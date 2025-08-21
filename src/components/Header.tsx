@@ -24,8 +24,8 @@ const Header = () => {
             <div className="flex items-center">
               <Globe className="h-8 w-8 text-primary ml-2" />
               <div>
-                <h1 className="text-xl font-arabic-title font-bold text-primary">ترجمان</h1>
-                <p className="text-xs text-muted-foreground">منصة الترجمة الاحترافية</p>
+                <h1 className="text-xl font-arabic-title font-bold text-primary">مركز الخبراء</h1>
+                <p className="text-xs text-muted-foreground">للترجمة الاحترافية</p>
               </div>
             </div>
           </div>
@@ -50,7 +50,7 @@ const Header = () => {
               تسجيل الدخول
             </Button>
             <Button size="sm" className="bg-gradient-primary text-primary-foreground hover:opacity-90 shadow-medium">
-              ابدأ الترجمة
+              اطلب خدمة الترجمة
             </Button>
           </div>
 
@@ -65,7 +65,7 @@ const Header = () => {
               <div className="flex flex-col space-y-4 mt-8">
                 <div className="flex items-center mb-6">
                   <Globe className="h-6 w-6 text-primary ml-2" />
-                  <span className="font-arabic-title font-bold text-lg">ترجمان</span>
+                  <span className="font-arabic-title font-bold text-lg">مركز الخبراء</span>
                 </div>
                 
                 {navigation.map((item) => (
@@ -85,7 +85,7 @@ const Header = () => {
                     تسجيل الدخول
                   </Button>
                   <Button size="sm" className="bg-gradient-primary text-primary-foreground">
-                    ابدأ الترجمة
+                    اطلب خدمة الترجمة
                   </Button>
                 </div>
               </div>

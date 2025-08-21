@@ -1,6 +1,5 @@
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
-import TranslationTool from "@/components/TranslationTool";
 import ServicesSection from "@/components/ServicesSection";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -101,14 +100,14 @@ const Index = () => {
             </Badge>
             
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-arabic-title font-bold leading-tight">
-              منصة <span className="text-primary-glow">ترجمان</span>
+              مركز <span className="text-primary-glow">الخبراء</span>
               <br />
               للترجمة الاحترافية
             </h1>
             
             <p className="text-xl md:text-2xl text-white/90 font-light leading-relaxed max-w-3xl mx-auto">
-              احصل على ترجمة دقيقة وسريعة بأكثر من 100 لغة. 
-              نقدم خدمات ترجمة احترافية للنصوص والمستندات والمواقع بجودة عالمية.
+              نقدم خدمات ترجمة احترافية شاملة بأكثر من 100 لغة عالمية.
+              فريق من المترجمين المعتمدين والمتخصصين في جميع المجالات لضمان أعلى جودة ودقة.
             </p>
             
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mt-8">
@@ -116,7 +115,7 @@ const Index = () => {
                 size="lg" 
                 className="bg-white text-primary hover:bg-white/90 shadow-strong px-8 py-4 text-lg font-medium"
               >
-                ابدأ الترجمة المجانية
+                اطلب خدمة الترجمة
                 <ArrowLeft className="h-5 w-5 mr-2" />
               </Button>
               
@@ -152,18 +151,42 @@ const Index = () => {
         </div>
       </section>
 
-      {/* أداة الترجمة */}
+      {/* أنواع الترجمات */}
       <section className="py-16 bg-muted/30">
         <div className="container mx-auto px-4">
           <div className="text-center mb-12">
             <h2 className="text-3xl lg:text-4xl font-arabic-title font-bold mb-4">
-              جرب أداة الترجمة <span className="text-gradient">المجانية</span>
+              أنواع <span className="text-gradient">الترجمات</span>
             </h2>
             <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-              اختبر جودة خدماتنا من خلال أداة الترجمة المجانية الفورية
+              نقدم جميع أنواع خدمات الترجمة المتخصصة لتلبية احتياجاتكم المختلفة
             </p>
           </div>
-          <TranslationTool />
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {[
+              { title: "الترجمة القانونية", desc: "ترجمة العقود والوثائق القانونية", icon: "⚖️" },
+              { title: "الترجمة الطبية", desc: "ترجمة التقارير والأبحاث الطبية", icon: "🏥" },
+              { title: "الترجمة التقنية", desc: "ترجمة المستندات التقنية والهندسية", icon: "⚙️" },
+              { title: "الترجمة التجارية", desc: "ترجمة المراسلات والتقارير التجارية", icon: "💼" },
+              { title: "الترجمة الأكاديمية", desc: "ترجمة الأبحاث والرسائل العلمية", icon: "🎓" },
+              { title: "الترجمة الأدبية", desc: "ترجمة الكتب والنصوص الأدبية", icon: "📚" },
+              { title: "الترجمة الإعلامية", desc: "ترجمة المقالات والأخبار", icon: "📰" },
+              { title: "الترجمة الفورية", desc: "ترجمة فورية للمؤتمرات والاجتماعات", icon: "🎤" }
+            ].map((type, index) => (
+              <Card key={index} className="text-center hover-lift bg-gradient-card shadow-soft border-0 animate-fade-in-up"
+                   style={{ animationDelay: `${index * 0.1}s` }}>
+                <CardContent className="p-6 space-y-4">
+                  <div className="text-4xl mb-4">{type.icon}</div>
+                  <h3 className="text-lg font-bold">{type.title}</h3>
+                  <p className="text-muted-foreground text-sm">{type.desc}</p>
+                  <Button variant="outline" size="sm" className="w-full">
+                    اطلب الخدمة
+                  </Button>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
         </div>
       </section>
 
@@ -172,7 +195,7 @@ const Index = () => {
         <div className="container mx-auto px-4">
           <div className="text-center mb-12">
             <h2 className="text-3xl lg:text-4xl font-arabic-title font-bold mb-4">
-              لماذا تختار <span className="text-gradient">ترجمان؟</span>
+              لماذا تختار <span className="text-gradient">مركز الخبراء؟</span>
             </h2>
           </div>
           
@@ -250,7 +273,7 @@ const Index = () => {
                 size="lg" 
                 className="bg-white text-primary hover:bg-white/90 shadow-strong px-8 py-4 text-lg"
               >
-                ابدأ مشروعك الآن
+                احصل على عرض سعر
               </Button>
               <Button 
                 variant="outline" 
