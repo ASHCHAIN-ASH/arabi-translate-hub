@@ -7,6 +7,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
 import { Upload, FileText, Calculator, Clock, DollarSign } from "lucide-react";
+import mammoth from "mammoth";
+import * as pdfjsLib from "pdfjs-dist";
 
 interface TranslationCalculatorProps {
   translationType: string;
@@ -115,6 +117,44 @@ const TranslationCalculator = ({ translationType }: TranslationCalculatorProps) 
     setFileContent(value);
   };
 
+  // تهيئة PDF.js worker
+  useEffect(() => {
+    pdfjsLib.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjsLib.version}/pdf.worker.min.js`;
+  }, []);
+
+  const extractTextFromPDF = async (file: File): Promise<string> => {
+    try {
+      const arrayBuffer = await file.arrayBuffer();
+      const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+      let fullText = '';
+      
+      for (let i = 1; i <= pdf.numPages; i++) {
+        const page = await pdf.getPage(i);
+        const textContent = await page.getTextContent();
+        const pageText = textContent.items
+          .map((item: any) => item.str)
+          .join(' ');
+        fullText += pageText + ' ';
+      }
+      
+      return fullText.trim();
+    } catch (error) {
+      console.error('خطأ في قراءة PDF:', error);
+      throw error;
+    }
+  };
+
+  const extractTextFromWord = async (file: File): Promise<string> => {
+    try {
+      const arrayBuffer = await file.arrayBuffer();
+      const result = await mammoth.extractRawText({ arrayBuffer });
+      return result.value;
+    } catch (error) {
+      console.error('خطأ في قراءة Word:', error);
+      throw error;
+    }
+  };
+
   const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFile = event.target.files?.[0];
     if (!selectedFile) return;
@@ -129,14 +169,20 @@ const TranslationCalculator = ({ translationType }: TranslationCalculatorProps) 
       if (selectedFile.type === "text/plain") {
         content = await selectedFile.text();
       } else if (selectedFile.type === "application/pdf") {
-        // محاكاة قراءة PDF - في التطبيق الحقيقي نحتاج مكتبة PDF.js
-        content = "هذا مثال على محتوى PDF. عدد الكلمات المقدر: " + Math.floor(selectedFile.size / 6) + " كلمة تقريباً.";
-      } else if (selectedFile.type.includes("word") || selectedFile.name.endsWith('.docx') || selectedFile.name.endsWith('.doc')) {
-        // محاكاة قراءة Word - في التطبيق الحقيقي نحتاج مكتبة mammoth.js
-        content = "هذا مثال على محتوى Word. عدد الكلمات المقدر: " + Math.floor(selectedFile.size / 8) + " كلمة تقريباً.";
+        content = await extractTextFromPDF(selectedFile);
+      } else if (selectedFile.type.includes("word") || 
+                 selectedFile.type === "application/vnd.openxmlformats-officedocument.wordprocessingml.document" ||
+                 selectedFile.type === "application/msword" ||
+                 selectedFile.name.endsWith('.docx') || 
+                 selectedFile.name.endsWith('.doc')) {
+        content = await extractTextFromWord(selectedFile);
       } else {
         // محاولة قراءة كنص عادي
         content = await selectedFile.text();
+      }
+      
+      if (!content || content.trim().length === 0) {
+        throw new Error("لم يتم العثور على نص في الملف");
       }
       
       setFileContent(content);
@@ -152,11 +198,24 @@ const TranslationCalculator = ({ translationType }: TranslationCalculatorProps) 
       
     } catch (error) {
       console.error("خطأ في قراءة الملف:", error);
-      // تقدير تقريبي بناء على حجم الملف
-      const estimatedWords = Math.floor(selectedFile.size / 6);
+      // في حالة فشل القراءة، استخدم تقديراً محسناً
+      const fileExtension = selectedFile.name.split('.').pop()?.toLowerCase();
+      let estimatedWords = 0;
+      
+      if (fileExtension === 'pdf') {
+        // ملفات PDF عادة تحتوي على 250-300 كلمة لكل KB
+        estimatedWords = Math.floor(selectedFile.size / 1024 * 250);
+      } else if (fileExtension === 'docx' || fileExtension === 'doc') {
+        // ملفات Word عادة تحتوي على 500-600 كلمة لكل KB
+        estimatedWords = Math.floor(selectedFile.size / 1024 * 500);
+      } else {
+        // ملفات نصية أخرى
+        estimatedWords = Math.floor(selectedFile.size / 6);
+      }
+      
       setWordCount(estimatedWords);
       setWordDetails({ arabic: 0, english: estimatedWords, numbers: 0, others: 0 });
-      setFileContent(`تقدير تقريبي: ${estimatedWords} كلمة بناء على حجم الملف`);
+      setFileContent(`تعذر قراءة الملف. تقدير تقريبي: ${estimatedWords} كلمة`);
     } finally {
       setIsProcessing(false);
     }
