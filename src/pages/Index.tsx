@@ -165,23 +165,85 @@ const Index = () => {
           
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {[
-              { title: "الترجمة القانونية", desc: "ترجمة العقود والوثائق القانونية", icon: "⚖️" },
-              { title: "الترجمة الطبية", desc: "ترجمة التقارير والأبحاث الطبية", icon: "🏥" },
-              { title: "الترجمة التقنية", desc: "ترجمة المستندات التقنية والهندسية", icon: "⚙️" },
-              { title: "الترجمة التجارية", desc: "ترجمة المراسلات والتقارير التجارية", icon: "💼" },
-              { title: "الترجمة الأكاديمية", desc: "ترجمة الأبحاث والرسائل العلمية", icon: "🎓" },
-              { title: "الترجمة الأدبية", desc: "ترجمة الكتب والنصوص الأدبية", icon: "📚" },
-              { title: "الترجمة الإعلامية", desc: "ترجمة المقالات والأخبار", icon: "📰" },
-              { title: "الترجمة الفورية", desc: "ترجمة فورية للمؤتمرات والاجتماعات", icon: "🎤" }
+              { 
+                title: "الترجمة القانونية", 
+                desc: "ترجمة العقود والوثائق القانونية", 
+                icon: "⚖️",
+                route: "/legal-translation",
+                color: "from-blue-500 to-blue-600"
+              },
+              { 
+                title: "الترجمة الطبية", 
+                desc: "ترجمة التقارير والأبحاث الطبية", 
+                icon: "🏥",
+                route: "/medical-translation",
+                color: "from-green-500 to-green-600"
+              },
+              { 
+                title: "الترجمة التقنية", 
+                desc: "ترجمة المستندات التقنية والهندسية", 
+                icon: "⚙️",
+                route: "/technical-translation",
+                color: "from-purple-500 to-purple-600"
+              },
+              { 
+                title: "الترجمة التجارية", 
+                desc: "ترجمة المراسلات والتقارير التجارية", 
+                icon: "💼",
+                route: "/business-translation",
+                color: "from-orange-500 to-orange-600"
+              },
+              { 
+                title: "الترجمة الأكاديمية", 
+                desc: "ترجمة الأبحاث والرسائل العلمية", 
+                icon: "🎓",
+                route: "/academic-translation",
+                color: "from-indigo-500 to-indigo-600"
+              },
+              { 
+                title: "الترجمة الأدبية", 
+                desc: "ترجمة الكتب والنصوص الأدبية", 
+                icon: "📚",
+                route: "/literary-translation",
+                color: "from-pink-500 to-pink-600"
+              },
+              { 
+                title: "الترجمة الإعلامية", 
+                desc: "ترجمة المقالات والأخبار", 
+                icon: "📰",
+                route: "/media-translation",
+                color: "from-red-500 to-red-600"
+              },
+              { 
+                title: "الترجمة الفورية", 
+                desc: "ترجمة فورية للمؤتمرات والاجتماعات", 
+                icon: "🎤",
+                route: "/live-translation",
+                color: "from-teal-500 to-teal-600"
+              }
             ].map((type, index) => (
-              <Card key={index} className="text-center hover-lift bg-gradient-card shadow-soft border-0 animate-fade-in-up"
+              <Card key={index} className="group text-center hover-lift bg-gradient-card shadow-soft border-0 animate-fade-in-up overflow-hidden relative"
                    style={{ animationDelay: `${index * 0.1}s` }}>
-                <CardContent className="p-6 space-y-4">
-                  <div className="text-4xl mb-4">{type.icon}</div>
-                  <h3 className="text-lg font-bold">{type.title}</h3>
-                  <p className="text-muted-foreground text-sm">{type.desc}</p>
-                  <Button variant="outline" size="sm" className="w-full">
-                    اطلب الخدمة
+                <div className={`absolute inset-0 bg-gradient-to-br ${type.color} opacity-0 group-hover:opacity-5 transition-opacity duration-300`} />
+                <CardContent className="p-6 space-y-4 relative z-10">
+                  <div className="relative">
+                    <div className="text-5xl mb-4 transform group-hover:scale-110 group-hover:rotate-3 transition-all duration-300 animate-pulse">
+                      {type.icon}
+                    </div>
+                    <div className="absolute inset-0 flex items-center justify-center">
+                      <div className="w-16 h-16 bg-gradient-to-r from-primary/20 to-accent/20 rounded-full blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                    </div>
+                  </div>
+                  <h3 className="text-lg font-bold group-hover:text-primary transition-colors duration-300">{type.title}</h3>
+                  <p className="text-muted-foreground text-sm leading-relaxed">{type.desc}</p>
+                  <Button 
+                    variant="outline" 
+                    size="sm" 
+                    className="w-full group-hover:bg-primary group-hover:text-primary-foreground group-hover:border-primary transition-all duration-300 hover:shadow-md"
+                    onClick={() => window.location.href = type.route}
+                  >
+                    المزيد
+                    <ArrowLeft className="h-4 w-4 mr-2 group-hover:translate-x-1 transition-transform duration-300" />
                   </Button>
                 </CardContent>
               </Card>
