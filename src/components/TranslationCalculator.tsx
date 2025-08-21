@@ -1,35 +1,25 @@
-import { useState, useCallback, useEffect } from "react";
+import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
-import { Badge } from "@/components/ui/badge";
-import { Upload, FileText, Calculator, Clock, DollarSign } from "lucide-react";
-import mammoth from "mammoth";
-import * as pdfjsLib from "pdfjs-dist";
+import { Calculator } from "lucide-react";
+import WordCounter from "./WordCounter";
+import FileUploader from "./FileUploader";
+import PriceCalculator from "./PriceCalculator";
+import { useWordCounter } from "@/hooks/useWordCounter";
 
 interface TranslationCalculatorProps {
   translationType: string;
 }
 
 const TranslationCalculator = ({ translationType }: TranslationCalculatorProps) => {
-  const [text, setText] = useState("");
-  const [file, setFile] = useState<File | null>(null);
   const [fromLang, setFromLang] = useState("");
   const [toLang, setToLang] = useState("");
   const [urgency, setUrgency] = useState("normal");
-  const [wordCount, setWordCount] = useState(0);
-  const [price, setPrice] = useState(0);
-  const [fileContent, setFileContent] = useState("");
   const [isProcessing, setIsProcessing] = useState(false);
-  const [wordDetails, setWordDetails] = useState({
-    arabic: 0,
-    english: 0,
-    numbers: 0,
-    others: 0
-  });
+  
+  const { text, fileContent, wordDetails, handleTextChange, handleFileContent, clearAll } = useWordCounter();
 
   const languages = [
     { code: "ar", name: "العربية" },
@@ -50,389 +40,105 @@ const TranslationCalculator = ({ translationType }: TranslationCalculatorProps) 
     { value: "express", label: "فوري (12-24 ساعة)", multiplier: 2 }
   ];
 
-  const basePrice = {
-    "legal": 0.19,        // 95 ريال لكل 500 كلمة = 0.19 ريال لكل كلمة
-    "medical": 0.20,      // 100 ريال لكل 500 كلمة
-    "technical": 0.18,    // 90 ريال لكل 500 كلمة
-    "business": 0.15,     // 75 ريال لكل 500 كلمة
-    "academic": 0.17,     // 85 ريال لكل 500 كلمة
-    "literary": 0.21,     // 105 ريال لكل 500 كلمة
-    "media": 0.14,        // 70 ريال لكل 500 كلمة
-    "live": 0.30          // 150 ريال لكل 500 كلمة
-  };
-
-  const countWordsDetailed = useCallback((content: string) => {
-    if (!content || content.trim().length === 0) {
-      return { total: 0, arabic: 0, english: 0, numbers: 0, others: 0 };
-    }
-    
-    // إزالة المسافات الإضافية والأسطر الفارغة
-    const cleanContent = content.trim().replace(/\s+/g, ' ');
-    
-    // حساب الكلمات العربية والإنجليزية
-    const arabicWords = (cleanContent.match(/[\u0600-\u06FF]+/g) || []).length;
-    const englishWords = (cleanContent.match(/[a-zA-Z]+/g) || []).length;
-    const numberWords = (cleanContent.match(/\d+/g) || []).length;
-    
-    // الكلمات الأخرى (رموز، علامات ترقيم معقدة)
-    const otherWords = cleanContent.split(/\s+/).filter(word => {
-      return word.length > 0 && 
-             !word.match(/[\u0600-\u06FF]/) && 
-             !word.match(/[a-zA-Z]/) && 
-             !word.match(/^\d+$/);
-    }).length;
-    
-    const total = arabicWords + englishWords + numberWords + otherWords;
-    
-    return {
-      total,
-      arabic: arabicWords,
-      english: englishWords,
-      numbers: numberWords,
-      others: otherWords
-    };
-  }, []);
-
-  const calculatePrice = useCallback(() => {
-    if (wordCount === 0) return;
-    
-    const typeKey = translationType.split('-')[0] as keyof typeof basePrice;
-    const pricePerWord = basePrice[typeKey] || 0.10;
-    const urgencyMultiplier = urgencyOptions.find(opt => opt.value === urgency)?.multiplier || 1;
-    
-    const totalPrice = wordCount * pricePerWord * urgencyMultiplier;
-    setPrice(totalPrice);
-  }, [wordCount, translationType, urgency]);
-
-  const handleTextChange = (value: string) => {
-    setText(value);
-    const details = countWordsDetailed(value);
-    setWordCount(details.total);
-    setWordDetails({
-      arabic: details.arabic,
-      english: details.english,
-      numbers: details.numbers,
-      others: details.others
-    });
-    setFileContent(value);
-  };
-
-  // تهيئة PDF.js worker
-  useEffect(() => {
-    pdfjsLib.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjsLib.version}/pdf.worker.min.js`;
-  }, []);
-
-  const extractTextFromPDF = async (file: File): Promise<string> => {
-    try {
-      const arrayBuffer = await file.arrayBuffer();
-      const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
-      let fullText = '';
-      
-      for (let i = 1; i <= pdf.numPages; i++) {
-        const page = await pdf.getPage(i);
-        const textContent = await page.getTextContent();
-        const pageText = textContent.items
-          .map((item: any) => item.str)
-          .join(' ');
-        fullText += pageText + ' ';
-      }
-      
-      return fullText.trim();
-    } catch (error) {
-      console.error('خطأ في قراءة PDF:', error);
-      throw error;
-    }
-  };
-
-  const extractTextFromWord = async (file: File): Promise<string> => {
-    try {
-      const arrayBuffer = await file.arrayBuffer();
-      const result = await mammoth.extractRawText({ arrayBuffer });
-      return result.value;
-    } catch (error) {
-      console.error('خطأ في قراءة Word:', error);
-      throw error;
-    }
-  };
-
-  const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
-    const selectedFile = event.target.files?.[0];
-    if (!selectedFile) return;
-    
-    setFile(selectedFile);
-    setIsProcessing(true);
-    
-    try {
-      let content = "";
-      
-      // تحديد نوع الملف ومعالجته
-      if (selectedFile.type === "text/plain") {
-        content = await selectedFile.text();
-      } else if (selectedFile.type === "application/pdf") {
-        content = await extractTextFromPDF(selectedFile);
-      } else if (selectedFile.type.includes("word") || 
-                 selectedFile.type === "application/vnd.openxmlformats-officedocument.wordprocessingml.document" ||
-                 selectedFile.type === "application/msword" ||
-                 selectedFile.name.endsWith('.docx') || 
-                 selectedFile.name.endsWith('.doc')) {
-        content = await extractTextFromWord(selectedFile);
-      } else {
-        // محاولة قراءة كنص عادي
-        content = await selectedFile.text();
-      }
-      
-      if (!content || content.trim().length === 0) {
-        throw new Error("لم يتم العثور على نص في الملف");
-      }
-      
-      setFileContent(content);
-      const details = countWordsDetailed(content);
-      setWordCount(details.total);
-      setWordDetails({
-        arabic: details.arabic,
-        english: details.english,
-        numbers: details.numbers,
-        others: details.others
-      });
-      setText(""); // مسح النص المكتوب يدوياً
-      
-    } catch (error) {
-      console.error("خطأ في قراءة الملف:", error);
-      // في حالة فشل القراءة، استخدم تقديراً محسناً
-      const fileExtension = selectedFile.name.split('.').pop()?.toLowerCase();
-      let estimatedWords = 0;
-      
-      if (fileExtension === 'pdf') {
-        // ملفات PDF عادة تحتوي على 250-300 كلمة لكل KB
-        estimatedWords = Math.floor(selectedFile.size / 1024 * 250);
-      } else if (fileExtension === 'docx' || fileExtension === 'doc') {
-        // ملفات Word عادة تحتوي على 500-600 كلمة لكل KB
-        estimatedWords = Math.floor(selectedFile.size / 1024 * 500);
-      } else {
-        // ملفات نصية أخرى
-        estimatedWords = Math.floor(selectedFile.size / 6);
-      }
-      
-      setWordCount(estimatedWords);
-      setWordDetails({ arabic: 0, english: estimatedWords, numbers: 0, others: 0 });
-      setFileContent(`تعذر قراءة الملف. تقدير تقريبي: ${estimatedWords} كلمة`);
-    } finally {
-      setIsProcessing(false);
-    }
-  };
-
-  useEffect(() => {
-    calculatePrice();
-  }, [calculatePrice]);
-
-  const deliveryTime = urgencyOptions.find(opt => opt.value === urgency)?.label.split('(')[1].split(')')[0];
-
   return (
-    <div className="space-y-6">
-      <Card className="bg-gradient-card border-0 shadow-soft">
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2 text-xl font-arabic-title">
-            <Calculator className="h-6 w-6 text-primary" />
-            حاسبة تكلفة الترجمة
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-6">
-          {/* اختيار اللغات */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="space-y-2">
-              <Label>الترجمة من</Label>
-              <Select value={fromLang} onValueChange={setFromLang}>
-                <SelectTrigger>
-                  <SelectValue placeholder="اختر اللغة المصدر" />
-                </SelectTrigger>
-                <SelectContent>
-                  {languages.map((lang) => (
-                    <SelectItem key={lang.code} value={lang.code}>
-                      {lang.name}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-            
-            <div className="space-y-2">
-              <Label>الترجمة إلى</Label>
-              <Select value={toLang} onValueChange={setToLang}>
-                <SelectTrigger>
-                  <SelectValue placeholder="اختر اللغة المطلوبة" />
-                </SelectTrigger>
-                <SelectContent>
-                  {languages.map((lang) => (
-                    <SelectItem key={lang.code} value={lang.code}>
-                      {lang.name}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-          </div>
-
-          {/* إدخال النص أو رفع ملف */}
-          <div className="space-y-4">
-            <Label>النص المراد ترجمته</Label>
-            <Textarea
-              value={text}
-              onChange={(e) => handleTextChange(e.target.value)}
-              placeholder="اكتب النص هنا أو ارفع ملف..."
-              className="min-h-[120px] resize-none"
-              disabled={isProcessing}
-            />
-            
-            <div className="flex items-center gap-4">
-              <div className="flex-1">
-                <Input
-                  type="file"
-                  accept=".txt,.doc,.docx,.pdf"
-                  onChange={handleFileUpload}
-                  className="hidden"
-                  id="file-upload"
-                  disabled={isProcessing}
-                />
-                <Label
-                  htmlFor="file-upload"
-                  className={`inline-flex items-center gap-2 px-4 py-2 bg-muted hover:bg-muted/80 rounded-md cursor-pointer transition-colors ${isProcessing ? 'opacity-50 cursor-not-allowed' : ''}`}
-                >
-                  <Upload className="h-4 w-4" />
-                  {isProcessing ? "جاري المعالجة..." : "رفع ملف"}
-                </Label>
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 dark:from-slate-900 dark:via-blue-950 dark:to-indigo-950">
+      <div className="container mx-auto px-4 py-8 max-w-4xl">
+        <Card className="bg-white/80 dark:bg-slate-900/80 backdrop-blur-sm border-0 shadow-2xl">
+          <CardHeader className="bg-gradient-to-r from-primary/10 to-accent/10 rounded-t-lg">
+            <CardTitle className="flex items-center gap-3 text-2xl font-bold text-primary">
+              <Calculator className="h-8 w-8" />
+              حاسبة تكلفة الترجمة
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-8 p-8">
+            {/* اختيار اللغات */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="space-y-3">
+                <Label className="text-base font-semibold">الترجمة من</Label>
+                <Select value={fromLang} onValueChange={setFromLang}>
+                  <SelectTrigger className="h-12 border-2 border-primary/20 focus:border-primary">
+                    <SelectValue placeholder="اختر اللغة المصدر" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {languages.map((lang) => (
+                      <SelectItem key={lang.code} value={lang.code}>
+                        {lang.name}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
               </div>
               
-              {file && (
-                <div className="flex items-center gap-2">
-                  <FileText className="h-4 w-4 text-primary" />
-                  <span className="text-sm text-muted-foreground">{file.name}</span>
-                  <Badge variant="outline" className="text-xs">
-                    {(file.size / 1024).toFixed(1)} KB
-                  </Badge>
-                </div>
-              )}
-            </div>
-            
-            {/* عرض محتوى الملف */}
-            {fileContent && (
-              <div className="p-3 bg-muted/30 rounded-md">
-                <p className="text-sm text-muted-foreground mb-2">معاينة المحتوى:</p>
-                <p className="text-sm max-h-20 overflow-y-auto">
-                  {fileContent.substring(0, 200)}
-                  {fileContent.length > 200 && "..."}
-                </p>
+              <div className="space-y-3">
+                <Label className="text-base font-semibold">الترجمة إلى</Label>
+                <Select value={toLang} onValueChange={setToLang}>
+                  <SelectTrigger className="h-12 border-2 border-primary/20 focus:border-primary">
+                    <SelectValue placeholder="اختر اللغة المطلوبة" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {languages.map((lang) => (
+                      <SelectItem key={lang.code} value={lang.code}>
+                        {lang.name}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
               </div>
-            )}
-          </div>
+            </div>
 
-          {/* السرعة المطلوبة */}
-          <div className="space-y-2">
-            <Label>سرعة التسليم</Label>
-            <Select value={urgency} onValueChange={setUrgency}>
-              <SelectTrigger>
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                {urgencyOptions.map((option) => (
-                  <SelectItem key={option.value} value={option.value}>
-                    {option.label}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
-
-          {/* النتائج */}
-          {wordCount > 0 && (
+            {/* إدخال النص */}
             <div className="space-y-4">
-              {/* إحصائيات مفصلة */}
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-3 p-4 bg-muted/30 rounded-lg">
-                <div className="text-center">
-                  <div className="text-lg font-bold text-primary">{wordDetails.arabic}</div>
-                  <div className="text-xs text-muted-foreground">كلمات عربية</div>
-                </div>
-                <div className="text-center">
-                  <div className="text-lg font-bold text-accent">{wordDetails.english}</div>
-                  <div className="text-xs text-muted-foreground">كلمات إنجليزية</div>
-                </div>
-                <div className="text-center">
-                  <div className="text-lg font-bold text-accent-emerald">{wordDetails.numbers}</div>
-                  <div className="text-xs text-muted-foreground">أرقام</div>
-                </div>
-                <div className="text-center">
-                  <div className="text-lg font-bold text-muted-foreground">{wordDetails.others}</div>
-                  <div className="text-xs text-muted-foreground">رموز أخرى</div>
-                </div>
-              </div>
-              
-              {/* الإجمالي والسعر */}
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 p-4 bg-gradient-card rounded-lg border">
-                <div className="text-center">
-                  <div className="text-3xl font-bold text-primary">{wordCount.toLocaleString()}</div>
-                  <div className="text-sm text-muted-foreground font-medium">إجمالي الكلمات</div>
-                </div>
-                
-              <div className="text-center">
-                <div className="text-3xl font-bold text-accent-emerald">{price.toFixed(2)} ر.س</div>
-                <div className="text-sm text-muted-foreground font-medium">السعر الإجمالي</div>
-              </div>
-                
-                <div className="text-center">
-                  <div className="text-2xl font-bold text-accent flex items-center justify-center">
-                    <Clock className="h-5 w-5 ml-1" />
-                    {deliveryTime}
-                  </div>
-                  <div className="text-sm text-muted-foreground font-medium">مدة التسليم</div>
-                </div>
-              </div>
-              
-              {/* تفاصيل الحساب */}
-              <div className="p-3 bg-blue-50 dark:bg-blue-950/20 rounded-lg border border-blue-200 dark:border-blue-800">
-                <h4 className="font-bold text-sm mb-2 text-blue-800 dark:text-blue-200">تفاصيل الحساب:</h4>
-                <div className="text-xs text-blue-700 dark:text-blue-300 space-y-1">
-                  <div>• السعر الأساسي: {(basePrice[translationType.split('-')[0] as keyof typeof basePrice] || 0.15).toFixed(2)} ريال لكل كلمة</div>
-                  <div>• معامل السرعة: {urgencyOptions.find(opt => opt.value === urgency)?.multiplier}x</div>
-                  <div>• الحساب: {wordCount} كلمة × {(basePrice[translationType.split('-')[0] as keyof typeof basePrice] || 0.15).toFixed(2)} × {urgencyOptions.find(opt => opt.value === urgency)?.multiplier} = {price.toFixed(2)} ر.س</div>
-                  <div className="mt-2 p-2 bg-blue-100 dark:bg-blue-900/30 rounded text-blue-800 dark:text-blue-200">
-                    <strong>ملاحظة:</strong> للترجمة القانونية: 95 ريال لكل 500 كلمة
-                  </div>
-                </div>
-              </div>
+              <Label className="text-base font-semibold">النص المراد ترجمته</Label>
+              <Textarea
+                value={text}
+                onChange={(e) => handleTextChange(e.target.value)}
+                placeholder="اكتب النص هنا للحصول على حساب دقيق..."
+                className="min-h-[150px] resize-none border-2 border-primary/20 focus:border-primary text-base leading-relaxed"
+                disabled={isProcessing}
+              />
             </div>
-          )}
 
-          {/* أزرار الإجراءات */}
-          <div className="flex flex-col sm:flex-row gap-4">
-            <Button 
-              className="flex-1 bg-gradient-primary text-primary-foreground hover:opacity-90 shadow-medium"
-              disabled={!fromLang || !toLang || wordCount === 0}
-            >
-              <DollarSign className="h-4 w-4 ml-2" />
-              طلب عرض سعر ({price.toFixed(0)} ر.س)
-            </Button>
-            
-            <Button 
-              variant="outline"
-              className="flex-1"
-              disabled={!fromLang || !toLang || wordCount === 0}
-            >
-              بدء الترجمة الآن
-            </Button>
-          </div>
-
-          {/* معلومات إضافية */}
-          <div className="text-center space-y-2">
-            <div className="flex flex-wrap justify-center gap-2">
-              <Badge variant="secondary">ترجمة معتمدة</Badge>
-              <Badge variant="secondary">ابتداءً من 70 ر.س لكل 500 كلمة</Badge>
-              <Badge variant="secondary">سرية تامة</Badge>
+            {/* رفع الملفات */}
+            <div className="space-y-4">
+              <Label className="text-base font-semibold">أو ارفع ملف</Label>
+              <FileUploader
+                onFileProcess={handleFileContent}
+                isProcessing={isProcessing}
+                onProcessingChange={setIsProcessing}
+              />
             </div>
-            <p className="text-xs text-muted-foreground">
-              الأسعار بالريال السعودي • الترجمة القانونية: 95 ر.س لكل 500 كلمة • السعر النهائي قد يختلف حسب التعقيد
-            </p>
-          </div>
-        </CardContent>
-      </Card>
+
+            {/* السرعة المطلوبة */}
+            <div className="space-y-3">
+              <Label className="text-base font-semibold">سرعة التسليم</Label>
+              <Select value={urgency} onValueChange={setUrgency}>
+                <SelectTrigger className="h-12 border-2 border-primary/20 focus:border-primary">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  {urgencyOptions.map((option) => (
+                    <SelectItem key={option.value} value={option.value}>
+                      {option.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+
+            {/* عرض إحصائيات الكلمات */}
+            <WordCounter wordDetails={wordDetails} isProcessing={isProcessing} />
+
+            {/* حاسبة السعر */}
+            <PriceCalculator
+              wordCount={wordDetails.total}
+              translationType={translationType}
+              urgency={urgency}
+              fromLang={fromLang}
+              toLang={toLang}
+            />
+          </CardContent>
+        </Card>
+      </div>
     </div>
   );
 };
