@@ -54,11 +54,8 @@ const FileUploader = ({ onFileProcess, isProcessing, onProcessingChange }: FileU
             const arrayBuffer = content as ArrayBuffer;
             const uint8Array = new Uint8Array(arrayBuffer);
             
-            // استخدام worker من نفس الحزمة لضمان التوافق
-            pdfjsLib.GlobalWorkerOptions.workerSrc = new URL(
-              'pdfjs-dist/build/pdf.worker.min.js',
-              import.meta.url
-            ).toString();
+            // استخدام CDN worker لضمان التوافق
+            pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
             
             const pdf = await pdfjsLib.getDocument({ data: uint8Array }).promise;
             let fullText = "";
