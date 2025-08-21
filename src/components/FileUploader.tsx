@@ -7,8 +7,7 @@ import { Upload, FileText, X, AlertCircle } from "lucide-react";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 // @ts-ignore
 import mammoth from "mammoth";
-// @ts-ignore
-import pdfParse from "pdf-parse";
+import * as pdfjsLib from "pdfjs-dist";
 
 interface FileUploaderProps {
   onFileProcess: (content: string, fileName: string) => void;
@@ -51,10 +50,27 @@ const FileUploader = ({ onFileProcess, isProcessing, onProcessingChange }: FileU
             extractedText = content as string;
             
           } else if (fileExtension === '.pdf') {
-            // معالجة ملفات PDF
+            // معالجة ملفات PDF باستخدام PDF.js
             const arrayBuffer = content as ArrayBuffer;
-            const pdfData = await pdfParse(arrayBuffer);
-            extractedText = pdfData.text;
+            const uint8Array = new Uint8Array(arrayBuffer);
+            
+            // تحديد مسار العامل
+            pdfjsLib.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js`;
+            
+            const pdf = await pdfjsLib.getDocument({ data: uint8Array }).promise;
+            let fullText = "";
+            
+            // استخراج النص من كل صفحة
+            for (let i = 1; i <= pdf.numPages; i++) {
+              const page = await pdf.getPage(i);
+              const textContent = await page.getTextContent();
+              const pageText = textContent.items
+                .map((item: any) => item.str)
+                .join(' ');
+              fullText += pageText + ' ';
+            }
+            
+            extractedText = fullText;
             
           } else if (fileExtension === '.docx') {
             // معالجة ملفات Word الحديثة
