@@ -5,6 +5,10 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Upload, FileText, X, AlertCircle } from "lucide-react";
 import { Alert, AlertDescription } from "@/components/ui/alert";
+// @ts-ignore
+import mammoth from "mammoth";
+// @ts-ignore
+import pdfParse from "pdf-parse";
 
 interface FileUploaderProps {
   onFileProcess: (content: string, fileName: string) => void;
@@ -32,32 +36,74 @@ const FileUploader = ({ onFileProcess, isProcessing, onProcessingChange }: FileU
   }, []);
 
   const extractTextFromFile = useCallback(async (file: File): Promise<string> => {
+    const fileExtension = file.name.toLowerCase().substring(file.name.lastIndexOf('.'));
+    
     return new Promise((resolve, reject) => {
       const reader = new FileReader();
       
-      reader.onload = (event) => {
-        const content = event.target?.result as string;
-        if (!content || content.trim().length === 0) {
-          reject(new Error("الملف فارغ أو لا يحتوي على نص"));
-          return;
+      reader.onload = async (event) => {
+        try {
+          const content = event.target?.result;
+          let extractedText = "";
+          
+          if (fileExtension === '.txt' || file.type === 'text/plain') {
+            // معالجة الملفات النصية
+            extractedText = content as string;
+            
+          } else if (fileExtension === '.pdf') {
+            // معالجة ملفات PDF
+            const arrayBuffer = content as ArrayBuffer;
+            const pdfData = await pdfParse(arrayBuffer);
+            extractedText = pdfData.text;
+            
+          } else if (fileExtension === '.docx') {
+            // معالجة ملفات Word الحديثة
+            const arrayBuffer = content as ArrayBuffer;
+            const result = await mammoth.extractRawText({ arrayBuffer });
+            extractedText = result.value;
+            
+          } else if (fileExtension === '.doc') {
+            // ملفات Word القديمة - محاولة قراءة النص الخام
+            try {
+              const result = await mammoth.extractRawText({ arrayBuffer: content as ArrayBuffer });
+              extractedText = result.value;
+            } catch {
+              // في حالة فشل mammoth مع ملفات .doc القديمة
+              throw new Error("ملفات .doc القديمة غير مدعومة بالكامل. يرجى تحويل الملف إلى .docx أو .txt");
+            }
+          }
+          
+          if (!extractedText || extractedText.trim().length === 0) {
+            reject(new Error("الملف فارغ أو لا يحتوي على نص قابل للقراءة"));
+            return;
+          }
+          
+          // تنظيف المحتوى
+          const cleanContent = extractedText
+            .replace(/\r\n/g, '\n')
+            .replace(/\r/g, '\n')
+            .replace(/\t/g, ' ')
+            .replace(/\s+/g, ' ')
+            .trim();
+          
+          resolve(cleanContent);
+          
+        } catch (error) {
+          console.error("خطأ في استخراج النص:", error);
+          reject(new Error("خطأ في قراءة محتوى الملف: " + (error instanceof Error ? error.message : "خطأ غير معروف")));
         }
-        
-        // تنظيف المحتوى
-        const cleanContent = content
-          .replace(/\r\n/g, '\n')
-          .replace(/\r/g, '\n')
-          .replace(/\t/g, ' ')
-          .replace(/\s+/g, ' ')
-          .trim();
-        
-        resolve(cleanContent);
       };
       
       reader.onerror = () => {
         reject(new Error("خطأ في قراءة الملف"));
       };
       
-      reader.readAsText(file, 'UTF-8');
+      // اختيار طريقة القراءة المناسبة حسب نوع الملف
+      if (fileExtension === '.txt' || file.type === 'text/plain') {
+        reader.readAsText(file, 'UTF-8');
+      } else {
+        reader.readAsArrayBuffer(file);
+      }
     });
   }, []);
 
@@ -90,24 +136,8 @@ const FileUploader = ({ onFileProcess, isProcessing, onProcessingChange }: FileU
         throw new Error("حجم الملف كبير جداً. الحد الأقصى 10 ميجابايت");
       }
       
-      let content = "";
-      
-      // معالجة الملفات النصية فقط حالياً للسرعة
-      if (selectedFile.type === "text/plain" || fileExtension === '.txt') {
-        content = await extractTextFromFile(selectedFile);
-      } else {
-        // للملفات الأخرى، استخدم تقديراً محسناً
-        let estimatedWords = 0;
-        
-        if (fileExtension === '.pdf') {
-          estimatedWords = Math.floor(selectedFile.size / 1024 * 200);
-        } else if (fileExtension === '.docx' || fileExtension === '.doc') {
-          estimatedWords = Math.floor(selectedFile.size / 1024 * 400);
-        }
-        
-        content = `تقدير محسن: ${estimatedWords} كلمة\nنوع الملف: ${selectedFile.type || 'غير محدد'}\nحجم الملف: ${(selectedFile.size / 1024).toFixed(1)} KB`;
-      }
-      
+      // استخراج النص من جميع أنواع الملفات
+      const content = await extractTextFromFile(selectedFile);
       onFileProcess(content, selectedFile.name);
       
     } catch (error) {
@@ -189,8 +219,8 @@ const FileUploader = ({ onFileProcess, isProcessing, onProcessingChange }: FileU
       
       {/* معلومات مفيدة */}
       <div className="text-xs text-muted-foreground space-y-1 p-3 bg-muted/30 rounded-lg">
-        <p>• الملفات النصية (.txt) يتم حسابها بدقة كاملة</p>
-        <p>• ملفات PDF و Word يتم تقديرها بناءً على الحجم</p>
+        <p>• جميع أنواع الملفات يتم حساب كلماتها بدقة كاملة</p>
+        <p>• يتم استخراج النص الفعلي من PDF و Word للحساب الدقيق</p>
         <p>• الحد الأقصى لحجم الملف: 10 ميجابايت</p>
       </div>
     </div>
