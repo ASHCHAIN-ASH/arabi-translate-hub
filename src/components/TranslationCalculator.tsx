@@ -20,6 +20,14 @@ const TranslationCalculator = ({ translationType }: TranslationCalculatorProps) 
   const [urgency, setUrgency] = useState("normal");
   const [wordCount, setWordCount] = useState(0);
   const [price, setPrice] = useState(0);
+  const [fileContent, setFileContent] = useState("");
+  const [isProcessing, setIsProcessing] = useState(false);
+  const [wordDetails, setWordDetails] = useState({
+    arabic: 0,
+    english: 0,
+    numbers: 0,
+    others: 0
+  });
 
   const languages = [
     { code: "ar", name: "العربية" },
@@ -51,9 +59,36 @@ const TranslationCalculator = ({ translationType }: TranslationCalculatorProps) 
     "live": 0.20
   };
 
-  const countWords = useCallback((content: string) => {
-    const words = content.trim().split(/\s+/).filter(word => word.length > 0);
-    return words.length;
+  const countWordsDetailed = useCallback((content: string) => {
+    if (!content || content.trim().length === 0) {
+      return { total: 0, arabic: 0, english: 0, numbers: 0, others: 0 };
+    }
+    
+    // إزالة المسافات الإضافية والأسطر الفارغة
+    const cleanContent = content.trim().replace(/\s+/g, ' ');
+    
+    // حساب الكلمات العربية والإنجليزية
+    const arabicWords = (cleanContent.match(/[\u0600-\u06FF]+/g) || []).length;
+    const englishWords = (cleanContent.match(/[a-zA-Z]+/g) || []).length;
+    const numberWords = (cleanContent.match(/\d+/g) || []).length;
+    
+    // الكلمات الأخرى (رموز، علامات ترقيم معقدة)
+    const otherWords = cleanContent.split(/\s+/).filter(word => {
+      return word.length > 0 && 
+             !word.match(/[\u0600-\u06FF]/) && 
+             !word.match(/[a-zA-Z]/) && 
+             !word.match(/^\d+$/);
+    }).length;
+    
+    const total = arabicWords + englishWords + numberWords + otherWords;
+    
+    return {
+      total,
+      arabic: arabicWords,
+      english: englishWords,
+      numbers: numberWords,
+      others: otherWords
+    };
   }, []);
 
   const calculatePrice = useCallback(() => {
@@ -69,23 +104,61 @@ const TranslationCalculator = ({ translationType }: TranslationCalculatorProps) 
 
   const handleTextChange = (value: string) => {
     setText(value);
-    const count = countWords(value);
-    setWordCount(count);
+    const details = countWordsDetailed(value);
+    setWordCount(details.total);
+    setWordDetails({
+      arabic: details.arabic,
+      english: details.english,
+      numbers: details.numbers,
+      others: details.others
+    });
+    setFileContent(value);
   };
 
-  const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFile = event.target.files?.[0];
-    if (selectedFile) {
-      setFile(selectedFile);
+    if (!selectedFile) return;
+    
+    setFile(selectedFile);
+    setIsProcessing(true);
+    
+    try {
+      let content = "";
       
-      // محاكاة قراءة محتوى الملف
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        const content = e.target?.result as string;
-        const count = countWords(content);
-        setWordCount(count);
-      };
-      reader.readAsText(selectedFile);
+      // تحديد نوع الملف ومعالجته
+      if (selectedFile.type === "text/plain") {
+        content = await selectedFile.text();
+      } else if (selectedFile.type === "application/pdf") {
+        // محاكاة قراءة PDF - في التطبيق الحقيقي نحتاج مكتبة PDF.js
+        content = "هذا مثال على محتوى PDF. عدد الكلمات المقدر: " + Math.floor(selectedFile.size / 6) + " كلمة تقريباً.";
+      } else if (selectedFile.type.includes("word") || selectedFile.name.endsWith('.docx') || selectedFile.name.endsWith('.doc')) {
+        // محاكاة قراءة Word - في التطبيق الحقيقي نحتاج مكتبة mammoth.js
+        content = "هذا مثال على محتوى Word. عدد الكلمات المقدر: " + Math.floor(selectedFile.size / 8) + " كلمة تقريباً.";
+      } else {
+        // محاولة قراءة كنص عادي
+        content = await selectedFile.text();
+      }
+      
+      setFileContent(content);
+      const details = countWordsDetailed(content);
+      setWordCount(details.total);
+      setWordDetails({
+        arabic: details.arabic,
+        english: details.english,
+        numbers: details.numbers,
+        others: details.others
+      });
+      setText(""); // مسح النص المكتوب يدوياً
+      
+    } catch (error) {
+      console.error("خطأ في قراءة الملف:", error);
+      // تقدير تقريبي بناء على حجم الملف
+      const estimatedWords = Math.floor(selectedFile.size / 6);
+      setWordCount(estimatedWords);
+      setWordDetails({ arabic: 0, english: estimatedWords, numbers: 0, others: 0 });
+      setFileContent(`تقدير تقريبي: ${estimatedWords} كلمة بناء على حجم الملف`);
+    } finally {
+      setIsProcessing(false);
     }
   };
 
@@ -148,6 +221,7 @@ const TranslationCalculator = ({ translationType }: TranslationCalculatorProps) 
               onChange={(e) => handleTextChange(e.target.value)}
               placeholder="اكتب النص هنا أو ارفع ملف..."
               className="min-h-[120px] resize-none"
+              disabled={isProcessing}
             />
             
             <div className="flex items-center gap-4">
@@ -158,13 +232,14 @@ const TranslationCalculator = ({ translationType }: TranslationCalculatorProps) 
                   onChange={handleFileUpload}
                   className="hidden"
                   id="file-upload"
+                  disabled={isProcessing}
                 />
                 <Label
                   htmlFor="file-upload"
-                  className="inline-flex items-center gap-2 px-4 py-2 bg-muted hover:bg-muted/80 rounded-md cursor-pointer transition-colors"
+                  className={`inline-flex items-center gap-2 px-4 py-2 bg-muted hover:bg-muted/80 rounded-md cursor-pointer transition-colors ${isProcessing ? 'opacity-50 cursor-not-allowed' : ''}`}
                 >
                   <Upload className="h-4 w-4" />
-                  رفع ملف
+                  {isProcessing ? "جاري المعالجة..." : "رفع ملف"}
                 </Label>
               </div>
               
@@ -172,9 +247,23 @@ const TranslationCalculator = ({ translationType }: TranslationCalculatorProps) 
                 <div className="flex items-center gap-2">
                   <FileText className="h-4 w-4 text-primary" />
                   <span className="text-sm text-muted-foreground">{file.name}</span>
+                  <Badge variant="outline" className="text-xs">
+                    {(file.size / 1024).toFixed(1)} KB
+                  </Badge>
                 </div>
               )}
             </div>
+            
+            {/* عرض محتوى الملف */}
+            {fileContent && (
+              <div className="p-3 bg-muted/30 rounded-md">
+                <p className="text-sm text-muted-foreground mb-2">معاينة المحتوى:</p>
+                <p className="text-sm max-h-20 overflow-y-auto">
+                  {fileContent.substring(0, 200)}
+                  {fileContent.length > 200 && "..."}
+                </p>
+              </div>
+            )}
           </div>
 
           {/* السرعة المطلوبة */}
@@ -196,23 +285,56 @@ const TranslationCalculator = ({ translationType }: TranslationCalculatorProps) 
 
           {/* النتائج */}
           {wordCount > 0 && (
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 p-4 bg-muted/30 rounded-lg">
-              <div className="text-center">
-                <div className="text-2xl font-bold text-primary">{wordCount.toLocaleString()}</div>
-                <div className="text-sm text-muted-foreground">كلمة</div>
-              </div>
-              
-              <div className="text-center">
-                <div className="text-2xl font-bold text-accent-emerald">${price.toFixed(2)}</div>
-                <div className="text-sm text-muted-foreground">السعر الإجمالي</div>
-              </div>
-              
-              <div className="text-center">
-                <div className="text-2xl font-bold text-accent">
-                  <Clock className="h-5 w-5 inline ml-1" />
-                  {deliveryTime}
+            <div className="space-y-4">
+              {/* إحصائيات مفصلة */}
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-3 p-4 bg-muted/30 rounded-lg">
+                <div className="text-center">
+                  <div className="text-lg font-bold text-primary">{wordDetails.arabic}</div>
+                  <div className="text-xs text-muted-foreground">كلمات عربية</div>
                 </div>
-                <div className="text-sm text-muted-foreground">مدة التسليم</div>
+                <div className="text-center">
+                  <div className="text-lg font-bold text-accent">{wordDetails.english}</div>
+                  <div className="text-xs text-muted-foreground">كلمات إنجليزية</div>
+                </div>
+                <div className="text-center">
+                  <div className="text-lg font-bold text-accent-emerald">{wordDetails.numbers}</div>
+                  <div className="text-xs text-muted-foreground">أرقام</div>
+                </div>
+                <div className="text-center">
+                  <div className="text-lg font-bold text-muted-foreground">{wordDetails.others}</div>
+                  <div className="text-xs text-muted-foreground">رموز أخرى</div>
+                </div>
+              </div>
+              
+              {/* الإجمالي والسعر */}
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 p-4 bg-gradient-card rounded-lg border">
+                <div className="text-center">
+                  <div className="text-3xl font-bold text-primary">{wordCount.toLocaleString()}</div>
+                  <div className="text-sm text-muted-foreground font-medium">إجمالي الكلمات</div>
+                </div>
+                
+                <div className="text-center">
+                  <div className="text-3xl font-bold text-accent-emerald">${price.toFixed(2)}</div>
+                  <div className="text-sm text-muted-foreground font-medium">السعر الإجمالي</div>
+                </div>
+                
+                <div className="text-center">
+                  <div className="text-2xl font-bold text-accent flex items-center justify-center">
+                    <Clock className="h-5 w-5 ml-1" />
+                    {deliveryTime}
+                  </div>
+                  <div className="text-sm text-muted-foreground font-medium">مدة التسليم</div>
+                </div>
+              </div>
+              
+              {/* تفاصيل الحساب */}
+              <div className="p-3 bg-blue-50 dark:bg-blue-950/20 rounded-lg border border-blue-200 dark:border-blue-800">
+                <h4 className="font-bold text-sm mb-2 text-blue-800 dark:text-blue-200">تفاصيل الحساب:</h4>
+                <div className="text-xs text-blue-700 dark:text-blue-300 space-y-1">
+                  <div>• السعر الأساسي: ${(basePrice[translationType.split('-')[0] as keyof typeof basePrice] || 0.10).toFixed(3)} لكل كلمة</div>
+                  <div>• معامل السرعة: {urgencyOptions.find(opt => opt.value === urgency)?.multiplier}x</div>
+                  <div>• الحساب: {wordCount} كلمة × ${(basePrice[translationType.split('-')[0] as keyof typeof basePrice] || 0.10).toFixed(3)} × {urgencyOptions.find(opt => opt.value === urgency)?.multiplier} = ${price.toFixed(2)}</div>
+                </div>
               </div>
             </div>
           )}
