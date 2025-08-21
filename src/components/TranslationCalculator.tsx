@@ -49,14 +49,14 @@ const TranslationCalculator = ({ translationType }: TranslationCalculatorProps) 
   ];
 
   const basePrice = {
-    "legal": 0.12,
-    "medical": 0.15,
-    "technical": 0.13,
-    "business": 0.10,
-    "academic": 0.11,
-    "literary": 0.14,
-    "media": 0.09,
-    "live": 0.20
+    "legal": 0.19,        // 95 ريال لكل 500 كلمة = 0.19 ريال لكل كلمة
+    "medical": 0.20,      // 100 ريال لكل 500 كلمة
+    "technical": 0.18,    // 90 ريال لكل 500 كلمة
+    "business": 0.15,     // 75 ريال لكل 500 كلمة
+    "academic": 0.17,     // 85 ريال لكل 500 كلمة
+    "literary": 0.21,     // 105 ريال لكل 500 كلمة
+    "media": 0.14,        // 70 ريال لكل 500 كلمة
+    "live": 0.30          // 150 ريال لكل 500 كلمة
   };
 
   const countWordsDetailed = useCallback((content: string) => {
@@ -313,10 +313,10 @@ const TranslationCalculator = ({ translationType }: TranslationCalculatorProps) 
                   <div className="text-sm text-muted-foreground font-medium">إجمالي الكلمات</div>
                 </div>
                 
-                <div className="text-center">
-                  <div className="text-3xl font-bold text-accent-emerald">${price.toFixed(2)}</div>
-                  <div className="text-sm text-muted-foreground font-medium">السعر الإجمالي</div>
-                </div>
+              <div className="text-center">
+                <div className="text-3xl font-bold text-accent-emerald">{price.toFixed(2)} ر.س</div>
+                <div className="text-sm text-muted-foreground font-medium">السعر الإجمالي</div>
+              </div>
                 
                 <div className="text-center">
                   <div className="text-2xl font-bold text-accent flex items-center justify-center">
@@ -331,9 +331,12 @@ const TranslationCalculator = ({ translationType }: TranslationCalculatorProps) 
               <div className="p-3 bg-blue-50 dark:bg-blue-950/20 rounded-lg border border-blue-200 dark:border-blue-800">
                 <h4 className="font-bold text-sm mb-2 text-blue-800 dark:text-blue-200">تفاصيل الحساب:</h4>
                 <div className="text-xs text-blue-700 dark:text-blue-300 space-y-1">
-                  <div>• السعر الأساسي: ${(basePrice[translationType.split('-')[0] as keyof typeof basePrice] || 0.10).toFixed(3)} لكل كلمة</div>
+                  <div>• السعر الأساسي: {(basePrice[translationType.split('-')[0] as keyof typeof basePrice] || 0.15).toFixed(2)} ريال لكل كلمة</div>
                   <div>• معامل السرعة: {urgencyOptions.find(opt => opt.value === urgency)?.multiplier}x</div>
-                  <div>• الحساب: {wordCount} كلمة × ${(basePrice[translationType.split('-')[0] as keyof typeof basePrice] || 0.10).toFixed(3)} × {urgencyOptions.find(opt => opt.value === urgency)?.multiplier} = ${price.toFixed(2)}</div>
+                  <div>• الحساب: {wordCount} كلمة × {(basePrice[translationType.split('-')[0] as keyof typeof basePrice] || 0.15).toFixed(2)} × {urgencyOptions.find(opt => opt.value === urgency)?.multiplier} = {price.toFixed(2)} ر.س</div>
+                  <div className="mt-2 p-2 bg-blue-100 dark:bg-blue-900/30 rounded text-blue-800 dark:text-blue-200">
+                    <strong>ملاحظة:</strong> للترجمة القانونية: 95 ريال لكل 500 كلمة
+                  </div>
                 </div>
               </div>
             </div>
@@ -346,7 +349,7 @@ const TranslationCalculator = ({ translationType }: TranslationCalculatorProps) 
               disabled={!fromLang || !toLang || wordCount === 0}
             >
               <DollarSign className="h-4 w-4 ml-2" />
-              طلب عرض سعر
+              طلب عرض سعر ({price.toFixed(0)} ر.س)
             </Button>
             
             <Button 
@@ -362,11 +365,11 @@ const TranslationCalculator = ({ translationType }: TranslationCalculatorProps) 
           <div className="text-center space-y-2">
             <div className="flex flex-wrap justify-center gap-2">
               <Badge variant="secondary">ترجمة معتمدة</Badge>
-              <Badge variant="secondary">مراجعة مجانية</Badge>
+              <Badge variant="secondary">ابتداءً من 70 ر.س لكل 500 كلمة</Badge>
               <Badge variant="secondary">سرية تامة</Badge>
             </div>
             <p className="text-xs text-muted-foreground">
-              السعر تقديري وقد يختلف حسب التعقيد والمجال التخصصي
+              الأسعار بالريال السعودي • الترجمة القانونية: 95 ر.س لكل 500 كلمة • السعر النهائي قد يختلف حسب التعقيد
             </p>
           </div>
         </CardContent>
