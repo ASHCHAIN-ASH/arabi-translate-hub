@@ -1,6 +1,7 @@
 import { useState } from "react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import FileUploader from "@/components/FileUploader";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -472,7 +473,7 @@ const LegalTranslation = () => {
         </div>
       </section>
 
-      {/* حاسبة التكلفة التفاعلية */}
+                {/* حاسبة التكلفة التفاعلية */}
       <section className="py-20 bg-gradient-to-br from-primary/5 via-background to-accent/5">
         <div className="container mx-auto px-4">
           <motion.div 
@@ -486,7 +487,7 @@ const LegalTranslation = () => {
               <span className="text-gradient bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">حاسبة التكلفة</span> الذكية
             </h2>
             <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
-              احسب تكلفة ترجمة وثائقك القانونية بدقة وشفافية كاملة
+              احسب تكلفة ترجمة وثائقك القانونية بدقة وشفافية كاملة - ارفع ملفاتك أو أدخل عدد الكلمات يدوياً
             </p>
           </motion.div>
           
@@ -496,100 +497,126 @@ const LegalTranslation = () => {
             transition={{ duration: 0.8 }}
             viewport={{ once: true }}
           >
-            <Card className="max-w-4xl mx-auto bg-background border-0 shadow-strong overflow-hidden">
+            <Card className="max-w-6xl mx-auto bg-background border-0 shadow-strong overflow-hidden">
               {/* رأس البطاقة */}
-              <div className="bg-gradient-primary text-primary-foreground p-8">
+              <div className="bg-gradient-primary text-primary-foreground p-6">
                 <div className="flex items-center justify-center gap-4">
                   <motion.div 
-                    className="bg-white/20 p-4 rounded-2xl backdrop-blur-md"
+                    className="bg-white/20 p-3 rounded-2xl backdrop-blur-md"
                     animate={{ rotate: 360 }}
                     transition={{ duration: 8, repeat: Infinity, ease: "linear" }}
                   >
-                    <Calculator className="h-8 w-8" />
+                    <Calculator className="h-6 w-6" />
                   </motion.div>
                   <div className="text-center">
-                    <h3 className="text-2xl font-arabic-title font-bold">
-                      حاسبة التكلفة الذكية
+                    <h3 className="text-xl font-arabic-title font-bold">
+                      حاسبة التكلفة الذكية مع رفع الملفات
                     </h3>
-                    <p className="text-primary-foreground/80 mt-1">
-                      احسب تكلفة مشروع الترجمة الخاص بك
+                    <p className="text-primary-foreground/80 mt-1 text-sm">
+                      احسب تكلفة مشروع الترجمة بدقة عالية
                     </p>
                   </div>
                 </div>
               </div>
 
-              <CardContent className="p-8">
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                  {/* إدخال البيانات */}
-                  <div className="space-y-6">
+              <CardContent className="p-6">
+                <div className="grid grid-cols-1 xl:grid-cols-3 gap-8">
+                  {/* رفع الملفات */}
+                  <div className="xl:col-span-2 space-y-6">
                     <div>
-                      <Label className="text-lg font-bold text-foreground mb-3 block">عدد الكلمات</Label>
-                      <Input
-                        type="number"
-                        value={wordCount}
-                        onChange={(e) => {
-                          const words = parseInt(e.target.value) || 0;
+                      <Label className="text-lg font-bold text-foreground mb-4 block">رفع الملفات (اختياري)</Label>
+                      <FileUploader
+                        onWordCountChange={(words) => {
                           setWordCount(words);
                           calculatePrice(words);
                         }}
-                        className="h-14 text-lg text-center font-bold border-2 border-primary/20 focus:border-primary rounded-xl"
-                        placeholder="أدخل عدد الكلمات"
+                        maxFiles={5}
+                        acceptedTypes={['.doc', '.docx', '.pdf', '.txt']}
                       />
                     </div>
+                    
+                    {/* أو إدخال يدوي */}
+                    <div className="relative">
+                      <div className="absolute inset-0 flex items-center">
+                        <div className="w-full border-t border-muted-foreground/20"></div>
+                      </div>
+                      <div className="relative flex justify-center text-sm">
+                        <span className="px-4 bg-background text-muted-foreground font-medium">أو أدخل الكلمات يدوياً</span>
+                      </div>
+                    </div>
+                    
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div>
+                        <Label className="text-base font-bold text-foreground mb-3 block">عدد الكلمات</Label>
+                        <Input
+                          type="number"
+                          value={wordCount}
+                          onChange={(e) => {
+                            const words = parseInt(e.target.value) || 0;
+                            setWordCount(words);
+                            calculatePrice(words);
+                          }}
+                          className="h-12 text-lg text-center font-bold border-2 border-primary/20 focus:border-primary rounded-xl"
+                          placeholder="أدخل عدد الكلمات"
+                        />
+                      </div>
 
-                    <div>
-                      <Label className="text-lg font-bold text-foreground mb-3 block">سعر الكلمة (ريال)</Label>
-                      <Input
-                        type="number"
-                        step="0.01"
-                        value={priceRate}
-                        onChange={(e) => {
-                          const rate = parseFloat(e.target.value) || 0.19;
-                          setPriceRate(rate);
-                          calculatePrice(wordCount);
-                        }}
-                        className="h-14 text-lg text-center font-bold border-2 border-secondary/20 focus:border-secondary rounded-xl"
-                        placeholder="0.19"
-                      />
+                      <div>
+                        <Label className="text-base font-bold text-foreground mb-3 block">سعر الكلمة (ريال)</Label>
+                        <Input
+                          type="number"
+                          step="0.01"
+                          value={priceRate}
+                          onChange={(e) => {
+                            const rate = parseFloat(e.target.value) || 0.19;
+                            setPriceRate(rate);
+                            calculatePrice(wordCount);
+                          }}
+                          className="h-12 text-lg text-center font-bold border-2 border-secondary/20 focus:border-secondary rounded-xl"
+                          placeholder="0.19"
+                        />
+                      </div>
                     </div>
                   </div>
 
                   {/* عرض النتائج */}
-                  <div className="bg-gradient-to-br from-accent/10 to-primary/10 p-6 rounded-2xl">
-                    <h4 className="text-xl font-bold text-foreground mb-4 text-center">تفاصيل التكلفة</h4>
-                    
-                    <div className="space-y-4">
-                      <div className="flex justify-between items-center p-3 bg-background/60 rounded-lg">
-                        <span className="text-muted-foreground">عدد الكلمات:</span>
-                        <span className="font-bold text-foreground">{wordCount.toLocaleString()}</span>
-                      </div>
+                  <div className="xl:col-span-1">
+                    <div className="bg-gradient-to-br from-accent/10 to-primary/10 p-6 rounded-2xl h-full">
+                      <h4 className="text-xl font-bold text-foreground mb-6 text-center">تفاصيل التكلفة</h4>
                       
-                      <div className="flex justify-between items-center p-3 bg-background/60 rounded-lg">
-                        <span className="text-muted-foreground">سعر الكلمة:</span>
-                        <span className="font-bold text-foreground">{priceRate} ريال</span>
+                      <div className="space-y-4">
+                        <div className="flex justify-between items-center p-3 bg-background/60 rounded-lg">
+                          <span className="text-muted-foreground text-sm">عدد الكلمات:</span>
+                          <span className="font-bold text-foreground">{wordCount.toLocaleString()}</span>
+                        </div>
+                        
+                        <div className="flex justify-between items-center p-3 bg-background/60 rounded-lg">
+                          <span className="text-muted-foreground text-sm">سعر الكلمة:</span>
+                          <span className="font-bold text-foreground">{priceRate} ريال</span>
+                        </div>
+                        
+                        <div className="flex justify-between items-center p-4 bg-gradient-primary text-primary-foreground rounded-lg">
+                          <span className="font-bold">التكلفة الإجمالية:</span>
+                          <motion.span 
+                            className="text-xl font-bold"
+                            key={estimatedPrice}
+                            initial={{ scale: 1.2 }}
+                            animate={{ scale: 1 }}
+                            transition={{ duration: 0.3 }}
+                          >
+                            {estimatedPrice.toLocaleString()} ريال
+                          </motion.span>
+                        </div>
                       </div>
-                      
-                      <div className="flex justify-between items-center p-4 bg-gradient-primary text-primary-foreground rounded-lg">
-                        <span className="text-lg font-bold">التكلفة الإجمالية:</span>
-                        <motion.span 
-                          className="text-2xl font-bold"
-                          key={estimatedPrice}
-                          initial={{ scale: 1.2 }}
-                          animate={{ scale: 1 }}
-                          transition={{ duration: 0.3 }}
-                        >
-                          {estimatedPrice.toLocaleString()} ريال
-                        </motion.span>
-                      </div>
-                    </div>
 
-                    <Button 
-                      className="w-full mt-6 bg-gradient-success text-success-foreground shadow-success text-lg font-bold"
-                      size="lg"
-                    >
-                      <MessageSquare className="h-5 w-5 ml-2" />
-                      اطلب عرض سعر مفصل
-                    </Button>
+                      <Button 
+                        className="w-full mt-6 bg-gradient-success text-success-foreground shadow-success font-bold"
+                        size="lg"
+                      >
+                        <MessageSquare className="h-4 w-4 ml-2" />
+                        اطلب عرض سعر مفصل
+                      </Button>
+                    </div>
                   </div>
                 </div>
               </CardContent>
