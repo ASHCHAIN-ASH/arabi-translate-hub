@@ -51,12 +51,6 @@ const OCRProcessor = ({ onOCRComplete, isProcessing, onProcessingChange }: OCRPr
       }
     });
     
-    await worker.setParameters({
-      tessedit_pageseg_mode: 1,
-      tessedit_ocr_engine_mode: 1, 
-      preserve_interword_spaces: 1
-    });
-    
     return worker;
   }, []);
 
