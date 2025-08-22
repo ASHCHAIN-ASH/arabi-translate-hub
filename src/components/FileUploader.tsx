@@ -15,9 +15,16 @@ interface FileUploaderProps {
   onProcessingChange: (processing: boolean) => void;
 }
 
+interface ProcessingProgress {
+  current: number;
+  total: number;
+  message: string;
+}
+
 const FileUploader = ({ onFileProcess, isProcessing, onProcessingChange }: FileUploaderProps) => {
   const [file, setFile] = useState<File | null>(null);
   const [error, setError] = useState<string>("");
+  const [progress, setProgress] = useState<ProcessingProgress | null>(null);
 
   const countWords = useCallback((text: string): number => {
     if (!text || text.trim().length === 0) return 0;
@@ -50,46 +57,63 @@ const FileUploader = ({ onFileProcess, isProcessing, onProcessingChange }: FileU
             extractedText = content as string;
             
           } else if (fileExtension === '.pdf') {
-            // معالجة ملفات PDF باستخدام PDF.js مع تحسين الأداء
+            // معالجة ملفات PDF مع مؤشر تقدم
             const arrayBuffer = content as ArrayBuffer;
             const uint8Array = new Uint8Array(arrayBuffer);
+            
+            setProgress({ current: 0, total: 100, message: "تحميل PDF..." });
             
             // استخدام إصدار متوافق مع المكتبة المثبتة
             pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/5.4.54/pdf.worker.min.js';
             
             const pdf = await pdfjsLib.getDocument({ 
               data: uint8Array,
-              // تحسين الأداء
               disableFontFace: true,
               disableRange: false,
               disableStream: false
             }).promise;
             
+            const totalPages = pdf.numPages;
+            const maxPages = Math.min(totalPages, 50); // تقليل العدد أكثر
+            setProgress({ current: 10, total: 100, message: `معالجة ${maxPages} صفحة...` });
+            
             let fullText = "";
-            const maxPages = Math.min(pdf.numPages, 100); // حد أقصى 100 صفحة لتجنب التأخير
             
-            // معالجة الصفحات بشكل متوازي لتسريع العملية
-            const pagePromises = [];
+            // معالجة الصفحات تدريجياً لتجنب تجميد المتصفح
             for (let i = 1; i <= maxPages; i++) {
-              pagePromises.push(
-                pdf.getPage(i).then(async (page) => {
-                  const textContent = await page.getTextContent();
-                  return textContent.items
-                    .map((item: any) => item.str)
-                    .filter(str => str.trim().length > 0)
-                    .join(' ');
-                })
-              );
+              try {
+                const page = await pdf.getPage(i);
+                const textContent = await page.getTextContent();
+                const pageText = textContent.items
+                  .map((item: any) => item.str)
+                  .filter((str: string) => str.trim().length > 0)
+                  .join(' ');
+                
+                fullText += pageText + ' ';
+                
+                // تحديث مؤشر التقدم
+                const progress = Math.floor((i / maxPages) * 80) + 10;
+                setProgress({ 
+                  current: progress, 
+                  total: 100, 
+                  message: `معالجة صفحة ${i} من ${maxPages}...` 
+                });
+                
+                // السماح للمتصفح بالتنفس كل 5 صفحات
+                if (i % 5 === 0) {
+                  await new Promise(resolve => setTimeout(resolve, 50));
+                }
+              } catch (pageError) {
+                console.warn(`خطأ في معالجة الصفحة ${i}:`, pageError);
+                continue;
+              }
             }
             
-            // انتظار معالجة جميع الصفحات
-            const pageTexts = await Promise.all(pagePromises);
-            fullText = pageTexts.join(' ');
-            
-            if (pdf.numPages > 100) {
-              fullText += '\n[تم استخراج النص من أول 100 صفحة فقط لضمان الأداء السريع]';
+            if (totalPages > 50) {
+              fullText += `\n\n[تم استخراج النص من ${maxPages} صفحة من أصل ${totalPages} صفحة]`;
             }
             
+            setProgress({ current: 95, total: 100, message: "تنظيف النص..." });
             extractedText = fullText;
             
           } else if (fileExtension === '.docx') {
@@ -181,6 +205,7 @@ const FileUploader = ({ onFileProcess, isProcessing, onProcessingChange }: FileU
       setError(errorMessage);
       console.error("خطأ في معالجة الملف:", error);
     } finally {
+      setProgress(null);
       onProcessingChange(false);
     }
   };
@@ -188,6 +213,7 @@ const FileUploader = ({ onFileProcess, isProcessing, onProcessingChange }: FileU
   const removeFile = () => {
     setFile(null);
     setError("");
+    setProgress(null);
     onFileProcess("", "");
     
     // إعادة تعيين input
@@ -213,7 +239,7 @@ const FileUploader = ({ onFileProcess, isProcessing, onProcessingChange }: FileU
           >
             <Upload className="h-5 w-5 text-primary" />
             <span className="font-medium">
-              {isProcessing ? "جاري المعالجة..." : "رفع ملف للترجمة"}
+              {progress ? progress.message : isProcessing ? "جاري المعالجة..." : "رفع ملف للترجمة"}
             </span>
             <Badge variant="outline" className="text-xs">
               TXT, DOC, DOCX, PDF
@@ -221,6 +247,22 @@ const FileUploader = ({ onFileProcess, isProcessing, onProcessingChange }: FileU
           </Label>
         </div>
       </div>
+      
+      {/* مؤشر التقدم */}
+      {progress && (
+        <div className="space-y-2">
+          <div className="flex justify-between text-sm">
+            <span>{progress.message}</span>
+            <span>{progress.current}%</span>
+          </div>
+          <div className="w-full bg-secondary rounded-full h-2">
+            <div 
+              className="bg-primary h-2 rounded-full transition-all duration-300"
+              style={{ width: `${progress.current}%` }}
+            />
+          </div>
+        </div>
+      )}
       
       {/* عرض الملف المرفوع */}
       {file && (
