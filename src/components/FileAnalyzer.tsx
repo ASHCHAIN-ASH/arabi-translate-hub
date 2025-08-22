@@ -23,8 +23,8 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 import mammoth from "mammoth";
 import * as pdfjsLib from "pdfjs-dist";
 
-// تحديد مسار Worker لـ PDF.js - مسار محدث وموثوق
-pdfjsLib.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js`;
+// تحديد مسار Worker لـ PDF.js - يطابق إصدار API تلقائياً
+pdfjsLib.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjsLib.version}/pdf.worker.min.js`;
 
 interface FileAnalysis {
   fileName: string;
