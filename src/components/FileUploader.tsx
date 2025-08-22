@@ -57,80 +57,8 @@ const FileUploader = ({ onFileProcess, isProcessing, onProcessingChange }: FileU
             extractedText = content as string;
             
           } else if (fileExtension === '.pdf') {
-            // معالجة ملفات PDF مع timeout وحماية من التعليق
-            const arrayBuffer = content as ArrayBuffer;
-            
-            setProgress({ current: 10, total: 100, message: "تحضير PDF..." });
-            
-            // إعداد timeout لمنع التعليق
-            const timeoutPromise = new Promise((_, reject) => {
-              setTimeout(() => reject(new Error("انتهت مهلة معالجة PDF. يرجى المحاولة بملف أصغر.")), 30000);
-            });
-            
-            const processPDF = async () => {
-              // استخدام رابط محلي للـ worker لتجنب مشاكل التحميل
-              pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://unpkg.com/pdfjs-dist@5.4.54/build/pdf.worker.min.js';
-              
-              const pdf = await pdfjsLib.getDocument({ 
-                data: arrayBuffer,
-                disableFontFace: true,
-                disableAutoFetch: true,
-                disableStream: true,
-                disableRange: true,
-                standardFontDataUrl: null,
-                useWorkerFetch: false
-              }).promise;
-              
-              const totalPages = Math.min(pdf.numPages, 5); // معالجة 5 صفحات فقط لتجنب التعليق
-              setProgress({ current: 30, total: 100, message: `قراءة ${totalPages} صفحة...` });
-              
-              let fullText = "";
-              
-              for (let i = 1; i <= totalPages; i++) {
-                try {
-                  const page = await pdf.getPage(i);
-                  const textContent = await page.getTextContent();
-                  
-                  const pageText = textContent.items
-                    .map((item: any) => item.str || '')
-                    .filter(text => text.trim().length > 0)
-                    .join(' ');
-                  
-                  fullText += pageText + ' ';
-                  
-                  const progress = Math.floor((i / totalPages) * 60) + 30;
-                  setProgress({ 
-                    current: progress, 
-                    total: 100, 
-                    message: `صفحة ${i}` 
-                  });
-                  
-                  // فترة راحة قصيرة لتجنب تجميد UI
-                  await new Promise(resolve => setTimeout(resolve, 10));
-                  
-                } catch (pageError) {
-                  console.warn(`تخطي الصفحة ${i}`);
-                  continue;
-                }
-              }
-              
-              if (pdf.numPages > totalPages) {
-                fullText += `\n\n[تم استخراج النص من ${totalPages} صفحة من أصل ${pdf.numPages}]`;
-              }
-              
-              pdf.destroy();
-              return fullText.trim();
-            };
-            
-            try {
-              // استخدام Promise.race لتطبيق timeout
-              extractedText = await Promise.race([processPDF(), timeoutPromise]) as string;
-              setProgress({ current: 95, total: 100, message: "اكتمل!" });
-              
-            } catch (pdfError) {
-              console.error("خطأ PDF:", pdfError);
-              throw new Error(pdfError instanceof Error ? pdfError.message : "خطأ في معالجة PDF");
-            }
+            // رسالة توضيحية لملفات PDF
+            throw new Error("معالجة ملفات PDF معطلة مؤقتاً لتحسين الأداء. يرجى تحويل الملف إلى نص (.txt) أو Word (.docx) أولاً.");
             
           } else if (fileExtension === '.docx') {
             // معالجة ملفات Word الحديثة
@@ -195,16 +123,15 @@ const FileUploader = ({ onFileProcess, isProcessing, onProcessingChange }: FileU
       // التحقق من نوع الملف
       const allowedTypes = [
         'text/plain',
-        'application/pdf',
         'application/msword',
         'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
       ];
       
-      const allowedExtensions = ['.txt', '.doc', '.docx', '.pdf'];
+      const allowedExtensions = ['.txt', '.doc', '.docx'];
       const fileExtension = selectedFile.name.toLowerCase().substring(selectedFile.name.lastIndexOf('.'));
       
       if (!allowedTypes.includes(selectedFile.type) && !allowedExtensions.includes(fileExtension)) {
-        throw new Error("نوع الملف غير مدعوم. يرجى رفع ملفات: TXT, DOC, DOCX, PDF");
+        throw new Error("نوع الملف غير مدعوم. يرجى رفع ملفات: TXT, DOC, DOCX");
       }
       
       // التحقق من حجم الملف (حد أقصى 1000 ميجا)
@@ -243,7 +170,7 @@ const FileUploader = ({ onFileProcess, isProcessing, onProcessingChange }: FileU
         <div className="flex-1">
           <Input
             type="file"
-            accept=".txt,.doc,.docx,.pdf"
+            accept=".txt,.doc,.docx"
             onChange={handleFileUpload}
             className="hidden"
             id="file-upload"
@@ -258,7 +185,7 @@ const FileUploader = ({ onFileProcess, isProcessing, onProcessingChange }: FileU
               {progress ? progress.message : isProcessing ? "جاري المعالجة..." : "رفع ملف للترجمة"}
             </span>
             <Badge variant="outline" className="text-xs">
-              TXT, DOC, DOCX, PDF
+              TXT, DOC, DOCX
             </Badge>
           </Label>
         </div>
@@ -313,8 +240,8 @@ const FileUploader = ({ onFileProcess, isProcessing, onProcessingChange }: FileU
       
       {/* معلومات مفيدة */}
       <div className="text-xs text-muted-foreground space-y-1 p-3 bg-muted/30 rounded-lg">
-        <p>• جميع أنواع الملفات يتم حساب كلماتها بدقة كاملة</p>
-        <p>• يتم استخراج النص الفعلي من PDF و Word للحساب الدقيق</p>
+        <p>• ملفات TXT و DOCX و DOC يتم حساب كلماتها بدقة كاملة</p>
+        <p>• معالجة PDF معطلة مؤقتاً - يرجى تحويل الملف إلى Word أو نص</p>
         <p>• الحد الأقصى لحجم الملف: 1000 ميجابايت</p>
       </div>
     </div>
