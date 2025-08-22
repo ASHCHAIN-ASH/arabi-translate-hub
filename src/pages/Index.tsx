@@ -232,9 +232,9 @@ const Index = () => {
           </motion.div>
         </div>
 
-        {/* إحصائيات متحركة */}
+        {/* إحصائيات متحركة ومنسقة */}
         <motion.div 
-          className="absolute bottom-6 sm:bottom-8 lg:bottom-12 left-1/2 transform -translate-x-1/2 w-full max-w-7xl px-4 sm:px-6 lg:px-8"
+          className="absolute bottom-6 sm:bottom-8 lg:bottom-12 left-1/2 transform -translate-x-1/2 w-full max-w-6xl px-4 sm:px-6 lg:px-8"
           initial={{ opacity: 0, y: 50 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 1.5 }}
@@ -248,36 +248,52 @@ const Index = () => {
                   initial={{ opacity: 0, scale: 0.8, y: 30 }}
                   animate={{ opacity: 1, scale: 1, y: 0 }}
                   transition={{ duration: 0.5, delay: 1.7 + index * 0.1 }}
-                  whileHover={{ scale: 1.05, y: -5 }}
+                  whileHover={{ scale: 1.05, y: -8 }}
                   className="cursor-pointer"
                 >
-                  <Card className="bg-white/5 backdrop-blur-xl border-white/10 text-center hover:bg-white/10 transition-all duration-300 group overflow-hidden relative">
-                    <CardContent className="p-3 sm:p-4 lg:p-6">
+                  <Card className="bg-white/10 backdrop-blur-xl border-white/20 text-center hover:bg-white/15 transition-all duration-300 group overflow-hidden relative h-full min-h-[120px] sm:min-h-[140px] lg:min-h-[160px]">
+                    <CardContent className="p-3 sm:p-4 lg:p-6 h-full flex flex-col justify-center items-center">
+                      {/* أيقونة مع تأثير دوران */}
                       <motion.div
-                        animate={{ rotate: 360 }}
-                        transition={{ duration: 8, repeat: Infinity, ease: "linear" }}
-                        className="relative mb-2 sm:mb-3 lg:mb-4"
+                        className="relative mb-2 sm:mb-3 lg:mb-4 flex justify-center"
+                        animate={{ rotate: index % 2 === 0 ? 360 : -360 }}
+                        transition={{ duration: 10, repeat: Infinity, ease: "linear" }}
                       >
-                        <IconComponent className={`h-6 w-6 sm:h-8 lg:h-10 text-white mx-auto`} />
-                        <div className={`absolute inset-0 bg-gradient-to-br ${stat.gradient} opacity-30 rounded-full blur-sm`} />
+                        <IconComponent className="h-6 w-6 sm:h-8 lg:h-10 text-white drop-shadow-lg" />
+                        <div className={`absolute inset-0 bg-gradient-to-br ${stat.gradient} opacity-20 rounded-full blur-sm scale-150`} />
                       </motion.div>
+                      
+                      {/* الرقم مع انيميشن العد */}
                       <motion.div 
-                        className="text-xl sm:text-2xl lg:text-3xl xl:text-4xl font-bold text-white mb-1 sm:mb-2"
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        transition={{ delay: 2 + index * 0.2 }}
+                        className="text-xl sm:text-2xl lg:text-3xl xl:text-4xl font-bold text-white mb-1 sm:mb-2 font-arabic-title"
+                        initial={{ opacity: 0, scale: 0.5 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        transition={{ delay: 2 + index * 0.2, duration: 0.5 }}
+                        whileHover={{ scale: 1.1 }}
                       >
                         {stat.number}
                       </motion.div>
-                      <div className="text-white/90 text-xs sm:text-sm font-medium leading-tight">{stat.label}</div>
+                      
+                      {/* النص الوصفي */}
+                      <div className="text-white/90 text-xs sm:text-sm lg:text-base font-medium leading-tight text-center">
+                        {stat.label}
+                      </div>
                     </CardContent>
                     
-                    {/* تأثير الضوء المتحرك */}
+                    {/* تأثير الضوء المتحرك عند الهوفر */}
                     <motion.div
-                      className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent opacity-0 group-hover:opacity-100"
+                      className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent opacity-0 group-hover:opacity-100"
                       animate={{ x: ["-100%", "100%"] }}
-                      transition={{ duration: 1.5, repeat: Infinity, repeatDelay: 3 }}
+                      transition={{ 
+                        duration: 2, 
+                        repeat: Infinity, 
+                        repeatDelay: 1,
+                        ease: "linear"
+                      }}
                     />
+                    
+                    {/* حدود متوهجة */}
+                    <div className="absolute inset-0 rounded-lg border border-white/10 group-hover:border-white/30 transition-all duration-300" />
                   </Card>
                 </motion.div>
               );
