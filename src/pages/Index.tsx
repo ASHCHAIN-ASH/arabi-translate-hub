@@ -1,6 +1,7 @@
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import ServicesSection from "@/components/ServicesSection";
+import StatsSection from "@/components/StatsSection";
 import TranslationStudio from "@/components/TranslationStudio";
 import AnimatedBackground from "@/components/AnimatedBackground";
 import { Button } from "@/components/ui/button";
@@ -36,12 +37,6 @@ import { motion } from "framer-motion";
 import React from "react";
 
 const Index = () => {
-  const stats = [
-    { icon: Building2, number: "500+", label: "شركة عالمية", gradient: "from-primary to-primary-dark" },
-    { icon: Languages, number: "150+", label: "لغة احترافية", gradient: "from-secondary to-secondary-light" },
-    { icon: FileText, number: "10M+", label: "وثيقة مترجمة", gradient: "from-accent to-accent-light" },
-    { icon: Award, number: "99.9%", label: "دقة مضمونة", gradient: "from-secondary to-accent" }
-  ];
 
   const features = [
     {
@@ -232,75 +227,8 @@ const Index = () => {
           </motion.div>
         </div>
 
-        {/* إحصائيات متحركة ومنسقة في الوسط */}
-        <motion.div 
-          className="absolute bottom-6 sm:bottom-8 lg:bottom-12 left-1/2 transform -translate-x-1/2 w-full max-w-4xl px-4 sm:px-6 lg:px-8"
-          initial={{ opacity: 0, y: 50 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 1.5 }}
-        >
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 lg:gap-8 justify-items-center">
-            {stats.map((stat, index) => {
-              const IconComponent = stat.icon;
-              return (
-                <motion.div
-                  key={index}
-                  initial={{ opacity: 0, scale: 0.8, y: 30 }}
-                  animate={{ opacity: 1, scale: 1, y: 0 }}
-                  transition={{ duration: 0.5, delay: 1.7 + index * 0.1 }}
-                  whileHover={{ scale: 1.05, y: -8 }}
-                  className="cursor-pointer"
-                >
-                  <Card className="bg-white/10 backdrop-blur-xl border-white/20 text-center hover:bg-white/15 transition-all duration-300 group overflow-hidden relative w-36 sm:w-40 lg:w-44 h-36 sm:h-40 lg:h-44">
-                    <CardContent className="p-4 sm:p-5 lg:p-6 h-full flex flex-col justify-center items-center"
-                    >
-                      {/* أيقونة مع تأثير دوران */}
-                      <motion.div
-                        className="relative mb-3 flex justify-center"
-                        animate={{ rotate: index % 2 === 0 ? 360 : -360 }}
-                        transition={{ duration: 12, repeat: Infinity, ease: "linear" }}
-                      >
-                        <IconComponent className="h-6 w-6 sm:h-7 lg:h-8 text-white drop-shadow-lg" />
-                        <div className={`absolute inset-0 bg-gradient-to-br ${stat.gradient} opacity-25 rounded-full blur-sm scale-150`} />
-                      </motion.div>
-                      
-                      {/* الرقم مع انيميشن العد */}
-                      <motion.div 
-                        className="text-xl sm:text-2xl lg:text-3xl font-bold text-white mb-2 font-arabic-title"
-                        initial={{ opacity: 0, scale: 0.5 }}
-                        animate={{ opacity: 1, scale: 1 }}
-                        transition={{ delay: 2 + index * 0.2, duration: 0.5 }}
-                        whileHover={{ scale: 1.1 }}
-                      >
-                        {stat.number}
-                      </motion.div>
-                      
-                      {/* النص الوصفي */}
-                      <div className="text-white/90 text-sm sm:text-base font-medium leading-tight text-center">
-                        {stat.label}
-                      </div>
-                    </CardContent>
-                    
-                    {/* تأثير الضوء المتحرك عند الهوفر */}
-                    <motion.div
-                      className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent opacity-0 group-hover:opacity-100"
-                      animate={{ x: ["-100%", "100%"] }}
-                      transition={{ 
-                        duration: 2, 
-                        repeat: Infinity, 
-                        repeatDelay: 1,
-                        ease: "linear"
-                      }}
-                    />
-                    
-                    {/* حدود متوهجة */}
-                    <div className="absolute inset-0 rounded-lg border border-white/10 group-hover:border-white/30 transition-all duration-300" />
-                  </Card>
-                </motion.div>
-              );
-            })}
-          </div>
-        </motion.div>
+        {/* قسم الإحصائيات المتقدم */}
+        <StatsSection />
       </section>
 
       {/* أنواع الترجمات */}
