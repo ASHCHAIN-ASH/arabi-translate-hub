@@ -57,8 +57,54 @@ const FileUploader = ({ onFileProcess, isProcessing, onProcessingChange }: FileU
             extractedText = content as string;
             
           } else if (fileExtension === '.pdf') {
-            // رسالة توضيحية لملفات PDF
-            throw new Error("معالجة ملفات PDF معطلة مؤقتاً لتحسين الأداء. يرجى تحويل الملف إلى نص (.txt) أو Word (.docx) أولاً.");
+            // معالجة ملفات PDF مع تحسينات الأداء
+            const arrayBuffer = content as ArrayBuffer;
+            const loadingTask = pdfjsLib.getDocument({ data: arrayBuffer });
+            
+            // تعيين مهلة زمنية للمعالجة
+            const timeoutPromise = new Promise((_, reject) => {
+              setTimeout(() => reject(new Error("انتهت مهلة معالجة PDF. الملف كبير جداً أو معقد.")), 30000);
+            });
+            
+            const pdf = await Promise.race([loadingTask.promise, timeoutPromise]) as any;
+            const maxPages = Math.min(pdf.numPages, 10); // معالجة أقصى 10 صفحات
+            let allText = "";
+            
+            for (let pageNum = 1; pageNum <= maxPages; pageNum++) {
+              setProgress({ 
+                current: Math.round((pageNum / maxPages) * 100), 
+                total: 100, 
+                message: `معالجة صفحة ${pageNum} من ${maxPages}...` 
+              });
+              
+              try {
+                const page = await pdf.getPage(pageNum);
+                const textContent = await page.getTextContent();
+                const pageText = textContent.items
+                  .map((item: any) => item.str)
+                  .join(' ');
+                
+                allText += pageText + '\n';
+                
+                // تنظيف الذاكرة
+                if (page.cleanup) page.cleanup();
+                
+                // السماح للواجهة بالتحديث
+                await new Promise(resolve => setTimeout(resolve, 10));
+              } catch (pageError) {
+                console.warn(`خطأ في معالجة الصفحة ${pageNum}:`, pageError);
+                continue;
+              }
+            }
+            
+            // تنظيف موارد PDF
+            if (pdf.destroy) pdf.destroy();
+            
+            if (maxPages < pdf.numPages) {
+              console.log(`تم معالجة ${maxPages} صفحة من أصل ${pdf.numPages} صفحة لتحسين الأداء`);
+            }
+            
+            extractedText = allText;
             
           } else if (fileExtension === '.docx') {
             // معالجة ملفات Word الحديثة
@@ -124,14 +170,15 @@ const FileUploader = ({ onFileProcess, isProcessing, onProcessingChange }: FileU
       const allowedTypes = [
         'text/plain',
         'application/msword',
-        'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+        'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+        'application/pdf'
       ];
       
-      const allowedExtensions = ['.txt', '.doc', '.docx'];
+      const allowedExtensions = ['.txt', '.doc', '.docx', '.pdf'];
       const fileExtension = selectedFile.name.toLowerCase().substring(selectedFile.name.lastIndexOf('.'));
       
       if (!allowedTypes.includes(selectedFile.type) && !allowedExtensions.includes(fileExtension)) {
-        throw new Error("نوع الملف غير مدعوم. يرجى رفع ملفات: TXT, DOC, DOCX");
+        throw new Error("نوع الملف غير مدعوم. يرجى رفع ملفات: TXT, DOC, DOCX, PDF");
       }
       
       // التحقق من حجم الملف (حد أقصى 1000 ميجا)
@@ -170,7 +217,7 @@ const FileUploader = ({ onFileProcess, isProcessing, onProcessingChange }: FileU
         <div className="flex-1">
           <Input
             type="file"
-            accept=".txt,.doc,.docx"
+            accept=".txt,.doc,.docx,.pdf"
             onChange={handleFileUpload}
             className="hidden"
             id="file-upload"
@@ -185,7 +232,7 @@ const FileUploader = ({ onFileProcess, isProcessing, onProcessingChange }: FileU
               {progress ? progress.message : isProcessing ? "جاري المعالجة..." : "رفع ملف للترجمة"}
             </span>
             <Badge variant="outline" className="text-xs">
-              TXT, DOC, DOCX
+              TXT, DOC, DOCX, PDF
             </Badge>
           </Label>
         </div>
@@ -241,7 +288,7 @@ const FileUploader = ({ onFileProcess, isProcessing, onProcessingChange }: FileU
       {/* معلومات مفيدة */}
       <div className="text-xs text-muted-foreground space-y-1 p-3 bg-muted/30 rounded-lg">
         <p>• ملفات TXT و DOCX و DOC يتم حساب كلماتها بدقة كاملة</p>
-        <p>• معالجة PDF معطلة مؤقتاً - يرجى تحويل الملف إلى Word أو نص</p>
+        <p>• ملفات PDF يتم معالجة أول 10 صفحات لتحسين الأداء</p>
         <p>• الحد الأقصى لحجم الملف: 1000 ميجابايت</p>
       </div>
     </div>
