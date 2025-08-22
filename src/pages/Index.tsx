@@ -232,14 +232,14 @@ const Index = () => {
           </motion.div>
         </div>
 
-        {/* إحصائيات متحركة ومنسقة */}
+        {/* إحصائيات متحركة ومنسقة في الوسط */}
         <motion.div 
-          className="absolute bottom-6 sm:bottom-8 lg:bottom-12 left-1/2 transform -translate-x-1/2 w-full max-w-5xl px-4 sm:px-6 lg:px-8"
+          className="absolute bottom-6 sm:bottom-8 lg:bottom-12 left-1/2 transform -translate-x-1/2 w-full max-w-4xl px-4 sm:px-6 lg:px-8"
           initial={{ opacity: 0, y: 50 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 1.5 }}
         >
-          <div className="flex flex-wrap justify-center gap-3 sm:gap-4 lg:gap-6 xl:gap-8">
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 lg:gap-8 justify-items-center">
             {stats.map((stat, index) => {
               const IconComponent = stat.icon;
               return (
@@ -251,22 +251,22 @@ const Index = () => {
                   whileHover={{ scale: 1.05, y: -8 }}
                   className="cursor-pointer"
                 >
-                  <Card className="bg-white/10 backdrop-blur-xl border-white/20 text-center hover:bg-white/15 transition-all duration-300 group overflow-hidden relative w-32 sm:w-36 lg:w-40 xl:w-44 h-32 sm:h-36 lg:h-40 xl:h-44 flex-shrink-0">
-                    <CardContent className="p-3 sm:p-4 lg:p-5 h-full flex flex-col justify-center items-center"
+                  <Card className="bg-white/10 backdrop-blur-xl border-white/20 text-center hover:bg-white/15 transition-all duration-300 group overflow-hidden relative w-36 sm:w-40 lg:w-44 h-36 sm:h-40 lg:h-44">
+                    <CardContent className="p-4 sm:p-5 lg:p-6 h-full flex flex-col justify-center items-center"
                     >
                       {/* أيقونة مع تأثير دوران */}
                       <motion.div
-                        className="relative mb-2 flex justify-center"
+                        className="relative mb-3 flex justify-center"
                         animate={{ rotate: index % 2 === 0 ? 360 : -360 }}
-                        transition={{ duration: 10, repeat: Infinity, ease: "linear" }}
+                        transition={{ duration: 12, repeat: Infinity, ease: "linear" }}
                       >
-                        <IconComponent className="h-5 w-5 sm:h-6 lg:h-7 xl:h-8 text-white drop-shadow-lg" />
-                        <div className={`absolute inset-0 bg-gradient-to-br ${stat.gradient} opacity-20 rounded-full blur-sm scale-150`} />
+                        <IconComponent className="h-6 w-6 sm:h-7 lg:h-8 text-white drop-shadow-lg" />
+                        <div className={`absolute inset-0 bg-gradient-to-br ${stat.gradient} opacity-25 rounded-full blur-sm scale-150`} />
                       </motion.div>
                       
                       {/* الرقم مع انيميشن العد */}
                       <motion.div 
-                        className="text-lg sm:text-xl lg:text-2xl xl:text-3xl font-bold text-white mb-1 font-arabic-title"
+                        className="text-xl sm:text-2xl lg:text-3xl font-bold text-white mb-2 font-arabic-title"
                         initial={{ opacity: 0, scale: 0.5 }}
                         animate={{ opacity: 1, scale: 1 }}
                         transition={{ delay: 2 + index * 0.2, duration: 0.5 }}
@@ -276,7 +276,7 @@ const Index = () => {
                       </motion.div>
                       
                       {/* النص الوصفي */}
-                      <div className="text-white/90 text-xs sm:text-sm font-medium leading-tight text-center px-1">
+                      <div className="text-white/90 text-sm sm:text-base font-medium leading-tight text-center">
                         {stat.label}
                       </div>
                     </CardContent>
