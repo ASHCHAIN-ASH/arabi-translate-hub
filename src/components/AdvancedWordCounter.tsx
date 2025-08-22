@@ -140,22 +140,22 @@ const AdvancedWordCounter = ({ analysisData, isProcessing }: AdvancedWordCounter
       <Card className="bg-gradient-card border-0 shadow-medium">
         <CardContent className="p-0">
           <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-            <TabsList className="grid w-full grid-cols-4 rounded-none bg-muted/30">
-              <TabsTrigger value="overview" className="gap-2">
-                <TrendingUp className="h-4 w-4" />
+            <TabsList className="grid w-full grid-cols-4 rounded-none bg-muted/30" dir="rtl">
+              <TabsTrigger value="overview" className="gap-2 flex-row-reverse">
                 <span className="hidden sm:inline">النظرة العامة</span>
+                <TrendingUp className="h-4 w-4" />
               </TabsTrigger>
-              <TabsTrigger value="files" className="gap-2">
-                <FileText className="h-4 w-4" />
+              <TabsTrigger value="files" className="gap-2 flex-row-reverse">
                 <span className="hidden sm:inline">تحليل الملفات</span>
+                <FileText className="h-4 w-4" />
               </TabsTrigger>
-              <TabsTrigger value="duplicates" className="gap-2">
-                <Copy className="h-4 w-4" />
+              <TabsTrigger value="duplicates" className="gap-2 flex-row-reverse">
                 <span className="hidden sm:inline">التكرارات</span>
+                <Copy className="h-4 w-4" />
               </TabsTrigger>
-              <TabsTrigger value="exclusions" className="gap-2">
-                <Filter className="h-4 w-4" />
+              <TabsTrigger value="exclusions" className="gap-2 flex-row-reverse">
                 <span className="hidden sm:inline">الاستثناءات</span>
+                <Filter className="h-4 w-4" />
               </TabsTrigger>
             </TabsList>
 

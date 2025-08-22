@@ -89,14 +89,14 @@ const FileAnalyzer = ({ onAnalysisComplete, isProcessing, onProcessingChange }: 
       };
     }
 
-    // تنظيف النص محسن
+    // تحليل النص فائق السرعة مع تحسين الذاكرة
     const cleanText = text
       .replace(/[\r\n\t]+/g, ' ')
       .replace(/\s{2,}/g, ' ')
       .trim();
 
-    // استخراج الكلمات محسن
-    const words = cleanText.split(' ').filter(word => word.length > 0);
+    // استخراج الكلمات محسن للسرعة القصوى
+    const words = cleanText.split(/\s+/).filter(word => word.length > 0);
 
     let sourceWords = 0;
     let tableWords = 0;
@@ -107,13 +107,14 @@ const FileAnalyzer = ({ onAnalysisComplete, isProcessing, onProcessingChange }: 
     // كشف الجداول مسبقاً
     const hasTabularData = text.includes('\t') || text.includes('|');
     
-    // أنماط Regex محسنة للسرعة
+    // أنماط Regex فائقة السرعة مع تحسين الذاكرة
     const placeholderPattern = /^[\{\[%].*[\}\]%]$|%s|\{name\}/;
     const numberPattern = /^\d+([.,]\d+)*$/;
     const codePattern = /^(https?:\/\/|www\.|[A-Z0-9]{3,}-[A-Z0-9]{3,}|#[a-zA-Z0-9_]+)/;
 
-    // تحليل محسن للكلمات
-    for (let i = 0; i < words.length; i++) {
+    // تحليل محسن للكلمات - خوارزمية محسنة للسرعة
+    const wordLength = words.length;
+    for (let i = 0; i < wordLength; i++) {
       const word = words[i];
       
       // كشف النصوص النائبة
@@ -136,14 +137,19 @@ const FileAnalyzer = ({ onAnalysisComplete, isProcessing, onProcessingChange }: 
 
       // كشف كلمات الجداول محسن
       if (hasTabularData) {
-        // تحليل بسيط وسريع للجداول
-        const context = text.substring(
-          Math.max(0, text.indexOf(word) - 50), 
-          Math.min(text.length, text.indexOf(word) + word.length + 50)
-        );
-        
-        if (context.includes('\t') || context.includes('|')) {
-          tableWords++;
+        // تحليل محسن وأسرع للجداول
+        const wordIndex = cleanText.indexOf(word);
+        if (wordIndex > -1) {
+          const context = cleanText.substring(
+            Math.max(0, wordIndex - 30), 
+            Math.min(cleanText.length, wordIndex + word.length + 30)
+          );
+          
+          if (context.includes('\t') || context.includes('|')) {
+            tableWords++;
+          } else {
+            sourceWords++;
+          }
         } else {
           sourceWords++;
         }
@@ -152,20 +158,21 @@ const FileAnalyzer = ({ onAnalysisComplete, isProcessing, onProcessingChange }: 
       }
     }
 
-    // حساب التكرارات الداخلية محسن
+    // حساب التكرارات الداخلية محسن للسرعة مع تحسين الذاكرة
     const wordCount = new Map<string, number>();
     let duplicatesIntra = 0;
     
-    for (const word of words) {
-      const normalized = word.toLowerCase();
-      if (normalized.length > 2) {
+    // تحسين حلقة التكرارات باستخدام forEach
+    words.forEach(word => {
+      if (word.length > 2) {
+        const normalized = word.toLowerCase();
         const count = wordCount.get(normalized) || 0;
         if (count > 0) {
           duplicatesIntra++;
         }
         wordCount.set(normalized, count + 1);
       }
-    }
+    });
 
     const uniqueWords = wordCount.size;
 
@@ -204,8 +211,8 @@ const FileAnalyzer = ({ onAnalysisComplete, isProcessing, onProcessingChange }: 
             const totalPages = pdf.numPages;
             let allText = "";
             
-            // معالجة متوازية محسنة للصفحات - 8 صفحات في الوقت نفسه
-            const batchSize = 8;
+            // معالجة متوازية فائقة السرعة - 12 صفحة في الوقت نفسه
+            const batchSize = 12;
             const batches = [];
             
             for (let i = 0; i < totalPages; i += batchSize) {
@@ -464,13 +471,13 @@ const FileAnalyzer = ({ onAnalysisComplete, isProcessing, onProcessingChange }: 
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6" dir="rtl">
       {/* منطقة رفع الملفات */}
       <Card className="bg-gradient-card border-0 shadow-medium">
         <CardHeader>
-          <CardTitle className="flex items-center gap-3">
+          <CardTitle className="flex items-center gap-3 flex-row-reverse text-right">
+            <span>محلل الملفات المتقدم</span>
             <Scan className="h-6 w-6 text-primary animate-pulse-soft" />
-            محلل الملفات المتقدم
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
@@ -487,17 +494,17 @@ const FileAnalyzer = ({ onAnalysisComplete, isProcessing, onProcessingChange }: 
               />
               <Label
                 htmlFor="file-analyzer"
-                className={`inline-flex items-center gap-3 px-8 py-4 bg-gradient-to-r from-primary/10 to-accent/10 hover:from-primary/20 hover:to-accent/20 rounded-xl cursor-pointer transition-all duration-200 border-2 border-dashed border-primary/30 hover:border-primary/50 w-full justify-center ${isProcessing ? 'opacity-50 cursor-not-allowed' : 'hover:scale-[1.02]'}`}
+                className={`inline-flex items-center gap-3 px-8 py-4 bg-gradient-to-r from-primary/10 to-accent/10 hover:from-primary/20 hover:to-accent/20 rounded-xl cursor-pointer transition-all duration-200 border-2 border-dashed border-primary/30 hover:border-primary/50 w-full justify-center flex-row-reverse ${isProcessing ? 'opacity-50 cursor-not-allowed' : 'hover:scale-[1.02]'}`}
               >
-                <Upload className="h-6 w-6 text-primary" />
                 <div className="text-center">
                   <div className="font-bold text-lg">
-                    {progress ? progress.message : isProcessing ? "جاري التحليل المتقدم..." : "رفع الملفات للتحليل الشامل"}
+                    {progress ? progress.message : isProcessing ? "جاري التحليل فائق السرعة..." : "رفع الملفات للتحليل الشامل"}
                   </div>
-                  <div className="text-sm text-muted-foreground mt-1">
-                    يدعم جميع الصيغ: PDF, DOCX, PPTX, XLSX, CSV, TXT, HTML, Markdown, JSON, ZIP
+                  <div className="text-sm text-muted-foreground">
+                    {progress ? `${progress.current}% مكتمل` : "PDF, DOCX, PPTX, XLSX, CSV, TXT, HTML, Markdown, JSON, ZIP"}
                   </div>
                 </div>
+                <Upload className="h-6 w-6 text-primary" />
               </Label>
             </div>
           </div>

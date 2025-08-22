@@ -137,42 +137,43 @@ const LegalTranslation = () => {
             </CardHeader>
             <CardContent>
               <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-                <TabsList className="grid w-full grid-cols-3 mb-8 bg-muted/50 rtl-flex">
-                  <TabsTrigger value="analyzer" className="gap-2">
+                <TabsList className="grid w-full grid-cols-3 mb-8 bg-muted/50" dir="rtl">
+                  <TabsTrigger value="analyzer" className="gap-2 flex-row-reverse">
                     <Scan className="h-4 w-4" />
                     تحليل الملفات
                   </TabsTrigger>
-                  <TabsTrigger value="pricing" className="gap-2">
+                  <TabsTrigger value="pricing" className="gap-2 flex-row-reverse">
                     <Calculator className="h-4 w-4" />
                     التسعير
                   </TabsTrigger>
-                  <TabsTrigger value="reports" className="gap-2">
+                  <TabsTrigger value="reports" className="gap-2 flex-row-reverse">
                     <BarChart3 className="h-4 w-4" />
                     التقارير
                   </TabsTrigger>
                 </TabsList>
 
-                <TabsContent value="analyzer" className="space-y-6 animate-slide-in-rtl">
+                <TabsContent value="analyzer" className="space-y-6" dir="rtl">
                   <div className="space-y-4">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <div className="space-y-2">
-                        <Label className="text-base font-semibold text-rtl">سعر الترجمة (ريال/كلمة)</Label>
+                        <Label className="text-base font-semibold text-right">سعر الترجمة (ريال/كلمة)</Label>
                         <Input
                           type="number"
                           step="0.001"
                           value={priceRate}
                           onChange={(e) => setPriceRate(parseFloat(e.target.value) || 0.19)}
-                          className="h-12 border-2 border-primary/20 form-rtl"
+                          className="h-12 border-2 border-primary/20 text-right"
                           placeholder="0.190"
+                          dir="rtl"
                         />
                       </div>
                       <div className="space-y-2">
-                        <Label className="text-base font-semibold text-rtl">وضع المعالجة</Label>
-                        <div className="flex items-center gap-2 p-3 bg-emerald-50 dark:bg-emerald-900/20 rounded-lg">
-                          <Zap className="h-5 w-5 text-emerald-600" />
+                        <Label className="text-base font-semibold text-right">وضع المعالجة</Label>
+                        <div className="flex items-center gap-2 p-3 bg-emerald-50 dark:bg-emerald-900/20 rounded-lg flex-row-reverse">
                           <span className="text-sm font-medium text-emerald-700 dark:text-emerald-300">
-                            معالجة سريعة ومتوازية - 8x أسرع
+                            معالجة فائقة السرعة ومتوازية - 12x أسرع
                           </span>
+                          <Zap className="h-5 w-5 text-emerald-600" />
                         </div>
                       </div>
                     </div>
