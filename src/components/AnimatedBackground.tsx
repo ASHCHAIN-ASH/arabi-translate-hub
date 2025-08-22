@@ -1,88 +1,180 @@
-import { useState, useEffect } from 'react';
-
-interface FloatingElement {
-  id: number;
-  x: number;
-  y: number;
-  size: number;
-  speed: number;
-  icon: string;
-  rotation: number;
-  rotationSpeed: number;
-}
+import { motion } from "framer-motion";
+import { useEffect, useState } from "react";
 
 const AnimatedBackground = () => {
-  const [elements, setElements] = useState<FloatingElement[]>([]);
-
-  // الرموز القانونية والملفات
-  const icons = ['⚖️', '📋', '📄', '📑', '🏛️', '📋', '⚖️', '📜', '🔏', '📊'];
+  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
 
   useEffect(() => {
-    // إنشاء العناصر المتحركة
-    const initialElements: FloatingElement[] = Array.from({ length: 15 }, (_, i) => ({
-      id: i,
-      x: Math.random() * window.innerWidth,
-      y: Math.random() * window.innerHeight,
-      size: Math.random() * 30 + 20,
-      speed: Math.random() * 0.5 + 0.2,
-      icon: icons[Math.floor(Math.random() * icons.length)],
-      rotation: Math.random() * 360,
-      rotationSpeed: (Math.random() - 0.5) * 2
-    }));
-
-    setElements(initialElements);
-
-    // حركة العناصر
-    const animateElements = () => {
-      setElements(prev => prev.map(element => ({
-        ...element,
-        y: element.y <= -50 ? window.innerHeight + 50 : element.y - element.speed,
-        rotation: element.rotation + element.rotationSpeed
-      })));
+    const handleMouseMove = (e: MouseEvent) => {
+      setMousePosition({
+        x: e.clientX / window.innerWidth,
+        y: e.clientY / window.innerHeight,
+      });
     };
 
-    const interval = setInterval(animateElements, 50);
-    return () => clearInterval(interval);
+    window.addEventListener("mousemove", handleMouseMove);
+    return () => window.removeEventListener("mousemove", handleMouseMove);
   }, []);
 
   return (
-    <div className="fixed inset-0 pointer-events-none overflow-hidden z-0">
-      {/* الخلفية المتدرجة */}
-      <div className="absolute inset-0 bg-gradient-to-br from-slate-50 via-blue-50/30 to-indigo-100/40 dark:from-slate-900 dark:via-blue-950/30 dark:to-indigo-950/40" />
+    <div className="absolute inset-0 overflow-hidden">
+      {/* الطبقة الأساسية للتدرج */}
+      <div className="absolute inset-0 bg-gradient-to-br from-primary via-accent-emerald to-primary-glow opacity-90" />
       
-      {/* الشبكة الخفيفة */}
-      <div className="absolute inset-0 opacity-[0.02] dark:opacity-[0.05]">
-        <svg width="100%" height="100%">
-          <defs>
-            <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
-              <path d="M 40 0 L 0 0 0 40" fill="none" stroke="currentColor" strokeWidth="1"/>
-            </pattern>
-          </defs>
-          <rect width="100%" height="100%" fill="url(#grid)" />
-        </svg>
+      {/* شبكة النقاط المتحركة */}
+      <div className="absolute inset-0">
+        {[...Array(50)].map((_, i) => (
+          <motion.div
+            key={i}
+            className="absolute w-2 h-2 bg-white/10 rounded-full"
+            initial={{
+              x: Math.random() * (typeof window !== 'undefined' ? window.innerWidth : 1200),
+              y: Math.random() * (typeof window !== 'undefined' ? window.innerHeight : 800),
+            }}
+            animate={{
+              x: mousePosition.x * (typeof window !== 'undefined' ? window.innerWidth : 1200) + (Math.random() - 0.5) * 100,
+              y: mousePosition.y * (typeof window !== 'undefined' ? window.innerHeight : 800) + (Math.random() - 0.5) * 100,
+            }}
+            transition={{
+              duration: 2 + Math.random() * 3,
+              repeat: Infinity,
+              repeatType: "reverse",
+              ease: "easeInOut",
+            }}
+          />
+        ))}
       </div>
 
-      {/* العناصر المتحركة */}
-      {elements.map(element => (
-        <div
-          key={element.id}
-          className="absolute animate-float opacity-20 dark:opacity-10"
-          style={{
-            left: `${element.x}px`,
-            top: `${element.y}px`,
-            fontSize: `${element.size}px`,
-            transform: `rotate(${element.rotation}deg)`,
-            transition: 'transform 0.1s linear'
-          }}
-        >
-          {element.icon}
-        </div>
-      ))}
+      {/* الكرات العائمة الكبيرة */}
+      <motion.div
+        className="absolute top-1/4 left-1/4 w-96 h-96 bg-white/5 rounded-full blur-3xl"
+        animate={{
+          scale: [1, 1.2, 1],
+          x: [0, 50, 0],
+          y: [0, -30, 0],
+        }}
+        transition={{
+          duration: 8,
+          repeat: Infinity,
+          ease: "easeInOut",
+        }}
+      />
 
-      {/* تأثيرات الضوء */}
-      <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-primary/5 rounded-full blur-3xl animate-pulse-soft" />
-      <div className="absolute bottom-1/4 right-1/4 w-80 h-80 bg-accent/5 rounded-full blur-3xl animate-pulse-soft" style={{ animationDelay: '1s' }} />
-      <div className="absolute top-1/2 left-1/2 w-64 h-64 bg-emerald-500/5 rounded-full blur-3xl animate-pulse-soft" style={{ animationDelay: '2s' }} />
+      <motion.div
+        className="absolute top-3/4 right-1/4 w-80 h-80 bg-accent-emerald/10 rounded-full blur-2xl"
+        animate={{
+          scale: [1.2, 1, 1.2],
+          x: [0, -40, 0],
+          y: [0, 20, 0],
+        }}
+        transition={{
+          duration: 6,
+          repeat: Infinity,
+          ease: "easeInOut",
+          delay: 1,
+        }}
+      />
+
+      <motion.div
+        className="absolute top-1/2 right-1/3 w-64 h-64 bg-primary-glow/8 rounded-full blur-xl"
+        animate={{
+          scale: [1, 1.3, 1],
+          rotate: [0, 180, 360],
+        }}
+        transition={{
+          duration: 10,
+          repeat: Infinity,
+          ease: "linear",
+        }}
+      />
+
+      {/* الخطوط المتحركة */}
+      <div className="absolute inset-0">
+        {[...Array(6)].map((_, i) => (
+          <motion.div
+            key={i}
+            className="absolute h-px bg-gradient-to-r from-transparent via-white/20 to-transparent"
+            style={{
+              top: `${20 + i * 15}%`,
+              width: "100%",
+            }}
+            animate={{
+              x: ["-100%", "100%"],
+              opacity: [0, 1, 0],
+            }}
+            transition={{
+              duration: 3 + i * 0.5,
+              repeat: Infinity,
+              ease: "easeInOut",
+              delay: i * 0.8,
+            }}
+          />
+        ))}
+      </div>
+
+      {/* التموج الدائري */}
+      <motion.div
+        className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
+        animate={{
+          scale: [0, 2, 0],
+          opacity: [0, 0.3, 0],
+        }}
+        transition={{
+          duration: 4,
+          repeat: Infinity,
+          ease: "easeOut",
+        }}
+      >
+        <div className="w-96 h-96 border border-white/20 rounded-full" />
+      </motion.div>
+
+      <motion.div
+        className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
+        animate={{
+          scale: [0, 1.5, 0],
+          opacity: [0, 0.5, 0],
+        }}
+        transition={{
+          duration: 4,
+          repeat: Infinity,
+          ease: "easeOut",
+          delay: 2,
+        }}
+      >
+        <div className="w-64 h-64 border border-white/30 rounded-full" />
+      </motion.div>
+
+      {/* الشبكة الهندسية */}
+      <div className="absolute inset-0 opacity-10">
+        <div 
+          className="w-full h-full"
+          style={{
+            backgroundImage: `
+              linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px),
+              linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px)
+            `,
+            backgroundSize: '50px 50px',
+          }}
+        />
+      </div>
+
+      {/* تأثير الضوء المتحرك */}
+      <motion.div
+        className="absolute inset-0"
+        animate={{
+          background: [
+            "radial-gradient(circle at 20% 20%, rgba(255,255,255,0.1) 0%, transparent 50%)",
+            "radial-gradient(circle at 80% 80%, rgba(255,255,255,0.1) 0%, transparent 50%)",
+            "radial-gradient(circle at 20% 80%, rgba(255,255,255,0.1) 0%, transparent 50%)",
+            "radial-gradient(circle at 80% 20%, rgba(255,255,255,0.1) 0%, transparent 50%)",
+          ]
+        }}
+        transition={{
+          duration: 8,
+          repeat: Infinity,
+          ease: "easeInOut",
+        }}
+      />
     </div>
   );
 };

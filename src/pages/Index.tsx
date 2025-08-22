@@ -2,6 +2,7 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import ServicesSection from "@/components/ServicesSection";
 import TranslationStudio from "@/components/TranslationStudio";
+import AnimatedBackground from "@/components/AnimatedBackground";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -17,39 +18,48 @@ import {
   PlayCircle,
   Award,
   Sparkles,
-  Rocket
+  Rocket,
+  Building2,
+  TrendingUp,
+  Briefcase,
+  Settings,
+  Target,
+  Lightbulb
 } from "lucide-react";
 import { motion } from "framer-motion";
-import heroImage from "@/assets/hero-translation.jpg";
 
 const Index = () => {
   const stats = [
-    { icon: Users, number: "50,000+", label: "عميل راض" },
-    { icon: Globe, number: "100+", label: "لغة مدعومة" },
-    { icon: CheckCircle, number: "1M+", label: "كلمة مترجمة" },
-    { icon: Award, number: "99%", label: "دقة الترجمة" }
+    { icon: Building2, number: "500+", label: "شركة عالمية", color: "text-blue-400" },
+    { icon: Globe, number: "150+", label: "لغة احترافية", color: "text-emerald-400" },
+    { icon: TrendingUp, number: "10M+", label: "كلمة مترجمة", color: "text-purple-400" },
+    { icon: Award, number: "99.9%", label: "دقة مضمونة", color: "text-yellow-400" }
   ];
 
   const features = [
     {
-      icon: Zap,
-      title: "ترجمة فورية",
-      description: "احصل على ترجمة دقيقة في ثوان معدودة"
+      icon: Briefcase,
+      title: "للشركات العالمية",
+      description: "حلول ترجمة متطورة للمؤسسات الكبرى والشركات متعددة الجنسيات",
+      gradient: "from-blue-500 to-cyan-500"
     },
     {
       icon: Shield,
-      title: "أمان وخصوصية",
-      description: "نضمن حماية بياناتك وسرية مستنداتك"
+      title: "أمان مؤسسي",
+      description: "معايير الأمان العالمية مع شهادات ISO وحماية البيانات الحساسة",
+      gradient: "from-emerald-500 to-teal-500"
     },
     {
-      icon: Clock,
-      title: "متاح 24/7",
-      description: "خدمة ترجمة متاحة طوال الوقت"
+      icon: Settings,
+      title: "تقنية متقدمة",
+      description: "ذكاء اصطناعي متطور مع مراجعة بشرية من خبراء معتمدين",
+      gradient: "from-purple-500 to-indigo-500"
     },
     {
-      icon: Star,
-      title: "جودة احترافية",
-      description: "ترجمة بجودة عالية ومراجعة من خبراء"
+      icon: Target,
+      title: "دقة استثنائية",
+      description: "ضمان جودة 99.9% مع التزام صارم بالمواعيد النهائية",
+      gradient: "from-orange-500 to-red-500"
     }
   ];
 
@@ -82,77 +92,192 @@ const Index = () => {
       <Header />
       
       {/* قسم Hero */}
-      <section className="relative min-h-[90vh] flex items-center justify-center overflow-hidden">
-        {/* خلفية متدرجة */}
-        <div className="absolute inset-0 bg-gradient-hero" />
-        <div className="absolute inset-0 bg-black/20" />
+      <section className="relative min-h-[100vh] flex items-center justify-center overflow-hidden">
+        {/* الخلفية المتحركة والديناميكية */}
+        <AnimatedBackground />
         
-        {/* صورة الخلفية */}
-        <div className="absolute inset-0">
-          <img 
-            src={heroImage}
-            alt="منصة الترجمة الاحترافية"
-            className="w-full h-full object-cover opacity-30"
-          />
-        </div>
+        {/* طبقة إضافية للتحكم في الشفافية */}
+        <div className="absolute inset-0 bg-gradient-to-br from-primary/80 via-accent-emerald/60 to-primary-glow/80" />
 
         <div className="relative z-10 container mx-auto px-4 text-center text-white">
-          <div className="max-w-4xl mx-auto space-y-8 animate-fade-in-up">
-            <Badge className="bg-white/20 text-white border-white/30 backdrop-blur-sm">
-              <Star className="h-4 w-4 ml-2 text-yellow-400" />
-              المنصة الأولى للترجمة في المنطقة
-            </Badge>
-            
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-arabic-title font-bold leading-tight">
-              مركز <span className="text-primary-glow">الخبراء</span>
-              <br />
-              للترجمة الاحترافية
-            </h1>
-            
-            <p className="text-xl md:text-2xl text-white/90 font-light leading-relaxed max-w-3xl mx-auto">
-              نقدم خدمات ترجمة احترافية شاملة بأكثر من 100 لغة عالمية.
-              فريق من المترجمين المعتمدين والمتخصصين في جميع المجالات لضمان أعلى جودة ودقة.
-            </p>
-            
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mt-8">
-              <Button 
-                size="lg" 
-                className="bg-white text-primary hover:bg-white/90 shadow-strong px-8 py-4 text-lg font-medium"
+          <motion.div 
+            className="max-w-6xl mx-auto space-y-8"
+            initial={{ opacity: 0, y: 50 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+          >
+            <motion.div
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.6, delay: 0.2 }}
+              className="flex items-center justify-center gap-4 mb-6"
+            >
+              <motion.div
+                animate={{ rotate: 360 }}
+                transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
+                className="relative"
               >
-                اطلب خدمة الترجمة
-                <ArrowLeft className="h-5 w-5 mr-2" />
-              </Button>
+                <Building2 className="h-12 w-12 text-white/80" />
+                <motion.div
+                  className="absolute inset-0 bg-white/20 rounded-full blur-xl"
+                  animate={{ scale: [1, 1.5, 1], opacity: [0.5, 0.8, 0.5] }}
+                  transition={{ duration: 2, repeat: Infinity }}
+                />
+              </motion.div>
               
-              <Button 
-                variant="outline" 
-                size="lg"
-                className="border-white/50 text-white hover:bg-white/10 px-8 py-4 text-lg backdrop-blur-sm"
+              <Badge className="bg-white/10 text-white border-white/20 backdrop-blur-md px-4 py-2 text-lg">
+                <Sparkles className="h-5 w-5 ml-2 text-yellow-300" />
+                الحل الأمثل للشركات العالمية
+              </Badge>
+              
+              <motion.div
+                animate={{ rotate: -360 }}
+                transition={{ duration: 25, repeat: Infinity, ease: "linear" }}
+                className="relative"
               >
-                <PlayCircle className="h-5 w-5 ml-2" />
-                شاهد العرض التوضيحي
-              </Button>
-            </div>
-          </div>
+                <Lightbulb className="h-12 w-12 text-white/80" />
+                <motion.div
+                  className="absolute inset-0 bg-yellow-300/20 rounded-full blur-xl"
+                  animate={{ scale: [1, 1.3, 1], opacity: [0.3, 0.6, 0.3] }}
+                  transition={{ duration: 1.5, repeat: Infinity }}
+                />
+              </motion.div>
+            </motion.div>
+            
+            <motion.h1 
+              className="text-5xl md:text-6xl lg:text-8xl font-arabic-title font-bold leading-tight"
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.4 }}
+            >
+              <motion.span
+                className="inline-block"
+                whileHover={{ scale: 1.05, color: "#60A5FA" }}
+                transition={{ duration: 0.2 }}
+              >
+                مركز الخبراء
+              </motion.span>
+              <br />
+              <motion.span
+                className="text-white/90 text-4xl md:text-5xl lg:text-6xl block mt-2"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 0.6, delay: 0.8 }}
+              >
+                للحلول التقنية المتقدمة
+              </motion.span>
+            </motion.h1>
+            
+            <motion.p 
+              className="text-xl md:text-2xl text-white/95 font-light leading-relaxed max-w-4xl mx-auto"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.6, delay: 1 }}
+            >
+              شريكك الاستراتيجي في التوسع العالمي. نقدم حلول ترجمة مؤسسية متكاملة 
+              بتقنيات الذكاء الاصطناعي المتطورة وفريق من الخبراء المعتمدين دولياً.
+              <br />
+              <span className="text-white/80 text-lg">
+                أكثر من 150 لغة • خدمة 24/7 • ضمان الجودة المطلقة
+              </span>
+            </motion.p>
+            
+            <motion.div 
+              className="flex flex-col sm:flex-row items-center justify-center gap-6 mt-12"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 1.2 }}
+            >
+              <motion.div
+                whileHover={{ scale: 1.05, y: -2 }}
+                whileTap={{ scale: 0.98 }}
+              >
+                <Button 
+                  size="lg" 
+                  className="bg-white text-primary hover:bg-white/95 shadow-2xl px-10 py-6 text-xl font-bold rounded-2xl"
+                >
+                  <Rocket className="h-6 w-6 mr-3" />
+                  ابدأ مشروعك الآن
+                  <ArrowLeft className="h-6 w-6 mr-3" />
+                </Button>
+              </motion.div>
+              
+              <motion.div
+                whileHover={{ scale: 1.05, y: -2 }}
+                whileTap={{ scale: 0.98 }}
+              >
+                <Button 
+                  variant="outline" 
+                  size="lg"
+                  className="border-2 border-white/60 text-white hover:bg-white/15 px-10 py-6 text-xl backdrop-blur-md rounded-2xl"
+                >
+                  <PlayCircle className="h-6 w-6 ml-3" />
+                  جولة تفاعلية
+                </Button>
+              </motion.div>
+            </motion.div>
+          </motion.div>
         </div>
 
-        {/* إحصائيات */}
-        <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 w-full max-w-4xl px-4">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+        {/* إحصائيات متحركة */}
+        <motion.div 
+          className="absolute bottom-12 left-1/2 transform -translate-x-1/2 w-full max-w-6xl px-4"
+          initial={{ opacity: 0, y: 50 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 1.5 }}
+        >
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-6">
             {stats.map((stat, index) => {
               const IconComponent = stat.icon;
               return (
-                <Card key={index} className="bg-white/10 backdrop-blur-sm border-white/20 text-center animate-fade-in-up" 
-                     style={{ animationDelay: `${index * 0.1}s` }}>
-                  <CardContent className="p-4">
-                    <IconComponent className="h-6 w-6 text-primary-glow mx-auto mb-2" />
-                    <div className="text-2xl font-bold text-white">{stat.number}</div>
-                    <div className="text-sm text-white/80">{stat.label}</div>
-                  </CardContent>
-                </Card>
+                <motion.div
+                  key={index}
+                  initial={{ opacity: 0, scale: 0.8, y: 30 }}
+                  animate={{ opacity: 1, scale: 1, y: 0 }}
+                  transition={{ duration: 0.5, delay: 1.7 + index * 0.1 }}
+                  whileHover={{ scale: 1.05, y: -5 }}
+                  className="cursor-pointer"
+                >
+                  <Card className="bg-white/5 backdrop-blur-xl border-white/10 text-center hover:bg-white/10 transition-all duration-300 group overflow-hidden relative">
+                    <CardContent className="p-6">
+                      <motion.div
+                        animate={{ rotate: 360 }}
+                        transition={{ duration: 8, repeat: Infinity, ease: "linear" }}
+                        className="relative mb-4"
+                      >
+                        <IconComponent className={`h-10 w-10 ${stat.color} mx-auto`} />
+                        <motion.div
+                          className="absolute inset-0 bg-gradient-to-r from-white/10 to-transparent rounded-full blur-lg"
+                          animate={{ 
+                            opacity: [0, 0.8, 0],
+                            scale: [0.8, 1.2, 0.8]
+                          }}
+                          transition={{ duration: 2, repeat: Infinity }}
+                        />
+                      </motion.div>
+                      <motion.div 
+                        className="text-3xl md:text-4xl font-bold text-white mb-2"
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        transition={{ delay: 2 + index * 0.2 }}
+                      >
+                        {stat.number}
+                      </motion.div>
+                      <div className="text-white/90 text-sm font-medium">{stat.label}</div>
+                    </CardContent>
+                    
+                    {/* تأثير الضوء المتحرك */}
+                    <motion.div
+                      className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent opacity-0 group-hover:opacity-100"
+                      animate={{ x: ["-100%", "100%"] }}
+                      transition={{ duration: 1.5, repeat: Infinity, repeatDelay: 3 }}
+                    />
+                  </Card>
+                </motion.div>
               );
             })}
           </div>
-        </div>
+        </motion.div>
       </section>
 
       {/* أنواع الترجمات */}
@@ -293,43 +418,109 @@ const Index = () => {
         </div>
       </section>
 
-      {/* المزايا الرئيسية */}
-      <section className="py-16 bg-background">
-        <div className="container mx-auto px-4">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl lg:text-4xl font-arabic-title font-bold mb-4">
-              لماذا تختار <span className="text-gradient">مركز الخبراء؟</span>
-            </h2>
-          </div>
+      {/* المزايا الرئيسية للشركات */}
+      <section className="py-20 bg-gradient-to-br from-background via-muted/20 to-background relative overflow-hidden">
+        {/* خلفية هندسية متحركة */}
+        <div className="absolute inset-0 opacity-5">
+          <div className="absolute inset-0" style={{
+            backgroundImage: `
+              linear-gradient(45deg, hsl(var(--primary)) 1px, transparent 1px),
+              linear-gradient(-45deg, hsl(var(--accent-emerald)) 1px, transparent 1px)
+            `,
+            backgroundSize: '60px 60px'
+          }} />
+        </div>
+        
+        <div className="container mx-auto px-4 relative z-10">
+          <motion.div 
+            className="text-center mb-16"
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            viewport={{ once: true }}
+          >
+            <motion.h2 
+              className="text-4xl lg:text-5xl font-arabic-title font-bold mb-6"
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1 }}
+              transition={{ duration: 0.8, delay: 0.2 }}
+              viewport={{ once: true }}
+            >
+              لماذا تثق بنا <span className="text-gradient bg-gradient-to-r from-primary to-accent-emerald bg-clip-text">الشركات الرائدة؟</span>
+            </motion.h2>
+            <motion.p
+              className="text-xl text-muted-foreground max-w-3xl mx-auto"
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1 }}
+              transition={{ duration: 0.6, delay: 0.4 }}
+              viewport={{ once: true }}
+            >
+              حلول متطورة ومخصصة للمؤسسات الكبرى والشركات متعددة الجنسيات
+            </motion.p>
+          </motion.div>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             {features.map((feature, index) => {
               const IconComponent = feature.icon;
               return (
                 <motion.div
                   key={index}
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  transition={{ delay: index * 0.1, duration: 0.5 }}
+                  initial={{ opacity: 0, y: 30, scale: 0.9 }}
+                  whileInView={{ opacity: 1, y: 0, scale: 1 }}
+                  transition={{ delay: index * 0.15, duration: 0.6 }}
                   viewport={{ once: true }}
-                  whileHover={{ scale: 1.05, y: -10 }}
-                  className="cursor-pointer"
+                  whileHover={{ scale: 1.02, y: -8 }}
+                  className="cursor-pointer group"
                 >
-                  <Card className="text-center hover-lift bg-gradient-card shadow-soft border-0 h-full">
-                    <CardContent className="p-6 space-y-4">
+                  <Card className="relative overflow-hidden border-0 shadow-xl bg-gradient-to-br from-white to-muted/30 hover:shadow-2xl transition-all duration-500 h-full">
+                    {/* تأثير التدرج المتحرك */}
+                    <div className={`absolute inset-0 bg-gradient-to-br ${feature.gradient} opacity-0 group-hover:opacity-5 transition-opacity duration-500`} />
+                    
+                    <CardContent className="p-8 space-y-6 relative z-10">
                       <motion.div 
-                        className="bg-primary/10 w-16 h-16 rounded-full flex items-center justify-center mx-auto"
-                        whileHover={{ 
-                          rotate: 360,
-                          scale: 1.1,
-                          transition: { duration: 0.5 }
-                        }}
+                        className="flex items-center gap-4 mb-6"
+                        whileHover={{ scale: 1.05 }}
+                        transition={{ duration: 0.2 }}
                       >
-                        <IconComponent className="h-8 w-8 text-primary" />
+                        <motion.div 
+                          className={`w-20 h-20 rounded-2xl bg-gradient-to-br ${feature.gradient} flex items-center justify-center shadow-lg`}
+                          whileHover={{ 
+                            rotate: [0, -5, 5, -5, 0],
+                            scale: 1.1
+                          }}
+                          transition={{ duration: 0.5 }}
+                        >
+                          <IconComponent className="h-10 w-10 text-white" />
+                        </motion.div>
+                        <div>
+                          <h3 className="text-2xl font-arabic-title font-bold text-foreground group-hover:text-primary transition-colors duration-300">
+                            {feature.title}
+                          </h3>
+                        </div>
                       </motion.div>
-                      <h3 className="text-xl font-bold">{feature.title}</h3>
-                      <p className="text-muted-foreground text-sm">{feature.description}</p>
+                      
+                      <p className="text-muted-foreground text-lg leading-relaxed">
+                        {feature.description}
+                      </p>
+                      
+                      {/* مؤشر التفاعل */}
+                      <motion.div
+                        className="flex items-center gap-2 text-primary font-medium opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                        initial={{ x: -10 }}
+                        whileInView={{ x: 0 }}
+                        transition={{ duration: 0.3 }}
+                      >
+                        <span>اعرف المزيد</span>
+                        <ArrowLeft className="h-4 w-4" />
+                      </motion.div>
                     </CardContent>
+                    
+                    {/* تأثير الإضاءة المتحركة */}
+                    <motion.div
+                      className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-primary to-transparent opacity-0 group-hover:opacity-100"
+                      animate={{ x: ["-100%", "100%"] }}
+                      transition={{ duration: 2, repeat: Infinity, repeatDelay: 1 }}
+                    />
                   </Card>
                 </motion.div>
               );
