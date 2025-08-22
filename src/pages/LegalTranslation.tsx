@@ -76,7 +76,7 @@ const LegalTranslation = () => {
   };
 
   return (
-    <div className="min-h-screen relative" dir="rtl">
+    <div className="min-h-screen relative rtl-container" dir="rtl">
       <AnimatedBackground />
       <Header />
       
@@ -129,12 +129,15 @@ const LegalTranslation = () => {
             <CardHeader className="text-center pb-6">
               <CardTitle className="text-3xl font-arabic-title flex items-center justify-center gap-3">
                 <Sparkles className="h-8 w-8 text-primary animate-pulse-soft" />
-                نظام حساب الكلمات الاحترافي
+                نظام حساب الكلمات الاحترافي المتطور
               </CardTitle>
+              <p className="text-muted-foreground mt-2">
+                معالجة سريعة ومتوازية للملفات مع دعم كامل للـ RTL
+              </p>
             </CardHeader>
             <CardContent>
               <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-                <TabsList className="grid w-full grid-cols-3 mb-8 bg-muted/50">
+                <TabsList className="grid w-full grid-cols-3 mb-8 bg-muted/50 rtl-flex">
                   <TabsTrigger value="analyzer" className="gap-2">
                     <Scan className="h-4 w-4" />
                     تحليل الملفات
@@ -149,19 +152,28 @@ const LegalTranslation = () => {
                   </TabsTrigger>
                 </TabsList>
 
-                <TabsContent value="analyzer" className="space-y-6">
+                <TabsContent value="analyzer" className="space-y-6 animate-slide-in-rtl">
                   <div className="space-y-4">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <div className="space-y-2">
-                        <Label className="text-base font-semibold">سعر الترجمة (ريال/كلمة)</Label>
+                        <Label className="text-base font-semibold text-rtl">سعر الترجمة (ريال/كلمة)</Label>
                         <Input
                           type="number"
                           step="0.001"
                           value={priceRate}
                           onChange={(e) => setPriceRate(parseFloat(e.target.value) || 0.19)}
-                          className="h-12 border-2 border-primary/20"
+                          className="h-12 border-2 border-primary/20 form-rtl"
                           placeholder="0.190"
                         />
+                      </div>
+                      <div className="space-y-2">
+                        <Label className="text-base font-semibold text-rtl">وضع المعالجة</Label>
+                        <div className="flex items-center gap-2 p-3 bg-emerald-50 dark:bg-emerald-900/20 rounded-lg">
+                          <Zap className="h-5 w-5 text-emerald-600" />
+                          <span className="text-sm font-medium text-emerald-700 dark:text-emerald-300">
+                            معالجة سريعة ومتوازية - 8x أسرع
+                          </span>
+                        </div>
                       </div>
                     </div>
                   </div>

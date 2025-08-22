@@ -196,6 +196,51 @@
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
   }
+  
+  /* تحسينات RTL */
+  .rtl-container {
+    direction: rtl;
+    text-align: right;
+  }
+  
+  .rtl-flex {
+    direction: rtl;
+    display: flex;
+  }
+  
+  .rtl-grid {
+    direction: rtl;
+  }
+  
+  /* تحسين المحاذاة للنصوص العربية */
+  .text-rtl {
+    direction: rtl;
+    text-align: right;
+    unicode-bidi: bidi-override;
+  }
+  
+  /* تحسين الجداول RTL */
+  .table-rtl {
+    direction: rtl;
+  }
+  
+  .table-rtl th,
+  .table-rtl td {
+    text-align: right;
+  }
+  
+  /* تحسين الأزرار والنماذج RTL */
+  .form-rtl input,
+  .form-rtl textarea,
+  .form-rtl select {
+    direction: rtl;
+    text-align: right;
+  }
+  
+  /* تحسين التوقيتات للـ RTL */
+  .animate-slide-in-rtl {
+    animation: slideInRTL 0.5s ease-out;
+  }
 }
 
 /* رسوم متحركة */
@@ -225,5 +270,16 @@
   }
   50% {
     opacity: 0.7;
+  }
+}
+
+@keyframes slideInRTL {
+  from {
+    opacity: 0;
+    transform: translateX(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
   }
 }

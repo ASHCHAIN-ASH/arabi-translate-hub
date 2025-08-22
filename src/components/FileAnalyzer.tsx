@@ -67,7 +67,7 @@ const FileAnalyzer = ({ onAnalysisComplete, isProcessing, onProcessingChange }: 
     '.txt', '.html', '.md', '.json', '.zip'
   ];
 
-  // تحليل النص وكشف أنواع الكلمات
+  // تحليل النص وكشف أنواع الكلمات - محسن للسرعة
   const analyzeText = useCallback((text: string): {
     sourceWords: number;
     tableWords: number;
@@ -89,17 +89,14 @@ const FileAnalyzer = ({ onAnalysisComplete, isProcessing, onProcessingChange }: 
       };
     }
 
-    // تنظيف النص
+    // تنظيف النص محسن
     const cleanText = text
-      .replace(/\r\n/g, '\n')
-      .replace(/\r/g, '\n')
-      .replace(/\t/g, ' ')
+      .replace(/[\r\n\t]+/g, ' ')
+      .replace(/\s{2,}/g, ' ')
       .trim();
 
-    // استخراج الكلمات
-    const words = cleanText.split(/\s+/).filter(word => 
-      word.length > 0 && word.trim().length > 0
-    );
+    // استخراج الكلمات محسن
+    const words = cleanText.split(' ').filter(word => word.length > 0);
 
     let sourceWords = 0;
     let tableWords = 0;
@@ -107,38 +104,45 @@ const FileAnalyzer = ({ onAnalysisComplete, isProcessing, onProcessingChange }: 
     let excluded = 0;
     let placeholders = 0;
 
-    // تحليل كل كلمة
-    words.forEach(word => {
-      const trimmedWord = word.trim();
+    // كشف الجداول مسبقاً
+    const hasTabularData = text.includes('\t') || text.includes('|');
+    
+    // أنماط Regex محسنة للسرعة
+    const placeholderPattern = /^[\{\[%].*[\}\]%]$|%s|\{name\}/;
+    const numberPattern = /^\d+([.,]\d+)*$/;
+    const codePattern = /^(https?:\/\/|www\.|[A-Z0-9]{3,}-[A-Z0-9]{3,}|#[a-zA-Z0-9_]+)/;
+
+    // تحليل محسن للكلمات
+    for (let i = 0; i < words.length; i++) {
+      const word = words[i];
       
       // كشف النصوص النائبة
-      if (trimmedWord.match(/^[\{\[%].*[\}\]%]$/) || 
-          trimmedWord.includes('%s') || 
-          trimmedWord.includes('{name}')) {
+      if (placeholderPattern.test(word)) {
         placeholders++;
-        return;
+        continue;
       }
 
       // كشف الأرقام الصرفة
-      if (/^\d+([.,]\d+)*$/.test(trimmedWord)) {
+      if (numberPattern.test(word)) {
         numbersOnly++;
-        return;
+        continue;
       }
 
       // كشف الأكواد والمعرفات والروابط
-      if (trimmedWord.match(/^(https?:\/\/|www\.|[A-Z0-9]{3,}-[A-Z0-9]{3,}|#[a-zA-Z0-9_]+)/) ||
-          trimmedWord.length > 20 && /[A-Z0-9]{5,}/.test(trimmedWord)) {
+      if (codePattern.test(word) || (word.length > 20 && /[A-Z0-9]{5,}/.test(word))) {
         excluded++;
-        return;
+        continue;
       }
 
-      // كشف كلمات الجداول (تبسيط - يمكن تحسينه)
-      if (text.includes('\t') && trimmedWord.length > 0) {
-        const tabIndex = text.indexOf(trimmedWord);
-        const beforeTab = text.substring(Math.max(0, tabIndex - 10), tabIndex);
-        const afterTab = text.substring(tabIndex, Math.min(text.length, tabIndex + trimmedWord.length + 10));
+      // كشف كلمات الجداول محسن
+      if (hasTabularData) {
+        // تحليل بسيط وسريع للجداول
+        const context = text.substring(
+          Math.max(0, text.indexOf(word) - 50), 
+          Math.min(text.length, text.indexOf(word) + word.length + 50)
+        );
         
-        if (beforeTab.includes('\t') || afterTab.includes('\t')) {
+        if (context.includes('\t') || context.includes('|')) {
           tableWords++;
         } else {
           sourceWords++;
@@ -146,22 +150,24 @@ const FileAnalyzer = ({ onAnalysisComplete, isProcessing, onProcessingChange }: 
       } else {
         sourceWords++;
       }
-    });
+    }
 
-    // حساب التكرارات الداخلية
-    const wordCount: { [key: string]: number } = {};
-    words.forEach(word => {
-      const normalized = word.toLowerCase().trim();
+    // حساب التكرارات الداخلية محسن
+    const wordCount = new Map<string, number>();
+    let duplicatesIntra = 0;
+    
+    for (const word of words) {
+      const normalized = word.toLowerCase();
       if (normalized.length > 2) {
-        wordCount[normalized] = (wordCount[normalized] || 0) + 1;
+        const count = wordCount.get(normalized) || 0;
+        if (count > 0) {
+          duplicatesIntra++;
+        }
+        wordCount.set(normalized, count + 1);
       }
-    });
+    }
 
-    const duplicatesIntra = Object.values(wordCount).reduce((sum, count) => 
-      sum + Math.max(0, count - 1), 0
-    );
-
-    const uniqueWords = Object.keys(wordCount).length;
+    const uniqueWords = wordCount.size;
 
     return {
       sourceWords,
@@ -198,8 +204,8 @@ const FileAnalyzer = ({ onAnalysisComplete, isProcessing, onProcessingChange }: 
             const totalPages = pdf.numPages;
             let allText = "";
             
-            // معالجة متوازية للصفحات
-            const batchSize = 3;
+            // معالجة متوازية محسنة للصفحات - 8 صفحات في الوقت نفسه
+            const batchSize = 8;
             const batches = [];
             
             for (let i = 0; i < totalPages; i += batchSize) {
