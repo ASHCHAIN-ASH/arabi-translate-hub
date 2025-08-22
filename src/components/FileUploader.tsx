@@ -64,24 +64,20 @@ const FileUploader = ({ onFileProcess, isProcessing, onProcessingChange }: FileU
             extractedText = content as string;
             
           } else if (fileExtension === '.pdf') {
-            // معالجة ملفات PDF مع تحسينات الأداء
+            // معالجة ملفات PDF بدون قيود
             const arrayBuffer = content as ArrayBuffer;
             const loadingTask = pdfjsLib.getDocument({ data: arrayBuffer });
             
-            // تعيين مهلة زمنية للمعالجة
-            const timeoutPromise = new Promise((_, reject) => {
-              setTimeout(() => reject(new Error("انتهت مهلة معالجة PDF. الملف كبير جداً أو معقد.")), 30000);
-            });
-            
-            const pdf = await Promise.race([loadingTask.promise, timeoutPromise]) as any;
-            const maxPages = Math.min(pdf.numPages, 10); // معالجة أقصى 10 صفحات
+            // إزالة المهلة الزمنية - معالجة بدون قيود زمنية
+            const pdf = await loadingTask.promise as any;
+            const totalPages = pdf.numPages; // معالجة جميع الصفحات
             let allText = "";
             
-            for (let pageNum = 1; pageNum <= maxPages; pageNum++) {
+            for (let pageNum = 1; pageNum <= totalPages; pageNum++) {
               setProgress({ 
-                current: Math.round((pageNum / maxPages) * 100), 
+                current: Math.round((pageNum / totalPages) * 100), 
                 total: 100, 
-                message: `معالجة صفحة ${pageNum} من ${maxPages}...` 
+                message: `معالجة صفحة ${pageNum} من ${totalPages}...` 
               });
               
               try {
@@ -97,7 +93,7 @@ const FileUploader = ({ onFileProcess, isProcessing, onProcessingChange }: FileU
                 if (page.cleanup) page.cleanup();
                 
                 // السماح للواجهة بالتحديث
-                await new Promise(resolve => setTimeout(resolve, 10));
+                await new Promise(resolve => setTimeout(resolve, 5));
               } catch (pageError) {
                 console.warn(`خطأ في معالجة الصفحة ${pageNum}:`, pageError);
                 continue;
@@ -107,9 +103,7 @@ const FileUploader = ({ onFileProcess, isProcessing, onProcessingChange }: FileU
             // تنظيف موارد PDF
             if (pdf.destroy) pdf.destroy();
             
-            if (maxPages < pdf.numPages) {
-              console.log(`تم معالجة ${maxPages} صفحة من أصل ${pdf.numPages} صفحة لتحسين الأداء`);
-            }
+            console.log(`تم معالجة جميع الصفحات: ${totalPages} صفحة`);
             
             extractedText = allText;
             
@@ -188,10 +182,8 @@ const FileUploader = ({ onFileProcess, isProcessing, onProcessingChange }: FileU
         throw new Error("نوع الملف غير مدعوم. يرجى رفع ملفات: TXT, DOC, DOCX, PDF");
       }
       
-      // التحقق من حجم الملف (حد أقصى 1000 ميجا)
-      if (selectedFile.size > 1000 * 1024 * 1024) {
-        throw new Error("حجم الملف كبير جداً. الحد الأقصى 1000 ميجابايت");
-      }
+      // التحقق من حجم الملف - إزالة القيود
+      // لا توجد قيود على حجم الملف بناءً على طلب المستخدم
       
       // استخراج النص من جميع أنواع الملفات
       const content = await extractTextFromFile(selectedFile);
@@ -295,8 +287,8 @@ const FileUploader = ({ onFileProcess, isProcessing, onProcessingChange }: FileU
       {/* معلومات مفيدة */}
       <div className="text-xs text-muted-foreground space-y-1 p-3 bg-muted/30 rounded-lg">
         <p>• ملفات TXT و DOCX و DOC يتم حساب كلماتها بدقة كاملة</p>
-        <p>• ملفات PDF يتم معالجة أول 10 صفحات لتحسين الأداء</p>
-        <p>• الحد الأقصى لحجم الملف: 1000 ميجابايت</p>
+        <p>• ملفات PDF يتم معالجة جميع الصفحات بدون قيود</p>
+        <p>• لا توجد قيود على حجم الملف - معالجة لا محدودة</p>
       </div>
     </div>
   );
