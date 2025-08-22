@@ -57,64 +57,81 @@ const FileUploader = ({ onFileProcess, isProcessing, onProcessingChange }: FileU
             extractedText = content as string;
             
           } else if (fileExtension === '.pdf') {
-            // معالجة ملفات PDF مع مؤشر تقدم
+            // معالجة ملفات PDF بطريقة خفيفة وسريعة
             const arrayBuffer = content as ArrayBuffer;
-            const uint8Array = new Uint8Array(arrayBuffer);
             
-            setProgress({ current: 0, total: 100, message: "تحميل PDF..." });
+            setProgress({ current: 10, total: 100, message: "تحضير PDF..." });
             
-            // استخدام إصدار متوافق مع المكتبة المثبتة
+            // استخدام worker منفصل لعدم تجميد الواجهة
             pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/5.4.54/pdf.worker.min.js';
             
-            const pdf = await pdfjsLib.getDocument({ 
-              data: uint8Array,
-              disableFontFace: true,
-              disableRange: false,
-              disableStream: false
-            }).promise;
-            
-            const totalPages = pdf.numPages;
-            const maxPages = Math.min(totalPages, 50); // تقليل العدد أكثر
-            setProgress({ current: 10, total: 100, message: `معالجة ${maxPages} صفحة...` });
-            
-            let fullText = "";
-            
-            // معالجة الصفحات تدريجياً لتجنب تجميد المتصفح
-            for (let i = 1; i <= maxPages; i++) {
-              try {
-                const page = await pdf.getPage(i);
-                const textContent = await page.getTextContent();
-                const pageText = textContent.items
-                  .map((item: any) => item.str)
-                  .filter((str: string) => str.trim().length > 0)
-                  .join(' ');
+            try {
+              const pdf = await pdfjsLib.getDocument({ 
+                data: arrayBuffer,
+                disableFontFace: true,
+                disableRange: true,
+                disableStream: true,
+                useSystemFonts: true,
+                stopAtErrors: true
+              }).promise;
+              
+              const totalPages = pdf.numPages;
+              const maxPages = Math.min(totalPages, 10); // تقليل كبير في عدد الصفحات
+              
+              setProgress({ current: 20, total: 100, message: `استخراج النص من ${maxPages} صفحة...` });
+              
+              let fullText = "";
+              
+              // معالجة الصفحات بطريقة أكثر كفاءة
+              for (let i = 1; i <= maxPages; i++) {
+                // استخدام requestAnimationFrame للحصول على استجابة أفضل
+                await new Promise(resolve => requestAnimationFrame(resolve));
                 
-                fullText += pageText + ' ';
-                
-                // تحديث مؤشر التقدم
-                const progress = Math.floor((i / maxPages) * 80) + 10;
-                setProgress({ 
-                  current: progress, 
-                  total: 100, 
-                  message: `معالجة صفحة ${i} من ${maxPages}...` 
-                });
-                
-                // السماح للمتصفح بالتنفس كل 5 صفحات
-                if (i % 5 === 0) {
-                  await new Promise(resolve => setTimeout(resolve, 50));
+                try {
+                  const page = await pdf.getPage(i);
+                  const textContent = await page.getTextContent();
+                  
+                  // استخراج النص بطريقة مبسطة
+                  const pageText = textContent.items
+                    .filter((item: any) => item.str && item.str.trim().length > 0)
+                    .map((item: any) => item.str.trim())
+                    .join(' ');
+                  
+                  if (pageText.length > 0) {
+                    fullText += pageText + ' ';
+                  }
+                  
+                  // تحديث التقدم بشكل متكرر
+                  const progress = Math.floor((i / maxPages) * 70) + 20;
+                  setProgress({ 
+                    current: progress, 
+                    total: 100, 
+                    message: `صفحة ${i}/${maxPages}` 
+                  });
+                  
+                  // تحرير ذاكرة الصفحة
+                  page.cleanup();
+                  
+                } catch (pageError) {
+                  console.warn(`تخطي الصفحة ${i}:`, pageError);
+                  continue;
                 }
-              } catch (pageError) {
-                console.warn(`خطأ في معالجة الصفحة ${i}:`, pageError);
-                continue;
               }
+              
+              if (totalPages > maxPages) {
+                fullText += `\n\n[تم استخراج النص من ${maxPages} صفحة الأولى من أصل ${totalPages} صفحة]`;
+              }
+              
+              setProgress({ current: 95, total: 100, message: "انتهاء المعالجة..." });
+              extractedText = fullText.trim();
+              
+              // تحرير ذاكرة PDF
+              pdf.destroy();
+              
+            } catch (pdfError) {
+              console.error("خطأ في معالجة PDF:", pdfError);
+              throw new Error("خطأ في قراءة ملف PDF. تأكد من أن الملف غير تالف وليس محمي بكلمة مرور.");
             }
-            
-            if (totalPages > 50) {
-              fullText += `\n\n[تم استخراج النص من ${maxPages} صفحة من أصل ${totalPages} صفحة]`;
-            }
-            
-            setProgress({ current: 95, total: 100, message: "تنظيف النص..." });
-            extractedText = fullText;
             
           } else if (fileExtension === '.docx') {
             // معالجة ملفات Word الحديثة
