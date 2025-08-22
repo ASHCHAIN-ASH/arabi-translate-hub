@@ -100,6 +100,11 @@ const FileAnalyzer = ({ onAnalysisComplete, isProcessing, onProcessingChange }: 
     const codePattern = /^(https?:\/\/|www\.|[A-Z0-9]{3,}-[A-Z0-9]{3,}|#[a-zA-Z0-9_]+)/;
     const hasTabularData = text.includes('\t') || text.includes('|');
 
+    // مجموعة للكلمات الفريدة للترجمة فقط (sourceWords + tableWords)
+    const uniqueTranslatableWords = new Set<string>();
+    let duplicatesIntra = 0;
+    const allWordCounts = new Map<string, number>();
+
     // تحليل الكلمات
     words.forEach(word => {
       if (placeholderPattern.test(word)) {
@@ -117,26 +122,27 @@ const FileAnalyzer = ({ onAnalysisComplete, isProcessing, onProcessingChange }: 
         
         if (context.includes('\t') || context.includes('|')) {
           tableWords++;
+          // إضافة كلمات الجداول للكلمات الفريدة
+          uniqueTranslatableWords.add(word.toLowerCase());
         } else {
           sourceWords++;
+          // إضافة كلمات المصدر للكلمات الفريدة
+          uniqueTranslatableWords.add(word.toLowerCase());
         }
       } else {
         sourceWords++;
+        // إضافة كلمات المصدر للكلمات الفريدة
+        uniqueTranslatableWords.add(word.toLowerCase());
       }
-    });
 
-    // حساب التكرارات
-    const wordCount = new Map<string, number>();
-    let duplicatesIntra = 0;
-    
-    words.forEach(word => {
+      // حساب التكرارات الإجمالية لجميع الكلمات
       if (word.length > 2) {
         const normalized = word.toLowerCase();
-        const count = wordCount.get(normalized) || 0;
+        const count = allWordCounts.get(normalized) || 0;
         if (count > 0) {
           duplicatesIntra++;
         }
-        wordCount.set(normalized, count + 1);
+        allWordCounts.set(normalized, count + 1);
       }
     });
 
@@ -147,7 +153,7 @@ const FileAnalyzer = ({ onAnalysisComplete, isProcessing, onProcessingChange }: 
       excluded,
       placeholders,
       duplicatesIntra,
-      uniqueWords: wordCount.size
+      uniqueWords: uniqueTranslatableWords.size // عدد الكلمات الفريدة القابلة للترجمة فقط
     };
   }, []);
 
