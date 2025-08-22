@@ -21,10 +21,13 @@ import {
 import { Alert, AlertDescription } from "@/components/ui/alert";
 // @ts-ignore
 import mammoth from "mammoth";
-import * as pdfjsLib from "pdfjs-dist";
+import { pdfjs } from 'react-pdf';
 
-// تحديد مسار Worker لـ PDF.js - يطابق إصدار API تلقائياً
-pdfjsLib.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjsLib.version}/pdf.worker.min.js`;
+// إعداد PDF.js worker بشكل موثوق وثابت
+pdfjs.GlobalWorkerOptions.workerSrc = new URL(
+  'pdfjs-dist/build/pdf.worker.min.js',
+  import.meta.url,
+).toString();
 
 interface FileAnalysis {
   fileName: string;
@@ -63,11 +66,10 @@ const FileAnalyzer = ({ onAnalysisComplete, isProcessing, onProcessingChange }: 
   const [analyses, setAnalyses] = useState<FileAnalysis[]>([]);
 
   const supportedFormats = [
-    '.pdf', '.docx', '.doc', '.pptx', '.xlsx', '.csv', 
-    '.txt', '.html', '.md', '.json', '.zip'
+    '.pdf', '.docx', '.doc', '.txt', '.html', '.md', '.json'
   ];
 
-  // تحليل النص وكشف أنواع الكلمات - محسن للسرعة
+  // تحليل النص محسن للسرعة
   const analyzeText = useCallback((text: string): {
     sourceWords: number;
     tableWords: number;
@@ -89,13 +91,13 @@ const FileAnalyzer = ({ onAnalysisComplete, isProcessing, onProcessingChange }: 
       };
     }
 
-    // تحليل النص فائق السرعة مع تحسين الذاكرة
+    // تنظيف النص
     const cleanText = text
       .replace(/[\r\n\t]+/g, ' ')
       .replace(/\s{2,}/g, ' ')
       .trim();
 
-    // استخراج الكلمات محسن للسرعة القصوى
+    // استخراج الكلمات
     const words = cleanText.split(/\s+/).filter(word => word.length > 0);
 
     let sourceWords = 0;
@@ -104,65 +106,41 @@ const FileAnalyzer = ({ onAnalysisComplete, isProcessing, onProcessingChange }: 
     let excluded = 0;
     let placeholders = 0;
 
-    // كشف الجداول مسبقاً
-    const hasTabularData = text.includes('\t') || text.includes('|');
-    
-    // أنماط Regex فائقة السرعة مع تحسين الذاكرة
+    // أنماط التحليل
     const placeholderPattern = /^[\{\[%].*[\}\]%]$|%s|\{name\}/;
     const numberPattern = /^\d+([.,]\d+)*$/;
     const codePattern = /^(https?:\/\/|www\.|[A-Z0-9]{3,}-[A-Z0-9]{3,}|#[a-zA-Z0-9_]+)/;
+    const hasTabularData = text.includes('\t') || text.includes('|');
 
-    // تحليل محسن للكلمات - خوارزمية محسنة للسرعة
-    const wordLength = words.length;
-    for (let i = 0; i < wordLength; i++) {
-      const word = words[i];
-      
-      // كشف النصوص النائبة
+    // تحليل الكلمات
+    words.forEach(word => {
       if (placeholderPattern.test(word)) {
         placeholders++;
-        continue;
-      }
-
-      // كشف الأرقام الصرفة
-      if (numberPattern.test(word)) {
+      } else if (numberPattern.test(word)) {
         numbersOnly++;
-        continue;
-      }
-
-      // كشف الأكواد والمعرفات والروابط
-      if (codePattern.test(word) || (word.length > 20 && /[A-Z0-9]{5,}/.test(word))) {
+      } else if (codePattern.test(word) || (word.length > 20 && /[A-Z0-9]{5,}/.test(word))) {
         excluded++;
-        continue;
-      }
-
-      // كشف كلمات الجداول محسن
-      if (hasTabularData) {
-        // تحليل محسن وأسرع للجداول
+      } else if (hasTabularData && (text.indexOf(word) > -1)) {
         const wordIndex = cleanText.indexOf(word);
-        if (wordIndex > -1) {
-          const context = cleanText.substring(
-            Math.max(0, wordIndex - 30), 
-            Math.min(cleanText.length, wordIndex + word.length + 30)
-          );
-          
-          if (context.includes('\t') || context.includes('|')) {
-            tableWords++;
-          } else {
-            sourceWords++;
-          }
+        const context = cleanText.substring(
+          Math.max(0, wordIndex - 30), 
+          Math.min(cleanText.length, wordIndex + word.length + 30)
+        );
+        
+        if (context.includes('\t') || context.includes('|')) {
+          tableWords++;
         } else {
           sourceWords++;
         }
       } else {
         sourceWords++;
       }
-    }
+    });
 
-    // حساب التكرارات الداخلية محسن للسرعة مع تحسين الذاكرة
+    // حساب التكرارات
     const wordCount = new Map<string, number>();
     let duplicatesIntra = 0;
     
-    // تحسين حلقة التكرارات باستخدام forEach
     words.forEach(word => {
       if (word.length > 2) {
         const normalized = word.toLowerCase();
@@ -174,8 +152,6 @@ const FileAnalyzer = ({ onAnalysisComplete, isProcessing, onProcessingChange }: 
       }
     });
 
-    const uniqueWords = wordCount.size;
-
     return {
       sourceWords,
       tableWords,
@@ -183,190 +159,113 @@ const FileAnalyzer = ({ onAnalysisComplete, isProcessing, onProcessingChange }: 
       excluded,
       placeholders,
       duplicatesIntra,
-      uniqueWords
+      uniqueWords: wordCount.size
     };
   }, []);
 
-  // استخراج النص من الملفات - حل جذري بدون Promise wrapper
+  // استخراج النص من PDF محسن
+  const extractPdfText = useCallback(async (file: File): Promise<string> => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      
+      reader.onload = async () => {
+        try {
+          const arrayBuffer = reader.result as ArrayBuffer;
+          const uint8Array = new Uint8Array(arrayBuffer);
+          
+          // تحميل PDF
+          const loadingTask = pdfjs.getDocument({ data: uint8Array });
+          const pdf = await loadingTask.promise;
+          
+          let allText = "";
+          const numPages = pdf.numPages;
+          
+          // معالجة الصفحات بالتتابع لتجنب المشاكل
+          for (let pageNum = 1; pageNum <= numPages; pageNum++) {
+            try {
+              setProgress(prev => prev ? {
+                ...prev,
+                message: `استخراج النص من الصفحة ${pageNum} من ${numPages}...`
+              } : null);
+              
+              const page = await pdf.getPage(pageNum);
+              const textContent = await page.getTextContent();
+              
+              const pageText = textContent.items
+                .map((item: any) => item.str)
+                .join(' ');
+              
+              allText += pageText + ' ';
+              
+              // تنظيف الذاكرة
+              page.cleanup();
+              
+            } catch (pageError) {
+              console.warn(`تخطي الصفحة ${pageNum} بسبب خطأ:`, pageError);
+            }
+          }
+          
+          // تنظيف الـ PDF
+          pdf.destroy();
+          
+          resolve(allText.trim());
+          
+        } catch (error) {
+          console.error('خطأ في معالجة PDF:', error);
+          reject(error);
+        }
+      };
+      
+      reader.onerror = () => reject(new Error('خطأ في قراءة الملف'));
+      reader.readAsArrayBuffer(file);
+    });
+  }, []);
+
+  // استخراج النص من الملفات المختلفة
   const extractTextFromFile = useCallback(async (file: File): Promise<string> => {
     const fileExtension = file.name.toLowerCase().substring(file.name.lastIndexOf('.'));
     
-    // إنشاء timeout للمنع من التعليق
-    const timeoutPromise = new Promise<never>((_, reject) => {
-      setTimeout(() => reject(new Error('انتهت مهلة استخراج النص - الملف كبير جداً')), 30000);
-    });
-    
-    const extractionPromise = new Promise<string>((resolve, reject) => {
-      const reader = new FileReader();
-      
-      reader.onload = async (event) => {
-        try {
-          const content = event.target?.result;
-          let extractedText = "";
-          
-          setProgress(prev => prev ? { ...prev, message: `استخراج النص من ${file.name}...` } : null);
+    try {
+      setProgress(prev => prev ? { ...prev, message: `استخراج النص من ${file.name}...` } : null);
 
-          if (fileExtension === '.txt' || file.type === 'text/plain') {
-            extractedText = content as string;
-            
-          } else if (fileExtension === '.pdf') {
-            try {
-              const arrayBuffer = content as ArrayBuffer;
-              console.log('بدء معالجة PDF، حجم الملف:', arrayBuffer.byteLength);
-              
-              const loadingTask = pdfjsLib.getDocument({ 
-                data: arrayBuffer,
-                disableFontFace: true, // تسريع المعالجة
-                cMapPacked: true
-              });
-              
-              const pdf = await loadingTask.promise;
-              const totalPages = pdf.numPages;
-              console.log('عدد الصفحات:', totalPages);
-              
-              if (totalPages === 0) {
-                throw new Error('الملف لا يحتوي على صفحات');
-              }
-              
-              let allText = "";
-              
-              // معالجة محسنة وآمنة - 6 صفحات في الوقت نفسه لضمان الاستقرار
-              const batchSize = Math.min(6, totalPages);
-            const batches = [];
-            
-            for (let i = 0; i < totalPages; i += batchSize) {
-              batches.push(Array.from({ length: Math.min(batchSize, totalPages - i) }, (_, j) => i + j + 1));
-            }
-            
-            let processedPages = 0;
-            
-            for (const batch of batches) {
-              const batchPromises = batch.map(async (pageNum) => {
-                try {
-                  console.log(`معالجة الصفحة ${pageNum}...`);
-                  const page = await pdf.getPage(pageNum);
-                  const textContent = await page.getTextContent();
-                  
-                  if (!textContent || !textContent.items) {
-                    console.warn(`الصفحة ${pageNum} فارغة`);
-                    return { pageNum, text: '' };
-                  }
-                  
-                  const pageText = textContent.items
-                    .filter((item: any) => item && item.str)
-                    .map((item: any) => item.str.trim())
-                    .filter(str => str.length > 0)
-                    .join(' ');
-                  
-                  // تنظيف الذاكرة
-                  if (page.cleanup) {
-                    page.cleanup();
-                  }
-                  
-                  console.log(`الصفحة ${pageNum} مكتملة - ${pageText.length} حرف`);
-                  return { pageNum, text: pageText };
-                } catch (pageError) {
-                  console.error(`خطأ في معالجة الصفحة ${pageNum}:`, pageError);
-                  return { pageNum, text: '' };
-                }
-              });
-              
-              const batchResults = await Promise.all(batchPromises);
-              
-              batchResults
-                .sort((a, b) => a.pageNum - b.pageNum)
-                .forEach(result => {
-                  if (result.text.trim()) {
-                    allText += result.text + '\n';
-                  }
-                });
-              
-              processedPages += batch.length;
-              
-              setProgress(prev => prev ? {
-                ...prev,
-                current: Math.round((processedPages / totalPages) * 100),
-                message: `معالجة ${file.name}: ${processedPages} من ${totalPages} صفحة...`
-              } : null);
-              
-              console.log(`Batch مكتمل: ${processedPages}/${totalPages}`);
-            }
-            
-            // تنظيف الذاكرة
-            if (pdf.destroy) {
-              pdf.destroy();
-            }
-            
-            console.log('النص المستخرج - إجمالي الأحرف:', allText.length);
-            extractedText = allText.trim();
-            
-            if (!extractedText) {
-              throw new Error('لم يتم استخراج أي نص من الملف - قد يكون ملف صورة يحتاج OCR');
-            }
-            } catch (pdfError) {
-              console.error('خطأ في معالجة PDF:', pdfError);
-              throw new Error(`خطأ في معالجة PDF: ${pdfError instanceof Error ? pdfError.message : 'خطأ غير معروف'}`);
-            }
-            
-          } else if (fileExtension === '.docx' || fileExtension === '.doc') {
-            const arrayBuffer = content as ArrayBuffer;
-            const result = await mammoth.extractRawText({ arrayBuffer });
-            extractedText = result.value;
-            
-          } else if (fileExtension === '.json') {
-            const jsonContent = JSON.parse(content as string);
-            extractedText = JSON.stringify(jsonContent, null, 2);
-            
-          } else if (fileExtension === '.html') {
-            const htmlContent = content as string;
-            // إزالة الوسوم HTML
-            extractedText = htmlContent.replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim();
-            
-          } else if (fileExtension === '.md') {
-            const mdContent = content as string;
-            // إزالة علامات Markdown الأساسية
-            extractedText = mdContent
-              .replace(/#{1,6}\s/g, '')
-              .replace(/\*\*(.*?)\*\*/g, '$1')
-              .replace(/\*(.*?)\*/g, '$1')
-              .replace(/\[(.*?)\]\(.*?\)/g, '$1')
-              .trim();
-          }
-          
-          if (!extractedText || extractedText.trim().length === 0) {
-            console.warn('النص المستخرج فارغ');
-            reject(new Error("الملف فارغ أو لا يحتوي على نص قابل للقراءة"));
-            return;
-          }
-          
-          console.log('استخراج النص مكتمل بنجاح:', extractedText.length, 'حرف');
-          resolve(extractedText.trim());
-          
-        } catch (error) {
-          console.error("خطأ في استخراج النص:", error);
-          reject(new Error("خطأ في قراءة محتوى الملف: " + (error instanceof Error ? error.message : "خطأ غير معروف")));
-        }
-      };
-      
-      reader.onerror = (error) => {
-        console.error("خطأ في FileReader:", error);
-        reject(new Error("خطأ في قراءة الملف"));
-      };
-      
-      try {
-        if (fileExtension === '.txt' || file.type === 'text/plain' || fileExtension === '.html' || fileExtension === '.md' || fileExtension === '.json') {
-          reader.readAsText(file, 'UTF-8');
-        } else {
-          reader.readAsArrayBuffer(file);
-        }
-      } catch (readerError) {
-        console.error("خطأ في بدء FileReader:", readerError);
-        reject(new Error("خطأ في بدء قراءة الملف"));
+      if (fileExtension === '.txt') {
+        const text = await file.text();
+        return text;
+        
+      } else if (fileExtension === '.pdf') {
+        return await extractPdfText(file);
+        
+      } else if (fileExtension === '.docx' || fileExtension === '.doc') {
+        const arrayBuffer = await file.arrayBuffer();
+        const result = await mammoth.extractRawText({ arrayBuffer });
+        return result.value;
+        
+      } else if (fileExtension === '.json') {
+        const text = await file.text();
+        const jsonContent = JSON.parse(text);
+        return JSON.stringify(jsonContent, null, 2);
+        
+      } else if (fileExtension === '.html') {
+        const htmlContent = await file.text();
+        return htmlContent.replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim();
+        
+      } else if (fileExtension === '.md') {
+        const mdContent = await file.text();
+        return mdContent
+          .replace(/#{1,6}\s/g, '')
+          .replace(/\*\*(.*?)\*\*/g, '$1')
+          .replace(/\*(.*?)\*/g, '$1')
+          .replace(/\[(.*?)\]\(.*?\)/g, '$1')
+          .trim();
       }
-    });
-    
-    return Promise.race([extractionPromise, timeoutPromise]);
-  }, []);
+      
+      throw new Error(`نوع الملف ${fileExtension} غير مدعوم`);
+      
+    } catch (error) {
+      console.error(`خطأ في استخراج النص من ${file.name}:`, error);
+      throw error;
+    }
+  }, [extractPdfText]);
 
   // معالجة رفع الملفات
   const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -421,15 +320,15 @@ const FileAnalyzer = ({ onAnalysisComplete, isProcessing, onProcessingChange }: 
           const fileAnalysis: FileAnalysis = {
             fileName: file.name,
             fileType: fileExtension.substring(1).toUpperCase(),
-            pages: fileExtension === '.pdf' ? Math.ceil(rawText.length / 2000) : 1, // تقدير تقريبي
+            pages: fileExtension === '.pdf' ? Math.ceil(rawText.length / 2000) : 1,
             sourceWords: analysis.sourceWords,
             tableWords: analysis.tableWords,
             numbersOnly: analysis.numbersOnly,
             excluded: analysis.excluded,
             placeholders: analysis.placeholders,
-            ocrNeeded: rawText.length < 100 && fileExtension === '.pdf', // كشف بسيط لـ OCR
+            ocrNeeded: rawText.length < 100 && fileExtension === '.pdf',
             duplicatesIntra: analysis.duplicatesIntra,
-            duplicatesInter: 0, // سيتم حسابه لاحقاً
+            duplicatesInter: 0,
             uniqueWords: analysis.uniqueWords,
             notes: [],
             rawText
@@ -481,243 +380,211 @@ const FileAnalyzer = ({ onAnalysisComplete, isProcessing, onProcessingChange }: 
           message: "حساب التكرارات بين الملفات..."
         });
 
-        // تحليل بسيط للتكرارات بين الملفات
+        // حساب بسيط للتكرارات بين الملفات
         analysisResults.forEach((analysis, index) => {
-          if (analysis.rawText) {
-            const words = analysis.rawText.split(/\s+/).filter(w => w.length > 3);
-            let interDuplicates = 0;
+          if (analysis.rawText.length === 0) return;
+          
+          const words = analysis.rawText.toLowerCase().split(/\s+/);
+          let interDuplicates = 0;
+          
+          for (let j = 0; j < allTexts.length; j++) {
+            if (j === index) continue;
             
-            words.forEach(word => {
-              const normalizedWord = word.toLowerCase().trim();
-              for (let i = 0; i < allTexts.length; i++) {
-                if (i !== index && allTexts[i].toLowerCase().includes(normalizedWord)) {
-                  interDuplicates++;
-                  break;
-                }
-              }
-            });
-            
-            analysis.duplicatesInter = Math.floor(interDuplicates * 0.1); // تقدير تقريبي
+            const otherWords = allTexts[j].toLowerCase().split(/\s+/);
+            const commonWords = words.filter(word => 
+              word.length > 3 && otherWords.includes(word)
+            );
+            interDuplicates += commonWords.length;
+          }
+          
+          analysis.duplicatesInter = interDuplicates;
+          if (interDuplicates > words.length * 0.1) {
+            analysis.notes.push("تشابه مع ملفات أخرى");
           }
         });
       }
 
+      setProgress({
+        current: selectedFiles.length,
+        total: selectedFiles.length,
+        stage: "اكتمل",
+        message: "تم إنجاز التحليل بنجاح!"
+      });
+
       setAnalyses(analysisResults);
       onAnalysisComplete(analysisResults);
-      
+
     } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : "خطأ غير معروف";
-      setError(errorMessage);
-      console.error("خطأ في تحليل الملفات:", error);
+      console.error("خطأ في التحليل:", error);
+      setError(error instanceof Error ? error.message : "حدث خطأ غير متوقع");
     } finally {
-      setProgress(null);
       onProcessingChange(false);
+      setTimeout(() => setProgress(null), 2000);
     }
   };
 
+  // حذف ملف
   const removeFile = (index: number) => {
-    const newFiles = files.filter((_, i) => i !== index);
+    const newFiles = [...files];
+    newFiles.splice(index, 1);
     setFiles(newFiles);
     
-    if (newFiles.length === 0) {
-      setAnalyses([]);
-      onAnalysisComplete([]);
-      
-      // إعادة تعيين input
-      const input = document.getElementById("file-analyzer") as HTMLInputElement;
-      if (input) input.value = "";
-    }
+    const newAnalyses = [...analyses];
+    newAnalyses.splice(index, 1);
+    setAnalyses(newAnalyses);
+    onAnalysisComplete(newAnalyses);
   };
 
   return (
-    <div className="space-y-6" dir="rtl">
-      {/* منطقة رفع الملفات */}
-      <Card className="bg-gradient-card border-0 shadow-medium">
-        <CardHeader>
-          <CardTitle className="flex items-center gap-3 flex-row-reverse text-right">
-            <span>محلل الملفات المتقدم</span>
-            <Scan className="h-6 w-6 text-primary animate-pulse-soft" />
+    <Card className="w-full">
+      <CardHeader className="pb-4">
+        <div className="flex items-center justify-between">
+          <CardTitle className="flex items-center gap-2 text-right">
+            <Scan className="h-5 w-5 text-primary" />
+            محلل الملفات المتقدم
           </CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <div className="flex items-center gap-4">
-            <div className="flex-1">
-              <Input
-                type="file"
-                multiple
-                accept={supportedFormats.join(',')}
-                onChange={handleFileUpload}
-                className="hidden"
-                id="file-analyzer"
-                disabled={isProcessing}
-              />
-              <Label
-                htmlFor="file-analyzer"
-                className={`inline-flex items-center gap-3 px-8 py-4 bg-gradient-to-r from-primary/10 to-accent/10 hover:from-primary/20 hover:to-accent/20 rounded-xl cursor-pointer transition-all duration-200 border-2 border-dashed border-primary/30 hover:border-primary/50 w-full justify-center flex-row-reverse ${isProcessing ? 'opacity-50 cursor-not-allowed' : 'hover:scale-[1.02]'}`}
-              >
-                <div className="text-center">
-                  <div className="font-bold text-lg">
-                    {progress ? progress.message : isProcessing ? "جاري التحليل فائق السرعة..." : "رفع الملفات للتحليل الشامل"}
-                  </div>
-                  <div className="text-sm text-muted-foreground">
-                    {progress ? `${progress.current}% مكتمل` : "PDF, DOCX, PPTX, XLSX, CSV, TXT, HTML, Markdown, JSON, ZIP"}
-                  </div>
-                </div>
+          <Badge variant="secondary" className="bg-primary/10 text-primary">
+            نظام محسن
+          </Badge>
+        </div>
+      </CardHeader>
+      
+      <CardContent className="space-y-4">
+        {/* منطقة رفع الملفات */}
+        <div className="space-y-2">
+          <Label htmlFor="file-upload" className="text-sm font-medium">
+            اختر الملفات للتحليل
+          </Label>
+          <div className="relative">
+            <Input
+              id="file-upload"
+              type="file"
+              multiple
+              accept={supportedFormats.join(',')}
+              onChange={handleFileUpload}
+              disabled={isProcessing}
+              className="hidden"
+            />
+            <Button
+              onClick={() => document.getElementById('file-upload')?.click()}
+              disabled={isProcessing}
+              className="w-full h-20 border-2 border-dashed border-primary/20 hover:border-primary/40 bg-primary/5 hover:bg-primary/10"
+              variant="outline"
+            >
+              <div className="flex flex-col items-center gap-2">
                 <Upload className="h-6 w-6 text-primary" />
-              </Label>
+                <span className="text-sm font-medium">
+                  {isProcessing ? "جاري المعالجة..." : "اضغط لاختيار الملفات"}
+                </span>
+                <span className="text-xs text-muted-foreground">
+                  يدعم: PDF, DOCX, TXT, HTML, MD, JSON
+                </span>
+              </div>
+            </Button>
+          </div>
+        </div>
+
+        {/* شريط التقدم */}
+        {progress && (
+          <div className="space-y-2 p-4 bg-gradient-to-r from-primary/5 to-accent/5 rounded-lg border border-primary/10">
+            <div className="flex justify-between items-center">
+              <span className="text-sm font-medium">{progress.stage}</span>
+              <span className="text-xs text-muted-foreground">
+                {progress.current} من {progress.total}
+              </span>
+            </div>
+            <Progress 
+              value={(progress.current / progress.total) * 100} 
+              className="h-2"
+            />
+            <p className="text-xs text-muted-foreground">{progress.message}</p>
+          </div>
+        )}
+
+        {/* رسائل الخطأ */}
+        {error && (
+          <Alert variant="destructive">
+            <AlertCircle className="h-4 w-4" />
+            <AlertDescription>{error}</AlertDescription>
+          </Alert>
+        )}
+
+        {/* قائمة الملفات */}
+        {files.length > 0 && (
+          <div className="space-y-2">
+            <h3 className="text-sm font-medium">الملفات المحددة:</h3>
+            <div className="space-y-2 max-h-40 overflow-y-auto">
+              {files.map((file, index) => (
+                <div key={index} className="flex items-center justify-between p-2 bg-secondary/50 rounded-lg">
+                  <div className="flex items-center gap-2">
+                    <FileText className="h-4 w-4 text-primary" />
+                    <span className="text-sm">{file.name}</span>
+                    <Badge variant="outline" className="text-xs">
+                      {(file.size / 1024 / 1024).toFixed(2)} MB
+                    </Badge>
+                  </div>
+                  <Button
+                    size="sm"
+                    variant="ghost"
+                    onClick={() => removeFile(index)}
+                    disabled={isProcessing}
+                    className="h-6 w-6 p-0"
+                  >
+                    <X className="h-3 w-3" />
+                  </Button>
+                </div>
+              ))}
             </div>
           </div>
+        )}
 
-          {/* شريط التقدم */}
-          {progress && (
-            <div className="space-y-3">
-              <div className="flex justify-between items-center text-sm">
-                <span className="font-medium">{progress.stage}</span>
-                <span className="text-primary font-bold">{progress.current}/{progress.total}</span>
-              </div>
-              <Progress value={(progress.current / progress.total) * 100} className="h-3" />
-              <div className="text-center text-sm text-muted-foreground">
-                {progress.message}
-              </div>
+        {/* نتائج التحليل */}
+        {analyses.length > 0 && (
+          <div className="space-y-3">
+            <div className="flex items-center gap-2">
+              <CheckCircle className="h-4 w-4 text-green-600" />
+              <h3 className="text-sm font-medium">نتائج التحليل</h3>
             </div>
-          )}
-
-          {/* الميزات المدعومة */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mt-4">
-            <div className="flex items-center gap-2 text-sm text-muted-foreground">
-              <Table className="h-4 w-4 text-blue-600" />
-              <span>كشف الجداول</span>
-            </div>
-            <div className="flex items-center gap-2 text-sm text-muted-foreground">
-              <Hash className="h-4 w-4 text-orange-600" />
-              <span>فلترة الأرقام</span>
-            </div>
-            <div className="flex items-center gap-2 text-sm text-muted-foreground">
-              <Copy className="h-4 w-4 text-purple-600" />
-              <span>كشف التكرارات</span>
-            </div>
-            <div className="flex items-center gap-2 text-sm text-muted-foreground">
-              <Scan className="h-4 w-4 text-green-600" />
-              <span>كشف OCR</span>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* عرض الملفات المرفوعة */}
-      {files.length > 0 && (
-        <div className="space-y-3">
-          <h4 className="font-bold text-lg flex items-center gap-2">
-            <FileText className="h-5 w-5 text-primary" />
-            الملفات المرفوعة ({files.length})
-          </h4>
-          
-          {files.map((file, index) => {
-            const analysis = analyses[index];
-            return (
-              <Card key={index} className="bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-950/20 dark:to-emerald-950/20 border border-green-200 dark:border-green-800">
-                <CardContent className="p-4">
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-3 flex-1">
-                      <FileText className="h-5 w-5 text-green-600 flex-shrink-0" />
-                      <div className="flex-1 min-w-0">
-                        <p className="font-medium text-green-800 dark:text-green-200 truncate">{file.name}</p>
-                        <div className="flex items-center gap-4 text-sm text-green-600 dark:text-green-400 mt-1">
-                          <span>{(file.size / 1024).toFixed(1)} KB</span>
-                          {analysis && (
-                            <>
-                              <span>{analysis.sourceWords.toLocaleString()} كلمة</span>
-                              {analysis.tableWords > 0 && (
-                                <Badge variant="secondary" className="text-xs bg-blue-100 text-blue-800">
-                                  {analysis.tableWords} في جداول
-                                </Badge>
-                              )}
-                              {analysis.ocrNeeded && (
-                                <Badge variant="secondary" className="text-xs bg-yellow-100 text-yellow-800">
-                                  يحتاج OCR
-                                </Badge>
-                              )}
-                            </>
-                          )}
-                        </div>
-                      </div>
-                    </div>
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      onClick={() => removeFile(index)}
-                      className="text-green-600 hover:text-green-800 hover:bg-green-100 dark:hover:bg-green-900 flex-shrink-0"
-                    >
-                      <X className="h-4 w-4" />
-                    </Button>
+            
+            <div className="grid gap-3">
+              {analyses.map((analysis, index) => (
+                <div key={index} className="p-3 bg-gradient-to-r from-primary/5 to-accent/5 rounded-lg border border-primary/10">
+                  <div className="flex items-center justify-between mb-2">
+                    <span className="font-medium text-sm">{analysis.fileName}</span>
+                    <Badge variant="outline">{analysis.fileType}</Badge>
                   </div>
                   
-                  {analysis && analysis.notes.length > 0 && (
-                    <div className="mt-3 flex flex-wrap gap-2">
+                  <div className="grid grid-cols-3 gap-2 text-xs">
+                    <div className="text-center">
+                      <div className="font-bold text-primary">{analysis.sourceWords.toLocaleString()}</div>
+                      <div className="text-muted-foreground">كلمات مصدرية</div>
+                    </div>
+                    <div className="text-center">
+                      <div className="font-bold text-accent">{analysis.tableWords.toLocaleString()}</div>
+                      <div className="text-muted-foreground">كلمات جداول</div>
+                    </div>
+                    <div className="text-center">
+                      <div className="font-bold text-orange-600">{analysis.numbersOnly.toLocaleString()}</div>
+                      <div className="text-muted-foreground">أرقام</div>
+                    </div>
+                  </div>
+                  
+                  {analysis.notes.length > 0 && (
+                    <div className="mt-2 flex flex-wrap gap-1">
                       {analysis.notes.map((note, noteIndex) => (
-                        <Badge key={noteIndex} variant="outline" className="text-xs">
+                        <Badge key={noteIndex} variant="secondary" className="text-xs">
                           {note}
                         </Badge>
                       ))}
                     </div>
                   )}
-                </CardContent>
-              </Card>
-            );
-          })}
-        </div>
-      )}
-
-      {/* عرض الأخطاء */}
-      {error && (
-        <Alert variant="destructive">
-          <AlertCircle className="h-4 w-4" />
-          <AlertDescription>{error}</AlertDescription>
-        </Alert>
-      )}
-
-      {/* ملخص سريع */}
-      {analyses.length > 0 && !isProcessing && (
-        <Card className="bg-gradient-to-r from-primary/5 via-accent/5 to-emerald-500/5 border-2 border-primary/20">
-          <CardContent className="p-4">
-            <div className="flex items-center gap-2 mb-3">
-              <CheckCircle className="h-5 w-5 text-green-600" />
-              <h4 className="font-bold text-green-800 dark:text-green-200">تم التحليل بنجاح</h4>
+                </div>
+              ))}
             </div>
-            
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
-              <div className="text-center">
-                <div className="text-2xl font-bold text-primary">
-                  {analyses.reduce((sum, a) => sum + a.sourceWords, 0).toLocaleString()}
-                </div>
-                <div className="text-muted-foreground">إجمالي الكلمات</div>
-              </div>
-              
-              <div className="text-center">
-                <div className="text-2xl font-bold text-blue-600">
-                  {analyses.reduce((sum, a) => sum + a.tableWords, 0).toLocaleString()}
-                </div>
-                <div className="text-muted-foreground">كلمات الجداول</div>
-              </div>
-              
-              <div className="text-center">
-                <div className="text-2xl font-bold text-orange-600">
-                  {analyses.reduce((sum, a) => sum + a.duplicatesIntra + a.duplicatesInter, 0).toLocaleString()}
-                </div>
-                <div className="text-muted-foreground">التكرارات</div>
-              </div>
-              
-              <div className="text-center">
-                <div className="text-2xl font-bold text-green-600">
-                  {analyses.filter(a => a.ocrNeeded).length}
-                </div>
-                <div className="text-muted-foreground">يحتاج OCR</div>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-      )}
-    </div>
+          </div>
+        )}
+      </CardContent>
+    </Card>
   );
 };
 
