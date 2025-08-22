@@ -1,6 +1,7 @@
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import ServicesSection from "@/components/ServicesSection";
+import AdvancedFileAnalyzer from "@/components/AdvancedFileAnalyzer";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -14,7 +15,8 @@ import {
   CheckCircle, 
   ArrowLeft,
   PlayCircle,
-  Award
+  Award,
+  Calculator
 } from "lucide-react";
 import heroImage from "@/assets/hero-translation.jpg";
 
@@ -283,6 +285,26 @@ const Index = () => {
 
       {/* قسم الخدمات */}
       <ServicesSection />
+
+      {/* محلل الملفات المتقدم للترجمة */}
+      <section className="py-16 bg-background">
+        <div className="container mx-auto px-4">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl lg:text-4xl font-arabic-title font-bold mb-4">
+              <Calculator className="inline-block h-8 w-8 ml-2 text-primary" />
+              محلل الملفات <span className="text-gradient">المتقدم</span>
+            </h2>
+            <p className="text-lg text-muted-foreground max-w-3xl mx-auto">
+              نظام تحليل متطور للنصوص والملفات مع حساب دقيق للكلمات القابلة للترجمة والتسعير الفوري.
+              يدعم جميع أنواع الملفات مع معالجة OCR للصور والمستندات الممسوحة ضوئياً.
+            </p>
+          </div>
+          
+          <div className="max-w-6xl mx-auto">
+            <AdvancedFileAnalyzer />
+          </div>
+        </div>
+      </section>
 
       {/* آراء العملاء */}
       <section className="py-16 bg-muted/30">
