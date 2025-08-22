@@ -2,6 +2,7 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import ServicesSection from "@/components/ServicesSection";
 import StatsSection from "@/components/StatsSection";
+import StatsBackground from "@/components/StatsBackground";
 import TranslationStudio from "@/components/TranslationStudio";
 import AnimatedBackground from "@/components/AnimatedBackground";
 import { Button } from "@/components/ui/button";
@@ -230,9 +231,9 @@ const Index = () => {
       </section>
 
       {/* قسم الإحصائيات التفاعلي */}
-      <section className="py-12 sm:py-16 lg:py-20 bg-gradient-to-br from-muted/20 via-background to-muted/30 relative overflow-hidden">
-        {/* خلفية تفاعلية */}
-        <div className="absolute inset-0 bg-grid-white/10 bg-grid-16 [mask-image:radial-gradient(white,transparent_70%)]" />
+      <section className="py-12 sm:py-16 lg:py-20 relative overflow-hidden">
+        {/* الخلفية المتحركة للترجمة */}
+        <StatsBackground />
         
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <motion.div
