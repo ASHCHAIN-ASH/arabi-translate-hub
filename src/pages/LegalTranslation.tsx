@@ -1,7 +1,6 @@
 import { useState } from "react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
-import FileAnalyzer from "@/components/FileAnalyzer";
 import AdvancedWordCounter from "@/components/AdvancedWordCounter";
 import PricingReport from "@/components/PricingReport";
 import AnimatedBackground from "@/components/AnimatedBackground";
@@ -248,10 +247,10 @@ const LegalTranslation = () => {
                 </div>
                 <div className="text-center">
                   <h3 className="text-3xl font-arabic-title font-bold">
-                    محرك التحليل الاحترافي
+                    خدمات الترجمة المتقدمة
                   </h3>
                   <p className="text-primary-foreground/80 mt-2">
-                    معالجة سريعة ومتوازية مع دعم كامل للغة العربية والـ RTL
+                    خدمات ترجمة متطورة مع دعم كامل للغة العربية والـ RTL
                   </p>
                 </div>
               </div>
@@ -343,19 +342,17 @@ const LegalTranslation = () => {
                       </Card>
                     </div>
                   </div>
-                  
-                  <FileAnalyzer
-                    onAnalysisComplete={setAnalysisData}
-                    isProcessing={isProcessing}
-                    onProcessingChange={setIsProcessing}
-                  />
-                  
-                  {analysisData && (
-                    <AdvancedWordCounter 
-                      analysisData={mockAnalysisData} 
-                      isProcessing={isProcessing} 
-                    />
-                  )}
+                   
+                   <Card className="text-center py-12">
+                     <CardContent>
+                       <Calculator className="h-16 w-16 text-primary mx-auto mb-4" />
+                       <h3 className="text-xl font-bold mb-2">حاسبة التكلفة الذكية</h3>
+                       <p className="text-muted-foreground mb-6">احسب تكلفة ترجمة وثائقك القانونية بدقة</p>
+                       <Button className="bg-gradient-primary text-primary-foreground">
+                         ابدأ الحساب
+                       </Button>
+                     </CardContent>
+                   </Card>
                 </TabsContent>
 
                 <TabsContent value="pricing" className="space-y-6">

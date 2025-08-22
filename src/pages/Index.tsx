@@ -4,7 +4,6 @@ import ServicesSection from "@/components/ServicesSection";
 
 import StatsSection from "@/components/StatsSection";
 import StatsBackground from "@/components/StatsBackground";
-import TranslationStudio from "@/components/TranslationStudio";
 import AnimatedBackground from "@/components/AnimatedBackground";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -33,7 +32,13 @@ import {
   Headphones,
   BookOpen,
   Mic,
-  Monitor
+  Monitor,
+  Scale,
+  Stethoscope,
+  Cog,
+  GraduationCap,
+  Newspaper,
+  Radio
 } from "lucide-react";
 import { motion } from "framer-motion";
 import React from "react";
@@ -297,129 +302,145 @@ const Index = () => {
               { 
                 title: "الترجمة القانونية", 
                 desc: "ترجمة العقود والوثائق القانونية", 
-                icon: "⚖️",
+                icon: Scale,
                 route: "/legal-translation",
-                color: "from-blue-500 to-blue-600"
+                color: "from-blue-500 to-blue-600",
+                bgGlow: "bg-blue-500/20"
               },
               { 
                 title: "الترجمة الطبية", 
                 desc: "ترجمة التقارير والأبحاث الطبية", 
-                icon: "🏥",
+                icon: Stethoscope,
                 route: "/medical-translation",
-                color: "from-green-500 to-green-600"
+                color: "from-green-500 to-green-600",
+                bgGlow: "bg-green-500/20"
               },
               { 
                 title: "الترجمة التقنية", 
                 desc: "ترجمة المستندات التقنية والهندسية", 
-                icon: "⚙️",
+                icon: Cog,
                 route: "/technical-translation",
-                color: "from-purple-500 to-purple-600"
+                color: "from-purple-500 to-purple-600",
+                bgGlow: "bg-purple-500/20"
               },
               { 
                 title: "الترجمة التجارية", 
                 desc: "ترجمة المراسلات والتقارير التجارية", 
-                icon: "💼",
+                icon: Briefcase,
                 route: "/business-translation",
-                color: "from-orange-500 to-orange-600"
+                color: "from-orange-500 to-orange-600",
+                bgGlow: "bg-orange-500/20"
               },
               { 
                 title: "الترجمة الأكاديمية", 
                 desc: "ترجمة الأبحاث والرسائل العلمية", 
-                icon: "🎓",
+                icon: GraduationCap,
                 route: "/academic-translation",
-                color: "from-indigo-500 to-indigo-600"
+                color: "from-indigo-500 to-indigo-600",
+                bgGlow: "bg-indigo-500/20"
               },
               { 
                 title: "الترجمة الأدبية", 
                 desc: "ترجمة الكتب والنصوص الأدبية", 
-                icon: "📚",
+                icon: BookOpen,
                 route: "/literary-translation",
-                color: "from-pink-500 to-pink-600"
+                color: "from-pink-500 to-pink-600",
+                bgGlow: "bg-pink-500/20"
               },
               { 
                 title: "الترجمة الإعلامية", 
                 desc: "ترجمة المقالات والأخبار", 
-                icon: "📰",
+                icon: Newspaper,
                 route: "/media-translation",
-                color: "from-red-500 to-red-600"
+                color: "from-red-500 to-red-600",
+                bgGlow: "bg-red-500/20"
               },
               { 
                 title: "الترجمة الفورية", 
                 desc: "ترجمة فورية للمؤتمرات والاجتماعات", 
-                icon: "🎤",
+                icon: Radio,
                 route: "/live-translation",
-                color: "from-teal-500 to-teal-600"
+                color: "from-teal-500 to-teal-600",
+                bgGlow: "bg-teal-500/20"
               }
-            ].map((type, index) => (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ delay: index * 0.1, duration: 0.5 }}
-                viewport={{ once: true }}
-                whileHover={{ scale: 1.05, y: -5 }}
-                className="cursor-pointer"
-              >
-                <Card className="group text-center hover-lift bg-gradient-card shadow-soft border-0 overflow-hidden relative h-full">
-                  <div className={`absolute inset-0 bg-gradient-to-br ${type.color} opacity-0 group-hover:opacity-15 transition-all duration-500`} />
-                  <CardContent className="p-4 sm:p-6 lg:p-8 space-y-3 sm:space-y-4 lg:space-y-6 relative z-10 h-full flex flex-col justify-between">
-                    <div className="relative">
-                      <motion.div 
-                        className="mb-3 sm:mb-4 flex justify-center"
-                        whileHover={{ 
-                          scale: 1.15, 
-                          rotate: [0, -5, 5, -5, 0],
-                          transition: { duration: 0.5 }
-                        }}
-                      >
-                        <div className="text-4xl sm:text-5xl lg:text-6xl">
-                          {type.icon}
-                        </div>
-                      </motion.div>
-                      <div className="absolute inset-0 flex items-center justify-center">
+            ].map((type, index) => {
+              const IconComponent = type.icon;
+              return (
+                <motion.div
+                  key={index}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  transition={{ delay: index * 0.1, duration: 0.5 }}
+                  viewport={{ once: true }}
+                  whileHover={{ scale: 1.05, y: -5 }}
+                  className="cursor-pointer"
+                >
+                  <Card className="group text-center hover-lift bg-gradient-card shadow-soft border-0 overflow-hidden relative h-full">
+                    <div className={`absolute inset-0 bg-gradient-to-br ${type.color} opacity-0 group-hover:opacity-15 transition-all duration-500`} />
+                    <CardContent className="p-4 sm:p-6 lg:p-8 space-y-3 sm:space-y-4 lg:space-y-6 relative z-10 h-full flex flex-col justify-between">
+                      <div className="relative">
                         <motion.div 
-                          className="w-16 h-16 sm:w-20 lg:w-24 bg-gradient-to-r from-primary/20 to-secondary/20 rounded-full blur-xl opacity-0 group-hover:opacity-100"
-                          animate={{ 
-                            scale: [1, 1.2, 1],
-                            opacity: [0, 0.6, 0]
+                          className="mb-3 sm:mb-4 flex justify-center relative"
+                          whileHover={{ 
+                            scale: 1.15,
+                            transition: { duration: 0.3 }
                           }}
-                          transition={{ 
-                            duration: 2,
-                            repeat: Infinity,
-                            repeatType: "reverse"
-                          }}
-                        />
-                      </div>
-                    </div>
-                    <div className="space-y-2 sm:space-y-3">
-                      <h3 className="text-sm sm:text-base lg:text-lg font-bold group-hover:text-primary transition-colors duration-300 leading-tight">
-                        {type.title}
-                      </h3>
-                      <p className="text-muted-foreground text-xs sm:text-sm leading-relaxed">
-                        {type.desc}
-                      </p>
-                    </div>
-                    <Button 
-                      variant="outline" 
-                      size="sm" 
-                      className="w-full text-xs sm:text-sm group-hover:bg-primary group-hover:text-primary-foreground group-hover:border-primary transition-all duration-300 hover:shadow-lg transform group-hover:scale-105"
-                      onClick={() => window.location.href = type.route}
-                    >
-                      <span className="flex items-center gap-2">
-                        المزيد
-                        <motion.div
-                          initial={{ x: 0 }}
-                          whileHover={{ x: -5 }}
-                          transition={{ duration: 0.2 }}
                         >
-                          <ArrowLeft className="h-3 w-3 sm:h-4 lg:h-5" />
+                          <div className="relative">
+                            <motion.div 
+                              className={`w-16 h-16 sm:w-20 lg:w-24 bg-gradient-to-br ${type.color} rounded-2xl flex items-center justify-center shadow-lg`}
+                              whileHover={{ 
+                                rotate: [0, -5, 5, -5, 0],
+                                transition: { duration: 0.5 }
+                              }}
+                            >
+                              <IconComponent className="h-8 w-8 sm:h-10 lg:h-12 text-white" />
+                            </motion.div>
+                            <motion.div 
+                              className={`absolute inset-0 ${type.bgGlow} rounded-2xl blur-xl opacity-0 group-hover:opacity-60`}
+                              animate={{ 
+                                scale: [1, 1.2, 1],
+                                opacity: [0, 0.4, 0]
+                              }}
+                              transition={{ 
+                                duration: 2,
+                                repeat: Infinity,
+                                repeatType: "reverse"
+                              }}
+                            />
+                          </div>
                         </motion.div>
-                      </span>
-                    </Button>
-                  </CardContent>
-                </Card>
-              </motion.div>
-            ))}
+                      </div>
+                      <div className="space-y-2 sm:space-y-3">
+                        <h3 className="text-sm sm:text-base lg:text-lg font-bold group-hover:text-primary transition-colors duration-300 leading-tight">
+                          {type.title}
+                        </h3>
+                        <p className="text-muted-foreground text-xs sm:text-sm leading-relaxed">
+                          {type.desc}
+                        </p>
+                      </div>
+                      <Button 
+                        variant="outline" 
+                        size="sm" 
+                        className="w-full text-xs sm:text-sm group-hover:bg-primary group-hover:text-primary-foreground group-hover:border-primary transition-all duration-300 hover:shadow-lg transform group-hover:scale-105"
+                        onClick={() => window.location.href = type.route}
+                      >
+                        <span className="flex items-center gap-2">
+                          المزيد
+                          <motion.div
+                            initial={{ x: 0 }}
+                            whileHover={{ x: -5 }}
+                            transition={{ duration: 0.2 }}
+                          >
+                            <ArrowLeft className="h-3 w-3 sm:h-4 lg:h-5" />
+                          </motion.div>
+                        </span>
+                      </Button>
+                    </CardContent>
+                  </Card>
+                </motion.div>
+              );
+            })}
           </div>
         </div>
       </section>
@@ -538,104 +559,6 @@ const Index = () => {
       {/* قسم الخدمات */}
       <ServicesSection />
 
-
-      {/* استوديو الترجمة التفاعلي */}
-      <section className="py-12 sm:py-16 lg:py-20 bg-gradient-to-br from-background via-primary/5 to-accent/5 relative overflow-hidden">
-        {/* خلفية متحركة */}
-        <div className="absolute inset-0 opacity-30">
-          <div className="absolute top-10 left-10 w-16 h-16 sm:w-20 lg:w-24 bg-primary/20 rounded-full blur-xl animate-pulse" />
-          <div className="absolute top-1/2 right-10 sm:right-20 w-24 h-24 sm:w-32 lg:w-40 bg-accent/20 rounded-full blur-2xl animate-pulse delay-1000" />
-          <div className="absolute bottom-10 sm:bottom-20 left-1/3 w-20 h-20 sm:w-24 lg:w-32 bg-gradient-to-r from-primary/20 to-accent/20 rounded-full blur-xl animate-pulse delay-500" />
-        </div>
-
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            viewport={{ once: true }}
-            className="text-center mb-12 sm:mb-16"
-          >
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-4 mb-4 sm:mb-6">
-              <motion.div
-                animate={{ rotate: 360 }}
-                transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
-                className="order-2 sm:order-1"
-              >
-                <Sparkles className="h-6 w-6 sm:h-8 lg:h-10 text-primary" />
-              </motion.div>
-              <h2 className="text-2xl sm:text-3xl lg:text-4xl xl:text-5xl font-arabic-title font-bold order-1 sm:order-2 text-center px-4">
-                استوديو <span className="text-gradient bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">الترجمة</span> التفاعلي
-              </h2>
-              <motion.div
-                animate={{ rotate: -360 }}
-                transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
-                className="order-3"
-              >
-                <Rocket className="h-6 w-6 sm:h-8 lg:h-10 text-accent" />
-              </motion.div>
-            </div>
-            <motion.p
-              initial={{ opacity: 0 }}
-              whileInView={{ opacity: 1 }}
-              transition={{ delay: 0.3, duration: 0.6 }}
-              className="text-base sm:text-lg lg:text-xl text-muted-foreground max-w-5xl mx-auto leading-relaxed px-4"
-            >
-              تجربة ترجمة ثورية مع تحليل ذكي للملفات، حساب دقيق للتكاليف، ومعاينة فورية للنتائج.
-              <br className="hidden sm:block" />
-              <span className="text-primary font-medium block sm:inline mt-2 sm:mt-0">اسحب، أفلت، وشاهد السحر يحدث!</span>
-            </motion.p>
-          </motion.div>
-          
-          <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
-            whileInView={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.5, delay: 0.2 }}
-            viewport={{ once: true }}
-            className="max-w-7xl mx-auto"
-          >
-            <div className="bg-white/50 backdrop-blur-sm rounded-2xl sm:rounded-3xl p-4 sm:p-6 lg:p-8 shadow-2xl">
-              <TranslationStudio />
-            </div>
-          </motion.div>
-        </div>
-      </section>
-
-      {/* آراء العملاء */}
-      <section className="py-12 sm:py-16 lg:py-20 bg-muted/30">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-8 sm:mb-12 lg:mb-16">
-            <h2 className="text-2xl sm:text-3xl lg:text-4xl xl:text-5xl font-arabic-title font-bold mb-4 px-4">
-              ماذا يقول <span className="text-gradient">عملاؤنا</span>
-            </h2>
-          </div>
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
-            {testimonials.map((testimonial, index) => (
-              <Card key={index} className="hover-lift bg-gradient-card border-0 shadow-soft animate-fade-in-up h-full"
-                   style={{ animationDelay: `${index * 0.1}s` }}>
-                <CardContent className="p-4 sm:p-6 lg:p-8 space-y-3 sm:space-y-4 lg:space-y-6 h-full flex flex-col">
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-3 sm:gap-4">
-                      <div className="text-2xl sm:text-3xl lg:text-4xl">{testimonial.avatar}</div>
-                      <div>
-                        <h4 className="font-bold text-sm sm:text-base lg:text-lg">{testimonial.name}</h4>
-                        <p className="text-xs sm:text-sm text-muted-foreground">{testimonial.role}</p>
-                      </div>
-                    </div>
-                    <div className="flex">
-                      {[...Array(testimonial.rating)].map((_, i) => (
-                        <Star key={i} className="h-3 w-3 sm:h-4 lg:h-5 text-yellow-400 fill-current" />
-                      ))}
-                    </div>
-                  </div>
-                  <p className="text-muted-foreground leading-relaxed text-sm sm:text-base flex-1">"{testimonial.text}"</p>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        </div>
-      </section>
 
       {/* دعوة للعمل النهائية */}
       <section className="py-12 sm:py-16 lg:py-20 bg-gradient-primary text-primary-foreground">
