@@ -64,46 +64,68 @@ const FileUploader = ({ onFileProcess, isProcessing, onProcessingChange }: FileU
             extractedText = content as string;
             
           } else if (fileExtension === '.pdf') {
-            // معالجة ملفات PDF بدون قيود
+            // معالجة ملفات PDF بسرعة عالية - معالجة متوازية
             const arrayBuffer = content as ArrayBuffer;
             const loadingTask = pdfjsLib.getDocument({ data: arrayBuffer });
             
-            // إزالة المهلة الزمنية - معالجة بدون قيود زمنية
             const pdf = await loadingTask.promise as any;
-            const totalPages = pdf.numPages; // معالجة جميع الصفحات
+            const totalPages = pdf.numPages;
             let allText = "";
             
-            for (let pageNum = 1; pageNum <= totalPages; pageNum++) {
-              setProgress({ 
-                current: Math.round((pageNum / totalPages) * 100), 
-                total: 100, 
-                message: `معالجة صفحة ${pageNum} من ${totalPages}...` 
+            // معالجة متوازية للصفحات لتسريع العملية
+            const batchSize = 5; // معالجة 5 صفحات في نفس الوقت
+            const batches = [];
+            
+            for (let i = 0; i < totalPages; i += batchSize) {
+              batches.push(Array.from({ length: Math.min(batchSize, totalPages - i) }, (_, j) => i + j + 1));
+            }
+            
+            let processedPages = 0;
+            
+            for (const batch of batches) {
+              // معالجة الصفحات في المجموعة بالتوازي
+              const batchPromises = batch.map(async (pageNum) => {
+                try {
+                  const page = await pdf.getPage(pageNum);
+                  const textContent = await page.getTextContent();
+                  const pageText = textContent.items
+                    .map((item: any) => item.str)
+                    .join(' ');
+                  
+                  // تنظيف الذاكرة فوراً
+                  if (page.cleanup) page.cleanup();
+                  
+                  return { pageNum, text: pageText };
+                } catch (pageError) {
+                  console.warn(`خطأ في معالجة الصفحة ${pageNum}:`, pageError);
+                  return { pageNum, text: '' };
+                }
               });
               
-              try {
-                const page = await pdf.getPage(pageNum);
-                const textContent = await page.getTextContent();
-                const pageText = textContent.items
-                  .map((item: any) => item.str)
-                  .join(' ');
-                
-                allText += pageText + '\n';
-                
-                // تنظيف الذاكرة
-                if (page.cleanup) page.cleanup();
-                
-                // السماح للواجهة بالتحديث
-                await new Promise(resolve => setTimeout(resolve, 5));
-              } catch (pageError) {
-                console.warn(`خطأ في معالجة الصفحة ${pageNum}:`, pageError);
-                continue;
-              }
+              // انتظار انتهاء المجموعة الحالية
+              const batchResults = await Promise.all(batchPromises);
+              
+              // ترتيب النتائج وإضافتها
+              batchResults
+                .sort((a, b) => a.pageNum - b.pageNum)
+                .forEach(result => {
+                  allText += result.text + '\n';
+                });
+              
+              processedPages += batch.length;
+              
+              // تحديث التقدم
+              setProgress({
+                current: Math.round((processedPages / totalPages) * 100),
+                total: 100,
+                message: `معالجة سريعة: ${processedPages} من ${totalPages} صفحة...`
+              });
             }
             
             // تنظيف موارد PDF
             if (pdf.destroy) pdf.destroy();
             
-            console.log(`تم معالجة جميع الصفحات: ${totalPages} صفحة`);
+            console.log(`تم معالجة جميع الصفحات بسرعة: ${totalPages} صفحة`);
             
             extractedText = allText;
             
@@ -287,7 +309,7 @@ const FileUploader = ({ onFileProcess, isProcessing, onProcessingChange }: FileU
       {/* معلومات مفيدة */}
       <div className="text-xs text-muted-foreground space-y-1 p-3 bg-muted/30 rounded-lg">
         <p>• ملفات TXT و DOCX و DOC يتم حساب كلماتها بدقة كاملة</p>
-        <p>• ملفات PDF يتم معالجة جميع الصفحات بدون قيود</p>
+        <p>• ملفات PDF معالجة سريعة متوازية - 5 صفحات في نفس الوقت ⚡</p>
         <p>• لا توجد قيود على حجم الملف - معالجة لا محدودة</p>
       </div>
     </div>
