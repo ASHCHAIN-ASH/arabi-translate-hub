@@ -19,21 +19,21 @@
     --popover: 0 0% 100%;
     --popover-foreground: 220 15% 20%;
 
-    /* الألوان الرئيسية - أزرق حيوي مع برتقالي نشيط */
-    --primary: 220 90% 56%;
+    /* الألوان الرئيسية - أزرق احترافي داكن */
+    --primary: 212 100% 15%;
     --primary-foreground: 0 0% 100%;
-    --primary-dark: 220 100% 45%;
-    --primary-light: 220 85% 70%;
+    --primary-dark: 212 100% 12%;
+    --primary-light: 212 80% 35%;
 
-    /* اللون الثانوي - برتقالي حيوي */
-    --secondary: 25 95% 53%;
-    --secondary-foreground: 0 0% 100%;
-    --secondary-light: 25 100% 70%;
+    /* اللون الثانوي - ذهبي راقي */
+    --secondary: 43 96% 56%;
+    --secondary-foreground: 212 100% 15%;
+    --secondary-light: 43 100% 70%;
 
-    /* الأخضر للنجاح والنمو */
-    --accent: 142 76% 36%;
+    /* الأخضر للنجاح والموثوقية */
+    --accent: 160 84% 25%;
     --accent-foreground: 0 0% 100%;
-    --accent-light: 142 70% 50%;
+    --accent-light: 160 70% 45%;
 
     /* الألوان المساعدة */
     --muted: 220 13% 95%;
@@ -53,21 +53,21 @@
     --input: 220 13% 95%;
     --ring: 220 90% 56%;
 
-    /* التدرجات الحيوية والجذابة */
-    --gradient-primary: linear-gradient(135deg, hsl(220 90% 56%) 0%, hsl(220 100% 45%) 100%);
-    --gradient-secondary: linear-gradient(135deg, hsl(25 95% 53%) 0%, hsl(38 92% 50%) 100%);
-    --gradient-success: linear-gradient(135deg, hsl(142 76% 36%) 0%, hsl(142 70% 50%) 100%);
-    --gradient-hero: linear-gradient(135deg, hsl(220 90% 56%) 0%, hsl(25 95% 53%) 50%, hsl(142 76% 36%) 100%);
-    --gradient-card: linear-gradient(145deg, hsl(0 0% 100%) 0%, hsl(220 13% 98%) 100%);
-    --gradient-vibrant: linear-gradient(45deg, hsl(220 90% 56%) 0%, hsl(25 95% 53%) 25%, hsl(142 76% 36%) 50%, hsl(260 90% 65%) 75%, hsl(320 85% 60%) 100%);
+    /* التدرجات الاحترافية والأنيقة */
+    --gradient-primary: linear-gradient(135deg, hsl(212 100% 15%) 0%, hsl(212 100% 25%) 100%);
+    --gradient-secondary: linear-gradient(135deg, hsl(43 96% 56%) 0%, hsl(43 100% 70%) 100%);
+    --gradient-success: linear-gradient(135deg, hsl(160 84% 25%) 0%, hsl(160 70% 45%) 100%);
+    --gradient-hero: linear-gradient(135deg, hsl(212 100% 15%) 0%, hsl(43 96% 56%) 50%, hsl(160 84% 25%) 100%);
+    --gradient-card: linear-gradient(145deg, hsl(0 0% 100%) 0%, hsl(212 15% 98%) 100%);
+    --gradient-vibrant: linear-gradient(45deg, hsl(212 100% 15%) 0%, hsl(43 96% 56%) 30%, hsl(160 84% 25%) 60%, hsl(212 80% 35%) 100%);
     
-    /* ظلال ملونة وحيوية */
-    --shadow-primary: 0 4px 25px -5px hsl(220 90% 56% / 0.3);
-    --shadow-secondary: 0 4px 25px -5px hsl(25 95% 53% / 0.3);
-    --shadow-success: 0 4px 25px -5px hsl(142 76% 36% / 0.3);
-    --shadow-soft: 0 2px 15px -3px hsl(220 15% 20% / 0.08);
-    --shadow-medium: 0 8px 35px -8px hsl(220 15% 20% / 0.12);
-    --shadow-strong: 0 20px 60px -15px hsl(220 15% 20% / 0.15);
+    /* ظلال احترافية وأنيقة */
+    --shadow-primary: 0 4px 25px -5px hsl(212 100% 15% / 0.4);
+    --shadow-secondary: 0 4px 25px -5px hsl(43 96% 56% / 0.3);
+    --shadow-success: 0 4px 25px -5px hsl(160 84% 25% / 0.3);
+    --shadow-soft: 0 2px 15px -3px hsl(212 15% 20% / 0.06);
+    --shadow-medium: 0 8px 35px -8px hsl(212 15% 20% / 0.10);
+    --shadow-strong: 0 20px 60px -15px hsl(212 15% 20% / 0.15);
 
     --radius: 1rem;
   }

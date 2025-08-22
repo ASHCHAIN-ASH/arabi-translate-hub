@@ -24,46 +24,53 @@ import {
   Briefcase,
   Settings,
   Target,
-  Lightbulb
+  Languages,
+  FileText,
+  MessageSquare,
+  Headphones,
+  BookOpen,
+  Mic,
+  Monitor
 } from "lucide-react";
 import { motion } from "framer-motion";
+import React from "react";
 
 const Index = () => {
   const stats = [
     { icon: Building2, number: "500+", label: "شركة عالمية", gradient: "from-primary to-primary-dark" },
-    { icon: Globe, number: "150+", label: "لغة احترافية", gradient: "from-secondary to-warning" },
-    { icon: TrendingUp, number: "10M+", label: "كلمة مترجمة", gradient: "from-accent to-accent-light" },
-    { icon: Award, number: "99.9%", label: "دقة مضمونة", gradient: "from-yellow-400 to-yellow-600" }
+    { icon: Languages, number: "150+", label: "لغة احترافية", gradient: "from-secondary to-secondary-light" },
+    { icon: FileText, number: "10M+", label: "وثيقة مترجمة", gradient: "from-accent to-accent-light" },
+    { icon: Award, number: "99.9%", label: "دقة مضمونة", gradient: "from-secondary to-accent" }
   ];
 
   const features = [
     {
-      icon: Briefcase,
-      title: "للشركات العالمية",
-      description: "حلول ترجمة متطورة للمؤسسات الكبرى والشركات متعددة الجنسيات",
-      gradient: "from-primary to-primary-dark",
+      icon: Languages,
+      title: "ترجمة متعددة اللغات",
+      description: "نغطي أكثر من 150 لغة عالمية بدقة احترافية وجودة عالية",
+      gradient: "from-primary to-primary-light",
       shadowColor: "shadow-primary"
     },
     {
       icon: Shield,
-      title: "أمان مؤسسي",
-      description: "معايير الأمان العالمية مع شهادات ISO وحماية البيانات الحساسة",
+      title: "أمان وخصوصية",
+      description: "معايير الأمان العالمية مع حماية كاملة للبيانات الحساسة",
       gradient: "from-accent to-accent-light",
       shadowColor: "shadow-success"
     },
     {
-      icon: Settings,
-      title: "تقنية متقدمة",
-      description: "ذكاء اصطناعي متطور مع مراجعة بشرية من خبراء معتمدين",
-      gradient: "from-purple-500 to-indigo-500",
-      shadowColor: "shadow-medium"
+      icon: Zap,
+      title: "سرعة فائقة",
+      description: "تقنيات ذكاء اصطناعي متطورة لترجمة سريعة ودقيقة",
+      gradient: "from-secondary to-secondary-light",
+      shadowColor: "shadow-secondary"
     },
     {
-      icon: Target,
-      title: "دقة استثنائية",
-      description: "ضمان جودة 99.9% مع التزام صارم بالمواعيد النهائية",
-      gradient: "from-secondary to-warning",
-      shadowColor: "shadow-secondary"
+      icon: Award,
+      title: "جودة مضمونة",
+      description: "ضمان دقة 99.9% مع مراجعة بشرية من خبراء لغويين معتمدين",
+      gradient: "from-primary-dark to-accent",
+      shadowColor: "shadow-medium"
     }
   ];
 
@@ -101,7 +108,7 @@ const Index = () => {
         <AnimatedBackground />
         
         {/* طبقة إضافية للتحكم في الشفافية */}
-        <div className="absolute inset-0 bg-gradient-to-br from-primary/70 via-secondary/50 to-accent/60" />
+        <div className="absolute inset-0 bg-gradient-to-br from-primary/80 via-primary-dark/70 to-accent/60" />
 
         <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8 text-center text-white">
           <motion.div 
@@ -121,17 +128,17 @@ const Index = () => {
                 transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
                 className="relative"
               >
-                <Building2 className="h-8 w-8 sm:h-10 lg:h-12 w-10 lg:w-12 text-white/80" />
+                <Languages className="h-8 w-8 sm:h-10 lg:h-12 w-10 lg:w-12 text-white/90" />
                 <motion.div
-                  className="absolute inset-0 bg-white/20 rounded-full blur-xl"
+                  className="absolute inset-0 bg-secondary/30 rounded-full blur-xl"
                   animate={{ scale: [1, 1.5, 1], opacity: [0.5, 0.8, 0.5] }}
                   transition={{ duration: 2, repeat: Infinity }}
                 />
               </motion.div>
               
-              <Badge className="bg-white/10 text-white border-white/20 backdrop-blur-md px-3 py-2 sm:px-4 lg:px-6 text-sm sm:text-base lg:text-lg">
-                <Sparkles className="h-4 w-4 sm:h-5 lg:h-6 ml-2 text-yellow-300" />
-                الحل الأمثل للشركات العالمية
+              <Badge className="bg-white/15 text-white border-white/30 backdrop-blur-md px-3 py-2 sm:px-4 lg:px-6 text-sm sm:text-base lg:text-lg font-bold">
+                <Sparkles className="h-4 w-4 sm:h-5 lg:h-6 ml-2 text-secondary" />
+                منصة الترجمة الاحترافية
               </Badge>
               
               <motion.div
@@ -139,9 +146,9 @@ const Index = () => {
                 transition={{ duration: 25, repeat: Infinity, ease: "linear" }}
                 className="relative"
               >
-                <Lightbulb className="h-8 w-8 sm:h-10 lg:h-12 w-10 lg:w-12 text-white/80" />
+                <Globe className="h-8 w-8 sm:h-10 lg:h-12 w-10 lg:w-12 text-white/90" />
                 <motion.div
-                  className="absolute inset-0 bg-yellow-300/20 rounded-full blur-xl"
+                  className="absolute inset-0 bg-accent/30 rounded-full blur-xl"
                   animate={{ scale: [1, 1.3, 1], opacity: [0.3, 0.6, 0.3] }}
                   transition={{ duration: 1.5, repeat: Infinity }}
                 />
@@ -178,8 +185,8 @@ const Index = () => {
               animate={{ opacity: 1 }}
               transition={{ duration: 0.6, delay: 1 }}
             >
-              شريكك الاستراتيجي في التوسع العالمي. نقدم حلول ترجمة مؤسسية متكاملة 
-              بتقنيات الذكاء الاصطناعي المتطورة وفريق من الخبراء المعتمدين دولياً.
+              منصة الترجمة الاحترافية الرائدة عالمياً. نوفر خدمات ترجمة متطورة 
+              بتقنيات الذكاء الاصطناعي وفريق من المترجمين المحترفين المعتمدين.
               <br className="hidden sm:block" />
               <span className="text-white/80 text-sm sm:text-base lg:text-lg block sm:inline mt-2 sm:mt-0">
                 أكثر من 150 لغة • خدمة 24/7 • ضمان الجودة المطلقة
@@ -360,25 +367,27 @@ const Index = () => {
                 className="cursor-pointer"
               >
                 <Card className="group text-center hover-lift bg-gradient-card shadow-soft border-0 overflow-hidden relative h-full">
-                  <div className={`absolute inset-0 bg-gradient-to-br ${type.color} opacity-0 group-hover:opacity-10 transition-all duration-500`} />
+                  <div className={`absolute inset-0 bg-gradient-to-br ${type.color} opacity-0 group-hover:opacity-15 transition-all duration-500`} />
                   <CardContent className="p-4 sm:p-6 lg:p-8 space-y-3 sm:space-y-4 lg:space-y-6 relative z-10 h-full flex flex-col justify-between">
                     <div className="relative">
                       <motion.div 
-                        className="text-4xl sm:text-5xl lg:text-6xl mb-3 sm:mb-4"
+                        className="mb-3 sm:mb-4 flex justify-center"
                         whileHover={{ 
-                          scale: 1.2, 
-                          rotate: [0, -10, 10, -10, 0],
+                          scale: 1.15, 
+                          rotate: [0, -5, 5, -5, 0],
                           transition: { duration: 0.5 }
                         }}
                       >
-                        {type.icon}
+                        <div className="text-4xl sm:text-5xl lg:text-6xl">
+                          {type.icon}
+                        </div>
                       </motion.div>
                       <div className="absolute inset-0 flex items-center justify-center">
                         <motion.div 
-                          className="w-16 h-16 sm:w-20 lg:w-24 bg-gradient-to-r from-primary/20 to-accent/20 rounded-full blur-xl opacity-0 group-hover:opacity-100"
+                          className="w-16 h-16 sm:w-20 lg:w-24 bg-gradient-to-r from-primary/20 to-secondary/20 rounded-full blur-xl opacity-0 group-hover:opacity-100"
                           animate={{ 
                             scale: [1, 1.2, 1],
-                            opacity: [0, 0.5, 0]
+                            opacity: [0, 0.6, 0]
                           }}
                           transition={{ 
                             duration: 2,
