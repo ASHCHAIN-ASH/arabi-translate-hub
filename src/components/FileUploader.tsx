@@ -9,6 +9,13 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 import mammoth from "mammoth";
 import * as pdfjsLib from "pdfjs-dist";
 
+// تحديد مسار Worker لـ PDF.js - حل جذري للخطأ
+pdfjsLib.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjsLib.version}/pdf.worker.min.js`;
+
+// تسجيل للتأكد من التكوين
+console.log('PDF.js Worker configured:', pdfjsLib.GlobalWorkerOptions.workerSrc);
+console.log('PDF.js version:', pdfjsLib.version);
+
 interface FileUploaderProps {
   onFileProcess: (content: string, fileName: string) => void;
   isProcessing: boolean;
