@@ -14,12 +14,14 @@ import {
   CheckCircle
 } from "lucide-react";
 import { Alert, AlertDescription } from "@/components/ui/alert";
+import TranslationExtrasForm from "./TranslationExtrasForm";
 // @ts-ignore
 import mammoth from "mammoth";
 
 interface FileAnalysis {
   fileName: string;
   fileType: string;
+  detectedLanguage: string;
   pages: number;
   sourceWords: number;
   tableWords: number;
@@ -32,6 +34,18 @@ interface FileAnalysis {
   uniqueWords: number;
   notes: string[];
   rawText: string;
+  translationExtras?: TranslationExtras;
+}
+
+interface TranslationExtras {
+  proofreading: boolean;
+  certification: boolean;
+  urgentDelivery: boolean;
+  formatting: boolean;
+  clientContact: {
+    email: string;
+    whatsapp: string;
+  };
 }
 
 interface AnalysisProgress {
@@ -52,10 +66,33 @@ const FileAnalyzer = ({ onAnalysisComplete, isProcessing, onProcessingChange }: 
   const [error, setError] = useState<string>("");
   const [progress, setProgress] = useState<AnalysisProgress | null>(null);
   const [analyses, setAnalyses] = useState<FileAnalysis[]>([]);
+  const [translationExtras, setTranslationExtras] = useState<TranslationExtras | null>(null);
 
   const supportedFormats = [
     '.pdf', '.docx', '.doc', '.txt', '.html', '.md', '.json'
   ];
+
+  // كشف اللغة من النص
+  const detectLanguage = useCallback((text: string): string => {
+    if (!text || text.trim().length === 0) return "غير محدد";
+    
+    // أنماط اللغات الشائعة
+    const arabicPattern = /[\u0600-\u06FF\u0750-\u077F]/;
+    const englishPattern = /[a-zA-Z]/;
+    const frenchPattern = /[àâäéèêëïîôùûüÿç]/i;
+    const spanishPattern = /[ñáéíóúü]/i;
+    const germanPattern = /[äöüß]/i;
+    
+    const sample = text.substring(0, 1000); // عينة من النص
+    
+    if (arabicPattern.test(sample)) return "العربية";
+    if (frenchPattern.test(sample)) return "الفرنسية";
+    if (spanishPattern.test(sample)) return "الإسبانية";  
+    if (germanPattern.test(sample)) return "الألمانية";
+    if (englishPattern.test(sample)) return "الإنجليزية";
+    
+    return "غير محدد";
+  }, []);
 
   // تحليل النص محسن للسرعة
   const analyzeText = useCallback((text: string): {
@@ -268,6 +305,7 @@ const FileAnalyzer = ({ onAnalysisComplete, isProcessing, onProcessingChange }: 
           const fileAnalysis: FileAnalysis = {
             fileName: file.name,
             fileType: fileExtension.substring(1).toUpperCase(),
+            detectedLanguage: detectLanguage(rawText),
             pages: fileExtension === '.pdf' ? Math.ceil(rawText.length / 2000) : 1,
             sourceWords: analysis.sourceWords,
             tableWords: analysis.tableWords,
@@ -302,6 +340,7 @@ const FileAnalyzer = ({ onAnalysisComplete, isProcessing, onProcessingChange }: 
           analysisResults.push({
             fileName: file.name,
             fileType: fileExtension.substring(1).toUpperCase(),
+            detectedLanguage: "غير محدد",
             pages: 0,
             sourceWords: 0,
             tableWords: 0,
@@ -498,11 +537,16 @@ const FileAnalyzer = ({ onAnalysisComplete, isProcessing, onProcessingChange }: 
               {analyses.map((analysis, index) => (
                 <div key={index} className="p-3 bg-gradient-to-r from-primary/5 to-accent/5 rounded-lg border border-primary/10">
                   <div className="flex items-center justify-between mb-2">
-                    <span className="font-medium text-sm">{analysis.fileName}</span>
+                    <div className="flex items-center gap-2">
+                      <span className="font-medium text-sm">{analysis.fileName}</span>
+                      <Badge variant="secondary" className="text-xs bg-accent/10 text-accent">
+                        {analysis.detectedLanguage}
+                      </Badge>
+                    </div>
                     <Badge variant="outline">{analysis.fileType}</Badge>
                   </div>
                   
-                  <div className="grid grid-cols-3 gap-2 text-xs">
+                  <div className="grid grid-cols-4 gap-2 text-xs mb-2">
                     <div className="text-center">
                       <div className="font-bold text-primary">{analysis.sourceWords.toLocaleString()}</div>
                       <div className="text-muted-foreground">كلمات مصدرية</div>
@@ -510,6 +554,10 @@ const FileAnalyzer = ({ onAnalysisComplete, isProcessing, onProcessingChange }: 
                     <div className="text-center">
                       <div className="font-bold text-accent">{analysis.tableWords.toLocaleString()}</div>
                       <div className="text-muted-foreground">كلمات جداول</div>
+                    </div>
+                    <div className="text-center">
+                      <div className="font-bold text-green-600">{analysis.uniqueWords.toLocaleString()}</div>
+                      <div className="text-muted-foreground">كلمات فريدة</div>
                     </div>
                     <div className="text-center">
                       <div className="font-bold text-orange-600">{analysis.numbersOnly.toLocaleString()}</div>
@@ -529,6 +577,9 @@ const FileAnalyzer = ({ onAnalysisComplete, isProcessing, onProcessingChange }: 
                 </div>
               ))}
             </div>
+            
+            {/* إضافات الترجمة الاختيارية */}
+            <TranslationExtrasForm onExtrasChange={setTranslationExtras} />
           </div>
         )}
       </CardContent>
