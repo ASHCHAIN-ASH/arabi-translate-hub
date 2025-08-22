@@ -87,15 +87,18 @@ const PricingEngine = ({
 
   // حساب التسعير المفصل
   const calculatePricing = useCallback((): PricingBreakdown => {
-    // حساب الكلمات القابلة للفوترة
-    const billableWords = wordCounts.sourceWords + wordCounts.tableWords;
+    // حساب الكلمات القابلة للفوترة - استخدام uniqueWords بدلاً من sourceWords + tableWords
+    const billableWords = Math.max(wordCounts.uniqueWords, wordCounts.sourceWords + wordCounts.tableWords);
     
     // السعر الأساسي
     const basePrice = billableWords * PRICING_CONSTANTS.PRICE_PER_WORD;
     
-    // حساب الخصومات
-    const intraDiscountAmount = (wordCounts.duplicatesIntra * PRICING_CONSTANTS.PRICE_PER_WORD) * PRICING_CONSTANTS.INTRA_DISCOUNT_RATE;
-    const interDiscountAmount = (wordCounts.duplicatesInter * PRICING_CONSTANTS.PRICE_PER_WORD) * PRICING_CONSTANTS.INTER_DISCOUNT_RATE;
+    // حساب الخصومات بناءً على الكلمات الفعلية
+    const duplicateWords = Math.min(wordCounts.duplicatesIntra, billableWords);
+    const interDuplicateWords = Math.min(wordCounts.duplicatesInter, billableWords);
+    
+    const intraDiscountAmount = (duplicateWords * PRICING_CONSTANTS.PRICE_PER_WORD) * PRICING_CONSTANTS.INTRA_DISCOUNT_RATE;
+    const interDiscountAmount = (interDuplicateWords * PRICING_CONSTANTS.PRICE_PER_WORD) * PRICING_CONSTANTS.INTER_DISCOUNT_RATE;
     const totalDiscounts = intraDiscountAmount + interDiscountAmount;
     
     // حساب تكاليف OCR

@@ -148,49 +148,55 @@ const FileAnalyzer = ({ onAnalysisComplete, isProcessing, onProcessingChange }: 
     const codePattern = /^(https?:\/\/|www\.|[A-Z0-9]{3,}-[A-Z0-9]{3,}|#[a-zA-Z0-9_]+)/;
     const hasTabularData = text.includes('\t') || text.includes('|');
 
-    // مجموعة للكلمات الفريدة للترجمة فقط (sourceWords + tableWords)
+    // مجموعة للكلمات الفريدة للترجمة فقط
     const uniqueTranslatableWords = new Set<string>();
     let duplicatesIntra = 0;
     const allWordCounts = new Map<string, number>();
 
     // تحليل الكلمات
     words.forEach(word => {
+      const normalizedWord = word.toLowerCase().replace(/[^\u0600-\u06FFa-zA-Z0-9]/g, '');
+      
+      if (normalizedWord.length < 2) {
+        excluded++;
+        return;
+      }
+
       if (placeholderPattern.test(word)) {
         placeholders++;
       } else if (numberPattern.test(word)) {
         numbersOnly++;
       } else if (codePattern.test(word) || (word.length > 20 && /[A-Z0-9]{5,}/.test(word))) {
         excluded++;
-      } else if (hasTabularData && (text.indexOf(word) > -1)) {
-        const wordIndex = cleanText.indexOf(word);
-        const context = cleanText.substring(
-          Math.max(0, wordIndex - 30), 
-          Math.min(cleanText.length, wordIndex + word.length + 30)
-        );
-        
-        if (context.includes('\t') || context.includes('|')) {
-          tableWords++;
-          // إضافة كلمات الجداول للكلمات الفريدة
-          uniqueTranslatableWords.add(word.toLowerCase());
+      } else {
+        // تحديد إذا كانت الكلمة في جدول أم لا
+        if (hasTabularData && (text.indexOf(word) > -1)) {
+          const wordIndex = cleanText.indexOf(word);
+          const context = cleanText.substring(
+            Math.max(0, wordIndex - 30), 
+            Math.min(cleanText.length, wordIndex + word.length + 30)
+          );
+          
+          if (context.includes('\t') || context.includes('|')) {
+            tableWords++;
+          } else {
+            sourceWords++;
+          }
         } else {
           sourceWords++;
-          // إضافة كلمات المصدر للكلمات الفريدة
-          uniqueTranslatableWords.add(word.toLowerCase());
         }
-      } else {
-        sourceWords++;
-        // إضافة كلمات المصدر للكلمات الفريدة
-        uniqueTranslatableWords.add(word.toLowerCase());
+        
+        // إضافة للكلمات الفريدة
+        uniqueTranslatableWords.add(normalizedWord);
       }
 
-      // حساب التكرارات الإجمالية لجميع الكلمات
-      if (word.length > 2) {
-        const normalized = word.toLowerCase();
-        const count = allWordCounts.get(normalized) || 0;
+      // حساب التكرارات لجميع الكلمات المعالجة
+      if (normalizedWord.length > 2 && !placeholderPattern.test(word) && !numberPattern.test(word)) {
+        const count = allWordCounts.get(normalizedWord) || 0;
         if (count > 0) {
           duplicatesIntra++;
         }
-        allWordCounts.set(normalized, count + 1);
+        allWordCounts.set(normalizedWord, count + 1);
       }
     });
 
@@ -201,7 +207,7 @@ const FileAnalyzer = ({ onAnalysisComplete, isProcessing, onProcessingChange }: 
       excluded,
       placeholders,
       duplicatesIntra,
-      uniqueWords: uniqueTranslatableWords.size // عدد الكلمات الفريدة القابلة للترجمة فقط
+      uniqueWords: uniqueTranslatableWords.size
     };
   }, []);
 
