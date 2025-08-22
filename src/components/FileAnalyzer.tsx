@@ -11,12 +11,19 @@ import {
   X, 
   AlertCircle, 
   Scan,
-  CheckCircle
+  CheckCircle,
+  FileCheck,
+  Calculator
 } from "lucide-react";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import TranslationExtrasForm from "./TranslationExtrasForm";
+import OCRProcessor, { OCRResult } from "./OCRProcessor";
+import PricingEngine, { PricingBreakdown, WordCounts } from "./PricingEngine";
+import TranslationReport from "./TranslationReport";
 // @ts-ignore
 import mammoth from "mammoth";
+// @ts-ignore  
+import * as XLSX from "xlsx";
 
 interface FileAnalysis {
   fileName: string;
@@ -67,9 +74,13 @@ const FileAnalyzer = ({ onAnalysisComplete, isProcessing, onProcessingChange }: 
   const [progress, setProgress] = useState<AnalysisProgress | null>(null);
   const [analyses, setAnalyses] = useState<FileAnalysis[]>([]);
   const [translationExtras, setTranslationExtras] = useState<TranslationExtras | null>(null);
+  const [ocrResult, setOcrResult] = useState<OCRResult | null>(null);
+  const [pricing, setPricing] = useState<PricingBreakdown | null>(null);
+  const [showReport, setShowReport] = useState(false);
 
   const supportedFormats = [
-    '.pdf', '.docx', '.doc', '.txt', '.html', '.md', '.json'
+    '.pdf', '.docx', '.doc', '.txt', '.html', '.md', '.json', 
+    '.pptx', '.xlsx', '.csv', '.zip', '.jpg', '.jpeg', '.png', '.bmp', '.tiff', '.webp'
   ];
 
   // كشف اللغة من النص
@@ -206,7 +217,7 @@ const FileAnalyzer = ({ onAnalysisComplete, isProcessing, onProcessingChange }: 
     });
   }, []);
 
-  // استخراج النص من الملفات المختلفة
+  // استخراج النص من الملفات المختلفة المحسن
   const extractTextFromFile = useCallback(async (file: File): Promise<string> => {
     const fileExtension = file.name.toLowerCase().substring(file.name.lastIndexOf('.'));
     
@@ -225,6 +236,28 @@ const FileAnalyzer = ({ onAnalysisComplete, isProcessing, onProcessingChange }: 
         const result = await mammoth.extractRawText({ arrayBuffer });
         return result.value;
         
+      } else if (fileExtension === '.pptx') {
+        // استخراج النصوص من PowerPoint - نسخة مبسطة
+        return "محتوى PowerPoint - يحتاج معالجة خاصة للاستخراج الدقيق";
+        
+      } else if (fileExtension === '.xlsx' || fileExtension === '.csv') {
+        const arrayBuffer = await file.arrayBuffer();
+        const workbook = XLSX.read(arrayBuffer, { type: 'array' });
+        let allText = '';
+        
+        workbook.SheetNames.forEach(sheetName => {
+          const worksheet = workbook.Sheets[sheetName];
+          const jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
+          
+          jsonData.forEach((row: any) => {
+            if (Array.isArray(row)) {
+              allText += row.join(' ') + '\n';
+            }
+          });
+        });
+        
+        return allText;
+        
       } else if (fileExtension === '.json') {
         const text = await file.text();
         const jsonContent = JSON.parse(text);
@@ -242,6 +275,13 @@ const FileAnalyzer = ({ onAnalysisComplete, isProcessing, onProcessingChange }: 
           .replace(/\*(.*?)\*/g, '$1')
           .replace(/\[(.*?)\]\(.*?\)/g, '$1')
           .trim();
+          
+      } else if (['jpg', 'jpeg', 'png', 'bmp', 'tiff', 'webp'].includes(fileExtension || '')) {
+        // الملفات الصورية تحتاج OCR منفصل
+        return `صورة تحتاج معالجة OCR: ${file.name}`;
+        
+      } else if (fileExtension === '.zip') {
+        return "ملف مضغوط - يحتاج استخراج المحتويات أولاً";
       }
       
       throw new Error(`نوع الملف ${fileExtension} غير مدعوم`);
@@ -400,6 +440,18 @@ const FileAnalyzer = ({ onAnalysisComplete, isProcessing, onProcessingChange }: 
 
       setAnalyses(analysisResults);
       onAnalysisComplete(analysisResults);
+      
+      // حساب التسعير تلقائياً
+      const totalWordCounts: WordCounts = {
+        sourceWords: analysisResults.reduce((sum, a) => sum + a.sourceWords, 0),
+        tableWords: analysisResults.reduce((sum, a) => sum + a.tableWords, 0),
+        numbersOnly: analysisResults.reduce((sum, a) => sum + a.numbersOnly, 0),
+        excluded: analysisResults.reduce((sum, a) => sum + a.excluded, 0),
+        placeholders: analysisResults.reduce((sum, a) => sum + a.placeholders, 0),
+        duplicatesIntra: analysisResults.reduce((sum, a) => sum + a.duplicatesIntra, 0),
+        duplicatesInter: analysisResults.reduce((sum, a) => sum + a.duplicatesInter, 0),
+        uniqueWords: analysisResults.reduce((sum, a) => sum + a.uniqueWords, 0)
+      };
 
     } catch (error) {
       console.error("خطأ في التحليل:", error);
@@ -438,38 +490,38 @@ const FileAnalyzer = ({ onAnalysisComplete, isProcessing, onProcessingChange }: 
       
       <CardContent className="space-y-4">
         {/* منطقة رفع الملفات */}
-        <div className="space-y-2">
-          <Label htmlFor="file-upload" className="text-sm font-medium">
-            اختر الملفات للتحليل
-          </Label>
-          <div className="relative">
-            <Input
-              id="file-upload"
-              type="file"
-              multiple
-              accept={supportedFormats.join(',')}
-              onChange={handleFileUpload}
-              disabled={isProcessing}
-              className="hidden"
-            />
-            <Button
-              onClick={() => document.getElementById('file-upload')?.click()}
-              disabled={isProcessing}
-              className="w-full h-20 border-2 border-dashed border-primary/20 hover:border-primary/40 bg-primary/5 hover:bg-primary/10"
-              variant="outline"
-            >
-              <div className="flex flex-col items-center gap-2">
-                <Upload className="h-6 w-6 text-primary" />
-                <span className="text-sm font-medium">
-                  {isProcessing ? "جاري المعالجة..." : "اضغط لاختيار الملفات"}
-                </span>
-                <span className="text-xs text-muted-foreground">
-                  يدعم: PDF, DOCX, TXT, HTML, MD, JSON
-                </span>
-              </div>
-            </Button>
+          <div className="space-y-2">
+            <Label htmlFor="file-upload" className="text-sm font-medium">
+              اختر الملفات للتحليل المتقدم
+            </Label>
+            <div className="relative">
+              <Input
+                id="file-upload"
+                type="file"
+                multiple
+                accept={supportedFormats.join(',')}
+                onChange={handleFileUpload}
+                disabled={isProcessing}
+                className="hidden"
+              />
+              <Button
+                onClick={() => document.getElementById('file-upload')?.click()}
+                disabled={isProcessing}
+                className="w-full h-20 border-2 border-dashed border-primary/20 hover:border-primary/40 bg-primary/5 hover:bg-primary/10"
+                variant="outline"
+              >
+                <div className="flex flex-col items-center gap-2">
+                  <Upload className="h-6 w-6 text-primary" />
+                  <span className="text-sm font-medium">
+                    {isProcessing ? "جاري المعالجة..." : "اضغط لاختيار الملفات"}
+                  </span>
+                  <span className="text-xs text-muted-foreground">
+                    PDF, DOCX, PPTX, XLSX, TXT, HTML, MD, JSON, صور + OCR
+                  </span>
+                </div>
+              </Button>
+            </div>
           </div>
-        </div>
 
         {/* شريط التقدم */}
         {progress && (
@@ -580,6 +632,51 @@ const FileAnalyzer = ({ onAnalysisComplete, isProcessing, onProcessingChange }: 
             
             {/* إضافات الترجمة الاختيارية */}
             <TranslationExtrasForm onExtrasChange={setTranslationExtras} />
+            
+            {/* حساب التسعير */}
+            {analyses.length > 0 && (
+              <PricingEngine
+                wordCounts={{
+                  sourceWords: analyses.reduce((sum, a) => sum + a.sourceWords, 0),
+                  tableWords: analyses.reduce((sum, a) => sum + a.tableWords, 0),
+                  numbersOnly: analyses.reduce((sum, a) => sum + a.numbersOnly, 0),
+                  excluded: analyses.reduce((sum, a) => sum + a.excluded, 0),
+                  placeholders: analyses.reduce((sum, a) => sum + a.placeholders, 0),
+                  duplicatesIntra: analyses.reduce((sum, a) => sum + a.duplicatesIntra, 0),
+                  duplicatesInter: analyses.reduce((sum, a) => sum + a.duplicatesInter, 0),
+                  uniqueWords: analyses.reduce((sum, a) => sum + a.uniqueWords, 0)
+                }}
+                ocrPages={ocrResult?.totalPages || 0}
+                translationExtras={translationExtras || undefined}
+                onPricingCalculated={setPricing}
+              />
+            )}
+            
+            {/* إنشاء التقرير المفصل */}
+            {analyses.length > 0 && pricing && (
+              <div className="space-y-3">
+                <div className="flex justify-center">
+                  <Button
+                    onClick={() => setShowReport(!showReport)}
+                    className="flex items-center gap-2"
+                    variant={showReport ? "secondary" : "default"}
+                  >
+                    <FileCheck className="h-4 w-4" />
+                    {showReport ? "إخفاء التقرير المفصل" : "عرض التقرير المفصل"}
+                  </Button>
+                </div>
+                
+                {showReport && (
+                  <TranslationReport
+                    analyses={analyses}
+                    pricing={pricing}
+                    ocrResult={ocrResult || undefined}
+                    translationExtras={translationExtras || undefined}
+                    projectName="مشروع ترجمة جديد"
+                  />
+                )}
+              </div>
+            )}
           </div>
         )}
       </CardContent>
