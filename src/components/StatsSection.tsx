@@ -1,3 +1,4 @@
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -63,167 +64,181 @@ const StatsSection = () => {
   return (
     <div className="w-full">
       {/* الإحصائيات الرئيسية */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8 lg:gap-10 justify-items-center mb-12">
+      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-8 lg:gap-10 justify-items-center mb-16">
         {mainStats.map((stat, index) => {
           const IconComponent = stat.icon;
           return (
             <motion.div
               key={index}
-              initial={{ opacity: 0, scale: 0.8, y: 30 }}
+              initial={{ opacity: 0, scale: 0.8, y: 40 }}
               whileInView={{ opacity: 1, scale: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: index * 0.15 }}
-              whileHover={{ scale: 1.05, y: -8 }}
-              className="cursor-pointer group"
+              transition={{ duration: 0.6, delay: index * 0.2 }}
+              whileHover={{ scale: 1.02, y: -5 }}
+              className="cursor-pointer group w-full max-w-sm"
             >
-              <Card className="bg-gradient-card shadow-medium border border-white/10 text-center hover:shadow-strong transition-all duration-500 group overflow-hidden relative w-48 sm:w-52 lg:w-60 h-48 sm:h-52 lg:h-60 hover:border-primary/30">
-                <CardContent className="p-6 sm:p-7 lg:p-8 h-full flex flex-col justify-center items-center relative z-10">
-                  {/* أيقونة مع تأثيرات متقدمة */}
+              <Card className="bg-white shadow-xl border-0 text-center hover:shadow-2xl transition-all duration-500 group overflow-hidden relative h-64 lg:h-72 backdrop-blur-sm">
+                <CardContent className="p-8 lg:p-10 h-full flex flex-col justify-center items-center relative z-10">
+                  {/* أيقونة احترافية */}
                   <motion.div
-                    className="relative mb-3 flex justify-center"
+                    className="relative mb-6 flex justify-center"
                     animate={{ 
-                      rotate: index % 2 === 0 ? [0, 360] : [0, -360],
-                      scale: [1, 1.1, 1]
+                      rotate: index % 2 === 0 ? [0, 5, -5, 0] : [0, -5, 5, 0],
                     }}
                     transition={{ 
-                      rotate: { duration: 15, repeat: Infinity, ease: "linear" },
-                      scale: { duration: 2, repeat: Infinity, ease: "easeInOut" }
+                      duration: 4,
+                      repeat: Infinity,
+                      ease: "easeInOut"
                     }}
                   >
-                    <IconComponent className="h-8 w-8 sm:h-10 lg:h-12 text-primary drop-shadow-lg relative z-10" />
-                    
-                    {/* هالة متوهجة */}
-                    <motion.div 
-                      className={`absolute inset-0 bg-gradient-to-br ${stat.gradient} opacity-30 rounded-full blur-md scale-150`}
-                      animate={{ 
-                        opacity: [0.3, 0.6, 0.3],
-                        scale: [1.5, 2, 1.5]
-                      }}
-                      transition={{ 
-                        duration: 3,
-                        repeat: Infinity,
-                        ease: "easeInOut"
-                      }}
-                    />
-                    
-                    {/* حلقات متحركة */}
-                    <motion.div
-                      className="absolute inset-0 border-2 border-white/20 rounded-full"
-                      animate={{ 
-                        scale: [1, 1.5, 1],
-                        opacity: [0.5, 0, 0.5]
-                      }}
-                      transition={{ 
-                        duration: 2,
-                        repeat: Infinity,
-                        delay: index * 0.5
-                      }}
-                    />
+                    <div className="relative">
+                      <IconComponent className="h-12 w-12 lg:h-16 lg:w-16 text-primary drop-shadow-sm relative z-10" />
+                      
+                      {/* دائرة خلفية أنيقة */}
+                      <motion.div 
+                        className="absolute inset-0 bg-primary/10 rounded-full scale-150 blur-sm"
+                        animate={{ 
+                          scale: [1.5, 1.8, 1.5],
+                          opacity: [0.1, 0.2, 0.1]
+                        }}
+                        transition={{ 
+                          duration: 3,
+                          repeat: Infinity,
+                          ease: "easeInOut"
+                        }}
+                      />
+                      
+                      {/* حلقة خارجية */}
+                      <motion.div
+                        className="absolute inset-0 border-2 border-primary/20 rounded-full scale-150"
+                        animate={{ 
+                          scale: [1.5, 2, 1.5],
+                          opacity: [0.2, 0, 0.2]
+                        }}
+                        transition={{ 
+                          duration: 2,
+                          repeat: Infinity,
+                          delay: index * 0.5
+                        }}
+                      />
+                    </div>
                   </motion.div>
 
                   {/* العداد المتحرك */}
                   <motion.div 
-                    className="text-2xl sm:text-3xl lg:text-4xl font-bold text-foreground mb-2 font-arabic-title"
-                    whileHover={{ scale: 1.1 }}
+                    className="text-4xl lg:text-5xl font-bold text-foreground mb-3 font-arabic-title"
+                    whileHover={{ scale: 1.05 }}
                   >
                     <AnimatedCounter 
                       end={stat.number} 
-                      duration={2} 
-                      delay={index * 0.3}
+                      duration={2.5} 
+                      delay={index * 0.4}
                       suffix={stat.suffix}
                     />
                   </motion.div>
 
                   {/* النص الوصفي */}
-                  <div className="text-muted-foreground text-base sm:text-lg font-medium leading-tight text-center mb-2">
+                  <div className="text-muted-foreground text-lg lg:text-xl font-semibold leading-tight text-center mb-2">
                     {stat.label}
                   </div>
                   
-                  <div className="text-muted-foreground/80 text-sm leading-tight text-center">
+                  <div className="text-muted-foreground/70 text-sm lg:text-base leading-tight text-center">
                     {stat.description}
                   </div>
                 </CardContent>
 
-                {/* تأثيرات إضافية */}
+                {/* تأثيرات احترافية */}
                 <motion.div
-                  className="absolute inset-0 bg-gradient-to-r from-transparent via-primary/5 to-transparent opacity-0 group-hover:opacity-100"
-                  animate={{ x: ["-100%", "100%"] }}
-                  transition={{ 
-                    duration: 2, 
-                    repeat: Infinity, 
-                    repeatDelay: 2,
-                    ease: "linear"
-                  }}
+                  className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-secondary/5 opacity-0 group-hover:opacity-100"
+                  transition={{ duration: 0.5 }}
                 />
                 
+                {/* حدود متوهجة */}
+                <div className="absolute inset-0 rounded-lg border border-border group-hover:border-primary/30 transition-all duration-500" />
                 
-                <div className="absolute inset-0 rounded-lg border border-border group-hover:border-primary/30 transition-all duration-300" />
-                
-                {/* نقاط متحركة */}
-                {[...Array(3)].map((_, i) => (
-                  <motion.div
-                    key={i}
-                    className="absolute w-1 h-1 bg-primary/40 rounded-full"
-                    style={{
-                      left: `${20 + i * 30}%`,
-                      top: `${15 + i * 25}%`,
-                    }}
-                    animate={{
-                      opacity: [0.4, 1, 0.4],
-                      scale: [1, 1.5, 1],
-                    }}
-                    transition={{
-                      duration: 2,
-                      repeat: Infinity,
-                      delay: i * 0.5,
-                    }}
-                  />
-                ))}
+                {/* خط تحتي زخرفي */}
+                <motion.div
+                  className="absolute bottom-0 left-1/2 w-0 h-1 bg-gradient-primary group-hover:w-full group-hover:left-0"
+                  transition={{ duration: 0.5 }}
+                />
               </Card>
             </motion.div>
           );
         })}
       </div>
 
-      {/* الإحصائيات الإضافية المصغرة */}
+      {/* الإحصائيات الإضافية بتصميم شريطي احترافي */}
       <motion.div
-        className="grid grid-cols-3 lg:grid-cols-6 gap-4 sm:gap-6 lg:gap-8"
-        initial={{ opacity: 0, y: 20 }}
+        className="bg-white/60 backdrop-blur-md rounded-2xl border border-white/80 shadow-lg p-8 lg:p-10"
+        initial={{ opacity: 0, y: 30 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
-        transition={{ delay: 0.5, duration: 0.6 }}
+        transition={{ delay: 0.8, duration: 0.8 }}
       >
-        {additionalStats.map((stat, index) => {
-          const IconComponent = stat.icon;
-          return (
-            <motion.div
-              key={index}
-              className="text-center group cursor-pointer"
-              whileHover={{ scale: 1.05 }}
-              initial={{ opacity: 0 }}
-              whileInView={{ opacity: 1 }}
-              viewport={{ once: true }}
-              transition={{ delay: 0.8 + index * 0.1 }}
-            >
-              <Card className="bg-gradient-card shadow-soft border border-border hover:shadow-medium hover:border-primary/20 transition-all duration-300 p-3 sm:p-4">
-                <CardContent className="p-2 sm:p-3">
-                  <IconComponent className="h-5 w-5 sm:h-6 w-6 text-primary mx-auto mb-2" />
-                  <div className="text-sm sm:text-base font-bold text-foreground">
-                    <AnimatedCounter 
-                      end={stat.number} 
-                      duration={1.5} 
-                      delay={1 + index * 0.1}
-                      suffix={stat.suffix}
-                    />
+        <div className="text-center mb-8">
+          <h3 className="text-2xl lg:text-3xl font-bold text-foreground font-arabic-title mb-2">
+            إنجازات إضافية
+          </h3>
+          <p className="text-muted-foreground">مؤشرات أداء شاملة لخدماتنا</p>
+        </div>
+        
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6 lg:gap-8">
+          {additionalStats.map((stat, index) => {
+            const IconComponent = stat.icon;
+            return (
+              <motion.div
+                key={index}
+                className="text-center group cursor-pointer"
+                whileHover={{ scale: 1.05 }}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: 1 + index * 0.1, duration: 0.5 }}
+              >
+                <div className="bg-white/80 backdrop-blur-sm rounded-xl border border-white/90 hover:shadow-lg hover:border-primary/20 transition-all duration-300 p-4 lg:p-5">
+                  <div className="flex flex-col items-center space-y-3">
+                    <div className="relative">
+                      <IconComponent className="h-8 w-8 lg:h-10 lg:w-10 text-primary/80 mx-auto" />
+                      <motion.div
+                        className="absolute inset-0 bg-primary/10 rounded-full scale-125 opacity-0 group-hover:opacity-100"
+                        transition={{ duration: 0.3 }}
+                      />
+                    </div>
+                    
+                    <div className="text-xl lg:text-2xl font-bold text-foreground">
+                      <AnimatedCounter 
+                        end={stat.number} 
+                        duration={2} 
+                        delay={1.2 + index * 0.1}
+                        suffix={stat.suffix}
+                      />
+                    </div>
+                    
+                    <div className="text-sm lg:text-base text-muted-foreground font-medium leading-tight">
+                      {stat.label}
+                    </div>
                   </div>
-                  <div className="text-xs sm:text-sm text-muted-foreground leading-tight">{stat.label}</div>
-                </CardContent>
-              </Card>
-            </motion.div>
-          );
-        })}
+                </div>
+              </motion.div>
+            );
+          })}
+        </div>
       </motion.div>
 
+      {/* مؤشر الثقة */}
+      <motion.div
+        className="mt-12 text-center"
+        initial={{ opacity: 0 }}
+        whileInView={{ opacity: 1 }}
+        viewport={{ once: true }}
+        transition={{ delay: 1.5, duration: 0.8 }}
+      >
+        <div className="inline-flex items-center space-x-4 space-x-reverse bg-gradient-primary text-white px-8 py-4 rounded-full shadow-lg">
+          <Star className="h-6 w-6 text-yellow-300 animate-pulse" />
+          <span className="text-lg font-bold">موثوق من قبل أكثر من 50,000 عميل حول العالم</span>
+          <Star className="h-6 w-6 text-yellow-300 animate-pulse" />
+        </div>
+      </motion.div>
     </div>
   );
 };

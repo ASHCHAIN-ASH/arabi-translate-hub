@@ -237,21 +237,42 @@ const Index = () => {
         
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <motion.div
-            className="text-center mb-12"
+            className="text-center mb-16"
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
+            transition={{ duration: 0.8 }}
           >
-            <Badge className="bg-gradient-primary text-white border-0 px-6 py-2 text-lg font-bold mb-4 shadow-primary">
-              ✨ إحصائياتنا المذهلة
-            </Badge>
-            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-arabic-title font-bold mb-4">
-              أرقام تتحدث عن <span className="text-gradient">نجاحنا</span>
+            <motion.div
+              className="inline-flex items-center justify-center mb-6"
+              initial={{ scale: 0.8 }}
+              whileInView={{ scale: 1 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6, delay: 0.2 }}
+            >
+              <Badge className="bg-primary text-white border-0 px-8 py-3 text-lg font-bold shadow-primary rounded-full">
+                <Star className="h-5 w-5 ml-2 text-yellow-300" />
+                إحصائياتنا المذهلة
+                <Zap className="h-5 w-5 mr-2 text-yellow-300" />
+              </Badge>
+            </motion.div>
+            
+            <h2 className="text-4xl sm:text-5xl lg:text-6xl font-arabic-title font-bold mb-6 leading-tight">
+              أرقام تتحدث عن <span className="text-gradient bg-gradient-primary bg-clip-text text-transparent">تميزنا</span>
             </h2>
-            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-              إنجازات حقيقية ونتائج ملموسة حققناها مع عملائنا حول العالم
+            
+            <p className="text-xl lg:text-2xl text-muted-foreground max-w-4xl mx-auto leading-relaxed">
+              إنجازات حقيقية ونتائج ملموسة حققناها مع عملائنا الكرام في جميع أنحاء العالم
             </p>
+            
+            {/* خط زخرفي */}
+            <motion.div
+              className="w-32 h-1 bg-gradient-primary mx-auto mt-8 rounded-full"
+              initial={{ width: 0 }}
+              whileInView={{ width: 128 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.8, delay: 0.5 }}
+            />
           </motion.div>
 
           <StatsSection />
