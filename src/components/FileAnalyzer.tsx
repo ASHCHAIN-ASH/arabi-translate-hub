@@ -23,8 +23,8 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 import mammoth from "mammoth";
 import * as pdfjsLib from "pdfjs-dist";
 
-// تحديد مسار Worker لـ PDF.js
-pdfjsLib.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjsLib.version}/pdf.worker.min.js`;
+// تحديد مسار Worker لـ PDF.js - مسار محدث وموثوق
+pdfjsLib.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js`;
 
 interface FileAnalysis {
   fileName: string;
@@ -187,11 +187,16 @@ const FileAnalyzer = ({ onAnalysisComplete, isProcessing, onProcessingChange }: 
     };
   }, []);
 
-  // استخراج النص من الملفات
+  // استخراج النص من الملفات - حل جذري بدون Promise wrapper
   const extractTextFromFile = useCallback(async (file: File): Promise<string> => {
     const fileExtension = file.name.toLowerCase().substring(file.name.lastIndexOf('.'));
     
-    return new Promise((resolve, reject) => {
+    // إنشاء timeout للمنع من التعليق
+    const timeoutPromise = new Promise<never>((_, reject) => {
+      setTimeout(() => reject(new Error('انتهت مهلة استخراج النص - الملف كبير جداً')), 30000);
+    });
+    
+    const extractionPromise = new Promise<string>((resolve, reject) => {
       const reader = new FileReader();
       
       reader.onload = async (event) => {
@@ -205,14 +210,28 @@ const FileAnalyzer = ({ onAnalysisComplete, isProcessing, onProcessingChange }: 
             extractedText = content as string;
             
           } else if (fileExtension === '.pdf') {
-            const arrayBuffer = content as ArrayBuffer;
-            const loadingTask = pdfjsLib.getDocument({ data: arrayBuffer });
-            const pdf = await loadingTask.promise as any;
-            const totalPages = pdf.numPages;
-            let allText = "";
-            
-            // معالجة متوازية فائقة السرعة - 12 صفحة في الوقت نفسه
-            const batchSize = 12;
+            try {
+              const arrayBuffer = content as ArrayBuffer;
+              console.log('بدء معالجة PDF، حجم الملف:', arrayBuffer.byteLength);
+              
+              const loadingTask = pdfjsLib.getDocument({ 
+                data: arrayBuffer,
+                disableFontFace: true, // تسريع المعالجة
+                cMapPacked: true
+              });
+              
+              const pdf = await loadingTask.promise;
+              const totalPages = pdf.numPages;
+              console.log('عدد الصفحات:', totalPages);
+              
+              if (totalPages === 0) {
+                throw new Error('الملف لا يحتوي على صفحات');
+              }
+              
+              let allText = "";
+              
+              // معالجة محسنة وآمنة - 6 صفحات في الوقت نفسه لضمان الاستقرار
+              const batchSize = Math.min(6, totalPages);
             const batches = [];
             
             for (let i = 0; i < totalPages; i += batchSize) {
@@ -224,17 +243,30 @@ const FileAnalyzer = ({ onAnalysisComplete, isProcessing, onProcessingChange }: 
             for (const batch of batches) {
               const batchPromises = batch.map(async (pageNum) => {
                 try {
+                  console.log(`معالجة الصفحة ${pageNum}...`);
                   const page = await pdf.getPage(pageNum);
                   const textContent = await page.getTextContent();
+                  
+                  if (!textContent || !textContent.items) {
+                    console.warn(`الصفحة ${pageNum} فارغة`);
+                    return { pageNum, text: '' };
+                  }
+                  
                   const pageText = textContent.items
-                    .map((item: any) => item.str)
+                    .filter((item: any) => item && item.str)
+                    .map((item: any) => item.str.trim())
+                    .filter(str => str.length > 0)
                     .join(' ');
                   
-                  if (page.cleanup) page.cleanup();
+                  // تنظيف الذاكرة
+                  if (page.cleanup) {
+                    page.cleanup();
+                  }
                   
+                  console.log(`الصفحة ${pageNum} مكتملة - ${pageText.length} حرف`);
                   return { pageNum, text: pageText };
                 } catch (pageError) {
-                  console.warn(`خطأ في معالجة الصفحة ${pageNum}:`, pageError);
+                  console.error(`خطأ في معالجة الصفحة ${pageNum}:`, pageError);
                   return { pageNum, text: '' };
                 }
               });
@@ -244,7 +276,9 @@ const FileAnalyzer = ({ onAnalysisComplete, isProcessing, onProcessingChange }: 
               batchResults
                 .sort((a, b) => a.pageNum - b.pageNum)
                 .forEach(result => {
-                  allText += result.text + '\n';
+                  if (result.text.trim()) {
+                    allText += result.text + '\n';
+                  }
                 });
               
               processedPages += batch.length;
@@ -254,10 +288,25 @@ const FileAnalyzer = ({ onAnalysisComplete, isProcessing, onProcessingChange }: 
                 current: Math.round((processedPages / totalPages) * 100),
                 message: `معالجة ${file.name}: ${processedPages} من ${totalPages} صفحة...`
               } : null);
+              
+              console.log(`Batch مكتمل: ${processedPages}/${totalPages}`);
             }
             
-            if (pdf.destroy) pdf.destroy();
-            extractedText = allText;
+            // تنظيف الذاكرة
+            if (pdf.destroy) {
+              pdf.destroy();
+            }
+            
+            console.log('النص المستخرج - إجمالي الأحرف:', allText.length);
+            extractedText = allText.trim();
+            
+            if (!extractedText) {
+              throw new Error('لم يتم استخراج أي نص من الملف - قد يكون ملف صورة يحتاج OCR');
+            }
+            } catch (pdfError) {
+              console.error('خطأ في معالجة PDF:', pdfError);
+              throw new Error(`خطأ في معالجة PDF: ${pdfError instanceof Error ? pdfError.message : 'خطأ غير معروف'}`);
+            }
             
           } else if (fileExtension === '.docx' || fileExtension === '.doc') {
             const arrayBuffer = content as ArrayBuffer;
@@ -285,10 +334,12 @@ const FileAnalyzer = ({ onAnalysisComplete, isProcessing, onProcessingChange }: 
           }
           
           if (!extractedText || extractedText.trim().length === 0) {
+            console.warn('النص المستخرج فارغ');
             reject(new Error("الملف فارغ أو لا يحتوي على نص قابل للقراءة"));
             return;
           }
           
+          console.log('استخراج النص مكتمل بنجاح:', extractedText.length, 'حرف');
           resolve(extractedText.trim());
           
         } catch (error) {
@@ -297,16 +348,24 @@ const FileAnalyzer = ({ onAnalysisComplete, isProcessing, onProcessingChange }: 
         }
       };
       
-      reader.onerror = () => {
+      reader.onerror = (error) => {
+        console.error("خطأ في FileReader:", error);
         reject(new Error("خطأ في قراءة الملف"));
       };
       
-      if (fileExtension === '.txt' || file.type === 'text/plain' || fileExtension === '.html' || fileExtension === '.md' || fileExtension === '.json') {
-        reader.readAsText(file, 'UTF-8');
-      } else {
-        reader.readAsArrayBuffer(file);
+      try {
+        if (fileExtension === '.txt' || file.type === 'text/plain' || fileExtension === '.html' || fileExtension === '.md' || fileExtension === '.json') {
+          reader.readAsText(file, 'UTF-8');
+        } else {
+          reader.readAsArrayBuffer(file);
+        }
+      } catch (readerError) {
+        console.error("خطأ في بدء FileReader:", readerError);
+        reject(new Error("خطأ في بدء قراءة الملف"));
       }
     });
+    
+    return Promise.race([extractionPromise, timeoutPromise]);
   }, []);
 
   // معالجة رفع الملفات
