@@ -50,24 +50,44 @@ const FileUploader = ({ onFileProcess, isProcessing, onProcessingChange }: FileU
             extractedText = content as string;
             
           } else if (fileExtension === '.pdf') {
-            // معالجة ملفات PDF باستخدام PDF.js
+            // معالجة ملفات PDF باستخدام PDF.js مع تحسين الأداء
             const arrayBuffer = content as ArrayBuffer;
             const uint8Array = new Uint8Array(arrayBuffer);
             
             // استخدام إصدار متوافق مع المكتبة المثبتة
             pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/5.4.54/pdf.worker.min.js';
             
-            const pdf = await pdfjsLib.getDocument({ data: uint8Array }).promise;
-            let fullText = "";
+            const pdf = await pdfjsLib.getDocument({ 
+              data: uint8Array,
+              // تحسين الأداء
+              disableFontFace: true,
+              disableRange: false,
+              disableStream: false
+            }).promise;
             
-            // استخراج النص من كل صفحة
-            for (let i = 1; i <= pdf.numPages; i++) {
-              const page = await pdf.getPage(i);
-              const textContent = await page.getTextContent();
-              const pageText = textContent.items
-                .map((item: any) => item.str)
-                .join(' ');
-              fullText += pageText + ' ';
+            let fullText = "";
+            const maxPages = Math.min(pdf.numPages, 100); // حد أقصى 100 صفحة لتجنب التأخير
+            
+            // معالجة الصفحات بشكل متوازي لتسريع العملية
+            const pagePromises = [];
+            for (let i = 1; i <= maxPages; i++) {
+              pagePromises.push(
+                pdf.getPage(i).then(async (page) => {
+                  const textContent = await page.getTextContent();
+                  return textContent.items
+                    .map((item: any) => item.str)
+                    .filter(str => str.trim().length > 0)
+                    .join(' ');
+                })
+              );
+            }
+            
+            // انتظار معالجة جميع الصفحات
+            const pageTexts = await Promise.all(pagePromises);
+            fullText = pageTexts.join(' ');
+            
+            if (pdf.numPages > 100) {
+              fullText += '\n[تم استخراج النص من أول 100 صفحة فقط لضمان الأداء السريع]';
             }
             
             extractedText = fullText;
