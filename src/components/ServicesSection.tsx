@@ -1,9 +1,12 @@
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { FileText, Mic, Globe, Video, Calculator, Users } from "lucide-react";
-import documentIcon from "@/assets/document-translation.jpg";
-import voiceIcon from "@/assets/voice-translation.jpg";
-import websiteIcon from "@/assets/website-translation.jpg";
+import realTextTranslation from "@/assets/real-text-translation.jpg";
+import realDocumentTranslation from "@/assets/real-document-translation.jpg";
+import realAudioTranslation from "@/assets/real-audio-translation.jpg";
+import realWebsiteTranslation from "@/assets/real-website-translation.jpg";
+import realVideoTranslation from "@/assets/real-video-translation.jpg";
+import realBusinessServices from "@/assets/real-business-services.jpg";
 
 const ServicesSection = () => {
   const services = [
@@ -11,42 +14,42 @@ const ServicesSection = () => {
       title: "ترجمة النصوص",
       description: "ترجمة فورية وسريعة لجميع أنواع النصوص بدقة عالية ومراجعة احترافية",
       icon: FileText,
-      image: documentIcon,
+      image: realTextTranslation,
       features: ["ترجمة فورية", "مراجعة احترافية", "أكثر من 100 لغة", "دقة 99%"]
     },
     {
       title: "ترجمة المستندات",
       description: "ترجمة ملفات Word, PDF, PowerPoint مع الحفاظ على التنسيق الأصلي",
       icon: FileText,
-      image: documentIcon,
+      image: realDocumentTranslation,
       features: ["حفظ التنسيق", "ملفات متعددة", "تسليم سريع", "سرية تامة"]
     },
     {
       title: "الترجمة الصوتية",
       description: "تحويل الكلام إلى نص وترجمته مباشرة مع دعم جميع اللهجات",
       icon: Mic,
-      image: voiceIcon,
+      image: realAudioTranslation,
       features: ["تحويل صوتي", "ترجمة فورية", "دعم اللهجات", "جودة عالية"]
     },
     {
       title: "ترجمة المواقع",
       description: "ترجمة مواقع الويب والصفحات الإلكترونية بالكامل مع الحفاظ على التصميم",
       icon: Globe,
-      image: websiteIcon,
+      image: realWebsiteTranslation,
       features: ["ترجمة كاملة", "حفظ التصميم", "SEO محسن", "تحديث مستمر"]
     },
     {
       title: "ترجمة الفيديو",
       description: "إضافة ترجمة للفيديوهات والأفلام مع خدمات الدبلجة الاحترافية",
       icon: Video,
-      image: voiceIcon,
+      image: realVideoTranslation,
       features: ["ترجمة مرئية", "دبلجة صوتية", "توقيت دقيق", "جودة HD"]
     },
     {
       title: "خدمات مخصصة",
       description: "حلول ترجمة مخصصة للشركات والمؤسسات بأسعار تنافسية",
       icon: Users,
-      image: websiteIcon,
+      image: realBusinessServices,
       features: ["حلول مخصصة", "دعم 24/7", "فريق مختص", "أسعار مرنة"]
     }
   ];

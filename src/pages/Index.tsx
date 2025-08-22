@@ -1,7 +1,7 @@
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import ServicesSection from "@/components/ServicesSection";
-import ServiceImageGenerator from "@/components/ServiceImageGenerator";
+
 import StatsSection from "@/components/StatsSection";
 import StatsBackground from "@/components/StatsBackground";
 import TranslationStudio from "@/components/TranslationStudio";
@@ -538,27 +538,6 @@ const Index = () => {
       {/* قسم الخدمات */}
       <ServicesSection />
 
-      {/* مولد الصور للخدمات */}
-      <section className="py-12 sm:py-16 lg:py-20 bg-muted/50">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            viewport={{ once: true }}
-            className="text-center mb-12"
-          >
-            <h2 className="text-3xl lg:text-4xl font-arabic-title font-bold mb-4">
-              توليد صور <span className="text-gradient">احترافية</span> للخدمات
-            </h2>
-            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-              استخدم الذكاء الاصطناعي لإنشاء صور عالية الجودة لجميع خدماتنا
-            </p>
-          </motion.div>
-          
-          <ServiceImageGenerator />
-        </div>
-      </section>
 
       {/* استوديو الترجمة التفاعلي */}
       <section className="py-12 sm:py-16 lg:py-20 bg-gradient-to-br from-background via-primary/5 to-accent/5 relative overflow-hidden">
