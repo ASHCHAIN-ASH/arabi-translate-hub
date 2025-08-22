@@ -74,10 +74,10 @@ const StatsSection = () => {
               whileInView={{ opacity: 1, scale: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.6, delay: index * 0.2 }}
-              whileHover={{ scale: 1.02, y: -5 }}
+              whileHover={{ scale: 1.05, y: -8 }}
               className="cursor-pointer group w-full max-w-sm"
             >
-              <Card className="bg-white shadow-xl border-0 text-center hover:shadow-2xl transition-all duration-500 group overflow-hidden relative h-64 lg:h-72 backdrop-blur-sm">
+              <Card className="bg-gradient-to-br from-card via-card/95 to-card/90 shadow-2xl border border-border/50 text-center hover:shadow-[0_25px_50px_-12px_rgba(0,0,0,0.25)] hover:border-primary/30 transition-all duration-700 group overflow-hidden relative h-64 lg:h-72 backdrop-blur-lg rounded-2xl">
                 <CardContent className="p-8 lg:p-10 h-full flex flex-col justify-center items-center relative z-10">
                   {/* أيقونة احترافية */}
                   <motion.div
@@ -149,18 +149,37 @@ const StatsSection = () => {
 
                 {/* تأثيرات احترافية */}
                 <motion.div
-                  className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-secondary/5 opacity-0 group-hover:opacity-100"
-                  transition={{ duration: 0.5 }}
+                  className="absolute inset-0 bg-gradient-to-br from-primary/8 via-transparent to-secondary/8 opacity-0 group-hover:opacity-100"
+                  transition={{ duration: 0.7 }}
                 />
                 
-                {/* حدود متوهجة */}
-                <div className="absolute inset-0 rounded-lg border border-border group-hover:border-primary/30 transition-all duration-500" />
+                {/* حدود متوهجة مع تأثير ضوئي */}
+                <motion.div 
+                  className="absolute inset-0 rounded-2xl border-2 border-transparent group-hover:border-primary/40 transition-all duration-700"
+                  style={{
+                    background: 'linear-gradient(135deg, transparent, rgba(var(--primary), 0.1), transparent)',
+                    backgroundClip: 'padding-box',
+                  }}
+                />
                 
-                {/* خط تحتي زخرفي */}
+                {/* شعاع ضوئي متحرك */}
                 <motion.div
-                  className="absolute bottom-0 left-1/2 w-0 h-1 bg-gradient-primary group-hover:w-full group-hover:left-0"
-                  transition={{ duration: 0.5 }}
+                  className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-primary to-transparent opacity-0 group-hover:opacity-100"
+                  animate={{
+                    x: ['-100%', '100%'],
+                  }}
+                  transition={{
+                    duration: 2,
+                    repeat: Infinity,
+                    ease: "linear"
+                  }}
                 />
+                
+                {/* تأثيرات الزوايا */}
+                <div className="absolute top-0 left-0 w-6 h-6 border-l-2 border-t-2 border-primary/30 rounded-tl-2xl opacity-0 group-hover:opacity-100 transition-all duration-500" />
+                <div className="absolute top-0 right-0 w-6 h-6 border-r-2 border-t-2 border-primary/30 rounded-tr-2xl opacity-0 group-hover:opacity-100 transition-all duration-500" />
+                <div className="absolute bottom-0 left-0 w-6 h-6 border-l-2 border-b-2 border-primary/30 rounded-bl-2xl opacity-0 group-hover:opacity-100 transition-all duration-500" />
+                <div className="absolute bottom-0 right-0 w-6 h-6 border-r-2 border-b-2 border-primary/30 rounded-br-2xl opacity-0 group-hover:opacity-100 transition-all duration-500" />
               </Card>
             </motion.div>
           );
@@ -169,12 +188,16 @@ const StatsSection = () => {
 
       {/* الإحصائيات الإضافية بتصميم شريطي احترافي */}
       <motion.div
-        className="bg-white/60 backdrop-blur-md rounded-2xl border border-white/80 shadow-lg p-8 lg:p-10"
+        className="bg-gradient-to-br from-card/80 via-card/90 to-card/95 backdrop-blur-xl rounded-3xl border-2 border-border/40 shadow-2xl p-8 lg:p-12 relative overflow-hidden"
         initial={{ opacity: 0, y: 30 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
         transition={{ delay: 0.8, duration: 0.8 }}
       >
+        {/* تأثير خلفية ضوئية */}
+        <div className="absolute inset-0 bg-gradient-to-r from-primary/5 via-transparent to-secondary/5 opacity-50" />
+        <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-primary/30 to-transparent" />
+        <div className="absolute bottom-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-secondary/30 to-transparent" />
         <div className="text-center mb-8">
           <h3 className="text-2xl lg:text-3xl font-bold text-foreground font-arabic-title mb-2">
             إنجازات إضافية
@@ -195,13 +218,46 @@ const StatsSection = () => {
                 viewport={{ once: true }}
                 transition={{ delay: 1 + index * 0.1, duration: 0.5 }}
               >
-                <div className="bg-white/80 backdrop-blur-sm rounded-xl border border-white/90 hover:shadow-lg hover:border-primary/20 transition-all duration-300 p-4 lg:p-5">
-                  <div className="flex flex-col items-center space-y-3">
+                <div className="bg-gradient-to-br from-card via-card/95 to-card/90 backdrop-blur-md rounded-2xl border-2 border-border/30 hover:shadow-2xl hover:border-primary/40 hover:shadow-primary/10 transition-all duration-500 p-4 lg:p-6 relative overflow-hidden group">
+                  {/* تأثير ضوئي خلفي */}
+                  <div className="absolute inset-0 bg-gradient-to-br from-primary/3 to-secondary/3 opacity-0 group-hover:opacity-100 transition-all duration-500" />
+                  
+                  {/* حدود ضوئية متحركة */}
+                  <motion.div
+                    className="absolute inset-0 rounded-2xl border border-primary/20 opacity-0 group-hover:opacity-100"
+                    animate={{
+                      background: [
+                        'linear-gradient(0deg, transparent, rgba(var(--primary), 0.1), transparent)',
+                        'linear-gradient(90deg, transparent, rgba(var(--primary), 0.1), transparent)',
+                        'linear-gradient(180deg, transparent, rgba(var(--primary), 0.1), transparent)',
+                        'linear-gradient(270deg, transparent, rgba(var(--primary), 0.1), transparent)',
+                      ]
+                    }}
+                    transition={{ duration: 4, repeat: Infinity, ease: "linear" }}
+                  />
+                  
+                  <div className="flex flex-col items-center space-y-3 relative z-10">
                     <div className="relative">
-                      <IconComponent className="h-8 w-8 lg:h-10 lg:w-10 text-primary/80 mx-auto" />
                       <motion.div
-                        className="absolute inset-0 bg-primary/10 rounded-full scale-125 opacity-0 group-hover:opacity-100"
+                        className="p-3 rounded-xl bg-primary/10 border border-primary/20"
+                        whileHover={{ scale: 1.1, rotate: 5 }}
                         transition={{ duration: 0.3 }}
+                      >
+                        <IconComponent className="h-8 w-8 lg:h-10 lg:w-10 text-primary mx-auto" />
+                      </motion.div>
+                      
+                      {/* دوائر ضوئية متحركة */}
+                      <motion.div
+                        className="absolute inset-0 bg-primary/5 rounded-full scale-150 opacity-0 group-hover:opacity-100"
+                        animate={{ 
+                          scale: [1.5, 2, 1.5],
+                          opacity: [0, 0.3, 0]
+                        }}
+                        transition={{ 
+                          duration: 2,
+                          repeat: Infinity,
+                          delay: index * 0.2
+                        }}
                       />
                     </div>
                     
