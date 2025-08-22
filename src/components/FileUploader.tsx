@@ -147,9 +147,9 @@ const FileUploader = ({ onFileProcess, isProcessing, onProcessingChange }: FileU
         throw new Error("نوع الملف غير مدعوم. يرجى رفع ملفات: TXT, DOC, DOCX, PDF");
       }
       
-      // التحقق من حجم الملف (حد أقصى 10 ميجا)
-      if (selectedFile.size > 10 * 1024 * 1024) {
-        throw new Error("حجم الملف كبير جداً. الحد الأقصى 10 ميجابايت");
+      // التحقق من حجم الملف (حد أقصى 50 ميجا)
+      if (selectedFile.size > 50 * 1024 * 1024) {
+        throw new Error("حجم الملف كبير جداً. الحد الأقصى 50 ميجابايت");
       }
       
       // استخراج النص من جميع أنواع الملفات
@@ -237,7 +237,7 @@ const FileUploader = ({ onFileProcess, isProcessing, onProcessingChange }: FileU
       <div className="text-xs text-muted-foreground space-y-1 p-3 bg-muted/30 rounded-lg">
         <p>• جميع أنواع الملفات يتم حساب كلماتها بدقة كاملة</p>
         <p>• يتم استخراج النص الفعلي من PDF و Word للحساب الدقيق</p>
-        <p>• الحد الأقصى لحجم الملف: 10 ميجابايت</p>
+        <p>• الحد الأقصى لحجم الملف: 50 ميجابايت</p>
       </div>
     </div>
   );
