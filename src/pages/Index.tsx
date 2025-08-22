@@ -227,8 +227,34 @@ const Index = () => {
           </motion.div>
         </div>
 
-        {/* قسم الإحصائيات المتقدم */}
-        <StatsSection />
+      </section>
+
+      {/* قسم الإحصائيات التفاعلي */}
+      <section className="py-12 sm:py-16 lg:py-20 bg-gradient-to-br from-muted/20 via-background to-muted/30 relative overflow-hidden">
+        {/* خلفية تفاعلية */}
+        <div className="absolute inset-0 bg-grid-white/10 bg-grid-16 [mask-image:radial-gradient(white,transparent_70%)]" />
+        
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+          <motion.div
+            className="text-center mb-12"
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+          >
+            <Badge className="bg-gradient-primary text-white border-0 px-6 py-2 text-lg font-bold mb-4 shadow-primary">
+              ✨ إحصائياتنا المذهلة
+            </Badge>
+            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-arabic-title font-bold mb-4">
+              أرقام تتحدث عن <span className="text-gradient">نجاحنا</span>
+            </h2>
+            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+              إنجازات حقيقية ونتائج ملموسة حققناها مع عملائنا حول العالم
+            </p>
+          </motion.div>
+
+          <StatsSection />
+        </div>
       </section>
 
       {/* أنواع الترجمات */}

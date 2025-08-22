@@ -61,39 +61,23 @@ const StatsSection = () => {
   ];
 
   return (
-    <motion.div 
-      className="absolute bottom-6 sm:bottom-8 lg:bottom-12 left-1/2 transform -translate-x-1/2 w-full max-w-7xl px-4 sm:px-6 lg:px-8"
-      initial={{ opacity: 0, y: 50 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.8, delay: 1.5 }}
-    >
-      {/* العنوان */}
-      <motion.div
-        className="text-center mb-6"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 1.8 }}
-      >
-        <Badge className="bg-white/15 text-white border-white/30 backdrop-blur-md px-4 py-2 text-sm font-bold mb-2">
-          ✨ إحصائياتنا المذهلة
-        </Badge>
-      </motion.div>
-
+    <div className="w-full">
       {/* الإحصائيات الرئيسية */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 lg:gap-8 justify-items-center mb-6">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8 lg:gap-10 justify-items-center mb-12">
         {mainStats.map((stat, index) => {
           const IconComponent = stat.icon;
           return (
             <motion.div
               key={index}
               initial={{ opacity: 0, scale: 0.8, y: 30 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 1.7 + index * 0.15 }}
+              whileInView={{ opacity: 1, scale: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: index * 0.15 }}
               whileHover={{ scale: 1.05, y: -8 }}
               className="cursor-pointer group"
             >
-              <Card className="bg-white/10 backdrop-blur-xl border-white/20 text-center hover:bg-white/15 transition-all duration-500 group overflow-hidden relative w-36 sm:w-40 lg:w-48 h-40 sm:h-44 lg:h-52">
-                <CardContent className="p-4 sm:p-5 lg:p-6 h-full flex flex-col justify-center items-center relative z-10">
+              <Card className="bg-gradient-card shadow-medium border border-white/10 text-center hover:shadow-strong transition-all duration-500 group overflow-hidden relative w-48 sm:w-52 lg:w-60 h-48 sm:h-52 lg:h-60 hover:border-primary/30">
+                <CardContent className="p-6 sm:p-7 lg:p-8 h-full flex flex-col justify-center items-center relative z-10">
                   {/* أيقونة مع تأثيرات متقدمة */}
                   <motion.div
                     className="relative mb-3 flex justify-center"
@@ -106,7 +90,7 @@ const StatsSection = () => {
                       scale: { duration: 2, repeat: Infinity, ease: "easeInOut" }
                     }}
                   >
-                    <IconComponent className="h-7 w-7 sm:h-8 lg:h-10 text-white drop-shadow-lg relative z-10" />
+                    <IconComponent className="h-8 w-8 sm:h-10 lg:h-12 text-primary drop-shadow-lg relative z-10" />
                     
                     {/* هالة متوهجة */}
                     <motion.div 
@@ -139,62 +123,59 @@ const StatsSection = () => {
 
                   {/* العداد المتحرك */}
                   <motion.div 
-                    className="text-xl sm:text-2xl lg:text-3xl font-bold text-white mb-1 font-arabic-title"
+                    className="text-2xl sm:text-3xl lg:text-4xl font-bold text-foreground mb-2 font-arabic-title"
                     whileHover={{ scale: 1.1 }}
                   >
                     <AnimatedCounter 
                       end={stat.number} 
                       duration={2} 
-                      delay={2 + index * 0.3}
+                      delay={index * 0.3}
                       suffix={stat.suffix}
                     />
                   </motion.div>
 
                   {/* النص الوصفي */}
-                  <div className="text-white/90 text-sm sm:text-base font-medium leading-tight text-center mb-1">
+                  <div className="text-muted-foreground text-base sm:text-lg font-medium leading-tight text-center mb-2">
                     {stat.label}
                   </div>
                   
-                  <div className="text-white/70 text-xs leading-tight text-center">
+                  <div className="text-muted-foreground/80 text-sm leading-tight text-center">
                     {stat.description}
                   </div>
                 </CardContent>
 
                 {/* تأثيرات إضافية */}
                 <motion.div
-                  className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent opacity-0 group-hover:opacity-100"
+                  className="absolute inset-0 bg-gradient-to-r from-transparent via-primary/5 to-transparent opacity-0 group-hover:opacity-100"
                   animate={{ x: ["-100%", "100%"] }}
                   transition={{ 
                     duration: 2, 
                     repeat: Infinity, 
-                    repeatDelay: 1,
+                    repeatDelay: 2,
                     ease: "linear"
                   }}
                 />
                 
-                <motion.div
-                  className={`absolute inset-0 bg-gradient-to-br ${stat.gradient} opacity-0 group-hover:opacity-5 transition-all duration-500`}
-                />
                 
-                <div className="absolute inset-0 rounded-lg border border-white/10 group-hover:border-white/30 transition-all duration-300" />
+                <div className="absolute inset-0 rounded-lg border border-border group-hover:border-primary/30 transition-all duration-300" />
                 
                 {/* نقاط متحركة */}
-                {[...Array(5)].map((_, i) => (
+                {[...Array(3)].map((_, i) => (
                   <motion.div
                     key={i}
-                    className="absolute w-1 h-1 bg-white/30 rounded-full"
+                    className="absolute w-1 h-1 bg-primary/40 rounded-full"
                     style={{
-                      left: `${20 + i * 15}%`,
-                      top: `${10 + i * 20}%`,
+                      left: `${20 + i * 30}%`,
+                      top: `${15 + i * 25}%`,
                     }}
                     animate={{
-                      opacity: [0.3, 1, 0.3],
+                      opacity: [0.4, 1, 0.4],
                       scale: [1, 1.5, 1],
                     }}
                     transition={{
                       duration: 2,
                       repeat: Infinity,
-                      delay: i * 0.4,
+                      delay: i * 0.5,
                     }}
                   />
                 ))}
@@ -206,10 +187,11 @@ const StatsSection = () => {
 
       {/* الإحصائيات الإضافية المصغرة */}
       <motion.div
-        className="grid grid-cols-3 lg:grid-cols-6 gap-2 sm:gap-3 lg:gap-4 opacity-80"
+        className="grid grid-cols-3 lg:grid-cols-6 gap-4 sm:gap-6 lg:gap-8"
         initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 0.8, y: 0 }}
-        transition={{ delay: 2.5, duration: 0.6 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        transition={{ delay: 0.5, duration: 0.6 }}
       >
         {additionalStats.map((stat, index) => {
           const IconComponent = stat.icon;
@@ -219,21 +201,22 @@ const StatsSection = () => {
               className="text-center group cursor-pointer"
               whileHover={{ scale: 1.05 }}
               initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 2.8 + index * 0.1 }}
+              whileInView={{ opacity: 1 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.8 + index * 0.1 }}
             >
-              <Card className="bg-white/5 backdrop-blur-md border-white/10 hover:bg-white/10 transition-all duration-300 p-2 sm:p-3">
-                <CardContent className="p-1 sm:p-2">
-                  <IconComponent className="h-4 w-4 sm:h-5 w-5 text-white/80 mx-auto mb-1" />
-                  <div className="text-xs sm:text-sm font-bold text-white">
+              <Card className="bg-gradient-card shadow-soft border border-border hover:shadow-medium hover:border-primary/20 transition-all duration-300 p-3 sm:p-4">
+                <CardContent className="p-2 sm:p-3">
+                  <IconComponent className="h-5 w-5 sm:h-6 w-6 text-primary mx-auto mb-2" />
+                  <div className="text-sm sm:text-base font-bold text-foreground">
                     <AnimatedCounter 
                       end={stat.number} 
                       duration={1.5} 
-                      delay={3 + index * 0.1}
+                      delay={1 + index * 0.1}
                       suffix={stat.suffix}
                     />
                   </div>
-                  <div className="text-xs text-white/70 leading-tight">{stat.label}</div>
+                  <div className="text-xs sm:text-sm text-muted-foreground leading-tight">{stat.label}</div>
                 </CardContent>
               </Card>
             </motion.div>
@@ -241,20 +224,7 @@ const StatsSection = () => {
         })}
       </motion.div>
 
-      {/* مؤشر التمرير */}
-      <motion.div
-        className="flex justify-center mt-4"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 3.5 }}
-      >
-        <motion.div
-          className="w-6 h-1 bg-white/30 rounded-full"
-          animate={{ scaleX: [1, 1.5, 1] }}
-          transition={{ duration: 2, repeat: Infinity }}
-        />
-      </motion.div>
-    </motion.div>
+    </div>
   );
 };
 
