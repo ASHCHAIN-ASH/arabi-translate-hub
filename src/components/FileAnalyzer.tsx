@@ -11,23 +11,11 @@ import {
   X, 
   AlertCircle, 
   Scan,
-  Table,
-  Hash,
-  Copy,
-  Filter,
-  Zap,
   CheckCircle
 } from "lucide-react";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 // @ts-ignore
 import mammoth from "mammoth";
-import { pdfjs } from 'react-pdf';
-
-// إعداد PDF.js worker بشكل موثوق وثابت
-pdfjs.GlobalWorkerOptions.workerSrc = new URL(
-  'pdfjs-dist/build/pdf.worker.min.js',
-  import.meta.url,
-).toString();
 
 interface FileAnalysis {
   fileName: string;
@@ -163,61 +151,15 @@ const FileAnalyzer = ({ onAnalysisComplete, isProcessing, onProcessingChange }: 
     };
   }, []);
 
-  // استخراج النص من PDF محسن
+  // استخراج النص من PDF - نظام بديل مبسط
   const extractPdfText = useCallback(async (file: File): Promise<string> => {
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      
-      reader.onload = async () => {
-        try {
-          const arrayBuffer = reader.result as ArrayBuffer;
-          const uint8Array = new Uint8Array(arrayBuffer);
-          
-          // تحميل PDF
-          const loadingTask = pdfjs.getDocument({ data: uint8Array });
-          const pdf = await loadingTask.promise;
-          
-          let allText = "";
-          const numPages = pdf.numPages;
-          
-          // معالجة الصفحات بالتتابع لتجنب المشاكل
-          for (let pageNum = 1; pageNum <= numPages; pageNum++) {
-            try {
-              setProgress(prev => prev ? {
-                ...prev,
-                message: `استخراج النص من الصفحة ${pageNum} من ${numPages}...`
-              } : null);
-              
-              const page = await pdf.getPage(pageNum);
-              const textContent = await page.getTextContent();
-              
-              const pageText = textContent.items
-                .map((item: any) => item.str)
-                .join(' ');
-              
-              allText += pageText + ' ';
-              
-              // تنظيف الذاكرة
-              page.cleanup();
-              
-            } catch (pageError) {
-              console.warn(`تخطي الصفحة ${pageNum} بسبب خطأ:`, pageError);
-            }
-          }
-          
-          // تنظيف الـ PDF
-          pdf.destroy();
-          
-          resolve(allText.trim());
-          
-        } catch (error) {
-          console.error('خطأ في معالجة PDF:', error);
-          reject(error);
-        }
-      };
-      
-      reader.onerror = () => reject(new Error('خطأ في قراءة الملف'));
-      reader.readAsArrayBuffer(file);
+    console.log('PDF detection:', file.name);
+    
+    // PDF يحتاج معالجة خاصة - سنضع رسالة واضحة
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        resolve("ملف PDF تم اكتشافه - يحتاج معالجة خاصة. يمكنك تحويله إلى DOCX أو TXT لتحليل دقيق.");
+      }, 1000);
     });
   }, []);
 
@@ -444,7 +386,7 @@ const FileAnalyzer = ({ onAnalysisComplete, isProcessing, onProcessingChange }: 
             محلل الملفات المتقدم
           </CardTitle>
           <Badge variant="secondary" className="bg-primary/10 text-primary">
-            نظام محسن
+            نظام مبسط
           </Badge>
         </div>
       </CardHeader>
