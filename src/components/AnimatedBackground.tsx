@@ -18,8 +18,8 @@ const AnimatedBackground = () => {
 
   return (
     <div className="absolute inset-0 overflow-hidden">
-      {/* الطبقة الأساسية للتدرج */}
-      <div className="absolute inset-0 bg-gradient-to-br from-primary via-accent-emerald to-primary-glow opacity-90" />
+      {/* الطبقة الأساسية للتدرج الحيوي */}
+      <div className="absolute inset-0 bg-gradient-vibrant opacity-95" />
       
       {/* شبكة النقاط المتحركة */}
       <div className="absolute inset-0">
@@ -61,7 +61,7 @@ const AnimatedBackground = () => {
       />
 
       <motion.div
-        className="absolute top-3/4 right-1/4 w-80 h-80 bg-accent-emerald/10 rounded-full blur-2xl"
+        className="absolute top-3/4 right-1/4 w-80 h-80 bg-secondary/15 rounded-full blur-2xl"
         animate={{
           scale: [1.2, 1, 1.2],
           x: [0, -40, 0],
@@ -76,7 +76,7 @@ const AnimatedBackground = () => {
       />
 
       <motion.div
-        className="absolute top-1/2 right-1/3 w-64 h-64 bg-primary-glow/8 rounded-full blur-xl"
+        className="absolute top-1/2 right-1/3 w-64 h-64 bg-accent/12 rounded-full blur-xl"
         animate={{
           scale: [1, 1.3, 1],
           rotate: [0, 180, 360],

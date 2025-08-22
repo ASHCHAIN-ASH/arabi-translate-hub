@@ -30,10 +30,10 @@ import { motion } from "framer-motion";
 
 const Index = () => {
   const stats = [
-    { icon: Building2, number: "500+", label: "شركة عالمية", color: "text-blue-400" },
-    { icon: Globe, number: "150+", label: "لغة احترافية", color: "text-emerald-400" },
-    { icon: TrendingUp, number: "10M+", label: "كلمة مترجمة", color: "text-purple-400" },
-    { icon: Award, number: "99.9%", label: "دقة مضمونة", color: "text-yellow-400" }
+    { icon: Building2, number: "500+", label: "شركة عالمية", gradient: "from-primary to-primary-dark" },
+    { icon: Globe, number: "150+", label: "لغة احترافية", gradient: "from-secondary to-warning" },
+    { icon: TrendingUp, number: "10M+", label: "كلمة مترجمة", gradient: "from-accent to-accent-light" },
+    { icon: Award, number: "99.9%", label: "دقة مضمونة", gradient: "from-yellow-400 to-yellow-600" }
   ];
 
   const features = [
@@ -41,25 +41,29 @@ const Index = () => {
       icon: Briefcase,
       title: "للشركات العالمية",
       description: "حلول ترجمة متطورة للمؤسسات الكبرى والشركات متعددة الجنسيات",
-      gradient: "from-blue-500 to-cyan-500"
+      gradient: "from-primary to-primary-dark",
+      shadowColor: "shadow-primary"
     },
     {
       icon: Shield,
       title: "أمان مؤسسي",
       description: "معايير الأمان العالمية مع شهادات ISO وحماية البيانات الحساسة",
-      gradient: "from-emerald-500 to-teal-500"
+      gradient: "from-accent to-accent-light",
+      shadowColor: "shadow-success"
     },
     {
       icon: Settings,
       title: "تقنية متقدمة",
       description: "ذكاء اصطناعي متطور مع مراجعة بشرية من خبراء معتمدين",
-      gradient: "from-purple-500 to-indigo-500"
+      gradient: "from-purple-500 to-indigo-500",
+      shadowColor: "shadow-medium"
     },
     {
       icon: Target,
       title: "دقة استثنائية",
       description: "ضمان جودة 99.9% مع التزام صارم بالمواعيد النهائية",
-      gradient: "from-orange-500 to-red-500"
+      gradient: "from-secondary to-warning",
+      shadowColor: "shadow-secondary"
     }
   ];
 
@@ -97,7 +101,7 @@ const Index = () => {
         <AnimatedBackground />
         
         {/* طبقة إضافية للتحكم في الشفافية */}
-        <div className="absolute inset-0 bg-gradient-to-br from-primary/80 via-accent-emerald/60 to-primary-glow/80" />
+        <div className="absolute inset-0 bg-gradient-to-br from-primary/70 via-secondary/50 to-accent/60" />
 
         <div className="relative z-10 container mx-auto px-4 text-center text-white">
           <motion.div 
@@ -245,15 +249,8 @@ const Index = () => {
                         transition={{ duration: 8, repeat: Infinity, ease: "linear" }}
                         className="relative mb-4"
                       >
-                        <IconComponent className={`h-10 w-10 ${stat.color} mx-auto`} />
-                        <motion.div
-                          className="absolute inset-0 bg-gradient-to-r from-white/10 to-transparent rounded-full blur-lg"
-                          animate={{ 
-                            opacity: [0, 0.8, 0],
-                            scale: [0.8, 1.2, 0.8]
-                          }}
-                          transition={{ duration: 2, repeat: Infinity }}
-                        />
+                        <IconComponent className={`h-10 w-10 text-white mx-auto`} />
+                        <div className={`absolute inset-0 bg-gradient-to-br ${stat.gradient} opacity-30 rounded-full blur-sm`} />
                       </motion.div>
                       <motion.div 
                         className="text-3xl md:text-4xl font-bold text-white mb-2"
@@ -423,10 +420,10 @@ const Index = () => {
         {/* خلفية هندسية متحركة */}
         <div className="absolute inset-0 opacity-5">
           <div className="absolute inset-0" style={{
-            backgroundImage: `
-              linear-gradient(45deg, hsl(var(--primary)) 1px, transparent 1px),
-              linear-gradient(-45deg, hsl(var(--accent-emerald)) 1px, transparent 1px)
-            `,
+             backgroundImage: `
+               linear-gradient(45deg, hsl(var(--primary)) 1px, transparent 1px),
+               linear-gradient(-45deg, hsl(var(--accent)) 1px, transparent 1px)
+             `,
             backgroundSize: '60px 60px'
           }} />
         </div>
@@ -446,7 +443,7 @@ const Index = () => {
               transition={{ duration: 0.8, delay: 0.2 }}
               viewport={{ once: true }}
             >
-              لماذا تثق بنا <span className="text-gradient bg-gradient-to-r from-primary to-accent-emerald bg-clip-text">الشركات الرائدة؟</span>
+              لماذا تثق بنا <span className="text-gradient-secondary">الشركات الرائدة؟</span>
             </motion.h2>
             <motion.p
               className="text-xl text-muted-foreground max-w-3xl mx-auto"
