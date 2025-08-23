@@ -60,6 +60,8 @@ const SmartPriceCalculator = ({
   qualityLevel = 'standard',
   onPriceChange
 }: SmartPriceCalculatorProps) => {
+  console.log('SmartPriceCalculator: Component rendering...', { files, fromLanguage, toLanguage, urgency, qualityLevel });
+  
   const [isCalculating, setIsCalculating] = useState(false);
   const [activeTab, setActiveTab] = useState("summary");
   const [currentStep, setCurrentStep] = useState<'pricing' | 'client-info' | 'success'>('pricing');
