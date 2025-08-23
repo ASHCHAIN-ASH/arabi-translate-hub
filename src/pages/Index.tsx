@@ -299,7 +299,7 @@ const Index = () => {
                 <Button 
                   variant="outline" 
                   size="lg"
-                  className="group w-full sm:w-auto border-2 border-white/60 text-white hover:bg-white/15 hover:border-white px-8 py-6 text-xl backdrop-blur-md rounded-2xl shadow-lg transition-all duration-300"
+                  className="group w-full sm:w-auto bg-white/20 border-2 border-white text-white hover:bg-white hover:text-primary px-8 py-6 text-xl backdrop-blur-md rounded-2xl shadow-2xl font-bold transition-all duration-300"
                 >
                   <motion.div
                     animate={{ scale: [1, 1.2, 1] }}
