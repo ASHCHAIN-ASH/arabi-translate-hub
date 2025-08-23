@@ -9,6 +9,7 @@ const Header = () => {
   const navigation = [
     { name: 'الرئيسية', href: '/' },
     { name: 'خدمات الترجمة', href: '/translation-services' },
+    { name: 'خدمات الأبحاث والكتابة', href: '/research-services' },
     { name: 'الأسعار', href: '/pricing' },
     { name: 'عن الشركة', href: '/about' },
     { name: 'المدونة', href: '/blog' },

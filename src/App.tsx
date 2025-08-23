@@ -13,6 +13,21 @@ import InstantTranslation from "./pages/InstantTranslation";
 import MediaTranslation from "./pages/MediaTranslation";
 import LiteraryTranslation from "./pages/LiteraryTranslation";
 import AcademicTranslation from "./pages/AcademicTranslation";
+import ResearchServices from "./pages/ResearchServices";
+import ThesisTitles from "./pages/research/ThesisTitles";
+import ResearchPlan from "./pages/research/ResearchPlan";
+import TheoreticalFramework from "./pages/research/TheoreticalFramework";
+import StatisticalAnalysis from "./pages/research/StatisticalAnalysis";
+import LanguageReview from "./pages/research/LanguageReview";
+import Formatting from "./pages/research/Formatting";
+import PlagiarismCheck from "./pages/research/PlagiarismCheck";
+import AdmissionServices from "./pages/research/AdmissionServices";
+import References from "./pages/research/References";
+import ResearchTools from "./pages/research/ResearchTools";
+import ResearchEvaluation from "./pages/research/ResearchEvaluation";
+import Publication from "./pages/research/Publication";
+import AcademicConsultation from "./pages/research/AcademicConsultation";
+import TrainingCourses from "./pages/research/TrainingCourses";
 import TermsOfService from "./pages/TermsOfService";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
 import NotFound from "./pages/NotFound";
@@ -36,6 +51,21 @@ const App = () => (
           <Route path="/media-translation" element={<MediaTranslation />} />
           <Route path="/literary-translation" element={<LiteraryTranslation />} />
           <Route path="/academic-translation" element={<AcademicTranslation />} />
+          <Route path="/research-services" element={<ResearchServices />} />
+          <Route path="/research/thesis-titles" element={<ThesisTitles />} />
+          <Route path="/research/research-plan" element={<ResearchPlan />} />
+          <Route path="/research/theoretical-framework" element={<TheoreticalFramework />} />
+          <Route path="/research/statistical-analysis" element={<StatisticalAnalysis />} />
+          <Route path="/research/language-review" element={<LanguageReview />} />
+          <Route path="/research/formatting" element={<Formatting />} />
+          <Route path="/research/plagiarism-check" element={<PlagiarismCheck />} />
+          <Route path="/research/admission-services" element={<AdmissionServices />} />
+          <Route path="/research/references" element={<References />} />
+          <Route path="/research/research-tools" element={<ResearchTools />} />
+          <Route path="/research/research-evaluation" element={<ResearchEvaluation />} />
+          <Route path="/research/publication" element={<Publication />} />
+          <Route path="/research/academic-consultation" element={<AcademicConsultation />} />
+          <Route path="/research/training-courses" element={<TrainingCourses />} />
           <Route path="/terms-of-service" element={<TermsOfService />} />
           <Route path="/privacy-policy" element={<PrivacyPolicy />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
