@@ -109,149 +109,259 @@ const Index = () => {
         {/* الخلفية المتحركة والديناميكية */}
         <AnimatedBackground />
         
-        {/* طبقة إضافية للتحكم في الشفافية */}
-        <div className="absolute inset-0 bg-gradient-to-br from-primary/80 via-primary-dark/70 to-accent/60" />
+        {/* طبقة التدرج المحسنة */}
+        <div className="absolute inset-0 bg-gradient-to-br from-primary/90 via-primary-dark/80 to-accent/70" />
+        
+        {/* شبكة ديناميكية خلفية */}
+        <div className="absolute inset-0 opacity-10">
+          <div className="absolute inset-0" style={{
+            backgroundImage: `radial-gradient(circle at 1px 1px, rgba(255,255,255,0.3) 1px, transparent 0)`,
+            backgroundSize: '50px 50px',
+            animation: 'move 20s linear infinite'
+          }} />
+        </div>
 
         <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8 text-center text-white">
           <motion.div 
-            className="max-w-7xl mx-auto space-y-6 sm:space-y-8 lg:space-y-12"
+            className="max-w-7xl mx-auto space-y-8 lg:space-y-12"
             initial={{ opacity: 0, y: 50 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
           >
+            {/* شارة العلامة التجارية */}
             <motion.div
               initial={{ opacity: 0, scale: 0.8 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.6, delay: 0.2 }}
-              className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-6"
+              className="flex flex-col items-center justify-center gap-4 mb-8"
             >
               <motion.div
-                animate={{ rotate: 360 }}
-                transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
-                className="relative"
+                className="relative mb-4"
+                animate={{ 
+                  rotate: [0, 5, -5, 0],
+                  scale: [1, 1.05, 1]
+                }}
+                transition={{ 
+                  duration: 4,
+                  repeat: Infinity,
+                  ease: "easeInOut"
+                }}
               >
-                <Languages className="h-8 w-8 sm:h-10 lg:h-12 w-10 lg:w-12 text-white/90" />
-                <motion.div
-                  className="absolute inset-0 bg-secondary/30 rounded-full blur-xl"
-                  animate={{ scale: [1, 1.5, 1], opacity: [0.5, 0.8, 0.5] }}
-                  transition={{ duration: 2, repeat: Infinity }}
-                />
+                <div className="relative">
+                  <div className="w-20 h-20 lg:w-24 lg:h-24 bg-white/10 rounded-full flex items-center justify-center backdrop-blur-md border border-white/20">
+                    <motion.div
+                      animate={{ rotate: 360 }}
+                      transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
+                    >
+                      <GraduationCap className="h-10 w-10 lg:h-12 lg:w-12 text-white" />
+                    </motion.div>
+                  </div>
+                  <motion.div
+                    className="absolute inset-0 bg-secondary/30 rounded-full blur-xl"
+                    animate={{ 
+                      scale: [1, 1.5, 1], 
+                      opacity: [0.5, 0.8, 0.5] 
+                    }}
+                    transition={{ duration: 3, repeat: Infinity }}
+                  />
+                </div>
               </motion.div>
               
-              <Badge className="bg-white/15 text-white border-white/30 backdrop-blur-md px-3 py-2 sm:px-4 lg:px-6 text-sm sm:text-base lg:text-lg font-bold">
-                <Sparkles className="h-4 w-4 sm:h-5 lg:h-6 ml-2 text-secondary" />
-                منصة الترجمة الاحترافية
-              </Badge>
-              
               <motion.div
-                animate={{ rotate: -360 }}
-                transition={{ duration: 25, repeat: Infinity, ease: "linear" }}
-                className="relative"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 0.4 }}
+                className="text-center"
               >
-                <Globe className="h-8 w-8 sm:h-10 lg:h-12 w-10 lg:w-12 text-white/90" />
-                <motion.div
-                  className="absolute inset-0 bg-accent/30 rounded-full blur-xl"
-                  animate={{ scale: [1, 1.3, 1], opacity: [0.3, 0.6, 0.3] }}
-                  transition={{ duration: 1.5, repeat: Infinity }}
-                />
+                <Badge className="bg-white/15 text-white border-white/30 backdrop-blur-md px-6 py-3 text-lg font-bold shadow-lg">
+                  <Sparkles className="h-5 w-5 ml-2 text-secondary animate-pulse" />
+                  وكالة الحلول التعليمية الرائدة
+                  <Award className="h-5 w-5 mr-2 text-yellow-300 animate-pulse" />
+                </Badge>
               </motion.div>
             </motion.div>
             
-            <motion.h1 
-              className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-8xl font-arabic-title font-bold leading-tight"
+            {/* العنوان الرئيسي */}
+            <motion.div
+              className="space-y-6"
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.4 }}
             >
-              <motion.span
-                className="inline-block"
-                whileHover={{ scale: 1.05, color: "#60A5FA" }}
+              <motion.h1 
+                className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-arabic-title font-bold leading-tight"
+                whileHover={{ scale: 1.02 }}
                 transition={{ duration: 0.2 }}
               >
-                وكالة ماستر إيدو باث
-              </motion.span>
-              <br />
-              <motion.span
-                className="text-white/90 text-xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl block mt-2"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
+                <motion.span
+                  className="inline-block bg-gradient-to-r from-white to-white/90 bg-clip-text text-transparent"
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ duration: 0.6, delay: 0.6 }}
+                >
+                  وكالة ماستر إيدو باث
+                </motion.span>
+              </motion.h1>
+              
+              <motion.h2
+                className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold text-white/95"
+                initial={{ opacity: 0, x: 20 }}
+                animate={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.6, delay: 0.8 }}
               >
                 للحلول التعليمية المتقدمة
-              </motion.span>
-              <br />
-              <motion.span
-                className="text-white/80 text-lg sm:text-xl md:text-2xl lg:text-3xl xl:text-4xl block mt-4"
+              </motion.h2>
+              
+              <motion.div
+                className="space-y-2"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ duration: 0.6, delay: 1.0 }}
               >
-                MasterEduPath Agency
-              </motion.span>
-              <br />
-              <motion.span
-                className="text-white/70 text-base sm:text-lg md:text-xl lg:text-2xl xl:text-3xl block mt-2"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ duration: 0.6, delay: 1.2 }}
-              >
-                Advanced Educational Solutions
-              </motion.span>
-            </motion.h1>
+                <h3 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-semibold text-white/85">
+                  MasterEduPath Agency
+                </h3>
+                <h4 className="text-lg sm:text-xl md:text-2xl lg:text-3xl xl:text-4xl text-white/75">
+                  Advanced Educational Solutions
+                </h4>
+              </motion.div>
+            </motion.div>
             
-            <motion.p 
-              className="text-base sm:text-lg md:text-xl lg:text-2xl text-white/95 font-light leading-relaxed max-w-5xl mx-auto px-4"
+            {/* الوصف */}
+            <motion.div 
+              className="max-w-5xl mx-auto space-y-4"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              transition={{ duration: 0.6, delay: 1 }}
-            >
-              المؤسسة التعليمية الرائدة عالمياً في تقديم الحلول التعليمية المتكاملة. 
-              نُمكّن الطلاب والجامعيين والمهنيين من تحقيق أهدافهم التعليمية والمهنية بأعلى معايير الجودة العالمية.
-              <br className="hidden sm:block" />
-              <span className="text-white/80 text-sm sm:text-base lg:text-lg block sm:inline mt-2 sm:mt-0">
-                برامج معتمدة دولياً • تطوير مهني متخصص • استشارات أكاديمية • دعم مستمر 24/7
-              </span>
-            </motion.p>
-            
-            <motion.div 
-              className="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-6 mt-8 lg:mt-12 px-4"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 1.2 }}
             >
+              <p className="text-lg sm:text-xl md:text-2xl lg:text-3xl text-white/95 font-light leading-relaxed">
+                المؤسسة التعليمية الرائدة عالمياً في تقديم الحلول التعليمية المتكاملة
+              </p>
+              <p className="text-base sm:text-lg md:text-xl lg:text-2xl text-white/85 leading-relaxed">
+                نُمكّن الطلاب والجامعيين والمهنيين من تحقيق أهدافهم التعليمية والمهنية بأعلى معايير الجودة العالمية
+              </p>
+              
+              {/* مميزات سريعة */}
+              <div className="flex flex-wrap items-center justify-center gap-4 mt-8">
+                {[
+                  { icon: Award, text: "برامج معتمدة دولياً", color: "text-yellow-300" },
+                  { icon: Users, text: "دعم مستمر 24/7", color: "text-green-300" },
+                  { icon: Globe, text: "خدمات عالمية", color: "text-blue-300" },
+                  { icon: Shield, text: "ضمان الجودة", color: "text-purple-300" }
+                ].map(({ icon: Icon, text, color }, index) => (
+                  <motion.div
+                    key={index}
+                    initial={{ opacity: 0, scale: 0.8 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ duration: 0.4, delay: 1.4 + index * 0.1 }}
+                    className="flex items-center gap-2 bg-white/10 backdrop-blur-md px-4 py-2 rounded-full border border-white/20"
+                  >
+                    <Icon className={`h-5 w-5 ${color}`} />
+                    <span className="text-white/90 text-sm font-medium">{text}</span>
+                  </motion.div>
+                ))}
+              </div>
+            </motion.div>
+            
+            {/* الأزرار المحسنة */}
+            <motion.div 
+              className="flex flex-col sm:flex-row items-center justify-center gap-6 mt-12"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 1.6 }}
+            >
               <motion.div
-                whileHover={{ scale: 1.05, y: -2 }}
+                whileHover={{ scale: 1.05, y: -3 }}
                 whileTap={{ scale: 0.98 }}
                 className="w-full sm:w-auto"
               >
                 <Button 
                   size="lg" 
-                  className="w-full sm:w-auto bg-white text-primary hover:bg-white/95 shadow-2xl px-6 sm:px-8 lg:px-10 py-4 sm:py-5 lg:py-6 text-lg sm:text-xl font-bold rounded-xl lg:rounded-2xl"
+                  className="group w-full sm:w-auto bg-white text-primary hover:bg-white/95 shadow-2xl px-8 py-6 text-xl font-bold rounded-2xl border-2 border-transparent hover:border-white/20 transition-all duration-300"
                 >
-                  <Rocket className="h-5 w-5 sm:h-6 lg:h-7 mr-2 sm:mr-3" />
-                  ابدأ مشروعك الآن
-                  <ArrowLeft className="h-5 w-5 sm:h-6 lg:h-7 mr-2 sm:mr-3" />
+                  <motion.div
+                    animate={{ rotate: [0, 360] }}
+                    transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
+                    className="mr-3"
+                  >
+                    <Rocket className="h-6 w-6" />
+                  </motion.div>
+                  ابدأ رحلتك التعليمية الآن
+                  <ArrowLeft className="h-6 w-6 mr-3 group-hover:translate-x-1 transition-transform duration-300" />
                 </Button>
               </motion.div>
               
               <motion.div
-                whileHover={{ scale: 1.05, y: -2 }}
+                whileHover={{ scale: 1.05, y: -3 }}
                 whileTap={{ scale: 0.98 }}
                 className="w-full sm:w-auto"
               >
                 <Button 
                   variant="outline" 
                   size="lg"
-                  className="w-full sm:w-auto border-2 border-white/60 text-white hover:bg-white/15 px-6 sm:px-8 lg:px-10 py-4 sm:py-5 lg:py-6 text-lg sm:text-xl backdrop-blur-md rounded-xl lg:rounded-2xl"
+                  className="group w-full sm:w-auto border-2 border-white/60 text-white hover:bg-white/15 hover:border-white px-8 py-6 text-xl backdrop-blur-md rounded-2xl shadow-lg transition-all duration-300"
                 >
-                  <PlayCircle className="h-5 w-5 sm:h-6 lg:h-7 ml-2 sm:ml-3" />
-                  جولة تفاعلية
+                  <motion.div
+                    animate={{ scale: [1, 1.2, 1] }}
+                    transition={{ duration: 1.5, repeat: Infinity }}
+                    className="ml-3"
+                  >
+                    <PlayCircle className="h-6 w-6" />
+                  </motion.div>
+                  استكشف خدماتنا
+                  <Monitor className="h-6 w-6 mr-3 group-hover:rotate-12 transition-transform duration-300" />
                 </Button>
               </motion.div>
+            </motion.div>
+
+            {/* أزرار إضافية للخدمات السريعة */}
+            <motion.div
+              className="flex flex-wrap items-center justify-center gap-4 mt-8"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.6, delay: 1.8 }}
+            >
+              {[
+                { icon: BookOpen, text: "البرامج الأكاديمية", href: "#academic" },
+                { icon: Briefcase, text: "التطوير المهني", href: "#professional" },
+                { icon: MessageSquare, text: "الاستشارات", href: "#consulting" }
+              ].map(({ icon: Icon, text, href }, index) => (
+                <motion.a
+                  key={index}
+                  href={href}
+                  whileHover={{ scale: 1.1, y: -2 }}
+                  whileTap={{ scale: 0.95 }}
+                  className="group flex items-center gap-2 bg-white/5 hover:bg-white/15 backdrop-blur-md px-4 py-3 rounded-xl border border-white/20 hover:border-white/40 transition-all duration-300"
+                >
+                  <Icon className="h-5 w-5 text-white/80 group-hover:text-white transition-colors duration-300" />
+                  <span className="text-white/80 group-hover:text-white text-sm font-medium transition-colors duration-300">{text}</span>
+                </motion.a>
+              ))}
             </motion.div>
           </motion.div>
         </div>
 
+        {/* مؤشر التمرير */}
+        <motion.div
+          className="absolute bottom-8 left-1/2 transform -translate-x-1/2"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.6, delay: 2 }}
+        >
+          <motion.div
+            animate={{ y: [0, 10, 0] }}
+            transition={{ duration: 2, repeat: Infinity }}
+            className="flex flex-col items-center text-white/60"
+          >
+            <span className="text-sm mb-2">اكتشف المزيد</span>
+            <motion.div
+              animate={{ rotate: 180 }}
+              className="w-8 h-8 rounded-full border-2 border-white/30 flex items-center justify-center"
+            >
+              <ArrowLeft className="h-4 w-4 rotate-90" />
+            </motion.div>
+          </motion.div>
+        </motion.div>
       </section>
 
       {/* قسم الإحصائيات التفاعلي */}
