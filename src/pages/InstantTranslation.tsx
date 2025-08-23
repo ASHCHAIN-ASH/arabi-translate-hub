@@ -91,7 +91,7 @@ const InstantTranslation = () => {
       y: 0,
       scale: 1,
       transition: {
-        type: "spring",
+        type: "spring" as const,
         stiffness: 120,
         damping: 12
       }
@@ -147,7 +147,7 @@ const InstantTranslation = () => {
           <motion.div
             initial={{ opacity: 0, y: 60 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 1, type: "spring", stiffness: 100 }}
+            transition={{ duration: 1, type: "spring" as const, stiffness: 100 }}
             className="text-center text-white"
           >
             <motion.div
@@ -270,7 +270,7 @@ const InstantTranslation = () => {
                       <motion.div
                         className="p-4 bg-gradient-to-br from-orange-500 to-red-600 rounded-xl text-white shadow-lg"
                         whileHover={{ rotate: 15, scale: 1.1 }}
-                        transition={{ type: "spring", stiffness: 300 }}
+                         transition={{ type: "spring" as const, stiffness: 300 }}
                       >
                         <service.icon className="h-6 w-6" />
                       </motion.div>
@@ -390,7 +390,7 @@ const InstantTranslation = () => {
                       <motion.div
                         className="relative inline-flex p-6 bg-gradient-to-br from-orange-500 to-red-600 rounded-full text-white mb-6 shadow-lg"
                         whileHover={{ scale: 1.15, rotate: 10 }}
-                        transition={{ type: "spring", stiffness: 300 }}
+                        transition={{ type: "spring" as const, stiffness: 300 }}
                       >
                         <feature.icon className="h-10 w-10" />
                         <motion.div
@@ -437,7 +437,7 @@ const InstantTranslation = () => {
               initial={{ scale: 0.9, opacity: 0 }}
               whileInView={{ scale: 1, opacity: 1 }}
               viewport={{ once: true }}
-              transition={{ duration: 1, type: "spring", stiffness: 100 }}
+              transition={{ duration: 1, type: "spring" as const, stiffness: 100 }}
               className="relative"
             >
               <div className="absolute inset-0 bg-gradient-to-r from-orange-100 to-red-100 rounded-3xl blur-3xl opacity-30"></div>

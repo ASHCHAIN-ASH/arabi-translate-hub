@@ -85,7 +85,7 @@ const MediaTranslation = () => {
       y: 0,
       scale: 1,
       transition: {
-        type: "spring",
+        type: "spring" as const,
         stiffness: 110,
         damping: 12
       }
@@ -99,7 +99,7 @@ const MediaTranslation = () => {
       transition: {
         duration: 4,
         repeat: Infinity,
-        ease: "easeInOut"
+        ease: "easeInOut" as const
       }
     }
   };
@@ -153,7 +153,7 @@ const MediaTranslation = () => {
           <motion.div
             initial={{ opacity: 0, y: 60 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 1.2, type: "spring", stiffness: 80 }}
+            transition={{ duration: 1.2, type: "spring" as const, stiffness: 80 }}
             className="text-center text-white"
           >
             <motion.div
@@ -273,7 +273,7 @@ const MediaTranslation = () => {
                       <motion.div
                         className="p-4 bg-gradient-to-br from-purple-500 to-pink-600 rounded-xl text-white shadow-lg"
                         whileHover={{ rotate: 10, scale: 1.1 }}
-                        transition={{ type: "spring", stiffness: 300 }}
+                         transition={{ type: "spring" as const, stiffness: 300 }}
                       >
                         <service.icon className="h-6 w-6" />
                       </motion.div>
@@ -346,7 +346,7 @@ const MediaTranslation = () => {
                       <motion.div
                         className="inline-flex p-4 bg-gradient-to-br from-purple-500 to-pink-600 rounded-full text-white mb-4 shadow-lg"
                         whileHover={{ scale: 1.2, rotate: 15 }}
-                        transition={{ type: "spring", stiffness: 300 }}
+                         transition={{ type: "spring" as const, stiffness: 300 }}
                       >
                         <type.icon className="h-6 w-6" />
                       </motion.div>
@@ -394,7 +394,7 @@ const MediaTranslation = () => {
                       <motion.div
                         className="relative inline-flex p-6 bg-gradient-to-br from-purple-500 to-pink-600 rounded-full text-white mb-6 shadow-lg"
                         whileHover={{ scale: 1.15, rotate: 10 }}
-                        transition={{ type: "spring", stiffness: 300 }}
+                        transition={{ type: "spring" as const, stiffness: 300 }}
                       >
                         <stage.icon className="h-10 w-10" />
                         <motion.div
@@ -447,7 +447,7 @@ const MediaTranslation = () => {
               initial={{ scale: 0.9, opacity: 0 }}
               whileInView={{ scale: 1, opacity: 1 }}
               viewport={{ once: true }}
-              transition={{ duration: 1, type: "spring", stiffness: 100 }}
+              transition={{ duration: 1, type: "spring" as const, stiffness: 100 }}
               className="relative"
             >
               <div className="absolute inset-0 bg-gradient-to-r from-purple-100 to-pink-100 rounded-3xl blur-3xl opacity-30"></div>

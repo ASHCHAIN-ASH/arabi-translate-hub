@@ -62,7 +62,7 @@ const MedicalTranslation = () => {
           <motion.div
             initial={{ opacity: 0, y: 50 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 1.2, type: "spring", stiffness: 80 }}
+            transition={{ duration: 1.2, type: "spring" as const, stiffness: 80 }}
           >
             <div className="flex justify-center mb-6">
               <div className="p-4 bg-white/20 rounded-full backdrop-blur-sm">
