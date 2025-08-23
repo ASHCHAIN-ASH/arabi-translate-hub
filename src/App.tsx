@@ -5,6 +5,13 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Index from "./pages/Index";
 import LegalTranslation from "./pages/LegalTranslation";
+import BusinessTranslation from "./pages/BusinessTranslation";
+import TechnicalTranslation from "./pages/TechnicalTranslation";
+import MedicalTranslation from "./pages/MedicalTranslation";
+import InstantTranslation from "./pages/InstantTranslation";
+import MediaTranslation from "./pages/MediaTranslation";
+import LiteraryTranslation from "./pages/LiteraryTranslation";
+import AcademicTranslation from "./pages/AcademicTranslation";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -18,6 +25,13 @@ const App = () => (
         <Routes>
           <Route path="/" element={<Index />} />
           <Route path="/legal-translation" element={<LegalTranslation />} />
+          <Route path="/business-translation" element={<BusinessTranslation />} />
+          <Route path="/technical-translation" element={<TechnicalTranslation />} />
+          <Route path="/medical-translation" element={<MedicalTranslation />} />
+          <Route path="/instant-translation" element={<InstantTranslation />} />
+          <Route path="/media-translation" element={<MediaTranslation />} />
+          <Route path="/literary-translation" element={<LiteraryTranslation />} />
+          <Route path="/academic-translation" element={<AcademicTranslation />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
