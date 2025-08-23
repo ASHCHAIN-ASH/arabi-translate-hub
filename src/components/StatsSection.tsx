@@ -4,7 +4,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import AnimatedCounter from "./AnimatedCounter";
 import { 
-  Building2, 
+  GraduationCap, 
   Languages, 
   FileText, 
   Award,
@@ -13,52 +13,58 @@ import {
   Clock,
   Shield,
   Star,
-  TrendingUp
+  TrendingUp,
+  BookOpen,
+  PenTool,
+  Search,
+  Trophy,
+  Brain,
+  Target
 } from "lucide-react";
 
 const StatsSection = () => {
   const mainStats = [
     { 
-      icon: Building2, 
-      number: 500, 
+      icon: GraduationCap, 
+      number: 2500, 
       suffix: "+",
-      label: "شركة عالمية", 
+      label: "رسالة علمية منجزة", 
       gradient: "from-primary to-primary-dark",
-      description: "تثق بخدماتنا"
+      description: "ماجستير ودكتوراه"
     },
     { 
       icon: Languages, 
-      number: 150, 
+      number: 180, 
       suffix: "+",
-      label: "لغة احترافية", 
+      label: "لغة مُترجَمة", 
       gradient: "from-secondary to-secondary-light",
-      description: "نغطيها بدقة"
+      description: "بدقة مهنية عالية"
     },
     { 
-      icon: FileText, 
-      number: 10, 
-      suffix: "M+",
-      label: "وثيقة مترجمة", 
+      icon: BookOpen, 
+      number: 15000, 
+      suffix: "+",
+      label: "بحث علمي مُحكَّم", 
       gradient: "from-accent to-accent-light",
-      description: "تم إنجازها بنجاح"
+      description: "منشور في مجلات دولية"
     },
     { 
       icon: Award, 
-      number: 99.9, 
+      number: 99.8, 
       suffix: "%",
-      label: "دقة مضمونة", 
+      label: "نسبة النجاح", 
       gradient: "from-secondary to-accent",
-      description: "معدل الرضا"
+      description: "في قبول الأبحاث"
     }
   ];
 
   const additionalStats = [
-    { icon: Users, number: 50000, suffix: "+", label: "عميل راضي" },
-    { icon: Clock, number: 24, suffix: "/7", label: "دعم مستمر" },
-    { icon: Shield, number: 100, suffix: "%", label: "أمان البيانات" },
-    { icon: Star, number: 4.9, suffix: "/5", label: "تقييم العملاء" },
-    { icon: TrendingUp, number: 200, suffix: "%", label: "نمو سنوي" },
-    { icon: Globe, number: 85, suffix: "+", label: "دولة نخدمها" }
+    { icon: PenTool, number: 8500, suffix: "+", label: "مقال علمي منجز" },
+    { icon: Brain, number: 320, suffix: "+", label: "خبير أكاديمي" },
+    { icon: Trophy, number: 95, suffix: "%", label: "نجاح القبولات" },
+    { icon: Target, number: 48, suffix: " ساعة", label: "متوسط التسليم" },
+    { icon: Search, number: 1200, suffix: "+", label: "مرجع محكم" },
+    { icon: Globe, number: 92, suffix: "+", label: "جامعة شريكة" }
   ];
 
   return (
@@ -291,7 +297,7 @@ const StatsSection = () => {
       >
         <div className="inline-flex items-center space-x-4 space-x-reverse bg-gradient-primary text-white px-8 py-4 rounded-full shadow-lg">
           <Star className="h-6 w-6 text-yellow-300 animate-pulse" />
-          <span className="text-lg font-bold">موثوق من قبل أكثر من 50,000 عميل حول العالم</span>
+          <span className="text-lg font-bold">الخيار الأول للباحثين والأكاديميين في 92+ دولة حول العالم</span>
           <Star className="h-6 w-6 text-yellow-300 animate-pulse" />
         </div>
       </motion.div>
