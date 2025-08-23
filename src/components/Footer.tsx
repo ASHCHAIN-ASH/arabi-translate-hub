@@ -68,7 +68,6 @@ const Footer = () => {
               </motion.div>
               <h4 className="font-bold text-lg mb-2">موقعنا</h4>
               <p className="text-sm opacity-90">جدة، المملكة العربية السعودية</p>
-              <p className="text-xs opacity-75 mt-1">شارع الأمير سلطان، حي الروضة</p>
             </motion.div>
 
             <motion.div
@@ -149,7 +148,7 @@ const Footer = () => {
               </div>
               <div className="text-center p-3 bg-white/5 rounded-lg">
                 <Users className="h-6 w-6 mx-auto mb-1 text-blue-400 animate-pulse" />
-                <p className="text-xs text-white/80">+500 خبير</p>
+                <p className="text-xs text-white/80">128 خبير ومترجم معتمد</p>
               </div>
             </div>
 
@@ -268,9 +267,9 @@ const Footer = () => {
             
             <div className="space-y-4">
               {[
-                { Icon: Phone, text: "+966 50 123 4567", subtext: "اتصل بنا الآن", color: "text-green-400" },
+                { Icon: Phone, text: "0500776343", subtext: "اتصل بنا الآن", color: "text-green-400" },
                 { Icon: Mail, text: "info@tarjuman.com", subtext: "راسلنا عبر البريد", color: "text-blue-400" },
-                { Icon: MapPin, text: "جدة، المملكة العربية السعودية", subtext: "شارع الأمير سلطان، حي الروضة", color: "text-red-400" }
+                { Icon: MapPin, text: "جدة، المملكة العربية السعودية", subtext: "موقعنا الرئيسي", color: "text-red-400" }
               ].map(({ Icon, text, subtext, color }, index) => (
                 <motion.div 
                   key={index}
