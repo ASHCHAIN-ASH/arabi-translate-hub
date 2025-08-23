@@ -29,6 +29,7 @@ interface FileInfo {
 interface FileUploaderProps {
   onWordCountChange?: (totalWords: number) => void;
   onFileProcess?: (content: string, fileName: string) => void;
+  onFilesSelected?: (files: File[]) => void;
   isProcessing?: boolean;
   onProcessingChange?: (processing: boolean) => void;
   maxFiles?: number;
@@ -38,6 +39,7 @@ interface FileUploaderProps {
 const FileUploader = ({ 
   onWordCountChange, 
   onFileProcess,
+  onFilesSelected,
   isProcessing: externalProcessing,
   onProcessingChange,
   maxFiles = 5,
@@ -88,6 +90,8 @@ const FileUploader = ({
     }
     const newFiles: FileInfo[] = [];
 
+    const validFiles: File[] = [];
+    
     for (let i = 0; i < selectedFiles.length; i++) {
       const file = selectedFiles[i];
       
@@ -105,6 +109,8 @@ const FileUploader = ({
         continue;
       }
 
+      validFiles.push(file);
+
       const fileInfo: FileInfo = {
         id: `file-${Date.now()}-${i}`,
         name: file.name,
@@ -116,6 +122,11 @@ const FileUploader = ({
       };
 
       newFiles.push(fileInfo);
+    }
+
+    // إشعار الملفات المحددة للتحليل
+    if (onFilesSelected && validFiles.length > 0) {
+      onFilesSelected(validFiles);
     }
 
     setFiles(prev => [...prev, ...newFiles]);

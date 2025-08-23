@@ -2,6 +2,8 @@ import { useState } from "react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import FileUploader from "@/components/FileUploader";
+import SmartPriceCalculator from "@/components/SmartPriceCalculator";
+import AdvancedFileAnalyzer from "@/components/AdvancedFileAnalyzer";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -39,15 +41,14 @@ import legalOfficeBg from "@/assets/legal-office-bg.jpg";
 
 const LegalTranslation = () => {
   const [activeTab, setActiveTab] = useState("calculator");
-  const [priceRate, setPriceRate] = useState(0.19);
-  const [wordCount, setWordCount] = useState(0);
-  const [estimatedPrice, setEstimatedPrice] = useState(0);
-
-  // حساب السعر التلقائي
-  const calculatePrice = (words: number) => {
-    const totalPrice = words * priceRate;
-    setEstimatedPrice(totalPrice);
-  };
+  const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
+  const [fileAnalyses, setFileAnalyses] = useState<any[]>([]);
+  const [isAnalyzing, setIsAnalyzing] = useState(false);
+  const [finalPrice, setFinalPrice] = useState(0);
+  const [fromLanguage, setFromLanguage] = useState("ar");
+  const [toLanguage, setToLanguage] = useState("en");
+  const [urgency, setUrgency] = useState<'standard' | 'fast' | 'urgent' | 'express'>('standard');
+  const [qualityLevel, setQualityLevel] = useState<'standard' | 'premium' | 'expert'>('premium');
 
   const services = [
     { 
@@ -523,17 +524,30 @@ const LegalTranslation = () => {
                 <div className="grid grid-cols-1 xl:grid-cols-3 gap-8">
                   {/* رفع الملفات */}
                   <div className="xl:col-span-2 space-y-6">
-                    <div>
-                      <Label className="text-lg font-bold text-foreground mb-4 block">رفع الملفات (اختياري)</Label>
-                      <FileUploader
-                        onWordCountChange={(words) => {
-                          setWordCount(words);
-                          calculatePrice(words);
-                        }}
-                        maxFiles={5}
-                        acceptedTypes={['.doc', '.docx', '.pdf', '.txt']}
-                      />
-                    </div>
+                     <div>
+                       <Label className="text-lg font-bold text-foreground mb-4 block">رفع الملفات للتحليل الذكي</Label>
+                       <FileUploader
+                         onFilesSelected={setSelectedFiles}
+                         onProcessingChange={setIsAnalyzing}
+                         maxFiles={5}
+                         acceptedTypes={['.doc', '.docx', '.pdf', '.txt']}
+                       />
+                       
+                       <AdvancedFileAnalyzer
+                         files={selectedFiles}
+                         onAnalysisComplete={setFileAnalyses}
+                         isProcessing={isAnalyzing}
+                       />
+                       
+                       <SmartPriceCalculator
+                         files={fileAnalyses}
+                         fromLanguage={fromLanguage}
+                         toLanguage={toLanguage}
+                         urgency={urgency}
+                         qualityLevel={qualityLevel}
+                         onPriceChange={(price) => setFinalPrice(price)}
+                       />
+                     </div>
                     
                     {/* أو إدخال يدوي */}
                     <div className="relative">
@@ -545,79 +559,8 @@ const LegalTranslation = () => {
                       </div>
                     </div>
                     
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <div>
-                        <Label className="text-base font-bold text-foreground mb-3 block">عدد الكلمات</Label>
-                        <Input
-                          type="number"
-                          value={wordCount}
-                          onChange={(e) => {
-                            const words = parseInt(e.target.value) || 0;
-                            setWordCount(words);
-                            calculatePrice(words);
-                          }}
-                          className="h-12 text-lg text-center font-bold border-2 border-primary/20 focus:border-primary rounded-xl"
-                          placeholder="أدخل عدد الكلمات"
-                        />
-                      </div>
-
-                      <div>
-                        <Label className="text-base font-bold text-foreground mb-3 block">سعر الكلمة (ريال)</Label>
-                        <Input
-                          type="number"
-                          step="0.01"
-                          value={priceRate}
-                          onChange={(e) => {
-                            const rate = parseFloat(e.target.value) || 0.19;
-                            setPriceRate(rate);
-                            calculatePrice(wordCount);
-                          }}
-                          className="h-12 text-lg text-center font-bold border-2 border-secondary/20 focus:border-secondary rounded-xl"
-                          placeholder="0.19"
-                        />
-                      </div>
-                    </div>
                   </div>
 
-                  {/* عرض النتائج */}
-                  <div className="xl:col-span-1">
-                    <div className="bg-gradient-to-br from-accent/10 to-primary/10 p-6 rounded-2xl h-full">
-                      <h4 className="text-xl font-bold text-foreground mb-6 text-center">تفاصيل التكلفة</h4>
-                      
-                      <div className="space-y-4">
-                        <div className="flex justify-between items-center p-3 bg-background/60 rounded-lg">
-                          <span className="text-muted-foreground text-sm">عدد الكلمات:</span>
-                          <span className="font-bold text-foreground">{wordCount.toLocaleString()}</span>
-                        </div>
-                        
-                        <div className="flex justify-between items-center p-3 bg-background/60 rounded-lg">
-                          <span className="text-muted-foreground text-sm">سعر الكلمة:</span>
-                          <span className="font-bold text-foreground">{priceRate} ريال</span>
-                        </div>
-                        
-                        <div className="flex justify-between items-center p-4 bg-gradient-primary text-primary-foreground rounded-lg">
-                          <span className="font-bold">التكلفة الإجمالية:</span>
-                          <motion.span 
-                            className="text-xl font-bold"
-                            key={estimatedPrice}
-                            initial={{ scale: 1.2 }}
-                            animate={{ scale: 1 }}
-                            transition={{ duration: 0.3 }}
-                          >
-                            {estimatedPrice.toLocaleString()} ريال
-                          </motion.span>
-                        </div>
-                      </div>
-
-                      <Button 
-                        className="w-full mt-6 bg-gradient-success text-success-foreground shadow-success font-bold"
-                        size="lg"
-                      >
-                        <MessageSquare className="h-4 w-4 ml-2" />
-                        اطلب عرض سعر مفصل
-                      </Button>
-                    </div>
-                  </div>
                 </div>
               </CardContent>
             </Card>
