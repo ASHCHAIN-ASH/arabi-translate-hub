@@ -49,8 +49,8 @@ const Footer = () => {
             >
               <Building2 className="h-10 w-10 text-white" />
             </motion.div>
-            <h2 className="text-4xl font-bold mb-4 font-arabic-title">مركز ترجمان للترجمة الاحترافية</h2>
-            <p className="text-xl opacity-90 max-w-2xl mx-auto">شريكك الموثوق للحصول على أفضل خدمات الترجمة في المملكة العربية السعودية</p>
+            <h2 className="text-4xl font-bold mb-4 font-arabic-title">وكالة MasterEduPath للحلول التعليمية المتقدمة</h2>
+            <p className="text-xl opacity-90 max-w-2xl mx-auto">شريكك الموثوق للحصول على أفضل الحلول التعليمية والتقنية المتقدمة في المملكة العربية السعودية</p>
           </motion.div>
           {/* Company Info Cards */}
           <div className="grid md:grid-cols-3 gap-6 mb-12">
@@ -126,8 +126,8 @@ const Footer = () => {
                 <Globe className="h-6 w-6 text-white" />
               </motion.div>
               <div>
-                <h3 className="text-2xl font-arabic-title font-bold">ترجمان</h3>
-                <p className="text-sm text-white/70">منصة الترجمة الاحترافية</p>
+                <h3 className="text-2xl font-arabic-title font-bold">MasterEduPath</h3>
+                <p className="text-sm text-white/70">وكالة الحلول التعليمية المتقدمة</p>
               </div>
             </div>
             
