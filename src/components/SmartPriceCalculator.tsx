@@ -380,9 +380,12 @@ const SmartPriceCalculator = ({
 
                 <div className="bg-gradient-to-br from-primary/5 to-accent/5 p-4 rounded-xl">
                   <h4 className="font-bold text-foreground mb-3">معلومات التسليم</h4>
-                  <div className="space-y-2">
+                   <div className="space-y-2">
                      <div className="flex items-center gap-2">
-                       {React.createElement(urgencyFactors[urgency].icon, { className: "h-4 w-4 text-primary" })}
+                       {(() => {
+                         const IconComponent = urgencyFactors[urgency].icon;
+                         return <IconComponent className="h-4 w-4 text-primary" />;
+                       })()}
                        <span className="text-sm">{pricing.deliveryTime}</span>
                      </div>
                     <div className="flex items-center gap-2">
