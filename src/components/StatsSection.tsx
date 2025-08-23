@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import { motion, useInView, useMotionValue, useSpring } from "framer-motion";
+import { motion, useInView } from "framer-motion";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import AnimatedCounter from "./AnimatedCounter";
@@ -10,429 +10,268 @@ import {
   Award,
   Globe,
   Users,
-  Clock,
-  Shield,
-  Star,
   TrendingUp,
   PenTool,
   Search,
   Trophy,
   Brain,
   Target,
-  Microscope,
   FileCheck,
   Lightbulb,
-  Zap,
-  Sparkles,
-  Orbit
+  Star
 } from "lucide-react";
 
 const StatsSection = () => {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true });
-  const [activeCard, setActiveCard] = useState(0);
 
   const mainStats = [
     { 
       icon: GraduationCap, 
       number: 2500, 
       suffix: "+",
-      title: "رسالة علمية",
-      subtitle: "منجزة بتميز",
-      description: "ماجستير ودكتوراه",
-      color: "hsl(var(--primary))",
-      bgGradient: "from-blue-500/20 via-purple-500/10 to-blue-600/20"
+      title: "رسالة علمية منجزة",
+      description: "ماجستير ودكتوراه بمعايير عالمية",
+      color: "text-blue-600"
     },
     { 
       icon: Languages, 
       number: 180, 
       suffix: "+",
-      title: "لغة عالمية",
-      subtitle: "مُترجَمة بدقة",
-      description: "تغطية شاملة ومهنية",
-      color: "hsl(var(--secondary))",
-      bgGradient: "from-emerald-500/20 via-teal-500/10 to-green-600/20"
+      title: "لغة مترجمة بدقة",
+      description: "تغطية شاملة لجميع اللغات العالمية",
+      color: "text-emerald-600"
     },
     { 
       icon: BookOpen, 
       number: 15000, 
       suffix: "+",
-      title: "بحث علمي",
-      subtitle: "محكم ومنشور",
-      description: "في مجلات دولية مرموقة",
-      color: "hsl(var(--accent))",
-      bgGradient: "from-amber-500/20 via-orange-500/10 to-yellow-600/20"
+      title: "بحث علمي محكم",
+      description: "منشور في مجلات دولية مرموقة",
+      color: "text-amber-600"
     },
     { 
       icon: Award, 
       number: 99.8, 
       suffix: "%",
-      title: "معدل النجاح",
-      subtitle: "في القبولات",
+      title: "معدل نجاح القبولات",
       description: "نتائج مضمونة ومؤكدة",
-      color: "hsl(var(--destructive))",
-      bgGradient: "from-rose-500/20 via-pink-500/10 to-red-600/20"
+      color: "text-rose-600"
     }
   ];
 
   const achievementStats = [
-    { icon: Brain, number: 320, suffix: "+", label: "خبير أكاديمي", category: "فريق العمل" },
-    { icon: Trophy, number: 95, suffix: "%", label: "نجاح القبولات", category: "الإنجازات" },
-    { icon: PenTool, number: 8500, suffix: "+", label: "مقال علمي", category: "المنشورات" },
-    { icon: Microscope, number: 1200, suffix: "+", label: "بحث تطبيقي", category: "التطبيق" },
-    { icon: Target, number: 48, suffix: "ساعة", label: "متوسط التسليم", category: "السرعة" },
-    { icon: Globe, number: 92, suffix: "+", label: "جامعة شريكة", category: "الشراكات" }
+    { icon: Brain, number: 320, suffix: "+", label: "خبير أكاديمي" },
+    { icon: Trophy, number: 95, suffix: "%", label: "نجاح القبولات" },
+    { icon: PenTool, number: 8500, suffix: "+", label: "مقال علمي منجز" },
+    { icon: FileCheck, number: 1200, suffix: "+", label: "بحث تطبيقي" },
+    { icon: Target, number: 48, suffix: " ساعة", label: "متوسط التسليم" },
+    { icon: Globe, number: 92, suffix: "+", label: "جامعة شريكة" }
   ];
 
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setActiveCard((prev) => (prev + 1) % mainStats.length);
-    }, 4000);
-    return () => clearInterval(interval);
-  }, []);
+  const clientStats = [
+    { icon: Users, number: 50000, suffix: "+", label: "عميل راضي" },
+    { icon: Search, number: 25000, suffix: "+", label: "مشروع منجز" },
+    { icon: Lightbulb, number: 15, suffix: " سنة", label: "خبرة في المجال" },
+    { icon: TrendingUp, number: 200, suffix: "%", label: "نمو سنوي" }
+  ];
 
   return (
-    <div ref={ref} className="w-full py-20 bg-gradient-to-br from-background via-card/30 to-background relative overflow-hidden">
-      {/* تأثيرات الخلفية */}
-      <div className="absolute inset-0 overflow-hidden">
-        <motion.div
-          className="absolute -top-40 -right-40 w-80 h-80 bg-primary/5 rounded-full blur-3xl"
-          animate={{
-            scale: [1, 1.2, 1],
-            opacity: [0.3, 0.5, 0.3],
-          }}
-          transition={{ duration: 8, repeat: Infinity }}
-        />
-        <motion.div
-          className="absolute -bottom-40 -left-40 w-80 h-80 bg-secondary/5 rounded-full blur-3xl"
-          animate={{
-            scale: [1.2, 1, 1.2],
-            opacity: [0.5, 0.3, 0.5],
-          }}
-          transition={{ duration: 8, repeat: Infinity, delay: 2 }}
-        />
-        
-        {/* شبكة نقاط متحركة */}
-        <div className="absolute inset-0 opacity-20">
-          {Array.from({ length: 50 }).map((_, i) => (
-            <motion.div
-              key={i}
-              className="absolute w-1 h-1 bg-primary rounded-full"
-              style={{
-                left: `${Math.random() * 100}%`,
-                top: `${Math.random() * 100}%`,
-              }}
-              animate={{
-                opacity: [0, 1, 0],
-                scale: [0, 1, 0],
-              }}
-              transition={{
-                duration: 3,
-                repeat: Infinity,
-                delay: Math.random() * 2,
-              }}
-            />
-          ))}
-        </div>
-      </div>
-
-      <div className="container mx-auto px-4 relative z-10">
+    <section ref={ref} className="py-16 lg:py-24 bg-gradient-to-b from-background to-muted/20">
+      <div className="container mx-auto px-4">
         {/* العنوان الرئيسي */}
         <motion.div
-          className="text-center mb-20"
+          className="text-center mb-16 lg:mb-20"
           initial={{ opacity: 0, y: 30 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.8 }}
         >
-          <motion.div
-            className="inline-flex items-center gap-3 mb-6"
-            whileHover={{ scale: 1.05 }}
-          >
-            <Sparkles className="h-8 w-8 text-primary animate-pulse" />
-            <h2 className="text-4xl lg:text-6xl font-bold bg-gradient-to-r from-foreground via-primary to-foreground bg-clip-text text-transparent">
-              إحصائياتنا المذهلة
-            </h2>
-            <Sparkles className="h-8 w-8 text-primary animate-pulse" />
-          </motion.div>
-          <motion.p
-            className="text-xl text-muted-foreground max-w-2xl mx-auto"
-            initial={{ opacity: 0 }}
-            animate={isInView ? { opacity: 1 } : {}}
-            transition={{ delay: 0.3, duration: 0.8 }}
-          >
-            أرقام حقيقية تعكس التزامنا بالتميز في خدمات الأبحاث والتعليم والترجمة
-          </motion.p>
+          <h2 className="text-3xl lg:text-5xl font-bold text-foreground mb-4">
+            إحصائياتنا المتميزة
+          </h2>
+          <div className="w-24 h-1 bg-primary mx-auto mb-6"></div>
+          <p className="text-lg lg:text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
+            أرقام حقيقية تعكس التزامنا بالتميز والجودة في خدمات الأبحاث والتعليم والترجمة
+          </p>
         </motion.div>
 
-        {/* الإحصائيات الرئيسية - تصميم هرمي مبتكر */}
-        <div className="relative mb-20">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 max-w-6xl mx-auto">
-            {mainStats.map((stat, index) => {
+        {/* الإحصائيات الرئيسية */}
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6 lg:gap-8 mb-16 lg:mb-20">
+          {mainStats.map((stat, index) => {
+            const IconComponent = stat.icon;
+            return (
+              <motion.div
+                key={index}
+                initial={{ opacity: 0, y: 40 }}
+                animate={isInView ? { opacity: 1, y: 0 } : {}}
+                transition={{ delay: index * 0.1, duration: 0.6 }}
+                whileHover={{ y: -8 }}
+                className="group"
+              >
+                <Card className="h-full bg-card/50 backdrop-blur-sm border border-border/50 hover:border-primary/30 transition-all duration-300 hover:shadow-xl hover:shadow-primary/5">
+                  <CardContent className="p-6 lg:p-8 text-center h-full flex flex-col justify-between">
+                    {/* الأيقونة */}
+                    <div className="mb-6">
+                      <div className="w-16 h-16 lg:w-20 lg:h-20 mx-auto bg-primary/10 rounded-2xl flex items-center justify-center group-hover:bg-primary/15 transition-colors duration-300">
+                        <IconComponent className={`h-8 w-8 lg:h-10 lg:w-10 ${stat.color} group-hover:scale-110 transition-transform duration-300`} />
+                      </div>
+                    </div>
+
+                    {/* الرقم */}
+                    <div className="mb-4">
+                      <div className="text-4xl lg:text-5xl font-bold text-foreground mb-2">
+                        <AnimatedCounter 
+                          end={stat.number} 
+                          duration={2.5} 
+                          delay={index * 0.2}
+                          suffix={stat.suffix}
+                        />
+                      </div>
+                      <h3 className="text-lg lg:text-xl font-semibold text-foreground leading-tight">
+                        {stat.title}
+                      </h3>
+                    </div>
+
+                    {/* الوصف */}
+                    <p className="text-sm lg:text-base text-muted-foreground leading-relaxed">
+                      {stat.description}
+                    </p>
+                  </CardContent>
+                </Card>
+              </motion.div>
+            );
+          })}
+        </div>
+
+        {/* إحصائيات الإنجازات */}
+        <motion.div
+          className="mb-16 lg:mb-20"
+          initial={{ opacity: 0, y: 40 }}
+          animate={isInView ? { opacity: 1, y: 0 } : {}}
+          transition={{ delay: 0.6, duration: 0.8 }}
+        >
+          <div className="text-center mb-12">
+            <h3 className="text-2xl lg:text-3xl font-bold text-foreground mb-4">
+              إنجازات متميزة
+            </h3>
+            <p className="text-muted-foreground max-w-2xl mx-auto">
+              مؤشرات الأداء التي تؤكد ريادتنا وتميزنا في تقديم الخدمات الأكاديمية
+            </p>
+          </div>
+
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 lg:gap-6">
+            {achievementStats.map((stat, index) => {
               const IconComponent = stat.icon;
-              const isActive = activeCard === index;
-              
               return (
                 <motion.div
                   key={index}
-                  className={`relative group cursor-pointer ${
-                    index === 0 || index === 3 ? 'lg:col-span-1' : 'lg:col-span-1'
-                  }`}
-                  initial={{ opacity: 0, x: index % 2 === 0 ? -100 : 100 }}
-                  animate={isInView ? { opacity: 1, x: 0 } : {}}
-                  transition={{ delay: index * 0.2, duration: 0.8 }}
-                  whileHover={{ scale: 1.02 }}
-                  onHoverStart={() => setActiveCard(index)}
+                  initial={{ opacity: 0, scale: 0.8 }}
+                  animate={isInView ? { opacity: 1, scale: 1 } : {}}
+                  transition={{ delay: 0.8 + index * 0.1, duration: 0.5 }}
+                  whileHover={{ scale: 1.05 }}
+                  className="group"
                 >
-                  <Card className={`
-                    relative overflow-hidden h-64 border-2 transition-all duration-700
-                    ${isActive 
-                      ? 'border-primary/50 shadow-2xl shadow-primary/20 scale-105' 
-                      : 'border-border/30 hover:border-primary/30'
-                    }
-                    bg-gradient-to-br from-card/90 via-card/95 to-card
-                    backdrop-blur-xl rounded-3xl
-                  `}>
-                    {/* خلفية متحركة */}
-                    <motion.div
-                      className={`absolute inset-0 bg-gradient-to-br ${stat.bgGradient} opacity-0 group-hover:opacity-100`}
-                      transition={{ duration: 0.7 }}
-                    />
-                    
-                    {/* تأثير الضوء المتحرك */}
-                    <motion.div
-                      className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent -skew-x-12 opacity-0 group-hover:opacity-100"
-                      animate={{
-                        x: isActive ? ['-200%', '200%'] : '-200%',
-                      }}
-                      transition={{ duration: 2, repeat: isActive ? Infinity : 0, ease: "linear" }}
-                    />
-
-                    <CardContent className="p-8 h-full flex items-center relative z-10">
-                      <div className="flex items-center gap-6 w-full">
-                        {/* الأيقونة */}
-                        <motion.div
-                          className="relative"
-                          animate={isActive ? { 
-                            rotate: [0, 360],
-                            scale: [1, 1.1, 1]
-                          } : {}}
-                          transition={{ duration: 2, repeat: isActive ? Infinity : 0 }}
-                        >
-                          <div className="relative p-4 rounded-2xl bg-gradient-to-br from-primary/10 to-secondary/10 border border-primary/20">
-                            <IconComponent 
-                              className="h-12 w-12 text-primary relative z-10" 
-                              style={{ color: stat.color }}
-                            />
-                            
-                            {/* دوائر متحركة */}
-                            <motion.div
-                              className="absolute inset-0 rounded-2xl border-2 border-primary/30"
-                              animate={isActive ? {
-                                scale: [1, 1.2, 1],
-                                opacity: [0.5, 0, 0.5]
-                              } : {}}
-                              transition={{ duration: 2, repeat: isActive ? Infinity : 0 }}
-                            />
-                          </div>
-                        </motion.div>
-
-                        {/* المحتوى */}
-                        <div className="flex-1">
-                          <motion.div 
-                            className="text-4xl font-bold text-foreground mb-2"
-                            animate={isActive ? { scale: [1, 1.1, 1] } : {}}
-                            transition={{ duration: 1.5, repeat: isActive ? Infinity : 0 }}
-                          >
-                            <AnimatedCounter 
-                              end={stat.number} 
-                              duration={2.5} 
-                              delay={index * 0.3}
-                              suffix={stat.suffix}
-                            />
-                          </motion.div>
-                          
-                          <div className="space-y-1">
-                            <h3 className="text-xl font-bold text-foreground">
-                              {stat.title}
-                            </h3>
-                            <p className="text-lg text-primary font-semibold">
-                              {stat.subtitle}
-                            </p>
-                            <p className="text-sm text-muted-foreground">
-                              {stat.description}
-                            </p>
-                          </div>
-                        </div>
+                  <Card className="bg-card/30 backdrop-blur-sm border border-border/30 hover:border-primary/40 transition-all duration-300 hover:shadow-lg">
+                    <CardContent className="p-4 lg:p-6 text-center">
+                      <div className="w-12 h-12 lg:w-14 lg:h-14 mx-auto bg-primary/10 rounded-xl flex items-center justify-center mb-3 group-hover:bg-primary/15 transition-colors duration-300">
+                        <IconComponent className="h-6 w-6 lg:h-7 lg:w-7 text-primary group-hover:scale-110 transition-transform duration-300" />
                       </div>
+                      
+                      <div className="text-xl lg:text-2xl font-bold text-foreground mb-1">
+                        <AnimatedCounter 
+                          end={stat.number} 
+                          duration={2} 
+                          delay={1 + index * 0.1}
+                          suffix={stat.suffix}
+                        />
+                      </div>
+                      
+                      <p className="text-xs lg:text-sm text-muted-foreground font-medium leading-tight">
+                        {stat.label}
+                      </p>
                     </CardContent>
-
-                    {/* مؤشر النشاط */}
-                    <motion.div
-                      className="absolute bottom-0 left-0 h-1 bg-gradient-to-r from-primary to-secondary"
-                      initial={{ width: 0 }}
-                      animate={{ width: isActive ? '100%' : '0%' }}
-                      transition={{ duration: 0.5 }}
-                    />
                   </Card>
                 </motion.div>
               );
             })}
           </div>
-
-          {/* مؤشرات التبديل */}
-          <div className="flex justify-center mt-12 gap-3">
-            {mainStats.map((_, index) => (
-              <motion.button
-                key={index}
-                className={`w-3 h-3 rounded-full transition-all duration-300 ${
-                  activeCard === index 
-                    ? 'bg-primary scale-125' 
-                    : 'bg-muted-foreground/30 hover:bg-primary/50'
-                }`}
-                onClick={() => setActiveCard(index)}
-                whileHover={{ scale: 1.2 }}
-                whileTap={{ scale: 0.9 }}
-              />
-            ))}
-          </div>
-        </div>
-
-        {/* الإحصائيات الثانوية - تصميم دائري مبتكر */}
-        <motion.div
-          className="relative"
-          initial={{ opacity: 0, y: 50 }}
-          animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ delay: 1, duration: 0.8 }}
-        >
-          <div className="text-center mb-12">
-            <h3 className="text-3xl font-bold text-foreground mb-4">
-              إنجازات متميزة
-            </h3>
-            <p className="text-muted-foreground">
-              مؤشرات الأداء التي تؤكد ريادتنا في المجال
-            </p>
-          </div>
-
-          <div className="relative max-w-5xl mx-auto">
-            {/* الدائرة المركزية */}
-            <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-32 h-32 z-10">
-              <motion.div
-                className="w-full h-full rounded-full bg-gradient-to-br from-primary to-secondary shadow-2xl flex items-center justify-center"
-                animate={{ rotate: 360 }}
-                transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
-              >
-                <Orbit className="h-12 w-12 text-white" />
-              </motion.div>
-            </div>
-
-            {/* الإحصائيات في دائرة */}
-            <div className="relative">
-              {achievementStats.map((stat, index) => {
-                const IconComponent = stat.icon;
-                const angle = (index * 60) - 90; // توزيع 6 عناصر في دائرة
-                const radius = 280;
-                const x = Math.cos(angle * Math.PI / 180) * radius;
-                const y = Math.sin(angle * Math.PI / 180) * radius;
-
-                return (
-                  <motion.div
-                    key={index}
-                    className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
-                    style={{
-                      transform: `translate(calc(-50% + ${x}px), calc(-50% + ${y}px))`,
-                    }}
-                    initial={{ opacity: 0, scale: 0 }}
-                    animate={isInView ? { opacity: 1, scale: 1 } : {}}
-                    transition={{ delay: 1.2 + index * 0.1, duration: 0.6 }}
-                    whileHover={{ scale: 1.1, zIndex: 20 }}
-                  >
-                    <Card className="w-48 h-40 bg-gradient-to-br from-card/90 to-card border-2 border-border/30 hover:border-primary/50 transition-all duration-500 shadow-xl hover:shadow-2xl rounded-2xl overflow-hidden group">
-                      <CardContent className="p-6 h-full flex flex-col justify-center items-center text-center relative">
-                        {/* تأثير خلفي */}
-                        <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-secondary/5 opacity-0 group-hover:opacity-100 transition-all duration-500" />
-                        
-                        <motion.div
-                          className="p-3 rounded-xl bg-primary/10 border border-primary/20 mb-3"
-                          whileHover={{ rotate: 360 }}
-                          transition={{ duration: 0.8 }}
-                        >
-                          <IconComponent className="h-8 w-8 text-primary" />
-                        </motion.div>
-                        
-                        <div className="text-2xl font-bold text-foreground mb-1 relative z-10">
-                          <AnimatedCounter 
-                            end={stat.number} 
-                            duration={2} 
-                            delay={1.4 + index * 0.1}
-                            suffix={stat.suffix}
-                          />
-                        </div>
-                        
-                        <div className="text-sm font-semibold text-primary mb-1 relative z-10">
-                          {stat.label}
-                        </div>
-                        
-                        <Badge variant="secondary" className="text-xs relative z-10">
-                          {stat.category}
-                        </Badge>
-                      </CardContent>
-                    </Card>
-                  </motion.div>
-                );
-              })}
-            </div>
-          </div>
         </motion.div>
 
-        {/* شعار الثقة المحدث */}
+        {/* إحصائيات العملاء */}
         <motion.div
-          className="mt-20 text-center"
+          className="mb-16"
+          initial={{ opacity: 0, y: 40 }}
+          animate={isInView ? { opacity: 1, y: 0 } : {}}
+          transition={{ delay: 1.2, duration: 0.8 }}
+        >
+          <Card className="bg-gradient-to-br from-primary/5 via-card/50 to-secondary/5 backdrop-blur-sm border border-border/50">
+            <CardContent className="p-8 lg:p-12">
+              <div className="text-center mb-10">
+                <h3 className="text-2xl lg:text-3xl font-bold text-foreground mb-4">
+                  ثقة عملائنا
+                </h3>
+                <p className="text-muted-foreground">
+                  نفخر بثقة عملائنا وشركائنا في جميع أنحاء العالم
+                </p>
+              </div>
+
+              <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8">
+                {clientStats.map((stat, index) => {
+                  const IconComponent = stat.icon;
+                  return (
+                    <motion.div
+                      key={index}
+                      className="text-center group"
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={isInView ? { opacity: 1, y: 0 } : {}}
+                      transition={{ delay: 1.4 + index * 0.1, duration: 0.5 }}
+                      whileHover={{ scale: 1.05 }}
+                    >
+                      <div className="w-16 h-16 lg:w-20 lg:h-20 mx-auto bg-white/80 backdrop-blur-sm rounded-2xl flex items-center justify-center mb-4 group-hover:bg-white group-hover:shadow-lg transition-all duration-300">
+                        <IconComponent className="h-8 w-8 lg:h-10 lg:w-10 text-primary group-hover:scale-110 transition-transform duration-300" />
+                      </div>
+                      
+                      <div className="text-2xl lg:text-3xl font-bold text-foreground mb-2">
+                        <AnimatedCounter 
+                          end={stat.number} 
+                          duration={2} 
+                          delay={1.6 + index * 0.1}
+                          suffix={stat.suffix}
+                        />
+                      </div>
+                      
+                      <p className="text-sm lg:text-base text-muted-foreground font-medium">
+                        {stat.label}
+                      </p>
+                    </motion.div>
+                  );
+                })}
+              </div>
+            </CardContent>
+          </Card>
+        </motion.div>
+
+        {/* شعار الثقة */}
+        <motion.div
+          className="text-center"
           initial={{ opacity: 0, y: 30 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
           transition={{ delay: 2, duration: 0.8 }}
         >
-          <div className="relative inline-block">
-            <motion.div
-              className="bg-gradient-to-r from-primary via-secondary to-primary text-white px-12 py-6 rounded-full shadow-2xl relative overflow-hidden"
-              whileHover={{ scale: 1.05 }}
-              animate={{
-                backgroundPosition: ['0%', '100%', '0%'],
-              }}
-              transition={{
-                backgroundPosition: { duration: 3, repeat: Infinity },
-              }}
-            >
-              {/* تأثير الضوء */}
-              <motion.div
-                className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -skew-x-12"
-                animate={{ x: ['-200%', '200%'] }}
-                transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
-              />
-              
-              <div className="flex items-center gap-4 relative z-10">
-                <Star className="h-8 w-8 text-yellow-300 animate-pulse" />
-                <span className="text-xl font-bold">
+          <Card className="inline-block bg-gradient-to-r from-primary to-secondary text-white shadow-2xl">
+            <CardContent className="px-8 lg:px-12 py-6 lg:py-8">
+              <div className="flex items-center gap-4">
+                <Star className="h-6 w-6 lg:h-8 lg:w-8 text-yellow-300 animate-pulse" />
+                <span className="text-lg lg:text-xl font-bold">
                   الاختيار الأول للباحثين والأكاديميين في 92+ دولة حول العالم
                 </span>
-                <Star className="h-8 w-8 text-yellow-300 animate-pulse" />
+                <Star className="h-6 w-6 lg:h-8 lg:w-8 text-yellow-300 animate-pulse" />
               </div>
-            </motion.div>
-
-            {/* دوائر خلفية متحركة */}
-            <motion.div
-              className="absolute inset-0 border-4 border-primary/20 rounded-full scale-110"
-              animate={{ rotate: 360 }}
-              transition={{ duration: 10, repeat: Infinity, ease: "linear" }}
-            />
-            <motion.div
-              className="absolute inset-0 border-4 border-secondary/20 rounded-full scale-125"
-              animate={{ rotate: -360 }}
-              transition={{ duration: 15, repeat: Infinity, ease: "linear" }}
-            />
-          </div>
+            </CardContent>
+          </Card>
         </motion.div>
       </div>
-    </div>
+    </section>
   );
 };
 
