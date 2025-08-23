@@ -75,10 +75,7 @@ const FileUploader = ({
   };
 
   const handleFileSelect = useCallback(async (selectedFiles: FileList) => {
-    console.log('FileUploader: handleFileSelect called with files:', selectedFiles.length);
-    
     if (files.length + selectedFiles.length > maxFiles) {
-      console.log('FileUploader: Max files exceeded');
       toast({
         title: "تجاوز الحد المسموح",
         description: `يمكنك رفع ${maxFiles} ملفات كحد أقصى`,
@@ -87,7 +84,6 @@ const FileUploader = ({
       return;
     }
 
-    console.log('FileUploader: Starting file processing');
     setIsProcessing(true);
     if (onProcessingChange) {
       onProcessingChange(true);
@@ -251,16 +247,12 @@ const FileUploader = ({
           }
         }}
         onClick={() => {
-          console.log('FileUploader: Click triggered for file selection');
           const input = document.createElement('input');
           input.type = 'file';
           input.multiple = true;
           input.accept = acceptedTypes.join(',');
-          console.log('FileUploader: Input accept types:', acceptedTypes.join(','));
           input.onchange = (e) => {
-            console.log('FileUploader: Input change event fired');
             const files = (e.target as HTMLInputElement).files;
-            console.log('FileUploader: Selected files:', files?.length);
             if (files) handleFileSelect(files);
           };
           input.click();

@@ -254,23 +254,43 @@ const LiteraryTranslation = () => {
             </div>
           </motion.div>
 
-          {/* Pricing */}
+          {/* Enhanced Pricing Calculator */}
           <motion.div
             initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.8 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 1 }}
           >
-            <h3 className="text-3xl font-bold text-center mb-8 font-arabic-title text-gray-800">
-              احسب تكلفة الترجمة الأدبية
-            </h3>
-            <SmartPriceCalculator 
-              files={[]}
-              fromLanguage="ar"
-              toLanguage="en"
-              urgency="standard"
-              qualityLevel="expert"
-              onPriceChange={(price, details) => console.log('Literary translation price:', price)}
-            />
+            <div className="text-center mb-12">
+              <h3 className="text-3xl md:text-4xl font-bold mb-6 font-arabic-title">
+                <span className="bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
+                  احسب تكلفة الترجمة الأدبية
+                </span>
+              </h3>
+              <p className="text-xl text-gray-600 font-arabic-body max-w-3xl mx-auto">
+                احصل على تقدير دقيق لمشروع الترجمة الأدبية مع مراعاة التعقيد الأدبي والأسلوب
+              </p>
+            </div>
+            
+            <motion.div
+              initial={{ scale: 0.9, opacity: 0 }}
+              whileInView={{ scale: 1, opacity: 1 }}
+              viewport={{ once: true }}
+              transition={{ duration: 1, type: "spring" as const, stiffness: 100 }}
+              className="relative"
+            >
+              <div className="absolute inset-0 bg-gradient-to-r from-purple-100 to-pink-100 rounded-3xl blur-3xl opacity-30"></div>
+              <div className="relative">
+                <SmartPriceCalculator 
+                  files={[]}
+                  fromLanguage="ar"
+                  toLanguage="en"
+                  urgency="standard"
+                  qualityLevel="expert"
+                  onPriceChange={(price, details) => console.log('Literary translation price:', price)}
+                />
+              </div>
+            </motion.div>
           </motion.div>
         </div>
       </section>
