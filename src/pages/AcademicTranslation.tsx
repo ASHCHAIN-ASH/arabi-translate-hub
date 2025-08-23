@@ -282,6 +282,8 @@ const AcademicTranslation = () => {
               fromLanguage="ar"
               toLanguage="en"
               urgency="standard"
+              qualityLevel="expert"
+              onPriceChange={(price, details) => console.log('Academic translation price:', price)}
             />
           </motion.div>
         </div>

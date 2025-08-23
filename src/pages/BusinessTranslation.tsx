@@ -175,6 +175,8 @@ const BusinessTranslation = () => {
               fromLanguage="ar"
               toLanguage="en"
               urgency="standard"
+              qualityLevel="premium"
+              onPriceChange={(price, details) => console.log('Business translation price:', price)}
             />
           </motion.div>
         </div>

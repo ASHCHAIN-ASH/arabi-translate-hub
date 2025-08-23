@@ -279,6 +279,8 @@ const MediaTranslation = () => {
               fromLanguage="ar"
               toLanguage="en"
               urgency="standard"
+              qualityLevel="premium"
+              onPriceChange={(price, details) => console.log('Media translation price:', price)}
             />
           </motion.div>
         </div>

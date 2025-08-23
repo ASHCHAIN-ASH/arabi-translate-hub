@@ -221,6 +221,8 @@ const MedicalTranslation = () => {
               fromLanguage="ar"
               toLanguage="en"
               urgency="standard"
+              qualityLevel="expert"
+              onPriceChange={(price, details) => console.log('Medical translation price:', price)}
             />
           </motion.div>
         </div>

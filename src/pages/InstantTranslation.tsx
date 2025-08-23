@@ -265,7 +265,9 @@ const InstantTranslation = () => {
               files={[]}
               fromLanguage="ar"
               toLanguage="en"
-              urgency="standard"
+              urgency="express"
+              qualityLevel="premium"
+              onPriceChange={(price, details) => console.log('Instant translation price:', price)}
             />
           </motion.div>
         </div>

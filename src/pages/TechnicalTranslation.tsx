@@ -188,6 +188,8 @@ const TechnicalTranslation = () => {
               fromLanguage="ar"
               toLanguage="en"
               urgency="standard"
+              qualityLevel="expert"
+              onPriceChange={(price, details) => console.log('Technical translation price:', price)}
             />
           </motion.div>
         </div>
