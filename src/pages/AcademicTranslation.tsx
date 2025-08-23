@@ -2,289 +2,478 @@ import { motion } from "framer-motion";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { GraduationCap, FileText, Search, BookOpen, Award, Star } from "lucide-react";
+import { GraduationCap, BookOpen, FileText, Award, Users, Globe, Microscope, Calculator, FlaskConical, Atom, Library, PenTool } from "lucide-react";
 import SmartPriceCalculator from "@/components/SmartPriceCalculator";
 
 const AcademicTranslation = () => {
   const academicServices = [
     {
       title: "ترجمة الأطروحات والرسائل",
-      description: "ترجمة رسائل الماجستير والدكتوراه والأطروحات الجامعية",
+      description: "ترجمة أكاديمية دقيقة لرسائل الماجستير والدكتوراه والأبحاث الجامعية",
       icon: GraduationCap,
+      level: "دكتوراه",
+      features: ["منهجية أكاديمية", "مراجع علمية", "تدقيق أكاديمي"]
     },
     {
-      title: "ترجمة الأبحاث العلمية",
-      description: "ترجمة البحوث والدراسات والأوراق العلمية المحكمة",
-      icon: Search,
-    },
-    {
-      title: "ترجمة المناهج التعليمية",
-      description: "ترجمة الكتب الدراسية والمناهج والمواد التعليمية",
-      icon: BookOpen,
-    },
-    {
-      title: "ترجمة الوثائق الأكاديمية",
-      description: "ترجمة الشهادات والسجلات الأكاديمية والوثائق الجامعية",
+      title: "ترجمة الأوراق البحثية",
+      description: "ترجمة الأبحاث والمقالات العلمية المنشورة في المجلات الأكاديمية المحكمة",
       icon: FileText,
+      level: "بحثي",
+      features: ["دقة علمية", "مصطلحات متخصصة", "معايير النشر"]
     },
+    {
+      title: "ترجمة الكتب الأكاديمية",
+      description: "ترجمة الكتب العلمية والمراجع الأكاديمية والمناهج الدراسية",
+      icon: BookOpen,
+      level: "تعليمي",
+      features: ["محتوى شامل", "تسلسل منطقي", "وضوح تعليمي"]
+    },
+    {
+      title: "ترجمة المؤتمرات العلمية",
+      description: "ترجمة أوراق المؤتمرات والندوات العلمية والعروض التقديمية الأكاديمية",
+      icon: Users,
+      level: "مؤتمرات",
+      features: ["ترجمة فورية", "عروض تقديمية", "تفاعل مباشر"]
+    }
   ];
 
   const academicFields = [
-    "العلوم الطبيعية",
-    "العلوم الإنسانية",
-    "الطب والعلوم الصحية",
-    "الهندسة والتكنولوجيا",
-    "العلوم الاجتماعية",
-    "الاقتصاد والإدارة",
-    "القانون والعلوم السياسية",
-    "التربية وعلم النفس",
-    "اللغات والآداب",
-    "الفنون والإعلام",
-    "الزراعة والبيئة",
-    "الرياضيات والإحصاء"
+    { name: "العلوم الطبيعية", icon: Atom, publications: "500+" },
+    { name: "الرياضيات", icon: Calculator, publications: "300+" },
+    { name: "العلوم الطبية", icon: Microscope, publications: "450+" },
+    { name: "العلوم الاجتماعية", icon: Users, publications: "400+" },
+    { name: "الهندسة", icon: PenTool, publications: "350+" },
+    { name: "الكيمياء", icon: FlaskConical, publications: "280+" },
+    { name: "الأدب واللغات", icon: Library, publications: "320+" },
+    { name: "التاريخ", icon: BookOpen, publications: "250+" }
   ];
 
-  const advantages = [
-    "مترجمون حاملو درجات علمية عليا",
-    "فهم عميق للمنهجية العلمية والأكاديمية",
-    "دقة في ترجمة المصطلحات العلمية المتخصصة",
-    "احترام معايير التوثيق والمراجع العلمية",
-    "خبرة في متطلبات النشر الأكاديمي",
-    "ترجمة معتمدة ومقبولة من الجامعات العالمية",
+  const qualityStandards = [
+    {
+      title: "دقة أكاديمية متميزة",
+      description: "مترجمون أكاديميون متخصصون في مجالاتهم العلمية",
+      icon: Award,
+      standard: "PhD"
+    },
+    {
+      title: "معايير النشر الدولية",
+      description: "الالتزام بمعايير المجلات العلمية والمؤسسات الأكاديمية",
+      icon: Globe,
+      standard: "ISI/Scopus"
+    },
+    {
+      title: "سرية البحث العلمي",
+      description: "حماية الملكية الفكرية والبيانات البحثية الحساسة",
+      icon: Library,
+      standard: "NDA"
+    }
   ];
+
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.12,
+        delayChildren: 0.2
+      }
+    }
+  };
+
+  const itemVariants = {
+    hidden: { opacity: 0, y: 30, scale: 0.95 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      scale: 1,
+      transition: {
+        type: "spring",
+        stiffness: 100,
+        damping: 15
+      }
+    }
+  };
+
+  const bookAnimation = {
+    rotateY: [0, 10, -10, 0],
+    scale: [1, 1.05, 1],
+    transition: {
+      duration: 5,
+      repeat: Infinity,
+      ease: "easeInOut" as const
+    }
+  };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-indigo-50 to-white">
-      {/* Header */}
-      <section className="relative py-20 px-4 text-center bg-gradient-to-r from-indigo-600 to-indigo-800 text-white">
+    <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-blue-50 to-cyan-50">
+      {/* Academic Hero Section */}
+      <section className="relative overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-r from-indigo-700 via-blue-700 to-cyan-800"></div>
         <div className="absolute inset-0 bg-black/20"></div>
-        <div className="relative container mx-auto max-w-4xl">
+        
+        {/* Academic Elements Animation */}
+        <div className="absolute inset-0 overflow-hidden">
+          {[...Array(15)].map((_, i) => (
+            <motion.div
+              key={i}
+              className="absolute"
+              style={{
+                left: `${Math.random() * 100}%`,
+                top: `${Math.random() * 100}%`,
+              }}
+              animate={{
+                y: [0, -40, 0],
+                x: [0, Math.random() * 30 - 15, 0],
+                opacity: [0.2, 0.8, 0.2],
+                scale: [0.8, 1.2, 0.8],
+                rotate: [0, Math.random() * 360],
+              }}
+              transition={{
+                duration: 6 + Math.random() * 4,
+                repeat: Infinity,
+                delay: Math.random() * 3,
+              }}
+            >
+              {i % 3 === 0 ? (
+                <BookOpen className="w-8 h-8 text-blue-300/50" />
+              ) : i % 3 === 1 ? (
+                <GraduationCap className="w-8 h-8 text-indigo-300/50" />
+              ) : (
+                <Award className="w-8 h-8 text-cyan-300/50" />
+              )}
+            </motion.div>
+          ))}
+        </div>
+
+        <div className="relative container mx-auto max-w-6xl px-4 py-24">
           <motion.div
-            initial={{ opacity: 0, y: 30 }}
+            initial={{ opacity: 0, y: 60 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
+            transition={{ duration: 1.2, type: "spring", stiffness: 80 }}
+            className="text-center text-white"
           >
-            <div className="flex justify-center mb-6">
-              <div className="p-4 bg-white/20 rounded-full backdrop-blur-sm">
-                <GraduationCap className="h-12 w-12" />
+            <motion.div
+              className="flex justify-center mb-10"
+              animate={bookAnimation}
+            >
+              <div className="relative">
+                <div className="p-8 bg-gradient-to-br from-indigo-600 to-blue-700 rounded-2xl backdrop-blur-sm border border-white/20 shadow-2xl">
+                  <GraduationCap className="h-20 w-20" />
+                </div>
+                <motion.div
+                  className="absolute -top-2 -right-2"
+                  animate={{
+                    scale: [1, 1.2, 1],
+                    opacity: [0.7, 1, 0.7],
+                  }}
+                  transition={{
+                    duration: 2.5,
+                    repeat: Infinity,
+                  }}
+                >
+                  <Award className="h-8 w-8 text-yellow-400" />
+                </motion.div>
+                <motion.div
+                  className="absolute -bottom-2 -left-2"
+                  animate={{
+                    rotate: [0, 360],
+                    scale: [0.8, 1, 0.8],
+                  }}
+                  transition={{
+                    duration: 4,
+                    repeat: Infinity,
+                  }}
+                >
+                  <Atom className="h-6 w-6 text-cyan-300" />
+                </motion.div>
               </div>
-            </div>
-            <h1 className="text-4xl md:text-6xl font-bold mb-6 font-arabic-title">
-              خدمات الترجمة الأكاديمية
-            </h1>
-            <p className="text-xl md:text-2xl mb-8 font-arabic-body">
-              ترجمة أكاديمية دقيقة ومتخصصة للأبحاث والدراسات العلمية
-            </p>
-            <Button size="lg" variant="secondary" className="text-lg px-8 py-3">
-              احصل على ترجمة أكاديمية معتمدة
-            </Button>
+            </motion.div>
+            
+            <motion.h1
+              className="text-5xl md:text-7xl font-bold mb-8 font-arabic-title"
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ delay: 0.3, duration: 1 }}
+            >
+              <span className="bg-gradient-to-r from-indigo-200 to-cyan-300 bg-clip-text text-transparent">
+                الترجمة الأكاديمية المتخصصة
+              </span>
+            </motion.h1>
+            
+            <motion.p
+              className="text-xl md:text-2xl mb-10 font-arabic-body max-w-4xl mx-auto leading-relaxed"
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.5, duration: 1 }}
+            >
+              نبني جسور المعرفة بين الثقافات - ترجمة أكاديمية دقيقة تحافظ على الأصالة العلمية
+            </motion.p>
+            
+            <motion.div
+              className="flex flex-col sm:flex-row gap-6 justify-center"
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.7, duration: 1 }}
+            >
+              <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                <Button 
+                  size="lg" 
+                  className="text-lg px-10 py-4 bg-white text-indigo-600 hover:bg-white/90 shadow-xl font-bold"
+                >
+                  ابدأ مشروعك الأكاديمي
+                </Button>
+              </motion.div>
+              <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                <Button 
+                  size="lg" 
+                  variant="outline" 
+                  className="text-lg px-10 py-4 border-white/30 text-white hover:bg-white/10 backdrop-blur-sm"
+                >
+                  تصفح الأبحاث المترجمة
+                </Button>
+              </motion.div>
+            </motion.div>
           </motion.div>
         </div>
       </section>
 
       {/* Services */}
-      <section className="py-16 px-4">
+      <section className="py-24 px-4">
         <div className="container mx-auto max-w-6xl">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.2 }}
-            className="text-center mb-12"
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 1 }}
+            className="text-center mb-16"
           >
-            <h2 className="text-3xl md:text-4xl font-bold mb-4 font-arabic-title text-gray-800">
-              خدمات الترجمة الأكاديمية
+            <h2 className="text-4xl md:text-5xl font-bold mb-6 font-arabic-title">
+              <span className="bg-gradient-to-r from-indigo-600 to-blue-600 bg-clip-text text-transparent">
+                خدمات الترجمة الأكاديمية
+              </span>
             </h2>
-            <p className="text-xl text-gray-600 font-arabic-body">
-              نقدم ترجمة أكاديمية احترافية تلبي أعلى المعايير العلمية
+            <p className="text-xl text-gray-600 font-arabic-body max-w-3xl mx-auto">
+              نقدم ترجمة أكاديمية عالية الجودة تلبي معايير المؤسسات التعليمية والبحثية
             </p>
           </motion.div>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-2 gap-8 mb-16">
+          <motion.div
+            variants={containerVariants}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+            className="grid md:grid-cols-2 gap-8 mb-20"
+          >
             {academicServices.map((service, index) => (
               <motion.div
                 key={index}
-                initial={{ opacity: 0, y: 30 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.8, delay: index * 0.1 }}
+                variants={itemVariants}
+                whileHover={{ scale: 1.02, y: -8 }}
+                className="group"
               >
-                <Card className="h-full hover:shadow-lg transition-shadow">
-                  <CardHeader>
-                    <div className="flex items-center gap-4">
-                      <div className="p-3 bg-indigo-100 rounded-lg">
-                        <service.icon className="h-6 w-6 text-indigo-600" />
+                <Card className="h-full border-0 shadow-xl bg-white/90 backdrop-blur-sm hover:shadow-2xl transition-all duration-500 overflow-hidden">
+                  <div className="absolute inset-0 bg-gradient-to-br from-indigo-50 to-blue-50 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                  
+                  <CardHeader className="relative pb-4">
+                    <div className="flex items-center gap-4 mb-4">
+                      <motion.div
+                        className="p-4 bg-gradient-to-br from-indigo-600 to-blue-700 rounded-xl text-white shadow-lg"
+                        whileHover={{ rotate: 10, scale: 1.1 }}
+                        transition={{ type: "spring", stiffness: 300 }}
+                      >
+                        <service.icon className="h-6 w-6" />
+                      </motion.div>
+                      <div className="flex-1">
+                        <CardTitle className="font-arabic-title text-right text-xl mb-2">
+                          {service.title}
+                        </CardTitle>
+                        <Badge 
+                          variant="secondary" 
+                          className="bg-indigo-100 text-indigo-700"
+                        >
+                          {service.level}
+                        </Badge>
                       </div>
-                      <CardTitle className="font-arabic-title text-right">
-                        {service.title}
-                      </CardTitle>
                     </div>
                   </CardHeader>
-                  <CardContent>
-                    <p className="text-gray-600 font-arabic-body text-right">
+                  
+                  <CardContent className="relative">
+                    <p className="text-gray-600 font-arabic-body text-right mb-6 leading-relaxed">
                       {service.description}
                     </p>
+                    <div className="flex flex-wrap gap-2 justify-end">
+                      {service.features.map((feature, idx) => (
+                        <motion.div
+                          key={idx}
+                          initial={{ scale: 0, opacity: 0 }}
+                          animate={{ scale: 1, opacity: 1 }}
+                          transition={{ delay: idx * 0.1 + 0.3 }}
+                        >
+                          <Badge variant="outline" className="text-sm bg-indigo-50 border-indigo-200">
+                            {feature}
+                          </Badge>
+                        </motion.div>
+                      ))}
+                    </div>
                   </CardContent>
                 </Card>
               </motion.div>
             ))}
-          </div>
-
-          {/* Academic Standards */}
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.4 }}
-            className="mb-16"
-          >
-            <Card className="bg-gradient-to-r from-indigo-100 to-purple-100 border-none">
-              <CardContent className="p-8 text-center">
-                <Star className="h-16 w-16 mx-auto mb-6 text-indigo-600" />
-                <h3 className="text-3xl font-bold mb-6 font-arabic-title text-gray-800">
-                  معايير الترجمة الأكاديمية
-                </h3>
-                <p className="text-lg text-gray-700 font-arabic-body leading-relaxed max-w-4xl mx-auto mb-8">
-                  نلتزم بأعلى المعايير الأكاديمية العالمية في الترجمة، مع التركيز على الدقة العلمية والأمانة الأكاديمية
-                </p>
-                <div className="grid md:grid-cols-3 gap-6 text-sm">
-                  <div className="bg-white p-4 rounded-lg shadow-sm">
-                    <strong className="text-indigo-600">دقة المحتوى:</strong> ترجمة دقيقة للمفاهيم العلمية
-                  </div>
-                  <div className="bg-white p-4 rounded-lg shadow-sm">
-                    <strong className="text-indigo-600">المنهجية:</strong> احترام المنهجية العلمية والبحثية
-                  </div>
-                  <div className="bg-white p-4 rounded-lg shadow-sm">
-                    <strong className="text-indigo-600">التوثيق:</strong> الحفاظ على أسلوب التوثيق والمراجع
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
           </motion.div>
 
           {/* Academic Fields */}
           <motion.div
             initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.5 }}
-            className="mb-16"
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 1 }}
+            className="mb-20"
           >
-            <Card className="bg-gradient-to-r from-indigo-600 to-indigo-800 text-white">
-              <CardContent className="p-8">
-                <div className="text-center mb-8">
-                  <BookOpen className="h-16 w-16 mx-auto mb-4" />
-                  <h3 className="text-2xl md:text-3xl font-bold mb-4 font-arabic-title">
-                    التخصصات الأكاديمية
-                  </h3>
-                  <p className="text-lg font-arabic-body">
-                    نغطي جميع المجالات الأكاديمية والعلمية
-                  </p>
-                </div>
-                <div className="grid md:grid-cols-3 gap-4">
-                  {academicFields.map((field, index) => (
-                    <Badge key={index} variant="secondary" className="p-3 text-center justify-center">
-                      {field}
-                    </Badge>
-                  ))}
-                </div>
-              </CardContent>
+            <h3 className="text-3xl md:text-4xl font-bold text-center mb-12 font-arabic-title text-gray-800">
+              التخصصات الأكاديمية
+            </h3>
+            
+            <motion.div
+              variants={containerVariants}
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true }}
+              className="grid grid-cols-2 md:grid-cols-4 gap-6"
+            >
+              {academicFields.map((field, index) => (
+                <motion.div
+                  key={index}
+                  variants={itemVariants}
+                  whileHover={{ scale: 1.05, rotate: 1 }}
+                  className="group cursor-pointer"
+                >
+                  <Card className="border-0 shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden">
+                    <CardContent className="p-6 text-center">
+                      <motion.div
+                        className="inline-flex p-4 bg-gradient-to-br from-indigo-500 to-blue-600 rounded-full text-white mb-4 shadow-lg"
+                        whileHover={{ scale: 1.2, rotate: 15 }}
+                        transition={{ type: "spring", stiffness: 300 }}
+                      >
+                        <field.icon className="h-6 w-6" />
+                      </motion.div>
+                      <h4 className="font-arabic-title font-semibold text-gray-800 text-sm mb-2">
+                        {field.name}
+                      </h4>
+                      <Badge variant="outline" className="text-xs">
+                        {field.publications} بحث
+                      </Badge>
+                    </CardContent>
+                  </Card>
+                </motion.div>
+              ))}
+            </motion.div>
+          </motion.div>
+
+          {/* Quality Standards */}
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 1 }}
+            className="mb-20"
+          >
+            <Card className="border-0 shadow-2xl overflow-hidden">
+              <div className="bg-gradient-to-r from-indigo-700 to-blue-700 text-white">
+                <CardContent className="p-12">
+                  <div className="text-center mb-12">
+                    <motion.div
+                      whileHover={{ scale: 1.1, rotate: 10 }}
+                      className="inline-block"
+                    >
+                      <Microscope className="h-20 w-20 mx-auto mb-6" />
+                    </motion.div>
+                    <h3 className="text-3xl md:text-4xl font-bold mb-4 font-arabic-title">
+                      معايير الجودة الأكاديمية
+                    </h3>
+                    <p className="text-xl font-arabic-body opacity-90 max-w-3xl mx-auto">
+                      نلتزم بأعلى معايير الدقة الأكاديمية والأصالة العلمية في جميع ترجماتنا
+                    </p>
+                  </div>
+                  
+                  <motion.div
+                    variants={containerVariants}
+                    initial="hidden"
+                    whileInView="visible"
+                    viewport={{ once: true }}
+                    className="grid md:grid-cols-3 gap-8"
+                  >
+                    {qualityStandards.map((standard, index) => (
+                      <motion.div
+                        key={index}
+                        variants={itemVariants}
+                        whileHover={{ y: -5 }}
+                        className="text-center"
+                      >
+                        <div className="bg-white/20 backdrop-blur-sm rounded-2xl p-8 border border-white/30">
+                          <motion.div
+                            className="inline-flex p-4 bg-white/20 rounded-full mb-6"
+                            whileHover={{ scale: 1.1, rotate: 10 }}
+                          >
+                            <standard.icon className="h-8 w-8" />
+                          </motion.div>
+                          <Badge 
+                            variant="secondary" 
+                            className="mb-4 bg-white/20 text-white border-white/30"
+                          >
+                            {standard.standard}
+                          </Badge>
+                          <h4 className="text-xl font-bold mb-4 font-arabic-title">
+                            {standard.title}
+                          </h4>
+                          <p className="font-arabic-body opacity-90 text-sm leading-relaxed">
+                            {standard.description}
+                          </p>
+                        </div>
+                      </motion.div>
+                    ))}
+                  </motion.div>
+                </CardContent>
+              </div>
             </Card>
           </motion.div>
 
-          {/* Quality Assurance */}
+          {/* Enhanced Pricing Calculator */}
           <motion.div
             initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.6 }}
-            className="mb-16"
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 1 }}
           >
-            <h3 className="text-3xl font-bold text-center mb-8 font-arabic-title text-gray-800">
-              ضمان الجودة الأكاديمية
-            </h3>
-            <div className="grid md:grid-cols-4 gap-6">
-              <Card className="text-center">
-                <CardContent className="p-6">
-                  <div className="w-16 h-16 bg-indigo-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <span className="text-2xl font-bold text-indigo-600">1</span>
-                  </div>
-                  <h4 className="text-lg font-bold mb-2 font-arabic-title">التحليل الأولي</h4>
-                  <p className="text-sm text-gray-600 font-arabic-body">
-                    تحليل النص وتحديد المنهجية والمصطلحات
-                  </p>
-                </CardContent>
-              </Card>
-              <Card className="text-center">
-                <CardContent className="p-6">
-                  <div className="w-16 h-16 bg-indigo-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <span className="text-2xl font-bold text-indigo-600">2</span>
-                  </div>
-                  <h4 className="text-lg font-bold mb-2 font-arabic-title">الترجمة المتخصصة</h4>
-                  <p className="text-sm text-gray-600 font-arabic-body">
-                    ترجمة بواسطة خبراء في نفس التخصص
-                  </p>
-                </CardContent>
-              </Card>
-              <Card className="text-center">
-                <CardContent className="p-6">
-                  <div className="w-16 h-16 bg-indigo-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <span className="text-2xl font-bold text-indigo-600">3</span>
-                  </div>
-                  <h4 className="text-lg font-bold mb-2 font-arabic-title">المراجعة الأكاديمية</h4>
-                  <p className="text-sm text-gray-600 font-arabic-body">
-                    مراجعة من قبل أكاديميين متخصصين
-                  </p>
-                </CardContent>
-              </Card>
-              <Card className="text-center">
-                <CardContent className="p-6">
-                  <div className="w-16 h-16 bg-indigo-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <span className="text-2xl font-bold text-indigo-600">4</span>
-                  </div>
-                  <h4 className="text-lg font-bold mb-2 font-arabic-title">التدقيق النهائي</h4>
-                  <p className="text-sm text-gray-600 font-arabic-body">
-                    تدقيق شامل للمحتوى والمراجع
-                  </p>
-                </CardContent>
-              </Card>
+            <div className="text-center mb-12">
+              <h3 className="text-3xl md:text-4xl font-bold mb-6 font-arabic-title">
+                <span className="bg-gradient-to-r from-indigo-600 to-blue-600 bg-clip-text text-transparent">
+                  احسب تكلفة الترجمة الأكاديمية
+                </span>
+              </h3>
+              <p className="text-xl text-gray-600 font-arabic-body max-w-3xl mx-auto">
+                احصل على تقدير دقيق لمشروع الترجمة الأكاديمية مع مراعاة التعقيد العلمي
+              </p>
             </div>
-          </motion.div>
-
-          {/* Advantages */}
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.7 }}
-            className="mb-16"
-          >
-            <h3 className="text-3xl font-bold text-center mb-8 font-arabic-title text-gray-800">
-              مميزات خدماتنا الأكاديمية
-            </h3>
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {advantages.map((advantage, index) => (
-                <div key={index} className="flex items-center gap-3">
-                  <Award className="h-5 w-5 text-indigo-600 flex-shrink-0" />
-                  <span className="font-arabic-body text-gray-700">
-                    {advantage}
-                  </span>
-                </div>
-              ))}
-            </div>
-          </motion.div>
-
-          {/* Pricing */}
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.8 }}
-          >
-            <h3 className="text-3xl font-bold text-center mb-8 font-arabic-title text-gray-800">
-              احسب تكلفة الترجمة الأكاديمية
-            </h3>
-            <SmartPriceCalculator 
-              files={[]}
-              fromLanguage="ar"
-              toLanguage="en"
-              urgency="standard"
-              qualityLevel="expert"
-              onPriceChange={(price, details) => console.log('Academic translation price:', price)}
-            />
+            
+            <motion.div
+              initial={{ scale: 0.9, opacity: 0 }}
+              whileInView={{ scale: 1, opacity: 1 }}
+              viewport={{ once: true }}
+              transition={{ duration: 1, type: "spring", stiffness: 100 }}
+              className="relative"
+            >
+              <div className="absolute inset-0 bg-gradient-to-r from-indigo-100 to-blue-100 rounded-3xl blur-3xl opacity-30"></div>
+              <div className="relative">
+                <SmartPriceCalculator 
+                  files={[]}
+                  fromLanguage="ar"
+                  toLanguage="en"
+                  urgency="standard"
+                  qualityLevel="expert"
+                  onPriceChange={(price, details) => console.log('Academic translation price:', price)}
+                />
+              </div>
+            </motion.div>
           </motion.div>
         </div>
       </section>
