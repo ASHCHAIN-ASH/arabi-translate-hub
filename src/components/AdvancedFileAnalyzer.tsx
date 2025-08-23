@@ -1,4 +1,4 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -231,11 +231,11 @@ const AdvancedFileAnalyzer = ({
   }, [files, onAnalysisComplete]);
 
   // بدء التحليل عند تغيير الملفات
-  useState(() => {
+  useEffect(() => {
     if (files.length > 0 && isProcessing) {
       analyzeAllFiles();
     }
-  });
+  }, [files, isProcessing, analyzeAllFiles]);
 
   const getDocumentTypeIcon = (type: string) => {
     switch (type) {
