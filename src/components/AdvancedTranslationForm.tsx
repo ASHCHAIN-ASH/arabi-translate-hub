@@ -641,10 +641,10 @@ const AdvancedTranslationForm = ({
   const progressPercentage = (currentStep / 5) * 100;
 
   return (
-    <div className="w-full max-w-4xl mx-auto">
-      <Card className="overflow-hidden border-0 shadow-2xl">
+    <div className="w-full max-w-4xl mx-auto" dir="rtl">
+      <Card className="overflow-hidden border-0 shadow-2xl bg-white dark:bg-gray-900">
         {/* Header Section with Company Info */}
-        <div className={`bg-gradient-to-l from-${gradientFrom} to-${gradientTo} text-white overflow-hidden relative`}>
+        <div className={`bg-gradient-to-r from-${gradientFrom} to-${gradientTo} text-white overflow-hidden relative`}>
           {/* Animated Background Pattern */}
           <div className="absolute inset-0 opacity-10">
             <div className="absolute top-0 left-0 w-20 h-20 bg-white rounded-full animate-float"></div>
@@ -667,8 +667,8 @@ const AdvancedTranslationForm = ({
               >
                 <Building2 className="h-10 w-10 text-white" />
               </motion.div>
-              <h2 className="text-3xl md:text-4xl font-bold mb-2 text-rtl">{title}</h2>
-              <p className="text-xl opacity-90 text-rtl">{description}</p>
+              <h2 className="text-3xl md:text-4xl font-bold mb-2 font-arabic-title">{title}</h2>
+              <p className="text-xl opacity-90 font-arabic-body">{description}</p>
             </motion.div>
 
             {/* Company Information Cards */}
@@ -680,8 +680,8 @@ const AdvancedTranslationForm = ({
                 className="bg-white/10 backdrop-blur-sm rounded-lg p-4 text-center"
               >
                 <MapPin className="h-8 w-8 mx-auto mb-2 text-white animate-pulse" />
-                <h4 className="font-semibold text-rtl">موقعنا</h4>
-                <p className="text-sm opacity-90 text-rtl">جدة، المملكة العربية السعودية</p>
+                <h4 className="font-semibold">موقعنا</h4>
+                <p className="text-sm opacity-90">جدة، المملكة العربية السعودية</p>
               </motion.div>
 
               <motion.div
@@ -691,9 +691,9 @@ const AdvancedTranslationForm = ({
                 className="bg-white/10 backdrop-blur-sm rounded-lg p-4 text-center"
               >
                 <Clock className="h-8 w-8 mx-auto mb-2 text-white animate-pulse" />
-                <h4 className="font-semibold text-rtl">ساعات العمل</h4>
-                <p className="text-sm opacity-90 text-rtl">الأحد - الخميس</p>
-                <p className="text-xs opacity-80 text-rtl">10:00 ص - 7:00 م</p>
+                <h4 className="font-semibold">ساعات العمل</h4>
+                <p className="text-sm opacity-90">الأحد - الخميس</p>
+                <p className="text-xs opacity-80">10:00 ص - 7:00 م</p>
               </motion.div>
 
               <motion.div
@@ -703,9 +703,9 @@ const AdvancedTranslationForm = ({
                 className="bg-white/10 backdrop-blur-sm rounded-lg p-4 text-center"
               >
                 <Headphones className="h-8 w-8 mx-auto mb-2 text-white animate-pulse" />
-                <h4 className="font-semibold text-rtl">خدمة العملاء</h4>
-                <p className="text-sm opacity-90 text-rtl">متاحة 24/7</p>
-                <p className="text-xs opacity-80 text-rtl">على مدار الساعة</p>
+                <h4 className="font-semibold">خدمة العملاء</h4>
+                <p className="text-sm opacity-90">متاحة 24/7</p>
+                <p className="text-xs opacity-80">على مدار الساعة</p>
               </motion.div>
             </div>
 
@@ -752,7 +752,7 @@ const AdvancedTranslationForm = ({
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.3 }}
-              className="flex justify-between mt-8 pt-6 border-t rtl-flex"
+              className="flex justify-between mt-8 pt-6 border-t"
             >
               <Button 
                 variant="outline" 
@@ -768,7 +768,7 @@ const AdvancedTranslationForm = ({
                 <Button 
                   onClick={nextStep}
                   disabled={!validateStep(currentStep)}
-                  className="flex items-center gap-2 hover-scale bg-gradient-to-l from-primary to-primary/80"
+                  className="flex items-center gap-2 hover:scale-105 transition-transform bg-gradient-to-r from-primary to-primary/80"
                 >
                   التالي
                   <ArrowLeft className="h-4 w-4" />
@@ -777,7 +777,7 @@ const AdvancedTranslationForm = ({
                 <Button 
                   onClick={handleSubmit}
                   disabled={isSubmitting || !validateStep(currentStep)}
-                  className="flex items-center gap-2 hover-scale bg-gradient-to-l from-green-600 to-green-500"
+                  className="flex items-center gap-2 hover:scale-105 transition-transform bg-gradient-to-r from-green-600 to-green-500"
                 >
                   {isSubmitting ? (
                     <>
@@ -802,7 +802,7 @@ const AdvancedTranslationForm = ({
               animate={{ opacity: 1, scale: 1 }}
               className="mt-6 p-4 bg-muted/50 rounded-lg"
             >
-              <div className="flex justify-between items-center text-sm mb-2 rtl-flex">
+              <div className="flex justify-between items-center text-sm mb-2">
                 <span className="flex items-center gap-2">
                   <Zap className="h-4 w-4 animate-pulse text-primary" />
                   جاري رفع الملفات ومعالجة الطلب...
@@ -822,7 +822,7 @@ const AdvancedTranslationForm = ({
           >
             <div className="flex items-center gap-3 p-3 bg-green-50 dark:bg-green-900/20 rounded-lg">
               <Shield className="h-8 w-8 text-green-600 animate-pulse" />
-              <div className="text-rtl">
+              <div>
                 <h5 className="font-semibold text-green-800 dark:text-green-200">أمان تام</h5>
                 <p className="text-xs text-green-600">حماية كاملة للبيانات</p>
               </div>
@@ -830,7 +830,7 @@ const AdvancedTranslationForm = ({
 
             <div className="flex items-center gap-3 p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
               <Award className="h-8 w-8 text-blue-600 animate-pulse" />
-              <div className="text-rtl">
+              <div>
                 <h5 className="font-semibold text-blue-800 dark:text-blue-200">جودة معتمدة</h5>
                 <p className="text-xs text-blue-600">ISO 9001 معتمد</p>
               </div>
@@ -838,7 +838,7 @@ const AdvancedTranslationForm = ({
 
             <div className="flex items-center gap-3 p-3 bg-purple-50 dark:bg-purple-900/20 rounded-lg">
               <Users className="h-8 w-8 text-purple-600 animate-pulse" />
-              <div className="text-rtl">
+              <div>
                 <h5 className="font-semibold text-purple-800 dark:text-purple-200">فريق خبراء</h5>
                 <p className="text-xs text-purple-600">+500 مترجم محترف</p>
               </div>
