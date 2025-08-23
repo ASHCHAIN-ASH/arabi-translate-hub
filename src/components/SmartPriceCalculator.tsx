@@ -179,7 +179,7 @@ const SmartPriceCalculator = ({
     }
   }, [pricing, onPriceChange]);
 
-  if (!pricing) {
+  if (files.length === 0) {
     return (
       <Card className="bg-gradient-to-br from-muted/50 to-muted/30 border-0 shadow-soft">
         <CardContent className="p-8 text-center">
@@ -189,6 +189,22 @@ const SmartPriceCalculator = ({
           </h3>
           <p className="text-sm text-muted-foreground">
             قم برفع ملفاتك لحساب التكلفة الدقيقة
+          </p>
+        </CardContent>
+      </Card>
+    );
+  }
+
+  if (!pricing) {
+    return (
+      <Card className="bg-gradient-to-br from-muted/50 to-muted/30 border-0 shadow-soft">
+        <CardContent className="p-8 text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
+          <h3 className="text-lg font-semibold text-muted-foreground mb-2">
+            جاري حساب التكلفة...
+          </h3>
+          <p className="text-sm text-muted-foreground">
+            يرجى الانتظار بينما نحلل ملفاتك
           </p>
         </CardContent>
       </Card>
