@@ -3,6 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Stethoscope, Heart, FileText, Shield, Award, Users } from "lucide-react";
+import AdvancedTranslationForm from "@/components/AdvancedTranslationForm";
 
 const MedicalTranslation = () => {
   const medicalServices = [
@@ -204,6 +205,22 @@ const MedicalTranslation = () => {
                 </div>
               ))}
             </div>
+          </motion.div>
+
+          {/* Advanced Translation Form */}
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 1 }}
+          >
+            <AdvancedTranslationForm 
+              translationType="medical"
+              title="طلب ترجمة طبية متخصصة"
+              description="ترجمة طبية دقيقة وآمنة من أطباء متخصصين"
+              gradientFrom="green-600"
+              gradientTo="green-800"
+            />
           </motion.div>
 
         </div>

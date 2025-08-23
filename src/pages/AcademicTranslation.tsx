@@ -3,6 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { GraduationCap, BookOpen, FileText, Award, Users, Globe, Microscope, Calculator, FlaskConical, Atom, Library, PenTool } from "lucide-react";
+import AdvancedTranslationForm from "@/components/AdvancedTranslationForm";
 
 const AcademicTranslation = () => {
   const academicServices = [
@@ -436,6 +437,21 @@ const AcademicTranslation = () => {
             </Card>
           </motion.div>
 
+          {/* Advanced Translation Form */}
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 1 }}
+          >
+            <AdvancedTranslationForm 
+              translationType="academic"
+              title="طلب ترجمة أكاديمية متخصصة"
+              description="ترجمة أكاديمية دقيقة للأبحاث والرسائل العلمية"
+              gradientFrom="indigo-600"
+              gradientTo="blue-600"
+            />
+          </motion.div>
         </div>
       </section>
     </div>

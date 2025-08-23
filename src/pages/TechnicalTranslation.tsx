@@ -3,6 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Settings, Code, Cpu, Zap, Shield, Award } from "lucide-react";
+import AdvancedTranslationForm from "@/components/AdvancedTranslationForm";
 
 const TechnicalTranslation = () => {
   const technicalServices = [
@@ -171,6 +172,22 @@ const TechnicalTranslation = () => {
                 </div>
               ))}
             </div>
+          </motion.div>
+
+          {/* Advanced Translation Form */}
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 1 }}
+          >
+            <AdvancedTranslationForm 
+              translationType="technical"
+              title="طلب ترجمة تقنية متخصصة"
+              description="ترجمة تقنية دقيقة للوثائق والمواصفات التقنية"
+              gradientFrom="gray-600"
+              gradientTo="blue-600"
+            />
           </motion.div>
 
         </div>

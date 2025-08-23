@@ -2,7 +2,7 @@ import { useState } from "react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import FileUploader from "@/components/FileUploader";
-import AdvancedFileAnalyzer from "@/components/AdvancedFileAnalyzer";
+import AdvancedTranslationForm from "@/components/AdvancedTranslationForm";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -519,40 +519,13 @@ const LegalTranslation = () => {
                 </div>
               </div>
 
-              <CardContent className="p-6">
-                <div className="grid grid-cols-1 xl:grid-cols-3 gap-8">
-                  {/* رفع الملفات */}
-                  <div className="xl:col-span-2 space-y-6">
-                     <div>
-                       <Label className="text-lg font-bold text-foreground mb-4 block">رفع الملفات للتحليل الذكي</Label>
-                       <FileUploader
-                         onFilesSelected={setSelectedFiles}
-                         onProcessingChange={setIsAnalyzing}
-                         maxFiles={5}
-                         acceptedTypes={['.doc', '.docx', '.pdf', '.txt']}
-                       />
-                       
-                        <AdvancedFileAnalyzer
-                          files={selectedFiles}
-                          onAnalysisComplete={setFileAnalyses}
-                          isProcessing={isAnalyzing}
-                        />
-                     </div>
-                    
-                    {/* أو إدخال يدوي */}
-                    <div className="relative">
-                      <div className="absolute inset-0 flex items-center">
-                        <div className="w-full border-t border-muted-foreground/20"></div>
-                      </div>
-                      <div className="relative flex justify-center text-sm">
-                        <span className="px-4 bg-background text-muted-foreground font-medium">أو أدخل الكلمات يدوياً</span>
-                      </div>
-                    </div>
-                    
-                  </div>
-
-                </div>
-              </CardContent>
+              <AdvancedTranslationForm 
+                translationType="legal"
+                title="طلب ترجمة قانونية احترافية"
+                description="ترجمة معتمدة للوثائق القانونية من خبراء متخصصين"
+                gradientFrom="blue-700"
+                gradientTo="indigo-700"
+              />
             </Card>
           </motion.div>
         </div>
