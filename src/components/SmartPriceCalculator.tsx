@@ -1,4 +1,5 @@
 import { useState, useEffect, useMemo } from "react";
+import React from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -318,10 +319,10 @@ const SmartPriceCalculator = ({
                 <div className="bg-gradient-to-br from-primary/5 to-accent/5 p-4 rounded-xl">
                   <h4 className="font-bold text-foreground mb-3">معلومات التسليم</h4>
                   <div className="space-y-2">
-                    <div className="flex items-center gap-2">
-                      <urgencyFactors[urgency].icon className="h-4 w-4 text-primary" />
-                      <span className="text-sm">{pricing.deliveryTime}</span>
-                    </div>
+                     <div className="flex items-center gap-2">
+                       {React.createElement(urgencyFactors[urgency].icon, { className: "h-4 w-4 text-primary" })}
+                       <span className="text-sm">{pricing.deliveryTime}</span>
+                     </div>
                     <div className="flex items-center gap-2">
                       <Target className="h-4 w-4 text-accent" />
                       <span className="text-sm">دقة مضمونة 99.5%</span>
@@ -388,22 +389,20 @@ const SmartPriceCalculator = ({
                         <span>نوع الوثيقة:</span>
                         <Badge variant="outline" className="text-xs">{file.documentType}</Badge>
                       </div>
-                      <div className="flex justify-between">
-                        <span>التعقيد:</span>
-                        <Badge 
-                          variant="outline" 
-                          className={`text-xs ${
-                            file.complexity === 'expert' ? 'border-red-200 text-red-700' :
-                            file.complexity === 'high' ? 'border-orange-200 text-orange-700' :
-                            file.complexity === 'medium' ? 'border-yellow-200 text-yellow-700' :
-                            'border-green-200 text-green-700'
-                          }`}
-                        >
-                          {file.complexity}
-                        </Badge>
-                          {file.complexity}
-                        </Badge>
-                      </div>
+                       <div className="flex justify-between">
+                         <span>التعقيد:</span>
+                         <Badge 
+                           variant="outline" 
+                           className={`text-xs ${
+                             file.complexity === 'expert' ? 'border-red-200 text-red-700' :
+                             file.complexity === 'high' ? 'border-orange-200 text-orange-700' :
+                             file.complexity === 'medium' ? 'border-yellow-200 text-yellow-700' :
+                             'border-green-200 text-green-700'
+                           }`}
+                         >
+                           {file.complexity}
+                         </Badge>
+                       </div>
                       <div className="flex justify-between">
                         <span>المصطلحات المتخصصة:</span>
                         <span className="font-medium">{file.specialTerms}</span>
