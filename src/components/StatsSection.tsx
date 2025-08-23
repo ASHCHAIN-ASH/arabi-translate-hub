@@ -154,8 +154,21 @@ const StatsSection = () => {
   ];
 
   return (
-    <section ref={ref} className="py-20 lg:py-32 bg-gray-50">
-      <div className="container mx-auto px-4">
+    <section ref={ref} className="py-20 lg:py-32 bg-gradient-to-b from-slate-50 to-gray-100 relative">
+      {/* خلفية رسمية ثابتة */}
+      <div className="absolute inset-0 opacity-5">
+        <div className="absolute top-20 left-20 w-32 h-32 border-2 border-gray-300 rounded-full"></div>
+        <div className="absolute top-40 right-32 w-24 h-24 border-2 border-blue-300 rounded-full"></div>
+        <div className="absolute bottom-32 left-32 w-40 h-40 border border-gray-200 rounded-full"></div>
+        <div className="absolute bottom-20 right-20 w-28 h-28 border border-blue-200 rounded-full"></div>
+        
+        {/* خطوط هندسية ثابتة */}
+        <div className="absolute top-0 left-1/4 w-px h-full bg-gray-200"></div>
+        <div className="absolute top-0 right-1/4 w-px h-full bg-gray-200"></div>
+        <div className="absolute top-1/4 left-0 w-full h-px bg-gray-200"></div>
+        <div className="absolute bottom-1/4 left-0 w-full h-px bg-gray-200"></div>
+      </div>
+      <div className="container mx-auto px-4 relative z-10">
         {/* العنوان الرئيسي */}
         <motion.div
           className="text-center mb-16"
@@ -206,11 +219,8 @@ const StatsSection = () => {
                     <div className="mb-4">
                       <motion.div
                         className="w-16 h-16 mx-auto bg-white rounded-xl flex items-center justify-center shadow-sm group-hover:shadow-md transition-all duration-300"
-                        whileHover={{ 
-                          rotate: [0, -10, 10, -5, 5, 0],
-                          scale: 1.1
-                        }}
-                        transition={{ duration: 0.6 }}
+                        whileHover={{ scale: 1.05 }}
+                        transition={{ duration: 0.2 }}
                       >
                         <IconComponent className={`h-8 w-8 ${stat.color}`} />
                       </motion.div>
@@ -259,8 +269,8 @@ const StatsSection = () => {
             <CardContent className="px-12 py-8">
               <div className="flex items-center gap-6">
                 <motion.div
-                  animate={{ rotate: [0, 360] }}
-                  transition={{ duration: 8, repeat: Infinity, ease: "linear" }}
+                  animate={{ rotate: 360 }}
+                  transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
                 >
                   <Star className="h-10 w-10 text-yellow-300" />
                 </motion.div>
@@ -275,8 +285,8 @@ const StatsSection = () => {
                 </div>
                 
                 <motion.div
-                  animate={{ rotate: [360, 0] }}
-                  transition={{ duration: 8, repeat: Infinity, ease: "linear" }}
+                  animate={{ rotate: -360 }}
+                  transition={{ duration: 25, repeat: Infinity, ease: "linear" }}
                 >
                   <Star className="h-10 w-10 text-yellow-300" />
                 </motion.div>
