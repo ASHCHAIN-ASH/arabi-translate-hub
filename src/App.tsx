@@ -12,6 +12,8 @@ import InstantTranslation from "./pages/InstantTranslation";
 import MediaTranslation from "./pages/MediaTranslation";
 import LiteraryTranslation from "./pages/LiteraryTranslation";
 import AcademicTranslation from "./pages/AcademicTranslation";
+import TermsOfService from "./pages/TermsOfService";
+import PrivacyPolicy from "./pages/PrivacyPolicy";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -32,6 +34,8 @@ const App = () => (
           <Route path="/media-translation" element={<MediaTranslation />} />
           <Route path="/literary-translation" element={<LiteraryTranslation />} />
           <Route path="/academic-translation" element={<AcademicTranslation />} />
+          <Route path="/terms-of-service" element={<TermsOfService />} />
+          <Route path="/privacy-policy" element={<PrivacyPolicy />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
