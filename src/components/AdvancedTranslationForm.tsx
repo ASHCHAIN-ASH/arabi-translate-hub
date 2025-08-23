@@ -225,21 +225,21 @@ const AdvancedTranslationForm = ({
         <p className="text-muted-foreground">نحتاج معلوماتك للتواصل معك</p>
       </div>
 
-      <div className="grid md:grid-cols-2 gap-6">
+      <div className="grid md:grid-cols-2 gap-6 rtl-grid">
         <div className="space-y-2">
-          <Label htmlFor="clientName" className="text-right">الاسم الكامل *</Label>
+          <Label htmlFor="clientName" className="text-rtl">الاسم الكامل *</Label>
           <Input
             id="clientName"
             value={formData.clientName}
             onChange={(e) => handleInputChange('clientName', e.target.value)}
             placeholder="أدخل اسمك الكامل"
-            className="text-right"
+            className="text-rtl"
             required
           />
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="clientEmail" className="text-right">البريد الإلكتروني *</Label>
+          <Label htmlFor="clientEmail" className="text-rtl">البريد الإلكتروني *</Label>
           <Input
             id="clientEmail"
             type="email"
@@ -251,25 +251,25 @@ const AdvancedTranslationForm = ({
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="clientPhone" className="text-right">رقم الهاتف *</Label>
+          <Label htmlFor="clientPhone" className="text-rtl">رقم الهاتف *</Label>
           <Input
             id="clientPhone"
             value={formData.clientPhone}
             onChange={(e) => handleInputChange('clientPhone', e.target.value)}
             placeholder="+966 XX XXX XXXX"
-            className="text-right"
+            className="text-rtl"
             required
           />
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="companyName" className="text-right">اسم الشركة (اختياري)</Label>
+          <Label htmlFor="companyName" className="text-rtl">اسم الشركة (اختياري)</Label>
           <Input
             id="companyName"
             value={formData.companyName}
             onChange={(e) => handleInputChange('companyName', e.target.value)}
             placeholder="اسم الشركة أو المؤسسة"
-            className="text-right"
+            className="text-rtl"
           />
         </div>
       </div>
@@ -286,9 +286,9 @@ const AdvancedTranslationForm = ({
 
       <div className="space-y-6">
         <div className="space-y-2">
-          <Label className="text-right">نوع الترجمة</Label>
+          <Label className="text-rtl">نوع الترجمة</Label>
           <Select value={formData.translationType} onValueChange={(value) => handleInputChange('translationType', value)}>
-            <SelectTrigger className="text-right">
+            <SelectTrigger className="text-rtl">
               <SelectValue placeholder="اختر نوع الترجمة" />
             </SelectTrigger>
             <SelectContent>
@@ -301,11 +301,11 @@ const AdvancedTranslationForm = ({
           </Select>
         </div>
 
-        <div className="grid md:grid-cols-2 gap-6">
+        <div className="grid md:grid-cols-2 gap-6 rtl-grid">
           <div className="space-y-2">
-            <Label className="text-right">من اللغة</Label>
+            <Label className="text-rtl">من اللغة</Label>
             <Select value={formData.fromLanguage} onValueChange={(value) => handleInputChange('fromLanguage', value)}>
-              <SelectTrigger className="text-right">
+              <SelectTrigger className="text-rtl">
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
@@ -319,9 +319,9 @@ const AdvancedTranslationForm = ({
           </div>
 
           <div className="space-y-2">
-            <Label className="text-right">إلى اللغة</Label>
+            <Label className="text-rtl">إلى اللغة</Label>
             <Select value={formData.toLanguage} onValueChange={(value) => handleInputChange('toLanguage', value)}>
-              <SelectTrigger className="text-right">
+              <SelectTrigger className="text-rtl">
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
@@ -336,7 +336,7 @@ const AdvancedTranslationForm = ({
         </div>
 
         <div className="space-y-4">
-          <Label className="text-right">السرعة المطلوبة</Label>
+          <Label className="text-rtl">السرعة المطلوبة</Label>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {urgencyOptions.map((option) => (
               <motion.div
@@ -355,7 +355,7 @@ const AdvancedTranslationForm = ({
                       </Badge>
                       <option.icon className="h-5 w-5" />
                     </div>
-                    <h4 className="font-semibold text-right">{option.label}</h4>
+                    <h4 className="font-semibold text-rtl">{option.label}</h4>
                   </CardContent>
                 </Card>
               </motion.div>
@@ -364,7 +364,7 @@ const AdvancedTranslationForm = ({
         </div>
 
         <div className="space-y-4">
-          <Label className="text-right">مستوى الجودة</Label>
+          <Label className="text-rtl">مستوى الجودة</Label>
           <div className="space-y-3">
             {qualityOptions.map((option) => (
               <motion.div
@@ -377,8 +377,8 @@ const AdvancedTranslationForm = ({
                   onClick={() => handleInputChange('qualityLevel', option.value)}
                 >
                   <CardContent className="p-4">
-                    <div className="flex items-center justify-between">
-                      <div className="text-right">
+                    <div className="flex items-center justify-between rtl-flex">
+                      <div className="text-rtl">
                         <h4 className="font-semibold">{option.label}</h4>
                         <p className="text-sm text-muted-foreground">{option.description}</p>
                       </div>
@@ -410,41 +410,41 @@ const AdvancedTranslationForm = ({
 
       <div className="space-y-4">
         <div className="space-y-2">
-          <Label htmlFor="projectDescription" className="text-right">وصف المشروع</Label>
+          <Label htmlFor="projectDescription" className="text-rtl">وصف المشروع</Label>
           <Textarea
             id="projectDescription"
             value={formData.projectDescription}
             onChange={(e) => handleInputChange('projectDescription', e.target.value)}
             placeholder="صف مشروع الترجمة وأي تفاصيل مهمة..."
-            className="min-h-[120px] text-right"
+            className="min-h-[120px] text-rtl"
           />
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="specialRequirements" className="text-right">متطلبات خاصة</Label>
+          <Label htmlFor="specialRequirements" className="text-rtl">متطلبات خاصة</Label>
           <Textarea
             id="specialRequirements"
             value={formData.specialRequirements}
             onChange={(e) => handleInputChange('specialRequirements', e.target.value)}
             placeholder="أي متطلبات خاصة أو تعليمات إضافية..."
-            className="text-right"
+            className="text-rtl"
           />
         </div>
 
-        <div className="grid md:grid-cols-2 gap-6">
+        <div className="grid md:grid-cols-2 gap-6 rtl-grid">
           <div className="space-y-2">
-            <Label htmlFor="budget" className="text-right">الميزانية المتوقعة</Label>
+            <Label htmlFor="budget" className="text-rtl">الميزانية المتوقعة</Label>
             <Input
               id="budget"
               value={formData.budget}
               onChange={(e) => handleInputChange('budget', e.target.value)}
               placeholder="مثال: 1000 ريال"
-              className="text-right"
+              className="text-rtl"
             />
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="deadline" className="text-right">الموعد النهائي المطلوب</Label>
+            <Label htmlFor="deadline" className="text-rtl">الموعد النهائي المطلوب</Label>
             <Input
               id="deadline"
               type="date"
