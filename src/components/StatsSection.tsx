@@ -157,12 +157,7 @@ const StatsSection = () => {
     <section ref={ref} className="py-20 lg:py-32 bg-white">
       <div className="container mx-auto px-4">
         {/* العنوان الرئيسي */}
-        <motion.div
-          className="text-center mb-16"
-          initial={{ opacity: 0, y: 30 }}
-          animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.8 }}
-        >
+        <div className="text-center mb-16">
           <Badge variant="outline" className="text-lg font-semibold px-6 py-3 bg-white border-gray-300 mb-8">
             إحصائياتنا الرائعة
           </Badge>
@@ -176,25 +171,14 @@ const StatsSection = () => {
           <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
             بيانات موثقة تعكس جودة خدماتنا وثقه عملائنا في جميع أنحاء العالم
           </p>
-        </motion.div>
+        </div>
 
         {/* شبكة الإحصائيات */}
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 lg:gap-8">
           {allStats.map((stat, index) => {
             const IconComponent = stat.icon;
             return (
-                <motion.div
-                  key={index}
-                  initial={{ opacity: 0, y: 40, scale: 0.9 }}
-                  animate={isInView ? { opacity: 1, y: 0, scale: 1 } : {}}
-                  transition={{ delay: index * 0.1, duration: 0.6 }}
-                  whileHover={{ 
-                    y: -8, 
-                    scale: 1.02,
-                    transition: { duration: 0.2 }
-                  }}
-                  className="group"
-                >
+              <div key={index} className="group">
                 <Card className={`
                   h-64 ${stat.bgColor} border-2 ${stat.borderColor} 
                   hover:border-gray-300 transition-all duration-300 
@@ -228,26 +212,16 @@ const StatsSection = () => {
                     </div>
 
                     {/* خط سفلي */}
-                    <motion.div
-                      className={`w-full h-1 ${stat.color.replace('text-', 'bg-')} rounded-full opacity-0 group-hover:opacity-100`}
-                      initial={{ scaleX: 0 }}
-                      whileHover={{ scaleX: 1 }}
-                      transition={{ duration: 0.3 }}
-                    />
+                    <div className={`w-full h-1 ${stat.color.replace('text-', 'bg-')} rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300`} />
                   </CardContent>
                 </Card>
-              </motion.div>
+              </div>
             );
           })}
         </div>
 
         {/* شعار الثقه */}
-        <motion.div
-          className="text-center mt-20"
-          initial={{ opacity: 0, y: 30 }}
-          animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ delay: 1.5, duration: 0.8 }}
-        >
+        <div className="text-center mt-20">
           <Card className="inline-block bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-xl border-0 rounded-2xl">
             <CardContent className="px-12 py-8">
               <div className="flex items-center gap-6">
@@ -270,7 +244,7 @@ const StatsSection = () => {
               </div>
             </CardContent>
           </Card>
-        </motion.div>
+        </div>
       </div>
     </section>
   );
