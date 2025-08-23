@@ -168,7 +168,7 @@ const Index = () => {
                 whileHover={{ scale: 1.05, color: "#60A5FA" }}
                 transition={{ duration: 0.2 }}
               >
-                مركز الخبراء
+                مركز MasterEduPath
               </motion.span>
               <br />
               <motion.span
@@ -177,7 +177,7 @@ const Index = () => {
                 animate={{ opacity: 1 }}
                 transition={{ duration: 0.6, delay: 0.8 }}
               >
-                للحلول التقنية المتقدمة
+                للحلول التعليمية المتقدمة | Advanced Educational Solutions
               </motion.span>
             </motion.h1>
             
