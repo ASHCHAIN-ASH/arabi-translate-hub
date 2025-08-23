@@ -175,7 +175,6 @@ const BusinessTranslation = () => {
               fromLanguage="ar"
               toLanguage="en"
               urgency="standard"
-              wordCount={0}
             />
           </motion.div>
         </div>
