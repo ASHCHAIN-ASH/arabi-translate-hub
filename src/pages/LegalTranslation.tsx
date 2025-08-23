@@ -2,7 +2,6 @@ import { useState } from "react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import FileUploader from "@/components/FileUploader";
-import SmartPriceCalculator from "@/components/SmartPriceCalculator";
 import AdvancedFileAnalyzer from "@/components/AdvancedFileAnalyzer";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -533,20 +532,11 @@ const LegalTranslation = () => {
                          acceptedTypes={['.doc', '.docx', '.pdf', '.txt']}
                        />
                        
-                       <AdvancedFileAnalyzer
-                         files={selectedFiles}
-                         onAnalysisComplete={setFileAnalyses}
-                         isProcessing={isAnalyzing}
-                       />
-                       
-                       <SmartPriceCalculator
-                         files={fileAnalyses}
-                         fromLanguage={fromLanguage}
-                         toLanguage={toLanguage}
-                         urgency={urgency}
-                         qualityLevel={qualityLevel}
-                         onPriceChange={(price) => setFinalPrice(price)}
-                       />
+                        <AdvancedFileAnalyzer
+                          files={selectedFiles}
+                          onAnalysisComplete={setFileAnalyses}
+                          isProcessing={isAnalyzing}
+                        />
                      </div>
                     
                     {/* أو إدخال يدوي */}

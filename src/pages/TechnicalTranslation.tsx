@@ -3,7 +3,6 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Settings, Code, Cpu, Zap, Shield, Award } from "lucide-react";
-import SmartPriceCalculator from "@/components/SmartPriceCalculator";
 
 const TechnicalTranslation = () => {
   const technicalServices = [
@@ -174,44 +173,6 @@ const TechnicalTranslation = () => {
             </div>
           </motion.div>
 
-          {/* Enhanced Pricing Calculator */}
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 1 }}
-          >
-            <div className="text-center mb-12">
-              <h3 className="text-3xl md:text-4xl font-bold mb-6 font-arabic-title">
-                <span className="bg-gradient-to-r from-gray-600 to-blue-600 bg-clip-text text-transparent">
-                  احسب تكلفة الترجمة التقنية
-                </span>
-              </h3>
-              <p className="text-xl text-gray-600 font-arabic-body max-w-3xl mx-auto">
-                احصل على تقدير دقيق لمشروع الترجمة التقنية مع مراعاة التعقيد التقني والتخصص
-              </p>
-            </div>
-            
-            <motion.div
-              initial={{ scale: 0.9, opacity: 0 }}
-              whileInView={{ scale: 1, opacity: 1 }}
-              viewport={{ once: true }}
-              transition={{ duration: 1, type: "spring" as const, stiffness: 100 }}
-              className="relative"
-            >
-              <div className="absolute inset-0 bg-gradient-to-r from-gray-100 to-blue-100 rounded-3xl blur-3xl opacity-30"></div>
-              <div className="relative">
-                <SmartPriceCalculator 
-                  files={[]}
-                  fromLanguage="ar"
-                  toLanguage="en"
-                  urgency="standard"
-                  qualityLevel="expert"
-                  onPriceChange={(price, details) => console.log('Technical translation price:', price)}
-                />
-              </div>
-            </motion.div>
-          </motion.div>
         </div>
       </section>
     </div>
