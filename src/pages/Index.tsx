@@ -47,32 +47,52 @@ const Index = () => {
 
   const features = [
     {
+      icon: GraduationCap,
+      title: "خبرة أكاديمية متخصصة",
+      description: "فريق من الأكاديميين وحملة الدكتوراه المتخصصين في جميع المجالات العلمية والبحثية",
+      gradient: "from-emerald-500 to-emerald-600",
+      shadowColor: "shadow-emerald-200",
+      bgPattern: "academic"
+    },
+    {
+      icon: BookOpen,
+      title: "منهجية علمية متطورة",
+      description: "نتبع أحدث المعايير الدولية في البحث العلمي والكتابة الأكاديمية وفقاً لأفضل الممارسات العالمية",
+      gradient: "from-blue-500 to-blue-600",
+      shadowColor: "shadow-blue-200",
+      bgPattern: "research"
+    },
+    {
       icon: Languages,
-      title: "ترجمة متعددة اللغات",
-      description: "نغطي أكثر من 150 لغة عالمية بدقة احترافية وجودة عالية",
-      gradient: "from-primary to-primary-light",
-      shadowColor: "shadow-primary"
-    },
-    {
-      icon: Shield,
-      title: "أمان وخصوصية",
-      description: "معايير الأمان العالمية مع حماية كاملة للبيانات الحساسة",
-      gradient: "from-accent to-accent-light",
-      shadowColor: "shadow-success"
-    },
-    {
-      icon: Zap,
-      title: "سرعة فائقة",
-      description: "تقنيات ذكاء اصطناعي متطورة لترجمة سريعة ودقيقة",
-      gradient: "from-secondary to-secondary-light",
-      shadowColor: "shadow-secondary"
+      title: "ترجمة أكاديمية متعددة اللغات",
+      description: "ترجمة متخصصة للأوراق البحثية والرسائل الجامعية في أكثر من 180 لغة بدقة علمية عالية",
+      gradient: "from-purple-500 to-purple-600",
+      shadowColor: "shadow-purple-200",
+      bgPattern: "translation"
     },
     {
       icon: Award,
-      title: "جودة مضمونة",
-      description: "ضمان دقة 99.9% مع مراجعة بشرية من خبراء لغويين معتمدين",
-      gradient: "from-primary-dark to-accent",
-      shadowColor: "shadow-medium"
+      title: "ضمان الجودة والتميز",
+      description: "معدل رضا 99.8% مع ضمان النجاح وإعادة التعديل مجاناً حتى تحقيق أعلى معايير الجودة المطلوبة",
+      gradient: "from-amber-500 to-amber-600",
+      shadowColor: "shadow-amber-200",
+      bgPattern: "quality"
+    },
+    {
+      icon: Shield,
+      title: "سرية وأمان مطلق",
+      description: "حماية كاملة للمعلومات الشخصية والبحثية مع التزام صارم بمعايير الخصوصية الأكاديمية",
+      gradient: "from-teal-500 to-teal-600",
+      shadowColor: "shadow-teal-200",
+      bgPattern: "security"
+    },
+    {
+      icon: Clock,
+      title: "التزام بالمواعيد النهائية",
+      description: "تسليم دقيق في الوقت المحدد مع إمكانية التسليم العاجل خلال 24-48 ساعة حسب الحاجة",
+      gradient: "from-rose-500 to-rose-600",
+      shadowColor: "shadow-rose-200",
+      bgPattern: "timing"
     }
   ];
 
@@ -441,7 +461,7 @@ const Index = () => {
               transition={{ duration: 0.8, delay: 0.2 }}
               viewport={{ once: true }}
             >
-              لماذا تثق بنا <span className="text-gradient-secondary">الشركات الرائدة؟</span>
+              لماذا تختارنا <span className="text-gradient-secondary">المؤسسات الأكاديمية الرائدة؟</span>
             </motion.h2>
             <motion.p
               className="text-base sm:text-lg lg:text-xl text-muted-foreground max-w-4xl mx-auto px-4"
@@ -450,8 +470,44 @@ const Index = () => {
               transition={{ duration: 0.6, delay: 0.4 }}
               viewport={{ once: true }}
             >
-              حلول متطورة ومخصصة للمؤسسات الكبرى والشركات متعددة الجنسيات
+              حلول تعليمية وبحثية متطورة مخصصة للجامعات والمراكز البحثية والطلاب المتميزين حول العالم
             </motion.p>
+
+            {/* إضافة عناصر تصميمية أكاديمية */}
+            <motion.div
+              className="flex items-center justify-center gap-8 mt-8 flex-wrap"
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.6 }}
+              viewport={{ once: true }}
+            >
+              {[
+                { icon: GraduationCap, text: "تعليم عالي", color: "text-emerald-500" },
+                { icon: BookOpen, text: "بحث علمي", color: "text-blue-500" },
+                { icon: Languages, text: "ترجمة أكاديمية", color: "text-purple-500" },
+                { icon: Award, text: "جودة مضمونة", color: "text-amber-500" }
+              ].map((item, index) => {
+                const IconComponent = item.icon;
+                return (
+                  <motion.div
+                    key={index}
+                    className="flex flex-col items-center gap-2 group"
+                    initial={{ opacity: 0, scale: 0.8 }}
+                    whileInView={{ opacity: 1, scale: 1 }}
+                    transition={{ duration: 0.4, delay: 0.8 + index * 0.1 }}
+                    viewport={{ once: true }}
+                    whileHover={{ scale: 1.1, y: -5 }}
+                  >
+                    <div className={`w-16 h-16 rounded-full bg-gradient-to-br from-${item.color.split('-')[1]}-100/50 to-${item.color.split('-')[1]}-200/50 border-2 border-${item.color.split('-')[1]}-200/30 flex items-center justify-center shadow-lg group-hover:shadow-xl transition-all duration-300`}>
+                      <IconComponent className={`h-8 w-8 ${item.color} group-hover:scale-110 transition-transform duration-300`} />
+                    </div>
+                    <span className="text-sm font-medium text-muted-foreground group-hover:text-foreground transition-colors duration-300">
+                      {item.text}
+                    </span>
+                  </motion.div>
+                );
+              })}
+            </motion.div>
           </motion.div>
           
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8 lg:gap-12">
@@ -467,56 +523,146 @@ const Index = () => {
                   whileHover={{ scale: 1.02, y: -8 }}
                   className="cursor-pointer group"
                 >
-                  <Card className={`relative overflow-hidden border-0 ${feature.shadowColor} bg-gradient-to-br from-white to-muted/30 hover:shadow-2xl transition-all duration-500 h-full`}>
-                    {/* تأثير التدرج المتحرك */}
-                    <div className={`absolute inset-0 bg-gradient-to-br ${feature.gradient} opacity-0 group-hover:opacity-5 transition-opacity duration-500`} />
-                    
-                    <CardContent className="p-6 sm:p-8 lg:p-10 space-y-4 sm:space-y-6 relative z-10">
-                      <motion.div 
-                        className="flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-6 mb-4 sm:mb-6"
-                        whileHover={{ scale: 1.05 }}
-                        transition={{ duration: 0.2 }}
-                      >
-                        <motion.div 
-                          className={`w-16 h-16 sm:w-20 lg:w-24 rounded-2xl bg-gradient-to-br ${feature.gradient} flex items-center justify-center shadow-lg flex-shrink-0`}
-                          whileHover={{ 
-                            rotate: [0, -5, 5, -5, 0],
-                            scale: 1.1
-                          }}
-                          transition={{ duration: 0.5 }}
-                        >
-                          <IconComponent className="h-8 w-8 sm:h-10 lg:h-12 text-white" />
-                        </motion.div>
-                        <div className="flex-1">
-                          <h3 className="text-xl sm:text-2xl lg:text-3xl font-arabic-title font-bold text-foreground group-hover:text-primary transition-colors duration-300 leading-tight">
-                            {feature.title}
-                          </h3>
-                        </div>
-                      </motion.div>
-                      
-                      <p className="text-muted-foreground text-sm sm:text-base lg:text-lg leading-relaxed">
-                        {feature.description}
-                      </p>
-                      
-                      {/* مؤشر التفاعل */}
-                      <motion.div
-                        className="flex items-center gap-2 text-primary font-medium opacity-0 group-hover:opacity-100 transition-opacity duration-300 pt-2 sm:pt-4"
-                        initial={{ x: -10 }}
-                        whileInView={{ x: 0 }}
-                        transition={{ duration: 0.3 }}
-                      >
-                        <span className="text-sm sm:text-base">اعرف المزيد</span>
-                        <ArrowLeft className="h-4 w-4 sm:h-5 lg:h-6" />
-                      </motion.div>
-                    </CardContent>
-                    
-                    {/* تأثير الإضاءة المتحركة */}
-                    <motion.div
-                      className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-primary to-transparent opacity-0 group-hover:opacity-100"
-                      animate={{ x: ["-100%", "100%"] }}
-                      transition={{ duration: 2, repeat: Infinity, repeatDelay: 1 }}
-                    />
-                  </Card>
+                   <Card className={`relative overflow-hidden border-2 border-transparent ${feature.shadowColor} bg-gradient-to-br from-white via-white to-muted/20 hover:shadow-2xl hover:border-primary/10 transition-all duration-500 h-full group-hover:bg-gradient-to-br group-hover:from-white group-hover:via-background/50 group-hover:to-muted/30`}>
+                     {/* نمط خلفية أكاديمي متحرك */}
+                     <div className="absolute inset-0 opacity-0 group-hover:opacity-5 transition-opacity duration-500">
+                       {feature.bgPattern === 'academic' && (
+                         <div className="w-full h-full" style={{
+                           backgroundImage: `radial-gradient(circle at 20% 30%, rgba(34, 197, 94, 0.1) 0%, transparent 50%), radial-gradient(circle at 80% 70%, rgba(34, 197, 94, 0.1) 0%, transparent 50%)`
+                         }} />
+                       )}
+                       {feature.bgPattern === 'research' && (
+                         <div className="w-full h-full" style={{
+                           backgroundImage: `linear-gradient(45deg, rgba(59, 130, 246, 0.05) 25%, transparent 25%), linear-gradient(-45deg, rgba(59, 130, 246, 0.05) 25%, transparent 25%)`
+                         }} />
+                       )}
+                       {feature.bgPattern === 'translation' && (
+                         <div className="w-full h-full" style={{
+                           backgroundImage: `radial-gradient(circle at 1px 1px, rgba(168, 85, 247, 0.1) 1px, transparent 0)`
+                         }} />
+                       )}
+                       {feature.bgPattern === 'quality' && (
+                         <div className="w-full h-full" style={{
+                           backgroundImage: `conic-gradient(from 45deg, rgba(245, 158, 11, 0.05), transparent, rgba(245, 158, 11, 0.05))`
+                         }} />
+                       )}
+                       {feature.bgPattern === 'security' && (
+                         <div className="w-full h-full" style={{
+                           backgroundImage: `repeating-linear-gradient(45deg, rgba(20, 184, 166, 0.03) 0px, rgba(20, 184, 166, 0.03) 2px, transparent 2px, transparent 10px)`
+                         }} />
+                       )}
+                       {feature.bgPattern === 'timing' && (
+                         <div className="w-full h-full" style={{
+                           backgroundImage: `radial-gradient(ellipse at center, rgba(244, 63, 94, 0.08) 0%, transparent 70%)`
+                         }} />
+                       )}
+                     </div>
+                     
+                     {/* خط علوي ملون */}
+                     <div className={`absolute top-0 left-0 right-0 h-1 bg-gradient-to-r ${feature.gradient} opacity-60 group-hover:opacity-100 transition-opacity duration-300`} />
+                     
+                     <CardContent className="p-6 sm:p-8 lg:p-10 space-y-4 sm:space-y-6 relative z-10">
+                       <motion.div 
+                         className="flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-6 mb-4 sm:mb-6"
+                         whileHover={{ scale: 1.02 }}
+                         transition={{ duration: 0.2 }}
+                       >
+                         <motion.div 
+                           className={`w-20 h-20 sm:w-24 lg:w-28 rounded-3xl bg-gradient-to-br ${feature.gradient} flex items-center justify-center shadow-xl flex-shrink-0 border-4 border-white group-hover:border-background transition-colors duration-300`}
+                           whileHover={{ 
+                             rotate: [0, -3, 3, -3, 0],
+                             scale: 1.05
+                           }}
+                           transition={{ duration: 0.6 }}
+                         >
+                           <IconComponent className="h-10 w-10 sm:h-12 lg:h-14 text-white drop-shadow-lg" />
+                         </motion.div>
+                         <div className="flex-1">
+                           <h3 className="text-xl sm:text-2xl lg:text-3xl font-arabic-title font-bold text-foreground group-hover:text-primary transition-colors duration-300 leading-tight mb-2">
+                             {feature.title}
+                           </h3>
+                           <motion.div
+                             className={`w-16 h-1 bg-gradient-to-r ${feature.gradient} rounded-full opacity-50 group-hover:opacity-100 group-hover:w-24 transition-all duration-300`}
+                             initial={{ width: 64 }}
+                             whileInView={{ width: 96 }}
+                             transition={{ duration: 0.4, delay: index * 0.1 }}
+                           />
+                         </div>
+                       </motion.div>
+                       
+                       <div className="space-y-4">
+                         <p className="text-muted-foreground text-sm sm:text-base lg:text-lg leading-relaxed group-hover:text-foreground/80 transition-colors duration-300">
+                           {feature.description}
+                         </p>
+                         
+                         {/* إضافة مميزات فرعية */}
+                         <div className="flex flex-wrap gap-2 pt-2">
+                           {feature.bgPattern === 'academic' && ['PhD خبراء', 'اعتماد دولي', 'مراجعة دقيقة'].map((tag, i) => (
+                             <span key={i} className="px-3 py-1 bg-emerald-100/80 text-emerald-700 rounded-full text-xs font-medium">
+                               {tag}
+                             </span>
+                           ))}
+                           {feature.bgPattern === 'research' && ['منهجية علمية', 'معايير دولية', 'تحديث مستمر'].map((tag, i) => (
+                             <span key={i} className="px-3 py-1 bg-blue-100/80 text-blue-700 rounded-full text-xs font-medium">
+                               {tag}
+                             </span>
+                           ))}
+                           {feature.bgPattern === 'translation' && ['180+ لغة', 'دقة علمية', 'متخصصون'].map((tag, i) => (
+                             <span key={i} className="px-3 py-1 bg-purple-100/80 text-purple-700 rounded-full text-xs font-medium">
+                               {tag}
+                             </span>
+                           ))}
+                           {feature.bgPattern === 'quality' && ['ضمان 99.8%', 'مراجعة مجانية', 'معايير عالية'].map((tag, i) => (
+                             <span key={i} className="px-3 py-1 bg-amber-100/80 text-amber-700 rounded-full text-xs font-medium">
+                               {tag}
+                             </span>
+                           ))}
+                           {feature.bgPattern === 'security' && ['حماية مطلقة', 'سرية تامة', 'أمان متقدم'].map((tag, i) => (
+                             <span key={i} className="px-3 py-1 bg-teal-100/80 text-teal-700 rounded-full text-xs font-medium">
+                               {tag}
+                             </span>
+                           ))}
+                           {feature.bgPattern === 'timing' && ['تسليم دقيق', '24-48 ساعة', 'مواعيد محددة'].map((tag, i) => (
+                             <span key={i} className="px-3 py-1 bg-rose-100/80 text-rose-700 rounded-full text-xs font-medium">
+                               {tag}
+                             </span>
+                           ))}
+                         </div>
+                       </div>
+                       
+                       {/* مؤشر التفاعل المحسن */}
+                       <motion.div
+                         className="flex items-center justify-between pt-4 border-t border-muted/20 group-hover:border-primary/20 transition-colors duration-300"
+                         initial={{ x: -10, opacity: 0 }}
+                         whileInView={{ x: 0, opacity: 1 }}
+                         transition={{ duration: 0.3, delay: index * 0.1 }}
+                       >
+                         <motion.div
+                           className="flex items-center gap-2 text-primary font-medium opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                           whileHover={{ x: 5 }}
+                         >
+                           <span className="text-sm sm:text-base">اعرف المزيد</span>
+                           <ArrowLeft className="h-4 w-4 sm:h-5 lg:h-6" />
+                         </motion.div>
+                         <div className={`w-12 h-12 rounded-full bg-gradient-to-r ${feature.gradient} opacity-10 group-hover:opacity-20 flex items-center justify-center transition-opacity duration-300`}>
+                           <CheckCircle className="h-6 w-6 text-white" />
+                         </div>
+                       </motion.div>
+                     </CardContent>
+                     
+                     {/* تأثير الإضاءة المتحركة المحسن */}
+                     <motion.div
+                       className={`absolute top-0 left-0 w-full h-2 bg-gradient-to-r ${feature.gradient} opacity-0 group-hover:opacity-30`}
+                       animate={{ 
+                         background: [
+                           `linear-gradient(90deg, transparent, hsl(var(--primary)), transparent)`,
+                           `linear-gradient(90deg, transparent, hsl(var(--accent)), transparent)`,
+                           `linear-gradient(90deg, transparent, hsl(var(--primary)), transparent)`
+                         ]
+                       }}
+                       transition={{ duration: 3, repeat: Infinity }}
+                     />
+                   </Card>
                 </motion.div>
               );
             })}
