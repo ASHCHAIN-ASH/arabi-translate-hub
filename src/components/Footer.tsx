@@ -126,8 +126,8 @@ const Footer = () => {
                 <Globe className="h-6 w-6 text-white" />
               </motion.div>
               <div>
-                <h3 className="text-2xl font-arabic-title font-bold">MasterEduPath</h3>
-                <p className="text-sm text-white/70">وكالة الحلول التعليمية المتقدمة</p>
+                <h3 className="text-2xl font-arabic-title font-bold">MasterEduPath | ماستر إيدو باث</h3>
+                <p className="text-sm text-white/70">وكالة الحلول التعليمية المتقدمة | Advanced Educational Solutions Agency</p>
               </div>
             </div>
             
