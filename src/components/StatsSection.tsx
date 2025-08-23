@@ -231,13 +231,13 @@ const StatsSection = () => {
         >
           <div className="text-center mb-20">
             <Badge variant="outline" className="text-sm font-semibold px-4 py-2 bg-slate-50 text-slate-700 border-slate-300 mb-6">
-              مؤشرات الأداء البحثي
+              إنجازاتنا في الخدمات
             </Badge>
             <h3 className="text-4xl lg:text-5xl font-bold text-slate-800 mb-6">
-              معايير التميز الأكاديمي
+              تميزنا في تقديم الخدمات
             </h3>
             <p className="text-xl text-slate-600 max-w-3xl mx-auto">
-              مقاييس دقيقة تُظهر مستوى الجودة والتميز في خدماتنا البحثية والأكاديمية
+              أرقام حقيقية تُظهر حجم وجودة الخدمات التي نقدمها للطلاب والباحثين
             </p>
           </div>
 
