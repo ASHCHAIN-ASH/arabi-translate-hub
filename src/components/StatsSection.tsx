@@ -35,43 +35,43 @@ const StatsSection = () => {
       icon: GraduationCap, 
       number: 2500, 
       suffix: "+",
-      title: "رسالة علمية منجزة",
+      title: "طالب ساعدناه بالتخرج",
       subtitle: "ماجستير ودكتوراه",
-      category: "الأطروحات العلمية"
+      category: "خدمات الرسائل العلمية"
     },
     { 
       icon: BookOpen, 
       number: 15000, 
       suffix: "+",
-      title: "بحث علمي محكم",
-      subtitle: "منشور في مجلات عالمية",
-      category: "الأبحاث المنشورة"
+      title: "بحث أكاديمي أنجزناه",
+      subtitle: "للطلاب والباحثين",
+      category: "خدمات البحث العلمي"
     },
     { 
       icon: Languages, 
       number: 180, 
       suffix: "+",
-      title: "لغة أكاديمية",
-      subtitle: "مترجمة بدقة علمية",
+      title: "لغة نترجم إليها",
+      subtitle: "خدمات ترجمة متخصصة",
       category: "الترجمة الأكاديمية"
     },
     { 
       icon: Award, 
       number: 99.8, 
       suffix: "%",
-      title: "معدل القبول",
-      subtitle: "في الجامعات المرموقة",
-      category: "نسبة النجاح"
+      title: "معدل رضا عملائنا",
+      subtitle: "من الطلاب والأكاديميين",
+      category: "جودة الخدمة"
     }
   ];
 
   const researchMetrics = [
-    { icon: Brain, number: 320, suffix: "+", label: "أستاذ وخبير أكاديمي", field: "هيئة التدريس" },
-    { icon: Microscope, number: 1200, suffix: "+", label: "بحث تطبيقي متقدم", field: "البحث العلمي" },
-    { icon: BookMarked, number: 8500, suffix: "+", label: "مقال علمي معتمد", field: "المنشورات" },
-    { icon: Calculator, number: 950, suffix: "+", label: "تحليل إحصائي", field: "التحليل" },
-    { icon: Library, number: 92, suffix: "+", label: "مكتبة جامعية شريكة", field: "الشراكات" },
-    { icon: Target, number: 48, suffix: " ساعة", label: "متوسط التسليم", field: "الكفاءة" }
+    { icon: Brain, number: 320, suffix: "+", label: "خبير متخصص لدينا", field: "فريق العمل" },
+    { icon: Microscope, number: 1200, suffix: "+", label: "مشروع بحثي أنجزناه", field: "مشاريع البحث" },
+    { icon: BookMarked, number: 8500, suffix: "+", label: "مقال كتبناه للعملاء", field: "الكتابة الأكاديمية" },
+    { icon: Calculator, number: 950, suffix: "+", label: "تحليل إحصائي قدمناه", field: "خدمات التحليل" },
+    { icon: Library, number: 92, suffix: "+", label: "دولة نخدم طلابها", field: "التغطية العالمية" },
+    { icon: Target, number: 48, suffix: " ساعة", label: "متوسط وقت التسليم", field: "سرعة الإنجاز" }
   ];
 
   const institutionalData = [
@@ -80,28 +80,28 @@ const StatsSection = () => {
       number: 50000, 
       suffix: "+", 
       title: "طالب وباحث",
-      description: "استفادوا من خدماتنا الأكاديمية"
+      description: "استفادوا من خدماتنا المتميزة"
     },
     { 
       icon: Globe, 
       number: 92, 
       suffix: "+", 
-      title: "جامعة ومؤسسة",
-      description: "تتعاون معنا حول العالم"
+      title: "دولة حول العالم",
+      description: "نقدم لها خدماتنا الأكاديمية"
     },
     { 
       icon: TrendingUp, 
       number: 15, 
       suffix: " سنة", 
-      title: "خبرة أكاديمية",
+      title: "خبرة في الخدمات",
       description: "في مجال البحث والتعليم"
     },
     { 
       icon: Trophy, 
       number: 95, 
       suffix: "%", 
-      title: "رضا الباحثين",
-      description: "عن جودة خدماتنا العلمية"
+      title: "رضا العملاء",
+      description: "عن جودة خدماتنا المتخصصة"
     }
   ];
 
@@ -160,7 +160,7 @@ const StatsSection = () => {
           <div className="w-32 h-0.5 bg-blue-600 mx-auto mb-8"></div>
           
           <p className="text-xl text-slate-600 max-w-4xl mx-auto leading-relaxed">
-            بيانات موثقة ومعتمدة تعكس إنجازاتنا المتميزة في مجال البحث العلمي والتعليم الأكاديمي والترجمة المتخصصة
+            بيانات موثقة تعكس تميزنا كوكالة رائدة في تقديم خدمات البحث العلمي والتعليم الأكاديمي والترجمة المتخصصة
           </p>
         </motion.div>
 
@@ -294,13 +294,13 @@ const StatsSection = () => {
             <CardContent className="p-12 lg:p-16">
               <div className="text-center mb-16">
                 <Badge variant="outline" className="text-sm font-semibold px-4 py-2 bg-blue-100 text-blue-700 border-blue-300 mb-6">
-                  التأثير الأكاديمي العالمي
+                  نطاق خدماتنا العالمي
                 </Badge>
                 <h3 className="text-4xl lg:text-5xl font-bold text-slate-800 mb-6">
-                  شراكاتنا الأكاديمية
+                  انتشارنا العالمي
                 </h3>
                 <p className="text-xl text-slate-600 max-w-3xl mx-auto">
-                  نفخر بشراكاتنا الاستراتيجية مع المؤسسات الأكاديمية والبحثية الرائدة عالمياً
+                  نفخر بثقه عملائنا وانتشار خدماتنا في جميع أنحاء العالم
                 </p>
               </div>
 
@@ -361,10 +361,10 @@ const StatsSection = () => {
                 </div>
                 <div className="text-center">
                   <div className="text-2xl font-bold mb-1">
-                    الشريك الأكاديمي المعتمد
+                    وكالة الخدمات الأكاديمية الرائدة
                   </div>
                   <div className="text-lg opacity-90">
-                    للجامعات والمؤسسات البحثية في 92+ دولة حول العالم
+                    نخدم الطلاب والباحثين في 92+ دولة حول العالم
                   </div>
                 </div>
                 <div className="flex gap-2">
