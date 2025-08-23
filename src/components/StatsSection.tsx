@@ -23,7 +23,10 @@ import {
   BookMarked,
   Microscope,
   Calculator,
-  Library
+  Library,
+  Sparkles,
+  Zap,
+  Rocket
 } from "lucide-react";
 
 const StatsSection = () => {
@@ -37,7 +40,9 @@ const StatsSection = () => {
       suffix: "+",
       title: "طالب ساعدناه بالتخرج",
       subtitle: "ماجستير ودكتوراه",
-      category: "خدمات الرسائل العلمية"
+      category: "خدمات الرسائل العلمية",
+      color: "from-blue-500 to-cyan-500",
+      bgPattern: "bg-blue-50"
     },
     { 
       icon: BookOpen, 
@@ -45,7 +50,9 @@ const StatsSection = () => {
       suffix: "+",
       title: "بحث أكاديمي أنجزناه",
       subtitle: "للطلاب والباحثين",
-      category: "خدمات البحث العلمي"
+      category: "خدمات البحث العلمي",
+      color: "from-emerald-500 to-teal-500",
+      bgPattern: "bg-emerald-50"
     },
     { 
       icon: Languages, 
@@ -53,7 +60,9 @@ const StatsSection = () => {
       suffix: "+",
       title: "لغة نترجم إليها",
       subtitle: "خدمات ترجمة متخصصة",
-      category: "الترجمة الأكاديمية"
+      category: "الترجمة الأكاديمية",
+      color: "from-amber-500 to-orange-500",
+      bgPattern: "bg-amber-50"
     },
     { 
       icon: Award, 
@@ -61,279 +70,427 @@ const StatsSection = () => {
       suffix: "%",
       title: "معدل رضا عملائنا",
       subtitle: "من الطلاب والأكاديميين",
-      category: "جودة الخدمة"
+      category: "جودة الخدمة",
+      color: "from-purple-500 to-pink-500",
+      bgPattern: "bg-purple-50"
     }
   ];
 
-  const researchMetrics = [
-    { icon: Brain, number: 320, suffix: "+", label: "خبير متخصص لدينا", field: "فريق العمل" },
-    { icon: Microscope, number: 1200, suffix: "+", label: "مشروع بحثي أنجزناه", field: "مشاريع البحث" },
-    { icon: BookMarked, number: 8500, suffix: "+", label: "مقال كتبناه للعملاء", field: "الكتابة الأكاديمية" },
-    { icon: Calculator, number: 950, suffix: "+", label: "تحليل إحصائي قدمناه", field: "خدمات التحليل" },
-    { icon: Library, number: 92, suffix: "+", label: "دولة نخدم طلابها", field: "التغطية العالمية" },
-    { icon: Target, number: 48, suffix: " ساعة", label: "متوسط وقت التسليم", field: "سرعة الإنجاز" }
+  const serviceMetrics = [
+    { icon: Brain, number: 320, suffix: "+", label: "خبير متخصص", field: "فريق العمل", color: "text-indigo-600" },
+    { icon: Rocket, number: 1200, suffix: "+", label: "مشروع منجز", field: "الإبداع", color: "text-blue-600" },
+    { icon: Zap, number: 8500, suffix: "+", label: "خدمة سريعة", field: "الكفاءة", color: "text-yellow-600" },
+    { icon: Calculator, number: 950, suffix: "+", label: "تحليل دقيق", field: "التحليل", color: "text-green-600" },
+    { icon: Sparkles, number: 92, suffix: "+", label: "دولة نخدمها", field: "التميز", color: "text-purple-600" },
+    { icon: Target, number: 48, suffix: " ساعة", label: "وقت التسليم", field: "السرعة", color: "text-red-600" }
   ];
 
-  const institutionalData = [
+  const globalReach = [
     { 
       icon: Users, 
       number: 50000, 
       suffix: "+", 
-      title: "طالب وباحث",
-      description: "استفادوا من خدماتنا المتميزة"
+      title: "عميل سعيد",
+      description: "يثق بخدماتنا المتميزة",
+      gradient: "from-pink-400 to-rose-500"
     },
     { 
       icon: Globe, 
       number: 92, 
       suffix: "+", 
       title: "دولة حول العالم",
-      description: "نقدم لها خدماتنا الأكاديمية"
+      description: "نقدم لها خدماتنا",
+      gradient: "from-blue-400 to-indigo-500"
     },
     { 
       icon: TrendingUp, 
       number: 15, 
       suffix: " سنة", 
-      title: "خبرة في الخدمات",
-      description: "في مجال البحث والتعليم"
+      title: "خبرة متراكمة",
+      description: "في الخدمات الأكاديمية",
+      gradient: "from-green-400 to-emerald-500"
     },
     { 
       icon: Trophy, 
       number: 95, 
       suffix: "%", 
-      title: "رضا العملاء",
-      description: "عن جودة خدماتنا المتخصصة"
+      title: "معدل الرضا",
+      description: "من جميع عملائنا",
+      gradient: "from-amber-400 to-yellow-500"
     }
   ];
 
+  const iconAnimation = {
+    initial: { scale: 1, rotate: 0 },
+    hover: { 
+      scale: 1.1, 
+      rotate: [0, -10, 10, -5, 5, 0],
+      transition: { duration: 0.6 }
+    },
+    tap: { scale: 0.95 }
+  };
+
+  const floatingAnimation = {
+    animate: {
+      y: [-10, 10, -10],
+      rotate: [0, 5, -5, 0],
+      scale: [1, 1.05, 1]
+    },
+    transition: {
+      duration: 4,
+      repeat: Infinity,
+      ease: "easeInOut"
+    }
+  };
+
   return (
-    <section ref={ref} className="py-24 lg:py-32 bg-slate-50 relative overflow-hidden">
-      {/* خلفية أكاديمية */}
+    <section ref={ref} className="py-24 lg:py-32 bg-gradient-to-br from-slate-50 via-indigo-50/30 to-blue-50/40 relative overflow-hidden">
+      {/* خلفية ديناميكية */}
       <div className="absolute inset-0">
-        {/* شبكة أكاديمية */}
-        <div className="absolute inset-0 opacity-5">
-          <div className="grid grid-cols-12 h-full">
-            {Array.from({ length: 12 }).map((_, i) => (
-              <div key={i} className="border-l border-slate-300"></div>
-            ))}
-          </div>
-          <div className="absolute inset-0">
-            {Array.from({ length: 20 }).map((_, i) => (
-              <div key={i} className="border-b border-slate-300 h-16"></div>
-            ))}
-          </div>
-        </div>
+        <motion.div
+          className="absolute top-20 left-20 w-64 h-64 bg-gradient-to-r from-blue-200/20 to-purple-200/20 rounded-full blur-3xl"
+          animate={{ 
+            scale: [1, 1.2, 1],
+            opacity: [0.3, 0.6, 0.3],
+            x: [0, 50, 0],
+            y: [0, -30, 0]
+          }}
+          transition={{ duration: 8, repeat: Infinity }}
+        />
+        <motion.div
+          className="absolute bottom-20 right-20 w-80 h-80 bg-gradient-to-r from-emerald-200/20 to-teal-200/20 rounded-full blur-3xl"
+          animate={{ 
+            scale: [1.2, 1, 1.2],
+            opacity: [0.4, 0.2, 0.4],
+            x: [0, -40, 0],
+            y: [0, 40, 0]
+          }}
+          transition={{ duration: 10, repeat: Infinity }}
+        />
         
-        {/* عناصر زخرفية أكاديمية */}
-        <div className="absolute top-20 left-20 w-32 h-32 border-2 border-slate-200/30 rounded-full"></div>
-        <div className="absolute top-40 right-32 w-24 h-24 border-2 border-blue-200/30 rounded-full"></div>
-        <div className="absolute bottom-20 left-32 w-40 h-40 border-2 border-slate-200/20 rounded-full"></div>
-        <div className="absolute bottom-40 right-20 w-28 h-28 border-2 border-blue-200/20 rounded-full"></div>
-        
-        {/* خطوط أكاديمية */}
-        <div className="absolute top-0 left-1/4 w-px h-full bg-gradient-to-b from-transparent via-slate-200/30 to-transparent"></div>
-        <div className="absolute top-0 right-1/4 w-px h-full bg-gradient-to-b from-transparent via-blue-200/30 to-transparent"></div>
+        {/* عناصر هندسية متحركة */}
+        <motion.div
+          className="absolute top-1/4 left-1/4 w-4 h-4 bg-blue-400/30 rounded-full"
+          animate={{ 
+            scale: [1, 1.5, 1],
+            opacity: [0.3, 0.8, 0.3]
+          }}
+          transition={{ duration: 3, repeat: Infinity, delay: 1 }}
+        />
+        <motion.div
+          className="absolute top-3/4 right-1/3 w-6 h-6 bg-purple-400/30 rounded-full"
+          animate={{ 
+            scale: [1, 1.8, 1],
+            opacity: [0.2, 0.7, 0.2]
+          }}
+          transition={{ duration: 4, repeat: Infinity, delay: 2 }}
+        />
       </div>
 
       <div className="container mx-auto px-4 relative z-10">
-        {/* العنوان الأكاديمي */}
+        {/* العنوان المتحرك */}
         <motion.div
-          className="text-center mb-24"
-          initial={{ opacity: 0, y: 30 }}
+          className="text-center mb-20"
+          initial={{ opacity: 0, y: 50 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.8 }}
+          transition={{ duration: 1 }}
         >
           <motion.div
-            className="inline-block mb-8"
-            initial={{ scale: 0.9 }}
-            animate={isInView ? { scale: 1 } : {}}
-            transition={{ delay: 0.2, duration: 0.8 }}
+            className="inline-flex items-center gap-3 mb-8"
+            whileHover={{ scale: 1.05 }}
           >
-            <Badge variant="outline" className="text-sm font-semibold px-4 py-2 bg-blue-50 text-blue-700 border-blue-200">
-              تقرير إحصائي شامل
+            <motion.div
+              animate={{ rotate: 360 }}
+              transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
+            >
+              <Sparkles className="h-10 w-10 text-blue-500" />
+            </motion.div>
+            <Badge variant="outline" className="text-base font-bold px-6 py-3 bg-gradient-to-r from-blue-50 to-purple-50 border-blue-200">
+              إحصائيات مذهلة
             </Badge>
+            <motion.div
+              animate={{ rotate: -360 }}
+              transition={{ duration: 15, repeat: Infinity, ease: "linear" }}
+            >
+              <Sparkles className="h-10 w-10 text-purple-500" />
+            </motion.div>
           </motion.div>
           
-          <h2 className="text-5xl lg:text-7xl font-bold text-slate-800 mb-6 leading-tight">
-            إحصائياتنا الأكاديمية
-          </h2>
+          <motion.h2 
+            className="text-6xl lg:text-8xl font-extrabold bg-gradient-to-r from-slate-800 via-blue-600 to-purple-600 bg-clip-text text-transparent mb-8"
+            initial={{ scale: 0.8 }}
+            animate={isInView ? { scale: 1 } : {}}
+            transition={{ delay: 0.3, duration: 0.8 }}
+          >
+            نجاحاتنا الرائعة
+          </motion.h2>
           
-          <div className="w-32 h-0.5 bg-blue-600 mx-auto mb-8"></div>
+          <motion.div 
+            className="w-32 h-2 bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 mx-auto mb-8 rounded-full"
+            initial={{ width: 0 }}
+            animate={isInView ? { width: "8rem" } : {}}
+            transition={{ delay: 0.8, duration: 1.2 }}
+          />
           
-          <p className="text-xl text-slate-600 max-w-4xl mx-auto leading-relaxed">
-            بيانات موثقة تعكس تميزنا كوكالة رائدة في تقديم خدمات البحث العلمي والتعليم الأكاديمي والترجمة المتخصصة
-          </p>
+          <motion.p 
+            className="text-2xl text-slate-600 max-w-4xl mx-auto leading-relaxed font-medium"
+            initial={{ opacity: 0 }}
+            animate={isInView ? { opacity: 1 } : {}}
+            transition={{ delay: 0.6, duration: 1 }}
+          >
+            أرقام حقيقية تحكي قصة نجاح متواصلة في خدمة الطلاب والباحثين حول العالم
+          </motion.p>
         </motion.div>
 
-        {/* الإحصائيات الأكاديمية الرئيسية */}
-        <div className="mb-28">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 max-w-6xl mx-auto">
-            {academicStats.map((stat, index) => {
-              const IconComponent = stat.icon;
-              return (
-                <motion.div
-                  key={index}
-                  initial={{ opacity: 0, y: 40 }}
-                  animate={isInView ? { opacity: 1, y: 0 } : {}}
-                  transition={{ delay: index * 0.15, duration: 0.8 }}
-                  whileHover={{ y: -5 }}
-                  className="group"
-                >
-                  <Card className="h-72 bg-white shadow-lg hover:shadow-xl transition-all duration-500 border border-slate-200 hover:border-blue-200">
-                    <CardContent className="p-8 h-full">
-                      <div className="flex items-start gap-6 h-full">
-                        {/* الأيقونة */}
-                        <div className="flex-shrink-0">
-                          <div className="w-20 h-20 bg-blue-50 rounded-2xl flex items-center justify-center group-hover:bg-blue-100 group-hover:scale-105 transition-all duration-300">
-                            <IconComponent className="h-10 w-10 text-blue-600" />
-                          </div>
-                        </div>
+        {/* الإحصائيات الرئيسية - تصميم جديد */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 mb-32 max-w-7xl mx-auto">
+          {academicStats.map((stat, index) => {
+            const IconComponent = stat.icon;
+            return (
+              <motion.div
+                key={index}
+                initial={{ opacity: 0, x: index % 2 === 0 ? -100 : 100, rotateY: -15 }}
+                animate={isInView ? { opacity: 1, x: 0, rotateY: 0 } : {}}
+                transition={{ delay: index * 0.2, duration: 0.8 }}
+                whileHover={{ scale: 1.03, y: -10 }}
+                className="group perspective-1000"
+              >
+                <Card className={`relative overflow-hidden border-0 shadow-2xl hover:shadow-3xl transition-all duration-500 rounded-3xl transform-gpu ${stat.bgPattern}`}>
+                  <CardContent className="p-0 h-80">
+                    {/* رأس الكارت مع تدرج متحرك */}
+                    <div className={`relative h-32 bg-gradient-to-r ${stat.color} overflow-hidden`}>
+                      <motion.div
+                        className="absolute inset-0 bg-white/10"
+                        animate={{
+                          background: [
+                            "linear-gradient(45deg, rgba(255,255,255,0.1), rgba(255,255,255,0.2))",
+                            "linear-gradient(90deg, rgba(255,255,255,0.2), rgba(255,255,255,0.1))",
+                            "linear-gradient(135deg, rgba(255,255,255,0.1), rgba(255,255,255,0.2))"
+                          ]
+                        }}
+                        transition={{ duration: 3, repeat: Infinity }}
+                      />
+                      
+                      <div className="absolute inset-0 flex items-center justify-between px-8">
+                        <motion.div
+                          className="w-20 h-20 bg-white/20 backdrop-blur-sm rounded-2xl flex items-center justify-center"
+                          variants={iconAnimation}
+                          initial="initial"
+                          whileHover="hover"
+                          whileTap="tap"
+                          animate={{
+                            y: [-10, 10, -10],
+                            rotate: [0, 5, -5, 0],
+                            scale: [1, 1.05, 1]
+                          }}
+                          transition={{
+                            duration: 4,
+                            repeat: Infinity,
+                            ease: "easeInOut"
+                          }}
+                        >
+                          <IconComponent className="h-10 w-10 text-white" />
+                        </motion.div>
                         
-                        {/* المحتوى */}
-                        <div className="flex-1 flex flex-col justify-between">
-                          <div>
-                            <Badge variant="secondary" className="text-xs mb-4 bg-slate-100 text-slate-600">
-                              {stat.category}
-                            </Badge>
-                            
-                            <div className="text-5xl font-bold text-slate-800 mb-4">
-                              <AnimatedCounter 
-                                end={stat.number} 
-                                duration={2.5} 
-                                delay={index * 0.3}
-                                suffix={stat.suffix}
-                              />
-                            </div>
-                            
-                            <h3 className="text-2xl font-bold text-slate-800 mb-2 leading-tight">
-                              {stat.title}
-                            </h3>
-                            
-                            <p className="text-lg text-slate-600 font-medium">
-                              {stat.subtitle}
-                            </p>
-                          </div>
-                        </div>
+                        <Badge variant="secondary" className="bg-white/20 text-white border-white/30 backdrop-blur-sm">
+                          {stat.category}
+                        </Badge>
                       </div>
-                    </CardContent>
-                  </Card>
-                </motion.div>
-              );
-            })}
-          </div>
+                    </div>
+                    
+                    {/* محتوى الكارت */}
+                    <div className="p-8 bg-white/90 backdrop-blur-sm h-48 flex flex-col justify-center">
+                      <motion.div 
+                        className="text-5xl font-extrabold mb-4 bg-gradient-to-r from-slate-800 to-slate-600 bg-clip-text text-transparent"
+                        initial={{ scale: 0 }}
+                        animate={isInView ? { scale: 1 } : {}}
+                        transition={{ delay: index * 0.3 + 0.5, duration: 0.6, type: "spring" }}
+                      >
+                        <AnimatedCounter 
+                          end={stat.number} 
+                          duration={3} 
+                          delay={index * 0.4}
+                          suffix={stat.suffix}
+                        />
+                      </motion.div>
+                      
+                      <h3 className="text-2xl font-bold text-slate-800 mb-2 leading-tight">
+                        {stat.title}
+                      </h3>
+                      
+                      <p className="text-lg text-slate-600 font-semibold">
+                        {stat.subtitle}
+                      </p>
+                    </div>
+
+                    {/* تأثير ضوئي متحرك */}
+                    <motion.div
+                      className="absolute bottom-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-white/60 to-transparent"
+                      animate={{
+                        x: ["-100%", "100%"]
+                      }}
+                      transition={{
+                        duration: 2,
+                        repeat: Infinity,
+                        ease: "linear",
+                        delay: index * 0.5
+                      }}
+                    />
+                  </CardContent>
+                </Card>
+              </motion.div>
+            );
+          })}
         </div>
 
-        {/* مقاييس البحث العلمي */}
+        {/* مقاييس الخدمات - تصميم دائري */}
         <motion.div
-          className="mb-28"
-          initial={{ opacity: 0 }}
-          animate={isInView ? { opacity: 1 } : {}}
-          transition={{ delay: 0.8, duration: 0.8 }}
+          className="mb-32"
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={isInView ? { opacity: 1, scale: 1 } : {}}
+          transition={{ delay: 1, duration: 0.8 }}
         >
           <div className="text-center mb-20">
-            <Badge variant="outline" className="text-sm font-semibold px-4 py-2 bg-slate-50 text-slate-700 border-slate-300 mb-6">
-              إنجازاتنا في الخدمات
-            </Badge>
-            <h3 className="text-4xl lg:text-5xl font-bold text-slate-800 mb-6">
-              تميزنا في تقديم الخدمات
+            <motion.div
+              animate={{ rotate: [0, 360] }}
+              transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
+              className="inline-block mb-6"
+            >
+              <Zap className="h-12 w-12 text-yellow-500" />
+            </motion.div>
+            <h3 className="text-5xl lg:text-6xl font-bold bg-gradient-to-r from-slate-800 to-blue-600 bg-clip-text text-transparent mb-6">
+              خدماتنا المتميزة
             </h3>
-            <p className="text-xl text-slate-600 max-w-3xl mx-auto">
-              أرقام حقيقية تُظهر حجم وجودة الخدمات التي نقدمها للطلاب والباحثين
+            <p className="text-2xl text-slate-600 max-w-3xl mx-auto">
+              مؤشرات توضح جودة وتنوع الخدمات التي نقدمها
             </p>
           </div>
 
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6">
-            {researchMetrics.map((metric, index) => {
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-8">
+            {serviceMetrics.map((metric, index) => {
               const IconComponent = metric.icon;
               return (
                 <motion.div
                   key={index}
-                  initial={{ opacity: 0, scale: 0.9 }}
-                  animate={isInView ? { opacity: 1, scale: 1 } : {}}
-                  transition={{ delay: 1 + index * 0.1, duration: 0.6 }}
-                  whileHover={{ scale: 1.02, y: -3 }}
+                  initial={{ opacity: 0, scale: 0, rotate: -180 }}
+                  animate={isInView ? { opacity: 1, scale: 1, rotate: 0 } : {}}
+                  transition={{ delay: 1.2 + index * 0.1, duration: 0.8, type: "spring" }}
+                  whileHover={{ scale: 1.1, rotate: 5 }}
                   className="group"
                 >
-                  <Card className="bg-white shadow-md hover:shadow-lg transition-all duration-300 border border-slate-100 hover:border-slate-200">
-                    <CardContent className="p-6 text-center">
-                      <div className="w-16 h-16 mx-auto bg-slate-50 rounded-xl flex items-center justify-center mb-4 group-hover:bg-slate-100 transition-colors duration-300">
-                        <IconComponent className="h-8 w-8 text-slate-600 group-hover:text-slate-700" />
-                      </div>
-                      
-                      <div className="text-3xl font-bold text-slate-800 mb-2">
-                        <AnimatedCounter 
-                          end={metric.number} 
-                          duration={2} 
-                          delay={1.2 + index * 0.1}
-                          suffix={metric.suffix}
-                        />
-                      </div>
-                      
-                      <h4 className="text-sm font-semibold text-slate-800 mb-2 leading-tight">
-                        {metric.label}
-                      </h4>
-                      
-                      <Badge variant="secondary" className="text-xs bg-slate-100 text-slate-600">
-                        {metric.field}
-                      </Badge>
-                    </CardContent>
-                  </Card>
+                  <div className="relative">
+                    <Card className="bg-white/80 backdrop-blur-sm shadow-xl hover:shadow-2xl transition-all duration-500 border-0 rounded-3xl overflow-hidden">
+                      <CardContent className="p-8 text-center">
+                        <motion.div
+                          className="w-20 h-20 mx-auto bg-gradient-to-br from-slate-100 to-slate-200 rounded-3xl flex items-center justify-center mb-6 group-hover:from-blue-50 group-hover:to-indigo-50 transition-all duration-300"
+                          variants={iconAnimation}
+                          initial="initial"
+                          whileHover="hover"
+                          whileTap="tap"
+                        >
+                          <IconComponent className={`h-10 w-10 ${metric.color} group-hover:scale-125 transition-transform duration-300`} />
+                        </motion.div>
+                        
+                        <div className="text-4xl font-bold text-slate-800 mb-3">
+                          <AnimatedCounter 
+                            end={metric.number} 
+                            duration={2.5} 
+                            delay={1.4 + index * 0.1}
+                            suffix={metric.suffix}
+                          />
+                        </div>
+                        
+                        <p className="text-sm font-bold text-slate-800 mb-2">
+                          {metric.label}
+                        </p>
+                        
+                        <Badge variant="outline" className="text-xs bg-slate-50 border-slate-200">
+                          {metric.field}
+                        </Badge>
+                      </CardContent>
+                    </Card>
+
+                    {/* حلقة ضوئية */}
+                    <motion.div
+                      className="absolute -inset-2 rounded-full border-2 border-blue-200/0 group-hover:border-blue-200/50"
+                      animate={{
+                        rotate: 360,
+                        scale: [1, 1.05, 1]
+                      }}
+                      transition={{
+                        rotate: { duration: 10, repeat: Infinity, ease: "linear" },
+                        scale: { duration: 2, repeat: Infinity, delay: index * 0.2 }
+                      }}
+                    />
+                  </div>
                 </motion.div>
               );
             })}
           </div>
         </motion.div>
 
-        {/* البيانات المؤسسية */}
+        {/* الانتشار العالمي - تصميم هكساغون */}
         <motion.div
           className="mb-20"
-          initial={{ opacity: 0, y: 40 }}
+          initial={{ opacity: 0, y: 100 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ delay: 1.6, duration: 0.8 }}
+          transition={{ delay: 1.8, duration: 1 }}
         >
-          <Card className="bg-gradient-to-br from-blue-50 to-slate-50 border border-blue-100 shadow-xl">
-            <CardContent className="p-12 lg:p-16">
+          <Card className="bg-gradient-to-br from-white/90 to-blue-50/90 backdrop-blur-xl border-2 border-white/50 shadow-2xl rounded-3xl overflow-hidden">
+            <CardContent className="p-16">
               <div className="text-center mb-16">
-                <Badge variant="outline" className="text-sm font-semibold px-4 py-2 bg-blue-100 text-blue-700 border-blue-300 mb-6">
-                  نطاق خدماتنا العالمي
-                </Badge>
-                <h3 className="text-4xl lg:text-5xl font-bold text-slate-800 mb-6">
+                <motion.div
+                  animate={{ 
+                    scale: [1, 1.1, 1],
+                    rotate: [0, 180, 360] 
+                  }}
+                  transition={{ duration: 6, repeat: Infinity }}
+                  className="inline-block mb-6"
+                >
+                  <Globe className="h-16 w-16 text-blue-500" />
+                </motion.div>
+                <h3 className="text-5xl font-bold bg-gradient-to-r from-slate-800 to-blue-600 bg-clip-text text-transparent mb-6">
                   انتشارنا العالمي
                 </h3>
-                <p className="text-xl text-slate-600 max-w-3xl mx-auto">
-                  نفخر بثقه عملائنا وانتشار خدماتنا في جميع أنحاء العالم
+                <p className="text-2xl text-slate-600">
+                  نحن فخورون بوصول خدماتنا لجميع أنحاء العالم
                 </p>
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-                {institutionalData.map((data, index) => {
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10">
+                {globalReach.map((data, index) => {
                   const IconComponent = data.icon;
                   return (
                     <motion.div
                       key={index}
-                      className="text-center"
-                      initial={{ opacity: 0, y: 30 }}
+                      className="text-center group"
+                      initial={{ opacity: 0, y: 50 }}
                       animate={isInView ? { opacity: 1, y: 0 } : {}}
-                      transition={{ delay: 1.8 + index * 0.1, duration: 0.6 }}
-                      whileHover={{ scale: 1.02 }}
+                      transition={{ delay: 2 + index * 0.15, duration: 0.8 }}
+                      whileHover={{ scale: 1.05 }}
                     >
-                      <div className="w-24 h-24 mx-auto bg-white rounded-2xl flex items-center justify-center mb-6 shadow-md hover:shadow-lg transition-all duration-300">
-                        <IconComponent className="h-12 w-12 text-blue-600" />
-                      </div>
+                      <motion.div
+                        className={`w-28 h-28 mx-auto bg-gradient-to-br ${data.gradient} rounded-full flex items-center justify-center mb-6 shadow-xl group-hover:shadow-2xl transition-all duration-300`}
+                        whileHover={{ rotate: 360 }}
+                        transition={{ duration: 0.8 }}
+                      >
+                        <IconComponent className="h-14 w-14 text-white" />
+                      </motion.div>
                       
-                      <div className="text-4xl font-bold text-slate-800 mb-3">
+                      <div className="text-5xl font-bold text-slate-800 mb-3">
                         <AnimatedCounter 
                           end={data.number} 
-                          duration={2.5} 
-                          delay={2 + index * 0.1}
+                          duration={3} 
+                          delay={2.2 + index * 0.15}
                           suffix={data.suffix}
                         />
                       </div>
                       
-                      <h4 className="text-xl font-bold text-slate-800 mb-2">
+                      <h4 className="text-2xl font-bold text-slate-800 mb-2">
                         {data.title}
                       </h4>
                       
-                      <p className="text-slate-600 leading-relaxed">
+                      <p className="text-lg text-slate-600">
                         {data.description}
                       </p>
                     </motion.div>
@@ -344,37 +501,70 @@ const StatsSection = () => {
           </Card>
         </motion.div>
 
-        {/* شهادة الاعتماد الأكاديمي */}
+        {/* الشعار النهائي */}
         <motion.div
           className="text-center"
-          initial={{ opacity: 0, scale: 0.95 }}
+          initial={{ opacity: 0, scale: 0.8 }}
           animate={isInView ? { opacity: 1, scale: 1 } : {}}
-          transition={{ delay: 2.5, duration: 0.8 }}
+          transition={{ delay: 2.8, duration: 1 }}
         >
-          <Card className="inline-block bg-gradient-to-r from-blue-600 to-slate-700 text-white shadow-2xl border-0">
-            <CardContent className="px-12 py-8">
-              <div className="flex items-center gap-6">
-                <div className="flex gap-2">
-                  <Star className="h-8 w-8 text-yellow-300" />
-                  <Star className="h-8 w-8 text-yellow-300" />
-                  <Star className="h-8 w-8 text-yellow-300" />
-                </div>
-                <div className="text-center">
-                  <div className="text-2xl font-bold mb-1">
-                    وكالة الخدمات الأكاديمية الرائدة
+          <motion.div
+            className="inline-block relative"
+            whileHover={{ scale: 1.05 }}
+          >
+            <Card className="bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-600 text-white shadow-2xl border-0 rounded-full overflow-hidden">
+              <CardContent className="px-16 py-10">
+                <motion.div
+                  className="absolute inset-0 bg-gradient-to-r from-white/10 via-white/20 to-white/10"
+                  animate={{
+                    x: ["-100%", "100%"]
+                  }}
+                  transition={{
+                    duration: 3,
+                    repeat: Infinity,
+                    ease: "linear"
+                  }}
+                />
+                
+                <div className="flex items-center gap-8 relative z-10">
+                  <motion.div
+                    animate={{ rotate: [0, 360] }}
+                    transition={{ duration: 4, repeat: Infinity, ease: "linear" }}
+                  >
+                    <Star className="h-12 w-12 text-yellow-300" />
+                  </motion.div>
+                  
+                  <div className="text-center">
+                    <div className="text-3xl font-bold mb-2">
+                      وكالة الخدمات الأكاديمية الرائدة
+                    </div>
+                    <div className="text-xl opacity-90">
+                      نخدم الطلاب والباحثين في 92+ دولة حول العالم
+                    </div>
                   </div>
-                  <div className="text-lg opacity-90">
-                    نخدم الطلاب والباحثين في 92+ دولة حول العالم
-                  </div>
+                  
+                  <motion.div
+                    animate={{ rotate: [360, 0] }}
+                    transition={{ duration: 4, repeat: Infinity, ease: "linear" }}
+                  >
+                    <Star className="h-12 w-12 text-yellow-300" />
+                  </motion.div>
                 </div>
-                <div className="flex gap-2">
-                  <Star className="h-8 w-8 text-yellow-300" />
-                  <Star className="h-8 w-8 text-yellow-300" />
-                  <Star className="h-8 w-8 text-yellow-300" />
-                </div>
-              </div>
-            </CardContent>
-          </Card>
+              </CardContent>
+            </Card>
+
+            {/* دوائر متحركة حول الشعار */}
+            <motion.div
+              className="absolute -inset-4 border-4 border-white/20 rounded-full"
+              animate={{ rotate: 360 }}
+              transition={{ duration: 15, repeat: Infinity, ease: "linear" }}
+            />
+            <motion.div
+              className="absolute -inset-8 border-4 border-white/10 rounded-full"
+              animate={{ rotate: -360 }}
+              transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
+            />
+          </motion.div>
         </motion.div>
       </div>
     </section>
