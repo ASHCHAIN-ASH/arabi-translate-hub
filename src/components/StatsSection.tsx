@@ -265,7 +265,7 @@ const StatsSection = () => {
           <div className="bg-white/80 backdrop-blur-lg rounded-3xl p-8 lg:p-16 shadow-2xl border border-white/20">
             <div className="text-center mb-16">
               <h3 className="text-4xl lg:text-5xl font-bold bg-gradient-to-r from-slate-800 to-blue-800 bg-clip-text text-transparent mb-6">
-                ثقة لا محدودة
+                ثقة عملائنا
               </h3>
               <p className="text-xl text-slate-600">
                 نحن فخورون بثقة عملائنا وشركائنا حول العالم
