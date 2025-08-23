@@ -6,6 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import ClientInfoForm from "./ClientInfoForm";
 import { 
   Calculator, 
   Clock, 
@@ -61,6 +62,7 @@ const SmartPriceCalculator = ({
 }: SmartPriceCalculatorProps) => {
   const [isCalculating, setIsCalculating] = useState(false);
   const [activeTab, setActiveTab] = useState("summary");
+  const [currentStep, setCurrentStep] = useState<'pricing' | 'client-info' | 'success'>('pricing');
 
   // أسعار القاعدة حسب نوع الوثيقة
   const baseRates = {
@@ -190,6 +192,66 @@ const SmartPriceCalculator = ({
           </p>
         </CardContent>
       </Card>
+    );
+  }
+
+  const handleClientInfoSubmit = (clientInfo: any) => {
+    setCurrentStep('success');
+    // هنا يمكن إضافة منطق إرسال البيانات إلى الخادم
+    console.log('Client Info:', clientInfo);
+    console.log('Pricing Details:', pricing);
+  };
+
+  const handleBackToPricing = () => {
+    setCurrentStep('pricing');
+  };
+
+  if (currentStep === 'client-info') {
+    return (
+      <ClientInfoForm
+        pricingDetails={pricing}
+        onSubmit={handleClientInfoSubmit}
+        onBack={handleBackToPricing}
+      />
+    );
+  }
+
+  if (currentStep === 'success') {
+    return (
+      <motion.div
+        initial={{ opacity: 0, scale: 0.9 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ duration: 0.5 }}
+        className="text-center py-12"
+      >
+        <Card className="bg-gradient-to-br from-green-50 to-emerald-50 border-green-200 shadow-soft">
+          <CardContent className="p-8">
+            <motion.div
+              initial={{ scale: 0 }}
+              animate={{ scale: 1 }}
+              transition={{ delay: 0.2, type: "spring", stiffness: 200 }}
+              className="bg-green-100 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4"
+            >
+              <CheckCircle className="h-8 w-8 text-green-600" />
+            </motion.div>
+            
+            <h2 className="text-2xl font-bold text-green-800 mb-2">
+              تم إرسال طلبك بنجاح!
+            </h2>
+            <p className="text-green-700 mb-6">
+              سنتواصل معك خلال 24 ساعة لتأكيد التفاصيل وبدء العمل
+            </p>
+            
+            <Button
+              onClick={() => setCurrentStep('pricing')}
+              variant="outline"
+              className="border-green-600 text-green-700 hover:bg-green-600 hover:text-white"
+            >
+              طلب جديد
+            </Button>
+          </CardContent>
+        </Card>
+      </motion.div>
     );
   }
 
@@ -418,6 +480,7 @@ const SmartPriceCalculator = ({
             <Button 
               className="flex-1 bg-gradient-primary text-primary-foreground shadow-primary"
               size="lg"
+              onClick={() => setCurrentStep('client-info')}
             >
               <CheckCircle className="h-5 w-5 ml-2" />
               طلب الترجمة الآن
@@ -426,6 +489,7 @@ const SmartPriceCalculator = ({
               variant="outline" 
               size="lg"
               className="border-primary text-primary hover:bg-primary hover:text-primary-foreground"
+              onClick={() => setCurrentStep('client-info')}
             >
               <FileText className="h-5 w-5 ml-2" />
               طلب عرض سعر مفصل
