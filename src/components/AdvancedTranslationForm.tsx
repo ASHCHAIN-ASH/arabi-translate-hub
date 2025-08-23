@@ -30,7 +30,14 @@ import {
   ArrowLeft,
   Download,
   Eye,
-  MessageSquare
+  MessageSquare,
+  MapPin,
+  Users,
+  Headphones,
+  Timer,
+  Building2,
+  Award,
+  Zap
 } from "lucide-react";
 
 interface TranslationFormData {
@@ -219,11 +226,22 @@ const AdvancedTranslationForm = ({
 
   const renderStep1 = () => (
     <motion.div {...stepAnimation} className="space-y-6">
-      <div className="text-center mb-8">
-        <User className="h-16 w-16 mx-auto mb-4 text-primary" />
-        <h3 className="text-2xl font-bold mb-2">معلومات العميل</h3>
-        <p className="text-muted-foreground">نحتاج معلوماتك للتواصل معك</p>
-      </div>
+      <motion.div 
+        initial={{ opacity: 0, scale: 0.8 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ delay: 0.2 }}
+        className="text-center mb-8"
+      >
+        <motion.div
+          animate={{ rotate: 360 }}
+          transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
+          className="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-br from-primary to-primary/60 rounded-full mb-4 shadow-lg"
+        >
+          <User className="h-10 w-10 text-white" />
+        </motion.div>
+        <h3 className="text-2xl font-bold mb-2 text-rtl">معلومات العميل</h3>
+        <p className="text-muted-foreground text-rtl">نحتاج معلوماتك للتواصل معك</p>
+      </motion.div>
 
       <div className="grid md:grid-cols-2 gap-6 rtl-grid">
         <div className="space-y-2">
@@ -278,11 +296,22 @@ const AdvancedTranslationForm = ({
 
   const renderStep2 = () => (
     <motion.div {...stepAnimation} className="space-y-6">
-      <div className="text-center mb-8">
-        <Globe className="h-16 w-16 mx-auto mb-4 text-primary" />
-        <h3 className="text-2xl font-bold mb-2">تفاصيل الترجمة</h3>
-        <p className="text-muted-foreground">حدد نوع الترجمة واللغات المطلوبة</p>
-      </div>
+      <motion.div 
+        initial={{ opacity: 0, scale: 0.8 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ delay: 0.2 }}
+        className="text-center mb-8"
+      >
+        <motion.div
+          animate={{ scale: [1, 1.1, 1] }}
+          transition={{ duration: 2, repeat: Infinity }}
+          className="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-full mb-4 shadow-lg"
+        >
+          <Globe className="h-10 w-10 text-white" />
+        </motion.div>
+        <h3 className="text-2xl font-bold mb-2 text-rtl">تفاصيل الترجمة</h3>
+        <p className="text-muted-foreground text-rtl">حدد نوع الترجمة واللغات المطلوبة</p>
+      </motion.div>
 
       <div className="space-y-6">
         <div className="space-y-2">
@@ -396,11 +425,22 @@ const AdvancedTranslationForm = ({
 
   const renderStep3 = () => (
     <motion.div {...stepAnimation} className="space-y-6">
-      <div className="text-center mb-8">
-        <FileText className="h-16 w-16 mx-auto mb-4 text-primary" />
-        <h3 className="text-2xl font-bold mb-2">رفع الملفات</h3>
-        <p className="text-muted-foreground">ارفع الملفات المراد ترجمتها</p>
-      </div>
+      <motion.div 
+        initial={{ opacity: 0, scale: 0.8 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ delay: 0.2 }}
+        className="text-center mb-8"
+      >
+        <motion.div
+          animate={{ y: [0, -10, 0] }}
+          transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+          className="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-br from-green-500 to-emerald-600 rounded-full mb-4 shadow-lg"
+        >
+          <FileText className="h-10 w-10 text-white" />
+        </motion.div>
+        <h3 className="text-2xl font-bold mb-2 text-rtl">رفع الملفات</h3>
+        <p className="text-muted-foreground text-rtl">ارفع الملفات المراد ترجمتها</p>
+      </motion.div>
 
       <FileUploader
         onFilesSelected={handleFilesSelected}
@@ -459,11 +499,22 @@ const AdvancedTranslationForm = ({
 
   const renderStep4 = () => (
     <motion.div {...stepAnimation} className="space-y-6">
-      <div className="text-center mb-8">
-        <Shield className="h-16 w-16 mx-auto mb-4 text-primary" />
-        <h3 className="text-2xl font-bold mb-2">خيارات إضافية والموافقات</h3>
-        <p className="text-muted-foreground">اختر الخدمات الإضافية وراجع الشروط</p>
-      </div>
+      <motion.div 
+        initial={{ opacity: 0, scale: 0.8 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ delay: 0.2 }}
+        className="text-center mb-8"
+      >
+        <motion.div
+          animate={{ rotate: [0, 10, -10, 0] }}
+          transition={{ duration: 3, repeat: Infinity }}
+          className="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-br from-purple-500 to-violet-600 rounded-full mb-4 shadow-lg"
+        >
+          <Shield className="h-10 w-10 text-white" />
+        </motion.div>
+        <h3 className="text-2xl font-bold mb-2 text-rtl">خيارات إضافية والموافقات</h3>
+        <p className="text-muted-foreground text-rtl">اختر الخدمات الإضافية وراجع الشروط</p>
+      </motion.div>
 
       <div className="space-y-6">
         <Card>
@@ -592,27 +643,101 @@ const AdvancedTranslationForm = ({
   return (
     <div className="w-full max-w-4xl mx-auto">
       <Card className="overflow-hidden border-0 shadow-2xl">
-        <div className={`bg-gradient-to-r from-${gradientFrom} to-${gradientTo} text-white p-8`}>
-          <div className="text-center mb-6">
-            <h2 className="text-3xl md:text-4xl font-bold mb-2">{title}</h2>
-            <p className="text-xl opacity-90">{description}</p>
+        {/* Header Section with Company Info */}
+        <div className={`bg-gradient-to-l from-${gradientFrom} to-${gradientTo} text-white overflow-hidden relative`}>
+          {/* Animated Background Pattern */}
+          <div className="absolute inset-0 opacity-10">
+            <div className="absolute top-0 left-0 w-20 h-20 bg-white rounded-full animate-float"></div>
+            <div className="absolute top-10 right-10 w-16 h-16 bg-white rounded-full animate-float" style={{animationDelay: '0.5s'}}></div>
+            <div className="absolute bottom-5 left-5 w-12 h-12 bg-white rounded-full animate-float" style={{animationDelay: '1s'}}></div>
           </div>
           
-          {currentStep < 5 && (
-            <div className="space-y-4">
-              <div className="flex justify-between text-sm opacity-90">
-                <span>الخطوة {currentStep} من 4</span>
-                <span>{Math.round(progressPercentage)}% مكتمل</span>
-              </div>
-              <Progress 
-                value={progressPercentage} 
-                className="h-2 bg-white/20"
-              />
+          <div className="relative z-10 p-8">
+            <motion.div 
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6 }}
+              className="text-center mb-8"
+            >
+              <motion.div
+                initial={{ scale: 0 }}
+                animate={{ scale: 1 }}
+                transition={{ delay: 0.2, type: "spring", stiffness: 200 }}
+                className="inline-flex items-center justify-center w-20 h-20 bg-white/20 rounded-full mb-4"
+              >
+                <Building2 className="h-10 w-10 text-white" />
+              </motion.div>
+              <h2 className="text-3xl md:text-4xl font-bold mb-2 text-rtl">{title}</h2>
+              <p className="text-xl opacity-90 text-rtl">{description}</p>
+            </motion.div>
+
+            {/* Company Information Cards */}
+            <div className="grid md:grid-cols-3 gap-4 mb-8">
+              <motion.div
+                initial={{ opacity: 0, x: -50 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: 0.3, duration: 0.5 }}
+                className="bg-white/10 backdrop-blur-sm rounded-lg p-4 text-center"
+              >
+                <MapPin className="h-8 w-8 mx-auto mb-2 text-white animate-pulse" />
+                <h4 className="font-semibold text-rtl">موقعنا</h4>
+                <p className="text-sm opacity-90 text-rtl">جدة، المملكة العربية السعودية</p>
+              </motion.div>
+
+              <motion.div
+                initial={{ opacity: 0, y: -50 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.4, duration: 0.5 }}
+                className="bg-white/10 backdrop-blur-sm rounded-lg p-4 text-center"
+              >
+                <Clock className="h-8 w-8 mx-auto mb-2 text-white animate-pulse" />
+                <h4 className="font-semibold text-rtl">ساعات العمل</h4>
+                <p className="text-sm opacity-90 text-rtl">الأحد - الخميس</p>
+                <p className="text-xs opacity-80 text-rtl">10:00 ص - 7:00 م</p>
+              </motion.div>
+
+              <motion.div
+                initial={{ opacity: 0, x: 50 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: 0.5, duration: 0.5 }}
+                className="bg-white/10 backdrop-blur-sm rounded-lg p-4 text-center"
+              >
+                <Headphones className="h-8 w-8 mx-auto mb-2 text-white animate-pulse" />
+                <h4 className="font-semibold text-rtl">خدمة العملاء</h4>
+                <p className="text-sm opacity-90 text-rtl">متاحة 24/7</p>
+                <p className="text-xs opacity-80 text-rtl">على مدار الساعة</p>
+              </motion.div>
             </div>
-          )}
+
+            {/* Progress Section */}
+            {currentStep < 5 && (
+              <motion.div 
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ delay: 0.6, duration: 0.5 }}
+                className="bg-white/10 backdrop-blur-sm rounded-lg p-6"
+              >
+                <div className="flex justify-between items-center mb-4 rtl-flex">
+                  <div className="text-rtl">
+                    <h4 className="text-lg font-semibold">الخطوة {currentStep} من 4</h4>
+                    <p className="text-sm opacity-90">{Math.round(progressPercentage)}% مكتمل</p>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Timer className="h-5 w-5 animate-spin" />
+                    <span className="text-sm">جاري المعالجة...</span>
+                  </div>
+                </div>
+                <Progress 
+                  value={progressPercentage} 
+                  className="h-3 bg-white/20"
+                />
+              </motion.div>
+            )}
+          </div>
         </div>
 
-        <CardContent className="p-8">
+        {/* Main Content */}
+        <CardContent className="p-8 rtl-container">
           <AnimatePresence mode="wait">
             {currentStep === 1 && renderStep1()}
             {currentStep === 2 && renderStep2()}
@@ -621,15 +746,21 @@ const AdvancedTranslationForm = ({
             {currentStep === 5 && renderStep5()}
           </AnimatePresence>
 
+          {/* Action Buttons */}
           {currentStep < 5 && (
-            <div className="flex justify-between mt-8 pt-6 border-t">
+            <motion.div 
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.3 }}
+              className="flex justify-between mt-8 pt-6 border-t rtl-flex"
+            >
               <Button 
                 variant="outline" 
                 onClick={prevStep}
                 disabled={currentStep === 1}
-                className="flex items-center gap-2"
+                className="flex items-center gap-2 hover-scale"
               >
-                <ArrowLeft className="h-4 w-4" />
+                <ArrowRight className="h-4 w-4" />
                 السابق
               </Button>
 
@@ -637,16 +768,16 @@ const AdvancedTranslationForm = ({
                 <Button 
                   onClick={nextStep}
                   disabled={!validateStep(currentStep)}
-                  className="flex items-center gap-2"
+                  className="flex items-center gap-2 hover-scale bg-gradient-to-l from-primary to-primary/80"
                 >
                   التالي
-                  <ArrowRight className="h-4 w-4" />
+                  <ArrowLeft className="h-4 w-4" />
                 </Button>
               ) : (
                 <Button 
                   onClick={handleSubmit}
                   disabled={isSubmitting || !validateStep(currentStep)}
-                  className="flex items-center gap-2"
+                  className="flex items-center gap-2 hover-scale bg-gradient-to-l from-green-600 to-green-500"
                 >
                   {isSubmitting ? (
                     <>
@@ -655,24 +786,64 @@ const AdvancedTranslationForm = ({
                     </>
                   ) : (
                     <>
-                      <Send className="h-4 w-4" />
                       إرسال الطلب
+                      <Send className="h-4 w-4" />
                     </>
                   )}
                 </Button>
               )}
-            </div>
+            </motion.div>
           )}
 
+          {/* Submission Progress */}
           {isSubmitting && (
-            <div className="mt-6">
-              <div className="flex justify-between text-sm mb-2">
-                <span>جاري رفع الملفات ومعالجة الطلب...</span>
-                <span>{submitProgress}%</span>
+            <motion.div 
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              className="mt-6 p-4 bg-muted/50 rounded-lg"
+            >
+              <div className="flex justify-between items-center text-sm mb-2 rtl-flex">
+                <span className="flex items-center gap-2">
+                  <Zap className="h-4 w-4 animate-pulse text-primary" />
+                  جاري رفع الملفات ومعالجة الطلب...
+                </span>
+                <span className="font-semibold">{submitProgress}%</span>
               </div>
               <Progress value={submitProgress} className="h-2" />
-            </div>
+            </motion.div>
           )}
+
+          {/* Trust Indicators */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.8 }}
+            className="mt-8 grid md:grid-cols-3 gap-4"
+          >
+            <div className="flex items-center gap-3 p-3 bg-green-50 dark:bg-green-900/20 rounded-lg">
+              <Shield className="h-8 w-8 text-green-600 animate-pulse" />
+              <div className="text-rtl">
+                <h5 className="font-semibold text-green-800 dark:text-green-200">أمان تام</h5>
+                <p className="text-xs text-green-600">حماية كاملة للبيانات</p>
+              </div>
+            </div>
+
+            <div className="flex items-center gap-3 p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
+              <Award className="h-8 w-8 text-blue-600 animate-pulse" />
+              <div className="text-rtl">
+                <h5 className="font-semibold text-blue-800 dark:text-blue-200">جودة معتمدة</h5>
+                <p className="text-xs text-blue-600">ISO 9001 معتمد</p>
+              </div>
+            </div>
+
+            <div className="flex items-center gap-3 p-3 bg-purple-50 dark:bg-purple-900/20 rounded-lg">
+              <Users className="h-8 w-8 text-purple-600 animate-pulse" />
+              <div className="text-rtl">
+                <h5 className="font-semibold text-purple-800 dark:text-purple-200">فريق خبراء</h5>
+                <p className="text-xs text-purple-600">+500 مترجم محترف</p>
+              </div>
+            </div>
+          </motion.div>
         </CardContent>
       </Card>
     </div>
