@@ -3,6 +3,7 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import PageThemeProvider from "./components/PageThemeProvider";
 import Index from "./pages/Index";
 import TranslationServices from "./pages/TranslationServices";
 import LegalTranslation from "./pages/LegalTranslation";
@@ -32,6 +33,7 @@ import AcademicConsultation from "./pages/research/AcademicConsultation";
 import TrainingCourses from "./pages/research/TrainingCourses";
 import TermsOfService from "./pages/TermsOfService";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
+import ColorShowcase from "./pages/ColorShowcase";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -42,6 +44,7 @@ const App = () => (
       <Toaster />
       <Sonner />
       <BrowserRouter>
+        <PageThemeProvider>
         <Routes>
           <Route path="/" element={<Index />} />
           <Route path="/translation-services" element={<TranslationServices />} />
@@ -72,9 +75,11 @@ const App = () => (
           <Route path="/research/training-courses" element={<TrainingCourses />} />
           <Route path="/terms-of-service" element={<TermsOfService />} />
           <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+          <Route path="/color-showcase" element={<ColorShowcase />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
+        </PageThemeProvider>
       </BrowserRouter>
     </TooltipProvider>
   </QueryClientProvider>
