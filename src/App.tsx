@@ -40,6 +40,7 @@ import TrainingCourses from "./pages/research/TrainingCourses";
 import TermsOfService from "./pages/TermsOfService";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
 import ColorShowcase from "./pages/ColorShowcase";
+import OrderTracking from "./pages/OrderTracking";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -89,6 +90,7 @@ const App = () => (
           <Route path="/research/training-courses" element={<TrainingCourses />} />
           <Route path="/terms-of-service" element={<TermsOfService />} />
           <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+          <Route path="/order-tracking" element={<OrderTracking />} />
           <Route path="/color-showcase" element={<ColorShowcase />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />

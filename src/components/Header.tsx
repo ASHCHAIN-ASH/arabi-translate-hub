@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { Menu, User, Globe, Phone, GraduationCap, BookOpen, ChevronDown } from "lucide-react";
+import { Menu, User, Globe, Phone, GraduationCap, BookOpen, ChevronDown, Search } from "lucide-react";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
@@ -17,6 +17,7 @@ const Header = () => {
     { name: 'الرئيسية', href: '/' },
     { name: 'خدمات الترجمة', href: '/translation-services' },
     { name: 'خدمات الأبحاث والكتابة', href: '/research-services' },
+    { name: 'تتبع الطلب', href: '/order-tracking' },
     { name: 'من نحن', href: '/about-us' },
     { name: 'تواصل معنا', href: '/contact' },
   ];
@@ -64,6 +65,12 @@ const Header = () => {
 
           {/* أزرار الإجراءات */}
           <div className="hidden lg:flex items-center space-x-reverse space-x-4">
+            <Button variant="outline" size="sm" asChild>
+              <Link to="/order-tracking">
+                <Search className="h-4 w-4 ml-2" />
+                تتبع الطلب
+              </Link>
+            </Button>
             <Button variant="ghost" size="sm">
               <User className="h-4 w-4 ml-2" />
               تسجيل الدخول
@@ -115,6 +122,12 @@ const Header = () => {
                 ))}
                 
                 <div className="flex flex-col space-y-2 mt-6">
+                  <Button variant="outline" size="sm" asChild>
+                    <Link to="/order-tracking" onClick={() => setIsOpen(false)}>
+                      <Search className="h-4 w-4 ml-2" />
+                      تتبع الطلب
+                    </Link>
+                  </Button>
                   <Button variant="ghost" size="sm">
                     <User className="h-4 w-4 ml-2" />
                     تسجيل الدخول
