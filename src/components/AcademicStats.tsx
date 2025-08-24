@@ -1,0 +1,202 @@
+import React from 'react';
+import { motion } from 'framer-motion';
+import { Card, CardContent } from '@/components/ui/card';
+import { 
+  Users, 
+  Globe, 
+  Award, 
+  BookOpen,
+  GraduationCap,
+  TrendingUp,
+  Building2,
+  CheckCircle
+} from 'lucide-react';
+
+const AcademicStats = () => {
+  const stats = [
+    {
+      icon: Users,
+      value: "+10,000",
+      label: "طالب وباحث",
+      sublabel: "Students & Researchers",
+      description: "من جميع أنحاء العالم يثقون في خدماتنا",
+      color: "from-blue-600 to-indigo-600"
+    },
+    {
+      icon: Globe,
+      value: "+50",
+      label: "دولة",
+      sublabel: "Countries",
+      description: "نقدم خدماتنا في أكثر من 50 دولة حول العالم",
+      color: "from-emerald-600 to-teal-600"
+    },
+    {
+      icon: Award,
+      value: "99.8%",
+      label: "نسبة النجاح",
+      sublabel: "Success Rate",
+      description: "معدل رضا استثنائي مع ضمان الجودة",
+      color: "from-amber-600 to-orange-600"
+    },
+    {
+      icon: BookOpen,
+      value: "+5,000",
+      label: "مشروع مكتمل",
+      sublabel: "Completed Projects",
+      description: "من الأبحاث والرسائل والترجمات المتخصصة",
+      color: "from-purple-600 to-pink-600"
+    }
+  ];
+
+  const achievements = [
+    {
+      icon: GraduationCap,
+      title: "شراكات أكاديمية",
+      description: "شريك معتمد لأكثر من 200 جامعة ومؤسسة تعليمية عالمية"
+    },
+    {
+      icon: TrendingUp,
+      title: "نمو مستمر",
+      description: "نسبة نمو سنوية 150% في عدد المشاريع المكتملة بنجاح"
+    },
+    {
+      icon: Building2,
+      title: "اعتماد دولي",
+      description: "معتمدون من المنظمات الدولية للتعليم والبحث العلمي"
+    }
+  ];
+
+  return (
+    <section className="py-16 lg:py-20 bg-gradient-to-br from-slate-50 via-blue-50/30 to-indigo-50/20 dark:from-slate-900 dark:via-blue-950/30 dark:to-indigo-950/20">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+        
+        {/* العنوان */}
+        <motion.div 
+          className="text-center mb-16"
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+          viewport={{ once: true }}
+        >
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-arabic-formal font-bold mb-6 text-slate-800 dark:text-white">
+            أرقام تتحدث عن <span className="bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">التميز</span>
+          </h2>
+          <p className="text-lg text-slate-600 dark:text-slate-300 max-w-2xl mx-auto">
+            إنجازاتنا وأرقامنا تعكس الثقة التي يوليها لنا شركاؤنا الأكاديميون حول العالم
+          </p>
+        </motion.div>
+
+        {/* الإحصائيات الرئيسية */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-16">
+          {stats.map((stat, index) => {
+            const IconComponent = stat.icon;
+            return (
+              <motion.div
+                key={index}
+                initial={{ opacity: 0, y: 30, scale: 0.9 }}
+                whileInView={{ opacity: 1, y: 0, scale: 1 }}
+                transition={{ delay: index * 0.1, duration: 0.6 }}
+                viewport={{ once: true }}
+                whileHover={{ y: -8, scale: 1.02 }}
+              >
+                <Card className="relative overflow-hidden bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:shadow-xl transition-all duration-500 h-full text-center group">
+                  
+                  {/* خط علوي */}
+                  <div className={`absolute top-0 left-0 right-0 h-1 bg-gradient-to-r ${stat.color}`} />
+                  
+                  <CardContent className="p-8">
+                    {/* الأيقونة */}
+                    <motion.div 
+                      className={`w-16 h-16 mx-auto mb-6 rounded-full bg-gradient-to-br ${stat.color} flex items-center justify-center shadow-lg`}
+                      whileHover={{ 
+                        rotate: 360,
+                        scale: 1.1
+                      }}
+                      transition={{ duration: 0.6 }}
+                    >
+                      <IconComponent className="h-8 w-8 text-white" />
+                    </motion.div>
+                    
+                    {/* الرقم */}
+                    <motion.div 
+                      className="text-4xl font-bold mb-2 text-slate-800 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors duration-300"
+                      initial={{ scale: 0.5, opacity: 0 }}
+                      whileInView={{ scale: 1, opacity: 1 }}
+                      transition={{ duration: 0.5, delay: index * 0.1 + 0.2 }}
+                      viewport={{ once: true }}
+                    >
+                      {stat.value}
+                    </motion.div>
+                    
+                    {/* التسمية العربية */}
+                    <h3 className="text-lg font-arabic-formal font-bold text-slate-700 dark:text-slate-200 mb-1">
+                      {stat.label}
+                    </h3>
+                    
+                    {/* التسمية الإنجليزية */}
+                    <p className="text-sm text-slate-500 dark:text-slate-400 mb-4 font-medium">
+                      {stat.sublabel}
+                    </p>
+                    
+                    {/* الوصف */}
+                    <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
+                      {stat.description}
+                    </p>
+                  </CardContent>
+                </Card>
+              </motion.div>
+            );
+          })}
+        </div>
+
+        {/* الإنجازات الإضافية */}
+        <motion.div
+          className="grid grid-cols-1 md:grid-cols-3 gap-8"
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.4 }}
+          viewport={{ once: true }}
+        >
+          {achievements.map((achievement, index) => {
+            const IconComponent = achievement.icon;
+            return (
+              <motion.div
+                key={index}
+                initial={{ opacity: 0, x: -20 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                transition={{ delay: index * 0.1, duration: 0.5 }}
+                viewport={{ once: true }}
+                whileHover={{ scale: 1.02 }}
+                className="bg-white dark:bg-slate-800 rounded-xl p-6 shadow-lg border border-slate-200 dark:border-slate-700 hover:shadow-xl transition-all duration-300"
+              >
+                <div className="flex items-start gap-4">
+                  <div className="w-12 h-12 bg-gradient-to-br from-slate-600 to-slate-700 rounded-lg flex items-center justify-center flex-shrink-0">
+                    <IconComponent className="h-6 w-6 text-white" />
+                  </div>
+                  <div className="flex-1">
+                    <h4 className="text-lg font-arabic-formal font-bold text-slate-800 dark:text-white mb-2">
+                      {achievement.title}
+                    </h4>
+                    <p className="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
+                      {achievement.description}
+                    </p>
+                  </div>
+                </div>
+                
+                {/* مؤشر الصحة */}
+                <div className="flex items-center justify-end mt-4">
+                  <div className="flex items-center gap-2 text-emerald-600 dark:text-emerald-400">
+                    <CheckCircle className="h-4 w-4" />
+                    <span className="text-xs font-medium">مؤكد</span>
+                  </div>
+                </div>
+              </motion.div>
+            );
+          })}
+        </motion.div>
+      </div>
+    </section>
+  );
+};
+
+export default AcademicStats;
