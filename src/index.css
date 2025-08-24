@@ -70,71 +70,71 @@
     --shadow-strong: 0 20px 60px -15px hsl(217 15% 20% / 0.15);
 
     /* ألوان خاصة لكل صفحة */
-    /* الصفحة الرئيسية - أزرق */
+    /* الصفحة الرئيسية - أزرق فاتح */
     --page-home-primary: 217 91% 60%;
     --page-home-secondary: 220 85% 70%;
     --page-home-accent: 25 95% 53%;
-    --page-home-bg: 217 50% 97%;
+    --page-home-bg: 217 30% 96%;
 
-    /* خدمات الترجمة القانونية - أرجواني */
+    /* خدمات الترجمة القانونية - أرجواني فاتح */
     --page-legal-primary: 270 85% 60%;
     --page-legal-secondary: 280 75% 65%;
     --page-legal-accent: 260 80% 55%;
-    --page-legal-bg: 270 40% 97%;
+    --page-legal-bg: 270 30% 96%;
 
-    /* خدمات الترجمة التجارية - أخضر */
+    /* خدمات الترجمة التجارية - أخضر فاتح */
     --page-business-primary: 142 69% 58%;
     --page-business-secondary: 150 65% 60%;
     --page-business-accent: 135 70% 55%;
-    --page-business-bg: 142 35% 97%;
+    --page-business-bg: 142 25% 96%;
 
-    /* خدمات الترجمة التقنية - برتقالي */
+    /* خدمات الترجمة التقنية - برتقالي فاتح */
     --page-technical-primary: 25 95% 53%;
     --page-technical-secondary: 35 90% 60%;
     --page-technical-accent: 15 85% 50%;
-    --page-technical-bg: 25 45% 97%;
+    --page-technical-bg: 25 35% 96%;
 
-    /* خدمات الترجمة الطبية - أحمر */
+    /* خدمات الترجمة الطبية - أحمر فاتح */
     --page-medical-primary: 0 84% 60%;
     --page-medical-secondary: 10 80% 65%;
     --page-medical-accent: 350 75% 55%;
-    --page-medical-bg: 0 40% 97%;
+    --page-medical-bg: 0 30% 96%;
 
-    /* خدمات الترجمة الأكاديمية - زمردي */
+    /* خدمات الترجمة الأكاديمية - زمردي فاتح */
     --page-academic-primary: 185 84% 52%;
     --page-academic-secondary: 190 80% 60%;
     --page-academic-accent: 175 75% 45%;
-    --page-academic-bg: 185 40% 97%;
+    --page-academic-bg: 185 30% 96%;
 
-    /* خدمات الترجمة الفورية - وردي */
+    /* خدمات الترجمة الفورية - وردي فاتح */
     --page-instant-primary: 340 82% 65%;
     --page-instant-secondary: 350 75% 70%;
     --page-instant-accent: 330 80% 60%;
-    --page-instant-bg: 340 35% 97%;
+    --page-instant-bg: 340 25% 96%;
 
-    /* خدمات الترجمة الإعلامية - بنفسجي */
+    /* خدمات الترجمة الإعلامية - بنفسجي فاتح */
     --page-media-primary: 260 85% 65%;
     --page-media-secondary: 270 80% 70%;
     --page-media-accent: 250 75% 60%;
-    --page-media-bg: 260 40% 97%;
+    --page-media-bg: 260 30% 96%;
 
-    /* خدمات الترجمة الأدبية - ذهبي */
+    /* خدمات الترجمة الأدبية - ذهبي فاتح */
     --page-literary-primary: 45 95% 58%;
     --page-literary-secondary: 50 90% 65%;
     --page-literary-accent: 40 85% 50%;
-    --page-literary-bg: 45 45% 97%;
+    --page-literary-bg: 45 35% 96%;
 
-    /* خدمات البحث العلمي - أزرق داكن */
+    /* خدمات البحث العلمي - أزرق داكن فاتح */
     --page-research-primary: 210 90% 55%;
     --page-research-secondary: 220 85% 60%;
     --page-research-accent: 200 80% 50%;
-    --page-research-bg: 210 40% 97%;
+    --page-research-bg: 210 30% 96%;
 
-    /* صفحة من نحن - رمادي أنيق */
+    /* صفحة من نحن - رمادي أنيق فاتح */
     --page-about-primary: 220 15% 40%;
     --page-about-secondary: 215 20% 45%;
     --page-about-accent: 225 10% 35%;
-    --page-about-bg: 220 10% 97%;
+    --page-about-bg: 220 8% 96%;
 
     --radius: 1rem;
   }
