@@ -19,10 +19,10 @@ export default {
 		},
 		extend: {
 			fontFamily: {
-				'tajawal': ['Tajawal', 'sans-serif'],
-				'amiri': ['Amiri', 'serif'],
-				'arabic-title': ['Amiri', 'serif'],
-				'arabic-body': ['Tajawal', 'sans-serif'],
+				'ibm-plex': ['IBM Plex Sans Arabic', 'sans-serif'],
+				'cairo': ['Cairo', 'sans-serif'],
+				'arabic-title': ['Cairo', 'sans-serif'],
+				'arabic-body': ['IBM Plex Sans Arabic', 'sans-serif'],
 			},
 			colors: {
 				border: 'hsl(var(--border))',
