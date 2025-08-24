@@ -318,15 +318,26 @@ export const getAllEsignDocuments = async (): Promise<EsignDocument[]> => {
         `)
         .order('created_at', { ascending: false });
 
-      if (error) throw error;
+      if (error) {
+        console.error('Supabase error:', error);
+        return [];
+      }
+
+      // إذا لم توجد بيانات، ارجع مصفوفة فارغة
+      if (!data || data.length === 0) {
+        console.log('No e-signature documents found in database');
+        return [];
+      }
 
       return data.map(transformEsignDocument);
     } catch (error) {
       console.error('Error fetching esign documents:', error);
       return [];
     }
+  } else {
+    console.warn('Supabase not configured for e-signature service');
+    return [];
   }
-  return [];
 };
 
 // الحصول على مستند توقيع بالمعرف

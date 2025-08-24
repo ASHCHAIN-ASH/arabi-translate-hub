@@ -39,7 +39,8 @@ import {
   XCircle,
   Users,
   Mail,
-  Phone
+  Phone,
+  TestTube
 } from 'lucide-react';
 import { 
   getAllEsignDocuments,
@@ -251,6 +252,29 @@ const EsignManagement: React.FC = () => {
             <RefreshCw className={`ml-2 h-4 w-4 ${loading ? 'animate-spin' : ''}`} />
             تحديث
           </Button>
+
+          <Button 
+            onClick={async () => {
+              // إنشاء بيانات تجريبية للاختبار
+              try {
+                const { seedEsignData } = await import('@/utils/seedEsignData');
+                const result = await seedEsignData();
+                if (result.success) {
+                  toast.success(result.message);
+                  loadDocuments();
+                } else {
+                  toast.error(result.message);
+                }
+              } catch (error) {
+                toast.error('فشل في إنشاء البيانات التجريبية');
+              }
+            }}
+            variant="outline"
+            className="gap-2"
+          >
+            <TestTube className="h-4 w-4" />
+            إنشاء بيانات تجريبية
+          </Button>
         </div>
       </div>
 
@@ -347,8 +371,31 @@ const EsignManagement: React.FC = () => {
           <CardDescription>إدارة ومتابعة مستندات التوقيع الإلكتروني</CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="space-y-4">
-            {filteredDocuments.map((document) => (
+          {loading ? (
+            <div className="flex items-center justify-center py-12">
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+              <span className="mr-3">جاري تحميل البيانات...</span>
+            </div>
+          ) : filteredDocuments.length === 0 ? (
+            <div className="text-center py-12">
+              <FileText className="mx-auto h-16 w-16 mb-4 text-muted-foreground/50" />
+              <h3 className="text-lg font-semibold mb-2">لا توجد مستندات توقيع إلكتروني</h3>
+              <p className="text-muted-foreground mb-6 max-w-md mx-auto">
+                {searchTerm || statusFilter !== 'all' 
+                  ? 'لم يتم العثور على مستندات تطابق الفلاتر المحددة. جرب تغيير مصطلح البحث أو الفلاتر.'
+                  : 'لم يتم إنشاء أي مستندات توقيع إلكتروني بعد. ابدأ بإنشاء مستند جديد من العقود الموجودة.'
+                }
+              </p>
+              {!searchTerm && statusFilter === 'all' && (
+                <Button onClick={() => setNewDocumentDialog(true)} className="gap-2">
+                  <FileText className="h-4 w-4" />
+                  إنشاء مستند جديد
+                </Button>
+              )}
+            </div>
+          ) : (
+            <div className="space-y-4">
+              {filteredDocuments.map((document) => (
               <Card key={document.id} className="border border-border">
                 <CardContent className="p-4">
                   <div className="flex justify-between items-start">
@@ -454,17 +501,17 @@ const EsignManagement: React.FC = () => {
                 </CardContent>
               </Card>
             ))}
+            </div>
+          )}
 
-            {filteredDocuments.length === 0 && (
+            {/* رسالة عدم وجود نتائج للبحث */}
+            {!loading && filteredDocuments.length === 0 && (searchTerm || statusFilter !== 'all') && (
               <div className="text-center py-8 text-muted-foreground">
                 <FileText className="mx-auto h-12 w-12 mb-4" />
-                <p>لا توجد مستندات توقيع إلكتروني</p>
-                {searchTerm && (
-                  <p className="text-sm">جرب تغيير مصطلح البحث أو الفلاتر</p>
-                )}
+                <p>لا توجد مستندات تطابق البحث المحدد</p>
+                <p className="text-sm">جرب تغيير مصطلح البحث أو الفلاتر</p>
               </div>
             )}
-          </div>
         </CardContent>
       </Card>
       </div>
