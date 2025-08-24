@@ -2,8 +2,6 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import ServicesSection from "@/components/ServicesSection";
 
-import StatsSection from "@/components/StatsSection";
-import StatsBackground from "@/components/StatsBackground";
 import AnimatedBackground from "@/components/AnimatedBackground";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -384,54 +382,6 @@ const Index = () => {
         </motion.div>
       </section>
 
-      {/* قسم الإحصائيات التفاعلي */}
-      <section className="py-12 sm:py-16 lg:py-20 relative overflow-hidden">
-        {/* الخلفية المتحركة للترجمة */}
-        <StatsBackground />
-        
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-          <motion.div
-            className="text-center mb-16"
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.8 }}
-          >
-            <motion.div
-              className="inline-flex items-center justify-center mb-6"
-              initial={{ scale: 0.8 }}
-              whileInView={{ scale: 1 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6, delay: 0.2 }}
-            >
-              <Badge className="bg-primary text-white border-0 px-8 py-3 text-lg font-bold shadow-primary rounded-full">
-                <Star className="h-5 w-5 ml-2 text-yellow-300" />
-                إحصائياتنا المذهلة
-                <Zap className="h-5 w-5 mr-2 text-yellow-300" />
-              </Badge>
-            </motion.div>
-            
-            <h2 className="text-4xl sm:text-5xl lg:text-6xl font-arabic-title font-bold mb-6 leading-tight">
-              أرقام تتحدث عن <span className="text-gradient bg-gradient-primary bg-clip-text text-transparent">تميزنا</span>
-            </h2>
-            
-            <p className="text-xl lg:text-2xl text-muted-foreground max-w-4xl mx-auto leading-relaxed">
-              إنجازات حقيقية ونتائج ملموسة حققناها مع عملائنا الكرام في جميع أنحاء العالم
-            </p>
-            
-            {/* خط زخرفي */}
-            <motion.div
-              className="w-32 h-1 bg-gradient-primary mx-auto mt-8 rounded-full"
-              initial={{ width: 0 }}
-              whileInView={{ width: 128 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.8, delay: 0.5 }}
-            />
-          </motion.div>
-
-          <StatsSection />
-        </div>
-      </section>
 
       {/* المزايا الرئيسية للشركات */}
       <section className="py-12 sm:py-16 lg:py-20 bg-gradient-to-br from-background via-muted/20 to-background relative overflow-hidden">
