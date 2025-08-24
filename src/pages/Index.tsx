@@ -62,8 +62,9 @@ const Index = () => {
               <Button 
                 size="lg" 
                 className="w-full sm:w-auto bg-white text-slate-800 hover:bg-gray-100 shadow-xl px-8 py-4 text-lg font-medium rounded-lg transition-all duration-300"
+                onClick={() => window.location.href = '/submit-order'}
               >
-                احصل على استشارة مجانية
+                اطلب خدمة الآن
               </Button>
               <Button 
                 variant="outline" 

@@ -10,6 +10,8 @@ export interface DatabaseOrder {
   phone_last_four: string;
   title: string;
   degree: string;
+  service_type: string;
+  description?: string;
   current_status: string;
   estimated_delivery: string;
   created_at: string;
@@ -27,6 +29,8 @@ const mockOrders: DatabaseOrder[] = [
     phone_last_four: '4567',
     title: 'تأثير التكنولوجيا على التعليم في المملكة العربية السعودية',
     degree: 'ماجستير إدارة الأعمال',
+    service_type: 'research-thesis',
+    description: 'دراسة تحليلية شاملة لتأثير التكنولوجيا على منظومة التعليم',
     current_status: 'data_collection',
     estimated_delivery: '2024-03-15',
     created_at: '2024-01-10T10:00:00Z',
@@ -41,6 +45,8 @@ const mockOrders: DatabaseOrder[] = [
     phone_last_four: '6543',
     title: 'الذكاء الاصطناعي في الرعاية الصحية',
     degree: 'دكتوراه علوم الحاسوب',
+    service_type: 'research-plan',
+    description: 'خطة بحثية مفصلة لدراسة تطبيقات الذكاء الاصطناعي في المجال الطبي',
     current_status: 'research_plan',
     estimated_delivery: '2024-04-20',
     created_at: '2024-01-15T14:30:00Z',
@@ -212,6 +218,8 @@ export const createOrder = async (orderData: {
   phoneLastFour: string;
   title: string;
   degree: string;
+  serviceType: string;
+  description?: string;
   clientName: string;
   clientPhone: string;
   clientEmail: string;
@@ -228,6 +236,8 @@ export const createOrder = async (orderData: {
         phone_last_four: orderData.phoneLastFour,
         title: orderData.title,
         degree: orderData.degree,
+        service_type: orderData.serviceType,
+        description: orderData.description,
         current_status: 'received',
         estimated_delivery: new Date(Date.now() + 60 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
         created_at: new Date().toISOString(),
@@ -251,6 +261,8 @@ export const createOrder = async (orderData: {
         phone_last_four: orderData.phoneLastFour,
         title: orderData.title,
         degree: orderData.degree,
+        service_type: orderData.serviceType,
+        description: orderData.description,
         current_status: 'received',
         estimated_delivery: estimatedDelivery,
         client_name: orderData.clientName,

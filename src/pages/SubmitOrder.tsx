@@ -30,21 +30,40 @@ const SubmitOrder = () => {
     clientName: '',
     clientPhone: '',
     clientEmail: '',
+    serviceType: '',
     title: '',
     degree: '',
     description: ''
   });
 
+  const serviceTypes = [
+    { value: 'translation-legal', label: 'ترجمة قانونية' },
+    { value: 'translation-medical', label: 'ترجمة طبية' },
+    { value: 'translation-technical', label: 'ترجمة تقنية' },
+    { value: 'translation-business', label: 'ترجمة تجارية' },
+    { value: 'translation-academic', label: 'ترجمة أكاديمية' },
+    { value: 'translation-literary', label: 'ترجمة أدبية' },
+    { value: 'translation-media', label: 'ترجمة إعلامية' },
+    { value: 'research-thesis', label: 'كتابة رسائل علمية' },
+    { value: 'research-plan', label: 'إعداد خطة البحث' },
+    { value: 'research-analysis', label: 'التحليل الإحصائي' },
+    { value: 'research-formatting', label: 'تنسيق الأبحاث' },
+    { value: 'research-publication', label: 'النشر العلمي' },
+    { value: 'research-consultation', label: 'استشارات أكاديمية' },
+    { value: 'custom-service', label: 'خدمة مخصصة' }
+  ];
+
   const degrees = [
     'بكالوريوس',
-    'ماجستير',
+    'ماجستير', 
     'دكتوراه',
     'دبلوم عالي',
     'ماجستير إدارة الأعمال',
     'دكتوراه علوم الحاسوب',
     'ماجستير الهندسة',
     'دكتوراه الطب',
-    'أخرى'
+    'أخرى',
+    'غير محدد'
   ];
 
   const generateTrackingId = () => {
@@ -64,7 +83,7 @@ const SubmitOrder = () => {
     e.preventDefault();
     
     // Validation
-    if (!formData.clientName || !formData.clientPhone || !formData.clientEmail || !formData.title || !formData.degree) {
+    if (!formData.clientName || !formData.clientPhone || !formData.clientEmail || !formData.serviceType || !formData.title) {
       toast({
         title: 'خطأ في البيانات',
         description: 'يرجى ملء جميع الحقول المطلوبة',
@@ -93,10 +112,12 @@ const SubmitOrder = () => {
         trackingId: newTrackingId,
         phoneLastFour,
         title: formData.title,
-        degree: formData.degree,
+        degree: formData.degree || 'غير محدد',
+        serviceType: formData.serviceType,
         clientName: formData.clientName,
         clientPhone: formData.clientPhone,
-        clientEmail: formData.clientEmail
+        clientEmail: formData.clientEmail,
+        description: formData.description
       });
 
       setTrackingId(newTrackingId);
@@ -199,11 +220,11 @@ const SubmitOrder = () => {
             </div>
             
             <h1 className="text-4xl lg:text-5xl font-arabic-title font-bold mb-4">
-              تقديم <span className="text-gradient bg-gradient-primary bg-clip-text text-transparent">طلب جديد</span>
+              طلب <span className="text-gradient bg-gradient-primary bg-clip-text text-transparent">خدمة جديدة</span>
             </h1>
             
             <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-              احصل على المساعدة الأكاديمية المتخصصة التي تحتاجها
+              احصل على الخدمة المتخصصة التي تحتاجها - ترجمة، بحوث أكاديمية، أو خدمات مخصصة
             </p>
           </motion.div>
 
@@ -255,6 +276,39 @@ const SubmitOrder = () => {
                     </div>
                   </div>
 
+                  {/* Service Type Selection */}
+                  <div className="md:col-span-2 space-y-2">
+                    <Label htmlFor="serviceType" className="flex items-center gap-2 font-bold">
+                      <FileText className="h-4 w-4" />
+                      نوع الخدمة المطلوبة *
+                    </Label>
+                    <Select onValueChange={(value) => handleInputChange('serviceType', value)} required>
+                      <SelectTrigger className="bg-muted/50">
+                        <SelectValue placeholder="اختر نوع الخدمة" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <div className="text-sm font-semibold text-muted-foreground px-2 py-1">خدمات الترجمة</div>
+                        {serviceTypes.filter(type => type.value.startsWith('translation')).map((type) => (
+                          <SelectItem key={type.value} value={type.value}>
+                            {type.label}
+                          </SelectItem>
+                        ))}
+                        <div className="text-sm font-semibold text-muted-foreground px-2 py-1 mt-2">خدمات البحوث الأكاديمية</div>
+                        {serviceTypes.filter(type => type.value.startsWith('research')).map((type) => (
+                          <SelectItem key={type.value} value={type.value}>
+                            {type.label}
+                          </SelectItem>
+                        ))}
+                        <div className="text-sm font-semibold text-muted-foreground px-2 py-1 mt-2">خدمات أخرى</div>
+                        {serviceTypes.filter(type => type.value === 'custom-service').map((type) => (
+                          <SelectItem key={type.value} value={type.value}>
+                            {type.label}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+
                   <div className="space-y-2">
                     <Label htmlFor="clientEmail" className="flex items-center gap-2 font-bold">
                       <Mail className="h-4 w-4" />
@@ -271,36 +325,44 @@ const SubmitOrder = () => {
                     />
                   </div>
 
-                  {/* Academic Information */}
-                  <div className="grid md:grid-cols-2 gap-6">
-                    <div className="space-y-2">
-                      <Label htmlFor="degree" className="flex items-center gap-2 font-bold">
-                        <GraduationCap className="h-4 w-4" />
-                        الدرجة العلمية *
-                      </Label>
-                      <Select onValueChange={(value) => handleInputChange('degree', value)} required>
-                        <SelectTrigger className="bg-muted/50">
-                          <SelectValue placeholder="اختر الدرجة العلمية" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {degrees.map((degree) => (
-                            <SelectItem key={degree} value={degree}>
-                              {degree}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
+                  {/* Academic Information - Only show for research services */}
+                  {formData.serviceType?.startsWith('research') && (
+                    <div className="grid md:grid-cols-2 gap-6">
+                      <div className="space-y-2">
+                        <Label htmlFor="degree" className="flex items-center gap-2 font-bold">
+                          <GraduationCap className="h-4 w-4" />
+                          الدرجة العلمية
+                        </Label>
+                        <Select onValueChange={(value) => handleInputChange('degree', value)}>
+                          <SelectTrigger className="bg-muted/50">
+                            <SelectValue placeholder="اختر الدرجة العلمية" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {degrees.map((degree) => (
+                              <SelectItem key={degree} value={degree}>
+                                {degree}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      </div>
                     </div>
-                  </div>
+                  )}
 
                   <div className="space-y-2">
                     <Label htmlFor="title" className="flex items-center gap-2 font-bold">
                       <FileText className="h-4 w-4" />
-                      عنوان البحث أو الموضوع *
+                      عنوان المشروع أو الموضوع المطلوب *
                     </Label>
                     <Input
                       id="title"
-                      placeholder="أدخل عنوان البحث أو الموضوع المطلوب"
+                      placeholder={
+                        formData.serviceType?.startsWith('translation') 
+                          ? "اذكر نوع المستند أو النص المطلوب ترجمته"
+                          : formData.serviceType?.startsWith('research')
+                          ? "أدخل عنوان البحث أو الموضوع المطلوب"
+                          : "أدخل وصف مختصر للخدمة المطلوبة"
+                      }
                       value={formData.title}
                       onChange={(e) => handleInputChange('title', e.target.value)}
                       className="bg-muted/50"
