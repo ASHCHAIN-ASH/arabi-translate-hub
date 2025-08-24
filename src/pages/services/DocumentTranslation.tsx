@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
+import AdvancedTranslationForm from "@/components/AdvancedTranslationForm";
 import { 
   FileText, 
   Upload, 
@@ -337,6 +338,19 @@ const DocumentTranslation = () => {
               <Upload className="h-5 w-5 mr-2" />
             </Button>
           </motion.div>
+        </div>
+      </section>
+
+      {/* فورم طلب الخدمة */}
+      <section className="py-16">
+        <div className="container mx-auto px-4">
+          <AdvancedTranslationForm 
+            translationType="document"
+            title="احصل على ترجمة مستندات احترافية"
+            description="ترجمة دقيقة ومعتمدة لجميع أنواع المستندات والوثائق"
+            gradientFrom="green-600"
+            gradientTo="blue-600"
+          />
         </div>
       </section>
 

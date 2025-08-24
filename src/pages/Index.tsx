@@ -5,6 +5,7 @@ import AcademicHeroSection from "@/components/AcademicHeroSection";
 import AcademicFeatures from "@/components/AcademicFeatures";
 import AcademicStats from "@/components/AcademicStats";
 import ServiceSteps from "@/components/ServiceSteps";
+import AdvancedTranslationForm from "@/components/AdvancedTranslationForm";
 
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
@@ -29,6 +30,19 @@ const Index = () => {
 
       {/* قسم الخدمات */}
       <ServicesSection />
+
+      {/* فورم طلب الخدمة */}
+      <section className="py-16">
+        <div className="container mx-auto px-4">
+          <AdvancedTranslationForm 
+            translationType="general"
+            title="احصل على خدمة تعليمية متميزة"
+            description="نقدم خدمات تعليمية وبحثية شاملة تلبي جميع احتياجاتك الأكاديمية"
+            gradientFrom="blue-600"
+            gradientTo="purple-600"
+          />
+        </div>
+      </section>
 
       {/* دعوة للعمل النهائية */}
       <section className="py-16 lg:py-20 bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 text-white">

@@ -3,6 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Video, Film, Tv, Radio, Headphones, Camera, Edit, Play, Pause, Volume2, Subtitles, Mic } from "lucide-react";
+import AdvancedTranslationForm from "@/components/AdvancedTranslationForm";
 
 const MediaTranslation = () => {
   const mediaServices = [
@@ -424,6 +425,19 @@ const MediaTranslation = () => {
             </motion.div>
           </motion.div>
 
+        </div>
+      </section>
+
+      {/* فورم طلب الخدمة */}
+      <section className="py-16">
+        <div className="container mx-auto px-4">
+          <AdvancedTranslationForm 
+            translationType="media"
+            title="طلب ترجمة الوسائط المتخصصة"
+            description="ترجمة احترافية للمحتوى الصوتي والمرئي"
+            gradientFrom="purple-600"
+            gradientTo="pink-600"
+          />
         </div>
       </section>
     </div>
