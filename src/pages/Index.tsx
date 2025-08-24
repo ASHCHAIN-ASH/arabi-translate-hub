@@ -2,6 +2,7 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import ServicesSection from "@/components/ServicesSection";
 import ProfessionalHeroSection from "@/components/ProfessionalCarousel";
+import ServiceSteps from "@/components/ServiceSteps";
 
 import AnimatedBackground from "@/components/AnimatedBackground";
 import { Button } from "@/components/ui/button";
@@ -363,6 +364,9 @@ const Index = () => {
           </div>
         </div>
       </section>
+
+      {/* قسم مراحل تنفيذ الخدمة */}
+      <ServiceSteps />
 
       {/* قسم الخدمات */}
       <ServicesSection />
