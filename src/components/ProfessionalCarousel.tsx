@@ -37,21 +37,21 @@ interface SlideData {
 const slidesData: SlideData[] = [
   {
     id: 1,
-    title: "حلول الترجمة الأكاديمية المتقدمة",
-    subtitle: "Advanced Academic Translation Solutions",
-    description: "نقدم خدمات ترجمة أكاديمية متخصصة للجامعات والمؤسسات البحثية العالمية مع ضمان الدقة والجودة العلمية",
+    title: "الحلول الأكاديمية المتقدمة",
+    subtitle: "Advanced Academic Solutions",
+    description: "نقدم حلول تعليمية شاملة للطلاب والباحثين والمؤسسات الأكاديمية، من كتابة الأبحاث إلى التحليل الإحصائي والاستشارات التعليمية",
     features: [
-      "ترجمة البحوث العلمية والرسائل الجامعية",
-      "مراجعة لغوية من خبراء متخصصين",
-      "التزام بالمعايير الأكاديمية الدولية",
-      "دعم أكثر من 180 لغة عالمية"
+      "كتابة وتطوير الأبحاث العلمية والرسائل الجامعية",
+      "التحليل الإحصائي والمراجعة الأكاديمية",
+      "الاستشارات التعليمية المتخصصة",
+      "برامج التدريب والتطوير الأكاديمي"
     ],
     stats: [
-      { value: "99.8%", label: "معدل الرضا" },
-      { value: "180+", label: "لغة" },
+      { value: "99.5%", label: "معدل النجاح" },
+      { value: "5000+", label: "طالب مساعد" },
       { value: "24/7", label: "دعم مستمر" }
     ],
-    ctaText: "احصل على عرض سعر مجاني",
+    ctaText: "ابدأ مشروعك الأكاديمي",
     ctaSecondary: "استشارة مجانية",
     backgroundGradient: "from-blue-600 via-blue-700 to-indigo-800",
     icon: GraduationCap,
@@ -59,66 +59,66 @@ const slidesData: SlideData[] = [
   },
   {
     id: 2,
-    title: "خدمات الترجمة القانونية المعتمدة",
-    subtitle: "Certified Legal Translation Services",
-    description: "ترجمة قانونية معتمدة للوثائق الرسمية والعقود التجارية مع ضمان الامتثال للقوانين المحلية والدولية",
+    title: "خدمات البحث العلمي والتطوير",
+    subtitle: "Research & Development Services",
+    description: "فريق من الخبراء والباحثين المتخصصين لمساعدتك في إنجاز بحثك العلمي بأعلى معايير الجودة الأكاديمية والمنهجية العلمية",
     features: [
-      "ترجمة معتمدة للوثائق الرسمية",
-      "خبراء قانونيون متخصصون",
-      "سرية تامة وأمان متقدم",
-      "اعتماد من الجهات الرسمية"
+      "تطوير خطط البحث والإطار النظري",
+      "جمع وتحليل البيانات الأكاديمية",
+      "المراجعة العلمية وفحص الانتحال",
+      "النشر في المجلات العلمية المحكمة"
     ],
     stats: [
-      { value: "100%", label: "دقة قانونية" },
-      { value: "50+", label: "نظام قانوني" },
+      { value: "500+", label: "بحث منجز" },
+      { value: "50+", label: "تخصص علمي" },
       { value: "15", label: "سنة خبرة" }
     ],
-    ctaText: "طلب ترجمة معتمدة",
+    ctaText: "طلب خدمة البحث",
     ctaSecondary: "تواصل مع الخبراء",
     backgroundGradient: "from-emerald-600 via-emerald-700 to-teal-800",
-    icon: Shield,
-    imagePattern: "legal"
+    icon: BookOpen,
+    imagePattern: "research"
   },
   {
     id: 3,
-    title: "حلول الترجمة التجارية والشركات",
-    subtitle: "Corporate Business Translation Solutions",
-    description: "خدمات ترجمة متكاملة للشركات العالمية تشمل التقارير المالية والعقود التجارية والمحتوى التسويقي",
+    title: "الاستشارات التعليمية والمهنية",
+    subtitle: "Educational & Professional Consulting",
+    description: "استشارات شاملة للطلاب والمهنيين في التخطيط الأكاديمي والمهني، بناء السيرة الذاتية، والتحضير للقبول الجامعي والمنح الدراسية",
     features: [
-      "ترجمة التقارير المالية والتجارية",
-      "المحتوى التسويقي متعدد اللغات",
-      "إدارة مشاريع الترجمة الكبيرة",
-      "حلول تقنية متقدمة للشركات"
+      "التخطيط الأكاديمي والمهني المتقدم",
+      "إعداد طلبات القبول والمنح الدراسية",
+      "تطوير المهارات الأكاديمية والبحثية",
+      "التوجيه المهني وبناء الشبكات العلمية"
     ],
     stats: [
-      { value: "500+", label: "شركة عالمية" },
-      { value: "95%", label: "توفير في التكلفة" },
-      { value: "48h", label: "تسليم سريع" }
+      { value: "85%", label: "معدل القبول" },
+      { value: "300+", label: "منحة دراسية" },
+      { value: "20", label: "جامعة عالمية" }
     ],
-    ctaText: "حلول الشركات",
-    ctaSecondary: "عرض توضيحي",
+    ctaText: "احجز استشارتك",
+    ctaSecondary: "خطة مجانية",
     backgroundGradient: "from-purple-600 via-purple-700 to-violet-800",
-    icon: Building2,
-    imagePattern: "business"
+    icon: Users,
+    imagePattern: "consulting"
   },
   {
     id: 4,
-    title: "تكنولوجيا الترجمة الذكية",
-    subtitle: "Smart Translation Technology Platform",
-    description: "منصة ذكية متطورة تجمع بين الذكاء الاصطناعي والخبرة البشرية لتقديم ترجمات عالية الجودة بكفاءة استثنائية",
+    title: "منصة التعلم الذكية والتدريب",
+    subtitle: "Smart Learning & Training Platform",
+    description: "منصة تعليمية متطورة تجمع بين التكنولوجيا الحديثة والخبرة الأكاديمية لتقديم برامج تدريبية وتعليمية مخصصة للطلاب والباحثين",
     features: [
-      "ذكاء اصطناعي متقدم للترجمة",
-      "مراجعة بشرية من خبراء متخصصين",
-      "منصة إدارة مشاريع متكاملة",
-      "تقارير تحليلية شاملة"
+      "دورات تدريبية متخصصة في البحث العلمي",
+      "ورش عمل في المهارات الأكاديمية",
+      "برامج التطوير المهني المستمر",
+      "شهادات معتمدة من جهات تعليمية عالمية"
     ],
     stats: [
-      { value: "AI+", label: "تقنية ذكية" },
-      { value: "90%", label: "توفير في الوقت" },
-      { value: "24/7", label: "متاح دائماً" }
+      { value: "50+", label: "برنامج تدريبي" },
+      { value: "2000+", label: "متدرب" },
+      { value: "95%", label: "رضا المتدربين" }
     ],
-    ctaText: "جرب المنصة",
-    ctaSecondary: "عرض تقني",
+    ctaText: "تصفح البرامج",
+    ctaSecondary: "جرب مجاناً",
     backgroundGradient: "from-orange-600 via-red-600 to-pink-700",
     icon: Target,
     imagePattern: "technology"
@@ -169,14 +169,14 @@ const ProfessionalCarousel: React.FC = () => {
                                radial-gradient(circle at 80% 70%, rgba(255,255,255,0.1) 0%, transparent 50%)`
             }} />
           )}
-          {currentSlideData.imagePattern === 'legal' && (
+          {currentSlideData.imagePattern === 'research' && (
             <div className="w-full h-full" style={{
               backgroundImage: `linear-gradient(45deg, rgba(255,255,255,0.1) 25%, transparent 25%), 
                                linear-gradient(-45deg, rgba(255,255,255,0.1) 25%, transparent 25%)`,
               backgroundSize: '60px 60px'
             }} />
           )}
-          {currentSlideData.imagePattern === 'business' && (
+          {currentSlideData.imagePattern === 'consulting' && (
             <div className="w-full h-full" style={{
               backgroundImage: `repeating-linear-gradient(45deg, rgba(255,255,255,0.05) 0px, 
                                rgba(255,255,255,0.05) 2px, transparent 2px, transparent 40px)`
