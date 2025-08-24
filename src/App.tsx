@@ -45,6 +45,10 @@ import SubmitOrder from "./pages/SubmitOrder";
 import AdminOrders from "./pages/AdminOrders";
 import ContractManagement from "./pages/ContractManagement";
 import ClientContractApproval from "./pages/ClientContractApproval";
+import AccountingDashboard from "./pages/admin/AccountingDashboard";
+import EsignManagement from "./pages/admin/EsignManagement";
+import WhatsappManagement from "./pages/admin/WhatsappManagement";
+import EsignPortal from "./pages/EsignPortal";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -98,7 +102,11 @@ const App = () => (
           <Route path="/submit-order" element={<SubmitOrder />} />
           <Route path="/admin/orders" element={<AdminOrders />} />
           <Route path="/admin/contracts" element={<ContractManagement />} />
+          <Route path="/admin/accounting" element={<AccountingDashboard />} />
+          <Route path="/admin/esign" element={<EsignManagement />} />
+          <Route path="/admin/whatsapp" element={<WhatsappManagement />} />
           <Route path="/contract-approval" element={<ClientContractApproval />} />
+          <Route path="/esign/:token" element={<EsignPortal />} />
           <Route path="/color-showcase" element={<ColorShowcase />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import NavigationSidebar from '@/components/admin/NavigationSidebar';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
@@ -159,7 +160,9 @@ const WhatsappManagement: React.FC = () => {
   const activeProvider = providers.find(p => p.isEnabled);
 
   return (
-    <div className="container mx-auto p-6 space-y-6" dir="rtl">
+    <div className="flex min-h-screen" dir="rtl">
+      <NavigationSidebar />
+      <div className="flex-1 p-6 space-y-6">
       <div className="flex justify-between items-center">
         <div>
           <h1 className="text-3xl font-bold text-foreground">إدارة واتساب</h1>
@@ -517,6 +520,7 @@ const WhatsappManagement: React.FC = () => {
           </DialogFooter>
         </DialogContent>
       </Dialog>
+      </div>
     </div>
   );
 };
