@@ -60,7 +60,16 @@ const AcademicFeatures = () => {
   ];
 
   return (
-    <section className="py-12 sm:py-16 lg:py-20 bg-gradient-to-br from-background to-slate-50/50 dark:to-slate-900/50">
+    <section className="py-12 sm:py-16 lg:py-20 bg-gradient-to-r from-emerald-50 via-teal-50 to-cyan-50 dark:from-emerald-950 dark:via-teal-950 dark:to-cyan-950 relative overflow-hidden">
+      
+      {/* خلفية ديناميكية للمميزات */}
+      <div className="absolute inset-0">
+        <div className="absolute top-0 left-0 w-full h-full opacity-40">
+          <div className="absolute top-20 left-20 w-64 h-64 bg-gradient-to-br from-emerald-300/30 to-teal-300/30 rounded-full blur-3xl animate-float"></div>
+          <div className="absolute bottom-20 right-20 w-80 h-80 bg-gradient-to-tl from-cyan-300/30 to-blue-300/30 rounded-full blur-3xl animate-float" style={{ animationDelay: '3s' }}></div>
+          <div className="absolute top-1/3 right-1/4 w-48 h-48 bg-gradient-to-r from-teal-300/20 to-emerald-300/20 rounded-full blur-2xl animate-float" style={{ animationDelay: '1.5s' }}></div>
+        </div>
+      </div>
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* العنوان المحدث */}

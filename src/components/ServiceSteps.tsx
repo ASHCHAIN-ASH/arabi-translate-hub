@@ -57,16 +57,15 @@ const ServiceSteps = () => {
   ];
 
   return (
-    <section className="py-12 sm:py-16 lg:py-20 bg-gradient-to-br from-background to-muted/5 relative overflow-hidden">
-      {/* خلفية بسيطة */}
-      <div className="absolute inset-0 opacity-3">
-        <div className="absolute inset-0" style={{
-          backgroundImage: `
-            linear-gradient(90deg, transparent 49%, hsl(var(--muted)) 49%, hsl(var(--muted)) 51%, transparent 51%),
-            linear-gradient(transparent 49%, hsl(var(--muted)) 49%, hsl(var(--muted)) 51%, transparent 51%)
-          `,
-          backgroundSize: '60px 60px'
-        }} />
+    <section className="py-12 sm:py-16 lg:py-20 bg-gradient-to-br from-slate-50 via-gray-50 to-zinc-50 dark:from-slate-950 dark:via-gray-950 dark:to-zinc-950 relative overflow-hidden">
+      
+      {/* خلفية للمراحل */}
+      <div className="absolute inset-0">
+        <div className="absolute inset-0 opacity-30">
+          <div className="absolute top-24 right-24 w-72 h-72 bg-gradient-to-br from-slate-400/20 to-gray-400/20 rounded-full blur-3xl animate-float"></div>
+          <div className="absolute bottom-24 left-24 w-80 h-80 bg-gradient-to-tl from-zinc-400/20 to-slate-400/20 rounded-full blur-3xl animate-float" style={{ animationDelay: '3s' }}></div>
+          <div className="absolute top-1/2 right-1/2 w-56 h-56 bg-gradient-to-r from-gray-400/15 to-zinc-400/15 rounded-full blur-2xl animate-float" style={{ animationDelay: '1.5s' }}></div>
+        </div>
       </div>
 
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">

@@ -55,7 +55,16 @@ const ServicesSection = () => {
   ];
 
   return (
-    <section className="py-16 bg-gradient-to-b from-background to-muted/30">
+    <section className="py-16 bg-gradient-to-br from-purple-50 via-pink-50 to-rose-50 dark:from-purple-950 dark:via-pink-950 dark:to-rose-950 relative overflow-hidden">
+      
+      {/* خلفية ديناميكية لقسم الخدمات */}
+      <div className="absolute inset-0">
+        <div className="absolute inset-0 opacity-40">
+          <div className="absolute top-32 left-32 w-80 h-80 bg-gradient-to-br from-purple-400/30 to-pink-400/30 rounded-full blur-3xl animate-pulse"></div>
+          <div className="absolute bottom-32 right-32 w-96 h-96 bg-gradient-to-tl from-rose-400/30 to-purple-400/30 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '2s' }}></div>
+          <div className="absolute top-2/3 left-1/3 w-64 h-64 bg-gradient-to-r from-pink-400/20 to-rose-400/20 rounded-full blur-2xl animate-pulse" style={{ animationDelay: '4s' }}></div>
+        </div>
+      </div>
       <div className="container mx-auto px-4">
         <div className="text-center mb-12 animate-fade-in-up">
           <h2 className="text-3xl lg:text-4xl font-arabic-title font-bold text-foreground mb-4">

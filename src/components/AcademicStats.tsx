@@ -67,7 +67,16 @@ const AcademicStats = () => {
   ];
 
   return (
-    <section className="py-12 sm:py-16 lg:py-20 bg-gradient-to-br from-slate-50 via-blue-50/30 to-indigo-50/20 dark:from-slate-900 dark:via-blue-950/30 dark:to-indigo-950/20">
+    <section className="py-12 sm:py-16 lg:py-20 bg-gradient-to-br from-amber-50 via-orange-50 to-red-50 dark:from-amber-950 dark:via-orange-950 dark:to-red-950 relative overflow-hidden">
+      
+      {/* خلفية إحصائيات متحركة */}
+      <div className="absolute inset-0">
+        <div className="absolute inset-0 opacity-30">
+          <div className="absolute top-16 right-16 w-72 h-72 bg-gradient-to-br from-amber-400/40 to-orange-400/40 rounded-full blur-3xl animate-pulse"></div>
+          <div className="absolute bottom-16 left-16 w-96 h-96 bg-gradient-to-tl from-red-400/30 to-pink-400/30 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '2s' }}></div>
+          <div className="absolute top-2/3 right-1/3 w-60 h-60 bg-gradient-to-r from-orange-400/25 to-amber-400/25 rounded-full blur-2xl animate-pulse" style={{ animationDelay: '4s' }}></div>
+        </div>
+      </div>
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* العنوان */}
