@@ -70,8 +70,49 @@ export const createEsignDocument = async (
       console.error('Error creating esign document:', error);
       throw error;
     }
+  } else {
+    // وضع التجريب - إنشاء مستند وهمي
+    console.log('Creating demo document (Supabase not connected)');
+    const demoId = 'demo-' + Date.now();
+    
+    // محاكاة تأخير الشبكة
+    await new Promise(resolve => setTimeout(resolve, 500));
+    
+    // إضافة المستند للبيانات الوهمية المحلية
+    const demoDocument: EsignDocument = {
+      id: demoId,
+      contractId,
+      docTitle,
+      status: 'draft',
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+      signers: signers.map((signer, index) => ({
+        id: `signer-${index}-${Date.now()}`,
+        esignDocumentId: demoId,
+        role: signer.role,
+        signerName: signer.name,
+        signerEmail: signer.email,
+        signerPhone: signer.phone,
+        signingOrder: signer.order,
+        signatureAuditJson: {}
+      })),
+      events: [{
+        id: `event-${Date.now()}`,
+        esignDocumentId: demoId,
+        eventType: 'sent',
+        actor: 'system',
+        metaJson: { createdAt: new Date().toISOString() },
+        createdAt: new Date().toISOString()
+      }]
+    };
+    
+    // حفظ البيانات الوهمية في localStorage
+    const existingDocs = JSON.parse(localStorage.getItem('demo-esign-docs') || '[]');
+    existingDocs.push(demoDocument);
+    localStorage.setItem('demo-esign-docs', JSON.stringify(existingDocs));
+    
+    return demoId;
   }
-  throw new Error('Supabase not configured');
 };
 
 // إرسال مستند للتوقيع
@@ -335,8 +376,10 @@ export const getAllEsignDocuments = async (): Promise<EsignDocument[]> => {
       return [];
     }
   } else {
-    console.warn('Supabase not configured for e-signature service');
-    return [];
+    // وضع التجريب - استرجاع البيانات الوهمية من localStorage
+    console.log('Loading demo documents (Supabase not connected)');
+    const demoDocs = JSON.parse(localStorage.getItem('demo-esign-docs') || '[]');
+    return demoDocs as EsignDocument[];
   }
 };
 
