@@ -182,11 +182,11 @@ const Header = () => {
                     onClick={() => setIsServicesOpen(!isServicesOpen)}
                     className="flex items-center justify-between w-full gap-2 py-2 px-1 text-right hover:text-primary transition-colors duration-200"
                   >
-                    <ChevronDown className={`h-4 w-4 text-primary transition-transform duration-200 ${isServicesOpen ? 'rotate-180' : ''}`} />
                     <div className="flex items-center gap-2">
                       <span className="font-medium text-foreground">خدماتنا المتخصصة</span>
                       <Briefcase className="h-4 w-4 text-primary" />
                     </div>
+                    <ChevronDown className={`h-4 w-4 text-primary transition-transform duration-200 ${isServicesOpen ? 'rotate-180' : ''}`} />
                   </button>
                   {isServicesOpen && (
                     <div className="mt-2 space-y-1">
