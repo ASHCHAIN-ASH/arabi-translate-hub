@@ -31,6 +31,7 @@ import {
 
 const Header = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const [isServicesOpen, setIsServicesOpen] = useState(false);
 
   const navigation = [
     { name: 'الرئيسية', href: '/', icon: Home },
@@ -177,28 +178,41 @@ const Header = () => {
                 
                 {/* قائمة الخدمات للهواتف */}
                 <div className="py-2 border-b border-muted">
-                  <div className="flex items-center gap-2 py-2 px-1">
-                    <Briefcase className="h-4 w-4 text-primary" />
-                    <span className="font-medium text-foreground">خدماتنا المتخصصة</span>
-                  </div>
-                  {servicesDropdown.map((service) => (
-                    <Link
-                      key={service.name}
-                      to={service.href}
-                      className="text-muted-foreground hover:text-primary transition-colors duration-200 py-3 pr-4 block"
-                      onClick={() => setIsOpen(false)}
-                    >
-                      <div className="flex items-start gap-3">
-                        <div className="flex-shrink-0 w-8 h-8 bg-primary/10 rounded-lg flex items-center justify-center">
-                          <service.icon className="h-4 w-4 text-primary" />
-                        </div>
-                        <div className="flex-1 text-right">
-                          <div className="font-medium text-sm text-foreground">{service.name}</div>
-                          <div className="text-xs text-muted-foreground mt-1">{service.description}</div>
-                        </div>
-                      </div>
-                    </Link>
-                  ))}
+                  <button
+                    onClick={() => setIsServicesOpen(!isServicesOpen)}
+                    className="flex items-center justify-between w-full gap-2 py-2 px-1 text-right hover:text-primary transition-colors duration-200"
+                  >
+                    <ChevronDown className={`h-4 w-4 text-primary transition-transform duration-200 ${isServicesOpen ? 'rotate-180' : ''}`} />
+                    <div className="flex items-center gap-2">
+                      <span className="font-medium text-foreground">خدماتنا المتخصصة</span>
+                      <Briefcase className="h-4 w-4 text-primary" />
+                    </div>
+                  </button>
+                  {isServicesOpen && (
+                    <div className="mt-2 space-y-1">
+                      {servicesDropdown.map((service) => (
+                        <Link
+                          key={service.name}
+                          to={service.href}
+                          className="text-muted-foreground hover:text-primary transition-colors duration-200 py-3 pr-4 block"
+                          onClick={() => {
+                            setIsOpen(false);
+                            setIsServicesOpen(false);
+                          }}
+                        >
+                          <div className="flex items-start gap-3">
+                            <div className="flex-shrink-0 w-8 h-8 bg-primary/10 rounded-lg flex items-center justify-center">
+                              <service.icon className="h-4 w-4 text-primary" />
+                            </div>
+                            <div className="flex-1 text-right">
+                              <div className="font-medium text-sm text-foreground">{service.name}</div>
+                              <div className="text-xs text-muted-foreground mt-1">{service.description}</div>
+                            </div>
+                          </div>
+                        </Link>
+                      ))}
+                    </div>
+                  )}
                 </div>
                 
                 <div className="flex flex-col space-y-2 mt-6">
