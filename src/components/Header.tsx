@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { Menu, User, Globe, Phone, GraduationCap, BookOpen, ChevronDown, Search } from "lucide-react";
+import { Menu, User, Globe, Phone, GraduationCap, BookOpen, ChevronDown, Search, Languages, PenTool } from "lucide-react";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
@@ -21,8 +21,8 @@ const Header = () => {
   ];
 
   const servicesDropdown = [
-    { name: 'خدمات الترجمة', href: '/translation-services' },
-    { name: 'خدمات الأبحاث والكتابة', href: '/research-services' },
+    { name: 'خدمات الترجمة', href: '/translation-services', icon: Languages },
+    { name: 'خدمات الأبحاث والكتابة', href: '/research-services', icon: PenTool },
   ];
 
   return (
@@ -73,14 +73,15 @@ const Header = () => {
                   <ChevronDown className="h-4 w-4 mr-1" />
                 </Button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent className="w-56 bg-background border border-border shadow-lg z-50">
+              <DropdownMenuContent className="w-64 bg-background border border-border shadow-lg z-50" align="end">
                 {servicesDropdown.map((service) => (
                   <DropdownMenuItem key={service.name} asChild>
                     <Link
                       to={service.href}
-                      className="w-full cursor-pointer hover:bg-muted focus:bg-muted"
+                      className="w-full cursor-pointer hover:bg-muted focus:bg-muted flex items-center gap-3 p-3 text-right"
                     >
-                      {service.name}
+                      <service.icon className="h-5 w-5 text-primary" />
+                      <span className="font-medium">{service.name}</span>
                     </Link>
                   </DropdownMenuItem>
                 ))}
@@ -151,10 +152,11 @@ const Header = () => {
                     <Link
                       key={service.name}
                       to={service.href}
-                      className="text-muted-foreground hover:text-primary transition-colors duration-200 py-2 pr-4 block"
+                      className="text-muted-foreground hover:text-primary transition-colors duration-200 py-3 pr-4 block flex items-center gap-3"
                       onClick={() => setIsOpen(false)}
                     >
-                      {service.name}
+                      <service.icon className="h-5 w-5 text-primary" />
+                      <span>{service.name}</span>
                     </Link>
                   ))}
                 </div>
