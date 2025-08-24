@@ -79,11 +79,17 @@ const TranslationPricingForm = () => {
 
   const extractTextFromPDF = async (file: File): Promise<string> => {
     return new Promise((resolve, reject) => {
+      // Check if PDF.js is loaded
+      if (typeof window !== 'undefined' && !(window as any).pdfjsLib) {
+        reject(new Error('مكتبة PDF.js غير محملة. يرجى المحاولة مرة أخرى.'));
+        return;
+      }
+
       const fileReader = new FileReader();
       fileReader.onload = async function() {
         try {
           const typedarray = new Uint8Array(this.result as ArrayBuffer);
-          // @ts-ignore - pdf.js global
+          const pdfjsLib = (window as any).pdfjsLib;
           const pdf = await pdfjsLib.getDocument(typedarray).promise;
           let fullText = '';
           
@@ -96,7 +102,7 @@ const TranslationPricingForm = () => {
           
           resolve(fullText);
         } catch (error) {
-          reject(error);
+          reject(new Error('فشل في قراءة ملف PDF. تأكد من أن الملف سليم.'));
         }
       };
       fileReader.onerror = () => reject(new Error('فشل في قراءة الملف'));
@@ -106,7 +112,13 @@ const TranslationPricingForm = () => {
 
   const extractTextFromImage = async (file: File): Promise<string> => {
     return new Promise((resolve, reject) => {
-      // @ts-ignore - Tesseract global
+      // Check if Tesseract is loaded
+      if (typeof window !== 'undefined' && !(window as any).Tesseract) {
+        reject(new Error('مكتبة Tesseract غير محملة. يرجى المحاولة مرة أخرى.'));
+        return;
+      }
+
+      const Tesseract = (window as any).Tesseract;
       Tesseract.recognize(file, 'ara+eng', {
         logger: (m: any) => {
           if (m.status === 'recognizing text') {
@@ -115,19 +127,27 @@ const TranslationPricingForm = () => {
         }
       }).then(({ data: { text } }: any) => {
         resolve(text);
-      }).catch(reject);
+      }).catch(() => {
+        reject(new Error('فشل في قراءة النص من الصورة. تأكد من وضوح النص في الصورة.'));
+      });
     });
   };
 
   const extractTextFromDOCX = async (file: File): Promise<string> => {
     return new Promise((resolve, reject) => {
+      // Check if Mammoth is loaded
+      if (typeof window !== 'undefined' && !(window as any).mammoth) {
+        reject(new Error('مكتبة Mammoth غير محملة. يرجى المحاولة مرة أخرى.'));
+        return;
+      }
+
       const reader = new FileReader();
       reader.onload = function(e) {
         const arrayBuffer = e.target?.result as ArrayBuffer;
-        // @ts-ignore - mammoth global
+        const mammoth = (window as any).mammoth;
         mammoth.extractRawText({ arrayBuffer })
           .then((result: any) => resolve(result.value))
-          .catch(reject);
+          .catch(() => reject(new Error('فشل في قراءة ملف Word. تأكد من أن الملف سليم.')));
       };
       reader.onerror = () => reject(new Error('فشل في قراءة الملف'));
       reader.readAsArrayBuffer(file);
@@ -137,14 +157,28 @@ const TranslationPricingForm = () => {
   const analyzeFile = async (file: File): Promise<FileAnalysis> => {
     let extractedText = '';
     
-    if (file.type === 'application/pdf') {
-      extractedText = await extractTextFromPDF(file);
-    } else if (file.type.startsWith('image/')) {
-      extractedText = await extractTextFromImage(file);
-    } else if (file.type === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document') {
-      extractedText = await extractTextFromDOCX(file);
-    } else if (file.type === 'text/plain') {
-      extractedText = await file.text();
+    try {
+      if (file.type === 'application/pdf') {
+        extractedText = await extractTextFromPDF(file);
+      } else if (file.type.startsWith('image/')) {
+        extractedText = await extractTextFromImage(file);
+      } else if (file.type === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document') {
+        extractedText = await extractTextFromDOCX(file);
+      } else if (file.type === 'text/plain') {
+        extractedText = await file.text();
+      } else {
+        // Fallback for unsupported file types
+        throw new Error(`نوع الملف غير مدعوم: ${file.type}. يرجى استخدام ملفات PDF أو DOCX أو TXT أو صور.`);
+      }
+    } catch (error) {
+      // If library extraction fails, provide a fallback message
+      console.error('File processing error:', error);
+      throw error;
+    }
+
+    // Ensure we have some text to work with
+    if (!extractedText || extractedText.trim().length === 0) {
+      throw new Error('لم يتم العثور على نص في الملف. تأكد من أن الملف يحتوي على نص قابل للقراءة.');
     }
 
     const wordCount = extractedText.trim().split(/\s+/).filter(word => word.length > 0).length;
