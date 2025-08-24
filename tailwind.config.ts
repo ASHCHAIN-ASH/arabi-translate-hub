@@ -21,8 +21,11 @@ export default {
 			fontFamily: {
 				'ibm-plex': ['IBM Plex Sans Arabic', 'sans-serif'],
 				'cairo': ['Cairo', 'sans-serif'],
-				'arabic-title': ['Cairo', 'sans-serif'],
+				'amiri': ['Amiri', 'serif'],
+				'tajawal': ['Tajawal', 'sans-serif'],
+				'arabic-title': ['Tajawal', 'Cairo', 'sans-serif'],
 				'arabic-body': ['IBM Plex Sans Arabic', 'sans-serif'],
+				'arabic-formal': ['Amiri', 'serif'],
 			},
 			colors: {
 				border: 'hsl(var(--border))',

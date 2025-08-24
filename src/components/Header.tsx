@@ -21,18 +21,23 @@ const Header = () => {
           {/* الشعار */}
           <div className="flex items-center space-x-reverse space-x-4">
             <div className="flex items-center">
-              <div className="relative w-12 h-12 ml-3">
-                <div className="absolute inset-0 bg-gradient-to-br from-blue-600 via-purple-600 to-indigo-600 rounded-xl shadow-lg flex items-center justify-center">
-                  <div className="flex items-center justify-center">
-                    <GraduationCap className="h-6 w-6 text-white" />
-                    <BookOpen className="h-4 w-4 text-white/80 -ml-1" />
+              <div className="relative w-14 h-14 ml-4">
+                <div className="absolute inset-0 bg-gradient-to-br from-blue-700 via-indigo-700 to-purple-700 rounded-2xl shadow-xl flex items-center justify-center border-2 border-white/20">
+                  <div className="flex flex-col items-center justify-center">
+                    <GraduationCap className="h-7 w-7 text-white mb-0.5" />
+                    <div className="flex items-center">
+                      <BookOpen className="h-3 w-3 text-white/90" />
+                      <Globe className="h-3 w-3 text-white/90 -ml-0.5" />
+                    </div>
                   </div>
                 </div>
-                <div className="absolute -top-1 -right-1 w-4 h-4 bg-gradient-to-br from-orange-400 to-red-500 rounded-full border-2 border-white shadow-sm"></div>
+                <div className="absolute -top-1 -right-1 w-5 h-5 bg-gradient-to-br from-amber-400 to-orange-500 rounded-full border-2 border-white shadow-lg flex items-center justify-center">
+                  <span className="text-white text-xs font-bold">M</span>
+                </div>
               </div>
               <div>
-                <h1 className="text-xl font-arabic-title font-bold text-primary leading-tight">وكالة ماستر إيدو باث</h1>
-                <p className="text-sm font-semibold text-blue-600 dark:text-blue-400">MasterEduPath Agency</p>
+                <h1 className="text-2xl font-arabic-formal font-bold text-slate-800 dark:text-white leading-tight tracking-wide">وكالة ماستر إيدو باث</h1>
+                <p className="text-base font-tajawal font-semibold text-blue-700 dark:text-blue-400 tracking-wider">MasterEduPath Agency</p>
               </div>
             </div>
           </div>
@@ -71,18 +76,23 @@ const Header = () => {
             <SheetContent side="right" className="w-80">
               <div className="flex flex-col space-y-4 mt-8">
                 <div className="flex items-center mb-6">
-                  <div className="relative w-10 h-10 ml-3">
-                    <div className="absolute inset-0 bg-gradient-to-br from-blue-600 via-purple-600 to-indigo-600 rounded-lg shadow-lg flex items-center justify-center">
-                      <div className="flex items-center justify-center">
-                        <GraduationCap className="h-5 w-5 text-white" />
-                        <BookOpen className="h-3 w-3 text-white/80 -ml-1" />
+                  <div className="relative w-12 h-12 ml-4">
+                    <div className="absolute inset-0 bg-gradient-to-br from-blue-700 via-indigo-700 to-purple-700 rounded-xl shadow-lg flex items-center justify-center border border-white/20">
+                      <div className="flex flex-col items-center justify-center">
+                        <GraduationCap className="h-6 w-6 text-white mb-0.5" />
+                        <div className="flex items-center">
+                          <BookOpen className="h-2.5 w-2.5 text-white/90" />
+                          <Globe className="h-2.5 w-2.5 text-white/90 -ml-0.5" />
+                        </div>
                       </div>
                     </div>
-                    <div className="absolute -top-0.5 -right-0.5 w-3 h-3 bg-gradient-to-br from-orange-400 to-red-500 rounded-full border border-white shadow-sm"></div>
+                    <div className="absolute -top-0.5 -right-0.5 w-4 h-4 bg-gradient-to-br from-amber-400 to-orange-500 rounded-full border border-white shadow-sm flex items-center justify-center">
+                      <span className="text-white text-xs font-bold">M</span>
+                    </div>
                   </div>
                   <div>
-                    <span className="font-arabic-title font-bold text-lg text-primary">وكالة ماستر إيدو باث</span>
-                    <p className="text-xs font-medium text-blue-600 dark:text-blue-400">MasterEduPath Agency</p>
+                    <span className="font-arabic-formal font-bold text-lg text-slate-800 dark:text-white leading-tight tracking-wide">وكالة ماستر إيدو باث</span>
+                    <p className="text-sm font-tajawal font-medium text-blue-700 dark:text-blue-400 tracking-wide">MasterEduPath Agency</p>
                   </div>
                 </div>
                 
