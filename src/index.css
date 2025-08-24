@@ -74,56 +74,67 @@
     --page-home-primary: 217 91% 60%;
     --page-home-secondary: 220 85% 70%;
     --page-home-accent: 25 95% 53%;
+    --page-home-bg: 217 50% 97%;
 
     /* خدمات الترجمة القانونية - أرجواني */
     --page-legal-primary: 270 85% 60%;
     --page-legal-secondary: 280 75% 65%;
     --page-legal-accent: 260 80% 55%;
+    --page-legal-bg: 270 40% 97%;
 
     /* خدمات الترجمة التجارية - أخضر */
     --page-business-primary: 142 69% 58%;
     --page-business-secondary: 150 65% 60%;
     --page-business-accent: 135 70% 55%;
+    --page-business-bg: 142 35% 97%;
 
     /* خدمات الترجمة التقنية - برتقالي */
     --page-technical-primary: 25 95% 53%;
     --page-technical-secondary: 35 90% 60%;
     --page-technical-accent: 15 85% 50%;
+    --page-technical-bg: 25 45% 97%;
 
     /* خدمات الترجمة الطبية - أحمر */
     --page-medical-primary: 0 84% 60%;
     --page-medical-secondary: 10 80% 65%;
     --page-medical-accent: 350 75% 55%;
+    --page-medical-bg: 0 40% 97%;
 
     /* خدمات الترجمة الأكاديمية - زمردي */
     --page-academic-primary: 185 84% 52%;
     --page-academic-secondary: 190 80% 60%;
     --page-academic-accent: 175 75% 45%;
+    --page-academic-bg: 185 40% 97%;
 
     /* خدمات الترجمة الفورية - وردي */
     --page-instant-primary: 340 82% 65%;
     --page-instant-secondary: 350 75% 70%;
     --page-instant-accent: 330 80% 60%;
+    --page-instant-bg: 340 35% 97%;
 
     /* خدمات الترجمة الإعلامية - بنفسجي */
     --page-media-primary: 260 85% 65%;
     --page-media-secondary: 270 80% 70%;
     --page-media-accent: 250 75% 60%;
+    --page-media-bg: 260 40% 97%;
 
     /* خدمات الترجمة الأدبية - ذهبي */
     --page-literary-primary: 45 95% 58%;
     --page-literary-secondary: 50 90% 65%;
     --page-literary-accent: 40 85% 50%;
+    --page-literary-bg: 45 45% 97%;
 
     /* خدمات البحث العلمي - أزرق داكن */
     --page-research-primary: 210 90% 55%;
     --page-research-secondary: 220 85% 60%;
     --page-research-accent: 200 80% 50%;
+    --page-research-bg: 210 40% 97%;
 
     /* صفحة من نحن - رمادي أنيق */
     --page-about-primary: 220 15% 40%;
     --page-about-secondary: 215 20% 45%;
     --page-about-accent: 225 10% 35%;
+    --page-about-bg: 220 10% 97%;
 
     --radius: 1rem;
   }
@@ -185,46 +196,57 @@
     --page-home-primary: 220 85% 70%;
     --page-home-secondary: 225 80% 75%;
     --page-home-accent: 30 85% 65%;
+    --page-home-bg: 217 25% 12%;
 
     --page-legal-primary: 275 80% 70%;
     --page-legal-secondary: 285 75% 75%;
     --page-legal-accent: 265 75% 65%;
+    --page-legal-bg: 270 25% 12%;
 
     --page-business-primary: 145 65% 65%;
     --page-business-secondary: 155 60% 70%;
     --page-business-accent: 140 70% 60%;
+    --page-business-bg: 142 25% 12%;
 
     --page-technical-primary: 30 85% 65%;
     --page-technical-secondary: 40 80% 70%;
     --page-technical-accent: 20 80% 60%;
+    --page-technical-bg: 25 25% 12%;
 
     --page-medical-primary: 5 75% 70%;
     --page-medical-secondary: 15 70% 75%;
     --page-medical-accent: 355 70% 65%;
+    --page-medical-bg: 0 25% 12%;
 
     --page-academic-primary: 190 75% 60%;
     --page-academic-secondary: 195 70% 70%;
     --page-academic-accent: 180 70% 55%;
+    --page-academic-bg: 185 25% 12%;
 
     --page-instant-primary: 345 75% 75%;
     --page-instant-secondary: 355 70% 80%;
     --page-instant-accent: 335 75% 70%;
+    --page-instant-bg: 340 25% 12%;
 
     --page-media-primary: 265 80% 75%;
     --page-media-secondary: 275 75% 80%;
     --page-media-accent: 255 75% 70%;
+    --page-media-bg: 260 25% 12%;
 
     --page-literary-primary: 50 85% 70%;
     --page-literary-secondary: 55 80% 75%;
     --page-literary-accent: 45 80% 65%;
+    --page-literary-bg: 45 25% 12%;
 
     --page-research-primary: 215 85% 65%;
     --page-research-secondary: 225 80% 70%;
     --page-research-accent: 205 75% 60%;
+    --page-research-bg: 210 25% 12%;
 
     --page-about-primary: 225 20% 60%;
     --page-about-secondary: 220 25% 65%;
     --page-about-accent: 230 15% 55%;
+    --page-about-bg: 220 15% 12%;
   }
 }
 
@@ -353,66 +375,77 @@
     --primary: var(--page-home-primary);
     --secondary: var(--page-home-secondary);
     --accent: var(--page-home-accent);
+    --background: var(--page-home-bg);
   }
 
   .page-legal {
     --primary: var(--page-legal-primary);
     --secondary: var(--page-legal-secondary);
     --accent: var(--page-legal-accent);
+    --background: var(--page-legal-bg);
   }
 
   .page-business {
     --primary: var(--page-business-primary);
     --secondary: var(--page-business-secondary);
     --accent: var(--page-business-accent);
+    --background: var(--page-business-bg);
   }
 
   .page-technical {
     --primary: var(--page-technical-primary);
     --secondary: var(--page-technical-secondary);
     --accent: var(--page-technical-accent);
+    --background: var(--page-technical-bg);
   }
 
   .page-medical {
     --primary: var(--page-medical-primary);
     --secondary: var(--page-medical-secondary);
     --accent: var(--page-medical-accent);
+    --background: var(--page-medical-bg);
   }
 
   .page-academic {
     --primary: var(--page-academic-primary);
     --secondary: var(--page-academic-secondary);
     --accent: var(--page-academic-accent);
+    --background: var(--page-academic-bg);
   }
 
   .page-instant {
     --primary: var(--page-instant-primary);
     --secondary: var(--page-instant-secondary);
     --accent: var(--page-instant-accent);
+    --background: var(--page-instant-bg);
   }
 
   .page-media {
     --primary: var(--page-media-primary);
     --secondary: var(--page-media-secondary);
     --accent: var(--page-media-accent);
+    --background: var(--page-media-bg);
   }
 
   .page-literary {
     --primary: var(--page-literary-primary);
     --secondary: var(--page-literary-secondary);
     --accent: var(--page-literary-accent);
+    --background: var(--page-literary-bg);
   }
 
   .page-research {
     --primary: var(--page-research-primary);
     --secondary: var(--page-research-secondary);
     --accent: var(--page-research-accent);
+    --background: var(--page-research-bg);
   }
 
   .page-about {
     --primary: var(--page-about-primary);
     --secondary: var(--page-about-secondary);
     --accent: var(--page-about-accent);
+    --background: var(--page-about-bg);
   }
 
   /* تحسينات RTL */
