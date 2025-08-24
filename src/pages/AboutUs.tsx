@@ -19,7 +19,19 @@ import {
   ArrowRight,
   Building,
   Zap,
-  Crown
+  Crown,
+  GraduationCap,
+  Brain,
+  Rocket,
+  Monitor,
+  PenTool,
+  FileText,
+  Search,
+  BarChart3,
+  Languages,
+  Microscope,
+  Calculator,
+  Puzzle
 } from "lucide-react";
 
 const AboutUs = () => {
@@ -27,80 +39,80 @@ const AboutUs = () => {
     {
       name: "د. أحمد محمد الأستاذ",
       role: "المدير التنفيذي والمؤسس",
-      specialization: "أستاذ الترجمة واللسانيات",
+      specialization: "الحلول التعليمية المتقدمة",
       experience: "15+ سنة",
       image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=400&fit=crop&crop=face",
-      description: "خبير في الترجمة القانونية والطبية مع دكتوراه في اللسانيات التطبيقية"
+      description: "خبير في تطوير الحلول التعليمية والتكنولوجية مع دكتوراه في التربية الرقمية"
     },
     {
       name: "د. فاطمة العلي",
-      role: "مديرة الأبحاث الأكاديمية",
-      specialization: "البحث العلمي والنشر الأكاديمي",
+      role: "مديرة الأبحاث والتطوير",
+      specialization: "البحث العلمي والتعليم الإلكتروني",
       experience: "12+ سنة",
       image: "https://images.unsplash.com/photo-1494790108755-2616b612b786?w=400&h=400&fit=crop&crop=face",
-      description: "متخصصة في البحوث الطبية والعلمية مع خبرة واسعة في النشر الدولي"
+      description: "متخصصة في تطوير المناهج التعليمية وحلول التعلم الذكي"
     },
     {
       name: "أ. سارة الحسن",
-      role: "مديرة الجودة والمراجعة",
-      specialization: "ضمان الجودة والتدقيق",
+      role: "مديرة الجودة والابتكار",
+      specialization: "ضمان الجودة والتطوير التقني",
       experience: "10+ سنوات",
       image: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=400&h=400&fit=crop&crop=face",
-      description: "خبيرة في مراجعة الترجمات وضمان أعلى معايير الجودة"
+      description: "خبيرة في ضمان جودة المنتجات التعليمية والحلول التقنية المبتكرة"
     }
   ];
 
   const values = [
     {
-      icon: Shield,
-      title: "المصداقية والثقة",
-      description: "نلتزم بأعلى معايير الشفافية والمصداقية في جميع خدماتنا",
+      icon: Brain,
+      title: "الابتكار التعليمي",
+      description: "نطور حلول تعليمية مبتكرة تواكب أحدث التطورات التكنولوجية",
+      color: "text-purple-500",
+      bgColor: "bg-purple-50"
+    },
+    {
+      icon: GraduationCap,
+      title: "التميز الأكاديمي",
+      description: "نسعى لتحقيق أعلى معايير الجودة في التعليم والبحث العلمي",
       color: "text-blue-500",
       bgColor: "bg-blue-50"
     },
     {
-      icon: Star,
-      title: "التميز والجودة",
-      description: "نسعى للتميز في كل عمل نقوم به ونحرص على تقديم أفضل جودة",
-      color: "text-yellow-500",
-      bgColor: "bg-yellow-50"
-    },
-    {
-      icon: Heart,
-      title: "العمل بروح الفريق",
-      description: "نؤمن بقوة العمل الجماعي والتعاون لتحقيق أهدافنا المشتركة",
-      color: "text-red-500",
-      bgColor: "bg-red-50"
-    },
-    {
-      icon: TrendingUp,
-      title: "التطوير المستمر",
-      description: "نحرص على التطوير والتحديث المستمر لخدماتنا ومهاراتنا",
+      icon: Rocket,
+      title: "التطوير التقني",
+      description: "نستخدم أحدث التقنيات لتقديم تجربة تعليمية متقدمة وفعالة",
       color: "text-green-500",
       bgColor: "bg-green-50"
+    },
+    {
+      icon: Lightbulb,
+      title: "الإبداع والحلول",
+      description: "نقدم حلولاً إبداعية مخصصة تلبي احتياجات كل طالب ومؤسسة",
+      color: "text-orange-500",
+      bgColor: "bg-orange-50"
     }
   ];
 
   const achievements = [
     {
-      number: "5000+",
-      title: "مشروع مكتمل",
-      description: "بنجاح وجودة عالية"
+      number: "10,000+",
+      title: "طالب مستفيد",
+      description: "من حلولنا التعليمية"
     },
     {
-      number: "98%",
-      title: "نسبة الرضا",
-      description: "من عملائنا الكرام"
+      number: "95%",
+      title: "معدل النجاح",
+      description: "في تحقيق الأهداف التعليمية"
     },
     {
-      number: "50+",
-      title: "لغة متاحة",
-      description: "للترجمة والخدمات"
+      number: "200+",
+      title: "مؤسسة تعليمية",
+      description: "تثق في خدماتنا"
     },
     {
       number: "24/7",
-      title: "دعم فني",
-      description: "متواصل على مدار الساعة"
+      title: "دعم متواصل",
+      description: "لضمان أفضل تجربة تعليمية"
     }
   ];
 
@@ -166,7 +178,7 @@ const AboutUs = () => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.3 }}
             >
-              مركز <span className="text-gradient bg-gradient-primary bg-clip-text text-transparent">الخبراء</span> للترجمة الاحترافية
+              وكالة <span className="text-gradient bg-gradient-primary bg-clip-text text-transparent">ماستر إيدو باث</span> للحلول التعليمية المتقدمة
             </motion.h1>
 
             <motion.p
@@ -175,7 +187,7 @@ const AboutUs = () => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.4 }}
             >
-              رائدون في مجال الترجمة الاحترافية والخدمات الأكاديمية منذ أكثر من عقد من الزمن
+              نقود التحول الرقمي في التعليم من خلال حلول تعليمية مبتكرة ومتطورة تلبي احتياجات المستقبل
             </motion.p>
 
             <motion.div
@@ -215,7 +227,7 @@ const AboutUs = () => {
                     <h3 className="text-2xl font-bold mr-4">رؤيتنا</h3>
                   </div>
                   <p className="text-lg text-muted-foreground leading-relaxed">
-                    أن نكون المرجع الأول في العالم العربي لخدمات الترجمة الاحترافية والخدمات الأكاديمية، ونساهم في تطوير البحث العلمي والثقافي من خلال تقديم حلول متطورة وموثوقة تلبي احتياجات عملائنا المتنوعة.
+                    أن نكون الرائدين في تطوير الحلول التعليمية المتقدمة في المنطقة العربية، ونحدث تحولاً جذرياً في مجال التعليم من خلال تقنيات الذكاء الاصطناعي والتعلم التفاعلي لإعداد جيل واعد للمستقبل.
                   </p>
                 </CardContent>
               </Card>
@@ -236,7 +248,7 @@ const AboutUs = () => {
                     <h3 className="text-2xl font-bold mr-4">رسالتنا</h3>
                   </div>
                   <p className="text-lg text-muted-foreground leading-relaxed">
-                    تقديم خدمات ترجمة وأكاديمية متميزة تتسم بالدقة والجودة العالية، مع الالتزام بالمواعيد المحددة والمعايير المهنية العالمية، لنساعد عملاءنا على تحقيق أهدافهم الأكاديمية والمهنية بنجاح.
+                    تمكين الطلاب والمؤسسات التعليمية من خلال حلول تعليمية مبتكرة ومتطورة، ودعم رحلة التعلم بأدوات وخدمات ذكية تحقق أفضل النتائج وتواكب تطورات العصر الرقمي.
                   </p>
                 </CardContent>
               </Card>
@@ -330,6 +342,97 @@ const AboutUs = () => {
                     </motion.div>
                     <h3 className="text-xl font-bold mb-1">{achievement.title}</h3>
                     <p className="text-muted-foreground text-sm">{achievement.description}</p>
+                  </CardContent>
+                </Card>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* قسم الخدمات التعليمية */}
+      <section className="py-16">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+          <motion.div
+            className="text-center mb-12"
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8 }}
+          >
+            <h2 className="text-3xl sm:text-4xl font-arabic-title font-bold mb-4">
+              خدماتنا <span className="text-gradient bg-gradient-primary bg-clip-text text-transparent">التعليمية</span>
+            </h2>
+            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+              مجموعة شاملة من الحلول التعليمية المتقدمة تلبي احتياجات العصر الرقمي
+            </p>
+          </motion.div>
+
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {[
+              {
+                icon: Monitor,
+                title: "التعلم الإلكتروني",
+                description: "منصات تعليمية تفاعلية ومحتوى رقمي متطور",
+                color: "text-blue-500",
+                bgColor: "bg-blue-50"
+              },
+              {
+                icon: PenTool,
+                title: "كتابة الأبحاث",
+                description: "دعم شامل في إعداد وكتابة البحوث العلمية",
+                color: "text-green-500",
+                bgColor: "bg-green-50"
+              },
+              {
+                icon: FileText,
+                title: "التدقيق اللغوي",
+                description: "مراجعة وتحرير النصوص الأكاديمية والعلمية",
+                color: "text-purple-500",
+                bgColor: "bg-purple-50"
+              },
+              {
+                icon: Search,
+                title: "البحث العلمي",
+                description: "أدوات وتقنيات متقدمة للبحث والتحليل",
+                color: "text-orange-500",
+                bgColor: "bg-orange-50"
+              },
+              {
+                icon: BarChart3,
+                title: "التحليل الإحصائي",
+                description: "تحليل البيانات والإحصائيات بأحدث الطرق",
+                color: "text-red-500",
+                bgColor: "bg-red-50"
+              },
+              {
+                icon: Languages,
+                title: "الترجمة المتخصصة",
+                description: "ترجمة دقيقة للنصوص الأكاديمية والعلمية",
+                color: "text-indigo-500",
+                bgColor: "bg-indigo-50"
+              }
+            ].map((service, index) => (
+              <motion.div
+                key={index}
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.6, delay: index * 0.1 }}
+              >
+                <Card className="p-6 h-full border-2 border-transparent hover:border-primary/20 bg-gradient-to-br from-background to-muted/10 shadow-lg hover:shadow-xl transition-all duration-300 group cursor-pointer">
+                  <CardContent className="p-0">
+                    <motion.div
+                      className={`w-12 h-12 ${service.bgColor} rounded-full flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300`}
+                      whileHover={{ rotate: 360 }}
+                      transition={{ duration: 0.8 }}
+                    >
+                      <service.icon className={`h-6 w-6 ${service.color}`} />
+                    </motion.div>
+                    <h3 className="text-xl font-bold mb-3">{service.title}</h3>
+                    <p className="text-muted-foreground leading-relaxed text-sm">
+                      {service.description}
+                    </p>
                   </CardContent>
                 </Card>
               </motion.div>
