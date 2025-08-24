@@ -194,6 +194,7 @@ const TranslationServices = () => {
                         <Button 
                           variant="ghost" 
                           className="group-hover:bg-primary/10 group-hover:text-primary transition-all duration-300 w-full"
+                          onClick={() => window.location.href = type.route}
                         >
                           اعرف المزيد
                           <ArrowLeft className="h-4 w-4 mr-2 group-hover:translate-x-1 transition-transform duration-300" />
