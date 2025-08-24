@@ -43,6 +43,8 @@ import ColorShowcase from "./pages/ColorShowcase";
 import OrderTracking from "./pages/OrderTracking";
 import SubmitOrder from "./pages/SubmitOrder";
 import AdminOrders from "./pages/AdminOrders";
+import ContractManagement from "./pages/ContractManagement";
+import ClientContractApproval from "./pages/ClientContractApproval";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -95,6 +97,8 @@ const App = () => (
           <Route path="/order-tracking" element={<OrderTracking />} />
           <Route path="/submit-order" element={<SubmitOrder />} />
           <Route path="/admin/orders" element={<AdminOrders />} />
+          <Route path="/admin/contracts" element={<ContractManagement />} />
+          <Route path="/contract-approval" element={<ClientContractApproval />} />
           <Route path="/color-showcase" element={<ColorShowcase />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
