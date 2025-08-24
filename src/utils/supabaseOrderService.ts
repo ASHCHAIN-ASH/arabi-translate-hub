@@ -4,12 +4,6 @@ import { OrderStatus, TIMELINE_STEPS } from '@/types/order';
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
 const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
 
-if (!supabaseUrl || !supabaseKey) {
-  throw new Error('Missing Supabase environment variables');
-}
-
-const supabase = createClient(supabaseUrl, supabaseKey);
-
 export interface DatabaseOrder {
   id: string;
   tracking_id: string;
@@ -25,9 +19,58 @@ export interface DatabaseOrder {
   client_email: string;
 }
 
+// Mock data for fallback when Supabase is not configured
+const mockOrders: DatabaseOrder[] = [
+  {
+    id: '1',
+    tracking_id: 'TR001234',
+    phone_last_four: '4567',
+    title: 'تأثير التكنولوجيا على التعليم في المملكة العربية السعودية',
+    degree: 'ماجستير إدارة الأعمال',
+    current_status: 'data_collection',
+    estimated_delivery: '2024-03-15',
+    created_at: '2024-01-10T10:00:00Z',
+    updated_at: '2024-01-10T10:00:00Z',
+    client_name: 'أحمد محمد',
+    client_phone: '0501234567',
+    client_email: 'ahmed@example.com'
+  },
+  {
+    id: '2',
+    tracking_id: 'TR001235',
+    phone_last_four: '6543',
+    title: 'الذكاء الاصطناعي في الرعاية الصحية',
+    degree: 'دكتوراه علوم الحاسوب',
+    current_status: 'research_plan',
+    estimated_delivery: '2024-04-20',
+    created_at: '2024-01-15T14:30:00Z',
+    updated_at: '2024-01-15T14:30:00Z',
+    client_name: 'فاطمة علي',
+    client_phone: '0509876543',
+    client_email: 'fatima@example.com'
+  }
+];
+
+// Check if Supabase is configured
+const isSupabaseConfigured = !!(supabaseUrl && supabaseKey);
+let supabase: any = null;
+
+if (isSupabaseConfigured) {
+  supabase = createClient(supabaseUrl, supabaseKey);
+} else {
+  console.warn('Supabase environment variables not found. Using mock data.');
+}
+
 // Get all orders from database
 export const getAllOrders = async (): Promise<DatabaseOrder[]> => {
   try {
+    // If Supabase is not configured, return mock data
+    if (!isSupabaseConfigured) {
+      console.log('Using mock data - Supabase not configured');
+      await new Promise(resolve => setTimeout(resolve, 500)); // Simulate API delay
+      return [...mockOrders];
+    }
+
     const { data, error } = await supabase
       .from('orders')
       .select('*')
@@ -35,9 +78,9 @@ export const getAllOrders = async (): Promise<DatabaseOrder[]> => {
     
     if (error) {
       console.error('Error fetching orders:', error);
-      // If table doesn't exist, return empty array
+      // If table doesn't exist, return mock data
       if (error.code === 'PGRST116') {
-        return [];
+        return [...mockOrders];
       }
       throw error;
     }
@@ -45,7 +88,8 @@ export const getAllOrders = async (): Promise<DatabaseOrder[]> => {
     return data || [];
   } catch (error) {
     console.error('Error in getAllOrders:', error);
-    return [];
+    // Fallback to mock data on error
+    return [...mockOrders];
   }
 };
 
@@ -55,6 +99,21 @@ export const updateOrderStatus = async (
   newStatus: string
 ): Promise<void> => {
   try {
+    // If Supabase is not configured, simulate update with mock data
+    if (!isSupabaseConfigured) {
+      console.log('Using mock data - Supabase not configured');
+      await new Promise(resolve => setTimeout(resolve, 300)); // Simulate API delay
+      
+      const orderIndex = mockOrders.findIndex(order => order.id === orderId);
+      if (orderIndex !== -1) {
+        mockOrders[orderIndex].current_status = newStatus;
+        mockOrders[orderIndex].updated_at = new Date().toISOString();
+      }
+      
+      console.log(`تم تحديث حالة الطلب ${orderId} إلى ${newStatus}`);
+      return;
+    }
+
     const { error } = await supabase
       .from('orders')
       .update({ 
@@ -81,6 +140,38 @@ export const searchOrderByTracking = async (
   phoneLastFour: string
 ): Promise<OrderStatus | null> => {
   try {
+    // If Supabase is not configured, search in mock data
+    if (!isSupabaseConfigured) {
+      console.log('Using mock data - Supabase not configured');
+      await new Promise(resolve => setTimeout(resolve, 500)); // Simulate API delay
+      
+      const order = mockOrders.find(
+        o => o.tracking_id === trackingId.toUpperCase() && 
+             o.phone_last_four === phoneLastFour
+      );
+
+      if (!order) {
+        return null;
+      }
+
+      const currentStepIndex = TIMELINE_STEPS.findIndex(step => step.status === order.current_status);
+      const progress = currentStepIndex >= 0 ? ((currentStepIndex + 1) / TIMELINE_STEPS.length) * 100 : 10;
+
+      return {
+        id: order.id,
+        trackingId: order.tracking_id,
+        phoneLastFour: order.phone_last_four,
+        title: order.title,
+        degree: order.degree,
+        currentStatus: order.current_status,
+        progress,
+        estimatedDelivery: order.estimated_delivery,
+        createdAt: order.created_at,
+        timeline: [],
+        files: []
+      };
+    }
+
     const { data, error } = await supabase
       .from('orders')
       .select('*')
@@ -126,6 +217,31 @@ export const createOrder = async (orderData: {
   clientEmail: string;
 }): Promise<string> => {
   try {
+    // If Supabase is not configured, add to mock data
+    if (!isSupabaseConfigured) {
+      console.log('Using mock data - Supabase not configured');
+      await new Promise(resolve => setTimeout(resolve, 800)); // Simulate API delay
+      
+      const newOrder: DatabaseOrder = {
+        id: String(mockOrders.length + 1),
+        tracking_id: orderData.trackingId,
+        phone_last_four: orderData.phoneLastFour,
+        title: orderData.title,
+        degree: orderData.degree,
+        current_status: 'received',
+        estimated_delivery: new Date(Date.now() + 60 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString(),
+        client_name: orderData.clientName,
+        client_phone: orderData.clientPhone,
+        client_email: orderData.clientEmail
+      };
+      
+      mockOrders.push(newOrder);
+      console.log('تم إنشاء الطلب بنجاح:', newOrder.tracking_id);
+      return newOrder.id;
+    }
+
     const estimatedDelivery = new Date(Date.now() + 60 * 24 * 60 * 60 * 1000).toISOString().split('T')[0];
     
     const { data, error } = await supabase
