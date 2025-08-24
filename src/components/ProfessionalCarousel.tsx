@@ -264,33 +264,35 @@ const ProfessionalHeroSection: React.FC = () => {
             initial={{ opacity: 0, y: 40 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 2.1 }}
-            className="flex flex-col sm:flex-row items-center justify-center gap-6 mt-12"
+            className="flex flex-col sm:flex-row items-center justify-center gap-4 mt-12"
           >
             <motion.div
               whileHover={{ scale: 1.05, y: -3 }}
               whileTap={{ scale: 0.95 }}
+              className="w-full sm:w-auto"
             >
               <Button 
                 size="lg" 
-                className="group bg-white text-slate-900 hover:bg-blue-50 shadow-2xl px-8 py-6 text-xl font-bold rounded-2xl border-2 border-transparent transition-all duration-300"
+                className="group bg-white text-slate-900 hover:bg-blue-50 shadow-2xl px-10 py-4 text-lg font-bold rounded-xl transition-all duration-300 w-full sm:w-auto min-w-[280px]"
               >
-                <Zap className="h-6 w-6 ml-3 group-hover:text-blue-600 transition-colors duration-300" />
+                <Zap className="h-5 w-5 ml-2 group-hover:text-blue-600 transition-colors duration-300" />
                 ابدأ رحلتك التعليمية
-                <ArrowLeft className="h-6 w-6 mr-3 group-hover:translate-x-1 transition-transform duration-300" />
+                <ArrowLeft className="h-5 w-5 mr-2 group-hover:translate-x-1 transition-transform duration-300" />
               </Button>
             </motion.div>
             
             <motion.div
               whileHover={{ scale: 1.05, y: -3 }}
               whileTap={{ scale: 0.95 }}
+              className="w-full sm:w-auto"
             >
               <Button 
                 variant="outline" 
                 size="lg"
-                className="group bg-white/10 border-2 border-white/50 text-white hover:bg-white/20 hover:border-white/70 px-8 py-6 text-xl font-semibold rounded-2xl backdrop-blur-md transition-all duration-300"
+                className="group bg-white/10 border-2 border-white/50 text-white hover:bg-white/20 hover:border-white/70 px-10 py-4 text-lg font-semibold rounded-xl backdrop-blur-md transition-all duration-300 w-full sm:w-auto min-w-[280px]"
               >
-                <BookOpen className="h-6 w-6 ml-3 group-hover:rotate-12 transition-transform duration-300" />
-                استكشف خدماتنا
+                <BookOpen className="h-5 w-5 ml-2 group-hover:rotate-12 transition-transform duration-300" />
+                اكتشف خدماتنا
               </Button>
             </motion.div>
           </motion.div>
