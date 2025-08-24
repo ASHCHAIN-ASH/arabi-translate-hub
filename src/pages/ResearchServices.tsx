@@ -2,7 +2,6 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import AdvancedTranslationForm from "@/components/AdvancedTranslationForm";
 import { BookOpen, FileText, BarChart3, Search, CheckCircle, Layout, Shield, GraduationCap, Database, Cog, Scale, Globe, Users, Award, Brain, Lightbulb, Target, TrendingUp, Star, Zap, Rocket, Trophy } from "lucide-react";
 
 const ResearchServices = () => {
@@ -508,19 +507,6 @@ const ResearchServices = () => {
               شاهد نماذج أعمالنا
             </Button>
           </div>
-        </div>
-      </section>
-
-      {/* فورم طلب خدمة البحث */}
-      <section className="py-16">
-        <div className="container mx-auto px-4">
-          <AdvancedTranslationForm 
-            translationType="research"
-            title="احصل على خدمة بحثية أكاديمية متميزة"
-            description="نقدم جميع أنواع الخدمات البحثية والأكاديمية بأعلى معايير الجودة والتميز العلمي"
-            gradientFrom="primary"
-            gradientTo="secondary"
-          />
         </div>
       </section>
 

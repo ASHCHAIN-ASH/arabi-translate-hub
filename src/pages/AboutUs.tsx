@@ -4,7 +4,6 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
-import AdvancedTranslationForm from "@/components/AdvancedTranslationForm";
 import { 
   Users, 
   Target, 
@@ -416,20 +415,7 @@ const AboutUs = () => {
         </div>
       </section>
 
-      {/* فورم طلب الخدمة */}
-      <section className="py-16">
-        <div className="container mx-auto px-4">
-          <AdvancedTranslationForm 
-            translationType="general"
-            title="تواصل معنا لتحقيق أهدافك التعليمية"
-            description="نحن هنا لمساعدتك في تحقيق التميز الأكاديمي والمهني من خلال خدماتنا المتخصصة"
-            gradientFrom="primary"
-            gradientTo="secondary"
-          />
-        </div>
-      </section>
-
-      {/* قسم الدعوة للعمل */}
+      {/* قسم الدعوة للعمل النهائية */}
       <section className="py-16 relative overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-r from-primary/10 via-transparent to-secondary/10" />
         
