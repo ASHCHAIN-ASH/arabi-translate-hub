@@ -377,7 +377,6 @@
     --primary: var(--page-home-primary);
     --secondary: var(--page-home-secondary);
     --accent: var(--page-home-accent);
-    --background: var(--page-home-bg);
     background-color: hsl(var(--page-home-bg));
   }
 
@@ -385,7 +384,6 @@
     --primary: var(--page-legal-primary);
     --secondary: var(--page-legal-secondary);
     --accent: var(--page-legal-accent);
-    --background: var(--page-legal-bg);
     background-color: hsl(var(--page-legal-bg));
   }
 
@@ -393,7 +391,6 @@
     --primary: var(--page-business-primary);
     --secondary: var(--page-business-secondary);
     --accent: var(--page-business-accent);
-    --background: var(--page-business-bg);
     background-color: hsl(var(--page-business-bg));
   }
 
@@ -401,7 +398,6 @@
     --primary: var(--page-technical-primary);
     --secondary: var(--page-technical-secondary);
     --accent: var(--page-technical-accent);
-    --background: var(--page-technical-bg);
     background-color: hsl(var(--page-technical-bg));
   }
 
@@ -409,7 +405,6 @@
     --primary: var(--page-medical-primary);
     --secondary: var(--page-medical-secondary);
     --accent: var(--page-medical-accent);
-    --background: var(--page-medical-bg);
     background-color: hsl(var(--page-medical-bg));
   }
 
@@ -417,7 +412,6 @@
     --primary: var(--page-academic-primary);
     --secondary: var(--page-academic-secondary);
     --accent: var(--page-academic-accent);
-    --background: var(--page-academic-bg);
     background-color: hsl(var(--page-academic-bg));
   }
 
@@ -425,7 +419,6 @@
     --primary: var(--page-instant-primary);
     --secondary: var(--page-instant-secondary);
     --accent: var(--page-instant-accent);
-    --background: var(--page-instant-bg);
     background-color: hsl(var(--page-instant-bg));
   }
 
@@ -433,7 +426,6 @@
     --primary: var(--page-media-primary);
     --secondary: var(--page-media-secondary);
     --accent: var(--page-media-accent);
-    --background: var(--page-media-bg);
     background-color: hsl(var(--page-media-bg));
   }
 
@@ -441,7 +433,6 @@
     --primary: var(--page-literary-primary);
     --secondary: var(--page-literary-secondary);
     --accent: var(--page-literary-accent);
-    --background: var(--page-literary-bg);
     background-color: hsl(var(--page-literary-bg));
   }
 
@@ -449,7 +440,6 @@
     --primary: var(--page-research-primary);
     --secondary: var(--page-research-secondary);
     --accent: var(--page-research-accent);
-    --background: var(--page-research-bg);
     background-color: hsl(var(--page-research-bg));
   }
 
@@ -457,7 +447,6 @@
     --primary: var(--page-about-primary);
     --secondary: var(--page-about-secondary);
     --accent: var(--page-about-accent);
-    --background: var(--page-about-bg);
     background-color: hsl(var(--page-about-bg));
   }
 
