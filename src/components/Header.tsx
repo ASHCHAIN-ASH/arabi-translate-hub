@@ -15,7 +15,6 @@ const Header = () => {
 
   const navigation = [
     { name: 'الرئيسية', href: '/' },
-    { name: 'اطلب الان', href: '/submit-order' },
     { name: 'خدمات الأبحاث والكتابة', href: '/research-services' },
     { name: 'تتبع الطلب', href: '/order-tracking' },
     { name: 'من نحن', href: '/about-us' },
