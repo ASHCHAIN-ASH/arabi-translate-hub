@@ -59,7 +59,7 @@ const EsignManagement: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState<EsignStatus | 'all'>('all');
-  const [selectedContract, setSelectedContract] = useState<string>('');
+  const [selectedServiceType, setSelectedServiceType] = useState<string>('');
   const [newDocumentDialog, setNewDocumentDialog] = useState(false);
 
   useEffect(() => {
@@ -111,17 +111,35 @@ const EsignManagement: React.FC = () => {
     }
   };
 
-  const handleCreateDocument = async (contractId: string) => {
+  const handleCreateDocument = async (serviceType: string) => {
     try {
-      const contract = contracts.find(c => c.id === contractId);
-      if (!contract) return;
+      // تحويل نوع الخدمة إلى عنوان
+      const getServiceTitle = (type: string) => {
+        const serviceNames: Record<string, string> = {
+          'translation-legal': 'الترجمة القانونية',
+          'translation-business': 'الترجمة التجارية',
+          'translation-technical': 'الترجمة التقنية',
+          'translation-medical': 'الترجمة الطبية',
+          'translation-academic': 'الترجمة الأكاديمية',
+          'translation-literary': 'الترجمة الأدبية',
+          'translation-media': 'ترجمة الوسائط',
+          'research-thesis': 'إعداد الرسائل العلمية',
+          'research-plan': 'خطة البحث',
+          'research-analysis': 'التحليل الإحصائي',
+          'research-formatting': 'التنسيق الأكاديمي',
+          'research-publication': 'النشر العلمي',
+          'research-consultation': 'الاستشارات الأكاديمية',
+          'custom-service': 'خدمة مخصصة'
+        };
+        return serviceNames[type] || 'خدمة غير محددة';
+      };
 
       const signers = [
         {
           role: 'customer' as const,
-          name: contract.clientName,
-          email: contract.clientEmail,
-          phone: contract.clientPhone,
+          name: 'العميل',
+          email: 'client@example.com',
+          phone: '+966500000000',
           order: 1
         },
         {
@@ -134,14 +152,14 @@ const EsignManagement: React.FC = () => {
       ];
 
       await createEsignDocument(
-        contractId,
-        `عقد التوقيع الإلكتروني - ${contract.serviceDetails.title}`,
+        `contract-${Date.now()}`, // إنشاء معرف مؤقت للعقد
+        `عقد التوقيع الإلكتروني - ${getServiceTitle(serviceType)}`,
         signers
       );
 
       toast.success('تم إنشاء مستند التوقيع الإلكتروني بنجاح');
       setNewDocumentDialog(false);
-      setSelectedContract('');
+      setSelectedServiceType('');
       loadDocuments();
     } catch (error) {
       console.error('Error creating document:', error);
@@ -214,23 +232,38 @@ const EsignManagement: React.FC = () => {
               <DialogHeader>
                 <DialogTitle>إنشاء مستند توقيع إلكتروني</DialogTitle>
                 <DialogDescription>
-                  اختر العقد الذي تريد إنشاء مستند توقيع إلكتروني له
+                  اختر نوع الخدمة التي تريد إنشاء مستند توقيع إلكتروني لها
                 </DialogDescription>
               </DialogHeader>
               <div className="space-y-4">
                 <div>
-                  <label className="text-sm font-medium">اختر العقد</label>
-                  <select 
+                  <label className="text-sm font-medium">نوع الخدمة</label>
+                   <select 
                     className="w-full p-2 border rounded-md mt-1"
-                    value={selectedContract}
-                    onChange={(e) => setSelectedContract(e.target.value)}
+                    value={selectedServiceType}
+                    onChange={(e) => setSelectedServiceType(e.target.value)}
                   >
-                    <option value="">-- اختر العقد --</option>
-                    {contracts.map(contract => (
-                      <option key={contract.id} value={contract.id}>
-                        {contract.serviceDetails.title} - {contract.clientName}
-                      </option>
-                    ))}
+                    <option value="">-- اختر نوع الخدمة --</option>
+                    <optgroup label="خدمات الترجمة">
+                      <option value="translation-legal">الترجمة القانونية</option>
+                      <option value="translation-business">الترجمة التجارية</option>
+                      <option value="translation-technical">الترجمة التقنية</option>
+                      <option value="translation-medical">الترجمة الطبية</option>
+                      <option value="translation-academic">الترجمة الأكاديمية</option>
+                      <option value="translation-literary">الترجمة الأدبية</option>
+                      <option value="translation-media">ترجمة الوسائط</option>
+                    </optgroup>
+                    <optgroup label="خدمات البحث">
+                      <option value="research-thesis">إعداد الرسائل العلمية</option>
+                      <option value="research-plan">خطة البحث</option>
+                      <option value="research-analysis">التحليل الإحصائي</option>
+                      <option value="research-formatting">التنسيق الأكاديمي</option>
+                      <option value="research-publication">النشر العلمي</option>
+                      <option value="research-consultation">الاستشارات الأكاديمية</option>
+                    </optgroup>
+                    <optgroup label="خدمات أخرى">
+                      <option value="custom-service">خدمة مخصصة</option>
+                    </optgroup>
                   </select>
                 </div>
               </div>
@@ -239,8 +272,8 @@ const EsignManagement: React.FC = () => {
                   إلغاء
                 </Button>
                 <Button 
-                  onClick={() => handleCreateDocument(selectedContract)}
-                  disabled={!selectedContract}
+                  onClick={() => handleCreateDocument(selectedServiceType)}
+                  disabled={!selectedServiceType}
                 >
                   إنشاء المستند
                 </Button>
