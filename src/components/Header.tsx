@@ -15,11 +15,14 @@ const Header = () => {
 
   const navigation = [
     { name: 'الرئيسية', href: '/' },
-    { name: 'خدمات الترجمة', href: '/translation-services' },
-    { name: 'خدمات الأبحاث والكتابة', href: '/research-services' },
     { name: 'تتبع الطلب', href: '/order-tracking' },
     { name: 'من نحن', href: '/about-us' },
     { name: 'تواصل معنا', href: '/contact' },
+  ];
+
+  const servicesDropdown = [
+    { name: 'خدمات الترجمة', href: '/translation-services' },
+    { name: 'خدمات الأبحاث والكتابة', href: '/research-services' },
   ];
 
   return (
@@ -61,6 +64,28 @@ const Header = () => {
                 {item.name}
               </Link>
             ))}
+            
+            {/* قائمة الخدمات المنسدلة */}
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" className="text-foreground hover:text-primary transition-colors duration-200 font-medium p-0 h-auto">
+                  خدماتنا
+                  <ChevronDown className="h-4 w-4 mr-1" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent className="w-56 bg-background border border-border shadow-lg z-50">
+                {servicesDropdown.map((service) => (
+                  <DropdownMenuItem key={service.name} asChild>
+                    <Link
+                      to={service.href}
+                      className="w-full cursor-pointer hover:bg-muted focus:bg-muted"
+                    >
+                      {service.name}
+                    </Link>
+                  </DropdownMenuItem>
+                ))}
+              </DropdownMenuContent>
+            </DropdownMenu>
           </nav>
 
           {/* أزرار الإجراءات */}
@@ -118,6 +143,21 @@ const Header = () => {
                     {item.name}
                   </Link>
                 ))}
+                
+                {/* قائمة الخدمات للهواتف */}
+                <div className="py-2 border-b border-muted">
+                  <span className="font-medium text-foreground block py-2">خدماتنا</span>
+                  {servicesDropdown.map((service) => (
+                    <Link
+                      key={service.name}
+                      to={service.href}
+                      className="text-muted-foreground hover:text-primary transition-colors duration-200 py-2 pr-4 block"
+                      onClick={() => setIsOpen(false)}
+                    >
+                      {service.name}
+                    </Link>
+                  ))}
+                </div>
                 
                 <div className="flex flex-col space-y-2 mt-6">
                   <Button variant="outline" size="sm" asChild>
