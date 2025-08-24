@@ -1,7 +1,7 @@
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import ServicesSection from "@/components/ServicesSection";
-import ProfessionalCarousel from "@/components/ProfessionalCarousel";
+import ProfessionalHeroSection from "@/components/ProfessionalCarousel";
 
 import AnimatedBackground from "@/components/AnimatedBackground";
 import { Button } from "@/components/ui/button";
@@ -124,7 +124,7 @@ const Index = () => {
       <Header />
       
       {/* السلايدر الاحترافي الجديد */}
-      <ProfessionalCarousel />
+      <ProfessionalHeroSection />
 
 
       {/* المزايا الرئيسية للشركات */}
