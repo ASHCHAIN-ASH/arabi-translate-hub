@@ -3,7 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Stethoscope, Heart, FileText, Shield, Award, Users } from "lucide-react";
-import AdvancedTranslationForm from "@/components/AdvancedTranslationForm";
+
 
 const MedicalTranslation = () => {
   const medicalServices = [
@@ -211,18 +211,6 @@ const MedicalTranslation = () => {
         </div>
       </section>
 
-      {/* فورم طلب الخدمة */}
-      <section className="py-16">
-        <div className="container mx-auto px-4">
-          <AdvancedTranslationForm 
-            translationType="medical"
-            title="طلب ترجمة طبية متخصصة"
-            description="ترجمة طبية دقيقة وآمنة من أطباء متخصصين"
-            gradientFrom="green-600"
-            gradientTo="green-800"
-          />
-        </div>
-      </section>
     </div>
   );
 };

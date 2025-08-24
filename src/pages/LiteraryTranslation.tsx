@@ -3,7 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { BookOpen, Feather, Scroll, PenTool, Award, Heart } from "lucide-react";
-import AdvancedTranslationForm from "@/components/AdvancedTranslationForm";
+
 
 const LiteraryTranslation = () => {
   const literaryServices = [
@@ -257,18 +257,6 @@ const LiteraryTranslation = () => {
         </div>
       </section>
 
-      {/* فورم طلب الخدمة */}
-      <section className="py-16">
-        <div className="container mx-auto px-4">
-          <AdvancedTranslationForm 
-            translationType="literary"
-            title="طلب ترجمة أدبية إبداعية"
-            description="ترجمة أدبية تحافظ على روح النص وجماليته"
-            gradientFrom="purple-600"
-            gradientTo="pink-600"
-          />
-        </div>
-      </section>
     </div>
   );
 };

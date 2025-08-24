@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
-import AdvancedTranslationForm from "@/components/AdvancedTranslationForm";
+
 import { 
   Globe, 
   Layout, 
@@ -383,18 +383,6 @@ const WebsiteTranslation = () => {
         </div>
       </section>
 
-      {/* فورم طلب الخدمة */}
-      <section className="py-16">
-        <div className="container mx-auto px-4">
-          <AdvancedTranslationForm 
-            translationType="website"
-            title="احصل على ترجمة مواقع احترافية"
-            description="ترجمة شاملة للمواقع الإلكترونية مع الحفاظ على التصميم والوظائف"
-            gradientFrom="teal-600"
-            gradientTo="blue-600"
-          />
-        </div>
-      </section>
 
       <Footer />
     </div>

@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
-import AdvancedTranslationForm from "@/components/AdvancedTranslationForm";
+
 import { 
   Video, 
   Play, 
@@ -413,18 +413,6 @@ const VideoTranslation = () => {
         </div>
       </section>
 
-      {/* فورم طلب الخدمة */}
-      <section className="py-16">
-        <div className="container mx-auto px-4">
-          <AdvancedTranslationForm 
-            translationType="video"
-            title="احصل على ترجمة فيديو احترافية"
-            description="ترجمة ودبلجة الفيديوهات بأعلى جودة مع ترجمة مرئية"
-            gradientFrom="red-600"
-            gradientTo="pink-600"
-          />
-        </div>
-      </section>
 
       <Footer />
     </div>

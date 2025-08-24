@@ -3,7 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Zap, Clock, Smartphone, MessageSquare, Globe, Mic, Video, FileText, Star, CheckCircle, Timer, Users } from "lucide-react";
-import AdvancedTranslationForm from "@/components/AdvancedTranslationForm";
+
 
 const InstantTranslation = () => {
   const instantServices = [
@@ -418,18 +418,6 @@ const InstantTranslation = () => {
         </div>
       </section>
 
-      {/* فورم طلب الخدمة */}
-      <section className="py-16">
-        <div className="container mx-auto px-4">
-          <AdvancedTranslationForm 
-            translationType="instant"
-            title="طلب ترجمة فورية سريعة"
-            description="ترجمة فورية عالية الجودة في أسرع وقت ممكن"
-            gradientFrom="orange-600"
-            gradientTo="red-600"
-          />
-        </div>
-      </section>
     </div>
   );
 };

@@ -3,7 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Settings, Code, Cpu, Zap, Shield, Award } from "lucide-react";
-import AdvancedTranslationForm from "@/components/AdvancedTranslationForm";
+
 
 const TechnicalTranslation = () => {
   const technicalServices = [
@@ -178,18 +178,6 @@ const TechnicalTranslation = () => {
         </div>
       </section>
 
-      {/* فورم طلب الخدمة */}
-      <section className="py-16">
-        <div className="container mx-auto px-4">
-          <AdvancedTranslationForm 
-            translationType="technical"
-            title="طلب ترجمة تقنية متخصصة"
-            description="ترجمة تقنية دقيقة للوثائق والمواصفات التقنية"
-            gradientFrom="gray-600"
-            gradientTo="blue-600"
-          />
-        </div>
-      </section>
     </div>
   );
 };

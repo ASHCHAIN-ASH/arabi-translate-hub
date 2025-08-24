@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
-import AdvancedTranslationForm from "@/components/AdvancedTranslationForm";
+
 import { 
   FileText, 
   Languages, 
@@ -319,18 +319,6 @@ const TextTranslation = () => {
         </div>
       </section>
 
-      {/* فورم طلب الخدمة */}
-      <section className="py-16">
-        <div className="container mx-auto px-4">
-          <AdvancedTranslationForm 
-            translationType="text"
-            title="احصل على ترجمة نصوص احترافية"
-            description="ترجمة دقيقة وسريعة لجميع أنواع النصوص"
-            gradientFrom="blue-600"
-            gradientTo="indigo-600"
-          />
-        </div>
-      </section>
 
       <Footer />
     </div>
