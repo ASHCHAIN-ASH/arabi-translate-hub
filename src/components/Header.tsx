@@ -11,7 +11,6 @@ const Header = () => {
     { name: 'خدمات الترجمة', href: '/translation-services' },
     { name: 'خدمات الأبحاث والكتابة', href: '/research-services' },
     { name: 'من نحن', href: '/about-us' },
-    { name: 'الشهادات والاعتمادات', href: '/certifications' },
     { name: 'تواصل معنا', href: '/contact' },
   ];
 
