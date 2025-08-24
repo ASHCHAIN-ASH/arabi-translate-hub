@@ -133,6 +133,7 @@ const AdminOrders = () => {
                     <TableHead>رقم التتبع</TableHead>
                     <TableHead>العنوان</TableHead>
                     <TableHead>اسم العميل</TableHead>
+                    <TableHead>رقم الجوال</TableHead>
                     <TableHead>الدرجة</TableHead>
                     <TableHead>الحالة الحالية</TableHead>
                     <TableHead>التاريخ المتوقع</TableHead>
@@ -149,6 +150,7 @@ const AdminOrders = () => {
                         </div>
                       </TableCell>
                       <TableCell>{order.client_name}</TableCell>
+                      <TableCell className="font-mono">{order.client_phone}</TableCell>
                       <TableCell>{order.degree}</TableCell>
                       <TableCell>
                         <Badge className={getStatusColor(order.current_status)}>
