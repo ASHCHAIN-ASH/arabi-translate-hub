@@ -19,33 +19,29 @@ const ProfessionalHeroSection: React.FC = () => {
     {
       icon: Microscope,
       title: "البحث",
-      titleEn: "Research",
       color: "from-blue-500 to-purple-600"
     },
     {
       icon: BookOpen,
       title: "الكتابة الأكاديمية",
-      titleEn: "Academic Writing",
       color: "from-emerald-500 to-teal-600"
     },
     {
       icon: Languages,
       title: "الترجمة",
-      titleEn: "Translation",
       color: "from-orange-500 to-red-600"
     },
     {
       icon: Users,
       title: "الاستشارات",
-      titleEn: "Consultation",
       color: "from-purple-500 to-pink-600"
     }
   ];
 
   const achievements = [
-    { value: "+50", label: "دولة", labelEn: "Countries", icon: Globe },
-    { value: "99%", label: "نسبة النجاح", labelEn: "Success Rate", icon: Award },
-    { value: "+10K", label: "طالب", labelEn: "Students", icon: Users }
+    { value: "+50", label: "دولة", icon: Globe },
+    { value: "99%", label: "نسبة النجاح", icon: Award },
+    { value: "+10K", label: "طالب", icon: Users }
   ];
 
   return (
@@ -175,12 +171,9 @@ const ProfessionalHeroSection: React.FC = () => {
                 >
                   <IconComponent className="h-10 w-10 text-white" />
                 </motion.div>
-                <h3 className="text-xl font-arabic-formal font-bold mb-2 text-slate-800 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
+                <h3 className="text-xl font-arabic-formal font-bold text-slate-800 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
                   {service.title}
                 </h3>
-                <p className="text-base font-tajawal text-slate-600 dark:text-slate-300 group-hover:text-slate-700 dark:group-hover:text-slate-200 transition-colors">
-                  {service.titleEn}
-                </p>
               </motion.div>
             );
           })}
@@ -214,11 +207,8 @@ const ProfessionalHeroSection: React.FC = () => {
                 <div className="text-4xl font-bold text-slate-800 dark:text-white mb-2 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
                   {achievement.value}
                 </div>
-                <div className="text-lg font-arabic-formal font-semibold text-slate-800 dark:text-slate-200 mb-1">
+                <div className="text-lg font-arabic-formal font-semibold text-slate-800 dark:text-slate-200">
                   {achievement.label}
-                </div>
-                <div className="text-sm font-tajawal text-slate-600 dark:text-slate-400">
-                  {achievement.labelEn}
                 </div>
               </motion.div>
             );
