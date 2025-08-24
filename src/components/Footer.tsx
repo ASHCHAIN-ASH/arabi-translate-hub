@@ -268,7 +268,7 @@ const Footer = () => {
             <div className="space-y-4">
               {[
                 { Icon: Phone, text: "0500776343", subtext: "اتصل بنا الآن", color: "text-green-400" },
-                { Icon: Mail, text: "info@tarjuman.com", subtext: "راسلنا عبر البريد", color: "text-blue-400" },
+                { Icon: Mail, text: "info@masteredupath.com", subtext: "راسلنا عبر البريد", color: "text-blue-400" },
                 { Icon: MapPin, text: "جدة، المملكة العربية السعودية", subtext: "موقعنا الرئيسي", color: "text-red-400" }
               ].map(({ Icon, text, subtext, color }, index) => (
                 <motion.div 
@@ -331,7 +331,7 @@ const Footer = () => {
               >
                 <Globe className="h-4 w-4" />
               </motion.div>
-              © {currentYear} ترجمان - مركز الترجمة الاحترافية. جميع الحقوق محفوظة.
+              © {currentYear} وكالة ماستر إيدو باث - للحلول التعليمية المتقدمة. جميع الحقوق محفوظة.
             </motion.p>
             
             <div className="flex items-center gap-6 text-sm">
