@@ -50,6 +50,9 @@ import AccountingDashboard from "./pages/admin/AccountingDashboard";
 import EsignManagement from "./pages/admin/EsignManagement";
 import WhatsappManagement from "./pages/admin/WhatsappManagement";
 import EsignPortal from "./pages/EsignPortal";
+import ContractRequest from "./pages/ContractRequest";
+import ClientDashboard from "./pages/ClientDashboard";
+import ClientContracts from "./pages/ClientContracts";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -108,6 +111,9 @@ const App = () => (
           <Route path="/admin/esign" element={<EsignManagement />} />
           <Route path="/admin/whatsapp" element={<WhatsappManagement />} />
           <Route path="/contract-approval" element={<ClientContractApproval />} />
+          <Route path="/contract-request" element={<ContractRequest />} />
+          <Route path="/client/dashboard" element={<ClientDashboard />} />
+          <Route path="/client/contracts" element={<ClientContracts />} />
           <Route path="/esign/:token" element={<EsignPortal />} />
           <Route path="/color-showcase" element={<ColorShowcase />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}

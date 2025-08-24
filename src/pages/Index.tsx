@@ -62,16 +62,17 @@ const Index = () => {
               <Button 
                 size="lg" 
                 className="w-full sm:w-auto bg-white text-slate-800 hover:bg-gray-100 shadow-xl px-8 py-4 text-lg font-medium rounded-lg transition-all duration-300"
-                onClick={() => window.location.href = '/submit-order'}
+                onClick={() => window.location.href = '/contract-request'}
               >
-                اطلب خدمة الآن
+                طلب عقد الآن
               </Button>
               <Button 
                 variant="outline" 
                 size="lg"
                 className="w-full sm:w-auto border-2 border-white/50 text-white hover:bg-white/10 px-8 py-4 text-lg font-medium rounded-lg transition-all duration-300"
+                onClick={() => window.location.href = '/submit-order'}
               >
-                تواصل مع فريق الخبراء
+                طلب خدمة سريعة
               </Button>
             </motion.div>
           </div>
