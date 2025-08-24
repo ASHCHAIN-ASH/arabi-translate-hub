@@ -1,5 +1,24 @@
 import { Button } from "@/components/ui/button";
-import { Menu, User, Globe, Phone, GraduationCap, BookOpen, ChevronDown, Search, Languages, PenTool } from "lucide-react";
+import { 
+  Menu, 
+  Globe, 
+  GraduationCap, 
+  BookOpen, 
+  ChevronDown, 
+  Search, 
+  Languages, 
+  PenTool,
+  Home,
+  Package,
+  Users,
+  Phone,
+  Mail,
+  FileText,
+  Briefcase,
+  Award,
+  Microscope,
+  Edit3
+} from "lucide-react";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
@@ -14,15 +33,15 @@ const Header = () => {
   const [isOpen, setIsOpen] = useState(false);
 
   const navigation = [
-    { name: 'الرئيسية', href: '/' },
-    { name: 'تتبع الطلب', href: '/order-tracking' },
-    { name: 'من نحن', href: '/about-us' },
-    { name: 'تواصل معنا', href: '/contact' },
+    { name: 'الرئيسية', href: '/', icon: Home },
+    { name: 'تتبع الطلب', href: '/order-tracking', icon: Package },
+    { name: 'من نحن', href: '/about-us', icon: Users },
+    { name: 'تواصل معنا', href: '/contact', icon: Phone },
   ];
 
   const servicesDropdown = [
-    { name: 'خدمات الترجمة', href: '/translation-services', icon: Languages },
-    { name: 'خدمات الأبحاث والكتابة', href: '/research-services', icon: PenTool },
+    { name: 'خدمات الترجمة', href: '/translation-services', icon: Languages, description: 'ترجمة النصوص والوثائق' },
+    { name: 'خدمات الأبحاث والكتابة', href: '/research-services', icon: Microscope, description: 'كتابة وتحليل الأبحاث العلمية' },
   ];
 
   return (
@@ -54,13 +73,14 @@ const Header = () => {
           </div>
 
           {/* القائمة الرئيسية - شاشات كبيرة */}
-          <nav className="hidden lg:flex items-center space-x-reverse space-x-8">
+          <nav className="hidden lg:flex items-center space-x-reverse space-x-6">
             {navigation.map((item) => (
               <Link
                 key={item.name}
                 to={item.href}
-                className="text-foreground hover:text-primary transition-colors duration-200 font-medium"
+                className="text-foreground hover:text-primary transition-colors duration-200 font-medium flex items-center gap-2"
               >
+                <item.icon className="h-4 w-4" />
                 {item.name}
               </Link>
             ))}
@@ -68,23 +88,32 @@ const Header = () => {
             {/* قائمة الخدمات المنسدلة */}
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="ghost" className="text-foreground hover:text-primary transition-colors duration-200 font-medium p-0 h-auto">
+                <Button variant="ghost" className="text-foreground hover:text-primary transition-colors duration-200 font-medium px-3 py-2 h-auto flex items-center gap-2">
+                  <Briefcase className="h-4 w-4" />
                   خدماتنا
-                  <ChevronDown className="h-4 w-4 mr-1" />
+                  <ChevronDown className="h-4 w-4" />
                 </Button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent className="w-64 bg-background border border-border shadow-lg z-50" align="end">
-                {servicesDropdown.map((service) => (
-                  <DropdownMenuItem key={service.name} asChild>
-                    <Link
-                      to={service.href}
-                      className="w-full cursor-pointer hover:bg-muted focus:bg-muted flex items-center gap-2 p-3 text-right"
-                    >
-                      <service.icon className="h-4 w-4 text-primary flex-shrink-0" />
-                      <span className="font-medium text-sm">{service.name}</span>
-                    </Link>
-                  </DropdownMenuItem>
-                ))}
+              <DropdownMenuContent className="w-80 bg-background border border-border shadow-xl z-50" align="end">
+                <div className="p-2">
+                  <div className="text-sm font-semibold text-muted-foreground mb-3 px-2">خدماتنا المتخصصة</div>
+                  {servicesDropdown.map((service) => (
+                    <DropdownMenuItem key={service.name} asChild>
+                      <Link
+                        to={service.href}
+                        className="w-full cursor-pointer hover:bg-muted focus:bg-muted flex items-start gap-3 p-3 rounded-lg text-right"
+                      >
+                        <div className="flex-shrink-0 w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center">
+                          <service.icon className="h-5 w-5 text-primary" />
+                        </div>
+                        <div className="flex-1 text-right">
+                          <div className="font-medium text-sm text-foreground">{service.name}</div>
+                          <div className="text-xs text-muted-foreground mt-1">{service.description}</div>
+                        </div>
+                      </Link>
+                    </DropdownMenuItem>
+                  ))}
+                </div>
               </DropdownMenuContent>
             </DropdownMenu>
           </nav>
@@ -138,25 +167,36 @@ const Header = () => {
                   <Link
                     key={item.name}
                     to={item.href}
-                    className="text-foreground hover:text-primary transition-colors duration-200 py-2 border-b border-muted block"
+                    className="text-foreground hover:text-primary transition-colors duration-200 py-3 border-b border-muted block flex items-center gap-3"
                     onClick={() => setIsOpen(false)}
                   >
-                    {item.name}
+                    <item.icon className="h-4 w-4 text-primary" />
+                    <span className="font-medium">{item.name}</span>
                   </Link>
                 ))}
                 
                 {/* قائمة الخدمات للهواتف */}
                 <div className="py-2 border-b border-muted">
-                  <span className="font-medium text-foreground block py-2">خدماتنا</span>
+                  <div className="flex items-center gap-2 py-2 px-1">
+                    <Briefcase className="h-4 w-4 text-primary" />
+                    <span className="font-medium text-foreground">خدماتنا المتخصصة</span>
+                  </div>
                   {servicesDropdown.map((service) => (
                     <Link
                       key={service.name}
                       to={service.href}
-                      className="text-muted-foreground hover:text-primary transition-colors duration-200 py-3 pr-4 block flex items-center gap-2"
+                      className="text-muted-foreground hover:text-primary transition-colors duration-200 py-3 pr-4 block"
                       onClick={() => setIsOpen(false)}
                     >
-                      <service.icon className="h-4 w-4 text-primary flex-shrink-0" />
-                      <span className="text-sm">{service.name}</span>
+                      <div className="flex items-start gap-3">
+                        <div className="flex-shrink-0 w-8 h-8 bg-primary/10 rounded-lg flex items-center justify-center">
+                          <service.icon className="h-4 w-4 text-primary" />
+                        </div>
+                        <div className="flex-1 text-right">
+                          <div className="font-medium text-sm text-foreground">{service.name}</div>
+                          <div className="text-xs text-muted-foreground mt-1">{service.description}</div>
+                        </div>
+                      </div>
                     </Link>
                   ))}
                 </div>
