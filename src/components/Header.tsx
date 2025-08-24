@@ -72,12 +72,10 @@ const Header = () => {
                 تتبع الطلب
               </Link>
             </Button>
-            <Button variant="ghost" size="sm">
-              <User className="h-4 w-4 ml-2" />
-              تسجيل الدخول
-            </Button>
-            <Button size="sm" className="bg-gradient-primary text-primary-foreground hover:opacity-90 shadow-medium">
-              اطلب خدمة الترجمة
+            <Button size="sm" className="bg-gradient-primary text-primary-foreground hover:opacity-90 shadow-medium" asChild>
+              <Link to="/submit-order">
+                اطلب الان
+              </Link>
             </Button>
           </div>
 
@@ -129,12 +127,10 @@ const Header = () => {
                       تتبع الطلب
                     </Link>
                   </Button>
-                  <Button variant="ghost" size="sm">
-                    <User className="h-4 w-4 ml-2" />
-                    تسجيل الدخول
-                  </Button>
-                  <Button size="sm" className="bg-gradient-primary text-primary-foreground">
-                    اطلب خدمة الترجمة
+                  <Button size="sm" className="bg-gradient-primary text-primary-foreground" asChild>
+                    <Link to="/submit-order" onClick={() => setIsOpen(false)}>
+                      اطلب الان
+                    </Link>
                   </Button>
                 </div>
               </div>
