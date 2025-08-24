@@ -67,59 +67,59 @@ const AcademicStats = () => {
   ];
 
   return (
-    <section className="py-16 lg:py-20 bg-gradient-to-br from-slate-50 via-blue-50/30 to-indigo-50/20 dark:from-slate-900 dark:via-blue-950/30 dark:to-indigo-950/20">
+    <section className="py-12 sm:py-16 lg:py-20 bg-gradient-to-br from-slate-50 via-blue-50/30 to-indigo-50/20 dark:from-slate-900 dark:via-blue-950/30 dark:to-indigo-950/20">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* العنوان */}
         <motion.div 
-          className="text-center mb-16"
+          className="text-center mb-12 sm:mb-16"
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
           viewport={{ once: true }}
         >
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-arabic-formal font-bold mb-6 text-slate-800 dark:text-white">
+          <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-arabic-formal font-bold mb-4 sm:mb-6 text-slate-800 dark:text-white">
             أرقام تتحدث عن <span className="bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">التميز</span>
           </h2>
-          <p className="text-lg text-slate-600 dark:text-slate-300 max-w-2xl mx-auto">
+          <p className="text-base sm:text-lg md:text-xl text-slate-600 dark:text-slate-300 max-w-2xl mx-auto">
             إنجازاتنا وأرقامنا تعكس الثقة التي يوليها لنا شركاؤنا الأكاديميون حول العالم
           </p>
         </motion.div>
 
         {/* الإحصائيات الرئيسية */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-16">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8 mb-12 sm:mb-16">
           {stats.map((stat, index) => {
             const IconComponent = stat.icon;
             return (
               <motion.div
                 key={index}
-                initial={{ opacity: 0, y: 30, scale: 0.9 }}
+                initial={{ opacity: 0, y: 20, scale: 0.9 }}
                 whileInView={{ opacity: 1, y: 0, scale: 1 }}
                 transition={{ delay: index * 0.1, duration: 0.6 }}
                 viewport={{ once: true }}
-                whileHover={{ y: -8, scale: 1.02 }}
+                whileHover={{ y: -4, scale: 1.01 }}
               >
                 <Card className="relative overflow-hidden bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:shadow-xl transition-all duration-500 h-full text-center group">
                   
                   {/* خط علوي */}
                   <div className={`absolute top-0 left-0 right-0 h-1 bg-gradient-to-r ${stat.color}`} />
                   
-                  <CardContent className="p-8">
+                  <CardContent className="p-6 sm:p-8">
                     {/* الأيقونة */}
                     <motion.div 
-                      className={`w-16 h-16 mx-auto mb-6 rounded-full bg-gradient-to-br ${stat.color} flex items-center justify-center shadow-lg`}
+                      className={`w-12 h-12 sm:w-14 sm:h-14 lg:w-16 lg:h-16 mx-auto mb-4 sm:mb-6 rounded-full bg-gradient-to-br ${stat.color} flex items-center justify-center shadow-lg`}
                       whileHover={{ 
                         rotate: 360,
                         scale: 1.1
                       }}
                       transition={{ duration: 0.6 }}
                     >
-                      <IconComponent className="h-8 w-8 text-white" />
+                      <IconComponent className="h-6 w-6 sm:h-7 sm:w-7 lg:h-8 lg:w-8 text-white" />
                     </motion.div>
                     
                     {/* الرقم */}
                     <motion.div 
-                      className="text-4xl font-bold mb-2 text-slate-800 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors duration-300"
+                      className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-2 text-slate-800 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors duration-300"
                       initial={{ scale: 0.5, opacity: 0 }}
                       whileInView={{ scale: 1, opacity: 1 }}
                       transition={{ duration: 0.5, delay: index * 0.1 + 0.2 }}
@@ -129,17 +129,17 @@ const AcademicStats = () => {
                     </motion.div>
                     
                     {/* التسمية العربية */}
-                    <h3 className="text-lg font-arabic-formal font-bold text-slate-700 dark:text-slate-200 mb-1">
+                    <h3 className="text-base sm:text-lg lg:text-xl font-arabic-formal font-bold text-slate-700 dark:text-slate-200 mb-1">
                       {stat.label}
                     </h3>
                     
                     {/* التسمية الإنجليزية */}
-                    <p className="text-sm text-slate-500 dark:text-slate-400 mb-4 font-medium">
+                    <p className="text-xs sm:text-sm lg:text-base text-slate-500 dark:text-slate-400 mb-3 sm:mb-4 font-medium">
                       {stat.sublabel}
                     </p>
                     
                     {/* الوصف */}
-                    <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
+                    <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
                       {stat.description}
                     </p>
                   </CardContent>
@@ -151,7 +151,7 @@ const AcademicStats = () => {
 
         {/* الإنجازات الإضافية */}
         <motion.div
-          className="grid grid-cols-1 md:grid-cols-3 gap-8"
+          className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8"
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.4 }}
@@ -162,32 +162,32 @@ const AcademicStats = () => {
             return (
               <motion.div
                 key={index}
-                initial={{ opacity: 0, x: -20 }}
+                initial={{ opacity: 0, x: -10 }}
                 whileInView={{ opacity: 1, x: 0 }}
                 transition={{ delay: index * 0.1, duration: 0.5 }}
                 viewport={{ once: true }}
-                whileHover={{ scale: 1.02 }}
-                className="bg-white dark:bg-slate-800 rounded-xl p-6 shadow-lg border border-slate-200 dark:border-slate-700 hover:shadow-xl transition-all duration-300"
+                whileHover={{ scale: 1.01 }}
+                className="bg-white dark:bg-slate-800 rounded-xl p-4 sm:p-6 shadow-lg border border-slate-200 dark:border-slate-700 hover:shadow-xl transition-all duration-300"
               >
-                <div className="flex items-start gap-4">
-                  <div className="w-12 h-12 bg-gradient-to-br from-slate-600 to-slate-700 rounded-lg flex items-center justify-center flex-shrink-0">
-                    <IconComponent className="h-6 w-6 text-white" />
+                <div className="flex items-start gap-3 sm:gap-4">
+                  <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-slate-600 to-slate-700 rounded-lg flex items-center justify-center flex-shrink-0">
+                    <IconComponent className="h-5 w-5 sm:h-6 sm:w-6 text-white" />
                   </div>
                   <div className="flex-1">
-                    <h4 className="text-lg font-arabic-formal font-bold text-slate-800 dark:text-white mb-2">
+                    <h4 className="text-base sm:text-lg lg:text-xl font-arabic-formal font-bold text-slate-800 dark:text-white mb-2">
                       {achievement.title}
                     </h4>
-                    <p className="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
+                    <p className="text-xs sm:text-sm lg:text-base text-slate-600 dark:text-slate-300 leading-relaxed">
                       {achievement.description}
                     </p>
                   </div>
                 </div>
                 
                 {/* مؤشر الصحة */}
-                <div className="flex items-center justify-end mt-4">
+                <div className="flex items-center justify-end mt-3 sm:mt-4">
                   <div className="flex items-center gap-2 text-emerald-600 dark:text-emerald-400">
-                    <CheckCircle className="h-4 w-4" />
-                    <span className="text-xs font-medium">مؤكد</span>
+                    <CheckCircle className="h-3 w-3 sm:h-4 sm:w-4" />
+                    <span className="text-xs sm:text-sm font-medium">مؤكد</span>
                   </div>
                 </div>
               </motion.div>
