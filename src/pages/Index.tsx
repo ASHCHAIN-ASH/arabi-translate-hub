@@ -9,8 +9,11 @@ import ServiceSteps from "@/components/ServiceSteps";
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
 import React from "react";
+import { useNavigate } from "react-router-dom";
 
 const Index = () => {
+  const navigate = useNavigate();
+  
   return (
     <div className="min-h-screen bg-background" dir="rtl">
       <Header />
@@ -62,17 +65,25 @@ const Index = () => {
               <Button 
                 size="lg" 
                 className="w-full sm:w-auto bg-white text-slate-800 hover:bg-gray-100 shadow-xl px-8 py-4 text-lg font-medium rounded-lg transition-all duration-300"
-                onClick={() => window.location.href = '/contract-request'}
+                onClick={() => navigate('/login?type=client')}
               >
-                طلب عقد الآن
+                تسجيل دخول العملاء
               </Button>
               <Button 
                 variant="outline" 
                 size="lg"
                 className="w-full sm:w-auto border-2 border-white/50 text-white hover:bg-white/10 px-8 py-4 text-lg font-medium rounded-lg transition-all duration-300"
-                onClick={() => window.location.href = '/submit-order'}
+                onClick={() => navigate('/register')}
               >
-                طلب خدمة سريعة
+                إنشاء حساب جديد
+              </Button>
+              <Button 
+                variant="outline" 
+                size="lg"
+                className="w-full sm:w-auto border-2 border-white/50 text-white hover:bg-white/10 px-8 py-4 text-lg font-medium rounded-lg transition-all duration-300"
+                onClick={() => navigate('/login?type=admin')}
+              >
+                دخول الإدارة
               </Button>
             </motion.div>
           </div>

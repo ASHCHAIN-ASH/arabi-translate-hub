@@ -4,6 +4,8 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import PageThemeProvider from "./components/PageThemeProvider";
+import { AuthProvider } from "@/components/AuthProvider";
+import ProtectedRoute from "@/components/ProtectedRoute";
 import Index from "./pages/Index";
 import TranslationServices from "./pages/TranslationServices";
 import LegalTranslation from "./pages/LegalTranslation";
@@ -16,6 +18,9 @@ import LiteraryTranslation from "./pages/LiteraryTranslation";
 import AcademicTranslation from "./pages/AcademicTranslation";
 import ResearchServices from "./pages/ResearchServices";
 import AboutUs from "./pages/AboutUs";
+import Login from "./pages/Login";
+import Register from "./pages/Register";
+import Unauthorized from "./pages/Unauthorized";
 
 import ThesisTitles from "./pages/research/ThesisTitles";
 import ResearchPlan from "./pages/research/ResearchPlan";
@@ -63,63 +68,116 @@ const App = () => (
       <Toaster />
       <Sonner />
       <BrowserRouter>
-        <PageThemeProvider>
-        <Routes>
-          <Route path="/" element={<Index />} />
-          <Route path="/translation-services" element={<TranslationServices />} />
-          <Route path="/legal-translation" element={<LegalTranslation />} />
-          <Route path="/business-translation" element={<BusinessTranslation />} />
-          <Route path="/technical-translation" element={<TechnicalTranslation />} />
-          <Route path="/medical-translation" element={<MedicalTranslation />} />
-          <Route path="/instant-translation" element={<InstantTranslation />} />
-          <Route path="/media-translation" element={<MediaTranslation />} />
-          <Route path="/literary-translation" element={<LiteraryTranslation />} />
-          <Route path="/academic-translation" element={<AcademicTranslation />} />
-          <Route path="/research-services" element={<ResearchServices />} />
-          <Route path="/about-us" element={<AboutUs />} />
-          
-          <Route path="/research/thesis-titles" element={<ThesisTitles />} />
-          <Route path="/research/research-plan" element={<ResearchPlan />} />
-          <Route path="/research/theoretical-framework" element={<TheoreticalFramework />} />
-          <Route path="/research/statistical-analysis" element={<StatisticalAnalysis />} />
-          <Route path="/research/language-review" element={<LanguageReview />} />
-          <Route path="/research/formatting" element={<Formatting />} />
-          <Route path="/research/plagiarism-check" element={<PlagiarismCheck />} />
-          <Route path="/research/admission-services" element={<AdmissionServices />} />
-          <Route path="/research/references" element={<References />} />
-            <Route path="/research/research-tools" element={<ResearchTools />} />
+        <AuthProvider>
+          <PageThemeProvider>
+          <Routes>
+            {/* Public Routes */}
+            <Route path="/" element={<Index />} />
+            <Route path="/translation-services" element={<TranslationServices />} />
+            <Route path="/legal-translation" element={<LegalTranslation />} />
+            <Route path="/business-translation" element={<BusinessTranslation />} />
+            <Route path="/technical-translation" element={<TechnicalTranslation />} />
+            <Route path="/medical-translation" element={<MedicalTranslation />} />
+            <Route path="/instant-translation" element={<InstantTranslation />} />
+            <Route path="/media-translation" element={<MediaTranslation />} />
+            <Route path="/literary-translation" element={<LiteraryTranslation />} />
+            <Route path="/academic-translation" element={<AcademicTranslation />} />
+            <Route path="/research-services" element={<ResearchServices />} />
+            <Route path="/about-us" element={<AboutUs />} />
+            <Route path="/terms-of-service" element={<TermsOfService />} />
+            <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+            <Route path="/order-tracking" element={<OrderTracking />} />
+            <Route path="/submit-order" element={<SubmitOrder />} />
+            <Route path="/color-showcase" element={<ColorShowcase />} />
             
-            {/* صفحات خدمات الترجمة */}
+            {/* Auth Routes */}
+            <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Register />} />
+            <Route path="/unauthorized" element={<Unauthorized />} />
+            
+            {/* Research Routes */}
+            <Route path="/research/thesis-titles" element={<ThesisTitles />} />
+            <Route path="/research/research-plan" element={<ResearchPlan />} />
+            <Route path="/research/theoretical-framework" element={<TheoreticalFramework />} />
+            <Route path="/research/statistical-analysis" element={<StatisticalAnalysis />} />
+            <Route path="/research/language-review" element={<LanguageReview />} />
+            <Route path="/research/formatting" element={<Formatting />} />
+            <Route path="/research/plagiarism-check" element={<PlagiarismCheck />} />
+            <Route path="/research/admission-services" element={<AdmissionServices />} />
+            <Route path="/research/references" element={<References />} />
+            <Route path="/research/research-tools" element={<ResearchTools />} />
+            <Route path="/research/research-evaluation" element={<ResearchEvaluation />} />
+            <Route path="/research/publication" element={<Publication />} />
+            <Route path="/research/academic-consultation" element={<AcademicConsultation />} />
+            <Route path="/research/training-courses" element={<TrainingCourses />} />
+            
+            {/* Service Routes */}
             <Route path="/services/text-translation" element={<TextTranslation />} />
             <Route path="/services/document-translation" element={<DocumentTranslation />} />
             <Route path="/services/audio-translation" element={<AudioTranslation />} />
             <Route path="/services/website-translation" element={<WebsiteTranslation />} />
             <Route path="/services/video-translation" element={<VideoTranslation />} />
             <Route path="/services/custom-services" element={<CustomServices />} />
-          <Route path="/research/research-evaluation" element={<ResearchEvaluation />} />
-          <Route path="/research/publication" element={<Publication />} />
-          <Route path="/research/academic-consultation" element={<AcademicConsultation />} />
-          <Route path="/research/training-courses" element={<TrainingCourses />} />
-          <Route path="/terms-of-service" element={<TermsOfService />} />
-          <Route path="/privacy-policy" element={<PrivacyPolicy />} />
-          <Route path="/order-tracking" element={<OrderTracking />} />
-          <Route path="/submit-order" element={<SubmitOrder />} />
-          <Route path="/admin" element={<AdminDashboard />} />
-          <Route path="/admin/orders" element={<AdminOrders />} />
-          <Route path="/admin/contracts" element={<ContractManagement />} />
-          <Route path="/admin/accounting" element={<AccountingDashboard />} />
-          <Route path="/admin/esign" element={<EsignManagement />} />
-          <Route path="/admin/whatsapp" element={<WhatsappManagement />} />
-          <Route path="/contract-approval" element={<ClientContractApproval />} />
-          <Route path="/contract-request" element={<ContractRequest />} />
-          <Route path="/client/dashboard" element={<ClientDashboard />} />
-          <Route path="/client/contracts" element={<ClientContracts />} />
-          <Route path="/esign/:token" element={<EsignPortal />} />
-          <Route path="/color-showcase" element={<ColorShowcase />} />
-          {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-          <Route path="*" element={<NotFound />} />
-        </Routes>
-        </PageThemeProvider>
+            
+            {/* Protected Client Routes */}
+            <Route path="/contract-request" element={
+              <ProtectedRoute requiredRole="client">
+                <ContractRequest />
+              </ProtectedRoute>
+            } />
+            <Route path="/client/dashboard" element={
+              <ProtectedRoute requiredRole="client">
+                <ClientDashboard />
+              </ProtectedRoute>
+            } />
+            <Route path="/client/contracts" element={
+              <ProtectedRoute requiredRole="client">
+                <ClientContracts />
+              </ProtectedRoute>
+            } />
+            <Route path="/contract-approval" element={
+              <ProtectedRoute requiredRole="client">
+                <ClientContractApproval />
+              </ProtectedRoute>
+            } />
+            
+            {/* Protected Admin Routes */}
+            <Route path="/admin" element={
+              <ProtectedRoute requiredRole="admin">
+                <AdminDashboard />
+              </ProtectedRoute>
+            } />
+            <Route path="/admin/orders" element={
+              <ProtectedRoute requiredRole="admin">
+                <AdminOrders />
+              </ProtectedRoute>
+            } />
+            <Route path="/admin/contracts" element={
+              <ProtectedRoute requiredRole="admin">
+                <ContractManagement />
+              </ProtectedRoute>
+            } />
+            <Route path="/admin/accounting" element={
+              <ProtectedRoute requiredRole="admin">
+                <AccountingDashboard />
+              </ProtectedRoute>
+            } />
+            <Route path="/admin/esign" element={
+              <ProtectedRoute requiredRole="admin">
+                <EsignManagement />
+              </ProtectedRoute>
+            } />
+            <Route path="/admin/whatsapp" element={
+              <ProtectedRoute requiredRole="admin">
+                <WhatsappManagement />
+              </ProtectedRoute>
+            } />
+            <Route path="/esign/:token" element={<EsignPortal />} />
+            
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+          </PageThemeProvider>
+        </AuthProvider>
       </BrowserRouter>
     </TooltipProvider>
   </QueryClientProvider>

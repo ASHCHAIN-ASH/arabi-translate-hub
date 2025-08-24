@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Home, FileText, Eye, Settings, LogOut, User, Bell } from "lucide-react";
-import { NavLink, useLocation } from "react-router-dom";
+import { NavLink, useLocation, useNavigate } from "react-router-dom";
+import { useAuth } from "@/components/AuthProvider";
 
 import {
   Sidebar,
@@ -24,6 +25,8 @@ const clientMenuItems = [
 
 export function ClientSidebar() {
   const location = useLocation();
+  const navigate = useNavigate();
+  const { signOut, user } = useAuth();
   const currentPath = location.pathname;
 
   const isActive = (path: string) => currentPath === path;
@@ -42,8 +45,10 @@ export function ClientSidebar() {
               <User className="h-6 w-6 text-primary" />
             </div>
             <div>
-              <p className="font-semibold text-sm">لوحة العميل</p>
-              <p className="text-xs text-muted-foreground">أهلاً بك</p>
+              <p className="font-semibold text-sm">أهلاً بك</p>
+              <p className="text-xs text-muted-foreground">
+                {user?.email || 'العميل الكريم'}
+              </p>
             </div>
           </div>
         </div>
@@ -73,14 +78,19 @@ export function ClientSidebar() {
 
         {/* Logout */}
         <div className="mt-auto p-4 border-t">
-          <SidebarMenuButton asChild>
-            <NavLink 
-              to="/" 
-              className="flex items-center gap-2 text-red-600 hover:bg-red-50"
-            >
-              <LogOut className="h-4 w-4" />
-              <span>تسجيل الخروج</span>
-            </NavLink>
+          <SidebarMenuButton 
+            onClick={async () => {
+              try {
+                await signOut();
+                navigate('/');
+              } catch (error) {
+                console.error('Error signing out:', error);
+              }
+            }}
+            className="flex items-center gap-2 text-red-600 hover:bg-red-50 w-full justify-start"
+          >
+            <LogOut className="h-4 w-4" />
+            <span>تسجيل الخروج</span>
           </SidebarMenuButton>
         </div>
       </SidebarContent>
