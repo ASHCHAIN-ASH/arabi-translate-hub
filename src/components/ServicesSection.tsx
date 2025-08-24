@@ -1,5 +1,6 @@
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { Link } from "react-router-dom";
 import { FileText, Mic, Globe, Video, Calculator, Users } from "lucide-react";
 import realTextTranslation from "@/assets/real-text-translation.jpg";
 import realDocumentTranslation from "@/assets/real-document-translation.jpg";
@@ -15,42 +16,48 @@ const ServicesSection = () => {
       description: "ترجمة فورية وسريعة لجميع أنواع النصوص بدقة عالية ومراجعة احترافية",
       icon: FileText,
       image: realTextTranslation,
-      features: ["ترجمة فورية", "مراجعة احترافية", "أكثر من 100 لغة", "دقة 99%"]
+      features: ["ترجمة فورية", "مراجعة احترافية", "أكثر من 100 لغة", "دقة 99%"],
+      href: "/services/text-translation"
     },
     {
       title: "ترجمة المستندات",
       description: "ترجمة ملفات Word, PDF, PowerPoint مع الحفاظ على التنسيق الأصلي",
       icon: FileText,
       image: realDocumentTranslation,
-      features: ["حفظ التنسيق", "ملفات متعددة", "تسليم سريع", "سرية تامة"]
+      features: ["حفظ التنسيق", "ملفات متعددة", "تسليم سريع", "سرية تامة"],
+      href: "/services/document-translation"
     },
     {
       title: "الترجمة الصوتية",
       description: "تحويل الكلام إلى نص وترجمته مباشرة مع دعم جميع اللهجات",
       icon: Mic,
       image: realAudioTranslation,
-      features: ["تحويل صوتي", "ترجمة فورية", "دعم اللهجات", "جودة عالية"]
+      features: ["تحويل صوتي", "ترجمة فورية", "دعم اللهجات", "جودة عالية"],
+      href: "/services/audio-translation"
     },
     {
       title: "ترجمة المواقع",
       description: "ترجمة مواقع الويب والصفحات الإلكترونية بالكامل مع الحفاظ على التصميم",
       icon: Globe,
       image: realWebsiteTranslation,
-      features: ["ترجمة كاملة", "حفظ التصميم", "SEO محسن", "تحديث مستمر"]
+      features: ["ترجمة كاملة", "حفظ التصميم", "SEO محسن", "تحديث مستمر"],
+      href: "/services/website-translation"
     },
     {
       title: "ترجمة الفيديو",
       description: "إضافة ترجمة للفيديوهات والأفلام مع خدمات الدبلجة الاحترافية",
       icon: Video,
       image: realVideoTranslation,
-      features: ["ترجمة مرئية", "دبلجة صوتية", "توقيت دقيق", "جودة HD"]
+      features: ["ترجمة مرئية", "دبلجة صوتية", "توقيت دقيق", "جودة HD"],
+      href: "/services/video-translation"
     },
     {
       title: "خدمات مخصصة",
       description: "حلول ترجمة مخصصة للشركات والمؤسسات بأسعار تنافسية",
       icon: Users,
       image: realBusinessServices,
-      features: ["حلول مخصصة", "دعم 24/7", "فريق مختص", "أسعار مرنة"]
+      features: ["حلول مخصصة", "دعم 24/7", "فريق مختص", "أسعار مرنة"],
+      href: "/services/custom-services"
     }
   ];
 
@@ -116,12 +123,14 @@ const ServicesSection = () => {
                     ))}
                   </ul>
                   
-                  <Button 
-                    variant="outline" 
-                    className="w-full mt-4 group-hover:bg-primary group-hover:text-primary-foreground group-hover:border-primary transition-all duration-300"
-                  >
-                    اطلب الخدمة
-                  </Button>
+                  <Link to={service.href}>
+                    <Button 
+                      variant="outline" 
+                      className="w-full mt-4 group-hover:bg-primary group-hover:text-primary-foreground group-hover:border-primary transition-all duration-300"
+                    >
+                      اطلب الخدمة
+                    </Button>
+                  </Link>
                 </CardContent>
               </Card>
             );

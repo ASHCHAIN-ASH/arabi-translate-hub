@@ -1,14 +1,35 @@
 import { Button } from "@/components/ui/button";
-import { Menu, User, Globe, Phone, GraduationCap, BookOpen } from "lucide-react";
+import { Menu, User, Globe, Phone, GraduationCap, BookOpen, ChevronDown } from "lucide-react";
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 const Header = () => {
   const [isOpen, setIsOpen] = useState(false);
 
   const navigation = [
     { name: 'الرئيسية', href: '/' },
-    { name: 'خدمات الترجمة', href: '/translation-services' },
+    { 
+      name: 'خدمات الترجمة', 
+      href: '/translation-services',
+      hasDropdown: true,
+      subItems: [
+        { name: 'الترجمة القانونية', href: '/legal-translation' },
+        { name: 'الترجمة التجارية', href: '/business-translation' },
+        { name: 'الترجمة التقنية', href: '/technical-translation' },
+        { name: 'الترجمة الطبية', href: '/medical-translation' },
+        { name: 'الترجمة الأكاديمية', href: '/academic-translation' },
+        { name: 'الترجمة الفورية', href: '/instant-translation' },
+        { name: 'الترجمة الإعلامية', href: '/media-translation' },
+        { name: 'الترجمة الأدبية', href: '/literary-translation' },
+      ]
+    },
     { name: 'خدمات الأبحاث والكتابة', href: '/research-services' },
     { name: 'من نحن', href: '/about-us' },
     { name: 'تواصل معنا', href: '/contact' },
@@ -45,13 +66,31 @@ const Header = () => {
           {/* القائمة الرئيسية - شاشات كبيرة */}
           <nav className="hidden lg:flex items-center space-x-reverse space-x-8">
             {navigation.map((item) => (
-              <a
-                key={item.name}
-                href={item.href}
-                className="text-foreground hover:text-primary transition-colors duration-200 font-medium"
-              >
-                {item.name}
-              </a>
+              item.hasDropdown ? (
+                <DropdownMenu key={item.name}>
+                  <DropdownMenuTrigger className="flex items-center gap-1 text-foreground hover:text-primary transition-colors duration-200 font-medium">
+                    {item.name}
+                    <ChevronDown className="h-4 w-4" />
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end" className="w-48">
+                    {item.subItems?.map((subItem) => (
+                      <DropdownMenuItem key={subItem.name} asChild>
+                        <Link to={subItem.href} className="w-full">
+                          {subItem.name}
+                        </Link>
+                      </DropdownMenuItem>
+                    ))}
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              ) : (
+                <Link
+                  key={item.name}
+                  to={item.href}
+                  className="text-foreground hover:text-primary transition-colors duration-200 font-medium"
+                >
+                  {item.name}
+                </Link>
+              )
             ))}
           </nav>
 
@@ -97,14 +136,29 @@ const Header = () => {
                 </div>
                 
                 {navigation.map((item) => (
-                  <a
-                    key={item.name}
-                    href={item.href}
-                    className="text-foreground hover:text-primary transition-colors duration-200 py-2 border-b border-muted"
-                    onClick={() => setIsOpen(false)}
-                  >
-                    {item.name}
-                  </a>
+                  <div key={item.name}>
+                    <Link
+                      to={item.href}
+                      className="text-foreground hover:text-primary transition-colors duration-200 py-2 border-b border-muted block"
+                      onClick={() => setIsOpen(false)}
+                    >
+                      {item.name}
+                    </Link>
+                    {item.hasDropdown && item.subItems && (
+                      <div className="mr-4 mt-2 space-y-2">
+                        {item.subItems.map((subItem) => (
+                          <Link
+                            key={subItem.name}
+                            to={subItem.href}
+                            className="text-muted-foreground hover:text-primary transition-colors duration-200 py-1 text-sm block"
+                            onClick={() => setIsOpen(false)}
+                          >
+                            {subItem.name}
+                          </Link>
+                        ))}
+                      </div>
+                    )}
+                  </div>
                 ))}
                 
                 <div className="flex flex-col space-y-2 mt-6">
