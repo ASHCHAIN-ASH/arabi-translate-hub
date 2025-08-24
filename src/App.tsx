@@ -27,6 +27,12 @@ import PlagiarismCheck from "./pages/research/PlagiarismCheck";
 import AdmissionServices from "./pages/research/AdmissionServices";
 import References from "./pages/research/References";
 import ResearchTools from "./pages/research/ResearchTools";
+import TextTranslation from "./pages/services/TextTranslation";
+import DocumentTranslation from "./pages/services/DocumentTranslation";
+import AudioTranslation from "./pages/services/AudioTranslation";
+import WebsiteTranslation from "./pages/services/WebsiteTranslation";
+import VideoTranslation from "./pages/services/VideoTranslation";
+import CustomServices from "./pages/services/CustomServices";
 import ResearchEvaluation from "./pages/research/ResearchEvaluation";
 import Publication from "./pages/research/Publication";
 import AcademicConsultation from "./pages/research/AcademicConsultation";
@@ -68,7 +74,15 @@ const App = () => (
           <Route path="/research/plagiarism-check" element={<PlagiarismCheck />} />
           <Route path="/research/admission-services" element={<AdmissionServices />} />
           <Route path="/research/references" element={<References />} />
-          <Route path="/research/research-tools" element={<ResearchTools />} />
+            <Route path="/research/research-tools" element={<ResearchTools />} />
+            
+            {/* صفحات خدمات الترجمة */}
+            <Route path="/services/text-translation" element={<TextTranslation />} />
+            <Route path="/services/document-translation" element={<DocumentTranslation />} />
+            <Route path="/services/audio-translation" element={<AudioTranslation />} />
+            <Route path="/services/website-translation" element={<WebsiteTranslation />} />
+            <Route path="/services/video-translation" element={<VideoTranslation />} />
+            <Route path="/services/custom-services" element={<CustomServices />} />
           <Route path="/research/research-evaluation" element={<ResearchEvaluation />} />
           <Route path="/research/publication" element={<Publication />} />
           <Route path="/research/academic-consultation" element={<AcademicConsultation />} />
