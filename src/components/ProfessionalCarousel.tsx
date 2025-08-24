@@ -219,7 +219,7 @@ const ProfessionalHeroSection: React.FC = () => {
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 1.9 }}
-            className="flex flex-col sm:flex-row items-center justify-center gap-4 max-w-lg mx-auto"
+            className="flex flex-col sm:flex-row items-center justify-center gap-4 max-w-2xl mx-auto"
           >
             <motion.div
               whileHover={{ scale: 1.05, y: -2 }}
@@ -228,10 +228,10 @@ const ProfessionalHeroSection: React.FC = () => {
             >
               <Button 
                 size="lg" 
-                className="w-full sm:w-auto group bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white shadow-xl px-8 py-4 text-lg font-semibold rounded-xl transition-all duration-300 border border-white/20"
+                className="w-full sm:w-auto group bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white shadow-2xl px-10 py-5 text-xl font-bold rounded-2xl transition-all duration-300 border-2 border-white/30 hover:border-white/50"
               >
-                Start Your Journey
-                <ArrowRight className="h-5 w-5 ml-2 group-hover:translate-x-1 transition-transform" />
+                ابدأ رحلتك معنا
+                <ArrowRight className="h-6 w-6 mr-3 group-hover:-translate-x-1 transition-transform" />
               </Button>
             </motion.div>
             
@@ -243,10 +243,10 @@ const ProfessionalHeroSection: React.FC = () => {
               <Button 
                 variant="outline" 
                 size="lg"
-                className="w-full sm:w-auto group bg-white/10 border border-white/30 text-white hover:bg-white/20 px-8 py-4 text-lg font-medium rounded-xl backdrop-blur-sm transition-all duration-300"
+                className="w-full sm:w-auto group bg-white/15 border-2 border-white/40 text-white hover:bg-white/25 hover:border-white/60 px-10 py-5 text-xl font-bold rounded-2xl backdrop-blur-sm transition-all duration-300 shadow-xl"
               >
-                <BookOpen className="h-5 w-5 mr-2 group-hover:rotate-12 transition-transform" />
-                Explore Services
+                <BookOpen className="h-6 w-6 ml-3 group-hover:rotate-12 transition-transform" />
+                استكشف خدماتنا
               </Button>
             </motion.div>
           </motion.div>
