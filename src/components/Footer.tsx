@@ -195,7 +195,8 @@ const Footer = () => {
                 { name: 'عن الشركة', icon: Building2 },
                 { name: 'المدونة', icon: Globe },
                 { name: 'الأسئلة الشائعة', icon: Users },
-                { name: 'سياسة الخصوصية', icon: Shield }
+                { name: 'سياسة الخصوصية', icon: Shield },
+                { name: 'إدارة', icon: Users, href: '/admin/orders', admin: true }
               ].map((link) => (
                 <motion.li 
                   key={link.name}
@@ -203,8 +204,8 @@ const Footer = () => {
                   transition={{ type: "spring", stiffness: 300 }}
                 >
                   <a 
-                    href="#" 
-                    className="text-white/70 hover:text-white transition-colors text-sm flex items-center gap-2 group"
+                    href={link.href || "#"} 
+                    className={`text-white/70 hover:text-white transition-colors text-sm flex items-center gap-2 group ${link.admin ? 'text-white/40 hover:text-white/60' : ''}`}
                   >
                     <link.icon className="h-4 w-4 group-hover:text-primary transition-colors" />
                     {link.name}
