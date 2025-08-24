@@ -2,7 +2,7 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import AdvancedTranslationForm from "@/components/AdvancedTranslationForm";
+import TranslationPricingForm from "@/components/TranslationPricingForm";
 import { 
   Scale, 
   Stethoscope, 
@@ -266,13 +266,7 @@ const TranslationServices = () => {
       {/* فورم طلب خدمة الترجمة */}
       <section className="py-16">
         <div className="container mx-auto px-4">
-          <AdvancedTranslationForm 
-            translationType="general"
-            title="احصل على خدمة ترجمة متخصصة"
-            description="نقدم جميع أنواع خدمات الترجمة المتخصصة بأعلى معايير الجودة والدقة"
-            gradientFrom="primary"
-            gradientTo="accent"
-          />
+          <TranslationPricingForm />
         </div>
       </section>
 
