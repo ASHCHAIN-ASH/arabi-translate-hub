@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { Menu, User, Globe, Phone } from "lucide-react";
+import { Menu, User, Globe, Phone, GraduationCap, BookOpen } from "lucide-react";
 import { useState } from "react";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 
@@ -21,10 +21,18 @@ const Header = () => {
           {/* الشعار */}
           <div className="flex items-center space-x-reverse space-x-4">
             <div className="flex items-center">
-              <Globe className="h-8 w-8 text-primary ml-2" />
+              <div className="relative w-12 h-12 ml-3">
+                <div className="absolute inset-0 bg-gradient-to-br from-blue-600 via-purple-600 to-indigo-600 rounded-xl shadow-lg flex items-center justify-center">
+                  <div className="flex items-center justify-center">
+                    <GraduationCap className="h-6 w-6 text-white" />
+                    <BookOpen className="h-4 w-4 text-white/80 -ml-1" />
+                  </div>
+                </div>
+                <div className="absolute -top-1 -right-1 w-4 h-4 bg-gradient-to-br from-orange-400 to-red-500 rounded-full border-2 border-white shadow-sm"></div>
+              </div>
               <div>
-                <h1 className="text-xl font-arabic-title font-bold text-primary">مركز الخبراء</h1>
-                <p className="text-xs text-muted-foreground">للترجمة الاحترافية</p>
+                <h1 className="text-xl font-arabic-title font-bold text-primary leading-tight">وكالة ماستر إيدو باث</h1>
+                <p className="text-sm font-semibold text-blue-600 dark:text-blue-400">MasterEduPath Agency</p>
               </div>
             </div>
           </div>
@@ -63,8 +71,19 @@ const Header = () => {
             <SheetContent side="right" className="w-80">
               <div className="flex flex-col space-y-4 mt-8">
                 <div className="flex items-center mb-6">
-                  <Globe className="h-6 w-6 text-primary ml-2" />
-                  <span className="font-arabic-title font-bold text-lg">مركز الخبراء</span>
+                  <div className="relative w-10 h-10 ml-3">
+                    <div className="absolute inset-0 bg-gradient-to-br from-blue-600 via-purple-600 to-indigo-600 rounded-lg shadow-lg flex items-center justify-center">
+                      <div className="flex items-center justify-center">
+                        <GraduationCap className="h-5 w-5 text-white" />
+                        <BookOpen className="h-3 w-3 text-white/80 -ml-1" />
+                      </div>
+                    </div>
+                    <div className="absolute -top-0.5 -right-0.5 w-3 h-3 bg-gradient-to-br from-orange-400 to-red-500 rounded-full border border-white shadow-sm"></div>
+                  </div>
+                  <div>
+                    <span className="font-arabic-title font-bold text-lg text-primary">وكالة ماستر إيدو باث</span>
+                    <p className="text-xs font-medium text-blue-600 dark:text-blue-400">MasterEduPath Agency</p>
+                  </div>
                 </div>
                 
                 {navigation.map((item) => (
