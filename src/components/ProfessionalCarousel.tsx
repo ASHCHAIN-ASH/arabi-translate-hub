@@ -178,12 +178,12 @@ const ProfessionalHeroSection: React.FC = () => {
             })}
           </motion.div>
 
-          {/* Achievements */}
+          {/* Stats Section */}
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 1.5 }}
-            className="flex justify-center items-center gap-8 lg:gap-16"
+            className="grid grid-cols-1 sm:grid-cols-3 gap-6 max-w-4xl mx-auto"
           >
             {achievements.map((achievement, index) => {
               const IconComponent = achievement.icon;
@@ -193,20 +193,20 @@ const ProfessionalHeroSection: React.FC = () => {
                   initial={{ opacity: 0, scale: 0.8 }}
                   animate={{ opacity: 1, scale: 1 }}
                   transition={{ duration: 0.5, delay: 1.7 + index * 0.1 }}
-                  whileHover={{ scale: 1.1 }}
-                  className="text-center group"
+                  whileHover={{ scale: 1.02, y: -4 }}
+                  className="group bg-white/5 backdrop-blur-sm rounded-2xl p-6 border border-white/10 hover:border-white/30 transition-all duration-300 text-center"
                 >
                   <motion.div 
-                    className="w-12 h-12 mx-auto mb-2 bg-gradient-to-br from-blue-500/20 to-purple-500/20 rounded-xl flex items-center justify-center border border-white/20"
+                    className="w-16 h-16 mx-auto mb-4 bg-gradient-to-br from-blue-500/30 to-purple-500/30 rounded-xl flex items-center justify-center border border-white/20"
                     whileHover={{ rotate: 360 }}
                     transition={{ duration: 0.8 }}
                   >
-                    <IconComponent className="h-6 w-6 text-white" />
+                    <IconComponent className="h-8 w-8 text-white" />
                   </motion.div>
-                  <div className="text-2xl lg:text-3xl font-bold text-white">
+                  <div className="text-3xl lg:text-4xl font-bold text-white mb-2 group-hover:text-blue-200 transition-colors">
                     {achievement.value}
                   </div>
-                  <div className="text-sm text-white/70">
+                  <div className="text-base text-white/70 group-hover:text-white/90 transition-colors font-medium">
                     {achievement.label}
                   </div>
                 </motion.div>
@@ -214,20 +214,21 @@ const ProfessionalHeroSection: React.FC = () => {
             })}
           </motion.div>
 
-          {/* Call to Action */}
+          {/* Action Buttons */}
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 1.9 }}
-            className="flex flex-col sm:flex-row items-center justify-center gap-4"
+            className="flex flex-col sm:flex-row items-center justify-center gap-4 max-w-lg mx-auto"
           >
             <motion.div
               whileHover={{ scale: 1.05, y: -2 }}
               whileTap={{ scale: 0.95 }}
+              className="w-full sm:w-auto"
             >
               <Button 
                 size="lg" 
-                className="group bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white shadow-xl px-8 py-4 text-lg font-semibold rounded-xl transition-all duration-300 border border-white/20"
+                className="w-full sm:w-auto group bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white shadow-xl px-8 py-4 text-lg font-semibold rounded-xl transition-all duration-300 border border-white/20"
               >
                 Start Your Journey
                 <ArrowRight className="h-5 w-5 ml-2 group-hover:translate-x-1 transition-transform" />
@@ -237,11 +238,12 @@ const ProfessionalHeroSection: React.FC = () => {
             <motion.div
               whileHover={{ scale: 1.05, y: -2 }}
               whileTap={{ scale: 0.95 }}
+              className="w-full sm:w-auto"
             >
               <Button 
                 variant="outline" 
                 size="lg"
-                className="group bg-white/10 border border-white/30 text-white hover:bg-white/20 px-8 py-4 text-lg font-medium rounded-xl backdrop-blur-sm transition-all duration-300"
+                className="w-full sm:w-auto group bg-white/10 border border-white/30 text-white hover:bg-white/20 px-8 py-4 text-lg font-medium rounded-xl backdrop-blur-sm transition-all duration-300"
               >
                 <BookOpen className="h-5 w-5 mr-2 group-hover:rotate-12 transition-transform" />
                 Explore Services
