@@ -35,32 +35,6 @@ import {
 } from "lucide-react";
 
 const AboutUs = () => {
-  const teamMembers = [
-    {
-      name: "د. أحمد محمد الأستاذ",
-      role: "المدير التنفيذي والمؤسس",
-      specialization: "الحلول التعليمية المتقدمة",
-      experience: "15+ سنة",
-      image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=400&fit=crop&crop=face",
-      description: "خبير في تطوير الحلول التعليمية والتكنولوجية مع دكتوراه في التربية الرقمية"
-    },
-    {
-      name: "د. فاطمة العلي",
-      role: "مديرة الأبحاث والتطوير",
-      specialization: "البحث العلمي والتعليم الإلكتروني",
-      experience: "12+ سنة",
-      image: "https://images.unsplash.com/photo-1494790108755-2616b612b786?w=400&h=400&fit=crop&crop=face",
-      description: "متخصصة في تطوير المناهج التعليمية وحلول التعلم الذكي"
-    },
-    {
-      name: "أ. سارة الحسن",
-      role: "مديرة الجودة والابتكار",
-      specialization: "ضمان الجودة والتطوير التقني",
-      experience: "10+ سنوات",
-      image: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=400&h=400&fit=crop&crop=face",
-      description: "خبيرة في ضمان جودة المنتجات التعليمية والحلول التقنية المبتكرة"
-    }
-  ];
 
   const values = [
     {
@@ -432,68 +406,6 @@ const AboutUs = () => {
                     <h3 className="text-xl font-bold mb-3">{service.title}</h3>
                     <p className="text-muted-foreground leading-relaxed text-sm">
                       {service.description}
-                    </p>
-                  </CardContent>
-                </Card>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* قسم فريق العمل */}
-      <section className="py-16 bg-gradient-to-br from-muted/30 to-background">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <motion.div
-            className="text-center mb-12"
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.8 }}
-          >
-            <h2 className="text-3xl sm:text-4xl font-arabic-title font-bold mb-4">
-              فريق <span className="text-gradient bg-gradient-primary bg-clip-text text-transparent">الخبراء</span>
-            </h2>
-            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-              نخبة من الخبراء والمتخصصين في مختلف المجالات الأكاديمية والترجمة
-            </p>
-          </motion.div>
-
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {teamMembers.map((member, index) => (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.6, delay: index * 0.2 }}
-              >
-                <Card className="p-6 border-2 border-transparent hover:border-primary/20 bg-gradient-to-br from-background to-muted/10 shadow-lg hover:shadow-xl transition-all duration-300 group">
-                  <CardContent className="p-0 text-center">
-                    <motion.div
-                      className="relative mb-4 group-hover:scale-105 transition-transform duration-300"
-                      whileHover={{ scale: 1.1 }}
-                    >
-                      <img
-                        src={member.image}
-                        alt={member.name}
-                        className="w-24 h-24 rounded-full mx-auto object-cover border-4 border-primary/20"
-                      />
-                      <div className="absolute -bottom-2 -right-2 w-8 h-8 bg-primary rounded-full flex items-center justify-center">
-                        <CheckCircle className="h-4 w-4 text-white" />
-                      </div>
-                    </motion.div>
-                    
-                    <h3 className="text-xl font-bold mb-2">{member.name}</h3>
-                    <div className="mb-3">
-                      <Badge variant="secondary" className="mb-2">
-                        {member.role}
-                      </Badge>
-                      <p className="text-sm text-primary font-medium">{member.specialization}</p>
-                      <p className="text-xs text-muted-foreground mt-1">{member.experience}</p>
-                    </div>
-                    <p className="text-sm text-muted-foreground leading-relaxed">
-                      {member.description}
                     </p>
                   </CardContent>
                 </Card>
