@@ -78,10 +78,10 @@ const Header = () => {
                   <DropdownMenuItem key={service.name} asChild>
                     <Link
                       to={service.href}
-                      className="w-full cursor-pointer hover:bg-muted focus:bg-muted flex items-center gap-3 p-3 text-right"
+                      className="w-full cursor-pointer hover:bg-muted focus:bg-muted flex items-center justify-between p-3 text-right"
                     >
-                      <service.icon className="h-5 w-5 text-primary" />
                       <span className="font-medium">{service.name}</span>
+                      <service.icon className="h-5 w-5 text-primary" />
                     </Link>
                   </DropdownMenuItem>
                 ))}
@@ -152,11 +152,11 @@ const Header = () => {
                     <Link
                       key={service.name}
                       to={service.href}
-                      className="text-muted-foreground hover:text-primary transition-colors duration-200 py-3 pr-4 block flex items-center gap-3"
+                      className="text-muted-foreground hover:text-primary transition-colors duration-200 py-3 pr-4 block flex items-center justify-between"
                       onClick={() => setIsOpen(false)}
                     >
-                      <service.icon className="h-5 w-5 text-primary" />
                       <span>{service.name}</span>
+                      <service.icon className="h-5 w-5 text-primary" />
                     </Link>
                   ))}
                 </div>
