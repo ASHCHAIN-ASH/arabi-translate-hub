@@ -43,6 +43,7 @@ import ColorShowcase from "./pages/ColorShowcase";
 import OrderTracking from "./pages/OrderTracking";
 import SubmitOrder from "./pages/SubmitOrder";
 import AdminOrders from "./pages/AdminOrders";
+import AdminDashboard from "./pages/AdminDashboard";
 import ContractManagement from "./pages/ContractManagement";
 import ClientContractApproval from "./pages/ClientContractApproval";
 import AccountingDashboard from "./pages/admin/AccountingDashboard";
@@ -100,6 +101,7 @@ const App = () => (
           <Route path="/privacy-policy" element={<PrivacyPolicy />} />
           <Route path="/order-tracking" element={<OrderTracking />} />
           <Route path="/submit-order" element={<SubmitOrder />} />
+          <Route path="/admin" element={<AdminDashboard />} />
           <Route path="/admin/orders" element={<AdminOrders />} />
           <Route path="/admin/contracts" element={<ContractManagement />} />
           <Route path="/admin/accounting" element={<AccountingDashboard />} />
