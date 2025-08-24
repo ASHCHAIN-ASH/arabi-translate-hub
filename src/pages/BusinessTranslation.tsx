@@ -3,7 +3,6 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Briefcase, FileText, TrendingUp, Users, Globe, Award } from "lucide-react";
-import AdvancedTranslationForm from "@/components/AdvancedTranslationForm";
 import realBusinessServicesImg from "@/assets/real-business-services.jpg";
 
 const BusinessTranslation = () => {
@@ -161,21 +160,6 @@ const BusinessTranslation = () => {
             </div>
           </motion.div>
 
-          {/* Advanced Translation Form */}
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 1 }}
-          >
-            <AdvancedTranslationForm 
-              translationType="business"
-              title="طلب ترجمة تجارية احترافية"
-              description="ترجمة تجارية متخصصة للشركات والمؤسسات"
-              gradientFrom="orange-600"
-              gradientTo="orange-800"
-            />
-          </motion.div>
 
         </div>
       </section>

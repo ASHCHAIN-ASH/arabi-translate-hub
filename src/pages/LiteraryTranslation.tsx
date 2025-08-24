@@ -3,7 +3,6 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { BookOpen, Feather, Scroll, PenTool, Award, Heart } from "lucide-react";
-import AdvancedTranslationForm from "@/components/AdvancedTranslationForm";
 
 const LiteraryTranslation = () => {
   const literaryServices = [
@@ -254,21 +253,6 @@ const LiteraryTranslation = () => {
             </div>
           </motion.div>
 
-          {/* Advanced Translation Form */}
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 1 }}
-          >
-            <AdvancedTranslationForm 
-              translationType="literary"
-              title="طلب ترجمة أدبية إبداعية"
-              description="ترجمة أدبية تحافظ على روح النص وجماليته"
-              gradientFrom="purple-600"
-              gradientTo="pink-600"
-            />
-          </motion.div>
         </div>
       </section>
     </div>

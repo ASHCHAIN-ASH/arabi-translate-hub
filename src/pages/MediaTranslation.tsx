@@ -3,7 +3,6 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Video, Film, Tv, Radio, Headphones, Camera, Edit, Play, Pause, Volume2, Subtitles, Mic } from "lucide-react";
-import AdvancedTranslationForm from "@/components/AdvancedTranslationForm";
 
 const MediaTranslation = () => {
   const mediaServices = [
@@ -425,21 +424,6 @@ const MediaTranslation = () => {
             </motion.div>
           </motion.div>
 
-          {/* Advanced Translation Form */}
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 1 }}
-          >
-            <AdvancedTranslationForm 
-              translationType="media"
-              title="طلب ترجمة الوسائط المتخصصة"
-              description="ترجمة احترافية للمحتوى الصوتي والمرئي"
-              gradientFrom="purple-600"
-              gradientTo="pink-600"
-            />
-          </motion.div>
         </div>
       </section>
     </div>

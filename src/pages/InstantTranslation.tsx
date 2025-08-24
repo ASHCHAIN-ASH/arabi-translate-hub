@@ -3,7 +3,6 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Zap, Clock, Smartphone, MessageSquare, Globe, Mic, Video, FileText, Star, CheckCircle, Timer, Users } from "lucide-react";
-import AdvancedTranslationForm from "@/components/AdvancedTranslationForm";
 
 const InstantTranslation = () => {
   const instantServices = [
@@ -415,21 +414,6 @@ const InstantTranslation = () => {
             </motion.div>
           </motion.div>
 
-          {/* Advanced Translation Form */}
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 1 }}
-          >
-            <AdvancedTranslationForm 
-              translationType="instant"
-              title="طلب ترجمة فورية سريعة"
-              description="ترجمة فورية عالية الجودة في أسرع وقت ممكن"
-              gradientFrom="orange-600"
-              gradientTo="red-600"
-            />
-          </motion.div>
         </div>
       </section>
     </div>
