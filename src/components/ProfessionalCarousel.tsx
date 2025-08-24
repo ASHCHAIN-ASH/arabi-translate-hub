@@ -219,7 +219,7 @@ const ProfessionalHeroSection: React.FC = () => {
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 1.9 }}
-            className="flex flex-col sm:flex-row items-center justify-center gap-4 max-w-2xl mx-auto"
+            className="flex flex-col sm:flex-row items-center justify-center gap-4 max-w-2xl mx-auto mb-16"
           >
             <motion.div
               whileHover={{ scale: 1.05, y: -2 }}
