@@ -10,9 +10,8 @@ const Header = () => {
     { name: 'الرئيسية', href: '/' },
     { name: 'خدمات الترجمة', href: '/translation-services' },
     { name: 'خدمات الأبحاث والكتابة', href: '/research-services' },
-    { name: 'الأسعار', href: '/pricing' },
-    { name: 'عن الشركة', href: '/about' },
-    { name: 'المدونة', href: '/blog' },
+    { name: 'من نحن', href: '/about-us' },
+    { name: 'الشهادات والاعتمادات', href: '/certifications' },
     { name: 'تواصل معنا', href: '/contact' },
   ];
 

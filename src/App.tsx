@@ -14,6 +14,8 @@ import MediaTranslation from "./pages/MediaTranslation";
 import LiteraryTranslation from "./pages/LiteraryTranslation";
 import AcademicTranslation from "./pages/AcademicTranslation";
 import ResearchServices from "./pages/ResearchServices";
+import AboutUs from "./pages/AboutUs";
+import Certifications from "./pages/Certifications";
 import ThesisTitles from "./pages/research/ThesisTitles";
 import ResearchPlan from "./pages/research/ResearchPlan";
 import TheoreticalFramework from "./pages/research/TheoreticalFramework";
@@ -52,6 +54,8 @@ const App = () => (
           <Route path="/literary-translation" element={<LiteraryTranslation />} />
           <Route path="/academic-translation" element={<AcademicTranslation />} />
           <Route path="/research-services" element={<ResearchServices />} />
+          <Route path="/about-us" element={<AboutUs />} />
+          <Route path="/certifications" element={<Certifications />} />
           <Route path="/research/thesis-titles" element={<ThesisTitles />} />
           <Route path="/research/research-plan" element={<ResearchPlan />} />
           <Route path="/research/theoretical-framework" element={<TheoreticalFramework />} />
