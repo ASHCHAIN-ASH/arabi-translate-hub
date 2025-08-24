@@ -256,8 +256,10 @@
   }
 
   body {
-    @apply bg-background text-foreground font-ibm-plex;
+    @apply text-foreground font-ibm-plex;
+    background-color: hsl(var(--background));
     font-feature-settings: "kern" 1;
+    transition: background-color 0.3s ease;
   }
 }
 
