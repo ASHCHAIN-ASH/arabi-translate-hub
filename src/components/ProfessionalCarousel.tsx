@@ -410,36 +410,6 @@ const ProfessionalHeroSection: React.FC = () => {
             </motion.div>
           </motion.div>
 
-          {/* Professional Links */}
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.8, delay: 2.5 }}
-            className="flex flex-wrap items-center justify-center gap-6 mt-12"
-          >
-            {[
-              { text: "Research Excellence", textAr: "التميز البحثي" },
-              { text: "Academic Writing", textAr: "الكتابة الأكاديمية" }, 
-              { text: "Global Consultancy", textAr: "الاستشارات العالمية" },
-              { text: "Language Services", textAr: "الخدمات اللغوية" }
-            ].map((link, index) => (
-              <motion.div
-                key={index}
-                whileHover={{ scale: 1.1, y: -2 }}
-                whileTap={{ scale: 0.95 }}
-                className="group bg-white/5 hover:bg-white/15 backdrop-blur-sm px-8 py-4 rounded-full border border-white/20 hover:border-white/40 transition-all duration-300 cursor-pointer"
-              >
-                <div className="text-center">
-                  <span className="block text-white/90 group-hover:text-white text-sm font-medium transition-colors duration-300">
-                    {link.text}
-                  </span>
-                  <span className="block text-white/70 group-hover:text-white/90 text-xs transition-colors duration-300">
-                    {link.textAr}
-                  </span>
-                </div>
-              </motion.div>
-            ))}
-          </motion.div>
         </div>
       </div>
 
