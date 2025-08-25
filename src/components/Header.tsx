@@ -95,14 +95,14 @@ const Header = () => {
                   <span>خدماتنا</span>
                 </Button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent className="w-80 bg-background/95 backdrop-blur-md border border-border shadow-xl z-50" align="end">
+              <DropdownMenuContent className="w-80 bg-white dark:bg-gray-800 border border-border shadow-xl z-50 backdrop-blur-sm" align="end">
                 <div className="p-2">
                   <div className="text-sm font-semibold text-muted-foreground mb-3 px-2 text-right">خدماتنا المتخصصة</div>
                   {servicesDropdown.map((service) => (
                     <DropdownMenuItem key={service.name} asChild>
                       <Link
                         to={service.href}
-                        className="w-full cursor-pointer hover:bg-muted focus:bg-muted flex items-center gap-3 p-3 rounded-lg"
+                        className="w-full cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 focus:bg-gray-100 dark:focus:bg-gray-700 flex items-center gap-3 p-3 rounded-lg"
                       >
                         <div className="flex-1 text-right">
                           <div className="font-medium text-sm text-foreground">{service.name}</div>
