@@ -101,14 +101,14 @@ const Header = () => {
                     <DropdownMenuItem key={service.name} asChild>
                       <Link
                         to={service.href}
-                        className="w-full cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 focus:bg-gray-100 dark:focus:bg-gray-700 flex items-center gap-3 p-3 rounded-lg"
+                        className="w-full cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 focus:bg-gray-100 dark:focus:bg-gray-700 flex items-center gap-3 p-3 rounded-lg flex-row-reverse"
                       >
+                        <div className="flex-shrink-0 w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center">
+                          <service.icon className="h-5 w-5 text-primary" />
+                        </div>
                         <div className="flex-1 text-right">
                           <div className="font-medium text-sm text-foreground">{service.name}</div>
                           <div className="text-xs text-muted-foreground mt-1">{service.description}</div>
-                        </div>
-                        <div className="flex-shrink-0 w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center">
-                          <service.icon className="h-5 w-5 text-primary" />
                         </div>
                       </Link>
                     </DropdownMenuItem>
@@ -203,15 +203,15 @@ const Header = () => {
                             setIsServicesOpen(false);
                           }}
                         >
-                          <div className="flex items-start justify-end gap-3">
-                            <div className="flex-1 text-right">
-                              <div className="font-medium text-sm text-foreground group-hover:text-primary">{service.name}</div>
-                              <div className="text-xs text-muted-foreground mt-1">{service.description}</div>
-                            </div>
-                            <div className="flex-shrink-0 w-8 h-8 bg-primary/10 rounded-lg flex items-center justify-center group-hover:bg-primary/20 transition-colors duration-200">
-                              <service.icon className="h-4 w-4 text-primary" />
-                            </div>
-                          </div>
+                           <div className="flex items-start gap-3 flex-row-reverse">
+                             <div className="flex-shrink-0 w-8 h-8 bg-primary/10 rounded-lg flex items-center justify-center group-hover:bg-primary/20 transition-colors duration-200">
+                               <service.icon className="h-4 w-4 text-primary" />
+                             </div>
+                             <div className="flex-1 text-right">
+                               <div className="font-medium text-sm text-foreground group-hover:text-primary">{service.name}</div>
+                               <div className="text-xs text-muted-foreground mt-1">{service.description}</div>
+                             </div>
+                           </div>
                         </Link>
                       ))}
                     </div>
