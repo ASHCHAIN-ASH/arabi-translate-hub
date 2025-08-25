@@ -171,11 +171,11 @@ const Header = () => {
                     <Link
                       key={item.name}
                       to={item.href}
-                      className="text-foreground hover:text-primary hover:bg-muted/50 transition-all duration-200 py-3 px-4 rounded-lg flex items-center justify-end gap-3 group"
+                      className="text-foreground hover:text-primary hover:bg-muted/50 transition-all duration-200 py-3 px-4 rounded-lg flex items-center gap-3 group"
                       onClick={() => setIsOpen(false)}
                     >
-                      <span className="font-medium text-right">{item.name}</span>
-                      <item.icon className="h-5 w-5 text-primary group-hover:scale-110 transition-transform duration-200" />
+                      <item.icon className="h-5 w-5 text-primary group-hover:scale-110 transition-transform duration-200 flex-shrink-0" />
+                      <span className="font-medium flex-1 text-right">{item.name}</span>
                     </Link>
                   ))}
                 </div>
