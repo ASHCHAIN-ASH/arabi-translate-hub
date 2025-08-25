@@ -1,69 +1,73 @@
 import { motion } from "framer-motion";
 import { Card, CardContent } from "@/components/ui/card";
-import { CheckCircle, Users, Clock, Shield, Award, Globe, Star, Headphones } from "lucide-react";
+import { Percent, Heart, FileText, BookOpen, Wallet, Users } from "lucide-react";
 import enagoHeroBg from "@/assets/enago-hero-bg.jpg";
 
 const ServicesShowcase = () => {
   const benefits = [
     {
       id: 1,
-      title: "دقة 99%+ في الترجمة",
-      description: "نضمن أعلى مستويات الدقة في جميع أعمال الترجمة مع مراجعة متعددة المراحل من خبراء متخصصين",
-      icon: CheckCircle,
-      position: { x: -380, y: -200 },
-      delay: 0.2
+      title: "خصم يصل إلى 50%",
+      description: "كل دولار تنفقه يعني توفيراً يصل إلى 50% للطلب التالي. قيمة الخصم المتراكمة لا تنتهي أبداً",
+      icon: Percent,
+      logoText: "PREMIUM DISCOUNT",
+      position: "top-16 left-4",
+      cardClass: "w-72"
     },
     {
       id: 2,
-      title: "شهادات معتمدة",
-      description: "احفظ محررينك المفضلين وسنعطيهم الأولوية للعمل على مهامك المستقبلية",
-      icon: Award,
-      position: { x: 380, y: -200 },
-      delay: 0.3
+      title: "محرروك المفضلون",
+      description: "احفظ محرريك المفضلين وسنقوم بإعطائهم الأولوية للعمل على مهامك المستقبلية",
+      icon: Heart,
+      logoText: "MyEditors",
+      logoClass: "bg-red-500 text-white px-2 py-1 rounded text-sm font-bold",
+      position: "top-16 right-4",
+      cardClass: "w-72"
     },
     {
       id: 3,
-      title: "+100 لغة متاحة",
-      description: "يمكنك الوصول إلى أكثر من 6000 مقالة أكاديمية لدينا في 9 لغات وحضور ورش العمل من قبل قادة المعرفة في الصناعة مجاناً",
-      icon: Globe,
-      position: { x: 420, y: -20 },
-      delay: 0.4
+      title: "حسابي الشخصي",
+      description: "تتبع المهام، تحميل الملفات المسلمة والفواتير، واطلب خدمات ما بعد البيع من لوحة التحكم",
+      icon: FileText,
+      logoText: "MyPage Account",
+      logoClass: "bg-red-500 text-white px-2 py-1 rounded text-sm font-bold",
+      position: "bottom-32 left-4",
+      cardClass: "w-72"
     },
     {
       id: 4,
-      title: "دعم فني 24/7",
-      description: "تتبع المهام، وتنزيل الملفات والفواتير التي تم تسليمها، واطلب خدمات ما بعد البيع من لوحة التحكم الخاصة بك",
-      icon: Headphones,
-      position: { x: -420, y: -20 },
-      delay: 0.5
+      title: "المصادر الأكاديمية",
+      description: "يمكنك الوصول إلى أكثر من 6000 مقالة أكاديمية لدينا في 9 لغات وحضور ورش العمل من قبل قادة المعرفة في الصناعة مجاناً",
+      icon: BookOpen,
+      logoText: "Academic Resources",
+      logoClass: "bg-red-500 text-white px-2 py-1 rounded text-sm font-bold",
+      position: "bottom-32 right-4",
+      cardClass: "w-72"
     },
     {
       id: 5,
-      title: "برنامج الإحالة",
-      description: "قم بإحالة صديق لكسب كوبونات نقدية وتجميع قيمة الخصم بحتى 50% على طلبك التالي",
-      icon: Star,
-      position: { x: 380, y: 200 },
-      delay: 0.6
+      title: "محفظة البحث",
+      description: "احفظ صندوق البحث الخاص بك عندما تكون مخطوطتك جاهزة، واكسب قسائم أمازون ونقود كاش باك",
+      icon: Wallet,
+      logoText: "Enago Wallet",
+      logoClass: "bg-red-500 text-white px-2 py-1 rounded text-sm font-bold",
+      position: "bottom-4 left-1/4 transform -translate-x-1/2",
+      cardClass: "w-80"
     },
     {
       id: 6,
-      title: "محفظة إناغو",
-      description: "احفظ صندوق البحث الخاص بك عندما تكون مخطوطتك جاهزة، واكسب قسائم أمازون ونقود كاش",
-      icon: Shield,
-      position: { x: -380, y: 200 },
-      delay: 0.7
+      title: "برنامج الإحالة",
+      description: "قم بإحالة صديق لكسب كوبونات نقدية وتجميع قيمة الخصم لحتى 50% خصم على طلبك التالي",
+      icon: Users,
+      logoText: "Referral Program",
+      logoClass: "bg-red-500 text-white px-2 py-1 rounded text-sm font-bold",
+      position: "bottom-4 right-1/4 transform translate-x-1/2",
+      cardClass: "w-80"
     }
   ];
 
-  const stats = [
-    { number: "24/7", label: "دعم فني", color: "text-blue-600" },
-    { number: "+100", label: "لغة متاحة", color: "text-purple-600" },
-    { number: "+500", label: "مترجم محترف", color: "text-emerald-600" },
-    { number: "+15000", label: "مشروع مكتمل", color: "text-orange-600" }
-  ];
-
   return (
-    <section className="py-20 bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 dark:from-slate-900 dark:via-blue-950 dark:to-indigo-950 overflow-hidden">
+    <section className="py-20 bg-gray-100 dark:bg-gray-900 overflow-hidden">
       <div className="container mx-auto px-4">
         {/* العنوان */}
         <motion.div 
@@ -73,16 +77,16 @@ const ServicesShowcase = () => {
           transition={{ duration: 0.6 }}
           viewport={{ once: true }}
         >
-          <h2 className="text-4xl lg:text-5xl font-arabic-title font-bold text-foreground mb-6">
-            مزايا <span className="text-gradient bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">خدماتنا الاحترافية</span>
+          <h2 className="text-4xl lg:text-5xl font-bold text-gray-800 dark:text-white mb-6">
+            مزايا مجتمع وكالة ماستر إيدو باث
           </h2>
         </motion.div>
 
-        {/* التصميم الدائري مع الصورة بدون نص */}
-        <div className="relative flex items-center justify-center min-h-[700px] mb-20">
-          {/* الصورة المركزية بدون نص */}
+        {/* التصميم الدائري */}
+        <div className="relative flex items-center justify-center min-h-[800px]">
+          {/* الصورة المركزية */}
           <motion.div 
-            className="relative z-10 w-96 h-96 rounded-full overflow-hidden shadow-2xl border-8 border-white dark:border-gray-800"
+            className="relative z-10 w-80 h-80 rounded-full overflow-hidden shadow-2xl"
             initial={{ opacity: 0, scale: 0.8 }}
             whileInView={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.8 }}
@@ -93,67 +97,55 @@ const ServicesShowcase = () => {
               alt="خدماتنا الاحترافية"
               className="w-full h-full object-cover"
             />
-            <div className="absolute inset-0 bg-gradient-to-t from-blue-900/40 via-transparent to-transparent"></div>
           </motion.div>
 
-          {/* البطاقات الموزعة حول الصورة */}
-          {benefits.map((benefit) => {
-            const IconComponent = benefit.icon;
-            return (
-              <motion.div
-                key={benefit.id}
-                className="absolute"
-                style={{
-                  transform: `translate(${benefit.position.x}px, ${benefit.position.y}px)`,
-                }}
-                initial={{ opacity: 0, scale: 0.8 }}
-                whileInView={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 0.6, delay: benefit.delay }}
-                viewport={{ once: true }}
-                whileHover={{ scale: 1.05, y: -5 }}
-              >
-                <Card className="w-80 bg-white/95 dark:bg-gray-800/95 backdrop-blur-sm border-0 shadow-xl hover:shadow-2xl transition-all duration-300">
-                  <CardContent className="p-6">
-                    <div className="flex items-start gap-4">
-                      <div className="flex-shrink-0 w-14 h-14 bg-gradient-to-br from-blue-500/10 to-purple-500/10 rounded-xl flex items-center justify-center">
-                        <IconComponent className="h-7 w-7 text-blue-600" />
+          {/* البطاقات الموزعة */}
+          <div className="absolute inset-0">
+            {benefits.map((benefit, index) => {
+              const IconComponent = benefit.icon;
+              return (
+                <motion.div
+                  key={benefit.id}
+                  className={`absolute ${benefit.position}`}
+                  initial={{ opacity: 0, scale: 0.8, y: 20 }}
+                  whileInView={{ opacity: 1, scale: 1, y: 0 }}
+                  transition={{ duration: 0.6, delay: index * 0.1 }}
+                  viewport={{ once: true }}
+                  whileHover={{ scale: 1.05, y: -5 }}
+                >
+                  <Card className={`${benefit.cardClass} bg-white dark:bg-gray-800 shadow-lg hover:shadow-xl transition-all duration-300 border-0`}>
+                    <CardContent className="p-6">
+                      <div className="flex items-start gap-4">
+                        {/* الأيقونة أو الشعار */}
+                        <div className="flex-shrink-0">
+                          {benefit.logoClass ? (
+                            <div className={benefit.logoClass}>
+                              {benefit.logoText}
+                            </div>
+                          ) : (
+                            <div className="w-12 h-12 bg-yellow-100 rounded-lg flex items-center justify-center">
+                              <IconComponent className="h-6 w-6 text-yellow-600" />
+                            </div>
+                          )}
+                        </div>
+                        
+                        {/* المحتوى */}
+                        <div className="flex-1 text-right">
+                          <h3 className="font-bold text-gray-800 dark:text-white mb-3 text-lg leading-tight">
+                            {benefit.title}
+                          </h3>
+                          <p className="text-sm text-gray-600 dark:text-gray-300 leading-relaxed">
+                            {benefit.description}
+                          </p>
+                        </div>
                       </div>
-                      <div className="flex-1 text-right">
-                        <h3 className="font-bold text-foreground mb-3 text-lg leading-tight">
-                          {benefit.title}
-                        </h3>
-                        <p className="text-sm text-muted-foreground leading-relaxed">
-                          {benefit.description}
-                        </p>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
-              </motion.div>
-            );
-          })}
+                    </CardContent>
+                  </Card>
+                </motion.div>
+              );
+            })}
+          </div>
         </div>
-
-        {/* الإحصائيات */}
-        <motion.div 
-          className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center"
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.4 }}
-          viewport={{ once: true }}
-        >
-          {stats.map((stat, index) => (
-            <motion.div 
-              key={index}
-              className="space-y-3 p-6 bg-white/60 dark:bg-gray-800/60 backdrop-blur-sm rounded-xl border border-white/20 dark:border-gray-700/20"
-              whileHover={{ scale: 1.05, y: -5 }}
-              transition={{ duration: 0.2 }}
-            >
-              <div className={`text-4xl font-bold ${stat.color}`}>{stat.number}</div>
-              <div className="text-sm text-muted-foreground font-medium">{stat.label}</div>
-            </motion.div>
-          ))}
-        </motion.div>
       </div>
     </section>
   );
