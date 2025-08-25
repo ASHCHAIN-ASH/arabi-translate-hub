@@ -1,6 +1,7 @@
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import ServicesSection from "@/components/ServicesSection";
+import ServicesShowcase from "@/components/ServicesShowcase";
 import AcademicHeroSection from "@/components/AcademicHeroSection";
 import AcademicFeatures from "@/components/AcademicFeatures";
 import AcademicStats from "@/components/AcademicStats";
@@ -29,6 +30,9 @@ const Index = () => {
 
       {/* قسم مراحل تنفيذ الخدمة */}
       <ServiceSteps />
+
+      {/* قسم مزايا الخدمات */}
+      <ServicesShowcase />
 
       {/* قسم الخدمات */}
       <ServicesSection />
