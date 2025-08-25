@@ -95,21 +95,21 @@ const Header = () => {
                   <ChevronDown className="h-4 w-4" />
                 </Button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent className="w-80 bg-background border border-border shadow-xl z-50" align="end">
+              <DropdownMenuContent className="w-80 bg-background border border-border shadow-xl z-50" align="start">
                 <div className="p-2">
-                  <div className="text-sm font-semibold text-muted-foreground mb-3 px-2">خدماتنا المتخصصة</div>
+                  <div className="text-sm font-semibold text-muted-foreground mb-3 px-2 text-right">خدماتنا المتخصصة</div>
                   {servicesDropdown.map((service) => (
                     <DropdownMenuItem key={service.name} asChild>
                       <Link
                         to={service.href}
                         className="w-full cursor-pointer hover:bg-muted focus:bg-muted flex items-start gap-3 p-3 rounded-lg text-right"
                       >
-                        <div className="flex-shrink-0 w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center">
-                          <service.icon className="h-5 w-5 text-primary" />
-                        </div>
                         <div className="flex-1 text-right">
                           <div className="font-medium text-sm text-foreground">{service.name}</div>
                           <div className="text-xs text-muted-foreground mt-1">{service.description}</div>
+                        </div>
+                        <div className="flex-shrink-0 w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center">
+                          <service.icon className="h-5 w-5 text-primary" />
                         </div>
                       </Link>
                     </DropdownMenuItem>
@@ -201,12 +201,12 @@ const Header = () => {
                           }}
                         >
                           <div className="flex items-start gap-3">
-                            <div className="flex-shrink-0 w-8 h-8 bg-primary/10 rounded-lg flex items-center justify-center">
-                              <service.icon className="h-4 w-4 text-primary" />
-                            </div>
                             <div className="flex-1 text-right">
                               <div className="font-medium text-sm text-foreground">{service.name}</div>
                               <div className="text-xs text-muted-foreground mt-1">{service.description}</div>
+                            </div>
+                            <div className="flex-shrink-0 w-8 h-8 bg-primary/10 rounded-lg flex items-center justify-center">
+                              <service.icon className="h-4 w-4 text-primary" />
                             </div>
                           </div>
                         </Link>
