@@ -46,27 +46,27 @@ const Header = () => {
   ];
 
   return (
-    <header className="sticky top-0 z-50 w-full bg-white/80 backdrop-blur-lg border-b border-border shadow-soft">
+    <header className="sticky top-0 z-50 w-full bg-white/80 backdrop-blur-lg border-b border-border shadow-soft" dir="rtl">
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-16">
           {/* الشعار */}
-          <div className="flex items-center space-x-reverse space-x-4">
+          <div className="flex items-center gap-4">
             <div className="flex items-center">
-              <div className="relative w-14 h-14 ml-4">
+              <div className="relative w-14 h-14 mr-4">
                 <div className="absolute inset-0 bg-gradient-to-br from-blue-700 via-indigo-700 to-purple-700 rounded-2xl shadow-xl flex items-center justify-center border-2 border-white/20">
                   <div className="flex flex-col items-center justify-center">
                     <GraduationCap className="h-7 w-7 text-white mb-0.5" />
                     <div className="flex items-center">
                       <BookOpen className="h-3 w-3 text-white/90" />
-                      <Globe className="h-3 w-3 text-white/90 -ml-0.5" />
+                      <Globe className="h-3 w-3 text-white/90 -mr-0.5" />
                     </div>
                   </div>
                 </div>
-                <div className="absolute -top-1 -right-1 w-5 h-5 bg-gradient-to-br from-amber-400 to-orange-500 rounded-full border-2 border-white shadow-lg flex items-center justify-center">
+                <div className="absolute -top-1 -left-1 w-5 h-5 bg-gradient-to-br from-amber-400 to-orange-500 rounded-full border-2 border-white shadow-lg flex items-center justify-center">
                   <span className="text-white text-xs font-bold">M</span>
                 </div>
               </div>
-              <div>
+              <div className="text-right">
                 <h1 className="text-2xl font-arabic-formal font-bold text-slate-800 dark:text-white leading-tight tracking-wide">وكالة ماستر إيدو باث</h1>
                 <p className="text-base font-tajawal font-semibold text-blue-700 dark:text-blue-400 tracking-wider">MasterEduPath Agency</p>
               </div>
@@ -74,28 +74,28 @@ const Header = () => {
           </div>
 
           {/* القائمة الرئيسية - شاشات كبيرة */}
-          <nav className="hidden lg:flex items-center space-x-reverse space-x-6">
+          <nav className="hidden lg:flex items-center gap-6">
             {navigation.map((item) => (
               <Link
                 key={item.name}
                 to={item.href}
-                className="text-foreground hover:text-primary transition-colors duration-200 font-medium flex items-center gap-2"
+                className="text-foreground hover:text-primary transition-colors duration-200 font-medium flex items-center gap-2 flex-row-reverse"
               >
+                <span>{item.name}</span>
                 <item.icon className="h-4 w-4" />
-                {item.name}
               </Link>
             ))}
             
             {/* قائمة الخدمات المنسدلة */}
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="ghost" className="text-foreground hover:text-primary transition-colors duration-200 font-medium px-3 py-2 h-auto flex items-center gap-2">
+                <Button variant="ghost" className="text-foreground hover:text-primary transition-colors duration-200 font-medium px-3 py-2 h-auto flex items-center gap-2 flex-row-reverse">
+                  <span>خدماتنا</span>
                   <Briefcase className="h-4 w-4" />
-                  خدماتنا
                   <ChevronDown className="h-4 w-4" />
                 </Button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent className="w-80 bg-background border border-border shadow-xl z-50" align="start">
+              <DropdownMenuContent className="w-80 bg-background border border-border shadow-xl z-50" align="end">
                 <div className="p-2">
                   <div className="text-sm font-semibold text-muted-foreground mb-3 px-2 text-right">خدماتنا المتخصصة</div>
                   {servicesDropdown.map((service) => (
@@ -104,12 +104,12 @@ const Header = () => {
                         to={service.href}
                         className="w-full cursor-pointer hover:bg-muted focus:bg-muted flex items-start gap-3 p-3 rounded-lg text-right"
                       >
+                        <div className="flex-shrink-0 w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center">
+                          <service.icon className="h-5 w-5 text-primary" />
+                        </div>
                         <div className="flex-1 text-right">
                           <div className="font-medium text-sm text-foreground">{service.name}</div>
                           <div className="text-xs text-muted-foreground mt-1">{service.description}</div>
-                        </div>
-                        <div className="flex-shrink-0 w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center">
-                          <service.icon className="h-5 w-5 text-primary" />
                         </div>
                       </Link>
                     </DropdownMenuItem>
@@ -120,16 +120,16 @@ const Header = () => {
           </nav>
 
           {/* أزرار الإجراءات */}
-          <div className="hidden lg:flex items-center space-x-reverse space-x-4">
+          <div className="hidden lg:flex items-center gap-4">
             <Button variant="outline" size="sm" asChild>
-              <Link to="/order-tracking">
-                <Search className="h-4 w-4 ml-2" />
-                تتبع الطلب
+              <Link to="/order-tracking" className="flex items-center gap-2 flex-row-reverse">
+                <span>تتبع الطلب</span>
+                <Search className="h-4 w-4" />
               </Link>
             </Button>
             <Button size="sm" className="bg-gradient-primary text-primary-foreground hover:opacity-90 shadow-medium" asChild>
               <Link to="/submit-order">
-                اطلب الان
+                اطلب الآن
               </Link>
             </Button>
           </div>
@@ -141,24 +141,24 @@ const Header = () => {
                 <Menu className="h-5 w-5" />
               </Button>
             </SheetTrigger>
-            <SheetContent side="right" className="w-80">
+            <SheetContent side="left" className="w-80" dir="rtl">
               <div className="flex flex-col space-y-4 mt-8">
                 <div className="flex items-center mb-6">
-                  <div className="relative w-12 h-12 ml-4">
+                  <div className="relative w-12 h-12 mr-4">
                     <div className="absolute inset-0 bg-gradient-to-br from-blue-700 via-indigo-700 to-purple-700 rounded-xl shadow-lg flex items-center justify-center border border-white/20">
                       <div className="flex flex-col items-center justify-center">
                         <GraduationCap className="h-6 w-6 text-white mb-0.5" />
                         <div className="flex items-center">
                           <BookOpen className="h-2.5 w-2.5 text-white/90" />
-                          <Globe className="h-2.5 w-2.5 text-white/90 -ml-0.5" />
+                          <Globe className="h-2.5 w-2.5 text-white/90 -mr-0.5" />
                         </div>
                       </div>
                     </div>
-                    <div className="absolute -top-0.5 -right-0.5 w-4 h-4 bg-gradient-to-br from-amber-400 to-orange-500 rounded-full border border-white shadow-sm flex items-center justify-center">
+                    <div className="absolute -top-0.5 -left-0.5 w-4 h-4 bg-gradient-to-br from-amber-400 to-orange-500 rounded-full border border-white shadow-sm flex items-center justify-center">
                       <span className="text-white text-xs font-bold">M</span>
                     </div>
                   </div>
-                  <div>
+                  <div className="text-right">
                     <span className="font-arabic-formal font-bold text-lg text-slate-800 dark:text-white leading-tight tracking-wide">وكالة ماستر إيدو باث</span>
                     <p className="text-sm font-tajawal font-medium text-blue-700 dark:text-blue-400 tracking-wide">MasterEduPath Agency</p>
                   </div>
@@ -168,11 +168,11 @@ const Header = () => {
                   <Link
                     key={item.name}
                     to={item.href}
-                    className="text-foreground hover:text-primary transition-colors duration-200 py-3 border-b border-muted block flex items-center gap-3"
+                    className="text-foreground hover:text-primary transition-colors duration-200 py-3 border-b border-muted block flex items-center gap-3 flex-row-reverse text-right"
                     onClick={() => setIsOpen(false)}
                   >
-                    <item.icon className="h-4 w-4 text-primary" />
                     <span className="font-medium">{item.name}</span>
+                    <item.icon className="h-4 w-4 text-primary" />
                   </Link>
                 ))}
                 
@@ -182,11 +182,11 @@ const Header = () => {
                     onClick={() => setIsServicesOpen(!isServicesOpen)}
                     className="flex items-center justify-between w-full gap-2 py-2 px-1 text-right hover:text-primary transition-colors duration-200"
                   >
-                    <div className="flex items-center gap-2">
+                    <ChevronDown className={`h-4 w-4 text-primary transition-transform duration-200 ${isServicesOpen ? 'rotate-180' : ''}`} />
+                    <div className="flex items-center gap-2 flex-row-reverse">
                       <span className="font-medium text-foreground">خدماتنا المتخصصة</span>
                       <Briefcase className="h-4 w-4 text-primary" />
                     </div>
-                    <ChevronDown className={`h-4 w-4 text-primary transition-transform duration-200 ${isServicesOpen ? 'rotate-180' : ''}`} />
                   </button>
                   {isServicesOpen && (
                     <div className="mt-2 space-y-1">
@@ -194,19 +194,19 @@ const Header = () => {
                         <Link
                           key={service.name}
                           to={service.href}
-                          className="text-muted-foreground hover:text-primary transition-colors duration-200 py-3 pr-4 block"
+                          className="text-muted-foreground hover:text-primary transition-colors duration-200 py-3 pl-4 block"
                           onClick={() => {
                             setIsOpen(false);
                             setIsServicesOpen(false);
                           }}
                         >
                           <div className="flex items-start gap-3">
+                            <div className="flex-shrink-0 w-8 h-8 bg-primary/10 rounded-lg flex items-center justify-center">
+                              <service.icon className="h-4 w-4 text-primary" />
+                            </div>
                             <div className="flex-1 text-right">
                               <div className="font-medium text-sm text-foreground">{service.name}</div>
                               <div className="text-xs text-muted-foreground mt-1">{service.description}</div>
-                            </div>
-                            <div className="flex-shrink-0 w-8 h-8 bg-primary/10 rounded-lg flex items-center justify-center">
-                              <service.icon className="h-4 w-4 text-primary" />
                             </div>
                           </div>
                         </Link>
@@ -217,14 +217,14 @@ const Header = () => {
                 
                 <div className="flex flex-col space-y-2 mt-6">
                   <Button variant="outline" size="sm" asChild>
-                    <Link to="/order-tracking" onClick={() => setIsOpen(false)}>
-                      <Search className="h-4 w-4 ml-2" />
-                      تتبع الطلب
+                    <Link to="/order-tracking" onClick={() => setIsOpen(false)} className="flex items-center gap-2 flex-row-reverse justify-center">
+                      <span>تتبع الطلب</span>
+                      <Search className="h-4 w-4" />
                     </Link>
                   </Button>
                   <Button size="sm" className="bg-gradient-primary text-primary-foreground" asChild>
                     <Link to="/submit-order" onClick={() => setIsOpen(false)}>
-                      اطلب الان
+                      اطلب الآن
                     </Link>
                   </Button>
                 </div>
