@@ -66,13 +66,22 @@ const ServicesShowcase = () => {
   ];
 
   return (
-    <section className="py-16 bg-gradient-to-br from-background via-muted/20 to-background relative overflow-hidden" dir="rtl">
+    <section 
+      className="py-16 relative overflow-hidden" 
+      dir="rtl"
+      style={{
+        background: "linear-gradient(135deg, hsl(280 100% 15%) 0%, hsl(290 90% 10%) 50%, hsl(260 95% 12%) 100%)",
+        '--services-primary': '280 100% 70%',
+        '--services-secondary': '320 85% 65%',
+        '--services-accent': '240 90% 75%'
+      } as React.CSSProperties & { [key: string]: string }}
+    >
       {/* خلفية تفاعلية متطورة */}
       <div className="absolute inset-0">
         <motion.div 
           className="absolute inset-0 opacity-50"
           style={{
-            background: "radial-gradient(circle at 20% 50%, hsl(var(--primary) / 0.1) 0%, transparent 50%), radial-gradient(circle at 80% 20%, hsl(var(--secondary) / 0.1) 0%, transparent 50%), radial-gradient(circle at 40% 80%, hsl(var(--accent) / 0.1) 0%, transparent 50%)"
+            background: "radial-gradient(circle at 20% 50%, hsl(280 100% 70% / 0.1) 0%, transparent 50%), radial-gradient(circle at 80% 20%, hsl(320 85% 65% / 0.1) 0%, transparent 50%), radial-gradient(circle at 40% 80%, hsl(240 90% 75% / 0.1) 0%, transparent 50%)"
           }}
           animate={{
             opacity: [0.3, 0.6, 0.3]
@@ -154,7 +163,7 @@ const ServicesShowcase = () => {
             <motion.h2 
               className="text-5xl lg:text-7xl font-bold mb-4 leading-tight"
               style={{
-                background: "linear-gradient(135deg, hsl(var(--primary)), hsl(var(--primary)) 30%, hsl(var(--secondary)) 70%, hsl(var(--accent)))",
+                background: "linear-gradient(135deg, hsl(280 100% 70%), hsl(320 85% 65%) 30%, hsl(240 90% 75%) 70%, hsl(300 95% 80%))",
                 backgroundSize: "400% 400%",
                 WebkitBackgroundClip: "text",
                 WebkitTextFillColor: "transparent",
@@ -174,7 +183,8 @@ const ServicesShowcase = () => {
           </motion.div>
           
           <motion.p 
-            className="text-xl text-muted-foreground max-w-4xl mx-auto leading-relaxed"
+            className="text-xl max-w-4xl mx-auto leading-relaxed"
+            style={{ color: "hsl(280 30% 85%)" }}
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
             transition={{ duration: 0.8, delay: 0.3 }}
@@ -196,10 +206,11 @@ const ServicesShowcase = () => {
               return (
                 <motion.div
                   key={index}
-                  className="flex items-center gap-2 bg-primary/10 px-4 py-2 rounded-full"
+                  className="flex items-center gap-2 px-4 py-2 rounded-full"
+                  style={{ backgroundColor: "hsl(280 100% 70% / 0.15)" }}
                   whileHover={{ 
                     scale: 1.1, 
-                    backgroundColor: "hsl(var(--primary) / 0.2)",
+                    backgroundColor: "hsl(280 100% 70% / 0.25)",
                     transition: { duration: 0.2 }
                   }}
                   animate={{
@@ -209,8 +220,8 @@ const ServicesShowcase = () => {
                     y: { duration: 2, repeat: Infinity, delay: index * 0.3 }
                   }}
                 >
-                  <IconComponent className="h-5 w-5 text-primary" />
-                  <span className="text-sm font-medium text-foreground">{feature.text}</span>
+                  <IconComponent className="h-5 w-5" style={{ color: "hsl(280 100% 70%)" }} />
+                  <span className="text-sm font-medium" style={{ color: "hsl(280 30% 90%)" }}>{feature.text}</span>
                 </motion.div>
               );
             })}
