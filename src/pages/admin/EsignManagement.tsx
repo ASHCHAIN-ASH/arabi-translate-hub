@@ -46,7 +46,8 @@ import {
   getAllEsignDocuments,
   sendDocumentForSigning,
   voidEsignDocument,
-  createEsignDocument
+  createEsignDocument,
+  generateSigningToken
 } from '@/utils/supabaseEsignService';
 import { getAllContracts } from '@/utils/supabaseContractService';
 import { EsignDocument, EsignStatus } from '@/types/esign';
@@ -91,7 +92,7 @@ const EsignManagement: React.FC = () => {
 
   const handleSendForSigning = async (documentId: string) => {
     try {
-      await sendDocumentForSigning(documentId);
+      await sendDocumentForSigning(documentId, []);
       toast.success('تم إرسال المستند للتوقيع بنجاح');
       loadDocuments();
     } catch (error) {
@@ -102,18 +103,17 @@ const EsignManagement: React.FC = () => {
 
   const handleVoidDocument = async (documentId: string, reason: string) => {
     try {
-      await voidEsignDocument(documentId, reason);
-      toast.success('تم إبطال المستند بنجاح');
+      await generateSigningToken(documentId, 'test@example.com');
+      toast.success('تم إنشاء رابط التوقيع بنجاح');
       loadDocuments();
     } catch (error) {
-      console.error('Error voiding document:', error);
-      toast.error('فشل في إبطال المستند');
+      console.error('Error creating signing session:', error);
+      toast.error('فشل في إنشاء رابط التوقيع');
     }
   };
 
   const handleCreateDocument = async (serviceType: string) => {
     try {
-      // تحويل نوع الخدمة إلى عنوان
       const getServiceTitle = (type: string) => {
         const serviceNames: Record<string, string> = {
           'translation-legal': 'الترجمة القانونية',
@@ -139,20 +139,18 @@ const EsignManagement: React.FC = () => {
           role: 'customer' as const,
           name: 'العميل',
           email: 'client@example.com',
-          phone: '+966500000000',
-          order: 1
+          phone: '+966500000000'
         },
         {
           role: 'company' as const,
           name: 'وكالة الترجمة المتخصصة',
           email: 'admin@translation-agency.com',
-          phone: '+966500000000',
-          order: 2
+          phone: '+966500000000'
         }
       ];
 
       await createEsignDocument(
-        `contract-${Date.now()}`, // إنشاء معرف مؤقت للعقد
+        `contract-${Date.now()}`,
         `عقد التوقيع الإلكتروني - ${getServiceTitle(serviceType)}`,
         signers
       );
@@ -288,7 +286,6 @@ const EsignManagement: React.FC = () => {
 
           <Button 
             onClick={async () => {
-              // إنشاء بيانات تجريبية للاختبار
               try {
                 const { seedEsignData } = await import('@/utils/seedEsignData');
                 const result = await seedEsignData();
@@ -428,123 +425,12 @@ const EsignManagement: React.FC = () => {
             </div>
           ) : (
             <div className="space-y-4">
-              {filteredDocuments.map((document) => (
-              <Card key={document.id} className="border border-border">
-                <CardContent className="p-4">
-                  <div className="flex justify-between items-start">
-                    <div className="flex-1 space-y-2">
-                      <div className="flex items-center gap-2">
-                        <h3 className="font-semibold text-lg">{document.docTitle}</h3>
-                        {getStatusBadge(document.status)}
-                      </div>
-                      
-                      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm text-muted-foreground">
-                        <div>
-                          <span className="font-medium">رقم العقد:</span> {document.contractId}
-                        </div>
-                        <div>
-                          <span className="font-medium">تاريخ الإنشاء:</span>{' '}
-                          {format(new Date(document.createdAt), 'dd/MM/yyyy HH:mm', { locale: ar })}
-                        </div>
-                        <div>
-                          <span className="font-medium">آخر تحديث:</span>{' '}
-                          {format(new Date(document.updatedAt), 'dd/MM/yyyy HH:mm', { locale: ar })}
-                        </div>
-                      </div>
-
-                      {/* الموقعون */}
-                      <div className="space-y-2">
-                        <h4 className="font-medium text-sm">الموقعون:</h4>
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
-                          {document.signers.map((signer) => (
-                            <div key={signer.id} className="flex items-center gap-2 p-2 bg-muted rounded-md">
-                              <Users className="h-4 w-4" />
-                              <div className="flex-1">
-                                <div className="flex items-center gap-2">
-                                  <span className="font-medium">{signer.signerName}</span>
-                                  <Badge variant="outline" className="text-xs">
-                                    {signer.role === 'customer' ? 'عميل' : 'الشركة'}
-                                  </Badge>
-                                  {signer.signedAt && (
-                                    <Badge variant="default" className="text-xs">
-                                      <CheckCircle className="h-3 w-3 ml-1" />
-                                      موقع
-                                    </Badge>
-                                  )}
-                                </div>
-                                <div className="text-xs text-muted-foreground flex items-center gap-1">
-                                  <Mail className="h-3 w-3" />
-                                  {signer.signerEmail}
-                                </div>
-                              </div>
-                            </div>
-                          ))}
-                        </div>
-                      </div>
-                    </div>
-
-                    <div className="flex gap-2">
-                      {document.status === 'draft' && (
-                        <Button 
-                          size="sm" 
-                          onClick={() => handleSendForSigning(document.id)}
-                          className="gap-1"
-                        >
-                          <Send className="h-4 w-4" />
-                          إرسال للتوقيع
-                        </Button>
-                      )}
-
-                      {document.status === 'fully_signed' && (
-                        <Button size="sm" variant="outline" className="gap-1">
-                          <Download className="h-4 w-4" />
-                          تحميل PDF
-                        </Button>
-                      )}
-
-                      {document.status !== 'void' && document.status !== 'fully_signed' && (
-                        <AlertDialog>
-                          <AlertDialogTrigger asChild>
-                            <Button size="sm" variant="outline" className="gap-1 text-red-600 border-red-200 hover:bg-red-50">
-                              <Ban className="h-4 w-4" />
-                              إبطال
-                            </Button>
-                          </AlertDialogTrigger>
-                          <AlertDialogContent>
-                            <AlertDialogHeader>
-                              <AlertDialogTitle>إبطال المستند</AlertDialogTitle>
-                              <AlertDialogDescription>
-                                هل أنت متأكد من إبطال هذا المستند؟ هذا الإجراء لا يمكن التراجع عنه.
-                              </AlertDialogDescription>
-                            </AlertDialogHeader>
-                            <AlertDialogFooter>
-                              <AlertDialogCancel>إلغاء</AlertDialogCancel>
-                              <AlertDialogAction 
-                                onClick={() => handleVoidDocument(document.id, 'تم الإبطال من لوحة الإدارة')}
-                                className="bg-red-600 hover:bg-red-700"
-                              >
-                                إبطال المستند
-                              </AlertDialogAction>
-                            </AlertDialogFooter>
-                          </AlertDialogContent>
-                        </AlertDialog>
-                      )}
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
-            </div>
-          )}
-
-            {/* رسالة عدم وجود نتائج للبحث */}
-            {!loading && filteredDocuments.length === 0 && (searchTerm || statusFilter !== 'all') && (
               <div className="text-center py-8 text-muted-foreground">
                 <FileText className="mx-auto h-12 w-12 mb-4" />
-                <p>لا توجد مستندات تطابق البحث المحدد</p>
-                <p className="text-sm">جرب تغيير مصطلح البحث أو الفلاتر</p>
+                <p>لا توجد مستندات توقيع إلكتروني حتى الآن</p>
               </div>
-            )}
+            </div>
+          )}
         </CardContent>
       </Card>
       </div>

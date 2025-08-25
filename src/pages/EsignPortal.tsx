@@ -61,7 +61,11 @@ const EsignPortal: React.FC = () => {
       setSession(sessionData);
       
       // تسجيل حدث المشاهدة
-      await logEsignEvent(sessionData.document.id, 'viewed', sessionData.signer.signerName);
+      await logEsignEvent({
+        documentId: sessionData.document.id,
+        eventType: 'viewed',
+        signerName: sessionData.signer.signerName
+      });
     } catch (error) {
       console.error('Error validating token:', error);
       toast.error('خطأ في التحقق من رابط التوقيع');
@@ -305,49 +309,6 @@ const EsignPortal: React.FC = () => {
               <Badge variant="outline">
                 {session.signer.role === 'customer' ? 'عميل' : 'الشركة'}
               </Badge>
-            </div>
-          </CardContent>
-        </Card>
-
-        {/* قائمة الموقعين */}
-        <Card>
-          <CardHeader>
-            <CardTitle>حالة التوقيعات</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-3">
-              {session.document.signers
-                .sort((a, b) => a.signingOrder - b.signingOrder)
-                .map((signer) => (
-                <div key={signer.id} className="flex items-center justify-between p-3 border rounded-lg">
-                  <div className="flex items-center gap-3">
-                    <div className="text-sm font-medium bg-muted rounded-full w-8 h-8 flex items-center justify-center">
-                      {signer.signingOrder}
-                    </div>
-                    <div>
-                      <p className="font-medium">{signer.signerName}</p>
-                      <p className="text-sm text-muted-foreground">
-                        {signer.role === 'customer' ? 'عميل' : 'الشركة'}
-                      </p>
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    {signer.signedAt ? (
-                      <>
-                        <CheckCircle className="h-5 w-5 text-green-500" />
-                        <Badge variant="default">موقع</Badge>
-                      </>
-                    ) : (
-                      <>
-                        <Clock className="h-5 w-5 text-yellow-500" />
-                        <Badge variant="outline">
-                          {signer.id === session.signer.id ? 'دورك الآن' : 'في الانتظار'}
-                        </Badge>
-                      </>
-                    )}
-                  </div>
-                </div>
-              ))}
             </div>
           </CardContent>
         </Card>

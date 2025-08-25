@@ -46,11 +46,25 @@ export const generateSigningToken = async (
 export const validateSigningToken = async (token: string): Promise<SigningSession | null> => {
   // Mock implementation - return a fake session
   const mockSession: SigningSession = {
-    id: 'session-' + Date.now(),
-    documentId: 'doc-123',
-    signerEmail: 'test@example.com',
-    signerName: 'المستخدم التجريبي',
-    signerRole: 'client',
+    document: {
+      id: 'doc-123',
+      docTitle: 'عقد توقيع تجريبي',
+      contractId: 'contract-123',
+      createdAt: new Date().toISOString(),
+      status: 'draft' as EsignStatus,
+      updatedAt: new Date().toISOString(),
+      events: [],
+      signers: []
+    },
+    signer: {
+      id: 'signer-1',
+      signerName: 'المستخدم التجريبي',
+      signerEmail: 'test@example.com',
+      signerPhone: '+966500000000',
+      role: 'customer',
+      signingOrder: 1,
+      signedAt: null
+    },
     token: token,
     expiresAt: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString(),
     isValid: true,
@@ -140,4 +154,14 @@ export const logEsignEvent = async (eventData: any): Promise<void> => {
 
 export const voidEsignDocument = async (documentId: string): Promise<void> => {
   console.log(`Mock document ${documentId} voided`);
+};
+
+export const updateEsignDocument = async (documentId: string, updateData: any): Promise<void> => {
+  console.log(`Mock document ${documentId} updated:`, updateData);
+};
+
+export const createSigningSession = async (documentId: string): Promise<string> => {
+  const sessionId = 'session-' + Date.now();
+  console.log(`Mock signing session ${sessionId} created for document ${documentId}`);
+  return sessionId;
 };

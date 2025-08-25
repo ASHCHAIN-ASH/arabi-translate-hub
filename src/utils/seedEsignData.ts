@@ -17,15 +17,13 @@ export const seedEsignData = async () => {
           role: 'customer',
           name: 'أحمد محمد علي',
           email: 'ahmed@example.com',
-          phone: '+966501234567',
-          order: 1
+          phone: '+966501234567'
         },
         {
           role: 'company',
           name: 'وكالة ماستر إيدو باث',
           email: 'admin@masteredupath.com',
-          phone: '+966500000000',
-          order: 2
+          phone: '+966500000000'
         }
       ]
     );
@@ -39,21 +37,19 @@ export const seedEsignData = async () => {
           role: 'customer',
           name: 'فاطمة أحمد',
           email: 'fatima@example.com',
-          phone: '+966507654321',
-          order: 1
+          phone: '+966507654321'
         },
         {
           role: 'company',
           name: 'وكالة ماستر إيدو باث',
           email: 'admin@masteredupath.com',
-          phone: '+966500000000',
-          order: 2
+          phone: '+966500000000'
         }
       ]
     );
 
     // إرسال المستند الأول للتوقيع
-    await sendDocumentForSigning(doc1Id);
+    await sendDocumentForSigning(doc1Id, []);
 
     console.log('Sample e-signature documents created successfully');
     

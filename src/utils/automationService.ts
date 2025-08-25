@@ -115,74 +115,9 @@ export const automateEsignInvitation = async (esignData: {
   }
 };
 
-// جدولة تذكيرات الفواتير المستحقة
-export const scheduleInvoiceReminders = async () => {
-  try {
-    // في التطبيق الحقيقي، سيتم الحصول على الفواتير المستحقة من قاعدة البيانات
-    // وإرسال تذكيرات حسب القواعد المحددة
-    
-    // مثال للتذكيرات:
-    // - قبل الاستحقاق بـ 3 أيام
-    // - يوم الاستحقاق
-    // - بعد الاستحقاق بـ 3، 7، 14 يوم
-
-    const overdueInvoices = await getOverdueInvoices();
-    
-    for (const invoice of overdueInvoices) {
-      await sendInvoiceReminder(invoice);
-    }
-
-    console.log(`Processed ${overdueInvoices.length} invoice reminders`);
-  } catch (error) {
-    console.error('Error in invoice reminders automation:', error);
-  }
-};
-
-// دالة مساعدة للحصول على الفواتير المستحقة (مثال)
-const getOverdueInvoices = async (): Promise<any[]> => {
-  // في التطبيق الحقيقي، سيتم استعلام قاعدة البيانات
-  return [];
-};
-
-// دالة مساعدة لإرسال تذكير فاتورة (مثال)
-const sendInvoiceReminder = async (invoice: any) => {
-  // في التطبيق الحقيقي، سيتم إرسال تذكير واتساب
-  console.log(`Sending reminder for invoice ${invoice.id}`);
-};
-
-// أتمتة تحديث حالة الفواتير المتأخرة
-export const automateOverdueInvoices = async () => {
-  try {
-    // البحث عن الفواتير المتأخرة وتحديث حالتها
-    // يمكن أيضاً إنشاء قيود محاسبية للغرامات إذا لزم الأمر
-    
-    console.log('Overdue invoices automation completed');
-  } catch (error) {
-    console.error('Error in overdue invoices automation:', error);
-  }
-};
-
-// أتمتة إعادة إرسال دعوات التوقيع
-export const automateEsignReminders = async () => {
-  try {
-    // البحث عن مستندات التوقيع التي لم يتم توقيعها بعد 48 ساعة
-    // وإعادة إرسال الدعوة
-    
-    console.log('E-sign reminders automation completed');
-  } catch (error) {
-    console.error('Error in e-sign reminders automation:', error);
-  }
-};
-
 // دالة رئيسية لتشغيل جميع عمليات الأتمتة
 export const runAutomationTasks = async () => {
   try {
-    await Promise.all([
-      scheduleInvoiceReminders(),
-      automateOverdueInvoices(),
-      automateEsignReminders()
-    ]);
-    
     console.log('All automation tasks completed successfully');
   } catch (error) {
     console.error('Error running automation tasks:', error);

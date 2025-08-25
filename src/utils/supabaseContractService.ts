@@ -20,7 +20,10 @@ const mockContracts: Contract[] = [
         sourceLang: 'الإنجليزية',
         targetLang: 'العربية',
         domain: 'قانوني'
-      }
+      },
+      attachments: [],
+      estimatedDuration: '5-7 أيام عمل',
+      deliverables: ['ملف الترجمة النهائي', 'مراجعة لغوية']
     },
     contractContent: 'محتوى العقد الخاص بترجمة عقد العمل...',
     status: 'draft',
@@ -30,18 +33,19 @@ const mockContracts: Contract[] = [
     clientSignature: null,
     digitalSignature: null,
     totalAmount: 450,
-    currency: 'SAR',
     deliveryDate: '2024-01-22',
     terms: [
       {
         id: '1',
         title: 'المدة الزمنية',
-        content: 'سيتم تسليم الترجمة خلال 7 أيام عمل'
+        content: 'سيتم تسليم الترجمة خلال 7 أيام عمل',
+        required: true
       },
       {
         id: '2',
         title: 'الدفع',
-        content: 'الدفع مقدماً قبل البدء في العمل'
+        content: 'الدفع مقدماً قبل البدء في العمل',
+        required: true
       }
     ]
   },
@@ -60,7 +64,10 @@ const mockContracts: Contract[] = [
         sourceLang: 'العربية',
         targetLang: 'الإنجليزية',
         domain: 'طبي'
-      }
+      },
+      attachments: [],
+      estimatedDuration: '3-5 أيام عمل',
+      deliverables: ['ترجمة طبية معتمدة', 'شهادة ترجمة']
     },
     contractContent: 'محتوى العقد الخاص بترجمة التقرير الطبي...',
     status: 'approved',
@@ -70,13 +77,14 @@ const mockContracts: Contract[] = [
     clientSignature: 'signature_hash_123',
     digitalSignature: 'digital_sig_456',
     totalAmount: 320,
-    currency: 'SAR',
+    
     deliveryDate: '2024-01-17',
     terms: [
       {
         id: '3',
         title: 'السرية',
-        content: 'الالتزام بسرية المعلومات الطبية'
+        content: 'الالتزام بسرية المعلومات الطبية',
+        required: true
       }
     ]
   }

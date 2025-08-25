@@ -63,7 +63,7 @@ const WhatsappManagement: React.FC = () => {
       const [providersData, templatesData, logsData] = await Promise.all([
         getAllWhatsappProviders(),
         getAllWhatsappTemplates(),
-        getWhatsappLogs(100)
+        getWhatsappLogs({})
       ]);
 
       setProviders(providersData);
@@ -446,8 +446,8 @@ const WhatsappManagement: React.FC = () => {
         <TabsContent value="providers">
           <Card>
             <CardHeader>
-              <CardTitle>مزودي واتساب</CardTitle>
-              <CardDescription>إدارة مزودي خدمة واتساب</CardDescription>
+              <CardTitle>مزودين واتساب</CardTitle>
+              <CardDescription>إدارة مزودين خدمة واتساب</CardDescription>
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
@@ -455,33 +455,18 @@ const WhatsappManagement: React.FC = () => {
                   <Card key={provider.id} className="border border-border">
                     <CardContent className="p-4">
                       <div className="flex items-center justify-between">
-                        <div className="space-y-1">
-                          <div className="flex items-center gap-2">
-                            <h3 className="font-semibold capitalize">{provider.name}</h3>
-                            {provider.isEnabled && (
-                              <Badge variant="default">نشط</Badge>
-                            )}
-                          </div>
-                          <p className="text-sm text-muted-foreground">
-                            آخر تحديث: {format(new Date(provider.updatedAt), 'dd/MM/yyyy HH:mm', { locale: ar })}
-                          </p>
+                        <div>
+                          <h3 className="font-semibold">{provider.name}</h3>
+                          <p className="text-sm text-muted-foreground">{provider.description}</p>
                         </div>
-                        
-                        <div className="flex items-center gap-3">
+                        <div className="flex items-center gap-2">
                           <Switch
                             checked={provider.isEnabled}
                             onCheckedChange={() => handleProviderToggle(provider)}
                           />
-                          <Button 
-                            variant="outline" 
-                            size="sm"
-                            onClick={() => {
-                              setSelectedProvider(provider);
-                              setConfigDialog(true);
-                            }}
-                          >
-                            <Settings className="h-4 w-4" />
-                          </Button>
+                          <Badge variant={provider.isEnabled ? 'default' : 'outline'}>
+                            {provider.isEnabled ? 'نشط' : 'غير نشط'}
+                          </Badge>
                         </div>
                       </div>
                     </CardContent>
@@ -492,34 +477,6 @@ const WhatsappManagement: React.FC = () => {
           </Card>
         </TabsContent>
       </Tabs>
-
-      {/* حوار إعدادات المزود */}
-      <Dialog open={configDialog} onOpenChange={setConfigDialog}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>إعدادات المزود: {selectedProvider?.name}</DialogTitle>
-            <DialogDescription>
-              تكوين إعدادات مزود واتساب
-            </DialogDescription>
-          </DialogHeader>
-          <div className="space-y-4">
-            <div className="text-center p-4 bg-muted rounded-md">
-              <AlertCircle className="mx-auto h-8 w-8 mb-2 text-muted-foreground" />
-              <p className="text-sm text-muted-foreground">
-                إعدادات المزود في وضع المحاكاة حالياً
-              </p>
-              <p className="text-xs text-muted-foreground mt-1">
-                لاستخدام مزود حقيقي، يرجى تكوين مفاتيح API المطلوبة
-              </p>
-            </div>
-          </div>
-          <DialogFooter>
-            <Button variant="outline" onClick={() => setConfigDialog(false)}>
-              إغلاق
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
       </div>
     </div>
   );

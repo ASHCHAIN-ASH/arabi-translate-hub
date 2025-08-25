@@ -47,8 +47,6 @@ import PrivacyPolicy from "./pages/PrivacyPolicy";
 import ColorShowcase from "./pages/ColorShowcase";
 import OrderTracking from "./pages/OrderTracking";
 import SubmitOrder from "./pages/SubmitOrder";
-import AdminOrders from "./pages/AdminOrders";
-import AdminDashboard from "./pages/AdminDashboard";
 import ContractManagement from "./pages/ContractManagement";
 import ClientContractApproval from "./pages/ClientContractApproval";
 import AccountingDashboard from "./pages/admin/AccountingDashboard";
@@ -56,7 +54,7 @@ import EsignManagement from "./pages/admin/EsignManagement";
 import WhatsappManagement from "./pages/admin/WhatsappManagement";
 import EsignPortal from "./pages/EsignPortal";
 import ContractRequest from "./pages/ContractRequest";
-import ClientDashboard from "./pages/ClientDashboard";
+
 import ClientContracts from "./pages/ClientContracts";
 import NotFound from "./pages/NotFound";
 
@@ -125,11 +123,6 @@ const App = () => (
                 <ContractRequest />
               </ProtectedRoute>
             } />
-            <Route path="/client/dashboard" element={
-              <ProtectedRoute requiredRole="client">
-                <ClientDashboard />
-              </ProtectedRoute>
-            } />
             <Route path="/client/contracts" element={
               <ProtectedRoute requiredRole="client">
                 <ClientContracts />
@@ -142,16 +135,6 @@ const App = () => (
             } />
             
             {/* Protected Admin Routes */}
-            <Route path="/admin" element={
-              <ProtectedRoute requiredRole="admin">
-                <AdminDashboard />
-              </ProtectedRoute>
-            } />
-            <Route path="/admin/orders" element={
-              <ProtectedRoute requiredRole="admin">
-                <AdminOrders />
-              </ProtectedRoute>
-            } />
             <Route path="/admin/contracts" element={
               <ProtectedRoute requiredRole="admin">
                 <ContractManagement />

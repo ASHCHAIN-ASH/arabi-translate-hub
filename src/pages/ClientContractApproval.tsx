@@ -121,7 +121,13 @@ const ClientContractApproval = () => {
         comments: comments
       };
 
-      await saveClientApproval(approval);
+      await saveClientApproval(contract.id, {
+        clientName: approval.clientName,
+        signature: approval.signature,
+        ipAddress: approval.ipAddress,
+        userAgent: approval.userAgent,
+        comments: approval.comments
+      });
       
       toast.success('تم حفظ موافقتك بنجاح!', {
         description: 'سيتم التواصل معك قريباً لبدء تنفيذ المشروع'
@@ -308,20 +314,6 @@ const ClientContractApproval = () => {
                     ))}
                   </ul>
                 </div>
-              </div>
-            </CardContent>
-          </Card>
-
-          {/* Contract Content */}
-          <Card className="mb-8">
-            <CardHeader>
-              <CardTitle>محتوى العقد</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="bg-muted p-6 rounded-lg max-h-96 overflow-y-auto">
-                <pre className="whitespace-pre-wrap text-sm leading-relaxed">
-                  {contract.contractContent}
-                </pre>
               </div>
             </CardContent>
           </Card>
