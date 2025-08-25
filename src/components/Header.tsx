@@ -141,7 +141,7 @@ const Header = () => {
                 <Menu className="h-5 w-5" />
               </Button>
             </SheetTrigger>
-            <SheetContent side="left" className="w-80" dir="rtl">
+            <SheetContent side="right" className="w-80" dir="rtl">
               <div className="flex flex-col space-y-4 mt-8">
                 <div className="flex items-center mb-6">
                   <div className="relative w-12 h-12 mr-4">
