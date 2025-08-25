@@ -102,7 +102,7 @@ const Header = () => {
                     <DropdownMenuItem key={service.name} asChild>
                       <Link
                         to={service.href}
-                        className="w-full cursor-pointer hover:bg-muted focus:bg-muted flex items-center gap-3 p-3 rounded-lg"
+                        className="w-full cursor-pointer hover:bg-muted focus:bg-muted flex items-center gap-3 p-3 rounded-lg flex-row-reverse"
                       >
                         <div className="flex-shrink-0 w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center">
                           <service.icon className="h-5 w-5 text-primary" />
