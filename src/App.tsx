@@ -24,6 +24,7 @@ import Unauthorized from "./pages/Unauthorized";
 
 import ThesisTitles from "./pages/research/ThesisTitles";
 import ResearchPlan from "./pages/research/ResearchPlan";
+import TheoreticalFrameworkPage from "./pages/research/TheoreticalFrameworkPage";
 import TheoreticalFramework from "./pages/research/TheoreticalFramework";
 import StatisticalAnalysis from "./pages/research/StatisticalAnalysis";
 import LanguageReview from "./pages/research/LanguageReview";
@@ -96,9 +97,7 @@ const App = () => (
             {/* Research Routes */}
             <Route path="/research/thesis-titles" element={<ThesisTitles />} />
             <Route path="/research/research-plan" element={<ResearchPlan />} />
-            <Route path="/research/thesis-titles" element={<ThesisTitles />} />
-            <Route path="/research/research-plan" element={<ResearchPlan />} />
-            <Route path="/research/theoretical-framework" element={<TheoreticalFramework />} />
+            <Route path="/research/theoretical-framework" element={<TheoreticalFrameworkPage />} />
             <Route path="/research/statistical-analysis" element={<StatisticalAnalysis />} />
             <Route path="/research/language-review" element={<LanguageReview />} />
             <Route path="/research/formatting" element={<Formatting />} />
