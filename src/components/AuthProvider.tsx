@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
-import { supabase } from '@/lib/supabase';
+import { supabase } from '@/integrations/supabase/client';
 import { User } from '@supabase/supabase-js';
 
 interface AuthContextType {
@@ -53,13 +53,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const fetchUserRole = async (userId: string) => {
     try {
       const { data, error } = await supabase
-        .from('user_profiles')
+        .from('user_roles')
         .select('role')
-        .eq('id', userId)
+        .eq('user_id', userId)
         .single();
 
       if (error) throw error;
-      setUserRole(data?.role || 'client');
+      setUserRole(data?.role === 'admin' ? 'admin' : 'client');
     } catch (error) {
       console.error('Error fetching user role:', error);
       setUserRole('client'); // Default to client
@@ -82,22 +82,18 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     
     if (error) throw error;
 
-    // Create user profile
+    // Create user role
     if (data.user) {
-      const { error: profileError } = await supabase
-        .from('user_profiles')
+      const { error: roleError } = await supabase
+        .from('user_roles')
         .insert([
           {
-            id: data.user.id,
-            email: data.user.email,
-            full_name: userData.fullName,
-            phone: userData.phone,
-            role: userData.role || 'client',
-            created_at: new Date().toISOString(),
+            user_id: data.user.id,
+            role: userData.role || 'user',
           }
         ]);
 
-      if (profileError) throw profileError;
+      if (roleError) throw roleError;
     }
   };
 
