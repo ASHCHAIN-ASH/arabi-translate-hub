@@ -89,20 +89,20 @@ const Header = () => {
             {/* قائمة الخدمات المنسدلة */}
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="ghost" className="text-foreground hover:text-primary transition-colors duration-200 font-medium px-3 py-2 h-auto flex items-center gap-2 flex-row-reverse">
-                  <span>خدماتنا</span>
-                  <Briefcase className="h-4 w-4" />
+                <Button variant="ghost" className="text-foreground hover:text-primary transition-colors duration-200 font-medium px-3 py-2 h-auto flex items-center gap-2">
                   <ChevronDown className="h-4 w-4" />
+                  <Briefcase className="h-4 w-4" />
+                  <span>خدماتنا</span>
                 </Button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent className="w-80 bg-background border border-border shadow-xl z-50" align="end">
+              <DropdownMenuContent className="w-80 bg-background/95 backdrop-blur-md border border-border shadow-xl z-50" align="end">
                 <div className="p-2">
                   <div className="text-sm font-semibold text-muted-foreground mb-3 px-2 text-right">خدماتنا المتخصصة</div>
                   {servicesDropdown.map((service) => (
                     <DropdownMenuItem key={service.name} asChild>
                       <Link
                         to={service.href}
-                        className="w-full cursor-pointer hover:bg-muted focus:bg-muted flex items-start gap-3 p-3 rounded-lg text-right"
+                        className="w-full cursor-pointer hover:bg-muted focus:bg-muted flex items-center gap-3 p-3 rounded-lg"
                       >
                         <div className="flex-shrink-0 w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center">
                           <service.icon className="h-5 w-5 text-primary" />
