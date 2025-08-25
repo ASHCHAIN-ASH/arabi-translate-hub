@@ -368,9 +368,13 @@ const ServicesShowcase = () => {
           ].map((stat, index) => {
             const IconComponent = stat.icon;
             return (
-              <motion.div 
+               <motion.div 
                 key={index}
-                className="text-center p-6 bg-card/40 backdrop-blur-sm rounded-2xl border border-border/50 hover:border-primary/30 transition-all duration-300 group"
+                className="text-center p-6 rounded-2xl border border-border/50 hover:border-primary/30 transition-all duration-300 group"
+                style={{ 
+                  backgroundColor: "hsl(280 20% 25% / 0.6)",
+                  backdropFilter: "blur(10px)"
+                }}
                 whileHover={{ 
                   scale: 1.05, 
                   y: -8,
@@ -411,7 +415,7 @@ const ServicesShowcase = () => {
                   {stat.number}
                 </motion.div>
                 
-                <div className="text-sm text-muted-foreground font-medium group-hover:text-foreground transition-colors duration-300">
+                <div className="text-sm font-medium group-hover:text-foreground transition-colors duration-300" style={{ color: "hsl(280 30% 85%)" }}>
                   {stat.label}
                 </div>
               </motion.div>
