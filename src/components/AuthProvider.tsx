@@ -75,9 +75,34 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   const signUp = async (email: string, password: string, userData: any) => {
+    // Validate password strength
+    if (password.length < 12) {
+      throw new Error('كلمة المرور يجب أن تكون على الأقل 12 حرف');
+    }
+    
+    if (!/[A-Z]/.test(password)) {
+      throw new Error('كلمة المرور يجب أن تحتوي على حرف كبير واحد على الأقل');
+    }
+    
+    if (!/[a-z]/.test(password)) {
+      throw new Error('كلمة المرور يجب أن تحتوي على حرف صغير واحد على الأقل');
+    }
+    
+    if (!/[0-9]/.test(password)) {
+      throw new Error('كلمة المرور يجب أن تحتوي على رقم واحد على الأقل');
+    }
+    
+    if (!/[^A-Za-z0-9]/.test(password)) {
+      throw new Error('كلمة المرور يجب أن تحتوي على رمز خاص واحد على الأقل');
+    }
+
     const { data, error } = await supabase.auth.signUp({
       email,
       password,
+      options: {
+        emailRedirectTo: `${window.location.origin}/`,
+        data: userData
+      }
     });
     
     if (error) throw error;

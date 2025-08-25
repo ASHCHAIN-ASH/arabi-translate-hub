@@ -43,8 +43,33 @@ const Register = () => {
       return;
     }
 
-    if (formData.password.length < 6) {
-      setError('كلمة المرور يجب أن تكون على الأقل 6 أحرف');
+    // Enhanced password validation (handled in AuthProvider now)
+    if (formData.password.length < 12) {
+      setError('كلمة المرور يجب أن تكون على الأقل 12 حرف');
+      setLoading(false);
+      return;
+    }
+    
+    if (!/[A-Z]/.test(formData.password)) {
+      setError('كلمة المرور يجب أن تحتوي على حرف كبير واحد على الأقل');
+      setLoading(false);
+      return;
+    }
+    
+    if (!/[a-z]/.test(formData.password)) {
+      setError('كلمة المرور يجب أن تحتوي على حرف صغير واحد على الأقل');
+      setLoading(false);
+      return;
+    }
+    
+    if (!/[0-9]/.test(formData.password)) {
+      setError('كلمة المرور يجب أن تحتوي على رقم واحد على الأقل');
+      setLoading(false);
+      return;
+    }
+    
+    if (!/[^A-Za-z0-9]/.test(formData.password)) {
+      setError('كلمة المرور يجب أن تحتوي على رمز خاص واحد على الأقل');
       setLoading(false);
       return;
     }
