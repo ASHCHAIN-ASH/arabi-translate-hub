@@ -8,49 +8,49 @@ const ServicesShowcase = () => {
     {
       id: 1,
       title: "دقة 99%+ في الترجمة",
-      description: "نضمن أعلى مستويات الدقة في جميع أعمال الترجمة مع مراجعة متعددة المراحل",
+      description: "نضمن أعلى مستويات الدقة في جميع أعمال الترجمة مع مراجعة متعددة المراحل من خبراء متخصصين",
       icon: CheckCircle,
-      position: { x: -350, y: -180 },
+      position: { x: -380, y: -200 },
       delay: 0.2
     },
     {
       id: 2,
-      title: "فريق مترجمين محترفين",
-      description: "أكثر من 500 مترجم معتمد ومتخصص في جميع المجالات الأكاديمية والمهنية",
-      icon: Users,
-      position: { x: 350, y: -180 },
+      title: "شهادات معتمدة",
+      description: "احفظ محررينك المفضلين وسنعطيهم الأولوية للعمل على مهامك المستقبلية",
+      icon: Award,
+      position: { x: 380, y: -200 },
       delay: 0.3
     },
     {
       id: 3,
       title: "+100 لغة متاحة",
-      description: "تغطية شاملة لجميع اللغات العالمية مع تخصص في اللغات الأكاديمية النادرة",
+      description: "يمكنك الوصول إلى أكثر من 6000 مقالة أكاديمية لدينا في 9 لغات وحضور ورش العمل من قبل قادة المعرفة في الصناعة مجاناً",
       icon: Globe,
-      position: { x: 430, y: -50 },
+      position: { x: 420, y: -20 },
       delay: 0.4
     },
     {
       id: 4,
       title: "دعم فني 24/7",
-      description: "فريق خدمة عملاء متخصص متاح على مدار الساعة لتقديم الدعم الفوري",
+      description: "تتبع المهام، وتنزيل الملفات والفواتير التي تم تسليمها، واطلب خدمات ما بعد البيع من لوحة التحكم الخاصة بك",
       icon: Headphones,
-      position: { x: -430, y: -50 },
+      position: { x: -420, y: -20 },
       delay: 0.5
     },
     {
       id: 5,
-      title: "شهادات معتمدة",
-      description: "ترجمة رسمية معتمدة ومصدقة للمستندات الأكاديمية والقانونية والرسمية",
-      icon: Award,
-      position: { x: 350, y: 180 },
+      title: "برنامج الإحالة",
+      description: "قم بإحالة صديق لكسب كوبونات نقدية وتجميع قيمة الخصم بحتى 50% على طلبك التالي",
+      icon: Star,
+      position: { x: 380, y: 200 },
       delay: 0.6
     },
     {
       id: 6,
-      title: "سرية وأمان تام",
-      description: "حماية مطلقة للمعلومات الحساسة مع اتفاقيات سرية معتمدة دولياً",
+      title: "محفظة إناغو",
+      description: "احفظ صندوق البحث الخاص بك عندما تكون مخطوطتك جاهزة، واكسب قسائم أمازون ونقود كاش",
       icon: Shield,
-      position: { x: -350, y: 180 },
+      position: { x: -380, y: 200 },
       delay: 0.7
     }
   ];
@@ -74,13 +74,13 @@ const ServicesShowcase = () => {
           viewport={{ once: true }}
         >
           <h2 className="text-4xl lg:text-5xl font-arabic-title font-bold text-foreground mb-6">
-            مزايا <span className="text-gradient bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">مجتمع إناغو</span>
+            مزايا <span className="text-gradient bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">خدماتنا الاحترافية</span>
           </h2>
         </motion.div>
 
-        {/* التصميم الدائري مع الصورة الجديدة */}
+        {/* التصميم الدائري مع الصورة بدون نص */}
         <div className="relative flex items-center justify-center min-h-[700px] mb-20">
-          {/* الصورة المركزية */}
+          {/* الصورة المركزية بدون نص */}
           <motion.div 
             className="relative z-10 w-96 h-96 rounded-full overflow-hidden shadow-2xl border-8 border-white dark:border-gray-800"
             initial={{ opacity: 0, scale: 0.8 }}
@@ -93,15 +93,7 @@ const ServicesShowcase = () => {
               alt="خدماتنا الاحترافية"
               className="w-full h-full object-cover"
             />
-            <div className="absolute inset-0 bg-gradient-to-t from-blue-900/60 via-blue-600/30 to-transparent"></div>
-            
-            {/* النص المركزي */}
-            <div className="absolute inset-0 flex items-center justify-center">
-              <div className="text-center text-white bg-blue-600/90 backdrop-blur-sm rounded-full px-8 py-4 shadow-xl">
-                <div className="text-3xl font-bold">خدماتنا</div>
-                <div className="text-lg font-medium">الاحترافية</div>
-              </div>
-            </div>
+            <div className="absolute inset-0 bg-gradient-to-t from-blue-900/40 via-transparent to-transparent"></div>
           </motion.div>
 
           {/* البطاقات الموزعة حول الصورة */}
@@ -123,7 +115,7 @@ const ServicesShowcase = () => {
                 <Card className="w-80 bg-white/95 dark:bg-gray-800/95 backdrop-blur-sm border-0 shadow-xl hover:shadow-2xl transition-all duration-300">
                   <CardContent className="p-6">
                     <div className="flex items-start gap-4">
-                      <div className="flex-shrink-0 w-14 h-14 bg-gradient-to-br from-blue-500/10 to-purple-500/10 rounded-xl flex items-center justify-center group-hover:from-blue-500/20 group-hover:to-purple-500/20 transition-all duration-300">
+                      <div className="flex-shrink-0 w-14 h-14 bg-gradient-to-br from-blue-500/10 to-purple-500/10 rounded-xl flex items-center justify-center">
                         <IconComponent className="h-7 w-7 text-blue-600" />
                       </div>
                       <div className="flex-1 text-right">
