@@ -33,17 +33,7 @@ export const automateNewInvoice = async (invoiceData: {
     });
 
     // 2. إرسال إشعار واتساب
-    await sendInvoiceNotification(
-      invoiceData.customerId,
-      invoiceData.customerPhone,
-      {
-        invoiceNumber: invoiceData.invoiceId,
-        customerName: invoiceData.customerName,
-        grandTotal: `${invoiceData.totalAmount.toLocaleString('ar-SA')} ر.س`,
-        dueDate: invoiceData.dueDate,
-        paymentLink: invoiceData.paymentLink
-      }
-    );
+    await sendInvoiceNotification(invoiceData.customerPhone);
 
     console.log(`Invoice automation completed for ${invoiceData.invoiceId}`);
   } catch (error) {
@@ -97,16 +87,7 @@ export const automateEsignInvitation = async (esignData: {
 }) => {
   try {
     // إرسال دعوة التوقيع عبر واتساب
-    await sendSigningInvitation(
-      esignData.customerId,
-      esignData.customerPhone,
-      {
-        customer_name: esignData.customerName,
-        contract_title: esignData.contractTitle,
-        sign_link: esignData.signLink,
-        otp: esignData.otp
-      }
-    );
+    await sendSigningInvitation(esignData.customerPhone);
 
     console.log(`E-sign invitation sent for contract ${esignData.contractId}`);
   } catch (error) {

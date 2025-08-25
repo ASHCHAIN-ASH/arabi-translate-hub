@@ -83,12 +83,12 @@ const WhatsappManagement: React.FC = () => {
       if (!provider.isEnabled) {
         for (const p of providers) {
           if (p.isEnabled && p.id !== provider.id) {
-            await updateWhatsappProvider(p.id, p.configJson, false);
+            await updateWhatsappProvider(p.id, { isEnabled: false });
           }
         }
       }
 
-      await updateWhatsappProvider(provider.id, provider.configJson, !provider.isEnabled);
+      await updateWhatsappProvider(provider.id, { isEnabled: !provider.isEnabled });
       toast.success(`تم ${!provider.isEnabled ? 'تفعيل' : 'تعطيل'} مزود ${provider.name} بنجاح`);
       loadData();
     } catch (error) {
@@ -109,7 +109,11 @@ const WhatsappManagement: React.FC = () => {
         variables = JSON.parse(testVariables);
       }
 
-      const result = await testWhatsappMessage(testPhone, testTemplate, variables);
+      const result = await testWhatsappMessage('default', {
+        to: testPhone,
+        templateName: testTemplate,
+        variables: variables
+      });
       
       if (result.success) {
         toast.success('تم إرسال الرسالة التجريبية بنجاح');
@@ -457,7 +461,9 @@ const WhatsappManagement: React.FC = () => {
                       <div className="flex items-center justify-between">
                         <div>
                           <h3 className="font-semibold">{provider.name}</h3>
-                          <p className="text-sm text-muted-foreground">{provider.description}</p>
+                          <p className="text-sm text-muted-foreground">
+                            {provider.isEnabled ? 'نشط' : 'غير نشط'}
+                          </p>
                         </div>
                         <div className="flex items-center gap-2">
                           <Switch

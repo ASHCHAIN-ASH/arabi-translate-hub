@@ -63,12 +63,13 @@ export const validateSigningToken = async (token: string): Promise<SigningSessio
       signerPhone: '+966500000000',
       role: 'customer',
       signingOrder: 1,
-      signedAt: null
+      signedAt: null,
+      esignDocumentId: 'doc-123',
+      signatureAuditJson: {}
     },
     token: token,
     expiresAt: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString(),
-    isValid: true,
-    createdAt: new Date().toISOString()
+    isValid: true
   };
   
   return mockSession;

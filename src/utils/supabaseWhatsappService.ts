@@ -76,9 +76,7 @@ export const sendWhatsappMessage = async (
   // Mock implementation - return a fake response
   const mockResponse: WhatsappResponse = {
     success: true,
-    messageId: 'msg-' + Date.now(),
-    status: 'sent',
-    timestamp: new Date().toISOString()
+    messageId: 'msg-' + Date.now()
   };
   
   console.log(`Mock WhatsApp message sent via provider ${providerId}:`, message);
@@ -92,9 +90,7 @@ export const sendBulkWhatsappMessages = async (
   // Mock implementation - return fake responses
   const responses: WhatsappResponse[] = messages.map((_, index) => ({
     success: true,
-    messageId: 'bulk-msg-' + Date.now() + '-' + index,
-    status: 'sent',
-    timestamp: new Date().toISOString()
+    messageId: 'bulk-msg-' + Date.now() + '-' + index
   }));
   
   console.log(`Mock bulk WhatsApp messages sent via provider ${providerId}:`, messages.length, 'messages');

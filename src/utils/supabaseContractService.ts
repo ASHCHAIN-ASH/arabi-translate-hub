@@ -34,6 +34,7 @@ const mockContracts: Contract[] = [
     digitalSignature: null,
     totalAmount: 450,
     deliveryDate: '2024-01-22',
+    paymentTerms: 'دفع مقدم',
     terms: [
       {
         id: '1',
@@ -77,8 +78,8 @@ const mockContracts: Contract[] = [
     clientSignature: 'signature_hash_123',
     digitalSignature: 'digital_sig_456',
     totalAmount: 320,
-    
     deliveryDate: '2024-01-17',
+    paymentTerms: 'دفع عند التسليم',
     terms: [
       {
         id: '3',
