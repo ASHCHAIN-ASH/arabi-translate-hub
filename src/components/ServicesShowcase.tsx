@@ -1,142 +1,140 @@
 import { motion } from "framer-motion";
 import { Card, CardContent } from "@/components/ui/card";
 import { CheckCircle, Users, Clock, Shield, Award, Globe, Star, Headphones } from "lucide-react";
+import heroTranslation from "@/assets/hero-translation.jpg";
 
 const ServicesShowcase = () => {
   const benefits = [
     {
       id: 1,
       title: "دقة 99%+ في الترجمة",
-      description: "نضمن أعلى مستويات الدقة في جميع أعمال الترجمة مع مراجعة مزدوجة من خبراء متخصصين",
+      description: "نضمن أعلى مستويات الدقة في جميع أعمال الترجمة",
       icon: CheckCircle,
-      delay: 0.1
+      position: { x: -320, y: -150 },
+      delay: 0.2
     },
     {
       id: 2,
       title: "فريق مترجمين محترفين",
-      description: "أكثر من 500 مترجم معتمد ومتخصص في مختلف المجالات الأكاديمية والمهنية",
+      description: "أكثر من 500 مترجم معتمد في جميع التخصصات",
       icon: Users,
-      delay: 0.2
-    },
-    {
-      id: 3,
-      title: "تسليم في الوقت المحدد",
-      description: "التزام صارم بمواعيد التسليم المتفق عليها مع إمكانية التسليم المستعجل",
-      icon: Clock,
+      position: { x: 320, y: -150 },
       delay: 0.3
     },
     {
-      id: 4,
-      title: "سرية وأمان تام",
-      description: "حماية مطلقة للمعلومات والبيانات الحساسة مع اتفاقيات سرية معتمدة",
-      icon: Shield,
+      id: 3,
+      title: "+100 لغة متاحة",
+      description: "تغطية شاملة لجميع اللغات العالمية الرئيسية",
+      icon: Globe,
+      position: { x: 400, y: 0 },
       delay: 0.4
+    },
+    {
+      id: 4,
+      title: "دعم فني 24/7",
+      description: "خدمة عملاء متاحة على مدار الساعة",
+      icon: Headphones,
+      position: { x: -400, y: 0 },
+      delay: 0.5
     },
     {
       id: 5,
       title: "شهادات معتمدة",
-      description: "ترجمة رسمية معتمدة ومصدقة للمستندات الأكاديمية والقانونية",
+      description: "ترجمة معتمدة ومصدقة للمستندات الرسمية",
       icon: Award,
-      delay: 0.5
-    },
-    {
-      id: 6,
-      title: "+100 لغة متاحة",
-      description: "تغطية شاملة لجميع اللغات العالمية مع تخصص في اللغات الأكاديمية",
-      icon: Globe,
+      position: { x: 320, y: 150 },
       delay: 0.6
     },
     {
-      id: 7,
-      title: "تقييم 5 نجوم",
-      description: "تقييمات متميزة من العملاء مع معدل رضا يتجاوز 98% في جميع الخدمات",
-      icon: Star,
+      id: 6,
+      title: "سرية وأمان تام",
+      description: "حماية كاملة لمعلوماتكم وبياناتكم الحساسة",
+      icon: Shield,
+      position: { x: -320, y: 150 },
       delay: 0.7
-    },
-    {
-      id: 8,
-      title: "دعم فني 24/7",
-      description: "فريق خدمة عملاء متاح على مدار الساعة لتقديم المساعدة والإرشاد اللازم",
-      icon: Headphones,
-      delay: 0.8
     }
   ];
 
   const stats = [
-    { number: "15000+", label: "مشروع مكتمل", color: "text-blue-600" },
-    { number: "500+", label: "مترجم محترف", color: "text-emerald-600" },
-    { number: "100+", label: "لغة متاحة", color: "text-purple-600" },
-    { number: "99%", label: "دقة في الترجمة", color: "text-orange-600" }
+    { number: "24/7", label: "دعم فني", color: "text-blue-600" },
+    { number: "+100", label: "لغة متاحة", color: "text-purple-600" },
+    { number: "+500", label: "مترجم محترف", color: "text-emerald-600" },
+    { number: "+15000", label: "مشروع مكتمل", color: "text-orange-600" }
   ];
 
   return (
-    <section className="py-20 bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 dark:from-slate-900 dark:via-blue-950 dark:to-indigo-950">
+    <section className="py-20 bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 dark:from-slate-900 dark:via-blue-950 dark:to-indigo-950 overflow-hidden">
       <div className="container mx-auto px-4">
         {/* العنوان */}
         <motion.div 
-          className="text-center mb-16"
+          className="text-center mb-20"
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
           viewport={{ once: true }}
         >
           <h2 className="text-4xl lg:text-5xl font-arabic-title font-bold text-foreground mb-6">
-            مزايا <span className="text-gradient bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">خدماتنا الأكاديمية</span>
+            مزايا <span className="text-gradient bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">خدماتنا</span>
           </h2>
-          <p className="text-lg text-muted-foreground max-w-3xl mx-auto leading-relaxed">
-            اكتشف لماذا يثق بنا آلاف الطلاب والباحثين والمؤسسات الأكاديمية حول العالم
-          </p>
         </motion.div>
 
-        {/* الإحصائيات */}
-        <motion.div 
-          className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-16"
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.2 }}
-          viewport={{ once: true }}
-        >
-          {stats.map((stat, index) => (
-            <motion.div 
-              key={index}
-              className="text-center p-6 bg-white/60 dark:bg-gray-800/60 backdrop-blur-sm rounded-xl border border-white/20 dark:border-gray-700/20"
-              whileHover={{ scale: 1.05, y: -5 }}
-              transition={{ duration: 0.2 }}
-            >
-              <div className={`text-3xl font-bold ${stat.color} mb-2`}>{stat.number}</div>
-              <div className="text-sm text-muted-foreground font-medium">{stat.label}</div>
-            </motion.div>
-          ))}
-        </motion.div>
+        {/* التصميم الدائري */}
+        <div className="relative flex items-center justify-center min-h-[600px] mb-20">
+          {/* الصورة المركزية */}
+          <motion.div 
+            className="relative z-10 w-80 h-80 rounded-full overflow-hidden shadow-2xl border-8 border-white dark:border-gray-800"
+            initial={{ opacity: 0, scale: 0.8 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.8 }}
+            viewport={{ once: true }}
+          >
+            <img 
+              src={heroTranslation} 
+              alt="خدمات الترجمة الاحترافية"
+              className="w-full h-full object-cover"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-blue-600/20 to-transparent"></div>
+            
+            {/* النص المركزي */}
+            <div className="absolute inset-0 flex items-center justify-center">
+              <div className="text-center text-white bg-blue-600/80 backdrop-blur-sm rounded-full px-6 py-3">
+                <div className="text-2xl font-bold">خدماتنا</div>
+                <div className="text-sm">الاحترافية</div>
+              </div>
+            </div>
+          </motion.div>
 
-        {/* بطاقات المزايا */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          {/* البطاقات الموزعة حول الصورة */}
           {benefits.map((benefit) => {
             const IconComponent = benefit.icon;
             return (
               <motion.div
                 key={benefit.id}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
+                className="absolute"
+                style={{
+                  transform: `translate(${benefit.position.x}px, ${benefit.position.y}px)`,
+                }}
+                initial={{ opacity: 0, scale: 0.8 }}
+                whileInView={{ opacity: 1, scale: 1 }}
                 transition={{ duration: 0.6, delay: benefit.delay }}
                 viewport={{ once: true }}
-                whileHover={{ scale: 1.03, y: -8 }}
+                whileHover={{ scale: 1.05, y: -5 }}
               >
-                <Card className="h-full bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm border-0 shadow-lg hover:shadow-xl transition-all duration-300 group">
-                  <CardContent className="p-6 h-full flex flex-col">
-                    <div className="flex items-center justify-center w-16 h-16 bg-gradient-to-br from-blue-500/10 to-purple-500/10 rounded-xl mb-4 group-hover:from-blue-500/20 group-hover:to-purple-500/20 transition-all duration-300">
-                      <IconComponent className="h-8 w-8 text-blue-600 dark:text-blue-400 group-hover:scale-110 transition-transform duration-300" />
+                <Card className="w-72 bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm border-0 shadow-lg hover:shadow-xl transition-all duration-300">
+                  <CardContent className="p-6">
+                    <div className="flex items-start gap-4">
+                      <div className="flex-shrink-0 w-12 h-12 bg-blue-100 dark:bg-blue-900/30 rounded-xl flex items-center justify-center">
+                        <IconComponent className="h-6 w-6 text-blue-600" />
+                      </div>
+                      <div className="flex-1 text-right">
+                        <h3 className="font-bold text-foreground mb-2 text-lg">
+                          {benefit.title}
+                        </h3>
+                        <p className="text-sm text-muted-foreground leading-relaxed">
+                          {benefit.description}
+                        </p>
+                      </div>
                     </div>
-                    
-                    <h3 className="font-bold text-foreground mb-3 text-lg text-right leading-tight group-hover:text-blue-600 transition-colors duration-300">
-                      {benefit.title}
-                    </h3>
-                    
-                    <p className="text-sm text-muted-foreground leading-relaxed text-right flex-1">
-                      {benefit.description}
-                    </p>
-
-                    <div className="mt-4 w-full h-1 bg-gradient-to-r from-blue-500/20 to-purple-500/20 rounded-full group-hover:from-blue-500/40 group-hover:to-purple-500/40 transition-all duration-300"></div>
                   </CardContent>
                 </Card>
               </motion.div>
@@ -144,38 +142,24 @@ const ServicesShowcase = () => {
           })}
         </div>
 
-        {/* دعوة للعمل */}
+        {/* الإحصائيات */}
         <motion.div 
-          className="mt-16 text-center"
+          className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center"
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.4 }}
           viewport={{ once: true }}
         >
-          <Card className="max-w-4xl mx-auto bg-gradient-to-r from-blue-600 to-purple-600 text-white border-0 shadow-2xl">
-            <CardContent className="p-12 text-center">
-              <h3 className="text-3xl font-bold mb-4">هل أنت مستعد للبدء؟</h3>
-              <p className="text-blue-100 mb-8 text-lg max-w-2xl mx-auto">
-                انضم إلى آلاف العملاء الذين اختاروا التميز الأكاديمي معنا
-              </p>
-              <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <motion.button 
-                  className="px-8 py-4 bg-white text-blue-600 rounded-lg font-bold hover:bg-blue-50 transition-colors duration-300 shadow-lg"
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                >
-                  ابدأ مشروعك الآن
-                </motion.button>
-                <motion.button 
-                  className="px-8 py-4 border-2 border-white/30 text-white rounded-lg font-bold hover:bg-white/10 transition-colors duration-300"
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                >
-                  تواصل معنا
-                </motion.button>
-              </div>
-            </CardContent>
-          </Card>
+          {stats.map((stat, index) => (
+            <motion.div 
+              key={index}
+              className="space-y-2"
+              whileHover={{ scale: 1.05 }}
+            >
+              <div className={`text-4xl font-bold ${stat.color}`}>{stat.number}</div>
+              <div className="text-sm text-muted-foreground font-medium">{stat.label}</div>
+            </motion.div>
+          ))}
         </motion.div>
       </div>
     </section>
