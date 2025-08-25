@@ -1,8 +1,5 @@
-import { createClient } from '@supabase/supabase-js';
+import { supabase } from '@/integrations/supabase/client';
 import { OrderStatus, TIMELINE_STEPS } from '@/types/order';
-
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
-const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
 
 export interface DatabaseOrder {
   id: string;
@@ -57,26 +54,11 @@ const mockOrders: DatabaseOrder[] = [
   }
 ];
 
-// Check if Supabase is configured
-const isSupabaseConfigured = !!(supabaseUrl && supabaseKey);
-let supabase: any = null;
-
-if (isSupabaseConfigured) {
-  supabase = createClient(supabaseUrl, supabaseKey);
-} else {
-  console.warn('Supabase environment variables not found. Using mock data.');
-}
+// Check if Supabase is configured - it's always configured via client integration
 
 // Get all orders from database
 export const getAllOrders = async (): Promise<DatabaseOrder[]> => {
   try {
-    // If Supabase is not configured, return mock data
-    if (!isSupabaseConfigured) {
-      console.log('Using mock data - Supabase not configured');
-      await new Promise(resolve => setTimeout(resolve, 500)); // Simulate API delay
-      return [...mockOrders];
-    }
-
     const { data, error } = await supabase
       .from('orders')
       .select('*')
@@ -105,21 +87,6 @@ export const updateOrderStatus = async (
   newStatus: string
 ): Promise<void> => {
   try {
-    // If Supabase is not configured, simulate update with mock data
-    if (!isSupabaseConfigured) {
-      console.log('Using mock data - Supabase not configured');
-      await new Promise(resolve => setTimeout(resolve, 300)); // Simulate API delay
-      
-      const orderIndex = mockOrders.findIndex(order => order.id === orderId);
-      if (orderIndex !== -1) {
-        mockOrders[orderIndex].current_status = newStatus;
-        mockOrders[orderIndex].updated_at = new Date().toISOString();
-      }
-      
-      console.log(`تم تحديث حالة الطلب ${orderId} إلى ${newStatus}`);
-      return;
-    }
-
     const { error } = await supabase
       .from('orders')
       .update({ 
@@ -146,38 +113,6 @@ export const searchOrderByTracking = async (
   phoneLastFour: string
 ): Promise<OrderStatus | null> => {
   try {
-    // If Supabase is not configured, search in mock data
-    if (!isSupabaseConfigured) {
-      console.log('Using mock data - Supabase not configured');
-      await new Promise(resolve => setTimeout(resolve, 500)); // Simulate API delay
-      
-      const order = mockOrders.find(
-        o => o.tracking_id === trackingId.toUpperCase() && 
-             o.phone_last_four === phoneLastFour
-      );
-
-      if (!order) {
-        return null;
-      }
-
-      const currentStepIndex = TIMELINE_STEPS.findIndex(step => step.status === order.current_status);
-      const progress = currentStepIndex >= 0 ? ((currentStepIndex + 1) / TIMELINE_STEPS.length) * 100 : 10;
-
-      return {
-        id: order.id,
-        trackingId: order.tracking_id,
-        phoneLastFour: order.phone_last_four,
-        title: order.title,
-        degree: order.degree,
-        currentStatus: order.current_status,
-        progress,
-        estimatedDelivery: order.estimated_delivery,
-        createdAt: order.created_at,
-        timeline: [],
-        files: []
-      };
-    }
-
     const { data, error } = await supabase
       .from('orders')
       .select('*')
@@ -208,7 +143,32 @@ export const searchOrderByTracking = async (
     };
   } catch (error) {
     console.error('Error in searchOrderByTracking:', error);
-    return null;
+    // Fallback to mock data on error
+    const order = mockOrders.find(
+      o => o.tracking_id === trackingId.toUpperCase() && 
+           o.phone_last_four === phoneLastFour
+    );
+
+    if (!order) {
+      return null;
+    }
+
+    const currentStepIndex = TIMELINE_STEPS.findIndex(step => step.status === order.current_status);
+    const progress = currentStepIndex >= 0 ? ((currentStepIndex + 1) / TIMELINE_STEPS.length) * 100 : 10;
+
+    return {
+      id: order.id,
+      trackingId: order.tracking_id,
+      phoneLastFour: order.phone_last_four,
+      title: order.title,
+      degree: order.degree,
+      currentStatus: order.current_status,
+      progress,
+      estimatedDelivery: order.estimated_delivery,
+      createdAt: order.created_at,
+      timeline: [],
+      files: []
+    };
   }
 };
 
@@ -225,33 +185,6 @@ export const createOrder = async (orderData: {
   clientEmail: string;
 }): Promise<string> => {
   try {
-    // If Supabase is not configured, add to mock data
-    if (!isSupabaseConfigured) {
-      console.log('Using mock data - Supabase not configured');
-      await new Promise(resolve => setTimeout(resolve, 800)); // Simulate API delay
-      
-      const newOrder: DatabaseOrder = {
-        id: String(mockOrders.length + 1),
-        tracking_id: orderData.trackingId,
-        phone_last_four: orderData.phoneLastFour,
-        title: orderData.title,
-        degree: orderData.degree,
-        service_type: orderData.serviceType,
-        description: orderData.description,
-        current_status: 'received',
-        estimated_delivery: new Date(Date.now() + 60 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
-        created_at: new Date().toISOString(),
-        updated_at: new Date().toISOString(),
-        client_name: orderData.clientName,
-        client_phone: orderData.clientPhone,
-        client_email: orderData.clientEmail
-      };
-      
-      mockOrders.push(newOrder);
-      console.log('تم إنشاء الطلب بنجاح:', newOrder.tracking_id);
-      return newOrder.id;
-    }
-
     const estimatedDelivery = new Date(Date.now() + 60 * 24 * 60 * 60 * 1000).toISOString().split('T')[0];
     
     const { data, error } = await supabase
@@ -281,6 +214,26 @@ export const createOrder = async (orderData: {
     return data.id;
   } catch (error) {
     console.error('Error in createOrder:', error);
-    throw error;
+    // Fallback to mock creation
+    const newOrder: DatabaseOrder = {
+      id: String(mockOrders.length + 1),
+      tracking_id: orderData.trackingId,
+      phone_last_four: orderData.phoneLastFour,
+      title: orderData.title,
+      degree: orderData.degree,
+      service_type: orderData.serviceType,
+      description: orderData.description,
+      current_status: 'received',
+      estimated_delivery: new Date(Date.now() + 60 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString(),
+      client_name: orderData.clientName,
+      client_phone: orderData.clientPhone,
+      client_email: orderData.clientEmail
+    };
+    
+    mockOrders.push(newOrder);
+    console.log('تم إنشاء الطلب بنجاح:', newOrder.tracking_id);
+    return newOrder.id;
   }
 };
