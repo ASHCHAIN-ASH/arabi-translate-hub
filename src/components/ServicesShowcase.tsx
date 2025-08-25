@@ -1,58 +1,58 @@
 import { motion } from "framer-motion";
 import { Card, CardContent } from "@/components/ui/card";
 import { 
-  Target, Users, Award, BookOpen, Wallet, 
-  TrendingUp, Shield, Clock, Globe, Star,
-  CheckCircle, HeartHandshake 
+  Languages, PenTool, BookOpen, Users, MessageSquare, GraduationCap,
+  FileText, Search, Award, Clock, Globe, Star, Target, Shield,
+  CheckCircle, HeartHandshake, Brain, Microscope
 } from "lucide-react";
 
 const ServicesShowcase = () => {
   const services = [
     {
       id: 1,
-      title: "دقة 99%+ في الترجمة",
-      description: "نضمن أعلى معايير الدقة مع مراجعة متعددة المراحل من خبراء متخصصين",
-      icon: Target,
+      title: "خدمات الترجمة",
+      description: "ترجمة احترافية لجميع أنواع المستندات والمحتوى الأكاديمي والمهني بدقة عالية",
+      icon: Languages,
       gradient: "from-blue-500 to-blue-700",
       delay: 0.1
     },
     {
       id: 2,
-      title: "المترجمون المفضلون",
-      description: "احفظ مترجميك المفضلين وأعطهم الأولوية في مشاريعك المستقبلية",
-      icon: Users,
+      title: "التحرير والمراجعة",
+      description: "تحرير ومراجعة النصوص الأكاديمية والمهنية لضمان الجودة والوضوح",
+      icon: PenTool,
       gradient: "from-purple-500 to-purple-700",
       delay: 0.2
     },
     {
       id: 3,
-      title: "لوحة التحكم الذكية",
-      description: "تتبع مشاريعك، حمل الملفات، واطلب خدمات إضافية بسهولة",
-      icon: TrendingUp,
+      title: "الكتابة الأكاديمية",
+      description: "كتابة الأبحاث والرسائل والمقالات الأكاديمية بمعايير عالمية",
+      icon: BookOpen,
       gradient: "from-emerald-500 to-emerald-700",
       delay: 0.3
     },
     {
       id: 4,
-      title: "المكتبة الأكاديمية",
-      description: "أكثر من 6000 مقال أكاديمي مترجم في 9 لغات مع ورش عمل مجانية",
-      icon: BookOpen,
+      title: "الاستشارات التعليمية",
+      description: "استشارات أكاديمية متخصصة لطلاب الدراسات العليا والباحثين",
+      icon: GraduationCap,
       gradient: "from-orange-500 to-orange-700",
       delay: 0.4
     },
     {
       id: 5,
-      title: "محفظة المكافآت",
-      description: "اكسب نقاط وخصومات تصل إلى 50% على الطلبات القادمة",
-      icon: Wallet,
+      title: "التحليل الإحصائي",
+      description: "تحليل البيانات الإحصائية وإعداد التقارير العلمية والبحثية",
+      icon: Microscope,
       gradient: "from-rose-500 to-rose-700",
       delay: 0.5
     },
     {
       id: 6,
-      title: "برنامج الإحالة",
-      description: "أحل الأصدقاء واكسب رصيد مجاني وكوبونات خصم حصرية",
-      icon: HeartHandshake,
+      title: "خدمات النشر",
+      description: "مساعدة في نشر الأبحاث في المجلات العلمية المحكمة",
+      icon: FileText,
       gradient: "from-indigo-500 to-indigo-700",
       delay: 0.6
     }
@@ -129,7 +129,7 @@ const ServicesShowcase = () => {
                 ease: "easeInOut"
               }}
             >
-              مزايا وكالة ماستر إيدو باث
+              خدماتنا الاحترافية المتكاملة
             </motion.h2>
           </motion.div>
           
@@ -140,7 +140,7 @@ const ServicesShowcase = () => {
             transition={{ duration: 0.8, delay: 0.3 }}
             viewport={{ once: true }}
           >
-            نقدم لك تجربة ترجمة أكاديمية ومهنية استثنائية مع مزايا حصرية تضمن نجاح مشاريعك
+            نقدم مجموعة شاملة من الخدمات الأكاديمية والمهنية من الترجمة والتحرير إلى البحث والنشر العلمي
           </motion.p>
 
           {/* شريط المزايا السريعة */}
@@ -208,14 +208,14 @@ const ServicesShowcase = () => {
                 }}
                 className="group"
               >
-                <Card className="h-full bg-card/60 backdrop-blur-sm border-0 shadow-lg hover:shadow-2xl transition-all duration-500 overflow-hidden relative">
+                <Card className="h-full bg-card/60 backdrop-blur-sm border-0 shadow-lg hover:shadow-2xl transition-all duration-500 overflow-hidden relative rounded-full aspect-square">
                   {/* التدرج الخلفي */}
                   <motion.div 
-                    className={`absolute inset-0 bg-gradient-to-br ${service.gradient} opacity-0 group-hover:opacity-10 transition-opacity duration-500`}
+                    className={`absolute inset-0 bg-gradient-to-br ${service.gradient} opacity-0 group-hover:opacity-10 transition-opacity duration-500 rounded-full`}
                     whileHover={{ opacity: 0.1 }}
                   />
                   
-                  <CardContent className="p-8 relative z-10">
+                  <CardContent className="p-8 relative z-10 h-full flex flex-col items-center justify-center text-center">
                     {/* الأيقونة التفاعلية */}
                     <motion.div 
                       className="mb-6"
@@ -225,7 +225,7 @@ const ServicesShowcase = () => {
                       }}
                       transition={{ duration: 0.5 }}
                     >
-                      <div className={`w-16 h-16 bg-gradient-to-br ${service.gradient} rounded-2xl flex items-center justify-center shadow-lg group-hover:shadow-xl transition-shadow duration-300`}>
+                      <div className={`w-20 h-20 bg-gradient-to-br ${service.gradient} rounded-full flex items-center justify-center shadow-lg group-hover:shadow-xl transition-shadow duration-300`}>
                         <motion.div
                           animate={{ 
                             rotate: [0, 5, -5, 0]
@@ -236,16 +236,16 @@ const ServicesShowcase = () => {
                             ease: "easeInOut"
                           }}
                         >
-                          <IconComponent className="h-8 w-8 text-white" />
+                          <IconComponent className="h-10 w-10 text-white" />
                         </motion.div>
                       </div>
                     </motion.div>
 
                     {/* المحتوى */}
                     <motion.h3 
-                      className="text-xl font-bold text-foreground mb-4 group-hover:text-primary transition-colors duration-300"
-                      initial={{ x: 20, opacity: 0 }}
-                      whileInView={{ x: 0, opacity: 1 }}
+                      className="text-lg font-bold text-foreground mb-4 group-hover:text-primary transition-colors duration-300"
+                      initial={{ y: 20, opacity: 0 }}
+                      whileInView={{ y: 0, opacity: 1 }}
                       transition={{ duration: 0.5, delay: service.delay + 0.1 }}
                       viewport={{ once: true }}
                     >
@@ -253,9 +253,9 @@ const ServicesShowcase = () => {
                     </motion.h3>
                     
                     <motion.p 
-                      className="text-muted-foreground leading-relaxed"
-                      initial={{ x: 20, opacity: 0 }}
-                      whileInView={{ x: 0, opacity: 1 }}
+                      className="text-sm text-muted-foreground leading-relaxed"
+                      initial={{ y: 20, opacity: 0 }}
+                      whileInView={{ y: 0, opacity: 1 }}
                       transition={{ duration: 0.5, delay: service.delay + 0.2 }}
                       viewport={{ once: true }}
                     >
@@ -289,9 +289,9 @@ const ServicesShowcase = () => {
         >
           {[
             { number: "15000+", label: "مشروع مكتمل", icon: CheckCircle, color: "text-blue-500" },
-            { number: "500+", label: "مترجم محترف", icon: Award, color: "text-purple-500" },
-            { number: "100+", label: "لغة متاحة", icon: Globe, color: "text-emerald-500" },
-            { number: "99%", label: "دقة الترجمة", icon: Target, color: "text-orange-500" }
+            { number: "500+", label: "خبير متخصص", icon: Award, color: "text-purple-500" },
+            { number: "50+", label: "تخصص أكاديمي", icon: Globe, color: "text-emerald-500" },
+            { number: "99%", label: "رضا العملاء", icon: Target, color: "text-orange-500" }
           ].map((stat, index) => {
             const IconComponent = stat.icon;
             return (
