@@ -97,7 +97,6 @@ const Header = () => {
               </DropdownMenuTrigger>
               <DropdownMenuContent className="w-80 bg-white dark:bg-gray-800 border border-border shadow-xl z-50 backdrop-blur-sm" align="end">
                 <div className="p-2">
-                  <div className="text-sm font-semibold text-muted-foreground mb-3 px-2 text-right">خدماتنا المتخصصة</div>
                   {servicesDropdown.map((service) => (
                     <DropdownMenuItem key={service.name} asChild>
                       <Link
@@ -186,7 +185,7 @@ const Header = () => {
                     onClick={() => setIsServicesOpen(!isServicesOpen)}
                     className="w-full flex items-center justify-end gap-3 py-3 px-4 rounded-lg text-right hover:text-primary hover:bg-muted/50 transition-all duration-200 group"
                   >
-                    <span className="font-medium text-foreground">خدماتنا المتخصصة</span>
+                    <span className="font-medium text-foreground">خدماتنا</span>
                     <div className="flex items-center gap-2">
                       <ChevronDown className={`h-4 w-4 text-primary transition-all duration-200 ${isServicesOpen ? 'rotate-180' : ''} group-hover:scale-110`} />
                       <Briefcase className="h-5 w-5 text-primary group-hover:scale-110 transition-transform duration-200" />
