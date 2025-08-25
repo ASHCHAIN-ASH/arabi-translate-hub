@@ -23,8 +23,7 @@ const ResearchServices = () => {
       href: "/research/thesis-titles",
       stats: "2000+ عنوان مقترح",
       features: ["عناوين مبتكرة", "خطة أولية", "مراجعة متخصصة", "توجيه أكاديمي"],
-      duration: "3-5 أيام",
-      price: "يبدأ من 150$"
+      duration: "3-5 أيام"
     },
     {
       id: "research-plan",
@@ -36,8 +35,7 @@ const ResearchServices = () => {
       href: "/research/research-plan",
       stats: "1500+ خطة بحثية",
       features: ["منهجية علمية", "تصميم متكامل", "مراجعة أكاديمية", "ضمان الجودة"],
-      duration: "7-10 أيام",
-      price: "يبدأ من 300$"
+      duration: "7-10 أيام"
     },
     {
       id: "theoretical-framework",
@@ -49,8 +47,7 @@ const ResearchServices = () => {
       href: "/research/theoretical-framework",
       stats: "800+ إطار نظري",
       features: ["مراجعة أدبية", "ربط نظري", "تحليل شامل", "مصادر حديثة"],
-      duration: "10-14 يوم",
-      price: "يبدأ من 400$"
+      duration: "10-14 يوم"
     },
     {
       id: "statistical-analysis",
@@ -62,8 +59,7 @@ const ResearchServices = () => {
       href: "/research/statistical-analysis",
       stats: "1200+ تحليل إحصائي",
       features: ["SPSS & R", "تحليل متقدم", "مناقشة علمية", "رسوم بيانية"],
-      duration: "5-8 أيام",
-      price: "يبدأ من 250$"
+      duration: "5-8 أيام"
     },
     {
       id: "language-review",
@@ -75,8 +71,7 @@ const ResearchServices = () => {
       href: "/research/language-review",
       stats: "3000+ مراجعة لغوية",
       features: ["تدقيق شامل", "تحسين أسلوبي", "مراجعة نهائية", "ضمان الجودة"],
-      duration: "3-5 أيام",
-      price: "يبدأ من 100$"
+      duration: "3-5 أيام"
     },
     {
       id: "formatting",
@@ -88,8 +83,7 @@ const ResearchServices = () => {
       href: "/research/formatting",
       stats: "2500+ رسالة منسقة",
       features: ["معايير دولية", "تصميم أنيق", "تنسيق شامل", "جاهز للطباعة"],
-      duration: "2-4 أيام",
-      price: "يبدأ من 80$"
+      duration: "2-4 أيام"
     }
   ];
 
@@ -249,11 +243,11 @@ const ResearchServices = () => {
             
             <h1 className="text-4xl md:text-6xl lg:text-7xl font-arabic-title font-bold mb-8 leading-tight">
               <span className="bg-gradient-to-r from-white via-blue-200 to-white bg-clip-text text-transparent">
-                مركز التميز للأبحاث
+                وكالة ماستر إيدو باث
               </span>
               <br />
               <span className="bg-gradient-to-r from-blue-300 via-purple-300 to-green-300 bg-clip-text text-transparent">
-                والكتابة الأكاديمية
+                MasterEduPath Agency
               </span>
             </h1>
             
@@ -345,7 +339,7 @@ const ResearchServices = () => {
                   </div>
 
                   <div className="text-center mb-6">
-                    <span className="text-lg font-bold text-slate-800">{service.price}</span>
+                    <span className="text-sm font-medium text-slate-500">مدة الإنجاز: {service.duration}</span>
                   </div>
 
                   <Button asChild className={`w-full ${service.gradient} text-white border-0 hover:opacity-90 shadow-lg rounded-full font-bold group-hover:scale-105 transition-transform duration-300`}>

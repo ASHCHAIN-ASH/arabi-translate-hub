@@ -96,6 +96,8 @@ const App = () => (
             {/* Research Routes */}
             <Route path="/research/thesis-titles" element={<ThesisTitles />} />
             <Route path="/research/research-plan" element={<ResearchPlan />} />
+            <Route path="/research/thesis-titles" element={<ThesisTitles />} />
+            <Route path="/research/research-plan" element={<ResearchPlan />} />
             <Route path="/research/theoretical-framework" element={<TheoreticalFramework />} />
             <Route path="/research/statistical-analysis" element={<StatisticalAnalysis />} />
             <Route path="/research/language-review" element={<LanguageReview />} />

@@ -2,38 +2,72 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { FileText, Target, BookOpen, BarChart3, Users, CheckCircle } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
+import { 
+  FileText, BookOpen, Target, CheckCircle, Star, 
+  ArrowRight, Clock, Users, Trophy, Sparkles, Search,
+  Award, Shield, Rocket, Zap, PenTool, Database
+} from "lucide-react";
 
 const ResearchPlan = () => {
-  const planComponents = [
+  const features = [
     {
+      title: "منهجية علمية متطورة",
+      description: "تطبيق أحدث المناهج البحثية المعتمدة عالمياً في إعداد خطة البحث",
       icon: <Target className="h-8 w-8" />,
-      title: "مشكلة البحث والأهداف",
-      description: "تحديد واضح لمشكلة البحث والأهداف المراد تحقيقها"
+      color: "bg-blue-500"
     },
     {
-      icon: <BookOpen className="h-8 w-8" />,
-      title: "الإطار النظري",
-      description: "مراجعة شاملة للأدبيات والدراسات السابقة"
+      title: "تصميم بحثي متكامل",
+      description: "تصميم شامل يغطي جميع جوانب البحث من المقدمة حتى النتائج المتوقعة",
+      icon: <PenTool className="h-8 w-8" />,
+      color: "bg-green-500"
     },
     {
-      icon: <BarChart3 className="h-8 w-8" />,
-      title: "منهجية البحث",
-      description: "تصميم منهجي علمي مناسب لطبيعة البحث"
+      title: "مراجعة أكاديمية دقيقة",
+      description: "مراجعة متخصصة من أساتذة محكمين لضمان جودة ودقة المحتوى",
+      icon: <Shield className="h-8 w-8" />,
+      color: "bg-purple-500"
     },
     {
-      icon: <Users className="h-8 w-8" />,
-      title: "عينة الدراسة",
-      description: "تحديد مجتمع البحث وعينة الدراسة المناسبة"
+      title: "ضمان الجودة والقبول",
+      description: "ضمان قبول الخطة من الجامعة مع إمكانية التعديل المجاني",
+      icon: <Award className="h-8 w-8" />,
+      color: "bg-orange-500"
     }
   ];
 
-  const benefits = [
-    "خطة بحثية متكاملة ومنهجية",
-    "مراجعة من خبراء متخصصين",
-    "توافق مع معايير الجامعات",
-    "دعم في التطوير والتعديل",
-    "ضمان الجودة والأصالة العلمية"
+  const components = [
+    {
+      title: "المقدمة وخلفية البحث",
+      description: "تقديم واضح لموضوع البحث مع عرض الخلفية النظرية والعملية",
+      icon: <BookOpen className="h-6 w-6" />
+    },
+    {
+      title: "مشكلة البحث والأسئلة",
+      description: "تحديد دقيق لمشكلة البحث وصياغة الأسئلة البحثية الرئيسية",
+      icon: <Search className="h-6 w-6" />
+    },
+    {
+      title: "الأهداف والفرضيات",
+      description: "وضع أهداف واضحة وقابلة للقياس مع صياغة الفرضيات العلمية",
+      icon: <Target className="h-6 w-6" />
+    },
+    {
+      title: "مراجعة الأدبيات",
+      description: "مسح شامل للدراسات السابقة وتحديد الفجوة البحثية",
+      icon: <Database className="h-6 w-6" />
+    },
+    {
+      title: "المنهجية وتصميم البحث",
+      description: "اختيار المنهج المناسب وتحديد أدوات جمع وتحليل البيانات",
+      icon: <PenTool className="h-6 w-6" />
+    },
+    {
+      title: "الجدول الزمني والميزانية",
+      description: "وضع جدول زمني واقعي مع تقدير التكاليف المطلوبة",
+      icon: <Clock className="h-6 w-6" />
+    }
   ];
 
   return (
@@ -41,183 +75,154 @@ const ResearchPlan = () => {
       <Header />
       
       {/* Hero Section */}
-      <section className="relative py-20 bg-gradient-secondary text-white overflow-hidden">
-        <div className="absolute inset-0 bg-black/20"></div>
-        <div className="container relative mx-auto px-4">
-          <div className="flex flex-col lg:flex-row items-center gap-12">
-            <div className="flex-1 text-center lg:text-right">
-              <h1 className="text-4xl md:text-5xl font-arabic-title font-bold mb-6 animate-fade-in-up">
-                المساعدة في كتابة خطة البحث
-              </h1>
-              <p className="text-lg md:text-xl mb-8 font-arabic-body animate-fade-in-up">
-                نساعدك في إعداد خطة بحثية شاملة ومتكاملة تضمن نجاح مشروعك العلمي
-              </p>
-              <Button size="lg" className="bg-white text-primary hover:bg-white/90 shadow-strong animate-fade-in-up">
-                ابدأ إعداد خطتك الآن
-              </Button>
+      <section className="relative py-32 bg-gradient-to-br from-orange-900 via-red-900 to-pink-900 text-white overflow-hidden">
+        <div className="absolute inset-0">
+          <div className="absolute inset-0 bg-black/20"></div>
+          <div className="absolute top-20 left-10 w-72 h-72 bg-orange-500/10 rounded-full blur-3xl animate-float"></div>
+          <div className="absolute bottom-20 right-10 w-96 h-96 bg-red-500/10 rounded-full blur-3xl animate-float-slow"></div>
+        </div>
+
+        <div className="container relative mx-auto px-4 text-center">
+          <div className="animate-fade-in-up">
+            <div className="inline-flex items-center justify-center w-20 h-20 mx-auto mb-8 bg-white/10 rounded-full backdrop-blur-sm border border-white/20">
+              <FileText className="h-10 w-10 text-white" />
             </div>
-            <div className="flex-1 animate-float">
-              <div className="w-64 h-64 mx-auto bg-white/10 rounded-full flex items-center justify-center">
-                <FileText className="h-32 w-32 text-white" />
-              </div>
+            
+            <h1 className="text-4xl md:text-6xl font-arabic-title font-bold mb-8">
+              المساعدة في كتابة خطة البحث
+            </h1>
+            
+            <p className="text-xl max-w-3xl mx-auto mb-12 font-arabic-body leading-relaxed text-orange-100">
+              إعداد خطط بحثية متكاملة تشمل المنهجية العلمية وتصميم البحث بأعلى المعايير الأكاديمية
+            </p>
+            
+            <div className="flex flex-col sm:flex-row gap-6 justify-center">
+              <Button size="lg" className="bg-white text-slate-900 hover:bg-orange-50 shadow-xl text-lg px-8 py-4 rounded-full font-bold">
+                <Zap className="h-5 w-5 ml-2" />
+                اطلب خطة بحثية الآن
+              </Button>
+              <Button size="lg" variant="outline" className="border-white/30 text-white hover:bg-white/10 backdrop-blur-sm text-lg px-8 py-4 rounded-full font-bold">
+                <Users className="h-5 w-5 ml-2" />
+                استشارة مجانية
+              </Button>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Plan Components */}
-      <section className="py-20">
+      {/* Features Section */}
+      <section className="py-24 bg-gradient-to-b from-slate-50 to-white">
         <div className="container mx-auto px-4">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-arabic-title font-bold text-foreground mb-6">
-              مكونات خطة البحث
+          <div className="text-center mb-20">
+            <h2 className="text-4xl md:text-5xl font-arabic-title font-bold text-slate-800 mb-8">
+              مميزات خدمة إعداد خطة البحث
             </h2>
-            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-              نقوم بإعداد جميع عناصر خطة البحث وفقاً للمعايير الأكاديمية المعتمدة
+            <p className="text-xl text-slate-600 max-w-3xl mx-auto">
+              نقدم خدمة شاملة لإعداد خطط بحثية احترافية تلبي متطلبات الجامعات العالمية
             </p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-            {planComponents.map((component, index) => (
-              <Card key={index} className="text-center hover-lift bg-gradient-card border-0 animate-fade-in-up" style={{ animationDelay: `${index * 150}ms` }}>
-                <CardHeader>
-                  <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-gradient-secondary flex items-center justify-center text-white shadow-secondary">
-                    {component.icon}
+            {features.map((feature, index) => (
+              <Card key={index} className="text-center hover:shadow-xl transition-all duration-300 border-0 animate-fade-in-up" style={{ animationDelay: `${index * 100}ms` }}>
+                <CardHeader className="pb-4">
+                  <div className={`w-16 h-16 mx-auto mb-4 ${feature.color} rounded-2xl flex items-center justify-center text-white shadow-lg`}>
+                    {feature.icon}
                   </div>
-                  <CardTitle className="font-arabic-title">{component.title}</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <CardDescription className="font-arabic-body">{component.description}</CardDescription>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Detailed Process */}
-      <section className="py-20 bg-muted/30">
-        <div className="container mx-auto px-4">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
-            <div>
-              <h2 className="text-3xl md:text-4xl font-arabic-title font-bold text-foreground mb-8">
-                عملية إعداد خطة البحث
-              </h2>
-              <div className="space-y-6">
-                {[
-                  {
-                    step: "01",
-                    title: "دراسة المتطلبات",
-                    description: "تحليل متطلبات الجامعة والقسم الأكاديمي"
-                  },
-                  {
-                    step: "02",
-                    title: "تحديد المشكلة",
-                    description: "صياغة مشكلة البحث بطريقة علمية دقيقة"
-                  },
-                  {
-                    step: "03",
-                    title: "المراجعة الأدبية",
-                    description: "جمع ومراجعة الدراسات السابقة ذات الصلة"
-                  },
-                  {
-                    step: "04",
-                    title: "تصميم المنهجية",
-                    description: "اختيار المنهج الأنسب وأدوات جمع البيانات"
-                  }
-                ].map((item, index) => (
-                  <div key={index} className="flex gap-4 animate-fade-in-up" style={{ animationDelay: `${index * 100}ms` }}>
-                    <div className="w-12 h-12 rounded-full bg-gradient-secondary flex items-center justify-center text-white shadow-secondary flex-shrink-0">
-                      <span className="font-bold">{item.step}</span>
-                    </div>
-                    <div>
-                      <h3 className="text-xl font-arabic-title font-bold mb-2">{item.title}</h3>
-                      <p className="text-muted-foreground font-arabic-body">{item.description}</p>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-            <div className="animate-float">
-              <Card className="p-8 bg-gradient-card border-0 shadow-medium">
-                <CardHeader>
-                  <CardTitle className="text-2xl font-arabic-title font-bold text-foreground mb-4">
-                    ما يشمله العمل
+                  <CardTitle className="text-xl font-arabic-title font-bold text-slate-800">
+                    {feature.title}
                   </CardTitle>
                 </CardHeader>
-                <CardContent className="space-y-4">
-                  {benefits.map((benefit, index) => (
-                    <div key={index} className="flex items-start gap-3">
-                      <div className="w-5 h-5 rounded-full bg-gradient-success flex items-center justify-center flex-shrink-0 mt-1">
-                        <CheckCircle className="h-3 w-3 text-white" />
-                      </div>
-                      <p className="text-foreground font-arabic-body">{benefit}</p>
-                    </div>
-                  ))}
-                  <Button className="w-full mt-6 bg-gradient-secondary text-white hover:opacity-90">
-                    اطلب خدمة إعداد الخطة
-                  </Button>
+                <CardContent>
+                  <CardDescription className="text-slate-600 leading-relaxed">
+                    {feature.description}
+                  </CardDescription>
                 </CardContent>
               </Card>
-            </div>
+            ))}
           </div>
         </div>
       </section>
 
-      {/* Why Choose Us */}
-      <section className="py-20">
+      {/* Components Section */}
+      <section className="py-24 bg-slate-900 text-white">
         <div className="container mx-auto px-4">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-arabic-title font-bold text-foreground mb-6">
-              لماذا نتميز في إعداد خطط البحث؟
+          <div className="text-center mb-20">
+            <h2 className="text-4xl md:text-5xl font-arabic-title font-bold mb-8">
+              مكونات خطة البحث
             </h2>
+            <p className="text-xl text-slate-300 max-w-3xl mx-auto">
+              نغطي جميع العناصر الأساسية لخطة بحثية متكاملة ومعتمدة أكاديمياً
+            </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {[
-              {
-                icon: <Users className="h-10 w-10" />,
-                title: "فريق متخصص",
-                description: "أكاديميون وباحثون مختصون في مختلف المجالات",
-                color: "primary"
-              },
-              {
-                icon: <CheckCircle className="h-10 w-10" />,
-                title: "معايير عالمية",
-                description: "نلتزم بالمعايير الأكاديمية العالمية في الكتابة",
-                color: "secondary"
-              },
-              {
-                icon: <Target className="h-10 w-10" />,
-                title: "خطط قابلة للتطبيق",
-                description: "خطط واقعية ومدروسة يمكن تنفيذها بنجاح",
-                color: "accent"
-              }
-            ].map((item, index) => (
-              <div key={index} className="text-center animate-fade-in-up" style={{ animationDelay: `${index * 200}ms` }}>
-                <div className={`w-20 h-20 mx-auto mb-6 rounded-full bg-gradient-${item.color} flex items-center justify-center text-white shadow-${item.color}`}>
-                  {item.icon}
-                </div>
-                <h3 className="text-xl font-arabic-title font-bold mb-4">{item.title}</h3>
-                <p className="text-muted-foreground font-arabic-body">{item.description}</p>
-              </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {components.map((component, index) => (
+              <Card key={index} className="bg-slate-800 border-slate-700 hover:bg-slate-700 transition-all duration-300 animate-fade-in-up" style={{ animationDelay: `${index * 100}ms` }}>
+                <CardHeader className="pb-4">
+                  <div className="flex items-center gap-4 mb-4">
+                    <div className="w-12 h-12 bg-orange-600 rounded-xl flex items-center justify-center text-white">
+                      {component.icon}
+                    </div>
+                    <CardTitle className="text-lg font-arabic-title font-bold text-white">
+                      {component.title}
+                    </CardTitle>
+                  </div>
+                </CardHeader>
+                <CardContent>
+                  <CardDescription className="text-slate-300 leading-relaxed">
+                    {component.description}
+                  </CardDescription>
+                </CardContent>
+              </Card>
             ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Stats Section */}
+      <section className="py-16 bg-slate-100">
+        <div className="container mx-auto px-4">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
+            <div className="animate-fade-in-up">
+              <div className="text-4xl font-bold text-orange-600 mb-2">1500+</div>
+              <div className="text-slate-600">خطة بحثية</div>
+            </div>
+            <div className="animate-fade-in-up" style={{ animationDelay: '200ms' }}>
+              <div className="text-4xl font-bold text-green-600 mb-2">98%</div>
+              <div className="text-slate-600">معدل قبول الخطط</div>
+            </div>
+            <div className="animate-fade-in-up" style={{ animationDelay: '400ms' }}>
+              <div className="text-4xl font-bold text-purple-600 mb-2">40+</div>
+              <div className="text-slate-600">تخصص أكاديمي</div>
+            </div>
+            <div className="animate-fade-in-up" style={{ animationDelay: '600ms' }}>
+              <div className="text-4xl font-bold text-blue-600 mb-2">7-10</div>
+              <div className="text-slate-600">أيام للتسليم</div>
+            </div>
           </div>
         </div>
       </section>
 
       {/* CTA Section */}
-      <section className="py-20 bg-gradient-hero text-white">
+      <section className="py-24 bg-gradient-to-r from-orange-600 via-red-600 to-pink-600 text-white">
         <div className="container mx-auto px-4 text-center">
-          <h2 className="text-3xl md:text-4xl font-arabic-title font-bold mb-6">
+          <h2 className="text-4xl md:text-5xl font-arabic-title font-bold mb-8">
             احصل على خطة بحثية احترافية
           </h2>
-          <p className="text-lg md:text-xl max-w-2xl mx-auto mb-8">
-            لا تترك نجاح بحثك للصدفة، احصل على خطة بحثية متكاملة من الخبراء
+          <p className="text-xl mb-12 max-w-3xl mx-auto">
+            خطة بحثية متكاملة تضمن قبول موضوعك البحثي وتساعدك في إنجاز رسالتك بنجاح
           </p>
-          <Button size="lg" className="bg-white text-primary hover:bg-white/90 shadow-strong">
-            ابدأ الآن
-          </Button>
+          <div className="flex flex-col sm:flex-row gap-6 justify-center">
+            <Button size="lg" className="bg-white text-slate-900 hover:bg-orange-50 shadow-xl text-lg px-8 py-4 rounded-full font-bold">
+              <Rocket className="h-5 w-5 ml-2" />
+              اطلب الخدمة الآن
+            </Button>
+            <Button size="lg" variant="outline" className="border-white text-white hover:bg-white/10 text-lg px-8 py-4 rounded-full font-bold">
+              <Users className="h-5 w-5 ml-2" />
+              تحدث مع خبير
+            </Button>
+          </div>
         </div>
       </section>
 
