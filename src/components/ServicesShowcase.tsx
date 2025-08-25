@@ -66,7 +66,47 @@ const ServicesShowcase = () => {
   ];
 
   return (
-    <section className="py-20 bg-gradient-to-br from-background via-background/50 to-muted/30 overflow-hidden" dir="rtl">
+    <section className="py-16 bg-gradient-to-br from-background via-muted/20 to-background relative overflow-hidden" dir="rtl">
+      {/* خلفية تفاعلية متطورة */}
+      <div className="absolute inset-0">
+        <motion.div 
+          className="absolute inset-0 opacity-50"
+          style={{
+            background: "radial-gradient(circle at 20% 50%, hsl(var(--primary) / 0.1) 0%, transparent 50%), radial-gradient(circle at 80% 20%, hsl(var(--secondary) / 0.1) 0%, transparent 50%), radial-gradient(circle at 40% 80%, hsl(var(--accent) / 0.1) 0%, transparent 50%)"
+          }}
+          animate={{
+            opacity: [0.3, 0.6, 0.3]
+          }}
+          transition={{
+            duration: 8,
+            repeat: Infinity,
+            ease: "easeInOut"
+          }}
+        />
+        
+        {/* نقاط متحركة للزينة */}
+        {Array.from({ length: 20 }).map((_, i) => (
+          <motion.div
+            key={i}
+            className="absolute w-2 h-2 bg-primary/20 rounded-full"
+            style={{
+              left: `${Math.random() * 100}%`,
+              top: `${Math.random() * 100}%`,
+            }}
+            animate={{
+              y: [0, -30, 0],
+              opacity: [0.2, 0.8, 0.2],
+              scale: [0.5, 1, 0.5]
+            }}
+            transition={{
+              duration: 3 + Math.random() * 2,
+              repeat: Infinity,
+              delay: Math.random() * 2,
+              ease: "easeInOut"
+            }}
+          />
+        ))}
+      </div>
       {/* العناصر المتحركة في الخلفية */}
       <div className="absolute inset-0 pointer-events-none">
         {features.map((feature, index) => {
@@ -178,7 +218,7 @@ const ServicesShowcase = () => {
         </motion.div>
 
         {/* شبكة الخدمات المتطورة */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-4 md:gap-6 lg:gap-8 mb-16">
           {services.map((service, index) => {
             const IconComponent = service.icon;
             return (
@@ -202,30 +242,50 @@ const ServicesShowcase = () => {
                 }}
                 viewport={{ once: true }}
                 whileHover={{ 
-                  y: -10,
-                  scale: 1.02,
+                  y: -8,
+                  scale: 1.03,
                   transition: { duration: 0.3 }
                 }}
                 className="group"
               >
-                <Card className="h-full bg-card/60 backdrop-blur-sm border-0 shadow-lg hover:shadow-2xl transition-all duration-500 overflow-hidden relative rounded-full aspect-square">
+                <Card className="h-full bg-card/80 backdrop-blur-sm border-2 border-border/30 hover:border-primary/50 shadow-lg hover:shadow-2xl transition-all duration-500 overflow-hidden relative rounded-full aspect-square w-full max-w-[280px] mx-auto">
                   {/* التدرج الخلفي */}
                   <motion.div 
-                    className={`absolute inset-0 bg-gradient-to-br ${service.gradient} opacity-0 group-hover:opacity-10 transition-opacity duration-500 rounded-full`}
-                    whileHover={{ opacity: 0.1 }}
+                    className={`absolute inset-0 bg-gradient-to-br ${service.gradient} opacity-0 group-hover:opacity-15 transition-opacity duration-500 rounded-full`}
+                    whileHover={{ opacity: 0.15 }}
                   />
                   
-                  <CardContent className="p-8 relative z-10 h-full flex flex-col items-center justify-center text-center">
+                  {/* حافة متحركة */}
+                  <motion.div 
+                    className="absolute inset-0 rounded-full border-2 border-transparent"
+                    style={{
+                      background: `linear-gradient(45deg, ${service.gradient.replace('from-', '').replace(' to-', ', ')}) border-box`,
+                      WebkitMask: "linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0)",
+                      WebkitMaskComposite: "subtract"
+                    }}
+                    initial={{ opacity: 0 }}
+                    animate={{
+                      rotate: [0, 360]
+                    }}
+                    transition={{
+                      duration: 20,
+                      repeat: Infinity,
+                      ease: "linear"
+                    }}
+                    whileHover={{ opacity: 0.3 }}
+                  />
+                  
+                  <CardContent className="p-4 md:p-6 lg:p-8 relative z-10 h-full flex flex-col items-center justify-center text-center">
                     {/* الأيقونة التفاعلية */}
                     <motion.div 
-                      className="mb-6"
+                      className="mb-3 md:mb-4"
                       whileHover={{ 
                         rotate: [0, -10, 10, 0],
                         scale: 1.1
                       }}
                       transition={{ duration: 0.5 }}
                     >
-                      <div className={`w-20 h-20 bg-gradient-to-br ${service.gradient} rounded-full flex items-center justify-center shadow-lg group-hover:shadow-xl transition-shadow duration-300`}>
+                      <div className={`w-12 h-12 md:w-16 md:h-16 lg:w-18 lg:h-18 bg-gradient-to-br ${service.gradient} rounded-full flex items-center justify-center shadow-lg group-hover:shadow-xl transition-shadow duration-300 border-2 border-white/20`}>
                         <motion.div
                           animate={{ 
                             rotate: [0, 5, -5, 0]
@@ -236,14 +296,14 @@ const ServicesShowcase = () => {
                             ease: "easeInOut"
                           }}
                         >
-                          <IconComponent className="h-10 w-10 text-white" />
+                          <IconComponent className="h-6 w-6 md:h-8 md:w-8 lg:h-9 lg:w-9 text-white" />
                         </motion.div>
                       </div>
                     </motion.div>
 
                     {/* المحتوى */}
                     <motion.h3 
-                      className="text-lg font-bold text-foreground mb-4 group-hover:text-primary transition-colors duration-300"
+                      className="text-sm md:text-base lg:text-lg font-bold text-foreground mb-2 md:mb-3 group-hover:text-primary transition-colors duration-300 leading-tight"
                       initial={{ y: 20, opacity: 0 }}
                       whileInView={{ y: 0, opacity: 1 }}
                       transition={{ duration: 0.5, delay: service.delay + 0.1 }}
@@ -253,7 +313,7 @@ const ServicesShowcase = () => {
                     </motion.h3>
                     
                     <motion.p 
-                      className="text-sm text-muted-foreground leading-relaxed"
+                      className="text-xs md:text-sm text-muted-foreground leading-relaxed px-2"
                       initial={{ y: 20, opacity: 0 }}
                       whileInView={{ y: 0, opacity: 1 }}
                       transition={{ duration: 0.5, delay: service.delay + 0.2 }}
@@ -264,13 +324,15 @@ const ServicesShowcase = () => {
 
                     {/* علامة التحقق */}
                     <motion.div 
-                      className="absolute top-4 left-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                      className="absolute top-2 md:top-4 left-2 md:left-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
                       initial={{ scale: 0 }}
                       whileInView={{ scale: 1 }}
                       transition={{ duration: 0.3, delay: service.delay + 0.3 }}
                       viewport={{ once: true }}
                     >
-                      <CheckCircle className="h-6 w-6 text-green-500" />
+                      <div className="w-6 h-6 bg-green-500 rounded-full flex items-center justify-center">
+                        <CheckCircle className="h-4 w-4 text-white" />
+                      </div>
                     </motion.div>
                   </CardContent>
                 </Card>
