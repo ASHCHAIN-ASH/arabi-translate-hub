@@ -17,8 +17,7 @@ import {
   Briefcase,
   Award,
   Microscope,
-  Edit3,
-  Settings
+  Edit3
 } from "lucide-react";
 import { useState } from "react";
 import { Link } from "react-router-dom";
@@ -123,12 +122,6 @@ const Header = () => {
           {/* أزرار الإجراءات */}
           <div className="hidden lg:flex items-center space-x-reverse space-x-4">
             <Button variant="outline" size="sm" asChild>
-              <Link to="/admin">
-                <Settings className="h-4 w-4 ml-2" />
-                لوحة الإدارة
-              </Link>
-            </Button>
-            <Button variant="outline" size="sm" asChild>
               <Link to="/order-tracking">
                 <Search className="h-4 w-4 ml-2" />
                 تتبع الطلب
@@ -223,12 +216,6 @@ const Header = () => {
                 </div>
                 
                 <div className="flex flex-col space-y-2 mt-6">
-                  <Button variant="outline" size="sm" asChild>
-                    <Link to="/admin" onClick={() => setIsOpen(false)}>
-                      <Settings className="h-4 w-4 ml-2" />
-                      لوحة الإدارة
-                    </Link>
-                  </Button>
                   <Button variant="outline" size="sm" asChild>
                     <Link to="/order-tracking" onClick={() => setIsOpen(false)}>
                       <Search className="h-4 w-4 ml-2" />
