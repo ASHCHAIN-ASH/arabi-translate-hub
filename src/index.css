@@ -10,64 +10,64 @@
 @layer base {
   :root {
     /* الألوان الأساسية - نظام لوني حيوي ومتناسق */
-    --background: 0 0% 99%;
-    --foreground: 220 15% 20%;
+    --background: 222 84% 4%;
+    --foreground: 210 40% 98%;
 
-    --card: 0 0% 100%;
-    --card-foreground: 220 15% 20%;
+    --card: 222 84% 5%;
+    --card-foreground: 210 40% 98%;
 
-    --popover: 0 0% 100%;
-    --popover-foreground: 220 15% 20%;
+    --popover: 222 84% 5%;
+    --popover-foreground: 210 40% 98%;
 
-    /* الألوان الرئيسية - أزرق حيوي ومشرق */
+    /* الألوان الرئيسية - أزرق مشع وذهبي */
     --primary: 217 91% 60%;
-    --primary-foreground: 0 0% 100%;
-    --primary-dark: 217 91% 50%;
-    --primary-light: 217 91% 70%;
+    --primary-foreground: 222 84% 4%;
+    --primary-dark: 217 91% 45%;
+    --primary-light: 217 91% 75%;
 
-    /* اللون الثانوي - برتقالي حيوي */
-    --secondary: 25 95% 53%;
-    --secondary-foreground: 0 0% 100%;
-    --secondary-light: 25 95% 65%;
+    /* اللون الثانوي - ذهبي مشع */
+    --secondary: 45 93% 58%;
+    --secondary-foreground: 222 84% 4%;
+    --secondary-light: 45 93% 70%;
 
-    /* الأخضر للنجاح والموثوقية */
-    --accent: 142 69% 58%;
-    --accent-foreground: 0 0% 100%;
-    --accent-light: 142 69% 70%;
+    /* الأخضر السماوي للنجاح */
+    --accent: 180 100% 50%;
+    --accent-foreground: 222 84% 4%;
+    --accent-light: 180 100% 65%;
 
     /* الألوان المساعدة */
-    --muted: 220 13% 95%;
-    --muted-foreground: 220 10% 45%;
+    --muted: 215 25% 15%;
+    --muted-foreground: 217 15% 70%;
 
     --success: 142 76% 36%;
-    --success-foreground: 0 0% 100%;
+    --success-foreground: 210 40% 98%;
 
     --warning: 38 92% 50%;
-    --warning-foreground: 0 0% 100%;
+    --warning-foreground: 222 84% 4%;
 
     --destructive: 0 84% 60%;
-    --destructive-foreground: 0 0% 100%;
+    --destructive-foreground: 210 40% 98%;
 
     /* حدود ومدخلات */
-    --border: 220 13% 91%;
-    --input: 220 13% 95%;
-    --ring: 220 90% 56%;
+    --border: 215 25% 18%;
+    --input: 215 25% 12%;
+    --ring: 217 91% 60%;
 
     /* التدرجات الاحترافية والأنيقة */
-    --gradient-primary: linear-gradient(135deg, hsl(217 91% 60%) 0%, hsl(217 91% 70%) 100%);
-    --gradient-secondary: linear-gradient(135deg, hsl(25 95% 53%) 0%, hsl(25 95% 65%) 100%);
-    --gradient-success: linear-gradient(135deg, hsl(142 69% 58%) 0%, hsl(142 69% 70%) 100%);
-    --gradient-hero: linear-gradient(135deg, hsl(217 91% 60%) 0%, hsl(25 95% 53%) 40%, hsl(142 69% 58%) 100%);
-    --gradient-card: linear-gradient(145deg, hsl(0 0% 100%) 0%, hsl(220 15% 98%) 100%);
-    --gradient-vibrant: linear-gradient(45deg, hsl(217 91% 60%) 0%, hsl(25 95% 53%) 25%, hsl(142 69% 58%) 50%, hsl(295 85% 70%) 75%, hsl(340 82% 65%) 100%);
+    --gradient-primary: linear-gradient(135deg, hsl(217 91% 60%) 0%, hsl(217 91% 75%) 100%);
+    --gradient-secondary: linear-gradient(135deg, hsl(45 93% 58%) 0%, hsl(45 93% 70%) 100%);
+    --gradient-success: linear-gradient(135deg, hsl(180 100% 50%) 0%, hsl(180 100% 65%) 100%);
+    --gradient-hero: linear-gradient(135deg, hsl(217 91% 60%) 0%, hsl(45 93% 58%) 40%, hsl(180 100% 50%) 100%);
+    --gradient-card: linear-gradient(145deg, hsl(222 84% 5%) 0%, hsl(215 25% 8%) 100%);
+    --gradient-vibrant: linear-gradient(45deg, hsl(217 91% 60%) 0%, hsl(45 93% 58%) 25%, hsl(180 100% 50%) 50%, hsl(295 85% 70%) 75%, hsl(340 82% 65%) 100%);
     
     /* ظلال احترافية وأنيقة */
     --shadow-primary: 0 4px 25px -5px hsl(217 91% 60% / 0.4);
-    --shadow-secondary: 0 4px 25px -5px hsl(25 95% 53% / 0.3);
-    --shadow-success: 0 4px 25px -5px hsl(142 69% 58% / 0.3);
-    --shadow-soft: 0 2px 15px -3px hsl(217 15% 20% / 0.06);
-    --shadow-medium: 0 8px 35px -8px hsl(217 15% 20% / 0.10);
-    --shadow-strong: 0 20px 60px -15px hsl(217 15% 20% / 0.15);
+    --shadow-secondary: 0 4px 25px -5px hsl(45 93% 58% / 0.3);
+    --shadow-success: 0 4px 25px -5px hsl(180 100% 50% / 0.3);
+    --shadow-soft: 0 2px 15px -3px hsl(0 0% 0% / 0.2);
+    --shadow-medium: 0 8px 35px -8px hsl(0 0% 0% / 0.3);
+    --shadow-strong: 0 20px 60px -15px hsl(0 0% 0% / 0.4);
 
     /* ألوان خاصة لكل صفحة */
     /* الصفحة الرئيسية - أزرق فاتح */
