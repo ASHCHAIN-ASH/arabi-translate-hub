@@ -456,98 +456,150 @@ const ClientDashboard = () => {
           </Card>
         </motion.div>
 
-        {/* Enhanced Recent Orders */}
+        {/* Enhanced Recent Orders - Mobile Optimized */}
         <motion.div
           initial={{ opacity: 0, y: 40 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.7 }}
         >
-          <Card className="border-0 shadow-2xl bg-gradient-to-br from-white to-gray-50/50">
-            <CardHeader className="flex flex-row items-center justify-between pb-8">
-              <div>
-                <CardTitle className="text-2xl sm:text-3xl lg:text-4xl font-black flex items-center text-gray-800 mb-2 sm:mb-3">
+          <Card className="border-0 shadow-lg sm:shadow-2xl bg-gradient-to-br from-white to-gray-50/50 overflow-hidden">
+            <CardHeader className="flex flex-col sm:flex-row sm:items-center sm:justify-between pb-4 sm:pb-6 lg:pb-8 px-4 sm:px-6">
+              <div className="mb-4 sm:mb-0">
+                <CardTitle className="text-xl sm:text-2xl lg:text-4xl font-black flex items-center text-gray-800 mb-2">
                   <motion.div
                     whileHover={{ rotate: 360, scale: 1.1 }}
                     transition={{ duration: 0.6 }}
-                    className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-emerald-500 via-teal-500 to-blue-500 rounded-2xl sm:rounded-3xl flex items-center justify-center ml-3 sm:ml-4 shadow-xl"
+                    className="w-8 h-8 sm:w-10 sm:h-10 lg:w-12 lg:h-12 bg-gradient-to-br from-emerald-500 via-teal-500 to-blue-500 rounded-xl sm:rounded-2xl lg:rounded-3xl flex items-center justify-center ml-2 sm:ml-3 lg:ml-4 shadow-lg sm:shadow-xl"
                   >
-                    <Activity className="w-5 h-5 sm:w-6 sm:h-6 lg:w-7 lg:h-7 text-white" />
+                    <Activity className="w-4 h-4 sm:w-5 sm:h-5 lg:w-7 lg:h-7 text-white" />
                   </motion.div>
                   آخر 5 طلبات
                 </CardTitle>
-                <CardDescription className="text-base sm:text-lg lg:text-xl text-gray-600">
+                <CardDescription className="text-sm sm:text-base lg:text-xl text-gray-600">
                   تتبع حالة طلباتك الحديثة ومستوى التقدم
                 </CardDescription>
               </div>
               <Button 
                 variant="outline" 
                 onClick={() => navigate('/orders')}
-                className="border-2 border-gray-300 hover:border-blue-500 hover:text-blue-600 font-bold px-4 sm:px-6 lg:px-8 py-2 sm:py-3 lg:py-4 rounded-xl sm:rounded-2xl transition-all duration-300 text-sm sm:text-base lg:text-lg"
+                className="border-2 border-gray-300 hover:border-blue-500 hover:text-blue-600 font-bold px-4 sm:px-6 lg:px-8 py-2 sm:py-3 lg:py-4 rounded-xl sm:rounded-2xl transition-all duration-300 text-sm sm:text-base lg:text-lg w-full sm:w-auto"
               >
                 عرض الكل
                 <ChevronLeft className="w-4 h-4 sm:w-5 sm:h-5 mr-2 sm:mr-3" />
               </Button>
             </CardHeader>
-            <CardContent>
-              <div className="space-y-6">
+            <CardContent className="px-4 sm:px-6">
+              <div className="space-y-3 sm:space-y-4 lg:space-y-6">
                 {recentOrders.map((order, index) => (
                   <motion.div
                     key={order.id}
                     initial={{ opacity: 0, x: -30 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ duration: 0.6, delay: 0.9 + index * 0.1 }}
-                    whileHover={{ scale: 1.02, x: 10 }}
+                    whileHover={{ scale: 1.01, x: 5 }}
                     className="cursor-pointer group"
                     onClick={() => navigate(`/orders/${order.id}`)}
                   >
-                    <Card className="border-2 border-gray-200 hover:border-blue-300 hover:shadow-xl transition-all duration-300 bg-gradient-to-r from-white via-blue-50/30 to-white group-hover:from-blue-50/50 group-hover:to-indigo-50/30 overflow-hidden">
-                      <CardContent className="p-8">
-                        <div className="flex items-center justify-between">
-                          <div className="flex items-center space-x-reverse space-x-6 flex-1">
+                    <Card className="border border-gray-200 hover:border-blue-300 hover:shadow-lg transition-all duration-300 bg-gradient-to-r from-white via-blue-50/20 to-white group-hover:from-blue-50/30 group-hover:to-indigo-50/20 overflow-hidden">
+                      <CardContent className="p-4 sm:p-6 lg:p-8">
+                        {/* Mobile Layout */}
+                        <div className="block sm:hidden">
+                          <div className="flex items-start justify-between mb-3">
                             <motion.div 
-                              whileHover={{ scale: 1.2, rotate: 10 }}
-                              className="w-16 h-16 bg-gradient-to-br from-gray-100 to-gray-200 group-hover:from-blue-100 group-hover:to-blue-200 rounded-3xl flex items-center justify-center shadow-lg transition-all duration-300"
+                              whileHover={{ scale: 1.1, rotate: 5 }}
+                              className="w-12 h-12 bg-gradient-to-br from-gray-100 to-gray-200 group-hover:from-blue-100 group-hover:to-blue-200 rounded-2xl flex items-center justify-center shadow-md transition-all duration-300 flex-shrink-0"
                             >
-                              <BookMarked className="w-8 h-8 text-gray-600 group-hover:text-blue-600 transition-colors duration-300" />
+                              <BookMarked className="w-6 h-6 text-gray-600 group-hover:text-blue-600 transition-colors duration-300" />
                             </motion.div>
-                            <div className="flex-1 min-w-0">
-                              <div className="flex items-center justify-between mb-3">
-                                <h3 className="font-black text-xl text-gray-800 group-hover:text-blue-800 transition-colors duration-300 truncate">
-                                  {order.service}
-                                </h3>
-                                <Badge className={`${getStatusColor(order.status)} font-bold px-4 py-2 rounded-2xl text-sm shadow-lg`}>
-                                  {getStatusText(order.status)}
-                                </Badge>
+                            <Badge className={`${getStatusColor(order.status)} font-bold px-3 py-1 rounded-xl text-xs shadow-md ml-2`}>
+                              {getStatusText(order.status)}
+                            </Badge>
+                          </div>
+                          
+                          <h3 className="font-black text-base text-gray-800 group-hover:text-blue-800 transition-colors duration-300 mb-2 leading-tight">
+                            {order.service}
+                          </h3>
+                          
+                          <div className="space-y-2 text-sm text-gray-600 mb-3">
+                            <div className="flex items-center justify-between">
+                              <span className="font-semibold">#{order.orderNumber}</span>
+                              <span>{order.date}</span>
+                            </div>
+                            <div className="flex items-center justify-between">
+                              <Badge className="bg-amber-100 text-amber-700 border border-amber-200 px-2 py-1 rounded-lg text-xs font-semibold">
+                                {order.priority}
+                              </Badge>
+                              <span className="font-black text-lg text-blue-600">{order.total}</span>
+                            </div>
+                          </div>
+                          
+                          {order.status === 'processing' && (
+                            <div className="mt-3">
+                              <div className="flex items-center justify-between text-xs text-gray-500 mb-2">
+                                <span className="font-semibold">التقدم</span>
+                                <span className="font-bold">{order.progress}%</span>
                               </div>
-                              <div className="flex items-center justify-between text-base text-gray-600 mb-4">
-                                <div className="flex items-center space-x-reverse space-x-6">
-                                  <span className="font-bold">#{order.orderNumber}</span>
-                                  <span>{order.date}</span>
-                                  <Badge className="bg-amber-100 text-amber-700 border border-amber-200 px-3 py-1 rounded-xl font-semibold">
-                                    {order.priority}
+                              <div className="w-full bg-gray-200 rounded-full h-2">
+                                <motion.div 
+                                  initial={{ width: 0 }}
+                                  animate={{ width: `${order.progress}%` }}
+                                  transition={{ duration: 1.5, delay: index * 0.3 }}
+                                  className="bg-gradient-to-r from-blue-500 to-indigo-600 h-2 rounded-full shadow-inner"
+                                />
+                              </div>
+                            </div>
+                          )}
+                        </div>
+
+                        {/* Desktop/Tablet Layout */}
+                        <div className="hidden sm:block">
+                          <div className="flex items-center justify-between">
+                            <div className="flex items-center space-x-reverse space-x-6 flex-1">
+                              <motion.div 
+                                whileHover={{ scale: 1.2, rotate: 10 }}
+                                className="w-16 h-16 bg-gradient-to-br from-gray-100 to-gray-200 group-hover:from-blue-100 group-hover:to-blue-200 rounded-3xl flex items-center justify-center shadow-lg transition-all duration-300"
+                              >
+                                <BookMarked className="w-8 h-8 text-gray-600 group-hover:text-blue-600 transition-colors duration-300" />
+                              </motion.div>
+                              <div className="flex-1 min-w-0">
+                                <div className="flex items-center justify-between mb-3">
+                                  <h3 className="font-black text-xl text-gray-800 group-hover:text-blue-800 transition-colors duration-300 truncate">
+                                    {order.service}
+                                  </h3>
+                                  <Badge className={`${getStatusColor(order.status)} font-bold px-4 py-2 rounded-2xl text-sm shadow-lg`}>
+                                    {getStatusText(order.status)}
                                   </Badge>
                                 </div>
-                                <div className="flex items-center space-x-reverse space-x-4">
-                                  <span className="font-black text-2xl text-blue-600">{order.total}</span>
-                                  <Eye className="w-5 h-5 text-gray-400 group-hover:text-blue-500 transition-colors duration-300" />
+                                <div className="flex items-center justify-between text-base text-gray-600 mb-4">
+                                  <div className="flex items-center space-x-reverse space-x-6">
+                                    <span className="font-bold">#{order.orderNumber}</span>
+                                    <span>{order.date}</span>
+                                    <Badge className="bg-amber-100 text-amber-700 border border-amber-200 px-3 py-1 rounded-xl font-semibold">
+                                      {order.priority}
+                                    </Badge>
+                                  </div>
+                                  <div className="flex items-center space-x-reverse space-x-4">
+                                    <span className="font-black text-2xl text-blue-600">{order.total}</span>
+                                    <Eye className="w-5 h-5 text-gray-400 group-hover:text-blue-500 transition-colors duration-300" />
+                                  </div>
                                 </div>
+                                {order.status === 'processing' && (
+                                  <div className="mt-4">
+                                    <div className="flex items-center justify-between text-sm text-gray-500 mb-3">
+                                      <span className="font-semibold">التقدم</span>
+                                      <span className="font-bold">{order.progress}%</span>
+                                    </div>
+                                    <div className="w-full bg-gray-200 rounded-full h-3">
+                                      <motion.div 
+                                        initial={{ width: 0 }}
+                                        animate={{ width: `${order.progress}%` }}
+                                        transition={{ duration: 1.5, delay: index * 0.3 }}
+                                        className="bg-gradient-to-r from-blue-500 to-indigo-600 h-3 rounded-full shadow-inner"
+                                      />
+                                    </div>
+                                  </div>
+                                )}
                               </div>
-                              {order.status === 'processing' && (
-                                <div className="mt-4">
-                                  <div className="flex items-center justify-between text-sm text-gray-500 mb-3">
-                                    <span className="font-semibold">التقدم</span>
-                                    <span className="font-bold">{order.progress}%</span>
-                                  </div>
-                                  <div className="w-full bg-gray-200 rounded-full h-3">
-                                    <motion.div 
-                                      initial={{ width: 0 }}
-                                      animate={{ width: `${order.progress}%` }}
-                                      transition={{ duration: 1.5, delay: index * 0.3 }}
-                                      className="bg-gradient-to-r from-blue-500 to-indigo-600 h-3 rounded-full shadow-inner"
-                                    />
-                                  </div>
-                                </div>
-                              )}
                             </div>
                           </div>
                         </div>
