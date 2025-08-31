@@ -34,7 +34,7 @@ const ClientLayout: React.FC<ClientLayoutProps> = ({ children }) => {
       icon: LayoutDashboard 
     },
     { 
-      name: 'طلباتي', 
+      name: 'سجل الطلبات', 
       href: '/orders', 
       icon: ShoppingCart 
     },
