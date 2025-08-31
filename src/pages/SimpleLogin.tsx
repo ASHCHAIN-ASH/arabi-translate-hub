@@ -313,6 +313,18 @@ const SimpleLogin = () => {
                         </div>
                       )}
                     </Button>
+
+                    {/* رابط نسيت كلمة المرور */}
+                    <div className="text-center mt-4">
+                      <Button
+                        type="button"
+                        variant="link"
+                        className="p-0 h-auto font-normal text-sm text-muted-foreground hover:text-primary transition-colors duration-200"
+                        onClick={() => navigate('/auth/forgot-password')}
+                      >
+                        نسيت كلمة المرور؟
+                      </Button>
+                    </div>
                   </form>
                 </motion.div>
               </TabsContent>
