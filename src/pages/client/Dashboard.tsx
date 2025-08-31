@@ -39,59 +39,42 @@ import {
   Trophy,
   Rocket,
   Shield,
-  Gem
+  Gem,
+  RefreshCw
 } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { useAuth } from '@/components/SimpleAuthProvider';
 import { useNavigate } from 'react-router-dom';
+import { useClientData } from '@/hooks/useClientData';
+import { ClientDashboardService } from '@/utils/clientDashboardService';
+import { useToast } from '@/hooks/use-toast';
 import ClientLayout from '@/components/client/ClientLayout';
 
 const ClientDashboard = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
+  const { toast } = useToast();
+  const {
+    stats,
+    orders,
+    invoices,
+    tickets,
+    payments,
+    loading,
+    error,
+    refresh
+  } = useClientData(user?.id);
 
-  // Mock data
-  const stats = {
-    totalOrders: 12,
-    unpaidInvoices: 2,
-    lastPayment: '750 ريال',
-    avgExecutionTime: '5 أيام'
+  // تحديث البيانات يدوياً
+  const handleRefresh = async () => {
+    await refresh();
+    toast({
+      title: "تم تحديث البيانات",
+      description: "تم تحديث بيانات لوحة التحكم بنجاح",
+    });
   };
-
-  const recentOrders = [
-    {
-      id: '1',
-      orderNumber: 'MEP250001',
-      service: 'مراجعة أكاديمية شاملة',
-      status: 'completed',
-      total: '750 ريال',
-      date: '2024-01-15',
-      priority: 'عالية',
-      progress: 100
-    },
-    {
-      id: '2',
-      orderNumber: 'MEP250002',
-      service: 'ترجمة أطروحة دكتوراه',
-      status: 'processing',
-      total: '1,299 ريال',
-      date: '2024-01-20',
-      priority: 'متوسطة',
-      progress: 65
-    },
-    {
-      id: '3',
-      orderNumber: 'MEP250003',
-      service: 'تحليل إحصائي متقدم',
-      status: 'pending',
-      total: '899 ريال',
-      date: '2024-01-22',
-      priority: 'عالية',
-      progress: 0
-    }
-  ];
 
   const quickActions = [
     {
@@ -122,32 +105,66 @@ const ClientDashboard = () => {
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case 'completed': return 'bg-gradient-to-r from-emerald-500 to-green-600 text-white';
-      case 'processing': return 'bg-gradient-to-r from-blue-500 to-cyan-600 text-white';
-      case 'pending': return 'bg-gradient-to-r from-amber-500 to-orange-600 text-white';
+      case 'مكتمل': return 'bg-gradient-to-r from-emerald-500 to-green-600 text-white';
+      case 'قيد المعالجة': return 'bg-gradient-to-r from-blue-500 to-cyan-600 text-white';
+      case 'في الانتظار': return 'bg-gradient-to-r from-amber-500 to-orange-600 text-white';
+      case 'مسودة': return 'bg-gradient-to-r from-gray-500 to-slate-600 text-white';
       default: return 'bg-gradient-to-r from-gray-500 to-slate-600 text-white';
     }
   };
 
-  const getStatusText = (status: string) => {
-    switch (status) {
-      case 'completed': return 'مكتمل';
-      case 'processing': return 'قيد المعالجة';
-      case 'pending': return 'في الانتظار';
-      default: return status;
-    }
-  };
+  if (loading) {
+    return (
+      <ClientLayout>
+        <div className="flex items-center justify-center min-h-[400px]">
+          <div className="text-center">
+            <RefreshCw className="w-8 h-8 animate-spin mx-auto mb-4 text-primary" />
+            <p className="text-muted-foreground">جاري تحميل البيانات المباشرة...</p>
+          </div>
+        </div>
+      </ClientLayout>
+    );
+  }
+
+  if (error) {
+    return (
+      <ClientLayout>
+        <div className="flex items-center justify-center min-h-[400px]">
+          <div className="text-center">
+            <AlertCircle className="w-8 h-8 mx-auto mb-4 text-red-500" />
+            <p className="text-red-600 mb-4">{error}</p>
+            <Button onClick={handleRefresh} variant="outline">
+              <RefreshCw className="w-4 h-4 ml-2" />
+              إعادة المحاولة
+            </Button>
+          </div>
+        </div>
+      </ClientLayout>
+    );
+  }
 
   return (
     <ClientLayout>
       <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 p-2 sm:p-4 lg:p-6" dir="rtl">
-        {/* Enhanced Academic Hero Section */}
+        {/* Enhanced Academic Hero Section with refresh button */}
         <motion.div
           initial={{ opacity: 0, y: -40 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, ease: "easeOut" }}
           className="relative overflow-hidden rounded-xl sm:rounded-2xl lg:rounded-[2rem] bg-gradient-to-br from-indigo-600 via-blue-600 to-purple-700 p-4 sm:p-6 lg:p-12 text-white mb-4 sm:mb-6 lg:mb-8 shadow-2xl"
         >
+          {/* Refresh Button */}
+          <div className="absolute top-4 left-4 z-20">
+            <Button
+              onClick={handleRefresh}
+              variant="secondary"
+              size="sm"
+              className="bg-white/20 backdrop-blur-md border-white/30 text-white hover:bg-white/30"
+            >
+              <RefreshCw className="w-4 h-4 ml-2" />
+              تحديث
+            </Button>
+          </div>
           {/* Animated Background Elements */}
           <div className="absolute inset-0 overflow-hidden">
             <motion.div
@@ -299,7 +316,9 @@ const ClientDashboard = () => {
                 </motion.div>
               </CardHeader>
               <CardContent className="relative z-10 px-3 sm:px-4 lg:px-6">
-                <div className="text-2xl sm:text-3xl lg:text-5xl font-black text-red-600 mb-1 sm:mb-2 lg:mb-3">{stats.unpaidInvoices}</div>
+                <div className="text-2xl sm:text-3xl lg:text-5xl font-black text-red-600 mb-1 sm:mb-2 lg:mb-3">
+                  {stats?.unpaidInvoices || 0}
+                </div>
                 <p className="text-xs sm:text-sm text-gray-600 flex items-center font-semibold">
                   <AlertCircle className="w-3 h-3 sm:w-4 sm:h-4 ml-1 text-amber-500" />
                   <span className="hidden sm:inline">تحتاج للمراجعة</span>
@@ -318,7 +337,9 @@ const ClientDashboard = () => {
               <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-blue-200/30 to-indigo-200/30 rounded-full blur-2xl group-hover:scale-110 transition-transform duration-500"></div>
               <div className="absolute -bottom-4 -left-4 w-20 h-20 bg-blue-100/50 rounded-full blur-xl"></div>
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3 sm:pb-4 relative z-10">
-                <CardTitle className="text-xs sm:text-sm font-bold text-gray-700">طلبات (3 قيد المعالجة)</CardTitle>
+                <CardTitle className="text-xs sm:text-sm font-bold text-gray-700">
+                  طلبات ({stats?.pendingOrders || 0} قيد المعالجة)
+                </CardTitle>
                 <motion.div 
                   whileHover={{ scale: 1.2, rotate: 10 }}
                   className="w-12 h-12 sm:w-14 sm:h-14 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-xl sm:rounded-2xl flex items-center justify-center shadow-xl"
@@ -327,10 +348,12 @@ const ClientDashboard = () => {
                 </motion.div>
               </CardHeader>
               <CardContent className="relative z-10">
-                <div className="text-3xl sm:text-4xl lg:text-5xl font-black text-blue-600 mb-2 sm:mb-3">{stats.totalOrders}</div>
+                <div className="text-3xl sm:text-4xl lg:text-5xl font-black text-blue-600 mb-2 sm:mb-3">
+                  {stats?.totalOrders || 0}
+                </div>
                 <p className="text-xs sm:text-sm text-gray-600 flex items-center font-semibold">
                   <TrendingUp className="w-3 h-3 sm:w-4 sm:h-4 ml-1 sm:ml-2 text-emerald-500" />
-                  +2 هذا الشهر
+                  +{stats?.pendingOrders || 0} هذا الشهر
                 </p>
               </CardContent>
             </Card>
@@ -354,7 +377,9 @@ const ClientDashboard = () => {
                 </motion.div>
               </CardHeader>
               <CardContent className="relative z-10">
-                <div className="text-3xl sm:text-4xl lg:text-5xl font-black text-purple-600 mb-2 sm:mb-3">{stats.avgExecutionTime}</div>
+                <div className="text-3xl sm:text-4xl lg:text-5xl font-black text-purple-600 mb-2 sm:mb-3">
+                  {stats?.avgExecutionTime || '5 أيام'}
+                </div>
                 <p className="text-xs sm:text-sm text-gray-600 flex items-center font-semibold">
                   <Timer className="w-3 h-3 sm:w-4 sm:h-4 ml-1 sm:ml-2 text-green-500" />
                   أسرع من المتوقع
@@ -381,8 +406,12 @@ const ClientDashboard = () => {
                 </motion.div>
               </CardHeader>
               <CardContent className="relative z-10">
-                <div className="text-3xl sm:text-4xl lg:text-5xl font-black text-emerald-600 mb-2 sm:mb-3">{stats.lastPayment}</div>
-                <p className="text-xs sm:text-sm text-gray-600 font-semibold">2024-01-15</p>
+                <div className="text-3xl sm:text-4xl lg:text-5xl font-black text-emerald-600 mb-2 sm:mb-3">
+                  {stats?.lastPayment ? ClientDashboardService.formatCurrency(stats.lastPayment) : '0 ريال'}
+                </div>
+                <p className="text-xs sm:text-sm text-gray-600 font-semibold">
+                  {payments.length > 0 ? payments[0].date : 'لا توجد مدفوعات'}
+                </p>
               </CardContent>
             </Card>
           </motion.div>
@@ -490,7 +519,7 @@ const ClientDashboard = () => {
             </CardHeader>
             <CardContent className="px-4 sm:px-6">
               <div className="space-y-3 sm:space-y-4 lg:space-y-6">
-                {recentOrders.map((order, index) => (
+                {orders.slice(0, 3).map((order, index) => (
                   <motion.div
                     key={order.id}
                     initial={{ opacity: 0, x: -30 }}
@@ -512,7 +541,7 @@ const ClientDashboard = () => {
                               <BookMarked className="w-6 h-6 text-gray-600 group-hover:text-blue-600 transition-colors duration-300" />
                             </motion.div>
                             <Badge className={`${getStatusColor(order.status)} font-bold px-3 py-1 rounded-xl text-xs shadow-md ml-2`}>
-                              {getStatusText(order.status)}
+                              {order.status}
                             </Badge>
                           </div>
                           
@@ -567,7 +596,7 @@ const ClientDashboard = () => {
                                     {order.service}
                                   </h3>
                                   <Badge className={`${getStatusColor(order.status)} font-bold px-4 py-2 rounded-2xl text-sm shadow-lg`}>
-                                    {getStatusText(order.status)}
+                                    {order.status}
                                   </Badge>
                                 </div>
                                 <div className="flex items-center justify-between text-base text-gray-600 mb-4">
