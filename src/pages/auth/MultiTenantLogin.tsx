@@ -121,7 +121,7 @@ const MultiTenantLogin = () => {
   };
 
   return (
-    <div className="min-h-screen relative overflow-hidden" dir="rtl">
+    <div className="min-h-screen relative overflow-hidden" dir="rtl" style={{ direction: 'rtl' }}>
       {/* Academic Background */}
       <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-blue-900 to-indigo-900">
         <div className="absolute inset-0 opacity-20">
@@ -249,10 +249,10 @@ const MultiTenantLogin = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.6, duration: 0.6 }}
           >
-            <Card className="shadow-2xl border-0 bg-white/95 backdrop-blur-lg rounded-3xl overflow-hidden" dir="rtl">
+            <Card className="shadow-2xl border-0 bg-white/95 backdrop-blur-lg rounded-3xl overflow-hidden" dir="rtl" style={{ direction: 'rtl' }}>
               <CardHeader className="pb-6 bg-gradient-to-r from-blue-50 to-purple-50">
-                <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full" dir="rtl">
-                  <TabsList className="grid w-full grid-cols-2 bg-white/80 rounded-2xl p-1">
+                <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full" dir="rtl" style={{ direction: 'rtl' }}>
+                  <TabsList className="grid w-full grid-cols-2 bg-white/80 rounded-2xl p-1" dir="rtl" style={{ direction: 'rtl' }}>
                     <TabsTrigger 
                       value="login" 
                       className="rounded-xl data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-500 data-[state=active]:to-purple-500 data-[state=active]:text-white font-medium"
@@ -269,7 +269,7 @@ const MultiTenantLogin = () => {
                 </Tabs>
               </CardHeader>
               
-              <CardContent className="p-8 space-y-6" dir="rtl">
+              <CardContent className="p-8 space-y-6" dir="rtl" style={{ direction: 'rtl' }}>
                 {error && (
                   <motion.div
                     initial={{ opacity: 0, scale: 0.95 }}
@@ -282,16 +282,16 @@ const MultiTenantLogin = () => {
                   </motion.div>
                 )}
 
-                <Tabs value={activeTab} className="w-full" dir="rtl">
-                  <TabsContent value="login" className="space-y-6 mt-0" dir="rtl">
-                    <form onSubmit={handleLogin} className="space-y-6" dir="rtl">
+                <Tabs value={activeTab} className="w-full" dir="rtl" style={{ direction: 'rtl' }}>
+                  <TabsContent value="login" className="space-y-6 mt-0" dir="rtl" style={{ direction: 'rtl' }}>
+                    <form onSubmit={handleLogin} className="space-y-6" dir="rtl" style={{ direction: 'rtl' }}>
                       <motion.div 
                         className="space-y-2"
                         initial={{ opacity: 0, x: -20 }}
                         animate={{ opacity: 1, x: 0 }}
                         transition={{ delay: 0.7, duration: 0.5 }}
                       >
-                        <Label htmlFor="login-email" className="text-gray-700 font-medium text-right block">البريد الإلكتروني</Label>
+                        <Label htmlFor="login-email" className="text-gray-700 font-medium text-right block" dir="rtl" style={{ textAlign: 'right', direction: 'rtl' }}>البريد الإلكتروني</Label>
                         <Input
                           id="login-email"
                           type="email"
@@ -300,9 +300,9 @@ const MultiTenantLogin = () => {
                           placeholder="أدخل بريدك الإلكتروني"
                           required
                           disabled={loading}
-                          className="h-12 rounded-xl border-gray-200 focus:border-blue-500 focus:ring-blue-500/20 text-lg text-right"
+                          className="h-12 rounded-xl border-gray-200 focus:border-blue-500 focus:ring-blue-500/20 text-lg text-right placeholder:text-right"
                           dir="rtl"
-                          style={{ textAlign: 'right', direction: 'rtl' }}
+                          style={{ textAlign: 'right', direction: 'rtl', unicodeBidi: 'plaintext' }}
                         />
                       </motion.div>
                       
@@ -312,8 +312,8 @@ const MultiTenantLogin = () => {
                         animate={{ opacity: 1, x: 0 }}
                         transition={{ delay: 0.8, duration: 0.5 }}
                       >
-                        <Label htmlFor="login-password" className="text-gray-700 font-medium text-right block">كلمة المرور</Label>
-                        <div className="relative">
+                        <Label htmlFor="login-password" className="text-gray-700 font-medium text-right block" dir="rtl" style={{ textAlign: 'right', direction: 'rtl' }}>كلمة المرور</Label>
+                        <div className="relative" dir="rtl">
                           <Input
                             id="login-password"
                             type={showPassword ? 'text' : 'password'}
@@ -322,14 +322,14 @@ const MultiTenantLogin = () => {
                             placeholder="أدخل كلمة المرور"
                             required
                             disabled={loading}
-                            className="h-12 rounded-xl border-gray-200 focus:border-blue-500 focus:ring-blue-500/20 text-lg text-right pl-12"
+                            className="h-12 rounded-xl border-gray-200 focus:border-blue-500 focus:ring-blue-500/20 text-lg text-right pr-12 placeholder:text-right"
                             dir="rtl"
-                            style={{ textAlign: 'right', direction: 'rtl' }}
+                            style={{ textAlign: 'right', direction: 'rtl', unicodeBidi: 'plaintext' }}
                           />
                           <button
                             type="button"
                             onClick={() => setShowPassword(!showPassword)}
-                            className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
+                            className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
                           >
                             {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
                           </button>
@@ -363,15 +363,15 @@ const MultiTenantLogin = () => {
                     </form>
                   </TabsContent>
 
-                  <TabsContent value="register" className="space-y-6 mt-0" dir="rtl">
-                    <form onSubmit={handleRegister} className="space-y-6" dir="rtl">
+                  <TabsContent value="register" className="space-y-6 mt-0" dir="rtl" style={{ direction: 'rtl' }}>
+                    <form onSubmit={handleRegister} className="space-y-6" dir="rtl" style={{ direction: 'rtl' }}>
                       <motion.div 
                         className="space-y-2"
                         initial={{ opacity: 0, x: -20 }}
                         animate={{ opacity: 1, x: 0 }}
                         transition={{ delay: 0.7, duration: 0.5 }}
                       >
-                        <Label htmlFor="register-name" className="text-gray-700 font-medium text-right block">الاسم الكامل *</Label>
+                        <Label htmlFor="register-name" className="text-gray-700 font-medium text-right block" dir="rtl" style={{ textAlign: 'right', direction: 'rtl' }}>الاسم الكامل *</Label>
                         <Input
                           id="register-name"
                           type="text"
@@ -380,9 +380,9 @@ const MultiTenantLogin = () => {
                           placeholder="أدخل اسمك الكامل"
                           required
                           disabled={loading}
-                          className="h-12 rounded-xl border-gray-200 focus:border-blue-500 focus:ring-blue-500/20 text-right"
+                          className="h-12 rounded-xl border-gray-200 focus:border-blue-500 focus:ring-blue-500/20 text-right placeholder:text-right"
                           dir="rtl"
-                          style={{ textAlign: 'right', direction: 'rtl' }}
+                          style={{ textAlign: 'right', direction: 'rtl', unicodeBidi: 'plaintext' }}
                         />
                       </motion.div>
 
@@ -392,7 +392,7 @@ const MultiTenantLogin = () => {
                         animate={{ opacity: 1, x: 0 }}
                         transition={{ delay: 0.8, duration: 0.5 }}
                       >
-                        <Label htmlFor="register-email" className="text-gray-700 font-medium text-right block">البريد الإلكتروني *</Label>
+                        <Label htmlFor="register-email" className="text-gray-700 font-medium text-right block" dir="rtl" style={{ textAlign: 'right', direction: 'rtl' }}>البريد الإلكتروني *</Label>
                         <Input
                           id="register-email"
                           type="email"
@@ -401,9 +401,9 @@ const MultiTenantLogin = () => {
                           placeholder="أدخل بريدك الإلكتروني"
                           required
                           disabled={loading}
-                          className="h-12 rounded-xl border-gray-200 focus:border-blue-500 focus:ring-blue-500/20 text-right"
+                          className="h-12 rounded-xl border-gray-200 focus:border-blue-500 focus:ring-blue-500/20 text-right placeholder:text-right"
                           dir="rtl"
-                          style={{ textAlign: 'right', direction: 'rtl' }}
+                          style={{ textAlign: 'right', direction: 'rtl', unicodeBidi: 'plaintext' }}
                         />
                       </motion.div>
 
@@ -413,7 +413,7 @@ const MultiTenantLogin = () => {
                         animate={{ opacity: 1, x: 0 }}
                         transition={{ delay: 0.9, duration: 0.5 }}
                       >
-                        <Label htmlFor="register-phone" className="text-gray-700 font-medium text-right block">رقم الهاتف</Label>
+                        <Label htmlFor="register-phone" className="text-gray-700 font-medium text-right block" dir="rtl" style={{ textAlign: 'right', direction: 'rtl' }}>رقم الهاتف</Label>
                         <Input
                           id="register-phone"
                           type="tel"
@@ -421,9 +421,9 @@ const MultiTenantLogin = () => {
                           onChange={(e) => setRegisterPhone(e.target.value)}
                           placeholder="أدخل رقم هاتفك"
                           disabled={loading}
-                          className="h-12 rounded-xl border-gray-200 focus:border-blue-500 focus:ring-blue-500/20 text-right"
+                          className="h-12 rounded-xl border-gray-200 focus:border-blue-500 focus:ring-blue-500/20 text-right placeholder:text-right"
                           dir="rtl"
-                          style={{ textAlign: 'right', direction: 'rtl' }}
+                          style={{ textAlign: 'right', direction: 'rtl', unicodeBidi: 'plaintext' }}
                         />
                       </motion.div>
 
@@ -433,8 +433,8 @@ const MultiTenantLogin = () => {
                         animate={{ opacity: 1, x: 0 }}
                         transition={{ delay: 1.0, duration: 0.5 }}
                       >
-                        <Label htmlFor="register-password" className="text-gray-700 font-medium text-right block">كلمة المرور *</Label>
-                        <div className="relative">
+                        <Label htmlFor="register-password" className="text-gray-700 font-medium text-right block" dir="rtl" style={{ textAlign: 'right', direction: 'rtl' }}>كلمة المرور *</Label>
+                        <div className="relative" dir="rtl">
                           <Input
                             id="register-password"
                             type={showPassword ? 'text' : 'password'}
@@ -443,14 +443,14 @@ const MultiTenantLogin = () => {
                             placeholder="أدخل كلمة المرور (8 أحرف على الأقل)"
                             required
                             disabled={loading}
-                            className="h-12 rounded-xl border-gray-200 focus:border-blue-500 focus:ring-blue-500/20 text-right pl-12"
+                            className="h-12 rounded-xl border-gray-200 focus:border-blue-500 focus:ring-blue-500/20 text-right pr-12 placeholder:text-right"
                             dir="rtl"
-                            style={{ textAlign: 'right', direction: 'rtl' }}
+                            style={{ textAlign: 'right', direction: 'rtl', unicodeBidi: 'plaintext' }}
                           />
                           <button
                             type="button"
                             onClick={() => setShowPassword(!showPassword)}
-                            className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
+                            className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
                           >
                             {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
                           </button>
@@ -463,7 +463,7 @@ const MultiTenantLogin = () => {
                         animate={{ opacity: 1, x: 0 }}
                         transition={{ delay: 1.1, duration: 0.5 }}
                       >
-                        <Label htmlFor="confirm-password" className="text-gray-700 font-medium text-right block">تأكيد كلمة المرور *</Label>
+                        <Label htmlFor="confirm-password" className="text-gray-700 font-medium text-right block" dir="rtl" style={{ textAlign: 'right', direction: 'rtl' }}>تأكيد كلمة المرور *</Label>
                         <Input
                           id="confirm-password"
                           type={showPassword ? 'text' : 'password'}
@@ -472,9 +472,9 @@ const MultiTenantLogin = () => {
                           placeholder="أعد كتابة كلمة المرور"
                           required
                           disabled={loading}
-                          className="h-12 rounded-xl border-gray-200 focus:border-blue-500 focus:ring-blue-500/20 text-right"
+                          className="h-12 rounded-xl border-gray-200 focus:border-blue-500 focus:ring-blue-500/20 text-right placeholder:text-right"
                           dir="rtl"
-                          style={{ textAlign: 'right', direction: 'rtl' }}
+                          style={{ textAlign: 'right', direction: 'rtl', unicodeBidi: 'plaintext' }}
                         />
                       </motion.div>
 
