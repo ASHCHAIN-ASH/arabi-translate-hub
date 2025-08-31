@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { User } from '@supabase/supabase-js';
+import { useTenant, normalizeEmail } from '@/contexts/TenantContext';
 
 interface AuthContextType {
   user: User | null;
@@ -25,6 +26,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [user, setUser] = useState<User | null>(null);
   const [userRole, setUserRole] = useState<'admin' | 'client' | 'superadmin' | null>(null);
   const [loading, setLoading] = useState(true);
+  const { tenant } = useTenant();
 
   useEffect(() => {
     // Get initial session
@@ -67,14 +69,45 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   const signIn = async (email: string, password: string) => {
+    if (!tenant) {
+      throw new Error('لا يمكن تنفيذ العملية لعدم تحديد الموقع (Tenant).');
+    }
+
+    const normalizedEmail = normalizeEmail(email);
+    
+    // Check if user exists in current tenant
+    const { data: userData, error: userError } = await supabase
+      .from('ash_users')
+      .select('id, email, role, status')
+      .eq('tenant_id', tenant.id)
+      .eq('email_normalized', normalizedEmail)
+      .single();
+
+    if (userError || !userData) {
+      throw new Error('بيانات تسجيل الدخول غير صحيحة');
+    }
+
+    if (userData.status !== 'active') {
+      throw new Error(userData.status === 'pending' 
+        ? 'الرجاء تفعيل بريدك قبل تسجيل الدخول'
+        : 'تم حظر حسابك. يرجى التواصل مع الإدارة'
+      );
+    }
+
+    // Use Supabase auth for actual login
     const { error } = await supabase.auth.signInWithPassword({
-      email,
+      email: normalizedEmail,
       password,
     });
-    if (error) throw error;
+    
+    if (error) throw new Error('بيانات تسجيل الدخول غير صحيحة');
   };
 
   const signUp = async (email: string, password: string, userData: any) => {
+    if (!tenant) {
+      throw new Error('لا يمكن تنفيذ العملية لعدم تحديد الموقع (Tenant).');
+    }
+
     // Validate password strength
     if (password.length < 12) {
       throw new Error('كلمة المرور يجب أن تكون على الأقل 12 حرف');
@@ -96,8 +129,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       throw new Error('كلمة المرور يجب أن تحتوي على رمز خاص واحد على الأقل');
     }
 
+    const normalizedEmail = normalizeEmail(email);
+
     const { data, error } = await supabase.auth.signUp({
-      email,
+      email: normalizedEmail,
       password,
       options: {
         emailRedirectTo: `${window.location.origin}/`,
@@ -107,15 +142,17 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     
     if (error) throw error;
 
-    // Create user profile (use upsert to avoid duplicate key error)
+    // Create user profile with tenant_id
     if (data.user) {
       const { error: profileError } = await supabase
         .from('ash_users')
         .upsert([
           {
             id: data.user.id,
-            email: email.toLowerCase(),
-            email_lower: email.toLowerCase(),
+            tenant_id: tenant.id,
+            email: normalizedEmail,
+            email_lower: normalizedEmail, // Keep for backward compatibility
+            email_normalized: normalizedEmail,
             name: userData.name,
             phone: userData.phone || null,
             role: 'client', // Default role for new registrations

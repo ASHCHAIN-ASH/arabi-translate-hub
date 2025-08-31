@@ -6,6 +6,8 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import PageThemeProvider from "./components/PageThemeProvider";
 import { AuthProvider } from "@/components/AuthProvider";
 import ProtectedRoute from "@/components/ProtectedRoute";
+import { TenantGuard } from "@/components/TenantGuard";
+import { TenantBadge } from "@/components/TenantBadge";
 import Index from "./pages/Index";
 import TranslationServices from "./pages/TranslationServices";
 import LegalTranslation from "./pages/LegalTranslation";
@@ -86,8 +88,9 @@ const App = () => (
       <Toaster />
       <Sonner />
       <BrowserRouter>
-        <AuthProvider>
-          <PageThemeProvider>
+        <TenantGuard>
+          <AuthProvider>
+            <PageThemeProvider>
           <Routes>
             {/* Public Routes */}
             <Route path="/" element={<Index />} />
@@ -152,6 +155,7 @@ const App = () => (
             {/* Admin Dashboard Routes */}
             <Route path="/admin" element={
               <ProtectedRoute requiredRole="admin">
+                <TenantBadge />
                 <AdminDashboard />
               </ProtectedRoute>
             } />
@@ -252,8 +256,9 @@ const App = () => (
             
             <Route path="*" element={<NotFound />} />
           </Routes>
-          </PageThemeProvider>
-        </AuthProvider>
+            </PageThemeProvider>
+          </AuthProvider>
+        </TenantGuard>
       </BrowserRouter>
     </TooltipProvider>
   </QueryClientProvider>

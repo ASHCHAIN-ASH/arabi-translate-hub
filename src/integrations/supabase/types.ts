@@ -4461,6 +4461,10 @@ export type Database = {
         Args: { phone_input: string; user_requesting?: string }
         Returns: string
       }
+      migrate_tenant_data: {
+        Args: Record<PropertyKey, never>
+        Returns: string
+      }
       normalize_digits: {
         Args: { input_value: string }
         Returns: string
