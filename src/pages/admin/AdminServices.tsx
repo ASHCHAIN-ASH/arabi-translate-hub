@@ -501,7 +501,7 @@ const CategoryCard = ({
   return (
     <Card className="group hover:shadow-xl transition-all duration-300 border-2 hover:border-primary/20 rounded-2xl overflow-hidden">
       <CardHeader className="pb-4">
-        <div className="flex items-start justify-between gap-4">
+        <div className="flex items-start gap-4">
           <div className="relative">
             <div 
               className="w-16 h-16 rounded-2xl flex items-center justify-center text-white shadow-lg group-hover:scale-110 transition-transform duration-300"
@@ -509,19 +509,21 @@ const CategoryCard = ({
             >
               {getIcon(category.icon)}
             </div>
-            <div className="absolute -bottom-1 -right-1 w-5 h-5 bg-background rounded-full border-2 border-border flex items-center justify-center">
+            <div className="absolute -bottom-1 -left-1 w-5 h-5 bg-background rounded-full border-2 border-border flex items-center justify-center">
               <div className={`w-2 h-2 rounded-full ${category.is_active ? 'bg-success' : 'bg-muted-foreground'}`}></div>
             </div>
           </div>
           <div className="flex-1 text-right">
             <Badge 
               variant={category.is_active ? "default" : "secondary"}
-              className="text-xs font-semibold px-3 py-1 rounded-full mb-3"
+              className="text-xs font-semibold px-3 py-1 rounded-full mb-3 float-right"
             >
               {category.is_active ? "مفعل" : "معطل"}
             </Badge>
-            <CardTitle className="text-xl font-bold text-right mb-1">{category.name_ar}</CardTitle>
-            <p className="text-sm text-muted-foreground text-right">{category.name_en}</p>
+            <div className="clear-both">
+              <CardTitle className="text-xl font-bold text-right mb-1">{category.name_ar}</CardTitle>
+              <p className="text-sm text-muted-foreground text-right">{category.name_en}</p>
+            </div>
           </div>
         </div>
       </CardHeader>
@@ -540,20 +542,20 @@ const CategoryCard = ({
               <Button 
                 variant="outline" 
                 size="sm" 
-                onClick={() => onDelete(category.id)}
-                className="flex items-center gap-2 text-destructive hover:text-destructive hover:bg-destructive/10 hover:border-destructive/30 rounded-xl"
-              >
-                <Trash2 className="w-4 h-4" />
-                <span>حذف</span>
-              </Button>
-              <Button 
-                variant="outline" 
-                size="sm" 
                 onClick={() => onEdit(category)}
                 className="flex items-center gap-2 hover:bg-primary/10 hover:border-primary/30 rounded-xl"
               >
                 <Edit2 className="w-4 h-4" />
                 <span>تعديل</span>
+              </Button>
+              <Button 
+                variant="outline" 
+                size="sm" 
+                onClick={() => onDelete(category.id)}
+                className="flex items-center gap-2 text-destructive hover:text-destructive hover:bg-destructive/10 hover:border-destructive/30 rounded-xl"
+              >
+                <Trash2 className="w-4 h-4" />
+                <span>حذف</span>
               </Button>
             </div>
           </div>
@@ -576,60 +578,38 @@ const ServiceCard = ({
   return (
     <Card className="group hover:shadow-xl transition-all duration-300 border-2 hover:border-secondary/20 rounded-2xl overflow-hidden">
       <CardContent className="p-6">
-        <div className="flex items-start justify-between gap-6">
-          <div className="flex gap-2">
-            <Button 
-              variant="outline" 
-              size="sm" 
-              onClick={() => onDelete(service.id)}
-              className="flex items-center gap-2 text-destructive hover:text-destructive hover:bg-destructive/10 hover:border-destructive/30 rounded-xl"
-            >
-              <Trash2 className="w-4 h-4" />
-              <span>حذف</span>
-            </Button>
-            <Button 
-              variant="outline" 
-              size="sm" 
-              onClick={() => onEdit(service)}
-              className="flex items-center gap-2 hover:bg-primary/10 hover:border-primary/30 rounded-xl"
-            >
-              <Edit2 className="w-4 h-4" />
-              <span>تعديل</span>
-            </Button>
+        <div className="flex items-start gap-6">
+          <div 
+            className="w-12 h-12 rounded-lg flex items-center justify-center text-white flex-shrink-0"
+            style={{ backgroundColor: service.service_categories?.color || '#3B82F6' }}
+          >
+            <Settings className="w-6 h-6" />
           </div>
           
           <div className="flex-1 text-right">
-            <div className="flex items-center gap-3 mb-3 justify-end">
-              <div className="text-right">
-                <h3 className="text-lg font-semibold">{service.name_ar}</h3>
-                <p className="text-sm text-muted-foreground">{service.name_en}</p>
-              </div>
-              <div 
-                className="w-10 h-10 rounded-lg flex items-center justify-center text-white"
-                style={{ backgroundColor: service.service_categories?.color || '#3B82F6' }}
-              >
-                <Settings className="w-5 h-5" />
-              </div>
+            <div className="mb-3">
+              <h3 className="text-lg font-semibold text-right">{service.name_ar}</h3>
+              <p className="text-sm text-muted-foreground text-right">{service.name_en}</p>
             </div>
             
             <p className="text-sm text-muted-foreground mb-4 text-right">
               {service.description_ar || "لا يوجد وصف"}
             </p>
 
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4 text-right">
-              <div>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
+              <div className="text-right">
                 <p className="text-xs text-muted-foreground">القسم</p>
                 <p className="text-sm font-medium">{service.service_categories?.name_ar}</p>
               </div>
-              <div>
+              <div className="text-right">
                 <p className="text-xs text-muted-foreground">مدة التسليم</p>
                 <p className="text-sm font-medium">{service.delivery_time_days} أيام</p>
               </div>
-              <div>
+              <div className="text-right">
                 <p className="text-xs text-muted-foreground">الحد الأدنى</p>
                 <p className="text-sm font-medium">{service.min_units} {service.unit_type}</p>
               </div>
-              <div>
+              <div className="text-right">
                 <p className="text-xs text-muted-foreground">السعر لكل وحدة</p>
                 <p className="text-sm font-medium">
                   {service.price_per_unit ? `${service.price_per_unit} ريال` : 'حسب الطلب'}
@@ -637,18 +617,41 @@ const ServiceCard = ({
               </div>
             </div>
 
-            <div className="flex items-center gap-4 justify-end">
-              {service.rush_delivery_available && (
-                <Badge variant="outline">
-                  تسليم سريع متاح
+            <div className="flex items-center gap-4 justify-between">
+              <div className="flex gap-2">
+                <Button 
+                  variant="outline" 
+                  size="sm" 
+                  onClick={() => onEdit(service)}
+                  className="flex items-center gap-2 hover:bg-primary/10 hover:border-primary/30 rounded-xl"
+                >
+                  <Edit2 className="w-4 h-4" />
+                  <span>تعديل</span>
+                </Button>
+                <Button 
+                  variant="outline" 
+                  size="sm" 
+                  onClick={() => onDelete(service.id)}
+                  className="flex items-center gap-2 text-destructive hover:text-destructive hover:bg-destructive/10 hover:border-destructive/30 rounded-xl"
+                >
+                  <Trash2 className="w-4 h-4" />
+                  <span>حذف</span>
+                </Button>
+              </div>
+              
+              <div className="flex items-center gap-2">
+                {service.rush_delivery_available && (
+                  <Badge variant="outline" className="text-xs">
+                    تسليم سريع
+                  </Badge>
+                )}
+                <Badge variant={service.show_to_clients ? "default" : "outline"} className="text-xs">
+                  {service.show_to_clients ? "ظاهر" : "مخفي"}
                 </Badge>
-              )}
-              <Badge variant={service.show_to_clients ? "default" : "outline"}>
-                {service.show_to_clients ? "ظاهر للعملاء" : "مخفي"}
-              </Badge>
-              <Badge variant={service.is_active ? "default" : "secondary"}>
-                {service.is_active ? "مفعل" : "معطل"}
-              </Badge>
+                <Badge variant={service.is_active ? "default" : "secondary"} className="text-xs">
+                  {service.is_active ? "مفعل" : "معطل"}
+                </Badge>
+              </div>
             </div>
           </div>
         </div>
