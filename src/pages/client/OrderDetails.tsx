@@ -234,10 +234,10 @@ const OrderDetails = () => {
         {/* Main Content */}
         <Tabs defaultValue="overview" className="space-y-6" dir="rtl">
           <TabsList className="grid w-full grid-cols-4" dir="rtl">
-            <TabsTrigger value="overview" className="text-right">نظرة عامة</TabsTrigger>
-            <TabsTrigger value="timeline" className="text-right">الجدول الزمني</TabsTrigger>
-            <TabsTrigger value="files" className="text-right">الملفات</TabsTrigger>
             <TabsTrigger value="communication" className="text-right">التواصل</TabsTrigger>
+            <TabsTrigger value="files" className="text-right">الملفات</TabsTrigger>
+            <TabsTrigger value="timeline" className="text-right">الجدول الزمني</TabsTrigger>
+            <TabsTrigger value="overview" className="text-right">نظرة عامة</TabsTrigger>
           </TabsList>
 
           <TabsContent value="overview" className="space-y-6" dir="rtl">
