@@ -90,7 +90,7 @@ const ClientLayout: React.FC<ClientLayoutProps> = ({ children }) => {
       })}
       
       {/* Sign Out Button في الجوال */}
-      <div className="pt-4 mt-4 border-t border-border lg:hidden">
+      <div className="pt-4 mt-4 border-t border-border md:hidden">
         <Button 
           variant="ghost" 
           onClick={handleSignOut}
@@ -105,12 +105,13 @@ const ClientLayout: React.FC<ClientLayoutProps> = ({ children }) => {
 
   // Debug log
   console.log('ClientLayout rendering - window width:', typeof window !== 'undefined' ? window.innerWidth : 'server');
+  console.log('Should show sidebar:', typeof window !== 'undefined' ? window.innerWidth >= 900 : 'server');
 
   return (
     <div className="min-h-screen w-full bg-background" dir="rtl">
       <div className="flex">
-        {/* Desktop Sidebar - Always visible on large screens */}
-        <aside className="w-64 bg-card/80 backdrop-blur-sm border-l border-border flex-shrink-0 hidden lg:block">
+        {/* Desktop Sidebar - Always visible on screens 900px+ */}
+        <aside className="w-64 bg-card/80 backdrop-blur-sm border-l border-border flex-shrink-0 hidden md:block">
           <div className="sticky top-0 h-screen overflow-y-auto">
             {/* Sidebar Header */}
             <div className="p-4 border-b border-border bg-gradient-to-r from-primary/5 to-secondary/5">
@@ -139,7 +140,7 @@ const ClientLayout: React.FC<ClientLayoutProps> = ({ children }) => {
                 {/* Mobile Menu Toggle */}
                 <Sheet open={isSidebarOpen} onOpenChange={setIsSidebarOpen}>
                   <SheetTrigger asChild>
-                    <Button variant="ghost" size="sm" className="lg:hidden p-2">
+                  <Button variant="ghost" size="sm" className="md:hidden p-2">
                       <Menu className="w-5 h-5" />
                     </Button>
                   </SheetTrigger>
