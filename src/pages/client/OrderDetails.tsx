@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import ClientLayout from '@/components/client/ClientLayout';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -25,60 +25,124 @@ import {
   FileCheck,
   Send,
   ArrowRight,
-  Edit
+  Edit,
+  Loader2
 } from 'lucide-react';
+import { useToast } from '@/components/ui/use-toast';
 
 const OrderDetails = () => {
   const { id } = useParams();
   const navigate = useNavigate();
+  const { toast } = useToast();
+  const [isLoading, setIsLoading] = useState(true);
+  const [order, setOrder] = useState<any>(null);
+  const [newMessage, setNewMessage] = useState('');
 
-  // Mock data - في التطبيق الحقيقي سيتم جلب البيانات من API
-  const order = {
-    id: id || 'MEP250003',
-    title: 'مراجعة لغوية وتدوية متخصصة للنص الأكاديمي مع تحسين الأسلوب',
-    service: 'تحليل إحصائي متقدم',
-    serviceIcon: BarChart3,
-    status: 'in_progress',
-    priority: 'medium',
-    progress: 45,
-    value: 899,
-    createdAt: '2024-01-15',
-    deadline: '2024-01-30',
-    description: 'تحليل إحصائي شامل للبيانات البحثية باستخدام R و SPSS',
-    client: {
-      name: 'أحمد محمد علي',
-      email: 'ahmed.ali@email.com',
-      phone: '+966501234567',
-      university: 'جامعة الملك سعود'
-    },
-    timeline: [
-      { status: 'received', name: 'مستلم', completed: true, date: '2024-01-15', description: 'تم استلام طلبكم بنجاح' },
-      { status: 'under_review', name: 'تحت المراجعة', completed: true, date: '2024-01-16', description: 'جاري مراجعة التفاصيل' },
-      { status: 'in_progress', name: 'قيد التنفيذ', completed: true, date: '2024-01-18', description: 'بدء العمل على المشروع' },
-      { status: 'review', name: 'المراجعة', completed: false, date: null, description: 'مراجعة العمل والتأكد من الجودة' },
-      { status: 'delivery', name: 'التسليم', completed: false, date: null, description: 'التسليم النهائي للعمل' }
-    ],
-    files: [
-      { name: 'البيانات_الأولية.xlsx', type: 'input', uploadedAt: '2024-01-15', size: '2.3 MB' },
-      { name: 'متطلبات_المشروع.pdf', type: 'input', uploadedAt: '2024-01-15', size: '1.1 MB' },
-      { name: 'التحليل_المبدئي.pdf', type: 'output', uploadedAt: '2024-01-20', size: '3.7 MB' }
-    ],
-    communications: [
-      { 
-        type: 'message', 
-        from: 'العميل', 
-        content: 'هل يمكن إضافة تحليل إضافي للمتغيرات؟', 
-        timestamp: '2024-01-19 14:30',
-        avatar: 'client'
-      },
-      { 
-        type: 'response', 
-        from: 'المختص', 
-        content: 'بالطبع، سيتم إضافة التحليل المطلوب وسيكون جاهز خلال يومين', 
-        timestamp: '2024-01-19 16:45',
-        avatar: 'specialist'
+  // Load order data
+  useEffect(() => {
+    const loadOrderData = async () => {
+      setIsLoading(true);
+      try {
+        // Simulate API call to get order details
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        
+        // Mock data that would come from Supabase
+        const orderData = {
+          id: id || 'MEP250003',
+          title: 'مراجعة لغوية وتدوية متخصصة للنص الأكاديمي مع تحسين الأسلوب',
+          service: 'تحليل إحصائي متقدم',
+          serviceIcon: BarChart3,
+          status: 'in_progress',
+          priority: 'medium',
+          progress: 45,
+          value: 899,
+          createdAt: '2024-01-15',
+          deadline: '2024-01-30',
+          description: 'تحليل إحصائي شامل للبيانات البحثية باستخدام R و SPSS',
+          client: {
+            name: 'أحمد محمد علي',
+            email: 'ahmed.ali@email.com',
+            phone: '+966501234567',
+            university: 'جامعة الملك سعود'
+          },
+          timeline: [
+            { status: 'received', name: 'مستلم', completed: true, date: '2024-01-15', description: 'تم استلام طلبكم بنجاح' },
+            { status: 'under_review', name: 'تحت المراجعة', completed: true, date: '2024-01-16', description: 'جاري مراجعة التفاصيل' },
+            { status: 'in_progress', name: 'قيد التنفيذ', completed: true, date: '2024-01-18', description: 'بدء العمل على المشروع' },
+            { status: 'review', name: 'المراجعة', completed: false, date: null, description: 'مراجعة العمل والتأكد من الجودة' },
+            { status: 'delivery', name: 'التسليم', completed: false, date: null, description: 'التسليم النهائي للعمل' }
+          ],
+          files: [
+            { name: 'البيانات_الأولية.xlsx', type: 'input', uploadedAt: '2024-01-15', size: '2.3 MB' },
+            { name: 'متطلبات_المشروع.pdf', type: 'input', uploadedAt: '2024-01-15', size: '1.1 MB' },
+            { name: 'التحليل_المبدئي.pdf', type: 'output', uploadedAt: '2024-01-20', size: '3.7 MB' }
+          ],
+          communications: [
+            { 
+              id: 1,
+              type: 'message', 
+              from: 'العميل', 
+              content: 'هل يمكن إضافة تحليل إضافي للمتغيرات؟', 
+              timestamp: '2024-01-19 14:30',
+              avatar: 'client'
+            },
+            { 
+              id: 2,
+              type: 'response', 
+              from: 'المختص', 
+              content: 'بالطبع، سيتم إضافة التحليل المطلوب وسيكون جاهز خلال يومين', 
+              timestamp: '2024-01-19 16:45',
+              avatar: 'specialist'
+            }
+          ]
+        };
+        
+        setOrder(orderData);
+      } catch (error) {
+        toast({
+          title: "خطأ في تحميل البيانات",
+          description: "لم يتم تحميل تفاصيل الطلب، يرجى المحاولة مرة أخرى",
+          variant: "destructive"
+        });
+      } finally {
+        setIsLoading(false);
       }
-    ]
+    };
+
+    loadOrderData();
+  }, [id, toast]);
+
+  const handleSendMessage = async () => {
+    if (!newMessage.trim()) return;
+
+    try {
+      const newCommunication = {
+        id: Date.now(),
+        type: 'message',
+        from: 'العميل',
+        content: newMessage,
+        timestamp: new Date().toLocaleString('ar-SA'),
+        avatar: 'client'
+      };
+
+      setOrder(prev => ({
+        ...prev,
+        communications: [...prev.communications, newCommunication]
+      }));
+
+      setNewMessage('');
+      
+      toast({
+        title: "تم إرسال الرسالة",
+        description: "تم إرسال رسالتك بنجاح، سيتم الرد عليها قريباً"
+      });
+    } catch (error) {
+      toast({
+        title: "خطأ في الإرسال",
+        description: "لم يتم إرسال الرسالة، يرجى المحاولة مرة أخرى",
+        variant: "destructive"
+      });
+    }
   };
 
   const getStatusColor = (status: string) => {
@@ -108,18 +172,46 @@ const OrderDetails = () => {
     return 'bg-green-500';
   };
 
+  if (isLoading) {
+    return (
+      <ClientLayout>
+        <div className="flex items-center justify-center min-h-[60vh]">
+          <div className="text-center space-y-4">
+            <Loader2 className="w-8 h-8 animate-spin mx-auto text-primary" />
+            <p className="text-muted-foreground">جاري تحميل تفاصيل الطلب...</p>
+          </div>
+        </div>
+      </ClientLayout>
+    );
+  }
+
+  if (!order) {
+    return (
+      <ClientLayout>
+        <div className="text-center space-y-4 mt-20">
+          <AlertCircle className="w-16 h-16 mx-auto text-red-500" />
+          <h2 className="text-2xl font-bold">لم يتم العثور على الطلب</h2>
+          <p className="text-muted-foreground">الطلب المطلوب غير موجود أو محذوف</p>
+          <Button onClick={() => navigate('/orders')}>
+            العودة إلى قائمة الطلبات
+          </Button>
+        </div>
+      </ClientLayout>
+    );
+  }
+
   const ServiceIcon = order.serviceIcon;
 
   return (
     <ClientLayout>
-      <div className="space-y-6">
+      <div className="space-y-6" dir="rtl">
         {/* Header */}
         <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
           <div>
             <h1 className="text-2xl lg:text-3xl font-bold text-foreground mb-2">
               تفاصيل الطلب #{order.id}
             </h1>
-            <p className="text-muted-foreground">{order.title}</p>
+            <p className="text-muted-foreground text-right">{order.title}</p>
           </div>
           <div className="flex flex-col sm:flex-row gap-3">
             <Button 
@@ -148,84 +240,15 @@ const OrderDetails = () => {
 
           <TabsContent value="overview" className="space-y-6">
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-              {/* Order Info */}
-              <div className="lg:col-span-2 space-y-6">
-                <Card>
-                  <CardHeader>
-                    <CardTitle className="flex items-center gap-3">
-                      <ServiceIcon className="w-6 h-6 text-primary" />
-                      معلومات الطلب
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent className="space-y-4">
-                    <div className="flex flex-wrap items-center gap-3">
-                      <Badge className={getStatusColor(order.status)}>
-                        {order.status === 'in_progress' && 'قيد التنفيذ'}
-                      </Badge>
-                      <Badge className={getPriorityColor(order.priority)}>
-                        أولوية {order.priority === 'medium' && 'متوسطة'}
-                      </Badge>
-                    </div>
-
-                    <div className="space-y-3">
-                      <div className="flex items-center justify-between text-sm">
-                        <span className="text-muted-foreground">التقدم</span>
-                        <span className="font-medium">{order.progress}%</span>
-                      </div>
-                      <div className="w-full bg-muted rounded-full h-2">
-                        <div 
-                          className={`h-2 rounded-full transition-all duration-300 ${getProgressColor(order.progress)}`}
-                          style={{ width: `${order.progress}%` }}
-                        />
-                      </div>
-                    </div>
-
-                    <Separator />
-
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                      <div className="flex items-center gap-3">
-                        <Calendar className="w-5 h-5 text-muted-foreground" />
-                        <div>
-                          <p className="text-sm text-muted-foreground">تاريخ الإنشاء</p>
-                          <p className="font-medium">{order.createdAt}</p>
-                        </div>
-                      </div>
-                      <div className="flex items-center gap-3">
-                        <Clock className="w-5 h-5 text-muted-foreground" />
-                        <div>
-                          <p className="text-sm text-muted-foreground">الموعد النهائي</p>
-                          <p className="font-medium">{order.deadline}</p>
-                        </div>
-                      </div>
-                    </div>
-
-                    <div className="flex items-center gap-3">
-                      <DollarSign className="w-5 h-5 text-muted-foreground" />
-                      <div>
-                        <p className="text-sm text-muted-foreground">القيمة</p>
-                        <p className="font-bold text-lg text-primary">{order.value} ريال</p>
-                      </div>
-                    </div>
-
-                    <Separator />
-
-                    <div>
-                      <h4 className="font-medium mb-2">وصف المشروع</h4>
-                      <p className="text-muted-foreground leading-relaxed">{order.description}</p>
-                    </div>
-                  </CardContent>
-                </Card>
-              </div>
-
-              {/* Client Info */}
-              <Card>
+              {/* Client Info - Right Side */}
+              <Card className="order-1 lg:order-2">
                 <CardHeader>
-                  <CardTitle className="flex items-center gap-3">
+                  <CardTitle className="flex items-center gap-3 text-right">
                     <User className="w-5 h-5 text-primary" />
                     معلومات العميل
                   </CardTitle>
                 </CardHeader>
-                <CardContent className="space-y-4">
+                <CardContent className="space-y-4 text-right">
                   <div className="space-y-3">
                     <div>
                       <p className="text-sm text-muted-foreground">الاسم</p>
@@ -246,18 +269,87 @@ const OrderDetails = () => {
                   </div>
                 </CardContent>
               </Card>
+
+              {/* Order Info - Left Side */}
+              <div className="lg:col-span-2 space-y-6 order-2 lg:order-1">
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="flex items-center gap-3 text-right">
+                      <ServiceIcon className="w-6 h-6 text-primary" />
+                      معلومات الطلب
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-4 text-right">
+                    <div className="flex flex-wrap items-center gap-3 justify-end">
+                      <Badge className={getPriorityColor(order.priority)}>
+                        أولوية {order.priority === 'medium' && 'متوسطة'}
+                      </Badge>
+                      <Badge className={getStatusColor(order.status)}>
+                        {order.status === 'in_progress' && 'قيد التنفيذ'}
+                      </Badge>
+                    </div>
+
+                    <div className="space-y-3">
+                      <div className="flex items-center justify-between text-sm">
+                        <span className="font-medium">{order.progress}%</span>
+                        <span className="text-muted-foreground">التقدم</span>
+                      </div>
+                      <div className="w-full bg-muted rounded-full h-2">
+                        <div 
+                          className={`h-2 rounded-full transition-all duration-300 ${getProgressColor(order.progress)}`}
+                          style={{ width: `${order.progress}%` }}
+                        />
+                      </div>
+                    </div>
+
+                    <Separator />
+
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                      <div className="flex items-center gap-3 text-right">
+                        <div className="text-right">
+                          <p className="text-sm text-muted-foreground">تاريخ الإنشاء</p>
+                          <p className="font-medium">{order.createdAt}</p>
+                        </div>
+                        <Calendar className="w-5 h-5 text-muted-foreground" />
+                      </div>
+                      <div className="flex items-center gap-3 text-right">
+                        <div className="text-right">
+                          <p className="text-sm text-muted-foreground">الموعد النهائي</p>
+                          <p className="font-medium">{order.deadline}</p>
+                        </div>
+                        <Clock className="w-5 h-5 text-muted-foreground" />
+                      </div>
+                    </div>
+
+                    <div className="flex items-center gap-3 text-right">
+                      <div className="text-right">
+                        <p className="text-sm text-muted-foreground">القيمة</p>
+                        <p className="font-bold text-lg text-primary">{order.value} ريال</p>
+                      </div>
+                      <DollarSign className="w-5 h-5 text-muted-foreground" />
+                    </div>
+
+                    <Separator />
+
+                    <div className="text-right">
+                      <h4 className="font-medium mb-2">وصف المشروع</h4>
+                      <p className="text-muted-foreground leading-relaxed">{order.description}</p>
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
             </div>
           </TabsContent>
 
           <TabsContent value="timeline" className="space-y-6">
             <Card>
               <CardHeader>
-                <CardTitle>الجدول الزمني للمشروع</CardTitle>
+                <CardTitle className="text-right">الجدول الزمني للمشروع</CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="space-y-6">
                   {order.timeline.map((step, index) => (
-                    <div key={index} className="flex gap-4">
+                    <div key={index} className="flex gap-4" dir="rtl">
                       <div className="flex flex-col items-center">
                         <div className={`w-8 h-8 rounded-full flex items-center justify-center ${
                           step.completed 
@@ -276,16 +368,16 @@ const OrderDetails = () => {
                           }`} />
                         )}
                       </div>
-                      <div className="flex-1 pb-8">
+                      <div className="flex-1 pb-8 text-right">
                         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-2">
-                          <h4 className={`font-medium ${
+                          {step.date && (
+                            <span className="text-sm text-muted-foreground order-2 sm:order-1">{step.date}</span>
+                          )}
+                          <h4 className={`font-medium order-1 sm:order-2 ${
                             step.completed ? 'text-foreground' : 'text-muted-foreground'
                           }`}>
                             {step.name}
                           </h4>
-                          {step.date && (
-                            <span className="text-sm text-muted-foreground">{step.date}</span>
-                          )}
                         </div>
                         <p className="text-sm text-muted-foreground">{step.description}</p>
                       </div>
@@ -299,25 +391,25 @@ const OrderDetails = () => {
           <TabsContent value="files" className="space-y-6">
             <Card>
               <CardHeader>
-                <CardTitle>ملفات المشروع</CardTitle>
+                <CardTitle className="text-right">ملفات المشروع</CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="space-y-4">
                   {order.files.map((file, index) => (
-                    <div key={index} className="flex items-center justify-between p-4 border rounded-lg hover:bg-muted/50 transition-colors">
-                      <div className="flex items-center gap-3">
-                        <FileText className="w-5 h-5 text-primary" />
+                    <div key={index} className="flex items-center justify-between p-4 border rounded-lg hover:bg-muted/50 transition-colors" dir="rtl">
+                      <Button variant="outline" size="sm">
+                        <Download className="w-4 h-4 ml-2" />
+                        تحميل
+                      </Button>
+                      <div className="flex items-center gap-3 text-right">
                         <div>
                           <p className="font-medium">{file.name}</p>
                           <p className="text-sm text-muted-foreground">
                             {file.type === 'input' ? 'ملف مدخل' : 'ملف مخرج'} • {file.size} • {file.uploadedAt}
                           </p>
                         </div>
+                        <FileText className="w-5 h-5 text-primary" />
                       </div>
-                      <Button variant="outline" size="sm">
-                        <Download className="w-4 h-4 mr-2" />
-                        تحميل
-                      </Button>
                     </div>
                   ))}
                 </div>
@@ -328,24 +420,24 @@ const OrderDetails = () => {
           <TabsContent value="communication" className="space-y-6">
             <Card>
               <CardHeader>
-                <CardTitle>سجل التواصل</CardTitle>
+                <CardTitle className="text-right">سجل التواصل</CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="space-y-4">
+                <div className="space-y-4" dir="rtl">
                   {order.communications.map((comm, index) => (
-                    <div key={index} className={`flex gap-3 ${
-                      comm.from === 'العميل' ? 'justify-end' : 'justify-start'
+                    <div key={comm.id} className={`flex gap-3 ${
+                      comm.from === 'العميل' ? 'justify-start' : 'justify-end'
                     }`}>
                       <div className={`max-w-[70%] p-4 rounded-lg ${
                         comm.from === 'العميل' 
                           ? 'bg-primary text-primary-foreground' 
                           : 'bg-muted'
                       }`}>
-                        <div className="flex items-center gap-2 mb-2">
-                          <span className="font-medium text-sm">{comm.from}</span>
+                        <div className="flex items-center gap-2 mb-2 text-right">
                           <span className="text-xs opacity-70">{comm.timestamp}</span>
+                          <span className="font-medium text-sm">{comm.from}</span>
                         </div>
-                        <p className="text-sm leading-relaxed">{comm.content}</p>
+                        <p className="text-sm leading-relaxed text-right">{comm.content}</p>
                       </div>
                     </div>
                   ))}
@@ -353,17 +445,20 @@ const OrderDetails = () => {
                 
                 <Separator className="my-6" />
                 
-                <div className="flex gap-3">
+                <div className="flex gap-3" dir="rtl">
+                  <Button onClick={handleSendMessage} disabled={!newMessage.trim()}>
+                    <Send className="w-4 h-4" />
+                  </Button>
                   <div className="flex-1">
                     <textarea 
                       placeholder="اكتب رسالتك هنا..."
-                      className="w-full p-3 border rounded-lg resize-none"
+                      className="w-full p-3 border rounded-lg resize-none text-right"
                       rows={3}
+                      value={newMessage}
+                      onChange={(e) => setNewMessage(e.target.value)}
+                      dir="rtl"
                     />
                   </div>
-                  <Button>
-                    <Send className="w-4 h-4" />
-                  </Button>
                 </div>
               </CardContent>
             </Card>
