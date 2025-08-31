@@ -4,8 +4,9 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import PageThemeProvider from "./components/PageThemeProvider";
-import { AuthProvider } from "@/components/AuthProvider";
-import ProtectedRoute from "@/components/ProtectedRoute";
+import { TenantProvider } from "@/components/TenantProvider";
+import { MultiTenantAuthProvider } from "@/components/MultiTenantAuthProvider";
+import MultiTenantProtectedRoute from "@/components/MultiTenantProtectedRoute";
 import Index from "./pages/Index";
 import TranslationServices from "./pages/TranslationServices";
 import LegalTranslation from "./pages/LegalTranslation";
@@ -18,8 +19,7 @@ import LiteraryTranslation from "./pages/LiteraryTranslation";
 import AcademicTranslation from "./pages/AcademicTranslation";
 import ResearchServices from "./pages/ResearchServices";
 import AboutUs from "./pages/AboutUs";
-import Login from "./pages/auth/Login";
-import Register from "./pages/auth/Register";
+import MultiTenantLogin from "./pages/auth/MultiTenantLogin";
 import ForgotPassword from "./pages/auth/ForgotPassword";
 import ResetPassword from "./pages/auth/ResetPassword";
 import Unauthorized from "./pages/Unauthorized";
@@ -86,8 +86,9 @@ const App = () => (
       <Toaster />
       <Sonner />
       <BrowserRouter>
-        <AuthProvider>
-          <PageThemeProvider>
+        <TenantProvider>
+          <MultiTenantAuthProvider>
+            <PageThemeProvider>
           <Routes>
             {/* Public Routes */}
             <Route path="/" element={<Index />} />
@@ -109,81 +110,76 @@ const App = () => (
             <Route path="/color-showcase" element={<ColorShowcase />} />
             
             {/* Auth Routes */}
-            <Route path="/auth/login" element={<Login />} />
-            <Route path="/auth/register" element={<Register />} />
-            <Route path="/auth/forgot-password" element={<ForgotPassword />} />
-            <Route path="/auth/reset-password" element={<ResetPassword />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/register" element={<Register />} />
+            <Route path="/login" element={<MultiTenantLogin />} />
             <Route path="/unauthorized" element={<Unauthorized />} />
             
             {/* Client Dashboard Routes */}
             <Route path="/dashboard" element={
-              <ProtectedRoute requiredRole="client">
+              <MultiTenantProtectedRoute requiredRole="client">
                 <ClientDashboard />
-              </ProtectedRoute>
+              </MultiTenantProtectedRoute>
             } />
             <Route path="/orders" element={
-              <ProtectedRoute requiredRole="client">
+              <MultiTenantProtectedRoute requiredRole="client">
                 <Orders />
-              </ProtectedRoute>
+              </MultiTenantProtectedRoute>
             } />
             <Route path="/orders/new" element={
-              <ProtectedRoute requiredRole="client">
+              <MultiTenantProtectedRoute requiredRole="client">
                 <OrderNew />
-              </ProtectedRoute>
+              </MultiTenantProtectedRoute>
             } />
             <Route path="/orders/:id" element={
-              <ProtectedRoute requiredRole="client">
+              <MultiTenantProtectedRoute requiredRole="client">
                 <OrderDetails />
-              </ProtectedRoute>
+              </MultiTenantProtectedRoute>
             } />
             <Route path="/billing/invoices" element={
-              <ProtectedRoute requiredRole="client">
+              <MultiTenantProtectedRoute requiredRole="client">
                 <ClientInvoices />
-              </ProtectedRoute>
+              </MultiTenantProtectedRoute>
             } />
             <Route path="/support/tickets" element={
-              <ProtectedRoute requiredRole="client">
+              <MultiTenantProtectedRoute requiredRole="client">
                 <ClientTickets />
-              </ProtectedRoute>
+              </MultiTenantProtectedRoute>
             } />
             
             {/* Admin Dashboard Routes */}
             <Route path="/admin" element={
-              <ProtectedRoute requiredRole="admin">
+              <MultiTenantProtectedRoute adminOnly>
                 <AdminDashboard />
-              </ProtectedRoute>
+              </MultiTenantProtectedRoute>
             } />
             <Route path="/admin/services" element={
-              <ProtectedRoute requiredRole="admin">
+              <MultiTenantProtectedRoute adminOnly>
                 <AdminServices />
-              </ProtectedRoute>
+              </MultiTenantProtectedRoute>
             } />
             <Route path="/admin/orders" element={
-              <ProtectedRoute requiredRole="admin">
+              <MultiTenantProtectedRoute adminOnly>
                 <AdminOrders />
-              </ProtectedRoute>
+              </MultiTenantProtectedRoute>
             } />
             <Route path="/admin/invoices" element={
-              <ProtectedRoute requiredRole="admin">
+              <MultiTenantProtectedRoute adminOnly>
                 <AdminInvoices />
-              </ProtectedRoute>
+              </MultiTenantProtectedRoute>
             } />
             <Route path="/admin/transactions" element={
-              <ProtectedRoute requiredRole="admin">
+              <MultiTenantProtectedRoute adminOnly>
                 <AdminTransactions />
-              </ProtectedRoute>
+              </MultiTenantProtectedRoute>
             } />
             <Route path="/admin/users" element={
-              <ProtectedRoute requiredRole="admin">
+              <MultiTenantProtectedRoute adminOnly>
                 <AdminUsers />
-              </ProtectedRoute>
+              </MultiTenantProtectedRoute>
             } />
             <Route path="/admin/tickets" element={
-              <ProtectedRoute requiredRole="admin">
+              <MultiTenantProtectedRoute adminOnly>
                 <AdminTickets />
-              </ProtectedRoute>
+              </MultiTenantProtectedRoute>
             } />
             
             {/* Research Routes */}
@@ -212,48 +208,49 @@ const App = () => (
             
             {/* Protected Client Routes */}
             <Route path="/contract-request" element={
-              <ProtectedRoute requiredRole="client">
+              <MultiTenantProtectedRoute requiredRole="client">
                 <ContractRequest />
-              </ProtectedRoute>
+              </MultiTenantProtectedRoute>
             } />
             <Route path="/client/contracts" element={
-              <ProtectedRoute requiredRole="client">
+              <MultiTenantProtectedRoute requiredRole="client">
                 <ClientContracts />
-              </ProtectedRoute>
+              </MultiTenantProtectedRoute>
             } />
             <Route path="/contract-approval" element={
-              <ProtectedRoute requiredRole="client">
+              <MultiTenantProtectedRoute requiredRole="client">
                 <ClientContractApproval />
-              </ProtectedRoute>
+              </MultiTenantProtectedRoute>
             } />
             
             {/* Protected Admin Routes */}
             <Route path="/admin/contracts" element={
-              <ProtectedRoute requiredRole="admin">
+              <MultiTenantProtectedRoute adminOnly>
                 <ContractManagement />
-              </ProtectedRoute>
+              </MultiTenantProtectedRoute>
             } />
             <Route path="/admin/accounting" element={
-              <ProtectedRoute requiredRole="admin">
+              <MultiTenantProtectedRoute adminOnly>
                 <AccountingDashboard />
-              </ProtectedRoute>
+              </MultiTenantProtectedRoute>
             } />
             <Route path="/admin/esign" element={
-              <ProtectedRoute requiredRole="admin">
+              <MultiTenantProtectedRoute adminOnly>
                 <EsignManagement />
-              </ProtectedRoute>
+              </MultiTenantProtectedRoute>
             } />
             <Route path="/admin/whatsapp" element={
-              <ProtectedRoute requiredRole="admin">
+              <MultiTenantProtectedRoute adminOnly>
                 <WhatsappManagement />
-              </ProtectedRoute>
+              </MultiTenantProtectedRoute>
             } />
             <Route path="/esign/:token" element={<EsignPortal />} />
             
             <Route path="*" element={<NotFound />} />
           </Routes>
           </PageThemeProvider>
-        </AuthProvider>
+          </MultiTenantAuthProvider>
+        </TenantProvider>
       </BrowserRouter>
     </TooltipProvider>
   </QueryClientProvider>

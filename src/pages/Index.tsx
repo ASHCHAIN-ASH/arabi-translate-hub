@@ -69,7 +69,7 @@ const Index = () => {
               <Button 
                 size="lg" 
                 className="w-full sm:w-auto bg-white text-slate-800 hover:bg-gray-100 shadow-xl px-8 py-4 text-lg font-medium rounded-lg transition-all duration-300"
-                onClick={() => navigate('/login?type=client')}
+                onClick={() => navigate('/login')}
               >
                 تسجيل دخول العملاء
               </Button>
@@ -77,17 +77,17 @@ const Index = () => {
                 variant="outline" 
                 size="lg"
                 className="w-full sm:w-auto border-2 border-white/50 text-white hover:bg-white/10 px-8 py-4 text-lg font-medium rounded-lg transition-all duration-300"
-                onClick={() => navigate('/register')}
+                onClick={() => navigate('/login')}
               >
-                إنشاء حساب جديد
+                إنشاء حساب
               </Button>
               <Button 
                 variant="outline" 
                 size="lg"
                 className="w-full sm:w-auto border-2 border-white/50 text-white hover:bg-white/10 px-8 py-4 text-lg font-medium rounded-lg transition-all duration-300"
-                onClick={() => navigate('/login?type=admin')}
+                onClick={() => navigate('/login')}
               >
-                دخول الإدارة
+                تسجيل الدخول
               </Button>
             </motion.div>
           </div>
