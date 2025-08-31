@@ -7,6 +7,8 @@ import PageThemeProvider from "./components/PageThemeProvider";
 import { SimpleAuthProvider } from "@/components/SimpleAuthProvider";
 import SimpleProtectedRoute from "@/components/SimpleProtectedRoute";
 import SimpleLogin from "./pages/SimpleLogin";
+import Login from "./pages/auth/Login";
+import AdminLogin from "./pages/auth/AdminLogin";
 import Index from "./pages/Index";
 import TranslationServices from "./pages/TranslationServices";
 import LegalTranslation from "./pages/LegalTranslation";
@@ -98,7 +100,8 @@ const App = () => (
             <Route path="/color-showcase" element={<ColorShowcase />} />
             
             {/* Auth Routes */}
-            <Route path="/login" element={<SimpleLogin />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/admin/login" element={<AdminLogin />} />
             <Route path="/unauthorized" element={<Unauthorized />} />
             
             {/* Client Dashboard Routes */}

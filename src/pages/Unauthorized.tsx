@@ -30,13 +30,13 @@ const Unauthorized = () => {
             </Button>
             <Button 
               variant="outline" 
-              onClick={() => navigate('/login?type=client')}
+              onClick={() => navigate('/login')}
             >
               تسجيل دخول العميل
             </Button>
             <Button 
               variant="outline" 
-              onClick={() => navigate('/login?type=admin')}
+              onClick={() => navigate('/admin/login')}
             >
               تسجيل دخول الإدارة
             </Button>
