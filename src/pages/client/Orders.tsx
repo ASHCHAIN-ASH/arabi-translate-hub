@@ -33,7 +33,8 @@ import {
   BookMarked,
   ArrowUpDown,
   Download,
-  MoreHorizontal
+  MoreHorizontal,
+  DollarSign
 } from 'lucide-react';
 import { motion } from 'framer-motion';
 
@@ -413,7 +414,7 @@ const Orders = () => {
           </Card>
         </motion.div>
 
-        {/* Orders Table */}
+        {/* Enhanced Responsive Orders Table */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -429,158 +430,302 @@ const Orders = () => {
                 </Badge>
               </CardTitle>
             </CardHeader>
+            
             <CardContent className="p-0">
               {filteredOrders.length > 0 ? (
-                <div className="overflow-x-auto">
-                  <Table>
-                    <TableHeader>
-                      <TableRow className="bg-gradient-to-r from-slate-50 to-gray-50 hover:bg-slate-100">
-                        <TableHead className="text-right font-bold text-gray-900 p-4">
-                          <Button 
-                            variant="ghost" 
-                            onClick={() => handleSort('serviceName')}
-                            className="font-bold text-gray-900 hover:text-indigo-600"
-                          >
-                            اسم الخدمة
-                            <ArrowUpDown className="w-4 h-4 mr-2" />
-                          </Button>
-                        </TableHead>
-                        <TableHead className="text-center font-bold text-gray-900 p-4">رقم الطلب</TableHead>
-                        <TableHead className="text-center font-bold text-gray-900 p-4">
-                          <Button 
-                            variant="ghost" 
-                            onClick={() => handleSort('status')}
-                            className="font-bold text-gray-900 hover:text-indigo-600"
-                          >
-                            الحالة
-                            <ArrowUpDown className="w-4 h-4 mr-2" />
-                          </Button>
-                        </TableHead>
-                        <TableHead className="text-center font-bold text-gray-900 p-4">الأولوية</TableHead>
-                        <TableHead className="text-center font-bold text-gray-900 p-4">
-                          <Button 
-                            variant="ghost" 
-                            onClick={() => handleSort('total')}
-                            className="font-bold text-gray-900 hover:text-indigo-600"
-                          >
-                            القيمة
-                            <ArrowUpDown className="w-4 h-4 mr-2" />
-                          </Button>
-                        </TableHead>
-                        <TableHead className="text-center font-bold text-gray-900 p-4">التقدم</TableHead>
-                        <TableHead className="text-center font-bold text-gray-900 p-4">
-                          <Button 
-                            variant="ghost" 
-                            onClick={() => handleSort('createdAt')}
-                            className="font-bold text-gray-900 hover:text-indigo-600"
-                          >
-                            تاريخ الإنشاء
-                            <ArrowUpDown className="w-4 h-4 mr-2" />
-                          </Button>
-                        </TableHead>
-                        <TableHead className="text-center font-bold text-gray-900 p-4">الإجراءات</TableHead>
-                      </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                      {filteredOrders.map((order, index) => {
-                        const ServiceIcon = getServiceIcon(order.serviceType);
-                        const statusConfig = getStatusConfig(order.status);
-                        const priorityConfig = getPriorityConfig(order.priority);
-                        
-                        return (
-                          <motion.tr
-                            key={order.id}
-                            initial={{ opacity: 0, x: -20 }}
-                            animate={{ opacity: 1, x: 0 }}
-                            transition={{ duration: 0.3, delay: index * 0.05 }}
-                            className="border-b hover:bg-gradient-to-r hover:from-indigo-50 hover:to-purple-50 transition-all duration-200 group"
-                          >
-                            <TableCell className="p-4">
-                              <div className="flex items-center gap-3">
-                                <div className="w-10 h-10 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-lg flex items-center justify-center shadow-lg group-hover:shadow-xl transition-shadow">
-                                  <ServiceIcon className="w-5 h-5 text-white" />
+                <>
+                  {/* Desktop Table View */}
+                  <div className="hidden lg:block overflow-x-auto">
+                    <Table>
+                      <TableHeader>
+                        <TableRow className="bg-gradient-to-r from-slate-50 to-gray-50 hover:bg-slate-100">
+                          <TableHead className="text-right font-bold text-gray-900 p-4 min-w-[250px]">
+                            <Button 
+                              variant="ghost" 
+                              onClick={() => handleSort('serviceName')}
+                              className="font-bold text-gray-900 hover:text-indigo-600"
+                            >
+                              اسم الخدمة
+                              <ArrowUpDown className="w-4 h-4 mr-2" />
+                            </Button>
+                          </TableHead>
+                          <TableHead className="text-center font-bold text-gray-900 p-4 min-w-[120px]">رقم الطلب</TableHead>
+                          <TableHead className="text-center font-bold text-gray-900 p-4 min-w-[120px]">
+                            <Button 
+                              variant="ghost" 
+                              onClick={() => handleSort('status')}
+                              className="font-bold text-gray-900 hover:text-indigo-600"
+                            >
+                              الحالة
+                              <ArrowUpDown className="w-4 h-4 mr-2" />
+                            </Button>
+                          </TableHead>
+                          <TableHead className="text-center font-bold text-gray-900 p-4 min-w-[100px]">الأولوية</TableHead>
+                          <TableHead className="text-center font-bold text-gray-900 p-4 min-w-[120px]">
+                            <Button 
+                              variant="ghost" 
+                              onClick={() => handleSort('total')}
+                              className="font-bold text-gray-900 hover:text-indigo-600"
+                            >
+                              القيمة
+                              <ArrowUpDown className="w-4 h-4 mr-2" />
+                            </Button>
+                          </TableHead>
+                          <TableHead className="text-center font-bold text-gray-900 p-4 min-w-[120px]">التقدم</TableHead>
+                          <TableHead className="text-center font-bold text-gray-900 p-4 min-w-[150px]">
+                            <Button 
+                              variant="ghost" 
+                              onClick={() => handleSort('createdAt')}
+                              className="font-bold text-gray-900 hover:text-indigo-600"
+                            >
+                              تاريخ الإنشاء
+                              <ArrowUpDown className="w-4 h-4 mr-2" />
+                            </Button>
+                          </TableHead>
+                          <TableHead className="text-center font-bold text-gray-900 p-4 min-w-[120px]">الإجراءات</TableHead>
+                        </TableRow>
+                      </TableHeader>
+                      <TableBody>
+                        {filteredOrders.map((order, index) => {
+                          const ServiceIcon = getServiceIcon(order.serviceType);
+                          const statusConfig = getStatusConfig(order.status);
+                          const priorityConfig = getPriorityConfig(order.priority);
+                          
+                          return (
+                            <motion.tr
+                              key={order.id}
+                              initial={{ opacity: 0, x: -20 }}
+                              animate={{ opacity: 1, x: 0 }}
+                              transition={{ duration: 0.3, delay: index * 0.05 }}
+                              className="border-b hover:bg-gradient-to-r hover:from-indigo-50 hover:to-purple-50 transition-all duration-200 group"
+                            >
+                              <TableCell className="p-4">
+                                <div className="flex items-center gap-3">
+                                  <div className="w-12 h-12 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-xl flex items-center justify-center shadow-lg group-hover:shadow-xl transition-shadow">
+                                    <ServiceIcon className="w-6 h-6 text-white" />
+                                  </div>
+                                  <div className="min-w-0 flex-1">
+                                    <p className="font-bold text-gray-900 text-base leading-tight">{order.serviceName}</p>
+                                    <p className="text-sm text-gray-600 mt-1">{order.category}</p>
+                                    <p className="text-xs text-gray-500 mt-1 line-clamp-2">{order.description}</p>
+                                  </div>
                                 </div>
-                                <div className="min-w-0 flex-1">
-                                  <p className="font-bold text-gray-900 truncate">{order.serviceName}</p>
-                                  <p className="text-sm text-gray-600 truncate">{order.category}</p>
+                              </TableCell>
+                              
+                              <TableCell className="p-4 text-center">
+                                <Badge variant="outline" className="font-mono font-bold bg-slate-50 border-slate-200 text-slate-700 px-3 py-2">
+                                  {order.orderNumber}
+                                </Badge>
+                              </TableCell>
+                              
+                              <TableCell className="p-4 text-center">
+                                <Badge className={`${statusConfig.color} border-0 shadow-sm px-4 py-2 text-sm font-bold`}>
+                                  {statusConfig.label}
+                                </Badge>
+                              </TableCell>
+                              
+                              <TableCell className="p-4 text-center">
+                                <Badge 
+                                  variant="outline"
+                                  className={`${priorityConfig.bgColor} ${priorityConfig.color} ${priorityConfig.borderColor} border-2 font-bold px-3 py-2`}
+                                >
+                                  {priorityConfig.label}
+                                </Badge>
+                              </TableCell>
+                              
+                              <TableCell className="p-4 text-center">
+                                <div className="font-black text-xl text-indigo-600">
+                                  {order.total.toLocaleString()}
+                                </div>
+                                <div className="text-sm text-gray-600 font-semibold">{order.currency}</div>
+                              </TableCell>
+                              
+                              <TableCell className="p-4 text-center">
+                                <div className="flex flex-col items-center gap-3">
+                                  <div className="w-full max-w-24 bg-gray-200 rounded-full h-3 overflow-hidden">
+                                    <div 
+                                      className={`h-full transition-all duration-500 ${
+                                        order.progress >= 80 ? 'bg-gradient-to-r from-emerald-500 to-green-500' :
+                                        order.progress >= 50 ? 'bg-gradient-to-r from-blue-500 to-indigo-500' :
+                                        order.progress >= 25 ? 'bg-gradient-to-r from-amber-500 to-orange-500' :
+                                        'bg-gradient-to-r from-red-500 to-pink-500'
+                                      }`}
+                                      style={{ width: `${order.progress}%` }}
+                                    />
+                                  </div>
+                                  <span className="text-sm font-black text-indigo-600">{order.progress}%</span>
+                                </div>
+                              </TableCell>
+                              
+                              <TableCell className="p-4 text-center">
+                                <div className="flex flex-col items-center gap-2">
+                                  <div className="flex items-center gap-2 text-gray-900">
+                                    <Calendar className="w-4 h-4 text-indigo-500" />
+                                    <span className="font-bold">{order.createdAt}</span>
+                                  </div>
+                                  <div className="flex items-center gap-2 text-gray-600">
+                                    <Target className="w-4 h-4 text-purple-500" />
+                                    <span className="text-sm">الموعد: {order.deadline}</span>
+                                  </div>
+                                </div>
+                              </TableCell>
+                              
+                              <TableCell className="p-4 text-center">
+                                <div className="flex flex-col items-center gap-2">
+                                  <Button
+                                    variant="outline"
+                                    size="sm"
+                                    onClick={() => navigate(`/orders/${order.id}`)}
+                                    className="border-2 border-indigo-200 text-indigo-700 hover:bg-indigo-50 hover:border-indigo-300 font-semibold w-full"
+                                  >
+                                    <Eye className="w-4 h-4 ml-2" />
+                                    عرض
+                                  </Button>
+                                  
+                                  {order.status === 'draft' && (
+                                    <Button
+                                      size="sm"
+                                      onClick={() => navigate(`/orders/${order.id}/edit`)}
+                                      className="bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 font-semibold w-full"
+                                    >
+                                      <Edit className="w-4 h-4 ml-2" />
+                                      تعديل
+                                    </Button>
+                                  )}
+                                </div>
+                              </TableCell>
+                            </motion.tr>
+                          );
+                        })}
+                      </TableBody>
+                    </Table>
+                  </div>
+
+                  {/* Mobile Card View */}
+                  <div className="lg:hidden p-4 space-y-4">
+                    {filteredOrders.map((order, index) => {
+                      const ServiceIcon = getServiceIcon(order.serviceType);
+                      const statusConfig = getStatusConfig(order.status);
+                      const priorityConfig = getPriorityConfig(order.priority);
+                      
+                      return (
+                        <motion.div
+                          key={order.id}
+                          initial={{ opacity: 0, y: 20 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          transition={{ duration: 0.4, delay: index * 0.1 }}
+                          className="bg-white rounded-2xl shadow-lg border-2 border-gray-100 hover:border-indigo-300 hover:shadow-xl transition-all duration-300 overflow-hidden"
+                        >
+                          {/* Card Header */}
+                          <div className="bg-gradient-to-r from-indigo-50 to-purple-50 p-4 border-b">
+                            <div className="flex items-center justify-between mb-3">
+                              <div className="flex items-center gap-3">
+                                <div className="w-12 h-12 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-xl flex items-center justify-center shadow-lg">
+                                  <ServiceIcon className="w-6 h-6 text-white" />
+                                </div>
+                                <div>
+                                  <h3 className="font-bold text-gray-900 text-lg leading-tight">{order.serviceName}</h3>
+                                  <p className="text-sm text-gray-600">{order.category}</p>
                                 </div>
                               </div>
-                            </TableCell>
-                            
-                            <TableCell className="p-4 text-center">
-                              <Badge variant="outline" className="font-mono font-bold bg-slate-50 border-slate-200">
+                              <Badge variant="outline" className="font-mono font-bold bg-slate-50 border-slate-200 text-slate-700">
                                 {order.orderNumber}
                               </Badge>
-                            </TableCell>
+                            </div>
                             
-                            <TableCell className="p-4 text-center">
-                              <Badge className={`${statusConfig.color} border-0 shadow-sm px-3 py-1`}>
+                            <div className="flex items-center gap-3">
+                              <Badge className={`${statusConfig.color} border-0 shadow-sm px-3 py-1 text-sm font-bold`}>
                                 {statusConfig.label}
                               </Badge>
-                            </TableCell>
-                            
-                            <TableCell className="p-4 text-center">
                               <Badge 
                                 variant="outline"
-                                className={`${priorityConfig.bgColor} ${priorityConfig.color} ${priorityConfig.borderColor} border font-medium px-3 py-1`}
+                                className={`${priorityConfig.bgColor} ${priorityConfig.color} ${priorityConfig.borderColor} border font-bold px-3 py-1`}
                               >
-                                {priorityConfig.label}
+                                أولوية {priorityConfig.label}
                               </Badge>
-                            </TableCell>
+                            </div>
+                          </div>
+
+                          {/* Card Body */}
+                          <div className="p-4 space-y-4">
+                            {/* Description */}
+                            <p className="text-gray-700 text-sm leading-relaxed line-clamp-2">{order.description}</p>
                             
-                            <TableCell className="p-4 text-center">
-                              <div className="font-bold text-lg text-indigo-600">
-                                {order.total.toLocaleString()} {order.currency}
+                            {/* Progress */}
+                            <div className="space-y-2">
+                              <div className="flex justify-between items-center">
+                                <span className="text-sm font-semibold text-gray-700">التقدم</span>
+                                <span className="text-lg font-black text-indigo-600">{order.progress}%</span>
                               </div>
-                            </TableCell>
-                            
-                            <TableCell className="p-4 text-center">
-                              <div className="flex flex-col items-center gap-2">
-                                <div className="w-full max-w-20 bg-gray-200 rounded-full h-2 overflow-hidden">
-                                  <div 
-                                    className="h-full bg-gradient-to-r from-indigo-500 to-purple-600 transition-all duration-300"
-                                    style={{ width: `${order.progress}%` }}
-                                  />
+                              <div className="w-full bg-gray-200 rounded-full h-3 overflow-hidden">
+                                <div 
+                                  className={`h-full transition-all duration-500 ${
+                                    order.progress >= 80 ? 'bg-gradient-to-r from-emerald-500 to-green-500' :
+                                    order.progress >= 50 ? 'bg-gradient-to-r from-blue-500 to-indigo-500' :
+                                    order.progress >= 25 ? 'bg-gradient-to-r from-amber-500 to-orange-500' :
+                                    'bg-gradient-to-r from-red-500 to-pink-500'
+                                  }`}
+                                  style={{ width: `${order.progress}%` }}
+                                />
+                              </div>
+                            </div>
+
+                            {/* Details Grid */}
+                            <div className="grid grid-cols-2 gap-4">
+                              <div className="bg-indigo-50 rounded-lg p-3">
+                                <div className="flex items-center gap-2 mb-1">
+                                  <DollarSign className="w-4 h-4 text-indigo-600" />
+                                  <span className="text-xs text-gray-600">القيمة</span>
                                 </div>
-                                <span className="text-sm font-bold text-indigo-600">{order.progress}%</span>
+                                <p className="font-black text-lg text-indigo-600">{order.total.toLocaleString()} {order.currency}</p>
                               </div>
-                            </TableCell>
-                            
-                            <TableCell className="p-4 text-center">
-                              <div className="flex flex-col items-center gap-1">
-                                <span className="font-semibold text-gray-900">{order.createdAt}</span>
-                                <span className="text-xs text-gray-500">الموعد: {order.deadline}</span>
+                              
+                              <div className="bg-purple-50 rounded-lg p-3">
+                                <div className="flex items-center gap-2 mb-1">
+                                  <Calendar className="w-4 h-4 text-purple-600" />
+                                  <span className="text-xs text-gray-600">تاريخ الإنشاء</span>
+                                </div>
+                                <p className="font-bold text-purple-600">{order.createdAt}</p>
                               </div>
-                            </TableCell>
-                            
-                            <TableCell className="p-4 text-center">
-                              <div className="flex items-center justify-center gap-2">
+                              
+                              <div className="bg-emerald-50 rounded-lg p-3 col-span-2">
+                                <div className="flex items-center gap-2 mb-1">
+                                  <Target className="w-4 h-4 text-emerald-600" />
+                                  <span className="text-xs text-gray-600">الموعد النهائي</span>
+                                </div>
+                                <p className="font-bold text-emerald-600">{order.deadline}</p>
+                              </div>
+                            </div>
+
+                            {/* Action Buttons */}
+                            <div className="flex gap-2 pt-2">
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                onClick={() => navigate(`/orders/${order.id}`)}
+                                className="flex-1 border-2 border-indigo-200 text-indigo-700 hover:bg-indigo-50 hover:border-indigo-300 font-semibold"
+                              >
+                                <Eye className="w-4 h-4 ml-2" />
+                                عرض التفاصيل
+                              </Button>
+                              
+                              {order.status === 'draft' && (
                                 <Button
-                                  variant="outline"
                                   size="sm"
-                                  onClick={() => navigate(`/orders/${order.id}`)}
-                                  className="border-indigo-200 text-indigo-700 hover:bg-indigo-50 hover:border-indigo-300"
+                                  onClick={() => navigate(`/orders/${order.id}/edit`)}
+                                  className="flex-1 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 font-semibold"
                                 >
-                                  <Eye className="w-4 h-4" />
+                                  <Edit className="w-4 h-4 ml-2" />
+                                  تعديل
                                 </Button>
-                                
-                                {order.status === 'draft' && (
-                                  <Button
-                                    size="sm"
-                                    onClick={() => navigate(`/orders/${order.id}/edit`)}
-                                    className="bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700"
-                                  >
-                                    <Edit className="w-4 h-4" />
-                                  </Button>
-                                )}
-                              </div>
-                            </TableCell>
-                          </motion.tr>
-                        );
-                      })}
-                    </TableBody>
-                  </Table>
-                </div>
+                              )}
+                            </div>
+                          </div>
+                        </motion.div>
+                      );
+                    })}
+                  </div>
+                </>
               ) : (
                 <div className="text-center py-12">
                   <motion.div
