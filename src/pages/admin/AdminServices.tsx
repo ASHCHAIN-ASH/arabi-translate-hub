@@ -120,7 +120,7 @@ export default function AdminServices() {
       if (servicesError) throw servicesError;
 
       setCategories(categoriesData || []);
-      setServices(servicesData || []);
+      setServices((servicesData || []) as Service[]);
     } catch (error) {
       console.error('Error loading data:', error);
       toast({
@@ -146,9 +146,19 @@ export default function AdminServices() {
         toast({ title: "تم التحديث", description: "تم تحديث القسم بنجاح" });
       } else {
         // إنشاء جديد
+        const categoryData = {
+          name_ar: category.name_ar || '',
+          name_en: category.name_en || '',
+          description_ar: category.description_ar,
+          description_en: category.description_en,
+          icon: category.icon || 'Languages',
+          color: category.color || '#3B82F6',
+          sort_order: category.sort_order || 0,
+          is_active: category.is_active ?? true
+        };
         const { error } = await supabase
           .from('service_categories')
-          .insert(category);
+          .insert(categoryData);
 
         if (error) throw error;
         toast({ title: "تم الحفظ", description: "تم إنشاء القسم بنجاح" });
@@ -180,9 +190,30 @@ export default function AdminServices() {
         toast({ title: "تم التحديث", description: "تم تحديث الخدمة بنجاح" });
       } else {
         // إنشاء جديد
+        const serviceData = {
+          name_ar: service.name_ar || '',
+          name_en: service.name_en || '',
+          description_ar: service.description_ar,
+          description_en: service.description_en,
+          features_ar: service.features_ar || [],
+          features_en: service.features_en || [],
+          category_id: service.category_id || '',
+          base_price: service.base_price,
+          price_per_unit: service.price_per_unit,
+          min_units: service.min_units || 1,
+          max_units: service.max_units,
+          delivery_time_days: service.delivery_time_days || 7,
+          rush_delivery_available: service.rush_delivery_available || false,
+          rush_delivery_multiplier: service.rush_delivery_multiplier || 1.5,
+          unit_type: service.unit_type || 'page',
+          image_url: service.image_url,
+          sort_order: service.sort_order || 0,
+          is_active: service.is_active ?? true,
+          show_to_clients: service.show_to_clients ?? true
+        };
         const { error } = await supabase
           .from('services')
-          .insert(service);
+          .insert(serviceData);
 
         if (error) throw error;
         toast({ title: "تم الحفظ", description: "تم إنشاء الخدمة بنجاح" });
