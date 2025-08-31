@@ -266,8 +266,8 @@ const SimpleLogin = () => {
                         onChange={(e) => setLoginData(prev => ({ ...prev, email: e.target.value }))}
                         placeholder="example@domain.com"
                         required
-                        className="h-12 sm:h-14 rounded-xl sm:rounded-2xl border-2 border-muted focus:border-primary transition-all duration-300 bg-background/80 text-sm sm:text-base px-3 sm:px-4"
-                        style={{ direction: 'ltr', textAlign: 'left' }}
+                        className="h-12 sm:h-14 rounded-xl sm:rounded-2xl border-2 border-muted focus:border-primary transition-all duration-300 bg-background/80 text-sm sm:text-base px-3 sm:px-4 text-right"
+                        style={{ direction: 'rtl' }}
                       />
                     </div>
 
@@ -357,8 +357,8 @@ const SimpleLogin = () => {
                         onChange={(e) => setRegisterData(prev => ({ ...prev, email: e.target.value }))}
                         placeholder="example@domain.com"
                         required
-                        className="h-12 sm:h-14 rounded-xl sm:rounded-2xl border-2 border-muted focus:border-primary transition-all duration-300 bg-background/80 text-sm sm:text-base px-3 sm:px-4"
-                        style={{ direction: 'ltr', textAlign: 'left' }}
+                        className="h-12 sm:h-14 rounded-xl sm:rounded-2xl border-2 border-muted focus:border-primary transition-all duration-300 bg-background/80 text-sm sm:text-base px-3 sm:px-4 text-right"
+                        style={{ direction: 'rtl' }}
                       />
                     </div>
 
