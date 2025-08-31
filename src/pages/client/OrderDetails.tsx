@@ -363,28 +363,28 @@ const OrderDetails = () => {
               <TabsList className="grid grid-cols-4 bg-white border border-gray-200 shadow-lg rounded-2xl p-1 gap-1" dir="rtl">
                 <TabsTrigger 
                   value="overview" 
-                  className="text-right data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-500 data-[state=active]:to-cyan-600 data-[state=active]:text-white data-[state=active]:shadow-lg rounded-xl transition-all duration-300 py-3 order-4"
+                  className="text-right data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-500 data-[state=active]:to-cyan-600 data-[state=active]:text-white data-[state=active]:shadow-lg rounded-xl transition-all duration-300 py-3 order-1"
                 >
                   <Eye className="w-4 h-4 ml-2" />
                   <span className="hidden sm:inline">نظرة عامة</span>
                 </TabsTrigger>
                 <TabsTrigger 
                   value="timeline" 
-                  className="text-right data-[state=active]:bg-gradient-to-r data-[state=active]:from-orange-500 data-[state=active]:to-red-600 data-[state=active]:text-white data-[state=active]:shadow-lg rounded-xl transition-all duration-300 py-3 order-3"
+                  className="text-right data-[state=active]:bg-gradient-to-r data-[state=active]:from-orange-500 data-[state=active]:to-red-600 data-[state=active]:text-white data-[state=active]:shadow-lg rounded-xl transition-all duration-300 py-3 order-2"
                 >
                   <Clock className="w-4 h-4 ml-2" />
                   <span className="hidden sm:inline">الجدول الزمني</span>
                 </TabsTrigger>
                 <TabsTrigger 
                   value="files" 
-                  className="text-right data-[state=active]:bg-gradient-to-r data-[state=active]:from-purple-500 data-[state=active]:to-indigo-600 data-[state=active]:text-white data-[state=active]:shadow-lg rounded-xl transition-all duration-300 py-3 order-2"
+                  className="text-right data-[state=active]:bg-gradient-to-r data-[state=active]:from-purple-500 data-[state=active]:to-indigo-600 data-[state=active]:text-white data-[state=active]:shadow-lg rounded-xl transition-all duration-300 py-3 order-3"
                 >
                   <FileText className="w-4 h-4 ml-2" />
                   <span className="hidden sm:inline">الملفات</span>
                 </TabsTrigger>
                 <TabsTrigger 
                   value="communication" 
-                  className="text-right data-[state=active]:bg-gradient-to-r data-[state=active]:from-pink-500 data-[state=active]:to-purple-600 data-[state=active]:text-white data-[state=active]:shadow-lg rounded-xl transition-all duration-300 py-3 order-1"
+                  className="text-right data-[state=active]:bg-gradient-to-r data-[state=active]:from-pink-500 data-[state=active]:to-purple-600 data-[state=active]:text-white data-[state=active]:shadow-lg rounded-xl transition-all duration-300 py-3 order-4"
                 >
                   <MessageSquare className="w-4 h-4 ml-2" />
                   <span className="hidden sm:inline">التواصل</span>
