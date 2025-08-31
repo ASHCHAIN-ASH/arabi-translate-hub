@@ -31,7 +31,7 @@ const AdminLogin = () => {
       
       // Small delay to allow auth state to update
       setTimeout(() => {
-        navigate('/admin/dashboard');
+        navigate('/admin');
       }, 100);
     } catch (error: any) {
       toast.error(error.message || 'خطأ في تسجيل الدخول');
