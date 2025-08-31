@@ -9,31 +9,31 @@
 
 @layer base {
   :root {
-    /* الألوان الأساسية - نظام لوني حيوي ومتناسق */
-    --background: 0 0% 99%;
-    --foreground: 220 15% 20%;
+    /* نظام الألوان الأكاديمي العصري */
+    --background: 210 20% 98%;
+    --foreground: 220 15% 15%;
 
     --card: 0 0% 100%;
-    --card-foreground: 220 15% 20%;
+    --card-foreground: 220 15% 15%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 220 15% 20%;
+    --popover-foreground: 220 15% 15%;
 
-    /* الألوان الرئيسية - أزرق حيوي ومشرق */
-    --primary: 217 91% 60%;
+    /* الألوان الأساسية - أزرق سماوي أكاديمي */
+    --primary: 199 89% 48%;
     --primary-foreground: 0 0% 100%;
-    --primary-dark: 217 91% 50%;
-    --primary-light: 217 91% 70%;
+    --primary-dark: 199 89% 40%;
+    --primary-light: 199 89% 60%;
 
-    /* اللون الثانوي - برتقالي حيوي */
-    --secondary: 25 95% 53%;
+    /* اللون الثانوي - أخضر الثقة */
+    --secondary: 142 69% 48%;
     --secondary-foreground: 0 0% 100%;
-    --secondary-light: 25 95% 65%;
+    --secondary-light: 142 69% 60%;
 
-    /* الأخضر للنجاح والموثوقية */
-    --accent: 142 69% 58%;
+    /* لون التمييز - بنفسجي خفيف */
+    --accent: 262 83% 70%;
     --accent-foreground: 0 0% 100%;
-    --accent-light: 142 69% 70%;
+    --accent-light: 262 83% 80%;
 
     /* الألوان المساعدة */
     --muted: 220 13% 95%;
@@ -53,21 +53,23 @@
     --input: 220 13% 95%;
     --ring: 220 90% 56%;
 
-    /* التدرجات الاحترافية والأنيقة */
-    --gradient-primary: linear-gradient(135deg, hsl(217 91% 60%) 0%, hsl(217 91% 70%) 100%);
-    --gradient-secondary: linear-gradient(135deg, hsl(25 95% 53%) 0%, hsl(25 95% 65%) 100%);
-    --gradient-success: linear-gradient(135deg, hsl(142 69% 58%) 0%, hsl(142 69% 70%) 100%);
-    --gradient-hero: linear-gradient(135deg, hsl(217 91% 60%) 0%, hsl(25 95% 53%) 40%, hsl(142 69% 58%) 100%);
-    --gradient-card: linear-gradient(145deg, hsl(0 0% 100%) 0%, hsl(220 15% 98%) 100%);
-    --gradient-vibrant: linear-gradient(45deg, hsl(217 91% 60%) 0%, hsl(25 95% 53%) 25%, hsl(142 69% 58%) 50%, hsl(295 85% 70%) 75%, hsl(340 82% 65%) 100%);
+    /* التدرجات الأكاديمية العصرية */
+    --gradient-primary: linear-gradient(135deg, hsl(199 89% 48%) 0%, hsl(199 89% 60%) 100%);
+    --gradient-secondary: linear-gradient(135deg, hsl(142 69% 48%) 0%, hsl(142 69% 60%) 100%);
+    --gradient-accent: linear-gradient(135deg, hsl(262 83% 70%) 0%, hsl(262 83% 80%) 100%);
+    --gradient-hero: linear-gradient(135deg, hsl(199 89% 48%) 0%, hsl(142 69% 48%) 50%, hsl(262 83% 70%) 100%);
+    --gradient-card: linear-gradient(145deg, hsl(0 0% 100%) 0%, hsl(210 20% 98%) 100%);
+    --gradient-vibrant: linear-gradient(45deg, hsl(199 89% 48%) 0%, hsl(142 69% 48%) 33%, hsl(262 83% 70%) 66%, hsl(280 70% 60%) 100%);
+    --gradient-academic: linear-gradient(120deg, hsl(199 89% 48%) 0%, hsl(185 84% 52%) 50%, hsl(262 83% 70%) 100%);
     
-    /* ظلال احترافية وأنيقة */
-    --shadow-primary: 0 4px 25px -5px hsl(217 91% 60% / 0.4);
-    --shadow-secondary: 0 4px 25px -5px hsl(25 95% 53% / 0.3);
-    --shadow-success: 0 4px 25px -5px hsl(142 69% 58% / 0.3);
-    --shadow-soft: 0 2px 15px -3px hsl(217 15% 20% / 0.06);
-    --shadow-medium: 0 8px 35px -8px hsl(217 15% 20% / 0.10);
-    --shadow-strong: 0 20px 60px -15px hsl(217 15% 20% / 0.15);
+    /* ظلال أكاديمية ناعمة */
+    --shadow-primary: 0 4px 20px -5px hsl(199 89% 48% / 0.3);
+    --shadow-secondary: 0 4px 20px -5px hsl(142 69% 48% / 0.25);
+    --shadow-accent: 0 4px 20px -5px hsl(262 83% 70% / 0.3);
+    --shadow-soft: 0 2px 12px -3px hsl(220 15% 20% / 0.08);
+    --shadow-medium: 0 6px 25px -6px hsl(220 15% 20% / 0.12);
+    --shadow-strong: 0 15px 45px -10px hsl(220 15% 20% / 0.15);
+    --shadow-academic: 0 8px 30px -8px hsl(199 89% 48% / 0.2);
 
     /* ألوان خاصة لكل صفحة */
     /* الصفحة الرئيسية - أزرق فاتح */
@@ -256,27 +258,36 @@
   }
 
   body {
-    @apply text-foreground font-ibm-plex;
+    @apply text-foreground font-academic-body;
     background-color: hsl(var(--background));
     font-feature-settings: "kern" 1;
     transition: background-color 0.3s ease;
+    direction: rtl;
   }
 }
 
-/* خطوط عربية احترافية */
-@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&display=swap');
+/* خطوط أكاديمية عربية حديثة */
 @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Arabic:wght@300;400;500;600;700&display=swap');
 
 @layer base {
-  .font-arabic-title {
+  /* خطوط أكاديمية عصرية */
+  .font-academic-title {
     font-family: 'Cairo', sans-serif;
     font-weight: 700;
-    letter-spacing: 0.02em;
+    letter-spacing: 0.01em;
   }
   
-  .font-arabic-body {
-    font-family: 'IBM Plex Sans Arabic', sans-serif;
+  .font-academic-body {
+    font-family: 'Noto Sans Arabic', 'Cairo', sans-serif;
     font-weight: 400;
+    line-height: 1.6;
+  }
+  
+  .font-academic-heading {
+    font-family: 'Cairo', sans-serif;
+    font-weight: 600;
+    letter-spacing: 0.02em;
   }
 }
 
@@ -327,6 +338,14 @@
     background: var(--gradient-vibrant);
   }
   
+  .bg-gradient-academic {
+    background: var(--gradient-academic);
+  }
+  
+  .bg-gradient-accent {
+    background: var(--gradient-accent);
+  }
+  
   .shadow-primary {
     box-shadow: var(--shadow-primary);
   }
@@ -349,6 +368,43 @@
   
   .shadow-strong {
     box-shadow: var(--shadow-strong);
+  }
+  
+  .shadow-academic {
+    box-shadow: var(--shadow-academic);
+  }
+  
+  .shadow-accent {
+    box-shadow: var(--shadow-accent);
+  }
+  
+  /* أنيميشن أكاديمي متطور */
+  .animate-academic-slide {
+    animation: academicSlide 0.8s ease-out;
+  }
+  
+  .animate-academic-bounce {
+    animation: academicBounce 1s ease-out;
+  }
+  
+  .animate-scale-hover {
+    transition: all 0.2s ease;
+  }
+  
+  .animate-scale-hover:hover {
+    transform: scale(1.02);
+  }
+  
+  /* كلاسات أكاديمية إضافية */
+  .academic-card {
+    border-radius: 20px;
+    background: var(--gradient-card);
+    transition: all 0.3s ease;
+  }
+  
+  .academic-card:hover {
+    box-shadow: var(--shadow-academic);
+    transform: translateY(-4px);
   }
   
   .text-gradient {
@@ -534,6 +590,32 @@
   to {
     opacity: 1;
     transform: translateX(0);
+  }
+}
+
+@keyframes academicSlide {
+  from {
+    opacity: 0;
+    transform: translateY(40px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes academicBounce {
+  0% {
+    opacity: 0;
+    transform: translateY(-20px) scale(0.8);
+  }
+  60% {
+    opacity: 1;
+    transform: translateY(5px) scale(1.05);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
   }
 }
 
