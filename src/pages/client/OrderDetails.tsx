@@ -1,683 +1,740 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { motion } from 'framer-motion';
-import ClientLayout from '@/components/client/ClientLayout';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
-import { Progress } from '@/components/ui/progress';
-import { Separator } from '@/components/ui/separator';
+import { motion, AnimatePresence } from 'framer-motion';
 import { 
-  FileText, 
-  Calendar, 
-  DollarSign, 
-  User, 
-  Phone, 
-  Mail, 
-  MapPin,
-  Download,
-  MessageCircle,
-  Clock,
-  CheckCircle,
-  AlertCircle,
-  BarChart3,
-  PenTool,
-  FileCheck,
-  Send,
-  ArrowRight,
-  Edit,
-  Loader2,
-  Activity
+  ArrowRight, User, Mail, Phone, MapPin, Calendar, Clock, 
+  DollarSign, FileText, MessageSquare, Eye, Edit3, Download,
+  CheckCircle, AlertCircle, PlayCircle, PauseCircle, 
+  BookOpen, Globe, Headphones, Video, FileImage, Monitor,
+  Star, TrendingUp, Activity, Zap, Award, Target,
+  Send, Paperclip, Heart, Share2, Flag
 } from 'lucide-react';
-import { useToast } from '@/components/ui/use-toast';
+import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
+import { Progress } from '@/components/ui/progress';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Separator } from '@/components/ui/separator';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { useToast } from '@/hooks/use-toast';
+
+// بيانات وهمية للطلب
+const orderData = {
+  id: '5',
+  service: 'ترجمة أكاديمية متقدمة',
+  status: 'in_progress',
+  priority: 'high',
+  progress: 65,
+  createdAt: '2024-01-15',
+  deadline: '2024-01-30',
+  totalPrice: 899,
+  paidAmount: 450,
+  client: {
+    name: 'أحمد محمد علي',
+    email: 'ahmed.ali@email.com',
+    phone: '+966501234567',
+    university: 'جامعة الملك سعود',
+    avatar: '/placeholder.svg'
+  },
+  description: 'تحليل إحصائي شامل للبيانات البحثية باستخدام SPSS و R',
+  files: [
+    { name: 'البحث_الأصلي.pdf', size: '2.5 MB', type: 'pdf', uploadedAt: '2024-01-15' },
+    { name: 'الجداول_الإحصائية.xlsx', size: '1.2 MB', type: 'excel', uploadedAt: '2024-01-16' },
+    { name: 'المراجع.docx', size: '800 KB', type: 'word', uploadedAt: '2024-01-17' }
+  ],
+  timeline: [
+    { date: '2024-01-15', event: 'تم إنشاء الطلب', status: 'completed' },
+    { date: '2024-01-16', event: 'تم تأكيد الدفع', status: 'completed' },
+    { date: '2024-01-18', event: 'بدء العمل على المشروع', status: 'completed' },
+    { date: '2024-01-22', event: 'مراجعة أولية للترجمة', status: 'current' },
+    { date: '2024-01-28', event: 'تسليم النسخة النهائية', status: 'pending' }
+  ],
+  communication: [
+    { 
+      id: 1, 
+      sender: 'المختص', 
+      message: 'تم البدء في ترجمة المشروع وسيتم تسليم المراجعة الأولية خلال 3 أيام', 
+      timestamp: '2024-01-18 10:30',
+      type: 'update'
+    },
+    { 
+      id: 2, 
+      sender: 'العميل', 
+      message: 'شكراً لكم، أتطلع لرؤية النتائج', 
+      timestamp: '2024-01-18 15:45',
+      type: 'message'
+    }
+  ]
+};
 
 const OrderDetails = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const { toast } = useToast();
-  const [isLoading, setIsLoading] = useState(true);
-  const [order, setOrder] = useState<any>(null);
-  const [newMessage, setNewMessage] = useState('');
+  const [activeTab, setActiveTab] = useState('overview');
 
-  // Load order data
-  useEffect(() => {
-    const loadOrderData = async () => {
-      setIsLoading(true);
-      try {
-        // Simulate API call to get order details
-        await new Promise(resolve => setTimeout(resolve, 1000));
-        
-        // Mock data that would come from Supabase
-        const orderData = {
-          id: id || 'MEP250003',
-          title: 'مراجعة لغوية وتدوية متخصصة للنص الأكاديمي مع تحسين الأسلوب',
-          service: 'تحليل إحصائي متقدم',
-          serviceIcon: BarChart3,
-          status: 'in_progress',
-          priority: 'medium',
-          progress: 45,
-          value: 899,
-          createdAt: '2024-01-15',
-          deadline: '2024-01-30',
-          description: 'تحليل إحصائي شامل للبيانات البحثية باستخدام R و SPSS',
-          client: {
-            name: 'أحمد محمد علي',
-            email: 'ahmed.ali@email.com',
-            phone: '+966501234567',
-            university: 'جامعة الملك سعود'
-          },
-          timeline: [
-            { status: 'received', name: 'مستلم', completed: true, date: '2024-01-15', description: 'تم استلام طلبكم بنجاح' },
-            { status: 'under_review', name: 'تحت المراجعة', completed: true, date: '2024-01-16', description: 'جاري مراجعة التفاصيل' },
-            { status: 'in_progress', name: 'قيد التنفيذ', completed: true, date: '2024-01-18', description: 'بدء العمل على المشروع' },
-            { status: 'review', name: 'المراجعة', completed: false, date: null, description: 'مراجعة العمل والتأكد من الجودة' },
-            { status: 'delivery', name: 'التسليم', completed: false, date: null, description: 'التسليم النهائي للعمل' }
-          ],
-          files: [
-            { name: 'البيانات_الأولية.xlsx', type: 'input', uploadedAt: '2024-01-15', size: '2.3 MB' },
-            { name: 'متطلبات_المشروع.pdf', type: 'input', uploadedAt: '2024-01-15', size: '1.1 MB' },
-            { name: 'التحليل_المبدئي.pdf', type: 'output', uploadedAt: '2024-01-20', size: '3.7 MB' }
-          ],
-          communications: [
-            { 
-              id: 1,
-              type: 'message', 
-              from: 'العميل', 
-              content: 'هل يمكن إضافة تحليل إضافي للمتغيرات؟', 
-              timestamp: '2024-01-19 14:30',
-              avatar: 'client'
-            },
-            { 
-              id: 2,
-              type: 'response', 
-              from: 'المختص', 
-              content: 'بالطبع، سيتم إضافة التحليل المطلوب وسيكون جاهز خلال يومين', 
-              timestamp: '2024-01-19 16:45',
-              avatar: 'specialist'
-            }
-          ]
-        };
-        
-        setOrder(orderData);
-      } catch (error) {
-        toast({
-          title: "خطأ في تحميل البيانات",
-          description: "لم يتم تحميل تفاصيل الطلب، يرجى المحاولة مرة أخرى",
-          variant: "destructive"
-        });
-      } finally {
-        setIsLoading(false);
-      }
-    };
+  const order = orderData;
 
-    loadOrderData();
-  }, [id, toast]);
-
-  const handleSendMessage = async () => {
-    if (!newMessage.trim()) return;
-
-    try {
-      const newCommunication = {
-        id: Date.now(),
-        type: 'message',
-        from: 'العميل',
-        content: newMessage,
-        timestamp: new Date().toLocaleString('ar-SA'),
-        avatar: 'client'
-      };
-
-      setOrder(prev => ({
-        ...prev,
-        communications: [...prev.communications, newCommunication]
-      }));
-
-      setNewMessage('');
-      
-      toast({
-        title: "تم إرسال الرسالة",
-        description: "تم إرسال رسالتك بنجاح، سيتم الرد عليها قريباً"
-      });
-    } catch (error) {
-      toast({
-        title: "خطأ في الإرسال",
-        description: "لم يتم إرسال الرسالة، يرجى المحاولة مرة أخرى",
-        variant: "destructive"
-      });
+  // دالة لتحديد لون الحالة
+  const getStatusColor = (status: string) => {
+    switch (status) {
+      case 'completed': return 'bg-gradient-to-r from-green-500 to-emerald-600 text-white';
+      case 'in_progress': return 'bg-gradient-to-r from-blue-500 to-cyan-600 text-white';
+      case 'pending': return 'bg-gradient-to-r from-yellow-500 to-amber-600 text-white';
+      case 'cancelled': return 'bg-gradient-to-r from-red-500 to-rose-600 text-white';
+      default: return 'bg-gradient-to-r from-gray-500 to-slate-600 text-white';
     }
   };
 
-  const getStatusColor = (status: string) => {
-    const colors = {
-      received: 'bg-blue-100 text-blue-700 border-blue-200',
-      under_review: 'bg-yellow-100 text-yellow-700 border-yellow-200',
-      in_progress: 'bg-purple-100 text-purple-700 border-purple-200',
-      review: 'bg-orange-100 text-orange-700 border-orange-200',
-      delivery: 'bg-green-100 text-green-700 border-green-200',
-      completed: 'bg-green-100 text-green-700 border-green-200'
-    };
-    return colors[status as keyof typeof colors] || 'bg-gray-100 text-gray-700 border-gray-200';
-  };
-
+  // دالة لتحديد لون الأولوية
   const getPriorityColor = (priority: string) => {
-    const colors = {
-      low: 'bg-blue-100 text-blue-700',
-      medium: 'bg-yellow-100 text-yellow-700',
-      high: 'bg-red-100 text-red-700'
-    };
-    return colors[priority as keyof typeof colors] || 'bg-gray-100 text-gray-700';
+    switch (priority) {
+      case 'high': return 'bg-gradient-to-r from-red-500 to-pink-600 text-white';
+      case 'medium': return 'bg-gradient-to-r from-yellow-500 to-orange-600 text-white';
+      case 'low': return 'bg-gradient-to-r from-green-500 to-teal-600 text-white';
+      default: return 'bg-gradient-to-r from-gray-500 to-slate-600 text-white';
+    }
   };
 
-  const getProgressColor = (progress: number) => {
-    if (progress < 30) return 'bg-red-500';
-    if (progress < 70) return 'bg-yellow-500';
-    return 'bg-green-500';
+  // أيقونة الخدمة
+  const getServiceIcon = () => {
+    return BookOpen;
   };
 
-  if (isLoading) {
-    return (
-      <ClientLayout>
-        <div className="flex items-center justify-center min-h-[60vh]">
-          <div className="text-center space-y-4">
-            <Loader2 className="w-8 h-8 animate-spin mx-auto text-primary" />
-            <p className="text-muted-foreground">جاري تحميل تفاصيل الطلب...</p>
-          </div>
-        </div>
-      </ClientLayout>
-    );
-  }
-
-  if (!order) {
-    return (
-      <ClientLayout>
-        <div className="text-center space-y-4 mt-20">
-          <AlertCircle className="w-16 h-16 mx-auto text-red-500" />
-          <h2 className="text-2xl font-bold">لم يتم العثور على الطلب</h2>
-          <p className="text-muted-foreground">الطلب المطلوب غير موجود أو محذوف</p>
-          <Button onClick={() => navigate('/orders')}>
-            العودة إلى قائمة الطلبات
-          </Button>
-        </div>
-      </ClientLayout>
-    );
-  }
-
-  const ServiceIcon = order.serviceIcon;
+  const ServiceIcon = getServiceIcon();
 
   return (
-    <ClientLayout>
-      <div className="space-y-6" dir="rtl">
-        {/* Header */}
-        <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
-          <div>
-            <h1 className="text-2xl lg:text-3xl font-bold text-foreground mb-2">
-              تفاصيل الطلب #{order.id}
-            </h1>
-            <p className="text-muted-foreground text-right">{order.title}</p>
-          </div>
-          <div className="flex flex-col sm:flex-row gap-3">
-            <Button 
-              variant="outline" 
-              onClick={() => navigate(`/orders/${id}/edit`)}
-              className="flex items-center gap-2"
-            >
-              <Edit className="w-4 h-4" />
-              تعديل الطلب
-            </Button>
-            <Button className="flex items-center gap-2">
-              <MessageCircle className="w-4 h-4" />
-              تواصل مع المختص
-            </Button>
-          </div>
-        </div>
-
-        {/* Main Content */}
-        <Tabs defaultValue="overview" className="space-y-6" dir="rtl">
-          <TabsList className="grid w-full grid-cols-4" dir="rtl">
-            <TabsTrigger value="communication" className="text-right">التواصل</TabsTrigger>
-            <TabsTrigger value="files" className="text-right">الملفات</TabsTrigger>
-            <TabsTrigger value="timeline" className="text-right">الجدول الزمني</TabsTrigger>
-            <TabsTrigger value="overview" className="text-right">نظرة عامة</TabsTrigger>
-          </TabsList>
-
-          <TabsContent value="overview" className="space-y-6" dir="rtl">
-            <motion.div 
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, ease: "easeOut" }}
-              className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:grid-flow-row-dense"
-            >
-              {/* Hero Section */}
-              <motion.div 
-                initial={{ opacity: 0, scale: 0.95 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 0.5, delay: 0.1 }}
-                className="lg:col-span-12 order-0"
-              >
-                <Card className="relative overflow-hidden bg-gradient-to-bl from-primary/5 via-primary/10 to-primary/5 border-primary/20">
-                  <div className="absolute top-0 right-0 w-full h-1 bg-gradient-to-l from-primary via-primary/60 to-primary"></div>
-                  <CardContent className="p-6">
-                    <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
-                      <div className="flex items-center gap-4 order-2 lg:order-1">
-                        <div className="flex items-center gap-4">
-                          <div className="text-right">
-                            <p className="text-sm text-muted-foreground">حالة الطلب</p>
-                            <Badge className={`${getStatusColor(order.status)} text-sm px-3 py-1`}>
-                              {order.status === 'in_progress' && 'قيد التنفيذ'}
-                            </Badge>
-                          </div>
-                          <div className="text-right">
-                            <p className="text-sm text-muted-foreground">الأولوية</p>
-                            <Badge className={`${getPriorityColor(order.priority)} text-sm px-3 py-1`}>
-                              أولوية {order.priority === 'medium' && 'متوسطة'}
-                            </Badge>
-                          </div>
-                        </div>
-                      </div>
-                      
-                      <div className="flex items-center gap-4 order-1 lg:order-2">
-                        <div className="space-y-1 text-right">
-                          <h2 className="text-xl font-bold text-foreground">{order.service}</h2>
-                          <p className="text-sm text-muted-foreground">#{order.id}</p>
-                        </div>
-                        <div className="relative">
-                          <div className="absolute inset-0 bg-primary/20 rounded-full animate-pulse"></div>
-                          <div className="relative bg-white rounded-full p-3 shadow-lg">
-                            <ServiceIcon className="w-8 h-8 text-primary" />
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
-              </motion.div>
-
-              {/* معلومات العميل - أقصى اليمين */}
-              <motion.div 
-                initial={{ opacity: 0, x: 50 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.5, delay: 0.3 }}
-                className="lg:col-start-1 lg:col-span-4 lg:row-start-2 order-1"
-              >
-                <Card className="h-full hover:shadow-lg transition-all duration-300 sticky top-6">
-                  <CardHeader>
-                    <CardTitle className="flex items-center gap-3 text-right justify-end">
-                      <span>معلومات العميل</span>
-                      <User className="w-5 h-5 text-primary" />
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent className="space-y-4">
-                    <div className="space-y-4">
-                      <motion.div 
-                        initial={{ opacity: 0, x: 20 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        transition={{ delay: 0.9 }}
-                        className="flex items-center gap-3 p-3 rounded-lg bg-gradient-to-l from-blue-50 to-blue-100/50 border border-blue-200"
-                      >
-                        <div className="text-right">
-                          <p className="text-sm text-blue-600">الاسم</p>
-                          <p className="font-semibold text-blue-900">{order.client.name}</p>
-                        </div>
-                        <User className="w-5 h-5 text-blue-600" />
-                      </motion.div>
-                      
-                      <motion.div 
-                        initial={{ opacity: 0, x: 20 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        transition={{ delay: 1.0 }}
-                        className="flex items-center gap-3 p-3 rounded-lg bg-gradient-to-l from-green-50 to-green-100/50 border border-green-200"
-                      >
-                        <div className="text-right">
-                          <p className="text-sm text-green-600">البريد الإلكتروني</p>
-                          <p className="font-semibold text-green-900 text-sm">{order.client.email}</p>
-                        </div>
-                        <Mail className="w-5 h-5 text-green-600" />
-                      </motion.div>
-                      
-                      <motion.div 
-                        initial={{ opacity: 0, x: 20 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        transition={{ delay: 1.1 }}
-                        className="flex items-center gap-3 p-3 rounded-lg bg-gradient-to-l from-purple-50 to-purple-100/50 border border-purple-200"
-                      >
-                        <div className="text-right">
-                          <p className="text-sm text-purple-600">رقم الهاتف</p>
-                          <p className="font-semibold text-purple-900">{order.client.phone}</p>
-                        </div>
-                        <Phone className="w-5 h-5 text-purple-600" />
-                      </motion.div>
-                      
-                      <motion.div 
-                        initial={{ opacity: 0, x: 20 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        transition={{ delay: 1.2 }}
-                        className="flex items-center gap-3 p-3 rounded-lg bg-gradient-to-l from-orange-50 to-orange-100/50 border border-orange-200"
-                      >
-                        <div className="text-right">
-                          <p className="text-sm text-orange-600">الجامعة</p>
-                          <p className="font-semibold text-orange-900">{order.client.university}</p>
-                        </div>
-                        <MapPin className="w-5 h-5 text-orange-600" />
-                      </motion.div>
-                    </div>
-
-                    {/* Quick Actions */}
-                    <motion.div 
-                      initial={{ opacity: 0, y: 20 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: 1.3 }}
-                      className="pt-4 border-t space-y-3"
-                    >
-                      <Button 
-                        className="w-full flex items-center gap-2 hover:scale-105 transition-transform"
-                        onClick={() => navigate(`/orders/${id}/edit`)}
-                      >
-                        <span>تعديل الطلب</span>
-                        <Edit className="w-4 h-4" />
-                      </Button>
-                      <Button 
-                        variant="outline" 
-                        className="w-full flex items-center gap-2 hover:scale-105 transition-transform"
-                      >
-                        <span>تواصل مع المختص</span>
-                        <MessageCircle className="w-4 h-4" />
-                      </Button>
-                    </motion.div>
-                  </CardContent>
-                </Card>
-              </motion.div>
-
-              {/* تقدم المشروع - أقصى اليسار */}
-              <motion.div 
-                initial={{ opacity: 0, x: -50 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.5, delay: 0.2 }}
-                className="lg:col-start-5 lg:col-span-8 lg:row-start-2 order-2"
-              >
-                <Card className="h-full hover:shadow-lg transition-all duration-300">
-                  <CardHeader>
-                    <CardTitle className="flex items-center gap-3 text-right justify-end">
-                      <span>تقدم المشروع</span>
-                      <Activity className="w-5 h-5 text-primary" />
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent className="space-y-6">
-                    {/* Progress Bar */}
-                    <div className="space-y-3">
-                      <div className="flex items-center justify-between text-right">
-                        <span className="text-muted-foreground">نسبة الإنجاز</span>
-                        <motion.span 
-                          initial={{ opacity: 0 }}
-                          animate={{ opacity: 1 }}
-                          transition={{ delay: 0.4 }}
-                          className="text-3xl font-bold text-primary"
-                        >
-                          {order.progress}%
-                        </motion.span>
-                      </div>
-                      <div className="relative">
-                        <div className="w-full bg-muted rounded-full h-3 overflow-hidden">
-                          <motion.div 
-                            initial={{ width: 0 }}
-                            animate={{ width: `${order.progress}%` }}
-                            transition={{ duration: 1.5, delay: 0.3, ease: "easeOut" }}
-                            className={`h-3 rounded-full relative ${getProgressColor(order.progress)}`}
-                          >
-                            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent animate-pulse"></div>
-                          </motion.div>
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Project Details */}
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                      <motion.div 
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: 0.5 }}
-                        className="flex items-center gap-3 p-3 rounded-lg bg-muted/30 hover:bg-muted/50 transition-colors"
-                      >
-                        <div className="text-right">
-                          <p className="text-sm text-muted-foreground">تاريخ الإنشاء</p>
-                          <p className="font-medium">{order.createdAt}</p>
-                        </div>
-                        <Calendar className="w-5 h-5 text-primary" />
-                      </motion.div>
-                      
-                      <motion.div 
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: 0.6 }}
-                        className="flex items-center gap-3 p-3 rounded-lg bg-muted/30 hover:bg-muted/50 transition-colors"
-                      >
-                        <div className="text-right">
-                          <p className="text-sm text-muted-foreground">الموعد النهائي</p>
-                          <p className="font-medium">{order.deadline}</p>
-                        </div>
-                        <Clock className="w-5 h-5 text-orange-500" />
-                      </motion.div>
-                    </div>
-
-                    {/* Value Card */}
-                    <motion.div 
-                      initial={{ opacity: 0, scale: 0.9 }}
-                      animate={{ opacity: 1, scale: 1 }}
-                      transition={{ delay: 0.7 }}
-                      className="relative p-4 rounded-xl bg-gradient-to-bl from-primary/10 to-primary/5 border border-primary/20"
-                    >
-                      <div className="flex items-center gap-3 justify-end text-right">
-                        <div>
-                          <p className="text-sm text-muted-foreground">القيمة الإجمالية</p>
-                          <p className="text-2xl font-bold text-primary">{order.value} ريال</p>
-                        </div>
-                        <div className="bg-primary/10 p-2 rounded-lg">
-                          <DollarSign className="w-6 h-6 text-primary" />
-                        </div>
-                      </div>
-                    </motion.div>
-
-                    {/* Description */}
-                    <motion.div 
-                      initial={{ opacity: 0, y: 20 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: 0.8 }}
-                      className="space-y-3 text-right"
-                    >
-                      <h4 className="font-medium flex items-center gap-2 justify-end">
-                        <span>وصف المشروع</span>
-                        <FileText className="w-4 h-4 text-primary" />
-                      </h4>
-                      <div className="p-4 rounded-lg bg-muted/30 border-r-4 border-primary">
-                        <p className="text-muted-foreground leading-relaxed text-right">{order.description}</p>
-                      </div>
-                    </motion.div>
-                  </CardContent>
-                </Card>
-              </motion.div>
-            </motion.div>
-          </TabsContent>
-
-          <TabsContent value="timeline" className="space-y-6" dir="rtl">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5 }}
-            >
-              <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-3 text-right justify-end">
-                    <span>الجدول الزمني للمشروع</span>
-                    <Clock className="w-5 h-5 text-primary" />
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-6">
-                    {order.timeline.map((step, index) => (
-                      <motion.div 
-                        key={index} 
-                        initial={{ opacity: 0, x: 50 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        transition={{ delay: index * 0.1, duration: 0.4 }}
-                        className="flex gap-4"
-                      >
-                        <div className="flex flex-col items-center">
-                          <div className={`w-8 h-8 rounded-full flex items-center justify-center transition-all duration-300 ${
-                            step.completed 
-                              ? 'bg-green-100 text-green-600 shadow-lg' 
-                              : 'bg-muted text-muted-foreground'
-                          }`}>
-                            {step.completed ? (
-                              <CheckCircle className="w-4 h-4" />
-                            ) : (
-                              <Clock className="w-4 h-4" />
-                            )}
-                          </div>
-                          {index < order.timeline.length - 1 && (
-                            <div className={`w-0.5 h-12 mt-2 transition-all duration-300 ${
-                              step.completed ? 'bg-green-200' : 'bg-muted'
-                            }`} />
-                          )}
-                        </div>
-                        <div className="flex-1 pb-8 text-right">
-                          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-2">
-                            {step.date && (
-                              <span className="text-sm text-muted-foreground order-2 sm:order-1">{step.date}</span>
-                            )}
-                            <h4 className={`font-medium order-1 sm:order-2 ${
-                              step.completed ? 'text-foreground' : 'text-muted-foreground'
-                            }`}>
-                              {step.name}
-                            </h4>
-                          </div>
-                          <p className="text-sm text-muted-foreground text-right">{step.description}</p>
-                        </div>
-                      </motion.div>
-                    ))}
-                  </div>
-                </CardContent>
-              </Card>
-            </motion.div>
-          </TabsContent>
-
-          <TabsContent value="files" className="space-y-6" dir="rtl">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5 }}
-            >
-              <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-3 text-right justify-end">
-                    <span>ملفات المشروع</span>
-                    <FileText className="w-5 h-5 text-primary" />
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-4">
-                    {order.files.map((file, index) => (
-                      <motion.div 
-                        key={index} 
-                        initial={{ opacity: 0, scale: 0.95 }}
-                        animate={{ opacity: 1, scale: 1 }}
-                        transition={{ delay: index * 0.1, duration: 0.3 }}
-                        className="flex items-center justify-between p-4 border rounded-lg hover:bg-muted/50 hover:shadow-md transition-all duration-300"
-                      >
-                        <Button variant="outline" size="sm" className="hover:scale-105 transition-transform">
-                          <span>تحميل</span>
-                          <Download className="w-4 h-4 mr-2" />
-                        </Button>
-                        <div className="flex items-center gap-3 text-right">
-                          <div>
-                            <p className="font-medium">{file.name}</p>
-                            <p className="text-sm text-muted-foreground">
-                              {file.type === 'input' ? 'ملف مدخل' : 'ملف مخرج'} • {file.size} • {file.uploadedAt}
-                            </p>
-                          </div>
-                          <div className="bg-primary/10 p-2 rounded-lg">
-                            <FileText className="w-5 h-5 text-primary" />
-                          </div>
-                        </div>
-                      </motion.div>
-                    ))}
-                  </div>
-                </CardContent>
-              </Card>
-            </motion.div>
-          </TabsContent>
-
-          <TabsContent value="communication" className="space-y-6" dir="rtl">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5 }}
-            >
-              <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-3 text-right justify-end">
-                    <span>سجل التواصل</span>
-                    <MessageCircle className="w-5 h-5 text-primary" />
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-4">
-                    {order.communications.map((comm, index) => (
-                      <motion.div 
-                        key={comm.id}
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: index * 0.1, duration: 0.4 }}
-                        className={`flex gap-3 ${
-                          comm.from === 'العميل' ? 'justify-start' : 'justify-end'
-                        }`}
-                      >
-                        <div className={`max-w-[70%] p-4 rounded-lg shadow-sm hover:shadow-md transition-shadow ${
-                          comm.from === 'العميل' 
-                            ? 'bg-primary text-primary-foreground' 
-                            : 'bg-muted'
-                        }`}>
-                          <div className="flex items-center gap-2 mb-2 text-right">
-                            <span className="text-xs opacity-70">{comm.timestamp}</span>
-                            <span className="font-medium text-sm">{comm.from}</span>
-                          </div>
-                          <p className="text-sm leading-relaxed text-right">{comm.content}</p>
-                        </div>
-                      </motion.div>
-                    ))}
-                  </div>
-                  
-                  <Separator className="my-6" />
-                  
-                  <motion.div 
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.3 }}
-                    className="flex gap-3"
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 p-4" dir="rtl">
+      <div className="max-w-7xl mx-auto space-y-8">
+        
+        {/* Header با أنيميشن رائع */}
+        <motion.div
+          initial={{ opacity: 0, y: -30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, ease: "easeOut" }}
+          className="relative"
+        >
+          <div className="absolute inset-0 bg-gradient-to-r from-purple-600 via-blue-600 to-cyan-500 rounded-3xl blur-xl opacity-20"></div>
+          <Card className="relative bg-white/90 backdrop-blur-lg border-0 shadow-2xl rounded-3xl overflow-hidden">
+            <div className="absolute top-0 right-0 w-full h-2 bg-gradient-to-l from-purple-500 via-blue-500 to-cyan-500"></div>
+            <CardContent className="p-8">
+              <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
+                
+                {/* معلومات الخدمة */}
+                <div className="flex items-center gap-6 order-2 lg:order-1">
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => navigate('/orders')}
+                    className="flex items-center gap-2 hover:bg-white/50 transition-all duration-300"
                   >
-                    <Button 
-                      onClick={handleSendMessage} 
-                      disabled={!newMessage.trim()}
-                      className="hover:scale-105 transition-transform"
+                    <ArrowRight className="w-4 h-4" />
+                    <span>العودة للطلبات</span>
+                  </Button>
+                </div>
+
+                {/* عنوان الخدمة والأيقونة */}
+                <div className="flex items-center gap-6 order-1 lg:order-2">
+                  <div className="text-right space-y-2">
+                    <motion.h1 
+                      initial={{ opacity: 0, x: 20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: 0.3 }}
+                      className="text-3xl font-bold bg-gradient-to-r from-gray-800 to-gray-600 bg-clip-text text-transparent"
                     >
-                      <Send className="w-4 h-4" />
-                    </Button>
-                    <div className="flex-1">
-                      <textarea 
-                        placeholder="اكتب رسالتك هنا..."
-                        className="w-full p-3 border rounded-lg resize-none text-right hover:border-primary/50 focus:border-primary transition-colors"
-                        rows={3}
-                        value={newMessage}
-                        onChange={(e) => setNewMessage(e.target.value)}
-                        dir="rtl"
-                      />
+                      {order.service}
+                    </motion.h1>
+                    <motion.p 
+                      initial={{ opacity: 0, x: 20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: 0.4 }}
+                      className="text-gray-600 font-medium"
+                    >
+                      رقم الطلب: #{order.id}
+                    </motion.p>
+                    
+                    {/* Badges للحالة والأولوية */}
+                    <motion.div 
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: 0.5 }}
+                      className="flex items-center gap-3"
+                    >
+                      <Badge className={`${getStatusColor(order.status)} px-4 py-2 text-sm font-semibold rounded-full shadow-lg`}>
+                        <CheckCircle className="w-4 h-4 mr-2" />
+                        قيد التنفيذ
+                      </Badge>
+                      <Badge className={`${getPriorityColor(order.priority)} px-4 py-2 text-sm font-semibold rounded-full shadow-lg`}>
+                        <Flag className="w-4 h-4 mr-2" />
+                        أولوية عالية
+                      </Badge>
+                    </motion.div>
+                  </div>
+                  
+                  {/* أيقونة الخدمة با أنيميشن */}
+                  <motion.div
+                    initial={{ scale: 0, rotate: -180 }}
+                    animate={{ scale: 1, rotate: 0 }}
+                    transition={{ duration: 0.8, delay: 0.2, type: "spring", stiffness: 200 }}
+                    className="relative"
+                  >
+                    <div className="absolute inset-0 bg-gradient-to-r from-purple-500 to-blue-500 rounded-2xl blur-lg opacity-30 animate-pulse"></div>
+                    <div className="relative bg-gradient-to-r from-purple-500 to-blue-500 rounded-2xl p-4 shadow-2xl">
+                      <ServiceIcon className="w-12 h-12 text-white" />
                     </div>
                   </motion.div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </motion.div>
+
+        {/* التبويبات با تصميم حديث */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.3 }}
+        >
+          <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-8" dir="rtl">
+            <div className="flex justify-center">
+              <TabsList className="grid grid-cols-4 bg-white/80 backdrop-blur-lg border-0 shadow-xl rounded-2xl p-2" dir="rtl">
+                <TabsTrigger 
+                  value="communication" 
+                  className="text-right data-[state=active]:bg-gradient-to-r data-[state=active]:from-purple-500 data-[state=active]:to-blue-500 data-[state=active]:text-white rounded-xl transition-all duration-300"
+                >
+                  <MessageSquare className="w-4 h-4 ml-2" />
+                  التواصل
+                </TabsTrigger>
+                <TabsTrigger 
+                  value="files" 
+                  className="text-right data-[state=active]:bg-gradient-to-r data-[state=active]:from-purple-500 data-[state=active]:to-blue-500 data-[state=active]:text-white rounded-xl transition-all duration-300"
+                >
+                  <FileText className="w-4 h-4 ml-2" />
+                  الملفات
+                </TabsTrigger>
+                <TabsTrigger 
+                  value="timeline" 
+                  className="text-right data-[state=active]:bg-gradient-to-r data-[state=active]:from-purple-500 data-[state=active]:to-blue-500 data-[state=active]:text-white rounded-xl transition-all duration-300"
+                >
+                  <Clock className="w-4 h-4 ml-2" />
+                  الجدول الزمني
+                </TabsTrigger>
+                <TabsTrigger 
+                  value="overview" 
+                  className="text-right data-[state=active]:bg-gradient-to-r data-[state=active]:from-purple-500 data-[state=active]:to-blue-500 data-[state=active]:text-white rounded-xl transition-all duration-300"
+                >
+                  <Eye className="w-4 h-4 ml-2" />
+                  نظرة عامة
+                </TabsTrigger>
+              </TabsList>
+            </div>
+
+            {/* نظرة عامة */}
+            <TabsContent value="overview" className="space-y-8" dir="rtl">
+              <div className="grid grid-cols-1 xl:grid-cols-12 gap-8">
+                
+                {/* معلومات العميل - على اليمين */}
+                <motion.div
+                  initial={{ opacity: 0, x: 50 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ duration: 0.6, delay: 0.2 }}
+                  className="xl:col-span-4 xl:col-start-1 order-1"
+                >
+                  <Card className="bg-white/90 backdrop-blur-lg border-0 shadow-2xl rounded-3xl overflow-hidden h-full">
+                    <div className="bg-gradient-to-r from-blue-500 to-cyan-500 p-6">
+                      <CardTitle className="flex items-center gap-3 text-white text-xl">
+                        <User className="w-6 h-6" />
+                        <span>معلومات العميل</span>
+                      </CardTitle>
+                    </div>
+                    <CardContent className="p-6 space-y-6">
+                      
+                      {/* صورة العميل */}
+                      <motion.div 
+                        initial={{ scale: 0 }}
+                        animate={{ scale: 1 }}
+                        transition={{ delay: 0.5, type: "spring" }}
+                        className="flex justify-center"
+                      >
+                        <div className="relative">
+                          <div className="absolute inset-0 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-full blur-lg opacity-30"></div>
+                          <Avatar className="relative w-24 h-24 border-4 border-white shadow-xl">
+                            <AvatarImage src={order.client.avatar} />
+                            <AvatarFallback className="bg-gradient-to-r from-blue-500 to-cyan-500 text-white text-xl font-bold">
+                              {order.client.name.split(' ').map(n => n[0]).join('')}
+                            </AvatarFallback>
+                          </Avatar>
+                        </div>
+                      </motion.div>
+
+                      {/* معلومات تفصيلية */}
+                      <div className="space-y-4">
+                        {[
+                          { icon: User, label: 'الاسم', value: order.client.name, color: 'from-blue-500 to-cyan-500' },
+                          { icon: Mail, label: 'البريد الإلكتروني', value: order.client.email, color: 'from-green-500 to-emerald-500' },
+                          { icon: Phone, label: 'رقم الهاتف', value: order.client.phone, color: 'from-purple-500 to-violet-500' },
+                          { icon: MapPin, label: 'الجامعة', value: order.client.university, color: 'from-orange-500 to-red-500' }
+                        ].map((item, index) => (
+                          <motion.div
+                            key={item.label}
+                            initial={{ opacity: 0, x: 20 }}
+                            animate={{ opacity: 1, x: 0 }}
+                            transition={{ delay: 0.7 + index * 0.1 }}
+                            className="group"
+                          >
+                            <div className={`p-4 rounded-2xl bg-gradient-to-r ${item.color} bg-opacity-10 border border-white/20 hover:shadow-lg transition-all duration-300 group-hover:scale-105`}>
+                              <div className="flex items-center gap-4">
+                                <div className={`p-2 rounded-xl bg-gradient-to-r ${item.color} shadow-lg`}>
+                                  <item.icon className="w-5 h-5 text-white" />
+                                </div>
+                                <div className="text-right flex-1">
+                                  <p className="text-sm text-gray-600 font-medium">{item.label}</p>
+                                  <p className="font-bold text-gray-800">{item.value}</p>
+                                </div>
+                              </div>
+                            </div>
+                          </motion.div>
+                        ))}
+                      </div>
+
+                      {/* أزرار العمليات */}
+                      <motion.div
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 1.1 }}
+                        className="space-y-3 pt-4 border-t border-gray-200"
+                      >
+                        <Button 
+                          className="w-full bg-gradient-to-r from-blue-500 to-cyan-500 hover:from-blue-600 hover:to-cyan-600 text-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
+                          onClick={() => navigate(`/orders/${id}/edit`)}
+                        >
+                          <Edit3 className="w-4 h-4 ml-2" />
+                          تعديل الطلب
+                        </Button>
+                        <Button 
+                          variant="outline" 
+                          className="w-full border-2 border-purple-500 text-purple-500 hover:bg-purple-500 hover:text-white rounded-xl transition-all duration-300 transform hover:scale-105"
+                        >
+                          <MessageSquare className="w-4 h-4 ml-2" />
+                          تواصل مع المختص
+                        </Button>
+                      </motion.div>
+                    </CardContent>
+                  </Card>
+                </motion.div>
+
+                {/* تقدم المشروع - على اليسار */}
+                <motion.div
+                  initial={{ opacity: 0, x: -50 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ duration: 0.6, delay: 0.4 }}
+                  className="xl:col-span-8 xl:col-start-5 order-2"
+                >
+                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 h-full">
+                    
+                    {/* كارت تقدم المشروع */}
+                    <Card className="bg-white/90 backdrop-blur-lg border-0 shadow-2xl rounded-3xl overflow-hidden">
+                      <div className="bg-gradient-to-r from-purple-500 to-pink-500 p-6">
+                        <CardTitle className="flex items-center gap-3 text-white text-xl">
+                          <TrendingUp className="w-6 h-6" />
+                          <span>تقدم المشروع</span>
+                        </CardTitle>
+                      </div>
+                      <CardContent className="p-6 space-y-6">
+                        
+                        {/* نسبة الإنجاز */}
+                        <motion.div
+                          initial={{ scale: 0 }}
+                          animate={{ scale: 1 }}
+                          transition={{ delay: 0.6, type: "spring" }}
+                          className="text-center"
+                        >
+                          <div className="relative w-32 h-32 mx-auto mb-4">
+                            <svg className="w-32 h-32 transform -rotate-90" viewBox="0 0 144 144">
+                              <circle
+                                cx="72"
+                                cy="72"
+                                r="60"
+                                stroke="currentColor"
+                                strokeWidth="8"
+                                fill="none"
+                                className="text-gray-200"
+                              />
+                              <motion.circle
+                                cx="72"
+                                cy="72"
+                                r="60"
+                                stroke="url(#gradient)"
+                                strokeWidth="8"
+                                fill="none"
+                                strokeLinecap="round"
+                                strokeDasharray={377}
+                                initial={{ strokeDashoffset: 377 }}
+                                animate={{ strokeDashoffset: 377 - (377 * order.progress) / 100 }}
+                                transition={{ duration: 2, delay: 0.8 }}
+                              />
+                              <defs>
+                                <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                                  <stop offset="0%" stopColor="#8B5CF6" />
+                                  <stop offset="100%" stopColor="#EC4899" />
+                                </linearGradient>
+                              </defs>
+                            </svg>
+                            <div className="absolute inset-0 flex items-center justify-center">
+                              <motion.span 
+                                initial={{ opacity: 0 }}
+                                animate={{ opacity: 1 }}
+                                transition={{ delay: 1.5 }}
+                                className="text-3xl font-bold bg-gradient-to-r from-purple-500 to-pink-500 bg-clip-text text-transparent"
+                              >
+                                {order.progress}%
+                              </motion.span>
+                            </div>
+                          </div>
+                          <p className="text-gray-600 font-medium">نسبة الإنجاز</p>
+                        </motion.div>
+
+                        {/* معلومات إضافية */}
+                        <div className="space-y-4">
+                          {[
+                            { icon: Calendar, label: 'تاريخ الإنشاء', value: '2024-01-15', color: 'from-blue-500 to-cyan-500' },
+                            { icon: Clock, label: 'الموعد النهائي', value: '2024-01-30', color: 'from-orange-500 to-red-500' }
+                          ].map((item, index) => (
+                            <motion.div
+                              key={item.label}
+                              initial={{ opacity: 0, x: -20 }}
+                              animate={{ opacity: 1, x: 0 }}
+                              transition={{ delay: 0.8 + index * 0.1 }}
+                              className="group"
+                            >
+                              <div className={`p-4 rounded-2xl bg-gradient-to-r ${item.color} bg-opacity-10 border border-white/20 hover:shadow-lg transition-all duration-300 group-hover:scale-105`}>
+                                <div className="flex items-center gap-4">
+                                  <div className={`p-2 rounded-xl bg-gradient-to-r ${item.color} shadow-lg`}>
+                                    <item.icon className="w-5 h-5 text-white" />
+                                  </div>
+                                  <div className="text-right flex-1">
+                                    <p className="text-sm text-gray-600 font-medium">{item.label}</p>
+                                    <p className="font-bold text-gray-800">{item.value}</p>
+                                  </div>
+                                </div>
+                              </div>
+                            </motion.div>
+                          ))}
+                        </div>
+                      </CardContent>
+                    </Card>
+
+                    {/* كارت المعلومات المالية */}
+                    <Card className="bg-white/90 backdrop-blur-lg border-0 shadow-2xl rounded-3xl overflow-hidden">
+                      <div className="bg-gradient-to-r from-green-500 to-emerald-500 p-6">
+                        <CardTitle className="flex items-center gap-3 text-white text-xl">
+                          <DollarSign className="w-6 h-6" />
+                          <span>القيمة الإجمالية</span>
+                        </CardTitle>
+                      </div>
+                      <CardContent className="p-6 space-y-6">
+                        
+                        {/* القيمة الإجمالية */}
+                        <motion.div
+                          initial={{ scale: 0 }}
+                          animate={{ scale: 1 }}
+                          transition={{ delay: 0.7, type: "spring" }}
+                          className="text-center"
+                        >
+                          <div className="relative p-6 rounded-2xl bg-gradient-to-r from-green-500 to-emerald-500 bg-opacity-10 border border-green-200">
+                            <motion.p 
+                              initial={{ opacity: 0 }}
+                              animate={{ opacity: 1 }}
+                              transition={{ delay: 1.2 }}
+                              className="text-4xl font-bold bg-gradient-to-r from-green-600 to-emerald-600 bg-clip-text text-transparent"
+                            >
+                              {order.totalPrice} ريال
+                            </motion.p>
+                            <p className="text-gray-600 font-medium mt-2">القيمة الإجمالية</p>
+                          </div>
+                        </motion.div>
+
+                        {/* تقدم الدفع */}
+                        <motion.div
+                          initial={{ opacity: 0, y: 20 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          transition={{ delay: 0.9 }}
+                          className="space-y-3"
+                        >
+                          <div className="flex justify-between items-center">
+                            <span className="text-sm text-gray-600">المبلغ المدفوع</span>
+                            <span className="font-bold text-green-600">{order.paidAmount} ريال</span>
+                          </div>
+                          <Progress 
+                            value={(order.paidAmount / order.totalPrice) * 100} 
+                            className="h-3 bg-gray-200 rounded-full overflow-hidden"
+                          />
+                          <div className="flex justify-between items-center">
+                            <span className="text-sm text-gray-600">المتبقي</span>
+                            <span className="font-bold text-orange-600">{order.totalPrice - order.paidAmount} ريال</span>
+                          </div>
+                        </motion.div>
+
+                        {/* وصف المشروع */}
+                        <motion.div
+                          initial={{ opacity: 0, y: 20 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          transition={{ delay: 1.0 }}
+                          className="pt-4 border-t border-gray-200"
+                        >
+                          <h4 className="font-bold text-gray-800 mb-2 text-right">وصف المشروع</h4>
+                          <p className="text-gray-600 text-sm leading-relaxed text-right">
+                            {order.description}
+                          </p>
+                        </motion.div>
+                      </CardContent>
+                    </Card>
+                  </div>
+                </motion.div>
+              </div>
+            </TabsContent>
+
+            {/* الجدول الزمني */}
+            <TabsContent value="timeline" className="space-y-6" dir="rtl">
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6 }}
+              >
+                <Card className="bg-white/90 backdrop-blur-lg border-0 shadow-2xl rounded-3xl overflow-hidden">
+                  <div className="bg-gradient-to-r from-indigo-500 to-purple-500 p-6">
+                    <CardTitle className="flex items-center gap-3 text-white text-xl">
+                      <Clock className="w-6 h-6" />
+                      <span>الجدول الزمني للمشروع</span>
+                    </CardTitle>
+                  </div>
+                  <CardContent className="p-6">
+                    <div className="space-y-6">
+                      {order.timeline.map((item, index) => (
+                        <motion.div
+                          key={index}
+                          initial={{ opacity: 0, x: 50 }}
+                          animate={{ opacity: 1, x: 0 }}
+                          transition={{ delay: index * 0.1, duration: 0.5 }}
+                          className="flex items-center gap-4 relative"
+                        >
+                          {/* خط الوقت */}
+                          {index < order.timeline.length - 1 && (
+                            <div className="absolute right-6 top-12 w-0.5 h-16 bg-gradient-to-b from-blue-500 to-purple-500"></div>
+                          )}
+                          
+                          {/* أيقونة الحالة */}
+                          <div className={`
+                            relative z-10 w-12 h-12 rounded-full flex items-center justify-center shadow-lg
+                            ${item.status === 'completed' ? 'bg-gradient-to-r from-green-500 to-emerald-500' : 
+                              item.status === 'current' ? 'bg-gradient-to-r from-blue-500 to-cyan-500' : 
+                              'bg-gradient-to-r from-gray-400 to-gray-500'}
+                          `}>
+                            {item.status === 'completed' ? (
+                              <CheckCircle className="w-6 h-6 text-white" />
+                            ) : item.status === 'current' ? (
+                              <PlayCircle className="w-6 h-6 text-white" />
+                            ) : (
+                              <Clock className="w-6 h-6 text-white" />
+                            )}
+                          </div>
+
+                          {/* محتوى الحدث */}
+                          <div className="flex-1 p-4 rounded-2xl bg-gradient-to-r from-gray-50 to-gray-100 border border-gray-200">
+                            <div className="flex justify-between items-start">
+                              <div className="text-right">
+                                <h4 className="font-bold text-gray-800">{item.event}</h4>
+                                <p className="text-gray-600 text-sm mt-1">{item.date}</p>
+                              </div>
+                              <Badge className={`
+                                ${item.status === 'completed' ? 'bg-green-100 text-green-700' : 
+                                  item.status === 'current' ? 'bg-blue-100 text-blue-700' : 
+                                  'bg-gray-100 text-gray-700'}
+                              `}>
+                                {item.status === 'completed' ? 'مكتمل' : 
+                                 item.status === 'current' ? 'جاري' : 'في الانتظار'}
+                              </Badge>
+                            </div>
+                          </div>
+                        </motion.div>
+                      ))}
+                    </div>
+                  </CardContent>
+                </Card>
+              </motion.div>
+            </TabsContent>
+
+            {/* الملفات */}
+            <TabsContent value="files" className="space-y-6" dir="rtl">
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6 }}
+              >
+                <Card className="bg-white/90 backdrop-blur-lg border-0 shadow-2xl rounded-3xl overflow-hidden">
+                  <div className="bg-gradient-to-r from-emerald-500 to-teal-500 p-6">
+                    <CardTitle className="flex items-center gap-3 text-white text-xl">
+                      <FileText className="w-6 h-6" />
+                      <span>ملفات المشروع</span>
+                    </CardTitle>
+                  </div>
+                  <CardContent className="p-6">
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                      {order.files.map((file, index) => (
+                        <motion.div
+                          key={index}
+                          initial={{ opacity: 0, scale: 0.9 }}
+                          animate={{ opacity: 1, scale: 1 }}
+                          transition={{ delay: index * 0.1, duration: 0.5 }}
+                          className="group"
+                        >
+                          <div className="p-4 rounded-2xl bg-gradient-to-r from-gray-50 to-gray-100 border border-gray-200 hover:shadow-lg transition-all duration-300 group-hover:scale-105">
+                            <div className="flex items-center gap-3 mb-3">
+                              <div className="p-2 rounded-xl bg-gradient-to-r from-blue-500 to-cyan-500 shadow-lg">
+                                <FileText className="w-5 h-5 text-white" />
+                              </div>
+                              <div className="text-right flex-1">
+                                <h4 className="font-bold text-gray-800 text-sm">{file.name}</h4>
+                                <p className="text-gray-600 text-xs">{file.size}</p>
+                              </div>
+                            </div>
+                            <div className="flex gap-2">
+                              <Button size="sm" className="flex-1 bg-gradient-to-r from-blue-500 to-cyan-500 hover:from-blue-600 hover:to-cyan-600 text-white">
+                                <Download className="w-4 h-4 ml-1" />
+                                تحميل
+                              </Button>
+                              <Button size="sm" variant="outline" className="border-purple-500 text-purple-500 hover:bg-purple-500 hover:text-white">
+                                <Eye className="w-4 h-4" />
+                              </Button>
+                            </div>
+                          </div>
+                        </motion.div>
+                      ))}
+                    </div>
+                  </CardContent>
+                </Card>
+              </motion.div>
+            </TabsContent>
+
+            {/* التواصل */}
+            <TabsContent value="communication" className="space-y-6" dir="rtl">
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6 }}
+              >
+                <Card className="bg-white/90 backdrop-blur-lg border-0 shadow-2xl rounded-3xl overflow-hidden">
+                  <div className="bg-gradient-to-r from-pink-500 to-rose-500 p-6">
+                    <CardTitle className="flex items-center gap-3 text-white text-xl">
+                      <MessageSquare className="w-6 h-6" />
+                      <span>رسائل التواصل</span>
+                    </CardTitle>
+                  </div>
+                  <CardContent className="p-6">
+                    <div className="space-y-4 max-h-96 overflow-y-auto">
+                      {order.communication.map((msg, index) => (
+                        <motion.div
+                          key={msg.id}
+                          initial={{ opacity: 0, x: msg.sender === 'العميل' ? 50 : -50 }}
+                          animate={{ opacity: 1, x: 0 }}
+                          transition={{ delay: index * 0.1, duration: 0.5 }}
+                          className={`flex gap-3 ${msg.sender === 'العميل' ? 'justify-start' : 'justify-end'}`}
+                        >
+                          <div className={`
+                            max-w-xs lg:max-w-md p-4 rounded-2xl shadow-lg
+                            ${msg.sender === 'العميل' ? 
+                              'bg-gradient-to-r from-blue-500 to-cyan-500 text-white' : 
+                              'bg-gradient-to-r from-purple-500 to-pink-500 text-white'}
+                          `}>
+                            <div className="text-right">
+                              <p className="font-medium text-sm opacity-90">{msg.sender}</p>
+                              <p className="mt-1">{msg.message}</p>
+                              <p className="text-xs opacity-75 mt-2">{msg.timestamp}</p>
+                            </div>
+                          </div>
+                        </motion.div>
+                      ))}
+                    </div>
+                    
+                    {/* إضافة رسالة جديدة */}
+                    <div className="mt-6 pt-6 border-t border-gray-200">
+                      <div className="flex gap-3">
+                        <Button className="bg-gradient-to-r from-pink-500 to-rose-500 hover:from-pink-600 hover:to-rose-600 text-white">
+                          <Send className="w-4 h-4" />
+                        </Button>
+                        <input
+                          type="text"
+                          placeholder="اكتب رسالتك هنا..."
+                          className="flex-1 p-3 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-pink-500 text-right"
+                        />
+                        <Button variant="outline" className="border-gray-300 text-gray-600 hover:bg-gray-50">
+                          <Paperclip className="w-4 h-4" />
+                        </Button>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              </motion.div>
+            </TabsContent>
+          </Tabs>
+        </motion.div>
+
+        {/* إجراءات سريعة */}
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.5 }}
+          className="grid grid-cols-1 md:grid-cols-3 gap-6"
+        >
+          {[
+            { 
+              icon: Heart, 
+              title: 'تقييم الخدمة', 
+              desc: 'قيم جودة الخدمة المقدمة', 
+              color: 'from-red-500 to-pink-500',
+              action: () => toast({ title: "شكراً لك!", description: "تم تسجيل تقييمك بنجاح" })
+            },
+            { 
+              icon: Share2, 
+              title: 'مشاركة التقدم', 
+              desc: 'شارك تقدم مشروعك مع آخرين', 
+              color: 'from-blue-500 to-cyan-500',
+              action: () => toast({ title: "تم النسخ!", description: "تم نسخ رابط المشاركة" })
+            },
+            { 
+              icon: Award, 
+              title: 'طلب شهادة', 
+              desc: 'احصل على شهادة إتمام المشروع', 
+              color: 'from-yellow-500 to-orange-500',
+              action: () => toast({ title: "تم الطلب!", description: "سيتم إرسال الشهادة قريباً" })
+            }
+          ].map((item, index) => (
+            <motion.div
+              key={index}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.7 + index * 0.1, duration: 0.5 }}
+              className="group cursor-pointer"
+              onClick={item.action}
+            >
+              <Card className="bg-white/90 backdrop-blur-lg border-0 shadow-xl rounded-2xl overflow-hidden hover:shadow-2xl transition-all duration-300 group-hover:scale-105">
+                <CardContent className="p-6">
+                  <div className="text-center space-y-4">
+                    <div className={`w-16 h-16 mx-auto rounded-2xl bg-gradient-to-r ${item.color} shadow-lg flex items-center justify-center group-hover:rotate-12 transition-transform duration-300`}>
+                      <item.icon className="w-8 h-8 text-white" />
+                    </div>
+                    <div>
+                      <h3 className="font-bold text-gray-800 text-lg">{item.title}</h3>
+                      <p className="text-gray-600 text-sm mt-1">{item.desc}</p>
+                    </div>
+                  </div>
                 </CardContent>
               </Card>
             </motion.div>
-          </TabsContent>
-        </Tabs>
+          ))}
+        </motion.div>
       </div>
-    </ClientLayout>
+    </div>
   );
 };
 
