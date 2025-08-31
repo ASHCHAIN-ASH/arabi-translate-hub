@@ -214,7 +214,7 @@ const SimpleLogin = () => {
                   إنشاء حساب جديد
                 </TabsTrigger>
               </TabsList>
-            
+              
               <TabsContent value="login" className="space-y-6">
                 <motion.div
                   initial={{ opacity: 0, y: 20 }}
@@ -239,8 +239,8 @@ const SimpleLogin = () => {
                         onChange={(e) => setLoginData(prev => ({ ...prev, email: e.target.value }))}
                         placeholder="example@domain.com"
                         required
-                        dir="ltr"
-                        className="h-12 rounded-xl border-2 border-muted focus:border-primary transition-colors duration-300 bg-background/50"
+                        className="h-12 rounded-xl border-2 border-muted focus:border-primary transition-colors duration-300 bg-background/50 text-left"
+                        style={{ direction: 'ltr' }}
                       />
                     </div>
 
@@ -257,7 +257,7 @@ const SimpleLogin = () => {
                           onChange={(e) => setLoginData(prev => ({ ...prev, password: e.target.value }))}
                           placeholder="أدخل كلمة المرور"
                           required
-                          className="h-12 rounded-xl border-2 border-muted focus:border-primary transition-colors duration-300 bg-background/50 pl-12"
+                          className="h-12 rounded-xl border-2 border-muted focus:border-primary transition-colors duration-300 bg-background/50 pr-4 pl-12"
                         />
                         <button
                           type="button"
@@ -289,7 +289,7 @@ const SimpleLogin = () => {
                   </form>
                 </motion.div>
               </TabsContent>
-            
+              
               <TabsContent value="register" className="space-y-6">
                 <motion.div
                   initial={{ opacity: 0, y: 20 }}
@@ -330,8 +330,8 @@ const SimpleLogin = () => {
                         onChange={(e) => setRegisterData(prev => ({ ...prev, email: e.target.value }))}
                         placeholder="example@domain.com"
                         required
-                        dir="ltr"
-                        className="h-12 rounded-xl border-2 border-muted focus:border-primary transition-colors duration-300 bg-background/50"
+                        className="h-12 rounded-xl border-2 border-muted focus:border-primary transition-colors duration-300 bg-background/50 text-left"
+                        style={{ direction: 'ltr' }}
                       />
                     </div>
 
@@ -346,8 +346,8 @@ const SimpleLogin = () => {
                         value={registerData.phone}
                         onChange={(e) => setRegisterData(prev => ({ ...prev, phone: e.target.value }))}
                         placeholder="+966 50 123 4567"
-                        dir="ltr"
-                        className="h-12 rounded-xl border-2 border-muted focus:border-primary transition-colors duration-300 bg-background/50"
+                        className="h-12 rounded-xl border-2 border-muted focus:border-primary transition-colors duration-300 bg-background/50 text-left"
+                        style={{ direction: 'ltr' }}
                       />
                     </div>
 
@@ -364,7 +364,7 @@ const SimpleLogin = () => {
                           onChange={(e) => setRegisterData(prev => ({ ...prev, password: e.target.value }))}
                           placeholder="كلمة مرور قوية ومعقدة"
                           required
-                          className="h-12 rounded-xl border-2 border-muted focus:border-primary transition-colors duration-300 bg-background/50 pl-12"
+                          className="h-12 rounded-xl border-2 border-muted focus:border-primary transition-colors duration-300 bg-background/50 pr-4 pl-12"
                         />
                         <button
                           type="button"
