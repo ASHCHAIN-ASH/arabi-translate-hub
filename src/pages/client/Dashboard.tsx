@@ -140,13 +140,13 @@ const ClientDashboard = () => {
 
   return (
     <ClientLayout>
-      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 p-6" dir="rtl">
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 p-3 sm:p-6" dir="rtl">
         {/* Enhanced Academic Hero Section */}
         <motion.div
           initial={{ opacity: 0, y: -40 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, ease: "easeOut" }}
-          className="relative overflow-hidden rounded-[2rem] bg-gradient-to-br from-indigo-600 via-blue-600 to-purple-700 p-8 lg:p-12 text-white mb-8 shadow-2xl"
+          className="relative overflow-hidden rounded-2xl sm:rounded-[2rem] bg-gradient-to-br from-indigo-600 via-blue-600 to-purple-700 p-6 sm:p-8 lg:p-12 text-white mb-6 sm:mb-8 shadow-2xl"
         >
           {/* Animated Background Elements */}
           <div className="absolute inset-0 overflow-hidden">
@@ -178,18 +178,18 @@ const ClientDashboard = () => {
           </div>
           
           <div className="relative z-10">
-            <div className="flex items-center mb-8">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center mb-6 sm:mb-8 space-y-4 sm:space-y-0">
               <motion.div
                 initial={{ scale: 0, rotate: -180 }}
                 animate={{ scale: 1, rotate: 0 }}
                 transition={{ duration: 1, delay: 0.3, type: "spring" as const, stiffness: 200 }}
-                className="w-24 h-24 bg-white/20 backdrop-blur-md rounded-[1.5rem] flex items-center justify-center ml-6 shadow-2xl border border-white/30"
+                className="w-16 h-16 sm:w-20 sm:h-20 lg:w-24 lg:h-24 bg-white/20 backdrop-blur-md rounded-2xl sm:rounded-[1.5rem] flex items-center justify-center ml-0 sm:ml-6 shadow-2xl border border-white/30"
               >
                 <motion.div
                   animate={{ rotate: [0, 10, -10, 0] }}
                   transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
                 >
-                  <GraduationCap className="w-12 h-12 text-white" />
+                  <GraduationCap className="w-8 h-8 sm:w-10 sm:h-10 lg:w-12 lg:h-12 text-white" />
                 </motion.div>
               </motion.div>
               <div>
@@ -197,7 +197,7 @@ const ClientDashboard = () => {
                   initial={{ opacity: 0, x: -50 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ duration: 0.8, delay: 0.5 }}
-                  className="text-4xl lg:text-6xl font-black mb-4 leading-tight"
+                  className="text-2xl sm:text-4xl lg:text-6xl font-black mb-3 sm:mb-4 leading-tight text-center sm:text-right"
                 >
                   <motion.span
                     initial={{ opacity: 0, y: 30 }}
@@ -237,7 +237,7 @@ const ClientDashboard = () => {
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.8, delay: 1.2 }}
-                  className="text-white/90 text-xl lg:text-2xl font-medium"
+                  className="text-white/90 text-lg sm:text-xl lg:text-2xl font-medium text-center sm:text-right"
                 >
                   ابدأ رحلتك الأكاديمية مع خدماتنا المتخصصة المتقدمة
                 </motion.p>
@@ -248,7 +248,7 @@ const ClientDashboard = () => {
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 1.4 }}
-              className="flex flex-wrap gap-6"
+              className="flex flex-wrap gap-4 sm:gap-6 justify-center sm:justify-start"
             >
               <motion.div
                 whileHover={{ scale: 1.05, y: -3 }}
@@ -257,17 +257,17 @@ const ClientDashboard = () => {
               >
                 <Button 
                   size="lg" 
-                  className="bg-white text-indigo-600 hover:bg-white/95 font-black shadow-2xl border-0 px-10 py-5 text-xl rounded-2xl group-hover:shadow-3xl transition-all duration-300"
+                  className="bg-white text-indigo-600 hover:bg-white/95 font-black shadow-2xl border-0 px-6 sm:px-10 py-4 sm:py-5 text-lg sm:text-xl rounded-xl sm:rounded-2xl group-hover:shadow-3xl transition-all duration-300"
                   onClick={() => navigate('/orders/new')}
                 >
                   <motion.div
                     whileHover={{ rotate: 90 }}
                     transition={{ duration: 0.3 }}
                   >
-                    <Plus className="w-6 h-6 ml-3" />
+                    <Plus className="w-5 h-5 sm:w-6 sm:h-6 ml-2 sm:ml-3" />
                   </motion.div>
                   ابدأ طلب جديد
-                  <ArrowUpRight className="w-5 h-5 mr-3 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform duration-300" />
+                  <ArrowUpRight className="w-4 h-4 sm:w-5 sm:h-5 mr-2 sm:mr-3 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform duration-300" />
                 </Button>
               </motion.div>
             </motion.div>
@@ -279,7 +279,7 @@ const ClientDashboard = () => {
           initial={{ opacity: 0, y: 40 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.3 }}
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8"
+          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-6 sm:mb-8"
         >
           {/* فواتير غير مدفوعة */}
           <motion.div
@@ -289,19 +289,19 @@ const ClientDashboard = () => {
             <Card className="relative overflow-hidden border-0 shadow-xl bg-gradient-to-br from-white via-red-50 to-pink-50 group hover:shadow-2xl transition-all duration-500">
               <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-red-200/30 to-pink-200/30 rounded-full blur-2xl group-hover:scale-110 transition-transform duration-500"></div>
               <div className="absolute -bottom-4 -left-4 w-20 h-20 bg-red-100/50 rounded-full blur-xl"></div>
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4 relative z-10">
-                <CardTitle className="text-sm font-bold text-gray-700">فواتير غير مدفوعة</CardTitle>
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3 sm:pb-4 relative z-10">
+                <CardTitle className="text-xs sm:text-sm font-bold text-gray-700">فواتير غير مدفوعة</CardTitle>
                 <motion.div 
                   whileHover={{ scale: 1.2, rotate: 10 }}
-                  className="w-14 h-14 bg-gradient-to-br from-red-500 to-pink-600 rounded-2xl flex items-center justify-center shadow-xl"
+                  className="w-12 h-12 sm:w-14 sm:h-14 bg-gradient-to-br from-red-500 to-pink-600 rounded-xl sm:rounded-2xl flex items-center justify-center shadow-xl"
                 >
-                  <FileText className="h-7 w-7 text-white" />
+                  <FileText className="h-6 w-6 sm:h-7 sm:w-7 text-white" />
                 </motion.div>
               </CardHeader>
               <CardContent className="relative z-10">
-                <div className="text-5xl font-black text-red-600 mb-3">{stats.unpaidInvoices}</div>
-                <p className="text-sm text-gray-600 flex items-center font-semibold">
-                  <AlertCircle className="w-4 h-4 ml-2 text-amber-500" />
+                <div className="text-3xl sm:text-4xl lg:text-5xl font-black text-red-600 mb-2 sm:mb-3">{stats.unpaidInvoices}</div>
+                <p className="text-xs sm:text-sm text-gray-600 flex items-center font-semibold">
+                  <AlertCircle className="w-3 h-3 sm:w-4 sm:h-4 ml-1 sm:ml-2 text-amber-500" />
                   تحتاج للمراجعة
                 </p>
               </CardContent>
@@ -316,19 +316,19 @@ const ClientDashboard = () => {
             <Card className="relative overflow-hidden border-0 shadow-xl bg-gradient-to-br from-white via-blue-50 to-indigo-50 group hover:shadow-2xl transition-all duration-500">
               <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-blue-200/30 to-indigo-200/30 rounded-full blur-2xl group-hover:scale-110 transition-transform duration-500"></div>
               <div className="absolute -bottom-4 -left-4 w-20 h-20 bg-blue-100/50 rounded-full blur-xl"></div>
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4 relative z-10">
-                <CardTitle className="text-sm font-bold text-gray-700">طلبات (3 قيد المعالجة)</CardTitle>
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3 sm:pb-4 relative z-10">
+                <CardTitle className="text-xs sm:text-sm font-bold text-gray-700">طلبات (3 قيد المعالجة)</CardTitle>
                 <motion.div 
                   whileHover={{ scale: 1.2, rotate: 10 }}
-                  className="w-14 h-14 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-2xl flex items-center justify-center shadow-xl"
+                  className="w-12 h-12 sm:w-14 sm:h-14 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-xl sm:rounded-2xl flex items-center justify-center shadow-xl"
                 >
-                  <ShoppingBag className="h-7 w-7 text-white" />
+                  <ShoppingBag className="h-6 w-6 sm:h-7 sm:w-7 text-white" />
                 </motion.div>
               </CardHeader>
               <CardContent className="relative z-10">
-                <div className="text-5xl font-black text-blue-600 mb-3">{stats.totalOrders}</div>
-                <p className="text-sm text-gray-600 flex items-center font-semibold">
-                  <TrendingUp className="w-4 h-4 ml-2 text-emerald-500" />
+                <div className="text-3xl sm:text-4xl lg:text-5xl font-black text-blue-600 mb-2 sm:mb-3">{stats.totalOrders}</div>
+                <p className="text-xs sm:text-sm text-gray-600 flex items-center font-semibold">
+                  <TrendingUp className="w-3 h-3 sm:w-4 sm:h-4 ml-1 sm:ml-2 text-emerald-500" />
                   +2 هذا الشهر
                 </p>
               </CardContent>
@@ -343,19 +343,19 @@ const ClientDashboard = () => {
             <Card className="relative overflow-hidden border-0 shadow-xl bg-gradient-to-br from-white via-purple-50 to-violet-50 group hover:shadow-2xl transition-all duration-500">
               <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-purple-200/30 to-violet-200/30 rounded-full blur-2xl group-hover:scale-110 transition-transform duration-500"></div>
               <div className="absolute -bottom-4 -left-4 w-20 h-20 bg-purple-100/50 rounded-full blur-xl"></div>
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4 relative z-10">
-                <CardTitle className="text-sm font-bold text-gray-700">متوسط وقت التنفيذ</CardTitle>
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3 sm:pb-4 relative z-10">
+                <CardTitle className="text-xs sm:text-sm font-bold text-gray-700">متوسط وقت التنفيذ</CardTitle>
                 <motion.div 
                   whileHover={{ scale: 1.2, rotate: 10 }}
-                  className="w-14 h-14 bg-gradient-to-br from-purple-500 to-violet-600 rounded-2xl flex items-center justify-center shadow-xl"
+                  className="w-12 h-12 sm:w-14 sm:h-14 bg-gradient-to-br from-purple-500 to-violet-600 rounded-xl sm:rounded-2xl flex items-center justify-center shadow-xl"
                 >
-                  <Clock className="h-7 w-7 text-white" />
+                  <Clock className="h-6 w-6 sm:h-7 sm:w-7 text-white" />
                 </motion.div>
               </CardHeader>
               <CardContent className="relative z-10">
-                <div className="text-5xl font-black text-purple-600 mb-3">{stats.avgExecutionTime}</div>
-                <p className="text-sm text-gray-600 flex items-center font-semibold">
-                  <Timer className="w-4 h-4 ml-2 text-green-500" />
+                <div className="text-3xl sm:text-4xl lg:text-5xl font-black text-purple-600 mb-2 sm:mb-3">{stats.avgExecutionTime}</div>
+                <p className="text-xs sm:text-sm text-gray-600 flex items-center font-semibold">
+                  <Timer className="w-3 h-3 sm:w-4 sm:h-4 ml-1 sm:ml-2 text-green-500" />
                   أسرع من المتوقع
                 </p>
               </CardContent>
@@ -370,18 +370,18 @@ const ClientDashboard = () => {
             <Card className="relative overflow-hidden border-0 shadow-xl bg-gradient-to-br from-white via-emerald-50 to-teal-50 group hover:shadow-2xl transition-all duration-500">
               <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-emerald-200/30 to-teal-200/30 rounded-full blur-2xl group-hover:scale-110 transition-transform duration-500"></div>
               <div className="absolute -bottom-4 -left-4 w-20 h-20 bg-emerald-100/50 rounded-full blur-xl"></div>
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4 relative z-10">
-                <CardTitle className="text-sm font-bold text-gray-700">آخر دفعة</CardTitle>
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3 sm:pb-4 relative z-10">
+                <CardTitle className="text-xs sm:text-sm font-bold text-gray-700">آخر دفعة</CardTitle>
                 <motion.div 
                   whileHover={{ scale: 1.2, rotate: 10 }}
-                  className="w-14 h-14 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-2xl flex items-center justify-center shadow-xl"
+                  className="w-12 h-12 sm:w-14 sm:h-14 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-xl sm:rounded-2xl flex items-center justify-center shadow-xl"
                 >
-                  <DollarSign className="h-7 w-7 text-white" />
+                  <DollarSign className="h-6 w-6 sm:h-7 sm:w-7 text-white" />
                 </motion.div>
               </CardHeader>
               <CardContent className="relative z-10">
-                <div className="text-5xl font-black text-emerald-600 mb-3">{stats.lastPayment}</div>
-                <p className="text-sm text-gray-600 font-semibold">2024-01-15</p>
+                <div className="text-3xl sm:text-4xl lg:text-5xl font-black text-emerald-600 mb-2 sm:mb-3">{stats.lastPayment}</div>
+                <p className="text-xs sm:text-sm text-gray-600 font-semibold">2024-01-15</p>
               </CardContent>
             </Card>
           </motion.div>
@@ -399,24 +399,24 @@ const ClientDashboard = () => {
             <CardHeader className="pb-8 relative z-10">
               <div className="flex items-center justify-between">
                 <div>
-                  <CardTitle className="text-4xl font-black flex items-center text-gray-800 mb-3">
+                  <CardTitle className="text-2xl sm:text-3xl lg:text-4xl font-black flex items-center text-gray-800 mb-2 sm:mb-3">
                     <motion.div
                       whileHover={{ rotate: 360, scale: 1.1 }}
                       transition={{ duration: 0.6 }}
-                      className="w-12 h-12 bg-gradient-to-br from-blue-500 via-purple-500 to-pink-500 rounded-3xl flex items-center justify-center ml-4 shadow-xl"
+                      className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-blue-500 via-purple-500 to-pink-500 rounded-2xl sm:rounded-3xl flex items-center justify-center ml-3 sm:ml-4 shadow-xl"
                     >
-                      <Rocket className="w-7 h-7 text-white" />
+                      <Rocket className="w-5 h-5 sm:w-6 sm:w-6 lg:w-7 lg:h-7 text-white" />
                     </motion.div>
                     ابدأ بسرعة
                   </CardTitle>
-                  <CardDescription className="text-xl text-gray-600 leading-relaxed">
+                  <CardDescription className="text-base sm:text-lg lg:text-xl text-gray-600 leading-relaxed">
                     الخدمات الأكثر استخداماً للوصول السريع إلى أهدافك الأكاديمية
                   </CardDescription>
                 </div>
               </div>
             </CardHeader>
             <CardContent className="relative z-10">
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
                 {quickActions.map((action, index) => (
                   <motion.div
                     key={index}
@@ -430,22 +430,22 @@ const ClientDashboard = () => {
                   >
                     <Card className={`h-full border-0 shadow-xl hover:shadow-2xl transition-all duration-500 ${action.bgPattern} overflow-hidden relative`}>
                       <div className="absolute inset-0 bg-gradient-to-br from-white/80 to-transparent"></div>
-                      <div className="absolute top-0 right-0 w-24 h-24 bg-white/40 rounded-full blur-2xl group-hover:bg-white/60 transition-colors duration-500"></div>
-                      <CardContent className="p-10 relative z-10">
+                      <div className="absolute top-0 right-0 w-20 h-20 sm:w-24 sm:h-24 bg-white/40 rounded-full blur-2xl group-hover:bg-white/60 transition-colors duration-500"></div>
+                      <CardContent className="p-6 sm:p-8 lg:p-10 relative z-10">
                         <motion.div 
                           whileHover={{ scale: 1.2, rotate: 10 }}
                           transition={{ duration: 0.3 }}
-                          className={`w-20 h-20 bg-gradient-to-br ${action.gradient} rounded-3xl flex items-center justify-center mb-8 shadow-2xl group-hover:shadow-3xl`}
+                          className={`w-16 h-16 sm:w-18 sm:h-18 lg:w-20 lg:h-20 bg-gradient-to-br ${action.gradient} rounded-2xl sm:rounded-3xl flex items-center justify-center mb-6 sm:mb-8 shadow-2xl group-hover:shadow-3xl`}
                         >
-                          <action.icon className="w-10 h-10 text-white" />
+                          <action.icon className="w-8 h-8 sm:w-9 sm:h-9 lg:w-10 lg:h-10 text-white" />
                         </motion.div>
-                        <h3 className="font-black text-2xl mb-4 text-gray-800 group-hover:text-gray-900 transition-colors duration-300">
+                        <h3 className="font-black text-lg sm:text-xl lg:text-2xl mb-3 sm:mb-4 text-gray-800 group-hover:text-gray-900 transition-colors duration-300">
                           {action.title}
                         </h3>
-                        <p className="text-gray-600 leading-relaxed text-lg group-hover:text-gray-700 transition-colors duration-300">
+                        <p className="text-gray-600 leading-relaxed text-base sm:text-lg group-hover:text-gray-700 transition-colors duration-300">
                           {action.description}
                         </p>
-                        <ArrowUpRight className="w-6 h-6 text-gray-400 opacity-0 group-hover:opacity-100 absolute top-8 left-8 group-hover:translate-x-2 group-hover:-translate-y-2 transition-all duration-300" />
+                        <ArrowUpRight className="w-5 h-5 sm:w-6 sm:h-6 text-gray-400 opacity-0 group-hover:opacity-100 absolute top-6 sm:top-8 left-6 sm:left-8 group-hover:translate-x-2 group-hover:-translate-y-2 transition-all duration-300" />
                       </CardContent>
                     </Card>
                   </motion.div>
@@ -464,27 +464,27 @@ const ClientDashboard = () => {
           <Card className="border-0 shadow-2xl bg-gradient-to-br from-white to-gray-50/50">
             <CardHeader className="flex flex-row items-center justify-between pb-8">
               <div>
-                <CardTitle className="text-4xl font-black flex items-center text-gray-800 mb-3">
+                <CardTitle className="text-2xl sm:text-3xl lg:text-4xl font-black flex items-center text-gray-800 mb-2 sm:mb-3">
                   <motion.div
                     whileHover={{ rotate: 360, scale: 1.1 }}
                     transition={{ duration: 0.6 }}
-                    className="w-12 h-12 bg-gradient-to-br from-emerald-500 via-teal-500 to-blue-500 rounded-3xl flex items-center justify-center ml-4 shadow-xl"
+                    className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-emerald-500 via-teal-500 to-blue-500 rounded-2xl sm:rounded-3xl flex items-center justify-center ml-3 sm:ml-4 shadow-xl"
                   >
-                    <Activity className="w-7 h-7 text-white" />
+                    <Activity className="w-5 h-5 sm:w-6 sm:h-6 lg:w-7 lg:h-7 text-white" />
                   </motion.div>
                   آخر 5 طلبات
                 </CardTitle>
-                <CardDescription className="text-xl text-gray-600">
+                <CardDescription className="text-base sm:text-lg lg:text-xl text-gray-600">
                   تتبع حالة طلباتك الحديثة ومستوى التقدم
                 </CardDescription>
               </div>
               <Button 
                 variant="outline" 
                 onClick={() => navigate('/orders')}
-                className="border-2 border-gray-300 hover:border-blue-500 hover:text-blue-600 font-bold px-8 py-4 rounded-2xl transition-all duration-300 text-lg"
+                className="border-2 border-gray-300 hover:border-blue-500 hover:text-blue-600 font-bold px-4 sm:px-6 lg:px-8 py-2 sm:py-3 lg:py-4 rounded-xl sm:rounded-2xl transition-all duration-300 text-sm sm:text-base lg:text-lg"
               >
                 عرض الكل
-                <ChevronLeft className="w-5 h-5 mr-3" />
+                <ChevronLeft className="w-4 h-4 sm:w-5 sm:h-5 mr-2 sm:mr-3" />
               </Button>
             </CardHeader>
             <CardContent>
