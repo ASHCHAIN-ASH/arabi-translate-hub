@@ -252,9 +252,9 @@ const OrderDetails = () => {
                 initial={{ opacity: 0, scale: 0.95 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ duration: 0.5, delay: 0.1 }}
-                className="lg:col-span-12"
+                className="lg:col-span-12 order-0"
               >
-                <Card className="relative overflow-hidden bg-gradient-to-br from-primary/5 via-primary/10 to-primary/5 border-primary/20">
+                <Card className="relative overflow-hidden bg-gradient-to-bl from-primary/5 via-primary/10 to-primary/5 border-primary/20">
                   <div className="absolute top-0 right-0 w-full h-1 bg-gradient-to-l from-primary via-primary/60 to-primary"></div>
                   <CardContent className="p-6">
                     <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
@@ -292,12 +292,12 @@ const OrderDetails = () => {
                 </Card>
               </motion.div>
 
-              {/* Client Info Sidebar - يجب أن يكون على اليمين */}
+              {/* معلومات العميل - على اليمين تماماً */}
               <motion.div 
                 initial={{ opacity: 0, x: 50 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.5, delay: 0.3 }}
-                className="lg:col-span-4 order-1 lg:order-1"
+                className="lg:col-span-4 order-1"
               >
                 <Card className="h-full hover:shadow-lg transition-all duration-300 sticky top-6">
                   <CardHeader>
@@ -387,12 +387,12 @@ const OrderDetails = () => {
                 </Card>
               </motion.div>
 
-              {/* Progress Section - يجب أن يكون على اليسار */}
+              {/* تقدم المشروع - على اليسار */}
               <motion.div 
                 initial={{ opacity: 0, x: -50 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.5, delay: 0.2 }}
-                className="lg:col-span-8 order-2 lg:order-2"
+                className="lg:col-span-8 order-2"
               >
                 <Card className="h-full hover:shadow-lg transition-all duration-300">
                   <CardHeader>
