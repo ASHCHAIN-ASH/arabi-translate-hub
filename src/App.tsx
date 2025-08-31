@@ -26,6 +26,7 @@ import ClientDashboard from "./pages/client/Dashboard";
 import Orders from "./pages/client/Orders";
 import OrderNew from "./pages/client/OrderNew";
 import OrderDetails from "./pages/client/OrderDetails";
+import OrderEdit from "./pages/client/OrderEdit";
 import ClientInvoices from "./pages/client/Invoices";
 import ClientTickets from "./pages/client/Tickets";
 
@@ -119,6 +120,11 @@ const App = () => (
             <Route path="/orders/:id" element={
               <SimpleProtectedRoute requiredRole="client">
                 <OrderDetails />
+              </SimpleProtectedRoute>
+            } />
+            <Route path="/orders/:id/edit" element={
+              <SimpleProtectedRoute requiredRole="client">
+                <OrderEdit />
               </SimpleProtectedRoute>
             } />
             <Route path="/billing/invoices" element={
