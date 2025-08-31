@@ -48,7 +48,38 @@ export const SimpleAuthProvider: React.FC<{ children: React.ReactNode }> = ({ ch
 
   const signIn = async (email: string, password: string): Promise<{ error?: string }> => {
     try {
-      // البحث عن المستخدم في قاعدة البيانات
+      // التحقق من تسجيل دخول المدير أولاً
+      if (email === 'admin@masteredupath.com') {
+        const { data: adminResult, error: adminError } = await supabase
+          .rpc('verify_admin_login', {
+            email_input: email,
+            password_input: password
+          });
+
+        if (adminError) {
+          console.error('Admin login error:', adminError);
+          return { error: 'البريد الإلكتروني أو كلمة المرور غير صحيحة' };
+        }
+
+        if (adminResult) {
+          // إنشاء كائن المستخدم للمدير
+          const adminUser: User = {
+            id: 'admin-id',
+            email: email,
+            name: 'مدير النظام',
+            role: 'admin',
+            status: 'active'
+          };
+
+          setUser(adminUser);
+          localStorage.setItem('user', JSON.stringify(adminUser));
+          return {};
+        } else {
+          return { error: 'البريد الإلكتروني أو كلمة المرور غير صحيحة' };
+        }
+      }
+
+      // البحث عن المستخدم العادي في قاعدة البيانات
       const { data: userData, error: fetchError } = await supabase
         .from('users')
         .select('*')
