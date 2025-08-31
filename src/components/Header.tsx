@@ -126,6 +126,12 @@ const Header = () => {
                 <Search className="h-4 w-4" />
               </Link>
             </Button>
+            <Button variant="outline" size="sm" asChild>
+              <Link to="/login" className="flex items-center gap-2 flex-row-reverse">
+                <span>تسجيل الدخول</span>
+                <Users className="h-4 w-4" />
+              </Link>
+            </Button>
             <Button size="sm" className="bg-gradient-primary text-primary-foreground hover:opacity-90 shadow-medium" asChild>
               <Link to="/submit-order">
                 اطلب الآن
@@ -224,6 +230,12 @@ const Header = () => {
                     <Link to="/order-tracking" onClick={() => setIsOpen(false)} className="flex items-center gap-2">
                       <Search className="h-4 w-4" />
                       <span>تتبع الطلب</span>
+                    </Link>
+                  </Button>
+                  <Button variant="outline" size="sm" className="w-full justify-center" asChild>
+                    <Link to="/login" onClick={() => setIsOpen(false)} className="flex items-center gap-2">
+                      <Users className="h-4 w-4" />
+                      <span>تسجيل الدخول</span>
                     </Link>
                   </Button>
                   <Button size="sm" className="w-full bg-gradient-primary text-primary-foreground hover:opacity-90 shadow-medium" asChild>
