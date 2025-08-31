@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+import { motion } from 'framer-motion';
 import ClientLayout from '@/components/client/ClientLayout';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -26,7 +27,8 @@ import {
   Send,
   ArrowRight,
   Edit,
-  Loader2
+  Loader2,
+  Activity
 } from 'lucide-react';
 import { useToast } from '@/components/ui/use-toast';
 
@@ -239,106 +241,259 @@ const OrderDetails = () => {
           </TabsList>
 
           <TabsContent value="overview" className="space-y-6">
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-              {/* Client Info - Right Side */}
-              <Card className="order-1 lg:order-2">
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-3 text-right">
-                    <User className="w-5 h-5 text-primary" />
-                    معلومات العميل
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-4 text-right">
-                  <div className="space-y-3">
-                    <div>
-                      <p className="text-sm text-muted-foreground">الاسم</p>
-                      <p className="font-medium">{order.client.name}</p>
+            <motion.div 
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, ease: "easeOut" }}
+              className="grid grid-cols-1 lg:grid-cols-12 gap-6"
+              dir="rtl"
+            >
+              {/* Hero Section */}
+              <motion.div 
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.5, delay: 0.1 }}
+                className="lg:col-span-12"
+              >
+                <Card className="relative overflow-hidden bg-gradient-to-br from-primary/5 via-primary/10 to-primary/5 border-primary/20">
+                  <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-primary via-primary/60 to-primary"></div>
+                  <CardContent className="p-6">
+                    <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6 text-right">
+                      <div className="flex items-center gap-4">
+                        <div className="relative">
+                          <div className="absolute inset-0 bg-primary/20 rounded-full animate-pulse"></div>
+                          <div className="relative bg-white rounded-full p-3 shadow-lg">
+                            <ServiceIcon className="w-8 h-8 text-primary" />
+                          </div>
+                        </div>
+                        <div className="space-y-1">
+                          <h2 className="text-xl font-bold text-foreground">{order.service}</h2>
+                          <p className="text-sm text-muted-foreground">#{order.id}</p>
+                        </div>
+                      </div>
+                      
+                      <div className="flex items-center gap-4">
+                        <div className="text-right">
+                          <p className="text-sm text-muted-foreground">حالة الطلب</p>
+                          <Badge className={`${getStatusColor(order.status)} text-sm px-3 py-1`}>
+                            {order.status === 'in_progress' && 'قيد التنفيذ'}
+                          </Badge>
+                        </div>
+                        <div className="text-right">
+                          <p className="text-sm text-muted-foreground">الأولوية</p>
+                          <Badge className={`${getPriorityColor(order.priority)} text-sm px-3 py-1`}>
+                            أولوية {order.priority === 'medium' && 'متوسطة'}
+                          </Badge>
+                        </div>
+                      </div>
                     </div>
-                    <div>
-                      <p className="text-sm text-muted-foreground">البريد الإلكتروني</p>
-                      <p className="font-medium">{order.client.email}</p>
-                    </div>
-                    <div>
-                      <p className="text-sm text-muted-foreground">رقم الهاتف</p>
-                      <p className="font-medium">{order.client.phone}</p>
-                    </div>
-                    <div>
-                      <p className="text-sm text-muted-foreground">الجامعة</p>
-                      <p className="font-medium">{order.client.university}</p>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
+                  </CardContent>
+                </Card>
+              </motion.div>
 
-              {/* Order Info - Left Side */}
-              <div className="lg:col-span-2 space-y-6 order-2 lg:order-1">
-                <Card>
+              {/* Progress Section */}
+              <motion.div 
+                initial={{ opacity: 0, x: 50 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.5, delay: 0.2 }}
+                className="lg:col-span-8"
+              >
+                <Card className="h-full hover:shadow-lg transition-all duration-300">
                   <CardHeader>
                     <CardTitle className="flex items-center gap-3 text-right">
-                      <ServiceIcon className="w-6 h-6 text-primary" />
-                      معلومات الطلب
+                      <Activity className="w-5 h-5 text-primary" />
+                      تقدم المشروع
                     </CardTitle>
                   </CardHeader>
-                  <CardContent className="space-y-4 text-right">
-                    <div className="flex flex-wrap items-center gap-3 justify-end">
-                      <Badge className={getPriorityColor(order.priority)}>
-                        أولوية {order.priority === 'medium' && 'متوسطة'}
-                      </Badge>
-                      <Badge className={getStatusColor(order.status)}>
-                        {order.status === 'in_progress' && 'قيد التنفيذ'}
-                      </Badge>
-                    </div>
-
+                  <CardContent className="space-y-6">
+                    {/* Progress Bar */}
                     <div className="space-y-3">
-                      <div className="flex items-center justify-between text-sm">
-                        <span className="font-medium">{order.progress}%</span>
-                        <span className="text-muted-foreground">التقدم</span>
+                      <div className="flex items-center justify-between text-right">
+                        <motion.span 
+                          initial={{ opacity: 0 }}
+                          animate={{ opacity: 1 }}
+                          transition={{ delay: 0.4 }}
+                          className="text-3xl font-bold text-primary"
+                        >
+                          {order.progress}%
+                        </motion.span>
+                        <span className="text-muted-foreground">نسبة الإنجاز</span>
                       </div>
-                      <div className="w-full bg-muted rounded-full h-2">
-                        <div 
-                          className={`h-2 rounded-full transition-all duration-300 ${getProgressColor(order.progress)}`}
-                          style={{ width: `${order.progress}%` }}
-                        />
+                      <div className="relative">
+                        <div className="w-full bg-muted rounded-full h-3 overflow-hidden">
+                          <motion.div 
+                            initial={{ width: 0 }}
+                            animate={{ width: `${order.progress}%` }}
+                            transition={{ duration: 1.5, delay: 0.3, ease: "easeOut" }}
+                            className={`h-3 rounded-full relative ${getProgressColor(order.progress)}`}
+                          >
+                            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent animate-pulse"></div>
+                          </motion.div>
+                        </div>
                       </div>
                     </div>
 
-                    <Separator />
-
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                      <div className="flex items-center gap-3 text-right">
+                    {/* Project Details */}
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-right">
+                      <motion.div 
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 0.5 }}
+                        className="flex items-center gap-3 p-3 rounded-lg bg-muted/30 hover:bg-muted/50 transition-colors"
+                      >
                         <div className="text-right">
                           <p className="text-sm text-muted-foreground">تاريخ الإنشاء</p>
                           <p className="font-medium">{order.createdAt}</p>
                         </div>
-                        <Calendar className="w-5 h-5 text-muted-foreground" />
-                      </div>
-                      <div className="flex items-center gap-3 text-right">
+                        <Calendar className="w-5 h-5 text-primary" />
+                      </motion.div>
+                      
+                      <motion.div 
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 0.6 }}
+                        className="flex items-center gap-3 p-3 rounded-lg bg-muted/30 hover:bg-muted/50 transition-colors"
+                      >
                         <div className="text-right">
                           <p className="text-sm text-muted-foreground">الموعد النهائي</p>
                           <p className="font-medium">{order.deadline}</p>
                         </div>
-                        <Clock className="w-5 h-5 text-muted-foreground" />
+                        <Clock className="w-5 h-5 text-orange-500" />
+                      </motion.div>
+                    </div>
+
+                    {/* Value Card */}
+                    <motion.div 
+                      initial={{ opacity: 0, scale: 0.9 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      transition={{ delay: 0.7 }}
+                      className="relative p-4 rounded-xl bg-gradient-to-br from-primary/10 to-primary/5 border border-primary/20 text-right"
+                    >
+                      <div className="flex items-center gap-3 justify-end">
+                        <div>
+                          <p className="text-sm text-muted-foreground">القيمة الإجمالية</p>
+                          <p className="text-2xl font-bold text-primary">{order.value} ريال</p>
+                        </div>
+                        <div className="bg-primary/10 p-2 rounded-lg">
+                          <DollarSign className="w-6 h-6 text-primary" />
+                        </div>
                       </div>
-                    </div>
+                    </motion.div>
 
-                    <div className="flex items-center gap-3 text-right">
-                      <div className="text-right">
-                        <p className="text-sm text-muted-foreground">القيمة</p>
-                        <p className="font-bold text-lg text-primary">{order.value} ريال</p>
+                    {/* Description */}
+                    <motion.div 
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: 0.8 }}
+                      className="space-y-3 text-right"
+                    >
+                      <h4 className="font-medium flex items-center gap-2 justify-end">
+                        <FileText className="w-4 h-4 text-primary" />
+                        وصف المشروع
+                      </h4>
+                      <div className="p-4 rounded-lg bg-muted/30 border-r-4 border-primary">
+                        <p className="text-muted-foreground leading-relaxed">{order.description}</p>
                       </div>
-                      <DollarSign className="w-5 h-5 text-muted-foreground" />
-                    </div>
-
-                    <Separator />
-
-                    <div className="text-right">
-                      <h4 className="font-medium mb-2">وصف المشروع</h4>
-                      <p className="text-muted-foreground leading-relaxed">{order.description}</p>
-                    </div>
+                    </motion.div>
                   </CardContent>
                 </Card>
-              </div>
-            </div>
+              </motion.div>
+
+              {/* Client Info Sidebar */}
+              <motion.div 
+                initial={{ opacity: 0, x: -50 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.5, delay: 0.3 }}
+                className="lg:col-span-4"
+              >
+                <Card className="h-full hover:shadow-lg transition-all duration-300 sticky top-6">
+                  <CardHeader>
+                    <CardTitle className="flex items-center gap-3 text-right">
+                      <User className="w-5 h-5 text-primary" />
+                      معلومات العميل
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-4">
+                    <div className="space-y-4 text-right">
+                      <motion.div 
+                        initial={{ opacity: 0, x: -20 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ delay: 0.9 }}
+                        className="flex items-center gap-3 p-3 rounded-lg bg-gradient-to-r from-blue-50 to-blue-100/50 border border-blue-200"
+                      >
+                        <div>
+                          <p className="text-sm text-blue-600">الاسم</p>
+                          <p className="font-semibold text-blue-900">{order.client.name}</p>
+                        </div>
+                        <User className="w-5 h-5 text-blue-600" />
+                      </motion.div>
+                      
+                      <motion.div 
+                        initial={{ opacity: 0, x: -20 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ delay: 1.0 }}
+                        className="flex items-center gap-3 p-3 rounded-lg bg-gradient-to-r from-green-50 to-green-100/50 border border-green-200"
+                      >
+                        <div>
+                          <p className="text-sm text-green-600">البريد الإلكتروني</p>
+                          <p className="font-semibold text-green-900 text-sm">{order.client.email}</p>
+                        </div>
+                        <Mail className="w-5 h-5 text-green-600" />
+                      </motion.div>
+                      
+                      <motion.div 
+                        initial={{ opacity: 0, x: -20 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ delay: 1.1 }}
+                        className="flex items-center gap-3 p-3 rounded-lg bg-gradient-to-r from-purple-50 to-purple-100/50 border border-purple-200"
+                      >
+                        <div>
+                          <p className="text-sm text-purple-600">رقم الهاتف</p>
+                          <p className="font-semibold text-purple-900">{order.client.phone}</p>
+                        </div>
+                        <Phone className="w-5 h-5 text-purple-600" />
+                      </motion.div>
+                      
+                      <motion.div 
+                        initial={{ opacity: 0, x: -20 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ delay: 1.2 }}
+                        className="flex items-center gap-3 p-3 rounded-lg bg-gradient-to-r from-orange-50 to-orange-100/50 border border-orange-200"
+                      >
+                        <div>
+                          <p className="text-sm text-orange-600">الجامعة</p>
+                          <p className="font-semibold text-orange-900">{order.client.university}</p>
+                        </div>
+                        <MapPin className="w-5 h-5 text-orange-600" />
+                      </motion.div>
+                    </div>
+
+                    {/* Quick Actions */}
+                    <motion.div 
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: 1.3 }}
+                      className="pt-4 border-t space-y-3"
+                    >
+                      <Button 
+                        className="w-full flex items-center gap-2 hover:scale-105 transition-transform"
+                        onClick={() => navigate(`/orders/${id}/edit`)}
+                      >
+                        <Edit className="w-4 h-4" />
+                        تعديل الطلب
+                      </Button>
+                      <Button 
+                        variant="outline" 
+                        className="w-full flex items-center gap-2 hover:scale-105 transition-transform"
+                      >
+                        <MessageCircle className="w-4 h-4" />
+                        تواصل مع المختص
+                      </Button>
+                    </motion.div>
+                  </CardContent>
+                </Card>
+              </motion.div>
+            </motion.div>
           </TabsContent>
 
           <TabsContent value="timeline" className="space-y-6">
