@@ -281,28 +281,28 @@ const AdminServices = () => {
         <div className="bg-gradient-to-l from-primary/10 via-background to-secondary/10 border-b">
           <div className="container mx-auto px-6 py-8">
             <div className="flex items-center justify-between">
+              <div className="text-left">
+                <div className="text-2xl font-bold text-primary">{services.filter(s => s.is_active).length}</div>
+                <div className="text-sm text-muted-foreground">خدمة نشطة</div>
+              </div>
               <div className="flex items-center gap-6">
-                <div className="w-16 h-16 bg-gradient-to-br from-primary to-primary/70 rounded-3xl flex items-center justify-center shadow-lg">
-                  <Settings className="w-8 h-8 text-white" />
-                </div>
-                <div>
-                  <h1 className="text-3xl font-bold text-right">إدارة الخدمات والأقسام</h1>
-                  <p className="text-muted-foreground text-right mt-2">إدارة شاملة لجميع أقسام وخدمات المنصة التعليمية</p>
+                <div className="text-right">
+                  <h1 className="text-3xl font-bold">إدارة الخدمات والأقسام</h1>
+                  <p className="text-muted-foreground mt-2">إدارة شاملة لجميع أقسام وخدمات المنصة التعليمية</p>
                   <div className="flex items-center gap-6 mt-3 justify-end">
                     <div className="flex items-center gap-2">
-                      <div className="w-3 h-3 bg-primary rounded-full"></div>
                       <span className="text-sm font-medium">{categories.length} قسم</span>
+                      <div className="w-3 h-3 bg-primary rounded-full"></div>
                     </div>
                     <div className="flex items-center gap-2">
-                      <div className="w-3 h-3 bg-secondary rounded-full"></div>
                       <span className="text-sm font-medium">{services.length} خدمة</span>
+                      <div className="w-3 h-3 bg-secondary rounded-full"></div>
                     </div>
                   </div>
                 </div>
-              </div>
-              <div className="text-right">
-                <div className="text-2xl font-bold text-primary">{services.filter(s => s.is_active).length}</div>
-                <div className="text-sm text-muted-foreground">خدمة نشطة</div>
+                <div className="w-16 h-16 bg-gradient-to-br from-primary to-primary/70 rounded-3xl flex items-center justify-center shadow-lg">
+                  <Settings className="w-8 h-8 text-white" />
+                </div>
               </div>
             </div>
           </div>
@@ -314,17 +314,17 @@ const AdminServices = () => {
               <TabsList className="grid grid-cols-2 w-full max-w-md bg-muted/50 p-1 rounded-2xl">
                 <TabsTrigger 
                   value="categories" 
-                  className="flex items-center justify-center gap-3 px-6 py-3 rounded-xl text-right"
+                  className="flex items-center justify-center gap-3 px-6 py-3 rounded-xl"
                 >
-                  <Languages className="w-5 h-5" />
                   <span className="font-semibold">الأقسام</span>
+                  <Languages className="w-5 h-5" />
                 </TabsTrigger>
                 <TabsTrigger 
                   value="services" 
-                  className="flex items-center justify-center gap-3 px-6 py-3 rounded-xl text-right"
+                  className="flex items-center justify-center gap-3 px-6 py-3 rounded-xl"
                 >
-                  <Settings className="w-5 h-5" />
                   <span className="font-semibold">الخدمات</span>
+                  <Settings className="w-5 h-5" />
                 </TabsTrigger>
               </TabsList>
             </div>
