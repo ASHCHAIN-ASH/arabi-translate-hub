@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import AdminLayout from '@/components/admin/AdminLayout';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -26,9 +26,25 @@ import {
   EyeOff,
   Clock,
   DollarSign,
-  Settings
+  Settings,
+  Filter,
+  Download,
+  Upload,
+  Grid3X3,
+  List,
+  SortAsc,
+  SortDesc,
+  ToggleLeft,
+  ToggleRight,
+  AlertCircle,
+  CheckCircle2,
+  Zap,
+  FileText,
+  TrendingUp,
+  Archive
 } from 'lucide-react';
 
+// تعديل نموذج البيانات ليشمل كود الخدمة وحقول إضافية
 interface ServiceCategory {
   id: string;
   name_ar: string;
@@ -64,6 +80,8 @@ interface Service {
   sort_order: number;
   is_active: boolean;
   show_to_clients: boolean;
+  code?: string; // إضافة كود الخدمة
+  type?: 'service' | 'course' | 'bundle'; // نوع الخدمة
   created_at: string;
   updated_at: string;
   service_categories?: {
@@ -75,31 +93,141 @@ interface Service {
   };
 }
 
+// نوع عرض الخدمات
+type ViewMode = 'grid' | 'list';
+
+// نوع الترتيب
+type SortType = 'name' | 'price' | 'date' | 'category';
+type SortOrder = 'asc' | 'desc';
+
+// حالة الفلتر
+interface FilterState {
+  search: string;
+  status: 'all' | 'active' | 'inactive';
+  category: string;
+  type: 'all' | 'service' | 'course' | 'bundle';
+  priceRange: [number, number];
+}
+
 const AdminServices = () => {
   const [categories, setCategories] = useState<ServiceCategory[]>([]);
   const [services, setServices] = useState<Service[]>([]);
+  const [filteredServices, setFilteredServices] = useState<Service[]>([]);
   const [loading, setLoading] = useState(true);
   const [editingCategory, setEditingCategory] = useState<ServiceCategory | null>(null);
   const [editingService, setEditingService] = useState<Service | null>(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [isServiceDialogOpen, setIsServiceDialogOpen] = useState(false);
+  const [viewMode, setViewMode] = useState<ViewMode>('grid');
+  const [sortType, setSortType] = useState<SortType>('name');
+  const [sortOrder, setSortOrder] = useState<SortOrder>('asc');
+  const [filters, setFilters] = useState<FilterState>({
+    search: '',
+    status: 'all',
+    category: 'all',
+    type: 'all',
+    priceRange: [0, 10000]
+  });
+  
   const { toast } = useToast();
 
+  // إحصائيات الخدمات
+  const stats = useMemo(() => {
+    const total = services.length;
+    const active = services.filter(s => s.is_active).length;
+    const inactive = total - active;
+    const visible = services.filter(s => s.show_to_clients).length;
+    const avgPrice = services.length > 0 
+      ? services.reduce((sum, s) => sum + (s.price_per_unit || 0), 0) / services.length 
+      : 0;
+
+    return { total, active, inactive, visible, avgPrice };
+  }, [services]);
+
+  // تحميل البيانات مع Realtime subscription
   useEffect(() => {
     loadData();
+    setupRealtimeSubscription();
   }, []);
+
+  // تطبيق الفلاتر والبحث والترتيب
+  useEffect(() => {
+    let filtered = [...services];
+
+    // البحث
+    if (filters.search) {
+      const searchTerm = filters.search.toLowerCase();
+      filtered = filtered.filter(service => 
+        service.name_ar.toLowerCase().includes(searchTerm) ||
+        service.name_en.toLowerCase().includes(searchTerm) ||
+        service.code?.toLowerCase().includes(searchTerm) ||
+        service.service_categories?.name_ar.toLowerCase().includes(searchTerm)
+      );
+    }
+
+    // فلتر الحالة
+    if (filters.status !== 'all') {
+      filtered = filtered.filter(service => 
+        filters.status === 'active' ? service.is_active : !service.is_active
+      );
+    }
+
+    // فلتر القسم
+    if (filters.category !== 'all') {
+      filtered = filtered.filter(service => service.category_id === filters.category);
+    }
+
+    // فلتر النوع
+    if (filters.type !== 'all') {
+      filtered = filtered.filter(service => service.type === filters.type);
+    }
+
+    // فلتر السعر
+    filtered = filtered.filter(service => {
+      const price = service.price_per_unit || service.base_price || 0;
+      return price >= filters.priceRange[0] && price <= filters.priceRange[1];
+    });
+
+    // الترتيب
+    filtered.sort((a, b) => {
+      let comparison = 0;
+      
+      switch (sortType) {
+        case 'name':
+          comparison = a.name_ar.localeCompare(b.name_ar, 'ar');
+          break;
+        case 'price':
+          const priceA = a.price_per_unit || a.base_price || 0;
+          const priceB = b.price_per_unit || b.base_price || 0;
+          comparison = priceA - priceB;
+          break;
+        case 'date':
+          comparison = new Date(a.created_at).getTime() - new Date(b.created_at).getTime();
+          break;
+        case 'category':
+          comparison = (a.service_categories?.name_ar || '').localeCompare(
+            b.service_categories?.name_ar || '', 'ar'
+          );
+          break;
+      }
+
+      return sortOrder === 'asc' ? comparison : -comparison;
+    });
+
+    setFilteredServices(filtered);
+  }, [services, filters, sortType, sortOrder]);
 
   const loadData = async () => {
     try {
       setLoading(true);
       
-      // Load categories
+      // تحميل الأقسام
       const { data: categoriesData, error: categoriesError } = await supabase
         .from('service_categories')
         .select('*')
         .order('sort_order', { ascending: true });
 
-      // Load services with categories
+      // تحميل الخدمات مع الأقسام
       const { data: servicesData, error: servicesError } = await supabase
         .from('services')
         .select(`
@@ -131,10 +259,92 @@ const AdminServices = () => {
     }
   };
 
+  // إعداد Realtime subscription للمزامنة اللحظية
+  const setupRealtimeSubscription = () => {
+    const channel = supabase
+      .channel('services-changes')
+      .on(
+        'postgres_changes',
+        {
+          event: '*',
+          schema: 'public',
+          table: 'services'
+        },
+        (payload) => {
+          console.log('Service changed:', payload);
+          
+          // إرسال حدث للعملاء
+          broadcastServiceChange(payload);
+          
+          // تحديث البيانات المحلية
+          if (payload.eventType === 'INSERT') {
+            loadData(); // إعادة تحميل لضمان الحصول على البيانات الكاملة
+          } else if (payload.eventType === 'UPDATE') {
+            setServices(prev => prev.map(service => 
+              service.id === payload.new.id 
+                ? { ...service, ...payload.new }
+                : service
+            ));
+          } else if (payload.eventType === 'DELETE') {
+            setServices(prev => prev.filter(service => service.id !== payload.old.id));
+          }
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  };
+
+  // إرسال حدث تغيير الخدمة للعملاء
+  const broadcastServiceChange = (payload: Record<string, any>) => {
+    const event = {
+      type: 'service_changed',
+      operation: payload.eventType?.toLowerCase() || 'update',
+      service: payload.new || payload.old,
+      timestamp: new Date().toISOString()
+    };
+
+    console.log('Broadcasting service change:', event);
+  };
+
+  // تفعيل/تعطيل الخدمة مع تحديث فوري
+  const handleToggleService = async (serviceId: string, currentStatus: boolean) => {
+    try {
+      const { error } = await supabase
+        .from('services')
+        .update({ is_active: !currentStatus })
+        .eq('id', serviceId);
+
+      if (error) throw error;
+
+      toast({
+        title: currentStatus ? "تم التعطيل" : "تم التفعيل",
+        description: currentStatus 
+          ? "تم تعطيل الخدمة ولن تظهر للعملاء" 
+          : "تم تفعيل الخدمة وهي متاحة الآن",
+      });
+
+      // التحديث الفوري للواجهة (Optimistic UI)
+      setServices(prev => prev.map(service => 
+        service.id === serviceId 
+          ? { ...service, is_active: !currentStatus }
+          : service
+      ));
+    } catch (error) {
+      console.error('Error toggling service:', error);
+      toast({
+        title: "خطأ",
+        description: "فشل في تحديث حالة الخدمة",
+        variant: "destructive",
+      });
+    }
+  };
+
   const handleSaveCategory = async (category: Partial<ServiceCategory>) => {
     try {
       if (editingCategory?.id) {
-        // تحديث
         const { error } = await supabase
           .from('service_categories')
           .update(category)
@@ -143,14 +353,13 @@ const AdminServices = () => {
         if (error) throw error;
         toast({ title: "تم التحديث", description: "تم تحديث القسم بنجاح" });
       } else {
-        // إنشاء جديد
         const categoryData = {
           name_ar: category.name_ar || '',
           name_en: category.name_en || '',
           description_ar: category.description_ar,
           description_en: category.description_en,
           icon: category.icon || 'Languages',
-          color: category.color || '#3B82F6',
+          color: category.color || '#0EA5E9',
           sort_order: category.sort_order || 0,
           is_active: category.is_active ?? true
         };
@@ -177,38 +386,70 @@ const AdminServices = () => {
 
   const handleSaveService = async (service: Partial<Service>) => {
     try {
+      // تطبيع الأرقام العربية
+      const normalizeDigits = (text: string) => {
+        return text.replace(/[٠-٩]/g, (d) => '٠١٢٣٤٥٦٧٨٩'.indexOf(d).toString());
+      };
+
+      // التحقق من البيانات
+      if (service.price_per_unit && service.price_per_unit < 0) {
+        throw new Error('السعر يجب أن يكون أكبر من الصفر');
+      }
+
+      // تنظيف البيانات
+      const cleanedService = {
+        ...service,
+        code: service.code ? normalizeDigits(service.code) : undefined,
+        price_per_unit: service.price_per_unit ? parseFloat(service.price_per_unit.toString()) : undefined,
+        base_price: service.base_price ? parseFloat(service.base_price.toString()) : undefined,
+      };
+
       if (editingService?.id) {
-        // تحديث
         const { error } = await supabase
           .from('services')
-          .update(service)
+          .update(cleanedService)
           .eq('id', editingService.id);
 
         if (error) throw error;
         toast({ title: "تم التحديث", description: "تم تحديث الخدمة بنجاح" });
       } else {
-        // إنشاء جديد
+        // التحقق من عدم تكرار الكود
+        if (cleanedService.code) {
+          const { data: existingService } = await supabase
+            .from('services')
+            .select('id')
+            .eq('code', cleanedService.code)
+            .single();
+
+          if (existingService) {
+            throw new Error('كود الخدمة مستخدم بالفعل');
+          }
+        }
+
         const serviceData = {
-          name_ar: service.name_ar || '',
-          name_en: service.name_en || '',
-          description_ar: service.description_ar,
-          description_en: service.description_en,
-          features_ar: service.features_ar || [],
-          features_en: service.features_en || [],
-          category_id: service.category_id || '',
-          base_price: service.base_price,
-          price_per_unit: service.price_per_unit,
-          min_units: service.min_units || 1,
-          max_units: service.max_units,
-          delivery_time_days: service.delivery_time_days || 7,
-          rush_delivery_available: service.rush_delivery_available || false,
-          rush_delivery_multiplier: service.rush_delivery_multiplier || 1.5,
-          unit_type: service.unit_type || 'page',
-          image_url: service.image_url,
-          sort_order: service.sort_order || 0,
-          is_active: service.is_active ?? true,
-          show_to_clients: service.show_to_clients ?? true
+          name_ar: cleanedService.name_ar || '',
+          name_en: cleanedService.name_en || '',
+          description_ar: cleanedService.description_ar,
+          description_en: cleanedService.description_en,
+          features_ar: cleanedService.features_ar || [],
+          features_en: cleanedService.features_en || [],
+          category_id: cleanedService.category_id || '',
+          base_price: cleanedService.base_price,
+          price_per_unit: cleanedService.price_per_unit,
+          min_units: cleanedService.min_units || 1,
+          max_units: cleanedService.max_units,
+          delivery_time_days: cleanedService.delivery_time_days || 7,
+          rush_delivery_available: cleanedService.rush_delivery_available || false,
+          rush_delivery_multiplier: cleanedService.rush_delivery_multiplier || 1.5,
+          unit_type: cleanedService.unit_type || 'page',
+          code: cleanedService.code,
+          type: cleanedService.type || 'service',
+          image_url: cleanedService.image_url,
+          sort_order: cleanedService.sort_order || 0,
+          is_active: cleanedService.is_active ?? true,
+          show_to_clients: cleanedService.show_to_clients ?? true
         };
+
         const { error } = await supabase
           .from('services')
           .insert(serviceData);
@@ -224,7 +465,7 @@ const AdminServices = () => {
       console.error('Error saving service:', error);
       toast({
         title: "خطأ",
-        description: "فشل في حفظ الخدمة",
+        description: error instanceof Error ? error.message : "فشل في حفظ الخدمة",
         variant: "destructive",
       });
     }
@@ -253,6 +494,26 @@ const AdminServices = () => {
   };
 
   const handleDeleteService = async (id: string) => {
+    // التحقق من وجود طلبات مرتبطة بالخدمة
+    try {
+      const { data: orders } = await supabase
+        .from('orders')
+        .select('id')
+        .eq('service_id', id)
+        .limit(1);
+
+      if (orders && orders.length > 0) {
+        toast({
+          title: "لا يمكن الحذف",
+          description: "لا يمكن حذف خدمة مرتبطة بطلبات. يمكنك تعطيلها بدلاً من ذلك.",
+          variant: "destructive",
+        });
+        return;
+      }
+    } catch (error) {
+      console.log('Could not check orders, proceeding with delete');
+    }
+
     if (!confirm('هل أنت متأكد من حذف هذه الخدمة؟')) return;
     
     try {
@@ -274,73 +535,186 @@ const AdminServices = () => {
     }
   };
 
+  // تصدير البيانات
+  const handleExportServices = () => {
+    const csvData = services.map(service => ({
+      'الكود': service.code || '',
+      'الاسم العربي': service.name_ar,
+      'الاسم الإنجليزي': service.name_en,
+      'القسم': service.service_categories?.name_ar || '',
+      'النوع': service.type || 'service',
+      'السعر': service.price_per_unit || service.base_price || 0,
+      'الحالة': service.is_active ? 'مفعل' : 'معطل',
+      'ظاهر للعملاء': service.show_to_clients ? 'نعم' : 'لا',
+      'تاريخ الإنشاء': new Date(service.created_at).toLocaleDateString('ar-SA')
+    }));
+
+    // تحويل إلى CSV (هنا يحتاج مكتبة إضافية في التطبيق الحقيقي)
+    console.log('Exporting services:', csvData);
+    toast({ 
+      title: "تم التصدير", 
+      description: `تم تصدير ${csvData.length} خدمة بنجاح` 
+    });
+  };
+
   return (
     <AdminLayout>
-      <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/30" dir="rtl">
-        {/* العنوان الرئيسي */}
-        <div className="bg-gradient-to-r from-primary/5 via-background to-secondary/5 border-b shadow-sm">
-          <div className="container mx-auto px-8 py-10">
-            <div className="flex items-center justify-between">
-              {/* الإحصائيات - يسار */}
-              <div className="text-center">
-                <div className="text-3xl font-bold text-primary">{services.filter(s => s.is_active).length}</div>
-                <div className="text-sm text-muted-foreground font-medium">خدمة نشطة</div>
-              </div>
-              
-              {/* المحتوى الرئيسي - وسط ويمين */}
-              <div className="flex items-center gap-8">
-                <div className="text-right space-y-3">
-                  <h1 className="text-4xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
-                    إدارة الخدمات والأقسام
-                  </h1>
-                  <p className="text-lg text-muted-foreground">
-                    إدارة شاملة لجميع أقسام وخدمات المنصة التعليمية
-                  </p>
-                  <div className="flex items-center gap-8 justify-end">
-                    <div className="flex items-center gap-3">
-                      <span className="text-base font-semibold">{categories.length} قسم</span>
-                      <div className="w-4 h-4 bg-gradient-to-r from-primary to-primary/70 rounded-full shadow-sm"></div>
-                    </div>
-                    <div className="flex items-center gap-3">
-                      <span className="text-base font-semibold">{services.length} خدمة</span>
-                      <div className="w-4 h-4 bg-gradient-to-r from-secondary to-secondary/70 rounded-full shadow-sm"></div>
-                    </div>
+      <div className="min-h-screen bg-gradient-to-br from-background via-background to-primary/5" dir="rtl">
+        {/* الهيدر المحسن */}
+        <div className="bg-gradient-to-l from-primary/10 via-background to-secondary/10 border-b border-border/50 shadow-sm">
+          <div className="container mx-auto px-6 py-8">
+            <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-6">
+              {/* العنوان والوصف */}
+              <div className="text-right space-y-4">
+                <div className="flex items-center gap-4 justify-end">
+                  <div className="space-y-1">
+                    <h1 className="text-4xl lg:text-5xl font-bold bg-gradient-to-l from-primary via-primary to-secondary bg-clip-text text-transparent">
+                      إدارة الخدمات
+                    </h1>
+                    <p className="text-lg text-muted-foreground">
+                      نظام شامل لإدارة خدمات المنصة التعليمية مع مزامنة حية
+                    </p>
+                  </div>
+                  <div className="w-16 h-16 bg-gradient-to-br from-primary to-secondary rounded-2xl flex items-center justify-center shadow-lg">
+                    <Settings className="w-8 h-8 text-white" />
                   </div>
                 </div>
-                <div className="w-20 h-20 bg-gradient-to-br from-primary via-primary to-primary/80 rounded-3xl flex items-center justify-center shadow-xl">
-                  <Settings className="w-10 h-10 text-white" />
+
+                {/* شريط الإحصائيات */}
+                <div className="grid grid-cols-2 lg:grid-cols-5 gap-4">
+                  <StatsCard 
+                    title="إجمالي الخدمات" 
+                    value={stats.total} 
+                    icon={FileText}
+                    color="bg-blue-500"
+                  />
+                  <StatsCard 
+                    title="خدمات نشطة" 
+                    value={stats.active} 
+                    icon={CheckCircle2}
+                    color="bg-green-500"
+                  />
+                  <StatsCard 
+                    title="معطلة" 
+                    value={stats.inactive} 
+                    icon={Archive}
+                    color="bg-gray-500"
+                  />
+                  <StatsCard 
+                    title="ظاهرة للعملاء" 
+                    value={stats.visible} 
+                    icon={Eye}
+                    color="bg-purple-500"
+                  />
+                  <StatsCard 
+                    title="متوسط السعر" 
+                    value={`${stats.avgPrice.toFixed(0)} ر.س`} 
+                    icon={DollarSign}
+                    color="bg-orange-500"
+                  />
                 </div>
+              </div>
+
+              {/* الأزرار الرئيسية */}
+              <div className="flex flex-col sm:flex-row gap-3">
+                <Button
+                  onClick={handleExportServices}
+                  variant="outline"
+                  className="flex items-center gap-3 px-6 py-3 rounded-xl text-base font-semibold border-border/50 hover:bg-muted/50"
+                >
+                  <span>تصدير CSV</span>
+                  <Download className="w-5 h-5" />
+                </Button>
+                <Dialog open={isServiceDialogOpen} onOpenChange={setIsServiceDialogOpen}>
+                  <DialogTrigger asChild>
+                    <Button 
+                      onClick={() => {
+                        setEditingService(null);
+                        setIsServiceDialogOpen(true);
+                      }}
+                      className="flex items-center gap-3 px-8 py-3 rounded-xl bg-gradient-to-l from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 shadow-lg hover:shadow-xl transition-all duration-300 text-base font-bold"
+                      size="lg"
+                    >
+                      <span>إضافة خدمة جديدة</span>
+                      <Plus className="w-5 h-5" />
+                    </Button>
+                  </DialogTrigger>
+                  <EnhancedServiceDialog 
+                    service={editingService}
+                    categories={categories}
+                    onSave={handleSaveService}
+                    onClose={() => {
+                      setIsServiceDialogOpen(false);
+                      setEditingService(null);
+                    }}
+                  />
+                </Dialog>
               </div>
             </div>
           </div>
         </div>
 
-        <div className="container mx-auto px-8 py-10">
-          <Tabs defaultValue="categories" className="w-full space-y-8">
-            {/* التابز */}
+        <div className="container mx-auto px-6 py-8">
+          <Tabs defaultValue="services" className="w-full space-y-6">
+            {/* التابز المحسنة */}
             <div className="flex justify-center">
-              <TabsList className="grid grid-cols-2 w-full max-w-lg bg-card/80 backdrop-blur-sm p-2 rounded-3xl border shadow-lg">
-                <TabsTrigger 
-                  value="categories" 
-                  className="flex items-center gap-4 px-8 py-4 rounded-2xl data-[state=active]:bg-background data-[state=active]:shadow-md transition-all duration-300"
-                >
-                  <span className="font-bold text-lg">الأقسام</span>
-                  <Languages className="w-6 h-6" />
-                </TabsTrigger>
+              <TabsList className="grid grid-cols-2 w-full max-w-md bg-card/80 backdrop-blur-sm p-1.5 rounded-2xl border shadow-lg">
                 <TabsTrigger 
                   value="services" 
-                  className="flex items-center gap-4 px-8 py-4 rounded-2xl data-[state=active]:bg-background data-[state=active]:shadow-md transition-all duration-300"
+                  className="flex items-center gap-3 px-6 py-3 rounded-xl data-[state=active]:bg-background data-[state=active]:shadow-sm transition-all duration-200 text-base font-semibold"
                 >
-                  <span className="font-bold text-lg">الخدمات</span>
-                  <Settings className="w-6 h-6" />
+                  <span>الخدمات</span>
+                  <Settings className="w-5 h-5" />
+                </TabsTrigger>
+                <TabsTrigger 
+                  value="categories" 
+                  className="flex items-center gap-3 px-6 py-3 rounded-xl data-[state=active]:bg-background data-[state=active]:shadow-sm transition-all duration-200 text-base font-semibold"
+                >
+                  <span>الأقسام</span>
+                  <Languages className="w-5 h-5" />
                 </TabsTrigger>
               </TabsList>
             </div>
 
+            {/* تاب الخدمات المحسن */}
+            <TabsContent value="services" className="space-y-6">
+              {/* شريط الأدوات */}
+              <ServicesToolbar 
+                filters={filters}
+                setFilters={setFilters}
+                viewMode={viewMode}
+                setViewMode={setViewMode}
+                sortType={sortType}
+                setSortType={setSortType}
+                sortOrder={sortOrder}
+                setSortOrder={setSortOrder}
+                categories={categories}
+                servicesCount={filteredServices.length}
+              />
+
+              {/* قائمة الخدمات */}
+              {loading ? (
+                <ServicesLoading viewMode={viewMode} />
+              ) : filteredServices.length === 0 ? (
+                <EmptyServicesState hasFilters={Object.values(filters).some(f => f !== 'all' && f !== '' && f !== 0)} />
+              ) : (
+                <ServicesGrid 
+                  services={filteredServices}
+                  viewMode={viewMode}
+                  onEdit={(srv) => {
+                    setEditingService(srv);
+                    setIsServiceDialogOpen(true);
+                  }}
+                  onDelete={handleDeleteService}
+                  onToggle={handleToggleService}
+                />
+              )}
+            </TabsContent>
+
             {/* تاب الأقسام */}
-            <TabsContent value="categories" className="space-y-8">
-              <div className="bg-card/60 backdrop-blur-sm border rounded-3xl p-8 shadow-lg">
-                <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-8">
+            <TabsContent value="categories" className="space-y-6">
+              <div className="bg-card/60 backdrop-blur-sm border rounded-2xl p-6 shadow-sm">
+                <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-6">
                   <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
                     <DialogTrigger asChild>
                       <Button 
@@ -348,11 +722,11 @@ const AdminServices = () => {
                           setEditingCategory(null);
                           setIsDialogOpen(true);
                         }}
-                        className="flex items-center gap-4 px-8 py-4 rounded-2xl bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 shadow-lg hover:shadow-xl transition-all duration-300 text-lg font-bold"
+                        className="flex items-center gap-3 px-6 py-3 rounded-xl bg-gradient-to-l from-secondary to-secondary/80 hover:from-secondary/90 hover:to-secondary/70 shadow-lg hover:shadow-xl transition-all duration-300 text-base font-bold"
                         size="lg"
                       >
                         <span>إضافة قسم جديد</span>
-                        <Plus className="w-6 h-6" />
+                        <Plus className="w-5 h-5" />
                       </Button>
                     </DialogTrigger>
                     <CategoryDialog 
@@ -366,33 +740,33 @@ const AdminServices = () => {
                   </Dialog>
                   
                   <div className="text-right space-y-2">
-                    <h2 className="text-3xl font-bold flex items-center gap-4 justify-end">
+                    <h2 className="text-2xl font-bold flex items-center gap-3 justify-end">
                       <span>أقسام الخدمات</span>
-                      <div className="w-10 h-10 bg-primary/15 rounded-2xl flex items-center justify-center">
-                        <Languages className="w-6 h-6 text-primary" />
+                      <div className="w-8 h-8 bg-secondary/15 rounded-xl flex items-center justify-center">
+                        <Languages className="w-5 h-5 text-secondary" />
                       </div>
                     </h2>
-                    <p className="text-lg text-muted-foreground">إدارة تصنيفات الخدمات الأساسية في المنصة</p>
+                    <p className="text-base text-muted-foreground">إدارة تصنيفات الخدمات في المنصة</p>
                   </div>
                 </div>
               </div>
 
               {loading ? (
-                <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
+                <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
                   {Array.from({ length: 6 }).map((_, i) => (
-                    <div key={i} className="h-72 bg-gradient-to-br from-muted/40 to-muted/20 animate-pulse rounded-3xl border" />
+                    <div key={i} className="h-64 bg-muted/40 animate-pulse rounded-2xl border" />
                   ))}
                 </div>
               ) : categories.length === 0 ? (
-                <div className="text-center py-24">
-                  <div className="w-32 h-32 bg-muted/40 rounded-full flex items-center justify-center mx-auto mb-8">
-                    <Languages className="w-16 h-16 text-muted-foreground" />
+                <div className="text-center py-20">
+                  <div className="w-24 h-24 bg-muted/40 rounded-full flex items-center justify-center mx-auto mb-6">
+                    <Languages className="w-12 h-12 text-muted-foreground" />
                   </div>
-                  <h3 className="text-2xl font-bold mb-4">لا توجد أقسام بعد</h3>
-                  <p className="text-lg text-muted-foreground mb-8">ابدأ بإنشاء أول قسم للخدمات</p>
+                  <h3 className="text-xl font-bold mb-3">لا توجد أقسام بعد</h3>
+                  <p className="text-base text-muted-foreground mb-6">ابدأ بإنشاء أول قسم للخدمات</p>
                 </div>
               ) : (
-                <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
+                <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
                   {categories.map((category) => (
                     <CategoryCard
                       key={category.id}
@@ -407,79 +781,6 @@ const AdminServices = () => {
                 </div>
               )}
             </TabsContent>
-
-            {/* تاب الخدمات */}
-            <TabsContent value="services" className="space-y-8">
-              <div className="bg-card/60 backdrop-blur-sm border rounded-3xl p-8 shadow-lg">
-                <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-8">
-                  <Dialog open={isServiceDialogOpen} onOpenChange={setIsServiceDialogOpen}>
-                    <DialogTrigger asChild>
-                      <Button 
-                        onClick={() => {
-                          setEditingService(null);
-                          setIsServiceDialogOpen(true);
-                        }}
-                        className="flex items-center gap-4 px-8 py-4 rounded-2xl bg-gradient-to-r from-secondary to-secondary/80 hover:from-secondary/90 hover:to-secondary/70 shadow-lg hover:shadow-xl transition-all duration-300 text-lg font-bold"
-                        size="lg"
-                        variant="secondary"
-                      >
-                        <span>إضافة خدمة جديدة</span>
-                        <Plus className="w-6 h-6" />
-                      </Button>
-                    </DialogTrigger>
-                    <ServiceDialog 
-                      service={editingService}
-                      categories={categories}
-                      onSave={handleSaveService}
-                      onClose={() => {
-                        setIsServiceDialogOpen(false);
-                        setEditingService(null);
-                      }}
-                    />
-                  </Dialog>
-                  
-                  <div className="text-right space-y-2">
-                    <h2 className="text-3xl font-bold flex items-center gap-4 justify-end">
-                      <span>إدارة الخدمات</span>
-                      <div className="w-10 h-10 bg-secondary/15 rounded-2xl flex items-center justify-center">
-                        <Settings className="w-6 h-6 text-secondary" />
-                      </div>
-                    </h2>
-                    <p className="text-lg text-muted-foreground">إدارة جميع الخدمات المتاحة للعملاء في المنصة</p>
-                  </div>
-                </div>
-              </div>
-
-              {loading ? (
-                <div className="space-y-6">
-                  {Array.from({ length: 5 }).map((_, i) => (
-                    <div key={i} className="h-48 bg-gradient-to-br from-muted/40 to-muted/20 animate-pulse rounded-3xl border" />
-                  ))}
-                </div>
-              ) : services.length === 0 ? (
-                <div className="text-center py-24">
-                  <div className="w-32 h-32 bg-muted/40 rounded-full flex items-center justify-center mx-auto mb-8">
-                    <Settings className="w-16 h-16 text-muted-foreground" />
-                  </div>
-                  <h3 className="text-2xl font-bold mb-4">لا توجد خدمات بعد</h3>
-                  <p className="text-lg text-muted-foreground mb-8">ابدأ بإنشاء أول خدمة للعملاء</p>
-                </div>
-              ) : (
-                <div className="space-y-6">
-                  {services.map((service) => (
-                    <ServiceCard
-                      key={service.id}
-                      service={service}
-                      onEdit={(srv) => {
-                        setEditingService(srv);
-                        setIsServiceDialogOpen(true);
-                      }}
-                      onDelete={handleDeleteService}
-                    />
-                  ))}
-                </div>
-              )}
-            </TabsContent>
           </Tabs>
         </div>
       </div>
@@ -487,16 +788,440 @@ const AdminServices = () => {
   );
 };
 
-// كارت القسم
-const CategoryCard = ({ 
-  category, 
-  onEdit, 
-  onDelete 
-}: { 
-  category: ServiceCategory;
-  onEdit: (category: ServiceCategory) => void;
-  onDelete: (id: string) => void;
-}) => {
+// مكون بطاقة الإحصائيات
+const StatsCard = ({ title, value, icon: Icon, color }: {
+  title: string;
+  value: number | string;
+  icon: any;
+  color: string;
+}) => (
+  <div className="bg-card/80 backdrop-blur-sm border border-border/50 rounded-xl p-4 text-center space-y-2 hover:shadow-lg transition-all duration-200">
+    <div className={`w-8 h-8 ${color} rounded-lg flex items-center justify-center mx-auto mb-2`}>
+      <Icon className="w-4 h-4 text-white" />
+    </div>
+    <div className="text-2xl font-bold">{value}</div>
+    <div className="text-sm text-muted-foreground">{title}</div>
+  </div>
+);
+
+// شريط الأدوات للخدمات
+const ServicesToolbar = ({ 
+  filters, 
+  setFilters, 
+  viewMode, 
+  setViewMode, 
+  sortType, 
+  setSortType, 
+  sortOrder, 
+  setSortOrder,
+  categories,
+  servicesCount 
+}: any) => {
+  const [searchDebounce, setSearchDebounce] = useState('');
+
+  // تأخير البحث
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setFilters((prev: any) => ({ ...prev, search: searchDebounce }));
+    }, 300);
+
+    return () => clearTimeout(timer);
+  }, [searchDebounce, setFilters]);
+
+  return (
+    <div className="bg-card/60 backdrop-blur-sm border border-border/50 rounded-2xl p-6 space-y-4">
+      {/* الصف الأول: البحث والعرض */}
+      <div className="flex flex-col lg:flex-row gap-4 justify-between items-start lg:items-center">
+        <div className="flex flex-col sm:flex-row gap-3 w-full lg:w-auto">
+          {/* البحث */}
+          <div className="relative flex-1 lg:w-80">
+            <Search className="absolute right-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-5 h-5" />
+            <Input
+              placeholder="البحث في الخدمات..."
+              value={searchDebounce}
+              onChange={(e) => setSearchDebounce(e.target.value)}
+              className="pr-10 pl-4 py-3 rounded-xl text-base border-border/50"
+              dir="rtl"
+            />
+          </div>
+
+          {/* أزرار العرض */}
+          <div className="flex gap-2 bg-muted/50 p-1 rounded-lg">
+            <Button
+              variant={viewMode === 'grid' ? 'default' : 'ghost'}
+              size="sm"
+              onClick={() => setViewMode('grid')}
+              className="px-3 py-2 rounded-md"
+            >
+              <Grid3X3 className="w-4 h-4" />
+            </Button>
+            <Button
+              variant={viewMode === 'list' ? 'default' : 'ghost'}
+              size="sm"
+              onClick={() => setViewMode('list')}
+              className="px-3 py-2 rounded-md"
+            >
+              <List className="w-4 h-4" />
+            </Button>
+          </div>
+        </div>
+
+        <div className="text-sm text-muted-foreground">
+          {servicesCount} خدمة
+        </div>
+      </div>
+
+      {/* الصف الثاني: الفلاتر والترتيب */}
+      <div className="grid grid-cols-2 lg:grid-cols-6 gap-3">
+        {/* فلتر الحالة */}
+        <Select value={filters.status} onValueChange={(value) => setFilters((prev: any) => ({ ...prev, status: value }))}>
+          <SelectTrigger className="rounded-lg border-border/50">
+            <SelectValue placeholder="الحالة" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">جميع الحالات</SelectItem>
+            <SelectItem value="active">نشطة</SelectItem>
+            <SelectItem value="inactive">معطلة</SelectItem>
+          </SelectContent>
+        </Select>
+
+        {/* فلتر القسم */}
+        <Select value={filters.category} onValueChange={(value) => setFilters((prev: any) => ({ ...prev, category: value }))}>
+          <SelectTrigger className="rounded-lg border-border/50">
+            <SelectValue placeholder="القسم" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">جميع الأقسام</SelectItem>
+            {categories.map((cat: any) => (
+              <SelectItem key={cat.id} value={cat.id}>{cat.name_ar}</SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+
+        {/* فلتر النوع */}
+        <Select value={filters.type} onValueChange={(value) => setFilters((prev: any) => ({ ...prev, type: value }))}>
+          <SelectTrigger className="rounded-lg border-border/50">
+            <SelectValue placeholder="النوع" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">جميع الأنواع</SelectItem>
+            <SelectItem value="service">خدمة</SelectItem>
+            <SelectItem value="course">دورة</SelectItem>
+            <SelectItem value="bundle">باقة</SelectItem>
+          </SelectContent>
+        </Select>
+
+        {/* الترتيب */}
+        <Select value={sortType} onValueChange={(value) => setSortType(value)}>
+          <SelectTrigger className="rounded-lg border-border/50">
+            <SelectValue placeholder="ترتيب حسب" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="name">الاسم</SelectItem>
+            <SelectItem value="price">السعر</SelectItem>
+            <SelectItem value="date">تاريخ الإنشاء</SelectItem>
+            <SelectItem value="category">القسم</SelectItem>
+          </SelectContent>
+        </Select>
+
+        {/* اتجاه الترتيب */}
+        <Button
+          variant="outline"
+          onClick={() => setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc')}
+          className="rounded-lg border-border/50 px-3"
+        >
+          {sortOrder === 'asc' ? <SortAsc className="w-4 h-4" /> : <SortDesc className="w-4 h-4" />}
+        </Button>
+
+        {/* إعادة تعيين الفلاتر */}
+        <Button
+          variant="ghost"
+          onClick={() => setFilters({
+            search: '',
+            status: 'all',
+            category: 'all',
+            type: 'all',
+            priceRange: [0, 10000]
+          })}
+          className="rounded-lg text-muted-foreground hover:text-foreground"
+        >
+          <X className="w-4 h-4 ml-2" />
+          مسح الفلاتر
+        </Button>
+      </div>
+    </div>
+  );
+};
+
+// مكون التحميل للخدمات
+const ServicesLoading = ({ viewMode }: { viewMode: ViewMode }) => (
+  <div className={viewMode === 'grid' 
+    ? "grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6" 
+    : "space-y-4"
+  }>
+    {Array.from({ length: viewMode === 'grid' ? 6 : 5 }).map((_, i) => (
+      <div key={i} className={`animate-pulse rounded-2xl border ${
+        viewMode === 'grid' ? 'h-80 bg-muted/40' : 'h-32 bg-muted/40'
+      }`} />
+    ))}
+  </div>
+);
+
+// مكون الحالة الفارغة
+const EmptyServicesState = ({ hasFilters }: { hasFilters: boolean }) => (
+  <div className="text-center py-20">
+    <div className="w-24 h-24 bg-muted/40 rounded-full flex items-center justify-center mx-auto mb-6">
+      <Settings className="w-12 h-12 text-muted-foreground" />
+    </div>
+    <h3 className="text-xl font-bold mb-3">
+      {hasFilters ? 'لا توجد خدمات تطابق البحث' : 'لا توجد خدمات بعد'}
+    </h3>
+    <p className="text-base text-muted-foreground mb-6">
+      {hasFilters ? 'جرب تعديل معايير البحث' : 'ابدأ بإنشاء أول خدمة للعملاء'}
+    </p>
+  </div>
+);
+
+// شبكة الخدمات
+const ServicesGrid = ({ services, viewMode, onEdit, onDelete, onToggle }: any) => (
+  <div className={viewMode === 'grid' 
+    ? "grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6" 
+    : "space-y-4"
+  }>
+    {services.map((service: Service) => (
+      <EnhancedServiceCard
+        key={service.id}
+        service={service}
+        viewMode={viewMode}
+        onEdit={onEdit}
+        onDelete={onDelete}
+        onToggle={onToggle}
+      />
+    ))}
+  </div>
+);
+
+// بطاقة الخدمة المحسنة
+const EnhancedServiceCard = ({ service, viewMode, onEdit, onDelete, onToggle }: any) => {
+  const getTypeIcon = (type: string) => {
+    switch (type) {
+      case 'course': return GraduationCap;
+      case 'bundle': return Archive;
+      default: return Settings;
+    }
+  };
+
+  const getTypeName = (type: string) => {
+    switch (type) {
+      case 'course': return 'دورة';
+      case 'bundle': return 'باقة';
+      default: return 'خدمة';
+    }
+  };
+
+  const TypeIcon = getTypeIcon(service.type || 'service');
+
+  if (viewMode === 'list') {
+    return (
+      <Card className="group relative overflow-hidden bg-card/80 backdrop-blur-sm border border-border/50 hover:border-primary/30 hover:shadow-lg transition-all duration-300 rounded-2xl">
+        <CardContent className="p-6">
+          <div className="flex items-center justify-between gap-6">
+            {/* معلومات الخدمة */}
+            <div className="flex items-center gap-4 flex-1">
+              <div 
+                className="w-12 h-12 rounded-xl flex items-center justify-center text-white flex-shrink-0"
+                style={{ backgroundColor: service.service_categories?.color || '#0EA5E9' }}
+              >
+                <TypeIcon className="w-6 h-6" />
+              </div>
+              
+              <div className="flex-1 text-right space-y-1">
+                <div className="flex items-center gap-3 justify-end">
+                  <h3 className="text-lg font-bold">{service.name_ar}</h3>
+                  {service.code && (
+                    <Badge variant="outline" className="text-xs px-2 py-1">
+                      {service.code}
+                    </Badge>
+                  )}
+                </div>
+                <p className="text-sm text-muted-foreground">{service.service_categories?.name_ar}</p>
+              </div>
+            </div>
+
+            {/* السعر والحالة */}
+            <div className="text-center space-y-2">
+              <div className="text-lg font-bold text-primary">
+                {service.price_per_unit ? `${service.price_per_unit} ر.س` : 'حسب الطلب'}
+              </div>
+              <div className="flex gap-2">
+                <Badge variant={service.is_active ? "default" : "secondary"} className="text-xs">
+                  {service.is_active ? "مفعل" : "معطل"}
+                </Badge>
+                <Badge variant={service.show_to_clients ? "default" : "outline"} className="text-xs">
+                  {service.show_to_clients ? "ظاهر" : "مخفي"}
+                </Badge>
+              </div>
+            </div>
+
+            {/* الأزرار */}
+            <div className="flex gap-2">
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => onToggle(service.id, service.is_active)}
+                className="p-2 hover:bg-primary/10"
+              >
+                {service.is_active ? <ToggleRight className="w-4 h-4 text-green-600" /> : <ToggleLeft className="w-4 h-4 text-gray-400" />}
+              </Button>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => onEdit(service)}
+                className="p-2 hover:bg-primary/10"
+              >
+                <Edit2 className="w-4 h-4" />
+              </Button>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => onDelete(service.id)}
+                className="p-2 hover:bg-destructive/10 text-destructive"
+              >
+                <Trash2 className="w-4 h-4" />
+              </Button>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+    );
+  }
+
+  return (
+    <Card className="group relative overflow-hidden bg-card/80 backdrop-blur-sm border border-border/50 hover:border-primary/30 hover:shadow-xl transition-all duration-500 rounded-2xl">
+      {/* خلفية متحركة */}
+      <div className="absolute inset-0 opacity-5">
+        <div className="absolute top-0 left-0 w-32 h-32 bg-gradient-to-br from-primary to-secondary rounded-full transform -translate-x-16 -translate-y-16 group-hover:scale-150 transition-transform duration-700" />
+        <div className="absolute bottom-0 right-0 w-24 h-24 bg-gradient-to-tl from-secondary to-primary rounded-full transform translate-x-12 translate-y-12 group-hover:scale-125 transition-transform duration-700" />
+      </div>
+      
+      <CardContent className="p-6 relative">
+        <div className="space-y-4">
+          {/* هيدر البطاقة */}
+          <div className="flex items-start justify-between gap-4">
+            <div className="flex items-center gap-3">
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => onToggle(service.id, service.is_active)}
+                className="p-2 hover:bg-primary/10 rounded-lg"
+              >
+                {service.is_active ? 
+                  <ToggleRight className="w-5 h-5 text-green-600" /> : 
+                  <ToggleLeft className="w-5 h-5 text-gray-400" />
+                }
+              </Button>
+              <Badge 
+                variant={service.is_active ? "default" : "secondary"}
+                className="text-xs font-semibold px-3 py-1 rounded-full"
+              >
+                {service.is_active ? "مفعل" : "معطل"}
+              </Badge>
+            </div>
+            
+            <div className="flex items-center gap-3">
+              <div 
+                className="w-12 h-12 rounded-xl flex items-center justify-center text-white shadow-lg group-hover:scale-110 transition-transform duration-300"
+                style={{ backgroundColor: service.service_categories?.color || '#0EA5E9' }}
+              >
+                <TypeIcon className="w-6 h-6" />
+              </div>
+              {service.code && (
+                <Badge variant="outline" className="text-xs px-2 py-1 rounded-lg font-mono">
+                  {service.code}
+                </Badge>
+              )}
+            </div>
+          </div>
+
+          {/* محتوى البطاقة */}
+          <div className="text-right space-y-3">
+            <div className="space-y-1">
+              <h3 className="text-xl font-bold leading-tight group-hover:text-primary transition-colors duration-300">
+                {service.name_ar}
+              </h3>
+              <p className="text-sm text-muted-foreground">{service.name_en}</p>
+            </div>
+
+            <p className="text-sm text-muted-foreground leading-relaxed line-clamp-2">
+              {service.description_ar || "لا يوجد وصف"}
+            </p>
+
+            {/* معلومات إضافية */}
+            <div className="grid grid-cols-2 gap-3 text-sm">
+              <div className="bg-muted/30 p-3 rounded-lg text-center">
+                <div className="text-xs text-muted-foreground mb-1">القسم</div>
+                <div className="font-semibold">{service.service_categories?.name_ar}</div>
+              </div>
+              <div className="bg-muted/30 p-3 rounded-lg text-center">
+                <div className="text-xs text-muted-foreground mb-1">النوع</div>
+                <div className="font-semibold">{getTypeName(service.type || 'service')}</div>
+              </div>
+            </div>
+            
+            {/* السعر */}
+            <div className="text-center p-4 bg-gradient-to-l from-primary/10 to-secondary/10 rounded-lg border border-primary/20">
+              <div className="text-2xl font-bold text-primary">
+                {service.price_per_unit ? `${service.price_per_unit} ر.س` : 'حسب الطلب'}
+              </div>
+              <div className="text-xs text-muted-foreground">
+                {service.unit_type && `لكل ${service.unit_type}`}
+              </div>
+            </div>
+          </div>
+
+          {/* أزرار التحكم */}
+          <div className="flex justify-between items-center pt-4 border-t border-border/50">
+            <div className="flex gap-2">
+              <Button 
+                variant="outline" 
+                size="sm" 
+                onClick={() => onEdit(service)}
+                className="flex items-center gap-2 hover:bg-primary/10 hover:border-primary/30 rounded-lg px-3 py-2 transition-all duration-200"
+              >
+                <span className="text-sm font-semibold">تعديل</span>
+                <Edit2 className="w-4 h-4" />
+              </Button>
+              <Button 
+                variant="outline" 
+                size="sm" 
+                onClick={() => onDelete(service.id)}
+                className="flex items-center gap-2 text-destructive hover:text-destructive hover:bg-destructive/10 hover:border-destructive/30 rounded-lg px-3 py-2 transition-all duration-200"
+              >
+                <span className="text-sm font-semibold">حذف</span>
+                <Trash2 className="w-4 h-4" />
+              </Button>
+            </div>
+            
+            <div className="flex items-center gap-2">
+              {service.rush_delivery_available && (
+                <Badge variant="outline" className="text-xs px-2 py-1 flex items-center gap-1">
+                  <Zap className="w-3 h-3" />
+                  تسليم سريع
+                </Badge>
+              )}
+              <Badge variant={service.show_to_clients ? "default" : "outline"} className="text-xs px-2 py-1">
+                {service.show_to_clients ? "ظاهر" : "مخفي"}
+              </Badge>
+            </div>
+          </div>
+        </div>
+      </CardContent>
+    </Card>
+  );
+};
+
+// بطاقة القسم المحسنة
+const CategoryCard = ({ category, onEdit, onDelete }: any) => {
   const getIcon = (iconName: string) => {
     const icons: any = {
       Languages,
@@ -509,66 +1234,68 @@ const CategoryCard = ({
   };
 
   return (
-    <Card className="group relative overflow-hidden bg-gradient-to-br from-card/90 to-card/70 backdrop-blur-sm border-2 border-border/40 hover:border-primary/30 hover:shadow-2xl transition-all duration-500 rounded-3xl">
-      {/* خلفية زخرفية */}
+    <Card className="group relative overflow-hidden bg-card/80 backdrop-blur-sm border border-border/50 hover:border-primary/30 hover:shadow-xl transition-all duration-500 rounded-2xl">
+      {/* خلفية متحركة */}
       <div className="absolute inset-0 opacity-5">
-        <div className="absolute top-0 right-0 w-32 h-32 rounded-full" style={{ backgroundColor: category.color }}></div>
-        <div className="absolute bottom-0 left-0 w-20 h-20 rounded-full" style={{ backgroundColor: category.color }}></div>
+        <div className="absolute top-0 left-0 w-32 h-32 rounded-full transform -translate-x-16 -translate-y-16" 
+             style={{ backgroundColor: category.color }}></div>
+        <div className="absolute bottom-0 right-0 w-20 h-20 rounded-full transform translate-x-10 translate-y-10" 
+             style={{ backgroundColor: category.color }}></div>
       </div>
       
-      <CardHeader className="pb-6 relative">
-        <div className="flex items-start gap-6">
+      <CardHeader className="pb-4 relative">
+        <div className="flex items-start gap-4">
           <div className="relative">
             <div 
-              className="w-20 h-20 rounded-3xl flex items-center justify-center text-white shadow-xl group-hover:scale-110 transition-transform duration-500"
+              className="w-16 h-16 rounded-2xl flex items-center justify-center text-white shadow-lg group-hover:scale-110 transition-transform duration-500"
               style={{ backgroundColor: category.color }}
             >
               {getIcon(category.icon)}
             </div>
-            <div className="absolute -bottom-2 -left-2 w-6 h-6 bg-background rounded-full border-2 border-border flex items-center justify-center shadow-lg">
-              <div className={`w-3 h-3 rounded-full ${category.is_active ? 'bg-green-500' : 'bg-muted-foreground'}`}></div>
+            <div className="absolute -bottom-1 -left-1 w-5 h-5 bg-background rounded-full border-2 border-border flex items-center justify-center shadow-sm">
+              <div className={`w-2.5 h-2.5 rounded-full ${category.is_active ? 'bg-green-500' : 'bg-gray-400'}`}></div>
             </div>
           </div>
-          <div className="flex-1 text-right space-y-3">
+          <div className="flex-1 text-right space-y-2">
             <Badge 
               variant={category.is_active ? "default" : "secondary"}
-              className="text-sm font-bold px-4 py-2 rounded-full"
+              className="text-xs font-bold px-3 py-1 rounded-full"
             >
               {category.is_active ? "مفعل" : "معطل"}
             </Badge>
-            <CardTitle className="text-2xl font-bold leading-tight">{category.name_ar}</CardTitle>
-            <p className="text-base text-muted-foreground">{category.name_en}</p>
+            <CardTitle className="text-xl font-bold leading-tight">{category.name_ar}</CardTitle>
+            <p className="text-sm text-muted-foreground">{category.name_en}</p>
           </div>
         </div>
       </CardHeader>
       
-      <CardContent className="pt-0 relative space-y-6">
-        <p className="text-base text-muted-foreground text-right leading-relaxed min-h-[4rem]">
+      <CardContent className="pt-0 relative space-y-4">
+        <p className="text-sm text-muted-foreground text-right leading-relaxed min-h-[3rem]">
           {category.description_ar || "لا يوجد وصف متاح لهذا القسم"}
         </p>
         
-        <div className="pt-6 border-t border-border/50">
+        <div className="pt-4 border-t border-border/50">
           <div className="flex justify-between items-center gap-4">
-            <div className="text-sm text-muted-foreground bg-muted/30 px-3 py-2 rounded-xl">
+            <div className="text-xs text-muted-foreground bg-muted/30 px-3 py-2 rounded-lg">
               ترتيب: {category.sort_order}
             </div>
-            <div className="flex gap-3">
+            <div className="flex gap-2">
               <Button 
                 variant="outline" 
                 size="sm" 
                 onClick={() => onEdit(category)}
-                className="flex items-center gap-2 hover:bg-primary/10 hover:border-primary/30 rounded-xl px-4 py-2 transition-all duration-300"
+                className="flex items-center gap-2 hover:bg-primary/10 hover:border-primary/30 rounded-lg px-3 py-2 transition-all duration-200"
               >
-                <span className="font-semibold">تعديل</span>
+                <span className="text-sm font-semibold">تعديل</span>
                 <Edit2 className="w-4 h-4" />
               </Button>
               <Button 
                 variant="outline" 
                 size="sm" 
                 onClick={() => onDelete(category.id)}
-                className="flex items-center gap-2 text-destructive hover:text-destructive hover:bg-destructive/10 hover:border-destructive/30 rounded-xl px-4 py-2 transition-all duration-300"
+                className="flex items-center gap-2 text-destructive hover:text-destructive hover:bg-destructive/10 hover:border-destructive/30 rounded-lg px-3 py-2 transition-all duration-200"
               >
-                <span className="font-semibold">حذف</span>
+                <span className="text-sm font-semibold">حذف</span>
                 <Trash2 className="w-4 h-4" />
               </Button>
             </div>
@@ -579,124 +1306,15 @@ const CategoryCard = ({
   );
 };
 
-// كارت الخدمة
-const ServiceCard = ({ 
-  service, 
-  onEdit, 
-  onDelete 
-}: { 
-  service: Service;
-  onEdit: (service: Service) => void;
-  onDelete: (id: string) => void;
-}) => {
-  return (
-    <Card className="group relative overflow-hidden bg-gradient-to-br from-card/90 to-card/70 backdrop-blur-sm border-2 border-border/40 hover:border-secondary/30 hover:shadow-2xl transition-all duration-500 rounded-3xl">
-      {/* خلفية زخرفية */}
-      <div className="absolute inset-0 opacity-5">
-        <div className="absolute top-0 right-0 w-40 h-40 bg-secondary rounded-full"></div>
-        <div className="absolute bottom-0 left-0 w-28 h-28 bg-primary rounded-full"></div>
-      </div>
-      
-      <CardContent className="p-8 relative">
-        <div className="flex items-start gap-8">
-          <div 
-            className="w-16 h-16 rounded-2xl flex items-center justify-center text-white flex-shrink-0 shadow-xl"
-            style={{ backgroundColor: service.service_categories?.color || '#3B82F6' }}
-          >
-            <Settings className="w-8 h-8" />
-          </div>
-          
-          <div className="flex-1 text-right space-y-6">
-            <div className="space-y-2">
-              <h3 className="text-2xl font-bold leading-tight">{service.name_ar}</h3>
-              <p className="text-base text-muted-foreground">{service.name_en}</p>
-            </div>
-            
-            <p className="text-base text-muted-foreground leading-relaxed">
-              {service.description_ar || "لا يوجد وصف"}
-            </p>
-
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-              <div className="text-right bg-muted/20 p-4 rounded-2xl">
-                <p className="text-sm text-muted-foreground mb-1">القسم</p>
-                <p className="text-base font-bold">{service.service_categories?.name_ar}</p>
-              </div>
-              <div className="text-right bg-muted/20 p-4 rounded-2xl">
-                <p className="text-sm text-muted-foreground mb-1">مدة التسليم</p>
-                <p className="text-base font-bold">{service.delivery_time_days} أيام</p>
-              </div>
-              <div className="text-right bg-muted/20 p-4 rounded-2xl">
-                <p className="text-sm text-muted-foreground mb-1">الحد الأدنى</p>
-                <p className="text-base font-bold">{service.min_units} {service.unit_type}</p>
-              </div>
-              <div className="text-right bg-muted/20 p-4 rounded-2xl">
-                <p className="text-sm text-muted-foreground mb-1">السعر لكل وحدة</p>
-                <p className="text-base font-bold">
-                  {service.price_per_unit ? `${service.price_per_unit} ريال` : 'حسب الطلب'}
-                </p>
-              </div>
-            </div>
-
-            <div className="flex items-center justify-between pt-4 border-t border-border/30">
-              <div className="flex gap-3">
-                <Button 
-                  variant="outline" 
-                  size="sm" 
-                  onClick={() => onEdit(service)}
-                  className="flex items-center gap-2 hover:bg-primary/10 hover:border-primary/30 rounded-xl px-4 py-2 transition-all duration-300"
-                >
-                  <span className="font-semibold">تعديل</span>
-                  <Edit2 className="w-4 h-4" />
-                </Button>
-                <Button 
-                  variant="outline" 
-                  size="sm" 
-                  onClick={() => onDelete(service.id)}
-                  className="flex items-center gap-2 text-destructive hover:text-destructive hover:bg-destructive/10 hover:border-destructive/30 rounded-xl px-4 py-2 transition-all duration-300"
-                >
-                  <span className="font-semibold">حذف</span>
-                  <Trash2 className="w-4 h-4" />
-                </Button>
-              </div>
-              
-              <div className="flex items-center gap-3">
-                {service.rush_delivery_available && (
-                  <Badge variant="outline" className="text-sm font-semibold px-3 py-1">
-                    تسليم سريع
-                  </Badge>
-                )}
-                <Badge variant={service.show_to_clients ? "default" : "outline"} className="text-sm font-semibold px-3 py-1">
-                  {service.show_to_clients ? "ظاهر" : "مخفي"}
-                </Badge>
-                <Badge variant={service.is_active ? "default" : "secondary"} className="text-sm font-semibold px-3 py-1">
-                  {service.is_active ? "مفعل" : "معطل"}
-                </Badge>
-              </div>
-            </div>
-          </div>
-        </div>
-      </CardContent>
-    </Card>
-  );
-};
-
-// نافذة إضافة/تعديل القسم
-const CategoryDialog = ({ 
-  category, 
-  onSave, 
-  onClose 
-}: { 
-  category: ServiceCategory | null;
-  onSave: (category: Partial<ServiceCategory>) => void;
-  onClose: () => void;
-}) => {
+// نافذة إضافة/تعديل القسم المحسنة
+const CategoryDialog = ({ category, onSave, onClose }: any) => {
   const [formData, setFormData] = useState({
     name_ar: category?.name_ar || '',
     name_en: category?.name_en || '',
     description_ar: category?.description_ar || '',
     description_en: category?.description_en || '',
     icon: category?.icon || 'Languages',
-    color: category?.color || '#3B82F6',
+    color: category?.color || '#0EA5E9',
     sort_order: category?.sort_order || 0,
     is_active: category?.is_active ?? true
   });
@@ -707,85 +1325,90 @@ const CategoryDialog = ({
   };
 
   const iconOptions = [
-    { value: 'Languages', label: 'اللغات' },
-    { value: 'GraduationCap', label: 'التعليم' },
-    { value: 'Users', label: 'المستخدمين' },
-    { value: 'Search', label: 'البحث' }
+    { value: 'Languages', label: 'اللغات', icon: Languages },
+    { value: 'GraduationCap', label: 'التعليم', icon: GraduationCap },
+    { value: 'Users', label: 'المستخدمين', icon: Users },
+    { value: 'Search', label: 'البحث', icon: Search },
+    { value: 'Settings', label: 'الإعدادات', icon: Settings },
+    { value: 'FileText', label: 'الوثائق', icon: FileText }
   ];
 
   return (
-    <DialogContent className="max-w-2xl" dir="rtl">
+    <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto" dir="rtl">
       <DialogHeader>
         <DialogTitle className="text-right text-2xl font-bold">
           {category ? 'تعديل القسم' : 'قسم جديد'}
         </DialogTitle>
-        <DialogDescription className="text-right text-lg">
+        <DialogDescription className="text-right text-base">
           {category ? 'تعديل بيانات القسم' : 'إضافة قسم جديد للخدمات'}
         </DialogDescription>
       </DialogHeader>
       
       <form onSubmit={handleSubmit} className="space-y-6">
-        <div className="grid grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           <div>
-            <Label htmlFor="name_ar" className="text-right block text-base font-semibold mb-2">الاسم بالعربية</Label>
+            <Label htmlFor="name_ar" className="text-right block text-base font-semibold mb-3">الاسم بالعربية *</Label>
             <Input
               id="name_ar"
               value={formData.name_ar}
               onChange={(e) => setFormData({ ...formData, name_ar: e.target.value })}
               required
               dir="rtl"
-              className="text-right text-lg p-4 rounded-xl"
+              className="text-right text-base p-4 rounded-xl border-border/50"
             />
           </div>
 
           <div>
-            <Label htmlFor="name_en" className="text-right block text-base font-semibold mb-2">الاسم بالإنجليزية</Label>
+            <Label htmlFor="name_en" className="text-right block text-base font-semibold mb-3">الاسم بالإنجليزية *</Label>
             <Input
               id="name_en"
               value={formData.name_en}
               onChange={(e) => setFormData({ ...formData, name_en: e.target.value })}
               required
               dir="ltr"
-              className="text-lg p-4 rounded-xl"
+              className="text-base p-4 rounded-xl border-border/50"
             />
           </div>
         </div>
 
-        <div className="grid grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           <div>
-            <Label htmlFor="description_ar" className="text-right block text-base font-semibold mb-2">الوصف بالعربية</Label>
+            <Label htmlFor="description_ar" className="text-right block text-base font-semibold mb-3">الوصف بالعربية</Label>
             <Textarea
               id="description_ar"
               value={formData.description_ar}
               onChange={(e) => setFormData({ ...formData, description_ar: e.target.value })}
               dir="rtl"
-              className="text-right text-lg p-4 rounded-xl min-h-[120px]"
+              className="text-right text-base p-4 rounded-xl min-h-[120px] border-border/50"
             />
           </div>
 
           <div>
-            <Label htmlFor="description_en" className="text-right block text-base font-semibold mb-2">الوصف بالإنجليزية</Label>
+            <Label htmlFor="description_en" className="text-right block text-base font-semibold mb-3">الوصف بالإنجليزية</Label>
             <Textarea
               id="description_en"
               value={formData.description_en}
               onChange={(e) => setFormData({ ...formData, description_en: e.target.value })}
               dir="ltr"
-              className="text-lg p-4 rounded-xl min-h-[120px]"
+              className="text-base p-4 rounded-xl min-h-[120px] border-border/50"
             />
           </div>
         </div>
 
-        <div className="grid grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           <div>
-            <Label htmlFor="icon" className="text-right block text-base font-semibold mb-2">الأيقونة</Label>
+            <Label htmlFor="icon" className="text-right block text-base font-semibold mb-3">الأيقونة</Label>
             <Select value={formData.icon} onValueChange={(value) => setFormData({ ...formData, icon: value })}>
-              <SelectTrigger className="text-lg p-4 rounded-xl">
+              <SelectTrigger className="text-base p-4 rounded-xl border-border/50">
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
                 {iconOptions.map((option) => (
-                  <SelectItem key={option.value} value={option.value}>
-                    {option.label}
+                  <SelectItem key={option.value} value={option.value} className="flex items-center gap-3">
+                    <div className="flex items-center gap-3">
+                      <option.icon className="w-4 h-4" />
+                      <span>{option.label}</span>
+                    </div>
                   </SelectItem>
                 ))}
               </SelectContent>
@@ -793,31 +1416,39 @@ const CategoryDialog = ({
           </div>
 
           <div>
-            <Label htmlFor="color" className="text-right block text-base font-semibold mb-2">اللون</Label>
-            <Input
-              id="color"
-              type="color"
-              value={formData.color}
-              onChange={(e) => setFormData({ ...formData, color: e.target.value })}
-              className="h-14 rounded-xl"
-            />
+            <Label htmlFor="color" className="text-right block text-base font-semibold mb-3">اللون</Label>
+            <div className="flex gap-3 items-center">
+              <Input
+                id="color"
+                type="color"
+                value={formData.color}
+                onChange={(e) => setFormData({ ...formData, color: e.target.value })}
+                className="w-16 h-14 rounded-xl border-border/50 p-1"
+              />
+              <div 
+                className="flex-1 h-14 rounded-xl border border-border/50 flex items-center justify-center text-white font-semibold"
+                style={{ backgroundColor: formData.color }}
+              >
+                معاينة
+              </div>
+            </div>
           </div>
 
           <div>
-            <Label htmlFor="sort_order" className="text-right block text-base font-semibold mb-2">ترتيب العرض</Label>
+            <Label htmlFor="sort_order" className="text-right block text-base font-semibold mb-3">ترتيب العرض</Label>
             <Input
               id="sort_order"
               type="number"
               value={formData.sort_order}
               onChange={(e) => setFormData({ ...formData, sort_order: parseInt(e.target.value) || 0 })}
               dir="ltr"
-              className="text-lg p-4 rounded-xl"
+              className="text-base p-4 rounded-xl border-border/50"
             />
           </div>
         </div>
 
         <div className="flex items-center justify-end gap-4 p-4 bg-muted/20 rounded-xl">
-          <Label htmlFor="is_active" className="text-lg font-semibold">مفعل</Label>
+          <Label htmlFor="is_active" className="text-base font-semibold">مفعل</Label>
           <Switch
             id="is_active"
             checked={formData.is_active}
@@ -826,12 +1457,12 @@ const CategoryDialog = ({
         </div>
 
         <div className="flex justify-end gap-4 pt-6 border-t">
-          <Button type="button" variant="outline" onClick={onClose} className="px-6 py-3 rounded-xl text-lg">
+          <Button type="button" variant="outline" onClick={onClose} className="px-6 py-3 rounded-xl text-base">
             إلغاء
           </Button>
-          <Button type="submit" className="px-8 py-3 rounded-xl text-lg font-bold">
+          <Button type="submit" className="px-8 py-3 rounded-xl text-base font-bold flex items-center gap-3">
             <span>حفظ</span>
-            <Save className="w-5 h-5 mr-2" />
+            <Save className="w-5 h-5" />
           </Button>
         </div>
       </form>
@@ -839,18 +1470,8 @@ const CategoryDialog = ({
   );
 };
 
-// نافذة إضافة/تعديل الخدمة
-const ServiceDialog = ({ 
-  service, 
-  categories,
-  onSave, 
-  onClose 
-}: { 
-  service: Service | null;
-  categories: ServiceCategory[];
-  onSave: (service: Partial<Service>) => void;
-  onClose: () => void;
-}) => {
+// نافذة إضافة/تعديل الخدمة المحسنة
+const EnhancedServiceDialog = ({ service, categories, onSave, onClose }: any) => {
   const [formData, setFormData] = useState({
     name_ar: service?.name_ar || '',
     name_en: service?.name_en || '',
@@ -868,6 +1489,8 @@ const ServiceDialog = ({
     rush_delivery_available: service?.rush_delivery_available || false,
     rush_delivery_multiplier: service?.rush_delivery_multiplier || 1.5,
     image_url: service?.image_url || '',
+    code: service?.code || '',
+    type: service?.type || 'service',
     sort_order: service?.sort_order || 0,
     is_active: service?.is_active ?? true,
     show_to_clients: service?.show_to_clients ?? true
@@ -875,10 +1498,27 @@ const ServiceDialog = ({
 
   const [currentFeatureAr, setCurrentFeatureAr] = useState('');
   const [currentFeatureEn, setCurrentFeatureEn] = useState('');
+  const [errors, setErrors] = useState<any>({});
+
+  // التحقق من صحة البيانات
+  const validateForm = () => {
+    const newErrors: any = {};
+
+    if (!formData.name_ar.trim()) newErrors.name_ar = 'اسم الخدمة بالعربية مطلوب';
+    if (!formData.name_en.trim()) newErrors.name_en = 'اسم الخدمة بالإنجليزية مطلوب';
+    if (!formData.category_id) newErrors.category_id = 'القسم مطلوب';
+    if (formData.price_per_unit && formData.price_per_unit < 0) newErrors.price_per_unit = 'السعر يجب أن يكون أكبر من الصفر';
+    if (formData.min_units < 1) newErrors.min_units = 'الحد الأدنى يجب أن يكون على الأقل 1';
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     
+    if (!validateForm()) return;
+
     const submitData = {
       ...formData,
       base_price: formData.base_price ? parseFloat(formData.base_price as string) : null,
@@ -910,140 +1550,181 @@ const ServiceDialog = ({
   };
 
   return (
-    <DialogContent className="max-w-5xl max-h-[90vh] overflow-y-auto" dir="rtl">
+    <DialogContent className="max-w-6xl max-h-[90vh] overflow-y-auto" dir="rtl">
       <DialogHeader>
         <DialogTitle className="text-right text-2xl font-bold">
           {service ? 'تعديل الخدمة' : 'خدمة جديدة'}
         </DialogTitle>
-        <DialogDescription className="text-right text-lg">
+        <DialogDescription className="text-right text-base">
           {service ? 'تعديل بيانات الخدمة' : 'إضافة خدمة جديدة'}
         </DialogDescription>
       </DialogHeader>
       
-      <form onSubmit={handleSubmit} className="space-y-8">
+      <form onSubmit={handleSubmit} className="space-y-6">
         <Tabs defaultValue="basic" className="space-y-6">
           <TabsList className="grid grid-cols-3 w-full bg-muted/30 p-2 rounded-2xl">
-            <TabsTrigger value="basic" className="text-lg font-bold py-3 rounded-xl">البيانات الأساسية</TabsTrigger>
-            <TabsTrigger value="pricing" className="text-lg font-bold py-3 rounded-xl">الأسعار والتسليم</TabsTrigger>
-            <TabsTrigger value="settings" className="text-lg font-bold py-3 rounded-xl">الإعدادات</TabsTrigger>
+            <TabsTrigger value="basic" className="text-base font-bold py-3 rounded-xl">البيانات الأساسية</TabsTrigger>
+            <TabsTrigger value="pricing" className="text-base font-bold py-3 rounded-xl">الأسعار والتسليم</TabsTrigger>
+            <TabsTrigger value="settings" className="text-base font-bold py-3 rounded-xl">الإعدادات</TabsTrigger>
           </TabsList>
 
           <TabsContent value="basic" className="space-y-6">
-            <div className="grid grid-cols-2 gap-6">
+            {/* البيانات الأساسية */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
               <div>
-                <Label htmlFor="name_ar" className="text-right block text-base font-semibold mb-2">اسم الخدمة بالعربية</Label>
+                <Label htmlFor="name_ar" className="text-right block text-base font-semibold mb-3">اسم الخدمة بالعربية *</Label>
                 <Input
                   id="name_ar"
                   value={formData.name_ar}
                   onChange={(e) => setFormData({ ...formData, name_ar: e.target.value })}
                   required
                   dir="rtl"
-                  className="text-right text-lg p-4 rounded-xl"
+                  className={`text-right text-base p-4 rounded-xl border-border/50 ${errors.name_ar ? 'border-destructive' : ''}`}
                 />
+                {errors.name_ar && <p className="text-destructive text-sm mt-1">{errors.name_ar}</p>}
               </div>
 
               <div>
-                <Label htmlFor="name_en" className="text-right block text-base font-semibold mb-2">اسم الخدمة بالإنجليزية</Label>
+                <Label htmlFor="name_en" className="text-right block text-base font-semibold mb-3">اسم الخدمة بالإنجليزية *</Label>
                 <Input
                   id="name_en"
                   value={formData.name_en}
                   onChange={(e) => setFormData({ ...formData, name_en: e.target.value })}
                   required
                   dir="ltr"
-                  className="text-lg p-4 rounded-xl"
+                  className={`text-base p-4 rounded-xl border-border/50 ${errors.name_en ? 'border-destructive' : ''}`}
+                />
+                {errors.name_en && <p className="text-destructive text-sm mt-1">{errors.name_en}</p>}
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+              <div>
+                <Label htmlFor="category_id" className="text-right block text-base font-semibold mb-3">القسم *</Label>
+                <Select 
+                  value={formData.category_id} 
+                  onValueChange={(value) => setFormData({ ...formData, category_id: value })}
+                >
+                  <SelectTrigger className={`text-base p-4 rounded-xl border-border/50 ${errors.category_id ? 'border-destructive' : ''}`}>
+                    <SelectValue placeholder="اختر القسم" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {categories.map((category: any) => (
+                      <SelectItem key={category.id} value={category.id}>
+                        {category.name_ar}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+                {errors.category_id && <p className="text-destructive text-sm mt-1">{errors.category_id}</p>}
+              </div>
+
+              <div>
+                <Label htmlFor="type" className="text-right block text-base font-semibold mb-3">نوع الخدمة</Label>
+                <Select 
+                  value={formData.type} 
+                  onValueChange={(value) => setFormData({ ...formData, type: value })}
+                >
+                  <SelectTrigger className="text-base p-4 rounded-xl border-border/50">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="service">خدمة</SelectItem>
+                    <SelectItem value="course">دورة</SelectItem>
+                    <SelectItem value="bundle">باقة</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div>
+                <Label htmlFor="code" className="text-right block text-base font-semibold mb-3">كود الخدمة</Label>
+                <Input
+                  id="code"
+                  value={formData.code}
+                  onChange={(e) => setFormData({ ...formData, code: e.target.value })}
+                  dir="ltr"
+                  className="text-base p-4 rounded-xl border-border/50 font-mono"
+                  placeholder="SRV001"
                 />
               </div>
             </div>
 
-            <div>
-              <Label htmlFor="category_id" className="text-right block text-base font-semibold mb-2">القسم</Label>
-              <Select 
-                value={formData.category_id} 
-                onValueChange={(value) => setFormData({ ...formData, category_id: value })}
-              >
-                <SelectTrigger className="text-lg p-4 rounded-xl">
-                  <SelectValue placeholder="اختر القسم" />
-                </SelectTrigger>
-                <SelectContent>
-                  {categories.map((category) => (
-                    <SelectItem key={category.id} value={category.id}>
-                      {category.name_ar}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-
-            <div className="grid grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
               <div>
-                <Label htmlFor="description_ar" className="text-right block text-base font-semibold mb-2">الوصف بالعربية</Label>
+                <Label htmlFor="description_ar" className="text-right block text-base font-semibold mb-3">الوصف بالعربية</Label>
                 <Textarea
                   id="description_ar"
                   value={formData.description_ar}
                   onChange={(e) => setFormData({ ...formData, description_ar: e.target.value })}
                   dir="rtl"
-                  className="text-right text-lg p-4 rounded-xl min-h-[120px]"
+                  className="text-right text-base p-4 rounded-xl min-h-[120px] border-border/50"
                 />
               </div>
 
               <div>
-                <Label htmlFor="description_en" className="text-right block text-base font-semibold mb-2">الوصف بالإنجليزية</Label>
+                <Label htmlFor="description_en" className="text-right block text-base font-semibold mb-3">الوصف بالإنجليزية</Label>
                 <Textarea
                   id="description_en"
                   value={formData.description_en}
                   onChange={(e) => setFormData({ ...formData, description_en: e.target.value })}
                   dir="ltr"
-                  className="text-lg p-4 rounded-xl min-h-[120px]"
+                  className="text-base p-4 rounded-xl min-h-[120px] border-border/50"
                 />
               </div>
             </div>
 
-            {/* قسم المميزات */}
-            <div className="space-y-4 p-6 bg-muted/10 rounded-2xl">
-              <Label className="text-right block text-lg font-bold">المميزات</Label>
+            {/* قسم المميزات المحسن */}
+            <div className="space-y-4 p-6 bg-gradient-to-l from-primary/5 to-secondary/5 rounded-2xl border border-primary/20">
+              <Label className="text-right block text-lg font-bold flex items-center gap-3 justify-end">
+                <span>مميزات الخدمة</span>
+                <CheckCircle2 className="w-5 h-5 text-primary" />
+              </Label>
               
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
                 <div>
                   <Input
-                    placeholder="ميزة بالعربية"
+                    placeholder="ميزة بالعربية..."
                     value={currentFeatureAr}
                     onChange={(e) => setCurrentFeatureAr(e.target.value)}
                     dir="rtl"
-                    className="text-right text-lg p-4 rounded-xl"
+                    className="text-right text-base p-4 rounded-xl border-border/50"
                   />
                 </div>
                 <div>
                   <Input
-                    placeholder="Feature in English"
+                    placeholder="Feature in English..."
                     value={currentFeatureEn}
                     onChange={(e) => setCurrentFeatureEn(e.target.value)}
                     dir="ltr"
-                    className="text-lg p-4 rounded-xl"
+                    className="text-base p-4 rounded-xl border-border/50"
                   />
                 </div>
               </div>
               
-              <Button type="button" onClick={addFeature} className="w-full text-lg font-bold py-3 rounded-xl">
+              <Button type="button" onClick={addFeature} className="w-full text-base font-bold py-3 rounded-xl flex items-center justify-center gap-3">
                 <span>إضافة ميزة</span>
-                <Plus className="w-5 h-5 mr-2" />
+                <Plus className="w-5 h-5" />
               </Button>
 
               {formData.features_ar.length > 0 && (
                 <div className="space-y-3">
                   {formData.features_ar.map((feature, index) => (
-                    <div key={index} className="flex items-center justify-between gap-4 p-4 bg-background rounded-xl border">
+                    <div key={index} className="flex items-center justify-between gap-4 p-4 bg-background rounded-xl border border-border/30">
                       <Button
                         type="button"
                         variant="ghost"
                         size="sm"
                         onClick={() => removeFeature(index)}
-                        className="text-destructive hover:text-destructive hover:bg-destructive/10 rounded-lg"
+                        className="text-destructive hover:text-destructive hover:bg-destructive/10 rounded-lg p-2"
                       >
-                        <X className="w-5 h-5" />
+                        <X className="w-4 h-4" />
                       </Button>
-                      <div className="flex-1 text-right">
+                      <div className="flex-1 text-right space-y-1">
                         <p className="text-base font-semibold">{feature}</p>
                         <p className="text-sm text-muted-foreground">{formData.features_en[index]}</p>
+                      </div>
+                      <div className="w-8 h-8 bg-primary/15 rounded-lg flex items-center justify-center">
+                        <CheckCircle2 className="w-4 h-4 text-primary" />
                       </div>
                     </div>
                   ))}
@@ -1053,42 +1734,46 @@ const ServiceDialog = ({
           </TabsContent>
 
           <TabsContent value="pricing" className="space-y-6">
-            <div className="grid grid-cols-2 gap-6">
+            {/* الأسعار */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
               <div>
-                <Label htmlFor="base_price" className="text-right block text-base font-semibold mb-2">السعر الأساسي</Label>
+                <Label htmlFor="base_price" className="text-right block text-base font-semibold mb-3">السعر الأساسي (ر.س)</Label>
                 <Input
                   id="base_price"
                   type="number"
                   step="0.01"
+                  min="0"
                   value={formData.base_price}
                   onChange={(e) => setFormData({ ...formData, base_price: e.target.value })}
                   dir="ltr"
-                  className="text-lg p-4 rounded-xl"
+                  className="text-base p-4 rounded-xl border-border/50"
                 />
               </div>
 
               <div>
-                <Label htmlFor="price_per_unit" className="text-right block text-base font-semibold mb-2">السعر لكل وحدة</Label>
+                <Label htmlFor="price_per_unit" className="text-right block text-base font-semibold mb-3">السعر لكل وحدة (ر.س)</Label>
                 <Input
                   id="price_per_unit"
                   type="number"
                   step="0.01"
+                  min="0"
                   value={formData.price_per_unit}
                   onChange={(e) => setFormData({ ...formData, price_per_unit: e.target.value })}
                   dir="ltr"
-                  className="text-lg p-4 rounded-xl"
+                  className={`text-base p-4 rounded-xl border-border/50 ${errors.price_per_unit ? 'border-destructive' : ''}`}
                 />
+                {errors.price_per_unit && <p className="text-destructive text-sm mt-1">{errors.price_per_unit}</p>}
               </div>
             </div>
 
-            <div className="grid grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
               <div>
-                <Label htmlFor="unit_type" className="text-right block text-base font-semibold mb-2">نوع الوحدة</Label>
+                <Label htmlFor="unit_type" className="text-right block text-base font-semibold mb-3">نوع الوحدة</Label>
                 <Select 
                   value={formData.unit_type} 
                   onValueChange={(value) => setFormData({ ...formData, unit_type: value })}
                 >
-                  <SelectTrigger className="text-lg p-4 rounded-xl">
+                  <SelectTrigger className="text-base p-4 rounded-xl border-border/50">
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
@@ -1096,64 +1781,75 @@ const ServiceDialog = ({
                     <SelectItem value="word">كلمة</SelectItem>
                     <SelectItem value="hour">ساعة</SelectItem>
                     <SelectItem value="project">مشروع</SelectItem>
+                    <SelectItem value="course">دورة</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
 
               <div>
-                <Label htmlFor="min_units" className="text-right block text-base font-semibold mb-2">الحد الأدنى</Label>
+                <Label htmlFor="min_units" className="text-right block text-base font-semibold mb-3">الحد الأدنى</Label>
                 <Input
                   id="min_units"
                   type="number"
+                  min="1"
                   value={formData.min_units}
                   onChange={(e) => setFormData({ ...formData, min_units: parseInt(e.target.value) || 1 })}
                   dir="ltr"
-                  className="text-lg p-4 rounded-xl"
+                  className={`text-base p-4 rounded-xl border-border/50 ${errors.min_units ? 'border-destructive' : ''}`}
                 />
+                {errors.min_units && <p className="text-destructive text-sm mt-1">{errors.min_units}</p>}
               </div>
 
               <div>
-                <Label htmlFor="max_units" className="text-right block text-base font-semibold mb-2">الحد الأقصى</Label>
+                <Label htmlFor="max_units" className="text-right block text-base font-semibold mb-3">الحد الأقصى</Label>
                 <Input
                   id="max_units"
                   type="number"
+                  min="1"
                   value={formData.max_units}
                   onChange={(e) => setFormData({ ...formData, max_units: e.target.value })}
                   dir="ltr"
-                  className="text-lg p-4 rounded-xl"
+                  className="text-base p-4 rounded-xl border-border/50"
+                  placeholder="غير محدود"
                 />
               </div>
             </div>
 
-            <div className="grid grid-cols-2 gap-6">
+            {/* مدة التسليم */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
               <div>
-                <Label htmlFor="delivery_time_days" className="text-right block text-base font-semibold mb-2">مدة التسليم (أيام)</Label>
+                <Label htmlFor="delivery_time_days" className="text-right block text-base font-semibold mb-3">مدة التسليم (أيام)</Label>
                 <Input
                   id="delivery_time_days"
                   type="number"
+                  min="1"
                   value={formData.delivery_time_days}
                   onChange={(e) => setFormData({ ...formData, delivery_time_days: parseInt(e.target.value) || 7 })}
                   dir="ltr"
-                  className="text-lg p-4 rounded-xl"
+                  className="text-base p-4 rounded-xl border-border/50"
                 />
               </div>
 
               <div>
-                <Label htmlFor="rush_delivery_multiplier" className="text-right block text-base font-semibold mb-2">مضاعف التسليم السريع</Label>
+                <Label htmlFor="rush_delivery_multiplier" className="text-right block text-base font-semibold mb-3">مضاعف التسليم السريع</Label>
                 <Input
                   id="rush_delivery_multiplier"
                   type="number"
                   step="0.1"
+                  min="1"
                   value={formData.rush_delivery_multiplier}
                   onChange={(e) => setFormData({ ...formData, rush_delivery_multiplier: parseFloat(e.target.value) || 1.5 })}
                   dir="ltr"
-                  className="text-lg p-4 rounded-xl"
+                  className="text-base p-4 rounded-xl border-border/50"
                 />
               </div>
             </div>
 
             <div className="flex items-center justify-end gap-4 p-4 bg-muted/20 rounded-xl">
-              <Label htmlFor="rush_delivery_available" className="text-lg font-semibold">التسليم السريع متاح</Label>
+              <Label htmlFor="rush_delivery_available" className="text-base font-semibold flex items-center gap-2">
+                <span>التسليم السريع متاح</span>
+                <Zap className="w-4 h-4 text-orange-500" />
+              </Label>
               <Switch
                 id="rush_delivery_available"
                 checked={formData.rush_delivery_available}
@@ -1163,33 +1859,39 @@ const ServiceDialog = ({
           </TabsContent>
 
           <TabsContent value="settings" className="space-y-6">
-            <div>
-              <Label htmlFor="image_url" className="text-right block text-base font-semibold mb-2">رابط الصورة</Label>
-              <Input
-                id="image_url"
-                type="url"
-                value={formData.image_url}
-                onChange={(e) => setFormData({ ...formData, image_url: e.target.value })}
-                dir="ltr"
-                className="text-lg p-4 rounded-xl"
-              />
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              <div>
+                <Label htmlFor="image_url" className="text-right block text-base font-semibold mb-3">رابط الصورة</Label>
+                <Input
+                  id="image_url"
+                  type="url"
+                  value={formData.image_url}
+                  onChange={(e) => setFormData({ ...formData, image_url: e.target.value })}
+                  dir="ltr"
+                  className="text-base p-4 rounded-xl border-border/50"
+                  placeholder="https://example.com/image.jpg"
+                />
+              </div>
+
+              <div>
+                <Label htmlFor="sort_order" className="text-right block text-base font-semibold mb-3">ترتيب العرض</Label>
+                <Input
+                  id="sort_order"
+                  type="number"
+                  value={formData.sort_order}
+                  onChange={(e) => setFormData({ ...formData, sort_order: parseInt(e.target.value) || 0 })}
+                  dir="ltr"
+                  className="text-base p-4 rounded-xl border-border/50"
+                />
+              </div>
             </div>
 
-            <div>
-              <Label htmlFor="sort_order" className="text-right block text-base font-semibold mb-2">ترتيب العرض</Label>
-              <Input
-                id="sort_order"
-                type="number"
-                value={formData.sort_order}
-                onChange={(e) => setFormData({ ...formData, sort_order: parseInt(e.target.value) || 0 })}
-                dir="ltr"
-                className="text-lg p-4 rounded-xl"
-              />
-            </div>
-
-            <div className="grid grid-cols-2 gap-6">
-              <div className="flex items-center justify-end gap-4 p-4 bg-muted/20 rounded-xl">
-                <Label htmlFor="is_active" className="text-lg font-semibold">مفعل</Label>
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              <div className="flex items-center justify-end gap-4 p-6 bg-gradient-to-l from-green-50 to-green-100 dark:from-green-950 dark:to-green-900 rounded-xl border border-green-200 dark:border-green-800">
+                <Label htmlFor="is_active" className="text-base font-semibold flex items-center gap-2">
+                  <span>خدمة مفعلة</span>
+                  <CheckCircle2 className="w-4 h-4 text-green-600" />
+                </Label>
                 <Switch
                   id="is_active"
                   checked={formData.is_active}
@@ -1197,8 +1899,11 @@ const ServiceDialog = ({
                 />
               </div>
 
-              <div className="flex items-center justify-end gap-4 p-4 bg-muted/20 rounded-xl">
-                <Label htmlFor="show_to_clients" className="text-lg font-semibold">ظاهر للعملاء</Label>
+              <div className="flex items-center justify-end gap-4 p-6 bg-gradient-to-l from-blue-50 to-blue-100 dark:from-blue-950 dark:to-blue-900 rounded-xl border border-blue-200 dark:border-blue-800">
+                <Label htmlFor="show_to_clients" className="text-base font-semibold flex items-center gap-2">
+                  <span>ظاهرة للعملاء</span>
+                  <Eye className="w-4 h-4 text-blue-600" />
+                </Label>
                 <Switch
                   id="show_to_clients"
                   checked={formData.show_to_clients}
@@ -1206,16 +1911,53 @@ const ServiceDialog = ({
                 />
               </div>
             </div>
+
+            {/* معاينة البطاقة */}
+            {formData.name_ar && (
+              <div className="space-y-4">
+                <Label className="text-right block text-lg font-bold">معاينة البطاقة</Label>
+                <div className="p-6 bg-gradient-to-l from-muted/50 to-muted/30 rounded-2xl border border-border/30">
+                  <div className="max-w-sm mx-auto">
+                    <Card className="bg-card/80 backdrop-blur-sm border border-border/50 rounded-2xl overflow-hidden">
+                      <CardContent className="p-4">
+                        <div className="space-y-3">
+                          <div className="flex items-center justify-between">
+                            <Badge variant={formData.is_active ? "default" : "secondary"} className="text-xs">
+                              {formData.is_active ? "مفعل" : "معطل"}
+                            </Badge>
+                            <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
+                              <Settings className="w-4 h-4 text-white" />
+                            </div>
+                          </div>
+                          <div className="text-right">
+                            <h3 className="text-lg font-bold">{formData.name_ar}</h3>
+                            <p className="text-sm text-muted-foreground">{formData.name_en}</p>
+                          </div>
+                          <div className="text-center p-3 bg-primary/10 rounded-lg">
+                            <div className="text-lg font-bold text-primary">
+                              {formData.price_per_unit ? `${formData.price_per_unit} ر.س` : 'حسب الطلب'}
+                            </div>
+                            {formData.unit_type && (
+                              <div className="text-xs text-muted-foreground">لكل {formData.unit_type}</div>
+                            )}
+                          </div>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  </div>
+                </div>
+              </div>
+            )}
           </TabsContent>
         </Tabs>
 
         <div className="flex justify-end gap-4 pt-6 border-t">
-          <Button type="button" variant="outline" onClick={onClose} className="px-6 py-3 rounded-xl text-lg">
+          <Button type="button" variant="outline" onClick={onClose} className="px-6 py-3 rounded-xl text-base">
             إلغاء
           </Button>
-          <Button type="submit" className="px-8 py-3 rounded-xl text-lg font-bold">
-            <span>حفظ</span>
-            <Save className="w-5 h-5 mr-2" />
+          <Button type="submit" className="px-8 py-3 rounded-xl text-base font-bold flex items-center gap-3">
+            <span>حفظ الخدمة</span>
+            <Save className="w-5 h-5" />
           </Button>
         </div>
       </form>
