@@ -104,7 +104,7 @@ const ClientLayout: React.FC<ClientLayoutProps> = ({ children }) => {
   );
 
   return (
-    <div className="min-h-screen bg-background" dir="rtl">
+    <div className="min-h-screen w-full bg-background" dir="rtl">
       {/* Header */}
       <header className="bg-card/95 backdrop-blur-md border-b border-border sticky top-0 z-50 shadow-sm">
         <div className="px-3 sm:px-4 lg:px-6">
@@ -199,19 +199,33 @@ const ClientLayout: React.FC<ClientLayoutProps> = ({ children }) => {
         </div>
       </header>
 
-      <div className="flex">
-        {/* Desktop Sidebar */}
-        <aside className="hidden lg:block w-64 bg-card/50 backdrop-blur-sm border-r border-border min-h-screen">
-          <SidebarContent />
+      <div className="flex w-full min-h-[calc(100vh-4rem)]">
+        {/* Desktop Sidebar - Fixed positioning and enhanced styling */}
+        <aside className="hidden lg:flex w-64 bg-card/80 backdrop-blur-sm border-r border-border flex-shrink-0 sticky top-16 h-[calc(100vh-4rem)] overflow-y-auto">
+          <div className="w-full">
+            {/* Sidebar Header */}
+            <div className="p-4 border-b border-border bg-gradient-to-r from-primary/5 to-secondary/5">
+              <div className="flex items-center space-x-3 space-x-reverse">
+                <div className="w-10 h-10 bg-gradient-to-br from-primary to-secondary rounded-xl flex items-center justify-center shadow-lg">
+                  <GraduationCap className="w-6 h-6 text-white" />
+                </div>
+                <div>
+                  <h2 className="text-lg font-black text-gray-900">القائمة الرئيسية</h2>
+                  <p className="text-xs text-muted-foreground">إدارة حسابك</p>
+                </div>
+              </div>
+            </div>
+            <SidebarContent />
+          </div>
         </aside>
 
         {/* Main Content */}
-        <main className="flex-1 overflow-auto">
+        <main className="flex-1 overflow-auto w-full">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.3 }}
-            className="p-0"
+            className="w-full h-full"
           >
             {children}
           </motion.div>
