@@ -276,57 +276,52 @@ const AdminServices = () => {
 
   return (
     <AdminLayout>
-      <div className="min-h-screen bg-gradient-to-br from-background via-background to-primary/5" dir="rtl">
-        {/* Header Section */}
-        <div className="bg-card/50 backdrop-blur-sm border-b border-border/50">
-          <div className="container mx-auto px-8 py-12">
+      <div className="min-h-screen bg-background" dir="rtl" style={{ fontFamily: 'Noto Sans Arabic, Arial, sans-serif' }}>
+        {/* Header */}
+        <div className="bg-gradient-to-l from-primary/10 via-background to-secondary/10 border-b">
+          <div className="container mx-auto px-6 py-8">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-6">
-                <div className="relative">
-                  <div className="w-20 h-20 bg-gradient-to-br from-primary to-primary/70 rounded-2xl flex items-center justify-center shadow-xl">
-                    <Settings className="w-10 h-10 text-primary-foreground" />
-                  </div>
-                  <div className="absolute -bottom-2 -right-2 w-6 h-6 bg-success rounded-full border-4 border-background"></div>
+                <div className="w-16 h-16 bg-gradient-to-br from-primary to-primary/70 rounded-3xl flex items-center justify-center shadow-lg">
+                  <Settings className="w-8 h-8 text-white" />
                 </div>
-                <div className="space-y-2">
-                  <h1 className="text-4xl font-bold text-foreground">إدارة الخدمات والأقسام</h1>
-                  <p className="text-lg text-muted-foreground font-medium">إدارة شاملة لجميع أقسام وخدمات المنصة التعليمية</p>
-                  <div className="flex items-center gap-4 text-sm text-muted-foreground">
-                    <span className="flex items-center gap-2">
-                      <div className="w-2 h-2 bg-primary rounded-full"></div>
-                      {categories.length} قسم
-                    </span>
-                    <span className="flex items-center gap-2">
-                      <div className="w-2 h-2 bg-secondary rounded-full"></div>
-                      {services.length} خدمة
-                    </span>
+                <div>
+                  <h1 className="text-3xl font-bold text-right">إدارة الخدمات والأقسام</h1>
+                  <p className="text-muted-foreground text-right mt-2">إدارة شاملة لجميع أقسام وخدمات المنصة التعليمية</p>
+                  <div className="flex items-center gap-6 mt-3 justify-end">
+                    <div className="flex items-center gap-2">
+                      <div className="w-3 h-3 bg-primary rounded-full"></div>
+                      <span className="text-sm font-medium">{categories.length} قسم</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <div className="w-3 h-3 bg-secondary rounded-full"></div>
+                      <span className="text-sm font-medium">{services.length} خدمة</span>
+                    </div>
                   </div>
                 </div>
               </div>
-              <div className="hidden lg:block">
-                <div className="text-right space-y-2">
-                  <div className="text-2xl font-bold text-primary">{services.filter(s => s.is_active).length}</div>
-                  <div className="text-sm text-muted-foreground">خدمة نشطة</div>
-                </div>
+              <div className="text-right">
+                <div className="text-2xl font-bold text-primary">{services.filter(s => s.is_active).length}</div>
+                <div className="text-sm text-muted-foreground">خدمة نشطة</div>
               </div>
             </div>
           </div>
         </div>
 
-        <div className="container mx-auto px-8 py-8">
-          <Tabs defaultValue="categories" className="space-y-8">
-            <div className="flex justify-center">
-              <TabsList className="grid grid-cols-2 w-full max-w-lg bg-muted/30 backdrop-blur-sm p-2 rounded-2xl border border-border/50">
+        <div className="container mx-auto px-6 py-8">
+          <Tabs defaultValue="categories" className="w-full">
+            <div className="flex justify-center mb-8">
+              <TabsList className="grid grid-cols-2 w-full max-w-md bg-muted/50 p-1 rounded-2xl">
                 <TabsTrigger 
                   value="categories" 
-                  className="flex items-center gap-3 px-6 py-4 rounded-xl data-[state=active]:bg-background data-[state=active]:shadow-lg transition-all duration-300"
+                  className="flex items-center justify-center gap-3 px-6 py-3 rounded-xl text-right"
                 >
                   <Languages className="w-5 h-5" />
                   <span className="font-semibold">الأقسام</span>
                 </TabsTrigger>
                 <TabsTrigger 
                   value="services" 
-                  className="flex items-center gap-3 px-6 py-4 rounded-xl data-[state=active]:bg-background data-[state=active]:shadow-lg transition-all duration-300"
+                  className="flex items-center justify-center gap-3 px-6 py-3 rounded-xl text-right"
                 >
                   <Settings className="w-5 h-5" />
                   <span className="font-semibold">الخدمات</span>
@@ -335,17 +330,17 @@ const AdminServices = () => {
             </div>
 
             {/* Categories Tab */}
-            <TabsContent value="categories" className="space-y-8">
-              <div className="bg-card/30 backdrop-blur-sm rounded-2xl border border-border/50 p-8">
+            <TabsContent value="categories" className="space-y-6">
+              <div className="bg-card border rounded-2xl p-6">
                 <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-6">
-                  <div className="space-y-2">
-                    <h2 className="text-2xl font-bold text-foreground flex items-center gap-3">
+                  <div className="text-right">
+                    <h2 className="text-2xl font-bold flex items-center gap-3 justify-end">
+                      <span>أقسام الخدمات</span>
                       <div className="w-8 h-8 bg-primary/10 rounded-lg flex items-center justify-center">
                         <Languages className="w-5 h-5 text-primary" />
                       </div>
-                      أقسام الخدمات
                     </h2>
-                    <p className="text-muted-foreground">إدارة تصنيفات الخدمات الأساسية في المنصة</p>
+                    <p className="text-muted-foreground text-right mt-2">إدارة تصنيفات الخدمات الأساسية في المنصة</p>
                   </div>
                   <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
                     <DialogTrigger asChild>
@@ -354,7 +349,7 @@ const AdminServices = () => {
                           setEditingCategory(null);
                           setIsDialogOpen(true);
                         }}
-                        className="flex items-center gap-3 px-6 py-3 rounded-xl bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 shadow-lg hover:shadow-xl transition-all duration-300"
+                        className="flex items-center gap-3 px-6 py-3 rounded-xl shadow-lg"
                         size="lg"
                       >
                         <Plus className="w-5 h-5" />
@@ -374,31 +369,21 @@ const AdminServices = () => {
               </div>
 
               {loading ? (
-                <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
+                <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
                   {Array.from({ length: 6 }).map((_, i) => (
-                    <div key={i} className="h-64 bg-gradient-to-br from-muted/50 to-muted/30 animate-pulse rounded-2xl border border-border/30" />
+                    <div key={i} className="h-64 bg-muted/30 animate-pulse rounded-2xl" />
                   ))}
                 </div>
               ) : categories.length === 0 ? (
                 <div className="text-center py-20">
-                  <div className="w-24 h-24 bg-muted/50 rounded-full flex items-center justify-center mx-auto mb-6">
+                  <div className="w-24 h-24 bg-muted/30 rounded-full flex items-center justify-center mx-auto mb-6">
                     <Languages className="w-12 h-12 text-muted-foreground" />
                   </div>
-                  <h3 className="text-xl font-semibold text-foreground mb-2">لا توجد أقسام بعد</h3>
+                  <h3 className="text-xl font-semibold mb-2">لا توجد أقسام بعد</h3>
                   <p className="text-muted-foreground mb-6">ابدأ بإنشاء أول قسم للخدمات</p>
-                  <Button 
-                    onClick={() => {
-                      setEditingCategory(null);
-                      setIsDialogOpen(true);
-                    }}
-                    className="flex items-center gap-2"
-                  >
-                    <Plus className="w-4 h-4" />
-                    إنشاء قسم جديد
-                  </Button>
                 </div>
               ) : (
-                <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
+                <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
                   {categories.map((category) => (
                     <CategoryCard
                       key={category.id}
@@ -415,17 +400,17 @@ const AdminServices = () => {
             </TabsContent>
 
             {/* Services Tab */}
-            <TabsContent value="services" className="space-y-8">
-              <div className="bg-card/30 backdrop-blur-sm rounded-2xl border border-border/50 p-8">
+            <TabsContent value="services" className="space-y-6">
+              <div className="bg-card border rounded-2xl p-6">
                 <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-6">
-                  <div className="space-y-2">
-                    <h2 className="text-2xl font-bold text-foreground flex items-center gap-3">
+                  <div className="text-right">
+                    <h2 className="text-2xl font-bold flex items-center gap-3 justify-end">
+                      <span>إدارة الخدمات</span>
                       <div className="w-8 h-8 bg-secondary/10 rounded-lg flex items-center justify-center">
                         <Settings className="w-5 h-5 text-secondary" />
                       </div>
-                      إدارة الخدمات
                     </h2>
-                    <p className="text-muted-foreground">إدارة جميع الخدمات المتاحة للعملاء في المنصة</p>
+                    <p className="text-muted-foreground text-right mt-2">إدارة جميع الخدمات المتاحة للعملاء في المنصة</p>
                   </div>
                   <Dialog open={isServiceDialogOpen} onOpenChange={setIsServiceDialogOpen}>
                     <DialogTrigger asChild>
@@ -434,8 +419,9 @@ const AdminServices = () => {
                           setEditingService(null);
                           setIsServiceDialogOpen(true);
                         }}
-                        className="flex items-center gap-3 px-6 py-3 rounded-xl bg-gradient-to-r from-secondary to-secondary/80 hover:from-secondary/90 hover:to-secondary/70 shadow-lg hover:shadow-xl transition-all duration-300"
+                        className="flex items-center gap-3 px-6 py-3 rounded-xl shadow-lg"
                         size="lg"
+                        variant="secondary"
                       >
                         <Plus className="w-5 h-5" />
                         <span className="font-semibold">إضافة خدمة جديدة</span>
@@ -455,31 +441,21 @@ const AdminServices = () => {
               </div>
 
               {loading ? (
-                <div className="space-y-6">
+                <div className="space-y-4">
                   {Array.from({ length: 5 }).map((_, i) => (
-                    <div key={i} className="h-40 bg-gradient-to-br from-muted/50 to-muted/30 animate-pulse rounded-2xl border border-border/30" />
+                    <div key={i} className="h-40 bg-muted/30 animate-pulse rounded-2xl" />
                   ))}
                 </div>
               ) : services.length === 0 ? (
                 <div className="text-center py-20">
-                  <div className="w-24 h-24 bg-muted/50 rounded-full flex items-center justify-center mx-auto mb-6">
+                  <div className="w-24 h-24 bg-muted/30 rounded-full flex items-center justify-center mx-auto mb-6">
                     <Settings className="w-12 h-12 text-muted-foreground" />
                   </div>
-                  <h3 className="text-xl font-semibold text-foreground mb-2">لا توجد خدمات بعد</h3>
+                  <h3 className="text-xl font-semibold mb-2">لا توجد خدمات بعد</h3>
                   <p className="text-muted-foreground mb-6">ابدأ بإنشاء أول خدمة للعملاء</p>
-                  <Button 
-                    onClick={() => {
-                      setEditingService(null);
-                      setIsServiceDialogOpen(true);
-                    }}
-                    className="flex items-center gap-2"
-                  >
-                    <Plus className="w-4 h-4" />
-                    إنشاء خدمة جديدة
-                  </Button>
                 </div>
               ) : (
-                <div className="space-y-6">
+                <div className="space-y-4">
                   {services.map((service) => (
                     <ServiceCard
                       key={service.id}
@@ -523,72 +499,62 @@ const CategoryCard = ({
   };
 
   return (
-    <Card className="group relative overflow-hidden bg-gradient-to-br from-card/80 to-card/60 backdrop-blur-sm border-2 border-border/50 hover:border-primary/30 hover:shadow-2xl transition-all duration-500 rounded-2xl">
-      {/* Background Pattern */}
-      <div className="absolute inset-0 opacity-5">
-        <div className="absolute top-0 right-0 w-32 h-32 rounded-full" style={{ backgroundColor: category.color }}></div>
-        <div className="absolute bottom-0 left-0 w-20 h-20 rounded-full" style={{ backgroundColor: category.color }}></div>
-      </div>
-      
-      <CardHeader className="pb-4 relative">
+    <Card className="group hover:shadow-xl transition-all duration-300 border-2 hover:border-primary/20 rounded-2xl overflow-hidden">
+      <CardHeader className="pb-4">
         <div className="flex items-start justify-between gap-4">
-          <div className="flex items-center gap-4 flex-1">
-            <div className="relative">
-              <div 
-                className="w-16 h-16 rounded-2xl flex items-center justify-center text-white shadow-lg group-hover:scale-110 transition-transform duration-300"
-                style={{ backgroundColor: category.color }}
-              >
-                {getIcon(category.icon)}
-              </div>
-              <div className="absolute -bottom-1 -right-1 w-5 h-5 bg-background rounded-full border-2 border-border flex items-center justify-center">
-                <div className={`w-2 h-2 rounded-full ${category.is_active ? 'bg-success' : 'bg-muted-foreground'}`}></div>
-              </div>
+          <div className="flex-1 text-right">
+            <Badge 
+              variant={category.is_active ? "default" : "secondary"}
+              className="text-xs font-semibold px-3 py-1 rounded-full mb-3"
+            >
+              {category.is_active ? "مفعل" : "معطل"}
+            </Badge>
+            <CardTitle className="text-xl font-bold text-right mb-1">{category.name_ar}</CardTitle>
+            <p className="text-sm text-muted-foreground text-right">{category.name_en}</p>
+          </div>
+          <div className="relative">
+            <div 
+              className="w-16 h-16 rounded-2xl flex items-center justify-center text-white shadow-lg group-hover:scale-110 transition-transform duration-300"
+              style={{ backgroundColor: category.color }}
+            >
+              {getIcon(category.icon)}
             </div>
-            <div className="flex-1 min-w-0">
-              <CardTitle className="text-xl font-bold text-foreground mb-1 truncate">{category.name_ar}</CardTitle>
-              <p className="text-sm text-muted-foreground font-medium mb-2 truncate">{category.name_en}</p>
-              <Badge 
-                variant={category.is_active ? "default" : "secondary"}
-                className="text-xs font-semibold px-3 py-1 rounded-full"
-              >
-                {category.is_active ? "مفعل" : "معطل"}
-              </Badge>
+            <div className="absolute -bottom-1 -left-1 w-5 h-5 bg-background rounded-full border-2 border-border flex items-center justify-center">
+              <div className={`w-2 h-2 rounded-full ${category.is_active ? 'bg-success' : 'bg-muted-foreground'}`}></div>
             </div>
           </div>
         </div>
       </CardHeader>
       
-      <CardContent className="pt-0 relative">
-        <div className="space-y-4">
-          <p className="text-sm text-muted-foreground leading-relaxed min-h-[3rem]">
-            {category.description_ar || "لا يوجد وصف متاح لهذا القسم"}
-          </p>
-          
-          <div className="pt-4 border-t border-border/50">
-            <div className="flex justify-between items-center gap-3">
-              <div className="text-xs text-muted-foreground">
-                ترتيب: {category.sort_order}
-              </div>
-              <div className="flex gap-2">
-                <Button 
-                  variant="outline" 
-                  size="sm" 
-                  onClick={() => onEdit(category)}
-                  className="flex items-center gap-2 hover:bg-primary/10 hover:border-primary/30 rounded-xl transition-all duration-300"
-                >
-                  <Edit2 className="w-4 h-4" />
-                  <span className="font-medium">تعديل</span>
-                </Button>
-                <Button 
-                  variant="outline" 
-                  size="sm" 
-                  onClick={() => onDelete(category.id)}
-                  className="flex items-center gap-2 text-destructive hover:text-destructive hover:bg-destructive/10 hover:border-destructive/30 rounded-xl transition-all duration-300"
-                >
-                  <Trash2 className="w-4 h-4" />
-                  <span className="font-medium">حذف</span>
-                </Button>
-              </div>
+      <CardContent className="pt-0">
+        <p className="text-sm text-muted-foreground text-right leading-relaxed mb-6 min-h-[3rem]">
+          {category.description_ar || "لا يوجد وصف متاح لهذا القسم"}
+        </p>
+        
+        <div className="pt-4 border-t">
+          <div className="flex justify-between items-center gap-3">
+            <div className="flex gap-2">
+              <Button 
+                variant="outline" 
+                size="sm" 
+                onClick={() => onEdit(category)}
+                className="flex items-center gap-2 hover:bg-primary/10 hover:border-primary/30 rounded-xl"
+              >
+                <Edit2 className="w-4 h-4" />
+                <span>تعديل</span>
+              </Button>
+              <Button 
+                variant="outline" 
+                size="sm" 
+                onClick={() => onDelete(category.id)}
+                className="flex items-center gap-2 text-destructive hover:text-destructive hover:bg-destructive/10 hover:border-destructive/30 rounded-xl"
+              >
+                <Trash2 className="w-4 h-4" />
+                <span>حذف</span>
+              </Button>
+            </div>
+            <div className="text-xs text-muted-foreground">
+              ترتيب: {category.sort_order}
             </div>
           </div>
         </div>
@@ -608,34 +574,49 @@ const ServiceCard = ({
   onDelete: (id: string) => void;
 }) => {
   return (
-    <Card className="group relative overflow-hidden bg-gradient-to-br from-card/80 to-card/60 backdrop-blur-sm border-2 border-border/50 hover:border-secondary/30 hover:shadow-2xl transition-all duration-500 rounded-2xl">
-      {/* Background Elements */}
-      <div className="absolute inset-0 opacity-5">
-        <div className="absolute top-0 right-0 w-32 h-32 bg-secondary rounded-full"></div>
-        <div className="absolute bottom-0 left-0 w-24 h-24 bg-primary rounded-full"></div>
-      </div>
-      
-      <CardContent className="p-8 relative">
-        <div className="flex items-start justify-between">
-          <div className="flex-1">
-            <div className="flex items-center gap-3 mb-3">
+    <Card className="group hover:shadow-xl transition-all duration-300 border-2 hover:border-secondary/20 rounded-2xl overflow-hidden">
+      <CardContent className="p-6">
+        <div className="flex items-start justify-between gap-6">
+          <div className="flex gap-2">
+            <Button 
+              variant="outline" 
+              size="sm" 
+              onClick={() => onEdit(service)}
+              className="flex items-center gap-2 hover:bg-primary/10 hover:border-primary/30 rounded-xl"
+            >
+              <Edit2 className="w-4 h-4" />
+              <span>تعديل</span>
+            </Button>
+            <Button 
+              variant="outline" 
+              size="sm" 
+              onClick={() => onDelete(service.id)}
+              className="flex items-center gap-2 text-destructive hover:text-destructive hover:bg-destructive/10 hover:border-destructive/30 rounded-xl"
+            >
+              <Trash2 className="w-4 h-4" />
+              <span>حذف</span>
+            </Button>
+          </div>
+          
+          <div className="flex-1 text-right">
+            <div className="flex items-center gap-3 mb-3 justify-end">
+              <div className="text-right">
+                <h3 className="text-lg font-semibold">{service.name_ar}</h3>
+                <p className="text-sm text-muted-foreground">{service.name_en}</p>
+              </div>
               <div 
                 className="w-10 h-10 rounded-lg flex items-center justify-center text-white"
                 style={{ backgroundColor: service.service_categories?.color || '#3B82F6' }}
               >
                 <Settings className="w-5 h-5" />
               </div>
-              <div>
-                <h3 className="text-lg font-semibold">{service.name_ar}</h3>
-                <p className="text-sm text-muted-foreground">{service.name_en}</p>
-              </div>
             </div>
             
-            <p className="text-sm text-muted-foreground mb-3">
+            <p className="text-sm text-muted-foreground mb-4 text-right">
               {service.description_ar || "لا يوجد وصف"}
             </p>
 
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4 text-right">
               <div>
                 <p className="text-xs text-muted-foreground">القسم</p>
                 <p className="text-sm font-medium">{service.service_categories?.name_ar}</p>
@@ -656,7 +637,7 @@ const ServiceCard = ({
               </div>
             </div>
 
-            <div className="flex items-center gap-4">
+            <div className="flex items-center gap-4 justify-end">
               <Badge variant={service.is_active ? "default" : "secondary"}>
                 {service.is_active ? "مفعل" : "معطل"}
               </Badge>
@@ -669,27 +650,6 @@ const ServiceCard = ({
                 </Badge>
               )}
             </div>
-          </div>
-
-          <div className="flex gap-2 mr-4">
-            <Button 
-              variant="outline" 
-              size="sm" 
-              onClick={() => onEdit(service)}
-              className="flex items-center gap-1"
-            >
-              <Edit2 className="w-3 h-3" />
-              تعديل
-            </Button>
-            <Button 
-              variant="outline" 
-              size="sm" 
-              onClick={() => onDelete(service.id)}
-              className="flex items-center gap-1 text-destructive hover:text-destructive"
-            >
-              <Trash2 className="w-3 h-3" />
-              حذف
-            </Button>
           </div>
         </div>
       </CardContent>
@@ -733,26 +693,27 @@ const CategoryDialog = ({
   return (
     <DialogContent className="max-w-md" dir="rtl">
       <DialogHeader>
-        <DialogTitle>{category ? 'تعديل القسم' : 'قسم جديد'}</DialogTitle>
-        <DialogDescription>
+        <DialogTitle className="text-right">{category ? 'تعديل القسم' : 'قسم جديد'}</DialogTitle>
+        <DialogDescription className="text-right">
           {category ? 'تعديل بيانات القسم' : 'إضافة قسم جديد للخدمات'}
         </DialogDescription>
       </DialogHeader>
       
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
-          <Label htmlFor="name_ar">الاسم بالعربية</Label>
+          <Label htmlFor="name_ar" className="text-right block">الاسم بالعربية</Label>
           <Input
             id="name_ar"
             value={formData.name_ar}
             onChange={(e) => setFormData({ ...formData, name_ar: e.target.value })}
             required
             dir="rtl"
+            className="text-right"
           />
         </div>
 
         <div>
-          <Label htmlFor="name_en">الاسم بالإنجليزية</Label>
+          <Label htmlFor="name_en" className="text-right block">الاسم بالإنجليزية</Label>
           <Input
             id="name_en"
             value={formData.name_en}
@@ -763,17 +724,18 @@ const CategoryDialog = ({
         </div>
 
         <div>
-          <Label htmlFor="description_ar">الوصف بالعربية</Label>
+          <Label htmlFor="description_ar" className="text-right block">الوصف بالعربية</Label>
           <Textarea
             id="description_ar"
             value={formData.description_ar}
             onChange={(e) => setFormData({ ...formData, description_ar: e.target.value })}
             dir="rtl"
+            className="text-right"
           />
         </div>
 
         <div>
-          <Label htmlFor="description_en">الوصف بالإنجليزية</Label>
+          <Label htmlFor="description_en" className="text-right block">الوصف بالإنجليزية</Label>
           <Textarea
             id="description_en"
             value={formData.description_en}
@@ -784,7 +746,7 @@ const CategoryDialog = ({
 
         <div className="grid grid-cols-2 gap-4">
           <div>
-            <Label htmlFor="icon">الأيقونة</Label>
+            <Label htmlFor="icon" className="text-right block">الأيقونة</Label>
             <Select value={formData.icon} onValueChange={(value) => setFormData({ ...formData, icon: value })}>
               <SelectTrigger>
                 <SelectValue />
@@ -800,7 +762,7 @@ const CategoryDialog = ({
           </div>
 
           <div>
-            <Label htmlFor="color">اللون</Label>
+            <Label htmlFor="color" className="text-right block">اللون</Label>
             <Input
               id="color"
               type="color"
@@ -812,16 +774,17 @@ const CategoryDialog = ({
 
         <div className="grid grid-cols-2 gap-4">
           <div>
-            <Label htmlFor="sort_order">ترتيب العرض</Label>
+            <Label htmlFor="sort_order" className="text-right block">ترتيب العرض</Label>
             <Input
               id="sort_order"
               type="number"
               value={formData.sort_order}
               onChange={(e) => setFormData({ ...formData, sort_order: parseInt(e.target.value) || 0 })}
+              dir="ltr"
             />
           </div>
 
-          <div className="flex items-center space-x-2 space-x-reverse">
+          <div className="flex items-center space-x-2 space-x-reverse pt-6">
             <Switch
               id="is_active"
               checked={formData.is_active}
@@ -918,8 +881,8 @@ const ServiceDialog = ({
   return (
     <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto" dir="rtl">
       <DialogHeader>
-        <DialogTitle>{service ? 'تعديل الخدمة' : 'خدمة جديدة'}</DialogTitle>
-        <DialogDescription>
+        <DialogTitle className="text-right">{service ? 'تعديل الخدمة' : 'خدمة جديدة'}</DialogTitle>
+        <DialogDescription className="text-right">
           {service ? 'تعديل بيانات الخدمة' : 'إضافة خدمة جديدة'}
         </DialogDescription>
       </DialogHeader>
@@ -935,18 +898,19 @@ const ServiceDialog = ({
           <TabsContent value="basic" className="space-y-4">
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <Label htmlFor="name_ar">اسم الخدمة بالعربية</Label>
+                <Label htmlFor="name_ar" className="text-right block">اسم الخدمة بالعربية</Label>
                 <Input
                   id="name_ar"
                   value={formData.name_ar}
                   onChange={(e) => setFormData({ ...formData, name_ar: e.target.value })}
                   required
                   dir="rtl"
+                  className="text-right"
                 />
               </div>
 
               <div>
-                <Label htmlFor="name_en">اسم الخدمة بالإنجليزية</Label>
+                <Label htmlFor="name_en" className="text-right block">اسم الخدمة بالإنجليزية</Label>
                 <Input
                   id="name_en"
                   value={formData.name_en}
@@ -958,7 +922,7 @@ const ServiceDialog = ({
             </div>
 
             <div>
-              <Label htmlFor="category_id">القسم</Label>
+              <Label htmlFor="category_id" className="text-right block">القسم</Label>
               <Select 
                 value={formData.category_id} 
                 onValueChange={(value) => setFormData({ ...formData, category_id: value })}
@@ -978,17 +942,18 @@ const ServiceDialog = ({
 
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <Label htmlFor="description_ar">الوصف بالعربية</Label>
+                <Label htmlFor="description_ar" className="text-right block">الوصف بالعربية</Label>
                 <Textarea
                   id="description_ar"
                   value={formData.description_ar}
                   onChange={(e) => setFormData({ ...formData, description_ar: e.target.value })}
                   dir="rtl"
+                  className="text-right"
                 />
               </div>
 
               <div>
-                <Label htmlFor="description_en">الوصف بالإنجليزية</Label>
+                <Label htmlFor="description_en" className="text-right block">الوصف بالإنجليزية</Label>
                 <Textarea
                   id="description_en"
                   value={formData.description_en}
@@ -998,51 +963,52 @@ const ServiceDialog = ({
               </div>
             </div>
 
-            <div>
-              <Label>المميزات</Label>
-              <div className="space-y-2">
-                <div className="grid grid-cols-2 gap-2">
+            {/* Features Section */}
+            <div className="space-y-4">
+              <Label className="text-right block">المميزات</Label>
+              
+              <div className="grid grid-cols-2 gap-4">
+                <div>
                   <Input
-                    placeholder="المميزة بالعربية"
+                    placeholder="ميزة بالعربية"
                     value={currentFeatureAr}
                     onChange={(e) => setCurrentFeatureAr(e.target.value)}
                     dir="rtl"
+                    className="text-right"
                   />
+                </div>
+                <div>
                   <Input
-                    placeholder="المميزة بالإنجليزية"
+                    placeholder="Feature in English"
                     value={currentFeatureEn}
                     onChange={(e) => setCurrentFeatureEn(e.target.value)}
                     dir="ltr"
                   />
                 </div>
-                <Button 
-                  type="button" 
-                  variant="outline" 
-                  size="sm"
-                  onClick={addFeature}
-                  className="w-full"
-                >
-                  <Plus className="w-4 h-4 ml-2" />
-                  إضافة مميزة
-                </Button>
               </div>
+              
+              <Button type="button" onClick={addFeature} className="w-full">
+                <Plus className="w-4 h-4 ml-2" />
+                إضافة ميزة
+              </Button>
 
               {formData.features_ar.length > 0 && (
-                <div className="mt-4 space-y-2">
+                <div className="space-y-2">
                   {formData.features_ar.map((feature, index) => (
-                    <div key={index} className="flex items-center justify-between bg-muted p-2 rounded">
-                      <div className="grid grid-cols-2 gap-2 flex-1">
-                        <span className="text-sm">{feature}</span>
-                        <span className="text-sm text-muted-foreground">{formData.features_en[index]}</span>
-                      </div>
+                    <div key={index} className="flex items-center justify-between gap-2 p-3 bg-muted rounded-lg">
                       <Button
                         type="button"
                         variant="ghost"
                         size="sm"
                         onClick={() => removeFeature(index)}
+                        className="text-destructive hover:text-destructive"
                       >
                         <X className="w-4 h-4" />
                       </Button>
+                      <div className="flex-1 text-right">
+                        <p className="text-sm font-medium">{feature}</p>
+                        <p className="text-xs text-muted-foreground">{formData.features_en[index]}</p>
+                      </div>
                     </div>
                   ))}
                 </div>
@@ -1053,31 +1019,33 @@ const ServiceDialog = ({
           <TabsContent value="pricing" className="space-y-4">
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <Label htmlFor="base_price">السعر الأساسي (ريال)</Label>
+                <Label htmlFor="base_price" className="text-right block">السعر الأساسي</Label>
                 <Input
                   id="base_price"
                   type="number"
                   step="0.01"
                   value={formData.base_price}
                   onChange={(e) => setFormData({ ...formData, base_price: e.target.value })}
+                  dir="ltr"
                 />
               </div>
 
               <div>
-                <Label htmlFor="price_per_unit">السعر لكل وحدة (ريال)</Label>
+                <Label htmlFor="price_per_unit" className="text-right block">السعر لكل وحدة</Label>
                 <Input
                   id="price_per_unit"
                   type="number"
                   step="0.01"
                   value={formData.price_per_unit}
                   onChange={(e) => setFormData({ ...formData, price_per_unit: e.target.value })}
+                  dir="ltr"
                 />
               </div>
             </div>
 
             <div className="grid grid-cols-3 gap-4">
               <div>
-                <Label htmlFor="unit_type">نوع الوحدة</Label>
+                <Label htmlFor="unit_type" className="text-right block">نوع الوحدة</Label>
                 <Select 
                   value={formData.unit_type} 
                   onValueChange={(value) => setFormData({ ...formData, unit_type: value })}
@@ -1095,45 +1063,49 @@ const ServiceDialog = ({
               </div>
 
               <div>
-                <Label htmlFor="min_units">الحد الأدنى</Label>
+                <Label htmlFor="min_units" className="text-right block">الحد الأدنى</Label>
                 <Input
                   id="min_units"
                   type="number"
                   value={formData.min_units}
                   onChange={(e) => setFormData({ ...formData, min_units: parseInt(e.target.value) || 1 })}
+                  dir="ltr"
                 />
               </div>
 
               <div>
-                <Label htmlFor="max_units">الحد الأقصى</Label>
+                <Label htmlFor="max_units" className="text-right block">الحد الأقصى</Label>
                 <Input
                   id="max_units"
                   type="number"
                   value={formData.max_units}
                   onChange={(e) => setFormData({ ...formData, max_units: e.target.value })}
+                  dir="ltr"
                 />
               </div>
             </div>
 
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <Label htmlFor="delivery_time_days">مدة التسليم (أيام)</Label>
+                <Label htmlFor="delivery_time_days" className="text-right block">مدة التسليم (أيام)</Label>
                 <Input
                   id="delivery_time_days"
                   type="number"
                   value={formData.delivery_time_days}
                   onChange={(e) => setFormData({ ...formData, delivery_time_days: parseInt(e.target.value) || 7 })}
+                  dir="ltr"
                 />
               </div>
 
               <div>
-                <Label htmlFor="rush_delivery_multiplier">مضاعف التسليم السريع</Label>
+                <Label htmlFor="rush_delivery_multiplier" className="text-right block">مضاعف التسليم السريع</Label>
                 <Input
                   id="rush_delivery_multiplier"
                   type="number"
                   step="0.1"
                   value={formData.rush_delivery_multiplier}
                   onChange={(e) => setFormData({ ...formData, rush_delivery_multiplier: parseFloat(e.target.value) || 1.5 })}
+                  dir="ltr"
                 />
               </div>
             </div>
@@ -1150,7 +1122,7 @@ const ServiceDialog = ({
 
           <TabsContent value="settings" className="space-y-4">
             <div>
-              <Label htmlFor="image_url">رابط الصورة</Label>
+              <Label htmlFor="image_url" className="text-right block">رابط الصورة</Label>
               <Input
                 id="image_url"
                 type="url"
@@ -1161,16 +1133,17 @@ const ServiceDialog = ({
             </div>
 
             <div>
-              <Label htmlFor="sort_order">ترتيب العرض</Label>
+              <Label htmlFor="sort_order" className="text-right block">ترتيب العرض</Label>
               <Input
                 id="sort_order"
                 type="number"
                 value={formData.sort_order}
                 onChange={(e) => setFormData({ ...formData, sort_order: parseInt(e.target.value) || 0 })}
+                dir="ltr"
               />
             </div>
 
-            <div className="space-y-4">
+            <div className="grid grid-cols-2 gap-4">
               <div className="flex items-center space-x-2 space-x-reverse">
                 <Switch
                   id="is_active"
