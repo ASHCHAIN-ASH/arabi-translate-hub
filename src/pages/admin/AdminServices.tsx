@@ -502,6 +502,17 @@ const CategoryCard = ({
     <Card className="group hover:shadow-xl transition-all duration-300 border-2 hover:border-primary/20 rounded-2xl overflow-hidden">
       <CardHeader className="pb-4">
         <div className="flex items-start justify-between gap-4">
+          <div className="relative">
+            <div 
+              className="w-16 h-16 rounded-2xl flex items-center justify-center text-white shadow-lg group-hover:scale-110 transition-transform duration-300"
+              style={{ backgroundColor: category.color }}
+            >
+              {getIcon(category.icon)}
+            </div>
+            <div className="absolute -bottom-1 -right-1 w-5 h-5 bg-background rounded-full border-2 border-border flex items-center justify-center">
+              <div className={`w-2 h-2 rounded-full ${category.is_active ? 'bg-success' : 'bg-muted-foreground'}`}></div>
+            </div>
+          </div>
           <div className="flex-1 text-right">
             <Badge 
               variant={category.is_active ? "default" : "secondary"}
@@ -511,17 +522,6 @@ const CategoryCard = ({
             </Badge>
             <CardTitle className="text-xl font-bold text-right mb-1">{category.name_ar}</CardTitle>
             <p className="text-sm text-muted-foreground text-right">{category.name_en}</p>
-          </div>
-          <div className="relative">
-            <div 
-              className="w-16 h-16 rounded-2xl flex items-center justify-center text-white shadow-lg group-hover:scale-110 transition-transform duration-300"
-              style={{ backgroundColor: category.color }}
-            >
-              {getIcon(category.icon)}
-            </div>
-            <div className="absolute -bottom-1 -left-1 w-5 h-5 bg-background rounded-full border-2 border-border flex items-center justify-center">
-              <div className={`w-2 h-2 rounded-full ${category.is_active ? 'bg-success' : 'bg-muted-foreground'}`}></div>
-            </div>
           </div>
         </div>
       </CardHeader>
@@ -533,16 +533,10 @@ const CategoryCard = ({
         
         <div className="pt-4 border-t">
           <div className="flex justify-between items-center gap-3">
+            <div className="text-xs text-muted-foreground">
+              ترتيب: {category.sort_order}
+            </div>
             <div className="flex gap-2">
-              <Button 
-                variant="outline" 
-                size="sm" 
-                onClick={() => onEdit(category)}
-                className="flex items-center gap-2 hover:bg-primary/10 hover:border-primary/30 rounded-xl"
-              >
-                <Edit2 className="w-4 h-4" />
-                <span>تعديل</span>
-              </Button>
               <Button 
                 variant="outline" 
                 size="sm" 
@@ -552,9 +546,15 @@ const CategoryCard = ({
                 <Trash2 className="w-4 h-4" />
                 <span>حذف</span>
               </Button>
-            </div>
-            <div className="text-xs text-muted-foreground">
-              ترتيب: {category.sort_order}
+              <Button 
+                variant="outline" 
+                size="sm" 
+                onClick={() => onEdit(category)}
+                className="flex items-center gap-2 hover:bg-primary/10 hover:border-primary/30 rounded-xl"
+              >
+                <Edit2 className="w-4 h-4" />
+                <span>تعديل</span>
+              </Button>
             </div>
           </div>
         </div>
@@ -581,20 +581,20 @@ const ServiceCard = ({
             <Button 
               variant="outline" 
               size="sm" 
-              onClick={() => onEdit(service)}
-              className="flex items-center gap-2 hover:bg-primary/10 hover:border-primary/30 rounded-xl"
-            >
-              <Edit2 className="w-4 h-4" />
-              <span>تعديل</span>
-            </Button>
-            <Button 
-              variant="outline" 
-              size="sm" 
               onClick={() => onDelete(service.id)}
               className="flex items-center gap-2 text-destructive hover:text-destructive hover:bg-destructive/10 hover:border-destructive/30 rounded-xl"
             >
               <Trash2 className="w-4 h-4" />
               <span>حذف</span>
+            </Button>
+            <Button 
+              variant="outline" 
+              size="sm" 
+              onClick={() => onEdit(service)}
+              className="flex items-center gap-2 hover:bg-primary/10 hover:border-primary/30 rounded-xl"
+            >
+              <Edit2 className="w-4 h-4" />
+              <span>تعديل</span>
             </Button>
           </div>
           
@@ -638,17 +638,17 @@ const ServiceCard = ({
             </div>
 
             <div className="flex items-center gap-4 justify-end">
-              <Badge variant={service.is_active ? "default" : "secondary"}>
-                {service.is_active ? "مفعل" : "معطل"}
-              </Badge>
-              <Badge variant={service.show_to_clients ? "default" : "outline"}>
-                {service.show_to_clients ? "ظاهر للعملاء" : "مخفي"}
-              </Badge>
               {service.rush_delivery_available && (
                 <Badge variant="outline">
                   تسليم سريع متاح
                 </Badge>
               )}
+              <Badge variant={service.show_to_clients ? "default" : "outline"}>
+                {service.show_to_clients ? "ظاهر للعملاء" : "مخفي"}
+              </Badge>
+              <Badge variant={service.is_active ? "default" : "secondary"}>
+                {service.is_active ? "مفعل" : "معطل"}
+              </Badge>
             </div>
           </div>
         </div>
