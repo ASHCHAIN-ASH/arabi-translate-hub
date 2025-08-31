@@ -103,29 +103,33 @@ const ClientLayout: React.FC<ClientLayoutProps> = ({ children }) => {
     </nav>
   );
 
+  // Debug log
+  console.log('ClientLayout rendering - window width:', typeof window !== 'undefined' ? window.innerWidth : 'server');
+
   return (
-    <div className="min-h-screen w-full bg-background flex" dir="rtl">
-      {/* Desktop Sidebar - Always visible on large screens */}
-      <aside className="hidden lg:flex w-64 bg-card/80 backdrop-blur-sm border-l border-border flex-shrink-0 sticky top-0 h-screen overflow-y-auto">
-        <div className="w-full">
-          {/* Sidebar Header */}
-          <div className="p-4 border-b border-border bg-gradient-to-r from-primary/5 to-secondary/5">
-            <div className="flex items-center space-x-3 space-x-reverse">
-              <div className="w-10 h-10 bg-gradient-to-br from-primary to-secondary rounded-xl flex items-center justify-center shadow-lg">
-                <GraduationCap className="w-6 h-6 text-white" />
-              </div>
-              <div>
-                <h2 className="text-lg font-black text-gray-900">القائمة الرئيسية</h2>
-                <p className="text-xs text-muted-foreground">إدارة حسابك</p>
+    <div className="min-h-screen w-full bg-background" dir="rtl">
+      <div className="flex">
+        {/* Desktop Sidebar - Always visible on large screens */}
+        <aside className="w-64 bg-card/80 backdrop-blur-sm border-l border-border flex-shrink-0 hidden lg:block">
+          <div className="sticky top-0 h-screen overflow-y-auto">
+            {/* Sidebar Header */}
+            <div className="p-4 border-b border-border bg-gradient-to-r from-primary/5 to-secondary/5">
+              <div className="flex items-center space-x-3 space-x-reverse">
+                <div className="w-10 h-10 bg-gradient-to-br from-primary to-secondary rounded-xl flex items-center justify-center shadow-lg">
+                  <GraduationCap className="w-6 h-6 text-white" />
+                </div>
+                <div>
+                  <h2 className="text-lg font-black text-gray-900">القائمة الرئيسية</h2>
+                  <p className="text-xs text-muted-foreground">إدارة حسابك</p>
+                </div>
               </div>
             </div>
+            <SidebarContent />
           </div>
-          <SidebarContent />
-        </div>
-      </aside>
+        </aside>
 
-      {/* Main Content Area */}
-      <div className="flex-1 flex flex-col w-full lg:w-auto">
+        {/* Main Content Area */}
+        <div className="flex-1 min-w-0">
         {/* Header */}
         <header className="bg-card/95 backdrop-blur-md border-b border-border sticky top-0 z-50 shadow-sm">
           <div className="px-3 sm:px-4 lg:px-6">
@@ -220,17 +224,18 @@ const ClientLayout: React.FC<ClientLayoutProps> = ({ children }) => {
           </div>
         </header>
 
-        {/* Main Content */}
-        <main className="flex-1 overflow-auto w-full">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.3 }}
-            className="w-full h-full"
-          >
-            {children}
-          </motion.div>
-        </main>
+          {/* Main Content */}
+          <main className="flex-1 overflow-auto">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.3 }}
+              className="w-full h-full"
+            >
+              {children}
+            </motion.div>
+          </main>
+        </div>
       </div>
     </div>
   );
