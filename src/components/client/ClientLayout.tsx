@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '@/components/SimpleAuthProvider';
 import { Button } from '@/components/ui/button';
+import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { 
   LayoutDashboard, 
   ShoppingCart, 
@@ -10,7 +11,9 @@ import {
   HelpCircle,
   LogOut,
   GraduationCap,
-  Bell
+  Bell,
+  Menu,
+  X
 } from 'lucide-react';
 import { motion } from 'framer-motion';
 
@@ -22,6 +25,7 @@ const ClientLayout: React.FC<ClientLayoutProps> = ({ children }) => {
   const location = useLocation();
   const navigate = useNavigate();
   const { user, signOut } = useAuth();
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   const navItems = [
     { 
@@ -60,19 +64,96 @@ const ClientLayout: React.FC<ClientLayoutProps> = ({ children }) => {
     }
   };
 
+  const SidebarContent = () => (
+    <nav className="p-4 space-y-2">
+      {navItems.map((item) => {
+        const isActive = location.pathname === item.href || 
+          (item.href !== '/dashboard' && location.pathname.startsWith(item.href));
+        
+        return (
+          <Link
+            key={item.href}
+            to={item.href}
+            onClick={() => setIsSidebarOpen(false)}
+            className={`
+              flex items-center space-x-3 space-x-reverse px-4 py-3 rounded-xl text-sm font-semibold transition-all duration-200
+              ${isActive 
+                ? 'bg-gradient-to-r from-primary to-primary-600 text-white shadow-lg' 
+                : 'text-muted-foreground hover:text-foreground hover:bg-muted/50'
+              }
+            `}
+          >
+            <item.icon className={`w-5 h-5 ${isActive ? 'text-white' : ''}`} />
+            <span>{item.name}</span>
+          </Link>
+        );
+      })}
+      
+      {/* Sign Out Button في الجوال */}
+      <div className="pt-4 mt-4 border-t border-border lg:hidden">
+        <Button 
+          variant="ghost" 
+          onClick={handleSignOut}
+          className="w-full justify-start text-red-600 hover:text-red-700 hover:bg-red-50"
+        >
+          <LogOut className="w-5 h-5 ml-3" />
+          تسجيل الخروج
+        </Button>
+      </div>
+    </nav>
+  );
+
   return (
     <div className="min-h-screen bg-background" dir="rtl">
       {/* Header */}
-      <header className="bg-card border-b border-border sticky top-0 z-40">
-        <div className="px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-16">
-            {/* Logo and Brand */}
-            <div className="flex items-center">
+      <header className="bg-card/95 backdrop-blur-md border-b border-border sticky top-0 z-50 shadow-sm">
+        <div className="px-3 sm:px-4 lg:px-6">
+          <div className="flex items-center justify-between h-14 sm:h-16">
+            {/* Mobile Menu Button & Logo */}
+            <div className="flex items-center space-x-3 space-x-reverse">
+              {/* Mobile Menu Toggle */}
+              <Sheet open={isSidebarOpen} onOpenChange={setIsSidebarOpen}>
+                <SheetTrigger asChild>
+                  <Button variant="ghost" size="sm" className="lg:hidden p-2">
+                    <Menu className="w-5 h-5" />
+                  </Button>
+                </SheetTrigger>
+                <SheetContent 
+                  side="right" 
+                  className="w-80 bg-card/95 backdrop-blur-md border-l border-border p-0"
+                  dir="rtl"
+                >
+                  <div className="p-4 border-b border-border">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center space-x-2 space-x-reverse">
+                        <div className="w-8 h-8 bg-gradient-to-br from-primary to-secondary rounded-lg flex items-center justify-center">
+                          <GraduationCap className="w-5 h-5 text-white" />
+                        </div>
+                        <div>
+                          <h1 className="text-lg font-arabic-formal font-bold">منصة التعليم</h1>
+                          <p className="text-xs text-muted-foreground">لوحة العميل</p>
+                        </div>
+                      </div>
+                      <Button 
+                        variant="ghost" 
+                        size="sm" 
+                        onClick={() => setIsSidebarOpen(false)}
+                        className="p-1"
+                      >
+                        <X className="w-4 h-4" />
+                      </Button>
+                    </div>
+                  </div>
+                  <SidebarContent />
+                </SheetContent>
+              </Sheet>
+
+              {/* Logo */}
               <Link to="/dashboard" className="flex items-center space-x-2 space-x-reverse">
                 <div className="w-8 h-8 bg-gradient-to-br from-primary to-secondary rounded-lg flex items-center justify-center">
                   <GraduationCap className="w-5 h-5 text-white" />
                 </div>
-                <div>
+                <div className="hidden sm:block">
                   <h1 className="text-lg font-arabic-formal font-bold">منصة التعليم</h1>
                   <p className="text-xs text-muted-foreground">لوحة العميل</p>
                 </div>
@@ -80,18 +161,22 @@ const ClientLayout: React.FC<ClientLayoutProps> = ({ children }) => {
             </div>
 
             {/* User Menu */}
-            <div className="flex items-center space-x-4 space-x-reverse">
+            <div className="flex items-center space-x-2 sm:space-x-4 space-x-reverse">
               {/* Notifications */}
-              <Button variant="ghost" size="sm" className="relative">
-                <Bell className="w-5 h-5" />
+              <Button variant="ghost" size="sm" className="relative p-2">
+                <Bell className="w-4 h-4 sm:w-5 sm:h-5" />
                 <span className="absolute -top-1 -right-1 w-2 h-2 bg-red-500 rounded-full"></span>
               </Button>
 
               {/* User Profile */}
-              <div className="flex items-center space-x-3 space-x-reverse">
-                <div className="text-right">
-                  <p className="text-sm font-medium">{user?.name || user?.email}</p>
-                  <p className="text-xs text-muted-foreground">{user?.role === 'admin' ? 'مدير' : 'عميل'}</p>
+              <div className="flex items-center space-x-2 sm:space-x-3 space-x-reverse">
+                <div className="text-right hidden sm:block">
+                  <p className="text-sm font-medium truncate max-w-24 sm:max-w-none">
+                    {user?.name || user?.email?.split('@')[0]}
+                  </p>
+                  <p className="text-xs text-muted-foreground">
+                    {user?.role === 'admin' ? 'مدير' : 'عميل'}
+                  </p>
                 </div>
                 <div className="w-8 h-8 bg-gradient-to-br from-primary to-secondary rounded-full flex items-center justify-center">
                   <span className="text-white text-sm font-medium">
@@ -100,8 +185,13 @@ const ClientLayout: React.FC<ClientLayoutProps> = ({ children }) => {
                 </div>
               </div>
 
-              {/* Sign Out */}
-              <Button variant="ghost" size="sm" onClick={handleSignOut}>
+              {/* Desktop Sign Out */}
+              <Button 
+                variant="ghost" 
+                size="sm" 
+                onClick={handleSignOut}
+                className="hidden lg:flex p-2"
+              >
                 <LogOut className="w-4 h-4" />
               </Button>
             </div>
@@ -110,34 +200,9 @@ const ClientLayout: React.FC<ClientLayoutProps> = ({ children }) => {
       </header>
 
       <div className="flex">
-        {/* Sidebar */}
-        <aside className="w-64 bg-card border-r border-border min-h-screen">
-          <nav className="p-4">
-            <ul className="space-y-2">
-              {navItems.map((item) => {
-                const isActive = location.pathname === item.href || 
-                  (item.href !== '/dashboard' && location.pathname.startsWith(item.href));
-                
-                return (
-                  <li key={item.href}>
-                    <Link
-                      to={item.href}
-                      className={`
-                        flex items-center space-x-3 space-x-reverse px-3 py-2 rounded-lg text-sm font-medium transition-colors
-                        ${isActive 
-                          ? 'bg-primary text-white' 
-                          : 'text-muted-foreground hover:text-foreground hover:bg-muted'
-                        }
-                      `}
-                    >
-                      <item.icon className="w-5 h-5" />
-                      <span>{item.name}</span>
-                    </Link>
-                  </li>
-                );
-              })}
-            </ul>
-          </nav>
+        {/* Desktop Sidebar */}
+        <aside className="hidden lg:block w-64 bg-card/50 backdrop-blur-sm border-r border-border min-h-screen">
+          <SidebarContent />
         </aside>
 
         {/* Main Content */}
@@ -146,7 +211,7 @@ const ClientLayout: React.FC<ClientLayoutProps> = ({ children }) => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.3 }}
-            className="p-6"
+            className="p-0"
           >
             {children}
           </motion.div>
