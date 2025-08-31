@@ -25,6 +25,7 @@ import Unauthorized from "./pages/Unauthorized";
 
 // Client Pages
 import ClientDashboard from "./pages/client/Dashboard";
+import ClientServices from "./pages/client/ClientServices";
 import Orders from "./pages/client/Orders";
 import OrderNew from "./pages/client/OrderNew";
 import OrderDetails from "./pages/client/OrderDetails";
@@ -108,6 +109,11 @@ const App = () => (
             <Route path="/dashboard" element={
               <SimpleProtectedRoute requiredRole="client">
                 <ClientDashboard />
+              </SimpleProtectedRoute>
+            } />
+            <Route path="/client/services" element={
+              <SimpleProtectedRoute requiredRole="client">
+                <ClientServices />
               </SimpleProtectedRoute>
             } />
             <Route path="/orders" element={

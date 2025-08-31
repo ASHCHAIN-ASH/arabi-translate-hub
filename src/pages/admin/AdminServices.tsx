@@ -25,7 +25,8 @@ import {
   Eye,
   EyeOff,
   Clock,
-  DollarSign
+  DollarSign,
+  Settings
 } from 'lucide-react';
 
 interface ServiceCategory {
@@ -49,8 +50,8 @@ interface Service {
   name_en: string;
   description_ar?: string;
   description_en?: string;
-  features_ar?: string[];
-  features_en?: string[];
+  features_ar: string[];
+  features_en: string[];
   base_price?: number;
   price_per_unit?: number;
   unit_type: string;
@@ -65,28 +66,24 @@ interface Service {
   show_to_clients: boolean;
   created_at: string;
   updated_at: string;
-  service_categories?: ServiceCategory;
+  service_categories?: {
+    id: string;
+    name_ar: string;
+    name_en: string;
+    icon: string;
+    color: string;
+  };
 }
 
-const getIconComponent = (iconName: string) => {
-  const icons: Record<string, React.ComponentType<any>> = {
-    Languages,
-    GraduationCap,
-    Users,
-    Search
-  };
-  return icons[iconName] || Languages;
-};
-
-export default function AdminServices() {
-  const { toast } = useToast();
+const AdminServices = () => {
   const [categories, setCategories] = useState<ServiceCategory[]>([]);
   const [services, setServices] = useState<Service[]>([]);
   const [loading, setLoading] = useState(true);
   const [editingCategory, setEditingCategory] = useState<ServiceCategory | null>(null);
   const [editingService, setEditingService] = useState<Service | null>(null);
-  const [showCategoryDialog, setShowCategoryDialog] = useState(false);
-  const [showServiceDialog, setShowServiceDialog] = useState(false);
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [isServiceDialogOpen, setIsServiceDialogOpen] = useState(false);
+  const { toast } = useToast();
 
   useEffect(() => {
     loadData();
@@ -94,15 +91,15 @@ export default function AdminServices() {
 
   const loadData = async () => {
     try {
-      // تحميل الأقسام
+      setLoading(true);
+      
+      // Load categories
       const { data: categoriesData, error: categoriesError } = await supabase
         .from('service_categories')
         .select('*')
-        .order('sort_order');
+        .order('sort_order', { ascending: true });
 
-      if (categoriesError) throw categoriesError;
-
-      // تحميل الخدمات مع معلومات الأقسام
+      // Load services with categories
       const { data: servicesData, error: servicesError } = await supabase
         .from('services')
         .select(`
@@ -115,8 +112,9 @@ export default function AdminServices() {
             color
           )
         `)
-        .order('sort_order');
+        .order('sort_order', { ascending: true });
 
+      if (categoriesError) throw categoriesError;
       if (servicesError) throw servicesError;
 
       setCategories(categoriesData || []);
@@ -126,14 +124,14 @@ export default function AdminServices() {
       toast({
         title: "خطأ",
         description: "فشل في تحميل البيانات",
-        variant: "destructive"
+        variant: "destructive",
       });
     } finally {
       setLoading(false);
     }
   };
 
-  const saveCategory = async (category: Partial<ServiceCategory>) => {
+  const handleSaveCategory = async (category: Partial<ServiceCategory>) => {
     try {
       if (editingCategory?.id) {
         // تحديث
@@ -163,8 +161,8 @@ export default function AdminServices() {
         if (error) throw error;
         toast({ title: "تم الحفظ", description: "تم إنشاء القسم بنجاح" });
       }
-
-      setShowCategoryDialog(false);
+      
+      setIsDialogOpen(false);
       setEditingCategory(null);
       loadData();
     } catch (error) {
@@ -172,12 +170,12 @@ export default function AdminServices() {
       toast({
         title: "خطأ",
         description: "فشل في حفظ القسم",
-        variant: "destructive"
+        variant: "destructive",
       });
     }
   };
 
-  const saveService = async (service: Partial<Service>) => {
+  const handleSaveService = async (service: Partial<Service>) => {
     try {
       if (editingService?.id) {
         // تحديث
@@ -218,8 +216,8 @@ export default function AdminServices() {
         if (error) throw error;
         toast({ title: "تم الحفظ", description: "تم إنشاء الخدمة بنجاح" });
       }
-
-      setShowServiceDialog(false);
+      
+      setIsServiceDialogOpen(false);
       setEditingService(null);
       loadData();
     } catch (error) {
@@ -227,14 +225,14 @@ export default function AdminServices() {
       toast({
         title: "خطأ",
         description: "فشل في حفظ الخدمة",
-        variant: "destructive"
+        variant: "destructive",
       });
     }
   };
 
-  const deleteCategory = async (id: string) => {
+  const handleDeleteCategory = async (id: string) => {
     if (!confirm('هل أنت متأكد من حذف هذا القسم؟')) return;
-
+    
     try {
       const { error } = await supabase
         .from('service_categories')
@@ -249,14 +247,14 @@ export default function AdminServices() {
       toast({
         title: "خطأ",
         description: "فشل في حذف القسم",
-        variant: "destructive"
+        variant: "destructive",
       });
     }
   };
 
-  const deleteService = async (id: string) => {
+  const handleDeleteService = async (id: string) => {
     if (!confirm('هل أنت متأكد من حذف هذه الخدمة؟')) return;
-
+    
     try {
       const { error } = await supabase
         .from('services')
@@ -271,248 +269,318 @@ export default function AdminServices() {
       toast({
         title: "خطأ",
         description: "فشل في حذف الخدمة",
-        variant: "destructive"
+        variant: "destructive",
       });
     }
   };
 
-  if (loading) {
-    return (
-      <AdminLayout>
-        <div className="flex items-center justify-center h-64">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
-        </div>
-      </AdminLayout>
-    );
-  }
-
   return (
     <AdminLayout>
-      <div className="space-y-8">
-        <div className="flex justify-between items-center">
-          <div>
-            <h1 className="text-3xl font-bold">إدارة الخدمات</h1>
-            <p className="text-muted-foreground">إدارة أقسام وخدمات الموقع</p>
+      <div className="min-h-screen bg-background" dir="rtl">
+        <div className="container mx-auto px-6 py-8">
+          {/* Header */}
+          <div className="mb-8">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <div className="w-12 h-12 bg-primary/10 rounded-xl flex items-center justify-center">
+                  <Settings className="w-6 h-6 text-primary" />
+                </div>
+                <div>
+                  <h1 className="text-3xl font-bold text-foreground">إدارة الخدمات</h1>
+                  <p className="text-muted-foreground mt-1">إدارة أقسام وخدمات الموقع</p>
+                </div>
+              </div>
+            </div>
           </div>
-          <div className="flex gap-2">
-            <Dialog open={showCategoryDialog} onOpenChange={setShowCategoryDialog}>
-              <DialogTrigger asChild>
-                <Button onClick={() => setEditingCategory(null)}>
-                  <Plus className="h-4 w-4 ml-2" />
-                  قسم جديد
-                </Button>
-              </DialogTrigger>
-              <CategoryDialog
-                category={editingCategory}
-                onSave={saveCategory}
-                onClose={() => {
-                  setShowCategoryDialog(false);
-                  setEditingCategory(null);
-                }}
-              />
-            </Dialog>
 
-            <Dialog open={showServiceDialog} onOpenChange={setShowServiceDialog}>
-              <DialogTrigger asChild>
-                <Button variant="outline" onClick={() => setEditingService(null)}>
-                  <Plus className="h-4 w-4 ml-2" />
-                  خدمة جديدة
-                </Button>
-              </DialogTrigger>
-              <ServiceDialog
-                service={editingService}
-                categories={categories}
-                onSave={saveService}
-                onClose={() => {
-                  setShowServiceDialog(false);
-                  setEditingService(null);
-                }}
-              />
-            </Dialog>
-          </div>
+          <Tabs defaultValue="categories" className="space-y-6">
+            <TabsList className="grid grid-cols-2 w-full max-w-md">
+              <TabsTrigger value="categories" className="flex items-center gap-2">
+                <Languages className="w-4 h-4" />
+                الأقسام
+              </TabsTrigger>
+              <TabsTrigger value="services" className="flex items-center gap-2">
+                <Settings className="w-4 h-4" />
+                الخدمات
+              </TabsTrigger>
+            </TabsList>
+
+            {/* Categories Tab */}
+            <TabsContent value="categories" className="space-y-6">
+              <div className="flex justify-between items-center">
+                <h2 className="text-xl font-semibold">أقسام الخدمات</h2>
+                <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+                  <DialogTrigger asChild>
+                    <Button 
+                      onClick={() => {
+                        setEditingCategory(null);
+                        setIsDialogOpen(true);
+                      }}
+                      className="flex items-center gap-2"
+                    >
+                      <Plus className="w-4 h-4" />
+                      قسم جديد
+                    </Button>
+                  </DialogTrigger>
+                  <CategoryDialog 
+                    category={editingCategory}
+                    onSave={handleSaveCategory}
+                    onClose={() => {
+                      setIsDialogOpen(false);
+                      setEditingCategory(null);
+                    }}
+                  />
+                </Dialog>
+              </div>
+
+              {loading ? (
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                  {Array.from({ length: 6 }).map((_, i) => (
+                    <div key={i} className="h-48 bg-muted animate-pulse rounded-lg" />
+                  ))}
+                </div>
+              ) : (
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                  {categories.map((category) => (
+                    <CategoryCard
+                      key={category.id}
+                      category={category}
+                      onEdit={(cat) => {
+                        setEditingCategory(cat);
+                        setIsDialogOpen(true);
+                      }}
+                      onDelete={handleDeleteCategory}
+                    />
+                  ))}
+                </div>
+              )}
+            </TabsContent>
+
+            {/* Services Tab */}
+            <TabsContent value="services" className="space-y-6">
+              <div className="flex justify-between items-center">
+                <h2 className="text-xl font-semibold">الخدمات</h2>
+                <Dialog open={isServiceDialogOpen} onOpenChange={setIsServiceDialogOpen}>
+                  <DialogTrigger asChild>
+                    <Button 
+                      onClick={() => {
+                        setEditingService(null);
+                        setIsServiceDialogOpen(true);
+                      }}
+                      className="flex items-center gap-2"
+                    >
+                      <Plus className="w-4 h-4" />
+                      خدمة جديدة
+                    </Button>
+                  </DialogTrigger>
+                  <ServiceDialog 
+                    service={editingService}
+                    categories={categories}
+                    onSave={handleSaveService}
+                    onClose={() => {
+                      setIsServiceDialogOpen(false);
+                      setEditingService(null);
+                    }}
+                  />
+                </Dialog>
+              </div>
+
+              {loading ? (
+                <div className="space-y-4">
+                  {Array.from({ length: 5 }).map((_, i) => (
+                    <div key={i} className="h-32 bg-muted animate-pulse rounded-lg" />
+                  ))}
+                </div>
+              ) : (
+                <div className="space-y-4">
+                  {services.map((service) => (
+                    <ServiceCard
+                      key={service.id}
+                      service={service}
+                      onEdit={(srv) => {
+                        setEditingService(srv);
+                        setIsServiceDialogOpen(true);
+                      }}
+                      onDelete={handleDeleteService}
+                    />
+                  ))}
+                </div>
+              )}
+            </TabsContent>
+          </Tabs>
         </div>
-
-        <Tabs defaultValue="services" className="w-full">
-          <TabsList className="grid w-full grid-cols-2">
-            <TabsTrigger value="services">الخدمات</TabsTrigger>
-            <TabsTrigger value="categories">الأقسام</TabsTrigger>
-          </TabsList>
-
-          <TabsContent value="services" className="space-y-6">
-            <div className="grid gap-6">
-              {categories.map(category => {
-                const categoryServices = services.filter(s => s.category_id === category.id);
-                const IconComponent = getIconComponent(category.icon);
-                
-                return (
-                  <Card key={category.id} className="overflow-hidden">
-                    <CardHeader style={{ backgroundColor: category.color + '10' }}>
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-3">
-                          <div 
-                            className="p-2 rounded-lg text-white"
-                            style={{ backgroundColor: category.color }}
-                          >
-                            <IconComponent className="h-5 w-5" />
-                          </div>
-                          <div>
-                            <CardTitle className="flex items-center gap-2">
-                              {category.name_ar}
-                              <Badge variant={category.is_active ? "default" : "secondary"}>
-                                {category.is_active ? 'نشط' : 'غير نشط'}
-                              </Badge>
-                            </CardTitle>
-                            <CardDescription>{category.description_ar}</CardDescription>
-                          </div>
-                        </div>
-                        <Badge variant="outline">
-                          {categoryServices.length} خدمة
-                        </Badge>
-                      </div>
-                    </CardHeader>
-                    <CardContent className="p-6">
-                      <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
-                        {categoryServices.map(service => (
-                          <div key={service.id} className="border rounded-lg p-4 space-y-3">
-                            <div className="flex items-start justify-between">
-                              <h4 className="font-semibold">{service.name_ar}</h4>
-                              <div className="flex gap-1">
-                                <Button
-                                  size="sm"
-                                  variant="ghost"
-                                  onClick={() => {
-                                    setEditingService(service);
-                                    setShowServiceDialog(true);
-                                  }}
-                                >
-                                  <Edit2 className="h-3 w-3" />
-                                </Button>
-                                <Button
-                                  size="sm"
-                                  variant="ghost"
-                                  onClick={() => deleteService(service.id)}
-                                >
-                                  <Trash2 className="h-3 w-3" />
-                                </Button>
-                              </div>
-                            </div>
-                            
-                            <p className="text-sm text-muted-foreground line-clamp-2">
-                              {service.description_ar}
-                            </p>
-                            
-                            <div className="flex flex-wrap gap-2">
-                              <Badge variant={service.is_active ? "default" : "secondary"}>
-                                {service.is_active ? 'نشط' : 'غير نشط'}
-                              </Badge>
-                              <Badge variant={service.show_to_clients ? "default" : "outline"}>
-                                {service.show_to_clients ? <Eye className="h-3 w-3" /> : <EyeOff className="h-3 w-3" />}
-                              </Badge>
-                            </div>
-                            
-                            {service.base_price && (
-                              <div className="flex items-center gap-2 text-sm">
-                                <DollarSign className="h-3 w-3" />
-                                <span>{service.base_price} ريال</span>
-                              </div>
-                            )}
-                            
-                            <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                              <Clock className="h-3 w-3" />
-                              <span>{service.delivery_time_days} أيام</span>
-                            </div>
-                          </div>
-                        ))}
-                        
-                        <div className="border-2 border-dashed border-muted rounded-lg p-4 flex items-center justify-center">
-                          <Button
-                            variant="ghost"
-                            onClick={() => {
-                              setEditingService({ category_id: category.id } as Service);
-                              setShowServiceDialog(true);
-                            }}
-                          >
-                            <Plus className="h-4 w-4 ml-2" />
-                            إضافة خدمة
-                          </Button>
-                        </div>
-                      </div>
-                    </CardContent>
-                  </Card>
-                );
-              })}
-            </div>
-          </TabsContent>
-
-          <TabsContent value="categories" className="space-y-6">
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {categories.map(category => {
-                const IconComponent = getIconComponent(category.icon);
-                const serviceCount = services.filter(s => s.category_id === category.id).length;
-                
-                return (
-                  <Card key={category.id}>
-                    <CardHeader>
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-3">
-                          <div 
-                            className="p-2 rounded-lg text-white"
-                            style={{ backgroundColor: category.color }}
-                          >
-                            <IconComponent className="h-5 w-5" />
-                          </div>
-                          <div>
-                            <CardTitle className="text-lg">{category.name_ar}</CardTitle>
-                            <CardDescription>{category.name_en}</CardDescription>
-                          </div>
-                        </div>
-                        <div className="flex gap-1">
-                          <Button
-                            size="sm"
-                            variant="ghost"
-                            onClick={() => {
-                              setEditingCategory(category);
-                              setShowCategoryDialog(true);
-                            }}
-                          >
-                            <Edit2 className="h-3 w-3" />
-                          </Button>
-                          <Button
-                            size="sm"
-                            variant="ghost"
-                            onClick={() => deleteCategory(category.id)}
-                          >
-                            <Trash2 className="h-3 w-3" />
-                          </Button>
-                        </div>
-                      </div>
-                    </CardHeader>
-                    <CardContent>
-                      <p className="text-sm text-muted-foreground mb-4">
-                        {category.description_ar}
-                      </p>
-                      <div className="flex justify-between items-center">
-                        <Badge variant={category.is_active ? "default" : "secondary"}>
-                          {category.is_active ? 'نشط' : 'غير نشط'}
-                        </Badge>
-                        <span className="text-sm text-muted-foreground">
-                          {serviceCount} خدمة
-                        </span>
-                      </div>
-                    </CardContent>
-                  </Card>
-                );
-              })}
-            </div>
-          </TabsContent>
-        </Tabs>
       </div>
     </AdminLayout>
   );
-}
+};
 
-// مكون نافذة تحرير القسم
-function CategoryDialog({ 
+// Category Card Component
+const CategoryCard = ({ 
+  category, 
+  onEdit, 
+  onDelete 
+}: { 
+  category: ServiceCategory;
+  onEdit: (category: ServiceCategory) => void;
+  onDelete: (id: string) => void;
+}) => {
+  const getIcon = (iconName: string) => {
+    const icons: any = {
+      Languages,
+      GraduationCap,
+      Users,
+      Search
+    };
+    const Icon = icons[iconName] || Languages;
+    return <Icon className="w-6 h-6" />;
+  };
+
+  return (
+    <Card className="hover:shadow-lg transition-shadow border-2 hover:border-primary/20">
+      <CardHeader className="pb-3">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div 
+              className="w-10 h-10 rounded-lg flex items-center justify-center text-white"
+              style={{ backgroundColor: category.color }}
+            >
+              {getIcon(category.icon)}
+            </div>
+            <div>
+              <CardTitle className="text-lg">{category.name_ar}</CardTitle>
+              <p className="text-sm text-muted-foreground">{category.name_en}</p>
+            </div>
+          </div>
+          <Badge variant={category.is_active ? "default" : "secondary"}>
+            {category.is_active ? "مفعل" : "معطل"}
+          </Badge>
+        </div>
+      </CardHeader>
+      <CardContent>
+        <p className="text-sm text-muted-foreground mb-4">
+          {category.description_ar || "لا يوجد وصف"}
+        </p>
+        <div className="flex justify-end gap-2">
+          <Button 
+            variant="outline" 
+            size="sm" 
+            onClick={() => onEdit(category)}
+            className="flex items-center gap-1"
+          >
+            <Edit2 className="w-3 h-3" />
+            تعديل
+          </Button>
+          <Button 
+            variant="outline" 
+            size="sm" 
+            onClick={() => onDelete(category.id)}
+            className="flex items-center gap-1 text-destructive hover:text-destructive"
+          >
+            <Trash2 className="w-3 h-3" />
+            حذف
+          </Button>
+        </div>
+      </CardContent>
+    </Card>
+  );
+};
+
+// Service Card Component
+const ServiceCard = ({ 
+  service, 
+  onEdit, 
+  onDelete 
+}: { 
+  service: Service;
+  onEdit: (service: Service) => void;
+  onDelete: (id: string) => void;
+}) => {
+  return (
+    <Card className="hover:shadow-lg transition-shadow">
+      <CardContent className="p-6">
+        <div className="flex items-start justify-between">
+          <div className="flex-1">
+            <div className="flex items-center gap-3 mb-3">
+              <div 
+                className="w-10 h-10 rounded-lg flex items-center justify-center text-white"
+                style={{ backgroundColor: service.service_categories?.color || '#3B82F6' }}
+              >
+                <Settings className="w-5 h-5" />
+              </div>
+              <div>
+                <h3 className="text-lg font-semibold">{service.name_ar}</h3>
+                <p className="text-sm text-muted-foreground">{service.name_en}</p>
+              </div>
+            </div>
+            
+            <p className="text-sm text-muted-foreground mb-3">
+              {service.description_ar || "لا يوجد وصف"}
+            </p>
+
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
+              <div>
+                <p className="text-xs text-muted-foreground">القسم</p>
+                <p className="text-sm font-medium">{service.service_categories?.name_ar}</p>
+              </div>
+              <div>
+                <p className="text-xs text-muted-foreground">مدة التسليم</p>
+                <p className="text-sm font-medium">{service.delivery_time_days} أيام</p>
+              </div>
+              <div>
+                <p className="text-xs text-muted-foreground">الحد الأدنى</p>
+                <p className="text-sm font-medium">{service.min_units} {service.unit_type}</p>
+              </div>
+              <div>
+                <p className="text-xs text-muted-foreground">السعر لكل وحدة</p>
+                <p className="text-sm font-medium">
+                  {service.price_per_unit ? `${service.price_per_unit} ريال` : 'حسب الطلب'}
+                </p>
+              </div>
+            </div>
+
+            <div className="flex items-center gap-4">
+              <Badge variant={service.is_active ? "default" : "secondary"}>
+                {service.is_active ? "مفعل" : "معطل"}
+              </Badge>
+              <Badge variant={service.show_to_clients ? "default" : "outline"}>
+                {service.show_to_clients ? "ظاهر للعملاء" : "مخفي"}
+              </Badge>
+              {service.rush_delivery_available && (
+                <Badge variant="outline">
+                  تسليم سريع متاح
+                </Badge>
+              )}
+            </div>
+          </div>
+
+          <div className="flex gap-2 mr-4">
+            <Button 
+              variant="outline" 
+              size="sm" 
+              onClick={() => onEdit(service)}
+              className="flex items-center gap-1"
+            >
+              <Edit2 className="w-3 h-3" />
+              تعديل
+            </Button>
+            <Button 
+              variant="outline" 
+              size="sm" 
+              onClick={() => onDelete(service.id)}
+              className="flex items-center gap-1 text-destructive hover:text-destructive"
+            >
+              <Trash2 className="w-3 h-3" />
+              حذف
+            </Button>
+          </div>
+        </div>
+      </CardContent>
+    </Card>
+  );
+};
+
+// Category Dialog Component
+const CategoryDialog = ({ 
   category, 
   onSave, 
   onClose 
@@ -520,145 +588,147 @@ function CategoryDialog({
   category: ServiceCategory | null;
   onSave: (category: Partial<ServiceCategory>) => void;
   onClose: () => void;
-}) {
+}) => {
   const [formData, setFormData] = useState({
-    name_ar: '',
-    name_en: '',
-    description_ar: '',
-    description_en: '',
-    icon: 'Languages',
-    color: '#3B82F6',
-    sort_order: 0,
-    is_active: true
+    name_ar: category?.name_ar || '',
+    name_en: category?.name_en || '',
+    description_ar: category?.description_ar || '',
+    description_en: category?.description_en || '',
+    icon: category?.icon || 'Languages',
+    color: category?.color || '#3B82F6',
+    sort_order: category?.sort_order || 0,
+    is_active: category?.is_active ?? true
   });
 
-  useEffect(() => {
-    if (category) {
-      setFormData({
-        name_ar: category.name_ar || '',
-        name_en: category.name_en || '',
-        description_ar: category.description_ar || '',
-        description_en: category.description_en || '',
-        icon: category.icon || 'Languages',
-        color: category.color || '#3B82F6',
-        sort_order: category.sort_order || 0,
-        is_active: category.is_active ?? true
-      });
-    }
-  }, [category]);
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    onSave(formData);
+  };
+
+  const iconOptions = [
+    { value: 'Languages', label: 'Languages' },
+    { value: 'GraduationCap', label: 'GraduationCap' },
+    { value: 'Users', label: 'Users' },
+    { value: 'Search', label: 'Search' }
+  ];
 
   return (
-    <DialogContent className="max-w-2xl">
+    <DialogContent className="max-w-md" dir="rtl">
       <DialogHeader>
-        <DialogTitle>{category ? 'تحرير القسم' : 'قسم جديد'}</DialogTitle>
+        <DialogTitle>{category ? 'تعديل القسم' : 'قسم جديد'}</DialogTitle>
         <DialogDescription>
-          أدخل معلومات القسم باللغتين العربية والإنجليزية
+          {category ? 'تعديل بيانات القسم' : 'إضافة قسم جديد للخدمات'}
         </DialogDescription>
       </DialogHeader>
       
-      <div className="grid gap-4 py-4">
-        <div className="grid grid-cols-2 gap-4">
-          <div className="space-y-2">
-            <Label htmlFor="name_ar">الاسم بالعربية</Label>
-            <Input
-              id="name_ar"
-              value={formData.name_ar}
-              onChange={(e) => setFormData(prev => ({ ...prev, name_ar: e.target.value }))}
-            />
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="name_en">الاسم بالإنجليزية</Label>
-            <Input
-              id="name_en"
-              value={formData.name_en}
-              onChange={(e) => setFormData(prev => ({ ...prev, name_en: e.target.value }))}
-            />
-          </div>
+      <form onSubmit={handleSubmit} className="space-y-4">
+        <div>
+          <Label htmlFor="name_ar">الاسم بالعربية</Label>
+          <Input
+            id="name_ar"
+            value={formData.name_ar}
+            onChange={(e) => setFormData({ ...formData, name_ar: e.target.value })}
+            required
+            dir="rtl"
+          />
         </div>
-        
-        <div className="grid grid-cols-2 gap-4">
-          <div className="space-y-2">
-            <Label htmlFor="description_ar">الوصف بالعربية</Label>
-            <Textarea
-              id="description_ar"
-              value={formData.description_ar}
-              onChange={(e) => setFormData(prev => ({ ...prev, description_ar: e.target.value }))}
-            />
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="description_en">الوصف بالإنجليزية</Label>
-            <Textarea
-              id="description_en"
-              value={formData.description_en}
-              onChange={(e) => setFormData(prev => ({ ...prev, description_en: e.target.value }))}
-            />
-          </div>
+
+        <div>
+          <Label htmlFor="name_en">الاسم بالإنجليزية</Label>
+          <Input
+            id="name_en"
+            value={formData.name_en}
+            onChange={(e) => setFormData({ ...formData, name_en: e.target.value })}
+            required
+            dir="ltr"
+          />
         </div>
-        
-        <div className="grid grid-cols-3 gap-4">
-          <div className="space-y-2">
+
+        <div>
+          <Label htmlFor="description_ar">الوصف بالعربية</Label>
+          <Textarea
+            id="description_ar"
+            value={formData.description_ar}
+            onChange={(e) => setFormData({ ...formData, description_ar: e.target.value })}
+            dir="rtl"
+          />
+        </div>
+
+        <div>
+          <Label htmlFor="description_en">الوصف بالإنجليزية</Label>
+          <Textarea
+            id="description_en"
+            value={formData.description_en}
+            onChange={(e) => setFormData({ ...formData, description_en: e.target.value })}
+            dir="ltr"
+          />
+        </div>
+
+        <div className="grid grid-cols-2 gap-4">
+          <div>
             <Label htmlFor="icon">الأيقونة</Label>
-            <Select 
-              value={formData.icon} 
-              onValueChange={(value) => setFormData(prev => ({ ...prev, icon: value }))}
-            >
+            <Select value={formData.icon} onValueChange={(value) => setFormData({ ...formData, icon: value })}>
               <SelectTrigger>
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="Languages">Languages</SelectItem>
-                <SelectItem value="GraduationCap">GraduationCap</SelectItem>
-                <SelectItem value="Users">Users</SelectItem>
-                <SelectItem value="Search">Search</SelectItem>
+                {iconOptions.map((option) => (
+                  <SelectItem key={option.value} value={option.value}>
+                    {option.label}
+                  </SelectItem>
+                ))}
               </SelectContent>
             </Select>
           </div>
-          <div className="space-y-2">
+
+          <div>
             <Label htmlFor="color">اللون</Label>
             <Input
               id="color"
               type="color"
               value={formData.color}
-              onChange={(e) => setFormData(prev => ({ ...prev, color: e.target.value }))}
+              onChange={(e) => setFormData({ ...formData, color: e.target.value })}
             />
           </div>
-          <div className="space-y-2">
+        </div>
+
+        <div className="grid grid-cols-2 gap-4">
+          <div>
             <Label htmlFor="sort_order">ترتيب العرض</Label>
             <Input
               id="sort_order"
               type="number"
               value={formData.sort_order}
-              onChange={(e) => setFormData(prev => ({ ...prev, sort_order: parseInt(e.target.value) || 0 }))}
+              onChange={(e) => setFormData({ ...formData, sort_order: parseInt(e.target.value) || 0 })}
             />
           </div>
+
+          <div className="flex items-center space-x-2 space-x-reverse">
+            <Switch
+              id="is_active"
+              checked={formData.is_active}
+              onCheckedChange={(checked) => setFormData({ ...formData, is_active: checked })}
+            />
+            <Label htmlFor="is_active">مفعل</Label>
+          </div>
         </div>
-        
-        <div className="flex items-center space-x-2 space-x-reverse">
-          <Switch
-            id="is_active"
-            checked={formData.is_active}
-            onCheckedChange={(checked) => setFormData(prev => ({ ...prev, is_active: checked }))}
-          />
-          <Label htmlFor="is_active">نشط</Label>
+
+        <div className="flex justify-end gap-2 pt-4">
+          <Button type="button" variant="outline" onClick={onClose}>
+            إلغاء
+          </Button>
+          <Button type="submit">
+            <Save className="w-4 h-4 ml-2" />
+            حفظ
+          </Button>
         </div>
-      </div>
-      
-      <div className="flex justify-end gap-2">
-        <Button variant="outline" onClick={onClose}>
-          <X className="h-4 w-4 ml-2" />
-          إلغاء
-        </Button>
-        <Button onClick={() => onSave(formData)}>
-          <Save className="h-4 w-4 ml-2" />
-          حفظ
-        </Button>
-      </div>
+      </form>
     </DialogContent>
   );
-}
+};
 
-// مكون نافذة تحرير الخدمة
-function ServiceDialog({ 
+// Service Dialog Component
+const ServiceDialog = ({ 
   service, 
   categories,
   onSave, 
@@ -668,267 +738,354 @@ function ServiceDialog({
   categories: ServiceCategory[];
   onSave: (service: Partial<Service>) => void;
   onClose: () => void;
-}) {
+}) => {
   const [formData, setFormData] = useState({
-    category_id: '',
-    name_ar: '',
-    name_en: '',
-    description_ar: '',
-    description_en: '',
-    features_ar: '',
-    features_en: '',
-    base_price: '',
-    price_per_unit: '',
-    unit_type: 'page',
-    min_units: 1,
-    max_units: '',
-    delivery_time_days: 7,
-    rush_delivery_available: false,
-    rush_delivery_multiplier: 1.5,
-    image_url: '',
-    sort_order: 0,
-    is_active: true,
-    show_to_clients: true
+    name_ar: service?.name_ar || '',
+    name_en: service?.name_en || '',
+    description_ar: service?.description_ar || '',
+    description_en: service?.description_en || '',
+    category_id: service?.category_id || '',
+    features_ar: service?.features_ar || [],
+    features_en: service?.features_en || [],
+    base_price: service?.base_price || '',
+    price_per_unit: service?.price_per_unit || '',
+    unit_type: service?.unit_type || 'page',
+    min_units: service?.min_units || 1,
+    max_units: service?.max_units || '',
+    delivery_time_days: service?.delivery_time_days || 7,
+    rush_delivery_available: service?.rush_delivery_available || false,
+    rush_delivery_multiplier: service?.rush_delivery_multiplier || 1.5,
+    image_url: service?.image_url || '',
+    sort_order: service?.sort_order || 0,
+    is_active: service?.is_active ?? true,
+    show_to_clients: service?.show_to_clients ?? true
   });
 
-  useEffect(() => {
-    if (service) {
-      setFormData({
-        category_id: service.category_id || '',
-        name_ar: service.name_ar || '',
-        name_en: service.name_en || '',
-        description_ar: service.description_ar || '',
-        description_en: service.description_en || '',
-        features_ar: service.features_ar?.join('\n') || '',
-        features_en: service.features_en?.join('\n') || '',
-        base_price: service.base_price?.toString() || '',
-        price_per_unit: service.price_per_unit?.toString() || '',
-        unit_type: service.unit_type || 'page',
-        min_units: service.min_units || 1,
-        max_units: service.max_units?.toString() || '',
-        delivery_time_days: service.delivery_time_days || 7,
-        rush_delivery_available: service.rush_delivery_available ?? false,
-        rush_delivery_multiplier: service.rush_delivery_multiplier || 1.5,
-        image_url: service.image_url || '',
-        sort_order: service.sort_order || 0,
-        is_active: service.is_active ?? true,
-        show_to_clients: service.show_to_clients ?? true
-      });
-    }
-  }, [service]);
+  const [currentFeatureAr, setCurrentFeatureAr] = useState('');
+  const [currentFeatureEn, setCurrentFeatureEn] = useState('');
 
-  const handleSave = () => {
-    const serviceData: Partial<Service> = {
-      category_id: formData.category_id,
-      name_ar: formData.name_ar,
-      name_en: formData.name_en,
-      description_ar: formData.description_ar,
-      description_en: formData.description_en,
-      features_ar: formData.features_ar.split('\n').filter(f => f.trim()),
-      features_en: formData.features_en.split('\n').filter(f => f.trim()),
-      base_price: formData.base_price ? parseFloat(formData.base_price) : null,
-      price_per_unit: formData.price_per_unit ? parseFloat(formData.price_per_unit) : null,
-      unit_type: formData.unit_type,
-      min_units: formData.min_units,
-      max_units: formData.max_units ? parseInt(formData.max_units) : null,
-      delivery_time_days: formData.delivery_time_days,
-      rush_delivery_available: formData.rush_delivery_available,
-      rush_delivery_multiplier: formData.rush_delivery_multiplier,
-      image_url: formData.image_url || null,
-      sort_order: formData.sort_order,
-      is_active: formData.is_active,
-      show_to_clients: formData.show_to_clients
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    const submitData = {
+      ...formData,
+      base_price: formData.base_price ? parseFloat(formData.base_price as string) : null,
+      price_per_unit: formData.price_per_unit ? parseFloat(formData.price_per_unit as string) : null,
+      max_units: formData.max_units ? parseInt(formData.max_units as string) : null
     };
-    onSave(serviceData);
+    
+    onSave(submitData);
+  };
+
+  const addFeature = () => {
+    if (currentFeatureAr.trim() && currentFeatureEn.trim()) {
+      setFormData({
+        ...formData,
+        features_ar: [...formData.features_ar, currentFeatureAr.trim()],
+        features_en: [...formData.features_en, currentFeatureEn.trim()]
+      });
+      setCurrentFeatureAr('');
+      setCurrentFeatureEn('');
+    }
+  };
+
+  const removeFeature = (index: number) => {
+    setFormData({
+      ...formData,
+      features_ar: formData.features_ar.filter((_, i) => i !== index),
+      features_en: formData.features_en.filter((_, i) => i !== index)
+    });
   };
 
   return (
-    <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+    <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto" dir="rtl">
       <DialogHeader>
-        <DialogTitle>{service ? 'تحرير الخدمة' : 'خدمة جديدة'}</DialogTitle>
+        <DialogTitle>{service ? 'تعديل الخدمة' : 'خدمة جديدة'}</DialogTitle>
         <DialogDescription>
-          أدخل معلومات الخدمة بالتفصيل
+          {service ? 'تعديل بيانات الخدمة' : 'إضافة خدمة جديدة'}
         </DialogDescription>
       </DialogHeader>
       
-      <div className="grid gap-6 py-4">
-        <div className="space-y-2">
-          <Label htmlFor="category_id">القسم</Label>
-          <Select 
-            value={formData.category_id} 
-            onValueChange={(value) => setFormData(prev => ({ ...prev, category_id: value }))}
-          >
-            <SelectTrigger>
-              <SelectValue placeholder="اختر القسم" />
-            </SelectTrigger>
-            <SelectContent>
-              {categories.map(category => (
-                <SelectItem key={category.id} value={category.id}>
-                  {category.name_ar}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+      <form onSubmit={handleSubmit} className="space-y-6">
+        <Tabs defaultValue="basic" className="space-y-4">
+          <TabsList className="grid grid-cols-3 w-full">
+            <TabsTrigger value="basic">البيانات الأساسية</TabsTrigger>
+            <TabsTrigger value="pricing">الأسعار والتسليم</TabsTrigger>
+            <TabsTrigger value="settings">الإعدادات</TabsTrigger>
+          </TabsList>
+
+          <TabsContent value="basic" className="space-y-4">
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <Label htmlFor="name_ar">اسم الخدمة بالعربية</Label>
+                <Input
+                  id="name_ar"
+                  value={formData.name_ar}
+                  onChange={(e) => setFormData({ ...formData, name_ar: e.target.value })}
+                  required
+                  dir="rtl"
+                />
+              </div>
+
+              <div>
+                <Label htmlFor="name_en">اسم الخدمة بالإنجليزية</Label>
+                <Input
+                  id="name_en"
+                  value={formData.name_en}
+                  onChange={(e) => setFormData({ ...formData, name_en: e.target.value })}
+                  required
+                  dir="ltr"
+                />
+              </div>
+            </div>
+
+            <div>
+              <Label htmlFor="category_id">القسم</Label>
+              <Select 
+                value={formData.category_id} 
+                onValueChange={(value) => setFormData({ ...formData, category_id: value })}
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="اختر القسم" />
+                </SelectTrigger>
+                <SelectContent>
+                  {categories.map((category) => (
+                    <SelectItem key={category.id} value={category.id}>
+                      {category.name_ar}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <Label htmlFor="description_ar">الوصف بالعربية</Label>
+                <Textarea
+                  id="description_ar"
+                  value={formData.description_ar}
+                  onChange={(e) => setFormData({ ...formData, description_ar: e.target.value })}
+                  dir="rtl"
+                />
+              </div>
+
+              <div>
+                <Label htmlFor="description_en">الوصف بالإنجليزية</Label>
+                <Textarea
+                  id="description_en"
+                  value={formData.description_en}
+                  onChange={(e) => setFormData({ ...formData, description_en: e.target.value })}
+                  dir="ltr"
+                />
+              </div>
+            </div>
+
+            <div>
+              <Label>المميزات</Label>
+              <div className="space-y-2">
+                <div className="grid grid-cols-2 gap-2">
+                  <Input
+                    placeholder="المميزة بالعربية"
+                    value={currentFeatureAr}
+                    onChange={(e) => setCurrentFeatureAr(e.target.value)}
+                    dir="rtl"
+                  />
+                  <Input
+                    placeholder="المميزة بالإنجليزية"
+                    value={currentFeatureEn}
+                    onChange={(e) => setCurrentFeatureEn(e.target.value)}
+                    dir="ltr"
+                  />
+                </div>
+                <Button 
+                  type="button" 
+                  variant="outline" 
+                  size="sm"
+                  onClick={addFeature}
+                  className="w-full"
+                >
+                  <Plus className="w-4 h-4 ml-2" />
+                  إضافة مميزة
+                </Button>
+              </div>
+
+              {formData.features_ar.length > 0 && (
+                <div className="mt-4 space-y-2">
+                  {formData.features_ar.map((feature, index) => (
+                    <div key={index} className="flex items-center justify-between bg-muted p-2 rounded">
+                      <div className="grid grid-cols-2 gap-2 flex-1">
+                        <span className="text-sm">{feature}</span>
+                        <span className="text-sm text-muted-foreground">{formData.features_en[index]}</span>
+                      </div>
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => removeFeature(index)}
+                      >
+                        <X className="w-4 h-4" />
+                      </Button>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          </TabsContent>
+
+          <TabsContent value="pricing" className="space-y-4">
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <Label htmlFor="base_price">السعر الأساسي (ريال)</Label>
+                <Input
+                  id="base_price"
+                  type="number"
+                  step="0.01"
+                  value={formData.base_price}
+                  onChange={(e) => setFormData({ ...formData, base_price: e.target.value })}
+                />
+              </div>
+
+              <div>
+                <Label htmlFor="price_per_unit">السعر لكل وحدة (ريال)</Label>
+                <Input
+                  id="price_per_unit"
+                  type="number"
+                  step="0.01"
+                  value={formData.price_per_unit}
+                  onChange={(e) => setFormData({ ...formData, price_per_unit: e.target.value })}
+                />
+              </div>
+            </div>
+
+            <div className="grid grid-cols-3 gap-4">
+              <div>
+                <Label htmlFor="unit_type">نوع الوحدة</Label>
+                <Select 
+                  value={formData.unit_type} 
+                  onValueChange={(value) => setFormData({ ...formData, unit_type: value })}
+                >
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="page">صفحة</SelectItem>
+                    <SelectItem value="word">كلمة</SelectItem>
+                    <SelectItem value="hour">ساعة</SelectItem>
+                    <SelectItem value="project">مشروع</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div>
+                <Label htmlFor="min_units">الحد الأدنى</Label>
+                <Input
+                  id="min_units"
+                  type="number"
+                  value={formData.min_units}
+                  onChange={(e) => setFormData({ ...formData, min_units: parseInt(e.target.value) || 1 })}
+                />
+              </div>
+
+              <div>
+                <Label htmlFor="max_units">الحد الأقصى</Label>
+                <Input
+                  id="max_units"
+                  type="number"
+                  value={formData.max_units}
+                  onChange={(e) => setFormData({ ...formData, max_units: e.target.value })}
+                />
+              </div>
+            </div>
+
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <Label htmlFor="delivery_time_days">مدة التسليم (أيام)</Label>
+                <Input
+                  id="delivery_time_days"
+                  type="number"
+                  value={formData.delivery_time_days}
+                  onChange={(e) => setFormData({ ...formData, delivery_time_days: parseInt(e.target.value) || 7 })}
+                />
+              </div>
+
+              <div>
+                <Label htmlFor="rush_delivery_multiplier">مضاعف التسليم السريع</Label>
+                <Input
+                  id="rush_delivery_multiplier"
+                  type="number"
+                  step="0.1"
+                  value={formData.rush_delivery_multiplier}
+                  onChange={(e) => setFormData({ ...formData, rush_delivery_multiplier: parseFloat(e.target.value) || 1.5 })}
+                />
+              </div>
+            </div>
+
+            <div className="flex items-center space-x-2 space-x-reverse">
+              <Switch
+                id="rush_delivery_available"
+                checked={formData.rush_delivery_available}
+                onCheckedChange={(checked) => setFormData({ ...formData, rush_delivery_available: checked })}
+              />
+              <Label htmlFor="rush_delivery_available">التسليم السريع متاح</Label>
+            </div>
+          </TabsContent>
+
+          <TabsContent value="settings" className="space-y-4">
+            <div>
+              <Label htmlFor="image_url">رابط الصورة</Label>
+              <Input
+                id="image_url"
+                type="url"
+                value={formData.image_url}
+                onChange={(e) => setFormData({ ...formData, image_url: e.target.value })}
+                dir="ltr"
+              />
+            </div>
+
+            <div>
+              <Label htmlFor="sort_order">ترتيب العرض</Label>
+              <Input
+                id="sort_order"
+                type="number"
+                value={formData.sort_order}
+                onChange={(e) => setFormData({ ...formData, sort_order: parseInt(e.target.value) || 0 })}
+              />
+            </div>
+
+            <div className="space-y-4">
+              <div className="flex items-center space-x-2 space-x-reverse">
+                <Switch
+                  id="is_active"
+                  checked={formData.is_active}
+                  onCheckedChange={(checked) => setFormData({ ...formData, is_active: checked })}
+                />
+                <Label htmlFor="is_active">مفعل</Label>
+              </div>
+
+              <div className="flex items-center space-x-2 space-x-reverse">
+                <Switch
+                  id="show_to_clients"
+                  checked={formData.show_to_clients}
+                  onCheckedChange={(checked) => setFormData({ ...formData, show_to_clients: checked })}
+                />
+                <Label htmlFor="show_to_clients">ظاهر للعملاء</Label>
+              </div>
+            </div>
+          </TabsContent>
+        </Tabs>
+
+        <div className="flex justify-end gap-2 pt-4 border-t">
+          <Button type="button" variant="outline" onClick={onClose}>
+            إلغاء
+          </Button>
+          <Button type="submit">
+            <Save className="w-4 h-4 ml-2" />
+            حفظ
+          </Button>
         </div>
-        
-        <div className="grid grid-cols-2 gap-4">
-          <div className="space-y-2">
-            <Label htmlFor="name_ar">اسم الخدمة بالعربية</Label>
-            <Input
-              id="name_ar"
-              value={formData.name_ar}
-              onChange={(e) => setFormData(prev => ({ ...prev, name_ar: e.target.value }))}
-            />
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="name_en">اسم الخدمة بالإنجليزية</Label>
-            <Input
-              id="name_en"
-              value={formData.name_en}
-              onChange={(e) => setFormData(prev => ({ ...prev, name_en: e.target.value }))}
-            />
-          </div>
-        </div>
-        
-        <div className="grid grid-cols-2 gap-4">
-          <div className="space-y-2">
-            <Label htmlFor="description_ar">الوصف بالعربية</Label>
-            <Textarea
-              id="description_ar"
-              value={formData.description_ar}
-              onChange={(e) => setFormData(prev => ({ ...prev, description_ar: e.target.value }))}
-            />
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="description_en">الوصف بالإنجليزية</Label>
-            <Textarea
-              id="description_en"
-              value={formData.description_en}
-              onChange={(e) => setFormData(prev => ({ ...prev, description_en: e.target.value }))}
-            />
-          </div>
-        </div>
-        
-        <div className="grid grid-cols-2 gap-4">
-          <div className="space-y-2">
-            <Label htmlFor="features_ar">المميزات بالعربية (سطر لكل ميزة)</Label>
-            <Textarea
-              id="features_ar"
-              value={formData.features_ar}
-              onChange={(e) => setFormData(prev => ({ ...prev, features_ar: e.target.value }))}
-              rows={4}
-            />
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="features_en">المميزات بالإنجليزية (سطر لكل ميزة)</Label>
-            <Textarea
-              id="features_en"
-              value={formData.features_en}
-              onChange={(e) => setFormData(prev => ({ ...prev, features_en: e.target.value }))}
-              rows={4}
-            />
-          </div>
-        </div>
-        
-        <div className="grid grid-cols-4 gap-4">
-          <div className="space-y-2">
-            <Label htmlFor="base_price">السعر الأساسي</Label>
-            <Input
-              id="base_price"
-              type="number"
-              step="0.01"
-              value={formData.base_price}
-              onChange={(e) => setFormData(prev => ({ ...prev, base_price: e.target.value }))}
-            />
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="price_per_unit">سعر الوحدة</Label>
-            <Input
-              id="price_per_unit"
-              type="number"
-              step="0.01"
-              value={formData.price_per_unit}
-              onChange={(e) => setFormData(prev => ({ ...prev, price_per_unit: e.target.value }))}
-            />
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="unit_type">نوع الوحدة</Label>
-            <Select 
-              value={formData.unit_type} 
-              onValueChange={(value) => setFormData(prev => ({ ...prev, unit_type: value }))}
-            >
-              <SelectTrigger>
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="page">صفحة</SelectItem>
-                <SelectItem value="word">كلمة</SelectItem>
-                <SelectItem value="hour">ساعة</SelectItem>
-                <SelectItem value="project">مشروع</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="delivery_time_days">مدة التسليم (أيام)</Label>
-            <Input
-              id="delivery_time_days"
-              type="number"
-              value={formData.delivery_time_days}
-              onChange={(e) => setFormData(prev => ({ ...prev, delivery_time_days: parseInt(e.target.value) || 7 }))}
-            />
-          </div>
-        </div>
-        
-        <div className="space-y-2">
-          <Label htmlFor="image_url">رابط الصورة</Label>
-          <Input
-            id="image_url"
-            value={formData.image_url}
-            onChange={(e) => setFormData(prev => ({ ...prev, image_url: e.target.value }))}
-            placeholder="/assets/service-image.jpg"
-          />
-        </div>
-        
-        <div className="flex gap-6">
-          <div className="flex items-center space-x-2 space-x-reverse">
-            <Switch
-              id="is_active"
-              checked={formData.is_active}
-              onCheckedChange={(checked) => setFormData(prev => ({ ...prev, is_active: checked }))}
-            />
-            <Label htmlFor="is_active">نشط</Label>
-          </div>
-          
-          <div className="flex items-center space-x-2 space-x-reverse">
-            <Switch
-              id="show_to_clients"
-              checked={formData.show_to_clients}
-              onCheckedChange={(checked) => setFormData(prev => ({ ...prev, show_to_clients: checked }))}
-            />
-            <Label htmlFor="show_to_clients">ظاهر للعملاء</Label>
-          </div>
-          
-          <div className="flex items-center space-x-2 space-x-reverse">
-            <Switch
-              id="rush_delivery_available"
-              checked={formData.rush_delivery_available}
-              onCheckedChange={(checked) => setFormData(prev => ({ ...prev, rush_delivery_available: checked }))}
-            />
-            <Label htmlFor="rush_delivery_available">تسليم عاجل متاح</Label>
-          </div>
-        </div>
-      </div>
-      
-      <div className="flex justify-end gap-2">
-        <Button variant="outline" onClick={onClose}>
-          <X className="h-4 w-4 ml-2" />
-          إلغاء
-        </Button>
-        <Button onClick={handleSave}>
-          <Save className="h-4 w-4 ml-2" />
-          حفظ
-        </Button>
-      </div>
+      </form>
     </DialogContent>
   );
-}
+};
+
+export default AdminServices;
