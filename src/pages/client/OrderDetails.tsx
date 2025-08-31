@@ -4,10 +4,10 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { 
   ArrowRight, User, Mail, Phone, MapPin, Calendar, Clock, 
   DollarSign, FileText, MessageSquare, Eye, Edit3, Download,
-  CheckCircle, AlertCircle, PlayCircle, PauseCircle, 
+  CheckCircle, AlertCircle, PlayCircle, Upload,
   BookOpen, Globe, Headphones, Video, FileImage, Monitor,
   Star, TrendingUp, Activity, Zap, Award, Target,
-  Send, Paperclip, Heart, Share2, Flag
+  Send, Paperclip, MoreHorizontal
 } from 'lucide-react';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -17,11 +17,13 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Separator } from '@/components/ui/separator';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { useToast } from '@/hooks/use-toast';
+import { Textarea } from '@/components/ui/textarea';
 
 // بيانات وهمية للطلب
 const orderData = {
   id: '5',
   service: 'ترجمة أكاديمية متقدمة',
+  serviceType: 'academic',
   status: 'in_progress',
   priority: 'high',
   progress: 65,
@@ -29,6 +31,7 @@ const orderData = {
   deadline: '2024-01-30',
   totalPrice: 899,
   paidAmount: 450,
+  remainingAmount: 449,
   client: {
     name: 'أحمد محمد علي',
     email: 'ahmed.ali@email.com',
@@ -36,33 +39,104 @@ const orderData = {
     university: 'جامعة الملك سعود',
     avatar: '/placeholder.svg'
   },
-  description: 'تحليل إحصائي شامل للبيانات البحثية باستخدام SPSS و R',
+  description: 'تحليل إحصائي شامل للبيانات البحثية باستخدام SPSS وR مع ترجمة النتائج للغة العربية',
   files: [
-    { name: 'البحث_الأصلي.pdf', size: '2.5 MB', type: 'pdf', uploadedAt: '2024-01-15' },
-    { name: 'الجداول_الإحصائية.xlsx', size: '1.2 MB', type: 'excel', uploadedAt: '2024-01-16' },
-    { name: 'المراجع.docx', size: '800 KB', type: 'word', uploadedAt: '2024-01-17' }
+    { 
+      id: 1,
+      name: 'البحث_الأصلي.pdf', 
+      size: '2.5 ميجا', 
+      type: 'pdf', 
+      uploadedAt: '2024-01-15',
+      uploadedBy: 'العميل'
+    },
+    { 
+      id: 2,
+      name: 'الجداول_الإحصائية.xlsx', 
+      size: '1.2 ميجا', 
+      type: 'excel', 
+      uploadedAt: '2024-01-16',
+      uploadedBy: 'العميل'
+    },
+    { 
+      id: 3,
+      name: 'المراجع_المترجمة.docx', 
+      size: '800 كيلو', 
+      type: 'word', 
+      uploadedAt: '2024-01-20',
+      uploadedBy: 'المختص'
+    }
   ],
   timeline: [
-    { date: '2024-01-15', event: 'تم إنشاء الطلب', status: 'completed' },
-    { date: '2024-01-16', event: 'تم تأكيد الدفع', status: 'completed' },
-    { date: '2024-01-18', event: 'بدء العمل على المشروع', status: 'completed' },
-    { date: '2024-01-22', event: 'مراجعة أولية للترجمة', status: 'current' },
-    { date: '2024-01-28', event: 'تسليم النسخة النهائية', status: 'pending' }
+    { 
+      id: 1,
+      date: '2024-01-15', 
+      time: '10:30 ص',
+      title: 'تم إنشاء الطلب', 
+      description: 'تم استلام طلب الترجمة الأكاديمية',
+      status: 'completed',
+      actor: 'العميل'
+    },
+    { 
+      id: 2,
+      date: '2024-01-16', 
+      time: '02:15 م',
+      title: 'تم تأكيد الدفع', 
+      description: 'تم استلام المبلغ المقدم وتأكيد الطلب',
+      status: 'completed',
+      actor: 'النظام'
+    },
+    { 
+      id: 3,
+      date: '2024-01-18', 
+      time: '09:00 ص',
+      title: 'بدء العمل على المشروع', 
+      description: 'تم تعيين مختص الترجمة وبدء العمل',
+      status: 'completed',
+      actor: 'المختص'
+    },
+    { 
+      id: 4,
+      date: '2024-01-22', 
+      time: '11:45 ص',
+      title: 'مراجعة أولية للترجمة', 
+      description: 'جاري مراجعة الترجمة الأولية وضمان الجودة',
+      status: 'current',
+      actor: 'المختص'
+    },
+    { 
+      id: 5,
+      date: '2024-01-28', 
+      time: '--',
+      title: 'تسليم النسخة النهائية', 
+      description: 'تسليم العمل المكتمل مع شهادة الجودة',
+      status: 'pending',
+      actor: 'المختص'
+    }
   ],
   communication: [
     { 
       id: 1, 
       sender: 'المختص', 
-      message: 'تم البدء في ترجمة المشروع وسيتم تسليم المراجعة الأولية خلال 3 أيام', 
-      timestamp: '2024-01-18 10:30',
-      type: 'update'
+      senderType: 'specialist',
+      message: 'مرحباً أحمد، تم البدء في ترجمة المشروع وفقاً للمعايير الأكاديمية المطلوبة. سيتم تسليم المراجعة الأولية خلال 3 أيام عمل.', 
+      timestamp: '2024-01-18 10:30 ص',
+      status: 'sent'
     },
     { 
       id: 2, 
-      sender: 'العميل', 
-      message: 'شكراً لكم، أتطلع لرؤية النتائج', 
-      timestamp: '2024-01-18 15:45',
-      type: 'message'
+      sender: 'أحمد محمد علي', 
+      senderType: 'client',
+      message: 'شكراً جزيلاً لكم على الاهتمام. أتطلع لرؤية النتائج والجودة المتوقعة منكم.', 
+      timestamp: '2024-01-18 03:45 م',
+      status: 'sent'
+    },
+    { 
+      id: 3, 
+      sender: 'المختص', 
+      senderType: 'specialist',
+      message: 'تم الانتهاء من ترجمة 65% من المشروع. النتائج الأولية ممتازة وتتماشى مع المعايير المطلوبة.', 
+      timestamp: '2024-01-22 02:20 م',
+      status: 'sent'
     }
   ]
 };
@@ -72,224 +146,318 @@ const OrderDetails = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
   const [activeTab, setActiveTab] = useState('overview');
+  const [newMessage, setNewMessage] = useState('');
 
   const order = orderData;
 
   // دالة لتحديد لون الحالة
-  const getStatusColor = (status: string) => {
+  const getStatusInfo = (status: string) => {
     switch (status) {
-      case 'completed': return 'bg-gradient-to-r from-green-500 to-emerald-600 text-white';
-      case 'in_progress': return 'bg-gradient-to-r from-blue-500 to-cyan-600 text-white';
-      case 'pending': return 'bg-gradient-to-r from-yellow-500 to-amber-600 text-white';
-      case 'cancelled': return 'bg-gradient-to-r from-red-500 to-rose-600 text-white';
-      default: return 'bg-gradient-to-r from-gray-500 to-slate-600 text-white';
+      case 'completed': 
+        return { 
+          color: 'bg-gradient-to-r from-emerald-500 to-green-600', 
+          text: 'مكتمل',
+          textColor: 'text-emerald-700',
+          bgColor: 'bg-emerald-50',
+          icon: CheckCircle
+        };
+      case 'in_progress': 
+        return { 
+          color: 'bg-gradient-to-r from-blue-500 to-cyan-600', 
+          text: 'قيد التنفيذ',
+          textColor: 'text-blue-700',
+          bgColor: 'bg-blue-50',
+          icon: PlayCircle
+        };
+      case 'pending': 
+        return { 
+          color: 'bg-gradient-to-r from-amber-500 to-orange-600', 
+          text: 'في الانتظار',
+          textColor: 'text-amber-700',
+          bgColor: 'bg-amber-50',
+          icon: Clock
+        };
+      default: 
+        return { 
+          color: 'bg-gradient-to-r from-gray-500 to-slate-600', 
+          text: 'غير محدد',
+          textColor: 'text-gray-700',
+          bgColor: 'bg-gray-50',
+          icon: AlertCircle
+        };
     }
   };
 
   // دالة لتحديد لون الأولوية
-  const getPriorityColor = (priority: string) => {
+  const getPriorityInfo = (priority: string) => {
     switch (priority) {
-      case 'high': return 'bg-gradient-to-r from-red-500 to-pink-600 text-white';
-      case 'medium': return 'bg-gradient-to-r from-yellow-500 to-orange-600 text-white';
-      case 'low': return 'bg-gradient-to-r from-green-500 to-teal-600 text-white';
-      default: return 'bg-gradient-to-r from-gray-500 to-slate-600 text-white';
+      case 'high': 
+        return { 
+          color: 'bg-gradient-to-r from-red-500 to-rose-600', 
+          text: 'أولوية عالية',
+          textColor: 'text-red-700',
+          bgColor: 'bg-red-50'
+        };
+      case 'medium': 
+        return { 
+          color: 'bg-gradient-to-r from-yellow-500 to-amber-600', 
+          text: 'أولوية متوسطة',
+          textColor: 'text-yellow-700',
+          bgColor: 'bg-yellow-50'
+        };
+      case 'low': 
+        return { 
+          color: 'bg-gradient-to-r from-green-500 to-emerald-600', 
+          text: 'أولوية منخفضة',
+          textColor: 'text-green-700',
+          bgColor: 'bg-green-50'
+        };
+      default: 
+        return { 
+          color: 'bg-gradient-to-r from-gray-500 to-slate-600', 
+          text: 'غير محدد',
+          textColor: 'text-gray-700',
+          bgColor: 'bg-gray-50'
+        };
     }
   };
 
-  // أيقونة الخدمة
+  // أيقونة الخدمة حسب النوع
   const getServiceIcon = () => {
-    return BookOpen;
+    switch (order.serviceType) {
+      case 'academic': return BookOpen;
+      case 'business': return Target;
+      case 'medical': return Activity;
+      case 'legal': return Award;
+      case 'technical': return Zap;
+      case 'audio': return Headphones;
+      case 'video': return Video;
+      case 'website': return Globe;
+      default: return FileText;
+    }
+  };
+
+  // دالة إرسال رسالة
+  const handleSendMessage = () => {
+    if (newMessage.trim()) {
+      toast({
+        title: "تم إرسال الرسالة",
+        description: "سيتم الرد عليك في أقرب وقت ممكن",
+      });
+      setNewMessage('');
+    }
+  };
+
+  // دالة تحميل ملف
+  const handleDownloadFile = (fileName: string) => {
+    toast({
+      title: "جاري التحميل",
+      description: `يتم تحميل ملف ${fileName}`,
+    });
   };
 
   const ServiceIcon = getServiceIcon();
+  const statusInfo = getStatusInfo(order.status);
+  const priorityInfo = getPriorityInfo(order.priority);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 p-4" dir="rtl">
-      <div className="max-w-7xl mx-auto space-y-8">
+    <div className="min-h-screen bg-gradient-to-br from-white via-blue-50/30 to-purple-50/20" dir="rtl">
+      <div className="max-w-7xl mx-auto px-4 py-6 space-y-6">
         
-        {/* Header با أنيميشن رائع */}
+        {/* Header Section */}
         <motion.div
-          initial={{ opacity: 0, y: -30 }}
+          initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, ease: "easeOut" }}
-          className="relative"
+          transition={{ duration: 0.6 }}
+          className="bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden"
         >
-          <div className="absolute inset-0 bg-gradient-to-r from-purple-600 via-blue-600 to-cyan-500 rounded-3xl blur-xl opacity-20"></div>
-          <Card className="relative bg-white/90 backdrop-blur-lg border-0 shadow-2xl rounded-3xl overflow-hidden">
-            <div className="absolute top-0 right-0 w-full h-2 bg-gradient-to-l from-purple-500 via-blue-500 to-cyan-500"></div>
-            <CardContent className="p-8">
-              <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
-                
-                {/* معلومات الخدمة */}
-                <div className="flex items-center gap-6 order-2 lg:order-1">
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => navigate('/orders')}
-                    className="flex items-center gap-2 hover:bg-white/50 transition-all duration-300"
-                  >
-                    <ArrowRight className="w-4 h-4" />
-                    <span>العودة للطلبات</span>
-                  </Button>
-                </div>
+          {/* Top gradient bar */}
+          <div className="h-1 bg-gradient-to-l from-blue-500 via-purple-500 to-cyan-500"></div>
+          
+          <div className="p-6">
+            <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
+              
+              {/* Back button */}
+              <div className="order-2 lg:order-1">
+                <Button
+                  variant="ghost"
+                  onClick={() => navigate('/orders')}
+                  className="flex items-center gap-2 text-gray-600 hover:text-blue-600 hover:bg-blue-50 transition-all duration-300"
+                >
+                  <ArrowRight className="w-4 h-4" />
+                  <span>العودة للطلبات</span>
+                </Button>
+              </div>
 
-                {/* عنوان الخدمة والأيقونة */}
-                <div className="flex items-center gap-6 order-1 lg:order-2">
-                  <div className="text-right space-y-2">
+              {/* Service info */}
+              <div className="flex items-center gap-4 order-1 lg:order-2">
+                <div className="text-right space-y-2">
+                  <div className="flex items-center gap-3">
                     <motion.h1 
                       initial={{ opacity: 0, x: 20 }}
                       animate={{ opacity: 1, x: 0 }}
-                      transition={{ delay: 0.3 }}
-                      className="text-3xl font-bold bg-gradient-to-r from-gray-800 to-gray-600 bg-clip-text text-transparent"
+                      transition={{ delay: 0.2 }}
+                      className="text-2xl lg:text-3xl font-bold text-gray-800"
                     >
                       {order.service}
                     </motion.h1>
-                    <motion.p 
-                      initial={{ opacity: 0, x: 20 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      transition={{ delay: 0.4 }}
-                      className="text-gray-600 font-medium"
-                    >
-                      رقم الطلب: #{order.id}
-                    </motion.p>
-                    
-                    {/* Badges للحالة والأولوية */}
-                    <motion.div 
-                      initial={{ opacity: 0, y: 10 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: 0.5 }}
-                      className="flex items-center gap-3"
-                    >
-                      <Badge className={`${getStatusColor(order.status)} px-4 py-2 text-sm font-semibold rounded-full shadow-lg`}>
-                        <CheckCircle className="w-4 h-4 mr-2" />
-                        قيد التنفيذ
-                      </Badge>
-                      <Badge className={`${getPriorityColor(order.priority)} px-4 py-2 text-sm font-semibold rounded-full shadow-lg`}>
-                        <Flag className="w-4 h-4 mr-2" />
-                        أولوية عالية
-                      </Badge>
-                    </motion.div>
+                    <div className="bg-gradient-to-r from-blue-500 to-purple-500 text-white px-3 py-1 rounded-full text-sm font-medium">
+                      🎓
+                    </div>
                   </div>
                   
-                  {/* أيقونة الخدمة با أنيميشن */}
-                  <motion.div
-                    initial={{ scale: 0, rotate: -180 }}
-                    animate={{ scale: 1, rotate: 0 }}
-                    transition={{ duration: 0.8, delay: 0.2, type: "spring", stiffness: 200 }}
-                    className="relative"
+                  <motion.p 
+                    initial={{ opacity: 0, x: 20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: 0.3 }}
+                    className="text-gray-600 font-medium"
                   >
-                    <div className="absolute inset-0 bg-gradient-to-r from-purple-500 to-blue-500 rounded-2xl blur-lg opacity-30 animate-pulse"></div>
-                    <div className="relative bg-gradient-to-r from-purple-500 to-blue-500 rounded-2xl p-4 shadow-2xl">
-                      <ServiceIcon className="w-12 h-12 text-white" />
-                    </div>
+                    رقم الطلب: #{order.id}
+                  </motion.p>
+                  
+                  {/* Status and Priority badges */}
+                  <motion.div 
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.4 }}
+                    className="flex items-center gap-3 flex-wrap"
+                  >
+                    <Badge className={`${statusInfo.color} text-white px-4 py-2 text-sm font-semibold rounded-full shadow-lg hover:shadow-xl transition-shadow`}>
+                      <statusInfo.icon className="w-4 h-4 mr-2" />
+                      {statusInfo.text}
+                    </Badge>
+                    <Badge className={`${priorityInfo.color} text-white px-4 py-2 text-sm font-semibold rounded-full shadow-lg hover:shadow-xl transition-shadow`}>
+                      <Star className="w-4 h-4 mr-2" />
+                      {priorityInfo.text}
+                    </Badge>
                   </motion.div>
                 </div>
+                
+                {/* Service icon */}
+                <motion.div
+                  initial={{ scale: 0, rotate: -180 }}
+                  animate={{ scale: 1, rotate: 0 }}
+                  transition={{ duration: 0.8, delay: 0.1, type: "spring", stiffness: 200 }}
+                  className="relative"
+                >
+                  <div className="absolute inset-0 bg-gradient-to-r from-blue-500 to-purple-500 rounded-2xl blur-lg opacity-30 animate-pulse"></div>
+                  <div className="relative bg-gradient-to-r from-blue-500 to-purple-500 rounded-2xl p-4 shadow-xl">
+                    <ServiceIcon className="w-10 h-10 text-white" />
+                  </div>
+                </motion.div>
               </div>
-            </CardContent>
-          </Card>
+            </div>
+          </div>
         </motion.div>
 
-        {/* التبويبات با تصميم حديث */}
+        {/* Tabs Navigation */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.3 }}
+          transition={{ duration: 0.6, delay: 0.2 }}
         >
-          <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-8" dir="rtl">
+          <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6" dir="rtl">
+            
+            {/* Tabs List */}
             <div className="flex justify-center">
-              <TabsList className="grid grid-cols-4 bg-white/80 backdrop-blur-lg border-0 shadow-xl rounded-2xl p-2" dir="rtl">
+              <TabsList className="grid grid-cols-4 bg-white border border-gray-200 shadow-lg rounded-2xl p-1 gap-1" dir="rtl">
                 <TabsTrigger 
                   value="communication" 
-                  className="text-right data-[state=active]:bg-gradient-to-r data-[state=active]:from-purple-500 data-[state=active]:to-blue-500 data-[state=active]:text-white rounded-xl transition-all duration-300"
+                  className="text-right data-[state=active]:bg-gradient-to-r data-[state=active]:from-pink-500 data-[state=active]:to-purple-600 data-[state=active]:text-white data-[state=active]:shadow-lg rounded-xl transition-all duration-300 py-3"
                 >
                   <MessageSquare className="w-4 h-4 ml-2" />
-                  التواصل
+                  <span className="hidden sm:inline">التواصل</span>
                 </TabsTrigger>
                 <TabsTrigger 
                   value="files" 
-                  className="text-right data-[state=active]:bg-gradient-to-r data-[state=active]:from-purple-500 data-[state=active]:to-blue-500 data-[state=active]:text-white rounded-xl transition-all duration-300"
+                  className="text-right data-[state=active]:bg-gradient-to-r data-[state=active]:from-purple-500 data-[state=active]:to-indigo-600 data-[state=active]:text-white data-[state=active]:shadow-lg rounded-xl transition-all duration-300 py-3"
                 >
                   <FileText className="w-4 h-4 ml-2" />
-                  الملفات
+                  <span className="hidden sm:inline">الملفات</span>
                 </TabsTrigger>
                 <TabsTrigger 
                   value="timeline" 
-                  className="text-right data-[state=active]:bg-gradient-to-r data-[state=active]:from-purple-500 data-[state=active]:to-blue-500 data-[state=active]:text-white rounded-xl transition-all duration-300"
+                  className="text-right data-[state=active]:bg-gradient-to-r data-[state=active]:from-orange-500 data-[state=active]:to-red-600 data-[state=active]:text-white data-[state=active]:shadow-lg rounded-xl transition-all duration-300 py-3"
                 >
                   <Clock className="w-4 h-4 ml-2" />
-                  الجدول الزمني
+                  <span className="hidden sm:inline">الجدول الزمني</span>
                 </TabsTrigger>
                 <TabsTrigger 
                   value="overview" 
-                  className="text-right data-[state=active]:bg-gradient-to-r data-[state=active]:from-purple-500 data-[state=active]:to-blue-500 data-[state=active]:text-white rounded-xl transition-all duration-300"
+                  className="text-right data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-500 data-[state=active]:to-cyan-600 data-[state=active]:text-white data-[state=active]:shadow-lg rounded-xl transition-all duration-300 py-3"
                 >
                   <Eye className="w-4 h-4 ml-2" />
-                  نظرة عامة
+                  <span className="hidden sm:inline">نظرة عامة</span>
                 </TabsTrigger>
               </TabsList>
             </div>
 
-            {/* نظرة عامة */}
-            <TabsContent value="overview" className="space-y-8" dir="rtl">
-              <div className="grid grid-cols-1 xl:grid-cols-12 gap-8">
+            {/* Overview Tab */}
+            <TabsContent value="overview" className="space-y-6" dir="rtl">
+              <div className="grid grid-cols-1 xl:grid-cols-12 gap-6">
                 
-                {/* معلومات العميل - على اليمين */}
+                {/* Client Info Card - Right Side */}
                 <motion.div
                   initial={{ opacity: 0, x: 50 }}
                   animate={{ opacity: 1, x: 0 }}
-                  transition={{ duration: 0.6, delay: 0.2 }}
+                  transition={{ duration: 0.6, delay: 0.1 }}
                   className="xl:col-span-4 xl:col-start-1 order-1"
                 >
-                  <Card className="bg-white/90 backdrop-blur-lg border-0 shadow-2xl rounded-3xl overflow-hidden h-full">
-                    <div className="bg-gradient-to-r from-blue-500 to-cyan-500 p-6">
-                      <CardTitle className="flex items-center gap-3 text-white text-xl">
-                        <User className="w-6 h-6" />
+                  <Card className="bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden h-full">
+                    <div className="bg-gradient-to-r from-sky-500 to-blue-600 p-5">
+                      <CardTitle className="flex items-center gap-3 text-white text-lg">
+                        <div className="bg-white/20 p-2 rounded-lg">
+                          <User className="w-5 h-5" />
+                        </div>
                         <span>معلومات العميل</span>
                       </CardTitle>
                     </div>
                     <CardContent className="p-6 space-y-6">
                       
-                      {/* صورة العميل */}
+                      {/* Client Avatar */}
                       <motion.div 
                         initial={{ scale: 0 }}
                         animate={{ scale: 1 }}
-                        transition={{ delay: 0.5, type: "spring" }}
+                        transition={{ delay: 0.3, type: "spring" }}
                         className="flex justify-center"
                       >
                         <div className="relative">
-                          <div className="absolute inset-0 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-full blur-lg opacity-30"></div>
-                          <Avatar className="relative w-24 h-24 border-4 border-white shadow-xl">
+                          <div className="absolute inset-0 bg-sky-500 rounded-full blur-lg opacity-30"></div>
+                          <Avatar className="relative w-20 h-20 border-4 border-white shadow-xl">
                             <AvatarImage src={order.client.avatar} />
-                            <AvatarFallback className="bg-gradient-to-r from-blue-500 to-cyan-500 text-white text-xl font-bold">
+                            <AvatarFallback className="bg-gradient-to-r from-sky-500 to-blue-600 text-white text-lg font-bold">
                               {order.client.name.split(' ').map(n => n[0]).join('')}
                             </AvatarFallback>
                           </Avatar>
                         </div>
                       </motion.div>
 
-                      {/* معلومات تفصيلية */}
+                      {/* Client Details */}
                       <div className="space-y-4">
                         {[
-                          { icon: User, label: 'الاسم', value: order.client.name, color: 'from-blue-500 to-cyan-500' },
-                          { icon: Mail, label: 'البريد الإلكتروني', value: order.client.email, color: 'from-green-500 to-emerald-500' },
-                          { icon: Phone, label: 'رقم الهاتف', value: order.client.phone, color: 'from-purple-500 to-violet-500' },
-                          { icon: MapPin, label: 'الجامعة', value: order.client.university, color: 'from-orange-500 to-red-500' }
+                          { icon: User, label: 'الاسم', value: order.client.name, color: '#0EA5E9' },
+                          { icon: Mail, label: 'البريد الإلكتروني', value: order.client.email, color: '#22C55E' },
+                          { icon: Phone, label: 'رقم الجوال', value: order.client.phone, color: '#A78BFA' },
+                          { icon: MapPin, label: 'الجامعة', value: order.client.university, color: '#F97316' }
                         ].map((item, index) => (
                           <motion.div
                             key={item.label}
                             initial={{ opacity: 0, x: 20 }}
                             animate={{ opacity: 1, x: 0 }}
-                            transition={{ delay: 0.7 + index * 0.1 }}
+                            transition={{ delay: 0.5 + index * 0.1 }}
                             className="group"
                           >
-                            <div className={`p-4 rounded-2xl bg-gradient-to-r ${item.color} bg-opacity-10 border border-white/20 hover:shadow-lg transition-all duration-300 group-hover:scale-105`}>
-                              <div className="flex items-center gap-4">
-                                <div className={`p-2 rounded-xl bg-gradient-to-r ${item.color} shadow-lg`}>
-                                  <item.icon className="w-5 h-5 text-white" />
+                            <div className="p-4 rounded-xl bg-gray-50 border border-gray-100 hover:shadow-md hover:border-gray-200 transition-all duration-300 group-hover:scale-[1.02]">
+                              <div className="flex items-center gap-3">
+                                <div 
+                                  className="p-2 rounded-lg shadow-sm"
+                                  style={{ backgroundColor: `${item.color}15`, color: item.color }}
+                                >
+                                  <item.icon className="w-5 h-5" />
                                 </div>
-                                <div className="text-right flex-1">
+                                <div className="text-right flex-1 min-w-0">
                                   <p className="text-sm text-gray-600 font-medium">{item.label}</p>
-                                  <p className="font-bold text-gray-800">{item.value}</p>
+                                  <p className="font-semibold text-gray-800 truncate">{item.value}</p>
                                 </div>
                               </div>
                             </div>
@@ -297,15 +465,15 @@ const OrderDetails = () => {
                         ))}
                       </div>
 
-                      {/* أزرار العمليات */}
+                      {/* Action Buttons */}
                       <motion.div
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: 1.1 }}
+                        transition={{ delay: 0.9 }}
                         className="space-y-3 pt-4 border-t border-gray-200"
                       >
                         <Button 
-                          className="w-full bg-gradient-to-r from-blue-500 to-cyan-500 hover:from-blue-600 hover:to-cyan-600 text-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
+                          className="w-full bg-gradient-to-r from-blue-500 to-cyan-600 hover:from-blue-600 hover:to-cyan-700 text-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
                           onClick={() => navigate(`/orders/${id}/edit`)}
                         >
                           <Edit3 className="w-4 h-4 ml-2" />
@@ -313,7 +481,8 @@ const OrderDetails = () => {
                         </Button>
                         <Button 
                           variant="outline" 
-                          className="w-full border-2 border-purple-500 text-purple-500 hover:bg-purple-500 hover:text-white rounded-xl transition-all duration-300 transform hover:scale-105"
+                          className="w-full border-2 border-purple-500 text-purple-600 hover:bg-purple-500 hover:text-white rounded-xl transition-all duration-300 transform hover:scale-105"
+                          onClick={() => setActiveTab('communication')}
                         >
                           <MessageSquare className="w-4 h-4 ml-2" />
                           تواصل مع المختص
@@ -323,38 +492,40 @@ const OrderDetails = () => {
                   </Card>
                 </motion.div>
 
-                {/* تقدم المشروع - على اليسار */}
+                {/* Project Progress & Finance - Left Side */}
                 <motion.div
                   initial={{ opacity: 0, x: -50 }}
                   animate={{ opacity: 1, x: 0 }}
-                  transition={{ duration: 0.6, delay: 0.4 }}
+                  transition={{ duration: 0.6, delay: 0.2 }}
                   className="xl:col-span-8 xl:col-start-5 order-2"
                 >
                   <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 h-full">
                     
-                    {/* كارت تقدم المشروع */}
-                    <Card className="bg-white/90 backdrop-blur-lg border-0 shadow-2xl rounded-3xl overflow-hidden">
-                      <div className="bg-gradient-to-r from-purple-500 to-pink-500 p-6">
-                        <CardTitle className="flex items-center gap-3 text-white text-xl">
-                          <TrendingUp className="w-6 h-6" />
+                    {/* Progress Card */}
+                    <Card className="bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden">
+                      <div className="bg-gradient-to-r from-purple-500 to-pink-600 p-5">
+                        <CardTitle className="flex items-center gap-3 text-white text-lg">
+                          <div className="bg-white/20 p-2 rounded-lg">
+                            <TrendingUp className="w-5 h-5" />
+                          </div>
                           <span>تقدم المشروع</span>
                         </CardTitle>
                       </div>
                       <CardContent className="p-6 space-y-6">
                         
-                        {/* نسبة الإنجاز */}
+                        {/* Progress Circle */}
                         <motion.div
                           initial={{ scale: 0 }}
                           animate={{ scale: 1 }}
-                          transition={{ delay: 0.6, type: "spring" }}
+                          transition={{ delay: 0.4, type: "spring" }}
                           className="text-center"
                         >
-                          <div className="relative w-32 h-32 mx-auto mb-4">
-                            <svg className="w-32 h-32 transform -rotate-90" viewBox="0 0 144 144">
+                          <div className="relative w-28 h-28 mx-auto mb-4">
+                            <svg className="w-28 h-28 transform -rotate-90" viewBox="0 0 144 144">
                               <circle
                                 cx="72"
                                 cy="72"
-                                r="60"
+                                r="56"
                                 stroke="currentColor"
                                 strokeWidth="8"
                                 fill="none"
@@ -363,18 +534,18 @@ const OrderDetails = () => {
                               <motion.circle
                                 cx="72"
                                 cy="72"
-                                r="60"
-                                stroke="url(#gradient)"
+                                r="56"
+                                stroke="url(#progressGradient)"
                                 strokeWidth="8"
                                 fill="none"
                                 strokeLinecap="round"
-                                strokeDasharray={377}
-                                initial={{ strokeDashoffset: 377 }}
-                                animate={{ strokeDashoffset: 377 - (377 * order.progress) / 100 }}
-                                transition={{ duration: 2, delay: 0.8 }}
+                                strokeDasharray={351.86}
+                                initial={{ strokeDashoffset: 351.86 }}
+                                animate={{ strokeDashoffset: 351.86 - (351.86 * order.progress) / 100 }}
+                                transition={{ duration: 2, delay: 0.6 }}
                               />
                               <defs>
-                                <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <linearGradient id="progressGradient" x1="0%" y1="0%" x2="100%" y2="100%">
                                   <stop offset="0%" stopColor="#8B5CF6" />
                                   <stop offset="100%" stopColor="#EC4899" />
                                 </linearGradient>
@@ -385,7 +556,7 @@ const OrderDetails = () => {
                                 initial={{ opacity: 0 }}
                                 animate={{ opacity: 1 }}
                                 transition={{ delay: 1.5 }}
-                                className="text-3xl font-bold bg-gradient-to-r from-purple-500 to-pink-500 bg-clip-text text-transparent"
+                                className="text-2xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent"
                               >
                                 {order.progress}%
                               </motion.span>
@@ -394,27 +565,30 @@ const OrderDetails = () => {
                           <p className="text-gray-600 font-medium">نسبة الإنجاز</p>
                         </motion.div>
 
-                        {/* معلومات إضافية */}
-                        <div className="space-y-4">
+                        {/* Dates Info */}
+                        <div className="space-y-3">
                           {[
-                            { icon: Calendar, label: 'تاريخ الإنشاء', value: '2024-01-15', color: 'from-blue-500 to-cyan-500' },
-                            { icon: Clock, label: 'الموعد النهائي', value: '2024-01-30', color: 'from-orange-500 to-red-500' }
+                            { icon: Calendar, label: 'تاريخ الإنشاء', value: order.createdAt, color: '#0EA5E9' },
+                            { icon: Clock, label: 'الموعد النهائي', value: order.deadline, color: '#F97316' }
                           ].map((item, index) => (
                             <motion.div
                               key={item.label}
                               initial={{ opacity: 0, x: -20 }}
                               animate={{ opacity: 1, x: 0 }}
-                              transition={{ delay: 0.8 + index * 0.1 }}
+                              transition={{ delay: 0.6 + index * 0.1 }}
                               className="group"
                             >
-                              <div className={`p-4 rounded-2xl bg-gradient-to-r ${item.color} bg-opacity-10 border border-white/20 hover:shadow-lg transition-all duration-300 group-hover:scale-105`}>
-                                <div className="flex items-center gap-4">
-                                  <div className={`p-2 rounded-xl bg-gradient-to-r ${item.color} shadow-lg`}>
-                                    <item.icon className="w-5 h-5 text-white" />
+                              <div className="p-3 rounded-xl bg-gray-50 border border-gray-100 hover:shadow-md hover:border-gray-200 transition-all duration-300 group-hover:scale-[1.02]">
+                                <div className="flex items-center gap-3">
+                                  <div 
+                                    className="p-2 rounded-lg shadow-sm"
+                                    style={{ backgroundColor: `${item.color}15`, color: item.color }}
+                                  >
+                                    <item.icon className="w-4 h-4" />
                                   </div>
                                   <div className="text-right flex-1">
                                     <p className="text-sm text-gray-600 font-medium">{item.label}</p>
-                                    <p className="font-bold text-gray-800">{item.value}</p>
+                                    <p className="font-semibold text-gray-800">{item.value}</p>
                                   </div>
                                 </div>
                               </div>
@@ -424,65 +598,67 @@ const OrderDetails = () => {
                       </CardContent>
                     </Card>
 
-                    {/* كارت المعلومات المالية */}
-                    <Card className="bg-white/90 backdrop-blur-lg border-0 shadow-2xl rounded-3xl overflow-hidden">
-                      <div className="bg-gradient-to-r from-green-500 to-emerald-500 p-6">
-                        <CardTitle className="flex items-center gap-3 text-white text-xl">
-                          <DollarSign className="w-6 h-6" />
-                          <span>القيمة الإجمالية</span>
+                    {/* Finance Card */}
+                    <Card className="bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden">
+                      <div className="bg-gradient-to-r from-emerald-500 to-green-600 p-5">
+                        <CardTitle className="flex items-center gap-3 text-white text-lg">
+                          <div className="bg-white/20 p-2 rounded-lg">
+                            <DollarSign className="w-5 h-5" />
+                          </div>
+                          <span>المعلومات المالية</span>
                         </CardTitle>
                       </div>
                       <CardContent className="p-6 space-y-6">
                         
-                        {/* القيمة الإجمالية */}
+                        {/* Total Price */}
                         <motion.div
                           initial={{ scale: 0 }}
                           animate={{ scale: 1 }}
-                          transition={{ delay: 0.7, type: "spring" }}
+                          transition={{ delay: 0.5, type: "spring" }}
                           className="text-center"
                         >
-                          <div className="relative p-6 rounded-2xl bg-gradient-to-r from-green-500 to-emerald-500 bg-opacity-10 border border-green-200">
+                          <div className="p-4 rounded-xl bg-gradient-to-r from-emerald-50 to-green-50 border border-emerald-200">
                             <motion.p 
                               initial={{ opacity: 0 }}
                               animate={{ opacity: 1 }}
-                              transition={{ delay: 1.2 }}
-                              className="text-4xl font-bold bg-gradient-to-r from-green-600 to-emerald-600 bg-clip-text text-transparent"
+                              transition={{ delay: 1.0 }}
+                              className="text-3xl font-bold text-emerald-600"
                             >
                               {order.totalPrice} ريال
                             </motion.p>
-                            <p className="text-gray-600 font-medium mt-2">القيمة الإجمالية</p>
+                            <p className="text-gray-600 font-medium mt-1">القيمة الإجمالية</p>
                           </div>
                         </motion.div>
 
-                        {/* تقدم الدفع */}
+                        {/* Payment Progress */}
                         <motion.div
                           initial={{ opacity: 0, y: 20 }}
                           animate={{ opacity: 1, y: 0 }}
-                          transition={{ delay: 0.9 }}
+                          transition={{ delay: 0.7 }}
                           className="space-y-3"
                         >
-                          <div className="flex justify-between items-center">
-                            <span className="text-sm text-gray-600">المبلغ المدفوع</span>
-                            <span className="font-bold text-green-600">{order.paidAmount} ريال</span>
+                          <div className="flex justify-between items-center text-sm">
+                            <span className="text-emerald-600 font-semibold">{order.paidAmount} ريال</span>
+                            <span className="text-gray-600">المبلغ المدفوع</span>
                           </div>
                           <Progress 
                             value={(order.paidAmount / order.totalPrice) * 100} 
                             className="h-3 bg-gray-200 rounded-full overflow-hidden"
                           />
-                          <div className="flex justify-between items-center">
-                            <span className="text-sm text-gray-600">المتبقي</span>
-                            <span className="font-bold text-orange-600">{order.totalPrice - order.paidAmount} ريال</span>
+                          <div className="flex justify-between items-center text-sm">
+                            <span className="text-orange-600 font-semibold">{order.remainingAmount} ريال</span>
+                            <span className="text-gray-600">المبلغ المتبقي</span>
                           </div>
                         </motion.div>
 
-                        {/* وصف المشروع */}
+                        {/* Project Description */}
                         <motion.div
                           initial={{ opacity: 0, y: 20 }}
                           animate={{ opacity: 1, y: 0 }}
-                          transition={{ delay: 1.0 }}
+                          transition={{ delay: 0.8 }}
                           className="pt-4 border-t border-gray-200"
                         >
-                          <h4 className="font-bold text-gray-800 mb-2 text-right">وصف المشروع</h4>
+                          <h4 className="font-semibold text-gray-800 mb-2 text-right">وصف المشروع</h4>
                           <p className="text-gray-600 text-sm leading-relaxed text-right">
                             {order.description}
                           </p>
@@ -494,17 +670,19 @@ const OrderDetails = () => {
               </div>
             </TabsContent>
 
-            {/* الجدول الزمني */}
+            {/* Timeline Tab */}
             <TabsContent value="timeline" className="space-y-6" dir="rtl">
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6 }}
               >
-                <Card className="bg-white/90 backdrop-blur-lg border-0 shadow-2xl rounded-3xl overflow-hidden">
-                  <div className="bg-gradient-to-r from-indigo-500 to-purple-500 p-6">
+                <Card className="bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden">
+                  <div className="bg-gradient-to-r from-orange-500 to-red-600 p-6">
                     <CardTitle className="flex items-center gap-3 text-white text-xl">
-                      <Clock className="w-6 h-6" />
+                      <div className="bg-white/20 p-2 rounded-lg">
+                        <Clock className="w-6 h-6" />
+                      </div>
                       <span>الجدول الزمني للمشروع</span>
                     </CardTitle>
                   </div>
@@ -512,48 +690,53 @@ const OrderDetails = () => {
                     <div className="space-y-6">
                       {order.timeline.map((item, index) => (
                         <motion.div
-                          key={index}
+                          key={item.id}
                           initial={{ opacity: 0, x: 50 }}
                           animate={{ opacity: 1, x: 0 }}
                           transition={{ delay: index * 0.1, duration: 0.5 }}
-                          className="flex items-center gap-4 relative"
+                          className="flex items-start gap-4 relative"
                         >
-                          {/* خط الوقت */}
+                          {/* Timeline line */}
                           {index < order.timeline.length - 1 && (
-                            <div className="absolute right-6 top-12 w-0.5 h-16 bg-gradient-to-b from-blue-500 to-purple-500"></div>
+                            <div className="absolute right-5 top-12 w-0.5 h-16 bg-gradient-to-b from-gray-300 to-gray-200"></div>
                           )}
                           
-                          {/* أيقونة الحالة */}
+                          {/* Status icon */}
                           <div className={`
-                            relative z-10 w-12 h-12 rounded-full flex items-center justify-center shadow-lg
-                            ${item.status === 'completed' ? 'bg-gradient-to-r from-green-500 to-emerald-500' : 
-                              item.status === 'current' ? 'bg-gradient-to-r from-blue-500 to-cyan-500' : 
+                            relative z-10 w-10 h-10 rounded-full flex items-center justify-center shadow-lg border-2 border-white
+                            ${item.status === 'completed' ? 'bg-gradient-to-r from-emerald-500 to-green-600' : 
+                              item.status === 'current' ? 'bg-gradient-to-r from-blue-500 to-cyan-600' : 
                               'bg-gradient-to-r from-gray-400 to-gray-500'}
                           `}>
                             {item.status === 'completed' ? (
-                              <CheckCircle className="w-6 h-6 text-white" />
+                              <CheckCircle className="w-5 h-5 text-white" />
                             ) : item.status === 'current' ? (
-                              <PlayCircle className="w-6 h-6 text-white" />
+                              <PlayCircle className="w-5 h-5 text-white" />
                             ) : (
-                              <Clock className="w-6 h-6 text-white" />
+                              <Clock className="w-5 h-5 text-white" />
                             )}
                           </div>
 
-                          {/* محتوى الحدث */}
-                          <div className="flex-1 p-4 rounded-2xl bg-gradient-to-r from-gray-50 to-gray-100 border border-gray-200">
-                            <div className="flex justify-between items-start">
+                          {/* Event content */}
+                          <div className="flex-1 bg-gray-50 rounded-xl p-4 border border-gray-100 hover:shadow-md transition-all duration-300">
+                            <div className="flex justify-between items-start mb-2">
                               <div className="text-right">
-                                <h4 className="font-bold text-gray-800">{item.event}</h4>
-                                <p className="text-gray-600 text-sm mt-1">{item.date}</p>
+                                <h4 className="font-bold text-gray-800">{item.title}</h4>
+                                <p className="text-gray-600 text-sm mt-1">{item.description}</p>
                               </div>
                               <Badge className={`
-                                ${item.status === 'completed' ? 'bg-green-100 text-green-700' : 
+                                text-xs px-2 py-1 rounded-full
+                                ${item.status === 'completed' ? 'bg-emerald-100 text-emerald-700' : 
                                   item.status === 'current' ? 'bg-blue-100 text-blue-700' : 
                                   'bg-gray-100 text-gray-700'}
                               `}>
                                 {item.status === 'completed' ? 'مكتمل' : 
                                  item.status === 'current' ? 'جاري' : 'في الانتظار'}
                               </Badge>
+                            </div>
+                            <div className="flex justify-between items-center text-sm text-gray-500">
+                              <span>{item.actor}</span>
+                              <span>{item.date} - {item.time}</span>
                             </div>
                           </div>
                         </motion.div>
@@ -564,46 +747,77 @@ const OrderDetails = () => {
               </motion.div>
             </TabsContent>
 
-            {/* الملفات */}
+            {/* Files Tab */}
             <TabsContent value="files" className="space-y-6" dir="rtl">
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6 }}
               >
-                <Card className="bg-white/90 backdrop-blur-lg border-0 shadow-2xl rounded-3xl overflow-hidden">
-                  <div className="bg-gradient-to-r from-emerald-500 to-teal-500 p-6">
-                    <CardTitle className="flex items-center gap-3 text-white text-xl">
-                      <FileText className="w-6 h-6" />
-                      <span>ملفات المشروع</span>
-                    </CardTitle>
+                <Card className="bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden">
+                  <div className="bg-gradient-to-r from-purple-500 to-indigo-600 p-6">
+                    <div className="flex items-center justify-between">
+                      <CardTitle className="flex items-center gap-3 text-white text-xl">
+                        <div className="bg-white/20 p-2 rounded-lg">
+                          <FileText className="w-6 h-6" />
+                        </div>
+                        <span>ملفات المشروع</span>
+                      </CardTitle>
+                      <Button 
+                        className="bg-white/20 hover:bg-white/30 text-white border-white/30"
+                        size="sm"
+                      >
+                        <Upload className="w-4 h-4 ml-2" />
+                        رفع ملف جديد
+                      </Button>
+                    </div>
                   </div>
                   <CardContent className="p-6">
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                       {order.files.map((file, index) => (
                         <motion.div
-                          key={index}
+                          key={file.id}
                           initial={{ opacity: 0, scale: 0.9 }}
                           animate={{ opacity: 1, scale: 1 }}
                           transition={{ delay: index * 0.1, duration: 0.5 }}
                           className="group"
                         >
-                          <div className="p-4 rounded-2xl bg-gradient-to-r from-gray-50 to-gray-100 border border-gray-200 hover:shadow-lg transition-all duration-300 group-hover:scale-105">
+                          <div className="p-4 rounded-xl bg-gray-50 border border-gray-200 hover:shadow-lg hover:border-purple-300 transition-all duration-300 group-hover:scale-105">
+                            
+                            {/* File header */}
                             <div className="flex items-center gap-3 mb-3">
-                              <div className="p-2 rounded-xl bg-gradient-to-r from-blue-500 to-cyan-500 shadow-lg">
+                              <div className="p-2 rounded-lg bg-gradient-to-r from-purple-500 to-indigo-600 shadow-lg">
                                 <FileText className="w-5 h-5 text-white" />
                               </div>
-                              <div className="text-right flex-1">
-                                <h4 className="font-bold text-gray-800 text-sm">{file.name}</h4>
-                                <p className="text-gray-600 text-xs">{file.size}</p>
+                              <div className="text-right flex-1 min-w-0">
+                                <h4 className="font-semibold text-gray-800 text-sm truncate">{file.name}</h4>
+                                <p className="text-gray-500 text-xs">{file.size}</p>
                               </div>
                             </div>
+                            
+                            {/* File meta */}
+                            <div className="mb-3 text-xs text-gray-500">
+                              <div className="flex justify-between">
+                                <span>{file.uploadedBy}</span>
+                                <span>{file.uploadedAt}</span>
+                              </div>
+                            </div>
+                            
+                            {/* File actions */}
                             <div className="flex gap-2">
-                              <Button size="sm" className="flex-1 bg-gradient-to-r from-blue-500 to-cyan-500 hover:from-blue-600 hover:to-cyan-600 text-white">
+                              <Button 
+                                size="sm" 
+                                className="flex-1 bg-gradient-to-r from-blue-500 to-cyan-600 hover:from-blue-600 hover:to-cyan-700 text-white"
+                                onClick={() => handleDownloadFile(file.name)}
+                              >
                                 <Download className="w-4 h-4 ml-1" />
                                 تحميل
                               </Button>
-                              <Button size="sm" variant="outline" className="border-purple-500 text-purple-500 hover:bg-purple-500 hover:text-white">
+                              <Button 
+                                size="sm" 
+                                variant="outline" 
+                                className="border-purple-500 text-purple-600 hover:bg-purple-500 hover:text-white"
+                              >
                                 <Eye className="w-4 h-4" />
                               </Button>
                             </div>
@@ -616,58 +830,76 @@ const OrderDetails = () => {
               </motion.div>
             </TabsContent>
 
-            {/* التواصل */}
+            {/* Communication Tab */}
             <TabsContent value="communication" className="space-y-6" dir="rtl">
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6 }}
               >
-                <Card className="bg-white/90 backdrop-blur-lg border-0 shadow-2xl rounded-3xl overflow-hidden">
-                  <div className="bg-gradient-to-r from-pink-500 to-rose-500 p-6">
+                <Card className="bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden">
+                  <div className="bg-gradient-to-r from-pink-500 to-purple-600 p-6">
                     <CardTitle className="flex items-center gap-3 text-white text-xl">
-                      <MessageSquare className="w-6 h-6" />
+                      <div className="bg-white/20 p-2 rounded-lg">
+                        <MessageSquare className="w-6 h-6" />
+                      </div>
                       <span>رسائل التواصل</span>
                     </CardTitle>
                   </div>
                   <CardContent className="p-6">
-                    <div className="space-y-4 max-h-96 overflow-y-auto">
+                    
+                    {/* Messages */}
+                    <div className="space-y-4 max-h-96 overflow-y-auto mb-6">
                       {order.communication.map((msg, index) => (
                         <motion.div
                           key={msg.id}
-                          initial={{ opacity: 0, x: msg.sender === 'العميل' ? 50 : -50 }}
+                          initial={{ 
+                            opacity: 0, 
+                            x: msg.senderType === 'client' ? 50 : -50 
+                          }}
                           animate={{ opacity: 1, x: 0 }}
                           transition={{ delay: index * 0.1, duration: 0.5 }}
-                          className={`flex gap-3 ${msg.sender === 'العميل' ? 'justify-start' : 'justify-end'}`}
+                          className={`flex gap-3 ${msg.senderType === 'client' ? 'justify-start' : 'justify-end'}`}
                         >
                           <div className={`
                             max-w-xs lg:max-w-md p-4 rounded-2xl shadow-lg
-                            ${msg.sender === 'العميل' ? 
-                              'bg-gradient-to-r from-blue-500 to-cyan-500 text-white' : 
-                              'bg-gradient-to-r from-purple-500 to-pink-500 text-white'}
+                            ${msg.senderType === 'client' ? 
+                              'bg-gradient-to-r from-blue-500 to-cyan-600 text-white ml-auto' : 
+                              'bg-gradient-to-r from-purple-500 to-pink-600 text-white mr-auto'}
                           `}>
                             <div className="text-right">
-                              <p className="font-medium text-sm opacity-90">{msg.sender}</p>
-                              <p className="mt-1">{msg.message}</p>
-                              <p className="text-xs opacity-75 mt-2">{msg.timestamp}</p>
+                              <div className="flex items-center justify-between mb-2">
+                                <span className="text-xs opacity-75">{msg.timestamp}</span>
+                                <p className="font-medium text-sm opacity-90">{msg.sender}</p>
+                              </div>
+                              <p className="leading-relaxed">{msg.message}</p>
                             </div>
                           </div>
                         </motion.div>
                       ))}
                     </div>
                     
-                    {/* إضافة رسالة جديدة */}
-                    <div className="mt-6 pt-6 border-t border-gray-200">
+                    {/* Message input */}
+                    <div className="border-t border-gray-200 pt-6">
                       <div className="flex gap-3">
-                        <Button className="bg-gradient-to-r from-pink-500 to-rose-500 hover:from-pink-600 hover:to-rose-600 text-white">
+                        <Button 
+                          className="bg-gradient-to-r from-pink-500 to-purple-600 hover:from-pink-600 hover:to-purple-700 text-white"
+                          onClick={handleSendMessage}
+                          disabled={!newMessage.trim()}
+                        >
                           <Send className="w-4 h-4" />
                         </Button>
-                        <input
-                          type="text"
+                        <Textarea
+                          value={newMessage}
+                          onChange={(e) => setNewMessage(e.target.value)}
                           placeholder="اكتب رسالتك هنا..."
-                          className="flex-1 p-3 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-pink-500 text-right"
+                          className="flex-1 min-h-[60px] text-right resize-none border-gray-300 focus:border-purple-500 focus:ring-purple-500 rounded-xl"
+                          dir="rtl"
                         />
-                        <Button variant="outline" className="border-gray-300 text-gray-600 hover:bg-gray-50">
+                        <Button 
+                          variant="outline" 
+                          className="border-gray-300 text-gray-600 hover:bg-gray-50"
+                        >
                           <Paperclip className="w-4 h-4" />
                         </Button>
                       </div>
@@ -677,61 +909,6 @@ const OrderDetails = () => {
               </motion.div>
             </TabsContent>
           </Tabs>
-        </motion.div>
-
-        {/* إجراءات سريعة */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.5 }}
-          className="grid grid-cols-1 md:grid-cols-3 gap-6"
-        >
-          {[
-            { 
-              icon: Heart, 
-              title: 'تقييم الخدمة', 
-              desc: 'قيم جودة الخدمة المقدمة', 
-              color: 'from-red-500 to-pink-500',
-              action: () => toast({ title: "شكراً لك!", description: "تم تسجيل تقييمك بنجاح" })
-            },
-            { 
-              icon: Share2, 
-              title: 'مشاركة التقدم', 
-              desc: 'شارك تقدم مشروعك مع آخرين', 
-              color: 'from-blue-500 to-cyan-500',
-              action: () => toast({ title: "تم النسخ!", description: "تم نسخ رابط المشاركة" })
-            },
-            { 
-              icon: Award, 
-              title: 'طلب شهادة', 
-              desc: 'احصل على شهادة إتمام المشروع', 
-              color: 'from-yellow-500 to-orange-500',
-              action: () => toast({ title: "تم الطلب!", description: "سيتم إرسال الشهادة قريباً" })
-            }
-          ].map((item, index) => (
-            <motion.div
-              key={index}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.7 + index * 0.1, duration: 0.5 }}
-              className="group cursor-pointer"
-              onClick={item.action}
-            >
-              <Card className="bg-white/90 backdrop-blur-lg border-0 shadow-xl rounded-2xl overflow-hidden hover:shadow-2xl transition-all duration-300 group-hover:scale-105">
-                <CardContent className="p-6">
-                  <div className="text-center space-y-4">
-                    <div className={`w-16 h-16 mx-auto rounded-2xl bg-gradient-to-r ${item.color} shadow-lg flex items-center justify-center group-hover:rotate-12 transition-transform duration-300`}>
-                      <item.icon className="w-8 h-8 text-white" />
-                    </div>
-                    <div>
-                      <h3 className="font-bold text-gray-800 text-lg">{item.title}</h3>
-                      <p className="text-gray-600 text-sm mt-1">{item.desc}</p>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            </motion.div>
-          ))}
         </motion.div>
       </div>
     </div>
