@@ -4,7 +4,7 @@ import { User } from '@supabase/supabase-js';
 
 interface AuthContextType {
   user: User | null;
-  userRole: 'admin' | 'client' | null;
+  userRole: 'admin' | 'client' | 'superadmin' | null;
   loading: boolean;
   signIn: (email: string, password: string) => Promise<void>;
   signUp: (email: string, password: string, userData: any) => Promise<void>;
@@ -23,7 +23,7 @@ export const useAuth = () => {
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
-  const [userRole, setUserRole] = useState<'admin' | 'client' | null>(null);
+  const [userRole, setUserRole] = useState<'admin' | 'client' | 'superadmin' | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -53,13 +53,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const fetchUserRole = async (userId: string) => {
     try {
       const { data, error } = await supabase
-        .from('user_roles')
+        .from('ash_users')
         .select('role')
-        .eq('user_id', userId)
+        .eq('id', userId)
         .single();
 
       if (error) throw error;
-      setUserRole(data?.role === 'admin' ? 'admin' : 'client');
+      setUserRole(data?.role === 'admin' ? 'admin' : data?.role === 'superadmin' ? 'superadmin' : 'client');
     } catch (error) {
       console.error('Error fetching user role:', error);
       setUserRole('client'); // Default to client
@@ -107,18 +107,24 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     
     if (error) throw error;
 
-    // Create user role
+    // Create user profile
     if (data.user) {
-      const { error: roleError } = await supabase
-        .from('user_roles')
+      const { error: profileError } = await supabase
+        .from('ash_users')
         .insert([
           {
-            user_id: data.user.id,
-            role: userData.role || 'user',
+            id: data.user.id,
+            email: email.toLowerCase(),
+            email_lower: email.toLowerCase(),
+            name: userData.name,
+            phone: userData.phone || null,
+            role: 'client', // Default role for new registrations
+            status: 'pending',
+            password_hash: 'supabase_auth_managed', // Placeholder since Supabase manages auth
           }
         ]);
 
-      if (roleError) throw roleError;
+      if (profileError) throw profileError;
     }
   };
 

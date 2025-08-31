@@ -46,8 +46,7 @@ const Register = () => {
     try {
       await signUp(formData.email, formData.password, {
         name: formData.name,
-        phone: formData.phone,
-        role: 'client'
+        phone: formData.phone
       });
       
       toast.success('تم إنشاء الحساب بنجاح! يرجى تفعيل بريدك الإلكتروني');
