@@ -1,9 +1,11 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import AdminLayout from '@/components/admin/AdminLayout';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import AnimatedCounter from '@/components/AnimatedCounter';
+import { useAdminStats } from '@/hooks/useAdminStats';
+import { useToast } from '@/hooks/use-toast';
 import { 
   DollarSign, 
   ShoppingCart, 
@@ -19,95 +21,39 @@ import {
   Star,
   Zap,
   Target,
-  HelpCircle
+  HelpCircle,
+  RefreshCw
 } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 const AdminDashboard = () => {
-  // Sample data - will be replaced with real data from API
-  const stats = {
-    totalSales: 125420,
-    newOrders: 18,
-    overdueInvoices: 5,
-    collectionRate: 87,
-    totalUsers: 342,
-    activeServices: 12
+  const { toast } = useToast();
+  const {
+    stats,
+    recentOrders,
+    overdueInvoices,
+    highPriorityTickets,
+    loading,
+    error,
+    refresh
+  } = useAdminStats();
+
+  // تحديث البيانات يدوياً
+  const handleRefresh = async () => {
+    await refresh();
+    toast({
+      title: "تم تحديث البيانات",
+      description: "تم تحديث بيانات لوحة التحكم بنجاح",
+    });
   };
-
-  const recentOrders = [
-    {
-      id: '1',
-      orderNumber: 'ORD240001',
-      clientName: 'أحمد محمد',
-      serviceName: 'مراجعة أكاديمية شاملة',
-      status: 'قيد المعالجة',
-      total: 299,
-      createdAt: '2024-01-20'
-    },
-    {
-      id: '2',
-      orderNumber: 'ORD240002',
-      clientName: 'فاطمة أحمد',
-      serviceName: 'استشارة أكاديمية متقدمة',
-      status: 'جديد',
-      total: 799,
-      createdAt: '2024-01-20'
-    },
-    {
-      id: '3',
-      orderNumber: 'ORD240003',
-      clientName: 'محمد علي',
-      serviceName: 'دورة الكتابة الأكاديمية',
-      status: 'مكتمل',
-      total: 149,
-      createdAt: '2024-01-19'
-    }
-  ];
-
-  const overdueInvoices = [
-    {
-      id: '1',
-      invoiceNumber: 'INV240001',
-      clientName: 'شركة التعليم المتقدم',
-      amount: 1250,
-      dueDate: '2024-01-15',
-      daysOverdue: 5
-    },
-    {
-      id: '2',
-      invoiceNumber: 'INV240002',
-      clientName: 'مؤسسة البحث العلمي',
-      amount: 850,
-      dueDate: '2024-01-10',
-      daysOverdue: 10
-    }
-  ];
-
-  const highPriorityTickets = [
-    {
-      id: '1',
-      ticketNumber: 'TKT240001',
-      clientName: 'سارة محمد',
-      subject: 'مشكلة في الدفع الإلكتروني',
-      priority: 'عالية',
-      createdAt: '2024-01-20'
-    },
-    {
-      id: '2',
-      ticketNumber: 'TKT240002',
-      clientName: 'خالد أحمد',
-      subject: 'طلب تعديل على الخدمة',
-      priority: 'عالية',
-      createdAt: '2024-01-19'
-    }
-  ];
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case 'قيد المعالجة': return 'bg-yellow-100 text-yellow-800';
-      case 'مكتمل': return 'bg-green-100 text-green-800';
-      case 'جديد': return 'bg-blue-100 text-blue-800';
-      default: return 'bg-gray-100 text-gray-800';
+      case 'قيد المعالجة': return 'bg-yellow-100 text-yellow-800 border-yellow-300';
+      case 'مكتمل': return 'bg-green-100 text-green-800 border-green-300';
+      case 'نشط': return 'bg-blue-100 text-blue-800 border-blue-300';
+      case 'مسودة': return 'bg-gray-100 text-gray-800 border-gray-300';
+      default: return 'bg-gray-100 text-gray-800 border-gray-300';
     }
   };
 
@@ -118,20 +64,75 @@ const AdminDashboard = () => {
     }).format(amount);
   };
 
+  if (loading) {
+    return (
+      <AdminLayout>
+        <div className="flex items-center justify-center min-h-[400px]">
+          <div className="text-center">
+            <RefreshCw className="w-8 h-8 animate-spin mx-auto mb-4 text-primary" />
+            <p className="text-muted-foreground">جاري تحميل البيانات المباشرة...</p>
+          </div>
+        </div>
+      </AdminLayout>
+    );
+  }
+
+  if (error) {
+    return (
+      <AdminLayout>
+        <div className="flex items-center justify-center min-h-[400px]">
+          <div className="text-center">
+            <AlertTriangle className="w-8 h-8 mx-auto mb-4 text-red-500" />
+            <p className="text-red-600 mb-4">{error}</p>
+            <Button onClick={handleRefresh} variant="outline">
+              <RefreshCw className="w-4 h-4 ml-2" />
+              إعادة المحاولة
+            </Button>
+          </div>
+        </div>
+      </AdminLayout>
+    );
+  }
+
+  if (!stats) {
+    return (
+      <AdminLayout>
+        <div className="flex items-center justify-center min-h-[400px]">
+          <div className="text-center">
+            <AlertTriangle className="w-8 h-8 mx-auto mb-4 text-yellow-500" />
+            <p className="text-muted-foreground">لا توجد بيانات متاحة</p>
+          </div>
+        </div>
+      </AdminLayout>
+    );
+  }
+
   return (
     <AdminLayout>
       <div className="space-y-6">
-        {/* Header */}
+        {/* Header with refresh button */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
         >
-          <div>
-            <h1 className="text-3xl font-arabic-formal font-bold">لوحة التحكم الإدارية</h1>
-            <p className="text-muted-foreground">
-              نظرة عامة على الأداء والإحصائيات اليومية
-            </p>
+          <div className="flex items-center justify-between">
+            <div>
+              <h1 className="text-3xl font-arabic-formal font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
+                لوحة التحكم الإدارية
+              </h1>
+              <p className="text-muted-foreground">
+                نظرة عامة على الأداء والإحصائيات المباشرة من قاعدة البيانات
+              </p>
+            </div>
+            <Button 
+              onClick={handleRefresh} 
+              variant="outline"
+              className="gap-2"
+            >
+              <RefreshCw className="w-4 h-4" />
+              تحديث البيانات المباشرة
+            </Button>
           </div>
         </motion.div>
 
@@ -524,7 +525,7 @@ const AdminDashboard = () => {
                   <div className="text-right">
                     <p className="text-sm font-medium text-teal-700">معدل النمو الشهري</p>
                     <p className="text-3xl font-bold text-teal-900">
-                      <AnimatedCounter end={18.5} suffix="%" duration={2.5} />
+                      <AnimatedCounter end={stats.monthlyGrowth} suffix="%" duration={2.5} />
                     </p>
                   </div>
                 </div>

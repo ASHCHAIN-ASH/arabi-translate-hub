@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '@/components/SimpleAuthProvider';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
+import { AdminDashboardService } from '@/utils/adminDashboardService';
 import { 
   LayoutDashboard, 
   Users, 
@@ -85,11 +86,31 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
     },
   ];
 
-  const notifications = [
+  // الإشعارات الافتراضية
+  const defaultNotifications = [
     { id: 1, title: 'طلب جديد', message: 'تم استلام طلب خدمة جديد', time: 'منذ دقيقتين', type: 'order' },
     { id: 2, title: 'دفعة جديدة', message: 'تم استلام دفعة بقيمة 500 ريال', time: 'منذ 5 دقائق', type: 'payment' },
     { id: 3, title: 'تذكرة دعم', message: 'تذكرة دعم جديدة تحتاج انتباه', time: 'منذ 10 دقائق', type: 'support' },
   ];
+
+  // جلب الإشعارات الحقيقية
+  const [realNotifications, setRealNotifications] = useState(defaultNotifications);
+  
+  useEffect(() => {
+    const loadNotifications = async () => {
+      try {
+        const notifs = await AdminDashboardService.getRecentNotifications();
+        if (notifs.length > 0) {
+          setRealNotifications(notifs);
+        }
+      } catch (error) {
+        console.error('Error loading notifications:', error);
+        // نبقي على الإشعارات الافتراضية في حالة الخطأ
+      }
+    };
+    
+    loadNotifications();
+  }, []);
 
   const handleSignOut = async () => {
     try {
@@ -247,7 +268,7 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
                     animate={{ scale: [1, 1.2, 1] }}
                     transition={{ repeat: Infinity, duration: 2 }}
                   >
-                    {notifications.length}
+                    {realNotifications.length}
                   </motion.span>
                 </Button>
 
@@ -263,7 +284,7 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
                         <h3 className="font-semibold text-sm">الإشعارات الحديثة</h3>
                       </div>
                       <div className="max-h-64 overflow-y-auto">
-                        {notifications.map((notification, index) => (
+                        {realNotifications.map((notification, index) => (
                           <motion.div
                             key={notification.id}
                             initial={{ opacity: 0, x: 20 }}
