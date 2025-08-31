@@ -232,12 +232,12 @@ const OrderDetails = () => {
         </div>
 
         {/* Main Content */}
-        <Tabs defaultValue="overview" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-4">
-            <TabsTrigger value="overview">نظرة عامة</TabsTrigger>
-            <TabsTrigger value="timeline">الجدول الزمني</TabsTrigger>
-            <TabsTrigger value="files">الملفات</TabsTrigger>
-            <TabsTrigger value="communication">التواصل</TabsTrigger>
+        <Tabs defaultValue="overview" className="space-y-6" dir="rtl">
+          <TabsList className="grid w-full grid-cols-4" dir="rtl">
+            <TabsTrigger value="overview" className="text-right">نظرة عامة</TabsTrigger>
+            <TabsTrigger value="timeline" className="text-right">الجدول الزمني</TabsTrigger>
+            <TabsTrigger value="files" className="text-right">الملفات</TabsTrigger>
+            <TabsTrigger value="communication" className="text-right">التواصل</TabsTrigger>
           </TabsList>
 
           <TabsContent value="overview" className="space-y-6" dir="rtl">
@@ -497,127 +497,183 @@ const OrderDetails = () => {
             </motion.div>
           </TabsContent>
 
-          <TabsContent value="timeline" className="space-y-6">
-            <Card>
-              <CardHeader>
-                <CardTitle className="text-right">الجدول الزمني للمشروع</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-6">
-                  {order.timeline.map((step, index) => (
-                    <div key={index} className="flex gap-4" dir="rtl">
-                      <div className="flex flex-col items-center">
-                        <div className={`w-8 h-8 rounded-full flex items-center justify-center ${
-                          step.completed 
-                            ? 'bg-green-100 text-green-600' 
-                            : 'bg-muted text-muted-foreground'
-                        }`}>
-                          {step.completed ? (
-                            <CheckCircle className="w-4 h-4" />
-                          ) : (
-                            <Clock className="w-4 h-4" />
-                          )}
-                        </div>
-                        {index < order.timeline.length - 1 && (
-                          <div className={`w-0.5 h-12 mt-2 ${
-                            step.completed ? 'bg-green-200' : 'bg-muted'
-                          }`} />
-                        )}
-                      </div>
-                      <div className="flex-1 pb-8 text-right">
-                        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-2">
-                          {step.date && (
-                            <span className="text-sm text-muted-foreground order-2 sm:order-1">{step.date}</span>
-                          )}
-                          <h4 className={`font-medium order-1 sm:order-2 ${
-                            step.completed ? 'text-foreground' : 'text-muted-foreground'
+          <TabsContent value="timeline" className="space-y-6" dir="rtl">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5 }}
+            >
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-3 text-right justify-end">
+                    <span>الجدول الزمني للمشروع</span>
+                    <Clock className="w-5 h-5 text-primary" />
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-6">
+                    {order.timeline.map((step, index) => (
+                      <motion.div 
+                        key={index} 
+                        initial={{ opacity: 0, x: 50 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ delay: index * 0.1, duration: 0.4 }}
+                        className="flex gap-4"
+                      >
+                        <div className="flex flex-col items-center">
+                          <div className={`w-8 h-8 rounded-full flex items-center justify-center transition-all duration-300 ${
+                            step.completed 
+                              ? 'bg-green-100 text-green-600 shadow-lg' 
+                              : 'bg-muted text-muted-foreground'
                           }`}>
-                            {step.name}
-                          </h4>
+                            {step.completed ? (
+                              <CheckCircle className="w-4 h-4" />
+                            ) : (
+                              <Clock className="w-4 h-4" />
+                            )}
+                          </div>
+                          {index < order.timeline.length - 1 && (
+                            <div className={`w-0.5 h-12 mt-2 transition-all duration-300 ${
+                              step.completed ? 'bg-green-200' : 'bg-muted'
+                            }`} />
+                          )}
                         </div>
-                        <p className="text-sm text-muted-foreground">{step.description}</p>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </CardContent>
-            </Card>
-          </TabsContent>
-
-          <TabsContent value="files" className="space-y-6">
-            <Card>
-              <CardHeader>
-                <CardTitle className="text-right">ملفات المشروع</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-4">
-                  {order.files.map((file, index) => (
-                    <div key={index} className="flex items-center justify-between p-4 border rounded-lg hover:bg-muted/50 transition-colors" dir="rtl">
-                      <Button variant="outline" size="sm">
-                        <Download className="w-4 h-4 ml-2" />
-                        تحميل
-                      </Button>
-                      <div className="flex items-center gap-3 text-right">
-                        <div>
-                          <p className="font-medium">{file.name}</p>
-                          <p className="text-sm text-muted-foreground">
-                            {file.type === 'input' ? 'ملف مدخل' : 'ملف مخرج'} • {file.size} • {file.uploadedAt}
-                          </p>
+                        <div className="flex-1 pb-8 text-right">
+                          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-2">
+                            {step.date && (
+                              <span className="text-sm text-muted-foreground order-2 sm:order-1">{step.date}</span>
+                            )}
+                            <h4 className={`font-medium order-1 sm:order-2 ${
+                              step.completed ? 'text-foreground' : 'text-muted-foreground'
+                            }`}>
+                              {step.name}
+                            </h4>
+                          </div>
+                          <p className="text-sm text-muted-foreground text-right">{step.description}</p>
                         </div>
-                        <FileText className="w-5 h-5 text-primary" />
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </CardContent>
-            </Card>
-          </TabsContent>
-
-          <TabsContent value="communication" className="space-y-6">
-            <Card>
-              <CardHeader>
-                <CardTitle className="text-right">سجل التواصل</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-4" dir="rtl">
-                  {order.communications.map((comm, index) => (
-                    <div key={comm.id} className={`flex gap-3 ${
-                      comm.from === 'العميل' ? 'justify-start' : 'justify-end'
-                    }`}>
-                      <div className={`max-w-[70%] p-4 rounded-lg ${
-                        comm.from === 'العميل' 
-                          ? 'bg-primary text-primary-foreground' 
-                          : 'bg-muted'
-                      }`}>
-                        <div className="flex items-center gap-2 mb-2 text-right">
-                          <span className="text-xs opacity-70">{comm.timestamp}</span>
-                          <span className="font-medium text-sm">{comm.from}</span>
-                        </div>
-                        <p className="text-sm leading-relaxed text-right">{comm.content}</p>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-                
-                <Separator className="my-6" />
-                
-                <div className="flex gap-3" dir="rtl">
-                  <Button onClick={handleSendMessage} disabled={!newMessage.trim()}>
-                    <Send className="w-4 h-4" />
-                  </Button>
-                  <div className="flex-1">
-                    <textarea 
-                      placeholder="اكتب رسالتك هنا..."
-                      className="w-full p-3 border rounded-lg resize-none text-right"
-                      rows={3}
-                      value={newMessage}
-                      onChange={(e) => setNewMessage(e.target.value)}
-                      dir="rtl"
-                    />
+                      </motion.div>
+                    ))}
                   </div>
-                </div>
-              </CardContent>
-            </Card>
+                </CardContent>
+              </Card>
+            </motion.div>
+          </TabsContent>
+
+          <TabsContent value="files" className="space-y-6" dir="rtl">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5 }}
+            >
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-3 text-right justify-end">
+                    <span>ملفات المشروع</span>
+                    <FileText className="w-5 h-5 text-primary" />
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-4">
+                    {order.files.map((file, index) => (
+                      <motion.div 
+                        key={index} 
+                        initial={{ opacity: 0, scale: 0.95 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        transition={{ delay: index * 0.1, duration: 0.3 }}
+                        className="flex items-center justify-between p-4 border rounded-lg hover:bg-muted/50 hover:shadow-md transition-all duration-300"
+                      >
+                        <Button variant="outline" size="sm" className="hover:scale-105 transition-transform">
+                          <span>تحميل</span>
+                          <Download className="w-4 h-4 mr-2" />
+                        </Button>
+                        <div className="flex items-center gap-3 text-right">
+                          <div>
+                            <p className="font-medium">{file.name}</p>
+                            <p className="text-sm text-muted-foreground">
+                              {file.type === 'input' ? 'ملف مدخل' : 'ملف مخرج'} • {file.size} • {file.uploadedAt}
+                            </p>
+                          </div>
+                          <div className="bg-primary/10 p-2 rounded-lg">
+                            <FileText className="w-5 h-5 text-primary" />
+                          </div>
+                        </div>
+                      </motion.div>
+                    ))}
+                  </div>
+                </CardContent>
+              </Card>
+            </motion.div>
+          </TabsContent>
+
+          <TabsContent value="communication" className="space-y-6" dir="rtl">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5 }}
+            >
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-3 text-right justify-end">
+                    <span>سجل التواصل</span>
+                    <MessageCircle className="w-5 h-5 text-primary" />
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-4">
+                    {order.communications.map((comm, index) => (
+                      <motion.div 
+                        key={comm.id}
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: index * 0.1, duration: 0.4 }}
+                        className={`flex gap-3 ${
+                          comm.from === 'العميل' ? 'justify-start' : 'justify-end'
+                        }`}
+                      >
+                        <div className={`max-w-[70%] p-4 rounded-lg shadow-sm hover:shadow-md transition-shadow ${
+                          comm.from === 'العميل' 
+                            ? 'bg-primary text-primary-foreground' 
+                            : 'bg-muted'
+                        }`}>
+                          <div className="flex items-center gap-2 mb-2 text-right">
+                            <span className="text-xs opacity-70">{comm.timestamp}</span>
+                            <span className="font-medium text-sm">{comm.from}</span>
+                          </div>
+                          <p className="text-sm leading-relaxed text-right">{comm.content}</p>
+                        </div>
+                      </motion.div>
+                    ))}
+                  </div>
+                  
+                  <Separator className="my-6" />
+                  
+                  <motion.div 
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.3 }}
+                    className="flex gap-3"
+                  >
+                    <Button 
+                      onClick={handleSendMessage} 
+                      disabled={!newMessage.trim()}
+                      className="hover:scale-105 transition-transform"
+                    >
+                      <Send className="w-4 h-4" />
+                    </Button>
+                    <div className="flex-1">
+                      <textarea 
+                        placeholder="اكتب رسالتك هنا..."
+                        className="w-full p-3 border rounded-lg resize-none text-right hover:border-primary/50 focus:border-primary transition-colors"
+                        rows={3}
+                        value={newMessage}
+                        onChange={(e) => setNewMessage(e.target.value)}
+                        dir="rtl"
+                      />
+                    </div>
+                  </motion.div>
+                </CardContent>
+              </Card>
+            </motion.div>
           </TabsContent>
         </Tabs>
       </div>
