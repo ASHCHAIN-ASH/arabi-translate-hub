@@ -276,71 +276,129 @@ const AdminServices = () => {
 
   return (
     <AdminLayout>
-      <div className="min-h-screen bg-background" dir="rtl">
-        <div className="container mx-auto px-6 py-8">
-          {/* Header */}
-          <div className="mb-8">
+      <div className="min-h-screen bg-gradient-to-br from-background via-background to-primary/5" dir="rtl">
+        {/* Header Section */}
+        <div className="bg-card/50 backdrop-blur-sm border-b border-border/50">
+          <div className="container mx-auto px-8 py-12">
             <div className="flex items-center justify-between">
-              <div className="flex items-center gap-3">
-                <div className="w-12 h-12 bg-primary/10 rounded-xl flex items-center justify-center">
-                  <Settings className="w-6 h-6 text-primary" />
+              <div className="flex items-center gap-6">
+                <div className="relative">
+                  <div className="w-20 h-20 bg-gradient-to-br from-primary to-primary/70 rounded-2xl flex items-center justify-center shadow-xl">
+                    <Settings className="w-10 h-10 text-primary-foreground" />
+                  </div>
+                  <div className="absolute -bottom-2 -right-2 w-6 h-6 bg-success rounded-full border-4 border-background"></div>
                 </div>
-                <div>
-                  <h1 className="text-3xl font-bold text-foreground">إدارة الخدمات</h1>
-                  <p className="text-muted-foreground mt-1">إدارة أقسام وخدمات الموقع</p>
+                <div className="space-y-2">
+                  <h1 className="text-4xl font-bold text-foreground">إدارة الخدمات والأقسام</h1>
+                  <p className="text-lg text-muted-foreground font-medium">إدارة شاملة لجميع أقسام وخدمات المنصة التعليمية</p>
+                  <div className="flex items-center gap-4 text-sm text-muted-foreground">
+                    <span className="flex items-center gap-2">
+                      <div className="w-2 h-2 bg-primary rounded-full"></div>
+                      {categories.length} قسم
+                    </span>
+                    <span className="flex items-center gap-2">
+                      <div className="w-2 h-2 bg-secondary rounded-full"></div>
+                      {services.length} خدمة
+                    </span>
+                  </div>
+                </div>
+              </div>
+              <div className="hidden lg:block">
+                <div className="text-right space-y-2">
+                  <div className="text-2xl font-bold text-primary">{services.filter(s => s.is_active).length}</div>
+                  <div className="text-sm text-muted-foreground">خدمة نشطة</div>
                 </div>
               </div>
             </div>
           </div>
+        </div>
 
-          <Tabs defaultValue="categories" className="space-y-6">
-            <TabsList className="grid grid-cols-2 w-full max-w-md">
-              <TabsTrigger value="categories" className="flex items-center gap-2">
-                <Languages className="w-4 h-4" />
-                الأقسام
-              </TabsTrigger>
-              <TabsTrigger value="services" className="flex items-center gap-2">
-                <Settings className="w-4 h-4" />
-                الخدمات
-              </TabsTrigger>
-            </TabsList>
+        <div className="container mx-auto px-8 py-8">
+          <Tabs defaultValue="categories" className="space-y-8">
+            <div className="flex justify-center">
+              <TabsList className="grid grid-cols-2 w-full max-w-lg bg-muted/30 backdrop-blur-sm p-2 rounded-2xl border border-border/50">
+                <TabsTrigger 
+                  value="categories" 
+                  className="flex items-center gap-3 px-6 py-4 rounded-xl data-[state=active]:bg-background data-[state=active]:shadow-lg transition-all duration-300"
+                >
+                  <Languages className="w-5 h-5" />
+                  <span className="font-semibold">الأقسام</span>
+                </TabsTrigger>
+                <TabsTrigger 
+                  value="services" 
+                  className="flex items-center gap-3 px-6 py-4 rounded-xl data-[state=active]:bg-background data-[state=active]:shadow-lg transition-all duration-300"
+                >
+                  <Settings className="w-5 h-5" />
+                  <span className="font-semibold">الخدمات</span>
+                </TabsTrigger>
+              </TabsList>
+            </div>
 
             {/* Categories Tab */}
-            <TabsContent value="categories" className="space-y-6">
-              <div className="flex justify-between items-center">
-                <h2 className="text-xl font-semibold">أقسام الخدمات</h2>
-                <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-                  <DialogTrigger asChild>
-                    <Button 
-                      onClick={() => {
+            <TabsContent value="categories" className="space-y-8">
+              <div className="bg-card/30 backdrop-blur-sm rounded-2xl border border-border/50 p-8">
+                <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-6">
+                  <div className="space-y-2">
+                    <h2 className="text-2xl font-bold text-foreground flex items-center gap-3">
+                      <div className="w-8 h-8 bg-primary/10 rounded-lg flex items-center justify-center">
+                        <Languages className="w-5 h-5 text-primary" />
+                      </div>
+                      أقسام الخدمات
+                    </h2>
+                    <p className="text-muted-foreground">إدارة تصنيفات الخدمات الأساسية في المنصة</p>
+                  </div>
+                  <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+                    <DialogTrigger asChild>
+                      <Button 
+                        onClick={() => {
+                          setEditingCategory(null);
+                          setIsDialogOpen(true);
+                        }}
+                        className="flex items-center gap-3 px-6 py-3 rounded-xl bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 shadow-lg hover:shadow-xl transition-all duration-300"
+                        size="lg"
+                      >
+                        <Plus className="w-5 h-5" />
+                        <span className="font-semibold">إضافة قسم جديد</span>
+                      </Button>
+                    </DialogTrigger>
+                    <CategoryDialog 
+                      category={editingCategory}
+                      onSave={handleSaveCategory}
+                      onClose={() => {
+                        setIsDialogOpen(false);
                         setEditingCategory(null);
-                        setIsDialogOpen(true);
                       }}
-                      className="flex items-center gap-2"
-                    >
-                      <Plus className="w-4 h-4" />
-                      قسم جديد
-                    </Button>
-                  </DialogTrigger>
-                  <CategoryDialog 
-                    category={editingCategory}
-                    onSave={handleSaveCategory}
-                    onClose={() => {
-                      setIsDialogOpen(false);
-                      setEditingCategory(null);
-                    }}
-                  />
-                </Dialog>
+                    />
+                  </Dialog>
+                </div>
               </div>
 
               {loading ? (
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
                   {Array.from({ length: 6 }).map((_, i) => (
-                    <div key={i} className="h-48 bg-muted animate-pulse rounded-lg" />
+                    <div key={i} className="h-64 bg-gradient-to-br from-muted/50 to-muted/30 animate-pulse rounded-2xl border border-border/30" />
                   ))}
                 </div>
+              ) : categories.length === 0 ? (
+                <div className="text-center py-20">
+                  <div className="w-24 h-24 bg-muted/50 rounded-full flex items-center justify-center mx-auto mb-6">
+                    <Languages className="w-12 h-12 text-muted-foreground" />
+                  </div>
+                  <h3 className="text-xl font-semibold text-foreground mb-2">لا توجد أقسام بعد</h3>
+                  <p className="text-muted-foreground mb-6">ابدأ بإنشاء أول قسم للخدمات</p>
+                  <Button 
+                    onClick={() => {
+                      setEditingCategory(null);
+                      setIsDialogOpen(true);
+                    }}
+                    className="flex items-center gap-2"
+                  >
+                    <Plus className="w-4 h-4" />
+                    إنشاء قسم جديد
+                  </Button>
+                </div>
               ) : (
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
                   {categories.map((category) => (
                     <CategoryCard
                       key={category.id}
@@ -357,42 +415,71 @@ const AdminServices = () => {
             </TabsContent>
 
             {/* Services Tab */}
-            <TabsContent value="services" className="space-y-6">
-              <div className="flex justify-between items-center">
-                <h2 className="text-xl font-semibold">الخدمات</h2>
-                <Dialog open={isServiceDialogOpen} onOpenChange={setIsServiceDialogOpen}>
-                  <DialogTrigger asChild>
-                    <Button 
-                      onClick={() => {
+            <TabsContent value="services" className="space-y-8">
+              <div className="bg-card/30 backdrop-blur-sm rounded-2xl border border-border/50 p-8">
+                <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-6">
+                  <div className="space-y-2">
+                    <h2 className="text-2xl font-bold text-foreground flex items-center gap-3">
+                      <div className="w-8 h-8 bg-secondary/10 rounded-lg flex items-center justify-center">
+                        <Settings className="w-5 h-5 text-secondary" />
+                      </div>
+                      إدارة الخدمات
+                    </h2>
+                    <p className="text-muted-foreground">إدارة جميع الخدمات المتاحة للعملاء في المنصة</p>
+                  </div>
+                  <Dialog open={isServiceDialogOpen} onOpenChange={setIsServiceDialogOpen}>
+                    <DialogTrigger asChild>
+                      <Button 
+                        onClick={() => {
+                          setEditingService(null);
+                          setIsServiceDialogOpen(true);
+                        }}
+                        className="flex items-center gap-3 px-6 py-3 rounded-xl bg-gradient-to-r from-secondary to-secondary/80 hover:from-secondary/90 hover:to-secondary/70 shadow-lg hover:shadow-xl transition-all duration-300"
+                        size="lg"
+                      >
+                        <Plus className="w-5 h-5" />
+                        <span className="font-semibold">إضافة خدمة جديدة</span>
+                      </Button>
+                    </DialogTrigger>
+                    <ServiceDialog 
+                      service={editingService}
+                      categories={categories}
+                      onSave={handleSaveService}
+                      onClose={() => {
+                        setIsServiceDialogOpen(false);
                         setEditingService(null);
-                        setIsServiceDialogOpen(true);
                       }}
-                      className="flex items-center gap-2"
-                    >
-                      <Plus className="w-4 h-4" />
-                      خدمة جديدة
-                    </Button>
-                  </DialogTrigger>
-                  <ServiceDialog 
-                    service={editingService}
-                    categories={categories}
-                    onSave={handleSaveService}
-                    onClose={() => {
-                      setIsServiceDialogOpen(false);
-                      setEditingService(null);
-                    }}
-                  />
-                </Dialog>
+                    />
+                  </Dialog>
+                </div>
               </div>
 
               {loading ? (
-                <div className="space-y-4">
+                <div className="space-y-6">
                   {Array.from({ length: 5 }).map((_, i) => (
-                    <div key={i} className="h-32 bg-muted animate-pulse rounded-lg" />
+                    <div key={i} className="h-40 bg-gradient-to-br from-muted/50 to-muted/30 animate-pulse rounded-2xl border border-border/30" />
                   ))}
                 </div>
+              ) : services.length === 0 ? (
+                <div className="text-center py-20">
+                  <div className="w-24 h-24 bg-muted/50 rounded-full flex items-center justify-center mx-auto mb-6">
+                    <Settings className="w-12 h-12 text-muted-foreground" />
+                  </div>
+                  <h3 className="text-xl font-semibold text-foreground mb-2">لا توجد خدمات بعد</h3>
+                  <p className="text-muted-foreground mb-6">ابدأ بإنشاء أول خدمة للعملاء</p>
+                  <Button 
+                    onClick={() => {
+                      setEditingService(null);
+                      setIsServiceDialogOpen(true);
+                    }}
+                    className="flex items-center gap-2"
+                  >
+                    <Plus className="w-4 h-4" />
+                    إنشاء خدمة جديدة
+                  </Button>
+                </div>
               ) : (
-                <div className="space-y-4">
+                <div className="space-y-6">
                   {services.map((service) => (
                     <ServiceCard
                       key={service.id}
@@ -436,49 +523,74 @@ const CategoryCard = ({
   };
 
   return (
-    <Card className="hover:shadow-lg transition-shadow border-2 hover:border-primary/20">
-      <CardHeader className="pb-3">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div 
-              className="w-10 h-10 rounded-lg flex items-center justify-center text-white"
-              style={{ backgroundColor: category.color }}
-            >
-              {getIcon(category.icon)}
+    <Card className="group relative overflow-hidden bg-gradient-to-br from-card/80 to-card/60 backdrop-blur-sm border-2 border-border/50 hover:border-primary/30 hover:shadow-2xl transition-all duration-500 rounded-2xl">
+      {/* Background Pattern */}
+      <div className="absolute inset-0 opacity-5">
+        <div className="absolute top-0 right-0 w-32 h-32 rounded-full" style={{ backgroundColor: category.color }}></div>
+        <div className="absolute bottom-0 left-0 w-20 h-20 rounded-full" style={{ backgroundColor: category.color }}></div>
+      </div>
+      
+      <CardHeader className="pb-4 relative">
+        <div className="flex items-start justify-between gap-4">
+          <div className="flex items-center gap-4 flex-1">
+            <div className="relative">
+              <div 
+                className="w-16 h-16 rounded-2xl flex items-center justify-center text-white shadow-lg group-hover:scale-110 transition-transform duration-300"
+                style={{ backgroundColor: category.color }}
+              >
+                {getIcon(category.icon)}
+              </div>
+              <div className="absolute -bottom-1 -right-1 w-5 h-5 bg-background rounded-full border-2 border-border flex items-center justify-center">
+                <div className={`w-2 h-2 rounded-full ${category.is_active ? 'bg-success' : 'bg-muted-foreground'}`}></div>
+              </div>
             </div>
-            <div>
-              <CardTitle className="text-lg">{category.name_ar}</CardTitle>
-              <p className="text-sm text-muted-foreground">{category.name_en}</p>
+            <div className="flex-1 min-w-0">
+              <CardTitle className="text-xl font-bold text-foreground mb-1 truncate">{category.name_ar}</CardTitle>
+              <p className="text-sm text-muted-foreground font-medium mb-2 truncate">{category.name_en}</p>
+              <Badge 
+                variant={category.is_active ? "default" : "secondary"}
+                className="text-xs font-semibold px-3 py-1 rounded-full"
+              >
+                {category.is_active ? "مفعل" : "معطل"}
+              </Badge>
             </div>
           </div>
-          <Badge variant={category.is_active ? "default" : "secondary"}>
-            {category.is_active ? "مفعل" : "معطل"}
-          </Badge>
         </div>
       </CardHeader>
-      <CardContent>
-        <p className="text-sm text-muted-foreground mb-4">
-          {category.description_ar || "لا يوجد وصف"}
-        </p>
-        <div className="flex justify-end gap-2">
-          <Button 
-            variant="outline" 
-            size="sm" 
-            onClick={() => onEdit(category)}
-            className="flex items-center gap-1"
-          >
-            <Edit2 className="w-3 h-3" />
-            تعديل
-          </Button>
-          <Button 
-            variant="outline" 
-            size="sm" 
-            onClick={() => onDelete(category.id)}
-            className="flex items-center gap-1 text-destructive hover:text-destructive"
-          >
-            <Trash2 className="w-3 h-3" />
-            حذف
-          </Button>
+      
+      <CardContent className="pt-0 relative">
+        <div className="space-y-4">
+          <p className="text-sm text-muted-foreground leading-relaxed min-h-[3rem]">
+            {category.description_ar || "لا يوجد وصف متاح لهذا القسم"}
+          </p>
+          
+          <div className="pt-4 border-t border-border/50">
+            <div className="flex justify-between items-center gap-3">
+              <div className="text-xs text-muted-foreground">
+                ترتيب: {category.sort_order}
+              </div>
+              <div className="flex gap-2">
+                <Button 
+                  variant="outline" 
+                  size="sm" 
+                  onClick={() => onEdit(category)}
+                  className="flex items-center gap-2 hover:bg-primary/10 hover:border-primary/30 rounded-xl transition-all duration-300"
+                >
+                  <Edit2 className="w-4 h-4" />
+                  <span className="font-medium">تعديل</span>
+                </Button>
+                <Button 
+                  variant="outline" 
+                  size="sm" 
+                  onClick={() => onDelete(category.id)}
+                  className="flex items-center gap-2 text-destructive hover:text-destructive hover:bg-destructive/10 hover:border-destructive/30 rounded-xl transition-all duration-300"
+                >
+                  <Trash2 className="w-4 h-4" />
+                  <span className="font-medium">حذف</span>
+                </Button>
+              </div>
+            </div>
+          </div>
         </div>
       </CardContent>
     </Card>
@@ -496,8 +608,14 @@ const ServiceCard = ({
   onDelete: (id: string) => void;
 }) => {
   return (
-    <Card className="hover:shadow-lg transition-shadow">
-      <CardContent className="p-6">
+    <Card className="group relative overflow-hidden bg-gradient-to-br from-card/80 to-card/60 backdrop-blur-sm border-2 border-border/50 hover:border-secondary/30 hover:shadow-2xl transition-all duration-500 rounded-2xl">
+      {/* Background Elements */}
+      <div className="absolute inset-0 opacity-5">
+        <div className="absolute top-0 right-0 w-32 h-32 bg-secondary rounded-full"></div>
+        <div className="absolute bottom-0 left-0 w-24 h-24 bg-primary rounded-full"></div>
+      </div>
+      
+      <CardContent className="p-8 relative">
         <div className="flex items-start justify-between">
           <div className="flex-1">
             <div className="flex items-center gap-3 mb-3">
