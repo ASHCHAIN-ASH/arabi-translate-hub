@@ -18,9 +18,28 @@ import LiteraryTranslation from "./pages/LiteraryTranslation";
 import AcademicTranslation from "./pages/AcademicTranslation";
 import ResearchServices from "./pages/ResearchServices";
 import AboutUs from "./pages/AboutUs";
-import Login from "./pages/Login";
-import Register from "./pages/Register";
+import Login from "./pages/auth/Login";
+import Register from "./pages/auth/Register";
+import ForgotPassword from "./pages/auth/ForgotPassword";
+import ResetPassword from "./pages/auth/ResetPassword";
 import Unauthorized from "./pages/Unauthorized";
+
+// Client Pages
+import ClientDashboard from "./pages/client/Dashboard";
+import Orders from "./pages/client/Orders";
+import OrderNew from "./pages/client/OrderNew";
+import OrderDetails from "./pages/client/OrderDetails";
+import ClientInvoices from "./pages/client/Invoices";
+import ClientTickets from "./pages/client/Tickets";
+
+// Admin Pages
+import AdminDashboard from "./pages/admin/AdminDashboard";
+import AdminServices from "./pages/admin/AdminServices";
+import AdminOrders from "./pages/admin/AdminOrders";
+import AdminInvoices from "./pages/admin/AdminInvoices";
+import AdminTransactions from "./pages/admin/AdminTransactions";
+import AdminUsers from "./pages/admin/AdminUsers";
+import AdminTickets from "./pages/admin/AdminTickets";
 
 import ThesisTitles from "./pages/research/ThesisTitles";
 import ResearchPlan from "./pages/research/ResearchPlan";
@@ -90,9 +109,82 @@ const App = () => (
             <Route path="/color-showcase" element={<ColorShowcase />} />
             
             {/* Auth Routes */}
+            <Route path="/auth/login" element={<Login />} />
+            <Route path="/auth/register" element={<Register />} />
+            <Route path="/auth/forgot-password" element={<ForgotPassword />} />
+            <Route path="/auth/reset-password" element={<ResetPassword />} />
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
             <Route path="/unauthorized" element={<Unauthorized />} />
+            
+            {/* Client Dashboard Routes */}
+            <Route path="/dashboard" element={
+              <ProtectedRoute requiredRole="client">
+                <ClientDashboard />
+              </ProtectedRoute>
+            } />
+            <Route path="/orders" element={
+              <ProtectedRoute requiredRole="client">
+                <Orders />
+              </ProtectedRoute>
+            } />
+            <Route path="/orders/new" element={
+              <ProtectedRoute requiredRole="client">
+                <OrderNew />
+              </ProtectedRoute>
+            } />
+            <Route path="/orders/:id" element={
+              <ProtectedRoute requiredRole="client">
+                <OrderDetails />
+              </ProtectedRoute>
+            } />
+            <Route path="/billing/invoices" element={
+              <ProtectedRoute requiredRole="client">
+                <ClientInvoices />
+              </ProtectedRoute>
+            } />
+            <Route path="/support/tickets" element={
+              <ProtectedRoute requiredRole="client">
+                <ClientTickets />
+              </ProtectedRoute>
+            } />
+            
+            {/* Admin Dashboard Routes */}
+            <Route path="/admin" element={
+              <ProtectedRoute requiredRole="admin">
+                <AdminDashboard />
+              </ProtectedRoute>
+            } />
+            <Route path="/admin/services" element={
+              <ProtectedRoute requiredRole="admin">
+                <AdminServices />
+              </ProtectedRoute>
+            } />
+            <Route path="/admin/orders" element={
+              <ProtectedRoute requiredRole="admin">
+                <AdminOrders />
+              </ProtectedRoute>
+            } />
+            <Route path="/admin/invoices" element={
+              <ProtectedRoute requiredRole="admin">
+                <AdminInvoices />
+              </ProtectedRoute>
+            } />
+            <Route path="/admin/transactions" element={
+              <ProtectedRoute requiredRole="admin">
+                <AdminTransactions />
+              </ProtectedRoute>
+            } />
+            <Route path="/admin/users" element={
+              <ProtectedRoute requiredRole="admin">
+                <AdminUsers />
+              </ProtectedRoute>
+            } />
+            <Route path="/admin/tickets" element={
+              <ProtectedRoute requiredRole="admin">
+                <AdminTickets />
+              </ProtectedRoute>
+            } />
             
             {/* Research Routes */}
             <Route path="/research/thesis-titles" element={<ThesisTitles />} />
