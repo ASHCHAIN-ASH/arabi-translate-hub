@@ -103,7 +103,7 @@ const OrderEdit = () => {
 
   return (
     <ClientLayout>
-      <div className="space-y-6">
+      <div className="space-y-6" dir="rtl">
         {/* Header */}
         <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
           <div className="flex items-center gap-4">
@@ -116,7 +116,7 @@ const OrderEdit = () => {
               <ArrowLeft className="w-4 h-4" />
               العودة
             </Button>
-            <div>
+            <div className="text-right">
               <h1 className="text-2xl lg:text-3xl font-bold text-foreground">
                 تعديل الطلب #{id}
               </h1>
@@ -148,39 +148,102 @@ const OrderEdit = () => {
         {/* Warning Notice */}
         <Card className="border-yellow-200 bg-yellow-50">
           <CardContent className="p-4">
-            <div className="flex items-start gap-3">
-              <AlertCircle className="w-5 h-5 text-yellow-600 mt-0.5" />
+            <div className="flex items-start gap-3 text-right">
               <div>
                 <h4 className="font-medium text-yellow-800 mb-1">تنبيه مهم</h4>
                 <p className="text-sm text-yellow-700">
                   بعض التعديلات قد تؤثر على الجدول الزمني أو تكلفة المشروع. سيتم مراجعة التغييرات من قبل فريقنا وإشعارك بأي تحديثات.
                 </p>
               </div>
+              <AlertCircle className="w-5 h-5 text-yellow-600 mt-0.5" />
             </div>
           </CardContent>
         </Card>
 
         {/* Edit Form */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          {/* Summary Sidebar */}
+          <Card className="h-fit order-1 lg:order-2">
+            <CardHeader>
+              <CardTitle className="text-right">ملخص الطلب</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4 text-right">
+              <div className="space-y-3">
+                <div className="flex items-center gap-2 justify-end">
+                  <span className="text-sm font-medium">
+                    {services.find(s => s.value === orderData.service)?.label}
+                  </span>
+                  <span className="text-sm text-muted-foreground">:الخدمة</span>
+                </div>
+
+                <div className="flex items-center gap-2 justify-end">
+                  {selectedPriority && (
+                    <Badge className={selectedPriority.color}>
+                      {selectedPriority.label}
+                    </Badge>
+                  )}
+                  <span className="text-sm text-muted-foreground">:الأولوية</span>
+                </div>
+
+                <div className="flex items-center gap-2 justify-end">
+                  <span className="text-sm">{orderData.deadline}</span>
+                  <Calendar className="w-4 h-4 text-muted-foreground" />
+                </div>
+
+                <div className="flex items-center gap-2 justify-end">
+                  <span className="text-sm font-bold text-primary">
+                    {orderData.budget} ريال
+                  </span>
+                  <DollarSign className="w-4 h-4 text-muted-foreground" />
+                </div>
+              </div>
+
+              <Separator />
+
+              <div className="space-y-2 text-right">
+                <h4 className="font-medium text-sm">ملفات جديدة</h4>
+                <p className="text-xs text-muted-foreground">
+                  {newFiles.length} ملف محدد
+                </p>
+              </div>
+
+              <Button 
+                onClick={handleSave}
+                disabled={isLoading}
+                className="w-full"
+              >
+                {isLoading ? (
+                  <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                ) : (
+                  <>
+                    <Save className="w-4 h-4 ml-2" />
+                    حفظ التعديلات
+                  </>
+                )}
+              </Button>
+            </CardContent>
+          </Card>
+
           {/* Main Form */}
-          <div className="lg:col-span-2 space-y-6">
+          <div className="lg:col-span-2 space-y-6 order-2 lg:order-1">
             <Card>
               <CardHeader>
-                <CardTitle>المعلومات الأساسية</CardTitle>
+                <CardTitle className="text-right">المعلومات الأساسية</CardTitle>
               </CardHeader>
               <CardContent className="space-y-6">
-                <div className="space-y-2">
+                <div className="space-y-2 text-right">
                   <Label htmlFor="title">عنوان المشروع</Label>
                   <Input
                     id="title"
                     value={orderData.title}
                     onChange={(e) => handleInputChange('title', e.target.value)}
                     className="text-right"
+                    dir="rtl"
                   />
                 </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <div className="space-y-2">
+                  <div className="space-y-2 text-right">
                     <Label htmlFor="service">نوع الخدمة</Label>
                     <Select value={orderData.service} onValueChange={(value) => handleInputChange('service', value)}>
                       <SelectTrigger>
@@ -196,7 +259,7 @@ const OrderEdit = () => {
                     </Select>
                   </div>
 
-                  <div className="space-y-2">
+                  <div className="space-y-2 text-right">
                     <Label htmlFor="priority">الأولوية</Label>
                     <Select value={orderData.priority} onValueChange={(value) => handleInputChange('priority', value)}>
                       <SelectTrigger>
@@ -206,8 +269,8 @@ const OrderEdit = () => {
                         {priorities.map((priority) => (
                           <SelectItem key={priority.value} value={priority.value}>
                             <div className="flex items-center gap-2">
+                              <span>{priority.label}</span>
                               <div className={`w-3 h-3 rounded-full ${priority.color}`} />
-                              {priority.label}
                             </div>
                           </SelectItem>
                         ))}
@@ -217,17 +280,18 @@ const OrderEdit = () => {
                 </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <div className="space-y-2">
+                  <div className="space-y-2 text-right">
                     <Label htmlFor="deadline">الموعد النهائي</Label>
                     <Input
                       id="deadline"
                       type="date"
                       value={orderData.deadline}
                       onChange={(e) => handleInputChange('deadline', e.target.value)}
+                      dir="rtl"
                     />
                   </div>
 
-                  <div className="space-y-2">
+                  <div className="space-y-2 text-right">
                     <Label htmlFor="budget">الميزانية (ريال سعودي)</Label>
                     <Input
                       id="budget"
@@ -235,11 +299,12 @@ const OrderEdit = () => {
                       value={orderData.budget}
                       onChange={(e) => handleInputChange('budget', Number(e.target.value))}
                       className="text-right"
+                      dir="rtl"
                     />
                   </div>
                 </div>
 
-                <div className="space-y-2">
+                <div className="space-y-2 text-right">
                   <Label htmlFor="description">وصف المشروع</Label>
                   <Textarea
                     id="description"
@@ -247,10 +312,11 @@ const OrderEdit = () => {
                     onChange={(e) => handleInputChange('description', e.target.value)}
                     className="min-h-[100px] text-right"
                     placeholder="اكتب وصفاً مفصلاً عن المشروع..."
+                    dir="rtl"
                   />
                 </div>
 
-                <div className="space-y-2">
+                <div className="space-y-2 text-right">
                   <Label htmlFor="requirements">متطلبات خاصة</Label>
                   <Textarea
                     id="requirements"
@@ -258,6 +324,7 @@ const OrderEdit = () => {
                     onChange={(e) => handleInputChange('specialRequirements', e.target.value)}
                     className="min-h-[80px] text-right"
                     placeholder="أي متطلبات أو ملاحظات خاصة..."
+                    dir="rtl"
                   />
                 </div>
               </CardContent>
@@ -266,7 +333,7 @@ const OrderEdit = () => {
             {/* Files Section */}
             <Card>
               <CardHeader>
-                <CardTitle>الملفات الإضافية</CardTitle>
+                <CardTitle className="text-right">الملفات الإضافية</CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="border-2 border-dashed border-muted-foreground/25 rounded-lg p-6 text-center">
@@ -289,19 +356,10 @@ const OrderEdit = () => {
                 </div>
 
                 {newFiles.length > 0 && (
-                  <div className="space-y-3">
+                  <div className="space-y-3 text-right">
                     <h4 className="font-medium">الملفات المحددة</h4>
                     {newFiles.map((file, index) => (
-                      <div key={index} className="flex items-center justify-between p-3 border rounded-lg">
-                        <div className="flex items-center gap-3">
-                          <FileText className="w-5 h-5 text-primary" />
-                          <div>
-                            <p className="font-medium text-sm">{file.name}</p>
-                            <p className="text-xs text-muted-foreground">
-                              {(file.size / 1024 / 1024).toFixed(2)} MB
-                            </p>
-                          </div>
-                        </div>
+                      <div key={index} className="flex items-center justify-between p-3 border rounded-lg" dir="rtl">
                         <Button
                           variant="ghost"
                           size="sm"
@@ -309,6 +367,15 @@ const OrderEdit = () => {
                         >
                           <X className="w-4 h-4" />
                         </Button>
+                        <div className="flex items-center gap-3 text-right">
+                          <div>
+                            <p className="font-medium text-sm">{file.name}</p>
+                            <p className="text-xs text-muted-foreground">
+                              {(file.size / 1024 / 1024).toFixed(2)} MB
+                            </p>
+                          </div>
+                          <FileText className="w-5 h-5 text-primary" />
+                        </div>
                       </div>
                     ))}
                   </div>
@@ -316,68 +383,6 @@ const OrderEdit = () => {
               </CardContent>
             </Card>
           </div>
-
-          {/* Summary Sidebar */}
-          <Card className="h-fit">
-            <CardHeader>
-              <CardTitle>ملخص الطلب</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="space-y-3">
-                <div className="flex items-center gap-2">
-                  <span className="text-sm text-muted-foreground">الخدمة:</span>
-                  <span className="text-sm font-medium">
-                    {services.find(s => s.value === orderData.service)?.label}
-                  </span>
-                </div>
-
-                <div className="flex items-center gap-2">
-                  <span className="text-sm text-muted-foreground">الأولوية:</span>
-                  {selectedPriority && (
-                    <Badge className={selectedPriority.color}>
-                      {selectedPriority.label}
-                    </Badge>
-                  )}
-                </div>
-
-                <div className="flex items-center gap-2">
-                  <Calendar className="w-4 h-4 text-muted-foreground" />
-                  <span className="text-sm">الموعد النهائي: {orderData.deadline}</span>
-                </div>
-
-                <div className="flex items-center gap-2">
-                  <DollarSign className="w-4 h-4 text-muted-foreground" />
-                  <span className="text-sm font-bold text-primary">
-                    {orderData.budget} ريال
-                  </span>
-                </div>
-              </div>
-
-              <Separator />
-
-              <div className="space-y-2">
-                <h4 className="font-medium text-sm">ملفات جديدة</h4>
-                <p className="text-xs text-muted-foreground">
-                  {newFiles.length} ملف محدد
-                </p>
-              </div>
-
-              <Button 
-                onClick={handleSave}
-                disabled={isLoading}
-                className="w-full"
-              >
-                {isLoading ? (
-                  <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                ) : (
-                  <>
-                    <Save className="w-4 h-4 mr-2" />
-                    حفظ التعديلات
-                  </>
-                )}
-              </Button>
-            </CardContent>
-          </Card>
         </div>
       </div>
     </ClientLayout>
