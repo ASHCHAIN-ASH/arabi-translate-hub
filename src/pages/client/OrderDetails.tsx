@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
@@ -18,128 +18,67 @@ import { Separator } from '@/components/ui/separator';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { useToast } from '@/hooks/use-toast';
 import { Textarea } from '@/components/ui/textarea';
+import { supabase } from '@/integrations/supabase/client';
 
-// بيانات وهمية للطلب
-const orderData = {
-  id: '5',
-  service: 'ترجمة أكاديمية متقدمة',
-  serviceType: 'academic',
-  status: 'in_progress',
-  priority: 'high',
-  progress: 65,
-  createdAt: '2024-01-15',
-  deadline: '2024-01-30',
-  totalPrice: 899,
-  paidAmount: 450,
-  remainingAmount: 449,
-  client: {
-    name: 'أحمد محمد علي',
-    email: 'ahmed.ali@email.com',
-    phone: '+966501234567',
-    university: 'جامعة الملك سعود',
-    avatar: '/placeholder.svg'
-  },
-  description: 'تحليل إحصائي شامل للبيانات البحثية باستخدام SPSS وR مع ترجمة النتائج للغة العربية',
-  files: [
-    { 
-      id: 1,
-      name: 'البحث_الأصلي.pdf', 
-      size: '2.5 ميجا', 
-      type: 'pdf', 
-      uploadedAt: '2024-01-15',
-      uploadedBy: 'العميل'
-    },
-    { 
-      id: 2,
-      name: 'الجداول_الإحصائية.xlsx', 
-      size: '1.2 ميجا', 
-      type: 'excel', 
-      uploadedAt: '2024-01-16',
-      uploadedBy: 'العميل'
-    },
-    { 
-      id: 3,
-      name: 'المراجع_المترجمة.docx', 
-      size: '800 كيلو', 
-      type: 'word', 
-      uploadedAt: '2024-01-20',
-      uploadedBy: 'المختص'
-    }
-  ],
-  timeline: [
-    { 
-      id: 1,
-      date: '2024-01-15', 
-      time: '10:30 ص',
-      title: 'تم إنشاء الطلب', 
-      description: 'تم استلام طلب الترجمة الأكاديمية',
-      status: 'completed',
-      actor: 'العميل'
-    },
-    { 
-      id: 2,
-      date: '2024-01-16', 
-      time: '02:15 م',
-      title: 'تم تأكيد الدفع', 
-      description: 'تم استلام المبلغ المقدم وتأكيد الطلب',
-      status: 'completed',
-      actor: 'النظام'
-    },
-    { 
-      id: 3,
-      date: '2024-01-18', 
-      time: '09:00 ص',
-      title: 'بدء العمل على المشروع', 
-      description: 'تم تعيين مختص الترجمة وبدء العمل',
-      status: 'completed',
-      actor: 'المختص'
-    },
-    { 
-      id: 4,
-      date: '2024-01-22', 
-      time: '11:45 ص',
-      title: 'مراجعة أولية للترجمة', 
-      description: 'جاري مراجعة الترجمة الأولية وضمان الجودة',
-      status: 'current',
-      actor: 'المختص'
-    },
-    { 
-      id: 5,
-      date: '2024-01-28', 
-      time: '--',
-      title: 'تسليم النسخة النهائية', 
-      description: 'تسليم العمل المكتمل مع شهادة الجودة',
-      status: 'pending',
-      actor: 'المختص'
-    }
-  ],
-  communication: [
-    { 
-      id: 1, 
-      sender: 'المختص', 
-      senderType: 'specialist',
-      message: 'مرحباً أحمد، تم البدء في ترجمة المشروع وفقاً للمعايير الأكاديمية المطلوبة. سيتم تسليم المراجعة الأولية خلال 3 أيام عمل.', 
-      timestamp: '2024-01-18 10:30 ص',
-      status: 'sent'
-    },
-    { 
-      id: 2, 
-      sender: 'أحمد محمد علي', 
-      senderType: 'client',
-      message: 'شكراً جزيلاً لكم على الاهتمام. أتطلع لرؤية النتائج والجودة المتوقعة منكم.', 
-      timestamp: '2024-01-18 03:45 م',
-      status: 'sent'
-    },
-    { 
-      id: 3, 
-      sender: 'المختص', 
-      senderType: 'specialist',
-      message: 'تم الانتهاء من ترجمة 65% من المشروع. النتائج الأولية ممتازة وتتماشى مع المعايير المطلوبة.', 
-      timestamp: '2024-01-22 02:20 م',
-      status: 'sent'
-    }
-  ]
-};
+interface Order {
+  id: string;
+  order_number: string;
+  user_id: string;
+  service_type: string;
+  service_title: string;
+  description?: string;
+  status: string;
+  priority: string;
+  progress_percentage: number;
+  total_price: number;
+  paid_amount: number;
+  currency: string;
+  created_at: string;
+  updated_at: string;
+  deadline_date?: string;
+  assigned_to?: string;
+  client_name: string;
+  client_email: string;
+  client_phone?: string;
+  client_university?: string;
+}
+
+interface OrderFile {
+  id: string;
+  order_id: string;
+  file_name: string;
+  file_url: string;
+  file_size?: string;
+  file_type?: string;
+  uploaded_by: string;
+  uploaded_by_type: string;
+  created_at: string;
+}
+
+interface OrderTimeline {
+  id: string;
+  order_id: string;
+  title: string;
+  description?: string;
+  status: string;
+  actor_type: string;
+  actor_name?: string;
+  scheduled_date?: string;
+  completed_date?: string;
+  created_at: string;
+}
+
+interface OrderCommunication {
+  id: string;
+  order_id: string;
+  sender_id: string;
+  sender_type: string;
+  sender_name: string;
+  message: string;
+  attachments?: any;
+  is_read: boolean;
+  created_at: string;
+}
 
 const OrderDetails = () => {
   const { id } = useParams();
@@ -147,8 +86,168 @@ const OrderDetails = () => {
   const { toast } = useToast();
   const [activeTab, setActiveTab] = useState('overview');
   const [newMessage, setNewMessage] = useState('');
+  const [loading, setLoading] = useState(true);
+  
+  // State للبيانات
+  const [order, setOrder] = useState<Order | null>(null);
+  const [files, setFiles] = useState<OrderFile[]>([]);
+  const [timeline, setTimeline] = useState<OrderTimeline[]>([]);
+  const [communications, setCommunications] = useState<OrderCommunication[]>([]);
 
-  const order = orderData;
+  // تحميل البيانات من قاعدة البيانات
+  const fetchOrderData = async () => {
+    try {
+      setLoading(true);
+      
+      // تحميل بيانات الطلب
+      const { data: orderData, error: orderError } = await supabase
+        .from('orders')
+        .select('*')
+        .eq('id', id)
+        .single();
+      
+      if (orderError) throw orderError;
+      setOrder(orderData);
+
+      // تحميل الملفات
+      const { data: filesData, error: filesError } = await supabase
+        .from('order_files')
+        .select('*')
+        .eq('order_id', id)
+        .order('created_at', { ascending: false });
+      
+      if (filesError) throw filesError;
+      setFiles(filesData || []);
+
+      // تحميل الجدول الزمني
+      const { data: timelineData, error: timelineError } = await supabase
+        .from('order_timeline')
+        .select('*')
+        .eq('order_id', id)
+        .order('created_at', { ascending: true });
+      
+      if (timelineError) throw timelineError;
+      setTimeline(timelineData || []);
+
+      // تحميل الرسائل
+      const { data: communicationsData, error: communicationsError } = await supabase
+        .from('order_communications')
+        .select('*')
+        .eq('order_id', id)
+        .order('created_at', { ascending: true });
+      
+      if (communicationsError) throw communicationsError;
+      setCommunications(communicationsData || []);
+
+    } catch (error) {
+      console.error('Error fetching order data:', error);
+      toast({
+        title: "خطأ في تحميل البيانات",
+        description: "حدث خطأ أثناء تحميل بيانات الطلب",
+        variant: "destructive"
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // إعداد التحديثات اللحظية
+  useEffect(() => {
+    fetchOrderData();
+
+    // إعداد Real-time subscriptions
+    const orderChannel = supabase
+      .channel('order-changes')
+      .on(
+        'postgres_changes',
+        {
+          event: '*',
+          schema: 'public',
+          table: 'orders',
+          filter: `id=eq.${id}`
+        },
+        (payload) => {
+          console.log('Order updated:', payload);
+          if (payload.eventType === 'UPDATE') {
+            setOrder(payload.new as Order);
+            toast({
+              title: "تم تحديث الطلب",
+              description: "تم تحديث بيانات الطلب من قبل الإدارة",
+            });
+          }
+        }
+      )
+      .on(
+        'postgres_changes',
+        {
+          event: '*',
+          schema: 'public',
+          table: 'order_files',
+          filter: `order_id=eq.${id}`
+        },
+        (payload) => {
+          console.log('File updated:', payload);
+          if (payload.eventType === 'INSERT') {
+            setFiles(prev => [...prev, payload.new as OrderFile]);
+            toast({
+              title: "ملف جديد",
+              description: "تم إضافة ملف جديد للطلب",
+            });
+          }
+        }
+      )
+      .on(
+        'postgres_changes',
+        {
+          event: '*',
+          schema: 'public',
+          table: 'order_timeline',
+          filter: `order_id=eq.${id}`
+        },
+        (payload) => {
+          console.log('Timeline updated:', payload);
+          if (payload.eventType === 'INSERT') {
+            setTimeline(prev => [...prev, payload.new as OrderTimeline]);
+            toast({
+              title: "تحديث في الجدول الزمني",
+              description: "تم إضافة حدث جديد للطلب",
+            });
+          } else if (payload.eventType === 'UPDATE') {
+            setTimeline(prev => 
+              prev.map(item => 
+                item.id === payload.new.id ? payload.new as OrderTimeline : item
+              )
+            );
+            toast({
+              title: "تحديث في المراحل",
+              description: "تم تحديث مرحلة في الجدول الزمني",
+            });
+          }
+        }
+      )
+      .on(
+        'postgres_changes',
+        {
+          event: 'INSERT',
+          schema: 'public',
+          table: 'order_communications',
+          filter: `order_id=eq.${id}`
+        },
+        (payload) => {
+          console.log('New message:', payload);
+          setCommunications(prev => [...prev, payload.new as OrderCommunication]);
+          toast({
+            title: "رسالة جديدة",
+            description: `رسالة جديدة من ${payload.new.sender_name}`,
+          });
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(orderChannel);
+    };
+  }, [id]);
 
   // دالة لتحديد لون الحالة
   const getStatusInfo = (status: string) => {
@@ -168,6 +267,14 @@ const OrderDetails = () => {
           textColor: 'text-blue-700',
           bgColor: 'bg-blue-50',
           icon: PlayCircle
+        };
+      case 'under_review': 
+        return { 
+          color: 'bg-gradient-to-r from-purple-500 to-violet-600', 
+          text: 'تحت المراجعة',
+          textColor: 'text-purple-700',
+          bgColor: 'bg-purple-50',
+          icon: Eye
         };
       case 'pending': 
         return { 
@@ -191,6 +298,13 @@ const OrderDetails = () => {
   // دالة لتحديد لون الأولوية
   const getPriorityInfo = (priority: string) => {
     switch (priority) {
+      case 'urgent': 
+        return { 
+          color: 'bg-gradient-to-r from-red-600 to-rose-700', 
+          text: 'عاجل جداً',
+          textColor: 'text-red-700',
+          bgColor: 'bg-red-50'
+        };
       case 'high': 
         return { 
           color: 'bg-gradient-to-r from-red-500 to-rose-600', 
@@ -223,8 +337,8 @@ const OrderDetails = () => {
   };
 
   // أيقونة الخدمة حسب النوع
-  const getServiceIcon = () => {
-    switch (order.serviceType) {
+  const getServiceIcon = (serviceType: string) => {
+    switch (serviceType) {
       case 'academic': return BookOpen;
       case 'business': return Target;
       case 'medical': return Activity;
@@ -238,13 +352,36 @@ const OrderDetails = () => {
   };
 
   // دالة إرسال رسالة
-  const handleSendMessage = () => {
+  const handleSendMessage = async () => {
     if (newMessage.trim()) {
-      toast({
-        title: "تم إرسال الرسالة",
-        description: "سيتم الرد عليك في أقرب وقت ممكن",
-      });
-      setNewMessage('');
+      try {
+        const { error } = await supabase
+          .from('order_communications')
+          .insert([
+            {
+              order_id: id,
+              sender_id: 'current-user-id', // يجب الحصول على ID المستخدم الحالي
+              sender_type: 'client',
+              sender_name: order?.client_name || 'العميل',
+              message: newMessage.trim()
+            }
+          ]);
+
+        if (error) throw error;
+
+        setNewMessage('');
+        toast({
+          title: "تم إرسال الرسالة",
+          description: "سيتم الرد عليك في أقرب وقت ممكن",
+        });
+      } catch (error) {
+        console.error('Error sending message:', error);
+        toast({
+          title: "خطأ في إرسال الرسالة",
+          description: "حدث خطأ أثناء إرسال الرسالة",
+          variant: "destructive"
+        });
+      }
     }
   };
 
@@ -256,7 +393,26 @@ const OrderDetails = () => {
     });
   };
 
-  const ServiceIcon = getServiceIcon();
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-white via-blue-50/30 to-purple-50/20 flex items-center justify-center" dir="rtl">
+        <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-blue-500"></div>
+      </div>
+    );
+  }
+
+  if (!order) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-white via-blue-50/30 to-purple-50/20 flex items-center justify-center" dir="rtl">
+        <div className="text-center">
+          <h2 className="text-2xl font-bold text-gray-800 mb-4">الطلب غير موجود</h2>
+          <Button onClick={() => navigate('/orders')}>العودة للطلبات</Button>
+        </div>
+      </div>
+    );
+  }
+
+  const ServiceIcon = getServiceIcon(order.service_type);
   const statusInfo = getStatusInfo(order.status);
   const priorityInfo = getPriorityInfo(order.priority);
 
@@ -299,7 +455,7 @@ const OrderDetails = () => {
                       transition={{ delay: 0.2 }}
                       className="text-2xl lg:text-3xl font-bold text-gray-800"
                     >
-                      {order.service}
+                      {order.service_title}
                     </motion.h1>
                     <div className="bg-gradient-to-r from-blue-500 to-purple-500 text-white px-3 py-1 rounded-full text-sm font-medium">
                       🎓
@@ -312,7 +468,7 @@ const OrderDetails = () => {
                     transition={{ delay: 0.3 }}
                     className="text-gray-600 font-medium"
                   >
-                    رقم الطلب: #{order.id}
+                    رقم الطلب: #{order.order_number}
                   </motion.p>
                   
                   {/* Status and Priority badges */}
@@ -424,9 +580,9 @@ const OrderDetails = () => {
                         <div className="relative">
                           <div className="absolute inset-0 bg-sky-500 rounded-full blur-lg opacity-30"></div>
                           <Avatar className="relative w-20 h-20 border-4 border-white shadow-xl">
-                            <AvatarImage src={order.client.avatar} />
+                            <AvatarImage src="/placeholder.svg" />
                             <AvatarFallback className="bg-gradient-to-r from-sky-500 to-blue-600 text-white text-lg font-bold">
-                              {order.client.name.split(' ').map(n => n[0]).join('')}
+                              {order.client_name.split(' ').map(n => n[0]).join('')}
                             </AvatarFallback>
                           </Avatar>
                         </div>
@@ -435,10 +591,10 @@ const OrderDetails = () => {
                       {/* Client Details */}
                       <div className="space-y-4">
                         {[
-                          { icon: User, label: 'الاسم', value: order.client.name, color: '#0EA5E9' },
-                          { icon: Mail, label: 'البريد الإلكتروني', value: order.client.email, color: '#22C55E' },
-                          { icon: Phone, label: 'رقم الجوال', value: order.client.phone, color: '#A78BFA' },
-                          { icon: MapPin, label: 'الجامعة', value: order.client.university, color: '#F97316' }
+                          { icon: User, label: 'الاسم', value: order.client_name, color: '#0EA5E9' },
+                          { icon: Mail, label: 'البريد الإلكتروني', value: order.client_email, color: '#22C55E' },
+                          { icon: Phone, label: 'رقم الجوال', value: order.client_phone || 'غير محدد', color: '#A78BFA' },
+                          { icon: MapPin, label: 'الجامعة', value: order.client_university || 'غير محدد', color: '#F97316' }
                         ].map((item, index) => (
                           <motion.div
                             key={item.label}
@@ -541,7 +697,7 @@ const OrderDetails = () => {
                                 strokeLinecap="round"
                                 strokeDasharray={351.86}
                                 initial={{ strokeDashoffset: 351.86 }}
-                                animate={{ strokeDashoffset: 351.86 - (351.86 * order.progress) / 100 }}
+                                animate={{ strokeDashoffset: 351.86 - (351.86 * order.progress_percentage) / 100 }}
                                 transition={{ duration: 2, delay: 0.6 }}
                               />
                               <defs>
@@ -558,7 +714,7 @@ const OrderDetails = () => {
                                 transition={{ delay: 1.5 }}
                                 className="text-2xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent"
                               >
-                                {order.progress}%
+                                {order.progress_percentage}%
                               </motion.span>
                             </div>
                           </div>
@@ -568,8 +724,8 @@ const OrderDetails = () => {
                         {/* Dates Info */}
                         <div className="space-y-3">
                           {[
-                            { icon: Calendar, label: 'تاريخ الإنشاء', value: order.createdAt, color: '#0EA5E9' },
-                            { icon: Clock, label: 'الموعد النهائي', value: order.deadline, color: '#F97316' }
+                            { icon: Calendar, label: 'تاريخ الإنشاء', value: new Date(order.created_at).toLocaleDateString('ar-SA'), color: '#0EA5E9' },
+                            { icon: Clock, label: 'الموعد النهائي', value: order.deadline_date ? new Date(order.deadline_date).toLocaleDateString('ar-SA') : 'غير محدد', color: '#F97316' }
                           ].map((item, index) => (
                             <motion.div
                               key={item.label}
@@ -624,7 +780,7 @@ const OrderDetails = () => {
                               transition={{ delay: 1.0 }}
                               className="text-3xl font-bold text-emerald-600"
                             >
-                              {order.totalPrice} ريال
+                              {order.total_price} {order.currency}
                             </motion.p>
                             <p className="text-gray-600 font-medium mt-1">القيمة الإجمالية</p>
                           </div>
@@ -638,15 +794,15 @@ const OrderDetails = () => {
                           className="space-y-3"
                         >
                           <div className="flex justify-between items-center text-sm">
-                            <span className="text-emerald-600 font-semibold">{order.paidAmount} ريال</span>
+                            <span className="text-emerald-600 font-semibold">{order.paid_amount} {order.currency}</span>
                             <span className="text-gray-600">المبلغ المدفوع</span>
                           </div>
                           <Progress 
-                            value={(order.paidAmount / order.totalPrice) * 100} 
+                            value={(order.paid_amount / order.total_price) * 100} 
                             className="h-3 bg-gray-200 rounded-full overflow-hidden"
                           />
                           <div className="flex justify-between items-center text-sm">
-                            <span className="text-orange-600 font-semibold">{order.remainingAmount} ريال</span>
+                            <span className="text-orange-600 font-semibold">{order.total_price - order.paid_amount} {order.currency}</span>
                             <span className="text-gray-600">المبلغ المتبقي</span>
                           </div>
                         </motion.div>
@@ -660,7 +816,7 @@ const OrderDetails = () => {
                         >
                           <h4 className="font-semibold text-gray-800 mb-2 text-right">وصف المشروع</h4>
                           <p className="text-gray-600 text-sm leading-relaxed text-right">
-                            {order.description}
+                            {order.description || 'لا يوجد وصف متاح'}
                           </p>
                         </motion.div>
                       </CardContent>
@@ -688,7 +844,7 @@ const OrderDetails = () => {
                   </div>
                   <CardContent className="p-6">
                     <div className="space-y-6">
-                      {order.timeline.map((item, index) => (
+                      {timeline.map((item, index) => (
                         <motion.div
                           key={item.id}
                           initial={{ opacity: 0, x: 50 }}
@@ -697,7 +853,7 @@ const OrderDetails = () => {
                           className="flex items-start gap-4 relative"
                         >
                           {/* Timeline line */}
-                          {index < order.timeline.length - 1 && (
+                          {index < timeline.length - 1 && (
                             <div className="absolute right-5 top-12 w-0.5 h-16 bg-gradient-to-b from-gray-300 to-gray-200"></div>
                           )}
                           
@@ -735,8 +891,15 @@ const OrderDetails = () => {
                               </Badge>
                             </div>
                             <div className="flex justify-between items-center text-sm text-gray-500">
-                              <span>{item.actor}</span>
-                              <span>{item.date} - {item.time}</span>
+                              <span>{item.actor_name || 'النظام'}</span>
+                              <span>
+                                {item.completed_date ? 
+                                  new Date(item.completed_date).toLocaleDateString('ar-SA') : 
+                                  item.scheduled_date ? 
+                                    new Date(item.scheduled_date).toLocaleDateString('ar-SA') : 
+                                    'غير محدد'
+                                }
+                              </span>
                             </div>
                           </div>
                         </motion.div>
@@ -774,7 +937,7 @@ const OrderDetails = () => {
                   </div>
                   <CardContent className="p-6">
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                      {order.files.map((file, index) => (
+                      {files.map((file, index) => (
                         <motion.div
                           key={file.id}
                           initial={{ opacity: 0, scale: 0.9 }}
@@ -790,16 +953,19 @@ const OrderDetails = () => {
                                 <FileText className="w-5 h-5 text-white" />
                               </div>
                               <div className="text-right flex-1 min-w-0">
-                                <h4 className="font-semibold text-gray-800 text-sm truncate">{file.name}</h4>
-                                <p className="text-gray-500 text-xs">{file.size}</p>
+                                <h4 className="font-semibold text-gray-800 text-sm truncate">{file.file_name}</h4>
+                                <p className="text-gray-500 text-xs">{file.file_size}</p>
                               </div>
                             </div>
                             
                             {/* File meta */}
                             <div className="mb-3 text-xs text-gray-500">
                               <div className="flex justify-between">
-                                <span>{file.uploadedBy}</span>
-                                <span>{file.uploadedAt}</span>
+                                <span>
+                                  {file.uploaded_by_type === 'client' ? 'العميل' : 
+                                   file.uploaded_by_type === 'admin' ? 'الإدارة' : 'المختص'}
+                                </span>
+                                <span>{new Date(file.created_at).toLocaleDateString('ar-SA')}</span>
                               </div>
                             </div>
                             
@@ -808,7 +974,7 @@ const OrderDetails = () => {
                               <Button 
                                 size="sm" 
                                 className="flex-1 bg-gradient-to-r from-blue-500 to-cyan-600 hover:from-blue-600 hover:to-cyan-700 text-white"
-                                onClick={() => handleDownloadFile(file.name)}
+                                onClick={() => handleDownloadFile(file.file_name)}
                               >
                                 <Download className="w-4 h-4 ml-1" />
                                 تحميل
@@ -850,27 +1016,29 @@ const OrderDetails = () => {
                     
                     {/* Messages */}
                     <div className="space-y-4 max-h-96 overflow-y-auto mb-6">
-                      {order.communication.map((msg, index) => (
+                      {communications.map((msg, index) => (
                         <motion.div
                           key={msg.id}
                           initial={{ 
                             opacity: 0, 
-                            x: msg.senderType === 'client' ? 50 : -50 
+                            x: msg.sender_type === 'client' ? 50 : -50 
                           }}
                           animate={{ opacity: 1, x: 0 }}
                           transition={{ delay: index * 0.1, duration: 0.5 }}
-                          className={`flex gap-3 ${msg.senderType === 'client' ? 'justify-start' : 'justify-end'}`}
+                          className={`flex gap-3 ${msg.sender_type === 'client' ? 'justify-start' : 'justify-end'}`}
                         >
                           <div className={`
                             max-w-xs lg:max-w-md p-4 rounded-2xl shadow-lg
-                            ${msg.senderType === 'client' ? 
+                            ${msg.sender_type === 'client' ? 
                               'bg-gradient-to-r from-blue-500 to-cyan-600 text-white ml-auto' : 
                               'bg-gradient-to-r from-purple-500 to-pink-600 text-white mr-auto'}
                           `}>
                             <div className="text-right">
                               <div className="flex items-center justify-between mb-2">
-                                <span className="text-xs opacity-75">{msg.timestamp}</span>
-                                <p className="font-medium text-sm opacity-90">{msg.sender}</p>
+                                <span className="text-xs opacity-75">
+                                  {new Date(msg.created_at).toLocaleDateString('ar-SA')} - {new Date(msg.created_at).toLocaleTimeString('ar-SA', { hour: '2-digit', minute: '2-digit' })}
+                                </span>
+                                <p className="font-medium text-sm opacity-90">{msg.sender_name}</p>
                               </div>
                               <p className="leading-relaxed">{msg.message}</p>
                             </div>

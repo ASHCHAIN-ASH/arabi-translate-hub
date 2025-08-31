@@ -2042,6 +2042,210 @@ export type Database = {
         }
         Relationships: []
       }
+      order_communications: {
+        Row: {
+          attachments: Json | null
+          created_at: string | null
+          id: string
+          is_read: boolean | null
+          message: string
+          order_id: string
+          sender_id: string
+          sender_name: string
+          sender_type: string
+        }
+        Insert: {
+          attachments?: Json | null
+          created_at?: string | null
+          id?: string
+          is_read?: boolean | null
+          message: string
+          order_id: string
+          sender_id: string
+          sender_name: string
+          sender_type?: string
+        }
+        Update: {
+          attachments?: Json | null
+          created_at?: string | null
+          id?: string
+          is_read?: boolean | null
+          message?: string
+          order_id?: string
+          sender_id?: string
+          sender_name?: string
+          sender_type?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "order_communications_order_id_fkey"
+            columns: ["order_id"]
+            isOneToOne: false
+            referencedRelation: "orders"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      order_files: {
+        Row: {
+          created_at: string | null
+          file_name: string
+          file_size: string | null
+          file_type: string | null
+          file_url: string
+          id: string
+          order_id: string
+          uploaded_by: string
+          uploaded_by_type: string
+        }
+        Insert: {
+          created_at?: string | null
+          file_name: string
+          file_size?: string | null
+          file_type?: string | null
+          file_url: string
+          id?: string
+          order_id: string
+          uploaded_by: string
+          uploaded_by_type?: string
+        }
+        Update: {
+          created_at?: string | null
+          file_name?: string
+          file_size?: string | null
+          file_type?: string | null
+          file_url?: string
+          id?: string
+          order_id?: string
+          uploaded_by?: string
+          uploaded_by_type?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "order_files_order_id_fkey"
+            columns: ["order_id"]
+            isOneToOne: false
+            referencedRelation: "orders"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      order_timeline: {
+        Row: {
+          actor_name: string | null
+          actor_type: string
+          completed_date: string | null
+          created_at: string | null
+          description: string | null
+          id: string
+          order_id: string
+          scheduled_date: string | null
+          status: string
+          title: string
+        }
+        Insert: {
+          actor_name?: string | null
+          actor_type?: string
+          completed_date?: string | null
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          order_id: string
+          scheduled_date?: string | null
+          status?: string
+          title: string
+        }
+        Update: {
+          actor_name?: string | null
+          actor_type?: string
+          completed_date?: string | null
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          order_id?: string
+          scheduled_date?: string | null
+          status?: string
+          title?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "order_timeline_order_id_fkey"
+            columns: ["order_id"]
+            isOneToOne: false
+            referencedRelation: "orders"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      orders: {
+        Row: {
+          assigned_to: string | null
+          client_email: string
+          client_name: string
+          client_phone: string | null
+          client_university: string | null
+          created_at: string | null
+          currency: string | null
+          deadline_date: string | null
+          description: string | null
+          id: string
+          order_number: string
+          paid_amount: number | null
+          priority: string
+          progress_percentage: number | null
+          service_title: string
+          service_type: string
+          status: string
+          total_price: number
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          assigned_to?: string | null
+          client_email: string
+          client_name: string
+          client_phone?: string | null
+          client_university?: string | null
+          created_at?: string | null
+          currency?: string | null
+          deadline_date?: string | null
+          description?: string | null
+          id?: string
+          order_number: string
+          paid_amount?: number | null
+          priority?: string
+          progress_percentage?: number | null
+          service_title: string
+          service_type: string
+          status?: string
+          total_price: number
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          assigned_to?: string | null
+          client_email?: string
+          client_name?: string
+          client_phone?: string | null
+          client_university?: string | null
+          created_at?: string | null
+          currency?: string | null
+          deadline_date?: string | null
+          description?: string | null
+          id?: string
+          order_number?: string
+          paid_amount?: number | null
+          priority?: string
+          progress_percentage?: number | null
+          service_title?: string
+          service_type?: string
+          status?: string
+          total_price?: number
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
       pages: {
         Row: {
           author_id: string | null
