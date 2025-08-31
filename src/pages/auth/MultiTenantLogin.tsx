@@ -140,7 +140,7 @@ const MultiTenantLogin = () => {
       {/* Floating Academic Elements */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <motion.div 
-          className="absolute top-20 right-20 text-white/10 text-6xl"
+          className="absolute top-20 left-20 text-white/10 text-6xl"
           animate={{ 
             y: [-10, 10, -10],
             rotate: [0, 5, 0] 
@@ -154,7 +154,7 @@ const MultiTenantLogin = () => {
           📚
         </motion.div>
         <motion.div 
-          className="absolute bottom-32 left-16 text-white/10 text-5xl"
+          className="absolute bottom-32 right-16 text-white/10 text-5xl"
           animate={{ 
             y: [10, -10, 10],
             rotate: [0, -5, 0] 
@@ -169,7 +169,7 @@ const MultiTenantLogin = () => {
           🎓
         </motion.div>
         <motion.div 
-          className="absolute top-1/2 left-10 text-white/10 text-4xl"
+          className="absolute top-1/2 right-10 text-white/10 text-4xl"
           animate={{ 
             x: [-5, 5, -5],
             y: [-8, 8, -8] 
@@ -184,7 +184,7 @@ const MultiTenantLogin = () => {
           📝
         </motion.div>
         <motion.div 
-          className="absolute top-40 left-1/2 text-white/10 text-3xl"
+          className="absolute top-40 right-1/2 text-white/10 text-3xl"
           animate={{ 
             scale: [1, 1.1, 1],
             rotate: [0, 10, 0] 
@@ -220,8 +220,8 @@ const MultiTenantLogin = () => {
                   <LogIn className="w-10 h-10 text-white" />
                 </div>
               </div>
-              <div className="absolute -top-2 -right-2 w-6 h-6 bg-yellow-400 rounded-full animate-bounce"></div>
-              <div className="absolute -bottom-1 -left-1 w-4 h-4 bg-pink-400 rounded-full animate-pulse"></div>
+              <div className="absolute -top-2 -left-2 w-6 h-6 bg-yellow-400 rounded-full animate-bounce"></div>
+              <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-pink-400 rounded-full animate-pulse"></div>
             </motion.div>
             
             <motion.h1 
@@ -325,7 +325,7 @@ const MultiTenantLogin = () => {
                           <button
                             type="button"
                             onClick={() => setShowPassword(!showPassword)}
-                            className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
+                            className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
                           >
                             {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
                           </button>
@@ -345,12 +345,12 @@ const MultiTenantLogin = () => {
                         >
                           {loading ? (
                             <>
-                              <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white ml-2" />
+                              <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2" />
                               جاري تسجيل الدخول...
                             </>
                           ) : (
                             <>
-                              <LogIn className="ml-2 h-5 w-5" />
+                              <LogIn className="mr-2 h-5 w-5" />
                               تسجيل الدخول
                             </>
                           )}
@@ -438,7 +438,7 @@ const MultiTenantLogin = () => {
                           <button
                             type="button"
                             onClick={() => setShowPassword(!showPassword)}
-                            className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
+                            className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
                           >
                             {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
                           </button>
@@ -477,12 +477,12 @@ const MultiTenantLogin = () => {
                         >
                           {loading ? (
                             <>
-                              <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white ml-2" />
+                              <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2" />
                               جاري إنشاء الحساب...
                             </>
                           ) : (
                             <>
-                              <UserPlus className="ml-2 h-5 w-5" />
+                              <UserPlus className="mr-2 h-5 w-5" />
                               إنشاء حساب
                             </>
                           )}
@@ -502,7 +502,7 @@ const MultiTenantLogin = () => {
                     to="/"
                     className="inline-flex items-center text-sm text-gray-500 hover:text-blue-600 transition-colors group"
                   >
-                    <Home className="ml-1 h-4 w-4 group-hover:scale-110 transition-transform" />
+                    <Home className="mr-1 h-4 w-4 group-hover:scale-110 transition-transform" />
                     العودة للصفحة الرئيسية
                   </Link>
                 </motion.div>
