@@ -276,72 +276,71 @@ const AdminServices = () => {
 
   return (
     <AdminLayout>
-      <div className="min-h-screen bg-background" dir="rtl" style={{ fontFamily: 'Noto Sans Arabic, Arial, sans-serif' }}>
-        {/* Header */}
-        <div className="bg-gradient-to-l from-primary/10 via-background to-secondary/10 border-b">
-          <div className="container mx-auto px-6 py-8">
+      <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/30" dir="rtl">
+        {/* العنوان الرئيسي */}
+        <div className="bg-gradient-to-r from-primary/5 via-background to-secondary/5 border-b shadow-sm">
+          <div className="container mx-auto px-8 py-10">
             <div className="flex items-center justify-between">
-              <div className="text-left">
-                <div className="text-2xl font-bold text-primary">{services.filter(s => s.is_active).length}</div>
-                <div className="text-sm text-muted-foreground">خدمة نشطة</div>
+              {/* الإحصائيات - يسار */}
+              <div className="text-center">
+                <div className="text-3xl font-bold text-primary">{services.filter(s => s.is_active).length}</div>
+                <div className="text-sm text-muted-foreground font-medium">خدمة نشطة</div>
               </div>
-              <div className="flex items-center gap-6">
-                <div className="text-right">
-                  <h1 className="text-3xl font-bold">إدارة الخدمات والأقسام</h1>
-                  <p className="text-muted-foreground mt-2">إدارة شاملة لجميع أقسام وخدمات المنصة التعليمية</p>
-                  <div className="flex items-center gap-6 mt-3 justify-end">
-                    <div className="flex items-center gap-2">
-                      <span className="text-sm font-medium">{categories.length} قسم</span>
-                      <div className="w-3 h-3 bg-primary rounded-full"></div>
+              
+              {/* المحتوى الرئيسي - وسط ويمين */}
+              <div className="flex items-center gap-8">
+                <div className="text-right space-y-3">
+                  <h1 className="text-4xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
+                    إدارة الخدمات والأقسام
+                  </h1>
+                  <p className="text-lg text-muted-foreground">
+                    إدارة شاملة لجميع أقسام وخدمات المنصة التعليمية
+                  </p>
+                  <div className="flex items-center gap-8 justify-end">
+                    <div className="flex items-center gap-3">
+                      <span className="text-base font-semibold">{categories.length} قسم</span>
+                      <div className="w-4 h-4 bg-gradient-to-r from-primary to-primary/70 rounded-full shadow-sm"></div>
                     </div>
-                    <div className="flex items-center gap-2">
-                      <span className="text-sm font-medium">{services.length} خدمة</span>
-                      <div className="w-3 h-3 bg-secondary rounded-full"></div>
+                    <div className="flex items-center gap-3">
+                      <span className="text-base font-semibold">{services.length} خدمة</span>
+                      <div className="w-4 h-4 bg-gradient-to-r from-secondary to-secondary/70 rounded-full shadow-sm"></div>
                     </div>
                   </div>
                 </div>
-                <div className="w-16 h-16 bg-gradient-to-br from-primary to-primary/70 rounded-3xl flex items-center justify-center shadow-lg">
-                  <Settings className="w-8 h-8 text-white" />
+                <div className="w-20 h-20 bg-gradient-to-br from-primary via-primary to-primary/80 rounded-3xl flex items-center justify-center shadow-xl">
+                  <Settings className="w-10 h-10 text-white" />
                 </div>
               </div>
             </div>
           </div>
         </div>
 
-        <div className="container mx-auto px-6 py-8">
-          <Tabs defaultValue="categories" className="w-full">
-            <div className="flex justify-center mb-8">
-              <TabsList className="grid grid-cols-2 w-full max-w-md bg-muted/50 p-1 rounded-2xl">
+        <div className="container mx-auto px-8 py-10">
+          <Tabs defaultValue="categories" className="w-full space-y-8">
+            {/* التابز */}
+            <div className="flex justify-center">
+              <TabsList className="grid grid-cols-2 w-full max-w-lg bg-card/80 backdrop-blur-sm p-2 rounded-3xl border shadow-lg">
                 <TabsTrigger 
                   value="categories" 
-                  className="flex items-center justify-center gap-3 px-6 py-3 rounded-xl"
+                  className="flex items-center gap-4 px-8 py-4 rounded-2xl data-[state=active]:bg-background data-[state=active]:shadow-md transition-all duration-300"
                 >
-                  <span className="font-semibold">الأقسام</span>
-                  <Languages className="w-5 h-5" />
+                  <span className="font-bold text-lg">الأقسام</span>
+                  <Languages className="w-6 h-6" />
                 </TabsTrigger>
                 <TabsTrigger 
                   value="services" 
-                  className="flex items-center justify-center gap-3 px-6 py-3 rounded-xl"
+                  className="flex items-center gap-4 px-8 py-4 rounded-2xl data-[state=active]:bg-background data-[state=active]:shadow-md transition-all duration-300"
                 >
-                  <span className="font-semibold">الخدمات</span>
-                  <Settings className="w-5 h-5" />
+                  <span className="font-bold text-lg">الخدمات</span>
+                  <Settings className="w-6 h-6" />
                 </TabsTrigger>
               </TabsList>
             </div>
 
-            {/* Categories Tab */}
-            <TabsContent value="categories" className="space-y-6">
-              <div className="bg-card border rounded-2xl p-6">
-                <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-6">
-                  <div className="text-right">
-                    <h2 className="text-2xl font-bold flex items-center gap-3 justify-end">
-                      <span>أقسام الخدمات</span>
-                      <div className="w-8 h-8 bg-primary/10 rounded-lg flex items-center justify-center">
-                        <Languages className="w-5 h-5 text-primary" />
-                      </div>
-                    </h2>
-                    <p className="text-muted-foreground text-right mt-2">إدارة تصنيفات الخدمات الأساسية في المنصة</p>
-                  </div>
+            {/* تاب الأقسام */}
+            <TabsContent value="categories" className="space-y-8">
+              <div className="bg-card/60 backdrop-blur-sm border rounded-3xl p-8 shadow-lg">
+                <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-8">
                   <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
                     <DialogTrigger asChild>
                       <Button 
@@ -349,11 +348,11 @@ const AdminServices = () => {
                           setEditingCategory(null);
                           setIsDialogOpen(true);
                         }}
-                        className="flex items-center gap-3 px-6 py-3 rounded-xl shadow-lg"
+                        className="flex items-center gap-4 px-8 py-4 rounded-2xl bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 shadow-lg hover:shadow-xl transition-all duration-300 text-lg font-bold"
                         size="lg"
                       >
-                        <Plus className="w-5 h-5" />
-                        <span className="font-semibold">إضافة قسم جديد</span>
+                        <span>إضافة قسم جديد</span>
+                        <Plus className="w-6 h-6" />
                       </Button>
                     </DialogTrigger>
                     <CategoryDialog 
@@ -365,25 +364,35 @@ const AdminServices = () => {
                       }}
                     />
                   </Dialog>
+                  
+                  <div className="text-right space-y-2">
+                    <h2 className="text-3xl font-bold flex items-center gap-4 justify-end">
+                      <span>أقسام الخدمات</span>
+                      <div className="w-10 h-10 bg-primary/15 rounded-2xl flex items-center justify-center">
+                        <Languages className="w-6 h-6 text-primary" />
+                      </div>
+                    </h2>
+                    <p className="text-lg text-muted-foreground">إدارة تصنيفات الخدمات الأساسية في المنصة</p>
+                  </div>
                 </div>
               </div>
 
               {loading ? (
-                <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
                   {Array.from({ length: 6 }).map((_, i) => (
-                    <div key={i} className="h-64 bg-muted/30 animate-pulse rounded-2xl" />
+                    <div key={i} className="h-72 bg-gradient-to-br from-muted/40 to-muted/20 animate-pulse rounded-3xl border" />
                   ))}
                 </div>
               ) : categories.length === 0 ? (
-                <div className="text-center py-20">
-                  <div className="w-24 h-24 bg-muted/30 rounded-full flex items-center justify-center mx-auto mb-6">
-                    <Languages className="w-12 h-12 text-muted-foreground" />
+                <div className="text-center py-24">
+                  <div className="w-32 h-32 bg-muted/40 rounded-full flex items-center justify-center mx-auto mb-8">
+                    <Languages className="w-16 h-16 text-muted-foreground" />
                   </div>
-                  <h3 className="text-xl font-semibold mb-2">لا توجد أقسام بعد</h3>
-                  <p className="text-muted-foreground mb-6">ابدأ بإنشاء أول قسم للخدمات</p>
+                  <h3 className="text-2xl font-bold mb-4">لا توجد أقسام بعد</h3>
+                  <p className="text-lg text-muted-foreground mb-8">ابدأ بإنشاء أول قسم للخدمات</p>
                 </div>
               ) : (
-                <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
                   {categories.map((category) => (
                     <CategoryCard
                       key={category.id}
@@ -399,19 +408,10 @@ const AdminServices = () => {
               )}
             </TabsContent>
 
-            {/* Services Tab */}
-            <TabsContent value="services" className="space-y-6">
-              <div className="bg-card border rounded-2xl p-6">
-                <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-6">
-                  <div className="text-right">
-                    <h2 className="text-2xl font-bold flex items-center gap-3 justify-end">
-                      <span>إدارة الخدمات</span>
-                      <div className="w-8 h-8 bg-secondary/10 rounded-lg flex items-center justify-center">
-                        <Settings className="w-5 h-5 text-secondary" />
-                      </div>
-                    </h2>
-                    <p className="text-muted-foreground text-right mt-2">إدارة جميع الخدمات المتاحة للعملاء في المنصة</p>
-                  </div>
+            {/* تاب الخدمات */}
+            <TabsContent value="services" className="space-y-8">
+              <div className="bg-card/60 backdrop-blur-sm border rounded-3xl p-8 shadow-lg">
+                <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-8">
                   <Dialog open={isServiceDialogOpen} onOpenChange={setIsServiceDialogOpen}>
                     <DialogTrigger asChild>
                       <Button 
@@ -419,12 +419,12 @@ const AdminServices = () => {
                           setEditingService(null);
                           setIsServiceDialogOpen(true);
                         }}
-                        className="flex items-center gap-3 px-6 py-3 rounded-xl shadow-lg"
+                        className="flex items-center gap-4 px-8 py-4 rounded-2xl bg-gradient-to-r from-secondary to-secondary/80 hover:from-secondary/90 hover:to-secondary/70 shadow-lg hover:shadow-xl transition-all duration-300 text-lg font-bold"
                         size="lg"
                         variant="secondary"
                       >
-                        <Plus className="w-5 h-5" />
-                        <span className="font-semibold">إضافة خدمة جديدة</span>
+                        <span>إضافة خدمة جديدة</span>
+                        <Plus className="w-6 h-6" />
                       </Button>
                     </DialogTrigger>
                     <ServiceDialog 
@@ -437,25 +437,35 @@ const AdminServices = () => {
                       }}
                     />
                   </Dialog>
+                  
+                  <div className="text-right space-y-2">
+                    <h2 className="text-3xl font-bold flex items-center gap-4 justify-end">
+                      <span>إدارة الخدمات</span>
+                      <div className="w-10 h-10 bg-secondary/15 rounded-2xl flex items-center justify-center">
+                        <Settings className="w-6 h-6 text-secondary" />
+                      </div>
+                    </h2>
+                    <p className="text-lg text-muted-foreground">إدارة جميع الخدمات المتاحة للعملاء في المنصة</p>
+                  </div>
                 </div>
               </div>
 
               {loading ? (
-                <div className="space-y-4">
+                <div className="space-y-6">
                   {Array.from({ length: 5 }).map((_, i) => (
-                    <div key={i} className="h-40 bg-muted/30 animate-pulse rounded-2xl" />
+                    <div key={i} className="h-48 bg-gradient-to-br from-muted/40 to-muted/20 animate-pulse rounded-3xl border" />
                   ))}
                 </div>
               ) : services.length === 0 ? (
-                <div className="text-center py-20">
-                  <div className="w-24 h-24 bg-muted/30 rounded-full flex items-center justify-center mx-auto mb-6">
-                    <Settings className="w-12 h-12 text-muted-foreground" />
+                <div className="text-center py-24">
+                  <div className="w-32 h-32 bg-muted/40 rounded-full flex items-center justify-center mx-auto mb-8">
+                    <Settings className="w-16 h-16 text-muted-foreground" />
                   </div>
-                  <h3 className="text-xl font-semibold mb-2">لا توجد خدمات بعد</h3>
-                  <p className="text-muted-foreground mb-6">ابدأ بإنشاء أول خدمة للعملاء</p>
+                  <h3 className="text-2xl font-bold mb-4">لا توجد خدمات بعد</h3>
+                  <p className="text-lg text-muted-foreground mb-8">ابدأ بإنشاء أول خدمة للعملاء</p>
                 </div>
               ) : (
-                <div className="space-y-4">
+                <div className="space-y-6">
                   {services.map((service) => (
                     <ServiceCard
                       key={service.id}
@@ -477,7 +487,7 @@ const AdminServices = () => {
   );
 };
 
-// Category Card Component
+// كارت القسم
 const CategoryCard = ({ 
   category, 
   onEdit, 
@@ -495,67 +505,71 @@ const CategoryCard = ({
       Search
     };
     const Icon = icons[iconName] || Languages;
-    return <Icon className="w-6 h-6" />;
+    return <Icon className="w-8 h-8" />;
   };
 
   return (
-    <Card className="group hover:shadow-xl transition-all duration-300 border-2 hover:border-primary/20 rounded-2xl overflow-hidden">
-      <CardHeader className="pb-4">
-        <div className="flex items-start gap-4">
+    <Card className="group relative overflow-hidden bg-gradient-to-br from-card/90 to-card/70 backdrop-blur-sm border-2 border-border/40 hover:border-primary/30 hover:shadow-2xl transition-all duration-500 rounded-3xl">
+      {/* خلفية زخرفية */}
+      <div className="absolute inset-0 opacity-5">
+        <div className="absolute top-0 right-0 w-32 h-32 rounded-full" style={{ backgroundColor: category.color }}></div>
+        <div className="absolute bottom-0 left-0 w-20 h-20 rounded-full" style={{ backgroundColor: category.color }}></div>
+      </div>
+      
+      <CardHeader className="pb-6 relative">
+        <div className="flex items-start gap-6">
           <div className="relative">
             <div 
-              className="w-16 h-16 rounded-2xl flex items-center justify-center text-white shadow-lg group-hover:scale-110 transition-transform duration-300"
+              className="w-20 h-20 rounded-3xl flex items-center justify-center text-white shadow-xl group-hover:scale-110 transition-transform duration-500"
               style={{ backgroundColor: category.color }}
             >
               {getIcon(category.icon)}
             </div>
-            <div className="absolute -bottom-1 -left-1 w-5 h-5 bg-background rounded-full border-2 border-border flex items-center justify-center">
-              <div className={`w-2 h-2 rounded-full ${category.is_active ? 'bg-success' : 'bg-muted-foreground'}`}></div>
+            <div className="absolute -bottom-2 -left-2 w-6 h-6 bg-background rounded-full border-2 border-border flex items-center justify-center shadow-lg">
+              <div className={`w-3 h-3 rounded-full ${category.is_active ? 'bg-green-500' : 'bg-muted-foreground'}`}></div>
             </div>
           </div>
-          <div className="flex-1 text-right">
+          <div className="flex-1 text-right space-y-3">
             <Badge 
               variant={category.is_active ? "default" : "secondary"}
-              className="text-xs font-semibold px-3 py-1 rounded-full mb-3 float-right"
+              className="text-sm font-bold px-4 py-2 rounded-full"
             >
               {category.is_active ? "مفعل" : "معطل"}
             </Badge>
-            <div className="clear-both">
-              <CardTitle className="text-xl font-bold text-right mb-1">{category.name_ar}</CardTitle>
-              <p className="text-sm text-muted-foreground text-right">{category.name_en}</p>
-            </div>
+            <CardTitle className="text-2xl font-bold leading-tight">{category.name_ar}</CardTitle>
+            <p className="text-base text-muted-foreground">{category.name_en}</p>
           </div>
         </div>
       </CardHeader>
       
-      <CardContent className="pt-0">
-        <p className="text-sm text-muted-foreground text-right leading-relaxed mb-6 min-h-[3rem]">
+      <CardContent className="pt-0 relative space-y-6">
+        <p className="text-base text-muted-foreground text-right leading-relaxed min-h-[4rem]">
           {category.description_ar || "لا يوجد وصف متاح لهذا القسم"}
         </p>
         
-        <div className="pt-4 border-t">
-          <div className="flex justify-between items-center gap-3">
-            <div className="text-xs text-muted-foreground">
+        <div className="pt-6 border-t border-border/50">
+          <div className="flex justify-between items-center gap-4">
+            <div className="text-sm text-muted-foreground bg-muted/30 px-3 py-2 rounded-xl">
               ترتيب: {category.sort_order}
             </div>
-            <div className="flex gap-2">
+            <div className="flex gap-3">
               <Button 
                 variant="outline" 
                 size="sm" 
                 onClick={() => onEdit(category)}
-                className="flex items-center gap-2 hover:bg-primary/10 hover:border-primary/30 rounded-xl"
+                className="flex items-center gap-2 hover:bg-primary/10 hover:border-primary/30 rounded-xl px-4 py-2 transition-all duration-300"
               >
+                <span className="font-semibold">تعديل</span>
                 <Edit2 className="w-4 h-4" />
-                <span>تعديل</span>
               </Button>
               <Button 
                 variant="outline" 
                 size="sm" 
                 onClick={() => onDelete(category.id)}
-                className="flex items-center gap-2 text-destructive hover:text-destructive hover:bg-destructive/10 hover:border-destructive/30 rounded-xl"
+                className="flex items-center gap-2 text-destructive hover:text-destructive hover:bg-destructive/10 hover:border-destructive/30 rounded-xl px-4 py-2 transition-all duration-300"
               >
+                <span className="font-semibold">حذف</span>
                 <Trash2 className="w-4 h-4" />
-                <span>حذف</span>
               </Button>
             </div>
           </div>
@@ -565,7 +579,7 @@ const CategoryCard = ({
   );
 };
 
-// Service Card Component
+// كارت الخدمة
 const ServiceCard = ({ 
   service, 
   onEdit, 
@@ -576,79 +590,85 @@ const ServiceCard = ({
   onDelete: (id: string) => void;
 }) => {
   return (
-    <Card className="group hover:shadow-xl transition-all duration-300 border-2 hover:border-secondary/20 rounded-2xl overflow-hidden">
-      <CardContent className="p-6">
-        <div className="flex items-start gap-6">
+    <Card className="group relative overflow-hidden bg-gradient-to-br from-card/90 to-card/70 backdrop-blur-sm border-2 border-border/40 hover:border-secondary/30 hover:shadow-2xl transition-all duration-500 rounded-3xl">
+      {/* خلفية زخرفية */}
+      <div className="absolute inset-0 opacity-5">
+        <div className="absolute top-0 right-0 w-40 h-40 bg-secondary rounded-full"></div>
+        <div className="absolute bottom-0 left-0 w-28 h-28 bg-primary rounded-full"></div>
+      </div>
+      
+      <CardContent className="p-8 relative">
+        <div className="flex items-start gap-8">
           <div 
-            className="w-12 h-12 rounded-lg flex items-center justify-center text-white flex-shrink-0"
+            className="w-16 h-16 rounded-2xl flex items-center justify-center text-white flex-shrink-0 shadow-xl"
             style={{ backgroundColor: service.service_categories?.color || '#3B82F6' }}
           >
-            <Settings className="w-6 h-6" />
+            <Settings className="w-8 h-8" />
           </div>
           
-          <div className="flex-1 text-right">
-            <div className="mb-3">
-              <h3 className="text-lg font-semibold text-right">{service.name_ar}</h3>
-              <p className="text-sm text-muted-foreground text-right">{service.name_en}</p>
+          <div className="flex-1 text-right space-y-6">
+            <div className="space-y-2">
+              <h3 className="text-2xl font-bold leading-tight">{service.name_ar}</h3>
+              <p className="text-base text-muted-foreground">{service.name_en}</p>
             </div>
             
-            <p className="text-sm text-muted-foreground mb-4 text-right">
+            <p className="text-base text-muted-foreground leading-relaxed">
               {service.description_ar || "لا يوجد وصف"}
             </p>
 
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
-              <div className="text-right">
-                <p className="text-xs text-muted-foreground">القسم</p>
-                <p className="text-sm font-medium">{service.service_categories?.name_ar}</p>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+              <div className="text-right bg-muted/20 p-4 rounded-2xl">
+                <p className="text-sm text-muted-foreground mb-1">القسم</p>
+                <p className="text-base font-bold">{service.service_categories?.name_ar}</p>
               </div>
-              <div className="text-right">
-                <p className="text-xs text-muted-foreground">مدة التسليم</p>
-                <p className="text-sm font-medium">{service.delivery_time_days} أيام</p>
+              <div className="text-right bg-muted/20 p-4 rounded-2xl">
+                <p className="text-sm text-muted-foreground mb-1">مدة التسليم</p>
+                <p className="text-base font-bold">{service.delivery_time_days} أيام</p>
               </div>
-              <div className="text-right">
-                <p className="text-xs text-muted-foreground">الحد الأدنى</p>
-                <p className="text-sm font-medium">{service.min_units} {service.unit_type}</p>
+              <div className="text-right bg-muted/20 p-4 rounded-2xl">
+                <p className="text-sm text-muted-foreground mb-1">الحد الأدنى</p>
+                <p className="text-base font-bold">{service.min_units} {service.unit_type}</p>
               </div>
-              <div className="text-right">
-                <p className="text-xs text-muted-foreground">السعر لكل وحدة</p>
-                <p className="text-sm font-medium">
+              <div className="text-right bg-muted/20 p-4 rounded-2xl">
+                <p className="text-sm text-muted-foreground mb-1">السعر لكل وحدة</p>
+                <p className="text-base font-bold">
                   {service.price_per_unit ? `${service.price_per_unit} ريال` : 'حسب الطلب'}
                 </p>
               </div>
             </div>
 
-            <div className="flex items-center gap-4 justify-between">
-              <div className="flex gap-2">
+            <div className="flex items-center justify-between pt-4 border-t border-border/30">
+              <div className="flex gap-3">
                 <Button 
                   variant="outline" 
                   size="sm" 
                   onClick={() => onEdit(service)}
-                  className="flex items-center gap-2 hover:bg-primary/10 hover:border-primary/30 rounded-xl"
+                  className="flex items-center gap-2 hover:bg-primary/10 hover:border-primary/30 rounded-xl px-4 py-2 transition-all duration-300"
                 >
+                  <span className="font-semibold">تعديل</span>
                   <Edit2 className="w-4 h-4" />
-                  <span>تعديل</span>
                 </Button>
                 <Button 
                   variant="outline" 
                   size="sm" 
                   onClick={() => onDelete(service.id)}
-                  className="flex items-center gap-2 text-destructive hover:text-destructive hover:bg-destructive/10 hover:border-destructive/30 rounded-xl"
+                  className="flex items-center gap-2 text-destructive hover:text-destructive hover:bg-destructive/10 hover:border-destructive/30 rounded-xl px-4 py-2 transition-all duration-300"
                 >
+                  <span className="font-semibold">حذف</span>
                   <Trash2 className="w-4 h-4" />
-                  <span>حذف</span>
                 </Button>
               </div>
               
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-3">
                 {service.rush_delivery_available && (
-                  <Badge variant="outline" className="text-xs">
+                  <Badge variant="outline" className="text-sm font-semibold px-3 py-1">
                     تسليم سريع
                   </Badge>
                 )}
-                <Badge variant={service.show_to_clients ? "default" : "outline"} className="text-xs">
+                <Badge variant={service.show_to_clients ? "default" : "outline"} className="text-sm font-semibold px-3 py-1">
                   {service.show_to_clients ? "ظاهر" : "مخفي"}
                 </Badge>
-                <Badge variant={service.is_active ? "default" : "secondary"} className="text-xs">
+                <Badge variant={service.is_active ? "default" : "secondary"} className="text-sm font-semibold px-3 py-1">
                   {service.is_active ? "مفعل" : "معطل"}
                 </Badge>
               </div>
@@ -660,7 +680,7 @@ const ServiceCard = ({
   );
 };
 
-// Category Dialog Component
+// نافذة إضافة/تعديل القسم
 const CategoryDialog = ({ 
   category, 
   onSave, 
@@ -687,71 +707,79 @@ const CategoryDialog = ({
   };
 
   const iconOptions = [
-    { value: 'Languages', label: 'Languages' },
-    { value: 'GraduationCap', label: 'GraduationCap' },
-    { value: 'Users', label: 'Users' },
-    { value: 'Search', label: 'Search' }
+    { value: 'Languages', label: 'اللغات' },
+    { value: 'GraduationCap', label: 'التعليم' },
+    { value: 'Users', label: 'المستخدمين' },
+    { value: 'Search', label: 'البحث' }
   ];
 
   return (
-    <DialogContent className="max-w-md" dir="rtl">
+    <DialogContent className="max-w-2xl" dir="rtl">
       <DialogHeader>
-        <DialogTitle className="text-right">{category ? 'تعديل القسم' : 'قسم جديد'}</DialogTitle>
-        <DialogDescription className="text-right">
+        <DialogTitle className="text-right text-2xl font-bold">
+          {category ? 'تعديل القسم' : 'قسم جديد'}
+        </DialogTitle>
+        <DialogDescription className="text-right text-lg">
           {category ? 'تعديل بيانات القسم' : 'إضافة قسم جديد للخدمات'}
         </DialogDescription>
       </DialogHeader>
       
-      <form onSubmit={handleSubmit} className="space-y-4">
-        <div>
-          <Label htmlFor="name_ar" className="text-right block">الاسم بالعربية</Label>
-          <Input
-            id="name_ar"
-            value={formData.name_ar}
-            onChange={(e) => setFormData({ ...formData, name_ar: e.target.value })}
-            required
-            dir="rtl"
-            className="text-right"
-          />
-        </div>
-
-        <div>
-          <Label htmlFor="name_en" className="text-right block">الاسم بالإنجليزية</Label>
-          <Input
-            id="name_en"
-            value={formData.name_en}
-            onChange={(e) => setFormData({ ...formData, name_en: e.target.value })}
-            required
-            dir="ltr"
-          />
-        </div>
-
-        <div>
-          <Label htmlFor="description_ar" className="text-right block">الوصف بالعربية</Label>
-          <Textarea
-            id="description_ar"
-            value={formData.description_ar}
-            onChange={(e) => setFormData({ ...formData, description_ar: e.target.value })}
-            dir="rtl"
-            className="text-right"
-          />
-        </div>
-
-        <div>
-          <Label htmlFor="description_en" className="text-right block">الوصف بالإنجليزية</Label>
-          <Textarea
-            id="description_en"
-            value={formData.description_en}
-            onChange={(e) => setFormData({ ...formData, description_en: e.target.value })}
-            dir="ltr"
-          />
-        </div>
-
-        <div className="grid grid-cols-2 gap-4">
+      <form onSubmit={handleSubmit} className="space-y-6">
+        <div className="grid grid-cols-2 gap-6">
           <div>
-            <Label htmlFor="icon" className="text-right block">الأيقونة</Label>
+            <Label htmlFor="name_ar" className="text-right block text-base font-semibold mb-2">الاسم بالعربية</Label>
+            <Input
+              id="name_ar"
+              value={formData.name_ar}
+              onChange={(e) => setFormData({ ...formData, name_ar: e.target.value })}
+              required
+              dir="rtl"
+              className="text-right text-lg p-4 rounded-xl"
+            />
+          </div>
+
+          <div>
+            <Label htmlFor="name_en" className="text-right block text-base font-semibold mb-2">الاسم بالإنجليزية</Label>
+            <Input
+              id="name_en"
+              value={formData.name_en}
+              onChange={(e) => setFormData({ ...formData, name_en: e.target.value })}
+              required
+              dir="ltr"
+              className="text-lg p-4 rounded-xl"
+            />
+          </div>
+        </div>
+
+        <div className="grid grid-cols-2 gap-6">
+          <div>
+            <Label htmlFor="description_ar" className="text-right block text-base font-semibold mb-2">الوصف بالعربية</Label>
+            <Textarea
+              id="description_ar"
+              value={formData.description_ar}
+              onChange={(e) => setFormData({ ...formData, description_ar: e.target.value })}
+              dir="rtl"
+              className="text-right text-lg p-4 rounded-xl min-h-[120px]"
+            />
+          </div>
+
+          <div>
+            <Label htmlFor="description_en" className="text-right block text-base font-semibold mb-2">الوصف بالإنجليزية</Label>
+            <Textarea
+              id="description_en"
+              value={formData.description_en}
+              onChange={(e) => setFormData({ ...formData, description_en: e.target.value })}
+              dir="ltr"
+              className="text-lg p-4 rounded-xl min-h-[120px]"
+            />
+          </div>
+        </div>
+
+        <div className="grid grid-cols-3 gap-6">
+          <div>
+            <Label htmlFor="icon" className="text-right block text-base font-semibold mb-2">الأيقونة</Label>
             <Select value={formData.icon} onValueChange={(value) => setFormData({ ...formData, icon: value })}>
-              <SelectTrigger>
+              <SelectTrigger className="text-lg p-4 rounded-xl">
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
@@ -765,45 +793,45 @@ const CategoryDialog = ({
           </div>
 
           <div>
-            <Label htmlFor="color" className="text-right block">اللون</Label>
+            <Label htmlFor="color" className="text-right block text-base font-semibold mb-2">اللون</Label>
             <Input
               id="color"
               type="color"
               value={formData.color}
               onChange={(e) => setFormData({ ...formData, color: e.target.value })}
+              className="h-14 rounded-xl"
             />
           </div>
-        </div>
 
-        <div className="grid grid-cols-2 gap-4">
           <div>
-            <Label htmlFor="sort_order" className="text-right block">ترتيب العرض</Label>
+            <Label htmlFor="sort_order" className="text-right block text-base font-semibold mb-2">ترتيب العرض</Label>
             <Input
               id="sort_order"
               type="number"
               value={formData.sort_order}
               onChange={(e) => setFormData({ ...formData, sort_order: parseInt(e.target.value) || 0 })}
               dir="ltr"
+              className="text-lg p-4 rounded-xl"
             />
-          </div>
-
-          <div className="flex items-center space-x-2 space-x-reverse pt-6">
-            <Switch
-              id="is_active"
-              checked={formData.is_active}
-              onCheckedChange={(checked) => setFormData({ ...formData, is_active: checked })}
-            />
-            <Label htmlFor="is_active">مفعل</Label>
           </div>
         </div>
 
-        <div className="flex justify-end gap-2 pt-4">
-          <Button type="button" variant="outline" onClick={onClose}>
+        <div className="flex items-center justify-end gap-4 p-4 bg-muted/20 rounded-xl">
+          <Label htmlFor="is_active" className="text-lg font-semibold">مفعل</Label>
+          <Switch
+            id="is_active"
+            checked={formData.is_active}
+            onCheckedChange={(checked) => setFormData({ ...formData, is_active: checked })}
+          />
+        </div>
+
+        <div className="flex justify-end gap-4 pt-6 border-t">
+          <Button type="button" variant="outline" onClick={onClose} className="px-6 py-3 rounded-xl text-lg">
             إلغاء
           </Button>
-          <Button type="submit">
-            <Save className="w-4 h-4 ml-2" />
-            حفظ
+          <Button type="submit" className="px-8 py-3 rounded-xl text-lg font-bold">
+            <span>حفظ</span>
+            <Save className="w-5 h-5 mr-2" />
           </Button>
         </div>
       </form>
@@ -811,7 +839,7 @@ const CategoryDialog = ({
   );
 };
 
-// Service Dialog Component
+// نافذة إضافة/تعديل الخدمة
 const ServiceDialog = ({ 
   service, 
   categories,
@@ -882,55 +910,58 @@ const ServiceDialog = ({
   };
 
   return (
-    <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto" dir="rtl">
+    <DialogContent className="max-w-5xl max-h-[90vh] overflow-y-auto" dir="rtl">
       <DialogHeader>
-        <DialogTitle className="text-right">{service ? 'تعديل الخدمة' : 'خدمة جديدة'}</DialogTitle>
-        <DialogDescription className="text-right">
+        <DialogTitle className="text-right text-2xl font-bold">
+          {service ? 'تعديل الخدمة' : 'خدمة جديدة'}
+        </DialogTitle>
+        <DialogDescription className="text-right text-lg">
           {service ? 'تعديل بيانات الخدمة' : 'إضافة خدمة جديدة'}
         </DialogDescription>
       </DialogHeader>
       
-      <form onSubmit={handleSubmit} className="space-y-6">
-        <Tabs defaultValue="basic" className="space-y-4">
-          <TabsList className="grid grid-cols-3 w-full">
-            <TabsTrigger value="basic">البيانات الأساسية</TabsTrigger>
-            <TabsTrigger value="pricing">الأسعار والتسليم</TabsTrigger>
-            <TabsTrigger value="settings">الإعدادات</TabsTrigger>
+      <form onSubmit={handleSubmit} className="space-y-8">
+        <Tabs defaultValue="basic" className="space-y-6">
+          <TabsList className="grid grid-cols-3 w-full bg-muted/30 p-2 rounded-2xl">
+            <TabsTrigger value="basic" className="text-lg font-bold py-3 rounded-xl">البيانات الأساسية</TabsTrigger>
+            <TabsTrigger value="pricing" className="text-lg font-bold py-3 rounded-xl">الأسعار والتسليم</TabsTrigger>
+            <TabsTrigger value="settings" className="text-lg font-bold py-3 rounded-xl">الإعدادات</TabsTrigger>
           </TabsList>
 
-          <TabsContent value="basic" className="space-y-4">
-            <div className="grid grid-cols-2 gap-4">
+          <TabsContent value="basic" className="space-y-6">
+            <div className="grid grid-cols-2 gap-6">
               <div>
-                <Label htmlFor="name_ar" className="text-right block">اسم الخدمة بالعربية</Label>
+                <Label htmlFor="name_ar" className="text-right block text-base font-semibold mb-2">اسم الخدمة بالعربية</Label>
                 <Input
                   id="name_ar"
                   value={formData.name_ar}
                   onChange={(e) => setFormData({ ...formData, name_ar: e.target.value })}
                   required
                   dir="rtl"
-                  className="text-right"
+                  className="text-right text-lg p-4 rounded-xl"
                 />
               </div>
 
               <div>
-                <Label htmlFor="name_en" className="text-right block">اسم الخدمة بالإنجليزية</Label>
+                <Label htmlFor="name_en" className="text-right block text-base font-semibold mb-2">اسم الخدمة بالإنجليزية</Label>
                 <Input
                   id="name_en"
                   value={formData.name_en}
                   onChange={(e) => setFormData({ ...formData, name_en: e.target.value })}
                   required
                   dir="ltr"
+                  className="text-lg p-4 rounded-xl"
                 />
               </div>
             </div>
 
             <div>
-              <Label htmlFor="category_id" className="text-right block">القسم</Label>
+              <Label htmlFor="category_id" className="text-right block text-base font-semibold mb-2">القسم</Label>
               <Select 
                 value={formData.category_id} 
                 onValueChange={(value) => setFormData({ ...formData, category_id: value })}
               >
-                <SelectTrigger>
+                <SelectTrigger className="text-lg p-4 rounded-xl">
                   <SelectValue placeholder="اختر القسم" />
                 </SelectTrigger>
                 <SelectContent>
@@ -943,32 +974,33 @@ const ServiceDialog = ({
               </Select>
             </div>
 
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-2 gap-6">
               <div>
-                <Label htmlFor="description_ar" className="text-right block">الوصف بالعربية</Label>
+                <Label htmlFor="description_ar" className="text-right block text-base font-semibold mb-2">الوصف بالعربية</Label>
                 <Textarea
                   id="description_ar"
                   value={formData.description_ar}
                   onChange={(e) => setFormData({ ...formData, description_ar: e.target.value })}
                   dir="rtl"
-                  className="text-right"
+                  className="text-right text-lg p-4 rounded-xl min-h-[120px]"
                 />
               </div>
 
               <div>
-                <Label htmlFor="description_en" className="text-right block">الوصف بالإنجليزية</Label>
+                <Label htmlFor="description_en" className="text-right block text-base font-semibold mb-2">الوصف بالإنجليزية</Label>
                 <Textarea
                   id="description_en"
                   value={formData.description_en}
                   onChange={(e) => setFormData({ ...formData, description_en: e.target.value })}
                   dir="ltr"
+                  className="text-lg p-4 rounded-xl min-h-[120px]"
                 />
               </div>
             </div>
 
-            {/* Features Section */}
-            <div className="space-y-4">
-              <Label className="text-right block">المميزات</Label>
+            {/* قسم المميزات */}
+            <div className="space-y-4 p-6 bg-muted/10 rounded-2xl">
+              <Label className="text-right block text-lg font-bold">المميزات</Label>
               
               <div className="grid grid-cols-2 gap-4">
                 <div>
@@ -977,7 +1009,7 @@ const ServiceDialog = ({
                     value={currentFeatureAr}
                     onChange={(e) => setCurrentFeatureAr(e.target.value)}
                     dir="rtl"
-                    className="text-right"
+                    className="text-right text-lg p-4 rounded-xl"
                   />
                 </div>
                 <div>
@@ -986,31 +1018,32 @@ const ServiceDialog = ({
                     value={currentFeatureEn}
                     onChange={(e) => setCurrentFeatureEn(e.target.value)}
                     dir="ltr"
+                    className="text-lg p-4 rounded-xl"
                   />
                 </div>
               </div>
               
-              <Button type="button" onClick={addFeature} className="w-full">
-                <Plus className="w-4 h-4 ml-2" />
-                إضافة ميزة
+              <Button type="button" onClick={addFeature} className="w-full text-lg font-bold py-3 rounded-xl">
+                <span>إضافة ميزة</span>
+                <Plus className="w-5 h-5 mr-2" />
               </Button>
 
               {formData.features_ar.length > 0 && (
-                <div className="space-y-2">
+                <div className="space-y-3">
                   {formData.features_ar.map((feature, index) => (
-                    <div key={index} className="flex items-center justify-between gap-2 p-3 bg-muted rounded-lg">
+                    <div key={index} className="flex items-center justify-between gap-4 p-4 bg-background rounded-xl border">
                       <Button
                         type="button"
                         variant="ghost"
                         size="sm"
                         onClick={() => removeFeature(index)}
-                        className="text-destructive hover:text-destructive"
+                        className="text-destructive hover:text-destructive hover:bg-destructive/10 rounded-lg"
                       >
-                        <X className="w-4 h-4" />
+                        <X className="w-5 h-5" />
                       </Button>
                       <div className="flex-1 text-right">
-                        <p className="text-sm font-medium">{feature}</p>
-                        <p className="text-xs text-muted-foreground">{formData.features_en[index]}</p>
+                        <p className="text-base font-semibold">{feature}</p>
+                        <p className="text-sm text-muted-foreground">{formData.features_en[index]}</p>
                       </div>
                     </div>
                   ))}
@@ -1019,10 +1052,10 @@ const ServiceDialog = ({
             </div>
           </TabsContent>
 
-          <TabsContent value="pricing" className="space-y-4">
-            <div className="grid grid-cols-2 gap-4">
+          <TabsContent value="pricing" className="space-y-6">
+            <div className="grid grid-cols-2 gap-6">
               <div>
-                <Label htmlFor="base_price" className="text-right block">السعر الأساسي</Label>
+                <Label htmlFor="base_price" className="text-right block text-base font-semibold mb-2">السعر الأساسي</Label>
                 <Input
                   id="base_price"
                   type="number"
@@ -1030,11 +1063,12 @@ const ServiceDialog = ({
                   value={formData.base_price}
                   onChange={(e) => setFormData({ ...formData, base_price: e.target.value })}
                   dir="ltr"
+                  className="text-lg p-4 rounded-xl"
                 />
               </div>
 
               <div>
-                <Label htmlFor="price_per_unit" className="text-right block">السعر لكل وحدة</Label>
+                <Label htmlFor="price_per_unit" className="text-right block text-base font-semibold mb-2">السعر لكل وحدة</Label>
                 <Input
                   id="price_per_unit"
                   type="number"
@@ -1042,18 +1076,19 @@ const ServiceDialog = ({
                   value={formData.price_per_unit}
                   onChange={(e) => setFormData({ ...formData, price_per_unit: e.target.value })}
                   dir="ltr"
+                  className="text-lg p-4 rounded-xl"
                 />
               </div>
             </div>
 
-            <div className="grid grid-cols-3 gap-4">
+            <div className="grid grid-cols-3 gap-6">
               <div>
-                <Label htmlFor="unit_type" className="text-right block">نوع الوحدة</Label>
+                <Label htmlFor="unit_type" className="text-right block text-base font-semibold mb-2">نوع الوحدة</Label>
                 <Select 
                   value={formData.unit_type} 
                   onValueChange={(value) => setFormData({ ...formData, unit_type: value })}
                 >
-                  <SelectTrigger>
+                  <SelectTrigger className="text-lg p-4 rounded-xl">
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
@@ -1066,42 +1101,45 @@ const ServiceDialog = ({
               </div>
 
               <div>
-                <Label htmlFor="min_units" className="text-right block">الحد الأدنى</Label>
+                <Label htmlFor="min_units" className="text-right block text-base font-semibold mb-2">الحد الأدنى</Label>
                 <Input
                   id="min_units"
                   type="number"
                   value={formData.min_units}
                   onChange={(e) => setFormData({ ...formData, min_units: parseInt(e.target.value) || 1 })}
                   dir="ltr"
+                  className="text-lg p-4 rounded-xl"
                 />
               </div>
 
               <div>
-                <Label htmlFor="max_units" className="text-right block">الحد الأقصى</Label>
+                <Label htmlFor="max_units" className="text-right block text-base font-semibold mb-2">الحد الأقصى</Label>
                 <Input
                   id="max_units"
                   type="number"
                   value={formData.max_units}
                   onChange={(e) => setFormData({ ...formData, max_units: e.target.value })}
                   dir="ltr"
+                  className="text-lg p-4 rounded-xl"
                 />
               </div>
             </div>
 
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-2 gap-6">
               <div>
-                <Label htmlFor="delivery_time_days" className="text-right block">مدة التسليم (أيام)</Label>
+                <Label htmlFor="delivery_time_days" className="text-right block text-base font-semibold mb-2">مدة التسليم (أيام)</Label>
                 <Input
                   id="delivery_time_days"
                   type="number"
                   value={formData.delivery_time_days}
                   onChange={(e) => setFormData({ ...formData, delivery_time_days: parseInt(e.target.value) || 7 })}
                   dir="ltr"
+                  className="text-lg p-4 rounded-xl"
                 />
               </div>
 
               <div>
-                <Label htmlFor="rush_delivery_multiplier" className="text-right block">مضاعف التسليم السريع</Label>
+                <Label htmlFor="rush_delivery_multiplier" className="text-right block text-base font-semibold mb-2">مضاعف التسليم السريع</Label>
                 <Input
                   id="rush_delivery_multiplier"
                   type="number"
@@ -1109,72 +1147,75 @@ const ServiceDialog = ({
                   value={formData.rush_delivery_multiplier}
                   onChange={(e) => setFormData({ ...formData, rush_delivery_multiplier: parseFloat(e.target.value) || 1.5 })}
                   dir="ltr"
+                  className="text-lg p-4 rounded-xl"
                 />
               </div>
             </div>
 
-            <div className="flex items-center space-x-2 space-x-reverse">
+            <div className="flex items-center justify-end gap-4 p-4 bg-muted/20 rounded-xl">
+              <Label htmlFor="rush_delivery_available" className="text-lg font-semibold">التسليم السريع متاح</Label>
               <Switch
                 id="rush_delivery_available"
                 checked={formData.rush_delivery_available}
                 onCheckedChange={(checked) => setFormData({ ...formData, rush_delivery_available: checked })}
               />
-              <Label htmlFor="rush_delivery_available">التسليم السريع متاح</Label>
             </div>
           </TabsContent>
 
-          <TabsContent value="settings" className="space-y-4">
+          <TabsContent value="settings" className="space-y-6">
             <div>
-              <Label htmlFor="image_url" className="text-right block">رابط الصورة</Label>
+              <Label htmlFor="image_url" className="text-right block text-base font-semibold mb-2">رابط الصورة</Label>
               <Input
                 id="image_url"
                 type="url"
                 value={formData.image_url}
                 onChange={(e) => setFormData({ ...formData, image_url: e.target.value })}
                 dir="ltr"
+                className="text-lg p-4 rounded-xl"
               />
             </div>
 
             <div>
-              <Label htmlFor="sort_order" className="text-right block">ترتيب العرض</Label>
+              <Label htmlFor="sort_order" className="text-right block text-base font-semibold mb-2">ترتيب العرض</Label>
               <Input
                 id="sort_order"
                 type="number"
                 value={formData.sort_order}
                 onChange={(e) => setFormData({ ...formData, sort_order: parseInt(e.target.value) || 0 })}
                 dir="ltr"
+                className="text-lg p-4 rounded-xl"
               />
             </div>
 
-            <div className="grid grid-cols-2 gap-4">
-              <div className="flex items-center space-x-2 space-x-reverse">
+            <div className="grid grid-cols-2 gap-6">
+              <div className="flex items-center justify-end gap-4 p-4 bg-muted/20 rounded-xl">
+                <Label htmlFor="is_active" className="text-lg font-semibold">مفعل</Label>
                 <Switch
                   id="is_active"
                   checked={formData.is_active}
                   onCheckedChange={(checked) => setFormData({ ...formData, is_active: checked })}
                 />
-                <Label htmlFor="is_active">مفعل</Label>
               </div>
 
-              <div className="flex items-center space-x-2 space-x-reverse">
+              <div className="flex items-center justify-end gap-4 p-4 bg-muted/20 rounded-xl">
+                <Label htmlFor="show_to_clients" className="text-lg font-semibold">ظاهر للعملاء</Label>
                 <Switch
                   id="show_to_clients"
                   checked={formData.show_to_clients}
                   onCheckedChange={(checked) => setFormData({ ...formData, show_to_clients: checked })}
                 />
-                <Label htmlFor="show_to_clients">ظاهر للعملاء</Label>
               </div>
             </div>
           </TabsContent>
         </Tabs>
 
-        <div className="flex justify-end gap-2 pt-4 border-t">
-          <Button type="button" variant="outline" onClick={onClose}>
+        <div className="flex justify-end gap-4 pt-6 border-t">
+          <Button type="button" variant="outline" onClick={onClose} className="px-6 py-3 rounded-xl text-lg">
             إلغاء
           </Button>
-          <Button type="submit">
-            <Save className="w-4 h-4 ml-2" />
-            حفظ
+          <Button type="submit" className="px-8 py-3 rounded-xl text-lg font-bold">
+            <span>حفظ</span>
+            <Save className="w-5 h-5 mr-2" />
           </Button>
         </div>
       </form>
