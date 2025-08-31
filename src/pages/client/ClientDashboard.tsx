@@ -16,13 +16,12 @@ import {
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { useAuth } from '@/components/MultiTenantAuthProvider';
-import { useTenant } from '@/components/TenantProvider';
+import { useAuth } from '@/components/SimpleAuthProvider';
 import { useNavigate } from 'react-router-dom';
+import ClientLayout from '@/components/client/ClientLayout';
 
 const ClientDashboard = () => {
   const { user } = useAuth();
-  const { tenant } = useTenant();
   const navigate = useNavigate();
 
   // Mock data - would come from API
@@ -81,34 +80,10 @@ const ClientDashboard = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background" dir="rtl">
-      {/* Header */}
-      <div className="bg-card border-b">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-          <div className="flex items-center justify-between">
-            <div>
-              <h1 className="text-3xl font-bold text-foreground">
-                أهلاً بك، {user?.name}
-              </h1>
-              <p className="text-muted-foreground mt-1">
-                لوحة تحكم العميل - {tenant?.name}
-              </p>
-            </div>
-            <Button 
-              onClick={() => navigate('/orders/new')}
-              size="lg"
-              className="bg-primary hover:bg-primary/90"
-            >
-              <Plus className="ml-2 h-5 w-5" />
-              طلب جديد
-            </Button>
-          </div>
-        </div>
-      </div>
-
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <ClientLayout>
+      <div className="space-y-6">
         {/* Stats Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -183,7 +158,6 @@ const ClientDashboard = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.5 }}
-          className="mb-8"
         >
           <Card>
             <CardHeader>
@@ -285,7 +259,7 @@ const ClientDashboard = () => {
           </Card>
         </motion.div>
       </div>
-    </div>
+    </ClientLayout>
   );
 };
 
