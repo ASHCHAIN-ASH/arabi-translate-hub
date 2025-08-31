@@ -14,6 +14,39 @@ export type Database = {
   }
   public: {
     Tables: {
+      admin_credentials: {
+        Row: {
+          created_at: string | null
+          email: string
+          full_name: string
+          id: string
+          is_active: boolean | null
+          password_hash: string
+          role: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          email: string
+          full_name: string
+          id?: string
+          is_active?: boolean | null
+          password_hash: string
+          role?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          email?: string
+          full_name?: string
+          id?: string
+          is_active?: boolean | null
+          password_hash?: string
+          role?: string | null
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
       admin_profiles: {
         Row: {
           created_at: string
@@ -4410,6 +4443,10 @@ export type Database = {
       }
       validate_ultra_secure_admin_session: {
         Args: { token: string; user_agent?: string; user_ip?: unknown }
+        Returns: Json
+      }
+      verify_admin_login: {
+        Args: { email_input: string; password_input: string }
         Returns: Json
       }
       verify_admin_password: {
