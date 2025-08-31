@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from '@/components/AuthProvider';
+import { useAuth } from '@/components/SimpleAuthProvider';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -31,7 +31,7 @@ const Login = () => {
       
       // Small delay to allow auth state to update
       setTimeout(() => {
-        navigate('/client/dashboard');
+        navigate('/dashboard');
       }, 100);
     } catch (error: any) {
       toast.error(error.message || 'خطأ في تسجيل الدخول');
