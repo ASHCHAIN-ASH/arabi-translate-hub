@@ -291,56 +291,6 @@ export type Database = {
         }
         Relationships: []
       }
-      ash_email_otps: {
-        Row: {
-          attempts: number | null
-          code: string
-          consumed: boolean | null
-          consumed_at: string | null
-          created_at: string | null
-          email_lower: string
-          expires_at: string
-          id: string
-          normalized_code: string
-          type: string
-          user_id: string
-        }
-        Insert: {
-          attempts?: number | null
-          code: string
-          consumed?: boolean | null
-          consumed_at?: string | null
-          created_at?: string | null
-          email_lower: string
-          expires_at: string
-          id?: string
-          normalized_code: string
-          type: string
-          user_id: string
-        }
-        Update: {
-          attempts?: number | null
-          code?: string
-          consumed?: boolean | null
-          consumed_at?: string | null
-          created_at?: string | null
-          email_lower?: string
-          expires_at?: string
-          id?: string
-          normalized_code?: string
-          type?: string
-          user_id?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "ash_email_otps_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "ash_users"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
       ash_otps: {
         Row: {
           attempts: number | null
@@ -375,228 +325,7 @@ export type Database = {
           type?: string
           user_id?: string | null
         }
-        Relationships: [
-          {
-            foreignKeyName: "ash_otps_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "ash_users"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      ash_users: {
-        Row: {
-          address: string | null
-          avatar_url: string | null
-          company_name: string | null
-          created_at: string | null
-          email: string
-          email_lower: string
-          email_normalized: string | null
-          email_verified_at: string | null
-          id: string
-          kyc_status: string
-          last_login_at: string | null
-          name: string
-          password_algo: Database["public"]["Enums"]["password_algorithm"]
-          password_hash: string
-          password_hash_b64: string | null
-          password_hash_version: string | null
-          password_salt: string | null
-          password_salt_b64: string | null
-          phone: string | null
-          role: string
-          status: string
-          tenant_id: string | null
-          two_factor_enabled: boolean | null
-          updated_at: string | null
-          verified_at: string | null
-        }
-        Insert: {
-          address?: string | null
-          avatar_url?: string | null
-          company_name?: string | null
-          created_at?: string | null
-          email: string
-          email_lower: string
-          email_normalized?: string | null
-          email_verified_at?: string | null
-          id?: string
-          kyc_status?: string
-          last_login_at?: string | null
-          name: string
-          password_algo?: Database["public"]["Enums"]["password_algorithm"]
-          password_hash: string
-          password_hash_b64?: string | null
-          password_hash_version?: string | null
-          password_salt?: string | null
-          password_salt_b64?: string | null
-          phone?: string | null
-          role?: string
-          status?: string
-          tenant_id?: string | null
-          two_factor_enabled?: boolean | null
-          updated_at?: string | null
-          verified_at?: string | null
-        }
-        Update: {
-          address?: string | null
-          avatar_url?: string | null
-          company_name?: string | null
-          created_at?: string | null
-          email?: string
-          email_lower?: string
-          email_normalized?: string | null
-          email_verified_at?: string | null
-          id?: string
-          kyc_status?: string
-          last_login_at?: string | null
-          name?: string
-          password_algo?: Database["public"]["Enums"]["password_algorithm"]
-          password_hash?: string
-          password_hash_b64?: string | null
-          password_hash_version?: string | null
-          password_salt?: string | null
-          password_salt_b64?: string | null
-          phone?: string | null
-          role?: string
-          status?: string
-          tenant_id?: string | null
-          two_factor_enabled?: boolean | null
-          updated_at?: string | null
-          verified_at?: string | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "ash_users_tenant_id_fkey"
-            columns: ["tenant_id"]
-            isOneToOne: false
-            referencedRelation: "tenants"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      ash_wallet_transactions: {
-        Row: {
-          admin_notes: string | null
-          amount: number
-          approved_at: string | null
-          approved_by: string | null
-          balance_after: number | null
-          balance_before: number | null
-          created_at: string | null
-          created_by: string | null
-          description: string | null
-          id: string
-          reference_id: string | null
-          status: string
-          type: string
-          user_id: string | null
-          wallet_id: string | null
-        }
-        Insert: {
-          admin_notes?: string | null
-          amount: number
-          approved_at?: string | null
-          approved_by?: string | null
-          balance_after?: number | null
-          balance_before?: number | null
-          created_at?: string | null
-          created_by?: string | null
-          description?: string | null
-          id?: string
-          reference_id?: string | null
-          status?: string
-          type: string
-          user_id?: string | null
-          wallet_id?: string | null
-        }
-        Update: {
-          admin_notes?: string | null
-          amount?: number
-          approved_at?: string | null
-          approved_by?: string | null
-          balance_after?: number | null
-          balance_before?: number | null
-          created_at?: string | null
-          created_by?: string | null
-          description?: string | null
-          id?: string
-          reference_id?: string | null
-          status?: string
-          type?: string
-          user_id?: string | null
-          wallet_id?: string | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "ash_wallet_transactions_approved_by_fkey"
-            columns: ["approved_by"]
-            isOneToOne: false
-            referencedRelation: "ash_users"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "ash_wallet_transactions_created_by_fkey"
-            columns: ["created_by"]
-            isOneToOne: false
-            referencedRelation: "ash_users"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "ash_wallet_transactions_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "ash_users"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "ash_wallet_transactions_wallet_id_fkey"
-            columns: ["wallet_id"]
-            isOneToOne: false
-            referencedRelation: "ash_wallets"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      ash_wallets: {
-        Row: {
-          balance: number
-          created_at: string | null
-          currency: string
-          id: string
-          is_active: boolean | null
-          updated_at: string | null
-          user_id: string | null
-        }
-        Insert: {
-          balance?: number
-          created_at?: string | null
-          currency?: string
-          id?: string
-          is_active?: boolean | null
-          updated_at?: string | null
-          user_id?: string | null
-        }
-        Update: {
-          balance?: number
-          created_at?: string | null
-          currency?: string
-          id?: string
-          is_active?: boolean | null
-          updated_at?: string | null
-          user_id?: string | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "ash_wallets_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: true
-            referencedRelation: "ash_users"
-            referencedColumns: ["id"]
-          },
-        ]
+        Relationships: []
       }
       auth_diagnostics: {
         Row: {
@@ -931,13 +660,6 @@ export type Database = {
             referencedRelation: "quotes"
             referencedColumns: ["id"]
           },
-          {
-            foreignKeyName: "business_invoices_tenant_id_fkey"
-            columns: ["tenant_id"]
-            isOneToOne: false
-            referencedRelation: "tenants"
-            referencedColumns: ["id"]
-          },
         ]
       }
       business_payments: {
@@ -992,13 +714,6 @@ export type Database = {
             columns: ["invoice_id"]
             isOneToOne: false
             referencedRelation: "business_invoices"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "business_payments_tenant_id_fkey"
-            columns: ["tenant_id"]
-            isOneToOne: false
-            referencedRelation: "tenants"
             referencedColumns: ["id"]
           },
         ]
@@ -1120,15 +835,7 @@ export type Database = {
           updated_at?: string | null
           website?: string | null
         }
-        Relationships: [
-          {
-            foreignKeyName: "clients_tenant_id_fkey"
-            columns: ["tenant_id"]
-            isOneToOne: false
-            referencedRelation: "tenants"
-            referencedColumns: ["id"]
-          },
-        ]
+        Relationships: []
       }
       cms_applications: {
         Row: {
@@ -1999,15 +1706,7 @@ export type Database = {
           updated_at?: string
           user_id?: string | null
         }
-        Relationships: [
-          {
-            foreignKeyName: "invoices_tenant_id_fkey"
-            columns: ["tenant_id"]
-            isOneToOne: false
-            referencedRelation: "tenants"
-            referencedColumns: ["id"]
-          },
-        ]
+        Relationships: []
       }
       job_applicants: {
         Row: {
@@ -2592,15 +2291,7 @@ export type Database = {
           updated_at?: string | null
           user_id?: string
         }
-        Relationships: [
-          {
-            foreignKeyName: "payment_transactions_tenant_id_fkey"
-            columns: ["tenant_id"]
-            isOneToOne: false
-            referencedRelation: "tenants"
-            referencedColumns: ["id"]
-          },
-        ]
+        Relationships: []
       }
       product_orders: {
         Row: {
@@ -3170,13 +2861,6 @@ export type Database = {
             referencedRelation: "clients"
             referencedColumns: ["id"]
           },
-          {
-            foreignKeyName: "quotes_tenant_id_fkey"
-            columns: ["tenant_id"]
-            isOneToOne: false
-            referencedRelation: "tenants"
-            referencedColumns: ["id"]
-          },
         ]
       }
       rate_limits: {
@@ -3577,13 +3261,6 @@ export type Database = {
             referencedRelation: "clients"
             referencedColumns: ["id"]
           },
-          {
-            foreignKeyName: "support_tickets_tenant_id_fkey"
-            columns: ["tenant_id"]
-            isOneToOne: false
-            referencedRelation: "tenants"
-            referencedColumns: ["id"]
-          },
         ]
       }
       system_settings: {
@@ -3613,48 +3290,6 @@ export type Database = {
           updated_at?: string | null
           updated_by?: string | null
           value?: Json
-        }
-        Relationships: []
-      }
-      tenants: {
-        Row: {
-          code: string
-          cookie_name: string
-          created_at: string | null
-          extra_domains: string[] | null
-          id: string
-          is_active: boolean | null
-          jwt_secret: string
-          name: string
-          primary_domain: string
-          storage_prefix: string
-          updated_at: string | null
-        }
-        Insert: {
-          code: string
-          cookie_name: string
-          created_at?: string | null
-          extra_domains?: string[] | null
-          id?: string
-          is_active?: boolean | null
-          jwt_secret?: string
-          name: string
-          primary_domain: string
-          storage_prefix: string
-          updated_at?: string | null
-        }
-        Update: {
-          code?: string
-          cookie_name?: string
-          created_at?: string | null
-          extra_domains?: string[] | null
-          id?: string
-          is_active?: boolean | null
-          jwt_secret?: string
-          name?: string
-          primary_domain?: string
-          storage_prefix?: string
-          updated_at?: string | null
         }
         Relationships: []
       }
@@ -3789,15 +3424,7 @@ export type Database = {
           updated_at?: string | null
           user_id?: string
         }
-        Relationships: [
-          {
-            foreignKeyName: "tickets_tenant_id_fkey"
-            columns: ["tenant_id"]
-            isOneToOne: false
-            referencedRelation: "tenants"
-            referencedColumns: ["id"]
-          },
-        ]
+        Relationships: []
       }
       unauthorized_access_logs: {
         Row: {
@@ -3969,6 +3596,42 @@ export type Database = {
           id?: string
           role?: Database["public"]["Enums"]["app_role"]
           user_id?: string
+        }
+        Relationships: []
+      }
+      users: {
+        Row: {
+          created_at: string | null
+          email: string
+          id: string
+          name: string
+          password_hash: string
+          phone: string | null
+          role: string
+          status: string
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          email: string
+          id?: string
+          name: string
+          password_hash: string
+          phone?: string | null
+          role?: string
+          status?: string
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          email?: string
+          id?: string
+          name?: string
+          password_hash?: string
+          phone?: string | null
+          role?: string
+          status?: string
+          updated_at?: string | null
         }
         Relationships: []
       }

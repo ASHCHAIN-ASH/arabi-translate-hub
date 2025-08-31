@@ -1,0 +1,163 @@
+import React, { createContext, useContext, useState, useEffect } from 'react';
+import { supabase } from '@/integrations/supabase/client';
+import bcrypt from 'bcryptjs';
+
+interface User {
+  id: string;
+  email: string;
+  name: string;
+  phone?: string;
+  role: string;
+  status: string;
+}
+
+interface AuthContextType {
+  user: User | null;
+  loading: boolean;
+  signIn: (email: string, password: string) => Promise<{ error?: string }>;
+  signUp: (email: string, password: string, metadata: { name: string; phone?: string; role?: string }) => Promise<{ error?: string }>;
+  signOut: () => Promise<void>;
+}
+
+const AuthContext = createContext<AuthContextType | undefined>(undefined);
+
+export const useAuth = () => {
+  const context = useContext(AuthContext);
+  if (context === undefined) {
+    throw new Error('useAuth must be used within a SimpleAuthProvider');
+  }
+  return context;
+};
+
+export const SimpleAuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const [user, setUser] = useState<User | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    // التحقق من وجود جلسة مخزنة في localStorage
+    const storedUser = localStorage.getItem('user');
+    if (storedUser) {
+      try {
+        setUser(JSON.parse(storedUser));
+      } catch (error) {
+        localStorage.removeItem('user');
+      }
+    }
+    setLoading(false);
+  }, []);
+
+  const signIn = async (email: string, password: string): Promise<{ error?: string }> => {
+    try {
+      // البحث عن المستخدم في قاعدة البيانات
+      const { data: userData, error: fetchError } = await supabase
+        .from('users')
+        .select('*')
+        .eq('email', email.toLowerCase().trim())
+        .single();
+
+      if (fetchError || !userData) {
+        return { error: 'البريد الإلكتروني أو كلمة المرور غير صحيحة' };
+      }
+
+      // التحقق من كلمة المرور
+      const isValidPassword = await bcrypt.compare(password, userData.password_hash);
+      if (!isValidPassword) {
+        return { error: 'البريد الإلكتروني أو كلمة المرور غير صحيحة' };
+      }
+
+      // التحقق من حالة المستخدم
+      if (userData.status !== 'active') {
+        return { error: 'تم تعطيل حسابك. يرجى التواصل مع الإدارة' };
+      }
+
+      // إنشاء كائن المستخدم
+      const user: User = {
+        id: userData.id,
+        email: userData.email,
+        name: userData.name,
+        phone: userData.phone,
+        role: userData.role,
+        status: userData.status
+      };
+
+      setUser(user);
+      localStorage.setItem('user', JSON.stringify(user));
+
+      return {};
+    } catch (error) {
+      console.error('Login error:', error);
+      return { error: 'حدث خطأ أثناء تسجيل الدخول' };
+    }
+  };
+
+  const signUp = async (
+    email: string, 
+    password: string, 
+    metadata: { name: string; phone?: string; role?: string }
+  ): Promise<{ error?: string }> => {
+    try {
+      // التحقق من قوة كلمة المرور
+      if (password.length < 12) {
+        return { error: 'كلمة المرور يجب أن تكون 12 حرف على الأقل' };
+      }
+
+      // تشفير كلمة المرور
+      const saltRounds = 12;
+      const hashedPassword = await bcrypt.hash(password, saltRounds);
+
+      // إدراج المستخدم الجديد
+      const { data: newUser, error: insertError } = await supabase
+        .from('users')
+        .insert({
+          email: email.toLowerCase().trim(),
+          password_hash: hashedPassword,
+          name: metadata.name,
+          phone: metadata.phone,
+          role: metadata.role || 'client',
+          status: 'active'
+        })
+        .select()
+        .single();
+
+      if (insertError) {
+        if (insertError.code === '23505') {
+          return { error: 'البريد الإلكتروني مستخدم بالفعل' };
+        }
+        return { error: 'حدث خطأ أثناء إنشاء الحساب' };
+      }
+
+      // إنشاء كائن المستخدم
+      const user: User = {
+        id: newUser.id,
+        email: newUser.email,
+        name: newUser.name,
+        phone: newUser.phone,
+        role: newUser.role,
+        status: newUser.status
+      };
+
+      setUser(user);
+      localStorage.setItem('user', JSON.stringify(user));
+
+      return {};
+    } catch (error) {
+      console.error('Signup error:', error);
+      return { error: 'حدث خطأ أثناء إنشاء الحساب' };
+    }
+  };
+
+  const signOut = async (): Promise<void> => {
+    setUser(null);
+    localStorage.removeItem('user');
+  };
+
+  const value = {
+    user,
+    loading,
+    signIn,
+    signUp,
+    signOut
+  };
+
+  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
+};
