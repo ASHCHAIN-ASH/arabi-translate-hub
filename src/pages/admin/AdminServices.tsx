@@ -614,7 +614,7 @@ const AdminServices = () => {
                         <span className="text-muted-foreground">السعر:</span>
                         <div className="flex items-center gap-1">
                           <DollarSign className="h-4 w-4 text-success" />
-                          <span className="font-semibold">{service.price.toFixed(2)} ريال</span>
+                          <span className="font-semibold">{(service.price || 0).toFixed(2)} ريال</span>
                         </div>
                       </div>
                       
