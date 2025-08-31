@@ -44,7 +44,7 @@ import {
   Archive
 } from 'lucide-react';
 
-// تعديل نموذج البيانات ليشمل كود الخدمة وحقول إضافية
+// تبسيط تعريفات الأنواع
 interface ServiceCategory {
   id: string;
   name_ar: string;
@@ -80,8 +80,8 @@ interface Service {
   sort_order: number;
   is_active: boolean;
   show_to_clients: boolean;
-  code?: string; // إضافة كود الخدمة
-  type?: 'service' | 'course' | 'bundle'; // نوع الخدمة
+  code?: string;
+  type?: string;
   created_at: string;
   updated_at: string;
   service_categories?: {
@@ -93,22 +93,6 @@ interface Service {
   };
 }
 
-// نوع عرض الخدمات
-type ViewMode = 'grid' | 'list';
-
-// نوع الترتيب
-type SortType = 'name' | 'price' | 'date' | 'category';
-type SortOrder = 'asc' | 'desc';
-
-// حالة الفلتر
-interface FilterState {
-  search: string;
-  status: 'all' | 'active' | 'inactive';
-  category: string;
-  type: 'all' | 'service' | 'course' | 'bundle';
-  priceRange: [number, number];
-}
-
 const AdminServices = () => {
   const [categories, setCategories] = useState<ServiceCategory[]>([]);
   const [services, setServices] = useState<Service[]>([]);
@@ -118,16 +102,13 @@ const AdminServices = () => {
   const [editingService, setEditingService] = useState<Service | null>(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [isServiceDialogOpen, setIsServiceDialogOpen] = useState(false);
-  const [viewMode, setViewMode] = useState<ViewMode>('grid');
-  const [sortType, setSortType] = useState<SortType>('name');
-  const [sortOrder, setSortOrder] = useState<SortOrder>('asc');
-  const [filters, setFilters] = useState<FilterState>({
-    search: '',
-    status: 'all',
-    category: 'all',
-    type: 'all',
-    priceRange: [0, 10000]
-  });
+  const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
+  const [sortType, setSortType] = useState('name');
+  const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc');
+  const [searchTerm, setSearchTerm] = useState('');
+  const [statusFilter, setStatusFilter] = useState('all');
+  const [categoryFilter, setCategoryFilter] = useState('all');
+  const [typeFilter, setTypeFilter] = useState('all');
   
   const { toast } = useToast();
 
@@ -155,38 +136,32 @@ const AdminServices = () => {
     let filtered = [...services];
 
     // البحث
-    if (filters.search) {
-      const searchTerm = filters.search.toLowerCase();
+    if (searchTerm) {
+      const searchTermLower = searchTerm.toLowerCase();
       filtered = filtered.filter(service => 
-        service.name_ar.toLowerCase().includes(searchTerm) ||
-        service.name_en.toLowerCase().includes(searchTerm) ||
-        service.code?.toLowerCase().includes(searchTerm) ||
-        service.service_categories?.name_ar.toLowerCase().includes(searchTerm)
+        service.name_ar.toLowerCase().includes(searchTermLower) ||
+        service.name_en.toLowerCase().includes(searchTermLower) ||
+        service.code?.toLowerCase().includes(searchTermLower) ||
+        service.service_categories?.name_ar.toLowerCase().includes(searchTermLower)
       );
     }
 
     // فلتر الحالة
-    if (filters.status !== 'all') {
+    if (statusFilter !== 'all') {
       filtered = filtered.filter(service => 
-        filters.status === 'active' ? service.is_active : !service.is_active
+        statusFilter === 'active' ? service.is_active : !service.is_active
       );
     }
 
     // فلتر القسم
-    if (filters.category !== 'all') {
-      filtered = filtered.filter(service => service.category_id === filters.category);
+    if (categoryFilter !== 'all') {
+      filtered = filtered.filter(service => service.category_id === categoryFilter);
     }
 
     // فلتر النوع
-    if (filters.type !== 'all') {
-      filtered = filtered.filter(service => service.type === filters.type);
+    if (typeFilter !== 'all') {
+      filtered = filtered.filter(service => service.type === typeFilter);
     }
-
-    // فلتر السعر
-    filtered = filtered.filter(service => {
-      const price = service.price_per_unit || service.base_price || 0;
-      return price >= filters.priceRange[0] && price <= filters.priceRange[1];
-    });
 
     // الترتيب
     filtered.sort((a, b) => {
@@ -215,7 +190,7 @@ const AdminServices = () => {
     });
 
     setFilteredServices(filtered);
-  }, [services, filters, sortType, sortOrder]);
+  }, [services, searchTerm, statusFilter, categoryFilter, typeFilter, sortType, sortOrder]);
 
   const loadData = async () => {
     try {
@@ -281,12 +256,12 @@ const AdminServices = () => {
             loadData(); // إعادة تحميل لضمان الحصول على البيانات الكاملة
           } else if (payload.eventType === 'UPDATE') {
             setServices(prev => prev.map(service => 
-              service.id === payload.new.id 
+              service.id === payload.new?.id 
                 ? { ...service, ...payload.new }
                 : service
             ));
           } else if (payload.eventType === 'DELETE') {
-            setServices(prev => prev.filter(service => service.id !== payload.old.id));
+            setServices(prev => prev.filter(service => service.id !== payload.old?.id));
           }
         }
       )
@@ -419,7 +394,7 @@ const AdminServices = () => {
             .from('services')
             .select('id')
             .eq('code', cleanedService.code)
-            .single();
+            .maybeSingle();
 
           if (existingService) {
             throw new Error('كود الخدمة مستخدم بالفعل');
@@ -639,7 +614,7 @@ const AdminServices = () => {
                       <Plus className="w-5 h-5" />
                     </Button>
                   </DialogTrigger>
-                  <EnhancedServiceDialog 
+                  <ServiceDialog 
                     service={editingService}
                     categories={categories}
                     onSave={handleSaveService}
@@ -680,8 +655,14 @@ const AdminServices = () => {
             <TabsContent value="services" className="space-y-6">
               {/* شريط الأدوات */}
               <ServicesToolbar 
-                filters={filters}
-                setFilters={setFilters}
+                searchTerm={searchTerm}
+                setSearchTerm={setSearchTerm}
+                statusFilter={statusFilter}
+                setStatusFilter={setStatusFilter}
+                categoryFilter={categoryFilter}
+                setCategoryFilter={setCategoryFilter}
+                typeFilter={typeFilter}
+                setTypeFilter={setTypeFilter}
                 viewMode={viewMode}
                 setViewMode={setViewMode}
                 sortType={sortType}
@@ -696,12 +677,12 @@ const AdminServices = () => {
               {loading ? (
                 <ServicesLoading viewMode={viewMode} />
               ) : filteredServices.length === 0 ? (
-                <EmptyServicesState hasFilters={Object.values(filters).some(f => f !== 'all' && f !== '' && f !== 0)} />
+                <EmptyServicesState hasFilters={!!(searchTerm || statusFilter !== 'all' || categoryFilter !== 'all' || typeFilter !== 'all')} />
               ) : (
                 <ServicesGrid 
                   services={filteredServices}
                   viewMode={viewMode}
-                  onEdit={(srv) => {
+                  onEdit={(srv: Service) => {
                     setEditingService(srv);
                     setIsServiceDialogOpen(true);
                   }}
@@ -771,7 +752,7 @@ const AdminServices = () => {
                     <CategoryCard
                       key={category.id}
                       category={category}
-                      onEdit={(cat) => {
+                      onEdit={(cat: ServiceCategory) => {
                         setEditingCategory(cat);
                         setIsDialogOpen(true);
                       }}
@@ -789,12 +770,12 @@ const AdminServices = () => {
 };
 
 // مكون بطاقة الإحصائيات
-const StatsCard = ({ title, value, icon: Icon, color }: {
+const StatsCard: React.FC<{
   title: string;
   value: number | string;
-  icon: any;
+  icon: React.ComponentType<{ className?: string }>;
   color: string;
-}) => (
+}> = ({ title, value, icon: Icon, color }) => (
   <div className="bg-card/80 backdrop-blur-sm border border-border/50 rounded-xl p-4 text-center space-y-2 hover:shadow-lg transition-all duration-200">
     <div className={`w-8 h-8 ${color} rounded-lg flex items-center justify-center mx-auto mb-2`}>
       <Icon className="w-4 h-4 text-white" />
@@ -804,10 +785,33 @@ const StatsCard = ({ title, value, icon: Icon, color }: {
   </div>
 );
 
-// شريط الأدوات للخدمات
-const ServicesToolbar = ({ 
-  filters, 
-  setFilters, 
+// شريط الأدوات للخدمات - مع تبسيط الأنواع
+const ServicesToolbar: React.FC<{
+  searchTerm: string;
+  setSearchTerm: (term: string) => void;
+  statusFilter: string;
+  setStatusFilter: (status: string) => void;
+  categoryFilter: string;
+  setCategoryFilter: (category: string) => void;
+  typeFilter: string;
+  setTypeFilter: (type: string) => void;
+  viewMode: string;
+  setViewMode: (mode: 'grid' | 'list') => void;
+  sortType: string;
+  setSortType: (type: string) => void;
+  sortOrder: string;
+  setSortOrder: (order: 'asc' | 'desc') => void;
+  categories: ServiceCategory[];
+  servicesCount: number;
+}> = ({ 
+  searchTerm,
+  setSearchTerm,
+  statusFilter,
+  setStatusFilter,
+  categoryFilter,
+  setCategoryFilter,
+  typeFilter,
+  setTypeFilter,
   viewMode, 
   setViewMode, 
   sortType, 
@@ -816,17 +820,25 @@ const ServicesToolbar = ({
   setSortOrder,
   categories,
   servicesCount 
-}: any) => {
-  const [searchDebounce, setSearchDebounce] = useState('');
+}) => {
+  const [searchDebounce, setSearchDebounce] = useState(searchTerm);
 
   // تأخير البحث
   useEffect(() => {
     const timer = setTimeout(() => {
-      setFilters((prev: any) => ({ ...prev, search: searchDebounce }));
+      setSearchTerm(searchDebounce);
     }, 300);
 
     return () => clearTimeout(timer);
-  }, [searchDebounce, setFilters]);
+  }, [searchDebounce, setSearchTerm]);
+
+  const resetFilters = () => {
+    setSearchDebounce('');
+    setSearchTerm('');
+    setStatusFilter('all');
+    setCategoryFilter('all');
+    setTypeFilter('all');
+  };
 
   return (
     <div className="bg-card/60 backdrop-blur-sm border border-border/50 rounded-2xl p-6 space-y-4">
@@ -874,7 +886,7 @@ const ServicesToolbar = ({
       {/* الصف الثاني: الفلاتر والترتيب */}
       <div className="grid grid-cols-2 lg:grid-cols-6 gap-3">
         {/* فلتر الحالة */}
-        <Select value={filters.status} onValueChange={(value) => setFilters((prev: any) => ({ ...prev, status: value }))}>
+        <Select value={statusFilter} onValueChange={setStatusFilter}>
           <SelectTrigger className="rounded-lg border-border/50">
             <SelectValue placeholder="الحالة" />
           </SelectTrigger>
@@ -886,20 +898,20 @@ const ServicesToolbar = ({
         </Select>
 
         {/* فلتر القسم */}
-        <Select value={filters.category} onValueChange={(value) => setFilters((prev: any) => ({ ...prev, category: value }))}>
+        <Select value={categoryFilter} onValueChange={setCategoryFilter}>
           <SelectTrigger className="rounded-lg border-border/50">
             <SelectValue placeholder="القسم" />
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="all">جميع الأقسام</SelectItem>
-            {categories.map((cat: any) => (
+            {categories.map((cat) => (
               <SelectItem key={cat.id} value={cat.id}>{cat.name_ar}</SelectItem>
             ))}
           </SelectContent>
         </Select>
 
         {/* فلتر النوع */}
-        <Select value={filters.type} onValueChange={(value) => setFilters((prev: any) => ({ ...prev, type: value }))}>
+        <Select value={typeFilter} onValueChange={setTypeFilter}>
           <SelectTrigger className="rounded-lg border-border/50">
             <SelectValue placeholder="النوع" />
           </SelectTrigger>
@@ -912,7 +924,7 @@ const ServicesToolbar = ({
         </Select>
 
         {/* الترتيب */}
-        <Select value={sortType} onValueChange={(value) => setSortType(value)}>
+        <Select value={sortType} onValueChange={setSortType}>
           <SelectTrigger className="rounded-lg border-border/50">
             <SelectValue placeholder="ترتيب حسب" />
           </SelectTrigger>
@@ -936,13 +948,7 @@ const ServicesToolbar = ({
         {/* إعادة تعيين الفلاتر */}
         <Button
           variant="ghost"
-          onClick={() => setFilters({
-            search: '',
-            status: 'all',
-            category: 'all',
-            type: 'all',
-            priceRange: [0, 10000]
-          })}
+          onClick={resetFilters}
           className="rounded-lg text-muted-foreground hover:text-foreground"
         >
           <X className="w-4 h-4 ml-2" />
@@ -954,7 +960,7 @@ const ServicesToolbar = ({
 };
 
 // مكون التحميل للخدمات
-const ServicesLoading = ({ viewMode }: { viewMode: ViewMode }) => (
+const ServicesLoading: React.FC<{ viewMode: string }> = ({ viewMode }) => (
   <div className={viewMode === 'grid' 
     ? "grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6" 
     : "space-y-4"
@@ -968,7 +974,7 @@ const ServicesLoading = ({ viewMode }: { viewMode: ViewMode }) => (
 );
 
 // مكون الحالة الفارغة
-const EmptyServicesState = ({ hasFilters }: { hasFilters: boolean }) => (
+const EmptyServicesState: React.FC<{ hasFilters: boolean }> = ({ hasFilters }) => (
   <div className="text-center py-20">
     <div className="w-24 h-24 bg-muted/40 rounded-full flex items-center justify-center mx-auto mb-6">
       <Settings className="w-12 h-12 text-muted-foreground" />
@@ -983,13 +989,19 @@ const EmptyServicesState = ({ hasFilters }: { hasFilters: boolean }) => (
 );
 
 // شبكة الخدمات
-const ServicesGrid = ({ services, viewMode, onEdit, onDelete, onToggle }: any) => (
+const ServicesGrid: React.FC<{
+  services: Service[];
+  viewMode: string;
+  onEdit: (service: Service) => void;
+  onDelete: (id: string) => void;
+  onToggle: (id: string, currentStatus: boolean) => void;
+}> = ({ services, viewMode, onEdit, onDelete, onToggle }) => (
   <div className={viewMode === 'grid' 
     ? "grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6" 
     : "space-y-4"
   }>
-    {services.map((service: Service) => (
-      <EnhancedServiceCard
+    {services.map((service) => (
+      <ServiceCard
         key={service.id}
         service={service}
         viewMode={viewMode}
@@ -1002,7 +1014,13 @@ const ServicesGrid = ({ services, viewMode, onEdit, onDelete, onToggle }: any) =
 );
 
 // بطاقة الخدمة المحسنة
-const EnhancedServiceCard = ({ service, viewMode, onEdit, onDelete, onToggle }: any) => {
+const ServiceCard: React.FC<{
+  service: Service;
+  viewMode: string;
+  onEdit: (service: Service) => void;
+  onDelete: (id: string) => void;
+  onToggle: (id: string, currentStatus: boolean) => void;
+}> = ({ service, viewMode, onEdit, onDelete, onToggle }) => {
   const getTypeIcon = (type: string) => {
     switch (type) {
       case 'course': return GraduationCap;
@@ -1221,9 +1239,13 @@ const EnhancedServiceCard = ({ service, viewMode, onEdit, onDelete, onToggle }: 
 };
 
 // بطاقة القسم المحسنة
-const CategoryCard = ({ category, onEdit, onDelete }: any) => {
+const CategoryCard: React.FC<{
+  category: ServiceCategory;
+  onEdit: (category: ServiceCategory) => void;
+  onDelete: (id: string) => void;
+}> = ({ category, onEdit, onDelete }) => {
   const getIcon = (iconName: string) => {
-    const icons: any = {
+    const icons: Record<string, React.ComponentType<{ className?: string }>> = {
       Languages,
       GraduationCap,
       Users,
@@ -1307,7 +1329,11 @@ const CategoryCard = ({ category, onEdit, onDelete }: any) => {
 };
 
 // نافذة إضافة/تعديل القسم المحسنة
-const CategoryDialog = ({ category, onSave, onClose }: any) => {
+const CategoryDialog: React.FC<{
+  category: ServiceCategory | null;
+  onSave: (category: Partial<ServiceCategory>) => void;
+  onClose: () => void;
+}> = ({ category, onSave, onClose }) => {
   const [formData, setFormData] = useState({
     name_ar: category?.name_ar || '',
     name_en: category?.name_en || '',
@@ -1404,7 +1430,7 @@ const CategoryDialog = ({ category, onSave, onClose }: any) => {
               </SelectTrigger>
               <SelectContent>
                 {iconOptions.map((option) => (
-                  <SelectItem key={option.value} value={option.value} className="flex items-center gap-3">
+                  <SelectItem key={option.value} value={option.value}>
                     <div className="flex items-center gap-3">
                       <option.icon className="w-4 h-4" />
                       <span>{option.label}</span>
@@ -1471,7 +1497,12 @@ const CategoryDialog = ({ category, onSave, onClose }: any) => {
 };
 
 // نافذة إضافة/تعديل الخدمة المحسنة
-const EnhancedServiceDialog = ({ service, categories, onSave, onClose }: any) => {
+const ServiceDialog: React.FC<{
+  service: Service | null;
+  categories: ServiceCategory[];
+  onSave: (service: Partial<Service>) => void;
+  onClose: () => void;
+}> = ({ service, categories, onSave, onClose }) => {
   const [formData, setFormData] = useState({
     name_ar: service?.name_ar || '',
     name_en: service?.name_en || '',
@@ -1480,11 +1511,11 @@ const EnhancedServiceDialog = ({ service, categories, onSave, onClose }: any) =>
     category_id: service?.category_id || '',
     features_ar: service?.features_ar || [],
     features_en: service?.features_en || [],
-    base_price: service?.base_price || '',
-    price_per_unit: service?.price_per_unit || '',
+    base_price: service?.base_price?.toString() || '',
+    price_per_unit: service?.price_per_unit?.toString() || '',
     unit_type: service?.unit_type || 'page',
     min_units: service?.min_units || 1,
-    max_units: service?.max_units || '',
+    max_units: service?.max_units?.toString() || '',
     delivery_time_days: service?.delivery_time_days || 7,
     rush_delivery_available: service?.rush_delivery_available || false,
     rush_delivery_multiplier: service?.rush_delivery_multiplier || 1.5,
@@ -1498,32 +1529,15 @@ const EnhancedServiceDialog = ({ service, categories, onSave, onClose }: any) =>
 
   const [currentFeatureAr, setCurrentFeatureAr] = useState('');
   const [currentFeatureEn, setCurrentFeatureEn] = useState('');
-  const [errors, setErrors] = useState<any>({});
-
-  // التحقق من صحة البيانات
-  const validateForm = () => {
-    const newErrors: any = {};
-
-    if (!formData.name_ar.trim()) newErrors.name_ar = 'اسم الخدمة بالعربية مطلوب';
-    if (!formData.name_en.trim()) newErrors.name_en = 'اسم الخدمة بالإنجليزية مطلوب';
-    if (!formData.category_id) newErrors.category_id = 'القسم مطلوب';
-    if (formData.price_per_unit && formData.price_per_unit < 0) newErrors.price_per_unit = 'السعر يجب أن يكون أكبر من الصفر';
-    if (formData.min_units < 1) newErrors.min_units = 'الحد الأدنى يجب أن يكون على الأقل 1';
-
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
-  };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (!validateForm()) return;
-
     const submitData = {
       ...formData,
-      base_price: formData.base_price ? parseFloat(formData.base_price as string) : null,
-      price_per_unit: formData.price_per_unit ? parseFloat(formData.price_per_unit as string) : null,
-      max_units: formData.max_units ? parseInt(formData.max_units as string) : null
+      base_price: formData.base_price ? parseFloat(formData.base_price) : undefined,
+      price_per_unit: formData.price_per_unit ? parseFloat(formData.price_per_unit) : undefined,
+      max_units: formData.max_units ? parseInt(formData.max_units) : undefined
     };
     
     onSave(submitData);
@@ -1550,7 +1564,7 @@ const EnhancedServiceDialog = ({ service, categories, onSave, onClose }: any) =>
   };
 
   return (
-    <DialogContent className="max-w-6xl max-h-[90vh] overflow-y-auto" dir="rtl">
+    <DialogContent className="max-w-5xl max-h-[90vh] overflow-y-auto" dir="rtl">
       <DialogHeader>
         <DialogTitle className="text-right text-2xl font-bold">
           {service ? 'تعديل الخدمة' : 'خدمة جديدة'}
@@ -1579,9 +1593,8 @@ const EnhancedServiceDialog = ({ service, categories, onSave, onClose }: any) =>
                   onChange={(e) => setFormData({ ...formData, name_ar: e.target.value })}
                   required
                   dir="rtl"
-                  className={`text-right text-base p-4 rounded-xl border-border/50 ${errors.name_ar ? 'border-destructive' : ''}`}
+                  className="text-right text-base p-4 rounded-xl border-border/50"
                 />
-                {errors.name_ar && <p className="text-destructive text-sm mt-1">{errors.name_ar}</p>}
               </div>
 
               <div>
@@ -1592,9 +1605,8 @@ const EnhancedServiceDialog = ({ service, categories, onSave, onClose }: any) =>
                   onChange={(e) => setFormData({ ...formData, name_en: e.target.value })}
                   required
                   dir="ltr"
-                  className={`text-base p-4 rounded-xl border-border/50 ${errors.name_en ? 'border-destructive' : ''}`}
+                  className="text-base p-4 rounded-xl border-border/50"
                 />
-                {errors.name_en && <p className="text-destructive text-sm mt-1">{errors.name_en}</p>}
               </div>
             </div>
 
@@ -1605,18 +1617,17 @@ const EnhancedServiceDialog = ({ service, categories, onSave, onClose }: any) =>
                   value={formData.category_id} 
                   onValueChange={(value) => setFormData({ ...formData, category_id: value })}
                 >
-                  <SelectTrigger className={`text-base p-4 rounded-xl border-border/50 ${errors.category_id ? 'border-destructive' : ''}`}>
+                  <SelectTrigger className="text-base p-4 rounded-xl border-border/50">
                     <SelectValue placeholder="اختر القسم" />
                   </SelectTrigger>
                   <SelectContent>
-                    {categories.map((category: any) => (
+                    {categories.map((category) => (
                       <SelectItem key={category.id} value={category.id}>
                         {category.name_ar}
                       </SelectItem>
                     ))}
                   </SelectContent>
                 </Select>
-                {errors.category_id && <p className="text-destructive text-sm mt-1">{errors.category_id}</p>}
               </div>
 
               <div>
@@ -1760,9 +1771,8 @@ const EnhancedServiceDialog = ({ service, categories, onSave, onClose }: any) =>
                   value={formData.price_per_unit}
                   onChange={(e) => setFormData({ ...formData, price_per_unit: e.target.value })}
                   dir="ltr"
-                  className={`text-base p-4 rounded-xl border-border/50 ${errors.price_per_unit ? 'border-destructive' : ''}`}
+                  className="text-base p-4 rounded-xl border-border/50"
                 />
-                {errors.price_per_unit && <p className="text-destructive text-sm mt-1">{errors.price_per_unit}</p>}
               </div>
             </div>
 
@@ -1795,9 +1805,8 @@ const EnhancedServiceDialog = ({ service, categories, onSave, onClose }: any) =>
                   value={formData.min_units}
                   onChange={(e) => setFormData({ ...formData, min_units: parseInt(e.target.value) || 1 })}
                   dir="ltr"
-                  className={`text-base p-4 rounded-xl border-border/50 ${errors.min_units ? 'border-destructive' : ''}`}
+                  className="text-base p-4 rounded-xl border-border/50"
                 />
-                {errors.min_units && <p className="text-destructive text-sm mt-1">{errors.min_units}</p>}
               </div>
 
               <div>
@@ -1911,43 +1920,6 @@ const EnhancedServiceDialog = ({ service, categories, onSave, onClose }: any) =>
                 />
               </div>
             </div>
-
-            {/* معاينة البطاقة */}
-            {formData.name_ar && (
-              <div className="space-y-4">
-                <Label className="text-right block text-lg font-bold">معاينة البطاقة</Label>
-                <div className="p-6 bg-gradient-to-l from-muted/50 to-muted/30 rounded-2xl border border-border/30">
-                  <div className="max-w-sm mx-auto">
-                    <Card className="bg-card/80 backdrop-blur-sm border border-border/50 rounded-2xl overflow-hidden">
-                      <CardContent className="p-4">
-                        <div className="space-y-3">
-                          <div className="flex items-center justify-between">
-                            <Badge variant={formData.is_active ? "default" : "secondary"} className="text-xs">
-                              {formData.is_active ? "مفعل" : "معطل"}
-                            </Badge>
-                            <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
-                              <Settings className="w-4 h-4 text-white" />
-                            </div>
-                          </div>
-                          <div className="text-right">
-                            <h3 className="text-lg font-bold">{formData.name_ar}</h3>
-                            <p className="text-sm text-muted-foreground">{formData.name_en}</p>
-                          </div>
-                          <div className="text-center p-3 bg-primary/10 rounded-lg">
-                            <div className="text-lg font-bold text-primary">
-                              {formData.price_per_unit ? `${formData.price_per_unit} ر.س` : 'حسب الطلب'}
-                            </div>
-                            {formData.unit_type && (
-                              <div className="text-xs text-muted-foreground">لكل {formData.unit_type}</div>
-                            )}
-                          </div>
-                        </div>
-                      </CardContent>
-                    </Card>
-                  </div>
-                </div>
-              </div>
-            )}
           </TabsContent>
         </Tabs>
 
