@@ -204,12 +204,56 @@ const ClientDashboard = () => {
                 <GraduationCap className="w-8 h-8 text-white" />
               </div>
               <div>
-                <h1 className="text-3xl lg:text-4xl font-bold mb-2">
-                  مرحباً بك، {user?.email?.split('@')[0] || 'عزيزي العميل'}
-                </h1>
-                <p className="text-white/90 text-lg">
+                <motion.h1 
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ duration: 0.6, delay: 0.2 }}
+                  className="text-3xl lg:text-4xl font-bold mb-2"
+                >
+                  <motion.span
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.5, delay: 0.3 }}
+                    className="inline-block"
+                    style={{ animation: 'welcomeBounce 2s ease-in-out 1s' }}
+                  >
+                    أهلاً وسهلاً،
+                  </motion.span>
+                  {' '}
+                  <motion.span
+                    initial={{ opacity: 0, scale: 0.8, y: 10 }}
+                    animate={{ opacity: 1, scale: 1, y: 0 }}
+                    transition={{ 
+                      duration: 0.8, 
+                      delay: 0.8,
+                      type: "spring",
+                      stiffness: 120,
+                      damping: 8
+                    }}
+                    className="inline-block bg-gradient-to-r from-white via-yellow-100 to-white bg-clip-text text-transparent font-extrabold relative"
+                    style={{
+                      backgroundSize: '200% 100%',
+                      animation: 'shimmer 3s ease-in-out infinite 1.5s, glow 2s ease-in-out infinite 2s'
+                    }}
+                  >
+                    {user?.email?.split('@')[0] || 'عزيزي العميل'}
+                    <motion.div
+                      initial={{ opacity: 0, scale: 0 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      transition={{ duration: 0.5, delay: 1.2 }}
+                      className="absolute -top-2 -right-2 w-4 h-4 bg-yellow-400 rounded-full"
+                      style={{ animation: 'float 2s ease-in-out infinite 2s' }}
+                    />
+                  </motion.span>
+                </motion.h1>
+                <motion.p 
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.6, delay: 0.7 }}
+                  className="text-white/90 text-lg"
+                >
                   ابدأ رحلتك الأكاديمية مع خدماتنا المتخصصة المتقدمة
-                </p>
+                </motion.p>
               </div>
             </div>
             
