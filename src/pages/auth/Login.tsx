@@ -32,12 +32,15 @@ const Login = () => {
       await signIn(email, password);
       toast.success('تم تسجيل الدخول بنجاح');
       
-      // Navigate based on user type
-      if (activeTab === 'admin') {
-        navigate('/admin');
-      } else {
-        navigate('/dashboard');
-      }
+      // Small delay to allow auth state to update
+      setTimeout(() => {
+        // Navigate based on user type
+        if (activeTab === 'admin') {
+          navigate('/admin/dashboard');
+        } else {
+          navigate('/client/dashboard');
+        }
+      }, 100);
     } catch (error: any) {
       toast.error(error.message || 'خطأ في تسجيل الدخول');
     } finally {

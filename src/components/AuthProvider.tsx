@@ -2,6 +2,13 @@ import React, { createContext, useContext, useEffect, useState } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { User } from '@supabase/supabase-js';
 
+interface AdminUser {
+  id: string;
+  email: string;
+  full_name: string;
+  role: string;
+}
+
 interface AuthContextType {
   user: User | null;
   userRole: 'admin' | 'client' | null;
@@ -27,6 +34,20 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    // Check for stored admin session first
+    const storedAdminSession = localStorage.getItem('admin_session');
+    if (storedAdminSession) {
+      try {
+        const adminUser = JSON.parse(storedAdminSession);
+        setUser(adminUser);
+        setUserRole('admin');
+        setLoading(false);
+        return;
+      } catch (error) {
+        localStorage.removeItem('admin_session');
+      }
+    }
+
     // Get initial session
     supabase.auth.getSession().then(({ data: { session } }) => {
       setUser(session?.user ?? null);
@@ -67,6 +88,43 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   const signIn = async (email: string, password: string) => {
+    // First try admin credentials
+    try {
+      const { data: adminResult, error: adminError } = await supabase
+        .rpc('verify_admin_login', {
+          email_input: email.toLowerCase().trim(),
+          password_input: password
+        });
+
+      if (!adminError && adminResult) {
+        const result = adminResult as any;
+        if (result.success) {
+          // Create a mock user session for admin
+          const adminUser = {
+            id: result.user.id,
+            email: result.user.email,
+            aud: 'authenticated',
+            role: 'authenticated',
+            created_at: new Date().toISOString(),
+            updated_at: new Date().toISOString(),
+            app_metadata: {},
+            user_metadata: {
+              full_name: result.user.full_name,
+              role: result.user.role
+            }
+          } as User;
+          
+          setUser(adminUser);
+          setUserRole('admin');
+          localStorage.setItem('admin_session', JSON.stringify(adminUser));
+          return;
+        }
+      }
+    } catch (adminError) {
+      console.log('Admin login failed, trying regular auth:', adminError);
+    }
+
+    // If admin login fails, try regular Supabase auth
     const { error } = await supabase.auth.signInWithPassword({
       email,
       password,
@@ -123,6 +181,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   const signOut = async () => {
+    // Clear admin session if exists
+    localStorage.removeItem('admin_session');
+    setUser(null);
+    setUserRole(null);
+    
+    // Also sign out from regular Supabase auth
     const { error } = await supabase.auth.signOut();
     if (error) throw error;
   };
