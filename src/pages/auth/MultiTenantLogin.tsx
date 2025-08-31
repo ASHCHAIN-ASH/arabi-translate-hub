@@ -121,215 +121,396 @@ const MultiTenantLogin = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/30 flex items-center justify-center p-4" dir="rtl">
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
-        className="w-full max-w-md"
-      >
-        <div className="text-center mb-8">
-          <motion.div
-            initial={{ scale: 0 }}
-            animate={{ scale: 1 }}
-            transition={{ delay: 0.2, type: "spring", stiffness: 200 }}
-            className="w-20 h-20 bg-gradient-to-br from-primary to-primary/80 rounded-full flex items-center justify-center mx-auto mb-4"
-          >
-            <LogIn className="w-10 h-10 text-primary-foreground" />
-          </motion.div>
-          <h1 className="text-3xl font-bold text-foreground mb-2">
-            {tenant?.name || 'منصة التعليم'}
-          </h1>
-          <p className="text-muted-foreground">
-            {activeTab === 'login' ? 'سجل دخولك للمتابعة' : 'أنشئ حساباً جديداً'}
-          </p>
+    <div className="min-h-screen relative overflow-hidden" dir="rtl">
+      {/* Academic Background */}
+      <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-blue-900 to-indigo-900">
+        <div className="absolute inset-0 opacity-20">
+          <div className="absolute top-10 left-10 w-32 h-32 bg-blue-400 rounded-full blur-xl animate-pulse"></div>
+          <div className="absolute top-40 right-20 w-24 h-24 bg-purple-400 rounded-full blur-lg animate-pulse delay-1000"></div>
+          <div className="absolute bottom-32 left-1/4 w-28 h-28 bg-cyan-400 rounded-full blur-xl animate-pulse delay-2000"></div>
+          <div className="absolute bottom-10 right-10 w-20 h-20 bg-pink-400 rounded-full blur-lg animate-pulse delay-500"></div>
         </div>
+        
+        {/* Academic Pattern Overlay */}
+        <div className="absolute inset-0 opacity-10" style={{
+          backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.1'%3E%3Ccircle cx='30' cy='30' r='2'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
+        }}></div>
+      </div>
 
-        <Card className="shadow-xl border-0 bg-card/50 backdrop-blur-sm">
-          <CardHeader>
-            <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-              <TabsList className="grid w-full grid-cols-2">
-                <TabsTrigger value="login">تسجيل الدخول</TabsTrigger>
-                <TabsTrigger value="register">إنشاء حساب</TabsTrigger>
-              </TabsList>
-            </Tabs>
-          </CardHeader>
-          
-          <CardContent className="space-y-6">
-            {error && (
-              <Alert variant="destructive">
-                <AlertDescription>{error}</AlertDescription>
-              </Alert>
-            )}
+      {/* Floating Academic Elements */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <motion.div 
+          className="absolute top-20 right-20 text-white/10 text-6xl"
+          animate={{ 
+            y: [-10, 10, -10],
+            rotate: [0, 5, 0] 
+          }}
+          transition={{ 
+            duration: 6,
+            repeat: Infinity,
+            ease: "easeInOut"
+          }}
+        >
+          📚
+        </motion.div>
+        <motion.div 
+          className="absolute bottom-32 left-16 text-white/10 text-5xl"
+          animate={{ 
+            y: [10, -10, 10],
+            rotate: [0, -5, 0] 
+          }}
+          transition={{ 
+            duration: 8,
+            repeat: Infinity,
+            ease: "easeInOut",
+            delay: 1
+          }}
+        >
+          🎓
+        </motion.div>
+        <motion.div 
+          className="absolute top-1/2 left-10 text-white/10 text-4xl"
+          animate={{ 
+            x: [-5, 5, -5],
+            y: [-8, 8, -8] 
+          }}
+          transition={{ 
+            duration: 7,
+            repeat: Infinity,
+            ease: "easeInOut",
+            delay: 2
+          }}
+        >
+          📝
+        </motion.div>
+        <motion.div 
+          className="absolute top-40 left-1/2 text-white/10 text-3xl"
+          animate={{ 
+            scale: [1, 1.1, 1],
+            rotate: [0, 10, 0] 
+          }}
+          transition={{ 
+            duration: 5,
+            repeat: Infinity,
+            ease: "easeInOut",
+            delay: 0.5
+          }}
+        >
+          🔬
+        </motion.div>
+      </div>
 
-            <Tabs value={activeTab} className="w-full">
-              <TabsContent value="login" className="space-y-4 mt-0">
-                <form onSubmit={handleLogin} className="space-y-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="login-email">البريد الإلكتروني</Label>
-                    <Input
-                      id="login-email"
-                      type="email"
-                      value={loginEmail}
-                      onChange={(e) => setLoginEmail(e.target.value)}
-                      placeholder="أدخل بريدك الإلكتروني"
-                      required
-                      disabled={loading}
-                    />
-                  </div>
-                  
-                  <div className="space-y-2">
-                    <Label htmlFor="login-password">كلمة المرور</Label>
-                    <div className="relative">
-                      <Input
-                        id="login-password"
-                        type={showPassword ? 'text' : 'password'}
-                        value={loginPassword}
-                        onChange={(e) => setLoginPassword(e.target.value)}
-                        placeholder="أدخل كلمة المرور"
-                        required
-                        disabled={loading}
-                      />
-                      <button
-                        type="button"
-                        onClick={() => setShowPassword(!showPassword)}
-                        className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground hover:text-foreground"
-                      >
-                        {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-                      </button>
-                    </div>
-                  </div>
+      <div className="relative z-10 min-h-screen flex items-center justify-center p-4">
+        <motion.div
+          initial={{ opacity: 0, y: 30, scale: 0.95 }}
+          animate={{ opacity: 1, y: 0, scale: 1 }}
+          transition={{ duration: 0.6, ease: "easeOut" }}
+          className="w-full max-w-md"
+        >
+          {/* Header */}
+          <div className="text-center mb-8">
+            <motion.div
+              initial={{ scale: 0, rotate: -180 }}
+              animate={{ scale: 1, rotate: 0 }}
+              transition={{ delay: 0.3, type: "spring", stiffness: 200, damping: 15 }}
+              className="relative mx-auto mb-6"
+            >
+              <div className="w-24 h-24 bg-gradient-to-r from-blue-500 via-purple-500 to-cyan-500 rounded-2xl flex items-center justify-center mx-auto shadow-2xl">
+                <div className="w-20 h-20 bg-white/10 backdrop-blur-sm rounded-xl flex items-center justify-center">
+                  <LogIn className="w-10 h-10 text-white" />
+                </div>
+              </div>
+              <div className="absolute -top-2 -right-2 w-6 h-6 bg-yellow-400 rounded-full animate-bounce"></div>
+              <div className="absolute -bottom-1 -left-1 w-4 h-4 bg-pink-400 rounded-full animate-pulse"></div>
+            </motion.div>
+            
+            <motion.h1 
+              className="text-4xl font-bold text-white mb-3 bg-gradient-to-r from-blue-200 to-cyan-200 bg-clip-text text-transparent"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.4, duration: 0.6 }}
+            >
+              {tenant?.name || 'منصة وكالة ماستر إيدو باث'}
+            </motion.h1>
+            
+            <motion.p 
+              className="text-blue-100 text-lg"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.5, duration: 0.6 }}
+            >
+              {activeTab === 'login' ? 'سجل دخولك للمتابعة' : 'انضم إلى منصتنا الأكاديمية'}
+            </motion.p>
+          </div>
 
-                  <Button
-                    type="submit"
-                    className="w-full"
-                    disabled={loading}
-                    size="lg"
+          {/* Main Card */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.6, duration: 0.6 }}
+          >
+            <Card className="shadow-2xl border-0 bg-white/95 backdrop-blur-lg rounded-3xl overflow-hidden">
+              <CardHeader className="pb-6 bg-gradient-to-r from-blue-50 to-purple-50">
+                <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+                  <TabsList className="grid w-full grid-cols-2 bg-white/80 rounded-2xl p-1">
+                    <TabsTrigger 
+                      value="login" 
+                      className="rounded-xl data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-500 data-[state=active]:to-purple-500 data-[state=active]:text-white font-medium"
+                    >
+                      تسجيل الدخول
+                    </TabsTrigger>
+                    <TabsTrigger 
+                      value="register"
+                      className="rounded-xl data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-500 data-[state=active]:to-purple-500 data-[state=active]:text-white font-medium"
+                    >
+                      إنشاء حساب
+                    </TabsTrigger>
+                  </TabsList>
+                </Tabs>
+              </CardHeader>
+              
+              <CardContent className="p-8 space-y-6">
+                {error && (
+                  <motion.div
+                    initial={{ opacity: 0, scale: 0.95 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ duration: 0.3 }}
                   >
-                    {loading ? (
-                      <>
-                        <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white ml-2" />
-                        جاري تسجيل الدخول...
-                      </>
-                    ) : (
-                      <>
-                        <LogIn className="ml-2 h-4 w-4" />
-                        تسجيل الدخول
-                      </>
-                    )}
-                  </Button>
-                </form>
-              </TabsContent>
+                    <Alert variant="destructive" className="border-red-200 bg-red-50">
+                      <AlertDescription className="text-red-800">{error}</AlertDescription>
+                    </Alert>
+                  </motion.div>
+                )}
 
-              <TabsContent value="register" className="space-y-4 mt-0">
-                <form onSubmit={handleRegister} className="space-y-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="register-name">الاسم الكامل *</Label>
-                    <Input
-                      id="register-name"
-                      type="text"
-                      value={registerName}
-                      onChange={(e) => setRegisterName(e.target.value)}
-                      placeholder="أدخل اسمك الكامل"
-                      required
-                      disabled={loading}
-                    />
-                  </div>
-
-                  <div className="space-y-2">
-                    <Label htmlFor="register-email">البريد الإلكتروني *</Label>
-                    <Input
-                      id="register-email"
-                      type="email"
-                      value={registerEmail}
-                      onChange={(e) => setRegisterEmail(e.target.value)}
-                      placeholder="أدخل بريدك الإلكتروني"
-                      required
-                      disabled={loading}
-                    />
-                  </div>
-
-                  <div className="space-y-2">
-                    <Label htmlFor="register-phone">رقم الهاتف</Label>
-                    <Input
-                      id="register-phone"
-                      type="tel"
-                      value={registerPhone}
-                      onChange={(e) => setRegisterPhone(e.target.value)}
-                      placeholder="أدخل رقم هاتفك"
-                      disabled={loading}
-                    />
-                  </div>
-
-                  <div className="space-y-2">
-                    <Label htmlFor="register-password">كلمة المرور *</Label>
-                    <div className="relative">
-                      <Input
-                        id="register-password"
-                        type={showPassword ? 'text' : 'password'}
-                        value={registerPassword}
-                        onChange={(e) => setRegisterPassword(e.target.value)}
-                        placeholder="أدخل كلمة المرور (8 أحرف على الأقل)"
-                        required
-                        disabled={loading}
-                      />
-                      <button
-                        type="button"
-                        onClick={() => setShowPassword(!showPassword)}
-                        className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                <Tabs value={activeTab} className="w-full">
+                  <TabsContent value="login" className="space-y-6 mt-0">
+                    <form onSubmit={handleLogin} className="space-y-6">
+                      <motion.div 
+                        className="space-y-2"
+                        initial={{ opacity: 0, x: -20 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ delay: 0.7, duration: 0.5 }}
                       >
-                        {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-                      </button>
-                    </div>
-                  </div>
+                        <Label htmlFor="login-email" className="text-gray-700 font-medium">البريد الإلكتروني</Label>
+                        <Input
+                          id="login-email"
+                          type="email"
+                          value={loginEmail}
+                          onChange={(e) => setLoginEmail(e.target.value)}
+                          placeholder="أدخل بريدك الإلكتروني"
+                          required
+                          disabled={loading}
+                          className="h-12 rounded-xl border-gray-200 focus:border-blue-500 focus:ring-blue-500/20 text-lg"
+                        />
+                      </motion.div>
+                      
+                      <motion.div 
+                        className="space-y-2"
+                        initial={{ opacity: 0, x: -20 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ delay: 0.8, duration: 0.5 }}
+                      >
+                        <Label htmlFor="login-password" className="text-gray-700 font-medium">كلمة المرور</Label>
+                        <div className="relative">
+                          <Input
+                            id="login-password"
+                            type={showPassword ? 'text' : 'password'}
+                            value={loginPassword}
+                            onChange={(e) => setLoginPassword(e.target.value)}
+                            placeholder="أدخل كلمة المرور"
+                            required
+                            disabled={loading}
+                            className="h-12 rounded-xl border-gray-200 focus:border-blue-500 focus:ring-blue-500/20 text-lg"
+                          />
+                          <button
+                            type="button"
+                            onClick={() => setShowPassword(!showPassword)}
+                            className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
+                          >
+                            {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
+                          </button>
+                        </div>
+                      </motion.div>
 
-                  <div className="space-y-2">
-                    <Label htmlFor="confirm-password">تأكيد كلمة المرور *</Label>
-                    <Input
-                      id="confirm-password"
-                      type={showPassword ? 'text' : 'password'}
-                      value={confirmPassword}
-                      onChange={(e) => setConfirmPassword(e.target.value)}
-                      placeholder="أعد كتابة كلمة المرور"
-                      required
-                      disabled={loading}
-                    />
-                  </div>
+                      <motion.div
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 0.9, duration: 0.5 }}
+                      >
+                        <Button
+                          type="submit"
+                          className="w-full h-12 bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white font-medium rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-[1.02]"
+                          disabled={loading}
+                          size="lg"
+                        >
+                          {loading ? (
+                            <>
+                              <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white ml-2" />
+                              جاري تسجيل الدخول...
+                            </>
+                          ) : (
+                            <>
+                              <LogIn className="ml-2 h-5 w-5" />
+                              تسجيل الدخول
+                            </>
+                          )}
+                        </Button>
+                      </motion.div>
+                    </form>
+                  </TabsContent>
 
-                  <Button
-                    type="submit"
-                    className="w-full"
-                    disabled={loading}
-                    size="lg"
+                  <TabsContent value="register" className="space-y-6 mt-0">
+                    <form onSubmit={handleRegister} className="space-y-6">
+                      <motion.div 
+                        className="space-y-2"
+                        initial={{ opacity: 0, x: -20 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ delay: 0.7, duration: 0.5 }}
+                      >
+                        <Label htmlFor="register-name" className="text-gray-700 font-medium">الاسم الكامل *</Label>
+                        <Input
+                          id="register-name"
+                          type="text"
+                          value={registerName}
+                          onChange={(e) => setRegisterName(e.target.value)}
+                          placeholder="أدخل اسمك الكامل"
+                          required
+                          disabled={loading}
+                          className="h-12 rounded-xl border-gray-200 focus:border-blue-500 focus:ring-blue-500/20"
+                        />
+                      </motion.div>
+
+                      <motion.div 
+                        className="space-y-2"
+                        initial={{ opacity: 0, x: -20 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ delay: 0.8, duration: 0.5 }}
+                      >
+                        <Label htmlFor="register-email" className="text-gray-700 font-medium">البريد الإلكتروني *</Label>
+                        <Input
+                          id="register-email"
+                          type="email"
+                          value={registerEmail}
+                          onChange={(e) => setRegisterEmail(e.target.value)}
+                          placeholder="أدخل بريدك الإلكتروني"
+                          required
+                          disabled={loading}
+                          className="h-12 rounded-xl border-gray-200 focus:border-blue-500 focus:ring-blue-500/20"
+                        />
+                      </motion.div>
+
+                      <motion.div 
+                        className="space-y-2"
+                        initial={{ opacity: 0, x: -20 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ delay: 0.9, duration: 0.5 }}
+                      >
+                        <Label htmlFor="register-phone" className="text-gray-700 font-medium">رقم الهاتف</Label>
+                        <Input
+                          id="register-phone"
+                          type="tel"
+                          value={registerPhone}
+                          onChange={(e) => setRegisterPhone(e.target.value)}
+                          placeholder="أدخل رقم هاتفك"
+                          disabled={loading}
+                          className="h-12 rounded-xl border-gray-200 focus:border-blue-500 focus:ring-blue-500/20"
+                        />
+                      </motion.div>
+
+                      <motion.div 
+                        className="space-y-2"
+                        initial={{ opacity: 0, x: -20 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ delay: 1.0, duration: 0.5 }}
+                      >
+                        <Label htmlFor="register-password" className="text-gray-700 font-medium">كلمة المرور *</Label>
+                        <div className="relative">
+                          <Input
+                            id="register-password"
+                            type={showPassword ? 'text' : 'password'}
+                            value={registerPassword}
+                            onChange={(e) => setRegisterPassword(e.target.value)}
+                            placeholder="أدخل كلمة المرور (8 أحرف على الأقل)"
+                            required
+                            disabled={loading}
+                            className="h-12 rounded-xl border-gray-200 focus:border-blue-500 focus:ring-blue-500/20"
+                          />
+                          <button
+                            type="button"
+                            onClick={() => setShowPassword(!showPassword)}
+                            className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
+                          >
+                            {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
+                          </button>
+                        </div>
+                      </motion.div>
+
+                      <motion.div 
+                        className="space-y-2"
+                        initial={{ opacity: 0, x: -20 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ delay: 1.1, duration: 0.5 }}
+                      >
+                        <Label htmlFor="confirm-password" className="text-gray-700 font-medium">تأكيد كلمة المرور *</Label>
+                        <Input
+                          id="confirm-password"
+                          type={showPassword ? 'text' : 'password'}
+                          value={confirmPassword}
+                          onChange={(e) => setConfirmPassword(e.target.value)}
+                          placeholder="أعد كتابة كلمة المرور"
+                          required
+                          disabled={loading}
+                          className="h-12 rounded-xl border-gray-200 focus:border-blue-500 focus:ring-blue-500/20"
+                        />
+                      </motion.div>
+
+                      <motion.div
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 1.2, duration: 0.5 }}
+                      >
+                        <Button
+                          type="submit"
+                          className="w-full h-12 bg-gradient-to-r from-purple-500 to-pink-600 hover:from-purple-600 hover:to-pink-700 text-white font-medium rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-[1.02]"
+                          disabled={loading}
+                          size="lg"
+                        >
+                          {loading ? (
+                            <>
+                              <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white ml-2" />
+                              جاري إنشاء الحساب...
+                            </>
+                          ) : (
+                            <>
+                              <UserPlus className="ml-2 h-5 w-5" />
+                              إنشاء حساب
+                            </>
+                          )}
+                        </Button>
+                      </motion.div>
+                    </form>
+                  </TabsContent>
+                </Tabs>
+
+                <motion.div 
+                  className="text-center pt-6 border-t border-gray-100"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ delay: 1.3, duration: 0.5 }}
+                >
+                  <Link 
+                    to="/"
+                    className="inline-flex items-center text-sm text-gray-500 hover:text-blue-600 transition-colors group"
                   >
-                    {loading ? (
-                      <>
-                        <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white ml-2" />
-                        جاري إنشاء الحساب...
-                      </>
-                    ) : (
-                      <>
-                        <UserPlus className="ml-2 h-4 w-4" />
-                        إنشاء حساب
-                      </>
-                    )}
-                  </Button>
-                </form>
-              </TabsContent>
-            </Tabs>
-
-            <div className="text-center pt-4 border-t">
-              <Link 
-                to="/"
-                className="inline-flex items-center text-sm text-muted-foreground hover:text-primary transition-colors"
-              >
-                <Home className="ml-1 h-4 w-4" />
-                العودة للصفحة الرئيسية
-              </Link>
-            </div>
-          </CardContent>
-        </Card>
-      </motion.div>
+                    <Home className="ml-1 h-4 w-4 group-hover:scale-110 transition-transform" />
+                    العودة للصفحة الرئيسية
+                  </Link>
+                </motion.div>
+              </CardContent>
+            </Card>
+          </motion.div>
+        </motion.div>
+      </div>
     </div>
   );
 };
