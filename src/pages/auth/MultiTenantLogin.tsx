@@ -300,7 +300,8 @@ const MultiTenantLogin = () => {
                           placeholder="أدخل بريدك الإلكتروني"
                           required
                           disabled={loading}
-                          className="h-12 rounded-xl border-gray-200 focus:border-blue-500 focus:ring-blue-500/20 text-lg"
+                          className="h-12 rounded-xl border-gray-200 focus:border-blue-500 focus:ring-blue-500/20 text-lg text-right"
+                          dir="rtl"
                         />
                       </motion.div>
                       
@@ -320,12 +321,13 @@ const MultiTenantLogin = () => {
                             placeholder="أدخل كلمة المرور"
                             required
                             disabled={loading}
-                            className="h-12 rounded-xl border-gray-200 focus:border-blue-500 focus:ring-blue-500/20 text-lg"
+                            className="h-12 rounded-xl border-gray-200 focus:border-blue-500 focus:ring-blue-500/20 text-lg text-right pr-12"
+                            dir="rtl"
                           />
                           <button
                             type="button"
                             onClick={() => setShowPassword(!showPassword)}
-                            className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
+                            className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
                           >
                             {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
                           </button>
@@ -376,7 +378,8 @@ const MultiTenantLogin = () => {
                           placeholder="أدخل اسمك الكامل"
                           required
                           disabled={loading}
-                          className="h-12 rounded-xl border-gray-200 focus:border-blue-500 focus:ring-blue-500/20"
+                          className="h-12 rounded-xl border-gray-200 focus:border-blue-500 focus:ring-blue-500/20 text-right"
+                          dir="rtl"
                         />
                       </motion.div>
 
@@ -395,7 +398,8 @@ const MultiTenantLogin = () => {
                           placeholder="أدخل بريدك الإلكتروني"
                           required
                           disabled={loading}
-                          className="h-12 rounded-xl border-gray-200 focus:border-blue-500 focus:ring-blue-500/20"
+                          className="h-12 rounded-xl border-gray-200 focus:border-blue-500 focus:ring-blue-500/20 text-right"
+                          dir="rtl"
                         />
                       </motion.div>
 
@@ -413,7 +417,8 @@ const MultiTenantLogin = () => {
                           onChange={(e) => setRegisterPhone(e.target.value)}
                           placeholder="أدخل رقم هاتفك"
                           disabled={loading}
-                          className="h-12 rounded-xl border-gray-200 focus:border-blue-500 focus:ring-blue-500/20"
+                          className="h-12 rounded-xl border-gray-200 focus:border-blue-500 focus:ring-blue-500/20 text-right"
+                          dir="rtl"
                         />
                       </motion.div>
 
@@ -433,12 +438,13 @@ const MultiTenantLogin = () => {
                             placeholder="أدخل كلمة المرور (8 أحرف على الأقل)"
                             required
                             disabled={loading}
-                            className="h-12 rounded-xl border-gray-200 focus:border-blue-500 focus:ring-blue-500/20"
+                            className="h-12 rounded-xl border-gray-200 focus:border-blue-500 focus:ring-blue-500/20 text-right pr-12"
+                            dir="rtl"
                           />
                           <button
                             type="button"
                             onClick={() => setShowPassword(!showPassword)}
-                            className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
+                            className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
                           >
                             {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
                           </button>
@@ -460,7 +466,8 @@ const MultiTenantLogin = () => {
                           placeholder="أعد كتابة كلمة المرور"
                           required
                           disabled={loading}
-                          className="h-12 rounded-xl border-gray-200 focus:border-blue-500 focus:ring-blue-500/20"
+                          className="h-12 rounded-xl border-gray-200 focus:border-blue-500 focus:ring-blue-500/20 text-right"
+                          dir="rtl"
                         />
                       </motion.div>
 
