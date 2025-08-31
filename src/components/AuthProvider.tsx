@@ -107,11 +107,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     
     if (error) throw error;
 
-    // Create user profile
+    // Create user profile (use upsert to avoid duplicate key error)
     if (data.user) {
       const { error: profileError } = await supabase
         .from('ash_users')
-        .insert([
+        .upsert([
           {
             id: data.user.id,
             email: email.toLowerCase(),
@@ -122,7 +122,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
             status: 'pending',
             password_hash: 'supabase_auth_managed', // Placeholder since Supabase manages auth
           }
-        ]);
+        ], {
+          onConflict: 'id'
+        });
 
       if (profileError) throw profileError;
     }
