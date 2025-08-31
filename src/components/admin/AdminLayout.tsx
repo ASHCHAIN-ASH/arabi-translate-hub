@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { useAuth } from '@/components/AuthProvider';
+import { useAuth } from '@/components/SimpleAuthProvider';
 import { Button } from '@/components/ui/button';
 import { 
   LayoutDashboard, 
@@ -108,12 +108,12 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
               {/* User Profile */}
               <div className="flex items-center space-x-3 space-x-reverse">
                 <div className="text-right">
-                  <p className="text-sm font-medium">{user?.user_metadata?.name || user?.email}</p>
+                  <p className="text-sm font-medium">{user?.name || user?.email}</p>
                   <p className="text-xs text-muted-foreground">مدير</p>
                 </div>
                 <div className="w-8 h-8 bg-gradient-to-br from-red-500 to-red-600 rounded-full flex items-center justify-center">
                   <span className="text-white text-sm font-medium">
-                    {(user?.user_metadata?.name || user?.email || '').charAt(0).toUpperCase()}
+                    {(user?.name || user?.email || '').charAt(0).toUpperCase()}
                   </span>
                 </div>
               </div>
