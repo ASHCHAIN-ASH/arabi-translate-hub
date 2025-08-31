@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { 
   Plus, 
   Search, 
@@ -16,10 +17,7 @@ import {
   Award,
   Brain,
   PenTool,
-  Microscope,
   Calculator,
-  Globe,
-  Users,
   CheckCircle,
   Clock,
   AlertCircle,
@@ -29,12 +27,13 @@ import {
   Sparkles,
   Trophy,
   Target,
-  Zap,
   Activity,
   TrendingUp,
   Star,
   BookMarked,
-  Lightbulb
+  ArrowUpDown,
+  Download,
+  MoreHorizontal
 } from 'lucide-react';
 import { motion } from 'framer-motion';
 
@@ -42,6 +41,8 @@ const Orders = () => {
   const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
+  const [sortBy, setSortBy] = useState('date');
+  const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc');
 
   // Enhanced sample data with academic services
   const orders = [
@@ -58,7 +59,6 @@ const Orders = () => {
       description: 'مراجعة شاملة للبحث الأكاديمي مع تقييم المنهجية والتحليل النقدي',
       progress: 65,
       priority: 'high',
-      consultant: 'د. أحمد محمد',
       category: 'Research'
     },
     {
@@ -74,7 +74,6 @@ const Orders = () => {
       description: 'استشارة متخصصة في البحث العلمي والمنهجية مع خطة عمل مفصلة',
       progress: 100,
       priority: 'medium',
-      consultant: 'د. فاطمة العلي',
       category: 'Consultation'
     },
     {
@@ -90,7 +89,6 @@ const Orders = () => {
       description: 'تحليل إحصائي شامل للبيانات البحثية باستخدام SPSS و R',
       progress: 45,
       priority: 'medium',
-      consultant: 'د. خالد السعيد',
       category: 'Analysis'
     },
     {
@@ -106,7 +104,6 @@ const Orders = () => {
       description: 'مراجعة لغوية ونحوية متخصصة للنص الأكاديمي مع تحسين الأسلوب',
       progress: 20,
       priority: 'low',
-      consultant: 'د. مريم الزهراني',
       category: 'Language'
     },
     {
@@ -122,7 +119,6 @@ const Orders = () => {
       description: 'تطوير إطار نظري شامل للدراسة مع مراجعة الأدبيات ذات الصلة',
       progress: 0,
       priority: 'high',
-      consultant: 'د. عبدالله النور',
       category: 'Theory'
     }
   ];
@@ -143,37 +139,44 @@ const Orders = () => {
       case 'processing': return {
         label: 'قيد المعالجة',
         color: 'bg-gradient-to-r from-blue-500 to-cyan-600 text-white',
-        icon: Activity
+        icon: Activity,
+        bgColor: 'bg-blue-50',
+        textColor: 'text-blue-700'
       };
       case 'completed': return {
         label: 'مكتمل',
         color: 'bg-gradient-to-r from-emerald-500 to-green-600 text-white',
-        icon: CheckCircle
+        icon: CheckCircle,
+        bgColor: 'bg-green-50',
+        textColor: 'text-green-700'
       };
       case 'paid': return {
         label: 'مدفوع',
         color: 'bg-gradient-to-r from-purple-500 to-violet-600 text-white',
-        icon: Trophy
+        icon: Trophy,
+        bgColor: 'bg-purple-50',
+        textColor: 'text-purple-700'
       };
       case 'draft': return {
         label: 'مسودة',
         color: 'bg-gradient-to-r from-gray-500 to-slate-600 text-white',
-        icon: Edit
+        icon: Edit,
+        bgColor: 'bg-gray-50',
+        textColor: 'text-gray-700'
       };
       case 'pending': return {
         label: 'في الانتظار',
         color: 'bg-gradient-to-r from-amber-500 to-orange-600 text-white',
-        icon: Clock
-      };
-      case 'cancelled': return {
-        label: 'ملغي',
-        color: 'bg-gradient-to-r from-red-500 to-pink-600 text-white',
-        icon: AlertCircle
+        icon: Clock,
+        bgColor: 'bg-amber-50',
+        textColor: 'text-amber-700'
       };
       default: return {
         label: status,
         color: 'bg-gradient-to-r from-gray-500 to-slate-600 text-white',
-        icon: AlertCircle
+        icon: AlertCircle,
+        bgColor: 'bg-gray-50',
+        textColor: 'text-gray-700'
       };
     }
   };
@@ -207,10 +210,34 @@ const Orders = () => {
     }
   };
 
-  const filteredOrders = orders.filter(order => {
+  const handleSort = (field: string) => {
+    if (sortBy === field) {
+      setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc');
+    } else {
+      setSortBy(field);
+      setSortOrder('desc');
+    }
+  };
+
+  const sortedOrders = [...orders].sort((a, b) => {
+    let aValue = a[sortBy as keyof typeof a];
+    let bValue = b[sortBy as keyof typeof b];
+    
+    if (sortBy === 'createdAt') {
+      aValue = new Date(a.createdAt).getTime();
+      bValue = new Date(b.createdAt).getTime();
+    }
+    
+    if (sortOrder === 'asc') {
+      return aValue > bValue ? 1 : -1;
+    } else {
+      return aValue < bValue ? 1 : -1;
+    }
+  });
+
+  const filteredOrders = sortedOrders.filter(order => {
     const matchesSearch = order.serviceName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         order.orderNumber.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         order.consultant.toLowerCase().includes(searchTerm.toLowerCase());
+                         order.orderNumber.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesStatus = statusFilter === 'all' || order.status === statusFilter;
     return matchesSearch && matchesStatus;
   });
@@ -244,7 +271,6 @@ const Orders = () => {
               transition={{ duration: 25, repeat: Infinity, ease: "linear" }}
               className="absolute -bottom-20 -left-20 w-96 h-96 bg-purple-300/20 rounded-full blur-3xl"
             />
-            <div className="absolute inset-0 bg-gradient-to-br from-transparent via-white/5 to-transparent opacity-30"></div>
           </div>
           
           <div className="relative z-10">
@@ -256,12 +282,7 @@ const Orders = () => {
                   transition={{ duration: 1, type: "spring", stiffness: 200 }}
                   className="w-16 h-16 lg:w-20 lg:h-20 bg-white/20 backdrop-blur-md rounded-2xl flex items-center justify-center ml-4 lg:ml-6 shadow-2xl border border-white/30"
                 >
-                  <motion.div
-                    animate={{ rotate: [0, 10, -10, 0] }}
-                    transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-                  >
-                    <BookMarked className="w-8 h-8 lg:w-10 lg:h-10 text-white" />
-                  </motion.div>
+                  <BookMarked className="w-8 h-8 lg:w-10 lg:h-10 text-white" />
                 </motion.div>
                 <div>
                   <motion.h1 
@@ -364,7 +385,7 @@ const Orders = () => {
                   <div className="relative">
                     <Search className="absolute right-4 top-4 h-5 w-5 text-muted-foreground" />
                     <Input
-                      placeholder="البحث في المشاريع، أرقام الطلبات، أو أسماء الاستشاريين..."
+                      placeholder="البحث في المشاريع أو أرقام الطلبات..."
                       value={searchTerm}
                       onChange={(e) => setSearchTerm(e.target.value)}
                       className="pr-12 h-12 text-lg border-2 focus:border-primary/50 rounded-xl"
@@ -384,7 +405,6 @@ const Orders = () => {
                       <SelectItem value="processing">قيد المعالجة</SelectItem>
                       <SelectItem value="paid">مدفوع</SelectItem>
                       <SelectItem value="completed">مكتمل</SelectItem>
-                      <SelectItem value="cancelled">ملغي</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
@@ -393,219 +413,207 @@ const Orders = () => {
           </Card>
         </motion.div>
 
-        {/* Enhanced Orders Grid */}
+        {/* Orders Table */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.3 }}
-          className="space-y-6"
         >
-          {filteredOrders.length > 0 ? (
-            filteredOrders.map((order, index) => {
-              const ServiceIcon = getServiceIcon(order.serviceType);
-              const statusConfig = getStatusConfig(order.status);
-              const priorityConfig = getPriorityConfig(order.priority);
-              const StatusIcon = statusConfig.icon;
-              
-              return (
-                <motion.div
-                  key={order.id}
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ duration: 0.4, delay: index * 0.1 }}
-                  whileHover={{ y: -2 }}
-                >
-                  <Card className="border-0 shadow-xl bg-white/90 backdrop-blur-sm hover:shadow-2xl transition-all duration-300 group overflow-hidden">
-                    <div className="relative">
-                      {/* Gradient Background */}
-                      <div className="absolute top-0 left-0 right-0 h-2 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500"></div>
-                      
-                      <CardContent className="p-6">
-                        <div className="flex flex-col lg:flex-row lg:items-center justify-between space-y-4 lg:space-y-0">
-                          {/* Main Content */}
-                          <div className="flex-1 space-y-4">
-                            {/* Header */}
-                            <div className="flex items-start gap-4">
-                              <motion.div
-                                whileHover={{ scale: 1.1, rotate: 5 }}
-                                className="w-16 h-16 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-2xl flex items-center justify-center shadow-lg group-hover:shadow-xl transition-shadow"
-                              >
-                                <ServiceIcon className="w-8 h-8 text-white" />
-                              </motion.div>
-                              
-                              <div className="flex-1 min-w-0">
-                                <div className="flex flex-wrap items-center gap-3 mb-2">
-                                  <h3 className="text-xl font-bold text-gray-900 truncate">{order.serviceName}</h3>
-                                  <Badge className={`${statusConfig.color} border-0 shadow-sm flex items-center gap-1 px-3 py-1`}>
-                                    <StatusIcon className="w-3 h-3" />
-                                    {statusConfig.label}
-                                  </Badge>
-                                  <Badge className={`${priorityConfig.bgColor} ${priorityConfig.color} ${priorityConfig.borderColor} border font-medium px-3 py-1`}>
-                                    أولوية {priorityConfig.label}
-                                  </Badge>
+          <Card className="border-0 shadow-xl bg-white/90 backdrop-blur-sm overflow-hidden">
+            <CardHeader className="bg-gradient-to-r from-indigo-50 to-purple-50 border-b">
+              <CardTitle className="text-2xl font-black text-gray-900 flex items-center gap-3">
+                <BookOpen className="w-6 h-6 text-indigo-600" />
+                جدول المشاريع الأكاديمية
+                <Badge variant="secondary" className="mr-auto">
+                  {filteredOrders.length} مشروع
+                </Badge>
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="p-0">
+              {filteredOrders.length > 0 ? (
+                <div className="overflow-x-auto">
+                  <Table>
+                    <TableHeader>
+                      <TableRow className="bg-gradient-to-r from-slate-50 to-gray-50 hover:bg-slate-100">
+                        <TableHead className="text-right font-bold text-gray-900 p-4">
+                          <Button 
+                            variant="ghost" 
+                            onClick={() => handleSort('serviceName')}
+                            className="font-bold text-gray-900 hover:text-indigo-600"
+                          >
+                            اسم الخدمة
+                            <ArrowUpDown className="w-4 h-4 mr-2" />
+                          </Button>
+                        </TableHead>
+                        <TableHead className="text-center font-bold text-gray-900 p-4">رقم الطلب</TableHead>
+                        <TableHead className="text-center font-bold text-gray-900 p-4">
+                          <Button 
+                            variant="ghost" 
+                            onClick={() => handleSort('status')}
+                            className="font-bold text-gray-900 hover:text-indigo-600"
+                          >
+                            الحالة
+                            <ArrowUpDown className="w-4 h-4 mr-2" />
+                          </Button>
+                        </TableHead>
+                        <TableHead className="text-center font-bold text-gray-900 p-4">الأولوية</TableHead>
+                        <TableHead className="text-center font-bold text-gray-900 p-4">
+                          <Button 
+                            variant="ghost" 
+                            onClick={() => handleSort('total')}
+                            className="font-bold text-gray-900 hover:text-indigo-600"
+                          >
+                            القيمة
+                            <ArrowUpDown className="w-4 h-4 mr-2" />
+                          </Button>
+                        </TableHead>
+                        <TableHead className="text-center font-bold text-gray-900 p-4">التقدم</TableHead>
+                        <TableHead className="text-center font-bold text-gray-900 p-4">
+                          <Button 
+                            variant="ghost" 
+                            onClick={() => handleSort('createdAt')}
+                            className="font-bold text-gray-900 hover:text-indigo-600"
+                          >
+                            تاريخ الإنشاء
+                            <ArrowUpDown className="w-4 h-4 mr-2" />
+                          </Button>
+                        </TableHead>
+                        <TableHead className="text-center font-bold text-gray-900 p-4">الإجراءات</TableHead>
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                      {filteredOrders.map((order, index) => {
+                        const ServiceIcon = getServiceIcon(order.serviceType);
+                        const statusConfig = getStatusConfig(order.status);
+                        const priorityConfig = getPriorityConfig(order.priority);
+                        
+                        return (
+                          <motion.tr
+                            key={order.id}
+                            initial={{ opacity: 0, x: -20 }}
+                            animate={{ opacity: 1, x: 0 }}
+                            transition={{ duration: 0.3, delay: index * 0.05 }}
+                            className="border-b hover:bg-gradient-to-r hover:from-indigo-50 hover:to-purple-50 transition-all duration-200 group"
+                          >
+                            <TableCell className="p-4">
+                              <div className="flex items-center gap-3">
+                                <div className="w-10 h-10 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-lg flex items-center justify-center shadow-lg group-hover:shadow-xl transition-shadow">
+                                  <ServiceIcon className="w-5 h-5 text-white" />
                                 </div>
-                                
-                                <p className="text-gray-600 text-sm mb-3 line-clamp-2">{order.description}</p>
-                                
-                                <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 text-sm">
-                                  <div className="flex items-center gap-2">
-                                    <Calendar className="w-4 h-4 text-indigo-500" />
-                                    <div>
-                                      <p className="text-gray-500 text-xs">تاريخ الإنشاء</p>
-                                      <p className="font-semibold">{order.createdAt}</p>
-                                    </div>
-                                  </div>
-                                  
-                                  <div className="flex items-center gap-2">
-                                    <Target className="w-4 h-4 text-purple-500" />
-                                    <div>
-                                      <p className="text-gray-500 text-xs">الموعد النهائي</p>
-                                      <p className="font-semibold">{order.deadline}</p>
-                                    </div>
-                                  </div>
-                                  
-                                  <div className="flex items-center gap-2">
-                                    <Brain className="w-4 h-4 text-emerald-500" />
-                                    <div>
-                                      <p className="text-gray-500 text-xs">الاستشاري</p>
-                                      <p className="font-semibold">{order.consultant}</p>
-                                    </div>
-                                  </div>
-                                  
-                                  <div className="flex items-center gap-2">
-                                    <Sparkles className="w-4 h-4 text-amber-500" />
-                                    <div>
-                                      <p className="text-gray-500 text-xs">القيمة</p>
-                                      <p className="font-black text-lg text-indigo-600">{order.total.toLocaleString()} {order.currency}</p>
-                                    </div>
-                                  </div>
+                                <div className="min-w-0 flex-1">
+                                  <p className="font-bold text-gray-900 truncate">{order.serviceName}</p>
+                                  <p className="text-sm text-gray-600 truncate">{order.category}</p>
                                 </div>
                               </div>
-                            </div>
-
-                            {/* Progress Bar */}
-                            {order.progress > 0 && (
-                              <div className="space-y-2">
-                                <div className="flex justify-between items-center">
-                                  <span className="text-sm font-medium text-gray-700">التقدم</span>
-                                  <span className="text-sm font-bold text-indigo-600">{order.progress}%</span>
-                                </div>
-                                <div className="w-full bg-gray-200 rounded-full h-3 overflow-hidden">
-                                  <motion.div
-                                    initial={{ width: 0 }}
-                                    animate={{ width: `${order.progress}%` }}
-                                    transition={{ duration: 1, delay: 0.5 }}
-                                    className="h-full bg-gradient-to-r from-indigo-500 to-purple-600 rounded-full shadow-sm"
+                            </TableCell>
+                            
+                            <TableCell className="p-4 text-center">
+                              <Badge variant="outline" className="font-mono font-bold bg-slate-50 border-slate-200">
+                                {order.orderNumber}
+                              </Badge>
+                            </TableCell>
+                            
+                            <TableCell className="p-4 text-center">
+                              <Badge className={`${statusConfig.color} border-0 shadow-sm px-3 py-1`}>
+                                {statusConfig.label}
+                              </Badge>
+                            </TableCell>
+                            
+                            <TableCell className="p-4 text-center">
+                              <Badge 
+                                variant="outline"
+                                className={`${priorityConfig.bgColor} ${priorityConfig.color} ${priorityConfig.borderColor} border font-medium px-3 py-1`}
+                              >
+                                {priorityConfig.label}
+                              </Badge>
+                            </TableCell>
+                            
+                            <TableCell className="p-4 text-center">
+                              <div className="font-bold text-lg text-indigo-600">
+                                {order.total.toLocaleString()} {order.currency}
+                              </div>
+                            </TableCell>
+                            
+                            <TableCell className="p-4 text-center">
+                              <div className="flex flex-col items-center gap-2">
+                                <div className="w-full max-w-20 bg-gray-200 rounded-full h-2 overflow-hidden">
+                                  <div 
+                                    className="h-full bg-gradient-to-r from-indigo-500 to-purple-600 transition-all duration-300"
+                                    style={{ width: `${order.progress}%` }}
                                   />
                                 </div>
+                                <span className="text-sm font-bold text-indigo-600">{order.progress}%</span>
                               </div>
-                            )}
-
-                            {/* Order Details */}
-                            <div className="flex items-center gap-4 text-sm text-gray-600 pt-2 border-t border-gray-100">
-                              <span className="flex items-center gap-1">
-                                <FileText className="w-4 h-4" />
-                                رقم الطلب: <span className="font-mono font-semibold text-gray-900">{order.orderNumber}</span>
-                              </span>
-                              <span className="text-gray-300">•</span>
-                              <span className="flex items-center gap-1">
-                                <BookOpen className="w-4 h-4" />
-                                تصنيف: <span className="font-semibold text-gray-900">{order.category}</span>
-                              </span>
-                            </div>
-                          </div>
-
-                          {/* Action Buttons */}
-                          <div className="flex flex-col gap-3 lg:min-w-[200px]">
-                            <Button
-                              variant="outline"
-                              size="lg"
-                              onClick={() => navigate(`/orders/${order.id}`)}
-                              className="w-full justify-center gap-2 border-2 border-indigo-200 text-indigo-700 hover:bg-indigo-50 hover:border-indigo-300 font-semibold"
-                            >
-                              <Eye className="w-4 h-4" />
-                              عرض التفاصيل
-                            </Button>
+                            </TableCell>
                             
-                            {order.status === 'draft' && (
-                              <Button
-                                size="lg"
-                                onClick={() => navigate(`/orders/${order.id}/edit`)}
-                                className="w-full justify-center gap-2 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 font-semibold"
-                              >
-                                <Edit className="w-4 h-4" />
-                                تعديل المشروع
-                              </Button>
-                            )}
+                            <TableCell className="p-4 text-center">
+                              <div className="flex flex-col items-center gap-1">
+                                <span className="font-semibold text-gray-900">{order.createdAt}</span>
+                                <span className="text-xs text-gray-500">الموعد: {order.deadline}</span>
+                              </div>
+                            </TableCell>
                             
-                            {order.status === 'processing' && (
-                              <Button
-                                variant="outline"
-                                size="lg"
-                                onClick={() => navigate(`/orders/${order.id}/chat`)}
-                                className="w-full justify-center gap-2 border-2 border-emerald-200 text-emerald-700 hover:bg-emerald-50 hover:border-emerald-300 font-semibold"
-                              >
-                                <Users className="w-4 h-4" />
-                                التواصل مع الفريق
-                              </Button>
-                            )}
-                          </div>
-                        </div>
-                      </CardContent>
-                    </div>
-                  </Card>
-                </motion.div>
-              );
-            })
-          ) : (
-            <motion.div
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.5 }}
-            >
-              <Card className="border-0 shadow-xl bg-white/90 backdrop-blur-sm">
-                <CardContent className="p-12">
-                  <div className="text-center space-y-6">
-                    <motion.div
-                      initial={{ scale: 0 }}
-                      animate={{ scale: 1 }}
-                      transition={{ duration: 0.5, type: "spring" }}
-                      className="w-24 h-24 bg-gradient-to-br from-indigo-100 to-purple-100 rounded-full flex items-center justify-center mx-auto"
+                            <TableCell className="p-4 text-center">
+                              <div className="flex items-center justify-center gap-2">
+                                <Button
+                                  variant="outline"
+                                  size="sm"
+                                  onClick={() => navigate(`/orders/${order.id}`)}
+                                  className="border-indigo-200 text-indigo-700 hover:bg-indigo-50 hover:border-indigo-300"
+                                >
+                                  <Eye className="w-4 h-4" />
+                                </Button>
+                                
+                                {order.status === 'draft' && (
+                                  <Button
+                                    size="sm"
+                                    onClick={() => navigate(`/orders/${order.id}/edit`)}
+                                    className="bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700"
+                                  >
+                                    <Edit className="w-4 h-4" />
+                                  </Button>
+                                )}
+                              </div>
+                            </TableCell>
+                          </motion.tr>
+                        );
+                      })}
+                    </TableBody>
+                  </Table>
+                </div>
+              ) : (
+                <div className="text-center py-12">
+                  <motion.div
+                    initial={{ scale: 0 }}
+                    animate={{ scale: 1 }}
+                    transition={{ duration: 0.5, type: "spring" }}
+                    className="w-24 h-24 bg-gradient-to-br from-indigo-100 to-purple-100 rounded-full flex items-center justify-center mx-auto mb-6"
+                  >
+                    <Search className="w-12 h-12 text-indigo-400" />
+                  </motion.div>
+                  
+                  <h3 className="text-2xl font-bold text-gray-900 mb-2">لا توجد مشاريع</h3>
+                  <p className="text-gray-600 text-lg mb-6">
+                    {searchTerm || statusFilter !== 'all' 
+                      ? 'لم يتم العثور على مشاريع تطابق معايير البحث'
+                      : 'لم تقم بإنشاء أي مشاريع أكاديمية بعد'
+                    }
+                  </p>
+                  
+                  {!searchTerm && statusFilter === 'all' && (
+                    <Button 
+                      size="lg"
+                      onClick={() => navigate('/orders/new')}
+                      className="bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white font-bold px-8 py-4 text-lg rounded-xl shadow-lg"
                     >
-                      <Search className="w-12 h-12 text-indigo-400" />
-                    </motion.div>
-                    
-                    <div>
-                      <h3 className="text-2xl font-bold text-gray-900 mb-2">لا توجد مشاريع</h3>
-                      <p className="text-gray-600 text-lg">
-                        {searchTerm || statusFilter !== 'all' 
-                          ? 'لم يتم العثور على مشاريع تطابق معايير البحث'
-                          : 'لم تقم بإنشاء أي مشاريع أكاديمية بعد'
-                        }
-                      </p>
-                    </div>
-                    
-                    {!searchTerm && statusFilter === 'all' && (
-                      <motion.div
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.5, delay: 0.3 }}
-                      >
-                        <Button 
-                          size="lg"
-                          onClick={() => navigate('/orders/new')}
-                          className="bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white font-bold px-8 py-4 text-lg rounded-xl shadow-lg"
-                        >
-                          <Plus className="w-5 h-5 ml-2" />
-                          ابدأ مشروعك الأول
-                        </Button>
-                      </motion.div>
-                    )}
-                  </div>
-                </CardContent>
-              </Card>
-            </motion.div>
-          )}
+                      <Plus className="w-5 h-5 ml-2" />
+                      ابدأ مشروعك الأول
+                    </Button>
+                  )}
+                </div>
+              )}
+            </CardContent>
+          </Card>
         </motion.div>
 
         {/* Floating Action Button */}
