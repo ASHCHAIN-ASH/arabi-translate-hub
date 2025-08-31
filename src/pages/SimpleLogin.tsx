@@ -255,9 +255,9 @@ const SimpleLogin = () => {
 
                   <form onSubmit={handleLogin} className="space-y-5 sm:space-y-6">
                     <div className="space-y-2 sm:space-y-3">
-                      <Label htmlFor="login-email" className="text-sm sm:text-base font-bold text-foreground flex items-center">
-                        <Mail className="w-4 h-4 sm:w-5 sm:h-5 ml-2 sm:ml-3 text-primary" />
+                      <Label htmlFor="login-email" className="text-sm sm:text-base font-bold text-foreground flex items-center justify-end">
                         البريد الإلكتروني
+                        <Mail className="w-4 h-4 sm:w-5 sm:h-5 mr-2 sm:mr-3 text-primary" />
                       </Label>
                       <Input
                         id="login-email"
@@ -266,15 +266,15 @@ const SimpleLogin = () => {
                         onChange={(e) => setLoginData(prev => ({ ...prev, email: e.target.value }))}
                         placeholder="example@domain.com"
                         required
-                        className="h-12 sm:h-14 rounded-xl sm:rounded-2xl border-2 border-muted focus:border-primary transition-all duration-300 bg-background/80 text-sm sm:text-base px-3 sm:px-4 text-right"
-                        style={{ direction: 'ltr' }}
+                        className="h-12 sm:h-14 rounded-xl sm:rounded-2xl border-2 border-muted focus:border-primary transition-all duration-300 bg-background/80 text-sm sm:text-base px-3 sm:px-4"
+                        style={{ direction: 'ltr', textAlign: 'left' }}
                       />
                     </div>
 
                     <div className="space-y-2 sm:space-y-3">
-                      <Label htmlFor="login-password" className="text-sm sm:text-base font-bold text-foreground flex items-center">
-                        <Lock className="w-4 h-4 sm:w-5 sm:h-5 ml-2 sm:ml-3 text-primary" />
+                      <Label htmlFor="login-password" className="text-sm sm:text-base font-bold text-foreground flex items-center justify-end">
                         كلمة المرور
+                        <Lock className="w-4 h-4 sm:w-5 sm:h-5 mr-2 sm:mr-3 text-primary" />
                       </Label>
                       <div className="relative">
                         <Input
@@ -284,12 +284,12 @@ const SimpleLogin = () => {
                           onChange={(e) => setLoginData(prev => ({ ...prev, password: e.target.value }))}
                           placeholder="أدخل كلمة المرور"
                           required
-                          className="h-12 sm:h-14 rounded-xl sm:rounded-2xl border-2 border-muted focus:border-primary transition-all duration-300 bg-background/80 text-sm sm:text-base px-3 sm:px-4 pl-12 sm:pl-14 text-right"
+                          className="h-12 sm:h-14 rounded-xl sm:rounded-2xl border-2 border-muted focus:border-primary transition-all duration-300 bg-background/80 text-sm sm:text-base px-3 sm:px-4 pr-12 sm:pr-14 text-right"
                         />
                         <button
                           type="button"
                           onClick={() => setShowPassword(!showPassword)}
-                          className="absolute left-3 sm:left-4 top-1/2 transform -translate-y-1/2 text-muted-foreground hover:text-primary transition-colors duration-200"
+                          className="absolute right-3 sm:right-4 top-1/2 transform -translate-y-1/2 text-muted-foreground hover:text-primary transition-colors duration-200"
                         >
                           {showPassword ? <EyeOff className="h-5 w-5 sm:h-6 sm:w-6" /> : <Eye className="h-5 w-5 sm:h-6 sm:w-6" />}
                         </button>
@@ -330,9 +330,9 @@ const SimpleLogin = () => {
 
                   <form onSubmit={handleRegister} className="space-y-4 sm:space-y-5">
                     <div className="space-y-2">
-                      <Label htmlFor="register-name" className="text-sm sm:text-base font-bold text-foreground flex items-center">
-                        <User className="w-4 h-4 sm:w-5 sm:h-5 ml-2 sm:ml-3 text-primary" />
+                      <Label htmlFor="register-name" className="text-sm sm:text-base font-bold text-foreground flex items-center justify-end">
                         الاسم الكامل *
+                        <User className="w-4 h-4 sm:w-5 sm:h-5 mr-2 sm:mr-3 text-primary" />
                       </Label>
                       <Input
                         id="register-name"
@@ -346,9 +346,9 @@ const SimpleLogin = () => {
                     </div>
 
                     <div className="space-y-2">
-                      <Label htmlFor="register-email" className="text-sm sm:text-base font-bold text-foreground flex items-center">
-                        <Mail className="w-4 h-4 sm:w-5 sm:h-5 ml-2 sm:ml-3 text-primary" />
+                      <Label htmlFor="register-email" className="text-sm sm:text-base font-bold text-foreground flex items-center justify-end">
                         البريد الإلكتروني *
+                        <Mail className="w-4 h-4 sm:w-5 sm:h-5 mr-2 sm:mr-3 text-primary" />
                       </Label>
                       <Input
                         id="register-email"
@@ -357,15 +357,15 @@ const SimpleLogin = () => {
                         onChange={(e) => setRegisterData(prev => ({ ...prev, email: e.target.value }))}
                         placeholder="example@domain.com"
                         required
-                        className="h-12 sm:h-14 rounded-xl sm:rounded-2xl border-2 border-muted focus:border-primary transition-all duration-300 bg-background/80 text-sm sm:text-base px-3 sm:px-4 text-right"
-                        style={{ direction: 'ltr' }}
+                        className="h-12 sm:h-14 rounded-xl sm:rounded-2xl border-2 border-muted focus:border-primary transition-all duration-300 bg-background/80 text-sm sm:text-base px-3 sm:px-4"
+                        style={{ direction: 'ltr', textAlign: 'left' }}
                       />
                     </div>
 
                     <div className="space-y-2">
-                      <Label htmlFor="register-phone" className="text-sm sm:text-base font-bold text-foreground flex items-center">
-                        <Phone className="w-4 h-4 sm:w-5 sm:h-5 ml-2 sm:ml-3 text-primary" />
+                      <Label htmlFor="register-phone" className="text-sm sm:text-base font-bold text-foreground flex items-center justify-end">
                         رقم الهاتف
+                        <Phone className="w-4 h-4 sm:w-5 sm:h-5 mr-2 sm:mr-3 text-primary" />
                       </Label>
                       <Input
                         id="register-phone"
@@ -373,15 +373,15 @@ const SimpleLogin = () => {
                         value={registerData.phone}
                         onChange={(e) => setRegisterData(prev => ({ ...prev, phone: e.target.value }))}
                         placeholder="+966 50 123 4567"
-                        className="h-12 sm:h-14 rounded-xl sm:rounded-2xl border-2 border-muted focus:border-primary transition-all duration-300 bg-background/80 text-sm sm:text-base px-3 sm:px-4 text-right"
-                        style={{ direction: 'ltr' }}
+                        className="h-12 sm:h-14 rounded-xl sm:rounded-2xl border-2 border-muted focus:border-primary transition-all duration-300 bg-background/80 text-sm sm:text-base px-3 sm:px-4"
+                        style={{ direction: 'ltr', textAlign: 'left' }}
                       />
                     </div>
 
                     <div className="space-y-2">
-                      <Label htmlFor="register-password" className="text-sm sm:text-base font-bold text-foreground flex items-center">
-                        <Lock className="w-4 h-4 sm:w-5 sm:h-5 ml-2 sm:ml-3 text-primary" />
+                      <Label htmlFor="register-password" className="text-sm sm:text-base font-bold text-foreground flex items-center justify-end">
                         كلمة المرور *
+                        <Lock className="w-4 h-4 sm:w-5 sm:h-5 mr-2 sm:mr-3 text-primary" />
                       </Label>
                       <div className="relative">
                         <Input
@@ -391,26 +391,26 @@ const SimpleLogin = () => {
                           onChange={(e) => setRegisterData(prev => ({ ...prev, password: e.target.value }))}
                           placeholder="كلمة مرور قوية ومعقدة"
                           required
-                          className="h-12 sm:h-14 rounded-xl sm:rounded-2xl border-2 border-muted focus:border-primary transition-all duration-300 bg-background/80 text-sm sm:text-base px-3 sm:px-4 pl-12 sm:pl-14 text-right"
+                          className="h-12 sm:h-14 rounded-xl sm:rounded-2xl border-2 border-muted focus:border-primary transition-all duration-300 bg-background/80 text-sm sm:text-base px-3 sm:px-4 pr-12 sm:pr-14 text-right"
                         />
                         <button
                           type="button"
                           onClick={() => setShowPassword(!showPassword)}
-                          className="absolute left-3 sm:left-4 top-1/2 transform -translate-y-1/2 text-muted-foreground hover:text-primary transition-colors duration-200"
+                          className="absolute right-3 sm:right-4 top-1/2 transform -translate-y-1/2 text-muted-foreground hover:text-primary transition-colors duration-200"
                         >
                           {showPassword ? <EyeOff className="h-5 w-5 sm:h-6 sm:w-6" /> : <Eye className="h-5 w-5 sm:h-6 sm:w-6" />}
                         </button>
                       </div>
-                      <p className="text-xs sm:text-sm text-muted-foreground flex items-center mt-2">
-                        <Lock className="w-3 h-3 sm:w-4 sm:h-4 ml-1 sm:ml-2 text-primary" />
+                      <p className="text-xs sm:text-sm text-muted-foreground flex items-center justify-end mt-2">
                         يجب أن تحتوي على 12 حرف على الأقل
+                        <Lock className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2 text-primary" />
                       </p>
                     </div>
 
                     <div className="space-y-2">
-                      <Label htmlFor="register-confirm-password" className="text-sm sm:text-base font-bold text-foreground flex items-center">
-                        <Lock className="w-4 h-4 sm:w-5 sm:h-5 ml-2 sm:ml-3 text-primary" />
+                      <Label htmlFor="register-confirm-password" className="text-sm sm:text-base font-bold text-foreground flex items-center justify-end">
                         تأكيد كلمة المرور *
+                        <Lock className="w-4 h-4 sm:w-5 sm:h-5 mr-2 sm:mr-3 text-primary" />
                       </Label>
                       <Input
                         id="register-confirm-password"
