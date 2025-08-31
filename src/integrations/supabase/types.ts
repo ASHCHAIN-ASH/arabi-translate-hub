@@ -3208,6 +3208,48 @@ export type Database = {
         }
         Relationships: []
       }
+      service_categories: {
+        Row: {
+          color: string | null
+          created_at: string | null
+          description_ar: string | null
+          description_en: string | null
+          icon: string | null
+          id: string
+          is_active: boolean | null
+          name_ar: string
+          name_en: string
+          sort_order: number | null
+          updated_at: string | null
+        }
+        Insert: {
+          color?: string | null
+          created_at?: string | null
+          description_ar?: string | null
+          description_en?: string | null
+          icon?: string | null
+          id?: string
+          is_active?: boolean | null
+          name_ar: string
+          name_en: string
+          sort_order?: number | null
+          updated_at?: string | null
+        }
+        Update: {
+          color?: string | null
+          created_at?: string | null
+          description_ar?: string | null
+          description_en?: string | null
+          icon?: string | null
+          id?: string
+          is_active?: boolean | null
+          name_ar?: string
+          name_en?: string
+          sort_order?: number | null
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
       service_requests: {
         Row: {
           actual_cost: number | null
@@ -3267,6 +3309,89 @@ export type Database = {
           user_id?: string
         }
         Relationships: []
+      }
+      services: {
+        Row: {
+          base_price: number | null
+          category_id: string
+          created_at: string | null
+          delivery_time_days: number | null
+          description_ar: string | null
+          description_en: string | null
+          features_ar: string[] | null
+          features_en: string[] | null
+          id: string
+          image_url: string | null
+          is_active: boolean | null
+          max_units: number | null
+          min_units: number | null
+          name_ar: string
+          name_en: string
+          price_per_unit: number | null
+          rush_delivery_available: boolean | null
+          rush_delivery_multiplier: number | null
+          show_to_clients: boolean | null
+          sort_order: number | null
+          unit_type: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          base_price?: number | null
+          category_id: string
+          created_at?: string | null
+          delivery_time_days?: number | null
+          description_ar?: string | null
+          description_en?: string | null
+          features_ar?: string[] | null
+          features_en?: string[] | null
+          id?: string
+          image_url?: string | null
+          is_active?: boolean | null
+          max_units?: number | null
+          min_units?: number | null
+          name_ar: string
+          name_en: string
+          price_per_unit?: number | null
+          rush_delivery_available?: boolean | null
+          rush_delivery_multiplier?: number | null
+          show_to_clients?: boolean | null
+          sort_order?: number | null
+          unit_type?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          base_price?: number | null
+          category_id?: string
+          created_at?: string | null
+          delivery_time_days?: number | null
+          description_ar?: string | null
+          description_en?: string | null
+          features_ar?: string[] | null
+          features_en?: string[] | null
+          id?: string
+          image_url?: string | null
+          is_active?: boolean | null
+          max_units?: number | null
+          min_units?: number | null
+          name_ar?: string
+          name_en?: string
+          price_per_unit?: number | null
+          rush_delivery_available?: boolean | null
+          rush_delivery_multiplier?: number | null
+          show_to_clients?: boolean | null
+          sort_order?: number | null
+          unit_type?: string | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "services_category_id_fkey"
+            columns: ["category_id"]
+            isOneToOne: false
+            referencedRelation: "service_categories"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       subscription_plans: {
         Row: {
