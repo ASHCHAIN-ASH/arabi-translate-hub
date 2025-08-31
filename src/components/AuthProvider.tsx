@@ -75,23 +75,18 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
     const normalizedEmail = normalizeEmail(email);
     
-    // Check if user exists in current tenant
-    const { data: userData, error: userError } = await supabase
-      .from('ash_users')
-      .select('id, email, role, status')
-      .eq('tenant_id', tenant.id)
-      .eq('email_normalized', normalizedEmail)
-      .single();
+    // Use edge function for tenant-aware authentication
+    const { data: authData, error: authError } = await supabase.functions.invoke('tenant-auth', {
+      body: {
+        action: 'tenant-auth',
+        authAction: 'login',
+        email: normalizedEmail,
+        tenantId: tenant.id
+      }
+    });
 
-    if (userError || !userData) {
-      throw new Error('بيانات تسجيل الدخول غير صحيحة');
-    }
-
-    if (userData.status !== 'active') {
-      throw new Error(userData.status === 'pending' 
-        ? 'الرجاء تفعيل بريدك قبل تسجيل الدخول'
-        : 'تم حظر حسابك. يرجى التواصل مع الإدارة'
-      );
+    if (authError || authData?.error) {
+      throw new Error(authData?.error || 'بيانات تسجيل الدخول غير صحيحة');
     }
 
     // Use Supabase auth for actual login

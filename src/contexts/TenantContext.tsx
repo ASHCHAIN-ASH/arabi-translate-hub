@@ -47,24 +47,19 @@ export const normalizeDigits = (input: string): string => {
 
 const resolveTenantByHost = async (hostname: string): Promise<Tenant | null> => {
   try {
-    // For development, map localhost to siteA
-    if (hostname === 'localhost:3000' || hostname === 'localhost') {
-      hostname = 'localhost:3000';
-    }
-
-    const { data, error } = await supabase
-      .from('tenants')
-      .select('*')
-      .or(`primary_domain.eq.${hostname},extra_domains.cs.{${hostname}}`)
-      .eq('is_active', true)
-      .single();
+    const { data, error } = await supabase.functions.invoke('tenant-auth', {
+      body: {
+        action: 'resolve-tenant',
+        hostname
+      }
+    });
 
     if (error) {
       console.error('Error resolving tenant:', error);
       return null;
     }
 
-    return data;
+    return data?.tenant || null;
   } catch (error) {
     console.error('Error in resolveTenantByHost:', error);
     return null;

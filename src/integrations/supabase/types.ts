@@ -4466,7 +4466,7 @@ export type Database = {
         Returns: string
       }
       normalize_digits: {
-        Args: { input_value: string }
+        Args: { input_text: string }
         Returns: string
       }
       normalize_email: {
