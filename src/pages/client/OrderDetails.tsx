@@ -292,12 +292,12 @@ const OrderDetails = () => {
                 </Card>
               </motion.div>
 
-              {/* معلومات العميل - على اليمين تماماً */}
+              {/* معلومات العميل - أقصى اليمين */}
               <motion.div 
                 initial={{ opacity: 0, x: 50 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.5, delay: 0.3 }}
-                className="lg:col-span-4 order-1"
+                className="lg:col-start-1 lg:col-span-4 order-1"
               >
                 <Card className="h-full hover:shadow-lg transition-all duration-300 sticky top-6">
                   <CardHeader>
@@ -387,12 +387,12 @@ const OrderDetails = () => {
                 </Card>
               </motion.div>
 
-              {/* تقدم المشروع - على اليسار */}
+              {/* تقدم المشروع - أقصى اليسار */}
               <motion.div 
                 initial={{ opacity: 0, x: -50 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.5, delay: 0.2 }}
-                className="lg:col-span-8 order-2"
+                className="lg:col-start-5 lg:col-span-8 order-2"
               >
                 <Card className="h-full hover:shadow-lg transition-all duration-300">
                   <CardHeader>
