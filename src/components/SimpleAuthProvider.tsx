@@ -51,7 +51,7 @@ export const SimpleAuthProvider: React.FC<{ children: React.ReactNode }> = ({ ch
       // التحقق من تسجيل دخول المدير أولاً
       if (email === 'admin@masteredupath.com') {
         const { data: adminResult, error: adminError } = await supabase
-          .rpc('verify_admin_login', {
+          .rpc('check_admin_credentials', {
             email_input: email,
             password_input: password
           });
@@ -61,12 +61,13 @@ export const SimpleAuthProvider: React.FC<{ children: React.ReactNode }> = ({ ch
           return { error: 'البريد الإلكتروني أو كلمة المرور غير صحيحة' };
         }
 
-        if (adminResult) {
+        if (adminResult && typeof adminResult === 'object' && adminResult !== null && 'success' in adminResult && adminResult.success) {
+          const result = adminResult as { success: boolean; user: { id: string; email: string; full_name: string; } };
           // إنشاء كائن المستخدم للمدير
           const adminUser: User = {
-            id: 'admin-id',
-            email: email,
-            name: 'مدير النظام',
+            id: result.user.id,
+            email: result.user.email,
+            name: result.user.full_name,
             role: 'admin',
             status: 'active'
           };
@@ -75,7 +76,8 @@ export const SimpleAuthProvider: React.FC<{ children: React.ReactNode }> = ({ ch
           localStorage.setItem('user', JSON.stringify(adminUser));
           return {};
         } else {
-          return { error: 'البريد الإلكتروني أو كلمة المرور غير صحيحة' };
+          const result = adminResult as { message?: string };
+          return { error: result?.message || 'البريد الإلكتروني أو كلمة المرور غير صحيحة' };
         }
       }
 

@@ -4223,6 +4223,10 @@ export type Database = {
         Args: { user_id: string }
         Returns: string
       }
+      check_admin_credentials: {
+        Args: { email_input: string; password_input: string }
+        Returns: Json
+      }
       check_automation_limit: {
         Args: { p_automation_type: string; p_user_id: string }
         Returns: boolean
