@@ -26,7 +26,13 @@ const AdminLogin = () => {
 
     setLoading(true);
     try {
-      await signIn(email, password);
+      const result = await signIn(email, password);
+      
+      if (result.error) {
+        toast.error(result.error);
+        return;
+      }
+      
       toast.success('تم تسجيل الدخول بنجاح');
       
       // Small delay to allow auth state to update
