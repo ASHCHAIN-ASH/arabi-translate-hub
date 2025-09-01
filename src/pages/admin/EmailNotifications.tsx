@@ -145,6 +145,13 @@ export default function EmailNotifications() {
 
   const getTemplateDescription = (templateKey: string) => {
     const descriptions: Record<string, string> = {
+      // القوالب الجديدة المتطورة
+      'welcome_modern': '🎨 قالب ترحيب عصري بحركات متطورة وتدرجات لونية',
+      'invoice_premium': '💎 قالب فاتورة احترافي بتأثيرات بصرية راقية',
+      'reminder_interactive': '⏰ قالب تذكير تفاعلي مع عداد تنازلي وشرائط تقدم',
+      'congratulations_animated': '🎉 قالب تهنئة متحرك بالقصاصات والشرر المتلألئ',
+      'order_status_premium': '📦 قالب حالة الطلب المتقدم مع خط زمني تفاعلي',
+      // القوالب العادية
       'welcome_email': 'رسالة ترحيب للعملاء الجدد',
       'order_confirmation': 'تأكيد استلام الطلب',
       'order_completed': 'إشعار اكتمال الطلب',
@@ -183,6 +190,14 @@ export default function EmailNotifications() {
             <CardTitle className="flex items-center justify-between">
               قوالب البريد الإلكتروني
               <div className="flex items-center gap-2">
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => fetchTemplates()}
+                  className="px-2 py-1"
+                >
+                  🔄
+                </Button>
                 <Search className="h-4 w-4" />
                 <Input
                   placeholder="البحث في القوالب..."
