@@ -1631,34 +1631,34 @@ export type Database = {
       }
       email_templates: {
         Row: {
-          created_at: string
+          created_at: string | null
           html_template: string
           id: string
-          is_active: boolean
+          is_active: boolean | null
           subject_template: string
           template_key: string
-          updated_at: string
-          variables: Json
+          updated_at: string | null
+          variables: Json | null
         }
         Insert: {
-          created_at?: string
+          created_at?: string | null
           html_template: string
           id?: string
-          is_active?: boolean
+          is_active?: boolean | null
           subject_template: string
           template_key: string
-          updated_at?: string
-          variables?: Json
+          updated_at?: string | null
+          variables?: Json | null
         }
         Update: {
-          created_at?: string
+          created_at?: string | null
           html_template?: string
           id?: string
-          is_active?: boolean
+          is_active?: boolean | null
           subject_template?: string
           template_key?: string
-          updated_at?: string
-          variables?: Json
+          updated_at?: string | null
+          variables?: Json | null
         }
         Relationships: []
       }
