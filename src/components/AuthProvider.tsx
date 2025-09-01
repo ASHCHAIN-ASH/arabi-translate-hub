@@ -88,48 +88,75 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   const signIn = async (email: string, password: string) => {
-    // First try admin credentials
+    // التحقق من صحة المدخلات
+    if (!email || !password) {
+      throw new Error('البريد الإلكتروني وكلمة المرور مطلوبان');
+    }
+
     try {
+      // محاولة تسجيل دخول الإدارة فقط - لا يوجد تسجيل دخول عادي
       const { data: adminResult, error: adminError } = await supabase
         .rpc('verify_admin_login', {
           email_input: email.toLowerCase().trim(),
           password_input: password
         });
 
-      if (!adminError && adminResult) {
-        const result = adminResult as any;
-        if (result.success) {
-          // Create a mock user session for admin
-          const adminUser = {
-            id: result.user.id,
-            email: result.user.email,
-            aud: 'authenticated',
-            role: 'authenticated',
-            created_at: new Date().toISOString(),
-            updated_at: new Date().toISOString(),
-            app_metadata: {},
-            user_metadata: {
-              full_name: result.user.full_name,
-              role: result.user.role
-            }
-          } as User;
-          
-          setUser(adminUser);
-          setUserRole('admin');
-          localStorage.setItem('admin_session', JSON.stringify(adminUser));
-          return;
-        }
+      // إذا حدث خطأ في الاستعلام
+      if (adminError) {
+        console.error('خطأ في استعلام تسجيل الدخول:', adminError);
+        throw new Error('حدث خطأ في تسجيل الدخول. يرجى المحاولة لاحقاً');
       }
-    } catch (adminError) {
-      console.log('Admin login failed, trying regular auth:', adminError);
-    }
 
-    // If admin login fails, try regular Supabase auth
-    const { error } = await supabase.auth.signInWithPassword({
-      email,
-      password,
-    });
-    if (error) throw error;
+      // إذا لم يكن هناك نتيجة
+      if (!adminResult) {
+        throw new Error('بيانات تسجيل الدخول غير صحيحة');
+      }
+
+      const result = adminResult as any;
+      
+      // إذا فشل تسجيل الدخول
+      if (!result.success) {
+        throw new Error(result.message || 'بيانات تسجيل الدخول غير صحيحة');
+      }
+
+      // إذا نجح تسجيل الدخول
+      if (result.success && result.user) {
+        const adminUser = {
+          id: result.user.id,
+          email: result.user.email,
+          aud: 'authenticated',
+          role: 'authenticated',
+          created_at: new Date().toISOString(),
+          updated_at: new Date().toISOString(),
+          app_metadata: {},
+          user_metadata: {
+            full_name: result.user.full_name,
+            role: result.user.role
+          }
+        } as User;
+        
+        setUser(adminUser);
+        setUserRole('admin');
+        localStorage.setItem('admin_session', JSON.stringify(adminUser));
+        
+        console.log('تم تسجيل الدخول بنجاح للإدارة:', result.user.email);
+        return;
+      }
+
+      // إذا وصلنا هنا، فهناك مشكلة غير متوقعة
+      throw new Error('بيانات تسجيل الدخول غير صحيحة');
+
+    } catch (error: any) {
+      console.error('خطأ في تسجيل الدخول:', error);
+      
+      // إذا كان الخطأ من نوع Error، استخدم رسالته
+      if (error instanceof Error) {
+        throw error;
+      }
+      
+      // خطأ عام
+      throw new Error('فشل في تسجيل الدخول. تحقق من بيانات الاعتماد');
+    }
   };
 
   const signUp = async (email: string, password: string, userData: any) => {
