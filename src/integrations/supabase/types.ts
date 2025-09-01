@@ -4020,6 +4020,42 @@ export type Database = {
         }
         Relationships: []
       }
+      user_notifications: {
+        Row: {
+          category: string | null
+          created_at: string | null
+          id: string
+          message: string
+          metadata: Json | null
+          read_at: string | null
+          title: string
+          type: string | null
+          user_email: string
+        }
+        Insert: {
+          category?: string | null
+          created_at?: string | null
+          id?: string
+          message: string
+          metadata?: Json | null
+          read_at?: string | null
+          title: string
+          type?: string | null
+          user_email: string
+        }
+        Update: {
+          category?: string | null
+          created_at?: string | null
+          id?: string
+          message?: string
+          metadata?: Json | null
+          read_at?: string | null
+          title?: string
+          type?: string | null
+          user_email?: string
+        }
+        Relationships: []
+      }
       user_roles: {
         Row: {
           created_at: string | null
@@ -4613,6 +4649,10 @@ export type Database = {
       record_automation_usage: {
         Args: { p_automation_type: string; p_count?: number; p_user_id: string }
         Returns: undefined
+      }
+      send_service_notification: {
+        Args: { p_message: string; p_service_data?: Json; p_title: string }
+        Returns: number
       }
       simple_authenticate_user: {
         Args: { email_lower_param: string; plain_password: string }

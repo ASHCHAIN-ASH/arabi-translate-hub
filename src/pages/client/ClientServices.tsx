@@ -4,7 +4,9 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Input } from "@/components/ui/input";
+import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
+import RealtimeNotifications from "@/components/RealtimeNotifications";
 import { 
   Languages, 
   GraduationCap, 
@@ -62,9 +64,67 @@ const ClientServices = () => {
   const [loading, setLoading] = useState(true);
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const [searchQuery, setSearchQuery] = useState('');
+  const { toast } = useToast();
 
   useEffect(() => {
     loadData();
+    
+    // إعداد التحديثات اللحظية للخدمات
+    const servicesChannel = supabase
+      .channel('services-realtime')
+      .on(
+        'postgres_changes',
+        {
+          event: '*',
+          schema: 'public',
+          table: 'services',
+          filter: 'show_to_clients=eq.true'
+        },
+        (payload) => {
+          console.log('خدمة تم تحديثها:', payload);
+          // إعادة تحميل البيانات عند التغيير
+          loadData();
+          
+          // إظهار إشعار للمستخدم
+          if (payload.eventType === 'INSERT') {
+            toast({
+              title: "خدمة جديدة متاحة! 🎉",
+              description: `تم إضافة خدمة جديدة: ${payload.new?.name_ar}`,
+            });
+          } else if (payload.eventType === 'UPDATE') {
+            toast({
+              title: "تم تحديث خدمة ✨",
+              description: `تم تحديث: ${payload.new?.name_ar}`,
+            });
+          }
+        }
+      )
+      .on(
+        'postgres_changes',
+        {
+          event: '*',
+          schema: 'public',
+          table: 'service_categories',
+          filter: 'is_active=eq.true'
+        },
+        (payload) => {
+          console.log('فئة خدمة تم تحديثها:', payload);
+          // إعادة تحميل البيانات عند التغيير
+          loadData();
+          
+          if (payload.eventType === 'INSERT') {
+            toast({
+              title: "قسم جديد متاح!",
+              description: `تم إضافة قسم جديد: ${payload.new?.name_ar}`,
+            });
+          }
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(servicesChannel);
+    };
   }, []);
 
   useEffect(() => {
@@ -153,11 +213,16 @@ const ClientServices = () => {
       <div className="container mx-auto px-6 py-8">
         {/* Header */}
         <div className="mb-8">
-          <div className="text-center max-w-3xl mx-auto">
-            <h1 className="text-4xl font-bold text-foreground mb-4">خدماتنا</h1>
-            <p className="text-lg text-muted-foreground">
-              اكتشف مجموعة شاملة من الخدمات الأكاديمية والترجمة المتخصصة
-            </p>
+          <div className="flex items-center justify-between">
+            <div className="text-center max-w-3xl mx-auto">
+              <h1 className="text-4xl font-bold text-foreground mb-4">خدماتنا</h1>
+              <p className="text-lg text-muted-foreground">
+                اكتشف مجموعة شاملة من الخدمات الأكاديمية والترجمة المتخصصة
+              </p>
+            </div>
+            <div className="relative">
+              <RealtimeNotifications userEmail="all_clients" />
+            </div>
           </div>
         </div>
 
