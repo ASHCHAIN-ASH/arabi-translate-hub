@@ -3242,6 +3242,7 @@ export type Database = {
           name_ar: string
           name_en: string
           sort_order: number | null
+          tenant_id: string | null
           updated_at: string | null
         }
         Insert: {
@@ -3255,6 +3256,7 @@ export type Database = {
           name_ar: string
           name_en: string
           sort_order?: number | null
+          tenant_id?: string | null
           updated_at?: string | null
         }
         Update: {
@@ -3268,9 +3270,18 @@ export type Database = {
           name_ar?: string
           name_en?: string
           sort_order?: number | null
+          tenant_id?: string | null
           updated_at?: string | null
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "service_categories_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       service_requests: {
         Row: {
