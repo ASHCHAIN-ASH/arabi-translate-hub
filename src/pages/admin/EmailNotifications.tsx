@@ -42,18 +42,34 @@ export default function EmailNotifications() {
   }, []);
 
   const fetchTemplates = async () => {
-    const { data, error } = await supabase
-      .from('email_templates')
-      .select('*')
-      .eq('is_active', true)
-      .order('template_key');
+    try {
+      console.log("جاري جلب القوالب...");
+      const { data, error } = await supabase
+        .from('email_templates')
+        .select('*')
+        .eq('is_active', true)
+        .order('template_key');
 
-    if (error) {
-      toast.error("خطأ في جلب القوالب: " + error.message);
-      return;
+      console.log("نتيجة الاستعلام:", { data, error });
+
+      if (error) {
+        console.error("خطأ في جلب القوالب:", error);
+        toast.error("خطأ في جلب القوالب: " + error.message);
+        return;
+      }
+
+      console.log("تم جلب", data?.length || 0, "قالب");
+      setTemplates(data || []);
+      
+      if (data && data.length > 0) {
+        toast.success(`تم جلب ${data.length} قالب بنجاح! 🎉`);
+      } else {
+        toast.error("لم يتم العثور على أي قوالب نشطة");
+      }
+    } catch (err) {
+      console.error("خطأ عام:", err);
+      toast.error("خطأ في الاتصال بقاعدة البيانات");
     }
-
-    setTemplates(data || []);
   };
 
   const handleTemplateSelect = (template: EmailTemplate) => {
