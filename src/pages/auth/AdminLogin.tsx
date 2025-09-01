@@ -10,7 +10,7 @@ import { Shield, ArrowRight } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 const AdminLogin = () => {
-  const [email, setEmail] = useState('admin@masteredupath.com');
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   
@@ -78,7 +78,7 @@ const AdminLogin = () => {
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="admin@masteredupath.com"
+                placeholder="أدخل بريدك الإلكتروني"
                 required
                 dir="ltr"
                 className="bg-white/10 border-white/30 text-white placeholder:text-slate-400 focus:border-orange-400 focus:ring-orange-400/20"
