@@ -23,6 +23,7 @@ export type Database = {
           is_active: boolean | null
           password_hash: string
           role: string | null
+          tenant_id: string | null
           updated_at: string | null
         }
         Insert: {
@@ -33,6 +34,7 @@ export type Database = {
           is_active?: boolean | null
           password_hash: string
           role?: string | null
+          tenant_id?: string | null
           updated_at?: string | null
         }
         Update: {
@@ -43,9 +45,18 @@ export type Database = {
           is_active?: boolean | null
           password_hash?: string
           role?: string | null
+          tenant_id?: string | null
           updated_at?: string | null
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "admin_credentials_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       admin_profiles: {
         Row: {
@@ -1655,22 +1666,33 @@ export type Database = {
         Row: {
           counter: number
           created_at: string
+          tenant_id: string | null
           updated_at: string
           year: number
         }
         Insert: {
           counter?: number
           created_at?: string
+          tenant_id?: string | null
           updated_at?: string
           year: number
         }
         Update: {
           counter?: number
           created_at?: string
+          tenant_id?: string | null
           updated_at?: string
           year?: number
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "invoice_counters_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       invoices: {
         Row: {
@@ -3631,6 +3653,7 @@ export type Database = {
           description: string | null
           id: string
           key: string
+          tenant_id: string | null
           updated_at: string | null
           updated_by: string | null
           value: Json
@@ -3640,6 +3663,7 @@ export type Database = {
           description?: string | null
           id?: string
           key: string
+          tenant_id?: string | null
           updated_at?: string | null
           updated_by?: string | null
           value: Json
@@ -3649,9 +3673,54 @@ export type Database = {
           description?: string | null
           id?: string
           key?: string
+          tenant_id?: string | null
           updated_at?: string | null
           updated_by?: string | null
           value?: Json
+        }
+        Relationships: [
+          {
+            foreignKeyName: "system_settings_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      tenants: {
+        Row: {
+          code: string
+          created_at: string | null
+          database_url: string | null
+          domain: string
+          id: string
+          is_active: boolean | null
+          name: string
+          settings: Json | null
+          updated_at: string | null
+        }
+        Insert: {
+          code: string
+          created_at?: string | null
+          database_url?: string | null
+          domain: string
+          id?: string
+          is_active?: boolean | null
+          name: string
+          settings?: Json | null
+          updated_at?: string | null
+        }
+        Update: {
+          code?: string
+          created_at?: string | null
+          database_url?: string | null
+          domain?: string
+          id?: string
+          is_active?: boolean | null
+          name?: string
+          settings?: Json | null
+          updated_at?: string | null
         }
         Relationships: []
       }
