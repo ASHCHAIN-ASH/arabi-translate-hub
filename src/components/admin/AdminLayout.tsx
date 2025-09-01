@@ -20,7 +20,8 @@ import {
   X,
   ChevronDown,
   Activity,
-  TrendingUp
+  TrendingUp,
+  Mail
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -53,6 +54,12 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
       href: '/admin/orders', 
       icon: ShoppingCart,
       badge: '8'
+    },
+    { 
+      name: 'نظام الإشعارات البريدية', 
+      href: '/admin/email-notifications', 
+      icon: Mail,
+      badge: 'جديد'
     },
     { 
       name: 'إدارة الفواتير', 

@@ -41,6 +41,7 @@ import AdminInvoices from "./pages/admin/AdminInvoices";
 import AdminTransactions from "./pages/admin/AdminTransactions";
 import AdminUsers from "./pages/admin/AdminUsers";
 import AdminTickets from "./pages/admin/AdminTickets";
+import EmailNotifications from "./pages/admin/EmailNotifications";
 
 import ThesisTitles from "./pages/research/ThesisTitles";
 import ResearchPlan from "./pages/research/ResearchPlan";
@@ -181,6 +182,11 @@ const App = () => (
             <Route path="/admin/tickets" element={
               <SimpleProtectedRoute adminOnly>
                 <AdminTickets />
+              </SimpleProtectedRoute>
+            } />
+            <Route path="/admin/email-notifications" element={
+              <SimpleProtectedRoute adminOnly>
+                <EmailNotifications />
               </SimpleProtectedRoute>
             } />
             
