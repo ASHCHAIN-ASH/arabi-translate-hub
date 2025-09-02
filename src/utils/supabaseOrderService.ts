@@ -17,90 +17,94 @@ export interface DatabaseOrder {
   client_email: string;
 }
 
-// Mock data for orders - orders table not configured yet
-console.warn('Supabase orders table not configured, using mock data');
+import { supabase } from '@/integrations/supabase/client';
 
-const mockOrders: DatabaseOrder[] = [
-  {
-    id: '1',
-    tracking_id: 'TR001234',
-    phone_last_four: '4567',
-    title: 'تأثير التكنولوجيا على التعليم في المملكة العربية السعودية',
-    degree: 'ماجستير إدارة الأعمال',
-    service_type: 'research-thesis',
-    description: 'دراسة تحليلية شاملة لتأثير التكنولوجيا على منظومة التعليم',
-    current_status: 'data_collection',
-    estimated_delivery: '2024-03-15',
-    created_at: '2024-01-10T10:00:00Z',
-    updated_at: '2024-01-10T10:00:00Z',
-    client_name: 'أحمد محمد',
-    client_phone: '0501234567',
-    client_email: 'ahmed@example.com'
-  },
-  {
-    id: '2',
-    tracking_id: 'TR001235',
-    phone_last_four: '6543',
-    title: 'الذكاء الاصطناعي في الرعاية الصحية',
-    degree: 'دكتوراه علوم الحاسوب',
-    service_type: 'research-plan',
-    description: 'خطة بحثية مفصلة لدراسة تطبيقات الذكاء الاصطناعي في المجال الطبي',
-    current_status: 'research_plan',
-    estimated_delivery: '2024-04-20',
-    created_at: '2024-01-15T14:30:00Z',
-    updated_at: '2024-01-15T14:30:00Z',
-    client_name: 'فاطمة علي',
-    client_phone: '0509876543',
-    client_email: 'fatima@example.com'
-  }
-];
-
-// Get all orders (mock implementation)
+// Get all orders from Supabase
 export const getAllOrders = async (): Promise<DatabaseOrder[]> => {
-  return [...mockOrders];
+  try {
+    const { data, error } = await supabase
+      .from('orders')
+      .select('*')
+      .order('created_at', { ascending: false });
+
+    if (error) {
+      console.error('Error fetching orders:', error);
+      throw error;
+    }
+
+    return data || [];
+  } catch (error) {
+    console.error('Error in getAllOrders:', error);
+    return [];
+  }
 };
 
-// Update order status (mock implementation)
+// Update order status in Supabase
 export const updateOrderStatus = async (
   orderId: string, 
   newStatus: string
 ): Promise<void> => {
-  console.log(`تم تحديث حالة الطلب ${orderId} إلى ${newStatus}`);
+  try {
+    const { error } = await supabase
+      .from('orders')
+      .update({ 
+        current_status: newStatus,
+        updated_at: new Date().toISOString()
+      })
+      .eq('id', orderId);
+
+    if (error) {
+      console.error('Error updating order status:', error);
+      throw error;
+    }
+
+    console.log(`تم تحديث حالة الطلب ${orderId} إلى ${newStatus}`);
+  } catch (error) {
+    console.error('Error in updateOrderStatus:', error);
+    throw error;
+  }
 };
 
-// Search order by tracking ID and phone (mock implementation)
+// Search order by tracking ID and phone from Supabase
 export const searchOrderByTracking = async (
   trackingId: string, 
   phoneLastFour: string
 ): Promise<OrderStatus | null> => {
-  const order = mockOrders.find(
-    o => o.tracking_id === trackingId.toUpperCase() && 
-         o.phone_last_four === phoneLastFour
-  );
+  try {
+    const { data, error } = await supabase
+      .from('orders')
+      .select('*')
+      .eq('tracking_id', trackingId.toUpperCase())
+      .eq('phone_last_four', phoneLastFour)
+      .single();
 
-  if (!order) {
+    if (error || !data) {
+      return null;
+    }
+
+    const currentStepIndex = TIMELINE_STEPS.findIndex(step => step.status === data.current_status);
+    const progress = currentStepIndex >= 0 ? ((currentStepIndex + 1) / TIMELINE_STEPS.length) * 100 : 10;
+
+    return {
+      id: data.id,
+      trackingId: data.tracking_id,
+      phoneLastFour: data.phone_last_four,
+      title: data.title,
+      degree: data.degree,
+      currentStatus: data.current_status,
+      progress,
+      estimatedDelivery: data.estimated_delivery,
+      createdAt: data.created_at,
+      timeline: [],
+      files: []
+    };
+  } catch (error) {
+    console.error('Error in searchOrderByTracking:', error);
     return null;
   }
-
-  const currentStepIndex = TIMELINE_STEPS.findIndex(step => step.status === order.current_status);
-  const progress = currentStepIndex >= 0 ? ((currentStepIndex + 1) / TIMELINE_STEPS.length) * 100 : 10;
-
-  return {
-    id: order.id,
-    trackingId: order.tracking_id,
-    phoneLastFour: order.phone_last_four,
-    title: order.title,
-    degree: order.degree,
-    currentStatus: order.current_status,
-    progress,
-    estimatedDelivery: order.estimated_delivery,
-    createdAt: order.created_at,
-    timeline: [],
-    files: []
-  };
 };
 
-// Create new order (mock implementation)
+// Create new order in Supabase
 export const createOrder = async (orderData: {
   trackingId: string;
   phoneLastFour: string;
@@ -112,24 +116,34 @@ export const createOrder = async (orderData: {
   clientPhone: string;
   clientEmail: string;
 }): Promise<string> => {
-  const newOrder: DatabaseOrder = {
-    id: String(mockOrders.length + 1),
-    tracking_id: orderData.trackingId,
-    phone_last_four: orderData.phoneLastFour,
-    title: orderData.title,
-    degree: orderData.degree,
-    service_type: orderData.serviceType,
-    description: orderData.description,
-    current_status: 'received',
-    estimated_delivery: new Date(Date.now() + 60 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
-    created_at: new Date().toISOString(),
-    updated_at: new Date().toISOString(),
-    client_name: orderData.clientName,
-    client_phone: orderData.clientPhone,
-    client_email: orderData.clientEmail
-  };
-  
-  mockOrders.push(newOrder);
-  console.log('تم إنشاء الطلب بنجاح:', newOrder.tracking_id);
-  return newOrder.id;
+  try {
+    const { data, error } = await supabase
+      .from('orders')
+      .insert({
+        tracking_id: orderData.trackingId,
+        phone_last_four: orderData.phoneLastFour,
+        title: orderData.title,
+        degree: orderData.degree,
+        service_type: orderData.serviceType,
+        description: orderData.description,
+        current_status: 'received',
+        estimated_delivery: new Date(Date.now() + 60 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+        client_name: orderData.clientName,
+        client_phone: orderData.clientPhone,
+        client_email: orderData.clientEmail
+      })
+      .select('id')
+      .single();
+
+    if (error) {
+      console.error('Error creating order:', error);
+      throw error;
+    }
+
+    console.log('تم إنشاء الطلب بنجاح:', orderData.trackingId);
+    return data.id;
+  } catch (error) {
+    console.error('Error in createOrder:', error);
+    throw error;
+  }
 };
