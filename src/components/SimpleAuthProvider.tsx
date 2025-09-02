@@ -48,8 +48,11 @@ export const SimpleAuthProvider: React.FC<{ children: React.ReactNode }> = ({ ch
 
   const signIn = async (email: string, password: string): Promise<{ error?: string }> => {
     try {
-      // التحقق من تسجيل دخول المدير أولاً
+      console.log('SignIn attempt for:', email);
+      
+      // التحقق من تسجيل دخول المدير فقط إذا كان البريد هو admin@masteredupath.com
       if (email === 'admin@masteredupath.com') {
+        console.log('Admin login attempt');
         const { data: adminResult, error: adminError } = await supabase
           .rpc('check_admin_credentials', {
             email_input: email,
@@ -63,7 +66,6 @@ export const SimpleAuthProvider: React.FC<{ children: React.ReactNode }> = ({ ch
 
         if (adminResult && typeof adminResult === 'object' && adminResult !== null && 'success' in adminResult && adminResult.success) {
           const result = adminResult as { success: boolean; user: { id: string; email: string; full_name: string; } };
-          // إنشاء كائن المستخدم للمدير
           const adminUser: User = {
             id: result.user.id,
             email: result.user.email,
@@ -81,6 +83,8 @@ export const SimpleAuthProvider: React.FC<{ children: React.ReactNode }> = ({ ch
         }
       }
 
+      console.log('Regular user login attempt');
+      
       // البحث عن المستخدم العادي في قاعدة البيانات
       const { data: userData, error: fetchError } = await supabase
         .from('users')
@@ -89,12 +93,16 @@ export const SimpleAuthProvider: React.FC<{ children: React.ReactNode }> = ({ ch
         .single();
 
       if (fetchError || !userData) {
+        console.log('User not found:', fetchError);
         return { error: 'البريد الإلكتروني أو كلمة المرور غير صحيحة' };
       }
 
+      console.log('User found, verifying password...');
+      
       // التحقق من كلمة المرور
       const isValidPassword = await bcrypt.compare(password, userData.password_hash);
       if (!isValidPassword) {
+        console.log('Invalid password');
         return { error: 'البريد الإلكتروني أو كلمة المرور غير صحيحة' };
       }
 
@@ -103,6 +111,8 @@ export const SimpleAuthProvider: React.FC<{ children: React.ReactNode }> = ({ ch
         return { error: 'تم تعطيل حسابك. يرجى التواصل مع الإدارة' };
       }
 
+      console.log('Login successful');
+      
       // إنشاء كائن المستخدم
       const user: User = {
         id: userData.id,
