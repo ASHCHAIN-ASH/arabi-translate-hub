@@ -109,7 +109,7 @@ const handler = async (req: Request): Promise<Response> => {
     console.log("Sending email to:", to);
     
     const emailResponse = await resend.emails.send({
-      from: "ماستر التعليمي <info@masteredupath.com>",
+      from: "وكالة ماستر إيدو باث <info@masteredupath.com>",
       to: Array.isArray(to) ? to : [to],
       subject: emailSubject,
       html: emailContent,

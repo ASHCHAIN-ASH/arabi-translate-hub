@@ -55,7 +55,8 @@ const templateCategories = {
   notifications: { label: "إشعارات النظام", icon: Bell, color: "bg-orange-500/10 border-orange-200 text-orange-700" },
   payments: { label: "المدفوعات", icon: CreditCard, color: "bg-emerald-500/10 border-emerald-200 text-emerald-700" },
   orders: { label: "الطلبات", icon: Package, color: "bg-indigo-500/10 border-indigo-200 text-indigo-700" },
-  events: { label: "الفعاليات", icon: Calendar, color: "bg-pink-500/10 border-pink-200 text-pink-700" }
+  events: { label: "الفعاليات", icon: Calendar, color: "bg-pink-500/10 border-pink-200 text-pink-700" },
+  receipts: { label: "سندات الدفع", icon: FileText, color: "bg-teal-500/10 border-teal-200 text-teal-700" }
 };
 
 export default function EmailNotifications() {
@@ -220,7 +221,7 @@ export default function EmailNotifications() {
 
     switch (smartForm.type) {
       case "invoice":
-        subject = `فاتورة رقم ${smartForm.invoiceNumber} - ${smartForm.companyName}`;
+        subject = `فاتورة رقم ${smartForm.invoiceNumber} - وكالة ماستر إيدو باث`;
         content = generateInvoiceTemplate(smartForm);
         variables = {
           customerName: smartForm.customerName,
@@ -228,19 +229,43 @@ export default function EmailNotifications() {
           invoiceNumber: smartForm.invoiceNumber,
           dueDate: smartForm.dueDate,
           currency: smartForm.currency,
-          companyName: smartForm.companyName,
+          companyName: smartForm.companyName || "وكالة ماستر إيدو باث",
           serviceDescription: smartForm.serviceDescription
         };
         break;
       
+      case "paid_invoice":
+        subject = `إشعار سداد الفاتورة رقم ${smartForm.invoiceNumber} - وكالة ماستر إيدو باث`;
+        content = generatePaidInvoiceTemplate(smartForm);
+        variables = {
+          customerName: smartForm.customerName,
+          amount: smartForm.amount,
+          invoiceNumber: smartForm.invoiceNumber,
+          currency: smartForm.currency,
+          companyName: smartForm.companyName || "وكالة ماستر إيدو باث"
+        };
+        break;
+
+      case "payment_receipt":
+        subject = `سند دفع رقم ${smartForm.invoiceNumber} - وكالة ماستر إيدو باث`;
+        content = generatePaymentReceiptTemplate(smartForm);
+        variables = {
+          customerName: smartForm.customerName,
+          amount: smartForm.amount,
+          invoiceNumber: smartForm.invoiceNumber,
+          currency: smartForm.currency,
+          companyName: smartForm.companyName || "وكالة ماستر إيدو باث"
+        };
+        break;
+      
       case "activation":
-        subject = `تفعيل حسابك في ${smartForm.companyName}`;
+        subject = `تفعيل حسابك في وكالة ماستر إيدو باث`;
         content = generateActivationTemplate(smartForm);
         variables = {
           customerName: smartForm.customerName,
           username: smartForm.username,
           activationLink: smartForm.activationLink,
-          companyName: smartForm.companyName
+          companyName: smartForm.companyName || "وكالة ماستر إيدو باث"
         };
         break;
 
@@ -252,7 +277,7 @@ export default function EmailNotifications() {
           promotionTitle: smartForm.promotionTitle,
           promotionDescription: smartForm.promotionDescription,
           discountPercent: smartForm.discountPercent,
-          companyName: smartForm.companyName
+          companyName: smartForm.companyName || "وكالة ماستر إيدو باث"
         };
         break;
 
@@ -274,46 +299,201 @@ export default function EmailNotifications() {
 
   const generateInvoiceTemplate = (data: SmartFormData) => {
     return `
-    <div style="max-width: 600px; margin: 0 auto; font-family: Arial, sans-serif; background: #f9f9f9; padding: 20px;">
-      <div style="background: white; border-radius: 10px; padding: 30px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
-        <div style="text-align: center; border-bottom: 3px solid #4f46e5; padding-bottom: 20px; margin-bottom: 30px;">
-          <h1 style="color: #4f46e5; font-size: 28px; margin: 0;">${data.companyName}</h1>
-          <p style="color: #6b7280; margin: 5px 0 0 0;">فاتورة إلكترونية</p>
+    <div style="max-width: 700px; margin: 0 auto; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 25px;">
+      <div style="background: white; border-radius: 15px; overflow: hidden; box-shadow: 0 15px 35px rgba(0,0,0,0.1);">
+        <!-- Header Section -->
+        <div style="background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%); padding: 35px 40px; text-align: center; position: relative; overflow: hidden;">
+          <div style="position: absolute; top: -50px; right: -50px; width: 100px; height: 100px; background: rgba(255,255,255,0.1); border-radius: 50%; opacity: 0.5;"></div>
+          <div style="position: absolute; bottom: -30px; left: -30px; width: 60px; height: 60px; background: rgba(255,255,255,0.1); border-radius: 50%; opacity: 0.7;"></div>
+          <h1 style="color: white; font-size: 32px; margin: 0 0 8px 0; font-weight: 700; text-shadow: 2px 2px 4px rgba(0,0,0,0.3);">وكالة ماستر إيدو باث</h1>
+          <p style="color: rgba(255,255,255,0.9); margin: 0; font-size: 16px; font-weight: 300;">Master Edu Path Agency</p>
+          <div style="background: rgba(255,255,255,0.2); height: 2px; width: 80px; margin: 15px auto; border-radius: 2px;"></div>
+          <p style="color: rgba(255,255,255,0.95); margin: 10px 0 0 0; font-size: 18px; font-weight: 500;">📋 فاتورة إلكترونية</p>
         </div>
         
-        <div style="margin-bottom: 30px;">
-          <h2 style="color: #1f2937; margin-bottom: 15px;">مرحباً ${data.customerName}</h2>
-          <p style="color: #4b5563; line-height: 1.6;">نشكرك على ثقتك بنا. يرجى مراجعة تفاصيل فاتورتك أدناه:</p>
+        <!-- Company Info & Invoice Details -->
+        <div style="padding: 40px;">
+          <div style="display: flex; justify-content: space-between; margin-bottom: 35px; flex-wrap: wrap;">
+            <div style="flex: 1; min-width: 250px; margin-bottom: 20px;">
+              <h3 style="color: #1f2937; margin: 0 0 15px 0; font-size: 18px; border-bottom: 2px solid #e5e7eb; padding-bottom: 8px;">🏢 بيانات الشركة</h3>
+              <p style="margin: 5px 0; color: #4b5563; line-height: 1.6;"><strong>وكالة ماستر إيدو باث</strong></p>
+              <p style="margin: 5px 0; color: #6b7280;">المملكة العربية السعودية</p>
+              <p style="margin: 5px 0; color: #6b7280;">📧 info@masteredupath.com</p>
+              <p style="margin: 5px 0; color: #6b7280;">🌐 www.masteredupath.com</p>
+            </div>
+            <div style="flex: 1; min-width: 250px; text-align: left;">
+              <h3 style="color: #1f2937; margin: 0 0 15px 0; font-size: 18px; border-bottom: 2px solid #e5e7eb; padding-bottom: 8px;">📋 تفاصيل الفاتورة</h3>
+              <p style="margin: 5px 0; color: #4b5563;"><strong>رقم الفاتورة:</strong> <span style="color: #4f46e5; font-weight: bold;">#${data.invoiceNumber}</span></p>
+              <p style="margin: 5px 0; color: #6b7280;">📅 تاريخ الإصدار: ${new Date().toLocaleDateString('ar-SA')}</p>
+              <p style="margin: 5px 0; color: #6b7280;">⏰ تاريخ الاستحقاق: ${data.dueDate}</p>
+            </div>
+          </div>
+
+          <!-- Customer Info -->
+          <div style="background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%); border-radius: 12px; padding: 25px; margin: 25px 0; border-right: 5px solid #0ea5e9;">
+            <h3 style="color: #0c4a6e; margin: 0 0 15px 0; font-size: 18px;">👤 بيانات العميل</h3>
+            <p style="color: #075985; margin: 8px 0; font-size: 16px;"><strong>الاسم:</strong> ${data.customerName}</p>
+            <p style="color: #075985; margin: 8px 0;"><strong>البريد الإلكتروني:</strong> ${data.customerEmail}</p>
+          </div>
+
+          <!-- Service Details -->
+          <div style="background: white; border: 2px solid #e5e7eb; border-radius: 12px; padding: 25px; margin: 25px 0;">
+            <h3 style="color: #1f2937; margin: 0 0 20px 0; font-size: 18px; text-align: center; border-bottom: 1px solid #e5e7eb; padding-bottom: 10px;">📦 تفاصيل الخدمة</h3>
+            <table style="width: 100%; border-collapse: collapse;">
+              <thead>
+                <tr style="background: #f8fafc;">
+                  <th style="padding: 15px; text-align: right; color: #374151; border-bottom: 2px solid #e5e7eb;">الخدمة</th>
+                  <th style="padding: 15px; text-align: center; color: #374151; border-bottom: 2px solid #e5e7eb;">المبلغ</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td style="padding: 15px; color: #1f2937; border-bottom: 1px solid #f3f4f6;">${data.serviceDescription}</td>
+                  <td style="padding: 15px; text-align: center; color: #1f2937; border-bottom: 1px solid #f3f4f6;">${data.amount} ${data.currency}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <!-- Total Amount -->
+          <div style="background: linear-gradient(135deg, #10b981 0%, #059669 100%); border-radius: 12px; padding: 25px; margin: 30px 0; text-align: center; box-shadow: 0 8px 25px rgba(16, 185, 129, 0.25);">
+            <h2 style="color: white; margin: 0 0 10px 0; font-size: 24px; text-shadow: 1px 1px 2px rgba(0,0,0,0.3);">💰 المبلغ الإجمالي</h2>
+            <div style="background: rgba(255,255,255,0.2); border-radius: 8px; padding: 15px; display: inline-block;">
+              <span style="color: white; font-size: 32px; font-weight: bold; text-shadow: 2px 2px 4px rgba(0,0,0,0.3);">${data.amount} ${data.currency}</span>
+            </div>
+          </div>
+
+          <!-- Payment Button -->
+          <div style="text-align: center; margin: 35px 0;">
+            <a href="#" style="background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%); color: white; padding: 18px 40px; text-decoration: none; border-radius: 50px; font-weight: bold; font-size: 18px; display: inline-block; box-shadow: 0 8px 20px rgba(79, 70, 229, 0.4); transition: all 0.3s ease; text-transform: uppercase; letter-spacing: 1px;">💳 ادفع الآن</a>
+          </div>
+
+          <!-- Important Notes -->
+          <div style="background: #fef3f2; border-right: 4px solid #ef4444; border-radius: 8px; padding: 20px; margin: 25px 0;">
+            <h4 style="color: #dc2626; margin: 0 0 10px 0; font-size: 16px;">⚠️ ملاحظات مهمة:</h4>
+            <ul style="color: #7f1d1d; margin: 0; padding-right: 20px; line-height: 1.6;">
+              <li>يرجى سداد الفاتورة في الموعد المحدد</li>
+              <li>في حالة التأخير، قد تطبق رسوم إضافية</li>
+              <li>للاستفسارات، يرجى التواصل معنا</li>
+            </ul>
+          </div>
+
+          <!-- Footer -->
+          <div style="border-top: 2px solid #e5e7eb; padding-top: 25px; text-align: center; margin-top: 35px;">
+            <div style="background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%); border-radius: 10px; padding: 20px; margin-bottom: 20px;">
+              <p style="color: #475569; margin: 0 0 10px 0; font-size: 16px; font-weight: 500;">🙏 شكراً لثقتك في خدماتنا</p>
+              <p style="color: #64748b; margin: 0; font-size: 14px;">نحن نقدر اختيارك لوكالة ماستر إيدو باث</p>
+            </div>
+            <p style="color: #94a3b8; font-size: 12px; margin: 15px 0 0 0;">© ${new Date().getFullYear()} وكالة ماستر إيدو باث - جميع الحقوق محفوظة</p>
+          </div>
+        </div>
+      </div>
+    </div>`;
+  };
+
+  // قالب فاتورة مدفوعة
+  const generatePaidInvoiceTemplate = (data: SmartFormData) => {
+    return `
+    <div style="max-width: 700px; margin: 0 auto; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: linear-gradient(135deg, #10b981 0%, #059669 100%); padding: 25px;">
+      <div style="background: white; border-radius: 15px; overflow: hidden; box-shadow: 0 15px 35px rgba(0,0,0,0.1);">
+        <!-- Success Header -->
+        <div style="background: linear-gradient(135deg, #10b981 0%, #059669 100%); padding: 40px; text-align: center; position: relative;">
+          <div style="background: rgba(255,255,255,0.2); width: 100px; height: 100px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px auto; font-size: 45px;">✅</div>
+          <h1 style="color: white; font-size: 28px; margin: 0 0 10px 0; font-weight: 700;">تم الدفع بنجاح!</h1>
+          <p style="color: rgba(255,255,255,0.9); margin: 0; font-size: 16px;">شكراً لك ${data.customerName}</p>
+        </div>
+        
+        <div style="padding: 40px; text-align: center;">
+          <div style="background: #f0fdf4; border: 2px solid #10b981; border-radius: 12px; padding: 30px; margin: 25px 0;">
+            <h2 style="color: #065f46; margin: 0 0 20px 0; font-size: 24px;">💰 تفاصيل الدفعة</h2>
+            <p style="color: #047857; font-size: 18px; margin: 10px 0;"><strong>رقم الفاتورة:</strong> ${data.invoiceNumber}</p>
+            <p style="color: #047857; font-size: 18px; margin: 10px 0;"><strong>المبلغ المدفوع:</strong> ${data.amount} ${data.currency}</p>
+            <p style="color: #047857; font-size: 16px; margin: 10px 0;"><strong>تاريخ الدفع:</strong> ${new Date().toLocaleDateString('ar-SA')}</p>
+          </div>
+
+          <div style="background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%); border-radius: 10px; padding: 25px; margin: 25px 0;">
+            <h3 style="color: #1e40af; margin: 0 0 15px 0;">📧 سيتم إرسال إيصال مفصل إلى بريدك الإلكتروني</h3>
+            <p style="color: #1e3a8a; margin: 0;">${data.customerEmail}</p>
+          </div>
+
+          <div style="margin: 30px 0;">
+            <p style="color: #374151; font-size: 18px; margin: 0 0 20px 0;">🎉 نشكرك على سرعة السداد</p>
+            <p style="color: #6b7280; font-size: 14px;">وكالة ماستر إيدو باث - دائماً في خدمتكم</p>
+          </div>
+        </div>
+      </div>
+    </div>`;
+  };
+
+  // قالب سند دفع
+  const generatePaymentReceiptTemplate = (data: SmartFormData) => {
+    return `
+    <div style="max-width: 700px; margin: 0 auto; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f8fafc; padding: 25px;">
+      <div style="background: white; border: 3px solid #e2e8f0; border-radius: 12px; overflow: hidden;">
+        <!-- Receipt Header -->
+        <div style="background: linear-gradient(135deg, #334155 0%, #475569 100%); padding: 30px; text-align: center; color: white;">
+          <h1 style="margin: 0 0 10px 0; font-size: 28px; font-weight: 700;">📋 سند دفع</h1>
+          <p style="margin: 0; font-size: 16px; opacity: 0.9;">Payment Receipt</p>
+          <div style="background: rgba(255,255,255,0.2); height: 2px; width: 100px; margin: 15px auto;"></div>
+          <p style="margin: 0; font-size: 18px; font-weight: 500;">وكالة ماستر إيدو باث</p>
         </div>
 
-        <div style="background: #f8fafc; border-radius: 8px; padding: 20px; margin: 20px 0;">
-          <table style="width: 100%; border-collapse: collapse;">
+        <div style="padding: 35px;">
+          <!-- Receipt Number & Date -->
+          <div style="display: flex; justify-content: space-between; background: #f1f5f9; padding: 20px; border-radius: 8px; margin-bottom: 25px;">
+            <div>
+              <p style="margin: 0; color: #475569; font-weight: bold;">رقم السند:</p>
+              <p style="margin: 5px 0 0 0; color: #1e293b; font-size: 18px; font-weight: bold;">#${data.invoiceNumber}</p>
+            </div>
+            <div style="text-align: left;">
+              <p style="margin: 0; color: #475569; font-weight: bold;">التاريخ:</p>
+              <p style="margin: 5px 0 0 0; color: #1e293b; font-size: 16px;">${new Date().toLocaleDateString('ar-SA')}</p>
+            </div>
+          </div>
+
+          <!-- Customer & Payment Details -->
+          <table style="width: 100%; border-collapse: collapse; margin: 25px 0;">
             <tr>
-              <td style="padding: 8px 0; color: #6b7280;">رقم الفاتورة:</td>
-              <td style="padding: 8px 0; font-weight: bold; color: #1f2937;">${data.invoiceNumber}</td>
+              <td style="padding: 12px; background: #fafafa; border: 1px solid #e2e8f0; font-weight: bold; color: #374151;">استلمنا من السيد/ة:</td>
+              <td style="padding: 12px; border: 1px solid #e2e8f0; color: #1f2937;">${data.customerName}</td>
             </tr>
             <tr>
-              <td style="padding: 8px 0; color: #6b7280;">الخدمة:</td>
-              <td style="padding: 8px 0; color: #1f2937;">${data.serviceDescription}</td>
+              <td style="padding: 12px; background: #fafafa; border: 1px solid #e2e8f0; font-weight: bold; color: #374151;">مبلغ وقدره:</td>
+              <td style="padding: 12px; border: 1px solid #e2e8f0; color: #1f2937; font-size: 18px; font-weight: bold;">${data.amount} ${data.currency}</td>
             </tr>
             <tr>
-              <td style="padding: 8px 0; color: #6b7280;">تاريخ الاستحقاق:</td>
-              <td style="padding: 8px 0; color: #1f2937;">${data.dueDate}</td>
+              <td style="padding: 12px; background: #fafafa; border: 1px solid #e2e8f0; font-weight: bold; color: #374151;">وذلك عن:</td>
+              <td style="padding: 12px; border: 1px solid #e2e8f0; color: #1f2937;">سداد الفاتورة رقم ${data.invoiceNumber}</td>
             </tr>
-            <tr style="border-top: 2px solid #e5e7eb;">
-              <td style="padding: 15px 0 8px 0; color: #1f2937; font-weight: bold; font-size: 18px;">المبلغ الإجمالي:</td>
-              <td style="padding: 15px 0 8px 0; font-weight: bold; font-size: 20px; color: #059669;">${data.amount} ${data.currency}</td>
+            <tr>
+              <td style="padding: 12px; background: #fafafa; border: 1px solid #e2e8f0; font-weight: bold; color: #374151;">البريد الإلكتروني:</td>
+              <td style="padding: 12px; border: 1px solid #e2e8f0; color: #1f2937;">${data.customerEmail}</td>
             </tr>
           </table>
-        </div>
 
-        <div style="text-align: center; margin: 30px 0;">
-          <a href="#" style="background: #4f46e5; color: white; padding: 12px 25px; text-decoration: none; border-radius: 8px; font-weight: bold; display: inline-block;">دفع الفاتورة</a>
-        </div>
+          <!-- Amount in Words (placeholder) -->
+          <div style="background: #f0f9ff; border: 2px solid #3b82f6; border-radius: 8px; padding: 20px; margin: 25px 0; text-align: center;">
+            <p style="margin: 0; color: #1e40af; font-weight: bold; font-size: 16px;">المبلغ بالأحرف:</p>
+            <p style="margin: 5px 0 0 0; color: #1e3a8a; font-size: 18px; border-bottom: 2px dashed #3b82f6; padding-bottom: 10px; display: inline-block; min-width: 300px;">${data.amount} ${data.currency} فقط لا غير</p>
+          </div>
 
-        <div style="border-top: 1px solid #e5e7eb; padding-top: 20px; text-align: center; color: #6b7280; font-size: 14px;">
-          <p>شكراً لك على اختيار خدماتنا</p>
-          <p>${data.companyName} - جميع الحقوق محفوظة</p>
+          <!-- Signature Section -->
+          <div style="display: flex; justify-content: space-between; margin-top: 40px;">
+            <div style="text-align: center; flex: 1;">
+              <div style="border-bottom: 2px solid #374151; width: 200px; margin: 0 auto 10px auto; height: 40px;"></div>
+              <p style="margin: 0; color: #6b7280; font-size: 14px;">توقيع المستلم</p>
+            </div>
+            <div style="text-align: center; flex: 1;">
+              <div style="border-bottom: 2px solid #374151; width: 200px; margin: 0 auto 10px auto; height: 40px;"></div>
+              <p style="margin: 0; color: #6b7280; font-size: 14px;">ختم الشركة</p>
+            </div>
+          </div>
+
+          <!-- Footer -->
+          <div style="text-align: center; margin-top: 35px; padding-top: 20px; border-top: 1px solid #e2e8f0;">
+            <p style="margin: 0; color: #64748b; font-size: 14px;">وكالة ماستر إيدو باث</p>
+            <p style="margin: 5px 0 0 0; color: #94a3b8; font-size: 12px;">المملكة العربية السعودية | info@masteredupath.com</p>
+          </div>
         </div>
       </div>
     </div>`;
@@ -483,7 +663,7 @@ export default function EmailNotifications() {
               </CardHeader>
               <CardContent className="space-y-6">
                 {/* اختيار نوع البريد */}
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                   <div 
                     className={`p-4 border-2 rounded-xl cursor-pointer transition-all hover:shadow-lg ${
                       smartForm.type === 'invoice' ? 'border-primary bg-primary/5' : 'border-border hover:border-primary/50'
@@ -494,6 +674,32 @@ export default function EmailNotifications() {
                       <Receipt className="h-12 w-12 mx-auto mb-3 text-blue-600" />
                       <h3 className="font-semibold text-lg mb-2">فاتورة</h3>
                       <p className="text-sm text-muted-foreground">فواتير احترافية مع تفاصيل كاملة</p>
+                    </div>
+                  </div>
+                  
+                  <div 
+                    className={`p-4 border-2 rounded-xl cursor-pointer transition-all hover:shadow-lg ${
+                      smartForm.type === 'paid_invoice' ? 'border-primary bg-primary/5' : 'border-border hover:border-primary/50'
+                    }`}
+                    onClick={() => handleSmartFormChange('type', 'paid_invoice')}
+                  >
+                    <div className="text-center">
+                      <CreditCard className="h-12 w-12 mx-auto mb-3 text-green-600" />
+                      <h3 className="font-semibold text-lg mb-2">فاتورة مدفوعة</h3>
+                      <p className="text-sm text-muted-foreground">إشعار بسداد الفاتورة</p>
+                    </div>
+                  </div>
+
+                  <div 
+                    className={`p-4 border-2 rounded-xl cursor-pointer transition-all hover:shadow-lg ${
+                      smartForm.type === 'payment_receipt' ? 'border-primary bg-primary/5' : 'border-border hover:border-primary/50'
+                    }`}
+                    onClick={() => handleSmartFormChange('type', 'payment_receipt')}
+                  >
+                    <div className="text-center">
+                      <FileText className="h-12 w-12 mx-auto mb-3 text-teal-600" />
+                      <h3 className="font-semibold text-lg mb-2">سند دفع</h3>
+                      <p className="text-sm text-muted-foreground">سند إستلام مدفوعات رسمي</p>
                     </div>
                   </div>
                   
@@ -519,7 +725,7 @@ export default function EmailNotifications() {
                     <div className="text-center">
                       <Gift className="h-12 w-12 mx-auto mb-3 text-purple-600" />
                       <h3 className="font-semibold text-lg mb-2">عرض ترويجي</h3>
-                      <p className="text-sm text-muted-foreground">عروض وخصومات جذابة</p>
+                      <p className="text-sm text-muted-foreground">عروض وإعلانات تسويقية</p>
                     </div>
                   </div>
                 </div>
