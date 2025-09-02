@@ -185,7 +185,7 @@ const OrderForm: React.FC<OrderFormProps> = ({ selectedService, onSuccess }) => 
       
       // Create order
       const { data: orderData, error: orderError } = await supabase
-        .from('orders')
+        .from('service_orders')
         .insert({
           tracking_id: trackingId,
           service_id: formData.service_id,
@@ -199,7 +199,7 @@ const OrderForm: React.FC<OrderFormProps> = ({ selectedService, onSuccess }) => 
           unit_type: service?.unit_type || 'page',
           estimated_price: estimatedPrice,
           rush_delivery: formData.rush_delivery,
-          expected_delivery: new Date(Date.now() + (deliveryTime * 24 * 60 * 60 * 1000)).toISOString(),
+          expected_delivery: new Date(Date.now() + (deliveryTime * 24 * 60 * 60 * 1000)).toISOString().split('T')[0],
           additional_notes: formData.additional_notes,
           current_status: 'received'
         })
@@ -229,7 +229,7 @@ const OrderForm: React.FC<OrderFormProps> = ({ selectedService, onSuccess }) => 
 
       // Create initial timeline entry
       await supabase
-        .from('order_timeline')
+        .from('service_order_timeline')
         .insert({
           order_id: orderData.id,
           title: 'تم استلام الطلب',

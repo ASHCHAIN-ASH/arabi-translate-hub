@@ -69,6 +69,13 @@ const Index = () => {
               <Button 
                 size="lg" 
                 className="w-full sm:w-auto bg-white text-slate-800 hover:bg-gray-100 shadow-xl px-8 py-4 text-lg font-medium rounded-lg transition-all duration-300"
+                onClick={() => navigate('/services')}
+              >
+                تصفح خدماتنا
+              </Button>
+              <Button 
+                size="lg" 
+                className="w-full sm:w-auto bg-white text-slate-800 hover:bg-gray-100 shadow-xl px-8 py-4 text-lg font-medium rounded-lg transition-all duration-300"
                 onClick={() => navigate('/login')}
               >
                 تسجيل دخول العملاء

@@ -42,6 +42,7 @@ import AdminInvoices from "./pages/admin/AdminInvoices";
 import AdminTransactions from "./pages/admin/AdminTransactions";
 import AdminUsers from "./pages/admin/AdminUsers";
 import AdminTickets from "./pages/admin/AdminTickets";
+import AdminServiceOrders from "./pages/admin/AdminServiceOrders";
 import EmailNotifications from "./pages/admin/EmailNotifications";
 import AddUser from "./pages/admin/AddUser";
 
@@ -67,6 +68,7 @@ import ResearchEvaluation from "./pages/research/ResearchEvaluation";
 import Publication from "./pages/research/Publication";
 import AcademicConsultation from "./pages/research/AcademicConsultation";
 import TrainingCourses from "./pages/research/TrainingCourses";
+import OrderForm from "./components/OrderForm";
 import TermsOfService from "./pages/TermsOfService";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
 import ColorShowcase from "./pages/ColorShowcase";
@@ -102,7 +104,7 @@ const App = () => (
             <Route path="/terms-of-service" element={<TermsOfService />} />
             <Route path="/privacy-policy" element={<PrivacyPolicy />} />
             <Route path="/order-tracking" element={<OrderTracking />} />
-            <Route path="/submit-order" element={<SubmitOrder />} />
+            <Route path="/submit-order" element={<OrderForm />} />
             <Route path="/color-showcase" element={<ColorShowcase />} />
             
             {/* Auth Routes */}
@@ -163,6 +165,11 @@ const App = () => (
             <Route path="/admin/services" element={
               <SimpleProtectedRoute adminOnly>
                 <AdminServices />
+              </SimpleProtectedRoute>
+            } />
+            <Route path="/admin/service-orders" element={
+              <SimpleProtectedRoute adminOnly>
+                <AdminServiceOrders />
               </SimpleProtectedRoute>
             } />
             <Route path="/admin/orders" element={

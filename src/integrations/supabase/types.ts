@@ -3341,6 +3341,127 @@ export type Database = {
           },
         ]
       }
+      service_order_timeline: {
+        Row: {
+          actor_name: string | null
+          actor_type: string | null
+          completed_date: string | null
+          created_at: string | null
+          description: string | null
+          id: string
+          order_id: string | null
+          scheduled_date: string | null
+          status: string
+          title: string
+        }
+        Insert: {
+          actor_name?: string | null
+          actor_type?: string | null
+          completed_date?: string | null
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          order_id?: string | null
+          scheduled_date?: string | null
+          status: string
+          title: string
+        }
+        Update: {
+          actor_name?: string | null
+          actor_type?: string | null
+          completed_date?: string | null
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          order_id?: string | null
+          scheduled_date?: string | null
+          status?: string
+          title?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "service_order_timeline_order_id_fkey"
+            columns: ["order_id"]
+            isOneToOne: false
+            referencedRelation: "service_orders"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      service_orders: {
+        Row: {
+          additional_notes: string | null
+          client_email: string
+          client_name: string
+          client_phone: string | null
+          created_at: string | null
+          current_status: string | null
+          description: string | null
+          estimated_price: number | null
+          expected_delivery: string | null
+          id: string
+          quantity: number | null
+          requirements: string | null
+          rush_delivery: boolean | null
+          service_id: string | null
+          title: string
+          tracking_id: string
+          unit_type: string | null
+          updated_at: string | null
+          user_id: string | null
+        }
+        Insert: {
+          additional_notes?: string | null
+          client_email: string
+          client_name: string
+          client_phone?: string | null
+          created_at?: string | null
+          current_status?: string | null
+          description?: string | null
+          estimated_price?: number | null
+          expected_delivery?: string | null
+          id?: string
+          quantity?: number | null
+          requirements?: string | null
+          rush_delivery?: boolean | null
+          service_id?: string | null
+          title: string
+          tracking_id: string
+          unit_type?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          additional_notes?: string | null
+          client_email?: string
+          client_name?: string
+          client_phone?: string | null
+          created_at?: string | null
+          current_status?: string | null
+          description?: string | null
+          estimated_price?: number | null
+          expected_delivery?: string | null
+          id?: string
+          quantity?: number | null
+          requirements?: string | null
+          rush_delivery?: boolean | null
+          service_id?: string | null
+          title?: string
+          tracking_id?: string
+          unit_type?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "service_orders_service_id_fkey"
+            columns: ["service_id"]
+            isOneToOne: false
+            referencedRelation: "services"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       service_requests: {
         Row: {
           actual_cost: number | null

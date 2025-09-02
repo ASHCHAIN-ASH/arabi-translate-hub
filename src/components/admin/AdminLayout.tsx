@@ -7,7 +7,7 @@ import { AdminDashboardService } from '@/utils/adminDashboardService';
 import { 
   LayoutDashboard, 
   Users, 
-  ShoppingCart, 
+  ShoppingCart,
   FileText, 
   CreditCard, 
   HelpCircle,
@@ -50,6 +50,12 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
       badge: '12'
     },
     { 
+      name: 'طلبات الخدمات', 
+      href: '/admin/service-orders', 
+      icon: FileText,
+      badge: 'جديد'
+    },
+    { 
       name: 'إدارة الطلبات', 
       href: '/admin/orders', 
       icon: ShoppingCart,
@@ -64,7 +70,7 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
     { 
       name: 'إدارة الفواتير', 
       href: '/admin/invoices', 
-      icon: FileText,
+      icon: CreditCard,
       badge: '3'
     },
     { 
