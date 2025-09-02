@@ -299,92 +299,103 @@ export default function EmailNotifications() {
 
   const generateInvoiceTemplate = (data: SmartFormData) => {
     return `
-    <div dir="rtl" style="max-width: 700px; margin: 0 auto; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif, 'Times New Roman'; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 25px; direction: rtl; text-align: right;">
+    <div dir="rtl" style="max-width: 700px; margin: 0 auto; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif, 'Times New Roman'; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 15px; direction: rtl; text-align: right;">
+      <style>
+        @media (max-width: 768px) {
+          .mobile-container { padding: 10px !important; }
+          .mobile-text { font-size: 14px !important; }
+          .mobile-header { font-size: 24px !important; }
+          .mobile-flex { flex-direction: column !important; }
+          .mobile-table td { display: block !important; text-align: right !important; border: none !important; padding: 8px 0 !important; }
+          .mobile-table tr { border-bottom: 1px solid #e5e7eb !important; margin-bottom: 10px !important; }
+        }
+        * { direction: rtl !important; text-align: right !important; }
+        table { direction: rtl !important; }
+        td, th { direction: rtl !important; text-align: right !important; }
+      </style>
+      
       <div style="background: white; border-radius: 15px; overflow: hidden; box-shadow: 0 15px 35px rgba(0,0,0,0.1); direction: rtl;">
         <!-- Header Section -->
-        <div style="background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%); padding: 35px 40px; text-align: center; position: relative; overflow: hidden; direction: rtl;">
-          <div style="position: absolute; top: -50px; left: -50px; width: 100px; height: 100px; background: rgba(255,255,255,0.1); border-radius: 50%; opacity: 0.5;"></div>
-          <div style="position: absolute; bottom: -30px; right: -30px; width: 60px; height: 60px; background: rgba(255,255,255,0.1); border-radius: 50%; opacity: 0.7;"></div>
-          <h1 style="color: white; font-size: 32px; margin: 0 0 8px 0; font-weight: 700; text-shadow: 2px 2px 4px rgba(0,0,0,0.3); direction: rtl;">وكالة ماستر إيدو باث</h1>
-          <p style="color: rgba(255,255,255,0.9); margin: 0; font-size: 16px; font-weight: 300; direction: rtl;">Master Edu Path Agency</p>
+        <div style="background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%); padding: 25px 20px; text-align: center; position: relative; overflow: hidden; direction: rtl;" class="mobile-container">
+          <h1 style="color: white; font-size: 28px; margin: 0 0 8px 0; font-weight: 700; text-shadow: 2px 2px 4px rgba(0,0,0,0.3); direction: rtl;" class="mobile-header">وكالة ماستر إيدو باث</h1>
+          <p style="color: rgba(255,255,255,0.9); margin: 0; font-size: 14px; font-weight: 300; direction: rtl;" class="mobile-text">Master Edu Path Agency</p>
           <div style="background: rgba(255,255,255,0.2); height: 2px; width: 80px; margin: 15px auto; border-radius: 2px;"></div>
-          <p style="color: rgba(255,255,255,0.95); margin: 10px 0 0 0; font-size: 18px; font-weight: 500; direction: rtl;">📋 فاتورة إلكترونية</p>
+          <p style="color: rgba(255,255,255,0.95); margin: 10px 0 0 0; font-size: 16px; font-weight: 500; direction: rtl;" class="mobile-text">📋 فاتورة إلكترونية</p>
         </div>
         
         <!-- Company Info & Invoice Details -->
-        <div style="padding: 40px; direction: rtl;">
-          <div style="display: flex; justify-content: space-between; margin-bottom: 35px; flex-wrap: wrap; direction: rtl;">
-            <div style="flex: 1; min-width: 250px; margin-bottom: 20px; text-align: right; direction: rtl;">
-              <h3 style="color: #1f2937; margin: 0 0 15px 0; font-size: 18px; border-bottom: 2px solid #e5e7eb; padding-bottom: 8px; text-align: right; direction: rtl;">🏢 بيانات الشركة</h3>
-              <p style="margin: 5px 0; color: #4b5563; line-height: 1.6; text-align: right; direction: rtl;"><strong>وكالة ماستر إيدو باث</strong></p>
-              <p style="margin: 5px 0; color: #6b7280; text-align: right; direction: rtl;">المملكة العربية السعودية</p>
-              <p style="margin: 5px 0; color: #6b7280; text-align: right; direction: rtl;">📧 info@masteredupath.com</p>
-              <p style="margin: 5px 0; color: #6b7280; text-align: right; direction: rtl;">🌐 www.masteredupath.com</p>
+        <div style="padding: 30px 20px; direction: rtl;" class="mobile-container">
+          <!-- Mobile-friendly company info -->
+          <div style="margin-bottom: 25px; direction: rtl;">
+            <div style="background: #f8fafc; border-radius: 8px; padding: 20px; margin-bottom: 20px; direction: rtl; text-align: right;">
+              <h3 style="color: #1f2937; margin: 0 0 15px 0; font-size: 16px; border-bottom: 2px solid #e5e7eb; padding-bottom: 8px; text-align: right; direction: rtl;" class="mobile-text">🏢 بيانات الشركة</h3>
+              <p style="margin: 5px 0; color: #4b5563; line-height: 1.6; text-align: right; direction: rtl; font-size: 14px;" class="mobile-text"><strong>وكالة ماستر إيدو باث</strong></p>
+              <p style="margin: 5px 0; color: #6b7280; text-align: right; direction: rtl; font-size: 12px;" class="mobile-text">المملكة العربية السعودية</p>
+              <p style="margin: 5px 0; color: #6b7280; text-align: right; direction: rtl; font-size: 12px;" class="mobile-text">📧 info@masteredupath.com</p>
             </div>
-            <div style="flex: 1; min-width: 250px; text-align: right; direction: rtl;">
-              <h3 style="color: #1f2937; margin: 0 0 15px 0; font-size: 18px; border-bottom: 2px solid #e5e7eb; padding-bottom: 8px; text-align: right; direction: rtl;">📋 تفاصيل الفاتورة</h3>
-              <p style="margin: 5px 0; color: #4b5563; text-align: right; direction: rtl;"><strong>رقم الفاتورة:</strong> <span style="color: #4f46e5; font-weight: bold;">#${data.invoiceNumber}</span></p>
-              <p style="margin: 5px 0; color: #6b7280; text-align: right; direction: rtl;">📅 تاريخ الإصدار: ${new Date().toLocaleDateString('ar-SA')}</p>
-              <p style="margin: 5px 0; color: #6b7280; text-align: right; direction: rtl;">⏰ تاريخ الاستحقاق: ${data.dueDate}</p>
+            
+            <div style="background: #f0f9ff; border-radius: 8px; padding: 20px; direction: rtl; text-align: right;">
+              <h3 style="color: #1f2937; margin: 0 0 15px 0; font-size: 16px; border-bottom: 2px solid #e5e7eb; padding-bottom: 8px; text-align: right; direction: rtl;" class="mobile-text">📋 تفاصيل الفاتورة</h3>
+              <p style="margin: 5px 0; color: #4b5563; text-align: right; direction: rtl; font-size: 14px;" class="mobile-text"><strong>رقم الفاتورة:</strong> <span style="color: #4f46e5; font-weight: bold;">#${data.invoiceNumber}</span></p>
+              <p style="margin: 5px 0; color: #6b7280; text-align: right; direction: rtl; font-size: 12px;" class="mobile-text">📅 الإصدار: ${new Date().toLocaleDateString('ar-SA')}</p>
+              <p style="margin: 5px 0; color: #6b7280; text-align: right; direction: rtl; font-size: 12px;" class="mobile-text">⏰ الاستحقاق: ${data.dueDate}</p>
             </div>
           </div>
 
           <!-- Customer Info -->
-          <div style="background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%); border-radius: 12px; padding: 25px; margin: 25px 0; border-right: 5px solid #0ea5e9; direction: rtl; text-align: right;">
-            <h3 style="color: #0c4a6e; margin: 0 0 15px 0; font-size: 18px; text-align: right; direction: rtl;">👤 بيانات العميل</h3>
-            <p style="color: #075985; margin: 8px 0; font-size: 16px; text-align: right; direction: rtl;"><strong>الاسم:</strong> ${data.customerName}</p>
-            <p style="color: #075985; margin: 8px 0; text-align: right; direction: rtl;"><strong>البريد الإلكتروني:</strong> ${data.customerEmail}</p>
+          <div style="background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%); border-radius: 12px; padding: 20px; margin: 20px 0; border-right: 5px solid #0ea5e9; direction: rtl; text-align: right;">
+            <h3 style="color: #0c4a6e; margin: 0 0 15px 0; font-size: 16px; text-align: right; direction: rtl;" class="mobile-text">👤 بيانات العميل</h3>
+            <p style="color: #075985; margin: 8px 0; font-size: 14px; text-align: right; direction: rtl;" class="mobile-text"><strong>الاسم:</strong> ${data.customerName}</p>
+            <p style="color: #075985; margin: 8px 0; text-align: right; direction: rtl; font-size: 12px; word-break: break-all;" class="mobile-text"><strong>البريد:</strong> ${data.customerEmail}</p>
           </div>
 
-          <!-- Service Details -->
-          <div style="background: white; border: 2px solid #e5e7eb; border-radius: 12px; padding: 25px; margin: 25px 0; direction: rtl;">
-            <h3 style="color: #1f2937; margin: 0 0 20px 0; font-size: 18px; text-align: center; border-bottom: 1px solid #e5e7eb; padding-bottom: 10px; direction: rtl;">📦 تفاصيل الخدمة</h3>
-            <table style="width: 100%; border-collapse: collapse; direction: rtl;">
-              <thead>
-                <tr style="background: #f8fafc;">
-                  <th style="padding: 15px; text-align: right; color: #374151; border-bottom: 2px solid #e5e7eb; direction: rtl;">الخدمة</th>
-                  <th style="padding: 15px; text-align: center; color: #374151; border-bottom: 2px solid #e5e7eb; direction: rtl;">المبلغ</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td style="padding: 15px; color: #1f2937; border-bottom: 1px solid #f3f4f6; text-align: right; direction: rtl;">${data.serviceDescription}</td>
-                  <td style="padding: 15px; text-align: center; color: #1f2937; border-bottom: 1px solid #f3f4f6; direction: rtl;">${data.amount} ${data.currency}</td>
-                </tr>
-              </tbody>
-            </table>
+          <!-- Service Details - Mobile Optimized -->
+          <div style="background: white; border: 2px solid #e5e7eb; border-radius: 12px; padding: 20px; margin: 20px 0; direction: rtl;">
+            <h3 style="color: #1f2937; margin: 0 0 20px 0; font-size: 16px; text-align: center; border-bottom: 1px solid #e5e7eb; padding-bottom: 10px; direction: rtl;" class="mobile-text">📦 تفاصيل الخدمة</h3>
+            
+            <!-- Mobile-friendly service display -->
+            <div style="direction: rtl; text-align: right;">
+              <div style="background: #f8fafc; padding: 15px; border-radius: 8px; margin-bottom: 15px; direction: rtl;">
+                <p style="margin: 0 0 10px 0; color: #374151; font-weight: bold; text-align: right; direction: rtl; font-size: 14px;" class="mobile-text">الخدمة:</p>
+                <p style="margin: 0; color: #1f2937; text-align: right; direction: rtl; font-size: 14px;" class="mobile-text">${data.serviceDescription}</p>
+              </div>
+              <div style="background: #f0fdf4; padding: 15px; border-radius: 8px; border-right: 4px solid #10b981; direction: rtl;">
+                <p style="margin: 0 0 10px 0; color: #374151; font-weight: bold; text-align: right; direction: rtl; font-size: 14px;" class="mobile-text">المبلغ:</p>
+                <p style="margin: 0; color: #059669; font-size: 18px; font-weight: bold; text-align: right; direction: rtl;">${data.amount} ${data.currency}</p>
+              </div>
+            </div>
           </div>
 
           <!-- Total Amount -->
-          <div style="background: linear-gradient(135deg, #10b981 0%, #059669 100%); border-radius: 12px; padding: 25px; margin: 30px 0; text-align: center; box-shadow: 0 8px 25px rgba(16, 185, 129, 0.25); direction: rtl;">
-            <h2 style="color: white; margin: 0 0 10px 0; font-size: 24px; text-shadow: 1px 1px 2px rgba(0,0,0,0.3); direction: rtl;">💰 المبلغ الإجمالي</h2>
+          <div style="background: linear-gradient(135deg, #10b981 0%, #059669 100%); border-radius: 12px; padding: 25px; margin: 25px 0; text-align: center; box-shadow: 0 8px 25px rgba(16, 185, 129, 0.25); direction: rtl;">
+            <h2 style="color: white; margin: 0 0 10px 0; font-size: 20px; text-shadow: 1px 1px 2px rgba(0,0,0,0.3); direction: rtl;" class="mobile-text">💰 المبلغ الإجمالي</h2>
             <div style="background: rgba(255,255,255,0.2); border-radius: 8px; padding: 15px; display: inline-block; direction: rtl;">
-              <span style="color: white; font-size: 32px; font-weight: bold; text-shadow: 2px 2px 4px rgba(0,0,0,0.3); direction: rtl;">${data.amount} ${data.currency}</span>
+              <span style="color: white; font-size: 24px; font-weight: bold; text-shadow: 2px 2px 4px rgba(0,0,0,0.3); direction: rtl;">${data.amount} ${data.currency}</span>
             </div>
           </div>
 
           <!-- Payment Button -->
-          <div style="text-align: center; margin: 35px 0; direction: rtl;">
-            <a href="#" style="background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%); color: white; padding: 18px 40px; text-decoration: none; border-radius: 50px; font-weight: bold; font-size: 18px; display: inline-block; box-shadow: 0 8px 20px rgba(79, 70, 229, 0.4); transition: all 0.3s ease; direction: rtl;">💳 ادفع الآن</a>
+          <div style="text-align: center; margin: 25px 0; direction: rtl;">
+            <a href="#" style="background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%); color: white; padding: 15px 30px; text-decoration: none; border-radius: 25px; font-weight: bold; font-size: 16px; display: inline-block; box-shadow: 0 6px 15px rgba(79, 70, 229, 0.4); direction: rtl;" class="mobile-text">💳 ادفع الآن</a>
           </div>
 
           <!-- Important Notes -->
-          <div style="background: #fef3f2; border-right: 4px solid #ef4444; border-radius: 8px; padding: 20px; margin: 25px 0; direction: rtl; text-align: right;">
-            <h4 style="color: #dc2626; margin: 0 0 10px 0; font-size: 16px; text-align: right; direction: rtl;">⚠️ ملاحظات مهمة:</h4>
-            <ul style="color: #7f1d1d; margin: 0; padding-right: 20px; line-height: 1.6; text-align: right; direction: rtl; list-style-position: inside;">
-              <li style="text-align: right; direction: rtl;">يرجى سداد الفاتورة في الموعد المحدد</li>
-              <li style="text-align: right; direction: rtl;">في حالة التأخير، قد تطبق رسوم إضافية</li>
+          <div style="background: #fef3f2; border-right: 4px solid #ef4444; border-radius: 8px; padding: 15px; margin: 20px 0; direction: rtl; text-align: right;">
+            <h4 style="color: #dc2626; margin: 0 0 10px 0; font-size: 14px; text-align: right; direction: rtl;" class="mobile-text">⚠️ ملاحظات مهمة:</h4>
+            <ul style="color: #7f1d1d; margin: 0; padding-right: 15px; line-height: 1.6; text-align: right; direction: rtl; list-style-position: inside; font-size: 12px;" class="mobile-text">
+              <li style="text-align: right; direction: rtl; margin-bottom: 5px;">يرجى سداد الفاتورة في الموعد المحدد</li>
+              <li style="text-align: right; direction: rtl; margin-bottom: 5px;">في حالة التأخير، قد تطبق رسوم إضافية</li>
               <li style="text-align: right; direction: rtl;">للاستفسارات، يرجى التواصل معنا</li>
             </ul>
           </div>
 
           <!-- Footer -->
-          <div style="border-top: 2px solid #e5e7eb; padding-top: 25px; text-align: center; margin-top: 35px; direction: rtl;">
-            <div style="background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%); border-radius: 10px; padding: 20px; margin-bottom: 20px; direction: rtl;">
-              <p style="color: #475569; margin: 0 0 10px 0; font-size: 16px; font-weight: 500; direction: rtl;">🙏 شكراً لثقتك في خدماتنا</p>
-              <p style="color: #64748b; margin: 0; font-size: 14px; direction: rtl;">نحن نقدر اختيارك لوكالة ماستر إيدو باث</p>
+          <div style="border-top: 2px solid #e5e7eb; padding-top: 20px; text-align: center; margin-top: 25px; direction: rtl;">
+            <div style="background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%); border-radius: 10px; padding: 15px; margin-bottom: 15px; direction: rtl;">
+              <p style="color: #475569; margin: 0 0 5px 0; font-size: 14px; font-weight: 500; direction: rtl;" class="mobile-text">🙏 شكراً لثقتك في خدماتنا</p>
+              <p style="color: #64748b; margin: 0; font-size: 12px; direction: rtl;" class="mobile-text">نحن نقدر اختيارك لوكالة ماستر إيدو باث</p>
             </div>
-            <p style="color: #94a3b8; font-size: 12px; margin: 15px 0 0 0; direction: rtl;">© ${new Date().getFullYear()} وكالة ماستر إيدو باث - جميع الحقوق محفوظة</p>
+            <p style="color: #94a3b8; font-size: 10px; margin: 10px 0 0 0; direction: rtl;" class="mobile-text">© ${new Date().getFullYear()} وكالة ماستر إيدو باث - جميع الحقوق محفوظة</p>
           </div>
         </div>
       </div>
@@ -394,31 +405,42 @@ export default function EmailNotifications() {
   // قالب فاتورة مدفوعة
   const generatePaidInvoiceTemplate = (data: SmartFormData) => {
     return `
-    <div dir="rtl" style="max-width: 700px; margin: 0 auto; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif, 'Times New Roman'; background: linear-gradient(135deg, #10b981 0%, #059669 100%); padding: 25px; direction: rtl; text-align: right;">
+    <div dir="rtl" style="max-width: 700px; margin: 0 auto; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif, 'Times New Roman'; background: linear-gradient(135deg, #10b981 0%, #059669 100%); padding: 15px; direction: rtl; text-align: right;">
+      <style>
+        @media (max-width: 768px) {
+          .mobile-container { padding: 10px !important; }
+          .mobile-text { font-size: 14px !important; }
+          .mobile-header { font-size: 24px !important; }
+        }
+        * { direction: rtl !important; text-align: right !important; }
+      </style>
+      
       <div style="background: white; border-radius: 15px; overflow: hidden; box-shadow: 0 15px 35px rgba(0,0,0,0.1); direction: rtl;">
         <!-- Success Header -->
-        <div style="background: linear-gradient(135deg, #10b981 0%, #059669 100%); padding: 40px; text-align: center; position: relative; direction: rtl;">
-          <div style="background: rgba(255,255,255,0.2); width: 100px; height: 100px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px auto; font-size: 45px;">✅</div>
-          <h1 style="color: white; font-size: 28px; margin: 0 0 10px 0; font-weight: 700; direction: rtl;">تم الدفع بنجاح!</h1>
-          <p style="color: rgba(255,255,255,0.9); margin: 0; font-size: 16px; direction: rtl;">شكراً لك ${data.customerName}</p>
+        <div style="background: linear-gradient(135deg, #10b981 0%, #059669 100%); padding: 30px 20px; text-align: center; position: relative; direction: rtl;" class="mobile-container">
+          <div style="background: rgba(255,255,255,0.2); width: 80px; height: 80px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 15px auto; font-size: 35px;">✅</div>
+          <h1 style="color: white; font-size: 24px; margin: 0 0 10px 0; font-weight: 700; direction: rtl;" class="mobile-header">تم الدفع بنجاح!</h1>
+          <p style="color: rgba(255,255,255,0.9); margin: 0; font-size: 14px; direction: rtl;" class="mobile-text">شكراً لك ${data.customerName}</p>
         </div>
         
-        <div style="padding: 40px; text-align: center; direction: rtl;">
-          <div style="background: #f0fdf4; border: 2px solid #10b981; border-radius: 12px; padding: 30px; margin: 25px 0; direction: rtl; text-align: right;">
-            <h2 style="color: #065f46; margin: 0 0 20px 0; font-size: 24px; text-align: center; direction: rtl;">💰 تفاصيل الدفعة</h2>
-            <p style="color: #047857; font-size: 18px; margin: 10px 0; text-align: right; direction: rtl;"><strong>رقم الفاتورة:</strong> ${data.invoiceNumber}</p>
-            <p style="color: #047857; font-size: 18px; margin: 10px 0; text-align: right; direction: rtl;"><strong>المبلغ المدفوع:</strong> ${data.amount} ${data.currency}</p>
-            <p style="color: #047857; font-size: 16px; margin: 10px 0; text-align: right; direction: rtl;"><strong>تاريخ الدفع:</strong> ${new Date().toLocaleDateString('ar-SA')}</p>
+        <div style="padding: 30px 20px; text-align: center; direction: rtl;" class="mobile-container">
+          <div style="background: #f0fdf4; border: 2px solid #10b981; border-radius: 12px; padding: 20px; margin: 20px 0; direction: rtl; text-align: right;">
+            <h2 style="color: #065f46; margin: 0 0 15px 0; font-size: 18px; text-align: center; direction: rtl;" class="mobile-text">💰 تفاصيل الدفعة</h2>
+            <div style="text-align: right; direction: rtl;">
+              <p style="color: #047857; font-size: 16px; margin: 8px 0; text-align: right; direction: rtl;" class="mobile-text"><strong>رقم الفاتورة:</strong> ${data.invoiceNumber}</p>
+              <p style="color: #047857; font-size: 16px; margin: 8px 0; text-align: right; direction: rtl;" class="mobile-text"><strong>المبلغ المدفوع:</strong> ${data.amount} ${data.currency}</p>
+              <p style="color: #047857; font-size: 14px; margin: 8px 0; text-align: right; direction: rtl;" class="mobile-text"><strong>تاريخ الدفع:</strong> ${new Date().toLocaleDateString('ar-SA')}</p>
+            </div>
           </div>
 
-          <div style="background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%); border-radius: 10px; padding: 25px; margin: 25px 0; direction: rtl; text-align: center;">
-            <h3 style="color: #1e40af; margin: 0 0 15px 0; direction: rtl;">📧 سيتم إرسال إيصال مفصل إلى بريدك الإلكتروني</h3>
-            <p style="color: #1e3a8a; margin: 0; direction: rtl;">${data.customerEmail}</p>
+          <div style="background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%); border-radius: 10px; padding: 20px; margin: 20px 0; direction: rtl; text-align: center;">
+            <h3 style="color: #1e40af; margin: 0 0 10px 0; direction: rtl; font-size: 16px;" class="mobile-text">📧 سيتم إرسال إيصال مفصل إلى بريدك الإلكتروني</h3>
+            <p style="color: #1e3a8a; margin: 0; direction: rtl; font-size: 14px; word-break: break-all;" class="mobile-text">${data.customerEmail}</p>
           </div>
 
-          <div style="margin: 30px 0; direction: rtl; text-align: center;">
-            <p style="color: #374151; font-size: 18px; margin: 0 0 20px 0; direction: rtl;">🎉 نشكرك على سرعة السداد</p>
-            <p style="color: #6b7280; font-size: 14px; direction: rtl;">وكالة ماستر إيدو باث - دائماً في خدمتكم</p>
+          <div style="margin: 25px 0; direction: rtl; text-align: center;">
+            <p style="color: #374151; font-size: 16px; margin: 0 0 15px 0; direction: rtl;" class="mobile-text">🎉 نشكرك على سرعة السداد</p>
+            <p style="color: #6b7280; font-size: 12px; direction: rtl;" class="mobile-text">وكالة ماستر إيدو باث - دائماً في خدمتكم</p>
           </div>
         </div>
       </div>
@@ -428,71 +450,87 @@ export default function EmailNotifications() {
   // قالب سند دفع
   const generatePaymentReceiptTemplate = (data: SmartFormData) => {
     return `
-    <div dir="rtl" style="max-width: 700px; margin: 0 auto; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif, 'Times New Roman'; background: #f8fafc; padding: 25px; direction: rtl; text-align: right;">
+    <div dir="rtl" style="max-width: 700px; margin: 0 auto; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif, 'Times New Roman'; background: #f8fafc; padding: 15px; direction: rtl; text-align: right;">
+      <style>
+        @media (max-width: 768px) {
+          .mobile-container { padding: 10px !important; }
+          .mobile-text { font-size: 14px !important; }
+          .mobile-header { font-size: 24px !important; }
+          .mobile-flex { flex-direction: column !important; gap: 15px !important; }
+          .mobile-table { width: 100% !important; }
+          .mobile-table td { display: block !important; text-align: right !important; padding: 8px 0 !important; border: none !important; }
+          .mobile-table tr { border-bottom: 1px solid #e5e7eb !important; margin-bottom: 10px !important; display: block !important; }
+        }
+        * { direction: rtl !important; text-align: right !important; }
+      </style>
+      
       <div style="background: white; border: 3px solid #e2e8f0; border-radius: 12px; overflow: hidden; direction: rtl;">
         <!-- Receipt Header -->
-        <div style="background: linear-gradient(135deg, #334155 0%, #475569 100%); padding: 30px; text-align: center; color: white; direction: rtl;">
-          <h1 style="margin: 0 0 10px 0; font-size: 28px; font-weight: 700; direction: rtl;">📋 سند دفع</h1>
-          <p style="margin: 0; font-size: 16px; opacity: 0.9; direction: rtl;">Payment Receipt</p>
-          <div style="background: rgba(255,255,255,0.2); height: 2px; width: 100px; margin: 15px auto;"></div>
-          <p style="margin: 0; font-size: 18px; font-weight: 500; direction: rtl;">وكالة ماستر إيدو باث</p>
+        <div style="background: linear-gradient(135deg, #334155 0%, #475569 100%); padding: 25px 20px; text-align: center; color: white; direction: rtl;" class="mobile-container">
+          <h1 style="margin: 0 0 8px 0; font-size: 24px; font-weight: 700; direction: rtl;" class="mobile-header">📋 سند دفع</h1>
+          <p style="margin: 0; font-size: 14px; opacity: 0.9; direction: rtl;" class="mobile-text">Payment Receipt</p>
+          <div style="background: rgba(255,255,255,0.2); height: 2px; width: 80px; margin: 10px auto;"></div>
+          <p style="margin: 0; font-size: 16px; font-weight: 500; direction: rtl;" class="mobile-text">وكالة ماستر إيدو باث</p>
         </div>
 
-        <div style="padding: 35px; direction: rtl;">
+        <div style="padding: 25px 15px; direction: rtl;" class="mobile-container">
           <!-- Receipt Number & Date -->
-          <div style="display: flex; justify-content: space-between; background: #f1f5f9; padding: 20px; border-radius: 8px; margin-bottom: 25px; direction: rtl;">
+          <div style="display: flex; justify-content: space-between; background: #f1f5f9; padding: 15px; border-radius: 8px; margin-bottom: 20px; direction: rtl;" class="mobile-flex">
             <div style="text-align: right; direction: rtl;">
-              <p style="margin: 0; color: #475569; font-weight: bold; text-align: right; direction: rtl;">رقم السند:</p>
-              <p style="margin: 5px 0 0 0; color: #1e293b; font-size: 18px; font-weight: bold; text-align: right; direction: rtl;">#${data.invoiceNumber}</p>
+              <p style="margin: 0; color: #475569; font-weight: bold; text-align: right; direction: rtl; font-size: 14px;" class="mobile-text">رقم السند:</p>
+              <p style="margin: 5px 0 0 0; color: #1e293b; font-size: 16px; font-weight: bold; text-align: right; direction: rtl;" class="mobile-text">#${data.invoiceNumber}</p>
             </div>
-            <div style="text-align: left; direction: rtl;">
-              <p style="margin: 0; color: #475569; font-weight: bold; text-align: right; direction: rtl;">التاريخ:</p>
-              <p style="margin: 5px 0 0 0; color: #1e293b; font-size: 16px; text-align: right; direction: rtl;">${new Date().toLocaleDateString('ar-SA')}</p>
+            <div style="text-align: right; direction: rtl;">
+              <p style="margin: 0; color: #475569; font-weight: bold; text-align: right; direction: rtl; font-size: 14px;" class="mobile-text">التاريخ:</p>
+              <p style="margin: 5px 0 0 0; color: #1e293b; font-size: 14px; text-align: right; direction: rtl;" class="mobile-text">${new Date().toLocaleDateString('ar-SA')}</p>
             </div>
           </div>
 
-          <!-- Customer & Payment Details -->
-          <table style="width: 100%; border-collapse: collapse; margin: 25px 0; direction: rtl;">
-            <tr>
-              <td style="padding: 12px; background: #fafafa; border: 1px solid #e2e8f0; font-weight: bold; color: #374151; text-align: right; direction: rtl;">استلمنا من السيد/ة:</td>
-              <td style="padding: 12px; border: 1px solid #e2e8f0; color: #1f2937; text-align: right; direction: rtl;">${data.customerName}</td>
-            </tr>
-            <tr>
-              <td style="padding: 12px; background: #fafafa; border: 1px solid #e2e8f0; font-weight: bold; color: #374151; text-align: right; direction: rtl;">مبلغ وقدره:</td>
-              <td style="padding: 12px; border: 1px solid #e2e8f0; color: #1f2937; font-size: 18px; font-weight: bold; text-align: right; direction: rtl;">${data.amount} ${data.currency}</td>
-            </tr>
-            <tr>
-              <td style="padding: 12px; background: #fafafa; border: 1px solid #e2e8f0; font-weight: bold; color: #374151; text-align: right; direction: rtl;">وذلك عن:</td>
-              <td style="padding: 12px; border: 1px solid #e2e8f0; color: #1f2937; text-align: right; direction: rtl;">سداد الفاتورة رقم ${data.invoiceNumber}</td>
-            </tr>
-            <tr>
-              <td style="padding: 12px; background: #fafafa; border: 1px solid #e2e8f0; font-weight: bold; color: #374151; text-align: right; direction: rtl;">البريد الإلكتروني:</td>
-              <td style="padding: 12px; border: 1px solid #e2e8f0; color: #1f2937; text-align: right; direction: rtl;">${data.customerEmail}</td>
-            </tr>
-          </table>
-
-          <!-- Amount in Words (placeholder) -->
-          <div style="background: #f0f9ff; border: 2px solid #3b82f6; border-radius: 8px; padding: 20px; margin: 25px 0; text-align: center; direction: rtl;">
-            <p style="margin: 0; color: #1e40af; font-weight: bold; font-size: 16px; direction: rtl;">المبلغ بالأحرف:</p>
-            <p style="margin: 5px 0 0 0; color: #1e3a8a; font-size: 18px; border-bottom: 2px dashed #3b82f6; padding-bottom: 10px; display: inline-block; min-width: 300px; direction: rtl;">${data.amount} ${data.currency} فقط لا غير</p>
+          <!-- Customer & Payment Details - Mobile Optimized -->
+          <div style="margin: 20px 0; direction: rtl;">
+            <div style="background: #fafafa; border-radius: 8px; padding: 15px; margin-bottom: 15px; direction: rtl;">
+              <p style="margin: 0 0 8px 0; color: #374151; font-weight: bold; text-align: right; direction: rtl; font-size: 14px;" class="mobile-text">استلمنا من السيد/ة:</p>
+              <p style="margin: 0; color: #1f2937; text-align: right; direction: rtl; font-size: 14px;" class="mobile-text">${data.customerName}</p>
+            </div>
+            
+            <div style="background: #f0fdf4; border-radius: 8px; padding: 15px; margin-bottom: 15px; border-right: 4px solid #10b981; direction: rtl;">
+              <p style="margin: 0 0 8px 0; color: #374151; font-weight: bold; text-align: right; direction: rtl; font-size: 14px;" class="mobile-text">مبلغ وقدره:</p>
+              <p style="margin: 0; color: #059669; font-size: 18px; font-weight: bold; text-align: right; direction: rtl;">${data.amount} ${data.currency}</p>
+            </div>
+            
+            <div style="background: #fafafa; border-radius: 8px; padding: 15px; margin-bottom: 15px; direction: rtl;">
+              <p style="margin: 0 0 8px 0; color: #374151; font-weight: bold; text-align: right; direction: rtl; font-size: 14px;" class="mobile-text">وذلك عن:</p>
+              <p style="margin: 0; color: #1f2937; text-align: right; direction: rtl; font-size: 14px;" class="mobile-text">سداد الفاتورة رقم ${data.invoiceNumber}</p>
+            </div>
+            
+            <div style="background: #fafafa; border-radius: 8px; padding: 15px; direction: rtl;">
+              <p style="margin: 0 0 8px 0; color: #374151; font-weight: bold; text-align: right; direction: rtl; font-size: 14px;" class="mobile-text">البريد الإلكتروني:</p>
+              <p style="margin: 0; color: #1f2937; text-align: right; direction: rtl; font-size: 12px; word-break: break-all;" class="mobile-text">${data.customerEmail}</p>
+            </div>
           </div>
 
-          <!-- Signature Section -->
-          <div style="display: flex; justify-content: space-between; margin-top: 40px; direction: rtl;">
+          <!-- Amount in Words -->
+          <div style="background: #f0f9ff; border: 2px solid #3b82f6; border-radius: 8px; padding: 15px; margin: 20px 0; text-align: center; direction: rtl;">
+            <p style="margin: 0; color: #1e40af; font-weight: bold; font-size: 14px; direction: rtl;" class="mobile-text">المبلغ بالأحرف:</p>
+            <p style="margin: 5px 0 0 0; color: #1e3a8a; font-size: 16px; border-bottom: 2px dashed #3b82f6; padding-bottom: 8px; display: inline-block; min-width: 200px; direction: rtl;" class="mobile-text">${data.amount} ${data.currency} فقط لا غير</p>
+          </div>
+
+          <!-- Signature Section - Mobile Optimized -->
+          <div style="display: flex; justify-content: space-between; margin-top: 30px; direction: rtl; gap: 20px;" class="mobile-flex">
             <div style="text-align: center; flex: 1; direction: rtl;">
-              <div style="border-bottom: 2px solid #374151; width: 200px; margin: 0 auto 10px auto; height: 40px;"></div>
-              <p style="margin: 0; color: #6b7280; font-size: 14px; direction: rtl;">توقيع المستلم</p>
+              <div style="border-bottom: 2px solid #374151; width: 100%; max-width: 150px; margin: 0 auto 8px auto; height: 30px;"></div>
+              <p style="margin: 0; color: #6b7280; font-size: 12px; direction: rtl;" class="mobile-text">توقيع المستلم</p>
             </div>
             <div style="text-align: center; flex: 1; direction: rtl;">
-              <div style="border-bottom: 2px solid #374151; width: 200px; margin: 0 auto 10px auto; height: 40px;"></div>
-              <p style="margin: 0; color: #6b7280; font-size: 14px; direction: rtl;">ختم الشركة</p>
+              <div style="border-bottom: 2px solid #374151; width: 100%; max-width: 150px; margin: 0 auto 8px auto; height: 30px;"></div>
+              <p style="margin: 0; color: #6b7280; font-size: 12px; direction: rtl;" class="mobile-text">ختم الشركة</p>
             </div>
           </div>
 
           <!-- Footer -->
-          <div style="text-align: center; margin-top: 35px; padding-top: 20px; border-top: 1px solid #e2e8f0; direction: rtl;">
-            <p style="margin: 0; color: #64748b; font-size: 14px; direction: rtl;">وكالة ماستر إيدو باث</p>
-            <p style="margin: 5px 0 0 0; color: #94a3b8; font-size: 12px; direction: rtl;">المملكة العربية السعودية | info@masteredupath.com</p>
+          <div style="text-align: center; margin-top: 25px; padding-top: 15px; border-top: 1px solid #e2e8f0; direction: rtl;">
+            <p style="margin: 0; color: #64748b; font-size: 14px; direction: rtl;" class="mobile-text">وكالة ماستر إيدو باث</p>
+            <p style="margin: 5px 0 0 0; color: #94a3b8; font-size: 10px; direction: rtl;" class="mobile-text">المملكة العربية السعودية | info@masteredupath.com</p>
           </div>
         </div>
       </div>
