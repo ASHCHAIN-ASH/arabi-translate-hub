@@ -1803,6 +1803,30 @@ export default function EmailNotifications() {
                       <p className="text-sm text-muted-foreground">إعلان خدمات جديدة</p>
                     </div>
                   </div>
+
+                  {/* إضافة خدمة مخصصة */}
+                  <div 
+                    className="p-4 border-2 border-dashed rounded-xl cursor-pointer transition-all hover:shadow-lg hover:border-primary/50 bg-gradient-to-br from-primary/5 to-primary/10"
+                    onClick={() => {
+                      toast.info("يمكنك إنشاء قوالب مخصصة باستخدام الإرسال اليدوي");
+                      setActiveTab("manual-send");
+                    }}
+                  >
+                    <div className="text-center">
+                      <div className="relative">
+                        <Plus className="h-12 w-12 mx-auto mb-3 text-primary" />
+                        <div className="absolute -top-1 -right-1 w-6 h-6 bg-primary/20 rounded-full flex items-center justify-center">
+                          <Plus className="h-3 w-3 text-primary" />
+                        </div>
+                      </div>
+                      <h3 className="font-semibold text-lg mb-2 text-primary">إضافة خدمة مخصصة</h3>
+                      <p className="text-sm text-muted-foreground">قم بإنشاء قالب مخصص لخدمة جديدة</p>
+                      <div className="mt-2 inline-flex items-center gap-1 text-xs text-primary font-medium">
+                        <Settings className="h-3 w-3" />
+                        إعدادات متقدمة
+                      </div>
+                    </div>
+                  </div>
                 </div>
 
                 {smartForm.type && (
