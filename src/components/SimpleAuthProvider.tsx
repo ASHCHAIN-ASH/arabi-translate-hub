@@ -159,54 +159,47 @@ export const SimpleAuthProvider: React.FC<{ children: React.ReactNode }> = ({ ch
         return { error: 'كلمة المرور يجب أن تحتوي على رمز خاص واحد على الأقل' };
       }
 
-      console.log('Password validation passed, starting bcrypt...');
+      console.log('Password validation passed, using Supabase Auth...');
       
-      // تشفير كلمة المرور
-      const saltRounds = 12;
-      let hashedPassword;
-      try {
-        hashedPassword = await bcrypt.hash(password, saltRounds);
-        console.log('Bcrypt hashing successful');
-      } catch (bcryptError) {
-        console.error('Bcrypt error:', bcryptError);
-        return { error: 'خطأ في معالجة كلمة المرور' };
-      }
-
-      console.log('Attempting to insert user into database...');
+      // استخدام Supabase Auth لإنشاء المستخدم
+      const redirectUrl = `${window.location.origin}/`;
       
-      // إدراج المستخدم الجديد
-      const { data: newUser, error: insertError } = await supabase
-        .from('users')
-        .insert({
-          email: email.toLowerCase().trim(),
-          password_hash: hashedPassword,
-          name: metadata.name,
-          phone: metadata.phone,
-          role: metadata.role || 'client',
-          status: 'active'
-        })
-        .select()
-        .single();
+      const { data, error } = await supabase.auth.signUp({
+        email: email.toLowerCase().trim(),
+        password: password,
+        options: {
+          emailRedirectTo: redirectUrl,
+          data: {
+            full_name: metadata.name,
+            phone: metadata.phone || '',
+            role: metadata.role || 'client'
+          }
+        }
+      });
 
-      console.log('Insert result:', { newUser, insertError });
+      console.log('Supabase auth signUp result:', { data, error });
 
-      if (insertError) {
-        console.error('Database insert error:', insertError);
-        if (insertError.code === '23505') {
+      if (error) {
+        console.error('Supabase Auth error:', error);
+        if (error.message.includes('already registered')) {
           return { error: 'البريد الإلكتروني مستخدم بالفعل' };
         }
-        return { error: `خطأ في قاعدة البيانات: ${insertError.message}` };
+        return { error: `خطأ في التسجيل: ${error.message}` };
       }
 
-      console.log('User created successfully, sending welcome email...');
+      if (!data.user) {
+        return { error: 'حدث خطأ أثناء إنشاء الحساب' };
+      }
+
+      console.log('User created successfully via Supabase Auth');
 
       // إرسال بريد ترحيبي
       try {
         await supabase.functions.invoke('send-welcome-email', {
           body: {
-            user_email: newUser.email,
-            user_name: newUser.name,
-            user_id: newUser.id
+            user_email: data.user.email,
+            user_name: metadata.name,
+            user_id: data.user.id
           }
         });
         console.log('Welcome email sent successfully');
@@ -215,14 +208,14 @@ export const SimpleAuthProvider: React.FC<{ children: React.ReactNode }> = ({ ch
         // لا نتوقف عند خطأ في البريد الإلكتروني
       }
 
-      // إنشاء كائن المستخدم
+      // إنشاء كائن المستخدم للحفظ المحلي
       const user: User = {
-        id: newUser.id,
-        email: newUser.email,
-        name: newUser.name,
-        phone: newUser.phone,
-        role: newUser.role,
-        status: newUser.status
+        id: data.user.id,
+        email: data.user.email || email,
+        name: metadata.name,
+        phone: metadata.phone || '',
+        role: metadata.role || 'client',
+        status: 'active'
       };
 
       console.log('Setting user in state and localStorage...');
