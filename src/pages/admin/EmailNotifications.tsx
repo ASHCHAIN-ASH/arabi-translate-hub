@@ -413,7 +413,7 @@ export default function EmailNotifications() {
         }
         
         function copyFullAccountInfo() {
-          const accountInfo = 'مصرف الراجحي\\nرقم الحساب: 161000010006086071040\\nالآيبان: SA1980000161608016071040';
+          const accountInfo = 'مصرف الراجحي\\nاسم صاحب الحساب: شركة علي صالح الشهري القابضة\\nرقم الحساب: 161000010006086071040\\nالآيبان: SA1980000161608016071040';
           copyToClipboard(accountInfo, 'copyFullBtn');
         }
       </script>
@@ -496,90 +496,124 @@ export default function EmailNotifications() {
 
           <!-- Premium Bank Account Card -->
           <div class="bank-card">
-            <div style="text-align: center; margin-bottom: 25px; direction: rtl;">
-              <div style="background: rgba(255,255,255,0.15); width: 80px; height: 80px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 15px auto; border: 2px solid rgba(255,255,255,0.2); backdrop-filter: blur(5px);">
-                <span style="font-size: 35px;">🏛️</span>
+            <div style="text-align: center; margin-bottom: 20px; direction: rtl;">
+              <div style="background: rgba(255,255,255,0.15); width: 70px; height: 70px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 15px auto; border: 2px solid rgba(255,255,255,0.2); backdrop-filter: blur(5px);">
+                <span style="font-size: 30px;">🏛️</span>
               </div>
-              <h2 style="color: white; margin: 0; font-size: 24px; font-weight: 800; text-shadow: 2px 2px 4px rgba(0,0,0,0.3); direction: rtl; font-family: 'IBM Plex Sans Arabic';" class="mobile-text">معلومات التحويل البنكي</h2>
-              <p style="color: rgba(255,255,255,0.9); margin: 8px 0 0 0; font-size: 16px; direction: rtl; font-family: 'IBM Plex Sans Arabic';" class="mobile-text">نسخ سريع بنقرة واحدة</p>
+              <h2 style="color: white; margin: 0; font-size: 20px; font-weight: 800; text-shadow: 2px 2px 4px rgba(0,0,0,0.3); direction: rtl; font-family: 'IBM Plex Sans Arabic';" class="mobile-text">معلومات التحويل البنكي</h2>
+              <p style="color: rgba(255,255,255,0.9); margin: 8px 0 0 0; font-size: 14px; direction: rtl; font-family: 'IBM Plex Sans Arabic';" class="mobile-text">نسخ سريع بنقرة واحدة</p>
             </div>
 
-            <!-- Bank Name Section -->
-            <div style="background: rgba(255,255,255,0.95); border-radius: 15px; padding: 25px; margin-bottom: 20px; direction: rtl; text-align: center; box-shadow: 0 8px 25px rgba(0,0,0,0.1);">
-              <div style="background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%); color: white; padding: 15px 30px; border-radius: 25px; display: inline-block; font-weight: 800; font-size: 18px; margin-bottom: 20px; box-shadow: 0 4px 15px rgba(30, 64, 175, 0.3); font-family: 'IBM Plex Sans Arabic';">
-                🏛️ مصرف الراجحي
+            <!-- Compact Bank Card Design -->
+            <div style="background: rgba(255,255,255,0.95); border-radius: 15px; padding: 20px; margin-bottom: 15px; direction: rtl; text-align: center; box-shadow: 0 8px 25px rgba(0,0,0,0.1); border: 2px solid rgba(255,255,255,0.3);">
+              
+              <!-- Bank Header with Logo -->
+              <div style="display: flex; align-items: center; justify-content: center; gap: 15px; margin-bottom: 20px; padding: 15px; background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%); border-radius: 12px; direction: rtl;">
+                <div style="background: rgba(255,255,255,0.2); width: 45px; height: 45px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 20px;">🏛️</div>
+                <div style="text-align: right; direction: rtl;">
+                  <h3 style="color: white; margin: 0; font-size: 18px; font-weight: 800; font-family: 'IBM Plex Sans Arabic';">مصرف الراجحي</h3>
+                  <p style="color: rgba(255,255,255,0.9); margin: 2px 0 0 0; font-size: 12px; font-family: 'IBM Plex Sans Arabic';">Al Rajhi Bank</p>
+                </div>
+              </div>
+
+              <!-- Account Holder Name -->
+              <div style="background: #f8fafc; border: 2px solid #e2e8f0; border-radius: 10px; padding: 15px; margin-bottom: 15px; direction: rtl;">
+                <div style="display: flex; align-items: center; justify-content: space-between; direction: rtl;">
+                  <div style="display: flex; align-items: center; gap: 10px; direction: rtl;">
+                    <div style="background: #1e40af; color: white; width: 35px; height: 35px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: bold;">👤</div>
+                    <span style="color: #374151; font-size: 14px; font-weight: 600; font-family: 'IBM Plex Sans Arabic';">اسم صاحب الحساب</span>
+                  </div>
+                  <div style="text-align: left; direction: rtl;">
+                    <p style="margin: 0; color: #1e293b; font-size: 15px; font-weight: 700; text-align: right; direction: rtl; font-family: 'IBM Plex Sans Arabic';">شركة علي صالح الشهري القابضة</p>
+                    <p style="margin: 2px 0 0 0; color: #64748b; font-size: 11px; text-align: right; direction: rtl; font-family: 'IBM Plex Sans Arabic';">Ali Saleh Al-Shehri Holding Company</p>
+                  </div>
+                </div>
               </div>
               
+              <!-- Account Details Grid -->
+              <div style="display: grid; gap: 12px; direction: rtl;">
+                
+                <!-- Account Number -->
+                <div class="account-field" style="background: rgba(255, 255, 255, 0.8); border: 1px solid rgba(30, 64, 175, 0.2); border-radius: 10px; padding: 12px;">
+                  <div style="display: flex; justify-content: space-between; align-items: center; direction: rtl;" class="mobile-flex">
+                    <div style="display: flex; align-items: center; gap: 8px; direction: rtl;">
+                      <div style="background: #3b82f6; color: white; width: 30px; height: 30px; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: bold;">رح</div>
+                      <div style="direction: rtl; text-align: right;">
+                        <p style="margin: 0; color: #374151; font-size: 12px; font-weight: 600; font-family: 'IBM Plex Sans Arabic';">رقم الحساب</p>
+                        <p style="margin: 1px 0 0 0; color: #64748b; font-size: 10px; font-family: 'IBM Plex Sans Arabic';">Account Number</p>
+                      </div>
+                    </div>
+                    <div style="text-align: left; direction: ltr;" class="mobile-copy-btn">
+                      <p style="margin: 0; color: #1e293b; font-size: 15px; font-weight: bold; font-family: 'Courier New', monospace; direction: ltr; background: #f1f5f9; padding: 6px 10px; border-radius: 6px;">161000010006086071040</p>
+                      <button onclick="copyToClipboard('161000010006086071040', 'copyAccBtn')" id="copyAccBtn" class="copy-btn" style="margin-top: 6px; font-size: 11px; padding: 6px 12px; font-family: 'IBM Plex Sans Arabic';">
+                        📄 نسخ
+                      </button>
+                    </div>
+                  </div>
+                </div>
+                
+                <!-- IBAN -->
+                <div class="account-field" style="background: rgba(255, 255, 255, 0.8); border: 1px solid rgba(30, 64, 175, 0.2); border-radius: 10px; padding: 12px;">
+                  <div style="display: flex; justify-content: space-between; align-items: center; direction: rtl;" class="mobile-flex">
+                    <div style="display: flex; align-items: center; gap: 8px; direction: rtl;">
+                      <div style="background: #1e40af; color: white; width: 30px; height: 30px; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: bold;">IB</div>
+                      <div style="direction: rtl; text-align: right;">
+                        <p style="margin: 0; color: #374151; font-size: 12px; font-weight: 600; font-family: 'IBM Plex Sans Arabic';">الآيبان</p>
+                        <p style="margin: 1px 0 0 0; color: #64748b; font-size: 10px; font-family: 'IBM Plex Sans Arabic';">IBAN</p>
+                      </div>
+                    </div>
+                    <div style="text-align: left; direction: ltr;" class="mobile-copy-btn">
+                      <p style="margin: 0; color: #1e293b; font-size: 15px; font-weight: bold; font-family: 'Courier New', monospace; direction: ltr; background: #f0f9ff; padding: 6px 10px; border-radius: 6px;">SA1980000161608016071040</p>
+                      <button onclick="copyToClipboard('SA1980000161608016071040', 'copyIbanBtn')" id="copyIbanBtn" class="copy-btn" style="margin-top: 6px; font-size: 11px; padding: 6px 12px; font-family: 'IBM Plex Sans Arabic';">
+                        📄 نسخ
+                      </button>
+                    </div>
+                  </div>
+                </div>
+                
+              </div>
+
               <!-- Copy All Button -->
-              <div style="margin-top: 15px;">
-                <button id="copyFullBtn" onclick="copyFullAccountInfo()" class="copy-btn copy-tooltip" style="font-size: 14px; padding: 12px 25px; font-family: 'IBM Plex Sans Arabic';" class="mobile-copy-btn">
-                  📋 نسخ جميع البيانات
+              <div style="margin: 15px 0 10px 0; text-align: center;">
+                <button id="copyFullBtn" onclick="copyFullAccountInfo()" class="copy-btn copy-tooltip" style="font-size: 13px; padding: 10px 20px; font-family: 'IBM Plex Sans Arabic'; background: linear-gradient(135deg, #059669 0%, #047857 100%);" class="mobile-copy-btn">
+                  📋 نسخ جميع البيانات البنكية
                 </button>
               </div>
-            </div>
 
-            <!-- Account Details Grid -->
-            <div style="display: grid; gap: 18px; direction: rtl;">
-              
-              <!-- Account Number -->
-              <div class="account-field">
-                <div style="display: flex; justify-content: space-between; align-items: center; direction: rtl;" class="mobile-flex">
-                  <div style="display: flex; align-items: center; gap: 12px; direction: rtl;">
-                    <div style="background: rgba(255,255,255,0.25); width: 45px; height: 45px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 18px; font-weight: bold; border: 2px solid rgba(255,255,255,0.3);">AC</div>
-                    <div style="direction: rtl;">
-                      <p style="margin: 0; color: rgba(255,255,255,0.9); font-size: 14px; font-weight: 600; font-family: 'IBM Plex Sans Arabic';">رقم الحساب</p>
-                      <p style="margin: 2px 0 0 0; color: rgba(255,255,255,0.7); font-size: 12px; font-family: 'IBM Plex Sans Arabic';">Account Number</p>
-                    </div>
-                  </div>
-                  <div style="text-align: left; direction: ltr;" class="mobile-copy-btn">
-                    <p style="margin: 0; color: white; font-size: 18px; font-weight: bold; font-family: 'Courier New', monospace; direction: ltr;">161000010006086071040</p>
-                    <button onclick="copyToClipboard('161000010006086071040', 'copyAccBtn')" id="copyAccBtn" class="copy-btn" style="margin-top: 8px; font-family: 'IBM Plex Sans Arabic';">
-                      📄 نسخ
-                    </button>
-                  </div>
+              <!-- Banking Instructions -->
+              <div style="background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%); border: 1px solid #bfdbfe; border-radius: 8px; padding: 12px; margin-top: 15px; direction: rtl; text-align: center;">
+                <div style="display: flex; align-items: center; justify-content: center; gap: 8px; margin-bottom: 8px; direction: rtl;">
+                  <div style="background: #1e40af; color: white; width: 25px; height: 25px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px;">ℹ️</div>
+                  <span style="color: #1e40af; font-size: 12px; font-weight: 700; font-family: 'IBM Plex Sans Arabic';">تعليمات التحويل البنكي</span>
                 </div>
+                <ul style="color: #1e3a8a; font-size: 11px; margin: 0; padding: 0; list-style: none; line-height: 1.6; font-family: 'IBM Plex Sans Arabic';">
+                  <li style="margin-bottom: 4px;">• استخدم رقم الحساب للتحويلات المحلية</li>
+                  <li style="margin-bottom: 4px;">• استخدم الآيبان للتحويلات الدولية</li>
+                  <li style="margin-bottom: 4px;">• احتفظ بإيصال التحويل للمراجعة</li>
+                  <li>• أرسل صورة الإيصال عبر الواتساب</li>
+                </ul>
               </div>
-              
-              <!-- IBAN -->
-              <div class="account-field">
-                <div style="display: flex; justify-content: space-between; align-items: center; direction: rtl;" class="mobile-flex">
-                  <div style="display: flex; align-items: center; gap: 12px; direction: rtl;">
-                    <div style="background: rgba(255,255,255,0.25); width: 45px; height: 45px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 16px; font-weight: bold; border: 2px solid rgba(255,255,255,0.3);">IB</div>
-                    <div style="direction: rtl;">
-                      <p style="margin: 0; color: rgba(255,255,255,0.9); font-size: 14px; font-weight: 600; font-family: 'IBM Plex Sans Arabic';">الآيبان</p>
-                      <p style="margin: 2px 0 0 0; color: rgba(255,255,255,0.7); font-size: 12px; font-family: 'IBM Plex Sans Arabic';">IBAN</p>
-                    </div>
-                  </div>
-                  <div style="text-align: left; direction: ltr;" class="mobile-copy-btn">
-                    <p style="margin: 0; color: white; font-size: 18px; font-weight: bold; font-family: 'Courier New', monospace; direction: ltr;">SA1980000161608016071040</p>
-                    <button onclick="copyToClipboard('SA1980000161608016071040', 'copyIbanBtn')" id="copyIbanBtn" class="copy-btn" style="margin-top: 8px; font-family: 'IBM Plex Sans Arabic';">
-                      📄 نسخ
-                    </button>
-                  </div>
-                </div>
-              </div>
-              
             </div>
 
             <!-- WhatsApp Section -->
-            <div style="background: linear-gradient(135deg, #25d366 0%, #128c7e 100%); border-radius: 15px; padding: 20px; margin-top: 25px; direction: rtl; text-align: center; box-shadow: 0 8px 20px rgba(37, 211, 102, 0.4);">
-              <div style="background: rgba(255,255,255,0.15); width: 50px; height: 50px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 12px auto; border: 2px solid rgba(255,255,255,0.2);">
-                <span style="font-size: 25px;">📱</span>
+            <div style="background: linear-gradient(135deg, #25d366 0%, #128c7e 100%); border-radius: 12px; padding: 15px; margin-top: 15px; direction: rtl; text-align: center; box-shadow: 0 6px 15px rgba(37, 211, 102, 0.4);">
+              <div style="background: rgba(255,255,255,0.15); width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 10px auto; border: 2px solid rgba(255,255,255,0.2);">
+                <span style="font-size: 20px;">📱</span>
               </div>
-              <p style="margin: 0 0 10px 0; color: white; font-size: 16px; font-weight: 700; direction: rtl; font-family: 'IBM Plex Sans Arabic';" class="mobile-text">أرسل إيصال التحويل فوراً</p>
-              <div style="background: rgba(255,255,255,0.2); border-radius: 12px; padding: 12px; display: inline-block; backdrop-filter: blur(5px);">
-                <p style="margin: 0; color: white; font-size: 22px; font-weight: bold; direction: rtl; font-family: 'Courier New', monospace;" class="mobile-text">0500776343</p>
+              <p style="margin: 0 0 8px 0; color: white; font-size: 14px; font-weight: 700; direction: rtl; font-family: 'IBM Plex Sans Arabic';" class="mobile-text">أرسل إيصال التحويل فوراً</p>
+              <div style="background: rgba(255,255,255,0.2); border-radius: 8px; padding: 8px; display: inline-block; backdrop-filter: blur(5px);">
+                <p style="margin: 0; color: white; font-size: 18px; font-weight: bold; direction: rtl; font-family: 'Courier New', monospace;" class="mobile-text">0500776343</p>
               </div>
-              <p style="margin: 10px 0 0 0; color: rgba(255,255,255,0.9); font-size: 12px; direction: rtl; font-family: 'IBM Plex Sans Arabic';" class="mobile-text">WhatsApp Business</p>
+              <p style="margin: 8px 0 0 0; color: rgba(255,255,255,0.9); font-size: 10px; direction: rtl; font-family: 'IBM Plex Sans Arabic';" class="mobile-text">WhatsApp Business • متاح 24/7</p>
             </div>
 
-            <!-- Security Badge -->
-            <div style="background: rgba(220, 38, 38, 0.15); border: 2px solid rgba(220, 38, 38, 0.3); border-radius: 12px; padding: 15px; margin-top: 20px; direction: rtl; text-align: center;">
-              <div style="display: flex; align-items: center; justify-content: center; gap: 10px; direction: rtl;">
-                <div style="background: #dc2626; color: white; width: 35px; height: 35px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 16px;">🔒</div>
-                <div style="direction: rtl; text-align: right;">
-                  <p style="margin: 0; color: #dc2626; font-size: 14px; font-weight: 700; font-family: 'IBM Plex Sans Arabic';">تحويل آمن ومشفر</p>
-                  <p style="margin: 2px 0 0 0; color: #991b1b; font-size: 11px; font-family: 'IBM Plex Sans Arabic';">Secure & Encrypted Transfer</p>
+            <!-- Security & Verification Badge -->
+            <div style="background: rgba(220, 38, 38, 0.1); border: 1px solid rgba(220, 38, 38, 0.3); border-radius: 10px; padding: 12px; margin-top: 15px; direction: rtl; text-align: center;">
+              <div style="display: flex; align-items: center; justify-content: center; gap: 8px; direction: rtl;">
+                <div style="background: #dc2626; color: white; width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 14px;">🔒</div>
+                <div style="direction: rtl; text-align: center;">
+                  <p style="margin: 0; color: #dc2626; font-size: 12px; font-weight: 700; font-family: 'IBM Plex Sans Arabic';">تحويل مصرفي آمن ومشفر</p>
+                  <p style="margin: 2px 0 0 0; color: #991b1b; font-size: 10px; font-family: 'IBM Plex Sans Arabic';">Secure & Encrypted Banking Transfer</p>
                 </div>
               </div>
             </div>
