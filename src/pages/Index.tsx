@@ -77,9 +77,9 @@ const Index = () => {
                 variant="outline" 
                 size="lg"
                 className="w-full sm:w-auto border-2 border-white/50 text-white hover:bg-white/10 px-8 py-4 text-lg font-medium rounded-lg transition-all duration-300"
-                onClick={() => navigate('/login')}
+                onClick={() => navigate('/register')}
               >
-                إنشاء حساب
+                إنشاء حساب جديد
               </Button>
               <Button 
                 variant="outline" 

@@ -6,7 +6,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { toast } from 'sonner';
 import { Card } from '@/components/ui/card';
-import { GraduationCap } from 'lucide-react';
+import { UserPlus, Mail, User, Phone, Lock, Eye, EyeOff, CheckCircle } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 const Register = () => {
@@ -18,6 +18,8 @@ const Register = () => {
     confirmPassword: '',
   });
   const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   
   const { signUp } = useAuth();
   const navigate = useNavigate();
@@ -27,6 +29,30 @@ const Register = () => {
       ...prev,
       [e.target.name]: e.target.value
     }));
+  };
+
+  const getPasswordStrength = (password: string) => {
+    let strength = 0;
+    if (password.length >= 12) strength += 20;
+    if (/[A-Z]/.test(password)) strength += 20;
+    if (/[a-z]/.test(password)) strength += 20;
+    if (/[0-9]/.test(password)) strength += 20;
+    if (/[^A-Za-z0-9]/.test(password)) strength += 20;
+    return strength;
+  };
+
+  const passwordStrength = getPasswordStrength(formData.password);
+
+  const getStrengthColor = (strength: number) => {
+    if (strength < 60) return 'bg-red-500';
+    if (strength < 80) return 'bg-yellow-500';
+    return 'bg-green-500';
+  };
+
+  const getStrengthText = (strength: number) => {
+    if (strength < 60) return 'ضعيفة';
+    if (strength < 80) return 'متوسطة';
+    return 'قوية';
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -42,16 +68,26 @@ const Register = () => {
       return;
     }
 
+    if (passwordStrength < 80) {
+      toast.error('كلمة المرور يجب أن تكون قوية. يرجى اتباع التعليمات أدناه');
+      return;
+    }
+
     setLoading(true);
     try {
-      await signUp(formData.email, formData.password, {
+      const { error } = await signUp(formData.email, formData.password, {
         name: formData.name,
         phone: formData.phone,
         role: 'client'
       });
       
-      toast.success('تم إنشاء الحساب بنجاح! يرجى تفعيل بريدك الإلكتروني');
-      navigate('/auth/login');
+      if (error) {
+        toast.error(error);
+        return;
+      }
+      
+      toast.success('تم إنشاء الحساب بنجاح! مرحباً بك في منصة التعليم الأكاديمي');
+      navigate('/dashboard');
     } catch (error: any) {
       toast.error(error.message || 'خطأ في إنشاء الحساب');
     } finally {
@@ -59,131 +95,246 @@ const Register = () => {
     }
   };
 
+  const containerVariants = {
+    hidden: { opacity: 0, y: 30 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: {
+        duration: 0.6,
+        staggerChildren: 0.1
+      }
+    }
+  };
+
+  const itemVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: { opacity: 1, y: 0 }
+  };
+
   return (
-    <div className="min-h-screen bg-background flex items-center justify-center py-12 px-4" dir="rtl">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 flex items-center justify-center py-12 px-4" dir="rtl">
       <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
+        variants={containerVariants}
+        initial="hidden"
+        animate="visible"
         className="max-w-md w-full"
       >
-        <div className="text-center mb-8">
+        <motion.div variants={itemVariants} className="text-center mb-8">
           <div className="flex justify-center mb-4">
-            <div className="w-16 h-16 bg-gradient-to-br from-primary to-secondary rounded-full flex items-center justify-center">
-              <GraduationCap className="w-8 h-8 text-white" />
+            <div className="w-20 h-20 bg-gradient-to-br from-blue-600 via-indigo-600 to-purple-600 rounded-full flex items-center justify-center shadow-xl">
+              <UserPlus className="w-10 h-10 text-white" />
             </div>
           </div>
-          <h1 className="text-3xl font-arabic-formal font-bold text-foreground">
+          <h1 className="text-4xl font-arabic-formal font-bold text-slate-800 mb-2">
             إنشاء حساب جديد
           </h1>
-          <p className="mt-2 text-muted-foreground">
-            انضم لمنصة التعليم الأكاديمي
+          <p className="text-slate-600 text-lg">
+            انضم لمنصة التعليم الأكاديمي الرائدة
           </p>
-        </div>
+        </motion.div>
 
-        <Card className="p-6">
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <div>
-              <Label htmlFor="name">الاسم الكامل *</Label>
-              <Input
-                id="name"
-                name="name"
-                type="text"
-                value={formData.name}
-                onChange={handleChange}
-                placeholder="أدخل اسمك الكامل"
-                required
-              />
-            </div>
+        <motion.div variants={itemVariants}>
+          <Card className="p-8 shadow-2xl border-0 bg-white/80 backdrop-blur-sm">
+            <form onSubmit={handleSubmit} className="space-y-6">
+              <motion.div variants={itemVariants}>
+                <Label htmlFor="name" className="text-slate-700 font-medium flex items-center gap-2">
+                  <User className="w-4 h-4" />
+                  الاسم الكامل *
+                </Label>
+                <Input
+                  id="name"
+                  name="name"
+                  type="text"
+                  value={formData.name}
+                  onChange={handleChange}
+                  placeholder="أدخل اسمك الكامل"
+                  required
+                  className="mt-2 h-12 border-2 focus:border-blue-500 transition-colors"
+                />
+              </motion.div>
 
-            <div>
-              <Label htmlFor="email">البريد الإلكتروني *</Label>
-              <Input
-                id="email"
-                name="email"
-                type="email"
-                value={formData.email}
-                onChange={handleChange}
-                placeholder="أدخل بريدك الإلكتروني"
-                required
-                dir="ltr"
-              />
-            </div>
+              <motion.div variants={itemVariants}>
+                <Label htmlFor="email" className="text-slate-700 font-medium flex items-center gap-2">
+                  <Mail className="w-4 h-4" />
+                  البريد الإلكتروني *
+                </Label>
+                <Input
+                  id="email"
+                  name="email"
+                  type="email"
+                  value={formData.email}
+                  onChange={handleChange}
+                  placeholder="أدخل بريدك الإلكتروني"
+                  required
+                  dir="ltr"
+                  className="mt-2 h-12 border-2 focus:border-blue-500 transition-colors"
+                />
+              </motion.div>
 
-            <div>
-              <Label htmlFor="phone">رقم الهاتف</Label>
-              <Input
-                id="phone"
-                name="phone"
-                type="tel"
-                value={formData.phone}
-                onChange={handleChange}
-                placeholder="أدخل رقم هاتفك"
-                dir="ltr"
-              />
-            </div>
+              <motion.div variants={itemVariants}>
+                <Label htmlFor="phone" className="text-slate-700 font-medium flex items-center gap-2">
+                  <Phone className="w-4 h-4" />
+                  رقم الهاتف
+                </Label>
+                <Input
+                  id="phone"
+                  name="phone"
+                  type="tel"
+                  value={formData.phone}
+                  onChange={handleChange}
+                  placeholder="أدخل رقم هاتفك"
+                  dir="ltr"
+                  className="mt-2 h-12 border-2 focus:border-blue-500 transition-colors"
+                />
+              </motion.div>
 
-            <div>
-              <Label htmlFor="password">كلمة المرور *</Label>
-              <Input
-                id="password"
-                name="password"
-                type="password"
-                value={formData.password}
-                onChange={handleChange}
-                placeholder="أدخل كلمة مرور قوية"
-                required
-              />
-              <p className="text-xs text-muted-foreground mt-1">
-                يجب أن تحتوي على 12 حرف على الأقل مع أحرف كبيرة وصغيرة وأرقام ورموز
+              <motion.div variants={itemVariants}>
+                <Label htmlFor="password" className="text-slate-700 font-medium flex items-center gap-2">
+                  <Lock className="w-4 h-4" />
+                  كلمة المرور *
+                </Label>
+                <div className="relative mt-2">
+                  <Input
+                    id="password"
+                    name="password"
+                    type={showPassword ? "text" : "password"}
+                    value={formData.password}
+                    onChange={handleChange}
+                    placeholder="أدخل كلمة مرور قوية"
+                    required
+                    className="h-12 border-2 focus:border-blue-500 transition-colors pr-12"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-500 hover:text-slate-700"
+                  >
+                    {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                  </button>
+                </div>
+                
+                {formData.password && (
+                  <div className="mt-3 space-y-2">
+                    <div className="flex items-center justify-between text-sm">
+                      <span className="text-slate-600">قوة كلمة المرور:</span>
+                      <span className={`font-medium ${passwordStrength >= 80 ? 'text-green-600' : passwordStrength >= 60 ? 'text-yellow-600' : 'text-red-600'}`}>
+                        {getStrengthText(passwordStrength)}
+                      </span>
+                    </div>
+                    <div className="w-full bg-slate-200 rounded-full h-2">
+                      <div 
+                        className={`h-2 rounded-full transition-all duration-300 ${getStrengthColor(passwordStrength)}`}
+                        style={{ width: `${passwordStrength}%` }}
+                      />
+                    </div>
+                  </div>
+                )}
+                
+                <div className="mt-3 text-xs text-slate-600 space-y-1">
+                  <div className="flex items-center gap-2">
+                    <CheckCircle className={`w-3 h-3 ${formData.password.length >= 12 ? 'text-green-500' : 'text-slate-400'}`} />
+                    <span>12 حرف على الأقل</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <CheckCircle className={`w-3 h-3 ${/[A-Z]/.test(formData.password) ? 'text-green-500' : 'text-slate-400'}`} />
+                    <span>حرف كبير واحد على الأقل</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <CheckCircle className={`w-3 h-3 ${/[a-z]/.test(formData.password) ? 'text-green-500' : 'text-slate-400'}`} />
+                    <span>حرف صغير واحد على الأقل</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <CheckCircle className={`w-3 h-3 ${/[0-9]/.test(formData.password) ? 'text-green-500' : 'text-slate-400'}`} />
+                    <span>رقم واحد على الأقل</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <CheckCircle className={`w-3 h-3 ${/[^A-Za-z0-9]/.test(formData.password) ? 'text-green-500' : 'text-slate-400'}`} />
+                    <span>رمز خاص واحد على الأقل</span>
+                  </div>
+                </div>
+              </motion.div>
+
+              <motion.div variants={itemVariants}>
+                <Label htmlFor="confirmPassword" className="text-slate-700 font-medium flex items-center gap-2">
+                  <Lock className="w-4 h-4" />
+                  تأكيد كلمة المرور *
+                </Label>
+                <div className="relative mt-2">
+                  <Input
+                    id="confirmPassword"
+                    name="confirmPassword"
+                    type={showConfirmPassword ? "text" : "password"}
+                    value={formData.confirmPassword}
+                    onChange={handleChange}
+                    placeholder="أعد إدخال كلمة المرور"
+                    required
+                    className="h-12 border-2 focus:border-blue-500 transition-colors pr-12"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                    className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-500 hover:text-slate-700"
+                  >
+                    {showConfirmPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                  </button>
+                </div>
+                {formData.confirmPassword && formData.password !== formData.confirmPassword && (
+                  <p className="text-red-500 text-sm mt-1">كلمات المرور غير متطابقة</p>
+                )}
+              </motion.div>
+
+              <motion.div variants={itemVariants}>
+                <Button
+                  type="submit"
+                  className="w-full h-12 bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 hover:from-blue-700 hover:via-indigo-700 hover:to-purple-700 text-white font-medium text-lg shadow-lg transition-all duration-300"
+                  disabled={loading}
+                >
+                  {loading ? (
+                    <div className="flex items-center gap-2">
+                      <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                      جاري إنشاء الحساب...
+                    </div>
+                  ) : (
+                    'إنشاء حساب'
+                  )}
+                </Button>
+              </motion.div>
+            </form>
+
+            <motion.div variants={itemVariants} className="mt-8 text-center space-y-4">
+              <div className="relative">
+                <div className="absolute inset-0 flex items-center">
+                  <div className="w-full border-t border-slate-300" />
+                </div>
+                <div className="relative flex justify-center text-sm">
+                  <span className="px-2 bg-white text-slate-500">أو</span>
+                </div>
+              </div>
+              
+              <p className="text-slate-600">
+                لديك حساب بالفعل؟{' '}
+                <Button
+                  variant="link"
+                  className="p-0 h-auto font-medium text-blue-600 hover:text-blue-700"
+                  onClick={() => navigate('/login')}
+                >
+                  تسجيل الدخول
+                </Button>
               </p>
-            </div>
+            </motion.div>
+          </Card>
+        </motion.div>
 
-            <div>
-              <Label htmlFor="confirmPassword">تأكيد كلمة المرور *</Label>
-              <Input
-                id="confirmPassword"
-                name="confirmPassword"
-                type="password"
-                value={formData.confirmPassword}
-                onChange={handleChange}
-                placeholder="أعد إدخال كلمة المرور"
-                required
-              />
-            </div>
-
-            <Button
-              type="submit"
-              className="w-full"
-              disabled={loading}
-            >
-              {loading ? 'جاري إنشاء الحساب...' : 'إنشاء حساب'}
-            </Button>
-          </form>
-
-          <div className="mt-6 text-center">
-            <p className="text-sm text-muted-foreground">
-              لديك حساب بالفعل؟{' '}
-              <Button
-                variant="link"
-                className="p-0 h-auto font-normal"
-                onClick={() => navigate('/auth/login')}
-              >
-                تسجيل الدخول
-              </Button>
-            </p>
-          </div>
-        </Card>
-
-        <div className="mt-6 text-center">
+        <motion.div variants={itemVariants} className="mt-6 text-center">
           <Button
             variant="ghost"
             onClick={() => navigate('/')}
-            className="text-muted-foreground"
+            className="text-slate-600 hover:text-slate-800"
           >
             ← العودة للصفحة الرئيسية
           </Button>
-        </div>
+        </motion.div>
       </motion.div>
     </div>
   );

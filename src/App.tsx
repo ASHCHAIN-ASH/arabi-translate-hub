@@ -8,6 +8,7 @@ import { SimpleAuthProvider } from "@/components/SimpleAuthProvider";
 import SimpleProtectedRoute from "@/components/SimpleProtectedRoute";
 import SimpleLogin from "./pages/SimpleLogin";
 import Login from "./pages/auth/Login";
+import Register from "./pages/auth/Register";
 import AdminLogin from "./pages/auth/AdminLogin";
 import Index from "./pages/Index";
 import TranslationServices from "./pages/TranslationServices";
@@ -103,6 +104,8 @@ const App = () => (
             
             {/* Auth Routes */}
             <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Register />} />
+            <Route path="/auth/register" element={<Register />} />
             <Route path="/admin/login" element={<AdminLogin />} />
             <Route path="/unauthorized" element={<Unauthorized />} />
             
