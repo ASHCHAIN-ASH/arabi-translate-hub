@@ -1,196 +1,243 @@
-import { createClient } from '@supabase/supabase-js';
+import { supabase } from '@/integrations/supabase/client';
 
-// This would be properly configured with your Supabase URL and key
-const supabaseUrl = 'your-supabase-url';
-const supabaseKey = 'your-supabase-anon-key';
-
-// For now, this is a mock service that simulates Supabase operations
 export interface DatabaseOrder {
   id: string;
-  client_id: string;
+  tracking_id: string;
+  phone_last_four: string;
   title: string;
+  degree: string;
   service_type: string;
-  description: string;
-  status: string;
-  priority: 'low' | 'medium' | 'high';
-  progress: number;
-  budget: number;
-  deadline: string;
+  description?: string;
+  current_status: string;
+  estimated_delivery: string;
   created_at: string;
   updated_at: string;
-  special_requirements?: string;
+  client_name: string;
+  client_phone: string;
+  client_email: string;
+  user_id?: string;
 }
 
 export interface OrderTimeline {
   id: string;
   order_id: string;
+  title: string;
+  description?: string;
   status: string;
-  name: string;
-  description: string;
-  completed: boolean;
-  completed_at?: string;
+  scheduled_date?: string;
+  completed_date?: string;
+  actor_type: string;
+  actor_name?: string;
   created_at: string;
 }
 
 export interface OrderFile {
   id: string;
   order_id: string;
-  filename: string;
-  file_type: 'input' | 'output';
-  file_size: string;
+  file_name: string;
   file_url: string;
+  file_type: 'input' | 'output';
   uploaded_at: string;
-  uploaded_by: string;
+  uploaded_by?: string;
 }
 
 export interface OrderCommunication {
   id: string;
   order_id: string;
-  sender_type: 'client' | 'admin' | 'specialist';
-  sender_name: string;
   message: string;
+  sender_type: 'client' | 'admin' | 'specialist';
+  sender_name?: string;
   created_at: string;
-  read_status: boolean;
+  read_at?: string;
 }
 
-// Mock data for demonstration
-const mockOrders: DatabaseOrder[] = [
-  {
-    id: 'MEP250003',
-    client_id: 'client-1',
-    title: 'مراجعة لغوية وتدوية متخصصة للنص الأكاديمي مع تحسين الأسلوب',
-    service_type: 'statistical_analysis',
-    description: 'تحليل إحصائي شامل للبيانات البحثية باستخدام R و SPSS',
-    status: 'in_progress',
-    priority: 'medium',
-    progress: 45,
-    budget: 899,
-    deadline: '2024-01-30',
-    created_at: '2024-01-15',
-    updated_at: '2024-01-20',
-    special_requirements: 'يرجى التركيز على التحليل الوصفي والاستنتاجي'
-  }
-];
-
-const mockTimeline: OrderTimeline[] = [
-  { id: '1', order_id: 'MEP250003', status: 'received', name: 'مستلم', description: 'تم استلام طلبكم بنجاح', completed: true, completed_at: '2024-01-15', created_at: '2024-01-15' },
-  { id: '2', order_id: 'MEP250003', status: 'under_review', name: 'تحت المراجعة', description: 'جاري مراجعة التفاصيل', completed: true, completed_at: '2024-01-16', created_at: '2024-01-15' },
-  { id: '3', order_id: 'MEP250003', status: 'in_progress', name: 'قيد التنفيذ', description: 'بدء العمل على المشروع', completed: true, completed_at: '2024-01-18', created_at: '2024-01-15' },
-  { id: '4', order_id: 'MEP250003', status: 'review', name: 'المراجعة', description: 'مراجعة العمل والتأكد من الجودة', completed: false, created_at: '2024-01-15' },
-  { id: '5', order_id: 'MEP250003', status: 'delivery', name: 'التسليم', description: 'التسليم النهائي للعمل', completed: false, created_at: '2024-01-15' }
-];
-
-const mockFiles: OrderFile[] = [
-  { id: '1', order_id: 'MEP250003', filename: 'البيانات_الأولية.xlsx', file_type: 'input', file_size: '2.3 MB', file_url: '/mock-file-1', uploaded_at: '2024-01-15', uploaded_by: 'client' },
-  { id: '2', order_id: 'MEP250003', filename: 'متطلبات_المشروع.pdf', file_type: 'input', file_size: '1.1 MB', file_url: '/mock-file-2', uploaded_at: '2024-01-15', uploaded_by: 'client' },
-  { id: '3', order_id: 'MEP250003', filename: 'التحليل_المبدئي.pdf', file_type: 'output', file_size: '3.7 MB', file_url: '/mock-file-3', uploaded_at: '2024-01-20', uploaded_by: 'specialist' }
-];
-
-const mockCommunications: OrderCommunication[] = [
-  { id: '1', order_id: 'MEP250003', sender_type: 'client', sender_name: 'أحمد محمد علي', message: 'هل يمكن إضافة تحليل إضافي للمتغيرات؟', created_at: '2024-01-19 14:30', read_status: true },
-  { id: '2', order_id: 'MEP250003', sender_type: 'specialist', sender_name: 'د. محمد أحمد', message: 'بالطبع، سيتم إضافة التحليل المطلوب وسيكون جاهز خلال يومين', created_at: '2024-01-19 16:45', read_status: true }
-];
-
-console.warn('Supabase order management system not yet configured. Using mock data.');
-
-// Mock Supabase operations
+// Get order by ID from Supabase
 export const getOrderById = async (orderId: string): Promise<DatabaseOrder | null> => {
-  // Simulate API delay
-  await new Promise(resolve => setTimeout(resolve, 500));
-  return mockOrders.find(order => order.id === orderId) || null;
+  try {
+    const { data, error } = await supabase
+      .from('orders')
+      .select('*')
+      .eq('id', orderId)
+      .single();
+
+    if (error) {
+      console.error('Error fetching order:', error);
+      return null;
+    }
+
+    return data;
+  } catch (error) {
+    console.error('Error in getOrderById:', error);
+    return null;
+  }
 };
 
+// Get order timeline from Supabase
 export const getOrderTimeline = async (orderId: string): Promise<OrderTimeline[]> => {
-  await new Promise(resolve => setTimeout(resolve, 300));
-  return mockTimeline.filter(timeline => timeline.order_id === orderId);
+  try {
+    const { data, error } = await supabase
+      .from('order_timeline')
+      .select('*')
+      .eq('order_id', orderId)
+      .order('created_at', { ascending: true });
+
+    if (error) {
+      console.error('Error fetching timeline:', error);
+      return [];
+    }
+
+    return data || [];
+  } catch (error) {
+    console.error('Error in getOrderTimeline:', error);
+    return [];
+  }
 };
 
+// Get order files (placeholder - files table needs to be created)
 export const getOrderFiles = async (orderId: string): Promise<OrderFile[]> => {
-  await new Promise(resolve => setTimeout(resolve, 300));
-  return mockFiles.filter(file => file.order_id === orderId);
+  // TODO: Implement when files table is created
+  return [];
 };
 
+// Get order communications (placeholder - communications table needs to be created)
 export const getOrderCommunications = async (orderId: string): Promise<OrderCommunication[]> => {
-  await new Promise(resolve => setTimeout(resolve, 300));
-  return mockCommunications.filter(comm => comm.order_id === orderId);
+  // TODO: Implement when communications table is created
+  return [];
 };
 
-export const addOrderCommunication = async (orderId: string, message: string, senderType: 'client' | 'admin' | 'specialist' = 'client'): Promise<OrderCommunication> => {
-  await new Promise(resolve => setTimeout(resolve, 500));
-  
+// Add order communication (placeholder)
+export const addOrderCommunication = async (
+  orderId: string, 
+  message: string, 
+  senderType: 'client' | 'admin' | 'specialist' = 'client'
+): Promise<OrderCommunication> => {
+  // TODO: Implement when communications table is created
   const newCommunication: OrderCommunication = {
     id: Date.now().toString(),
     order_id: orderId,
-    sender_type: senderType,
-    sender_name: senderType === 'client' ? 'العميل' : 'المختص',
     message,
-    created_at: new Date().toLocaleString('ar-SA'),
-    read_status: false
+    sender_type: senderType,
+    created_at: new Date().toISOString()
   };
   
-  mockCommunications.push(newCommunication);
   return newCommunication;
 };
 
+// Update order status
 export const updateOrderStatus = async (orderId: string, status: string, progress?: number): Promise<void> => {
-  await new Promise(resolve => setTimeout(resolve, 500));
-  
-  const orderIndex = mockOrders.findIndex(order => order.id === orderId);
-  if (orderIndex !== -1) {
-    mockOrders[orderIndex].status = status;
-    if (progress !== undefined) {
-      mockOrders[orderIndex].progress = progress;
+  try {
+    const { error } = await supabase
+      .from('orders')
+      .update({ 
+        current_status: status,
+        updated_at: new Date().toISOString()
+      })
+      .eq('id', orderId);
+
+    if (error) {
+      console.error('Error updating order status:', error);
+      throw error;
     }
-    mockOrders[orderIndex].updated_at = new Date().toISOString();
+  } catch (error) {
+    console.error('Error in updateOrderStatus:', error);
+    throw error;
   }
 };
 
+// Update order timeline
 export const updateOrderTimeline = async (orderId: string, status: string, completed: boolean): Promise<void> => {
-  await new Promise(resolve => setTimeout(resolve, 500));
-  
-  const timelineIndex = mockTimeline.findIndex(timeline => timeline.order_id === orderId && timeline.status === status);
-  if (timelineIndex !== -1) {
-    mockTimeline[timelineIndex].completed = completed;
-    if (completed) {
-      mockTimeline[timelineIndex].completed_at = new Date().toISOString();
+  try {
+    const { error } = await supabase
+      .from('order_timeline')
+      .update({ 
+        completed_date: completed ? new Date().toISOString().split('T')[0] : null
+      })
+      .eq('order_id', orderId)
+      .eq('status', status);
+
+    if (error) {
+      console.error('Error updating timeline:', error);
+      throw error;
     }
+  } catch (error) {
+    console.error('Error in updateOrderTimeline:', error);
+    throw error;
   }
 };
 
+// Upload order file (placeholder)
 export const uploadOrderFile = async (orderId: string, file: File, fileType: 'input' | 'output'): Promise<OrderFile> => {
-  await new Promise(resolve => setTimeout(resolve, 1000));
-  
+  // TODO: Implement file upload functionality
   const newFile: OrderFile = {
     id: Date.now().toString(),
     order_id: orderId,
-    filename: file.name,
+    file_name: file.name,
+    file_url: URL.createObjectURL(file),
     file_type: fileType,
-    file_size: `${(file.size / 1024 / 1024).toFixed(1)} MB`,
-    file_url: `/mock-file-${Date.now()}`,
-    uploaded_at: new Date().toISOString(),
-    uploaded_by: 'admin'
+    uploaded_at: new Date().toISOString()
   };
   
-  mockFiles.push(newFile);
   return newFile;
 };
 
+// Update order
 export const updateOrder = async (orderId: string, updates: Partial<DatabaseOrder>): Promise<void> => {
-  await new Promise(resolve => setTimeout(resolve, 500));
-  
-  const orderIndex = mockOrders.findIndex(order => order.id === orderId);
-  if (orderIndex !== -1) {
-    mockOrders[orderIndex] = { ...mockOrders[orderIndex], ...updates, updated_at: new Date().toISOString() };
+  try {
+    const { error } = await supabase
+      .from('orders')
+      .update({ 
+        ...updates,
+        updated_at: new Date().toISOString()
+      })
+      .eq('id', orderId);
+
+    if (error) {
+      console.error('Error updating order:', error);
+      throw error;
+    }
+  } catch (error) {
+    console.error('Error in updateOrder:', error);
+    throw error;
   }
 };
 
-// Admin functions for managing orders
+// Get all orders for admin
 export const getAllOrdersForAdmin = async (): Promise<DatabaseOrder[]> => {
-  await new Promise(resolve => setTimeout(resolve, 500));
-  return mockOrders;
+  try {
+    const { data, error } = await supabase
+      .from('orders')
+      .select('*')
+      .order('created_at', { ascending: false });
+
+    if (error) {
+      console.error('Error fetching orders:', error);
+      return [];
+    }
+
+    return data || [];
+  } catch (error) {
+    console.error('Error in getAllOrdersForAdmin:', error);
+    return [];
+  }
 };
 
+// Get orders for specific client
 export const getOrdersForClient = async (clientId: string): Promise<DatabaseOrder[]> => {
-  await new Promise(resolve => setTimeout(resolve, 500));
-  return mockOrders.filter(order => order.client_id === clientId);
+  try {
+    const { data, error } = await supabase
+      .from('orders')
+      .select('*')
+      .eq('user_id', clientId)
+      .order('created_at', { ascending: false });
+
+    if (error) {
+      console.error('Error fetching client orders:', error);
+      return [];
+    }
+
+    return data || [];
+  } catch (error) {
+    console.error('Error in getOrdersForClient:', error);
+    return [];
+  }
 };
