@@ -36,10 +36,10 @@ const ClientOrders = () => {
   const loadOrders = async () => {
     try {
       setLoading(true);
-      // In a real implementation, this would filter by the current user
-      // For now, we'll use the mock data from the service
-      const { getAllOrders } = await import('@/utils/supabaseOrderService');
-      const orderData = await getAllOrders();
+    // In a real implementation, this would filter by the current user
+    // For now, we'll get all orders since user authentication isn't implemented yet
+    const { getAllOrders } = await import('@/utils/supabaseOrderService');
+    const orderData = await getAllOrders();
       setOrders(orderData);
     } catch (error) {
       console.error('Error loading orders:', error);
