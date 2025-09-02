@@ -49,9 +49,16 @@ const AdminUsers = () => {
 
   const sendWelcomeEmail = async (userId: string, userEmail: string, userName: string) => {
     try {
-      // This would be implemented with an edge function
+      await supabase.functions.invoke('send-welcome-email', {
+        body: {
+          user_email: userEmail,
+          user_name: userName,
+          user_id: userId
+        }
+      });
       toast.success(`تم إرسال بريد ترحيبي إلى ${userName}`);
     } catch (error) {
+      console.error('Error sending welcome email:', error);
       toast.error('خطأ في إرسال البريد الإلكتروني');
     }
   };

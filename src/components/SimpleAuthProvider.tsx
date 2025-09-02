@@ -159,6 +159,20 @@ export const SimpleAuthProvider: React.FC<{ children: React.ReactNode }> = ({ ch
         return { error: 'حدث خطأ أثناء إنشاء الحساب' };
       }
 
+      // إرسال بريد ترحيبي
+      try {
+        await supabase.functions.invoke('send-welcome-email', {
+          body: {
+            user_email: newUser.email,
+            user_name: newUser.name,
+            user_id: newUser.id
+          }
+        });
+      } catch (emailError) {
+        console.error('Error sending welcome email:', emailError);
+        // لا نتوقف عند خطأ في البريد الإلكتروني
+      }
+
       // إنشاء كائن المستخدم
       const user: User = {
         id: newUser.id,
