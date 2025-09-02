@@ -419,75 +419,93 @@ export default function EmailNotifications() {
       </script>
       
       <div style="background: white; border-radius: 25px; overflow: hidden; box-shadow: 0 25px 50px rgba(0,0,0,0.1); direction: rtl; border: 1px solid #e2e8f0;">
-        <!-- Premium Corporate Header -->
-        <div style="background: linear-gradient(135deg, #0f172a 0%, #1e293b 25%, #334155 50%, #475569 75%, #64748b 100%); padding: 50px 30px; position: relative; overflow: hidden; direction: rtl; border-bottom: 6px solid #0ea5e9;" class="mobile-container">
+        <!-- Mobile-Optimized Corporate Header -->
+        <div style="background: linear-gradient(135deg, #0f172a 0%, #1e293b 25%, #334155 50%, #475569 75%, #64748b 100%); padding: 30px 15px; position: relative; overflow: hidden; direction: rtl; border-bottom: 6px solid #0ea5e9;" class="mobile-container">
+          <style>
+            @media (max-width: 768px) {
+              .mobile-container { padding: 20px 10px !important; }
+              .mobile-text { font-size: 12px !important; line-height: 1.4 !important; }
+              .mobile-header { font-size: 20px !important; line-height: 1.3 !important; }
+              .mobile-subheader { font-size: 14px !important; }
+              .mobile-flex { 
+                flex-direction: column !important; 
+                gap: 10px !important; 
+                align-items: center !important;
+              }
+              .mobile-logo { 
+                width: 80px !important; 
+                height: 80px !important; 
+                margin-bottom: 15px !important;
+              }
+              .mobile-logo-inner { 
+                width: 60px !important; 
+                height: 60px !important; 
+                font-size: 16px !important;
+              }
+              .mobile-card {
+                max-width: 100% !important;
+                padding: 15px !important;
+                margin: 10px 0 !important;
+              }
+              .mobile-badge {
+                padding: 8px 12px !important;
+                font-size: 11px !important;
+                margin: 5px !important;
+              }
+              .mobile-contact {
+                position: static !important;
+                display: block !important;
+                text-align: center !important;
+                margin: 10px auto !important;
+                padding: 8px 12px !important;
+                font-size: 10px !important;
+              }
+            }
+          </style>
+          
           <!-- Premium Decorative Elements -->
-          <div style="position: absolute; top: 0; left: 0; right: 0; height: 8px; background: linear-gradient(90deg, #1e40af, #3b82f6, #0ea5e9, #06b6d4, #0891b2, #0e7490, #155e75, #164e63);"></div>
-          <div style="position: absolute; top: -50px; right: -50px; width: 200px; height: 200px; background: radial-gradient(circle, rgba(59, 130, 246, 0.1) 0%, transparent 70%); border-radius: 50%;"></div>
-          <div style="position: absolute; bottom: -30px; left: -30px; width: 150px; height: 150px; background: radial-gradient(circle, rgba(14, 165, 233, 0.08) 0%, transparent 70%); border-radius: 50%;"></div>
+          <div style="position: absolute; top: 0; left: 0; right: 0; height: 4px; background: linear-gradient(90deg, #1e40af, #3b82f6, #0ea5e9, #06b6d4, #0891b2, #0e7490, #155e75, #164e63);"></div>
           
           <!-- Corporate Identity Section -->
-          <div style="text-align: center; margin-bottom: 30px; direction: rtl;">
-            <!-- Premium Logo -->
-            <div style="background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%); width: 140px; height: 140px; border-radius: 25px; display: flex; align-items: center; justify-content: center; margin: 0 auto 25px auto; border: 4px solid rgba(255,255,255,0.2); box-shadow: 0 15px 35px rgba(0,0,0,0.3), inset 0 2px 10px rgba(255,255,255,0.1); backdrop-filter: blur(15px);">
-              <div style="background: linear-gradient(135deg, #1e40af 0%, #3b82f6 50%, #0ea5e9 100%); color: white; width: 100px; height: 100px; border-radius: 18px; display: flex; flex-direction: column; align-items: center; justify-content: center; font-weight: 900; box-shadow: 0 8px 20px rgba(30, 64, 175, 0.4);">
-                <div style="font-size: 32px; line-height: 1;">MEP</div>
-                <div style="font-size: 8px; margin-top: 2px; opacity: 0.9; letter-spacing: 1px;">AGENCY</div>
+          <div style="text-align: center; margin-bottom: 20px; direction: rtl;">
+            <!-- Mobile-Optimized Logo -->
+            <div class="mobile-logo" style="background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%); width: 100px; height: 100px; border-radius: 20px; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px auto; border: 3px solid rgba(255,255,255,0.2); box-shadow: 0 10px 25px rgba(0,0,0,0.3); backdrop-filter: blur(15px);">
+              <div class="mobile-logo-inner" style="background: linear-gradient(135deg, #1e40af 0%, #3b82f6 50%, #0ea5e9 100%); color: white; width: 70px; height: 70px; border-radius: 15px; display: flex; flex-direction: column; align-items: center; justify-content: center; font-weight: 900; box-shadow: 0 6px 15px rgba(30, 64, 175, 0.4);">
+                <div style="font-size: 20px; line-height: 1;">MEP</div>
+                <div style="font-size: 6px; margin-top: 1px; opacity: 0.9; letter-spacing: 1px;">AGENCY</div>
               </div>
             </div>
             
-            <!-- Corporate Name & Identity -->
-            <div style="background: rgba(255,255,255,0.08); backdrop-filter: blur(20px); border: 2px solid rgba(255,255,255,0.1); border-radius: 20px; padding: 30px; margin: 0 auto; max-width: 600px; box-shadow: 0 10px 30px rgba(0,0,0,0.2);">
-              <h1 style="color: white; font-size: 42px; margin: 0 0 15px 0; font-weight: 900; text-shadow: 3px 3px 8px rgba(0,0,0,0.5); direction: rtl; font-family: 'IBM Plex Sans Arabic', 'Cairo'; letter-spacing: 1.5px; line-height: 1.2;" class="mobile-header">وكالة ماستر إيدو باث</h1>
+            <!-- Mobile-Optimized Corporate Name -->
+            <div class="mobile-card" style="background: rgba(255,255,255,0.08); backdrop-filter: blur(20px); border: 2px solid rgba(255,255,255,0.1); border-radius: 15px; padding: 20px; margin: 0 auto; max-width: 90%; box-shadow: 0 8px 20px rgba(0,0,0,0.2);">
+              <h1 class="mobile-header" style="color: white; font-size: 24px; margin: 0 0 10px 0; font-weight: 900; text-shadow: 2px 2px 6px rgba(0,0,0,0.5); direction: rtl; font-family: 'IBM Plex Sans Arabic', 'Cairo'; letter-spacing: 1px; line-height: 1.2;">وكالة ماستر إيدو باث</h1>
               
-              <div style="background: linear-gradient(90deg, transparent, rgba(59, 130, 246, 0.6), rgba(14, 165, 233, 0.6), transparent); height: 4px; width: 200px; margin: 20px auto; border-radius: 2px; box-shadow: 0 2px 10px rgba(59, 130, 246, 0.3);"></div>
+              <div style="background: linear-gradient(90deg, transparent, rgba(59, 130, 246, 0.6), rgba(14, 165, 233, 0.6), transparent); height: 3px; width: 80px; margin: 12px auto; border-radius: 2px; box-shadow: 0 2px 8px rgba(59, 130, 246, 0.3);"></div>
               
-              <h2 style="color: rgba(255,255,255,0.95); margin: 15px 0 20px 0; font-size: 26px; font-weight: 700; direction: rtl; font-family: 'IBM Plex Sans Arabic'; text-shadow: 2px 2px 6px rgba(0,0,0,0.3);" class="mobile-text">للخدمات التعليمية والتدريب المتقدم</h2>
+              <h2 class="mobile-subheader" style="color: rgba(255,255,255,0.95); margin: 8px 0 12px 0; font-size: 16px; font-weight: 700; direction: rtl; font-family: 'IBM Plex Sans Arabic'; text-shadow: 1px 1px 4px rgba(0,0,0,0.3);">للخدمات التعليمية والتدريب المتقدم</h2>
               
-              <div style="background: rgba(255,255,255,0.1); border-radius: 15px; padding: 15px; margin: 20px 0; border: 1px solid rgba(255,255,255,0.15);">
-                <p style="color: rgba(255,255,255,0.9); margin: 0; font-size: 18px; direction: rtl; font-family: 'IBM Plex Sans Arabic'; font-weight: 500;" class="mobile-text">Master Edu Path Educational Services Agency</p>
+              <div style="background: rgba(255,255,255,0.1); border-radius: 10px; padding: 10px; margin: 12px 0; border: 1px solid rgba(255,255,255,0.15);">
+                <p class="mobile-text" style="color: rgba(255,255,255,0.9); margin: 0; font-size: 12px; direction: rtl; font-family: 'IBM Plex Sans Arabic'; font-weight: 500;">Master Edu Path Educational Services Agency</p>
               </div>
             </div>
           </div>
           
-          <!-- Professional Badges -->
-          <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 25px; direction: rtl; flex-wrap: wrap; gap: 15px;" class="mobile-flex">
-            <!-- Document Type Badge -->
-            <div style="background: linear-gradient(135deg, rgba(59, 130, 246, 0.2), rgba(14, 165, 233, 0.2)); padding: 15px 25px; border-radius: 30px; border: 2px solid rgba(59, 130, 246, 0.4); backdrop-filter: blur(15px); box-shadow: 0 6px 20px rgba(59, 130, 246, 0.2);">
-              <div style="display: flex; align-items: center; gap: 8px; direction: rtl;">
-                <span style="font-size: 18px;">📄</span>
-                <span style="color: #60a5fa; font-size: 16px; font-weight: 800; direction: rtl;">وثيقة رسمية</span>
-              </div>
+          <!-- Mobile-Optimized Badges -->
+          <div class="mobile-flex" style="display: flex; justify-content: center; align-items: center; margin-top: 15px; direction: rtl; flex-wrap: wrap; gap: 8px;">
+            <div class="mobile-badge" style="background: linear-gradient(135deg, rgba(59, 130, 246, 0.2), rgba(14, 165, 233, 0.2)); padding: 10px 15px; border-radius: 20px; border: 2px solid rgba(59, 130, 246, 0.4); backdrop-filter: blur(15px); box-shadow: 0 4px 15px rgba(59, 130, 246, 0.2);">
+              <span style="color: #60a5fa; font-size: 12px; font-weight: 800; direction: rtl;">📄 وثيقة رسمية</span>
             </div>
             
-            <!-- Certification Badge -->
-            <div style="background: linear-gradient(135deg, rgba(16, 185, 129, 0.2), rgba(5, 150, 105, 0.2)); padding: 15px 25px; border-radius: 30px; border: 2px solid rgba(16, 185, 129, 0.4); backdrop-filter: blur(15px); box-shadow: 0 6px 20px rgba(16, 185, 129, 0.2);">
-              <div style="display: flex; align-items: center; gap: 8px; direction: rtl;">
-                <span style="font-size: 18px;">🏢</span>
-                <span style="color: #34d399; font-size: 16px; font-weight: 800; direction: rtl;">معتمدة رسمياً</span>
-              </div>
-            </div>
-            
-            <!-- Quality Badge -->
-            <div style="background: linear-gradient(135deg, rgba(245, 158, 11, 0.2), rgba(217, 119, 6, 0.2)); padding: 15px 25px; border-radius: 30px; border: 2px solid rgba(245, 158, 11, 0.4); backdrop-filter: blur(15px); box-shadow: 0 6px 20px rgba(245, 158, 11, 0.2);">
-              <div style="display: flex; align-items: center; gap: 8px; direction: rtl;">
-                <span style="font-size: 18px;">⭐</span>
-                <span style="color: #fbbf24; font-size: 16px; font-weight: 800; direction: rtl;">جودة عالية</span>
-              </div>
+            <div class="mobile-badge" style="background: linear-gradient(135deg, rgba(16, 185, 129, 0.2), rgba(5, 150, 105, 0.2)); padding: 10px 15px; border-radius: 20px; border: 2px solid rgba(16, 185, 129, 0.4); backdrop-filter: blur(15px); box-shadow: 0 4px 15px rgba(16, 185, 129, 0.2);">
+              <span style="color: #34d399; font-size: 12px; font-weight: 800; direction: rtl;">🏢 معتمدة رسمياً</span>
             </div>
           </div>
           
-          <!-- Corporate Contact Info -->
-          <div style="position: absolute; bottom: 20px; right: 25px; background: rgba(255,255,255,0.08); padding: 12px 20px; border-radius: 25px; border: 1px solid rgba(255,255,255,0.15); backdrop-filter: blur(10px);">
-            <div style="display: flex; align-items: center; gap: 8px; direction: rtl;">
-              <span style="color: rgba(255,255,255,0.9); font-size: 13px; font-weight: 700; direction: rtl;">📧 info@masteredupath.com</span>
-            </div>
-          </div>
-          
-          <!-- Phone Contact -->
-          <div style="position: absolute; bottom: 20px; left: 25px; background: rgba(255,255,255,0.08); padding: 12px 20px; border-radius: 25px; border: 1px solid rgba(255,255,255,0.15); backdrop-filter: blur(10px);">
-            <div style="display: flex; align-items: center; gap: 8px;">
-              <span style="color: rgba(255,255,255,0.9); font-size: 13px; font-weight: 700;">📱 0500776343</span>
+          <!-- Mobile-Optimized Contact Info -->
+          <div class="mobile-contact" style="background: rgba(255,255,255,0.08); padding: 8px 15px; border-radius: 15px; border: 1px solid rgba(255,255,255,0.15); backdrop-filter: blur(10px); margin: 15px auto 5px auto; text-align: center; max-width: 280px;">
+            <div style="display: flex; align-items: center; justify-content: center; gap: 15px; flex-wrap: wrap; direction: rtl;">
+              <span style="color: rgba(255,255,255,0.9); font-size: 10px; font-weight: 700; direction: rtl;">📧 info@masteredupath.com</span>
+              <span style="color: rgba(255,255,255,0.9); font-size: 10px; font-weight: 700;">📱 0500776343</span>
             </div>
           </div>
         </div>
@@ -771,48 +789,85 @@ export default function EmailNotifications() {
       </style>
       
       <div style="background: white; border: 3px solid #e2e8f0; border-radius: 12px; overflow: hidden; direction: rtl;">
-        <!-- Premium Corporate Header for Receipt -->
-        <div style="background: linear-gradient(135deg, #0f172a 0%, #1e293b 25%, #334155 50%, #475569 75%, #64748b 100%); padding: 45px 30px; text-align: center; color: white; direction: rtl; position: relative; overflow: hidden; border-bottom: 6px solid #16a34a;" class="mobile-container">
+        <!-- Mobile-Optimized Corporate Header for Receipt -->
+        <div style="background: linear-gradient(135deg, #0f172a 0%, #1e293b 25%, #334155 50%, #475569 75%, #64748b 100%); padding: 30px 15px; text-align: center; color: white; direction: rtl; position: relative; overflow: hidden; border-bottom: 6px solid #16a34a;" class="mobile-container">
+          <style>
+            @media (max-width: 768px) {
+              .mobile-container { padding: 15px 10px !important; }
+              .mobile-text { font-size: 11px !important; line-height: 1.4 !important; }
+              .mobile-header { font-size: 18px !important; line-height: 1.3 !important; }
+              .mobile-subheader { font-size: 13px !important; }
+              .mobile-flex { 
+                flex-direction: column !important; 
+                gap: 8px !important; 
+                align-items: center !important;
+              }
+              .mobile-logo { 
+                width: 70px !important; 
+                height: 70px !important; 
+                margin-bottom: 12px !important;
+              }
+              .mobile-logo-inner { 
+                width: 50px !important; 
+                height: 50px !important; 
+                font-size: 14px !important;
+              }
+              .mobile-card {
+                max-width: 100% !important;
+                padding: 12px !important;
+                margin: 8px 0 !important;
+              }
+              .mobile-badge {
+                padding: 6px 10px !important;
+                font-size: 10px !important;
+                margin: 3px !important;
+              }
+              .mobile-contact {
+                position: static !important;
+                display: block !important;
+                text-align: center !important;
+                margin: 8px auto !important;
+                padding: 6px 10px !important;
+                font-size: 9px !important;
+              }
+            }
+          </style>
+          
           <!-- Premium Decorative Elements -->
-          <div style="position: absolute; top: 0; left: 0; right: 0; height: 6px; background: linear-gradient(90deg, #16a34a, #15803d, #14532d, #166534, #15803d, #16a34a);"></div>
-          <div style="position: absolute; top: -40px; right: -40px; width: 150px; height: 150px; background: radial-gradient(circle, rgba(22, 163, 74, 0.1) 0%, transparent 70%); border-radius: 50%;"></div>
-          <div style="position: absolute; bottom: -20px; left: -20px; width: 120px; height: 120px; background: radial-gradient(circle, rgba(21, 128, 61, 0.08) 0%, transparent 70%); border-radius: 50%;"></div>
+          <div style="position: absolute; top: 0; left: 0; right: 0; height: 4px; background: linear-gradient(90deg, #16a34a, #15803d, #14532d, #166534, #15803d, #16a34a);"></div>
           
-          <!-- Premium Logo -->
-          <div style="background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%); width: 120px; height: 120px; border-radius: 22px; display: flex; align-items: center; justify-content: center; margin: 0 auto 25px auto; border: 4px solid rgba(255,255,255,0.2); box-shadow: 0 12px 30px rgba(0,0,0,0.3), inset 0 2px 8px rgba(255,255,255,0.1); backdrop-filter: blur(15px);">
-            <div style="background: linear-gradient(135deg, #16a34a 0%, #15803d 50%, #14532d 100%); color: white; width: 85px; height: 85px; border-radius: 16px; display: flex; flex-direction: column; align-items: center; justify-content: center; font-weight: 900; box-shadow: 0 6px 18px rgba(22, 163, 74, 0.4);">
-              <div style="font-size: 28px; line-height: 1;">MEP</div>
-              <div style="font-size: 7px; margin-top: 2px; opacity: 0.9; letter-spacing: 1px;">RECEIPT</div>
+          <!-- Mobile-Optimized Logo -->
+          <div class="mobile-logo" style="background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%); width: 90px; height: 90px; border-radius: 18px; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px auto; border: 3px solid rgba(255,255,255,0.2); box-shadow: 0 10px 25px rgba(0,0,0,0.3); backdrop-filter: blur(15px);">
+            <div class="mobile-logo-inner" style="background: linear-gradient(135deg, #16a34a 0%, #15803d 50%, #14532d 100%); color: white; width: 65px; height: 65px; border-radius: 14px; display: flex; flex-direction: column; align-items: center; justify-content: center; font-weight: 900; box-shadow: 0 6px 15px rgba(22, 163, 74, 0.4);">
+              <div style="font-size: 18px; line-height: 1;">MEP</div>
+              <div style="font-size: 5px; margin-top: 1px; opacity: 0.9; letter-spacing: 1px;">RECEIPT</div>
             </div>
           </div>
           
-          <!-- Corporate Name & Receipt Title -->
-          <div style="background: rgba(255,255,255,0.08); backdrop-filter: blur(20px); border: 2px solid rgba(255,255,255,0.1); border-radius: 18px; padding: 25px; margin: 0 auto; max-width: 500px; box-shadow: 0 8px 25px rgba(0,0,0,0.2);">
-            <h1 style="margin: 0 0 10px 0; font-size: 36px; font-weight: 900; text-shadow: 3px 3px 8px rgba(0,0,0,0.5); direction: rtl; font-family: 'IBM Plex Sans Arabic';" class="mobile-header">وكالة ماستر إيدو باث</h1>
+          <!-- Mobile-Optimized Corporate Name -->
+          <div class="mobile-card" style="background: rgba(255,255,255,0.08); backdrop-filter: blur(20px); border: 2px solid rgba(255,255,255,0.1); border-radius: 15px; padding: 18px; margin: 0 auto; max-width: 90%; box-shadow: 0 8px 20px rgba(0,0,0,0.2);">
+            <h1 class="mobile-header" style="margin: 0 0 8px 0; font-size: 22px; font-weight: 900; text-shadow: 2px 2px 6px rgba(0,0,0,0.5); direction: rtl; font-family: 'IBM Plex Sans Arabic';">وكالة ماستر إيدو باث</h1>
             
-            <div style="background: linear-gradient(90deg, transparent, rgba(22, 163, 74, 0.6), rgba(21, 128, 61, 0.6), transparent); height: 3px; width: 150px; margin: 15px auto; border-radius: 2px; box-shadow: 0 2px 8px rgba(22, 163, 74, 0.3);"></div>
+            <div style="background: linear-gradient(90deg, transparent, rgba(22, 163, 74, 0.6), rgba(21, 128, 61, 0.6), transparent); height: 2px; width: 60px; margin: 10px auto; border-radius: 1px; box-shadow: 0 2px 6px rgba(22, 163, 74, 0.3);"></div>
             
-            <h2 style="color: rgba(255,255,255,0.95); margin: 10px 0 15px 0; font-size: 20px; font-weight: 700; direction: rtl; font-family: 'IBM Plex Sans Arabic';" class="mobile-text">للخدمات التعليمية والتدريب المتقدم</h2>
+            <h2 class="mobile-subheader" style="color: rgba(255,255,255,0.95); margin: 6px 0 10px 0; font-size: 14px; font-weight: 700; direction: rtl; font-family: 'IBM Plex Sans Arabic';">للخدمات التعليمية والتدريب المتقدم</h2>
             
-            <div style="background: rgba(22, 163, 74, 0.15); border-radius: 12px; padding: 12px; margin: 15px 0; border: 1px solid rgba(22, 163, 74, 0.25);">
-              <span style="color: #34d399; font-size: 18px; font-weight: 800; direction: rtl;">📋 سند دفع رسمي</span>
+            <div style="background: rgba(22, 163, 74, 0.15); border-radius: 10px; padding: 8px; margin: 10px 0; border: 1px solid rgba(22, 163, 74, 0.25);">
+              <span class="mobile-text" style="color: #34d399; font-size: 12px; font-weight: 800; direction: rtl;">📋 سند دفع رسمي</span>
             </div>
           </div>
           
-          <!-- Professional Badges -->
-          <div style="display: flex; justify-content: center; gap: 15px; margin-top: 20px; flex-wrap: wrap;" class="mobile-flex">
-            <div style="background: linear-gradient(135deg, rgba(22, 163, 74, 0.2), rgba(21, 128, 61, 0.2)); padding: 12px 20px; border-radius: 25px; border: 2px solid rgba(22, 163, 74, 0.4); backdrop-filter: blur(15px);">
-              <span style="color: #34d399; font-size: 14px; font-weight: 800;">🏢 معتمد رسمياً</span>
+          <!-- Mobile-Optimized Badge -->
+          <div class="mobile-badge" style="background: linear-gradient(135deg, rgba(22, 163, 74, 0.2), rgba(21, 128, 61, 0.2)); padding: 8px 15px; border-radius: 20px; border: 2px solid rgba(22, 163, 74, 0.4); backdrop-filter: blur(15px); margin: 15px auto; display: inline-block;">
+            <span style="color: #34d399; font-size: 11px; font-weight: 800;">🏢 معتمد رسمياً</span>
+          </div>
+          
+          <!-- Mobile-Optimized Contact Info -->
+          <div class="mobile-contact" style="background: rgba(255,255,255,0.08); padding: 6px 12px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.15); margin: 12px auto; text-align: center; max-width: 250px;">
+            <div style="display: flex; align-items: center; justify-content: center; gap: 12px; flex-wrap: wrap; direction: rtl;">
+              <span style="color: rgba(255,255,255,0.9); font-size: 9px; font-weight: 700; direction: rtl;">📧 info@masteredupath.com</span>
+              <span style="color: rgba(255,255,255,0.9); font-size: 9px; font-weight: 700;">📱 0500776343</span>
             </div>
-          </div>
-          
-          <!-- Contact Info -->
-          <div style="position: absolute; bottom: 15px; right: 20px; background: rgba(255,255,255,0.08); padding: 8px 15px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.15);">
-            <span style="color: rgba(255,255,255,0.9); font-size: 11px; font-weight: 700; direction: rtl;">📧 info@masteredupath.com</span>
-          </div>
-          
-          <div style="position: absolute; bottom: 15px; left: 20px; background: rgba(255,255,255,0.08); padding: 8px 15px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.15);">
-            <span style="color: rgba(255,255,255,0.9); font-size: 11px; font-weight: 700;">📱 0500776343</span>
           </div>
         </div>
 
@@ -890,58 +945,97 @@ export default function EmailNotifications() {
     return `
     <div dir="rtl" style="max-width: 600px; margin: 0 auto; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif, 'Times New Roman'; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 20px; direction: rtl; text-align: right;">
       <div style="background: white; border-radius: 15px; padding: 40px; text-align: center; direction: rtl;">
-      <!-- Premium Corporate Header for Activation -->
-      <div style="background: linear-gradient(135deg, #0f172a 0%, #1e293b 25%, #334155 50%, #475569 75%, #64748b 100%); border-radius: 15px 15px 0 0; padding: 50px 40px; text-align: center; direction: rtl; position: relative; overflow: hidden; border-bottom: 6px solid #10b981;">
-        <!-- Premium Decorative Elements -->
-        <div style="position: absolute; top: 0; left: 0; right: 0; height: 6px; background: linear-gradient(90deg, #10b981, #059669, #047857, #065f46, #047857, #10b981);"></div>
-        <div style="position: absolute; top: -40px; right: -40px; width: 160px; height: 160px; background: radial-gradient(circle, rgba(16, 185, 129, 0.1) 0%, transparent 70%); border-radius: 50%;"></div>
-        <div style="position: absolute; bottom: -25px; left: -25px; width: 130px; height: 130px; background: radial-gradient(circle, rgba(5, 150, 105, 0.08) 0%, transparent 70%); border-radius: 50%;"></div>
+      <!-- Mobile-Optimized Corporate Header for Activation -->
+      <div style="background: linear-gradient(135deg, #0f172a 0%, #1e293b 25%, #334155 50%, #475569 75%, #64748b 100%); border-radius: 15px 15px 0 0; padding: 30px 20px; text-align: center; direction: rtl; position: relative; overflow: hidden; border-bottom: 6px solid #10b981;">
+        <style>
+          @media (max-width: 768px) {
+            .mobile-container { padding: 15px 10px !important; }
+            .mobile-text { font-size: 11px !important; line-height: 1.4 !important; }
+            .mobile-header { font-size: 18px !important; line-height: 1.3 !important; }
+            .mobile-subheader { font-size: 13px !important; }
+            .mobile-flex { 
+              flex-direction: column !important; 
+              gap: 8px !important; 
+              align-items: center !important;
+            }
+            .mobile-logo { 
+              width: 75px !important; 
+              height: 75px !important; 
+              margin-bottom: 15px !important;
+            }
+            .mobile-logo-inner { 
+              width: 55px !important; 
+              height: 55px !important; 
+              font-size: 16px !important;
+            }
+            .mobile-card {
+              max-width: 100% !important;
+              padding: 15px !important;
+              margin: 10px 0 !important;
+            }
+            .mobile-badge {
+              padding: 6px 12px !important;
+              font-size: 10px !important;
+              margin: 4px !important;
+            }
+            .mobile-contact {
+              position: static !important;
+              display: block !important;
+              text-align: center !important;
+              margin: 10px auto !important;
+              padding: 6px 12px !important;
+              font-size: 9px !important;
+            }
+          }
+        </style>
         
-        <!-- Premium Logo -->
-        <div style="background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%); width: 130px; height: 130px; border-radius: 22px; display: flex; align-items: center; justify-content: center; margin: 0 auto 25px auto; border: 4px solid rgba(255,255,255,0.2); box-shadow: 0 15px 35px rgba(0,0,0,0.3), inset 0 2px 10px rgba(255,255,255,0.1); backdrop-filter: blur(15px);">
-          <div style="background: linear-gradient(135deg, #10b981 0%, #059669 50%, #047857 100%); color: white; width: 95px; height: 95px; border-radius: 18px; display: flex; flex-direction: column; align-items: center; justify-content: center; font-weight: 900; box-shadow: 0 8px 20px rgba(16, 185, 129, 0.4);">
-            <div style="font-size: 30px; line-height: 1;">MEP</div>
-            <div style="font-size: 8px; margin-top: 2px; opacity: 0.9; letter-spacing: 1px;">WELCOME</div>
+        <!-- Premium Decorative Elements -->
+        <div style="position: absolute; top: 0; left: 0; right: 0; height: 4px; background: linear-gradient(90deg, #10b981, #059669, #047857, #065f46, #047857, #10b981);"></div>
+        
+        <!-- Mobile-Optimized Logo -->
+        <div class="mobile-logo" style="background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%); width: 100px; height: 100px; border-radius: 20px; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px auto; border: 3px solid rgba(255,255,255,0.2); box-shadow: 0 12px 28px rgba(0,0,0,0.3); backdrop-filter: blur(15px);">
+          <div class="mobile-logo-inner" style="background: linear-gradient(135deg, #10b981 0%, #059669 50%, #047857 100%); color: white; width: 70px; height: 70px; border-radius: 16px; display: flex; flex-direction: column; align-items: center; justify-content: center; font-weight: 900; box-shadow: 0 6px 18px rgba(16, 185, 129, 0.4);">
+            <div style="font-size: 20px; line-height: 1;">MEP</div>
+            <div style="font-size: 6px; margin-top: 1px; opacity: 0.9; letter-spacing: 1px;">WELCOME</div>
           </div>
         </div>
         
-        <!-- Corporate Name & Welcome -->
-        <div style="background: rgba(255,255,255,0.08); backdrop-filter: blur(20px); border: 2px solid rgba(255,255,255,0.1); border-radius: 20px; padding: 30px; margin: 0 auto; max-width: 550px; box-shadow: 0 10px 30px rgba(0,0,0,0.2);">
-          <h1 style="margin: 0 0 12px 0; font-size: 38px; font-weight: 900; text-shadow: 3px 3px 8px rgba(0,0,0,0.5); direction: rtl; font-family: 'IBM Plex Sans Arabic'; letter-spacing: 0.5px;">وكالة ماستر إيدو باث</h1>
+        <!-- Mobile-Optimized Corporate Name -->
+        <div class="mobile-card" style="background: rgba(255,255,255,0.08); backdrop-filter: blur(20px); border: 2px solid rgba(255,255,255,0.1); border-radius: 18px; padding: 20px; margin: 0 auto; max-width: 90%; box-shadow: 0 8px 25px rgba(0,0,0,0.2);">
+          <h1 class="mobile-header" style="margin: 0 0 10px 0; font-size: 24px; font-weight: 900; text-shadow: 2px 2px 6px rgba(0,0,0,0.5); direction: rtl; font-family: 'IBM Plex Sans Arabic'; letter-spacing: 0.5px;">وكالة ماستر إيدو باث</h1>
           
-          <div style="background: linear-gradient(90deg, transparent, rgba(16, 185, 129, 0.6), rgba(5, 150, 105, 0.6), transparent); height: 4px; width: 180px; margin: 18px auto; border-radius: 2px; box-shadow: 0 2px 10px rgba(16, 185, 129, 0.3);"></div>
+          <div style="background: linear-gradient(90deg, transparent, rgba(16, 185, 129, 0.6), rgba(5, 150, 105, 0.6), transparent); height: 3px; width: 80px; margin: 12px auto; border-radius: 2px; box-shadow: 0 2px 8px rgba(16, 185, 129, 0.3);"></div>
           
-          <h2 style="color: rgba(255,255,255,0.95); margin: 10px 0 15px 0; font-size: 24px; font-weight: 700; direction: rtl; font-family: 'IBM Plex Sans Arabic'; text-shadow: 2px 2px 6px rgba(0,0,0,0.3);">للخدمات التعليمية والتدريب المتقدم</h2>
+          <h2 class="mobile-subheader" style="color: rgba(255,255,255,0.95); margin: 8px 0 12px 0; font-size: 16px; font-weight: 700; direction: rtl; font-family: 'IBM Plex Sans Arabic'; text-shadow: 2px 2px 4px rgba(0,0,0,0.3);">للخدمات التعليمية والتدريب المتقدم</h2>
           
-          <div style="background: rgba(255,255,255,0.1); border-radius: 15px; padding: 15px; margin: 18px 0; border: 1px solid rgba(255,255,255,0.15);">
-            <p style="color: rgba(255,255,255,0.9); margin: 0; font-size: 17px; direction: rtl; font-family: 'IBM Plex Sans Arabic'; font-weight: 500;">Master Edu Path Educational Services Agency</p>
+          <div style="background: rgba(255,255,255,0.1); border-radius: 12px; padding: 12px; margin: 12px 0; border: 1px solid rgba(255,255,255,0.15);">
+            <p class="mobile-text" style="color: rgba(255,255,255,0.9); margin: 0; font-size: 13px; direction: rtl; font-family: 'IBM Plex Sans Arabic'; font-weight: 500;">Master Edu Path Educational Services Agency</p>
           </div>
           
           <!-- Welcome Message -->
-          <div style="background: rgba(16, 185, 129, 0.15); border: 2px solid rgba(16, 185, 129, 0.3); border-radius: 18px; padding: 22px; margin: 20px 0; backdrop-filter: blur(5px);">
-            <h3 style="color: #34d399; margin: 0 0 10px 0; font-size: 26px; font-weight: 800; direction: rtl; text-shadow: 2px 2px 4px rgba(0,0,0,0.2);">مرحباً بك ${data.customerName}</h3>
-            <p style="color: rgba(255,255,255,0.9); margin: 0; font-size: 17px; direction: rtl; font-weight: 600;">حسابك جاهز للاستخدام في منصتنا الرسمية</p>
+          <div style="background: rgba(16, 185, 129, 0.15); border: 2px solid rgba(16, 185, 129, 0.3); border-radius: 15px; padding: 15px; margin: 15px 0; backdrop-filter: blur(5px);">
+            <h3 class="mobile-header" style="color: #34d399; margin: 0 0 8px 0; font-size: 18px; font-weight: 800; direction: rtl; text-shadow: 1px 1px 3px rgba(0,0,0,0.2);">مرحباً بك ${data.customerName}</h3>
+            <p class="mobile-text" style="color: rgba(255,255,255,0.9); margin: 0; font-size: 12px; direction: rtl; font-weight: 600;">حسابك جاهز للاستخدام في منصتنا الرسمية</p>
           </div>
         </div>
         
-        <!-- Professional Badges -->
-        <div style="display: flex; justify-content: center; gap: 15px; margin-top: 25px; flex-wrap: wrap;" class="mobile-flex">
-          <div style="background: linear-gradient(135deg, rgba(16, 185, 129, 0.2), rgba(5, 150, 105, 0.2)); padding: 12px 20px; border-radius: 25px; border: 2px solid rgba(16, 185, 129, 0.4); backdrop-filter: blur(15px);">
-            <span style="color: #34d399; font-size: 14px; font-weight: 800;">🔐 تفعيل حساب</span>
+        <!-- Mobile-Optimized Badges -->
+        <div class="mobile-flex" style="display: flex; justify-content: center; gap: 10px; margin-top: 18px; flex-wrap: wrap;">
+          <div class="mobile-badge" style="background: linear-gradient(135deg, rgba(16, 185, 129, 0.2), rgba(5, 150, 105, 0.2)); padding: 8px 15px; border-radius: 20px; border: 2px solid rgba(16, 185, 129, 0.4); backdrop-filter: blur(15px);">
+            <span style="color: #34d399; font-size: 11px; font-weight: 800;">🔐 تفعيل حساب</span>
           </div>
           
-          <div style="background: linear-gradient(135deg, rgba(59, 130, 246, 0.2), rgba(37, 99, 235, 0.2)); padding: 12px 20px; border-radius: 25px; border: 2px solid rgba(59, 130, 246, 0.4); backdrop-filter: blur(15px);">
-            <span style="color: #60a5fa; font-size: 14px; font-weight: 800;">🏢 معتمد رسمياً</span>
+          <div class="mobile-badge" style="background: linear-gradient(135deg, rgba(59, 130, 246, 0.2), rgba(37, 99, 235, 0.2)); padding: 8px 15px; border-radius: 20px; border: 2px solid rgba(59, 130, 246, 0.4); backdrop-filter: blur(15px);">
+            <span style="color: #60a5fa; font-size: 11px; font-weight: 800;">🏢 معتمد رسمياً</span>
           </div>
         </div>
         
-        <!-- Contact Info -->
-        <div style="position: absolute; bottom: 20px; right: 25px; background: rgba(255,255,255,0.08); padding: 10px 18px; border-radius: 22px; border: 1px solid rgba(255,255,255,0.15);">
-          <span style="color: rgba(255,255,255,0.9); font-size: 12px; font-weight: 700; direction: rtl;">📧 info@masteredupath.com</span>
-        </div>
-        
-        <div style="position: absolute; bottom: 20px; left: 25px; background: rgba(255,255,255,0.08); padding: 10px 18px; border-radius: 22px; border: 1px solid rgba(255,255,255,0.15);">
-          <span style="color: rgba(255,255,255,0.9); font-size: 12px; font-weight: 700;">📱 0500776343</span>
+        <!-- Mobile-Optimized Contact Info -->
+        <div class="mobile-contact" style="background: rgba(255,255,255,0.08); padding: 6px 12px; border-radius: 15px; border: 1px solid rgba(255,255,255,0.15); margin: 15px auto; text-align: center; max-width: 260px;">
+          <div style="display: flex; align-items: center; justify-content: center; gap: 12px; flex-wrap: wrap; direction: rtl;">
+            <span style="color: rgba(255,255,255,0.9); font-size: 9px; font-weight: 700; direction: rtl;">📧 info@masteredupath.com</span>
+            <span style="color: rgba(255,255,255,0.9); font-size: 9px; font-weight: 700;">📱 0500776343</span>
+          </div>
         </div>
       </div>
 
@@ -967,58 +1061,109 @@ export default function EmailNotifications() {
     return `
     <div dir="rtl" style="max-width: 600px; margin: 0 auto; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif, 'Times New Roman'; background: linear-gradient(135deg, #ff6b6b, #ee5a24); padding: 20px; direction: rtl; text-align: right;">
       <div style="background: white; border-radius: 15px; overflow: hidden; box-shadow: 0 10px 25px rgba(0,0,0,0.15); direction: rtl;">
-        <!-- Premium Corporate Header for Promotions -->
-        <div style="background: linear-gradient(135deg, #0f172a 0%, #1e293b 25%, #334155 50%, #475569 75%, #64748b 100%); padding: 45px 30px; text-align: center; color: white; direction: rtl; position: relative; overflow: hidden; border-bottom: 6px solid #ff6b6b;">
+        <!-- Mobile-Optimized Corporate Header for Promotions -->
+        <div style="background: linear-gradient(135deg, #0f172a 0%, #1e293b 25%, #334155 50%, #475569 75%, #64748b 100%); padding: 30px 20px; text-align: center; color: white; direction: rtl; position: relative; overflow: hidden; border-bottom: 6px solid #ff6b6b;">
+          <style>
+            @media (max-width: 768px) {
+              .mobile-container { padding: 15px 10px !important; }
+              .mobile-text { font-size: 11px !important; line-height: 1.4 !important; }
+              .mobile-header { font-size: 18px !important; line-height: 1.3 !important; }
+              .mobile-subheader { font-size: 13px !important; }
+              .mobile-flex { 
+                flex-direction: column !important; 
+                gap: 8px !important; 
+                align-items: center !important;
+              }
+              .mobile-logo { 
+                width: 75px !important; 
+                height: 75px !important; 
+                margin-bottom: 15px !important;
+              }
+              .mobile-logo-inner { 
+                width: 55px !important; 
+                height: 55px !important; 
+                font-size: 15px !important;
+              }
+              .mobile-card {
+                max-width: 100% !important;
+                padding: 15px !important;
+                margin: 10px 0 !important;
+              }
+              .mobile-badge {
+                padding: 6px 12px !important;
+                font-size: 10px !important;
+                margin: 4px !important;
+              }
+              .mobile-contact {
+                position: static !important;
+                display: block !important;
+                text-align: center !important;
+                margin: 10px auto !important;
+                padding: 6px 12px !important;
+                font-size: 9px !important;
+              }
+              .mobile-promo-banner {
+                padding: 15px !important;
+                margin: 12px 0 !important;
+                border-radius: 15px !important;
+              }
+              .mobile-promo-title {
+                font-size: 20px !important;
+                margin-bottom: 6px !important;
+              }
+              .mobile-promo-desc {
+                font-size: 12px !important;
+              }
+            }
+          </style>
+          
           <!-- Premium Decorative Elements -->
-          <div style="position: absolute; top: 0; left: 0; right: 0; height: 6px; background: linear-gradient(90deg, #ff6b6b, #ee5a24, #ea580c, #dc2626, #ea580c, #ff6b6b);"></div>
-          <div style="position: absolute; top: -45px; right: -45px; width: 180px; height: 180px; background: radial-gradient(circle, rgba(255, 107, 107, 0.1) 0%, transparent 70%); border-radius: 50%;"></div>
-          <div style="position: absolute; bottom: -25px; left: -25px; width: 140px; height: 140px; background: radial-gradient(circle, rgba(238, 90, 36, 0.08) 0%, transparent 70%); border-radius: 50%;"></div>
+          <div style="position: absolute; top: 0; left: 0; right: 0; height: 4px; background: linear-gradient(90deg, #ff6b6b, #ee5a24, #ea580c, #dc2626, #ea580c, #ff6b6b);"></div>
           
-          <!-- Premium Logo -->
-          <div style="background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%); width: 130px; height: 130px; border-radius: 25px; display: flex; align-items: center; justify-content: center; margin: 0 auto 25px auto; border: 4px solid rgba(255,255,255,0.2); box-shadow: 0 15px 35px rgba(0,0,0,0.3), inset 0 2px 10px rgba(255,255,255,0.1); backdrop-filter: blur(15px);">
-            <div style="background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 50%, #dc2626 100%); color: white; width: 95px; height: 95px; border-radius: 18px; display: flex; flex-direction: column; align-items: center; justify-content: center; font-weight: 900; box-shadow: 0 8px 20px rgba(255, 107, 107, 0.4);">
-              <div style="font-size: 28px; line-height: 1;">MEP</div>
-              <div style="font-size: 8px; margin-top: 2px; opacity: 0.9; letter-spacing: 1px;">OFFERS</div>
+          <!-- Mobile-Optimized Logo -->
+          <div class="mobile-logo" style="background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%); width: 100px; height: 100px; border-radius: 22px; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px auto; border: 3px solid rgba(255,255,255,0.2); box-shadow: 0 12px 28px rgba(0,0,0,0.3); backdrop-filter: blur(15px);">
+            <div class="mobile-logo-inner" style="background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 50%, #dc2626 100%); color: white; width: 70px; height: 70px; border-radius: 16px; display: flex; flex-direction: column; align-items: center; justify-content: center; font-weight: 900; box-shadow: 0 6px 18px rgba(255, 107, 107, 0.4);">
+              <div style="font-size: 18px; line-height: 1;">MEP</div>
+              <div style="font-size: 6px; margin-top: 1px; opacity: 0.9; letter-spacing: 1px;">OFFERS</div>
             </div>
           </div>
           
-          <!-- Corporate Name & Promotion -->
-          <div style="background: rgba(255,255,255,0.08); backdrop-filter: blur(20px); border: 2px solid rgba(255,255,255,0.1); border-radius: 20px; padding: 30px; margin: 0 auto; max-width: 600px; box-shadow: 0 10px 30px rgba(0,0,0,0.2);">
-            <h1 style="margin: 0 0 12px 0; font-size: 36px; font-weight: 900; text-shadow: 3px 3px 8px rgba(0,0,0,0.5); direction: rtl; font-family: 'IBM Plex Sans Arabic';">وكالة ماستر إيدو باث</h1>
+          <!-- Mobile-Optimized Corporate Name -->
+          <div class="mobile-card" style="background: rgba(255,255,255,0.08); backdrop-filter: blur(20px); border: 2px solid rgba(255,255,255,0.1); border-radius: 18px; padding: 20px; margin: 0 auto; max-width: 90%; box-shadow: 0 8px 25px rgba(0,0,0,0.2);">
+            <h1 class="mobile-header" style="margin: 0 0 10px 0; font-size: 22px; font-weight: 900; text-shadow: 2px 2px 6px rgba(0,0,0,0.5); direction: rtl; font-family: 'IBM Plex Sans Arabic';">وكالة ماستر إيدو باث</h1>
             
-            <div style="background: linear-gradient(90deg, transparent, rgba(255, 107, 107, 0.6), rgba(238, 90, 36, 0.6), transparent); height: 4px; width: 160px; margin: 18px auto; border-radius: 2px; box-shadow: 0 2px 10px rgba(255, 107, 107, 0.3);"></div>
+            <div style="background: linear-gradient(90deg, transparent, rgba(255, 107, 107, 0.6), rgba(238, 90, 36, 0.6), transparent); height: 3px; width: 70px; margin: 12px auto; border-radius: 2px; box-shadow: 0 2px 8px rgba(255, 107, 107, 0.3);"></div>
             
-            <h2 style="margin: 10px 0 20px 0; font-size: 22px; font-weight: 700; direction: rtl; font-family: 'IBM Plex Sans Arabic'; text-shadow: 2px 2px 6px rgba(0,0,0,0.3);">للخدمات التعليمية والتدريب المتقدم</h2>
+            <h2 class="mobile-subheader" style="margin: 8px 0 15px 0; font-size: 15px; font-weight: 700; direction: rtl; font-family: 'IBM Plex Sans Arabic'; text-shadow: 2px 2px 4px rgba(0,0,0,0.3);">للخدمات التعليمية والتدريب المتقدم</h2>
             
-            <div style="background: rgba(255,255,255,0.1); border-radius: 15px; padding: 15px; margin: 18px 0; border: 1px solid rgba(255,255,255,0.15);">
-              <p style="margin: 0; font-size: 16px; opacity: 0.9; direction: rtl; font-weight: 500;">Master Edu Path Educational Services Agency</p>
+            <div style="background: rgba(255,255,255,0.1); border-radius: 12px; padding: 10px; margin: 12px 0; border: 1px solid rgba(255,255,255,0.15);">
+              <p class="mobile-text" style="margin: 0; font-size: 11px; opacity: 0.9; direction: rtl; font-weight: 500;">Master Edu Path Educational Services Agency</p>
             </div>
             
-            <!-- Promotion Banner -->
-            <div style="background: linear-gradient(135deg, #ff6b6b, #ee5a24); border: 3px solid rgba(255,255,255,0.3); border-radius: 20px; padding: 25px; margin: 20px 0; backdrop-filter: blur(5px); box-shadow: 0 8px 25px rgba(255, 107, 107, 0.3);">
-              <h3 style="margin: 0 0 8px 0; font-size: 30px; text-shadow: 2px 2px 4px rgba(0,0,0,0.3); direction: rtl; font-weight: 800;">${data.promotionTitle}</h3>
-              <p style="margin: 0; font-size: 18px; opacity: 0.95; direction: rtl; font-weight: 600;">عرض حصري من الإدارة لعميلنا الكريم ${data.customerName}</p>
-            </div>
-          </div>
-          
-          <!-- Professional Badges -->
-          <div style="display: flex; justify-content: center; gap: 15px; margin-top: 25px; flex-wrap: wrap;" class="mobile-flex">
-            <div style="background: linear-gradient(135deg, rgba(255, 107, 107, 0.2), rgba(238, 90, 36, 0.2)); padding: 12px 20px; border-radius: 25px; border: 2px solid rgba(255, 107, 107, 0.4); backdrop-filter: blur(15px);">
-              <span style="color: #fca5a5; font-size: 14px; font-weight: 800;">🎯 عرض تجاري</span>
-            </div>
-            
-            <div style="background: linear-gradient(135deg, rgba(245, 158, 11, 0.2), rgba(217, 119, 6, 0.2)); padding: 12px 20px; border-radius: 25px; border: 2px solid rgba(245, 158, 11, 0.4); backdrop-filter: blur(15px);">
-              <span style="color: #fbbf24; font-size: 14px; font-weight: 800;">⭐ عرض محدود</span>
+            <!-- Mobile-Optimized Promotion Banner -->
+            <div class="mobile-promo-banner" style="background: linear-gradient(135deg, #ff6b6b, #ee5a24); border: 2px solid rgba(255,255,255,0.3); border-radius: 18px; padding: 20px; margin: 15px 0; backdrop-filter: blur(5px); box-shadow: 0 6px 20px rgba(255, 107, 107, 0.3);">
+              <h3 class="mobile-promo-title" style="margin: 0 0 6px 0; font-size: 22px; text-shadow: 2px 2px 4px rgba(0,0,0,0.3); direction: rtl; font-weight: 800;">${data.promotionTitle}</h3>
+              <p class="mobile-promo-desc" style="margin: 0; font-size: 14px; opacity: 0.95; direction: rtl; font-weight: 600;">عرض حصري من الإدارة لعميلنا الكريم ${data.customerName}</p>
             </div>
           </div>
           
-          <!-- Contact Info -->
-          <div style="position: absolute; bottom: 20px; right: 25px; background: rgba(255,255,255,0.08); padding: 10px 18px; border-radius: 22px; border: 1px solid rgba(255,255,255,0.15);">
-            <span style="color: rgba(255,255,255,0.9); font-size: 12px; font-weight: 700; direction: rtl;">📧 info@masteredupath.com</span>
+          <!-- Mobile-Optimized Badges -->
+          <div class="mobile-flex" style="display: flex; justify-content: center; gap: 8px; margin-top: 18px; flex-wrap: wrap;">
+            <div class="mobile-badge" style="background: linear-gradient(135deg, rgba(255, 107, 107, 0.2), rgba(238, 90, 36, 0.2)); padding: 8px 12px; border-radius: 18px; border: 2px solid rgba(255, 107, 107, 0.4); backdrop-filter: blur(15px);">
+              <span style="color: #fca5a5; font-size: 10px; font-weight: 800;">🎯 عرض تجاري</span>
+            </div>
+            
+            <div class="mobile-badge" style="background: linear-gradient(135deg, rgba(245, 158, 11, 0.2), rgba(217, 119, 6, 0.2)); padding: 8px 12px; border-radius: 18px; border: 2px solid rgba(245, 158, 11, 0.4); backdrop-filter: blur(15px);">
+              <span style="color: #fbbf24; font-size: 10px; font-weight: 800;">⭐ عرض محدود</span>
+            </div>
           </div>
           
-          <div style="position: absolute; bottom: 20px; left: 25px; background: rgba(255,255,255,0.08); padding: 10px 18px; border-radius: 22px; border: 1px solid rgba(255,255,255,0.15);">
-            <span style="color: rgba(255,255,255,0.9); font-size: 12px; font-weight: 700;">📱 0500776343</span>
+          <!-- Mobile-Optimized Contact Info -->
+          <div class="mobile-contact" style="background: rgba(255,255,255,0.08); padding: 6px 12px; border-radius: 15px; border: 1px solid rgba(255,255,255,0.15); margin: 15px auto; text-align: center; max-width: 260px;">
+            <div style="display: flex; align-items: center; justify-content: center; gap: 12px; flex-wrap: wrap; direction: rtl;">
+              <span style="color: rgba(255,255,255,0.9); font-size: 9px; font-weight: 700; direction: rtl;">📧 info@masteredupath.com</span>
+              <span style="color: rgba(255,255,255,0.9); font-size: 9px; font-weight: 700;">📱 0500776343</span>
+            </div>
           </div>
         </div>
 
