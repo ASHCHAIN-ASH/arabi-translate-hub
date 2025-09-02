@@ -419,34 +419,76 @@ export default function EmailNotifications() {
       </script>
       
       <div style="background: white; border-radius: 25px; overflow: hidden; box-shadow: 0 25px 50px rgba(0,0,0,0.1); direction: rtl; border: 1px solid #e2e8f0;">
-        <!-- Official Corporate Header -->
-        <div style="background: linear-gradient(135deg, #1e293b 0%, #334155 50%, #475569 100%); padding: 50px 30px; position: relative; overflow: hidden; direction: rtl; border-bottom: 4px solid #0f172a;" class="mobile-container">
-          <!-- Decorative Elements -->
-          <div style="position: absolute; top: 0; left: 0; right: 0; height: 6px; background: linear-gradient(90deg, #dc2626, #ea580c, #d97706, #ca8a04, #65a30d, #16a34a, #059669, #0d9488, #0891b2, #0284c7, #2563eb, #4f46e5, #7c3aed, #9333ea, #c026d3);"></div>
+        <!-- Premium Corporate Header -->
+        <div style="background: linear-gradient(135deg, #0f172a 0%, #1e293b 25%, #334155 50%, #475569 75%, #64748b 100%); padding: 50px 30px; position: relative; overflow: hidden; direction: rtl; border-bottom: 6px solid #0ea5e9;" class="mobile-container">
+          <!-- Premium Decorative Elements -->
+          <div style="position: absolute; top: 0; left: 0; right: 0; height: 8px; background: linear-gradient(90deg, #1e40af, #3b82f6, #0ea5e9, #06b6d4, #0891b2, #0e7490, #155e75, #164e63);"></div>
+          <div style="position: absolute; top: -50px; right: -50px; width: 200px; height: 200px; background: radial-gradient(circle, rgba(59, 130, 246, 0.1) 0%, transparent 70%); border-radius: 50%;"></div>
+          <div style="position: absolute; bottom: -30px; left: -30px; width: 150px; height: 150px; background: radial-gradient(circle, rgba(14, 165, 233, 0.08) 0%, transparent 70%); border-radius: 50%;"></div>
           
-          <!-- Corporate Logo Area -->
-          <div style="text-align: center; margin-bottom: 25px; direction: rtl;">
-            <div style="background: rgba(255,255,255,0.95); width: 120px; height: 120px; border-radius: 20px; display: flex; align-items: center; justify-content: center; margin: 0 auto; border: 3px solid rgba(255,255,255,0.3); box-shadow: 0 8px 25px rgba(0,0,0,0.2); backdrop-filter: blur(10px);">
-              <div style="background: linear-gradient(135deg, #1e40af, #3b82f6); color: white; width: 80px; height: 80px; border-radius: 15px; display: flex; align-items: center; justify-content: center; font-size: 24px; font-weight: bold;">MEP</div>
+          <!-- Corporate Identity Section -->
+          <div style="text-align: center; margin-bottom: 30px; direction: rtl;">
+            <!-- Premium Logo -->
+            <div style="background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%); width: 140px; height: 140px; border-radius: 25px; display: flex; align-items: center; justify-content: center; margin: 0 auto 25px auto; border: 4px solid rgba(255,255,255,0.2); box-shadow: 0 15px 35px rgba(0,0,0,0.3), inset 0 2px 10px rgba(255,255,255,0.1); backdrop-filter: blur(15px);">
+              <div style="background: linear-gradient(135deg, #1e40af 0%, #3b82f6 50%, #0ea5e9 100%); color: white; width: 100px; height: 100px; border-radius: 18px; display: flex; flex-direction: column; align-items: center; justify-content: center; font-weight: 900; box-shadow: 0 8px 20px rgba(30, 64, 175, 0.4);">
+                <div style="font-size: 32px; line-height: 1;">MEP</div>
+                <div style="font-size: 8px; margin-top: 2px; opacity: 0.9; letter-spacing: 1px;">AGENCY</div>
+              </div>
+            </div>
+            
+            <!-- Corporate Name & Identity -->
+            <div style="background: rgba(255,255,255,0.08); backdrop-filter: blur(20px); border: 2px solid rgba(255,255,255,0.1); border-radius: 20px; padding: 30px; margin: 0 auto; max-width: 600px; box-shadow: 0 10px 30px rgba(0,0,0,0.2);">
+              <h1 style="color: white; font-size: 42px; margin: 0 0 15px 0; font-weight: 900; text-shadow: 3px 3px 8px rgba(0,0,0,0.5); direction: rtl; font-family: 'IBM Plex Sans Arabic', 'Cairo'; letter-spacing: 1.5px; line-height: 1.2;" class="mobile-header">وكالة ماستر إيدو باث</h1>
+              
+              <div style="background: linear-gradient(90deg, transparent, rgba(59, 130, 246, 0.6), rgba(14, 165, 233, 0.6), transparent); height: 4px; width: 200px; margin: 20px auto; border-radius: 2px; box-shadow: 0 2px 10px rgba(59, 130, 246, 0.3);"></div>
+              
+              <h2 style="color: rgba(255,255,255,0.95); margin: 15px 0 20px 0; font-size: 26px; font-weight: 700; direction: rtl; font-family: 'IBM Plex Sans Arabic'; text-shadow: 2px 2px 6px rgba(0,0,0,0.3);" class="mobile-text">للخدمات التعليمية والتدريب المتقدم</h2>
+              
+              <div style="background: rgba(255,255,255,0.1); border-radius: 15px; padding: 15px; margin: 20px 0; border: 1px solid rgba(255,255,255,0.15);">
+                <p style="color: rgba(255,255,255,0.9); margin: 0; font-size: 18px; direction: rtl; font-family: 'IBM Plex Sans Arabic'; font-weight: 500;" class="mobile-text">Master Edu Path Educational Services Agency</p>
+              </div>
             </div>
           </div>
           
-          <!-- Official Corporate Header -->
-          <div style="text-align: center; direction: rtl;">
-            <h1 style="color: white; font-size: 38px; margin: 0 0 12px 0; font-weight: 900; text-shadow: 3px 3px 6px rgba(0,0,0,0.4); direction: rtl; font-family: 'IBM Plex Sans Arabic', 'Cairo'; letter-spacing: 1px;" class="mobile-header">وكالة ماستر إيدو باث</h1>
-            <div style="background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent); height: 3px; width: 120px; margin: 15px auto; border-radius: 2px;"></div>
-            <h2 style="color: rgba(255,255,255,0.95); margin: 10px 0 15px 0; font-size: 22px; font-weight: 700; direction: rtl; font-family: 'IBM Plex Sans Arabic';" class="mobile-text">للخدمات التعليمية والتدريب المتقدم</h2>
-            <p style="color: rgba(255,255,255,0.85); margin: 0; font-size: 16px; direction: rtl; font-family: 'IBM Plex Sans Arabic';" class="mobile-text">Master Edu Path Educational Services Agency</p>
+          <!-- Professional Badges -->
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 25px; direction: rtl; flex-wrap: wrap; gap: 15px;" class="mobile-flex">
+            <!-- Document Type Badge -->
+            <div style="background: linear-gradient(135deg, rgba(59, 130, 246, 0.2), rgba(14, 165, 233, 0.2)); padding: 15px 25px; border-radius: 30px; border: 2px solid rgba(59, 130, 246, 0.4); backdrop-filter: blur(15px); box-shadow: 0 6px 20px rgba(59, 130, 246, 0.2);">
+              <div style="display: flex; align-items: center; gap: 8px; direction: rtl;">
+                <span style="font-size: 18px;">📄</span>
+                <span style="color: #60a5fa; font-size: 16px; font-weight: 800; direction: rtl;">وثيقة رسمية</span>
+              </div>
+            </div>
+            
+            <!-- Certification Badge -->
+            <div style="background: linear-gradient(135deg, rgba(16, 185, 129, 0.2), rgba(5, 150, 105, 0.2)); padding: 15px 25px; border-radius: 30px; border: 2px solid rgba(16, 185, 129, 0.4); backdrop-filter: blur(15px); box-shadow: 0 6px 20px rgba(16, 185, 129, 0.2);">
+              <div style="display: flex; align-items: center; gap: 8px; direction: rtl;">
+                <span style="font-size: 18px;">🏢</span>
+                <span style="color: #34d399; font-size: 16px; font-weight: 800; direction: rtl;">معتمدة رسمياً</span>
+              </div>
+            </div>
+            
+            <!-- Quality Badge -->
+            <div style="background: linear-gradient(135deg, rgba(245, 158, 11, 0.2), rgba(217, 119, 6, 0.2)); padding: 15px 25px; border-radius: 30px; border: 2px solid rgba(245, 158, 11, 0.4); backdrop-filter: blur(15px); box-shadow: 0 6px 20px rgba(245, 158, 11, 0.2);">
+              <div style="display: flex; align-items: center; gap: 8px; direction: rtl;">
+                <span style="font-size: 18px;">⭐</span>
+                <span style="color: #fbbf24; font-size: 16px; font-weight: 800; direction: rtl;">جودة عالية</span>
+              </div>
+            </div>
           </div>
           
-          <!-- Professional Badge -->
-          <div style="position: absolute; top: 25px; left: 25px; background: rgba(255,255,255,0.2); padding: 15px 25px; border-radius: 30px; border: 2px solid rgba(255,255,255,0.3); backdrop-filter: blur(15px);">
-            <span style="color: white; font-size: 14px; font-weight: 800; direction: rtl;">📄 وثيقة رسمية</span>
+          <!-- Corporate Contact Info -->
+          <div style="position: absolute; bottom: 20px; right: 25px; background: rgba(255,255,255,0.08); padding: 12px 20px; border-radius: 25px; border: 1px solid rgba(255,255,255,0.15); backdrop-filter: blur(10px);">
+            <div style="display: flex; align-items: center; gap: 8px; direction: rtl;">
+              <span style="color: rgba(255,255,255,0.9); font-size: 13px; font-weight: 700; direction: rtl;">📧 info@masteredupath.com</span>
+            </div>
           </div>
           
-          <!-- Official Seal -->
-          <div style="position: absolute; bottom: 20px; right: 25px; background: rgba(255,255,255,0.15); padding: 12px 20px; border-radius: 25px; border: 2px solid rgba(255,255,255,0.2);">
-            <span style="color: rgba(255,255,255,0.9); font-size: 12px; font-weight: 700; direction: rtl;">🏢 معتمدة رسمياً</span>
+          <!-- Phone Contact -->
+          <div style="position: absolute; bottom: 20px; left: 25px; background: rgba(255,255,255,0.08); padding: 12px 20px; border-radius: 25px; border: 1px solid rgba(255,255,255,0.15); backdrop-filter: blur(10px);">
+            <div style="display: flex; align-items: center; gap: 8px;">
+              <span style="color: rgba(255,255,255,0.9); font-size: 13px; font-weight: 700;">📱 0500776343</span>
+            </div>
           </div>
         </div>
         
@@ -729,30 +771,48 @@ export default function EmailNotifications() {
       </style>
       
       <div style="background: white; border: 3px solid #e2e8f0; border-radius: 12px; overflow: hidden; direction: rtl;">
-        <!-- Official Corporate Header -->
-        <div style="background: linear-gradient(135deg, #1e293b 0%, #334155 50%, #475569 100%); padding: 40px 20px; text-align: center; color: white; direction: rtl; position: relative; overflow: hidden; border-bottom: 4px solid #0f172a;" class="mobile-container">
-          <!-- Decorative Top Line -->
-          <div style="position: absolute; top: 0; left: 0; right: 0; height: 4px; background: linear-gradient(90deg, #dc2626, #ea580c, #d97706, #ca8a04, #65a30d, #16a34a, #059669, #0d9488, #0891b2, #0284c7, #2563eb, #4f46e5, #7c3aed, #9333ea, #c026d3);"></div>
+        <!-- Premium Corporate Header for Receipt -->
+        <div style="background: linear-gradient(135deg, #0f172a 0%, #1e293b 25%, #334155 50%, #475569 75%, #64748b 100%); padding: 45px 30px; text-align: center; color: white; direction: rtl; position: relative; overflow: hidden; border-bottom: 6px solid #16a34a;" class="mobile-container">
+          <!-- Premium Decorative Elements -->
+          <div style="position: absolute; top: 0; left: 0; right: 0; height: 6px; background: linear-gradient(90deg, #16a34a, #15803d, #14532d, #166534, #15803d, #16a34a);"></div>
+          <div style="position: absolute; top: -40px; right: -40px; width: 150px; height: 150px; background: radial-gradient(circle, rgba(22, 163, 74, 0.1) 0%, transparent 70%); border-radius: 50%;"></div>
+          <div style="position: absolute; bottom: -20px; left: -20px; width: 120px; height: 120px; background: radial-gradient(circle, rgba(21, 128, 61, 0.08) 0%, transparent 70%); border-radius: 50%;"></div>
           
-          <!-- Official Corporate Header -->
-          <div style="background: rgba(255,255,255,0.95); width: 100px; height: 100px; border-radius: 18px; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px auto; border: 3px solid rgba(255,255,255,0.3); box-shadow: 0 6px 20px rgba(0,0,0,0.2);">
-            <div style="background: linear-gradient(135deg, #16a34a, #15803d); color: white; width: 70px; height: 70px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 20px; font-weight: bold;">MEP</div>
+          <!-- Premium Logo -->
+          <div style="background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%); width: 120px; height: 120px; border-radius: 22px; display: flex; align-items: center; justify-content: center; margin: 0 auto 25px auto; border: 4px solid rgba(255,255,255,0.2); box-shadow: 0 12px 30px rgba(0,0,0,0.3), inset 0 2px 8px rgba(255,255,255,0.1); backdrop-filter: blur(15px);">
+            <div style="background: linear-gradient(135deg, #16a34a 0%, #15803d 50%, #14532d 100%); color: white; width: 85px; height: 85px; border-radius: 16px; display: flex; flex-direction: column; align-items: center; justify-content: center; font-weight: 900; box-shadow: 0 6px 18px rgba(22, 163, 74, 0.4);">
+              <div style="font-size: 28px; line-height: 1;">MEP</div>
+              <div style="font-size: 7px; margin-top: 2px; opacity: 0.9; letter-spacing: 1px;">RECEIPT</div>
+            </div>
           </div>
           
-          <!-- Company Title -->
-          <h1 style="margin: 0 0 6px 0; font-size: 32px; font-weight: 900; text-shadow: 2px 2px 4px rgba(0,0,0,0.4); direction: rtl; font-family: 'IBM Plex Sans Arabic';" class="mobile-header">وكالة ماستر إيدو باث</h1>
-          <div style="background: rgba(255,255,255,0.4); height: 3px; width: 150px; margin: 10px auto;"></div>
-          <h2 style="margin: 8px 0 15px 0; font-size: 20px; font-weight: 700; direction: rtl; font-family: 'IBM Plex Sans Arabic';" class="mobile-text">للخدمات التعليمية والتدريب المتقدم</h2>
-          <p style="margin: 0; font-size: 15px; opacity: 0.9; direction: rtl;" class="mobile-text">Master Edu Path Educational Services Agency</p>
-          
-          <!-- Professional Badge -->
-          <div style="position: absolute; top: 20px; left: 20px; background: rgba(255,255,255,0.2); padding: 12px 20px; border-radius: 25px; border: 2px solid rgba(255,255,255,0.3);">
-            <span style="color: white; font-size: 13px; font-weight: 800;">📋 وثيقة رسمية</span>
+          <!-- Corporate Name & Receipt Title -->
+          <div style="background: rgba(255,255,255,0.08); backdrop-filter: blur(20px); border: 2px solid rgba(255,255,255,0.1); border-radius: 18px; padding: 25px; margin: 0 auto; max-width: 500px; box-shadow: 0 8px 25px rgba(0,0,0,0.2);">
+            <h1 style="margin: 0 0 10px 0; font-size: 36px; font-weight: 900; text-shadow: 3px 3px 8px rgba(0,0,0,0.5); direction: rtl; font-family: 'IBM Plex Sans Arabic';" class="mobile-header">وكالة ماستر إيدو باث</h1>
+            
+            <div style="background: linear-gradient(90deg, transparent, rgba(22, 163, 74, 0.6), rgba(21, 128, 61, 0.6), transparent); height: 3px; width: 150px; margin: 15px auto; border-radius: 2px; box-shadow: 0 2px 8px rgba(22, 163, 74, 0.3);"></div>
+            
+            <h2 style="color: rgba(255,255,255,0.95); margin: 10px 0 15px 0; font-size: 20px; font-weight: 700; direction: rtl; font-family: 'IBM Plex Sans Arabic';" class="mobile-text">للخدمات التعليمية والتدريب المتقدم</h2>
+            
+            <div style="background: rgba(22, 163, 74, 0.15); border-radius: 12px; padding: 12px; margin: 15px 0; border: 1px solid rgba(22, 163, 74, 0.25);">
+              <span style="color: #34d399; font-size: 18px; font-weight: 800; direction: rtl;">📋 سند دفع رسمي</span>
+            </div>
           </div>
           
-          <!-- Official Mark -->
-          <div style="position: absolute; bottom: 15px; right: 20px; background: rgba(255,255,255,0.15); padding: 8px 16px; border-radius: 20px;">
-            <span style="color: rgba(255,255,255,0.9); font-size: 11px; font-weight: 700; direction: rtl;">🏢 معتمدة</span>
+          <!-- Professional Badges -->
+          <div style="display: flex; justify-content: center; gap: 15px; margin-top: 20px; flex-wrap: wrap;" class="mobile-flex">
+            <div style="background: linear-gradient(135deg, rgba(22, 163, 74, 0.2), rgba(21, 128, 61, 0.2)); padding: 12px 20px; border-radius: 25px; border: 2px solid rgba(22, 163, 74, 0.4); backdrop-filter: blur(15px);">
+              <span style="color: #34d399; font-size: 14px; font-weight: 800;">🏢 معتمد رسمياً</span>
+            </div>
+          </div>
+          
+          <!-- Contact Info -->
+          <div style="position: absolute; bottom: 15px; right: 20px; background: rgba(255,255,255,0.08); padding: 8px 15px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.15);">
+            <span style="color: rgba(255,255,255,0.9); font-size: 11px; font-weight: 700; direction: rtl;">📧 info@masteredupath.com</span>
+          </div>
+          
+          <div style="position: absolute; bottom: 15px; left: 20px; background: rgba(255,255,255,0.08); padding: 8px 15px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.15);">
+            <span style="color: rgba(255,255,255,0.9); font-size: 11px; font-weight: 700;">📱 0500776343</span>
           </div>
         </div>
 
@@ -830,38 +890,58 @@ export default function EmailNotifications() {
     return `
     <div dir="rtl" style="max-width: 600px; margin: 0 auto; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif, 'Times New Roman'; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 20px; direction: rtl; text-align: right;">
       <div style="background: white; border-radius: 15px; padding: 40px; text-align: center; direction: rtl;">
-      <!-- Official Corporate Header -->
-      <div style="background: linear-gradient(135deg, #1e293b 0%, #334155 50%, #475569 100%); border-radius: 15px 15px 0 0; padding: 50px 40px; text-align: center; direction: rtl; position: relative; overflow: hidden; border-bottom: 4px solid #0f172a;">
-        <!-- Decorative Elements -->
-        <div style="position: absolute; top: 0; left: 0; right: 0; height: 5px; background: linear-gradient(90deg, #dc2626, #ea580c, #d97706, #ca8a04, #65a30d, #16a34a, #059669, #0d9488, #0891b2, #0284c7, #2563eb, #4f46e5, #7c3aed, #9333ea, #c026d3);"></div>
+      <!-- Premium Corporate Header for Activation -->
+      <div style="background: linear-gradient(135deg, #0f172a 0%, #1e293b 25%, #334155 50%, #475569 75%, #64748b 100%); border-radius: 15px 15px 0 0; padding: 50px 40px; text-align: center; direction: rtl; position: relative; overflow: hidden; border-bottom: 6px solid #10b981;">
+        <!-- Premium Decorative Elements -->
+        <div style="position: absolute; top: 0; left: 0; right: 0; height: 6px; background: linear-gradient(90deg, #10b981, #059669, #047857, #065f46, #047857, #10b981);"></div>
+        <div style="position: absolute; top: -40px; right: -40px; width: 160px; height: 160px; background: radial-gradient(circle, rgba(16, 185, 129, 0.1) 0%, transparent 70%); border-radius: 50%;"></div>
+        <div style="position: absolute; bottom: -25px; left: -25px; width: 130px; height: 130px; background: radial-gradient(circle, rgba(5, 150, 105, 0.08) 0%, transparent 70%); border-radius: 50%;"></div>
         
-        <!-- Corporate Logo -->
-        <div style="background: rgba(255,255,255,0.95); width: 120px; height: 120px; border-radius: 20px; display: flex; align-items: center; justify-content: center; margin: 0 auto 25px auto; border: 3px solid rgba(255,255,255,0.3); box-shadow: 0 8px 25px rgba(0,0,0,0.2);">
-          <div style="background: linear-gradient(135deg, #10b981, #059669); color: white; width: 85px; height: 85px; border-radius: 15px; display: flex; align-items: center; justify-content: center; font-size: 28px; font-weight: bold;">MEP</div>
-        </div>
-        
-        <!-- Company Official Title -->
-        <div style="color: white; direction: rtl;">
-          <h1 style="margin: 0 0 12px 0; font-size: 36px; font-weight: 900; text-shadow: 3px 3px 6px rgba(0,0,0,0.4); direction: rtl; font-family: 'IBM Plex Sans Arabic'; letter-spacing: 0.5px;">وكالة ماستر إيدو باث</h1>
-          <div style="background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent); height: 3px; width: 70%; margin: 15px auto; border-radius: 2px;"></div>
-          <h2 style="color: rgba(255,255,255,0.95); margin: 10px 0 15px 0; font-size: 22px; font-weight: 700; direction: rtl; font-family: 'IBM Plex Sans Arabic';">للخدمات التعليمية والتدريب المتقدم</h2>
-          <p style="color: rgba(255,255,255,0.85); margin: 0 0 20px 0; font-size: 16px; direction: rtl; font-family: 'IBM Plex Sans Arabic';">Master Edu Path Educational Services Agency</p>
-          
-          <!-- Welcome Message -->
-          <div style="background: rgba(16, 185, 129, 0.2); border: 2px solid rgba(16, 185, 129, 0.4); border-radius: 15px; padding: 20px; margin: 20px 0; backdrop-filter: blur(5px);">
-            <h3 style="color: #10b981; margin: 0 0 8px 0; font-size: 24px; font-weight: 800; direction: rtl;">مرحباً بك ${data.customerName}</h3>
-            <p style="color: rgba(255,255,255,0.9); margin: 0; font-size: 16px; direction: rtl;">حسابك جاهز للاستخدام في منصتنا الرسمية</p>
+        <!-- Premium Logo -->
+        <div style="background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%); width: 130px; height: 130px; border-radius: 22px; display: flex; align-items: center; justify-content: center; margin: 0 auto 25px auto; border: 4px solid rgba(255,255,255,0.2); box-shadow: 0 15px 35px rgba(0,0,0,0.3), inset 0 2px 10px rgba(255,255,255,0.1); backdrop-filter: blur(15px);">
+          <div style="background: linear-gradient(135deg, #10b981 0%, #059669 50%, #047857 100%); color: white; width: 95px; height: 95px; border-radius: 18px; display: flex; flex-direction: column; align-items: center; justify-content: center; font-weight: 900; box-shadow: 0 8px 20px rgba(16, 185, 129, 0.4);">
+            <div style="font-size: 30px; line-height: 1;">MEP</div>
+            <div style="font-size: 8px; margin-top: 2px; opacity: 0.9; letter-spacing: 1px;">WELCOME</div>
           </div>
         </div>
         
-        <!-- Document Type -->
-        <div style="position: absolute; top: 25px; left: 25px; background: rgba(16, 185, 129, 0.2); padding: 12px 20px; border-radius: 25px; border: 2px solid rgba(16, 185, 129, 0.3);">
-          <span style="color: #10b981; font-size: 14px; font-weight: 800;">🔐 تفعيل حساب</span>
+        <!-- Corporate Name & Welcome -->
+        <div style="background: rgba(255,255,255,0.08); backdrop-filter: blur(20px); border: 2px solid rgba(255,255,255,0.1); border-radius: 20px; padding: 30px; margin: 0 auto; max-width: 550px; box-shadow: 0 10px 30px rgba(0,0,0,0.2);">
+          <h1 style="margin: 0 0 12px 0; font-size: 38px; font-weight: 900; text-shadow: 3px 3px 8px rgba(0,0,0,0.5); direction: rtl; font-family: 'IBM Plex Sans Arabic'; letter-spacing: 0.5px;">وكالة ماستر إيدو باث</h1>
+          
+          <div style="background: linear-gradient(90deg, transparent, rgba(16, 185, 129, 0.6), rgba(5, 150, 105, 0.6), transparent); height: 4px; width: 180px; margin: 18px auto; border-radius: 2px; box-shadow: 0 2px 10px rgba(16, 185, 129, 0.3);"></div>
+          
+          <h2 style="color: rgba(255,255,255,0.95); margin: 10px 0 15px 0; font-size: 24px; font-weight: 700; direction: rtl; font-family: 'IBM Plex Sans Arabic'; text-shadow: 2px 2px 6px rgba(0,0,0,0.3);">للخدمات التعليمية والتدريب المتقدم</h2>
+          
+          <div style="background: rgba(255,255,255,0.1); border-radius: 15px; padding: 15px; margin: 18px 0; border: 1px solid rgba(255,255,255,0.15);">
+            <p style="color: rgba(255,255,255,0.9); margin: 0; font-size: 17px; direction: rtl; font-family: 'IBM Plex Sans Arabic'; font-weight: 500;">Master Edu Path Educational Services Agency</p>
+          </div>
+          
+          <!-- Welcome Message -->
+          <div style="background: rgba(16, 185, 129, 0.15); border: 2px solid rgba(16, 185, 129, 0.3); border-radius: 18px; padding: 22px; margin: 20px 0; backdrop-filter: blur(5px);">
+            <h3 style="color: #34d399; margin: 0 0 10px 0; font-size: 26px; font-weight: 800; direction: rtl; text-shadow: 2px 2px 4px rgba(0,0,0,0.2);">مرحباً بك ${data.customerName}</h3>
+            <p style="color: rgba(255,255,255,0.9); margin: 0; font-size: 17px; direction: rtl; font-weight: 600;">حسابك جاهز للاستخدام في منصتنا الرسمية</p>
+          </div>
         </div>
         
-        <!-- Official Mark -->
-        <div style="position: absolute; bottom: 20px; right: 25px; background: rgba(255,255,255,0.15); padding: 10px 18px; border-radius: 22px;">
-          <span style="color: rgba(255,255,255,0.9); font-size: 12px; font-weight: 700; direction: rtl;">🏢 معتمد رسمياً</span>
+        <!-- Professional Badges -->
+        <div style="display: flex; justify-content: center; gap: 15px; margin-top: 25px; flex-wrap: wrap;" class="mobile-flex">
+          <div style="background: linear-gradient(135deg, rgba(16, 185, 129, 0.2), rgba(5, 150, 105, 0.2)); padding: 12px 20px; border-radius: 25px; border: 2px solid rgba(16, 185, 129, 0.4); backdrop-filter: blur(15px);">
+            <span style="color: #34d399; font-size: 14px; font-weight: 800;">🔐 تفعيل حساب</span>
+          </div>
+          
+          <div style="background: linear-gradient(135deg, rgba(59, 130, 246, 0.2), rgba(37, 99, 235, 0.2)); padding: 12px 20px; border-radius: 25px; border: 2px solid rgba(59, 130, 246, 0.4); backdrop-filter: blur(15px);">
+            <span style="color: #60a5fa; font-size: 14px; font-weight: 800;">🏢 معتمد رسمياً</span>
+          </div>
+        </div>
+        
+        <!-- Contact Info -->
+        <div style="position: absolute; bottom: 20px; right: 25px; background: rgba(255,255,255,0.08); padding: 10px 18px; border-radius: 22px; border: 1px solid rgba(255,255,255,0.15);">
+          <span style="color: rgba(255,255,255,0.9); font-size: 12px; font-weight: 700; direction: rtl;">📧 info@masteredupath.com</span>
+        </div>
+        
+        <div style="position: absolute; bottom: 20px; left: 25px; background: rgba(255,255,255,0.08); padding: 10px 18px; border-radius: 22px; border: 1px solid rgba(255,255,255,0.15);">
+          <span style="color: rgba(255,255,255,0.9); font-size: 12px; font-weight: 700;">📱 0500776343</span>
         </div>
       </div>
 
@@ -887,36 +967,58 @@ export default function EmailNotifications() {
     return `
     <div dir="rtl" style="max-width: 600px; margin: 0 auto; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif, 'Times New Roman'; background: linear-gradient(135deg, #ff6b6b, #ee5a24); padding: 20px; direction: rtl; text-align: right;">
       <div style="background: white; border-radius: 15px; overflow: hidden; box-shadow: 0 10px 25px rgba(0,0,0,0.15); direction: rtl;">
-        <!-- Official Corporate Header -->
-        <div style="background: linear-gradient(135deg, #1e293b 0%, #334155 50%, #475569 100%); padding: 45px 30px; text-align: center; color: white; direction: rtl; position: relative; overflow: hidden; border-bottom: 4px solid #0f172a;">
-          <!-- Decorative Top Line -->
-          <div style="position: absolute; top: 0; left: 0; right: 0; height: 5px; background: linear-gradient(90deg, #dc2626, #ea580c, #d97706, #ca8a04, #65a30d, #16a34a, #059669, #0d9488, #0891b2, #0284c7, #2563eb, #4f46e5, #7c3aed, #9333ea, #c026d3);"></div>
+        <!-- Premium Corporate Header for Promotions -->
+        <div style="background: linear-gradient(135deg, #0f172a 0%, #1e293b 25%, #334155 50%, #475569 75%, #64748b 100%); padding: 45px 30px; text-align: center; color: white; direction: rtl; position: relative; overflow: hidden; border-bottom: 6px solid #ff6b6b;">
+          <!-- Premium Decorative Elements -->
+          <div style="position: absolute; top: 0; left: 0; right: 0; height: 6px; background: linear-gradient(90deg, #ff6b6b, #ee5a24, #ea580c, #dc2626, #ea580c, #ff6b6b);"></div>
+          <div style="position: absolute; top: -45px; right: -45px; width: 180px; height: 180px; background: radial-gradient(circle, rgba(255, 107, 107, 0.1) 0%, transparent 70%); border-radius: 50%;"></div>
+          <div style="position: absolute; bottom: -25px; left: -25px; width: 140px; height: 140px; background: radial-gradient(circle, rgba(238, 90, 36, 0.08) 0%, transparent 70%); border-radius: 50%;"></div>
           
-          <!-- Corporate Logo -->
-          <div style="background: rgba(255,255,255,0.95); width: 110px; height: 110px; border-radius: 20px; display: flex; align-items: center; justify-content: center; margin: 0 auto 25px auto; border: 3px solid rgba(255,255,255,0.3); box-shadow: 0 8px 25px rgba(0,0,0,0.2);">
-            <div style="background: linear-gradient(135deg, #ff6b6b, #ee5a24); color: white; width: 80px; height: 80px; border-radius: 15px; display: flex; align-items: center; justify-content: center; font-size: 24px; font-weight: bold;">MEP</div>
+          <!-- Premium Logo -->
+          <div style="background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%); width: 130px; height: 130px; border-radius: 25px; display: flex; align-items: center; justify-content: center; margin: 0 auto 25px auto; border: 4px solid rgba(255,255,255,0.2); box-shadow: 0 15px 35px rgba(0,0,0,0.3), inset 0 2px 10px rgba(255,255,255,0.1); backdrop-filter: blur(15px);">
+            <div style="background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 50%, #dc2626 100%); color: white; width: 95px; height: 95px; border-radius: 18px; display: flex; flex-direction: column; align-items: center; justify-content: center; font-weight: 900; box-shadow: 0 8px 20px rgba(255, 107, 107, 0.4);">
+              <div style="font-size: 28px; line-height: 1;">MEP</div>
+              <div style="font-size: 8px; margin-top: 2px; opacity: 0.9; letter-spacing: 1px;">OFFERS</div>
+            </div>
           </div>
           
-          <!-- Company Title -->
-          <h1 style="margin: 0 0 10px 0; font-size: 34px; font-weight: 900; text-shadow: 3px 3px 6px rgba(0,0,0,0.4); direction: rtl; font-family: 'IBM Plex Sans Arabic';">وكالة ماستر إيدو باث</h1>
-          <div style="background: rgba(255,255,255,0.4); height: 3px; width: 120px; margin: 12px auto;"></div>
-          <h2 style="margin: 8px 0 15px 0; font-size: 20px; font-weight: 700; direction: rtl; font-family: 'IBM Plex Sans Arabic';">للخدمات التعليمية والتدريب المتقدم</h2>
-          <p style="margin: 0 0 20px 0; font-size: 15px; opacity: 0.9; direction: rtl;">Master Edu Path Educational Services Agency</p>
-          
-          <!-- Promotion Banner -->
-          <div style="background: linear-gradient(135deg, #ff6b6b, #ee5a24); border: 3px solid rgba(255,255,255,0.3); border-radius: 20px; padding: 25px; margin: 20px 0; backdrop-filter: blur(5px); box-shadow: 0 8px 25px rgba(0,0,0,0.2);">
-            <h3 style="margin: 0 0 8px 0; font-size: 28px; text-shadow: 2px 2px 4px rgba(0,0,0,0.3); direction: rtl; font-weight: 800;">${data.promotionTitle}</h3>
-            <p style="margin: 0; font-size: 16px; opacity: 0.95; direction: rtl; font-weight: 600;">عرض حصري من الإدارة لعميلنا الكريم ${data.customerName}</p>
+          <!-- Corporate Name & Promotion -->
+          <div style="background: rgba(255,255,255,0.08); backdrop-filter: blur(20px); border: 2px solid rgba(255,255,255,0.1); border-radius: 20px; padding: 30px; margin: 0 auto; max-width: 600px; box-shadow: 0 10px 30px rgba(0,0,0,0.2);">
+            <h1 style="margin: 0 0 12px 0; font-size: 36px; font-weight: 900; text-shadow: 3px 3px 8px rgba(0,0,0,0.5); direction: rtl; font-family: 'IBM Plex Sans Arabic';">وكالة ماستر إيدو باث</h1>
+            
+            <div style="background: linear-gradient(90deg, transparent, rgba(255, 107, 107, 0.6), rgba(238, 90, 36, 0.6), transparent); height: 4px; width: 160px; margin: 18px auto; border-radius: 2px; box-shadow: 0 2px 10px rgba(255, 107, 107, 0.3);"></div>
+            
+            <h2 style="margin: 10px 0 20px 0; font-size: 22px; font-weight: 700; direction: rtl; font-family: 'IBM Plex Sans Arabic'; text-shadow: 2px 2px 6px rgba(0,0,0,0.3);">للخدمات التعليمية والتدريب المتقدم</h2>
+            
+            <div style="background: rgba(255,255,255,0.1); border-radius: 15px; padding: 15px; margin: 18px 0; border: 1px solid rgba(255,255,255,0.15);">
+              <p style="margin: 0; font-size: 16px; opacity: 0.9; direction: rtl; font-weight: 500;">Master Edu Path Educational Services Agency</p>
+            </div>
+            
+            <!-- Promotion Banner -->
+            <div style="background: linear-gradient(135deg, #ff6b6b, #ee5a24); border: 3px solid rgba(255,255,255,0.3); border-radius: 20px; padding: 25px; margin: 20px 0; backdrop-filter: blur(5px); box-shadow: 0 8px 25px rgba(255, 107, 107, 0.3);">
+              <h3 style="margin: 0 0 8px 0; font-size: 30px; text-shadow: 2px 2px 4px rgba(0,0,0,0.3); direction: rtl; font-weight: 800;">${data.promotionTitle}</h3>
+              <p style="margin: 0; font-size: 18px; opacity: 0.95; direction: rtl; font-weight: 600;">عرض حصري من الإدارة لعميلنا الكريم ${data.customerName}</p>
+            </div>
           </div>
           
-          <!-- Document Type -->
-          <div style="position: absolute; top: 25px; left: 25px; background: rgba(255, 107, 107, 0.2); padding: 12px 20px; border-radius: 25px; border: 2px solid rgba(255, 107, 107, 0.3);">
-            <span style="color: #ff6b6b; font-size: 14px; font-weight: 800;">🎯 عرض تجاري</span>
+          <!-- Professional Badges -->
+          <div style="display: flex; justify-content: center; gap: 15px; margin-top: 25px; flex-wrap: wrap;" class="mobile-flex">
+            <div style="background: linear-gradient(135deg, rgba(255, 107, 107, 0.2), rgba(238, 90, 36, 0.2)); padding: 12px 20px; border-radius: 25px; border: 2px solid rgba(255, 107, 107, 0.4); backdrop-filter: blur(15px);">
+              <span style="color: #fca5a5; font-size: 14px; font-weight: 800;">🎯 عرض تجاري</span>
+            </div>
+            
+            <div style="background: linear-gradient(135deg, rgba(245, 158, 11, 0.2), rgba(217, 119, 6, 0.2)); padding: 12px 20px; border-radius: 25px; border: 2px solid rgba(245, 158, 11, 0.4); backdrop-filter: blur(15px);">
+              <span style="color: #fbbf24; font-size: 14px; font-weight: 800;">⭐ عرض محدود</span>
+            </div>
           </div>
           
-          <!-- Official Mark -->
-          <div style="position: absolute; bottom: 20px; right: 25px; background: rgba(255,255,255,0.15); padding: 10px 18px; border-radius: 22px;">
-            <span style="color: rgba(255,255,255,0.9); font-size: 12px; font-weight: 700; direction: rtl;">🏢 معتمد</span>
+          <!-- Contact Info -->
+          <div style="position: absolute; bottom: 20px; right: 25px; background: rgba(255,255,255,0.08); padding: 10px 18px; border-radius: 22px; border: 1px solid rgba(255,255,255,0.15);">
+            <span style="color: rgba(255,255,255,0.9); font-size: 12px; font-weight: 700; direction: rtl;">📧 info@masteredupath.com</span>
+          </div>
+          
+          <div style="position: absolute; bottom: 20px; left: 25px; background: rgba(255,255,255,0.08); padding: 10px 18px; border-radius: 22px; border: 1px solid rgba(255,255,255,0.15);">
+            <span style="color: rgba(255,255,255,0.9); font-size: 12px; font-weight: 700;">📱 0500776343</span>
           </div>
         </div>
 
