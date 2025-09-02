@@ -1938,7 +1938,7 @@ export default function EmailNotifications() {
                           </>
                         )}
 
-                        {/* حقول خاصة بالعروض الترويجية */}
+                         {/* حقول خاصة بالعروض الترويجية */}
                         {smartForm.type === 'promotion' && (
                           <>
                             <div>
@@ -1973,6 +1973,328 @@ export default function EmailNotifications() {
                                 rows={2}
                                 className="mt-1"
                               />
+                            </div>
+                          </>
+                        )}
+
+                        {/* حقول خاصة بتذكير الدفع */}
+                        {smartForm.type === 'payment_reminder' && (
+                          <>
+                            <div>
+                              <Label className="text-sm font-medium">رقم الفاتورة</Label>
+                              <Input
+                                value={smartForm.invoiceNumber || ""}
+                                onChange={(e) => handleSmartFormChange('invoiceNumber', e.target.value)}
+                                placeholder="INV-001"
+                                className="mt-1"
+                              />
+                            </div>
+                            
+                            <div>
+                              <Label className="text-sm font-medium">المبلغ المستحق</Label>
+                              <Input
+                                type="number"
+                                value={smartForm.amount || ""}
+                                onChange={(e) => handleSmartFormChange('amount', parseFloat(e.target.value))}
+                                placeholder="1500"
+                                className="mt-1"
+                              />
+                            </div>
+
+                            <div>
+                              <Label className="text-sm font-medium">تاريخ الاستحقاق</Label>
+                              <Input
+                                type="date"
+                                value={smartForm.dueDate || ""}
+                                onChange={(e) => handleSmartFormChange('dueDate', e.target.value)}
+                                className="mt-1"
+                              />
+                            </div>
+
+                            <div>
+                              <Label className="text-sm font-medium">العملة</Label>
+                              <select 
+                                value={smartForm.currency || "ر.س"}
+                                onChange={(e) => handleSmartFormChange('currency', e.target.value)}
+                                className="mt-1 w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
+                              >
+                                <option value="ر.س">ريال سعودي (ر.س)</option>
+                                <option value="$">دولار أمريكي ($)</option>
+                                <option value="€">يورو (€)</option>
+                              </select>
+                            </div>
+                          </>
+                        )}
+
+                        {/* حقول خاصة بتأكيد الطلب */}
+                        {smartForm.type === 'order_confirmation' && (
+                          <>
+                            <div>
+                              <Label className="text-sm font-medium">رقم الطلب</Label>
+                              <Input
+                                value={smartForm.invoiceNumber || ""}
+                                onChange={(e) => handleSmartFormChange('invoiceNumber', e.target.value)}
+                                placeholder="ORD-001"
+                                className="mt-1"
+                              />
+                            </div>
+
+                            <div>
+                              <Label className="text-sm font-medium">قيمة الطلب</Label>
+                              <Input
+                                type="number"
+                                value={smartForm.amount || ""}
+                                onChange={(e) => handleSmartFormChange('amount', parseFloat(e.target.value))}
+                                placeholder="2500"
+                                className="mt-1"
+                              />
+                            </div>
+                            
+                            <div className="md:col-span-2">
+                              <Label className="text-sm font-medium">تفاصيل الطلب</Label>
+                              <Textarea
+                                value={smartForm.serviceDescription || ""}
+                                onChange={(e) => handleSmartFormChange('serviceDescription', e.target.value)}
+                                placeholder="ترجمة مستندات قانونية من العربية إلى الإنجليزية"
+                                rows={2}
+                                className="mt-1"
+                              />
+                            </div>
+                          </>
+                        )}
+
+                        {/* حقول خاصة بدعوة الفعالية */}
+                        {smartForm.type === 'event_invitation' && (
+                          <>
+                            <div>
+                              <Label className="text-sm font-medium">اسم الفعالية</Label>
+                              <Input
+                                value={smartForm.promotionTitle || ""}
+                                onChange={(e) => handleSmartFormChange('promotionTitle', e.target.value)}
+                                placeholder="مؤتمر الترجمة الدولي 2024"
+                                className="mt-1"
+                              />
+                            </div>
+
+                            <div>
+                              <Label className="text-sm font-medium">تاريخ الفعالية</Label>
+                              <Input
+                                type="date"
+                                value={smartForm.eventDate || ""}
+                                onChange={(e) => handleSmartFormChange('eventDate', e.target.value)}
+                                className="mt-1"
+                              />
+                            </div>
+
+                            <div>
+                              <Label className="text-sm font-medium">وقت الفعالية</Label>
+                              <Input
+                                type="time"
+                                value={smartForm.eventTime || ""}
+                                onChange={(e) => handleSmartFormChange('eventTime', e.target.value)}
+                                className="mt-1"
+                              />
+                            </div>
+
+                            <div>
+                              <Label className="text-sm font-medium">مكان الفعالية</Label>
+                              <Input
+                                value={smartForm.location || ""}
+                                onChange={(e) => handleSmartFormChange('location', e.target.value)}
+                                placeholder="فندق الريتز كارلتون - الرياض"
+                                className="mt-1"
+                              />
+                            </div>
+                          </>
+                        )}
+
+                        {/* حقول خاصة برسالة الترحيب */}
+                        {smartForm.type === 'welcome_message' && (
+                          <>
+                            <div>
+                              <Label className="text-sm font-medium">اسم المستخدم</Label>
+                              <Input
+                                value={smartForm.username || ""}
+                                onChange={(e) => handleSmartFormChange('username', e.target.value)}
+                                placeholder="ahmed_123"
+                                className="mt-1"
+                              />
+                            </div>
+
+                            <div className="md:col-span-3">
+                              <Label className="text-sm font-medium">رسالة ترحيبية إضافية</Label>
+                              <Textarea
+                                value={smartForm.promotionDescription || ""}
+                                onChange={(e) => handleSmartFormChange('promotionDescription', e.target.value)}
+                                placeholder="نحن سعداء لانضمامك إلينا وستحصل على دعم كامل من فريقنا المتخصص"
+                                rows={3}
+                                className="mt-1"
+                              />
+                            </div>
+                          </>
+                        )}
+
+                        {/* حقول خاصة برسالة الشكر */}
+                        {smartForm.type === 'thank_you' && (
+                          <>
+                            <div className="md:col-span-2">
+                              <Label className="text-sm font-medium">الخدمة التي تم تقديمها</Label>
+                              <Input
+                                value={smartForm.serviceDescription || ""}
+                                onChange={(e) => handleSmartFormChange('serviceDescription', e.target.value)}
+                                placeholder="ترجمة معتمدة للوثائق الأكاديمية"
+                                className="mt-1"
+                              />
+                            </div>
+
+                            <div className="md:col-span-2">
+                              <Label className="text-sm font-medium">رسالة شكر مخصصة</Label>
+                              <Textarea
+                                value={smartForm.promotionDescription || ""}
+                                onChange={(e) => handleSmartFormChange('promotionDescription', e.target.value)}
+                                placeholder="شكراً لثقتكم في خدماتنا، ونتطلع للتعامل معكم مستقبلاً"
+                                rows={2}
+                                className="mt-1"
+                              />
+                            </div>
+                          </>
+                        )}
+
+                        {/* حقول خاصة بتحديث حالة الطلب */}
+                        {smartForm.type === 'order_status' && (
+                          <>
+                            <div>
+                              <Label className="text-sm font-medium">رقم الطلب</Label>
+                              <Input
+                                value={smartForm.invoiceNumber || ""}
+                                onChange={(e) => handleSmartFormChange('invoiceNumber', e.target.value)}
+                                placeholder="ORD-001"
+                                className="mt-1"
+                              />
+                            </div>
+
+                            <div>
+                              <Label className="text-sm font-medium">الحالة الجديدة</Label>
+                              <select 
+                                value={smartForm.promotionDescription || ""}
+                                onChange={(e) => handleSmartFormChange('promotionDescription', e.target.value)}
+                                className="mt-1 w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
+                              >
+                                <option value="">اختر الحالة</option>
+                                <option value="قيد المراجعة">قيد المراجعة</option>
+                                <option value="قيد التنفيذ">قيد التنفيذ</option>
+                                <option value="مكتمل بنسبة 50%">مكتمل بنسبة 50%</option>
+                                <option value="جاهز للتسليم">جاهز للتسليم</option>
+                                <option value="مكتمل">مكتمل</option>
+                              </select>
+                            </div>
+                            
+                            <div className="md:col-span-2">
+                              <Label className="text-sm font-medium">تفاصيل الطلب</Label>
+                              <Input
+                                value={smartForm.serviceDescription || ""}
+                                onChange={(e) => handleSmartFormChange('serviceDescription', e.target.value)}
+                                placeholder="ترجمة تقارير طبية متخصصة"
+                                className="mt-1"
+                              />
+                            </div>
+                          </>
+                        )}
+
+                        {/* حقول خاصة بالخدمة الجديدة */}
+                        {smartForm.type === 'new_service' && (
+                          <>
+                            <div className="md:col-span-2">
+                              <Label className="text-sm font-medium">اسم الخدمة الجديدة ⭐</Label>
+                              <Input
+                                value={smartForm.promotionTitle || ""}
+                                onChange={(e) => handleSmartFormChange('promotionTitle', e.target.value)}
+                                placeholder="خدمة الترجمة الفورية بالذكاء الاصطناعي"
+                                className="mt-1 font-medium"
+                              />
+                            </div>
+
+                            <div className="md:col-span-2">
+                              <Label className="text-sm font-medium">فئة الخدمة</Label>
+                              <select 
+                                value={smartForm.serviceDescription || ""}
+                                onChange={(e) => handleSmartFormChange('serviceDescription', e.target.value)}
+                                className="mt-1 w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
+                              >
+                                <option value="">اختر فئة الخدمة</option>
+                                <option value="خدمات الترجمة">خدمات الترجمة</option>
+                                <option value="الخدمات التعليمية">الخدمات التعليمية</option>
+                                <option value="التدريب والتطوير">التدريب والتطوير</option>
+                                <option value="الاستشارات الأكاديمية">الاستشارات الأكاديمية</option>
+                                <option value="الخدمات التقنية">الخدمات التقنية</option>
+                              </select>
+                            </div>
+
+                            <div className="md:col-span-4">
+                              <Label className="text-sm font-medium">وصف شامل للخدمة الجديدة</Label>
+                              <Textarea
+                                value={smartForm.promotionDescription || ""}
+                                onChange={(e) => handleSmartFormChange('promotionDescription', e.target.value)}
+                                placeholder="تقدم هذه الخدمة حلولاً مبتكرة باستخدام أحدث التقنيات، مما يضمن جودة عالية وسرعة في الإنجاز. الخدمة متوفرة على مدار الساعة مع دعم فني متخصص."
+                                rows={4}
+                                className="mt-1"
+                              />
+                            </div>
+
+                            <div>
+                              <Label className="text-sm font-medium">سعر الخدمة (اختياري)</Label>
+                              <Input
+                                type="number"
+                                value={smartForm.amount || ""}
+                                onChange={(e) => handleSmartFormChange('amount', parseFloat(e.target.value))}
+                                placeholder="500"
+                                className="mt-1"
+                              />
+                            </div>
+
+                            <div>
+                              <Label className="text-sm font-medium">العملة</Label>
+                              <select 
+                                value={smartForm.currency || "ر.س"}
+                                onChange={(e) => handleSmartFormChange('currency', e.target.value)}
+                                className="mt-1 w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
+                              >
+                                <option value="ر.س">ريال سعودي (ر.س)</option>
+                                <option value="$">دولار أمريكي ($)</option>
+                                <option value="€">يورو (€)</option>
+                              </select>
+                            </div>
+
+                            <div>
+                              <Label className="text-sm font-medium">مدة التسليم المتوقعة</Label>
+                              <select 
+                                value={smartForm.dueDate || ""}
+                                onChange={(e) => handleSmartFormChange('dueDate', e.target.value)}
+                                className="mt-1 w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
+                              >
+                                <option value="">اختر المدة</option>
+                                <option value="24 ساعة">24 ساعة</option>
+                                <option value="3 أيام">3 أيام</option>
+                                <option value="أسبوع واحد">أسبوع واحد</option>
+                                <option value="أسبوعين">أسبوعين</option>
+                                <option value="شهر واحد">شهر واحد</option>
+                                <option value="حسب حجم المشروع">حسب حجم المشروع</option>
+                              </select>
+                            </div>
+
+                            <div>
+                              <Label className="text-sm font-medium">نوع العرض</Label>
+                              <select 
+                                value={smartForm.discountPercent || ""}
+                                onChange={(e) => handleSmartFormChange('discountPercent', parseFloat(e.target.value))}
+                                className="mt-1 w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
+                              >
+                                <option value="">بدون عرض خاص</option>
+                                <option value="10">خصم 10% للعملاء الجدد</option>
+                                <option value="15">خصم 15% لفترة محدودة</option>
+                                <option value="20">خصم 20% عرض افتتاحي</option>
+                                <option value="25">خصم 25% عرض استثنائي</option>
+                              </select>
                             </div>
                           </>
                         )}
