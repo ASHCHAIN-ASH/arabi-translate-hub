@@ -105,7 +105,7 @@ const handler = async (req: Request): Promise<Response> => {
       emailContent = emailContent.replace(new RegExp(placeholder, 'g'), value);
     }
 
-    // إرسال البريد الإلكتروني
+    // إرسال البريد الإلكتروني فوراً
     console.log("Sending email to:", to);
     
     const emailResponse = await resend.emails.send({
@@ -117,30 +117,42 @@ const handler = async (req: Request): Promise<Response> => {
 
     console.log("Email sent successfully:", emailResponse);
 
-    // تسجيل البريد في قاعدة البيانات
-    const recipients = Array.isArray(to) ? to : [to];
-    
-    for (const recipient of recipients) {
-      await supabase
-        .from('email_outbox')  // نستخدم email_outbox بدلاً من email_logs
-        .insert({
-          recipient_email: recipient,
-          sender_email: 'info@masteredupath.com',
-          subject: emailSubject,
-          content: emailContent,
-          template_id: templateUsed,
-          status: emailResponse.error ? 'failed' : 'sent',
-          error_message: emailResponse.error?.message,
-          metadata: { resend_id: emailResponse.data?.id, variables },
-          sent_at: new Date().toISOString()
-        });
-    }
+    // تسجيل البريد في الخلفية (لا ينتظر الاستجابة)
+    const backgroundLogging = async () => {
+      try {
+        const recipients = Array.isArray(to) ? to : [to];
+        
+        for (const recipient of recipients) {
+          await supabase
+            .from('email_outbox')
+            .insert({
+              recipient_email: recipient,
+              sender_email: 'info@masteredupath.com',
+              subject: emailSubject,
+              content: emailContent,
+              template_id: templateUsed,
+              status: emailResponse.error ? 'failed' : 'sent',
+              error_message: emailResponse.error?.message,
+              metadata: { resend_id: emailResponse.data?.id, variables },
+              sent_at: new Date().toISOString()
+            });
+        }
+        console.log("Background logging completed for", recipients.length, "recipients");
+      } catch (logError) {
+        console.error("Background logging error:", logError);
+      }
+    };
 
+    // تشغيل التسجيل في الخلفية دون انتظار
+    EdgeRuntime.waitUntil(backgroundLogging());
+
+    // إرجاع الاستجابة فوراً بعد الإرسال
     return new Response(
       JSON.stringify({
         success: true,
         message: "تم إرسال البريد الإلكتروني بنجاح",
-        data: emailResponse
+        data: emailResponse,
+        instant_delivery: true
       }),
       {
         status: 200,
