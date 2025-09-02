@@ -32,6 +32,7 @@ const SimpleProtectedRoute: React.FC<ProtectedRouteProps> = ({
     // Redirect to appropriate login page based on route
     const isAdminRoute = location.pathname.startsWith('/admin');
     const loginPath = isAdminRoute ? '/admin/login' : '/login';
+    console.log('User not authenticated, redirecting to:', loginPath);
     return <Navigate to={loginPath} state={{ from: location }} replace />;
   }
 
