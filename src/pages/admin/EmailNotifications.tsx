@@ -281,6 +281,87 @@ export default function EmailNotifications() {
         };
         break;
 
+      case "payment_reminder":
+        subject = `تذكير بدفع الفاتورة رقم ${smartForm.invoiceNumber} - وكالة ماستر إيدو باث`;
+        content = generatePaymentReminderTemplate(smartForm);
+        variables = {
+          customerName: smartForm.customerName,
+          amount: smartForm.amount,
+          invoiceNumber: smartForm.invoiceNumber,
+          dueDate: smartForm.dueDate,
+          currency: smartForm.currency,
+          companyName: smartForm.companyName || "وكالة ماستر إيدو باث"
+        };
+        break;
+
+      case "order_confirmation":
+        subject = `تأكيد الطلب رقم ${smartForm.invoiceNumber} - وكالة ماستر إيدو باث`;
+        content = generateOrderConfirmationTemplate(smartForm);
+        variables = {
+          customerName: smartForm.customerName,
+          invoiceNumber: smartForm.invoiceNumber,
+          serviceDescription: smartForm.serviceDescription,
+          amount: smartForm.amount,
+          currency: smartForm.currency,
+          companyName: smartForm.companyName || "وكالة ماستر إيدو باث"
+        };
+        break;
+
+      case "event_invitation":
+        subject = `دعوة لحضور ${smartForm.promotionTitle} - وكالة ماستر إيدو باث`;
+        content = generateEventInvitationTemplate(smartForm);
+        variables = {
+          customerName: smartForm.customerName,
+          eventTitle: smartForm.promotionTitle,
+          eventDate: smartForm.eventDate,
+          eventTime: smartForm.eventTime,
+          location: smartForm.location,
+          companyName: smartForm.companyName || "وكالة ماستر إيدو باث"
+        };
+        break;
+
+      case "welcome_message":
+        subject = `مرحباً بك في وكالة ماستر إيدو باث - ${smartForm.customerName}`;
+        content = generateWelcomeMessageTemplate(smartForm);
+        variables = {
+          customerName: smartForm.customerName,
+          username: smartForm.username,
+          companyName: smartForm.companyName || "وكالة ماستر إيدو باث"
+        };
+        break;
+
+      case "thank_you":
+        subject = `شكراً لتعاملكم معنا - وكالة ماستر إيدو باث`;
+        content = generateThankYouTemplate(smartForm);
+        variables = {
+          customerName: smartForm.customerName,
+          serviceDescription: smartForm.serviceDescription,
+          companyName: smartForm.companyName || "وكالة ماستر إيدو باث"
+        };
+        break;
+
+      case "order_status":
+        subject = `تحديث حالة طلبكم رقم ${smartForm.invoiceNumber} - وكالة ماستر إيدو باث`;
+        content = generateOrderStatusTemplate(smartForm);
+        variables = {
+          customerName: smartForm.customerName,
+          invoiceNumber: smartForm.invoiceNumber,
+          serviceDescription: smartForm.serviceDescription,
+          companyName: smartForm.companyName || "وكالة ماستر إيدو باث"
+        };
+        break;
+
+      case "new_service":
+        subject = `خدمة جديدة: ${smartForm.promotionTitle} - وكالة ماستر إيدو باث`;
+        content = generateNewServiceTemplate(smartForm);
+        variables = {
+          customerName: smartForm.customerName,
+          serviceTitle: smartForm.promotionTitle,
+          serviceDescription: smartForm.promotionDescription,
+          companyName: smartForm.companyName || "وكالة ماستر إيدو باث"
+        };
+        break;
+
       default:
         toast.error("نوع البريد غير مدعوم");
         return;
@@ -1192,6 +1273,278 @@ export default function EmailNotifications() {
     </div>`;
   };
 
+  // دوال إنشاء القوالب الجديدة
+  const generatePaymentReminderTemplate = (data: SmartFormData) => {
+    return `
+    <div dir="rtl" style="max-width: 700px; margin: 0 auto; font-family: 'Cairo', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: linear-gradient(135deg, #fbbf24, #f59e0b); padding: 20px; direction: rtl; text-align: right;">
+      <div style="background: white; border-radius: 20px; overflow: hidden; box-shadow: 0 15px 35px rgba(0,0,0,0.1); direction: rtl; border: 1px solid #e5e7eb;">
+        <!-- ترويسة تذكير الدفع -->
+        <div style="background: linear-gradient(135deg, #0f172a 0%, #1e293b 25%, #334155 50%, #475569 75%, #64748b 100%); padding: 30px 20px; text-align: center; color: white; direction: rtl; position: relative; border-bottom: 6px solid #f59e0b;">
+          <div style="text-align: center; margin-bottom: 20px; direction: rtl;">
+            <div style="display: inline-flex; align-items: center; justify-content: center; width: 100px; height: 100px; background: linear-gradient(135deg, #f59e0b, #fbbf24); border-radius: 50%; margin-bottom: 20px; position: relative; overflow: hidden; box-shadow: 0 8px 25px rgba(245, 158, 11, 0.4);">
+              <div style="width: 70px; height: 70px; background: linear-gradient(135deg, #0f172a, #334155); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 28px; font-weight: bold;">⏰</div>
+            </div>
+            <h1 style="margin: 0; font-size: 32px; font-weight: 700; background: linear-gradient(135deg, #fbbf24, #f59e0b); -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-shadow: 2px 2px 4px rgba(0,0,0,0.1);">وكالة ماستر إيدو باث</h1>
+            <p style="margin: 10px 0 0; font-size: 18px; color: #e2e8f0; font-weight: 500;">للخدمات التعليمية والتدريب المتقدم</p>
+          </div>
+        </div>
+
+        <div style="padding: 40px 30px; direction: rtl; text-align: right;">
+          <h2 style="color: #f59e0b; font-size: 28px; font-weight: 700; margin-bottom: 25px; text-align: center;">تذكير بدفع المستحقات 🔔</h2>
+          
+          <p style="color: #374151; font-size: 18px; line-height: 1.8; margin-bottom: 25px;">
+            عزيزي/عزيزتي <strong style="color: #f59e0b;">${data.customerName}</strong>،<br><br>
+            نتواصل معكم بكل احترام للتذكير اللطيف بسداد الفاتورة المستحقة.
+          </p>
+          
+          <div style="background: linear-gradient(135deg, #fef3c7, #fde68a); border-radius: 15px; padding: 25px; margin: 25px 0; border-left: 5px solid #f59e0b; box-shadow: 0 4px 15px rgba(245, 158, 11, 0.2);">
+            <h3 style="color: #92400e; margin-bottom: 15px; font-size: 20px; font-weight: 600;">📋 تفاصيل الفاتورة:</h3>
+            <p style="margin: 10px 0; color: #92400e; font-size: 16px;"><strong>رقم الفاتورة:</strong> ${data.invoiceNumber}</p>
+            <p style="margin: 10px 0; color: #92400e; font-size: 16px;"><strong>المبلغ المستحق:</strong> ${data.amount} ${data.currency}</p>
+            <p style="margin: 10px 0; color: #92400e; font-size: 16px;"><strong>تاريخ الاستحقاق:</strong> ${data.dueDate}</p>
+          </div>
+          
+          <p style="color: #374151; font-size: 16px; line-height: 1.7; margin-bottom: 30px; text-align: center;">
+            نقدر تفهمكم ونتطلع لسداد المستحقات في أقرب وقت ممكن.<br>
+            شكراً لكم على تعاونكم المستمر معنا 🙏
+          </p>
+        </div>
+      </div>
+    </div>`;
+  };
+
+  const generateOrderConfirmationTemplate = (data: SmartFormData) => {
+    return `
+    <div dir="rtl" style="max-width: 700px; margin: 0 auto; font-family: 'Cairo', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: linear-gradient(135deg, #10b981, #059669); padding: 20px; direction: rtl; text-align: right;">
+      <div style="background: white; border-radius: 20px; overflow: hidden; box-shadow: 0 15px 35px rgba(0,0,0,0.1); direction: rtl; border: 1px solid #e5e7eb;">
+        <!-- ترويسة تأكيد الطلب -->
+        <div style="background: linear-gradient(135deg, #0f172a 0%, #1e293b 25%, #334155 50%, #475569 75%, #64748b 100%); padding: 30px 20px; text-align: center; color: white; direction: rtl; position: relative; border-bottom: 6px solid #10b981;">
+          <div style="text-align: center; margin-bottom: 20px; direction: rtl;">
+            <div style="display: inline-flex; align-items: center; justify-content: center; width: 100px; height: 100px; background: linear-gradient(135deg, #10b981, #34d399); border-radius: 50%; margin-bottom: 20px; position: relative; overflow: hidden; box-shadow: 0 8px 25px rgba(16, 185, 129, 0.4);">
+              <div style="width: 70px; height: 70px; background: linear-gradient(135deg, #0f172a, #334155); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 28px; font-weight: bold;">✅</div>
+            </div>
+            <h1 style="margin: 0; font-size: 32px; font-weight: 700; background: linear-gradient(135deg, #34d399, #10b981); -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-shadow: 2px 2px 4px rgba(0,0,0,0.1);">وكالة ماستر إيدو باث</h1>
+            <p style="margin: 10px 0 0; font-size: 18px; color: #e2e8f0; font-weight: 500;">للخدمات التعليمية والتدريب المتقدم</p>
+          </div>
+        </div>
+
+        <div style="padding: 40px 30px; direction: rtl; text-align: right;">
+          <h2 style="color: #10b981; font-size: 28px; font-weight: 700; margin-bottom: 25px; text-align: center;">تأكيد استلام طلبكم 🎉</h2>
+          
+          <p style="color: #374151; font-size: 18px; line-height: 1.8; margin-bottom: 25px;">
+            عزيزي/عزيزتي <strong style="color: #10b981;">${data.customerName}</strong>،<br><br>
+            يسعدنا إخباركم بأنه تم استلام وتأكيد طلبكم بنجاح!
+          </p>
+          
+          <div style="background: linear-gradient(135deg, #d1fae5, #a7f3d0); border-radius: 15px; padding: 25px; margin: 25px 0; border-left: 5px solid #10b981; box-shadow: 0 4px 15px rgba(16, 185, 129, 0.2);">
+            <h3 style="color: #047857; margin-bottom: 15px; font-size: 20px; font-weight: 600;">📋 تفاصيل الطلب:</h3>
+            <p style="margin: 10px 0; color: #047857; font-size: 16px;"><strong>رقم الطلب:</strong> ${data.invoiceNumber}</p>
+            <p style="margin: 10px 0; color: #047857; font-size: 16px;"><strong>الخدمة المطلوبة:</strong> ${data.serviceDescription}</p>
+            <p style="margin: 10px 0; color: #047857; font-size: 16px;"><strong>القيمة الإجمالية:</strong> ${data.amount} ${data.currency}</p>
+          </div>
+          
+          <p style="color: #374151; font-size: 16px; line-height: 1.7; margin-bottom: 30px; text-align: center;">
+            سيتم البدء في تنفيذ طلبكم وسنقوم بإبلاغكم بتطورات العمل أولاً بأول.<br>
+            شكراً لثقتكم في خدماتنا 🌟
+          </p>
+        </div>
+      </div>
+    </div>`;
+  };
+
+  const generateEventInvitationTemplate = (data: SmartFormData) => {
+    return `
+    <div dir="rtl" style="max-width: 700px; margin: 0 auto; font-family: 'Cairo', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: linear-gradient(135deg, #8b5cf6, #7c3aed); padding: 20px; direction: rtl; text-align: right;">
+      <div style="background: white; border-radius: 20px; overflow: hidden; box-shadow: 0 15px 35px rgba(0,0,0,0.1); direction: rtl; border: 1px solid #e5e7eb;">
+        <!-- ترويسة دعوة الفعالية -->
+        <div style="background: linear-gradient(135deg, #0f172a 0%, #1e293b 25%, #334155 50%, #475569 75%, #64748b 100%); padding: 30px 20px; text-align: center; color: white; direction: rtl; position: relative; border-bottom: 6px solid #8b5cf6;">
+          <div style="text-align: center; margin-bottom: 20px; direction: rtl;">
+            <div style="display: inline-flex; align-items: center; justify-content: center; width: 100px; height: 100px; background: linear-gradient(135deg, #8b5cf6, #a78bfa); border-radius: 50%; margin-bottom: 20px; position: relative; overflow: hidden; box-shadow: 0 8px 25px rgba(139, 92, 246, 0.4);">
+              <div style="width: 70px; height: 70px; background: linear-gradient(135deg, #0f172a, #334155); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 28px; font-weight: bold;">📅</div>
+            </div>
+            <h1 style="margin: 0; font-size: 32px; font-weight: 700; background: linear-gradient(135deg, #a78bfa, #8b5cf6); -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-shadow: 2px 2px 4px rgba(0,0,0,0.1);">وكالة ماستر إيدو باث</h1>
+            <p style="margin: 10px 0 0; font-size: 18px; color: #e2e8f0; font-weight: 500;">للخدمات التعليمية والتدريب المتقدم</p>
+          </div>
+        </div>
+
+        <div style="padding: 40px 30px; direction: rtl; text-align: right;">
+          <h2 style="color: #8b5cf6; font-size: 28px; font-weight: 700; margin-bottom: 25px; text-align: center;">دعوة خاصة لحضور فعاليتنا 🎊</h2>
+          
+          <p style="color: #374151; font-size: 18px; line-height: 1.8; margin-bottom: 25px;">
+            عزيزي/عزيزتي <strong style="color: #8b5cf6;">${data.customerName}</strong>،<br><br>
+            يشرفنا دعوتكم لحضور فعاليتنا المميزة!
+          </p>
+          
+          <div style="background: linear-gradient(135deg, #ede9fe, #ddd6fe); border-radius: 15px; padding: 25px; margin: 25px 0; border-left: 5px solid #8b5cf6; box-shadow: 0 4px 15px rgba(139, 92, 246, 0.2);">
+            <h3 style="color: #6d28d9; margin-bottom: 15px; font-size: 20px; font-weight: 600;">📋 تفاصيل الفعالية:</h3>
+            <p style="margin: 10px 0; color: #6d28d9; font-size: 16px;"><strong>اسم الفعالية:</strong> ${data.promotionTitle}</p>
+            <p style="margin: 10px 0; color: #6d28d9; font-size: 16px;"><strong>التاريخ:</strong> ${data.eventDate}</p>
+            <p style="margin: 10px 0; color: #6d28d9; font-size: 16px;"><strong>الوقت:</strong> ${data.eventTime}</p>
+            <p style="margin: 10px 0; color: #6d28d9; font-size: 16px;"><strong>المكان:</strong> ${data.location}</p>
+          </div>
+          
+          <p style="color: #374151; font-size: 16px; line-height: 1.7; margin-bottom: 30px; text-align: center;">
+            نتطلع لحضوركم الكريم ومشاركتكم في هذا الحدث المهم.<br>
+            يرجى تأكيد الحضور في أقرب وقت ممكن 🎯
+          </p>
+        </div>
+      </div>
+    </div>`;
+  };
+
+  const generateWelcomeMessageTemplate = (data: SmartFormData) => {
+    return `
+    <div dir="rtl" style="max-width: 700px; margin: 0 auto; font-family: 'Cairo', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: linear-gradient(135deg, #06b6d4, #0891b2); padding: 20px; direction: rtl; text-align: right;">
+      <div style="background: white; border-radius: 20px; overflow: hidden; box-shadow: 0 15px 35px rgba(0,0,0,0.1); direction: rtl; border: 1px solid #e5e7eb;">
+        <!-- ترويسة الترحيب -->
+        <div style="background: linear-gradient(135deg, #0f172a 0%, #1e293b 25%, #334155 50%, #475569 75%, #64748b 100%); padding: 30px 20px; text-align: center; color: white; direction: rtl; position: relative; border-bottom: 6px solid #06b6d4;">
+          <div style="text-align: center; margin-bottom: 20px; direction: rtl;">
+            <div style="display: inline-flex; align-items: center; justify-content: center; width: 100px; height: 100px; background: linear-gradient(135deg, #06b6d4, #67e8f9); border-radius: 50%; margin-bottom: 20px; position: relative; overflow: hidden; box-shadow: 0 8px 25px rgba(6, 182, 212, 0.4);">
+              <div style="width: 70px; height: 70px; background: linear-gradient(135deg, #0f172a, #334155); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 28px; font-weight: bold;">🤝</div>
+            </div>
+            <h1 style="margin: 0; font-size: 32px; font-weight: 700; background: linear-gradient(135deg, #67e8f9, #06b6d4); -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-shadow: 2px 2px 4px rgba(0,0,0,0.1);">وكالة ماستر إيدو باث</h1>
+            <p style="margin: 10px 0 0; font-size: 18px; color: #e2e8f0; font-weight: 500;">للخدمات التعليمية والتدريب المتقدم</p>
+          </div>
+        </div>
+
+        <div style="padding: 40px 30px; direction: rtl; text-align: right;">
+          <h2 style="color: #06b6d4; font-size: 28px; font-weight: 700; margin-bottom: 25px; text-align: center;">أهلاً وسهلاً بك معنا! 🌟</h2>
+          
+          <p style="color: #374151; font-size: 18px; line-height: 1.8; margin-bottom: 25px;">
+            عزيزي/عزيزتي <strong style="color: #06b6d4;">${data.customerName}</strong>،<br><br>
+            مرحباً بك في عائلة وكالة ماستر إيدو باث! نحن سعداء جداً لانضمامك إلينا.
+          </p>
+          
+          <div style="background: linear-gradient(135deg, #cffafe, #a5f3fc); border-radius: 15px; padding: 25px; margin: 25px 0; border-left: 5px solid #06b6d4; box-shadow: 0 4px 15px rgba(6, 182, 212, 0.2);">
+            <h3 style="color: #0e7490; margin-bottom: 15px; font-size: 20px; font-weight: 600;">🚀 معلومات حسابك:</h3>
+            <p style="margin: 10px 0; color: #0e7490; font-size: 16px;"><strong>اسم المستخدم:</strong> ${data.username}</p>
+            <p style="margin: 10px 0; color: #0e7490; font-size: 16px;">يمكنك الآن الاستفادة من جميع خدماتنا المتميزة</p>
+          </div>
+          
+          <p style="color: #374151; font-size: 16px; line-height: 1.7; margin-bottom: 30px; text-align: center;">
+            نحن هنا لخدمتك وتقديم أفضل الحلول التعليمية والتدريبية.<br>
+            مرحباً بك مرة أخرى في رحلة التعلم والنجاح! 🎓
+          </p>
+        </div>
+      </div>
+    </div>`;
+  };
+
+  const generateThankYouTemplate = (data: SmartFormData) => {
+    return `
+    <div dir="rtl" style="max-width: 700px; margin: 0 auto; font-family: 'Cairo', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: linear-gradient(135deg, #f43f5e, #e11d48); padding: 20px; direction: rtl; text-align: right;">
+      <div style="background: white; border-radius: 20px; overflow: hidden; box-shadow: 0 15px 35px rgba(0,0,0,0.1); direction: rtl; border: 1px solid #e5e7eb;">
+        <!-- ترويسة الشكر -->
+        <div style="background: linear-gradient(135deg, #0f172a 0%, #1e293b 25%, #334155 50%, #475569 75%, #64748b 100%); padding: 30px 20px; text-align: center; color: white; direction: rtl; position: relative; border-bottom: 6px solid #f43f5e;">
+          <div style="text-align: center; margin-bottom: 20px; direction: rtl;">
+            <div style="display: inline-flex; align-items: center; justify-content: center; width: 100px; height: 100px; background: linear-gradient(135deg, #f43f5e, #fb7185); border-radius: 50%; margin-bottom: 20px; position: relative; overflow: hidden; box-shadow: 0 8px 25px rgba(244, 63, 94, 0.4);">
+              <div style="width: 70px; height: 70px; background: linear-gradient(135deg, #0f172a, #334155); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 28px; font-weight: bold;">❤️</div>
+            </div>
+            <h1 style="margin: 0; font-size: 32px; font-weight: 700; background: linear-gradient(135deg, #fb7185, #f43f5e); -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-shadow: 2px 2px 4px rgba(0,0,0,0.1);">وكالة ماستر إيدو باث</h1>
+            <p style="margin: 10px 0 0; font-size: 18px; color: #e2e8f0; font-weight: 500;">للخدمات التعليمية والتدريب المتقدم</p>
+          </div>
+        </div>
+
+        <div style="padding: 40px 30px; direction: rtl; text-align: right;">
+          <h2 style="color: #f43f5e; font-size: 28px; font-weight: 700; margin-bottom: 25px; text-align: center;">شكراً جزيلاً لك! 🙏</h2>
+          
+          <p style="color: #374151; font-size: 18px; line-height: 1.8; margin-bottom: 25px;">
+            عزيزي/عزيزتي <strong style="color: #f43f5e;">${data.customerName}</strong>،<br><br>
+            نتقدم لك بأسمى آيات الشكر والتقدير على ثقتك في خدماتنا.
+          </p>
+          
+          <div style="background: linear-gradient(135deg, #fce7f3, #fbcfe8); border-radius: 15px; padding: 25px; margin: 25px 0; border-left: 5px solid #f43f5e; box-shadow: 0 4px 15px rgba(244, 63, 94, 0.2);">
+            <h3 style="color: #be185d; margin-bottom: 15px; font-size: 20px; font-weight: 600;">💝 تقديرنا لك:</h3>
+            <p style="margin: 10px 0; color: #be185d; font-size: 16px;">شكراً لاختيارك خدمة: <strong>${data.serviceDescription}</strong></p>
+            <p style="margin: 10px 0; color: #be185d; font-size: 16px;">تعاملك معنا شرف كبير ونقدر ثقتك الغالية</p>
+          </div>
+          
+          <p style="color: #374151; font-size: 16px; line-height: 1.7; margin-bottom: 30px; text-align: center;">
+            نسعى دائماً لتقديم أفضل الخدمات ونتطلع للتعامل معك مستقبلاً.<br>
+            شكراً لكونك جزءاً من قصة نجاحنا! 🌟
+          </p>
+        </div>
+      </div>
+    </div>`;
+  };
+
+  const generateOrderStatusTemplate = (data: SmartFormData) => {
+    return `
+    <div dir="rtl" style="max-width: 700px; margin: 0 auto; font-family: 'Cairo', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: linear-gradient(135deg, #0ea5e9, #0284c7); padding: 20px; direction: rtl; text-align: right;">
+      <div style="background: white; border-radius: 20px; overflow: hidden; box-shadow: 0 15px 35px rgba(0,0,0,0.1); direction: rtl; border: 1px solid #e5e7eb;">
+        <!-- ترويسة تحديث الحالة -->
+        <div style="background: linear-gradient(135deg, #0f172a 0%, #1e293b 25%, #334155 50%, #475569 75%, #64748b 100%); padding: 30px 20px; text-align: center; color: white; direction: rtl; position: relative; border-bottom: 6px solid #0ea5e9;">
+          <div style="text-align: center; margin-bottom: 20px; direction: rtl;">
+            <div style="display: inline-flex; align-items: center; justify-content: center; width: 100px; height: 100px; background: linear-gradient(135deg, #0ea5e9, #38bdf8); border-radius: 50%; margin-bottom: 20px; position: relative; overflow: hidden; box-shadow: 0 8px 25px rgba(14, 165, 233, 0.4);">
+              <div style="width: 70px; height: 70px; background: linear-gradient(135deg, #0f172a, #334155); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 28px; font-weight: bold;">📦</div>
+            </div>
+            <h1 style="margin: 0; font-size: 32px; font-weight: 700; background: linear-gradient(135deg, #38bdf8, #0ea5e9); -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-shadow: 2px 2px 4px rgba(0,0,0,0.1);">وكالة ماستر إيدو باث</h1>
+            <p style="margin: 10px 0 0; font-size: 18px; color: #e2e8f0; font-weight: 500;">للخدمات التعليمية والتدريب المتقدم</p>
+          </div>
+        </div>
+
+        <div style="padding: 40px 30px; direction: rtl; text-align: right;">
+          <h2 style="color: #0ea5e9; font-size: 28px; font-weight: 700; margin-bottom: 25px; text-align: center;">تحديث حالة طلبكم 📋</h2>
+          
+          <p style="color: #374151; font-size: 18px; line-height: 1.8; margin-bottom: 25px;">
+            عزيزي/عزيزتي <strong style="color: #0ea5e9;">${data.customerName}</strong>،<br><br>
+            يسرنا إطلاعكم على آخر التطورات في طلبكم.
+          </p>
+          
+          <div style="background: linear-gradient(135deg, #e0f2fe, #b3e5fc); border-radius: 15px; padding: 25px; margin: 25px 0; border-left: 5px solid #0ea5e9; box-shadow: 0 4px 15px rgba(14, 165, 233, 0.2);">
+            <h3 style="color: #0277bd; margin-bottom: 15px; font-size: 20px; font-weight: 600;">📋 معلومات الطلب:</h3>
+            <p style="margin: 10px 0; color: #0277bd; font-size: 16px;"><strong>رقم الطلب:</strong> ${data.invoiceNumber}</p>
+            <p style="margin: 10px 0; color: #0277bd; font-size: 16px;"><strong>الخدمة:</strong> ${data.serviceDescription}</p>
+            <p style="margin: 10px 0; color: #0277bd; font-size: 16px;"><strong>الحالة الحالية:</strong> قيد التنفيذ</p>
+          </div>
+          
+          <p style="color: #374151; font-size: 16px; line-height: 1.7; margin-bottom: 30px; text-align: center;">
+            سنستمر في إبلاغكم بأي تطورات جديدة على طلبكم.<br>
+            شكراً لصبركم وثقتكم في خدماتنا! 🚀
+          </p>
+        </div>
+      </div>
+    </div>`;
+  };
+
+  const generateNewServiceTemplate = (data: SmartFormData) => {
+    return `
+    <div dir="rtl" style="max-width: 700px; margin: 0 auto; font-family: 'Cairo', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: linear-gradient(135deg, #7c3aed, #6d28d9); padding: 20px; direction: rtl; text-align: right;">
+      <div style="background: white; border-radius: 20px; overflow: hidden; box-shadow: 0 15px 35px rgba(0,0,0,0.1); direction: rtl; border: 1px solid #e5e7eb;">
+        <!-- ترويسة الخدمة الجديدة -->
+        <div style="background: linear-gradient(135deg, #0f172a 0%, #1e293b 25%, #334155 50%, #475569 75%, #64748b 100%); padding: 30px 20px; text-align: center; color: white; direction: rtl; position: relative; border-bottom: 6px solid #7c3aed;">
+          <div style="text-align: center; margin-bottom: 20px; direction: rtl;">
+            <div style="display: inline-flex; align-items: center; justify-content: center; width: 100px; height: 100px; background: linear-gradient(135deg, #7c3aed, #a855f7); border-radius: 50%; margin-bottom: 20px; position: relative; overflow: hidden; box-shadow: 0 8px 25px rgba(124, 58, 237, 0.4);">
+              <div style="width: 70px; height: 70px; background: linear-gradient(135deg, #0f172a, #334155); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 28px; font-weight: bold;">🎉</div>
+            </div>
+            <h1 style="margin: 0; font-size: 32px; font-weight: 700; background: linear-gradient(135deg, #a855f7, #7c3aed); -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-shadow: 2px 2px 4px rgba(0,0,0,0.1);">وكالة ماستر إيدو باث</h1>
+            <p style="margin: 10px 0 0; font-size: 18px; color: #e2e8f0; font-weight: 500;">للخدمات التعليمية والتدريب المتقدم</p>
+          </div>
+        </div>
+
+        <div style="padding: 40px 30px; direction: rtl; text-align: right;">
+          <h2 style="color: #7c3aed; font-size: 28px; font-weight: 700; margin-bottom: 25px; text-align: center;">خدمة جديدة ومميزة! ✨</h2>
+          
+          <p style="color: #374151; font-size: 18px; line-height: 1.8; margin-bottom: 25px;">
+            عزيزي/عزيزتي <strong style="color: #7c3aed;">${data.customerName}</strong>،<br><br>
+            يسرنا أن نعلن لكم عن إطلاق خدمة جديدة ومبتكرة!
+          </p>
+          
+          <div style="background: linear-gradient(135deg, #f3e8ff, #e9d5ff); border-radius: 15px; padding: 25px; margin: 25px 0; border-left: 5px solid #7c3aed; box-shadow: 0 4px 15px rgba(124, 58, 237, 0.2);">
+            <h3 style="color: #5b21b6; margin-bottom: 15px; font-size: 20px; font-weight: 600;">🚀 الخدمة الجديدة:</h3>
+            <p style="margin: 10px 0; color: #5b21b6; font-size: 18px; font-weight: 600;"><strong>${data.promotionTitle}</strong></p>
+            <p style="margin: 15px 0; color: #5b21b6; font-size: 16px; line-height: 1.7;">${data.promotionDescription}</p>
+          </div>
+          
+          <p style="color: #374151; font-size: 16px; line-height: 1.7; margin-bottom: 30px; text-align: center;">
+            هذه الخدمة تم تصميمها خصيصاً لتلبي احتياجاتكم وتحقق أهدافكم.<br>
+            تواصلوا معنا للحصول على المزيد من التفاصيل! 🌟
+          </p>
+        </div>
+      </div>
+    </div>`;
+  };
+
   const getTemplateDescription = (templateKey: string) => {
     const descriptions: Record<string, string> = {
       // القوالب الجديدة المتطورة
@@ -1294,7 +1647,7 @@ export default function EmailNotifications() {
               </CardHeader>
               <CardContent className="space-y-6">
                 {/* اختيار نوع البريد */}
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3">
                   <div 
                     className={`p-4 border-2 rounded-xl cursor-pointer transition-all hover:shadow-lg ${
                       smartForm.type === 'invoice' ? 'border-primary bg-primary/5' : 'border-border hover:border-primary/50'
@@ -1347,7 +1700,7 @@ export default function EmailNotifications() {
                     </div>
                   </div>
                   
-                  <div 
+                   <div 
                     className={`p-4 border-2 rounded-xl cursor-pointer transition-all hover:shadow-lg ${
                       smartForm.type === 'promotion' ? 'border-primary bg-primary/5' : 'border-border hover:border-primary/50'
                     }`}
@@ -1357,6 +1710,97 @@ export default function EmailNotifications() {
                       <Gift className="h-12 w-12 mx-auto mb-3 text-purple-600" />
                       <h3 className="font-semibold text-lg mb-2">عرض ترويجي</h3>
                       <p className="text-sm text-muted-foreground">عروض وإعلانات تسويقية</p>
+                    </div>
+                  </div>
+
+                  <div 
+                    className={`p-4 border-2 rounded-xl cursor-pointer transition-all hover:shadow-lg ${
+                      smartForm.type === 'payment_reminder' ? 'border-primary bg-primary/5' : 'border-border hover:border-primary/50'
+                    }`}
+                    onClick={() => handleSmartFormChange('type', 'payment_reminder')}
+                  >
+                    <div className="text-center">
+                      <Bell className="h-12 w-12 mx-auto mb-3 text-orange-600" />
+                      <h3 className="font-semibold text-lg mb-2">تذكير بالدفع</h3>
+                      <p className="text-sm text-muted-foreground">تذكير لطيف بدفع المستحقات</p>
+                    </div>
+                  </div>
+
+                  <div 
+                    className={`p-4 border-2 rounded-xl cursor-pointer transition-all hover:shadow-lg ${
+                      smartForm.type === 'order_confirmation' ? 'border-primary bg-primary/5' : 'border-border hover:border-primary/50'
+                    }`}
+                    onClick={() => handleSmartFormChange('type', 'order_confirmation')}
+                  >
+                    <div className="text-center">
+                      <Package className="h-12 w-12 mx-auto mb-3 text-indigo-600" />
+                      <h3 className="font-semibold text-lg mb-2">تأكيد الطلب</h3>
+                      <p className="text-sm text-muted-foreground">تأكيد استلام وقبول الطلب</p>
+                    </div>
+                  </div>
+
+                  <div 
+                    className={`p-4 border-2 rounded-xl cursor-pointer transition-all hover:shadow-lg ${
+                      smartForm.type === 'event_invitation' ? 'border-primary bg-primary/5' : 'border-border hover:border-primary/50'
+                    }`}
+                    onClick={() => handleSmartFormChange('type', 'event_invitation')}
+                  >
+                    <div className="text-center">
+                      <Calendar className="h-12 w-12 mx-auto mb-3 text-pink-600" />
+                      <h3 className="font-semibold text-lg mb-2">دعوة فعالية</h3>
+                      <p className="text-sm text-muted-foreground">دعوات للمؤتمرات والدورات</p>
+                    </div>
+                  </div>
+
+                  <div 
+                    className={`p-4 border-2 rounded-xl cursor-pointer transition-all hover:shadow-lg ${
+                      smartForm.type === 'welcome_message' ? 'border-primary bg-primary/5' : 'border-border hover:border-primary/50'
+                    }`}
+                    onClick={() => handleSmartFormChange('type', 'welcome_message')}
+                  >
+                    <div className="text-center">
+                      <Users className="h-12 w-12 mx-auto mb-3 text-emerald-600" />
+                      <h3 className="font-semibold text-lg mb-2">رسالة ترحيب</h3>
+                      <p className="text-sm text-muted-foreground">ترحيب بالعملاء الجدد</p>
+                    </div>
+                  </div>
+
+                  <div 
+                    className={`p-4 border-2 rounded-xl cursor-pointer transition-all hover:shadow-lg ${
+                      smartForm.type === 'thank_you' ? 'border-primary bg-primary/5' : 'border-border hover:border-primary/50'
+                    }`}
+                    onClick={() => handleSmartFormChange('type', 'thank_you')}
+                  >
+                    <div className="text-center">
+                      <Gift className="h-12 w-12 mx-auto mb-3 text-rose-600" />
+                      <h3 className="font-semibold text-lg mb-2">رسالة شكر</h3>
+                      <p className="text-sm text-muted-foreground">شكر للعملاء على تعاملهم</p>
+                    </div>
+                  </div>
+
+                  <div 
+                    className={`p-4 border-2 rounded-xl cursor-pointer transition-all hover:shadow-lg ${
+                      smartForm.type === 'order_status' ? 'border-primary bg-primary/5' : 'border-border hover:border-primary/50'
+                    }`}
+                    onClick={() => handleSmartFormChange('type', 'order_status')}
+                  >
+                    <div className="text-center">
+                      <Package className="h-12 w-12 mx-auto mb-3 text-cyan-600" />
+                      <h3 className="font-semibold text-lg mb-2">حالة الطلب</h3>
+                      <p className="text-sm text-muted-foreground">تحديث حالة الطلبات</p>
+                    </div>
+                  </div>
+
+                  <div 
+                    className={`p-4 border-2 rounded-xl cursor-pointer transition-all hover:shadow-lg ${
+                      smartForm.type === 'new_service' ? 'border-primary bg-primary/5' : 'border-border hover:border-primary/50'
+                    }`}
+                    onClick={() => handleSmartFormChange('type', 'new_service')}
+                  >
+                    <div className="text-center">
+                      <Plus className="h-12 w-12 mx-auto mb-3 text-violet-600" />
+                      <h3 className="font-semibold text-lg mb-2">خدمة جديدة</h3>
+                      <p className="text-sm text-muted-foreground">إعلان خدمات جديدة</p>
                     </div>
                   </div>
                 </div>
