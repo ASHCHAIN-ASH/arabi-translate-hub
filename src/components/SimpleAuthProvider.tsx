@@ -128,16 +128,30 @@ export const SimpleAuthProvider: React.FC<{ children: React.ReactNode }> = ({ ch
     password: string, 
     metadata: { name: string; phone?: string; role?: string }
   ): Promise<{ error?: string }> => {
+    console.log('Starting signUp process...', { email, name: metadata.name });
+    
     try {
       // التحقق من قوة كلمة المرور
       if (password.length < 12) {
+        console.log('Password too short');
         return { error: 'كلمة المرور يجب أن تكون 12 حرف على الأقل' };
       }
 
+      console.log('Password validation passed, starting bcrypt...');
+      
       // تشفير كلمة المرور
       const saltRounds = 12;
-      const hashedPassword = await bcrypt.hash(password, saltRounds);
+      let hashedPassword;
+      try {
+        hashedPassword = await bcrypt.hash(password, saltRounds);
+        console.log('Bcrypt hashing successful');
+      } catch (bcryptError) {
+        console.error('Bcrypt error:', bcryptError);
+        return { error: 'خطأ في معالجة كلمة المرور' };
+      }
 
+      console.log('Attempting to insert user into database...');
+      
       // إدراج المستخدم الجديد
       const { data: newUser, error: insertError } = await supabase
         .from('users')
@@ -152,12 +166,17 @@ export const SimpleAuthProvider: React.FC<{ children: React.ReactNode }> = ({ ch
         .select()
         .single();
 
+      console.log('Insert result:', { newUser, insertError });
+
       if (insertError) {
+        console.error('Database insert error:', insertError);
         if (insertError.code === '23505') {
           return { error: 'البريد الإلكتروني مستخدم بالفعل' };
         }
-        return { error: 'حدث خطأ أثناء إنشاء الحساب' };
+        return { error: `خطأ في قاعدة البيانات: ${insertError.message}` };
       }
+
+      console.log('User created successfully, sending welcome email...');
 
       // إرسال بريد ترحيبي
       try {
@@ -168,6 +187,7 @@ export const SimpleAuthProvider: React.FC<{ children: React.ReactNode }> = ({ ch
             user_id: newUser.id
           }
         });
+        console.log('Welcome email sent successfully');
       } catch (emailError) {
         console.error('Error sending welcome email:', emailError);
         // لا نتوقف عند خطأ في البريد الإلكتروني
@@ -183,13 +203,15 @@ export const SimpleAuthProvider: React.FC<{ children: React.ReactNode }> = ({ ch
         status: newUser.status
       };
 
+      console.log('Setting user in state and localStorage...');
       setUser(user);
       localStorage.setItem('user', JSON.stringify(user));
 
+      console.log('SignUp process completed successfully');
       return {};
     } catch (error) {
-      console.error('Signup error:', error);
-      return { error: 'حدث خطأ أثناء إنشاء الحساب' };
+      console.error('SignUp error:', error);
+      return { error: `حدث خطأ أثناء إنشاء الحساب: ${error.message || 'خطأ غير معروف'}` };
     }
   };
 
