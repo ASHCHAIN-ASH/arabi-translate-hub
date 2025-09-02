@@ -35,6 +35,7 @@ const Header = () => {
 
   const navigation = [
     { name: 'الرئيسية', href: '/', icon: Home },
+    { name: 'خدماتنا', href: '/services', icon: Briefcase },
     { name: 'تتبع الطلب', href: '/order-tracking', icon: Package },
     { name: 'من نحن', href: '/about-us', icon: Users },
     { name: 'تواصل معنا', href: '/contact', icon: Phone },

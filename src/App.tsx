@@ -62,6 +62,7 @@ import AudioTranslation from "./pages/services/AudioTranslation";
 import WebsiteTranslation from "./pages/services/WebsiteTranslation";
 import VideoTranslation from "./pages/services/VideoTranslation";
 import CustomServices from "./pages/services/CustomServices";
+import Services from "./pages/Services";
 import ResearchEvaluation from "./pages/research/ResearchEvaluation";
 import Publication from "./pages/research/Publication";
 import AcademicConsultation from "./pages/research/AcademicConsultation";
@@ -86,6 +87,7 @@ const App = () => (
           <Routes>
             {/* Public Routes */}
             <Route path="/" element={<Index />} />
+            <Route path="/services" element={<Services />} />
             <Route path="/translation-services" element={<TranslationServices />} />
             <Route path="/legal-translation" element={<LegalTranslation />} />
             <Route path="/business-translation" element={<BusinessTranslation />} />
