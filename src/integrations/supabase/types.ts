@@ -1694,10 +1694,63 @@ export type Database = {
           },
         ]
       }
+      invoice_items: {
+        Row: {
+          created_at: string | null
+          description: string | null
+          discount_amount: number | null
+          discount_percentage: number | null
+          id: string
+          invoice_id: string | null
+          item_name: string
+          order_index: number | null
+          quantity: number | null
+          total_price: number
+          unit_price: number
+        }
+        Insert: {
+          created_at?: string | null
+          description?: string | null
+          discount_amount?: number | null
+          discount_percentage?: number | null
+          id?: string
+          invoice_id?: string | null
+          item_name: string
+          order_index?: number | null
+          quantity?: number | null
+          total_price: number
+          unit_price: number
+        }
+        Update: {
+          created_at?: string | null
+          description?: string | null
+          discount_amount?: number | null
+          discount_percentage?: number | null
+          id?: string
+          invoice_id?: string | null
+          item_name?: string
+          order_index?: number | null
+          quantity?: number | null
+          total_price?: number
+          unit_price?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "invoice_items_invoice_id_fkey"
+            columns: ["invoice_id"]
+            isOneToOne: false
+            referencedRelation: "invoices"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       invoices: {
         Row: {
+          address: string | null
           amount: number
+          bank_details: Json | null
           client_id: string | null
+          company_registration: string | null
           created_at: string
           currency: string | null
           customer_email: string
@@ -1705,21 +1758,34 @@ export type Database = {
           customer_phone: string | null
           due_date: string | null
           id: string
+          include_vat: boolean | null
           invoice_number: string
+          invoice_template: string | null
           issue_date: string
           notes: string | null
           offer_title: string
+          parent_company: string | null
           payment_method: string | null
           payment_status: string | null
+          pdf_generated: boolean | null
+          pdf_url: string | null
           status: string
+          subtotal: number | null
+          tax_number: string | null
           tenant_id: string | null
+          terms_conditions: string | null
           transaction_id: string | null
           updated_at: string
           user_id: string | null
+          vat_amount: number | null
+          vat_rate: number | null
         }
         Insert: {
+          address?: string | null
           amount: number
+          bank_details?: Json | null
           client_id?: string | null
+          company_registration?: string | null
           created_at?: string
           currency?: string | null
           customer_email: string
@@ -1727,21 +1793,34 @@ export type Database = {
           customer_phone?: string | null
           due_date?: string | null
           id?: string
+          include_vat?: boolean | null
           invoice_number: string
+          invoice_template?: string | null
           issue_date?: string
           notes?: string | null
           offer_title: string
+          parent_company?: string | null
           payment_method?: string | null
           payment_status?: string | null
+          pdf_generated?: boolean | null
+          pdf_url?: string | null
           status?: string
+          subtotal?: number | null
+          tax_number?: string | null
           tenant_id?: string | null
+          terms_conditions?: string | null
           transaction_id?: string | null
           updated_at?: string
           user_id?: string | null
+          vat_amount?: number | null
+          vat_rate?: number | null
         }
         Update: {
+          address?: string | null
           amount?: number
+          bank_details?: Json | null
           client_id?: string | null
+          company_registration?: string | null
           created_at?: string
           currency?: string | null
           customer_email?: string
@@ -1749,17 +1828,27 @@ export type Database = {
           customer_phone?: string | null
           due_date?: string | null
           id?: string
+          include_vat?: boolean | null
           invoice_number?: string
+          invoice_template?: string | null
           issue_date?: string
           notes?: string | null
           offer_title?: string
+          parent_company?: string | null
           payment_method?: string | null
           payment_status?: string | null
+          pdf_generated?: boolean | null
+          pdf_url?: string | null
           status?: string
+          subtotal?: number | null
+          tax_number?: string | null
           tenant_id?: string | null
+          terms_conditions?: string | null
           transaction_id?: string | null
           updated_at?: string
           user_id?: string | null
+          vat_amount?: number | null
+          vat_rate?: number | null
         }
         Relationships: []
       }
@@ -4414,6 +4503,10 @@ export type Database = {
         Returns: string
       }
       generate_order_number: {
+        Args: Record<PropertyKey, never>
+        Returns: string
+      }
+      generate_professional_invoice_number: {
         Args: Record<PropertyKey, never>
         Returns: string
       }
