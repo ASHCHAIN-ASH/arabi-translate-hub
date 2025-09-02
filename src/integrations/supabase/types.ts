@@ -4317,6 +4317,10 @@ export type Database = {
         Args: { user_id: string }
         Returns: string
       }
+      check_admin_access: {
+        Args: Record<PropertyKey, never>
+        Returns: boolean
+      }
       check_admin_credentials: {
         Args: { email_input: string; password_input: string }
         Returns: Json
@@ -4579,10 +4583,6 @@ export type Database = {
       }
       is_admin: {
         Args: { user_id?: string }
-        Returns: boolean
-      }
-      is_admin_user: {
-        Args: Record<PropertyKey, never>
         Returns: boolean
       }
       log_auth_attempt: {
