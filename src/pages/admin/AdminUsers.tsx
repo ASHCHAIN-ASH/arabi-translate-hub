@@ -201,19 +201,29 @@ const AdminUsers = () => {
     try {
       setUpdatingPassword(true);
       
-      // استخدام Supabase Admin API لتحديث كلمة المرور
-      const { error } = await supabase.auth.admin.updateUserById(
-        passwordChangeModal.userId,
-        { password: newPassword }
-      );
+      // استخدام Edge Function لتحديث كلمة المرور
+      const { data, error } = await supabase.functions.invoke('update-user-password', {
+        body: {
+          userId: passwordChangeModal.userId,
+          newPassword: newPassword,
+          adminUserId: (await supabase.auth.getUser()).data.user?.id
+        }
+      });
 
-      if (error) throw error;
+      if (error) {
+        console.error('Edge function error:', error);
+        throw error;
+      }
+
+      if (data.error) {
+        throw new Error(data.error);
+      }
 
       toast.success(`تم تحديث كلمة مرور ${passwordChangeModal.userName} بنجاح`);
       closePasswordChangeModal();
     } catch (error) {
       console.error('Error updating password:', error);
-      toast.error('خطأ في تحديث كلمة المرور');
+      toast.error(`خطأ في تحديث كلمة المرور: ${error.message || 'حدث خطأ غير متوقع'}`);
     } finally {
       setUpdatingPassword(false);
     }
