@@ -162,6 +162,17 @@ export default function EmailNotifications() {
       return;
     }
 
+    // التحقق من صحة البريد الإلكتروني
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const emails = emailForm.to.split(',').map(email => email.trim());
+    
+    for (const email of emails) {
+      if (!emailRegex.test(email)) {
+        toast.error(`البريد الإلكتروني غير صحيح: ${email}\nيجب أن يكون بالصيغة: example@domain.com`);
+        return;
+      }
+    }
+
     setLoading(true);
     try {
       let variables = {};
@@ -171,9 +182,12 @@ export default function EmailNotifications() {
         variables = {};
       }
 
+      console.log("إرسال بريد إلى:", emails);
+      console.log("الموضوع:", emailForm.subject);
+
       const response = await supabase.functions.invoke('send-email', {
         body: {
-          to: emailForm.to.split(',').map(email => email.trim()),
+          to: emails,
           subject: emailForm.subject,
           content: emailForm.content,
           template_key: selectedTemplate?.template_key,
@@ -181,7 +195,19 @@ export default function EmailNotifications() {
         }
       });
 
-      if (response.error) throw response.error;
+      console.log("استجابة إرسال البريد:", response);
+
+      if (response.error) {
+        console.error("خطأ في الإرسال:", response.error);
+        throw response.error;
+      }
+
+      // التحقق من وجود خطأ في الاستجابة
+      if (response.data?.error) {
+        console.error("خطأ من الخدمة:", response.data.error);
+        toast.error(`خطأ في إرسال البريد: ${response.data.error.message}`);
+        return;
+      }
 
       toast.success("تم إرسال البريد الإلكتروني بنجاح ✅");
       
@@ -194,7 +220,8 @@ export default function EmailNotifications() {
       });
       setSelectedTemplate(null);
     } catch (error: any) {
-      toast.error("خطأ في إرسال البريد: " + error.message);
+      console.error("خطأ في إرسال البريد:", error);
+      toast.error("خطأ في إرسال البريد: " + (error.message || "حدث خطأ غير متوقع"));
     } finally {
       setLoading(false);
     }
