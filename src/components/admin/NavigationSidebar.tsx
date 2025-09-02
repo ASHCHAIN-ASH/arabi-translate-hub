@@ -1,5 +1,5 @@
 import React from 'react';
-import { FileText, CreditCard, FileSignature, MessageCircle } from 'lucide-react';
+import { FileText, CreditCard, FileSignature, MessageCircle, Receipt } from 'lucide-react';
 import { Sidebar, SidebarContent, SidebarGroup, SidebarGroupContent, SidebarGroupLabel, SidebarMenu, SidebarMenuButton, SidebarMenuItem, SidebarTrigger } from '@/components/ui/sidebar';
 
 const items = [
@@ -7,6 +7,11 @@ const items = [
     title: 'العقود',
     url: '/admin/contracts',
     icon: FileText,
+  },
+  {
+    title: 'الفواتير الضريبية',
+    url: '/admin/invoices',
+    icon: Receipt,
   },
   {
     title: 'المحاسبة',
