@@ -5,7 +5,8 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { Search, Users, Mail, Phone, Calendar, Filter } from 'lucide-react';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Search, Users, Mail, Phone, Calendar, Filter, Key, Edit, Eye, EyeOff } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 import { motion } from 'framer-motion';
@@ -18,6 +19,8 @@ interface User {
   role: string;
   status: string;
   created_at: string;
+  last_login?: string;
+  email_verified?: boolean;
 }
 
 const AdminUsers = () => {
@@ -25,6 +28,15 @@ const AdminUsers = () => {
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
+  const [passwordChangeModal, setPasswordChangeModal] = useState<{isOpen: boolean, userId: string, userName: string}>({
+    isOpen: false,
+    userId: '',
+    userName: ''
+  });
+  const [newPassword, setNewPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
+  const [updatingPassword, setUpdatingPassword] = useState(false);
 
   useEffect(() => {
     fetchUsers();
@@ -151,6 +163,59 @@ const AdminUsers = () => {
       toast.success('تم تحديث حالة المستخدم بنجاح');
     } catch (error) {
       toast.error('خطأ في تحديث حالة المستخدم');
+    }
+  };
+
+  const openPasswordChangeModal = (userId: string, userName: string) => {
+    setPasswordChangeModal({
+      isOpen: true,
+      userId,
+      userName
+    });
+    setNewPassword('');
+    setConfirmPassword('');
+  };
+
+  const closePasswordChangeModal = () => {
+    setPasswordChangeModal({
+      isOpen: false,
+      userId: '',
+      userName: ''
+    });
+    setNewPassword('');
+    setConfirmPassword('');
+    setShowPassword(false);
+  };
+
+  const updateUserPassword = async () => {
+    if (!newPassword || newPassword.length < 6) {
+      toast.error('كلمة المرور يجب أن تكون 6 أحرف على الأقل');
+      return;
+    }
+
+    if (newPassword !== confirmPassword) {
+      toast.error('كلمة المرور وتأكيد كلمة المرور غير متطابقين');
+      return;
+    }
+
+    try {
+      setUpdatingPassword(true);
+      
+      // استخدام Supabase Admin API لتحديث كلمة المرور
+      const { error } = await supabase.auth.admin.updateUserById(
+        passwordChangeModal.userId,
+        { password: newPassword }
+      );
+
+      if (error) throw error;
+
+      toast.success(`تم تحديث كلمة مرور ${passwordChangeModal.userName} بنجاح`);
+      closePasswordChangeModal();
+    } catch (error) {
+      console.error('Error updating password:', error);
+      toast.error('خطأ في تحديث كلمة المرور');
+    } finally {
+      setUpdatingPassword(false);
     }
   };
 
@@ -342,106 +407,128 @@ const AdminUsers = () => {
                 <div className="overflow-x-auto">
                   <Table>
                     <TableHeader>
-                      <TableRow>
-                        <TableHead className="text-right">المستخدم</TableHead>
-                        <TableHead className="text-right">البريد الإلكتروني</TableHead>
-                        <TableHead className="text-right">الهاتف</TableHead>
-                        <TableHead className="text-right">الدور</TableHead>
-                        <TableHead className="text-right">الحالة</TableHead>
-                        <TableHead className="text-right">تاريخ التسجيل</TableHead>
-                        <TableHead className="text-right">الإجراءات</TableHead>
+                      <TableRow className="bg-muted/30">
+                        <TableHead className="text-right font-semibold">المستخدم</TableHead>
+                        <TableHead className="text-right font-semibold">معلومات الاتصال</TableHead>
+                        <TableHead className="text-right font-semibold">الدور والحالة</TableHead>
+                        <TableHead className="text-right font-semibold">معلومات إضافية</TableHead>
+                        <TableHead className="text-right font-semibold">الإجراءات</TableHead>
                       </TableRow>
                     </TableHeader>
                     <TableBody>
                       {filteredUsers.map((user, index) => (
                         <TableRow
                           key={user.id}
-                          className="hover:bg-muted/50 transition-colors"
+                          className="hover:bg-muted/50 transition-colors border-b"
                         >
-                          <TableCell>
+                          <TableCell className="py-4">
                             <div className="flex items-center gap-3">
-                              <div className="w-10 h-10 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-full flex items-center justify-center shrink-0">
+                              <div className="w-12 h-12 bg-gradient-to-r from-primary to-primary/80 rounded-full flex items-center justify-center shrink-0">
                                 <span className="text-white text-sm font-medium">
                                   {(user.name || user.email).charAt(0).toUpperCase()}
                                 </span>
                               </div>
-                              <div className="min-w-0">
-                                <p className="font-medium text-foreground truncate">
+                              <div className="min-w-0 flex-1">
+                                <p className="font-semibold text-foreground text-base">
                                   {user.name || 'بدون اسم'}
                                 </p>
-                                <p className="text-sm text-muted-foreground">ID: {user.id.slice(0, 8)}...</p>
+                                <p className="text-xs text-muted-foreground">
+                                  ID: {user.id.slice(0, 8)}...
+                                </p>
                               </div>
                             </div>
                           </TableCell>
-                          <TableCell>
-                            <div className="flex items-center gap-2 min-w-0">
-                              <Mail className="w-4 h-4 text-muted-foreground shrink-0" />
-                              <span className="text-sm truncate">{user.email}</span>
-                            </div>
-                          </TableCell>
-                          <TableCell>
-                            {user.phone ? (
+                          
+                          <TableCell className="py-4">
+                            <div className="space-y-2">
                               <div className="flex items-center gap-2">
-                                <Phone className="w-4 h-4 text-muted-foreground shrink-0" />
-                                <span className="text-sm">{user.phone}</span>
+                                <Mail className="w-4 h-4 text-muted-foreground shrink-0" />
+                                <span className="text-sm truncate max-w-[200px]">{user.email}</span>
                               </div>
-                            ) : (
-                              <span className="text-muted-foreground text-sm">غير متوفر</span>
-                            )}
-                          </TableCell>
-                          <TableCell>
-                            <Badge 
-                              variant={user.role === 'admin' ? 'default' : 'secondary'}
-                              className="font-medium"
-                            >
-                              {user.role === 'admin' ? 'مدير' : 'عميل'}
-                            </Badge>
-                          </TableCell>
-                          <TableCell>
-                            {getStatusBadge(user.status)}
-                          </TableCell>
-                          <TableCell>
-                            <div className="flex items-center gap-2">
-                              <Calendar className="w-4 h-4 text-muted-foreground shrink-0" />
-                              <span className="text-sm">
-                                {new Date(user.created_at).toLocaleDateString('ar-SA', {
-                                  year: 'numeric',
-                                  month: 'short',
-                                  day: 'numeric'
-                                })}
-                              </span>
+                              {user.phone && (
+                                <div className="flex items-center gap-2">
+                                  <Phone className="w-4 h-4 text-muted-foreground shrink-0" />
+                                  <span className="text-sm">{user.phone}</span>
+                                </div>
+                              )}
                             </div>
                           </TableCell>
-                          <TableCell>
-                            <div className="flex items-center gap-2">
-                              <Button
-                                size="sm"
-                                variant="outline"
-                                className="text-xs"
-                                onClick={() => sendWelcomeEmail(user.id, user.email, user.name || user.email)}
+                          
+                          <TableCell className="py-4">
+                            <div className="space-y-2">
+                              <Badge 
+                                variant={user.role === 'admin' ? 'default' : 'secondary'}
+                                className="font-medium"
                               >
-                                <Mail className="w-3 h-3 ml-1" />
-                                بريد ترحيبي
-                              </Button>
-                              {user.status === 'active' ? (
-                                <Button
-                                  size="sm"
-                                  variant="destructive"
-                                  className="text-xs"
-                                  onClick={() => updateUserStatus(user.id, 'blocked')}
-                                >
-                                  حظر
-                                </Button>
-                              ) : (
-                                <Button
-                                  size="sm"
-                                  variant="default"
-                                  className="text-xs"
-                                  onClick={() => updateUserStatus(user.id, 'active')}
-                                >
-                                  تفعيل
-                                </Button>
+                                {user.role === 'admin' ? 'مدير' : 'عميل'}
+                              </Badge>
+                              <div>
+                                {getStatusBadge(user.status)}
+                              </div>
+                            </div>
+                          </TableCell>
+                          
+                          <TableCell className="py-4">
+                            <div className="space-y-2 text-sm">
+                              <div className="flex items-center gap-2">
+                                <Calendar className="w-4 h-4 text-muted-foreground shrink-0" />
+                                <span>
+                                  {new Date(user.created_at).toLocaleDateString('ar-SA', {
+                                    year: 'numeric',
+                                    month: 'short',
+                                    day: 'numeric'
+                                  })}
+                                </span>
+                              </div>
+                              {user.last_login && (
+                                <div className="text-xs text-muted-foreground">
+                                  آخر دخول: {new Date(user.last_login).toLocaleDateString('ar-SA')}
+                                </div>
                               )}
+                            </div>
+                          </TableCell>
+                          
+                          <TableCell className="py-4">
+                            <div className="flex flex-col gap-2">
+                              <div className="flex items-center gap-1">
+                                <Button
+                                  size="sm"
+                                  variant="outline"
+                                  className="text-xs px-2 py-1"
+                                  onClick={() => sendWelcomeEmail(user.id, user.email, user.name || user.email)}
+                                >
+                                  <Mail className="w-3 h-3" />
+                                </Button>
+                                <Button
+                                  size="sm"
+                                  variant="outline" 
+                                  className="text-xs px-2 py-1"
+                                  onClick={() => openPasswordChangeModal(user.id, user.name || user.email)}
+                                >
+                                  <Key className="w-3 h-3" />
+                                </Button>
+                              </div>
+                              <div className="flex items-center gap-1">
+                                {user.status === 'active' ? (
+                                  <Button
+                                    size="sm"
+                                    variant="destructive"
+                                    className="text-xs px-2 py-1 flex-1"
+                                    onClick={() => updateUserStatus(user.id, 'blocked')}
+                                  >
+                                    حظر
+                                  </Button>
+                                ) : (
+                                  <Button
+                                    size="sm"
+                                    variant="default"
+                                    className="text-xs px-2 py-1 flex-1"
+                                    onClick={() => updateUserStatus(user.id, 'active')}
+                                  >
+                                    تفعيل
+                                  </Button>
+                                )}
+                              </div>
                             </div>
                           </TableCell>
                         </TableRow>
@@ -453,6 +540,84 @@ const AdminUsers = () => {
             </div>
           </Card>
         </motion.div>
+
+        {/* Modal تعديل كلمة المرور */}
+        <Dialog open={passwordChangeModal.isOpen} onOpenChange={closePasswordChangeModal}>
+          <DialogContent className="sm:max-w-[425px]">
+            <DialogHeader>
+              <DialogTitle className="text-right">تعديل كلمة المرور</DialogTitle>
+            </DialogHeader>
+            <div className="space-y-4 py-4">
+              <div className="text-sm text-muted-foreground text-center">
+                تعديل كلمة مرور المستخدم: <span className="font-medium">{passwordChangeModal.userName}</span>
+              </div>
+              
+              <div className="space-y-4">
+                <div className="relative">
+                  <Input
+                    type={showPassword ? "text" : "password"}
+                    placeholder="كلمة المرور الجديدة"
+                    value={newPassword}
+                    onChange={(e) => setNewPassword(e.target.value)}
+                    className="pr-10"
+                  />
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="sm"
+                    className="absolute left-0 top-0 h-full px-3 py-2 hover:bg-transparent"
+                    onClick={() => setShowPassword(!showPassword)}
+                  >
+                    {showPassword ? (
+                      <EyeOff className="h-4 w-4" />
+                    ) : (
+                      <Eye className="h-4 w-4" />
+                    )}
+                  </Button>
+                </div>
+                
+                <Input
+                  type={showPassword ? "text" : "password"}
+                  placeholder="تأكيد كلمة المرور"
+                  value={confirmPassword}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
+                />
+              </div>
+              
+              <div className="text-xs text-muted-foreground">
+                • كلمة المرور يجب أن تكون 6 أحرف على الأقل
+                • تأكد من تطابق كلمة المرور مع التأكيد
+              </div>
+              
+              <div className="flex justify-end gap-2 pt-4">
+                <Button 
+                  variant="outline" 
+                  onClick={closePasswordChangeModal}
+                  disabled={updatingPassword}
+                >
+                  إلغاء
+                </Button>
+                <Button 
+                  onClick={updateUserPassword}
+                  disabled={updatingPassword || !newPassword || !confirmPassword}
+                  className="flex items-center gap-2"
+                >
+                  {updatingPassword ? (
+                    <>
+                      <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                      جاري التحديث...
+                    </>
+                  ) : (
+                    <>
+                      <Key className="w-4 h-4" />
+                      تحديث كلمة المرور
+                    </>
+                  )}
+                </Button>
+              </div>
+            </div>
+          </DialogContent>
+        </Dialog>
       </motion.div>
     </AdminLayout>
   );
