@@ -2220,15 +2220,7 @@ export type Database = {
           sender_name?: string
           sender_type?: string
         }
-        Relationships: [
-          {
-            foreignKeyName: "order_communications_order_id_fkey"
-            columns: ["order_id"]
-            isOneToOne: false
-            referencedRelation: "orders"
-            referencedColumns: ["id"]
-          },
-        ]
+        Relationships: []
       }
       order_files: {
         Row: {
@@ -2264,15 +2256,7 @@ export type Database = {
           uploaded_by?: string
           uploaded_by_type?: string
         }
-        Relationships: [
-          {
-            foreignKeyName: "order_files_order_id_fkey"
-            columns: ["order_id"]
-            isOneToOne: false
-            referencedRelation: "orders"
-            referencedColumns: ["id"]
-          },
-        ]
+        Relationships: []
       }
       order_timeline: {
         Row: {
@@ -2296,7 +2280,7 @@ export type Database = {
           id?: string
           order_id: string
           scheduled_date?: string | null
-          status?: string
+          status: string
           title: string
         }
         Update: {
@@ -2323,70 +2307,55 @@ export type Database = {
       }
       orders: {
         Row: {
-          assigned_to: string | null
           client_email: string
           client_name: string
-          client_phone: string | null
-          client_university: string | null
+          client_phone: string
           created_at: string | null
-          currency: string | null
-          deadline_date: string | null
+          current_status: string
+          degree: string
           description: string | null
+          estimated_delivery: string | null
           id: string
-          order_number: string
-          paid_amount: number | null
-          priority: string
-          progress_percentage: number | null
-          service_title: string
+          phone_last_four: string
           service_type: string
-          status: string
-          total_price: number
+          title: string
+          tracking_id: string
           updated_at: string | null
-          user_id: string
+          user_id: string | null
         }
         Insert: {
-          assigned_to?: string | null
           client_email: string
           client_name: string
-          client_phone?: string | null
-          client_university?: string | null
+          client_phone: string
           created_at?: string | null
-          currency?: string | null
-          deadline_date?: string | null
+          current_status?: string
+          degree: string
           description?: string | null
+          estimated_delivery?: string | null
           id?: string
-          order_number: string
-          paid_amount?: number | null
-          priority?: string
-          progress_percentage?: number | null
-          service_title: string
+          phone_last_four: string
           service_type: string
-          status?: string
-          total_price: number
+          title: string
+          tracking_id: string
           updated_at?: string | null
-          user_id: string
+          user_id?: string | null
         }
         Update: {
-          assigned_to?: string | null
           client_email?: string
           client_name?: string
-          client_phone?: string | null
-          client_university?: string | null
+          client_phone?: string
           created_at?: string | null
-          currency?: string | null
-          deadline_date?: string | null
+          current_status?: string
+          degree?: string
           description?: string | null
+          estimated_delivery?: string | null
           id?: string
-          order_number?: string
-          paid_amount?: number | null
-          priority?: string
-          progress_percentage?: number | null
-          service_title?: string
+          phone_last_four?: string
           service_type?: string
-          status?: string
-          total_price?: number
+          title?: string
+          tracking_id?: string
           updated_at?: string | null
-          user_id?: string
+          user_id?: string | null
         }
         Relationships: []
       }
