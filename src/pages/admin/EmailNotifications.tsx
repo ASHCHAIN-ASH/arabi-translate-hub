@@ -419,19 +419,35 @@ export default function EmailNotifications() {
       </script>
       
       <div style="background: white; border-radius: 25px; overflow: hidden; box-shadow: 0 25px 50px rgba(0,0,0,0.1); direction: rtl; border: 1px solid #e2e8f0;">
-        <!-- Premium Header Section -->
-        <div style="background: linear-gradient(135deg, #1e40af 0%, #3b82f6 50%, #60a5fa 100%); padding: 40px 30px; text-align: center; position: relative; overflow: hidden; direction: rtl;" class="mobile-container">
-          <div style="position: absolute; top: -20px; right: -20px; width: 100px; height: 100px; background: rgba(255,255,255,0.1); border-radius: 50%; opacity: 0.5;"></div>
-          <div style="position: absolute; bottom: -30px; left: -30px; width: 80px; height: 80px; background: rgba(255,255,255,0.08); border-radius: 50%;"></div>
+        <!-- Official Corporate Header -->
+        <div style="background: linear-gradient(135deg, #1e293b 0%, #334155 50%, #475569 100%); padding: 50px 30px; position: relative; overflow: hidden; direction: rtl; border-bottom: 4px solid #0f172a;" class="mobile-container">
+          <!-- Decorative Elements -->
+          <div style="position: absolute; top: 0; left: 0; right: 0; height: 6px; background: linear-gradient(90deg, #dc2626, #ea580c, #d97706, #ca8a04, #65a30d, #16a34a, #059669, #0d9488, #0891b2, #0284c7, #2563eb, #4f46e5, #7c3aed, #9333ea, #c026d3);"></div>
           
-          <div style="background: rgba(255,255,255,0.15); width: 100px; height: 100px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px auto; border: 3px solid rgba(255,255,255,0.2); backdrop-filter: blur(10px);">
-            <span style="font-size: 40px; color: white;">📄</span>
+          <!-- Corporate Logo Area -->
+          <div style="text-align: center; margin-bottom: 25px; direction: rtl;">
+            <div style="background: rgba(255,255,255,0.95); width: 120px; height: 120px; border-radius: 20px; display: flex; align-items: center; justify-content: center; margin: 0 auto; border: 3px solid rgba(255,255,255,0.3); box-shadow: 0 8px 25px rgba(0,0,0,0.2); backdrop-filter: blur(10px);">
+              <div style="background: linear-gradient(135deg, #1e40af, #3b82f6); color: white; width: 80px; height: 80px; border-radius: 15px; display: flex; align-items: center; justify-content: center; font-size: 24px; font-weight: bold;">MEP</div>
+            </div>
           </div>
           
-          <h1 style="color: white; font-size: 32px; margin: 0 0 10px 0; font-weight: 800; text-shadow: 2px 2px 4px rgba(0,0,0,0.3); direction: rtl; font-family: 'IBM Plex Sans Arabic', 'Cairo';" class="mobile-header">فاتورة إلكترونية</h1>
-          <div style="background: rgba(255,255,255,0.2); height: 3px; width: 120px; margin: 15px auto; border-radius: 3px;"></div>
-          <h2 style="color: rgba(255,255,255,0.95); margin: 10px 0 0 0; font-size: 24px; font-weight: 700; direction: rtl; font-family: 'IBM Plex Sans Arabic';" class="mobile-text">وكالة ماستر إيدو باث</h2>
-          <p style="color: rgba(255,255,255,0.85); margin: 5px 0 0 0; font-size: 16px; direction: rtl; font-family: 'IBM Plex Sans Arabic';" class="mobile-text">Master Edu Path Agency</p>
+          <!-- Company Official Header -->
+          <div style="text-align: center; direction: rtl;">
+            <h1 style="color: white; font-size: 36px; margin: 0 0 8px 0; font-weight: 900; text-shadow: 3px 3px 6px rgba(0,0,0,0.4); direction: rtl; font-family: 'IBM Plex Sans Arabic', 'Cairo'; letter-spacing: 1px;" class="mobile-header">شركة علي صالح الشهري القابضة</h1>
+            <div style="background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent); height: 2px; width: 80%; margin: 12px auto; border-radius: 1px;"></div>
+            <h2 style="color: rgba(255,255,255,0.95); margin: 8px 0 15px 0; font-size: 24px; font-weight: 700; direction: rtl; font-family: 'IBM Plex Sans Arabic';" class="mobile-text">وكالة ماستر إيدو باث للخدمات التعليمية</h2>
+            <p style="color: rgba(255,255,255,0.85); margin: 0; font-size: 16px; direction: rtl; font-family: 'IBM Plex Sans Arabic';" class="mobile-text">Ali Saleh Al-Shahri Holding Company | Master Edu Path Educational Services Agency</p>
+          </div>
+          
+          <!-- Official Document Type Badge -->
+          <div style="position: absolute; top: 20px; left: 20px; background: rgba(255,255,255,0.15); padding: 12px 20px; border-radius: 25px; border: 2px solid rgba(255,255,255,0.2); backdrop-filter: blur(10px);">
+            <span style="color: white; font-size: 14px; font-weight: 700; direction: rtl;">فاتورة إلكترونية رسمية</span>
+          </div>
+          
+          <!-- Corporate Registration -->
+          <div style="position: absolute; bottom: 15px; right: 20px; color: rgba(255,255,255,0.7); font-size: 11px; direction: rtl;">
+            <span>سجل تجاري: 1010xxxxxx | ضريبة القيمة المضافة: 3xxxxxxxxxxxxx</span>
+          </div>
         </div>
         
         <!-- Company & Invoice Details -->
@@ -713,12 +729,31 @@ export default function EmailNotifications() {
       </style>
       
       <div style="background: white; border: 3px solid #e2e8f0; border-radius: 12px; overflow: hidden; direction: rtl;">
-        <!-- Receipt Header -->
-        <div style="background: linear-gradient(135deg, #334155 0%, #475569 100%); padding: 25px 20px; text-align: center; color: white; direction: rtl;" class="mobile-container">
-          <h1 style="margin: 0 0 8px 0; font-size: 24px; font-weight: 700; direction: rtl;" class="mobile-header">📋 سند دفع</h1>
-          <p style="margin: 0; font-size: 14px; opacity: 0.9; direction: rtl;" class="mobile-text">Payment Receipt</p>
-          <div style="background: rgba(255,255,255,0.2); height: 2px; width: 80px; margin: 10px auto;"></div>
-          <p style="margin: 0; font-size: 16px; font-weight: 500; direction: rtl;" class="mobile-text">وكالة ماستر إيدو باث</p>
+        <!-- Official Corporate Header -->
+        <div style="background: linear-gradient(135deg, #1e293b 0%, #334155 50%, #475569 100%); padding: 40px 20px; text-align: center; color: white; direction: rtl; position: relative; overflow: hidden; border-bottom: 4px solid #0f172a;" class="mobile-container">
+          <!-- Decorative Top Line -->
+          <div style="position: absolute; top: 0; left: 0; right: 0; height: 4px; background: linear-gradient(90deg, #dc2626, #ea580c, #d97706, #ca8a04, #65a30d, #16a34a, #059669, #0d9488, #0891b2, #0284c7, #2563eb, #4f46e5, #7c3aed, #9333ea, #c026d3);"></div>
+          
+          <!-- Corporate Logo -->
+          <div style="background: rgba(255,255,255,0.95); width: 100px; height: 100px; border-radius: 18px; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px auto; border: 3px solid rgba(255,255,255,0.3); box-shadow: 0 6px 20px rgba(0,0,0,0.2);">
+            <div style="background: linear-gradient(135deg, #16a34a, #15803d); color: white; width: 70px; height: 70px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 20px; font-weight: bold;">MEP</div>
+          </div>
+          
+          <!-- Company Title -->
+          <h1 style="margin: 0 0 6px 0; font-size: 28px; font-weight: 900; text-shadow: 2px 2px 4px rgba(0,0,0,0.4); direction: rtl; font-family: 'IBM Plex Sans Arabic';" class="mobile-header">شركة علي صالح الشهري القابضة</h1>
+          <div style="background: rgba(255,255,255,0.3); height: 2px; width: 100px; margin: 8px auto;"></div>
+          <h2 style="margin: 6px 0 12px 0; font-size: 20px; font-weight: 700; direction: rtl; font-family: 'IBM Plex Sans Arabic';" class="mobile-text">وكالة ماستر إيدو باث للخدمات التعليمية</h2>
+          <p style="margin: 0; font-size: 14px; opacity: 0.9; direction: rtl;" class="mobile-text">Ali Saleh Al-Shahri Holding Company</p>
+          
+          <!-- Document Type Badge -->
+          <div style="position: absolute; top: 15px; left: 15px; background: rgba(255,255,255,0.15); padding: 8px 16px; border-radius: 20px; border: 2px solid rgba(255,255,255,0.2);">
+            <span style="color: white; font-size: 12px; font-weight: 700;">سند دفع رسمي</span>
+          </div>
+          
+          <!-- Registration Info -->
+          <div style="position: absolute; bottom: 10px; right: 15px; color: rgba(255,255,255,0.7); font-size: 10px; direction: rtl;">
+            <span>سجل تجاري: 1010xxxxxx</span>
+          </div>
         </div>
 
         <div style="padding: 25px 15px; direction: rtl;" class="mobile-container">
@@ -795,11 +830,40 @@ export default function EmailNotifications() {
     return `
     <div dir="rtl" style="max-width: 600px; margin: 0 auto; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif, 'Times New Roman'; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 20px; direction: rtl; text-align: right;">
       <div style="background: white; border-radius: 15px; padding: 40px; text-align: center; direction: rtl;">
-        <div style="margin-bottom: 30px; direction: rtl;">
-          <div style="display: inline-block; background: linear-gradient(135deg, #10b981, #059669); color: white; width: 80px; height: 80px; border-radius: 50%; line-height: 80px; font-size: 35px; margin-bottom: 20px;">✓</div>
-          <h1 style="color: #1f2937; margin: 0; font-size: 28px; direction: rtl;">مرحباً بك ${data.customerName}!</h1>
-          <p style="color: #6b7280; margin: 10px 0 0 0; font-size: 16px; direction: rtl;">حسابك جاهز للاستخدام</p>
+      <!-- Official Corporate Header -->
+      <div style="background: linear-gradient(135deg, #1e293b 0%, #334155 50%, #475569 100%); border-radius: 15px 15px 0 0; padding: 50px 40px; text-align: center; direction: rtl; position: relative; overflow: hidden; border-bottom: 4px solid #0f172a;">
+        <!-- Decorative Elements -->
+        <div style="position: absolute; top: 0; left: 0; right: 0; height: 5px; background: linear-gradient(90deg, #dc2626, #ea580c, #d97706, #ca8a04, #65a30d, #16a34a, #059669, #0d9488, #0891b2, #0284c7, #2563eb, #4f46e5, #7c3aed, #9333ea, #c026d3);"></div>
+        
+        <!-- Corporate Logo -->
+        <div style="background: rgba(255,255,255,0.95); width: 120px; height: 120px; border-radius: 20px; display: flex; align-items: center; justify-content: center; margin: 0 auto 25px auto; border: 3px solid rgba(255,255,255,0.3); box-shadow: 0 8px 25px rgba(0,0,0,0.2);">
+          <div style="background: linear-gradient(135deg, #10b981, #059669); color: white; width: 85px; height: 85px; border-radius: 15px; display: flex; align-items: center; justify-content: center; font-size: 28px; font-weight: bold;">MEP</div>
         </div>
+        
+        <!-- Company Official Title -->
+        <div style="color: white; direction: rtl;">
+          <h1 style="margin: 0 0 10px 0; font-size: 32px; font-weight: 900; text-shadow: 3px 3px 6px rgba(0,0,0,0.4); direction: rtl; font-family: 'IBM Plex Sans Arabic'; letter-spacing: 0.5px;">شركة علي صالح الشهري القابضة</h1>
+          <div style="background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent); height: 2px; width: 70%; margin: 15px auto; border-radius: 1px;"></div>
+          <h2 style="color: rgba(255,255,255,0.95); margin: 10px 0 15px 0; font-size: 22px; font-weight: 700; direction: rtl; font-family: 'IBM Plex Sans Arabic';">وكالة ماستر إيدو باث للخدمات التعليمية</h2>
+          <p style="color: rgba(255,255,255,0.85); margin: 0 0 20px 0; font-size: 15px; direction: rtl; font-family: 'IBM Plex Sans Arabic';">Ali Saleh Al-Shahri Holding Company</p>
+          
+          <!-- Welcome Message -->
+          <div style="background: rgba(16, 185, 129, 0.2); border: 2px solid rgba(16, 185, 129, 0.4); border-radius: 15px; padding: 20px; margin: 20px 0; backdrop-filter: blur(5px);">
+            <h3 style="color: #10b981; margin: 0 0 8px 0; font-size: 24px; font-weight: 800; direction: rtl;">مرحباً بك ${data.customerName}</h3>
+            <p style="color: rgba(255,255,255,0.9); margin: 0; font-size: 16px; direction: rtl;">حسابك جاهز للاستخدام في منصتنا الرسمية</p>
+          </div>
+        </div>
+        
+        <!-- Document Type -->
+        <div style="position: absolute; top: 20px; left: 20px; background: rgba(16, 185, 129, 0.15); padding: 10px 18px; border-radius: 25px; border: 2px solid rgba(16, 185, 129, 0.3);">
+          <span style="color: #10b981; font-size: 13px; font-weight: 700;">تفعيل حساب رسمي</span>
+        </div>
+        
+        <!-- Registration -->
+        <div style="position: absolute; bottom: 15px; right: 20px; color: rgba(255,255,255,0.7); font-size: 11px; direction: rtl;">
+          <span>سجل تجاري: 1010xxxxxx</span>
+        </div>
+      </div>
 
         <div style="background: #f0f9ff; border: 2px solid #0ea5e9; border-radius: 10px; padding: 25px; margin: 25px 0; direction: rtl; text-align: right;">
           <h3 style="color: #0c4a6e; margin: 0 0 15px 0; text-align: center; direction: rtl;">تفاصيل حسابك</h3>
@@ -823,9 +887,37 @@ export default function EmailNotifications() {
     return `
     <div dir="rtl" style="max-width: 600px; margin: 0 auto; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif, 'Times New Roman'; background: linear-gradient(135deg, #ff6b6b, #ee5a24); padding: 20px; direction: rtl; text-align: right;">
       <div style="background: white; border-radius: 15px; overflow: hidden; box-shadow: 0 10px 25px rgba(0,0,0,0.15); direction: rtl;">
-        <div style="background: linear-gradient(135deg, #ff6b6b, #ee5a24); padding: 30px; text-align: center; color: white; direction: rtl;">
-          <h1 style="margin: 0; font-size: 32px; text-shadow: 2px 2px 4px rgba(0,0,0,0.3); direction: rtl;">🎉 ${data.promotionTitle}</h1>
-          <p style="margin: 10px 0 0 0; font-size: 18px; opacity: 0.9; direction: rtl;">عرض حصري لك ${data.customerName}</p>
+        <!-- Official Corporate Header -->
+        <div style="background: linear-gradient(135deg, #1e293b 0%, #334155 50%, #475569 100%); padding: 45px 30px; text-align: center; color: white; direction: rtl; position: relative; overflow: hidden; border-bottom: 4px solid #0f172a;">
+          <!-- Decorative Top Line -->
+          <div style="position: absolute; top: 0; left: 0; right: 0; height: 5px; background: linear-gradient(90deg, #dc2626, #ea580c, #d97706, #ca8a04, #65a30d, #16a34a, #059669, #0d9488, #0891b2, #0284c7, #2563eb, #4f46e5, #7c3aed, #9333ea, #c026d3);"></div>
+          
+          <!-- Corporate Logo -->
+          <div style="background: rgba(255,255,255,0.95); width: 110px; height: 110px; border-radius: 20px; display: flex; align-items: center; justify-content: center; margin: 0 auto 25px auto; border: 3px solid rgba(255,255,255,0.3); box-shadow: 0 8px 25px rgba(0,0,0,0.2);">
+            <div style="background: linear-gradient(135deg, #ff6b6b, #ee5a24); color: white; width: 80px; height: 80px; border-radius: 15px; display: flex; align-items: center; justify-content: center; font-size: 24px; font-weight: bold;">MEP</div>
+          </div>
+          
+          <!-- Company Title -->
+          <h1 style="margin: 0 0 8px 0; font-size: 30px; font-weight: 900; text-shadow: 3px 3px 6px rgba(0,0,0,0.4); direction: rtl; font-family: 'IBM Plex Sans Arabic';">شركة علي صالح الشهري القابضة</h1>
+          <div style="background: rgba(255,255,255,0.3); height: 2px; width: 100px; margin: 12px auto;"></div>
+          <h2 style="margin: 8px 0 15px 0; font-size: 20px; font-weight: 700; direction: rtl; font-family: 'IBM Plex Sans Arabic';">وكالة ماستر إيدو باث للخدمات التعليمية</h2>
+          <p style="margin: 0 0 20px 0; font-size: 14px; opacity: 0.9; direction: rtl;">Ali Saleh Al-Shahri Holding Company</p>
+          
+          <!-- Promotion Banner -->
+          <div style="background: linear-gradient(135deg, #ff6b6b, #ee5a24); border: 3px solid rgba(255,255,255,0.3); border-radius: 20px; padding: 25px; margin: 20px 0; backdrop-filter: blur(5px); box-shadow: 0 8px 25px rgba(0,0,0,0.2);">
+            <h3 style="margin: 0 0 8px 0; font-size: 28px; text-shadow: 2px 2px 4px rgba(0,0,0,0.3); direction: rtl; font-weight: 800;">${data.promotionTitle}</h3>
+            <p style="margin: 0; font-size: 16px; opacity: 0.95; direction: rtl; font-weight: 600;">عرض حصري من الإدارة لعميلنا الكريم ${data.customerName}</p>
+          </div>
+          
+          <!-- Document Type -->
+          <div style="position: absolute; top: 20px; left: 20px; background: rgba(255, 107, 107, 0.15); padding: 10px 18px; border-radius: 25px; border: 2px solid rgba(255, 107, 107, 0.3);">
+            <span style="color: #ff6b6b; font-size: 13px; font-weight: 700;">عرض تجاري رسمي</span>
+          </div>
+          
+          <!-- Registration -->
+          <div style="position: absolute; bottom: 15px; right: 20px; color: rgba(255,255,255,0.7); font-size: 11px; direction: rtl;">
+            <span>سجل تجاري: 1010xxxxxx</span>
+          </div>
         </div>
 
         <div style="padding: 40px; direction: rtl;">
