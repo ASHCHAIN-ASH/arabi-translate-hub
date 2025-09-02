@@ -585,47 +585,6 @@ export default function EmailNotifications() {
             </div>
           </div>
 
-          <!-- Bank Account Information -->
-          <div style="background: linear-gradient(135deg, #1e40af 0%, #1e3a8a 100%); border-radius: 15px; padding: 25px; margin: 25px 0; color: white; text-align: center; box-shadow: 0 8px 25px rgba(30, 64, 175, 0.3); direction: rtl;">
-            <h2 style="color: white; margin: 0 0 20px 0; font-size: 20px; text-shadow: 1px 1px 2px rgba(0,0,0,0.3); direction: rtl;" class="mobile-text">🏦 معلومات الحساب البنكي</h2>
-            
-            <div style="background: rgba(255,255,255,0.95); border-radius: 12px; padding: 25px; margin-bottom: 20px; direction: rtl; text-align: right; box-shadow: 0 4px 15px rgba(0,0,0,0.1);">
-              <div style="display: grid; gap: 20px; direction: rtl;">
-                <!-- Bank Logo Area -->
-                <div style="text-align: center; padding-bottom: 15px; border-bottom: 2px solid #e5e7eb; margin-bottom: 15px;">
-                  <div style="background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%); color: white; padding: 12px 25px; border-radius: 25px; display: inline-block; font-weight: bold; font-size: 16px; box-shadow: 0 3px 10px rgba(30, 64, 175, 0.3);">
-                    🏛️ مصرف الراجحي
-                  </div>
-                </div>
-                
-                <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 18px; direction: rtl;">
-                  <div style="display: flex; justify-content: space-between; align-items: center; direction: rtl;">
-                    <span style="color: #64748b; font-size: 14px; font-weight: 500;">رقم الحساب:</span>
-                    <span style="color: #1e293b; font-size: 16px; font-weight: bold; font-family: 'Courier New', monospace; background: #ffffff; padding: 8px 15px; border-radius: 6px; border: 1px solid #d1d5db;">161000010006086071040</span>
-                  </div>
-                </div>
-                
-                <div style="background: #f0f9ff; border: 1px solid #bfdbfe; border-radius: 10px; padding: 18px; direction: rtl;">
-                  <div style="display: flex; justify-content: space-between; align-items: center; direction: rtl;">
-                    <span style="color: #1e40af; font-size: 14px; font-weight: 500;">الآيبان (IBAN):</span>
-                    <span style="color: #1e3a8a; font-size: 16px; font-weight: bold; font-family: 'Courier New', monospace; background: #ffffff; padding: 8px 15px; border-radius: 6px; border: 1px solid #93c5fd;">SA1980000161608016071040</span>
-                  </div>
-                </div>
-                
-                <!-- Security Notice -->
-                <div style="background: #fef3f2; border: 1px solid #fecaca; border-radius: 8px; padding: 15px; direction: rtl; text-align: center;">
-                  <p style="margin: 0; color: #dc2626; font-size: 12px; font-weight: 600;">⚡ تحويل آمن ومشفر | Secure & Encrypted Transfer</p>
-                </div>
-              </div>
-            </div>
-            
-            <!-- WhatsApp Contact -->
-            <div style="background: linear-gradient(135deg, #25d366 0%, #128c7e 100%); border-radius: 12px; padding: 18px; margin-top: 15px; direction: rtl; box-shadow: 0 4px 15px rgba(37, 211, 102, 0.3);">
-              <p style="margin: 0 0 8px 0; color: white; font-size: 14px; text-align: center; direction: rtl;" class="mobile-text">📱 بعد الدفع، أرسل الإيصال عبر الواتساب:</p>
-              <div style="background: rgba(255,255,255,0.2); border-radius: 8px; padding: 10px; text-align: center;">
-                <p style="margin: 0; color: white; font-size: 20px; font-weight: bold; direction: rtl; font-family: 'Courier New', monospace;" class="mobile-text">0500776343</p>
-              </div>
-            </div>
           </div>
 
           <!-- Important Notes -->
