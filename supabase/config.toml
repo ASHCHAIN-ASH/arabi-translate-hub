@@ -1,1 +1,4 @@
 project_id = "ibfcgweykqkzdodrfmci"
+
+[functions.send-order-status-email]
+verify_jwt = false
