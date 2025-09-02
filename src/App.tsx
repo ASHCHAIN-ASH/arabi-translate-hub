@@ -43,6 +43,7 @@ import AdminTransactions from "./pages/admin/AdminTransactions";
 import AdminUsers from "./pages/admin/AdminUsers";
 import AdminTickets from "./pages/admin/AdminTickets";
 import EmailNotifications from "./pages/admin/EmailNotifications";
+import AddUser from "./pages/admin/AddUser";
 
 import ThesisTitles from "./pages/research/ThesisTitles";
 import ResearchPlan from "./pages/research/ResearchPlan";
@@ -180,6 +181,11 @@ const App = () => (
             <Route path="/admin/users" element={
               <SimpleProtectedRoute adminOnly>
                 <AdminUsers />
+              </SimpleProtectedRoute>
+            } />
+            <Route path="/admin/add-user" element={
+              <SimpleProtectedRoute adminOnly>
+                <AddUser />
               </SimpleProtectedRoute>
             } />
             <Route path="/admin/tickets" element={
