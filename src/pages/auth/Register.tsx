@@ -33,25 +33,24 @@ const Register = () => {
 
   const getPasswordStrength = (password: string) => {
     let strength = 0;
-    if (password.length >= 12) strength += 20;
-    if (/[A-Z]/.test(password)) strength += 20;
-    if (/[a-z]/.test(password)) strength += 20;
-    if (/[0-9]/.test(password)) strength += 20;
-    if (/[^A-Za-z0-9]/.test(password)) strength += 20;
+    if (password.length >= 6) strength += 25;
+    if (/[A-Z]/.test(password) || /[a-z]/.test(password)) strength += 25;
+    if (/[0-9]/.test(password)) strength += 25;
+    if (/[^A-Za-z0-9]/.test(password)) strength += 25;
     return strength;
   };
 
   const passwordStrength = getPasswordStrength(formData.password);
 
   const getStrengthColor = (strength: number) => {
-    if (strength < 60) return 'bg-red-500';
-    if (strength < 80) return 'bg-yellow-500';
+    if (strength < 50) return 'bg-red-500';
+    if (strength < 75) return 'bg-yellow-500';
     return 'bg-green-500';
   };
 
   const getStrengthText = (strength: number) => {
-    if (strength < 60) return 'ضعيفة';
-    if (strength < 80) return 'متوسطة';
+    if (strength < 50) return 'ضعيفة';
+    if (strength < 75) return 'متوسطة';
     return 'قوية';
   };
 
@@ -68,8 +67,8 @@ const Register = () => {
       return;
     }
 
-    if (passwordStrength < 80) {
-      toast.error('كلمة المرور يجب أن تكون قوية. يرجى اتباع التعليمات أدناه');
+    if (passwordStrength < 75) {
+      toast.error('كلمة المرور يجب أن تحتوي على: 3 أحرف على الأقل + رمز واحد + رقم واحد');
       return;
     }
 
@@ -233,16 +232,12 @@ const Register = () => {
                 
                 <div className="mt-3 text-xs text-slate-600 space-y-1">
                   <div className="flex items-center gap-2">
-                    <CheckCircle className={`w-3 h-3 ${formData.password.length >= 12 ? 'text-green-500' : 'text-slate-400'}`} />
-                    <span>12 حرف على الأقل</span>
+                    <CheckCircle className={`w-3 h-3 ${formData.password.length >= 6 ? 'text-green-500' : 'text-slate-400'}`} />
+                    <span>6 أحرف على الأقل</span>
                   </div>
                   <div className="flex items-center gap-2">
-                    <CheckCircle className={`w-3 h-3 ${/[A-Z]/.test(formData.password) ? 'text-green-500' : 'text-slate-400'}`} />
-                    <span>حرف كبير واحد على الأقل</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <CheckCircle className={`w-3 h-3 ${/[a-z]/.test(formData.password) ? 'text-green-500' : 'text-slate-400'}`} />
-                    <span>حرف صغير واحد على الأقل</span>
+                    <CheckCircle className={`w-3 h-3 ${(/[A-Za-z]/.test(formData.password)) ? 'text-green-500' : 'text-slate-400'}`} />
+                    <span>حرف واحد على الأقل</span>
                   </div>
                   <div className="flex items-center gap-2">
                     <CheckCircle className={`w-3 h-3 ${/[0-9]/.test(formData.password) ? 'text-green-500' : 'text-slate-400'}`} />

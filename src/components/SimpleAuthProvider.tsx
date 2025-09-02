@@ -132,9 +132,21 @@ export const SimpleAuthProvider: React.FC<{ children: React.ReactNode }> = ({ ch
     
     try {
       // التحقق من قوة كلمة المرور
-      if (password.length < 12) {
+      if (password.length < 6) {
         console.log('Password too short');
-        return { error: 'كلمة المرور يجب أن تكون 12 حرف على الأقل' };
+        return { error: 'كلمة المرور يجب أن تكون 6 أحرف على الأقل' };
+      }
+
+      if (!/[A-Za-z]/.test(password)) {
+        return { error: 'كلمة المرور يجب أن تحتوي على حرف واحد على الأقل' };
+      }
+
+      if (!/[0-9]/.test(password)) {
+        return { error: 'كلمة المرور يجب أن تحتوي على رقم واحد على الأقل' };
+      }
+
+      if (!/[^A-Za-z0-9]/.test(password)) {
+        return { error: 'كلمة المرور يجب أن تحتوي على رمز خاص واحد على الأقل' };
       }
 
       console.log('Password validation passed, starting bcrypt...');

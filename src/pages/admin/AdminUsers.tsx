@@ -28,6 +28,49 @@ const AdminUsers = () => {
 
   useEffect(() => {
     fetchUsers();
+    
+    // إعداد التحديث اللحظي
+    const subscription = supabase
+      .channel('users_changes')
+      .on('postgres_changes', {
+        event: 'INSERT',
+        schema: 'public',
+        table: 'users'
+      }, (payload) => {
+        console.log('New user added:', payload);
+        const newUser = payload.new as User;
+        setUsers(prevUsers => [newUser, ...prevUsers]);
+        toast.success(`مستخدم جديد: ${newUser.name}`);
+      })
+      .on('postgres_changes', {
+        event: 'UPDATE',
+        schema: 'public',
+        table: 'users'
+      }, (payload) => {
+        console.log('User updated:', payload);
+        const updatedUser = payload.new as User;
+        setUsers(prevUsers => 
+          prevUsers.map(user => 
+            user.id === updatedUser.id ? updatedUser : user
+          )
+        );
+      })
+      .on('postgres_changes', {
+        event: 'DELETE',
+        schema: 'public',
+        table: 'users'
+      }, (payload) => {
+        console.log('User deleted:', payload);
+        const deletedUserId = payload.old.id;
+        setUsers(prevUsers => 
+          prevUsers.filter(user => user.id !== deletedUserId)
+        );
+      })
+      .subscribe();
+
+    return () => {
+      subscription.unsubscribe();
+    };
   }, []);
 
   const fetchUsers = async () => {
