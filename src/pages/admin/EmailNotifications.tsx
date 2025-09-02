@@ -374,9 +374,34 @@ export default function EmailNotifications() {
             </div>
           </div>
 
-          <!-- Payment Button -->
-          <div style="text-align: center; margin: 25px 0; direction: rtl;">
-            <a href="#" style="background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%); color: white; padding: 15px 30px; text-decoration: none; border-radius: 25px; font-weight: bold; font-size: 16px; display: inline-block; box-shadow: 0 6px 15px rgba(79, 70, 229, 0.4); direction: rtl;" class="mobile-text">💳 ادفع الآن</a>
+          <!-- Bank Account Information -->
+          <div style="background: linear-gradient(135deg, #1e40af 0%, #1e3a8a 100%); border-radius: 15px; padding: 25px; margin: 25px 0; color: white; text-align: center; box-shadow: 0 8px 25px rgba(30, 64, 175, 0.3); direction: rtl;">
+            <h2 style="color: white; margin: 0 0 20px 0; font-size: 20px; text-shadow: 1px 1px 2px rgba(0,0,0,0.3); direction: rtl;" class="mobile-text">🏦 معلومات الحساب البنكي</h2>
+            
+            <div style="background: rgba(255,255,255,0.15); border-radius: 10px; padding: 20px; margin-bottom: 20px; direction: rtl; text-align: right;">
+              <div style="display: grid; gap: 15px; direction: rtl;">
+                <div style="background: rgba(255,255,255,0.1); border-radius: 8px; padding: 15px; direction: rtl;">
+                  <p style="margin: 0 0 8px 0; color: rgba(255,255,255,0.8); font-size: 14px; text-align: right; direction: rtl;" class="mobile-text">اسم البنك:</p>
+                  <p style="margin: 0; color: white; font-size: 16px; font-weight: bold; text-align: right; direction: rtl;" class="mobile-text">قابضة</p>
+                </div>
+                
+                <div style="background: rgba(255,255,255,0.1); border-radius: 8px; padding: 15px; direction: rtl;">
+                  <p style="margin: 0 0 8px 0; color: rgba(255,255,255,0.8); font-size: 14px; text-align: right; direction: rtl;" class="mobile-text">رقم الحساب:</p>
+                  <p style="margin: 0; color: white; font-size: 16px; font-weight: bold; font-family: monospace; text-align: right; direction: rtl; letter-spacing: 1px;" class="mobile-text">161000010006086071040</p>
+                </div>
+                
+                <div style="background: rgba(255,255,255,0.1); border-radius: 8px; padding: 15px; direction: rtl;">
+                  <p style="margin: 0 0 8px 0; color: rgba(255,255,255,0.8); font-size: 14px; text-align: right; direction: rtl;" class="mobile-text">الآيبان (IBAN):</p>
+                  <p style="margin: 0; color: white; font-size: 16px; font-weight: bold; font-family: monospace; text-align: right; direction: rtl; letter-spacing: 1px;" class="mobile-text">SA1980000161608016071040</p>
+                </div>
+              </div>
+            </div>
+            
+            <!-- WhatsApp Contact -->
+            <div style="background: #25d366; border-radius: 8px; padding: 15px; margin-top: 15px; direction: rtl;">
+              <p style="margin: 0 0 8px 0; color: white; font-size: 14px; text-align: center; direction: rtl;" class="mobile-text">📱 بعد الدفع، تواصل معنا على الواتساب:</p>
+              <p style="margin: 0; color: white; font-size: 18px; font-weight: bold; text-align: center; direction: rtl;" class="mobile-text">0500776343</p>
+            </div>
           </div>
 
           <!-- Important Notes -->
@@ -384,8 +409,9 @@ export default function EmailNotifications() {
             <h4 style="color: #dc2626; margin: 0 0 10px 0; font-size: 14px; text-align: right; direction: rtl;" class="mobile-text">⚠️ ملاحظات مهمة:</h4>
             <ul style="color: #7f1d1d; margin: 0; padding-right: 15px; line-height: 1.6; text-align: right; direction: rtl; list-style-position: inside; font-size: 12px;" class="mobile-text">
               <li style="text-align: right; direction: rtl; margin-bottom: 5px;">يرجى سداد الفاتورة في الموعد المحدد</li>
-              <li style="text-align: right; direction: rtl; margin-bottom: 5px;">في حالة التأخير، قد تطبق رسوم إضافية</li>
-              <li style="text-align: right; direction: rtl;">للاستفسارات، يرجى التواصل معنا</li>
+              <li style="text-align: right; direction: rtl; margin-bottom: 5px; font-weight: bold;">⚠️ لا يتم اعتماد أي طلب إلا بإيصال الحساب البنكي</li>
+              <li style="text-align: right; direction: rtl; margin-bottom: 5px;">يرجى إرسال إيصال التحويل على الواتساب بعد السداد</li>
+              <li style="text-align: right; direction: rtl;">في حالة التأخير، قد تطبق رسوم إضافية</li>
             </ul>
           </div>
 
@@ -436,6 +462,22 @@ export default function EmailNotifications() {
           <div style="background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%); border-radius: 10px; padding: 20px; margin: 20px 0; direction: rtl; text-align: center;">
             <h3 style="color: #1e40af; margin: 0 0 10px 0; direction: rtl; font-size: 16px;" class="mobile-text">📧 سيتم إرسال إيصال مفصل إلى بريدك الإلكتروني</h3>
             <p style="color: #1e3a8a; margin: 0; direction: rtl; font-size: 14px; word-break: break-all;" class="mobile-text">${data.customerEmail}</p>
+          </div>
+
+          <!-- WhatsApp Contact Info -->
+          <div style="background: #25d366; border-radius: 10px; padding: 20px; margin: 20px 0; direction: rtl; text-align: center; color: white;">
+            <h3 style="color: white; margin: 0 0 10px 0; direction: rtl; font-size: 16px;" class="mobile-text">📱 للاستفسارات، تواصل معنا على الواتساب</h3>
+            <p style="color: white; margin: 0; direction: rtl; font-size: 18px; font-weight: bold;" class="mobile-text">0500776343</p>
+          </div>
+          
+          <!-- Bank Account Info -->
+          <div style="background: #f8fafc; border: 2px solid #e2e8f0; border-radius: 10px; padding: 20px; margin: 20px 0; direction: rtl; text-align: right;">
+            <h3 style="color: #374151; margin: 0 0 15px 0; direction: rtl; font-size: 16px; text-align: center;" class="mobile-text">🏦 معلومات الحساب البنكي</h3>
+            <div style="display: grid; gap: 10px; direction: rtl;">
+              <p style="color: #4b5563; margin: 0; text-align: right; direction: rtl; font-size: 14px;" class="mobile-text"><strong>البنك:</strong> قابضة</p>
+              <p style="color: #4b5563; margin: 0; text-align: right; direction: rtl; font-size: 14px; font-family: monospace;" class="mobile-text"><strong>رقم الحساب:</strong> 161000010006086071040</p>
+              <p style="color: #4b5563; margin: 0; text-align: right; direction: rtl; font-size: 14px; font-family: monospace;" class="mobile-text"><strong>الآيبان:</strong> SA1980000161608016071040</p>
+            </div>
           </div>
 
           <div style="margin: 25px 0; direction: rtl; text-align: center;">
@@ -513,6 +555,22 @@ export default function EmailNotifications() {
           <div style="background: #f0f9ff; border: 2px solid #3b82f6; border-radius: 8px; padding: 15px; margin: 20px 0; text-align: center; direction: rtl;">
             <p style="margin: 0; color: #1e40af; font-weight: bold; font-size: 14px; direction: rtl;" class="mobile-text">المبلغ بالأحرف:</p>
             <p style="margin: 5px 0 0 0; color: #1e3a8a; font-size: 16px; border-bottom: 2px dashed #3b82f6; padding-bottom: 8px; display: inline-block; min-width: 200px; direction: rtl;" class="mobile-text">${data.amount} ${data.currency} فقط لا غير</p>
+          </div>
+
+          <!-- Bank Account Information -->
+          <div style="background: #f8fafc; border: 2px solid #e2e8f0; border-radius: 10px; padding: 20px; margin: 20px 0; direction: rtl; text-align: right;">
+            <h3 style="color: #374151; margin: 0 0 15px 0; direction: rtl; font-size: 16px; text-align: center;" class="mobile-text">🏦 معلومات الحساب البنكي</h3>
+            <div style="display: grid; gap: 10px; direction: rtl;">
+              <p style="color: #4b5563; margin: 0; text-align: right; direction: rtl; font-size: 14px;" class="mobile-text"><strong>البنك:</strong> قابضة</p>
+              <p style="color: #4b5563; margin: 0; text-align: right; direction: rtl; font-size: 14px; font-family: monospace;" class="mobile-text"><strong>رقم الحساب:</strong> 161000010006086071040</p>
+              <p style="color: #4b5563; margin: 0; text-align: right; direction: rtl; font-size: 14px; font-family: monospace;" class="mobile-text"><strong>الآيبان:</strong> SA1980000161608016071040</p>
+            </div>
+          </div>
+
+          <!-- WhatsApp Contact -->
+          <div style="background: #25d366; border-radius: 8px; padding: 15px; margin: 20px 0; direction: rtl; text-align: center; color: white;">
+            <p style="margin: 0 0 5px 0; color: white; font-size: 14px; direction: rtl;" class="mobile-text">📱 للاستفسارات والتواصل:</p>
+            <p style="margin: 0; color: white; font-size: 16px; font-weight: bold; direction: rtl;" class="mobile-text">0500776343</p>
           </div>
 
           <!-- Signature Section - Mobile Optimized -->
