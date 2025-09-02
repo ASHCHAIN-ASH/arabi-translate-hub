@@ -12,6 +12,12 @@ interface UpdatePasswordRequest {
   adminUserId?: string;
 }
 
+// Function to hash password using bcrypt
+async function hashPassword(password: string): Promise<string> {
+  const bcrypt = await import("https://deno.land/x/bcrypt@v0.4.1/mod.ts");
+  return await bcrypt.hash(password);
+}
+
 const handler = async (req: Request): Promise<Response> => {
   // Handle CORS preflight requests
   if (req.method === 'OPTIONS') {
@@ -74,15 +80,69 @@ const handler = async (req: Request): Promise<Response> => {
       }
     }
 
-    // Update user password using admin client
-    const { data, error } = await supabaseAdmin.auth.admin.updateUserById(userId, {
-      password: newPassword,
-    });
+    // Check if user exists in custom users table
+    const { data: userData, error: userError } = await supabaseAdmin
+      .from('users')
+      .select('*')
+      .eq('id', userId)
+      .single();
 
-    if (error) {
-      console.error('Error updating password:', error);
+    if (userError) {
+      console.error('Error fetching user:', userError);
       return new Response(
-        JSON.stringify({ error: 'Failed to update password', details: error.message }),
+        JSON.stringify({ error: 'User not found' }),
+        {
+          status: 404,
+          headers: { 'Content-Type': 'application/json', ...corsHeaders },
+        }
+      );
+    }
+
+    let authUpdateSuccess = false;
+    let customTableUpdateSuccess = false;
+
+    // Try to update password in Supabase Auth (for users who use auth_users table)
+    try {
+      const { error: authError } = await supabaseAdmin.auth.admin.updateUserById(userId, {
+        password: newPassword,
+      });
+
+      if (!authError) {
+        authUpdateSuccess = true;
+        console.log('Successfully updated password in Supabase Auth for user:', userId);
+      } else {
+        console.log('Failed to update in Supabase Auth (user might not exist there):', authError.message);
+      }
+    } catch (authError) {
+      console.log('Auth update failed:', authError);
+    }
+
+    // Update password in custom users table (hash the password)
+    try {
+      const hashedPassword = await hashPassword(newPassword);
+      
+      const { error: tableError } = await supabaseAdmin
+        .from('users')
+        .update({ 
+          password_hash: hashedPassword,
+          updated_at: new Date().toISOString()
+        })
+        .eq('id', userId);
+
+      if (!tableError) {
+        customTableUpdateSuccess = true;
+        console.log('Successfully updated password in users table for user:', userId);
+      } else {
+        console.error('Failed to update users table:', tableError);
+      }
+    } catch (tableError) {
+      console.error('Custom table update failed:', tableError);
+    }
+
+    // Check if at least one update succeeded
+    if (!authUpdateSuccess && !customTableUpdateSuccess) {
+      return new Response(
+        JSON.stringify({ error: 'Failed to update password in both systems' }),
         {
           status: 500,
           headers: { 'Content-Type': 'application/json', ...corsHeaders },
@@ -90,13 +150,15 @@ const handler = async (req: Request): Promise<Response> => {
       );
     }
 
-    console.log('Password updated successfully for user:', userId);
+    console.log(`Password updated successfully for user: ${userId} (Auth: ${authUpdateSuccess}, Custom: ${customTableUpdateSuccess})`);
 
     return new Response(
       JSON.stringify({ 
         success: true, 
         message: 'Password updated successfully',
-        userId: data.user.id
+        userId: userId,
+        authUpdated: authUpdateSuccess,
+        customTableUpdated: customTableUpdateSuccess
       }),
       {
         status: 200,
