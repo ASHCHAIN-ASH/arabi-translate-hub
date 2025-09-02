@@ -26,7 +26,13 @@ const Login = () => {
 
     setLoading(true);
     try {
-      await signIn(email, password);
+      const { error } = await signIn(email, password);
+      
+      if (error) {
+        toast.error(error);
+        return;
+      }
+      
       toast.success('تم تسجيل الدخول بنجاح');
       
       // Small delay to allow auth state to update
