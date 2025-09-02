@@ -427,7 +427,7 @@ export default function EmailNotifications() {
   });
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background via-background/95 to-primary/5">
+    <div className="min-h-screen bg-gradient-to-br from-background via-background/95 to-primary/5" dir="rtl">
       <div className="container mx-auto p-6 space-y-6">
         {/* الهيدر */}
         <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4 bg-card/50 backdrop-blur-sm border rounded-xl p-6">
@@ -442,30 +442,30 @@ export default function EmailNotifications() {
           </div>
           <div className="flex flex-wrap gap-3">
             <Badge variant="outline" className="text-lg px-4 py-2 bg-background/50">
-              <Users className="h-4 w-4 mr-2" />
+              <Users className="h-4 w-4 ml-2" />
               {templates.length} قالب
             </Badge>
             <Badge variant="outline" className="text-lg px-4 py-2 bg-background/50">
-              <Palette className="h-4 w-4 mr-2" />
+              <Palette className="h-4 w-4 ml-2" />
               {Object.keys(templateCategories).length} فئة
             </Badge>
           </div>
         </div>
 
         {/* النظام الرئيسي */}
-        <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6" dir="rtl">
           <TabsList className="grid w-full grid-cols-3 h-12 bg-card/50 backdrop-blur-sm">
-            <TabsTrigger value="smart-send" className="flex items-center gap-2 text-sm">
-              <Settings className="h-4 w-4" />
-              النظام الذكي
+            <TabsTrigger value="templates" className="flex items-center gap-2 text-sm">
+              <FileText className="h-4 w-4" />
+              إدارة القوالب
             </TabsTrigger>
             <TabsTrigger value="manual-send" className="flex items-center gap-2 text-sm">
               <Send className="h-4 w-4" />
               الإرسال اليدوي
             </TabsTrigger>
-            <TabsTrigger value="templates" className="flex items-center gap-2 text-sm">
-              <FileText className="h-4 w-4" />
-              إدارة القوالب
+            <TabsTrigger value="smart-send" className="flex items-center gap-2 text-sm">
+              <Settings className="h-4 w-4" />
+              النظام الذكي
             </TabsTrigger>
           </TabsList>
 
@@ -674,15 +674,15 @@ export default function EmailNotifications() {
                       </div>
 
                       <div className="flex justify-center mt-6">
-                        <Button 
-                          onClick={generateSmartEmail}
-                          size="lg"
-                          className="px-8 py-3"
-                          disabled={!smartForm.type || !smartForm.customerEmail || !smartForm.customerName}
-                        >
-                          <Settings className="h-5 w-5 mr-2" />
-                          إنشاء البريد تلقائياً
-                        </Button>
+                      <Button 
+                        onClick={generateSmartEmail}
+                        size="lg"
+                        className="px-8 py-3"
+                        disabled={!smartForm.type || !smartForm.customerEmail || !smartForm.customerName}
+                      >
+                        <Settings className="h-5 w-5 ml-2" />
+                        إنشاء البريد تلقائياً
+                      </Button>
                       </div>
                     </CardContent>
                   </Card>
@@ -758,8 +758,8 @@ export default function EmailNotifications() {
                       disabled={loading || !emailForm.to || !emailForm.subject || !emailForm.content}
                       className="flex-1"
                     >
+                      <Send className="h-4 w-4 ml-2" />
                       {loading ? "جاري الإرسال..." : "إرسال البريد"}
-                      <Send className="h-4 w-4 mr-2" />
                     </Button>
                     
                     <Button 
@@ -767,7 +767,7 @@ export default function EmailNotifications() {
                       onClick={handlePreview}
                       disabled={!emailForm.subject || !emailForm.content}
                     >
-                      <Eye className="h-4 w-4 mr-2" />
+                      <Eye className="h-4 w-4 ml-2" />
                       معاينة
                     </Button>
                   </div>
@@ -828,12 +828,12 @@ export default function EmailNotifications() {
                 <div className="flex flex-col md:flex-row gap-4">
                   <div className="flex-1">
                     <div className="relative">
-                      <Search className="absolute right-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                      <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                       <Input
                         placeholder="البحث في القوالب..."
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}
-                        className="pr-10"
+                        className="pl-10"
                       />
                     </div>
                   </div>
@@ -856,7 +856,7 @@ export default function EmailNotifications() {
                     </Select>
                   </div>
                   <Button variant="outline" onClick={fetchTemplates}>
-                    <Settings className="h-4 w-4 mr-2" />
+                    <Settings className="h-4 w-4 ml-2" />
                     تحديث
                   </Button>
                 </div>
@@ -936,7 +936,7 @@ export default function EmailNotifications() {
                             setActiveTab("manual-send");
                           }}
                         >
-                          <Edit className="h-3 w-3 mr-1" />
+                          <Edit className="h-3 w-3 ml-1" />
                           استخدام
                         </Button>
                         <Button 
