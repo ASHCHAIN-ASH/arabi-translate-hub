@@ -45,40 +45,59 @@ const handler = async (req: Request): Promise<Response> => {
     let user: any = null;
     let userFound = false;
     
-    // First, check if user exists in Supabase auth.users
-    const { data: authSession } = await supabase.auth.admin.listUsers();
-    const authUser = authSession?.users?.find(u => u.email?.toLowerCase() === emailNormalized);
+    console.log('Searching for user with email:', emailNormalized);
     
-    if (authUser) {
-      user = {
-        id: authUser.id,
-        email: authUser.email,
-        full_name: authUser.user_metadata?.full_name || authUser.email
-      };
+    // First try admin_credentials table
+    const { data: adminUser, error: adminError } = await supabase
+      .from('admin_credentials')
+      .select('id, email, full_name')
+      .eq('email', emailNormalized)
+      .eq('is_active', true)
+      .maybeSingle();
+    
+    console.log('Admin credentials search result:', { adminUser, adminError });
+    
+    if (adminUser && !adminError) {
+      user = adminUser;
       userFound = true;
+      console.log('Found user in admin_credentials');
     } else {
-      // Try admin_credentials table
-      const { data: adminUser, error: adminError } = await supabase
-        .from('admin_credentials')
+      // Try profiles table  
+      const { data: profileUser, error: profileError } = await supabase
+        .from('profiles')
         .select('id, email, full_name')
-        .eq('email', emailNormalized)
-        .eq('is_active', true)
-        .single();
+        .ilike('email', emailNormalized)
+        .maybeSingle();
       
-      if (adminUser && !adminError) {
-        user = adminUser;
+      console.log('Profiles search result:', { profileUser, profileError });
+      
+      if (profileUser && !profileError) {
+        user = profileUser;
         userFound = true;
+        console.log('Found user in profiles');
       } else {
-        // Try profiles table  
-        const { data: profileUser, error: profileError } = await supabase
-          .from('profiles')
-          .select('id, email, full_name')
-          .eq('email', emailNormalized)
-          .single();
-        
-        if (profileUser && !profileError) {
-          user = profileUser;
-          userFound = true;
+        // Try auth.users via service role (fallback)
+        try {
+          const { data: authData, error: authError } = await supabase.auth.admin.listUsers();
+          console.log('Auth users count:', authData?.users?.length || 0);
+          
+          if (authData?.users) {
+            const authUser = authData.users.find(u => 
+              u.email?.toLowerCase().trim() === emailNormalized
+            );
+            
+            if (authUser) {
+              user = {
+                id: authUser.id,
+                email: authUser.email,
+                full_name: authUser.user_metadata?.full_name || authUser.email
+              };
+              userFound = true;
+              console.log('Found user in auth.users');
+            }
+          }
+        } catch (authErr) {
+          console.log('Auth admin error:', authErr);
         }
       }
     }
