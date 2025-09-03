@@ -4,6 +4,7 @@ import { useAuth } from '@/components/SimpleAuthProvider';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { AdminDashboardService } from '@/utils/adminDashboardService';
+import { supabase } from '@/integrations/supabase/client';
 import { 
   LayoutDashboard, 
   Users, 
@@ -35,6 +36,16 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
   const { user, signOut } = useAuth();
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isNotificationOpen, setIsNotificationOpen] = useState(false);
+  
+  // State for dynamic counts
+  const [counts, setCounts] = useState({
+    services: 0,
+    categories: 0,
+    orders: 0,
+    invoices: 0,
+    users: 0,
+    tickets: 0
+  });
 
   const navItems = [
     { 
@@ -47,7 +58,7 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
       name: 'إدارة الخدمات', 
       href: '/admin/services', 
       icon: Briefcase,
-      badge: '12'
+      badge: counts.services.toString()
     },
     { 
       name: 'طلبات الخدمات', 
@@ -59,7 +70,7 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
       name: 'إدارة الطلبات', 
       href: '/admin/orders', 
       icon: ShoppingCart,
-      badge: '8'
+      badge: counts.orders > 0 ? counts.orders.toString() : null
     },
     { 
       name: 'نظام الإشعارات البريدية', 
@@ -71,7 +82,7 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
       name: 'إدارة الفواتير', 
       href: '/admin/invoices', 
       icon: CreditCard,
-      badge: '3'
+      badge: counts.invoices > 0 ? counts.invoices.toString() : null
     },
     { 
       name: 'إدارة المدفوعات', 
@@ -83,13 +94,13 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
       name: 'إدارة المستخدمين', 
       href: '/admin/users', 
       icon: Users,
-      badge: '142'
+      badge: counts.users > 0 ? counts.users.toString() : null
     },
     { 
       name: 'إدارة التذاكر', 
       href: '/admin/tickets', 
       icon: HelpCircle,
-      badge: '5'
+      badge: counts.tickets > 0 ? counts.tickets.toString() : null
     },
     { 
       name: 'الإعدادات', 
@@ -123,7 +134,32 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
     };
     
     loadNotifications();
+    loadCounts();
   }, []);
+
+  // جلب الأعداد الديناميكية
+  const loadCounts = async () => {
+    try {
+      const [servicesRes, ordersRes, invoicesRes, usersRes, ticketsRes] = await Promise.all([
+        supabase.from('services').select('*', { count: 'exact', head: true }).eq('is_active', true),
+        supabase.from('orders').select('*', { count: 'exact', head: true }),
+        supabase.from('invoices').select('*', { count: 'exact', head: true }).eq('status', 'pending'),
+        supabase.from('users').select('*', { count: 'exact', head: true }),
+        supabase.from('tickets').select('*', { count: 'exact', head: true }).eq('status', 'open')
+      ]);
+
+      setCounts({
+        services: servicesRes.count || 0,
+        categories: 0,
+        orders: ordersRes.count || 0,
+        invoices: invoicesRes.count || 0,
+        users: usersRes.count || 0,
+        tickets: ticketsRes.count || 0
+      });
+    } catch (error) {
+      console.error('Error loading counts:', error);
+    }
+  };
 
   const handleSignOut = async () => {
     try {
