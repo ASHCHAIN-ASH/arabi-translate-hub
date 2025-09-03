@@ -2610,6 +2610,53 @@ export type Database = {
         }
         Relationships: []
       }
+      platform_audit_logs: {
+        Row: {
+          action: string
+          actor_id: string | null
+          created_at: string | null
+          entity_id: string | null
+          entity_type: string
+          id: string
+          ip_address: unknown | null
+          new_data: Json | null
+          old_data: Json | null
+          user_agent: string | null
+        }
+        Insert: {
+          action: string
+          actor_id?: string | null
+          created_at?: string | null
+          entity_id?: string | null
+          entity_type: string
+          id?: string
+          ip_address?: unknown | null
+          new_data?: Json | null
+          old_data?: Json | null
+          user_agent?: string | null
+        }
+        Update: {
+          action?: string
+          actor_id?: string | null
+          created_at?: string | null
+          entity_id?: string | null
+          entity_type?: string
+          id?: string
+          ip_address?: unknown | null
+          new_data?: Json | null
+          old_data?: Json | null
+          user_agent?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "platform_audit_logs_actor_id_fkey"
+            columns: ["actor_id"]
+            isOneToOne: false
+            referencedRelation: "platform_users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       platform_categories: {
         Row: {
           color: string | null
@@ -2695,6 +2742,30 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      platform_legacy_mappings: {
+        Row: {
+          entity_type: string
+          id: string
+          legacy_id: string
+          migrated_at: string | null
+          new_id: string
+        }
+        Insert: {
+          entity_type: string
+          id?: string
+          legacy_id: string
+          migrated_at?: string | null
+          new_id: string
+        }
+        Update: {
+          entity_type?: string
+          id?: string
+          legacy_id?: string
+          migrated_at?: string | null
+          new_id?: string
+        }
+        Relationships: []
       }
       platform_notifications: {
         Row: {
@@ -4992,6 +5063,19 @@ export type Database = {
         Args: { p_email: string; p_type: string; p_user_id: string }
         Returns: string
       }
+      create_platform_notification: {
+        Args: {
+          p_body_ar: string
+          p_body_en?: string
+          p_category?: string
+          p_data?: Json
+          p_title_ar: string
+          p_title_en?: string
+          p_type?: string
+          p_user_id: string
+        }
+        Returns: string
+      }
       create_secure_admin_password: {
         Args: { plain_password: string }
         Returns: Json
@@ -5308,6 +5392,18 @@ export type Database = {
       }
       owns_payment_transaction: {
         Args: { transaction_user_id: string }
+        Returns: boolean
+      }
+      platform_has_role: {
+        Args: { required_role: string; user_id: string }
+        Returns: boolean
+      }
+      platform_is_admin: {
+        Args: { user_id?: string }
+        Returns: boolean
+      }
+      platform_is_staff_or_admin: {
+        Args: { user_id?: string }
         Returns: boolean
       }
       process_wallet_transaction: {
