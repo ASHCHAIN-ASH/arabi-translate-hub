@@ -240,19 +240,35 @@ export const SimpleAuthProvider: React.FC<{ children: React.ReactNode }> = ({ ch
 
   const forgotPassword = async (email: string): Promise<{ error?: string }> => {
     try {
+      // تحديد الرابط الصحيح بناءً على البيئة
+      const currentOrigin = window.location.origin;
+      console.log('Current origin:', currentOrigin);
+      
+      // استخدام الرابط الحالي مباشرة في بيئة lovable
+      let redirectUrl = `${currentOrigin}/auth/reset-password`;
+      
+      console.log('Preparing to send password reset email...');
+      console.log('Email:', email);
+      console.log('Redirect URL:', redirectUrl);
+      
       const { error } = await supabase.auth.resetPasswordForEmail(email, {
-        redirectTo: `${window.location.origin}/auth/reset-password`,
+        redirectTo: redirectUrl,
       });
 
       if (error) {
-        console.error('Forgot password error:', error);
-        return { error: 'حدث خطأ أثناء إرسال رسالة إعادة التعيين' };
+        console.error('Supabase forgot password error:', error);
+        console.error('Error details:', {
+          message: error.message,
+          status: error.status
+        });
+        return { error: 'حدث خطأ أثناء إرسال رسالة إعادة التعيين: ' + error.message };
       }
 
+      console.log('Password reset email sent successfully');
       return {};
-    } catch (error) {
-      console.error('Forgot password error:', error);
-      return { error: 'حدث خطأ أثناء إرسال رسالة إعادة التعيين' };
+    } catch (error: any) {
+      console.error('Caught error in forgotPassword:', error);
+      return { error: 'حدث خطأ أثناء إرسال رسالة إعادة التعيين: ' + (error.message || 'خطأ غير معروف') };
     }
   };
 
