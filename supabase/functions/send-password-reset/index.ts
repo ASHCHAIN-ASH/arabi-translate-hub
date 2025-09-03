@@ -41,13 +41,34 @@ const handler = async (req: Request): Promise<Response> => {
     const emailNormalized = email.toLowerCase().trim();
     console.log('Processing password reset request for:', emailNormalized);
 
-    // Check if user exists in platform_users
-    const { data: user, error: userError } = await supabase
-      .from('platform_users')
+    // Check if user exists in auth.users through profiles or admin_credentials
+    let user: any = null;
+    let userError: any = null;
+    
+    // First try to find in admin_credentials
+    const { data: adminUser, error: adminError } = await supabase
+      .from('admin_credentials')
       .select('id, email, full_name')
-      .eq('email_normalized', emailNormalized)
-      .eq('status', 'active')
+      .eq('email', emailNormalized)
+      .eq('is_active', true)
       .single();
+    
+    if (adminUser) {
+      user = adminUser;
+    } else {
+      // Try to find in profiles table
+      const { data: profileUser, error: profileError } = await supabase
+        .from('profiles')
+        .select('id, email, full_name')
+        .eq('email', emailNormalized)
+        .single();
+      
+      if (profileUser) {
+        user = profileUser;
+      } else {
+        userError = profileError || adminError;
+      }
+    }
 
     if (userError || !user) {
       console.log('User not found:', userError);
@@ -65,15 +86,15 @@ const handler = async (req: Request): Promise<Response> => {
     const token = crypto.randomUUID();
     const expiresAt = new Date(Date.now() + 30 * 60 * 1000); // 30 minutes
 
-    // Store reset token
+    // Store reset token in password_reset_tokens table
     const { error: tokenError } = await supabase
-      .from('platform_password_resets')
+      .from('password_reset_tokens')
       .insert({
         user_id: user.id,
         token,
         expires_at: expiresAt.toISOString(),
-        ip_address: req.headers.get('x-forwarded-for') || 'unknown',
-        user_agent: req.headers.get('user-agent')
+        created_at: new Date().toISOString(),
+        used: false
       });
 
     if (tokenError) {
