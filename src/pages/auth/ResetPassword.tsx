@@ -1,17 +1,17 @@
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { useAuth } from '@/components/SimpleAuthProvider';
-import { supabase } from '@/integrations/supabase/client';
 import { CheckCircle, AlertCircle } from 'lucide-react';
 import { toast } from 'sonner';
 
 export default function ResetPassword() {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const [formData, setFormData] = useState({
     password: '',
     confirmPassword: ''
@@ -19,32 +19,15 @@ export default function ResetPassword() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState(false);
-  const [sessionError, setSessionError] = useState(false);
   
   const { resetPassword } = useAuth();
+  const token = searchParams.get('token');
 
   useEffect(() => {
-    // Check if there's a valid session for password reset
-    const checkSession = async () => {
-      const { data: { session }, error } = await supabase.auth.getSession();
-      if (error || !session) {
-        setSessionError(true);
-      }
-    };
-
-    checkSession();
-
-    // Listen for auth events
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      async (event, session) => {
-        if (event === 'PASSWORD_RECOVERY') {
-          setSessionError(false);
-        }
-      }
-    );
-
-    return () => subscription.unsubscribe();
-  }, []);
+    if (!token) {
+      setError('رمز إعادة التعيين غير موجود أو غير صحيح');
+    }
+  }, [token]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData(prev => ({
@@ -56,6 +39,11 @@ export default function ResetPassword() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
+    if (!token) {
+      setError('رمز إعادة التعيين غير صحيح');
+      return;
+    }
+
     setLoading(true);
     setError('');
 
@@ -71,7 +59,7 @@ export default function ResetPassword() {
       return;
     }
 
-    const result = await resetPassword(formData.password);
+    const result = await resetPassword(token, formData.password);
 
     if (result.error) {
       setError(result.error);
@@ -112,7 +100,7 @@ export default function ResetPassword() {
     );
   }
 
-  if (sessionError) {
+  if (!token || error) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-primary/5 to-secondary/5 px-4">
         <Card className="w-full max-w-md">
@@ -122,7 +110,7 @@ export default function ResetPassword() {
             </div>
             <CardTitle className="text-2xl font-bold">رابط غير صحيح</CardTitle>
             <CardDescription>
-              رابط إعادة تعيين كلمة المرور غير صحيح أو منتهي الصلاحية
+              رمز إعادة التعيين غير صحيح أو منتهي الصلاحية
             </CardDescription>
           </CardHeader>
           <CardContent>

@@ -18,7 +18,7 @@ interface AuthContextType {
   signUp: (email: string, password: string, metadata: { name: string; phone?: string; role?: string }) => Promise<{ error?: string }>;
   signOut: () => Promise<void>;
   forgotPassword: (email: string) => Promise<{ error?: string }>;
-  resetPassword: (password: string) => Promise<{ error?: string }>;
+  resetPassword: (token: string, password: string) => Promise<{ error?: string }>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -240,58 +240,66 @@ export const SimpleAuthProvider: React.FC<{ children: React.ReactNode }> = ({ ch
 
   const forgotPassword = async (email: string): Promise<{ error?: string }> => {
     try {
-      // تحديد الرابط الصحيح بناءً على البيئة
+      // استخدام النظام المخصص لإرسال إيميل إعادة تعيين كلمة المرور
       const currentOrigin = window.location.origin;
+      console.log('Sending custom password reset email for:', email);
       console.log('Current origin:', currentOrigin);
       
-      // استخدام الرابط الحالي مباشرة في بيئة lovable
-      let redirectUrl = `${currentOrigin}/auth/reset-password`;
-      
-      console.log('Preparing to send password reset email...');
-      console.log('Email:', email);
-      console.log('Redirect URL:', redirectUrl);
-      
-      const { error } = await supabase.auth.resetPasswordForEmail(email, {
-        redirectTo: redirectUrl,
+      const { data, error } = await supabase.functions.invoke('send-password-reset', {
+        body: { 
+          email: email,
+          redirect_url: currentOrigin 
+        }
       });
 
       if (error) {
-        console.error('Supabase forgot password error:', error);
-        console.error('Error details:', {
-          message: error.message,
-          status: error.status
-        });
+        console.error('Custom password reset error:', error);
         return { error: 'حدث خطأ أثناء إرسال رسالة إعادة التعيين: ' + error.message };
       }
 
-      console.log('Password reset email sent successfully');
+      if (data && !data.success && data.error) {
+        console.error('Password reset service error:', data.error);
+        return { error: data.error };
+      }
+
+      console.log('Custom password reset email sent successfully');
       return {};
     } catch (error: any) {
-      console.error('Caught error in forgotPassword:', error);
+      console.error('Caught error in custom forgotPassword:', error);
       return { error: 'حدث خطأ أثناء إرسال رسالة إعادة التعيين: ' + (error.message || 'خطأ غير معروف') };
     }
   };
 
-  const resetPassword = async (password: string): Promise<{ error?: string }> => {
+  const resetPassword = async (token: string, password: string): Promise<{ error?: string }> => {
     try {
       // التحقق من قوة كلمة المرور
       if (password.length < 6) {
         return { error: 'كلمة المرور يجب أن تكون 6 أحرف على الأقل' };
       }
 
-      const { error } = await supabase.auth.updateUser({
-        password: password
+      // استخدام platform-auth لإعادة تعيين كلمة المرور
+      const { data, error } = await supabase.functions.invoke('platform-auth/reset-password', {
+        body: { 
+          token: token,
+          password: password 
+        }
       });
 
       if (error) {
-        console.error('Reset password error:', error);
-        return { error: 'حدث خطأ أثناء تحديث كلمة المرور' };
+        console.error('Platform reset password error:', error);
+        return { error: 'حدث خطأ أثناء تحديث كلمة المرور: ' + error.message };
       }
 
+      if (data && !data.success && data.error) {
+        console.error('Reset password service error:', data.error);
+        return { error: data.error };
+      }
+
+      console.log('Password reset successful via platform auth');
       return {};
-    } catch (error) {
-      console.error('Reset password error:', error);
-      return { error: 'حدث خطأ أثناء تحديث كلمة المرور' };
+    } catch (error: any) {
+      console.error('Caught error in resetPassword:', error);
+      return { error: 'حدث خطأ أثناء تحديث كلمة المرور: ' + (error.message || 'خطأ غير معروف') };
     }
   };
 
