@@ -5039,6 +5039,10 @@ export type Database = {
         Args: { p_operation_type: string; p_user_id: string }
         Returns: boolean
       }
+      cleanup_expired_password_reset_tokens: {
+        Args: Record<PropertyKey, never>
+        Returns: undefined
+      }
       cleanup_expired_platform_password_resets: {
         Args: Record<PropertyKey, never>
         Returns: undefined
