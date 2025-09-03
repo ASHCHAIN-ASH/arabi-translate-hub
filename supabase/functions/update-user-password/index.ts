@@ -10,6 +10,7 @@ interface UpdatePasswordRequest {
   userId: string;
   newPassword: string;
   adminUserId?: string;
+  sendEmail?: boolean;
 }
 
 // Function to hash password using bcrypt
@@ -25,7 +26,7 @@ const handler = async (req: Request): Promise<Response> => {
   }
 
   try {
-    const { userId, newPassword, adminUserId }: UpdatePasswordRequest = await req.json();
+    const { userId, newPassword, adminUserId, sendEmail = true }: UpdatePasswordRequest = await req.json();
 
     // Validate input
     if (!userId || !newPassword) {
@@ -60,11 +61,12 @@ const handler = async (req: Request): Promise<Response> => {
       }
     );
 
-    // Verify the requesting user has admin privileges
+    // Get admin details
+    let adminData = null;
     if (adminUserId) {
       const { data: adminCheck, error: adminError } = await supabaseAdmin
         .from('admin_credentials')
-        .select('role, is_active')
+        .select('id, email, full_name, role, is_active')
         .eq('id', adminUserId)
         .single();
 
@@ -78,12 +80,13 @@ const handler = async (req: Request): Promise<Response> => {
           }
         );
       }
+      adminData = adminCheck;
     }
 
-    // Check if user exists in custom users table
+    // Get user details
     const { data: userData, error: userError } = await supabaseAdmin
       .from('users')
-      .select('*')
+      .select('id, email, name, created_at')
       .eq('id', userId)
       .single();
 
@@ -152,13 +155,93 @@ const handler = async (req: Request): Promise<Response> => {
 
     console.log(`Password updated successfully for user: ${userId} (Auth: ${authUpdateSuccess}, Custom: ${customTableUpdateSuccess})`);
 
+    // Send email notification if requested
+    let emailSent = false;
+    if (sendEmail && userData.email) {
+      try {
+        const changeDate = new Intl.DateTimeFormat('ar-SA', {
+          year: 'numeric',
+          month: 'long',
+          day: 'numeric',
+          hour: '2-digit',
+          minute: '2-digit',
+          timeZone: 'Asia/Riyadh'
+        }).format(new Date());
+
+        const adminRoleMap: { [key: string]: string } = {
+          'admin': 'مدير عام',
+          'superadmin': 'مدير فائق',
+          'manager': 'مدير',
+          'support': 'دعم فني'
+        };
+
+        const emailVariables = {
+          user_name: userData.name || 'المستخدم',
+          user_email: userData.email,
+          new_password: newPassword,
+          change_date: changeDate,
+          admin_name: adminData?.full_name || 'الإدارة',
+          admin_email: adminData?.email || 'admin@masteredupath.com',
+          admin_role: adminRoleMap[adminData?.role] || 'مدير'
+        };
+
+        // Call send-email function
+        const emailResponse = await supabaseAdmin.functions.invoke('send-email', {
+          body: {
+            to: userData.email,
+            template_key: 'password_changed_notification',
+            variables: emailVariables
+          }
+        });
+
+        if (!emailResponse.error) {
+          emailSent = true;
+          console.log('Password change notification email sent successfully to:', userData.email);
+        } else {
+          console.error('Failed to send password change notification email:', emailResponse.error);
+        }
+
+      } catch (emailError) {
+        console.error('Error sending password change notification email:', emailError);
+      }
+    }
+
+    // Log security audit
+    try {
+      await supabaseAdmin
+        .from('security_audit_logs')
+        .insert({
+          event_type: 'password_change',
+          user_id: userId,
+          action: 'admin_password_update',
+          resource_type: 'user_account',
+          resource_id: userId,
+          risk_level: 'high',
+          metadata: {
+            admin_user_id: adminUserId,
+            admin_email: adminData?.email,
+            admin_name: adminData?.full_name,
+            user_email: userData.email,
+            user_name: userData.name,
+            auth_updated: authUpdateSuccess,
+            custom_table_updated: customTableUpdateSuccess,
+            email_notification_sent: emailSent,
+            change_timestamp: new Date().toISOString(),
+            ip_address: req.headers.get('x-forwarded-for') || 'unknown'
+          }
+        });
+    } catch (auditError) {
+      console.error('Failed to log security audit:', auditError);
+    }
+
     return new Response(
       JSON.stringify({ 
         success: true, 
         message: 'Password updated successfully',
         userId: userId,
         authUpdated: authUpdateSuccess,
-        customTableUpdated: customTableUpdateSuccess
+        customTableUpdated: customTableUpdateSuccess,
+        emailSent: emailSent
       }),
       {
         status: 200,

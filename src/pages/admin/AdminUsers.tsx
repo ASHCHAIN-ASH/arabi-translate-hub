@@ -6,10 +6,11 @@ import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { Search, Users, Mail, Phone, Calendar, Filter, Key, Edit, Eye, EyeOff } from 'lucide-react';
+import { Search, Users, Mail, Phone, Calendar, Filter, Key, Edit, Eye, EyeOff, Check } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 import { motion } from 'framer-motion';
+import { Label } from '@/components/ui/label';
 
 interface User {
   id: string;
@@ -28,15 +29,17 @@ const AdminUsers = () => {
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
-  const [passwordChangeModal, setPasswordChangeModal] = useState<{isOpen: boolean, userId: string, userName: string}>({
+  const [passwordChangeModal, setPasswordChangeModal] = useState<{isOpen: boolean, userId: string, userName: string, userEmail: string}>({
     isOpen: false,
     userId: '',
-    userName: ''
+    userName: '',
+    userEmail: ''
   });
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [updatingPassword, setUpdatingPassword] = useState(false);
+  const [sendEmailNotification, setSendEmailNotification] = useState(true);
 
   useEffect(() => {
     fetchUsers();
@@ -166,25 +169,29 @@ const AdminUsers = () => {
     }
   };
 
-  const openPasswordChangeModal = (userId: string, userName: string) => {
+  const openPasswordChangeModal = (userId: string, userName: string, userEmail: string) => {
     setPasswordChangeModal({
       isOpen: true,
       userId,
-      userName
+      userName,
+      userEmail
     });
     setNewPassword('');
     setConfirmPassword('');
+    setSendEmailNotification(true);
   };
 
   const closePasswordChangeModal = () => {
     setPasswordChangeModal({
       isOpen: false,
       userId: '',
-      userName: ''
+      userName: '',
+      userEmail: ''
     });
     setNewPassword('');
     setConfirmPassword('');
     setShowPassword(false);
+    setSendEmailNotification(true);
   };
 
   const updateUserPassword = async () => {
@@ -201,12 +208,13 @@ const AdminUsers = () => {
     try {
       setUpdatingPassword(true);
       
-      // استخدام Edge Function لتحديث كلمة المرور
+      // استخدام Edge Function لتحديث كلمة المرور مع خيار إرسال البريد الإلكتروني
       const { data, error } = await supabase.functions.invoke('update-user-password', {
         body: {
           userId: passwordChangeModal.userId,
           newPassword: newPassword,
-          adminUserId: (await supabase.auth.getUser()).data.user?.id
+          adminUserId: (await supabase.auth.getUser()).data.user?.id,
+          sendEmail: sendEmailNotification
         }
       });
 
@@ -219,7 +227,17 @@ const AdminUsers = () => {
         throw new Error(data.error);
       }
 
-      toast.success(`تم تحديث كلمة مرور ${passwordChangeModal.userName} بنجاح`);
+      // رسائل مختلفة بناءً على حالة إرسال البريد الإلكتروني
+      if (sendEmailNotification) {
+        if (data.emailSent) {
+          toast.success(`✅ تم تحديث كلمة مرور ${passwordChangeModal.userName} وتم إرسال إشعار بالبريد الإلكتروني بنجاح`);
+        } else {
+          toast.success(`تم تحديث كلمة مرور ${passwordChangeModal.userName} بنجاح ولكن فشل في إرسال البريد الإلكتروني`);
+        }
+      } else {
+        toast.success(`تم تحديث كلمة مرور ${passwordChangeModal.userName} بنجاح`);
+      }
+
       closePasswordChangeModal();
     } catch (error) {
       console.error('Error updating password:', error);
@@ -509,12 +527,12 @@ const AdminUsers = () => {
                                 >
                                   <Mail className="w-3 h-3" />
                                 </Button>
-                                <Button
-                                  size="sm"
-                                  variant="outline" 
-                                  className="text-xs px-2 py-1"
-                                  onClick={() => openPasswordChangeModal(user.id, user.name || user.email)}
-                                >
+                                 <Button
+                                   size="sm"
+                                   variant="outline" 
+                                   className="text-xs px-2 py-1"
+                                   onClick={() => openPasswordChangeModal(user.id, user.name || user.email, user.email)}
+                                 >
                                   <Key className="w-3 h-3" />
                                 </Button>
                               </div>
@@ -558,24 +576,28 @@ const AdminUsers = () => {
               <DialogTitle className="text-right">تعديل كلمة المرور</DialogTitle>
             </DialogHeader>
             <div className="space-y-4 py-4">
-              <div className="text-sm text-muted-foreground text-center">
-                تعديل كلمة مرور المستخدم: <span className="font-medium">{passwordChangeModal.userName}</span>
+              <div className="text-sm text-muted-foreground text-center p-3 bg-muted/50 rounded-lg">
+                تعديل كلمة مرور المستخدم: <span className="font-medium text-foreground">{passwordChangeModal.userName}</span>
+                <br />
+                البريد الإلكتروني: <span className="font-medium text-foreground">{passwordChangeModal.userEmail}</span>
               </div>
               
               <div className="space-y-4">
                 <div className="relative">
+                  <Label htmlFor="newPassword" className="text-sm font-medium">كلمة المرور الجديدة</Label>
                   <Input
+                    id="newPassword"
                     type={showPassword ? "text" : "password"}
                     placeholder="كلمة المرور الجديدة"
                     value={newPassword}
                     onChange={(e) => setNewPassword(e.target.value)}
-                    className="pr-10"
+                    className="pr-10 mt-1"
                   />
                   <Button
                     type="button"
                     variant="ghost"
                     size="sm"
-                    className="absolute left-0 top-0 h-full px-3 py-2 hover:bg-transparent"
+                    className="absolute left-0 top-6 h-10 px-3 py-2 hover:bg-transparent"
                     onClick={() => setShowPassword(!showPassword)}
                   >
                     {showPassword ? (
@@ -586,17 +608,52 @@ const AdminUsers = () => {
                   </Button>
                 </div>
                 
-                <Input
-                  type={showPassword ? "text" : "password"}
-                  placeholder="تأكيد كلمة المرور"
-                  value={confirmPassword}
-                  onChange={(e) => setConfirmPassword(e.target.value)}
-                />
+                <div>
+                  <Label htmlFor="confirmPassword" className="text-sm font-medium">تأكيد كلمة المرور</Label>
+                  <Input
+                    id="confirmPassword"
+                    type={showPassword ? "text" : "password"}
+                    placeholder="تأكيد كلمة المرور"
+                    value={confirmPassword}
+                    onChange={(e) => setConfirmPassword(e.target.value)}
+                    className="mt-1"
+                  />
+                </div>
               </div>
               
-              <div className="text-xs text-muted-foreground">
-                • كلمة المرور يجب أن تكون 6 أحرف على الأقل
-                • تأكد من تطابق كلمة المرور مع التأكيد
+              <div className="p-4 bg-blue-50 border border-blue-200 rounded-lg">
+                <div className="flex items-start space-x-3 space-x-reverse">
+                  <input
+                    type="checkbox"
+                    id="sendEmailNotification"
+                    checked={sendEmailNotification}
+                    onChange={(e) => setSendEmailNotification(e.target.checked)}
+                    className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 mt-0.5"
+                  />
+                  <div className="flex-1">
+                    <Label htmlFor="sendEmailNotification" className="text-sm font-medium cursor-pointer">
+                      📧 إرسال إشعار بالبريد الإلكتروني للمستخدم
+                    </Label>
+                    <p className="text-xs text-muted-foreground mt-1">
+                      عند تفعيل هذا الخيار، سيتم إرسال بريد إلكتروني للمستخدم يحتوي على:
+                    </p>
+                    <ul className="text-xs text-muted-foreground mt-1 mr-4">
+                      <li>• كلمة المرور الجديدة</li>
+                      <li>• تفاصيل من قام بالتغيير</li>
+                      <li>• تاريخ ووقت التغيير</li>
+                      <li>• تعليمات الأمان</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+              
+              <div className="text-xs text-muted-foreground bg-yellow-50 border border-yellow-200 rounded-lg p-3">
+                <strong>متطلبات كلمة المرور:</strong>
+                <ul className="mt-1 mr-4">
+                  <li>• كلمة المرور يجب أن تكون 6 أحرف على الأقل</li>
+                  <li>• تأكد من تطابق كلمة المرور مع التأكيد</li>
+                  <li>• سيتم تطبيق التغيير فوراً</li>
+                </ul>
               </div>
               
               <div className="flex justify-end gap-2 pt-4">
@@ -620,7 +677,7 @@ const AdminUsers = () => {
                   ) : (
                     <>
                       <Key className="w-4 h-4" />
-                      تحديث كلمة المرور
+                      {sendEmailNotification ? 'تحديث وإرسال إشعار' : 'تحديث كلمة المرور'}
                     </>
                   )}
                 </Button>
