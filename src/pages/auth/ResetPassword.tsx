@@ -1,158 +1,196 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate, useSearchParams } from 'react-router-dom';
-import { supabase } from '@/integrations/supabase/client';
+import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Alert, AlertDescription } from '@/components/ui/alert';
+import { useAuth } from '@/components/SimpleAuthProvider';
+import { supabase } from '@/integrations/supabase/client';
+import { CheckCircle, AlertCircle } from 'lucide-react';
 import { toast } from 'sonner';
-import { Card } from '@/components/ui/card';
-import { Lock } from 'lucide-react';
-import { motion } from 'framer-motion';
 
-const ResetPassword = () => {
-  const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
-  const [loading, setLoading] = useState(false);
-  const [searchParams] = useSearchParams();
-  
+export default function ResetPassword() {
   const navigate = useNavigate();
+  const [formData, setFormData] = useState({
+    password: '',
+    confirmPassword: ''
+  });
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+  const [success, setSuccess] = useState(false);
+  const [sessionError, setSessionError] = useState(false);
+  
+  const { resetPassword } = useAuth();
 
   useEffect(() => {
-    // Check if we have the required tokens
-    const accessToken = searchParams.get('access_token');
-    const refreshToken = searchParams.get('refresh_token');
-    
-    if (!accessToken || !refreshToken) {
-      toast.error('رابط غير صالح أو منتهي الصلاحية');
-      navigate('/auth/forgot-password');
-      return;
-    }
+    // Check if there's a valid session for password reset
+    const checkSession = async () => {
+      const { data: { session }, error } = await supabase.auth.getSession();
+      if (error || !session) {
+        setSessionError(true);
+      }
+    };
 
-    // Set the session with the tokens
-    supabase.auth.setSession({
-      access_token: accessToken,
-      refresh_token: refreshToken,
-    });
-  }, [searchParams, navigate]);
+    checkSession();
+
+    // Listen for auth events
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(
+      async (event, session) => {
+        if (event === 'PASSWORD_RECOVERY') {
+          setSessionError(false);
+        }
+      }
+    );
+
+    return () => subscription.unsubscribe();
+  }, []);
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFormData(prev => ({
+      ...prev,
+      [e.target.name]: e.target.value
+    }));
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (!password || !confirmPassword) {
-      toast.error('يرجى ملء جميع الحقول');
-      return;
-    }
-
-    if (password !== confirmPassword) {
-      toast.error('كلمات المرور غير متطابقة');
-      return;
-    }
-
-    if (password.length < 12) {
-      toast.error('كلمة المرور يجب أن تكون 12 حرف على الأقل');
-      return;
-    }
-
     setLoading(true);
-    try {
-      const { error } = await supabase.auth.updateUser({
-        password: password
-      });
-      
-      if (error) throw error;
-      
-      toast.success('تم تحديث كلمة المرور بنجاح');
-      navigate('/auth/login');
-    } catch (error: any) {
-      toast.error(error.message || 'خطأ في تحديث كلمة المرور');
-    } finally {
+    setError('');
+
+    if (formData.password !== formData.confirmPassword) {
+      setError('كلمات المرور غير متطابقة');
       setLoading(false);
+      return;
     }
+
+    if (formData.password.length < 6) {
+      setError('كلمة المرور يجب أن تكون 6 أحرف على الأقل');
+      setLoading(false);
+      return;
+    }
+
+    const result = await resetPassword(formData.password);
+
+    if (result.error) {
+      setError(result.error);
+      toast.error(result.error);
+    } else {
+      setSuccess(true);
+      toast.success('تم تحديث كلمة المرور بنجاح');
+      setTimeout(() => {
+        navigate('/login');
+      }, 2000);
+    }
+
+    setLoading(false);
   };
 
-  return (
-    <div className="min-h-screen bg-background flex items-center justify-center py-12 px-4" dir="rtl">
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
-        className="max-w-md w-full"
-      >
-        <div className="text-center mb-8">
-          <div className="flex justify-center mb-4">
-            <div className="w-16 h-16 bg-gradient-to-br from-primary to-secondary rounded-full flex items-center justify-center">
-              <Lock className="w-8 h-8 text-white" />
+  if (success) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-primary/5 to-secondary/5 px-4">
+        <Card className="w-full max-w-md">
+          <CardHeader className="text-center">
+            <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+              <CheckCircle className="w-8 h-8 text-green-600" />
             </div>
-          </div>
-          <h1 className="text-3xl font-arabic-formal font-bold text-foreground">
-            إعادة تعيين كلمة المرور
-          </h1>
-          <p className="mt-2 text-muted-foreground">
-            أدخل كلمة المرور الجديدة
-          </p>
-        </div>
+            <CardTitle className="text-2xl font-bold">تم تحديث كلمة المرور</CardTitle>
+            <CardDescription>
+              تم تحديث كلمة المرور بنجاح. سيتم توجيهك إلى صفحة تسجيل الدخول
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="text-center">
+              <p className="text-sm text-muted-foreground mb-4">
+                يمكنك الآن تسجيل الدخول باستخدام كلمة المرور الجديدة
+              </p>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
 
-        <Card className="p-6">
+  if (sessionError) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-primary/5 to-secondary/5 px-4">
+        <Card className="w-full max-w-md">
+          <CardHeader className="text-center">
+            <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
+              <AlertCircle className="w-8 h-8 text-red-600" />
+            </div>
+            <CardTitle className="text-2xl font-bold">رابط غير صحيح</CardTitle>
+            <CardDescription>
+              رابط إعادة تعيين كلمة المرور غير صحيح أو منتهي الصلاحية
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="text-center space-y-4">
+              <p className="text-sm text-muted-foreground">
+                يرجى طلب رابط إعادة تعيين كلمة المرور جديد
+              </p>
+              <Button onClick={() => navigate('/auth/forgot-password')} className="w-full">
+                طلب رابط جديد
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
+
+  return (
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-primary/5 to-secondary/5 px-4">
+      <Card className="w-full max-w-md">
+        <CardHeader className="text-center">
+          <CardTitle className="text-2xl font-bold">إعادة تعيين كلمة المرور</CardTitle>
+          <CardDescription>
+            أدخل كلمة المرور الجديدة
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
           <form onSubmit={handleSubmit} className="space-y-4">
-            <div>
+            {error && (
+              <Alert variant="destructive">
+                <AlertDescription>{error}</AlertDescription>
+              </Alert>
+            )}
+            
+            <div className="space-y-2">
               <Label htmlFor="password">كلمة المرور الجديدة</Label>
               <Input
                 id="password"
+                name="password"
                 type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                placeholder="أدخل كلمة مرور قوية"
+                value={formData.password}
+                onChange={handleChange}
                 required
+                className="text-right"
+                placeholder="أدخل كلمة المرور الجديدة"
               />
-              <p className="text-xs text-muted-foreground mt-1">
-                يجب أن تحتوي على 12 حرف على الأقل مع أحرف كبيرة وصغيرة وأرقام ورموز
-              </p>
             </div>
-
-            <div>
+            
+            <div className="space-y-2">
               <Label htmlFor="confirmPassword">تأكيد كلمة المرور</Label>
               <Input
                 id="confirmPassword"
+                name="confirmPassword"
                 type="password"
-                value={confirmPassword}
-                onChange={(e) => setConfirmPassword(e.target.value)}
-                placeholder="أعد إدخال كلمة المرور"
+                value={formData.confirmPassword}
+                onChange={handleChange}
                 required
+                className="text-right"
+                placeholder="أعد إدخال كلمة المرور"
               />
             </div>
-
-            <Button
-              type="submit"
-              className="w-full"
-              disabled={loading}
-            >
+            
+            <Button type="submit" className="w-full" disabled={loading}>
               {loading ? 'جاري التحديث...' : 'تحديث كلمة المرور'}
             </Button>
           </form>
-
-          <div className="mt-6 text-center">
-            <Button
-              variant="link"
-              className="p-0 h-auto font-normal"
-              onClick={() => navigate('/auth/login')}
-            >
-              العودة لتسجيل الدخول
-            </Button>
-          </div>
-        </Card>
-
-        <div className="mt-6 text-center">
-          <Button
-            variant="ghost"
-            onClick={() => navigate('/')}
-            className="text-muted-foreground"
-          >
-            ← العودة للصفحة الرئيسية
-          </Button>
-        </div>
-      </motion.div>
+        </CardContent>
+      </Card>
     </div>
   );
-};
-
-export default ResetPassword;
+}

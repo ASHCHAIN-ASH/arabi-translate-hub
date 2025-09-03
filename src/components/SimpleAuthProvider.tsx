@@ -17,6 +17,8 @@ interface AuthContextType {
   signIn: (email: string, password: string) => Promise<{ error?: string }>;
   signUp: (email: string, password: string, metadata: { name: string; phone?: string; role?: string }) => Promise<{ error?: string }>;
   signOut: () => Promise<void>;
+  forgotPassword: (email: string) => Promise<{ error?: string }>;
+  resetPassword: (password: string) => Promise<{ error?: string }>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -233,6 +235,48 @@ export const SimpleAuthProvider: React.FC<{ children: React.ReactNode }> = ({ ch
   const signOut = async (): Promise<void> => {
     setUser(null);
     localStorage.removeItem('user');
+    await supabase.auth.signOut();
+  };
+
+  const forgotPassword = async (email: string): Promise<{ error?: string }> => {
+    try {
+      const { error } = await supabase.auth.resetPasswordForEmail(email, {
+        redirectTo: `${window.location.origin}/auth/reset-password`,
+      });
+
+      if (error) {
+        console.error('Forgot password error:', error);
+        return { error: 'حدث خطأ أثناء إرسال رسالة إعادة التعيين' };
+      }
+
+      return {};
+    } catch (error) {
+      console.error('Forgot password error:', error);
+      return { error: 'حدث خطأ أثناء إرسال رسالة إعادة التعيين' };
+    }
+  };
+
+  const resetPassword = async (password: string): Promise<{ error?: string }> => {
+    try {
+      // التحقق من قوة كلمة المرور
+      if (password.length < 6) {
+        return { error: 'كلمة المرور يجب أن تكون 6 أحرف على الأقل' };
+      }
+
+      const { error } = await supabase.auth.updateUser({
+        password: password
+      });
+
+      if (error) {
+        console.error('Reset password error:', error);
+        return { error: 'حدث خطأ أثناء تحديث كلمة المرور' };
+      }
+
+      return {};
+    } catch (error) {
+      console.error('Reset password error:', error);
+      return { error: 'حدث خطأ أثناء تحديث كلمة المرور' };
+    }
   };
 
   const value = {
@@ -240,7 +284,9 @@ export const SimpleAuthProvider: React.FC<{ children: React.ReactNode }> = ({ ch
     loading,
     signIn,
     signUp,
-    signOut
+    signOut,
+    forgotPassword,
+    resetPassword
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
