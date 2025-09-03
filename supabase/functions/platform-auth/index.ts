@@ -1,7 +1,7 @@
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 import { Resend } from "npm:resend@2.0.0";
-import { hash, verify } from "https://deno.land/x/argon2@0.7.0/mod.ts";
+import * as bcrypt from "https://deno.land/x/bcrypt@v0.4.1/mod.ts";
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -107,8 +107,8 @@ async function handleRegister(req: Request, supabase: any, resend: any): Promise
     });
   }
 
-  // Hash password with Argon2
-  const passwordHash = await hash(password);
+  // Hash password with bcrypt
+  const passwordHash = await bcrypt.hash(password);
 
   // Create user
   const { data: user, error } = await supabase
@@ -208,7 +208,7 @@ async function handleLogin(req: Request, supabase: any): Promise<Response> {
   }
 
   // Verify password
-  const isValidPassword = await verify(user.password_hash, password);
+  const isValidPassword = await bcrypt.compare(password, user.password_hash);
   if (!isValidPassword) {
     return new Response(JSON.stringify({ error: 'بيانات تسجيل الدخول غير صحيحة' }), {
       status: 401,
@@ -375,7 +375,7 @@ async function handleResetPassword(req: Request, supabase: any): Promise<Respons
   }
 
   // Hash new password
-  const passwordHash = await hash(password);
+  const passwordHash = await bcrypt.hash(password);
 
   // Update password
   const { error: updateError } = await supabase
