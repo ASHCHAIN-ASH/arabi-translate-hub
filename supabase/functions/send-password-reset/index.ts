@@ -41,37 +41,50 @@ const handler = async (req: Request): Promise<Response> => {
     const emailNormalized = email.toLowerCase().trim();
     console.log('Processing password reset request for:', emailNormalized);
 
-    // Check if user exists in auth.users through profiles or admin_credentials
+    // Check if user exists in multiple tables
     let user: any = null;
-    let userError: any = null;
+    let userFound = false;
     
-    // First try to find in admin_credentials
-    const { data: adminUser, error: adminError } = await supabase
-      .from('admin_credentials')
-      .select('id, email, full_name')
-      .eq('email', emailNormalized)
-      .eq('is_active', true)
-      .single();
+    // First, check if user exists in Supabase auth.users
+    const { data: authSession } = await supabase.auth.admin.listUsers();
+    const authUser = authSession?.users?.find(u => u.email?.toLowerCase() === emailNormalized);
     
-    if (adminUser) {
-      user = adminUser;
+    if (authUser) {
+      user = {
+        id: authUser.id,
+        email: authUser.email,
+        full_name: authUser.user_metadata?.full_name || authUser.email
+      };
+      userFound = true;
     } else {
-      // Try to find in profiles table
-      const { data: profileUser, error: profileError } = await supabase
-        .from('profiles')
+      // Try admin_credentials table
+      const { data: adminUser, error: adminError } = await supabase
+        .from('admin_credentials')
         .select('id, email, full_name')
         .eq('email', emailNormalized)
+        .eq('is_active', true)
         .single();
       
-      if (profileUser) {
-        user = profileUser;
+      if (adminUser && !adminError) {
+        user = adminUser;
+        userFound = true;
       } else {
-        userError = profileError || adminError;
+        // Try profiles table  
+        const { data: profileUser, error: profileError } = await supabase
+          .from('profiles')
+          .select('id, email, full_name')
+          .eq('email', emailNormalized)
+          .single();
+        
+        if (profileUser && !profileError) {
+          user = profileUser;
+          userFound = true;
+        }
       }
     }
 
-    if (userError || !user) {
-      console.log('User not found:', userError);
+    if (!userFound || !user) {
+      console.log('User not found for email:', emailNormalized);
       // Always return success to prevent email enumeration
       return new Response(JSON.stringify({
         success: true,
