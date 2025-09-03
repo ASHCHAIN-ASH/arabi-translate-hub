@@ -2610,6 +2610,499 @@ export type Database = {
         }
         Relationships: []
       }
+      platform_categories: {
+        Row: {
+          color: string | null
+          created_at: string | null
+          description_ar: string | null
+          description_en: string | null
+          icon: string | null
+          id: string
+          is_active: boolean | null
+          meta_data: Json | null
+          name_ar: string
+          name_en: string | null
+          slug: string
+          sort_order: number | null
+          updated_at: string | null
+        }
+        Insert: {
+          color?: string | null
+          created_at?: string | null
+          description_ar?: string | null
+          description_en?: string | null
+          icon?: string | null
+          id?: string
+          is_active?: boolean | null
+          meta_data?: Json | null
+          name_ar: string
+          name_en?: string | null
+          slug: string
+          sort_order?: number | null
+          updated_at?: string | null
+        }
+        Update: {
+          color?: string | null
+          created_at?: string | null
+          description_ar?: string | null
+          description_en?: string | null
+          icon?: string | null
+          id?: string
+          is_active?: boolean | null
+          meta_data?: Json | null
+          name_ar?: string
+          name_en?: string | null
+          slug?: string
+          sort_order?: number | null
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
+      platform_email_verifications: {
+        Row: {
+          created_at: string | null
+          expires_at: string
+          id: string
+          token: string
+          user_id: string
+          verified: boolean | null
+          verified_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          expires_at: string
+          id?: string
+          token: string
+          user_id: string
+          verified?: boolean | null
+          verified_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          expires_at?: string
+          id?: string
+          token?: string
+          user_id?: string
+          verified?: boolean | null
+          verified_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "platform_email_verifications_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "platform_users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      platform_notifications: {
+        Row: {
+          action_label_ar: string | null
+          action_label_en: string | null
+          action_url: string | null
+          body_ar: string
+          body_en: string | null
+          category: string | null
+          created_at: string | null
+          data: Json | null
+          id: string
+          is_read: boolean | null
+          priority: string | null
+          read_at: string | null
+          title_ar: string
+          title_en: string | null
+          type: string | null
+          user_id: string
+        }
+        Insert: {
+          action_label_ar?: string | null
+          action_label_en?: string | null
+          action_url?: string | null
+          body_ar: string
+          body_en?: string | null
+          category?: string | null
+          created_at?: string | null
+          data?: Json | null
+          id?: string
+          is_read?: boolean | null
+          priority?: string | null
+          read_at?: string | null
+          title_ar: string
+          title_en?: string | null
+          type?: string | null
+          user_id: string
+        }
+        Update: {
+          action_label_ar?: string | null
+          action_label_en?: string | null
+          action_url?: string | null
+          body_ar?: string
+          body_en?: string | null
+          category?: string | null
+          created_at?: string | null
+          data?: Json | null
+          id?: string
+          is_read?: boolean | null
+          priority?: string | null
+          read_at?: string | null
+          title_ar?: string
+          title_en?: string | null
+          type?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "platform_notifications_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "platform_users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      platform_order_items: {
+        Row: {
+          attachments: Json | null
+          created_at: string | null
+          custom_requirements: string | null
+          id: string
+          line_total: number
+          meta_data: Json | null
+          order_id: string
+          quantity: number
+          service_description: string | null
+          service_id: string | null
+          service_name: string
+          unit_price: number
+        }
+        Insert: {
+          attachments?: Json | null
+          created_at?: string | null
+          custom_requirements?: string | null
+          id?: string
+          line_total: number
+          meta_data?: Json | null
+          order_id: string
+          quantity?: number
+          service_description?: string | null
+          service_id?: string | null
+          service_name: string
+          unit_price: number
+        }
+        Update: {
+          attachments?: Json | null
+          created_at?: string | null
+          custom_requirements?: string | null
+          id?: string
+          line_total?: number
+          meta_data?: Json | null
+          order_id?: string
+          quantity?: number
+          service_description?: string | null
+          service_id?: string | null
+          service_name?: string
+          unit_price?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "platform_order_items_order_id_fkey"
+            columns: ["order_id"]
+            isOneToOne: false
+            referencedRelation: "platform_orders"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "platform_order_items_service_id_fkey"
+            columns: ["service_id"]
+            isOneToOne: false
+            referencedRelation: "platform_services"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      platform_orders: {
+        Row: {
+          admin_notes: string | null
+          billing_data: Json | null
+          cancellation_reason: string | null
+          cancelled_at: string | null
+          completed_at: string | null
+          created_at: string | null
+          currency: string | null
+          customer_id: string
+          customer_notes: string | null
+          estimated_delivery: string | null
+          id: string
+          internal_notes: string | null
+          meta_data: Json | null
+          notes: string | null
+          order_number: string
+          payment_method: string | null
+          payment_reference: string | null
+          status: Database["public"]["Enums"]["platform_order_status"]
+          subtotal: number | null
+          total: number | null
+          updated_at: string | null
+          vat_amount: number | null
+          vat_percent: number | null
+        }
+        Insert: {
+          admin_notes?: string | null
+          billing_data?: Json | null
+          cancellation_reason?: string | null
+          cancelled_at?: string | null
+          completed_at?: string | null
+          created_at?: string | null
+          currency?: string | null
+          customer_id: string
+          customer_notes?: string | null
+          estimated_delivery?: string | null
+          id?: string
+          internal_notes?: string | null
+          meta_data?: Json | null
+          notes?: string | null
+          order_number: string
+          payment_method?: string | null
+          payment_reference?: string | null
+          status?: Database["public"]["Enums"]["platform_order_status"]
+          subtotal?: number | null
+          total?: number | null
+          updated_at?: string | null
+          vat_amount?: number | null
+          vat_percent?: number | null
+        }
+        Update: {
+          admin_notes?: string | null
+          billing_data?: Json | null
+          cancellation_reason?: string | null
+          cancelled_at?: string | null
+          completed_at?: string | null
+          created_at?: string | null
+          currency?: string | null
+          customer_id?: string
+          customer_notes?: string | null
+          estimated_delivery?: string | null
+          id?: string
+          internal_notes?: string | null
+          meta_data?: Json | null
+          notes?: string | null
+          order_number?: string
+          payment_method?: string | null
+          payment_reference?: string | null
+          status?: Database["public"]["Enums"]["platform_order_status"]
+          subtotal?: number | null
+          total?: number | null
+          updated_at?: string | null
+          vat_amount?: number | null
+          vat_percent?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "platform_orders_customer_id_fkey"
+            columns: ["customer_id"]
+            isOneToOne: false
+            referencedRelation: "platform_users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      platform_password_resets: {
+        Row: {
+          created_at: string | null
+          expires_at: string
+          id: string
+          ip_address: unknown | null
+          token: string
+          used: boolean | null
+          used_at: string | null
+          user_agent: string | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          expires_at: string
+          id?: string
+          ip_address?: unknown | null
+          token: string
+          used?: boolean | null
+          used_at?: string | null
+          user_agent?: string | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          expires_at?: string
+          id?: string
+          ip_address?: unknown | null
+          token?: string
+          used?: boolean | null
+          used_at?: string | null
+          user_agent?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "platform_password_resets_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "platform_users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      platform_services: {
+        Row: {
+          category_id: string | null
+          created_at: string | null
+          currency: string | null
+          delivery_days: number | null
+          description_ar: string | null
+          description_en: string | null
+          features_ar: string[] | null
+          features_en: string[] | null
+          gallery_urls: string[] | null
+          id: string
+          image_url: string | null
+          is_active: boolean | null
+          is_featured: boolean | null
+          max_quantity: number | null
+          meta_data: Json | null
+          min_quantity: number | null
+          name_ar: string
+          name_en: string | null
+          price: number
+          short_description_ar: string | null
+          short_description_en: string | null
+          show_to_clients: boolean | null
+          slug: string
+          sort_order: number | null
+          tags: string[] | null
+          unit_type: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          category_id?: string | null
+          created_at?: string | null
+          currency?: string | null
+          delivery_days?: number | null
+          description_ar?: string | null
+          description_en?: string | null
+          features_ar?: string[] | null
+          features_en?: string[] | null
+          gallery_urls?: string[] | null
+          id?: string
+          image_url?: string | null
+          is_active?: boolean | null
+          is_featured?: boolean | null
+          max_quantity?: number | null
+          meta_data?: Json | null
+          min_quantity?: number | null
+          name_ar: string
+          name_en?: string | null
+          price?: number
+          short_description_ar?: string | null
+          short_description_en?: string | null
+          show_to_clients?: boolean | null
+          slug: string
+          sort_order?: number | null
+          tags?: string[] | null
+          unit_type?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          category_id?: string | null
+          created_at?: string | null
+          currency?: string | null
+          delivery_days?: number | null
+          description_ar?: string | null
+          description_en?: string | null
+          features_ar?: string[] | null
+          features_en?: string[] | null
+          gallery_urls?: string[] | null
+          id?: string
+          image_url?: string | null
+          is_active?: boolean | null
+          is_featured?: boolean | null
+          max_quantity?: number | null
+          meta_data?: Json | null
+          min_quantity?: number | null
+          name_ar?: string
+          name_en?: string | null
+          price?: number
+          short_description_ar?: string | null
+          short_description_en?: string | null
+          show_to_clients?: boolean | null
+          slug?: string
+          sort_order?: number | null
+          tags?: string[] | null
+          unit_type?: string | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "platform_services_category_id_fkey"
+            columns: ["category_id"]
+            isOneToOne: false
+            referencedRelation: "platform_categories"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      platform_users: {
+        Row: {
+          created_at: string | null
+          email: string
+          email_normalized: string
+          email_verified: boolean | null
+          full_name: string | null
+          id: string
+          last_login_at: string | null
+          password_hash: string | null
+          phone: string | null
+          phone_verified: boolean | null
+          preferences: Json | null
+          profile_data: Json | null
+          role: Database["public"]["Enums"]["platform_user_role"]
+          status: Database["public"]["Enums"]["platform_user_status"]
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          email: string
+          email_normalized: string
+          email_verified?: boolean | null
+          full_name?: string | null
+          id?: string
+          last_login_at?: string | null
+          password_hash?: string | null
+          phone?: string | null
+          phone_verified?: boolean | null
+          preferences?: Json | null
+          profile_data?: Json | null
+          role?: Database["public"]["Enums"]["platform_user_role"]
+          status?: Database["public"]["Enums"]["platform_user_status"]
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          email?: string
+          email_normalized?: string
+          email_verified?: boolean | null
+          full_name?: string | null
+          id?: string
+          last_login_at?: string | null
+          password_hash?: string | null
+          phone?: string | null
+          phone_verified?: boolean | null
+          preferences?: Json | null
+          profile_data?: Json | null
+          role?: Database["public"]["Enums"]["platform_user_role"]
+          status?: Database["public"]["Enums"]["platform_user_status"]
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
       product_orders: {
         Row: {
           created_at: string
@@ -4475,6 +4968,10 @@ export type Database = {
         Args: { p_operation_type: string; p_user_id: string }
         Returns: boolean
       }
+      cleanup_expired_platform_password_resets: {
+        Args: Record<PropertyKey, never>
+        Returns: undefined
+      }
       cleanup_expired_reset_tokens: {
         Args: Record<PropertyKey, never>
         Returns: undefined
@@ -4597,6 +5094,10 @@ export type Database = {
         Returns: string
       }
       generate_order_number: {
+        Args: Record<PropertyKey, never>
+        Returns: string
+      }
+      generate_platform_order_number: {
         Args: Record<PropertyKey, never>
         Returns: string
       }
@@ -4952,6 +5453,14 @@ export type Database = {
       page_status: "draft" | "published"
       password_algorithm: "sha256_v1" | "bcrypt_v1" | "argon2id_v1" | "md5_v1"
       payment_status: "pending" | "completed" | "failed" | "refunded"
+      platform_order_status:
+        | "pending"
+        | "paid"
+        | "processing"
+        | "completed"
+        | "cancelled"
+      platform_user_role: "admin" | "staff" | "customer"
+      platform_user_status: "pending" | "active" | "blocked"
       project_status:
         | "planning"
         | "in_progress"
@@ -5131,6 +5640,15 @@ export const Constants = {
       page_status: ["draft", "published"],
       password_algorithm: ["sha256_v1", "bcrypt_v1", "argon2id_v1", "md5_v1"],
       payment_status: ["pending", "completed", "failed", "refunded"],
+      platform_order_status: [
+        "pending",
+        "paid",
+        "processing",
+        "completed",
+        "cancelled",
+      ],
+      platform_user_role: ["admin", "staff", "customer"],
+      platform_user_status: ["pending", "active", "blocked"],
       project_status: [
         "planning",
         "in_progress",
