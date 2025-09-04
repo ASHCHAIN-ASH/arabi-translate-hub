@@ -113,20 +113,22 @@ export function PlatformAuthProvider({ children }: { children: React.ReactNode }
 
   const resetPassword = async (token: string, password: string) => {
     try {
-      const { data, error } = await supabase.functions.invoke('platform-auth/reset-password', {
+      const { data, error } = await supabase.functions.invoke('reset-password-confirm', {
         body: { token, password }
       });
 
       if (error) {
-        return { success: false, error: error.message };
+        console.error('Reset password function error:', error);
+        return { success: false, error: error.message || 'حدث خطأ أثناء إعادة تعيين كلمة المرور' };
       }
 
-      if (data.success) {
+      if (data && data.success) {
         return { success: true };
       } else {
-        return { success: false, error: data.error };
+        return { success: false, error: data?.error || 'حدث خطأ أثناء إعادة تعيين كلمة المرور' };
       }
     } catch (error: any) {
+      console.error('Reset password catch error:', error);
       return { success: false, error: error.message || 'حدث خطأ أثناء إعادة تعيين كلمة المرور' };
     }
   };
