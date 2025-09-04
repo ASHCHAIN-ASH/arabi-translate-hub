@@ -445,50 +445,50 @@ const AdminCustomers = () => {
                 </CardTitle>
               </CardHeader>
               <CardContent className="p-0">
-                <div className="overflow-x-auto">
+                <div className="w-full">
                   <Table>
                     <TableHeader>
                       <TableRow className="hover:bg-transparent border-b bg-muted/30">
-                        <TableHead className="font-semibold text-foreground py-4 px-6 min-w-[280px]">
+                        <TableHead className="font-semibold text-foreground py-3 px-4 w-[25%]">
                           <div className="flex items-center gap-2">
                             <Users className="w-4 h-4" />
-                            بيانات العميل
+                            العميل
                           </div>
                         </TableHead>
-                        <TableHead className="font-semibold text-foreground py-4 px-4 min-w-[140px]">
+                        <TableHead className="font-semibold text-foreground py-3 px-3 w-[12%]">
                           <div className="flex items-center gap-2">
                             <Phone className="w-4 h-4" />
                             الهاتف
                           </div>
                         </TableHead>
-                        <TableHead className="font-semibold text-foreground py-4 px-4 min-w-[120px]">
+                        <TableHead className="font-semibold text-foreground py-3 px-3 w-[10%]">
                           <div className="flex items-center gap-2">
                             <Activity className="w-4 h-4" />
                             الحالة
                           </div>
                         </TableHead>
-                        <TableHead className="font-semibold text-foreground py-4 px-4 min-w-[180px]">
+                        <TableHead className="font-semibold text-foreground py-3 px-3 w-[18%]">
                           <div className="flex items-center gap-2">
                             <ShieldCheck className="w-4 h-4" />
-                            حالة التحقق
+                            التحقق
                           </div>
                         </TableHead>
-                        <TableHead className="font-semibold text-foreground py-4 px-4 min-w-[140px]">
+                        <TableHead className="font-semibold text-foreground py-3 px-3 w-[12%]">
                           <div className="flex items-center gap-2">
                             <Calendar className="w-4 h-4" />
-                            تاريخ التسجيل
+                            التسجيل
                           </div>
                         </TableHead>
-                        <TableHead className="font-semibold text-foreground py-4 px-4 min-w-[140px]">
+                        <TableHead className="font-semibold text-foreground py-3 px-3 w-[12%]">
                           <div className="flex items-center gap-2">
                             <Clock className="w-4 h-4" />
                             آخر دخول
                           </div>
                         </TableHead>
-                        <TableHead className="text-center font-semibold text-foreground py-4 px-4 min-w-[100px]">
+                        <TableHead className="text-center font-semibold text-foreground py-3 px-3 w-[11%]">
                           <div className="flex items-center justify-center gap-2">
                             <Settings className="w-4 h-4" />
-                            الإجراءات
+                            إجراءات
                           </div>
                         </TableHead>
                       </TableRow>
@@ -555,44 +555,67 @@ const AdminCustomers = () => {
                         transition={{ delay: index * 0.05, duration: 0.3 }}
                         className="hover:bg-muted/30 transition-all duration-200 border-b group"
                       >
-                        <TableCell className="py-6 px-6">
-                          <div className="flex items-center gap-4">
-                            <div className="w-12 h-12 rounded-full bg-gradient-to-br from-primary/20 to-primary/10 flex items-center justify-center ring-2 ring-primary/10">
-                              <Users className="w-5 h-5 text-primary" />
+                        <TableCell className="py-4 px-4">
+                          <div className="flex items-center gap-3">
+                            <div className="w-9 h-9 rounded-full bg-gradient-to-br from-primary/20 to-primary/10 flex items-center justify-center ring-1 ring-primary/20">
+                              <Users className="w-4 h-4 text-primary" />
                             </div>
                             <div className="flex-1 min-w-0">
-                              <div className="font-semibold text-foreground text-base mb-1 truncate">
+                              <div className="font-medium text-foreground text-sm mb-0.5 truncate">
                                 {customer.full_name}
                               </div>
-                              <div className="text-sm text-muted-foreground flex items-center gap-2">
+                              <div className="text-xs text-muted-foreground flex items-center gap-1 truncate">
                                 <Mail className="w-3 h-3 flex-shrink-0" />
                                 <span className="truncate">{customer.email}</span>
                               </div>
                             </div>
                           </div>
                         </TableCell>
-                        <TableCell className="py-6 px-4">
-                          <div className="flex items-center gap-2 text-sm">
-                            <Phone className="w-3 h-3 text-muted-foreground flex-shrink-0" />
-                            <span className="text-foreground font-medium">
-                              {customer.phone || 'غير محدد'}
-                            </span>
+                        <TableCell className="py-4 px-3">
+                          <div className="text-xs font-medium text-foreground">
+                            {customer.phone ? (
+                              <span className="flex items-center gap-1">
+                                <Phone className="w-3 h-3 text-muted-foreground" />
+                                {customer.phone.length > 10 ? `${customer.phone.slice(0, 8)}...` : customer.phone}
+                              </span>
+                            ) : (
+                              <span className="text-muted-foreground">غير محدد</span>
+                            )}
                           </div>
                         </TableCell>
-                        <TableCell className="py-6 px-4">
-                          {getStatusBadge(customer.status)}
-                        </TableCell>
-                        <TableCell className="py-6 px-4">
-                          <div className="flex flex-wrap gap-1">
-                            {getVerificationBadge(customer)}
+                        <TableCell className="py-4 px-3">
+                          <div className="flex justify-center">
+                            {getStatusBadge(customer.status)}
                           </div>
                         </TableCell>
-                        <TableCell className="py-6 px-4">
-                          <div className="text-sm">
+                        <TableCell className="py-4 px-3">
+                          <div className="flex flex-col gap-1">
+                            {customer.email_verified && (
+                              <Badge variant="outline" className="text-xs bg-primary/10 text-primary border-primary/20 px-1.5 py-0.5">
+                                <Mail className="w-2.5 h-2.5 ml-1" />
+                                بريد
+                              </Badge>
+                            )}
+                            {customer.phone_verified && (
+                              <Badge variant="outline" className="text-xs bg-accent/10 text-accent-foreground border-accent/20 px-1.5 py-0.5">
+                                <Phone className="w-2.5 h-2.5 ml-1" />
+                                هاتف
+                              </Badge>
+                            )}
+                            {!customer.email_verified && !customer.phone_verified && (
+                              <Badge variant="outline" className="text-xs bg-muted/50 text-muted-foreground border-muted px-1.5 py-0.5">
+                                <Shield className="w-2.5 h-2.5 ml-1" />
+                                غير محقق
+                              </Badge>
+                            )}
+                          </div>
+                        </TableCell>
+                        <TableCell className="py-4 px-3">
+                          <div className="text-xs text-center">
                             <div className="font-medium text-foreground">
                               {new Date(customer.created_at).toLocaleDateString('ar-SA', {
-                                day: 'numeric',
-                                month: 'short'
+                                day: '2-digit',
+                                month: '2-digit'
                               })}
                             </div>
                             <div className="text-xs text-muted-foreground">
@@ -600,14 +623,14 @@ const AdminCustomers = () => {
                             </div>
                           </div>
                         </TableCell>
-                        <TableCell className="py-6 px-4">
-                          <div className="text-sm">
+                        <TableCell className="py-4 px-3">
+                          <div className="text-xs text-center">
                             {customer.last_login_at ? (
                               <>
                                 <div className="font-medium text-foreground">
                                   {new Date(customer.last_login_at).toLocaleDateString('ar-SA', {
-                                    day: 'numeric',
-                                    month: 'short'
+                                    day: '2-digit',
+                                    month: '2-digit'
                                   })}
                                 </div>
                                 <div className="text-xs text-muted-foreground">
@@ -615,31 +638,31 @@ const AdminCustomers = () => {
                                 </div>
                               </>
                             ) : (
-                              <span className="text-muted-foreground">لم يدخل بعد</span>
+                              <span className="text-muted-foreground">لم يدخل</span>
                             )}
                           </div>
                         </TableCell>
-                         <TableCell className="py-6 px-4">
+                         <TableCell className="py-4 px-3">
                            <div className="flex items-center justify-center">
                              <DropdownMenu>
                                <DropdownMenuTrigger asChild>
                                  <Button 
                                    variant="ghost" 
                                    size="sm"
-                                   className="h-9 w-9 p-0 hover:bg-primary/10 transition-all duration-200 rounded-full opacity-60 group-hover:opacity-100"
+                                   className="h-8 w-8 p-0 hover:bg-primary/10 transition-all duration-200 rounded-full opacity-70 group-hover:opacity-100"
                                  >
-                                   <MoreVertical className="h-4 w-4" />
+                                   <MoreVertical className="h-3.5 w-3.5" />
                                  </Button>
                                </DropdownMenuTrigger>
-                               <DropdownMenuContent align="end" className="z-50 w-48">
+                               <DropdownMenuContent align="end" className="z-50 w-44">
                                  <DropdownMenuItem 
                                    onClick={() => {
                                      setPasswordModal({ isOpen: true, customer });
                                      setNewPassword('');
                                    }}
-                                   className="cursor-pointer gap-2 py-2.5"
+                                   className="cursor-pointer gap-2 py-2 text-xs"
                                  >
-                                   <Key className="h-4 w-4 text-primary" />
+                                   <Key className="h-3.5 w-3.5 text-primary" />
                                    تغيير كلمة المرور
                                  </DropdownMenuItem>
                                  
@@ -651,9 +674,9 @@ const AdminCustomers = () => {
                                        phone: customer.phone || ''
                                      });
                                    }}
-                                   className="cursor-pointer gap-2 py-2.5"
+                                   className="cursor-pointer gap-2 py-2 text-xs"
                                  >
-                                   <Edit className="h-4 w-4 text-accent-foreground" />
+                                   <Edit className="h-3.5 w-3.5 text-accent-foreground" />
                                    تعديل البيانات
                                  </DropdownMenuItem>
 
@@ -665,9 +688,9 @@ const AdminCustomers = () => {
                                        setStatusModal({ isOpen: true, customer });
                                        setNewStatus('blocked');
                                      }}
-                                     className="text-destructive cursor-pointer gap-2 py-2.5"
+                                     className="text-destructive cursor-pointer gap-2 py-2 text-xs"
                                    >
-                                     <Ban className="h-4 w-4" />
+                                     <Ban className="h-3.5 w-3.5" />
                                      حظر العميل
                                    </DropdownMenuItem>
                                  ) : (
@@ -676,9 +699,9 @@ const AdminCustomers = () => {
                                        setStatusModal({ isOpen: true, customer });
                                        setNewStatus('active');
                                      }}
-                                     className="text-success cursor-pointer gap-2 py-2.5"
+                                     className="text-success cursor-pointer gap-2 py-2 text-xs"
                                    >
-                                     <CheckCircle className="h-4 w-4" />
+                                     <CheckCircle className="h-3.5 w-3.5" />
                                      تفعيل العميل
                                    </DropdownMenuItem>
                                  )}
@@ -687,9 +710,9 @@ const AdminCustomers = () => {
 
                                  <DropdownMenuItem 
                                    onClick={() => handleDeleteCustomer(customer)}
-                                   className="text-destructive cursor-pointer gap-2 py-2.5"
+                                   className="text-destructive cursor-pointer gap-2 py-2 text-xs"
                                  >
-                                   <Trash2 className="h-4 w-4" />
+                                   <Trash2 className="h-3.5 w-3.5" />
                                    حذف العميل
                                  </DropdownMenuItem>
                                </DropdownMenuContent>
