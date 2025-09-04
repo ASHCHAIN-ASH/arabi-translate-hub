@@ -1,10 +1,13 @@
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { Resend } from "npm:resend@2.0.0";
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 };
+
+const resend = new Resend(Deno.env.get("RESEND_API_KEY"));
 
 interface CustomerRequest {
   customerId: string;
@@ -97,6 +100,71 @@ async function updateCustomerPassword(supabase: any, customerId: string, newPass
       return { success: false, message: 'فشل في تحديث كلمة المرور' };
     }
 
+    // إرسال إيميل للعميل بكلمة المرور الجديدة
+    try {
+      await resend.emails.send({
+        from: 'إدارة النظام <noreply@alialshehriholding.com>',
+        to: [customer.email],
+        subject: 'تم تحديث كلمة المرور الخاصة بك',
+        html: `
+          <div dir="rtl" style="font-family: Arial, sans-serif; margin: 20px; padding: 20px; border: 1px solid #ddd; border-radius: 8px;">
+            <h2 style="color: #2563eb; text-align: center; margin-bottom: 30px;">تحديث كلمة المرور</h2>
+            
+            <p style="font-size: 16px; line-height: 1.6; margin-bottom: 20px;">
+              مرحباً <strong>${customer.full_name}</strong>،
+            </p>
+            
+            <p style="font-size: 16px; line-height: 1.6; margin-bottom: 20px;">
+              تم تحديث كلمة المرور الخاصة بحسابك بنجاح من قبل إدارة النظام.
+            </p>
+            
+            <div style="background-color: #f8fafc; padding: 15px; border-radius: 6px; margin: 20px 0;">
+              <p style="margin: 0; font-weight: bold; color: #1e40af;">كلمة المرور الجديدة:</p>
+              <p style="margin: 5px 0 0 0; font-family: monospace; font-size: 18px; color: #dc2626; background-color: white; padding: 10px; border-radius: 4px; border: 1px solid #e5e7eb;">
+                ${newPassword}
+              </p>
+            </div>
+            
+            <div style="background-color: #fef3c7; padding: 15px; border-radius: 6px; margin: 20px 0; border-right: 4px solid #f59e0b;">
+              <p style="margin: 0; color: #92400e; font-weight: bold;">⚠️ تنبيه أمني هام:</p>
+              <p style="margin: 10px 0 0 0; color: #92400e;">
+                • يُنصح بتغيير كلمة المرور هذه عند تسجيل الدخول التالي<br>
+                • لا تشارك كلمة المرور مع أي شخص آخر<br>
+                • احتفظ بكلمة المرور في مكان آمن
+              </p>
+            </div>
+            
+            <p style="font-size: 16px; line-height: 1.6; margin-bottom: 20px;">
+              يمكنك الآن تسجيل الدخول إلى حسابك باستخدام كلمة المرور الجديدة.
+            </p>
+            
+            <div style="text-align: center; margin: 30px 0;">
+              <a href="https://alialshehriholding.com/login" 
+                 style="background-color: #2563eb; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; display: inline-block; font-weight: bold;">
+                تسجيل الدخول الآن
+              </a>
+            </div>
+            
+            <hr style="border: none; border-top: 1px solid #e5e7eb; margin: 30px 0;">
+            
+            <p style="font-size: 14px; color: #6b7280; text-align: center; margin: 0;">
+              مع تحيات فريق إدارة النظام<br>
+              <strong>شركة علي صالح الشهري القابضة</strong>
+            </p>
+            
+            <p style="font-size: 12px; color: #9ca3af; text-align: center; margin-top: 15px;">
+              إذا لم تطلب تغيير كلمة المرور، يُرجى التواصل مع الدعم الفني فوراً
+            </p>
+          </div>
+        `,
+      });
+      
+      console.log('✅ Password update email sent successfully to:', customer.email);
+    } catch (emailError) {
+      console.error('❌ Email sending failed:', emailError);
+      // لا نفشل العملية إذا فشل الإيميل
+    }
+
     // تسجيل العملية (اختياري)
     try {
       await supabase
@@ -105,14 +173,14 @@ async function updateCustomerPassword(supabase: any, customerId: string, newPass
           user_id: customer.user_id,
           activity_type: 'password_reset',
           description: 'تغيير كلمة المرور من قبل المشرف',
-          metadata: { admin_reset: true }
+          metadata: { admin_reset: true, email_sent: true }
         });
     } catch (logError) {
       console.log('Log error (non-critical):', logError);
     }
 
     console.log('Password updated successfully for customer:', customerId);
-    return { success: true, message: 'تم تحديث كلمة المرور بنجاح' };
+    return { success: true, message: 'تم تحديث كلمة المرور بنجاح وإرسال إيميل للعميل' };
 
   } catch (error: any) {
     console.error('Error updating password:', error);
