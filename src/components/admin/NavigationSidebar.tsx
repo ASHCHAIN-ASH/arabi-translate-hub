@@ -1,8 +1,18 @@
 import React from 'react';
-import { FileText, CreditCard, FileSignature, MessageCircle, Receipt } from 'lucide-react';
+import { FileText, CreditCard, FileSignature, MessageCircle, Receipt, Users, Settings } from 'lucide-react';
 import { Sidebar, SidebarContent, SidebarGroup, SidebarGroupContent, SidebarGroupLabel, SidebarMenu, SidebarMenuButton, SidebarMenuItem, SidebarTrigger } from '@/components/ui/sidebar';
 
 const items = [
+  {
+    title: 'إدارة العملاء',
+    url: '/admin/customers',
+    icon: Users,
+  },
+  {
+    title: 'إدارة المستخدمين',
+    url: '/admin/users',
+    icon: Settings,
+  },
   {
     title: 'العقود',
     url: '/admin/contracts',

@@ -5541,6 +5541,10 @@ export type Database = {
         Args: Record<PropertyKey, never>
         Returns: undefined
       }
+      update_customer_status: {
+        Args: { p_customer_id: string; p_reason?: string; p_status: string }
+        Returns: Json
+      }
       update_user_last_activity: {
         Args: { user_id_param: string }
         Returns: undefined

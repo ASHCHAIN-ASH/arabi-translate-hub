@@ -97,6 +97,12 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
       badge: counts.users > 0 ? counts.users.toString() : null
     },
     { 
+      name: 'إدارة العملاء', 
+      href: '/admin/customers', 
+      icon: Users,
+      badge: 'جديد'
+    },
+    { 
       name: 'إدارة التذاكر', 
       href: '/admin/tickets', 
       icon: HelpCircle,
