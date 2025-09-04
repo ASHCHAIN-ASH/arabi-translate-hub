@@ -1521,6 +1521,44 @@ export type Database = {
         }
         Relationships: []
       }
+      customer_activation_logs: {
+        Row: {
+          action: string
+          admin_id: string | null
+          created_at: string | null
+          customer_id: string | null
+          id: string
+          metadata: Json | null
+          reason: string | null
+        }
+        Insert: {
+          action: string
+          admin_id?: string | null
+          created_at?: string | null
+          customer_id?: string | null
+          id?: string
+          metadata?: Json | null
+          reason?: string | null
+        }
+        Update: {
+          action?: string
+          admin_id?: string | null
+          created_at?: string | null
+          customer_id?: string | null
+          id?: string
+          metadata?: Json | null
+          reason?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "customer_activation_logs_customer_id_fkey"
+            columns: ["customer_id"]
+            isOneToOne: false
+            referencedRelation: "customers"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       customer_wallets: {
         Row: {
           balance: number
@@ -1545,6 +1583,51 @@ export type Database = {
           id?: string
           updated_at?: string
           user_id?: string
+        }
+        Relationships: []
+      }
+      customers: {
+        Row: {
+          created_at: string | null
+          email: string
+          email_verified: boolean | null
+          full_name: string
+          id: string
+          last_login_at: string | null
+          phone: string | null
+          phone_verified: boolean | null
+          profile_data: Json | null
+          status: string | null
+          updated_at: string | null
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          email: string
+          email_verified?: boolean | null
+          full_name: string
+          id?: string
+          last_login_at?: string | null
+          phone?: string | null
+          phone_verified?: boolean | null
+          profile_data?: Json | null
+          status?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          email?: string
+          email_verified?: boolean | null
+          full_name?: string
+          id?: string
+          last_login_at?: string | null
+          phone?: string | null
+          phone_verified?: boolean | null
+          profile_data?: Json | null
+          status?: string | null
+          updated_at?: string | null
+          user_id?: string | null
         }
         Relationships: []
       }
