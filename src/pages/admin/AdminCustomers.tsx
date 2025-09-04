@@ -23,7 +23,9 @@ import {
   Settings,
   Star,
   TrendingUp,
-  Activity
+  Activity,
+  Download,
+  FileSpreadsheet
 } from 'lucide-react';
 import AdminLayout from '@/components/admin/AdminLayout';
 import { useCustomers, Customer } from '@/hooks/useCustomers';
@@ -160,6 +162,47 @@ const AdminCustomers = () => {
       );
     }
     return badges;
+  };
+
+  // تصدير البيانات إلى CSV
+  const exportToCSV = () => {
+    const headers = [
+      'الاسم الكامل',
+      'البريد الإلكتروني', 
+      'رقم الهاتف',
+      'الحالة',
+      'البريد محقق',
+      'الهاتف محقق',
+      'تاريخ التسجيل',
+      'آخر دخول'
+    ];
+
+    const csvContent = [
+      headers.join(','),
+      ...filteredCustomers.map(customer => [
+        customer.full_name,
+        customer.email,
+        customer.phone || 'غير محدد',
+        customer.status === 'active' ? 'نشط' : customer.status === 'blocked' ? 'محظور' : 'غير نشط',
+        customer.email_verified ? 'نعم' : 'لا',
+        customer.phone_verified ? 'نعم' : 'لا',
+        new Date(customer.created_at).toLocaleDateString('ar-SA'),
+        customer.last_login_at ? new Date(customer.last_login_at).toLocaleDateString('ar-SA') : 'لم يدخل بعد'
+      ].join(','))
+    ].join('\n');
+
+    // إنشاء ملف CSV وتحميله
+    const blob = new Blob(['\ufeff' + csvContent], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    const url = URL.createObjectURL(blob);
+    link.setAttribute('href', url);
+    link.setAttribute('download', `قائمة_العملاء_${new Date().toISOString().split('T')[0]}.csv`);
+    link.style.visibility = 'hidden';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    
+    toast.success('تم تصدير البيانات بنجاح');
   };
 
   // التعامل مع تغيير كلمة المرور
@@ -726,6 +769,32 @@ const AdminCustomers = () => {
                  </Table>
                 </div>
               </CardContent>
+              
+              {/* زر التصدير */}
+              <div className="p-4 border-t bg-muted/20">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                    <Users className="w-4 h-4" />
+                    <span>عرض {filteredCustomers.length} من {stats.total} عميل</span>
+                  </div>
+                  
+                  <motion.div
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                  >
+                    <Button 
+                      onClick={exportToCSV}
+                      variant="outline"
+                      size="sm"
+                      className="gap-2 hover:bg-primary hover:text-primary-foreground transition-colors duration-200"
+                    >
+                      <Download className="w-4 h-4" />
+                      تصدير البيانات
+                      <FileSpreadsheet className="w-4 h-4" />
+                    </Button>
+                  </motion.div>
+                </div>
+              </div>
             </Card>
           </motion.div>
         </AnimatePresence>
