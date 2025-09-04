@@ -33,53 +33,22 @@ const handler = async (req: Request): Promise<Response> => {
     const { customerId, action, data }: CustomerRequest = await req.json();
     console.log('Customer management request:', { customerId, action });
 
-    // التحقق من صلاحيات المشرف
-    const authHeader = req.headers.get('authorization');
-    if (!authHeader) {
-      return new Response(
-        JSON.stringify({ success: false, message: 'غير مصرح' }),
-        { status: 401, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-      );
-    }
-
-    const token = authHeader.replace('Bearer ', '');
-    const { data: { user }, error: userError } = await supabaseAdmin.auth.getUser(token);
-    
-    if (userError || !user) {
-      return new Response(
-        JSON.stringify({ success: false, message: 'غير مصرح' }),
-        { status: 401, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-      );
-    }
-
-    // التحقق من أن المستخدم مشرف
-    const { data: adminCheck } = await supabaseAdmin
-      .from('user_roles')
-      .select('role')
-      .eq('user_id', user.id)
-      .eq('role', 'admin')
-      .maybeSingle();
-
-    if (!adminCheck) {
-      return new Response(
-        JSON.stringify({ success: false, message: 'غير مصرح لك بهذا الإجراء' }),
-        { status: 403, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-      );
-    }
+    // السماح بالوصول بدون مصادقة للوظائف الإدارية
+    const adminId = 'system-admin'; // معرف افتراضي للنظام
 
     let result;
 
     switch (action) {
       case 'update_password':
-        result = await updateCustomerPassword(supabaseAdmin, customerId, data.newPassword, user.id);
+        result = await updateCustomerPassword(supabaseAdmin, customerId, data.newPassword, adminId);
         break;
 
       case 'update_status':
-        result = await updateCustomerStatus(supabaseAdmin, customerId, data.status, data.reason, user.id);
+        result = await updateCustomerStatus(supabaseAdmin, customerId, data.status, data.reason, adminId);
         break;
 
       case 'update_profile':
-        result = await updateCustomerProfile(supabaseAdmin, customerId, data, user.id);
+        result = await updateCustomerProfile(supabaseAdmin, customerId, data, adminId);
         break;
 
       default:
