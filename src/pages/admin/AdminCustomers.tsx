@@ -64,7 +64,16 @@ interface EditProfileModal {
 }
 
 const AdminCustomers = () => {
-  const { customers, stats, loading, error, updateCustomerPassword, updateCustomerStatus, updateCustomerProfile, deleteCustomer } = useCustomers();
+  const { customers, stats, loading, error, updateCustomerPassword, updateCustomerStatus, updateCustomerProfile, deleteCustomer, refresh } = useCustomers();
+  
+  // تشخيص البيانات
+  console.log('🔍 AdminCustomers Debug Info:', {
+    customersCount: customers.length,
+    customersData: customers,
+    stats,
+    loading,
+    error
+  });
   
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
@@ -326,8 +335,61 @@ const AdminCustomers = () => {
                       <TableHead className="text-center">الإجراءات</TableHead>
                     </TableRow>
                   </TableHeader>
-                  <TableBody>
-                    {filteredCustomers.map((customer) => (
+                   <TableBody>
+                    {loading ? (
+                      <TableRow>
+                        <TableCell colSpan={7} className="text-center py-8">
+                          <div className="flex items-center justify-center">
+                            <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-primary mr-2"></div>
+                            جاري تحميل العملاء...
+                          </div>
+                        </TableCell>
+                      </TableRow>
+                    ) : error ? (
+                      <TableRow>
+                        <TableCell colSpan={7} className="text-center py-8 text-red-500">
+                          خطأ في تحميل العملاء: {error}
+                          <Button onClick={() => window.location.reload()} className="mt-2 block mx-auto">
+                            إعادة المحاولة
+                          </Button>
+                        </TableCell>
+                      </TableRow>
+                    ) : filteredCustomers.length === 0 ? (
+                      <TableRow>
+                        <TableCell colSpan={7} className="text-center py-12">
+                          <div className="flex flex-col items-center text-muted-foreground">
+                            <Users className="h-12 w-12 mb-4 text-muted-foreground/50" />
+                            <h3 className="text-lg font-medium mb-2">لا يوجد عملاء</h3>
+                            <p className="text-sm mb-4">
+                              {searchTerm || statusFilter !== 'all' 
+                                ? 'لا يوجد عملاء مطابقون لمعايير البحث' 
+                                : 'لم يتم تسجيل أي عملاء بعد'
+                              }
+                            </p>
+                            <div className="flex gap-2">
+                              <Button 
+                                onClick={() => {
+                                  setSearchTerm('');
+                                  setStatusFilter('all');
+                                }} 
+                                variant="outline"
+                                size="sm"
+                              >
+                                مسح المرشحات
+                              </Button>
+                              <Button 
+                                onClick={() => window.location.reload()} 
+                                variant="default"
+                                size="sm"
+                              >
+                                تحديث الصفحة
+                              </Button>
+                            </div>
+                          </div>
+                        </TableCell>
+                      </TableRow>
+                    ) : (
+                      filteredCustomers.map((customer) => (
                       <TableRow key={customer.id}>
                         <TableCell>
                           <div>
@@ -440,16 +502,11 @@ const AdminCustomers = () => {
                           </DropdownMenu>
                         </TableCell>
                       </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
-
-                {filteredCustomers.length === 0 && (
-                  <div className="text-center py-8">
-                    <p className="text-muted-foreground">لا توجد عملاء مطابقون للبحث</p>
-                  </div>
-                )}
-              </div>
+                     ))
+                    )}
+                   </TableBody>
+                 </Table>
+               </div>
             </CardContent>
           </Card>
         </motion.div>

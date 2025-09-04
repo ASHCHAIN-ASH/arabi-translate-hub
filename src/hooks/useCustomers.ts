@@ -33,28 +33,40 @@ export function useCustomers() {
     try {
       setLoading(true);
       setError(null);
+      
+      console.log('🔍 Fetching customers...');
 
       const { data, error } = await supabase
         .from('customers')
         .select('*')
         .order('created_at', { ascending: false });
 
-      if (error) throw error;
+      console.log('📊 Customers response:', { data, error });
 
-      setCustomers((data || []) as Customer[]);
+      if (error) {
+        console.error('❌ Supabase error:', error);
+        throw error;
+      }
+
+      const customersData = (data || []) as Customer[];
+      console.log('✅ Customers fetched successfully:', customersData.length, 'customers');
+      
+      setCustomers(customersData);
       
       // حساب الإحصائيات
       const today = new Date().toDateString();
       const newStats = {
-        total: data?.length || 0,
-        active: data?.filter(c => c.status === 'active').length || 0,
-        blocked: data?.filter(c => c.status === 'blocked').length || 0,
-        newToday: data?.filter(c => new Date(c.created_at).toDateString() === today).length || 0
+        total: customersData.length,
+        active: customersData.filter(c => c.status === 'active').length,
+        blocked: customersData.filter(c => c.status === 'blocked').length,
+        newToday: customersData.filter(c => new Date(c.created_at).toDateString() === today).length
       };
+      
+      console.log('📈 Customer stats:', newStats);
       setStats(newStats);
 
     } catch (err: any) {
-      console.error('Error fetching customers:', err);
+      console.error('❌ Error fetching customers:', err);
       setError(err.message);
     } finally {
       setLoading(false);
