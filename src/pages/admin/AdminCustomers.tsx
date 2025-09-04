@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { 
   Users, 
   UserCheck, 
@@ -14,7 +14,16 @@ import {
   Edit,
   Trash2,
   Eye,
-  EyeOff
+  EyeOff,
+  Mail,
+  Phone,
+  Shield,
+  ShieldCheck,
+  Clock,
+  Settings,
+  Star,
+  TrendingUp,
+  Activity
 } from 'lucide-react';
 import AdminLayout from '@/components/admin/AdminLayout';
 import { useCustomers, Customer } from '@/hooks/useCustomers';
@@ -98,14 +107,59 @@ const AdminCustomers = () => {
   const getStatusBadge = (status: string) => {
     switch (status) {
       case 'active':
-        return <Badge className="bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300">نشط</Badge>;
+        return (
+          <Badge className="bg-success/10 text-success border-success/20 hover:bg-success/20 transition-colors">
+            <CheckCircle className="w-3 h-3 ml-1" />
+            نشط
+          </Badge>
+        );
       case 'blocked':
-        return <Badge className="bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300">محظور</Badge>;
+        return (
+          <Badge className="bg-destructive/10 text-destructive border-destructive/20 hover:bg-destructive/20 transition-colors">
+            <Ban className="w-3 h-3 ml-1" />
+            محظور
+          </Badge>
+        );
       case 'inactive':
-        return <Badge className="bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-300">غير نشط</Badge>;
+        return (
+          <Badge className="bg-muted text-muted-foreground border-muted hover:bg-muted/80 transition-colors">
+            <Clock className="w-3 h-3 ml-1" />
+            غير نشط
+          </Badge>
+        );
       default:
         return <Badge variant="secondary">{status}</Badge>;
     }
+  };
+
+  // الحصول على شارة التحقق
+  const getVerificationBadge = (customer: Customer) => {
+    const badges = [];
+    if (customer.email_verified) {
+      badges.push(
+        <Badge key="email" variant="outline" className="text-xs bg-primary/10 text-primary border-primary/20">
+          <Mail className="w-3 h-3 ml-1" />
+          البريد محقق
+        </Badge>
+      );
+    }
+    if (customer.phone_verified) {
+      badges.push(
+        <Badge key="phone" variant="outline" className="text-xs bg-accent/10 text-accent-foreground border-accent/20">
+          <Phone className="w-3 h-3 ml-1" />
+          الهاتف محقق
+        </Badge>
+      );
+    }
+    if (badges.length === 0) {
+      badges.push(
+        <Badge key="none" variant="outline" className="text-xs bg-muted/50 text-muted-foreground border-muted">
+          <Shield className="w-3 h-3 ml-1" />
+          غير محقق
+        </Badge>
+      );
+    }
+    return badges;
   };
 
   // التعامل مع تغيير كلمة المرور
@@ -227,93 +281,157 @@ const AdminCustomers = () => {
           </div>
         </motion.div>
 
-        {/* الإحصائيات */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.1 }}
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6"
-        >
-          <Card>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">إجمالي العملاء</CardTitle>
-              <Users className="h-4 w-4 text-muted-foreground" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">{stats.total}</div>
-            </CardContent>
-          </Card>
+        <AnimatePresence mode="wait">
+          {/* الإحصائيات */}
+          <motion.div
+            key="stats"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            transition={{ delay: 0.1 }}
+            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6"
+          >
+          <motion.div whileHover={{ scale: 1.02 }} transition={{ type: "spring", stiffness: 300 }}>
+            <Card className="hover:shadow-lg transition-all duration-300 border-l-4 border-l-primary">
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardTitle className="text-sm font-medium text-muted-foreground">إجمالي العملاء</CardTitle>
+                <div className="p-2 bg-primary/10 rounded-full">
+                  <Users className="h-4 w-4 text-primary" />
+                </div>
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold text-foreground">{stats.total}</div>
+                <div className="flex items-center text-xs text-muted-foreground mt-1">
+                  <TrendingUp className="w-3 h-3 ml-1" />
+                  جميع المستخدمين
+                </div>
+              </CardContent>
+            </Card>
+          </motion.div>
 
-          <Card>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">العملاء النشطون</CardTitle>
-              <UserCheck className="h-4 w-4 text-green-600" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold text-green-600">{stats.active}</div>
-            </CardContent>
-          </Card>
+          <motion.div whileHover={{ scale: 1.02 }} transition={{ type: "spring", stiffness: 300 }}>
+            <Card className="hover:shadow-lg transition-all duration-300 border-l-4 border-l-success">
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardTitle className="text-sm font-medium text-muted-foreground">العملاء النشطون</CardTitle>
+                <div className="p-2 bg-success/10 rounded-full">
+                  <UserCheck className="h-4 w-4 text-success" />
+                </div>
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold text-success">{stats.active}</div>
+                <div className="flex items-center text-xs text-muted-foreground mt-1">
+                  <Activity className="w-3 h-3 ml-1" />
+                  حسابات فعالة
+                </div>
+              </CardContent>
+            </Card>
+          </motion.div>
 
-          <Card>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">العملاء المحظورون</CardTitle>
-              <UserX className="h-4 w-4 text-red-600" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold text-red-600">{stats.blocked}</div>
-            </CardContent>
-          </Card>
+          <motion.div whileHover={{ scale: 1.02 }} transition={{ type: "spring", stiffness: 300 }}>
+            <Card className="hover:shadow-lg transition-all duration-300 border-l-4 border-l-destructive">
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardTitle className="text-sm font-medium text-muted-foreground">العملاء المحظورون</CardTitle>
+                <div className="p-2 bg-destructive/10 rounded-full">
+                  <UserX className="h-4 w-4 text-destructive" />
+                </div>
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold text-destructive">{stats.blocked}</div>
+                <div className="flex items-center text-xs text-muted-foreground mt-1">
+                  <Ban className="w-3 h-3 ml-1" />
+                  حسابات محظورة
+                </div>
+              </CardContent>
+            </Card>
+          </motion.div>
 
-          <Card>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">جديد اليوم</CardTitle>
-              <Calendar className="h-4 w-4 text-blue-600" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold text-blue-600">{stats.newToday}</div>
-            </CardContent>
-          </Card>
-        </motion.div>
+          <motion.div whileHover={{ scale: 1.02 }} transition={{ type: "spring", stiffness: 300 }}>
+            <Card className="hover:shadow-lg transition-all duration-300 border-l-4 border-l-accent">
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardTitle className="text-sm font-medium text-muted-foreground">جديد اليوم</CardTitle>
+                <div className="p-2 bg-accent/10 rounded-full">
+                  <Star className="h-4 w-4 text-accent-foreground" />
+                </div>
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold text-accent-foreground">{stats.newToday}</div>
+                <div className="flex items-center text-xs text-muted-foreground mt-1">
+                  <Calendar className="w-3 h-3 ml-1" />
+                  مسجلين جدد
+                </div>
+              </CardContent>
+            </Card>
+          </motion.div>
+          </motion.div>
 
-        {/* البحث والتصفية */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2 }}
-          className="flex flex-col sm:flex-row gap-4"
-        >
-          <div className="relative flex-1">
-            <Search className="absolute right-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
-            <Input
-              placeholder="البحث عن عميل..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="pr-10"
-            />
+          {/* البحث والتصفية */}
+          <motion.div
+            key="filters"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            transition={{ delay: 0.2 }}
+            className="bg-card rounded-lg border p-4"
+          >
+          <div className="flex flex-col lg:flex-row gap-4 items-start lg:items-center justify-between">
+            <div className="flex flex-col sm:flex-row gap-3 flex-1 w-full lg:w-auto">
+              <div className="relative flex-1 min-w-[300px]">
+                <Search className="absolute right-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
+                <Input
+                  placeholder="البحث بالاسم أو البريد الإلكتروني..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className="pr-10 transition-all duration-200 focus:ring-2 focus:ring-primary/20"
+                />
+              </div>
+
+              <div className="flex items-center gap-2 min-w-[160px]">
+                <Filter className="h-4 w-4 text-muted-foreground flex-shrink-0" />
+                <Select value={statusFilter} onValueChange={setStatusFilter}>
+                  <SelectTrigger className="w-full transition-all duration-200 focus:ring-2 focus:ring-primary/20">
+                    <SelectValue placeholder="تصفية بالحالة" />
+                  </SelectTrigger>
+                  <SelectContent className="z-50">
+                    <SelectItem value="all">جميع الحالات</SelectItem>
+                    <SelectItem value="active">
+                      <div className="flex items-center gap-2">
+                        <CheckCircle className="w-3 h-3 text-success" />
+                        نشط
+                      </div>
+                    </SelectItem>
+                    <SelectItem value="inactive">
+                      <div className="flex items-center gap-2">
+                        <Clock className="w-3 h-3 text-muted-foreground" />
+                        غير نشط
+                      </div>
+                    </SelectItem>
+                    <SelectItem value="blocked">
+                      <div className="flex items-center gap-2">
+                        <Ban className="w-3 h-3 text-destructive" />
+                        محظور
+                      </div>
+                    </SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+
+            <div className="flex items-center gap-2 text-sm text-muted-foreground">
+              <Users className="h-4 w-4" />
+              عرض {filteredCustomers.length} من {stats.total} عميل
+            </div>
           </div>
+          </motion.div>
 
-          <div className="flex items-center gap-2">
-            <Filter className="h-4 w-4 text-muted-foreground" />
-            <Select value={statusFilter} onValueChange={setStatusFilter}>
-              <SelectTrigger className="w-40">
-                <SelectValue placeholder="تصفية بالحالة" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">جميع الحالات</SelectItem>
-                <SelectItem value="active">نشط</SelectItem>
-                <SelectItem value="inactive">غير نشط</SelectItem>
-                <SelectItem value="blocked">محظور</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-        </motion.div>
-
-        {/* جدول العملاء */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.3 }}
-        >
+          {/* جدول العملاء */}
+          <motion.div
+            key="customers-table"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            transition={{ delay: 0.3 }}
+            className="relative"
+          >
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
@@ -323,19 +441,54 @@ const AdminCustomers = () => {
             </CardHeader>
             <CardContent>
               <div className="overflow-x-auto">
-                <Table>
-                  <TableHeader>
-                    <TableRow>
-                      <TableHead>العميل</TableHead>
-                      <TableHead>معلومات الاتصال</TableHead>
-                      <TableHead>الحالة</TableHead>
-                      <TableHead>التحقق</TableHead>
-                      <TableHead>تاريخ التسجيل</TableHead>
-                      <TableHead>آخر دخول</TableHead>
-                      <TableHead className="text-center">الإجراءات</TableHead>
-                    </TableRow>
-                  </TableHeader>
-                   <TableBody>
+                  <Table>
+                    <TableHeader>
+                      <TableRow className="hover:bg-transparent border-b">
+                        <TableHead className="font-semibold text-foreground">
+                          <div className="flex items-center gap-2">
+                            <Users className="w-4 h-4" />
+                            العميل
+                          </div>
+                        </TableHead>
+                        <TableHead className="font-semibold text-foreground">
+                          <div className="flex items-center gap-2">
+                            <Phone className="w-4 h-4" />
+                            معلومات الاتصال
+                          </div>
+                        </TableHead>
+                        <TableHead className="font-semibold text-foreground">
+                          <div className="flex items-center gap-2">
+                            <Activity className="w-4 h-4" />
+                            الحالة
+                          </div>
+                        </TableHead>
+                        <TableHead className="font-semibold text-foreground">
+                          <div className="flex items-center gap-2">
+                            <ShieldCheck className="w-4 h-4" />
+                            التحقق
+                          </div>
+                        </TableHead>
+                        <TableHead className="font-semibold text-foreground">
+                          <div className="flex items-center gap-2">
+                            <Calendar className="w-4 h-4" />
+                            تاريخ التسجيل
+                          </div>
+                        </TableHead>
+                        <TableHead className="font-semibold text-foreground">
+                          <div className="flex items-center gap-2">
+                            <Clock className="w-4 h-4" />
+                            آخر دخول
+                          </div>
+                        </TableHead>
+                        <TableHead className="text-center font-semibold text-foreground">
+                          <div className="flex items-center justify-center gap-2">
+                            <Settings className="w-4 h-4" />
+                            الإجراءات
+                          </div>
+                        </TableHead>
+                      </TableRow>
+                    </TableHeader>
+                     <TableBody>
                     {loading ? (
                       <TableRow>
                         <TableCell colSpan={7} className="text-center py-8">
@@ -389,119 +542,141 @@ const AdminCustomers = () => {
                         </TableCell>
                       </TableRow>
                     ) : (
-                      filteredCustomers.map((customer) => (
-                      <TableRow key={customer.id}>
-                        <TableCell>
-                          <div>
-                            <div className="font-medium">{customer.full_name}</div>
-                            <div className="text-sm text-muted-foreground">{customer.email}</div>
+                      filteredCustomers.map((customer, index) => (
+                      <motion.tr
+                        key={customer.id}
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: index * 0.05, duration: 0.3 }}
+                        className="hover:bg-muted/50 transition-all duration-200 border-b"
+                      >
+                        <TableCell className="py-4">
+                          <div className="flex items-center gap-3">
+                            <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
+                              <Users className="w-4 h-4 text-primary" />
+                            </div>
+                            <div>
+                              <div className="font-medium text-foreground">{customer.full_name}</div>
+                              <div className="text-sm text-muted-foreground flex items-center gap-1">
+                                <Mail className="w-3 h-3" />
+                                {customer.email}
+                              </div>
+                            </div>
                           </div>
                         </TableCell>
-                        <TableCell>
-                          <div className="text-sm">
+                        <TableCell className="py-4">
+                          <div className="flex items-center gap-1 text-sm text-muted-foreground">
+                            <Phone className="w-3 h-3" />
                             {customer.phone || 'غير محدد'}
                           </div>
                         </TableCell>
-                        <TableCell>
+                        <TableCell className="py-4">
                           {getStatusBadge(customer.status)}
                         </TableCell>
-                        <TableCell>
-                          <div className="flex gap-1">
-                            {customer.email_verified && (
-                              <Badge variant="outline" className="text-xs bg-green-50 text-green-700">
-                                البريد محقق
-                              </Badge>
-                            )}
-                            {customer.phone_verified && (
-                              <Badge variant="outline" className="text-xs bg-blue-50 text-blue-700">
-                                الهاتف محقق
-                              </Badge>
-                            )}
+                        <TableCell className="py-4">
+                          <div className="flex flex-col gap-1">
+                            {getVerificationBadge(customer)}
                           </div>
                         </TableCell>
-                        <TableCell>
-                          <div className="text-sm">
-                            {new Date(customer.created_at).toLocaleDateString('ar-SA')}
+                        <TableCell className="py-4">
+                          <div className="text-sm text-muted-foreground">
+                            {new Date(customer.created_at).toLocaleDateString('ar-SA', {
+                              year: 'numeric',
+                              month: 'short',
+                              day: 'numeric'
+                            })}
                           </div>
                         </TableCell>
-                        <TableCell>
-                          <div className="text-sm">
+                        <TableCell className="py-4">
+                          <div className="text-sm text-muted-foreground">
                             {customer.last_login_at 
-                              ? new Date(customer.last_login_at).toLocaleDateString('ar-SA')
+                              ? new Date(customer.last_login_at).toLocaleDateString('ar-SA', {
+                                  year: 'numeric',
+                                  month: 'short',
+                                  day: 'numeric'
+                                })
                               : 'لم يدخل بعد'
                             }
                           </div>
                         </TableCell>
-                        <TableCell>
-                          <DropdownMenu>
-                            <DropdownMenuTrigger asChild>
-                              <Button variant="ghost" className="h-8 w-8 p-0">
-                                <MoreVertical className="h-4 w-4" />
-                              </Button>
-                            </DropdownMenuTrigger>
-                            <DropdownMenuContent align="end">
-                              <DropdownMenuItem 
-                                onClick={() => {
-                                  setPasswordModal({ isOpen: true, customer });
-                                  setNewPassword('');
-                                }}
-                              >
-                                <Key className="mr-2 h-4 w-4" />
-                                تغيير كلمة المرور
-                              </DropdownMenuItem>
-                              
-                              <DropdownMenuItem 
-                                onClick={() => {
-                                  setEditModal({ isOpen: true, customer });
-                                  setEditFormData({
-                                    full_name: customer.full_name,
-                                    phone: customer.phone || ''
-                                  });
-                                }}
-                              >
-                                <Edit className="mr-2 h-4 w-4" />
-                                تعديل البيانات
-                              </DropdownMenuItem>
+                         <TableCell className="py-4">
+                           <div className="flex items-center justify-center">
+                             <DropdownMenu>
+                               <DropdownMenuTrigger asChild>
+                                 <Button 
+                                   variant="ghost" 
+                                   size="sm"
+                                   className="h-8 w-8 p-0 hover:bg-muted transition-colors duration-200"
+                                 >
+                                   <MoreVertical className="h-4 w-4" />
+                                 </Button>
+                               </DropdownMenuTrigger>
+                               <DropdownMenuContent align="end" className="z-50">
+                                 <DropdownMenuItem 
+                                   onClick={() => {
+                                     setPasswordModal({ isOpen: true, customer });
+                                     setNewPassword('');
+                                   }}
+                                   className="cursor-pointer"
+                                 >
+                                   <Key className="mr-2 h-4 w-4 text-primary" />
+                                   تغيير كلمة المرور
+                                 </DropdownMenuItem>
+                                 
+                                 <DropdownMenuItem 
+                                   onClick={() => {
+                                     setEditModal({ isOpen: true, customer });
+                                     setEditFormData({
+                                       full_name: customer.full_name,
+                                       phone: customer.phone || ''
+                                     });
+                                   }}
+                                   className="cursor-pointer"
+                                 >
+                                   <Edit className="mr-2 h-4 w-4 text-accent-foreground" />
+                                   تعديل البيانات
+                                 </DropdownMenuItem>
 
-                              <DropdownMenuSeparator />
-                              
-                              {customer.status === 'active' ? (
-                                <DropdownMenuItem 
-                                  onClick={() => {
-                                    setStatusModal({ isOpen: true, customer });
-                                    setNewStatus('blocked');
-                                  }}
-                                  className="text-red-600"
-                                >
-                                  <Ban className="mr-2 h-4 w-4" />
-                                  حظر العميل
-                                </DropdownMenuItem>
-                              ) : (
-                                <DropdownMenuItem 
-                                  onClick={() => {
-                                    setStatusModal({ isOpen: true, customer });
-                                    setNewStatus('active');
-                                  }}
-                                  className="text-green-600"
-                                >
-                                  <CheckCircle className="mr-2 h-4 w-4" />
-                                  تفعيل العميل
-                                </DropdownMenuItem>
-                              )}
+                                 <DropdownMenuSeparator />
+                                 
+                                 {customer.status === 'active' ? (
+                                   <DropdownMenuItem 
+                                     onClick={() => {
+                                       setStatusModal({ isOpen: true, customer });
+                                       setNewStatus('blocked');
+                                     }}
+                                     className="text-destructive cursor-pointer"
+                                   >
+                                     <Ban className="mr-2 h-4 w-4" />
+                                     حظر العميل
+                                   </DropdownMenuItem>
+                                 ) : (
+                                   <DropdownMenuItem 
+                                     onClick={() => {
+                                       setStatusModal({ isOpen: true, customer });
+                                       setNewStatus('active');
+                                     }}
+                                     className="text-success cursor-pointer"
+                                   >
+                                     <CheckCircle className="mr-2 h-4 w-4" />
+                                     تفعيل العميل
+                                   </DropdownMenuItem>
+                                 )}
 
-                              <DropdownMenuSeparator />
+                                 <DropdownMenuSeparator />
 
-                              <DropdownMenuItem 
-                                onClick={() => handleDeleteCustomer(customer)}
-                                className="text-red-600"
-                              >
-                                <Trash2 className="mr-2 h-4 w-4" />
-                                حذف العميل
-                              </DropdownMenuItem>
-                            </DropdownMenuContent>
-                          </DropdownMenu>
-                        </TableCell>
-                      </TableRow>
+                                 <DropdownMenuItem 
+                                   onClick={() => handleDeleteCustomer(customer)}
+                                   className="text-destructive cursor-pointer"
+                                 >
+                                   <Trash2 className="mr-2 h-4 w-4" />
+                                   حذف العميل
+                                 </DropdownMenuItem>
+                               </DropdownMenuContent>
+                             </DropdownMenu>
+                           </div>
+                         </TableCell>
+                       </motion.tr>
                      ))
                     )}
                    </TableBody>
@@ -509,7 +684,8 @@ const AdminCustomers = () => {
                </div>
             </CardContent>
           </Card>
-        </motion.div>
+          </motion.div>
+        </AnimatePresence>
       </div>
 
       {/* Modal تغيير كلمة المرور */}
