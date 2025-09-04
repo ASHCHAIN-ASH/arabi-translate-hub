@@ -154,7 +154,7 @@ export function useCustomers() {
 
     // الاشتراك في التحديثات اللحظية
     const channel = supabase
-      .channel('schema-db-changes')
+      .channel('customers-changes')
       .on(
         'postgres_changes',
         {
@@ -163,11 +163,15 @@ export function useCustomers() {
           table: 'customers'
         },
         (payload) => {
-          console.log('Customer realtime update:', payload);
+          console.log('✅ Customer realtime update received:', payload);
           fetchCustomers(); // إعادة تحميل البيانات عند أي تغيير
         }
       )
-      .subscribe();
+      .subscribe((status) => {
+        if (status === 'SUBSCRIBED') {
+          console.log('✅ Realtime subscription active for customers table');
+        }
+      });
 
     return () => {
       supabase.removeChannel(channel);
