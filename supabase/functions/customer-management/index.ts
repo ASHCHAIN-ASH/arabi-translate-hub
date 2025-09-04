@@ -19,6 +19,8 @@ const handler = async (req: Request): Promise<Response> => {
   }
 
   try {
+    console.log('🔧 Customer management function called');
+    
     const supabaseAdmin = createClient(
       Deno.env.get('SUPABASE_URL') ?? '',
       Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? '',
@@ -31,10 +33,10 @@ const handler = async (req: Request): Promise<Response> => {
     );
 
     const { customerId, action, data }: CustomerRequest = await req.json();
-    console.log('Customer management request:', { customerId, action });
+    console.log('📝 Customer management request:', { customerId, action });
 
-    // السماح بالوصول بدون مصادقة للوظائف الإدارية
-    const adminId = 'system-admin'; // معرف افتراضي للنظام
+    // السماح بالوصول العام للوظائف الإدارية
+    const adminId = 'system-admin';
 
     let result;
 
@@ -95,16 +97,19 @@ async function updateCustomerPassword(supabase: any, customerId: string, newPass
       return { success: false, message: 'فشل في تحديث كلمة المرور' };
     }
 
-    // تسجيل العملية
-    await supabase
-      .from('customer_activation_logs')
-      .insert({
-        customer_id: customerId,
-        admin_id: adminId,
-        action: 'password_reset',
-        reason: 'تغيير كلمة المرور من قبل المشرف',
-        metadata: { admin_reset: true }
-      });
+    // تسجيل العملية (اختياري)
+    try {
+      await supabase
+        .from('user_activity_logs')
+        .insert({
+          user_id: customer.user_id,
+          activity_type: 'password_reset',
+          description: 'تغيير كلمة المرور من قبل المشرف',
+          metadata: { admin_reset: true }
+        });
+    } catch (logError) {
+      console.log('Log error (non-critical):', logError);
+    }
 
     console.log('Password updated successfully for customer:', customerId);
     return { success: true, message: 'تم تحديث كلمة المرور بنجاح' };
@@ -117,6 +122,17 @@ async function updateCustomerPassword(supabase: any, customerId: string, newPass
 
 async function updateCustomerStatus(supabase: any, customerId: string, status: string, reason: string, adminId: string) {
   try {
+    // الحصول على بيانات العميل أولاً
+    const { data: customer, error: customerError } = await supabase
+      .from('customers')
+      .select('user_id, email, full_name')
+      .eq('id', customerId)
+      .single();
+
+    if (customerError || !customer) {
+      return { success: false, message: 'العميل غير موجود' };
+    }
+
     // تحديث حالة العميل
     const { data: updatedCustomer, error: updateError } = await supabase
       .from('customers')
@@ -133,16 +149,19 @@ async function updateCustomerStatus(supabase: any, customerId: string, status: s
       return { success: false, message: 'فشل في تحديث حالة العميل' };
     }
 
-    // تسجيل العملية
-    await supabase
-      .from('customer_activation_logs')
-      .insert({
-        customer_id: customerId,
-        admin_id: adminId,
-        action: status === 'active' ? 'activate' : status === 'blocked' ? 'block' : 'deactivate',
-        reason: reason || `تغيير الحالة إلى ${status}`,
-        metadata: { new_status: status }
-      });
+    // تسجيل العملية (اختياري)
+    try {
+      await supabase
+        .from('user_activity_logs')
+        .insert({
+          user_id: customer.user_id, // استخدام user_id الصحيح
+          activity_type: 'status_update',
+          description: `تغيير حالة العميل إلى ${status}`,
+          metadata: { new_status: status, reason: reason || `تغيير الحالة إلى ${status}` }
+        });
+    } catch (logError) {
+      console.log('Log error (non-critical):', logError);
+    }
 
     console.log('Status updated successfully for customer:', customerId);
     return { success: true, message: 'تم تحديث حالة العميل بنجاح' };
@@ -155,6 +174,17 @@ async function updateCustomerStatus(supabase: any, customerId: string, status: s
 
 async function updateCustomerProfile(supabase: any, customerId: string, profileData: any, adminId: string) {
   try {
+    // الحصول على بيانات العميل أولاً
+    const { data: customer, error: customerError } = await supabase
+      .from('customers')
+      .select('user_id, email, full_name')
+      .eq('id', customerId)
+      .single();
+
+    if (customerError || !customer) {
+      return { success: false, message: 'العميل غير موجود' };
+    }
+
     const updateData: any = {
       updated_at: new Date().toISOString()
     };
@@ -176,16 +206,19 @@ async function updateCustomerProfile(supabase: any, customerId: string, profileD
       return { success: false, message: 'فشل في تحديث بيانات العميل' };
     }
 
-    // تسجيل العملية
-    await supabase
-      .from('customer_activation_logs')
-      .insert({
-        customer_id: customerId,
-        admin_id: adminId,
-        action: 'profile_update',
-        reason: 'تحديث بيانات الملف الشخصي',
-        metadata: { updated_fields: Object.keys(updateData) }
-      });
+    // تسجيل العملية (اختياري)
+    try {
+      await supabase
+        .from('user_activity_logs')
+        .insert({
+          user_id: customer.user_id, // استخدام user_id الصحيح
+          activity_type: 'profile_update',
+          description: 'تحديث بيانات الملف الشخصي',
+          metadata: { updated_fields: Object.keys(updateData) }
+        });
+    } catch (logError) {
+      console.log('Log error (non-critical):', logError);
+    }
 
     console.log('Profile updated successfully for customer:', customerId);
     return { success: true, message: 'تم تحديث بيانات العميل بنجاح' };
