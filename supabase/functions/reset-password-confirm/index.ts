@@ -117,8 +117,7 @@ const handler = async (req: Request): Promise<Response> => {
     const { error: markUsedError } = await supabase
       .from('password_reset_tokens')
       .update({ 
-        used: true,
-        used_at: new Date().toISOString()
+        used: true
       })
       .eq('token', token);
 
