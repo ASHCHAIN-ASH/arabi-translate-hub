@@ -116,7 +116,7 @@ const handler = async (req: Request): Promise<Response> => {
 
     // Generate reset token
     const token = crypto.randomUUID();
-    const expiresAt = new Date(Date.now() + 30 * 60 * 1000); // 30 minutes
+    const expiresAt = new Date(Date.now() + 60 * 60 * 1000); // 60 minutes
 
     // Store reset token in password_reset_tokens table
     const { error: tokenError } = await supabase
@@ -261,7 +261,7 @@ const handler = async (req: Request): Promise<Response> => {
                       <a href="${resetUrl}" class="reset-button">إعادة تعيين كلمة المرور</a>
                       
                       <div class="security-notice">
-                          <p><strong>تنبيه أمني:</strong> هذا الرابط صالح لمدة 30 دقيقة فقط من وقت إرسال هذه الرسالة.</p>
+                          <p><strong>تنبيه أمني:</strong> هذا الرابط صالح لمدة 60 دقيقة فقط من وقت إرسال هذه الرسالة.</p>
                       </div>
                       
                       <p>إذا لم تطلب إعادة تعيين كلمة المرور، يمكنك تجاهل هذه الرسالة بأمان.</p>

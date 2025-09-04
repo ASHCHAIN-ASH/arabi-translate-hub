@@ -59,10 +59,14 @@ const handler = async (req: Request): Promise<Response> => {
     }
 
     if (!resetToken) {
-      console.log('Invalid or expired token:', token);
+      console.log('Invalid or expired token details:', { 
+        token, 
+        current_time: new Date().toISOString(),
+        search_criteria: 'token not found or used=true or expired' 
+      });
       return new Response(JSON.stringify({ 
         success: false, 
-        error: 'رمز إعادة التعيين غير صحيح أو منتهي الصلاحية' 
+        error: 'رمز إعادة التعيين غير صحيح أو منتهي الصلاحية. يرجى طلب رابط جديد' 
       }), {
         status: 400,
         headers: { 'Content-Type': 'application/json', ...corsHeaders },
