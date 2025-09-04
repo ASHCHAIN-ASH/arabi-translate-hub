@@ -123,6 +123,7 @@ const handler = async (req: Request): Promise<Response> => {
       .from('password_reset_tokens')
       .insert({
         user_id: user.id,
+        email: user.email,
         token,
         expires_at: expiresAt.toISOString(),
         created_at: new Date().toISOString(),
