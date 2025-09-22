@@ -36,7 +36,6 @@ const Header = () => {
   const navigation = [
     { name: 'الرئيسية', href: '/', icon: Home },
     { name: 'خدماتنا', href: '/services', icon: Briefcase },
-    { name: 'تتبع الطلب', href: '/order-tracking', icon: Package },
     { name: 'من نحن', href: '/about-us', icon: Users },
     { name: 'تواصل معنا', href: '/contact', icon: Phone },
   ];
@@ -121,18 +120,6 @@ const Header = () => {
 
           {/* أزرار الإجراءات */}
           <div className="hidden lg:flex items-center gap-4">
-            <Button variant="outline" size="sm" asChild>
-              <Link to="/order-tracking" className="flex items-center gap-2 flex-row-reverse">
-                <span>تتبع الطلب</span>
-                <Search className="h-4 w-4" />
-              </Link>
-            </Button>
-            <Button variant="outline" size="sm" asChild>
-              <Link to="/login" className="flex items-center gap-2 flex-row-reverse">
-                <span>تسجيل الدخول</span>
-                <Users className="h-4 w-4" />
-              </Link>
-            </Button>
             <Button size="sm" className="bg-gradient-primary text-primary-foreground hover:opacity-90 shadow-medium" asChild>
               <Link to="/submit-order">
                 اطلب الآن
@@ -227,18 +214,6 @@ const Header = () => {
                 
                 {/* أزرار الإجراءات */}
                 <div className="flex flex-col space-y-3 mt-6 border-t border-border pt-6">
-                  <Button variant="outline" size="sm" className="w-full justify-center" asChild>
-                    <Link to="/order-tracking" onClick={() => setIsOpen(false)} className="flex items-center gap-2">
-                      <Search className="h-4 w-4" />
-                      <span>تتبع الطلب</span>
-                    </Link>
-                  </Button>
-                  <Button variant="outline" size="sm" className="w-full justify-center" asChild>
-                    <Link to="/login" onClick={() => setIsOpen(false)} className="flex items-center gap-2">
-                      <Users className="h-4 w-4" />
-                      <span>تسجيل الدخول</span>
-                    </Link>
-                  </Button>
                   <Button size="sm" className="w-full bg-gradient-primary text-primary-foreground hover:opacity-90 shadow-medium" asChild>
                     <Link to="/submit-order" onClick={() => setIsOpen(false)}>
                       اطلب الآن
