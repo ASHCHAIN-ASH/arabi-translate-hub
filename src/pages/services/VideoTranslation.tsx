@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
+import ServiceInquiryForm from '@/components/ServiceInquiryForm';
 
 import { 
   Video, 
@@ -389,6 +390,15 @@ const VideoTranslation = () => {
           </div>
         </div>
       </section>
+
+      {/* فورم طلب الخدمة */}
+      <ServiceInquiryForm
+        serviceType="video-translation"
+        serviceName="ترجمة الفيديو الاحترافية"
+        serviceIcon={<Video className="h-8 w-8" />}
+        showLanguageFields={true}
+        showFileSizeField={true}
+      />
 
       {/* دعوة للعمل */}
       <section className="py-16 bg-white dark:bg-slate-900">

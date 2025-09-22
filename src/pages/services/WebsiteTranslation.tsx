@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
+import ServiceInquiryForm from '@/components/ServiceInquiryForm';
 
 import { 
   Globe, 
@@ -359,6 +360,15 @@ const WebsiteTranslation = () => {
           </div>
         </div>
       </section>
+
+      {/* فورم طلب الخدمة */}
+      <ServiceInquiryForm
+        serviceType="website-translation"
+        serviceName="ترجمة المواقع الإلكترونية"
+        serviceIcon={<Globe className="h-8 w-8" />}
+        showLanguageFields={true}
+        showFileSizeField={false}
+      />
 
       {/* دعوة للعمل */}
       <section className="py-16 bg-gradient-to-r from-cyan-600 to-blue-600 text-white">
