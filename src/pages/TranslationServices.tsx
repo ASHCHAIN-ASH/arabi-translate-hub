@@ -148,7 +148,7 @@ export default function TranslationServices() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-primary/5 via-background to-secondary/10">
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-blue-50/30">
         <Header />
         <div className="container mx-auto p-6">
           <div className="flex items-center justify-center h-64">
@@ -380,393 +380,168 @@ export default function TranslationServices() {
         </motion.div>
       </section>
 
-      {/* Services Section */}
+      {/* Services Section - No Services Available */}
       <section className="container mx-auto p-6 pb-24">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
+          className="text-center space-y-12"
         >
-          {/* Section Header */}
-          <div className="text-center mb-16">
+          {/* No Services Message */}
+          <div className="max-w-4xl mx-auto">
             <motion.div
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.6 }}
-              className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-primary/5 to-secondary/5 rounded-full mb-6 border border-primary/10"
+              className="bg-card/60 backdrop-blur-xl border border-border/30 p-12 rounded-3xl shadow-2xl"
             >
-              <Sparkles className="w-5 h-5 text-primary" />
-              <span className="text-lg font-semibold text-primary">خدماتنا المتميزة</span>
-            </motion.div>
-            
-            <h2 className="text-4xl md:text-5xl font-bold mb-6 bg-gradient-to-r from-slate-800 to-slate-600 bg-clip-text text-transparent">
-              اختر الخدمة المناسبة لاحتياجاتك
-            </h2>
-            
-            <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-              نوفر مجموعة شاملة من خدمات الترجمة المتخصصة لجميع المجالات والصناعات
-            </p>
-          </div>
-
-          <Tabs value={selectedCategory} onValueChange={setSelectedCategory} className="w-full">
-            {/* Enhanced Tab Navigation */}
-            <div className="flex justify-center mb-16">
               <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6 }}
-                className="bg-card/60 backdrop-blur-xl border border-border/30 p-3 rounded-3xl shadow-2xl"
+                animate={{ 
+                  rotate: [0, 10, -10, 0],
+                  scale: [1, 1.1, 1]
+                }}
+                transition={{ 
+                  duration: 3,
+                  repeat: Infinity,
+                  ease: "easeInOut"
+                }}
+                className="inline-flex items-center justify-center w-24 h-24 bg-gradient-to-r from-primary/20 to-secondary/20 rounded-full mb-8"
               >
-                <TabsList className="grid grid-cols-auto bg-transparent p-0 gap-2">
-                  <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
-                    <TabsTrigger 
-                      value="all" 
-                      className="rounded-2xl data-[state=active]:bg-gradient-to-r data-[state=active]:from-primary data-[state=active]:to-secondary data-[state=active]:text-primary-foreground data-[state=active]:shadow-lg transition-all duration-300 hover:bg-muted/50 px-8 py-4 text-base font-medium"
+                <Languages className="w-12 h-12 text-primary" />
+              </motion.div>
+
+              <h2 className="text-4xl md:text-5xl font-bold mb-6 bg-gradient-to-r from-slate-800 to-slate-600 bg-clip-text text-transparent">
+                قريباً... خدمات ترجمة متطورة
+              </h2>
+              
+              <p className="text-xl text-muted-foreground mb-8 leading-relaxed">
+                نعمل حالياً على تطوير مجموعة متكاملة من خدمات الترجمة الاحترافية
+                <br />
+                ستكون متاحة قريباً بأعلى معايير الجودة العالمية
+              </p>
+
+              {/* Coming Soon Features */}
+              <div className="grid md:grid-cols-3 gap-8 mb-10">
+                {[
+                  {
+                    icon: FileText,
+                    title: "ترجمة المستندات",
+                    desc: "ترجمة احترافية لجميع أنواع المستندات"
+                  },
+                  {
+                    icon: Globe,
+                    title: "ترجمة المواقع",
+                    desc: "حلول ترجمة متكاملة للمواقع الإلكترونية"
+                  },
+                  {
+                    icon: Video,
+                    title: "ترجمة الوسائط",
+                    desc: "ترجمة الفيديوهات والمحتوى الصوتي"
+                  }
+                ].map((feature, index) => (
+                  <motion.div
+                    key={index}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.8 + index * 0.2, duration: 0.6 }}
+                    whileHover={{ scale: 1.05 }}
+                    className="p-6 bg-gradient-to-br from-muted/30 to-muted/10 rounded-2xl border border-border/30"
+                  >
+                    <motion.div
+                      animate={{ rotate: [0, 5, -5, 0] }}
+                      transition={{ duration: 4, repeat: Infinity, ease: "easeInOut", delay: index * 0.5 }}
+                      className="inline-flex items-center justify-center w-12 h-12 bg-gradient-to-r from-primary/10 to-secondary/10 rounded-xl mb-4"
                     >
-                      <Globe className="h-5 w-5 ml-2" />
-                      جميع الخدمات
-                    </TabsTrigger>
+                      <feature.icon className="w-6 h-6 text-primary" />
+                    </motion.div>
+                    
+                    <h3 className="font-bold text-lg mb-2 text-foreground">
+                      {feature.title}
+                    </h3>
+                    <p className="text-muted-foreground text-sm leading-relaxed">
+                      {feature.desc}
+                    </p>
+                  </motion.div>
+                ))}
+              </div>
+
+              {/* Contact CTA */}
+              <motion.div
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ delay: 1.4, duration: 0.6 }}
+                className="space-y-6"
+              >
+                <p className="text-lg font-medium text-primary">
+                  هل لديك مشروع ترجمة؟ تواصل معنا الآن للحصول على استشارة مجانية
+                </p>
+                
+                <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+                  <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                    <Button 
+                      size="lg"
+                      className="bg-gradient-to-r from-primary to-secondary hover:from-primary/90 hover:to-secondary/90 text-primary-foreground px-12 py-6 text-lg rounded-2xl shadow-2xl hover:shadow-3xl transition-all duration-500 font-semibold"
+                      onClick={() => navigate('/submit-order')}
+                    >
+                      <MessageCircle className="w-6 h-6 ml-3" />
+                      تواصل معنا
+                      <motion.div
+                        animate={{ x: [0, 5, 0] }}
+                        transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
+                        className="mr-2"
+                      >
+                        ←
+                      </motion.div>
+                    </Button>
                   </motion.div>
                   
-                  {categories.map((category, index) => {
-                    const IconComponent = getIconComponent(category.icon);
-                    return (
-                      <motion.div
-                        key={category.id}
-                        initial={{ opacity: 0, x: 20 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        transition={{ delay: index * 0.1, duration: 0.4 }}
-                        whileHover={{ scale: 1.02 }} 
-                        whileTap={{ scale: 0.98 }}
-                      >
-                        <TabsTrigger 
-                          value={category.id}
-                          className="rounded-2xl data-[state=active]:bg-gradient-to-r data-[state=active]:from-primary data-[state=active]:to-secondary data-[state=active]:text-primary-foreground data-[state=active]:shadow-lg transition-all duration-300 hover:bg-muted/50 px-8 py-4 text-base font-medium"
-                        >
-                          <IconComponent className="h-5 w-5 ml-2" />
-                          {category.name_ar}
-                        </TabsTrigger>
-                      </motion.div>
-                    );
-                  })}
-                </TabsList>
-              </motion.div>
-            </div>
-
-            {/* All Services Tab Content */}
-            <AnimatePresence mode="wait">
-              <TabsContent value="all" className="space-y-20">
-                {categories.map((category, categoryIndex) => {
-                  const categoryServices = services.filter(s => s.category_id === category.id);
-                  if (categoryServices.length === 0) return null;
-
-                  const IconComponent = getIconComponent(category.icon);
-                  
-                  return (
-                    <motion.div 
-                      key={category.id} 
-                      initial={{ opacity: 0, y: 50 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: categoryIndex * 0.3, duration: 0.8 }}
-                      className="space-y-12"
+                  <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                    <Button 
+                      variant="outline"
+                      size="lg"
+                      className="border-2 border-primary/30 hover:border-primary bg-transparent hover:bg-primary/5 text-primary px-12 py-6 text-lg rounded-2xl backdrop-blur-sm font-semibold"
                     >
-                      {/* Category Header */}
-                      <div className="text-center">
-                        <motion.div 
-                          initial={{ opacity: 0, scale: 0.8 }}
-                          animate={{ opacity: 1, scale: 1 }}
-                          transition={{ delay: categoryIndex * 0.3 + 0.2, duration: 0.6 }}
-                          className="flex flex-col lg:flex-row items-center justify-center gap-8 mb-12"
-                        >
-                          <div className="relative group">
-                            <motion.div 
-                              whileHover={{ scale: 1.15, rotate: 10 }}
-                              className="p-6 rounded-3xl bg-gradient-to-br from-primary to-secondary text-primary-foreground shadow-2xl relative overflow-hidden"
-                            >
-                              <IconComponent className="h-12 w-12 relative z-10" />
-                              <div className="absolute inset-0 bg-gradient-to-br from-white/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                            </motion.div>
-                            
-                            {/* Glow Effect */}
-                            <div className="absolute -inset-4 bg-gradient-to-r from-primary/30 to-secondary/30 rounded-3xl blur-2xl opacity-0 group-hover:opacity-60 transition-opacity duration-500" />
-                          </div>
-                          
-                          <div className="text-center lg:text-right space-y-4">
-                            <h3 className="text-4xl lg:text-5xl font-bold bg-gradient-to-r from-slate-800 via-slate-600 to-slate-800 bg-clip-text text-transparent">
-                              {category.name_ar}
-                            </h3>
-                            <p className="text-xl text-muted-foreground max-w-2xl leading-relaxed">
-                              {category.description_ar}
-                            </p>
-                            
-                            {/* Category Stats */}
-                            <div className="flex flex-wrap justify-center lg:justify-start gap-4 pt-2">
-                              <Badge variant="secondary" className="px-4 py-2 text-sm">
-                                <Clock className="w-4 h-4 ml-1" />
-                                تسليم سريع
-                              </Badge>
-                              <Badge variant="secondary" className="px-4 py-2 text-sm">
-                                <Shield className="w-4 h-4 ml-1" />
-                                جودة معتمدة
-                              </Badge>
-                              <Badge variant="secondary" className="px-4 py-2 text-sm">
-                                <Star className="w-4 h-4 ml-1" />
-                                خبراء متخصصون
-                              </Badge>
-                            </div>
-                          </div>
-                        </motion.div>
-                      </div>
-                      
-                      {/* Services Grid */}
-                      <motion.div 
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        transition={{ delay: categoryIndex * 0.3 + 0.4, duration: 0.8 }}
-                        className="grid sm:grid-cols-2 xl:grid-cols-3 gap-10"
-                      >
-                        {categoryServices.map((service, serviceIndex) => (
-                          <motion.div
-                            key={service.id}
-                            initial={{ opacity: 0, y: 30, rotateX: 15 }}
-                            animate={{ opacity: 1, y: 0, rotateX: 0 }}
-                            transition={{ 
-                              delay: categoryIndex * 0.3 + serviceIndex * 0.15 + 0.6, 
-                              duration: 0.6,
-                              ease: "easeOut"
-                            }}
-                          >
-                            <ServiceCard service={service} category={category} />
-                          </motion.div>
-                        ))}
-                      </motion.div>
-                    </motion.div>
-                  );
-                })}
-              </TabsContent>
-            </AnimatePresence>
+                      <Star className="w-6 h-6 ml-3" />
+                      اشترك للتحديثات
+                    </Button>
+                  </motion.div>
+                </div>
+              </motion.div>
+            </motion.div>
+          </div>
 
-          {categories.map(category => (
-            <AnimatePresence mode="wait" key={category.id}>
-              <TabsContent value={category.id} className="space-y-8">
-                <motion.div
-                  initial={{ opacity: 0, scale: 0.95 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  exit={{ opacity: 0, scale: 0.95 }}
-                  transition={{ duration: 0.4 }}
-                  className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8"
-                >
-                  {services
-                    .filter(service => service.category_id === category.id)
-                    .map((service, index) => (
-                      <motion.div
-                        key={service.id}
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        exit={{ opacity: 0, y: -20 }}
-                        transition={{ delay: index * 0.1, duration: 0.4 }}
-                      >
-                        <ServiceCard service={service} category={category} />
-                      </motion.div>
-                    ))}
-                </motion.div>
-              </TabsContent>
-            </AnimatePresence>
-          ))}
-          </Tabs>
+          {/* Newsletter Signup */}
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 1.6, duration: 0.8 }}
+            className="max-w-2xl mx-auto"
+          >
+            <div className="bg-gradient-to-r from-primary/5 via-secondary/5 to-accent/5 p-8 rounded-2xl border border-primary/10 backdrop-blur-sm">
+              <h3 className="text-2xl font-bold mb-4 text-center">
+                كن أول من يعلم عند إطلاق خدماتنا
+              </h3>
+              <p className="text-muted-foreground text-center mb-6">
+                اشترك في قائمتنا البريدية للحصول على إشعار فوري عند توفر الخدمات
+              </p>
+              
+              <div className="flex flex-col sm:flex-row gap-3">
+                <input
+                  type="email"
+                  placeholder="أدخل بريدك الإلكتروني"
+                  className="flex-1 px-4 py-3 rounded-xl border border-border bg-background/50 backdrop-blur-sm focus:outline-none focus:ring-2 focus:ring-primary/50 text-right"
+                />
+                <Button className="bg-primary hover:bg-primary/90 px-8 py-3 rounded-xl font-medium">
+                  اشتراك
+                </Button>
+              </div>
+            </div>
+          </motion.div>
         </motion.div>
       </section>
 
       <Footer />
     </div>
-  );
-}
-
-function ServiceCard({ service, category }: { service: Service; category: ServiceCategory }) {
-  const navigate = useNavigate();
-  const serviceImage = service.image_url || getServiceImage(service.name_ar);
-
-  return (
-    <motion.div
-      whileHover={{ y: -12, scale: 1.03 }}
-      whileTap={{ scale: 0.98 }}
-      transition={{ duration: 0.4, ease: "easeOut" }}
-      className="group h-full"
-    >
-      <Card className="overflow-hidden bg-card/70 backdrop-blur-xl border border-border/30 shadow-2xl hover:shadow-4xl transition-all duration-700 h-full relative">
-        {/* Premium Card Glow */}
-        <div className="absolute -inset-0.5 bg-gradient-to-r from-primary/20 via-secondary/20 to-accent/20 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-sm" />
-        
-        <div className="relative bg-card rounded-2xl h-full">
-          {/* Enhanced Image Section */}
-          <div className="relative h-64 overflow-hidden rounded-t-2xl">
-            <motion.img
-              whileHover={{ scale: 1.15, rotate: 2 }}
-              transition={{ duration: 0.7, ease: "easeOut" }}
-              src={serviceImage}
-              alt={service.name_ar}
-              className="w-full h-full object-cover"
-            />
-            
-            {/* Multi-layer Gradient Overlay */}
-            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent" />
-            <div className="absolute inset-0 bg-gradient-to-br from-primary/20 via-transparent to-secondary/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-            
-            {/* Enhanced Category Badge */}
-            <motion.div 
-              initial={{ opacity: 0, scale: 0.8, y: -10 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-              className="absolute top-6 right-6"
-            >
-              <Badge className="bg-gradient-to-r from-primary/90 to-secondary/90 backdrop-blur-md text-primary-foreground border-0 px-4 py-2 text-sm font-medium shadow-2xl">
-                {category.name_ar}
-              </Badge>
-            </motion.div>
-
-            {/* Premium Quality Stars */}
-            <div className="absolute bottom-6 right-6 flex items-center gap-1">
-              {[...Array(5)].map((_, i) => (
-                <motion.div
-                  key={i}
-                  initial={{ opacity: 0, scale: 0, rotate: -180 }}
-                  animate={{ opacity: 1, scale: 1, rotate: 0 }}
-                  transition={{ delay: i * 0.1 + 0.5, duration: 0.4, ease: "easeOut" }}
-                >
-                  <Star className="h-4 w-4 text-yellow-400 fill-current drop-shadow-lg" />
-                </motion.div>
-              ))}
-            </div>
-
-            {/* Service Type Indicator */}
-            <div className="absolute bottom-6 left-6">
-              <motion.div
-                whileHover={{ scale: 1.1 }}
-                className="p-3 rounded-full bg-white/20 backdrop-blur-md border border-white/30"
-              >
-                <FileText className="w-5 h-5 text-white" />
-              </motion.div>
-            </div>
-          </div>
-          
-          {/* Enhanced Content Section */}
-          <div className="p-8 space-y-6">
-            <CardHeader className="p-0">
-              <CardTitle className="text-2xl font-bold group-hover:text-primary transition-colors duration-300 line-clamp-2 leading-tight">
-                {service.name_ar}
-              </CardTitle>
-              <CardDescription className="text-muted-foreground line-clamp-3 leading-relaxed text-base mt-3">
-                {service.description_ar}
-              </CardDescription>
-            </CardHeader>
-            
-            <CardContent className="p-0 space-y-6">
-              {/* Enhanced Features */}
-              {service.features_ar && service.features_ar.length > 0 && (
-                <motion.div 
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.3 }}
-                  className="space-y-4"
-                >
-                  <h4 className="font-bold text-foreground flex items-center gap-3 text-lg">
-                    <motion.div
-                      animate={{ rotate: [0, 10, -10, 0] }}
-                      transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-                    >
-                      <Sparkles className="h-5 w-5 text-primary" />
-                    </motion.div>
-                    المميزات الأساسية:
-                  </h4>
-                  <ul className="space-y-3">
-                    {service.features_ar.slice(0, 3).map((feature, index) => (
-                      <motion.li 
-                        key={index}
-                        initial={{ opacity: 0, x: -15 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        transition={{ delay: 0.4 + index * 0.1 }}
-                        className="flex items-start gap-3 text-muted-foreground group/item hover:text-foreground transition-colors duration-200"
-                      >
-                        <motion.div
-                          whileHover={{ scale: 1.2 }}
-                          className="mt-0.5"
-                        >
-                          <CheckCircle className="h-5 w-5 text-green-500 flex-shrink-0 group-hover/item:text-green-400" />
-                        </motion.div>
-                        <span className="leading-relaxed text-base">{feature}</span>
-                      </motion.li>
-                    ))}
-                  </ul>
-                </motion.div>
-              )}
-              
-              {/* Enhanced Delivery & Service Info */}
-              <div className="space-y-4">
-                {/* Delivery Time Card */}
-                <div className="flex items-center justify-between p-4 bg-gradient-to-r from-muted/30 to-muted/20 rounded-2xl border border-border/50 backdrop-blur-sm">
-                  <div className="flex items-center gap-3 text-muted-foreground">
-                    <motion.div
-                      animate={{ rotate: 360 }}
-                      transition={{ duration: 8, repeat: Infinity, ease: "linear" }}
-                    >
-                      <Clock className="h-5 w-5 text-primary" />
-                    </motion.div>
-                    <span className="font-semibold text-base">التسليم خلال {service.delivery_time_days} أيام</span>
-                  </div>
-                  {service.rush_delivery_available && (
-                    <Badge variant="secondary" className="bg-gradient-to-r from-orange-100 to-orange-50 text-orange-700 hover:from-orange-200 hover:to-orange-100 border-orange-200 font-medium">
-                      <Zap className="w-3 h-3 ml-1" />
-                      تسليم عاجل
-                    </Badge>
-                  )}
-                </div>
-
-                {/* Quality Assurance */}
-                <div className="flex items-center gap-4 p-4 bg-gradient-to-r from-green-50/50 to-emerald-50/50 rounded-2xl border border-green-200/30">
-                  <Shield className="w-5 h-5 text-green-600" />
-                  <span className="text-green-700 font-medium">ضمان الجودة والمراجعة المجانية</span>
-                </div>
-              </div>
-              
-              {/* Enhanced Action Button */}
-              <motion.div
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
-                className="pt-4"
-              >
-                <Button 
-                  className="w-full bg-gradient-to-r from-primary via-secondary to-primary hover:from-primary/90 hover:via-secondary/90 hover:to-primary/90 text-primary-foreground shadow-xl hover:shadow-2xl transition-all duration-500 py-7 text-lg font-semibold rounded-2xl relative overflow-hidden group/btn"
-                  onClick={() => navigate('/submit-order')}
-                >
-                  {/* Button Glow Effect */}
-                  <div className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/20 to-white/0 translate-x-[-100%] group-hover/btn:translate-x-[100%] transition-transform duration-1000" />
-                  
-                  <motion.div
-                    animate={{ x: [0, 3, 0] }}
-                    transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-                  >
-                    <ArrowLeft className="h-6 w-6 ml-3" />
-                  </motion.div>
-                  احصل على عرض سعر مخصص
-                  
-                  <motion.div
-                    animate={{ x: [0, 8, 0] }}
-                    transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
-                    className="mr-3 text-xl"
-                  >
-                    ←
-                  </motion.div>
-                </Button>
-              </motion.div>
-            </CardContent>
-          </div>
-
-          {/* Premium Hover Effects */}
-          <div className="absolute inset-0 bg-gradient-to-r from-primary/5 via-secondary/5 to-accent/5 opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none rounded-2xl" />
-          
-          {/* Corner Accent */}
-          <div className="absolute top-0 right-0 w-20 h-20 bg-gradient-to-bl from-primary/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-tr-2xl" />
-        </div>
-      </Card>
-    </motion.div>
   );
 }
