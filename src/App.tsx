@@ -12,6 +12,7 @@ import Register from "./pages/auth/Register";
 import ForgotPassword from "./pages/auth/ForgotPassword";
 import ResetPassword from "./pages/auth/ResetPassword";
 import AdminLogin from "./pages/auth/AdminLogin";
+import JournalPublication from "./pages/research/JournalPublication";
 import Index from "./pages/Index";
 import TranslationServices from "./pages/TranslationServices";
 import LegalTranslation from "./pages/LegalTranslation";
@@ -231,6 +232,7 @@ const App = () => (
             <Route path="/research/research-tools" element={<ResearchTools />} />
             <Route path="/research/research-evaluation" element={<ResearchEvaluation />} />
             <Route path="/research/publication" element={<Publication />} />
+            <Route path="/research/journal-publication" element={<JournalPublication />} />
             <Route path="/research/academic-consultation" element={<AcademicConsultation />} />
             <Route path="/research/training-courses" element={<TrainingCourses />} />
             

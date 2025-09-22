@@ -12,7 +12,8 @@ import {
   Briefcase,
   Microscope,
   X,
-  ArrowLeft
+  ArrowLeft,
+  FileText
 } from "lucide-react";
 import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
@@ -40,6 +41,7 @@ const Header = () => {
   const servicesDropdown = [
     { name: 'خدمات الترجمة', href: '/translation-services', icon: Languages, description: 'ترجمة النصوص والوثائق بدقة عالية' },
     { name: 'خدمات الأبحاث والكتابة', href: '/research-services', icon: Microscope, description: 'كتابة وتحليل الأبحاث العلمية والأكاديمية' },
+    { name: 'النشر في المجلات المعتمدة', href: '/research/journal-publication', icon: FileText, description: 'خدمات النشر في المجلات العلمية المحكمة والمعتمدة دولياً' },
   ];
 
   const isActive = (path: string) => location.pathname === path;
