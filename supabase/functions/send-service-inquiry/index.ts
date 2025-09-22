@@ -68,14 +68,23 @@ const generateCustomerEmailTemplate = (inquiry: ServiceInquiry, serviceName: str
           box-sizing: border-box;
         }
         body {
-          font-family: 'Segoe UI', 'Cairo', 'Amiri', Tahoma, Arial, sans-serif;
+          font-family: 'Cairo', 'Amiri', 'Segoe UI', Tahoma, Arial, sans-serif;
           line-height: 1.8;
           color: #2c3e50;
           background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
           margin: 0;
           padding: 15px;
-          direction: rtl;
-          text-align: right;
+          direction: rtl !important;
+          text-align: right !important;
+        }
+        
+        * {
+          direction: rtl !important;
+          text-align: right !important;
+        }
+        
+        .text-center {
+          text-align: center !important;
         }
         .email-wrapper {
           width: 100%;
@@ -90,8 +99,9 @@ const generateCustomerEmailTemplate = (inquiry: ServiceInquiry, serviceName: str
           background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
           color: white;
           padding: 40px 30px;
-          text-align: center;
+          text-align: center !important;
           position: relative;
+          direction: rtl !important;
         }
         .header::after {
           content: '';
@@ -125,14 +135,16 @@ const generateCustomerEmailTemplate = (inquiry: ServiceInquiry, serviceName: str
           color: #2c3e50;
           margin-bottom: 25px;
           font-weight: 600;
-          text-align: center;
+          text-align: center !important;
+          direction: rtl !important;
         }
         .message {
           font-size: 17px;
           color: #34495e;
           margin-bottom: 30px;
           line-height: 1.8;
-          text-align: center;
+          text-align: center !important;
+          direction: rtl !important;
         }
         .info-card {
           background: linear-gradient(145deg, #f8f9fa 0%, #e9ecef 100%);
@@ -146,8 +158,9 @@ const generateCustomerEmailTemplate = (inquiry: ServiceInquiry, serviceName: str
           color: #1565c0;
           font-size: 20px;
           margin-bottom: 20px;
-          text-align: center;
+          text-align: center !important;
           font-weight: 700;
+          direction: rtl !important;
         }
         .info-grid {
           display: grid;
@@ -167,11 +180,15 @@ const generateCustomerEmailTemplate = (inquiry: ServiceInquiry, serviceName: str
           display: block;
           margin-bottom: 5px;
           font-size: 14px;
+          text-align: right !important;
+          direction: rtl !important;
         }
         .info-item span {
           color: #667eea;
           font-size: 16px;
           font-weight: 600;
+          text-align: right !important;
+          direction: rtl !important;
         }
         .full-width {
           grid-column: 1 / -1;
@@ -187,8 +204,9 @@ const generateCustomerEmailTemplate = (inquiry: ServiceInquiry, serviceName: str
           color: #2e7d32;
           font-size: 20px;
           margin-bottom: 25px;
-          text-align: center;
+          text-align: center !important;
           font-weight: 700;
+          direction: rtl !important;
         }
         .steps-list {
           list-style: none;
@@ -198,12 +216,14 @@ const generateCustomerEmailTemplate = (inquiry: ServiceInquiry, serviceName: str
           counter-increment: step-counter;
           background: white;
           margin: 12px 0;
-          padding: 18px 25px 18px 55px;
+          padding: 18px 55px 18px 25px;
           border-radius: 12px;
           position: relative;
           box-shadow: 0 4px 12px rgba(0,0,0,0.05);
           font-size: 16px;
           font-weight: 500;
+          text-align: right !important;
+          direction: rtl !important;
         }
         .steps-list li::before {
           content: counter(step-counter);
@@ -228,13 +248,16 @@ const generateCustomerEmailTemplate = (inquiry: ServiceInquiry, serviceName: str
           padding: 30px;
           margin: 30px 0;
           border: 3px solid #ffcc02;
-          text-align: center;
+          text-align: center !important;
+          direction: rtl !important;
         }
         .contact-section h3 {
           color: #e65100;
           font-size: 20px;
           margin-bottom: 25px;
           font-weight: 700;
+          text-align: center !important;
+          direction: rtl !important;
         }
         .contact-grid {
           display: grid;
@@ -248,22 +271,29 @@ const generateCustomerEmailTemplate = (inquiry: ServiceInquiry, serviceName: str
           font-size: 15px;
           box-shadow: 0 3px 10px rgba(0,0,0,0.05);
           border-right: 4px solid #ff9800;
+          text-align: center !important;
+          direction: rtl !important;
         }
         .footer {
           background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
           color: white;
           padding: 35px 30px;
-          text-align: center;
+          text-align: center !important;
+          direction: rtl !important;
         }
         .footer p {
           margin: 10px 0;
           font-size: 15px;
+          text-align: center !important;
+          direction: rtl !important;
         }
         .footer .company-name {
           font-size: 22px;
           font-weight: 700;
           color: #ecf0f1;
           margin-bottom: 15px;
+          text-align: center !important;
+          direction: rtl !important;
         }
         
         /* Mobile Responsive */
@@ -279,7 +309,7 @@ const generateCustomerEmailTemplate = (inquiry: ServiceInquiry, serviceName: str
           .message { font-size: 15px; }
           .info-grid, .contact-grid { grid-template-columns: 1fr; gap: 10px; }
           .info-card, .steps-section, .contact-section { padding: 25px 20px; margin: 25px 0; }
-          .steps-list li { padding: 15px 20px 15px 50px; font-size: 15px; }
+          .steps-list li { padding: 15px 50px 15px 20px; font-size: 15px; }
           .steps-list li::before { width: 28px; height: 28px; right: 15px; }
           .footer { padding: 30px 20px; }
           .info-item, .contact-item { padding: 12px 16px; }
@@ -433,14 +463,23 @@ const generateAdminEmailTemplate = (inquiry: ServiceInquiry, serviceName: string
           box-sizing: border-box;
         }
         body {
-          font-family: 'Segoe UI', 'Cairo', 'Amiri', Tahoma, Arial, sans-serif;
+          font-family: 'Cairo', 'Amiri', 'Segoe UI', Tahoma, Arial, sans-serif;
           line-height: 1.8;
           color: #2c3e50;
           background: linear-gradient(135deg, #ff6b6b 0%, #ee5a52 100%);
           margin: 0;
           padding: 15px;
-          direction: rtl;
-          text-align: right;
+          direction: rtl !important;
+          text-align: right !important;
+        }
+        
+        * {
+          direction: rtl !important;
+          text-align: right !important;
+        }
+        
+        .text-center {
+          text-align: center !important;
         }
         .email-wrapper {
           width: 100%;
@@ -456,10 +495,11 @@ const generateAdminEmailTemplate = (inquiry: ServiceInquiry, serviceName: string
           background: linear-gradient(45deg, #ff4757 0%, #ff3838 100%);
           color: white;
           padding: 18px;
-          text-align: center;
+          text-align: center !important;
           font-weight: bold;
           font-size: 18px;
           animation: pulse 2s infinite;
+          direction: rtl !important;
         }
         @keyframes pulse {
           0% { opacity: 1; }
@@ -470,8 +510,9 @@ const generateAdminEmailTemplate = (inquiry: ServiceInquiry, serviceName: string
           background: linear-gradient(135deg, #dc3545 0%, #fd7e14 100%);
           color: white;
           padding: 40px 30px;
-          text-align: center;
+          text-align: center !important;
           position: relative;
+          direction: rtl !important;
         }
         .header::after {
           content: '';
@@ -510,8 +551,9 @@ const generateAdminEmailTemplate = (inquiry: ServiceInquiry, serviceName: string
           border-radius: 20px;
           padding: 30px;
           margin: 30px 0;
-          text-align: center;
+          text-align: center !important;
           box-shadow: 0 10px 25px rgba(255,193,7,0.3);
+          direction: rtl !important;
         }
         .alert-card .icon {
           font-size: 54px;
@@ -539,8 +581,9 @@ const generateAdminEmailTemplate = (inquiry: ServiceInquiry, serviceName: string
           color: #1565c0;
           font-size: 22px;
           margin-bottom: 25px;
-          text-align: center;
+          text-align: center !important;
           font-weight: 700;
+          direction: rtl !important;
         }
         .client-info-grid {
           display: grid;
@@ -561,11 +604,15 @@ const generateAdminEmailTemplate = (inquiry: ServiceInquiry, serviceName: string
           margin-bottom: 8px;
           font-size: 15px;
           font-weight: 600;
+          text-align: right !important;
+          direction: rtl !important;
         }
         .client-info-item span {
           color: #2c3e50;
           font-size: 17px;
           font-weight: 600;
+          text-align: right !important;
+          direction: rtl !important;
         }
         .full-width {
           grid-column: 1 / -1;
@@ -581,8 +628,9 @@ const generateAdminEmailTemplate = (inquiry: ServiceInquiry, serviceName: string
           color: #6a1b9a;
           font-size: 22px;
           margin-bottom: 25px;
-          text-align: center;
+          text-align: center !important;
           font-weight: 700;
+          direction: rtl !important;
         }
         .detail-item {
           background: white;
@@ -598,11 +646,15 @@ const generateAdminEmailTemplate = (inquiry: ServiceInquiry, serviceName: string
           min-width: 140px;
           font-size: 15px;
           font-weight: 600;
+          text-align: right !important;
+          direction: rtl !important;
         }
         .detail-item span {
           color: #2c3e50;
           font-size: 16px;
           font-weight: 600;
+          text-align: right !important;
+          direction: rtl !important;
         }
         .priority-section {
           background: linear-gradient(145deg, #c8e6c9 0%, #a5d6a7 100%);
@@ -610,7 +662,8 @@ const generateAdminEmailTemplate = (inquiry: ServiceInquiry, serviceName: string
           border-radius: 20px;
           padding: 30px;
           margin: 30px 0;
-          text-align: center;
+          text-align: center !important;
+          direction: rtl !important;
         }
         .priority-section .icon {
           font-size: 48px;
@@ -633,8 +686,9 @@ const generateAdminEmailTemplate = (inquiry: ServiceInquiry, serviceName: string
           color: #c62828;
           font-size: 22px;
           margin-bottom: 25px;
-          text-align: center;
+          text-align: center !important;
           font-weight: 700;
+          direction: rtl !important;
         }
         .steps-list {
           list-style: none;
@@ -644,13 +698,15 @@ const generateAdminEmailTemplate = (inquiry: ServiceInquiry, serviceName: string
           counter-increment: step-counter;
           background: white;
           margin: 15px 0;
-          padding: 18px 25px 18px 55px;
+          padding: 18px 55px 18px 25px;
           border-radius: 12px;
           position: relative;
           box-shadow: 0 4px 12px rgba(0,0,0,0.06);
           font-size: 16px;
           font-weight: 600;
           color: #2c3e50;
+          text-align: right !important;
+          direction: rtl !important;
         }
         .steps-list li::before {
           content: counter(step-counter);
@@ -673,11 +729,14 @@ const generateAdminEmailTemplate = (inquiry: ServiceInquiry, serviceName: string
           background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
           color: white;
           padding: 35px 30px;
-          text-align: center;
+          text-align: center !important;
+          direction: rtl !important;
         }
         .footer p {
           margin: 10px 0;
           font-size: 15px;
+          text-align: center !important;
+          direction: rtl !important;
         }
         
         /* Mobile Responsive */
@@ -696,7 +755,7 @@ const generateAdminEmailTemplate = (inquiry: ServiceInquiry, serviceName: string
           .alert-card .icon { font-size: 46px; }
           .alert-card h3, .client-section h3, .service-details h3, .action-steps h3 { font-size: 20px; }
           .detail-item strong { min-width: 110px; font-size: 14px; }
-          .steps-list li { padding: 15px 20px 15px 50px; font-size: 15px; }
+          .steps-list li { padding: 15px 50px 15px 20px; font-size: 15px; }
           .steps-list li::before { width: 30px; height: 30px; font-size: 14px; right: 15px; }
           .footer { padding: 30px 20px; }
         }
