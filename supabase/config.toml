@@ -3,6 +3,9 @@ project_id = "ibfcgweykqkzdodrfmci"
 [functions.customer-management]
 verify_jwt = false
 
+[functions.journal-publication-form]
+verify_jwt = false
+
 [functions.send-order-status-email]
 verify_jwt = false
 
