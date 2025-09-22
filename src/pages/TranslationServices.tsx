@@ -30,13 +30,16 @@ import {
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
-// Import real images
-import documentTranslationImg from "@/assets/real-document-translation.jpg";
-import textTranslationImg from "@/assets/real-text-translation.jpg";
-import audioTranslationImg from "@/assets/real-audio-translation.jpg";
-import videoTranslationImg from "@/assets/real-video-translation.jpg";
+// Import unique service images
+import documentTranslationImg from "@/assets/document-translation-service.jpg";
+import textTranslationImg from "@/assets/text-translation-service.jpg";
+import audioTranslationImg from "@/assets/audio-translation-service.jpg";
+import videoTranslationImg from "@/assets/video-translation-service.jpg";
 import websiteTranslationImg from "@/assets/real-website-translation.jpg";
-import businessServicesImg from "@/assets/real-business-services.jpg";
+import legalTranslationImg from "@/assets/legal-translation-service.jpg";
+import medicalTranslationImg from "@/assets/medical-translation-service.jpg";
+import technicalTranslationImg from "@/assets/technical-translation-service.jpg";
+import academicTranslationImg from "@/assets/academic-translation-service.jpg";
 
 // Translation services data
 const translationServices = [
@@ -95,7 +98,7 @@ const translationServices = [
     title: 'الترجمة القانونية',
     description: 'ترجمة متخصصة للوثائق القانونية والعقود',
     icon: Scale,
-    image: businessServicesImg,
+    image: legalTranslationImg,
     route: '/legal-translation',
     features: ['مترجمون قانونيون', 'سرية تامة', 'دقة قانونية', 'ترجمة معتمدة'],
     color: 'from-indigo-500 to-indigo-600'
@@ -105,7 +108,7 @@ const translationServices = [
     title: 'الترجمة الطبية',
     description: 'ترجمة التقارير الطبية والأبحاث العلمية',
     icon: Stethoscope,
-    image: documentTranslationImg,
+    image: medicalTranslationImg,
     route: '/medical-translation',
     features: ['مصطلحات طبية دقيقة', 'مترجمون متخصصون', 'مراجعة علمية', 'معايير دولية'],
     color: 'from-teal-500 to-teal-600'
@@ -115,7 +118,7 @@ const translationServices = [
     title: 'الترجمة التقنية',
     description: 'ترجمة المحتوى التقني والدليل الفني',
     icon: Monitor,
-    image: textTranslationImg,
+    image: technicalTranslationImg,
     route: '/technical-translation',
     features: ['مصطلحات تقنية', 'خبرة تكنولوجية', 'دقة تقنية', 'تحديث مستمر'],
     color: 'from-cyan-500 to-cyan-600'
@@ -125,7 +128,7 @@ const translationServices = [
     title: 'الترجمة الأكاديمية',
     description: 'ترجمة الأبحاث الأكاديمية والرسائل العلمية',
     icon: GraduationCap,
-    image: businessServicesImg,
+    image: academicTranslationImg,
     route: '/academic-translation',
     features: ['مراجع أكاديمية', 'منهجية علمية', 'خبراء أكاديميون', 'نشر علمي'],
     color: 'from-pink-500 to-pink-600'
