@@ -1,6 +1,6 @@
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
-import ServicesSection from "@/components/ServicesSection";
+import AcademicPartnerships from "@/components/AcademicPartnerships";
 import ServicesShowcase from "@/components/ServicesShowcase";
 import AcademicHeroSection from "@/components/AcademicHeroSection";
 import AcademicFeatures from "@/components/AcademicFeatures";
@@ -34,8 +34,8 @@ const Index = () => {
       {/* قسم مزايا الخدمات */}
       <ServicesShowcase />
 
-      {/* قسم الخدمات */}
-      <ServicesSection />
+      {/* قسم الشراكات الأكاديمية العالمية */}
+      <AcademicPartnerships />
 
       {/* دعوة للعمل النهائية */}
       <section className="py-16 lg:py-20 bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 text-white">
