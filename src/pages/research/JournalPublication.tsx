@@ -39,37 +39,68 @@ import { Link } from 'react-router-dom';
 const JournalPublication = () => {
   const { toast } = useToast();
   const [formData, setFormData] = useState({
-    name: '',
+    fullName: '',
     email: '',
     phone: '',
     institution: '',
     researchField: '',
-    publicationType: '',
-    message: '',
-    preferredContact: ''
+    journalType: '',
+    manuscriptTitle: '',
+    currentStatus: '',
+    deadline: '',
+    additionalNotes: ''
   });
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleInputChange = (field: string, value: string) => {
     setFormData(prev => ({ ...prev, [field]: value }));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    toast({
-      title: "تم إرسال طلبك بنجاح",
-      description: "سنتواصل معك قريباً لمناقشة متطلباتك البحثية",
-    });
-    // Reset form
-    setFormData({
-      name: '',
-      email: '',
-      phone: '',
-      institution: '',
-      researchField: '',
-      publicationType: '',
-      message: '',
-      preferredContact: ''
-    });
+    setIsSubmitting(true);
+
+    try {
+      const response = await fetch("https://ibfcgweykqkzdodrfmci.supabase.co/functions/v1/journal-publication-form", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
+
+      const result = await response.json();
+
+      if (response.ok) {
+        toast({
+          title: "تم إرسال الطلب بنجاح ✅",
+          description: result.message || "سنتواصل معك قريباً لمناقشة التفاصيل",
+        });
+        setFormData({
+          fullName: '',
+          email: '',
+          phone: '',
+          institution: '',
+          researchField: '',
+          journalType: '',
+          manuscriptTitle: '',
+          currentStatus: '',
+          deadline: '',
+          additionalNotes: ''
+        });
+      } else {
+        throw new Error(result.error || "حدث خطأ في إرسال الطلب");
+      }
+    } catch (error: any) {
+      console.error("Error submitting form:", error);
+      toast({
+        title: "خطأ في إرسال الطلب",
+        description: error.message || "يرجى المحاولة مرة أخرى لاحقاً",
+        variant: "destructive",
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const features = [
@@ -340,14 +371,14 @@ const JournalPublication = () => {
                 <form onSubmit={handleSubmit} className="space-y-6">
                   <div className="grid md:grid-cols-2 gap-6">
                     <div className="space-y-2">
-                      <Label htmlFor="name" className="flex items-center gap-2 text-foreground font-semibold">
+                      <Label htmlFor="fullName" className="flex items-center gap-2 text-foreground font-semibold">
                         <User className="h-4 w-4" />
                         الاسم الكامل *
                       </Label>
                       <Input
-                        id="name"
-                        value={formData.name}
-                        onChange={(e) => handleInputChange('name', e.target.value)}
+                        id="fullName"
+                        value={formData.fullName}
+                        onChange={(e) => handleInputChange('fullName', e.target.value)}
                         placeholder="أدخل اسمك الكامل"
                         required
                         className="bg-background/50 border-2 focus:border-primary"
@@ -414,78 +445,131 @@ const JournalPublication = () => {
                           <SelectValue placeholder="اختر مجال البحث" />
                         </SelectTrigger>
                         <SelectContent>
-                          <SelectItem value="medicine">الطب</SelectItem>
-                          <SelectItem value="engineering">الهندسة</SelectItem>
-                          <SelectItem value="science">العلوم الطبيعية</SelectItem>
-                          <SelectItem value="social">العلوم الاجتماعية</SelectItem>
-                          <SelectItem value="humanities">العلوم الإنسانية</SelectItem>
-                          <SelectItem value="business">إدارة الأعمال</SelectItem>
-                          <SelectItem value="education">التربية والتعليم</SelectItem>
-                          <SelectItem value="other">أخرى</SelectItem>
+                          <SelectItem value="الطب">الطب</SelectItem>
+                          <SelectItem value="الهندسة">الهندسة</SelectItem>
+                          <SelectItem value="العلوم الطبيعية">العلوم الطبيعية</SelectItem>
+                          <SelectItem value="العلوم الاجتماعية">العلوم الاجتماعية</SelectItem>
+                          <SelectItem value="العلوم الإنسانية">العلوم الإنسانية</SelectItem>
+                          <SelectItem value="إدارة الأعمال">إدارة الأعمال</SelectItem>
+                          <SelectItem value="التربية والتعليم">التربية والتعليم</SelectItem>
+                          <SelectItem value="أخرى">أخرى</SelectItem>
                         </SelectContent>
                       </Select>
                     </div>
                     
                     <div className="space-y-2">
-                      <Label htmlFor="publicationType" className="flex items-center gap-2 text-foreground font-semibold">
+                      <Label htmlFor="journalType" className="flex items-center gap-2 text-foreground font-semibold">
                         <FileText className="h-4 w-4" />
-                        نوع المنشور المطلوب *
+                        نوع المجلة المطلوبة *
                       </Label>
-                      <Select value={formData.publicationType} onValueChange={(value) => handleInputChange('publicationType', value)}>
+                      <Select value={formData.journalType} onValueChange={(value) => handleInputChange('journalType', value)}>
                         <SelectTrigger className="bg-background/50 border-2 focus:border-primary">
-                          <SelectValue placeholder="اختر نوع المنشور" />
+                          <SelectValue placeholder="اختر نوع المجلة" />
                         </SelectTrigger>
                         <SelectContent>
-                          <SelectItem value="scopus">مجلة Scopus</SelectItem>
-                          <SelectItem value="wos">مجلة Web of Science</SelectItem>
-                          <SelectItem value="isi">مجلة ISI</SelectItem>
-                          <SelectItem value="arabic">مجلة عربية محكمة</SelectItem>
-                          <SelectItem value="consultation">استشارة فقط</SelectItem>
+                          <SelectItem value="Scopus">مجلة Scopus</SelectItem>
+                          <SelectItem value="Web of Science">مجلة Web of Science</SelectItem>
+                          <SelectItem value="ISI Impact Factor">مجلة ISI</SelectItem>
+                          <SelectItem value="عربية محكمة">مجلة عربية محكمة</SelectItem>
+                          <SelectItem value="استشارة فقط">استشارة فقط</SelectItem>
                         </SelectContent>
                       </Select>
                     </div>
                   </div>
 
                   <div className="space-y-2">
-                    <Label htmlFor="preferredContact" className="flex items-center gap-2 text-foreground font-semibold">
-                      <Calendar className="h-4 w-4" />
-                      طريقة التواصل المفضلة
+                    <Label htmlFor="manuscriptTitle" className="flex items-center gap-2 text-foreground font-semibold">
+                      <FileText className="h-4 w-4" />
+                      عنوان المخطوطة *
                     </Label>
-                    <Select value={formData.preferredContact} onValueChange={(value) => handleInputChange('preferredContact', value)}>
-                      <SelectTrigger className="bg-background/50 border-2 focus:border-primary">
-                        <SelectValue placeholder="اختر طريقة التواصل" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="email">البريد الإلكتروني</SelectItem>
-                        <SelectItem value="phone">الهاتف</SelectItem>
-                        <SelectItem value="whatsapp">واتساب</SelectItem>
-                        <SelectItem value="video">مكالمة فيديو</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-
-                  <div className="space-y-2">
-                    <Label htmlFor="message" className="flex items-center gap-2 text-foreground font-semibold">
-                      <Edit3 className="h-4 w-4" />
-                      تفاصيل إضافية عن البحث
-                    </Label>
-                    <Textarea
-                      id="message"
-                      value={formData.message}
-                      onChange={(e) => handleInputChange('message', e.target.value)}
-                      placeholder="أخبرنا المزيد عن بحثك، حالته الحالية، والمساعدة التي تحتاجها..."
-                      className="min-h-32 bg-background/50 border-2 focus:border-primary resize-none"
+                    <Input
+                      id="manuscriptTitle"
+                      value={formData.manuscriptTitle}
+                      onChange={(e) => handleInputChange('manuscriptTitle', e.target.value)}
+                      placeholder="أدخل عنوان البحث أو المخطوطة"
+                      required
+                      className="bg-background/50 border-2 focus:border-primary"
                     />
                   </div>
 
-                  <Button 
-                    type="submit" 
-                    size="lg" 
-                    className="w-full bg-gradient-to-r from-primary to-secondary hover:shadow-lg transition-all duration-300 font-semibold py-4 text-lg rounded-xl"
+                  <div className="grid md:grid-cols-2 gap-6">
+                    <div className="space-y-2">
+                      <Label htmlFor="currentStatus" className="flex items-center gap-2 text-foreground font-semibold">
+                        <CheckCircle className="h-4 w-4" />
+                        الحالة الحالية للبحث *
+                      </Label>
+                      <Select value={formData.currentStatus} onValueChange={(value) => handleInputChange('currentStatus', value)}>
+                        <SelectTrigger className="bg-background/50 border-2 focus:border-primary">
+                          <SelectValue placeholder="اختر الحالة الحالية" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="مسودة أولى">مسودة أولى</SelectItem>
+                          <SelectItem value="جاهز للمراجعة">جاهز للمراجعة</SelectItem>
+                          <SelectItem value="تم رفضه من مجلة سابقة">تم رفضه من مجلة سابقة</SelectItem>
+                          <SelectItem value="مكتمل ومراجع">مكتمل ومراجع</SelectItem>
+                          <SelectItem value="فكرة البحث فقط">فكرة البحث فقط</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+
+                    <div className="space-y-2">
+                      <Label htmlFor="deadline" className="flex items-center gap-2 text-foreground font-semibold">
+                        <Calendar className="h-4 w-4" />
+                        الموعد النهائي المطلوب
+                      </Label>
+                      <Input
+                        id="deadline"
+                        type="date"
+                        value={formData.deadline}
+                        onChange={(e) => handleInputChange('deadline', e.target.value)}
+                        className="bg-background/50 border-2 focus:border-primary"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="additionalNotes" className="flex items-center gap-2 text-foreground font-semibold">
+                      <Edit3 className="h-4 w-4" />
+                      ملاحظات إضافية أو تفاصيل خاصة
+                    </Label>
+                    <Textarea
+                      id="additionalNotes"
+                      value={formData.additionalNotes}
+                      onChange={(e) => handleInputChange('additionalNotes', e.target.value)}
+                      placeholder="اكتب أي تفاصيل إضافية عن بحثك أو متطلبات خاصة..."
+                      rows={4}
+                      className="bg-background/50 border-2 focus:border-primary resize-none"
+                    />
+                  </div>
+
+                  <motion.div
+                    initial={{ y: 20, opacity: 0 }}
+                    whileInView={{ y: 0, opacity: 1 }}
+                    transition={{ delay: 0.3, duration: 0.6 }}
+                    viewport={{ once: true }}
+                    className="flex justify-center"
                   >
-                    إرسال الطلب والحصول على استشارة مجانية
-                    <Send className="mr-2 h-5 w-5" />
-                  </Button>
+                    <Button 
+                      type="submit" 
+                      size="lg" 
+                      disabled={isSubmitting}
+                      className="bg-gradient-to-r from-primary to-secondary hover:shadow-lg transition-all duration-300 font-semibold px-12 py-6 rounded-2xl text-lg disabled:opacity-50"
+                    >
+                      <div className="flex items-center gap-3">
+                        {isSubmitting ? (
+                          <>
+                            <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
+                            <span>جاري الإرسال...</span>
+                          </>
+                        ) : (
+                          <>
+                            <Send className="h-5 w-5" />
+                            <span>إرسال الطلب</span>
+                          </>
+                        )}
+                      </div>
+                    </Button>
+                  </motion.div>
                 </form>
               </Card>
             </motion.div>
