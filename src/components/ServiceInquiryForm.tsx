@@ -145,7 +145,7 @@ const ServiceInquiryForm: React.FC<ServiceInquiryFormProps> = ({
   };
 
   return (
-    <section className={`py-16 bg-gradient-to-br from-slate-50 to-gray-100 dark:from-slate-900 dark:to-slate-800 ${className}`}>
+    <section className={`py-16 bg-gradient-to-br from-slate-50 to-gray-100 dark:from-slate-900 dark:to-slate-800 ${className}`} dir="rtl">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
@@ -172,9 +172,9 @@ const ServiceInquiryForm: React.FC<ServiceInquiryFormProps> = ({
                 {/* معلومات الاتصال */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div className="space-y-2">
-                    <Label htmlFor="name" className="text-sm font-medium flex items-center gap-2">
-                      <User className="h-4 w-4 text-blue-600" />
+                    <Label htmlFor="name" className="text-sm font-medium flex items-center gap-2 justify-end text-right">
                       الاسم الكامل *
+                      <User className="h-4 w-4 text-blue-600" />
                     </Label>
                     <Input
                       id="name"
@@ -183,14 +183,14 @@ const ServiceInquiryForm: React.FC<ServiceInquiryFormProps> = ({
                       value={formData.name}
                       onChange={(e) => handleInputChange('name', e.target.value)}
                       required
-                      className="border-2 border-gray-200 focus:border-blue-500 transition-colors"
+                      className="border-2 border-gray-200 focus:border-blue-500 transition-colors text-right"
                     />
                   </div>
 
                   <div className="space-y-2">
-                    <Label htmlFor="phone" className="text-sm font-medium flex items-center gap-2">
-                      <Phone className="h-4 w-4 text-blue-600" />
+                    <Label htmlFor="phone" className="text-sm font-medium flex items-center gap-2 justify-end text-right">
                       رقم الهاتف *
+                      <Phone className="h-4 w-4 text-blue-600" />
                     </Label>
                     <Input
                       id="phone"
@@ -199,15 +199,15 @@ const ServiceInquiryForm: React.FC<ServiceInquiryFormProps> = ({
                       value={formData.phone}
                       onChange={(e) => handleInputChange('phone', e.target.value)}
                       required
-                      className="border-2 border-gray-200 focus:border-blue-500 transition-colors"
+                      className="border-2 border-gray-200 focus:border-blue-500 transition-colors text-right"
                     />
                   </div>
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="email" className="text-sm font-medium flex items-center gap-2">
-                    <Mail className="h-4 w-4 text-blue-600" />
+                  <Label htmlFor="email" className="text-sm font-medium flex items-center gap-2 justify-end text-right">
                     البريد الإلكتروني *
+                    <Mail className="h-4 w-4 text-blue-600" />
                   </Label>
                   <Input
                     id="email"
@@ -216,7 +216,7 @@ const ServiceInquiryForm: React.FC<ServiceInquiryFormProps> = ({
                     value={formData.email}
                     onChange={(e) => handleInputChange('email', e.target.value)}
                     required
-                    className="border-2 border-gray-200 focus:border-blue-500 transition-colors"
+                    className="border-2 border-gray-200 focus:border-blue-500 transition-colors text-left"
                   />
                 </div>
 
@@ -224,17 +224,17 @@ const ServiceInquiryForm: React.FC<ServiceInquiryFormProps> = ({
                 {showLanguageFields && (
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div className="space-y-2">
-                      <Label className="text-sm font-medium flex items-center gap-2">
-                        <Languages className="h-4 w-4 text-blue-600" />
+                      <Label className="text-sm font-medium flex items-center gap-2 justify-end text-right">
                         ترجمة من
+                        <Languages className="h-4 w-4 text-blue-600" />
                       </Label>
                       <Select value={formData.sourceLanguage} onValueChange={(value) => handleInputChange('sourceLanguage', value)}>
-                        <SelectTrigger className="border-2 border-gray-200 focus:border-blue-500">
+                        <SelectTrigger className="border-2 border-gray-200 focus:border-blue-500 text-right">
                           <SelectValue placeholder="اختر اللغة المصدر" />
                         </SelectTrigger>
                         <SelectContent>
                           {languages.map((lang) => (
-                            <SelectItem key={lang.value} value={lang.value}>
+                            <SelectItem key={lang.value} value={lang.value} className="text-right">
                               {lang.label}
                             </SelectItem>
                           ))}
@@ -243,17 +243,17 @@ const ServiceInquiryForm: React.FC<ServiceInquiryFormProps> = ({
                     </div>
 
                     <div className="space-y-2">
-                      <Label className="text-sm font-medium flex items-center gap-2">
-                        <Languages className="h-4 w-4 text-blue-600" />
+                      <Label className="text-sm font-medium flex items-center gap-2 justify-end text-right">
                         ترجمة إلى
+                        <Languages className="h-4 w-4 text-blue-600" />
                       </Label>
                       <Select value={formData.targetLanguage} onValueChange={(value) => handleInputChange('targetLanguage', value)}>
-                        <SelectTrigger className="border-2 border-gray-200 focus:border-blue-500">
+                        <SelectTrigger className="border-2 border-gray-200 focus:border-blue-500 text-right">
                           <SelectValue placeholder="اختر اللغة المطلوبة" />
                         </SelectTrigger>
                         <SelectContent>
                           {languages.map((lang) => (
-                            <SelectItem key={lang.value} value={lang.value}>
+                            <SelectItem key={lang.value} value={lang.value} className="text-right">
                               {lang.label}
                             </SelectItem>
                           ))}
@@ -266,17 +266,17 @@ const ServiceInquiryForm: React.FC<ServiceInquiryFormProps> = ({
                 {/* حجم الملف/المشروع */}
                 {showFileSizeField && (
                   <div className="space-y-2">
-                    <Label className="text-sm font-medium flex items-center gap-2">
-                      <FileText className="h-4 w-4 text-blue-600" />
+                    <Label className="text-sm font-medium flex items-center gap-2 justify-end text-right">
                       حجم المشروع
+                      <FileText className="h-4 w-4 text-blue-600" />
                     </Label>
                     <Select value={formData.fileSize} onValueChange={(value) => handleInputChange('fileSize', value)}>
-                      <SelectTrigger className="border-2 border-gray-200 focus:border-blue-500">
+                      <SelectTrigger className="border-2 border-gray-200 focus:border-blue-500 text-right">
                         <SelectValue placeholder="اختر حجم المشروع" />
                       </SelectTrigger>
                       <SelectContent>
                         {fileSizeOptions.map((option) => (
-                          <SelectItem key={option.value} value={option.value}>
+                          <SelectItem key={option.value} value={option.value} className="text-right">
                             {option.label}
                           </SelectItem>
                         ))}
@@ -287,9 +287,9 @@ const ServiceInquiryForm: React.FC<ServiceInquiryFormProps> = ({
 
                 {/* تفاصيل المشروع */}
                 <div className="space-y-2">
-                  <Label htmlFor="projectDetails" className="text-sm font-medium flex items-center gap-2">
-                    <FileText className="h-4 w-4 text-blue-600" />
+                  <Label htmlFor="projectDetails" className="text-sm font-medium flex items-center gap-2 justify-end text-right">
                     تفاصيل المشروع
+                    <FileText className="h-4 w-4 text-blue-600" />
                   </Label>
                   <Textarea
                     id="projectDetails"
@@ -297,38 +297,38 @@ const ServiceInquiryForm: React.FC<ServiceInquiryFormProps> = ({
                     value={formData.projectDetails}
                     onChange={(e) => handleInputChange('projectDetails', e.target.value)}
                     rows={4}
-                    className="border-2 border-gray-200 focus:border-blue-500 transition-colors resize-none"
+                    className="border-2 border-gray-200 focus:border-blue-500 transition-colors resize-none text-right"
                   />
                 </div>
 
                 {/* الموعد النهائي والميزانية */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div className="space-y-2">
-                    <Label htmlFor="deadline" className="text-sm font-medium flex items-center gap-2">
-                      <Calendar className="h-4 w-4 text-blue-600" />
+                    <Label htmlFor="deadline" className="text-sm font-medium flex items-center gap-2 justify-end text-right">
                       الموعد المطلوب
+                      <Calendar className="h-4 w-4 text-blue-600" />
                     </Label>
                     <Input
                       id="deadline"
                       type="date"
                       value={formData.deadline}
                       onChange={(e) => handleInputChange('deadline', e.target.value)}
-                      className="border-2 border-gray-200 focus:border-blue-500 transition-colors"
+                      className="border-2 border-gray-200 focus:border-blue-500 transition-colors text-right"
                     />
                   </div>
 
                   <div className="space-y-2">
-                    <Label className="text-sm font-medium flex items-center gap-2">
-                      <DollarSign className="h-4 w-4 text-blue-600" />
+                    <Label className="text-sm font-medium flex items-center gap-2 justify-end text-right">
                       الميزانية المتوقعة
+                      <DollarSign className="h-4 w-4 text-blue-600" />
                     </Label>
                     <Select value={formData.budget} onValueChange={(value) => handleInputChange('budget', value)}>
-                      <SelectTrigger className="border-2 border-gray-200 focus:border-blue-500">
+                      <SelectTrigger className="border-2 border-gray-200 focus:border-blue-500 text-right">
                         <SelectValue placeholder="اختر نطاق الميزانية" />
                       </SelectTrigger>
                       <SelectContent>
                         {budgetRanges.map((range) => (
-                          <SelectItem key={range.value} value={range.value}>
+                          <SelectItem key={range.value} value={range.value} className="text-right">
                             {range.label}
                           </SelectItem>
                         ))}
@@ -339,9 +339,9 @@ const ServiceInquiryForm: React.FC<ServiceInquiryFormProps> = ({
 
                 {/* ملاحظات إضافية */}
                 <div className="space-y-2">
-                  <Label htmlFor="additionalNotes" className="text-sm font-medium flex items-center gap-2">
-                    <MessageSquare className="h-4 w-4 text-blue-600" />
+                  <Label htmlFor="additionalNotes" className="text-sm font-medium flex items-center gap-2 justify-end text-right">
                     ملاحظات إضافية
+                    <MessageSquare className="h-4 w-4 text-blue-600" />
                   </Label>
                   <Textarea
                     id="additionalNotes"
@@ -349,7 +349,7 @@ const ServiceInquiryForm: React.FC<ServiceInquiryFormProps> = ({
                     value={formData.additionalNotes}
                     onChange={(e) => handleInputChange('additionalNotes', e.target.value)}
                     rows={3}
-                    className="border-2 border-gray-200 focus:border-blue-500 transition-colors resize-none"
+                    className="border-2 border-gray-200 focus:border-blue-500 transition-colors resize-none text-right"
                   />
                 </div>
 
@@ -369,12 +369,12 @@ const ServiceInquiryForm: React.FC<ServiceInquiryFormProps> = ({
                         <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
                         جاري الإرسال...
                       </div>
-                    ) : (
-                      <div className="flex items-center justify-center gap-2">
-                        <Send className="h-5 w-5" />
-                        إرسال الطلب مجاناً
-                      </div>
-                    )}
+                     ) : (
+                       <div className="flex items-center justify-center gap-2 flex-row-reverse">
+                         إرسال الطلب مجاناً
+                         <Send className="h-5 w-5" />
+                       </div>
+                     )}
                   </Button>
                 </motion.div>
 
