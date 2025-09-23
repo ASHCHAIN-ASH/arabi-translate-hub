@@ -16,6 +16,11 @@ interface PricingInquiry {
   service: string;
   details?: string;
   budget?: string;
+  files?: Array<{
+    name: string;
+    size: number;
+    type: string;
+  }>;
 }
 
 const handler = async (req: Request): Promise<Response> => {
@@ -82,7 +87,7 @@ const handler = async (req: Request): Promise<Response> => {
             <div class="content">
               <h2 class="welcome">مرحباً ${inquiry.name}! 👋</h2>
               
-              <p>شكراً لك على اهتمامك بخدماتنا. تم استلام طلبك بنجاح وسيتواصل معك فريق المبيعات خلال <strong>ساعة واحدة</strong> للرد على استفساراتك وتقديم عرض سعر مخصص.</p>
+              <p>شكراً لك على اهتمامك بخدماتنا. تم استلام طلبك بنجاح وسيتواصل معك فريق المبيعات خلال <strong>٣ ساعات خلال أوقات الدوام</strong> للرد على استفساراتك وتقديم عرض سعر مخصص.</p>
               
               <div class="info-box">
                 <h3>تفاصيل طلبك:</h3>
@@ -122,12 +127,20 @@ const handler = async (req: Request): Promise<Response> => {
                   <p style="margin-top: 5px; color: #1e293b; line-height: 1.6;">${inquiry.details}</p>
                 </div>
                 ` : ''}
+                ${inquiry.files && inquiry.files.length > 0 ? `
+                <div style="margin-top: 15px;">
+                  <span class="info-label">المرفقات:</span>
+                  <ul style="margin-top: 5px; color: #1e293b; padding-right: 20px;">
+                    ${inquiry.files.map(file => `<li>📎 ${file.name} (${(file.size / 1024 / 1024).toFixed(2)} MB)</li>`).join('')}
+                  </ul>
+                </div>
+                ` : ''}
               </div>
               
               <div class="next-steps">
                 <h3>الخطوات التالية:</h3>
                 <ul style="margin: 10px 0; padding-right: 20px;">
-                  <li>سيتواصل معك أحد خبراء المبيعات خلال ساعة واحدة</li>
+                  <li>سيتواصل معك أحد خبراء المبيعات خلال ٣ ساعات خلال أوقات الدوام</li>
                   <li>سنقوم بدراسة متطلباتك بعناية</li>
                   <li>سنقدم لك عرض سعر مخصص ومفصل</li>
                   <li>يمكنك الاتصال بنا مباشرة إذا كان لديك أي استفسار عاجل</li>
@@ -202,8 +215,8 @@ const handler = async (req: Request): Promise<Response> => {
             
             <div class="content">
               <div class="urgent">
-                <h3>⏰ يتطلب رد سريع خلال ساعة واحدة</h3>
-                <p>تم إرسال رسالة تأكيد للعميل تتضمن وعد بالرد خلال ساعة واحدة.</p>
+                <h3>⏰ يتطلب رد سريع خلال ٣ ساعات خلال أوقات الدوام</h3>
+                <p>تم إرسال رسالة تأكيد للعميل تتضمن وعد بالرد خلال ٣ ساعات خلال أوقات الدوام.</p>
               </div>
               
               <div class="client-info">
@@ -248,6 +261,16 @@ const handler = async (req: Request): Promise<Response> => {
               <div class="priority-high">
                 <h3>تفاصيل المشروع:</h3>
                 <p style="line-height: 1.6; margin: 10px 0;">${inquiry.details}</p>
+              </div>
+              ` : ''}
+              
+              ${inquiry.files && inquiry.files.length > 0 ? `
+              <div class="priority-high">
+                <h3>📎 المرفقات (${inquiry.files.length} ملف):</h3>
+                <ul style="margin: 10px 0; padding-right: 20px;">
+                  ${inquiry.files.map(file => `<li><strong>${file.name}</strong> - ${(file.size / 1024 / 1024).toFixed(2)} MB</li>`).join('')}
+                </ul>
+                <p style="color: #dc2626; font-weight: bold;">⚠️ يرجى طلب الملفات من العميل عند التواصل</p>
               </div>
               ` : ''}
               
