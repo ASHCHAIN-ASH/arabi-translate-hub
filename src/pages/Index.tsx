@@ -1,5 +1,4 @@
 import Header from "@/components/Header";
-import Footer from "@/components/Footer";
 import ServicesShowcase from "@/components/ServicesShowcase";
 import AcademicHeroSection from "@/components/AcademicHeroSection";
 import AcademicFeatures from "@/components/AcademicFeatures";
@@ -96,8 +95,6 @@ const Index = () => {
           </div>
         </div>
       </section>
-
-      <Footer />
     </div>
   );
 };
