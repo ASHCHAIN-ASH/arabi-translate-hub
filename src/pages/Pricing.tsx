@@ -605,6 +605,58 @@ const Pricing = () => {
                            <span className="font-semibold">خدمة احترافية</span>
                          </div>
                        </div>
+                       
+                       {/* Company Contact Information */}
+                       <div className="mt-10 pt-8 border-t border-gray-200">
+                         <div className="text-center mb-6">
+                           <h3 className="text-xl font-bold text-gray-800 mb-2">🏢 MasterEduPath - الحلول التعليمية المتقدمة</h3>
+                           <p className="text-gray-600">نحن متخصصون في تقديم أفضل الحلول التعليمية والأكاديمية</p>
+                         </div>
+                         
+                         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto">
+                           <motion.div 
+                             whileHover={{ scale: 1.05 }}
+                             className="bg-gradient-to-r from-blue-50 to-indigo-50 p-6 rounded-xl border border-blue-100 text-center"
+                           >
+                             <div className="w-12 h-12 bg-blue-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                               <Mail className="w-6 h-6 text-white" />
+                             </div>
+                             <h4 className="font-bold text-gray-800 mb-2">البريد الإلكتروني</h4>
+                             <p className="text-blue-600 font-semibold">info@masteredupath.com</p>
+                             <p className="text-sm text-gray-500">للاستفسارات العامة</p>
+                           </motion.div>
+                           
+                           <motion.div 
+                             whileHover={{ scale: 1.05 }}
+                             className="bg-gradient-to-r from-green-50 to-emerald-50 p-6 rounded-xl border border-green-100 text-center"
+                           >
+                             <div className="w-12 h-12 bg-green-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                               <Phone className="w-6 h-6 text-white" />
+                             </div>
+                             <h4 className="font-bold text-gray-800 mb-2">الهاتف والواتساب</h4>
+                             <p className="text-green-600 font-semibold">0555 123 456</p>
+                             <p className="text-sm text-gray-500">متاح 24/7</p>
+                           </motion.div>
+                           
+                           <motion.div 
+                             whileHover={{ scale: 1.05 }}
+                             className="bg-gradient-to-r from-purple-50 to-pink-50 p-6 rounded-xl border border-purple-100 text-center"
+                           >
+                             <div className="w-12 h-12 bg-purple-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                               <Building2 className="w-6 h-6 text-white" />
+                             </div>
+                             <h4 className="font-bold text-gray-800 mb-2">الموقع</h4>
+                             <p className="text-purple-600 font-semibold">الرياض</p>
+                             <p className="text-sm text-gray-500">المملكة العربية السعودية</p>
+                           </motion.div>
+                         </div>
+                         
+                         <div className="text-center mt-6">
+                           <p className="text-sm text-gray-500">
+                             🌐 <strong>الموقع الإلكتروني:</strong> <span className="text-blue-600">www.masteredupath.com</span>
+                           </p>
+                         </div>
+                       </div>
                      </motion.div>
                   </form>
                 </CardContent>
