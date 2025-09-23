@@ -109,7 +109,7 @@ const Footer = () => {
 
       {/* Main Footer Content */}
       <div className="relative z-10 container mx-auto px-4 py-16">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8">
           {/* معلومات الشركة */}
           <motion.div 
             initial={{ opacity: 0, y: 20 }}
@@ -193,7 +193,6 @@ const Footer = () => {
                 { name: 'خدماتنا', icon: Zap, href: '/services' },
                 { name: 'الأسعار', icon: Star, href: '/pricing' },
                 { name: 'عن الشركة', icon: Building2, href: '/about-us' },
-                { name: 'المدونة', icon: Globe },
                 { name: 'الأسئلة الشائعة', icon: Users },
                 { name: 'سياسة الخصوصية', icon: Shield, href: '/privacy-policy' },
                 { name: 'إدارة', icon: Users, href: '/admin/orders', admin: true }
@@ -209,6 +208,45 @@ const Footer = () => {
                   >
                     <link.icon className="h-4 w-4 group-hover:text-primary transition-colors" />
                     {link.name}
+                  </a>
+                </motion.li>
+              ))}
+            </ul>
+          </motion.div>
+
+          {/* قسم المدونة */}
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.15, duration: 0.5 }}
+            className="space-y-4"
+          >
+            <h4 className="text-lg font-bold text-white flex items-center gap-2">
+              <Globe className="h-5 w-5 text-orange-400 animate-pulse" />
+              المدونة والموارد
+            </h4>
+            <ul className="space-y-3">
+              {[
+                { name: 'أحدث المقالات', badge: 'جديد' },
+                { name: 'نصائح الترجمة', badge: 'مفيد' },
+                { name: 'أخبار الصناعة', badge: 'حصري' },
+                { name: 'دليل العملاء', badge: 'شامل' },
+                { name: 'قصص النجاح', badge: 'ملهم' },
+                { name: 'الأسئلة الشائعة', badge: 'مهم' }
+              ].map((blog) => (
+                <motion.li 
+                  key={blog.name}
+                  whileHover={{ x: 10, scale: 1.02 }}
+                  transition={{ type: "spring", stiffness: 300 }}
+                >
+                  <a 
+                    href="#" 
+                    className="text-white/70 hover:text-white transition-colors text-sm flex items-center justify-between group"
+                  >
+                    <span>{blog.name}</span>
+                    <span className="text-xs bg-orange-500/20 text-orange-400 px-2 py-1 rounded-full opacity-0 group-hover:opacity-100 transition-opacity">
+                      {blog.badge}
+                    </span>
                   </a>
                 </motion.li>
               ))}
