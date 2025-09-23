@@ -342,88 +342,88 @@ const Pricing = () => {
                 <CardContent className="p-10">
                   <form onSubmit={handleSubmit} className="space-y-8">
                     <div className="grid sm:grid-cols-2 gap-8">
-                      <motion.div
-                        initial={{ opacity: 0, x: -30 }}
-                        whileInView={{ opacity: 1, x: 0 }}
-                        transition={{ delay: 0.1, duration: 0.6 }}
-                        viewport={{ once: true }}
-                      >
-                        <label className="block text-base font-bold mb-4 text-right flex items-center justify-end text-slate-700">
-                          <span className="mr-3">الاسم الكامل *</span>
-                          <div className="w-10 h-10 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center">
-                            <Users className="w-5 h-5 text-white" />
-                          </div>
-                        </label>
-                        <Input
-                          value={formData.name}
-                          onChange={(e) => handleInputChange('name', e.target.value)}
-                          placeholder="أدخل اسمك الكامل"
-                          className="text-right border-2 border-blue-200 hover:border-blue-400 focus:border-blue-600 transition-all duration-300 py-4 px-6 text-lg bg-blue-50/30 rounded-xl shadow-sm"
-                          required
-                        />
-                      </motion.div>
+                       <motion.div
+                         initial={{ opacity: 0, x: -30 }}
+                         whileInView={{ opacity: 1, x: 0 }}
+                         transition={{ delay: 0.1, duration: 0.6 }}
+                         viewport={{ once: true }}
+                       >
+                         <label className="block text-base font-bold mb-4 text-right flex items-center text-slate-700">
+                           <div className="w-10 h-10 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center mr-3">
+                             <Users className="w-5 h-5 text-white" />
+                           </div>
+                           <span>الاسم الكامل *</span>
+                         </label>
+                         <Input
+                           value={formData.name}
+                           onChange={(e) => handleInputChange('name', e.target.value)}
+                           placeholder="أدخل اسمك الكامل"
+                           className="text-right border-2 border-blue-200 hover:border-blue-400 focus:border-blue-600 transition-all duration-300 py-4 px-6 text-lg bg-blue-50/30 rounded-xl shadow-sm"
+                           required
+                         />
+                       </motion.div>
 
-                      <motion.div
-                        initial={{ opacity: 0, x: 30 }}
-                        whileInView={{ opacity: 1, x: 0 }}
-                        transition={{ delay: 0.2, duration: 0.6 }}
-                        viewport={{ once: true }}
-                      >
-                        <label className="block text-base font-bold mb-4 text-right flex items-center justify-end text-slate-700">
-                          <span className="mr-3">البريد الإلكتروني *</span>
-                          <div className="w-10 h-10 bg-gradient-to-r from-green-500 to-blue-600 rounded-full flex items-center justify-center">
-                            <Mail className="w-5 h-5 text-white" />
-                          </div>
-                        </label>
-                        <Input
-                          type="email"
-                          value={formData.email}
-                          onChange={(e) => handleInputChange('email', e.target.value)}
-                          placeholder="example@company.com"
-                          className="text-right border-2 border-green-200 hover:border-green-400 focus:border-green-600 transition-all duration-300 py-4 px-6 text-lg bg-green-50/30 rounded-xl shadow-sm"
-                          required
-                        />
-                      </motion.div>
+                       <motion.div
+                         initial={{ opacity: 0, x: 30 }}
+                         whileInView={{ opacity: 1, x: 0 }}
+                         transition={{ delay: 0.2, duration: 0.6 }}
+                         viewport={{ once: true }}
+                       >
+                         <label className="block text-base font-bold mb-4 text-right flex items-center text-slate-700">
+                           <div className="w-10 h-10 bg-gradient-to-r from-green-500 to-blue-600 rounded-full flex items-center justify-center mr-3">
+                             <Mail className="w-5 h-5 text-white" />
+                           </div>
+                           <span>البريد الإلكتروني *</span>
+                         </label>
+                         <Input
+                           type="email"
+                           value={formData.email}
+                           onChange={(e) => handleInputChange('email', e.target.value)}
+                           placeholder="example@company.com"
+                           className="text-right border-2 border-green-200 hover:border-green-400 focus:border-green-600 transition-all duration-300 py-4 px-6 text-lg bg-green-50/30 rounded-xl shadow-sm text-left"
+                           required
+                         />
+                       </motion.div>
 
-                      <motion.div
-                        initial={{ opacity: 0, x: -30 }}
-                        whileInView={{ opacity: 1, x: 0 }}
-                        transition={{ delay: 0.3, duration: 0.6 }}
-                        viewport={{ once: true }}
-                      >
-                        <label className="block text-base font-bold mb-4 text-right flex items-center justify-end text-slate-700">
-                          <span className="mr-3">رقم الهاتف</span>
-                          <div className="w-10 h-10 bg-gradient-to-r from-purple-500 to-pink-600 rounded-full flex items-center justify-center">
-                            <Phone className="w-5 h-5 text-white" />
-                          </div>
-                        </label>
-                        <Input
-                          value={formData.phone}
-                          onChange={(e) => handleInputChange('phone', e.target.value)}
-                          placeholder="+966 50 000 0000"
-                          className="text-right border-2 border-purple-200 hover:border-purple-400 focus:border-purple-600 transition-all duration-300 py-4 px-6 text-lg bg-purple-50/30 rounded-xl shadow-sm"
-                        />
-                      </motion.div>
+                       <motion.div
+                         initial={{ opacity: 0, x: -30 }}
+                         whileInView={{ opacity: 1, x: 0 }}
+                         transition={{ delay: 0.3, duration: 0.6 }}
+                         viewport={{ once: true }}
+                       >
+                         <label className="block text-base font-bold mb-4 text-right flex items-center text-slate-700">
+                           <div className="w-10 h-10 bg-gradient-to-r from-purple-500 to-pink-600 rounded-full flex items-center justify-center mr-3">
+                             <Phone className="w-5 h-5 text-white" />
+                           </div>
+                           <span>رقم الهاتف</span>
+                         </label>
+                         <Input
+                           value={formData.phone}
+                           onChange={(e) => handleInputChange('phone', e.target.value)}
+                           placeholder="+966 50 000 0000"
+                           className="text-right border-2 border-purple-200 hover:border-purple-400 focus:border-purple-600 transition-all duration-300 py-4 px-6 text-lg bg-purple-50/30 rounded-xl shadow-sm text-left"
+                         />
+                       </motion.div>
 
-                      <motion.div
-                        initial={{ opacity: 0, x: 30 }}
-                        whileInView={{ opacity: 1, x: 0 }}
-                        transition={{ delay: 0.4, duration: 0.6 }}
-                        viewport={{ once: true }}
-                      >
-                        <label className="block text-base font-bold mb-4 text-right flex items-center justify-end text-slate-700">
-                          <span className="mr-3">اسم الشركة</span>
-                          <div className="w-10 h-10 bg-gradient-to-r from-orange-500 to-red-600 rounded-full flex items-center justify-center">
-                            <Building2 className="w-5 h-5 text-white" />
-                          </div>
-                        </label>
-                        <Input
-                          value={formData.company}
-                          onChange={(e) => handleInputChange('company', e.target.value)}
-                          placeholder="اسم شركتك أو مؤسستك"
-                          className="text-right border-2 border-orange-200 hover:border-orange-400 focus:border-orange-600 transition-all duration-300 py-4 px-6 text-lg bg-orange-50/30 rounded-xl shadow-sm"
-                        />
-                      </motion.div>
+                       <motion.div
+                         initial={{ opacity: 0, x: 30 }}
+                         whileInView={{ opacity: 1, x: 0 }}
+                         transition={{ delay: 0.4, duration: 0.6 }}
+                         viewport={{ once: true }}
+                       >
+                         <label className="block text-base font-bold mb-4 text-right flex items-center text-slate-700">
+                           <div className="w-10 h-10 bg-gradient-to-r from-orange-500 to-red-600 rounded-full flex items-center justify-center mr-3">
+                             <Building2 className="w-5 h-5 text-white" />
+                           </div>
+                           <span>اسم الشركة</span>
+                         </label>
+                         <Input
+                           value={formData.company}
+                           onChange={(e) => handleInputChange('company', e.target.value)}
+                           placeholder="اسم شركتك أو مؤسستك"
+                           className="text-right border-2 border-orange-200 hover:border-orange-400 focus:border-orange-600 transition-all duration-300 py-4 px-6 text-lg bg-orange-50/30 rounded-xl shadow-sm"
+                         />
+                       </motion.div>
                     </div>
 
                     <motion.div
@@ -432,12 +432,12 @@ const Pricing = () => {
                       transition={{ delay: 0.5, duration: 0.6 }}
                       viewport={{ once: true }}
                     >
-                      <label className="block text-base font-bold mb-4 text-right flex items-center justify-end text-slate-700">
-                        <span className="mr-3">نوع الخدمة المطلوبة *</span>
-                        <div className="w-10 h-10 bg-gradient-to-r from-indigo-500 to-blue-600 rounded-full flex items-center justify-center">
-                          <Briefcase className="w-5 h-5 text-white" />
-                        </div>
-                      </label>
+                       <label className="block text-base font-bold mb-4 text-right flex items-center text-slate-700">
+                         <div className="w-10 h-10 bg-gradient-to-r from-indigo-500 to-blue-600 rounded-full flex items-center justify-center mr-3">
+                           <Briefcase className="w-5 h-5 text-white" />
+                         </div>
+                         <span>نوع الخدمة المطلوبة *</span>
+                       </label>
                       <Select value={formData.service} onValueChange={(value) => handleInputChange('service', value)}>
                         <SelectTrigger className="text-right border-2 border-indigo-200 hover:border-indigo-400 focus:border-indigo-600 py-4 px-6 text-lg bg-indigo-50/30 rounded-xl shadow-sm">
                           <SelectValue placeholder="اختر نوع الخدمة المطلوبة" />
@@ -463,12 +463,12 @@ const Pricing = () => {
                       transition={{ delay: 0.6, duration: 0.6 }}
                       viewport={{ once: true }}
                     >
-                      <label className="block text-base font-bold mb-4 text-right flex items-center justify-end text-slate-700">
-                        <span className="mr-3">الميزانية المتوقعة</span>
-                        <div className="w-10 h-10 bg-gradient-to-r from-yellow-500 to-orange-600 rounded-full flex items-center justify-center">
-                          <DollarSign className="w-5 h-5 text-white" />
-                        </div>
-                      </label>
+                       <label className="block text-base font-bold mb-4 text-right flex items-center text-slate-700">
+                         <div className="w-10 h-10 bg-gradient-to-r from-yellow-500 to-orange-600 rounded-full flex items-center justify-center mr-3">
+                           <DollarSign className="w-5 h-5 text-white" />
+                         </div>
+                         <span>الميزانية المتوقعة</span>
+                       </label>
                       <Select value={formData.budget} onValueChange={(value) => handleInputChange('budget', value)}>
                         <SelectTrigger className="text-right border-2 border-yellow-200 hover:border-yellow-400 focus:border-yellow-600 py-4 px-6 text-lg bg-yellow-50/30 rounded-xl shadow-sm">
                           <SelectValue placeholder="اختر النطاق السعري المناسب" />
@@ -490,12 +490,12 @@ const Pricing = () => {
                       transition={{ delay: 0.7, duration: 0.6 }}
                       viewport={{ once: true }}
                     >
-                      <label className="block text-base font-bold mb-4 text-right flex items-center justify-end text-slate-700">
-                        <span className="mr-3">تفاصيل المشروع</span>
-                        <div className="w-10 h-10 bg-gradient-to-r from-pink-500 to-rose-600 rounded-full flex items-center justify-center">
-                          <FileText className="w-5 h-5 text-white" />
-                        </div>
-                      </label>
+                       <label className="block text-base font-bold mb-4 text-right flex items-center text-slate-700">
+                         <div className="w-10 h-10 bg-gradient-to-r from-pink-500 to-rose-600 rounded-full flex items-center justify-center mr-3">
+                           <FileText className="w-5 h-5 text-white" />
+                         </div>
+                         <span>تفاصيل المشروع</span>
+                       </label>
                       <Textarea
                         value={formData.details}
                         onChange={(e) => handleInputChange('details', e.target.value)}
