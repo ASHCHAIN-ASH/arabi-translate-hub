@@ -77,6 +77,7 @@ import OrderForm from "./components/OrderForm";
 import TermsOfService from "./pages/TermsOfService";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
 import ColorShowcase from "./pages/ColorShowcase";
+import Pricing from "./pages/Pricing";
 import OrderTracking from "./pages/OrderTracking";
 import SubmitOrder from "./pages/SubmitOrder";
 import NotFound from "./pages/NotFound";
@@ -110,9 +111,10 @@ const App = () => (
             <Route path="/about-us" element={<AboutUs />} />
             <Route path="/terms-of-service" element={<TermsOfService />} />
             <Route path="/privacy-policy" element={<PrivacyPolicy />} />
-            <Route path="/order-tracking" element={<OrderTracking />} />
-            <Route path="/submit-order" element={<OrderForm />} />
-            <Route path="/color-showcase" element={<ColorShowcase />} />
+             <Route path="/order-tracking" element={<OrderTracking />} />
+             <Route path="/submit-order" element={<OrderForm />} />
+             <Route path="/color-showcase" element={<ColorShowcase />} />
+             <Route path="/pricing" element={<Pricing />} />
             
             {/* Auth Routes */}
             <Route path="/login" element={<Login />} />
