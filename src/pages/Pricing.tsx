@@ -53,69 +53,7 @@ const Pricing = () => {
   const { toast } = useToast();
 
   const pricingPlans = [
-    {
-      name: "الباقة الأساسية",
-      price: "199",
-      originalPrice: "299",
-      period: "ريال لكل صفحة",
-      description: "مثالية للأفراد والشركات الناشئة",
-      features: [
-        "ترجمة احترافية عالية الجودة",
-        "مراجعة لغوية شاملة", 
-        "تسليم خلال 24-48 ساعة",
-        "دعم فني مجاني",
-        "ضمان الجودة لمدة شهر",
-        "تنسيق أساسي للوثائق"
-      ],
-      badge: "الأكثر شعبية",
-      color: "from-blue-500 via-blue-600 to-indigo-600",
-      icon: Zap,
-      popular: true
-    },
-    {
-      name: "الباقة المتقدمة", 
-      price: "299",
-      originalPrice: "399",
-      period: "ريال لكل صفحة",
-      description: "للشركات المتوسطة والمشاريع المعقدة",
-      features: [
-        "جميع مميزات الباقة الأساسية",
-        "مراجعة من خبير ثاني",
-        "ترجمة متخصصة حسب المجال", 
-        "تسليم سريع خلال 12-24 ساعة",
-        "دعم أولوية على مدار الساعة",
-        "تنسيق وتصميم احترافي",
-        "ترجمة فورية للطوارئ",
-        "استشارة مجانية"
-      ],
-      badge: "الأفضل للشركات",
-      color: "from-purple-500 via-purple-600 to-pink-600",
-      icon: Crown,
-      popular: false
-    },
-    {
-      name: "الباقة الذهبية",
-      price: "يُحدد حسب المشروع",
-      originalPrice: null,
-      period: "أسعار خاصة مخفضة",
-      description: "حلول مخصصة للمؤسسات الكبرى والمشاريع الضخمة",
-      features: [
-        "جميع مميزات الباقات السابقة",
-        "فريق مخصص للمشروع",
-        "مدير مشروع متخصص",
-        "ترجمة فورية وعاجلة على مدار الساعة",
-        "تدريب الفريق الداخلي",
-        "اتفاقية مستوى خدمة مخصصة",
-        "تكامل مع أنظمة الشركة",
-        "خصم على المشاريع الكبيرة",
-        "دعم تقني متقدم",
-        "تقارير تفصيلية"
-      ],
-      badge: "حلول مؤسسية",
-      color: "from-orange-500 via-red-500 to-pink-600", 
-      icon: Diamond,
-      popular: false
-    }
+    // Removed pricing plans section as requested
   ];
 
   const features = [
@@ -240,7 +178,7 @@ const Pricing = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50/30 to-purple-50/30" dir="rtl">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50/30 to-purple-50/30" dir="rtl" style={{ fontFamily: 'Arial, sans-serif' }}>
       
       {/* Header Section */}
       <section className="relative py-20 overflow-hidden">
@@ -250,7 +188,7 @@ const Pricing = () => {
           <div className="absolute bottom-20 left-20 w-96 h-96 bg-purple-400/20 rounded-full blur-3xl animate-pulse delay-1000" />
         </div>
         
-        <div className="container mx-auto px-4 relative z-10">
+        <div className="container mx-auto px-4 relative z-10 text-right">
           <motion.div 
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
@@ -262,9 +200,9 @@ const Pricing = () => {
               animate={{ scale: 1 }}
               transition={{ delay: 0.2, duration: 0.5, type: "spring" }}
             >
-              <Badge className="mb-6 bg-gradient-to-r from-blue-500 to-purple-600 text-white text-lg px-6 py-2">
+              <Badge className="mb-6 bg-gradient-to-r from-blue-500 to-purple-600 text-white text-lg px-6 py-2 font-semibold">
                 <Sparkles className="w-5 h-5 ml-2" />
-                عروض حصرية وأسعار تنافسية
+                احصل على عرض أسعار مخصص
               </Badge>
             </motion.div>
 
@@ -274,7 +212,7 @@ const Pricing = () => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.4, duration: 0.8 }}
             >
-              باقات الترجمة الاحترافية
+              خدمات الترجمة الاحترافية
             </motion.h1>
 
             <motion.p 
@@ -283,7 +221,7 @@ const Pricing = () => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.6, duration: 0.8 }}
             >
-              اختر الباقة التي تناسب احتياجاتك واحصل على أفضل خدمات الترجمة بأسعار تنافسية مع ضمان الجودة
+              احصل على عرض أسعار مخصص لمشروعك واستمتع بأفضل خدمات الترجمة مع ضمان الجودة العالية
             </motion.p>
 
             {/* Stats Section */}
@@ -312,122 +250,9 @@ const Pricing = () => {
         </div>
       </section>
 
-      {/* Pricing Plans */}
-      <section className="py-20">
-        <div className="container mx-auto px-4">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-            viewport={{ once: true }}
-            className="text-center mb-16"
-          >
-            <h2 className="text-3xl md:text-5xl font-bold mb-6">اختر الباقة المناسبة لك</h2>
-            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-              باقات مصممة خصيصاً لتلبية احتياجات مختلف أنواع العملاء مع أفضل الأسعار
-            </p>
-          </motion.div>
-
-          <div className="grid lg:grid-cols-3 gap-8 max-w-7xl mx-auto">
-            {pricingPlans.map((plan, index) => (
-              <motion.div
-                key={plan.name}
-                initial={{ opacity: 0, y: 50 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ delay: index * 0.2, duration: 0.8 }}
-                viewport={{ once: true }}
-                whileHover={{ y: -10 }}
-                className={`relative ${plan.popular ? 'lg:scale-105 z-10' : ''}`}
-              >
-                <Card className={`h-full border-2 hover:shadow-2xl transition-all duration-500 ${
-                  plan.popular ? 'border-purple-200 shadow-xl bg-gradient-to-br from-white to-blue-50/50' : 'border-gray-200 hover:border-blue-200'
-                } overflow-hidden`}>
-                  
-                  {/* Popular Badge */}
-                  {plan.badge && (
-                    <motion.div 
-                      className={`absolute -top-4 left-1/2 transform -translate-x-1/2 px-6 py-3 rounded-full text-sm font-bold text-white bg-gradient-to-r ${plan.color} shadow-lg`}
-                      initial={{ scale: 0 }}
-                      animate={{ scale: 1 }}
-                      transition={{ delay: index * 0.2 + 0.5, type: "spring" }}
-                    >
-                      <Crown className="w-4 h-4 inline ml-2" />
-                      {plan.badge}
-                    </motion.div>
-                  )}
-
-                  {/* Background Pattern */}
-                  <div className="absolute top-0 right-0 w-32 h-32 opacity-5">
-                    <div className={`w-full h-full bg-gradient-to-br ${plan.color} transform rotate-45 translate-x-16 -translate-y-16`} />
-                  </div>
-                  
-                  <CardHeader className="text-center pb-8 pt-12 relative">
-                    <motion.div 
-                      className={`w-20 h-20 mx-auto mb-6 rounded-full bg-gradient-to-r ${plan.color} flex items-center justify-center shadow-lg`}
-                      whileHover={{ rotate: 360 }}
-                      transition={{ duration: 0.6 }}
-                    >
-                      <plan.icon className="w-10 h-10 text-white" />
-                    </motion.div>
-                    
-                    <CardTitle className="text-2xl mb-4">{plan.name}</CardTitle>
-                    
-                    <div className="mb-6">
-                      <div className="flex items-center justify-center gap-3">
-                        <span className="text-4xl font-bold text-primary">{plan.price}</span>
-                        {plan.originalPrice && (
-                          <div className="flex flex-col">
-                            <span className="text-lg text-muted-foreground line-through">{plan.originalPrice}</span>
-                            <Badge variant="destructive" className="text-xs">
-                              <Percent className="w-3 h-3 ml-1" />
-                              خصم 33%
-                            </Badge>
-                          </div>
-                        )}
-                      </div>
-                      <span className="text-muted-foreground text-sm block mt-2">{plan.period}</span>
-                    </div>
-                    
-                    <CardDescription className="text-base leading-relaxed">{plan.description}</CardDescription>
-                  </CardHeader>
-                  
-                  <CardContent className="pt-0">
-                    <ul className="space-y-4 mb-8">
-                      {plan.features.map((feature, featureIndex) => (
-                        <motion.li
-                          key={featureIndex}
-                          initial={{ opacity: 0, x: -20 }}
-                          whileInView={{ opacity: 1, x: 0 }}
-                          transition={{ delay: featureIndex * 0.1, duration: 0.5 }}
-                          viewport={{ once: true }}
-                          className="flex items-start gap-3"
-                        >
-                          <CheckCircle2 className="w-5 h-5 text-green-500 mt-0.5 flex-shrink-0" />
-                          <span className="text-sm text-muted-foreground leading-relaxed">{feature}</span>
-                        </motion.li>
-                      ))}
-                    </ul>
-                    
-                    <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
-                      <Button 
-                        className={`w-full bg-gradient-to-r ${plan.color} hover:shadow-xl transition-all duration-300 py-6 text-lg font-semibold`}
-                        size="lg"
-                      >
-                        <Rocket className="w-5 h-5 ml-2" />
-                        اطلب هذه الباقة الآن
-                      </Button>
-                    </motion.div>
-                  </CardContent>
-                </Card>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </section>
-
       {/* Features Section */}
       <section className="py-20 bg-gradient-to-r from-blue-50/50 via-white to-purple-50/50">
-        <div className="container mx-auto px-4">
+        <div className="container mx-auto px-4 text-right">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -473,13 +298,16 @@ const Pricing = () => {
       {/* Contact Form */}
       <section className="py-20 relative overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-br from-blue-600/5 via-purple-600/5 to-pink-600/5" />
-        <div className="container mx-auto px-4 relative z-10">
+        <div className="absolute top-10 left-10 w-96 h-96 bg-blue-400/10 rounded-full blur-3xl animate-pulse" />
+        <div className="absolute bottom-10 right-10 w-80 h-80 bg-purple-400/10 rounded-full blur-3xl animate-pulse delay-1000" />
+        
+        <div className="container mx-auto px-4 relative z-10 text-right">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
             viewport={{ once: true }}
-            className="max-w-4xl mx-auto"
+            className="max-w-5xl mx-auto"
           >
             <div className="text-center mb-12">
               <motion.div
@@ -488,17 +316,17 @@ const Pricing = () => {
                 transition={{ delay: 0.2, type: "spring" }}
                 viewport={{ once: true }}
               >
-                <Badge className="mb-6 bg-gradient-to-r from-green-500 to-blue-600 text-white text-lg px-6 py-2">
-                  <Gift className="w-5 h-5 ml-2" />
+                <Badge className="mb-6 bg-gradient-to-r from-green-500 to-blue-600 text-white text-lg px-8 py-3 font-bold shadow-lg">
+                  <Gift className="w-6 h-6 ml-2" />
                   عرض سعر مجاني فوري
                 </Badge>
               </motion.div>
               
-              <h2 className="text-3xl md:text-5xl font-bold mb-6">
+              <h2 className="text-4xl md:text-6xl font-bold mb-6 bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent">
                 احصل على عرض سعر مخصص الآن
               </h2>
-              <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-                املأ النموذج وسيتواصل معك فريق المبيعات المتخصص خلال ساعة واحدة فقط
+              <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
+                املأ النموذج وسيتواصل معك فريق المبيعات المتخصص خلال ساعة واحدة فقط مع أفضل الأسعار التنافسية
               </p>
             </div>
 
@@ -508,82 +336,92 @@ const Pricing = () => {
               transition={{ delay: 0.3, duration: 0.8 }}
               viewport={{ once: true }}
             >
-              <Card className="backdrop-blur-sm bg-white/90 border-0 shadow-2xl">
-                <CardContent className="p-8">
-                  <form onSubmit={handleSubmit} className="space-y-6">
-                    <div className="grid sm:grid-cols-2 gap-6">
+              <Card className="backdrop-blur-lg bg-white/95 border-2 border-blue-100/50 shadow-2xl overflow-hidden">
+                <div className="absolute top-0 right-0 w-full h-2 bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500"></div>
+                
+                <CardContent className="p-10">
+                  <form onSubmit={handleSubmit} className="space-y-8">
+                    <div className="grid sm:grid-cols-2 gap-8">
                       <motion.div
-                        initial={{ opacity: 0, x: -20 }}
+                        initial={{ opacity: 0, x: -30 }}
                         whileInView={{ opacity: 1, x: 0 }}
-                        transition={{ delay: 0.1, duration: 0.5 }}
+                        transition={{ delay: 0.1, duration: 0.6 }}
                         viewport={{ once: true }}
                       >
-                        <label className="block text-sm font-semibold mb-3 text-right flex items-center">
-                          <Users className="w-4 h-4 ml-2 text-blue-500" />
-                          الاسم الكامل *
+                        <label className="block text-base font-bold mb-4 text-right flex items-center justify-end text-slate-700">
+                          <span className="mr-3">الاسم الكامل *</span>
+                          <div className="w-10 h-10 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center">
+                            <Users className="w-5 h-5 text-white" />
+                          </div>
                         </label>
                         <Input
                           value={formData.name}
                           onChange={(e) => handleInputChange('name', e.target.value)}
                           placeholder="أدخل اسمك الكامل"
-                          className="text-right border-2 hover:border-blue-300 focus:border-blue-500 transition-colors py-6"
+                          className="text-right border-2 border-blue-200 hover:border-blue-400 focus:border-blue-600 transition-all duration-300 py-4 px-6 text-lg bg-blue-50/30 rounded-xl shadow-sm"
                           required
                         />
                       </motion.div>
 
                       <motion.div
-                        initial={{ opacity: 0, x: 20 }}
+                        initial={{ opacity: 0, x: 30 }}
                         whileInView={{ opacity: 1, x: 0 }}
-                        transition={{ delay: 0.2, duration: 0.5 }}
+                        transition={{ delay: 0.2, duration: 0.6 }}
                         viewport={{ once: true }}
                       >
-                        <label className="block text-sm font-semibold mb-3 text-right flex items-center">
-                          <Mail className="w-4 h-4 ml-2 text-blue-500" />
-                          البريد الإلكتروني *
+                        <label className="block text-base font-bold mb-4 text-right flex items-center justify-end text-slate-700">
+                          <span className="mr-3">البريد الإلكتروني *</span>
+                          <div className="w-10 h-10 bg-gradient-to-r from-green-500 to-blue-600 rounded-full flex items-center justify-center">
+                            <Mail className="w-5 h-5 text-white" />
+                          </div>
                         </label>
                         <Input
                           type="email"
                           value={formData.email}
                           onChange={(e) => handleInputChange('email', e.target.value)}
                           placeholder="example@company.com"
-                          className="text-right border-2 hover:border-blue-300 focus:border-blue-500 transition-colors py-6"
+                          className="text-right border-2 border-green-200 hover:border-green-400 focus:border-green-600 transition-all duration-300 py-4 px-6 text-lg bg-green-50/30 rounded-xl shadow-sm"
                           required
                         />
                       </motion.div>
 
                       <motion.div
-                        initial={{ opacity: 0, x: -20 }}
+                        initial={{ opacity: 0, x: -30 }}
                         whileInView={{ opacity: 1, x: 0 }}
-                        transition={{ delay: 0.3, duration: 0.5 }}
+                        transition={{ delay: 0.3, duration: 0.6 }}
                         viewport={{ once: true }}
                       >
-                        <label className="block text-sm font-semibold mb-3 text-right flex items-center">
-                          <Phone className="w-4 h-4 ml-2 text-blue-500" />
-                          رقم الهاتف
+                        <label className="block text-base font-bold mb-4 text-right flex items-center justify-end text-slate-700">
+                          <span className="mr-3">رقم الهاتف</span>
+                          <div className="w-10 h-10 bg-gradient-to-r from-purple-500 to-pink-600 rounded-full flex items-center justify-center">
+                            <Phone className="w-5 h-5 text-white" />
+                          </div>
                         </label>
                         <Input
                           value={formData.phone}
                           onChange={(e) => handleInputChange('phone', e.target.value)}
                           placeholder="+966 50 000 0000"
-                          className="text-right border-2 hover:border-blue-300 focus:border-blue-500 transition-colors py-6"
+                          className="text-right border-2 border-purple-200 hover:border-purple-400 focus:border-purple-600 transition-all duration-300 py-4 px-6 text-lg bg-purple-50/30 rounded-xl shadow-sm"
                         />
                       </motion.div>
 
                       <motion.div
-                        initial={{ opacity: 0, x: 20 }}
+                        initial={{ opacity: 0, x: 30 }}
                         whileInView={{ opacity: 1, x: 0 }}
-                        transition={{ delay: 0.4, duration: 0.5 }}
+                        transition={{ delay: 0.4, duration: 0.6 }}
                         viewport={{ once: true }}
                       >
-                        <label className="block text-sm font-semibold mb-3 text-right flex items-center">
-                          <Building2 className="w-4 h-4 ml-2 text-blue-500" />
-                          اسم الشركة
+                        <label className="block text-base font-bold mb-4 text-right flex items-center justify-end text-slate-700">
+                          <span className="mr-3">اسم الشركة</span>
+                          <div className="w-10 h-10 bg-gradient-to-r from-orange-500 to-red-600 rounded-full flex items-center justify-center">
+                            <Building2 className="w-5 h-5 text-white" />
+                          </div>
                         </label>
                         <Input
                           value={formData.company}
                           onChange={(e) => handleInputChange('company', e.target.value)}
                           placeholder="اسم شركتك أو مؤسستك"
-                          className="text-right border-2 hover:border-blue-300 focus:border-blue-500 transition-colors py-6"
+                          className="text-right border-2 border-orange-200 hover:border-orange-400 focus:border-orange-600 transition-all duration-300 py-4 px-6 text-lg bg-orange-50/30 rounded-xl shadow-sm"
                         />
                       </motion.div>
                     </div>
@@ -591,18 +429,20 @@ const Pricing = () => {
                     <motion.div
                       initial={{ opacity: 0, y: 20 }}
                       whileInView={{ opacity: 1, y: 0 }}
-                      transition={{ delay: 0.5, duration: 0.5 }}
+                      transition={{ delay: 0.5, duration: 0.6 }}
                       viewport={{ once: true }}
                     >
-                      <label className="block text-sm font-semibold mb-3 text-right flex items-center">
-                        <Briefcase className="w-4 h-4 ml-2 text-blue-500" />
-                        نوع الخدمة المطلوبة *
+                      <label className="block text-base font-bold mb-4 text-right flex items-center justify-end text-slate-700">
+                        <span className="mr-3">نوع الخدمة المطلوبة *</span>
+                        <div className="w-10 h-10 bg-gradient-to-r from-indigo-500 to-blue-600 rounded-full flex items-center justify-center">
+                          <Briefcase className="w-5 h-5 text-white" />
+                        </div>
                       </label>
                       <Select value={formData.service} onValueChange={(value) => handleInputChange('service', value)}>
-                        <SelectTrigger className="text-right border-2 hover:border-blue-300 focus:border-blue-500 py-6">
+                        <SelectTrigger className="text-right border-2 border-indigo-200 hover:border-indigo-400 focus:border-indigo-600 py-4 px-6 text-lg bg-indigo-50/30 rounded-xl shadow-sm">
                           <SelectValue placeholder="اختر نوع الخدمة المطلوبة" />
                         </SelectTrigger>
-                        <SelectContent>
+                        <SelectContent className="text-right">
                           <SelectItem value="document">📄 ترجمة الوثائق والمستندات</SelectItem>
                           <SelectItem value="website">🌐 ترجمة المواقع الإلكترونية</SelectItem>
                           <SelectItem value="audio">🎵 ترجمة صوتية</SelectItem>
@@ -620,18 +460,20 @@ const Pricing = () => {
                     <motion.div
                       initial={{ opacity: 0, y: 20 }}
                       whileInView={{ opacity: 1, y: 0 }}
-                      transition={{ delay: 0.6, duration: 0.5 }}
+                      transition={{ delay: 0.6, duration: 0.6 }}
                       viewport={{ once: true }}
                     >
-                      <label className="block text-sm font-semibold mb-3 text-right flex items-center">
-                        <DollarSign className="w-4 h-4 ml-2 text-blue-500" />
-                        الميزانية المتوقعة
+                      <label className="block text-base font-bold mb-4 text-right flex items-center justify-end text-slate-700">
+                        <span className="mr-3">الميزانية المتوقعة</span>
+                        <div className="w-10 h-10 bg-gradient-to-r from-yellow-500 to-orange-600 rounded-full flex items-center justify-center">
+                          <DollarSign className="w-5 h-5 text-white" />
+                        </div>
                       </label>
                       <Select value={formData.budget} onValueChange={(value) => handleInputChange('budget', value)}>
-                        <SelectTrigger className="text-right border-2 hover:border-blue-300 focus:border-blue-500 py-6">
+                        <SelectTrigger className="text-right border-2 border-yellow-200 hover:border-yellow-400 focus:border-yellow-600 py-4 px-6 text-lg bg-yellow-50/30 rounded-xl shadow-sm">
                           <SelectValue placeholder="اختر النطاق السعري المناسب" />
                         </SelectTrigger>
-                        <SelectContent>
+                        <SelectContent className="text-right">
                           <SelectItem value="under-1000">💰 أقل من 1,000 ريال</SelectItem>
                           <SelectItem value="1000-5000">💰💰 1,000 - 5,000 ريال</SelectItem>
                           <SelectItem value="5000-10000">💰💰💰 5,000 - 10,000 ريال</SelectItem>
@@ -645,54 +487,66 @@ const Pricing = () => {
                     <motion.div
                       initial={{ opacity: 0, y: 20 }}
                       whileInView={{ opacity: 1, y: 0 }}
-                      transition={{ delay: 0.7, duration: 0.5 }}
+                      transition={{ delay: 0.7, duration: 0.6 }}
                       viewport={{ once: true }}
                     >
-                      <label className="block text-sm font-semibold mb-3 text-right flex items-center">
-                        <FileText className="w-4 h-4 ml-2 text-blue-500" />
-                        تفاصيل المشروع
+                      <label className="block text-base font-bold mb-4 text-right flex items-center justify-end text-slate-700">
+                        <span className="mr-3">تفاصيل المشروع</span>
+                        <div className="w-10 h-10 bg-gradient-to-r from-pink-500 to-rose-600 rounded-full flex items-center justify-center">
+                          <FileText className="w-5 h-5 text-white" />
+                        </div>
                       </label>
                       <Textarea
                         value={formData.details}
                         onChange={(e) => handleInputChange('details', e.target.value)}
                         placeholder="اكتب تفاصيل مشروعك بالكامل: نوع المحتوى، عدد الصفحات، اللغات المطلوبة، الموعد النهائي، ومتطلبات خاصة..."
-                        className="text-right min-h-[150px] border-2 hover:border-blue-300 focus:border-blue-500 transition-colors"
-                        rows={6}
+                        className="text-right min-h-[180px] border-2 border-pink-200 hover:border-pink-400 focus:border-pink-600 transition-all duration-300 p-6 text-lg bg-pink-50/30 rounded-xl shadow-sm resize-none"
+                        rows={7}
                       />
                     </motion.div>
 
                     <motion.div
                       initial={{ opacity: 0, y: 20 }}
                       whileInView={{ opacity: 1, y: 0 }}
-                      transition={{ delay: 0.8, duration: 0.5 }}
+                      transition={{ delay: 0.8, duration: 0.6 }}
                       viewport={{ once: true }}
-                      className="text-center pt-6"
+                      className="text-center pt-8"
                     >
                       <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
                         <Button
                           type="submit"
                           disabled={isSubmitting}
-                          className="bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 hover:from-blue-700 hover:via-indigo-700 hover:to-purple-700 text-white px-12 py-6 text-xl font-bold shadow-xl hover:shadow-2xl transition-all duration-300 min-w-[300px]"
+                          className="bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 hover:from-blue-700 hover:via-indigo-700 hover:to-purple-700 text-white px-16 py-6 text-xl font-bold shadow-2xl hover:shadow-3xl transition-all duration-300 min-w-[350px] rounded-2xl border-2 border-white/20"
                           size="lg"
                         >
                           {isSubmitting ? (
                             <>
-                              <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-white ml-3"></div>
-                              جاري الإرسال...
+                              <div className="animate-spin rounded-full h-7 w-7 border-b-3 border-white ml-4"></div>
+                              <span className="font-bold">جاري الإرسال...</span>
                             </>
                           ) : (
                             <>
-                              <Send className="w-6 h-6 ml-3" />
-                              أرسل طلبي واحصل على العرض
+                              <Send className="w-7 h-7 ml-4" />
+                              <span className="font-bold">أرسل طلبي واحصل على العرض</span>
                             </>
                           )}
                         </Button>
                       </motion.div>
                       
-                      <p className="text-sm text-muted-foreground mt-4 flex items-center justify-center">
-                        <Clock className="w-4 h-4 ml-2 text-green-500" />
-                        رد سريع خلال ساعة واحدة فقط
-                      </p>
+                      <div className="flex items-center justify-center mt-6 space-x-6 space-x-reverse">
+                        <div className="flex items-center text-green-600">
+                          <Clock className="w-5 h-5 ml-2" />
+                          <span className="font-semibold">رد سريع خلال ساعة</span>
+                        </div>
+                        <div className="flex items-center text-blue-600">
+                          <Shield className="w-5 h-5 ml-2" />
+                          <span className="font-semibold">ضمان الجودة 100%</span>
+                        </div>
+                        <div className="flex items-center text-purple-600">
+                          <Award className="w-5 h-5 ml-2" />
+                          <span className="font-semibold">خدمة احترافية</span>
+                        </div>
+                      </div>
                     </motion.div>
                   </form>
                 </CardContent>
