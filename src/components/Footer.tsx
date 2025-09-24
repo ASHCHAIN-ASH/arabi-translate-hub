@@ -227,12 +227,12 @@ const Footer = () => {
             </h4>
             <ul className="space-y-3">
               {[
-                { name: 'أحدث المقالات', badge: 'جديد' },
-                { name: 'نصائح الترجمة', badge: 'مفيد' },
-                { name: 'أخبار الصناعة', badge: 'حصري' },
-                { name: 'دليل العملاء', badge: 'شامل' },
-                { name: 'قصص النجاح', badge: 'ملهم' },
-                { name: 'الأسئلة الشائعة', badge: 'مهم' }
+                { name: 'أحدث المقالات', badge: 'جديد', href: '/blog' },
+                { name: 'نصائح الترجمة', badge: 'مفيد', href: '/blog' },
+                { name: 'أخبار الصناعة', badge: 'حصري', href: '/blog' },
+                { name: 'دليل العملاء', badge: 'شامل', href: '/client-guide' },
+                { name: 'قصص النجاح', badge: 'ملهم', href: '/success-stories' },
+                { name: 'الأسئلة الشائعة', badge: 'مهم', href: '/faq' }
               ].map((blog) => (
                 <motion.li 
                   key={blog.name}
@@ -240,7 +240,7 @@ const Footer = () => {
                   transition={{ type: "spring", stiffness: 300 }}
                 >
                   <a 
-                    href="#" 
+                    href={blog.href} 
                     className="text-white/70 hover:text-white transition-colors text-sm flex items-center justify-between group"
                   >
                     <span>{blog.name}</span>
