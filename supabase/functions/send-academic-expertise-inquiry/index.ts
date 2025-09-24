@@ -446,7 +446,7 @@ const handler = async (req: Request): Promise<Response> => {
 
     // Send confirmation email to client
     const clientEmailResponse = await resend.emails.send({
-      from: "وكالة ماستر إيدو باث <info@fekrahtech.com>",
+      from: "وكالة ماستر إيدو باث <info@masteredupath.com>",
       to: [consultationData.email],
       subject: "✅ تأكيد استلام طلب الاستشارة الأكاديمية - وكالة ماستر إيدو باث",
       html: clientEmailTemplate,
@@ -469,8 +469,8 @@ const handler = async (req: Request): Promise<Response> => {
 
     // Send notification email to admin
     const adminEmailResponse = await resend.emails.send({
-      from: "نظام الإشعارات <info@fekrahtech.com>",
-      to: ["info@fekrahtech.com"],
+      from: "نظام الإشعارات <info@masteredupath.com>",
+      to: ["admin@masteredupath.com"],
       subject: `🚨 طلب استشارة أكاديمية جديد من ${consultationData.fullName} - ${serviceTypeArabic}`,
       html: adminEmailTemplate,
     });
