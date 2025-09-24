@@ -192,11 +192,11 @@ const ClientGuide = () => {
       <Header />
       
       {/* Hero Section */}
-      <section className="relative py-20 bg-gradient-to-r from-primary to-blue-600 overflow-hidden">
+      <section className="relative py-12 md:py-20 bg-gradient-to-r from-primary to-blue-600 overflow-hidden">
         <div className="absolute inset-0 opacity-10">
-          <div className="absolute top-10 right-10 w-32 h-32 bg-white rounded-full animate-float"></div>
-          <div className="absolute bottom-20 left-20 w-24 h-24 bg-white rounded-full animate-float" style={{animationDelay: '1s'}}></div>
-          <div className="absolute top-1/2 left-1/3 w-16 h-16 bg-white rounded-full animate-float" style={{animationDelay: '2s'}}></div>
+          <div className="absolute top-5 md:top-10 right-5 md:right-10 w-16 h-16 md:w-32 md:h-32 bg-white rounded-full animate-float"></div>
+          <div className="absolute bottom-10 md:bottom-20 left-10 md:left-20 w-12 h-12 md:w-24 md:h-24 bg-white rounded-full animate-float" style={{animationDelay: '1s'}}></div>
+          <div className="absolute top-1/2 left-1/3 w-8 h-8 md:w-16 md:h-16 bg-white rounded-full animate-float" style={{animationDelay: '2s'}}></div>
         </div>
         
         <div className="container mx-auto px-4 relative z-10">
@@ -209,25 +209,25 @@ const ClientGuide = () => {
             <motion.div
               animate={{ rotate: 360 }}
               transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
-              className="inline-flex items-center justify-center w-20 h-20 bg-white/10 rounded-full mb-6"
+              className="inline-flex items-center justify-center w-16 h-16 md:w-20 md:h-20 bg-white/10 rounded-full mb-4 md:mb-6"
             >
-              <BookOpen className="h-10 w-10 text-white" />
+              <BookOpen className="h-8 w-8 md:h-10 md:w-10 text-white" />
             </motion.div>
             
-            <h1 className="text-5xl md:text-6xl font-bold mb-6 font-arabic-title">
+            <h1 className="text-3xl md:text-5xl lg:text-6xl font-bold mb-4 md:mb-6 font-arabic-title leading-tight">
               دليل العملاء الشامل
             </h1>
-            <p className="text-xl md:text-2xl opacity-90 mb-8 leading-relaxed">
+            <p className="text-lg md:text-xl lg:text-2xl opacity-90 mb-6 md:mb-8 leading-relaxed px-4">
               رحلتك المتكاملة للحصول على أفضل الخدمات اللغوية والترجمة الاحترافية
             </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-              <Button size="lg" className="bg-white text-primary hover:bg-white/90 font-semibold">
+            <div className="flex flex-col sm:flex-row gap-3 md:gap-4 justify-center items-center px-4">
+              <Button size="lg" className="bg-white text-primary hover:bg-white/90 font-semibold w-full sm:w-auto">
                 ابدأ مشروعك الآن
-                <ArrowLeft className="ml-2 h-5 w-5" />
+                <ArrowLeft className="ml-2 h-4 w-4 md:h-5 md:w-5" />
               </Button>
-              <Button size="lg" variant="outline" className="border-white text-white hover:bg-white/10">
+              <Button size="lg" variant="outline" className="border-white text-white hover:bg-white/10 w-full sm:w-auto">
                 تحدث مع خبير
-                <Phone className="ml-2 h-5 w-5" />
+                <Phone className="ml-2 h-4 w-4 md:h-5 md:w-5" />
               </Button>
             </div>
           </motion.div>
@@ -237,19 +237,22 @@ const ClientGuide = () => {
       {/* Main Content */}
       <div className="container mx-auto px-4 py-16">
         <Tabs defaultValue="process" className="w-full" dir="rtl">
-          <div className="flex justify-center mb-12">
-            <TabsList className="grid w-full max-w-2xl grid-cols-3 h-12">
-              <TabsTrigger value="process" className="text-sm font-semibold">
-                <Play className="ml-2 h-4 w-4" />
-                خطوات العمل
+          <div className="flex justify-center mb-8 md:mb-12">
+            <TabsList className="grid w-full max-w-xs sm:max-w-md lg:max-w-2xl grid-cols-3 h-10 md:h-12">
+              <TabsTrigger value="process" className="text-xs md:text-sm font-semibold px-2 md:px-4">
+                <Play className="ml-1 md:ml-2 h-3 w-3 md:h-4 md:w-4" />
+                <span className="hidden sm:inline">خطوات العمل</span>
+                <span className="sm:hidden">خطوات</span>
               </TabsTrigger>
-              <TabsTrigger value="services" className="text-sm font-semibold">
-                <Globe className="ml-2 h-4 w-4" />
-                أنواع الخدمات
+              <TabsTrigger value="services" className="text-xs md:text-sm font-semibold px-2 md:px-4">
+                <Globe className="ml-1 md:ml-2 h-3 w-3 md:h-4 md:w-4" />
+                <span className="hidden sm:inline">أنواع الخدمات</span>
+                <span className="sm:hidden">خدمات</span>
               </TabsTrigger>
-              <TabsTrigger value="quality" className="text-sm font-semibold">
-                <Award className="ml-2 h-4 w-4" />
-                ضمان الجودة
+              <TabsTrigger value="quality" className="text-xs md:text-sm font-semibold px-2 md:px-4">
+                <Award className="ml-1 md:ml-2 h-3 w-3 md:h-4 md:w-4" />
+                <span className="hidden sm:inline">ضمان الجودة</span>
+                <span className="sm:hidden">جودة</span>
               </TabsTrigger>
             </TabsList>
           </div>
@@ -281,54 +284,54 @@ const ClientGuide = () => {
                   <Card className="shadow-xl hover:shadow-2xl transition-all duration-300 border-0 overflow-hidden">
                     <div className={`h-2 bg-gradient-to-r ${step.color}`}></div>
                     <CardHeader className="pb-4">
-                      <div className="flex items-start gap-6">
-                        <div className={`flex-shrink-0 w-16 h-16 bg-gradient-to-r ${step.color} rounded-2xl flex items-center justify-center text-white font-bold text-xl shadow-lg`}>
+                      <div className="flex flex-col sm:flex-row items-start gap-4 md:gap-6">
+                        <div className={`flex-shrink-0 w-12 h-12 md:w-16 md:h-16 bg-gradient-to-r ${step.color} rounded-xl md:rounded-2xl flex items-center justify-center text-white font-bold text-lg md:text-xl shadow-lg mx-auto sm:mx-0`}>
                           {step.step}
                         </div>
-                        <div className="flex-1">
-                          <CardTitle className="text-2xl mb-3 flex items-center gap-3">
-                            <step.icon className="h-7 w-7 text-primary" />
+                        <div className="flex-1 text-center sm:text-right">
+                          <CardTitle className="text-xl md:text-2xl mb-2 md:mb-3 flex items-center justify-center sm:justify-start gap-2 md:gap-3">
+                            <step.icon className="h-6 w-6 md:h-7 md:w-7 text-primary" />
                             {step.title}
                           </CardTitle>
-                          <p className="text-slate-600 text-lg leading-relaxed">{step.description}</p>
+                          <p className="text-slate-600 text-base md:text-lg leading-relaxed">{step.description}</p>
                         </div>
                       </div>
                     </CardHeader>
                     
                     <CardContent className="pt-4">
-                      <div className="grid lg:grid-cols-3 gap-8">
+                      <div className="grid lg:grid-cols-3 gap-6 md:gap-8">
                         <div className="lg:col-span-2 space-y-4">
-                          <h4 className="font-bold text-lg text-slate-800 flex items-center gap-2">
-                            <CheckCircle className="h-5 w-5 text-green-500" />
+                          <h4 className="font-bold text-base md:text-lg text-slate-800 flex items-center gap-2">
+                            <CheckCircle className="h-4 w-4 md:h-5 md:w-5 text-green-500" />
                             التفاصيل والمتطلبات:
                           </h4>
-                          <ul className="space-y-3">
+                          <ul className="space-y-2 md:space-y-3">
                             {step.details.map((detail, idx) => (
                               <motion.li 
                                 key={idx} 
-                                className="flex items-start gap-3 p-3 bg-slate-50 rounded-lg hover:bg-slate-100 transition-colors"
+                                className="flex items-start gap-2 md:gap-3 p-2 md:p-3 bg-slate-50 rounded-lg hover:bg-slate-100 transition-colors"
                                 whileHover={{ x: 5 }}
                               >
-                                <CheckCircle className="h-5 w-5 text-green-500 mt-0.5 flex-shrink-0" />
-                                <span className="text-slate-700 leading-relaxed">{detail}</span>
+                                <CheckCircle className="h-4 w-4 md:h-5 md:w-5 text-green-500 mt-0.5 flex-shrink-0" />
+                                <span className="text-slate-700 leading-relaxed text-sm md:text-base">{detail}</span>
                               </motion.li>
                             ))}
                           </ul>
                         </div>
                         
-                        <div className="space-y-4">
-                          <h4 className="font-bold text-lg text-slate-800 flex items-center gap-2">
-                            <Star className="h-5 w-5 text-yellow-500" />
+                        <div className="space-y-4 mt-6 lg:mt-0">
+                          <h4 className="font-bold text-base md:text-lg text-slate-800 flex items-center gap-2">
+                            <Star className="h-4 w-4 md:h-5 md:w-5 text-yellow-500" />
                             نصائح الخبراء:
                           </h4>
-                          <div className="space-y-3">
+                          <div className="space-y-2 md:space-y-3">
                             {step.tips.map((tip, idx) => (
                               <motion.div 
                                 key={idx} 
-                                className="bg-gradient-to-r from-blue-50 to-purple-50 border-r-4 border-primary rounded-lg p-4 hover:shadow-md transition-all"
+                                className="bg-gradient-to-r from-blue-50 to-purple-50 border-r-4 border-primary rounded-lg p-3 md:p-4 hover:shadow-md transition-all"
                                 whileHover={{ scale: 1.02 }}
                               >
-                                <p className="text-sm text-blue-800 leading-relaxed font-medium">{tip}</p>
+                                <p className="text-xs md:text-sm text-blue-800 leading-relaxed font-medium">{tip}</p>
                               </motion.div>
                             ))}
                           </div>
@@ -356,7 +359,7 @@ const ClientGuide = () => {
               </motion.div>
             </div>
 
-            <div className="grid lg:grid-cols-3 gap-8">
+            <div className="grid sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
               {serviceTypes.map((service, index) => (
                 <motion.div
                   key={index}
@@ -368,16 +371,16 @@ const ClientGuide = () => {
                   <Card className="h-full shadow-xl hover:shadow-2xl transition-all duration-300 group border-0 overflow-hidden">
                     <div className={`h-2 bg-gradient-to-r ${service.color}`}></div>
                     <CardHeader className="text-center pb-4">
-                      <div className={`w-20 h-20 bg-gradient-to-r ${service.color} rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform shadow-lg`}>
-                        <service.icon className="h-10 w-10 text-white" />
+                      <div className={`w-16 h-16 md:w-20 md:h-20 bg-gradient-to-r ${service.color} rounded-xl md:rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform shadow-lg`}>
+                        <service.icon className="h-8 w-8 md:h-10 md:w-10 text-white" />
                       </div>
-                      <CardTitle className="text-xl mb-3 leading-relaxed">{service.title}</CardTitle>
-                      <p className="text-slate-600 leading-relaxed">{service.description}</p>
+                      <CardTitle className="text-lg md:text-xl mb-3 leading-relaxed">{service.title}</CardTitle>
+                      <p className="text-slate-600 leading-relaxed text-sm md:text-base">{service.description}</p>
                     </CardHeader>
                     
-                    <CardContent className="space-y-6">
+                    <CardContent className="space-y-4 md:space-y-6">
                       <div>
-                        <h4 className="font-bold mb-3 flex items-center gap-2">
+                        <h4 className="font-bold mb-2 md:mb-3 flex items-center gap-2 text-sm md:text-base">
                           <Star className="h-4 w-4 text-yellow-500" />
                           المميزات الرئيسية:
                         </h4>
@@ -391,21 +394,21 @@ const ClientGuide = () => {
                       </div>
                       
                       <div>
-                        <h4 className="font-bold mb-2 flex items-center gap-2">
+                        <h4 className="font-bold mb-2 flex items-center gap-2 text-sm md:text-base">
                           <Target className="h-4 w-4 text-green-500" />
                           مناسب لـ:
                         </h4>
-                        <p className="text-sm text-slate-600 leading-relaxed">{service.suitable}</p>
+                        <p className="text-xs md:text-sm text-slate-600 leading-relaxed">{service.suitable}</p>
                       </div>
 
                       <div className="bg-slate-50 rounded-lg p-3">
                         <div className="flex items-center justify-between">
-                          <span className="font-semibold text-slate-800">السعر:</span>
-                          <span className="text-primary font-bold">{service.price}</span>
+                          <span className="font-semibold text-slate-800 text-sm">السعر:</span>
+                          <span className="text-primary font-bold text-sm md:text-base">{service.price}</span>
                         </div>
                       </div>
                       
-                      <Button className="w-full mt-6 group-hover:shadow-lg transition-all">
+                      <Button className="w-full mt-4 md:mt-6 group-hover:shadow-lg transition-all text-sm md:text-base">
                         اطلب هذه الخدمة الآن
                         <ArrowLeft className="ml-2 h-4 w-4" />
                       </Button>
