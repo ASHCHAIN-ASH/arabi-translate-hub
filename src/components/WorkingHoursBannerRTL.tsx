@@ -21,27 +21,30 @@ export const WorkingHoursBannerRTL: React.FC<WorkingHoursBannerProps> = ({
     return null; // Clean loading - no visible banner while loading
   }
 
-  const getStatusDot = () => {
+  const getStatusIndicator = () => {
     switch (status) {
       case 'open':
-        return <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />;
+        return {
+          dot: <div className="w-2 h-2 bg-success rounded-full animate-pulse" />,
+          text: 'متاح الآن',
+          bgClass: 'bg-success/10 border-success/20',
+          textClass: 'text-success-foreground'
+        };
       case 'holiday':
-        return <div className="w-2 h-2 bg-blue-500 rounded-full" />;
+        return {
+          dot: <div className="w-2 h-2 bg-primary rounded-full" />,
+          text: 'إجازة',
+          bgClass: 'bg-primary/10 border-primary/20',
+          textClass: 'text-primary'
+        };
       case 'closed':
       default:
-        return <div className="w-2 h-2 bg-amber-500 rounded-full" />;
-    }
-  };
-
-  const getStatusText = () => {
-    switch (status) {
-      case 'open':
-        return 'متاح الآن';
-      case 'holiday':
-        return 'إجازة';
-      case 'closed':
-      default:
-        return 'مغلق';
+        return {
+          dot: <div className="w-2 h-2 bg-muted-foreground rounded-full" />,
+          text: 'مغلق',
+          bgClass: 'bg-muted/50 border-border',
+          textClass: 'text-muted-foreground'
+        };
     }
   };
 
@@ -54,64 +57,71 @@ export const WorkingHoursBannerRTL: React.FC<WorkingHoursBannerProps> = ({
     
     return (
       <div className={cn(
-        "flex items-center gap-1 text-xs font-mono transition-all duration-300",
-        isClosingSoon ? "text-amber-600 dark:text-amber-400" : "text-muted-foreground"
+        "flex items-center gap-1.5 px-2 py-1 rounded-md text-xs font-mono transition-all duration-300",
+        "bg-card/50 border border-border/30",
+        isClosingSoon ? "text-warning border-warning/30 bg-warning/5" : "text-muted-foreground"
       )}>
         <Clock className={cn(
           "h-3 w-3 transition-all duration-300", 
           isClosingSoon && "animate-pulse"
         )} />
-        <div className="flex items-center gap-1">
+        <div className="flex items-center gap-0.5 font-semibold">
           {countdown.hours > 0 && (
             <>
-              <AnimatedCounter end={countdown.hours} duration={0.5} suffix="س" />
-              <span>:</span>
+              <AnimatedCounter end={countdown.hours} duration={0.5} />
+              <span className="text-[10px]">س</span>
+              <span className="mx-0.5">:</span>
             </>
           )}
           <AnimatedCounter 
             end={countdown.minutes} 
             duration={0.5} 
-            suffix={countdown.hours > 0 ? "" : "د"} 
           />
-          <span>:</span>
+          <span className="text-[10px]">د</span>
+          <span className="mx-0.5">:</span>
           <AnimatedCounter 
             end={countdown.seconds} 
             duration={0.5} 
-            suffix={countdown.hours === 0 && countdown.minutes === 0 ? "ث" : ""} 
           />
+          <span className="text-[10px]">ث</span>
         </div>
       </div>
     );
   };
 
+  const statusInfo = getStatusIndicator();
+
   return (
     <div 
       className={cn(
-        "sticky top-0 z-50 bg-background/95 backdrop-blur-md border-b border-border/40 shadow-sm",
+        "sticky top-0 z-40 backdrop-blur-sm border-b shadow-sm transition-all duration-300",
+        statusInfo.bgClass,
         className
       )}
       dir="rtl"
     >
       <div className="container mx-auto px-4">
         <div className={cn(
-          "flex items-center py-2 transition-all duration-300",
+          "flex items-center py-2.5 transition-all duration-300",
           compact ? "justify-between" : "flex-col gap-2"
         )}>
           {/* Main status section */}
-          <div className="flex items-center gap-2">
-            {getStatusDot()}
-            <span className="font-medium text-foreground text-xs">
-              {getStatusText()}
-            </span>
+          <div className="flex items-center gap-2.5">
+            <div className="flex items-center gap-1.5">
+              {statusInfo.dot}
+              <span className={cn("font-medium text-sm", statusInfo.textClass)}>
+                {statusInfo.text}
+              </span>
+            </div>
             {compact && <CountdownDisplay />}
           </div>
           
           {/* Support and countdown section */}
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-3">
             {!compact && <CountdownDisplay />}
-            <div className="flex items-center gap-1 text-muted-foreground">
-              <Phone className="h-3 w-3" />
-              <span className="text-xs">دعم فني 24/7</span>
+            <div className="flex items-center gap-1.5 px-2 py-1 rounded-md bg-card/30 border border-border/20">
+              <Phone className="h-3 w-3 text-primary" />
+              <span className="text-xs text-muted-foreground font-medium">دعم فني 24/7</span>
             </div>
           </div>
         </div>
