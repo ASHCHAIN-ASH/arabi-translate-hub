@@ -6,6 +6,12 @@ export interface WorkingStatus {
   nextOpenAt?: string;
   reason?: string;
   isLoading: boolean;
+  countdown?: {
+    hours: number;
+    minutes: number;
+    seconds: number;
+    totalSeconds: number;
+  };
 }
 
 export const useWorkingStatus = () => {
@@ -21,6 +27,23 @@ export const useWorkingStatus = () => {
     const utc = now.getTime() + (now.getTimezoneOffset() * 60000);
     const riyadhOffset = 3; // UTC+3
     return new Date(utc + (riyadhOffset * 3600000));
+  };
+
+  const getCountdown = (targetDate: string) => {
+    const now = getRiyadhTime();
+    const target = new Date(targetDate);
+    const diff = target.getTime() - now.getTime();
+    
+    if (diff <= 0) {
+      return { hours: 0, minutes: 0, seconds: 0, totalSeconds: 0 };
+    }
+    
+    const totalSeconds = Math.floor(diff / 1000);
+    const hours = Math.floor(totalSeconds / 3600);
+    const minutes = Math.floor((totalSeconds % 3600) / 60);
+    const seconds = totalSeconds % 60;
+    
+    return { hours, minutes, seconds, totalSeconds };
   };
 
   const getBusinessStatus = () => {
@@ -43,34 +66,44 @@ export const useWorkingStatus = () => {
       
       if (currentHoliday) {
         const nextWorkDay = getNextWorkDay(riyadhTime);
+        const nextOpenAt = nextWorkDay.toISOString();
         return {
           status: 'holiday' as const,
           label: `🎉 إجازة رسمية — ${currentHoliday.name} — نعود إلى العمل ${formatNextOpenTime(nextWorkDay)}`,
-          nextOpenAt: nextWorkDay.toISOString(),
+          nextOpenAt,
           reason: currentHoliday.name,
-          isLoading: false
+          isLoading: false,
+          countdown: getCountdown(nextOpenAt)
         };
       }
 
       // Friday is always closed
       if (dayOfWeek === 5) {
         const nextOpen = getNextWorkDay(riyadhTime);
+        const nextOpenAt = nextOpen.toISOString();
         return {
           status: 'closed' as const,
           label: `⏰ نحن الآن خارج أوقات الدوام — نفتح ${formatNextOpenTime(nextOpen)}`,
-          nextOpenAt: nextOpen.toISOString(),
-          isLoading: false
+          nextOpenAt,
+          isLoading: false,
+          countdown: getCountdown(nextOpenAt)
         };
       }
 
       // Check business hours
       let isOpen = false;
+      let nextCloseTime: Date | null = null;
       
       // Sunday to Thursday: 9:00 - 18:00
       if (dayOfWeek >= 0 && dayOfWeek <= 4) {
         const openTime = 9 * 60; // 9:00
         const closeTime = 18 * 60; // 18:00
         isOpen = currentTime >= openTime && currentTime < closeTime;
+        
+        if (isOpen) {
+          nextCloseTime = new Date(riyadhTime);
+          nextCloseTime.setHours(18, 0, 0, 0);
+        }
       }
       
       // Saturday: 15:00 - 18:00
@@ -78,21 +111,31 @@ export const useWorkingStatus = () => {
         const openTime = 15 * 60; // 15:00
         const closeTime = 18 * 60; // 18:00
         isOpen = currentTime >= openTime && currentTime < closeTime;
+        
+        if (isOpen) {
+          nextCloseTime = new Date(riyadhTime);
+          nextCloseTime.setHours(18, 0, 0, 0);
+        }
       }
 
-      if (isOpen) {
+      if (isOpen && nextCloseTime) {
+        const closeAt = nextCloseTime.toISOString();
         return {
           status: 'open' as const,
           label: '✅ نحن الآن في الدوام — ساعات الدوام: الأحد–الخميس 9:00 ص – 6:00 م | السبت 3:00 م – 6:00 م',
-          isLoading: false
+          isLoading: false,
+          nextOpenAt: closeAt,
+          countdown: getCountdown(closeAt)
         };
       } else {
         const nextOpen = getNextWorkDay(riyadhTime);
+        const nextOpenAt = nextOpen.toISOString();
         return {
           status: 'closed' as const,
           label: `⏰ نحن الآن خارج أوقات الدوام — نفتح ${formatNextOpenTime(nextOpen)}`,
-          nextOpenAt: nextOpen.toISOString(),
-          isLoading: false
+          nextOpenAt,
+          isLoading: false,
+          countdown: getCountdown(nextOpenAt)
         };
       }
     } catch (error) {
@@ -174,11 +217,11 @@ export const useWorkingStatus = () => {
     const status = getBusinessStatus();
     setWorkingStatus(status);
     
-    // Update every minute
+    // Update every second for countdown
     const interval = setInterval(() => {
       const status = getBusinessStatus();
       setWorkingStatus(status);
-    }, 60000);
+    }, 1000);
     
     // Also update at specific times (9:00, 15:00, 18:00)
     const checkSpecialTimes = () => {
