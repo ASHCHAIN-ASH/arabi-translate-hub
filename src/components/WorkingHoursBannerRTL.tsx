@@ -53,37 +53,30 @@ export const WorkingHoursBannerRTL: React.FC<WorkingHoursBannerProps> = ({
       return null;
     }
 
+    // Only show countdown if more than 5 minutes remaining
+    if (countdown.totalSeconds < 300) {
+      return null;
+    }
+
     const isClosingSoon = status === 'open' && countdown.totalSeconds <= 3600; // Less than 1 hour
     
     return (
       <div className={cn(
-        "flex items-center gap-1.5 px-2 py-1 rounded-md text-xs font-mono transition-all duration-300",
-        "bg-card/50 border border-border/30",
-        isClosingSoon ? "text-warning border-warning/30 bg-warning/5" : "text-muted-foreground"
+        "flex items-center gap-1.5 px-2 py-1 rounded-md text-xs transition-all duration-500",
+        "bg-card/30 border border-border/20",
+        isClosingSoon ? "text-warning" : "text-muted-foreground"
       )}>
-        <Clock className={cn(
-          "h-3 w-3 transition-all duration-300", 
-          isClosingSoon && "animate-pulse"
-        )} />
-        <div className="flex items-center gap-0.5 font-semibold">
+        <Clock className="h-3 w-3" />
+        <div className="flex items-center gap-0.5 font-medium">
           {countdown.hours > 0 && (
             <>
-              <AnimatedCounter end={countdown.hours} duration={0.5} />
+              <span className="min-w-[12px] text-center">{countdown.hours}</span>
               <span className="text-[10px]">س</span>
-              <span className="mx-0.5">:</span>
+              <span className="mx-0.5 opacity-50">:</span>
             </>
           )}
-          <AnimatedCounter 
-            end={countdown.minutes} 
-            duration={0.5} 
-          />
+          <span className="min-w-[12px] text-center">{String(countdown.minutes).padStart(2, '0')}</span>
           <span className="text-[10px]">د</span>
-          <span className="mx-0.5">:</span>
-          <AnimatedCounter 
-            end={countdown.seconds} 
-            duration={0.5} 
-          />
-          <span className="text-[10px]">ث</span>
         </div>
       </div>
     );

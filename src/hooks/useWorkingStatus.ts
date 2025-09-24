@@ -217,11 +217,11 @@ export const useWorkingStatus = () => {
     const status = getBusinessStatus();
     setWorkingStatus(status);
     
-    // Update every second for countdown
+    // Update every 10 seconds for countdown (less frequent, more stable)
     const interval = setInterval(() => {
       const status = getBusinessStatus();
       setWorkingStatus(status);
-    }, 1000);
+    }, 10000);
     
     // Also update at specific times (9:00, 15:00, 18:00)
     const checkSpecialTimes = () => {
