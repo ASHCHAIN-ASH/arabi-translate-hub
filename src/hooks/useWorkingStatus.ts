@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react';
-import { toZonedTime, format } from 'date-fns-tz';
 
 export interface WorkingStatus {
   status: 'open' | 'closed' | 'holiday';
@@ -16,16 +15,24 @@ export const useWorkingStatus = () => {
     isLoading: true
   });
 
+  const getRiyadhTime = () => {
+    // Create a date in Riyadh timezone (UTC+3)
+    const now = new Date();
+    const utc = now.getTime() + (now.getTimezoneOffset() * 60000);
+    const riyadhOffset = 3; // UTC+3
+    return new Date(utc + (riyadhOffset * 3600000));
+  };
+
   const getBusinessStatus = () => {
     try {
-      const riyadhTime = toZonedTime(new Date(), 'Asia/Riyadh');
+      const riyadhTime = getRiyadhTime();
       const dayOfWeek = riyadhTime.getDay(); // 0 = Sunday, 6 = Saturday
       const currentHour = riyadhTime.getHours();
       const currentMinute = riyadhTime.getMinutes();
       const currentTime = currentHour * 60 + currentMinute;
 
       // Check for official holidays (simplified - can be enhanced later)
-      const today = format(riyadhTime, 'MM-dd', { timeZone: 'Asia/Riyadh' });
+      const today = `${String(riyadhTime.getMonth() + 1).padStart(2, '0')}-${String(riyadhTime.getDate()).padStart(2, '0')}`;
       const holidays = [
         { date: '02-22', name: 'يوم التأسيس' },
         { date: '09-23', name: 'اليوم الوطني' },
