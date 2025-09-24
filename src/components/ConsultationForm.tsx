@@ -19,6 +19,7 @@ import {
 } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
+import { z } from 'zod';
 
 interface ConsultationFormData {
   fullName: string;
@@ -33,6 +34,20 @@ interface ConsultationFormData {
   deadline: string;
   additionalNotes: string;
 }
+
+const consultationSchema = z.object({
+  fullName: z.string().trim().min(2, { message: 'الاسم يجب أن يكون حرفين على الأقل' }).max(100, { message: 'الاسم طويل جداً' }),
+  email: z.string().trim().email({ message: 'بريد إلكتروني غير صالح' }).max(255),
+  phone: z.string().trim().min(8, { message: 'رقم الهاتف قصير جداً' }).max(20, { message: 'رقم الهاتف طويل جداً' }).regex(/^[0-9+\-\s()]+$/, { message: 'رقم هاتف غير صالح' }),
+  university: z.string().trim().max(100).optional().or(z.literal('')),
+  academicLevel: z.enum(['bachelor','master','phd','researcher','other']).optional().or(z.literal('')),
+  specialization: z.string().trim().max(100).optional().or(z.literal('')),
+  serviceType: z.string().trim().min(1, { message: 'يرجى اختيار نوع الخدمة' }),
+  projectTitle: z.string().trim().max(150).optional().or(z.literal('')),
+  projectDescription: z.string().trim().max(1000).optional().or(z.literal('')),
+  deadline: z.string().trim().optional().or(z.literal('')),
+  additionalNotes: z.string().trim().max(500).optional().or(z.literal('')),
+});
 
 const ConsultationForm = () => {
   const [formData, setFormData] = useState<ConsultationFormData>({
@@ -61,9 +76,11 @@ const ConsultationForm = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    // التحقق من الحقول المطلوبة
-    if (!formData.fullName || !formData.email || !formData.phone || !formData.serviceType) {
-      toast.error('يرجى ملء جميع الحقول المطلوبة');
+    // التحقق والتحقق من صحة البيانات
+    const parsed = consultationSchema.safeParse(formData);
+    if (!parsed.success) {
+      const firstError = parsed.error.issues[0]?.message ?? 'يرجى التحقق من الحقول';
+      toast.error(firstError);
       return;
     }
 
@@ -229,7 +246,7 @@ const ConsultationForm = () => {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
                   <div className="space-y-2">
                     <Label className="text-xs sm:text-sm font-semibold">المستوى الأكاديمي</Label>
-                    <Select onValueChange={(value) => handleInputChange('academicLevel', value)}>
+                    <Select value={formData.academicLevel || undefined} onValueChange={(value) => handleInputChange('academicLevel', value)}>
                       <SelectTrigger className="h-10 sm:h-12 text-right text-sm sm:text-base">
                         <SelectValue placeholder="اختر المستوى الأكاديمي" />
                       </SelectTrigger>
@@ -261,7 +278,7 @@ const ConsultationForm = () => {
                     <BookOpen className="h-3 w-3 sm:h-4 sm:w-4 text-blue-600" />
                     نوع الخدمة المطلوبة *
                   </Label>
-                  <Select onValueChange={(value) => handleInputChange('serviceType', value)}>
+                  <Select value={formData.serviceType || undefined} onValueChange={(value) => handleInputChange('serviceType', value)}>
                     <SelectTrigger className="h-10 sm:h-12 text-right text-sm sm:text-base">
                       <SelectValue placeholder="اختر نوع الخدمة" />
                     </SelectTrigger>

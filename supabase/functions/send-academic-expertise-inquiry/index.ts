@@ -454,15 +454,40 @@ const handler = async (req: Request): Promise<Response> => {
 
     console.log("Client confirmation email sent:", clientEmailResponse);
 
+    // If client email blocked or failed, return informative error
+    if (clientEmailResponse.error) {
+      console.error("Client email error:", clientEmailResponse.error);
+      return new Response(
+        JSON.stringify({
+          success: false,
+          message: "تعذر إرسال تأكيد للعميل. يرجى التحقق من إعدادات البريد (Resend Domain)",
+          error: clientEmailResponse.error
+        }),
+        { status: 502, headers: { "Content-Type": "application/json", ...corsHeaders } }
+      );
+    }
+
     // Send notification email to admin
     const adminEmailResponse = await resend.emails.send({
       from: "نظام الإشعارات <info@fekrahtech.com>",
-      to: ["info@fekrahtech.com"], // Using verified email for testing
+      to: ["info@fekrahtech.com"],
       subject: `🚨 طلب استشارة أكاديمية جديد من ${consultationData.fullName} - ${serviceTypeArabic}`,
       html: adminEmailTemplate,
     });
 
     console.log("Admin notification email sent:", adminEmailResponse);
+
+    if (adminEmailResponse.error) {
+      console.error("Admin email error:", adminEmailResponse.error);
+      return new Response(
+        JSON.stringify({
+          success: false,
+          message: "تعذر إشعار الإدارة. يرجى التحقق من إعدادات البريد (Resend Domain)",
+          error: adminEmailResponse.error
+        }),
+        { status: 502, headers: { "Content-Type": "application/json", ...corsHeaders } }
+      );
+    }
 
     return new Response(
       JSON.stringify({ 
