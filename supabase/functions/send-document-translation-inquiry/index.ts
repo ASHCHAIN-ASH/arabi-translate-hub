@@ -67,16 +67,18 @@ const handler = async (req: Request): Promise<Response> => {
               margin: 0;
               padding: 0;
               box-sizing: border-box;
+              direction: rtl !important;
+              text-align: right !important;
             }
             body {
-              font-family: 'Segoe UI', 'Cairo', 'Amiri', Tahoma, Arial, sans-serif;
+              font-family: 'Cairo', 'Segoe UI', Tahoma, Arial, sans-serif;
               line-height: 1.8;
               color: #2c3e50;
-              background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+              background: linear-gradient(135deg, #10b981 0%, #059669 100%);
               margin: 0;
-              padding: 10px;
-              direction: rtl;
-              text-align: right;
+              padding: 15px;
+              direction: rtl !important;
+              text-align: right !important;
             }
             .email-wrapper {
               width: 100%;

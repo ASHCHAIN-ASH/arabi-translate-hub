@@ -60,17 +60,79 @@ const handler = async (req: Request): Promise<Response> => {
           <meta name="viewport" content="width=device-width, initial-scale=1.0">
           <title>تأكيد استلام الطلب</title>
           <style>
-            body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; padding: 0; background-color: #f8fafc; direction: rtl; }
-            .container { max-width: 700px; margin: 0 auto; background-color: white; border-radius: 12px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
-            .header { background: linear-gradient(135deg, #3b82f6, #8b5cf6); color: white; padding: 40px; text-align: center; }
-            .logo { font-size: 32px; font-weight: bold; margin-bottom: 10px; }
-            .subtitle { font-size: 18px; opacity: 0.9; }
-            .content { padding: 40px; }
-            .welcome { font-size: 28px; font-weight: bold; color: #1e293b; margin-bottom: 25px; display: flex; align-items: center; justify-content: center; }
-            .welcome::before { content: "🎉"; margin-left: 15px; font-size: 32px; }
-            .success-message { background: linear-gradient(135deg, #ecfdf5, #f0fdf4); border: 2px solid #bbf7d0; border-radius: 12px; padding: 25px; margin: 25px 0; text-align: center; }
-            .success-message h3 { color: #065f46; margin: 0 0 15px 0; font-size: 22px; }
-            .success-message p { color: #047857; margin: 0; font-size: 16px; line-height: 1.6; }
+            * { margin: 0; padding: 0; box-sizing: border-box; }
+            body { 
+              font-family: 'Cairo', 'Segoe UI', Tahoma, Arial, sans-serif; 
+              margin: 0; 
+              padding: 15px; 
+              background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); 
+              direction: rtl !important; 
+              text-align: right !important;
+            }
+            * { direction: rtl !important; text-align: right !important; }
+            .text-center { text-align: center !important; }
+            .container { 
+              max-width: 650px; 
+              margin: 0 auto; 
+              background: white; 
+              border-radius: 25px; 
+              overflow: hidden; 
+              box-shadow: 0 25px 50px rgba(0,0,0,0.15); 
+            }
+            .header { 
+              background: linear-gradient(135deg, #10b981, #059669); 
+              color: white; 
+              padding: 40px 30px; 
+              text-align: center !important; 
+              position: relative;
+              direction: rtl !important;
+            }
+            .header::after {
+              content: '';
+              position: absolute;
+              bottom: 0;
+              left: 0;
+              right: 0;
+              height: 6px;
+              background: linear-gradient(90deg, #ffd89b 0%, #19547b 100%);
+            }
+            .header-icon { font-size: 48px; margin-bottom: 15px; display: block; }
+            .logo { font-size: 32px; font-weight: 700; margin-bottom: 10px; }
+            .subtitle { font-size: 18px; opacity: 0.95; font-weight: 400; }
+            .content { padding: 40px 30px; }
+            .welcome { 
+              font-size: 24px; 
+              font-weight: 600; 
+              color: #1e293b; 
+              margin-bottom: 25px; 
+              text-align: center !important; 
+              direction: rtl !important;
+            }
+            .success-message { 
+              background: linear-gradient(145deg, #d1fae5, #a7f3d0); 
+              border: 3px solid #10b981; 
+              border-radius: 20px; 
+              padding: 30px; 
+              margin: 30px 0; 
+              text-align: center !important;
+              box-shadow: 0 8px 20px rgba(16, 185, 129, 0.2);
+            }
+            .success-message h3 { 
+              color: #065f46; 
+              margin: 0 0 15px 0; 
+              font-size: 22px; 
+              font-weight: 700;
+              text-align: center !important;
+              direction: rtl !important;
+            }
+            .success-message p { 
+              color: #047857; 
+              margin: 0; 
+              font-size: 17px; 
+              line-height: 1.8;
+              text-align: center !important;
+              direction: rtl !important;
+            }
             .info-card { background: linear-gradient(135deg, #f8fafc, #f1f5f9); border-radius: 12px; padding: 30px; margin: 25px 0; border-right: 6px solid #3b82f6; }
             .info-card h3 { color: #1e293b; margin: 0 0 20px 0; font-size: 22px; display: flex; align-items: center; }
             .info-card h3::before { content: "📋"; margin-left: 10px; font-size: 24px; }

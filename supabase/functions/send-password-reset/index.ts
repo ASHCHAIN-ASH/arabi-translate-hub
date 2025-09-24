@@ -162,84 +162,137 @@ const handler = async (req: Request): Promise<Response> => {
               <meta name="viewport" content="width=device-width, initial-scale=1.0">
               <title>إعادة تعيين كلمة المرور</title>
               <style>
-                  body {
-                      font-family: 'Arial', 'Tahoma', sans-serif;
-                      background-color: #f8fafc;
+                  * {
                       margin: 0;
-                      padding: 20px;
-                      direction: rtl;
+                      padding: 0;
+                      box-sizing: border-box;
+                      direction: rtl !important;
+                      text-align: right !important;
                   }
+                  body {
+                      font-family: 'Cairo', 'Segoe UI', Tahoma, Arial, sans-serif;
+                      background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+                      margin: 0;
+                      padding: 15px;
+                      direction: rtl !important;
+                      text-align: right !important;
+                  }
+                  .text-center { text-align: center !important; }
                   .email-container {
-                      max-width: 600px;
+                      max-width: 650px;
                       margin: 0 auto;
-                      background-color: white;
-                      border-radius: 12px;
-                      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+                      background: white;
+                      border-radius: 25px;
+                      box-shadow: 0 25px 50px rgba(0,0,0,0.15);
                       overflow: hidden;
                   }
                   .email-header {
-                      background: linear-gradient(135deg, #3B82F6, #1E40AF);
+                      background: linear-gradient(135deg, #10b981, #059669);
                       color: white;
-                      text-align: center;
-                      padding: 40px 20px;
+                      text-align: center !important;
+                      padding: 40px 30px;
+                      position: relative;
+                      direction: rtl !important;
+                  }
+                  .email-header::after {
+                      content: '';
+                      position: absolute;
+                      bottom: 0;
+                      left: 0;
+                      right: 0;
+                      height: 6px;
+                      background: linear-gradient(90deg, #ffd89b 0%, #19547b 100%);
                   }
                   .email-header h1 {
                       margin: 0;
                       font-size: 28px;
-                      font-weight: bold;
+                      font-weight: 700;
+                      text-align: center !important;
+                      direction: rtl !important;
                   }
                   .email-body {
-                      padding: 40px;
-                      text-align: center;
+                      padding: 40px 30px;
+                      text-align: center !important;
+                      direction: rtl !important;
                   }
                   .email-body h2 {
-                      color: #1E293B;
+                      color: #1e293b;
                       margin: 0 0 20px 0;
-                      font-size: 24px;
+                      font-size: 22px;
+                      font-weight: 600;
+                      text-align: center !important;
+                      direction: rtl !important;
                   }
                   .email-body p {
-                      color: #64748B;
-                      line-height: 1.6;
+                      color: #64748b;
+                      line-height: 1.8;
                       margin: 16px 0;
                       font-size: 16px;
+                      text-align: center !important;
+                      direction: rtl !important;
                   }
                   .reset-button {
                       display: inline-block;
-                      background: #3B82F6;
+                      background: linear-gradient(135deg, #10b981, #059669);
                       color: white !important;
                       text-decoration: none;
                       padding: 16px 32px;
-                      border-radius: 8px;
-                      font-weight: bold;
+                      border-radius: 12px;
+                      font-weight: 600;
                       margin: 24px 0;
-                      font-size: 18px;
-                      transition: background-color 0.3s;
+                      font-size: 16px;
+                      transition: all 0.3s;
+                      box-shadow: 0 8px 20px rgba(16, 185, 129, 0.3);
                   }
                   .reset-button:hover {
-                      background: #1E40AF;
+                      transform: translateY(-2px);
+                      box-shadow: 0 12px 25px rgba(16, 185, 129, 0.4);
                   }
                   .security-notice {
-                      background: #FEF3C7;
-                      border: 1px solid #F59E0B;
-                      border-radius: 8px;
-                      padding: 16px;
+                      background: linear-gradient(145deg, #fef3c7, #fde68a);
+                      border: 2px solid #f59e0b;
+                      border-radius: 12px;
+                      padding: 20px;
                       margin: 24px 0;
+                      text-align: center !important;
+                      direction: rtl !important;
                   }
                   .security-notice p {
-                      color: #92400E;
+                      color: #92400e;
                       margin: 0;
-                      font-size: 14px;
+                      font-size: 15px;
+                      font-weight: 500;
+                      text-align: center !important;
+                      direction: rtl !important;
                   }
                   .email-footer {
-                      background: #F8FAFC;
-                      padding: 24px;
-                      text-align: center;
-                      border-top: 1px solid #E2E8F0;
+                      background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+                      color: white;
+                      padding: 30px;
+                      text-align: center !important;
+                      border-top: none;
+                      direction: rtl !important;
                   }
                   .email-footer p {
-                      color: #64748B;
+                      color: #ecf0f1;
                       font-size: 14px;
-                      margin: 0;
+                      margin: 8px 0;
+                      text-align: center !important;
+                      direction: rtl !important;
+                  }
+                  
+                  /* Mobile Responsive Styles */
+                  @media only screen and (max-width: 600px) {
+                      body { padding: 8px; }
+                      .email-container { border-radius: 20px; }
+                      .email-header { padding: 30px 20px; }
+                      .email-header h1 { font-size: 24px; }
+                      .email-body { padding: 30px 20px; }
+                      .email-body h2 { font-size: 20px; }
+                      .email-body p { font-size: 14px; }
+                      .reset-button { padding: 14px 28px; font-size: 15px; }
+                      .security-notice { padding: 16px; }
+                      .email-footer { padding: 25px 20px; }
                   }
               </style>
           </head>

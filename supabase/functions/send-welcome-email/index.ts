@@ -37,13 +37,22 @@ const handler = async (req: Request): Promise<Response> => {
           <meta charset="UTF-8">
           <meta name="viewport" content="width=device-width, initial-scale=1.0">
           <style>
-            body {
-              font-family: 'Arial', sans-serif;
-              background-color: #f8fafc;
+            * {
               margin: 0;
               padding: 0;
-              direction: rtl;
+              box-sizing: border-box;
+              direction: rtl !important;
+              text-align: right !important;
             }
+            body {
+              font-family: 'Cairo', 'Segoe UI', Tahoma, Arial, sans-serif;
+              background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+              margin: 0;
+              padding: 15px;
+              direction: rtl !important;
+              text-align: right !important;
+            }
+            .text-center { text-align: center !important; }
             .container {
               max-width: 600px;
               margin: 0 auto;
