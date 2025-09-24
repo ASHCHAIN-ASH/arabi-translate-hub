@@ -288,7 +288,7 @@ async function handleUpdateService(req: Request, supabase: any, serviceId: strin
       });
     }
 
-    updates.slug = newSlug;
+    (updates as any).slug = newSlug;
   }
 
   const { data: service, error } = await supabase

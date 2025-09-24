@@ -274,7 +274,7 @@ async function handleCreateOrder(req: Request, supabase: any, currentUser: any):
 
   // Validate all services exist and are active
   for (const item of orderData.items) {
-    const service = services.find(s => s.id === item.service_id);
+    const service = services.find((s: any) => s.id === item.service_id);
     if (!service) {
       return new Response(JSON.stringify({ error: 'خدمة غير موجودة' }), {
         status: 400,
@@ -292,7 +292,7 @@ async function handleCreateOrder(req: Request, supabase: any, currentUser: any):
   // Calculate totals
   let subtotal = 0;
   const orderItems = orderData.items.map(item => {
-    const service = services.find(s => s.id === item.service_id)!;
+    const service = services.find((s: any) => s.id === item.service_id)!;
     const lineTotal = service.price * item.quantity;
     subtotal += lineTotal;
     
@@ -550,7 +550,7 @@ async function handleUpdateOrder(req: Request, supabase: any, orderId: string, c
       });
     }
     
-    updates = filteredUpdates;
+    let updatesObj = filteredUpdates;
   }
 
   const { data: order, error } = await supabase

@@ -3,7 +3,34 @@ project_id = "ibfcgweykqkzdodrfmci"
 [functions.customer-management]
 verify_jwt = false
 
+[functions.generate-invoice-pdf]
+verify_jwt = false
+
 [functions.journal-publication-form]
+verify_jwt = false
+
+[functions.platform-auth]
+verify_jwt = false
+
+[functions.platform-migration]
+verify_jwt = false
+
+[functions.platform-orders]
+verify_jwt = false
+
+[functions.platform-services]
+verify_jwt = false
+
+[functions.platform-users]
+verify_jwt = false
+
+[functions.reset-password-confirm]
+verify_jwt = false
+
+[functions.send-document-translation-inquiry]
+verify_jwt = false
+
+[functions.send-email]
 verify_jwt = false
 
 [functions.send-order-status-email]
@@ -12,5 +39,14 @@ verify_jwt = false
 [functions.send-password-reset]
 verify_jwt = false
 
-[functions.reset-password-confirm]
+[functions.send-pricing-inquiry]
+verify_jwt = false
+
+[functions.send-service-inquiry]
+verify_jwt = false
+
+[functions.send-welcome-email]
+verify_jwt = false
+
+[functions.update-user-password]
 verify_jwt = false

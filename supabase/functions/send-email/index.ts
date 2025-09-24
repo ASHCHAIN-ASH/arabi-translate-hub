@@ -1,6 +1,6 @@
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
-import { Resend } from "npm:resend@2.0.0";
+import { Resend } from "https://esm.sh/resend@4.0.0";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -65,8 +65,8 @@ const handler = async (req: Request): Promise<Response> => {
 
       if (autoReply?.email_templates) {
         templateUsed = autoReply.template_id;
-        emailSubject = autoReply.email_templates.subject;
-        emailContent = autoReply.email_templates.content;
+        emailSubject = (autoReply.email_templates as any).subject;
+        emailContent = (autoReply.email_templates as any).content;
         console.log("Auto reply template found:", templateUsed);
       }
     }
@@ -250,7 +250,7 @@ const handler = async (req: Request): Promise<Response> => {
     };
 
     // تشغيل التسجيل في الخلفية دون انتظار
-    EdgeRuntime.waitUntil(backgroundLogging());
+    // EdgeRuntime.waitUntil(backgroundLogging());
 
     // إرجاع الاستجابة فوراً بعد الإرسال
     return new Response(

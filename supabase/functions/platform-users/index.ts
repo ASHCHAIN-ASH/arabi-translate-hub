@@ -161,15 +161,15 @@ async function handleGetUsers(req: Request, supabase: any, url: URL, currentUser
   const { data: stats } = await supabase
     .from('platform_users')
     .select('role, status')
-    .then(({ data }) => {
+    .then(({ data }: any) => {
       if (!data) return { data: null };
       
-      const roleStats = data.reduce((acc, user) => {
+      const roleStats = data.reduce((acc: any, user: any) => {
         acc[user.role] = (acc[user.role] || 0) + 1;
         return acc;
       }, {} as Record<string, number>);
 
-      const statusStats = data.reduce((acc, user) => {
+      const statusStats = data.reduce((acc: any, user: any) => {
         acc[user.status] = (acc[user.status] || 0) + 1;
         return acc;
       }, {} as Record<string, number>);
