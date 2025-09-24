@@ -26,75 +26,54 @@ import {
 const AcademicFeatures = () => {
   const features = [
     {
-      icon: Brain,
-      title: "ذكاء اصطناعي متطور مع خبرة بشرية",
-      description: "نجمع بين قوة الذكاء الاصطناعي المتقدم وخبرة فريق من حملة الدكتوراه والأكاديميين المتخصصين لضمان أعلى مستويات الدقة والابتكار",
-      tags: ["AI متطور", "PhD خبراء", "دقة 99.9%"],
-      color: "from-indigo-600 via-purple-600 to-pink-600",
-      stat: "+15 سنة خبرة",
-      badge: "الأكثر تطوراً"
+      icon: GraduationCap,
+      title: "خبرة أكاديمية متخصصة",
+      description: "فريق من الأكاديميين والمختصين المتمرسين في مختلف المجالات العلمية والبحثية، مع التزام بأعلى معايير الجودة الأكاديمية",
+      tags: ["خبراء متخصصون", "مراجعة دقيقة", "جودة عالية"],
+      color: "from-blue-600 to-indigo-600"
     },
     {
-      icon: Globe,
-      title: "شبكة عالمية من المؤسسات الأكاديمية",
-      description: "شراكات استراتيجية مع أكثر من 500 جامعة ومعهد بحثي حول العالم، مما يضمن فهماً عميقاً للمعايير الأكاديمية المختلفة",
-      tags: ["500+ شراكة", "معايير دولية", "اعتماد عالمي"],
-      color: "from-emerald-600 via-teal-600 to-cyan-600",
-      stat: "85+ دولة",
-      badge: "معتمد دولياً"
+      icon: BookOpen,
+      title: "منهجية علمية متطورة",
+      description: "نتبع المعايير الأكاديمية المعتمدة في البحث العلمي والكتابة الأكاديمية وفقاً لأفضل الممارسات المهنية",
+      tags: ["منهجية علمية", "معايير أكاديمية", "ممارسات مهنية"],
+      color: "from-emerald-600 to-teal-600"
     },
     {
-      icon: Sparkles,
-      title: "تقنيات الجيل القادم في التعليم",
-      description: "نستخدم أحدث تقنيات التعلم الآلي ومعالجة اللغات الطبيعية لتوفير حلول تعليمية مبتكرة تواكب التطورات العلمية المتسارعة",
-      tags: ["تقنيات حديثة", "تعلم آلي", "ابتكار مستمر"],
-      color: "from-violet-600 via-blue-600 to-indigo-600",
-      stat: "تحديث يومي",
-      badge: "تقنية متقدمة"
+      icon: Languages,
+      title: "ترجمة أكاديمية متعددة اللغات",
+      description: "خدمات ترجمة متخصصة للأوراق البحثية والرسائل الجامعية في لغات متعددة مع مراعاة الدقة العلمية والمصطلحات التخصصية",
+      tags: ["ترجمة متخصصة", "دقة مصطلحية", "لغات متعددة"],
+      color: "from-purple-600 to-pink-600"
     },
     {
-      icon: TrendingUp,
-      title: "نتائج مثبتة ونمو استثنائي",
-      description: "98.7% من عملائنا حققوا تفوقاً أكاديمياً ملحوظاً، مع معدل نجاح في النشر العلمي يفوق المتوسط العالمي بـ 3 أضعاف",
-      tags: ["98.7% نجاح", "نشر علمي", "تفوق مثبت"],
-      color: "from-green-600 via-emerald-600 to-teal-600",
-      stat: "3x أسرع",
-      badge: "نتائج مضمونة"
+      icon: Award,
+      title: "ضمان الجودة",
+      description: "التزام بمعايير الجودة العالية مع مراجعة شاملة لجميع الأعمال وإمكانية التعديل حسب المتطلبات المحددة",
+      tags: ["ضمان الجودة", "مراجعة شاملة", "تعديل مجاني"],
+      color: "from-amber-600 to-orange-600"
     },
     {
-      icon: Heart,
-      title: "دعم شخصي مدى الحياة",
-      description: "مرافقة مستمرة من مستشارين أكاديميين متخصصين، مع دعم فني على مدار الساعة وضمان المتابعة حتى تحقيق الأهداف المطلوبة",
-      tags: ["دعم 24/7", "مستشار شخصي", "متابعة مستمرة"],
-      color: "from-rose-600 via-pink-600 to-red-600",
-      stat: "استجابة فورية",
-      badge: "دعم متميز"
+      icon: Shield,
+      title: "سرية وأمان",
+      description: "حماية المعلومات الشخصية والبحثية مع التزام صارم بمعايير الخصوصية والسرية المهنية",
+      tags: ["حماية البيانات", "سرية مهنية", "أمان متقدم"],
+      color: "from-teal-600 to-cyan-600"
     },
     {
-      icon: Zap,
-      title: "سرعة وكفاءة لا مثيل لها",
-      description: "تسليم سريع دون التنازل عن الجودة، مع إمكانية التسليم العاجل خلال 6 ساعات للمشاريع الطارئة مع الحفاظ على أعلى المعايير",
-      tags: ["تسليم 6 ساعات", "جودة عالية", "خدمة طارئة"],
-      color: "from-amber-600 via-orange-600 to-yellow-600",
-      stat: "6-48 ساعة",
-      badge: "سرعة قياسية"
+      icon: Clock,
+      title: "التزام بالمواعيد",
+      description: "احترام المواعيد النهائية المتفق عليها مع إمكانية التسليم السريع حسب الحاجة والتعقيد المطلوب",
+      tags: ["تسليم منتظم", "مواعيد محددة", "مرونة في التوقيت"],
+      color: "from-rose-600 to-red-600"
     }
   ];
 
   const trustIndicators = [
-    { icon: Building2, text: "500+ مؤسسة", subtext: "جامعة ومعهد بحثي", color: "text-blue-600", bgColor: "bg-blue-50 dark:bg-blue-950" },
-    { icon: Users, text: "+50,000", subtext: "باحث وطالب", color: "text-emerald-600", bgColor: "bg-emerald-50 dark:bg-emerald-950" },
-    { icon: Award, text: "99.7%", subtext: "معدل الرضا", color: "text-amber-600", bgColor: "bg-amber-50 dark:bg-amber-950" },
-    { icon: Globe, text: "85+ دولة", subtext: "حول العالم", color: "text-purple-600", bgColor: "bg-purple-50 dark:bg-purple-950" }
-  ];
-
-  const partnerships = [
-    { name: "جامعة الملك سعود", type: "شراكة استراتيجية", status: "فعال" },
-    { name: "جامعة الملك عبدالعزيز", type: "برنامج التطوير", status: "فعال" },
-    { name: "جامعة الإمام محمد بن سعود", type: "تعاون بحثي", status: "فعال" },
-    { name: "الجامعة الإسلامية بالمدينة", type: "شراكة تقنية", status: "فعال" },
-    { name: "جامعة أم القرى", type: "برنامج تبادل", status: "فعال" },
-    { name: "جامعة الملك فهد للبترول", type: "تطوير حلول", status: "فعال" }
+    { icon: Users, text: "خبرة متنوعة", subtext: "في مختلف التخصصات", color: "text-blue-600", bgColor: "bg-blue-50 dark:bg-blue-950" },
+    { icon: Award, text: "جودة عالية", subtext: "معايير أكاديمية", color: "text-emerald-600", bgColor: "bg-emerald-50 dark:bg-emerald-950" },
+    { icon: Globe, text: "خدمة شاملة", subtext: "لغات متعددة", color: "text-amber-600", bgColor: "bg-amber-50 dark:bg-amber-950" },
+    { icon: Target, text: "التزام مهني", subtext: "بالمواعيد والجودة", color: "text-purple-600", bgColor: "bg-purple-50 dark:bg-purple-950" }
   ];
 
   return (
@@ -156,10 +135,10 @@ const AcademicFeatures = () => {
             transition={{ duration: 0.8, delay: 0.3 }}
             viewport={{ once: true }}
           >
-            لماذا تثق بنا{" "}
+            لماذا تختار{" "}
             <span className="relative">
               <span className="bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-600 bg-clip-text text-transparent">
-                المؤسسات التعليمية الرائدة؟
+                خدماتنا الأكاديمية؟
               </span>
               {/* خط تحتي متحرك */}
               <motion.div
@@ -179,8 +158,8 @@ const AcademicFeatures = () => {
             transition={{ duration: 0.6, delay: 0.5 }}
             viewport={{ once: true }}
           >
-            نجمع بين الابتكار التقني والخبرة الأكاديمية لتقديم حلول تعليمية وبحثية متطورة 
-            <span className="text-blue-600 dark:text-blue-400 font-semibold"> تحقق النتائج الاستثنائية</span>
+            نقدم خدمات أكاديمية وبحثية متخصصة مع التزام بأعلى معايير الجودة المهنية 
+            <span className="text-blue-600 dark:text-blue-400 font-semibold">والدقة العلمية</span>
           </motion.p>
 
           {/* مؤشرات الثقة المحسنة */}
@@ -218,7 +197,7 @@ const AcademicFeatures = () => {
           </motion.div>
         </motion.div>
 
-        {/* قسم الشراكات الأكاديمية */}
+        {/* قسم المزايا التنافسية */}
         <motion.div
           className="mb-16 sm:mb-20"
           initial={{ opacity: 0, y: 40 }}
@@ -228,45 +207,43 @@ const AcademicFeatures = () => {
         >
           <div className="text-center mb-10">
             <h3 className="text-2xl sm:text-3xl md:text-4xl font-arabic-formal font-bold mb-4 text-slate-800 dark:text-white">
-              شركاؤنا الأكاديميون المعتمدون
+              مزايانا التنافسية
             </h3>
             <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-              نفخر بشراكاتنا الاستراتيجية مع أبرز المؤسسات التعليمية في المملكة والعالم
+              ما يميز خدماتنا الأكاديمية عن غيرها في السوق
             </p>
           </div>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
-            {partnerships.map((partner, index) => (
-              <motion.div
-                key={index}
-                className="bg-white dark:bg-slate-800 rounded-xl p-6 border border-slate-200 dark:border-slate-700 hover:shadow-lg transition-all duration-300"
-                initial={{ opacity: 0, x: -20 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.5, delay: index * 0.1 }}
-                viewport={{ once: true }}
-                whileHover={{ scale: 1.02 }}
-              >
-                <div className="flex items-start justify-between mb-3">
-                  <div className="w-10 h-10 bg-gradient-to-br from-blue-600 to-indigo-600 rounded-lg flex items-center justify-center">
-                    <Building2 className="h-5 w-5 text-white" />
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {[
+              { icon: CheckCircle, title: "مراجعة دقيقة", description: "فحص شامل لجميع الأعمال قبل التسليم" },
+              { icon: Clock, title: "مرونة في التوقيت", description: "تكيف مع احتياجاتك الزمنية المختلفة" },
+              { icon: Users, title: "فريق متخصص", description: "خبراء في مختلف المجالات الأكاديمية" },
+              { icon: Shield, title: "سرية تامة", description: "حماية كاملة لمعلوماتك البحثية" }
+            ].map((item, index) => {
+              const IconComponent = item.icon;
+              return (
+                <motion.div
+                  key={index}
+                  className="bg-white dark:bg-slate-800 rounded-xl p-6 border border-slate-200 dark:border-slate-700 hover:shadow-lg transition-all duration-300 text-center"
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.5, delay: index * 0.1 }}
+                  viewport={{ once: true }}
+                  whileHover={{ scale: 1.02 }}
+                >
+                  <div className="w-12 h-12 bg-gradient-to-br from-blue-600 to-indigo-600 rounded-lg flex items-center justify-center mx-auto mb-4">
+                    <IconComponent className="h-6 w-6 text-white" />
                   </div>
-                  <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200">
-                    <div className="w-2 h-2 bg-green-500 rounded-full mr-1"></div>
-                    {partner.status}
-                  </span>
-                </div>
-                <h4 className="text-lg font-bold text-slate-800 dark:text-white mb-2">
-                  {partner.name}
-                </h4>
-                <p className="text-sm text-muted-foreground mb-3">
-                  {partner.type}
-                </p>
-                <div className="flex items-center text-blue-600 dark:text-blue-400 text-sm font-medium">
-                  <BadgeCheck className="h-4 w-4 mr-2" />
-                  شراكة معتمدة
-                </div>
-              </motion.div>
-            ))}
+                  <h4 className="text-lg font-bold text-slate-800 dark:text-white mb-2">
+                    {item.title}
+                  </h4>
+                  <p className="text-sm text-muted-foreground">
+                    {item.description}
+                  </p>
+                </motion.div>
+              );
+            })}
           </div>
         </motion.div>
         
@@ -294,10 +271,10 @@ const AcademicFeatures = () => {
                     <div className={`h-full bg-gradient-to-r ${feature.color} transition-all duration-500 group-hover:opacity-100`} />
                   </div>
                   
-                  {/* شارة التميز */}
+                  {/* شارة الجودة */}
                   <div className="absolute top-4 left-4 z-10">
-                    <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-gradient-to-r ${feature.color} text-white shadow-lg`}>
-                      {feature.badge}
+                    <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-600">
+                      خدمة متميزة
                     </span>
                   </div>
                   
@@ -323,10 +300,10 @@ const AcademicFeatures = () => {
                           {feature.title}
                         </h3>
                         
-                        {/* مؤشر الإحصائية */}
-                        <div className={`inline-flex items-center gap-2 px-3 py-1 rounded-full bg-gradient-to-r ${feature.color} bg-opacity-10 text-sm font-semibold`}>
-                          <Star className="h-3 w-3" />
-                          {feature.stat}
+                        {/* مؤشر الخدمة */}
+                        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-300 text-sm font-medium border border-slate-200 dark:border-slate-600">
+                          <CheckCircle className="h-3 w-3" />
+                          خدمة مضمونة
                         </div>
                       </div>
                     </div>
