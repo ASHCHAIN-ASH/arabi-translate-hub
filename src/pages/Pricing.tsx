@@ -646,7 +646,7 @@ const Pricing = () => {
                                <Building2 className="w-6 h-6 text-white" />
                              </div>
                              <h4 className="font-bold text-gray-800 mb-2">الموقع</h4>
-                             <p className="text-purple-600 font-semibold">الرياض</p>
+                             <p className="text-purple-600 font-semibold">جدة</p>
                              <p className="text-sm text-gray-500">المملكة العربية السعودية</p>
                            </motion.div>
                          </div>
