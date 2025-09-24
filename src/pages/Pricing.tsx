@@ -634,7 +634,7 @@ const Pricing = () => {
                                <Phone className="w-6 h-6 text-white" />
                              </div>
                               <h4 className="font-bold text-gray-800 mb-2">خدمة المبيعات</h4>
-                              <p className="text-green-600 font-semibold">920002580</p>
+                              <p className="text-green-600 font-semibold">0500776343</p>
                               <p className="text-sm text-gray-500">الرقم الموحد - متاح 24/7</p>
                            </motion.div>
                            
