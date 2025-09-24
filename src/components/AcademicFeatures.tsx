@@ -1,6 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { Card, CardContent } from '@/components/ui/card';
+import { Link } from 'react-router-dom';
 import { 
   GraduationCap,
   BookOpen,
@@ -336,14 +337,6 @@ const AcademicFeatures = () => {
                       whileInView={{ opacity: 1 }}
                       transition={{ duration: 0.5, delay: index * 0.1 }}
                     >
-                      <Link 
-                        to={`/academic/${index === 0 ? 'expertise' : index === 1 ? 'methodology' : index === 2 ? 'translation' : index === 3 ? 'quality' : index === 4 ? 'security' : 'timeline'}`}
-                        className="inline-flex items-center gap-2 text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 transition-colors font-medium"
-                      >
-                        تعرف على المزيد
-                        <ChevronRight className="h-4 w-4" />
-                      </Link>
-                    </motion.div>
                       <div className="flex items-center gap-3">
                         <BadgeCheck className="h-5 w-5 text-emerald-600 dark:text-emerald-400" />
                         <span className="text-sm font-semibold text-emerald-600 dark:text-emerald-400">
@@ -351,13 +344,13 @@ const AcademicFeatures = () => {
                         </span>
                       </div>
                       
-                      <motion.div
-                        className="flex items-center gap-2 text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 cursor-pointer transition-colors duration-300"
-                        whileHover={{ x: 5 }}
+                      <Link 
+                        to={`/academic/${index === 0 ? 'expertise' : index === 1 ? 'methodology' : index === 2 ? 'translation' : index === 3 ? 'quality' : index === 4 ? 'security' : 'timeline'}`}
+                        className="inline-flex items-center gap-2 text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 transition-colors font-medium"
                       >
-                        <span className="text-sm font-medium">المزيد</span>
+                        تعرف على المزيد
                         <ChevronRight className="h-4 w-4" />
-                      </motion.div>
+                      </Link>
                     </motion.div>
                   </CardContent>
                 </Card>
