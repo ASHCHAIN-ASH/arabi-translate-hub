@@ -432,7 +432,7 @@ const Pricing = () => {
                             <div className="w-10 h-10 bg-gradient-to-r from-orange-500 to-red-600 rounded-full flex items-center justify-center ml-4">
                               <Building2 className="w-5 h-5 text-white" />
                             </div>
-                           <span>اسم الشركة</span>
+                           <span>اسم الشركة (اختياري)</span>
                          </label>
                          <Input
                            value={formData.company}
