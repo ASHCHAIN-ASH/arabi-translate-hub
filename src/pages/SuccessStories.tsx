@@ -521,7 +521,7 @@ const SuccessStories = () => {
                             <Quote className="h-8 w-8 md:h-10 md:w-10 text-primary/30 absolute top-4 right-4" />
                             <div className="relative z-10">
                               <p className="text-slate-800 italic leading-relaxed mb-4 md:mb-6 text-sm md:text-base pr-8 md:pr-12">
-                                &ldquo;{story.testimonial}&rdquo;
+                                &quot;{story.testimonial}&quot;
                               </p>
                               <div className="flex items-center justify-between">
                                 <div>
@@ -660,7 +660,7 @@ const SuccessStories = () => {
             className="text-center mt-12 md:mt-16"
           >
             <Card className="bg-gradient-to-r from-primary via-blue-600 to-purple-600 text-white border-0 shadow-2xl overflow-hidden relative">
-              <div className="absolute inset-0 bg-[url('data:image/svg+xml,%3Csvg width=\"40\" height=\"40\" xmlns=\"http://www.w3.org/2000/svg\"%3E%3Cdefs%3E%3Cpattern id=\"grid2\" width=\"40\" height=\"40\" patternUnits=\"userSpaceOnUse\"%3E%3Cpath d=\"M 40 0 L 0 0 0 40\" fill=\"none\" stroke=\"white\" stroke-width=\"1\" opacity=\"0.1\"/%3E%3C/pattern%3E%3C/defs%3E%3Crect width=\"100%25\" height=\"100%25\" fill=\"url(%23grid2)\" /%3E%3C/svg%3E')] opacity-30"></div>
+              <div className="absolute inset-0 bg-gradient-to-br from-primary/20 to-purple-600/20 opacity-50"></div>
               <CardContent className="py-8 md:py-16 relative z-10">
                 <motion.div
                   animate={{ 
