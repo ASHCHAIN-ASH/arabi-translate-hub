@@ -345,11 +345,24 @@ const AcademicFeatures = () => {
                       </div>
                       
                       <Link 
-                        to={`/academic/${index === 0 ? 'expertise' : index === 1 ? 'methodology' : index === 2 ? 'translation' : index === 3 ? 'quality' : index === 4 ? 'security' : 'timeline'}`}
-                        className="inline-flex items-center gap-2 text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 transition-colors font-medium"
+                        to={`/academic/${
+                          index === 0 ? 'expertise' : 
+                          index === 1 ? 'methodology' : 
+                          index === 2 ? 'translation' : 
+                          index === 3 ? 'quality' : 
+                          index === 4 ? 'security' : 
+                          'timeline'
+                        }`}
+                        className="group"
                       >
-                        تعرف على المزيد
-                        <ChevronRight className="h-4 w-4" />
+                        <motion.button
+                          className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white rounded-lg font-medium text-sm transition-all duration-300 shadow-md hover:shadow-lg"
+                          whileHover={{ scale: 1.05, x: 5 }}
+                          whileTap={{ scale: 0.95 }}
+                        >
+                          <span>تفاصيل أكثر</span>
+                          <ChevronRight className="h-4 w-4 group-hover:translate-x-1 transition-transform duration-300" />
+                        </motion.button>
                       </Link>
                     </motion.div>
                   </CardContent>
