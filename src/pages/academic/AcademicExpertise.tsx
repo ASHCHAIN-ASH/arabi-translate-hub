@@ -21,6 +21,7 @@ import {
 import { Link } from 'react-router-dom';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
+import ConsultationForm from '@/components/ConsultationForm';
 
 const AcademicExpertise = () => {
   const expertiseAreas = [
@@ -320,6 +321,9 @@ const AcademicExpertise = () => {
         </div>
       </section>
 
+      {/* Consultation Form */}
+      <ConsultationForm />
+
       {/* CTA Section */}
       <section className="py-16 bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-600 text-white">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 text-center">
@@ -330,19 +334,19 @@ const AcademicExpertise = () => {
             viewport={{ once: true }}
           >
             <h2 className="text-3xl md:text-4xl font-arabic-formal font-bold mb-6">
-              ابدأ مشروعك الأكاديمي معنا
+              فريق متميز في خدمتك
             </h2>
             <p className="text-xl text-blue-100 mb-8 max-w-2xl mx-auto">
-              استفد من خبرة فريقنا المتخصص لتحقيق أهدافك الأكاديمية والبحثية
+              نحن هنا لمساعدتك في تحقيق أهدافك الأكاديمية والبحثية بأعلى مستوى من الجودة والمهنية
             </p>
             
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Button size="lg" variant="secondary" className="bg-white text-blue-600 hover:bg-blue-50">
-                طلب استشارة مجانية
+                تواصل معنا الآن
                 <ChevronRight className="mr-2 h-4 w-4" />
               </Button>
               <Button size="lg" variant="outline" className="border-white text-white hover:bg-white/10">
-                تصفح الخدمات
+                استعرض أعمالنا
               </Button>
             </div>
           </motion.div>
