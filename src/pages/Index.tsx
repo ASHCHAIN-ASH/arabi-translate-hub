@@ -9,12 +9,14 @@ import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
 import React from "react";
 import { useNavigate } from "react-router-dom";
+import { WorkingHoursBannerRTL } from "@/components/WorkingHoursBannerRTL";
 
 const Index = () => {
   const navigate = useNavigate();
   
   return (
     <div className="min-h-screen bg-background" dir="rtl">
+      <WorkingHoursBannerRTL />
       <Header />
       
       {/* القسم الرئيسي الأكاديمي الجديد */}

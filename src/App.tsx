@@ -54,6 +54,7 @@ import AdminTickets from "./pages/admin/AdminTickets";
 import AdminServiceOrders from "./pages/admin/AdminServiceOrders";
 import EmailNotifications from "./pages/admin/EmailNotifications";
 import AddUser from "./pages/admin/AddUser";
+import AdminWorkingHours from "./pages/admin/AdminWorkingHours";
 
 import ThesisTitles from "./pages/research/ThesisTitles";
 import ResearchPlan from "./pages/research/ResearchPlan";
@@ -229,6 +230,11 @@ const App = () => (
             <Route path="/admin/email-notifications" element={
               <SimpleProtectedRoute adminOnly>
                 <EmailNotifications />
+              </SimpleProtectedRoute>
+            } />
+            <Route path="/admin/working-hours" element={
+              <SimpleProtectedRoute adminOnly>
+                <AdminWorkingHours />
               </SimpleProtectedRoute>
             } />
             
