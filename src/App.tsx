@@ -14,6 +14,12 @@ import ForgotPassword from "./pages/auth/ForgotPassword";
 import ResetPassword from "./pages/auth/ResetPassword";
 import AdminLogin from "./pages/auth/AdminLogin";
 import JournalPublication from "./pages/research/JournalPublication";
+import AcademicExpertise from "./pages/academic/AcademicExpertise";
+import ScientificMethodology from "./pages/academic/ScientificMethodology";
+import MultilingualTranslation from "./pages/academic/MultilingualTranslation";
+import QualityAssurance from "./pages/academic/QualityAssurance";
+import PrivacySecurity from "./pages/academic/PrivacySecurity";
+import TimelineCommitment from "./pages/academic/TimelineCommitment";
 import Index from "./pages/Index";
 import TranslationServices from "./pages/TranslationServices";
 import LegalTranslation from "./pages/LegalTranslation";
@@ -238,6 +244,14 @@ const App = () => (
               </SimpleProtectedRoute>
             } />
             
+            {/* Academic Pages */}
+            <Route path="/academic/expertise" element={<AcademicExpertise />} />
+            <Route path="/academic/methodology" element={<ScientificMethodology />} />
+            <Route path="/academic/translation" element={<MultilingualTranslation />} />
+            <Route path="/academic/quality" element={<QualityAssurance />} />
+            <Route path="/academic/security" element={<PrivacySecurity />} />
+            <Route path="/academic/timeline" element={<TimelineCommitment />} />
+
             {/* Research Routes */}
             <Route path="/research/thesis-titles" element={<ThesisTitles />} />
             <Route path="/research/research-plan" element={<ResearchPlan />} />
