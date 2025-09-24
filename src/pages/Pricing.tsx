@@ -365,12 +365,12 @@ const Pricing = () => {
                          transition={{ delay: 0.1, duration: 0.6 }}
                          viewport={{ once: true }}
                        >
-                         <label className="block text-base font-bold mb-4 text-right flex items-center text-slate-700">
-                           <div className="w-10 h-10 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center mr-3">
-                             <Users className="w-5 h-5 text-white" />
-                           </div>
-                           <span>الاسم الكامل *</span>
-                         </label>
+                          <label className="block text-base font-bold mb-4 text-right flex items-center text-slate-700">
+                            <div className="w-10 h-10 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center ml-4">
+                              <Users className="w-5 h-5 text-white" />
+                            </div>
+                            <span>الاسم الكامل *</span>
+                          </label>
                          <Input
                            value={formData.name}
                            onChange={(e) => handleInputChange('name', e.target.value)}
@@ -386,12 +386,12 @@ const Pricing = () => {
                          transition={{ delay: 0.2, duration: 0.6 }}
                          viewport={{ once: true }}
                        >
-                         <label className="block text-base font-bold mb-4 text-right flex items-center text-slate-700">
-                           <div className="w-10 h-10 bg-gradient-to-r from-green-500 to-blue-600 rounded-full flex items-center justify-center mr-3">
-                             <Mail className="w-5 h-5 text-white" />
-                           </div>
-                           <span>البريد الإلكتروني *</span>
-                         </label>
+                          <label className="block text-base font-bold mb-4 text-right flex items-center text-slate-700">
+                            <div className="w-10 h-10 bg-gradient-to-r from-green-500 to-blue-600 rounded-full flex items-center justify-center ml-4">
+                              <Mail className="w-5 h-5 text-white" />
+                            </div>
+                            <span>البريد الإلكتروني *</span>
+                          </label>
                          <Input
                            type="email"
                            value={formData.email}
@@ -408,12 +408,12 @@ const Pricing = () => {
                          transition={{ delay: 0.3, duration: 0.6 }}
                          viewport={{ once: true }}
                        >
-                         <label className="block text-base font-bold mb-4 text-right flex items-center text-slate-700">
-                           <div className="w-10 h-10 bg-gradient-to-r from-purple-500 to-pink-600 rounded-full flex items-center justify-center mr-3">
-                             <Phone className="w-5 h-5 text-white" />
-                           </div>
-                           <span>رقم الهاتف</span>
-                         </label>
+                          <label className="block text-base font-bold mb-4 text-right flex items-center text-slate-700">
+                            <div className="w-10 h-10 bg-gradient-to-r from-purple-500 to-pink-600 rounded-full flex items-center justify-center ml-4">
+                              <Phone className="w-5 h-5 text-white" />
+                            </div>
+                            <span>رقم الهاتف</span>
+                          </label>
                          <Input
                            value={formData.phone}
                            onChange={(e) => handleInputChange('phone', e.target.value)}
@@ -429,9 +429,9 @@ const Pricing = () => {
                          viewport={{ once: true }}
                        >
                          <label className="block text-base font-bold mb-4 text-right flex items-center text-slate-700">
-                           <div className="w-10 h-10 bg-gradient-to-r from-orange-500 to-red-600 rounded-full flex items-center justify-center mr-3">
-                             <Building2 className="w-5 h-5 text-white" />
-                           </div>
+                            <div className="w-10 h-10 bg-gradient-to-r from-orange-500 to-red-600 rounded-full flex items-center justify-center ml-4">
+                              <Building2 className="w-5 h-5 text-white" />
+                            </div>
                            <span>اسم الشركة</span>
                          </label>
                          <Input
@@ -450,9 +450,9 @@ const Pricing = () => {
                       viewport={{ once: true }}
                     >
                        <label className="block text-base font-bold mb-4 text-right flex items-center text-slate-700">
-                         <div className="w-10 h-10 bg-gradient-to-r from-indigo-500 to-blue-600 rounded-full flex items-center justify-center mr-3">
-                           <Briefcase className="w-5 h-5 text-white" />
-                         </div>
+                          <div className="w-10 h-10 bg-gradient-to-r from-indigo-500 to-blue-600 rounded-full flex items-center justify-center ml-4">
+                            <Briefcase className="w-5 h-5 text-white" />
+                          </div>
                          <span>نوع الخدمة المطلوبة *</span>
                        </label>
                        <Select value={formData.service} onValueChange={(value) => handleInputChange('service', value)}>
@@ -481,9 +481,9 @@ const Pricing = () => {
                       viewport={{ once: true }}
                     >
                        <label className="block text-base font-bold mb-4 text-right flex items-center text-slate-700">
-                         <div className="w-10 h-10 bg-gradient-to-r from-yellow-500 to-orange-600 rounded-full flex items-center justify-center mr-3">
-                           <DollarSign className="w-5 h-5 text-white" />
-                         </div>
+                          <div className="w-10 h-10 bg-gradient-to-r from-yellow-500 to-orange-600 rounded-full flex items-center justify-center ml-4">
+                            <DollarSign className="w-5 h-5 text-white" />
+                          </div>
                          <span>الميزانية المتوقعة</span>
                        </label>
                        <Select value={formData.budget} onValueChange={(value) => handleInputChange('budget', value)}>
@@ -508,9 +508,9 @@ const Pricing = () => {
                        viewport={{ once: true }}
                      >
                        <label className="block text-base font-bold mb-4 text-right flex items-center text-slate-700">
-                         <div className="w-10 h-10 bg-gradient-to-r from-pink-500 to-rose-600 rounded-full flex items-center justify-center mr-3">
-                           <FileText className="w-5 h-5 text-white" />
-                         </div>
+                          <div className="w-10 h-10 bg-gradient-to-r from-pink-500 to-rose-600 rounded-full flex items-center justify-center ml-4">
+                            <FileText className="w-5 h-5 text-white" />
+                          </div>
                          <span>تفاصيل المشروع</span>
                        </label>
                        <Textarea
@@ -530,11 +530,11 @@ const Pricing = () => {
                        viewport={{ once: true }}
                      >
                        <label className="block text-base font-bold mb-4 text-right flex items-center text-slate-700">
-                         <div className="w-10 h-10 bg-gradient-to-r from-teal-500 to-cyan-600 rounded-full flex items-center justify-center mr-3">
-                           <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
-                           </svg>
-                         </div>
+                          <div className="w-10 h-10 bg-gradient-to-r from-teal-500 to-cyan-600 rounded-full flex items-center justify-center ml-4">
+                            <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+                            </svg>
+                          </div>
                          <span>المرفقات (اختياري)</span>
                        </label>
                        <div className="relative">
