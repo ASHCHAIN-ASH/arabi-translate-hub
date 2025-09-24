@@ -210,18 +210,18 @@ const handler = async (req: Request): Promise<Response> => {
                   <strong>📧 البريد الإلكتروني</strong><br>
                   <a href="mailto:info@masteredupath.com">info@masteredupath.com</a>
                 </div>
-                <div class="contact-item">
-                  <strong>📱 الهاتف والواتساب</strong><br>
-                  <a href="tel:+966555123456">0555 123 456</a>
-                </div>
+                 <div class="contact-item">
+                   <strong>📱 خدمة المبيعات</strong><br>
+                   <a href="tel:+966500776343">0500776343</a>
+                 </div>
                 <div class="contact-item">
                   <strong>🌐 الموقع الإلكتروني</strong><br>
                   <a href="https://masteredupath.com">www.masteredupath.com</a>
                 </div>
-                <div class="contact-item">
-                  <strong>📍 الموقع</strong><br>
-                  الرياض، المملكة العربية السعودية
-                </div>
+                 <div class="contact-item">
+                   <strong>📍 الموقع</strong><br>
+                   جدة، المملكة العربية السعودية
+                 </div>
               </div>
               
               <div class="company-info">
