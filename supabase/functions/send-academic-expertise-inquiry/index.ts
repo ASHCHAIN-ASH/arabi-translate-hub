@@ -446,7 +446,7 @@ const handler = async (req: Request): Promise<Response> => {
 
     // Send confirmation email to client
     const clientEmailResponse = await resend.emails.send({
-      from: "وكالة ماستر إيدو باث <onboarding@resend.dev>",
+      from: "وكالة ماستر إيدو باث <info@fekrahtech.com>",
       to: [consultationData.email],
       subject: "✅ تأكيد استلام طلب الاستشارة الأكاديمية - وكالة ماستر إيدو باث",
       html: clientEmailTemplate,
@@ -456,8 +456,8 @@ const handler = async (req: Request): Promise<Response> => {
 
     // Send notification email to admin
     const adminEmailResponse = await resend.emails.send({
-      from: "نظام الإشعارات <notifications@resend.dev>",
-      to: ["admin@masteredupath.com"],
+      from: "نظام الإشعارات <info@fekrahtech.com>",
+      to: ["info@fekrahtech.com"], // Using verified email for testing
       subject: `🚨 طلب استشارة أكاديمية جديد من ${consultationData.fullName} - ${serviceTypeArabic}`,
       html: adminEmailTemplate,
     });
