@@ -12,7 +12,7 @@ import {
   Gift, UserCheck, Calendar, Bell, CreditCard, Package,
   Settings, Palette, Filter, Plus, Edit, Trash2
 } from "lucide-react";
-import digitalStamp from "@/assets/masteredupath-digital-stamp.png";
+
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -619,9 +619,6 @@ export default function EmailNotifications() {
           </div>
 
           <!-- Digital Stamp -->
-          <div style="text-align: center; margin: 20px auto 10px auto;">
-            <img src="${digitalStamp}" alt="ختم وكالة ماستر إيدو باث المعتمد" style="width: 100px; height: 100px; filter: drop-shadow(0 4px 8px rgba(0,0,0,0.2)); opacity: 0.95;" />
-          </div>
         </div>
         
         <!-- Company & Invoice Details -->
@@ -861,9 +858,6 @@ export default function EmailNotifications() {
           <p style="color: rgba(255,255,255,0.9); margin: 0; font-size: 14px; direction: rtl;" class="mobile-text">شكراً لك ${data.customerName || 'عزيزي العميل'}</p>
           
           <!-- Digital Stamp -->
-          <div style="text-align: center; margin: 20px auto 0 auto;">
-            <img src="${digitalStamp}" alt="ختم وكالة ماستر إيدو باث المعتمد" style="width: 80px; height: 80px; filter: drop-shadow(0 4px 8px rgba(255,255,255,0.3)); opacity: 0.9;" />
-          </div>
         </div>
         
         <div style="padding: 30px 20px; text-align: center; direction: rtl;" class="mobile-container">
@@ -1045,7 +1039,7 @@ export default function EmailNotifications() {
               <p style="margin: 0; color: #6b7280; font-size: 12px; direction: rtl;" class="mobile-text">توقيع المستلم</p>
             </div>
             <div style="text-align: center; flex: 1; direction: rtl;">
-              <img src="${digitalStamp}" alt="ختم وكالة ماستر إيدو باث المعتمد" style="width: 80px; height: 80px; margin: 0 auto 8px auto; display: block; filter: drop-shadow(0 4px 8px rgba(0,0,0,0.2)); opacity: 0.95;" />
+              
               <div style="border-bottom: 2px solid #374151; width: 100%; max-width: 150px; margin: 0 auto 8px auto; height: 30px;"></div>
               <p style="margin: 0; color: #6b7280; font-size: 12px; direction: rtl;" class="mobile-text">ختم الشركة</p>
             </div>
@@ -1138,10 +1132,6 @@ export default function EmailNotifications() {
             <p class="mobile-text" style="color: rgba(255,255,255,0.9); margin: 0; font-size: 12px; direction: rtl; font-weight: 600;">حسابك جاهز للاستخدام في منصتنا الرسمية</p>
           </div>
           
-          <!-- Digital Stamp -->
-          <div style="text-align: center; margin: 15px auto 0 auto;">
-            <img src="${digitalStamp}" alt="ختم وكالة ماستر إيدو باث المعتمد" style="width: 70px; height: 70px; filter: drop-shadow(0 4px 8px rgba(255,255,255,0.3)); opacity: 0.9;" />
-          </div>
         </div>
         
         <!-- Mobile-Optimized Badges -->
@@ -1271,10 +1261,6 @@ export default function EmailNotifications() {
               <p class="mobile-promo-desc" style="margin: 0; font-size: 14px; opacity: 0.95; direction: rtl; font-weight: 600;">عرض حصري من الإدارة لعميلنا الكريم ${data.customerName}</p>
             </div>
             
-            <!-- Digital Stamp -->
-            <div style="text-align: center; margin: 15px auto 0 auto;">
-              <img src="${digitalStamp}" alt="ختم وكالة ماستر إيدو باث المعتمد" style="width: 70px; height: 70px; filter: drop-shadow(0 4px 8px rgba(255,255,255,0.3)); opacity: 0.9;" />
-            </div>
           </div>
           
           <!-- Mobile-Optimized Badges -->
@@ -1336,10 +1322,6 @@ export default function EmailNotifications() {
             <h1 style="margin: 0; font-size: 32px; font-weight: 700; background: linear-gradient(135deg, #fbbf24, #f59e0b); -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-shadow: 2px 2px 4px rgba(0,0,0,0.1);">وكالة ماستر إيدو باث</h1>
             <p style="margin: 10px 0 0; font-size: 18px; color: #e2e8f0; font-weight: 500;">للخدمات التعليمية والتدريب المتقدم</p>
             
-            <!-- Digital Stamp -->
-            <div style="text-align: center; margin: 20px auto 0 auto;">
-              <img src="${digitalStamp}" alt="ختم وكالة ماستر إيدو باث المعتمد" style="width: 80px; height: 80px; filter: drop-shadow(0 4px 8px rgba(255,255,255,0.3)); opacity: 0.9;" />
-            </div>
           </div>
         </div>
 
@@ -1380,10 +1362,6 @@ export default function EmailNotifications() {
             <h1 style="margin: 0; font-size: 32px; font-weight: 700; background: linear-gradient(135deg, #34d399, #10b981); -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-shadow: 2px 2px 4px rgba(0,0,0,0.1);">وكالة ماستر إيدو باث</h1>
             <p style="margin: 10px 0 0; font-size: 18px; color: #e2e8f0; font-weight: 500;">للخدمات التعليمية والتدريب المتقدم</p>
             
-            <!-- Digital Stamp -->
-            <div style="text-align: center; margin: 20px auto 0 auto;">
-              <img src="${digitalStamp}" alt="ختم وكالة ماستر إيدو باث المعتمد" style="width: 80px; height: 80px; filter: drop-shadow(0 4px 8px rgba(255,255,255,0.3)); opacity: 0.9;" />
-            </div>
           </div>
         </div>
 
@@ -1424,10 +1402,6 @@ export default function EmailNotifications() {
             <h1 style="margin: 0; font-size: 32px; font-weight: 700; background: linear-gradient(135deg, #a78bfa, #8b5cf6); -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-shadow: 2px 2px 4px rgba(0,0,0,0.1);">وكالة ماستر إيدو باث</h1>
             <p style="margin: 10px 0 0; font-size: 18px; color: #e2e8f0; font-weight: 500;">للخدمات التعليمية والتدريب المتقدم</p>
             
-            <!-- Digital Stamp -->
-            <div style="text-align: center; margin: 20px auto 0 auto;">
-              <img src="${digitalStamp}" alt="ختم وكالة ماستر إيدو باث المعتمد" style="width: 80px; height: 80px; filter: drop-shadow(0 4px 8px rgba(255,255,255,0.3)); opacity: 0.9;" />
-            </div>
           </div>
         </div>
 
@@ -1469,10 +1443,6 @@ export default function EmailNotifications() {
             <h1 style="margin: 0; font-size: 32px; font-weight: 700; background: linear-gradient(135deg, #67e8f9, #06b6d4); -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-shadow: 2px 2px 4px rgba(0,0,0,0.1);">وكالة ماستر إيدو باث</h1>
             <p style="margin: 10px 0 0; font-size: 18px; color: #e2e8f0; font-weight: 500;">للخدمات التعليمية والتدريب المتقدم</p>
             
-            <!-- Digital Stamp -->
-            <div style="text-align: center; margin: 20px auto 0 auto;">
-              <img src="${digitalStamp}" alt="ختم وكالة ماستر إيدو باث المعتمد" style="width: 80px; height: 80px; filter: drop-shadow(0 4px 8px rgba(255,255,255,0.3)); opacity: 0.9;" />
-            </div>
           </div>
         </div>
 
@@ -1512,10 +1482,6 @@ export default function EmailNotifications() {
             <h1 style="margin: 0; font-size: 32px; font-weight: 700; background: linear-gradient(135deg, #fb7185, #f43f5e); -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-shadow: 2px 2px 4px rgba(0,0,0,0.1);">وكالة ماستر إيدو باث</h1>
             <p style="margin: 10px 0 0; font-size: 18px; color: #e2e8f0; font-weight: 500;">للخدمات التعليمية والتدريب المتقدم</p>
             
-            <!-- Digital Stamp -->
-            <div style="text-align: center; margin: 20px auto 0 auto;">
-              <img src="${digitalStamp}" alt="ختم وكالة ماستر إيدو باث المعتمد" style="width: 80px; height: 80px; filter: drop-shadow(0 4px 8px rgba(255,255,255,0.3)); opacity: 0.9;" />
-            </div>
           </div>
         </div>
 
@@ -1555,10 +1521,6 @@ export default function EmailNotifications() {
             <h1 style="margin: 0; font-size: 32px; font-weight: 700; background: linear-gradient(135deg, #38bdf8, #0ea5e9); -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-shadow: 2px 2px 4px rgba(0,0,0,0.1);">وكالة ماستر إيدو باث</h1>
             <p style="margin: 10px 0 0; font-size: 18px; color: #e2e8f0; font-weight: 500;">للخدمات التعليمية والتدريب المتقدم</p>
             
-            <!-- Digital Stamp -->
-            <div style="text-align: center; margin: 20px auto 0 auto;">
-              <img src="${digitalStamp}" alt="ختم وكالة ماستر إيدو باث المعتمد" style="width: 80px; height: 80px; filter: drop-shadow(0 4px 8px rgba(255,255,255,0.3)); opacity: 0.9;" />
-            </div>
           </div>
         </div>
 
@@ -1599,10 +1561,6 @@ export default function EmailNotifications() {
             <h1 style="margin: 0; font-size: 32px; font-weight: 700; background: linear-gradient(135deg, #a855f7, #7c3aed); -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-shadow: 2px 2px 4px rgba(0,0,0,0.1);">وكالة ماستر إيدو باث</h1>
             <p style="margin: 10px 0 0; font-size: 18px; color: #e2e8f0; font-weight: 500;">للخدمات التعليمية والتدريب المتقدم</p>
             
-            <!-- Digital Stamp -->
-            <div style="text-align: center; margin: 20px auto 0 auto;">
-              <img src="${digitalStamp}" alt="ختم وكالة ماستر إيدو باث المعتمد" style="width: 80px; height: 80px; filter: drop-shadow(0 4px 8px rgba(255,255,255,0.3)); opacity: 0.9;" />
-            </div>
           </div>
         </div>
 
