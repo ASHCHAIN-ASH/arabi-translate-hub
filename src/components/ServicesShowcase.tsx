@@ -1,12 +1,16 @@
 import { motion } from "framer-motion";
 import { Card, CardContent } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { useNavigate } from "react-router-dom";
 import { 
   Languages, PenTool, BookOpen, Users, MessageSquare, GraduationCap,
   FileText, Search, Award, Clock, Globe, Star, Target, Shield,
-  CheckCircle, HeartHandshake, Brain, Microscope
+  CheckCircle, HeartHandshake, Brain, Microscope, ArrowLeft
 } from "lucide-react";
 
 const ServicesShowcase = () => {
+  const navigate = useNavigate();
+  
   const services = [
     {
       id: 1,
@@ -14,7 +18,8 @@ const ServicesShowcase = () => {
       description: "ترجمة احترافية لجميع أنواع المستندات والمحتوى الأكاديمي والمهني بدقة عالية",
       icon: Languages,
       gradient: "from-blue-500 to-blue-700",
-      delay: 0.1
+      delay: 0.1,
+      route: "/services/translation-services"
     },
     {
       id: 2,
@@ -22,7 +27,8 @@ const ServicesShowcase = () => {
       description: "تحرير ومراجعة النصوص الأكاديمية والمهنية لضمان الجودة والوضوح",
       icon: PenTool,
       gradient: "from-purple-500 to-purple-700",
-      delay: 0.2
+      delay: 0.2,
+      route: "/services/editing-services"
     },
     {
       id: 3,
@@ -30,7 +36,8 @@ const ServicesShowcase = () => {
       description: "كتابة الأبحاث والرسائل والمقالات الأكاديمية بمعايير عالمية",
       icon: BookOpen,
       gradient: "from-emerald-500 to-emerald-700",
-      delay: 0.3
+      delay: 0.3,
+      route: "/services/academic-writing"
     },
     {
       id: 4,
@@ -38,7 +45,8 @@ const ServicesShowcase = () => {
       description: "استشارات أكاديمية متخصصة لطلاب الدراسات العليا والباحثين",
       icon: GraduationCap,
       gradient: "from-orange-500 to-orange-700",
-      delay: 0.4
+      delay: 0.4,
+      route: "/services/consultation-services"
     },
     {
       id: 5,
@@ -46,7 +54,8 @@ const ServicesShowcase = () => {
       description: "تحليل البيانات الإحصائية وإعداد التقارير العلمية والبحثية",
       icon: Microscope,
       gradient: "from-rose-500 to-rose-700",
-      delay: 0.5
+      delay: 0.5,
+      route: "/services/statistical-analysis"
     },
     {
       id: 6,
@@ -54,7 +63,8 @@ const ServicesShowcase = () => {
       description: "مساعدة في نشر الأبحاث في المجلات العلمية المحكمة",
       icon: FileText,
       gradient: "from-indigo-500 to-indigo-700",
-      delay: 0.6
+      delay: 0.6,
+      route: "/services/publishing-services"
     }
   ];
 
@@ -324,7 +334,7 @@ const ServicesShowcase = () => {
                     </motion.h3>
                     
                     <motion.p 
-                      className="text-xs md:text-sm text-muted-foreground leading-relaxed px-2"
+                      className="text-xs md:text-sm text-muted-foreground leading-relaxed px-2 mb-4"
                       initial={{ y: 20, opacity: 0 }}
                       whileInView={{ y: 0, opacity: 1 }}
                       transition={{ duration: 0.5, delay: service.delay + 0.2 }}
@@ -332,6 +342,25 @@ const ServicesShowcase = () => {
                     >
                       {service.description}
                     </motion.p>
+
+                    {/* زر المزيد */}
+                    <motion.div
+                      initial={{ y: 20, opacity: 0 }}
+                      whileInView={{ y: 0, opacity: 1 }}
+                      transition={{ duration: 0.5, delay: service.delay + 0.3 }}
+                      viewport={{ once: true }}
+                      className="mt-auto"
+                    >
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        className="text-xs px-3 py-1 h-8 bg-white/10 hover:bg-white/20 border-white/30 hover:border-white/50 text-white hover:text-white transition-all duration-300"
+                        onClick={() => navigate(service.route)}
+                      >
+                        المزيد
+                        <ArrowLeft className="w-3 h-3 mr-1" />
+                      </Button>
+                    </motion.div>
 
                     {/* علامة التحقق */}
                     <motion.div 
