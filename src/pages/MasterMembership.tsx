@@ -107,7 +107,7 @@ const MasterMembership = () => {
       <Header />
       
       {/* Hero Section */}
-      <section className="relative py-20 bg-gradient-to-br from-purple-600 via-blue-600 to-indigo-700 overflow-hidden" dir="rtl">
+      <section className="relative py-20 bg-gradient-to-br from-purple-600 via-blue-600 to-indigo-700 overflow-hidden">
         <div className="container mx-auto px-4 relative z-10">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
@@ -126,7 +126,7 @@ const MasterMembership = () => {
         </div>
       </section>
 
-      <div className="container mx-auto px-4 py-16" dir="rtl">
+      <div className="container mx-auto px-4 py-16">
         <Tabs defaultValue="plans" className="space-y-8">
           <div className="flex justify-center">
             <TabsList className="grid w-full max-w-lg grid-cols-2">
@@ -135,7 +135,7 @@ const MasterMembership = () => {
                 العضويات
               </TabsTrigger>
               <TabsTrigger value="benefits" className="flex items-center gap-2">
-                <Star className="h-4 w-4" />
+                <Gift className="h-4 w-4" />
                 المزايا
               </TabsTrigger>
             </TabsList>
@@ -147,76 +147,94 @@ const MasterMembership = () => {
               اختر العضوية المناسبة لك
             </h2>
             
-            <div className="grid gap-6 lg:grid-cols-3 md:grid-cols-2 max-w-6xl mx-auto">
+            <div className="grid gap-8 lg:grid-cols-3 md:grid-cols-2 max-w-7xl mx-auto">
               {membershipPlans.map((plan, index) => (
                 <motion.div
                   key={plan.id}
                   initial={{ opacity: 0, y: 30 }}
                   animate={{ opacity: 1, y: 0 }}
-                  whileHover={{ y: -8, scale: 1.02 }}
+                  whileHover={{ y: -5, scale: 1.02 }}
                   transition={{ delay: index * 0.1, duration: 0.6 }}
                   className={`relative ${plan.popular ? 'lg:scale-105' : ''}`}
                 >
                   {plan.popular && (
-                    <div className="absolute -top-4 left-1/2 transform -translate-x-1/2 z-10">
-                      <div className="bg-gradient-to-r from-orange-400 to-red-500 text-white px-4 py-2 rounded-full text-sm font-bold shadow-lg">
-                        <Star className="inline-block w-4 h-4 mr-1" />
+                    <div className="absolute -top-6 right-1/2 transform translate-x-1/2 z-10">
+                      <div className="bg-gradient-to-r from-orange-400 to-red-500 text-white px-6 py-2 rounded-full text-sm font-bold shadow-xl">
+                        <Crown className="inline-block w-4 h-4 ml-1" />
                         الأكثر طلبًا
                       </div>
                     </div>
                   )}
                   
-                  {/* Bank Card */}
+                  {/* Bank Card - Arabic RTL Design */}
                   <div className={`
-                    relative w-full h-64 rounded-2xl overflow-hidden
+                    relative w-full h-80 rounded-[20px] overflow-hidden
                     bg-gradient-to-br ${plan.cardGradient}
                     shadow-2xl transition-all duration-500 
-                    hover:shadow-3xl hover:-translate-y-2
-                    border border-white/10
+                    hover:shadow-3xl
+                    border border-white/20
+                    backdrop-blur-sm
                   `}>
-                    {/* Card Header */}
-                    <div className="absolute top-4 left-4 text-white text-xs font-bold">
-                      ARABI TRANSLATE
-                    </div>
-                    <Crown className="absolute top-4 right-4 w-5 h-5 text-white/80" />
+                    {/* Card Background Pattern */}
+                    <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent"></div>
+                    <div className="absolute top-0 right-0 w-32 h-32 bg-white/5 rounded-full -translate-y-16 translate-x-16"></div>
+                    <div className="absolute bottom-0 left-0 w-24 h-24 bg-white/5 rounded-full translate-y-12 -translate-x-12"></div>
 
-                    {/* Chip */}
-                    <div className={`absolute top-16 left-6 w-12 h-8 ${plan.chipColor} rounded-lg`}>
-                      <div className="w-full h-full bg-gradient-to-r from-yellow-300 to-yellow-500 rounded-lg"></div>
+                    {/* Card Header - Arabic positioning */}
+                    <div className="absolute top-6 right-6 text-white text-sm font-bold opacity-90">
+                      وكالة ماستر إيدو باث
                     </div>
-
-                    {/* Card Number */}
-                    <div className="absolute top-28 left-6 text-white/60 text-sm font-mono">
-                      •••• •••• •••• {plan.id === 'silver' ? '1234' : plan.id === 'gold' ? '5678' : '9012'}
+                    <div className="absolute top-6 left-6">
+                      <Crown className="w-8 h-8 text-yellow-300" />
                     </div>
 
-                    {/* Membership Info */}
-                    <div className="absolute bottom-14 left-6 text-white">
-                      <div className="text-lg font-bold">{plan.name}</div>
-                      <div className="text-xs opacity-70">{plan.nameEn}</div>
+                    {/* Chip - Real bank card position */}
+                    <div className="absolute top-20 right-6 w-14 h-10 bg-gradient-to-br from-yellow-300 via-yellow-400 to-yellow-500 rounded-lg shadow-lg">
+                      <div className="absolute inset-1 bg-gradient-to-br from-yellow-200 to-yellow-400 rounded-md">
+                        <div className="w-full h-full bg-gradient-to-br from-transparent via-white/20 to-transparent rounded-md"></div>
+                      </div>
                     </div>
 
-                    {/* Agency */}
-                    <div className="absolute bottom-6 left-6 text-white/70 text-xs">
-                      <div>وكالة ماستر إيدو باث</div>
-                      <div>MASTER EDU PATH AGENCY</div>
+                    {/* Card Number - Arabic positioning */}
+                    <div className="absolute top-36 right-6 text-white font-mono text-lg tracking-widest">
+                      {plan.id === 'silver' ? '5432 1098 7654 ••••' : plan.id === 'gold' ? '4532 1098 7654 ••••' : '4532 1098 7654 ••••'}
                     </div>
 
-                    {/* Price */}
-                    <div className="absolute top-4 right-16 bg-white/20 rounded-lg p-3">
-                      <div className="text-white text-xs line-through opacity-70">{plan.originalPrice} ريال</div>
-                      <div className="text-white text-lg font-bold">{plan.price} ريال</div>
-                      <div className="text-green-300 text-xs">كاش باك: {plan.cashback}</div>
+                    {/* Membership Level - Arabic positioning */}
+                    <div className="absolute bottom-20 right-6 text-white">
+                      <div className="text-xl font-bold">{plan.name}</div>
+                      <div className="text-sm opacity-80 mt-1">{plan.nameEn}</div>
                     </div>
 
-                    {/* Discount */}
-                    <div className="absolute top-20 right-1/2 transform translate-x-1/2 bg-red-500 text-white px-3 py-1 rounded-full text-sm font-bold">
+                    {/* Expiry Date */}
+                    <div className="absolute bottom-12 right-6 text-white/80 text-sm">
+                      <div>صالح حتى</div>
+                      <div className="font-mono">12/25</div>
+                    </div>
+
+                    {/* Card Network Logo */}
+                    <div className="absolute bottom-6 right-6 text-white/60 text-xs font-bold">
+                      MASTERCARD
+                    </div>
+
+                    {/* Price Badge */}
+                    <div className="absolute top-6 left-20 bg-white/15 backdrop-blur-sm rounded-xl p-4 border border-white/10">
+                      <div className="text-white/70 text-sm line-through">{plan.originalPrice} ريال</div>
+                      <div className="text-white text-2xl font-bold">{plan.price}</div>
+                      <div className="text-green-300 text-sm font-medium">كاش باك: {plan.cashback}</div>
+                    </div>
+
+                    {/* Discount Badge */}
+                    <div className="absolute top-28 left-6 transform -rotate-12 bg-red-500 text-white px-4 py-2 rounded-lg text-sm font-bold shadow-lg">
                       خصم {plan.discount}
                     </div>
+
+                    {/* Holographic Effect */}
+                    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent opacity-0 hover:opacity-100 transition-opacity duration-500 transform -skew-x-12"></div>
                   </div>
 
                   {/* Subscribe Button */}
-                  <div className="mt-6">
+                  <div className="mt-8">
                     <Button 
                       onClick={() => {
                         setSelectedPlan(plan);
@@ -224,26 +242,26 @@ const MasterMembership = () => {
                       }}
                       className={`
                         w-full bg-gradient-to-r ${plan.gradient} 
-                        hover:opacity-90 text-white font-bold py-6 text-lg rounded-xl
-                        shadow-lg hover:shadow-xl transition-all duration-300
-                        hover:scale-105
+                        hover:opacity-90 text-white font-bold py-8 text-xl rounded-2xl
+                        shadow-xl hover:shadow-2xl transition-all duration-300
+                        hover:scale-105 border-0
                       `}
                     >
-                      <Crown className="w-5 h-5 ml-2" />
+                      <Crown className="w-6 h-6 ml-3" />
                       اشترك الآن - 12 شهر
                     </Button>
                     
-                    <div className="mt-3 text-center">
-                      <div className="inline-flex items-center gap-2 bg-green-50 text-green-700 px-4 py-2 rounded-full text-sm">
-                        <Gift className="w-4 h-4" />
+                    <div className="mt-4 text-center">
+                      <div className="inline-flex items-center gap-3 bg-green-50 text-green-700 px-6 py-3 rounded-full text-base font-medium">
+                        <Gift className="w-5 h-5" />
                         كاش باك مضمون: {plan.cashback} ريال
                       </div>
                     </div>
-                  </div>
-                </motion.div>
-              ))}
-            </div>
-          </TabsContent>
+                   </div>
+                 </motion.div>
+               ))}
+             </div>
+           </TabsContent>
 
           {/* Benefits Section */}
           <TabsContent value="benefits" className="space-y-8">
