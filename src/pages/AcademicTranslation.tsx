@@ -5,6 +5,8 @@ import { Button } from "@/components/ui/button";
 import { GraduationCap, BookOpen, FileText, Award, Users, Globe, Microscope, Calculator, FlaskConical, Atom, Library, PenTool } from "lucide-react";
 
 import AcademicTranslationForm from "@/components/AcademicTranslationForm";
+import Header from "@/components/Header";
+import Footer from "@/components/Footer";
 
 const AcademicTranslation = () => {
   const academicServices = [
@@ -107,6 +109,8 @@ const AcademicTranslation = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-blue-50 to-cyan-50">
+      <Header />
+      
       {/* Academic Hero Section */}
       <section className="relative overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-r from-indigo-700 via-blue-700 to-cyan-800"></div>
@@ -466,7 +470,7 @@ const AcademicTranslation = () => {
         </div>
       </section>
 
-      
+      <Footer />
     </div>
   );
 };
