@@ -320,9 +320,9 @@ const handler = async (req: Request): Promise<Response> => {
               <div class="contact-info">
                 <h3>📞 معلومات التواصل العاجل</h3>
                 <p><strong>البريد الإلكتروني:</strong> info@masteredupath.com</p>
-                <p><strong>الهاتف:</strong> +966 50 123 4567</p>
-                <p><strong>واتساب:</strong> +966 50 123 4567</p>
-                <p><strong>أوقات العمل:</strong> يومياً من 8 صباحاً - 10 مساءً</p>
+                <p><strong>الهاتف:</strong> 0500776343</p>
+                <p><strong>واتساب:</strong> 0500776343</p>
+                <p><strong>أوقات العمل:</strong> الأحد - الخميس، 10:00 ص - 7:00 م</p>
               </div>
             </div>
             
@@ -540,9 +540,9 @@ const handler = async (req: Request): Promise<Response> => {
               <div class="contact-info">
                 <h3>📞 معلومات التواصل:</h3>
                 <p><strong>البريد الإلكتروني:</strong> info@masteredupath.com</p>
-                <p><strong>الهاتف:</strong> +966 50 123 4567</p>
-                <p><strong>واتساب:</strong> +966 50 123 4567</p>
-                <p><strong>أوقات العمل:</strong> يومياً من 8 صباحاً - 10 مساءً</p>
+                <p><strong>الهاتف:</strong> 0500776343</p>
+                <p><strong>واتساب:</strong> 0500776343</p>
+                <p><strong>أوقات العمل:</strong> الأحد - الخميس، 10:00 ص - 7:00 م</p>
               </div>
             </div>
             
