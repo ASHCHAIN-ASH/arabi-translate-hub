@@ -15,6 +15,7 @@ import {
   Gift,
   Tag,
   UserCheck,
+  CreditCard,
 } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -23,6 +24,7 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { WorkingHoursBannerRTL } from "@/components/WorkingHoursBannerRTL";
 import MembershipSubscriptionForm from "@/components/MembershipSubscriptionForm";
+import MembershipBankCards from "@/components/MembershipBankCards";
 
 const MasterMembership = () => {
   const [selectedPlan, setSelectedPlan] = useState<any>(null);
@@ -144,7 +146,7 @@ const MasterMembership = () => {
       <div className="container mx-auto px-4 py-16">
         <Tabs defaultValue="plans" className="space-y-8">
           <div className="flex justify-center">
-            <TabsList className="grid w-full max-w-lg grid-cols-2">
+            <TabsList className="grid w-full max-w-2xl grid-cols-3">
               <TabsTrigger value="benefits" className="flex items-center gap-2">
                 <Gift className="h-4 w-4" />
                 المزايا
@@ -152,6 +154,10 @@ const MasterMembership = () => {
               <TabsTrigger value="plans" className="flex items-center gap-2">
                 <Crown className="h-4 w-4" />
                 العضويات
+              </TabsTrigger>
+              <TabsTrigger value="bank-cards" className="flex items-center gap-2">
+                <CreditCard className="h-4 w-4" />
+                البطاقات البنكية
               </TabsTrigger>
             </TabsList>
           </div>
@@ -516,6 +522,11 @@ const MasterMembership = () => {
                 <p className="text-lg mb-6">شريكك الموثوق في رحلة التعلم والتطوير المهني</p>
               </div>
             </div>
+          </TabsContent>
+
+          {/* Bank Cards Section */}
+          <TabsContent value="bank-cards" className="space-y-8">
+            <MembershipBankCards />
           </TabsContent>
         </Tabs>
       </div>
