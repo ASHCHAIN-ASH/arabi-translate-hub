@@ -260,38 +260,6 @@ const OrderNow = () => {
               </CardContent>
             </Card>
 
-            {/* Success Stories */}
-            <Card className="border-2 border-green-200 dark:border-green-800 shadow-xl">
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2 text-green-600 dark:text-green-400">
-                  <CheckCircle className="h-6 w-6" />
-                  قصص نجاح حديثة
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                {[
-                  { company: "شركة أرامكو السعودية", service: "ترجمة تقنية", rating: 5 },
-                  { company: "جامعة الملك سعود", service: "بحث أكاديمي", rating: 5 },
-                  { company: "بنك الراجحي", service: "ترجمة تجارية", rating: 5 }
-                ].map((story, index) => (
-                  <motion.div
-                    key={index}
-                    initial={{ opacity: 0, scale: 0.9 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    transition={{ delay: index * 0.1 + 0.4, duration: 0.5 }}
-                    className="p-3 bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20 rounded-lg"
-                  >
-                    <h4 className="font-semibold text-green-800 dark:text-green-300">{story.company}</h4>
-                    <p className="text-sm text-green-600 dark:text-green-400">{story.service}</p>
-                    <div className="flex items-center mt-1">
-                      {[...Array(story.rating)].map((_, i) => (
-                        <Star key={i} className="h-4 w-4 text-yellow-400 fill-current" />
-                      ))}
-                    </div>
-                  </motion.div>
-                ))}
-              </CardContent>
-            </Card>
           </motion.div>
 
           {/* Main Form */}
