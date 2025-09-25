@@ -126,8 +126,8 @@ const handler = async (req: Request): Promise<Response> => {
 
     // Send notification email to admin
     const adminEmailResponse = await resend.emails.send({
-      from: "نظام المنهجية العلمية <notifications@masteredupath.com>",
-      to: ["admin@masteredupath.com"],
+      from: "نظام المنهجية العلمية <noreply@masteredupath.com>",
+      to: ["info@masteredupath.com", "support@masteredupath.com"],
       subject: `🔬 طلب جديد لتصميم منهجية علمية - ${inquiryData.researchTitle}`,
       html: `
         <!DOCTYPE html>
@@ -136,21 +136,138 @@ const handler = async (req: Request): Promise<Response> => {
           <meta charset="UTF-8">
           <meta name="viewport" content="width=device-width, initial-scale=1.0">
           <style>
-            body { font-family: 'Arial', sans-serif; line-height: 1.6; color: #333; direction: rtl; }
-            .container { max-width: 800px; margin: 0 auto; padding: 20px; }
-            .header { background: linear-gradient(135deg, #10b981, #0d9488); color: white; padding: 30px; text-align: center; border-radius: 10px 10px 0 0; }
-            .content { background: #f8fafc; padding: 30px; }
-            .section { background: white; margin: 20px 0; padding: 20px; border-radius: 8px; border-right: 4px solid #10b981; }
-            .field { margin: 10px 0; }
-            .label { font-weight: bold; color: #0d9488; display: inline-block; min-width: 150px; }
-            .value { color: #374151; }
-            .footer { background: #1f2937; color: white; padding: 20px; text-align: center; border-radius: 0 0 10px 10px; }
-            .urgent { background: #fef3c7; border-right: 4px solid #f59e0b; padding: 15px; margin: 15px 0; border-radius: 5px; }
+            * { margin: 0; padding: 0; box-sizing: border-box; }
+            body { 
+              font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+              line-height: 1.6; 
+              color: #2d3748; 
+              direction: rtl; 
+              background-color: #f7fafc;
+            }
+            .container { 
+              max-width: 800px; 
+              margin: 20px auto; 
+              background: white;
+              border-radius: 16px;
+              overflow: hidden;
+              box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            }
+            .header { 
+              background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+              color: white; 
+              padding: 40px 30px; 
+              text-align: center; 
+              position: relative;
+            }
+            .header::before {
+              content: '';
+              position: absolute;
+              top: 0;
+              left: 0;
+              right: 0;
+              bottom: 0;
+              background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="25" cy="25" r="1" fill="white" opacity="0.1"/><circle cx="75" cy="75" r="1" fill="white" opacity="0.1"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
+            }
+            .header h1 {
+              font-size: 28px;
+              font-weight: 700;
+              margin-bottom: 10px;
+              position: relative;
+              z-index: 1;
+            }
+            .header p {
+              font-size: 16px;
+              opacity: 0.9;
+              position: relative;
+              z-index: 1;
+            }
+            .content { 
+              padding: 40px 30px; 
+              background: #ffffff;
+            }
+            .urgent { 
+              background: linear-gradient(135deg, #fed7d7, #feb2b2);
+              border: none;
+              border-radius: 12px;
+              padding: 20px; 
+              margin: 20px 0; 
+              text-align: center;
+              color: #742a2a;
+              font-weight: 600;
+            }
+            .section { 
+              background: #f8fafc; 
+              margin: 25px 0; 
+              padding: 25px; 
+              border-radius: 12px; 
+              border-right: 4px solid #667eea;
+              box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            }
+            .section h3 {
+              color: #667eea;
+              margin-bottom: 15px;
+              font-size: 18px;
+              font-weight: 600;
+              display: flex;
+              align-items: center;
+              gap: 8px;
+            }
+            .field { 
+              margin: 12px 0; 
+              display: flex;
+              align-items: start;
+              gap: 10px;
+            }
+            .label { 
+              font-weight: 600; 
+              color: #4a5568; 
+              min-width: 150px;
+              font-size: 14px;
+            }
+            .value { 
+              color: #2d3748; 
+              flex: 1;
+              background: white;
+              padding: 8px 12px;
+              border-radius: 6px;
+              border: 1px solid #e2e8f0;
+            }
+            .contact-info { 
+              background: linear-gradient(135deg, #667eea, #764ba2);
+              color: white; 
+              padding: 25px; 
+              border-radius: 12px; 
+              margin: 25px 0;
+              text-align: center;
+            }
+            .contact-info h3 {
+              margin-bottom: 15px;
+              font-size: 20px;
+            }
+            .contact-info p {
+              margin: 8px 0;
+              font-size: 16px;
+            }
+            .footer { 
+              background: #2d3748; 
+              color: white; 
+              padding: 30px; 
+              text-align: center;
+            }
+            .footer p {
+              margin: 8px 0;
+            }
+            .company-logo {
+              font-size: 24px;
+              font-weight: bold;
+              margin-bottom: 10px;
+            }
           </style>
         </head>
         <body>
           <div class="container">
             <div class="header">
+              <div class="company-logo">🎓 Master Edu Path</div>
               <h1>🔬 طلب تصميم منهجية علمية جديد</h1>
               <p>تم استلام طلب جديد لتصميم منهجية علمية موثوقة ومتطورة</p>
             </div>
@@ -199,11 +316,23 @@ const handler = async (req: Request): Promise<Response> => {
                 <div class="field"><span class="label">تاريخ الطلب:</span> <span class="value">${currentDate}</span></div>
                 <div class="field"><span class="label">نوع الخدمة:</span> <span class="value">تصميم منهجية علمية</span></div>
               </div>
+
+              <div class="contact-info">
+                <h3>📞 معلومات التواصل العاجل</h3>
+                <p><strong>البريد الإلكتروني:</strong> info@masteredupath.com</p>
+                <p><strong>الهاتف:</strong> +966 50 123 4567</p>
+                <p><strong>واتساب:</strong> +966 50 123 4567</p>
+                <p><strong>أوقات العمل:</strong> يومياً من 8 صباحاً - 10 مساءً</p>
+              </div>
             </div>
             
             <div class="footer">
-              <p>هذا إشعار تلقائي من نظام إدارة طلبات المنهجية العلمية</p>
-              <p>يرجى التواصل مع العميل في أسرع وقت ممكن</p>
+              <div class="company-logo">Master Edu Path</div>
+              <p><strong>شكراً لاختيارك خدماتنا المتخصصة</strong></p>
+              <p>نحن ملتزمون بتقديم أفضل الخدمات الأكاديمية والبحثية</p>
+              <p style="font-size: 14px; opacity: 0.8; margin-top: 15px;">
+                هذا إشعار تلقائي من نظام إدارة طلبات المنهجية العلمية
+              </p>
             </div>
           </div>
         </body>
@@ -215,7 +344,7 @@ const handler = async (req: Request): Promise<Response> => {
 
     // Send confirmation email to client
     const clientEmailResponse = await resend.emails.send({
-      from: "فريق المنهجية العلمية <no-reply@masteredupath.com>",
+      from: "فريق المنهجية العلمية <noreply@masteredupath.com>",
       to: [inquiryData.email],
       subject: `تأكيد استلام طلب المنهجية العلمية - ${inquiryData.researchTitle}`,
       html: `
@@ -225,21 +354,143 @@ const handler = async (req: Request): Promise<Response> => {
           <meta charset="UTF-8">
           <meta name="viewport" content="width=device-width, initial-scale=1.0">
           <style>
-            body { font-family: 'Arial', sans-serif; line-height: 1.6; color: #333; direction: rtl; }
-            .container { max-width: 600px; margin: 0 auto; padding: 20px; }
-            .header { background: linear-gradient(135deg, #10b981, #0d9488); color: white; padding: 30px; text-align: center; border-radius: 10px 10px 0 0; }
-            .content { background: #f8fafc; padding: 30px; }
-            .section { background: white; margin: 20px 0; padding: 20px; border-radius: 8px; border-right: 4px solid #10b981; }
-            .highlight { background: #ecfdf5; border: 2px solid #10b981; padding: 20px; border-radius: 10px; text-align: center; margin: 20px 0; }
-            .footer { background: #1f2937; color: white; padding: 20px; text-align: center; border-radius: 0 0 10px 10px; }
-            .contact-info { background: #0f172a; color: white; padding: 15px; border-radius: 8px; margin: 15px 0; }
+            * { margin: 0; padding: 0; box-sizing: border-box; }
+            body { 
+              font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+              line-height: 1.6; 
+              color: #2d3748; 
+              direction: rtl; 
+              background-color: #f7fafc;
+            }
+            .container { 
+              max-width: 600px; 
+              margin: 20px auto; 
+              background: white;
+              border-radius: 16px;
+              overflow: hidden;
+              box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            }
+            .header { 
+              background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+              color: white; 
+              padding: 40px 30px; 
+              text-align: center;
+              position: relative;
+            }
+            .header::before {
+              content: '';
+              position: absolute;
+              top: 0;
+              left: 0;
+              right: 0;
+              bottom: 0;
+              background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="25" cy="25" r="1" fill="white" opacity="0.1"/><circle cx="75" cy="75" r="1" fill="white" opacity="0.1"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
+            }
+            .header h1 {
+              font-size: 26px;
+              font-weight: 700;
+              margin-bottom: 10px;
+              position: relative;
+              z-index: 1;
+            }
+            .header p {
+              font-size: 16px;
+              opacity: 0.9;
+              position: relative;
+              z-index: 1;
+            }
+            .content { 
+              padding: 40px 30px; 
+              background: #ffffff;
+            }
+            .highlight { 
+              background: linear-gradient(135deg, #e6fffa, #b2f5ea);
+              border: none;
+              border-radius: 12px;
+              padding: 25px; 
+              text-align: center; 
+              margin: 25px 0;
+              color: #234e52;
+            }
+            .highlight h2 {
+              color: #285e61;
+              margin-bottom: 10px;
+              font-size: 22px;
+            }
+            .section { 
+              background: #f8fafc; 
+              margin: 25px 0; 
+              padding: 25px; 
+              border-radius: 12px; 
+              border-right: 4px solid #667eea;
+              box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            }
+            .section h3 {
+              color: #667eea;
+              margin-bottom: 15px;
+              font-size: 18px;
+              font-weight: 600;
+              display: flex;
+              align-items: center;
+              gap: 8px;
+            }
+            .section ul, .section ol {
+              text-align: right;
+              padding-right: 20px;
+            }
+            .section li {
+              margin: 8px 0;
+              color: #4a5568;
+            }
+            .section li strong {
+              color: #2d3748;
+            }
+            .contact-info { 
+              background: linear-gradient(135deg, #667eea, #764ba2);
+              color: white; 
+              padding: 25px; 
+              border-radius: 12px; 
+              margin: 25px 0;
+              text-align: center;
+            }
+            .contact-info h3 {
+              margin-bottom: 15px;
+              font-size: 20px;
+              color: white;
+            }
+            .contact-info p {
+              margin: 8px 0;
+              font-size: 16px;
+            }
+            .footer { 
+              background: #2d3748; 
+              color: white; 
+              padding: 30px; 
+              text-align: center;
+            }
+            .footer p {
+              margin: 8px 0;
+            }
+            .company-logo {
+              font-size: 20px;
+              font-weight: bold;
+              margin-bottom: 10px;
+            }
+            .timeline-item {
+              background: white;
+              margin: 10px 0;
+              padding: 15px;
+              border-radius: 8px;
+              border-right: 3px solid #667eea;
+            }
           </style>
         </head>
         <body>
           <div class="container">
             <div class="header">
+              <div class="company-logo">🎓 Master Edu Path</div>
               <h1>🔬 تم استلام طلبك بنجاح!</h1>
-              <p>شكراً لاختيارك خدمة المنهجية العلمية</p>
+              <p>شكراً لاختيارك خدمة المنهجية العلمية المتخصصة</p>
             </div>
             
             <div class="content">
@@ -260,12 +511,18 @@ const handler = async (req: Request): Promise<Response> => {
 
               <div class="section">
                 <h3>⏰ الخطوات التالية:</h3>
-                <ol style="text-align: right;">
-                  <li><strong>المراجعة الأولية:</strong> سيقوم فريق الخبراء بمراجعة طلبك خلال ساعة واحدة</li>
-                  <li><strong>التواصل المبدئي:</strong> سنتصل بك خلال 4 ساعات لمناقشة التفاصيل</li>
-                  <li><strong>الاستشارة المتخصصة:</strong> سنحدد موعداً لاستشارة مفصلة مع خبير المنهجية</li>
-                  <li><strong>التصميم المخصص:</strong> سنبدأ في تصميم المنهجية وفقاً لاحتياجاتك</li>
-                </ol>
+                <div class="timeline-item">
+                  <strong>1. المراجعة الأولية:</strong> سيقوم فريق الخبراء بمراجعة طلبك خلال ساعة واحدة
+                </div>
+                <div class="timeline-item">
+                  <strong>2. التواصل المبدئي:</strong> سنتصل بك خلال 4 ساعات لمناقشة التفاصيل
+                </div>
+                <div class="timeline-item">
+                  <strong>3. الاستشارة المتخصصة:</strong> سنحدد موعداً لاستشارة مفصلة مع خبير المنهجية
+                </div>
+                <div class="timeline-item">
+                  <strong>4. التصميم المخصص:</strong> سنبدأ في تصميم المنهجية وفقاً لاحتياجاتك
+                </div>
               </div>
 
               <div class="section">
@@ -276,21 +533,24 @@ const handler = async (req: Request): Promise<Response> => {
                   <li>إرشادات واضحة لتطبيق المنهجية</li>
                   <li>دعم مستمر من فريق الخبراء</li>
                   <li>ضمان الجودة والموثوقية العلمية</li>
+                  <li>مراجعات مجانية حتى الوصول للنتيجة المطلوبة</li>
                 </ul>
               </div>
 
               <div class="contact-info">
-                <h3 style="color: #10b981;">📞 معلومات التواصل:</h3>
-                <p><strong>البريد الإلكتروني:</strong> support@masteredupath.com</p>
-                <p><strong>الهاتف:</strong> +966 XX XXX XXXX</p>
-                <p><strong>أوقات العمل:</strong> الأحد - الخميس، 8 صباحاً - 8 مساءً</p>
+                <h3>📞 معلومات التواصل:</h3>
+                <p><strong>البريد الإلكتروني:</strong> info@masteredupath.com</p>
+                <p><strong>الهاتف:</strong> +966 50 123 4567</p>
+                <p><strong>واتساب:</strong> +966 50 123 4567</p>
+                <p><strong>أوقات العمل:</strong> يومياً من 8 صباحاً - 10 مساءً</p>
               </div>
             </div>
             
             <div class="footer">
-              <p><strong>شكراً لثقتك في خدماتنا</strong></p>
-              <p>نتطلع للعمل معك في تطوير بحثك العلمي</p>
-              <p style="font-size: 0.9em; margin-top: 15px;">
+              <div class="company-logo">Master Edu Path</div>
+              <p><strong>شكراً لثقتك في خدماتنا المتخصصة</strong></p>
+              <p>نتطلع للعمل معك في تطوير بحثك العلمي وضمان نجاحه</p>
+              <p style="font-size: 14px; margin-top: 15px; opacity: 0.8;">
                 تاريخ الطلب: ${currentDate}
               </p>
             </div>
