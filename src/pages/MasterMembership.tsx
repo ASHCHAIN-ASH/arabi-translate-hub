@@ -34,13 +34,18 @@ const MasterMembership = () => {
     {
       id: 'silver',
       name: 'العضوية الفضية',
-      nameEn: 'Silver',
+      nameEn: 'SILVER MEMBER',
+      price: '1,200',
+      originalPrice: '1,440',
       discount: '10%',
+      cashback: '120',
       popular: false,
-      gradient: 'from-slate-400 via-slate-300 to-slate-500',
-      cardGradient: 'from-cyan-400 via-blue-400 to-indigo-500',
+      gradient: 'from-slate-500 via-slate-400 to-slate-600',
+      cardGradient: 'from-slate-600 via-slate-500 to-slate-700',
+      chipColor: 'bg-yellow-400',
       features: [
         'خصم 10% على جميع الخدمات',
+        'كاش باك 120 ريال سنوياً',
         'دخول لدورات شهرية مجانية',
         'شهادة مشاركة رقمية'
       ]
@@ -48,13 +53,18 @@ const MasterMembership = () => {
     {
       id: 'gold',
       name: 'العضوية الذهبية',
-      nameEn: 'Gold',
+      nameEn: 'GOLD MEMBER',
+      price: '2,400',
+      originalPrice: '3,000',
       discount: '20%',
+      cashback: '480',
       popular: true,
-      gradient: 'from-yellow-400 via-amber-400 to-orange-500',
-      cardGradient: 'from-amber-400 via-yellow-400 to-orange-500',
+      gradient: 'from-yellow-500 via-amber-400 to-orange-500',
+      cardGradient: 'from-amber-500 via-yellow-500 to-orange-600',
+      chipColor: 'bg-white',
       features: [
         'خصم 20% على جميع الخدمات',
+        'كاش باك 480 ريال سنوياً',
         'دخول غير محدود للدورات',
         'دعم فني مميز عبر البريد',
         'شهادة إنجاز معتمدة'
@@ -63,13 +73,18 @@ const MasterMembership = () => {
     {
       id: 'platinum',
       name: 'العضوية البلاتينية',
-      nameEn: 'Platinum',
+      nameEn: 'PLATINUM MEMBER',
+      price: '3,600',
+      originalPrice: '5,520',
       discount: '35%',
+      cashback: '1,260',
       popular: false,
-      gradient: 'from-gray-900 via-gray-700 to-slate-600',
-      cardGradient: 'from-gray-800 via-slate-700 to-gray-900',
+      gradient: 'from-gray-800 via-slate-700 to-black',
+      cardGradient: 'from-gray-900 via-slate-800 to-black',
+      chipColor: 'bg-cyan-400',
       features: [
         'خصم 35% على جميع الخدمات',
+        'كاش باك 1,260 ريال سنوياً',
         'استشارة شهرية مجانية مع خبير',
         'أولوية في المسابقات الأكاديمية',
         'شهادة إنجاز معتمدة + توثيق QR'
@@ -266,55 +281,89 @@ const MasterMembership = () => {
                       
                       {/* Bank Card */}
                       <div className={`
-                        relative w-full h-80 rounded-2xl p-6 
+                        relative w-full h-56 rounded-2xl overflow-hidden
                         bg-gradient-to-br ${plan.cardGradient}
-                        shadow-2xl transform transition-all duration-300 
-                        hover:scale-105 hover:shadow-3xl hover:-translate-y-2
-                        border border-white/20 backdrop-blur-sm
-                        group-hover:shadow-[0_20px_40px_rgba(0,0,0,0.3)]
+                        shadow-2xl transform transition-all duration-500 
+                        hover:scale-105 hover:shadow-3xl hover:-translate-y-3
+                        border border-white/10 backdrop-blur-sm perspective-1000
+                        group-hover:shadow-[0_25px_50px_rgba(0,0,0,0.4)]
                       `}>
-                        {/* Card Header */}
-                        <div className="flex justify-between items-start mb-6">
-                          <div className="text-white">
-                            <h3 className="text-2xl font-bold mb-1">{plan.name}</h3>
-                            <p className="text-white/80 text-lg">{plan.nameEn}</p>
+                        {/* Card Texture Overlay */}
+                        <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/5 to-transparent"></div>
+                        
+                        {/* Bank Name & Logo */}
+                        <div className="absolute top-4 right-4 flex items-center gap-2">
+                          <div className="text-white/90 text-xs font-bold tracking-widest">
+                            ARABI TRANSLATE
                           </div>
-                          <div className="w-12 h-12 rounded-full bg-white/20 flex items-center justify-center backdrop-blur-sm">
-                            {plan.id === 'silver' && <Award className="w-6 h-6 text-white" />}
-                            {plan.id === 'gold' && <Crown className="w-6 h-6 text-white" />}
-                            {plan.id === 'platinum' && <Trophy className="w-6 h-6 text-white" />}
+                          <Crown className="w-5 h-5 text-white/80" />
+                        </div>
+
+                        {/* Card Chip */}
+                        <div className={`absolute top-16 right-6 w-12 h-9 ${plan.chipColor} rounded-lg shadow-inner`}>
+                          <div className="w-full h-full bg-gradient-to-br from-yellow-300 to-yellow-600 rounded-lg flex items-center justify-center">
+                            <div className="w-8 h-6 bg-gradient-to-br from-yellow-400 to-yellow-500 rounded-sm"></div>
+                          </div>
+                        </div>
+
+                        {/* Contactless Payment Symbol */}
+                        <div className="absolute top-16 left-6">
+                          <div className="relative">
+                            <div className="w-6 h-6 border-2 border-white/40 rounded-full"></div>
+                            <div className="absolute -top-1 -left-1 w-8 h-8 border-2 border-white/30 rounded-full"></div>
+                            <div className="absolute -top-2 -left-2 w-10 h-10 border-2 border-white/20 rounded-full"></div>
+                          </div>
+                        </div>
+
+                        {/* Card Number Pattern */}
+                        <div className="absolute top-28 right-6 text-white/60 text-sm font-mono tracking-widest">
+                          •••• •••• •••• {plan.id === 'silver' ? '1234' : plan.id === 'gold' ? '5678' : '9012'}
+                        </div>
+
+                        {/* Membership Type */}
+                        <div className="absolute bottom-14 right-6">
+                          <div className="text-white/90 text-lg font-bold">{plan.name}</div>
+                          <div className="text-white/70 text-xs font-bold tracking-widest">{plan.nameEn}</div>
+                        </div>
+
+                        {/* Validity */}
+                        <div className="absolute bottom-6 right-6 text-white/60 text-xs">
+                          <div>صالح حتى</div>
+                          <div className="font-mono">12/25</div>
+                        </div>
+
+                        {/* Hologram Effect */}
+                        <div className="absolute bottom-6 left-6 w-12 h-8 bg-gradient-to-r from-cyan-400 via-purple-400 to-pink-400 rounded opacity-80 animate-pulse"></div>
+
+                        {/* Price & Cashback */}
+                        <div className="absolute top-4 left-4">
+                          <div className="bg-white/20 backdrop-blur-sm rounded-lg p-3 border border-white/20">
+                            <div className="text-white text-xs opacity-70 line-through">{plan.originalPrice} ريال</div>
+                            <div className="text-white text-lg font-bold">{plan.price} ريال</div>
+                            <div className="text-green-300 text-xs font-bold">كاش باك: {plan.cashback} ريال</div>
                           </div>
                         </div>
 
                         {/* Discount Badge */}
-                        <div className="absolute top-6 left-6">
-                          <div className="bg-white/20 backdrop-blur-sm text-white px-3 py-2 rounded-lg font-bold text-xl">
+                        <div className="absolute top-4 left-1/2 transform -translate-x-1/2">
+                          <div className="bg-red-500 text-white px-3 py-1 rounded-full text-sm font-bold shadow-lg">
                             خصم {plan.discount}
                           </div>
                         </div>
+                      </div>
 
-                        {/* Card Chip Effect */}
-                        <div className="absolute top-20 right-6 w-8 h-6 bg-white/30 rounded-md"></div>
-                        
-                        {/* Features List */}
-                        <div className="space-y-3 mt-8">
+                      {/* Features Card */}
+                      <div className="mt-4 bg-white rounded-xl shadow-lg border border-gray-100 p-6">
+                        <h4 className="text-lg font-bold text-gray-800 mb-4 text-center">مميزات العضوية</h4>
+                        <div className="space-y-3">
                           {plan.features.map((feature, idx) => (
-                            <div key={idx} className="flex items-center gap-3 text-white">
-                              <div className="w-6 h-6 rounded-full bg-white/20 flex items-center justify-center">
-                                <CheckCircle className="w-3 h-3" />
+                            <div key={idx} className="flex items-center gap-3 text-gray-700">
+                              <div className="w-6 h-6 rounded-full bg-green-100 flex items-center justify-center">
+                                <CheckCircle className="w-4 h-4 text-green-600" />
                               </div>
                               <span className="text-sm font-medium">{feature}</span>
                             </div>
                           ))}
-                        </div>
-
-                        {/* Decorative Elements */}
-                        <div className="absolute bottom-6 left-6 opacity-20">
-                          <div className="flex gap-2">
-                            <div className="w-2 h-2 bg-white rounded-full"></div>
-                            <div className="w-2 h-2 bg-white rounded-full"></div>
-                            <div className="w-2 h-2 bg-white rounded-full"></div>
-                          </div>
                         </div>
                       </div>
 
@@ -323,15 +372,31 @@ const MasterMembership = () => {
                         <Button 
                           className={`
                             w-full bg-gradient-to-r ${plan.gradient} 
-                            hover:opacity-90 text-white font-bold py-4 text-lg rounded-xl
+                            hover:opacity-90 text-white font-bold py-6 text-lg rounded-xl
                             shadow-lg hover:shadow-xl transition-all duration-300
-                            border-0 hover:scale-105
+                            border-0 hover:scale-105 relative overflow-hidden
                           `}
                           size="lg"
                         >
-                          <Crown className="w-5 h-5 ml-2" />
-                          اشترك الآن
+                          <div className="absolute inset-0 bg-white/10 transform -skew-x-12 translate-x-full group-hover:translate-x-0 transition-transform duration-700"></div>
+                          <div className="relative flex flex-col items-center">
+                            <div className="flex items-center gap-2 mb-1">
+                              <Crown className="w-5 h-5" />
+                              <span>اشترك الآن - 12 شهر</span>
+                            </div>
+                            <div className="text-sm opacity-90">
+                              وفر {Math.round(((parseInt(plan.originalPrice.replace(',', '')) - parseInt(plan.price.replace(',', ''))) / parseInt(plan.originalPrice.replace(',', '')) * 100))}% سنوياً
+                            </div>
+                          </div>
                         </Button>
+                        
+                        {/* Cashback Info */}
+                        <div className="mt-3 text-center">
+                          <div className="inline-flex items-center gap-2 bg-green-50 text-green-700 px-4 py-2 rounded-full text-sm font-medium">
+                            <Gift className="w-4 h-4" />
+                            <span>كاش باك مضمون: {plan.cashback} ريال</span>
+                          </div>
+                        </div>
                       </div>
                     </div>
                   </motion.div>
