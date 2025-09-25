@@ -163,8 +163,8 @@ const MasterMembership = () => {
               اختر العضوية المناسبة لك
             </h2>
             
-            <div dir="rtl" className="mx-auto max-w-7xl px-4 py-10">
-              <div className="grid gap-8 lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1 justify-items-center">
+            <div dir="rtl" className="mx-auto max-w-6xl px-4 py-8">
+              <div className="grid gap-6 lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1 justify-items-center">
                 {TIERS.map(tier => {
                   const before = tier.baseSAR;
                   const after  = finalPrice(before, tier.discountPct);
@@ -192,93 +192,100 @@ const MasterMembership = () => {
                   const style = cardStyles[tier.slug as keyof typeof cardStyles];
 
                   return (
-                    <div key={tier.slug} className="relative group w-full max-w-sm">
+                    <div key={tier.slug} className="relative group w-full max-w-xs">
                       {tier.featured && (
-                        <div className="absolute -top-4 right-1/2 transform translate-x-1/2 z-20 bg-red-500 text-white text-xs font-bold px-4 py-2 rounded-full shadow-lg">
-                          <Crown className="inline-block w-3 h-3 ml-1" />
+                        <div className="absolute -top-3 right-1/2 transform translate-x-1/2 z-20 bg-red-500 text-white text-xs font-bold px-3 py-1 rounded-full shadow-lg">
                           الأكثر طلباً
                         </div>
                       )}
 
-                      {/* البطاقة الذكية */}
-                      <div className={`relative w-full h-52 sm:h-60 md:h-64 lg:h-64 rounded-2xl p-4 sm:p-5 md:p-6 text-white shadow-2xl bg-gradient-to-br ${style.gradient} overflow-hidden transform transition-all duration-300 hover:scale-105 hover:shadow-3xl`}>
+                      {/* البطاقة الذكية مصغرة */}
+                      <div className={`relative w-full h-44 rounded-xl p-4 text-white shadow-xl bg-gradient-to-br ${style.gradient} overflow-hidden transform transition-all duration-300 hover:scale-105`}>
                         
-                        {/* شارات السعر في الأعلى يمين */}
-                        <div className="absolute top-3 right-3 flex flex-col gap-2 items-end">
-                          <div className="bg-white/95 text-black rounded-lg px-2 py-1 text-xs font-bold shadow-md">
-                            <div className="line-through text-gray-500 text-xs leading-tight">{sar(before)}</div>
-                            <div className="text-sm font-extrabold text-gray-900">{toArabic(after)} ريال</div>
-                          </div>
-                          <div className="bg-red-500 text-white rounded-full px-3 py-1 text-xs font-bold shadow-md">
-                            خصم {toArabic(tier.discountPct)}%
-                          </div>
-                          <div className="bg-emerald-500/90 text-white rounded-md px-2 py-1 text-xs font-medium">
-                            كاش-باك: {sar(cash)}
-                          </div>
-                        </div>
-
                         {/* شريحة EMV في الأعلى يسار */}
-                        <div className="absolute top-4 left-4">
-                          <div className={`w-10 h-7 sm:w-12 sm:h-8 ${style.chipColor} rounded-md shadow-md flex items-center justify-center`}>
-                            <div className="w-6 h-4 sm:w-8 sm:h-5 bg-yellow-600/30 rounded-sm grid grid-cols-2 gap-0.5 p-0.5">
-                              <div className="bg-yellow-800/50 rounded-sm"></div>
-                              <div className="bg-yellow-800/50 rounded-sm"></div>
-                              <div className="bg-yellow-800/50 rounded-sm"></div>
-                              <div className="bg-yellow-800/50 rounded-sm"></div>
+                        <div className="absolute top-3 left-3">
+                          <div className={`w-8 h-6 ${style.chipColor} rounded-sm shadow-sm flex items-center justify-center`}>
+                            <div className="w-5 h-3 bg-yellow-600/40 rounded-sm grid grid-cols-2 gap-0.5 p-0.5">
+                              <div className="bg-yellow-800/60 rounded-sm"></div>
+                              <div className="bg-yellow-800/60 rounded-sm"></div>
+                              <div className="bg-yellow-800/60 rounded-sm"></div>
+                              <div className="bg-yellow-800/60 rounded-sm"></div>
                             </div>
                           </div>
                         </div>
 
-                        {/* رقم البطاقة في الوسط */}
-                        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 font-mono text-lg sm:text-xl md:text-2xl tracking-[2px] sm:tracking-[3px] drop-shadow-lg text-center">
-                          {style.mask}
+                        {/* شارات السعر في الأعلى يمين */}
+                        <div className="absolute top-2 right-2 flex flex-col gap-1 items-end">
+                          <div className="bg-white/95 text-black rounded-lg px-2 py-1 text-xs font-bold shadow-sm">
+                            <div className="line-through text-gray-500 text-xs leading-none">{toArabic(before)} ريال</div>
+                          </div>
+                          <div className="bg-red-500 text-white rounded-full px-2 py-1 text-xs font-bold">
+                            خصم {toArabic(tier.discountPct)}%
+                          </div>
                         </div>
 
-                        {/* معلومات الحامل في الأسفل يمين */}
-                        <div className="absolute bottom-3 right-4 text-right">
-                          <div className="text-xs opacity-80 mb-1">اسم حامل البطاقة</div>
-                          <div className="text-xs sm:text-sm font-bold leading-tight">عضوية ماستر {tier.titleAr}</div>
-                          <div className="text-xs opacity-80 mt-2">تاريخ الانتهاء</div>
+                        {/* رقم البطاقة الكبير في الوسط */}
+                        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-center">
+                          <div className="font-mono text-xl md:text-2xl tracking-[2px] drop-shadow-lg mb-1">
+                            {style.mask.split(' ')[0]}
+                          </div>
+                          <div className="font-mono text-lg tracking-[2px] drop-shadow-lg opacity-90">
+                            **** **** {style.mask.split(' ')[3]}
+                          </div>
+                        </div>
+
+                        {/* السعر بعد الخصم والكاش باك */}
+                        <div className="absolute bottom-2 right-3 text-right">
+                          <div className="bg-emerald-500/90 text-white rounded-md px-2 py-0.5 text-xs font-medium mb-1">
+                            كاش-باك: {sar(cash)}
+                          </div>
+                          <div className="text-lg font-bold">{toArabic(after)} ريال</div>
+                        </div>
+
+                        {/* معلومات الحامل والانتهاء في الأسفل يسار */}
+                        <div className="absolute bottom-2 left-3 text-left">
+                          <div className="text-xs opacity-80 mb-1">عضوية ماستر {tier.titleAr}</div>
+                          <div className="text-xs opacity-70">تاريخ الانتهاء</div>
                           <div className="text-xs font-semibold">12/27</div>
                         </div>
 
-                        {/* شعار Mastercard في الأسفل يسار */}
-                        <div className="absolute bottom-3 left-4 flex items-center gap-1">
-                          <div className="w-3 h-3 sm:w-4 sm:h-4 rounded-full bg-red-500"></div>
-                          <div className="w-3 h-3 sm:w-4 sm:h-4 rounded-full bg-yellow-400 -ml-1.5"></div>
-                          <span className="text-xs font-bold ml-2 tracking-wider hidden sm:inline">MASTERCARD</span>
+                        {/* شعار Mastercard */}
+                        <div className="absolute bottom-0 right-0 left-0 bg-black/20 py-1 px-3 flex items-center justify-between text-xs">
+                          <div className="flex items-center gap-1">
+                            <div className="w-2 h-2 rounded-full bg-red-500"></div>
+                            <div className="w-2 h-2 rounded-full bg-yellow-400 -ml-1"></div>
+                            <span className="text-xs font-bold ml-1">MASTERCARD</span>
+                          </div>
+                          <span className="text-xs opacity-70">اسم حامل البطاقة</span>
                         </div>
 
                         {/* تأثيرات بصرية */}
-                        <div className="absolute -top-8 -right-8 w-32 h-32 rounded-full bg-white/5 blur-2xl"></div>
-                        <div className="absolute -bottom-8 -left-8 w-24 h-24 rounded-full bg-black/10 blur-xl"></div>
-                        
-                        {/* تأثير الانعكاس */}
-                        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent opacity-0 hover:opacity-100 transition-opacity duration-500 transform -skew-x-12"></div>
+                        <div className="absolute -top-6 -right-6 w-24 h-24 rounded-full bg-white/5 blur-xl"></div>
+                        <div className="absolute -bottom-6 -left-6 w-20 h-20 rounded-full bg-black/10 blur-lg"></div>
                       </div>
 
                       {/* معلومات العضوية */}
-                      <div className="mt-6 px-2 text-center space-y-4">
+                      <div className="mt-4 px-2 text-center space-y-3">
                         <div>
-                          <div className="text-xl font-bold text-gray-800">{tier.titleAr}</div>
-                          <div className="text-sm text-gray-500 mt-1">{tier.titleEn}</div>
+                          <div className="text-lg font-bold text-gray-800">{tier.titleAr}</div>
+                          <div className="text-sm text-gray-500">{tier.titleEn}</div>
                         </div>
                         
                         {/* مزايا مختصرة */}
-                        <ul className="text-sm text-gray-600 space-y-2 py-4">
-                          <li className="flex items-center justify-center gap-2">
+                        <div className="space-y-1 text-sm text-gray-600">
+                          <div className="flex items-center justify-center gap-2">
                             <CheckCircle className="w-4 h-4 text-green-500" />
-                            اشتراك 12 شهر كامل
-                          </li>
-                          <li className="flex items-center justify-center gap-2">
+                            <span>اشتراك 12 شهر كامل</span>
+                          </div>
+                          <div className="flex items-center justify-center gap-2">
                             <Shield className="w-4 h-4 text-blue-500" />
-                            دعم فني متخصص
-                          </li>
-                          <li className="flex items-center justify-center gap-2">
+                            <span>دعم فني متخصص</span>
+                          </div>
+                          <div className="flex items-center justify-center gap-2">
                             <Award className="w-4 h-4 text-purple-500" />
-                            شهادة إنجاز رقمية
-                          </li>
-                        </ul>
+                            <span>شهادة إنجاز رقمية</span>
+                          </div>
+                        </div>
                         
                         <Button 
                           onClick={() => {
@@ -294,22 +301,17 @@ const MasterMembership = () => {
                             });
                             setIsFormOpen(true);
                           }}
-                          className="w-full bg-gradient-to-r from-gray-800 to-gray-900 hover:from-gray-700 hover:to-gray-800 text-white font-bold py-3 px-6 rounded-xl transition-all duration-300 hover:scale-105 shadow-lg hover:shadow-xl"
+                          className="w-full bg-gradient-to-r from-gray-800 to-gray-900 hover:from-gray-700 hover:to-gray-800 text-white font-bold py-2.5 px-4 rounded-lg transition-all duration-300 hover:scale-105 shadow-md"
                         >
                           <Crown className="w-4 h-4 ml-2 inline-block" />
                           اشترك الآن - 12 شهر
                         </Button>
-                        
-                        <div className="mt-3 inline-flex items-center gap-2 bg-green-50 text-green-700 px-4 py-2 rounded-full text-sm">
-                          <Gift className="w-4 h-4" />
-                          كاش باك فوري {tier.cashbackPct}%: {sar(cash)}
-                        </div>
                       </div>
                     </div>
                   );
                 })}
               </div>
-              <p className="mt-12 text-xs text-gray-600 text-center max-w-2xl mx-auto">
+              <p className="mt-8 text-xs text-gray-600 text-center max-w-2xl mx-auto leading-relaxed">
                 * جميع الأرقام بصيغة عربية و"ريال" مثبتة بعد الرقم. الحساب تلقائي من القيم أعلاه.
                 <br />
                 ** يشمل الاشتراك جميع المزايا لمدة 12 شهراً مع ضمان استرداد الكاش باك فورياً.
