@@ -248,6 +248,11 @@ const handler = async (req: Request): Promise<Response> => {
               border-radius: 6px;
               border: 1px solid #e2e8f0;
             }
+            /* RTL/LTR utility classes for all current and future templates */
+            .value.ltr, .ltr { direction: ltr; text-align: left; unicode-bidi: plaintext; }
+            .rtl { direction: rtl; text-align: right; unicode-bidi: plaintext; }
+            ul, ol { direction: rtl; text-align: right; padding-right: 20px; }
+            a.ltr { direction: ltr; text-align: left; unicode-bidi: plaintext; }
             .contact-info { 
               background: linear-gradient(135deg, #667eea, #764ba2);
               color: white; 
@@ -296,8 +301,8 @@ const handler = async (req: Request): Promise<Response> => {
               <div class="section">
                 <h3><span class="icon icon-user">👤</span> معلومات الباحث</h3>
                 <div class="field"><span class="label">الاسم الكامل:</span> <span class="value">${inquiryData.fullName}</span></div>
-                <div class="field"><span class="label">البريد الإلكتروني:</span> <span class="value">${inquiryData.email}</span></div>
-                <div class="field"><span class="label">رقم الهاتف:</span> <span class="value">${inquiryData.phone}</span></div>
+                <div class="field"><span class="label">البريد الإلكتروني:</span> <span class="value ltr">${inquiryData.email}</span></div>
+                <div class="field"><span class="label">رقم الهاتف:</span> <span class="value ltr">${inquiryData.phone}</span></div>
                 <div class="field"><span class="label">المؤسسة/الجامعة:</span> <span class="value">${inquiryData.organization}</span></div>
                 ${inquiryData.position ? `<div class="field"><span class="label">المنصب/الدرجة:</span> <span class="value">${inquiryData.position}</span></div>` : ''}
               </div>
@@ -335,9 +340,9 @@ const handler = async (req: Request): Promise<Response> => {
 
               <div class="contact-info">
                 <h3>📞 معلومات التواصل العاجل</h3>
-                <p><strong>البريد الإلكتروني:</strong> info@masteredupath.com</p>
-                <p><strong>الهاتف:</strong> 0500776343</p>
-                <p><strong>واتساب:</strong> 0500776343</p>
+                <p><strong>البريد الإلكتروني:</strong> <span class="ltr">info@masteredupath.com</span></p>
+                <p><strong>الهاتف:</strong> <span class="ltr">0500776343</span></p>
+                <p><strong>واتساب:</strong> <span class="ltr">0500776343</span></p>
                 <p><strong>أوقات العمل:</strong> الأحد - الخميس، 10:00 ص - 7:00 م</p>
               </div>
             </div>
@@ -569,9 +574,9 @@ const handler = async (req: Request): Promise<Response> => {
 
               <div class="contact-info">
                 <h3>📞 معلومات التواصل:</h3>
-                <p><strong>البريد الإلكتروني:</strong> info@masteredupath.com</p>
-                <p><strong>الهاتف:</strong> 0500776343</p>
-                <p><strong>واتساب:</strong> 0500776343</p>
+                <p><strong>البريد الإلكتروني:</strong> <span class="ltr">info@masteredupath.com</span></p>
+                <p><strong>الهاتف:</strong> <span class="ltr">0500776343</span></p>
+                <p><strong>واتساب:</strong> <span class="ltr">0500776343</span></p>
                 <p><strong>أوقات العمل:</strong> الأحد - الخميس، 10:00 ص - 7:00 م</p>
               </div>
             </div>
