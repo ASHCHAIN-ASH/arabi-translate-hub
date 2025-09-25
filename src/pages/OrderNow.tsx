@@ -54,6 +54,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { useToast } from '@/hooks/use-toast';
+import Header from '@/components/Header';
 
 // Schema للتحقق من صحة البيانات
 const orderSchema = z.object({
@@ -178,7 +179,9 @@ const OrderNow = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 dark:from-slate-900 dark:via-blue-900 dark:to-indigo-900" dir="rtl">
+    <>
+      <Header />
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 dark:from-slate-900 dark:via-blue-900 dark:to-indigo-900" dir="rtl">
       {/* Header Section */}
       <div className="relative overflow-hidden bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 py-16 md:py-24">
         {/* Background Pattern */}
@@ -856,7 +859,8 @@ const OrderNow = () => {
           </div>
         </motion.div>
       </div>
-    </div>
+      </div>
+    </>
   );
 };
 
