@@ -291,10 +291,14 @@ const MasterMembership = () => {
                     <div className="absolute top-3 left-3 right-3 flex justify-between items-start">
                       {/* Price Badge - Compact */}
                       <div className="bg-white/90 backdrop-blur-sm rounded-lg px-3 py-2 shadow-md border border-white/20">
-                        <div className="text-gray-600 text-xs line-through leading-none">{plan.originalPrice} ريال</div>
-                        <div className="text-gray-800 text-lg font-bold leading-none mt-1">{plan.price} ريال</div>
+                        <div className="text-gray-600 text-xs line-through leading-none">
+                          <span className="inline-flex items-center gap-1"><span>{plan.originalPrice}</span><span>ريال</span></span>
+                        </div>
+                        <div className="text-gray-800 text-lg font-bold leading-none mt-1">
+                          <span className="inline-flex items-center gap-1"><span>{plan.price}</span><span>ريال</span></span>
+                        </div>
                         <div className="text-green-600 text-xs font-medium leading-none mt-1">
-                          كاش باك: {plan.cashback} ريال
+                          كاش باك: <span className="inline-flex items-center gap-1"><span>{plan.cashback}</span><span>ريال</span></span>
                         </div>
                       </div>
 
@@ -343,7 +347,7 @@ const MasterMembership = () => {
                     <div className="mt-3 text-center">
                       <div className="inline-flex items-center gap-2 bg-green-50 text-green-700 px-4 py-2 rounded-full text-sm">
                         <Gift className="w-4 h-4" />
-                        كاش باك فوري {plan.cashbackPercent}: {plan.cashback} ريال
+                        كاش باك فوري {plan.cashbackPercent}: <span className="inline-flex items-center gap-1"><span>{plan.cashback}</span><span>ريال</span></span>
                       </div>
                       <p className="text-xs text-gray-500 mt-2">من رسوم التأسيس وجميع الطلبات</p>
                     </div>
