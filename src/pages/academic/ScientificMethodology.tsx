@@ -21,6 +21,7 @@ import {
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import Header from '@/components/Header';
+import ScientificMethodologyForm from '@/components/ScientificMethodologyForm';
 
 
 const ScientificMethodology = () => {
@@ -433,6 +434,8 @@ const ScientificMethodology = () => {
         </div>
       </section>
 
+      {/* Scientific Methodology Form */}
+      <ScientificMethodologyForm />
       
     </div>
   );
