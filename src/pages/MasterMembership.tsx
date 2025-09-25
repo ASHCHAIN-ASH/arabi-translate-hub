@@ -217,46 +217,27 @@ const MasterMembership = () => {
                           </div>
                         </div>
 
-                        {/* شارات السعر في الأعلى يمين */}
-                        <div className="absolute top-2 right-2 flex flex-col gap-1 items-end">
-                          <div className="bg-white/95 text-black rounded-lg px-2 py-1 text-xs font-bold shadow-sm">
-                            <div className="line-through text-gray-500 text-xs leading-none mb-0.5">{toArabic(before)} ريال</div>
-                            <div className="text-sm font-extrabold text-gray-900 leading-none">{toArabic(after)} ريال</div>
-                          </div>
-                          <div className="bg-red-500 text-white rounded-full px-2 py-1 text-xs font-bold">
-                            خصم {toArabic(tier.discountPct)}%
-                          </div>
-                        </div>
-
                         {/* معلومات العميل في الوسط */}
                         <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-center">
-                          <div className="text-xs opacity-80 mb-1">اسم العميل</div>
-                          <div className="text-sm font-bold mb-2 leading-tight">
+                          <div className="text-xs opacity-80 mb-2">وكالة ماستر إيدو باث</div>
+                          <div className="text-sm font-bold mb-3 leading-tight">
                             {customerName}
                           </div>
-                          <div className="text-xs opacity-80 mb-1">رقم العميل</div>
+                          <div className="text-xs opacity-80 mb-1">Customer ID</div>
                           <div className="font-mono text-xl font-bold tracking-wider drop-shadow-lg">
-                            {toArabic(customerNumber)}
+                            {customerNumber}
                           </div>
                         </div>
 
-                        {/* الكاش باك في الأسفل يمين */}
-                        <div className="absolute bottom-2 right-3 text-right">
-                          <div className="bg-emerald-500/90 text-white rounded-md px-2 py-1 text-xs font-bold shadow-sm mb-1">
-                            كاش-باك: {sar(cash)}
-                          </div>
-                          <div className="text-lg font-bold leading-tight">{toArabic(after)} ريال</div>
-                        </div>
-
-                        {/* معلومات العضوية في الأسفل وسط يسار */}
+                        {/* معلومات العضوية في الأسفل يسار */}
                         <div className="absolute bottom-2 left-3 text-left">
                           <div className="text-xs opacity-80 leading-tight">عضوية ماستر</div>
                           <div className="text-sm font-bold leading-tight">{tier.titleAr}</div>
                           <div className="text-xs opacity-70 mt-1 leading-tight">انتهاء: 12/27</div>
                         </div>
 
-                        {/* شعار Mastercard في أسفل يسار */}
-                        <div className="absolute bottom-2 left-1/2 transform -translate-x-1/2 flex items-center gap-1">
+                        {/* شعار Mastercard في أسفل يمين */}
+                        <div className="absolute bottom-2 right-3 flex items-center gap-1">
                           <div className="w-2 h-2 rounded-full bg-red-500"></div>
                           <div className="w-2 h-2 rounded-full bg-yellow-400 -ml-1"></div>
                           <span className="text-xs font-bold ml-1 tracking-wider">MASTERCARD</span>
@@ -265,6 +246,29 @@ const MasterMembership = () => {
                         {/* تأثيرات بصرية */}
                         <div className="absolute -top-6 -right-6 w-24 h-24 rounded-full bg-white/5 blur-xl"></div>
                         <div className="absolute -bottom-6 -left-6 w-20 h-20 rounded-full bg-black/10 blur-lg"></div>
+                      </div>
+
+                      {/* معلومات السعر تحت البطاقة */}
+                      <div className="mt-4 bg-gray-50 rounded-lg p-4 space-y-3">
+                        <div className="flex items-center justify-between">
+                          <span className="text-sm text-gray-600">السعر الأساسي:</span>
+                          <span className="text-sm font-medium line-through text-gray-500">{toArabic(before)} ريال</span>
+                        </div>
+                        
+                        <div className="flex items-center justify-between">
+                          <span className="text-sm text-gray-600">نسبة الخصم:</span>
+                          <span className="text-sm font-bold text-red-600">{toArabic(tier.discountPct)}%</span>
+                        </div>
+                        
+                        <div className="flex items-center justify-between border-t pt-2">
+                          <span className="text-base font-semibold text-gray-800">السعر بعد الخصم:</span>
+                          <span className="text-lg font-bold text-green-600">{toArabic(after)} ريال</span>
+                        </div>
+                        
+                        <div className="flex items-center justify-between bg-emerald-50 rounded-md p-2">
+                          <span className="text-sm font-medium text-emerald-700">كاش باك فوري:</span>
+                          <span className="text-sm font-bold text-emerald-600">{sar(cash)}</span>
+                        </div>
                       </div>
 
                       {/* معلومات العضوية */}
