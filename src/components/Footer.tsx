@@ -265,19 +265,21 @@ const Footer = () => {
               تواصل معنا
             </h4>
             
-            <div className="space-y-3 md:space-y-4">
+            <div className="space-y-3">
               {[
-                { Icon: Phone, text: "0500776343", subtext: "اتصل بنا الآن", color: "text-green-400" },
-                { Icon: Mail, text: "info@masteredupath.com", subtext: "راسلنا عبر البريد", color: "text-blue-400" },
-                { Icon: MapPin, text: "جدة، المملكة العربية السعودية", subtext: "موقعنا الرئيسي", color: "text-red-400" }
-              ].map(({ Icon, text, subtext, color }, index) => (
+                { Icon: Phone, text: "0500776343", subtext: "اتصل بنا الآن", color: "text-green-400", bgColor: "bg-green-400/10", borderColor: "border-green-400/20" },
+                { Icon: Mail, text: "info@masteredupath.com", subtext: "راسلنا عبر البريد", color: "text-blue-400", bgColor: "bg-blue-400/10", borderColor: "border-blue-400/20" },
+                { Icon: MapPin, text: "جدة، المملكة العربية السعودية", subtext: "موقعنا الرئيسي", color: "text-red-400", bgColor: "bg-red-400/10", borderColor: "border-red-400/20" }
+              ].map(({ Icon, text, subtext, color, bgColor, borderColor }, index) => (
                 <div 
                   key={index}
-                  className="flex items-center gap-3 p-3 md:p-4 bg-white/5 rounded-lg hover:bg-white/10 transition-all duration-300 cursor-pointer border border-white/10"
+                  className={`flex items-center gap-3 p-3 md:p-4 ${bgColor} rounded-lg hover:bg-opacity-20 transition-all duration-300 cursor-pointer border ${borderColor} group hover:border-opacity-40`}
                 >
-                  <Icon className={`h-4 w-4 md:h-5 md:w-5 ${color} flex-shrink-0`} />
-                  <div>
-                    <p className="text-sm md:text-base font-medium text-white">{text}</p>
+                  <div className={`flex items-center justify-center w-8 h-8 md:w-10 md:h-10 ${bgColor} rounded-full flex-shrink-0 group-hover:scale-110 transition-transform`}>
+                    <Icon className={`h-4 w-4 md:h-5 md:w-5 ${color}`} />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm md:text-base font-medium text-white truncate">{text}</p>
                     <p className="text-xs text-white/60">{subtext}</p>
                   </div>
                 </div>
@@ -285,20 +287,22 @@ const Footer = () => {
             </div>
 
             {/* Newsletter */}
-            <div className="space-y-3 p-3 md:p-4 bg-gradient-to-br from-primary/10 to-blue-600/10 rounded-lg border border-white/10">
+            <div className="space-y-3 p-3 md:p-4 bg-gradient-to-br from-primary/10 to-blue-600/10 rounded-lg border border-white/10 hover:border-white/20 transition-all duration-300">
               <h5 className="font-medium text-white flex items-center gap-2 text-sm md:text-base">
-                <Timer className="h-3 w-3 md:h-4 md:w-4 text-yellow-400" />
+                <div className="flex items-center justify-center w-6 h-6 md:w-8 md:h-8 bg-yellow-400/10 rounded-full">
+                  <Timer className="h-3 w-3 md:h-4 md:w-4 text-yellow-400" />
+                </div>
                 اشترك في نشرتنا الإخبارية
               </h5>
-              <p className="text-xs md:text-sm text-white/70">احصل على آخر العروض والأخبار</p>
+              <p className="text-xs md:text-sm text-white/70 pr-8 md:pr-10">احصل على آخر العروض والأخبار</p>
               <div className="flex flex-col sm:flex-row gap-2">
                 <Input 
                   placeholder="البريد الإلكتروني" 
-                  className="bg-white/10 border-white/20 text-white placeholder:text-white/50 text-sm flex-1"
+                  className="bg-white/10 border-white/20 text-white placeholder:text-white/50 text-sm flex-1 h-10 md:h-11"
                 />
                 <Button 
                   size="sm" 
-                  className="bg-gradient-to-r from-primary to-blue-600 hover:from-primary/80 hover:to-blue-600/80 text-white shadow-lg hover:shadow-xl transition-all duration-300 whitespace-nowrap"
+                  className="bg-gradient-to-r from-primary to-blue-600 hover:from-primary/80 hover:to-blue-600/80 text-white shadow-lg hover:shadow-xl transition-all duration-300 whitespace-nowrap h-10 md:h-11 px-4 md:px-6"
                 >
                   اشترك
                 </Button>
