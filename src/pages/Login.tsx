@@ -29,7 +29,7 @@ const Login = () => {
       
       // Redirect based on user type
       if (type === 'admin') {
-        navigate('/adminmaster/dashboard');
+        navigate('/adminmaster');
       } else {
         navigate('/client/dashboard');
       }
