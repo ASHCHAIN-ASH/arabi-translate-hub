@@ -39,12 +39,7 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
   
   // State for dynamic counts
   const [counts, setCounts] = useState({
-    services: 0,
-    categories: 0,
-    orders: 0,
-    invoices: 0,
-    users: 0,
-    tickets: 0
+    invoices: 0
   });
 
   const navItems = [
@@ -53,24 +48,6 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
       href: '/adminmaster', 
       icon: LayoutDashboard,
       badge: null
-    },
-    { 
-      name: 'إدارة الخدمات', 
-      href: '/adminmaster/services', 
-      icon: Briefcase,
-      badge: counts.services.toString()
-    },
-    { 
-      name: 'طلبات الخدمات', 
-      href: '/adminmaster/service-orders', 
-      icon: FileText,
-      badge: 'جديد'
-    },
-    { 
-      name: 'إدارة الطلبات', 
-      href: '/adminmaster/orders', 
-      icon: ShoppingCart,
-      badge: counts.orders > 0 ? counts.orders.toString() : null
     },
     { 
       name: 'نظام الإشعارات البريدية', 
@@ -89,24 +66,6 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
       href: '/adminmaster/transactions', 
       icon: CreditCard,
       badge: null
-    },
-    { 
-      name: 'إدارة المستخدمين', 
-      href: '/adminmaster/users', 
-      icon: Users,
-      badge: counts.users > 0 ? counts.users.toString() : null
-    },
-    { 
-      name: 'إدارة العملاء', 
-      href: '/adminmaster/customers', 
-      icon: Users,
-      badge: 'جديد'
-    },
-    { 
-      name: 'إدارة التذاكر', 
-      href: '/adminmaster/tickets', 
-      icon: HelpCircle,
-      badge: counts.tickets > 0 ? counts.tickets.toString() : null
     },
     { 
       name: 'الإعدادات', 
@@ -146,21 +105,12 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
   // جلب الأعداد الديناميكية
   const loadCounts = async () => {
     try {
-      const [servicesRes, ordersRes, invoicesRes, usersRes, ticketsRes] = await Promise.all([
-        supabase.from('services').select('*', { count: 'exact', head: true }).eq('is_active', true),
-        supabase.from('orders').select('*', { count: 'exact', head: true }),
+      const [invoicesRes] = await Promise.all([
         supabase.from('invoices').select('*', { count: 'exact', head: true }).eq('status', 'pending'),
-        supabase.from('users').select('*', { count: 'exact', head: true }),
-        supabase.from('tickets').select('*', { count: 'exact', head: true }).eq('status', 'open')
       ]);
 
       setCounts({
-        services: servicesRes.count || 0,
-        categories: 0,
-        orders: ordersRes.count || 0,
-        invoices: invoicesRes.count || 0,
-        users: usersRes.count || 0,
-        tickets: ticketsRes.count || 0
+        invoices: invoicesRes.count || 0
       });
     } catch (error) {
       console.error('Error loading counts:', error);
