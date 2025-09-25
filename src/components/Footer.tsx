@@ -200,7 +200,7 @@ const Footer = () => {
                 { name: 'نصائح الترجمة', badge: 'مفيد', href: '/blog' },
                 { name: 'أخبار الصناعة', badge: 'حصري', href: '/blog' },
                 { name: 'دليل العملاء', badge: 'شامل', href: '/client-guide' },
-                { name: 'قصص النجاح', badge: 'ملهم', href: '/success-stories' }
+                { name: 'مسابقات أكاديمية', badge: 'جوائز', href: '/academic-competitions' }
               ].map((blog) => (
                 <li key={blog.name}>
                   <a 
