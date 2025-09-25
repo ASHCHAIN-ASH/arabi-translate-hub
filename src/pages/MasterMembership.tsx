@@ -132,7 +132,7 @@ const MasterMembership = () => {
             <TabsList className="grid w-full max-w-lg grid-cols-2">
               <TabsTrigger value="plans" className="flex items-center gap-2">
                 <Crown className="h-4 w-4" />
-                الخطط
+                العضويات
               </TabsTrigger>
               <TabsTrigger value="benefits" className="flex items-center gap-2">
                 <Star className="h-4 w-4" />
