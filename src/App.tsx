@@ -33,6 +33,7 @@ import LiteraryTranslation from "./pages/LiteraryTranslation";
 import AcademicTranslation from "./pages/AcademicTranslation";
 import ResearchServices from "./pages/ResearchServices";
 import AboutUs from "./pages/AboutUs";
+import AcademicCompetitions from "./pages/AcademicCompetitions";
 import Unauthorized from "./pages/Unauthorized";
 import Blog from "./pages/Blog";
 import FAQ from "./pages/FAQ";
@@ -127,7 +128,7 @@ const App = () => (
              <Route path="/privacy-policy" element={<PrivacyPolicy />} />
              <Route path="/blog" element={<Blog />} />
              <Route path="/faq" element={<FAQ />} />
-             <Route path="/academic-competitions" element={<Blog />} />
+             <Route path="/academic-competitions" element={<AcademicCompetitions />} />
              <Route path="/client-guide" element={<ClientGuide />} />
              <Route path="/order-tracking" element={<OrderTracking />} />
              <Route path="/submit-order" element={<OrderForm />} />
