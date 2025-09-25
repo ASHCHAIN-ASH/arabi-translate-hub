@@ -26,81 +26,63 @@ const Footer = () => {
 
   return (
     <footer className="bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white relative overflow-hidden" dir="rtl">
-      {/* Animated Background Pattern */}
-      <div className="absolute inset-0 opacity-5">
-        <div className="absolute top-10 right-10 w-32 h-32 bg-primary rounded-full animate-float"></div>
-        <div className="absolute bottom-20 left-20 w-24 h-24 bg-blue-500 rounded-full animate-float" style={{animationDelay: '1s'}}></div>
-        <div className="absolute top-1/2 left-1/3 w-16 h-16 bg-green-500 rounded-full animate-float" style={{animationDelay: '2s'}}></div>
+      {/* Subtle Background Pattern */}
+      <div className="absolute inset-0 opacity-3">
+        <div className="absolute top-10 right-10 w-24 h-24 bg-primary/20 rounded-full"></div>
+        <div className="absolute bottom-20 left-20 w-16 h-16 bg-blue-500/20 rounded-full"></div>
+        <div className="absolute top-1/2 left-1/3 w-12 h-12 bg-green-500/20 rounded-full"></div>
       </div>
 
-      {/* Hero Section */}
-      <div className="relative z-10 bg-gradient-to-r from-primary/20 to-blue-600/20 py-12">
-        <div className="container mx-auto px-4">
+      {/* Company Header Section */}
+      <div className="relative z-10 bg-gradient-to-r from-primary/10 to-blue-600/10 py-8 md:py-12 border-b border-white/10">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div 
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
-            className="text-center mb-8"
+            className="text-center mb-6 md:mb-8"
           >
-            <motion.div
-              animate={{ rotate: 360 }}
-              transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
-              className="inline-flex items-center justify-center w-20 h-20 bg-white/10 rounded-full mb-6"
-            >
-              <Building2 className="h-10 w-10 text-white" />
-            </motion.div>
-            <h2 className="text-4xl font-bold mb-4 font-arabic-title">وكالة MasterEduPath للحلول التعليمية المتقدمة</h2>
-            <p className="text-xl opacity-90 max-w-2xl mx-auto">شريكك الموثوق للحصول على أفضل الحلول التعليمية والتقنية المتقدمة في المملكة العربية السعودية</p>
+            <div className="inline-flex items-center justify-center w-16 h-16 md:w-20 md:h-20 bg-white/10 rounded-full mb-4 md:mb-6">
+              <Building2 className="h-8 w-8 md:h-10 md:w-10 text-white" />
+            </div>
+            <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold mb-3 md:mb-4 font-arabic-title">وكالة MasterEduPath للحلول التعليمية المتقدمة</h2>
+            <p className="text-base md:text-lg lg:text-xl opacity-90 max-w-3xl mx-auto leading-relaxed">شريكك الموثوق للحصول على أفضل الحلول التعليمية والتقنية المتقدمة في المملكة العربية السعودية</p>
           </motion.div>
+          
           {/* Company Info Cards */}
-          <div className="grid md:grid-cols-3 gap-6 mb-12">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
             <motion.div
-              initial={{ opacity: 0, x: -50 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              transition={{ delay: 0.2, duration: 0.5 }}
-              className="bg-white/10 backdrop-blur-sm rounded-lg p-6 text-center group hover:bg-white/20 transition-all duration-300"
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.1, duration: 0.5 }}
+              className="bg-white/5 backdrop-blur-sm rounded-lg p-4 md:p-6 text-center hover:bg-white/10 transition-all duration-300 border border-white/10"
             >
-              <motion.div
-                animate={{ y: [0, -5, 0] }}
-                transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-              >
-                <MapPin className="h-12 w-12 mx-auto mb-4 text-blue-400 group-hover:text-blue-300 transition-colors" />
-              </motion.div>
-              <h4 className="font-bold text-lg mb-2">موقعنا</h4>
+              <MapPin className="h-8 w-8 md:h-10 md:w-10 mx-auto mb-3 text-blue-400" />
+              <h4 className="font-semibold text-base md:text-lg mb-2">موقعنا</h4>
               <p className="text-sm opacity-90">جدة، المملكة العربية السعودية</p>
             </motion.div>
 
             <motion.div
-              initial={{ opacity: 0, y: -50 }}
+              initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.3, duration: 0.5 }}
-              className="bg-white/10 backdrop-blur-sm rounded-lg p-6 text-center group hover:bg-white/20 transition-all duration-300"
+              transition={{ delay: 0.2, duration: 0.5 }}
+              className="bg-white/5 backdrop-blur-sm rounded-lg p-4 md:p-6 text-center hover:bg-white/10 transition-all duration-300 border border-white/10"
             >
-              <motion.div
-                animate={{ rotate: [0, 360] }}
-                transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
-              >
-                <Clock className="h-12 w-12 mx-auto mb-4 text-green-400 group-hover:text-green-300 transition-colors" />
-              </motion.div>
-              <h4 className="font-bold text-lg mb-2">ساعات العمل الرسمية</h4>
-              <p className="text-sm opacity-90">الأحد - الخميس</p>
-              <p className="text-lg font-semibold text-green-400">10:00 ص - 7:00 م</p>
+              <Clock className="h-8 w-8 md:h-10 md:w-10 mx-auto mb-3 text-green-400" />
+              <h4 className="font-semibold text-base md:text-lg mb-2">ساعات العمل الرسمية</h4>
+              <p className="text-sm opacity-90 mb-1">الأحد - الخميس</p>
+              <p className="text-sm md:text-base font-semibold text-green-400">10:00 ص - 7:00 م</p>
             </motion.div>
 
             <motion.div
-              initial={{ opacity: 0, x: 50 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              transition={{ delay: 0.4, duration: 0.5 }}
-              className="bg-white/10 backdrop-blur-sm rounded-lg p-6 text-center group hover:bg-white/20 transition-all duration-300"
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.3, duration: 0.5 }}
+              className="bg-white/5 backdrop-blur-sm rounded-lg p-4 md:p-6 text-center hover:bg-white/10 transition-all duration-300 border border-white/10"
             >
-              <motion.div
-                animate={{ scale: [1, 1.1, 1] }}
-                transition={{ duration: 2, repeat: Infinity }}
-              >
-                <Headphones className="h-12 w-12 mx-auto mb-4 text-purple-400 group-hover:text-purple-300 transition-colors" />
-              </motion.div>
-              <h4 className="font-bold text-lg mb-2">خدمة العملاء</h4>
-              <p className="text-lg font-semibold text-purple-400">متاحة 24/7</p>
+              <Headphones className="h-8 w-8 md:h-10 md:w-10 mx-auto mb-3 text-purple-400" />
+              <h4 className="font-semibold text-base md:text-lg mb-2">خدمة العملاء</h4>
+              <p className="text-sm md:text-base font-semibold text-purple-400 mb-1">متاحة 24/7</p>
               <p className="text-sm opacity-90">على مدار الساعة طوال أيام الأسبوع</p>
             </motion.div>
           </div>
@@ -108,71 +90,62 @@ const Footer = () => {
       </div>
 
       {/* Main Footer Content */}
-      <div className="relative z-10 container mx-auto px-4 py-16">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8">
+      <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-16">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-8 md:gap-12">
           {/* معلومات الشركة */}
           <motion.div 
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
-            className="space-y-6"
+            className="lg:col-span-1 space-y-6"
           >
-            <div className="flex items-center gap-4">
-              <motion.div
-                animate={{ rotate: [0, 360] }}
-                transition={{ duration: 10, repeat: Infinity, ease: "linear" }}
-                className="w-12 h-12 bg-gradient-to-br from-primary to-blue-600 rounded-full flex items-center justify-center"
-              >
-                <Globe className="h-6 w-6 text-white" />
-              </motion.div>
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 md:w-12 md:h-12 bg-gradient-to-br from-primary to-blue-600 rounded-full flex items-center justify-center flex-shrink-0">
+                <Globe className="h-5 w-5 md:h-6 md:w-6 text-white" />
+              </div>
               <div>
-                <h3 className="text-2xl font-arabic-title font-bold">MasterEduPath | ماستر إيدو باث</h3>
-                <p className="text-sm text-white/70">وكالة الحلول التعليمية المتقدمة | Advanced Educational Solutions Agency</p>
+                <h3 className="text-lg md:text-xl font-arabic-title font-bold">MasterEduPath</h3>
+                <p className="text-xs md:text-sm text-white/70">وكالة الحلول التعليمية المتقدمة</p>
               </div>
             </div>
             
-            <p className="text-white/80 text-sm leading-relaxed">
+            <p className="text-white/80 text-sm md:text-base leading-relaxed">
               نحن الشريك الموثوق لأكثر من 10,000 عميل في جميع أنحاء المملكة. نقدم خدمات ترجمة احترافية 
               بأكثر من 100 لغة مع ضمان الجودة والسرعة.
             </p>
 
             {/* Trust Indicators */}
-            <div className="grid grid-cols-3 gap-3">
-              <div className="text-center p-3 bg-white/5 rounded-lg">
-                <Award className="h-6 w-6 mx-auto mb-1 text-yellow-400 animate-pulse" />
+            <div className="grid grid-cols-3 gap-2 md:gap-3">
+              <div className="text-center p-2 md:p-3 bg-white/5 rounded-lg border border-white/10">
+                <Award className="h-4 w-4 md:h-5 md:w-5 mx-auto mb-1 text-yellow-400" />
                 <p className="text-xs text-white/80">ISO معتمد</p>
               </div>
-              <div className="text-center p-3 bg-white/5 rounded-lg">
-                <Shield className="h-6 w-6 mx-auto mb-1 text-green-400 animate-pulse" />
+              <div className="text-center p-2 md:p-3 bg-white/5 rounded-lg border border-white/10">
+                <Shield className="h-4 w-4 md:h-5 md:w-5 mx-auto mb-1 text-green-400" />
                 <p className="text-xs text-white/80">أمان تام</p>
               </div>
-              <div className="text-center p-3 bg-white/5 rounded-lg">
-                <Users className="h-6 w-6 mx-auto mb-1 text-blue-400 animate-pulse" />
-                <p className="text-xs text-white/80">128 خبير ومترجم معتمد</p>
+              <div className="text-center p-2 md:p-3 bg-white/5 rounded-lg border border-white/10">
+                <Users className="h-4 w-4 md:h-5 md:w-5 mx-auto mb-1 text-blue-400" />
+                <p className="text-xs text-white/80">128 خبير</p>
               </div>
             </div>
 
             {/* Social Media */}
-            <div className="flex gap-3">
+            <div className="flex gap-2 md:gap-3">
               {[
                 { Icon: Facebook, color: "hover:text-blue-400" },
                 { Icon: Twitter, color: "hover:text-sky-400" },
                 { Icon: Instagram, color: "hover:text-pink-400" },
                 { Icon: Linkedin, color: "hover:text-blue-600" }
               ].map(({ Icon, color }, index) => (
-                <motion.div
+                <Button 
                   key={index}
-                  whileHover={{ scale: 1.2, y: -5 }}
-                  whileTap={{ scale: 0.9 }}
+                  variant="ghost" 
+                  size="sm" 
+                  className={`w-8 h-8 md:w-10 md:h-10 rounded-full bg-white/5 hover:bg-white/10 text-white/70 ${color} transition-all duration-300 border border-white/10`}
                 >
-                  <Button 
-                    variant="ghost" 
-                    size="sm" 
-                    className={`w-10 h-10 rounded-full bg-white/10 hover:bg-white/20 text-white/70 ${color} transition-all duration-300`}
-                  >
-                    <Icon className="h-5 w-5" />
-                  </Button>
-                </motion.div>
+                  <Icon className="h-4 w-4 md:h-5 md:w-5" />
+                </Button>
               ))}
             </div>
           </motion.div>
@@ -182,13 +155,13 @@ const Footer = () => {
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1, duration: 0.5 }}
-            className="space-y-4"
+            className="space-y-4 md:space-y-6"
           >
-            <h4 className="text-lg font-bold text-white flex items-center gap-2">
-              <Star className="h-5 w-5 text-yellow-400 animate-pulse" />
+            <h4 className="text-base md:text-lg font-bold text-white flex items-center gap-2">
+              <Star className="h-4 w-4 md:h-5 md:w-5 text-yellow-400" />
               روابط سريعة
             </h4>
-            <ul className="space-y-3">
+            <ul className="space-y-2 md:space-y-3">
               {[
                 { name: 'خدماتنا', icon: Zap, href: '/services' },
                 { name: 'الأسعار', icon: Star, href: '/pricing' },
@@ -197,19 +170,15 @@ const Footer = () => {
                 { name: 'سياسة الخصوصية', icon: Shield, href: '/privacy-policy' },
                 { name: 'إدارة', icon: Users, href: '/admin/orders', admin: true }
               ].map((link) => (
-                <motion.li 
-                  key={link.name}
-                  whileHover={{ x: 10 }}
-                  transition={{ type: "spring", stiffness: 300 }}
-                >
+                <li key={link.name}>
                   <a 
                     href={link.href || "#"} 
-                    className={`text-white/70 hover:text-white transition-colors text-sm flex items-center gap-2 group ${link.admin ? 'text-white/40 hover:text-white/60' : ''}`}
+                    className={`text-white/70 hover:text-white transition-colors text-sm md:text-base flex items-center gap-2 hover:translate-x-1 transition-transform ${link.admin ? 'text-white/40 hover:text-white/60' : ''}`}
                   >
-                    <link.icon className="h-4 w-4 group-hover:text-primary transition-colors" />
+                    <link.icon className="h-3 w-3 md:h-4 md:w-4 text-primary" />
                     {link.name}
                   </a>
-                </motion.li>
+                </li>
               ))}
             </ul>
           </motion.div>
@@ -219,13 +188,13 @@ const Footer = () => {
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.15, duration: 0.5 }}
-            className="space-y-4"
+            className="space-y-4 md:space-y-6"
           >
-            <h4 className="text-lg font-bold text-white flex items-center gap-2">
-              <Globe className="h-5 w-5 text-orange-400 animate-pulse" />
+            <h4 className="text-base md:text-lg font-bold text-white flex items-center gap-2">
+              <Globe className="h-4 w-4 md:h-5 md:w-5 text-orange-400" />
               المدونة والموارد
             </h4>
-            <ul className="space-y-3">
+            <ul className="space-y-2 md:space-y-3">
               {[
                 { name: 'أحدث المقالات', badge: 'جديد', href: '/blog' },
                 { name: 'نصائح الترجمة', badge: 'مفيد', href: '/blog' },
@@ -234,21 +203,17 @@ const Footer = () => {
                 { name: 'قصص النجاح', badge: 'ملهم', href: '/success-stories' },
                 { name: 'الأسئلة الشائعة', badge: 'مهم', href: '/faq' }
               ].map((blog) => (
-                <motion.li 
-                  key={blog.name}
-                  whileHover={{ x: 10, scale: 1.02 }}
-                  transition={{ type: "spring", stiffness: 300 }}
-                >
+                <li key={blog.name}>
                   <a 
                     href={blog.href} 
-                    className="text-white/70 hover:text-white transition-colors text-sm flex items-center justify-between group"
+                    className="text-white/70 hover:text-white transition-colors text-sm md:text-base flex items-center justify-between hover:translate-x-1 transition-transform group"
                   >
                     <span>{blog.name}</span>
                     <span className="text-xs bg-orange-500/20 text-orange-400 px-2 py-1 rounded-full opacity-0 group-hover:opacity-100 transition-opacity">
                       {blog.badge}
                     </span>
                   </a>
-                </motion.li>
+                </li>
               ))}
             </ul>
           </motion.div>
@@ -258,13 +223,13 @@ const Footer = () => {
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2, duration: 0.5 }}
-            className="space-y-4"
+            className="space-y-4 md:space-y-6"
           >
-            <h4 className="text-lg font-bold text-white flex items-center gap-2">
-              <Globe className="h-5 w-5 text-blue-400 animate-spin" style={{ animationDuration: '3s' }} />
+            <h4 className="text-base md:text-lg font-bold text-white flex items-center gap-2">
+              <Globe className="h-4 w-4 md:h-5 md:w-5 text-blue-400" />
               خدماتنا المتخصصة
             </h4>
-            <ul className="space-y-3">
+            <ul className="space-y-2 md:space-y-3">
               {[
                 { name: 'خدمات الترجمة المتخصصة', badge: 'الأكثر طلباً' },
                 { name: 'البحث العلمي والأكاديمي', badge: 'متميز' },
@@ -273,21 +238,17 @@ const Footer = () => {
                 { name: 'النشر في المجلات', badge: 'معتمد' },
                 { name: 'الدورات التدريبية', badge: 'تفاعلي' }
               ].map((service) => (
-                <motion.li 
-                  key={service.name}
-                  whileHover={{ x: 10, scale: 1.02 }}
-                  transition={{ type: "spring", stiffness: 300 }}
-                >
+                <li key={service.name}>
                   <a 
                     href="#" 
-                    className="text-white/70 hover:text-white transition-colors text-sm flex items-center justify-between group"
+                    className="text-white/70 hover:text-white transition-colors text-sm md:text-base flex items-center justify-between hover:translate-x-1 transition-transform group"
                   >
                     <span>{service.name}</span>
                     <span className="text-xs bg-primary/20 text-primary px-2 py-1 rounded-full opacity-0 group-hover:opacity-100 transition-opacity">
                       {service.badge}
                     </span>
                   </a>
-                </motion.li>
+                </li>
               ))}
             </ul>
           </motion.div>
@@ -297,53 +258,47 @@ const Footer = () => {
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.3, duration: 0.5 }}
-            className="space-y-6"
+            className="space-y-4 md:space-y-6"
           >
-            <h4 className="text-lg font-bold text-white flex items-center gap-2">
-              <Headphones className="h-5 w-5 text-green-400 animate-pulse" />
+            <h4 className="text-base md:text-lg font-bold text-white flex items-center gap-2">
+              <Headphones className="h-4 w-4 md:h-5 md:w-5 text-green-400" />
               تواصل معنا
             </h4>
             
-            <div className="space-y-4">
+            <div className="space-y-3 md:space-y-4">
               {[
                 { Icon: Phone, text: "0500776343", subtext: "اتصل بنا الآن", color: "text-green-400" },
                 { Icon: Mail, text: "info@masteredupath.com", subtext: "راسلنا عبر البريد", color: "text-blue-400" },
                 { Icon: MapPin, text: "جدة، المملكة العربية السعودية", subtext: "موقعنا الرئيسي", color: "text-red-400" }
               ].map(({ Icon, text, subtext, color }, index) => (
-                <motion.div 
+                <div 
                   key={index}
-                  whileHover={{ scale: 1.05 }}
-                  className="flex items-center gap-3 p-3 bg-white/5 rounded-lg hover:bg-white/10 transition-all duration-300 cursor-pointer group"
+                  className="flex items-center gap-3 p-3 md:p-4 bg-white/5 rounded-lg hover:bg-white/10 transition-all duration-300 cursor-pointer border border-white/10"
                 >
-                  <motion.div
-                    animate={{ y: [0, -2, 0] }}
-                    transition={{ duration: 2, repeat: Infinity, delay: index * 0.5 }}
-                  >
-                    <Icon className={`h-5 w-5 ${color} group-hover:scale-110 transition-transform`} />
-                  </motion.div>
+                  <Icon className={`h-4 w-4 md:h-5 md:w-5 ${color} flex-shrink-0`} />
                   <div>
-                    <p className="text-sm font-medium text-white">{text}</p>
+                    <p className="text-sm md:text-base font-medium text-white">{text}</p>
                     <p className="text-xs text-white/60">{subtext}</p>
                   </div>
-                </motion.div>
+                </div>
               ))}
             </div>
 
             {/* Newsletter */}
-            <div className="space-y-3 p-4 bg-gradient-to-br from-primary/20 to-blue-600/20 rounded-lg border border-white/10">
-              <h5 className="font-medium text-white flex items-center gap-2">
-                <Timer className="h-4 w-4 text-yellow-400 animate-spin" />
+            <div className="space-y-3 p-3 md:p-4 bg-gradient-to-br from-primary/10 to-blue-600/10 rounded-lg border border-white/10">
+              <h5 className="font-medium text-white flex items-center gap-2 text-sm md:text-base">
+                <Timer className="h-3 w-3 md:h-4 md:w-4 text-yellow-400" />
                 اشترك في نشرتنا الإخبارية
               </h5>
-              <p className="text-xs text-white/70">احصل على آخر العروض والأخبار</p>
-              <div className="flex gap-2">
+              <p className="text-xs md:text-sm text-white/70">احصل على آخر العروض والأخبار</p>
+              <div className="flex flex-col sm:flex-row gap-2">
                 <Input 
                   placeholder="البريد الإلكتروني" 
-                  className="bg-white/10 border-white/20 text-white placeholder:text-white/50 text-sm"
+                  className="bg-white/10 border-white/20 text-white placeholder:text-white/50 text-sm flex-1"
                 />
                 <Button 
                   size="sm" 
-                  className="bg-gradient-to-r from-primary to-blue-600 hover:from-primary/80 hover:to-blue-600/80 text-white shadow-lg hover:shadow-xl transition-all duration-300"
+                  className="bg-gradient-to-r from-primary to-blue-600 hover:from-primary/80 hover:to-blue-600/80 text-white shadow-lg hover:shadow-xl transition-all duration-300 whitespace-nowrap"
                 >
                   اشترك
                 </Button>
@@ -357,112 +312,58 @@ const Footer = () => {
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
           transition={{ delay: 0.5, duration: 0.5 }}
-          className="border-t border-white/20 mt-16 pt-8"
+          className="border-t border-white/20 mt-12 md:mt-16 pt-6 md:pt-8"
         >
-          <div className="flex flex-col md:flex-row justify-between items-center gap-6">
-            <motion.p 
-              whileHover={{ scale: 1.05 }}
-              className="text-white/60 text-sm text-center md:text-right flex items-center gap-2"
-            >
-              <motion.div
-                animate={{ rotate: 360 }}
-                transition={{ duration: 5, repeat: Infinity, ease: "linear" }}
-              >
-                <Globe className="h-4 w-4" />
-              </motion.div>
+          <div className="flex flex-col lg:flex-row justify-between items-center gap-4 md:gap-6">
+            <p className="text-white/60 text-sm text-center lg:text-right flex items-center gap-2">
+              <Globe className="h-4 w-4 flex-shrink-0" />
               © {currentYear} وكالة ماستر إيدو باث - للحلول التعليمية المتقدمة. جميع الحقوق محفوظة.
-            </motion.p>
+            </p>
             
-            <div className="flex items-center gap-6 text-sm">
+            <div className="flex flex-wrap items-center justify-center gap-4 md:gap-6 text-sm">
               {[
                 { name: 'شروط الاستخدام', href: '/terms' },
                 { name: 'سياسة الخصوصية', href: '/privacy' },
                 { name: 'دعم العملاء', href: '#' }
               ].map((link, index) => (
-                <motion.a 
+                <a 
                   key={link.name}
                   href={link.href}
-                  whileHover={{ scale: 1.1, y: -2 }}
-                  transition={{ type: "spring", stiffness: 300 }}
-                  className="text-white/70 hover:text-white transition-colors relative group"
+                  className="text-white/70 hover:text-white transition-colors relative group hover:underline"
                 >
                   {link.name}
-                  <motion.div
-                    className="absolute bottom-0 left-0 w-0 h-0.5 bg-primary group-hover:w-full transition-all duration-300"
-                    whileHover={{ width: "100%" }}
-                  />
-                </motion.a>
+                </a>
               ))}
             </div>
             
             {/* شعار اليوم الوطني في الفوتر */}
-            <motion.div 
-              className="flex items-center gap-3 mt-4 md:mt-0"
-              initial={{ opacity: 0, scale: 0.8 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.8 }}
-            >
-              <motion.div
-                animate={{ 
-                  scale: [1, 1.1, 1],
-                  filter: ["brightness(1)", "brightness(1.2)", "brightness(1)"]
-                }}
-                transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-                className="relative"
-              >
+            <div className="flex items-center gap-2 md:gap-3 mt-4 lg:mt-0">
+              <div className="relative">
                 <img 
                   src="/assets/national-day-logo-original.webp" 
                   alt="عزنا بطبعنا - اليوم الوطني السعودي ٩٥"
-                  className="h-12 w-auto drop-shadow-lg opacity-80 hover:opacity-100 transition-opacity"
-                  style={{ 
-                    filter: 'drop-shadow(0 0 10px rgba(255,255,255,0.3))',
-                    mixBlendMode: 'screen'
-                  }}
+                  className="h-8 w-auto md:h-10 drop-shadow-lg opacity-80 hover:opacity-100 transition-opacity"
                 />
-                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent animate-golden-shine"></div>
-              </motion.div>
-              <div className="text-right">
-                <motion.p 
-                  className="text-xs text-white/70 font-medium"
-                  animate={{ color: ["rgba(255,255,255,0.7)", "rgba(255,255,255,0.9)", "rgba(255,255,255,0.7)"] }}
-                  transition={{ duration: 3, repeat: Infinity }}
-                >
-                  🇸🇦 فخورون بوطننا الغالي
-                </motion.p>
-                <motion.p 
-                  className="text-xs text-yellow-400 font-bold"
-                  animate={{ scale: [1, 1.05, 1] }}
-                  transition={{ duration: 2, repeat: Infinity }}
-                >
-                  عزنا بطبعنا - اليوم الوطني ٩٥
-                </motion.p>
               </div>
-            </motion.div>
+              <div className="text-right">
+                <p className="text-xs text-white/70 font-medium">
+                  🇸🇦 فخورون بوطننا الغالي
+                </p>
+                <p className="text-xs text-yellow-400 font-bold">
+                  عزنا بطبعنا - اليوم الوطني ٩٥
+                </p>
+              </div>
+            </div>
           </div>
 
           {/* Bottom Brand Strip */}
-          <motion.div 
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.7, duration: 0.5 }}
-            className="mt-8 text-center"
-          >
-            <div className="inline-flex items-center gap-4 px-6 py-3 bg-gradient-to-r from-primary/20 to-blue-600/20 rounded-full border border-white/10">
-              <motion.div
-                animate={{ rotate: [0, 360] }}
-                transition={{ duration: 8, repeat: Infinity, ease: "linear" }}
-              >
-                <Award className="h-5 w-5 text-yellow-400" />
-              </motion.div>
-              <span className="text-sm font-medium text-white">الشريك الموثوق لأكثر من 10,000 عميل</span>
-              <motion.div
-                animate={{ scale: [1, 1.2, 1] }}
-                transition={{ duration: 2, repeat: Infinity }}
-              >
-                <Star className="h-5 w-5 text-yellow-400 fill-current" />
-              </motion.div>
+          <div className="mt-6 md:mt-8 text-center">
+            <div className="inline-flex flex-wrap items-center justify-center gap-2 md:gap-4 px-4 md:px-6 py-2 md:py-3 bg-gradient-to-r from-primary/10 to-blue-600/10 rounded-full border border-white/10">
+              <Award className="h-4 w-4 md:h-5 md:w-5 text-yellow-400 flex-shrink-0" />
+              <span className="text-xs md:text-sm font-medium text-white">الشريك الموثوق لأكثر من 10,000 عميل</span>
+              <Star className="h-4 w-4 md:h-5 md:w-5 text-yellow-400 fill-current flex-shrink-0" />
             </div>
-          </motion.div>
+          </div>
         </motion.div>
       </div>
     </footer>
