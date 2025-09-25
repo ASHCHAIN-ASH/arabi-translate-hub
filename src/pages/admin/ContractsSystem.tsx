@@ -55,7 +55,7 @@ const ContractsSystem = () => {
   const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
-    client_id: '',
+    client_name: '',
     service_type: '',
     service_description: '',
     service_price: 0,
@@ -156,7 +156,7 @@ const ContractsSystem = () => {
   };
 
   const handleSaveContract = async () => {
-    if (!formData.client_id || !formData.service_type) {
+    if (!formData.client_name || !formData.service_type) {
       toast.error('يرجى ملء جميع الحقول المطلوبة');
       return;
     }
@@ -166,7 +166,7 @@ const ContractsSystem = () => {
       
       const contractData = {
         contract_number: contractNumber,
-        client_name: clients.find(c => c.id === formData.client_id)?.full_name || '',
+        client_name: formData.client_name,
         client_email: 'temp@example.com',
         client_phone: '000000000',
         client_type: formData.client_type,
@@ -193,7 +193,7 @@ const ContractsSystem = () => {
       
       // Reset form
       setFormData({
-        client_id: '',
+        client_name: '',
         service_type: '',
         service_description: '',
         service_price: 0,
@@ -311,21 +311,13 @@ const ContractsSystem = () => {
                       />
                     </div>
                     <div>
-                      <Label htmlFor="client_id">العميل *</Label>
-                      <Select value={formData.client_id} onValueChange={(value) => 
-                        setFormData(prev => ({ ...prev, client_id: value }))
-                      }>
-                        <SelectTrigger>
-                          <SelectValue placeholder="اختر العميل" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {clients.map((client) => (
-                            <SelectItem key={client.id} value={client.id}>
-                              {client.full_name}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
+                      <Label htmlFor="client_name">اسم العميل *</Label>
+                      <Input
+                        id="client_name"
+                        value={formData.client_name}
+                        onChange={(e) => setFormData(prev => ({ ...prev, client_name: e.target.value }))}
+                        placeholder="ادخل اسم العميل"
+                      />
                     </div>
                   </div>
 
