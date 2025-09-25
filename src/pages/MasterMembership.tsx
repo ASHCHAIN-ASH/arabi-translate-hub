@@ -28,50 +28,18 @@ const MasterMembership = () => {
   const [selectedPlan, setSelectedPlan] = useState<any>(null);
   const [isFormOpen, setIsFormOpen] = useState(false);
 
-  const membershipPlans = [
-    {
-      id: 'silver',
-      name: 'الفضية',
-      nameEn: 'Silver',
-      price: '1200',
-      originalPrice: '2400',
-      discount: '50%',
-      cashback: '84',
-      cashbackPercent: '7%',
-      cardGradient: 'from-gray-400 via-gray-500 to-gray-600',
-      gradient: 'from-gray-400 to-gray-600',
-      chipColor: 'bg-yellow-400',
-      popular: false
-    },
-    {
-      id: 'gold',
-      name: 'الذهبية',
-      nameEn: 'Gold',
-      price: '2200',
-      originalPrice: '4400',
-      discount: '50%',
-      cashback: '330',
-      cashbackPercent: '15%',
-      cardGradient: 'from-yellow-400 via-yellow-500 to-yellow-600',
-      gradient: 'from-yellow-400 to-yellow-600',
-      chipColor: 'bg-yellow-500',
-      popular: true
-    },
-    {
-      id: 'platinum',
-      name: 'البلاتينية',
-      nameEn: 'Platinum',
-      price: '3600',
-      originalPrice: '7200',
-      discount: '50%',
-      cashback: '900',
-      cashbackPercent: '25%',
-      cardGradient: 'from-slate-400 via-slate-500 to-slate-600',
-      gradient: 'from-slate-400 to-slate-600',
-      chipColor: 'bg-slate-400',
-      popular: false
-    }
+  // البيانات الديناميكية لبطاقات العضوية
+  const TIERS = [
+    { slug: "silver",    titleAr: "الفضية",    titleEn: "Silver",    baseSAR: 2400, discountPct: 50, cashbackPct: 7,  featured: false,  gradient: "from-slate-600 to-slate-400" },
+    { slug: "gold",      titleAr: "الذهبية",   titleEn: "Gold",      baseSAR: 4400, discountPct: 50, cashbackPct: 15, featured: true,   gradient: "from-amber-500 to-yellow-600" },
+    { slug: "platinum",  titleAr: "البلاتينية",titleEn: "Platinum",  baseSAR: 7200, discountPct: 50, cashbackPct: 25, featured: false,  gradient: "from-zinc-700 to-slate-500" }
   ];
+
+  // دوال التنسيق والحساب
+  const toArabic = (n: number) => new Intl.NumberFormat('ar-SA').format(n);
+  const sar = (n: number) => `${toArabic(n)} ريال`;
+  const finalPrice = (base: number, discountPct: number) => Math.round(base * (1 - discountPct/100));
+  const cashbackAmount = (finalP: number, cashbackPct: number) => Math.round(finalP * (cashbackPct/100));
 
   const benefits = [
     {
@@ -86,7 +54,9 @@ const MasterMembership = () => {
       color: 'text-blue-600',
       title: 'كاش باك فوري مضمون',
       description: 'استرداد نقدي فوري من رسوم تأسيس العضوية ومن جميع الطلبات بعد الاشتراك',
-      membership: ['7% للفضية (84 ريال)', '15% للذهبية (330 ريال)', '25% للبلاتينية (900 ريال)']
+      membership: [`7% للفضية (${sar(cashbackAmount(finalPrice(2400, 50), 7))})`, 
+                   `15% للذهبية (${sar(cashbackAmount(finalPrice(4400, 50), 15))})`, 
+                   `25% للبلاتينية (${sar(cashbackAmount(finalPrice(7200, 50), 25))})`]
     },
     {
       icon: BookOpen,
@@ -192,168 +162,75 @@ const MasterMembership = () => {
               اختر العضوية المناسبة لك
             </h2>
             
-            <div className="grid gap-8 lg:grid-cols-3 md:grid-cols-2 max-w-5xl mx-auto">
-              {membershipPlans.map((plan, index) => (
-                <motion.div
-                  key={plan.id}
-                  initial={{ opacity: 0, y: 30 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  whileHover={{ y: -5, scale: 1.05 }}
-                  transition={{ delay: index * 0.1, duration: 0.6 }}
-                  className={`relative ${plan.popular ? 'lg:scale-105' : ''}`}
-                >
-                  {plan.popular && (
-                    <div className="absolute -top-4 right-1/2 transform translate-x-1/2 z-10">
-                      <div className="bg-gradient-to-r from-orange-400 to-red-500 text-white px-4 py-2 rounded-full text-xs font-bold shadow-xl">
-                        <Crown className="inline-block w-3 h-3 ml-1" />
-                        الأكثر طلبًا
-                      </div>
-                    </div>
-                  )}
-                  
-                  {/* Bank Card - Real Credit Card Size */}
-                  <div className={`
-                    relative w-full aspect-[1.586/1] max-w-[320px] mx-auto rounded-xl overflow-hidden
-                    bg-gradient-to-br ${plan.cardGradient}
-                    shadow-xl hover:shadow-2xl transition-all duration-500 
-                    border border-white/20
-                    backdrop-blur-sm
-                  `}>
-                    {/* Card Background Pattern */}
-                    <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent"></div>
-                    <div className="absolute top-0 right-0 w-20 h-20 bg-white/5 rounded-full -translate-y-10 translate-x-10"></div>
-                    <div className="absolute bottom-0 left-0 w-16 h-16 bg-white/5 rounded-full translate-y-8 -translate-x-8"></div>
-
-                    {/* Academic Background Icons */}
-                    <div className="absolute inset-0 overflow-hidden">
-                      <BookOpen className="absolute top-8 right-8 w-8 h-8 text-white/10 transform rotate-12" />
-                      <Award className="absolute bottom-12 left-6 w-6 h-6 text-white/8 transform -rotate-12" />
-                      <Globe className="absolute top-16 left-8 w-7 h-7 text-white/8 transform rotate-45" />
-                      <Trophy className="absolute bottom-20 right-12 w-5 h-5 text-white/10 transform -rotate-45" />
-                      <Shield className="absolute top-20 right-20 w-6 h-6 text-white/8 transform rotate-12" />
-                      <MessageSquare className="absolute bottom-8 left-12 w-5 h-5 text-white/8 transform rotate-30" />
-                      <Users className="absolute top-12 left-16 w-6 h-6 text-white/8 transform -rotate-15" />
-                    </div>
-
-                    {/* Bank Name - Top Right */}
-                    <div className="absolute top-4 right-4 text-white text-xs font-bold opacity-90">
-                      ماستر إيدو باث
-                    </div>
-                    
-                    {/* Card Type - Top Left */}
-                    <div className="absolute top-4 left-4">
-                      <Crown className="w-5 h-5 text-yellow-300" />
-                    </div>
-
-                    {/* EMV Chip - Real position */}
-                    <div className="absolute top-12 right-4 w-8 h-6 bg-gradient-to-br from-yellow-300 via-yellow-400 to-yellow-500 rounded-sm shadow-md">
-                      <div className="absolute inset-0.5 bg-gradient-to-br from-yellow-200 to-yellow-400 rounded-sm">
-                        <div className="w-full h-full grid grid-cols-3 gap-0.5 p-0.5">
-                          <div className="bg-yellow-600/30 rounded-sm"></div>
-                          <div className="bg-yellow-600/30 rounded-sm"></div>
-                          <div className="bg-yellow-600/30 rounded-sm"></div>
-                          <div className="bg-yellow-600/30 rounded-sm"></div>
-                          <div className="bg-yellow-600/30 rounded-sm"></div>
-                          <div className="bg-yellow-600/30 rounded-sm"></div>
+            <div dir="rtl" className="mx-auto max-w-7xl px-4 py-10">
+              <div className="grid gap-6 md:grid-cols-3">
+                {TIERS.map(tier => {
+                  const before = tier.baseSAR;
+                  const after  = finalPrice(before, tier.discountPct);
+                  const cash   = cashbackAmount(after, tier.cashbackPct);
+                  return (
+                    <div key={tier.slug}
+                         className={`relative rounded-2xl p-5 shadow-lg bg-gradient-to-br ${tier.gradient} text-white`}>
+                      {tier.featured && (
+                        <div className="absolute -top-3 right-4 bg-red-500 text-white text-xs font-bold px-3 py-1 rounded-full shadow">
+                          <Crown className="inline-block w-3 h-3 ml-1" />
+                          الأكثر طلبًا
                         </div>
+                      )}
+                      <div className="mb-4">
+                        <div className="text-sm opacity-90">{tier.titleEn}</div>
+                        <div className="text-lg font-bold">{tier.titleAr}</div>
                       </div>
-                    </div>
 
-                    {/* Card Number */}
-                    <div className="absolute top-20 right-4 text-white font-mono text-sm tracking-wider">
-                      {plan.id === 'silver' ? '5432 **** **** 1234' : plan.id === 'gold' ? '4532 **** **** 5678' : '4532 **** **** 9012'}
-                    </div>
-
-                    {/* Card Holder Name */}
-                    <div className="absolute bottom-14 right-4 text-white">
-                      <div className="text-xs opacity-80 mb-1">اسم حامل البطاقة</div>
-                      <div className="text-sm font-bold">عضوية {plan.name}</div>
-                    </div>
-
-                    {/* Expiry & CVV */}
-                    <div className="absolute bottom-8 right-4 flex gap-6 text-white text-xs">
-                      <div>
-                        <div className="opacity-80">صالح حتى</div>
-                        <div className="font-mono font-bold">12/25</div>
-                      </div>
-                      <div>
-                        <div className="opacity-80">CVV</div>
-                        <div className="font-mono font-bold">***</div>
-                      </div>
-                    </div>
-
-                    {/* Card Network */}
-                    <div className="absolute bottom-4 right-4 text-white/60 text-xs font-bold">
-                      MASTERCARD
-                    </div>
-
-                    {/* Price & Discount Container - Top Section */}
-                    <div className="absolute top-3 left-3 right-3 flex justify-between items-start">
-                      {/* Price Badge - Compact */}
-                      <div className="bg-white/90 backdrop-blur-sm rounded-lg px-3 py-2 shadow-md border border-white/20">
-                        <div className="text-gray-600 text-xs line-through leading-none">
-                          <span dir="ltr" className="inline-flex items-center gap-1"><span>{plan.originalPrice}</span><span>ريال</span></span>
+                      {/* الأسعار */}
+                      <div className="space-y-1 mb-4">
+                        <div className="inline-flex items-baseline gap-1 text-gray-200/90">
+                          <span className="line-through text-sm">{sar(before)}</span>
                         </div>
-                        <div className="text-gray-800 text-lg font-bold leading-none mt-1">
-                          <span dir="ltr" className="inline-flex items-center gap-1"><span>{plan.price}</span><span>ريال</span></span>
+                        <div className="inline-flex items-baseline gap-1">
+                          <span className="text-3xl font-extrabold">{toArabic(after)}</span>
+                          <span className="text-lg">ريال</span>
+                          <span className="ml-2 inline-flex items-center text-xs bg-red-500/90 px-2 py-0.5 rounded-full">
+                            خصم {toArabic(tier.discountPct)}%
+                          </span>
                         </div>
-                        <div className="text-green-600 text-xs font-medium leading-none mt-1">
-                          كاش باك: <span dir="ltr" className="inline-flex items-center gap-1"><span>{plan.cashback}</span><span>ريال</span></span>
+                        <div className="text-sm text-emerald-100">
+                          كاش-باك: <span className="font-semibold">{sar(cash)}</span>
                         </div>
                       </div>
 
-                      {/* Discount Badge - Small & Clear */}
-                      <div className="bg-gradient-to-r from-red-500 to-red-600 text-white px-3 py-1 rounded-full text-xs font-bold shadow-lg transform -rotate-3">
-                        خصم {plan.discount}
-                      </div>
+                      {/* أزرار ووصف مختصر */}
+                      <ul className="text-sm text-white/90 space-y-1 mb-5">
+                        <li>اشتراك 12 شهر</li>
+                        <li>دعم فني عبر البريد</li>
+                        <li>شهادة إنجاز رقمية</li>
+                      </ul>
+                      <Button 
+                        onClick={() => {
+                          setSelectedPlan({
+                            id: tier.slug,
+                            name: tier.titleAr,
+                            nameEn: tier.titleEn,
+                            price: toArabic(after),
+                            originalPrice: toArabic(before),
+                            discount: `${tier.discountPct}%`,
+                            cashback: toArabic(cash),
+                            cashbackPercent: `${tier.cashbackPct}%`,
+                          });
+                          setIsFormOpen(true);
+                        }}
+                        className="w-full rounded-xl bg-white text-black font-bold py-2 hover:opacity-90 transition"
+                      >
+                        <Crown className="w-4 h-4 ml-2" />
+                        اشترك الآن
+                      </Button>
                     </div>
-
-                    {/* Contactless Symbol */}
-                    <div className="absolute top-12 left-4">
-                      <div className="w-4 h-4 border-2 border-white/40 rounded-full relative">
-                        <div className="absolute inset-1 border border-white/40 rounded-full"></div>
-                        <div className="absolute inset-2 border border-white/40 rounded-full"></div>
-                      </div>
-                    </div>
-
-                    {/* Holographic Effect */}
-                    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent opacity-0 hover:opacity-100 transition-opacity duration-500 transform -skew-x-12"></div>
-                  </div>
-
-                  {/* Card Details */}
-                  <div className="mt-6 text-center">
-                    <h3 className="text-xl font-bold text-gray-800 mb-2">{plan.name}</h3>
-                    <p className="text-gray-600 text-sm mb-4">{plan.nameEn}</p>
-                  </div>
-
-                  {/* Subscribe Button */}
-                  <div className="mt-4">
-                    <Button 
-                      onClick={() => {
-                        setSelectedPlan(plan);
-                        setIsFormOpen(true);
-                      }}
-                      className={`
-                        w-full bg-gradient-to-r ${plan.gradient} 
-                        hover:opacity-90 text-white font-bold py-4 text-base rounded-xl
-                        shadow-lg hover:shadow-xl transition-all duration-300
-                        hover:scale-105 border-0
-                      `}
-                    >
-                      <Crown className="w-4 h-4 ml-2" />
-                      اشترك الآن - 12 شهر
-                    </Button>
-                    
-                    <div className="mt-3 text-center">
-                      <div className="inline-flex items-center gap-2 bg-green-50 text-green-700 px-4 py-2 rounded-full text-sm">
-                        <Gift className="w-4 h-4" />
-                        كاش باك فوري {plan.cashbackPercent}: <span dir="ltr" className="inline-flex items-center gap-1"><span>{plan.cashback}</span><span>ريال</span></span>
-                      </div>
-                      <p className="text-xs text-gray-500 mt-2">من رسوم التأسيس وجميع الطلبات</p>
-                    </div>
-                  </div>
-                </motion.div>
-              ))}
+                  );
+                })}
+              </div>
+              <p className="mt-4 text-xs text-gray-600 text-center">
+                * جميع الأرقام بصيغة عربية و"ريال" مثبتة بعد الرقم. الحساب تلقائي من القيم أعلاه.
+              </p>
             </div>
 
             {/* Cashback Notice - Attractive Alert */}
