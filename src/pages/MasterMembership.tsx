@@ -40,9 +40,9 @@ const MasterMembership = () => {
       gradient: 'from-slate-400 via-slate-300 to-slate-500',
       cardGradient: 'from-cyan-400 via-blue-400 to-indigo-500',
       features: [
-        { text: 'خصم 10% على جميع الخدمات', icon: 'tag' },
-        { text: 'دخول لدورات شهرية مجانية', icon: 'book' },
-        { text: 'شهادة مشاركة رقمية', icon: 'award' }
+        'خصم 10% على جميع الخدمات',
+        'دخول لدورات شهرية مجانية',
+        'شهادة مشاركة رقمية'
       ]
     },
     {
@@ -54,10 +54,10 @@ const MasterMembership = () => {
       gradient: 'from-yellow-400 via-amber-400 to-orange-500',
       cardGradient: 'from-amber-400 via-yellow-400 to-orange-500',
       features: [
-        { text: 'خصم 20% على جميع الخدمات', icon: 'tag' },
-        { text: 'دخول غير محدود للدورات', icon: 'infinity' },
-        { text: 'دعم فني مميز عبر البريد', icon: 'mail' },
-        { text: 'شهادة إنجاز معتمدة', icon: 'award' }
+        'خصم 20% على جميع الخدمات',
+        'دخول غير محدود للدورات',
+        'دعم فني مميز عبر البريد',
+        'شهادة إنجاز معتمدة'
       ]
     },
     {
@@ -69,10 +69,10 @@ const MasterMembership = () => {
       gradient: 'from-gray-900 via-gray-700 to-slate-600',
       cardGradient: 'from-gray-800 via-slate-700 to-gray-900',
       features: [
-        { text: 'خصم 35% على جميع الخدمات', icon: 'tag' },
-        { text: 'استشارة شهرية مجانية مع خبير', icon: 'user-check' },
-        { text: 'أولوية في المسابقات الأكاديمية', icon: 'trophy' },
-        { text: 'شهادة إنجاز معتمدة + توثيق QR', icon: 'qr-code' }
+        'خصم 35% على جميع الخدمات',
+        'استشارة شهرية مجانية مع خبير',
+        'أولوية في المسابقات الأكاديمية',
+        'شهادة إنجاز معتمدة + توثيق QR'
       ]
     }
   ];
@@ -301,16 +301,9 @@ const MasterMembership = () => {
                           {plan.features.map((feature, idx) => (
                             <div key={idx} className="flex items-center gap-3 text-white">
                               <div className="w-6 h-6 rounded-full bg-white/20 flex items-center justify-center">
-                                {feature.icon === 'tag' && <Tag className="w-3 h-3" />}
-                                {feature.icon === 'book' && <BookOpen className="w-3 h-3" />}
-                                {feature.icon === 'award' && <Award className="w-3 h-3" />}
-                                {feature.icon === 'infinity' && <Infinity className="w-3 h-3" />}
-                                {feature.icon === 'mail' && <Mail className="w-3 h-3" />}
-                                {feature.icon === 'user-check' && <UserCheck className="w-3 h-3" />}
-                                {feature.icon === 'trophy' && <Trophy className="w-3 h-3" />}
-                                {feature.icon === 'qr-code' && <QrCode className="w-3 h-3" />}
+                                <CheckCircle className="w-3 h-3" />
                               </div>
-                              <span className="text-sm font-medium">{feature.text}</span>
+                              <span className="text-sm font-medium">{feature}</span>
                             </div>
                           ))}
                         </div>
