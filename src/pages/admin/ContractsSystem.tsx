@@ -291,9 +291,9 @@ const ContractsSystem = () => {
 
   return (
     <AdminLayout>
-      <div className="space-y-6">
+      <div className="space-y-6" dir="rtl">
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-          <div>
+          <div className="text-right">
             <h1 className="text-2xl sm:text-3xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
               نظام إدارة العقود
             </h1>
@@ -302,12 +302,12 @@ const ContractsSystem = () => {
           
           <Dialog open={showNewContractDialog} onOpenChange={setShowNewContractDialog}>
             <DialogTrigger asChild>
-              <Button className="w-full sm:w-auto">
-                <Plus className="w-4 h-4 ml-2" />
+              <Button className="w-full sm:w-auto flex items-center gap-2">
+                <Plus className="w-4 h-4" />
                 إنشاء عقد جديد
               </Button>
             </DialogTrigger>
-            <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+            <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto" dir="rtl">
               <DialogHeader>
                 <DialogTitle>إنشاء عقد جديد</DialogTitle>
               </DialogHeader>
@@ -442,7 +442,7 @@ const ContractsSystem = () => {
           </Dialog>
         </div>
 
-        <Tabs defaultValue="contracts" className="w-full">
+        <Tabs defaultValue="contracts" className="w-full" dir="rtl">
           <TabsList className="grid w-full grid-cols-3">
             <TabsTrigger value="contracts" className="flex items-center gap-2">
               <FileText className="w-4 h-4" />
@@ -458,7 +458,7 @@ const ContractsSystem = () => {
             </TabsTrigger>
           </TabsList>
 
-          <TabsContent value="contracts" className="space-y-4">
+          <TabsContent value="contracts" className="space-y-4" dir="rtl">
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
@@ -498,74 +498,74 @@ const ContractsSystem = () => {
               </CardHeader>
               <CardContent>
                 {filteredContracts.length === 0 ? (
-                  <div className="text-center py-8">
-                    <FileText className="w-12 h-12 mx-auto mb-4 text-muted-foreground" />
-                    <p className="text-muted-foreground">لا توجد عقود مطابقة للبحث</p>
-                  </div>
-                ) : (
-                  <div className="space-y-4">
-                    {filteredContracts.map((contract) => (
-                      <div
-                        key={contract.id}
-                        className="p-4 border border-border rounded-lg hover:shadow-md transition-shadow"
-                      >
-                        <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4">
-                          <div className="flex-1">
-                            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 mb-2">
-                              <h3 className="font-semibold text-lg">{contract.contract_no}</h3>
-                              <Badge className={`${getStatusColor(contract.status)} text-xs`}>
-                                {getStatusLabel(contract.status)}
-                              </Badge>
+                    <div className="text-center py-8">
+                      <FileText className="w-12 h-12 mx-auto mb-4 text-muted-foreground" />
+                      <p className="text-muted-foreground">لا توجد عقود مطابقة للبحث</p>
+                    </div>
+                  ) : (
+                    <div className="space-y-4" dir="rtl">
+                      {filteredContracts.map((contract) => (
+                        <div
+                          key={contract.id}
+                          className="p-4 border border-border rounded-lg hover:shadow-md transition-shadow"
+                        >
+                          <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4">
+                            <div className="flex-1 text-right">
+                              <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 mb-2">
+                                <h3 className="font-semibold text-lg">{contract.contract_no}</h3>
+                                <Badge className={`${getStatusColor(contract.status)} text-xs`}>
+                                  {getStatusLabel(contract.status)}
+                                </Badge>
+                              </div>
+                              <p className="text-muted-foreground mb-1 text-right">{contract.client_name}</p>
+                              <p className="text-sm text-muted-foreground text-right">{contract.service_type}</p>
+                              <p className="text-xs text-muted-foreground text-right">
+                                تاريخ الإنشاء: {new Date(contract.created_at).toLocaleDateString('ar-SA')}
+                              </p>
                             </div>
-                            <p className="text-muted-foreground mb-1">{contract.client_name}</p>
-                            <p className="text-sm text-muted-foreground">{contract.service_type}</p>
-                            <p className="text-xs text-muted-foreground">
-                              تاريخ الإنشاء: {new Date(contract.created_at).toLocaleDateString('ar-SA')}
-                            </p>
-                          </div>
-                          <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2">
-                            <p className="font-bold text-lg text-primary">
-                              {contract.total_amount.toLocaleString()} {contract.currency}
-                            </p>
-                            <div className="flex flex-wrap gap-2">
-                              <Button
-                                variant="outline"
-                                size="sm"
-                                onClick={() => handleGeneratePDF(contract.id)}
-                                className="text-xs"
-                              >
-                                <Download className="w-3 h-3 ml-1" />
-                                PDF
-                              </Button>
-                              <Button
-                                variant="outline"
-                                size="sm"
-                                onClick={() => handleSendContract(contract.id)}
-                                className="text-xs"
-                              >
-                                <Send className="w-3 h-3 ml-1" />
-                                إرسال
-                              </Button>
-                              <Button
-                                variant="outline"
-                                size="sm"
-                                onClick={() => navigate(`/adminmaster/contracts/${contract.id}`)}
-                                className="text-xs"
-                              >
-                                <Eye className="w-3 h-3 ml-1" />
-                                عرض
-                              </Button>
-                              {contract.status !== 'cancelled' && (
+                            <div className="flex flex-col sm:flex-row items-end sm:items-center gap-2">
+                              <p className="font-bold text-lg text-primary text-right">
+                                {contract.total_amount.toLocaleString()} {contract.currency}
+                              </p>
+                              <div className="flex flex-wrap gap-2">
                                 <Button
-                                  variant="destructive"
+                                  variant="outline"
                                   size="sm"
-                                  onClick={() => handleCancelContract(contract.id)}
-                                  className="text-xs"
+                                  onClick={() => handleGeneratePDF(contract.id)}
+                                  className="text-xs flex items-center gap-1"
                                 >
-                                  <X className="w-3 h-3 ml-1" />
-                                  إلغاء
+                                  <Download className="w-3 h-3" />
+                                  PDF
                                 </Button>
-                              )}
+                                <Button
+                                  variant="outline"
+                                  size="sm"
+                                  onClick={() => handleSendContract(contract.id)}
+                                  className="text-xs flex items-center gap-1"
+                                >
+                                  <Send className="w-3 h-3" />
+                                  إرسال
+                                </Button>
+                                <Button
+                                  variant="outline"
+                                  size="sm"
+                                  onClick={() => navigate(`/adminmaster/contracts/${contract.id}`)}
+                                  className="text-xs flex items-center gap-1"
+                                >
+                                  <Eye className="w-3 h-3" />
+                                  عرض
+                                </Button>
+                                {contract.status !== 'cancelled' && (
+                                  <Button
+                                    variant="destructive"
+                                    size="sm"
+                                    onClick={() => handleCancelContract(contract.id)}
+                                    className="text-xs flex items-center gap-1"
+                                  >
+                                    <X className="w-3 h-3" />
+                                    إلغاء
+                                  </Button>
+                                )}
                             </div>
                           </div>
                         </div>
@@ -577,24 +577,24 @@ const ContractsSystem = () => {
             </Card>
           </TabsContent>
 
-          <TabsContent value="clients" className="space-y-4">
+          <TabsContent value="clients" className="space-y-4" dir="rtl">
             <Card>
               <CardContent className="text-center py-12">
                 <Users className="w-16 h-16 mx-auto mb-4 text-muted-foreground" />
                 <h3 className="text-xl font-semibold mb-2">إدارة العملاء</h3>
-                <p className="text-muted-foreground mb-4">
+                <p className="text-muted-foreground mb-4 text-right">
                   ستتم إضافة إدارة العملاء في التحديث القادم
                 </p>
               </CardContent>
             </Card>
           </TabsContent>
 
-          <TabsContent value="templates" className="space-y-4">
+          <TabsContent value="templates" className="space-y-4" dir="rtl">
             <Card>
               <CardContent className="text-center py-12">
                 <Copy className="w-16 h-16 mx-auto mb-4 text-muted-foreground" />
                 <h3 className="text-xl font-semibold mb-2">قوالب العقود</h3>
-                <p className="text-muted-foreground mb-4">
+                <p className="text-muted-foreground mb-4 text-right">
                   ستتم إضافة نظام قوالب العقود في التحديث القادم
                 </p>
               </CardContent>
