@@ -350,19 +350,19 @@ const AcademicCompetitions = () => {
 
                             {/* Action Buttons */}
                             <div className="flex flex-col gap-3 md:w-48">
-                              <Button className="w-full group" size="lg">
-                                <Upload className="ml-2 h-4 w-4 group-hover:translate-y-1 transition-transform" />
-                                شارك الآن
-                              </Button>
-                              <Button variant="outline" className="w-full group">
-                                <FileText className="ml-2 h-4 w-4" />
-                                تفاصيل أكثر
-                                <ChevronRight className="mr-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
-                              </Button>
-                              <Button variant="ghost" size="sm" className="w-full">
-                                <Download className="ml-2 h-4 w-4" />
-                                تحميل الشروط
-                              </Button>
+                <Button className="w-full group" size="lg">
+                  <Upload className="mr-2 h-4 w-4 group-hover:translate-y-1 transition-transform" />
+                  شارك الآن
+                </Button>
+                <Button variant="outline" className="w-full group">
+                  <FileText className="mr-2 h-4 w-4" />
+                  تفاصيل أكثر
+                  <ChevronRight className="ml-2 h-4 w-4 group-hover:-translate-x-1 transition-transform" />
+                </Button>
+                <Button variant="ghost" size="sm" className="w-full">
+                  <Download className="mr-2 h-4 w-4" />
+                  تحميل الشروط
+                </Button>
                             </div>
                           </div>
                         </CardContent>

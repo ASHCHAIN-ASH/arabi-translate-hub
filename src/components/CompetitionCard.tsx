@@ -159,7 +159,7 @@ const CompetitionCard: React.FC<CompetitionCardProps> = ({
   };
 
   return (
-    <Card className="overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 group border-r-4 border-r-primary">
+    <Card className="overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 group border-r-4 border-r-primary" dir="rtl">
       <div className="md:flex">
         
         {/* Competition Icon & Status */}
@@ -303,12 +303,12 @@ const CompetitionCard: React.FC<CompetitionCardProps> = ({
                   onClick={handleRegister}
                   disabled={loading}
                 >
-                  <Upload className="ml-2 h-4 w-4 group-hover:translate-y-1 transition-transform" />
+                  <Upload className="mr-2 h-4 w-4 group-hover:translate-y-1 transition-transform" />
                   {loading ? 'جاري التسجيل...' : 'شارك الآن'}
                 </Button>
               ) : isRegistered ? (
                 <Button variant="default" className="w-full bg-green-600 hover:bg-green-700" size="lg" disabled>
-                  <CheckCircle className="ml-2 h-4 w-4" />
+                  <CheckCircle className="mr-2 h-4 w-4" />
                   تم التسجيل
                 </Button>
               ) : (
@@ -322,13 +322,13 @@ const CompetitionCard: React.FC<CompetitionCardProps> = ({
                 className="w-full group"
                 onClick={() => onView?.(competition.id)}
               >
-                <FileText className="ml-2 h-4 w-4" />
+                <FileText className="mr-2 h-4 w-4" />
                 تفاصيل أكثر
-                <ChevronRight className="mr-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
+                <ChevronRight className="ml-2 h-4 w-4 group-hover:-translate-x-1 transition-transform" />
               </Button>
               
               <Button variant="ghost" size="sm" className="w-full">
-                <Download className="ml-2 h-4 w-4" />
+                <Download className="mr-2 h-4 w-4" />
                 تحميل الشروط
               </Button>
             </div>

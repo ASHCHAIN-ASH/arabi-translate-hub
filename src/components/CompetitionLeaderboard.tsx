@@ -120,7 +120,7 @@ const CompetitionLeaderboard: React.FC<LeaderboardProps> = ({
   const maxScore = Math.max(...leaderboard.map(entry => entry.score));
 
   return (
-    <Card className="shadow-lg">
+    <Card className="shadow-lg" dir="rtl">
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
           <TrendingUp className="h-5 w-5 text-primary" />
