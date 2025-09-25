@@ -168,7 +168,7 @@ const Footer = () => {
                 { name: 'عن الشركة', icon: Building2, href: '/about-us' },
                 { name: 'الأسئلة الشائعة', icon: Users },
                 { name: 'سياسة الخصوصية', icon: Shield, href: '/privacy-policy' },
-                { name: 'إدارة', icon: Users, href: '/admin/orders', admin: true }
+                { name: 'إدارة', icon: Users, href: '/adminmaster/orders', admin: true }
               ].map((link) => (
                 <li key={link.name}>
                   <a 

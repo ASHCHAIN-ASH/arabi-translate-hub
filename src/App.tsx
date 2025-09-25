@@ -139,18 +139,13 @@ const App = () => (
             <Route path="/auth/register" element={<Register />} />
             <Route path="/auth/forgot-password" element={<ForgotPassword />} />
             <Route path="/auth/reset-password" element={<ResetPassword />} />
-            <Route path="/admin/login" element={<AdminLogin />} />
+            <Route path="/adminmaster/login" element={<AdminLogin />} />
             <Route path="/unauthorized" element={<Unauthorized />} />
             
             {/* Client Dashboard Routes */}
             <Route path="/dashboard" element={
               <SimpleProtectedRoute requiredRole="client">
                 <ClientDashboard />
-              </SimpleProtectedRoute>
-            } />
-            <Route path="/client/services" element={
-              <SimpleProtectedRoute requiredRole="client">
-                <ClientServices />
               </SimpleProtectedRoute>
             } />
             <Route path="/orders" element={
@@ -173,7 +168,7 @@ const App = () => (
                 <OrderEdit />
               </SimpleProtectedRoute>
             } />
-            <Route path="/billing/invoices" element={
+            <Route path="/invoices" element={
               <SimpleProtectedRoute requiredRole="client">
                 <ClientInvoices />
               </SimpleProtectedRoute>
@@ -184,63 +179,63 @@ const App = () => (
               </SimpleProtectedRoute>
             } />
             
-            {/* Admin Dashboard Routes */}
-            <Route path="/admin" element={
+            {/* Admin Dashboard Routes - Hidden Path */}
+            <Route path="/adminmaster" element={
               <SimpleProtectedRoute adminOnly>
                 <AdminDashboard />
               </SimpleProtectedRoute>
             } />
-            <Route path="/admin/services" element={
+            <Route path="/adminmaster/services" element={
               <SimpleProtectedRoute adminOnly>
                 <AdminServices />
               </SimpleProtectedRoute>
             } />
-            <Route path="/admin/service-orders" element={
+            <Route path="/adminmaster/service-orders" element={
               <SimpleProtectedRoute adminOnly>
                 <AdminServiceOrders />
               </SimpleProtectedRoute>
             } />
-            <Route path="/admin/orders" element={
+            <Route path="/adminmaster/orders" element={
               <SimpleProtectedRoute adminOnly>
                 <AdminOrders />
               </SimpleProtectedRoute>
             } />
-            <Route path="/admin/invoices" element={
+            <Route path="/adminmaster/invoices" element={
               <SimpleProtectedRoute adminOnly>
                 <AdminInvoices />
               </SimpleProtectedRoute>
             } />
-            <Route path="/admin/transactions" element={
+            <Route path="/adminmaster/transactions" element={
               <SimpleProtectedRoute adminOnly>
                 <AdminTransactions />
               </SimpleProtectedRoute>
             } />
-            <Route path="/admin/users" element={
+            <Route path="/adminmaster/users" element={
               <SimpleProtectedRoute adminOnly>
                 <AdminUsers />
               </SimpleProtectedRoute>
             } />
-            <Route path="/admin/customers" element={
+            <Route path="/adminmaster/customers" element={
               <SimpleProtectedRoute adminOnly>
                 <AdminCustomers />
               </SimpleProtectedRoute>
             } />
-            <Route path="/admin/add-user" element={
+            <Route path="/adminmaster/add-user" element={
               <SimpleProtectedRoute adminOnly>
                 <AddUser />
               </SimpleProtectedRoute>
             } />
-            <Route path="/admin/tickets" element={
+            <Route path="/adminmaster/tickets" element={
               <SimpleProtectedRoute adminOnly>
                 <AdminTickets />
               </SimpleProtectedRoute>
             } />
-            <Route path="/admin/email-notifications" element={
+            <Route path="/adminmaster/email-notifications" element={
               <SimpleProtectedRoute adminOnly>
                 <EmailNotifications />
               </SimpleProtectedRoute>
             } />
-            <Route path="/admin/working-hours" element={
+            <Route path="/adminmaster/working-hours" element={
               <SimpleProtectedRoute adminOnly>
                 <AdminWorkingHours />
               </SimpleProtectedRoute>

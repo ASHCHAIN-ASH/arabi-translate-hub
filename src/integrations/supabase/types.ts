@@ -335,6 +335,27 @@ export type Database = {
         }
         Relationships: []
       }
+      application_counters: {
+        Row: {
+          counter: number
+          created_at: string
+          updated_at: string
+          year: number
+        }
+        Insert: {
+          counter?: number
+          created_at?: string
+          updated_at?: string
+          year: number
+        }
+        Update: {
+          counter?: number
+          created_at?: string
+          updated_at?: string
+          year?: number
+        }
+        Relationships: []
+      }
       ash_otps: {
         Row: {
           attempts: number | null
@@ -1993,49 +2014,61 @@ export type Database = {
       }
       job_applications: {
         Row: {
+          application_number: string | null
           city: string | null
           cover_letter: string | null
           created_at: string
           cv_file_name: string | null
           cv_file_size: number | null
+          cv_url: string | null
           education: string | null
           email: string
           experience: string | null
           full_name: string
           id: string
+          linkedin_url: string | null
           phone: string
+          portfolio_url: string | null
           position: string
           status: string | null
           updated_at: string
         }
         Insert: {
+          application_number?: string | null
           city?: string | null
           cover_letter?: string | null
           created_at?: string
           cv_file_name?: string | null
           cv_file_size?: number | null
+          cv_url?: string | null
           education?: string | null
           email: string
           experience?: string | null
           full_name: string
           id?: string
+          linkedin_url?: string | null
           phone: string
+          portfolio_url?: string | null
           position: string
           status?: string | null
           updated_at?: string
         }
         Update: {
+          application_number?: string | null
           city?: string | null
           cover_letter?: string | null
           created_at?: string
           cv_file_name?: string | null
           cv_file_size?: number | null
+          cv_url?: string | null
           education?: string | null
           email?: string
           experience?: string | null
           full_name?: string
           id?: string
+          linkedin_url?: string | null
           phone?: string
+          portfolio_url?: string | null
           position?: string
           status?: string | null
           updated_at?: string
@@ -2338,6 +2371,63 @@ export type Database = {
           order_id?: string
           uploaded_by?: string
           uploaded_by_type?: string
+        }
+        Relationships: []
+      }
+      order_requests: {
+        Row: {
+          attachment_names: string[] | null
+          attachment_urls: string[] | null
+          budget: string
+          client_type: string
+          contact_person: string
+          country: string
+          created_at: string | null
+          email: string
+          id: string
+          organization_name: string
+          phone: string
+          priority: string
+          project_description: string
+          service_type: string
+          timeline: string
+          updated_at: string | null
+        }
+        Insert: {
+          attachment_names?: string[] | null
+          attachment_urls?: string[] | null
+          budget: string
+          client_type: string
+          contact_person: string
+          country: string
+          created_at?: string | null
+          email: string
+          id?: string
+          organization_name: string
+          phone: string
+          priority: string
+          project_description: string
+          service_type: string
+          timeline: string
+          updated_at?: string | null
+        }
+        Update: {
+          attachment_names?: string[] | null
+          attachment_urls?: string[] | null
+          budget?: string
+          client_type?: string
+          contact_person?: string
+          country?: string
+          created_at?: string | null
+          email?: string
+          id?: string
+          organization_name?: string
+          phone?: string
+          priority?: string
+          project_description?: string
+          service_type?: string
+          timeline?: string
+          updated_at?: string | null
         }
         Relationships: []
       }
@@ -3219,6 +3309,7 @@ export type Database = {
           profile_data: Json | null
           role: Database["public"]["Enums"]["platform_user_role"]
           status: Database["public"]["Enums"]["platform_user_status"]
+          tenant_id: string | null
           updated_at: string | null
         }
         Insert: {
@@ -3236,6 +3327,7 @@ export type Database = {
           profile_data?: Json | null
           role?: Database["public"]["Enums"]["platform_user_role"]
           status?: Database["public"]["Enums"]["platform_user_status"]
+          tenant_id?: string | null
           updated_at?: string | null
         }
         Update: {
@@ -3253,9 +3345,18 @@ export type Database = {
           profile_data?: Json | null
           role?: Database["public"]["Enums"]["platform_user_role"]
           status?: Database["public"]["Enums"]["platform_user_status"]
+          tenant_id?: string | null
           updated_at?: string | null
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "platform_users_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       product_orders: {
         Row: {
@@ -3319,16 +3420,60 @@ export type Database = {
       }
       profiles: {
         Row: {
+          company: string | null
+          created_at: string | null
+          email: string
+          full_name: string | null
+          phone: string | null
+          role: string
+          site_id: string
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          company?: string | null
+          created_at?: string | null
+          email: string
+          full_name?: string | null
+          phone?: string | null
+          role?: string
+          site_id?: string
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          company?: string | null
+          created_at?: string | null
+          email?: string
+          full_name?: string | null
+          phone?: string | null
+          role?: string
+          site_id?: string
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "profiles_site_id_fkey"
+            columns: ["site_id"]
+            isOneToOne: false
+            referencedRelation: "sites"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      profiles_backup: {
+        Row: {
           account_number: string | null
           client_id: string | null
           company: string | null
           created_at: string | null
           email: string | null
           full_name: string | null
-          id: string
+          id: string | null
           phone: string | null
           updated_at: string | null
-          user_id: string
+          user_id: string | null
           user_role: string | null
         }
         Insert: {
@@ -3338,10 +3483,10 @@ export type Database = {
           created_at?: string | null
           email?: string | null
           full_name?: string | null
-          id?: string
+          id?: string | null
           phone?: string | null
           updated_at?: string | null
-          user_id: string
+          user_id?: string | null
           user_role?: string | null
         }
         Update: {
@@ -3351,10 +3496,10 @@ export type Database = {
           created_at?: string | null
           email?: string | null
           full_name?: string | null
-          id?: string
+          id?: string | null
           phone?: string | null
           updated_at?: string | null
-          user_id?: string
+          user_id?: string | null
           user_role?: string | null
         }
         Relationships: []
@@ -3458,6 +3603,57 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      project_requests: {
+        Row: {
+          additional_services: string[] | null
+          budget: string | null
+          company: string | null
+          created_at: string
+          description: string | null
+          email: string
+          email_sent: boolean | null
+          id: string
+          name: string
+          phone: string | null
+          project_ref: string | null
+          project_type: string
+          timeline: string | null
+          updated_at: string
+        }
+        Insert: {
+          additional_services?: string[] | null
+          budget?: string | null
+          company?: string | null
+          created_at?: string
+          description?: string | null
+          email: string
+          email_sent?: boolean | null
+          id?: string
+          name: string
+          phone?: string | null
+          project_ref?: string | null
+          project_type: string
+          timeline?: string | null
+          updated_at?: string
+        }
+        Update: {
+          additional_services?: string[] | null
+          budget?: string | null
+          company?: string | null
+          created_at?: string
+          description?: string | null
+          email?: string
+          email_sent?: boolean | null
+          id?: string
+          name?: string
+          phone?: string | null
+          project_ref?: string | null
+          project_type?: string
+          timeline?: string | null
+          updated_at?: string
+        }
+        Relationships: []
       }
       project_stages: {
         Row: {
@@ -3865,6 +4061,7 @@ export type Database = {
           resource_id: string | null
           resource_type: string | null
           risk_level: string | null
+          tenant_id: string | null
           user_agent: string | null
           user_id: string | null
         }
@@ -3878,6 +4075,7 @@ export type Database = {
           resource_id?: string | null
           resource_type?: string | null
           risk_level?: string | null
+          tenant_id?: string | null
           user_agent?: string | null
           user_id?: string | null
         }
@@ -3891,10 +4089,19 @@ export type Database = {
           resource_id?: string | null
           resource_type?: string | null
           risk_level?: string | null
+          tenant_id?: string | null
           user_agent?: string | null
           user_id?: string | null
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "security_audit_logs_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       sensitive_data_audit: {
         Row: {
@@ -4191,6 +4398,7 @@ export type Database = {
           rush_delivery_multiplier: number | null
           show_to_clients: boolean | null
           sort_order: number | null
+          tenant_id: string | null
           unit_type: string | null
           updated_at: string | null
         }
@@ -4215,6 +4423,7 @@ export type Database = {
           rush_delivery_multiplier?: number | null
           show_to_clients?: boolean | null
           sort_order?: number | null
+          tenant_id?: string | null
           unit_type?: string | null
           updated_at?: string | null
         }
@@ -4239,6 +4448,7 @@ export type Database = {
           rush_delivery_multiplier?: number | null
           show_to_clients?: boolean | null
           sort_order?: number | null
+          tenant_id?: string | null
           unit_type?: string | null
           updated_at?: string | null
         }
@@ -4250,7 +4460,35 @@ export type Database = {
             referencedRelation: "service_categories"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "services_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
         ]
+      }
+      sites: {
+        Row: {
+          created_at: string | null
+          domain: string
+          id: string
+          slug: string
+        }
+        Insert: {
+          created_at?: string | null
+          domain: string
+          id?: string
+          slug: string
+        }
+        Update: {
+          created_at?: string | null
+          domain?: string
+          id?: string
+          slug?: string
+        }
+        Relationships: []
       }
       subscription_plans: {
         Row: {
@@ -4777,6 +5015,7 @@ export type Database = {
           publish_date: string | null
           target_audience: string
           target_client_id: string | null
+          tenant_id: string | null
           title: string
           update_type: string
           updated_at: string
@@ -4792,6 +5031,7 @@ export type Database = {
           publish_date?: string | null
           target_audience?: string
           target_client_id?: string | null
+          tenant_id?: string | null
           title: string
           update_type?: string
           updated_at?: string
@@ -4807,11 +5047,20 @@ export type Database = {
           publish_date?: string | null
           target_audience?: string
           target_client_id?: string | null
+          tenant_id?: string | null
           title?: string
           update_type?: string
           updated_at?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "updates_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       user_activity_logs: {
         Row: {
@@ -4854,6 +5103,7 @@ export type Database = {
           message: string
           metadata: Json | null
           read_at: string | null
+          tenant_id: string | null
           title: string
           type: string | null
           user_email: string
@@ -4865,6 +5115,7 @@ export type Database = {
           message: string
           metadata?: Json | null
           read_at?: string | null
+          tenant_id?: string | null
           title: string
           type?: string | null
           user_email: string
@@ -4876,11 +5127,20 @@ export type Database = {
           message?: string
           metadata?: Json | null
           read_at?: string | null
+          tenant_id?: string | null
           title?: string
           type?: string | null
           user_email?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "user_notifications_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       user_roles: {
         Row: {
@@ -5081,6 +5341,10 @@ export type Database = {
         }
         Returns: Json
       }
+      belongs_to_tenant: {
+        Args: { record_tenant_id: string }
+        Returns: boolean
+      }
       calculate_affiliate_level: {
         Args: { user_id: string }
         Returns: string
@@ -5121,6 +5385,30 @@ export type Database = {
       check_sensitive_operation_limit: {
         Args: { p_operation_type: string; p_user_id: string }
         Returns: boolean
+      }
+      citext: {
+        Args: { "": boolean } | { "": string } | { "": unknown }
+        Returns: string
+      }
+      citext_hash: {
+        Args: { "": string }
+        Returns: number
+      }
+      citextin: {
+        Args: { "": unknown }
+        Returns: string
+      }
+      citextout: {
+        Args: { "": string }
+        Returns: unknown
+      }
+      citextrecv: {
+        Args: { "": unknown }
+        Returns: string
+      }
+      citextsend: {
+        Args: { "": string }
+        Returns: string
       }
       cleanup_expired_password_reset_tokens: {
         Args: Record<PropertyKey, never>
@@ -5244,6 +5532,10 @@ export type Database = {
         Args: Record<PropertyKey, never>
         Returns: string
       }
+      generate_application_number: {
+        Args: Record<PropertyKey, never>
+        Returns: string
+      }
       generate_business_contract_number: {
         Args: Record<PropertyKey, never>
         Returns: string
@@ -5322,6 +5614,10 @@ export type Database = {
         Returns: string
       }
       get_current_ash_user_role: {
+        Args: Record<PropertyKey, never>
+        Returns: string
+      }
+      get_current_tenant_id: {
         Args: Record<PropertyKey, never>
         Returns: string
       }
@@ -5466,11 +5762,11 @@ export type Database = {
         Returns: string
       }
       normalize_digits: {
-        Args: { input_text: string }
+        Args: { txt: string }
         Returns: string
       }
       normalize_email: {
-        Args: { email_input: string }
+        Args: { txt: string }
         Returns: string
       }
       normalize_email_enhanced: {
@@ -5511,7 +5807,10 @@ export type Database = {
               p_transaction_type: string
               p_user_id: string
             }
-        Returns: string
+        Returns: {
+          new_balance: number
+          transaction_id: string
+        }[]
       }
       record_automation_usage: {
         Args: { p_automation_type: string; p_count?: number; p_user_id: string }
@@ -5540,6 +5839,10 @@ export type Database = {
       simulate_user_activities: {
         Args: Record<PropertyKey, never>
         Returns: undefined
+      }
+      switch_tenant: {
+        Args: { tenant_code: string }
+        Returns: boolean
       }
       update_customer_status: {
         Args: { p_customer_id: string; p_reason?: string; p_status: string }

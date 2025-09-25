@@ -13,7 +13,7 @@ const AddUser = () => {
   const handleSuccessfulRegistration = () => {
     // التوجه إلى صفحة إدارة المستخدمين بعد التسجيل الناجح
     setTimeout(() => {
-      navigate('/admin/users');
+      navigate('/adminmaster/users');
     }, 2000);
   };
 
@@ -40,7 +40,7 @@ const AddUser = () => {
             </div>
             <Button
               variant="outline"
-              onClick={() => navigate('/admin/users')}
+              onClick={() => navigate('/adminmaster/users')}
               className="flex items-center gap-2"
             >
               <ArrowRight className="w-4 h-4" />

@@ -36,7 +36,7 @@ const Unauthorized = () => {
             </Button>
             <Button 
               variant="outline" 
-              onClick={() => navigate('/admin/login')}
+              onClick={() => navigate('/adminmaster/login')}
             >
               تسجيل دخول الإدارة
             </Button>

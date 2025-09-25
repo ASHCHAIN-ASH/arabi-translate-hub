@@ -5,37 +5,37 @@ import { Sidebar, SidebarContent, SidebarGroup, SidebarGroupContent, SidebarGrou
 const items = [
   {
     title: 'إدارة العملاء',
-    url: '/admin/customers',
+    url: '/adminmaster/customers',
     icon: Users,
   },
   {
     title: 'إدارة المستخدمين',
-    url: '/admin/users',
+    url: '/adminmaster/users',
     icon: Settings,
   },
   {
     title: 'العقود',
-    url: '/admin/contracts',
+    url: '/adminmaster/contracts',
     icon: FileText,
   },
   {
     title: 'الفواتير الضريبية',
-    url: '/admin/invoices',
+    url: '/adminmaster/invoices',
     icon: Receipt,
   },
   {
     title: 'المحاسبة',
-    url: '/admin/accounting',
+    url: '/adminmaster/accounting',
     icon: CreditCard,
   },
   {
     title: 'التوقيع الإلكتروني',
-    url: '/admin/esign',
+    url: '/adminmaster/esign',
     icon: FileSignature,
   },
   {
     title: 'واتساب',
-    url: '/admin/whatsapp',
+    url: '/adminmaster/whatsapp',
     icon: MessageCircle,
   }
 ];

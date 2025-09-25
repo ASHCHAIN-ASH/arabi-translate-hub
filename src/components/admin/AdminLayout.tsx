@@ -50,67 +50,67 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
   const navItems = [
     { 
       name: 'لوحة التحكم', 
-      href: '/admin', 
+      href: '/adminmaster', 
       icon: LayoutDashboard,
       badge: null
     },
     { 
       name: 'إدارة الخدمات', 
-      href: '/admin/services', 
+      href: '/adminmaster/services', 
       icon: Briefcase,
       badge: counts.services.toString()
     },
     { 
       name: 'طلبات الخدمات', 
-      href: '/admin/service-orders', 
+      href: '/adminmaster/service-orders', 
       icon: FileText,
       badge: 'جديد'
     },
     { 
       name: 'إدارة الطلبات', 
-      href: '/admin/orders', 
+      href: '/adminmaster/orders', 
       icon: ShoppingCart,
       badge: counts.orders > 0 ? counts.orders.toString() : null
     },
     { 
       name: 'نظام الإشعارات البريدية', 
-      href: '/admin/email-notifications', 
+      href: '/adminmaster/email-notifications', 
       icon: Mail,
       badge: 'جديد'
     },
     { 
       name: 'إدارة الفواتير', 
-      href: '/admin/invoices', 
+      href: '/adminmaster/invoices', 
       icon: CreditCard,
       badge: counts.invoices > 0 ? counts.invoices.toString() : null
     },
     { 
       name: 'إدارة المدفوعات', 
-      href: '/admin/transactions', 
+      href: '/adminmaster/transactions', 
       icon: CreditCard,
       badge: null
     },
     { 
       name: 'إدارة المستخدمين', 
-      href: '/admin/users', 
+      href: '/adminmaster/users', 
       icon: Users,
       badge: counts.users > 0 ? counts.users.toString() : null
     },
     { 
       name: 'إدارة العملاء', 
-      href: '/admin/customers', 
+      href: '/adminmaster/customers', 
       icon: Users,
       badge: 'جديد'
     },
     { 
       name: 'إدارة التذاكر', 
-      href: '/admin/tickets', 
+      href: '/adminmaster/tickets', 
       icon: HelpCircle,
       badge: counts.tickets > 0 ? counts.tickets.toString() : null
     },
     { 
       name: 'الإعدادات', 
-      href: '/admin/settings', 
+      href: '/adminmaster/settings', 
       icon: Settings,
       badge: null
     },
@@ -180,7 +180,7 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
     <nav className="p-4 space-y-2">
       {navItems.map((item, index) => {
         const isActive = location.pathname === item.href || 
-          (item.href !== '/admin' && location.pathname.startsWith(item.href));
+          (item.href !== '/adminmaster' && location.pathname.startsWith(item.href));
         
         return (
           <motion.div
@@ -276,7 +276,7 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
               </Sheet>
 
               {/* Logo */}
-              <Link to="/admin" className="flex items-center space-x-3 space-x-reverse group">
+              <Link to="/adminmaster" className="flex items-center space-x-3 space-x-reverse group">
                 <motion.div 
                   className="w-10 h-10 bg-gradient-to-br from-primary to-secondary rounded-xl flex items-center justify-center shadow-lg"
                   whileHover={{ scale: 1.05, rotate: 5 }}
