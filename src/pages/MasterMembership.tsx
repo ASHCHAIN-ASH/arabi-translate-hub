@@ -221,15 +221,15 @@ const MasterMembership = () => {
                       <div className={`relative w-full h-44 rounded-xl p-4 text-white shadow-xl bg-gradient-to-br ${style.gradient} overflow-hidden transform transition-all duration-300 hover:scale-105`}>
                         
                         {/* أيقونات أنشطة الموقع في الخلفية */}
-                        <div className="absolute inset-0 overflow-hidden opacity-10">
-                          <BookOpen className="absolute top-8 right-8 w-6 h-6 text-white/30 transform rotate-12 animate-pulse" />
-                          <Award className="absolute bottom-12 left-6 w-5 h-5 text-white/25 transform -rotate-12 animate-bounce" />
-                          <Globe className="absolute top-16 left-8 w-5 h-5 text-white/25 transform rotate-45 animate-pulse" />
-                          <Trophy className="absolute bottom-20 right-12 w-4 h-4 text-white/30 transform -rotate-45 animate-bounce" />
-                          <Shield className="absolute top-20 right-20 w-5 h-5 text-white/25 transform rotate-12 animate-pulse" />
-                          <MessageSquare className="absolute bottom-8 left-12 w-4 h-4 text-white/25 transform rotate-30 animate-bounce" />
-                          <Users className="absolute top-12 left-16 w-5 h-5 text-white/25 transform -rotate-15 animate-pulse" />
-                          <Download className="absolute bottom-16 right-6 w-4 h-4 text-white/30 transform rotate-25 animate-bounce" />
+                        <div className="absolute inset-0 overflow-hidden opacity-20">
+                          <BookOpen className="absolute top-8 left-8 w-8 h-8 text-white/60 transform -rotate-12 animate-pulse" />
+                          <Award className="absolute bottom-12 right-6 w-7 h-7 text-white/50 transform rotate-12 animate-bounce" />
+                          <Globe className="absolute top-16 right-8 w-7 h-7 text-white/50 transform -rotate-45 animate-pulse" />
+                          <Trophy className="absolute bottom-20 left-12 w-6 h-6 text-white/60 transform rotate-45 animate-bounce" />
+                          <Shield className="absolute top-20 left-20 w-7 h-7 text-white/50 transform -rotate-12 animate-pulse" />
+                          <MessageSquare className="absolute bottom-8 right-12 w-6 h-6 text-white/50 transform -rotate-30 animate-bounce" />
+                          <Users className="absolute top-12 right-16 w-7 h-7 text-white/50 transform rotate-15 animate-pulse" />
+                          <Download className="absolute bottom-16 left-6 w-6 h-6 text-white/60 transform -rotate-25 animate-bounce" />
                         </div>
                         
                         {/* اسم الوكالة في أعلى البطاقة */}
