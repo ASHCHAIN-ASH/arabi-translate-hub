@@ -14,6 +14,90 @@ export type Database = {
   }
   public: {
     Tables: {
+      academic_competitions: {
+        Row: {
+          category: string
+          created_at: string
+          created_by: string
+          description: string
+          difficulty: Database["public"]["Enums"]["difficulty_level"]
+          end_date: string
+          evaluation_criteria: string[] | null
+          id: string
+          image_url: string | null
+          innovation_category: string | null
+          language_pairs: string[] | null
+          max_participants: number | null
+          prize_description: string
+          quiz_duration_minutes: number | null
+          registration_deadline: string
+          requirements: string[] | null
+          rules: string | null
+          start_date: string
+          status: Database["public"]["Enums"]["competition_status"]
+          submission_format: string | null
+          tenant_id: string | null
+          title: string
+          type: Database["public"]["Enums"]["competition_type"]
+          updated_at: string
+          word_limit: number | null
+        }
+        Insert: {
+          category: string
+          created_at?: string
+          created_by: string
+          description: string
+          difficulty?: Database["public"]["Enums"]["difficulty_level"]
+          end_date: string
+          evaluation_criteria?: string[] | null
+          id?: string
+          image_url?: string | null
+          innovation_category?: string | null
+          language_pairs?: string[] | null
+          max_participants?: number | null
+          prize_description: string
+          quiz_duration_minutes?: number | null
+          registration_deadline: string
+          requirements?: string[] | null
+          rules?: string | null
+          start_date: string
+          status?: Database["public"]["Enums"]["competition_status"]
+          submission_format?: string | null
+          tenant_id?: string | null
+          title: string
+          type: Database["public"]["Enums"]["competition_type"]
+          updated_at?: string
+          word_limit?: number | null
+        }
+        Update: {
+          category?: string
+          created_at?: string
+          created_by?: string
+          description?: string
+          difficulty?: Database["public"]["Enums"]["difficulty_level"]
+          end_date?: string
+          evaluation_criteria?: string[] | null
+          id?: string
+          image_url?: string | null
+          innovation_category?: string | null
+          language_pairs?: string[] | null
+          max_participants?: number | null
+          prize_description?: string
+          quiz_duration_minutes?: number | null
+          registration_deadline?: string
+          requirements?: string[] | null
+          rules?: string | null
+          start_date?: string
+          status?: Database["public"]["Enums"]["competition_status"]
+          submission_format?: string | null
+          tenant_id?: string | null
+          title?: string
+          type?: Database["public"]["Enums"]["competition_type"]
+          updated_at?: string
+          word_limit?: number | null
+        }
+        Relationships: []
+      }
       admin_credentials: {
         Row: {
           created_at: string | null
@@ -1436,6 +1520,217 @@ export type Database = {
             columns: ["created_by"]
             isOneToOne: false
             referencedRelation: "admin_users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      competition_evaluations: {
+        Row: {
+          comments: string | null
+          created_at: string
+          criteria_scores: Json
+          evaluation_date: string
+          evaluator_id: string
+          id: string
+          participation_id: string
+          tenant_id: string | null
+          total_score: number
+        }
+        Insert: {
+          comments?: string | null
+          created_at?: string
+          criteria_scores: Json
+          evaluation_date?: string
+          evaluator_id: string
+          id?: string
+          participation_id: string
+          tenant_id?: string | null
+          total_score: number
+        }
+        Update: {
+          comments?: string | null
+          created_at?: string
+          criteria_scores?: Json
+          evaluation_date?: string
+          evaluator_id?: string
+          id?: string
+          participation_id?: string
+          tenant_id?: string | null
+          total_score?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "competition_evaluations_participation_id_fkey"
+            columns: ["participation_id"]
+            isOneToOne: false
+            referencedRelation: "competition_participants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      competition_participants: {
+        Row: {
+          competition_id: string
+          created_at: string
+          feedback: string | null
+          id: string
+          quiz_answers: Json | null
+          rank: number | null
+          registration_date: string
+          score: number | null
+          status: Database["public"]["Enums"]["participation_status"]
+          submission_content: string | null
+          submission_date: string | null
+          submission_file_url: string | null
+          submission_metadata: Json | null
+          tenant_id: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          competition_id: string
+          created_at?: string
+          feedback?: string | null
+          id?: string
+          quiz_answers?: Json | null
+          rank?: number | null
+          registration_date?: string
+          score?: number | null
+          status?: Database["public"]["Enums"]["participation_status"]
+          submission_content?: string | null
+          submission_date?: string | null
+          submission_file_url?: string | null
+          submission_metadata?: Json | null
+          tenant_id?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          competition_id?: string
+          created_at?: string
+          feedback?: string | null
+          id?: string
+          quiz_answers?: Json | null
+          rank?: number | null
+          registration_date?: string
+          score?: number | null
+          status?: Database["public"]["Enums"]["participation_status"]
+          submission_content?: string | null
+          submission_date?: string | null
+          submission_file_url?: string | null
+          submission_metadata?: Json | null
+          tenant_id?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "competition_participants_competition_id_fkey"
+            columns: ["competition_id"]
+            isOneToOne: false
+            referencedRelation: "academic_competitions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      competition_votes: {
+        Row: {
+          competition_id: string
+          created_at: string
+          id: string
+          participant_id: string
+          tenant_id: string | null
+          vote_value: number
+          voter_email: string
+          voter_ip: unknown | null
+        }
+        Insert: {
+          competition_id: string
+          created_at?: string
+          id?: string
+          participant_id: string
+          tenant_id?: string | null
+          vote_value?: number
+          voter_email: string
+          voter_ip?: unknown | null
+        }
+        Update: {
+          competition_id?: string
+          created_at?: string
+          id?: string
+          participant_id?: string
+          tenant_id?: string | null
+          vote_value?: number
+          voter_email?: string
+          voter_ip?: unknown | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "competition_votes_competition_id_fkey"
+            columns: ["competition_id"]
+            isOneToOne: false
+            referencedRelation: "academic_competitions"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "competition_votes_participant_id_fkey"
+            columns: ["participant_id"]
+            isOneToOne: false
+            referencedRelation: "competition_participants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      competition_winners: {
+        Row: {
+          announcement_date: string
+          certificate_url: string | null
+          competition_id: string
+          created_at: string
+          id: string
+          participant_id: string
+          position: number
+          prize_amount: number | null
+          prize_description: string
+          tenant_id: string | null
+        }
+        Insert: {
+          announcement_date?: string
+          certificate_url?: string | null
+          competition_id: string
+          created_at?: string
+          id?: string
+          participant_id: string
+          position: number
+          prize_amount?: number | null
+          prize_description: string
+          tenant_id?: string | null
+        }
+        Update: {
+          announcement_date?: string
+          certificate_url?: string | null
+          competition_id?: string
+          created_at?: string
+          id?: string
+          participant_id?: string
+          position?: number
+          prize_amount?: number | null
+          prize_description?: string
+          tenant_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "competition_winners_competition_id_fkey"
+            columns: ["competition_id"]
+            isOneToOne: false
+            referencedRelation: "academic_competitions"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "competition_winners_participant_id_fkey"
+            columns: ["participant_id"]
+            isOneToOne: false
+            referencedRelation: "competition_participants"
             referencedColumns: ["id"]
           },
         ]
@@ -5709,6 +6004,10 @@ export type Database = {
           verified_users: number
         }[]
       }
+      get_competition_stats: {
+        Args: { competition_uuid: string }
+        Returns: Json
+      }
       get_current_admin_user: {
         Args: Record<PropertyKey, never>
         Returns: string
@@ -5952,6 +6251,10 @@ export type Database = {
         Args: { tenant_code: string }
         Returns: boolean
       }
+      update_competition_rankings: {
+        Args: { competition_uuid: string }
+        Returns: undefined
+      }
       update_customer_status: {
         Args: { p_customer_id: string; p_reason?: string; p_status: string }
         Returns: Json
@@ -6036,6 +6339,14 @@ export type Database = {
         | "logout"
       client_sector: "government" | "private" | "semi_government"
       client_status: "prospect" | "active" | "inactive" | "blocked"
+      competition_status: "active" | "upcoming" | "ended" | "cancelled"
+      competition_type:
+        | "research"
+        | "case_study"
+        | "quiz"
+        | "writing"
+        | "translation"
+        | "innovation"
       contract_status:
         | "draft"
         | "sent"
@@ -6044,11 +6355,19 @@ export type Database = {
         | "completed"
         | "terminated"
       contract_type: "full_time" | "part_time" | "contract" | "internship"
+      difficulty_level: "beginner" | "intermediate" | "advanced"
       invoice_status: "draft" | "sent" | "paid" | "overdue" | "cancelled"
       job_status: "open" | "closed"
       job_type: "full_time" | "part_time" | "contract" | "internship"
       news_type: "news" | "press"
       page_status: "draft" | "published"
+      participation_status:
+        | "registered"
+        | "submitted"
+        | "under_review"
+        | "evaluated"
+        | "winner"
+        | "disqualified"
       password_algorithm: "sha256_v1" | "bcrypt_v1" | "argon2id_v1" | "md5_v1"
       payment_status: "pending" | "completed" | "failed" | "refunded"
       platform_order_status:
@@ -6222,6 +6541,15 @@ export const Constants = {
       ],
       client_sector: ["government", "private", "semi_government"],
       client_status: ["prospect", "active", "inactive", "blocked"],
+      competition_status: ["active", "upcoming", "ended", "cancelled"],
+      competition_type: [
+        "research",
+        "case_study",
+        "quiz",
+        "writing",
+        "translation",
+        "innovation",
+      ],
       contract_status: [
         "draft",
         "sent",
@@ -6231,11 +6559,20 @@ export const Constants = {
         "terminated",
       ],
       contract_type: ["full_time", "part_time", "contract", "internship"],
+      difficulty_level: ["beginner", "intermediate", "advanced"],
       invoice_status: ["draft", "sent", "paid", "overdue", "cancelled"],
       job_status: ["open", "closed"],
       job_type: ["full_time", "part_time", "contract", "internship"],
       news_type: ["news", "press"],
       page_status: ["draft", "published"],
+      participation_status: [
+        "registered",
+        "submitted",
+        "under_review",
+        "evaluated",
+        "winner",
+        "disqualified",
+      ],
       password_algorithm: ["sha256_v1", "bcrypt_v1", "argon2id_v1", "md5_v1"],
       payment_status: ["pending", "completed", "failed", "refunded"],
       platform_order_status: [
