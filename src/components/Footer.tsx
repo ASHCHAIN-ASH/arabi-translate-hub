@@ -197,6 +197,7 @@ const Footer = () => {
             <ul className="space-y-2 md:space-y-3">
               {[
                 { name: 'أحدث المقالات', badge: 'جديد', href: '/blog' },
+                { name: 'عضوية ماستر', badge: 'حصري', href: '/master-membership' },
                 { name: 'نصائح الترجمة', badge: 'مفيد', href: '/blog' },
                 { name: 'أخبار الصناعة', badge: 'حصري', href: '/blog' },
                 { name: 'دليل العملاء', badge: 'شامل', href: '/client-guide' },

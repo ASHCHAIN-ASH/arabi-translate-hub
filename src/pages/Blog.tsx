@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { ArrowRight, Calendar, User, Eye, Heart, Share2, Tag, Search } from "lucide-react";
+import { ArrowRight, Calendar, User, Eye, Heart, Share2, Tag, Search, Crown, CheckCircle } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -152,6 +152,44 @@ const Blog = () => {
             transition={{ duration: 0.6 }}
             className="lg:col-span-1"
           >
+            {/* Master Membership CTA */}
+            <motion.div
+              initial={{ opacity: 0, x: 30 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: 0.2, duration: 0.6 }}
+              className="bg-gradient-to-br from-purple-600 via-blue-600 to-indigo-700 rounded-xl p-6 text-white shadow-xl mb-8"
+            >
+              <div className="text-center">
+                <div className="w-16 h-16 bg-white/20 rounded-full mx-auto mb-4 flex items-center justify-center">
+                  <Crown className="h-8 w-8 text-yellow-300" />
+                </div>
+                <h3 className="text-xl font-bold mb-3">عضوية ماستر</h3>
+                <p className="text-sm opacity-90 mb-4">
+                  انضم لمجتمع النخبة واحصل على محتوى حصري وموارد متقدمة
+                </p>
+                <div className="space-y-3 mb-4">
+                  <div className="flex items-center gap-2 text-sm">
+                    <CheckCircle className="h-4 w-4 text-green-300" />
+                    <span>محتوى حصري متقدم</span>
+                  </div>
+                  <div className="flex items-center gap-2 text-sm">
+                    <CheckCircle className="h-4 w-4 text-green-300" />
+                    <span>ورش عمل مباشرة</span>
+                  </div>
+                  <div className="flex items-center gap-2 text-sm">
+                    <CheckCircle className="h-4 w-4 text-green-300" />
+                    <span>استشارات شخصية</span>
+                  </div>
+                </div>
+                <Button 
+                  className="w-full bg-yellow-500 hover:bg-yellow-400 text-black font-bold"
+                  asChild
+                >
+                  <a href="/master-membership">اعرف المزيد</a>
+                </Button>
+              </div>
+            </motion.div>
+
             <Card className="mb-8 shadow-lg hover:shadow-xl transition-shadow">
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
