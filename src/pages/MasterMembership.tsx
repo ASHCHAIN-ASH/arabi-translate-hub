@@ -163,8 +163,23 @@ const MasterMembership = () => {
               اختر العضوية المناسبة لك
             </h2>
             
-            <div dir="rtl" className="mx-auto max-w-6xl px-4 py-8">
-              <div className="grid gap-6 lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1 justify-items-center">
+            <div dir="rtl" className="mx-auto max-w-6xl px-4 py-8 bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 rounded-3xl border border-blue-100 shadow-inner">
+              {/* خلفية أكاديمية زخرفية */}
+              <div className="absolute inset-0 overflow-hidden rounded-3xl">
+                <div className="absolute top-10 right-10 w-32 h-32 bg-blue-100/30 rounded-full blur-2xl"></div>
+                <div className="absolute bottom-10 left-10 w-40 h-40 bg-indigo-100/30 rounded-full blur-2xl"></div>
+                <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-60 h-60 bg-purple-100/20 rounded-full blur-3xl"></div>
+                
+                {/* رموز أكاديمية في الخلفية */}
+                <BookOpen className="absolute top-16 right-20 w-12 h-12 text-blue-100/40 transform rotate-12" />
+                <Award className="absolute bottom-20 left-16 w-10 h-10 text-indigo-100/40 transform -rotate-12" />
+                <Trophy className="absolute top-20 left-1/4 w-8 h-8 text-purple-100/40 transform rotate-45" />
+                <Globe className="absolute bottom-16 right-1/4 w-10 h-10 text-blue-100/40 transform -rotate-30" />
+                <Shield className="absolute top-1/3 right-12 w-6 h-6 text-indigo-100/40 transform rotate-90" />
+                <Users className="absolute bottom-1/3 left-12 w-8 h-8 text-purple-100/40 transform -rotate-15" />
+              </div>
+              
+              <div className="relative z-10 grid gap-6 lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1 justify-items-center">
                 {TIERS.map(tier => {
                   const before = tier.baseSAR;
                   const after  = finalPrice(before, tier.discountPct);
@@ -176,10 +191,10 @@ const MasterMembership = () => {
                   const customerNames = ["أحمد محمد", "فاطمة علي", "محمد سالم", "نورا أحمد", "سعد خالد", "مريم يوسف"];
                   const customerName = customerNames[Math.floor(Math.random() * customerNames.length)];
                   
-                  // ألوان وتدرجات البطاقات الذكية
+                  // ألوان وتدرجات البطاقات الذكية متمايزة
                   const cardStyles = {
                     silver: { 
-                      gradient: "from-slate-700 via-slate-600 to-slate-800", 
+                      gradient: "from-indigo-600 via-blue-600 to-blue-700", 
                       chipColor: "bg-yellow-300"
                     },
                     gold: { 
@@ -187,7 +202,7 @@ const MasterMembership = () => {
                       chipColor: "bg-yellow-200"
                     },
                     platinum: { 
-                      gradient: "from-zinc-600 via-slate-700 to-zinc-800", 
+                      gradient: "from-purple-600 via-violet-600 to-purple-700", 
                       chipColor: "bg-gray-300"
                     }
                   };
@@ -318,7 +333,8 @@ const MasterMembership = () => {
                   );
                 })}
               </div>
-              <p className="mt-8 text-xs text-gray-600 text-center max-w-2xl mx-auto leading-relaxed">
+              
+              <p className="mt-8 text-xs text-gray-600 text-center max-w-2xl mx-auto leading-relaxed relative z-10">
                 * جميع الأرقام بصيغة عربية و"ريال" مثبتة بعد الرقم. الحساب تلقائي من القيم أعلاه.
                 <br />
                 ** يشمل الاشتراك جميع المزايا لمدة 12 شهراً مع ضمان استرداد الكاش باك فورياً.
