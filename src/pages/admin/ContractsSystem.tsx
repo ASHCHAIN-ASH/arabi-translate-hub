@@ -11,6 +11,7 @@ import { Badge } from '@/components/ui/badge';
 import { Textarea } from '@/components/ui/textarea';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { useAuth } from '@/components/SimpleAuthProvider';
 import { 
   FileText, 
   Send, 
@@ -53,7 +54,7 @@ const ContractsSystem = () => {
   const [showNewContractDialog, setShowNewContractDialog] = useState(false);
   const [contractNumber, setContractNumber] = useState('');
   const navigate = useNavigate();
-
+  const { user } = useAuth();
   const [formData, setFormData] = useState({
     client_name: '',
     service_type: '',
@@ -164,6 +165,12 @@ const ContractsSystem = () => {
     try {
       setLoading(true);
       
+      if (!user) {
+        toast.error('يجب تسجيل دخول الإدارة');
+        navigate('/adminmaster/login');
+        return;
+      }
+      
       const contractData = {
         contract_number: contractNumber,
         client_name: formData.client_name,
@@ -177,7 +184,7 @@ const ContractsSystem = () => {
         payment_terms: formData.payment_terms,
         contract_duration: formData.contract_duration,
         status: 'draft',
-        user_id: 'admin-user-id'
+        user_id: user.id
       };
 
       console.log('Saving contract data:', contractData);
