@@ -3,6 +3,8 @@ import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
 import { Download, FileText, Shield } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import Header from "@/components/Header";
+import { WorkingHoursBannerRTL } from "@/components/WorkingHoursBannerRTL";
 
 const TermsOfService = () => {
   const downloadTerms = () => {
@@ -16,7 +18,14 @@ const TermsOfService = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background via-background/95 to-muted/20">
+    <div className="min-h-screen bg-gradient-to-br from-background via-background/95 to-muted/20" dir="rtl">
+      
+      {/* Working Hours Banner */}
+      <WorkingHoursBannerRTL />
+      
+      {/* Header */}
+      <Header />
+      
       <div className="container mx-auto px-4 py-16">
         <div className="max-w-4xl mx-auto">
           <div className="text-center mb-12">

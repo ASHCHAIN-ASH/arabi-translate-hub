@@ -5,6 +5,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import Header from "@/components/Header";
+import { WorkingHoursBannerRTL } from "@/components/WorkingHoursBannerRTL";
 
 const FAQ = () => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -288,6 +290,12 @@ const FAQ = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-blue-50" dir="rtl">
+      {/* Working Hours Banner */}
+      <WorkingHoursBannerRTL />
+      
+      {/* Header */}
+      <Header />
+      
       {/* Header Section */}
       <section className="relative py-24 bg-gradient-to-br from-primary via-blue-600 to-purple-700 overflow-hidden">
         {/* Simplified Background Elements */}
@@ -547,7 +555,7 @@ const FAQ = () => {
                           </div>
                           <div className="flex-1 text-right">
                             <p className="font-medium text-gray-800">اتصال مباشر</p>
-                            <p className="text-xs text-gray-600 direction-ltr">+966 500 776 343</p>
+                            <p className="text-xs text-gray-600 font-mono tracking-wider">966+ 500 776 343</p>
                           </div>
                         </div>
                       </a>

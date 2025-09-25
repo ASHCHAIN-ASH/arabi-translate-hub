@@ -4,6 +4,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
+import Header from "@/components/Header";
+import { WorkingHoursBannerRTL } from "@/components/WorkingHoursBannerRTL";
 
 const Blog = () => {
   const blogPosts = [
@@ -98,6 +100,13 @@ const Blog = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-blue-50" dir="rtl">
+      
+      {/* Working Hours Banner */}
+      <WorkingHoursBannerRTL />
+      
+      {/* Header */}
+      <Header />
+      
       {/* Header Section */}
       <section className="relative py-20 bg-gradient-to-r from-primary to-blue-600 overflow-hidden">
         <div className="absolute inset-0 opacity-10">

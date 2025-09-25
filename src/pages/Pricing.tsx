@@ -7,6 +7,8 @@ import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
+import Header from "@/components/Header";
+import { WorkingHoursBannerRTL } from "@/components/WorkingHoursBannerRTL";
 import { 
   Check, 
   Star, 
@@ -196,6 +198,12 @@ const Pricing = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50/30 to-purple-50/30" dir="rtl" style={{ fontFamily: 'Arial, sans-serif' }}>
+      
+      {/* Working Hours Banner */}
+      <WorkingHoursBannerRTL />
+      
+      {/* Header */}
+      <Header />
       
       {/* Header Section */}
       <section className="relative py-20 overflow-hidden">
