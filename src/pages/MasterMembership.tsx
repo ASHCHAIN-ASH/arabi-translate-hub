@@ -142,10 +142,10 @@ const MasterMembership = () => {
         </div>
       </section>
 
-      <div className="container mx-auto px-4 py-16">
-        <Tabs defaultValue="plans" className="space-y-8">
+      <div className="container mx-auto px-4 py-16" dir="rtl">
+        <Tabs defaultValue="plans" className="space-y-8" dir="rtl">
           <div className="flex justify-center">
-            <TabsList className="grid w-full max-w-lg grid-cols-2">
+            <TabsList className="grid w-full max-w-lg grid-cols-2" dir="rtl">
               <TabsTrigger value="benefits" className="flex items-center gap-2">
                 <Gift className="h-4 w-4" />
                 المزايا
@@ -158,7 +158,7 @@ const MasterMembership = () => {
           </div>
 
           {/* Membership Plans */}
-          <TabsContent value="plans" className="space-y-8">
+          <TabsContent value="plans" className="space-y-8" dir="rtl">
             <h2 className="text-3xl font-bold text-center mb-12 text-gray-800">
               اختر العضوية المناسبة لك
             </h2>
@@ -166,20 +166,20 @@ const MasterMembership = () => {
             <div dir="rtl" className="mx-auto max-w-6xl px-4 py-8 bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 rounded-3xl border border-blue-100 shadow-inner">
               {/* خلفية أكاديمية زخرفية */}
               <div className="absolute inset-0 overflow-hidden rounded-3xl">
-                <div className="absolute top-10 right-10 w-32 h-32 bg-blue-100/30 rounded-full blur-2xl"></div>
-                <div className="absolute bottom-10 left-10 w-40 h-40 bg-indigo-100/30 rounded-full blur-2xl"></div>
+                <div className="absolute top-10 left-10 w-32 h-32 bg-blue-100/30 rounded-full blur-2xl"></div>
+                <div className="absolute bottom-10 right-10 w-40 h-40 bg-indigo-100/30 rounded-full blur-2xl"></div>
                 <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-60 h-60 bg-purple-100/20 rounded-full blur-3xl"></div>
                 
                 {/* رموز أكاديمية في الخلفية */}
-                <BookOpen className="absolute top-16 right-20 w-12 h-12 text-blue-100/40 transform rotate-12" />
-                <Award className="absolute bottom-20 left-16 w-10 h-10 text-indigo-100/40 transform -rotate-12" />
-                <Trophy className="absolute top-20 left-1/4 w-8 h-8 text-purple-100/40 transform rotate-45" />
-                <Globe className="absolute bottom-16 right-1/4 w-10 h-10 text-blue-100/40 transform -rotate-30" />
-                <Shield className="absolute top-1/3 right-12 w-6 h-6 text-indigo-100/40 transform rotate-90" />
-                <Users className="absolute bottom-1/3 left-12 w-8 h-8 text-purple-100/40 transform -rotate-15" />
+                <BookOpen className="absolute top-16 left-20 w-12 h-12 text-blue-100/40 transform -rotate-12" />
+                <Award className="absolute bottom-20 right-16 w-10 h-10 text-indigo-100/40 transform rotate-12" />
+                <Trophy className="absolute top-20 right-1/4 w-8 h-8 text-purple-100/40 transform -rotate-45" />
+                <Globe className="absolute bottom-16 left-1/4 w-10 h-10 text-blue-100/40 transform rotate-30" />
+                <Shield className="absolute top-1/3 left-12 w-6 h-6 text-indigo-100/40 transform -rotate-90" />
+                <Users className="absolute bottom-1/3 right-12 w-8 h-8 text-purple-100/40 transform rotate-15" />
               </div>
               
-              <div className="relative z-10 grid gap-6 lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1 justify-items-center">
+              <div className="relative z-10 grid gap-6 lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1 justify-items-center" dir="rtl">
                 {TIERS.map(tier => {
                   const before = tier.baseSAR;
                   const after  = finalPrice(before, tier.discountPct);
@@ -239,8 +239,8 @@ const MasterMembership = () => {
                           </div>
                         </div>
                         
-                        {/* شريحة EMV في الأعلى يسار */}
-                        <div className="absolute top-2 left-2 z-10">
+                        {/* شريحة EMV في الأعلى يمين */}
+                        <div className="absolute top-2 right-2 z-10">
                           <div className={`w-8 h-6 ${style.chipColor} rounded-sm shadow-sm flex items-center justify-center`}>
                             <div className="w-5 h-3 bg-yellow-600/40 rounded-sm grid grid-cols-2 gap-0.5 p-0.5">
                               <div className="bg-yellow-800/60 rounded-sm"></div>
@@ -263,18 +263,18 @@ const MasterMembership = () => {
                           </div>
                         </div>
 
-                        {/* معلومات العضوية في الأسفل يسار */}
-                        <div className="absolute bottom-2 left-3 text-left z-10">
+                        {/* معلومات العضوية في الأسفل يمين */}
+                        <div className="absolute bottom-2 right-3 text-right z-10">
                           <div className="text-xs opacity-80 leading-tight">عضوية ماستر</div>
                           <div className="text-sm font-bold leading-tight">{tier.titleAr}</div>
                           <div className="text-xs opacity-70 mt-1 leading-tight">انتهاء: 12/27</div>
                         </div>
 
-                        {/* شعار Mastercard في أسفل يمين */}
-                        <div className="absolute bottom-2 right-3 flex items-center gap-1 z-10">
+                        {/* شعار Mastercard في أسفل يسار */}
+                        <div className="absolute bottom-2 left-3 flex items-center gap-1 z-10">
                           <div className="w-2 h-2 rounded-full bg-red-500"></div>
-                          <div className="w-2 h-2 rounded-full bg-yellow-400 -ml-1"></div>
-                          <span className="text-xs font-bold ml-1 tracking-wider">MASTERCARD</span>
+                          <div className="w-2 h-2 rounded-full bg-yellow-400 -mr-1"></div>
+                          <span className="text-xs font-bold mr-1 tracking-wider">MASTERCARD</span>
                         </div>
 
                         {/* تأثيرات بصرية */}
@@ -508,12 +508,12 @@ const MasterMembership = () => {
           </TabsContent>
 
           {/* Benefits Section */}
-          <TabsContent value="benefits" className="space-y-8">
+          <TabsContent value="benefits" className="space-y-8" dir="rtl">
             <h2 className="text-3xl font-bold text-center mb-8 text-gray-800">
               مزايا عضوية ماستر
             </h2>
             
-            <div className="grid gap-6 lg:grid-cols-2 max-w-6xl mx-auto">
+            <div className="grid gap-6 lg:grid-cols-2 max-w-6xl mx-auto" dir="rtl">
               {benefits.map((benefit, index) => (
                 <motion.div
                   key={index}
