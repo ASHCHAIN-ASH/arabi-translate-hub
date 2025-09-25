@@ -9,7 +9,7 @@ import {
   LayoutDashboard, 
   Users, 
   ShoppingCart,
-  FileText, 
+  FileText, FileSignature, 
   CreditCard, 
   HelpCircle,
   Settings,
@@ -47,6 +47,24 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
       name: 'لوحة التحكم', 
       href: '/adminmaster', 
       icon: LayoutDashboard,
+      badge: null
+    },
+    { 
+      name: 'العقود', 
+      href: '/adminmaster/contracts', 
+      icon: FileText,
+      badge: null
+    },
+    { 
+      name: 'إنشاء عقد جديد', 
+      href: '/adminmaster/contracts/new', 
+      icon: FileSignature,
+      badge: null
+    },
+    { 
+      name: 'قوالب العقود', 
+      href: '/adminmaster/contract-templates', 
+      icon: FileText,
       badge: null
     },
     { 
