@@ -406,7 +406,7 @@ const MasterMembership = () => {
                   </div>
 
                   {/* Main Alert Content */}
-                  <div className="text-center">
+                  <div className="text-center" dir="rtl">
                     <motion.h3 
                       initial={{ opacity: 0, y: 20 }}
                       animate={{ opacity: 1, y: 0 }}
@@ -422,37 +422,37 @@ const MasterMembership = () => {
                       transition={{ delay: 0.8, duration: 0.5 }}
                       className="bg-white/70 backdrop-blur-sm rounded-xl p-6 border border-green-100"
                     >
-                      <p className="text-lg text-green-700 font-semibold mb-4 leading-relaxed">
+                      <p className="text-lg text-green-700 font-semibold mb-4 leading-relaxed text-right">
                         🎯 ستحصل على الكاش باك الفوري من مصدرين أساسيين:
                       </p>
                       
-                      <div className="grid gap-4 md:grid-cols-2 text-right">
+                      <div className="grid gap-4 md:grid-cols-2 text-right" dir="rtl">
                         <motion.div
-                          whileHover={{ scale: 1.02, x: -5 }}
-                          className="bg-gradient-to-r from-emerald-100 to-teal-100 p-4 rounded-lg border-r-4 border-emerald-500 order-2 md:order-1"
+                          whileHover={{ scale: 1.02, x: 5 }}
+                          className="bg-gradient-to-l from-emerald-100 to-teal-100 p-4 rounded-lg border-r-4 border-emerald-500"
                         >
-                          <div className="flex items-center gap-3 mb-2">
+                          <div className="flex items-center gap-3 mb-2 justify-start">
+                            <h4 className="font-bold text-emerald-800 flex-1">من رسوم تأسيس العضوية</h4>
                             <div className="w-8 h-8 bg-emerald-500 rounded-full flex items-center justify-center">
-                              <span className="text-white font-bold text-sm">1</span>
+                              <span className="text-white font-bold text-sm">١</span>
                             </div>
-                            <h4 className="font-bold text-emerald-800">من رسوم تأسيس العضوية</h4>
                           </div>
-                          <p className="text-emerald-700 text-sm">
+                          <p className="text-emerald-700 text-sm text-right">
                             كاش باك فوري بنسبة العضوية المختارة من رسوم التأسيس
                           </p>
                         </motion.div>
 
                         <motion.div
-                          whileHover={{ scale: 1.02, x: -5 }}
-                          className="bg-gradient-to-r from-green-100 to-emerald-100 p-4 rounded-lg border-r-4 border-green-500 order-1 md:order-2"
+                          whileHover={{ scale: 1.02, x: 5 }}
+                          className="bg-gradient-to-l from-green-100 to-emerald-100 p-4 rounded-lg border-r-4 border-green-500"
                         >
-                          <div className="flex items-center gap-3 mb-2">
+                          <div className="flex items-center gap-3 mb-2 justify-start">
+                            <h4 className="font-bold text-green-800 flex-1">من جميع الطلبات المستقبلية</h4>
                             <div className="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center">
-                              <span className="text-white font-bold text-sm">2</span>
+                              <span className="text-white font-bold text-sm">٢</span>
                             </div>
-                            <h4 className="font-bold text-green-800">من جميع الطلبات المستقبلية</h4>
                           </div>
-                          <p className="text-green-700 text-sm">
+                          <p className="text-green-700 text-sm text-right">
                             كاش باك مستمر من كل طلب تقوم به بعد الاشتراك
                           </p>
                         </motion.div>
@@ -461,24 +461,24 @@ const MasterMembership = () => {
                       {/* Percentage Breakdown */}
                       <div className="mt-6 bg-gradient-to-r from-gray-50 to-slate-50 rounded-lg p-4">
                         <h4 className="font-bold text-gray-800 mb-3 text-center">نسب الكاش باك حسب العضوية:</h4>
-                        <div className="flex justify-center gap-6 flex-wrap">
+                        <div className="flex justify-center gap-6 flex-wrap" dir="rtl">
                           <div className="text-center">
-                            <div className="w-12 h-12 bg-gray-400 rounded-full flex items-center justify-center mb-2 mx-auto">
-                              <span className="text-white font-bold text-sm">7%</span>
+                            <div className="w-12 h-12 bg-slate-400 rounded-full flex items-center justify-center mb-2 mx-auto">
+                              <span className="text-white font-bold text-sm">٢٥٪</span>
                             </div>
-                            <span className="text-sm font-semibold text-gray-700">الفضية</span>
+                            <span className="text-sm font-semibold text-gray-700">البلاتينية</span>
                           </div>
                           <div className="text-center">
                             <div className="w-12 h-12 bg-yellow-400 rounded-full flex items-center justify-center mb-2 mx-auto">
-                              <span className="text-white font-bold text-sm">15%</span>
+                              <span className="text-white font-bold text-sm">١٥٪</span>
                             </div>
                             <span className="text-sm font-semibold text-gray-700">الذهبية</span>
                           </div>
                           <div className="text-center">
-                            <div className="w-12 h-12 bg-slate-400 rounded-full flex items-center justify-center mb-2 mx-auto">
-                              <span className="text-white font-bold text-sm">25%</span>
+                            <div className="w-12 h-12 bg-gray-400 rounded-full flex items-center justify-center mb-2 mx-auto">
+                              <span className="text-white font-bold text-sm">٧٪</span>
                             </div>
-                            <span className="text-sm font-semibold text-gray-700">البلاتينية</span>
+                            <span className="text-sm font-semibold text-gray-700">الفضية</span>
                           </div>
                         </div>
                       </div>
