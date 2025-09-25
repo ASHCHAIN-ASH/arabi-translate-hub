@@ -221,6 +221,36 @@ export default {
 					'100%': {
 						backgroundPosition: '200% center'
 					}
+				},
+				'pride-glow': {
+					'0%, 100%': {
+						filter: 'brightness(1) saturate(1)',
+						transform: 'scale(1)'
+					},
+					'50%': {
+						filter: 'brightness(1.2) saturate(1.3)',
+						transform: 'scale(1.02)'
+					}
+				},
+				'sparkle': {
+					'0%, 100%': {
+						opacity: '0.4',
+						transform: 'scale(0.8) rotate(0deg)'
+					},
+					'50%': {
+						opacity: '1',
+						transform: 'scale(1.2) rotate(180deg)'
+					}
+				},
+				'pulse-slow': {
+					'0%, 100%': {
+						opacity: '0.6',
+						transform: 'scale(1)'
+					},
+					'50%': {
+						opacity: '1',
+						transform: 'scale(1.05)'
+					}
 				}
 			},
 			animation: {
@@ -236,7 +266,10 @@ export default {
 				'glow': 'glow 2s ease-in-out infinite',
 				'saudi-wave': 'saudi-wave 4s ease-in-out infinite',
 				'national-pride': 'national-pride 6s ease-in-out infinite',
-				'golden-shine': 'golden-shine 3s linear infinite'
+				'golden-shine': 'golden-shine 3s linear infinite',
+				'pride-glow': 'pride-glow 4s ease-in-out infinite',
+				'sparkle': 'sparkle 2s ease-in-out infinite',
+				'pulse-slow': 'pulse-slow 4s ease-in-out infinite'
 			}
 		}
 	},
