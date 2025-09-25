@@ -394,6 +394,50 @@ const Footer = () => {
                 </motion.a>
               ))}
             </div>
+            
+            {/* شعار اليوم الوطني في الفوتر */}
+            <motion.div 
+              className="flex items-center gap-3 mt-4 md:mt-0"
+              initial={{ opacity: 0, scale: 0.8 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.8 }}
+            >
+              <motion.div
+                animate={{ 
+                  scale: [1, 1.1, 1],
+                  filter: ["brightness(1)", "brightness(1.2)", "brightness(1)"]
+                }}
+                transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+                className="relative"
+              >
+                <img 
+                  src="/assets/national-day-logo-original.webp" 
+                  alt="عزنا بطبعنا - اليوم الوطني السعودي ٩٥"
+                  className="h-12 w-auto drop-shadow-lg opacity-80 hover:opacity-100 transition-opacity"
+                  style={{ 
+                    filter: 'drop-shadow(0 0 10px rgba(255,255,255,0.3))',
+                    mixBlendMode: 'screen'
+                  }}
+                />
+                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent animate-golden-shine"></div>
+              </motion.div>
+              <div className="text-right">
+                <motion.p 
+                  className="text-xs text-white/70 font-medium"
+                  animate={{ color: ["rgba(255,255,255,0.7)", "rgba(255,255,255,0.9)", "rgba(255,255,255,0.7)"] }}
+                  transition={{ duration: 3, repeat: Infinity }}
+                >
+                  🇸🇦 فخورون بوطننا الغالي
+                </motion.p>
+                <motion.p 
+                  className="text-xs text-yellow-400 font-bold"
+                  animate={{ scale: [1, 1.05, 1] }}
+                  transition={{ duration: 2, repeat: Infinity }}
+                >
+                  عزنا بطبعنا - اليوم الوطني ٩٥
+                </motion.p>
+              </div>
+            </motion.div>
           </div>
 
           {/* Bottom Brand Strip */}
