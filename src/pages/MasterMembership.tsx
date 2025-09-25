@@ -432,10 +432,10 @@ const MasterMembership = () => {
                           className="bg-gradient-to-l from-emerald-100 to-teal-100 p-4 rounded-lg border-r-4 border-emerald-500"
                         >
                           <div className="flex items-center gap-3 mb-2 justify-start">
-                            <h4 className="font-bold text-emerald-800 flex-1">من رسوم تأسيس العضوية</h4>
                             <div className="w-8 h-8 bg-emerald-500 rounded-full flex items-center justify-center">
                               <span className="text-white font-bold text-sm">١</span>
                             </div>
+                            <h4 className="font-bold text-emerald-800 flex-1">من رسوم تأسيس العضوية</h4>
                           </div>
                           <p className="text-emerald-700 text-sm text-right">
                             كاش باك فوري بنسبة العضوية المختارة من رسوم التأسيس
@@ -447,10 +447,10 @@ const MasterMembership = () => {
                           className="bg-gradient-to-l from-green-100 to-emerald-100 p-4 rounded-lg border-r-4 border-green-500"
                         >
                           <div className="flex items-center gap-3 mb-2 justify-start">
-                            <h4 className="font-bold text-green-800 flex-1">من جميع الطلبات المستقبلية</h4>
                             <div className="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center">
                               <span className="text-white font-bold text-sm">٢</span>
                             </div>
+                            <h4 className="font-bold text-green-800 flex-1">من جميع الطلبات المستقبلية</h4>
                           </div>
                           <p className="text-green-700 text-sm text-right">
                             كاش باك مستمر من كل طلب تقوم به بعد الاشتراك
