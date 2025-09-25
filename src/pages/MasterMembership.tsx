@@ -224,6 +224,17 @@ const MasterMembership = () => {
                     <div className="absolute top-0 right-0 w-20 h-20 bg-white/5 rounded-full -translate-y-10 translate-x-10"></div>
                     <div className="absolute bottom-0 left-0 w-16 h-16 bg-white/5 rounded-full translate-y-8 -translate-x-8"></div>
 
+                    {/* Academic Background Icons */}
+                    <div className="absolute inset-0 overflow-hidden">
+                      <BookOpen className="absolute top-8 right-8 w-8 h-8 text-white/10 transform rotate-12" />
+                      <Award className="absolute bottom-12 left-6 w-6 h-6 text-white/8 transform -rotate-12" />
+                      <Globe className="absolute top-16 left-8 w-7 h-7 text-white/8 transform rotate-45" />
+                      <Trophy className="absolute bottom-20 right-12 w-5 h-5 text-white/10 transform -rotate-45" />
+                      <Shield className="absolute top-20 right-20 w-6 h-6 text-white/8 transform rotate-12" />
+                      <MessageSquare className="absolute bottom-8 left-12 w-5 h-5 text-white/8 transform rotate-30" />
+                      <Users className="absolute top-12 left-16 w-6 h-6 text-white/8 transform -rotate-15" />
+                    </div>
+
                     {/* Bank Name - Top Right */}
                     <div className="absolute top-4 right-4 text-white text-xs font-bold opacity-90">
                       ماستر إيدو باث
