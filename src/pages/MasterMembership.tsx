@@ -220,15 +220,27 @@ const MasterMembership = () => {
                       {/* البطاقة الذكية مصغرة */}
                       <div className={`relative w-full h-44 rounded-xl p-4 text-white shadow-xl bg-gradient-to-br ${style.gradient} overflow-hidden transform transition-all duration-300 hover:scale-105`}>
                         
+                        {/* أيقونات أنشطة الموقع في الخلفية */}
+                        <div className="absolute inset-0 overflow-hidden opacity-10">
+                          <BookOpen className="absolute top-8 right-8 w-6 h-6 text-white/30 transform rotate-12 animate-pulse" />
+                          <Award className="absolute bottom-12 left-6 w-5 h-5 text-white/25 transform -rotate-12 animate-bounce" />
+                          <Globe className="absolute top-16 left-8 w-5 h-5 text-white/25 transform rotate-45 animate-pulse" />
+                          <Trophy className="absolute bottom-20 right-12 w-4 h-4 text-white/30 transform -rotate-45 animate-bounce" />
+                          <Shield className="absolute top-20 right-20 w-5 h-5 text-white/25 transform rotate-12 animate-pulse" />
+                          <MessageSquare className="absolute bottom-8 left-12 w-4 h-4 text-white/25 transform rotate-30 animate-bounce" />
+                          <Users className="absolute top-12 left-16 w-5 h-5 text-white/25 transform -rotate-15 animate-pulse" />
+                          <Download className="absolute bottom-16 right-6 w-4 h-4 text-white/30 transform rotate-25 animate-bounce" />
+                        </div>
+                        
                         {/* اسم الوكالة في أعلى البطاقة */}
-                        <div className="absolute top-2 left-1/2 transform -translate-x-1/2 text-center">
+                        <div className="absolute top-2 left-1/2 transform -translate-x-1/2 text-center z-10">
                           <div className="text-xs font-bold tracking-widest opacity-90 drop-shadow-md">
                             MASTER EDU PATH AGENCY
                           </div>
                         </div>
                         
                         {/* شريحة EMV في الأعلى يسار */}
-                        <div className="absolute top-2 left-2">
+                        <div className="absolute top-2 left-2 z-10">
                           <div className={`w-8 h-6 ${style.chipColor} rounded-sm shadow-sm flex items-center justify-center`}>
                             <div className="w-5 h-3 bg-yellow-600/40 rounded-sm grid grid-cols-2 gap-0.5 p-0.5">
                               <div className="bg-yellow-800/60 rounded-sm"></div>
@@ -240,7 +252,7 @@ const MasterMembership = () => {
                         </div>
 
                         {/* معلومات العميل في الوسط */}
-                        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-center">
+                        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-center z-10">
                           <div className="text-xs opacity-80 mb-2">وكالة ماستر إيدو باث</div>
                           <div className="text-sm font-bold mb-3 leading-tight">
                             {customerName}
@@ -252,14 +264,14 @@ const MasterMembership = () => {
                         </div>
 
                         {/* معلومات العضوية في الأسفل يسار */}
-                        <div className="absolute bottom-2 left-3 text-left">
+                        <div className="absolute bottom-2 left-3 text-left z-10">
                           <div className="text-xs opacity-80 leading-tight">عضوية ماستر</div>
                           <div className="text-sm font-bold leading-tight">{tier.titleAr}</div>
                           <div className="text-xs opacity-70 mt-1 leading-tight">انتهاء: 12/27</div>
                         </div>
 
                         {/* شعار Mastercard في أسفل يمين */}
-                        <div className="absolute bottom-2 right-3 flex items-center gap-1">
+                        <div className="absolute bottom-2 right-3 flex items-center gap-1 z-10">
                           <div className="w-2 h-2 rounded-full bg-red-500"></div>
                           <div className="w-2 h-2 rounded-full bg-yellow-400 -ml-1"></div>
                           <span className="text-xs font-bold ml-1 tracking-wider">MASTERCARD</span>
@@ -341,11 +353,13 @@ const MasterMembership = () => {
                 })}
               </div>
               
-              <p className="mt-8 text-xs text-gray-600 text-center max-w-2xl mx-auto leading-relaxed relative z-10">
-                * جميع الأرقام بصيغة عربية و"ريال" مثبتة بعد الرقم. الحساب تلقائي من القيم أعلاه.
-                <br />
-                ** يشمل الاشتراك جميع المزايا لمدة 12 شهراً مع ضمان استرداد الكاش باك فورياً.
-              </p>
+              <div className="mt-8 text-center relative z-10">
+                <div className="inline-block bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent font-bold animate-pulse">
+                  <div className="text-sm leading-relaxed animate-bounce">
+                    ** يشمل الاشتراك جميع المزايا لمدة 12 شهراً مع ضمان استرداد الكاش باك فورياً **
+                  </div>
+                </div>
+              </div>
             </div>
 
             {/* Cashback Notice - Attractive Alert */}
