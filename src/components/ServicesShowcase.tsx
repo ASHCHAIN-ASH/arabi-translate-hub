@@ -349,16 +349,18 @@ const ServicesShowcase = () => {
                       whileInView={{ y: 0, opacity: 1 }}
                       transition={{ duration: 0.5, delay: service.delay + 0.3 }}
                       viewport={{ once: true }}
-                      className="mt-auto"
+                      className="mt-auto pt-2"
                     >
                       <Button
                         size="sm"
                         variant="default"
-                        className="text-xs px-4 py-2 h-8 bg-white text-gray-900 hover:bg-gray-100 border-none font-semibold shadow-md hover:shadow-lg transition-all duration-300 hover:scale-105"
+                        className="w-full text-xs sm:text-sm px-2 py-1.5 h-7 sm:h-8 bg-white text-gray-900 hover:bg-gray-100 border-none font-semibold shadow-md hover:shadow-lg transition-all duration-300 hover:scale-105 rounded-full"
                         onClick={() => navigate(service.route)}
                       >
-                        المزيد
-                        <ArrowLeft className="w-3 h-3 mr-1" />
+                        <span className="flex items-center justify-center gap-1">
+                          المزيد
+                          <ArrowLeft className="w-2.5 h-2.5 sm:w-3 sm:h-3" />
+                        </span>
                       </Button>
                     </motion.div>
 
