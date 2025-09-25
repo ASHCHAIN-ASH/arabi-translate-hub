@@ -188,7 +188,7 @@ const MasterMembership = () => {
                   // رقم عشوائي من 6 أرقام للعميل
                   const customerNumber = Math.floor(100000 + Math.random() * 900000);
                   // اسم عميل عشوائي
-                  const customerNames = ["أحمد محمد", "فاطمة علي", "محمد سالم", "نورا أحمد", "سعد خالد", "مريم يوسف"];
+                  const customerNames = ["أحمد محمد", "محمد سالم", "سعد خالد", "عبد الله أحمد", "فيصل العتيبي", "خالد الغامدي"];
                   const customerName = customerNames[Math.floor(Math.random() * customerNames.length)];
                   
                   // ألوان وتدرجات البطاقات الأساسية
