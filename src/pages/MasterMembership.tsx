@@ -36,7 +36,8 @@ const MasterMembership = () => {
       price: '1200',
       originalPrice: '2400',
       discount: '50%',
-      cashback: '1200',
+      cashback: '84',
+      cashbackPercent: '7%',
       cardGradient: 'from-gray-400 via-gray-500 to-gray-600',
       gradient: 'from-gray-400 to-gray-600',
       chipColor: 'bg-yellow-400',
@@ -49,7 +50,8 @@ const MasterMembership = () => {
       price: '2400',
       originalPrice: '4800',
       discount: '50%',
-      cashback: '2400',
+      cashback: '360',
+      cashbackPercent: '15%',
       cardGradient: 'from-yellow-400 via-yellow-500 to-yellow-600',
       gradient: 'from-yellow-400 to-yellow-600',
       chipColor: 'bg-yellow-500',
@@ -62,7 +64,8 @@ const MasterMembership = () => {
       price: '3600',
       originalPrice: '7200',
       discount: '50%',
-      cashback: '3600',
+      cashback: '900',
+      cashbackPercent: '25%',
       cardGradient: 'from-slate-400 via-slate-500 to-slate-600',
       gradient: 'from-slate-400 to-slate-600',
       chipColor: 'bg-slate-400',
@@ -81,9 +84,9 @@ const MasterMembership = () => {
     {
       icon: Users,
       color: 'text-blue-600',
-      title: 'كاش باك مضمون',
-      description: 'استرداد نقدي مضمون يصل إلى 1,260 ريال حسب نوع الاشتراك',
-      membership: ['120 ريال للفضية', '480 ريال للذهبية', '1,260 ريال للبلاتينية']
+      title: 'كاش باك فوري مضمون',
+      description: 'استرداد نقدي فوري من رسوم تأسيس العضوية ومن جميع الطلبات بعد الاشتراك',
+      membership: ['7% للفضية (84 ريال)', '15% للذهبية (360 ريال)', '25% للبلاتينية (900 ريال)']
     },
     {
       icon: BookOpen,
@@ -277,7 +280,7 @@ const MasterMembership = () => {
                     <div className="absolute top-4 left-12 bg-white/15 backdrop-blur-sm rounded-lg p-2 border border-white/10">
                       <div className="text-white/70 text-xs line-through">{plan.originalPrice} ريال</div>
                       <div className="text-white text-lg font-bold">{plan.price}</div>
-                      <div className="text-green-300 text-xs">كاش باك: {plan.cashback}</div>
+                      <div className="text-green-300 text-xs">كاش باك فوري: {plan.cashback} ريال</div>
                     </div>
 
                     {/* Discount Badge */}
@@ -324,8 +327,9 @@ const MasterMembership = () => {
                     <div className="mt-3 text-center">
                       <div className="inline-flex items-center gap-2 bg-green-50 text-green-700 px-4 py-2 rounded-full text-sm">
                         <Gift className="w-4 h-4" />
-                        كاش باك مضمون: {plan.cashback} ريال
+                        كاش باك فوري {plan.cashbackPercent}: {plan.cashback} ريال
                       </div>
+                      <p className="text-xs text-gray-500 mt-2">من رسوم التأسيس وجميع الطلبات</p>
                     </div>
                   </div>
                 </motion.div>
