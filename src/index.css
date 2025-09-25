@@ -9,21 +9,27 @@
 
 @layer base {
   :root {
-    /* نظام الألوان الأكاديمي العصري */
-    --background: 210 20% 98%;
-    --foreground: 220 15% 15%;
+    /* نظام الألوان الأكاديمي العصري - اليوم الوطني السعودي */
+    --background: 0 0% 100%;
+    --foreground: 120 20% 15%;
 
     --card: 0 0% 100%;
-    --card-foreground: 220 15% 15%;
+    --card-foreground: 120 20% 15%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 220 15% 15%;
+    --popover-foreground: 120 20% 15%;
 
-    /* الألوان الأساسية - أزرق سماوي أكاديمي */
-    --primary: 199 89% 48%;
+    /* الألوان الأساسية - أخضر العلم السعودي */
+    --primary: 120 100% 25%;
     --primary-foreground: 0 0% 100%;
-    --primary-dark: 199 89% 40%;
-    --primary-light: 199 89% 60%;
+    --primary-dark: 120 100% 20%;
+    --primary-light: 120 60% 35%;
+
+    /* ألوان اليوم الوطني الخاصة */
+    --saudi-green: 120 100% 25%;
+    --saudi-white: 0 0% 100%;
+    --saudi-gold: 45 100% 50%;
+    --national-day-accent: 45 90% 55%;
 
     /* اللون الثانوي - أخضر الثقة */
     --secondary: 142 69% 48%;
@@ -53,14 +59,15 @@
     --input: 220 13% 95%;
     --ring: 220 90% 56%;
 
-    /* التدرجات الأكاديمية العصرية */
-    --gradient-primary: linear-gradient(135deg, hsl(199 89% 48%) 0%, hsl(199 89% 60%) 100%);
+    /* التدرجات الخاصة باليوم الوطني السعودي */
+    --gradient-primary: linear-gradient(135deg, hsl(120 100% 25%) 0%, hsl(120 60% 35%) 100%);
     --gradient-secondary: linear-gradient(135deg, hsl(142 69% 48%) 0%, hsl(142 69% 60%) 100%);
-    --gradient-accent: linear-gradient(135deg, hsl(262 83% 70%) 0%, hsl(262 83% 80%) 100%);
-    --gradient-hero: linear-gradient(135deg, hsl(199 89% 48%) 0%, hsl(142 69% 48%) 50%, hsl(262 83% 70%) 100%);
-    --gradient-card: linear-gradient(145deg, hsl(0 0% 100%) 0%, hsl(210 20% 98%) 100%);
-    --gradient-vibrant: linear-gradient(45deg, hsl(199 89% 48%) 0%, hsl(142 69% 48%) 33%, hsl(262 83% 70%) 66%, hsl(280 70% 60%) 100%);
-    --gradient-academic: linear-gradient(120deg, hsl(199 89% 48%) 0%, hsl(185 84% 52%) 50%, hsl(262 83% 70%) 100%);
+    --gradient-accent: linear-gradient(135deg, hsl(45 100% 50%) 0%, hsl(45 90% 55%) 100%);
+    --gradient-hero: linear-gradient(135deg, hsl(120 100% 25%) 0%, hsl(0 0% 100%) 30%, hsl(45 100% 50%) 100%);
+    --gradient-card: linear-gradient(145deg, hsl(0 0% 100%) 0%, hsl(120 20% 98%) 100%);
+    --gradient-vibrant: linear-gradient(45deg, hsl(120 100% 25%) 0%, hsl(0 0% 100%) 25%, hsl(45 100% 50%) 50%, hsl(120 60% 35%) 75%, hsl(45 90% 55%) 100%);
+    --gradient-academic: linear-gradient(120deg, hsl(120 100% 25%) 0%, hsl(0 0% 100%) 50%, hsl(45 100% 50%) 100%);
+    --gradient-national: linear-gradient(135deg, hsl(120 100% 25%) 0%, hsl(120 80% 30%) 25%, hsl(0 0% 100%) 50%, hsl(45 100% 50%) 75%, hsl(45 90% 55%) 100%);
     
     /* ظلال أكاديمية ناعمة */
     --shadow-primary: 0 4px 20px -5px hsl(199 89% 48% / 0.3);
@@ -344,6 +351,47 @@
   
   .bg-gradient-accent {
     background: var(--gradient-accent);
+  }
+  
+  .bg-gradient-national {
+    background: var(--gradient-national);
+  }
+  
+  /* أنيميشن اليوم الوطني السعودي */
+  .saudi-flag-wave {
+    background: linear-gradient(45deg, 
+      hsl(120 100% 25%) 0%, 
+      hsl(120 100% 25%) 45%, 
+      hsl(0 0% 100%) 50%, 
+      hsl(120 100% 25%) 55%, 
+      hsl(120 100% 25%) 100%);
+    background-size: 400% 400%;
+    animation: saudi-wave 3s ease-in-out infinite;
+  }
+  
+  .golden-text {
+    background: linear-gradient(45deg, 
+      hsl(45 100% 50%), 
+      hsl(45 100% 60%), 
+      hsl(45 100% 70%), 
+      hsl(45 100% 60%), 
+      hsl(45 100% 50%));
+    background-size: 200% auto;
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: golden-shine 2s linear infinite;
+  }
+  
+  .national-day-card {
+    background: linear-gradient(135deg, 
+      hsl(120 100% 25%) 0%, 
+      hsl(120 80% 30%) 25%, 
+      hsl(0 0% 98%) 50%, 
+      hsl(45 100% 50%) 75%, 
+      hsl(45 90% 55%) 100%);
+    border: 2px solid hsl(120 100% 25%);
+    box-shadow: 0 8px 32px hsla(120, 100%, 25%, 0.3);
   }
   
   .shadow-primary {

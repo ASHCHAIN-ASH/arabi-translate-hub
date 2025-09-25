@@ -82,7 +82,11 @@ export default {
 					'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
-				}
+				},
+				'saudi-green': 'hsl(var(--saudi-green))',
+				'saudi-white': 'hsl(var(--saudi-white))',
+				'saudi-gold': 'hsl(var(--saudi-gold))',
+				'national-day-accent': 'hsl(var(--national-day-accent))'
 			},
 			borderRadius: {
 				lg: 'var(--radius)',
@@ -177,6 +181,46 @@ export default {
 					'50%': {
 						boxShadow: '0 0 40px rgba(59, 130, 246, 0.6)'
 					}
+				},
+				'saudi-wave': {
+					'0%': {
+						transform: 'translateX(-100%) rotate(0deg)',
+						opacity: '0.7'
+					},
+					'50%': {
+						transform: 'translateX(0%) rotate(2deg)',
+						opacity: '1'
+					},
+					'100%': {
+						transform: 'translateX(100%) rotate(0deg)',
+						opacity: '0.7'
+					}
+				},
+				'national-pride': {
+					'0%, 100%': {
+						transform: 'scale(1) rotate(0deg)',
+						filter: 'hue-rotate(0deg)'
+					},
+					'25%': {
+						transform: 'scale(1.05) rotate(1deg)',
+						filter: 'hue-rotate(5deg)'
+					},
+					'50%': {
+						transform: 'scale(1.1) rotate(0deg)',
+						filter: 'hue-rotate(10deg)'
+					},
+					'75%': {
+						transform: 'scale(1.05) rotate(-1deg)',
+						filter: 'hue-rotate(5deg)'
+					}
+				},
+				'golden-shine': {
+					'0%': {
+						backgroundPosition: '-200% center'
+					},
+					'100%': {
+						backgroundPosition: '200% center'
+					}
 				}
 			},
 			animation: {
@@ -189,7 +233,10 @@ export default {
 				'float': 'float 4s ease-in-out infinite',
 				'float-slow': 'float-slow 6s ease-in-out infinite',
 				'pulse-soft': 'pulse-soft 3s ease-in-out infinite',
-				'glow': 'glow 2s ease-in-out infinite'
+				'glow': 'glow 2s ease-in-out infinite',
+				'saudi-wave': 'saudi-wave 4s ease-in-out infinite',
+				'national-pride': 'national-pride 6s ease-in-out infinite',
+				'golden-shine': 'golden-shine 3s linear infinite'
 			}
 		}
 	},
