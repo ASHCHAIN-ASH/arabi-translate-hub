@@ -26,7 +26,10 @@ import {
   Bell,
   Send,
   AlertCircle,
-  DollarSign
+  DollarSign,
+  GraduationCap,
+  BookOpen,
+  UserCheck
 } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
@@ -54,7 +57,8 @@ import { useToast } from '@/hooks/use-toast';
 
 // Schema للتحقق من صحة البيانات
 const orderSchema = z.object({
-  companyName: z.string().min(2, { message: "اسم الشركة يجب أن يكون حرفين على الأقل" }),
+  clientType: z.string().min(1, { message: "نوع العميل مطلوب" }),
+  organizationName: z.string().min(2, { message: "اسم الجهة يجب أن يكون حرفين على الأقل" }),
   contactPerson: z.string().min(2, { message: "اسم الشخص المسؤول مطلوب" }),
   email: z.string().email({ message: "البريد الإلكتروني غير صحيح" }),
   phone: z.string().min(10, { message: "رقم الهاتف يجب أن يكون 10 أرقام على الأقل" }),
@@ -73,11 +77,13 @@ const OrderNow = () => {
   const { toast } = useToast();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitSuccess, setSubmitSuccess] = useState(false);
+  const [selectedClientType, setSelectedClientType] = useState('');
 
   const form = useForm<OrderFormData>({
     resolver: zodResolver(orderSchema),
     defaultValues: {
-      companyName: '',
+      clientType: '',
+      organizationName: '',
       contactPerson: '',
       email: '',
       phone: '',
@@ -89,6 +95,13 @@ const OrderNow = () => {
       priority: '',
     },
   });
+
+  // أنواع العملاء
+  const clientTypes = [
+    { value: 'company', label: 'شركة', icon: Building2, color: 'text-blue-600' },
+    { value: 'student', label: 'طالب', icon: GraduationCap, color: 'text-green-600' },
+    { value: 'researcher', label: 'باحث', icon: BookOpen, color: 'text-purple-600' },
+  ];
 
   // قائمة الخدمات
   const services = [
@@ -147,7 +160,8 @@ const OrderNow = () => {
     // هنا سيتم إرسال تنبيه للإدارة (يمكن دمجه مع Supabase أو API خارجي)
     console.log("تنبيه للإدارة:", {
       type: "طلب جديد",
-      company: data.companyName,
+      clientType: data.clientType,
+      organization: data.organizationName,
       service: data.serviceType,
       priority: data.priority,
       timestamp: new Date().toISOString(),
@@ -190,7 +204,7 @@ const OrderNow = () => {
             </h1>
             
             <p className="text-lg md:text-xl mb-8 opacity-90 max-w-3xl mx-auto">
-              انضم إلى آلاف الشركات العالمية التي تثق في خدماتنا المتخصصة
+              انضم إلى آلاف الشركات والطلاب والباحثين الذين يثقون في خدماتنا المتخصصة
             </p>
             
             {/* Trust Indicators */}
@@ -273,11 +287,11 @@ const OrderNow = () => {
             <Card className="border-2 border-gradient-to-r from-blue-500 to-purple-500 shadow-2xl">
               <CardHeader className="bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-t-lg">
                 <CardTitle className="text-2xl md:text-3xl text-center flex items-center justify-center gap-3">
-                  <Building2 className="h-8 w-8" />
+                  <UserCheck className="h-8 w-8" />
                   نموذج طلب الخدمة المتقدم
                 </CardTitle>
                 <p className="text-center opacity-90 mt-2">
-                  املأ البيانات أدناه وسيتم التواصل معك خلال 24 ساعة
+                  للشركات والطلاب والباحثين - املأ البيانات وسيتم التواصل معك خلال 24 ساعة
                 </p>
               </CardHeader>
 
@@ -299,24 +313,79 @@ const OrderNow = () => {
 
                 <Form {...form}>
                   <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-                    {/* Company Information Section */}
+                    {/* Client Type Selection */}
+                    <div className="bg-gradient-to-r from-purple-50 to-pink-50 dark:from-purple-900/10 dark:to-pink-900/10 p-6 rounded-lg border border-purple-200 dark:border-purple-800">
+                      <h3 className="text-lg font-semibold text-purple-800 dark:text-purple-300 mb-4 flex items-center gap-2">
+                        <UserCheck className="h-5 w-5" />
+                        نوع العميل
+                      </h3>
+                      
+                      <FormField
+                        control={form.control}
+                        name="clientType"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel className="text-slate-700 dark:text-slate-300 font-medium">اختر نوع العميل *</FormLabel>
+                            <Select 
+                              onValueChange={(value) => {
+                                field.onChange(value);
+                                setSelectedClientType(value);
+                              }} 
+                              defaultValue={field.value}
+                            >
+                              <FormControl>
+                                <SelectTrigger className="h-12 border-2 border-purple-200 dark:border-purple-700 focus:border-purple-500">
+                                  <SelectValue placeholder="اختر نوع العميل" />
+                                </SelectTrigger>
+                              </FormControl>
+                              <SelectContent className="bg-white dark:bg-slate-800 border-2 border-purple-200 dark:border-purple-700 z-50">
+                                {clientTypes.map((type) => (
+                                  <SelectItem key={type.value} value={type.value} className="cursor-pointer hover:bg-purple-50 dark:hover:bg-purple-900/20">
+                                    <div className="flex items-center gap-2">
+                                      <type.icon className={`h-4 w-4 ${type.color}`} />
+                                      <span>{type.label}</span>
+                                    </div>
+                                  </SelectItem>
+                                ))}
+                              </SelectContent>
+                            </Select>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                    </div>
+
+                    {/* Organization Information Section */}
                     <div className="bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900/10 dark:to-indigo-900/10 p-6 rounded-lg border border-blue-200 dark:border-blue-800">
                       <h3 className="text-lg font-semibold text-blue-800 dark:text-blue-300 mb-4 flex items-center gap-2">
-                        <Building2 className="h-5 w-5" />
-                        معلومات الشركة
+                        {selectedClientType === 'company' && <Building2 className="h-5 w-5" />}
+                        {selectedClientType === 'student' && <GraduationCap className="h-5 w-5" />}
+                        {selectedClientType === 'researcher' && <BookOpen className="h-5 w-5" />}
+                        {!selectedClientType && <Building2 className="h-5 w-5" />}
+                        {selectedClientType === 'company' ? 'معلومات الشركة' : 
+                         selectedClientType === 'student' ? 'معلومات الطالب' :
+                         selectedClientType === 'researcher' ? 'معلومات الباحث' : 'معلومات الجهة'}
                       </h3>
                       
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <FormField
                           control={form.control}
-                          name="companyName"
+                          name="organizationName"
                           render={({ field }) => (
                             <FormItem>
-                              <FormLabel className="text-slate-700 dark:text-slate-300 font-medium">اسم الشركة *</FormLabel>
+                              <FormLabel className="text-slate-700 dark:text-slate-300 font-medium">
+                                {selectedClientType === 'company' ? 'اسم الشركة *' : 
+                                 selectedClientType === 'student' ? 'اسم الجامعة/المعهد *' :
+                                 selectedClientType === 'researcher' ? 'اسم المؤسسة البحثية *' : 'اسم الجهة *'}
+                              </FormLabel>
                               <FormControl>
                                 <Input
                                   {...field}
-                                  placeholder="مثال: شركة التقنيات المتقدمة"
+                                  placeholder={
+                                    selectedClientType === 'company' ? "مثال: شركة التقنيات المتقدمة" : 
+                                    selectedClientType === 'student' ? "مثال: جامعة الملك سعود" :
+                                    selectedClientType === 'researcher' ? "مثال: مركز الأبحاث العلمية" : "مثال: اسم الجهة"
+                                  }
                                   className="border-2 border-blue-200 dark:border-blue-700 focus:border-blue-500 h-12"
                                 />
                               </FormControl>
@@ -330,7 +399,11 @@ const OrderNow = () => {
                           name="contactPerson"
                           render={({ field }) => (
                             <FormItem>
-                              <FormLabel className="text-slate-700 dark:text-slate-300 font-medium">الشخص المسؤول *</FormLabel>
+                              <FormLabel className="text-slate-700 dark:text-slate-300 font-medium">
+                                {selectedClientType === 'company' ? 'الشخص المسؤول *' : 
+                                 selectedClientType === 'student' ? 'اسم الطالب *' :
+                                 selectedClientType === 'researcher' ? 'اسم الباحث *' : 'اسم الشخص المسؤول *'}
+                              </FormLabel>
                               <FormControl>
                                 <Input
                                   {...field}
