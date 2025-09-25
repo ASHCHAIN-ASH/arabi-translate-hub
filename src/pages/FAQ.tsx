@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { ChevronDown, Search, MessageCircle, Phone, Mail, HelpCircle, CheckCircle, Star } from "lucide-react";
+import { ChevronDown, Search, MessageCircle, Phone, Mail, HelpCircle, CheckCircle, Star, MessageSquare, Clock } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -493,27 +493,129 @@ const FAQ = () => {
               </CardContent>
             </Card>
 
-            {/* Contact Support */}
-            <Card className="shadow-lg hover:shadow-xl transition-shadow border-0 bg-white/80 backdrop-blur-sm">
-              <CardHeader className="pb-3">
-                <CardTitle className="text-center text-base lg:text-lg">تحتاج مساعدة؟</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-3">
-                <p className="text-xs lg:text-sm text-slate-600 text-center leading-relaxed">
-                  لم تجد إجابة لسؤالك؟ تواصل معنا مباشرة
+            {/* Contact Support - محسن ومعدل */}
+            <Card className="shadow-lg hover:shadow-xl transition-all duration-300 border-0 bg-gradient-to-br from-white/90 to-white/80 backdrop-blur-sm hover:from-white/95 hover:to-white/90">
+              <CardHeader className="pb-4 text-center">
+                <motion.div
+                  initial={{ scale: 0.8 }}
+                  animate={{ scale: 1 }}
+                  transition={{ duration: 0.3 }}
+                  className="inline-flex items-center justify-center w-12 h-12 bg-gradient-to-br from-primary/10 to-blue-500/10 rounded-xl mb-2 mx-auto"
+                >
+                  <HelpCircle className="h-6 w-6 text-primary" />
+                </motion.div>
+                <CardTitle className="text-base lg:text-lg font-bold text-gray-800">
+                  هل تحتاج لمساعدة إضافية؟
+                </CardTitle>
+                <p className="text-xs lg:text-sm text-slate-600 leading-relaxed mt-2">
+                  فريق خدمة العملاء جاهز لمساعدتك على مدار الساعة
                 </p>
+              </CardHeader>
+              
+              <CardContent className="space-y-3">
+                {/* خدمة العملاء */}
+                <div className="bg-gradient-to-l from-primary/5 to-blue-50 rounded-lg p-3 border border-primary/10">
+                  <div className="flex items-center gap-2 mb-2">
+                    <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+                    <span className="text-xs lg:text-sm font-medium text-gray-700">خدمة العملاء</span>
+                    <Badge className="bg-green-500/10 text-green-700 border-green-500/20 text-xs px-2">
+                      متاح الآن
+                    </Badge>
+                  </div>
+                  <p className="text-xs text-gray-600 leading-relaxed">
+                    نحن متاحون 24/7 لخدمتكم وتقديم الدعم الفني والاستشارات المجانية
+                  </p>
+                </div>
+
+                {/* أزرار التواصل */}
                 <div className="space-y-2">
-                  <Button variant="outline" size="sm" className="w-full justify-start text-xs lg:text-sm py-2 h-auto">
-                    <Phone className="ml-2 h-3 w-3 lg:h-4 lg:w-4" />
-                    0500776343
-                  </Button>
-                  <Button variant="outline" size="sm" className="w-full justify-start text-xs lg:text-sm py-2 h-auto">
-                    <Mail className="ml-2 h-3 w-3 lg:h-4 lg:w-4" />
-                    info@masteredupath.com
-                  </Button>
-                  <Button size="sm" className="w-full text-xs lg:text-sm py-2 h-auto bg-primary hover:bg-primary/90">
-                    دردشة فورية
-                  </Button>
+                  {/* الهاتف */}
+                  <motion.div
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                  >
+                    <Button 
+                      variant="outline" 
+                      size="sm" 
+                      className="w-full justify-start text-xs lg:text-sm py-3 h-auto hover:bg-blue-50 hover:border-blue-300 transition-all duration-300 group"
+                      asChild
+                    >
+                      <a href="tel:+966500776343">
+                        <div className="flex items-center gap-3 w-full">
+                          <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center group-hover:bg-blue-200 transition-colors">
+                            <Phone className="h-4 w-4 text-blue-600" />
+                          </div>
+                          <div className="flex-1 text-right">
+                            <p className="font-medium text-gray-800">اتصال مباشر</p>
+                            <p className="text-xs text-gray-600 direction-ltr">+966 500 776 343</p>
+                          </div>
+                        </div>
+                      </a>
+                    </Button>
+                  </motion.div>
+
+                  {/* الواتساب */}
+                  <motion.div
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                  >
+                    <Button 
+                      size="sm" 
+                      className="w-full justify-start text-xs lg:text-sm py-3 h-auto bg-gradient-to-r from-green-600 to-green-500 hover:from-green-700 hover:to-green-600 text-white shadow-md hover:shadow-lg transition-all duration-300 group"
+                      asChild
+                    >
+                      <a href="https://wa.me/966500776343" target="_blank" rel="noopener noreferrer">
+                        <div className="flex items-center gap-3 w-full">
+                          <div className="w-8 h-8 bg-white/20 rounded-lg flex items-center justify-center group-hover:bg-white/30 transition-colors">
+                            <MessageSquare className="h-4 w-4 text-white" />
+                          </div>
+                          <div className="flex-1 text-right">
+                            <p className="font-medium">تواصل معنا عبر الواتساب</p>
+                            <p className="text-xs text-green-100">دردشة فورية - رد سريع</p>
+                          </div>
+                        </div>
+                      </a>
+                    </Button>
+                  </motion.div>
+
+                  {/* البريد الإلكتروني */}
+                  <motion.div
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                  >
+                    <Button 
+                      variant="outline" 
+                      size="sm" 
+                      className="w-full justify-start text-xs lg:text-sm py-3 h-auto hover:bg-orange-50 hover:border-orange-300 transition-all duration-300 group"
+                      asChild
+                    >
+                      <a href="mailto:info@masteredupath.com">
+                        <div className="flex items-center gap-3 w-full">
+                          <div className="w-8 h-8 bg-orange-100 rounded-lg flex items-center justify-center group-hover:bg-orange-200 transition-colors">
+                            <Mail className="h-4 w-4 text-orange-600" />
+                          </div>
+                          <div className="flex-1 text-right">
+                            <p className="font-medium text-gray-800">البريد الإلكتروني</p>
+                            <p className="text-xs text-gray-600">info@masteredupath.com</p>
+                          </div>
+                        </div>
+                      </a>
+                    </Button>
+                  </motion.div>
+                </div>
+
+                {/* معلومات إضافية */}
+                <div className="bg-slate-50 rounded-lg p-3 border border-slate-200">
+                  <div className="flex items-center gap-2 mb-1">
+                    <Clock className="h-3 w-3 text-slate-500" />
+                    <span className="text-xs font-medium text-slate-700">ساعات العمل</span>
+                  </div>
+                  <p className="text-xs text-slate-600">
+                    الأحد - الخميس: 10:00 ص - 7:00 م
+                  </p>
+                  <p className="text-xs text-slate-500 mt-1">
+                    خدمة الواتساب متاحة 24/7
+                  </p>
                 </div>
               </CardContent>
             </Card>
