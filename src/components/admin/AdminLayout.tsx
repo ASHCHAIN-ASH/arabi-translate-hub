@@ -50,20 +50,8 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
       badge: null
     },
     { 
-      name: 'العقود', 
+      name: 'نظام العقود', 
       href: '/adminmaster/contracts', 
-      icon: FileText,
-      badge: null
-    },
-    { 
-      name: 'إنشاء عقد جديد', 
-      href: '/adminmaster/contracts/new', 
-      icon: FileSignature,
-      badge: null
-    },
-    { 
-      name: 'قوالب العقود', 
-      href: '/adminmaster/contract-templates', 
       icon: FileText,
       badge: null
     },

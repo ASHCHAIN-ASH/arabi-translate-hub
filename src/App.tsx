@@ -62,9 +62,7 @@ import AdminServiceOrders from "./pages/admin/AdminServiceOrders";
 import EmailNotifications from "./pages/admin/EmailNotifications";
 import AddUser from "./pages/admin/AddUser";
 import AdminWorkingHours from "./pages/admin/AdminWorkingHours";
-import ContractsManagement from "./pages/admin/ContractsManagement";
-import NewContract from "./pages/admin/NewContract";
-import ContractTemplates from "./pages/admin/ContractTemplates";
+import ContractsSystem from "./pages/admin/ContractsSystem";
 
 import ThesisTitles from "./pages/research/ThesisTitles";
 import ResearchPlan from "./pages/research/ResearchPlan";
@@ -190,17 +188,7 @@ const App = () => (
             } />
             <Route path="/adminmaster/contracts" element={
               <SimpleProtectedRoute adminOnly>
-                <ContractsManagement />
-              </SimpleProtectedRoute>
-            } />
-            <Route path="/adminmaster/contracts/new" element={
-              <SimpleProtectedRoute adminOnly>
-                <NewContract />
-              </SimpleProtectedRoute>
-            } />
-            <Route path="/adminmaster/contract-templates" element={
-              <SimpleProtectedRoute adminOnly>
-                <ContractTemplates />
+                <ContractsSystem />
               </SimpleProtectedRoute>
             } />
             <Route path="/adminmaster/services" element={
