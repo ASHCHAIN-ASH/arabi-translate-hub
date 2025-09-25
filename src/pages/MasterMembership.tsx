@@ -18,9 +18,9 @@ import {
 } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import Header from "@/components/Header";
+import Footer from "@/components/Footer";
 import { WorkingHoursBannerRTL } from "@/components/WorkingHoursBannerRTL";
 import MembershipSubscriptionForm from "@/components/MembershipSubscriptionForm";
 
@@ -31,72 +31,72 @@ const MasterMembership = () => {
   const membershipPlans = [
     {
       id: 'silver',
-      name: 'العضوية الفضية',
-      nameEn: 'SILVER MEMBER',
-      price: '1,200',
-      originalPrice: '1,440',
-      discount: '10%',
+      name: 'الفضية',
+      nameEn: 'Silver',
+      price: '120',
+      originalPrice: '240',
+      discount: '50%',
       cashback: '120',
-      popular: false,
-      gradient: 'from-slate-500 via-slate-400 to-slate-600',
-      cardGradient: 'from-slate-600 via-slate-500 to-slate-700',
-      chipColor: 'bg-yellow-400'
+      cardGradient: 'from-gray-400 via-gray-500 to-gray-600',
+      gradient: 'from-gray-400 to-gray-600',
+      chipColor: 'bg-yellow-400',
+      popular: false
     },
     {
       id: 'gold',
-      name: 'العضوية الذهبية',
-      nameEn: 'GOLD MEMBER',
-      price: '2,400',
-      originalPrice: '3,000',
-      discount: '20%',
+      name: 'الذهبية',
+      nameEn: 'Gold',
+      price: '480',
+      originalPrice: '960',
+      discount: '50%',
       cashback: '480',
-      popular: true,
-      gradient: 'from-yellow-500 via-amber-400 to-orange-500',
-      cardGradient: 'from-amber-500 via-yellow-500 to-orange-600',
-      chipColor: 'bg-white'
+      cardGradient: 'from-yellow-400 via-yellow-500 to-yellow-600',
+      gradient: 'from-yellow-400 to-yellow-600',
+      chipColor: 'bg-yellow-500',
+      popular: true
     },
     {
       id: 'platinum',
-      name: 'العضوية البلاتينية',
-      nameEn: 'PLATINUM MEMBER',
-      price: '3,600',
-      originalPrice: '5,520',
-      discount: '35%',
-      cashback: '1,260',
-      popular: false,
-      gradient: 'from-gray-800 via-slate-700 to-black',
-      cardGradient: 'from-gray-900 via-slate-800 to-black',
-      chipColor: 'bg-cyan-400'
+      name: 'البلاتينية',
+      nameEn: 'Platinum',
+      price: '1260',
+      originalPrice: '2520',
+      discount: '50%',
+      cashback: '1260',
+      cardGradient: 'from-slate-400 via-slate-500 to-slate-600',
+      gradient: 'from-slate-400 to-slate-600',
+      chipColor: 'bg-slate-400',
+      popular: false
     }
   ];
 
   const benefits = [
     {
-      icon: Tag,
+      icon: Trophy,
+      color: 'text-purple-600',
       title: 'خصومات مميزة',
-      description: 'خصومات تصل إلى 35% على جميع خدمات الترجمة والبحث الأكاديمي',
-      color: 'text-red-500',
-      membership: ['10% للفضية', '20% للذهبية', '35% للبلاتينية']
-    },
-    {
-      icon: Gift,
-      title: 'كاش باك مضمون',
-      description: 'استرداد نقدي سنوي مضمون يصل إلى 1,260 ريال حسب نوع العضوية',
-      color: 'text-green-500',
-      membership: ['120 ريال للفضية', '480 ريال للذهبية', '1,260 ريال للبلاتينية']
-    },
-    {
-      icon: BookOpen,
-      title: 'مكتبة محتوى شاملة',
-      description: 'وصول لآلاف المقالات والموارد التعليمية المتخصصة في الترجمة والأبحاث',
-      color: 'text-blue-500',
-      membership: ['محدود للفضية', 'متقدم للذهبية', 'غير محدود للبلاتينية']
+      description: 'خصومات تصل إلى %35 على جميع خدمات الترجمة والبحث الأكاديمي',
+      membership: ['للفضية 10%', 'للذهبية 20%', 'للبلاتينية 35%']
     },
     {
       icon: Users,
+      color: 'text-blue-600',
+      title: 'كاش باك مضمون',
+      description: 'استرداد نقدي مضمون يصل إلى 1,260 ريال حسب نوع الاشتراك الاختياري',
+      membership: ['ريال للفضية 120', 'ريال للذهبية 480', 'ريال للبلاتينية 1,260']
+    },
+    {
+      icon: BookOpen,
+      color: 'text-green-600',
+      title: 'مكتبة محتوى شاملة',
+      description: 'وصول لآلاف المقالات والموارد التعليمية المتخصصة في الترجمة والأبحاث',
+      membership: ['محدود للفضية', 'متقدم للذهبية', 'غير محدود للبلاتينية']
+    },
+    {
+      icon: MessageSquare,
+      color: 'text-indigo-600',
       title: 'مجتمع من الخبراء',
       description: 'تفاعل مع شبكة من المترجمين والباحثين المحترفين من جميع أنحاء العالم',
-      color: 'text-purple-500',
       membership: ['نقاشات عامة', 'ورش عمل مباشرة', 'مجموعة VIP حصرية']
     }
   ];
@@ -147,94 +147,122 @@ const MasterMembership = () => {
               اختر العضوية المناسبة لك
             </h2>
             
-            <div className="grid gap-8 lg:grid-cols-3 md:grid-cols-2 max-w-7xl mx-auto">
+            <div className="grid gap-8 lg:grid-cols-3 md:grid-cols-2 max-w-5xl mx-auto">
               {membershipPlans.map((plan, index) => (
                 <motion.div
                   key={plan.id}
                   initial={{ opacity: 0, y: 30 }}
                   animate={{ opacity: 1, y: 0 }}
-                  whileHover={{ y: -5, scale: 1.02 }}
+                  whileHover={{ y: -5, scale: 1.05 }}
                   transition={{ delay: index * 0.1, duration: 0.6 }}
                   className={`relative ${plan.popular ? 'lg:scale-105' : ''}`}
                 >
                   {plan.popular && (
-                    <div className="absolute -top-6 right-1/2 transform translate-x-1/2 z-10">
-                      <div className="bg-gradient-to-r from-orange-400 to-red-500 text-white px-6 py-2 rounded-full text-sm font-bold shadow-xl">
-                        <Crown className="inline-block w-4 h-4 ml-1" />
+                    <div className="absolute -top-4 right-1/2 transform translate-x-1/2 z-10">
+                      <div className="bg-gradient-to-r from-orange-400 to-red-500 text-white px-4 py-2 rounded-full text-xs font-bold shadow-xl">
+                        <Crown className="inline-block w-3 h-3 ml-1" />
                         الأكثر طلبًا
                       </div>
                     </div>
                   )}
                   
-                  {/* Bank Card - Arabic RTL Design */}
+                  {/* Bank Card - Real Credit Card Size */}
                   <div className={`
-                    relative w-full h-80 rounded-[20px] overflow-hidden
+                    relative w-full aspect-[1.586/1] max-w-[320px] mx-auto rounded-xl overflow-hidden
                     bg-gradient-to-br ${plan.cardGradient}
-                    shadow-2xl transition-all duration-500 
-                    hover:shadow-3xl
+                    shadow-xl hover:shadow-2xl transition-all duration-500 
                     border border-white/20
                     backdrop-blur-sm
                   `}>
                     {/* Card Background Pattern */}
                     <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent"></div>
-                    <div className="absolute top-0 right-0 w-32 h-32 bg-white/5 rounded-full -translate-y-16 translate-x-16"></div>
-                    <div className="absolute bottom-0 left-0 w-24 h-24 bg-white/5 rounded-full translate-y-12 -translate-x-12"></div>
+                    <div className="absolute top-0 right-0 w-20 h-20 bg-white/5 rounded-full -translate-y-10 translate-x-10"></div>
+                    <div className="absolute bottom-0 left-0 w-16 h-16 bg-white/5 rounded-full translate-y-8 -translate-x-8"></div>
 
-                    {/* Card Header - Arabic positioning */}
-                    <div className="absolute top-6 right-6 text-white text-sm font-bold opacity-90">
-                      وكالة ماستر إيدو باث
+                    {/* Bank Name - Top Right */}
+                    <div className="absolute top-4 right-4 text-white text-xs font-bold opacity-90">
+                      ماستر إيدو باث
                     </div>
-                    <div className="absolute top-6 left-6">
-                      <Crown className="w-8 h-8 text-yellow-300" />
+                    
+                    {/* Card Type - Top Left */}
+                    <div className="absolute top-4 left-4">
+                      <Crown className="w-5 h-5 text-yellow-300" />
                     </div>
 
-                    {/* Chip - Real bank card position */}
-                    <div className="absolute top-20 right-6 w-14 h-10 bg-gradient-to-br from-yellow-300 via-yellow-400 to-yellow-500 rounded-lg shadow-lg">
-                      <div className="absolute inset-1 bg-gradient-to-br from-yellow-200 to-yellow-400 rounded-md">
-                        <div className="w-full h-full bg-gradient-to-br from-transparent via-white/20 to-transparent rounded-md"></div>
+                    {/* EMV Chip - Real position */}
+                    <div className="absolute top-12 right-4 w-8 h-6 bg-gradient-to-br from-yellow-300 via-yellow-400 to-yellow-500 rounded-sm shadow-md">
+                      <div className="absolute inset-0.5 bg-gradient-to-br from-yellow-200 to-yellow-400 rounded-sm">
+                        <div className="w-full h-full grid grid-cols-3 gap-0.5 p-0.5">
+                          <div className="bg-yellow-600/30 rounded-sm"></div>
+                          <div className="bg-yellow-600/30 rounded-sm"></div>
+                          <div className="bg-yellow-600/30 rounded-sm"></div>
+                          <div className="bg-yellow-600/30 rounded-sm"></div>
+                          <div className="bg-yellow-600/30 rounded-sm"></div>
+                          <div className="bg-yellow-600/30 rounded-sm"></div>
+                        </div>
                       </div>
                     </div>
 
-                    {/* Card Number - Arabic positioning */}
-                    <div className="absolute top-36 right-6 text-white font-mono text-lg tracking-widest">
-                      {plan.id === 'silver' ? '5432 1098 7654 ••••' : plan.id === 'gold' ? '4532 1098 7654 ••••' : '4532 1098 7654 ••••'}
+                    {/* Card Number */}
+                    <div className="absolute top-20 right-4 text-white font-mono text-sm tracking-wider">
+                      {plan.id === 'silver' ? '5432 **** **** 1234' : plan.id === 'gold' ? '4532 **** **** 5678' : '4532 **** **** 9012'}
                     </div>
 
-                    {/* Membership Level - Arabic positioning */}
-                    <div className="absolute bottom-20 right-6 text-white">
-                      <div className="text-xl font-bold">{plan.name}</div>
-                      <div className="text-sm opacity-80 mt-1">{plan.nameEn}</div>
+                    {/* Card Holder Name */}
+                    <div className="absolute bottom-14 right-4 text-white">
+                      <div className="text-xs opacity-80 mb-1">اسم حامل البطاقة</div>
+                      <div className="text-sm font-bold">عضوية {plan.name}</div>
                     </div>
 
-                    {/* Expiry Date */}
-                    <div className="absolute bottom-12 right-6 text-white/80 text-sm">
-                      <div>صالح حتى</div>
-                      <div className="font-mono">12/25</div>
+                    {/* Expiry & CVV */}
+                    <div className="absolute bottom-8 right-4 flex gap-6 text-white text-xs">
+                      <div>
+                        <div className="opacity-80">صالح حتى</div>
+                        <div className="font-mono font-bold">12/25</div>
+                      </div>
+                      <div>
+                        <div className="opacity-80">CVV</div>
+                        <div className="font-mono font-bold">***</div>
+                      </div>
                     </div>
 
-                    {/* Card Network Logo */}
-                    <div className="absolute bottom-6 right-6 text-white/60 text-xs font-bold">
+                    {/* Card Network */}
+                    <div className="absolute bottom-4 right-4 text-white/60 text-xs font-bold">
                       MASTERCARD
                     </div>
 
                     {/* Price Badge */}
-                    <div className="absolute top-6 left-20 bg-white/15 backdrop-blur-sm rounded-xl p-4 border border-white/10">
-                      <div className="text-white/70 text-sm line-through">{plan.originalPrice} ريال</div>
-                      <div className="text-white text-2xl font-bold">{plan.price}</div>
-                      <div className="text-green-300 text-sm font-medium">كاش باك: {plan.cashback}</div>
+                    <div className="absolute top-4 left-12 bg-white/15 backdrop-blur-sm rounded-lg p-2 border border-white/10">
+                      <div className="text-white/70 text-xs line-through">{plan.originalPrice} ريال</div>
+                      <div className="text-white text-lg font-bold">{plan.price}</div>
+                      <div className="text-green-300 text-xs">كاش باك: {plan.cashback}</div>
                     </div>
 
                     {/* Discount Badge */}
-                    <div className="absolute top-28 left-6 transform -rotate-12 bg-red-500 text-white px-4 py-2 rounded-lg text-sm font-bold shadow-lg">
-                      خصم {plan.discount}
+                    <div className="absolute top-16 left-4 transform -rotate-12 bg-red-500 text-white px-2 py-1 rounded text-xs font-bold shadow-lg">
+                      {plan.discount}
+                    </div>
+
+                    {/* Contactless Symbol */}
+                    <div className="absolute top-12 left-4">
+                      <div className="w-4 h-4 border-2 border-white/40 rounded-full relative">
+                        <div className="absolute inset-1 border border-white/40 rounded-full"></div>
+                        <div className="absolute inset-2 border border-white/40 rounded-full"></div>
+                      </div>
                     </div>
 
                     {/* Holographic Effect */}
-                    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent opacity-0 hover:opacity-100 transition-opacity duration-500 transform -skew-x-12"></div>
+                    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent opacity-0 hover:opacity-100 transition-opacity duration-500 transform -skew-x-12"></div>
+                  </div>
+
+                  {/* Card Details */}
+                  <div className="mt-6 text-center">
+                    <h3 className="text-xl font-bold text-gray-800 mb-2">{plan.name}</h3>
+                    <p className="text-gray-600 text-sm mb-4">{plan.nameEn}</p>
                   </div>
 
                   {/* Subscribe Button */}
-                  <div className="mt-8">
+                  <div className="mt-4">
                     <Button 
                       onClick={() => {
                         setSelectedPlan(plan);
@@ -242,26 +270,26 @@ const MasterMembership = () => {
                       }}
                       className={`
                         w-full bg-gradient-to-r ${plan.gradient} 
-                        hover:opacity-90 text-white font-bold py-8 text-xl rounded-2xl
-                        shadow-xl hover:shadow-2xl transition-all duration-300
+                        hover:opacity-90 text-white font-bold py-4 text-base rounded-xl
+                        shadow-lg hover:shadow-xl transition-all duration-300
                         hover:scale-105 border-0
                       `}
                     >
-                      <Crown className="w-6 h-6 ml-3" />
+                      <Crown className="w-4 h-4 ml-2" />
                       اشترك الآن - 12 شهر
                     </Button>
                     
-                    <div className="mt-4 text-center">
-                      <div className="inline-flex items-center gap-3 bg-green-50 text-green-700 px-6 py-3 rounded-full text-base font-medium">
-                        <Gift className="w-5 h-5" />
+                    <div className="mt-3 text-center">
+                      <div className="inline-flex items-center gap-2 bg-green-50 text-green-700 px-4 py-2 rounded-full text-sm">
+                        <Gift className="w-4 h-4" />
                         كاش باك مضمون: {plan.cashback} ريال
                       </div>
                     </div>
-                   </div>
-                 </motion.div>
-               ))}
-             </div>
-           </TabsContent>
+                  </div>
+                </motion.div>
+              ))}
+            </div>
+          </TabsContent>
 
           {/* Benefits Section */}
           <TabsContent value="benefits" className="space-y-8">
@@ -323,6 +351,8 @@ const MasterMembership = () => {
           }}
         />
       )}
+
+      <Footer />
     </div>
   );
 };
