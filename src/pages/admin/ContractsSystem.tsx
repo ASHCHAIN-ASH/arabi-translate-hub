@@ -164,6 +164,13 @@ const ContractsSystem = () => {
     try {
       setLoading(true);
       
+      // Get current user
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) {
+        toast.error('يجب تسجيل الدخول أولاً');
+        return;
+      }
+      
       const contractData = {
         contract_number: contractNumber,
         client_name: formData.client_name,
@@ -171,21 +178,28 @@ const ContractsSystem = () => {
         client_phone: '000000000',
         client_type: formData.client_type,
         service_type: formData.service_type,
-        service_description: formData.service_description,
-        service_price: calculations.total_amount,
+        service_description: formData.service_description || '',
+        service_price: calculations.total_amount || formData.service_price,
         currency: formData.currency,
         payment_terms: formData.payment_terms,
         contract_duration: formData.contract_duration,
         status: 'draft',
-        user_id: 'temp-user-id'
+        user_id: user.id
       };
 
-      const { error } = await supabase
+      console.log('Saving contract data:', contractData);
+
+      const { error, data } = await supabase
         .from('contracts')
-        .insert([contractData]);
+        .insert([contractData])
+        .select();
 
-      if (error) throw error;
+      if (error) {
+        console.error('Supabase error:', error);
+        throw error;
+      }
 
+      console.log('Contract saved successfully:', data);
       toast.success('تم حفظ العقد بنجاح');
       setShowNewContractDialog(false);
       loadContracts();
@@ -204,7 +218,7 @@ const ContractsSystem = () => {
       });
     } catch (error) {
       console.error('Error saving contract:', error);
-      toast.error('خطأ في حفظ العقد');
+      toast.error(`خطأ في حفظ العقد: ${error.message || error}`);
     } finally {
       setLoading(false);
     }
