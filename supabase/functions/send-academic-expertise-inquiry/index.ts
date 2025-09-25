@@ -67,154 +67,347 @@ const handler = async (req: Request): Promise<Response> => {
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <title>تأكيد طلب الاستشارة الأكاديمية</title>
       <style>
-        body {
-          font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-          direction: rtl;
-          text-align: right;
-          background-color: #f8fafc;
+        * {
           margin: 0;
           padding: 0;
-          line-height: 1.6;
+          box-sizing: border-box;
         }
-        .container {
-          max-width: 600px;
+        body {
+          font-family: 'Cairo', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+          direction: rtl;
+          text-align: right;
+          background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+          margin: 0;
+          padding: 20px;
+          line-height: 1.8;
+          color: #2d3748;
+        }
+        .email-wrapper {
+          max-width: 680px;
           margin: 0 auto;
-          background-color: #ffffff;
-          box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+          background: #ffffff;
+          border-radius: 20px;
+          overflow: hidden;
+          box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
         }
         .header {
-          background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
+          background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 50%, #ec4899 100%);
           color: white;
-          padding: 30px;
+          padding: 50px 40px;
           text-align: center;
+          position: relative;
+          overflow: hidden;
         }
-        .header h1 {
-          margin: 0;
-          font-size: 28px;
-          font-weight: bold;
+        .header::before {
+          content: '';
+          position: absolute;
+          top: -50%;
+          right: -50%;
+          width: 200%;
+          height: 200%;
+          background: repeating-linear-gradient(
+            45deg,
+            transparent,
+            transparent 10px,
+            rgba(255,255,255,0.1) 10px,
+            rgba(255,255,255,0.1) 20px
+          );
+          animation: move 20s linear infinite;
+        }
+        @keyframes move {
+          0% { transform: translate(-50%, -50%) rotate(0deg); }
+          100% { transform: translate(-50%, -50%) rotate(360deg); }
+        }
+        .header-content {
+          position: relative;
+          z-index: 2;
+        }
+        .logo {
+          font-size: 2.5rem;
+          font-weight: 800;
+          margin-bottom: 15px;
+          text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        .tagline {
+          font-size: 1.1rem;
+          opacity: 0.95;
+          font-weight: 300;
         }
         .content {
-          padding: 30px;
+          padding: 50px 40px;
+          background: #ffffff;
         }
         .greeting {
-          font-size: 18px;
-          color: #1f2937;
-          margin-bottom: 20px;
+          font-size: 1.3rem;
+          color: #2d3748;
+          margin-bottom: 30px;
+          padding: 25px;
+          background: linear-gradient(135deg, #f7fafc 0%, #edf2f7 100%);
+          border-radius: 15px;
+          border-right: 6px solid #4f46e5;
         }
-        .info-section {
-          background-color: #f1f5f9;
-          padding: 20px;
-          border-radius: 8px;
-          margin: 20px 0;
-          border-right: 4px solid #3b82f6;
-        }
-        .info-row {
-          display: flex;
-          justify-content: space-between;
-          margin: 10px 0;
-          padding: 8px 0;
-          border-bottom: 1px solid #e2e8f0;
-        }
-        .info-row:last-child {
-          border-bottom: none;
-        }
-        .label {
-          font-weight: bold;
-          color: #374151;
-          min-width: 120px;
-        }
-        .value {
-          color: #6b7280;
-        }
-        .next-steps {
-          background-color: #ecfdf5;
-          border: 1px solid #10b981;
-          border-radius: 8px;
-          padding: 20px;
-          margin: 20px 0;
-        }
-        .next-steps h3 {
-          color: #065f46;
-          margin-top: 0;
-        }
-        .next-steps ul {
-          color: #047857;
-          margin: 10px 0 0 20px;
-        }
-        .footer {
-          background-color: #1f2937;
-          color: white;
-          padding: 20px;
-          text-align: center;
-          font-size: 14px;
-        }
-        .contact-info {
-          margin: 15px 0;
-        }
-        .highlight {
-          background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+        .highlight-name {
+          background: linear-gradient(135deg, #4f46e5, #7c3aed);
           -webkit-background-clip: text;
           -webkit-text-fill-color: transparent;
+          background-clip: text;
+          font-weight: 700;
+          font-size: 1.1em;
+        }
+        .main-text {
+          font-size: 1.1rem;
+          line-height: 1.8;
+          margin-bottom: 35px;
+          color: #4a5568;
+        }
+        .info-section {
+          background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+          padding: 35px;
+          border-radius: 18px;
+          margin: 35px 0;
+          border-right: 6px solid #0ea5e9;
+          box-shadow: 0 8px 25px rgba(14, 165, 233, 0.1);
+        }
+        .section-title {
+          color: #0369a1;
+          margin-bottom: 25px;
+          font-size: 1.4rem;
+          font-weight: 700;
+          display: flex;
+          align-items: center;
+          gap: 10px;
+        }
+        .info-grid {
+          display: grid;
+          gap: 20px;
+        }
+        .info-item {
+          background: white;
+          padding: 20px;
+          border-radius: 12px;
+          border-right: 4px solid #0ea5e9;
+          box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+          transition: transform 0.2s ease;
+        }
+        .info-item:hover {
+          transform: translateY(-2px);
+        }
+        .info-label {
+          font-weight: 700;
+          color: #1e40af;
+          font-size: 0.95rem;
+          margin-bottom: 8px;
+          display: block;
+        }
+        .info-value {
+          color: #4b5563;
+          font-size: 1.05rem;
+          font-weight: 500;
+        }
+        .next-steps {
+          background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+          border: 2px solid #22c55e;
+          border-radius: 18px;
+          padding: 35px;
+          margin: 35px 0;
+          box-shadow: 0 8px 25px rgba(34, 197, 94, 0.1);
+        }
+        .next-steps h3 {
+          color: #15803d;
+          margin-bottom: 25px;
+          font-size: 1.4rem;
+          font-weight: 700;
+          display: flex;
+          align-items: center;
+          gap: 10px;
+        }
+        .steps-list {
+          list-style: none;
+          padding: 0;
+        }
+        .steps-list li {
+          color: #166534;
+          margin-bottom: 15px;
+          padding: 15px 20px;
+          background: white;
+          border-radius: 10px;
+          border-right: 4px solid #22c55e;
+          font-weight: 500;
+          box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+          position: relative;
+          padding-right: 50px;
+        }
+        .steps-list li::before {
+          content: '✓';
+          position: absolute;
+          right: 20px;
+          top: 50%;
+          transform: translateY(-50%);
+          width: 24px;
+          height: 24px;
+          background: #22c55e;
+          color: white;
+          border-radius: 50%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
           font-weight: bold;
+          font-size: 14px;
+        }
+        .contact-section {
+          background: linear-gradient(135deg, #fefce8 0%, #fef3c7 100%);
+          padding: 35px;
+          border-radius: 18px;
+          margin: 35px 0;
+          border-right: 6px solid #f59e0b;
+          box-shadow: 0 8px 25px rgba(245, 158, 11, 0.1);
+        }
+        .contact-title {
+          color: #d97706;
+          margin-bottom: 25px;
+          font-size: 1.4rem;
+          font-weight: 700;
+          display: flex;
+          align-items: center;
+          gap: 10px;
+        }
+        .contact-item {
+          background: white;
+          padding: 20px;
+          border-radius: 12px;
+          margin-bottom: 15px;
+          border-right: 4px solid #f59e0b;
+          font-weight: 500;
+          color: #92400e;
+          box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        }
+        .closing-message {
+          font-size: 1.1rem;
+          line-height: 1.8;
+          margin: 40px 0;
+          padding: 30px;
+          background: linear-gradient(135deg, #faf5ff 0%, #f3e8ff 100%);
+          border-radius: 15px;
+          border-right: 6px solid #7c3aed;
+          color: #5b21b6;
+          font-weight: 500;
+        }
+        .signature {
+          text-align: center;
+          padding: 30px;
+          background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+          border-radius: 15px;
+          margin-top: 30px;
+        }
+        .signature-name {
+          font-weight: 700;
+          color: #1e293b;
+          font-size: 1.2rem;
+          margin-bottom: 10px;
+        }
+        .signature-team {
+          color: #64748b;
+          font-size: 1.05rem;
+          margin-bottom: 5px;
+        }
+        .signature-tagline {
+          color: #7c3aed;
+          font-weight: 600;
+          font-style: italic;
+        }
+        .footer {
+          background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+          color: #f1f5f9;
+          padding: 40px;
+          text-align: center;
+          font-size: 0.95rem;
+        }
+        .footer-title {
+          font-size: 1.3rem;
+          font-weight: 700;
+          margin-bottom: 15px;
+          color: white;
+        }
+        .footer-subtitle {
+          margin-bottom: 20px;
+          color: #cbd5e1;
+        }
+        .footer-copyright {
+          color: #94a3b8;
+          font-size: 0.9rem;
+        }
+        @media (max-width: 600px) {
+          body { padding: 10px; }
+          .content, .header { padding: 30px 25px; }
+          .info-section, .next-steps, .contact-section { padding: 25px; }
+          .logo { font-size: 2rem; }
+          .greeting { font-size: 1.1rem; padding: 20px; }
+          .section-title, .next-steps h3, .contact-title { font-size: 1.2rem; }
         }
       </style>
     </head>
     <body>
-      <div class="container">
+      <div class="email-wrapper">
         <div class="header">
-          <h1>🎓 وكالة ماستر إيدو باث</h1>
-          <p>للخدمات الأكاديمية والبحثية المتخصصة</p>
+          <div class="header-content">
+            <div class="logo">🎓 وكالة ماستر إيدو باث</div>
+            <div class="tagline">للخدمات الأكاديمية والبحثية المتخصصة</div>
+          </div>
         </div>
         
         <div class="content">
           <div class="greeting">
             السلام عليكم ورحمة الله وبركاته،<br>
-            الأستاذ / الأستاذة <span class="highlight">${consultationData.fullName}</span> المحترم/ة
+            الأستاذ / الأستاذة <span class="highlight-name">${consultationData.fullName}</span> المحترم/ة
           </div>
           
-          <p>نشكركم لثقتكم في <strong>وكالة ماستر إيدو باث</strong> ولاختياركم خدماتنا الأكاديمية المتخصصة.</p>
-          
-          <p>تم استلام طلب الاستشارة الأكاديمية الخاص بكم بنجاح، وسيقوم فريقنا المختص بمراجعته والتواصل معكم في أقرب وقت ممكن.</p>
+          <div class="main-text">
+            نشكركم لثقتكم في <strong>وكالة ماستر إيدو باث</strong> ولاختياركم خدماتنا الأكاديمية المتخصصة.
+            <br><br>
+            تم استلام طلب الاستشارة الأكاديمية الخاص بكم بنجاح، وسيقوم فريقنا المختص بمراجعته والتواصل معكم في أقرب وقت ممكن.
+          </div>
           
           <div class="info-section">
-            <h3 style="color: #3b82f6; margin-top: 0;">📋 تفاصيل طلبكم:</h3>
-            <div class="info-row">
-              <span class="label">نوع الخدمة:</span>
-              <span class="value">${serviceTypeArabic}</span>
+            <h3 class="section-title">📋 تفاصيل طلبكم</h3>
+            <div class="info-grid">
+              <div class="info-item">
+                <span class="info-label">نوع الخدمة</span>
+                <span class="info-value">${serviceTypeArabic}</span>
+              </div>
+              <div class="info-item">
+                <span class="info-label">المستوى الأكاديمي</span>
+                <span class="info-value">${academicLevelArabic}</span>
+              </div>
+              ${consultationData.specialization ? `
+              <div class="info-item">
+                <span class="info-label">التخصص</span>
+                <span class="info-value">${consultationData.specialization}</span>
+              </div>
+              ` : ''}
+              ${consultationData.university ? `
+              <div class="info-item">
+                <span class="info-label">الجامعة</span>
+                <span class="info-value">${consultationData.university}</span>
+              </div>
+              ` : ''}
+              ${consultationData.projectTitle ? `
+              <div class="info-item">
+                <span class="info-label">عنوان المشروع</span>
+                <span class="info-value">${consultationData.projectTitle}</span>
+              </div>
+              ` : ''}
+              ${consultationData.deadline ? `
+              <div class="info-item">
+                <span class="info-label">الموعد النهائي</span>
+                <span class="info-value">${new Date(consultationData.deadline).toLocaleDateString('ar-SA')}</span>
+              </div>
+              ` : ''}
             </div>
-            <div class="info-row">
-              <span class="label">المستوى الأكاديمي:</span>
-              <span class="value">${academicLevelArabic}</span>
-            </div>
-            ${consultationData.specialization ? `
-            <div class="info-row">
-              <span class="label">التخصص:</span>
-              <span class="value">${consultationData.specialization}</span>
-            </div>
-            ` : ''}
-            ${consultationData.university ? `
-            <div class="info-row">
-              <span class="label">الجامعة:</span>
-              <span class="value">${consultationData.university}</span>
-            </div>
-            ` : ''}
-            ${consultationData.projectTitle ? `
-            <div class="info-row">
-              <span class="label">عنوان المشروع:</span>
-              <span class="value">${consultationData.projectTitle}</span>
-            </div>
-            ` : ''}
-            ${consultationData.deadline ? `
-            <div class="info-row">
-              <span class="label">الموعد النهائي:</span>
-              <span class="value">${new Date(consultationData.deadline).toLocaleDateString('ar-SA')}</span>
-            </div>
-            ` : ''}
           </div>
           
           <div class="next-steps">
-            <h3>⏰ الخطوات التالية:</h3>
-            <ul>
+            <h3>⏰ الخطوات التالية</h3>
+            <ul class="steps-list">
               <li>سيتم مراجعة طلبكم من قبل فريق الخبراء المختصين</li>
               <li>سنتواصل معكم خلال <strong>24 ساعة كحد أقصى</strong> لمناقشة التفاصيل</li>
               <li>سيتم تقديم عرض سعر مفصل وخطة عمل شاملة</li>
@@ -222,23 +415,31 @@ const handler = async (req: Request): Promise<Response> => {
             </ul>
           </div>
           
-          <div class="contact-info">
-            <h3 style="color: #3b82f6;">📞 للتواصل المباشر:</h3>
-            <p><strong>البريد الإلكتروني:</strong> admin@masteredupath.com</p>
-            <p><strong>الهاتف:</strong> ${consultationData.phone}</p>
+          <div class="contact-section">
+            <h3 class="contact-title">📞 للتواصل المباشر</h3>
+            <div class="contact-item">
+              <strong>البريد الإلكتروني:</strong> admin@masteredupath.com
+            </div>
+            <div class="contact-item">
+              <strong>رقم الهاتف:</strong> ${consultationData.phone}
+            </div>
           </div>
           
-          <p style="margin-top: 30px;">نتطلع لخدمتكم وتقديم أفضل الحلول الأكاديمية التي تلبي احتياجاتكم وتحقق أهدافكم العلمية.</p>
+          <div class="closing-message">
+            نتطلع لخدمتكم وتقديم أفضل الحلول الأكاديمية التي تلبي احتياجاتكم وتحقق أهدافكم العلمية بأعلى معايير الجودة والاحترافية.
+          </div>
           
-          <p><strong>مع أطيب التحيات،</strong><br>
-          فريق وكالة ماستر إيدو باث<br>
-          <em>شريككم في التميز الأكاديمي</em></p>
+          <div class="signature">
+            <div class="signature-name">مع أطيب التحيات</div>
+            <div class="signature-team">فريق وكالة ماستر إيدو باث</div>
+            <div class="signature-tagline">شريككم في التميز الأكاديمي</div>
+          </div>
         </div>
         
         <div class="footer">
-          <p><strong>وكالة ماستر إيدو باث</strong></p>
-          <p>للخدمات الأكاديمية والبحثية المتخصصة</p>
-          <p>جميع الحقوق محفوظة © 2024</p>
+          <div class="footer-title">وكالة ماستر إيدو باث</div>
+          <div class="footer-subtitle">للخدمات الأكاديمية والبحثية المتخصصة</div>
+          <div class="footer-copyright">جميع الحقوق محفوظة © 2024</div>
         </div>
       </div>
     </body>
@@ -254,190 +455,385 @@ const handler = async (req: Request): Promise<Response> => {
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <title>طلب استشارة أكاديمية جديد</title>
       <style>
-        body {
-          font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-          direction: rtl;
-          text-align: right;
-          background-color: #f8fafc;
+        * {
           margin: 0;
           padding: 0;
-          line-height: 1.6;
+          box-sizing: border-box;
         }
-        .container {
-          max-width: 700px;
+        body {
+          font-family: 'Cairo', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+          direction: rtl;
+          text-align: right;
+          background: linear-gradient(135deg, #dc2626 0%, #ea580c 50%, #f59e0b 100%);
+          margin: 0;
+          padding: 20px;
+          line-height: 1.8;
+          color: #1f2937;
+        }
+        .email-wrapper {
+          max-width: 800px;
           margin: 0 auto;
-          background-color: #ffffff;
-          box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+          background: #ffffff;
+          border-radius: 25px;
+          overflow: hidden;
+          box-shadow: 0 30px 60px rgba(0, 0, 0, 0.2);
         }
         .header {
-          background: linear-gradient(135deg, #dc2626 0%, #ea580c 100%);
+          background: linear-gradient(135deg, #dc2626 0%, #ea580c 50%, #f59e0b 100%);
           color: white;
-          padding: 25px;
+          padding: 50px 40px;
           text-align: center;
+          position: relative;
+          overflow: hidden;
+        }
+        .header::before {
+          content: '';
+          position: absolute;
+          top: -50%;
+          right: -50%;
+          width: 200%;
+          height: 200%;
+          background: repeating-linear-gradient(
+            45deg,
+            transparent,
+            transparent 15px,
+            rgba(255,255,255,0.1) 15px,
+            rgba(255,255,255,0.1) 30px
+          );
+          animation: alertMove 15s linear infinite;
+        }
+        @keyframes alertMove {
+          0% { transform: translate(-50%, -50%) rotate(0deg); }
+          100% { transform: translate(-50%, -50%) rotate(360deg); }
+        }
+        .header-content {
+          position: relative;
+          z-index: 2;
         }
         .urgent-badge {
-          background-color: #fbbf24;
+          background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
           color: #92400e;
-          padding: 5px 15px;
-          border-radius: 20px;
-          font-size: 12px;
-          font-weight: bold;
+          padding: 12px 25px;
+          border-radius: 50px;
+          font-size: 0.9rem;
+          font-weight: 800;
           display: inline-block;
-          margin-bottom: 10px;
+          margin-bottom: 20px;
+          text-transform: uppercase;
+          letter-spacing: 1px;
+          box-shadow: 0 8px 20px rgba(251, 191, 36, 0.4);
+          animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+          0%, 100% { transform: scale(1); }
+          50% { transform: scale(1.05); }
+        }
+        .header-title {
+          font-size: 2.2rem;
+          font-weight: 800;
+          margin-bottom: 15px;
+          text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        .header-subtitle {
+          font-size: 1.1rem;
+          opacity: 0.95;
+          font-weight: 300;
         }
         .content {
+          padding: 50px 40px;
+          background: #ffffff;
+        }
+        .alert-message {
+          background: linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%);
+          border: 3px solid #ef4444;
+          border-radius: 20px;
           padding: 30px;
+          margin-bottom: 40px;
+          text-align: center;
+          position: relative;
+          overflow: hidden;
         }
-        .client-info {
-          background-color: #eff6ff;
-          border: 1px solid #3b82f6;
-          border-radius: 8px;
-          padding: 20px;
-          margin: 20px 0;
+        .alert-message::before {
+          content: '⚠️';
+          font-size: 3rem;
+          position: absolute;
+          top: -10px;
+          right: 20px;
+          opacity: 0.1;
         }
-        .info-grid {
-          display: grid;
-          grid-template-columns: 1fr 1fr;
-          gap: 15px;
-          margin: 15px 0;
+        .alert-text {
+          color: #dc2626;
+          font-size: 1.3rem;
+          font-weight: 700;
+          margin-bottom: 15px;
         }
-        .info-item {
-          padding: 10px;
-          background-color: #f8fafc;
-          border-radius: 6px;
-          border-right: 3px solid #3b82f6;
+        .alert-subtext {
+          color: #991b1b;
+          font-size: 1.05rem;
+          font-weight: 500;
         }
-        .label {
-          font-weight: bold;
+        .client-section {
+          background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+          border: 3px solid #3b82f6;
+          border-radius: 20px;
+          padding: 40px;
+          margin: 40px 0;
+          box-shadow: 0 15px 35px rgba(59, 130, 246, 0.1);
+        }
+        .section-title {
           color: #1e40af;
-          font-size: 14px;
+          margin-bottom: 30px;
+          font-size: 1.6rem;
+          font-weight: 800;
+          display: flex;
+          align-items: center;
+          gap: 15px;
         }
-        .value {
+        .client-grid {
+          display: grid;
+          grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+          gap: 25px;
+          margin: 30px 0;
+        }
+        .client-card {
+          background: white;
+          padding: 25px;
+          border-radius: 15px;
+          border-right: 5px solid #3b82f6;
+          box-shadow: 0 8px 25px rgba(0,0,0,0.08);
+          transition: all 0.3s ease;
+          position: relative;
+        }
+        .client-card:hover {
+          transform: translateY(-5px);
+          box-shadow: 0 15px 40px rgba(0,0,0,0.15);
+        }
+        .card-label {
+          font-weight: 700;
+          color: #1e40af;
+          font-size: 0.95rem;
+          margin-bottom: 10px;
+          display: block;
+          text-transform: uppercase;
+          letter-spacing: 0.5px;
+        }
+        .card-value {
           color: #374151;
-          margin-top: 5px;
+          font-size: 1.1rem;
+          font-weight: 600;
+          line-height: 1.6;
+        }
+        .project-section {
+          background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+          border: 3px solid #22c55e;
+          border-radius: 20px;
+          padding: 40px;
+          margin: 40px 0;
+          box-shadow: 0 15px 35px rgba(34, 197, 94, 0.1);
         }
         .project-details {
-          background-color: #f0fdf4;
-          border: 1px solid #10b981;
-          border-radius: 8px;
-          padding: 20px;
-          margin: 20px 0;
+          display: grid;
+          gap: 25px;
         }
-        .action-needed {
-          background-color: #fef2f2;
-          border: 1px solid #ef4444;
-          border-radius: 8px;
-          padding: 20px;
-          margin: 20px 0;
+        .project-card {
+          background: white;
+          padding: 25px;
+          border-radius: 15px;
+          border-right: 5px solid #22c55e;
+          box-shadow: 0 8px 25px rgba(0,0,0,0.08);
         }
-        .priority-high {
+        .highlight-value {
           background: linear-gradient(135deg, #dc2626, #ea580c);
           -webkit-background-clip: text;
           -webkit-text-fill-color: transparent;
-          font-weight: bold;
+          background-clip: text;
+          font-weight: 800;
+          font-size: 1.2em;
+        }
+        .action-section {
+          background: linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%);
+          border: 3px solid #ef4444;
+          border-radius: 20px;
+          padding: 40px;
+          margin: 40px 0;
+          box-shadow: 0 15px 35px rgba(239, 68, 68, 0.1);
+        }
+        .action-list {
+          list-style: none;
+          padding: 0;
+        }
+        .action-item {
+          color: #7f1d1d;
+          margin-bottom: 20px;
+          padding: 20px 25px;
+          background: white;
+          border-radius: 12px;
+          border-right: 5px solid #ef4444;
+          font-weight: 600;
+          font-size: 1.05rem;
+          box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+          position: relative;
+          padding-right: 60px;
+        }
+        .action-item::before {
+          content: '🚀';
+          position: absolute;
+          right: 20px;
+          top: 50%;
+          transform: translateY(-50%);
+          font-size: 1.5rem;
+        }
+        .urgent-info {
+          background: linear-gradient(135deg, #fefce8 0%, #fef3c7 100%);
+          border: 3px solid #f59e0b;
+          border-radius: 20px;
+          padding: 35px;
+          margin: 40px 0;
+          text-align: center;
+          box-shadow: 0 15px 35px rgba(245, 158, 11, 0.1);
+        }
+        .timestamp {
+          font-size: 1.2rem;
+          font-weight: 700;
+          color: #92400e;
+          background: white;
+          padding: 20px;
+          border-radius: 15px;
+          border: 2px solid #f59e0b;
+          display: inline-block;
         }
         .footer {
-          background-color: #374151;
-          color: white;
-          padding: 20px;
+          background: linear-gradient(135deg, #374151 0%, #1f2937 100%);
+          color: #f9fafb;
+          padding: 40px;
           text-align: center;
-          font-size: 14px;
+          font-size: 0.95rem;
+        }
+        .footer-title {
+          font-size: 1.4rem;
+          font-weight: 700;
+          margin-bottom: 15px;
+          color: white;
+        }
+        .footer-subtitle {
+          margin-bottom: 20px;
+          color: #d1d5db;
+          font-size: 1.05rem;
+        }
+        @media (max-width: 600px) {
+          body { padding: 10px; }
+          .content, .header { padding: 30px 25px; }
+          .client-section, .project-section, .action-section { padding: 25px; }
+          .client-grid { grid-template-columns: 1fr; }
+          .header-title { font-size: 1.8rem; }
+          .section-title { font-size: 1.3rem; }
         }
       </style>
     </head>
     <body>
-      <div class="container">
+      <div class="email-wrapper">
         <div class="header">
-          <div class="urgent-badge">🚨 طلب جديد - يتطلب متابعة فورية</div>
-          <h1>📧 طلب استشارة أكاديمية جديد</h1>
-          <p>تم استلام طلب استشارة من عميل محتمل</p>
+          <div class="header-content">
+            <div class="urgent-badge">🚨 طلب جديد - يتطلب متابعة فورية</div>
+            <div class="header-title">📧 طلب استشارة أكاديمية جديد</div>
+            <div class="header-subtitle">تم استلام طلب استشارة من عميل محتمل</div>
+          </div>
         </div>
         
         <div class="content">
-          <div class="client-info">
-            <h3 style="color: #1e40af; margin-top: 0;">👤 معلومات العميل:</h3>
-            <div class="info-grid">
-              <div class="info-item">
-                <div class="label">الاسم الكامل</div>
-                <div class="value">${consultationData.fullName}</div>
+          <div class="alert-message">
+            <div class="alert-text">تنبيه هام: طلب استشارة جديد!</div>
+            <div class="alert-subtext">يتطلب الرد خلال 24 ساعة كحد أقصى</div>
+          </div>
+          
+          <div class="client-section">
+            <h3 class="section-title">👤 معلومات العميل</h3>
+            <div class="client-grid">
+              <div class="client-card">
+                <span class="card-label">الاسم الكامل</span>
+                <div class="card-value">${consultationData.fullName}</div>
               </div>
-              <div class="info-item">
-                <div class="label">البريد الإلكتروني</div>
-                <div class="value">${consultationData.email}</div>
+              <div class="client-card">
+                <span class="card-label">البريد الإلكتروني</span>
+                <div class="card-value">${consultationData.email}</div>
               </div>
-              <div class="info-item">
-                <div class="label">رقم الهاتف</div>
-                <div class="value">${consultationData.phone}</div>
+              <div class="client-card">
+                <span class="card-label">رقم الهاتف</span>
+                <div class="card-value">${consultationData.phone}</div>
               </div>
-              <div class="info-item">
-                <div class="label">الجامعة / المؤسسة</div>
-                <div class="value">${consultationData.university || 'غير محدد'}</div>
+              <div class="client-card">
+                <span class="card-label">الجامعة / المؤسسة</span>
+                <div class="card-value">${consultationData.university || 'غير محدد'}</div>
               </div>
-              <div class="info-item">
-                <div class="label">المستوى الأكاديمي</div>
-                <div class="value">${academicLevelArabic}</div>
+              <div class="client-card">
+                <span class="card-label">المستوى الأكاديمي</span>
+                <div class="card-value">${academicLevelArabic}</div>
               </div>
-              <div class="info-item">
-                <div class="label">التخصص</div>
-                <div class="value">${consultationData.specialization || 'غير محدد'}</div>
+              <div class="client-card">
+                <span class="card-label">التخصص</span>
+                <div class="card-value">${consultationData.specialization || 'غير محدد'}</div>
               </div>
             </div>
           </div>
           
-          <div class="project-details">
-            <h3 style="color: #059669; margin-top: 0;">📚 تفاصيل المشروع:</h3>
-            <div class="info-item" style="margin-bottom: 15px;">
-              <div class="label">نوع الخدمة المطلوبة</div>
-              <div class="value"><strong>${serviceTypeArabic}</strong></div>
+          <div class="project-section">
+            <h3 class="section-title">📚 تفاصيل المشروع</h3>
+            <div class="project-details">
+              <div class="project-card">
+                <span class="card-label">نوع الخدمة المطلوبة</span>
+                <div class="card-value highlight-value">${serviceTypeArabic}</div>
+              </div>
+              ${consultationData.projectTitle ? `
+              <div class="project-card">
+                <span class="card-label">عنوان المشروع</span>
+                <div class="card-value">${consultationData.projectTitle}</div>
+              </div>
+              ` : ''}
+              ${consultationData.projectDescription ? `
+              <div class="project-card">
+                <span class="card-label">وصف المشروع</span>
+                <div class="card-value">${consultationData.projectDescription}</div>
+              </div>
+              ` : ''}
+              ${consultationData.deadline ? `
+              <div class="project-card">
+                <span class="card-label">الموعد النهائي المطلوب</span>
+                <div class="card-value highlight-value">${new Date(consultationData.deadline).toLocaleDateString('ar-SA')}</div>
+              </div>
+              ` : ''}
+              ${consultationData.additionalNotes ? `
+              <div class="project-card">
+                <span class="card-label">ملاحظات إضافية</span>
+                <div class="card-value">${consultationData.additionalNotes}</div>
+              </div>
+              ` : ''}
             </div>
-            ${consultationData.projectTitle ? `
-            <div class="info-item" style="margin-bottom: 15px;">
-              <div class="label">عنوان المشروع</div>
-              <div class="value">${consultationData.projectTitle}</div>
-            </div>
-            ` : ''}
-            ${consultationData.projectDescription ? `
-            <div class="info-item" style="margin-bottom: 15px;">
-              <div class="label">وصف المشروع</div>
-              <div class="value">${consultationData.projectDescription}</div>
-            </div>
-            ` : ''}
-            ${consultationData.deadline ? `
-            <div class="info-item" style="margin-bottom: 15px;">
-              <div class="label">الموعد النهائي المطلوب</div>
-              <div class="value priority-high">${new Date(consultationData.deadline).toLocaleDateString('ar-SA')}</div>
-            </div>
-            ` : ''}
-            ${consultationData.additionalNotes ? `
-            <div class="info-item">
-              <div class="label">ملاحظات إضافية</div>
-              <div class="value">${consultationData.additionalNotes}</div>
-            </div>
-            ` : ''}
           </div>
           
-          <div class="action-needed">
-            <h3 style="color: #dc2626; margin-top: 0;">⚡ إجراءات مطلوبة:</h3>
-            <ul style="color: #7f1d1d;">
-              <li><strong>التواصل الفوري:</strong> يجب التواصل مع العميل خلال 24 ساعة كحد أقصى</li>
-              <li><strong>تقييم المشروع:</strong> مراجعة المتطلبات وتحديد الخبراء المناسبين</li>
-              <li><strong>إعداد العرض:</strong> تحضير عرض سعر مفصل وجدول زمني</li>
-              <li><strong>المتابعة:</strong> تسجيل الطلب في نظام إدارة العملاء</li>
+          <div class="action-section">
+            <h3 class="section-title">⚡ إجراءات مطلوبة</h3>
+            <ul class="action-list">
+              <li class="action-item">التواصل الفوري: يجب التواصل مع العميل خلال 24 ساعة كحد أقصى</li>
+              <li class="action-item">تقييم المشروع: مراجعة المتطلبات وتحديد الخبراء المناسبين</li>
+              <li class="action-item">إعداد العرض: تحضير عرض سعر مفصل وجدول زمني</li>
+              <li class="action-item">المتابعة: تسجيل الطلب في نظام إدارة العملاء</li>
             </ul>
           </div>
           
-          <p style="font-size: 16px; font-weight: bold; color: #1f2937;">
-            ⏰ تم إرسال هذا الطلب في: ${new Date().toLocaleString('ar-SA', { 
-              timeZone: 'Asia/Riyadh',
-              dateStyle: 'full',
-              timeStyle: 'short'
-            })}
-          </p>
+          <div class="urgent-info">
+            <div class="timestamp">
+              ⏰ تم إرسال هذا الطلب في: ${new Date().toLocaleString('ar-SA', { 
+                timeZone: 'Asia/Riyadh',
+                dateStyle: 'full',
+                timeStyle: 'short'
+              })}
+            </div>
+          </div>
         </div>
         
         <div class="footer">
-          <p><strong>نظام إدارة الطلبات - وكالة ماستر إيدو باث</strong></p>
-          <p>هذا إشعار آلي من نظام إدارة طلبات الاستشارات الأكاديمية</p>
+          <div class="footer-title">نظام إدارة الطلبات - وكالة ماستر إيدو باث</div>
+          <div class="footer-subtitle">هذا إشعار آلي من نظام إدارة طلبات الاستشارات الأكاديمية</div>
         </div>
       </div>
     </body>
