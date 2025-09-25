@@ -203,12 +203,12 @@ const MembershipSubscriptionForm = ({ plan, isOpen, onClose }: MembershipSubscri
                   
                   <div className="flex justify-center items-center gap-4">
                     <div className="text-center">
-                      <div className="text-3xl font-bold">{plan.price} ريال</div>
-                      <div className="text-sm line-through opacity-70">{plan.originalPrice} ريال</div>
+                      <div className="text-3xl font-bold">ريال {plan.price}</div>
+                      <div className="text-sm line-through opacity-70">ريال {plan.originalPrice}</div>
                     </div>
                     <div className="bg-white/20 backdrop-blur-sm px-4 py-2 rounded-lg">
                       <div className="text-sm">كاش باك</div>
-                      <div className="font-bold">{plan.cashback} ريال</div>
+                      <div className="font-bold">ريال {plan.cashback}</div>
                     </div>
                   </div>
                 </div>

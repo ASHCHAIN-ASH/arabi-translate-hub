@@ -137,7 +137,7 @@ const PriceCalculator = ({ wordCount, translationType, urgency, fromLang, toLang
           </div>
           
           <div className="mt-3 p-2 bg-blue-100 dark:bg-blue-900/30 rounded text-blue-800 dark:text-blue-200 text-xs">
-            <strong>ملاحظة:</strong> الترجمة القانونية: 95 ريال لكل 500 كلمة • الأسعار شاملة الضريبة
+            <strong>ملاحظة:</strong> الترجمة القانونية: ر.س 95 لكل 500 كلمة • الأسعار شاملة الضريبة
           </div>
         </CardContent>
       </Card>
@@ -169,7 +169,7 @@ const PriceCalculator = ({ wordCount, translationType, urgency, fromLang, toLang
             ترجمة معتمدة
           </Badge>
           <Badge variant="secondary" className="bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200">
-            ابتداءً من 70 ر.س/500 كلمة
+            ابتداءً من ر.س 70/500 كلمة
           </Badge>
           <Badge variant="secondary" className="bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200">
             سرية تامة
@@ -179,7 +179,7 @@ const PriceCalculator = ({ wordCount, translationType, urgency, fromLang, toLang
           </Badge>
         </div>
         <p className="text-xs text-muted-foreground leading-relaxed">
-          الأسعار بالريال السعودي شاملة الضريبة • الترجمة القانونية: 95 ر.س لكل 500 كلمة • 
+          الأسعار بالريال السعودي شاملة الضريبة • الترجمة القانونية: ر.س 95 لكل 500 كلمة • 
           السعر النهائي قد يختلف حسب تعقيد المحتوى • خصم خاص للكميات الكبيرة
         </p>
       </div>
