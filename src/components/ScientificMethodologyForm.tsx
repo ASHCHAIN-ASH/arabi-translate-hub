@@ -232,9 +232,9 @@ const ScientificMethodologyForm = () => {
                   
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div className="space-y-2">
-                      <Label htmlFor="fullName" className="text-sm font-medium flex items-center gap-2 justify-end text-right">
-                        الاسم الكامل *
+                      <Label htmlFor="fullName" className="text-sm font-medium flex items-center gap-2 text-right">
                         <User className="h-4 w-4 text-emerald-600" />
+                        الاسم الكامل *
                       </Label>
                       <Input
                         id="fullName"
@@ -244,13 +244,14 @@ const ScientificMethodologyForm = () => {
                         onChange={(e) => handleInputChange('fullName', e.target.value)}
                         required
                         className="border-2 border-gray-200 focus:border-emerald-500 transition-colors text-right"
+                        dir="rtl"
                       />
                     </div>
 
                     <div className="space-y-2">
-                      <Label htmlFor="phone" className="text-sm font-medium flex items-center gap-2 justify-end text-right">
-                        رقم الهاتف *
+                      <Label htmlFor="phone" className="text-sm font-medium flex items-center gap-2 text-right">
                         <Phone className="h-4 w-4 text-emerald-600" />
+                        رقم الهاتف *
                       </Label>
                       <Input
                         id="phone"
@@ -259,16 +260,17 @@ const ScientificMethodologyForm = () => {
                         value={formData.phone}
                         onChange={(e) => handleInputChange('phone', e.target.value)}
                         required
-                        className="border-2 border-gray-200 focus:border-emerald-500 transition-colors text-right"
+                        className="border-2 border-gray-200 focus:border-emerald-500 transition-colors text-left"
+                        dir="ltr"
                       />
                     </div>
                   </div>
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
                     <div className="space-y-2">
-                      <Label htmlFor="email" className="text-sm font-medium flex items-center gap-2 justify-end text-right">
-                        البريد الإلكتروني *
+                      <Label htmlFor="email" className="text-sm font-medium flex items-center gap-2 text-right">
                         <Mail className="h-4 w-4 text-emerald-600" />
+                        البريد الإلكتروني *
                       </Label>
                       <Input
                         id="email"
@@ -278,13 +280,14 @@ const ScientificMethodologyForm = () => {
                         onChange={(e) => handleInputChange('email', e.target.value)}
                         required
                         className="border-2 border-gray-200 focus:border-emerald-500 transition-colors text-left"
+                        dir="ltr"
                       />
                     </div>
 
                     <div className="space-y-2">
-                      <Label htmlFor="organization" className="text-sm font-medium flex items-center gap-2 justify-end text-right">
-                        المؤسسة/الجامعة *
+                      <Label htmlFor="organization" className="text-sm font-medium flex items-center gap-2 text-right">
                         <BookOpen className="h-4 w-4 text-emerald-600" />
+                        المؤسسة/الجامعة *
                       </Label>
                       <Input
                         id="organization"
@@ -294,14 +297,15 @@ const ScientificMethodologyForm = () => {
                         onChange={(e) => handleInputChange('organization', e.target.value)}
                         required
                         className="border-2 border-gray-200 focus:border-emerald-500 transition-colors text-right"
+                        dir="rtl"
                       />
                     </div>
                   </div>
 
                   <div className="space-y-2 mt-4">
-                    <Label htmlFor="position" className="text-sm font-medium flex items-center gap-2 justify-end text-right">
-                      المنصب/الدرجة العلمية
+                    <Label htmlFor="position" className="text-sm font-medium flex items-center gap-2 text-right">
                       <Settings className="h-4 w-4 text-emerald-600" />
+                      المنصب/الدرجة العلمية
                     </Label>
                     <Input
                       id="position"
@@ -310,6 +314,7 @@ const ScientificMethodologyForm = () => {
                       value={formData.position}
                       onChange={(e) => handleInputChange('position', e.target.value)}
                       className="border-2 border-gray-200 focus:border-emerald-500 transition-colors text-right"
+                      dir="rtl"
                     />
                   </div>
                 </div>
@@ -323,15 +328,15 @@ const ScientificMethodologyForm = () => {
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div className="space-y-2">
-                      <Label className="text-sm font-medium flex items-center gap-2 justify-end text-right">
-                        مجال البحث *
+                      <Label className="text-sm font-medium flex items-center gap-2 text-right">
                         <BookOpen className="h-4 w-4 text-blue-600" />
+                        مجال البحث *
                       </Label>
-                      <Select value={formData.researchField} onValueChange={(value) => handleInputChange('researchField', value)}>
-                        <SelectTrigger className="border-2 border-gray-200 focus:border-blue-500 text-right">
+                      <Select value={formData.researchField} onValueChange={(value) => handleInputChange('researchField', value)} dir="rtl">
+                        <SelectTrigger className="border-2 border-gray-200 focus:border-blue-500 text-right" dir="rtl">
                           <SelectValue placeholder="اختر مجال البحث" />
                         </SelectTrigger>
-                        <SelectContent>
+                        <SelectContent dir="rtl">
                           {researchFields.map((field) => (
                             <SelectItem key={field.value} value={field.value} className="text-right">
                               {field.label}
@@ -342,15 +347,15 @@ const ScientificMethodologyForm = () => {
                     </div>
 
                     <div className="space-y-2">
-                      <Label className="text-sm font-medium flex items-center gap-2 justify-end text-right">
-                        نوع المنهجية *
+                      <Label className="text-sm font-medium flex items-center gap-2 text-right">
                         <BarChart3 className="h-4 w-4 text-blue-600" />
+                        نوع المنهجية *
                       </Label>
-                      <Select value={formData.methodologyType} onValueChange={(value) => handleInputChange('methodologyType', value)}>
-                        <SelectTrigger className="border-2 border-gray-200 focus:border-blue-500 text-right">
+                      <Select value={formData.methodologyType} onValueChange={(value) => handleInputChange('methodologyType', value)} dir="rtl">
+                        <SelectTrigger className="border-2 border-gray-200 focus:border-blue-500 text-right" dir="rtl">
                           <SelectValue placeholder="اختر نوع المنهجية" />
                         </SelectTrigger>
-                        <SelectContent>
+                        <SelectContent dir="rtl">
                           {methodologyTypes.map((type) => (
                             <SelectItem key={type.value} value={type.value} className="text-right">
                               {type.label}
@@ -362,9 +367,9 @@ const ScientificMethodologyForm = () => {
                   </div>
 
                   <div className="space-y-2 mt-4">
-                    <Label htmlFor="researchTitle" className="text-sm font-medium flex items-center gap-2 justify-end text-right">
-                      عنوان البحث *
+                    <Label htmlFor="researchTitle" className="text-sm font-medium flex items-center gap-2 text-right">
                       <FileText className="h-4 w-4 text-blue-600" />
+                      عنوان البحث *
                     </Label>
                     <Input
                       id="researchTitle"
@@ -374,13 +379,14 @@ const ScientificMethodologyForm = () => {
                       onChange={(e) => handleInputChange('researchTitle', e.target.value)}
                       required
                       className="border-2 border-gray-200 focus:border-blue-500 transition-colors text-right"
+                      dir="rtl"
                     />
                   </div>
 
                   <div className="space-y-2 mt-4">
-                    <Label htmlFor="researchObjectives" className="text-sm font-medium flex items-center gap-2 justify-end text-right">
-                      أهداف البحث *
+                    <Label htmlFor="researchObjectives" className="text-sm font-medium flex items-center gap-2 text-right">
                       <Target className="h-4 w-4 text-blue-600" />
+                      أهداف البحث *
                     </Label>
                     <Textarea
                       id="researchObjectives"
@@ -390,6 +396,7 @@ const ScientificMethodologyForm = () => {
                       required
                       rows={4}
                       className="border-2 border-gray-200 focus:border-blue-500 transition-colors resize-none text-right"
+                      dir="rtl"
                     />
                   </div>
                 </div>
@@ -403,15 +410,15 @@ const ScientificMethodologyForm = () => {
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div className="space-y-2">
-                      <Label className="text-sm font-medium flex items-center gap-2 justify-end text-right">
-                        المدة المتوقعة
+                      <Label className="text-sm font-medium flex items-center gap-2 text-right">
                         <Calendar className="h-4 w-4 text-purple-600" />
+                        المدة المتوقعة
                       </Label>
-                      <Select value={formData.expectedDuration} onValueChange={(value) => handleInputChange('expectedDuration', value)}>
-                        <SelectTrigger className="border-2 border-gray-200 focus:border-purple-500 text-right">
+                      <Select value={formData.expectedDuration} onValueChange={(value) => handleInputChange('expectedDuration', value)} dir="rtl">
+                        <SelectTrigger className="border-2 border-gray-200 focus:border-purple-500 text-right" dir="rtl">
                           <SelectValue placeholder="اختر المدة المتوقعة" />
                         </SelectTrigger>
-                        <SelectContent>
+                        <SelectContent dir="rtl">
                           {durationOptions.map((duration) => (
                             <SelectItem key={duration.value} value={duration.value} className="text-right">
                               {duration.label}
@@ -422,15 +429,15 @@ const ScientificMethodologyForm = () => {
                     </div>
 
                     <div className="space-y-2">
-                      <Label className="text-sm font-medium flex items-center gap-2 justify-end text-right">
-                        الميزانية المتوقعة
+                      <Label className="text-sm font-medium flex items-center gap-2 text-right">
                         <Settings className="h-4 w-4 text-purple-600" />
+                        الميزانية المتوقعة
                       </Label>
-                      <Select value={formData.budgetRange} onValueChange={(value) => handleInputChange('budgetRange', value)}>
-                        <SelectTrigger className="border-2 border-gray-200 focus:border-purple-500 text-right">
+                      <Select value={formData.budgetRange} onValueChange={(value) => handleInputChange('budgetRange', value)} dir="rtl">
+                        <SelectTrigger className="border-2 border-gray-200 focus:border-purple-500 text-right" dir="rtl">
                           <SelectValue placeholder="اختر نطاق الميزانية" />
                         </SelectTrigger>
-                        <SelectContent>
+                        <SelectContent dir="rtl">
                           {budgetRanges.map((range) => (
                             <SelectItem key={range.value} value={range.value} className="text-right">
                               {range.label}
@@ -442,9 +449,9 @@ const ScientificMethodologyForm = () => {
                   </div>
 
                   <div className="space-y-2 mt-4">
-                    <Label htmlFor="targetPopulation" className="text-sm font-medium flex items-center gap-2 justify-end text-right">
-                      العينة المستهدفة
+                    <Label htmlFor="targetPopulation" className="text-sm font-medium flex items-center gap-2 text-right">
                       <User className="h-4 w-4 text-purple-600" />
+                      العينة المستهدفة
                     </Label>
                     <Textarea
                       id="targetPopulation"
@@ -453,13 +460,14 @@ const ScientificMethodologyForm = () => {
                       onChange={(e) => handleInputChange('targetPopulation', e.target.value)}
                       rows={3}
                       className="border-2 border-gray-200 focus:border-purple-500 transition-colors resize-none text-right"
+                      dir="rtl"
                     />
                   </div>
 
                   <div className="space-y-2 mt-4">
-                    <Label htmlFor="dataCollectionMethods" className="text-sm font-medium flex items-center gap-2 justify-end text-right">
-                      طرق جمع البيانات
+                    <Label htmlFor="dataCollectionMethods" className="text-sm font-medium flex items-center gap-2 text-right">
                       <BarChart3 className="h-4 w-4 text-purple-600" />
+                      طرق جمع البيانات
                     </Label>
                     <Textarea
                       id="dataCollectionMethods"
@@ -468,13 +476,14 @@ const ScientificMethodologyForm = () => {
                       onChange={(e) => handleInputChange('dataCollectionMethods', e.target.value)}
                       rows={3}
                       className="border-2 border-gray-200 focus:border-purple-500 transition-colors resize-none text-right"
+                      dir="rtl"
                     />
                   </div>
 
                   <div className="space-y-2 mt-4">
-                    <Label htmlFor="analysisApproach" className="text-sm font-medium flex items-center gap-2 justify-end text-right">
-                      منهج التحليل
+                    <Label htmlFor="analysisApproach" className="text-sm font-medium flex items-center gap-2 text-right">
                       <Settings className="h-4 w-4 text-purple-600" />
+                      منهج التحليل
                     </Label>
                     <Textarea
                       id="analysisApproach"
@@ -483,13 +492,14 @@ const ScientificMethodologyForm = () => {
                       onChange={(e) => handleInputChange('analysisApproach', e.target.value)}
                       rows={3}
                       className="border-2 border-gray-200 focus:border-purple-500 transition-colors resize-none text-right"
+                      dir="rtl"
                     />
                   </div>
 
                   <div className="space-y-2 mt-4">
-                    <Label htmlFor="ethicalConsiderations" className="text-sm font-medium flex items-center gap-2 justify-end text-right">
-                      الاعتبارات الأخلاقية
+                    <Label htmlFor="ethicalConsiderations" className="text-sm font-medium flex items-center gap-2 text-right">
                       <FileText className="h-4 w-4 text-purple-600" />
+                      الاعتبارات الأخلاقية
                     </Label>
                     <Textarea
                       id="ethicalConsiderations"
@@ -498,15 +508,16 @@ const ScientificMethodologyForm = () => {
                       onChange={(e) => handleInputChange('ethicalConsiderations', e.target.value)}
                       rows={3}
                       className="border-2 border-gray-200 focus:border-purple-500 transition-colors resize-none text-right"
+                      dir="rtl"
                     />
                   </div>
                 </div>
 
                 {/* ملاحظات إضافية */}
                 <div className="space-y-2">
-                  <Label htmlFor="additionalNotes" className="text-sm font-medium flex items-center gap-2 justify-end text-right">
-                    ملاحظات إضافية
+                  <Label htmlFor="additionalNotes" className="text-sm font-medium flex items-center gap-2 text-right">
                     <MessageSquare className="h-4 w-4 text-slate-600" />
+                    ملاحظات إضافية
                   </Label>
                   <Textarea
                     id="additionalNotes"
@@ -515,6 +526,7 @@ const ScientificMethodologyForm = () => {
                     onChange={(e) => handleInputChange('additionalNotes', e.target.value)}
                     rows={4}
                     className="border-2 border-gray-200 focus:border-slate-500 transition-colors resize-none text-right"
+                    dir="rtl"
                   />
                 </div>
 
@@ -535,9 +547,9 @@ const ScientificMethodologyForm = () => {
                         جاري إرسال الطلب...
                       </div>
                     ) : (
-                      <div className="flex items-center justify-center gap-2 flex-row-reverse">
-                        طلب تصميم المنهجية العلمية
+                      <div className="flex items-center justify-center gap-2">
                         <Send className="h-5 w-5" />
+                        طلب تصميم المنهجية العلمية
                       </div>
                     )}
                   </Button>
