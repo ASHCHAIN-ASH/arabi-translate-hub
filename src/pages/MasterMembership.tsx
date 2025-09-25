@@ -419,30 +419,30 @@ const MasterMembership = () => {
                       <div className="grid gap-4 md:grid-cols-2 text-right">
                         <motion.div
                           whileHover={{ scale: 1.02, x: -5 }}
-                          className="bg-gradient-to-r from-green-100 to-emerald-100 p-4 rounded-lg border-r-4 border-green-500"
+                          className="bg-gradient-to-r from-emerald-100 to-teal-100 p-4 rounded-lg border-r-4 border-emerald-500 order-2 md:order-1"
                         >
                           <div className="flex items-center gap-3 mb-2">
-                            <div className="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center">
+                            <div className="w-8 h-8 bg-emerald-500 rounded-full flex items-center justify-center">
                               <span className="text-white font-bold text-sm">1</span>
                             </div>
-                            <h4 className="font-bold text-green-800">من رسوم تأسيس العضوية</h4>
+                            <h4 className="font-bold text-emerald-800">من رسوم تأسيس العضوية</h4>
                           </div>
-                          <p className="text-green-700 text-sm">
+                          <p className="text-emerald-700 text-sm">
                             كاش باك فوري بنسبة العضوية المختارة من رسوم التأسيس
                           </p>
                         </motion.div>
 
                         <motion.div
                           whileHover={{ scale: 1.02, x: -5 }}
-                          className="bg-gradient-to-r from-emerald-100 to-teal-100 p-4 rounded-lg border-r-4 border-emerald-500"
+                          className="bg-gradient-to-r from-green-100 to-emerald-100 p-4 rounded-lg border-r-4 border-green-500 order-1 md:order-2"
                         >
                           <div className="flex items-center gap-3 mb-2">
-                            <div className="w-8 h-8 bg-emerald-500 rounded-full flex items-center justify-center">
+                            <div className="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center">
                               <span className="text-white font-bold text-sm">2</span>
                             </div>
-                            <h4 className="font-bold text-emerald-800">من جميع الطلبات المستقبلية</h4>
+                            <h4 className="font-bold text-green-800">من جميع الطلبات المستقبلية</h4>
                           </div>
-                          <p className="text-emerald-700 text-sm">
+                          <p className="text-green-700 text-sm">
                             كاش باك مستمر من كل طلب تقوم به بعد الاشتراك
                           </p>
                         </motion.div>
