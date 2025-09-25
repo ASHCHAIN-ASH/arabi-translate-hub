@@ -4,7 +4,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { GraduationCap, BookOpen, FileText, Award, Users, Globe, Microscope, Calculator, FlaskConical, Atom, Library, PenTool } from "lucide-react";
 
-import ServiceInquiryForm from "@/components/ServiceInquiryForm";
+import AcademicTranslationForm from "@/components/AcademicTranslationForm";
 
 const AcademicTranslation = () => {
   const academicServices = [
@@ -438,7 +438,7 @@ const AcademicTranslation = () => {
             </Card>
           </motion.div>
 
-          {/* Service Inquiry Form */}
+          {/* Academic Translation Form */}
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -446,30 +446,21 @@ const AcademicTranslation = () => {
             transition={{ duration: 1 }}
             className="mb-20"
           >
-            <Card className="border-0 shadow-2xl overflow-hidden bg-gradient-to-br from-indigo-50 to-blue-50">
-              <CardContent className="p-12">
-                <div className="text-center mb-12">
-                  <motion.div
-                    whileHover={{ scale: 1.1, rotate: 10 }}
-                    className="inline-block"
-                  >
-                    <GraduationCap className="h-20 w-20 mx-auto mb-6 text-indigo-600" />
-                  </motion.div>
-                  <h3 className="text-3xl md:text-4xl font-bold mb-4 font-arabic-title text-gray-800">
-                    ابدأ مشروعك الأكاديمي الآن
-                  </h3>
-                  <p className="text-xl font-arabic-body text-gray-600 max-w-3xl mx-auto">
-                    تواصل معنا للحصول على ترجمة أكاديمية دقيقة تلبي معايير المؤسسات التعليمية والبحثية
-                  </p>
-                </div>
-                <ServiceInquiryForm 
-                  serviceType="academic-translation"
-                  serviceName="الترجمة الأكاديمية"
-                  showLanguageFields={true}
-                  showFileSizeField={true}
-                />
-              </CardContent>
-            </Card>
+            <div className="text-center mb-12">
+              <motion.div
+                whileHover={{ scale: 1.1, rotate: 10 }}
+                className="inline-block"
+              >
+                <GraduationCap className="h-20 w-20 mx-auto mb-6 text-indigo-600" />
+              </motion.div>
+              <h3 className="text-3xl md:text-4xl font-bold mb-4 font-arabic-title text-gray-800">
+                ابدأ مشروعك الأكاديمي الآن
+              </h3>
+              <p className="text-xl font-arabic-body text-gray-600 max-w-3xl mx-auto">
+                تواصل معنا للحصول على ترجمة أكاديمية دقيقة تلبي معايير المؤسسات التعليمية والبحثية
+              </p>
+            </div>
+            <AcademicTranslationForm />
           </motion.div>
 
         </div>
