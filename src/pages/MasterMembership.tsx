@@ -312,15 +312,6 @@ const MasterMembership = () => {
                       </div>
                     </div>
 
-                    {/* Main Price Display - Center */}
-                    <div className="absolute inset-0 flex flex-col items-center justify-center">
-                      <div className="text-center">
-                        <div className="text-white/80 text-xs mb-1">{plan.originalPrice} ريال</div>
-                        <div className="text-white text-4xl font-bold mb-1">{plan.price} ريال</div>
-                        <div className="text-white/90 text-sm">كاش باك: {plan.cashback} ريال</div>
-                      </div>
-                    </div>
-
                     {/* Holographic Effect */}
                     <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent opacity-0 hover:opacity-100 transition-opacity duration-500 transform -skew-x-12"></div>
                   </div>
