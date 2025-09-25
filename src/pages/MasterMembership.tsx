@@ -276,16 +276,21 @@ const MasterMembership = () => {
                       MASTERCARD
                     </div>
 
-                    {/* Price Badge */}
-                    <div className="absolute top-4 left-12 bg-white/15 backdrop-blur-sm rounded-lg p-2 border border-white/10">
-                      <div className="text-white/70 text-xs line-through">{plan.originalPrice} ريال</div>
-                      <div className="text-white text-lg font-bold">{plan.price}</div>
-                      <div className="text-green-300 text-xs">كاش باك فوري: {plan.cashback} ريال</div>
-                    </div>
+                    {/* Price & Discount Container - Top Section */}
+                    <div className="absolute top-3 left-3 right-3 flex justify-between items-start">
+                      {/* Price Badge - Compact */}
+                      <div className="bg-white/90 backdrop-blur-sm rounded-lg px-3 py-2 shadow-md border border-white/20">
+                        <div className="text-gray-600 text-xs line-through leading-none">{plan.originalPrice} ريال</div>
+                        <div className="text-gray-800 text-lg font-bold leading-none mt-1">{plan.price} ريال</div>
+                        <div className="text-green-600 text-xs font-medium leading-none mt-1">
+                          كاش باك: {plan.cashback} ريال
+                        </div>
+                      </div>
 
-                    {/* Discount Badge */}
-                    <div className="absolute top-16 left-4 transform -rotate-12 bg-red-500 text-white px-2 py-1 rounded text-xs font-bold shadow-lg">
-                      {plan.discount}
+                      {/* Discount Badge - Small & Clear */}
+                      <div className="bg-gradient-to-r from-red-500 to-red-600 text-white px-3 py-1 rounded-full text-xs font-bold shadow-lg transform -rotate-3">
+                        خصم {plan.discount}
+                      </div>
                     </div>
 
                     {/* Contactless Symbol */}
