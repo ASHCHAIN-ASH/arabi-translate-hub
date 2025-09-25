@@ -478,7 +478,7 @@ const AdvancedTranslationForm = ({
               id="budget"
               value={formData.budget}
               onChange={(e) => handleInputChange('budget', e.target.value)}
-              placeholder="مثال: ريال 1000"
+              placeholder="مثال: 1000 ريال"
               className="text-rtl"
             />
           </div>

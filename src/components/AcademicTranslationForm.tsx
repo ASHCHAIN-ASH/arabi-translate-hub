@@ -155,12 +155,12 @@ const AcademicTranslationForm = () => {
   ];
 
   const budgetRanges = [
-    { value: 'under-500', label: 'أقل من ريال 500' },
-    { value: '500-1000', label: 'ريال 500 - 1,000' },
-    { value: '1000-2500', label: 'ريال 1,000 - 2,500' },
-    { value: '2500-5000', label: 'ريال 2,500 - 5,000' },
-    { value: '5000-10000', label: 'ريال 5,000 - 10,000' },
-    { value: 'above-10000', label: 'أكثر من ريال 10,000' },
+    { value: 'under-500', label: 'أقل من 500 ريال' },
+    { value: '500-1000', label: '500 - 1,000 ريال' },
+    { value: '1000-2500', label: '1,000 - 2,500 ريال' },
+    { value: '2500-5000', label: '2,500 - 5,000 ريال' },
+    { value: '5000-10000', label: '5,000 - 10,000 ريال' },
+    { value: 'above-10000', label: 'أكثر من 10,000 ريال' },
     { value: 'flexible', label: 'مرن حسب الخدمة المطلوبة' }
   ];
 

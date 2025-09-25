@@ -86,7 +86,7 @@ const MasterMembership = () => {
       color: 'text-blue-600',
       title: 'كاش باك فوري مضمون',
       description: 'استرداد نقدي فوري من رسوم تأسيس العضوية ومن جميع الطلبات بعد الاشتراك',
-      membership: ['ريال 84 للفضية (7%)', 'ريال 330 للذهبية (15%)', 'ريال 900 للبلاتينية (25%)']
+      membership: ['7% للفضية (84 ريال)', '15% للذهبية (330 ريال)', '25% للبلاتينية (900 ريال)']
     },
     {
       icon: BookOpen,
@@ -291,10 +291,10 @@ const MasterMembership = () => {
                     <div className="absolute top-3 left-3 right-3 flex justify-between items-start">
                       {/* Price Badge - Compact */}
                       <div className="bg-white/90 backdrop-blur-sm rounded-lg px-3 py-2 shadow-md border border-white/20">
-                        <div className="text-gray-600 text-xs line-through leading-none">ريال {plan.originalPrice}</div>
-                        <div className="text-gray-800 text-lg font-bold leading-none mt-1">ريال {plan.price}</div>
+                        <div className="text-gray-600 text-xs line-through leading-none">{plan.originalPrice} ريال</div>
+                        <div className="text-gray-800 text-lg font-bold leading-none mt-1">{plan.price} ريال</div>
                         <div className="text-green-600 text-xs font-medium leading-none mt-1">
-                          كاش باك: ريال {plan.cashback}
+                          كاش باك: {plan.cashback} ريال
                         </div>
                       </div>
 
@@ -343,7 +343,7 @@ const MasterMembership = () => {
                     <div className="mt-3 text-center">
                       <div className="inline-flex items-center gap-2 bg-green-50 text-green-700 px-4 py-2 rounded-full text-sm">
                         <Gift className="w-4 h-4" />
-                        كاش باك فوري {plan.cashbackPercent}: ريال {plan.cashback}
+                        كاش باك فوري {plan.cashbackPercent}: {plan.cashback} ريال
                       </div>
                       <p className="text-xs text-gray-500 mt-2">من رسوم التأسيس وجميع الطلبات</p>
                     </div>
