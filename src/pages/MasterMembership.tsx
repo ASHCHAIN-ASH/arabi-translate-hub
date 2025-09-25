@@ -130,13 +130,13 @@ const MasterMembership = () => {
         <Tabs defaultValue="plans" className="space-y-8">
           <div className="flex justify-center">
             <TabsList className="grid w-full max-w-lg grid-cols-2">
-              <TabsTrigger value="plans" className="flex items-center gap-2">
-                <Crown className="h-4 w-4" />
-                العضويات
-              </TabsTrigger>
               <TabsTrigger value="benefits" className="flex items-center gap-2">
                 <Gift className="h-4 w-4" />
                 المزايا
+              </TabsTrigger>
+              <TabsTrigger value="plans" className="flex items-center gap-2">
+                <Crown className="h-4 w-4" />
+                العضويات
               </TabsTrigger>
             </TabsList>
           </div>
