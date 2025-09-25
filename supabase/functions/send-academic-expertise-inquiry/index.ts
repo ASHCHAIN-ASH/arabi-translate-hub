@@ -152,8 +152,8 @@ const handler = async (req: Request): Promise<Response> => {
                   <td style="padding:16px 24px;background-color:#ffffff;">
                     <div style="background:linear-gradient(135deg,#fefce8,#fef3c7);border-right:5px solid #f59e0b;border-radius:14px;padding:16px;">
                       <div style="font-size:16px;font-weight:800;color:#d97706;margin-bottom:10px;">📞 للتواصل</div>
-                      <div style="padding:10px;background:#fff;border-right:4px solid #f59e0b;border-radius:10px;color:#92400e;font-weight:600;margin-bottom:8px;">البريد الإلكتروني: admin@masteredupath.com</div>
-                      <div style="padding:10px;background:#fff;border-right:4px solid #f59e0b;border-radius:10px;color:#92400e;font-weight:600;">رقم الهاتف: ${consultationData.phone}</div>
+                      <div style="padding:10px;background:#fff;border-right:4px solid #f59e0b;border-radius:10px;color:#92400e;font-weight:600;margin-bottom:8px;">البريد الإلكتروني: info@masteredupath.com</div>
+                      <div style="padding:10px;background:#fff;border-right:4px solid #f59e0b;border-radius:10px;color:#92400e;font-weight:600;">رقم الهاتف: 0500776343</div>
                     </div>
                   </td>
                 </tr>
