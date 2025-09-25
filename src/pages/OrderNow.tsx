@@ -55,6 +55,7 @@ import {
 } from '@/components/ui/select';
 import { useToast } from '@/hooks/use-toast';
 import Header from '@/components/Header';
+import { supabase } from '@/integrations/supabase/client';
 
 // Schema للتحقق من صحة البيانات
 const orderSchema = z.object({
@@ -128,28 +129,26 @@ const OrderNow = () => {
     
     try {
       // محاكاة إرسال البيانات
-      await new Promise(resolve => setTimeout(resolve, 2000));
+      await new Promise(resolve => setTimeout(resolve, 1000));
       
-      // إرسال تنبيه للإدارة
+      // إرسال تنبيه للإدارة ورد للعميل عبر Edge Function
       await sendAdminNotification(data);
-      
-      // إرسال رد تلقائي للعميل
-      await sendClientResponse(data);
       
       setSubmitSuccess(true);
       
       toast({
         title: "تم إرسال طلبك بنجاح! 🎉",
-        description: "سيتم التواصل معك خلال 24 ساعة",
+        description: "سيتم التواصل معك خلال 24 ساعة وستصلك رسالة تأكيد على بريدك الإلكتروني",
       });
       
       // إعادة تعيين النموذج
       form.reset();
       
     } catch (error) {
+      console.error("Error submitting order:", error);
       toast({
         title: "حدث خطأ في الإرسال",
-        description: "يرجى المحاولة مرة أخرى",
+        description: "يرجى المحاولة مرة أخرى أو التواصل معنا مباشرة",
         variant: "destructive",
       });
     } finally {
@@ -158,24 +157,29 @@ const OrderNow = () => {
   };
 
   const sendAdminNotification = async (data: OrderFormData) => {
-    // هنا سيتم إرسال تنبيه للإدارة (يمكن دمجه مع Supabase أو API خارجي)
-    console.log("تنبيه للإدارة:", {
-      type: "طلب جديد",
-      clientType: data.clientType,
-      organization: data.organizationName,
-      service: data.serviceType,
-      priority: data.priority,
-      timestamp: new Date().toISOString(),
-    });
+    try {
+      console.log("Sending notification via Edge Function:", data);
+      
+      const { data: result, error } = await supabase.functions.invoke('send-order-notification', {
+        body: data
+      });
+
+      if (error) {
+        console.error("Error sending notification:", error);
+        throw error;
+      }
+
+      console.log("Notification sent successfully:", result);
+      return result;
+    } catch (error) {
+      console.error("Failed to send notification:", error);
+      throw error;
+    }
   };
 
   const sendClientResponse = async (data: OrderFormData) => {
-    // هنا سيتم إرسال رد تلقائي للعميل
-    console.log("رد تلقائي للعميل:", {
-      to: data.email,
-      subject: "تأكيد استلام طلبكم - وكالة ماستر إيدو باث",
-      message: `عزيزي ${data.contactPerson}، تم استلام طلبكم بنجاح وسيتم التواصل معكم قريباً.`,
-    });
+    // هذه الدالة الآن لا تحتاج لفعل شيء لأن الإيميل يتم إرساله من الـ Edge Function
+    console.log("Client response will be sent via Edge Function");
   };
 
   return (
