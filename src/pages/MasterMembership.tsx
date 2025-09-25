@@ -297,31 +297,58 @@ const MasterMembership = () => {
               مزايا عضوية ماستر
             </h2>
             
-            <div className="flex flex-col gap-6 max-w-3xl mx-auto">
+            <div className="flex flex-col gap-8 max-w-4xl mx-auto">
               {benefits.map((benefit, index) => (
                 <motion.div
                   key={index}
-                  initial={{ opacity: 0, x: -30 }}
+                  initial={{ opacity: 0, x: 50 }}
                   animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: index * 0.1, duration: 0.6 }}
+                  whileHover={{ scale: 1.02, x: -5 }}
+                  transition={{ delay: index * 0.2, duration: 0.6 }}
                 >
-                  <Card className="p-8 hover:shadow-lg transition-all duration-300 border-l-4 border-purple-500">
-                    <div className="flex items-start gap-6">
-                      <div className="w-16 h-16 rounded-xl bg-gradient-to-br from-purple-100 to-blue-100 flex items-center justify-center flex-shrink-0">
-                        <benefit.icon className={`h-8 w-8 ${benefit.color}`} />
-                      </div>
-                      <div className="flex-1">
-                        <h3 className="text-2xl font-bold mb-3 text-gray-800">{benefit.title}</h3>
-                        <p className="text-gray-600 mb-4 text-lg leading-relaxed">{benefit.description}</p>
-                        <div className="grid gap-3 sm:grid-cols-2">
+                  <Card className="p-8 hover:shadow-xl transition-all duration-500 border-r-4 border-purple-500 bg-gradient-to-l from-purple-50/50 to-white">
+                    <div className="flex items-start gap-8">
+                      <div className="flex-1 text-right">
+                        <motion.h3 
+                          initial={{ opacity: 0, y: 20 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          transition={{ delay: index * 0.2 + 0.2, duration: 0.5 }}
+                          className="text-2xl font-bold mb-4 text-gray-800"
+                        >
+                          {benefit.title}
+                        </motion.h3>
+                        <motion.p 
+                          initial={{ opacity: 0, y: 20 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          transition={{ delay: index * 0.2 + 0.3, duration: 0.5 }}
+                          className="text-gray-600 mb-6 text-lg leading-relaxed"
+                        >
+                          {benefit.description}
+                        </motion.p>
+                        <div className="grid gap-4 sm:grid-cols-1">
                           {benefit.membership.map((level, idx) => (
-                            <div key={idx} className="flex items-center gap-3">
+                            <motion.div 
+                              key={idx} 
+                              initial={{ opacity: 0, x: 30 }}
+                              animate={{ opacity: 1, x: 0 }}
+                              transition={{ delay: index * 0.2 + 0.4 + idx * 0.1, duration: 0.4 }}
+                              className="flex items-center gap-3 justify-end"
+                            >
+                              <span className="text-gray-700 font-medium">{level}</span>
                               <CheckCircle className="h-5 w-5 text-green-500 flex-shrink-0" />
-                              <span className="text-gray-700">{level}</span>
-                            </div>
+                            </motion.div>
                           ))}
                         </div>
                       </div>
+                      <motion.div 
+                        initial={{ opacity: 0, scale: 0 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        whileHover={{ scale: 1.1, rotate: 5 }}
+                        transition={{ delay: index * 0.2, duration: 0.6, type: "spring", stiffness: 200 }}
+                        className="w-20 h-20 rounded-2xl bg-gradient-to-br from-purple-100 via-blue-100 to-indigo-100 flex items-center justify-center flex-shrink-0 shadow-lg"
+                      >
+                        <benefit.icon className={`h-10 w-10 ${benefit.color}`} />
+                      </motion.div>
                     </div>
                   </Card>
                 </motion.div>
