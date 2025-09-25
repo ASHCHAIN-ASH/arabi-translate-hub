@@ -167,13 +167,12 @@ const Footer = () => {
                 { name: 'الأسعار', icon: Star, href: '/pricing' },
                 { name: 'عن الشركة', icon: Building2, href: '/about-us' },
                 { name: 'الأسئلة الشائعة', icon: Users },
-                { name: 'سياسة الخصوصية', icon: Shield, href: '/privacy-policy' },
-                { name: 'إدارة', icon: Users, href: '/adminmaster/orders', admin: true }
+                { name: 'سياسة الخصوصية', icon: Shield, href: '/privacy-policy' }
               ].map((link) => (
                 <li key={link.name}>
                   <a 
                     href={link.href || "#"} 
-                    className={`text-white/70 hover:text-white transition-colors text-sm md:text-base flex items-center gap-2 hover:translate-x-1 transition-transform ${link.admin ? 'text-white/40 hover:text-white/60' : ''}`}
+                    className="text-white/70 hover:text-white transition-colors text-sm md:text-base flex items-center gap-2 hover:translate-x-1 transition-transform"
                   >
                     <link.icon className="h-3 w-3 md:h-4 md:w-4 text-primary" />
                     {link.name}
