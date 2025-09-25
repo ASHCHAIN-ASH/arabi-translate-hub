@@ -353,8 +353,8 @@ const ServicesShowcase = () => {
                     >
                       <Button
                         size="sm"
-                        variant="outline"
-                        className="text-xs px-3 py-1 h-8 bg-white/10 hover:bg-white/20 border-white/30 hover:border-white/50 text-white hover:text-white transition-all duration-300"
+                        variant="default"
+                        className="text-xs px-4 py-2 h-8 bg-white text-gray-900 hover:bg-gray-100 border-none font-semibold shadow-md hover:shadow-lg transition-all duration-300 hover:scale-105"
                         onClick={() => navigate(service.route)}
                       >
                         المزيد
