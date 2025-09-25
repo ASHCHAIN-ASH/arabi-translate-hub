@@ -636,9 +636,9 @@ export default function EmailNotifications() {
             <div style="background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%); border-radius: 15px; padding: 25px; border: 1px solid #bae6fd; direction: rtl;">
               <h3 style="color: #0c4a6e; margin: 0 0 20px 0; font-size: 18px; font-weight: 700; direction: rtl; font-family: 'IBM Plex Sans Arabic';" class="mobile-text">📋 تفاصيل الفاتورة</h3>
               <div style="space-y: 12px; direction: rtl;">
-                <p style="margin: 8px 0; color: #075985; text-align: right; direction: rtl; font-size: 15px; font-weight: 600; font-family: 'IBM Plex Sans Arabic';" class="mobile-text">رقم الفاتورة: <span style="color: #0ea5e9; font-weight: 800;">#${data.invoiceNumber}</span></p>
+                <p style="margin: 8px 0; color: #075985; text-align: right; direction: rtl; font-size: 15px; font-weight: 600; font-family: 'IBM Plex Sans Arabic';" class="mobile-text">رقم الفاتورة: <span style="color: #0ea5e9; font-weight: 800;">#${data.invoiceNumber || 'غير محدد'}</span></p>
                 <p style="margin: 6px 0; color: #0369a1; text-align: right; direction: rtl; font-size: 14px; font-family: 'IBM Plex Sans Arabic';" class="mobile-text">📅 تاريخ الإصدار: ${new Date().toLocaleDateString('ar-SA')}</p>
-                <p style="margin: 6px 0; color: #0369a1; text-align: right; direction: rtl; font-size: 14px; font-family: 'IBM Plex Sans Arabic';" class="mobile-text">⏰ تاريخ الاستحقاق: ${data.dueDate}</p>
+                <p style="margin: 6px 0; color: #0369a1; text-align: right; direction: rtl; font-size: 14px; font-family: 'IBM Plex Sans Arabic';" class="mobile-text">⏰ تاريخ الاستحقاق: ${data.dueDate || 'غير محدد'}</p>
               </div>
             </div>
           </div>
@@ -647,8 +647,8 @@ export default function EmailNotifications() {
           <div style="background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%); border-radius: 15px; padding: 25px; margin: 25px 0; border-right: 5px solid #22c55e; border: 1px solid #bbf7d0; direction: rtl;">
             <h3 style="color: #14532d; margin: 0 0 20px 0; font-size: 18px; font-weight: 700; text-align: center; direction: rtl; font-family: 'IBM Plex Sans Arabic';" class="mobile-text">👤 بيانات العميل</h3>
             <div style="background: rgba(255,255,255,0.7); border-radius: 12px; padding: 20px; direction: rtl;">
-              <p style="color: #15803d; margin: 10px 0; font-size: 16px; font-weight: 600; text-align: right; direction: rtl; font-family: 'IBM Plex Sans Arabic';" class="mobile-text">الاسم: ${data.customerName}</p>
-              <p style="color: #15803d; margin: 10px 0; text-align: right; direction: rtl; font-size: 15px; word-break: break-all; font-family: 'IBM Plex Sans Arabic';" class="mobile-text">البريد الإلكتروني: ${data.customerEmail}</p>
+              <p style="color: #15803d; margin: 10px 0; font-size: 16px; font-weight: 600; text-align: right; direction: rtl; font-family: 'IBM Plex Sans Arabic';" class="mobile-text">الاسم: ${data.customerName || 'غير محدد'}</p>
+              <p style="color: #15803d; margin: 10px 0; text-align: right; direction: rtl; font-size: 15px; word-break: break-all; font-family: 'IBM Plex Sans Arabic';" class="mobile-text">البريد الإلكتروني: ${data.customerEmail || 'غير محدد'}</p>
             </div>
           </div>
 
@@ -659,12 +659,12 @@ export default function EmailNotifications() {
             <div style="display: grid; gap: 20px; direction: rtl;">
               <div style="background: #f9fafb; border-radius: 12px; padding: 20px; border: 1px solid #e5e7eb; direction: rtl;">
                 <p style="margin: 0 0 12px 0; color: #374151; font-weight: 700; font-size: 15px; text-align: right; direction: rtl; font-family: 'IBM Plex Sans Arabic';" class="mobile-text">وصف الخدمة:</p>
-                <p style="margin: 0; color: #1f2937; font-size: 16px; text-align: right; direction: rtl; font-family: 'IBM Plex Sans Arabic';" class="mobile-text">${data.serviceDescription}</p>
+                <p style="margin: 0; color: #1f2937; font-size: 16px; text-align: right; direction: rtl; font-family: 'IBM Plex Sans Arabic';" class="mobile-text">${data.serviceDescription || 'خدمة عامة'}</p>
               </div>
               
               <div style="background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%); border-radius: 12px; padding: 20px; border-right: 4px solid #22c55e; direction: rtl;">
                 <p style="margin: 0 0 12px 0; color: #15803d; font-weight: 700; font-size: 15px; text-align: right; direction: rtl; font-family: 'IBM Plex Sans Arabic';" class="mobile-text">قيمة الخدمة:</p>
-                <p style="margin: 0; color: #14532d; font-size: 24px; font-weight: 800; text-align: right; direction: rtl; font-family: 'IBM Plex Sans Arabic';">${data.amount} ${data.currency}</p>
+                <p style="margin: 0; color: #14532d; font-size: 24px; font-weight: 800; text-align: right; direction: rtl; font-family: 'IBM Plex Sans Arabic';">${data.amount || '0'} ${data.currency || 'ر.س'}</p>
               </div>
             </div>
           </div>
@@ -674,7 +674,7 @@ export default function EmailNotifications() {
             <div style="position: absolute; top: -10px; right: -10px; width: 60px; height: 60px; background: rgba(255,255,255,0.1); border-radius: 50%; opacity: 0.7;"></div>
             <h2 style="color: white; margin: 0 0 15px 0; font-size: 24px; font-weight: 800; text-shadow: 2px 2px 4px rgba(0,0,0,0.3); direction: rtl; font-family: 'IBM Plex Sans Arabic';" class="mobile-text">💰 المبلغ الإجمالي</h2>
             <div style="background: rgba(255,255,255,0.15); border-radius: 15px; padding: 20px; display: inline-block; backdrop-filter: blur(10px); border: 2px solid rgba(255,255,255,0.2); direction: rtl;">
-              <span style="color: white; font-size: 32px; font-weight: 900; text-shadow: 2px 2px 4px rgba(0,0,0,0.3); direction: rtl; font-family: 'IBM Plex Sans Arabic';">${data.amount} ${data.currency}</span>
+              <span style="color: white; font-size: 32px; font-weight: 900; text-shadow: 2px 2px 4px rgba(0,0,0,0.3); direction: rtl; font-family: 'IBM Plex Sans Arabic';">${data.amount || '0'} ${data.currency || 'ر.س'}</span>
             </div>
           </div>
 
@@ -852,22 +852,22 @@ export default function EmailNotifications() {
         <div style="background: linear-gradient(135deg, #10b981 0%, #059669 100%); padding: 30px 20px; text-align: center; position: relative; direction: rtl;" class="mobile-container">
           <div style="background: rgba(255,255,255,0.2); width: 80px; height: 80px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 15px auto; font-size: 35px;">✅</div>
           <h1 style="color: white; font-size: 24px; margin: 0 0 10px 0; font-weight: 700; direction: rtl;" class="mobile-header">تم الدفع بنجاح!</h1>
-          <p style="color: rgba(255,255,255,0.9); margin: 0; font-size: 14px; direction: rtl;" class="mobile-text">شكراً لك ${data.customerName}</p>
+          <p style="color: rgba(255,255,255,0.9); margin: 0; font-size: 14px; direction: rtl;" class="mobile-text">شكراً لك ${data.customerName || 'عزيزي العميل'}</p>
         </div>
         
         <div style="padding: 30px 20px; text-align: center; direction: rtl;" class="mobile-container">
           <div style="background: #f0fdf4; border: 2px solid #10b981; border-radius: 12px; padding: 20px; margin: 20px 0; direction: rtl; text-align: right;">
             <h2 style="color: #065f46; margin: 0 0 15px 0; font-size: 18px; text-align: center; direction: rtl;" class="mobile-text">💰 تفاصيل الدفعة</h2>
             <div style="text-align: right; direction: rtl;">
-              <p style="color: #047857; font-size: 16px; margin: 8px 0; text-align: right; direction: rtl;" class="mobile-text"><strong>رقم الفاتورة:</strong> ${data.invoiceNumber}</p>
-              <p style="color: #047857; font-size: 16px; margin: 8px 0; text-align: right; direction: rtl;" class="mobile-text"><strong>المبلغ المدفوع:</strong> ${data.amount} ${data.currency}</p>
+              <p style="color: #047857; font-size: 16px; margin: 8px 0; text-align: right; direction: rtl;" class="mobile-text"><strong>رقم الفاتورة:</strong> ${data.invoiceNumber || 'غير محدد'}</p>
+              <p style="color: #047857; font-size: 16px; margin: 8px 0; text-align: right; direction: rtl;" class="mobile-text"><strong>المبلغ المدفوع:</strong> ${data.amount || '0'} ${data.currency || 'ر.س'}</p>
               <p style="color: #047857; font-size: 14px; margin: 8px 0; text-align: right; direction: rtl;" class="mobile-text"><strong>تاريخ الدفع:</strong> ${new Date().toLocaleDateString('ar-SA')}</p>
             </div>
           </div>
 
           <div style="background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%); border-radius: 10px; padding: 20px; margin: 20px 0; direction: rtl; text-align: center;">
             <h3 style="color: #1e40af; margin: 0 0 10px 0; direction: rtl; font-size: 16px;" class="mobile-text">📧 سيتم إرسال إيصال مفصل إلى بريدك الإلكتروني</h3>
-            <p style="color: #1e3a8a; margin: 0; direction: rtl; font-size: 14px; word-break: break-all;" class="mobile-text">${data.customerEmail}</p>
+            <p style="color: #1e3a8a; margin: 0; direction: rtl; font-size: 14px; word-break: break-all;" class="mobile-text">${data.customerEmail || 'غير محدد'}</p>
           </div>
 
           <div style="margin: 25px 0; direction: rtl; text-align: center;">
@@ -1320,15 +1320,15 @@ export default function EmailNotifications() {
           <h2 style="color: #f59e0b; font-size: 28px; font-weight: 700; margin-bottom: 25px; text-align: center;">تذكير بدفع المستحقات 🔔</h2>
           
           <p style="color: #374151; font-size: 18px; line-height: 1.8; margin-bottom: 25px;">
-            عزيزي/عزيزتي <strong style="color: #f59e0b;">${data.customerName}</strong>،<br><br>
+            عزيزي/عزيزتي <strong style="color: #f59e0b;">${data.customerName || 'عزيزي العميل'}</strong>،<br><br>
             نتواصل معكم بكل احترام للتذكير اللطيف بسداد الفاتورة المستحقة.
           </p>
           
           <div style="background: linear-gradient(135deg, #fef3c7, #fde68a); border-radius: 15px; padding: 25px; margin: 25px 0; border-left: 5px solid #f59e0b; box-shadow: 0 4px 15px rgba(245, 158, 11, 0.2);">
             <h3 style="color: #92400e; margin-bottom: 15px; font-size: 20px; font-weight: 600;">📋 تفاصيل الفاتورة:</h3>
-            <p style="margin: 10px 0; color: #92400e; font-size: 16px;"><strong>رقم الفاتورة:</strong> ${data.invoiceNumber}</p>
-            <p style="margin: 10px 0; color: #92400e; font-size: 16px;"><strong>المبلغ المستحق:</strong> ${data.amount} ${data.currency}</p>
-            <p style="margin: 10px 0; color: #92400e; font-size: 16px;"><strong>تاريخ الاستحقاق:</strong> ${data.dueDate}</p>
+            <p style="margin: 10px 0; color: #92400e; font-size: 16px;"><strong>رقم الفاتورة:</strong> ${data.invoiceNumber || 'غير محدد'}</p>
+            <p style="margin: 10px 0; color: #92400e; font-size: 16px;"><strong>المبلغ المستحق:</strong> ${data.amount || '0'} ${data.currency || 'ر.س'}</p>
+            <p style="margin: 10px 0; color: #92400e; font-size: 16px;"><strong>تاريخ الاستحقاق:</strong> ${data.dueDate || 'غير محدد'}</p>
           </div>
           
           <p style="color: #374151; font-size: 16px; line-height: 1.7; margin-bottom: 30px; text-align: center;">
