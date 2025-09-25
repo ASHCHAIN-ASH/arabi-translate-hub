@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { ChevronDown, Search, MessageCircle, Phone, Mail, HelpCircle, CheckCircle } from "lucide-react";
+import { ChevronDown, Search, MessageCircle, Phone, Mail, HelpCircle, CheckCircle, Star } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -12,14 +12,14 @@ const FAQ = () => {
   const [openItems, setOpenItems] = useState<number[]>([]);
 
   const categories = [
-    { name: "الكل", count: 45, color: "bg-gradient-to-r from-blue-500 to-blue-600" },
-    { name: "الخدمات الأكاديمية", count: 12, color: "bg-gradient-to-r from-emerald-500 to-emerald-600" },
-    { name: "البحث العلمي", count: 10, color: "bg-gradient-to-r from-purple-500 to-purple-600" },
-    { name: "الترجمة المتخصصة", count: 8, color: "bg-gradient-to-r from-orange-500 to-orange-600" },
-    { name: "الخدمات التقنية", count: 7, color: "bg-gradient-to-r from-teal-500 to-teal-600" },
-    { name: "الأسعار والدفع", count: 6, color: "bg-gradient-to-r from-indigo-500 to-indigo-600" },
-    { name: "الجودة والاعتماد", count: 5, color: "bg-gradient-to-r from-red-500 to-red-600" },
-    { name: "الخصوصية والأمان", count: 4, color: "bg-gradient-to-r from-pink-500 to-pink-600" }
+    { name: "الكل", count: 35, color: "bg-gradient-to-r from-blue-500 to-blue-600" },
+    { name: "الخدمات الأكاديمية", count: 7, color: "bg-gradient-to-r from-emerald-500 to-emerald-600" },
+    { name: "البحث العلمي", count: 8, color: "bg-gradient-to-r from-purple-500 to-purple-600" },
+    { name: "الترجمة المتخصصة", count: 5, color: "bg-gradient-to-r from-orange-500 to-orange-600" },
+    { name: "الخدمات التقنية", count: 6, color: "bg-gradient-to-r from-teal-500 to-teal-600" },
+    { name: "الأسعار والدفع", count: 4, color: "bg-gradient-to-r from-indigo-500 to-indigo-600" },
+    { name: "الجودة والاعتماد", count: 4, color: "bg-gradient-to-r from-red-500 to-red-600" },
+    { name: "الخصوصية والأمان", count: 2, color: "bg-gradient-to-r from-pink-500 to-pink-600" }
   ];
 
   const faqItems = [
@@ -393,10 +393,10 @@ const FAQ = () => {
               initial={{ opacity: 0, y: 40 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 1.1 }}
-              className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-12 max-w-4xl mx-auto"
+              className="grid grid-cols-2 lg:grid-cols-4 gap-2 lg:gap-4 mt-8 lg:mt-12 max-w-4xl mx-auto"
             >
               {[
-                { number: "45+", label: "سؤال وإجابة", color: "from-blue-400 to-blue-600" },
+                { number: "35+", label: "سؤال وإجابة", color: "from-blue-400 to-blue-600" },
                 { number: "8", label: "تصنيف متخصص", color: "from-green-400 to-green-600" },
                 { number: "100+", label: "خدمة متقدمة", color: "from-purple-400 to-purple-600" },
                 { number: "24/7", label: "دعم متواصل", color: "from-orange-400 to-orange-600" }
@@ -407,12 +407,12 @@ const FAQ = () => {
                   animate={{ opacity: 1, scale: 1 }}
                   transition={{ delay: 1.3 + index * 0.1, duration: 0.5 }}
                   whileHover={{ scale: 1.05, y: -5 }}
-                  className="bg-white/10 backdrop-blur-sm rounded-xl p-4 border border-white/20 hover:bg-white/15 transition-all duration-300"
+                  className="bg-white/10 backdrop-blur-sm rounded-xl p-2 lg:p-4 border border-white/20 hover:bg-white/15 transition-all duration-300"
                 >
-                  <div className={`text-2xl font-bold bg-gradient-to-r ${stat.color} bg-clip-text text-transparent`}>
+                  <div className={`text-lg lg:text-2xl font-bold bg-gradient-to-r ${stat.color} bg-clip-text text-transparent`}>
                     {stat.number}
                   </div>
-                  <div className="text-white/80 text-sm mt-1">{stat.label}</div>
+                  <div className="text-white/80 text-xs lg:text-sm mt-0.5 lg:mt-1 leading-tight">{stat.label}</div>
                 </motion.div>
               ))}
             </motion.div>
@@ -420,41 +420,71 @@ const FAQ = () => {
         </div>
       </section>
 
-      <div className="container mx-auto px-4 py-16">
-        <div className="grid lg:grid-cols-4 gap-8">
+      <div className="container mx-auto px-4 py-12 lg:py-16">
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 lg:gap-8">
           
-          {/* Sidebar */}
+          {/* Sidebar - مُحسَّن للجوال */}
           <motion.div 
             initial={{ opacity: 0, x: 50 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.6 }}
             className="lg:col-span-1"
           >
-            <Card className="mb-8 shadow-lg hover:shadow-xl transition-shadow">
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
+            {/* Categories - مخفية على الجوال ومرئية كـ Dropdown */}
+            <div className="lg:hidden mb-6">
+              <div className="relative">
+                <select
+                  value={activeCategory}
+                  onChange={(e) => setActiveCategory(e.target.value)}
+                  className="w-full p-3 bg-white border border-gray-200 rounded-lg text-gray-700 focus:ring-2 focus:ring-primary focus:border-transparent appearance-none pr-10"
+                >
+                  {categories.map((category) => (
+                    <option key={category.name} value={category.name}>
+                      {category.name} ({category.count})
+                    </option>
+                  ))}
+                </select>
+                <ChevronDown className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400 pointer-events-none" />
+              </div>
+            </div>
+
+            {/* Categories Card - مخفية على الجوال */}
+            <Card className="hidden lg:block mb-6 lg:mb-8 shadow-lg hover:shadow-xl transition-shadow border-0 bg-white/80 backdrop-blur-sm">
+              <CardHeader className="pb-3">
+                <CardTitle className="flex items-center gap-2 text-lg">
                   <MessageCircle className="h-5 w-5 text-primary" />
                   التصنيفات
                 </CardTitle>
               </CardHeader>
-              <CardContent className="space-y-3">
+              <CardContent className="space-y-2">
                 {categories.map((category, index) => (
                   <motion.div
                     key={category.name}
                     initial={{ opacity: 0, x: 20 }}
                     animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: index * 0.1 }}
+                    transition={{ delay: index * 0.05 }}
                   >
                     <Button 
                       variant={activeCategory === category.name ? "default" : "ghost"} 
-                      className="w-full justify-between group"
+                      className={`w-full justify-between group text-sm py-2 h-auto ${
+                        activeCategory === category.name 
+                          ? 'bg-primary text-white shadow-md' 
+                          : 'hover:bg-slate-50'
+                      }`}
                       onClick={() => setActiveCategory(category.name)}
                     >
                       <div className="flex items-center gap-2">
-                        <div className={`w-3 h-3 rounded-full ${category.color}`}></div>
-                        {category.name}
+                        <div className={`w-2 h-2 rounded-full ${category.color.replace('bg-gradient-to-r', 'bg-gradient-to-br')}`}></div>
+                        <span className="truncate">{category.name}</span>
                       </div>
-                      <Badge variant="secondary" className="group-hover:bg-primary group-hover:text-white transition-colors">
+                      <Badge 
+                        variant={activeCategory === category.name ? "secondary" : "outline"}
+                        className={`text-xs px-2 py-0.5 ${
+                          activeCategory === category.name 
+                            ? 'bg-white/20 text-white border-white/30' 
+                            : 'group-hover:bg-primary group-hover:text-white group-hover:border-primary'
+                        }`}
+                      >
                         {category.count}
                       </Badge>
                     </Button>
@@ -464,24 +494,26 @@ const FAQ = () => {
             </Card>
 
             {/* Contact Support */}
-            <Card className="shadow-lg hover:shadow-xl transition-shadow">
-              <CardHeader>
-                <CardTitle className="text-center">تحتاج مساعدة؟</CardTitle>
+            <Card className="shadow-lg hover:shadow-xl transition-shadow border-0 bg-white/80 backdrop-blur-sm">
+              <CardHeader className="pb-3">
+                <CardTitle className="text-center text-base lg:text-lg">تحتاج مساعدة؟</CardTitle>
               </CardHeader>
-              <CardContent className="space-y-4">
-                <p className="text-sm text-slate-600 text-center">
+              <CardContent className="space-y-3">
+                <p className="text-xs lg:text-sm text-slate-600 text-center leading-relaxed">
                   لم تجد إجابة لسؤالك؟ تواصل معنا مباشرة
                 </p>
                 <div className="space-y-2">
-                  <Button variant="outline" className="w-full justify-start">
-                    <Phone className="ml-2 h-4 w-4" />
+                  <Button variant="outline" size="sm" className="w-full justify-start text-xs lg:text-sm py-2 h-auto">
+                    <Phone className="ml-2 h-3 w-3 lg:h-4 lg:w-4" />
                     0500776343
                   </Button>
-                  <Button variant="outline" className="w-full justify-start">
-                    <Mail className="ml-2 h-4 w-4" />
+                  <Button variant="outline" size="sm" className="w-full justify-start text-xs lg:text-sm py-2 h-auto">
+                    <Mail className="ml-2 h-3 w-3 lg:h-4 lg:w-4" />
                     info@masteredupath.com
                   </Button>
-                  <Button className="w-full">دردشة فورية</Button>
+                  <Button size="sm" className="w-full text-xs lg:text-sm py-2 h-auto bg-primary hover:bg-primary/90">
+                    دردشة فورية
+                  </Button>
                 </div>
               </CardContent>
             </Card>
@@ -489,28 +521,29 @@ const FAQ = () => {
 
           {/* Main Content */}
           <div className="lg:col-span-3">
-            <div className="mb-6 flex items-center justify-between">
-              <h2 className="text-2xl font-bold">
-                {filteredFAQs.length} سؤال في "{activeCategory}"
+            <div className="mb-4 lg:mb-6 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+              <h2 className="text-xl lg:text-2xl font-bold text-gray-800">
+                <span className="text-primary">{filteredFAQs.length}</span> سؤال في "{activeCategory}"
               </h2>
               {searchTerm && (
-                <Badge variant="outline" className="text-primary">
+                <Badge variant="outline" className="text-primary border-primary/30 bg-primary/5 self-start sm:self-auto">
+                  <Search className="h-3 w-3 ml-1" />
                   نتائج البحث: {filteredFAQs.length}
                 </Badge>
               )}
             </div>
 
-            <div className="space-y-4">
+            <div className="space-y-3 lg:space-y-4">
               {filteredFAQs.map((item, index) => (
                 <motion.div
                   key={item.id}
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: index * 0.1, duration: 0.5 }}
+                  transition={{ delay: index * 0.05, duration: 0.5 }}
                 >
-                  <Card className="overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 border border-slate-200 hover:border-primary/20">
+                  <Card className="overflow-hidden shadow-md hover:shadow-lg transition-all duration-300 border border-slate-200 hover:border-primary/20 bg-white/90 backdrop-blur-sm">
                     <CardHeader 
-                      className="cursor-pointer hover:bg-slate-50 transition-colors relative z-10 select-none"
+                      className="cursor-pointer hover:bg-slate-50/80 transition-colors relative z-10 select-none p-3 lg:p-6"
                       onClick={(e) => {
                         e.preventDefault();
                         e.stopPropagation();
@@ -518,21 +551,22 @@ const FAQ = () => {
                         toggleItem(item.id);
                       }}
                     >
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-start gap-3 flex-1">
-                          <div className="flex-shrink-0 w-8 h-8 bg-primary/10 rounded-full flex items-center justify-center mt-1">
-                            <CheckCircle className="h-4 w-4 text-primary" />
+                      <div className="flex items-start justify-between gap-3">
+                        <div className="flex items-start gap-2 lg:gap-3 flex-1 min-w-0">
+                          <div className="flex-shrink-0 w-6 h-6 lg:w-8 lg:h-8 bg-primary/10 rounded-full flex items-center justify-center mt-0.5">
+                            <CheckCircle className="h-3 w-3 lg:h-4 lg:w-4 text-primary" />
                           </div>
-                          <div className="flex-1">
-                            <h3 className="text-lg font-semibold text-right leading-relaxed">
+                          <div className="flex-1 min-w-0">
+                            <h3 className="text-sm lg:text-lg font-semibold text-right leading-snug lg:leading-relaxed text-gray-800 pr-2">
                               {item.question}
                             </h3>
-                            <div className="flex items-center gap-2 mt-2">
-                              <Badge variant="secondary" className="text-xs">
+                            <div className="flex flex-wrap items-center gap-1 lg:gap-2 mt-2">
+                              <Badge variant="secondary" className="text-xs bg-slate-100 text-slate-600 px-2 py-0.5">
                                 {item.category}
                               </Badge>
                               {item.popular && (
-                                <Badge className="text-xs bg-orange-500">
+                                <Badge className="text-xs bg-gradient-to-r from-orange-500 to-orange-600 text-white px-2 py-0.5 shadow-sm">
+                                  <Star className="h-2 w-2 ml-1" />
                                   سؤال شائع
                                 </Badge>
                               )}
@@ -542,9 +576,9 @@ const FAQ = () => {
                         <motion.div
                           animate={{ rotate: openItems.includes(item.id) ? 180 : 0 }}
                           transition={{ duration: 0.2 }}
-                          className="flex-shrink-0"
+                          className="flex-shrink-0 mt-1"
                         >
-                          <ChevronDown className="h-5 w-5 text-slate-400" />
+                          <ChevronDown className="h-4 w-4 lg:h-5 lg:w-5 text-slate-400" />
                         </motion.div>
                       </div>
                     </CardHeader>
@@ -572,9 +606,9 @@ const FAQ = () => {
                           }}
                           style={{ overflow: "hidden" }}
                         >
-                          <CardContent className="pt-0 pr-14">
-                            <div className="border-t border-slate-200 pt-4">
-                              <p className="text-slate-700 leading-relaxed">
+                          <CardContent className="pt-0 pr-8 lg:pr-14 px-3 lg:px-6 pb-4 lg:pb-6">
+                            <div className="border-t border-slate-200 pt-3 lg:pt-4">
+                              <p className="text-xs lg:text-base text-slate-700 leading-relaxed lg:leading-loose">
                                 {item.answer}
                               </p>
                             </div>
@@ -591,15 +625,36 @@ const FAQ = () => {
               <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
-                className="text-center py-12"
+                className="text-center py-8 lg:py-12"
               >
-                <HelpCircle className="h-16 w-16 text-slate-300 mx-auto mb-4" />
-                <h3 className="text-xl font-semibold text-slate-600 mb-2">
-                  لم نجد أي نتائج
-                </h3>
-                <p className="text-slate-500">
-                  جرب البحث بكلمات مختلفة أو تواصل معنا مباشرة
-                </p>
+                <div className="flex flex-col items-center space-y-3 lg:space-y-4">
+                  <HelpCircle className="h-12 w-12 lg:h-16 lg:w-16 text-slate-300 mx-auto" />
+                  <h3 className="text-lg lg:text-xl font-semibold text-slate-600">
+                    لم نجد أي نتائج
+                  </h3>
+                  <p className="text-sm lg:text-base text-slate-500 max-w-md mx-auto leading-relaxed">
+                    جرب البحث بكلمات مختلفة أو اختر تصنيفاً آخر، أو تواصل معنا مباشرة للحصول على المساعدة
+                  </p>
+                  <div className="flex flex-col sm:flex-row gap-2 pt-2">
+                    <Button 
+                      variant="outline" 
+                      size="sm" 
+                      onClick={() => {
+                        setSearchTerm("");
+                        setActiveCategory("الكل");
+                      }}
+                      className="text-xs lg:text-sm"
+                    >
+                      مسح البحث
+                    </Button>
+                    <Button 
+                      size="sm" 
+                      className="text-xs lg:text-sm bg-primary hover:bg-primary/90"
+                    >
+                      تواصل معنا
+                    </Button>
+                  </div>
+                </div>
               </motion.div>
             )}
           </div>
