@@ -383,14 +383,14 @@ const MasterMembership = () => {
                           
                           {/* أيقونات أنشطة الموقع في الخلفية */}
                           <div className="absolute inset-0 overflow-hidden opacity-25">
-                            <BookOpen className="absolute top-8 left-8 w-8 h-8 text-white/70 transform -rotate-12 animate-pulse" />
-                            <Award className="absolute bottom-12 right-6 w-7 h-7 text-white/60 transform rotate-12 animate-bounce" />
-                            <Globe className="absolute top-16 right-8 w-7 h-7 text-white/60 transform -rotate-45 animate-pulse" />
-                            <Trophy className="absolute bottom-20 left-12 w-6 h-6 text-white/70 transform rotate-45 animate-bounce" />
-                            <Shield className="absolute top-20 left-20 w-7 h-7 text-white/60 transform -rotate-12 animate-pulse" />
-                            <MessageSquare className="absolute bottom-8 right-12 w-6 h-6 text-white/60 transform -rotate-30 animate-bounce" />
-                            <Users className="absolute top-12 right-16 w-7 h-7 text-white/60 transform rotate-15 animate-pulse" />
-                            <Download className="absolute bottom-16 left-6 w-6 h-6 text-white/70 transform -rotate-25 animate-bounce" />
+                            <BookOpen className="absolute top-8 right-8 w-8 h-8 text-white/70 transform rotate-12 animate-pulse" />
+                            <Award className="absolute bottom-12 left-6 w-7 h-7 text-white/60 transform -rotate-12 animate-bounce" />
+                            <Globe className="absolute top-16 left-8 w-7 h-7 text-white/60 transform rotate-45 animate-pulse" />
+                            <Trophy className="absolute bottom-20 right-12 w-6 h-6 text-white/70 transform -rotate-45 animate-bounce" />
+                            <Shield className="absolute top-20 right-20 w-7 h-7 text-white/60 transform rotate-12 animate-pulse" />
+                            <MessageSquare className="absolute bottom-8 left-12 w-6 h-6 text-white/60 transform rotate-30 animate-bounce" />
+                            <Users className="absolute top-12 left-16 w-7 h-7 text-white/60 transform -rotate-15 animate-pulse" />
+                            <Download className="absolute bottom-16 right-6 w-6 h-6 text-white/70 transform rotate-25 animate-bounce" />
                           </div>
                           
                           {/* اسم الوكالة في أعلى البطاقة */}
@@ -400,8 +400,8 @@ const MasterMembership = () => {
                             </div>
                           </div>
                           
-                          {/* شريحة EMV في الأعلى يمين */}
-                          <div className="absolute top-3 right-3 z-10">
+                          {/* شريحة EMV في الأعلى يسار */}
+                          <div className="absolute top-3 left-3 z-10">
                             <div className={`w-10 h-7 ${tier.chipColor} rounded-md shadow-lg flex items-center justify-center`}>
                               <div className="w-6 h-4 bg-yellow-600/50 rounded-sm grid grid-cols-2 gap-0.5 p-0.5">
                                 <div className="bg-yellow-800/70 rounded-sm"></div>
@@ -424,18 +424,18 @@ const MasterMembership = () => {
                             </div>
                           </div>
 
-                          {/* معلومات العضوية في الأسفل يمين */}
-                          <div className="absolute bottom-3 right-4 text-right z-10">
+                          {/* معلومات العضوية في الأسفل يسار */}
+                          <div className="absolute bottom-3 left-4 text-left z-10">
                             <div className="text-xs opacity-85 leading-tight">عضوية ماستر</div>
                             <div className="text-lg font-bold leading-tight drop-shadow-md">{tier.titleAr}</div>
                             <div className="text-xs opacity-75 mt-1 leading-tight">انتهاء: 12/27</div>
                           </div>
 
-                          {/* شعار Mastercard في أسفل يسار */}
-                          <div className="absolute bottom-3 left-4 flex items-center gap-1 z-10">
+                          {/* شعار Mastercard في أسفل يمين */}
+                          <div className="absolute bottom-3 right-4 flex items-center gap-1 z-10">
                             <div className="w-3 h-3 rounded-full bg-red-500 shadow-sm"></div>
-                            <div className="w-3 h-3 rounded-full bg-yellow-400 -mr-1 shadow-sm"></div>
-                            <span className="text-xs font-bold mr-2 tracking-wider drop-shadow-sm">MASTERCARD</span>
+                            <div className="w-3 h-3 rounded-full bg-yellow-400 -ml-1 shadow-sm"></div>
+                            <span className="text-xs font-bold ml-2 tracking-wider drop-shadow-sm">MASTERCARD</span>
                           </div>
 
                           {/* تأثيرات بصرية */}
@@ -540,31 +540,31 @@ const MasterMembership = () => {
                       
                       <div className="grid gap-6 md:grid-cols-2">
                         <motion.div
-                          whileHover={{ scale: 1.02, x: 5 }}
-                          className="bg-gradient-to-l from-emerald-100 to-teal-100 p-6 rounded-xl border-r-4 border-emerald-500 shadow-md"
+                          whileHover={{ scale: 1.02, x: -5 }}
+                          className="bg-gradient-to-r from-emerald-100 to-teal-100 p-6 rounded-xl border-l-4 border-emerald-500 shadow-md"
                         >
-                          <div className="flex items-center gap-4 mb-3 justify-start">
+                          <div className="flex items-center gap-4 mb-3 justify-end">
+                            <h4 className="font-bold text-emerald-800 text-lg flex-1 text-right">من رسوم تأسيس العضوية</h4>
                             <div className="w-10 h-10 bg-emerald-500 rounded-full flex items-center justify-center shadow-md">
                               <span className="text-white font-bold">١</span>
                             </div>
-                            <h4 className="font-bold text-emerald-800 text-lg flex-1">من رسوم تأسيس العضوية</h4>
                           </div>
-                          <p className="text-emerald-700 leading-relaxed">
+                          <p className="text-emerald-700 leading-relaxed text-right">
                             كاش باك فوري بنسبة العضوية المختارة من رسوم التأسيس
                           </p>
                         </motion.div>
 
                         <motion.div
-                          whileHover={{ scale: 1.02, x: 5 }}
-                          className="bg-gradient-to-l from-green-100 to-emerald-100 p-6 rounded-xl border-r-4 border-green-500 shadow-md"
+                          whileHover={{ scale: 1.02, x: -5 }}
+                          className="bg-gradient-to-r from-green-100 to-emerald-100 p-6 rounded-xl border-l-4 border-green-500 shadow-md"
                         >
-                          <div className="flex items-center gap-4 mb-3 justify-start">
+                          <div className="flex items-center gap-4 mb-3 justify-end">
+                            <h4 className="font-bold text-green-800 text-lg flex-1 text-right">من جميع الطلبات المستقبلية</h4>
                             <div className="w-10 h-10 bg-green-500 rounded-full flex items-center justify-center shadow-md">
                               <span className="text-white font-bold">٢</span>
                             </div>
-                            <h4 className="font-bold text-green-800 text-lg flex-1">من جميع الطلبات المستقبلية</h4>
                           </div>
-                          <p className="text-green-700 leading-relaxed">
+                          <p className="text-green-700 leading-relaxed text-right">
                             كاش باك مستمر من كل طلب تقوم به بعد الاشتراك
                           </p>
                         </motion.div>
