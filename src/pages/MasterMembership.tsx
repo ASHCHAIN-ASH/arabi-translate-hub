@@ -142,15 +142,21 @@ const MasterMembership = () => {
         </div>
       </section>
 
-      <div className="container mx-auto px-4 py-16" dir="rtl">
-        <Tabs defaultValue="benefits" className="space-y-8" dir="rtl">
+      <div className="container mx-auto px-4 py-16">
+        <Tabs defaultValue="benefits" className="space-y-8">
           <div className="flex justify-center">
-            <TabsList className="grid w-full max-w-lg grid-cols-2" dir="rtl">
-              <TabsTrigger value="plans" className="flex items-center gap-2">
+            <TabsList className="grid w-full max-w-lg grid-cols-2 bg-muted p-1 rounded-lg">
+              <TabsTrigger 
+                value="plans" 
+                className="flex items-center gap-2 data-[state=active]:bg-background data-[state=active]:text-foreground cursor-pointer"
+              >
                 <Crown className="h-4 w-4" />
                 العضويات
               </TabsTrigger>
-              <TabsTrigger value="benefits" className="flex items-center gap-2">
+              <TabsTrigger 
+                value="benefits" 
+                className="flex items-center gap-2 data-[state=active]:bg-background data-[state=active]:text-foreground cursor-pointer"
+              >
                 <Gift className="h-4 w-4" />
                 المزايا
               </TabsTrigger>
@@ -158,12 +164,12 @@ const MasterMembership = () => {
           </div>
 
           {/* Membership Plans */}
-          <TabsContent value="plans" className="space-y-8" dir="rtl">
+          <TabsContent value="plans" className="space-y-8">
             <h2 className="text-3xl font-bold text-center mb-12 text-gray-800">
               اختر العضوية المناسبة لك
             </h2>
             
-            <div dir="rtl" className="mx-auto max-w-6xl px-4 py-8 bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 rounded-3xl border border-blue-100 shadow-inner">
+            <div className="mx-auto max-w-6xl px-4 py-8 bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 rounded-3xl border border-blue-100 shadow-inner" dir="rtl">
               {/* خلفية أكاديمية زخرفية */}
               <div className="absolute inset-0 overflow-hidden rounded-3xl">
                 <div className="absolute top-10 left-10 w-32 h-32 bg-blue-100/30 rounded-full blur-2xl"></div>
@@ -508,7 +514,7 @@ const MasterMembership = () => {
           </TabsContent>
 
           {/* Benefits Section */}
-          <TabsContent value="benefits" className="space-y-8" dir="rtl">
+          <TabsContent value="benefits" className="space-y-8">
             <h2 className="text-3xl font-bold text-center mb-8 text-gray-800">
               مزايا عضوية ماستر
             </h2>
