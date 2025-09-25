@@ -319,7 +319,7 @@ const handler = async (req: Request): Promise<Response> => {
       from: "نظام الإشعارات <info@masteredupath.com>",
       to: ["admin@masteredupath.com"],
       cc: ["info@masteredupath.com"],
-      reply_to: [consultationData.email],
+      replyTo: [consultationData.email],
       subject: `🚨 طلب استشارة أكاديمية جديد من ${consultationData.fullName} - ${serviceTypeArabic}`,
       html: adminEmailTemplate,
     });
