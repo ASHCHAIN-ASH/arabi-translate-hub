@@ -24,7 +24,6 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { WorkingHoursBannerRTL } from "@/components/WorkingHoursBannerRTL";
 import MembershipSubscriptionForm from "@/components/MembershipSubscriptionForm";
-import MembershipBankCards from "@/components/MembershipBankCards";
 
 const MasterMembership = () => {
   const [selectedPlan, setSelectedPlan] = useState<any>(null);
@@ -146,7 +145,7 @@ const MasterMembership = () => {
       <div className="container mx-auto px-4 py-16">
         <Tabs defaultValue="plans" className="space-y-8">
           <div className="flex justify-center">
-            <TabsList className="grid w-full max-w-2xl grid-cols-3">
+            <TabsList className="grid w-full max-w-lg grid-cols-2">
               <TabsTrigger value="benefits" className="flex items-center gap-2">
                 <Gift className="h-4 w-4" />
                 المزايا
@@ -154,10 +153,6 @@ const MasterMembership = () => {
               <TabsTrigger value="plans" className="flex items-center gap-2">
                 <Crown className="h-4 w-4" />
                 العضويات
-              </TabsTrigger>
-              <TabsTrigger value="bank-cards" className="flex items-center gap-2">
-                <CreditCard className="h-4 w-4" />
-                البطاقات البنكية
               </TabsTrigger>
             </TabsList>
           </div>
@@ -174,67 +169,129 @@ const MasterMembership = () => {
                   const before = tier.baseSAR;
                   const after  = finalPrice(before, tier.discountPct);
                   const cash   = cashbackAmount(after, tier.cashbackPct);
+                  
+                  // ألوان وتدرجات البطاقات الذكية
+                  const cardStyles = {
+                    silver: { 
+                      gradient: "from-slate-700 via-slate-600 to-slate-800", 
+                      mask: "1234 **** **** 5432",
+                      chipColor: "bg-yellow-300"
+                    },
+                    gold: { 
+                      gradient: "from-amber-500 via-yellow-500 to-orange-500", 
+                      mask: "5678 **** **** 4532",
+                      chipColor: "bg-yellow-200"
+                    },
+                    platinum: { 
+                      gradient: "from-zinc-600 via-slate-700 to-zinc-800", 
+                      mask: "9912 **** **** 5432",
+                      chipColor: "bg-gray-300"
+                    }
+                  };
+
+                  const style = cardStyles[tier.slug as keyof typeof cardStyles];
+
                   return (
-                    <div key={tier.slug}
-                         className={`relative rounded-2xl p-5 shadow-lg bg-gradient-to-br ${tier.gradient} text-white`}>
+                    <div key={tier.slug} className="relative group">
                       {tier.featured && (
-                        <div className="absolute -top-3 right-4 bg-red-500 text-white text-xs font-bold px-3 py-1 rounded-full shadow">
-                          <Crown className="inline-block w-3 h-3 ml-1" />
-                          الأكثر طلبًا
+                        <div className="absolute -top-3 right-4 z-20 bg-red-500 text-white text-xs font-bold px-3 py-1 rounded-full shadow-lg">
+                          الأكثر طلباً
                         </div>
                       )}
-                      <div className="mb-4">
-                        <div className="text-sm opacity-90">{tier.titleEn}</div>
-                        <div className="text-lg font-bold">{tier.titleAr}</div>
-                      </div>
 
-                      {/* الأسعار */}
-                      <div className="space-y-1 mb-4">
-                        <div className="inline-flex items-baseline gap-1 text-gray-200/90">
-                          <span className="line-through text-sm">{sar(before)}</span>
-                        </div>
-                        <div className="inline-flex items-baseline gap-1">
-                          <span className="text-3xl font-extrabold">{toArabic(after)}</span>
-                          <span className="text-lg">ريال</span>
-                          <span className="ml-2 inline-flex items-center text-xs bg-red-500/90 px-2 py-0.5 rounded-full">
+                      {/* البطاقة الذكية */}
+                      <div className={`relative w-full max-w-[380px] h-[240px] mx-auto rounded-2xl p-6 text-white shadow-2xl bg-gradient-to-br ${style.gradient} overflow-hidden`}>
+                        
+                        {/* شارات السعر والخصم في الأعلى */}
+                        <div className="absolute top-4 left-4 right-4 flex justify-between items-start">
+                          <div className="bg-white/90 text-black rounded-lg px-3 py-1 text-sm font-bold">
+                            <span className="line-through text-gray-500 text-xs">{sar(before)}</span>
+                          </div>
+                          <div className="bg-red-500 text-white rounded-full px-3 py-1 text-xs font-bold">
                             خصم {toArabic(tier.discountPct)}%
-                          </span>
+                          </div>
                         </div>
-                        <div className="text-sm text-emerald-100">
-                          كاش-باك: <span className="font-semibold">{sar(cash)}</span>
+
+                        {/* السعر الرئيسي */}
+                        <div className="absolute top-4 left-4">
+                          <div className="bg-white/95 text-black rounded-xl px-4 py-2 font-bold text-lg">
+                            {toArabic(after)} ريال
+                          </div>
                         </div>
+
+                        {/* الكاش باك */}
+                        <div className="absolute top-16 left-4">
+                          <div className="bg-emerald-500/90 text-white rounded-md px-3 py-1 text-sm">
+                            كاش-باك: {sar(cash)}
+                          </div>
+                        </div>
+
+                        {/* شريحة EMV */}
+                        <div className="absolute top-20 right-6">
+                          <div className={`w-12 h-9 ${style.chipColor} rounded-md shadow-md flex items-center justify-center`}>
+                            <div className="w-8 h-6 bg-yellow-600/30 rounded-sm grid grid-cols-2 gap-0.5 p-1">
+                              <div className="bg-yellow-800/50 rounded-sm"></div>
+                              <div className="bg-yellow-800/50 rounded-sm"></div>
+                              <div className="bg-yellow-800/50 rounded-sm"></div>
+                              <div className="bg-yellow-800/50 rounded-sm"></div>
+                            </div>
+                          </div>
+                        </div>
+
+                        {/* رقم البطاقة */}
+                        <div className="absolute top-36 right-6 font-mono text-xl tracking-[3px] drop-shadow-lg">
+                          {style.mask}
+                        </div>
+
+                        {/* معلومات الحامل */}
+                        <div className="absolute bottom-6 right-6">
+                          <div className="text-xs opacity-80 mb-1">اسم حامل البطاقة</div>
+                          <div className="text-sm font-bold">عضوية ماستر {tier.titleAr}</div>
+                          <div className="text-xs opacity-80 mt-2">تاريخ الانتهاء</div>
+                          <div className="text-sm">12/27</div>
+                        </div>
+
+                        {/* شعار Mastercard */}
+                        <div className="absolute bottom-6 left-6 flex items-center gap-1">
+                          <div className="w-4 h-4 rounded-full bg-red-500"></div>
+                          <div className="w-4 h-4 rounded-full bg-yellow-400 -ml-2"></div>
+                          <span className="text-xs font-bold ml-2 tracking-wider">MASTERCARD</span>
+                        </div>
+
+                        {/* تأثيرات بصرية */}
+                        <div className="absolute -top-10 -right-10 w-40 h-40 rounded-full bg-white/5 blur-2xl"></div>
+                        <div className="absolute -bottom-10 -left-10 w-32 h-32 rounded-full bg-black/10 blur-xl"></div>
                       </div>
 
-                      {/* أزرار ووصف مختصر */}
-                      <ul className="text-sm text-white/90 space-y-1 mb-5">
-                        <li>اشتراك 12 شهر</li>
-                        <li>دعم فني عبر البريد</li>
-                        <li>شهادة إنجاز رقمية</li>
-                      </ul>
-                      <Button 
-                        onClick={() => {
-                          setSelectedPlan({
-                            id: tier.slug,
-                            name: tier.titleAr,
-                            nameEn: tier.titleEn,
-                            price: toArabic(after),
-                            originalPrice: toArabic(before),
-                            discount: `${tier.discountPct}%`,
-                            cashback: toArabic(cash),
-                            cashbackPercent: `${tier.cashbackPct}%`,
-                          });
-                          setIsFormOpen(true);
-                        }}
-                        className="w-full rounded-xl bg-white text-black font-bold py-2 hover:opacity-90 transition"
-                      >
-                        <Crown className="w-4 h-4 ml-2" />
-                        اشترك الآن
-                      </Button>
+                      {/* معلومات العضوية */}
+                      <div className="mt-6 text-center space-y-3">
+                        <div className="text-lg font-bold text-gray-800">{tier.titleAr}</div>
+                        <div className="text-sm text-gray-500">{tier.titleEn}</div>
+                        
+                        <Button 
+                          onClick={() => {
+                            setSelectedPlan({
+                              id: tier.slug,
+                              name: tier.titleAr,
+                              nameEn: tier.titleEn,
+                              price: toArabic(after),
+                              originalPrice: toArabic(before),
+                              discount: `${tier.discountPct}%`,
+                              cashback: toArabic(cash),
+                              cashbackPercent: `${tier.cashbackPct}%`,
+                            });
+                            setIsFormOpen(true);
+                          }}
+                          className="w-full bg-black hover:bg-gray-800 text-white font-bold py-3 rounded-xl transition-all duration-300 hover:scale-105"
+                        >
+                          اشترك الآن
+                        </Button>
+                      </div>
                     </div>
                   );
                 })}
               </div>
-              <p className="mt-4 text-xs text-gray-600 text-center">
+              <p className="mt-8 text-xs text-gray-600 text-center">
                 * جميع الأرقام بصيغة عربية و"ريال" مثبتة بعد الرقم. الحساب تلقائي من القيم أعلاه.
               </p>
             </div>
@@ -522,11 +579,6 @@ const MasterMembership = () => {
                 <p className="text-lg mb-6">شريكك الموثوق في رحلة التعلم والتطوير المهني</p>
               </div>
             </div>
-          </TabsContent>
-
-          {/* Bank Cards Section */}
-          <TabsContent value="bank-cards" className="space-y-8">
-            <MembershipBankCards />
           </TabsContent>
         </Tabs>
       </div>
