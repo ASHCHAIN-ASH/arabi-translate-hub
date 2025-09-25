@@ -35,18 +35,14 @@ const NewContract = () => {
   const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
-    type_id: '',
     client_id: '',
-    template_id: '',
-    variables: JSON.stringify({
-      service_name: '—',
-      price: 0,
-      deliverables: ['—'],
-      payment_terms: '—'
-    }, null, 2),
-    vat_percent: 15,
+    service_type: '',
+    service_description: '',
+    service_price: 0,
     currency: 'SAR',
-    valid_until: ''
+    client_type: 'business',
+    payment_terms: 'دفعة واحدة',
+    contract_duration: '30 يوم'
   });
 
   const [calculations, setCalculations] = useState({
@@ -62,32 +58,18 @@ const NewContract = () => {
 
   const loadInitialData = async () => {
     try {
-      // تحميل أنواع العقود
-      const { data: types, error: typesError } = await supabase
-        .from('contract_types')
-        .select('id, name_ar')
-        .order('name_ar');
-
-      if (typesError) throw typesError;
-      setContractTypes(types || []);
-
       // تحميل العملاء
       const { data: clientsData, error: clientsError } = await supabase
         .from('clients')
-        .select('id, full_name')
+        .select('id, display_name')
         .order('created_at', { ascending: false });
 
       if (clientsError) throw clientsError;
-      setClients(clientsData || []);
-
-      // تحميل القوالب
-      const { data: templatesData, error: templatesError } = await supabase
-        .from('contract_templates')
-        .select('id, title, variables')
-        .order('created_at', { ascending: false });
-
-      if (templatesError) throw templatesError;
-      setTemplates(templatesData || []);
+      const formattedClients = clientsData?.map(client => ({
+        id: client.id,
+        full_name: client.display_name || 'غير محدد'
+      })) || [];
+      setClients(formattedClients);
 
     } catch (error) {
       console.error('Error loading data:', error);
@@ -108,9 +90,8 @@ const NewContract = () => {
 
   const calculateTotals = () => {
     try {
-      const variables = JSON.parse(formData.variables);
-      const price = Number(variables.price || 0);
-      const vatPercent = Number(formData.vat_percent || 0);
+      const price = Number(formData.service_price || 0);
+      const vatPercent = 15; // ضريبة ثابتة
       const vatAmount = +(price * vatPercent / 100).toFixed(2);
       const totalAmount = +(price + vatAmount).toFixed(2);
 
@@ -122,12 +103,12 @@ const NewContract = () => {
 
       toast.success('تم حساب الإجمالي');
     } catch (error) {
-      toast.error('خطأ في حساب الإجمالي - تأكد من صحة JSON');
+      toast.error('خطأ في حساب الإجمالي');
     }
   };
 
   const handleSave = async (sendAfterSave = false) => {
-    if (!formData.type_id || !formData.client_id || !formData.template_id) {
+    if (!formData.client_id || !formData.service_type) {
       toast.error('يرجى ملء جميع الحقول المطلوبة');
       return;
     }
@@ -137,17 +118,18 @@ const NewContract = () => {
       
       const contractData = {
         contract_number: contractNumber,
-        type_id: formData.type_id,
-        client_id: formData.client_id,
-        template_id: formData.template_id,
-        variables: JSON.parse(formData.variables),
-        subtotal: calculations.subtotal,
-        vat_percent: formData.vat_percent,
-        vat_amount: calculations.vat_amount,
-        total_amount: calculations.total_amount,
+        client_name: clients.find(c => c.id === formData.client_id)?.full_name || '',
+        client_email: 'temp@example.com', // يجب إضافة حقل البريد الإلكتروني للعميل
+        client_phone: '000000000', // يجب إضافة حقل الهاتف للعميل
+        client_type: formData.client_type,
+        service_type: formData.service_type,
+        service_description: formData.service_description,
+        service_price: calculations.total_amount,
         currency: formData.currency,
-        valid_until: formData.valid_until || null,
-        status: 'draft'
+        payment_terms: formData.payment_terms,
+        contract_duration: formData.contract_duration,
+        status: 'draft',
+        user_id: 'temp-user-id' // يجب ربطه بالمستخدم الحالي
       };
 
       const { data, error } = await supabase
@@ -207,24 +189,6 @@ const NewContract = () => {
               </div>
 
               <div>
-                <Label htmlFor="type_id">نوع العقد *</Label>
-                <Select value={formData.type_id} onValueChange={(value) => 
-                  setFormData(prev => ({ ...prev, type_id: value }))
-                }>
-                  <SelectTrigger>
-                    <SelectValue placeholder="اختر نوع العقد" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {contractTypes.map((type) => (
-                      <SelectItem key={type.id} value={type.id}>
-                        {type.name_ar}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-
-              <div>
                 <Label htmlFor="client_id">العميل *</Label>
                 <Select value={formData.client_id} onValueChange={(value) => 
                   setFormData(prev => ({ ...prev, client_id: value }))
@@ -243,33 +207,42 @@ const NewContract = () => {
               </div>
 
               <div>
-                <Label htmlFor="template_id">القالب *</Label>
-                <Select value={formData.template_id} onValueChange={(value) => 
-                  setFormData(prev => ({ ...prev, template_id: value }))
-                }>
-                  <SelectTrigger>
-                    <SelectValue placeholder="اختر القالب" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {templates.map((template) => (
-                      <SelectItem key={template.id} value={template.id}>
-                        {template.title}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
+                <Label htmlFor="service_type">نوع الخدمة *</Label>
+                <Input
+                  id="service_type"
+                  value={formData.service_type}
+                  onChange={(e) => setFormData(prev => ({ 
+                    ...prev, 
+                    service_type: e.target.value 
+                  }))}
+                  placeholder="أدخل نوع الخدمة"
+                />
+              </div>
+
+              <div>
+                <Label htmlFor="service_description">وصف الخدمة</Label>
+                <Textarea
+                  id="service_description"
+                  value={formData.service_description}
+                  onChange={(e) => setFormData(prev => ({ 
+                    ...prev, 
+                    service_description: e.target.value 
+                  }))}
+                  placeholder="أدخل وصف مفصل للخدمة"
+                  rows={3}
+                />
               </div>
 
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <Label htmlFor="vat_percent">الضريبة (%)</Label>
+                  <Label htmlFor="service_price">سعر الخدمة (قبل الضريبة)</Label>
                   <Input
-                    id="vat_percent"
+                    id="service_price"
                     type="number"
-                    value={formData.vat_percent}
+                    value={formData.service_price}
                     onChange={(e) => setFormData(prev => ({ 
                       ...prev, 
-                      vat_percent: Number(e.target.value) 
+                      service_price: Number(e.target.value) 
                     }))}
                   />
                 </div>
@@ -286,36 +259,45 @@ const NewContract = () => {
                 </div>
               </div>
 
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <Label htmlFor="client_type">نوع العميل</Label>
+                  <Select value={formData.client_type} onValueChange={(value) => 
+                    setFormData(prev => ({ ...prev, client_type: value }))
+                  }>
+                    <SelectTrigger>
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="business">شركة</SelectItem>
+                      <SelectItem value="individual">فرد</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div>
+                  <Label htmlFor="contract_duration">مدة العقد</Label>
+                  <Input
+                    id="contract_duration"
+                    value={formData.contract_duration}
+                    onChange={(e) => setFormData(prev => ({ 
+                      ...prev, 
+                      contract_duration: e.target.value 
+                    }))}
+                  />
+                </div>
+              </div>
+
               <div>
-                <Label htmlFor="valid_until">صالح حتى</Label>
+                <Label htmlFor="payment_terms">شروط الدفع</Label>
                 <Input
-                  id="valid_until"
-                  type="date"
-                  value={formData.valid_until}
+                  id="payment_terms"
+                  value={formData.payment_terms}
                   onChange={(e) => setFormData(prev => ({ 
                     ...prev, 
-                    valid_until: e.target.value 
+                    payment_terms: e.target.value 
                   }))}
                 />
               </div>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader>
-              <CardTitle>متغيرات العقد (JSON)</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <Textarea
-                value={formData.variables}
-                onChange={(e) => setFormData(prev => ({ 
-                  ...prev, 
-                  variables: e.target.value 
-                }))}
-                rows={10}
-                className="font-mono text-sm"
-                placeholder="أدخل متغيرات العقد بصيغة JSON"
-              />
             </CardContent>
           </Card>
         </div>
@@ -342,7 +324,7 @@ const NewContract = () => {
                   <span>{calculations.subtotal.toLocaleString()} {formData.currency}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span>الضريبة ({formData.vat_percent}%):</span>
+                  <span>الضريبة (15%):</span>
                   <span>{calculations.vat_amount.toLocaleString()} {formData.currency}</span>
                 </div>
                 <div className="flex justify-between font-bold border-t pt-2">

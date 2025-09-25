@@ -44,25 +44,21 @@ const ContractsManagement = () => {
     try {
       const { data, error } = await supabase
         .from('contracts')
-        .select(`
-          *,
-          clients!inner(full_name),
-          contract_types!inner(name_ar)
-        `)
+        .select('*')
         .order('created_at', { ascending: false });
 
       if (error) throw error;
 
       const formattedContracts = data?.map(contract => ({
         id: contract.id,
-        contract_no: contract.contract_number || `C-${new Date().getFullYear()}-0001`,
-        client_name: contract.clients?.full_name || 'غير محدد',
-        service_type: contract.contract_types?.name_ar || 'غير محدد',
-        total_amount: contract.total_amount || 0,
+        contract_no: contract.contract_number,
+        client_name: contract.client_name,
+        service_type: contract.service_type,
+        total_amount: contract.service_price || 0,
         currency: contract.currency || 'SAR',
         status: contract.status || 'draft',
         created_at: contract.created_at,
-        pdf_path: contract.pdf_path
+        pdf_path: contract.contract_pdf_url
       })) || [];
 
       setContracts(formattedContracts);
