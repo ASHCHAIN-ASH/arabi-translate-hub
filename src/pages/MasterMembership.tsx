@@ -42,13 +42,7 @@ const MasterMembership = () => {
       popular: false,
       gradient: 'from-slate-500 via-slate-400 to-slate-600',
       cardGradient: 'from-slate-600 via-slate-500 to-slate-700',
-      chipColor: 'bg-yellow-400',
-      features: [
-        'خصم 10% على جميع الخدمات',
-        'كاش باك 120 ريال سنوياً',
-        'دخول لدورات شهرية مجانية',
-        'شهادة مشاركة رقمية'
-      ]
+      chipColor: 'bg-yellow-400'
     },
     {
       id: 'gold',
@@ -61,14 +55,7 @@ const MasterMembership = () => {
       popular: true,
       gradient: 'from-yellow-500 via-amber-400 to-orange-500',
       cardGradient: 'from-amber-500 via-yellow-500 to-orange-600',
-      chipColor: 'bg-white',
-      features: [
-        'خصم 20% على جميع الخدمات',
-        'كاش باك 480 ريال سنوياً',
-        'دخول غير محدود للدورات',
-        'دعم فني مميز عبر البريد',
-        'شهادة إنجاز معتمدة'
-      ]
+      chipColor: 'bg-white'
     },
     {
       id: 'platinum',
@@ -81,41 +68,80 @@ const MasterMembership = () => {
       popular: false,
       gradient: 'from-gray-800 via-slate-700 to-black',
       cardGradient: 'from-gray-900 via-slate-800 to-black',
-      chipColor: 'bg-cyan-400',
-      features: [
-        'خصم 35% على جميع الخدمات',
-        'كاش باك 1,260 ريال سنوياً',
-        'استشارة شهرية مجانية مع خبير',
-        'أولوية في المسابقات الأكاديمية',
-        'شهادة إنجاز معتمدة + توثيق QR'
-      ]
+      chipColor: 'bg-cyan-400'
     }
   ];
 
   const benefits = [
     {
+      icon: Tag,
+      title: 'خصومات مميزة',
+      description: 'خصومات تصل إلى 35% على جميع خدمات الترجمة والبحث الأكاديمي',
+      color: 'text-red-500',
+      membership: ['10% للفضية', '20% للذهبية', '35% للبلاتينية']
+    },
+    {
+      icon: Gift,
+      title: 'كاش باك مضمون',
+      description: 'استرداد نقدي سنوي مضمون يصل إلى 1,260 ريال حسب نوع العضوية',
+      color: 'text-green-500',
+      membership: ['120 ريال للفضية', '480 ريال للذهبية', '1,260 ريال للبلاتينية']
+    },
+    {
       icon: BookOpen,
       title: 'مكتبة محتوى شاملة',
       description: 'وصول لآلاف المقالات والموارد التعليمية المتخصصة في الترجمة والأبحاث',
-      color: 'text-blue-500'
+      color: 'text-blue-500',
+      membership: ['محدود للفضية', 'متقدم للذهبية', 'غير محدود للبلاتينية']
     },
     {
       icon: Users,
       title: 'مجتمع من الخبراء',
       description: 'تفاعل مع شبكة من المترجمين والباحثين المحترفين من جميع أنحاء العالم',
-      color: 'text-green-500'
+      color: 'text-purple-500',
+      membership: ['نقاشات عامة', 'ورش عمل مباشرة', 'مجموعة VIP حصرية']
     },
     {
-      icon: Trophy,
-      title: 'تطوير مهني مستمر',
-      description: 'برامج تدريبية متقدمة وورش عمل تطبيقية لتطوير مهاراتك المهنية',
-      color: 'text-purple-500'
+      icon: Award,
+      title: 'شهادات معتمدة',
+      description: 'احصل على شهادات مشاركة وإنجاز معتمدة لتطوير سيرتك الذاتية',
+      color: 'text-yellow-500',
+      membership: ['شهادة مشاركة', 'شهادة إنجاز', 'شهادة + توثيق QR']
     },
     {
       icon: Shield,
       title: 'دعم متخصص',
       description: 'فريق دعم متاح على مدار الساعة للإجابة على استفساراتك وحل مشاكلك',
-      color: 'text-orange-500'
+      color: 'text-orange-500',
+      membership: ['دعم أساسي', 'دعم مميز', 'دعم أولوية VIP']
+    },
+    {
+      icon: Trophy,
+      title: 'المسابقات الأكاديمية',
+      description: 'شارك في المسابقات الأكاديمية واحصل على جوائز قيمة ومنح تعليمية',
+      color: 'text-indigo-500',
+      membership: ['مشاركة عادية', 'أولوية متوسطة', 'أولوية قصوى']
+    },
+    {
+      icon: UserCheck,
+      title: 'استشارات شخصية',
+      description: 'جلسات استشارية فردية مع خبراء متخصصين في مجال الترجمة والبحث',
+      color: 'text-cyan-500',
+      membership: ['غير متاح', 'ساعة شهرياً', 'غير محدود']
+    },
+    {
+      icon: Globe,
+      title: 'خدمات الترجمة المتقدمة',
+      description: 'أدوات ترجمة متطورة وخدمات ترجمة فورية لجميع اللغات',
+      color: 'text-pink-500',
+      membership: ['ترجمة أساسية', 'ترجمة متقدمة', 'ترجمة احترافية']
+    },
+    {
+      icon: Download,
+      title: 'موارد حصرية قابلة للتحميل',
+      description: 'قوالب، نماذج، وأدوات عمل متخصصة قابلة للتحميل والاستخدام',
+      color: 'text-teal-500',
+      membership: ['موارد أساسية', 'مكتبة متقدمة', 'جميع الموارد']
     }
   ];
 
@@ -173,11 +199,11 @@ const MasterMembership = () => {
       <Header />
       
       {/* Hero Section */}
-      <section className="relative py-20 bg-gradient-to-br from-purple-600 via-blue-600 to-indigo-700 overflow-hidden">
+      <section className="relative py-20 bg-gradient-to-br from-purple-600 via-blue-600 to-indigo-700 overflow-hidden" dir="rtl">
         <div className="absolute inset-0 opacity-10">
-          <div className="absolute top-10 right-10 w-32 h-32 bg-white rounded-full animate-pulse"></div>
-          <div className="absolute bottom-20 left-20 w-24 h-24 bg-white rounded-full animate-pulse" style={{animationDelay: '1s'}}></div>
-          <div className="absolute top-1/2 left-1/3 w-16 h-16 bg-white rounded-full animate-pulse" style={{animationDelay: '2s'}}></div>
+          <div className="absolute top-10 left-10 w-32 h-32 bg-white rounded-full animate-pulse"></div>
+          <div className="absolute bottom-20 right-20 w-24 h-24 bg-white rounded-full animate-pulse" style={{animationDelay: '1s'}}></div>
+          <div className="absolute top-1/2 right-1/3 w-16 h-16 bg-white rounded-full animate-pulse" style={{animationDelay: '2s'}}></div>
         </div>
         
         <div className="container mx-auto px-4 relative z-10">
@@ -222,7 +248,7 @@ const MasterMembership = () => {
         </div>
       </section>
 
-      <div className="container mx-auto px-4 py-16">
+      <div className="container mx-auto px-4 py-16" dir="rtl">
         <Tabs defaultValue="plans" className="space-y-8">
           
           {/* Tabs Navigation */}
@@ -248,7 +274,7 @@ const MasterMembership = () => {
           </div>
 
           {/* Membership Plans */}
-          <TabsContent value="plans" className="space-y-8">
+          <TabsContent value="plans" className="space-y-8" dir="rtl">
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
@@ -271,9 +297,9 @@ const MasterMembership = () => {
                     <div className="relative group cursor-pointer">
                       {/* Featured Badge */}
                       {plan.popular && (
-                        <div className="absolute -top-4 right-4 z-10">
+                        <div className="absolute -top-4 left-4 z-10">
                           <div className="bg-gradient-to-r from-orange-400 to-red-500 text-white px-4 py-2 rounded-full text-sm font-bold shadow-lg">
-                            <Star className="inline-block w-4 h-4 ml-1" />
+                            <Star className="inline-block w-4 h-4 mr-1" />
                             الأكثر طلبًا
                           </div>
                         </div>
@@ -292,7 +318,7 @@ const MasterMembership = () => {
                         <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/5 to-transparent"></div>
                         
                         {/* Bank Name & Logo */}
-                        <div className="absolute top-4 right-4 flex items-center gap-2">
+                        <div className="absolute top-4 left-4 flex items-center gap-2">
                           <div className="text-white/90 text-xs font-bold tracking-widest">
                             ARABI TRANSLATE
                           </div>
@@ -300,14 +326,14 @@ const MasterMembership = () => {
                         </div>
 
                         {/* Card Chip */}
-                        <div className={`absolute top-16 right-6 w-12 h-9 ${plan.chipColor} rounded-lg shadow-inner`}>
+                        <div className={`absolute top-16 left-6 w-12 h-9 ${plan.chipColor} rounded-lg shadow-inner`}>
                           <div className="w-full h-full bg-gradient-to-br from-yellow-300 to-yellow-600 rounded-lg flex items-center justify-center">
                             <div className="w-8 h-6 bg-gradient-to-br from-yellow-400 to-yellow-500 rounded-sm"></div>
                           </div>
                         </div>
 
                         {/* Contactless Payment Symbol */}
-                        <div className="absolute top-16 left-6">
+                        <div className="absolute top-16 right-6">
                           <div className="relative">
                             <div className="w-6 h-6 border-2 border-white/40 rounded-full"></div>
                             <div className="absolute -top-1 -left-1 w-8 h-8 border-2 border-white/30 rounded-full"></div>
@@ -316,27 +342,37 @@ const MasterMembership = () => {
                         </div>
 
                         {/* Card Number Pattern */}
-                        <div className="absolute top-28 right-6 text-white/60 text-sm font-mono tracking-widest">
+                        <div className="absolute top-28 left-6 text-white/60 text-sm font-mono tracking-widest">
                           •••• •••• •••• {plan.id === 'silver' ? '1234' : plan.id === 'gold' ? '5678' : '9012'}
                         </div>
 
                         {/* Membership Type */}
-                        <div className="absolute bottom-14 right-6">
+                        <div className="absolute bottom-14 left-6">
                           <div className="text-white/90 text-lg font-bold">{plan.name}</div>
                           <div className="text-white/70 text-xs font-bold tracking-widest">{plan.nameEn}</div>
                         </div>
 
+                        {/* Agency Name */}
+                        <div className="absolute bottom-6 left-6">
+                          <div className="text-white/80 text-xs font-bold tracking-wide">
+                            وكالة ماستر إيدو باث
+                          </div>
+                          <div className="text-white/60 text-xs">
+                            MASTER EDU PATH AGENCY
+                          </div>
+                        </div>
+
                         {/* Validity */}
-                        <div className="absolute bottom-6 right-6 text-white/60 text-xs">
+                        <div className="absolute bottom-14 right-6 text-white/60 text-xs">
                           <div>صالح حتى</div>
                           <div className="font-mono">12/25</div>
                         </div>
 
                         {/* Hologram Effect */}
-                        <div className="absolute bottom-6 left-6 w-12 h-8 bg-gradient-to-r from-cyan-400 via-purple-400 to-pink-400 rounded opacity-80 animate-pulse"></div>
+                        <div className="absolute bottom-6 right-6 w-12 h-8 bg-gradient-to-r from-cyan-400 via-purple-400 to-pink-400 rounded opacity-80 animate-pulse"></div>
 
                         {/* Price & Cashback */}
-                        <div className="absolute top-4 left-4">
+                        <div className="absolute top-4 right-4">
                           <div className="bg-white/20 backdrop-blur-sm rounded-lg p-3 border border-white/20">
                             <div className="text-white text-xs opacity-70 line-through">{plan.originalPrice} ريال</div>
                             <div className="text-white text-lg font-bold">{plan.price} ريال</div>
@@ -345,25 +381,10 @@ const MasterMembership = () => {
                         </div>
 
                         {/* Discount Badge */}
-                        <div className="absolute top-4 left-1/2 transform -translate-x-1/2">
+                        <div className="absolute top-4 right-1/2 transform translate-x-1/2">
                           <div className="bg-red-500 text-white px-3 py-1 rounded-full text-sm font-bold shadow-lg">
                             خصم {plan.discount}
                           </div>
-                        </div>
-                      </div>
-
-                      {/* Features Card */}
-                      <div className="mt-4 bg-white rounded-xl shadow-lg border border-gray-100 p-6">
-                        <h4 className="text-lg font-bold text-gray-800 mb-4 text-center">مميزات العضوية</h4>
-                        <div className="space-y-3">
-                          {plan.features.map((feature, idx) => (
-                            <div key={idx} className="flex items-center gap-3 text-gray-700">
-                              <div className="w-6 h-6 rounded-full bg-green-100 flex items-center justify-center">
-                                <CheckCircle className="w-4 h-4 text-green-600" />
-                              </div>
-                              <span className="text-sm font-medium">{feature}</span>
-                            </div>
-                          ))}
                         </div>
                       </div>
 
@@ -406,41 +427,104 @@ const MasterMembership = () => {
           </TabsContent>
 
           {/* Benefits Section */}
-          <TabsContent value="benefits" className="space-y-8">
+          <TabsContent value="benefits" className="space-y-8" dir="rtl">
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ duration: 0.6 }}
             >
-              <h2 className="text-3xl font-bold text-center mb-8 text-gray-800">
-                لماذا عضوية ماستر؟
+              <h2 className="text-3xl font-bold text-center mb-12 text-gray-800">
+                مزايا عضوية ماستر
               </h2>
               
-              <div className="grid gap-8 md:grid-cols-2 max-w-5xl mx-auto">
+              <div className="grid gap-6 lg:grid-cols-2 max-w-7xl mx-auto">
                 {benefits.map((benefit, index) => (
                   <motion.div
                     key={index}
-                    initial={{ opacity: 0, x: index % 2 === 0 ? -30 : 30 }}
+                    initial={{ opacity: 0, x: index % 2 === 0 ? -50 : 50 }}
                     animate={{ opacity: 1, x: 0 }}
+                    whileHover={{ scale: 1.02, y: -5 }}
                     transition={{ delay: index * 0.1, duration: 0.6 }}
                   >
-                    <Card className="p-6 hover:shadow-lg transition-shadow duration-300 h-full">
-                      <div className="flex items-center gap-4 mb-4">
-                        <div className={`w-12 h-12 rounded-lg bg-gray-100 flex items-center justify-center`}>
-                          <benefit.icon className={`h-6 w-6 ${benefit.color}`} />
+                    <Card className="p-6 hover:shadow-2xl transition-all duration-500 h-full border-r-4 border-r-primary/20 hover:border-r-primary">
+                      <div className="flex items-start gap-4 mb-4">
+                        <motion.div 
+                          className={`w-16 h-16 rounded-xl bg-gradient-to-br from-gray-50 to-gray-100 flex items-center justify-center shadow-lg`}
+                          whileHover={{ rotate: 360 }}
+                          transition={{ duration: 0.5 }}
+                        >
+                          <benefit.icon className={`h-8 w-8 ${benefit.color}`} />
+                        </motion.div>
+                        <div className="flex-1">
+                          <h3 className="text-xl font-bold text-gray-800 mb-2">{benefit.title}</h3>
+                          <p className="text-gray-600 leading-relaxed mb-4">{benefit.description}</p>
+                          
+                          {/* Membership Benefits */}
+                          <div className="space-y-2">
+                            <h4 className="text-sm font-semibold text-gray-700 mb-2">مستويات العضوية:</h4>
+                            {benefit.membership.map((level, idx) => (
+                              <motion.div 
+                                key={idx}
+                                initial={{ opacity: 0, x: 20 }}
+                                animate={{ opacity: 1, x: 0 }}
+                                transition={{ delay: (index * 0.1) + (idx * 0.05) }}
+                                className="flex items-center gap-3"
+                              >
+                                <div className={`w-3 h-3 rounded-full ${
+                                  idx === 0 ? 'bg-slate-400' : 
+                                  idx === 1 ? 'bg-yellow-400' : 
+                                  'bg-gray-700'
+                                } shadow-sm`}></div>
+                                <span className="text-sm text-gray-600 font-medium">{level}</span>
+                              </motion.div>
+                            ))}
+                          </div>
                         </div>
-                        <h3 className="text-xl font-bold text-gray-800">{benefit.title}</h3>
                       </div>
-                      <p className="text-gray-600 leading-relaxed">{benefit.description}</p>
                     </Card>
                   </motion.div>
                 ))}
               </div>
+              
+              {/* CTA Section */}
+              <motion.div
+                initial={{ opacity: 0, y: 30 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.8, duration: 0.6 }}
+                className="text-center mt-12"
+              >
+                <div className="bg-gradient-to-r from-purple-600 via-blue-600 to-indigo-700 rounded-2xl p-8 text-white">
+                  <motion.div
+                    animate={{ rotate: [0, 5, -5, 0] }}
+                    transition={{ duration: 2, repeat: Infinity, repeatDelay: 3 } as any}
+                  >
+                    <Crown className="w-16 h-16 mx-auto mb-4 text-yellow-300" />
+                  </motion.div>
+                  <h3 className="text-2xl font-bold mb-4">وكالة ماستر إيدو باث</h3>
+                  <p className="text-lg opacity-90 mb-6">
+                    شريكك الموثوق في رحلة التعلم والتطوير المهني
+                  </p>
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-center">
+                    <div className="bg-white/10 rounded-lg p-4">
+                      <Users className="w-8 h-8 mx-auto mb-2" />
+                      <div className="text-sm">أكثر من 10,000 عضو</div>
+                    </div>
+                    <div className="bg-white/10 rounded-lg p-4">
+                      <BookOpen className="w-8 h-8 mx-auto mb-2" />
+                      <div className="text-sm">أكثر من 500 مورد تعليمي</div>
+                    </div>
+                    <div className="bg-white/10 rounded-lg p-4">
+                      <Award className="w-8 h-8 mx-auto mb-2" />
+                      <div className="text-sm">أكثر من 100 شهادة معتمدة</div>
+                    </div>
+                  </div>
+                </div>
+              </motion.div>
             </motion.div>
           </TabsContent>
 
           {/* Resources Section */}
-          <TabsContent value="resources" className="space-y-8">
+          <TabsContent value="resources" className="space-y-8" dir="rtl">
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
@@ -481,7 +565,7 @@ const MasterMembership = () => {
           </TabsContent>
 
           {/* Testimonials Section */}
-          <TabsContent value="testimonials" className="space-y-8">
+          <TabsContent value="testimonials" className="space-y-8" dir="rtl">
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
