@@ -19,6 +19,16 @@ const items = [
     icon: FileText,
   },
   {
+    title: 'إنشاء عقد جديد',
+    url: '/adminmaster/contracts/new',
+    icon: FileSignature,
+  },
+  {
+    title: 'قوالب العقود',
+    url: '/adminmaster/contract-templates',
+    icon: FileText,
+  },
+  {
     title: 'الفواتير الضريبية',
     url: '/adminmaster/invoices',
     icon: Receipt,

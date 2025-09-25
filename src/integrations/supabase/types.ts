@@ -1440,6 +1440,68 @@ export type Database = {
           },
         ]
       }
+      contract_templates: {
+        Row: {
+          body_html: string
+          created_at: string | null
+          id: string
+          is_default: boolean | null
+          title: string
+          type_id: string | null
+          variables: Json
+        }
+        Insert: {
+          body_html: string
+          created_at?: string | null
+          id?: string
+          is_default?: boolean | null
+          title: string
+          type_id?: string | null
+          variables?: Json
+        }
+        Update: {
+          body_html?: string
+          created_at?: string | null
+          id?: string
+          is_default?: boolean | null
+          title?: string
+          type_id?: string | null
+          variables?: Json
+        }
+        Relationships: [
+          {
+            foreignKeyName: "contract_templates_type_id_fkey"
+            columns: ["type_id"]
+            isOneToOne: false
+            referencedRelation: "contract_types"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      contract_types: {
+        Row: {
+          code: string
+          created_at: string | null
+          description: string | null
+          id: string
+          name_ar: string
+        }
+        Insert: {
+          code: string
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          name_ar: string
+        }
+        Update: {
+          code?: string
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          name_ar?: string
+        }
+        Relationships: []
+      }
       contracts: {
         Row: {
           authorized_person: string | null
@@ -1684,6 +1746,44 @@ export type Database = {
           status?: string
         }
         Relationships: []
+      }
+      email_logs: {
+        Row: {
+          contract_id: string | null
+          created_at: string | null
+          error: string | null
+          id: string
+          status: string | null
+          subject: string | null
+          to_email: string | null
+        }
+        Insert: {
+          contract_id?: string | null
+          created_at?: string | null
+          error?: string | null
+          id?: string
+          status?: string | null
+          subject?: string | null
+          to_email?: string | null
+        }
+        Update: {
+          contract_id?: string | null
+          created_at?: string | null
+          error?: string | null
+          id?: string
+          status?: string | null
+          subject?: string | null
+          to_email?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "email_logs_contract_id_fkey"
+            columns: ["contract_id"]
+            isOneToOne: false
+            referencedRelation: "contracts"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       email_outbox: {
         Row: {
@@ -5758,6 +5858,10 @@ export type Database = {
         Returns: string
       }
       migrate_tenant_data: {
+        Args: Record<PropertyKey, never>
+        Returns: string
+      }
+      next_contract_number: {
         Args: Record<PropertyKey, never>
         Returns: string
       }
