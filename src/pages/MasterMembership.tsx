@@ -251,25 +251,34 @@ const MasterMembership = () => {
               مزايا عضوية ماستر
             </h2>
             
-            <div className="grid gap-6 md:grid-cols-2 max-w-4xl mx-auto">
+            <div className="flex flex-col gap-6 max-w-3xl mx-auto">
               {benefits.map((benefit, index) => (
-                <Card key={index} className="p-6">
-                  <div className="flex items-center gap-4 mb-4">
-                    <div className="w-12 h-12 rounded-lg bg-gray-100 flex items-center justify-center">
-                      <benefit.icon className={`h-6 w-6 ${benefit.color}`} />
-                    </div>
-                    <h3 className="text-xl font-bold">{benefit.title}</h3>
-                  </div>
-                  <p className="text-gray-600 mb-4">{benefit.description}</p>
-                  <div className="space-y-2">
-                    {benefit.membership.map((level, idx) => (
-                      <div key={idx} className="flex items-center gap-2">
-                        <CheckCircle className="h-4 w-4 text-green-500" />
-                        <span className="text-sm">{level}</span>
+                <motion.div
+                  key={index}
+                  initial={{ opacity: 0, x: -30 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: index * 0.1, duration: 0.6 }}
+                >
+                  <Card className="p-8 hover:shadow-lg transition-all duration-300 border-l-4 border-purple-500">
+                    <div className="flex items-start gap-6">
+                      <div className="w-16 h-16 rounded-xl bg-gradient-to-br from-purple-100 to-blue-100 flex items-center justify-center flex-shrink-0">
+                        <benefit.icon className={`h-8 w-8 ${benefit.color}`} />
                       </div>
-                    ))}
-                  </div>
-                </Card>
+                      <div className="flex-1">
+                        <h3 className="text-2xl font-bold mb-3 text-gray-800">{benefit.title}</h3>
+                        <p className="text-gray-600 mb-4 text-lg leading-relaxed">{benefit.description}</p>
+                        <div className="grid gap-3 sm:grid-cols-2">
+                          {benefit.membership.map((level, idx) => (
+                            <div key={idx} className="flex items-center gap-3">
+                              <CheckCircle className="h-5 w-5 text-green-500 flex-shrink-0" />
+                              <span className="text-gray-700">{level}</span>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                  </Card>
+                </motion.div>
               ))}
             </div>
 
