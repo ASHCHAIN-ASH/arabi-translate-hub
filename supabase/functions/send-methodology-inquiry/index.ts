@@ -204,14 +204,30 @@ const handler = async (req: Request): Promise<Response> => {
               box-shadow: 0 4px 6px rgba(0,0,0,0.05);
             }
             .section h3 {
-              color: #667eea;
-              margin-bottom: 15px;
-              font-size: 18px;
-              font-weight: 600;
+              color: #4c51bf;
+              margin-bottom: 18px;
+              font-size: 20px;
+              font-weight: 700;
               display: flex;
               align-items: center;
-              gap: 8px;
+              gap: 12px;
+              padding: 12px 0;
+              border-bottom: 2px solid #e2e8f0;
             }
+            .icon {
+              width: 28px;
+              height: 28px;
+              display: inline-flex;
+              align-items: center;
+              justify-content: center;
+              border-radius: 8px;
+              font-size: 16px;
+            }
+            .icon-user { background: linear-gradient(135deg, #4299e1, #3182ce); }
+            .icon-research { background: linear-gradient(135deg, #38a169, #2f855a); }
+            .icon-methodology { background: linear-gradient(135deg, #d69e2e, #b7791f); }
+            .icon-notes { background: linear-gradient(135deg, #e53e3e, #c53030); }
+            .icon-time { background: linear-gradient(135deg, #805ad5, #6b46c1); }
             .field { 
               margin: 12px 0; 
               display: flex;
@@ -278,7 +294,7 @@ const handler = async (req: Request): Promise<Response> => {
               </div>
 
               <div class="section">
-                <h3>👤 معلومات الباحث</h3>
+                <h3><span class="icon icon-user">👤</span> معلومات الباحث</h3>
                 <div class="field"><span class="label">الاسم الكامل:</span> <span class="value">${inquiryData.fullName}</span></div>
                 <div class="field"><span class="label">البريد الإلكتروني:</span> <span class="value">${inquiryData.email}</span></div>
                 <div class="field"><span class="label">رقم الهاتف:</span> <span class="value">${inquiryData.phone}</span></div>
@@ -287,7 +303,7 @@ const handler = async (req: Request): Promise<Response> => {
               </div>
 
               <div class="section">
-                <h3>🎯 معلومات البحث</h3>
+                <h3><span class="icon icon-research">🎯</span> معلومات البحث</h3>
                 <div class="field"><span class="label">مجال البحث:</span> <span class="value">${getFieldLabel('researchField', inquiryData.researchField)}</span></div>
                 <div class="field"><span class="label">نوع المنهجية:</span> <span class="value">${getFieldLabel('methodologyType', inquiryData.methodologyType)}</span></div>
                 <div class="field"><span class="label">عنوان البحث:</span> <span class="value">${inquiryData.researchTitle}</span></div>
@@ -295,7 +311,7 @@ const handler = async (req: Request): Promise<Response> => {
               </div>
 
               <div class="section">
-                <h3>🔬 تفاصيل المنهجية</h3>
+                <h3><span class="icon icon-methodology">🔬</span> تفاصيل المنهجية</h3>
                 ${inquiryData.expectedDuration ? `<div class="field"><span class="label">المدة المتوقعة:</span> <span class="value">${getFieldLabel('expectedDuration', inquiryData.expectedDuration)}</span></div>` : ''}
                 ${inquiryData.budgetRange ? `<div class="field"><span class="label">الميزانية المتوقعة:</span> <span class="value">${getFieldLabel('budgetRange', inquiryData.budgetRange)}</span></div>` : ''}
                 ${inquiryData.targetPopulation ? `<div class="field"><span class="label">العينة المستهدفة:</span> <span class="value">${inquiryData.targetPopulation}</span></div>` : ''}
@@ -306,13 +322,13 @@ const handler = async (req: Request): Promise<Response> => {
 
               ${inquiryData.additionalNotes ? `
               <div class="section">
-                <h3>📝 ملاحظات إضافية</h3>
+                <h3><span class="icon icon-notes">📝</span> ملاحظات إضافية</h3>
                 <div class="field"><span class="value">${inquiryData.additionalNotes}</span></div>
               </div>
               ` : ''}
 
               <div class="section">
-                <h3>🕒 معلومات الطلب</h3>
+                <h3><span class="icon icon-time">🕒</span> معلومات الطلب</h3>
                 <div class="field"><span class="label">تاريخ الطلب:</span> <span class="value">${currentDate}</span></div>
                 <div class="field"><span class="label">نوع الخدمة:</span> <span class="value">تصميم منهجية علمية</span></div>
               </div>
@@ -426,14 +442,28 @@ const handler = async (req: Request): Promise<Response> => {
               box-shadow: 0 4px 6px rgba(0,0,0,0.05);
             }
             .section h3 {
-              color: #667eea;
-              margin-bottom: 15px;
-              font-size: 18px;
-              font-weight: 600;
+              color: #4c51bf;
+              margin-bottom: 18px;
+              font-size: 20px;
+              font-weight: 700;
               display: flex;
               align-items: center;
-              gap: 8px;
+              gap: 12px;
+              padding: 12px 0;
+              border-bottom: 2px solid #e2e8f0;
             }
+            .icon {
+              width: 28px;
+              height: 28px;
+              display: inline-flex;
+              align-items: center;
+              justify-content: center;
+              border-radius: 8px;
+              font-size: 16px;
+            }
+            .icon-summary { background: linear-gradient(135deg, #38a169, #2f855a); }
+            .icon-timeline { background: linear-gradient(135deg, #805ad5, #6b46c1); }
+            .icon-benefits { background: linear-gradient(135deg, #d69e2e, #b7791f); }
             .section ul, .section ol {
               text-align: right;
               padding-right: 20px;
@@ -500,7 +530,7 @@ const handler = async (req: Request): Promise<Response> => {
               </div>
 
               <div class="section">
-                <h3>📋 ملخص طلبك:</h3>
+                <h3><span class="icon icon-summary">📋</span> ملخص طلبك:</h3>
                 <ul style="text-align: right;">
                   <li><strong>مجال البحث:</strong> ${getFieldLabel('researchField', inquiryData.researchField)}</li>
                   <li><strong>نوع المنهجية:</strong> ${getFieldLabel('methodologyType', inquiryData.methodologyType)}</li>
@@ -510,7 +540,7 @@ const handler = async (req: Request): Promise<Response> => {
               </div>
 
               <div class="section">
-                <h3>⏰ الخطوات التالية:</h3>
+                <h3><span class="icon icon-timeline">⏰</span> الخطوات التالية:</h3>
                 <div class="timeline-item">
                   <strong>1. المراجعة الأولية:</strong> سيقوم فريق الخبراء بمراجعة طلبك خلال ساعة واحدة
                 </div>
@@ -526,7 +556,7 @@ const handler = async (req: Request): Promise<Response> => {
               </div>
 
               <div class="section">
-                <h3>🎓 ما يمكنك توقعه:</h3>
+                <h3><span class="icon icon-benefits">🎓</span> ما يمكنك توقعه:</h3>
                 <ul style="text-align: right;">
                   <li>منهجية علمية شاملة ومتطورة</li>
                   <li>تصميم مخصص لمجال بحثك</li>
