@@ -32,7 +32,7 @@ const AcademicStats = () => {
     },
     {
       icon: Award,
-      value: "99.8%",
+      value: "100%",
       label: "نسبة النجاح",
       sublabel: "Success Rate",
       description: "معدل رضا استثنائي مع ضمان الجودة",
