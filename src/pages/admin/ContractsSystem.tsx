@@ -164,13 +164,6 @@ const ContractsSystem = () => {
     try {
       setLoading(true);
       
-      // Get current user
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) {
-        toast.error('يجب تسجيل الدخول أولاً');
-        return;
-      }
-      
       const contractData = {
         contract_number: contractNumber,
         client_name: formData.client_name,
@@ -184,7 +177,7 @@ const ContractsSystem = () => {
         payment_terms: formData.payment_terms,
         contract_duration: formData.contract_duration,
         status: 'draft',
-        user_id: user.id
+        user_id: 'admin-user-id'
       };
 
       console.log('Saving contract data:', contractData);
