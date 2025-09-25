@@ -110,8 +110,8 @@ const Footer = () => {
             </div>
             
             <p className="text-white/80 text-sm md:text-base leading-relaxed">
-              نحن الشريك الموثوق لأكثر من 10,000 عميل في جميع أنحاء المملكة. نقدم خدمات ترجمة احترافية 
-              بأكثر من 100 لغة مع ضمان الجودة والسرعة.
+              نحن الشريك الموثوق لأكثر من 10,000 عميل في جميع أنحاء المملكة. 
+              نقدم خدمات ترجمة احترافية بأكثر من 100 لغة مع ضمان الجودة والسرعة.
             </p>
 
             {/* Trust Indicators */}
@@ -318,13 +318,15 @@ const Footer = () => {
           transition={{ delay: 0.5, duration: 0.5 }}
           className="border-t border-white/20 mt-12 md:mt-16 pt-6 md:pt-8"
         >
-          <div className="flex flex-col lg:flex-row justify-between items-center gap-4 md:gap-6">
-            <p className="text-white/60 text-sm text-center lg:text-right flex items-center gap-2">
-              <Globe className="h-4 w-4 flex-shrink-0" />
-              © {currentYear} وكالة ماستر إيدو باث - للحلول التعليمية المتقدمة. جميع الحقوق محفوظة.
-            </p>
+          <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4 md:gap-6">
+            <div className="flex-1 max-w-lg">
+              <p className="text-white/60 text-sm text-center lg:text-right flex items-center gap-2 flex-wrap">
+                <Globe className="h-4 w-4 flex-shrink-0" />
+                <span>© {currentYear} وكالة ماستر إيدو باث - للحلول التعليمية المتقدمة. جميع الحقوق محفوظة.</span>
+              </p>
+            </div>
             
-            <div className="flex flex-wrap items-center justify-center gap-4 md:gap-6 text-sm">
+            <div className="flex flex-wrap items-center justify-center lg:justify-end gap-4 md:gap-6 text-sm">
               {[
                 { name: 'شروط الاستخدام', href: '/terms' },
                 { name: 'سياسة الخصوصية', href: '/privacy' },
@@ -333,7 +335,7 @@ const Footer = () => {
                 <a 
                   key={link.name}
                   href={link.href}
-                  className="text-white/70 hover:text-white transition-colors relative group hover:underline"
+                  className="text-white/70 hover:text-white transition-colors relative group hover:underline whitespace-nowrap"
                 >
                   {link.name}
                 </a>
@@ -341,19 +343,19 @@ const Footer = () => {
             </div>
             
             {/* شعار اليوم الوطني في الفوتر */}
-            <div className="flex items-center gap-2 md:gap-3 mt-4 lg:mt-0">
-              <div className="relative">
+            <div className="flex items-center gap-2 md:gap-3 mt-2 lg:mt-0 mx-auto lg:mx-0">
+              <div className="relative flex-shrink-0">
                 <img 
                   src="/assets/national-day-logo-original.webp" 
                   alt="عزنا بطبعنا - اليوم الوطني السعودي ٩٥"
                   className="h-8 w-auto md:h-10 drop-shadow-lg opacity-80 hover:opacity-100 transition-opacity"
                 />
               </div>
-              <div className="text-right">
-                <p className="text-xs text-white/70 font-medium">
+              <div className="text-right min-w-0">
+                <p className="text-xs text-white/70 font-medium whitespace-nowrap">
                   🇸🇦 فخورون بوطننا الغالي
                 </p>
-                <p className="text-xs text-yellow-400 font-bold">
+                <p className="text-xs text-yellow-400 font-bold whitespace-nowrap">
                   عزنا بطبعنا - اليوم الوطني ٩٥
                 </p>
               </div>
