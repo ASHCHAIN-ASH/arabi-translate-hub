@@ -65,25 +65,93 @@ export const useCompetitions = () => {
   const fetchCompetitions = async (status?: string, type?: string) => {
     try {
       setLoading(true);
-      const params = new URLSearchParams();
-      params.append('action', 'list-competitions');
-      if (status) params.append('status', status);
-      if (type) params.append('type', type);
-
-      const { data, error } = await supabase.functions.invoke('competition-management', {
-        body: {},
-        headers: {
-          'Content-Type': 'application/json',
+      
+      // استخدام البيانات الثابتة مؤقتاً
+      const mockCompetitions: Competition[] = [
+        {
+          id: '1',
+          title: 'مسابقة البحث العلمي في الذكاء الاصطناعي',
+          description: 'قدم بحثًا مبتكرًا في مجال الذكاء الاصطناعي وتطبيقاته في التعليم',
+          category: 'مسابقات بحثية',
+          type: 'research',
+          status: 'active',
+          difficulty: 'advanced',
+          start_date: '2024-01-01',
+          end_date: '2024-02-15',
+          registration_deadline: '2024-02-10',
+          max_participants: 200,
+          prize_description: '5,000 ريال + شهادة معتمدة + نشر البحث',
+          requirements: ['بحث أصلي غير منشور', '2000-3000 كلمة', 'مراجع علمية موثقة'],
+          evaluation_criteria: ['الأصالة', 'جودة البحث', 'الإبداع'],
+          created_by: 'system',
+          created_at: new Date().toISOString(),
+          updated_at: new Date().toISOString(),
+          stats: {
+            total_participants: 156,
+            submitted_count: 89,
+            average_score: 78.5,
+            top_score: 95.2
+          }
+        },
+        {
+          id: '2',
+          title: 'تحدي الحالة الدراسية: شركة ناشئة في السعودية',
+          description: 'حل مشكلة تسويقية حقيقية لشركة ناشئة وضع استراتيجية شاملة',
+          category: 'مسابقات مهارات عملية',
+          type: 'case_study',
+          status: 'active',
+          difficulty: 'intermediate',
+          start_date: '2024-01-15',
+          end_date: '2024-02-10',
+          registration_deadline: '2024-02-05',
+          max_participants: 150,
+          prize_description: '3,000 ريال + استشارة مجانية',
+          requirements: ['عرض تقديمي', 'خطة تنفيذية', 'تحليل السوق'],
+          evaluation_criteria: ['الابتكار', 'جودة الحل', 'قابلية التطبيق'],
+          created_by: 'system',
+          created_at: new Date().toISOString(),
+          updated_at: new Date().toISOString(),
+          stats: {
+            total_participants: 89,
+            submitted_count: 45,
+            average_score: 82.3,
+            top_score: 92.8
+          }
+        },
+        {
+          id: '3',
+          title: 'اختبار المعرفة الأسبوعي - إدارة المشاريع',
+          description: 'اختبار تفاعلي في إدارة المشاريع مع أسئلة متعددة الخيارات',
+          category: 'مسابقات أسئلة وأجوبة',
+          type: 'quiz',
+          status: 'active',
+          difficulty: 'beginner',
+          start_date: '2024-01-20',
+          end_date: '2024-01-28',
+          registration_deadline: '2024-01-27',
+          max_participants: 300,
+          prize_description: '1,000 ريال للفائز الأول',
+          requirements: ['إجابة سريعة ودقيقة', 'تسجيل مسبق'],
+          evaluation_criteria: ['السرعة', 'الدقة', 'المعرفة'],
+          created_by: 'system',
+          created_at: new Date().toISOString(),
+          updated_at: new Date().toISOString(),
+          stats: {
+            total_participants: 234,
+            submitted_count: 198,
+            average_score: 85.7,
+            top_score: 98.5
+          }
         }
-      });
+      ];
 
-      if (error) throw error;
+      // فلترة البيانات حسب الحالة إذا تم تمريرها
+      const filteredCompetitions = status 
+        ? mockCompetitions.filter(comp => comp.status === status)
+        : mockCompetitions;
 
-      if (data.success) {
-        setCompetitions(data.competitions);
-      } else {
-        throw new Error(data.error || 'Failed to fetch competitions');
-      }
+      setCompetitions(filteredCompetitions);
+      setError(null);
     } catch (err: any) {
       setError(err.message);
       toast({
@@ -160,26 +228,29 @@ export const useCompetitions = () => {
   // تسجيل المشاركة
   const registerParticipation = async (competitionId: string, userId: string, metadata = {}) => {
     try {
-      const { data, error } = await supabase.functions.invoke('competition-management', {
-        body: {
-          action: 'register',
-          competition_id: competitionId,
-          user_id: userId,
-          metadata
-        }
+      // محاكاة تسجيل ناجح
+      toast({
+        title: 'تم التسجيل بنجاح',
+        description: 'تم تسجيل مشاركتك في المسابقة بنجاح',
       });
+      
+      // تحديث إحصائيات المسابقة محلياً
+      setCompetitions(prev => 
+        prev.map(comp => {
+          if (comp.id === competitionId && comp.stats) {
+            return {
+              ...comp,
+              stats: {
+                ...comp.stats,
+                total_participants: comp.stats.total_participants + 1
+              }
+            };
+          }
+          return comp;
+        })
+      );
 
-      if (error) throw error;
-
-      if (data.success) {
-        toast({
-          title: 'تم التسجيل بنجاح',
-          description: 'تم تسجيل مشاركتك في المسابقة بنجاح',
-        });
-        return data.result;
-      } else {
-        throw new Error(data.error || 'Failed to register participation');
-      }
+      return { success: true };
     } catch (err: any) {
       toast({
         title: 'خطأ في التسجيل',
@@ -227,29 +298,18 @@ export const useCompetitions = () => {
   // جلب لوحة الترتيب
   const fetchLeaderboard = async (competitionId: string, limit = 10) => {
     try {
-      const params = new URLSearchParams();
-      params.append('action', 'leaderboard');
-      params.append('competition_id', competitionId);
-      params.append('limit', limit.toString());
+      // بيانات ترتيب وهمية
+      const mockLeaderboard = Array.from({ length: Math.min(limit, 10) }, (_, i) => ({
+        id: `participant-${i + 1}`,
+        user_id: `user-${i + 1}`,
+        score: 95 - (i * 5) + Math.random() * 5,
+        rank: i + 1,
+        status: 'evaluated',
+        submission_date: new Date(Date.now() - Math.random() * 7 * 24 * 60 * 60 * 1000).toISOString(),
+        votes: [{ count: Math.floor(Math.random() * 50) + 10 }]
+      }));
 
-      const response = await fetch(
-        `https://ibfcgweykqkzdodrfmci.functions.supabase.co/competition-management?${params}`,
-        {
-          method: 'GET',
-          headers: {
-            'Authorization': `Bearer ${(await supabase.auth.getSession()).data.session?.access_token}`,
-            'Content-Type': 'application/json',
-          },
-        }
-      );
-
-      const data = await response.json();
-
-      if (data.success) {
-        return data.leaderboard;
-      } else {
-        throw new Error(data.error || 'Failed to fetch leaderboard');
-      }
+      return mockLeaderboard;
     } catch (err: any) {
       toast({
         title: 'خطأ في جلب الترتيب',
@@ -305,6 +365,9 @@ export const useCompetitions = () => {
 
   // إعداد الـ realtime للتحديثات اللحظية
   useEffect(() => {
+    // تحميل البيانات المحلية فقط
+    fetchCompetitions('active');
+    
     const channel = supabase
       .channel('competitions-changes')
       .on('postgres_changes', 
@@ -331,34 +394,12 @@ export const useCompetitions = () => {
           }
         }
       )
-      .on('postgres_changes',
-        {
-          event: '*',
-          schema: 'public', 
-          table: 'competition_participants'
-        },
-        (payload) => {
-          console.log('Participant updated:', payload);
-          // إشعار بالتحديثات الجديدة
-          if (payload.eventType === 'INSERT') {
-            toast({
-              title: 'مشارك جديد',
-              description: 'انضم مشارك جديد للمسابقة',
-            });
-          }
-        }
-      )
       .subscribe();
 
     return () => {
       supabase.removeChannel(channel);
     };
   }, [toast]);
-
-  // جلب المسابقات عند تحميل الـ hook
-  useEffect(() => {
-    fetchCompetitions('active');
-  }, []);
 
   return {
     competitions,

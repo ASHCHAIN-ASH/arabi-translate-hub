@@ -43,110 +43,6 @@ const AcademicCompetitions = () => {
     window.location.href = `/academic-competitions/${competitionId}`;
   };
 
-  const activeCompetitions = [
-    {
-      id: 1,
-      title: "مسابقة البحث العلمي في الذكاء الاصطناعي",
-      type: "research",
-      category: "مسابقات بحثية",
-      description: "قدم بحثًا مبتكرًا في مجال الذكاء الاصطناعي وتطبيقاته في التعليم",
-      deadline: "2024-02-15",
-      prize: "5,000 ريال + شهادة معتمدة + نشر البحث",
-      participants: 156,
-      status: "جارية",
-      difficulty: "متقدم",
-      duration: "30 يوم",
-      requirements: ["بحث أصلي غير منشور", "2000-3000 كلمة", "مراجع علمية موثقة"],
-      icon: FileText,
-      color: "text-blue-500",
-      bgColor: "bg-blue-50"
-    },
-    {
-      id: 2,
-      title: "تحدي الحالة الدراسية: شركة ناشئة في السعودية",
-      type: "case-study",
-      category: "مسابقات مهارات عملية",
-      description: "حل مشكلة تسويقية حقيقية لشركة ناشئة وضع استراتيجية شاملة",
-      deadline: "2024-02-10",
-      prize: "3,000 ريال + استشارة مجانية",
-      participants: 89,
-      status: "جارية",
-      difficulty: "متوسط",
-      duration: "15 يوم",
-      requirements: ["عرض تقديمي", "خطة تنفيذية", "تحليل السوق"],
-      icon: Target,
-      color: "text-green-500",
-      bgColor: "bg-green-50"
-    },
-    {
-      id: 3,
-      title: "اختبار المعرفة الأسبوعي - إدارة المشاريع",
-      type: "quiz",
-      category: "مسابقات أسئلة وأجوبة",
-      description: "اختبار تفاعلي في إدارة المشاريع مع أسئلة متعددة الخيارات",
-      deadline: "2024-01-28",
-      prize: "1,000 ريال للفائز الأول",
-      participants: 234,
-      status: "جارية",
-      difficulty: "مبتدئ",
-      duration: "30 دقيقة",
-      requirements: ["إجابة سريعة ودقيقة", "تسجيل مسبق"],
-      icon: Zap,
-      color: "text-yellow-500",
-      bgColor: "bg-yellow-50"
-    },
-    {
-      id: 4,
-      title: "مسابقة المقال الأكاديمي - مستقبل التعليم",
-      type: "writing",
-      category: "مسابقات الكتابة الأكاديمية",
-      description: "اكتب مقالًا علميًا عن مستقبل التعليم الرقمي في المملكة",
-      deadline: "2024-02-20",
-      prize: "نشر المقال + 2,000 ريال",
-      participants: 67,
-      status: "قريبًا",
-      difficulty: "متوسط",
-      duration: "20 يوم",
-      requirements: ["500-1000 كلمة", "منهجية علمية", "مراجع موثقة"],
-      icon: BookOpen,
-      color: "text-purple-500",
-      bgColor: "bg-purple-50"
-    },
-    {
-      id: 5,
-      title: "تحدي الترجمة الطبية",
-      type: "translation",
-      category: "مسابقات الترجمة",
-      description: "ترجمة نصوص طبية متخصصة من الإنجليزية إلى العربية",
-      deadline: "2024-02-12",
-      prize: "4,000 ريال + دورة ترجمة مجانية",
-      participants: 123,
-      status: "جارية",
-      difficulty: "متقدم",
-      duration: "10 أيام",
-      requirements: ["خبرة في الترجمة الطبية", "دقة عالية", "التزام بالمصطلحات"],
-      icon: Languages,
-      color: "text-indigo-500",
-      bgColor: "bg-indigo-50"
-    },
-    {
-      id: 6,
-      title: "مسابقة الابتكار التعليمي",
-      type: "innovation",
-      category: "مسابقات الابتكار",
-      description: "اقترح حلولًا مبتكرة لتطوير التعليم عن بُعد",
-      deadline: "2024-03-01",
-      prize: "10,000 ريال + دعم تنفيذ الفكرة",
-      participants: 45,
-      status: "قريبًا",
-      difficulty: "متقدم",
-      duration: "45 يوم",
-      requirements: ["فكرة أصلية", "خطة تنفيذية", "نموذج أولي"],
-      icon: Lightbulb,
-      color: "text-orange-500",
-      bgColor: "bg-orange-50"
-    }
-  ];
 
   const winners = [
     {
@@ -172,11 +68,36 @@ const AcademicCompetitions = () => {
     }
   ];
 
+  // حساب الإحصائيات من البيانات الفعلية
+  const totalParticipants = competitions.reduce((sum, comp) => sum + (comp.stats?.total_participants || 0), 0);
+  const totalPrizeValue = 156000; // يمكن حسابه من prize_description أو إضافة حقل منفصل
+  const totalWinners = 89; // يمكن حسابه من جدول الفائزين
+
   const competitionStats = [
-    { label: "إجمالي المسابقات", value: "24", icon: Trophy, color: "text-yellow-500" },
-    { label: "المشاركون النشطون", value: "1,247", icon: Users, color: "text-blue-500" },
-    { label: "الجوائز الموزعة", value: "156,000 ريال", icon: Gift, color: "text-green-500" },
-    { label: "الفائزون", value: "89", icon: Award, color: "text-purple-500" }
+    { 
+      label: "إجمالي المسابقات", 
+      value: loading ? "..." : competitions.length.toString(), 
+      icon: Trophy, 
+      color: "text-yellow-500" 
+    },
+    { 
+      label: "المشاركون النشطون", 
+      value: loading ? "..." : totalParticipants.toLocaleString(), 
+      icon: Users, 
+      color: "text-blue-500" 
+    },
+    { 
+      label: "الجوائز الموزعة", 
+      value: `${totalPrizeValue.toLocaleString()} ريال`, 
+      icon: Gift, 
+      color: "text-green-500" 
+    },
+    { 
+      label: "الفائزون", 
+      value: totalWinners.toString(), 
+      icon: Award, 
+      color: "text-purple-500" 
+    }
   ];
 
   return (
@@ -266,110 +187,42 @@ const AcademicCompetitions = () => {
               </h2>
               
               <div className="grid gap-6 md:gap-8">
-                {activeCompetitions.map((competition, index) => (
-                  <motion.div
-                    key={competition.id}
-                    initial={{ opacity: 0, y: 30 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: index * 0.1, duration: 0.6 }}
-                  >
-                    <Card className="overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 group border-r-4 border-r-primary">
-                      <div className="md:flex">
-                        
-                        {/* Competition Icon & Status */}
-                        <div className="md:w-1/6 flex md:flex-col items-center justify-center p-6 bg-gradient-to-br from-slate-50 to-white">
-                          <div className={`w-16 h-16 rounded-full ${competition.bgColor} flex items-center justify-center mb-4`}>
-                            <competition.icon className={`h-8 w-8 ${competition.color}`} />
-                          </div>
-                          <Badge 
-                            variant={competition.status === 'جارية' ? 'default' : 'secondary'}
-                            className="whitespace-nowrap"
-                          >
-                            {competition.status}
-                          </Badge>
+                {loading ? (
+                  // Loading skeleton
+                  Array.from({ length: 3 }).map((_, index) => (
+                    <div key={index} className="bg-white rounded-lg shadow-lg p-6 animate-pulse">
+                      <div className="flex gap-4">
+                        <div className="w-16 h-16 bg-gray-200 rounded-full"></div>
+                        <div className="flex-1">
+                          <div className="h-4 bg-gray-200 rounded mb-2"></div>
+                          <div className="h-3 bg-gray-200 rounded w-2/3 mb-4"></div>
+                          <div className="h-3 bg-gray-200 rounded w-1/2"></div>
                         </div>
-
-                        {/* Main Content */}
-                        <CardContent className="md:w-5/6 p-6">
-                          <div className="flex flex-col md:flex-row md:justify-between md:items-start gap-4">
-                            
-                            {/* Competition Details */}
-                            <div className="flex-1">
-                              <div className="flex flex-wrap items-center gap-2 mb-3">
-                                <Badge variant="outline" className="text-xs">
-                                  {competition.category}
-                                </Badge>
-                                <Badge variant="outline" className="text-xs">
-                                  {competition.difficulty}
-                                </Badge>
-                              </div>
-                              
-                              <h3 className="text-xl font-bold mb-3 group-hover:text-primary transition-colors">
-                                {competition.title}
-                              </h3>
-                              
-                              <p className="text-gray-600 mb-4 leading-relaxed">
-                                {competition.description}
-                              </p>
-
-                              {/* Competition Info Grid */}
-                              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-4">
-                                <div className="flex items-center gap-2 text-sm text-gray-600">
-                                  <Calendar className="h-4 w-4 text-primary" />
-                                  <span>ينتهي: {new Date(competition.deadline).toLocaleDateString('ar-SA')}</span>
-                                </div>
-                                <div className="flex items-center gap-2 text-sm text-gray-600">
-                                  <Clock className="h-4 w-4 text-primary" />
-                                  <span>المدة: {competition.duration}</span>
-                                </div>
-                                <div className="flex items-center gap-2 text-sm text-gray-600">
-                                  <Users className="h-4 w-4 text-primary" />
-                                  <span>{competition.participants} مشارك</span>
-                                </div>
-                              </div>
-
-                              {/* Requirements */}
-                              <div className="mb-4">
-                                <h4 className="font-semibold mb-2 text-gray-800">متطلبات المشاركة:</h4>
-                                <div className="flex flex-wrap gap-2">
-                                  {competition.requirements.map((req, idx) => (
-                                    <div key={idx} className="flex items-center gap-1 text-xs bg-gray-100 px-2 py-1 rounded-full">
-                                      <CheckCircle className="h-3 w-3 text-green-500" />
-                                      {req}
-                                    </div>
-                                  ))}
-                                </div>
-                              </div>
-
-                              {/* Prize */}
-                              <div className="flex items-center gap-2 p-3 bg-gradient-to-r from-yellow-50 to-orange-50 rounded-lg border border-yellow-200">
-                                <Gift className="h-5 w-5 text-yellow-600" />
-                                <span className="font-semibold text-yellow-800">الجائزة: {competition.prize}</span>
-                              </div>
-                            </div>
-
-                            {/* Action Buttons */}
-                            <div className="flex flex-col gap-3 md:w-48">
-                <Button className="w-full group" size="lg">
-                  <Upload className="mr-2 h-4 w-4 group-hover:translate-y-1 transition-transform" />
-                  شارك الآن
-                </Button>
-                <Button variant="outline" className="w-full group">
-                  <FileText className="mr-2 h-4 w-4" />
-                  تفاصيل أكثر
-                  <ChevronRight className="ml-2 h-4 w-4 group-hover:-translate-x-1 transition-transform" />
-                </Button>
-                <Button variant="ghost" size="sm" className="w-full">
-                  <Download className="mr-2 h-4 w-4" />
-                  تحميل الشروط
-                </Button>
-                            </div>
-                          </div>
-                        </CardContent>
                       </div>
-                    </Card>
-                  </motion.div>
-                ))}
+                    </div>
+                  ))
+                ) : competitions.length > 0 ? (
+                  competitions.map((competition, index) => (
+                    <motion.div
+                      key={competition.id}
+                      initial={{ opacity: 0, y: 30 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: index * 0.1, duration: 0.6 }}
+                    >
+                      <CompetitionCard
+                        competition={competition}
+                        onRegister={handleRegister}
+                        onView={handleViewDetails}
+                      />
+                    </motion.div>
+                  ))
+                ) : (
+                  <div className="text-center py-12">
+                    <Trophy className="h-16 w-16 mx-auto mb-4 text-gray-300" />
+                    <h3 className="text-xl font-semibold text-gray-600 mb-2">لا توجد مسابقات حالياً</h3>
+                    <p className="text-gray-500">سيتم إضافة مسابقات جديدة قريباً</p>
+                  </div>
+                )}
               </div>
             </motion.div>
           </TabsContent>
