@@ -325,7 +325,10 @@ const OrderNow = () => {
                         name="clientType"
                         render={({ field }) => (
                           <FormItem>
-                            <FormLabel className="text-slate-700 dark:text-slate-300 font-medium">اختر نوع العميل *</FormLabel>
+                            <FormLabel className="text-slate-700 dark:text-slate-300 font-medium flex items-center gap-2">
+                              <span>اختر نوع العميل</span>
+                              <AlertCircle className="h-4 w-4 text-red-500" />
+                            </FormLabel>
                             <Select 
                               onValueChange={(value) => {
                                 field.onChange(value);
@@ -334,16 +337,16 @@ const OrderNow = () => {
                               defaultValue={field.value}
                             >
                               <FormControl>
-                                <SelectTrigger className="h-12 border-2 border-purple-200 dark:border-purple-700 focus:border-purple-500">
-                                  <SelectValue placeholder="اختر نوع العميل" />
+                                <SelectTrigger className="h-12 border-2 border-purple-200 dark:border-purple-700 focus:border-purple-500 text-right" dir="rtl">
+                                  <SelectValue placeholder="اختر نوع العميل" className="text-right" />
                                 </SelectTrigger>
                               </FormControl>
-                              <SelectContent className="bg-white dark:bg-slate-800 border-2 border-purple-200 dark:border-purple-700 z-50">
+                              <SelectContent className="bg-white dark:bg-slate-800 border-2 border-purple-200 dark:border-purple-700 z-50" dir="rtl">
                                 {clientTypes.map((type) => (
-                                  <SelectItem key={type.value} value={type.value} className="cursor-pointer hover:bg-purple-50 dark:hover:bg-purple-900/20">
-                                    <div className="flex items-center gap-2">
-                                      <type.icon className={`h-4 w-4 ${type.color}`} />
+                                  <SelectItem key={type.value} value={type.value} className="cursor-pointer hover:bg-purple-50 dark:hover:bg-purple-900/20 text-right" dir="rtl">
+                                    <div className="flex items-center gap-2 justify-end">
                                       <span>{type.label}</span>
+                                      <type.icon className={`h-4 w-4 ${type.color}`} />
                                     </div>
                                   </SelectItem>
                                 ))}
@@ -373,10 +376,13 @@ const OrderNow = () => {
                           name="organizationName"
                           render={({ field }) => (
                             <FormItem>
-                              <FormLabel className="text-slate-700 dark:text-slate-300 font-medium">
-                                {selectedClientType === 'company' ? 'اسم الشركة *' : 
-                                 selectedClientType === 'student' ? 'اسم الجامعة/المعهد *' :
-                                 selectedClientType === 'researcher' ? 'اسم المؤسسة البحثية *' : 'اسم الجهة *'}
+                              <FormLabel className="text-slate-700 dark:text-slate-300 font-medium flex items-center gap-2">
+                                <span>
+                                  {selectedClientType === 'company' ? 'اسم الشركة' : 
+                                   selectedClientType === 'student' ? 'اسم الجامعة/المعهد' :
+                                   selectedClientType === 'researcher' ? 'اسم المؤسسة البحثية' : 'اسم الجهة'}
+                                </span>
+                                <AlertCircle className="h-4 w-4 text-red-500" />
                               </FormLabel>
                               <FormControl>
                                 <Input
@@ -386,7 +392,8 @@ const OrderNow = () => {
                                     selectedClientType === 'student' ? "مثال: جامعة الملك سعود" :
                                     selectedClientType === 'researcher' ? "مثال: مركز الأبحاث العلمية" : "مثال: اسم الجهة"
                                   }
-                                  className="border-2 border-blue-200 dark:border-blue-700 focus:border-blue-500 h-12"
+                                  className="border-2 border-blue-200 dark:border-blue-700 focus:border-blue-500 h-12 text-right"
+                                  dir="rtl"
                                 />
                               </FormControl>
                               <FormMessage />
@@ -399,16 +406,20 @@ const OrderNow = () => {
                           name="contactPerson"
                           render={({ field }) => (
                             <FormItem>
-                              <FormLabel className="text-slate-700 dark:text-slate-300 font-medium">
-                                {selectedClientType === 'company' ? 'الشخص المسؤول *' : 
-                                 selectedClientType === 'student' ? 'اسم الطالب *' :
-                                 selectedClientType === 'researcher' ? 'اسم الباحث *' : 'اسم الشخص المسؤول *'}
+                              <FormLabel className="text-slate-700 dark:text-slate-300 font-medium flex items-center gap-2">
+                                <span>
+                                  {selectedClientType === 'company' ? 'الشخص المسؤول' : 
+                                   selectedClientType === 'student' ? 'اسم الطالب' :
+                                   selectedClientType === 'researcher' ? 'اسم الباحث' : 'اسم الشخص المسؤول'}
+                                </span>
+                                <AlertCircle className="h-4 w-4 text-red-500" />
                               </FormLabel>
                               <FormControl>
                                 <Input
                                   {...field}
                                   placeholder="مثال: أحمد محمد"
-                                  className="border-2 border-blue-200 dark:border-blue-700 focus:border-blue-500 h-12"
+                                  className="border-2 border-blue-200 dark:border-blue-700 focus:border-blue-500 h-12 text-right"
+                                  dir="rtl"
                                 />
                               </FormControl>
                               <FormMessage />
@@ -430,18 +441,22 @@ const OrderNow = () => {
                           control={form.control}
                           name="email"
                           render={({ field }) => (
-                            <FormItem>
-                              <FormLabel className="text-slate-700 dark:text-slate-300 font-medium">البريد الإلكتروني *</FormLabel>
-                              <FormControl>
-                                <Input
-                                  {...field}
-                                  type="email"
-                                  placeholder="example@company.com"
-                                  className="border-2 border-green-200 dark:border-green-700 focus:border-green-500 h-12"
-                                />
-                              </FormControl>
-                              <FormMessage />
-                            </FormItem>
+                             <FormItem>
+                               <FormLabel className="text-slate-700 dark:text-slate-300 font-medium flex items-center gap-2">
+                                 <span>البريد الإلكتروني</span>
+                                 <AlertCircle className="h-4 w-4 text-red-500" />
+                               </FormLabel>
+                               <FormControl>
+                                 <Input
+                                   {...field}
+                                   type="email"
+                                   placeholder="example@company.com"
+                                   className="border-2 border-green-200 dark:border-green-700 focus:border-green-500 h-12 text-right"
+                                   dir="rtl"
+                                 />
+                               </FormControl>
+                               <FormMessage />
+                             </FormItem>
                           )}
                         />
 
@@ -449,17 +464,21 @@ const OrderNow = () => {
                           control={form.control}
                           name="phone"
                           render={({ field }) => (
-                            <FormItem>
-                              <FormLabel className="text-slate-700 dark:text-slate-300 font-medium">رقم الهاتف *</FormLabel>
-                              <FormControl>
-                                <Input
-                                  {...field}
-                                  placeholder="+966501234567"
-                                  className="border-2 border-green-200 dark:border-green-700 focus:border-green-500 h-12"
-                                />
-                              </FormControl>
-                              <FormMessage />
-                            </FormItem>
+                             <FormItem>
+                               <FormLabel className="text-slate-700 dark:text-slate-300 font-medium flex items-center gap-2">
+                                 <span>رقم الهاتف</span>
+                                 <AlertCircle className="h-4 w-4 text-red-500" />
+                               </FormLabel>
+                               <FormControl>
+                                 <Input
+                                   {...field}
+                                   placeholder="+966501234567"
+                                   className="border-2 border-green-200 dark:border-green-700 focus:border-green-500 h-12 text-right"
+                                   dir="rtl"
+                                 />
+                               </FormControl>
+                               <FormMessage />
+                             </FormItem>
                           )}
                         />
                       </div>
@@ -479,14 +498,17 @@ const OrderNow = () => {
                             control={form.control}
                             name="serviceType"
                             render={({ field }) => (
-                              <FormItem>
-                                <FormLabel className="text-slate-700 dark:text-slate-300 font-medium">نوع الخدمة المطلوبة *</FormLabel>
-                                <Select onValueChange={field.onChange} defaultValue={field.value}>
-                                  <FormControl>
-                                    <SelectTrigger className="border-2 border-purple-200 dark:border-purple-700 focus:border-purple-500 h-12 bg-white dark:bg-slate-800">
-                                      <SelectValue placeholder="اختر الخدمة" />
-                                    </SelectTrigger>
-                                  </FormControl>
+                               <FormItem>
+                                 <FormLabel className="text-slate-700 dark:text-slate-300 font-medium flex items-center gap-2">
+                                   <span>نوع الخدمة المطلوبة</span>
+                                   <AlertCircle className="h-4 w-4 text-red-500" />
+                                 </FormLabel>
+                                 <Select onValueChange={field.onChange} defaultValue={field.value}>
+                                   <FormControl>
+                                     <SelectTrigger className="border-2 border-purple-200 dark:border-purple-700 focus:border-purple-500 h-12 bg-white dark:bg-slate-800 text-right" dir="rtl">
+                                       <SelectValue placeholder="اختر الخدمة" className="text-right" />
+                                     </SelectTrigger>
+                                   </FormControl>
                                   <SelectContent className="z-50 bg-white dark:bg-slate-800 border border-purple-200 dark:border-purple-700 shadow-xl">
                                     {services.map((service) => (
                                       <SelectItem key={service.value} value={service.value} className="hover:bg-purple-50 dark:hover:bg-slate-700">
@@ -507,24 +529,27 @@ const OrderNow = () => {
                             control={form.control}
                             name="country"
                             render={({ field }) => (
-                              <FormItem>
-                                <FormLabel className="text-slate-700 dark:text-slate-300 font-medium">الدولة *</FormLabel>
-                                <Select onValueChange={field.onChange} defaultValue={field.value}>
-                                  <FormControl>
-                                    <SelectTrigger className="border-2 border-purple-200 dark:border-purple-700 focus:border-purple-500 h-12 bg-white dark:bg-slate-800">
-                                      <SelectValue placeholder="اختر الدولة" />
-                                    </SelectTrigger>
-                                  </FormControl>
-                                  <SelectContent className="z-50 bg-white dark:bg-slate-800 border border-purple-200 dark:border-purple-700 shadow-xl max-h-[200px]">
-                                    {countries.map((country) => (
-                                      <SelectItem key={country} value={country} className="hover:bg-purple-50 dark:hover:bg-slate-700">
-                                        {country}
-                                      </SelectItem>
-                                    ))}
-                                  </SelectContent>
-                                </Select>
-                                <FormMessage />
-                              </FormItem>
+                               <FormItem>
+                                 <FormLabel className="text-slate-700 dark:text-slate-300 font-medium flex items-center gap-2">
+                                   <span>الدولة</span>
+                                   <AlertCircle className="h-4 w-4 text-red-500" />
+                                 </FormLabel>
+                                 <Select onValueChange={field.onChange} defaultValue={field.value}>
+                                   <FormControl>
+                                     <SelectTrigger className="border-2 border-purple-200 dark:border-purple-700 focus:border-purple-500 h-12 bg-white dark:bg-slate-800 text-right" dir="rtl">
+                                       <SelectValue placeholder="اختر الدولة" className="text-right" />
+                                     </SelectTrigger>
+                                   </FormControl>
+                                   <SelectContent className="z-50 bg-white dark:bg-slate-800 border border-purple-200 dark:border-purple-700 shadow-xl max-h-[200px]" dir="rtl">
+                                     {countries.map((country) => (
+                                       <SelectItem key={country} value={country} className="hover:bg-purple-50 dark:hover:bg-slate-700 text-right" dir="rtl">
+                                         {country}
+                                       </SelectItem>
+                                     ))}
+                                   </SelectContent>
+                                 </Select>
+                                 <FormMessage />
+                               </FormItem>
                             )}
                           />
                         </div>
@@ -541,51 +566,54 @@ const OrderNow = () => {
                               control={form.control}
                               name="budget"
                               render={({ field }) => (
-                                <FormItem>
-                                  <FormLabel className="text-slate-700 dark:text-slate-300 font-medium">الميزانية المتوقعة *</FormLabel>
-                                  <Select onValueChange={field.onChange} defaultValue={field.value}>
-                                    <FormControl>
-                                      <SelectTrigger className="border-2 border-amber-200 dark:border-amber-700 focus:border-amber-500 h-12 bg-white dark:bg-slate-800">
-                                        <SelectValue placeholder="اختر الميزانية" />
-                                      </SelectTrigger>
-                                    </FormControl>
-                                    <SelectContent className="z-50 bg-white dark:bg-slate-800 border border-amber-200 dark:border-amber-700 shadow-xl">
-                                      <SelectItem value="under-5k" className="hover:bg-amber-50 dark:hover:bg-slate-700">
-                                        <div className="flex items-center gap-2">
-                                          <DollarSign className="h-4 w-4 text-green-600" />
-                                          أقل من 5,000 ريال
-                                        </div>
-                                      </SelectItem>
-                                      <SelectItem value="5k-15k" className="hover:bg-amber-50 dark:hover:bg-slate-700">
-                                        <div className="flex items-center gap-2">
-                                          <DollarSign className="h-4 w-4 text-blue-600" />
-                                          5,000 - 15,000 ريال
-                                        </div>
-                                      </SelectItem>
-                                      <SelectItem value="15k-30k" className="hover:bg-amber-50 dark:hover:bg-slate-700">
-                                        <div className="flex items-center gap-2">
-                                          <DollarSign className="h-4 w-4 text-purple-600" />
-                                          15,000 - 30,000 ريال
-                                        </div>
-                                      </SelectItem>
-                                      <SelectItem value="30k-50k" className="hover:bg-amber-50 dark:hover:bg-slate-700">
-                                        <div className="flex items-center gap-2">
-                                          <DollarSign className="h-4 w-4 text-orange-600" />
-                                          30,000 - 50,000 ريال
-                                        </div>
-                                      </SelectItem>
-                                      <SelectItem value="above-50k" className="hover:bg-amber-50 dark:hover:bg-slate-700">
-                                        <div className="flex items-center gap-2">
-                                          <DollarSign className="h-4 w-4 text-red-600" />
-                                          أكثر من 50,000 ريال
-                                        </div>
-                                      </SelectItem>
-                                      <SelectItem value="custom" className="hover:bg-amber-50 dark:hover:bg-slate-700">
-                                        <div className="flex items-center gap-2">
-                                          <DollarSign className="h-4 w-4 text-gray-600" />
-                                          ميزانية مخصصة
-                                        </div>
-                                      </SelectItem>
+                                 <FormItem>
+                                   <FormLabel className="text-slate-700 dark:text-slate-300 font-medium flex items-center gap-2">
+                                     <span>الميزانية المتوقعة</span>
+                                     <AlertCircle className="h-4 w-4 text-red-500" />
+                                   </FormLabel>
+                                   <Select onValueChange={field.onChange} defaultValue={field.value}>
+                                     <FormControl>
+                                       <SelectTrigger className="border-2 border-amber-200 dark:border-amber-700 focus:border-amber-500 h-12 bg-white dark:bg-slate-800 text-right" dir="rtl">
+                                         <SelectValue placeholder="اختر الميزانية" className="text-right" />
+                                       </SelectTrigger>
+                                     </FormControl>
+                                     <SelectContent className="z-50 bg-white dark:bg-slate-800 border border-amber-200 dark:border-amber-700 shadow-xl" dir="rtl">
+                                       <SelectItem value="under-5k" className="hover:bg-amber-50 dark:hover:bg-slate-700 text-right" dir="rtl">
+                                         <div className="flex items-center gap-2 justify-end">
+                                           <span>أقل من 5,000 ريال</span>
+                                           <DollarSign className="h-4 w-4 text-green-600" />
+                                         </div>
+                                       </SelectItem>
+                                       <SelectItem value="5k-15k" className="hover:bg-amber-50 dark:hover:bg-slate-700 text-right" dir="rtl">
+                                         <div className="flex items-center gap-2 justify-end">
+                                           <span>5,000 - 15,000 ريال</span>
+                                           <DollarSign className="h-4 w-4 text-blue-600" />
+                                         </div>
+                                       </SelectItem>
+                                       <SelectItem value="15k-30k" className="hover:bg-amber-50 dark:hover:bg-slate-700 text-right" dir="rtl">
+                                         <div className="flex items-center gap-2 justify-end">
+                                           <span>15,000 - 30,000 ريال</span>
+                                           <DollarSign className="h-4 w-4 text-purple-600" />
+                                         </div>
+                                       </SelectItem>
+                                       <SelectItem value="30k-50k" className="hover:bg-amber-50 dark:hover:bg-slate-700 text-right" dir="rtl">
+                                         <div className="flex items-center gap-2 justify-end">
+                                           <span>30,000 - 50,000 ريال</span>
+                                           <DollarSign className="h-4 w-4 text-orange-600" />
+                                         </div>
+                                       </SelectItem>
+                                       <SelectItem value="above-50k" className="hover:bg-amber-50 dark:hover:bg-slate-700 text-right" dir="rtl">
+                                         <div className="flex items-center gap-2 justify-end">
+                                           <span>أكثر من 50,000 ريال</span>
+                                           <DollarSign className="h-4 w-4 text-red-600" />
+                                         </div>
+                                       </SelectItem>
+                                       <SelectItem value="custom" className="hover:bg-amber-50 dark:hover:bg-slate-700 text-right" dir="rtl">
+                                         <div className="flex items-center gap-2 justify-end">
+                                           <span>ميزانية مخصصة</span>
+                                           <DollarSign className="h-4 w-4 text-gray-600" />
+                                         </div>
+                                       </SelectItem>
                                     </SelectContent>
                                   </Select>
                                   <FormMessage />
@@ -597,55 +625,58 @@ const OrderNow = () => {
                               control={form.control}
                               name="timeline"
                               render={({ field }) => (
-                                <FormItem>
-                                  <FormLabel className="text-slate-700 dark:text-slate-300 font-medium">المدة المطلوبة *</FormLabel>
-                                  <Select onValueChange={field.onChange} defaultValue={field.value}>
-                                    <FormControl>
-                                      <SelectTrigger className="border-2 border-amber-200 dark:border-amber-700 focus:border-amber-500 h-12 bg-white dark:bg-slate-800">
-                                        <SelectValue placeholder="اختر المدة" />
-                                      </SelectTrigger>
-                                    </FormControl>
-                                    <SelectContent className="z-50 bg-white dark:bg-slate-800 border border-amber-200 dark:border-amber-700 shadow-xl">
-                                      <SelectItem value="urgent" className="hover:bg-amber-50 dark:hover:bg-slate-700">
-                                        <div className="flex items-center gap-2">
-                                          <AlertCircle className="h-4 w-4 text-red-600" />
-                                          عاجل (1-3 أيام)
-                                        </div>
-                                      </SelectItem>
-                                      <SelectItem value="week" className="hover:bg-amber-50 dark:hover:bg-slate-700">
-                                        <div className="flex items-center gap-2">
-                                          <Clock className="h-4 w-4 text-orange-600" />
-                                          أسبوع واحد
-                                        </div>
-                                      </SelectItem>
-                                      <SelectItem value="2weeks" className="hover:bg-amber-50 dark:hover:bg-slate-700">
-                                        <div className="flex items-center gap-2">
-                                          <Clock className="h-4 w-4 text-blue-600" />
-                                          أسبوعين
-                                        </div>
-                                      </SelectItem>
-                                      <SelectItem value="month" className="hover:bg-amber-50 dark:hover:bg-slate-700">
-                                        <div className="flex items-center gap-2">
-                                          <Calendar className="h-4 w-4 text-green-600" />
-                                          شهر واحد
-                                        </div>
-                                      </SelectItem>
-                                      <SelectItem value="2months" className="hover:bg-amber-50 dark:hover:bg-slate-700">
-                                        <div className="flex items-center gap-2">
-                                          <Calendar className="h-4 w-4 text-purple-600" />
-                                          شهرين
-                                        </div>
-                                      </SelectItem>
-                                      <SelectItem value="3months" className="hover:bg-amber-50 dark:hover:bg-slate-700">
-                                        <div className="flex items-center gap-2">
-                                          <Calendar className="h-4 w-4 text-gray-600" />
-                                          3 أشهر أو أكثر
-                                        </div>
-                                      </SelectItem>
-                                    </SelectContent>
-                                  </Select>
-                                  <FormMessage />
-                                </FormItem>
+                                 <FormItem>
+                                   <FormLabel className="text-slate-700 dark:text-slate-300 font-medium flex items-center gap-2">
+                                     <span>المدة المطلوبة</span>
+                                     <AlertCircle className="h-4 w-4 text-red-500" />
+                                   </FormLabel>
+                                   <Select onValueChange={field.onChange} defaultValue={field.value}>
+                                     <FormControl>
+                                       <SelectTrigger className="border-2 border-amber-200 dark:border-amber-700 focus:border-amber-500 h-12 bg-white dark:bg-slate-800 text-right" dir="rtl">
+                                         <SelectValue placeholder="اختر المدة" className="text-right" />
+                                       </SelectTrigger>
+                                     </FormControl>
+                                     <SelectContent className="z-50 bg-white dark:bg-slate-800 border border-amber-200 dark:border-amber-700 shadow-xl" dir="rtl">
+                                       <SelectItem value="urgent" className="hover:bg-amber-50 dark:hover:bg-slate-700 text-right" dir="rtl">
+                                         <div className="flex items-center gap-2 justify-end">
+                                           <span>عاجل (1-3 أيام)</span>
+                                           <AlertCircle className="h-4 w-4 text-red-600" />
+                                         </div>
+                                       </SelectItem>
+                                       <SelectItem value="week" className="hover:bg-amber-50 dark:hover:bg-slate-700 text-right" dir="rtl">
+                                         <div className="flex items-center gap-2 justify-end">
+                                           <span>أسبوع واحد</span>
+                                           <Clock className="h-4 w-4 text-orange-600" />
+                                         </div>
+                                       </SelectItem>
+                                       <SelectItem value="2weeks" className="hover:bg-amber-50 dark:hover:bg-slate-700 text-right" dir="rtl">
+                                         <div className="flex items-center gap-2 justify-end">
+                                           <span>أسبوعين</span>
+                                           <Clock className="h-4 w-4 text-blue-600" />
+                                         </div>
+                                       </SelectItem>
+                                       <SelectItem value="month" className="hover:bg-amber-50 dark:hover:bg-slate-700 text-right" dir="rtl">
+                                         <div className="flex items-center gap-2 justify-end">
+                                           <span>شهر واحد</span>
+                                           <Calendar className="h-4 w-4 text-green-600" />
+                                         </div>
+                                       </SelectItem>
+                                       <SelectItem value="2months" className="hover:bg-amber-50 dark:hover:bg-slate-700 text-right" dir="rtl">
+                                         <div className="flex items-center gap-2 justify-end">
+                                           <span>شهرين</span>
+                                           <Calendar className="h-4 w-4 text-purple-600" />
+                                         </div>
+                                       </SelectItem>
+                                       <SelectItem value="3months" className="hover:bg-amber-50 dark:hover:bg-slate-700 text-right" dir="rtl">
+                                         <div className="flex items-center gap-2 justify-end">
+                                           <span>3 أشهر أو أكثر</span>
+                                           <Calendar className="h-4 w-4 text-gray-600" />
+                                         </div>
+                                       </SelectItem>
+                                     </SelectContent>
+                                   </Select>
+                                   <FormMessage />
+                                 </FormItem>
                               )}
                             />
 
@@ -653,39 +684,42 @@ const OrderNow = () => {
                               control={form.control}
                               name="priority"
                               render={({ field }) => (
-                                <FormItem>
-                                  <FormLabel className="text-slate-700 dark:text-slate-300 font-medium">مستوى الأولوية *</FormLabel>
-                                  <Select onValueChange={field.onChange} defaultValue={field.value}>
-                                    <FormControl>
-                                      <SelectTrigger className="border-2 border-amber-200 dark:border-amber-700 focus:border-amber-500 h-12 bg-white dark:bg-slate-800">
-                                        <SelectValue placeholder="اختر الأولوية" />
-                                      </SelectTrigger>
-                                    </FormControl>
-                                    <SelectContent className="z-50 bg-white dark:bg-slate-800 border border-amber-200 dark:border-amber-700 shadow-xl">
-                                      <SelectItem value="low" className="hover:bg-amber-50 dark:hover:bg-slate-700">
-                                        <div className="flex items-center gap-2">
-                                          <div className="w-3 h-3 bg-green-500 rounded-full"></div>
-                                          منخفضة
-                                        </div>
-                                      </SelectItem>
-                                      <SelectItem value="medium" className="hover:bg-amber-50 dark:hover:bg-slate-700">
-                                        <div className="flex items-center gap-2">
-                                          <div className="w-3 h-3 bg-blue-500 rounded-full"></div>
-                                          متوسطة
-                                        </div>
-                                      </SelectItem>
-                                      <SelectItem value="high" className="hover:bg-amber-50 dark:hover:bg-slate-700">
-                                        <div className="flex items-center gap-2">
-                                          <div className="w-3 h-3 bg-orange-500 rounded-full"></div>
-                                          عالية
-                                        </div>
-                                      </SelectItem>
-                                      <SelectItem value="critical" className="hover:bg-amber-50 dark:hover:bg-slate-700">
-                                        <div className="flex items-center gap-2">
-                                          <div className="w-3 h-3 bg-red-500 rounded-full"></div>
-                                          حرجة
-                                        </div>
-                                      </SelectItem>
+                                 <FormItem>
+                                   <FormLabel className="text-slate-700 dark:text-slate-300 font-medium flex items-center gap-2">
+                                     <span>مستوى الأولوية</span>
+                                     <AlertCircle className="h-4 w-4 text-red-500" />
+                                   </FormLabel>
+                                   <Select onValueChange={field.onChange} defaultValue={field.value}>
+                                     <FormControl>
+                                       <SelectTrigger className="border-2 border-amber-200 dark:border-amber-700 focus:border-amber-500 h-12 bg-white dark:bg-slate-800 text-right" dir="rtl">
+                                         <SelectValue placeholder="اختر الأولوية" className="text-right" />
+                                       </SelectTrigger>
+                                     </FormControl>
+                                     <SelectContent className="z-50 bg-white dark:bg-slate-800 border border-amber-200 dark:border-amber-700 shadow-xl" dir="rtl">
+                                       <SelectItem value="low" className="hover:bg-amber-50 dark:hover:bg-slate-700 text-right" dir="rtl">
+                                         <div className="flex items-center gap-2 justify-end">
+                                           <span>منخفضة</span>
+                                           <div className="w-3 h-3 bg-green-500 rounded-full"></div>
+                                         </div>
+                                       </SelectItem>
+                                       <SelectItem value="medium" className="hover:bg-amber-50 dark:hover:bg-slate-700 text-right" dir="rtl">
+                                         <div className="flex items-center gap-2 justify-end">
+                                           <span>متوسطة</span>
+                                           <div className="w-3 h-3 bg-blue-500 rounded-full"></div>
+                                         </div>
+                                       </SelectItem>
+                                       <SelectItem value="high" className="hover:bg-amber-50 dark:hover:bg-slate-700 text-right" dir="rtl">
+                                         <div className="flex items-center gap-2 justify-end">
+                                           <span>عالية</span>
+                                           <div className="w-3 h-3 bg-orange-500 rounded-full"></div>
+                                         </div>
+                                       </SelectItem>
+                                       <SelectItem value="critical" className="hover:bg-amber-50 dark:hover:bg-slate-700 text-right" dir="rtl">
+                                         <div className="flex items-center gap-2 justify-end">
+                                           <span>حرجة</span>
+                                           <div className="w-3 h-3 bg-red-500 rounded-full"></div>
+                                         </div>
+                                       </SelectItem>
                                     </SelectContent>
                                   </Select>
                                   <FormMessage />
@@ -699,17 +733,21 @@ const OrderNow = () => {
                           control={form.control}
                           name="projectDescription"
                           render={({ field }) => (
-                            <FormItem>
-                              <FormLabel className="text-slate-700 dark:text-slate-300 font-medium">وصف تفصيلي للمشروع *</FormLabel>
-                              <FormControl>
-                                <Textarea
-                                  {...field}
-                                  placeholder="يرجى وصف المشروع بالتفصيل، متطلباتكم، والنتائج المتوقعة..."
-                                  className="border-2 border-purple-200 dark:border-purple-700 focus:border-purple-500 min-h-[120px] resize-y"
-                                />
-                              </FormControl>
-                              <FormMessage />
-                            </FormItem>
+                             <FormItem>
+                               <FormLabel className="text-slate-700 dark:text-slate-300 font-medium flex items-center gap-2">
+                                 <span>وصف تفصيلي للمشروع</span>
+                                 <AlertCircle className="h-4 w-4 text-red-500" />
+                               </FormLabel>
+                               <FormControl>
+                                 <Textarea
+                                   {...field}
+                                   placeholder="يرجى وصف المشروع بالتفصيل، متطلباتكم، والنتائج المتوقعة..."
+                                   className="border-2 border-purple-200 dark:border-purple-700 focus:border-purple-500 min-h-[120px] resize-y text-right"
+                                   dir="rtl"
+                                 />
+                               </FormControl>
+                               <FormMessage />
+                             </FormItem>
                           )}
                         />
                       </div>
