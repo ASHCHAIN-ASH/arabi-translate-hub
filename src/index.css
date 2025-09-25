@@ -280,19 +280,19 @@
 @layer base {
   /* خطوط أكاديمية عصرية */
   .font-academic-title {
-    font-family: 'Cairo', sans-serif;
+    font-family: 'Cairo', 'IBM Plex Sans Arabic', sans-serif;
     font-weight: 700;
     letter-spacing: 0.01em;
   }
   
   .font-academic-body {
-    font-family: 'Noto Sans Arabic', 'Cairo', sans-serif;
+    font-family: 'IBM Plex Sans Arabic', 'Noto Sans Arabic', sans-serif;
     font-weight: 400;
     line-height: 1.6;
   }
   
   .font-academic-heading {
-    font-family: 'Cairo', sans-serif;
+    font-family: 'Cairo', 'IBM Plex Sans Arabic', sans-serif;
     font-weight: 600;
     letter-spacing: 0.02em;
   }

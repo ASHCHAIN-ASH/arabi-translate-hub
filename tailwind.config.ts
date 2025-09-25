@@ -19,13 +19,14 @@ export default {
 		},
 		extend: {
 			fontFamily: {
-				'cairo': ['Cairo', 'sans-serif'],
-				'noto-arabic': ['Noto Sans Arabic', 'sans-serif'],
-				'ibm-plex': ['IBM Plex Sans Arabic', 'sans-serif'],
-				'arabic-title': ['Cairo', 'sans-serif'],
-				'arabic-body': ['Noto Sans Arabic', 'Cairo', 'sans-serif'],
-				'academic': ['Noto Sans Arabic', 'Cairo', 'sans-serif'],
-				'academic-title': ['Cairo', 'sans-serif'],
+				'sans': ['IBM Plex Sans Arabic', 'Noto Sans Arabic', 'Cairo', 'system-ui', 'sans-serif'],
+				'cairo': ['Cairo', 'IBM Plex Sans Arabic', 'sans-serif'],
+				'noto-arabic': ['Noto Sans Arabic', 'IBM Plex Sans Arabic', 'sans-serif'],
+				'ibm-plex': ['IBM Plex Sans Arabic', 'Noto Sans Arabic', 'sans-serif'],
+				'arabic-title': ['Cairo', 'IBM Plex Sans Arabic', 'sans-serif'],
+				'arabic-body': ['IBM Plex Sans Arabic', 'Noto Sans Arabic', 'sans-serif'],
+				'academic': ['IBM Plex Sans Arabic', 'Noto Sans Arabic', 'sans-serif'],
+				'academic-title': ['Cairo', 'IBM Plex Sans Arabic', 'sans-serif'],
 			},
 			colors: {
 				border: 'hsl(var(--border))',
