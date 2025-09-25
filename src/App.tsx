@@ -247,7 +247,7 @@ const App = () => (
             {/* Academic Pages */}
             <Route path="/academic/expertise" element={<AcademicExpertise />} />
             <Route path="/academic/methodology" element={<ScientificMethodology />} />
-            <Route path="/academic/translation" element={<MultilingualTranslation />} />
+            <Route path="/academic/translation" element={<AcademicTranslation />} />
             <Route path="/academic/quality" element={<QualityAssurance />} />
             <Route path="/academic/security" element={<PrivacySecurity />} />
             <Route path="/academic/timeline" element={<TimelineCommitment />} />
