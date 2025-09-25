@@ -27,8 +27,22 @@ import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import Header from "@/components/Header";
 import { WorkingHoursBannerRTL } from "@/components/WorkingHoursBannerRTL";
+import CompetitionCard from "@/components/CompetitionCard";
+import CompetitionLeaderboard from "@/components/CompetitionLeaderboard";
+import { useCompetitions } from "@/hooks/useCompetitions";
 
 const AcademicCompetitions = () => {
+  const { competitions, loading, fetchCompetition, registerParticipation } = useCompetitions();
+  
+  const handleRegister = async (competitionId: string) => {
+    await registerParticipation(competitionId, 'user-temp-id');
+  };
+
+  const handleViewDetails = (competitionId: string) => {
+    // Navigate to competition details
+    window.location.href = `/academic-competitions/${competitionId}`;
+  };
+
   const activeCompetitions = [
     {
       id: 1,

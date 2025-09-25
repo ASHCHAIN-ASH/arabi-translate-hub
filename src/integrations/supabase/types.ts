@@ -5703,6 +5703,15 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      add_competition_vote: {
+        Args: {
+          p_competition_id: string
+          p_participant_id: string
+          p_vote_value?: number
+          p_voter_email: string
+        }
+        Returns: Json
+      }
       admin_login: {
         Args: {
           user_agent?: string
@@ -6054,6 +6063,10 @@ export type Database = {
           status: string
         }[]
       }
+      get_voting_stats: {
+        Args: { p_competition_id: string }
+        Returns: Json
+      }
       has_admin_role: {
         Args:
           | {
@@ -6223,6 +6236,10 @@ export type Database = {
         Args: { p_automation_type: string; p_count?: number; p_user_id: string }
         Returns: undefined
       }
+      register_competition_participation: {
+        Args: { p_competition_id: string; p_metadata?: Json; p_user_id: string }
+        Returns: Json
+      }
       send_service_notification: {
         Args: { p_message: string; p_service_data?: Json; p_title: string }
         Returns: number
@@ -6265,6 +6282,10 @@ export type Database = {
       }
       validate_admin_session: {
         Args: { session_id: string } | { token: string; user_agent?: string }
+        Returns: Json
+      }
+      validate_competition_participation: {
+        Args: { p_competition_id: string; p_user_id: string }
         Returns: Json
       }
       validate_email: {
