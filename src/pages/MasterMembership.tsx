@@ -191,19 +191,19 @@ const MasterMembership = () => {
                   const customerNames = ["أحمد محمد", "فاطمة علي", "محمد سالم", "نورا أحمد", "سعد خالد", "مريم يوسف"];
                   const customerName = customerNames[Math.floor(Math.random() * customerNames.length)];
                   
-                  // ألوان وتدرجات البطاقات الذكية متمايزة
+                  // ألوان وتدرجات البطاقات الأساسية
                   const cardStyles = {
                     silver: { 
-                      gradient: "from-indigo-600 via-blue-600 to-blue-700", 
+                      gradient: "from-gray-400 via-gray-500 to-gray-600", 
                       chipColor: "bg-yellow-300"
                     },
                     gold: { 
-                      gradient: "from-amber-500 via-yellow-500 to-orange-500", 
+                      gradient: "from-yellow-400 via-yellow-500 to-amber-600", 
                       chipColor: "bg-yellow-200"
                     },
                     platinum: { 
-                      gradient: "from-purple-600 via-violet-600 to-purple-700", 
-                      chipColor: "bg-gray-300"
+                      gradient: "from-slate-300 via-slate-400 to-slate-500", 
+                      chipColor: "bg-gray-200"
                     }
                   };
 
@@ -220,8 +220,15 @@ const MasterMembership = () => {
                       {/* البطاقة الذكية مصغرة */}
                       <div className={`relative w-full h-44 rounded-xl p-4 text-white shadow-xl bg-gradient-to-br ${style.gradient} overflow-hidden transform transition-all duration-300 hover:scale-105`}>
                         
+                        {/* اسم الوكالة في أعلى البطاقة */}
+                        <div className="absolute top-2 left-1/2 transform -translate-x-1/2 text-center">
+                          <div className="text-xs font-bold tracking-widest opacity-90 drop-shadow-md">
+                            MASTER EDU PATH AGENCY
+                          </div>
+                        </div>
+                        
                         {/* شريحة EMV في الأعلى يسار */}
-                        <div className="absolute top-3 left-3">
+                        <div className="absolute top-2 left-2">
                           <div className={`w-8 h-6 ${style.chipColor} rounded-sm shadow-sm flex items-center justify-center`}>
                             <div className="w-5 h-3 bg-yellow-600/40 rounded-sm grid grid-cols-2 gap-0.5 p-0.5">
                               <div className="bg-yellow-800/60 rounded-sm"></div>
