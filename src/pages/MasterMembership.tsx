@@ -172,6 +172,9 @@ const MasterMembership = () => {
                   
                   // رقم عشوائي من 6 أرقام للعميل
                   const customerNumber = Math.floor(100000 + Math.random() * 900000);
+                  // اسم عميل عشوائي
+                  const customerNames = ["أحمد محمد", "فاطمة علي", "محمد سالم", "نورا أحمد", "سعد خالد", "مريم يوسف"];
+                  const customerName = customerNames[Math.floor(Math.random() * customerNames.length)];
                   
                   // ألوان وتدرجات البطاقات الذكية
                   const cardStyles = {
@@ -225,38 +228,38 @@ const MasterMembership = () => {
                           </div>
                         </div>
 
-                        {/* رقم العميل في الوسط */}
+                        {/* معلومات العميل في الوسط */}
                         <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-center">
+                          <div className="text-xs opacity-80 mb-1">اسم العميل</div>
+                          <div className="text-sm font-bold mb-2 leading-tight">
+                            {customerName}
+                          </div>
                           <div className="text-xs opacity-80 mb-1">رقم العميل</div>
-                          <div className="font-mono text-2xl font-bold tracking-wider drop-shadow-lg">
+                          <div className="font-mono text-xl font-bold tracking-wider drop-shadow-lg">
                             {toArabic(customerNumber)}
                           </div>
                         </div>
 
-                        {/* الكاش باك في الوسط أسفل */}
-                        <div className="absolute top-2/3 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
-                          <div className="bg-emerald-500/90 text-white rounded-md px-3 py-1 text-xs font-medium text-center">
+                        {/* الكاش باك في الأسفل يمين */}
+                        <div className="absolute bottom-2 right-3 text-right">
+                          <div className="bg-emerald-500/90 text-white rounded-md px-2 py-1 text-xs font-bold shadow-sm mb-1">
                             كاش-باك: {sar(cash)}
                           </div>
+                          <div className="text-lg font-bold leading-tight">{toArabic(after)} ريال</div>
                         </div>
 
-                        {/* معلومات الحامل في الأسفل يمين */}
-                        <div className="absolute bottom-2 right-3 text-right">
+                        {/* معلومات العضوية في الأسفل وسط يسار */}
+                        <div className="absolute bottom-2 left-3 text-left">
                           <div className="text-xs opacity-80 leading-tight">عضوية ماستر</div>
                           <div className="text-sm font-bold leading-tight">{tier.titleAr}</div>
+                          <div className="text-xs opacity-70 mt-1 leading-tight">انتهاء: 12/27</div>
                         </div>
 
-                        {/* تاريخ الانتهاء في الأسفل وسط */}
-                        <div className="absolute bottom-2 left-1/2 transform -translate-x-1/2 text-center">
-                          <div className="text-xs opacity-70 leading-tight">تاريخ الانتهاء</div>
-                          <div className="text-xs font-semibold leading-tight">12/27</div>
-                        </div>
-
-                        {/* شعار Mastercard في الأسفل يسار */}
-                        <div className="absolute bottom-2 left-3 flex items-center gap-1">
+                        {/* شعار Mastercard في أسفل يسار */}
+                        <div className="absolute bottom-2 left-1/2 transform -translate-x-1/2 flex items-center gap-1">
                           <div className="w-2 h-2 rounded-full bg-red-500"></div>
                           <div className="w-2 h-2 rounded-full bg-yellow-400 -ml-1"></div>
-                          <span className="text-xs font-bold ml-1 tracking-wider">MC</span>
+                          <span className="text-xs font-bold ml-1 tracking-wider">MASTERCARD</span>
                         </div>
 
                         {/* تأثيرات بصرية */}
