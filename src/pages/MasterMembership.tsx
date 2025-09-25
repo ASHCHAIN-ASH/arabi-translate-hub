@@ -82,22 +82,64 @@ const MasterMembership = () => {
       icon: Users,
       color: 'text-blue-600',
       title: 'كاش باك مضمون',
-      description: 'استرداد نقدي مضمون يصل إلى 1,260 ريال حسب نوع الاشتراك الاختياري',
-      membership: ['ريال للفضية 120', 'ريال للذهبية 480', 'ريال للبلاتينية 1,260']
+      description: 'استرداد نقدي مضمون يصل إلى 1,260 ريال حسب نوع الاشتراك',
+      membership: ['120 ريال للفضية', '480 ريال للذهبية', '1,260 ريال للبلاتينية']
     },
     {
       icon: BookOpen,
       color: 'text-green-600',
       title: 'مكتبة محتوى شاملة',
-      description: 'وصول لآلاف المقالات والموارد التعليمية المتخصصة في الترجمة والأبحاث',
+      description: 'وصول لآلاف المقالات والموارد التعليمية المتخصصة',
       membership: ['محدود للفضية', 'متقدم للذهبية', 'غير محدود للبلاتينية']
     },
     {
       icon: MessageSquare,
       color: 'text-indigo-600',
       title: 'مجتمع من الخبراء',
-      description: 'تفاعل مع شبكة من المترجمين والباحثين المحترفين من جميع أنحاء العالم',
+      description: 'تفاعل مع شبكة من المترجمين والباحثين المحترفين',
       membership: ['نقاشات عامة', 'ورش عمل مباشرة', 'مجموعة VIP حصرية']
+    },
+    {
+      icon: Award,
+      color: 'text-orange-600',
+      title: 'شهادات معتمدة',
+      description: 'احصل على شهادات معتمدة في الترجمة والبحث الأكاديمي',
+      membership: ['شهادة أساسية', 'شهادة متقدمة', 'شهادة خبير معتمد']
+    },
+    {
+      icon: Shield,
+      color: 'text-red-600',
+      title: 'ضمان الجودة',
+      description: 'ضمان جودة الترجمة مع إمكانية المراجعة والتعديل المجاني',
+      membership: ['مراجعة واحدة', 'مراجعتان', 'مراجعات غير محدودة']
+    },
+    {
+      icon: Download,
+      color: 'text-teal-600',
+      title: 'أدوات حصرية',
+      description: 'وصول لأدوات الترجمة والبحث المتطورة والحصرية',
+      membership: ['أدوات أساسية', 'أدوات متقدمة', 'جميع الأدوات المتاحة']
+    },
+    {
+      icon: Globe,
+      color: 'text-cyan-600',
+      title: 'دعم متعدد اللغات',
+      description: 'دعم فني متخصص بأكثر من 15 لغة عالمية',
+      membership: ['5 لغات', '10 لغات', '15+ لغة']
+    },
+    {
+      icon: Tag,
+      color: 'text-pink-600',
+      title: 'عروض حصرية',
+      description: 'وصول مبكر للعروض والخدمات الجديدة قبل الآخرين',
+      membership: ['إشعارات العروض', 'وصول مبكر', 'عروض VIP حصرية']
+    },
+    {
+      icon: UserCheck,
+      color: 'text-violet-600',
+      title: 'دعم شخصي مخصص',
+      description: 'مدير حساب شخصي للمساعدة في جميع احتياجاتك',
+      membership: ['دعم عام', 'دعم أولوية', 'مدير حساب مخصص']
     }
   ];
 
@@ -297,57 +339,123 @@ const MasterMembership = () => {
               مزايا عضوية ماستر
             </h2>
             
-            <div className="flex flex-col gap-8 max-w-4xl mx-auto">
+            <div className="grid gap-6 lg:grid-cols-2 max-w-6xl mx-auto">
               {benefits.map((benefit, index) => (
                 <motion.div
                   key={index}
-                  initial={{ opacity: 0, x: 50 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  whileHover={{ scale: 1.02, x: -5 }}
-                  transition={{ delay: index * 0.2, duration: 0.6 }}
+                  initial={{ opacity: 0, x: 50, scale: 0.9 }}
+                  animate={{ opacity: 1, x: 0, scale: 1 }}
+                  whileHover={{ scale: 1.03, y: -5 }}
+                  transition={{ 
+                    delay: index * 0.1, 
+                    duration: 0.5,
+                    type: "spring",
+                    stiffness: 100 
+                  }}
+                  className="group"
                 >
-                  <Card className="p-8 hover:shadow-xl transition-all duration-500 border-r-4 border-purple-500 bg-gradient-to-l from-purple-50/50 to-white">
-                    <div className="flex items-start gap-8">
+                  <Card className="p-6 hover:shadow-xl transition-all duration-500 border-r-4 border-purple-500 bg-gradient-to-l from-purple-50/30 to-white hover:from-purple-50/50 hover:to-blue-50/30 overflow-hidden relative h-full">
+                    {/* Background Animation */}
+                    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-purple-100/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 transform translate-x-full group-hover:translate-x-0"></div>
+                    
+                    <div className="flex items-start gap-6 relative z-10">
                       <div className="flex-1 text-right">
                         <motion.h3 
                           initial={{ opacity: 0, y: 20 }}
                           animate={{ opacity: 1, y: 0 }}
-                          transition={{ delay: index * 0.2 + 0.2, duration: 0.5 }}
-                          className="text-2xl font-bold mb-4 text-gray-800"
+                          transition={{ delay: index * 0.1 + 0.2, duration: 0.4 }}
+                          className="text-xl font-bold mb-3 text-gray-800"
                         >
                           {benefit.title}
                         </motion.h3>
                         <motion.p 
                           initial={{ opacity: 0, y: 20 }}
                           animate={{ opacity: 1, y: 0 }}
-                          transition={{ delay: index * 0.2 + 0.3, duration: 0.5 }}
-                          className="text-gray-600 mb-6 text-lg leading-relaxed"
+                          transition={{ delay: index * 0.1 + 0.3, duration: 0.4 }}
+                          className="text-gray-600 mb-4 text-sm leading-relaxed"
                         >
                           {benefit.description}
                         </motion.p>
-                        <div className="grid gap-4 sm:grid-cols-1">
+                        <div className="space-y-2">
                           {benefit.membership.map((level, idx) => (
                             <motion.div 
                               key={idx} 
                               initial={{ opacity: 0, x: 30 }}
                               animate={{ opacity: 1, x: 0 }}
-                              transition={{ delay: index * 0.2 + 0.4 + idx * 0.1, duration: 0.4 }}
-                              className="flex items-center gap-3 justify-end"
+                              transition={{ 
+                                delay: index * 0.1 + 0.4 + idx * 0.1, 
+                                duration: 0.3 
+                              }}
+                              className="flex items-center gap-2 justify-end"
                             >
-                              <span className="text-gray-700 font-medium">{level}</span>
-                              <CheckCircle className="h-5 w-5 text-green-500 flex-shrink-0" />
+                              <span className="text-gray-700 text-sm font-medium">{level}</span>
+                              <motion.div
+                                whileHover={{ scale: 1.2, rotate: 360 }}
+                                transition={{ duration: 0.3 }}
+                              >
+                                <CheckCircle className="h-4 w-4 text-green-500 flex-shrink-0" />
+                              </motion.div>
                             </motion.div>
                           ))}
                         </div>
                       </div>
+                      
+                      {/* Animated Icon */}
                       <motion.div 
-                        initial={{ opacity: 0, scale: 0 }}
-                        animate={{ opacity: 1, scale: 1 }}
-                        whileHover={{ scale: 1.1, rotate: 5 }}
-                        transition={{ delay: index * 0.2, duration: 0.6, type: "spring", stiffness: 200 }}
-                        className="w-20 h-20 rounded-2xl bg-gradient-to-br from-purple-100 via-blue-100 to-indigo-100 flex items-center justify-center flex-shrink-0 shadow-lg"
+                        initial={{ opacity: 0, scale: 0, rotate: -180 }}
+                        animate={{ opacity: 1, scale: 1, rotate: 0 }}
+                        whileHover={{ 
+                          scale: 1.2, 
+                          rotate: 10,
+                          y: -5,
+                          boxShadow: "0 10px 25px rgba(0,0,0,0.15)"
+                        }}
+                        transition={{ 
+                          delay: index * 0.1, 
+                          duration: 0.6, 
+                          type: "spring", 
+                          stiffness: 200 
+                        }}
+                        className="w-16 h-16 rounded-xl bg-gradient-to-br from-white via-gray-50 to-gray-100 flex items-center justify-center flex-shrink-0 shadow-lg border border-gray-200/50 relative overflow-hidden"
                       >
-                        <benefit.icon className={`h-10 w-10 ${benefit.color}`} />
+                        {/* Icon Glow Effect */}
+                        <motion.div
+                          className="absolute inset-0 bg-gradient-to-br from-purple-100/50 to-blue-100/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                          initial={false}
+                          animate={{ opacity: 0 }}
+                          whileHover={{ opacity: 1 }}
+                        />
+                        
+                        {/* Floating Icon */}
+                        <motion.div
+                          animate={{ 
+                            y: [0, -2, 0],
+                            rotate: [0, 2, -2, 0]
+                          }}
+                          transition={{ 
+                            duration: 3,
+                            repeat: Infinity,
+                            ease: "easeInOut",
+                            delay: index * 0.2
+                          }}
+                          className="relative z-10"
+                        >
+                          <benefit.icon className={`h-8 w-8 ${benefit.color} transition-colors duration-300`} />
+                        </motion.div>
+
+                        {/* Sparkle Effect */}
+                        <motion.div
+                          className="absolute top-1 right-1 w-2 h-2 bg-yellow-300 rounded-full opacity-0"
+                          animate={{ 
+                            opacity: [0, 1, 0],
+                            scale: [0.5, 1, 0.5]
+                          }}
+                          transition={{ 
+                            duration: 2,
+                            repeat: Infinity,
+                            delay: index * 0.3
+                          }}
+                        />
                       </motion.div>
                     </div>
                   </Card>
