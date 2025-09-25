@@ -620,7 +620,7 @@ export default function EmailNotifications() {
 
           <!-- Digital Stamp -->
           <div style="text-align: center; margin: 20px auto 10px auto;">
-            <img src="data:image/png;base64,${digitalStamp}" alt="ختم وكالة ماستر إيدو باث المعتمد" style="width: 100px; height: 100px; filter: drop-shadow(0 4px 8px rgba(255,255,255,0.3)); opacity: 0.9;" />
+            <img src="${digitalStamp}" alt="ختم وكالة ماستر إيدو باث المعتمد" style="width: 100px; height: 100px; filter: drop-shadow(0 4px 8px rgba(0,0,0,0.2)); opacity: 0.95;" />
           </div>
         </div>
         
@@ -995,7 +995,7 @@ export default function EmailNotifications() {
           <div style="display: flex; justify-content: space-between; background: #f1f5f9; padding: 15px; border-radius: 8px; margin-bottom: 20px; direction: rtl;" class="mobile-flex">
             <div style="text-align: right; direction: rtl;">
               <p style="margin: 0; color: #475569; font-weight: bold; text-align: right; direction: rtl; font-size: 14px;" class="mobile-text">رقم السند:</p>
-              <p style="margin: 5px 0 0 0; color: #1e293b; font-size: 16px; font-weight: bold; text-align: right; direction: rtl;" class="mobile-text">#${data.invoiceNumber}</p>
+              <p style="margin: 5px 0 0 0; color: #1e293b; font-size: 16px; font-weight: bold; text-align: right; direction: rtl;" class="mobile-text">#${data.invoiceNumber || 'غير محدد'}</p>
             </div>
             <div style="text-align: right; direction: rtl;">
               <p style="margin: 0; color: #475569; font-weight: bold; text-align: right; direction: rtl; font-size: 14px;" class="mobile-text">التاريخ:</p>
@@ -1012,12 +1012,12 @@ export default function EmailNotifications() {
             
             <div style="background: #f0fdf4; border-radius: 8px; padding: 15px; margin-bottom: 15px; border-right: 4px solid #10b981; direction: rtl;">
               <p style="margin: 0 0 8px 0; color: #374151; font-weight: bold; text-align: right; direction: rtl; font-size: 14px;" class="mobile-text">مبلغ وقدره:</p>
-              <p style="margin: 0; color: #059669; font-size: 18px; font-weight: bold; text-align: right; direction: rtl;">${data.amount} ${data.currency}</p>
+              <p style="margin: 0; color: #059669; font-size: 18px; font-weight: bold; text-align: right; direction: rtl;">${data.amount || '0'} ${data.currency || 'ر.س'}</p>
             </div>
             
             <div style="background: #fafafa; border-radius: 8px; padding: 15px; margin-bottom: 15px; direction: rtl;">
               <p style="margin: 0 0 8px 0; color: #374151; font-weight: bold; text-align: right; direction: rtl; font-size: 14px;" class="mobile-text">وذلك عن:</p>
-              <p style="margin: 0; color: #1f2937; text-align: right; direction: rtl; font-size: 14px;" class="mobile-text">سداد الفاتورة رقم ${data.invoiceNumber}</p>
+              <p style="margin: 0; color: #1f2937; text-align: right; direction: rtl; font-size: 14px;" class="mobile-text">سداد الفاتورة رقم ${data.invoiceNumber || 'غير محدد'}</p>
             </div>
             
             <div style="background: #fafafa; border-radius: 8px; padding: 15px; direction: rtl;">
@@ -1029,7 +1029,7 @@ export default function EmailNotifications() {
           <!-- Amount in Words -->
           <div style="background: #f0f9ff; border: 2px solid #3b82f6; border-radius: 8px; padding: 15px; margin: 20px 0; text-align: center; direction: rtl;">
             <p style="margin: 0; color: #1e40af; font-weight: bold; font-size: 14px; direction: rtl;" class="mobile-text">المبلغ بالأحرف:</p>
-            <p style="margin: 5px 0 0 0; color: #1e3a8a; font-size: 16px; border-bottom: 2px dashed #3b82f6; padding-bottom: 8px; display: inline-block; min-width: 200px; direction: rtl;" class="mobile-text">${data.amount} ${data.currency} فقط لا غير</p>
+            <p style="margin: 5px 0 0 0; color: #1e3a8a; font-size: 16px; border-bottom: 2px dashed #3b82f6; padding-bottom: 8px; display: inline-block; min-width: 200px; direction: rtl;" class="mobile-text">${data.amount || '0'} ${data.currency || 'ر.س'} فقط لا غير</p>
           </div>
 
           <!-- WhatsApp Contact -->
@@ -1045,6 +1045,7 @@ export default function EmailNotifications() {
               <p style="margin: 0; color: #6b7280; font-size: 12px; direction: rtl;" class="mobile-text">توقيع المستلم</p>
             </div>
             <div style="text-align: center; flex: 1; direction: rtl;">
+              <img src="${digitalStamp}" alt="ختم وكالة ماستر إيدو باث المعتمد" style="width: 80px; height: 80px; margin: 0 auto 8px auto; display: block; filter: drop-shadow(0 4px 8px rgba(0,0,0,0.2)); opacity: 0.95;" />
               <div style="border-bottom: 2px solid #374151; width: 100%; max-width: 150px; margin: 0 auto 8px auto; height: 30px;"></div>
               <p style="margin: 0; color: #6b7280; font-size: 12px; direction: rtl;" class="mobile-text">ختم الشركة</p>
             </div>
