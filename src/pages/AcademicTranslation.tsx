@@ -146,7 +146,7 @@ const AcademicTranslation = () => {
           ))}
         </div>
 
-        <div className="relative container mx-auto max-w-6xl px-4 py-24">
+        <div className="relative container mx-auto max-w-6xl px-4 sm:px-6 py-16 sm:py-20 md:py-24">
           <motion.div
             initial={{ opacity: 0, y: 60 }}
             animate={{ opacity: 1, y: 0 }}
@@ -191,7 +191,7 @@ const AcademicTranslation = () => {
             </motion.div>
             
             <motion.h1
-              className="text-5xl md:text-7xl font-bold mb-8 font-arabic-title"
+              className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold mb-6 sm:mb-8 font-arabic-title leading-tight"
               initial={{ opacity: 0, scale: 0.8 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ delay: 0.3, duration: 1 }}
@@ -202,7 +202,7 @@ const AcademicTranslation = () => {
             </motion.h1>
             
             <motion.p
-              className="text-xl md:text-2xl mb-10 font-arabic-body max-w-4xl mx-auto leading-relaxed"
+              className="text-lg sm:text-xl md:text-2xl mb-8 sm:mb-10 font-arabic-body max-w-4xl mx-auto leading-relaxed px-4 sm:px-0"
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.5, duration: 1 }}
@@ -211,7 +211,7 @@ const AcademicTranslation = () => {
             </motion.p>
             
             <motion.div
-              className="flex flex-col sm:flex-row gap-6 justify-center"
+              className="flex flex-col sm:flex-row gap-4 sm:gap-6 justify-center px-4 sm:px-0"
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.7, duration: 1 }}
@@ -219,7 +219,7 @@ const AcademicTranslation = () => {
               <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
                 <Button 
                   size="lg" 
-                  className="text-lg px-10 py-4 bg-white text-indigo-600 hover:bg-white/90 shadow-xl font-bold"
+                  className="text-base sm:text-lg px-8 sm:px-10 py-3 sm:py-4 bg-white text-indigo-600 hover:bg-white/90 shadow-xl font-bold min-h-[48px]"
                 >
                   ابدأ مشروعك الأكاديمي
                 </Button>
@@ -228,7 +228,7 @@ const AcademicTranslation = () => {
                 <Button 
                   size="lg" 
                   variant="outline" 
-                  className="text-lg px-10 py-4 border-white/30 text-white hover:bg-white/10 backdrop-blur-sm"
+                  className="text-base sm:text-lg px-8 sm:px-10 py-3 sm:py-4 border-white/30 text-white hover:bg-white/10 backdrop-blur-sm min-h-[48px]"
                 >
                   تصفح الأبحاث المترجمة
                 </Button>
@@ -248,12 +248,12 @@ const AcademicTranslation = () => {
             transition={{ duration: 1 }}
             className="text-center mb-16"
           >
-            <h2 className="text-4xl md:text-5xl font-bold mb-6 font-arabic-title">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-4 sm:mb-6 font-arabic-title">
               <span className="bg-gradient-to-r from-indigo-600 to-blue-600 bg-clip-text text-transparent">
                 خدمات الترجمة الأكاديمية
               </span>
             </h2>
-            <p className="text-xl text-gray-600 font-arabic-body max-w-3xl mx-auto">
+            <p className="text-lg sm:text-xl text-gray-600 font-arabic-body max-w-3xl mx-auto px-4 sm:px-0">
               نقدم ترجمة أكاديمية عالية الجودة تلبي معايير المؤسسات التعليمية والبحثية
             </p>
           </motion.div>
@@ -263,7 +263,7 @@ const AcademicTranslation = () => {
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true }}
-            className="grid md:grid-cols-2 gap-8 mb-20"
+            className="grid grid-cols-1 sm:grid-cols-2 gap-6 sm:gap-8 mb-16 sm:mb-20"
           >
             {academicServices.map((service, index) => (
               <motion.div

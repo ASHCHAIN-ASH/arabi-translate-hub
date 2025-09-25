@@ -234,8 +234,8 @@ const AcademicTranslationForm = () => {
   };
 
   return (
-    <section className="py-16 bg-gradient-to-br from-blue-50/50 to-indigo-50/50 dark:from-blue-950/20 dark:to-indigo-950/20" dir="rtl">
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+    <section className="py-12 sm:py-16 bg-gradient-to-br from-blue-50/50 to-indigo-50/50 dark:from-blue-950/20 dark:to-indigo-950/20" dir="rtl">
+      <div className="container mx-auto px-3 sm:px-4 lg:px-6 xl:px-8">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -243,29 +243,29 @@ const AcademicTranslationForm = () => {
           viewport={{ once: true }}
           className="max-w-5xl mx-auto"
         >
-          <Card className="shadow-2xl border-0 bg-white/95 dark:bg-slate-900/95 backdrop-blur-sm">
-            <CardHeader className="text-center pb-8 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-t-lg">
-              <div className="flex items-center justify-center gap-3 mb-4">
-                <Languages className="h-8 w-8" />
-                <CardTitle className="text-3xl font-arabic-formal font-bold">
+          <Card className="shadow-2xl border-0 bg-white/95 dark:bg-slate-900/95 backdrop-blur-sm overflow-hidden">
+            <CardHeader className="text-center pb-6 sm:pb-8 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-t-lg">
+              <div className="flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-3 mb-3 sm:mb-4">
+                <Languages className="h-6 sm:h-7 md:h-8 w-6 sm:w-7 md:w-8" />
+                <CardTitle className="text-xl sm:text-2xl md:text-3xl font-arabic-formal font-bold text-center">
                   طلب ترجمة أكاديمية متخصصة
                 </CardTitle>
               </div>
-              <p className="text-blue-100 text-lg">
+              <p className="text-blue-100 text-sm sm:text-base md:text-lg px-2 sm:px-0">
                 احصل على ترجمة أكاديمية دقيقة ومعتمدة لوثائقك العلمية والبحثية
               </p>
             </CardHeader>
             
-            <CardContent className="p-8">
-              <form onSubmit={handleSubmit} className="space-y-6">
+            <CardContent className="p-4 sm:p-6 md:p-8">
+              <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-6">
                 {/* معلومات العميل */}
-                <div className="bg-blue-50 dark:bg-blue-950/30 p-6 rounded-lg">
-                  <h3 className="text-lg font-semibold text-blue-700 dark:text-blue-300 mb-4 flex items-center gap-2">
-                    <User className="h-5 w-5" />
+                <div className="bg-blue-50 dark:bg-blue-950/30 p-4 sm:p-6 rounded-lg">
+                  <h3 className="text-base sm:text-lg font-semibold text-blue-700 dark:text-blue-300 mb-3 sm:mb-4 flex items-center gap-2">
+                    <User className="h-4 sm:h-5 w-4 sm:w-5" />
                     معلومات العميل
                   </h3>
                   
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
                     <div className="space-y-2">
                       <Label htmlFor="fullName" className="text-sm font-medium flex items-center gap-2 text-right">
                         <User className="h-4 w-4 text-blue-600" />
@@ -278,7 +278,7 @@ const AcademicTranslationForm = () => {
                         value={formData.fullName}
                         onChange={(e) => handleInputChange('fullName', e.target.value)}
                         required
-                        className="border-2 border-gray-200 focus:border-blue-500 transition-colors text-right"
+                        className="border-2 border-gray-200 focus:border-blue-500 transition-colors text-right h-11 sm:h-10"
                         dir="rtl"
                       />
                     </div>
@@ -295,13 +295,13 @@ const AcademicTranslationForm = () => {
                         value={formData.phone}
                         onChange={(e) => handleInputChange('phone', e.target.value)}
                         required
-                        className="border-2 border-gray-200 focus:border-blue-500 transition-colors text-left"
+                        className="border-2 border-gray-200 focus:border-blue-500 transition-colors text-left h-11 sm:h-10"
                         dir="ltr"
                       />
                     </div>
                   </div>
 
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6 mt-3 sm:mt-4">
                     <div className="space-y-2">
                       <Label htmlFor="email" className="text-sm font-medium flex items-center gap-2 text-right">
                         <Mail className="h-4 w-4 text-blue-600" />
@@ -314,7 +314,7 @@ const AcademicTranslationForm = () => {
                         value={formData.email}
                         onChange={(e) => handleInputChange('email', e.target.value)}
                         required
-                        className="border-2 border-gray-200 focus:border-blue-500 transition-colors text-left"
+                        className="border-2 border-gray-200 focus:border-blue-500 transition-colors text-left h-11 sm:h-10"
                         dir="ltr"
                       />
                     </div>
@@ -331,13 +331,13 @@ const AcademicTranslationForm = () => {
                         value={formData.organization}
                         onChange={(e) => handleInputChange('organization', e.target.value)}
                         required
-                        className="border-2 border-gray-200 focus:border-blue-500 transition-colors text-right"
+                        className="border-2 border-gray-200 focus:border-blue-500 transition-colors text-right h-11 sm:h-10"
                         dir="rtl"
                       />
                     </div>
                   </div>
 
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6 mt-3 sm:mt-4">
                     <div className="space-y-2">
                       <Label htmlFor="position" className="text-sm font-medium flex items-center gap-2 text-right">
                         <GraduationCap className="h-4 w-4 text-blue-600" />
@@ -349,7 +349,7 @@ const AcademicTranslationForm = () => {
                         placeholder="مثال: طالب دكتوراه، أستاذ مساعد، باحث..."
                         value={formData.position}
                         onChange={(e) => handleInputChange('position', e.target.value)}
-                        className="border-2 border-gray-200 focus:border-blue-500 transition-colors text-right"
+                        className="border-2 border-gray-200 focus:border-blue-500 transition-colors text-right h-11 sm:h-10"
                         dir="rtl"
                       />
                     </div>
@@ -360,7 +360,7 @@ const AcademicTranslationForm = () => {
                         المستوى الأكاديمي *
                       </Label>
                       <Select value={formData.academicLevel} onValueChange={(value) => handleInputChange('academicLevel', value)} dir="rtl">
-                        <SelectTrigger className="border-2 border-gray-200 focus:border-blue-500 text-right" dir="rtl">
+                        <SelectTrigger className="border-2 border-gray-200 focus:border-blue-500 text-right h-11 sm:h-10" dir="rtl">
                           <SelectValue placeholder="اختر المستوى الأكاديمي" />
                         </SelectTrigger>
                         <SelectContent dir="rtl">
@@ -376,20 +376,20 @@ const AcademicTranslationForm = () => {
                 </div>
 
                 {/* معلومات الوثيقة */}
-                <div className="bg-indigo-50 dark:bg-indigo-950/30 p-6 rounded-lg">
-                  <h3 className="text-lg font-semibold text-indigo-700 dark:text-indigo-300 mb-4 flex items-center gap-2">
-                    <FileText className="h-5 w-5" />
+                <div className="bg-indigo-50 dark:bg-indigo-950/30 p-4 sm:p-6 rounded-lg">
+                  <h3 className="text-base sm:text-lg font-semibold text-indigo-700 dark:text-indigo-300 mb-3 sm:mb-4 flex items-center gap-2">
+                    <FileText className="h-4 sm:h-5 w-4 sm:w-5" />
                     معلومات الوثيقة
                   </h3>
 
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
                     <div className="space-y-2">
                       <Label className="text-sm font-medium flex items-center gap-2 text-right">
                         <BookOpen className="h-4 w-4 text-indigo-600" />
                         مجال الدراسة *
                       </Label>
                       <Select value={formData.fieldOfStudy} onValueChange={(value) => handleInputChange('fieldOfStudy', value)} dir="rtl">
-                        <SelectTrigger className="border-2 border-gray-200 focus:border-indigo-500 text-right" dir="rtl">
+                        <SelectTrigger className="border-2 border-gray-200 focus:border-indigo-500 text-right h-11 sm:h-10" dir="rtl">
                           <SelectValue placeholder="اختر مجال الدراسة" />
                         </SelectTrigger>
                         <SelectContent dir="rtl">
@@ -408,7 +408,7 @@ const AcademicTranslationForm = () => {
                         نوع الوثيقة *
                       </Label>
                       <Select value={formData.documentType} onValueChange={(value) => handleInputChange('documentType', value)} dir="rtl">
-                        <SelectTrigger className="border-2 border-gray-200 focus:border-indigo-500 text-right" dir="rtl">
+                        <SelectTrigger className="border-2 border-gray-200 focus:border-indigo-500 text-right h-11 sm:h-10" dir="rtl">
                           <SelectValue placeholder="اختر نوع الوثيقة" />
                         </SelectTrigger>
                         <SelectContent dir="rtl">
@@ -434,7 +434,7 @@ const AcademicTranslationForm = () => {
                       value={formData.documentTitle}
                       onChange={(e) => handleInputChange('documentTitle', e.target.value)}
                       required
-                      className="border-2 border-gray-200 focus:border-indigo-500 transition-colors text-right"
+                      className="border-2 border-gray-200 focus:border-indigo-500 transition-colors text-right h-11 sm:h-10"
                       dir="rtl"
                     />
                   </div>
@@ -446,7 +446,7 @@ const AcademicTranslationForm = () => {
                         اللغة المصدر *
                       </Label>
                       <Select value={formData.sourceLanguage} onValueChange={(value) => handleInputChange('sourceLanguage', value)} dir="rtl">
-                        <SelectTrigger className="border-2 border-gray-200 focus:border-indigo-500 text-right" dir="rtl">
+                        <SelectTrigger className="border-2 border-gray-200 focus:border-indigo-500 text-right h-11 sm:h-10" dir="rtl">
                           <SelectValue placeholder="اختر اللغة المصدر" />
                         </SelectTrigger>
                         <SelectContent dir="rtl">
@@ -465,7 +465,7 @@ const AcademicTranslationForm = () => {
                         اللغة المستهدفة *
                       </Label>
                       <Select value={formData.targetLanguage} onValueChange={(value) => handleInputChange('targetLanguage', value)} dir="rtl">
-                        <SelectTrigger className="border-2 border-gray-200 focus:border-indigo-500 text-right" dir="rtl">
+                        <SelectTrigger className="border-2 border-gray-200 focus:border-indigo-500 text-right h-11 sm:h-10" dir="rtl">
                           <SelectValue placeholder="اختر اللغة المستهدفة" />
                         </SelectTrigger>
                         <SelectContent dir="rtl">
@@ -499,7 +499,7 @@ const AcademicTranslationForm = () => {
                         placeholder="عدد الصفحات"
                         value={formData.pageCount}
                         onChange={(e) => handleInputChange('pageCount', e.target.value)}
-                        className="border-2 border-gray-200 focus:border-purple-500 transition-colors text-center"
+                        className="border-2 border-gray-200 focus:border-purple-500 transition-colors text-center h-11 sm:h-10"
                         dir="ltr"
                       />
                     </div>
@@ -515,7 +515,7 @@ const AcademicTranslationForm = () => {
                         placeholder="عدد الكلمات (تقريبي)"
                         value={formData.wordCount}
                         onChange={(e) => handleInputChange('wordCount', e.target.value)}
-                        className="border-2 border-gray-200 focus:border-purple-500 transition-colors text-center"
+                        className="border-2 border-gray-200 focus:border-purple-500 transition-colors text-center h-11 sm:h-10"
                         dir="ltr"
                       />
                     </div>
@@ -526,7 +526,7 @@ const AcademicTranslationForm = () => {
                         مستوى الأولوية *
                       </Label>
                       <Select value={formData.urgency} onValueChange={(value) => handleInputChange('urgency', value)} dir="rtl">
-                        <SelectTrigger className="border-2 border-gray-200 focus:border-purple-500 text-right" dir="rtl">
+                        <SelectTrigger className="border-2 border-gray-200 focus:border-purple-500 text-right h-11 sm:h-10" dir="rtl">
                           <SelectValue placeholder="اختر مستوى الأولوية" />
                         </SelectTrigger>
                         <SelectContent dir="rtl">
@@ -547,7 +547,7 @@ const AcademicTranslationForm = () => {
                         هل تحتاج تصديق؟ *
                       </Label>
                       <Select value={formData.certificationNeeded} onValueChange={(value) => handleInputChange('certificationNeeded', value)} dir="rtl">
-                        <SelectTrigger className="border-2 border-gray-200 focus:border-purple-500 text-right" dir="rtl">
+                        <SelectTrigger className="border-2 border-gray-200 focus:border-purple-500 text-right h-11 sm:h-10" dir="rtl">
                           <SelectValue placeholder="اختر إذا كنت بحاجة لتصديق" />
                         </SelectTrigger>
                         <SelectContent dir="rtl">
@@ -565,7 +565,7 @@ const AcademicTranslationForm = () => {
                         الميزانية المتوقعة
                       </Label>
                       <Select value={formData.budgetRange} onValueChange={(value) => handleInputChange('budgetRange', value)} dir="rtl">
-                        <SelectTrigger className="border-2 border-gray-200 focus:border-purple-500 text-right" dir="rtl">
+                        <SelectTrigger className="border-2 border-gray-200 focus:border-purple-500 text-right h-11 sm:h-10" dir="rtl">
                           <SelectValue placeholder="اختر نطاق الميزانية" />
                         </SelectTrigger>
                         <SelectContent dir="rtl">
@@ -590,7 +590,7 @@ const AcademicTranslationForm = () => {
                       value={formData.specialRequirements}
                       onChange={(e) => handleInputChange('specialRequirements', e.target.value)}
                       rows={3}
-                      className="border-2 border-gray-200 focus:border-purple-500 transition-colors resize-none text-right"
+                      className="border-2 border-gray-200 focus:border-purple-500 transition-colors resize-none text-right min-h-[80px] sm:min-h-[100px]"
                       dir="rtl"
                     />
                   </div>
@@ -607,41 +607,41 @@ const AcademicTranslationForm = () => {
                     placeholder="أي معلومات إضافية تود مشاركتها حول مشروع الترجمة..."
                     value={formData.additionalNotes}
                     onChange={(e) => handleInputChange('additionalNotes', e.target.value)}
-                    rows={4}
-                    className="border-2 border-gray-200 focus:border-slate-500 transition-colors resize-none text-right"
+                    rows={3}
+                    className="border-2 border-gray-200 focus:border-slate-500 transition-colors resize-none text-right min-h-[80px] sm:min-h-[100px]"
                     dir="rtl"
                   />
                 </div>
 
                 {/* زر الإرسال */}
                 <motion.div
-                  className="pt-6"
+                  className="pt-4 sm:pt-6"
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
                 >
                   <Button
                     type="submit"
                     disabled={isSubmitting}
-                    className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white py-4 text-lg font-semibold rounded-lg shadow-lg disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300"
+                    className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white py-3 sm:py-4 text-base sm:text-lg font-semibold rounded-lg shadow-lg disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 min-h-[48px] sm:min-h-[52px]"
                   >
                     {isSubmitting ? (
                       <div className="flex items-center justify-center gap-2">
-                        <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                        جاري إرسال الطلب...
+                        <div className="w-4 sm:w-5 h-4 sm:h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                        <span className="text-sm sm:text-base">جاري إرسال الطلب...</span>
                       </div>
                     ) : (
                       <div className="flex items-center justify-center gap-2">
-                        <Send className="h-5 w-5" />
-                        طلب الترجمة الأكاديمية
+                        <Send className="h-4 sm:h-5 w-4 sm:w-5" />
+                        <span className="text-sm sm:text-base">طلب الترجمة الأكاديمية</span>
                       </div>
                     )}
                   </Button>
                 </motion.div>
 
-                <div className="text-center text-sm text-gray-600 dark:text-gray-400 mt-4">
+                <div className="text-center text-xs sm:text-sm text-gray-600 dark:text-gray-400 mt-3 sm:mt-4 space-y-1 sm:space-y-2 px-2 sm:px-0">
                   <p>* سيقوم فريق الخبراء بالتواصل معك خلال 4 ساعات</p>
-                  <p className="mt-1">📚 سنقوم بترجمة دقيقة ومعتمدة لوثائقك الأكاديمية</p>
-                  <p className="mt-1">🔒 معلوماتك محمية ولن يتم مشاركتها مع أي طرف ثالث</p>
+                  <p>📚 سنقوم بترجمة دقيقة ومعتمدة لوثائقك الأكاديمية</p>
+                  <p>🔒 معلوماتك محمية ولن يتم مشاركتها مع أي طرف ثالث</p>
                 </div>
               </form>
             </CardContent>
