@@ -83,6 +83,12 @@ import AudioTranslation from "./pages/services/AudioTranslation";
 import WebsiteTranslation from "./pages/services/WebsiteTranslation";
 import VideoTranslation from "./pages/services/VideoTranslation";
 import CustomServices from "./pages/services/CustomServices";
+import TranslationServicesDetail from "./pages/services/TranslationServices";
+import EditingServices from "./pages/services/EditingServices";
+import AcademicWritingServices from "./pages/services/AcademicWritingServices";
+import ConsultationServices from "./pages/services/ConsultationServices";
+import StatisticalAnalysisServices from "./pages/services/StatisticalAnalysisServices";
+import PublishingServices from "./pages/services/PublishingServices";
 import Services from "./pages/Services";
 import ResearchEvaluation from "./pages/research/ResearchEvaluation";
 import Publication from "./pages/research/Publication";
@@ -282,6 +288,14 @@ const App = () => (
             <Route path="/services/website-translation" element={<WebsiteTranslation />} />
             <Route path="/services/video-translation" element={<VideoTranslation />} />
             <Route path="/services/custom-services" element={<CustomServices />} />
+            
+            {/* Professional Service Detail Routes */}
+            <Route path="/services/translation-services" element={<TranslationServicesDetail />} />
+            <Route path="/services/editing-services" element={<EditingServices />} />
+            <Route path="/services/academic-writing" element={<AcademicWritingServices />} />
+            <Route path="/services/consultation-services" element={<ConsultationServices />} />
+            <Route path="/services/statistical-analysis" element={<StatisticalAnalysisServices />} />
+            <Route path="/services/publishing-services" element={<PublishingServices />} />
             
             <Route path="*" element={<NotFound />} />
           </Routes>
