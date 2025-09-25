@@ -20,6 +20,7 @@ import MultilingualTranslation from "./pages/academic/MultilingualTranslation";
 import QualityAssurance from "./pages/academic/QualityAssurance";
 import PrivacySecurity from "./pages/academic/PrivacySecurity";
 import TimelineCommitment from "./pages/academic/TimelineCommitment";
+import OrderNow from "./pages/OrderNow";
 import Index from "./pages/Index";
 import TranslationServices from "./pages/TranslationServices";
 import LegalTranslation from "./pages/LegalTranslation";
@@ -108,6 +109,7 @@ const App = () => (
           <Routes>
             {/* Public Routes */}
             <Route path="/" element={<Index />} />
+            <Route path="/order-now" element={<OrderNow />} />
             <Route path="/services" element={<Services />} />
             <Route path="/translation-services" element={<TranslationServices />} />
             <Route path="/legal-translation" element={<LegalTranslation />} />

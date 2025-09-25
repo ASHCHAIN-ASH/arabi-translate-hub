@@ -167,7 +167,7 @@ const Services = () => {
 
   const handleOrderService = (service: Service) => {
     // Check if user is logged in
-    navigate('/submit-order', { state: { selectedService: service } });
+    navigate('/order-now', { state: { selectedService: service } });
   };
 
   return (

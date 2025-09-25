@@ -273,7 +273,7 @@ export default function TranslationServices() {
               <Button 
                 size="lg"
                 className="bg-gradient-to-r from-primary to-secondary hover:from-primary/90 hover:to-secondary/90 text-primary-foreground px-12 py-6 text-xl rounded-2xl shadow-2xl hover:shadow-3xl transition-all duration-500 font-semibold"
-                onClick={() => navigate('/submit-order')}
+                onClick={() => navigate('/order-now')}
               >
                 <Zap className="w-6 h-6 ml-3" />
                 احصل على عرض سعر

@@ -245,7 +245,7 @@ const Header = () => {
                 className="bg-gradient-to-r from-primary to-primary/80 text-primary-foreground hover:from-primary/90 hover:to-primary/70 shadow-lg hover:shadow-xl transition-all duration-300 font-semibold px-8 py-3 rounded-xl" 
                 asChild
               >
-                <Link to="/submit-order" className="flex items-center gap-2">
+                <Link to="/order-now" className="flex items-center gap-2">
                   <span>اطلب الآن</span>
                   <motion.div
                     animate={{ x: [0, -3, 0] }}
@@ -468,7 +468,7 @@ const Header = () => {
                       className="w-full bg-gradient-to-r from-primary to-primary/80 text-primary-foreground hover:from-primary/90 hover:to-primary/70 shadow-lg hover:shadow-xl transition-all duration-300 font-semibold py-4 rounded-xl" 
                       asChild
                     >
-                      <Link to="/submit-order" onClick={() => setIsOpen(false)} className="flex items-center justify-center gap-2">
+                      <Link to="/order-now" onClick={() => setIsOpen(false)} className="flex items-center justify-center gap-2">
                         <span>اطلب الآن</span>
                         <motion.div
                           animate={{ x: [0, -3, 0] }}
