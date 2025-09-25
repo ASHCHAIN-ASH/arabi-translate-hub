@@ -56,6 +56,7 @@ import {
 import { useToast } from '@/hooks/use-toast';
 import Header from '@/components/Header';
 import { supabase } from '@/integrations/supabase/client';
+import OrderFileUploader from '@/components/OrderFileUploader';
 
 // Schema للتحقق من صحة البيانات
 const orderSchema = z.object({
@@ -70,6 +71,11 @@ const orderSchema = z.object({
   budget: z.string().min(1, { message: "الميزانية مطلوبة" }),
   timeline: z.string().min(1, { message: "الجدول الزمني مطلوب" }),
   priority: z.string().min(1, { message: "الأولوية مطلوبة" }),
+  attachments: z.array(z.object({
+    file: z.any(),
+    id: z.string(),
+    uploadUrl: z.string().optional()
+  })).optional()
 });
 
 type OrderFormData = z.infer<typeof orderSchema>;
@@ -80,6 +86,7 @@ const OrderNow = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitSuccess, setSubmitSuccess] = useState(false);
   const [selectedClientType, setSelectedClientType] = useState('');
+  const [attachments, setAttachments] = useState<any[]>([]);
 
   const form = useForm<OrderFormData>({
     resolver: zodResolver(orderSchema),
@@ -95,6 +102,7 @@ const OrderNow = () => {
       budget: '',
       timeline: '',
       priority: '',
+      attachments: []
     },
   });
 
@@ -128,11 +136,16 @@ const OrderNow = () => {
     setIsSubmitting(true);
     
     try {
-      // محاكاة إرسال البيانات
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      // إضافة المرفقات إلى البيانات
+      const orderData = {
+        ...data,
+        attachments: attachments,
+        attachmentUrls: attachments.map(att => att.uploadUrl).filter(Boolean),
+        attachmentNames: attachments.map(att => att.file.name)
+      };
       
       // إرسال تنبيه للإدارة ورد للعميل عبر Edge Function
-      await sendAdminNotification(data);
+      await sendAdminNotification(orderData);
       
       setSubmitSuccess(true);
       
@@ -141,8 +154,9 @@ const OrderNow = () => {
         description: "سيتم التواصل معك خلال 24 ساعة وستصلك رسالة تأكيد على بريدك الإلكتروني",
       });
       
-      // إعادة تعيين النموذج
+      // إعادة تعيين النموذج والمرفقات
       form.reset();
+      setAttachments([]);
       
     } catch (error) {
       console.error("Error submitting order:", error);
@@ -756,11 +770,25 @@ const OrderNow = () => {
                                <FormMessage />
                              </FormItem>
                           )}
-                        />
-                      </div>
-                    </div>
+                         />
+                       </div>
 
-                    {/* Submit Button */}
+                       {/* File Upload Section */}
+                       <div className="bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-900/10 dark:to-purple-900/10 p-5 rounded-lg border border-blue-200 dark:border-blue-800">
+                         <h4 className="text-md font-semibold text-blue-800 dark:text-blue-300 mb-4 flex items-center gap-2">
+                           <FileText className="h-4 w-4" />
+                           الملفات المرفقة (اختياري)
+                         </h4>
+                         
+                         <OrderFileUploader 
+                           onFilesChange={setAttachments}
+                           maxFiles={5}
+                           maxFileSize={10}
+                         />
+                       </div>
+                     </div>
+
+                     {/* Submit Button */}
                     <motion.div
                       initial={{ opacity: 0, y: 20 }}
                       animate={{ opacity: 1, y: 0 }}

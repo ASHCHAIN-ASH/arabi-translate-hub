@@ -21,6 +21,8 @@ interface OrderNotificationRequest {
   budget: string;
   timeline: string;
   priority: string;
+  attachmentUrls?: string[];
+  attachmentNames?: string[];
 }
 
 const handler = async (req: Request): Promise<Response> => {
@@ -70,6 +72,22 @@ const handler = async (req: Request): Promise<Response> => {
               <p style="line-height: 1.6;">${orderData.projectDescription}</p>
             </div>
 
+            ${orderData.attachmentUrls && orderData.attachmentUrls.length > 0 ? `
+            <div style="background: #f0fdf4; border-right: 4px solid #22c55e; padding: 20px; margin: 20px 0;">
+              <h3 style="color: #15803d; margin-top: 0;">الملفات المرفقة</h3>
+              <p style="margin-bottom: 15px;">العميل قام بإرفاق الملفات التالية:</p>
+              <ul style="list-style: none; padding: 0; margin: 0;">
+                ${orderData.attachmentNames?.map((name, index) => `
+                  <li style="background: white; padding: 10px; margin: 5px 0; border-radius: 6px; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+                    <a href="${orderData.attachmentUrls?.[index]}" style="color: #15803d; text-decoration: none; font-weight: 500;" target="_blank">
+                      📎 ${name}
+                    </a>
+                  </li>
+                `).join('')}
+              </ul>
+            </div>
+            ` : ''}
+
             <div style="text-align: center; margin-top: 30px;">
               <p style="color: #6b7280; font-size: 14px;">يرجى التواصل مع العميل خلال 24 ساعة</p>
               <p style="color: #6b7280; font-size: 12px;">تم إرسال هذا الإشعار تلقائياً من نظام وكالة ماستر إيدو باث</p>
@@ -108,6 +126,20 @@ const handler = async (req: Request): Promise<Response> => {
               <p><strong>الأولوية:</strong> ${getPriorityArabic(orderData.priority)}</p>
               <p><strong>المدة المطلوبة:</strong> ${getTimelineArabic(orderData.timeline)}</p>
             </div>
+
+            ${orderData.attachmentUrls && orderData.attachmentUrls.length > 0 ? `
+            <div style="background: #f0fdf4; border: 1px solid #22c55e; border-radius: 8px; padding: 20px; margin: 20px 0;">
+              <h3 style="color: #15803d; margin-top: 0;">📎 الملفات المرفقة</h3>
+              <p style="color: #374151; margin-bottom: 15px;">تم استلام الملفات التالية مع طلبكم:</p>
+              <ul style="list-style: none; padding: 0; margin: 0;">
+                ${orderData.attachmentNames?.map((name) => `
+                  <li style="background: white; padding: 8px 12px; margin: 5px 0; border-radius: 4px; color: #15803d; font-size: 14px;">
+                    ✓ ${name}
+                  </li>
+                `).join('')}
+              </ul>
+            </div>
+            ` : ''}
 
             <div style="background: #fef3c7; border-right: 4px solid #f59e0b; padding: 20px; margin: 20px 0;">
               <h3 style="color: #92400e; margin-top: 0;">⏱️ الخطوات التالية</h3>
