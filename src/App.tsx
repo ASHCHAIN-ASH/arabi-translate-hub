@@ -127,7 +127,7 @@ const App = () => (
              <Route path="/privacy-policy" element={<PrivacyPolicy />} />
              <Route path="/blog" element={<Blog />} />
              <Route path="/faq" element={<FAQ />} />
-             <Route path="/success-stories" element={<SuccessStories />} />
+             <Route path="/academic-competitions" element={<Blog />} />
              <Route path="/client-guide" element={<ClientGuide />} />
              <Route path="/order-tracking" element={<OrderTracking />} />
              <Route path="/submit-order" element={<OrderForm />} />
