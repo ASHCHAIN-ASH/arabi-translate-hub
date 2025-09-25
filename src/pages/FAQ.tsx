@@ -290,16 +290,15 @@ const FAQ = () => {
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-blue-50" dir="rtl">
       {/* Header Section */}
       <section className="relative py-24 bg-gradient-to-br from-primary via-blue-600 to-purple-700 overflow-hidden">
-        {/* Animated Background Elements */}
+        {/* Simplified Background Elements */}
         <div className="absolute inset-0 overflow-hidden">
           <motion.div 
             animate={{ 
-              rotate: [0, 360],
-              scale: [1, 1.2, 1],
-              opacity: [0.1, 0.3, 0.1]
+              rotate: 360,
+              opacity: [0.1, 0.2, 0.1]
             }}
             transition={{ 
-              duration: 20,
+              duration: 30,
               repeat: Infinity,
               ease: "linear"
             }}
@@ -307,29 +306,15 @@ const FAQ = () => {
           />
           <motion.div 
             animate={{ 
-              rotate: [360, 0],
-              scale: [1, 1.1, 1],
-              opacity: [0.1, 0.2, 0.1]
+              rotate: -360,
+              opacity: [0.1, 0.15, 0.1]
             }}
             transition={{ 
-              duration: 15,
+              duration: 40,
               repeat: Infinity,
-              ease: "linear",
-              delay: 5
+              ease: "linear"
             }}
-            className="absolute -bottom-32 -left-32 w-96 h-96 bg-gradient-to-r from-white/5 to-white/20 rounded-full"
-          />
-          <motion.div 
-            animate={{ 
-              y: [-20, 20, -20],
-              x: [-10, 10, -10]
-            }}
-            transition={{ 
-              duration: 8,
-              repeat: Infinity,
-              ease: "easeInOut"
-            }}
-            className="absolute top-1/4 left-1/4 w-32 h-32 bg-yellow-400/20 rounded-full blur-xl"
+            className="absolute -bottom-32 -left-32 w-96 h-96 bg-gradient-to-r from-white/5 to-white/15 rounded-full"
           />
         </div>
         
@@ -523,10 +508,15 @@ const FAQ = () => {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: index * 0.1, duration: 0.5 }}
                 >
-                  <Card className="overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300">
+                  <Card className="overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 border border-slate-200 hover:border-primary/20">
                     <CardHeader 
-                      className="cursor-pointer hover:bg-slate-50 transition-colors"
-                      onClick={() => toggleItem(item.id)}
+                      className="cursor-pointer hover:bg-slate-50 transition-colors relative z-10 select-none"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        console.log('FAQ item clicked:', item.id);
+                        toggleItem(item.id);
+                      }}
                     >
                       <div className="flex items-center justify-between">
                         <div className="flex items-start gap-3 flex-1">
@@ -559,13 +549,28 @@ const FAQ = () => {
                       </div>
                     </CardHeader>
                     
-                    <AnimatePresence>
+                    <AnimatePresence mode="wait">
                       {openItems.includes(item.id) && (
                         <motion.div
+                          key={`content-${item.id}`}
                           initial={{ height: 0, opacity: 0 }}
-                          animate={{ height: "auto", opacity: 1 }}
-                          exit={{ height: 0, opacity: 0 }}
-                          transition={{ duration: 0.3 }}
+                          animate={{ 
+                            height: "auto", 
+                            opacity: 1,
+                            transition: { 
+                              height: { duration: 0.4, ease: "easeOut" },
+                              opacity: { duration: 0.3, delay: 0.1 }
+                            }
+                          }}
+                          exit={{ 
+                            height: 0, 
+                            opacity: 0,
+                            transition: {
+                              height: { duration: 0.3, ease: "easeIn" },
+                              opacity: { duration: 0.2 }
+                            }
+                          }}
+                          style={{ overflow: "hidden" }}
                         >
                           <CardContent className="pt-0 pr-14">
                             <div className="border-t border-slate-200 pt-4">
