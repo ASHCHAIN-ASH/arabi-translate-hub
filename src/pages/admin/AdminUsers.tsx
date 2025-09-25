@@ -314,7 +314,7 @@ const AdminUsers = () => {
                 {users.length} مستخدم
               </Badge>
               <Button
-                onClick={() => window.location.href = '/admin/add-user'}
+                onClick={() => window.location.href = '/adminmaster/add-user'}
                 className="flex items-center gap-2 bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700"
               >
                 <Users className="w-4 h-4" />
