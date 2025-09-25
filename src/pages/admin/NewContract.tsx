@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
+import AdminLayout from '@/components/admin/AdminLayout';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -157,18 +158,223 @@ const NewContract = () => {
   };
 
   return (
-    <div className="space-y-6" dir="rtl">
-      <div className="flex justify-between items-center">
-        <div className="flex items-center gap-3">
-          <Button
-            variant="outline"
-            onClick={() => navigate('/adminmaster/contracts')}
-          >
-            <ArrowRight className="w-4 h-4" />
-          </Button>
-          <h1 className="text-3xl font-bold">إنشاء عقد جديد</h1>
+    <AdminLayout>
+      <div className="space-y-6">
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+          <div className="flex items-center gap-3">
+            <Button
+              variant="outline"
+              onClick={() => navigate('/adminmaster/contracts')}
+              size="sm"
+            >
+              <ArrowRight className="w-4 h-4" />
+            </Button>
+            <div>
+              <h1 className="text-2xl sm:text-3xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
+                إنشاء عقد جديد
+              </h1>
+              <p className="text-muted-foreground mt-1">إنشاء عقد جديد مع العميل</p>
+            </div>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          {/* الحقول الأساسية */}
+          <div className="lg:col-span-2 space-y-6">
+            <Card>
+              <CardHeader>
+                <CardTitle>بيانات العقد الأساسية</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div>
+                    <Label htmlFor="contract_no">رقم العقد</Label>
+                    <Input
+                      id="contract_no"
+                      value={contractNumber}
+                      readOnly
+                      className="bg-gray-50"
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="client_id">العميل *</Label>
+                    <Select value={formData.client_id} onValueChange={(value) => 
+                      setFormData(prev => ({ ...prev, client_id: value }))
+                    }>
+                      <SelectTrigger>
+                        <SelectValue placeholder="اختر العميل" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {clients.map((client) => (
+                          <SelectItem key={client.id} value={client.id}>
+                            {client.full_name}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div>
+                    <Label htmlFor="service_type">نوع الخدمة *</Label>
+                    <Input
+                      id="service_type"
+                      value={formData.service_type}
+                      onChange={(e) => setFormData(prev => ({ ...prev, service_type: e.target.value }))}
+                      placeholder="مثال: ترجمة قانونية، استشارة أكاديمية..."
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="client_type">نوع العميل</Label>
+                    <Select value={formData.client_type} onValueChange={(value) => 
+                      setFormData(prev => ({ ...prev, client_type: value }))
+                    }>
+                      <SelectTrigger>
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="individual">فرد</SelectItem>
+                        <SelectItem value="business">شركة</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                </div>
+
+                <div>
+                  <Label htmlFor="service_description">وصف الخدمة *</Label>
+                  <Textarea
+                    id="service_description"
+                    value={formData.service_description}
+                    onChange={(e) => setFormData(prev => ({ ...prev, service_description: e.target.value }))}
+                    placeholder="وصف تفصيلي للخدمة المطلوبة..."
+                    rows={4}
+                  />
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                  <div>
+                    <Label htmlFor="service_price">سعر الخدمة *</Label>
+                    <Input
+                      id="service_price"
+                      type="number"
+                      value={formData.service_price}
+                      onChange={(e) => setFormData(prev => ({ ...prev, service_price: parseFloat(e.target.value) || 0 }))}
+                      placeholder="0.00"
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="currency">العملة</Label>
+                    <Select value={formData.currency} onValueChange={(value) => 
+                      setFormData(prev => ({ ...prev, currency: value }))
+                    }>
+                      <SelectTrigger>
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="SAR">ريال سعودي</SelectItem>
+                        <SelectItem value="USD">دولار أمريكي</SelectItem>
+                        <SelectItem value="EUR">يورو</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <div className="flex items-end">
+                    <Button onClick={calculateTotals} variant="outline" className="w-full">
+                      <Calculator className="w-4 h-4 ml-2" />
+                      حساب الإجمالي
+                    </Button>
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div>
+                    <Label htmlFor="payment_terms">شروط الدفع</Label>
+                    <Select value={formData.payment_terms} onValueChange={(value) => 
+                      setFormData(prev => ({ ...prev, payment_terms: value }))
+                    }>
+                      <SelectTrigger>
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="دفعة واحدة">دفعة واحدة</SelectItem>
+                        <SelectItem value="دفعتين">دفعتين</SelectItem>
+                        <SelectItem value="ثلاث دفعات">ثلاث دفعات</SelectItem>
+                        <SelectItem value="شهرياً">شهرياً</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <div>
+                    <Label htmlFor="contract_duration">مدة العقد</Label>
+                    <Select value={formData.contract_duration} onValueChange={(value) => 
+                      setFormData(prev => ({ ...prev, contract_duration: value }))
+                    }>
+                      <SelectTrigger>
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="7 أيام">7 أيام</SelectItem>
+                        <SelectItem value="14 يوم">14 يوم</SelectItem>
+                        <SelectItem value="30 يوم">30 يوم</SelectItem>
+                        <SelectItem value="60 يوم">60 يوم</SelectItem>
+                        <SelectItem value="90 يوم">90 يوم</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+
+          {/* ملخص الحسابات */}
+          <div className="space-y-6">
+            <Card>
+              <CardHeader>
+                <CardTitle>ملخص المبالغ</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="flex justify-between">
+                  <span className="text-muted-foreground">المبلغ الأساسي:</span>
+                  <span className="font-medium">{calculations.subtotal.toFixed(2)} {formData.currency}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-muted-foreground">ضريبة القيمة المضافة (15%):</span>
+                  <span className="font-medium">{calculations.vat_amount.toFixed(2)} {formData.currency}</span>
+                </div>
+                <div className="border-t pt-2">
+                  <div className="flex justify-between font-bold text-lg">
+                    <span>الإجمالي:</span>
+                    <span className="text-primary">{calculations.total.toFixed(2)} {formData.currency}</span>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* الإجراءات */}
+            <div className="space-y-3">
+              <Button 
+                onClick={() => handleSave(false)} 
+                disabled={loading}
+                className="w-full"
+              >
+                <Save className="w-4 h-4 ml-2" />
+                {loading ? 'جاري الحفظ...' : 'حفظ العقد'}
+              </Button>
+              
+              <Button 
+                onClick={() => handleSave(true)}
+                disabled={loading}
+                variant="secondary"
+                className="w-full"
+              >
+                <Send className="w-4 h-4 ml-2" />
+                حفظ وإرسال
+              </Button>
+            </div>
+          </div>
         </div>
       </div>
+    </AdminLayout>
+  );
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* الحقول الأساسية */}
@@ -362,7 +568,7 @@ const NewContract = () => {
           </Card>
         </div>
       </div>
-    </div>
+    </AdminLayout>
   );
 };
 
