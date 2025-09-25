@@ -56,8 +56,8 @@ const handler = async (req: Request): Promise<Response> => {
 
     // Send email to customer
     const customerEmailResponse = await resend.emails.send({
-      from: "عضوية ماستر <onboarding@resend.dev>", // مؤقت للاختبار
-      to: ["info@fekrahtech.com"], // مؤقت - سيتم تغييره للعميل بعد التحقق من الدومين
+      from: "عضوية ماستر <info@masteredupath.com>",
+      to: [email],
       subject: `تأكيد طلب الاشتراك في ${membershipNameAr} - ${name}`,
       html: `
         <!DOCTYPE html>
@@ -138,8 +138,8 @@ const handler = async (req: Request): Promise<Response> => {
 
     // Send notification to admin
     const adminEmailResponse = await resend.emails.send({
-      from: "نظام العضويات <onboarding@resend.dev>", // مؤقت للاختبار
-      to: ["info@fekrahtech.com"], // مؤقت - نفس الإيميل المسجل في Resend
+      from: "نظام العضويات <info@masteredupath.com>",
+      to: ["info@masteredupath.com"],
       subject: `طلب اشتراك جديد - ${membershipNameAr} من ${name}`,
       html: `
         <!DOCTYPE html>
