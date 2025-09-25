@@ -130,43 +130,31 @@ const AcademicCompetitions = () => {
             <h1 className="text-5xl font-bold mb-6 font-arabic-title">
               المسابقات الأكاديمية
             </h1>
-            <p className="text-xl opacity-90 max-w-3xl mx-auto mb-8">
-              شارك في المسابقات الأكاديمية المتنوعة واحصل على جوائز قيمة وشهادات معتمدة وانشر إنجازاتك العلمية
-            </p>
-            
-            {/* Competition Stats */}
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-4xl mx-auto">
-              {competitionStats.map((stat, index) => (
-                <motion.div
-                  key={index}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: index * 0.1 + 0.5, duration: 0.5 }}
-                  className="bg-white/10 backdrop-blur-sm rounded-lg p-4 text-center border border-white/20"
-                >
-                  <stat.icon className={`h-8 w-8 mx-auto mb-2 ${stat.color}`} />
-                  <div className="text-2xl font-bold mb-1">{stat.value}</div>
-                  <div className="text-sm opacity-80">{stat.label}</div>
-                </motion.div>
-              ))}
+            <div className="max-w-2xl mx-auto text-center">
+              <p className="text-xl opacity-90 mb-6">
+                قريباً تبدأ المسابقات الأكاديمية المتميزة
+              </p>
+              <div className="bg-white/20 backdrop-blur-sm rounded-lg p-6 border border-white/30">
+                <Trophy className="h-12 w-12 mx-auto mb-4 text-yellow-300" />
+                <h3 className="text-2xl font-bold mb-2">سوف يتم إشعاركم</h3>
+                <p className="text-lg opacity-90">
+                  بمجرد إطلاق المسابقات سيتم إرسال إشعار لجميع المهتمين
+                </p>
+              </div>
             </div>
           </motion.div>
         </div>
       </section>
 
       <div className="container mx-auto px-4 py-16">
-        <Tabs defaultValue="active" className="space-y-8">
+        <Tabs defaultValue="competitions" className="space-y-8" dir="rtl">
           
           {/* Tabs Navigation */}
           <div className="flex justify-center">
-            <TabsList className="grid w-full max-w-md grid-cols-3">
-              <TabsTrigger value="active" className="flex items-center gap-2">
+            <TabsList className="grid w-full max-w-md grid-cols-2" dir="rtl">
+              <TabsTrigger value="competitions" className="flex items-center gap-2">
                 <Zap className="h-4 w-4" />
                 المسابقات الجارية
-              </TabsTrigger>
-              <TabsTrigger value="winners" className="flex items-center gap-2">
-                <Crown className="h-4 w-4" />
-                الفائزون
               </TabsTrigger>
               <TabsTrigger value="prizes" className="flex items-center gap-2">
                 <Gift className="h-4 w-4" />
@@ -175,54 +163,30 @@ const AcademicCompetitions = () => {
             </TabsList>
           </div>
 
-          {/* Active Competitions */}
-          <TabsContent value="active" className="space-y-8">
+          {/* Competitions Tab */}
+          <TabsContent value="competitions" className="space-y-8">
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ duration: 0.6 }}
+              className="text-center py-16"
             >
-              <h2 className="text-3xl font-bold text-center mb-8 text-gray-800">
-                المسابقات المتاحة حاليًا
-              </h2>
-              
-              <div className="grid gap-6 md:gap-8">
-                {loading ? (
-                  // Loading skeleton
-                  Array.from({ length: 3 }).map((_, index) => (
-                    <div key={index} className="bg-white rounded-lg shadow-lg p-6 animate-pulse">
-                      <div className="flex gap-4">
-                        <div className="w-16 h-16 bg-gray-200 rounded-full"></div>
-                        <div className="flex-1">
-                          <div className="h-4 bg-gray-200 rounded mb-2"></div>
-                          <div className="h-3 bg-gray-200 rounded w-2/3 mb-4"></div>
-                          <div className="h-3 bg-gray-200 rounded w-1/2"></div>
-                        </div>
-                      </div>
-                    </div>
-                  ))
-                ) : competitions.length > 0 ? (
-                  competitions.map((competition, index) => (
-                    <motion.div
-                      key={competition.id}
-                      initial={{ opacity: 0, y: 30 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: index * 0.1, duration: 0.6 }}
-                    >
-                      <CompetitionCard
-                        competition={competition}
-                        onRegister={handleRegister}
-                        onView={handleViewDetails}
-                      />
-                    </motion.div>
-                  ))
-                ) : (
-                  <div className="text-center py-12">
-                    <Trophy className="h-16 w-16 mx-auto mb-4 text-gray-300" />
-                    <h3 className="text-xl font-semibold text-gray-600 mb-2">لا توجد مسابقات حالياً</h3>
-                    <p className="text-gray-500">سيتم إضافة مسابقات جديدة قريباً</p>
-                  </div>
-                )}
+              <div className="max-w-2xl mx-auto">
+                <Trophy className="h-24 w-24 mx-auto mb-6 text-blue-500" />
+                <h2 className="text-3xl font-bold mb-4 text-gray-800">
+                  المسابقات قريباً
+                </h2>
+                <p className="text-lg text-gray-600 mb-8">
+                  نحن نعمل على تحضير مسابقات أكاديمية مميزة في مختلف المجالات
+                </p>
+                <div className="bg-blue-50 rounded-lg p-6 border border-blue-200">
+                  <h3 className="text-xl font-semibold text-blue-800 mb-2">
+                    سوف يتم إشعاركم
+                  </h3>
+                  <p className="text-blue-700">
+                    بمجرد إطلاق المسابقات سيتم إرسال إشعار عبر البريد الإلكتروني لجميع المهتمين
+                  </p>
+                </div>
               </div>
             </motion.div>
           </TabsContent>
