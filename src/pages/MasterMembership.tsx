@@ -170,21 +170,21 @@ const MasterMembership = () => {
                   const after  = finalPrice(before, tier.discountPct);
                   const cash   = cashbackAmount(after, tier.cashbackPct);
                   
+                  // رقم عشوائي من 6 أرقام للعميل
+                  const customerNumber = Math.floor(100000 + Math.random() * 900000);
+                  
                   // ألوان وتدرجات البطاقات الذكية
                   const cardStyles = {
                     silver: { 
                       gradient: "from-slate-700 via-slate-600 to-slate-800", 
-                      mask: "1234 **** **** 5432",
                       chipColor: "bg-yellow-300"
                     },
                     gold: { 
                       gradient: "from-amber-500 via-yellow-500 to-orange-500", 
-                      mask: "5678 **** **** 4532",
                       chipColor: "bg-yellow-200"
                     },
                     platinum: { 
                       gradient: "from-zinc-600 via-slate-700 to-zinc-800", 
-                      mask: "9912 **** **** 5432",
                       chipColor: "bg-gray-300"
                     }
                   };
@@ -217,46 +217,46 @@ const MasterMembership = () => {
                         {/* شارات السعر في الأعلى يمين */}
                         <div className="absolute top-2 right-2 flex flex-col gap-1 items-end">
                           <div className="bg-white/95 text-black rounded-lg px-2 py-1 text-xs font-bold shadow-sm">
-                            <div className="line-through text-gray-500 text-xs leading-none">{toArabic(before)} ريال</div>
+                            <div className="line-through text-gray-500 text-xs leading-none mb-0.5">{toArabic(before)} ريال</div>
+                            <div className="text-sm font-extrabold text-gray-900 leading-none">{toArabic(after)} ريال</div>
                           </div>
                           <div className="bg-red-500 text-white rounded-full px-2 py-1 text-xs font-bold">
                             خصم {toArabic(tier.discountPct)}%
                           </div>
                         </div>
 
-                        {/* رقم البطاقة الكبير في الوسط */}
+                        {/* رقم العميل في الوسط */}
                         <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-center">
-                          <div className="font-mono text-xl md:text-2xl tracking-[2px] drop-shadow-lg mb-1">
-                            {style.mask.split(' ')[0]}
-                          </div>
-                          <div className="font-mono text-lg tracking-[2px] drop-shadow-lg opacity-90">
-                            **** **** {style.mask.split(' ')[3]}
+                          <div className="text-xs opacity-80 mb-1">رقم العميل</div>
+                          <div className="font-mono text-2xl font-bold tracking-wider drop-shadow-lg">
+                            {toArabic(customerNumber)}
                           </div>
                         </div>
 
-                        {/* السعر بعد الخصم والكاش باك */}
-                        <div className="absolute bottom-2 right-3 text-right">
-                          <div className="bg-emerald-500/90 text-white rounded-md px-2 py-0.5 text-xs font-medium mb-1">
+                        {/* الكاش باك في الوسط أسفل */}
+                        <div className="absolute top-2/3 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+                          <div className="bg-emerald-500/90 text-white rounded-md px-3 py-1 text-xs font-medium text-center">
                             كاش-باك: {sar(cash)}
                           </div>
-                          <div className="text-lg font-bold">{toArabic(after)} ريال</div>
                         </div>
 
-                        {/* معلومات الحامل والانتهاء في الأسفل يسار */}
-                        <div className="absolute bottom-2 left-3 text-left">
-                          <div className="text-xs opacity-80 mb-1">عضوية ماستر {tier.titleAr}</div>
-                          <div className="text-xs opacity-70">تاريخ الانتهاء</div>
-                          <div className="text-xs font-semibold">12/27</div>
+                        {/* معلومات الحامل في الأسفل يمين */}
+                        <div className="absolute bottom-2 right-3 text-right">
+                          <div className="text-xs opacity-80 leading-tight">عضوية ماستر</div>
+                          <div className="text-sm font-bold leading-tight">{tier.titleAr}</div>
                         </div>
 
-                        {/* شعار Mastercard */}
-                        <div className="absolute bottom-0 right-0 left-0 bg-black/20 py-1 px-3 flex items-center justify-between text-xs">
-                          <div className="flex items-center gap-1">
-                            <div className="w-2 h-2 rounded-full bg-red-500"></div>
-                            <div className="w-2 h-2 rounded-full bg-yellow-400 -ml-1"></div>
-                            <span className="text-xs font-bold ml-1">MASTERCARD</span>
-                          </div>
-                          <span className="text-xs opacity-70">اسم حامل البطاقة</span>
+                        {/* تاريخ الانتهاء في الأسفل وسط */}
+                        <div className="absolute bottom-2 left-1/2 transform -translate-x-1/2 text-center">
+                          <div className="text-xs opacity-70 leading-tight">تاريخ الانتهاء</div>
+                          <div className="text-xs font-semibold leading-tight">12/27</div>
+                        </div>
+
+                        {/* شعار Mastercard في الأسفل يسار */}
+                        <div className="absolute bottom-2 left-3 flex items-center gap-1">
+                          <div className="w-2 h-2 rounded-full bg-red-500"></div>
+                          <div className="w-2 h-2 rounded-full bg-yellow-400 -ml-1"></div>
+                          <span className="text-xs font-bold ml-1 tracking-wider">MC</span>
                         </div>
 
                         {/* تأثيرات بصرية */}
@@ -266,24 +266,24 @@ const MasterMembership = () => {
 
                       {/* معلومات العضوية */}
                       <div className="mt-4 px-2 text-center space-y-3">
-                        <div>
-                          <div className="text-lg font-bold text-gray-800">{tier.titleAr}</div>
-                          <div className="text-sm text-gray-500">{tier.titleEn}</div>
+                        <div className="space-y-1">
+                          <div className="text-lg font-bold text-gray-800 leading-tight">{tier.titleAr}</div>
+                          <div className="text-sm text-gray-500 leading-tight">{tier.titleEn}</div>
                         </div>
                         
                         {/* مزايا مختصرة */}
-                        <div className="space-y-1 text-sm text-gray-600">
+                        <div className="space-y-2 text-sm text-gray-600 py-2">
                           <div className="flex items-center justify-center gap-2">
-                            <CheckCircle className="w-4 h-4 text-green-500" />
-                            <span>اشتراك 12 شهر كامل</span>
+                            <CheckCircle className="w-4 h-4 text-green-500 flex-shrink-0" />
+                            <span className="leading-tight">اشتراك 12 شهر كامل</span>
                           </div>
                           <div className="flex items-center justify-center gap-2">
-                            <Shield className="w-4 h-4 text-blue-500" />
-                            <span>دعم فني متخصص</span>
+                            <Shield className="w-4 h-4 text-blue-500 flex-shrink-0" />
+                            <span className="leading-tight">دعم فني متخصص</span>
                           </div>
                           <div className="flex items-center justify-center gap-2">
-                            <Award className="w-4 h-4 text-purple-500" />
-                            <span>شهادة إنجاز رقمية</span>
+                            <Award className="w-4 h-4 text-purple-500 flex-shrink-0" />
+                            <span className="leading-tight">شهادة إنجاز رقمية</span>
                           </div>
                         </div>
                         
