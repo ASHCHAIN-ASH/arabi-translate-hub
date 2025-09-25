@@ -15,14 +15,56 @@ import {
   Users,
   Star,
   Zap,
-  Timer
+  Timer,
+  ChevronDown,
+  CheckCircle,
+  HelpCircle
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
+import { useState } from "react";
 
 const Footer = () => {
   const currentYear = new Date().getFullYear();
+  const [openFAQItems, setOpenFAQItems] = useState<number[]>([]);
+  const [showAllFAQ, setShowAllFAQ] = useState(false);
+
+  const toggleFAQItem = (itemId: number) => {
+    setOpenFAQItems(prev => 
+      prev.includes(itemId) 
+        ? prev.filter(id => id !== itemId)
+        : [...prev, itemId]
+    );
+  };
+
+  const popularFAQs = [
+    {
+      id: 1,
+      question: "ما هي الخدمات الأكاديمية التي تقدمونها؟",
+      answer: "نقدم خدمات ترجمة أكاديمية متخصصة، البحث العلمي، إعداد الرسائل، النشر في المجلات العلمية، والاستشارات الأكاديمية."
+    },
+    {
+      id: 2,
+      question: "كم تستغرق خدمات الترجمة؟",
+      answer: "المدة تتراوح من 24-48 ساعة للمشاريع الصغيرة، و2-7 أيام للمشاريع الكبيرة، مع إمكانية التسليم العاجل."
+    },
+    {
+      id: 3,
+      question: "هل تقدمون ضمانات على الجودة؟",
+      answer: "نعم، نضمن الجودة العالية مع مراجعة ثلاثية المستويات وضمان إعادة العمل مجاناً لمدة 30 يوماً."
+    },
+    {
+      id: 4,
+      question: "كيف أحصل على عرض سعر؟",
+      answer: "يمكنكم الحصول على عرض سعر مجاني خلال ساعة من خلال موقعنا أو التواصل المباشر معنا."
+    },
+    {
+      id: 5,
+      question: "هل تدعمون الدفع بالتقسيط؟",
+      answer: "نعم، نوفر خطط دفع مرنة وتقسيط للمشاريع الكبيرة والعملاء المؤسسيين."
+    }
+  ];
 
   return (
     <footer className="bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white relative overflow-hidden" dir="rtl">
@@ -166,7 +208,6 @@ const Footer = () => {
                 { name: 'خدماتنا', icon: Zap, href: '/services' },
                 { name: 'الأسعار', icon: Star, href: '/pricing' },
                 { name: 'عن الشركة', icon: Building2, href: '/about-us' },
-                { name: 'الأسئلة الشائعة', icon: Users },
                 { name: 'سياسة الخصوصية', icon: Shield, href: '/privacy-policy' }
               ].map((link) => (
                 <li key={link.name}>
@@ -179,6 +220,85 @@ const Footer = () => {
                   </a>
                 </li>
               ))}
+              
+              {/* قسم الأسئلة الشائعة المدمج */}
+              <li>
+                <button
+                  onClick={() => setShowAllFAQ(!showAllFAQ)}
+                  className="text-white/70 hover:text-white transition-colors text-sm md:text-base flex items-center gap-2 hover:translate-x-1 transition-transform w-full text-right"
+                >
+                  <HelpCircle className="h-3 w-3 md:h-4 md:w-4 text-primary" />
+                  الأسئلة الشائعة
+                  <motion.div
+                    animate={{ rotate: showAllFAQ ? 180 : 0 }}
+                    transition={{ duration: 0.2 }}
+                    className="mr-auto"
+                  >
+                    <ChevronDown className="h-3 w-3" />
+                  </motion.div>
+                </button>
+                
+                <AnimatePresence>
+                  {showAllFAQ && (
+                    <motion.div
+                      initial={{ height: 0, opacity: 0 }}
+                      animate={{ height: "auto", opacity: 1 }}
+                      exit={{ height: 0, opacity: 0 }}
+                      transition={{ duration: 0.3 }}
+                      className="overflow-hidden mt-2"
+                    >
+                      <div className="bg-white/5 backdrop-blur-sm rounded-lg p-3 border border-white/10 space-y-2">
+                        {popularFAQs.map((faq, index) => (
+                          <div key={faq.id} className="border-b border-white/10 last:border-0 pb-2 last:pb-0">
+                            <button
+                              onClick={() => toggleFAQItem(faq.id)}
+                              className="w-full text-right text-xs text-white/80 hover:text-white transition-colors flex items-start gap-2 py-1"
+                            >
+                              <CheckCircle className="h-3 w-3 text-primary mt-0.5 flex-shrink-0" />
+                              <span className="flex-1 leading-relaxed">{faq.question}</span>
+                              <motion.div
+                                animate={{ rotate: openFAQItems.includes(faq.id) ? 180 : 0 }}
+                                transition={{ duration: 0.2 }}
+                                className="flex-shrink-0"
+                              >
+                                <ChevronDown className="h-3 w-3" />
+                              </motion.div>
+                            </button>
+                            
+                            <AnimatePresence>
+                              {openFAQItems.includes(faq.id) && (
+                                <motion.div
+                                  initial={{ height: 0, opacity: 0 }}
+                                  animate={{ height: "auto", opacity: 1 }}
+                                  exit={{ height: 0, opacity: 0 }}
+                                  transition={{ duration: 0.2 }}
+                                  className="overflow-hidden"
+                                >
+                                  <div className="pr-5 pt-1">
+                                    <p className="text-xs text-white/60 leading-relaxed">
+                                      {faq.answer}
+                                    </p>
+                                  </div>
+                                </motion.div>
+                              )}
+                            </AnimatePresence>
+                          </div>
+                        ))}
+                        
+                        <div className="pt-2 border-t border-white/10">
+                          <a 
+                            href="/faq" 
+                            className="text-xs text-primary hover:text-primary/80 transition-colors flex items-center gap-1"
+                          >
+                            <Star className="h-3 w-3" />
+                            عرض جميع الأسئلة (45+ سؤال)
+                          </a>
+                        </div>
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </li>
             </ul>
           </motion.div>
 
