@@ -6,7 +6,7 @@ import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import Header from "@/components/Header";
-import Footer from "@/components/Footer";
+
 import { 
   Languages, 
   GraduationCap, 
@@ -483,7 +483,7 @@ const Services = () => {
         </motion.div>
       </div>
 
-      <Footer />
+      
     </div>
   );
 };

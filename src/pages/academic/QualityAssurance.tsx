@@ -22,7 +22,7 @@ import {
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import Header from '@/components/Header';
-import Footer from '@/components/Footer';
+
 
 const QualityAssurance = () => {
   const qualityStandards = [
@@ -483,7 +483,7 @@ const QualityAssurance = () => {
         </div>
       </section>
 
-      <Footer />
+      
     </div>
   );
 };

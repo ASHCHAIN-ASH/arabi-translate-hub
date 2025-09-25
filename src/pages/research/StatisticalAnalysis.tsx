@@ -1,5 +1,5 @@
 import Header from "@/components/Header";
-import Footer from "@/components/Footer";
+
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { BarChart3, TrendingUp, PieChart, Calculator } from "lucide-react";
@@ -65,7 +65,7 @@ const StatisticalAnalysis = () => {
         </div>
       </section>
 
-      <Footer />
+      
     </div>
   );
 };

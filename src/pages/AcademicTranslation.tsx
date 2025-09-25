@@ -3,7 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { GraduationCap, BookOpen, FileText, Award, Users, Globe, Microscope, Calculator, FlaskConical, Atom, Library, PenTool } from "lucide-react";
-import Footer from "@/components/Footer";
+
 import ServiceInquiryForm from "@/components/ServiceInquiryForm";
 
 const AcademicTranslation = () => {
@@ -475,7 +475,7 @@ const AcademicTranslation = () => {
         </div>
       </section>
 
-      <Footer />
+      
     </div>
   );
 };

@@ -1,5 +1,5 @@
 import Header from "@/components/Header";
-import Footer from "@/components/Footer";
+
 import { Button } from "@/components/ui/button";
 import { Shield, Search, CheckCircle, AlertTriangle } from "lucide-react";
 
@@ -15,7 +15,7 @@ const PlagiarismCheck = () => {
           <Button size="lg" className="bg-white text-primary hover:bg-white/90">ابدأ الفحص</Button>
         </div>
       </section>
-      <Footer />
+      
     </div>
   );
 };

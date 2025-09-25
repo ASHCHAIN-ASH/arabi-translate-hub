@@ -411,7 +411,7 @@ const LegalTranslation = () => {
         </div>
       </section>
 
-      <Footer />
+      
     </div>
   );
 };

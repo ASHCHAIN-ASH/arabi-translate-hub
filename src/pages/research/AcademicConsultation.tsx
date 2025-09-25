@@ -1,5 +1,5 @@
 import Header from "@/components/Header";
-import Footer from "@/components/Footer";
+
 import { Button } from "@/components/ui/button";
 import { Users, MessageCircle, Lightbulb, Target } from "lucide-react";
 
@@ -15,7 +15,7 @@ const AcademicConsultation = () => {
           <Button size="lg" className="bg-white text-primary hover:bg-white/90">ابدأ الآن</Button>
         </div>
       </section>
-      <Footer />
+      
     </div>
   );
 };
