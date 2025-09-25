@@ -143,7 +143,7 @@ const MasterMembership = () => {
       </section>
 
       <div className="container mx-auto px-4 py-16" dir="rtl">
-        <Tabs defaultValue="benefits" className="space-y-8" dir="rtl">
+        <Tabs defaultValue="plans" className="space-y-8" dir="rtl">
           <div className="flex justify-center">
             <TabsList className="grid w-full max-w-lg grid-cols-2" dir="rtl">
               <TabsTrigger value="benefits" className="flex items-center gap-2">
