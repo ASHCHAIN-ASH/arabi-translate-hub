@@ -47,10 +47,10 @@ const MasterMembership = () => {
       id: 'gold',
       name: 'الذهبية',
       nameEn: 'Gold',
-      price: '2400',
-      originalPrice: '4800',
+      price: '2200',
+      originalPrice: '4400',
       discount: '50%',
-      cashback: '360',
+      cashback: '330',
       cashbackPercent: '15%',
       cardGradient: 'from-yellow-400 via-yellow-500 to-yellow-600',
       gradient: 'from-yellow-400 to-yellow-600',
@@ -86,7 +86,7 @@ const MasterMembership = () => {
       color: 'text-blue-600',
       title: 'كاش باك فوري مضمون',
       description: 'استرداد نقدي فوري من رسوم تأسيس العضوية ومن جميع الطلبات بعد الاشتراك',
-      membership: ['7% للفضية (84 ريال)', '15% للذهبية (360 ريال)', '25% للبلاتينية (900 ريال)']
+      membership: ['7% للفضية (84 ريال)', '15% للذهبية (330 ريال)', '25% للبلاتينية (900 ريال)']
     },
     {
       icon: BookOpen,
