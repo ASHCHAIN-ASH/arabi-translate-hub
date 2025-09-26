@@ -182,42 +182,26 @@ const PublishingServices = () => {
       </section>
 
       {/* CTA Section */}
-      <section className="py-20 relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-r from-primary/20 via-accent/15 to-primary/20"></div>
-        <div className="absolute inset-0 bg-card/80 backdrop-blur-sm"></div>
+      <section className="py-16 relative overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-r from-primary/10 to-accent/10"></div>
         <div className="container relative z-10 mx-auto px-4 text-center">
           <motion.div
             initial={{ opacity: 0, scale: 0.9 }}
             whileInView={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.6 }}
-            className="max-w-3xl mx-auto"
+            className="max-w-2xl mx-auto"
           >
-            <div className="bg-card/90 backdrop-blur-sm rounded-2xl p-8 md:p-12 shadow-2xl border-2 border-primary/20">
-              <h2 className="text-4xl md:text-5xl font-bold mb-8 text-foreground leading-tight">
-                انشر بحثك في أفضل المجلات العلمية المحكمة
-              </h2>
-              <p className="text-xl md:text-2xl text-foreground/80 mb-10 leading-relaxed font-medium">
-                اتخذ الخطوة الأولى نحو النشر الناجح لبحثك العلمي مع فريق من الخبراء المتخصصين
-              </p>
-              <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <Button 
-                  size="lg" 
-                  className="text-xl px-16 py-6 font-bold shadow-lg hover:shadow-xl transition-all duration-300"
-                  onClick={() => navigate('/order-now')}
-                >
-                  <BookOpen className="w-6 h-6 mr-3" />
-                  ابدأ رحلة النشر الآن
-                </Button>
-                <Button 
-                  size="lg" 
-                  variant="outline"
-                  className="text-xl px-12 py-6 border-2 border-primary/50 hover:border-primary font-bold"
-                  onClick={() => navigate('/pricing')}
-                >
-                  استشارة مجانية
-                </Button>
-              </div>
-            </div>
+            <h2 className="text-4xl font-bold mb-6">انشر بحثك في أفضل المجلات</h2>
+            <p className="text-xl text-muted-foreground mb-8">
+              اتخذ الخطوة الأولى نحو النشر الناجح لبحثك العلمي
+            </p>
+            <Button 
+              size="lg" 
+              className="text-lg px-12 py-4"
+              onClick={() => navigate('/order-now')}
+            >
+              ابدأ رحلة النشر
+            </Button>
           </motion.div>
         </div>
       </section>
