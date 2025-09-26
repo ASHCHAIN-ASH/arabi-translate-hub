@@ -403,14 +403,14 @@ const MasterMembership = () => {
                         </div>
                       </motion.div>
                     
-                     <div className="mt-3 text-center" dir="rtl">
-                       <div className="inline-flex items-center gap-2 bg-emerald-50 text-emerald-700 px-5 py-3 rounded-full text-sm font-semibold border border-emerald-200 text-right">
-                         <Gift className="w-4 h-4" />
-                         <span>كاش باك فوري {plan.cashbackPercent}:</span>
-                         <span className="font-bold">{plan.cashback}</span>
+                     <div className="mt-3 text-center">
+                       <div className="inline-flex items-center gap-2 bg-emerald-50 text-emerald-700 px-5 py-3 rounded-full text-sm font-semibold border border-emerald-200" dir="rtl">
                          <span className="text-xs opacity-80">ريال</span>
+                         <span className="font-bold">{plan.cashback}</span>
+                         <span>:{plan.cashbackPercent} كاش باك فوري</span>
+                         <Gift className="w-4 h-4" />
                        </div>
-                       <p className="text-xs text-gray-500 mt-2 font-medium text-right">من رسوم التأسيس وجميع الطلبات</p>
+                       <p className="text-xs text-gray-500 mt-2 font-medium" dir="rtl">من رسوم التأسيس وجميع الطلبات</p>
                      </div>
                   </div>
                 </motion.div>
