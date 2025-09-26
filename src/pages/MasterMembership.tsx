@@ -259,8 +259,8 @@ const MasterMembership = () => {
                       </div>
                     </div>
 
-                    {/* Premium Customer Details - Center Position */}
-                    <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-center text-white w-full px-4">
+                    {/* Customer Details - Right Position */}
+                    <div className="absolute top-1/2 right-4 transform -translate-y-1/2 text-right text-white">
                       {/* Customer Name */}
                       <div 
                         className="text-lg font-bold mb-2 font-cinzel tracking-widest"
@@ -278,7 +278,7 @@ const MasterMembership = () => {
                           backgroundClip: 'text'
                         }}
                       >
-                        العضو المميز
+                        اسم العميل
                       </div>
                       
                       {/* Customer ID */}
@@ -296,7 +296,7 @@ const MasterMembership = () => {
                           letterSpacing: '0.15em'
                         }}
                       >
-                        {plan.id === 'silver' ? 'ID: MEP-54321' : plan.id === 'gold' ? 'ID: MEP-45326' : 'ID: MEP-45329'}
+                        {plan.id === 'silver' ? 'رقم العميل: 54321' : plan.id === 'gold' ? 'رقم العميل: 45326' : 'رقم العميل: 45329'}
                       </div>
                     </div>
 
