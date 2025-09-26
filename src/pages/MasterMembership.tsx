@@ -307,7 +307,7 @@ const MasterMembership = () => {
                              textShadow: '0 2px 0 rgba(0,0,0,0.5), 0 -1px 0 rgba(255,255,255,0.15), inset 0 1px 3px rgba(0,0,0,0.4)',
                              filter: 'drop-shadow(0 2px 2px rgba(0,0,0,0.4))'
                            }}>
-                        عضوية {plan.name}
+                        العضوية {plan.name}
                       </div>
                     </div>
 
