@@ -609,57 +609,57 @@ const MasterMembership = () => {
                         🎯 ستحصل على الكاش باك الفوري من مصدرين أساسيين:
                       </motion.p>
                       
-                      {/* Enhanced Sources Grid */}
-                      <div className="grid gap-4 md:gap-6 lg:grid-cols-2 text-right">
+                      {/* Enhanced Sources Grid - RTL */}
+                      <div className="grid gap-4 md:gap-6 lg:grid-cols-2">
                         <motion.div
-                          initial={{ opacity: 0, x: 50 }}
+                          initial={{ opacity: 0, x: -50 }}
                           animate={{ opacity: 1, x: 0 }}
                           whileHover={{ scale: 1.03, y: -5 }}
                           transition={{ delay: 1.5, duration: 0.5 }}
-                          className="bg-gradient-to-r from-emerald-100 via-emerald-50 to-teal-100 p-4 md:p-6 rounded-xl border-r-4 border-emerald-500 shadow-lg hover:shadow-xl transition-all duration-300 order-2 lg:order-1"
+                          className="bg-gradient-to-l from-emerald-100 via-emerald-50 to-teal-100 p-4 md:p-6 rounded-xl border-l-4 border-emerald-500 shadow-lg hover:shadow-xl transition-all duration-300"
                         >
-                          <div className="flex items-center gap-3 mb-3">
+                          <div className="flex items-center gap-3 mb-3 justify-end">
+                            <h4 className="font-bold text-emerald-800 text-sm md:text-base">من رسوم تأسيس العضوية</h4>
                             <motion.div 
                               whileHover={{ scale: 1.1, rotate: 5 }}
                               className="w-10 h-10 md:w-12 md:h-12 bg-gradient-to-br from-emerald-500 to-emerald-600 rounded-full flex items-center justify-center shadow-lg"
                             >
                               <span className="text-white font-bold text-sm md:text-base">1</span>
                             </motion.div>
-                            <h4 className="font-bold text-emerald-800 text-sm md:text-base">من رسوم تأسيس العضوية</h4>
                           </div>
-                          <p className="text-emerald-700 text-xs md:text-sm leading-relaxed">
+                          <p className="text-emerald-700 text-xs md:text-sm leading-relaxed text-right">
                             كاش باك فوري بنسبة العضوية المختارة من رسوم التأسيس
                           </p>
                         </motion.div>
 
                         <motion.div
-                          initial={{ opacity: 0, x: -50 }}
+                          initial={{ opacity: 0, x: 50 }}
                           animate={{ opacity: 1, x: 0 }}
                           whileHover={{ scale: 1.03, y: -5 }}
                           transition={{ delay: 1.7, duration: 0.5 }}
-                          className="bg-gradient-to-r from-green-100 via-green-50 to-emerald-100 p-4 md:p-6 rounded-xl border-r-4 border-green-500 shadow-lg hover:shadow-xl transition-all duration-300 order-1 lg:order-2"
+                          className="bg-gradient-to-l from-green-100 via-green-50 to-emerald-100 p-4 md:p-6 rounded-xl border-l-4 border-green-500 shadow-lg hover:shadow-xl transition-all duration-300"
                         >
-                          <div className="flex items-center gap-3 mb-3">
+                          <div className="flex items-center gap-3 mb-3 justify-end">
+                            <h4 className="font-bold text-green-800 text-sm md:text-base">من جميع الطلبات المستقبلية</h4>
                             <motion.div 
                               whileHover={{ scale: 1.1, rotate: 5 }}
                               className="w-10 h-10 md:w-12 md:h-12 bg-gradient-to-br from-green-500 to-green-600 rounded-full flex items-center justify-center shadow-lg"
                             >
                               <span className="text-white font-bold text-sm md:text-base">2</span>
                             </motion.div>
-                            <h4 className="font-bold text-green-800 text-sm md:text-base">من جميع الطلبات المستقبلية</h4>
                           </div>
-                          <p className="text-green-700 text-xs md:text-sm leading-relaxed">
+                          <p className="text-green-700 text-xs md:text-sm leading-relaxed text-right">
                             كاش باك مستمر من كل طلب تقوم به بعد الاشتراك
                           </p>
                         </motion.div>
                       </div>
 
-                      {/* Enhanced Percentage Breakdown */}
+                      {/* Enhanced Percentage Breakdown - RTL */}
                       <motion.div
                         initial={{ opacity: 0, y: 30 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: 1.9, duration: 0.6 }}
-                        className="mt-6 bg-gradient-to-r from-slate-50 via-gray-50 to-slate-50 rounded-xl p-4 md:p-6 shadow-inner"
+                        className="mt-6 bg-gradient-to-l from-slate-50 via-gray-50 to-slate-50 rounded-xl p-4 md:p-6 shadow-inner"
                       >
                         <h4 className="font-bold text-gray-800 mb-4 text-center text-sm md:text-base">نسب الكاش باك حسب العضوية:</h4>
                         <div className="flex justify-center gap-4 md:gap-8 flex-wrap">
@@ -667,7 +667,7 @@ const MasterMembership = () => {
                             { percentage: '7%', name: 'الفضية', color: 'bg-gradient-to-br from-gray-400 to-gray-500', delay: 2.1 },
                             { percentage: '15%', name: 'الذهبية', color: 'bg-gradient-to-br from-yellow-400 to-yellow-500', delay: 2.3 },
                             { percentage: '25%', name: 'البلاتينية', color: 'bg-gradient-to-br from-slate-400 to-slate-500', delay: 2.5 }
-                          ].map((item, index) => (
+                          ].reverse().map((item, index) => (
                             <motion.div
                               key={index}
                               initial={{ opacity: 0, scale: 0 }}
