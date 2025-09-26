@@ -533,16 +533,15 @@ const MasterMembership = () => {
               transition={{ delay: 0.5, duration: 0.8 }}
               className="mt-8 md:mt-12 max-w-6xl mx-auto px-4"
             >
-              <div className="relative bg-gradient-to-br from-emerald-50 via-green-50 to-teal-50 border-2 border-emerald-200 rounded-2xl md:rounded-3xl p-6 md:p-8 shadow-2xl overflow-hidden">
-                {/* Enhanced Background Animation */}
+              <div className="relative bg-gradient-to-l from-emerald-50 via-green-50 to-teal-50 border-2 border-emerald-200 rounded-2xl md:rounded-3xl p-6 md:p-8 shadow-2xl overflow-hidden" dir="rtl">
                 <div className="absolute inset-0">
-                  <div className="absolute inset-0 bg-gradient-to-r from-emerald-100/40 to-green-100/40 opacity-60"></div>
-                  <div className="absolute top-0 right-0 w-24 h-24 md:w-40 md:h-40 bg-gradient-to-br from-emerald-300/20 to-green-300/20 rounded-full -translate-y-12 md:-translate-y-20 translate-x-12 md:translate-x-20 animate-pulse"></div>
-                  <div className="absolute bottom-0 left-0 w-20 h-20 md:w-32 md:h-32 bg-gradient-to-tr from-teal-300/20 to-emerald-300/20 rounded-full translate-y-10 md:translate-y-16 -translate-x-10 md:-translate-x-16 animate-pulse" style={{ animationDelay: '1s' }}></div>
-                  <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-16 h-16 md:w-24 md:h-24 bg-gradient-to-r from-green-200/20 to-emerald-200/20 rounded-full animate-pulse" style={{ animationDelay: '2s' }}></div>
+                  <div className="absolute inset-0 bg-gradient-to-l from-emerald-100/40 to-green-100/40 opacity-60"></div>
+                  <div className="absolute top-0 left-0 w-24 h-24 md:w-40 md:h-40 bg-gradient-to-bl from-emerald-300/20 to-green-300/20 rounded-full -translate-y-12 md:-translate-y-20 -translate-x-12 md:-translate-x-20 animate-pulse"></div>
+                  <div className="absolute bottom-0 right-0 w-20 h-20 md:w-32 md:h-32 bg-gradient-to-tr from-teal-300/20 to-emerald-300/20 rounded-full translate-y-10 md:translate-y-16 translate-x-10 md:translate-x-16 animate-pulse" style={{ animationDelay: '1s' }}></div>
+                  <div className="absolute top-1/2 right-1/2 transform translate-x-1/2 -translate-y-1/2 w-16 h-16 md:w-24 md:h-24 bg-gradient-to-l from-green-200/20 to-emerald-200/20 rounded-full animate-pulse" style={{ animationDelay: '2s' }}></div>
                 </div>
 
-                <div className="relative z-10">
+                <div className="relative z-10 text-right">
                   {/* Alert Icon with Enhanced Animation */}
                   <motion.div 
                     initial={{ scale: 0, rotate: -180 }}
@@ -589,7 +588,7 @@ const MasterMembership = () => {
                       initial={{ opacity: 0, y: 30 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ delay: 0.9, duration: 0.6 }}
-                      className="text-xl md:text-2xl lg:text-3xl font-bold text-emerald-800 mb-4 md:mb-6 px-2"
+                      className="text-xl md:text-2xl lg:text-3xl font-bold text-emerald-800 mb-4 md:mb-6 px-2 text-right"
                     >
                       ⚠️ تنبيه مهم للمشتركين - الكاش باك المضمون
                     </motion.h3>
@@ -604,7 +603,7 @@ const MasterMembership = () => {
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         transition={{ delay: 1.3, duration: 0.5 }}
-                        className="text-base md:text-lg lg:text-xl text-emerald-700 font-semibold mb-6 leading-relaxed"
+                        className="text-base md:text-lg lg:text-xl text-emerald-700 font-semibold mb-6 leading-relaxed text-right"
                       >
                         🎯 ستحصل على الكاش باك الفوري من مصدرين أساسيين:
                       </motion.p>
@@ -693,19 +692,19 @@ const MasterMembership = () => {
                       transition={{ delay: 2.7, duration: 0.6 }}
                       className="mt-6"
                     >
-                      <div className="inline-flex items-center gap-3 bg-gradient-to-r from-emerald-500 via-green-500 to-emerald-600 text-white px-4 md:px-8 py-3 md:py-4 rounded-full font-bold shadow-2xl border border-emerald-400/30 backdrop-blur-sm hover:shadow-3xl transition-all duration-300 hover:scale-105">
+                      <div className="inline-flex items-center gap-3 bg-gradient-to-l from-emerald-500 via-green-500 to-emerald-600 text-white px-4 md:px-8 py-3 md:py-4 rounded-full font-bold shadow-2xl border border-emerald-400/30 backdrop-blur-sm hover:shadow-3xl transition-all duration-300 hover:scale-105 flex-row-reverse">
+                        <motion.div
+                          animate={{ x: [0, -5, 0] }}
+                          transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+                        >
+                          <Gift className="w-5 h-5 md:w-6 md:h-6" />
+                        </motion.div>
+                        <span className="text-sm md:text-base lg:text-lg">ابدأ الآن واحصل على كاش باك فوري!</span>
                         <motion.div
                           animate={{ rotate: [0, 360] }}
                           transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
                         >
                           <Star className="w-5 h-5 md:w-6 md:h-6" />
-                        </motion.div>
-                        <span className="text-sm md:text-base lg:text-lg">ابدأ الآن واحصل على كاش باك فوري!</span>
-                        <motion.div
-                          animate={{ x: [0, 5, 0] }}
-                          transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-                        >
-                          <Gift className="w-5 h-5 md:w-6 md:h-6" />
                         </motion.div>
                       </div>
                     </motion.div>
