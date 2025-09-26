@@ -278,7 +278,7 @@ const MasterMembership = () => {
 
                     {/* Card Network */}
                     <div className="absolute bottom-4 right-4 text-white/60 text-xs font-bold">
-                      MASTERCARD
+                      MASTEREDUPATH
                     </div>
 
 
