@@ -751,6 +751,14 @@ const generateCustomerEmailTemplate = (consultationData: ConsultationRequest, se
               <p>الجمعة: مغلق</p>
               <p>الدعم الأكاديمي متاح 24/7</p>
             </div>
+            
+            <div class="info-block">
+              <h5>⚖️ الملكية الفكرية وحقوق النشر</h5>
+              <p>جميع المحتويات والخدمات محمية بموجب قوانين الملكية الفكرية</p>
+              <p>يُمنع منعاً باتاً نسخ أو استخدام المحتوى دون إذن مكتوب</p>
+              <p>التصاميم والنماذج مملوكة حصرياً للوكالة</p>
+              <p>حقوق الطبع والنشر محفوظة وفقاً للقوانين السعودية والدولية</p>
+            </div>
           </div>
           
           <div class="social-links">
@@ -764,7 +772,13 @@ const generateCustomerEmailTemplate = (consultationData: ConsultationRequest, se
           <div class="copyright">
             © 2024 وكالة ماستر إيدو باث للخدمات الأكاديمية - جميع الحقوق محفوظة<br>
             <small>Master Edu Path Agency - All Rights Reserved</small><br>
-            <small>ترخيص رقم: 1234567890 - وزارة التجارة والاستثمار - المملكة العربية السعودية</small>
+            <small>ترخيص رقم: 1234567890 - وزارة التجارة والاستثمار - المملكة العربية السعودية</small><br><br>
+            <strong style="color: #94a3b8;">⚖️ إشعار الملكية الفكرية:</strong><br>
+            <small style="font-size: 12px; line-height: 1.5;">
+              هذا المحتوى محمي بموجب قوانين حقوق الطبع والنشر والملكية الفكرية المحلية والدولية. 
+              أي استخدام غير مصرح به يعرض المخالف للمساءلة القانونية.
+              للاستفسار عن الحقوق والتراخيص، يرجى التواصل معنا.
+            </small>
           </div>
         </div>
       </div>
