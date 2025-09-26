@@ -259,6 +259,47 @@ const MasterMembership = () => {
                       </div>
                     </div>
 
+                    {/* Premium Customer Details - Center Position */}
+                    <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-center text-white w-full px-4">
+                      {/* Customer Name */}
+                      <div 
+                        className="text-lg font-bold mb-2 font-cinzel tracking-widest"
+                        style={{ 
+                          fontFamily: 'Cinzel, serif',
+                          textShadow: `
+                            0 3px 0 rgba(0,0,0,0.7),
+                            0 -2px 0 rgba(255,255,255,0.2),
+                            inset 0 2px 4px rgba(0,0,0,0.5),
+                            0 0 10px rgba(0,0,0,0.3)
+                          `,
+                          filter: 'drop-shadow(0 3px 3px rgba(0,0,0,0.5))',
+                          background: 'linear-gradient(45deg, rgba(255,255,255,0.05), rgba(255,255,255,0.02))',
+                          WebkitBackgroundClip: 'text',
+                          backgroundClip: 'text'
+                        }}
+                      >
+                        العضو المميز
+                      </div>
+                      
+                      {/* Customer ID */}
+                      <div 
+                        className="text-sm font-mono tracking-[0.3em] opacity-95"
+                        style={{ 
+                          fontFamily: 'Playfair Display, serif',
+                          textShadow: `
+                            0 2px 0 rgba(0,0,0,0.6),
+                            0 -1px 0 rgba(255,255,255,0.15),
+                            inset 0 1px 3px rgba(0,0,0,0.4),
+                            0 0 8px rgba(0,0,0,0.2)
+                          `,
+                          filter: 'drop-shadow(0 2px 2px rgba(0,0,0,0.4))',
+                          letterSpacing: '0.15em'
+                        }}
+                      >
+                        {plan.id === 'silver' ? 'ID: MEP-54321' : plan.id === 'gold' ? 'ID: MEP-45326' : 'ID: MEP-45329'}
+                      </div>
+                    </div>
+
                     {/* Membership Name - Bottom Left */}
                     <div className="absolute bottom-4 left-4 text-white">
                       <div className="text-sm font-bold" 
