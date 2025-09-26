@@ -270,16 +270,10 @@ const MasterMembership = () => {
                       </div>
                     </div>
 
-                    {/* Expiry & CVV */}
-                    <div className="absolute bottom-8 right-4 flex gap-6 text-white text-xs">
-                      <div>
-                        <div className="opacity-80">صالح حتى</div>
-                        <div className="font-mono font-bold">12/25</div>
-                      </div>
-                      <div>
-                        <div className="opacity-80">CVV</div>
-                        <div className="font-mono font-bold">***</div>
-                      </div>
+                    {/* Expiry */}
+                    <div className="absolute bottom-8 right-4 text-white text-xs">
+                      <div className="opacity-80">صالح حتى</div>
+                      <div className="font-mono font-bold">12/25</div>
                     </div>
 
                     {/* Card Network */}
