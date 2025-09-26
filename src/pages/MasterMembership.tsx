@@ -287,24 +287,24 @@ const MasterMembership = () => {
                       MASTERCARD
                     </div>
 
-                     {/* Price & Discount Container - Top Section */}
-                     <div className="absolute top-3 left-3 right-3 flex justify-between items-start">
-                       {/* Discount Badge - Enhanced */}
-                       <div className="bg-gradient-to-r from-red-500 to-red-600 text-white px-4 py-2 rounded-full text-sm font-bold shadow-lg transform rotate-2 hover:rotate-0 transition-transform duration-300">
+                     {/* Price & Discount Container - Centered Top */}
+                     <div className="absolute top-2 left-1/2 transform -translate-x-1/2 flex flex-col items-center gap-2">
+                       {/* Discount Badge - Smaller */}
+                       <div className="bg-gradient-to-r from-red-500 to-red-600 text-white px-3 py-1 rounded-full text-xs font-bold shadow-lg">
                          <span className="drop-shadow-sm">خصم {plan.discount}</span>
                        </div>
 
-                       {/* Price Badge - Smaller */}
-                       <div className="bg-white/95 backdrop-blur-sm rounded-md px-2 py-1.5 shadow-md border border-white/30">
-                         <div className="flex items-baseline gap-0.5 text-gray-500 text-[10px] line-through leading-none">
+                       {/* Price Badge - Centered */}
+                       <div className="bg-white/95 backdrop-blur-sm rounded-md px-3 py-2 shadow-md border border-white/30">
+                         <div className="flex items-baseline justify-center gap-0.5 text-gray-500 text-[10px] line-through leading-none">
                            <span className="text-[8px] opacity-70">ريال</span>
                            <span className="font-medium">{plan.originalPrice}</span>
                          </div>
-                         <div className="flex items-baseline gap-0.5 text-gray-900 text-sm font-bold leading-none mt-0.5">
+                         <div className="flex items-baseline justify-center gap-0.5 text-gray-900 text-sm font-bold leading-none mt-0.5">
                            <span className="text-[10px] opacity-80 font-normal">ريال</span>
                            <span>{plan.price}</span>
                          </div>
-                         <div className="flex items-baseline gap-0.5 text-emerald-600 text-[10px] font-semibold leading-none mt-1">
+                         <div className="flex items-baseline justify-center gap-0.5 text-emerald-600 text-[10px] font-semibold leading-none mt-1">
                            <span className="text-[8px] opacity-80">ريال</span>
                            <span className="font-bold">{plan.cashback}</span>
                            <span>:كاش باك</span>
