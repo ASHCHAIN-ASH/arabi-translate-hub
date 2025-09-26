@@ -287,22 +287,30 @@ const MasterMembership = () => {
                       MASTERCARD
                     </div>
 
-                    {/* Price & Discount Container - Top Section */}
-                    <div className="absolute top-3 left-3 right-3 flex justify-between items-start">
-                      {/* Price Badge - Compact */}
-                      <div className="bg-white/90 backdrop-blur-sm rounded-lg px-3 py-2 shadow-md border border-white/20">
-                        <div className="text-gray-600 text-xs line-through leading-none">{plan.originalPrice} ريال</div>
-                        <div className="text-gray-800 text-lg font-bold leading-none mt-1">{plan.price} ريال</div>
-                        <div className="text-green-600 text-xs font-medium leading-none mt-1">
-                          كاش باك: {plan.cashback} ريال
-                        </div>
-                      </div>
+                     {/* Price & Discount Container - Top Section */}
+                     <div className="absolute top-3 left-3 right-3 flex justify-between items-start">
+                       {/* Price Badge - Compact */}
+                       <div className="bg-white/95 backdrop-blur-sm rounded-lg px-4 py-3 shadow-lg border border-white/30">
+                         <div className="flex items-baseline gap-1 text-gray-500 text-xs line-through leading-none">
+                           <span className="font-medium">{plan.originalPrice}</span>
+                           <span className="text-[10px] opacity-70">ريال</span>
+                         </div>
+                         <div className="flex items-baseline gap-1 text-gray-900 text-xl font-bold leading-none mt-1">
+                           <span>{plan.price}</span>
+                           <span className="text-xs opacity-80 font-normal">ريال</span>
+                         </div>
+                         <div className="flex items-baseline gap-1 text-emerald-600 text-xs font-semibold leading-none mt-2">
+                           <span>كاش باك:</span>
+                           <span className="font-bold">{plan.cashback}</span>
+                           <span className="text-[10px] opacity-80">ريال</span>
+                         </div>
+                       </div>
 
-                      {/* Discount Badge - Small & Clear */}
-                      <div className="bg-gradient-to-r from-red-500 to-red-600 text-white px-3 py-1 rounded-full text-xs font-bold shadow-lg transform -rotate-3">
-                        خصم {plan.discount}
-                      </div>
-                    </div>
+                       {/* Discount Badge - Enhanced */}
+                       <div className="bg-gradient-to-r from-red-500 to-red-600 text-white px-4 py-2 rounded-full text-sm font-bold shadow-lg transform -rotate-2 hover:rotate-0 transition-transform duration-300">
+                         <span className="drop-shadow-sm">خصم {plan.discount}</span>
+                       </div>
+                     </div>
 
                     {/* Contactless Symbol */}
                     <div className="absolute top-12 left-4">
@@ -340,13 +348,15 @@ const MasterMembership = () => {
                       اشترك الآن - 12 شهر
                     </Button>
                     
-                    <div className="mt-3 text-center">
-                      <div className="inline-flex items-center gap-2 bg-green-50 text-green-700 px-4 py-2 rounded-full text-sm">
-                        <Gift className="w-4 h-4" />
-                        كاش باك فوري {plan.cashbackPercent}: {plan.cashback} ريال
-                      </div>
-                      <p className="text-xs text-gray-500 mt-2">من رسوم التأسيس وجميع الطلبات</p>
-                    </div>
+                     <div className="mt-3 text-center">
+                       <div className="inline-flex items-center gap-2 bg-emerald-50 text-emerald-700 px-5 py-3 rounded-full text-sm font-semibold border border-emerald-200">
+                         <Gift className="w-4 h-4" />
+                         <span>كاش باك فوري {plan.cashbackPercent}:</span>
+                         <span className="font-bold">{plan.cashback}</span>
+                         <span className="text-xs opacity-80">ريال</span>
+                       </div>
+                       <p className="text-xs text-gray-500 mt-2 font-medium">من رسوم التأسيس وجميع الطلبات</p>
+                     </div>
                   </div>
                 </motion.div>
               ))}
