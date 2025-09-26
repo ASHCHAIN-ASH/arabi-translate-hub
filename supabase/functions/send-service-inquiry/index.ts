@@ -69,7 +69,7 @@ const generateCustomerEmailTemplate = (inquiry: ServiceInquiry, serviceName: str
         }
         
         body {
-          font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+          font-family: 'Tajawal', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
           line-height: 1.7;
           color: #1a365d;
           background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
@@ -77,6 +77,17 @@ const generateCustomerEmailTemplate = (inquiry: ServiceInquiry, serviceName: str
           text-align: right;
           margin: 0;
           padding: 20px 0;
+          animation: fadeIn 1s ease-in;
+        }
+        
+        @keyframes fadeIn {
+          from { opacity: 0; transform: translateY(20px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
+        
+        @keyframes slideInRight {
+          from { opacity: 0; transform: translateX(30px); }
+          to { opacity: 1; transform: translateX(0); }
         }
         
         .email-container {

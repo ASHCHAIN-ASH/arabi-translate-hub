@@ -69,14 +69,25 @@ const handler = async (req: Request): Promise<Response> => {
         <style>
           * { margin: 0; padding: 0; box-sizing: border-box; }
           body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Tajawal', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             line-height: 1.7;
             color: #0f172a;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #4834d4 0%, #686de0 100%);
             direction: rtl;
             text-align: right;
             margin: 0;
             padding: 20px 0;
+            animation: academicFadeIn 1.2s ease-out;
+          }
+          
+          @keyframes academicFadeIn {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+          }
+          
+          @keyframes rtlSlide {
+            from { opacity: 0; transform: translateX(40px); }
+            to { opacity: 1; transform: translateX(0); }
           }
           .email-container {
             max-width: 680px;
