@@ -278,7 +278,7 @@ const MasterMembership = () => {
                           backgroundClip: 'text'
                         }}
                       >
-                        اسم العميل:
+                        اسم العميل: وكالة ماستر إيدو باث
                       </div>
                       
                       {/* Customer ID */}
