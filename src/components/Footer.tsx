@@ -92,7 +92,7 @@ const Footer = () => {
 
       {/* Main Footer Content */}
       <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-16">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 md:gap-12">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-8 md:gap-12">
           {/* معلومات الشركة */}
           <motion.div 
             initial={{ opacity: 0, y: 20 }}
@@ -252,6 +252,55 @@ const Footer = () => {
               ))}
             </ul>
           </motion.div>
+
+          {/* قسم الملكية الفكرية وحقوق النشر */}
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.25, duration: 0.5 }}
+            className="space-y-4 md:space-y-6"
+          >
+            <h4 className="text-base md:text-lg font-bold text-white flex items-center gap-2">
+              <Shield className="h-4 w-4 md:h-5 md:w-5 text-red-400" />
+              الملكية الفكرية وحقوق النشر
+            </h4>
+            <div className="space-y-3">
+              <div className="p-3 md:p-4 bg-red-500/10 rounded-lg border border-red-500/20">
+                <h5 className="text-sm md:text-base font-semibold text-red-400 mb-2 flex items-center gap-2">
+                  <Award className="h-3 w-3 md:h-4 md:w-4" />
+                  حماية قانونية شاملة
+                </h5>
+                <p className="text-xs md:text-sm text-white/80 leading-relaxed">
+                  جميع المحتويات والخدمات محمية بموجب قوانين الملكية الفكرية المحلية والدولية
+                </p>
+              </div>
+              
+              <div className="p-3 md:p-4 bg-yellow-500/10 rounded-lg border border-yellow-500/20">
+                <h5 className="text-sm md:text-base font-semibold text-yellow-400 mb-2 flex items-center gap-2">
+                  <HelpCircle className="h-3 w-3 md:h-4 md:w-4" />
+                  إشعار مهم
+                </h5>
+                <p className="text-xs md:text-sm text-white/80 leading-relaxed">
+                  يُمنع منعاً باتاً نسخ أو استخدام المحتوى دون إذن مكتوب مسبق من الإدارة
+                </p>
+              </div>
+
+              <div className="text-xs md:text-sm text-white/70 space-y-1">
+                <p className="flex items-center gap-2">
+                  <Shield className="h-3 w-3 flex-shrink-0 text-green-400" />
+                  التصاميم والنماذج مملوكة حصرياً للوكالة
+                </p>
+                <p className="flex items-center gap-2">
+                  <Globe className="h-3 w-3 flex-shrink-0 text-blue-400" />
+                  محفوظة وفقاً للقوانين السعودية والدولية
+                </p>
+                <p className="flex items-center gap-2">
+                  <Mail className="h-3 w-3 flex-shrink-0 text-purple-400" />
+                  للاستفسار: legal@masteredupath.com
+                </p>
+              </div>
+            </div>
+          </motion.div>
         </div>
 
         {/* Newsletter Section */}
@@ -293,10 +342,23 @@ const Footer = () => {
         >
           <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4 md:gap-6">
             <div className="flex-1 max-w-lg">
-              <p className="text-white/60 text-sm text-center lg:text-right flex items-center gap-2 flex-wrap">
-                <Globe className="h-4 w-4 flex-shrink-0" />
-                <span>© {currentYear} وكالة ماستر إيدو باث - للحلول التعليمية المتقدمة. جميع الحقوق محفوظة.</span>
-              </p>
+              <div className="space-y-2">
+                <p className="text-white/60 text-sm text-center lg:text-right flex items-center gap-2 flex-wrap">
+                  <Globe className="h-4 w-4 flex-shrink-0" />
+                  <span>© {currentYear} وكالة ماستر إيدو باث - للحلول التعليمية المتقدمة. جميع الحقوق محفوظة.</span>
+                </p>
+                <div className="bg-red-500/10 border border-red-500/20 rounded-lg p-2 md:p-3">
+                  <p className="text-xs md:text-sm text-red-400 font-semibold flex items-center gap-2 mb-1">
+                    <Shield className="h-3 w-3 md:h-4 md:w-4 flex-shrink-0" />
+                    إشعار الملكية الفكرية
+                  </p>
+                  <p className="text-xs text-white/70 leading-relaxed">
+                    هذا المحتوى محمي بموجب قوانين حقوق الطبع والنشر والملكية الفكرية. 
+                    أي استخدام غير مصرح به يعرض المخالف للمساءلة القانونية.
+                    للاستفسار عن الحقوق والتراخيص، يرجى التواصل معنا.
+                  </p>
+                </div>
+              </div>
             </div>
             
             <div className="flex flex-wrap items-center justify-center lg:justify-end gap-4 md:gap-6 text-sm">
