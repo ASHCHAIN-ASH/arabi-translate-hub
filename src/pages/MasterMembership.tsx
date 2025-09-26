@@ -331,12 +331,12 @@ const MasterMembership = () => {
                        transition={{ delay: 0.3, duration: 0.5 }}
                        className="mt-4 flex justify-center gap-3"
                      >
-                       {/* Discount Badge */}
-                       <div className="bg-gradient-to-r from-red-500 to-red-600 text-white px-3 py-1.5 rounded-full text-xs font-bold shadow-lg">
-                         <span className="drop-shadow-sm">خصم {plan.discount}</span>
+                       {/* Discount Badge - Small Strip */}
+                       <div className="bg-gradient-to-r from-red-500 to-red-600 text-white px-2 py-1 rounded-md text-xs font-bold shadow-md">
+                         <span className="drop-shadow-sm">{plan.discount}</span>
                        </div>
 
-                       {/* Price Badge */}
+                       {/* Price Badge - Without Cashback Icon */}
                        <div className="bg-white backdrop-blur-sm rounded-lg px-4 py-2 shadow-lg border border-gray-200">
                          <div className="flex items-baseline justify-center gap-0.5 text-gray-500 text-xs line-through leading-none">
                            <span className="text-[10px] opacity-70">ريال</span>
@@ -349,7 +349,7 @@ const MasterMembership = () => {
                          <div className="flex items-baseline justify-center gap-0.5 text-emerald-600 text-xs font-semibold leading-none mt-1">
                            <span className="text-[10px] opacity-80">ريال</span>
                            <span className="font-bold">{plan.cashback}</span>
-                           <span>:كاش باك</span>
+                           <span>كاش باك</span>
                          </div>
                        </div>
                      </motion.div>
