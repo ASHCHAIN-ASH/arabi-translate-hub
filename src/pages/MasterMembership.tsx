@@ -323,9 +323,9 @@ const MasterMembership = () => {
                     </div>
 
 
-                     {/* Small Discount Badge - Top Left Corner */}
-                     <div className="absolute top-3 left-3">
-                       <div className="bg-gradient-to-r from-red-500 to-red-600 text-white px-2 py-0.5 rounded text-[10px] font-bold shadow-md transform -rotate-3">
+                     {/* Small Discount Badge - Top Corner */}
+                     <div className="absolute top-3 right-3">
+                       <div className="bg-gradient-to-r from-red-500 to-red-600 text-white px-2 py-0.5 rounded text-[10px] font-bold shadow-md transform rotate-3">
                          {plan.discount}
                        </div>
                      </div>
@@ -404,13 +404,13 @@ const MasterMembership = () => {
                       </motion.div>
                     
                      <div className="mt-3 text-center">
-                       <div className="inline-flex items-center gap-2 bg-emerald-50 text-emerald-700 px-5 py-3 rounded-full text-sm font-semibold border border-emerald-200" dir="rtl">
-                         <span className="text-xs opacity-80">ريال</span>
-                         <span className="font-bold">{plan.cashback}</span>
-                         <span>:{plan.cashbackPercent} كاش باك فوري</span>
+                       <div className="inline-flex items-center gap-2 bg-emerald-50 text-emerald-700 px-5 py-3 rounded-full text-sm font-semibold border border-emerald-200">
                          <Gift className="w-4 h-4" />
+                         <span>كاش باك فوري {plan.cashbackPercent}:</span>
+                         <span className="font-bold">{plan.cashback}</span>
+                         <span className="text-xs opacity-80">ريال</span>
                        </div>
-                       <p className="text-xs text-gray-500 mt-2 font-medium" dir="rtl">من رسوم التأسيس وجميع الطلبات</p>
+                       <p className="text-xs text-gray-500 mt-2 font-medium">من رسوم التأسيس وجميع الطلبات</p>
                      </div>
                   </div>
                 </motion.div>
