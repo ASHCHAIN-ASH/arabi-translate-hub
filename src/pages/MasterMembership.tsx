@@ -526,143 +526,187 @@ const MasterMembership = () => {
               ))}
             </div>
 
-            {/* Cashback Notice - Attractive Alert */}
+            {/* Cashback Notice - Enhanced Mobile-Responsive Design */}
             <motion.div
-              initial={{ opacity: 0, y: 30, scale: 0.95 }}
+              initial={{ opacity: 0, y: 50, scale: 0.95 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}
-              transition={{ delay: 0.5, duration: 0.6 }}
-              className="mt-12 max-w-5xl mx-auto"
+              transition={{ delay: 0.5, duration: 0.8 }}
+              className="mt-8 md:mt-12 max-w-6xl mx-auto px-4"
             >
-              <div className="relative bg-gradient-to-r from-green-50 via-emerald-50 to-teal-50 border-2 border-green-200 rounded-2xl p-8 shadow-xl overflow-hidden">
-                {/* Background Animation */}
-                <div className="absolute inset-0 bg-gradient-to-r from-green-100/30 to-emerald-100/30 opacity-50"></div>
-                <div className="absolute top-0 right-0 w-32 h-32 bg-green-200/20 rounded-full -translate-y-16 translate-x-16"></div>
-                <div className="absolute bottom-0 left-0 w-24 h-24 bg-emerald-200/20 rounded-full translate-y-12 -translate-x-12"></div>
+              <div className="relative bg-gradient-to-br from-emerald-50 via-green-50 to-teal-50 border-2 border-emerald-200 rounded-2xl md:rounded-3xl p-6 md:p-8 shadow-2xl overflow-hidden">
+                {/* Enhanced Background Animation */}
+                <div className="absolute inset-0">
+                  <div className="absolute inset-0 bg-gradient-to-r from-emerald-100/40 to-green-100/40 opacity-60"></div>
+                  <div className="absolute top-0 right-0 w-24 h-24 md:w-40 md:h-40 bg-gradient-to-br from-emerald-300/20 to-green-300/20 rounded-full -translate-y-12 md:-translate-y-20 translate-x-12 md:translate-x-20 animate-pulse"></div>
+                  <div className="absolute bottom-0 left-0 w-20 h-20 md:w-32 md:h-32 bg-gradient-to-tr from-teal-300/20 to-emerald-300/20 rounded-full translate-y-10 md:translate-y-16 -translate-x-10 md:-translate-x-16 animate-pulse" style={{ animationDelay: '1s' }}></div>
+                  <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-16 h-16 md:w-24 md:h-24 bg-gradient-to-r from-green-200/20 to-emerald-200/20 rounded-full animate-pulse" style={{ animationDelay: '2s' }}></div>
+                </div>
 
                 <div className="relative z-10">
-                  {/* Alert Icon with Animation */}
-                  <div className="flex items-center justify-center mb-6">
+                  {/* Alert Icon with Enhanced Animation */}
+                  <motion.div 
+                    initial={{ scale: 0, rotate: -180 }}
+                    animate={{ scale: 1, rotate: 0 }}
+                    transition={{ delay: 0.7, duration: 0.8, type: "spring", stiffness: 150 }}
+                    className="flex items-center justify-center mb-6"
+                  >
                     <motion.div
                       animate={{ 
                         scale: [1, 1.1, 1],
-                        rotate: [0, 5, -5, 0]
+                        rotate: [0, 8, -8, 0],
+                        boxShadow: [
+                          "0 8px 25px rgba(16, 185, 129, 0.3)",
+                          "0 12px 35px rgba(16, 185, 129, 0.4)",
+                          "0 8px 25px rgba(16, 185, 129, 0.3)"
+                        ]
                       }}
                       transition={{ 
-                        duration: 2,
+                        duration: 3,
                         repeat: Infinity,
                         ease: "easeInOut"
                       }}
-                      className="w-16 h-16 bg-gradient-to-br from-green-400 to-emerald-500 rounded-full flex items-center justify-center shadow-lg"
+                      className="w-16 h-16 md:w-20 md:h-20 bg-gradient-to-br from-emerald-400 via-green-500 to-emerald-600 rounded-full flex items-center justify-center shadow-2xl border-4 border-white/30 backdrop-blur-sm"
                     >
                       <motion.div
                         animate={{ 
-                          y: [0, -2, 0],
+                          y: [0, -3, 0],
+                          rotate: [0, 15, -15, 0]
                         }}
                         transition={{ 
-                          duration: 1.5,
+                          duration: 2,
                           repeat: Infinity,
                           ease: "easeInOut"
                         }}
                       >
-                        <Gift className="w-8 h-8 text-white" />
+                        <Gift className="w-8 h-8 md:w-10 md:h-10 text-white" />
                       </motion.div>
                     </motion.div>
-                  </div>
+                  </motion.div>
 
                   {/* Main Alert Content */}
                   <div className="text-center">
                     <motion.h3 
-                      initial={{ opacity: 0, y: 20 }}
+                      initial={{ opacity: 0, y: 30 }}
                       animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: 0.7, duration: 0.5 }}
-                      className="text-2xl font-bold text-green-800 mb-4"
+                      transition={{ delay: 0.9, duration: 0.6 }}
+                      className="text-xl md:text-2xl lg:text-3xl font-bold text-emerald-800 mb-4 md:mb-6 px-2"
                     >
                       ⚠️ تنبيه مهم للمشتركين - الكاش باك المضمون
                     </motion.h3>
 
                     <motion.div
-                      initial={{ opacity: 0, y: 20 }}
+                      initial={{ opacity: 0, y: 30 }}
                       animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: 0.8, duration: 0.5 }}
-                      className="bg-white/70 backdrop-blur-sm rounded-xl p-6 border border-green-100"
+                      transition={{ delay: 1.1, duration: 0.6 }}
+                      className="bg-white/80 backdrop-blur-sm rounded-xl md:rounded-2xl p-4 md:p-6 border border-emerald-100 shadow-lg"
                     >
-                      <p className="text-lg text-green-700 font-semibold mb-4 leading-relaxed">
+                      <motion.p 
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        transition={{ delay: 1.3, duration: 0.5 }}
+                        className="text-base md:text-lg lg:text-xl text-emerald-700 font-semibold mb-6 leading-relaxed"
+                      >
                         🎯 ستحصل على الكاش باك الفوري من مصدرين أساسيين:
-                      </p>
+                      </motion.p>
                       
-                      <div className="grid gap-4 md:grid-cols-2 text-right">
+                      {/* Enhanced Sources Grid */}
+                      <div className="grid gap-4 md:gap-6 lg:grid-cols-2 text-right">
                         <motion.div
-                          whileHover={{ scale: 1.02, x: -5 }}
-                          className="bg-gradient-to-r from-emerald-100 to-teal-100 p-4 rounded-lg border-r-4 border-emerald-500 order-2 md:order-1"
+                          initial={{ opacity: 0, x: 50 }}
+                          animate={{ opacity: 1, x: 0 }}
+                          whileHover={{ scale: 1.03, y: -5 }}
+                          transition={{ delay: 1.5, duration: 0.5 }}
+                          className="bg-gradient-to-r from-emerald-100 via-emerald-50 to-teal-100 p-4 md:p-6 rounded-xl border-r-4 border-emerald-500 shadow-lg hover:shadow-xl transition-all duration-300 order-2 lg:order-1"
                         >
-                          <div className="flex items-center gap-3 mb-2">
-                            <div className="w-8 h-8 bg-emerald-500 rounded-full flex items-center justify-center">
-                              <span className="text-white font-bold text-sm">1</span>
-                            </div>
-                            <h4 className="font-bold text-emerald-800">من رسوم تأسيس العضوية</h4>
+                          <div className="flex items-center gap-3 mb-3">
+                            <motion.div 
+                              whileHover={{ scale: 1.1, rotate: 5 }}
+                              className="w-10 h-10 md:w-12 md:h-12 bg-gradient-to-br from-emerald-500 to-emerald-600 rounded-full flex items-center justify-center shadow-lg"
+                            >
+                              <span className="text-white font-bold text-sm md:text-base">1</span>
+                            </motion.div>
+                            <h4 className="font-bold text-emerald-800 text-sm md:text-base">من رسوم تأسيس العضوية</h4>
                           </div>
-                          <p className="text-emerald-700 text-sm">
+                          <p className="text-emerald-700 text-xs md:text-sm leading-relaxed">
                             كاش باك فوري بنسبة العضوية المختارة من رسوم التأسيس
                           </p>
                         </motion.div>
 
                         <motion.div
-                          whileHover={{ scale: 1.02, x: -5 }}
-                          className="bg-gradient-to-r from-green-100 to-emerald-100 p-4 rounded-lg border-r-4 border-green-500 order-1 md:order-2"
+                          initial={{ opacity: 0, x: -50 }}
+                          animate={{ opacity: 1, x: 0 }}
+                          whileHover={{ scale: 1.03, y: -5 }}
+                          transition={{ delay: 1.7, duration: 0.5 }}
+                          className="bg-gradient-to-r from-green-100 via-green-50 to-emerald-100 p-4 md:p-6 rounded-xl border-r-4 border-green-500 shadow-lg hover:shadow-xl transition-all duration-300 order-1 lg:order-2"
                         >
-                          <div className="flex items-center gap-3 mb-2">
-                            <div className="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center">
-                              <span className="text-white font-bold text-sm">2</span>
-                            </div>
-                            <h4 className="font-bold text-green-800">من جميع الطلبات المستقبلية</h4>
+                          <div className="flex items-center gap-3 mb-3">
+                            <motion.div 
+                              whileHover={{ scale: 1.1, rotate: 5 }}
+                              className="w-10 h-10 md:w-12 md:h-12 bg-gradient-to-br from-green-500 to-green-600 rounded-full flex items-center justify-center shadow-lg"
+                            >
+                              <span className="text-white font-bold text-sm md:text-base">2</span>
+                            </motion.div>
+                            <h4 className="font-bold text-green-800 text-sm md:text-base">من جميع الطلبات المستقبلية</h4>
                           </div>
-                          <p className="text-green-700 text-sm">
+                          <p className="text-green-700 text-xs md:text-sm leading-relaxed">
                             كاش باك مستمر من كل طلب تقوم به بعد الاشتراك
                           </p>
                         </motion.div>
                       </div>
 
-                      {/* Percentage Breakdown */}
-                      <div className="mt-6 bg-gradient-to-r from-gray-50 to-slate-50 rounded-lg p-4">
-                        <h4 className="font-bold text-gray-800 mb-3 text-center">نسب الكاش باك حسب العضوية:</h4>
-                        <div className="flex justify-center gap-6 flex-wrap">
-                          <div className="text-center">
-                            <div className="w-12 h-12 bg-gray-400 rounded-full flex items-center justify-center mb-2 mx-auto">
-                              <span className="text-white font-bold text-sm">7%</span>
-                            </div>
-                            <span className="text-sm font-semibold text-gray-700">الفضية</span>
-                          </div>
-                          <div className="text-center">
-                            <div className="w-12 h-12 bg-yellow-400 rounded-full flex items-center justify-center mb-2 mx-auto">
-                              <span className="text-white font-bold text-sm">15%</span>
-                            </div>
-                            <span className="text-sm font-semibold text-gray-700">الذهبية</span>
-                          </div>
-                          <div className="text-center">
-                            <div className="w-12 h-12 bg-slate-400 rounded-full flex items-center justify-center mb-2 mx-auto">
-                              <span className="text-white font-bold text-sm">25%</span>
-                            </div>
-                            <span className="text-sm font-semibold text-gray-700">البلاتينية</span>
-                          </div>
+                      {/* Enhanced Percentage Breakdown */}
+                      <motion.div
+                        initial={{ opacity: 0, y: 30 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 1.9, duration: 0.6 }}
+                        className="mt-6 bg-gradient-to-r from-slate-50 via-gray-50 to-slate-50 rounded-xl p-4 md:p-6 shadow-inner"
+                      >
+                        <h4 className="font-bold text-gray-800 mb-4 text-center text-sm md:text-base">نسب الكاش باك حسب العضوية:</h4>
+                        <div className="flex justify-center gap-4 md:gap-8 flex-wrap">
+                          {[
+                            { percentage: '7%', name: 'الفضية', color: 'bg-gradient-to-br from-gray-400 to-gray-500', delay: 2.1 },
+                            { percentage: '15%', name: 'الذهبية', color: 'bg-gradient-to-br from-yellow-400 to-yellow-500', delay: 2.3 },
+                            { percentage: '25%', name: 'البلاتينية', color: 'bg-gradient-to-br from-slate-400 to-slate-500', delay: 2.5 }
+                          ].map((item, index) => (
+                            <motion.div
+                              key={index}
+                              initial={{ opacity: 0, scale: 0 }}
+                              animate={{ opacity: 1, scale: 1 }}
+                              whileHover={{ scale: 1.1, y: -3 }}
+                              transition={{ delay: item.delay, duration: 0.5, type: "spring", stiffness: 200 }}
+                              className="text-center"
+                            >
+                              <div className={`w-12 h-12 md:w-16 md:h-16 ${item.color} rounded-full flex items-center justify-center mb-2 mx-auto shadow-lg border-2 border-white`}>
+                                <span className="text-white font-bold text-xs md:text-sm">{item.percentage}</span>
+                              </div>
+                              <span className="text-xs md:text-sm font-semibold text-gray-700">{item.name}</span>
+                            </motion.div>
+                          ))}
                         </div>
-                      </div>
+                      </motion.div>
                     </motion.div>
 
-                    {/* CTA */}
+                    {/* Enhanced CTA */}
                     <motion.div
-                      initial={{ opacity: 0, y: 20 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: 1, duration: 0.5 }}
+                      initial={{ opacity: 0, y: 30, scale: 0.9 }}
+                      animate={{ opacity: 1, y: 0, scale: 1 }}
+                      transition={{ delay: 2.7, duration: 0.6 }}
                       className="mt-6"
                     >
-                      <div className="inline-flex items-center gap-2 bg-gradient-to-r from-green-500 to-emerald-500 text-white px-6 py-3 rounded-full font-bold shadow-lg">
+                      <div className="inline-flex items-center gap-3 bg-gradient-to-r from-emerald-500 via-green-500 to-emerald-600 text-white px-4 md:px-8 py-3 md:py-4 rounded-full font-bold shadow-2xl border border-emerald-400/30 backdrop-blur-sm hover:shadow-3xl transition-all duration-300 hover:scale-105">
                         <motion.div
                           animate={{ rotate: [0, 360] }}
-                          transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
+                          transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
                         >
-                          <Star className="w-5 h-5" />
+                          <Star className="w-5 h-5 md:w-6 md:h-6" />
                         </motion.div>
-                        ابدأ الآن واحصل على كاش باك فوري!
+                        <span className="text-sm md:text-base lg:text-lg">ابدأ الآن واحصل على كاش باك فوري!</span>
+                        <motion.div
+                          animate={{ x: [0, 5, 0] }}
+                          transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+                        >
+                          <Gift className="w-5 h-5 md:w-6 md:h-6" />
+                        </motion.div>
                       </div>
                     </motion.div>
                   </div>
