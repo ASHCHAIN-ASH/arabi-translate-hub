@@ -287,30 +287,6 @@ const MasterMembership = () => {
                       MASTERCARD
                     </div>
 
-                     {/* Price & Discount Container - Centered Top */}
-                     <div className="absolute top-2 left-1/2 transform -translate-x-1/2 flex flex-col items-center gap-2">
-                       {/* Discount Badge - Smaller */}
-                       <div className="bg-gradient-to-r from-red-500 to-red-600 text-white px-3 py-1 rounded-full text-xs font-bold shadow-lg">
-                         <span className="drop-shadow-sm">خصم {plan.discount}</span>
-                       </div>
-
-                       {/* Price Badge - Centered */}
-                       <div className="bg-white/95 backdrop-blur-sm rounded-md px-3 py-2 shadow-md border border-white/30">
-                         <div className="flex items-baseline justify-center gap-0.5 text-gray-500 text-[10px] line-through leading-none">
-                           <span className="text-[8px] opacity-70">ريال</span>
-                           <span className="font-medium">{plan.originalPrice}</span>
-                         </div>
-                         <div className="flex items-baseline justify-center gap-0.5 text-gray-900 text-sm font-bold leading-none mt-0.5">
-                           <span className="text-[10px] opacity-80 font-normal">ريال</span>
-                           <span>{plan.price}</span>
-                         </div>
-                         <div className="flex items-baseline justify-center gap-0.5 text-emerald-600 text-[10px] font-semibold leading-none mt-1">
-                           <span className="text-[8px] opacity-80">ريال</span>
-                           <span className="font-bold">{plan.cashback}</span>
-                           <span>:كاش باك</span>
-                         </div>
-                       </div>
-                     </div>
 
                     {/* Contactless Symbol */}
                     <div className="absolute top-12 left-4">
@@ -332,21 +308,51 @@ const MasterMembership = () => {
 
                   {/* Subscribe Button */}
                   <div className="mt-4">
-                    <Button 
-                      onClick={() => {
-                        setSelectedPlan(plan);
-                        setIsFormOpen(true);
-                      }}
-                      className={`
-                        w-full bg-gradient-to-r ${plan.gradient} 
-                        hover:opacity-90 text-white font-bold py-4 text-base rounded-xl
-                        shadow-lg hover:shadow-xl transition-all duration-300
-                        hover:scale-105 border-0
-                      `}
-                    >
-                      <Crown className="w-4 h-4 ml-2" />
-                      اشترك الآن - 12 شهر
-                    </Button>
+                     <Button 
+                       onClick={() => {
+                         setSelectedPlan(plan);
+                         setIsFormOpen(true);
+                       }}
+                       className={`
+                         w-full bg-gradient-to-r ${plan.gradient} 
+                         hover:opacity-90 text-white font-bold py-4 text-base rounded-xl
+                         shadow-lg hover:shadow-xl transition-all duration-300
+                         hover:scale-105 border-0
+                       `}
+                     >
+                       <Crown className="w-4 h-4 ml-2" />
+                       اشترك الآن - 12 شهر
+                     </Button>
+                     
+                     {/* Price & Discount Container - Below Button */}
+                     <motion.div 
+                       initial={{ opacity: 0, y: 10 }}
+                       animate={{ opacity: 1, y: 0 }}
+                       transition={{ delay: 0.3, duration: 0.5 }}
+                       className="mt-4 flex justify-center gap-3"
+                     >
+                       {/* Discount Badge */}
+                       <div className="bg-gradient-to-r from-red-500 to-red-600 text-white px-3 py-1.5 rounded-full text-xs font-bold shadow-lg">
+                         <span className="drop-shadow-sm">خصم {plan.discount}</span>
+                       </div>
+
+                       {/* Price Badge */}
+                       <div className="bg-white backdrop-blur-sm rounded-lg px-4 py-2 shadow-lg border border-gray-200">
+                         <div className="flex items-baseline justify-center gap-0.5 text-gray-500 text-xs line-through leading-none">
+                           <span className="text-[10px] opacity-70">ريال</span>
+                           <span className="font-medium">{plan.originalPrice}</span>
+                         </div>
+                         <div className="flex items-baseline justify-center gap-0.5 text-gray-900 text-lg font-bold leading-none mt-0.5">
+                           <span className="text-sm opacity-80 font-normal">ريال</span>
+                           <span>{plan.price}</span>
+                         </div>
+                         <div className="flex items-baseline justify-center gap-0.5 text-emerald-600 text-xs font-semibold leading-none mt-1">
+                           <span className="text-[10px] opacity-80">ريال</span>
+                           <span className="font-bold">{plan.cashback}</span>
+                           <span>:كاش باك</span>
+                         </div>
+                       </div>
+                     </motion.div>
                     
                      <div className="mt-3 text-center">
                        <div className="inline-flex items-center gap-2 bg-emerald-50 text-emerald-700 px-5 py-3 rounded-full text-sm font-semibold border border-emerald-200">
