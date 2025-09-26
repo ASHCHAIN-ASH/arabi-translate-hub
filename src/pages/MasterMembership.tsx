@@ -278,7 +278,7 @@ const MasterMembership = () => {
                           backgroundClip: 'text'
                         }}
                       >
-                        اسم العميل
+                        اسم العميل:
                       </div>
                       
                       {/* Customer ID */}
