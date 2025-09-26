@@ -259,8 +259,8 @@ const MasterMembership = () => {
                       </div>
                     </div>
 
-                    {/* Customer Name and ID - Organized */}
-                    <div className="absolute bottom-14 right-4 text-white">
+                    {/* Customer Name and ID - Bottom Left */}
+                    <div className="absolute bottom-14 left-4 text-white">
                       {/* Customer Name */}
                       <div className="text-sm font-bold mb-2" 
                            style={{ 
