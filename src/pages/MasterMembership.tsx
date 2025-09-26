@@ -263,7 +263,7 @@ const MasterMembership = () => {
                     <div className="absolute top-1/2 right-4 transform -translate-y-1/2 text-right text-white">
                       {/* Customer Name */}
                       <div 
-                        className="text-lg font-bold mb-2 font-cinzel tracking-widest"
+                        className="text-sm font-bold mb-1 font-cinzel tracking-widest"
                         style={{ 
                           fontFamily: 'Cinzel, serif',
                           textShadow: `
