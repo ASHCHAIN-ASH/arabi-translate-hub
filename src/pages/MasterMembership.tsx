@@ -323,9 +323,9 @@ const MasterMembership = () => {
                     </div>
 
 
-                     {/* Small Discount Badge - Top Corner */}
-                     <div className="absolute top-3 right-3">
-                       <div className="bg-gradient-to-r from-red-500 to-red-600 text-white px-2 py-0.5 rounded text-[10px] font-bold shadow-md transform rotate-3">
+                     {/* Small Discount Badge - Top Left Corner */}
+                     <div className="absolute top-3 left-3">
+                       <div className="bg-gradient-to-r from-red-500 to-red-600 text-white px-2 py-0.5 rounded text-[10px] font-bold shadow-md transform -rotate-3">
                          {plan.discount}
                        </div>
                      </div>
