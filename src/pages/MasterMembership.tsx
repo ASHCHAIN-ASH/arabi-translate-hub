@@ -288,7 +288,14 @@ const MasterMembership = () => {
                     </div>
 
 
-                    {/* Contactless Symbol */}
+                     {/* Small Discount Badge - Top Corner */}
+                     <div className="absolute top-3 right-3">
+                       <div className="bg-gradient-to-r from-red-500 to-red-600 text-white px-2 py-0.5 rounded text-[10px] font-bold shadow-md transform rotate-3">
+                         {plan.discount}
+                       </div>
+                     </div>
+
+                     {/* Contactless Symbol */}
                     <div className="absolute top-12 left-4">
                       <div className="w-4 h-4 border-2 border-white/40 rounded-full relative">
                         <div className="absolute inset-1 border border-white/40 rounded-full"></div>
@@ -324,35 +331,42 @@ const MasterMembership = () => {
                        اشترك الآن - 12 شهر
                      </Button>
                      
-                     {/* Price & Discount Container - Below Button */}
-                     <motion.div 
-                       initial={{ opacity: 0, y: 10 }}
-                       animate={{ opacity: 1, y: 0 }}
-                       transition={{ delay: 0.3, duration: 0.5 }}
-                       className="mt-4 flex justify-center gap-3"
-                     >
-                       {/* Discount Badge - Small Strip */}
-                       <div className="bg-gradient-to-r from-red-500 to-red-600 text-white px-2 py-1 rounded-md text-xs font-bold shadow-md">
-                         <span className="drop-shadow-sm">{plan.discount}</span>
-                       </div>
-
-                       {/* Price Badge - Without Cashback Icon */}
-                       <div className="bg-white backdrop-blur-sm rounded-lg px-4 py-2 shadow-lg border border-gray-200">
-                         <div className="flex items-baseline justify-center gap-0.5 text-gray-500 text-xs line-through leading-none">
-                           <span className="text-[10px] opacity-70">ريال</span>
-                           <span className="font-medium">{plan.originalPrice}</span>
-                         </div>
-                         <div className="flex items-baseline justify-center gap-0.5 text-gray-900 text-lg font-bold leading-none mt-0.5">
-                           <span className="text-sm opacity-80 font-normal">ريال</span>
-                           <span>{plan.price}</span>
-                         </div>
-                         <div className="flex items-baseline justify-center gap-0.5 text-emerald-600 text-xs font-semibold leading-none mt-1">
-                           <span className="text-[10px] opacity-80">ريال</span>
-                           <span className="font-bold">{plan.cashback}</span>
-                           <span>كاش باك</span>
-                         </div>
-                       </div>
-                     </motion.div>
+                      {/* Enhanced Price Display - Below Button */}
+                      <motion.div 
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 0.3, duration: 0.5 }}
+                        className="mt-4 relative"
+                      >
+                        {/* Main Price Card */}
+                        <div className="bg-gradient-to-br from-white via-gray-50 to-gray-100 backdrop-blur-sm rounded-xl px-6 py-4 shadow-xl border border-gray-200/50 relative overflow-hidden">
+                          {/* Background Pattern */}
+                          <div className="absolute top-0 right-0 w-16 h-16 bg-gradient-to-br from-blue-100/30 to-purple-100/30 rounded-full -translate-y-8 translate-x-8"></div>
+                          <div className="absolute bottom-0 left-0 w-12 h-12 bg-gradient-to-br from-emerald-100/30 to-cyan-100/30 rounded-full translate-y-6 -translate-x-6"></div>
+                          
+                          {/* Price Content */}
+                          <div className="relative z-10 text-center">
+                            {/* Original Price */}
+                            <div className="flex items-baseline justify-center gap-1 text-gray-500 text-sm line-through mb-1">
+                              <span className="text-xs opacity-70">ريال</span>
+                              <span className="font-medium">{plan.originalPrice}</span>
+                            </div>
+                            
+                            {/* Current Price */}
+                            <div className="flex items-baseline justify-center gap-1 text-gray-900 text-2xl font-bold mb-2">
+                              <span className="text-base opacity-80 font-normal">ريال</span>
+                              <span>{plan.price}</span>
+                            </div>
+                            
+                            {/* Cashback */}
+                            <div className="inline-flex items-baseline gap-1 bg-gradient-to-r from-emerald-500 to-green-500 text-white px-3 py-1 rounded-full text-sm font-semibold">
+                              <span className="text-xs opacity-90">ريال</span>
+                              <span className="font-bold">{plan.cashback}</span>
+                              <span className="text-xs">كاش باك فوري</span>
+                            </div>
+                          </div>
+                        </div>
+                      </motion.div>
                     
                      <div className="mt-3 text-center">
                        <div className="inline-flex items-center gap-2 bg-emerald-50 text-emerald-700 px-5 py-3 rounded-full text-sm font-semibold border border-emerald-200">
