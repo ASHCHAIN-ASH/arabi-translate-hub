@@ -259,14 +259,14 @@ const MasterMembership = () => {
                       </div>
                     </div>
 
-                    {/* Card Number */}
+                    {/* Work Number */}
                     <div className="absolute top-20 right-4 text-white font-mono text-sm tracking-wider">
-                      {plan.id === 'silver' ? '5432 **** **** 1234' : plan.id === 'gold' ? '4532 **** **** 5678' : '4532 **** **** 9012'}
+                      {plan.id === 'silver' ? 'رقم العمل: 54321' : plan.id === 'gold' ? 'رقم العمل: 45326' : 'رقم العمل: 45329'}
                     </div>
 
-                    {/* Card Holder Name */}
+                    {/* Membership Holder Name */}
                     <div className="absolute bottom-14 right-4 text-white">
-                      <div className="text-xs opacity-80 mb-1">اسم حامل البطاقة</div>
+                      <div className="text-xs opacity-80 mb-1">اسم حامل العضوية</div>
                       <div className="text-sm font-bold">عضوية {plan.name}</div>
                     </div>
 
