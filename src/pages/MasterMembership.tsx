@@ -259,24 +259,14 @@ const MasterMembership = () => {
                       </div>
                     </div>
 
-                    {/* Customer Name and ID - Bottom Left */}
-                    <div className="absolute bottom-14 left-4 text-white">
-                      {/* Customer Name */}
-                      <div className="text-sm font-bold mb-2" 
+                    {/* Membership Name - Bottom Left */}
+                    <div className="absolute bottom-4 left-4 text-white">
+                      <div className="text-sm font-bold" 
                            style={{ 
                              textShadow: '0 2px 0 rgba(0,0,0,0.5), 0 -1px 0 rgba(255,255,255,0.15), inset 0 1px 3px rgba(0,0,0,0.4)',
                              filter: 'drop-shadow(0 2px 2px rgba(0,0,0,0.4))'
                            }}>
                         عضوية {plan.name}
-                      </div>
-                      
-                      {/* Customer ID */}
-                      <div className="text-xs font-mono tracking-wider opacity-90" 
-                           style={{ 
-                             textShadow: '0 1px 0 rgba(0,0,0,0.5), 0 -1px 0 rgba(255,255,255,0.1), inset 0 1px 2px rgba(0,0,0,0.3)',
-                             filter: 'drop-shadow(0 1px 1px rgba(0,0,0,0.4))'
-                           }}>
-                        {plan.id === 'silver' ? 'رقم العميل: 54321' : plan.id === 'gold' ? 'رقم العميل: 45326' : 'رقم العميل: 45329'}
                       </div>
                     </div>
 
