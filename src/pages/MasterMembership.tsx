@@ -289,20 +289,20 @@ const MasterMembership = () => {
 
                      {/* Price & Discount Container - Top Section */}
                      <div className="absolute top-3 left-3 right-3 flex justify-between items-start">
-                       {/* Price Badge - Compact */}
-                       <div className="bg-white/95 backdrop-blur-sm rounded-lg px-4 py-3 shadow-lg border border-white/30">
-                         <div className="flex items-baseline gap-1 text-gray-500 text-xs line-through leading-none">
+                       {/* Price Badge - Smaller */}
+                       <div className="bg-white/95 backdrop-blur-sm rounded-md px-2 py-1.5 shadow-md border border-white/30">
+                         <div className="flex items-baseline gap-0.5 text-gray-500 text-[10px] line-through leading-none">
                            <span className="font-medium">{plan.originalPrice}</span>
-                           <span className="text-[10px] opacity-70">ريال</span>
+                           <span className="text-[8px] opacity-70">ريال</span>
                          </div>
-                         <div className="flex items-baseline gap-1 text-gray-900 text-xl font-bold leading-none mt-1">
+                         <div className="flex items-baseline gap-0.5 text-gray-900 text-sm font-bold leading-none mt-0.5">
                            <span>{plan.price}</span>
-                           <span className="text-xs opacity-80 font-normal">ريال</span>
+                           <span className="text-[10px] opacity-80 font-normal">ريال</span>
                          </div>
-                         <div className="flex items-baseline gap-1 text-emerald-600 text-xs font-semibold leading-none mt-2">
+                         <div className="flex items-baseline gap-0.5 text-emerald-600 text-[10px] font-semibold leading-none mt-1">
                            <span>كاش باك:</span>
                            <span className="font-bold">{plan.cashback}</span>
-                           <span className="text-[10px] opacity-80">ريال</span>
+                           <span className="text-[8px] opacity-80">ريال</span>
                          </div>
                        </div>
 
