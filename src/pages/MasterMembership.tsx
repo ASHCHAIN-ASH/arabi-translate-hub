@@ -259,30 +259,24 @@ const MasterMembership = () => {
                       </div>
                     </div>
 
-                    {/* Work Number - Engraved Effect */}
-                    <div className="absolute top-20 right-4 text-white font-mono text-sm tracking-wider" 
-                         style={{ 
-                           textShadow: '0 1px 0 rgba(0,0,0,0.5), 0 -1px 0 rgba(255,255,255,0.1), inset 0 1px 2px rgba(0,0,0,0.3)',
-                           filter: 'drop-shadow(0 1px 1px rgba(0,0,0,0.4))'
-                         }}>
-                      {plan.id === 'silver' ? 'رقم العميل: 54321' : plan.id === 'gold' ? 'رقم العميل: 45326' : 'رقم العميل: 45329'}
-                    </div>
-
-                    {/* Membership Holder Name - Engraved Effect */}
+                    {/* Customer Name and ID - Organized */}
                     <div className="absolute bottom-14 right-4 text-white">
-                      <div className="text-xs opacity-80 mb-1" 
-                           style={{ 
-                             textShadow: '0 1px 0 rgba(0,0,0,0.3), 0 -1px 0 rgba(255,255,255,0.1)',
-                             filter: 'drop-shadow(0 1px 1px rgba(0,0,0,0.2))'
-                           }}>
-                        اسم العميل
-                      </div>
-                      <div className="text-sm font-bold" 
+                      {/* Customer Name */}
+                      <div className="text-sm font-bold mb-2" 
                            style={{ 
                              textShadow: '0 2px 0 rgba(0,0,0,0.5), 0 -1px 0 rgba(255,255,255,0.15), inset 0 1px 3px rgba(0,0,0,0.4)',
                              filter: 'drop-shadow(0 2px 2px rgba(0,0,0,0.4))'
                            }}>
                         عضوية {plan.name}
+                      </div>
+                      
+                      {/* Customer ID */}
+                      <div className="text-xs font-mono tracking-wider opacity-90" 
+                           style={{ 
+                             textShadow: '0 1px 0 rgba(0,0,0,0.5), 0 -1px 0 rgba(255,255,255,0.1), inset 0 1px 2px rgba(0,0,0,0.3)',
+                             filter: 'drop-shadow(0 1px 1px rgba(0,0,0,0.4))'
+                           }}>
+                        {plan.id === 'silver' ? 'رقم العميل: 54321' : plan.id === 'gold' ? 'رقم العميل: 45326' : 'رقم العميل: 45329'}
                       </div>
                     </div>
 
