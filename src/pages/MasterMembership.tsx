@@ -147,77 +147,171 @@ const MasterMembership = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-purple-50" dir="rtl">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-blue-50" dir="rtl">
       <WorkingHoursBannerRTL />
       <Header />
       
       {/* Hero Section */}
-      <section className="relative py-20 bg-gradient-to-br from-purple-600 via-blue-600 to-indigo-700 overflow-hidden">
+      <section className="relative py-16 md:py-20 bg-gradient-to-br from-blue-600 via-indigo-600 to-purple-700 overflow-hidden">
+        {/* Animated Background */}
+        <div className="absolute inset-0">
+          <div className="absolute top-10 left-10 w-32 md:w-64 h-32 md:h-64 bg-gradient-to-r from-white/10 to-purple-400/20 rounded-full blur-3xl animate-pulse"></div>
+          <div className="absolute bottom-10 right-10 w-24 md:w-48 h-24 md:h-48 bg-gradient-to-l from-yellow-400/20 to-white/10 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }}></div>
+          <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-40 md:w-80 h-40 md:h-80 bg-gradient-to-r from-blue-400/10 to-indigo-400/10 rounded-full blur-2xl animate-pulse" style={{ animationDelay: '2s' }}></div>
+        </div>
+
         <div className="container mx-auto px-4 relative z-10">
           <motion.div
-            initial={{ opacity: 0, y: 30 }}
+            initial={{ opacity: 0, y: 40 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
             className="text-center text-white"
           >
-            <div className="inline-flex items-center justify-center w-20 h-20 bg-white/10 rounded-full mb-6">
-              <Crown className="h-10 w-10 text-yellow-300" />
-            </div>
-            <h1 className="text-5xl font-bold mb-6">عضوية ماستر</h1>
-            <p className="text-xl opacity-90 max-w-3xl mx-auto mb-8">
+            {/* Crown Icon with Animation */}
+            <motion.div
+              initial={{ scale: 0, rotate: -180 }}
+              animate={{ scale: 1, rotate: 0 }}
+              transition={{ duration: 0.8, delay: 0.2 }}
+              className="inline-flex items-center justify-center w-16 h-16 md:w-20 md:h-20 bg-gradient-to-br from-yellow-400/20 to-yellow-300/30 rounded-full mb-6 backdrop-blur-sm border border-yellow-300/30"
+            >
+              <motion.div
+                animate={{ 
+                  y: [0, -4, 0],
+                  rotate: [0, 5, -5, 0]
+                }}
+                transition={{ 
+                  duration: 3,
+                  repeat: Infinity,
+                  ease: "easeInOut"
+                }}
+              >
+                <Crown className="h-8 w-8 md:h-10 md:w-10 text-yellow-300" />
+              </motion.div>
+            </motion.div>
+
+            {/* Title with Gradient Effect */}
+            <motion.h1 
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.4 }}
+              className="text-3xl md:text-5xl lg:text-6xl font-bold mb-6 bg-gradient-to-r from-white via-yellow-100 to-white bg-clip-text text-transparent"
+            >
+              عضوية ماستر
+            </motion.h1>
+
+            {/* Subtitle */}
+            <motion.p 
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.6 }}
+              className="text-lg md:text-xl opacity-90 max-w-4xl mx-auto mb-8 leading-relaxed px-4"
+            >
               انضم إلى مجتمع النخبة من المترجمين والباحثين واحصل على موارد حصرية ودعم متخصص
-            </p>
+            </motion.p>
+
+            {/* Statistics Cards */}
+            <motion.div
+              initial={{ opacity: 0, y: 40 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.8 }}
+              className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-4xl mx-auto mt-8 px-4"
+            >
+              {[
+                { number: '10K+', label: 'عضو نشط', icon: Users },
+                { number: '25+', label: 'لغة مدعومة', icon: Globe },
+                { number: '99%', label: 'رضا العملاء', icon: Trophy },
+                { number: '24/7', label: 'دعم فني', icon: Shield }
+              ].map((stat, index) => {
+                const IconComponent = stat.icon;
+                return (
+                  <motion.div
+                    key={index}
+                    initial={{ opacity: 0, scale: 0.8 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ duration: 0.6, delay: 0.9 + index * 0.1 }}
+                    className="bg-white/10 backdrop-blur-sm rounded-xl p-4 border border-white/20"
+                  >
+                    <IconComponent className="h-6 w-6 text-yellow-300 mx-auto mb-2" />
+                    <div className="text-xl md:text-2xl font-bold">{stat.number}</div>
+                    <div className="text-xs md:text-sm opacity-80">{stat.label}</div>
+                  </motion.div>
+                );
+              })}
+            </motion.div>
           </motion.div>
         </div>
       </section>
 
-      <div className="container mx-auto px-4 py-16">
+      <div className="container mx-auto px-4 py-8 md:py-16">
         <Tabs defaultValue="plans" className="space-y-8">
-          <div className="flex justify-center">
-            <TabsList className="grid w-full max-w-lg grid-cols-2">
-              <TabsTrigger value="benefits" className="flex items-center gap-2">
+          <motion.div 
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            className="flex justify-center"
+          >
+            <TabsList className="grid w-full max-w-md md:max-w-lg grid-cols-2 bg-white/80 backdrop-blur-sm border border-gray-200/50 p-1 rounded-xl">
+              <TabsTrigger value="benefits" className="flex items-center gap-2 rounded-lg data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-500 data-[state=active]:to-purple-500 data-[state=active]:text-white transition-all duration-300">
                 <Gift className="h-4 w-4" />
-                المزايا
+                <span className="hidden sm:inline">المزايا</span>
+                <span className="sm:hidden">المزايا</span>
               </TabsTrigger>
-              <TabsTrigger value="plans" className="flex items-center gap-2">
+              <TabsTrigger value="plans" className="flex items-center gap-2 rounded-lg data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-500 data-[state=active]:to-purple-500 data-[state=active]:text-white transition-all duration-300">
                 <Crown className="h-4 w-4" />
-                العضويات
+                <span className="hidden sm:inline">العضويات</span>
+                <span className="sm:hidden">العضويات</span>
               </TabsTrigger>
             </TabsList>
-          </div>
+          </motion.div>
 
           {/* Membership Plans */}
           <TabsContent value="plans" className="space-y-8">
-            <h2 className="text-3xl font-bold text-center mb-12 text-gray-800">
+            <motion.h2 
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.2 }}
+              className="text-2xl md:text-3xl lg:text-4xl font-bold text-center mb-8 md:mb-12 text-gray-800"
+            >
               اختر العضوية المناسبة لك
-            </h2>
+            </motion.h2>
             
-            <div className="grid gap-8 lg:grid-cols-3 md:grid-cols-2 max-w-5xl mx-auto">
+            <div className="grid gap-6 md:gap-8 lg:grid-cols-3 md:grid-cols-2 max-w-6xl mx-auto">
               {membershipPlans.map((plan, index) => (
                 <motion.div
                   key={plan.id}
-                  initial={{ opacity: 0, y: 30 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  whileHover={{ y: -5, scale: 1.05 }}
-                  transition={{ delay: index * 0.1, duration: 0.6 }}
-                  className={`relative ${plan.popular ? 'lg:scale-105' : ''}`}
+                  initial={{ opacity: 0, y: 50, scale: 0.9 }}
+                  animate={{ opacity: 1, y: 0, scale: 1 }}
+                  whileHover={{ y: -8, scale: 1.02 }}
+                  transition={{ 
+                    delay: index * 0.15, 
+                    duration: 0.7,
+                    type: "spring",
+                    stiffness: 100
+                  }}
+                  className={`relative ${plan.popular ? 'md:scale-105 lg:scale-110' : ''} group`}
                 >
                   {plan.popular && (
-                    <div className="absolute -top-4 right-1/2 transform translate-x-1/2 z-10">
-                      <div className="bg-gradient-to-r from-orange-400 to-red-500 text-white px-4 py-2 rounded-full text-xs font-bold shadow-xl">
+                    <motion.div 
+                      initial={{ opacity: 0, scale: 0, y: 20 }}
+                      animate={{ opacity: 1, scale: 1, y: 0 }}
+                      transition={{ delay: index * 0.15 + 0.5, duration: 0.6 }}
+                      className="absolute -top-3 md:-top-4 right-1/2 transform translate-x-1/2 z-20"
+                    >
+                      <div className="bg-gradient-to-r from-orange-400 to-red-500 text-white px-3 py-1.5 md:px-4 md:py-2 rounded-full text-xs font-bold shadow-xl border border-orange-300/50">
                         <Crown className="inline-block w-3 h-3 ml-1" />
                         الأكثر طلبًا
                       </div>
-                    </div>
+                    </motion.div>
                   )}
                   
-                  {/* Bank Card - Real Credit Card Size */}
+                  {/* Bank Card - Responsive Size */}
                   <div className={`
-                    relative w-full aspect-[1.586/1] max-w-[320px] mx-auto rounded-xl overflow-hidden
+                    relative w-full aspect-[1.586/1] max-w-[280px] md:max-w-[320px] mx-auto rounded-xl overflow-hidden
                     bg-gradient-to-br ${plan.cardGradient}
-                    shadow-xl hover:shadow-2xl transition-all duration-500 
+                    shadow-xl group-hover:shadow-2xl transition-all duration-500 
                     border border-white/20
                     backdrop-blur-sm
+                    transform group-hover:scale-105
                   `}>
                     {/* Card Background Pattern */}
                     <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent"></div>
@@ -342,14 +436,24 @@ const MasterMembership = () => {
                     <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent opacity-0 hover:opacity-100 transition-opacity duration-500 transform -skew-x-12"></div>
                   </div>
 
-                  {/* Card Details */}
-                  <div className="mt-6 text-center">
-                    <h3 className="text-xl font-bold text-gray-800 mb-2">{plan.name}</h3>
+                    {/* Card Details */}
+                  <motion.div 
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: index * 0.15 + 0.3, duration: 0.5 }}
+                    className="mt-4 md:mt-6 text-center px-2"
+                  >
+                    <h3 className="text-lg md:text-xl font-bold text-gray-800 mb-2">{plan.name}</h3>
                     <p className="text-gray-600 text-sm mb-4">{plan.nameEn}</p>
-                  </div>
+                  </motion.div>
 
                   {/* Subscribe Button */}
-                  <div className="mt-4">
+                  <motion.div 
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: index * 0.15 + 0.4, duration: 0.5 }}
+                    className="mt-4 px-2"
+                  >
                      <Button 
                        onClick={() => {
                          setSelectedPlan(plan);
@@ -357,63 +461,68 @@ const MasterMembership = () => {
                        }}
                        className={`
                          w-full bg-gradient-to-r ${plan.gradient} 
-                         hover:opacity-90 text-white font-bold py-4 text-base rounded-xl
+                         hover:opacity-90 text-white font-bold py-3 md:py-4 text-sm md:text-base rounded-xl
                          shadow-lg hover:shadow-xl transition-all duration-300
-                         hover:scale-105 border-0
+                         hover:scale-105 border-0 group-hover:shadow-2xl
                        `}
                      >
-                       <Crown className="w-4 h-4 ml-2" />
                        اشترك الآن - 12 شهر
+                       <Crown className="w-4 h-4 mr-2" />
                      </Button>
-                     
-                      {/* Enhanced Price Display - Below Button */}
-                      <motion.div 
-                        initial={{ opacity: 0, y: 10 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: 0.3, duration: 0.5 }}
-                        className="mt-4 relative"
-                      >
-                        {/* Main Price Card */}
-                        <div className="bg-gradient-to-br from-white via-gray-50 to-gray-100 backdrop-blur-sm rounded-xl px-6 py-4 shadow-xl border border-gray-200/50 relative overflow-hidden">
+                      
+                       {/* Enhanced Price Display - Below Button */}
+                       <motion.div 
+                         initial={{ opacity: 0, y: 20 }}
+                         animate={{ opacity: 1, y: 0 }}
+                         transition={{ delay: index * 0.15 + 0.5, duration: 0.5 }}
+                         className="mt-4 relative"
+                       >
+                         {/* Main Price Card */}
+                         <div className="bg-gradient-to-br from-white via-gray-50 to-gray-100 backdrop-blur-sm rounded-xl px-4 md:px-6 py-3 md:py-4 shadow-xl border border-gray-200/50 relative overflow-hidden group-hover:shadow-2xl transition-shadow duration-300">
                           {/* Background Pattern */}
                           <div className="absolute top-0 right-0 w-16 h-16 bg-gradient-to-br from-blue-100/30 to-purple-100/30 rounded-full -translate-y-8 translate-x-8"></div>
                           <div className="absolute bottom-0 left-0 w-12 h-12 bg-gradient-to-br from-emerald-100/30 to-cyan-100/30 rounded-full translate-y-6 -translate-x-6"></div>
                           
-                          {/* Price Content */}
-                          <div className="relative z-10 text-center">
-                            {/* Original Price */}
-                            <div className="flex items-baseline justify-center gap-1 text-gray-500 text-sm line-through mb-1">
-                              <span className="text-xs opacity-70">ريال</span>
-                              <span className="font-medium">{plan.originalPrice}</span>
-                            </div>
-                            
-                            {/* Current Price */}
-                            <div className="flex items-baseline justify-center gap-1 text-gray-900 text-2xl font-bold mb-2">
-                              <span className="text-base opacity-80 font-normal">ريال</span>
-                              <span>{plan.price}</span>
-                            </div>
-                            
-                            {/* Cashback */}
-                            <div className="inline-flex items-baseline gap-1 bg-gradient-to-r from-emerald-500 to-green-500 text-white px-3 py-1 rounded-full text-sm font-semibold">
-                              <span className="text-xs opacity-90">ريال</span>
-                              <span className="font-bold">{plan.cashback}</span>
-                              <span className="text-xs">كاش باك فوري</span>
-                            </div>
-                          </div>
+                           {/* Price Content */}
+                           <div className="relative z-10 text-center">
+                             {/* Original Price */}
+                             <div className="flex items-baseline justify-center gap-1 text-gray-500 text-xs md:text-sm line-through mb-1">
+                               <span className="text-xs opacity-70">ريال</span>
+                               <span className="font-medium">{plan.originalPrice}</span>
+                             </div>
+                             
+                             {/* Current Price */}
+                             <div className="flex items-baseline justify-center gap-1 text-gray-900 text-xl md:text-2xl font-bold mb-2">
+                               <span className="text-sm md:text-base opacity-80 font-normal">ريال</span>
+                               <span>{plan.price}</span>
+                             </div>
+                             
+                             {/* Cashback */}
+                             <div className="inline-flex items-baseline gap-1 bg-gradient-to-r from-emerald-500 to-green-500 text-white px-2 md:px-3 py-1 rounded-full text-xs md:text-sm font-semibold">
+                               <span className="text-xs">كاش باك فوري</span>
+                               <span className="font-bold">{plan.cashback}</span>
+                               <span className="text-xs opacity-90">ريال</span>
+                             </div>
+                           </div>
                         </div>
                       </motion.div>
                     
-                     <div className="mt-3 text-center">
-                       <div className="inline-flex items-center gap-2 bg-emerald-50 text-emerald-700 px-5 py-3 rounded-full text-sm font-semibold border border-emerald-200">
-                         <Gift className="w-4 h-4" />
-                         <span>كاش باك فوري {plan.cashbackPercent}:</span>
-                         <span className="font-bold">{plan.cashback}</span>
-                         <span className="text-xs opacity-80">ريال</span>
-                       </div>
-                       <p className="text-xs text-gray-500 mt-2 font-medium">من رسوم التأسيس وجميع الطلبات</p>
-                     </div>
-                  </div>
-                </motion.div>
+                      <motion.div 
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: index * 0.15 + 0.6, duration: 0.5 }}
+                        className="mt-3 text-center px-2"
+                      >
+                        <div className="inline-flex items-center gap-2 bg-emerald-50 text-emerald-700 px-3 md:px-5 py-2 md:py-3 rounded-full text-xs md:text-sm font-semibold border border-emerald-200">
+                          <span className="text-xs opacity-80">ريال</span>
+                          <span className="font-bold">{plan.cashback}</span>
+                          <span>كاش باك فوري {plan.cashbackPercent}</span>
+                          <Gift className="w-4 h-4" />
+                        </div>
+                        <p className="text-xs text-gray-500 mt-2 font-medium">من رسوم التأسيس وجميع الطلبات</p>
+                      </motion.div>
+                   </motion.div>
+                 </motion.div>
               ))}
             </div>
 
@@ -564,36 +673,41 @@ const MasterMembership = () => {
 
           {/* Benefits Section */}
           <TabsContent value="benefits" className="space-y-8">
-            <h2 className="text-3xl font-bold text-center mb-8 text-gray-800">
+            <motion.h2 
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6 }}
+              className="text-2xl md:text-3xl font-bold text-center mb-8 text-gray-800"
+            >
               مزايا عضوية ماستر
-            </h2>
+            </motion.h2>
             
-            <div className="grid gap-6 lg:grid-cols-2 max-w-6xl mx-auto">
+            <div className="grid gap-4 md:gap-6 lg:grid-cols-2 max-w-6xl mx-auto">
               {benefits.map((benefit, index) => (
                 <motion.div
                   key={index}
-                  initial={{ opacity: 0, x: 50, scale: 0.9 }}
+                  initial={{ opacity: 0, x: index % 2 === 0 ? -50 : 50, scale: 0.9 }}
                   animate={{ opacity: 1, x: 0, scale: 1 }}
-                  whileHover={{ scale: 1.03, y: -5 }}
+                  whileHover={{ scale: 1.02, y: -8 }}
                   transition={{ 
                     delay: index * 0.1, 
-                    duration: 0.5,
+                    duration: 0.6,
                     type: "spring",
-                    stiffness: 100 
+                    stiffness: 120 
                   }}
                   className="group"
                 >
-                  <Card className="p-6 hover:shadow-xl transition-all duration-500 border-r-4 border-purple-500 bg-gradient-to-l from-purple-50/30 to-white hover:from-purple-50/50 hover:to-blue-50/30 overflow-hidden relative h-full">
+                  <Card className="p-4 md:p-6 hover:shadow-xl transition-all duration-500 border-r-4 border-purple-500 bg-gradient-to-l from-purple-50/30 to-white hover:from-purple-50/50 hover:to-blue-50/30 overflow-hidden relative h-full">
                     {/* Background Animation */}
                     <div className="absolute inset-0 bg-gradient-to-r from-transparent via-purple-100/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 transform translate-x-full group-hover:translate-x-0"></div>
                     
-                    <div className="flex items-start gap-6 relative z-10">
+                    <div className="flex items-start gap-4 md:gap-6 relative z-10">
                       <div className="flex-1 text-right">
                         <motion.h3 
                           initial={{ opacity: 0, y: 20 }}
                           animate={{ opacity: 1, y: 0 }}
                           transition={{ delay: index * 0.1 + 0.2, duration: 0.4 }}
-                          className="text-xl font-bold mb-3 text-gray-800"
+                          className="text-lg md:text-xl font-bold mb-3 text-gray-800"
                         >
                           {benefit.title}
                         </motion.h3>
@@ -634,7 +748,7 @@ const MasterMembership = () => {
                         initial={{ opacity: 0, scale: 0, rotate: -180 }}
                         animate={{ opacity: 1, scale: 1, rotate: 0 }}
                         whileHover={{ 
-                          scale: 1.2, 
+                          scale: 1.15, 
                           rotate: 10,
                           y: -5,
                           boxShadow: "0 10px 25px rgba(0,0,0,0.15)"
@@ -645,7 +759,7 @@ const MasterMembership = () => {
                           type: "spring", 
                           stiffness: 200 
                         }}
-                        className="w-16 h-16 rounded-xl bg-gradient-to-br from-white via-gray-50 to-gray-100 flex items-center justify-center flex-shrink-0 shadow-lg border border-gray-200/50 relative overflow-hidden"
+                        className="w-14 h-14 md:w-16 md:h-16 rounded-xl bg-gradient-to-br from-white via-gray-50 to-gray-100 flex items-center justify-center flex-shrink-0 shadow-lg border border-gray-200/50 relative overflow-hidden"
                       >
                         {/* Icon Glow Effect */}
                         <motion.div
@@ -656,21 +770,21 @@ const MasterMembership = () => {
                         />
                         
                         {/* Floating Icon */}
-                        <motion.div
-                          animate={{ 
-                            y: [0, -2, 0],
-                            rotate: [0, 2, -2, 0]
-                          }}
-                          transition={{ 
-                            duration: 3,
-                            repeat: Infinity,
-                            ease: "easeInOut",
-                            delay: index * 0.2
-                          }}
-                          className="relative z-10"
-                        >
-                          <benefit.icon className={`h-8 w-8 ${benefit.color} transition-colors duration-300`} />
-                        </motion.div>
+                         <motion.div
+                           animate={{ 
+                             y: [0, -2, 0],
+                             rotate: [0, 2, -2, 0]
+                           }}
+                           transition={{ 
+                             duration: 3,
+                             repeat: Infinity,
+                             ease: "easeInOut",
+                             delay: index * 0.2
+                           }}
+                           className="relative z-10"
+                         >
+                           <benefit.icon className={`h-6 w-6 md:h-8 md:w-8 ${benefit.color} transition-colors duration-300`} />
+                         </motion.div>
 
                         {/* Sparkle Effect */}
                         <motion.div
@@ -693,13 +807,37 @@ const MasterMembership = () => {
             </div>
 
             {/* CTA Section */}
-            <div className="text-center mt-12">
-              <div className="bg-gradient-to-r from-purple-600 to-blue-600 rounded-2xl p-8 text-white">
-                <Crown className="w-16 h-16 mx-auto mb-4 text-yellow-300" />
-                <h3 className="text-2xl font-bold mb-4">وكالة ماستر إيدو باث</h3>
-                <p className="text-lg mb-6">شريكك الموثوق في رحلة التعلم والتطوير المهني</p>
+            <motion.div 
+              initial={{ opacity: 0, y: 40 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.5, duration: 0.8 }}
+              className="text-center mt-12"
+            >
+              <div className="bg-gradient-to-r from-purple-600 to-blue-600 rounded-2xl p-6 md:p-8 text-white mx-4 md:mx-0 relative overflow-hidden">
+                {/* Background Animation */}
+                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent opacity-50"></div>
+                <div className="absolute top-0 right-0 w-32 h-32 bg-purple-400/20 rounded-full -translate-y-16 translate-x-16"></div>
+                <div className="absolute bottom-0 left-0 w-24 h-24 bg-blue-400/20 rounded-full translate-y-12 -translate-x-12"></div>
+                
+                <div className="relative z-10">
+                  <motion.div
+                    animate={{ 
+                      y: [0, -5, 0],
+                      rotate: [0, 5, -5, 0]
+                    }}
+                    transition={{ 
+                      duration: 4,
+                      repeat: Infinity,
+                      ease: "easeInOut"
+                    }}
+                  >
+                    <Crown className="w-12 h-12 md:w-16 md:h-16 mx-auto mb-4 text-yellow-300" />
+                  </motion.div>
+                  <h3 className="text-xl md:text-2xl font-bold mb-4">وكالة ماستر إيدو باث</h3>
+                  <p className="text-base md:text-lg mb-6">شريكك الموثوق في رحلة التعلم والتطوير المهني</p>
+                </div>
               </div>
-            </div>
+            </motion.div>
           </TabsContent>
         </Tabs>
       </div>
