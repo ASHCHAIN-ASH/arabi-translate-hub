@@ -893,6 +893,7 @@ const handler = async (req: Request): Promise<Response> => {
       } catch (_) {
         sendAdminEmail();
       }
+    }
 
     console.log("Affiliate partner registered successfully:", {
       affiliate_id,
