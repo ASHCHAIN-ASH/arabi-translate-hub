@@ -38,6 +38,7 @@ import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import Header from '@/components/Header';
 import { useToast } from '@/hooks/use-toast';
+import { supabase } from '@/integrations/supabase/client';
 import careersBackground from '@/assets/careers-background.jpg';
 
 interface JobApplication {
@@ -192,12 +193,30 @@ const Careers = () => {
     setIsSubmitting(true);
 
     try {
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 2000));
-      
+      // Validate required fields
+      if (!formData.fullName || !formData.email || !formData.position) {
+        throw new Error("يرجى ملء جميع الحقول المطلوبة");
+      }
+
+      // Set position from selected job
+      const job = jobs.find(j => j.id === selectedJob);
+      const updatedFormData = {
+        ...formData,
+        position: job?.title || formData.position
+      };
+
+      // Call Edge Function to send emails
+      const { data, error } = await supabase.functions.invoke('send-job-application', {
+        body: updatedFormData,
+      });
+
+      if (error) {
+        throw new Error(error.message || "حدث خطأ أثناء إرسال الطلب");
+      }
+
       toast({
         title: "تم إرسال طلبك بنجاح! 🎉",
-        description: "سنتواصل معك خلال 3-5 أيام عمل لمناقشة الفرصة المتاحة",
+        description: "تم إرسال تنبيه للإدارة وإيميل تأكيد لك. سنتواصل معك خلال 3-5 أيام عمل.",
       });
 
       // Reset form
@@ -212,10 +231,11 @@ const Careers = () => {
         motivation: ''
       });
       setSelectedJob(null);
-    } catch (error) {
+    } catch (error: any) {
+      console.error("Job application error:", error);
       toast({
         title: "خطأ في الإرسال",
-        description: "حدث خطأ أثناء إرسال طلبك. يرجى المحاولة مرة أخرى.",
+        description: error.message || "حدث خطأ أثناء إرسال طلبك. يرجى المحاولة مرة أخرى.",
         variant: "destructive",
       });
     } finally {
