@@ -198,14 +198,30 @@ const handler = async (req: Request): Promise<Response> => {
 📞 0500776343 | 📧 legal@masteredupath.com
     `;
 
-    // إرسال البريد للعميل
-    await resend.emails.send({
-      from: "وكالة ماستر إيدو باث <onboarding@resend.dev>",
-      to: [email],
-      subject: "🎉 مرحباً بك في برنامج التسويق بالعمولة - وكالة ماستر إيدو باث",
-      html: clientEmailHtml,
-      text: clientEmailText,
-    });
+    console.log("Sending emails...");
+
+    // التحقق من وجود RESEND_API_KEY
+    if (!Deno.env.get("RESEND_API_KEY")) {
+      console.error("RESEND_API_KEY not found!");
+      // لا نفشل العملية، فقط نسجل الخطأ
+    } else {
+      try {
+        // إرسال البريد للعميل
+        console.log("Sending client email to:", email);
+        const clientEmailResult = await resend.emails.send({
+          from: "وكالة ماستر إيدو باث <onboarding@resend.dev>",
+          to: [email],
+          subject: "🎉 مرحباً بك في برنامج التسويق بالعمولة - وكالة ماستر إيدو باث",
+          html: clientEmailHtml,
+          text: clientEmailText,
+        });
+        console.log("Client email sent successfully:", clientEmailResult);
+
+      } catch (emailError) {
+        console.error("Error sending client email:", emailError);
+        // لا نفشل العملية، فقط نسجل الخطأ
+      }
+    }
 
     // إرسال تنبيه للإدارة
     const adminEmailHtml = `
@@ -241,12 +257,20 @@ const handler = async (req: Request): Promise<Response> => {
       </html>
     `;
 
-    await resend.emails.send({
-      from: "نظام التسويق بالعمولة <onboarding@resend.dev>",
-      to: ["legal@masteredupath.com"],
-      subject: `🔔 تسجيل جديد في برنامج التسويق بالعمولة - ${full_name}`,
-      html: adminEmailHtml,
-    });
+    if (Deno.env.get("RESEND_API_KEY")) {
+      try {
+        console.log("Sending admin notification email...");
+        const adminEmailResult = await resend.emails.send({
+          from: "نظام التسويق بالعمولة <onboarding@resend.dev>",
+          to: ["legal@masteredupath.com"],
+          subject: `🔔 تسجيل جديد في برنامج التسويق بالعمولة - ${full_name}`,
+          html: adminEmailHtml,
+        });
+        console.log("Admin email sent successfully:", adminEmailResult);
+      } catch (adminEmailError) {
+        console.error("Error sending admin email:", adminEmailError);
+      }
+    }
 
     console.log("Affiliate partner registered successfully:", {
       affiliate_id,
