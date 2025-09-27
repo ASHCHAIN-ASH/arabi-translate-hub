@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { ArrowRight, Calendar, User, Eye, Heart, Share2, Tag, Search, Crown, CheckCircle, BookOpen, Clock, Star, Filter, TrendingUp, Scale, Settings, PenTool, BarChart } from "lucide-react";
+import { ArrowRight, Calendar, User, Eye, Heart, Share2, Tag, Search, Crown, CheckCircle, BookOpen, Clock, Star, Filter, TrendingUp, Scale, Settings, PenTool, BarChart3 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -267,7 +267,7 @@ const Blog = () => {
     { name: "ترجمة تقنية", count: 2, icon: Settings },
     { name: "بحث علمي", count: 3, icon: Search },
     { name: "كتابة أكاديمية", count: 2, icon: PenTool },
-    { name: "تحليل إحصائي", count: 1, icon: BarChart }
+    { name: "تحليل إحصائي", count: 1, icon: BarChart3 }
   ];
 
   const featuredPosts = blogPosts.filter(post => post.featured);
@@ -451,9 +451,11 @@ const Blog = () => {
                       </p>
                       
                       <div className="flex items-center justify-between">
-                        <Button className="group">
-                          قراءة المقال
-                          <ArrowRight className="mr-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
+                        <Button className="group" asChild>
+                          <a href={`/blog/${post.id}`}>
+                            قراءة المقال
+                            <ArrowRight className="mr-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
+                          </a>
                         </Button>
                         
                         <div className="flex items-center gap-3 text-sm text-slate-500">
@@ -700,9 +702,11 @@ const Blog = () => {
                         </div>
                         
                         <div className="flex items-center justify-between">
-                          <Button className="group bg-gradient-to-r from-primary to-blue-600 hover:from-blue-600 hover:to-primary">
-                            قراءة المقال كاملاً
-                            <ArrowRight className="mr-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
+                          <Button className="group bg-gradient-to-r from-primary to-blue-600 hover:from-blue-600 hover:to-primary" asChild>
+                            <a href={`/blog/${post.id}`}>
+                              قراءة المقال كاملاً
+                              <ArrowRight className="mr-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
+                            </a>
                           </Button>
                           
                           <div className="flex items-center gap-4 text-sm text-slate-500">
