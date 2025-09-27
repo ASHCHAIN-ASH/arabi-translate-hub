@@ -103,7 +103,7 @@ import OrderTracking from "./pages/OrderTracking";
 import SubmitOrder from "./pages/SubmitOrder";
 import NotFound from "./pages/NotFound";
 import IntellectualProperty from "./pages/IntellectualProperty";
-import Footer from "@/components/Footer";
+import Footer from "./components/Footer";
 
 const queryClient = new QueryClient();
 
