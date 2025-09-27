@@ -102,7 +102,7 @@ import Pricing from "./pages/Pricing";
 import OrderTracking from "./pages/OrderTracking";
 import SubmitOrder from "./pages/SubmitOrder";
 import NotFound from "./pages/NotFound";
-import IntellectualProperty from "./pages/IntellectualProperty";
+import LicenseRequest from "./pages/LicenseRequest";
 import Footer from "./components/Footer";
 
 const queryClient = new QueryClient();
@@ -143,7 +143,7 @@ const App = () => (
              <Route path="/submit-order" element={<OrderForm />} />
              <Route path="/color-showcase" element={<ColorShowcase />} />
              <Route path="/pricing" element={<Pricing />} />
-             <Route path="/intellectual-property" element={<IntellectualProperty />} />
+             <Route path="/license-request" element={<LicenseRequest />} />
             
             {/* Auth Routes */}
             <Route path="/login" element={<Login />} />
