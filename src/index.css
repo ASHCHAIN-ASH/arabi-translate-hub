@@ -1001,3 +1001,203 @@
   background-size: 400% 400%;
   animation: gradient-xy 15s ease infinite;
 }
+
+/* Enhanced Research Services Page Animations */
+@keyframes research-float {
+  0%, 100% { transform: translateY(0px) rotateX(0deg); }
+  50% { transform: translateY(-20px) rotateX(2deg); }
+}
+
+@keyframes research-glow {
+  0%, 100% { 
+    box-shadow: 0 0 20px rgba(59, 130, 246, 0.3),
+                0 0 40px rgba(59, 130, 246, 0.1); 
+  }
+  50% { 
+    box-shadow: 0 0 40px rgba(59, 130, 246, 0.6),
+                0 0 80px rgba(59, 130, 246, 0.2); 
+  }
+}
+
+@keyframes research-pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.8; transform: scale(1.05); }
+}
+
+@keyframes research-shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+@keyframes research-bounce-in {
+  0% {
+    opacity: 0;
+    transform: translateY(50px) scale(0.8);
+  }
+  60% {
+    opacity: 1;
+    transform: translateY(-10px) scale(1.05);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes research-slide-up {
+  from {
+    opacity: 0;
+    transform: translateY(40px) rotateX(10deg);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) rotateX(0deg);
+  }
+}
+
+@keyframes research-scale-in {
+  from {
+    opacity: 0;
+    transform: scale(0.8) rotateZ(-5deg);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) rotateZ(0deg);
+  }
+}
+
+@keyframes research-card-hover {
+  0% { transform: translateY(0) scale(1); }
+  100% { transform: translateY(-10px) scale(1.02); }
+}
+
+@keyframes research-icon-spin {
+  from { transform: rotate(0deg) scale(1); }
+  to { transform: rotate(360deg) scale(1.1); }
+}
+
+/* Research Page Utility Classes */
+.research-animate-float {
+  animation: research-float 6s ease-in-out infinite;
+}
+
+.research-animate-glow {
+  animation: research-glow 3s ease-in-out infinite;
+}
+
+.research-animate-pulse {
+  animation: research-pulse 2s ease-in-out infinite;
+}
+
+.research-animate-shimmer {
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+  background-size: 200% 100%;
+  animation: research-shimmer 2s ease-in-out infinite;
+}
+
+.research-animate-bounce-in {
+  animation: research-bounce-in 0.8s ease-out forwards;
+}
+
+.research-animate-slide-up {
+  animation: research-slide-up 0.6s ease-out forwards;
+}
+
+.research-animate-scale-in {
+  animation: research-scale-in 0.5s ease-out forwards;
+}
+
+.research-card-hover {
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.research-card-hover:hover {
+  animation: research-card-hover 0.3s ease-out forwards;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+}
+
+.research-icon-hover:hover {
+  animation: research-icon-spin 0.6s ease-in-out;
+}
+
+/* Research Page Gradient Backgrounds */
+.research-bg-gradient-hero {
+  background: linear-gradient(135deg, 
+    #1e293b 0%, 
+    #1e40af 25%, 
+    #3730a3 50%, 
+    #1e40af 75%, 
+    #1e293b 100%);
+  background-size: 300% 300%;
+  animation: gradient-xy 8s ease infinite;
+}
+
+.research-bg-gradient-card {
+  background: linear-gradient(135deg, 
+    rgba(255, 255, 255, 0.9) 0%, 
+    rgba(248, 250, 252, 0.95) 100%);
+  backdrop-filter: blur(10px);
+}
+
+.research-bg-gradient-premium {
+  background: linear-gradient(135deg, 
+    #fef3c7 0%, 
+    #fde68a 25%, 
+    #f59e0b 50%, 
+    #d97706 75%, 
+    #92400e 100%);
+  background-size: 200% 200%;
+  animation: gradient-xy 6s ease infinite;
+}
+
+/* Research Text Effects */
+.research-text-shimmer {
+  background: linear-gradient(90deg, 
+    #1e40af 0%, 
+    #3b82f6 25%, 
+    #60a5fa 50%, 
+    #3b82f6 75%, 
+    #1e40af 100%);
+  background-size: 200% 100%;
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: research-shimmer 3s ease-in-out infinite;
+}
+
+.research-text-glow {
+  text-shadow: 
+    0 0 10px rgba(59, 130, 246, 0.5),
+    0 0 20px rgba(59, 130, 246, 0.3),
+    0 0 30px rgba(59, 130, 246, 0.1);
+}
+
+/* Research Interactive Elements */
+.research-interactive {
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.research-interactive::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, 
+    transparent, 
+    rgba(255, 255, 255, 0.4), 
+    transparent);
+  transition: left 0.5s ease;
+}
+
+.research-interactive:hover::before {
+  left: 100%;
+}
+
+.research-interactive:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.2);
+}
