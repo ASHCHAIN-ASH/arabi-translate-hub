@@ -498,42 +498,31 @@ const handler = async (req: Request): Promise<Response> => {
 📞 0500776343 | 📧 legal@masteredupath.com
     `;
 
-    console.log("Queueing emails...");
-
-    // التحقق من وجود RESEND_API_KEY
+    // إرسال بريد العميل بشكل متزامن والتبليغ عن أي خطأ
     if (!Deno.env.get("RESEND_API_KEY")) {
       console.error("RESEND_API_KEY not found!");
-      // لا نفشل العملية، فقط نسجل الخطأ
-    } else {
-      // أرسل بريد الترحيب للعميل في مهمة خلفية
-      const sendClientEmail = async () => {
-        try {
-          console.log("Sending client email to:", email);
-          const clientEmailResult = await resend.emails.send({
-            from: "وكالة ماستر إيدو باث <onboarding@resend.dev>",
-            to: [email],
-            subject: "🎉 مرحباً بك في برنامج التسويق بالعمولة - وكالة ماستر إيدو باث",
-            html: clientEmailHtml,
-            text: clientEmailText,
-          });
-          console.log("Client email sent successfully:", clientEmailResult);
-        } catch (emailError) {
-          console.error("Error sending client email:", emailError);
-        }
-      };
+      return new Response(
+        JSON.stringify({ error: "لم يتم ضبط مفتاح خدمة البريد (Resend)." }),
+        { status: 500, headers: { "Content-Type": "application/json", ...corsHeaders } }
+      );
+    }
 
-      // تشغيل المهمة بالخلفية إن أمكن
-      try {
-        // @ts-ignore - EdgeRuntime is provided by Supabase Edge Runtime
-        if ((globalThis as any).EdgeRuntime?.waitUntil) {
-          // @ts-ignore
-          (globalThis as any).EdgeRuntime.waitUntil(sendClientEmail());
-        } else {
-          sendClientEmail();
-        }
-      } catch (_) {
-        sendClientEmail();
-      }
+    try {
+      console.log("Sending client email to:", email);
+      const clientEmailResult = await resend.emails.send({
+        from: "وكالة ماستر إيدو باث <onboarding@resend.dev>",
+        to: [email],
+        subject: "🎉 مرحباً بك في برنامج التسويق بالعمولة - وكالة ماستر إيدو باث",
+        html: clientEmailHtml,
+        text: clientEmailText,
+      });
+      console.log("Client email sent successfully:", clientEmailResult);
+    } catch (emailError) {
+      console.error("Error sending client email:", emailError);
+      return new Response(
+        JSON.stringify({ error: "تعذر إرسال بريد الترحيب للعميل. يرجى المحاولة لاحقاً." }),
+        { status: 502, headers: { "Content-Type": "application/json", ...corsHeaders } }
+      );
     }
 
     // إرسال تنبيه للإدارة
@@ -868,30 +857,18 @@ const handler = async (req: Request): Promise<Response> => {
     `;
 
     if (Deno.env.get("RESEND_API_KEY")) {
-      const sendAdminEmail = async () => {
-        try {
-          console.log("Sending admin notification email...");
-          const adminEmailResult = await resend.emails.send({
-            from: "نظام التسويق بالعمولة <onboarding@resend.dev>",
-            to: ["legal@masteredupath.com"],
-            subject: `🔔 تسجيل جديد في برنامج التسويق بالعمولة - ${full_name}`,
-            html: adminEmailHtml,
-          });
-          console.log("Admin email sent successfully:", adminEmailResult);
-        } catch (adminEmailError) {
-          console.error("Error sending admin email:", adminEmailError);
-        }
-      };
       try {
-        // @ts-ignore
-        if ((globalThis as any).EdgeRuntime?.waitUntil) {
-          // @ts-ignore
-          (globalThis as any).EdgeRuntime.waitUntil(sendAdminEmail());
-        } else {
-          sendAdminEmail();
-        }
-      } catch (_) {
-        sendAdminEmail();
+        console.log("Sending admin notification email...");
+        const adminEmailResult = await resend.emails.send({
+          from: "نظام التسويق بالعمولة <onboarding@resend.dev>",
+          to: ["legal@masteredupath.com"],
+          subject: `🔔 تسجيل جديد في برنامج التسويق بالعمولة - ${full_name}`,
+          html: adminEmailHtml,
+        });
+        console.log("Admin email sent successfully:", adminEmailResult);
+      } catch (adminEmailError) {
+        console.error("Error sending admin email:", adminEmailError);
+        // لا نفشل العملية إذا فشل تنبيه الإدارة
       }
     }
 
