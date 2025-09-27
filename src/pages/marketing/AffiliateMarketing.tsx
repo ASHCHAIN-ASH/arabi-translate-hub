@@ -15,13 +15,21 @@ import {
   Users,
   Award,
   ArrowLeft,
-  UserPlus
+  UserPlus,
+  Star,
+  Target,
+  MessageCircle,
+  Activity,
+  FileText,
+  BarChart
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Checkbox } from '@/components/ui/checkbox';
-import { Card, CardContent } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Label } from '@/components/ui/label';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import Header from '@/components/Header';
@@ -32,6 +40,10 @@ interface FormData {
   phone: string;
   country_city: string;
   marketing_channel_url: string;
+  marketing_experience: string;
+  social_media_followers: string;
+  expected_monthly_sales: string;
+  motivation: string;
   terms_accepted: boolean;
 }
 
@@ -41,6 +53,10 @@ interface FormErrors {
   phone?: string;
   country_city?: string;
   marketing_channel_url?: string;
+  marketing_experience?: string;
+  social_media_followers?: string;
+  expected_monthly_sales?: string;
+  motivation?: string;
   terms_accepted?: string;
 }
 
@@ -59,6 +75,10 @@ const AffiliateMarketing = () => {
     phone: '',
     country_city: '',
     marketing_channel_url: '',
+    marketing_experience: '',
+    social_media_followers: '',
+    expected_monthly_sales: '',
+    motivation: '',
     terms_accepted: false
   });
   const [errors, setErrors] = useState<FormErrors>({});
@@ -71,6 +91,8 @@ const AffiliateMarketing = () => {
 
     if (!formData.full_name.trim()) {
       newErrors.full_name = 'الاسم الكامل مطلوب';
+    } else if (formData.full_name.trim().length < 3) {
+      newErrors.full_name = 'الاسم يجب أن يكون 3 أحرف على الأقل';
     }
 
     if (!formData.email.trim()) {
@@ -79,8 +101,32 @@ const AffiliateMarketing = () => {
       newErrors.email = 'صيغة البريد الإلكتروني غير صحيحة';
     }
 
-    if (formData.phone && !/^[\+]?[0-9\s\-\(\)]{10,}$/.test(formData.phone)) {
+    if (!formData.phone.trim()) {
+      newErrors.phone = 'رقم الهاتف مطلوب';
+    } else if (!/^[\+]?[0-9\s\-\(\)]{10,}$/.test(formData.phone)) {
       newErrors.phone = 'صيغة رقم الهاتف غير صحيحة';
+    }
+
+    if (!formData.country_city.trim()) {
+      newErrors.country_city = 'الدولة/المدينة مطلوبة';
+    }
+
+    if (formData.marketing_channel_url && !/^https?:\/\/.+/.test(formData.marketing_channel_url)) {
+      newErrors.marketing_channel_url = 'يرجى إدخال رابط صحيح يبدأ بـ http:// أو https://';
+    }
+
+    if (!formData.marketing_experience.trim()) {
+      newErrors.marketing_experience = 'يرجى تحديد مستوى خبرتك في التسويق';
+    }
+
+    if (!formData.expected_monthly_sales.trim()) {
+      newErrors.expected_monthly_sales = 'يرجى تحديد توقعاتك للمبيعات الشهرية';
+    }
+
+    if (!formData.motivation.trim()) {
+      newErrors.motivation = 'يرجى كتابة دوافعك للانضمام للبرنامج';
+    } else if (formData.motivation.trim().length < 20) {
+      newErrors.motivation = 'يرجى كتابة دوافعك بتفصيل أكثر (20 حرف على الأقل)';
     }
 
     if (!formData.terms_accepted) {
@@ -460,126 +506,306 @@ const AffiliateMarketing = () => {
                   </p>
                 </div>
 
-                <form onSubmit={handleSubmit} className="space-y-6">
-                  <div className="space-y-2">
-                    <label className="text-sm font-medium text-slate-700">
-                      الاسم الكامل *
-                    </label>
-                    <Input
-                      value={formData.full_name}
-                      onChange={(e) => handleInputChange('full_name', e.target.value)}
-                      placeholder="أدخل اسمك الكامل"
-                      className={`h-12 ${errors.full_name ? 'border-red-500 shake' : ''}`}
-                    />
-                    <AnimatePresence>
-                      {errors.full_name && (
-                        <motion.div
-                          initial={{ opacity: 0, y: -10 }}
-                          animate={{ opacity: 1, y: 0 }}
-                          exit={{ opacity: 0, y: -10 }}
-                          className="flex items-center gap-1 text-red-600 text-sm"
-                        >
-                          <AlertCircle className="h-4 w-4" />
-                          {errors.full_name}
-                        </motion.div>
-                      )}
-                    </AnimatePresence>
+                <form onSubmit={handleSubmit} className="space-y-8">
+                  {/* Basic Information Section */}
+                  <div className="bg-slate-50 dark:bg-slate-800 rounded-xl p-6">
+                    <div className="flex items-center gap-3 mb-6">
+                      <div className="w-10 h-10 bg-blue-500 rounded-full flex items-center justify-center">
+                        <UserPlus className="h-5 w-5 text-white" />
+                      </div>
+                      <h3 className="text-xl font-bold text-slate-800 dark:text-white">المعلومات الأساسية</h3>
+                    </div>
+                    
+                    <div className="grid md:grid-cols-2 gap-6">
+                      <div className="space-y-2">
+                        <Label className="text-sm font-medium text-slate-700 dark:text-slate-300 flex items-center gap-2">
+                          <Users className="h-4 w-4 text-blue-500" />
+                          الاسم الكامل *
+                        </Label>
+                        <Input
+                          value={formData.full_name}
+                          onChange={(e) => handleInputChange('full_name', e.target.value)}
+                          placeholder="أدخل اسمك الكامل"
+                          className={`h-12 transition-colors ${errors.full_name ? 'border-red-500 shake' : 'focus:border-blue-500'}`}
+                        />
+                        <AnimatePresence>
+                          {errors.full_name && (
+                            <motion.div
+                              initial={{ opacity: 0, y: -10 }}
+                              animate={{ opacity: 1, y: 0 }}
+                              exit={{ opacity: 0, y: -10 }}
+                              className="flex items-center gap-1 text-red-600 text-sm"
+                            >
+                              <AlertCircle className="h-4 w-4" />
+                              {errors.full_name}
+                            </motion.div>
+                          )}
+                        </AnimatePresence>
+                      </div>
+
+                      <div className="space-y-2">
+                        <Label className="text-sm font-medium text-slate-700 dark:text-slate-300 flex items-center gap-2">
+                          <Mail className="h-4 w-4 text-blue-500" />
+                          البريد الإلكتروني *
+                        </Label>
+                        <Input
+                          type="email"
+                          value={formData.email}
+                          onChange={(e) => handleInputChange('email', e.target.value)}
+                          placeholder="example@domain.com"
+                          className={`h-12 transition-colors ${errors.email ? 'border-red-500 shake' : 'focus:border-blue-500'}`}
+                        />
+                        <AnimatePresence>
+                          {errors.email && (
+                            <motion.div
+                              initial={{ opacity: 0, y: -10 }}
+                              animate={{ opacity: 1, y: 0 }}
+                              exit={{ opacity: 0, y: -10 }}
+                              className="flex items-center gap-1 text-red-600 text-sm"
+                            >
+                              <AlertCircle className="h-4 w-4" />
+                              {errors.email}
+                            </motion.div>
+                          )}
+                        </AnimatePresence>
+                      </div>
+
+                      <div className="space-y-2">
+                        <Label className="text-sm font-medium text-slate-700 dark:text-slate-300 flex items-center gap-2">
+                          <Phone className="h-4 w-4 text-blue-500" />
+                          رقم الجوال *
+                        </Label>
+                        <Input
+                          value={formData.phone}
+                          onChange={(e) => handleInputChange('phone', e.target.value)}
+                          placeholder="+966xxxxxxxxx"
+                          className={`h-12 transition-colors ${errors.phone ? 'border-red-500 shake' : 'focus:border-blue-500'}`}
+                        />
+                        <AnimatePresence>
+                          {errors.phone && (
+                            <motion.div
+                              initial={{ opacity: 0, y: -10 }}
+                              animate={{ opacity: 1, y: 0 }}
+                              exit={{ opacity: 0, y: -10 }}
+                              className="flex items-center gap-1 text-red-600 text-sm"
+                            >
+                              <AlertCircle className="h-4 w-4" />
+                              {errors.phone}
+                            </motion.div>
+                          )}
+                        </AnimatePresence>
+                      </div>
+
+                      <div className="space-y-2">
+                        <Label className="text-sm font-medium text-slate-700 dark:text-slate-300 flex items-center gap-2">
+                          <Globe className="h-4 w-4 text-blue-500" />
+                          الدولة / المدينة *
+                        </Label>
+                        <Input
+                          value={formData.country_city}
+                          onChange={(e) => handleInputChange('country_city', e.target.value)}
+                          placeholder="مثال: الرياض، المملكة العربية السعودية"
+                          className={`h-12 transition-colors ${errors.country_city ? 'border-red-500 shake' : 'focus:border-blue-500'}`}
+                        />
+                        <AnimatePresence>
+                          {errors.country_city && (
+                            <motion.div
+                              initial={{ opacity: 0, y: -10 }}
+                              animate={{ opacity: 1, y: 0 }}
+                              exit={{ opacity: 0, y: -10 }}
+                              className="flex items-center gap-1 text-red-600 text-sm"
+                            >
+                              <AlertCircle className="h-4 w-4" />
+                              {errors.country_city}
+                            </motion.div>
+                          )}
+                        </AnimatePresence>
+                      </div>
+                    </div>
                   </div>
 
-                  <div className="space-y-2">
-                    <label className="text-sm font-medium text-slate-700">
-                      البريد الإلكتروني *
-                    </label>
-                    <Input
-                      type="email"
-                      value={formData.email}
-                      onChange={(e) => handleInputChange('email', e.target.value)}
-                      placeholder="example@domain.com"
-                      className={`h-12 ${errors.email ? 'border-red-500 shake' : ''}`}
-                    />
-                    <AnimatePresence>
-                      {errors.email && (
-                        <motion.div
-                          initial={{ opacity: 0, y: -10 }}
-                          animate={{ opacity: 1, y: 0 }}
-                          exit={{ opacity: 0, y: -10 }}
-                          className="flex items-center gap-1 text-red-600 text-sm"
-                        >
-                          <AlertCircle className="h-4 w-4" />
-                          {errors.email}
-                        </motion.div>
-                      )}
-                    </AnimatePresence>
+                  {/* Marketing Experience Section */}
+                  <div className="bg-emerald-50 dark:bg-emerald-900/20 rounded-xl p-6">
+                    <div className="flex items-center gap-3 mb-6">
+                      <div className="w-10 h-10 bg-emerald-500 rounded-full flex items-center justify-center">
+                        <BarChart className="h-5 w-5 text-white" />
+                      </div>
+                      <h3 className="text-xl font-bold text-slate-800 dark:text-white">الخبرة التسويقية</h3>
+                    </div>
+
+                    <div className="grid md:grid-cols-2 gap-6">
+                      <div className="space-y-2">
+                        <Label className="text-sm font-medium text-slate-700 dark:text-slate-300 flex items-center gap-2">
+                          <Target className="h-4 w-4 text-emerald-500" />
+                          مستوى الخبرة في التسويق *
+                        </Label>
+                        <Select onValueChange={(value) => handleInputChange('marketing_experience', value)}>
+                          <SelectTrigger className={`h-12 transition-colors ${errors.marketing_experience ? 'border-red-500' : 'focus:border-emerald-500'}`}>
+                            <SelectValue placeholder="اختر مستوى خبرتك" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="beginner">مبتدئ (أقل من سنة)</SelectItem>
+                            <SelectItem value="intermediate">متوسط (1-3 سنوات)</SelectItem>
+                            <SelectItem value="advanced">متقدم (3-5 سنوات)</SelectItem>
+                            <SelectItem value="expert">خبير (أكثر من 5 سنوات)</SelectItem>
+                          </SelectContent>
+                        </Select>
+                        <AnimatePresence>
+                          {errors.marketing_experience && (
+                            <motion.div
+                              initial={{ opacity: 0, y: -10 }}
+                              animate={{ opacity: 1, y: 0 }}
+                              exit={{ opacity: 0, y: -10 }}
+                              className="flex items-center gap-1 text-red-600 text-sm"
+                            >
+                              <AlertCircle className="h-4 w-4" />
+                              {errors.marketing_experience}
+                            </motion.div>
+                          )}
+                        </AnimatePresence>
+                      </div>
+
+                      <div className="space-y-2">
+                        <Label className="text-sm font-medium text-slate-700 dark:text-slate-300 flex items-center gap-2">
+                          <Activity className="h-4 w-4 text-emerald-500" />
+                          عدد المتابعين في وسائل التواصل
+                        </Label>
+                        <Select onValueChange={(value) => handleInputChange('social_media_followers', value)}>
+                          <SelectTrigger className="h-12 focus:border-emerald-500">
+                            <SelectValue placeholder="اختر عدد المتابعين" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="0-1k">أقل من 1,000</SelectItem>
+                            <SelectItem value="1k-10k">1,000 - 10,000</SelectItem>
+                            <SelectItem value="10k-50k">10,000 - 50,000</SelectItem>
+                            <SelectItem value="50k-100k">50,000 - 100,000</SelectItem>
+                            <SelectItem value="100k+">أكثر من 100,000</SelectItem>
+                            <SelectItem value="no-social">لا أستخدم وسائل التواصل</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </div>
+
+                      <div className="space-y-2">
+                        <Label className="text-sm font-medium text-slate-700 dark:text-slate-300 flex items-center gap-2">
+                          <DollarSign className="h-4 w-4 text-emerald-500" />
+                          توقعات المبيعات الشهرية *
+                        </Label>
+                        <Select onValueChange={(value) => handleInputChange('expected_monthly_sales', value)}>
+                          <SelectTrigger className={`h-12 transition-colors ${errors.expected_monthly_sales ? 'border-red-500' : 'focus:border-emerald-500'}`}>
+                            <SelectValue placeholder="كم تتوقع أن تبيع شهرياً؟" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="1-5">1-5 خدمات</SelectItem>
+                            <SelectItem value="6-15">6-15 خدمة</SelectItem>
+                            <SelectItem value="16-30">16-30 خدمة</SelectItem>
+                            <SelectItem value="31-50">31-50 خدمة</SelectItem>
+                            <SelectItem value="50+">أكثر من 50 خدمة</SelectItem>
+                          </SelectContent>
+                        </Select>
+                        <AnimatePresence>
+                          {errors.expected_monthly_sales && (
+                            <motion.div
+                              initial={{ opacity: 0, y: -10 }}
+                              animate={{ opacity: 1, y: 0 }}
+                              exit={{ opacity: 0, y: -10 }}
+                              className="flex items-center gap-1 text-red-600 text-sm"
+                            >
+                              <AlertCircle className="h-4 w-4" />
+                              {errors.expected_monthly_sales}
+                            </motion.div>
+                          )}
+                        </AnimatePresence>
+                      </div>
+
+                      <div className="space-y-2">
+                        <Label className="text-sm font-medium text-slate-700 dark:text-slate-300 flex items-center gap-2">
+                          <Globe className="h-4 w-4 text-emerald-500" />
+                          رابط قناة التسويق (اختياري)
+                        </Label>
+                        <Input
+                          value={formData.marketing_channel_url}
+                          onChange={(e) => handleInputChange('marketing_channel_url', e.target.value)}
+                          placeholder="https://example.com أو رابط وسائل التواصل"
+                          className={`h-12 transition-colors ${errors.marketing_channel_url ? 'border-red-500 shake' : 'focus:border-emerald-500'}`}
+                        />
+                        <AnimatePresence>
+                          {errors.marketing_channel_url && (
+                            <motion.div
+                              initial={{ opacity: 0, y: -10 }}
+                              animate={{ opacity: 1, y: 0 }}
+                              exit={{ opacity: 0, y: -10 }}
+                              className="flex items-center gap-1 text-red-600 text-sm"
+                            >
+                              <AlertCircle className="h-4 w-4" />
+                              {errors.marketing_channel_url}
+                            </motion.div>
+                          )}
+                        </AnimatePresence>
+                      </div>
+                    </div>
                   </div>
 
-                  <div className="space-y-2">
-                    <label className="text-sm font-medium text-slate-700">
-                      رقم الجوال (اختياري)
-                    </label>
-                    <Input
-                      value={formData.phone}
-                      onChange={(e) => handleInputChange('phone', e.target.value)}
-                      placeholder="+966xxxxxxxxx"
-                      className={`h-12 ${errors.phone ? 'border-red-500 shake' : ''}`}
-                    />
-                    <AnimatePresence>
-                      {errors.phone && (
-                        <motion.div
-                          initial={{ opacity: 0, y: -10 }}
-                          animate={{ opacity: 1, y: 0 }}
-                          exit={{ opacity: 0, y: -10 }}
-                          className="flex items-center gap-1 text-red-600 text-sm"
-                        >
-                          <AlertCircle className="h-4 w-4" />
-                          {errors.phone}
-                        </motion.div>
-                      )}
-                    </AnimatePresence>
+                  {/* Motivation Section */}
+                  <div className="bg-purple-50 dark:bg-purple-900/20 rounded-xl p-6">
+                    <div className="flex items-center gap-3 mb-6">
+                      <div className="w-10 h-10 bg-purple-500 rounded-full flex items-center justify-center">
+                        <MessageCircle className="h-5 w-5 text-white" />
+                      </div>
+                      <h3 className="text-xl font-bold text-slate-800 dark:text-white">دوافعك للانضمام</h3>
+                    </div>
+
+                    <div className="space-y-2">
+                      <Label className="text-sm font-medium text-slate-700 dark:text-slate-300 flex items-center gap-2">
+                        <Star className="h-4 w-4 text-purple-500" />
+                        لماذا تريد الانضمام لبرنامج التسويق بالعمولة؟ *
+                      </Label>
+                      <Textarea
+                        value={formData.motivation}
+                        onChange={(e) => handleInputChange('motivation', e.target.value)}
+                        placeholder="اكتب دوافعك وأهدافك من الانضمام للبرنامج، وكيف ستساعد في تسويق خدماتنا..."
+                        rows={4}
+                        className={`transition-colors ${errors.motivation ? 'border-red-500 shake' : 'focus:border-purple-500'}`}
+                      />
+                      <div className="flex justify-between items-center text-xs text-slate-500">
+                        <span>{formData.motivation.length}/500</span>
+                        <span>الحد الأدنى: 20 حرف</span>
+                      </div>
+                      <AnimatePresence>
+                        {errors.motivation && (
+                          <motion.div
+                            initial={{ opacity: 0, y: -10 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            exit={{ opacity: 0, y: -10 }}
+                            className="flex items-center gap-1 text-red-600 text-sm"
+                          >
+                            <AlertCircle className="h-4 w-4" />
+                            {errors.motivation}
+                          </motion.div>
+                        )}
+                      </AnimatePresence>
+                    </div>
                   </div>
 
-                  <div className="space-y-2">
-                    <label className="text-sm font-medium text-slate-700">
-                      الدولة / المدينة (اختياري)
-                    </label>
-                    <Input
-                      value={formData.country_city}
-                      onChange={(e) => handleInputChange('country_city', e.target.value)}
-                      placeholder="مثال: الرياض، المملكة العربية السعودية"
-                      className="h-12"
-                    />
-                  </div>
-
-                  <div className="space-y-2">
-                    <label className="text-sm font-medium text-slate-700">
-                      رابط قناة التسويق (اختياري)
-                    </label>
-                    <Textarea
-                      value={formData.marketing_channel_url}
-                      onChange={(e) => handleInputChange('marketing_channel_url', e.target.value)}
-                      placeholder="أدخل رابط موقعك الإلكتروني، صفحة السوشيال ميديا، أو قناة التسويق الخاصة بك"
-                      rows={3}
-                    />
-                  </div>
-
-                  <div className="space-y-4">
-                    <div className="flex items-start space-x-3 space-x-reverse">
+                  {/* Terms and Submit */}
+                  <div className="space-y-6">
+                    <div className="flex items-start space-x-3 space-x-reverse p-4 bg-amber-50 dark:bg-amber-900/20 rounded-lg border border-amber-200 dark:border-amber-800">
                       <Checkbox
                         id="terms"
                         checked={formData.terms_accepted}
                         onCheckedChange={(checked) => handleInputChange('terms_accepted', !!checked)}
                         className={errors.terms_accepted ? 'border-red-500' : ''}
                       />
-                      <label htmlFor="terms" className="text-sm text-slate-600 leading-relaxed">
+                      <Label htmlFor="terms" className="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
                         أوافق على{' '}
                         <a 
                           href="/terms-of-service" 
                           target="_blank"
-                          className="text-blue-600 hover:text-blue-800 underline"
+                          className="text-blue-600 hover:text-blue-800 underline font-semibold"
                         >
                           شروط وأحكام برنامج التسويق بالعمولة
                         </a>
-                        {' '}وسياسة الخصوصية *
-                      </label>
+                        {' '}وسياسة الخصوصية، وأتعهد بالالتزام بقواعد التسويق المهني والأخلاقي *
+                      </Label>
                     </div>
                     <AnimatePresence>
                       {errors.terms_accepted && (
@@ -594,25 +820,30 @@ const AffiliateMarketing = () => {
                         </motion.div>
                       )}
                     </AnimatePresence>
-                  </div>
 
-                  <Button
-                    type="submit"
-                    disabled={isLoading}
-                    className="w-full h-12 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-semibold rounded-lg shadow-lg hover:shadow-xl transition-all duration-300"
-                  >
-                    {isLoading ? (
-                      <>
-                        <Loader2 className="mr-2 h-5 w-5 animate-spin" />
-                        جاري التسجيل...
-                      </>
-                    ) : (
-                      <>
-                        انضم للبرنامج الآن
-                        <ArrowLeft className="mr-2 h-5 w-5" />
-                      </>
-                    )}
-                  </Button>
+                    <motion.div
+                      whileHover={{ scale: 1.02 }}
+                      whileTap={{ scale: 0.98 }}
+                    >
+                      <Button
+                        type="submit"
+                        disabled={isLoading}
+                        className="w-full h-14 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-bold text-lg rounded-xl shadow-xl hover:shadow-2xl transition-all duration-300"
+                      >
+                        {isLoading ? (
+                          <>
+                            <Loader2 className="mr-2 h-6 w-6 animate-spin" />
+                            جاري التسجيل...
+                          </>
+                        ) : (
+                          <>
+                            انضم للبرنامج الآن
+                            <ArrowLeft className="mr-2 h-6 w-6" />
+                          </>
+                        )}
+                      </Button>
+                    </motion.div>
+                  </div>
                 </form>
               </CardContent>
             </Card>
