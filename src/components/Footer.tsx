@@ -95,7 +95,7 @@ const Footer = () => {
 
       {/* Main Footer Content */}
       <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-16">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-8 md:gap-12">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 md:gap-12">
           {/* معلومات الشركة */}
           <motion.div 
             initial={{ opacity: 0, y: 20 }}
@@ -154,7 +154,7 @@ const Footer = () => {
             </div>
           </motion.div>
 
-          {/* روابط سريعة */}
+          {/* خدماتنا المتخصصة */}
           <motion.div 
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -162,32 +162,31 @@ const Footer = () => {
             className="space-y-4 md:space-y-6"
           >
             <h4 className="text-base md:text-lg font-bold text-white flex items-center gap-2">
-              <Star className="h-4 w-4 md:h-5 md:w-5 text-yellow-400" />
-              روابط سريعة
+              <Globe className="h-4 w-4 md:h-5 md:w-5 text-blue-400" />
+              خدماتنا المتخصصة
             </h4>
             <ul className="space-y-2 md:space-y-3">
               {[
-                { name: 'خدماتنا', icon: Zap, href: '/services' },
-                { name: 'الأسعار', icon: Star, href: '/pricing' },
-                { name: 'عن الشركة', icon: Building2, href: '/about-us' },
-                { name: 'الملكية الفكرية', icon: Shield, href: '/intellectual-property' },
-                { name: 'الأسئلة الشائعة', icon: HelpCircle, href: '/faq' },
-                { name: 'سياسة الخصوصية', icon: Shield, href: '/privacy-policy' }
-              ].map((link) => (
-                <li key={link.name}>
+                { name: 'خدمات الترجمة المتخصصة', href: '/translation-services' },
+                { name: 'البحث العلمي والأكاديمي', href: '/research-services' },
+                { name: 'الاستشارات التعليمية', href: '/services/consultation-services' },
+                { name: 'التحليل الإحصائي', href: '/services/statistical-analysis-services' },
+                { name: 'النشر في المجلات', href: '/research/journal-publication' },
+                { name: 'الدورات التدريبية', href: '/research/training-courses' }
+              ].map((service) => (
+                <li key={service.name}>
                   <a 
-                    href={link.href || "#"} 
-                    className="text-white/70 hover:text-white transition-colors text-sm md:text-base flex items-center gap-2 hover:translate-x-1 transition-transform"
+                    href={service.href} 
+                    className="text-white/70 hover:text-white transition-colors text-sm md:text-base block hover:translate-x-1 transition-transform"
                   >
-                    <link.icon className="h-3 w-3 md:h-4 md:w-4 text-primary" />
-                    {link.name}
+                    {service.name}
                   </a>
                 </li>
               ))}
             </ul>
           </motion.div>
 
-          {/* قسم المدونة */}
+          {/* المدونة والموارد */}
           <motion.div 
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -200,57 +199,19 @@ const Footer = () => {
             </h4>
             <ul className="space-y-2 md:space-y-3">
               {[
-                { name: 'أحدث المقالات', badge: 'جديد', href: '/blog' },
-                { name: 'عضوية ماستر', badge: 'حصري', href: '/master-membership' },
-                { name: 'نصائح الترجمة', badge: 'مفيد', href: '/blog' },
-                { name: 'أخبار الصناعة', badge: 'حصري', href: '/blog' },
-                { name: 'دليل العملاء', badge: 'شامل', href: '/client-guide' },
-                { name: 'مسابقات أكاديمية', badge: 'جوائز', href: '/academic-competitions' }
+                { name: 'أحدث المقالات', href: '/blog' },
+                { name: 'عضوية ماستر', href: '/master-membership' },
+                { name: 'نصائح الترجمة', href: '/blog' },
+                { name: 'أخبار الصناعة', href: '/blog' },
+                { name: 'دليل العملاء', href: '/client-guide' },
+                { name: 'مسابقات أكاديمية', href: '/academic-competitions' }
               ].map((blog) => (
                 <li key={blog.name}>
                   <a 
                     href={blog.href} 
-                    className="text-white/70 hover:text-white transition-colors text-sm md:text-base flex items-center justify-between hover:translate-x-1 transition-transform group"
+                    className="text-white/70 hover:text-white transition-colors text-sm md:text-base block hover:translate-x-1 transition-transform"
                   >
-                    <span>{blog.name}</span>
-                    <span className="text-xs bg-orange-500/20 text-orange-400 px-2 py-1 rounded-full opacity-0 group-hover:opacity-100 transition-opacity">
-                      {blog.badge}
-                    </span>
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </motion.div>
-
-          {/* خدماتنا */}
-          <motion.div 
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.2, duration: 0.5 }}
-            className="space-y-4 md:space-y-6"
-          >
-            <h4 className="text-base md:text-lg font-bold text-white flex items-center gap-2">
-              <Globe className="h-4 w-4 md:h-5 md:w-5 text-blue-400" />
-              خدماتنا المتخصصة
-            </h4>
-            <ul className="space-y-2 md:space-y-3">
-              {[
-                { name: 'خدمات الترجمة المتخصصة', badge: 'الأكثر طلباً' },
-                { name: 'البحث العلمي والأكاديمي', badge: 'متميز' },
-                { name: 'الاستشارات التعليمية', badge: 'خبراء' },
-                { name: 'التحليل الإحصائي', badge: 'دقيق' },
-                { name: 'النشر في المجلات', badge: 'معتمد' },
-                { name: 'الدورات التدريبية', badge: 'تفاعلي' }
-              ].map((service) => (
-                <li key={service.name}>
-                  <a 
-                    href="#" 
-                    className="text-white/70 hover:text-white transition-colors text-sm md:text-base flex items-center justify-between hover:translate-x-1 transition-transform group"
-                  >
-                    <span>{service.name}</span>
-                    <span className="text-xs bg-primary/20 text-primary px-2 py-1 rounded-full opacity-0 group-hover:opacity-100 transition-opacity">
-                      {service.badge}
-                    </span>
+                    {blog.name}
                   </a>
                 </li>
               ))}
@@ -261,7 +222,7 @@ const Footer = () => {
           <motion.div 
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.25, duration: 0.5 }}
+            transition={{ delay: 0.2, duration: 0.5 }}
             className="space-y-4 md:space-y-6"
           >
             <h4 className="text-base md:text-lg font-bold text-white flex items-center gap-2">
@@ -269,15 +230,24 @@ const Footer = () => {
               روابط مهمة
             </h4>
             <ul className="space-y-2 md:space-y-3">
-              <li>
-                <a 
-                  href="#" 
-                  className="text-white/70 hover:text-white transition-colors text-sm md:text-base flex items-center gap-2 hover:translate-x-1 transition-transform"
-                >
-                  <TrendingUp className="h-3 w-3 md:h-4 md:w-4 text-green-400" />
-                  التسويق بالعمولة
-                </a>
-              </li>
+              {[
+                { name: 'التسويق بالعمولة', icon: TrendingUp, href: '#affiliate-program' },
+                { name: 'الأسعار', icon: DollarSign, href: '/pricing' },
+                { name: 'عن الشركة', icon: Building2, href: '/about-us' },
+                { name: 'الملكية الفكرية', icon: Shield, href: '/intellectual-property' },
+                { name: 'الأسئلة الشائعة', icon: HelpCircle, href: '/faq' },
+                { name: 'سياسة الخصوصية', icon: Shield, href: '/privacy-policy' }
+              ].map((link) => (
+                <li key={link.name}>
+                  <a 
+                    href={link.href} 
+                    className="text-white/70 hover:text-white transition-colors text-sm md:text-base flex items-center gap-2 hover:translate-x-1 transition-transform"
+                  >
+                    <link.icon className="h-3 w-3 md:h-4 md:w-4 text-purple-400" />
+                    {link.name}
+                  </a>
+                </li>
+              ))}
             </ul>
           </motion.div>
 
