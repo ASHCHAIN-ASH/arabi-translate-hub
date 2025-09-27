@@ -73,60 +73,73 @@ const handler = async (req: Request): Promise<Response> => {
       );
     }
 
-    // التحقق من عدم وجود بريد مكرر
+    // التحقق من عدم وجود بريد مكرر ثم تجهيز الأكواد
+    const emailLower = email.toLowerCase();
+
     const { data: existingPartner } = await supabase
       .from("affiliate_partners")
-      .select("email")
-      .eq("email", email.toLowerCase())
-      .single();
+      .select("affiliate_id, discount_code, full_name, email")
+      .eq("email", emailLower)
+      .maybeSingle();
+
+    let affiliate_id: string;
+    let discount_code: string;
 
     if (existingPartner) {
-      return new Response(
-        JSON.stringify({ error: "هذا البريد الإلكتروني مسجل مسبقاً في البرنامج" }),
-        { 
-          status: 409, 
-          headers: { "Content-Type": "application/json", ...corsHeaders } 
-        }
-      );
-    }
+      // في حال كان البريد موجودًا مسبقًا: نُعيد إرسال التفاصيل ونُحدّث البيانات
+      affiliate_id = existingPartner.affiliate_id;
+      discount_code = existingPartner.discount_code;
 
-    // توليد معرف المسوق وكود الخصم
-    const { data: affiliateIdData } = await supabase.rpc("generate_affiliate_id");
-    const { data: discountCodeData } = await supabase.rpc("generate_discount_code");
+      await supabase
+        .from("affiliate_partners")
+        .update({
+          full_name,
+          phone,
+          country_city,
+          marketing_channel_url,
+          marketing_experience,
+          social_media_followers,
+          expected_monthly_sales,
+          motivation,
+          terms_accepted: true,
+          status: "active",
+          updated_at: new Date().toISOString(),
+        })
+        .eq("email", emailLower);
+    } else {
+      // توليد معرف المسوق وكود الخصم
+      const { data: affiliateIdData } = await supabase.rpc("generate_affiliate_id");
+      const { data: discountCodeData } = await supabase.rpc("generate_discount_code");
 
-    const affiliate_id = affiliateIdData;
-    const discount_code = discountCodeData;
+      affiliate_id = affiliateIdData as string;
+      discount_code = discountCodeData as string;
 
-    // إدراج البيانات في قاعدة البيانات
-    const { data: newPartner, error: insertError } = await supabase
-      .from("affiliate_partners")
-      .insert({
-        affiliate_id,
-        discount_code,
-        full_name,
-        email: email.toLowerCase(),
-        phone,
-        country_city,
-        marketing_channel_url,
-        marketing_experience,
-        social_media_followers,
-        expected_monthly_sales,
-        motivation,
-        terms_accepted,
-        status: "active"
-      })
-      .select()
-      .single();
+      // إدراج البيانات في قاعدة البيانات
+      const { error: insertError } = await supabase
+        .from("affiliate_partners")
+        .insert({
+          affiliate_id,
+          discount_code,
+          full_name,
+          email: emailLower,
+          phone,
+          country_city,
+          marketing_channel_url,
+          marketing_experience,
+          social_media_followers,
+          expected_monthly_sales,
+          motivation,
+          terms_accepted,
+          status: "active",
+        });
 
-    if (insertError) {
-      console.error("Database insert error:", insertError);
-      return new Response(
-        JSON.stringify({ error: "خطأ في حفظ البيانات. يرجى المحاولة مرة أخرى." }),
-        { 
-          status: 500, 
-          headers: { "Content-Type": "application/json", ...corsHeaders } 
-        }
-      );
+      if (insertError) {
+        console.error("Database insert error:", insertError);
+        return new Response(
+          JSON.stringify({ error: "خطأ في حفظ البيانات. يرجى المحاولة مرة أخرى." }),
+          { status: 500, headers: { "Content-Type": "application/json", ...corsHeaders } }
+        );
+      }
     }
 
     // إرسال بريد إلكتروني للعميل
