@@ -29,10 +29,13 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge";
 import { Link } from "react-router-dom";
 import { Separator } from "@/components/ui/separator";
+import Header from "@/components/Header";
 
 const IntellectualProperty = () => {
   return (
-    <main className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-purple-50" dir="rtl">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-purple-50" dir="rtl">
+      <Header />
+      <main>
       {/* Hero Section */}
       <section className="relative overflow-hidden bg-gradient-to-br from-slate-900 via-blue-900 to-purple-900 text-white py-20 md:py-32">
         <div className="absolute inset-0 opacity-20">
@@ -506,7 +509,8 @@ const IntellectualProperty = () => {
           </motion.div>
         </div>
       </section>
-    </main>
+      </main>
+    </div>
   );
 };
 
