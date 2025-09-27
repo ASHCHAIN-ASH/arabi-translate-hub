@@ -458,7 +458,7 @@ const IntellectualProperty = () => {
                   <div className="space-y-2">
                     <Phone className="h-8 w-8 text-green-400 mx-auto" />
                     <h4 className="font-semibold">هاتف الشؤون القانونية</h4>
-                    <p className="text-green-300">+966 50 077 6343</p>
+                    <p className="text-green-300">0500776343</p>
                   </div>
                   <div className="space-y-2">
                     <Calendar className="h-8 w-8 text-purple-400 mx-auto" />
