@@ -36,7 +36,6 @@ import AboutUs from "./pages/AboutUs";
 import AcademicCompetitions from "./pages/AcademicCompetitions";
 import Unauthorized from "./pages/Unauthorized";
 import Blog from "./pages/Blog";
-import MasterMembership from "./pages/MasterMembership";
 import FAQ from "./pages/FAQ";
 import SuccessStories from "./pages/SuccessStories";
 import ClientGuide from "./pages/ClientGuide";
@@ -133,11 +132,10 @@ const App = () => (
             <Route path="/academic-translation" element={<AcademicTranslation />} />
             <Route path="/research-services" element={<ResearchServices />} />
             <Route path="/about-us" element={<AboutUs />} />
-             <Route path="/terms-of-service" element={<TermsOfService />} />
-             <Route path="/privacy-policy" element={<PrivacyPolicy />} />
-              <Route path="/blog" element={<Blog />} />
-              <Route path="/master-membership" element={<MasterMembership />} />
-             <Route path="/faq" element={<FAQ />} />
+              <Route path="/terms-of-service" element={<TermsOfService />} />
+              <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+               <Route path="/blog" element={<Blog />} />
+              <Route path="/faq" element={<FAQ />} />
              <Route path="/academic-competitions" element={<AcademicCompetitions />} />
              <Route path="/client-guide" element={<ClientGuide />} />
              <Route path="/order-tracking" element={<OrderTracking />} />

@@ -43,7 +43,6 @@ const Header = () => {
     { name: 'خدمات الترجمة', href: '/translation-services', icon: Languages, description: 'ترجمة النصوص والوثائق بدقة عالية' },
     { name: 'خدمات الأبحاث والكتابة', href: '/research-services', icon: Microscope, description: 'كتابة وتحليل الأبحاث العلمية والأكاديمية' },
     { name: 'النشر في المجلات المعتمدة', href: '/research/journal-publication', icon: FileText, description: 'خدمات النشر في المجلات العلمية المحكمة والمعتمدة دولياً' },
-    { name: 'عضوية ماستر', href: '/master-membership', icon: Crown, description: 'انضم لمجتمع النخبة واحصل على موارد حصرية ودعم متخصص' },
   ];
 
   const isActive = (path: string) => location.pathname === path;
