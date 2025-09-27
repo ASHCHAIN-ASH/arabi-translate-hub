@@ -16,7 +16,10 @@ import {
   Star,
   Zap,
   Timer,
-  HelpCircle
+  HelpCircle,
+  TrendingUp,
+  DollarSign,
+  UserPlus
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -92,7 +95,7 @@ const Footer = () => {
 
       {/* Main Footer Content */}
       <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-16">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-8 md:gap-12">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-8 md:gap-12">
           {/* معلومات الشركة */}
           <motion.div 
             initial={{ opacity: 0, y: 20 }}
@@ -247,6 +250,44 @@ const Footer = () => {
                     <span>{service.name}</span>
                     <span className="text-xs bg-primary/20 text-primary px-2 py-1 rounded-full opacity-0 group-hover:opacity-100 transition-opacity">
                       {service.badge}
+                    </span>
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </motion.div>
+
+          {/* قسم التسويق بالعمولة */}
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.25, duration: 0.5 }}
+            className="space-y-4 md:space-y-6"
+          >
+            <h4 className="text-base md:text-lg font-bold text-white flex items-center gap-2">
+              <TrendingUp className="h-4 w-4 md:h-5 md:w-5 text-green-400" />
+              التسويق بالعمولة
+            </h4>
+            <ul className="space-y-2 md:space-y-3">
+              {[
+                { name: 'انضم لفريق الشركاء', icon: UserPlus, badge: 'مربح', href: '#affiliate-program' },
+                { name: 'عمولات تنافسية', icon: DollarSign, badge: 'مضمون', href: '#commission-rates' },
+                { name: 'أدوات التسويق', icon: Zap, badge: 'مجاني', href: '#marketing-tools' },
+                { name: 'تتبع الأرباح', icon: TrendingUp, badge: 'فوري', href: '#earnings-tracker' },
+                { name: 'دليل الشركاء', icon: HelpCircle, badge: 'شامل', href: '#partner-guide' },
+                { name: 'شروط الانضمام', icon: Shield, badge: 'سهل', href: '#terms-conditions' }
+              ].map((item) => (
+                <li key={item.name}>
+                  <a 
+                    href={item.href} 
+                    className="text-white/70 hover:text-white transition-colors text-sm md:text-base flex items-center justify-between hover:translate-x-1 transition-transform group"
+                  >
+                    <span className="flex items-center gap-2">
+                      <item.icon className="h-3 w-3 md:h-4 md:w-4 text-green-400" />
+                      {item.name}
+                    </span>
+                    <span className="text-xs bg-green-500/20 text-green-400 px-2 py-1 rounded-full opacity-0 group-hover:opacity-100 transition-opacity">
+                      {item.badge}
                     </span>
                   </a>
                 </li>
