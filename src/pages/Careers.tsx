@@ -821,7 +821,7 @@ const Careers = () => {
                       className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white px-8 py-4 text-lg shadow-lg"
                     >
                       <Mail className="ml-2 h-6 w-6" />
-                      careers@masteredupath.com
+                      info@masteredupath.com
                     </Button>
                   </motion.div>
                   <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
