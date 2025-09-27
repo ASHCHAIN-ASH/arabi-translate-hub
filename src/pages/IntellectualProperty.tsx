@@ -27,6 +27,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Link } from "react-router-dom";
 import { Separator } from "@/components/ui/separator";
 
 const IntellectualProperty = () => {
@@ -469,11 +470,13 @@ const IntellectualProperty = () => {
 
                 <Separator className="my-8 bg-slate-700" />
 
-                <div className="text-center">
-                  <Button className="bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white px-8 py-3 rounded-full text-lg font-semibold shadow-lg hover:shadow-xl transition-all duration-300">
-                    طلب ترخيص استخدام
-                  </Button>
-                </div>
+                 <div className="text-center">
+                   <Button className="bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white px-8 py-3 rounded-full text-lg font-semibold shadow-lg hover:shadow-xl transition-all duration-300" asChild>
+                     <Link to="/license-request">
+                       طلب ترخيص استخدام
+                     </Link>
+                   </Button>
+                 </div>
               </CardContent>
             </Card>
           </motion.div>
