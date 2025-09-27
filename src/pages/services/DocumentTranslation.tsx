@@ -37,6 +37,8 @@ const DocumentTranslation = () => {
     name: '',
     email: '',
     phone: '',
+    company: '',
+    serviceType: '',
     documentType: '',
     sourceLanguage: '',
     targetLanguage: '',
@@ -70,6 +72,8 @@ const DocumentTranslation = () => {
         name: '',
         email: '',
         phone: '',
+        company: '',
+        serviceType: '',
         documentType: '',
         sourceLanguage: '',
         targetLanguage: '',
@@ -457,41 +461,78 @@ const DocumentTranslation = () => {
                 
                 <CardContent className="p-8">
                   <form onSubmit={handleSubmit} className="space-y-6">
-                    <div className="grid md:grid-cols-2 gap-6">
-                      {/* Name Field */}
-                      <div className="space-y-2">
-                        <Label htmlFor="name" className="text-lg font-semibold flex items-center gap-2">
-                          <Users className="w-4 h-4 text-emerald-600" />
-                          الاسم الكامل *
-                        </Label>
-                        <Input
-                          id="name"
-                          type="text"
-                          placeholder="أدخل اسمك الكامل"
-                          value={formData.name}
-                          onChange={(e) => handleInputChange('name', e.target.value)}
-                          required
-                          className="h-12 text-lg border-2 focus:border-emerald-500"
-                        />
-                      </div>
+                     <div className="grid md:grid-cols-2 gap-6">
+                       {/* Name Field */}
+                       <div className="space-y-2">
+                         <Label htmlFor="name" className="text-lg font-semibold flex items-center gap-2">
+                           <Users className="w-4 h-4 text-emerald-600" />
+                           الاسم الكامل *
+                         </Label>
+                         <Input
+                           id="name"
+                           type="text"
+                           placeholder="أدخل اسمك الكامل"
+                           value={formData.name}
+                           onChange={(e) => handleInputChange('name', e.target.value)}
+                           required
+                           className="h-12 text-lg border-2 focus:border-emerald-500 hover:border-emerald-400 transition-colors"
+                         />
+                       </div>
 
-                      {/* Email Field */}
-                      <div className="space-y-2">
-                        <Label htmlFor="email" className="text-lg font-semibold flex items-center gap-2">
-                          <Mail className="w-4 h-4 text-emerald-600" />
-                          البريد الإلكتروني *
-                        </Label>
-                        <Input
-                          id="email"
-                          type="email"
-                          placeholder="example@email.com"
-                          value={formData.email}
-                          onChange={(e) => handleInputChange('email', e.target.value)}
-                          required
-                          className="h-12 text-lg border-2 focus:border-emerald-500"
-                        />
-                      </div>
-                    </div>
+                       {/* Email Field */}
+                       <div className="space-y-2">
+                         <Label htmlFor="email" className="text-lg font-semibold flex items-center gap-2">
+                           <Mail className="w-4 h-4 text-emerald-600" />
+                           البريد الإلكتروني *
+                         </Label>
+                         <Input
+                           id="email"
+                           type="email"
+                           placeholder="example@email.com"
+                           value={formData.email}
+                           onChange={(e) => handleInputChange('email', e.target.value)}
+                           required
+                           className="h-12 text-lg border-2 focus:border-emerald-500 hover:border-emerald-400 transition-colors"
+                         />
+                       </div>
+                     </div>
+
+                     <div className="grid md:grid-cols-2 gap-6">
+                       {/* Company Field */}
+                       <div className="space-y-2">
+                         <Label htmlFor="company" className="text-lg font-semibold flex items-center gap-2">
+                           <FileText className="w-4 h-4 text-emerald-600" />
+                           اسم الشركة/المؤسسة
+                         </Label>
+                         <Input
+                           id="company"
+                           type="text"
+                           placeholder="اسم الشركة أو المؤسسة (اختياري)"
+                           value={formData.company || ''}
+                           onChange={(e) => handleInputChange('company', e.target.value)}
+                           className="h-12 text-lg border-2 focus:border-emerald-500 hover:border-emerald-400 transition-colors"
+                         />
+                       </div>
+
+                       {/* Service Type Field */}
+                       <div className="space-y-2">
+                         <Label htmlFor="serviceType" className="text-lg font-semibold flex items-center gap-2">
+                           <Award className="w-4 h-4 text-emerald-600" />
+                           نوع الخدمة *
+                         </Label>
+                         <Select onValueChange={(value) => handleInputChange('serviceType', value)} required>
+                           <SelectTrigger className="h-12 text-lg border-2 focus:border-emerald-500 hover:border-emerald-400 transition-colors">
+                             <SelectValue placeholder="اختر نوع الخدمة" />
+                           </SelectTrigger>
+                           <SelectContent>
+                             <SelectItem value="translation">ترجمة فقط</SelectItem>
+                             <SelectItem value="certified">ترجمة معتمدة</SelectItem>
+                             <SelectItem value="proofreading">ترجمة + مراجعة</SelectItem>
+                             <SelectItem value="localization">ترجمة + توطين</SelectItem>
+                           </SelectContent>
+                         </Select>
+                       </div>
+                     </div>
 
                     <div className="grid md:grid-cols-2 gap-6">
                       {/* Phone Field */}

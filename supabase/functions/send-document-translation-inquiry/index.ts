@@ -13,6 +13,8 @@ interface DocumentTranslationInquiry {
   name: string;
   email: string;
   phone: string;
+  company?: string;
+  serviceType: string;
   documentType: string;
   sourceLanguage: string;
   targetLanguage: string;
@@ -40,7 +42,7 @@ const handler = async (req: Request): Promise<Response> => {
     console.log("Received document translation inquiry:", inquiry);
 
     // Validate required fields
-    if (!inquiry.name || !inquiry.email || !inquiry.phone || !inquiry.documentType) {
+    if (!inquiry.name || !inquiry.email || !inquiry.phone || !inquiry.serviceType || !inquiry.documentType) {
       return new Response(
         JSON.stringify({ error: "الرجاء ملء جميع الحقول المطلوبة" }),
         {
@@ -326,17 +328,19 @@ const handler = async (req: Request): Promise<Response> => {
               
               <div class="info-card">
                 <h3>📋 تفاصيل طلبك المُستلم</h3>
-                <ul class="info-list">
-                  <li><strong>الاسم الكامل:</strong> ${inquiry.name}</li>
-                  <li><strong>البريد الإلكتروني:</strong> ${inquiry.email}</li>
-                  <li><strong>رقم الهاتف:</strong> ${inquiry.phone}</li>
-                  <li><strong>نوع المستند:</strong> ${inquiry.documentType}</li>
-                  <li><strong>من اللغة:</strong> ${inquiry.sourceLanguage}</li>
-                  <li><strong>إلى اللغة:</strong> ${inquiry.targetLanguage}</li>
-                  <li><strong>حجم المستند:</strong> ${inquiry.documentSize} صفحة</li>
-                  <li><strong>مستوى الاستعجال:</strong> ${inquiry.urgency}</li>
-                  ${inquiry.additionalNotes ? `<li><strong>ملاحظات إضافية:</strong> ${inquiry.additionalNotes}</li>` : ''}
-                </ul>
+                 <ul class="info-list">
+                   <li><strong>الاسم الكامل:</strong> ${inquiry.name}</li>
+                   <li><strong>البريد الإلكتروني:</strong> ${inquiry.email}</li>
+                   <li><strong>رقم الهاتف:</strong> ${inquiry.phone}</li>
+                   ${inquiry.company ? `<li><strong>الشركة/المؤسسة:</strong> ${inquiry.company}</li>` : ''}
+                   <li><strong>نوع الخدمة:</strong> ${inquiry.serviceType}</li>
+                   <li><strong>نوع المستند:</strong> ${inquiry.documentType}</li>
+                   <li><strong>من اللغة:</strong> ${inquiry.sourceLanguage}</li>
+                   <li><strong>إلى اللغة:</strong> ${inquiry.targetLanguage}</li>
+                   <li><strong>حجم المستند:</strong> ${inquiry.documentSize}</li>
+                   <li><strong>مستوى الاستعجال:</strong> ${inquiry.urgency}</li>
+                   ${inquiry.additionalNotes ? `<li><strong>ملاحظات إضافية:</strong> ${inquiry.additionalNotes}</li>` : ''}
+                 </ul>
               </div>
               
               <div class="steps-section">
@@ -727,51 +731,63 @@ const handler = async (req: Request): Promise<Response> => {
               
               <div class="client-section">
                 <h3>👤 معلومات العميل</h3>
-                <div class="client-info-grid">
-                  <div class="client-info-item">
-                    <strong>الاسم الكامل</strong>
-                    <span>${inquiry.name}</span>
-                  </div>
-                  <div class="client-info-item">
-                    <strong>رقم الهاتف</strong>
-                    <span>${inquiry.phone}</span>
-                  </div>
-                </div>
+                 <div class="client-info-grid">
+                   <div class="client-info-item">
+                     <strong>الاسم الكامل</strong>
+                     <span>${inquiry.name}</span>
+                   </div>
+                   <div class="client-info-item">
+                     <strong>رقم الهاتف</strong>
+                     <span>${inquiry.phone}</span>
+                   </div>
+                   <div class="client-info-item">
+                     <strong>البريد الإلكتروني</strong>
+                     <span>${inquiry.email}</span>
+                   </div>
+                   ${inquiry.company ? `<div class="client-info-item">
+                     <strong>الشركة/المؤسسة</strong>
+                     <span>${inquiry.company}</span>
+                   </div>` : ''}
+                 </div>
                 <div class="client-info-item">
                   <strong>البريد الإلكتروني</strong>
                   <span>${inquiry.email}</span>
                 </div>
               </div>
               
-              <div class="request-details">
-                <h3>📄 تفاصيل الطلب المُستلم</h3>
-                <div class="detail-item">
-                  <strong>نوع المستند:</strong>
-                  <span>${inquiry.documentType}</span>
-                </div>
-                <div class="detail-item">
-                  <strong>اللغة المصدر:</strong>
-                  <span>${inquiry.sourceLanguage}</span>
-                </div>
-                <div class="detail-item">
-                  <strong>اللغة المطلوبة:</strong>
-                  <span>${inquiry.targetLanguage}</span>
-                </div>
-                <div class="detail-item">
-                  <strong>حجم المستند:</strong>
-                  <span>${inquiry.documentSize} صفحة</span>
-                </div>
-                <div class="detail-item">
-                  <strong>مستوى الاستعجال:</strong>
-                  <span>${inquiry.urgency}</span>
-                </div>
-                ${inquiry.additionalNotes ? `
-                <div class="detail-item">
-                  <strong>ملاحظات إضافية:</strong>
-                  <span>${inquiry.additionalNotes}</span>
-                </div>
-                ` : ''}
-              </div>
+               <div class="request-details">
+                 <h3>📄 تفاصيل الطلب المُستلم</h3>
+                 <div class="detail-item">
+                   <strong>نوع الخدمة:</strong>
+                   <span>${inquiry.serviceType}</span>
+                 </div>
+                 <div class="detail-item">
+                   <strong>نوع المستند:</strong>
+                   <span>${inquiry.documentType}</span>
+                 </div>
+                 <div class="detail-item">
+                   <strong>اللغة المصدر:</strong>
+                   <span>${inquiry.sourceLanguage}</span>
+                 </div>
+                 <div class="detail-item">
+                   <strong>اللغة المطلوبة:</strong>
+                   <span>${inquiry.targetLanguage}</span>
+                 </div>
+                 <div class="detail-item">
+                   <strong>حجم المستند:</strong>
+                   <span>${inquiry.documentSize}</span>
+                 </div>
+                 <div class="detail-item">
+                   <strong>مستوى الاستعجال:</strong>
+                   <span>${inquiry.urgency}</span>
+                 </div>
+                 ${inquiry.additionalNotes ? `
+                 <div class="detail-item">
+                   <strong>ملاحظات إضافية:</strong>
+                   <span>${inquiry.additionalNotes}</span>
+                 </div>
+                 ` : ''}
+               </div>
               
               <div class="priority-section">
                 <div class="icon">⏰</div>
