@@ -250,62 +250,280 @@ const MasterMembershipBanner = () => {
               </motion.div>
             </div>
             
-            {/* Image Side - 2 columns */}
+            {/* Cards Side - 2 columns */}
             <div className="lg:col-span-2">
               <motion.div
-                initial={{ opacity: 0, x: 40, rotateY: -15 }}
-                whileInView={{ opacity: 1, x: 0, rotateY: 0 }}
+                initial={{ opacity: 0, x: 40 }}
+                whileInView={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.8, delay: 0.4, ease: "easeOut" }}
                 viewport={{ once: true }}
-                className="relative perspective-1000"
-                style={{ perspective: "1000px" }}
+                className="relative"
               >
-                <div className="relative overflow-hidden rounded-2xl shadow-2xl transform-gpu">
-                  <motion.img
-                    src={threeMembershipCards}
-                    alt="بطاقات العضوية الثلاث - الفضية والذهبية والبلاتينية"
-                    className="w-full h-32 lg:h-40 xl:h-48 object-cover object-center"
-                    whileHover={{ 
-                      scale: 1.08,
-                      rotateY: 5,
-                      rotateX: 2
-                    }}
-                    transition={{ duration: 0.6, ease: "easeOut" }}
-                  />
-                  
-                  {/* Image Overlay */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent" />
-                  
-                  {/* Floating Badge */}
-                  <motion.div
-                    className="absolute top-3 right-3 bg-gradient-to-r from-gray-600 via-yellow-500 to-slate-600 text-white px-3 py-1.5 rounded-full shadow-lg text-xs font-bold backdrop-blur-sm border border-white/20"
-                    animate={{ 
-                      y: [0, -4, 0],
-                      boxShadow: [
-                        "0 4px 20px rgba(0, 0, 0, 0.3)",
-                        "0 8px 25px rgba(0, 0, 0, 0.4)",
-                        "0 4px 20px rgba(0, 0, 0, 0.3)"
-                      ]
-                    }}
-                    transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
-                  >
-                    3 مستويات متميزة
-                  </motion.div>
+                {/* Three Membership Cards */}
+                <div className="flex flex-col sm:flex-row gap-3 justify-center items-center">
+                  {[
+                    {
+                      name: 'الفضية',
+                      nameEn: 'SILVER',
+                      gradient: 'from-gray-400 via-gray-500 to-gray-600',
+                      chipColor: 'bg-yellow-400',
+                      delay: 0,
+                      price: '1,200'
+                    },
+                    {
+                      name: 'الذهبية',
+                      nameEn: 'GOLD',
+                      gradient: 'from-yellow-400 via-yellow-500 to-yellow-600',
+                      chipColor: 'bg-yellow-500',
+                      delay: 0.2,
+                      popular: true,
+                      price: '2,200'
+                    },
+                    {
+                      name: 'البلاتينية',
+                      nameEn: 'PLATINUM',
+                      gradient: 'from-slate-400 via-slate-500 to-slate-600',
+                      chipColor: 'bg-slate-400',
+                      delay: 0.4,
+                      price: '3,600'
+                    }
+                  ].map((card, index) => (
+                    <motion.div
+                      key={card.name}
+                      initial={{ opacity: 0, y: 50, rotateY: -30 }}
+                      whileInView={{ opacity: 1, y: 0, rotateY: 0 }}
+                      whileHover={{ 
+                        y: -10,
+                        rotateY: 5,
+                        rotateX: 5,
+                        scale: 1.05,
+                        transition: { duration: 0.3 }
+                      }}
+                      transition={{ 
+                        duration: 0.8, 
+                        delay: card.delay,
+                        type: "spring",
+                        stiffness: 100
+                      }}
+                      viewport={{ once: true }}
+                      className="relative group"
+                      style={{ perspective: "1000px" }}
+                    >
+                      {/* Popular Badge */}
+                      {card.popular && (
+                        <motion.div
+                          initial={{ opacity: 0, scale: 0 }}
+                          animate={{ opacity: 1, scale: 1 }}
+                          transition={{ delay: 1.5, duration: 0.5 }}
+                          className="absolute -top-2 -right-2 bg-red-500 text-white px-2 py-1 rounded-full text-xs font-bold z-20 shadow-lg"
+                        >
+                          الأكثر طلباً
+                        </motion.div>
+                      )}
 
-                  {/* Quality Badge */}
-                  <motion.div
-                    className="absolute bottom-3 left-3 bg-emerald-500/90 backdrop-blur-sm text-white px-2 py-1 rounded-full shadow-lg text-xs font-medium border border-white/20"
-                    initial={{ opacity: 0, scale: 0 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    transition={{ delay: 1.5, duration: 0.5 }}
-                  >
-                    ✓ معتمد دولياً
-                  </motion.div>
+                      {/* Card Container */}
+                      <div className={`
+                        relative w-28 h-18 sm:w-32 sm:h-20 lg:w-36 lg:h-24 rounded-xl overflow-hidden
+                        bg-gradient-to-br ${card.gradient}
+                        shadow-xl group-hover:shadow-2xl transition-all duration-500
+                        border border-white/40 backdrop-blur-sm
+                        transform-gpu
+                      `}>
+                        {/* Card Background Effects */}
+                        <div className="absolute inset-0 overflow-hidden">
+                          <div className="absolute top-0 right-0 w-8 h-8 bg-white/10 rounded-full -translate-y-4 translate-x-4" />
+                          <div className="absolute bottom-0 left-0 w-6 h-6 bg-white/8 rounded-full translate-y-3 -translate-x-3" />
+                        </div>
+
+                        {/* Animated Background Pattern */}
+                        <motion.div
+                          className="absolute inset-0 opacity-20"
+                          animate={{
+                            backgroundPosition: ["0% 0%", "100% 100%", "0% 0%"]
+                          }}
+                          transition={{
+                            duration: 10,
+                            repeat: Infinity,
+                            ease: "linear"
+                          }}
+                          style={{
+                            background: "radial-gradient(circle, rgba(255,255,255,0.3) 1px, transparent 1px)",
+                            backgroundSize: "6px 6px"
+                          }}
+                        />
+
+                        {/* Card Header */}
+                        <div className="absolute top-1 right-1.5 text-white text-xs font-bold opacity-90 z-10">
+                          ماستر
+                        </div>
+                        
+                        <div className="absolute top-1 left-1.5 z-10">
+                          <Crown className="w-3 h-3 text-yellow-300" />
+                        </div>
+
+                        {/* EMV Chip */}
+                        <motion.div 
+                          className={`absolute top-5 right-1.5 w-4 h-3 ${card.chipColor} rounded-sm shadow-sm z-10`}
+                          animate={{
+                            boxShadow: [
+                              "0 0 0 0 rgba(255, 255, 255, 0.4)",
+                              "0 0 0 2px rgba(255, 255, 255, 0.2)",
+                              "0 0 0 0 rgba(255, 255, 255, 0.4)"
+                            ]
+                          }}
+                          transition={{
+                            duration: 2,
+                            repeat: Infinity,
+                            delay: index * 0.5
+                          }}
+                        >
+                          <div className="w-full h-full grid grid-cols-2 gap-0.5 p-0.5">
+                            {[...Array(4)].map((_, i) => (
+                              <div key={i} className="bg-yellow-600/40 rounded-sm"></div>
+                            ))}
+                          </div>
+                        </motion.div>
+
+                        {/* Card Number */}
+                        <div className="absolute top-1/2 right-1.5 transform -translate-y-1/2 text-white z-10">
+                          <motion.div 
+                            className="text-xs font-mono tracking-wider opacity-90"
+                            animate={{
+                              opacity: [0.7, 1, 0.7]
+                            }}
+                            transition={{
+                              duration: 3,
+                              repeat: Infinity,
+                              delay: index * 0.3
+                            }}
+                          >
+                            **** {(1234 + index).toString()}
+                          </motion.div>
+                        </div>
+
+                        {/* Price */}
+                        <div className="absolute top-1/2 left-1.5 transform -translate-y-1/2 text-white z-10">
+                          <motion.div 
+                            className="text-xs font-bold"
+                            animate={{
+                              scale: [1, 1.1, 1]
+                            }}
+                            transition={{
+                              duration: 2,
+                              repeat: Infinity,
+                              delay: index * 0.4
+                            }}
+                          >
+                            {card.price} ﷼
+                          </motion.div>
+                        </div>
+
+                        {/* Card Title */}
+                        <div className="absolute bottom-1 right-1.5 text-white z-10">
+                          <motion.div 
+                            className="text-xs font-bold"
+                            animate={{
+                              opacity: [0.8, 1, 0.8]
+                            }}
+                            transition={{
+                              duration: 3,
+                              repeat: Infinity,
+                              delay: index * 0.3
+                            }}
+                          >
+                            عضوية {card.name}
+                          </motion.div>
+                          <div className="text-xs opacity-70">{card.nameEn}</div>
+                        </div>
+
+                        {/* Validity */}
+                        <div className="absolute bottom-1 left-1.5 text-white/80 text-xs z-10">
+                          <div className="opacity-70">12/25</div>
+                        </div>
+
+                        {/* Contactless Symbol */}
+                        <motion.div
+                          className="absolute bottom-3 left-1.5 text-white/60 z-10"
+                          animate={{
+                            rotate: [0, 10, -10, 0]
+                          }}
+                          transition={{
+                            duration: 4,
+                            repeat: Infinity,
+                            delay: index * 0.7
+                          }}
+                        >
+                          <div className="text-xs">📶</div>
+                        </motion.div>
+
+                        {/* Glowing Edge Effect */}
+                        <motion.div
+                          className="absolute inset-0 rounded-xl"
+                          animate={{
+                            boxShadow: [
+                              `0 0 10px rgba(255, 255, 255, 0.2)`,
+                              `0 0 20px rgba(255, 255, 255, 0.4)`,
+                              `0 0 10px rgba(255, 255, 255, 0.2)`
+                            ]
+                          }}
+                          transition={{
+                            duration: 3,
+                            repeat: Infinity,
+                            delay: index * 0.4
+                          }}
+                        />
+
+                        {/* Holographic Effect */}
+                        <motion.div
+                          className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent rounded-xl"
+                          animate={{
+                            x: ["-100%", "100%"]
+                          }}
+                          transition={{
+                            duration: 3,
+                            repeat: Infinity,
+                            delay: index * 1 + 2,
+                            ease: "easeInOut"
+                          }}
+                        />
+                      </div>
+                    </motion.div>
+                  ))}
                 </div>
 
-                {/* Decorative Elements */}
-                <div className="absolute -top-2 -right-2 w-12 h-12 bg-gradient-to-br from-yellow-400/20 to-orange-500/20 rounded-full blur-sm animate-pulse" />
-                <div className="absolute -bottom-3 -left-3 w-16 h-16 bg-gradient-to-br from-blue-400/15 to-purple-600/15 rounded-full blur-sm animate-pulse" style={{ animationDelay: '1s' }} />
+                {/* Cards Description */}
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 1.2, duration: 0.6 }}
+                  className="text-center mt-4"
+                >
+                  <motion.span 
+                    className="text-white/90 text-sm font-medium"
+                    animate={{ opacity: [0.7, 1, 0.7] }}
+                    transition={{ duration: 2, repeat: Infinity }}
+                  >
+                    ✨ اختر المستوى المناسب لك ✨
+                  </motion.span>
+                </motion.div>
+
+                {/* Floating Elements Around Cards */}
+                <motion.div
+                  className="absolute -top-3 -right-3 w-6 h-6 bg-gradient-to-br from-yellow-400/30 to-orange-500/30 rounded-full blur-sm"
+                  animate={{
+                    scale: [1, 1.2, 1],
+                    opacity: [0.3, 0.6, 0.3]
+                  }}
+                  transition={{ duration: 4, repeat: Infinity }}
+                />
+                <motion.div
+                  className="absolute -bottom-2 -left-2 w-8 h-8 bg-gradient-to-br from-blue-400/20 to-purple-600/20 rounded-full blur-sm"
+                  animate={{
+                    scale: [1, 1.3, 1],
+                    opacity: [0.2, 0.5, 0.2]
+                  }}
+                  transition={{ duration: 5, repeat: Infinity, delay: 1 }}
+                />
               </motion.div>
             </div>
           </div>
