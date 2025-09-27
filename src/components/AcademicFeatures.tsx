@@ -289,7 +289,7 @@ const AcademicFeatures = () => {
                           scale: 1.1,
                           rotate: [0, -5, 5, 0],
                         }}
-                        transition={{ duration: 0.6, type: "spring", stiffness: 200 }}
+                        transition={{ duration: 0.6, type: "tween", ease: "easeInOut" }}
                       >
                         {/* طبقة الإضاءة */}
                         <div className="absolute inset-0 bg-gradient-to-tr from-white/20 via-transparent to-transparent" />

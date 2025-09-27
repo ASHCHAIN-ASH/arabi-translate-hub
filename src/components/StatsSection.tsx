@@ -390,7 +390,7 @@ const StatsSection = () => {
               >
                 <motion.div
                   animate={{ rotate: [0, 5, -5, 0] }}
-                  transition={{ duration: 2, repeat: Infinity, repeatDelay: 3 }}
+                  transition={{ type: "tween", ease: "easeInOut", duration: 2, repeat: Infinity, repeatDelay: 3 }}
                 >
                   <CheckCircle className="h-12 w-12 text-white" />
                 </motion.div>
@@ -418,7 +418,7 @@ const StatsSection = () => {
                 
                 <motion.div
                   animate={{ rotate: [0, -5, 5, 0] }}
-                  transition={{ duration: 2, repeat: Infinity, repeatDelay: 3, delay: 1 }}
+                  transition={{ type: "tween", ease: "easeInOut", duration: 2, repeat: Infinity, repeatDelay: 3, delay: 1 }}
                 >
                   <Clock className="h-12 w-12 text-white" />
                 </motion.div>

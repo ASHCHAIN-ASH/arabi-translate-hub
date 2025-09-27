@@ -147,7 +147,7 @@ const ColorShowcase = () => {
                           rotate: [0, -5, 5, 0],
                           scale: 1.1
                         }}
-                        transition={{ duration: 0.6 }}
+                        transition={{ duration: 0.6, type: "tween", ease: "easeInOut" }}
                       >
                         <IconComponent className="h-8 w-8 text-white" />
                       </motion.div>
