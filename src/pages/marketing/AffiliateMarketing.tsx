@@ -164,17 +164,51 @@ const AffiliateMarketing = () => {
       });
 
       if (error) {
-        throw error;
+        console.error('Registration error:', error);
+        
+        // Handle specific FunctionsHttpError cases
+        if (error.message && error.message.includes('Edge Function returned a non-2xx status code')) {
+          // This typically means there's an error response from the server
+          toast({
+            title: "خطأ في التسجيل",
+            description: "هذا البريد الإلكتروني مسجل مسبقاً في البرنامج. يرجى استخدام بريد إلكتروني مختلف.",
+            variant: "destructive",
+          });
+        } else if (error.message && error.message.includes('400')) {
+          toast({
+            title: "خطأ في البيانات",
+            description: "يرجى التأكد من صحة جميع البيانات المدخلة.",
+            variant: "destructive",
+          });
+        } else {
+          toast({
+            title: "خطأ في التسجيل",
+            description: "حدث خطأ أثناء التسجيل. يرجى المحاولة مرة أخرى.",
+            variant: "destructive",
+          });
+        }
+        return;
       }
 
-      if (data.success) {
+      // Check if there's an error in the response data
+      if (data && data.error) {
+        console.error('Registration data error:', data.error);
+        toast({
+          title: "خطأ في التسجيل",
+          description: data.error,
+          variant: "destructive",
+        });
+        return;
+      }
+
+      if (data && data.success) {
         setSuccessData(data.data);
         toast({
           title: "تم التسجيل بنجاح! 🎉",
           description: "تم إرسال تفاصيل العضوية إلى بريدك الإلكتروني",
         });
       } else {
-        throw new Error(data.error || 'فشل في التسجيل');
+        throw new Error('فشل في التسجيل');
       }
     } catch (error: any) {
       console.error('Registration error:', error);
