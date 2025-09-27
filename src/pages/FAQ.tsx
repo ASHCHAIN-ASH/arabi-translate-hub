@@ -555,7 +555,7 @@ const FAQ = () => {
                           </div>
                           <div className="flex-1 text-right">
                             <p className="font-medium text-gray-800">اتصال مباشر</p>
-                            <p className="text-xs text-gray-600 font-mono tracking-wider">966+ 500 776 343</p>
+                            <p className="text-xs text-gray-600 font-mono tracking-wider">0500776343</p>
                           </div>
                         </div>
                       </a>
