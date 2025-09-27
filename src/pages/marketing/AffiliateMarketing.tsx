@@ -14,7 +14,8 @@ import {
   Shield,
   Users,
   Award,
-  ArrowLeft
+  ArrowLeft,
+  UserPlus
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -293,26 +294,26 @@ const AffiliateMarketing = () => {
       {/* Features Section */}
       <section className="py-16">
         <div className="container mx-auto px-4">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto mb-16">
             {[
               {
                 icon: DollarSign,
                 title: "عمولة مجزية",
-                description: "احصل على نسبة عمولة تنافسية من كل عملية بيع تتم عبر كود الخصم الخاص بك",
+                description: "احصل على نسبة عمولة تنافسية من كل عملية بيع تتم عبر كود الخصم الخاص بك. الأرباح تُحول أسبوعياً عند وصولها لـ 100 ريال سعودي",
                 color: "text-green-600",
                 bgColor: "bg-green-100"
               },
               {
                 icon: TrendingUp,
-                title: "تتبع فوري",
-                description: "تابع أرباحك وعدد العملاء الذين جلبتهم من خلال لوحة تحكم متقدمة",
+                title: "دفع أسبوعي",
+                description: "نقوم بتحويل أرباحك أسبوعياً مباشرة إلى حسابك البنكي عند وصول الرصيد للحد الأدنى 100 ريال سعودي",
                 color: "text-blue-600",
                 bgColor: "bg-blue-100"
               },
               {
                 icon: Headphones,
                 title: "دعم متخصص",
-                description: "فريق دعم مخصص لمساعدتك في رحلة التسويق وتحقيق أقصى استفادة",
+                description: "فريق دعم مخصص لمساعدتك في رحلة التسويق وتقديم المواد التسويقية اللازمة لنجاحك",
                 color: "text-purple-600",
                 bgColor: "bg-purple-100"
               }
@@ -340,6 +341,102 @@ const AffiliateMarketing = () => {
               </motion.div>
             ))}
           </div>
+
+          {/* How it Works Section */}
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.8 }}
+            className="bg-white/80 backdrop-blur-sm rounded-2xl p-8 shadow-xl"
+          >
+            <h2 className="text-3xl font-bold text-center text-slate-800 mb-12">كيف يعمل البرنامج؟</h2>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+              {[
+                {
+                  step: "1",
+                  title: "التسجيل",
+                  description: "سجل في البرنامج واحصل على رقم العضوية وكود الخصم الخاص بك",
+                  icon: UserPlus,
+                  color: "bg-blue-500"
+                },
+                {
+                  step: "2", 
+                  title: "شارك الكود",
+                  description: "أرسل رقم عضويتك وكود الخصم للعملاء المحتملين عبر قنواتك التسويقية",
+                  icon: Users,
+                  color: "bg-green-500"
+                },
+                {
+                  step: "3",
+                  title: "العميل يطلب الخدمة",
+                  description: "عندما يستخدم العميل كود الخصم الخاص بك، ستحصل على عمولتك",
+                  icon: Award,
+                  color: "bg-purple-500"
+                },
+                {
+                  step: "4",
+                  title: "استلام الأرباح",
+                  description: "نحول لك أرباحك أسبوعياً عند وصولها لـ 100 ريال سعودي كحد أدنى",
+                  icon: DollarSign,
+                  color: "bg-amber-500"
+                }
+              ].map((step, index) => (
+                <motion.div
+                  key={index}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 1 + index * 0.1, duration: 0.5 }}
+                  className="text-center"
+                >
+                  <div className="relative mb-4">
+                    <div className={`w-16 h-16 ${step.color} rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg`}>
+                      <step.icon className="h-8 w-8 text-white" />
+                    </div>
+                    <div className="absolute -top-2 -right-2 w-8 h-8 bg-white rounded-full border-2 border-slate-300 flex items-center justify-center">
+                      <span className="text-sm font-bold text-slate-700">{step.step}</span>
+                    </div>
+                  </div>
+                  <h4 className="text-lg font-bold text-slate-800 mb-3">{step.title}</h4>
+                  <p className="text-slate-600 text-sm leading-relaxed">{step.description}</p>
+                </motion.div>
+              ))}
+            </div>
+
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 1.5, duration: 0.5 }}
+              className="mt-12 p-6 bg-gradient-to-r from-green-50 to-emerald-50 rounded-xl border border-green-200"
+            >
+              <div className="flex items-start gap-4">
+                <div className="w-12 h-12 bg-green-500 rounded-full flex items-center justify-center flex-shrink-0">
+                  <DollarSign className="h-6 w-6 text-white" />
+                </div>
+                <div>
+                  <h4 className="text-lg font-bold text-green-800 mb-2">معلومات الدفع المهمة</h4>
+                  <ul className="text-green-700 space-y-2">
+                    <li className="flex items-center gap-2">
+                      <CheckCircle className="h-4 w-4 text-green-600 flex-shrink-0" />
+                      <span>الحد الأدنى للتحويل: 100 ريال سعودي</span>
+                    </li>
+                    <li className="flex items-center gap-2">
+                      <CheckCircle className="h-4 w-4 text-green-600 flex-shrink-0" />
+                      <span>تكرار الدفع: أسبوعياً (كل يوم أحد)</span>
+                    </li>
+                    <li className="flex items-center gap-2">
+                      <CheckCircle className="h-4 w-4 text-green-600 flex-shrink-0" />
+                      <span>طريقة الدفع: تحويل بنكي مباشر</span>
+                    </li>
+                    <li className="flex items-center gap-2">
+                      <CheckCircle className="h-4 w-4 text-green-600 flex-shrink-0" />
+                      <span>تقارير الأرباح: يومية عبر البريد الإلكتروني</span>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </motion.div>
+          </motion.div>
         </div>
       </section>
 
