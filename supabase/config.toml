@@ -1,5 +1,8 @@
 project_id = "ibfcgweykqkzdodrfmci"
 
+[functions.affiliate-registration]
+verify_jwt = false
+
 [functions.customer-management]
 verify_jwt = false
 

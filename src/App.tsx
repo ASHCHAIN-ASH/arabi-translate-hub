@@ -22,6 +22,7 @@ import PrivacySecurity from "./pages/academic/PrivacySecurity";
 import TimelineCommitment from "./pages/academic/TimelineCommitment";
 import OrderNow from "./pages/OrderNow";
 import Index from "./pages/Index";
+import AffiliateMarketing from "./pages/marketing/AffiliateMarketing";
 import TranslationServices from "./pages/TranslationServices";
 import LegalTranslation from "./pages/LegalTranslation";
 import BusinessTranslation from "./pages/BusinessTranslation";
@@ -144,7 +145,9 @@ const App = () => (
              <Route path="/submit-order" element={<OrderForm />} />
              <Route path="/color-showcase" element={<ColorShowcase />} />
              <Route path="/pricing" element={<Pricing />} />
-             <Route path="/intellectual-property" element={<IntellectualProperty />} />
+            <Route path="/intellectual-property" element={<IntellectualProperty />} />
+            <Route path="/marketing/affiliate" element={<AffiliateMarketing />} />
+            <Route path="/marketing/affiliate" element={<AffiliateMarketing />} />
             <Route path="/license-request" element={<LicenseRequest />} />
             
             {/* Auth Routes */}
