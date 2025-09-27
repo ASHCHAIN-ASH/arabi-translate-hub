@@ -167,6 +167,7 @@ const Footer = () => {
                 { name: 'خدماتنا', icon: Zap, href: '/services' },
                 { name: 'الأسعار', icon: Star, href: '/pricing' },
                 { name: 'عن الشركة', icon: Building2, href: '/about-us' },
+                { name: 'الملكية الفكرية', icon: Shield, href: '/intellectual-property' },
                 { name: 'الأسئلة الشائعة', icon: HelpCircle, href: '/faq' },
                 { name: 'سياسة الخصوصية', icon: Shield, href: '/privacy-policy' }
               ].map((link) => (
