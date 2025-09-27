@@ -215,7 +215,7 @@ const Footer = () => {
             <ul className="space-y-2 md:space-y-3">
               <li>
                 <a 
-                  href="#affiliate-program" 
+                  href="/marketing/affiliate" 
                   className="text-white/70 hover:text-white transition-colors text-sm md:text-base flex items-center gap-2 hover:translate-x-1 transition-transform"
                 >
                   <DollarSign className="h-3 w-3 md:h-4 md:w-4 text-green-400" />

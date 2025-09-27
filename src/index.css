@@ -474,6 +474,11 @@
     transform: scale(1.02);
   }
   
+  /* تحريك حقول النماذج عند الخطأ */
+  .shake {
+    animation: shake 0.5s ease-in-out;
+  }
+  
   /* كلاسات أكاديمية إضافية */
   .academic-card {
     border-radius: 20px;
@@ -769,5 +774,24 @@
   }
   60% {
     transform: translateY(-5px);
+  }
+}
+
+/* تحريك الحقول عند حدوث خطأ */
+@keyframes shake {
+  0%, 100% {
+    transform: translateX(0);
+  }
+  20% {
+    transform: translateX(-10px);
+  }
+  40% {
+    transform: translateX(10px);
+  }
+  60% {
+    transform: translateX(-5px);
+  }
+  80% {
+    transform: translateX(5px);
   }
 }
