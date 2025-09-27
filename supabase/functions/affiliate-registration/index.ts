@@ -509,8 +509,9 @@ const handler = async (req: Request): Promise<Response> => {
 
     try {
       console.log("Sending client email to:", email);
+      const fromEmail = Deno.env.get("RESEND_FROM_EMAIL") || "وكالة ماستر إيدو باث <info@masteredupath.com>";
       const clientEmailResult = await resend.emails.send({
-        from: "وكالة ماستر إيدو باث <onboarding@resend.dev>",
+        from: fromEmail,
         to: [email],
         subject: "🎉 مرحباً بك في برنامج التسويق بالعمولة - وكالة ماستر إيدو باث",
         html: clientEmailHtml,
@@ -859,9 +860,11 @@ const handler = async (req: Request): Promise<Response> => {
     if (Deno.env.get("RESEND_API_KEY")) {
       try {
         console.log("Sending admin notification email...");
+        const fromEmail = Deno.env.get("RESEND_FROM_EMAIL") || "نظام التسويق بالعمولة <info@masteredupath.com>";
+        const adminEmail = Deno.env.get("ADMIN_NOTIFICATION_EMAIL") || "legal@masteredupath.com";
         const adminEmailResult = await resend.emails.send({
-          from: "نظام التسويق بالعمولة <onboarding@resend.dev>",
-          to: ["legal@masteredupath.com"],
+          from: fromEmail,
+          to: [adminEmail],
           subject: `🔔 تسجيل جديد في برنامج التسويق بالعمولة - ${full_name}`,
           html: adminEmailHtml,
         });
