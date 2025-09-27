@@ -476,22 +476,22 @@ const ResearchServices = () => {
 
         <div className="container mx-auto px-4 relative z-10">
           <motion.div 
-            className="text-center mb-20"
+            className="text-center mb-16 md:mb-20"
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
             viewport={{ once: true }}
           >
             <motion.div 
-              className="inline-flex items-center gap-3 bg-gradient-to-r from-blue-100 to-purple-100 text-blue-800 px-6 py-3 rounded-full text-sm font-medium mb-8 shadow-lg"
+              className="inline-flex items-center gap-2 md:gap-3 bg-gradient-to-r from-blue-100 to-purple-100 text-blue-800 px-4 md:px-6 py-2 md:py-3 rounded-full text-sm font-medium mb-6 md:mb-8 shadow-lg"
               whileHover={{ scale: 1.05 }}
             >
-              <Crown className="h-5 w-5" />
+              <Crown className="h-4 w-4 md:h-5 md:w-5" />
               ✨ خدماتنا المتخصصة عالمياً
             </motion.div>
             
             <motion.h2 
-              className="text-4xl md:text-6xl font-bold text-slate-800 mb-8"
+              className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-slate-800 mb-6 md:mb-8"
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.2 }}
@@ -503,7 +503,7 @@ const ResearchServices = () => {
             </motion.h2>
             
             <motion.p 
-              className="text-xl text-slate-600 max-w-4xl mx-auto leading-relaxed"
+              className="text-base sm:text-lg md:text-xl text-slate-600 max-w-4xl mx-auto leading-relaxed px-4"
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.4 }}
@@ -516,7 +516,7 @@ const ResearchServices = () => {
           </motion.div>
 
           {/* Interactive Services Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-20">
+          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 md:gap-8 mb-16 md:mb-20">
             {services.map((service, index) => (
               <motion.div
                 key={service.id}
@@ -540,7 +540,7 @@ const ResearchServices = () => {
                   {/* Floating Badge for Popular Services */}
                   {index < 2 && (
                     <motion.div
-                      className="absolute -top-2 -right-2 bg-gradient-to-r from-orange-400 to-red-500 text-white px-3 py-1 rounded-full text-xs font-bold z-20 shadow-lg"
+                      className="absolute -top-2 -right-2 bg-gradient-to-r from-orange-400 to-red-500 text-white px-2 sm:px-3 py-1 rounded-full text-xs font-bold z-20 shadow-lg"
                       animate={{
                         rotate: [0, 5, -5, 0],
                         scale: [1, 1.05, 1]
@@ -551,13 +551,14 @@ const ResearchServices = () => {
                         ease: "easeInOut"
                       }}
                     >
-                      🔥 الأكثر طلباً
+                      <span className="hidden sm:inline">🔥 الأكثر طلباً</span>
+                      <span className="sm:hidden">🔥</span>
                     </motion.div>
                   )}
                   
-                  <CardHeader className="text-center relative z-10 pb-4">
+                  <CardHeader className="text-center relative z-10 pb-4 p-4 md:p-6">
                     <motion.div 
-                      className={`w-20 h-20 mx-auto mb-6 rounded-3xl ${service.gradient} flex items-center justify-center text-white shadow-xl`}
+                      className={`w-16 h-16 sm:w-20 sm:h-20 mx-auto mb-4 md:mb-6 rounded-2xl md:rounded-3xl ${service.gradient} flex items-center justify-center text-white shadow-xl`}
                       whileHover={{ 
                         scale: 1.1,
                         rotate: 5,
@@ -567,33 +568,33 @@ const ResearchServices = () => {
                       {service.icon}
                     </motion.div>
                     
-                    <CardTitle className="text-xl font-bold text-slate-800 group-hover:text-blue-600 transition-colors mb-4 leading-snug">
+                    <CardTitle className="text-lg sm:text-xl font-bold text-slate-800 group-hover:text-blue-600 transition-colors mb-3 md:mb-4 leading-snug px-2">
                       {service.title}
                     </CardTitle>
                     
-                    <div className="flex items-center justify-between text-sm text-slate-500 mb-4 bg-slate-50/80 rounded-xl px-4 py-2">
+                    <div className="flex flex-col sm:flex-row items-center justify-between text-xs sm:text-sm text-slate-500 mb-4 bg-slate-50/80 rounded-xl px-3 md:px-4 py-2 gap-2">
                       <span className="flex items-center gap-2">
-                        <Trophy className="h-4 w-4 text-amber-500" />
-                        {service.stats}
+                        <Trophy className="h-3 w-3 sm:h-4 sm:w-4 text-amber-500" />
+                        <span className="truncate">{service.stats}</span>
                       </span>
                       <span className="flex items-center gap-2">
-                        <Clock className="h-4 w-4 text-blue-500" />
+                        <Clock className="h-3 w-3 sm:h-4 sm:w-4 text-blue-500" />
                         {service.duration}
                       </span>
                     </div>
                   </CardHeader>
                   
-                  <CardContent className="text-center relative z-10 pt-0 px-6">
-                    <CardDescription className="text-slate-600 mb-6 leading-relaxed text-sm">
+                  <CardContent className="text-center relative z-10 pt-0 px-4 md:px-6">
+                    <CardDescription className="text-slate-600 mb-4 md:mb-6 leading-relaxed text-sm">
                       {service.description}
                     </CardDescription>
                     
-                    <div className="flex flex-wrap gap-2 justify-center mb-6">
+                    <div className="flex flex-wrap gap-1 sm:gap-2 justify-center mb-4 md:mb-6">
                       {service.features.map((feature, idx) => (
                         <Badge 
                           key={idx} 
                           variant="secondary" 
-                          className="text-xs bg-gradient-to-r from-blue-50 to-purple-50 text-slate-700 hover:from-blue-100 hover:to-purple-100 transition-all duration-300 border border-blue-100"
+                          className="text-xs bg-gradient-to-r from-blue-50 to-purple-50 text-slate-700 hover:from-blue-100 hover:to-purple-100 transition-all duration-300 border border-blue-100 px-2 py-1"
                         >
                           ✓ {feature}
                         </Badge>
@@ -606,7 +607,7 @@ const ResearchServices = () => {
                     >
                       <Button 
                         asChild 
-                        className={`w-full ${service.gradient} text-white border-0 hover:opacity-90 shadow-lg rounded-full font-bold transition-all duration-300 py-3`}
+                        className={`w-full ${service.gradient} text-white border-0 hover:opacity-90 shadow-lg rounded-full font-bold transition-all duration-300 py-2 md:py-3 text-sm md:text-base`}
                       >
                         <a href={service.href} className="flex items-center justify-center gap-2">
                           <Compass className="h-4 w-4" />
@@ -623,7 +624,7 @@ const ResearchServices = () => {
 
           {/* Premium Services Section */}
           <motion.div 
-            className="relative bg-gradient-to-br from-amber-50 via-yellow-50 to-orange-50 rounded-3xl p-8 md:p-12 mb-20 overflow-hidden shadow-2xl"
+            className="relative bg-gradient-to-br from-amber-50 via-yellow-50 to-orange-50 rounded-3xl p-6 md:p-8 lg:p-12 mb-16 md:mb-20 overflow-hidden shadow-2xl"
             initial={{ opacity: 0, scale: 0.95 }}
             whileInView={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.8 }}
@@ -632,7 +633,7 @@ const ResearchServices = () => {
             {/* Premium Background Effect */}
             <div className="absolute inset-0">
               <motion.div
-                className="absolute top-0 right-0 w-64 h-64 bg-gradient-to-br from-amber-200/30 to-yellow-200/30 rounded-full blur-3xl"
+                className="absolute top-0 right-0 w-48 h-48 md:w-64 md:h-64 bg-gradient-to-br from-amber-200/30 to-yellow-200/30 rounded-full blur-3xl"
                 animate={{ 
                   rotate: [0, 360],
                   scale: [1, 1.2, 1]
@@ -644,7 +645,7 @@ const ResearchServices = () => {
                 }}
               />
               <motion.div
-                className="absolute bottom-0 left-0 w-48 h-48 bg-gradient-to-tr from-orange-200/30 to-red-200/30 rounded-full blur-3xl"
+                className="absolute bottom-0 left-0 w-36 h-36 md:w-48 md:h-48 bg-gradient-to-tr from-orange-200/30 to-red-200/30 rounded-full blur-3xl"
                 animate={{ 
                   x: [0, 50, 0],
                   y: [0, -30, 0]
@@ -659,30 +660,30 @@ const ResearchServices = () => {
 
             <div className="relative z-10">
               <motion.div 
-                className="text-center mb-12"
+                className="text-center mb-8 md:mb-12"
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6 }}
                 viewport={{ once: true }}
               >
                 <motion.div 
-                  className="inline-flex items-center gap-3 bg-gradient-to-r from-amber-100 to-yellow-100 text-amber-800 px-6 py-3 rounded-full text-sm font-medium mb-6 shadow-lg border border-amber-200"
+                  className="inline-flex items-center gap-2 md:gap-3 bg-gradient-to-r from-amber-100 to-yellow-100 text-amber-800 px-4 md:px-6 py-2 md:py-3 rounded-full text-sm font-medium mb-4 md:mb-6 shadow-lg border border-amber-200"
                   whileHover={{ scale: 1.05 }}
                 >
-                  <Gem className="h-5 w-5" />
+                  <Gem className="h-4 w-4 md:h-5 md:w-5" />
                   👑 خدمات النخبة المميزة
                 </motion.div>
-                <h3 className="text-3xl md:text-4xl font-bold text-slate-800 mb-4">
+                <h3 className="text-2xl sm:text-3xl md:text-4xl font-bold text-slate-800 mb-3 md:mb-4">
                   <span className="bg-gradient-to-r from-amber-600 to-orange-600 bg-clip-text text-transparent">
                     خدمات الأكاديميين المتميزين
                   </span>
                 </h3>
-                <p className="text-lg text-slate-600 max-w-2xl mx-auto">
+                <p className="text-base md:text-lg text-slate-600 max-w-2xl mx-auto px-4">
                   🌟 للباحثين الطموحين الذين يسعون للتميز الأكاديمي والنشر الدولي
                 </p>
               </motion.div>
 
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+              <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 md:gap-8">
                 {premiumServices.map((service, index) => (
                   <motion.div
                     key={service.id}
@@ -700,13 +701,14 @@ const ResearchServices = () => {
                   >
                     <Card className="group h-full border-2 border-amber-200/60 hover:border-amber-300 bg-white/95 backdrop-blur-sm shadow-lg hover:shadow-xl transition-all duration-300 relative overflow-hidden">
                       {/* Premium Indicator */}
-                      <div className="absolute top-0 right-0 bg-gradient-to-r from-amber-400 to-yellow-500 text-white px-3 py-1 rounded-bl-lg text-xs font-bold">
-                        ⭐ PREMIUM
+                      <div className="absolute top-0 right-0 bg-gradient-to-r from-amber-400 to-yellow-500 text-white px-2 sm:px-3 py-1 rounded-bl-lg text-xs font-bold">
+                        <span className="hidden sm:inline">⭐ PREMIUM</span>
+                        <span className="sm:hidden">⭐</span>
                       </div>
                       
-                      <CardHeader className="text-center pb-4 pt-8">
+                      <CardHeader className="text-center pb-4 pt-6 md:pt-8 p-4 md:p-6">
                         <motion.div 
-                          className={`w-16 h-16 mx-auto mb-4 rounded-2xl ${service.gradient} flex items-center justify-center text-white shadow-xl`}
+                          className={`w-14 h-14 sm:w-16 sm:h-16 mx-auto mb-3 md:mb-4 rounded-xl md:rounded-2xl ${service.gradient} flex items-center justify-center text-white shadow-xl`}
                           whileHover={{ 
                             scale: 1.1,
                             rotate: 10,
@@ -715,25 +717,25 @@ const ResearchServices = () => {
                         >
                           {service.icon}
                         </motion.div>
-                        <CardTitle className="text-lg font-bold text-slate-800 mb-3 leading-snug">
+                        <CardTitle className="text-base sm:text-lg font-bold text-slate-800 mb-2 md:mb-3 leading-snug px-2">
                           {service.title}
                         </CardTitle>
-                        <div className="bg-amber-100 text-amber-700 px-3 py-1 rounded-full text-sm font-medium inline-block">
+                        <div className="bg-amber-100 text-amber-700 px-2 md:px-3 py-1 rounded-full text-xs sm:text-sm font-medium inline-block">
                           🏆 {service.stats}
                         </div>
                       </CardHeader>
                       
-                      <CardContent className="text-center pt-0 px-6">
-                        <CardDescription className="text-slate-600 mb-6 text-sm leading-relaxed">
+                      <CardContent className="text-center pt-0 px-4 md:px-6">
+                        <CardDescription className="text-slate-600 mb-4 md:mb-6 text-sm leading-relaxed">
                           {service.description}
                         </CardDescription>
                         
-                        <div className="flex flex-wrap gap-2 justify-center mb-6">
+                        <div className="flex flex-wrap gap-1 sm:gap-2 justify-center mb-4 md:mb-6">
                           {service.features.map((feature, idx) => (
                             <Badge 
                               key={idx} 
                               variant="outline" 
-                              className="text-xs border-amber-200 text-amber-700 bg-amber-50 hover:bg-amber-100 transition-colors"
+                              className="text-xs border-amber-200 text-amber-700 bg-amber-50 hover:bg-amber-100 transition-colors px-2 py-1"
                             >
                               ✓ {feature}
                             </Badge>
@@ -746,7 +748,7 @@ const ResearchServices = () => {
                         >
                           <Button 
                             asChild 
-                            className="w-full bg-gradient-to-r from-amber-500 to-yellow-500 hover:from-amber-600 hover:to-yellow-600 text-white rounded-full font-bold shadow-lg transition-all duration-300 py-3"
+                            className="w-full bg-gradient-to-r from-amber-500 to-yellow-500 hover:from-amber-600 hover:to-yellow-600 text-white rounded-full font-bold shadow-lg transition-all duration-300 py-2 md:py-3 text-sm md:text-base"
                           >
                             <a href={service.href} className="flex items-center justify-center gap-2">
                               <Medal className="h-4 w-4" />
@@ -766,11 +768,11 @@ const ResearchServices = () => {
       </section>
 
       {/* Enhanced Process Section */}
-      <section className="py-32 bg-gradient-to-br from-slate-900 via-blue-900 to-indigo-900 text-white relative overflow-hidden">
+      <section className="py-24 md:py-32 bg-gradient-to-br from-slate-900 via-blue-900 to-indigo-900 text-white relative overflow-hidden">
         {/* Animated Background */}
         <div className="absolute inset-0">
           <motion.div
-            className="absolute top-20 left-10 w-96 h-96 bg-blue-500/20 rounded-full blur-3xl"
+            className="absolute top-20 left-10 w-72 h-72 md:w-96 md:h-96 bg-blue-500/20 rounded-full blur-3xl"
             animate={{ 
               x: [0, 100, 0],
               y: [0, -50, 0],
@@ -783,7 +785,7 @@ const ResearchServices = () => {
             }}
           />
           <motion.div
-            className="absolute bottom-20 right-10 w-80 h-80 bg-purple-500/20 rounded-full blur-3xl"
+            className="absolute bottom-20 right-10 w-64 h-64 md:w-80 md:h-80 bg-purple-500/20 rounded-full blur-3xl"
             animate={{ 
               rotate: [0, 360],
               scale: [1, 0.8, 1]
@@ -795,7 +797,7 @@ const ResearchServices = () => {
             }}
           />
           <motion.div
-            className="absolute top-1/2 left-1/2 w-64 h-64 bg-green-500/15 rounded-full blur-3xl"
+            className="absolute top-1/2 left-1/2 w-48 h-48 md:w-64 md:h-64 bg-green-500/15 rounded-full blur-3xl"
             animate={{ 
               x: [-100, 100, -100],
               y: [-50, 50, -50]
@@ -810,14 +812,14 @@ const ResearchServices = () => {
         
         <div className="container relative mx-auto px-4 z-10">
           <motion.div 
-            className="text-center mb-20"
+            className="text-center mb-16 md:mb-20"
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
             viewport={{ once: true }}
           >
             <motion.h2 
-              className="text-4xl md:text-6xl font-bold mb-8"
+              className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-6 md:mb-8"
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.2 }}
@@ -828,7 +830,7 @@ const ResearchServices = () => {
               </span>
             </motion.h2>
             <motion.p 
-              className="text-xl text-slate-300 max-w-4xl mx-auto leading-relaxed"
+              className="text-base sm:text-lg md:text-xl lg:text-2xl text-slate-300 max-w-4xl mx-auto leading-relaxed px-4"
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.4 }}
@@ -840,7 +842,7 @@ const ResearchServices = () => {
             </motion.p>
           </motion.div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8">
             {processSteps.map((step, index) => (
               <motion.div
                 key={index}
@@ -859,7 +861,7 @@ const ResearchServices = () => {
                 }}
               >
                 <motion.div 
-                  className={`w-20 h-20 mx-auto mb-6 ${step.color} rounded-3xl flex items-center justify-center text-white shadow-2xl relative`}
+                  className={`w-16 h-16 sm:w-20 sm:h-20 mx-auto mb-4 md:mb-6 ${step.color} rounded-2xl md:rounded-3xl flex items-center justify-center text-white shadow-2xl relative`}
                   whileHover={{ 
                     scale: 1.1,
                     rotate: 5,
@@ -886,13 +888,13 @@ const ResearchServices = () => {
                   }}
                 >
                   {step.icon}
-                  <div className="absolute -bottom-2 -right-2 w-8 h-8 bg-white/20 rounded-full flex items-center justify-center text-sm font-bold">
+                  <div className="absolute -bottom-1 -right-1 sm:-bottom-2 sm:-right-2 w-6 h-6 sm:w-8 sm:h-8 bg-white/20 rounded-full flex items-center justify-center text-xs sm:text-sm font-bold">
                     {step.step}
                   </div>
                 </motion.div>
                 
                 <motion.div 
-                  className="text-4xl font-bold mb-4 bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent"
+                  className="text-2xl sm:text-3xl lg:text-4xl font-bold mb-3 md:mb-4 bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent"
                   initial={{ scale: 0 }}
                   whileInView={{ scale: 1 }}
                   transition={{ duration: 0.5, delay: index * 0.2 + 0.3 }}
@@ -901,12 +903,12 @@ const ResearchServices = () => {
                   {step.step}
                 </motion.div>
                 
-                <h3 className="text-xl font-bold mb-4 text-white">{step.title}</h3>
-                <p className="text-slate-300 leading-relaxed">{step.description}</p>
+                <h3 className="text-lg sm:text-xl font-bold mb-3 md:mb-4 text-white px-2">{step.title}</h3>
+                <p className="text-slate-300 leading-relaxed text-sm sm:text-base px-2">{step.description}</p>
                 
                 {/* Connection Line for Desktop */}
                 {index < processSteps.length - 1 && (
-                  <div className="hidden lg:block absolute top-10 left-full w-8 h-0.5 bg-gradient-to-r from-white/40 to-transparent transform translate-x-4"></div>
+                  <div className="hidden lg:block absolute top-8 md:top-10 left-full w-6 md:w-8 h-0.5 bg-gradient-to-r from-white/40 to-transparent transform translate-x-2 md:translate-x-4"></div>
                 )}
               </motion.div>
             ))}
@@ -914,7 +916,7 @@ const ResearchServices = () => {
 
           {/* Call to Action */}
           <motion.div 
-            className="text-center mt-16"
+            className="text-center mt-12 md:mt-16"
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
@@ -924,10 +926,10 @@ const ResearchServices = () => {
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
             >
-              <Button size="lg" className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white shadow-2xl text-xl px-10 py-6 rounded-full font-bold">
-                <Map className="h-6 w-6 ml-2" />
+              <Button size="lg" className="w-full sm:w-auto bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white shadow-2xl text-base sm:text-lg lg:text-xl px-8 md:px-10 py-4 md:py-6 rounded-full font-bold">
+                <Map className="h-5 w-5 sm:h-6 sm:w-6 ml-2" />
                 🗺️ ابدأ رحلتك الأكاديمية الآن
-                <ChevronRight className="h-5 w-5 mr-2" />
+                <ChevronRight className="h-4 w-4 sm:h-5 sm:w-5 mr-2" />
               </Button>
             </motion.div>
           </motion.div>
@@ -997,11 +999,11 @@ const ResearchServices = () => {
       </section>
 
       {/* Enhanced CTA Section */}
-      <section className="py-32 bg-gradient-to-br from-blue-600 via-purple-600 to-green-600 text-white relative overflow-hidden">
+      <section className="py-24 md:py-32 bg-gradient-to-br from-blue-600 via-purple-600 to-green-600 text-white relative overflow-hidden">
         {/* Dynamic Background */}
         <div className="absolute inset-0">
           <motion.div
-            className="absolute top-10 left-10 w-96 h-96 bg-white/10 rounded-full blur-3xl"
+            className="absolute top-10 left-10 w-72 h-72 md:w-96 md:h-96 bg-white/10 rounded-full blur-3xl"
             animate={{ 
               rotate: [0, 360],
               scale: [1, 1.3, 1]
@@ -1013,7 +1015,7 @@ const ResearchServices = () => {
             }}
           />
           <motion.div
-            className="absolute bottom-10 right-10 w-80 h-80 bg-white/5 rounded-full blur-3xl"
+            className="absolute bottom-10 right-10 w-64 h-64 md:w-80 md:h-80 bg-white/5 rounded-full blur-3xl"
             animate={{ 
               x: [0, -100, 0],
               y: [0, 50, 0]
@@ -1028,7 +1030,7 @@ const ResearchServices = () => {
           {[...Array(15)].map((_, i) => (
             <motion.div
               key={i}
-              className="absolute w-3 h-3 bg-white/20 rounded-full"
+              className="absolute w-2 h-2 sm:w-3 sm:h-3 bg-white/20 rounded-full"
               style={{
                 left: `${Math.random() * 100}%`,
                 top: `${Math.random() * 100}%`,
@@ -1056,7 +1058,7 @@ const ResearchServices = () => {
             viewport={{ once: true }}
           >
             <motion.h2 
-              className="text-5xl md:text-7xl font-bold mb-8"
+              className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold mb-6 md:mb-8"
               initial={{ opacity: 0, scale: 0.8 }}
               whileInView={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.8, delay: 0.2 }}
@@ -1068,7 +1070,7 @@ const ResearchServices = () => {
             </motion.h2>
             
             <motion.p 
-              className="text-xl md:text-2xl mb-12 max-w-4xl mx-auto leading-relaxed"
+              className="text-base sm:text-lg md:text-xl lg:text-2xl mb-8 md:mb-12 max-w-4xl mx-auto leading-relaxed px-4"
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.4 }}
@@ -1076,13 +1078,13 @@ const ResearchServices = () => {
             >
               🎓 انضم إلى آلاف الباحثين الذين حققوا النجاح الأكاديمي مع خبرائنا المتميزين
               <br />
-              <span className="text-lg text-blue-200">
+              <span className="text-sm sm:text-base lg:text-lg text-blue-200">
                 ✨ نضمن لك التميز الأكاديمي والوصول لأعلى المراتب العلمية
               </span>
             </motion.p>
             
             <motion.div 
-              className="flex flex-col sm:flex-row gap-8 justify-center mb-16"
+              className="flex flex-col sm:flex-row gap-4 md:gap-8 justify-center mb-12 md:mb-16 px-4"
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.6 }}
@@ -1094,11 +1096,11 @@ const ResearchServices = () => {
               >
                 <Button 
                   size="lg" 
-                  className="bg-white text-slate-900 hover:bg-blue-50 shadow-2xl text-xl px-12 py-6 rounded-full font-bold transition-all duration-300"
+                  className="w-full sm:w-auto bg-white text-slate-900 hover:bg-blue-50 shadow-2xl text-base sm:text-lg lg:text-xl px-8 md:px-12 py-4 md:py-6 rounded-full font-bold transition-all duration-300"
                 >
-                  <Sparkles className="h-6 w-6 ml-2" />
+                  <Sparkles className="h-5 w-5 sm:h-6 sm:w-6 ml-2" />
                   🎯 احجز استشارة مجانية
-                  <ChevronRight className="h-5 w-5 mr-2" />
+                  <ChevronRight className="h-4 w-4 sm:h-5 sm:w-5 mr-2" />
                 </Button>
               </motion.div>
               
@@ -1109,9 +1111,9 @@ const ResearchServices = () => {
                 <Button 
                   size="lg" 
                   variant="outline" 
-                  className="border-2 border-white/50 text-white hover:bg-white/20 backdrop-blur-md text-xl px-12 py-6 rounded-full font-bold transition-all duration-300"
+                  className="w-full sm:w-auto border-2 border-white/50 text-white hover:bg-white/20 backdrop-blur-md text-base sm:text-lg lg:text-xl px-8 md:px-12 py-4 md:py-6 rounded-full font-bold transition-all duration-300"
                 >
-                  <MessageCircle className="h-6 w-6 ml-2" />
+                  <MessageCircle className="h-5 w-5 sm:h-6 sm:w-6 ml-2" />
                   💬 تواصل معنا الآن
                 </Button>
               </motion.div>
@@ -1119,40 +1121,40 @@ const ResearchServices = () => {
 
             {/* Contact Information */}
             <motion.div 
-              className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4xl mx-auto"
+              className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 max-w-4xl mx-auto"
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.8 }}
               viewport={{ once: true }}
             >
               <motion.div 
-                className="bg-white/10 backdrop-blur-md rounded-2xl p-6 border border-white/20"
+                className="bg-white/10 backdrop-blur-md rounded-xl md:rounded-2xl p-4 md:p-6 border border-white/20"
                 whileHover={{ scale: 1.05, backgroundColor: "rgba(255, 255, 255, 0.15)" }}
                 transition={{ duration: 0.3 }}
               >
-                <Phone className="h-8 w-8 mx-auto mb-4 text-blue-300" />
-                <h3 className="font-bold mb-2">📞 اتصل بنا</h3>
-                <p className="text-blue-200">متاح 24/7 لخدمتكم</p>
+                <Phone className="h-6 w-6 sm:h-8 sm:w-8 mx-auto mb-3 md:mb-4 text-blue-300" />
+                <h3 className="font-bold mb-2 text-sm sm:text-base">📞 اتصل بنا</h3>
+                <p className="text-blue-200 text-xs sm:text-sm">متاح 24/7 لخدمتكم</p>
               </motion.div>
               
               <motion.div 
-                className="bg-white/10 backdrop-blur-md rounded-2xl p-6 border border-white/20"
+                className="bg-white/10 backdrop-blur-md rounded-xl md:rounded-2xl p-4 md:p-6 border border-white/20"
                 whileHover={{ scale: 1.05, backgroundColor: "rgba(255, 255, 255, 0.15)" }}
                 transition={{ duration: 0.3 }}
               >
-                <Download className="h-8 w-8 mx-auto mb-4 text-green-300" />
-                <h3 className="font-bold mb-2">📄 احصل على عرض سعر</h3>
-                <p className="text-blue-200">مجاني وفوري</p>
+                <Download className="h-6 w-6 sm:h-8 sm:w-8 mx-auto mb-3 md:mb-4 text-green-300" />
+                <h3 className="font-bold mb-2 text-sm sm:text-base">📄 احصل على عرض سعر</h3>
+                <p className="text-blue-200 text-xs sm:text-sm">مجاني وفوري</p>
               </motion.div>
               
               <motion.div 
-                className="bg-white/10 backdrop-blur-md rounded-2xl p-6 border border-white/20"
+                className="bg-white/10 backdrop-blur-md rounded-xl md:rounded-2xl p-4 md:p-6 border border-white/20"
                 whileHover={{ scale: 1.05, backgroundColor: "rgba(255, 255, 255, 0.15)" }}
                 transition={{ duration: 0.3 }}
               >
-                <HeartHandshake className="h-8 w-8 mx-auto mb-4 text-purple-300" />
-                <h3 className="font-bold mb-2">🤝 ضمان الجودة</h3>
-                <p className="text-blue-200">نضمن رضاكم 100%</p>
+                <HeartHandshake className="h-6 w-6 sm:h-8 sm:w-8 mx-auto mb-3 md:mb-4 text-purple-300" />
+                <h3 className="font-bold mb-2 text-sm sm:text-base">🤝 ضمان الجودة</h3>
+                <p className="text-blue-200 text-xs sm:text-sm">نضمن رضاكم 100%</p>
               </motion.div>
             </motion.div>
           </motion.div>
