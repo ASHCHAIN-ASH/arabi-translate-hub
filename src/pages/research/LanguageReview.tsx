@@ -449,9 +449,9 @@ const LanguageReview = () => {
               </Button>
             </div>
             <ServiceInquiryForm 
+              serviceType="language-review"
               serviceName="التدقيق اللغوي والمراجعة"
               serviceIcon="✏️"
-              onClose={() => setShowForm(false)}
             />
           </div>
         </div>

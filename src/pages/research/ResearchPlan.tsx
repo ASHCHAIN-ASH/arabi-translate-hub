@@ -419,9 +419,9 @@ const ResearchPlan = () => {
               </Button>
             </div>
             <ServiceInquiryForm 
+              serviceType="research-plan"
               serviceName="المساعدة في كتابة خطة البحث"
               serviceIcon="📋"
-              onClose={() => setShowForm(false)}
             />
           </div>
         </div>

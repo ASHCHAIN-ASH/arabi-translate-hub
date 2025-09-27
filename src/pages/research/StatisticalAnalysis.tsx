@@ -454,9 +454,9 @@ const StatisticalAnalysis = () => {
               </Button>
             </div>
             <ServiceInquiryForm 
+              serviceType="statistical-analysis"
               serviceName="التحليل الإحصائي ومناقشة النتائج"
               serviceIcon="📊"
-              onClose={() => setShowForm(false)}
             />
           </div>
         </div>

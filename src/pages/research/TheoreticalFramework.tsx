@@ -417,9 +417,9 @@ const TheoreticalFramework = () => {
               </Button>
             </div>
             <ServiceInquiryForm 
+              serviceType="theoretical-framework"
               serviceName="كتابة الإطار النظري والأدبيات"
               serviceIcon="📚"
-              onClose={() => setShowForm(false)}
             />
           </div>
         </div>
