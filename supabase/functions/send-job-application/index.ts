@@ -53,7 +53,7 @@ const handler = async (req: Request): Promise<Response> => {
     // Email to applicant (confirmation)
     console.log("Sending confirmation email to applicant...");
     const applicantEmailResponse = await resend.emails.send({
-      from: "MasterEduPath <onboarding@resend.dev>",
+      from: "MasterEduPath <info@masteredupath.com>",
       to: [applicationData.email],
       subject: `تأكيد استلام طلب التوظيف - ${applicationData.position}`,
       html: `
@@ -101,7 +101,7 @@ const handler = async (req: Request): Promise<Response> => {
     // Email to admin (notification)
     console.log("Sending notification email to admin...");
     const adminEmailResponse = await resend.emails.send({
-      from: "MasterEduPath <onboarding@resend.dev>",
+      from: "MasterEduPath <info@masteredupath.com>",
       to: ["onboarding@resend.dev"],
       subject: `طلب توظيف جديد - ${applicationData.position} | ${applicationData.fullName}`,
       html: `

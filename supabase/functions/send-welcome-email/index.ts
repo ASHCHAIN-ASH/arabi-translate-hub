@@ -27,7 +27,7 @@ const handler = async (req: Request): Promise<Response> => {
     console.log(`Sending welcome email to: ${user_email}`);
 
     const emailResponse = await resend.emails.send({
-      from: "منصة التعليم الأكاديمي <onboarding@resend.dev>",
+      from: "منصة التعليم الأكاديمي <info@masteredupath.com>",
       to: [user_email],
       subject: "مرحباً بك في منصة التعليم الأكاديمي!",
       html: `

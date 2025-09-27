@@ -1365,7 +1365,7 @@ const handler = async (req: Request): Promise<Response> => {
     const customerEmailHtml = generateCustomerEmailTemplate(consultationData, serviceTypeArabic, academicLevelArabic);
     
     const customerEmailResponse = await resend.emails.send({
-      from: "وكالة ماستر إيدو باث <onboarding@resend.dev>",
+      from: "وكالة ماستر إيدو باث <info@masteredupath.com>",
       to: [consultationData.email],
       subject: `تأكيد طلب الاستشارة الأكاديمية - ${serviceTypeArabic}`,
       html: customerEmailHtml,
@@ -1377,7 +1377,7 @@ const handler = async (req: Request): Promise<Response> => {
     const adminEmailHtml = generateAdminEmailTemplate(consultationData, serviceTypeArabic, academicLevelArabic);
     
     const adminEmailResponse = await resend.emails.send({
-      from: "نظام الإشعارات الأكاديمية <onboarding@resend.dev>",
+      from: "نظام الإشعارات الأكاديمية <info@masteredupath.com>",
       to: ["info@masteredupath.com"],
       subject: `🚨 طلب ${serviceTypeArabic} جديد من ${consultationData.fullName}`,
       html: adminEmailHtml,

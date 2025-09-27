@@ -1387,7 +1387,7 @@ const handler = async (req: Request): Promise<Response> => {
     const customerEmailHtml = generateCustomerEmailTemplate(inquiryData, serviceName, serviceIcon);
     
     const customerEmailResponse = await resend.emails.send({
-      from: "وكالة ماستر إيدو باث <onboarding@resend.dev>",
+      from: "وكالة ماستر إيدو باث <info@masteredupath.com>",
       to: [inquiryData.email],
       subject: `تأكيد استلام طلبكم - ${serviceName}`,
       html: customerEmailHtml,
@@ -1399,7 +1399,7 @@ const handler = async (req: Request): Promise<Response> => {
     const adminEmailHtml = generateAdminEmailTemplate(inquiryData, serviceName, serviceIcon);
     
     const adminEmailResponse = await resend.emails.send({
-      from: "نظام الإشعارات <onboarding@resend.dev>",
+      from: "نظام الإشعارات <info@masteredupath.com>",
       to: ["info@masteredupath.com"],
       subject: `🚨 طلب ${serviceName} جديد من ${inquiryData.name}`,
       html: adminEmailHtml,

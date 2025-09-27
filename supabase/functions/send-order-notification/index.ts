@@ -38,7 +38,7 @@ const handler = async (req: Request): Promise<Response> => {
 
     // Send notification to admin
     const adminEmailResponse = await resend.emails.send({
-      from: "Lovable <onboarding@resend.dev>",
+      from: "MasterEduPath <info@masteredupath.com>",
       to: ["admin@masteredupath.com"],
       subject: `طلب جديد من ${orderData.contactPerson} - ${getServiceTypeArabic(orderData.serviceType)}`,
       html: `
@@ -101,7 +101,7 @@ const handler = async (req: Request): Promise<Response> => {
 
     // Send confirmation to client
     const clientEmailResponse = await resend.emails.send({
-      from: "وكالة ماستر إيدو باث <onboarding@resend.dev>",
+      from: "وكالة ماستر إيدو باث <info@masteredupath.com>",
       to: [orderData.email],
       subject: "تأكيد استلام طلبكم - وكالة ماستر إيدو باث",
       html: `
