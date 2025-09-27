@@ -11,6 +11,7 @@ const corsHeaders = {
 
 interface ServiceInquiry {
   serviceType: string;
+  serviceName?: string;
   name: string;
   email: string;
   phone: string;
@@ -21,6 +22,7 @@ interface ServiceInquiry {
   budget?: string;
   fileSize?: string;
   additionalNotes?: string;
+  attachmentCount?: number;
 }
 
 const serviceNames: { [key: string]: string } = {
@@ -35,7 +37,16 @@ const serviceNames: { [key: string]: string } = {
   'medical-translation': 'الترجمة الطبية',
   'technical-translation': 'الترجمة التقنية',
   'literary-translation': 'الترجمة الأدبية',
-  'media-translation': 'ترجمة الإعلام'
+  'media-translation': 'ترجمة الإعلام',
+  'plagiarism_check': 'فحص الانتحال',
+  'thesis_titles': 'اقتراح عناوين الرسائل',
+  'training_courses': 'الدورات التدريبية',
+  'formatting': 'التنسيق الأكاديمي',
+  'research_evaluation': 'تقييم البحوث',
+  'academic_consultation': 'الاستشارات الأكاديمية',
+  'references': 'إعداد المراجع',
+  'publication': 'النشر العلمي',
+  'research_tools': 'أدوات البحث العلمي'
 };
 
 const serviceIcons: { [key: string]: string } = {
@@ -50,7 +61,16 @@ const serviceIcons: { [key: string]: string } = {
   'medical-translation': '🏥',
   'technical-translation': '🔧',
   'literary-translation': '📚',
-  'media-translation': '📺'
+  'media-translation': '📺',
+  'plagiarism_check': '🔍',
+  'thesis_titles': '💡',
+  'training_courses': '📖',
+  'formatting': '📋',
+  'research_evaluation': '⚖️',
+  'academic_consultation': '👨‍🏫',
+  'references': '📚',
+  'publication': '📄',
+  'research_tools': '🔬'
 };
 
 const generateCustomerEmailTemplate = (inquiry: ServiceInquiry, serviceName: string, serviceIcon: string) => {
@@ -339,6 +359,31 @@ const generateCustomerEmailTemplate = (inquiry: ServiceInquiry, serviceName: str
           grid-column: 1 / -1;
         }
         
+        .download-section {
+          background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+          border-radius: 20px;
+          padding: 30px;
+          margin: 30px 0;
+          text-align: center;
+          border: 2px solid #22c55e;
+        }
+        
+        .download-link {
+          display: inline-block;
+          background: linear-gradient(135deg, #22c55e, #16a34a);
+          color: white;
+          padding: 15px 30px;
+          text-decoration: none;
+          border-radius: 25px;
+          font-weight: 600;
+          box-shadow: 0 8px 20px rgba(34, 197, 94, 0.3);
+          transition: transform 0.3s ease;
+        }
+        
+        .download-link:hover {
+          transform: translateY(-2px);
+        }
+        
         .steps-section {
           background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
           border-radius: 24px;
@@ -498,140 +543,103 @@ const generateCustomerEmailTemplate = (inquiry: ServiceInquiry, serviceName: str
         .footer {
           background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
           color: #94a3b8;
-          padding: 60px 40px;
+          padding: 50px 40px;
           text-align: center;
-          position: relative;
         }
         
         .footer::before {
           content: '';
-          position: absolute;
-          top: 0;
-          left: 0;
-          right: 0;
+          display: block;
+          width: 100%;
           height: 6px;
-          background: linear-gradient(90deg, #3b82f6, #8b5cf6, #f59e0b, #ef4444);
+          background: linear-gradient(90deg, #3b82f6, #8b5cf6, #f59e0b, #22c55e);
+          margin-bottom: 30px;
         }
         
         .footer h4 {
           font-size: 28px;
           color: #ffffff;
-          margin-bottom: 15px;
+          margin-bottom: 10px;
           font-weight: 800;
         }
         
         .footer-tagline {
           font-size: 18px;
-          color: #cbd5e1;
+          color: #3b82f6;
           margin-bottom: 40px;
+          font-weight: 600;
           font-style: italic;
         }
         
         .footer-info {
           display: grid;
-          grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-          gap: 25px;
-          margin: 40px 0;
+          grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+          gap: 30px;
+          margin-bottom: 40px;
         }
         
         .info-block {
           background: rgba(255, 255, 255, 0.05);
           padding: 25px;
-          border-radius: 16px;
+          border-radius: 15px;
           border: 1px solid rgba(255, 255, 255, 0.1);
-          transition: transform 0.3s ease;
-        }
-        
-        .info-block:hover {
-          transform: translateY(-3px);
-          background: rgba(255, 255, 255, 0.08);
         }
         
         .info-block h5 {
-          color: #e2e8f0;
+          color: #ffffff;
           font-size: 18px;
           margin-bottom: 15px;
           font-weight: 700;
         }
         
         .info-block p {
-          font-size: 15px;
-          color: #94a3b8;
-          margin: 8px 0;
+          font-size: 14px;
           line-height: 1.6;
-        }
-        
-        .info-block a {
-          color: #60a5fa;
-          text-decoration: none;
-          font-weight: 600;
-          transition: color 0.3s ease;
-        }
-        
-        .info-block a:hover {
-          color: #93c5fd;
+          margin-bottom: 8px;
         }
         
         .social-links {
-          margin: 40px 0 30px;
+          display: flex;
+          justify-content: center;
+          gap: 15px;
+          margin-bottom: 30px;
         }
         
         .social-links a {
-          display: inline-flex;
           width: 50px;
           height: 50px;
-          background: rgba(255, 255, 255, 0.1);
-          border: 2px solid rgba(255, 255, 255, 0.2);
           border-radius: 50%;
+          background: rgba(255, 255, 255, 0.1);
+          display: flex;
           align-items: center;
           justify-content: center;
-          margin: 0 10px;
-          font-size: 20px;
-          color: #cbd5e1;
+          font-size: 24px;
           text-decoration: none;
           transition: all 0.3s ease;
+          border: 2px solid rgba(255, 255, 255, 0.2);
         }
         
         .social-links a:hover {
           background: rgba(255, 255, 255, 0.2);
           transform: translateY(-3px);
-          color: #ffffff;
         }
         
         .copyright {
-          font-size: 14px;
-          color: #64748b;
-          margin-top: 30px;
-          padding-top: 30px;
+          font-size: 13px;
+          line-height: 1.8;
           border-top: 1px solid rgba(255, 255, 255, 0.1);
-          line-height: 1.6;
+          padding-top: 25px;
         }
         
-        @media only screen and (max-width: 768px) {
-          body { padding: 10px 0; }
-          .email-container { 
-            margin: 0 10px; 
-            border-radius: 20px; 
-          }
-          .header, .main-content, .footer { 
-            padding: 35px 25px; 
-          }
-          .company-name { 
-            font-size: 26px; 
-          }
-          .details-grid, .contact-grid { 
-            grid-template-columns: 1fr; 
-          }
-          .steps-list li { 
-            padding: 20px 25px 20px 70px; 
-            font-size: 16px; 
-          }
-          .footer-info { 
-            grid-template-columns: 1fr; 
-          }
-          .details-section, .steps-section, .contact-section {
-            padding: 30px 25px;
-          }
+        @media (max-width: 768px) {
+          .email-container { margin: 10px; }
+          .header { padding: 30px 20px; }
+          .main-content { padding: 30px 20px; }
+          .company-name { font-size: 26px; }
+          .details-grid { grid-template-columns: 1fr; }
+          .contact-grid { grid-template-columns: 1fr; }
+          .footer-info { grid-template-columns: 1fr; }
+          .social-links { flex-wrap: wrap; }
         }
       </style>
     </head>
@@ -639,33 +647,31 @@ const generateCustomerEmailTemplate = (inquiry: ServiceInquiry, serviceName: str
       <div class="email-container">
         <div class="header">
           <div class="header-content">
-            <div class="notification-badge">
-              🔔 تم استلام طلبكم بنجاح
-            </div>
+            <div class="notification-badge">✅ تم استلام طلبكم بنجاح</div>
             <div class="main-logo">🎓</div>
             <h1 class="company-name">وكالة ماستر إيدو باث</h1>
-            <p class="company-tagline">Master Edu Path Agency - للخدمات الأكاديمية والترجمة المتخصصة</p>
+            <p class="company-tagline">للخدمات الأكاديمية والترجمة المتخصصة</p>
             <div class="service-badge">
               <span class="icon">${serviceIcon}</span>
-              <span>طلب ${serviceName}</span>
+              <span>${serviceName}</span>
             </div>
           </div>
         </div>
-
+        
         <div class="main-content">
           <div class="greeting-section">
-            <h2>السلام عليكم ورحمة الله وبركاته</h2>
+            <h2>أهلاً وسهلاً <span class="customer-name">${inquiry.name}</span></h2>
             <p>
-              المحترم/ة <span class="customer-name">${inquiry.name}</span><br><br>
-              نتقدم بجزيل الشكر لثقتكم الغالية في خدماتنا المتميزة. يسعدنا إعلامكم بأنه تم استلام طلبكم بنجاح وسيتم التعامل معه بأقصى درجات الاحترافية والدقة من قبل فريقنا المتخصص من الخبراء والأكاديميين.
+              نشكركم على ثقتكم في خدماتنا. لقد تم استلام طلبكم بنجاح وسيتم مراجعته من قبل فريقنا المتخصص.
+              سنتواصل معكم خلال الساعات القادمة لمناقشة جميع التفاصيل وتقديم عرض مفصل ومخصص لاحتياجاتكم.
             </p>
           </div>
 
           <div class="details-section">
-            <h3>📋 ملخص تفاصيل طلبكم</h3>
+            <h3>📋 تفاصيل طلبكم</h3>
             <div class="details-grid">
               <div class="detail-card">
-                <div class="detail-label">👤 الاسم الكامل</div>
+                <div class="detail-label">👤 اسم العميل</div>
                 <div class="detail-value">${inquiry.name}</div>
               </div>
               
@@ -686,14 +692,20 @@ const generateCustomerEmailTemplate = (inquiry: ServiceInquiry, serviceName: str
               
               ${inquiry.sourceLanguage ? `
               <div class="detail-card">
-                <div class="detail-label">🔤 اللغة المصدر</div>
+                <div class="detail-label">🌍 ترجمة من</div>
                 <div class="detail-value">${inquiry.sourceLanguage}</div>
               </div>` : ''}
               
               ${inquiry.targetLanguage ? `
               <div class="detail-card">
-                <div class="detail-label">🔤 اللغة المستهدفة</div>
+                <div class="detail-label">🌍 ترجمة إلى</div>
                 <div class="detail-value">${inquiry.targetLanguage}</div>
+              </div>` : ''}
+              
+              ${inquiry.fileSize ? `
+              <div class="detail-card">
+                <div class="detail-label">📏 حجم المشروع</div>
+                <div class="detail-value">${inquiry.fileSize}</div>
               </div>` : ''}
               
               ${inquiry.deadline ? `
@@ -719,6 +731,21 @@ const generateCustomerEmailTemplate = (inquiry: ServiceInquiry, serviceName: str
                 <div class="detail-label">📌 ملاحظات إضافية</div>
                 <div class="detail-value">${inquiry.additionalNotes}</div>
               </div>` : ''}
+              
+              ${inquiry.attachmentCount && inquiry.attachmentCount > 0 ? `
+              <div class="detail-card">
+                <div class="detail-label">📎 المرفقات</div>
+                <div class="detail-value">${inquiry.attachmentCount} ملف مرفق</div>
+              </div>` : ''}
+            </div>
+            
+            <!-- رابط تحميل نموذج للعميل -->
+            <div class="download-section">
+              <h4 style="color: #15803d; margin-bottom: 15px; font-size: 20px;">📥 نماذج مرجعية للخدمة</h4>
+              <p style="color: #22543d; margin-bottom: 20px;">يمكنكم تحميل النماذج المرجعية لفهم أفضل لجودة خدماتنا</p>
+              <a href="https://drive.google.com/drive/folders/example" class="download-link">
+                📥 تحميل النماذج المرجعية
+              </a>
             </div>
           </div>
 
@@ -1011,6 +1038,10 @@ const generateAdminEmailTemplate = (inquiry: ServiceInquiry, serviceName: string
           color: #1e40af;
           font-weight: 800;
           text-align: center;
+          background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+          -webkit-background-clip: text;
+          background-clip: text;
+          -webkit-text-fill-color: transparent;
         }
         
         .customer-section {
@@ -1213,33 +1244,23 @@ const generateAdminEmailTemplate = (inquiry: ServiceInquiry, serviceName: string
         .footer h4 {
           font-size: 28px;
           color: #ffffff;
-          margin-bottom: 15px;
+          margin-bottom: 20px;
           font-weight: 800;
         }
         
         .footer p {
           font-size: 16px;
-          margin: 10px 0;
-          line-height: 1.6;
+          line-height: 1.8;
+          margin-bottom: 10px;
         }
         
-        .copyright {
-          font-size: 14px;
-          color: #64748b;
-          margin-top: 30px;
-          padding-top: 20px;
-          border-top: 1px solid rgba(255, 255, 255, 0.1);
-        }
-        
-        @media only screen and (max-width: 768px) {
-          body { padding: 10px 0; }
-          .email-container { margin: 0 10px; border-radius: 20px; }
-          .alert-header, .priority-section, .customer-section, .order-details, .action-section, .footer { 
-            padding: 30px 25px; margin: 20px; 
-          }
+        @media (max-width: 768px) {
+          .email-container { margin: 10px; }
+          .alert-header { padding: 30px 20px; }
+          .priority-section, .customer-section, .order-details, .action-section { margin: 20px; padding: 30px 20px; }
           .alert-title { font-size: 28px; }
           .customer-grid, .details-grid { grid-template-columns: 1fr; }
-          .action-buttons { flex-direction: column; align-items: center; }
+          .action-buttons { flex-direction: column; }
         }
       </style>
     </head>
@@ -1248,29 +1269,32 @@ const generateAdminEmailTemplate = (inquiry: ServiceInquiry, serviceName: string
         <div class="alert-header">
           <div class="alert-content">
             <div class="alert-icon">🚨</div>
-            <h1 class="alert-title">تنبيه طلب جديد</h1>
-            <p class="alert-subtitle">تم استلام طلب خدمة جديد يتطلب اتخاذ إجراء فوري</p>
+            <h1 class="alert-title">تنبيه: طلب خدمة جديد</h1>
+            <p class="alert-subtitle">يتطلب مراجعة عاجلة من فريق الإدارة</p>
             <div class="timestamp-badge">
               <span>⏰</span>
-              <span>تاريخ الاستلام: ${new Date().toLocaleDateString('ar-SA')} - ${new Date().toLocaleTimeString('ar-SA')}</span>
+              <span>تم الاستلام: ${new Date().toLocaleString('ar-SA')}</span>
             </div>
           </div>
         </div>
-
+        
         <div class="priority-section">
-          <h2 class="priority-title">طلب خدمة عالي الأولوية</h2>
+          <h2 class="priority-title">🚨 طلب عاجل يتطلب الانتباه</h2>
+          
           <div class="service-header">
             <div class="service-icon">${serviceIcon}</div>
-            <div class="service-name">${serviceName}</div>
+            <div class="service-name">📋 طلب جديد: ${serviceName}</div>
           </div>
         </div>
 
         <div class="customer-section">
-          <h3>👤 معلومات العميل</h3>
+          <h3>👥 معلومات العميل</h3>
           <div class="customer-grid">
             <div class="customer-info-card">
               <div class="info-label">👤 اسم العميل</div>
-              <div class="info-value customer-name">${inquiry.name}</div>
+              <div class="info-value">
+                <div class="customer-name">${inquiry.name}</div>
+              </div>
             </div>
             
             <div class="customer-info-card">
@@ -1284,25 +1308,31 @@ const generateAdminEmailTemplate = (inquiry: ServiceInquiry, serviceName: string
             </div>
             
             <div class="customer-info-card">
-              <div class="info-label">${serviceIcon} نوع الخدمة</div>
+              <div class="info-label">${serviceIcon} نوع الخدمة المطلوبة</div>
               <div class="info-value">${serviceName}</div>
             </div>
           </div>
         </div>
 
         <div class="order-details">
-          <h3>📋 تفاصيل الطلب</h3>
+          <h3>📋 تفاصيل الطلب الكامل</h3>
           <div class="details-grid">
             ${inquiry.sourceLanguage ? `
             <div class="detail-card">
-              <div class="detail-label">🔤 اللغة المصدر</div>
+              <div class="detail-label">🌍 ترجمة من</div>
               <div class="detail-value">${inquiry.sourceLanguage}</div>
             </div>` : ''}
             
             ${inquiry.targetLanguage ? `
             <div class="detail-card">
-              <div class="detail-label">🔤 اللغة المستهدفة</div>
+              <div class="detail-label">🌍 ترجمة إلى</div>
               <div class="detail-value">${inquiry.targetLanguage}</div>
+            </div>` : ''}
+            
+            ${inquiry.fileSize ? `
+            <div class="detail-card">
+              <div class="detail-label">📏 حجم المشروع</div>
+              <div class="detail-value">${inquiry.fileSize}</div>
             </div>` : ''}
             
             ${inquiry.deadline ? `
@@ -1313,14 +1343,8 @@ const generateAdminEmailTemplate = (inquiry: ServiceInquiry, serviceName: string
             
             ${inquiry.budget ? `
             <div class="detail-card">
-              <div class="detail-label">💰 الميزانية</div>
+              <div class="detail-label">💰 الميزانية المتوقعة</div>
               <div class="detail-value">${inquiry.budget}</div>
-            </div>` : ''}
-            
-            ${inquiry.fileSize ? `
-            <div class="detail-card">
-              <div class="detail-label">📊 حجم الملف</div>
-              <div class="detail-value">${inquiry.fileSize}</div>
             </div>` : ''}
             
             ${inquiry.projectDetails ? `
@@ -1334,34 +1358,44 @@ const generateAdminEmailTemplate = (inquiry: ServiceInquiry, serviceName: string
               <div class="detail-label">📌 ملاحظات إضافية</div>
               <div class="detail-value">${inquiry.additionalNotes}</div>
             </div>` : ''}
+            
+            ${inquiry.attachmentCount && inquiry.attachmentCount > 0 ? `
+            <div class="detail-card">
+              <div class="detail-label">📎 المرفقات</div>
+              <div class="detail-value">${inquiry.attachmentCount} ملف مرفق - يتطلب مراجعة عاجلة</div>
+            </div>` : ''}
           </div>
         </div>
 
         <div class="action-section">
-          <h3>⚡ الإجراءات المطلوبة</h3>
-          <p style="font-size: 18px; color: #15803d; margin-bottom: 25px; font-weight: 600;">
-            يرجى اتخاذ الإجراء المناسب في أسرع وقت ممكن لضمان رضا العميل
-          </p>
+          <h3>⚡ إجراءات مطلوبة فورية</h3>
           <div class="action-buttons">
-            <a href="tel:${inquiry.phone}" class="action-btn btn-primary">
-              <span>📞</span>
-              <span>اتصال فوري</span>
+            <a href="mailto:${inquiry.email}" class="action-btn btn-primary">
+              📧 الرد على العميل فوراً
             </a>
-            <a href="mailto:${inquiry.email}" class="action-btn btn-secondary">
-              <span>📧</span>
-              <span>إرسال رد</span>
+            <a href="tel:${inquiry.phone}" class="action-btn btn-secondary">
+              📞 الاتصال بالعميل
             </a>
+            <a href="https://wa.me/${inquiry.phone.replace(/[^0-9]/g, '')}" class="action-btn btn-primary">
+              💬 واتساب
+            </a>
+          </div>
+          
+          <div style="margin-top: 30px; padding: 20px; background: rgba(239, 68, 68, 0.1); border-radius: 15px; border-right: 4px solid #ef4444;">
+            <h4 style="color: #dc2626; margin-bottom: 10px;">⚠️ تنبيه هام</h4>
+            <p style="color: #991b1b; font-weight: 600; margin: 0;">
+              يرجى الرد على هذا الطلب خلال 4 ساعات كحد أقصى للحفاظ على سمعة الوكالة وضمان رضا العميل
+            </p>
           </div>
         </div>
-
+        
         <div class="footer">
-          <h4>🏢 وكالة ماستر إيدو باث</h4>
-          <p>نظام إدارة الطلبات والإشعارات</p>
-          <p>للخدمات الأكاديمية والترجمة المتخصصة</p>
-          <div class="copyright">
-            © 2024 وكالة ماستر إيدو باث - جميع الحقوق محفوظة<br>
-            <small>هذه رسالة تلقائية من نظام إدارة الطلبات</small>
-          </div>
+          <h4>وكالة ماستر إيدو باث - نظام إدارة الطلبات</h4>
+          <p>تم إرسال هذا التنبيه تلقائياً من نظام إدارة الطلبات</p>
+          <p>للاستفسارات التقنية، يرجى التواصل مع فريق تطوير النظام</p>
+          <p style="margin-top: 20px; font-size: 14px; opacity: 0.8;">
+            © 2024 وكالة ماستر إيدو باث - جميع الحقوق محفوظة
+          </p>
         </div>
       </div>
     </body>
@@ -1370,61 +1404,70 @@ const generateAdminEmailTemplate = (inquiry: ServiceInquiry, serviceName: string
 };
 
 const handler = async (req: Request): Promise<Response> => {
-  console.log("Service inquiry function called");
-
   if (req.method === "OPTIONS") {
     return new Response(null, { headers: corsHeaders });
   }
 
   try {
-    const inquiryData: ServiceInquiry = await req.json();
-    console.log("Received inquiry:", { ...inquiryData, phone: "[REDACTED]" });
+    const inquiry: ServiceInquiry = await req.json();
+    console.log("Received inquiry:", inquiry);
 
-    const serviceName = serviceNames[inquiryData.serviceType] || inquiryData.serviceType;
-    const serviceIcon = serviceIcons[inquiryData.serviceType] || '🔧';
+    // Get service name and icon
+    const serviceName = inquiry.serviceName || serviceNames[inquiry.serviceType] || inquiry.serviceType;
+    const serviceIcon = serviceIcons[inquiry.serviceType] || '📋';
 
-    // Send customer confirmation email
-    const customerEmailHtml = generateCustomerEmailTemplate(inquiryData, serviceName, serviceIcon);
-    
+    // Generate email templates
+    const customerTemplate = generateCustomerEmailTemplate(inquiry, serviceName, serviceIcon);
+    const adminTemplate = generateAdminEmailTemplate(inquiry, serviceName, serviceIcon);
+
+    // Send email to customer
     const customerEmailResponse = await resend.emails.send({
-      from: "وكالة ماستر إيدو باث <info@masteredupath.com>",
-      to: [inquiryData.email],
+      from: "وكالة ماستر إيدو باث <noreply@masteredupath.com>",
+      to: [inquiry.email],
       subject: `تأكيد استلام طلبكم - ${serviceName}`,
-      html: customerEmailHtml,
+      html: customerTemplate,
     });
 
-    console.log("Customer email sent:", customerEmailResponse);
+    console.log("Customer email sent successfully:", customerEmailResponse);
 
-    // Send admin notification email
-    const adminEmailHtml = generateAdminEmailTemplate(inquiryData, serviceName, serviceIcon);
-    
+    // Send email to admin
     const adminEmailResponse = await resend.emails.send({
-      from: "نظام الإشعارات <info@masteredupath.com>",
-      to: ["info@masteredupath.com"],
-      subject: `🚨 طلب ${serviceName} جديد من ${inquiryData.name}`,
-      html: adminEmailHtml,
+      from: "نظام الطلبات <system@masteredupath.com>",
+      to: ["admin@masteredupath.com"],
+      subject: `🚨 طلب جديد عاجل: ${serviceName} - ${inquiry.name}`,
+      html: adminTemplate,
     });
 
-    console.log("Admin email sent:", adminEmailResponse);
+    console.log("Admin email sent successfully:", adminEmailResponse);
 
     return new Response(
-      JSON.stringify({ 
-        success: true, 
+      JSON.stringify({
+        success: true,
         customerEmail: customerEmailResponse,
-        adminEmail: adminEmailResponse 
+        adminEmail: adminEmailResponse,
       }),
       {
         status: 200,
-        headers: { "Content-Type": "application/json", ...corsHeaders },
+        headers: {
+          "Content-Type": "application/json",
+          ...corsHeaders,
+        },
       }
     );
+
   } catch (error: any) {
-    console.error("Error in service inquiry:", error);
+    console.error("Error in send-service-inquiry function:", error);
     return new Response(
-      JSON.stringify({ error: error.message }),
+      JSON.stringify({
+        success: false,
+        error: error.message,
+      }),
       {
         status: 500,
-        headers: { "Content-Type": "application/json", ...corsHeaders },
+        headers: {
+          "Content-Type": "application/json",
+          ...corsHeaders,
+        },
       }
     );
   }

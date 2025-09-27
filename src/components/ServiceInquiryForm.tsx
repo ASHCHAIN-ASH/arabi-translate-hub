@@ -8,6 +8,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
+import FileUploader from './FileUploader';
 import { 
   Send, 
   User, 
@@ -17,7 +18,8 @@ import {
   Calendar, 
   DollarSign,
   FileText,
-  MessageSquare
+  MessageSquare,
+  Upload
 } from 'lucide-react';
 
 interface ServiceInquiryFormProps {
@@ -51,6 +53,7 @@ const ServiceInquiryForm: React.FC<ServiceInquiryFormProps> = ({
   });
   
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [attachedFiles, setAttachedFiles] = useState<File[]>([]);
 
   const languages = [
     { value: 'arabic', label: 'العربية' },
@@ -110,6 +113,8 @@ const ServiceInquiryForm: React.FC<ServiceInquiryFormProps> = ({
       const { error } = await supabase.functions.invoke('send-service-inquiry', {
         body: {
           serviceType,
+          serviceName,
+          attachmentCount: attachedFiles.length,
           ...formData
         }
       });
@@ -135,6 +140,7 @@ const ServiceInquiryForm: React.FC<ServiceInquiryFormProps> = ({
         fileSize: '',
         additionalNotes: ''
       });
+      setAttachedFiles([]);
 
     } catch (error) {
       console.error('Error:', error);
@@ -335,6 +341,31 @@ const ServiceInquiryForm: React.FC<ServiceInquiryFormProps> = ({
                       </SelectContent>
                     </Select>
                   </div>
+                </div>
+
+                {/* رفع الملفات */}
+                <div className="space-y-4">
+                  <Label className="text-sm font-medium flex items-center gap-2 justify-end text-right">
+                    المرفقات (اختياري)
+                    <Upload className="h-4 w-4 text-blue-600" />
+                  </Label>
+                  <div className="border-2 border-dashed border-gray-300 rounded-lg p-4">
+                    <FileUploader
+                      onFilesSelected={setAttachedFiles}
+                      maxFiles={5}
+                      acceptedTypes={['.pdf', '.doc', '.docx', '.txt', '.png', '.jpg', '.jpeg']}
+                    />
+                  </div>
+                  {attachedFiles.length > 0 && (
+                    <div className="text-sm text-gray-600">
+                      <p className="font-medium">الملفات المرفقة ({attachedFiles.length}):</p>
+                      <ul className="list-disc list-inside mt-2">
+                        {attachedFiles.map((file, index) => (
+                          <li key={index} className="text-right">{file.name}</li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
                 </div>
 
                 {/* ملاحظات إضافية */}
