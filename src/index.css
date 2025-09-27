@@ -985,3 +985,19 @@
     transform: translateX(5px);
   }
 }
+
+/* Animation for gradient background */
+@keyframes gradient-xy {
+  0%, 100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+}
+
+.animate-gradient-xy {
+  background: linear-gradient(-45deg, #4338ca, #3b82f6, #6366f1, #8b5cf6);
+  background-size: 400% 400%;
+  animation: gradient-xy 15s ease infinite;
+}
