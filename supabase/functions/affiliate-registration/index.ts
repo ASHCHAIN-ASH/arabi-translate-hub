@@ -517,6 +517,13 @@ const handler = async (req: Request): Promise<Response> => {
         html: clientEmailHtml,
         text: clientEmailText,
       });
+      if ((clientEmailResult as any)?.error) {
+        console.error("Resend client email error:", (clientEmailResult as any).error);
+        return new Response(
+          JSON.stringify({ error: `تعذر إرسال بريد الترحيب للعميل: ${(clientEmailResult as any).error.message}` }),
+          { status: 502, headers: { "Content-Type": "application/json", ...corsHeaders } }
+        );
+      }
       console.log("Client email sent successfully:", clientEmailResult);
     } catch (emailError) {
       console.error("Error sending client email:", emailError);
@@ -868,7 +875,11 @@ const handler = async (req: Request): Promise<Response> => {
           subject: `🔔 تسجيل جديد في برنامج التسويق بالعمولة - ${full_name}`,
           html: adminEmailHtml,
         });
-        console.log("Admin email sent successfully:", adminEmailResult);
+        if ((adminEmailResult as any)?.error) {
+          console.error("Resend admin email error:", (adminEmailResult as any).error);
+        } else {
+          console.log("Admin email sent successfully:", adminEmailResult);
+        }
       } catch (adminEmailError) {
         console.error("Error sending admin email:", adminEmailError);
         // لا نفشل العملية إذا فشل تنبيه الإدارة
