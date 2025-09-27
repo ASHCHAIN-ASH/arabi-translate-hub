@@ -254,54 +254,6 @@ const Footer = () => {
             </ul>
           </motion.div>
 
-          {/* قسم الملكية الفكرية وحقوق النشر */}
-          <motion.div 
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.25, duration: 0.5 }}
-            className="space-y-4 md:space-y-6"
-          >
-            <h4 className="text-base md:text-lg font-bold text-white flex items-center gap-2">
-              <Shield className="h-4 w-4 md:h-5 md:w-5 text-red-400" />
-              الملكية الفكرية وحقوق النشر
-            </h4>
-            <div className="space-y-3">
-              <div className="p-3 md:p-4 bg-red-500/10 rounded-lg border border-red-500/20">
-                <h5 className="text-sm md:text-base font-semibold text-red-400 mb-2 flex items-center gap-2">
-                  <Award className="h-3 w-3 md:h-4 md:w-4" />
-                  حماية قانونية شاملة
-                </h5>
-                <p className="text-xs md:text-sm text-white/80 leading-relaxed">
-                  جميع المحتويات والخدمات محمية بموجب قوانين الملكية الفكرية المحلية والدولية
-                </p>
-              </div>
-              
-              <div className="p-3 md:p-4 bg-yellow-500/10 rounded-lg border border-yellow-500/20">
-                <h5 className="text-sm md:text-base font-semibold text-yellow-400 mb-2 flex items-center gap-2">
-                  <HelpCircle className="h-3 w-3 md:h-4 md:w-4" />
-                  إشعار مهم
-                </h5>
-                <p className="text-xs md:text-sm text-white/80 leading-relaxed">
-                  يُمنع منعاً باتاً نسخ أو استخدام المحتوى دون إذن مكتوب مسبق من الإدارة
-                </p>
-              </div>
-
-              <div className="text-xs md:text-sm text-white/70 space-y-1">
-                <p className="flex items-center gap-2">
-                  <Shield className="h-3 w-3 flex-shrink-0 text-green-400" />
-                  التصاميم والنماذج مملوكة حصرياً للوكالة
-                </p>
-                <p className="flex items-center gap-2">
-                  <Globe className="h-3 w-3 flex-shrink-0 text-blue-400" />
-                  محفوظة وفقاً للقوانين السعودية والدولية
-                </p>
-                <p className="flex items-center gap-2">
-                  <Mail className="h-3 w-3 flex-shrink-0 text-purple-400" />
-                  للاستفسار: legal@masteredupath.com
-                </p>
-              </div>
-            </div>
-          </motion.div>
         </div>
 
         {/* Newsletter Section */}
