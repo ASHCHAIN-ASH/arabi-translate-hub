@@ -338,6 +338,51 @@ export type Database = {
           },
         ]
       }
+      affiliate_partners: {
+        Row: {
+          affiliate_id: string
+          country_city: string | null
+          created_at: string
+          discount_code: string
+          email: string
+          full_name: string
+          id: string
+          marketing_channel_url: string | null
+          phone: string | null
+          status: string
+          terms_accepted: boolean
+          updated_at: string
+        }
+        Insert: {
+          affiliate_id: string
+          country_city?: string | null
+          created_at?: string
+          discount_code: string
+          email: string
+          full_name: string
+          id?: string
+          marketing_channel_url?: string | null
+          phone?: string | null
+          status?: string
+          terms_accepted?: boolean
+          updated_at?: string
+        }
+        Update: {
+          affiliate_id?: string
+          country_city?: string | null
+          created_at?: string
+          discount_code?: string
+          email?: string
+          full_name?: string
+          id?: string
+          marketing_channel_url?: string | null
+          phone?: string | null
+          status?: string
+          terms_accepted?: boolean
+          updated_at?: string
+        }
+        Relationships: []
+      }
       affiliate_program: {
         Row: {
           affiliate_code: string
@@ -5936,6 +5981,10 @@ export type Database = {
         Args: Record<PropertyKey, never>
         Returns: string
       }
+      generate_affiliate_id: {
+        Args: Record<PropertyKey, never>
+        Returns: string
+      }
       generate_application_number: {
         Args: Record<PropertyKey, never>
         Returns: string
@@ -5953,6 +6002,10 @@ export type Database = {
         Returns: string
       }
       generate_contract_number: {
+        Args: Record<PropertyKey, never>
+        Returns: string
+      }
+      generate_discount_code: {
         Args: Record<PropertyKey, never>
         Returns: string
       }
