@@ -78,18 +78,18 @@ const AcademicFeatures = () => {
   ];
 
   return (
-    <section className="py-16 sm:py-20 lg:py-24 bg-gradient-to-br from-slate-50 via-blue-50/30 to-purple-50/20 dark:from-slate-950 dark:via-blue-950/30 dark:to-purple-950/20 relative overflow-hidden">
+    <section className="mobile-section bg-gradient-to-br from-slate-50 via-blue-50/30 to-purple-50/20 dark:from-slate-950 dark:via-blue-950/30 dark:to-purple-950/20 relative overflow-hidden">
       
       {/* خلفية متطورة وديناميكية */}
       <div className="absolute inset-0">
         <div className="absolute inset-0 opacity-40">
           {/* الطبقة الأولى - دوائر متحركة */}
-          <div className="absolute top-10 left-10 w-96 h-96 bg-gradient-to-br from-blue-500/20 via-indigo-500/15 to-purple-500/10 rounded-full blur-3xl animate-pulse"></div>
-          <div className="absolute bottom-10 right-10 w-80 h-80 bg-gradient-to-tl from-emerald-500/15 via-teal-500/20 to-cyan-500/10 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '2s' }}></div>
+          <div className="absolute top-4 sm:top-10 left-4 sm:left-10 w-48 h-48 sm:w-96 sm:h-96 bg-gradient-to-br from-blue-500/20 via-indigo-500/15 to-purple-500/10 rounded-full blur-3xl animate-pulse"></div>
+          <div className="absolute bottom-4 sm:bottom-10 right-4 sm:right-10 w-40 h-40 sm:w-80 sm:h-80 bg-gradient-to-tl from-emerald-500/15 via-teal-500/20 to-cyan-500/10 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '2s' }}></div>
           
           {/* الطبقة الثانية - أشكال هندسية */}
-          <div className="absolute top-1/4 right-1/3 w-72 h-72 bg-gradient-to-r from-violet-500/10 via-purple-500/15 to-pink-500/10 rounded-full blur-2xl animate-float"></div>
-          <div className="absolute bottom-1/3 left-1/4 w-64 h-64 bg-gradient-to-br from-amber-500/15 via-orange-500/10 to-red-500/10 rounded-full blur-3xl animate-float" style={{ animationDelay: '4s' }}></div>
+          <div className="absolute top-1/4 right-1/4 sm:right-1/3 w-36 h-36 sm:w-72 sm:h-72 bg-gradient-to-r from-violet-500/10 via-purple-500/15 to-pink-500/10 rounded-full blur-2xl animate-float"></div>
+          <div className="absolute bottom-1/3 left-1/4 w-32 h-32 sm:w-64 sm:h-64 bg-gradient-to-br from-amber-500/15 via-orange-500/10 to-red-500/10 rounded-full blur-3xl animate-float" style={{ animationDelay: '4s' }}></div>
           
           {/* خطوط متدرجة للحركة */}
           <div className="absolute inset-0 bg-gradient-to-r from-transparent via-blue-500/5 to-transparent transform rotate-12 animate-pulse" style={{ animationDelay: '1s' }}></div>

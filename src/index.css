@@ -457,46 +457,220 @@
     box-shadow: var(--shadow-accent);
   }
   
-  /* أنيميشن أكاديمي متطور */
-  .animate-academic-slide {
-    animation: academicSlide 0.8s ease-out;
+/* Responsive Design System for Mobile Devices */
+@layer utilities {
+  /* Mobile-First Responsive Utilities */
+  .mobile-container {
+    @apply px-4 sm:px-6 lg:px-8;
   }
   
-  .animate-academic-bounce {
-    animation: academicBounce 1s ease-out;
+  .mobile-grid {
+    @apply grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 lg:gap-6;
   }
   
-  .animate-scale-hover {
-    transition: all 0.2s ease;
+  .mobile-text-responsive {
+    @apply text-sm sm:text-base lg:text-lg;
   }
   
-  .animate-scale-hover:hover {
-    transform: scale(1.02);
+  .mobile-heading-responsive {
+    @apply text-lg sm:text-xl md:text-2xl lg:text-3xl xl:text-4xl;
   }
   
-  /* تحريك حقول النماذج عند الخطأ */
-  .shake {
-    animation: shake 0.5s ease-in-out;
+  .mobile-subheading-responsive {
+    @apply text-base sm:text-lg md:text-xl lg:text-2xl;
   }
   
-  /* كلاسات أكاديمية إضافية */
-  .academic-card {
-    border-radius: 20px;
-    background: var(--gradient-card);
-    transition: all 0.3s ease;
+  .mobile-padding-responsive {
+    @apply p-4 sm:p-6 lg:p-8;
   }
   
-  .academic-card:hover {
-    box-shadow: var(--shadow-academic);
-    transform: translateY(-4px);
+  .mobile-margin-responsive {
+    @apply m-4 sm:m-6 lg:m-8;
   }
   
-  .text-gradient {
-    background: var(--gradient-primary);
-    background-clip: text;
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
+  .mobile-gap-responsive {
+    @apply gap-2 sm:gap-4 lg:gap-6;
   }
+  
+  .mobile-button-responsive {
+    @apply px-4 py-2 sm:px-6 sm:py-3 lg:px-8 lg:py-4 text-sm sm:text-base lg:text-lg;
+  }
+  
+  /* Touch-Friendly Interactive Elements */
+  .touch-target {
+    @apply min-h-[44px] min-w-[44px];
+  }
+  
+  .mobile-touch-area {
+    @apply p-3 sm:p-4 lg:p-6;
+  }
+  
+  /* Mobile Navigation */
+  .mobile-nav-item {
+    @apply block w-full text-right py-3 px-4 rounded-lg transition-colors duration-200;
+  }
+  
+  .mobile-nav-item:hover {
+    @apply bg-primary/10 text-primary;
+  }
+  
+  /* Mobile Cards */
+  .mobile-card {
+    @apply p-4 sm:p-6 lg:p-8 rounded-lg sm:rounded-xl lg:rounded-2xl;
+  }
+  
+  .mobile-card-shadow {
+    @apply shadow-sm sm:shadow-md lg:shadow-lg;
+  }
+  
+  /* Mobile Typography */
+  .mobile-title {
+    @apply text-xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-bold leading-tight;
+  }
+  
+  .mobile-subtitle {
+    @apply text-lg sm:text-xl md:text-2xl lg:text-3xl font-semibold;
+  }
+  
+  .mobile-body {
+    @apply text-sm sm:text-base lg:text-lg leading-relaxed;
+  }
+  
+  .mobile-caption {
+    @apply text-xs sm:text-sm lg:text-base;
+  }
+  
+  /* Mobile Layout */
+  .mobile-section {
+    @apply py-8 sm:py-12 lg:py-16 xl:py-20;
+  }
+  
+  .mobile-container-wide {
+    @apply container mx-auto px-4 sm:px-6 lg:px-8 xl:px-12;
+  }
+  
+  /* Mobile Forms */
+  .mobile-input {
+    @apply w-full px-3 py-2 sm:px-4 sm:py-3 lg:px-5 lg:py-4 text-sm sm:text-base lg:text-lg;
+  }
+  
+  .mobile-label {
+    @apply text-sm sm:text-base lg:text-lg font-medium mb-2;
+  }
+  
+  /* Mobile Images */
+  .mobile-image {
+    @apply w-full h-auto rounded-lg sm:rounded-xl lg:rounded-2xl;
+  }
+  
+  /* Mobile Spacing */
+  .mobile-space-y {
+    @apply space-y-4 sm:space-y-6 lg:space-y-8;
+  }
+  
+  .mobile-space-x {
+    @apply space-x-2 sm:space-x-4 lg:space-x-6;
+  }
+  
+  /* Mobile Animation Performance */
+  .mobile-animate {
+    @apply transition-all duration-200 ease-in-out;
+  }
+  
+  .mobile-animate-fast {
+    @apply transition-all duration-150 ease-in-out;
+  }
+  
+  .mobile-animate-slow {
+    @apply transition-all duration-300 ease-in-out;
+  }
+}
+
+/* Mobile-Specific Animations */
+@keyframes mobile-slide-up {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes mobile-fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes mobile-scale-in {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Mobile Performance Optimizations */
+@media (max-width: 768px) {
+  * {
+    -webkit-tap-highlight-color: transparent;
+    -webkit-touch-callout: none;
+  }
+  
+  body {
+    -webkit-text-size-adjust: 100%;
+    -ms-text-size-adjust: 100%;
+  }
+  
+  /* Reduce motion for better performance on mobile */
+  @media (prefers-reduced-motion: reduce) {
+    * {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+}
+
+/* Mobile Device Specific Styles */
+@media screen and (max-width: 480px) {
+  .mobile-xs-text {
+    font-size: 14px !important;
+    line-height: 1.4 !important;
+  }
+  
+  .mobile-xs-padding {
+    padding: 12px !important;
+  }
+  
+  .mobile-xs-margin {
+    margin: 8px !important;
+  }
+  
+  .mobile-xs-gap {
+    gap: 8px !important;
+  }
+}
+
+/* Tablet Specific Styles */
+@media screen and (min-width: 768px) and (max-width: 1024px) {
+  .tablet-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+  
+  .tablet-text {
+    font-size: 16px !important;
+    line-height: 1.5 !important;
+  }
+}
   
   .text-gradient-secondary {
     background: var(--gradient-secondary);

@@ -58,47 +58,48 @@ const Header = () => {
         <div className="flex items-center justify-between h-20">
           {/* الشعار المحسن */}
           <motion.div 
-            className="flex items-center gap-4"
+            className="flex items-center gap-3 sm:gap-4"
             whileHover={{ scale: 1.02 }}
             transition={{ duration: 0.2 }}
           >
             <Link to="/" className="flex items-center group">
               <motion.div 
-                className="relative w-16 h-16 ml-4"
+                className="relative w-12 h-12 sm:w-14 sm:h-14 lg:w-16 lg:h-16 ml-2 sm:ml-3 lg:ml-4"
                 whileHover={{ rotate: 5 }}
                 transition={{ duration: 0.3 }}
               >
-                <div className="absolute inset-0 bg-gradient-to-br from-blue-600 via-indigo-600 to-purple-600 rounded-2xl shadow-xl flex items-center justify-center border-2 border-white/30 group-hover:shadow-2xl transition-shadow duration-300">
+                <div className="absolute inset-0 bg-gradient-to-br from-blue-600 via-indigo-600 to-purple-600 rounded-xl sm:rounded-2xl shadow-lg sm:shadow-xl flex items-center justify-center border-2 border-white/30 group-hover:shadow-2xl transition-shadow duration-300">
                   <div className="flex flex-col items-center justify-center">
                     <motion.div
                       animate={{ rotate: [0, 10, -10, 0] }}
                       transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
                     >
-                      <GraduationCap className="h-8 w-8 text-white mb-1" />
+                      <GraduationCap className="h-6 w-6 sm:h-7 sm:w-7 lg:h-8 lg:w-8 text-white mb-0.5 sm:mb-1" />
                     </motion.div>
                     <div className="flex items-center">
-                      <BookOpen className="h-3 w-3 text-white/90" />
-                      <Globe className="h-3 w-3 text-white/90 -mr-0.5" />
+                      <BookOpen className="h-2 w-2 sm:h-3 sm:w-3 text-white/90" />
+                      <Globe className="h-2 w-2 sm:h-3 sm:w-3 text-white/90 -mr-0.5" />
                     </div>
                   </div>
                 </div>
                 <motion.div 
-                  className="absolute -top-1 -right-1 w-6 h-6 bg-gradient-to-br from-amber-400 to-orange-500 rounded-full border-2 border-white shadow-lg flex items-center justify-center"
+                  className="absolute -top-0.5 sm:-top-1 -right-0.5 sm:-right-1 w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-6 bg-gradient-to-br from-amber-400 to-orange-500 rounded-full border border-white sm:border-2 shadow-sm sm:shadow-lg flex items-center justify-center"
                   animate={{ scale: [1, 1.1, 1] }}
                   transition={{ duration: 2, repeat: Infinity }}
                 >
                   <span className="text-white text-xs font-bold">M</span>
                 </motion.div>
               </motion.div>
-              <div className="text-right">
+              <div className="text-right min-w-0">
                 <motion.h1 
-                  className="text-2xl lg:text-3xl font-arabic-formal font-bold text-slate-800 dark:text-white leading-tight tracking-wide group-hover:text-primary transition-colors duration-300"
+                  className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-arabic-formal font-bold text-slate-800 dark:text-white leading-tight tracking-wide group-hover:text-primary transition-colors duration-300 truncate"
                   whileHover={{ scale: 1.02 }}
                 >
-                  وكالة ماستر إيدو باث
+                  <span className="hidden sm:inline">وكالة ماستر إيدو باث</span>
+                  <span className="sm:hidden">ماستر إيدو باث</span>
                 </motion.h1>
                 <motion.p 
-                  className="text-sm lg:text-base font-tajawal font-semibold text-blue-600 dark:text-blue-400 tracking-wider"
+                  className="text-xs sm:text-sm lg:text-base font-tajawal font-semibold text-blue-600 dark:text-blue-400 tracking-wider truncate"
                   whileHover={{ scale: 1.02 }}
                 >
                   MasterEduPath Agency
@@ -229,9 +230,8 @@ const Header = () => {
             </motion.div>
           </nav>
 
-          {/* أزرار الإجراءات المحسنة */}
           <motion.div 
-            className="hidden lg:flex items-center gap-4"
+            className="flex lg:hidden items-center gap-3 sm:gap-4"
             initial={{ x: 20, opacity: 0 }}
             animate={{ x: 0, opacity: 1 }}
             transition={{ delay: 0.6, duration: 0.3 }}
@@ -241,17 +241,17 @@ const Header = () => {
               whileTap={{ scale: 0.95 }}
             >
               <Button 
-                size="lg" 
-                className="bg-gradient-to-r from-primary to-primary/80 text-primary-foreground hover:from-primary/90 hover:to-primary/70 shadow-lg hover:shadow-xl transition-all duration-300 font-semibold px-8 py-3 rounded-xl" 
+                size="sm" 
+                className="bg-gradient-to-r from-primary to-primary/80 text-primary-foreground hover:from-primary/90 hover:to-primary/70 shadow-md hover:shadow-lg transition-all duration-300 font-medium px-4 py-2 sm:px-6 sm:py-2.5 text-sm sm:text-base rounded-lg sm:rounded-xl" 
                 asChild
               >
-                <Link to="/order-now" className="flex items-center gap-2">
+                <Link to="/order-now" className="flex items-center gap-1.5 sm:gap-2">
                   <span>اطلب الآن</span>
                   <motion.div
-                    animate={{ x: [0, -3, 0] }}
+                    animate={{ x: [0, -2, 0] }}
                     transition={{ duration: 1.5, repeat: Infinity }}
                   >
-                    <ArrowLeft className="h-4 w-4" />
+                    <ArrowLeft className="h-3 w-3 sm:h-4 sm:w-4" />
                   </motion.div>
                 </Link>
               </Button>

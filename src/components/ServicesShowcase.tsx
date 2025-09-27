@@ -77,7 +77,7 @@ const ServicesShowcase = () => {
 
   return (
     <section 
-      className="py-16 relative overflow-hidden" 
+      className="mobile-section relative overflow-hidden" 
       dir="rtl"
       style={{
         background: "linear-gradient(135deg, hsl(280 100% 15%) 0%, hsl(290 90% 10%) 50%, hsl(260 95% 12%) 100%)",
