@@ -19,7 +19,8 @@ import {
   HelpCircle,
   TrendingUp,
   DollarSign,
-  UserPlus
+  UserPlus,
+  Briefcase
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -220,6 +221,15 @@ const Footer = () => {
                 >
                   <DollarSign className="h-3 w-3 md:h-4 md:w-4 text-green-400" />
                   التسويق بالعمولة
+                </a>
+              </li>
+              <li>
+                <a 
+                  href="/careers" 
+                  className="text-white/70 hover:text-white transition-colors text-sm md:text-base flex items-center gap-2 hover:translate-x-1 transition-transform"
+                >
+                  <Briefcase className="h-3 w-3 md:h-4 md:w-4 text-blue-400" />
+                  التوظيف والوظائف
                 </a>
               </li>
               {[
