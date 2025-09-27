@@ -96,12 +96,13 @@ const Footer = () => {
       {/* Main Footer Content */}
       <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-16">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 md:gap-12">
+          
           {/* معلومات الشركة */}
           <motion.div 
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
-            className="lg:col-span-1 space-y-6"
+            className="space-y-6"
           >
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 md:w-12 md:h-12 bg-gradient-to-br from-primary to-blue-600 rounded-full flex items-center justify-center flex-shrink-0">
@@ -117,22 +118,6 @@ const Footer = () => {
               نحن الشريك الموثوق لأكثر من 10,000 عميل في جميع أنحاء المملكة. 
               نقدم خدمات ترجمة احترافية بأكثر من 100 لغة مع ضمان الجودة والسرعة.
             </p>
-
-            {/* Trust Indicators */}
-            <div className="grid grid-cols-3 gap-2 md:gap-3">
-              <div className="text-center p-2 md:p-3 bg-white/5 rounded-lg border border-white/10">
-                <Award className="h-4 w-4 md:h-5 md:w-5 mx-auto mb-1 text-yellow-400" />
-                <p className="text-xs text-white/80">ISO معتمد</p>
-              </div>
-              <div className="text-center p-2 md:p-3 bg-white/5 rounded-lg border border-white/10">
-                <Shield className="h-4 w-4 md:h-5 md:w-5 mx-auto mb-1 text-green-400" />
-                <p className="text-xs text-white/80">أمان تام</p>
-              </div>
-              <div className="text-center p-2 md:p-3 bg-white/5 rounded-lg border border-white/10">
-                <Users className="h-4 w-4 md:h-5 md:w-5 mx-auto mb-1 text-blue-400" />
-                <p className="text-xs text-white/80">128 خبير</p>
-              </div>
-            </div>
 
             {/* Social Media */}
             <div className="flex gap-2 md:gap-3">
@@ -154,7 +139,7 @@ const Footer = () => {
             </div>
           </motion.div>
 
-          {/* خدماتنا المتخصصة */}
+          {/* خدماتنا */}
           <motion.div 
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -162,17 +147,16 @@ const Footer = () => {
             className="space-y-4 md:space-y-6"
           >
             <h4 className="text-base md:text-lg font-bold text-white flex items-center gap-2">
-              <Globe className="h-4 w-4 md:h-5 md:w-5 text-blue-400" />
-              خدماتنا المتخصصة
+              <Zap className="h-4 w-4 md:h-5 md:w-5 text-blue-400" />
+              خدماتنا
             </h4>
             <ul className="space-y-2 md:space-y-3">
               {[
-                { name: 'خدمات الترجمة المتخصصة', href: '/translation-services' },
-                { name: 'البحث العلمي والأكاديمي', href: '/research-services' },
-                { name: 'الاستشارات التعليمية', href: '/services/consultation-services' },
-                { name: 'التحليل الإحصائي', href: '/services/statistical-analysis-services' },
+                { name: 'خدمات الترجمة', href: '/translation-services' },
+                { name: 'البحث العلمي', href: '/research-services' },
                 { name: 'النشر في المجلات', href: '/research/journal-publication' },
-                { name: 'الدورات التدريبية', href: '/research/training-courses' }
+                { name: 'التحليل الإحصائي', href: '/services/statistical-analysis-services' },
+                { name: 'الاستشارات التعليمية', href: '/services/consultation-services' }
               ].map((service) => (
                 <li key={service.name}>
                   <a 
@@ -186,7 +170,7 @@ const Footer = () => {
             </ul>
           </motion.div>
 
-          {/* المدونة والموارد */}
+          {/* روابط سريعة */}
           <motion.div 
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -194,24 +178,23 @@ const Footer = () => {
             className="space-y-4 md:space-y-6"
           >
             <h4 className="text-base md:text-lg font-bold text-white flex items-center gap-2">
-              <Globe className="h-4 w-4 md:h-5 md:w-5 text-orange-400" />
-              المدونة والموارد
+              <Star className="h-4 w-4 md:h-5 md:w-5 text-yellow-400" />
+              روابط سريعة
             </h4>
             <ul className="space-y-2 md:space-y-3">
               {[
-                { name: 'أحدث المقالات', href: '/blog' },
+                { name: 'عن الشركة', href: '/about-us' },
+                { name: 'الأسعار', href: '/pricing' },
+                { name: 'المدونة', href: '/blog' },
                 { name: 'عضوية ماستر', href: '/master-membership' },
-                { name: 'نصائح الترجمة', href: '/blog' },
-                { name: 'أخبار الصناعة', href: '/blog' },
-                { name: 'دليل العملاء', href: '/client-guide' },
-                { name: 'مسابقات أكاديمية', href: '/academic-competitions' }
-              ].map((blog) => (
-                <li key={blog.name}>
+                { name: 'الأسئلة الشائعة', href: '/faq' }
+              ].map((link) => (
+                <li key={link.name}>
                   <a 
-                    href={blog.href} 
+                    href={link.href} 
                     className="text-white/70 hover:text-white transition-colors text-sm md:text-base block hover:translate-x-1 transition-transform"
                   >
-                    {blog.name}
+                    {link.name}
                   </a>
                 </li>
               ))}
@@ -226,17 +209,23 @@ const Footer = () => {
             className="space-y-4 md:space-y-6"
           >
             <h4 className="text-base md:text-lg font-bold text-white flex items-center gap-2">
-              <Star className="h-4 w-4 md:h-5 md:w-5 text-purple-400" />
+              <TrendingUp className="h-4 w-4 md:h-5 md:w-5 text-purple-400" />
               روابط مهمة
             </h4>
             <ul className="space-y-2 md:space-y-3">
+              <li>
+                <a 
+                  href="#affiliate-program" 
+                  className="text-white/70 hover:text-white transition-colors text-sm md:text-base flex items-center gap-2 hover:translate-x-1 transition-transform"
+                >
+                  <DollarSign className="h-3 w-3 md:h-4 md:w-4 text-green-400" />
+                  التسويق بالعمولة
+                </a>
+              </li>
               {[
-                { name: 'التسويق بالعمولة', icon: TrendingUp, href: '#affiliate-program' },
-                { name: 'الأسعار', icon: DollarSign, href: '/pricing' },
-                { name: 'عن الشركة', icon: Building2, href: '/about-us' },
-                { name: 'الملكية الفكرية', icon: Shield, href: '/intellectual-property' },
-                { name: 'الأسئلة الشائعة', icon: HelpCircle, href: '/faq' },
-                { name: 'سياسة الخصوصية', icon: Shield, href: '/privacy-policy' }
+                { name: 'الملكية الفكرية', href: '/intellectual-property', icon: Shield },
+                { name: 'سياسة الخصوصية', href: '/privacy-policy', icon: Shield },
+                { name: 'شروط الاستخدام', href: '/terms-of-service', icon: HelpCircle }
               ].map((link) => (
                 <li key={link.name}>
                   <a 
