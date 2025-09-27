@@ -353,97 +353,65 @@ const MasterMembershipBanner = () => {
                           }}
                         />
 
-                        {/* Card Header */}
-                        <div className="absolute top-1 sm:top-1.5 right-1 sm:right-1.5 text-white text-xs font-bold opacity-90 z-10">
-                          <span className="hidden sm:inline">ماستر</span>
-                          <span className="sm:hidden text-xs">M</span>
-                        </div>
-                        
-                        <div className="absolute top-1 sm:top-1.5 left-1 sm:left-1.5 z-10">
-                          <Crown className="w-2.5 h-2.5 sm:w-3 sm:h-3 text-yellow-300" />
-                        </div>
-
-                        {/* EMV Chip */}
-                        <motion.div 
-                          className={`absolute top-3 sm:top-5 right-1 sm:right-1.5 w-3 h-2 sm:w-4 sm:h-3 ${card.chipColor} rounded-sm shadow-sm z-10`}
-                          animate={{
-                            boxShadow: [
-                              "0 0 0 0 rgba(255, 255, 255, 0.4)",
-                              "0 0 0 1px rgba(255, 255, 255, 0.2)",
-                              "0 0 0 0 rgba(255, 255, 255, 0.4)"
-                            ]
-                          }}
-                          transition={{
-                            duration: 2,
-                            repeat: Infinity,
-                            delay: index * 0.5
-                          }}
-                        >
-                          <div className="w-full h-full grid grid-cols-2 gap-0.5 p-0.5">
-                            {[...Array(4)].map((_, i) => (
-                              <div key={i} className="bg-yellow-600/40 rounded-sm"></div>
-                            ))}
+                        {/* Card Content - Reorganized Layout */}
+                        <div className="absolute inset-0 flex flex-col justify-between p-1 sm:p-1.5 text-white z-10">
+                          {/* Top Section */}
+                          <div className="flex justify-between items-start">
+                            <div className="text-xs font-bold opacity-90">
+                              <span className="hidden sm:inline">ماستر</span>
+                              <span className="sm:hidden text-xs">M</span>
+                            </div>
+                            <Crown className="w-2.5 h-2.5 sm:w-3 sm:h-3 text-yellow-300" />
                           </div>
-                        </motion.div>
-
-                        {/* Card Number */}
-                        <div className="absolute top-1/2 right-1 sm:right-1.5 transform -translate-y-1/2 text-white z-10">
-                          <motion.div 
-                            className="text-xs font-mono tracking-wider opacity-90"
-                            animate={{
-                              opacity: [0.7, 1, 0.7]
-                            }}
-                            transition={{
-                              duration: 3,
-                              repeat: Infinity,
-                              delay: index * 0.3
-                            }}
-                          >
-                            <span className="hidden sm:inline">**** {(1234 + index).toString()}</span>
-                            <span className="sm:hidden text-xs">****</span>
-                          </motion.div>
-                        </div>
-
-                        {/* Price */}
-                        <div className="absolute top-1/2 left-1 sm:left-1.5 transform -translate-y-1/2 text-white z-10">
-                          <motion.div 
-                            className="text-xs font-bold"
-                            animate={{
-                              scale: [1, 1.05, 1]
-                            }}
-                            transition={{
-                              duration: 2,
-                              repeat: Infinity,
-                              delay: index * 0.4
-                            }}
-                          >
-                            <span className="hidden sm:inline">{card.price} ﷼</span>
-                            <span className="sm:hidden text-xs">{card.price.split(',')[0]}K</span>
-                          </motion.div>
-                        </div>
-
-                        {/* Card Title */}
-                        <div className="absolute bottom-1 sm:bottom-1.5 right-1 sm:right-1.5 text-white z-10">
-                          <motion.div 
-                            className="text-xs font-bold"
-                            animate={{
-                              opacity: [0.8, 1, 0.8]
-                            }}
-                            transition={{
-                              duration: 3,
-                              repeat: Infinity,
-                              delay: index * 0.3
-                            }}
-                          >
-                            <span className="hidden sm:inline">عضوية {card.name}</span>
-                            <span className="sm:hidden text-xs">{card.name}</span>
-                          </motion.div>
-                          <div className="text-xs opacity-70 hidden sm:block">{card.nameEn}</div>
-                        </div>
-
-                        {/* Validity */}
-                        <div className="absolute bottom-1 sm:bottom-1.5 left-1 sm:left-1.5 text-white/80 text-xs z-10">
-                          <div className="opacity-70">12/25</div>
+                          
+                          {/* Center Section - Main Info */}
+                          <div className="text-center space-y-0.5">
+                            <motion.div 
+                              className="text-xs sm:text-sm font-bold drop-shadow-sm"
+                              animate={{
+                                opacity: [0.8, 1, 0.8]
+                              }}
+                              transition={{
+                                duration: 3,
+                                repeat: Infinity,
+                                delay: index * 0.3
+                              }}
+                            >
+                              {card.name}
+                            </motion.div>
+                            <motion.div 
+                              className="text-yellow-300 font-bold text-xs sm:text-sm drop-shadow-sm"
+                              animate={{
+                                scale: [1, 1.05, 1]
+                              }}
+                              transition={{
+                                duration: 2,
+                                repeat: Infinity,
+                                delay: index * 0.4
+                              }}
+                            >
+                              {card.price} ﷼
+                            </motion.div>
+                          </div>
+                          
+                          {/* Bottom Section */}
+                          <div className="flex justify-between items-end text-xs">
+                            <motion.div 
+                              className="font-mono tracking-wider opacity-90"
+                              animate={{
+                                opacity: [0.7, 1, 0.7]
+                              }}
+                              transition={{
+                                duration: 3,
+                                repeat: Infinity,
+                                delay: index * 0.3
+                              }}
+                            >
+                              <span className="hidden sm:inline">**** {(1234 + index).toString()}</span>
+                              <span className="sm:hidden">****</span>
+                            </motion.div>
+                            <div className="opacity-70">12/25</div>
+                          </div>
                         </div>
 
                         {/* Contactless Symbol */}
