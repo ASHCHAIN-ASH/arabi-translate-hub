@@ -1,9 +1,9 @@
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Crown, Star, CheckCircle, ArrowLeft, Sparkles, Award, Users, Zap } from "lucide-react";
+import { Crown, Star, CheckCircle, ArrowLeft, Sparkles, Award, Users, Zap, Shield, Gift } from "lucide-react";
 import { Link } from "react-router-dom";
-import masterMembershipBanner from "@/assets/master-membership-banner.jpg";
+import premiumMembershipCards from "@/assets/premium-membership-cards.jpg";
 
 const MasterMembershipBanner = () => {
   return (
@@ -48,79 +48,167 @@ const MasterMembershipBanner = () => {
                 </div>
 
                 <h2 className="text-4xl lg:text-5xl font-bold text-white mb-4 leading-tight">
-                  عضوية
-                  <span className="bg-gradient-to-r from-yellow-200 to-amber-200 bg-clip-text text-transparent mx-3">
-                    ماستر
-                  </span>
-                  الذهبية
+                  <motion.span
+                    animate={{ 
+                      backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"],
+                    }}
+                    transition={{ 
+                      duration: 3, 
+                      repeat: Infinity, 
+                      ease: "linear" 
+                    }}
+                    className="bg-gradient-to-r from-yellow-200 via-white via-amber-200 to-yellow-200 bg-clip-text text-transparent bg-[length:200%_100%]"
+                  >
+                    عضوية ماستر
+                  </motion.span>
+                  <br />
+                  <motion.span
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.8, delay: 0.3 }}
+                    className="text-white"
+                  >
+                    الحصرية
+                  </motion.span>
                 </h2>
 
-                <p className="text-xl text-white/90 mb-6 leading-relaxed">
-                  انضم إلى نخبة الباحثين والأكاديميين واحصل على خدمات متميزة مع امتيازات حصرية وأولوية في التنفيذ
-                </p>
+                <motion.p 
+                  className="text-xl text-white/90 mb-6 leading-relaxed"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ duration: 1, delay: 0.5 }}
+                >
+                  <motion.span
+                    animate={{ opacity: [0.7, 1, 0.7] }}
+                    transition={{ duration: 2, repeat: Infinity }}
+                  >
+                    انضم إلى نخبة الباحثين والأكاديميين
+                  </motion.span>
+                  <br />
+                  <motion.span
+                    initial={{ x: -20, opacity: 0 }}
+                    animate={{ x: 0, opacity: 1 }}
+                    transition={{ duration: 0.8, delay: 0.7 }}
+                  >
+                    واحصل على خدمات متميزة مع امتيازات حصرية
+                  </motion.span>
+                </motion.p>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8">
-                  <div className="flex items-center gap-3 text-white">
-                    <div className="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center">
+                  <motion.div 
+                    className="flex items-center gap-3 text-white"
+                    initial={{ x: -20, opacity: 0 }}
+                    animate={{ x: 0, opacity: 1 }}
+                    transition={{ duration: 0.6, delay: 0.8 }}
+                  >
+                    <motion.div 
+                      className="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center"
+                      animate={{ scale: [1, 1.1, 1] }}
+                      transition={{ duration: 2, repeat: Infinity }}
+                    >
                       <CheckCircle className="h-4 w-4" />
-                    </div>
-                    <span className="font-medium">خصم 30% على جميع الخدمات</span>
-                  </div>
+                    </motion.div>
+                    <span className="font-medium">خدمات مميزة وحصرية</span>
+                  </motion.div>
                   
-                  <div className="flex items-center gap-3 text-white">
-                    <div className="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center">
+                  <motion.div 
+                    className="flex items-center gap-3 text-white"
+                    initial={{ x: 20, opacity: 0 }}
+                    animate={{ x: 0, opacity: 1 }}
+                    transition={{ duration: 0.6, delay: 1 }}
+                  >
+                    <motion.div 
+                      className="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center"
+                      animate={{ rotate: [0, 360] }}
+                      transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
+                    >
                       <Zap className="h-4 w-4" />
-                    </div>
+                    </motion.div>
                     <span className="font-medium">أولوية في التنفيذ</span>
-                  </div>
+                  </motion.div>
                   
-                  <div className="flex items-center gap-3 text-white">
-                    <div className="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center">
+                  <motion.div 
+                    className="flex items-center gap-3 text-white"
+                    initial={{ x: -20, opacity: 0 }}
+                    animate={{ x: 0, opacity: 1 }}
+                    transition={{ duration: 0.6, delay: 1.2 }}
+                  >
+                    <motion.div 
+                      className="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center"
+                      animate={{ y: [0, -5, 0] }}
+                      transition={{ duration: 2, repeat: Infinity }}
+                    >
                       <Award className="h-4 w-4" />
-                    </div>
+                    </motion.div>
                     <span className="font-medium">استشارات مجانية</span>
-                  </div>
+                  </motion.div>
                   
-                  <div className="flex items-center gap-3 text-white">
-                    <div className="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center">
-                      <Users className="h-4 w-4" />
-                    </div>
+                  <motion.div 
+                    className="flex items-center gap-3 text-white"
+                    initial={{ x: 20, opacity: 0 }}
+                    animate={{ x: 0, opacity: 1 }}
+                    transition={{ duration: 0.6, delay: 1.4 }}
+                  >
+                    <motion.div 
+                      className="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center"
+                      animate={{ scale: [1, 1.2, 1] }}
+                      transition={{ duration: 1.5, repeat: Infinity }}
+                    >
+                      <Shield className="h-4 w-4" />
+                    </motion.div>
                     <span className="font-medium">دعم تقني متقدم</span>
-                  </div>
+                  </motion.div>
                 </div>
 
                 <div className="flex flex-col sm:flex-row gap-4">
-                  <Button 
-                    asChild
-                    size="lg"
-                    className="bg-white text-amber-600 hover:bg-gray-100 font-bold px-8 py-3 text-lg shadow-lg hover:shadow-xl transition-all duration-300"
+                  <motion.div
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
                   >
-                    <Link to="/master-membership">
-                      <Sparkles className="h-5 w-5 ml-2" />
-                      اشترك الآن
-                      <ArrowLeft className="h-5 w-5 mr-2" />
-                    </Link>
-                  </Button>
+                    <Button 
+                      asChild
+                      size="lg"
+                      className="bg-white text-amber-600 hover:bg-gray-100 font-bold px-8 py-3 text-lg shadow-lg hover:shadow-xl transition-all duration-300"
+                    >
+                      <Link to="/master-membership">
+                        <Sparkles className="h-5 w-5 ml-2" />
+                        اشترك الآن
+                        <ArrowLeft className="h-5 w-5 mr-2" />
+                      </Link>
+                    </Button>
+                  </motion.div>
                   
-                  <Button 
-                    variant="outline"
-                    size="lg"
-                    className="border-white/30 text-white hover:bg-white/10 backdrop-blur-sm font-medium px-6"
+                  <motion.div
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
                   >
-                    تفاصيل العضوية
-                  </Button>
+                    <Button 
+                      asChild
+                      size="lg"
+                      className="bg-white/20 backdrop-blur-sm text-white hover:bg-white/30 border-2 border-white/50 hover:border-white font-bold px-6 py-3 text-lg shadow-lg hover:shadow-xl transition-all duration-300"
+                    >
+                      <Link to="/master-membership">
+                        <Gift className="h-5 w-5 ml-2" />
+                        تفاصيل العضوية
+                      </Link>
+                    </Button>
+                  </motion.div>
                 </div>
 
-                <div className="flex items-center gap-6 mt-6 text-sm text-white/80">
-                  <div className="flex items-center gap-2">
-                    <Users className="h-4 w-4" />
-                    <span>+2,500 عضو نشط</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <Star className="h-4 w-4 fill-current" />
-                    <span>تقييم 4.9/5</span>
-                  </div>
-                </div>
+                <motion.div
+                  className="mt-6 text-center"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ duration: 1, delay: 1.8 }}
+                >
+                  <motion.span 
+                    className="text-white/90 text-lg font-medium"
+                    animate={{ opacity: [0.6, 1, 0.6] }}
+                    transition={{ duration: 3, repeat: Infinity }}
+                  >
+                    ✨ احصل على امتيازات حصرية ✨
+                  </motion.span>
+                </motion.div>
               </motion.div>
             </div>
 
@@ -135,8 +223,8 @@ const MasterMembershipBanner = () => {
               >
                 <div className="relative overflow-hidden rounded-2xl shadow-2xl">
                   <img
-                    src={masterMembershipBanner}
-                    alt="عضوية ماستر الذهبية"
+                    src={premiumMembershipCards}
+                    alt="بطاقات العضوية المميزة"
                     className="w-full h-80 object-cover transform hover:scale-105 transition-transform duration-500"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent" />
@@ -168,24 +256,6 @@ const MasterMembershipBanner = () => {
               </motion.div>
             </div>
           </div>
-
-          {/* Special Offer Badge */}
-          <motion.div
-            className="absolute top-0 right-8 transform -translate-y-4"
-            initial={{ opacity: 0, scale: 0 }}
-            whileInView={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.5, delay: 0.6 }}
-            viewport={{ once: true }}
-          >
-            <div className="bg-red-500 text-white px-4 py-2 rounded-b-xl shadow-lg relative">
-              <div className="text-sm font-bold text-center">
-                عرض محدود
-                <div className="text-xs opacity-90">خصم 50%</div>
-              </div>
-              <div className="absolute top-0 left-0 w-0 h-0 border-l-4 border-l-transparent border-t-4 border-t-red-600 transform -translate-x-full" />
-              <div className="absolute top-0 right-0 w-0 h-0 border-r-4 border-r-transparent border-t-4 border-t-red-600 transform translate-x-full" />
-            </div>
-          </motion.div>
         </motion.div>
       </div>
     </section>
