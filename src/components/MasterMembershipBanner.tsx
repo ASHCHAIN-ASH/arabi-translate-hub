@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Crown, Sparkles, ArrowLeft, Gift, Star } from "lucide-react";
 import { Link } from "react-router-dom";
-import vipMembershipCards from "@/assets/vip-membership-cards.jpg";
+import vipMembershipCards from "@/assets/platinum-membership-card.jpg";
 
 const MasterMembershipBanner = () => {
   return (
@@ -121,18 +121,18 @@ const MasterMembershipBanner = () => {
                 <div className="relative overflow-hidden rounded-xl shadow-lg">
                   <img
                     src={vipMembershipCards}
-                    alt="بطاقات العضوية المميزة"
+                    alt="بطاقة العضوية البلاتينية"
                     className="w-full h-24 lg:h-32 object-cover transform hover:scale-105 transition-transform duration-500"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent" />
                   
-                  {/* Floating VIP Badge */}
+                  {/* Floating Platinum Badge */}
                   <motion.div
-                    className="absolute top-1 right-1 bg-yellow-500 text-white px-2 py-1 rounded-full shadow-lg text-xs font-bold"
+                    className="absolute top-1 right-1 bg-slate-600 text-white px-2 py-1 rounded-full shadow-lg text-xs font-bold"
                     animate={{ y: [0, -3, 0] }}
                     transition={{ duration: 2, repeat: Infinity, repeatType: "reverse" }}
                   >
-                    VIP
+                    PLATINUM
                   </motion.div>
                 </div>
               </motion.div>
