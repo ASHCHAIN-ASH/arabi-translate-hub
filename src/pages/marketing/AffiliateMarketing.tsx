@@ -166,27 +166,29 @@ const AffiliateMarketing = () => {
       if (error) {
         console.error('Registration error:', error);
         
-        // Handle specific FunctionsHttpError cases
-        if (error.message && error.message.includes('Edge Function returned a non-2xx status code')) {
-          // This typically means there's an error response from the server
-          toast({
-            title: "خطأ في التسجيل",
-            description: "هذا البريد الإلكتروني مسجل مسبقاً في البرنامج. يرجى استخدام بريد إلكتروني مختلف.",
-            variant: "destructive",
-          });
-        } else if (error.message && error.message.includes('400')) {
-          toast({
-            title: "خطأ في البيانات",
-            description: "يرجى التأكد من صحة جميع البيانات المدخلة.",
-            variant: "destructive",
-          });
-        } else {
-          toast({
-            title: "خطأ في التسجيل",
-            description: "حدث خطأ أثناء التسجيل. يرجى المحاولة مرة أخرى.",
-            variant: "destructive",
-          });
+        let errorTitle = "خطأ في التسجيل";
+        let errorDescription = "حدث خطأ أثناء التسجيل. يرجى المحاولة مرة أخرى.";
+        
+        // Handle specific error cases
+        if (error.message && error.message.includes('FunctionsHttpError')) {
+          // Check if it's a 409 conflict (duplicate email)
+          if (error.context && error.context.status === 409) {
+            errorTitle = "البريد الإلكتروني مُسجل مسبقاً";
+            errorDescription = "هذا البريد الإلكتروني مسجل بالفعل في برنامج التسويق بالعمولة. إذا كنت تواجه مشكلة، يرجى التواصل معنا على 0500776343.";
+          } else if (error.message.includes('400')) {
+            errorTitle = "خطأ في البيانات";
+            errorDescription = "يرجى التأكد من صحة جميع البيانات المدخلة.";
+          } else {
+            // Try to get the actual error message from network response
+            errorDescription = "هذا البريد الإلكتروني مسجل مسبقاً في البرنامج. يرجى استخدام بريد إلكتروني مختلف أو التواصل معنا.";
+          }
         }
+        
+        toast({
+          title: errorTitle,
+          description: errorDescription,
+          variant: "destructive",
+        });
         return;
       }
 
