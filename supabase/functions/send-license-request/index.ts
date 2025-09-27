@@ -45,7 +45,7 @@ const durationMap: Record<string, string> = {
   "permanent": "دائم"
 };
 
-// Professional email template for client confirmation
+// Professional email template for client confirmation - Enhanced RTL
 const getClientEmailTemplate = (data: LicenseRequestData, requestNumber: string) => `
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
@@ -66,14 +66,15 @@ const getClientEmailTemplate = (data: LicenseRequestData, requestNumber: string)
             font-family: 'Cairo', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             line-height: 1.8;
             color: #1a202c;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #1e40af 0%, #7c3aed 100%);
             direction: rtl;
             text-align: right;
+            padding: 20px;
         }
         
         .email-container {
             max-width: 700px;
-            margin: 40px auto;
+            margin: 0 auto;
             background: #ffffff;
             border-radius: 20px;
             box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
@@ -81,7 +82,7 @@ const getClientEmailTemplate = (data: LicenseRequestData, requestNumber: string)
         }
         
         .header {
-            background: linear-gradient(135deg, #1e3a8a 0%, #7c3aed 50%, #db2777 100%);
+            background: linear-gradient(135deg, #1e40af 0%, #7c3aed 50%, #db2777 100%);
             color: white;
             padding: 40px 30px;
             text-align: center;
@@ -96,13 +97,13 @@ const getClientEmailTemplate = (data: LicenseRequestData, requestNumber: string)
             right: -50%;
             width: 200%;
             height: 200%;
-            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="25" cy="25" r="1" fill="white" opacity="0.1"/><circle cx="75" cy="75" r="1.5" fill="white" opacity="0.08"/><circle cx="50" cy="10" r="0.8" fill="white" opacity="0.12"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="25" cy="25" r="1" fill="white" opacity="0.1"/><circle cx="75" cy="75" r="1.5" fill="white" opacity="0.08"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
             animation: float 20s ease-in-out infinite;
         }
         
         @keyframes float {
-            0%, 100% { transform: translateY(0px) rotate(0deg); }
-            50% { transform: translateY(-20px) rotate(2deg); }
+            0%, 100% { transform: translateX(0px) rotate(0deg); }
+            50% { transform: translateX(-10px) rotate(1deg); }
         }
         
         .logo-container {
@@ -147,51 +148,58 @@ const getClientEmailTemplate = (data: LicenseRequestData, requestNumber: string)
         
         .greeting {
             font-size: 24px;
-            color: #1a365d;
+            color: #1e40af;
             margin-bottom: 25px;
             font-weight: 600;
+            text-align: center;
+            background: linear-gradient(135deg, #eff6ff 0%, #f3e8ff 100%);
+            padding: 20px;
+            border-radius: 15px;
+            border: 2px solid #e0e7ff;
         }
         
         .intro-text {
             font-size: 18px;
             color: #2d3748;
             margin-bottom: 35px;
-            line-height: 1.8;
+            line-height: 1.9;
+            text-align: center;
         }
         
         .request-number {
-            background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
+            background: linear-gradient(135deg, #7c3aed 0%, #ec4899 100%);
             color: white;
-            padding: 20px 30px;
+            padding: 25px 30px;
             border-radius: 15px;
             text-align: center;
             margin: 30px 0;
-            box-shadow: 0 8px 25px rgba(72, 187, 120, 0.3);
+            box-shadow: 0 10px 30px rgba(124, 58, 237, 0.3);
         }
         
         .request-number-label {
             font-size: 16px;
             opacity: 0.9;
-            margin-bottom: 8px;
+            margin-bottom: 10px;
         }
         
         .request-number-value {
-            font-size: 28px;
+            font-size: 32px;
             font-weight: 800;
-            font-family: 'Courier New', monospace;
-            letter-spacing: 2px;
+            font-family: 'Cairo', monospace;
+            letter-spacing: 3px;
         }
         
         .details-card {
-            background: linear-gradient(135deg, #edf2f7 0%, #e2e8f0 100%);
+            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
             border-radius: 18px;
             padding: 35px;
             margin: 30px 0;
-            border-right: 6px solid #4299e1;
+            border-right: 6px solid #1e40af;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
         }
         
         .details-header {
-            color: #2b6cb0;
+            color: #1e40af;
             font-size: 22px;
             font-weight: 700;
             margin-bottom: 25px;
@@ -204,41 +212,44 @@ const getClientEmailTemplate = (data: LicenseRequestData, requestNumber: string)
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 18px 0;
-            border-bottom: 2px solid rgba(203, 213, 224, 0.5);
+            padding: 20px;
+            margin-bottom: 15px;
+            background: white;
+            border-radius: 12px;
+            border-right: 4px solid #7c3aed;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            transition: transform 0.2s ease;
         }
         
-        .detail-row:last-child {
-            border-bottom: none;
+        .detail-row:hover {
+            transform: translateX(-5px);
         }
         
         .detail-label {
             font-weight: 600;
-            color: #4a5568;
+            color: #1e40af;
             font-size: 16px;
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 10px;
         }
         
         .detail-value {
             color: #1a202c;
             font-weight: 500;
             font-size: 16px;
-            text-align: left;
-            direction: ltr;
         }
         
         .next-steps {
-            background: linear-gradient(135deg, #fed7d7 0%, #feb2b2 100%);
+            background: linear-gradient(135deg, #ecfdf5 0%, #f0fdf4 100%);
             border-radius: 18px;
             padding: 35px;
             margin: 30px 0;
-            border-right: 6px solid #f56565;
+            border-right: 6px solid #22c55e;
         }
         
         .next-steps-header {
-            color: #c53030;
+            color: #16a34a;
             font-size: 22px;
             font-weight: 700;
             margin-bottom: 20px;
@@ -251,16 +262,20 @@ const getClientEmailTemplate = (data: LicenseRequestData, requestNumber: string)
             display: flex;
             align-items: flex-start;
             gap: 15px;
-            margin-bottom: 18px;
+            margin-bottom: 20px;
             font-size: 16px;
-            color: #742a2a;
+            color: #374151;
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            border-right: 3px solid #22c55e;
         }
         
         .step-icon {
-            background: #c53030;
+            background: #22c55e;
             color: white;
-            width: 28px;
-            height: 28px;
+            width: 30px;
+            height: 30px;
             border-radius: 50%;
             display: flex;
             align-items: center;
@@ -268,74 +283,72 @@ const getClientEmailTemplate = (data: LicenseRequestData, requestNumber: string)
             font-size: 14px;
             font-weight: bold;
             flex-shrink: 0;
-            margin-top: 2px;
+        }
+        
+        .timeline-notice {
+            font-size: 20px;
+            color: #7c3aed;
+            text-align: center;
+            margin: 35px 0;
+            padding: 25px;
+            background: linear-gradient(135deg, #faf5ff 0%, #f3e8ff 100%);
+            border-radius: 15px;
+            border: 2px solid #e9d5ff;
+            font-weight: 600;
         }
         
         .contact-section {
-            background: linear-gradient(135deg, #e6fffa 0%, #b2f5ea 100%);
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            color: white;
             border-radius: 18px;
-            padding: 35px;
+            padding: 40px;
             margin: 30px 0;
             text-align: center;
-            border-right: 6px solid #38b2ac;
         }
         
         .contact-header {
-            color: #285e61;
-            font-size: 22px;
+            color: #fbbf24;
+            font-size: 24px;
             font-weight: 700;
             margin-bottom: 25px;
         }
         
-        .contact-button {
-            display: inline-block;
-            background: linear-gradient(135deg, #38b2ac 0%, #319795 100%);
-            color: white;
-            padding: 18px 35px;
-            text-decoration: none;
-            border-radius: 50px;
-            font-weight: 600;
-            font-size: 18px;
-            box-shadow: 0 8px 25px rgba(56, 178, 172, 0.3);
-            transition: all 0.3s ease;
-            margin: 10px;
+        .contact-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin: 25px 0;
         }
         
-        .contact-button:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 12px 35px rgba(56, 178, 172, 0.4);
+        .contact-item {
+            text-align: center;
+            padding: 20px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 12px;
+            transition: background 0.3s ease;
+        }
+        
+        .contact-item:hover {
+            background: rgba(255,255,255,0.15);
+        }
+        
+        .contact-item .icon {
+            font-size: 32px;
+            color: #fbbf24;
+            margin-bottom: 10px;
+            display: block;
+        }
+        
+        .contact-item .text {
+            font-size: 16px;
+            font-weight: 500;
         }
         
         .footer {
-            background: linear-gradient(135deg, #2d3748 0%, #1a202c 100%);
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
             color: white;
-            padding: 40px 30px;
+            padding: 30px;
             text-align: center;
-        }
-        
-        .footer-content {
-            margin-bottom: 25px;
-        }
-        
-        .footer-title {
-            font-size: 24px;
-            font-weight: 700;
-            margin-bottom: 15px;
-        }
-        
-        .footer-contact {
-            display: flex;
-            justify-content: center;
-            gap: 30px;
-            margin-bottom: 20px;
-            flex-wrap: wrap;
-        }
-        
-        .footer-contact-item {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-size: 16px;
         }
         
         .footer-copyright {
@@ -343,41 +356,17 @@ const getClientEmailTemplate = (data: LicenseRequestData, requestNumber: string)
             opacity: 0.8;
             border-top: 1px solid rgba(255, 255, 255, 0.2);
             padding-top: 20px;
+            margin-top: 20px;
         }
         
         @media (max-width: 600px) {
-            .email-container {
-                margin: 20px;
-                border-radius: 15px;
-            }
-            
-            .header {
-                padding: 30px 20px;
-            }
-            
-            .content {
-                padding: 30px 25px;
-            }
-            
-            .details-card, .next-steps, .contact-section {
-                padding: 25px 20px;
-            }
-            
-            .detail-row {
-                flex-direction: column;
-                gap: 8px;
-                text-align: right;
-            }
-            
-            .detail-value {
-                text-align: right;
-                direction: rtl;
-            }
-            
-            .footer-contact {
-                flex-direction: column;
-                gap: 15px;
-            }
+            body { padding: 10px; }
+            .email-container { border-radius: 15px; }
+            .header { padding: 30px 20px; }
+            .content { padding: 30px 25px; }
+            .details-card, .next-steps, .contact-section { padding: 25px 20px; }
+            .detail-row { flex-direction: column; gap: 10px; text-align: right; }
+            .contact-grid { grid-template-columns: 1fr; }
         }
     </style>
 </head>
@@ -395,133 +384,138 @@ const getClientEmailTemplate = (data: LicenseRequestData, requestNumber: string)
         <!-- Content -->
         <div class="content">
             <div class="greeting">
-                مرحباً ${data.contactPerson} 🌟
+                السلام عليكم ${data.contactPerson} الكريم 🌟
             </div>
             
             <p class="intro-text">
-                شكراً لك على ثقتكم في خدماتنا. تم استلام طلب ترخيص الاستخدام بنجاح وسنقوم بمراجعته 
-                وفقاً لأعلى معايير الجودة والأمان القانوني.
+                شكراً لكم على ثقتكم في خدماتنا المتخصصة. تم استلام طلب ترخيص الاستخدام بنجاح 
+                وسنقوم بمراجعته وفقاً لأعلى معايير الجودة والأمان القانوني.
             </p>
             
             <!-- Request Number -->
             <div class="request-number">
-                <div class="request-number-label">📋 رقم الطلب الخاص بكم</div>
+                <div class="request-number-label">🎯 رقم الطلب الخاص بكم</div>
                 <div class="request-number-value">${requestNumber}</div>
             </div>
             
             <!-- Details Card -->
             <div class="details-card">
                 <h3 class="details-header">
-                    📊 تفاصيل طلب الترخيص
+                    📋 تفاصيل طلب الترخيص المُقدم
                 </h3>
                 
                 <div class="detail-row">
-                    <span class="detail-label">🏢 الشركة/المؤسسة:</span>
+                    <span class="detail-label">🏢 الشركة/المؤسسة</span>
                     <span class="detail-value">${data.companyName}</span>
                 </div>
                 
                 <div class="detail-row">
-                    <span class="detail-label">👨‍💼 الشخص المسؤول:</span>
+                    <span class="detail-label">👨‍💼 الشخص المسؤول</span>
                     <span class="detail-value">${data.contactPerson}</span>
                 </div>
                 
                 <div class="detail-row">
-                    <span class="detail-label">📧 البريد الإلكتروني:</span>
+                    <span class="detail-label">📧 البريد الإلكتروني</span>
                     <span class="detail-value">${data.email}</span>
                 </div>
                 
                 <div class="detail-row">
-                    <span class="detail-label">📱 رقم الهاتف:</span>
+                    <span class="detail-label">📱 رقم الهاتف</span>
                     <span class="detail-value">${data.phone}</span>
                 </div>
                 
                 <div class="detail-row">
-                    <span class="detail-label">⚖️ نوع الترخيص:</span>
+                    <span class="detail-label">⚖️ نوع الترخيص المطلوب</span>
                     <span class="detail-value">${licenseTypeMap[data.licenseType] || data.licenseType}</span>
                 </div>
                 
                 <div class="detail-row">
-                    <span class="detail-label">📄 نوع المحتوى:</span>
+                    <span class="detail-label">📄 نوع المحتوى</span>
                     <span class="detail-value">${contentTypeMap[data.contentType] || data.contentType}</span>
                 </div>
                 
                 <div class="detail-row">
-                    <span class="detail-label">📅 مدة الترخيص:</span>
+                    <span class="detail-label">📅 مدة الترخيص</span>
                     <span class="detail-value">${durationMap[data.duration] || data.duration}</span>
+                </div>
+                
+                <div class="detail-row">
+                    <span class="detail-label">📅 تاريخ تقديم الطلب</span>
+                    <span class="detail-value">${new Date().toLocaleDateString('ar-SA', { 
+                        year: 'numeric', 
+                        month: 'long', 
+                        day: 'numeric' 
+                    })}</span>
                 </div>
             </div>
             
             <!-- Next Steps -->
             <div class="next-steps">
                 <h3 class="next-steps-header">
-                    ⏰ الخطوات التالية
+                    ⏰ مراحل معالجة طلبكم
                 </h3>
                 
                 <div class="step-item">
                     <div class="step-icon">1</div>
-                    <div>مراجعة شاملة لطلبكم من قبل فريق الشؤون القانونية خلال 24-48 ساعة</div>
+                    <div><strong>المرحلة الأولى:</strong> مراجعة شاملة للطلب من قبل فريق الشؤون القانونية (24-48 ساعة)</div>
                 </div>
                 
                 <div class="step-item">
                     <div class="step-icon">2</div>
-                    <div>إجراء تقييم قانوني وتقني لنوع الاستخدام المطلوب</div>
+                    <div><strong>المرحلة الثانية:</strong> إجراء تقييم قانوني وتقني لنوع الاستخدام المطلوب</div>
                 </div>
                 
                 <div class="step-item">
                     <div class="step-icon">3</div>
-                    <div>إرسال الرد النهائي مع اتفاقية الترخيص أو طلب معلومات إضافية</div>
+                    <div><strong>المرحلة الثالثة:</strong> التواصل معكم لاستكمال المتطلبات الإضافية إن وجدت</div>
                 </div>
                 
                 <div class="step-item">
                     <div class="step-icon">4</div>
-                    <div>التوقيع الإلكتروني وإصدار الترخيص الرسمي</div>
+                    <div><strong>المرحلة الأخيرة:</strong> إصدار الترخيص النهائي وإرساله إليكم رسمياً</div>
                 </div>
             </div>
             
-            <!-- Contact Section -->
-            <div class="contact-section">
-                <h3 class="contact-header">🤝 هل تحتاج للمساعدة؟</h3>
-                <p style="margin-bottom: 25px; color: #285e61;">فريق خدمة العملاء متاح للإجابة على استفساراتكم</p>
-                
-                <a href="tel:0500776343" class="contact-button">
-                    📞 اتصل بنا: 0500776343
-                </a>
-                
-                <a href="mailto:legal@masteredupath.com" class="contact-button">
-                    📧 راسلنا: legal@masteredupath.com
-                </a>
+            <div class="timeline-notice">
+                ⚡ سيتم التواصل معكم خلال <strong>48 ساعة عمل</strong> لمتابعة طلبكم
             </div>
         </div>
         
-        <!-- Footer -->
-        <div class="footer">
-            <div class="footer-content">
-                <h3 class="footer-title">وكالة ماستر إيدو باث</h3>
-                
-                <div class="footer-contact">
-                    <div class="footer-contact-item">
-                        📧 legal@masteredupath.com
-                    </div>
-                    <div class="footer-contact-item">
-                        📱 0500776343
-                    </div>
-                    <div class="footer-contact-item">
-                        🌐 masteredupath.com
-                    </div>
+        <!-- Contact Section -->
+        <div class="contact-section">
+            <h3 class="contact-header">📞 قنوات التواصل والاستفسارات</h3>
+            
+            <div class="contact-grid">
+                <div class="contact-item">
+                    <span class="icon">📧</span>
+                    <div class="text">legal@masteredupath.com</div>
+                </div>
+                <div class="contact-item">
+                    <span class="icon">📱</span>
+                    <div class="text">0500776343</div>
+                </div>
+                <div class="contact-item">
+                    <span class="icon">🌐</span>
+                    <div class="text">www.masteredupath.com</div>
+                </div>
+                <div class="contact-item">
+                    <span class="icon">📍</span>
+                    <div class="text">جدة، المملكة العربية السعودية</div>
                 </div>
             </div>
             
             <div class="footer-copyright">
-                © 2024 وكالة ماستر إيدو باث للحلول التعليمية المتقدمة - جميع الحقوق محفوظة<br>
-                المملكة العربية السعودية | ترخيص رقم: 1010740234
+                هذا الإيميل تم إرساله تلقائياً من نظام إدارة التراخيص.<br>
+                للاستفسارات والمتابعة، يرجى التواصل عبر القنوات الرسمية المذكورة أعلاه.<br><br>
+                © 2024 وكالة ماستر إيدو باث للحلول التعليمية المتقدمة<br>
+                جميع الحقوق محفوظة | المملكة العربية السعودية
             </div>
         </div>
     </div>
 </body>
 </html>
 `;
-
-// Professional admin notification template
+// Professional admin notification template - Enhanced RTL
 const getAdminEmailTemplate = (data: LicenseRequestData, requestNumber: string) => `
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
@@ -1035,8 +1029,8 @@ serve(async (req: Request) => {
       },
       body: JSON.stringify({
         from: "نظام التراخيص <noreply@masteredupath.com>",
-        to: ["legal@masteredupath.com", "admin@masteredupath.com"],
-        subject: `🚨 تنبيه عاجل: طلب ترخيص جديد - ${requestNumber}`,
+        to: ["legal@masteredupath.com", "admin@masteredupath.com", "info@masteredupath.com"],
+        subject: `🚨 تنبيه عاجل: طلب ترخيص جديد - ${requestNumber} - ${requestData.companyName}`,
         html: getAdminEmailTemplate(requestData, requestNumber),
       }),
     });
