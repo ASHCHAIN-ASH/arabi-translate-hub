@@ -56,7 +56,7 @@ const MasterMembershipBanner = () => {
           </div>
 
           {/* Main Content Grid */}
-          <div className="grid lg:grid-cols-5 gap-8 items-center relative z-20 py-8 px-6 lg:px-10">
+          <div className="grid lg:grid-cols-5 gap-6 lg:gap-8 items-center relative z-20 py-6 lg:py-8 px-4 lg:px-10">
             
             {/* Content Side - 3 columns */}
             <div className="lg:col-span-3">
@@ -260,7 +260,7 @@ const MasterMembershipBanner = () => {
                 className="relative"
               >
                 {/* Three Membership Cards */}
-                <div className="flex flex-col sm:flex-row gap-3 justify-center items-center">
+                <div className="flex flex-wrap sm:flex-nowrap gap-2 sm:gap-3 justify-center items-center px-2">
                   {[
                     {
                       name: 'الفضية',
@@ -293,10 +293,10 @@ const MasterMembershipBanner = () => {
                       initial={{ opacity: 0, y: 50, rotateY: -30 }}
                       whileInView={{ opacity: 1, y: 0, rotateY: 0 }}
                       whileHover={{ 
-                        y: -10,
-                        rotateY: 5,
-                        rotateX: 5,
-                        scale: 1.05,
+                        y: -8,
+                        rotateY: 3,
+                        rotateX: 3,
+                        scale: 1.03,
                         transition: { duration: 0.3 }
                       }}
                       transition={{ 
@@ -306,7 +306,7 @@ const MasterMembershipBanner = () => {
                         stiffness: 100
                       }}
                       viewport={{ once: true }}
-                      className="relative group"
+                      className="relative group flex-1 min-w-0"
                       style={{ perspective: "1000px" }}
                     >
                       {/* Popular Badge */}
@@ -315,24 +315,25 @@ const MasterMembershipBanner = () => {
                           initial={{ opacity: 0, scale: 0 }}
                           animate={{ opacity: 1, scale: 1 }}
                           transition={{ delay: 1.5, duration: 0.5 }}
-                          className="absolute -top-2 -right-2 bg-red-500 text-white px-2 py-1 rounded-full text-xs font-bold z-20 shadow-lg"
+                          className="absolute -top-1.5 -right-1.5 bg-red-500 text-white px-1.5 py-0.5 rounded-full text-xs font-bold z-20 shadow-lg"
                         >
-                          الأكثر طلباً
+                          <span className="hidden sm:inline">الأكثر طلباً</span>
+                          <span className="sm:hidden">🔥</span>
                         </motion.div>
                       )}
 
                       {/* Card Container */}
                       <div className={`
-                        relative w-28 h-18 sm:w-32 sm:h-20 lg:w-36 lg:h-24 rounded-xl overflow-hidden
+                        relative w-full aspect-[1.586/1] max-w-[120px] sm:max-w-[140px] lg:max-w-[160px] mx-auto rounded-lg sm:rounded-xl overflow-hidden
                         bg-gradient-to-br ${card.gradient}
-                        shadow-xl group-hover:shadow-2xl transition-all duration-500
+                        shadow-lg sm:shadow-xl group-hover:shadow-2xl transition-all duration-500
                         border border-white/40 backdrop-blur-sm
                         transform-gpu
                       `}>
                         {/* Card Background Effects */}
                         <div className="absolute inset-0 overflow-hidden">
-                          <div className="absolute top-0 right-0 w-8 h-8 bg-white/10 rounded-full -translate-y-4 translate-x-4" />
-                          <div className="absolute bottom-0 left-0 w-6 h-6 bg-white/8 rounded-full translate-y-3 -translate-x-3" />
+                          <div className="absolute top-0 right-0 w-6 sm:w-8 h-6 sm:h-8 bg-white/10 rounded-full -translate-y-3 sm:-translate-y-4 translate-x-3 sm:translate-x-4" />
+                          <div className="absolute bottom-0 left-0 w-4 sm:w-6 h-4 sm:h-6 bg-white/8 rounded-full translate-y-2 sm:translate-y-3 -translate-x-2 sm:-translate-x-3" />
                         </div>
 
                         {/* Animated Background Pattern */}
@@ -348,26 +349,27 @@ const MasterMembershipBanner = () => {
                           }}
                           style={{
                             background: "radial-gradient(circle, rgba(255,255,255,0.3) 1px, transparent 1px)",
-                            backgroundSize: "6px 6px"
+                            backgroundSize: "4px 4px sm:6px sm:6px"
                           }}
                         />
 
                         {/* Card Header */}
-                        <div className="absolute top-1 right-1.5 text-white text-xs font-bold opacity-90 z-10">
-                          ماستر
+                        <div className="absolute top-1 sm:top-1.5 right-1 sm:right-1.5 text-white text-xs font-bold opacity-90 z-10">
+                          <span className="hidden sm:inline">ماستر</span>
+                          <span className="sm:hidden text-xs">M</span>
                         </div>
                         
-                        <div className="absolute top-1 left-1.5 z-10">
-                          <Crown className="w-3 h-3 text-yellow-300" />
+                        <div className="absolute top-1 sm:top-1.5 left-1 sm:left-1.5 z-10">
+                          <Crown className="w-2.5 h-2.5 sm:w-3 sm:h-3 text-yellow-300" />
                         </div>
 
                         {/* EMV Chip */}
                         <motion.div 
-                          className={`absolute top-5 right-1.5 w-4 h-3 ${card.chipColor} rounded-sm shadow-sm z-10`}
+                          className={`absolute top-3 sm:top-5 right-1 sm:right-1.5 w-3 h-2 sm:w-4 sm:h-3 ${card.chipColor} rounded-sm shadow-sm z-10`}
                           animate={{
                             boxShadow: [
                               "0 0 0 0 rgba(255, 255, 255, 0.4)",
-                              "0 0 0 2px rgba(255, 255, 255, 0.2)",
+                              "0 0 0 1px rgba(255, 255, 255, 0.2)",
                               "0 0 0 0 rgba(255, 255, 255, 0.4)"
                             ]
                           }}
@@ -385,7 +387,7 @@ const MasterMembershipBanner = () => {
                         </motion.div>
 
                         {/* Card Number */}
-                        <div className="absolute top-1/2 right-1.5 transform -translate-y-1/2 text-white z-10">
+                        <div className="absolute top-1/2 right-1 sm:right-1.5 transform -translate-y-1/2 text-white z-10">
                           <motion.div 
                             className="text-xs font-mono tracking-wider opacity-90"
                             animate={{
@@ -397,16 +399,17 @@ const MasterMembershipBanner = () => {
                               delay: index * 0.3
                             }}
                           >
-                            **** {(1234 + index).toString()}
+                            <span className="hidden sm:inline">**** {(1234 + index).toString()}</span>
+                            <span className="sm:hidden text-xs">****</span>
                           </motion.div>
                         </div>
 
                         {/* Price */}
-                        <div className="absolute top-1/2 left-1.5 transform -translate-y-1/2 text-white z-10">
+                        <div className="absolute top-1/2 left-1 sm:left-1.5 transform -translate-y-1/2 text-white z-10">
                           <motion.div 
                             className="text-xs font-bold"
                             animate={{
-                              scale: [1, 1.1, 1]
+                              scale: [1, 1.05, 1]
                             }}
                             transition={{
                               duration: 2,
@@ -414,12 +417,13 @@ const MasterMembershipBanner = () => {
                               delay: index * 0.4
                             }}
                           >
-                            {card.price} ﷼
+                            <span className="hidden sm:inline">{card.price} ﷼</span>
+                            <span className="sm:hidden text-xs">{card.price.split(',')[0]}K</span>
                           </motion.div>
                         </div>
 
                         {/* Card Title */}
-                        <div className="absolute bottom-1 right-1.5 text-white z-10">
+                        <div className="absolute bottom-1 sm:bottom-1.5 right-1 sm:right-1.5 text-white z-10">
                           <motion.div 
                             className="text-xs font-bold"
                             animate={{
@@ -431,19 +435,20 @@ const MasterMembershipBanner = () => {
                               delay: index * 0.3
                             }}
                           >
-                            عضوية {card.name}
+                            <span className="hidden sm:inline">عضوية {card.name}</span>
+                            <span className="sm:hidden text-xs">{card.name}</span>
                           </motion.div>
-                          <div className="text-xs opacity-70">{card.nameEn}</div>
+                          <div className="text-xs opacity-70 hidden sm:block">{card.nameEn}</div>
                         </div>
 
                         {/* Validity */}
-                        <div className="absolute bottom-1 left-1.5 text-white/80 text-xs z-10">
+                        <div className="absolute bottom-1 sm:bottom-1.5 left-1 sm:left-1.5 text-white/80 text-xs z-10">
                           <div className="opacity-70">12/25</div>
                         </div>
 
                         {/* Contactless Symbol */}
                         <motion.div
-                          className="absolute bottom-3 left-1.5 text-white/60 z-10"
+                          className="absolute bottom-2.5 sm:bottom-3 left-1 sm:left-1.5 text-white/60 z-10"
                           animate={{
                             rotate: [0, 10, -10, 0]
                           }}
@@ -458,12 +463,12 @@ const MasterMembershipBanner = () => {
 
                         {/* Glowing Edge Effect */}
                         <motion.div
-                          className="absolute inset-0 rounded-xl"
+                          className="absolute inset-0 rounded-lg sm:rounded-xl"
                           animate={{
                             boxShadow: [
-                              `0 0 10px rgba(255, 255, 255, 0.2)`,
-                              `0 0 20px rgba(255, 255, 255, 0.4)`,
-                              `0 0 10px rgba(255, 255, 255, 0.2)`
+                              `0 0 8px rgba(255, 255, 255, 0.2)`,
+                              `0 0 16px rgba(255, 255, 255, 0.4)`,
+                              `0 0 8px rgba(255, 255, 255, 0.2)`
                             ]
                           }}
                           transition={{
@@ -475,7 +480,7 @@ const MasterMembershipBanner = () => {
 
                         {/* Holographic Effect */}
                         <motion.div
-                          className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent rounded-xl"
+                          className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent rounded-lg sm:rounded-xl"
                           animate={{
                             x: ["-100%", "100%"]
                           }}
@@ -496,10 +501,10 @@ const MasterMembershipBanner = () => {
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 1.2, duration: 0.6 }}
-                  className="text-center mt-4"
+                  className="text-center mt-3 sm:mt-4"
                 >
                   <motion.span 
-                    className="text-white/90 text-sm font-medium"
+                    className="text-white/90 text-xs sm:text-sm font-medium px-2"
                     animate={{ opacity: [0.7, 1, 0.7] }}
                     transition={{ duration: 2, repeat: Infinity }}
                   >
@@ -509,7 +514,7 @@ const MasterMembershipBanner = () => {
 
                 {/* Floating Elements Around Cards */}
                 <motion.div
-                  className="absolute -top-3 -right-3 w-6 h-6 bg-gradient-to-br from-yellow-400/30 to-orange-500/30 rounded-full blur-sm"
+                  className="absolute -top-2 sm:-top-3 -right-2 sm:-right-3 w-4 h-4 sm:w-6 sm:h-6 bg-gradient-to-br from-yellow-400/30 to-orange-500/30 rounded-full blur-sm"
                   animate={{
                     scale: [1, 1.2, 1],
                     opacity: [0.3, 0.6, 0.3]
@@ -517,7 +522,7 @@ const MasterMembershipBanner = () => {
                   transition={{ duration: 4, repeat: Infinity }}
                 />
                 <motion.div
-                  className="absolute -bottom-2 -left-2 w-8 h-8 bg-gradient-to-br from-blue-400/20 to-purple-600/20 rounded-full blur-sm"
+                  className="absolute -bottom-1 sm:-bottom-2 -left-1 sm:-left-2 w-6 h-6 sm:w-8 sm:h-8 bg-gradient-to-br from-blue-400/20 to-purple-600/20 rounded-full blur-sm"
                   animate={{
                     scale: [1, 1.3, 1],
                     opacity: [0.2, 0.5, 0.2]
