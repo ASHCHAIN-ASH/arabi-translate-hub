@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { 
   Briefcase, 
@@ -188,13 +188,30 @@ const Careers = () => {
     setFormData(prev => ({ ...prev, [field]: value }));
   };
 
+  // تعيين الوظيفة المحددة في الفورم
+  useEffect(() => {
+    if (selectedJob) {
+      const job = jobs.find(j => j.id === selectedJob);
+      if (job) {
+        setFormData(prev => ({ ...prev, position: job.title }));
+      }
+    }
+  }, [selectedJob]);
+
   const handleJobApplication = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
 
     try {
+      console.log("Starting job application submission...");
+      
       // Validate required fields
       if (!formData.fullName || !formData.email || !formData.position) {
+        console.log("Validation failed - missing fields:", {
+          fullName: !!formData.fullName,
+          email: !!formData.email,
+          position: !!formData.position
+        });
         throw new Error("يرجى ملء جميع الحقول المطلوبة");
       }
 
@@ -205,12 +222,17 @@ const Careers = () => {
         position: job?.title || formData.position
       };
 
+      console.log("Calling Edge Function with data:", updatedFormData);
+
       // Call Edge Function to send emails
       const { data, error } = await supabase.functions.invoke('send-job-application', {
         body: updatedFormData,
       });
 
+      console.log("Edge Function response:", { data, error });
+
       if (error) {
+        console.error("Edge Function error:", error);
         throw new Error(error.message || "حدث خطأ أثناء إرسال الطلب");
       }
 
@@ -372,11 +394,11 @@ const Careers = () => {
                   </CardHeader>
                   <CardContent>
                     <form onSubmit={handleJobApplication} className="space-y-6">
-                      <input
-                        type="hidden"
-                        value={job?.title}
-                        onChange={(e) => handleInputChange('position', e.target.value)}
-                      />
+                        <input
+                          type="hidden"
+                          value={job?.title || ''}
+                          onChange={(e) => handleInputChange('position', e.target.value)}
+                        />
                       
                       <div className="space-y-2">
                         <Label htmlFor="fullName" className="text-slate-700 font-medium">الاسم الكامل *</Label>

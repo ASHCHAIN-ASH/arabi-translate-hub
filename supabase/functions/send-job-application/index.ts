@@ -21,24 +21,39 @@ interface JobApplicationRequest {
 }
 
 const handler = async (req: Request): Promise<Response> => {
+  console.log("Job application handler called, method:", req.method);
+  
   // Handle CORS preflight requests
   if (req.method === "OPTIONS") {
+    console.log("Handling CORS preflight request");
     return new Response(null, { headers: corsHeaders });
   }
 
   try {
+    console.log("Processing job application request...");
     const applicationData: JobApplicationRequest = await req.json();
-
-    console.log("Processing job application for:", applicationData.fullName);
+    console.log("Received application data:", applicationData);
 
     // Validate required fields
     if (!applicationData.fullName || !applicationData.email || !applicationData.position) {
+      console.log("Validation failed - missing required fields");
       throw new Error("البيانات المطلوبة مفقودة");
     }
 
+    console.log("Starting email sending process...");
+
+    // Check if RESEND_API_KEY is available
+    const resendKey = Deno.env.get("RESEND_API_KEY");
+    if (!resendKey) {
+      console.error("RESEND_API_KEY is not configured");
+      throw new Error("Email service not configured");
+    }
+    console.log("RESEND_API_KEY found:", resendKey ? "Yes" : "No");
+
     // Email to applicant (confirmation)
+    console.log("Sending confirmation email to applicant...");
     const applicantEmailResponse = await resend.emails.send({
-      from: "MasterEduPath <info@masteredupath.com>",
+      from: "MasterEduPath <onboarding@resend.dev>",
       to: [applicationData.email],
       subject: `تأكيد استلام طلب التوظيف - ${applicationData.position}`,
       html: `
@@ -81,11 +96,13 @@ const handler = async (req: Request): Promise<Response> => {
         </div>
       `,
     });
+    console.log("Applicant email sent successfully:", applicantEmailResponse.data?.id);
 
     // Email to admin (notification)
+    console.log("Sending notification email to admin...");
     const adminEmailResponse = await resend.emails.send({
-      from: "MasterEduPath <info@masteredupath.com>",
-      to: ["info@masteredupath.com"],
+      from: "MasterEduPath <onboarding@resend.dev>",
+      to: ["onboarding@resend.dev"],
       subject: `طلب توظيف جديد - ${applicationData.position} | ${applicationData.fullName}`,
       html: `
         <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; max-width: 700px; margin: 0 auto; background: #f8fafc; border-radius: 15px; overflow: hidden; border: 3px solid #e2e8f0;">
@@ -144,8 +161,9 @@ const handler = async (req: Request): Promise<Response> => {
         </div>
       `,
     });
+    console.log("Admin email sent successfully:", adminEmailResponse.data?.id);
 
-    console.log("Emails sent successfully - Applicant:", applicantEmailResponse.data?.id, "Admin:", adminEmailResponse.data?.id);
+    console.log("Both emails sent successfully - Applicant:", applicantEmailResponse.data?.id, "Admin:", adminEmailResponse.data?.id);
 
     return new Response(
       JSON.stringify({
