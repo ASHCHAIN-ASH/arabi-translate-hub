@@ -4,6 +4,7 @@ import AcademicHeroSection from "@/components/AcademicHeroSection";
 import AcademicFeatures from "@/components/AcademicFeatures";
 import AcademicStats from "@/components/AcademicStats";
 import ServiceSteps from "@/components/ServiceSteps";
+import MasterMembershipBanner from "@/components/MasterMembershipBanner";
 
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
@@ -22,6 +23,9 @@ const Index = () => {
       
       {/* القسم الرئيسي الأكاديمي الجديد */}
       <AcademicHeroSection />
+
+      {/* بنر عضوية ماستر */}
+      <MasterMembershipBanner />
 
       {/* قسم المميزات الأكاديمية */}
       <AcademicFeatures />
