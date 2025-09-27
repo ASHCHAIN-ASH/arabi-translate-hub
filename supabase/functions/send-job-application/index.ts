@@ -57,43 +57,118 @@ const handler = async (req: Request): Promise<Response> => {
       to: [applicationData.email],
       subject: `تأكيد استلام طلب التوظيف - ${applicationData.position}`,
       html: `
-        <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; max-width: 600px; margin: 0 auto; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border-radius: 15px; overflow: hidden;">
-          <div style="padding: 40px 30px; text-align: center;">
-            <div style="background: rgba(255,255,255,0.1); border-radius: 50%; width: 80px; height: 80px; margin: 0 auto 20px; display: flex; align-items: center; justify-content: center; font-size: 40px;">
-              🎯
+        <!DOCTYPE html>
+        <html dir="rtl" lang="ar">
+        <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>تأكيد طلب التوظيف</title>
+            <style>
+                * { margin: 0; padding: 0; box-sizing: border-box; }
+                body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f8fafc; margin: 0; padding: 20px; }
+                .email-container { max-width: 600px; margin: 0 auto; background: white; border-radius: 16px; overflow: hidden; box-shadow: 0 10px 40px rgba(0,0,0,0.1); }
+                .header { background: linear-gradient(135deg, #0f766e 0%, #059669 100%); padding: 40px 30px; text-align: center; color: white; }
+                .logo { font-size: 32px; font-weight: bold; margin-bottom: 10px; }
+                .tagline { font-size: 16px; opacity: 0.9; }
+                .content { padding: 40px 30px; }
+                .greeting { font-size: 24px; font-weight: 600; color: #1f2937; margin-bottom: 20px; text-align: center; }
+                .message { font-size: 18px; line-height: 1.6; color: #4b5563; text-align: center; margin-bottom: 30px; }
+                .info-box { background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%); border: 1px solid #a3e635; border-radius: 12px; padding: 25px; margin: 30px 0; }
+                .info-title { font-size: 20px; font-weight: 600; color: #059669; margin-bottom: 15px; text-align: center; }
+                .info-item { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid #e5e7eb; }
+                .info-item:last-child { border-bottom: none; }
+                .info-label { font-weight: 600; color: #374151; }
+                .info-value { color: #059669; font-weight: 500; }
+                .status-badge { display: inline-block; background: linear-gradient(135deg, #059669 0%, #0f766e 100%); color: white; padding: 8px 16px; border-radius: 20px; font-size: 14px; font-weight: 600; margin: 20px 0; }
+                .process-box { background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%); border-left: 4px solid #f59e0b; padding: 25px; margin: 25px 0; border-radius: 8px; }
+                .process-title { font-size: 18px; font-weight: 600; color: #92400e; margin-bottom: 15px; }
+                .process-step { color: #78350f; margin: 8px 0; font-size: 16px; line-height: 1.5; }
+                .contact-section { background: linear-gradient(135deg, #ede9fe 0%, #ddd6fe 100%); border-radius: 12px; padding: 25px; margin: 30px 0; text-align: center; }
+                .contact-title { font-size: 18px; font-weight: 600; color: #5b21b6; margin-bottom: 15px; }
+                .contact-info { display: inline-block; margin: 10px 15px; }
+                .contact-link { color: #7c3aed; text-decoration: none; font-weight: 600; }
+                .footer { background: #1f2937; color: white; padding: 30px; text-align: center; }
+                .footer-logo { font-size: 24px; font-weight: bold; margin-bottom: 10px; }
+                .footer-text { opacity: 0.8; font-size: 14px; line-height: 1.6; }
+                .divider { height: 2px; background: linear-gradient(90deg, #059669 0%, #0f766e 100%); margin: 30px 0; border-radius: 2px; }
+            </style>
+        </head>
+        <body>
+            <div class="email-container">
+                <div class="header">
+                    <div class="logo">🎯 MasterEduPath</div>
+                    <div class="tagline">وكالة الحلول التعليمية المتقدمة</div>
+                </div>
+                
+                <div class="content">
+                    <h1 class="greeting">مرحباً ${applicationData.fullName}!</h1>
+                    
+                    <p class="message">
+                        شكراً لك على ثقتك في MasterEduPath وتقديمك لطلب التوظيف. 
+                        نحن سعداء باهتمامك بالانضمام لفريقنا المتخصص في الحلول التعليمية.
+                    </p>
+                    
+                    <div class="status-badge">✅ تم استلام طلبك بنجاح</div>
+                    
+                    <div class="info-box">
+                        <div class="info-title">📋 تفاصيل طلب التوظيف</div>
+                        <div class="info-item">
+                            <span class="info-label">الوظيفة المطلوبة:</span>
+                            <span class="info-value">${applicationData.position}</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">الاسم الكامل:</span>
+                            <span class="info-value">${applicationData.fullName}</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">البريد الإلكتروني:</span>
+                            <span class="info-value">${applicationData.email}</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">رقم الهاتف:</span>
+                            <span class="info-value">${applicationData.phone}</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">سنوات الخبرة:</span>
+                            <span class="info-value">${applicationData.experience}</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">المؤهل التعليمي:</span>
+                            <span class="info-value">${applicationData.education}</span>
+                        </div>
+                    </div>
+                    
+                    <div class="divider"></div>
+                    
+                    <div class="process-box">
+                        <div class="process-title">📈 الخطوات التالية في عملية التوظيف</div>
+                        <div class="process-step">🔍 <strong>المرحلة الأولى:</strong> مراجعة دقيقة لطلبك وسيرتك الذاتية من قبل فريق الموارد البشرية</div>
+                        <div class="process-step">📞 <strong>المرحلة الثانية:</strong> مقابلة هاتفية أولية لتقييم المهارات والخبرات</div>
+                        <div class="process-step">🎯 <strong>المرحلة الثالثة:</strong> اختبار عملي متخصص في مجال الوظيفة</div>
+                        <div class="process-step">🤝 <strong>المرحلة النهائية:</strong> مقابلة شخصية مع الإدارة واتخاذ القرار النهائي</div>
+                    </div>
+                    
+                    <div class="contact-section">
+                        <div class="contact-title">📞 للاستفسارات والمتابعة</div>
+                        <div class="contact-info">
+                            <a href="mailto:info@masteredupath.com" class="contact-link">📧 info@masteredupath.com</a>
+                        </div>
+                        <div class="contact-info">
+                            <a href="tel:0500776343" class="contact-link">📱 0500776343</a>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="footer">
+                    <div class="footer-logo">MasterEduPath</div>
+                    <div class="footer-text">
+                        وكالة رائدة في مجال الحلول التعليمية والترجمة الأكاديمية<br>
+                        نفخر بخدمة أكثر من 10,000 عميل حول العالم
+                    </div>
+                </div>
             </div>
-            <h1 style="margin: 0 0 10px; font-size: 28px; font-weight: bold;">تم استلام طلبك بنجاح!</h1>
-            <p style="margin: 0 0 30px; font-size: 18px; opacity: 0.9;">شكراً لك على اهتمامك بالانضمام لفريقنا</p>
-            
-            <div style="background: rgba(255,255,255,0.1); border-radius: 12px; padding: 25px; margin: 30px 0; text-align: right;">
-              <h3 style="margin: 0 0 15px; color: #ffd700; font-size: 20px;">تفاصيل الطلب:</h3>
-              <p style="margin: 8px 0; font-size: 16px;"><strong>الوظيفة:</strong> ${applicationData.position}</p>
-              <p style="margin: 8px 0; font-size: 16px;"><strong>الاسم:</strong> ${applicationData.fullName}</p>
-              <p style="margin: 8px 0; font-size: 16px;"><strong>البريد الإلكتروني:</strong> ${applicationData.email}</p>
-              <p style="margin: 8px 0; font-size: 16px;"><strong>الهاتف:</strong> ${applicationData.phone}</p>
-            </div>
-
-            <div style="background: rgba(255,255,255,0.05); border-radius: 12px; padding: 20px; margin: 25px 0;">
-              <h4 style="margin: 0 0 15px; color: #98fb98; font-size: 18px;">ما الخطوات التالية؟</h4>
-              <ul style="text-align: right; padding-right: 20px; margin: 0; font-size: 14px; line-height: 1.8;">
-                <li>سيقوم فريق الموارد البشرية بمراجعة طلبك بعناية</li>
-                <li>ستتلقى رد منا خلال 3-5 أيام عمل</li>
-                <li>في حالة التأهل، سنتواصل معك لتحديد موعد مقابلة</li>
-                <li>يمكنك متابعة حالة طلبك عبر التواصل معنا</li>
-              </ul>
-            </div>
-
-            <div style="margin: 30px 0 20px;">
-              <p style="font-size: 16px; margin: 0 0 15px;">للاستفسارات والمتابعة:</p>
-              <div style="display: flex; justify-content: center; gap: 20px; flex-wrap: wrap;">
-                <a href="mailto:info@masteredupath.com" style="color: #ffd700; text-decoration: none; font-weight: bold;">📧 info@masteredupath.com</a>
-                <a href="tel:0500776343" style="color: #98fb98; text-decoration: none; font-weight: bold;">📞 0500776343</a>
-              </div>
-            </div>
-
-            <p style="font-size: 14px; opacity: 0.8; margin: 20px 0 0;">نتطلع للعمل معك في فريق MasterEduPath 🚀</p>
-          </div>
-        </div>
+        </body>
+        </html>
       `,
     });
     console.log("Applicant email sent successfully:", applicantEmailResponse.data?.id);
@@ -102,7 +177,7 @@ const handler = async (req: Request): Promise<Response> => {
     console.log("Sending notification email to admin...");
     const adminEmailResponse = await resend.emails.send({
       from: "MasterEduPath <info@masteredupath.com>",
-      to: ["onboarding@resend.dev"],
+      to: ["info@masteredupath.com"], // تغيير العنوان للإدارة الصحيح
       subject: `طلب توظيف جديد - ${applicationData.position} | ${applicationData.fullName}`,
       html: `
         <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; max-width: 700px; margin: 0 auto; background: #f8fafc; border-radius: 15px; overflow: hidden; border: 3px solid #e2e8f0;">
