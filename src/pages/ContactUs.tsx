@@ -10,6 +10,7 @@ import { Badge } from '@/components/ui/badge';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
 import Header from '@/components/Header';
+import contactHeroBackground from '@/assets/contact-hero-background.jpg';
 
 const ContactUs = () => {
   const { toast } = useToast();
@@ -91,44 +92,23 @@ const ContactUs = () => {
     },
     {
       icon: Phone,
-      title: "الهاتف الأساسي",
-      value: "+966 50 123 4567",
-      description: "خط الدعم الرئيسي - متاح 24/7",
+      title: "الهاتف والواتساب",
+      value: "+966 50 123 4567 | +966 55 960 0824",
+      description: "خطوط الدعم المتاحة 24/7 للتواصل السريع",
       action: "tel:+966501234567"
-    },
-    {
-      icon: Phone,
-      title: "الهاتف الثانوي",
-      value: "+966 55 960 0824",
-      description: "خط الدعم الإضافي - متاح في أوقات العمل",
-      action: "tel:+966559600824"
-    },
-    {
-      icon: MessageSquare,
-      title: "الواتساب الأساسي",
-      value: "+966 50 123 4567",
-      description: "للتواصل السريع والدعم الفوري",
-      action: "https://wa.me/966501234567"
-    },
-    {
-      icon: MessageSquare,
-      title: "الواتساب الثانوي",
-      value: "+966 55 960 0824",
-      description: "للاستفسارات والدعم الإضافي",
-      action: "https://wa.me/966559600824"
     },
     {
       icon: MapPin,
       title: "العنوان",
-      value: "الرياض، المملكة العربية السعودية",
-      description: "المقر الرئيسي للشركة",
+      value: "المملكة العربية السعودية",
+      description: "نخدم جميع مناطق المملكة",
       action: null
     },
     {
       icon: Clock,
       title: "ساعات العمل",
-      value: "الأحد - الخميس: 9ص - 6م",
-      description: "الجمعة والسبت: عطلة أسبوعية",
+      value: "السبت - الخميس: 10ص - 6م",
+      description: "الجمعة: عطلة أسبوعية",
       action: null
     }
   ];
@@ -170,7 +150,17 @@ const ContactUs = () => {
       
       <main className="pt-20">
         {/* Hero Section */}
-        <section className="py-20 px-4 text-center bg-gradient-to-r from-primary/10 via-secondary/10 to-accent/10 relative overflow-hidden">
+        <section className="py-20 px-4 text-center relative overflow-hidden min-h-[600px] flex items-center">
+          {/* Background Image */}
+          <div 
+            className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+            style={{
+              backgroundImage: `url(${contactHeroBackground})`,
+            }}
+          >
+            {/* Overlay */}
+            <div className="absolute inset-0 bg-gradient-to-r from-primary/80 via-secondary/70 to-accent/80 backdrop-blur-[1px]" />
+          </div>
           {/* Animated Background Elements */}
           <div className="absolute inset-0 overflow-hidden">
             <motion.div
@@ -208,7 +198,7 @@ const ContactUs = () => {
               transition={{ duration: 0.8, ease: "easeOut" }}
             >
               <motion.h1 
-                className="text-4xl md:text-6xl lg:text-7xl font-bold mb-6 bg-gradient-to-r from-primary via-secondary to-accent bg-clip-text text-transparent"
+                className="text-4xl md:text-6xl lg:text-7xl font-bold mb-6 text-white drop-shadow-lg"
                 initial={{ opacity: 0, scale: 0.8 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ duration: 1, delay: 0.2 }}
@@ -217,7 +207,7 @@ const ContactUs = () => {
               </motion.h1>
               
               <motion.p 
-                className="text-xl md:text-2xl text-muted-foreground max-w-3xl mx-auto mb-8 leading-relaxed"
+                className="text-xl md:text-2xl text-white/90 max-w-3xl mx-auto mb-8 leading-relaxed drop-shadow-md"
                 initial={{ opacity: 0, y: 30 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8, delay: 0.4 }}
@@ -250,7 +240,7 @@ const ContactUs = () => {
                       }}
                       whileTap={{ scale: 0.95 }}
                     >
-                      <Badge variant="secondary" className="px-6 py-3 text-base font-medium hover:bg-primary/10 transition-colors cursor-default">
+                      <Badge variant="outline" className="px-6 py-3 text-base font-medium bg-white/20 backdrop-blur-md border-white/30 text-white hover:bg-white/30 transition-colors cursor-default">
                         <feature.icon className="w-5 h-5 mr-2" />
                         {feature.title}
                       </Badge>
@@ -521,10 +511,57 @@ const ContactUs = () => {
                                 <h3 className="font-semibold text-lg mb-2 group-hover:text-primary transition-colors duration-300">
                                   {info.title}
                                 </h3>
-                                <p className="text-primary font-medium mb-2 group-hover:text-secondary transition-colors duration-300">
-                                  {info.value}
-                                </p>
-                                <p className="text-sm text-muted-foreground group-hover:text-foreground/80 transition-colors duration-300">
+                                {info.title === "الهاتف والواتساب" ? (
+                                  <div className="space-y-3">
+                                    <div className="flex items-center gap-2 justify-end">
+                                      <span className="text-sm text-muted-foreground">أساسي:</span>
+                                      <a 
+                                        href="tel:+966501234567" 
+                                        className="text-primary hover:text-secondary transition-colors font-medium"
+                                      >
+                                        +966 50 123 4567
+                                      </a>
+                                      <Phone className="w-4 h-4 text-primary" />
+                                    </div>
+                                    <div className="flex items-center gap-2 justify-end">
+                                      <a 
+                                        href="https://wa.me/966501234567" 
+                                        target="_blank" 
+                                        rel="noopener noreferrer"
+                                        className="text-green-600 hover:text-green-700 transition-colors font-medium"
+                                      >
+                                        واتساب أساسي
+                                      </a>
+                                      <MessageSquare className="w-4 h-4 text-green-600" />
+                                    </div>
+                                    <div className="flex items-center gap-2 justify-end">
+                                      <span className="text-sm text-muted-foreground">ثانوي:</span>
+                                      <a 
+                                        href="tel:+966559600824" 
+                                        className="text-primary hover:text-secondary transition-colors font-medium"
+                                      >
+                                        +966 55 960 0824
+                                      </a>
+                                      <Phone className="w-4 h-4 text-primary" />
+                                    </div>
+                                    <div className="flex items-center gap-2 justify-end">
+                                      <a 
+                                        href="https://wa.me/966559600824" 
+                                        target="_blank" 
+                                        rel="noopener noreferrer"
+                                        className="text-green-600 hover:text-green-700 transition-colors font-medium"
+                                      >
+                                        واتساب ثانوي
+                                      </a>
+                                      <MessageSquare className="w-4 h-4 text-green-600" />
+                                    </div>
+                                  </div>
+                                ) : (
+                                  <p className="text-primary font-medium mb-2 group-hover:text-secondary transition-colors duration-300">
+                                    {info.value}
+                                  </p>
+                                )}
+                                <p className="text-sm text-muted-foreground group-hover:text-foreground/80 transition-colors duration-300 mt-2">
                                   {info.description}
                                 </p>
                               </div>
