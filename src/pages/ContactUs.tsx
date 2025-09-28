@@ -241,8 +241,8 @@ const ContactUs = () => {
                       whileTap={{ scale: 0.95 }}
                     >
                       <Badge variant="outline" className="px-6 py-3 text-base font-medium bg-white/20 backdrop-blur-md border-white/30 text-white hover:bg-white/30 transition-colors cursor-default">
-                        <feature.icon className="w-5 h-5 mr-2" />
                         {feature.title}
+                        <feature.icon className="w-5 h-5 ml-2" />
                       </Badge>
                     </motion.div>
                   ))}
@@ -311,6 +311,7 @@ const ContactUs = () => {
                             onChange={(e) => handleInputChange('name', e.target.value)}
                             required
                             className="h-12 text-right focus:ring-2 focus:ring-primary/50 transition-all duration-300"
+                            dir="rtl"
                           />
                         </motion.div>
                       </motion.div>
@@ -330,6 +331,7 @@ const ContactUs = () => {
                             onChange={(e) => handleInputChange('email', e.target.value)}
                             required
                             className="h-12 text-right focus:ring-2 focus:ring-secondary/50 transition-all duration-300"
+                            dir="rtl"
                           />
                         </motion.div>
                       </motion.div>
@@ -337,33 +339,38 @@ const ContactUs = () => {
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <motion.div
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: 0.5 }}
+                        initial={{ opacity: 0, x: 30 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ delay: 1.0, duration: 0.5 }}
+                        whileHover={{ scale: 1.02 }}
                       >
-                        <label className="block text-sm font-medium mb-2">رقم الهاتف</label>
-                        <Input
-                          type="tel"
-                          placeholder="+966 50 123 4567"
-                          value={formData.phone}
-                          onChange={(e) => handleInputChange('phone', e.target.value)}
-                          className="h-12"
-                        />
+                        <label className="block text-sm font-medium mb-2 text-right">رقم الهاتف</label>
+                        <motion.div whileFocus={{ scale: 1.02 }}>
+                          <Input
+                            type="tel"
+                            placeholder="0500776343"
+                            value={formData.phone}
+                            onChange={(e) => handleInputChange('phone', e.target.value)}
+                            className="h-12 text-right focus:ring-2 focus:ring-accent/50 transition-all duration-300"
+                            dir="rtl"
+                          />
+                        </motion.div>
                       </motion.div>
                       
                       <motion.div
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: 0.6 }}
+                        initial={{ opacity: 0, x: -30 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ delay: 1.1, duration: 0.5 }}
+                        whileHover={{ scale: 1.02 }}
                       >
-                        <label className="block text-sm font-medium mb-2">نوع الخدمة</label>
+                        <label className="block text-sm font-medium mb-2 text-right">نوع الخدمة</label>
                         <Select value={formData.serviceType} onValueChange={(value) => handleInputChange('serviceType', value)}>
-                          <SelectTrigger className="h-12 text-right">
+                          <SelectTrigger className="h-12 text-right" dir="rtl">
                             <SelectValue placeholder="اختر نوع الخدمة" />
                           </SelectTrigger>
                           <SelectContent>
                             {services.map((service, index) => (
-                              <SelectItem key={index} value={service}>{service}</SelectItem>
+                              <SelectItem key={index} value={service} className="text-right">{service}</SelectItem>
                             ))}
                           </SelectContent>
                         </Select>
@@ -373,31 +380,39 @@ const ContactUs = () => {
                     <motion.div
                       initial={{ opacity: 0, y: 20 }}
                       animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: 0.7 }}
+                      transition={{ delay: 1.2, duration: 0.5 }}
+                      whileHover={{ scale: 1.02 }}
                     >
-                      <label className="block text-sm font-medium mb-2">موضوع الرسالة</label>
-                      <Input
-                        type="text"
-                        placeholder="اكتب موضوع رسالتك"
-                        value={formData.subject}
-                        onChange={(e) => handleInputChange('subject', e.target.value)}
-                        className="h-12 text-right"
-                      />
+                      <label className="block text-sm font-medium mb-2 text-right">موضوع الرسالة</label>
+                      <motion.div whileFocus={{ scale: 1.02 }}>
+                        <Input
+                          type="text"
+                          placeholder="اكتب موضوع رسالتك"
+                          value={formData.subject}
+                          onChange={(e) => handleInputChange('subject', e.target.value)}
+                          className="h-12 text-right focus:ring-2 focus:ring-primary/50 transition-all duration-300"
+                          dir="rtl"
+                        />
+                      </motion.div>
                     </motion.div>
 
                     <motion.div
                       initial={{ opacity: 0, y: 20 }}
                       animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: 0.8 }}
+                      transition={{ delay: 1.3, duration: 0.5 }}
+                      whileHover={{ scale: 1.02 }}
                     >
-                      <label className="block text-sm font-medium mb-2">محتوى الرسالة *</label>
-                      <Textarea
-                        placeholder="اكتب رسالتك بالتفصيل..."
-                        value={formData.message}
-                        onChange={(e) => handleInputChange('message', e.target.value)}
-                        required
-                        className="min-h-32 text-right resize-none"
-                      />
+                      <label className="block text-sm font-medium mb-2 text-right">محتوى الرسالة *</label>
+                      <motion.div whileFocus={{ scale: 1.02 }}>
+                        <Textarea
+                          placeholder="اكتب رسالتك بالتفصيل..."
+                          value={formData.message}
+                          onChange={(e) => handleInputChange('message', e.target.value)}
+                          required
+                          className="min-h-32 text-right resize-none focus:ring-2 focus:ring-secondary/50 transition-all duration-300"
+                          dir="rtl"
+                        />
+                      </motion.div>
                     </motion.div>
 
                     <motion.div
@@ -422,21 +437,21 @@ const ContactUs = () => {
                               initial={{ opacity: 0 }}
                               animate={{ opacity: 1 }}
                             >
+                              <span>جار الإرسال...</span>
                               <motion.div 
                                 className="w-6 h-6 border-2 border-white border-t-transparent rounded-full"
                                 animate={{ rotate: 360 }}
                                 transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
                               />
-                              جار الإرسال...
                             </motion.div>
                           ) : (
                             <motion.div 
-                              className="flex items-center gap-3"
-                              whileHover={{ x: -5 }}
+                              className="flex items-center gap-3 justify-center"
+                              whileHover={{ x: 5 }}
                               transition={{ duration: 0.2 }}
                             >
+                              <span>إرسال الرسالة</span>
                               <Send className="w-6 h-6" />
-                              إرسال الرسالة
                             </motion.div>
                           )}
                         </div>
@@ -512,20 +527,21 @@ const ContactUs = () => {
                                   {info.title}
                                 </h3>
                                 {info.title === "الهاتف والواتساب" ? (
-                                  <div className="space-y-3">
+                                  <div className="space-y-3 text-right">
                                     <div className="flex items-center gap-2 justify-end">
-                                      <span className="text-sm text-muted-foreground">أساسي:</span>
                                       <a 
-                                        href="tel:+966501234567" 
+                                        href="tel:0500776343" 
                                         className="text-primary hover:text-secondary transition-colors font-medium"
+                                        dir="ltr"
                                       >
-                                        +966 50 123 4567
+                                        0500776343
                                       </a>
+                                      <span className="text-sm text-muted-foreground">:أساسي</span>
                                       <Phone className="w-4 h-4 text-primary" />
                                     </div>
                                     <div className="flex items-center gap-2 justify-end">
                                       <a 
-                                        href="https://wa.me/966501234567" 
+                                        href="https://wa.me/9660500776343" 
                                         target="_blank" 
                                         rel="noopener noreferrer"
                                         className="text-green-600 hover:text-green-700 transition-colors font-medium"
@@ -535,18 +551,19 @@ const ContactUs = () => {
                                       <MessageSquare className="w-4 h-4 text-green-600" />
                                     </div>
                                     <div className="flex items-center gap-2 justify-end">
-                                      <span className="text-sm text-muted-foreground">ثانوي:</span>
                                       <a 
-                                        href="tel:+966559600824" 
+                                        href="tel:0559600824" 
                                         className="text-primary hover:text-secondary transition-colors font-medium"
+                                        dir="ltr"
                                       >
-                                        +966 55 960 0824
+                                        0559600824
                                       </a>
+                                      <span className="text-sm text-muted-foreground">:ثانوي</span>
                                       <Phone className="w-4 h-4 text-primary" />
                                     </div>
                                     <div className="flex items-center gap-2 justify-end">
                                       <a 
-                                        href="https://wa.me/966559600824" 
+                                        href="https://wa.me/9660559600824" 
                                         target="_blank" 
                                         rel="noopener noreferrer"
                                         className="text-green-600 hover:text-green-700 transition-colors font-medium"
@@ -617,13 +634,6 @@ const ContactUs = () => {
                     >
                       <Card className="p-4 hover:shadow-lg transition-all duration-500 border-0 bg-gradient-to-r from-primary/5 to-secondary/5 hover:from-primary/10 hover:to-secondary/10 group">
                         <div className="flex items-center gap-3 text-right">
-                          <motion.div 
-                            className="p-2 rounded-full bg-primary/10 group-hover:bg-primary/20 transition-all duration-300"
-                            whileHover={{ rotate: 360, scale: 1.1 }}
-                            transition={{ duration: 0.5 }}
-                          >
-                            <feature.icon className="w-5 h-5 text-primary" />
-                          </motion.div>
                           <div className="flex-1">
                             <h4 className="font-semibold group-hover:text-primary transition-colors duration-300">
                               {feature.title}
@@ -632,6 +642,13 @@ const ContactUs = () => {
                               {feature.description}
                             </p>
                           </div>
+                          <motion.div 
+                            className="p-2 rounded-full bg-primary/10 group-hover:bg-primary/20 transition-all duration-300"
+                            whileHover={{ rotate: 360, scale: 1.1 }}
+                            transition={{ duration: 0.5 }}
+                          >
+                            <feature.icon className="w-5 h-5 text-primary" />
+                          </motion.div>
                         </div>
                       </Card>
                     </motion.div>
