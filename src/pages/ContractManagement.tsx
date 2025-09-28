@@ -145,15 +145,7 @@ const ContractManagement = () => {
         status: 'draft'
       };
 
-      const { data, error } = await supabase
-        .from('contracts')
-        .insert([contractData])
-        .select()
-        .single();
-
-      if (error) throw error;
-
-      await sendContractNotifications(data);
+      await sendContractNotifications(contractData);
       toast.success('تم إرسال طلب العقد بنجاح للإدارة! سيتم التواصل معكم قريباً');
       resetNewContract();
 
