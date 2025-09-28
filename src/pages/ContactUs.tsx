@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { motion } from 'framer-motion';
-import { MapPin, Phone, Mail, Clock, Send, MessageCircle, Users, Award, Zap } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { MapPin, Phone, Mail, Clock, Send, MessageCircle, Users, Award, Zap, MessageSquare } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
@@ -86,25 +86,50 @@ const ContactUs = () => {
       icon: Mail,
       title: "البريد الإلكتروني",
       value: "info@masteredupath.com",
-      description: "للاستفسارات العامة والدعم الفني"
+      description: "للاستفسارات العامة والدعم الفني",
+      action: "mailto:info@masteredupath.com"
     },
     {
       icon: Phone,
-      title: "الهاتف والواتساب",
+      title: "الهاتف الأساسي",
       value: "+966 50 123 4567",
-      description: "متاح 24/7 للدعم السريع"
+      description: "خط الدعم الرئيسي - متاح 24/7",
+      action: "tel:+966501234567"
+    },
+    {
+      icon: Phone,
+      title: "الهاتف الثانوي",
+      value: "+966 55 960 0824",
+      description: "خط الدعم الإضافي - متاح في أوقات العمل",
+      action: "tel:+966559600824"
+    },
+    {
+      icon: MessageSquare,
+      title: "الواتساب الأساسي",
+      value: "+966 50 123 4567",
+      description: "للتواصل السريع والدعم الفوري",
+      action: "https://wa.me/966501234567"
+    },
+    {
+      icon: MessageSquare,
+      title: "الواتساب الثانوي",
+      value: "+966 55 960 0824",
+      description: "للاستفسارات والدعم الإضافي",
+      action: "https://wa.me/966559600824"
     },
     {
       icon: MapPin,
       title: "العنوان",
       value: "الرياض، المملكة العربية السعودية",
-      description: "المقر الرئيسي للشركة"
+      description: "المقر الرئيسي للشركة",
+      action: null
     },
     {
       icon: Clock,
       title: "ساعات العمل",
       value: "الأحد - الخميس: 9ص - 6م",
-      description: "الجمعة والسبت: عطلة أسبوعية"
+      description: "الجمعة والسبت: عطلة أسبوعية",
+      action: null
     }
   ];
 
@@ -140,39 +165,99 @@ const ContactUs = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background via-background to-secondary/20">
+    <div className="min-h-screen bg-gradient-to-br from-background via-background to-secondary/20" dir="rtl">
       <Header />
       
       <main className="pt-20">
         {/* Hero Section */}
-        <section className="py-16 px-4 text-center bg-gradient-to-r from-primary/10 via-secondary/10 to-accent/10">
-          <div className="container mx-auto max-w-4xl">
+        <section className="py-20 px-4 text-center bg-gradient-to-r from-primary/10 via-secondary/10 to-accent/10 relative overflow-hidden">
+          {/* Animated Background Elements */}
+          <div className="absolute inset-0 overflow-hidden">
             <motion.div
-              initial={{ opacity: 0, y: 30 }}
+              className="absolute -top-10 -right-10 w-40 h-40 bg-primary/20 rounded-full blur-3xl"
+              animate={{
+                x: [0, 30, 0],
+                y: [0, -20, 0],
+                scale: [1, 1.1, 1],
+              }}
+              transition={{
+                duration: 8,
+                repeat: Infinity,
+                ease: "easeInOut"
+              }}
+            />
+            <motion.div
+              className="absolute -bottom-10 -left-10 w-60 h-60 bg-secondary/20 rounded-full blur-3xl"
+              animate={{
+                x: [0, -40, 0],
+                y: [0, 30, 0],
+                scale: [1, 0.9, 1],
+              }}
+              transition={{
+                duration: 10,
+                repeat: Infinity,
+                ease: "easeInOut"
+              }}
+            />
+          </div>
+
+          <div className="container mx-auto max-w-4xl relative z-10">
+            <motion.div
+              initial={{ opacity: 0, y: 50 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6 }}
+              transition={{ duration: 0.8, ease: "easeOut" }}
             >
-              <h1 className="text-4xl md:text-6xl font-bold mb-6 bg-gradient-to-r from-primary via-secondary to-accent bg-clip-text text-transparent">
+              <motion.h1 
+                className="text-4xl md:text-6xl lg:text-7xl font-bold mb-6 bg-gradient-to-r from-primary via-secondary to-accent bg-clip-text text-transparent"
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 1, delay: 0.2 }}
+              >
                 تواصل معنا
-              </h1>
-              <p className="text-xl text-muted-foreground max-w-2xl mx-auto mb-8 leading-relaxed">
+              </motion.h1>
+              
+              <motion.p 
+                className="text-xl md:text-2xl text-muted-foreground max-w-3xl mx-auto mb-8 leading-relaxed"
+                initial={{ opacity: 0, y: 30 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8, delay: 0.4 }}
+              >
                 نحن هنا لخدمتك على مدار الساعة. تواصل معنا للحصول على أفضل خدمات الترجمة والبحث الأكاديمي
-              </p>
-              <div className="flex justify-center gap-4 flex-wrap">
-                {features.map((feature, index) => (
-                  <motion.div
-                    key={index}
-                    initial={{ opacity: 0, scale: 0.8 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    transition={{ delay: index * 0.1 + 0.3 }}
-                  >
-                    <Badge variant="secondary" className="px-4 py-2 text-sm">
-                      <feature.icon className="w-4 h-4 ml-2" />
-                      {feature.title}
-                    </Badge>
-                  </motion.div>
-                ))}
-              </div>
+              </motion.p>
+              
+              <motion.div 
+                className="flex justify-center gap-4 flex-wrap"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 0.6, delay: 0.6 }}
+              >
+                <AnimatePresence>
+                  {features.map((feature, index) => (
+                    <motion.div
+                      key={index}
+                      initial={{ opacity: 0, scale: 0.5, y: 50 }}
+                      animate={{ opacity: 1, scale: 1, y: 0 }}
+                      exit={{ opacity: 0, scale: 0.5, y: -50 }}
+                      transition={{ 
+                        delay: index * 0.15 + 0.8,
+                        duration: 0.6,
+                        type: "spring",
+                        stiffness: 100
+                      }}
+                      whileHover={{ 
+                        scale: 1.05,
+                        transition: { duration: 0.2 }
+                      }}
+                      whileTap={{ scale: 0.95 }}
+                    >
+                      <Badge variant="secondary" className="px-6 py-3 text-base font-medium hover:bg-primary/10 transition-colors cursor-default">
+                        <feature.icon className="w-5 h-5 mr-2" />
+                        {feature.title}
+                      </Badge>
+                    </motion.div>
+                  ))}
+                </AnimatePresence>
+              </motion.div>
             </motion.div>
           </div>
         </section>
@@ -182,54 +267,81 @@ const ContactUs = () => {
             
             {/* Contact Form */}
             <motion.div
-              initial={{ opacity: 0, x: -30 }}
+              initial={{ opacity: 0, x: 50 }}
               animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.6, delay: 0.2 }}
+              transition={{ duration: 0.8, delay: 0.3 }}
+              className="order-2 lg:order-1"
             >
-              <Card className="shadow-2xl border-0 bg-card/50 backdrop-blur-sm">
-                <CardHeader className="text-center bg-gradient-to-r from-primary/5 to-secondary/5">
-                  <CardTitle className="text-2xl md:text-3xl font-bold flex items-center justify-center gap-3">
-                    <MessageCircle className="w-8 h-8 text-primary" />
-                    أرسل رسالتك
-                  </CardTitle>
-                  <CardDescription className="text-base">
-                    املأ النموذج أدناه وسنتواصل معك خلال 4 ساعات كحد أقصى
-                  </CardDescription>
-                </CardHeader>
+              <motion.div
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.6, delay: 0.5 }}
+                whileHover={{ y: -5 }}
+              >
+                <Card className="shadow-2xl border-0 bg-card/60 backdrop-blur-md hover:shadow-3xl transition-all duration-500 overflow-hidden relative">
+                  {/* Animated border */}
+                  <div className="absolute inset-0 bg-gradient-to-r from-primary/20 via-secondary/20 to-accent/20 animate-pulse opacity-50" />
+                  
+                  <CardHeader className="text-center bg-gradient-to-r from-primary/10 via-secondary/10 to-accent/10 relative z-10">
+                    <motion.div
+                      initial={{ rotate: -10, scale: 0.8 }}
+                      animate={{ rotate: 0, scale: 1 }}
+                      transition={{ duration: 0.6, delay: 0.7 }}
+                    >
+                      <CardTitle className="text-2xl md:text-3xl font-bold flex items-center justify-center gap-3">
+                        <motion.div
+                          animate={{ rotate: [0, 10, -10, 0] }}
+                          transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+                        >
+                          <MessageCircle className="w-8 h-8 text-primary" />
+                        </motion.div>
+                        أرسل رسالتك
+                      </CardTitle>
+                    </motion.div>
+                    <CardDescription className="text-base mt-2">
+                      املأ النموذج أدناه وسنتواصل معك خلال 4 ساعات كحد أقصى
+                    </CardDescription>
+                  </CardHeader>
                 
-                <CardContent className="space-y-6 p-8">
+                <CardContent className="space-y-6 p-8 relative z-10">
                   <form onSubmit={handleSubmit} className="space-y-6">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <motion.div
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: 0.3 }}
+                        initial={{ opacity: 0, x: 30 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ delay: 0.8, duration: 0.5 }}
+                        whileHover={{ scale: 1.02 }}
                       >
-                        <label className="block text-sm font-medium mb-2">الاسم الكامل *</label>
-                        <Input
-                          type="text"
-                          placeholder="اكتب اسمك الكامل"
-                          value={formData.name}
-                          onChange={(e) => handleInputChange('name', e.target.value)}
-                          required
-                          className="h-12 text-right"
-                        />
+                        <label className="block text-sm font-medium mb-2 text-right">الاسم الكامل *</label>
+                        <motion.div whileFocus={{ scale: 1.02 }}>
+                          <Input
+                            type="text"
+                            placeholder="اكتب اسمك الكامل"
+                            value={formData.name}
+                            onChange={(e) => handleInputChange('name', e.target.value)}
+                            required
+                            className="h-12 text-right focus:ring-2 focus:ring-primary/50 transition-all duration-300"
+                          />
+                        </motion.div>
                       </motion.div>
                       
                       <motion.div
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: 0.4 }}
+                        initial={{ opacity: 0, x: -30 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ delay: 0.9, duration: 0.5 }}
+                        whileHover={{ scale: 1.02 }}
                       >
-                        <label className="block text-sm font-medium mb-2">البريد الإلكتروني *</label>
-                        <Input
-                          type="email"
-                          placeholder="example@email.com"
-                          value={formData.email}
-                          onChange={(e) => handleInputChange('email', e.target.value)}
-                          required
-                          className="h-12"
-                        />
+                        <label className="block text-sm font-medium mb-2 text-right">البريد الإلكتروني *</label>
+                        <motion.div whileFocus={{ scale: 1.02 }}>
+                          <Input
+                            type="email"
+                            placeholder="example@email.com"
+                            value={formData.email}
+                            onChange={(e) => handleInputChange('email', e.target.value)}
+                            required
+                            className="h-12 text-right focus:ring-2 focus:ring-secondary/50 transition-all duration-300"
+                          />
+                        </motion.div>
                       </motion.div>
                     </div>
 
@@ -299,107 +411,252 @@ const ContactUs = () => {
                     </motion.div>
 
                     <motion.div
-                      initial={{ opacity: 0, y: 20 }}
+                      initial={{ opacity: 0, y: 30 }}
                       animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: 0.9 }}
+                      transition={{ delay: 1.4, duration: 0.6 }}
+                      whileHover={{ scale: 1.02 }}
+                      whileTap={{ scale: 0.98 }}
                     >
                       <Button 
                         type="submit" 
-                        className="w-full h-14 text-lg font-semibold bg-gradient-to-r from-primary to-secondary hover:from-primary/90 hover:to-secondary/90 transition-all duration-300"
+                        className="w-full h-16 text-lg font-semibold bg-gradient-to-r from-primary via-secondary to-accent hover:from-primary/90 hover:via-secondary/90 hover:to-accent/90 transition-all duration-500 shadow-lg hover:shadow-xl relative overflow-hidden group"
                         disabled={loading}
                       >
-                        {loading ? (
-                          <div className="flex items-center gap-2">
-                            <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                            جار الإرسال...
-                          </div>
-                        ) : (
-                          <div className="flex items-center gap-2">
-                            <Send className="w-5 h-5" />
-                            إرسال الرسالة
-                          </div>
-                        )}
+                        {/* Animated background */}
+                        <div className="absolute inset-0 bg-gradient-to-r from-accent/20 to-primary/20 translate-x-full group-hover:translate-x-0 transition-transform duration-500" />
+                        
+                        <div className="relative z-10">
+                          {loading ? (
+                            <motion.div 
+                              className="flex items-center gap-3"
+                              initial={{ opacity: 0 }}
+                              animate={{ opacity: 1 }}
+                            >
+                              <motion.div 
+                                className="w-6 h-6 border-2 border-white border-t-transparent rounded-full"
+                                animate={{ rotate: 360 }}
+                                transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+                              />
+                              جار الإرسال...
+                            </motion.div>
+                          ) : (
+                            <motion.div 
+                              className="flex items-center gap-3"
+                              whileHover={{ x: -5 }}
+                              transition={{ duration: 0.2 }}
+                            >
+                              <Send className="w-6 h-6" />
+                              إرسال الرسالة
+                            </motion.div>
+                          )}
+                        </div>
                       </Button>
                     </motion.div>
                   </form>
                 </CardContent>
-              </Card>
+                </Card>
+              </motion.div>
             </motion.div>
 
             {/* Contact Information */}
             <motion.div
-              initial={{ opacity: 0, x: 30 }}
+              initial={{ opacity: 0, x: -50 }}
               animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.6, delay: 0.4 }}
-              className="space-y-8"
+              transition={{ duration: 0.8, delay: 0.5 }}
+              className="space-y-8 order-1 lg:order-2"
             >
-              <div className="text-center lg:text-right">
-                <h2 className="text-3xl font-bold mb-4">معلومات التواصل</h2>
+              <motion.div 
+                className="text-center lg:text-right"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 0.7 }}
+              >
+                <h2 className="text-3xl md:text-4xl font-bold mb-4 bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
+                  معلومات التواصل
+                </h2>
                 <p className="text-lg text-muted-foreground">
                   تواصل معنا عبر إحدى الطرق التالية
                 </p>
-              </div>
+              </motion.div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-6">
-                {contactInfo.map((info, index) => (
-                  <motion.div
-                    key={index}
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: index * 0.1 + 0.5 }}
-                  >
-                    <Card className="p-6 hover:shadow-lg transition-all duration-300 border-0 bg-card/30 backdrop-blur-sm hover:bg-card/50">
-                      <div className="flex items-start gap-4">
-                        <div className="p-3 rounded-full bg-gradient-to-br from-primary/20 to-secondary/20">
-                          <info.icon className="w-6 h-6 text-primary" />
-                        </div>
-                        <div className="flex-1">
-                          <h3 className="font-semibold text-lg mb-2">{info.title}</h3>
-                          <p className="text-primary font-medium mb-1">{info.value}</p>
-                          <p className="text-sm text-muted-foreground">{info.description}</p>
-                        </div>
-                      </div>
-                    </Card>
-                  </motion.div>
-                ))}
+              <div className="grid grid-cols-1 gap-4">
+                <AnimatePresence>
+                  {contactInfo.map((info, index) => (
+                    <motion.div
+                      key={index}
+                      initial={{ opacity: 0, x: 50, scale: 0.9 }}
+                      animate={{ opacity: 1, x: 0, scale: 1 }}
+                      exit={{ opacity: 0, x: -50, scale: 0.9 }}
+                      transition={{ 
+                        delay: index * 0.1 + 0.9,
+                        duration: 0.6,
+                        type: "spring",
+                        stiffness: 100
+                      }}
+                      whileHover={{ 
+                        scale: 1.02, 
+                        y: -5,
+                        transition: { duration: 0.2 }
+                      }}
+                    >
+                      {info.action ? (
+                        <a 
+                          href={info.action}
+                          target={info.action.startsWith('http') ? "_blank" : "_self"}
+                          rel={info.action.startsWith('http') ? "noopener noreferrer" : ""}
+                          className="block"
+                        >
+                          <Card className="p-6 hover:shadow-xl transition-all duration-500 border-0 bg-card/40 backdrop-blur-lg hover:bg-card/60 cursor-pointer group relative overflow-hidden">
+                            {/* Animated background on hover */}
+                            <div className="absolute inset-0 bg-gradient-to-r from-primary/10 to-secondary/10 translate-y-full group-hover:translate-y-0 transition-transform duration-500" />
+                            
+                            <div className="flex items-start gap-4 relative z-10">
+                              <motion.div 
+                                className="p-3 rounded-full bg-gradient-to-br from-primary/20 to-secondary/20 group-hover:from-primary/30 group-hover:to-secondary/30 transition-all duration-300"
+                                whileHover={{ rotate: 10, scale: 1.1 }}
+                              >
+                                <info.icon className="w-6 h-6 text-primary group-hover:text-secondary transition-colors duration-300" />
+                              </motion.div>
+                              <div className="flex-1 text-right">
+                                <h3 className="font-semibold text-lg mb-2 group-hover:text-primary transition-colors duration-300">
+                                  {info.title}
+                                </h3>
+                                <p className="text-primary font-medium mb-2 group-hover:text-secondary transition-colors duration-300">
+                                  {info.value}
+                                </p>
+                                <p className="text-sm text-muted-foreground group-hover:text-foreground/80 transition-colors duration-300">
+                                  {info.description}
+                                </p>
+                              </div>
+                            </div>
+                          </Card>
+                        </a>
+                      ) : (
+                        <Card className="p-6 hover:shadow-lg transition-all duration-300 border-0 bg-card/40 backdrop-blur-sm hover:bg-card/60">
+                          <div className="flex items-start gap-4">
+                            <motion.div 
+                              className="p-3 rounded-full bg-gradient-to-br from-primary/20 to-secondary/20"
+                              whileHover={{ rotate: 10, scale: 1.1 }}
+                            >
+                              <info.icon className="w-6 h-6 text-primary" />
+                            </motion.div>
+                            <div className="flex-1 text-right">
+                              <h3 className="font-semibold text-lg mb-2">{info.title}</h3>
+                              <p className="text-primary font-medium mb-2">{info.value}</p>
+                              <p className="text-sm text-muted-foreground">{info.description}</p>
+                            </div>
+                          </div>
+                        </Card>
+                      )}
+                    </motion.div>
+                  ))}
+                </AnimatePresence>
               </div>
 
               {/* Features Cards */}
-              <div className="space-y-4">
+              <motion.div 
+                className="space-y-4"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 1.5, duration: 0.6 }}
+              >
                 <h3 className="text-xl font-bold text-center lg:text-right">لماذا تختارنا؟</h3>
-                {features.map((feature, index) => (
-                  <motion.div
-                    key={index}
-                    initial={{ opacity: 0, x: 20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: index * 0.1 + 0.8 }}
-                  >
-                    <Card className="p-4 hover:shadow-md transition-all duration-300 border-0 bg-gradient-to-r from-primary/5 to-secondary/5">
-                      <div className="flex items-center gap-3">
-                        <div className="p-2 rounded-full bg-primary/10">
-                          <feature.icon className="w-5 h-5 text-primary" />
+                <AnimatePresence>
+                  {features.map((feature, index) => (
+                    <motion.div
+                      key={index}
+                      initial={{ opacity: 0, x: 30 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      exit={{ opacity: 0, x: -30 }}
+                      transition={{ 
+                        delay: index * 0.15 + 1.7,
+                        duration: 0.5
+                      }}
+                      whileHover={{ 
+                        scale: 1.03,
+                        x: -5,
+                        transition: { duration: 0.2 }
+                      }}
+                    >
+                      <Card className="p-4 hover:shadow-lg transition-all duration-500 border-0 bg-gradient-to-r from-primary/5 to-secondary/5 hover:from-primary/10 hover:to-secondary/10 group">
+                        <div className="flex items-center gap-3 text-right">
+                          <motion.div 
+                            className="p-2 rounded-full bg-primary/10 group-hover:bg-primary/20 transition-all duration-300"
+                            whileHover={{ rotate: 360, scale: 1.1 }}
+                            transition={{ duration: 0.5 }}
+                          >
+                            <feature.icon className="w-5 h-5 text-primary" />
+                          </motion.div>
+                          <div className="flex-1">
+                            <h4 className="font-semibold group-hover:text-primary transition-colors duration-300">
+                              {feature.title}
+                            </h4>
+                            <p className="text-sm text-muted-foreground group-hover:text-foreground/80 transition-colors duration-300">
+                              {feature.description}
+                            </p>
+                          </div>
                         </div>
-                        <div>
-                          <h4 className="font-semibold">{feature.title}</h4>
-                          <p className="text-sm text-muted-foreground">{feature.description}</p>
-                        </div>
-                      </div>
-                    </Card>
-                  </motion.div>
-                ))}
-              </div>
+                      </Card>
+                    </motion.div>
+                  ))}
+                </AnimatePresence>
+              </motion.div>
 
               {/* Response Time Alert */}
               <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 1.2 }}
+                initial={{ opacity: 0, scale: 0.9, y: 30 }}
+                animate={{ opacity: 1, scale: 1, y: 0 }}
+                transition={{ delay: 2.2, duration: 0.8, type: "spring" }}
+                whileHover={{ scale: 1.02, y: -3 }}
               >
-                <Card className="p-6 bg-gradient-to-r from-green-50 to-emerald-50 border-green-200">
-                  <div className="text-center">
-                    <h4 className="font-bold text-green-800 text-lg mb-2">⚡ استجابة سريعة</h4>
-                    <p className="text-green-700">
-                      نضمن لك الرد على استفسارك خلال <span className="font-bold">4 ساعات كحد أقصى</span> خلال أوقات العمل الرسمية
+                <Card className="p-6 bg-gradient-to-r from-green-50 via-emerald-50 to-teal-50 border-green-200 hover:border-green-300 transition-all duration-500 relative overflow-hidden group">
+                  {/* Animated background effect */}
+                  <div className="absolute inset-0 bg-gradient-to-r from-green-100/50 to-emerald-100/50 translate-x-full group-hover:translate-x-0 transition-transform duration-700" />
+                  
+                  <div className="text-center relative z-10">
+                    <motion.h4 
+                      className="font-bold text-green-800 text-lg mb-2 flex items-center justify-center gap-2"
+                      animate={{ 
+                        scale: [1, 1.05, 1],
+                      }}
+                      transition={{ 
+                        duration: 2,
+                        repeat: Infinity,
+                        ease: "easeInOut"
+                      }}
+                    >
+                      <motion.span
+                        animate={{ rotate: [0, 10, -10, 0] }}
+                        transition={{ 
+                          duration: 1.5,
+                          repeat: Infinity,
+                          ease: "easeInOut"
+                        }}
+                      >
+                        ⚡
+                      </motion.span>
+                      استجابة سريعة
+                    </motion.h4>
+                    <p className="text-green-700 group-hover:text-green-800 transition-colors duration-300">
+                      نضمن لك الرد على استفسارك خلال{" "}
+                      <motion.span 
+                        className="font-bold text-green-900"
+                        animate={{ 
+                          textShadow: [
+                            "0 0 0px rgba(34, 197, 94, 0)",
+                            "0 0 10px rgba(34, 197, 94, 0.5)",
+                            "0 0 0px rgba(34, 197, 94, 0)"
+                          ]
+                        }}
+                        transition={{ 
+                          duration: 2,
+                          repeat: Infinity,
+                          ease: "easeInOut"
+                        }}
+                      >
+                        4 ساعات كحد أقصى
+                      </motion.span>{" "}
+                      خلال أوقات العمل الرسمية
                     </p>
                   </div>
                 </Card>
