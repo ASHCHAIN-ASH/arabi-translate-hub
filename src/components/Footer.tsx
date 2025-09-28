@@ -98,33 +98,33 @@ const Footer = () => {
       </div>
 
       {/* Main Footer Content */}
-      <div className="relative z-10 mobile-container-wide mobile-section">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 mobile-gap-responsive">
+      <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-16">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-12">
           
           {/* معلومات الشركة */}
           <motion.div 
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
-            className="mobile-space-y col-span-1 sm:col-span-2 lg:col-span-1 mb-8 sm:mb-0"
+            className="col-span-1 md:col-span-2 lg:col-span-1 space-y-6"
           >
-            <div className="flex items-center gap-2 sm:gap-3 justify-center sm:justify-start">
-              <div className="w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 bg-gradient-to-br from-primary to-blue-600 rounded-full flex items-center justify-center flex-shrink-0">
-                <Globe className="h-4 w-4 sm:h-5 sm:w-5 md:h-6 md:w-6 text-white" />
+            <div className="flex items-center gap-3 justify-start mb-6">
+              <div className="w-12 h-12 bg-gradient-to-br from-primary to-blue-600 rounded-full flex items-center justify-center flex-shrink-0">
+                <Globe className="h-6 w-6 text-white" />
               </div>
-              <div className="text-center sm:text-right">
-                <h3 className="mobile-subtitle font-arabic-title font-bold">MasterEduPath</h3>
-                <p className="mobile-caption text-white/70">وكالة الحلول التعليمية المتقدمة</p>
+              <div className="text-right">
+                <h3 className="text-lg font-bold font-arabic-title">MasterEduPath</h3>
+                <p className="text-sm text-white/70">وكالة الحلول التعليمية المتقدمة</p>
               </div>
             </div>
             
-            <p className="text-white/80 mobile-body leading-relaxed text-center sm:text-right">
+            <p className="text-white/80 text-sm leading-relaxed text-right mb-6">
               نحن الشريك الموثوق لأكثر من 10,000 عميل في جميع أنحاء المملكة. 
               نقدم خدمات ترجمة احترافية بأكثر من 100 لغة مع ضمان الجودة والسرعة.
             </p>
 
             {/* Social Media */}
-            <div className="flex gap-2 sm:gap-3 justify-center sm:justify-start">
+            <div className="flex gap-3 justify-start">
               {[
                 { Icon: Facebook, color: "hover:text-blue-400" },
                 { Icon: Twitter, color: "hover:text-sky-400" },
@@ -135,9 +135,9 @@ const Footer = () => {
                   key={index}
                   variant="ghost" 
                   size="sm" 
-                  className={`touch-target w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-white/5 hover:bg-white/10 text-white/70 ${color} transition-all duration-300 border border-white/10`}
+                  className={`w-10 h-10 rounded-full bg-white/5 hover:bg-white/10 text-white/70 ${color} transition-all duration-300 border border-white/10`}
                 >
-                  <Icon className="h-4 w-4 sm:h-5 sm:w-5" />
+                  <Icon className="h-4 w-4" />
                 </Button>
               ))}
             </div>
@@ -205,42 +205,51 @@ const Footer = () => {
             </ul>
           </motion.div>
 
-           {/* روابط مهمة */}
+           {/* روابط مهمة ومميزة */}
            <motion.div 
              initial={{ opacity: 0, y: 20 }}
              whileInView={{ opacity: 1, y: 0 }}
              transition={{ delay: 0.2, duration: 0.5 }}
-             className="space-y-4 md:space-y-6"
+             className="space-y-6"
            >
-             <h4 className="text-base md:text-lg font-bold text-white flex items-center gap-2">
-               <TrendingUp className="h-4 w-4 md:h-5 md:w-5 text-purple-400" />
+             <h4 className="text-lg font-bold text-white flex items-center gap-2">
+               <TrendingUp className="h-5 w-5 text-purple-400" />
                روابط مهمة
              </h4>
-             <ul className="space-y-2 md:space-y-3">
+             <ul className="space-y-3">
                <li>
                  <a 
                    href="/marketing/affiliate" 
-                   className="text-white/70 hover:text-white transition-colors text-sm md:text-base flex items-center gap-2 hover:translate-x-1 transition-transform"
+                   className="text-white/70 hover:text-white transition-colors text-sm flex items-center gap-2 hover:translate-x-1 transition-transform"
                  >
-                   <DollarSign className="h-3 w-3 md:h-4 md:w-4 text-green-400" />
+                   <DollarSign className="h-4 w-4 text-green-400" />
                    التسويق بالعمولة
                  </a>
                </li>
                <li>
                  <a 
                    href="/careers" 
-                   className="text-white/70 hover:text-white transition-colors text-sm md:text-base flex items-center gap-2 hover:translate-x-1 transition-transform"
+                   className="text-white/70 hover:text-white transition-colors text-sm flex items-center gap-2 hover:translate-x-1 transition-transform"
                  >
-                   <Briefcase className="h-3 w-3 md:h-4 md:w-4 text-blue-400" />
+                   <Briefcase className="h-4 w-4 text-blue-400" />
                    الوظائف
                  </a>
                </li>
                <li>
                  <a 
-                   href="/payment-methods" 
-                   className="text-white/70 hover:text-white transition-colors text-sm md:text-base flex items-center gap-2 hover:translate-x-1 transition-transform"
+                   href="/universities" 
+                   className="text-white/70 hover:text-white transition-colors text-sm flex items-center gap-2 hover:translate-x-1 transition-transform"
                  >
-                   <DollarSign className="h-3 w-3 md:h-4 md:w-4 text-green-400" />
+                   <Building2 className="h-4 w-4 text-yellow-400" />
+                   الجامعات
+                 </a>
+               </li>
+               <li>
+                 <a 
+                   href="/payment-methods" 
+                   className="text-white/70 hover:text-white transition-colors text-sm flex items-center gap-2 hover:translate-x-1 transition-transform"
+                 >
+                   <DollarSign className="h-4 w-4 text-green-400" />
                    طرق الدفع
                  </a>
                </li>
@@ -252,9 +261,9 @@ const Footer = () => {
                  <li key={link.name}>
                    <a 
                      href={link.href} 
-                     className="text-white/70 hover:text-white transition-colors text-sm md:text-base flex items-center gap-2 hover:translate-x-1 transition-transform"
+                     className="text-white/70 hover:text-white transition-colors text-sm flex items-center gap-2 hover:translate-x-1 transition-transform"
                    >
-                     <link.icon className="h-3 w-3 md:h-4 md:w-4 text-purple-400" />
+                     <link.icon className="h-4 w-4 text-purple-400" />
                      {link.name}
                    </a>
                  </li>
@@ -262,62 +271,41 @@ const Footer = () => {
              </ul>
            </motion.div>
 
-           {/* روابط مميزة */}
-           <motion.div 
-             initial={{ opacity: 0, y: 20 }}
-             whileInView={{ opacity: 1, y: 0 }}
-             transition={{ delay: 0.25, duration: 0.5 }}
-             className="space-y-4 md:space-y-6"
-           >
-             <h4 className="text-base md:text-lg font-bold text-white flex items-center gap-2">
-               <Award className="h-4 w-4 md:h-5 md:w-5 text-yellow-400" />
-               روابط مميزة
-             </h4>
-             <ul className="space-y-2 md:space-y-3">
-               <li>
-                 <a 
-                   href="/universities" 
-                   className="text-white/70 hover:text-white transition-colors text-sm md:text-base flex items-center gap-2 hover:translate-x-1 transition-transform"
-                 >
-                   <Building2 className="h-3 w-3 md:h-4 md:w-4 text-yellow-400" />
-                   الجامعات
-                 </a>
-               </li>
-             </ul>
-           </motion.div>
-
         </div>
 
-          {/* Newsletter Section */}
-          <motion.div 
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.4, duration: 0.5 }}
-            className="mt-8 sm:mt-12 lg:mt-16 mobile-card bg-gradient-to-br from-primary/10 to-blue-600/10 border border-white/10 hover:border-white/20 transition-all duration-300"
-          >
-            <div className="text-center mobile-space-y">
-              <h5 className="font-bold text-white flex items-center justify-center mobile-gap-responsive mobile-subheading-responsive">
-                <div className="flex items-center justify-center w-8 h-8 sm:w-10 sm:h-10 bg-yellow-400/10 rounded-full">
-                  <Timer className="h-4 w-4 sm:h-5 sm:w-5 text-yellow-400" />
-                </div>
-                اشترك في نشرتنا الإخبارية
-              </h5>
-              <p className="mobile-body text-white/70">احصل على آخر العروض والأخبار المهمة</p>
-              <div className="flex flex-col sm:flex-row gap-3 max-w-md mx-auto">
-                <Input 
-                  placeholder="البريد الإلكتروني" 
-                  className="mobile-input bg-white/10 border-white/20 text-white placeholder:text-white/50 flex-1"
-                />
-                <Button 
-                  className="mobile-button-responsive bg-gradient-to-r from-primary to-blue-600 hover:from-primary/80 hover:to-blue-600/80 text-white shadow-lg hover:shadow-xl transition-all duration-300 whitespace-nowrap touch-target"
-                >
-                  اشترك الآن
-                </Button>
+        {/* Newsletter Section */}
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.4, duration: 0.5 }}
+          className="mt-12 bg-gradient-to-br from-primary/10 to-blue-600/10 border border-white/10 hover:border-white/20 transition-all duration-300 rounded-xl p-6 md:p-8"
+        >
+          <div className="text-center space-y-4">
+            <h5 className="text-lg font-bold text-white flex items-center justify-center gap-3">
+              <div className="flex items-center justify-center w-10 h-10 bg-yellow-400/10 rounded-full">
+                <Timer className="h-5 w-5 text-yellow-400" />
               </div>
+              اشترك في نشرتنا الإخبارية
+            </h5>
+            <p className="text-sm text-white/70">احصل على آخر العروض والأخبار المهمة</p>
+            <div className="flex flex-col sm:flex-row gap-3 max-w-md mx-auto">
+              <Input 
+                placeholder="البريد الإلكتروني" 
+                className="bg-white/10 border-white/20 text-white placeholder:text-white/50 flex-1 text-sm"
+              />
+              <Button 
+                className="bg-gradient-to-r from-primary to-blue-600 hover:from-primary/80 hover:to-blue-600/80 text-white shadow-lg hover:shadow-xl transition-all duration-300 whitespace-nowrap px-6"
+              >
+                اشترك الآن
+              </Button>
             </div>
-          </motion.div>
+          </div>
+         </motion.div>
 
-        {/* خط الفصل وحقوق الطبع */}
+      </div>
+
+      {/* خط الفصل وحقوق الطبع */}
+      <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div 
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
