@@ -77,8 +77,8 @@ const PaymentMethods = () => {
           name: 'التحويل البنكي المحلي',
           description: 'تحويل مباشر من البنوك السعودية',
           features: ['أمان عالي', 'رسوم منخفضة', 'إثبات رسمي'],
-          fees: 'حسب البنك (عادة 5-15 ريال)',
-          processing: '24-48 ساعة',
+          fees: 'مجاني',
+          processing: 'فوري',
           security: 'عالي جداً',
           icon: '🏦'
         },
