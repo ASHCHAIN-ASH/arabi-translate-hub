@@ -202,62 +202,90 @@ const Footer = () => {
             </ul>
           </motion.div>
 
-          {/* روابط مهمة */}
-          <motion.div 
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.2, duration: 0.5 }}
-            className="space-y-4 md:space-y-6"
-          >
-            <h4 className="text-base md:text-lg font-bold text-white flex items-center gap-2">
-              <TrendingUp className="h-4 w-4 md:h-5 md:w-5 text-purple-400" />
-              روابط مهمة
-            </h4>
-            <ul className="space-y-2 md:space-y-3">
-              <li>
-                <a 
-                  href="/marketing/affiliate" 
-                  className="text-white/70 hover:text-white transition-colors text-sm md:text-base flex items-center gap-2 hover:translate-x-1 transition-transform"
-                >
-                  <DollarSign className="h-3 w-3 md:h-4 md:w-4 text-green-400" />
-                  التسويق بالعمولة
-                </a>
-              </li>
-              <li>
-                <a 
-                  href="/careers" 
-                  className="text-white/70 hover:text-white transition-colors text-sm md:text-base flex items-center gap-2 hover:translate-x-1 transition-transform"
-                >
-                  <Briefcase className="h-3 w-3 md:h-4 md:w-4 text-blue-400" />
-                  الوظائف
-                </a>
-              </li>
-              <li>
-                <a 
-                  href="/payment-methods" 
-                  className="text-white/70 hover:text-white transition-colors text-sm md:text-base flex items-center gap-2 hover:translate-x-1 transition-transform"
-                >
-                  <DollarSign className="h-3 w-3 md:h-4 md:w-4 text-green-400" />
-                  طرق الدفع
-                </a>
-              </li>
-              {[
-                { name: 'الملكية الفكرية', href: '/intellectual-property', icon: Shield },
-                { name: 'سياسة الخصوصية', href: '/privacy-policy', icon: Shield },
-                { name: 'شروط الاستخدام', href: '/terms-of-service', icon: HelpCircle }
-              ].map((link) => (
-                <li key={link.name}>
-                  <a 
-                    href={link.href} 
-                    className="text-white/70 hover:text-white transition-colors text-sm md:text-base flex items-center gap-2 hover:translate-x-1 transition-transform"
-                  >
-                    <link.icon className="h-3 w-3 md:h-4 md:w-4 text-purple-400" />
-                    {link.name}
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </motion.div>
+           {/* روابط مهمة */}
+           <motion.div 
+             initial={{ opacity: 0, y: 20 }}
+             whileInView={{ opacity: 1, y: 0 }}
+             transition={{ delay: 0.2, duration: 0.5 }}
+             className="space-y-4 md:space-y-6"
+           >
+             <h4 className="text-base md:text-lg font-bold text-white flex items-center gap-2">
+               <TrendingUp className="h-4 w-4 md:h-5 md:w-5 text-purple-400" />
+               روابط مهمة
+             </h4>
+             <ul className="space-y-2 md:space-y-3">
+               <li>
+                 <a 
+                   href="/marketing/affiliate" 
+                   className="text-white/70 hover:text-white transition-colors text-sm md:text-base flex items-center gap-2 hover:translate-x-1 transition-transform"
+                 >
+                   <DollarSign className="h-3 w-3 md:h-4 md:w-4 text-green-400" />
+                   التسويق بالعمولة
+                 </a>
+               </li>
+               <li>
+                 <a 
+                   href="/careers" 
+                   className="text-white/70 hover:text-white transition-colors text-sm md:text-base flex items-center gap-2 hover:translate-x-1 transition-transform"
+                 >
+                   <Briefcase className="h-3 w-3 md:h-4 md:w-4 text-blue-400" />
+                   الوظائف
+                 </a>
+               </li>
+               <li>
+                 <a 
+                   href="/payment-methods" 
+                   className="text-white/70 hover:text-white transition-colors text-sm md:text-base flex items-center gap-2 hover:translate-x-1 transition-transform"
+                 >
+                   <DollarSign className="h-3 w-3 md:h-4 md:w-4 text-green-400" />
+                   طرق الدفع
+                 </a>
+               </li>
+               {[
+                 { name: 'الملكية الفكرية', href: '/intellectual-property', icon: Shield },
+                 { name: 'سياسة الخصوصية', href: '/privacy-policy', icon: Shield },
+                 { name: 'شروط الاستخدام', href: '/terms-of-service', icon: HelpCircle }
+               ].map((link) => (
+                 <li key={link.name}>
+                   <a 
+                     href={link.href} 
+                     className="text-white/70 hover:text-white transition-colors text-sm md:text-base flex items-center gap-2 hover:translate-x-1 transition-transform"
+                   >
+                     <link.icon className="h-3 w-3 md:h-4 md:w-4 text-purple-400" />
+                     {link.name}
+                   </a>
+                 </li>
+               ))}
+               
+               {/* قسم خريطة الموقع */}
+               <li className="mt-6 pt-4 border-t border-white/20">
+                 <h5 className="text-base font-bold text-white mb-3 flex items-center gap-2">
+                   <Globe className="h-4 w-4 text-blue-400" />
+                   خريطة الموقع
+                 </h5>
+                 <ul className="space-y-2 mr-6">
+                   {[
+                     { name: 'الصفحة الرئيسية', href: '/' },
+                     { name: 'خدمات الترجمة', href: '/services' },
+                     { name: 'خدمات البحث العلمي', href: '/research-services' },
+                     { name: 'المدونة', href: '/blog' },
+                     { name: 'اتصل بنا', href: '/contact-us' },
+                     { name: 'طلب خدمة', href: '/order-now' },
+                     { name: 'تتبع الطلبات', href: '/order-tracking' }
+                   ].map((sitemapLink) => (
+                     <li key={sitemapLink.name}>
+                       <a 
+                         href={sitemapLink.href} 
+                         className="text-white/60 hover:text-white/80 transition-colors text-xs md:text-sm block hover:translate-x-1 transition-transform"
+                       >
+                         {sitemapLink.name}
+                       </a>
+                     </li>
+                   ))}
+                 </ul>
+               </li>
+             </ul>
+           </motion.div>
 
         </div>
 
