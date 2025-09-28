@@ -1848,6 +1848,7 @@ export type Database = {
           client_address: string | null
           client_approved: boolean | null
           client_approved_at: string | null
+          client_company: string | null
           client_email: string
           client_id_number: string | null
           client_name: string
@@ -1856,11 +1857,13 @@ export type Database = {
           commercial_register: string | null
           company_approved: boolean | null
           company_approved_at: string | null
+          contract_content: string | null
           contract_duration: string | null
           contract_number: string
           contract_pdf_url: string | null
           created_at: string
           currency: string
+          delivery_date: string | null
           end_date: string | null
           id: string
           nafath_request_id: string | null
@@ -1881,6 +1884,7 @@ export type Database = {
           client_address?: string | null
           client_approved?: boolean | null
           client_approved_at?: string | null
+          client_company?: string | null
           client_email: string
           client_id_number?: string | null
           client_name: string
@@ -1889,11 +1893,13 @@ export type Database = {
           commercial_register?: string | null
           company_approved?: boolean | null
           company_approved_at?: string | null
+          contract_content?: string | null
           contract_duration?: string | null
           contract_number: string
           contract_pdf_url?: string | null
           created_at?: string
           currency?: string
+          delivery_date?: string | null
           end_date?: string | null
           id?: string
           nafath_request_id?: string | null
@@ -1914,6 +1920,7 @@ export type Database = {
           client_address?: string | null
           client_approved?: boolean | null
           client_approved_at?: string | null
+          client_company?: string | null
           client_email?: string
           client_id_number?: string | null
           client_name?: string
@@ -1922,11 +1929,13 @@ export type Database = {
           commercial_register?: string | null
           company_approved?: boolean | null
           company_approved_at?: string | null
+          contract_content?: string | null
           contract_duration?: string | null
           contract_number?: string
           contract_pdf_url?: string | null
           created_at?: string
           currency?: string
+          delivery_date?: string | null
           end_date?: string | null
           id?: string
           nafath_request_id?: string | null
