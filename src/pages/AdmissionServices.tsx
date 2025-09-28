@@ -9,6 +9,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Checkbox } from "@/components/ui/checkbox";
 import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/hooks/use-toast";
+import { supabase } from "@/integrations/supabase/client";
 import {
   GraduationCap,
   Users,
@@ -83,12 +84,18 @@ const AdmissionServices = () => {
       // Validate form data
       const validatedData = admissionSchema.parse(formData);
       
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 2000));
+      // Call Supabase edge function to send emails
+      const { data, error } = await supabase.functions.invoke('send-admission-inquiry', {
+        body: validatedData
+      });
+
+      if (error) {
+        throw error;
+      }
       
       toast({
         title: "تم إرسال الطلب بنجاح",
-        description: "سيتم التواصل معك خلال 24 ساعة لمتابعة طلب القبول",
+        description: `رقم الطلب: ${data.applicationNumber}. سيتم التواصل معك خلال 24 ساعة لمتابعة طلب القبول`,
       });
       
       // Reset form
@@ -108,6 +115,7 @@ const AdmissionServices = () => {
       });
       
     } catch (error) {
+      console.error("Submission error:", error);
       if (error instanceof z.ZodError) {
         const firstError = error.errors[0];
         toast({
@@ -118,7 +126,7 @@ const AdmissionServices = () => {
       } else {
         toast({
           title: "خطأ في الإرسال",
-          description: "حدث خطأ أثناء إرسال الطلب، يرجى المحاولة مرة أخرى",
+          description: error?.message || "حدث خطأ أثناء إرسال الطلب، يرجى المحاولة مرة أخرى",
           variant: "destructive",
         });
       }
