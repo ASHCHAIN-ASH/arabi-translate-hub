@@ -202,7 +202,7 @@ const createClientEmailHtml = (
       
       <div class="contact-section">
         <div class="contact-title">معلومات التواصل</div>
-        <div class="contact-item">📞 الهاتف: +966501234567</div>
+        <div class="contact-item">📞 الهاتف: 0500776343</div>
         <div class="contact-item">📧 البريد الإلكتروني: info@masteredupath.com</div>
         <div class="contact-item">📍 العنوان: المملكة العربية السعودية</div>
         <div class="contact-item">🕐 ساعات العمل: الأحد - الخميس | 10:00 ص - 7:00 م</div>
@@ -319,7 +319,7 @@ const createAdminEmailHtml = (
     .info-value { color: #1f2937; font-size: 14px; font-weight: 500; width: 65%; }
     .priority-high { color: #dc2626; font-weight: bold; background: #fef2f2; padding: 4px 8px; border-radius: 4px; }
     .email-value { color: #2563eb; text-decoration: underline; }
-    .phone-value { color: #059669; direction: ltr; }
+    .phone-value { color: #059669; direction: rtl; }
     .field-value { color: #7c3aed; font-weight: 600; }
     .university-value { color: #dc2626; font-weight: 600; }
     
@@ -512,7 +512,7 @@ const createAdminEmailHtml = (
     <div class="footer">
       <div class="footer-text">نظام إدارة القبول الجامعي - وكالة MasterEduPath</div>
       <div class="footer-subtext">هذا البريد تم إرساله تلقائياً من نظام إدارة طلبات القبول</div>
-      <div class="footer-contact">للدعم التقني: system@masteredupath.com | +966 50 123 4567</div>
+      <div class="footer-contact">للدعم التقني: info@masteredupath.com | 0500776343</div>
     </div>
   </div>
 </body>
@@ -569,7 +569,7 @@ const handler = async (req: Request): Promise<Response> => {
 
     // Send email to client
     const clientEmailResult = await resend.emails.send({
-      from: "خدمات القبول الجامعي - وكالة MasterEduPath <admissions@masteredupath.com>",
+      from: "مسار الخبراء للتعليم <info@masteredupath.com>",
       to: [inquiryData.email],
       subject: `✅ تأكيد استلام طلب القبول الجامعي - رقم الطلب: ${applicationNumber}`,
       html: clientEmailHtml,
@@ -579,8 +579,8 @@ const handler = async (req: Request): Promise<Response> => {
 
     // Send email to admin
     const adminEmailResult = await resend.emails.send({
-      from: "نظام القبول الجامعي - وكالة MasterEduPath <system@masteredupath.com>",
-      to: ["admissions@masteredupath.com", "admin@masteredupath.com"],
+      from: "إشعار طلب قبول جديد <info@masteredupath.com>",
+      to: ["info@masteredupath.com"],
       subject: `🚨 طلب قبول جامعي جديد من ${inquiryData.fullName} - ${applicationNumber}`,
       html: adminEmailHtml,
     });

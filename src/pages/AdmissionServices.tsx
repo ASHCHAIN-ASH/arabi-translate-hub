@@ -610,7 +610,7 @@ const AdmissionServices = () => {
                 icon: Phone,
                 title: "اتصل بنا",
                 description: "متاحون للرد على مكالماتك",
-                contact: "+966501234567",
+                contact: "0500776343",
                 color: "text-green-500",
                 bgColor: "bg-green-50"
               },
