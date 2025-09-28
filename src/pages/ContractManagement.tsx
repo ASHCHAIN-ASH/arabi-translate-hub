@@ -142,9 +142,7 @@ const ContractManagement = () => {
           additional_notes: newContract.additionalNotes,
           delivery_timeframe: newContract.deliveryTimeframe
         },
-        status: 'draft',
-        created_at: new Date().toISOString(),
-        updated_at: new Date().toISOString()
+        status: 'draft'
       };
 
       const { data, error } = await supabase

@@ -1871,6 +1871,7 @@ export type Database = {
           nafath_verified_at: string | null
           payment_terms: string | null
           service_description: string | null
+          service_details: Json | null
           service_price: number
           service_type: string
           start_date: string | null
@@ -1907,6 +1908,7 @@ export type Database = {
           nafath_verified_at?: string | null
           payment_terms?: string | null
           service_description?: string | null
+          service_details?: Json | null
           service_price: number
           service_type: string
           start_date?: string | null
@@ -1943,6 +1945,7 @@ export type Database = {
           nafath_verified_at?: string | null
           payment_terms?: string | null
           service_description?: string | null
+          service_details?: Json | null
           service_price?: number
           service_type?: string
           start_date?: string | null
