@@ -3,13 +3,14 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { ExternalLink, GraduationCap, Building2, Globe, Award } from "lucide-react";
+import universityPlaceholder from "@/assets/university-placeholder.png";
 
 const Universities = () => {
   const saudiPublicUniversities = [
     {
       name: "جامعة الملك سعود",
       nameEn: "King Saud University",
-      logo: "https://www.ksu.edu.sa/sites/ksu/assets/images/logos/ksu-logo.png",
+      logo: "https://www.ksu.edu.sa/sites/KSU/assets/images/logos/ksu_logo_en.png",
       website: "https://www.ksu.edu.sa",
       city: "الرياض",
       established: "1957"
@@ -17,7 +18,7 @@ const Universities = () => {
     {
       name: "جامعة الملك عبدالعزيز",
       nameEn: "King Abdulaziz University", 
-      logo: "https://www.kau.edu.sa/Style%20Library/KAU/images/logo-ar.png",
+      logo: "https://www.kau.edu.sa/Files/165/Files/151942_KAU-Logo.png",
       website: "https://www.kau.edu.sa",
       city: "جدة",
       established: "1967"
@@ -25,7 +26,7 @@ const Universities = () => {
     {
       name: "جامعة الملك فهد للبترول والمعادن",
       nameEn: "King Fahd University of Petroleum & Minerals",
-      logo: "https://www.kfupm.edu.sa/Style%20Library/KfupmEN/img/Logo.png",
+      logo: "https://www.kfupm.edu.sa/SiteCollectionImages/en/deanships/library/about/kfupm-logo.png",
       website: "https://www.kfupm.edu.sa",
       city: "الظهران",
       established: "1963"
@@ -33,7 +34,7 @@ const Universities = () => {
     {
       name: "جامعة أم القرى",
       nameEn: "Umm Al-Qura University",
-      logo: "https://uqu.edu.sa/_catalogs/masterpage/UQU/images/logo.png",
+      logo: "https://uqu.edu.sa/lib/img/logo.png",
       website: "https://uqu.edu.sa",
       city: "مكة المكرمة",
       established: "1981"
@@ -41,7 +42,7 @@ const Universities = () => {
     {
       name: "الجامعة الإسلامية بالمدينة المنورة",
       nameEn: "Islamic University of Madinah",
-      logo: "https://www.iu.edu.sa/site_images/iu-logo.png",
+      logo: "https://www.iu.edu.sa/site_images/logo-ar.png",
       website: "https://www.iu.edu.sa",
       city: "المدينة المنورة",
       established: "1961"
@@ -49,10 +50,74 @@ const Universities = () => {
     {
       name: "جامعة الإمام محمد بن سعود الإسلامية",
       nameEn: "Imam Mohammad Ibn Saud Islamic University",
-      logo: "https://imamu.edu.sa/Style%20Library/imamu/images/logo.png",
+      logo: "https://imamu.edu.sa/sites/default/files/imamu-logo.png",
       website: "https://imamu.edu.sa",
       city: "الرياض",
       established: "1953"
+    },
+    {
+      name: "جامعة الملك فيصل",
+      nameEn: "King Faisal University",
+      logo: "https://www.kfu.edu.sa/sites/Home/Style%20Library/ar/images/logo.png",
+      website: "https://www.kfu.edu.sa",
+      city: "الأحساء",
+      established: "1975"
+    },
+    {
+      name: "جامعة الملك خالد",
+      nameEn: "King Khalid University",
+      logo: "https://www.kku.edu.sa/sites/default/files/general_files/kku_logo.png",
+      website: "https://www.kku.edu.sa",
+      city: "أبها",
+      established: "1998"
+    },
+    {
+      name: "جامعة طيبة",
+      nameEn: "Taibah University",
+      logo: "https://www.taibahu.edu.sa/Pages/AR/Style%20Library/images/logo.png",
+      website: "https://www.taibahu.edu.sa",
+      city: "المدينة المنورة",
+      established: "2003"
+    },
+    {
+      name: "جامعة القصيم",
+      nameEn: "Qassim University",
+      logo: "https://www.qu.edu.sa/content/qu/ar/jcr:content/contentPar/image.img.png",
+      website: "https://www.qu.edu.sa",
+      city: "بريدة",
+      established: "2004"
+    },
+    {
+      name: "جامعة طيف",
+      nameEn: "Taif University",
+      logo: "https://www.tu.edu.sa/Style%20Library/images/logo-ar.png",
+      website: "https://www.tu.edu.sa",
+      city: "الطائف",
+      established: "2003"
+    },
+    {
+      name: "جامعة جازان",
+      nameEn: "Jazan University",
+      logo: "https://www.jazanu.edu.sa/Style%20Library/JU/images/logo.png",
+      website: "https://www.jazanu.edu.sa",
+      city: "جازان",
+      established: "2006"
+    },
+    {
+      name: "جامعة الحدود الشمالية",
+      nameEn: "Northern Border University",
+      logo: "https://www.nbu.edu.sa/Style%20Library/NBU/images/logo.png",
+      website: "https://www.nbu.edu.sa",
+      city: "عرعر",
+      established: "2007"
+    },
+    {
+      name: "جامعة الأميرة نورة بنت عبدالرحمن",
+      nameEn: "Princess Nourah bint Abdulrahman University",
+      logo: "https://www.pnu.edu.sa/arr/Style%20Library/PNU/images/logo.png",
+      website: "https://www.pnu.edu.sa",
+      city: "الرياض",
+      established: "2008"
     }
   ];
 
@@ -60,7 +125,7 @@ const Universities = () => {
     {
       name: "جامعة الأمير سلطان",
       nameEn: "Prince Sultan University",
-      logo: "https://www.psu.edu.sa/Style%20Library/psu/images/logo.png",
+      logo: "https://www.psu.edu.sa/sites/psu/Style%20Library/PSU/Images/logo.png",
       website: "https://www.psu.edu.sa",
       city: "الرياض",
       established: "1999"
@@ -68,7 +133,7 @@ const Universities = () => {
     {
       name: "جامعة عفت",
       nameEn: "Effat University",
-      logo: "https://www.effatuniversity.edu.sa/Style%20Library/effat/images/logo.png",
+      logo: "https://www.effatuniversity.edu.sa/English/Style%20Library/EU/Images/effat-logo.png",
       website: "https://www.effatuniversity.edu.sa",
       city: "جدة",
       established: "1999"
@@ -76,7 +141,7 @@ const Universities = () => {
     {
       name: "جامعة الفيصل",
       nameEn: "Alfaisal University",
-      logo: "https://www.alfaisal.edu/Style%20Library/alfaisal/images/logo.png",
+      logo: "https://www.alfaisal.edu/sites/default/files/alfaisal-logo.png",
       website: "https://www.alfaisal.edu",
       city: "الرياض",
       established: "2002"
@@ -84,10 +149,42 @@ const Universities = () => {
     {
       name: "جامعة دار العلوم",
       nameEn: "Dar Al Uloom University",
-      logo: "https://www.dau.edu.sa/Style%20Library/dau/images/logo.png",
+      logo: "https://www.dau.edu.sa/sites/dau/Style%20Library/Images/logo.png",
       website: "https://www.dau.edu.sa",
       city: "الرياض",
       established: "2008"
+    },
+    {
+      name: "الجامعة العربية المفتوحة",
+      nameEn: "Arab Open University",
+      logo: "https://www.arabou.edu.kw/sites/default/files/aou-logo.png",
+      website: "https://www.aou.edu.sa",
+      city: "الرياض",
+      established: "2002"
+    },
+    {
+      name: "جامعة الأمير محمد بن فهد",
+      nameEn: "Prince Mohammad Bin Fahd University",
+      logo: "https://www.pmu.edu.sa/Style%20Library/PMU/images/logo.png",
+      website: "https://www.pmu.edu.sa",
+      city: "الخبر",
+      established: "2006"
+    },
+    {
+      name: "جامعة رياض العلم",
+      nameEn: "Riyadh Elm University",
+      logo: "https://www.riyadh.edu.sa/Style%20Library/REU/images/logo.png",
+      website: "https://www.riyadh.edu.sa",
+      city: "الرياض",
+      established: "2004"
+    },
+    {
+      name: "كليات الفارابي",
+      nameEn: "Al-Farabi Colleges",
+      logo: "https://www.farabicollege.edu.sa/sites/default/files/farabi-logo.png",
+      website: "https://www.farabicollege.edu.sa",
+      city: "الرياض",
+      established: "1996"
     }
   ];
 
@@ -95,7 +192,7 @@ const Universities = () => {
     {
       name: "جامعة الكويت",
       nameEn: "Kuwait University",
-      logo: "https://www.ku.edu.kw/Style%20Library/ku/images/logo.png",
+      logo: "https://www.ku.edu.kw/themes/ku/images/logo.png",
       website: "https://www.ku.edu.kw",
       city: "الكويت",
       country: "الكويت"
@@ -103,7 +200,7 @@ const Universities = () => {
     {
       name: "جامعة الإمارات العربية المتحدة",
       nameEn: "United Arab Emirates University",
-      logo: "https://www.uaeu.ac.ae/Style%20Library/uaeu/images/logo.png",
+      logo: "https://www.uaeu.ac.ae/assets/images/logo-uaeu.png",
       website: "https://www.uaeu.ac.ae",
       city: "العين",
       country: "الإمارات"
@@ -111,7 +208,7 @@ const Universities = () => {
     {
       name: "جامعة قطر",
       nameEn: "Qatar University",
-      logo: "https://www.qu.edu.qa/Style%20Library/qu/images/logo.png",
+      logo: "https://www.qu.edu.qa/static/img/qu-logo.png",
       website: "https://www.qu.edu.qa",
       city: "الدوحة",
       country: "قطر"
@@ -119,10 +216,42 @@ const Universities = () => {
     {
       name: "جامعة البحرين",
       nameEn: "University of Bahrain",
-      logo: "https://www.uob.edu.bh/Style%20Library/uob/images/logo.png",
+      logo: "https://www.uob.edu.bh/assets/images/logo.png",
       website: "https://www.uob.edu.bh",
       city: "المنامة",
       country: "البحرين"
+    },
+    {
+      name: "الجامعة الأمريكية في دبي",
+      nameEn: "American University of Dubai",
+      logo: "https://www.aud.edu/images/AUD-logo.png",
+      website: "https://www.aud.edu",
+      city: "دبي",
+      country: "الإمارات"
+    },
+    {
+      name: "الجامعة الأمريكية في الشارقة",
+      nameEn: "American University of Sharjah",
+      logo: "https://www.aus.edu/info/abt/logo/aus-logo.png",
+      website: "https://www.aus.edu",
+      city: "الشارقة",
+      country: "الإمارات"
+    },
+    {
+      name: "جامعة الخليج العربي",
+      nameEn: "Arabian Gulf University",
+      logo: "https://www.agu.edu.bh/images/logo.png",
+      website: "https://www.agu.edu.bh",
+      city: "المنامة",
+      country: "البحرين"
+    },
+    {
+      name: "جامعة زايد",
+      nameEn: "Zayed University",
+      logo: "https://www.zu.ac.ae/images/zu-logo.png",
+      website: "https://www.zu.ac.ae",
+      city: "أبوظبي",
+      country: "الإمارات"
     }
   ];
 
@@ -130,7 +259,7 @@ const Universities = () => {
     {
       name: "جامعة هارفارد",
       nameEn: "Harvard University",
-      logo: "https://www.harvard.edu/wp-content/uploads/2021/02/harvard-university-logo.png",
+      logo: "https://logos-world.net/wp-content/uploads/2020/11/Harvard-Logo.png",
       website: "https://www.harvard.edu",
       city: "كامبريدج",
       country: "الولايات المتحدة"
@@ -138,7 +267,7 @@ const Universities = () => {
     {
       name: "معهد ماساتشوستس للتكنولوجيا",
       nameEn: "Massachusetts Institute of Technology",
-      logo: "https://web.mit.edu/graphicidentity/logo/logo-color.png",
+      logo: "https://logos-world.net/wp-content/uploads/2020/11/MIT-Logo.png",
       website: "https://www.mit.edu",
       city: "كامبريدج",
       country: "الولايات المتحدة"
@@ -146,7 +275,7 @@ const Universities = () => {
     {
       name: "جامعة ستانفورد",
       nameEn: "Stanford University",
-      logo: "https://identity.stanford.edu/wp-content/uploads/sites/3/2020/06/wordmark-nospace-red.png",
+      logo: "https://logos-world.net/wp-content/uploads/2020/11/Stanford-Logo.png",
       website: "https://www.stanford.edu",
       city: "ستانفورد",
       country: "الولايات المتحدة"
@@ -154,7 +283,7 @@ const Universities = () => {
     {
       name: "جامعة أكسفورد",
       nameEn: "University of Oxford",
-      logo: "https://www.ox.ac.uk/sites/files/oxford/styles/ow_medium/public/media_wysiwyg/Oxford%20University.png",
+      logo: "https://logos-world.net/wp-content/uploads/2020/11/Oxford-Logo.png",
       website: "https://www.ox.ac.uk",
       city: "أكسفورد",
       country: "المملكة المتحدة"
@@ -162,9 +291,65 @@ const Universities = () => {
     {
       name: "جامعة كامبريدج",
       nameEn: "University of Cambridge",
-      logo: "https://www.cam.ac.uk/sites/www.cam.ac.uk/files/inner-images/logo.jpg",
+      logo: "https://logos-world.net/wp-content/uploads/2020/11/Cambridge-Logo.png",
       website: "https://www.cam.ac.uk",
       city: "كامبريدج",
+      country: "المملكة المتحدة"
+    },
+    {
+      name: "جامعة كاليفورنيا - بيركلي",
+      nameEn: "University of California, Berkeley",
+      logo: "https://logos-world.net/wp-content/uploads/2020/11/UC-Berkeley-Logo.png",
+      website: "https://www.berkeley.edu",
+      city: "بيركلي",
+      country: "الولايات المتحدة"
+    },
+    {
+      name: "جامعة كولومبيا",
+      nameEn: "Columbia University",
+      logo: "https://logos-world.net/wp-content/uploads/2020/11/Columbia-Logo.png",
+      website: "https://www.columbia.edu",
+      city: "نيويورك",
+      country: "الولايات المتحدة"
+    },
+    {
+      name: "معهد كاليفورنيا للتكنولوجيا",
+      nameEn: "California Institute of Technology",
+      logo: "https://logos-world.net/wp-content/uploads/2020/11/Caltech-Logo.png",
+      website: "https://www.caltech.edu",
+      city: "باسادينا",
+      country: "الولايات المتحدة"
+    },
+    {
+      name: "جامعة ييل",
+      nameEn: "Yale University",
+      logo: "https://logos-world.net/wp-content/uploads/2020/11/Yale-Logo.png",
+      website: "https://www.yale.edu",
+      city: "نيو هيفن",
+      country: "الولايات المتحدة"
+    },
+    {
+      name: "جامعة برينستون",
+      nameEn: "Princeton University",
+      logo: "https://logos-world.net/wp-content/uploads/2020/11/Princeton-Logo.png",
+      website: "https://www.princeton.edu",
+      city: "برينستون",
+      country: "الولايات المتحدة"
+    },
+    {
+      name: "الكلية الإمبراطورية لندن",
+      nameEn: "Imperial College London",
+      logo: "https://logos-world.net/wp-content/uploads/2020/11/Imperial-College-London-Logo.png",
+      website: "https://www.imperial.ac.uk",
+      city: "لندن",
+      country: "المملكة المتحدة"
+    },
+    {
+      name: "كلية لندن الجامعية",
+      nameEn: "University College London",
+      logo: "https://logos-world.net/wp-content/uploads/2020/11/UCL-Logo.png",
+      website: "https://www.ucl.ac.uk",
+      city: "لندن",
       country: "المملكة المتحدة"
     }
   ];
@@ -180,10 +365,15 @@ const Universities = () => {
         <CardContent className="p-6">
           <div className="text-center space-y-4">
             {/* University Logo */}
-            <div className="w-20 h-20 mx-auto bg-white rounded-full shadow-md flex items-center justify-center p-2 mb-4">
-              <div className="w-full h-full bg-gradient-to-br from-primary/10 to-blue-500/10 rounded-full flex items-center justify-center">
-                <GraduationCap className="h-8 w-8 text-primary" />
-              </div>
+            <div className="w-20 h-20 mx-auto bg-white rounded-full shadow-md flex items-center justify-center p-2 mb-4 overflow-hidden">
+              <img 
+                src={university.logo}
+                alt={`${university.name} logo`}
+                className="w-full h-full object-contain"
+                onError={(e) => {
+                  e.currentTarget.src = universityPlaceholder;
+                }}
+              />
             </div>
 
             {/* University Name */}
