@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { 
   CreditCard, 
@@ -27,8 +27,20 @@ import Footer from '@/components/Footer';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import { useToast } from '@/hooks/use-toast';
 
 const PaymentMethods = () => {
+  const { toast } = useToast();
+  const [selectedMethod, setSelectedMethod] = useState<{category: string, method: string} | null>(null);
+
+  const handlePaymentSelection = (categoryName: string, methodName: string) => {
+    setSelectedMethod({ category: categoryName, method: methodName });
+    toast({
+      title: "تم اختيار طريقة الدفع",
+      description: `تم اختيار ${methodName} من ${categoryName}`,
+      duration: 3000,
+    });
+  };
   const paymentMethods = [
     {
       category: 'البطاقات الائتمانية',
@@ -405,10 +417,18 @@ const PaymentMethods = () => {
                           </div>
 
                           <Button 
-                            className="w-full group-hover:bg-primary group-hover:text-white transition-all duration-300"
-                            variant="outline"
+                            className={`w-full transition-all duration-300 ${
+                              selectedMethod?.category === category.category && selectedMethod?.method === method.name 
+                                ? 'bg-primary text-white shadow-lg' 
+                                : 'group-hover:bg-primary group-hover:text-white'
+                            }`}
+                            variant={selectedMethod?.category === category.category && selectedMethod?.method === method.name ? 'default' : 'outline'}
+                            onClick={() => handlePaymentSelection(category.category, method.name)}
                           >
-                            اختيار هذه الطريقة
+                            {selectedMethod?.category === category.category && selectedMethod?.method === method.name 
+                              ? '✓ تم الاختيار' 
+                              : 'اختيار هذه الطريقة'
+                            }
                           </Button>
                         </CardContent>
                       </Card>
