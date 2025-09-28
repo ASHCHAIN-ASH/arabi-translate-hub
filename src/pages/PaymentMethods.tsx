@@ -45,7 +45,10 @@ const PaymentMethods = () => {
     fullName: '',
     email: '',
     phone: '',
-    nationalId: '',
+    whatsappNumber: '',
+    absherPhone: '',
+    isEmployee: '',
+    jobTitle: '',
     monthlyIncome: '',
     serviceType: '',
     serviceAmount: '',
@@ -97,7 +100,10 @@ const PaymentMethods = () => {
           fullName: '',
           email: '',
           phone: '',
-          nationalId: '',
+          whatsappNumber: '',
+          absherPhone: '',
+          isEmployee: '',
+          jobTitle: '',
           monthlyIncome: '',
           serviceType: '',
           serviceAmount: '',
@@ -910,13 +916,51 @@ const PaymentMethods = () => {
               </div>
               
               <div className="space-y-2">
-                <Label htmlFor="nationalId">الهوية الوطنية *</Label>
+                <Label htmlFor="whatsappNumber">رقم الواتساب *</Label>
                 <Input
-                  id="nationalId"
+                  id="whatsappNumber"
                   required
-                  value={formData.nationalId}
-                  onChange={(e) => setFormData({...formData, nationalId: e.target.value})}
-                  placeholder="1xxxxxxxxx"
+                  value={formData.whatsappNumber}
+                  onChange={(e) => setFormData({...formData, whatsappNumber: e.target.value})}
+                  placeholder="05xxxxxxxx"
+                />
+              </div>
+              
+              <div className="space-y-2">
+                <Label htmlFor="absherPhone">رقم الجوال المسجل في أبشر *</Label>
+                <Input
+                  id="absherPhone"
+                  required
+                  value={formData.absherPhone}
+                  onChange={(e) => setFormData({...formData, absherPhone: e.target.value})}
+                  placeholder="05xxxxxxxx"
+                />
+              </div>
+              
+              <div className="space-y-2">
+                <Label htmlFor="isEmployee">هل أنت موظف؟ *</Label>
+                <Select onValueChange={(value) => setFormData({...formData, isEmployee: value})}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="اختر حالتك الوظيفية" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="employed">نعم، موظف</SelectItem>
+                    <SelectItem value="self-employed">عمل حر</SelectItem>
+                    <SelectItem value="unemployed">غير موظف</SelectItem>
+                    <SelectItem value="student">طالب</SelectItem>
+                    <SelectItem value="retired">متقاعد</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              
+              <div className="space-y-2">
+                <Label htmlFor="jobTitle">المسمى الوظيفي أو المهنة *</Label>
+                <Input
+                  id="jobTitle"
+                  required
+                  value={formData.jobTitle}
+                  onChange={(e) => setFormData({...formData, jobTitle: e.target.value})}
+                  placeholder="مثال: مهندس، طبيب، محاسب، إلخ"
                 />
               </div>
               
@@ -1001,6 +1045,7 @@ const PaymentMethods = () => {
                 <li>• قد نطلب مستندات إضافية لتأكيد الهوية والراتب</li>
                 <li>• الموافقة على التقسيط تعتمد على تقييم الأهلية</li>
                 <li>• لا توجد رسوم على تقديم الطلب</li>
+                <li>• يجب أن تكون جميع أرقام الجوال صالحة ومفعلة</li>
               </ul>
             </div>
             

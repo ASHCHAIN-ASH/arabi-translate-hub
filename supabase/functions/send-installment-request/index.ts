@@ -12,7 +12,10 @@ interface InstallmentRequest {
   fullName: string;
   email: string;
   phone: string;
-  nationalId: string;
+  whatsappNumber: string;
+  absherPhone: string;
+  isEmployee: string;
+  jobTitle: string;
   monthlyIncome: string;
   serviceType: string;
   serviceAmount: string;
@@ -84,10 +87,10 @@ const handler = async (req: Request): Promise<Response> => {
               <div style="background: #e3f2fd; padding: 20px; border-radius: 8px; margin: 20px 0;">
                 <h4 style="margin-top: 0; color: #1976d2;">الخطوات التالية:</h4>
                 <ul style="margin: 0; padding-right: 20px;">
-                  <li style="margin-bottom: 8px;">سيتم مراجعة طلبك خلال 24 ساعة</li>
-                  <li style="margin-bottom: 8px;">سيتواصل معك أحد مستشارينا لتأكيد التفاصيل</li>
-                  <li style="margin-bottom: 8px;">قد نطلب مستندات إضافية لإتمام العملية</li>
-                  <li>ستحصل على تأكيد الموافقة خلال 3 أيام عمل</li>
+                <li style="margin-bottom: 8px;">سيتم مراجعة طلبك خلال 24 ساعة</li>
+                <li style="margin-bottom: 8px;">سيتواصل معك أحد مستشارينا لتأكيد التفاصيل</li>
+                <li style="margin-bottom: 8px;">قد نطلب مستندات إضافية لإتمام العملية</li>
+                <li>ستحصل على تأكيد الموافقة خلال 3 أيام عمل</li>
                 </ul>
               </div>
               
@@ -147,8 +150,20 @@ const handler = async (req: Request): Promise<Response> => {
                     <td style="padding: 12px 0;"><a href="tel:${requestData.phone}" style="color: #667eea;">${requestData.phone}</a></td>
                   </tr>
                   <tr style="border-bottom: 1px solid #eee;">
-                    <td style="padding: 12px 0; font-weight: bold; color: #555;">الهوية الوطنية:</td>
-                    <td style="padding: 12px 0;">${requestData.nationalId}</td>
+                    <td style="padding: 12px 0; font-weight: bold; color: #555;">رقم الواتساب:</td>
+                    <td style="padding: 12px 0;"><a href="https://wa.me/${requestData.whatsappNumber.replace(/^\+/, '')}" style="color: #667eea;">${requestData.whatsappNumber}</a></td>
+                  </tr>
+                  <tr style="border-bottom: 1px solid #eee;">
+                    <td style="padding: 12px 0; font-weight: bold; color: #555;">رقم أبشر:</td>
+                    <td style="padding: 12px 0;">${requestData.absherPhone}</td>
+                  </tr>
+                  <tr style="border-bottom: 1px solid #eee;">
+                    <td style="padding: 12px 0; font-weight: bold; color: #555;">الحالة الوظيفية:</td>
+                    <td style="padding: 12px 0;">${getEmploymentStatusName(requestData.isEmployee)}</td>
+                  </tr>
+                  <tr style="border-bottom: 1px solid #eee;">
+                    <td style="padding: 12px 0; font-weight: bold; color: #555;">المسمى الوظيفي:</td>
+                    <td style="padding: 12px 0;">${requestData.jobTitle}</td>
                   </tr>
                   <tr>
                     <td style="padding: 12px 0; font-weight: bold; color: #555;">الراتب الشهري:</td>
@@ -271,6 +286,17 @@ function getInstallmentPeriodName(period: string): string {
     'flexible': 'مرنة حسب الظروف'
   };
   return periods[period] || period;
+}
+
+function getEmploymentStatusName(status: string): string {
+  const statusMap: { [key: string]: string } = {
+    'employed': 'موظف',
+    'self-employed': 'عمل حر',
+    'unemployed': 'غير موظف',
+    'student': 'طالب',
+    'retired': 'متقاعد'
+  };
+  return statusMap[status] || status;
 }
 
 serve(handler);
