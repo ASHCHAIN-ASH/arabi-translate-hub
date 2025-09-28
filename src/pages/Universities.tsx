@@ -2,30 +2,17 @@ import { motion } from "framer-motion";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { ExternalLink, GraduationCap, Building2, Globe, Award, Book, Users, Star, MapPin, Clock } from "lucide-react";
-import universityPlaceholder from "@/assets/university-placeholder.png";
-import ksuLogo from "@/assets/universities/ksu-logo.png";
-import kauLogo from "@/assets/universities/kau-logo.png";
-import kfupmLogo from "@/assets/universities/kfupm-logo.png";
-import harvardLogo from "@/assets/universities/harvard-logo.png";
-import mitLogo from "@/assets/universities/mit-logo.png";
-import uquLogo from "@/assets/universities/uqu-logo.png";
-import iuLogo from "@/assets/universities/iu-logo.png";
-import imamuLogo from "@/assets/universities/imamu-logo.png";
-import psuLogo from "@/assets/universities/psu-logo.png";
-import effatLogo from "@/assets/universities/effat-logo.png";
-import alfaisalLogo from "@/assets/universities/alfaisal-logo.png";
-import kuwaitLogo from "@/assets/universities/kuwait-logo.png";
-import uaeuLogo from "@/assets/universities/uaeu-logo.png";
-import quLogo from "@/assets/universities/qu-logo.png";
-import stanfordLogo from "@/assets/universities/stanford-logo.png";
-import oxfordLogo from "@/assets/universities/oxford-logo.png";
+import { 
+  ExternalLink, GraduationCap, Building2, Globe, Award, Book, Users, Star, MapPin, Clock,
+  Crown, Shield, Zap, Heart, Microscope, Calculator, Briefcase, Landmark, Brain,
+  BookOpen, FlaskConical, Stethoscope, Scale, PaintbrushIcon, Trees, Atom,
+  Diamond, Castle, Mountain, Waves, Sun, Moon
+} from "lucide-react";
 import { memo, useState } from "react";
 
 // University card component with performance optimizations
 const UniversityCard = memo(({ university, index }: { university: any, index: number }) => {
-  const [imageLoaded, setImageLoaded] = useState(false);
-  const [imageError, setImageError] = useState(false);
+  const IconComponent = university.icon;
 
   return (
     <motion.div
@@ -57,28 +44,19 @@ const UniversityCard = memo(({ university, index }: { university: any, index: nu
 
         <CardContent className="p-6 sm:p-8 relative z-10">
           <div className="text-center space-y-4 sm:space-y-6">
-            {/* University Logo */}
+            {/* University Icon */}
             <motion.div 
               className="relative w-20 h-20 sm:w-24 sm:h-24 mx-auto"
               whileHover={{ rotate: [0, -5, 5, 0] }}
               transition={{ duration: 0.5 }}
             >
               <div className="absolute inset-0 rounded-full bg-white shadow-lg group-hover:shadow-xl transition-shadow" />
-              <div className="absolute inset-2 rounded-full bg-white shadow-inner flex items-center justify-center overflow-hidden">
-                {!imageError ? (
-                  <img 
-                    src={university.logo}
-                    alt={`${university.name} logo`}
-                    className={`w-12 h-12 sm:w-16 sm:h-16 object-contain transition-all duration-300 ${
-                      imageLoaded ? 'opacity-100 scale-100' : 'opacity-0 scale-95'
-                    }`}
-                    onLoad={() => setImageLoaded(true)}
-                    onError={() => setImageError(true)}
-                    loading="lazy"
-                  />
-                ) : (
-                  <GraduationCap className="w-12 h-12 sm:w-16 sm:h-16 text-gray-400" />
-                )}
+              <div className="absolute inset-2 rounded-full bg-white shadow-inner flex items-center justify-center overflow-hidden"
+                style={{ backgroundColor: `${university.color}15` }}>
+                <IconComponent 
+                  className="w-12 h-12 sm:w-16 sm:h-16 transition-all duration-300"
+                  style={{ color: university.color }}
+                />
               </div>
               {/* Glow effect */}
               <div 
@@ -203,7 +181,7 @@ const Universities = () => {
     {
       name: "جامعة الملك سعود",
       nameEn: "King Saud University",
-      logo: ksuLogo,
+      icon: Crown,
       website: "https://www.ksu.edu.sa",
       city: "الرياض",
       established: "1957",
@@ -216,7 +194,7 @@ const Universities = () => {
     {
       name: "جامعة الملك عبدالعزيز",
       nameEn: "King Abdulaziz University", 
-      logo: kauLogo,
+      icon: Waves,
       website: "https://www.kau.edu.sa",
       city: "جدة",
       established: "1967",
@@ -229,7 +207,7 @@ const Universities = () => {
     {
       name: "جامعة الملك فهد للبترول والمعادن",
       nameEn: "King Fahd University of Petroleum & Minerals",
-      logo: kfupmLogo,
+      icon: FlaskConical,
       website: "https://www.kfupm.edu.sa",
       city: "الظهران",
       established: "1963",
@@ -242,7 +220,7 @@ const Universities = () => {
     {
       name: "جامعة أم القرى",
       nameEn: "Umm Al-Qura University",
-      logo: uquLogo,
+      icon: Building2,
       website: "https://uqu.edu.sa",
       city: "مكة المكرمة",
       established: "1981",
@@ -255,7 +233,7 @@ const Universities = () => {
     {
       name: "الجامعة الإسلامية بالمدينة المنورة",
       nameEn: "Islamic University of Madinah",
-      logo: iuLogo,
+      icon: BookOpen,
       website: "https://www.iu.edu.sa",
       city: "المدينة المنورة",
       established: "1961",
@@ -268,7 +246,7 @@ const Universities = () => {
     {
       name: "جامعة الإمام محمد بن سعود الإسلامية",
       nameEn: "Imam Mohammad Ibn Saud Islamic University",
-      logo: imamuLogo,
+      icon: Shield,
       website: "https://imamu.edu.sa",
       city: "الرياض",
       established: "1953",
@@ -277,6 +255,54 @@ const Universities = () => {
       students: "60,000+",
       faculties: ["الشريعة", "أصول الدين", "اللغة العربية", "العلوم الاجتماعية", "علوم الحاسب"],
       specialties: ["الشريعة الإسلامية", "العلوم الاجتماعية", "اللغة العربية", "أصول الدين", "الإعلام الإسلامي"]
+    },
+    {
+      name: "جامعة الملك خالد",
+      nameEn: "King Khalid University",
+      icon: Mountain,
+      website: "https://www.kku.edu.sa",
+      city: "أبها",
+      established: "1998",
+      color: "#2E7D32",
+      ranking: "5 محلياً",
+      students: "65,000+",
+      specialties: ["الطب", "الهندسة", "الحاسب الآلي", "التربية", "العلوم الإدارية"]
+    },
+    {
+      name: "جامعة القصيم",
+      nameEn: "Qassim University",
+      icon: Trees,
+      website: "https://www.qu.edu.sa",
+      city: "بريدة",
+      established: "2004",
+      color: "#388E3C",
+      ranking: "6 محلياً",
+      students: "70,000+",
+      specialties: ["الزراعة", "الطب البيطري", "الهندسة", "العلوم", "التربية"]
+    },
+    {
+      name: "جامعة طيبة",
+      nameEn: "Taibah University",
+      icon: Sun,
+      website: "https://www.taibahu.edu.sa",
+      city: "المدينة المنورة",
+      established: "2003",
+      color: "#FF9800",
+      ranking: "7 محلياً",
+      students: "60,000+",
+      specialties: ["الطب", "طب الأسنان", "الصيدلة", "الهندسة", "علوم الحاسب"]
+    },
+    {
+      name: "جامعة جازان",
+      nameEn: "Jazan University",
+      icon: Waves,
+      website: "https://www.jazanu.edu.sa",
+      city: "جازان",
+      established: "2006",
+      color: "#00ACC1",
+      ranking: "8 محلياً",
+      students: "65,000+",
+      specialties: ["الطب", "الهندسة", "العلوم البحرية", "الزراعة", "التربية"]
     }
   ];
 
@@ -284,7 +310,7 @@ const Universities = () => {
     {
       name: "جامعة الأمير سلطان",
       nameEn: "Prince Sultan University",
-      logo: psuLogo,
+      icon: Crown,
       website: "https://www.psu.edu.sa",
       city: "الرياض",
       established: "1999",
@@ -296,7 +322,7 @@ const Universities = () => {
     {
       name: "جامعة عفت",
       nameEn: "Effat University",
-      logo: effatLogo,
+      icon: Heart,
       website: "https://www.effatuniversity.edu.sa",
       city: "جدة",
       established: "1999",
@@ -308,7 +334,7 @@ const Universities = () => {
     {
       name: "جامعة الفيصل",
       nameEn: "Alfaisal University",
-      logo: alfaisalLogo,
+      icon: Diamond,
       website: "https://www.alfaisal.edu",
       city: "الرياض",
       established: "2002",
@@ -316,6 +342,42 @@ const Universities = () => {
       ranking: "متميزة",
       students: "3,000+",
       specialties: ["الطب", "الصيدلة", "الهندسة", "الأعمال", "العلوم والتقنية"]
+    },
+    {
+      name: "جامعة دار العلوم",
+      nameEn: "Dar Al Uloom University",
+      icon: BookOpen,
+      website: "https://www.dau.edu.sa",
+      city: "الرياض",
+      established: "2008",
+      color: "#8B5CF6",
+      ranking: "أهلية متميزة",
+      students: "5,000+",
+      specialties: ["إدارة الأعمال", "الهندسة", "علوم الحاسب", "الطب", "الصيدلة"]
+    },
+    {
+      name: "الجامعة العربية المفتوحة",
+      nameEn: "Arab Open University",
+      icon: Globe,
+      website: "https://www.aou.edu.sa",
+      city: "الرياض",
+      established: "2002",
+      color: "#DC2626",
+      ranking: "تعليم مفتوح",
+      students: "35,000+",
+      specialties: ["إدارة الأعمال", "تقنية المعلومات", "اللغة الإنجليزية", "التربية", "العلوم الاجتماعية"]
+    },
+    {
+      name: "جامعة الأمير محمد بن فهد",
+      nameEn: "Prince Mohammad Bin Fahd University",
+      icon: Zap,
+      website: "https://www.pmu.edu.sa",
+      city: "الخبر",
+      established: "2006",
+      color: "#F59E0B",
+      ranking: "أهلية تقنية",
+      students: "4,000+",
+      specialties: ["الهندسة", "إدارة الأعمال", "علوم الحاسب", "التصميم", "العمارة"]
     }
   ];
 
@@ -323,35 +385,80 @@ const Universities = () => {
     {
       name: "جامعة الكويت",
       nameEn: "Kuwait University",
-      logo: kuwaitLogo,
+      icon: Castle,
       website: "https://www.ku.edu.kw",
       city: "الكويت",
       country: "الكويت",
+      established: "1966",
       color: "#1B5E20",
+      ranking: "1 كويتياً",
       students: "40,000+",
       specialties: ["الطب", "الهندسة", "العلوم", "الآداب", "الحقوق"]
     },
     {
       name: "جامعة الإمارات العربية المتحدة",
       nameEn: "United Arab Emirates University",
-      logo: uaeuLogo,
+      icon: Sun,
       website: "https://www.uaeu.ac.ae",
       city: "العين",
       country: "الإمارات",
+      established: "1976",
       color: "#C62828",
+      ranking: "1 إماراتياً",
       students: "14,000+",
       specialties: ["الطب", "الهندسة", "تقنية المعلومات", "الأعمال", "التربية"]
     },
     {
       name: "جامعة قطر",
       nameEn: "Qatar University",
-      logo: quLogo,
+      icon: Diamond,
       website: "https://www.qu.edu.qa",
       city: "الدوحة",
       country: "قطر",
+      established: "1973",
       color: "#6A1B9A",
+      ranking: "1 قطرياً",
       students: "23,000+",
       specialties: ["الهندسة", "الطب", "الصيدلة", "القانون", "الأعمال"]
+    },
+    {
+      name: "جامعة البحرين",
+      nameEn: "University of Bahrain",
+      icon: Waves,
+      website: "https://www.uob.edu.bh",
+      city: "المنامة",
+      country: "البحرين",
+      established: "1986",
+      color: "#E53E3E",
+      ranking: "1 بحرينياً",
+      students: "30,000+",
+      specialties: ["الهندسة", "تقنية المعلومات", "إدارة الأعمال", "الطب", "التربية"]
+    },
+    {
+      name: "جامعة السلطان قابوس",
+      nameEn: "Sultan Qaboos University",
+      icon: Crown,
+      website: "https://www.squ.edu.om",
+      city: "مسقط",
+      country: "عُمان",
+      established: "1986",
+      color: "#805AD5",
+      ranking: "1 عُمانياً",
+      students: "18,000+",
+      specialties: ["الطب", "الهندسة", "العلوم", "الزراعة", "التربية"]
+    },
+    {
+      name: "الجامعة الأمريكية في دبي",
+      nameEn: "American University of Dubai",
+      icon: Building2,
+      website: "https://www.aud.edu",
+      city: "دبي",
+      country: "الإمارات",
+      established: "1995",
+      color: "#1A202C",
+      ranking: "أمريكية معتمدة",
+      students: "2,500+",
+      specialties: ["إدارة الأعمال", "الهندسة", "العمارة", "التصميم", "الإعلام"]
     }
   ];
 
@@ -359,10 +466,11 @@ const Universities = () => {
     {
       name: "جامعة هارفارد",
       nameEn: "Harvard University",
-      logo: harvardLogo,
+      icon: Shield,
       website: "https://www.harvard.edu",
       city: "كامبريدج",
       country: "الولايات المتحدة",
+      established: "1636",
       color: "#A51C30",
       ranking: "1 عالمياً",
       students: "23,000+",
@@ -371,10 +479,11 @@ const Universities = () => {
     {
       name: "معهد ماساتشوستس للتكنولوجيا",
       nameEn: "Massachusetts Institute of Technology",
-      logo: mitLogo,
+      icon: Atom,
       website: "https://www.mit.edu",
       city: "كامبريدج",
       country: "الولايات المتحدة",
+      established: "1861",
       color: "#8B0000",
       ranking: "1 تقنياً",
       students: "11,000+",
@@ -383,10 +492,11 @@ const Universities = () => {
     {
       name: "جامعة ستانفورد",
       nameEn: "Stanford University",
-      logo: stanfordLogo,
+      icon: Trees,
       website: "https://www.stanford.edu",
       city: "ستانفورد",
       country: "الولايات المتحدة",
+      established: "1885",
       color: "#8C1515",
       ranking: "2 عالمياً",
       students: "17,000+",
@@ -395,14 +505,67 @@ const Universities = () => {
     {
       name: "جامعة أكسفورد",
       nameEn: "University of Oxford",
-      logo: oxfordLogo,
+      icon: BookOpen,
       website: "https://www.ox.ac.uk",
       city: "أكسفورد",
       country: "المملكة المتحدة",
+      established: "1096",
       color: "#002147",
       ranking: "1 بريطانياً",
       students: "24,000+",
       specialties: ["الطب", "القانون", "الآداب", "العلوم", "الفلسفة"]
+    },
+    {
+      name: "جامعة كامبريدج",
+      nameEn: "University of Cambridge",
+      icon: Award,
+      website: "https://www.cam.ac.uk",
+      city: "كامبريدج",
+      country: "المملكة المتحدة",
+      established: "1209",
+      color: "#0F4C75",
+      ranking: "2 بريطانياً",
+      students: "21,000+",
+      specialties: ["الرياضيات", "الفيزياء", "الهندسة", "الطب", "العلوم الطبيعية"]
+    },
+    {
+      name: "جامعة تورونتو",
+      nameEn: "University of Toronto",
+      icon: Landmark,
+      website: "https://www.utoronto.ca",
+      city: "تورونتو",
+      country: "كندا",
+      established: "1827",
+      color: "#003F7F",
+      ranking: "1 كندياً",
+      students: "97,000+",
+      specialties: ["الطب", "الهندسة", "إدارة الأعمال", "علوم الحاسب", "الصيدلة"]
+    },
+    {
+      name: "جامعة طوكيو",
+      nameEn: "University of Tokyo",
+      icon: Sun,
+      website: "https://www.u-tokyo.ac.jp",
+      city: "طوكيو",
+      country: "اليابان",
+      established: "1877",
+      color: "#DD6B20",
+      ranking: "1 آسيوياً",
+      students: "28,000+",
+      specialties: ["الهندسة", "العلوم", "الطب", "القانون", "الاقتصاد"]
+    },
+    {
+      name: "جامعة ملبورن",
+      nameEn: "University of Melbourne",
+      icon: Globe,
+      website: "https://www.unimelb.edu.au",
+      city: "ملبورن",
+      country: "أستراليا",
+      established: "1853",
+      color: "#00274C",
+      ranking: "1 أسترالياً",
+      students: "50,000+",
+      specialties: ["الطب", "التجارة", "الهندسة", "القانون", "الفنون"]
     }
   ];
 
