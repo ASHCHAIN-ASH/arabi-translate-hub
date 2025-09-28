@@ -254,11 +254,7 @@ const Footer = () => {
              </h4>
              <ul className="space-y-2 md:space-y-3">
                {[
-                 { name: 'إدارة العقود', href: '/contract-management', icon: Briefcase },
-                 { name: 'طلب عقد جديد', href: '/contract-request', icon: UserPlus },
-                 { name: 'بوابة التوقيع الإلكتروني', href: '/esign-portal', icon: Shield },
-                 { name: 'اعتماد العقود', href: '/client/contract-approval', icon: Award },
-                 { name: 'عقود العملاء', href: '/client/contracts', icon: Briefcase }
+                 { name: 'إدارة العقود', href: '/contract-management', icon: Briefcase }
                ].map((link) => (
                  <li key={link.name}>
                    <a 
