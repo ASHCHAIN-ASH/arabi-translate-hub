@@ -224,7 +224,6 @@ const Footer = () => {
                 { name: 'دليل الجامعات', href: '/universities', icon: Building2 },
                 { name: 'القبول بالجامعات', href: '/admission-services', icon: GraduationCap },
                 { name: 'دليل المجلات العلمية', href: '/journals', icon: Award },
-                { name: 'النشر في المجلات', href: '/research/journal-publication', icon: Crown },
                 { name: 'التسويق بالعمولة', href: '/marketing/affiliate', icon: DollarSign },
                 { name: 'الوظائف', href: '/careers', icon: Briefcase },
                 { name: 'طرق الدفع', href: '/payment-methods', icon: DollarSign }
