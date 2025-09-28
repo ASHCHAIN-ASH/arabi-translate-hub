@@ -54,435 +54,144 @@ const Header = () => {
       className="sticky top-0 z-50 w-full bg-white/90 backdrop-blur-xl border-b border-border/50 shadow-lg" 
       dir="rtl"
     >
-      <div className="container mx-auto px-4 lg:px-6">
-        <div className="flex items-center justify-between h-20">
-          {/* الشعار المحسن */}
+      <div className="container mx-auto px-3 sm:px-4 lg:px-6">
+        <div className="flex items-center justify-between h-14 sm:h-16 lg:h-20">
+          {/* الشعار محسن للجوال */}
           <motion.div 
-            className="flex items-center gap-3 sm:gap-4"
+            className="flex items-center gap-2 sm:gap-3 flex-1 min-w-0"
             whileHover={{ scale: 1.02 }}
             transition={{ duration: 0.2 }}
           >
-            <Link to="/" className="flex items-center group">
+            <Link to="/" className="flex items-center min-w-0">
               <motion.div 
-                className="relative w-12 h-12 sm:w-14 sm:h-14 lg:w-16 lg:h-16 ml-2 sm:ml-3 lg:ml-4"
+                className="relative w-10 h-10 sm:w-12 sm:h-12 lg:w-16 lg:h-16 ml-2 sm:ml-3 flex-shrink-0"
                 whileHover={{ rotate: 5 }}
                 transition={{ duration: 0.3 }}
               >
-                <div className="absolute inset-0 bg-gradient-to-br from-blue-600 via-indigo-600 to-purple-600 rounded-xl sm:rounded-2xl shadow-lg sm:shadow-xl flex items-center justify-center border-2 border-white/30 group-hover:shadow-2xl transition-shadow duration-300">
-                  <div className="flex flex-col items-center justify-center">
-                    <motion.div
-                      animate={{ rotate: [0, 10, -10, 0] }}
-                      transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-                    >
-                      <GraduationCap className="h-6 w-6 sm:h-7 sm:w-7 lg:h-8 lg:w-8 text-white mb-0.5 sm:mb-1" />
-                    </motion.div>
-                    <div className="flex items-center">
-                      <BookOpen className="h-2 w-2 sm:h-3 sm:w-3 text-white/90" />
-                      <Globe className="h-2 w-2 sm:h-3 sm:w-3 text-white/90 -mr-0.5" />
-                    </div>
-                  </div>
+                <div className="absolute inset-0 bg-gradient-to-br from-blue-600 via-indigo-600 to-purple-600 rounded-lg sm:rounded-xl shadow-md sm:shadow-lg flex items-center justify-center border border-white/30">
+                  <GraduationCap className="h-5 w-5 sm:h-6 sm:w-6 lg:h-8 lg:w-8 text-white" />
                 </div>
-                <motion.div 
-                  className="absolute -top-0.5 sm:-top-1 -right-0.5 sm:-right-1 w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-6 bg-gradient-to-br from-amber-400 to-orange-500 rounded-full border border-white sm:border-2 shadow-sm sm:shadow-lg flex items-center justify-center"
-                  animate={{ scale: [1, 1.1, 1] }}
-                  transition={{ duration: 2, repeat: Infinity }}
-                >
-                  <span className="text-white text-xs font-bold">M</span>
-                </motion.div>
+                <div className="absolute -top-0.5 -right-0.5 w-3 h-3 sm:w-4 sm:h-4 lg:w-6 lg:h-6 bg-gradient-to-br from-amber-400 to-orange-500 rounded-full border border-white flex items-center justify-center">
+                  <span className="text-white text-[8px] sm:text-xs font-bold">M</span>
+                </div>
               </motion.div>
-              <div className="text-right min-w-0">
-                <motion.h1 
-                  className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-arabic-formal font-bold text-slate-800 dark:text-white leading-tight tracking-wide group-hover:text-primary transition-colors duration-300 truncate"
-                  whileHover={{ scale: 1.02 }}
-                >
+              <div className="text-right min-w-0 flex-1">
+                <h1 className="text-sm sm:text-base lg:text-2xl font-arabic-formal font-bold text-slate-800 leading-tight truncate">
                   <span className="hidden sm:inline">وكالة ماستر إيدو باث</span>
                   <span className="sm:hidden">ماستر إيدو باث</span>
-                </motion.h1>
-                <motion.p 
-                  className="text-xs sm:text-sm lg:text-base font-tajawal font-semibold text-blue-600 dark:text-blue-400 tracking-wider truncate"
-                  whileHover={{ scale: 1.02 }}
-                >
+                </h1>
+                <p className="text-[10px] sm:text-xs lg:text-sm font-tajawal font-medium text-blue-600 truncate hidden sm:block">
                   MasterEduPath Agency
-                </motion.p>
+                </p>
               </div>
             </Link>
           </motion.div>
 
-          {/* القائمة الرئيسية المحسنة - شاشات كبيرة */}
+          {/* القائمة الرئيسية - شاشات كبيرة */}
           <nav className="hidden lg:flex items-center gap-6">
             {navigation.map((item, index) => (
-              <motion.div
-                key={item.name}
-                initial={{ y: -20, opacity: 0 }}
-                animate={{ y: 0, opacity: 1 }}
-                transition={{ delay: index * 0.1, duration: 0.3 }}
-              >
-                <Link
-                  to={item.href}
-                  className={`relative font-medium flex items-center gap-2 flex-row-reverse px-4 py-2 rounded-lg transition-all duration-300 group ${
-                    isActive(item.href) 
-                      ? 'text-primary bg-primary/10' 
-                      : 'text-foreground hover:text-primary hover:bg-primary/5'
-                  }`}
-                >
-                  <span className="relative z-10">{item.name}</span>
-                  <motion.div
-                    whileHover={{ scale: 1.2, rotate: 10 }}
-                    transition={{ duration: 0.2 }}
-                  >
-                    <item.icon className="h-4 w-4 relative z-10" />
-                  </motion.div>
-                  {isActive(item.href) && (
-                    <motion.div
-                      layoutId="activeTab"
-                      className="absolute inset-0 bg-primary/10 rounded-lg"
-                      transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
-                    />
-                  )}
+              <motion.div key={item.name} initial={{ y: -20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: index * 0.1, duration: 0.3 }}>
+                <Link to={item.href} className={`relative font-medium flex items-center gap-2 px-4 py-2 rounded-lg transition-all duration-300 ${isActive(item.href) ? 'text-primary bg-primary/10' : 'text-foreground hover:text-primary hover:bg-primary/5'}`}>
+                  <span>{item.name}</span>
+                  <item.icon className="h-4 w-4" />
                 </Link>
               </motion.div>
             ))}
             
-            {/* قائمة الخدمات المنسدلة المحسنة */}
-            <motion.div
-              initial={{ y: -20, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              transition={{ delay: navigation.length * 0.1, duration: 0.3 }}
-            >
-              <DropdownMenu open={isDropdownOpen} onOpenChange={setIsDropdownOpen}>
-                <DropdownMenuTrigger asChild>
-                  <Button 
-                    variant="ghost" 
-                    className={`font-medium px-4 py-2 h-auto flex items-center gap-2 rounded-lg transition-all duration-300 group relative ${
-                      isDropdownOpen ? 'text-primary bg-primary/10' : 'text-foreground hover:text-primary hover:bg-primary/5'
-                    }`}
-                  >
-                    <span>خدماتنا</span>
-                    <motion.div
-                      whileHover={{ scale: 1.2, rotate: 10 }}
-                      transition={{ duration: 0.2 }}
-                    >
-                      <Briefcase className="h-4 w-4" />
-                    </motion.div>
-                    <motion.div
-                      animate={{ rotate: isDropdownOpen ? 180 : 0 }}
-                      transition={{ duration: 0.3 }}
-                    >
-                      <ChevronDown className="h-4 w-4" />
-                    </motion.div>
-                  </Button>
-                </DropdownMenuTrigger>
-                <AnimatePresence>
-                  {isDropdownOpen && (
-                    <DropdownMenuContent 
-                      className="w-96 bg-white/95 dark:bg-gray-800/95 backdrop-blur-xl border border-border/50 shadow-2xl z-50 rounded-xl overflow-hidden" 
-                      align="end"
-                      side="bottom"
-                      sideOffset={8}
-                      asChild
-                    >
-                      <motion.div
-                        initial={{ opacity: 0, y: -10, scale: 0.95 }}
-                        animate={{ opacity: 1, y: 0, scale: 1 }}
-                        exit={{ opacity: 0, y: -10, scale: 0.95 }}
-                        transition={{ duration: 0.2 }}
-                      >
-                        <div className="p-4">
-                          {servicesDropdown.map((service, index) => (
-                            <DropdownMenuItem key={service.name} asChild>
-                              <motion.div
-                                initial={{ x: -20, opacity: 0 }}
-                                animate={{ x: 0, opacity: 1 }}
-                                transition={{ delay: index * 0.05, duration: 0.2 }}
-                              >
-                                <Link
-                                  to={service.href}
-                                  className="w-full cursor-pointer hover:bg-primary/10 focus:bg-primary/10 flex items-center gap-4 p-4 rounded-xl flex-row-reverse transition-all duration-300 group mb-2 last:mb-0"
-                                  onClick={() => setIsDropdownOpen(false)}
-                                >
-                                  <motion.div 
-                                    className="flex-shrink-0 w-12 h-12 bg-primary/15 rounded-xl flex items-center justify-center group-hover:bg-primary/20 transition-colors duration-300"
-                                    whileHover={{ scale: 1.1, rotate: 5 }}
-                                    transition={{ duration: 0.2 }}
-                                  >
-                                    <service.icon className="h-6 w-6 text-primary" />
-                                  </motion.div>
-                                  <div className="flex-1 text-right">
-                                    <div className="font-semibold text-base text-foreground group-hover:text-primary transition-colors duration-300 mb-1">{service.name}</div>
-                                    <div className="text-sm text-muted-foreground leading-relaxed">{service.description}</div>
-                                  </div>
-                                  <motion.div
-                                    className="opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-                                    whileHover={{ x: -5 }}
-                                  >
-                                    <ArrowLeft className="h-5 w-5 text-primary" />
-                                  </motion.div>
-                                </Link>
-                              </motion.div>
-                            </DropdownMenuItem>
-                          ))}
-                        </div>
-                      </motion.div>
-                    </DropdownMenuContent>
-                  )}
-                </AnimatePresence>
-              </DropdownMenu>
-            </motion.div>
-          </nav>
-
-          <motion.div 
-            className="flex lg:hidden items-center gap-3 sm:gap-4"
-            initial={{ x: 20, opacity: 0 }}
-            animate={{ x: 0, opacity: 1 }}
-            transition={{ delay: 0.6, duration: 0.3 }}
-          >
-            <motion.div
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-            >
-              <Button 
-                size="sm" 
-                className="bg-gradient-to-r from-primary to-primary/80 text-primary-foreground hover:from-primary/90 hover:to-primary/70 shadow-md hover:shadow-lg transition-all duration-300 font-medium px-4 py-2 sm:px-6 sm:py-2.5 text-sm sm:text-base rounded-lg sm:rounded-xl" 
-                asChild
-              >
-                <Link to="/order-now" className="flex items-center gap-1.5 sm:gap-2">
-                  <span>اطلب الآن</span>
-                  <motion.div
-                    animate={{ x: [0, -2, 0] }}
-                    transition={{ duration: 1.5, repeat: Infinity }}
-                  >
-                    <ArrowLeft className="h-3 w-3 sm:h-4 sm:w-4" />
-                  </motion.div>
-                </Link>
-              </Button>
-            </motion.div>
-          </motion.div>
-
-          {/* زر القائمة المحسن للهواتف */}
-          <Sheet open={isOpen} onOpenChange={setIsOpen}>
-            <SheetTrigger asChild>
-              <motion.div
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-              >
-                <Button variant="ghost" size="sm" className="lg:hidden relative p-2 rounded-xl hover:bg-primary/10 transition-colors duration-300">
-                  <AnimatePresence mode="wait">
-                    {isOpen ? (
-                      <motion.div
-                        key="close"
-                        initial={{ rotate: -90, opacity: 0 }}
-                        animate={{ rotate: 0, opacity: 1 }}
-                        exit={{ rotate: 90, opacity: 0 }}
-                        transition={{ duration: 0.2 }}
-                      >
-                        <X className="h-5 w-5" />
-                      </motion.div>
-                    ) : (
-                      <motion.div
-                        key="menu"
-                        initial={{ rotate: 90, opacity: 0 }}
-                        animate={{ rotate: 0, opacity: 1 }}
-                        exit={{ rotate: -90, opacity: 0 }}
-                        transition={{ duration: 0.2 }}
-                      >
-                        <Menu className="h-5 w-5" />
-                      </motion.div>
-                    )}
-                  </AnimatePresence>
+            <DropdownMenu open={isDropdownOpen} onOpenChange={setIsDropdownOpen}>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" className="font-medium px-4 py-2 flex items-center gap-2 rounded-lg">
+                  <span>خدماتنا</span>
+                  <Briefcase className="h-4 w-4" />
+                  <ChevronDown className="h-4 w-4" />
                 </Button>
-              </motion.div>
-            </SheetTrigger>
-            <SheetContent 
-              side="right" 
-              className="w-80 bg-white/95 dark:bg-gray-900/95 backdrop-blur-xl border-r border-border/50 shadow-2xl" 
-              dir="rtl"
-            >
-              <motion.div 
-                className="flex flex-col space-y-6 mt-8 px-2"
-                initial={{ x: 50, opacity: 0 }}
-                animate={{ x: 0, opacity: 1 }}
-                transition={{ duration: 0.3 }}
-              >
-                {/* الشعار المحسن */}
-                <motion.div 
-                  className="flex items-center justify-end mb-6 border-b border-border/50 pb-6"
-                  initial={{ y: -20, opacity: 0 }}
-                  animate={{ y: 0, opacity: 1 }}
-                  transition={{ delay: 0.1, duration: 0.3 }}
-                >
-                  <div className="text-right ml-4">
-                    <span className="font-arabic-formal font-bold text-xl text-slate-800 dark:text-white leading-tight tracking-wide block">وكالة ماستر إيدو باث</span>
-                    <p className="text-sm font-tajawal font-medium text-blue-600 dark:text-blue-400 tracking-wide">MasterEduPath Agency</p>
-                  </div>
-                  <motion.div 
-                    className="relative w-14 h-14"
-                    whileHover={{ rotate: 5, scale: 1.05 }}
-                    transition={{ duration: 0.2 }}
-                  >
-                    <div className="absolute inset-0 bg-gradient-to-br from-blue-600 via-indigo-600 to-purple-600 rounded-xl shadow-lg flex items-center justify-center border border-white/20">
-                      <div className="flex flex-col items-center justify-center">
-                        <GraduationCap className="h-7 w-7 text-white mb-0.5" />
-                        <div className="flex items-center">
-                          <BookOpen className="h-3 w-3 text-white/90" />
-                          <Globe className="h-3 w-3 text-white/90 -mr-0.5" />
+              </DropdownMenuTrigger>
+              <DropdownMenuContent className="w-96 bg-white/95 backdrop-blur-xl border shadow-2xl rounded-xl overflow-hidden" align="end">
+                <div className="p-4">
+                  {servicesDropdown.map((service) => (
+                    <DropdownMenuItem key={service.name} asChild>
+                      <Link to={service.href} className="w-full cursor-pointer hover:bg-primary/10 flex items-center gap-4 p-4 rounded-xl transition-all duration-300 mb-2">
+                        <div className="w-12 h-12 bg-primary/15 rounded-xl flex items-center justify-center">
+                          <service.icon className="h-6 w-6 text-primary" />
                         </div>
-                      </div>
-                    </div>
-                    <div className="absolute -top-0.5 -right-0.5 w-5 h-5 bg-gradient-to-br from-amber-400 to-orange-500 rounded-full border border-white shadow-sm flex items-center justify-center">
-                      <span className="text-white text-xs font-bold">M</span>
-                    </div>
-                  </motion.div>
-                </motion.div>
-                
-                {/* عناصر التنقل المحسنة */}
-                <div className="space-y-2">
-                  {navigation.map((item, index) => (
-                    <motion.div
-                      key={item.name}
-                      initial={{ x: 30, opacity: 0 }}
-                      animate={{ x: 0, opacity: 1 }}
-                      transition={{ delay: 0.2 + index * 0.05, duration: 0.3 }}
-                    >
-                      <Link
-                        to={item.href}
-                        className={`transition-all duration-300 py-4 px-4 rounded-xl flex items-center gap-4 group ${
-                          isActive(item.href)
-                            ? 'text-primary bg-primary/10 shadow-sm'
-                            : 'text-foreground hover:text-primary hover:bg-primary/5'
-                        }`}
-                        onClick={() => setIsOpen(false)}
-                      >
-                        <motion.div
-                          whileHover={{ scale: 1.2, rotate: 10 }}
-                          transition={{ duration: 0.2 }}
-                        >
-                          <item.icon className="h-5 w-5 text-primary flex-shrink-0" />
-                        </motion.div>
-                        <span className="font-semibold flex-1 text-right">{item.name}</span>
-                        {isActive(item.href) && (
-                          <motion.div
-                            initial={{ scale: 0 }}
-                            animate={{ scale: 1 }}
-                            className="w-2 h-2 bg-primary rounded-full"
-                          />
-                        )}
+                        <div className="flex-1 text-right">
+                          <div className="font-semibold text-base mb-1">{service.name}</div>
+                          <div className="text-sm text-muted-foreground">{service.description}</div>
+                        </div>
                       </Link>
-                    </motion.div>
+                    </DropdownMenuItem>
                   ))}
                 </div>
-                
-                {/* قائمة الخدمات المحسنة للهواتف */}
-                <motion.div 
-                  className="border-t border-border/50 pt-4"
-                  initial={{ y: 20, opacity: 0 }}
-                  animate={{ y: 0, opacity: 1 }}
-                  transition={{ delay: 0.4, duration: 0.3 }}
-                >
-                  <motion.button
-                    onClick={() => setIsServicesOpen(!isServicesOpen)}
-                    className="w-full flex items-center justify-between gap-4 py-4 px-4 rounded-xl text-right hover:text-primary hover:bg-primary/5 transition-all duration-300 group"
-                    whileHover={{ scale: 1.02 }}
-                    whileTap={{ scale: 0.98 }}
-                  >
-                    <div className="flex items-center gap-2">
-                      <motion.div
-                        animate={{ rotate: isServicesOpen ? 180 : 0 }}
-                        transition={{ duration: 0.3 }}
-                      >
-                        <ChevronDown className="h-4 w-4 text-primary" />
-                      </motion.div>
-                      <motion.div
-                        whileHover={{ scale: 1.2, rotate: 10 }}
-                        transition={{ duration: 0.2 }}
-                      >
-                        <Briefcase className="h-5 w-5 text-primary" />
-                      </motion.div>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </nav>
+
+          {/* أزرار الجوال */}
+          <div className="flex items-center gap-2">
+            <Button size="sm" className="bg-gradient-to-r from-primary to-primary/80 text-primary-foreground px-3 py-1.5 sm:px-4 sm:py-2 text-xs sm:text-sm rounded-md" asChild>
+              <Link to="/order-now" className="flex items-center gap-1 whitespace-nowrap">
+                <span>اطلب الآن</span>
+                <ArrowLeft className="h-3 w-3" />
+              </Link>
+            </Button>
+
+            <Sheet open={isOpen} onOpenChange={setIsOpen}>
+              <SheetTrigger asChild>
+                <Button variant="ghost" size="sm" className="lg:hidden p-1.5 sm:p-2 rounded-lg">
+                  <Menu className="h-4 w-4 sm:h-5 sm:w-5" />
+                </Button>
+              </SheetTrigger>
+              <SheetContent side="right" className="w-72 sm:w-80 bg-white/95 backdrop-blur-xl" dir="rtl">
+                <div className="flex flex-col space-y-4 mt-6">
+                  <div className="flex items-center justify-end mb-4 pb-4 border-b">
+                    <div className="text-right ml-3">
+                      <span className="font-arabic-formal font-bold text-lg text-slate-800">ماستر إيدو باث</span>
+                      <p className="text-xs text-blue-600">MasterEduPath</p>
                     </div>
-                    <span className="font-semibold text-foreground">خدماتنا</span>
-                  </motion.button>
-                  <AnimatePresence>
-                    {isServicesOpen && (
-                      <motion.div 
-                        className="mt-3 space-y-3 pr-4"
-                        initial={{ height: 0, opacity: 0 }}
-                        animate={{ height: "auto", opacity: 1 }}
-                        exit={{ height: 0, opacity: 0 }}
-                        transition={{ duration: 0.3 }}
-                      >
-                        {servicesDropdown.map((service, index) => (
-                          <motion.div
-                            key={service.name}
-                            initial={{ x: 20, opacity: 0 }}
-                            animate={{ x: 0, opacity: 1 }}
-                            exit={{ x: 20, opacity: 0 }}
-                            transition={{ delay: index * 0.05, duration: 0.2 }}
-                          >
-                            <Link
-                              to={service.href}
-                              className="text-muted-foreground hover:text-primary hover:bg-primary/5 transition-all duration-300 py-4 px-3 rounded-xl block group"
-                              onClick={() => {
-                                setIsOpen(false);
-                                setIsServicesOpen(false);
-                              }}
-                            >
-                              <div className="flex items-start gap-4 flex-row-reverse">
-                                <motion.div 
-                                  className="flex-shrink-0 w-10 h-10 bg-primary/10 rounded-xl flex items-center justify-center group-hover:bg-primary/20 transition-colors duration-300"
-                                  whileHover={{ scale: 1.1, rotate: 5 }}
-                                  transition={{ duration: 0.2 }}
-                                >
-                                  <service.icon className="h-5 w-5 text-primary" />
-                                </motion.div>
-                                <div className="flex-1 text-right">
-                                  <div className="font-semibold text-sm text-foreground group-hover:text-primary transition-colors duration-300 mb-1">{service.name}</div>
-                                  <div className="text-xs text-muted-foreground leading-relaxed">{service.description}</div>
-                                </div>
-                                <motion.div
-                                  className="opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-                                  whileHover={{ x: -3 }}
-                                >
-                                  <ArrowLeft className="h-4 w-4 text-primary" />
-                                </motion.div>
-                              </div>
-                            </Link>
-                          </motion.div>
-                        ))}
-                      </motion.div>
-                    )}
-                  </AnimatePresence>
-                </motion.div>
-                
-                {/* أزرار الإجراءات المحسنة */}
-                <motion.div 
-                  className="flex flex-col space-y-4 mt-8 border-t border-border/50 pt-6"
-                  initial={{ y: 30, opacity: 0 }}
-                  animate={{ y: 0, opacity: 1 }}
-                  transition={{ delay: 0.5, duration: 0.3 }}
-                >
-                  <motion.div
-                    whileHover={{ scale: 1.02 }}
-                    whileTap={{ scale: 0.98 }}
-                  >
-                    <Button 
-                      size="lg" 
-                      className="w-full bg-gradient-to-r from-primary to-primary/80 text-primary-foreground hover:from-primary/90 hover:to-primary/70 shadow-lg hover:shadow-xl transition-all duration-300 font-semibold py-4 rounded-xl" 
-                      asChild
-                    >
-                      <Link to="/order-now" onClick={() => setIsOpen(false)} className="flex items-center justify-center gap-2">
-                        <span>اطلب الآن</span>
-                        <motion.div
-                          animate={{ x: [0, -3, 0] }}
-                          transition={{ duration: 1.5, repeat: Infinity }}
-                        >
-                          <ArrowLeft className="h-4 w-4" />
-                        </motion.div>
+                    <div className="relative w-12 h-12">
+                      <div className="absolute inset-0 bg-gradient-to-br from-blue-600 via-indigo-600 to-purple-600 rounded-xl flex items-center justify-center">
+                        <GraduationCap className="h-6 w-6 text-white" />
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div className="space-y-1">
+                    {navigation.map((item) => (
+                      <Link key={item.name} to={item.href} className={`py-3 px-3 rounded-lg flex items-center gap-3 transition-all ${isActive(item.href) ? 'text-primary bg-primary/10' : 'hover:bg-primary/5'}`} onClick={() => setIsOpen(false)}>
+                        <item.icon className="h-4 w-4 text-primary" />
+                        <span className="font-medium">{item.name}</span>
+                      </Link>
+                    ))}
+                  </div>
+
+                  <div className="pt-2 border-t">
+                    <div className="mb-2 px-3">
+                      <span className="text-xs font-semibold text-muted-foreground">خدماتنا</span>
+                    </div>
+                    <div className="space-y-1">
+                      {servicesDropdown.map((service) => (
+                        <Link key={service.name} to={service.href} className="py-2.5 px-3 rounded-lg flex items-center gap-3 hover:bg-primary/5" onClick={() => setIsOpen(false)}>
+                          <div className="w-8 h-8 bg-primary/10 rounded-lg flex items-center justify-center">
+                            <service.icon className="h-4 w-4 text-primary" />
+                          </div>
+                          <span className="font-medium text-sm">{service.name}</span>
+                        </Link>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div className="pt-4 border-t">
+                    <Button className="w-full bg-gradient-to-r from-primary to-primary/80" asChild>
+                      <Link to="/order-now" className="flex items-center justify-center gap-2" onClick={() => setIsOpen(false)}>
+                        <span>اطلب خدمتك الآن</span>
+                        <ArrowLeft className="h-4 w-4" />
                       </Link>
                     </Button>
-                  </motion.div>
-                </motion.div>
-              </motion.div>
-            </SheetContent>
-          </Sheet>
+                  </div>
+                </div>
+              </SheetContent>
+            </Sheet>
+          </div>
         </div>
       </div>
     </motion.header>
