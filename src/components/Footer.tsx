@@ -274,23 +274,15 @@ const Footer = () => {
                روابط مميزة
              </h4>
              <ul className="space-y-2 md:space-y-3">
-               {[
-                 { name: 'الترجمة الفورية', href: '/instant-translation', icon: Zap },
-                 { name: 'المسابقات الأكاديمية', href: '/academic-competitions', icon: Trophy },
-                 { name: 'قصص النجاح', href: '/success-stories', icon: Star },
-                 { name: 'أدوات البحث', href: '/research/research-tools', icon: Search },
-                 { name: 'عضوية VIP', href: '/master-membership', icon: Crown }
-               ].map((link) => (
-                 <li key={link.name}>
-                   <a 
-                     href={link.href} 
-                     className="text-white/70 hover:text-white transition-colors text-sm md:text-base flex items-center gap-2 hover:translate-x-1 transition-transform"
-                   >
-                     <link.icon className="h-3 w-3 md:h-4 md:w-4 text-yellow-400" />
-                     {link.name}
-                   </a>
-                 </li>
-               ))}
+               <li>
+                 <a 
+                   href="/universities" 
+                   className="text-white/70 hover:text-white transition-colors text-sm md:text-base flex items-center gap-2 hover:translate-x-1 transition-transform"
+                 >
+                   <Building2 className="h-3 w-3 md:h-4 md:w-4 text-yellow-400" />
+                   الجامعات
+                 </a>
+               </li>
              </ul>
            </motion.div>
 
