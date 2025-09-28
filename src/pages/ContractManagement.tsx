@@ -3,11 +3,15 @@ import { motion } from 'framer-motion';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 import { Badge } from '@/components/ui/badge';
+import { Textarea } from '@/components/ui/textarea';
+import { Checkbox } from '@/components/ui/checkbox';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { toast } from 'sonner';
+import { supabase } from '@/integrations/supabase/client';
 import { 
   FileText, 
   Search, 
@@ -22,23 +26,72 @@ import {
   Clock,
   CheckCircle,
   XCircle,
-  AlertCircle
+  AlertCircle,
+  Send,
+  Mail,
+  Package,
+  Globe,
+  BookOpen,
+  Briefcase,
+  Heart,
+  Zap,
+  Settings,
+  Building,
+  Phone,
+  MapPin,
+  Users
 } from 'lucide-react';
 import { Contract, ContractStatus, ServiceType } from '@/types/contract';
-import { getAllContracts, searchContracts, updateContractStatus, getContractsByStatus } from '@/utils/supabaseContractService';
 import Header from '@/components/Header';
 
-const ContractManagement = () => {
-  const [contracts, setContracts] = useState<Contract[]>([]);
-  const [filteredContracts, setFilteredContracts] = useState<Contract[]>([]);
-  const [searchTerm, setSearchTerm] = useState('');
-  const [statusFilter, setStatusFilter] = useState<ContractStatus | 'all'>('all');
-  const [isLoading, setIsLoading] = useState(true);
-  const [selectedContract, setSelectedContract] = useState<Contract | null>(null);
+interface Service {
+  id: string;
+  name_ar: string;
+  name_en: string;
+  description_ar: string;
+  category_id: string;
+  is_active: boolean;
+}
 
-  // تحميل العقود عند بداية التحميل
+interface NewContract {
+  clientName: string;
+  clientEmail: string;
+  clientPhone: string;
+  clientCompany: string;
+  clientAddress: string;
+  selectedServices: string[];
+  additionalNotes: string;
+  deliveryTimeframe: string;
+  agreedTerms: boolean;
+}
+
+const ContractManagement = () => {
+  const [contracts, setContracts] = useState<any[]>([]);
+  const [filteredContracts, setFilteredContracts] = useState<any[]>([]);
+  const [services, setServices] = useState<Service[]>([]);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [statusFilter, setStatusFilter] = useState<string>('all');
+  const [isLoading, setIsLoading] = useState(true);
+  const [isServicesLoading, setIsServicesLoading] = useState(false);
+  const [selectedContract, setSelectedContract] = useState<any>(null);
+  const [isCreatingContract, setIsCreatingContract] = useState(false);
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [newContract, setNewContract] = useState<NewContract>({
+    clientName: '',
+    clientEmail: '',
+    clientPhone: '',
+    clientCompany: '',
+    clientAddress: '',
+    selectedServices: [],
+    additionalNotes: '',
+    deliveryTimeframe: '',
+    agreedTerms: false
+  });
+
+  // تحميل العقود والخدمات عند بداية التحميل
   useEffect(() => {
     loadContracts();
+    loadServices();
   }, []);
 
   // تطبيق الفلاتر
@@ -49,8 +102,13 @@ const ContractManagement = () => {
   const loadContracts = async () => {
     try {
       setIsLoading(true);
-      const contractsData = await getAllContracts();
-      setContracts(contractsData);
+      const { data, error } = await supabase
+        .from('contracts')
+        .select('*')
+        .order('created_at', { ascending: false });
+
+      if (error) throw error;
+      setContracts(data || []);
     } catch (error) {
       console.error('Error loading contracts:', error);
       toast.error('خطأ في تحميل العقود');
@@ -59,15 +117,37 @@ const ContractManagement = () => {
     }
   };
 
-  const filterContracts = async () => {
+  const loadServices = async () => {
+    try {
+      setIsServicesLoading(true);
+      const { data, error } = await supabase
+        .from('services')
+        .select('*')
+        .eq('is_active', true)
+        .eq('show_to_clients', true)
+        .order('sort_order', { ascending: true });
+
+      if (error) throw error;
+      setServices(data || []);
+    } catch (error) {
+      console.error('Error loading services:', error);
+      toast.error('خطأ في تحميل الخدمات');
+    } finally {
+      setIsServicesLoading(false);
+    }
+  };
+
+  const filterContracts = () => {
     let filtered = contracts;
 
-    // فلترة حسب البحث
     if (searchTerm.trim()) {
-      filtered = await searchContracts(searchTerm);
+      filtered = filtered.filter(contract => 
+        contract.client_name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        contract.client_email?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        contract.contract_number?.toLowerCase().includes(searchTerm.toLowerCase())
+      );
     }
 
-    // فلترة حسب الحالة
     if (statusFilter !== 'all') {
       filtered = filtered.filter(contract => contract.status === statusFilter);
     }
@@ -75,19 +155,151 @@ const ContractManagement = () => {
     setFilteredContracts(filtered);
   };
 
-  const handleStatusUpdate = async (contractId: string, newStatus: ContractStatus) => {
+  const handleServiceToggle = (serviceId: string) => {
+    setNewContract(prev => ({
+      ...prev,
+      selectedServices: prev.selectedServices.includes(serviceId)
+        ? prev.selectedServices.filter(id => id !== serviceId)
+        : [...prev.selectedServices, serviceId]
+    }));
+  };
+
+  const handleCreateContract = async () => {
     try {
-      await updateContractStatus(contractId, newStatus);
-      toast.success('تم تحديث حالة العقد بنجاح');
+      if (!newContract.clientName || !newContract.clientEmail || !newContract.clientPhone) {
+        toast.error('يرجى ملء جميع الحقول المطلوبة');
+        return;
+      }
+
+      if (newContract.selectedServices.length === 0) {
+        toast.error('يرجى اختيار خدمة واحدة على الأقل');
+        return;
+      }
+
+      if (!newContract.agreedTerms) {
+        toast.error('يرجى الموافقة على الشروط والأحكام');
+        return;
+      }
+
+      setIsCreatingContract(true);
+
+      // الحصول على تفاصيل الخدمات المختارة
+      const selectedServiceDetails = services.filter(service => 
+        newContract.selectedServices.includes(service.id)
+      );
+
+      const contractData = {
+        client_name: newContract.clientName,
+        client_email: newContract.clientEmail,
+        client_phone: newContract.clientPhone,
+        client_company: newContract.clientCompany || null,
+        client_address: newContract.clientAddress || null,
+        client_type: 'individual',
+        contract_number: `CTR-${Date.now()}-${Math.random().toString(36).substr(2, 6)}`,
+        service_type: 'multiple-services',
+        service_price: 0,
+        user_id: '00000000-0000-0000-0000-000000000000',
+        service_details: {
+          services: selectedServiceDetails.map(service => ({
+            id: service.id,
+            name: service.name_ar,
+            description: service.description_ar,
+            category: service.category_id
+          })),
+          additional_notes: newContract.additionalNotes,
+          delivery_timeframe: newContract.deliveryTimeframe
+        },
+        status: 'draft',
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString()
+      };
+
+      const { data, error } = await supabase
+        .from('contracts')
+        .insert([contractData])
+        .select()
+        .single();
+
+      if (error) throw error;
+
+      // إرسال إشعارات بالإيميل
+      await sendContractNotifications(data);
+
+      toast.success('تم إنشاء العقد بنجاح وإرسال الإشعارات');
+      setIsDialogOpen(false);
+      resetNewContract();
       loadContracts();
+
     } catch (error) {
-      console.error('Error updating contract status:', error);
-      toast.error('خطأ في تحديث حالة العقد');
+      console.error('Error creating contract:', error);
+      toast.error('خطأ في إنشاء العقد');
+    } finally {
+      setIsCreatingContract(false);
     }
   };
 
-  const getStatusColor = (status: ContractStatus) => {
-    const colors = {
+  const sendContractNotifications = async (contractData: any) => {
+    try {
+      // إرسال العقد للإدارة والعميل
+      const { error } = await supabase.functions.invoke('send-contract-notification', {
+        body: {
+          contract: contractData,
+          type: 'new_contract',
+          recipients: {
+            admin_email: 'info@masteredupath.com',
+            client_email: contractData.client_email
+          }
+        }
+      });
+
+      if (error) {
+        console.error('Error sending notifications:', error);
+        toast.error('تم إنشاء العقد ولكن فشل في إرسال الإشعارات');
+      }
+    } catch (error) {
+      console.error('Error in notification process:', error);
+    }
+  };
+
+  const downloadContractPDF = async (contractId: string) => {
+    try {
+      const { data, error } = await supabase.functions.invoke('generate-contract-pdf', {
+        body: { contract_id: contractId }
+      });
+
+      if (error) throw error;
+
+      // تحميل ملف PDF
+      const link = document.createElement('a');
+      link.href = data.pdf_url;
+      link.download = `contract-${contractId}.pdf`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+
+      toast.success('تم تحميل العقد بنجاح');
+    } catch (error) {
+      console.error('Error downloading contract:', error);
+      toast.error('خطأ في تحميل العقد');
+    }
+  };
+
+  const resetNewContract = () => {
+    setNewContract({
+      clientName: '',
+      clientEmail: '',
+      clientPhone: '',
+      clientCompany: '',
+      clientAddress: '',
+      selectedServices: [],
+      additionalNotes: '',
+      deliveryTimeframe: '',
+      agreedTerms: false
+    });
+  };
+
+  const getStatusColor = (status: string) => {
+    const colors: Record<string, string> = {
       draft: 'bg-gray-100 text-gray-800',
       sent: 'bg-blue-100 text-blue-800',
       reviewed: 'bg-purple-100 text-purple-800',
@@ -95,14 +307,13 @@ const ContractManagement = () => {
       signed: 'bg-emerald-100 text-emerald-800',
       active: 'bg-cyan-100 text-cyan-800',
       completed: 'bg-indigo-100 text-indigo-800',
-      cancelled: 'bg-red-100 text-red-800',
-      expired: 'bg-orange-100 text-orange-800'
+      cancelled: 'bg-red-100 text-red-800'
     };
     return colors[status] || 'bg-gray-100 text-gray-800';
   };
 
-  const getStatusLabel = (status: ContractStatus) => {
-    const labels = {
+  const getStatusLabel = (status: string) => {
+    const labels: Record<string, string> = {
       draft: 'مسودة',
       sent: 'مرسل',
       reviewed: 'تمت المراجعة',
@@ -110,30 +321,9 @@ const ContractManagement = () => {
       signed: 'موقع',
       active: 'نشط',
       completed: 'مكتمل',
-      cancelled: 'ملغي',
-      expired: 'منتهي الصلاحية'
+      cancelled: 'ملغي'
     };
     return labels[status] || status;
-  };
-
-  const getServiceTypeLabel = (serviceType: ServiceType) => {
-    const labels = {
-      'translation-legal': 'ترجمة قانونية',
-      'translation-business': 'ترجمة تجارية',
-      'translation-technical': 'ترجمة تقنية',
-      'translation-medical': 'ترجمة طبية',
-      'translation-academic': 'ترجمة أكاديمية',
-      'translation-literary': 'ترجمة أدبية',
-      'translation-media': 'ترجمة إعلامية',
-      'research-thesis': 'رسالة علمية',
-      'research-plan': 'خطة بحث',
-      'research-analysis': 'تحليل إحصائي',
-      'research-formatting': 'تنسيق أكاديمي',
-      'research-publication': 'خدمات النشر',
-      'research-consultation': 'استشارة أكاديمية',
-      'custom-service': 'خدمة مخصصة'
-    };
-    return labels[serviceType] || serviceType;
   };
 
   const formatDate = (dateString: string) => {
@@ -173,7 +363,7 @@ const ContractManagement = () => {
               إدارة <span className="text-gradient bg-gradient-primary bg-clip-text text-transparent">العقود</span>
             </h1>
             <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-              نظام شامل لإدارة العقود الإلكترونية وموافقات العملاء
+              نظام شامل لإدارة العقود الإلكترونية وموافقات العملاء على جميع الخدمات
             </p>
           </motion.div>
 
@@ -231,7 +421,7 @@ const ContractManagement = () => {
                 />
               </div>
               
-              <Select value={statusFilter} onValueChange={(value) => setStatusFilter(value as ContractStatus | 'all')}>
+              <Select value={statusFilter} onValueChange={(value) => setStatusFilter(value)}>
                 <SelectTrigger className="w-full md:w-48">
                   <SelectValue placeholder="فلترة حسب الحالة" />
                 </SelectTrigger>
@@ -245,7 +435,6 @@ const ContractManagement = () => {
                   <SelectItem value="active">نشط</SelectItem>
                   <SelectItem value="completed">مكتمل</SelectItem>
                   <SelectItem value="cancelled">ملغي</SelectItem>
-                  <SelectItem value="expired">منتهي الصلاحية</SelectItem>
                 </SelectContent>
               </Select>
 
@@ -254,21 +443,227 @@ const ContractManagement = () => {
                 تحديث
               </Button>
 
-              <Dialog>
+              <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
                 <DialogTrigger asChild>
                   <Button>
                     <Plus className="h-4 w-4 mr-2" />
                     عقد جديد
                   </Button>
                 </DialogTrigger>
-                <DialogContent className="max-w-4xl">
+                <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
                   <DialogHeader>
-                    <DialogTitle>إنشاء عقد جديد</DialogTitle>
+                    <DialogTitle className="text-xl font-bold">إنشاء عقد جديد - التعاقد على الخدمات</DialogTitle>
                   </DialogHeader>
-                  <div className="p-4">
-                    <p className="text-center text-muted-foreground">
-                      سيتم إضافة نموذج إنشاء العقود قريباً
-                    </p>
+                  
+                  <div className="space-y-6 p-4">
+                    {/* معلومات العميل */}
+                    <Card>
+                      <CardHeader>
+                        <CardTitle className="flex items-center gap-2">
+                          <User className="h-5 w-5" />
+                          معلومات العميل
+                        </CardTitle>
+                      </CardHeader>
+                      <CardContent className="space-y-4">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                          <div>
+                            <Label htmlFor="clientName">الاسم الكامل *</Label>
+                            <Input
+                              id="clientName"
+                              value={newContract.clientName}
+                              onChange={(e) => setNewContract(prev => ({...prev, clientName: e.target.value}))}
+                              placeholder="اسم العميل الكامل"
+                            />
+                          </div>
+                          <div>
+                            <Label htmlFor="clientEmail">البريد الإلكتروني *</Label>
+                            <Input
+                              id="clientEmail"
+                              type="email"
+                              value={newContract.clientEmail}
+                              onChange={(e) => setNewContract(prev => ({...prev, clientEmail: e.target.value}))}
+                              placeholder="example@email.com"
+                            />
+                          </div>
+                          <div>
+                            <Label htmlFor="clientPhone">رقم الهاتف *</Label>
+                            <Input
+                              id="clientPhone"
+                              value={newContract.clientPhone}
+                              onChange={(e) => setNewContract(prev => ({...prev, clientPhone: e.target.value}))}
+                              placeholder="05xxxxxxxx"
+                            />
+                          </div>
+                          <div>
+                            <Label htmlFor="clientCompany">الشركة/المؤسسة</Label>
+                            <Input
+                              id="clientCompany"
+                              value={newContract.clientCompany}
+                              onChange={(e) => setNewContract(prev => ({...prev, clientCompany: e.target.value}))}
+                              placeholder="اسم الشركة (اختياري)"
+                            />
+                          </div>
+                        </div>
+                        <div>
+                          <Label htmlFor="clientAddress">العنوان</Label>
+                          <Textarea
+                            id="clientAddress"
+                            value={newContract.clientAddress}
+                            onChange={(e) => setNewContract(prev => ({...prev, clientAddress: e.target.value}))}
+                            placeholder="العنوان الكامل (اختياري)"
+                            rows={2}
+                          />
+                        </div>
+                      </CardContent>
+                    </Card>
+
+                    {/* اختيار الخدمات */}
+                    <Card>
+                      <CardHeader>
+                        <CardTitle className="flex items-center gap-2">
+                          <Package className="h-5 w-5" />
+                          اختيار الخدمات
+                        </CardTitle>
+                        <CardDescription>
+                          اختر الخدمات المطلوبة للتعاقد عليها (يمكن اختيار أكثر من خدمة)
+                        </CardDescription>
+                      </CardHeader>
+                      <CardContent>
+                        {isServicesLoading ? (
+                          <div className="text-center py-8">
+                            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-2"></div>
+                            <p>جاري تحميل الخدمات...</p>
+                          </div>
+                        ) : (
+                          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            {services.map((service) => (
+                              <Card
+                                key={service.id}
+                                className={`cursor-pointer transition-all duration-200 ${
+                                  newContract.selectedServices.includes(service.id)
+                                    ? 'ring-2 ring-primary bg-primary/5'
+                                    : 'hover:shadow-md'
+                                }`}
+                                onClick={() => handleServiceToggle(service.id)}
+                              >
+                                <CardContent className="p-4">
+                                  <div className="flex items-start space-x-3 space-x-reverse">
+                                    <Checkbox
+                                      checked={newContract.selectedServices.includes(service.id)}
+                                      onChange={() => handleServiceToggle(service.id)}
+                                    />
+                                    <div className="flex-1 min-w-0">
+                                      <h3 className="font-semibold text-sm">{service.name_ar}</h3>
+                                      <p className="text-xs text-muted-foreground mt-1 line-clamp-2">
+                                        {service.description_ar}
+                                      </p>
+                                      <Badge variant="outline" className="mt-2 text-xs">
+                                        {service.category_id}
+                                      </Badge>
+                                    </div>
+                                  </div>
+                                </CardContent>
+                              </Card>
+                            ))}
+                          </div>
+                        )}
+                      </CardContent>
+                    </Card>
+
+                    {/* تفاصيل إضافية */}
+                    <Card>
+                      <CardHeader>
+                        <CardTitle className="flex items-center gap-2">
+                          <Settings className="h-5 w-5" />
+                          تفاصيل إضافية
+                        </CardTitle>
+                      </CardHeader>
+                      <CardContent className="space-y-4">
+                        <div>
+                          <Label htmlFor="deliveryTimeframe">الإطار الزمني للتسليم</Label>
+                          <Input
+                            id="deliveryTimeframe"
+                            value={newContract.deliveryTimeframe}
+                            onChange={(e) => setNewContract(prev => ({...prev, deliveryTimeframe: e.target.value}))}
+                            placeholder="مثال: خلال أسبوعين من بداية العمل"
+                          />
+                        </div>
+                        <div>
+                          <Label htmlFor="additionalNotes">ملاحظات إضافية</Label>
+                          <Textarea
+                            id="additionalNotes"
+                            value={newContract.additionalNotes}
+                            onChange={(e) => setNewContract(prev => ({...prev, additionalNotes: e.target.value}))}
+                            placeholder="أي ملاحظات أو متطلبات خاصة..."
+                            rows={3}
+                          />
+                        </div>
+                      </CardContent>
+                    </Card>
+
+                    {/* تنبيه مهم حول الأسعار */}
+                    <Card className="border-orange-200 bg-orange-50">
+                      <CardContent className="p-4">
+                        <div className="flex items-start gap-3">
+                          <AlertCircle className="h-5 w-5 text-orange-600 mt-0.5" />
+                          <div>
+                            <h3 className="font-semibold text-orange-800 mb-1">تنبيه مهم حول التسعير</h3>
+                            <p className="text-sm text-orange-700">
+                              الأسعار النهائية للخدمات المختارة سيتم تحديدها وإدراجها في الفاتورة المرفقة مع العقد النهائي. 
+                              سيتم التواصل معكم لمناقشة التفاصيل والأسعار قبل إصدار العقد النهائي.
+                            </p>
+                          </div>
+                        </div>
+                      </CardContent>
+                    </Card>
+
+                    {/* الموافقة على الشروط */}
+                    <Card>
+                      <CardContent className="p-4">
+                        <div className="flex items-start space-x-3 space-x-reverse">
+                          <Checkbox
+                            id="agreedTerms"
+                            checked={newContract.agreedTerms}
+                            onCheckedChange={(checked) => 
+                              setNewContract(prev => ({...prev, agreedTerms: checked as boolean}))
+                            }
+                          />
+                          <Label htmlFor="agreedTerms" className="text-sm cursor-pointer">
+                            أوافق على <Button variant="link" className="p-0 h-auto text-sm">الشروط والأحكام</Button> الخاصة بالخدمات المختارة
+                          </Label>
+                        </div>
+                      </CardContent>
+                    </Card>
+
+                    {/* أزرار التحكم */}
+                    <div className="flex justify-end gap-3 pt-4 border-t">
+                      <Button
+                        variant="outline"
+                        onClick={() => {
+                          setIsDialogOpen(false);
+                          resetNewContract();
+                        }}
+                      >
+                        إلغاء
+                      </Button>
+                      <Button
+                        onClick={handleCreateContract}
+                        disabled={isCreatingContract || !newContract.agreedTerms}
+                        className="min-w-[120px]"
+                      >
+                        {isCreatingContract ? (
+                          <>
+                            <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                            جاري الإنشاء...
+                          </>
+                        ) : (
+                          <>
+                            <Send className="h-4 w-4 mr-2" />
+                            إنشاء العقد
+                          </>
+                        )}
+                      </Button>
+                    </div>
                   </div>
                 </DialogContent>
               </Dialog>
@@ -304,52 +699,46 @@ const ContractManagement = () => {
                     <div className="flex items-start justify-between mb-4">
                       <div className="flex-1">
                         <div className="flex items-center gap-2 mb-2">
-                          <h3 className="text-lg font-semibold">{contract.serviceDetails.title}</h3>
+                          <h3 className="text-lg font-semibold">عقد رقم: {contract.contract_number || contract.id?.substring(0, 8)}</h3>
                           <Badge className={getStatusColor(contract.status)}>
                             {getStatusLabel(contract.status)}
                           </Badge>
                         </div>
-                        <p className="text-muted-foreground mb-2">{contract.serviceDetails.description}</p>
-                        <div className="flex items-center gap-4 text-sm text-muted-foreground">
+                        <div className="flex items-center gap-4 text-sm text-muted-foreground mb-2">
                           <div className="flex items-center gap-1">
                             <User className="h-4 w-4" />
-                            {contract.clientName}
+                            {contract.client_name}
                           </div>
+                          <div className="flex items-center gap-1">
+                            <Mail className="h-4 w-4" />
+                            {contract.client_email}
+                          </div>
+                          <div className="flex items-center gap-1">
+                            <Phone className="h-4 w-4" />
+                            {contract.client_phone}
+                          </div>
+                        </div>
+                        <div className="flex items-center gap-4 text-sm text-muted-foreground">
                           <div className="flex items-center gap-1">
                             <Calendar className="h-4 w-4" />
-                            {formatDate(contract.createdAt)}
+                            {formatDate(contract.created_at)}
                           </div>
                           <div className="flex items-center gap-1">
-                            <DollarSign className="h-4 w-4" />
-                            {contract.totalAmount.toLocaleString()} ريال
+                            <Package className="h-4 w-4" />
+                            {contract.service_details?.services?.length || 0} خدمة
                           </div>
                         </div>
                       </div>
                       
                       <div className="flex items-center gap-2">
-                        <Badge variant="outline">
-                          {getServiceTypeLabel(contract.serviceType)}
-                        </Badge>
-                        
-                        <Select
-                          value={contract.status}
-                          onValueChange={(value) => handleStatusUpdate(contract.id, value as ContractStatus)}
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => downloadContractPDF(contract.id)}
                         >
-                          <SelectTrigger className="w-32">
-                            <SelectValue />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="draft">مسودة</SelectItem>
-                            <SelectItem value="sent">مرسل</SelectItem>
-                            <SelectItem value="reviewed">تمت المراجعة</SelectItem>
-                            <SelectItem value="approved">موافق عليه</SelectItem>
-                            <SelectItem value="signed">موقع</SelectItem>
-                            <SelectItem value="active">نشط</SelectItem>
-                            <SelectItem value="completed">مكتمل</SelectItem>
-                            <SelectItem value="cancelled">ملغي</SelectItem>
-                            <SelectItem value="expired">منتهي الصلاحية</SelectItem>
-                          </SelectContent>
-                        </Select>
+                          <Download className="h-4 w-4 mr-1" />
+                          تحميل PDF
+                        </Button>
 
                         <Dialog>
                           <DialogTrigger asChild>
@@ -361,61 +750,51 @@ const ContractManagement = () => {
                             <DialogHeader>
                               <DialogTitle>تفاصيل العقد</DialogTitle>
                             </DialogHeader>
-                            <Tabs defaultValue="details" className="w-full">
-                              <TabsList className="grid w-full grid-cols-3">
-                                <TabsTrigger value="details">التفاصيل</TabsTrigger>
-                                <TabsTrigger value="content">محتوى العقد</TabsTrigger>
-                                <TabsTrigger value="history">التاريخ</TabsTrigger>
-                              </TabsList>
-                              <TabsContent value="details" className="space-y-4">
-                                <div className="grid grid-cols-2 gap-4">
-                                  <div>
-                                    <label className="text-sm font-medium">اسم العميل</label>
-                                    <p className="text-sm text-muted-foreground">{contract.clientName}</p>
-                                  </div>
-                                  <div>
-                                    <label className="text-sm font-medium">البريد الإلكتروني</label>
-                                    <p className="text-sm text-muted-foreground">{contract.clientEmail}</p>
-                                  </div>
-                                  <div>
-                                    <label className="text-sm font-medium">رقم الهاتف</label>
-                                    <p className="text-sm text-muted-foreground">{contract.clientPhone}</p>
-                                  </div>
-                                  <div>
-                                    <label className="text-sm font-medium">نوع الخدمة</label>
-                                    <p className="text-sm text-muted-foreground">{getServiceTypeLabel(contract.serviceType)}</p>
-                                  </div>
-                                  <div>
-                                    <label className="text-sm font-medium">التكلفة الإجمالية</label>
-                                    <p className="text-sm text-muted-foreground">{contract.totalAmount.toLocaleString()} ريال</p>
-                                  </div>
-                                  <div>
-                                    <label className="text-sm font-medium">تاريخ التسليم</label>
-                                    <p className="text-sm text-muted-foreground">{contract.deliveryDate}</p>
+                            <div className="space-y-4 p-4">
+                              <div className="grid grid-cols-2 gap-4">
+                                <div>
+                                  <Label className="text-sm font-medium">اسم العميل</Label>
+                                  <p className="text-sm text-muted-foreground">{contract.client_name}</p>
+                                </div>
+                                <div>
+                                  <Label className="text-sm font-medium">البريد الإلكتروني</Label>
+                                  <p className="text-sm text-muted-foreground">{contract.client_email}</p>
+                                </div>
+                                <div>
+                                  <Label className="text-sm font-medium">رقم الهاتف</Label>
+                                  <p className="text-sm text-muted-foreground">{contract.client_phone}</p>
+                                </div>
+                                <div>
+                                  <Label className="text-sm font-medium">الحالة</Label>
+                                  <Badge className={getStatusColor(contract.status)}>
+                                    {getStatusLabel(contract.status)}
+                                  </Badge>
+                                </div>
+                              </div>
+                              
+                              {contract.service_details?.services && (
+                                <div>
+                                  <Label className="text-sm font-medium">الخدمات المطلوبة</Label>
+                                  <div className="mt-2 space-y-2">
+                                    {contract.service_details.services.map((service: any, index: number) => (
+                                      <div key={index} className="p-3 bg-muted rounded-lg">
+                                        <h4 className="font-medium">{service.name}</h4>
+                                        <p className="text-sm text-muted-foreground">{service.description}</p>
+                                      </div>
+                                    ))}
                                   </div>
                                 </div>
-                              </TabsContent>
-                              <TabsContent value="content">
-                                <div className="bg-muted p-4 rounded-lg">
-                                  <pre className="whitespace-pre-wrap text-sm">{contract.contractContent}</pre>
+                              )}
+
+                              {contract.service_details?.additional_notes && (
+                                <div>
+                                  <Label className="text-sm font-medium">ملاحظات إضافية</Label>
+                                  <p className="text-sm text-muted-foreground mt-1">{contract.service_details.additional_notes}</p>
                                 </div>
-                              </TabsContent>
-                              <TabsContent value="history">
-                                <div className="space-y-2 text-sm">
-                                  <div>تاريخ الإنشاء: {formatDate(contract.createdAt)}</div>
-                                  <div>آخر تحديث: {formatDate(contract.updatedAt)}</div>
-                                  {contract.approvedAt && (
-                                    <div>تاريخ الموافقة: {formatDate(contract.approvedAt)}</div>
-                                  )}
-                                </div>
-                              </TabsContent>
-                            </Tabs>
+                              )}
+                            </div>
                           </DialogContent>
                         </Dialog>
-
-                        <Button variant="outline" size="sm">
-                          <Download className="h-4 w-4" />
-                        </Button>
                       </div>
                     </div>
                   </CardContent>
@@ -425,7 +804,6 @@ const ContractManagement = () => {
           )}
         </div>
       </main>
-      
     </div>
   );
 };
