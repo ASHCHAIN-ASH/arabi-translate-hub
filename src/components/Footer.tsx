@@ -232,6 +232,15 @@ const Footer = () => {
                   الوظائف
                 </a>
               </li>
+              <li>
+                <a 
+                  href="/payment-methods" 
+                  className="text-white/70 hover:text-white transition-colors text-sm md:text-base flex items-center gap-2 hover:translate-x-1 transition-transform"
+                >
+                  <DollarSign className="h-3 w-3 md:h-4 md:w-4 text-green-400" />
+                  طرق الدفع
+                </a>
+              </li>
               {[
                 { name: 'الملكية الفكرية', href: '/intellectual-property', icon: Shield },
                 { name: 'سياسة الخصوصية', href: '/privacy-policy', icon: Shield },

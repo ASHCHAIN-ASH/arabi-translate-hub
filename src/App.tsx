@@ -109,6 +109,7 @@ import IntellectualProperty from "./pages/IntellectualProperty";
 import LicenseRequest from "./pages/LicenseRequest";
 import Careers from "./pages/Careers";
 import ContactUs from "./pages/ContactUs";
+import PaymentMethods from "./pages/PaymentMethods";
 import Footer from "./components/Footer";
 import ChatBot from "./components/ChatBot";
 
@@ -152,6 +153,7 @@ const App = () => (
              <Route path="/color-showcase" element={<ColorShowcase />} />
              <Route path="/pricing" element={<Pricing />} />
             <Route path="/intellectual-property" element={<IntellectualProperty />} />
+            <Route path="/payment-methods" element={<PaymentMethods />} />
             <Route path="/careers" element={<Careers />} />
             <Route path="/contact" element={<ContactUs />} />
             <Route path="/marketing/affiliate" element={<AffiliateMarketing />} />

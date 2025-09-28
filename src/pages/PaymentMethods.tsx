@@ -1,0 +1,598 @@
+import React from 'react';
+import { motion } from 'framer-motion';
+import { 
+  CreditCard, 
+  Building2, 
+  Smartphone, 
+  DollarSign, 
+  Euro, 
+  Banknote, 
+  Coins, 
+  Wallet,
+  Shield,
+  CheckCircle,
+  Clock,
+  Globe,
+  Lock,
+  Star,
+  TrendingUp,
+  Zap,
+  HeartHandshake,
+  BadgeCheck,
+  AlertCircle,
+  Info
+} from 'lucide-react';
+import Header from '@/components/Header';
+import Footer from '@/components/Footer';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+
+const PaymentMethods = () => {
+  const paymentMethods = [
+    {
+      category: 'البطاقات الائتمانية',
+      icon: CreditCard,
+      color: 'from-blue-500 to-blue-600',
+      bgColor: 'bg-blue-50',
+      textColor: 'text-blue-600',
+      methods: [
+        {
+          name: 'فيزا (Visa)',
+          description: 'دفع فوري وآمن باستخدام بطاقة فيزا',
+          features: ['دفع فوري', 'حماية المشتري', 'قبول عالمي'],
+          fees: 'بدون رسوم إضافية',
+          processing: '1-3 دقائق',
+          security: 'عالي',
+          icon: '💳'
+        },
+        {
+          name: 'ماستركارد (MasterCard)',
+          description: 'حماية عالية مع ماستركارد',
+          features: ['تشفير متقدم', 'حماية من الاحتيال', 'استرداد فوري'],
+          fees: 'بدون رسوم إضافية',
+          processing: '1-3 دقائق',
+          security: 'عالي',
+          icon: '💳'
+        },
+        {
+          name: 'أمريكان إكسبرس',
+          description: 'للعملاء المميزين مع حماية شاملة',
+          features: ['خدمة VIP', 'حماية شاملة', 'نقاط مكافآت'],
+          fees: 'رسوم معالجة 2.5%',
+          processing: '1-5 دقائق',
+          security: 'عالي جداً',
+          icon: '💎'
+        }
+      ]
+    },
+    {
+      category: 'التحويل البنكي',
+      icon: Building2,
+      color: 'from-green-500 to-green-600',
+      bgColor: 'bg-green-50',
+      textColor: 'text-green-600',
+      methods: [
+        {
+          name: 'التحويل البنكي المحلي',
+          description: 'تحويل مباشر من البنوك السعودية',
+          features: ['أمان عالي', 'رسوم منخفضة', 'إثبات رسمي'],
+          fees: 'حسب البنك (عادة 5-15 ريال)',
+          processing: '24-48 ساعة',
+          security: 'عالي جداً',
+          icon: '🏦'
+        },
+        {
+          name: 'التحويل الدولي (SWIFT)',
+          description: 'تحويلات دولية آمنة عبر نظام SWIFT',
+          features: ['قبول عالمي', 'تتبع التحويل', 'أمان مصرفي'],
+          fees: '25-50 دولار',
+          processing: '3-5 أيام عمل',
+          security: 'عالي جداً',
+          icon: '🌍'
+        }
+      ]
+    },
+    {
+      category: 'المحافظ الإلكترونية',
+      icon: Smartphone,
+      color: 'from-purple-500 to-purple-600',
+      bgColor: 'bg-purple-50',
+      textColor: 'text-purple-600',
+      methods: [
+        {
+          name: 'PayPal',
+          description: 'الأكثر أماناً عالمياً للدفع الإلكتروني',
+          features: ['حماية المشتري', 'دفع فوري', 'قبول عالمي'],
+          fees: '3.4% + 2 ريال',
+          processing: 'فوري',
+          security: 'عالي جداً',
+          icon: '🔵'
+        },
+        {
+          name: 'Skrill',
+          description: 'محفظة إلكترونية سريعة ومضمونة',
+          features: ['سرعة في التحويل', 'رسوم منخفضة', 'دعم العملات'],
+          fees: '2.9% + 1.5 ريال',
+          processing: 'فوري',
+          security: 'عالي',
+          icon: '🔮'
+        },
+        {
+          name: 'Apple Pay',
+          description: 'دفع آمن وسريع لمستخدمي آبل',
+          features: ['بصمة الوجه/الإصبع', 'لا توجد أرقام بطاقات', 'خصوصية عالية'],
+          fees: 'بدون رسوم إضافية',
+          processing: 'فوري',
+          security: 'عالي جداً',
+          icon: '🍎'
+        }
+      ]
+    },
+    {
+      category: 'التحويلات الدولية',
+      icon: Globe,
+      color: 'from-orange-500 to-orange-600',
+      bgColor: 'bg-orange-50',
+      textColor: 'text-orange-600',
+      methods: [
+        {
+          name: 'Western Union',
+          description: 'تحويلات دولية موثوقة منذ عقود',
+          features: ['شبكة عالمية', 'استلام نقدي', 'تتبع مباشر'],
+          fees: '15-25 دولار',
+          processing: '15 دقيقة - 2 ساعة',
+          security: 'عالي',
+          icon: '💰'
+        },
+        {
+          name: 'MoneyGram',
+          description: 'تحويلات سريعة لجميع دول العالم',
+          features: ['سرعة في التحويل', 'متوفر عالمياً', 'خيارات متنوعة'],
+          fees: '10-20 دولار',
+          processing: '10 دقيقة - 1 ساعة',
+          security: 'عالي',
+          icon: '📮'
+        },
+        {
+          name: 'Wise (TransferWise)',
+          description: 'أسعار صرف حقيقية وشفافية كاملة',
+          features: ['أسعار صرف حقيقية', 'شفافية الرسوم', 'سرعة عالية'],
+          fees: '0.5-2% من المبلغ',
+          processing: '1-2 أيام عمل',
+          security: 'عالي',
+          icon: '🎯'
+        }
+      ]
+    },
+    {
+      category: 'الطرق المحلية',
+      icon: Banknote,
+      color: 'from-teal-500 to-teal-600',
+      bgColor: 'bg-teal-50',
+      textColor: 'text-teal-600',
+      methods: [
+        {
+          name: 'الدفع النقدي',
+          description: 'للعملاء في منطقة جدة والرياض',
+          features: ['بدون رسوم', 'مقابلة شخصية', 'استلام فوري'],
+          fees: 'مجاني',
+          processing: 'فوري عند الاستلام',
+          security: 'متوسط',
+          icon: '💵'
+        },
+        {
+          name: 'STCPay',
+          description: 'محفظة STC الرقمية',
+          features: ['دفع بالجوال', 'سهولة الاستخدام', 'أمان عالي'],
+          fees: 'حسب نوع المعاملة',
+          processing: 'فوري',
+          security: 'عالي',
+          icon: '📱'
+        },
+        {
+          name: 'التحويل عبر الصرافات',
+          description: 'شبكة الصرافات المحلية المعتمدة',
+          features: ['منتشر محلياً', 'رسوم منخفضة', 'موثوق'],
+          fees: '10-25 ريال',
+          processing: '1-4 ساعات',
+          security: 'عالي',
+          icon: '🏪'
+        }
+      ]
+    },
+    {
+      category: 'العملات الرقمية',
+      icon: Coins,
+      color: 'from-yellow-500 to-yellow-600',
+      bgColor: 'bg-yellow-50',
+      textColor: 'text-yellow-600',
+      methods: [
+        {
+          name: 'Bitcoin (BTC)',
+          description: 'العملة الرقمية الأولى والأكثر انتشاراً',
+          features: ['لا مركزي', 'خصوصية عالية', 'رسوم منخفضة'],
+          fees: 'رسوم الشبكة (متغيرة)',
+          processing: '10-60 دقيقة',
+          security: 'عالي جداً',
+          icon: '₿'
+        },
+        {
+          name: 'USDT (Tether)',
+          description: 'عملة مستقرة مربوطة بالدولار الأمريكي',
+          features: ['استقرار السعر', 'سرعة عالية', 'شبكات متعددة'],
+          fees: 'رسوم الشبكة (1-5 دولار)',
+          processing: '5-30 دقيقة',
+          security: 'عالي',
+          icon: '₮'
+        }
+      ]
+    }
+  ];
+
+  const securityFeatures = [
+    {
+      icon: Shield,
+      title: 'تشفير متقدم SSL',
+      description: 'جميع المعاملات محمية بتشفير 256-بت'
+    },
+    {
+      icon: Lock,
+      title: 'الامتثال لمعايير PCI DSS',
+      description: 'نلتزم بأعلى معايير الأمان المصرفي'
+    },
+    {
+      icon: BadgeCheck,
+      title: 'مراقبة مستمرة',
+      description: 'مراقبة 24/7 للكشف عن أي نشاط مشبوه'
+    },
+    {
+      icon: HeartHandshake,
+      title: 'ضمان الاسترداد',
+      description: 'ضمان استرداد كامل في حالة عدم الرضا'
+    }
+  ];
+
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.1
+      }
+    }
+  };
+
+  const itemVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: {
+        duration: 0.5
+      }
+    }
+  };
+
+  const getSecurityColor = (level: string) => {
+    switch (level) {
+      case 'عالي جداً':
+        return 'text-green-600 bg-green-100';
+      case 'عالي':
+        return 'text-blue-600 bg-blue-100';
+      case 'متوسط':
+        return 'text-yellow-600 bg-yellow-100';
+      default:
+        return 'text-gray-600 bg-gray-100';
+    }
+  };
+
+  return (
+    <div className="min-h-screen bg-background" dir="rtl">
+      <Header />
+      
+      {/* Hero Section */}
+      <section className="relative bg-gradient-to-br from-primary/10 via-background to-blue-50 py-16 md:py-24 overflow-hidden">
+        <div className="absolute inset-0 bg-grid-slate-100 [mask-image:linear-gradient(0deg,white,rgba(255,255,255,0.6))]" />
+        
+        <div className="container mx-auto px-4 relative z-10">
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+            className="text-center max-w-4xl mx-auto"
+          >
+            <div className="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-br from-primary to-blue-600 rounded-full mb-6">
+              <DollarSign className="h-10 w-10 text-white" />
+            </div>
+            
+            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 bg-gradient-to-r from-primary to-blue-600 bg-clip-text text-transparent">
+              طرق الدفع المتاحة
+            </h1>
+            
+            <p className="text-lg md:text-xl text-muted-foreground leading-relaxed mb-8">
+              اختر من بين مجموعة متنوعة من طرق الدفع الآمنة والموثوقة التي تناسب احتياجاتك. 
+              نحن نضمن أمان وسرية جميع معاملاتك المالية.
+            </p>
+
+            <div className="flex flex-wrap justify-center gap-4 text-sm">
+              <Badge variant="secondary" className="px-4 py-2">
+                <Shield className="h-4 w-4 ml-2" />
+                آمان 100%
+              </Badge>
+              <Badge variant="secondary" className="px-4 py-2">
+                <Zap className="h-4 w-4 ml-2" />
+                دفع فوري
+              </Badge>
+              <Badge variant="secondary" className="px-4 py-2">
+                <Globe className="h-4 w-4 ml-2" />
+                قبول عالمي
+              </Badge>
+              <Badge variant="secondary" className="px-4 py-2">
+                <CheckCircle className="h-4 w-4 ml-2" />
+                ضمان الاسترداد
+              </Badge>
+            </div>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* Payment Methods */}
+      <section className="py-16 md:py-24">
+        <div className="container mx-auto px-4">
+          <motion.div
+            variants={containerVariants}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+            className="space-y-16"
+          >
+            {paymentMethods.map((category, categoryIndex) => (
+              <motion.div key={categoryIndex} variants={itemVariants} className="space-y-8">
+                <div className="text-center">
+                  <div className={`inline-flex items-center justify-center w-16 h-16 rounded-full bg-gradient-to-r ${category.color} mb-4`}>
+                    <category.icon className="h-8 w-8 text-white" />
+                  </div>
+                  <h2 className="text-3xl md:text-4xl font-bold mb-2">{category.category}</h2>
+                  <div className="w-24 h-1 bg-gradient-to-r from-primary to-blue-600 rounded-full mx-auto"></div>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                  {category.methods.map((method, methodIndex) => (
+                    <motion.div
+                      key={methodIndex}
+                      whileHover={{ scale: 1.02, y: -5 }}
+                      transition={{ duration: 0.2 }}
+                    >
+                      <Card className="h-full border-2 hover:border-primary/50 transition-all duration-300 group">
+                        <CardHeader className={`${category.bgColor} group-hover:bg-opacity-80 transition-all duration-300`}>
+                          <div className="flex items-center justify-between mb-3">
+                            <div className="text-3xl">{method.icon}</div>
+                            <Badge className={`${getSecurityColor(method.security)} border-0`}>
+                              {method.security}
+                            </Badge>
+                          </div>
+                          <CardTitle className={`${category.textColor} text-xl mb-2`}>
+                            {method.name}
+                          </CardTitle>
+                          <CardDescription className="text-sm leading-relaxed">
+                            {method.description}
+                          </CardDescription>
+                        </CardHeader>
+
+                        <CardContent className="p-6 space-y-4">
+                          <div className="space-y-3">
+                            <div className="flex items-center justify-between text-sm">
+                              <span className="text-muted-foreground">الرسوم:</span>
+                              <span className="font-semibold text-green-600">{method.fees}</span>
+                            </div>
+                            <div className="flex items-center justify-between text-sm">
+                              <span className="text-muted-foreground">وقت المعالجة:</span>
+                              <span className="font-semibold">{method.processing}</span>
+                            </div>
+                          </div>
+
+                          <div className="space-y-2">
+                            <h4 className="font-semibold text-sm">المميزات:</h4>
+                            <ul className="space-y-1">
+                              {method.features.map((feature, featureIndex) => (
+                                <li key={featureIndex} className="flex items-center text-sm text-muted-foreground">
+                                  <CheckCircle className="h-3 w-3 text-green-500 ml-2 flex-shrink-0" />
+                                  {feature}
+                                </li>
+                              ))}
+                            </ul>
+                          </div>
+
+                          <Button 
+                            className="w-full group-hover:bg-primary group-hover:text-white transition-all duration-300"
+                            variant="outline"
+                          >
+                            اختيار هذه الطريقة
+                          </Button>
+                        </CardContent>
+                      </Card>
+                    </motion.div>
+                  ))}
+                </div>
+              </motion.div>
+            ))}
+          </motion.div>
+        </div>
+      </section>
+
+      {/* Security Features */}
+      <section className="py-16 md:py-24 bg-gradient-to-br from-slate-50 to-blue-50">
+        <div className="container mx-auto px-4">
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+            viewport={{ once: true }}
+            className="text-center mb-12"
+          >
+            <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-green-500 to-green-600 rounded-full mb-6">
+              <Shield className="h-8 w-8 text-white" />
+            </div>
+            <h2 className="text-3xl md:text-4xl font-bold mb-4">أمان معاملاتك أولويتنا</h2>
+            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+              نطبق أعلى معايير الأمان العالمية لحماية بياناتك المالية ومعاملاتك
+            </p>
+          </motion.div>
+
+          <motion.div
+            variants={containerVariants}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6"
+          >
+            {securityFeatures.map((feature, index) => (
+              <motion.div key={index} variants={itemVariants}>
+                <Card className="text-center p-6 h-full hover:shadow-lg transition-all duration-300 border-2 hover:border-green-200">
+                  <div className="inline-flex items-center justify-center w-12 h-12 bg-green-100 rounded-full mb-4">
+                    <feature.icon className="h-6 w-6 text-green-600" />
+                  </div>
+                  <h3 className="font-bold mb-2">{feature.title}</h3>
+                  <p className="text-sm text-muted-foreground leading-relaxed">
+                    {feature.description}
+                  </p>
+                </Card>
+              </motion.div>
+            ))}
+          </motion.div>
+        </div>
+      </section>
+
+      {/* Important Notes */}
+      <section className="py-16 md:py-24">
+        <div className="container mx-auto px-4">
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+            viewport={{ once: true }}
+            className="max-w-4xl mx-auto"
+          >
+            <div className="text-center mb-12">
+              <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-amber-500 to-amber-600 rounded-full mb-6">
+                <Info className="h-8 w-8 text-white" />
+              </div>
+              <h2 className="text-3xl md:text-4xl font-bold mb-4">معلومات مهمة</h2>
+            </div>
+
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              <Card className="p-6 border-2 border-blue-200 bg-blue-50">
+                <div className="flex items-start gap-4">
+                  <div className="flex-shrink-0">
+                    <AlertCircle className="h-6 w-6 text-blue-600" />
+                  </div>
+                  <div>
+                    <h3 className="font-bold text-blue-900 mb-2">سياسة الاسترداد</h3>
+                    <p className="text-sm text-blue-800 leading-relaxed">
+                      يمكن طلب استرداد كامل خلال 7 أيام من تاريخ الدفع في حالة عدم الرضا عن الخدمة. 
+                      الاستردادات تتم خلال 3-5 أيام عمل حسب طريقة الدفع المستخدمة.
+                    </p>
+                  </div>
+                </div>
+              </Card>
+
+              <Card className="p-6 border-2 border-green-200 bg-green-50">
+                <div className="flex items-start gap-4">
+                  <div className="flex-shrink-0">
+                    <CheckCircle className="h-6 w-6 text-green-600" />
+                  </div>
+                  <div>
+                    <h3 className="font-bold text-green-900 mb-2">ضمان الأمان</h3>
+                    <p className="text-sm text-green-800 leading-relaxed">
+                      جميع المعاملات مشفرة وآمنة 100%. لا نحتفظ ببيانات بطاقاتك الائتمانية. 
+                      نستخدم أحدث تقنيات الحماية المعتمدة عالمياً.
+                    </p>
+                  </div>
+                </div>
+              </Card>
+
+              <Card className="p-6 border-2 border-purple-200 bg-purple-50">
+                <div className="flex items-start gap-4">
+                  <div className="flex-shrink-0">
+                    <Clock className="h-6 w-6 text-purple-600" />
+                  </div>
+                  <div>
+                    <h3 className="font-bold text-purple-900 mb-2">أوقات المعالجة</h3>
+                    <p className="text-sm text-purple-800 leading-relaxed">
+                      أوقات المعالجة المذكورة تقريبية وقد تختلف حسب البنك أو مقدم الخدمة. 
+                      ستصلك رسالة تأكيد فور اكتمال عملية الدفع.
+                    </p>
+                  </div>
+                </div>
+              </Card>
+
+              <Card className="p-6 border-2 border-amber-200 bg-amber-50">
+                <div className="flex items-start gap-4">
+                  <div className="flex-shrink-0">
+                    <Star className="h-6 w-6 text-amber-600" />
+                  </div>
+                  <div>
+                    <h3 className="font-bold text-amber-900 mb-2">دعم العملاء</h3>
+                    <p className="text-sm text-amber-800 leading-relaxed">
+                      فريق دعم العملاء متاح 24/7 لمساعدتك في أي استفسار متعلق بالدفع. 
+                      تواصل معنا عبر الواتساب أو البريد الإلكتروني.
+                    </p>
+                  </div>
+                </div>
+              </Card>
+            </div>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* CTA Section */}
+      <section className="py-16 md:py-24 bg-gradient-to-br from-primary to-blue-600">
+        <div className="container mx-auto px-4">
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+            viewport={{ once: true }}
+            className="text-center text-white"
+          >
+            <div className="inline-flex items-center justify-center w-20 h-20 bg-white/10 rounded-full mb-6">
+              <TrendingUp className="h-10 w-10 text-white" />
+            </div>
+            
+            <h2 className="text-3xl md:text-4xl font-bold mb-4">
+              جاهز لبدء مشروعك؟
+            </h2>
+            
+            <p className="text-lg md:text-xl opacity-90 mb-8 max-w-2xl mx-auto">
+              اختر طريقة الدفع التي تناسبك وابدأ رحلتك معنا نحو النجاح الأكاديمي والمهني
+            </p>
+            
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <Button 
+                size="lg" 
+                className="bg-white text-primary hover:bg-white/90 font-semibold px-8 py-3"
+              >
+                <DollarSign className="h-5 w-5 ml-2" />
+                اطلب خدمة الآن
+              </Button>
+              
+              <Button 
+                size="lg" 
+                variant="outline" 
+                className="border-white text-white hover:bg-white hover:text-primary font-semibold px-8 py-3"
+              >
+                <Smartphone className="h-5 w-5 ml-2" />
+                تواصل معنا
+              </Button>
+            </div>
+          </motion.div>
+        </div>
+      </section>
+
+      <Footer />
+    </div>
+  );
+};
+
+export default PaymentMethods;
