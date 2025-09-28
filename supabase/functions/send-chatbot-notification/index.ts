@@ -34,7 +34,7 @@ const handler = async (req: Request): Promise<Response> => {
 
     const emailResponse = await resend.emails.send({
       from: "ماستر إيدو باث <onboarding@resend.dev>",
-      to: ["admin@masteredupath.com"], // استبدل بالإيميل الفعلي للإدارة
+      to: ["info@fekrahtech.com"], // إيميل المطور للاختبار
       subject: "🤖 رسالة جديدة من الشات بوت - وكالة ماستر إيدو باث",
       html: `
         <!DOCTYPE html>
