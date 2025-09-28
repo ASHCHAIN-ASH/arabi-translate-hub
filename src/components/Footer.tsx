@@ -256,34 +256,6 @@ const Footer = () => {
                    </a>
                  </li>
                ))}
-               
-               {/* قسم خريطة الموقع */}
-               <li className="mt-6 pt-4 border-t border-white/20">
-                 <h5 className="text-base font-bold text-white mb-3 flex items-center gap-2">
-                   <Globe className="h-4 w-4 text-blue-400" />
-                   خريطة الموقع
-                 </h5>
-                 <ul className="space-y-2 mr-6">
-                   {[
-                     { name: 'الصفحة الرئيسية', href: '/' },
-                     { name: 'خدمات الترجمة', href: '/services' },
-                     { name: 'خدمات البحث العلمي', href: '/research-services' },
-                     { name: 'المدونة', href: '/blog' },
-                     { name: 'اتصل بنا', href: '/contact-us' },
-                     { name: 'طلب خدمة', href: '/order-now' },
-                     { name: 'تتبع الطلبات', href: '/order-tracking' }
-                   ].map((sitemapLink) => (
-                     <li key={sitemapLink.name}>
-                       <a 
-                         href={sitemapLink.href} 
-                         className="text-white/60 hover:text-white/80 transition-colors text-xs md:text-sm block hover:translate-x-1 transition-transform"
-                       >
-                         {sitemapLink.name}
-                       </a>
-                     </li>
-                   ))}
-                 </ul>
-               </li>
              </ul>
            </motion.div>
 
