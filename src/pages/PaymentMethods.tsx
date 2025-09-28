@@ -28,18 +28,96 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Textarea } from '@/components/ui/textarea';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Loader2 } from 'lucide-react';
 
 const PaymentMethods = () => {
   const { toast } = useToast();
   const [selectedMethod, setSelectedMethod] = useState<{category: string, method: string} | null>(null);
+  const [showInstallmentForm, setShowInstallmentForm] = useState(false);
+  const [selectedInstallmentMethod, setSelectedInstallmentMethod] = useState<string>('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [formData, setFormData] = useState({
+    fullName: '',
+    email: '',
+    phone: '',
+    nationalId: '',
+    monthlyIncome: '',
+    serviceType: '',
+    serviceAmount: '',
+    requestedAmount: '',
+    installmentPeriod: '',
+    notes: ''
+  });
 
   const handlePaymentSelection = (categoryName: string, methodName: string) => {
     setSelectedMethod({ category: categoryName, method: methodName });
+    
+    // إذا كان الدفع بالتقسيط، فتح نموذج التقديم
+    if (categoryName === 'الدفع بالتقسيط') {
+      setShowInstallmentForm(true);
+      setSelectedInstallmentMethod(methodName);
+    }
+    
     toast({
       title: "تم اختيار طريقة الدفع",
       description: `تم اختيار ${methodName} من ${categoryName}`,
       duration: 3000,
     });
+  };
+
+  const handleFormSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+
+    try {
+      const response = await fetch('https://ibfcgweykqkzdodrfmci.supabase.co/functions/v1/send-installment-request', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          ...formData,
+          installmentMethod: selectedInstallmentMethod,
+        }),
+      });
+
+      if (response.ok) {
+        toast({
+          title: "تم إرسال الطلب بنجاح",
+          description: "سيتم التواصل معك خلال 24 ساعة لتأكيد الطلب",
+          duration: 5000,
+        });
+        setShowInstallmentForm(false);
+        setFormData({
+          fullName: '',
+          email: '',
+          phone: '',
+          nationalId: '',
+          monthlyIncome: '',
+          serviceType: '',
+          serviceAmount: '',
+          requestedAmount: '',
+          installmentPeriod: '',
+          notes: ''
+        });
+      } else {
+        throw new Error('Failed to submit');
+      }
+    } catch (error) {
+      toast({
+        title: "خطأ في إرسال الطلب",
+        description: "حدث خطأ، يرجى المحاولة مرة أخرى",
+        variant: "destructive",
+        duration: 3000,
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
   const paymentMethods = [
     {
@@ -237,6 +315,69 @@ const PaymentMethods = () => {
           processing: '5-30 دقيقة',
           security: 'عالي',
           icon: '₮'
+        }
+      ]
+    },
+    {
+      category: 'الدفع بالتقسيط',
+      icon: Wallet,
+      color: 'from-indigo-500 to-indigo-600',
+      bgColor: 'bg-indigo-50',
+      textColor: 'text-indigo-600',
+      methods: [
+        {
+          name: 'أمكان (Emkan)',
+          description: 'قسّط مشترياتك على 4 دفعات بدون فوائد',
+          features: ['4 دفعات شهرية', 'بدون فوائد', 'موافقة فورية'],
+          fees: 'بدون رسوم إضافية',
+          processing: 'موافقة فورية',
+          security: 'عالي جداً',
+          icon: '💳'
+        },
+        {
+          name: 'تمارا (Tamara)',
+          description: 'اشتري الآن وادفع لاحقاً مع تمارا',
+          features: ['3 دفعات شهرية', 'بدون فوائد', 'مرونة في السداد'],
+          fees: 'بدون رسوم إضافية',
+          processing: 'موافقة فورية',
+          security: 'عالي جداً',
+          icon: '🟢'
+        },
+        {
+          name: 'تابي (Tabby)',
+          description: 'قسّط مشترياتك على 4 دفعات متساوية',
+          features: ['4 دفعات كل أسبوعين', 'بدون فوائد', 'سهولة الاستخدام'],
+          fees: 'بدون رسوم إضافية',
+          processing: 'موافقة فورية',
+          security: 'عالي جداً',
+          icon: '🔵'
+        },
+        {
+          name: 'مدفوع (Madfoua)',
+          description: 'حلول دفع بالتقسيط مرنة ومبتكرة',
+          features: ['دفعات مرنة', 'بدون فوائد', 'خدمة عملاء ممتازة'],
+          fees: 'بدون رسوم إضافية',
+          processing: 'موافقة فورية',
+          security: 'عالي جداً',
+          icon: '💰'
+        },
+        {
+          name: 'سبل (SPayLater)',
+          description: 'اشتري الآن وادفع على 6 أشهر',
+          features: ['6 دفعات شهرية', 'بدون فوائد', 'تطبيق سهل'],
+          fees: 'بدون رسوم إضافية',
+          processing: 'موافقة فورية',
+          security: 'عالي جداً',
+          icon: '📱'
+        },
+        {
+          name: 'بوستباي (PostPay)',
+          description: 'ادفع لاحقاً خلال 30 يوم',
+          features: ['دفع خلال 30 يوم', 'بدون فوائد', 'مرونة كاملة'],
+          fees: 'بدون رسوم إضافية',
+          processing: 'موافقة فورية',
+          security: 'عالي',
+          icon: '📮'
         }
       ]
     }
@@ -719,6 +860,177 @@ const PaymentMethods = () => {
           </motion.div>
         </div>
       </section>
+
+      {/* Installment Payment Form Modal */}
+      <Dialog open={showInstallmentForm} onOpenChange={setShowInstallmentForm}>
+        <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto" dir="rtl">
+          <DialogHeader>
+            <DialogTitle className="text-2xl font-bold text-center mb-2">
+              طلب الدفع بالتقسيط - {selectedInstallmentMethod}
+            </DialogTitle>
+            <DialogDescription className="text-center text-muted-foreground">
+              يرجى ملء النموذج أدناه وسيتم التواصل معك خلال 24 ساعة
+            </DialogDescription>
+          </DialogHeader>
+          
+          <form onSubmit={handleFormSubmit} className="space-y-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="fullName">الاسم الكامل *</Label>
+                <Input
+                  id="fullName"
+                  required
+                  value={formData.fullName}
+                  onChange={(e) => setFormData({...formData, fullName: e.target.value})}
+                  placeholder="أدخل اسمك الكامل"
+                />
+              </div>
+              
+              <div className="space-y-2">
+                <Label htmlFor="email">البريد الإلكتروني *</Label>
+                <Input
+                  id="email"
+                  type="email"
+                  required
+                  value={formData.email}
+                  onChange={(e) => setFormData({...formData, email: e.target.value})}
+                  placeholder="example@email.com"
+                />
+              </div>
+              
+              <div className="space-y-2">
+                <Label htmlFor="phone">رقم الجوال *</Label>
+                <Input
+                  id="phone"
+                  required
+                  value={formData.phone}
+                  onChange={(e) => setFormData({...formData, phone: e.target.value})}
+                  placeholder="05xxxxxxxx"
+                />
+              </div>
+              
+              <div className="space-y-2">
+                <Label htmlFor="nationalId">الهوية الوطنية *</Label>
+                <Input
+                  id="nationalId"
+                  required
+                  value={formData.nationalId}
+                  onChange={(e) => setFormData({...formData, nationalId: e.target.value})}
+                  placeholder="1xxxxxxxxx"
+                />
+              </div>
+              
+              <div className="space-y-2">
+                <Label htmlFor="monthlyIncome">الراتب الشهري *</Label>
+                <Select onValueChange={(value) => setFormData({...formData, monthlyIncome: value})}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="اختر الراتب الشهري" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="3000-5000">3,000 - 5,000 ريال</SelectItem>
+                    <SelectItem value="5000-8000">5,000 - 8,000 ريال</SelectItem>
+                    <SelectItem value="8000-12000">8,000 - 12,000 ريال</SelectItem>
+                    <SelectItem value="12000-20000">12,000 - 20,000 ريال</SelectItem>
+                    <SelectItem value="20000+">أكثر من 20,000 ريال</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              
+              <div className="space-y-2">
+                <Label htmlFor="serviceType">نوع الخدمة المطلوبة *</Label>
+                <Select onValueChange={(value) => setFormData({...formData, serviceType: value})}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="اختر نوع الخدمة" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="academic-translation">ترجمة أكاديمية</SelectItem>
+                    <SelectItem value="business-translation">ترجمة تجارية</SelectItem>
+                    <SelectItem value="legal-translation">ترجمة قانونية</SelectItem>
+                    <SelectItem value="medical-translation">ترجمة طبية</SelectItem>
+                    <SelectItem value="technical-translation">ترجمة تقنية</SelectItem>
+                    <SelectItem value="research-services">خدمات البحث</SelectItem>
+                    <SelectItem value="consultation">استشارات أكاديمية</SelectItem>
+                    <SelectItem value="other">أخرى</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              
+              <div className="space-y-2">
+                <Label htmlFor="serviceAmount">قيمة الخدمة (ريال) *</Label>
+                <Input
+                  id="serviceAmount"
+                  type="number"
+                  required
+                  value={formData.serviceAmount}
+                  onChange={(e) => setFormData({...formData, serviceAmount: e.target.value})}
+                  placeholder="1000"
+                />
+              </div>
+              
+              <div className="space-y-2">
+                <Label htmlFor="installmentPeriod">فترة التقسيط المطلوبة *</Label>
+                <Select onValueChange={(value) => setFormData({...formData, installmentPeriod: value})}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="اختر فترة التقسيط" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="3-months">3 أشهر</SelectItem>
+                    <SelectItem value="6-months">6 أشهر</SelectItem>
+                    <SelectItem value="12-months">12 شهر</SelectItem>
+                    <SelectItem value="flexible">مرنة حسب الظروف</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+            
+            <div className="space-y-2">
+              <Label htmlFor="notes">ملاحظات إضافية</Label>
+              <Textarea
+                id="notes"
+                value={formData.notes}
+                onChange={(e) => setFormData({...formData, notes: e.target.value})}
+                placeholder="أي معلومات إضافية تود إضافتها..."
+                rows={3}
+              />
+            </div>
+            
+            <div className="bg-blue-50 p-4 rounded-lg border border-blue-200">
+              <h4 className="font-semibold text-blue-900 mb-2">معلومات مهمة:</h4>
+              <ul className="text-sm text-blue-800 space-y-1">
+                <li>• سيتم مراجعة طلبك والتواصل معك خلال 24 ساعة</li>
+                <li>• قد نطلب مستندات إضافية لتأكيد الهوية والراتب</li>
+                <li>• الموافقة على التقسيط تعتمد على تقييم الأهلية</li>
+                <li>• لا توجد رسوم على تقديم الطلب</li>
+              </ul>
+            </div>
+            
+            <div className="flex gap-4 pt-4">
+              <Button 
+                type="submit" 
+                disabled={isSubmitting}
+                className="flex-1"
+              >
+                {isSubmitting ? (
+                  <>
+                    <Loader2 className="h-4 w-4 animate-spin ml-2" />
+                    جارٍ الإرسال...
+                  </>
+                ) : (
+                  'إرسال الطلب'
+                )}
+              </Button>
+              <Button 
+                type="button" 
+                variant="outline" 
+                onClick={() => setShowInstallmentForm(false)}
+                className="flex-1"
+              >
+                إلغاء
+              </Button>
+            </div>
+          </form>
+        </DialogContent>
+      </Dialog>
 
       <Footer />
     </div>
