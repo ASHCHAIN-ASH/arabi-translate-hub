@@ -20,7 +20,10 @@ import {
   TrendingUp,
   DollarSign,
   UserPlus,
-  Briefcase
+  Briefcase,
+  Trophy,
+  Search,
+  Crown
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -96,7 +99,7 @@ const Footer = () => {
 
       {/* Main Footer Content */}
       <div className="relative z-10 mobile-container-wide mobile-section">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 mobile-gap-responsive">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 mobile-gap-responsive">
           
           {/* معلومات الشركة */}
           <motion.div 
@@ -252,6 +255,38 @@ const Footer = () => {
                      className="text-white/70 hover:text-white transition-colors text-sm md:text-base flex items-center gap-2 hover:translate-x-1 transition-transform"
                    >
                      <link.icon className="h-3 w-3 md:h-4 md:w-4 text-purple-400" />
+                     {link.name}
+                   </a>
+                 </li>
+               ))}
+             </ul>
+           </motion.div>
+
+           {/* روابط مميزة */}
+           <motion.div 
+             initial={{ opacity: 0, y: 20 }}
+             whileInView={{ opacity: 1, y: 0 }}
+             transition={{ delay: 0.25, duration: 0.5 }}
+             className="space-y-4 md:space-y-6"
+           >
+             <h4 className="text-base md:text-lg font-bold text-white flex items-center gap-2">
+               <Award className="h-4 w-4 md:h-5 md:w-5 text-yellow-400" />
+               روابط مميزة
+             </h4>
+             <ul className="space-y-2 md:space-y-3">
+               {[
+                 { name: 'الترجمة الفورية', href: '/instant-translation', icon: Zap },
+                 { name: 'المسابقات الأكاديمية', href: '/academic-competitions', icon: Trophy },
+                 { name: 'قصص النجاح', href: '/success-stories', icon: Star },
+                 { name: 'أدوات البحث', href: '/research/research-tools', icon: Search },
+                 { name: 'عضوية VIP', href: '/master-membership', icon: Crown }
+               ].map((link) => (
+                 <li key={link.name}>
+                   <a 
+                     href={link.href} 
+                     className="text-white/70 hover:text-white transition-colors text-sm md:text-base flex items-center gap-2 hover:translate-x-1 transition-transform"
+                   >
+                     <link.icon className="h-3 w-3 md:h-4 md:w-4 text-yellow-400" />
                      {link.name}
                    </a>
                  </li>
