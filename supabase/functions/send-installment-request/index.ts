@@ -34,8 +34,10 @@ const handler = async (req: Request): Promise<Response> => {
     const requestData: InstallmentRequest = await req.json();
 
     console.log("Processing installment request:", requestData);
+    console.log("RESEND_API_KEY exists:", !!RESEND_API_KEY);
 
     // إرسال إيميل للعميل
+    console.log("Sending customer email...");
     const customerEmailResponse = await fetch('https://api.resend.com/emails', {
       method: 'POST',
       headers: {
@@ -112,6 +114,7 @@ const handler = async (req: Request): Promise<Response> => {
     });
 
     // إرسال إيميل للإدارة
+    console.log("Sending admin email...");
     const adminEmailResponse = await fetch('https://api.resend.com/emails', {
       method: 'POST',
       headers: {
@@ -232,6 +235,9 @@ const handler = async (req: Request): Promise<Response> => {
 
     const customerEmailData = await customerEmailResponse.json();
     const adminEmailData = await adminEmailResponse.json();
+    
+    console.log("Customer email response:", customerEmailData);
+    console.log("Admin email response:", adminEmailData);
 
     return new Response(
       JSON.stringify({
