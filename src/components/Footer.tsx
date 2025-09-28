@@ -99,7 +99,8 @@ const Footer = () => {
 
       {/* Main Footer Content */}
       <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-16">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-12">
+        {/* Main Footer Content */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6 lg:gap-8">
           
           {/* معلومات الشركة */}
           <motion.div 
@@ -143,7 +144,7 @@ const Footer = () => {
             </div>
           </motion.div>
 
-          {/* خدماتنا */}
+          {/* خدماتنا الأساسية */}
           <motion.div 
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -152,7 +153,7 @@ const Footer = () => {
           >
             <h4 className="text-base md:text-lg font-bold text-white flex items-center gap-2">
               <Zap className="h-4 w-4 md:h-5 md:w-5 text-blue-400" />
-              خدماتنا
+              خدماتنا الأساسية
             </h4>
             <ul className="space-y-2 md:space-y-3">
               {[
@@ -165,7 +166,7 @@ const Footer = () => {
                 <li key={service.name}>
                   <a 
                     href={service.href} 
-                    className="text-white/70 hover:text-white transition-colors text-sm md:text-base block hover:translate-x-1 transition-transform"
+                    className="text-white/70 hover:text-white transition-colors text-sm md:text-base block hover:translate-x-1 transition-transform duration-200"
                   >
                     {service.name}
                   </a>
@@ -191,12 +192,13 @@ const Footer = () => {
                 { name: 'الأسعار', href: '/pricing' },
                 { name: 'المدونة', href: '/blog' },
                 { name: 'عضوية ماستر', href: '/master-membership' },
-                { name: 'الأسئلة الشائعة', href: '/faq' }
+                { name: 'الأسئلة الشائعة', href: '/faq' },
+                { name: 'اتصل بنا', href: '/contact-us' }
               ].map((link) => (
                 <li key={link.name}>
                   <a 
                     href={link.href} 
-                    className="text-white/70 hover:text-white transition-colors text-sm md:text-base block hover:translate-x-1 transition-transform"
+                    className="text-white/70 hover:text-white transition-colors text-sm md:text-base block hover:translate-x-1 transition-transform duration-200"
                   >
                     {link.name}
                   </a>
@@ -205,65 +207,64 @@ const Footer = () => {
             </ul>
           </motion.div>
 
-           {/* روابط مهمة ومميزة */}
+          {/* الجامعات والمؤسسات التعليمية */}
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.2, duration: 0.5 }}
+            className="space-y-4 md:space-y-6"
+          >
+            <h4 className="text-base md:text-lg font-bold text-white flex items-center gap-2">
+              <Building2 className="h-4 w-4 md:h-5 md:w-5 text-green-400" />
+              الجامعات والمؤسسات
+            </h4>
+            <ul className="space-y-2 md:space-y-3">
+              {[
+                { name: 'دليل الجامعات', href: '/universities', icon: Building2 },
+                { name: 'الجامعات السعودية', href: '/universities#saudi', icon: Crown },
+                { name: 'الجامعات الدولية', href: '/universities#international', icon: Globe },
+                { name: 'التسويق بالعمولة', href: '/marketing/affiliate', icon: DollarSign },
+                { name: 'الوظائف', href: '/careers', icon: Briefcase },
+                { name: 'طرق الدفع', href: '/payment-methods', icon: DollarSign }
+              ].map((link) => (
+                <li key={link.name}>
+                  <a 
+                    href={link.href} 
+                    className="text-white/70 hover:text-white transition-colors text-sm md:text-base flex items-center gap-2 hover:translate-x-1 transition-transform duration-200"
+                  >
+                    <link.icon className="h-3 w-3 md:h-4 md:w-4 text-green-400" />
+                    {link.name}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </motion.div>
+
+           {/* الحقوق والسياسات */}
            <motion.div 
              initial={{ opacity: 0, y: 20 }}
              whileInView={{ opacity: 1, y: 0 }}
-             transition={{ delay: 0.2, duration: 0.5 }}
-             className="space-y-6"
+             transition={{ delay: 0.25, duration: 0.5 }}
+             className="space-y-4 md:space-y-6"
            >
-             <h4 className="text-lg font-bold text-white flex items-center gap-2">
-               <TrendingUp className="h-5 w-5 text-purple-400" />
-               روابط مهمة
+             <h4 className="text-base md:text-lg font-bold text-white flex items-center gap-2">
+               <Shield className="h-4 w-4 md:h-5 md:w-5 text-purple-400" />
+               الحقوق والسياسات
              </h4>
-             <ul className="space-y-3">
-               <li>
-                 <a 
-                   href="/marketing/affiliate" 
-                   className="text-white/70 hover:text-white transition-colors text-sm flex items-center gap-2 hover:translate-x-1 transition-transform"
-                 >
-                   <DollarSign className="h-4 w-4 text-green-400" />
-                   التسويق بالعمولة
-                 </a>
-               </li>
-               <li>
-                 <a 
-                   href="/careers" 
-                   className="text-white/70 hover:text-white transition-colors text-sm flex items-center gap-2 hover:translate-x-1 transition-transform"
-                 >
-                   <Briefcase className="h-4 w-4 text-blue-400" />
-                   الوظائف
-                 </a>
-               </li>
-               <li>
-                 <a 
-                   href="/universities" 
-                   className="text-white/70 hover:text-white transition-colors text-sm flex items-center gap-2 hover:translate-x-1 transition-transform"
-                 >
-                   <Building2 className="h-4 w-4 text-yellow-400" />
-                   الجامعات
-                 </a>
-               </li>
-               <li>
-                 <a 
-                   href="/payment-methods" 
-                   className="text-white/70 hover:text-white transition-colors text-sm flex items-center gap-2 hover:translate-x-1 transition-transform"
-                 >
-                   <DollarSign className="h-4 w-4 text-green-400" />
-                   طرق الدفع
-                 </a>
-               </li>
+             <ul className="space-y-2 md:space-y-3">
                {[
                  { name: 'الملكية الفكرية', href: '/intellectual-property', icon: Shield },
                  { name: 'سياسة الخصوصية', href: '/privacy-policy', icon: Shield },
-                 { name: 'شروط الاستخدام', href: '/terms-of-service', icon: HelpCircle }
+                 { name: 'شروط الاستخدام', href: '/terms-of-service', icon: HelpCircle },
+                 { name: 'حماية البيانات', href: '/privacy-policy#data-protection', icon: Shield },
+                 { name: 'اتفاقية الخدمة', href: '/terms-of-service#service-agreement', icon: Award }
                ].map((link) => (
                  <li key={link.name}>
                    <a 
                      href={link.href} 
-                     className="text-white/70 hover:text-white transition-colors text-sm flex items-center gap-2 hover:translate-x-1 transition-transform"
+                     className="text-white/70 hover:text-white transition-colors text-sm md:text-base flex items-center gap-2 hover:translate-x-1 transition-transform duration-200"
                    >
-                     <link.icon className="h-4 w-4 text-purple-400" />
+                     <link.icon className="h-3 w-3 md:h-4 md:w-4 text-purple-400" />
                      {link.name}
                    </a>
                  </li>
@@ -333,20 +334,14 @@ const Footer = () => {
               </div>
             </div>
             
-            <div className="flex flex-wrap items-center justify-center lg:justify-end gap-4 md:gap-6 text-sm">
-              {[
-                { name: 'شروط الاستخدام', href: '/terms' },
-                { name: 'سياسة الخصوصية', href: '/privacy' },
-                { name: 'دعم العملاء', href: '#' }
-              ].map((link, index) => (
-                <a 
-                  key={link.name}
-                  href={link.href}
-                  className="text-white/70 hover:text-white transition-colors relative group hover:underline whitespace-nowrap"
-                >
-                  {link.name}
-                </a>
-              ))}
+            <div className="flex flex-wrap items-center justify-center lg:justify-end gap-3 md:gap-4 text-xs md:text-sm">
+              <a 
+                href="/contact-us"
+                className="text-white/70 hover:text-white transition-colors relative group hover:underline whitespace-nowrap flex items-center gap-1"
+              >
+                <Headphones className="h-3 w-3" />
+                دعم العملاء
+              </a>
             </div>
             
             {/* شعار اليوم الوطني في الفوتر */}
