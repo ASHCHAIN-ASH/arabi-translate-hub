@@ -65,7 +65,6 @@ const ContractManagement = () => {
     agreedTerms: false
   });
 
-  // تحميل الخدمات عند بداية التحميل
   useEffect(() => {
     loadServices();
   }, []);
@@ -118,7 +117,6 @@ const ContractManagement = () => {
 
       setIsCreatingContract(true);
 
-      // الحصول على تفاصيل الخدمات المختارة
       const selectedServiceDetails = services.filter(service => 
         newContract.selectedServices.includes(service.id)
       );
@@ -157,9 +155,7 @@ const ContractManagement = () => {
 
       if (error) throw error;
 
-      // إرسال إشعارات بالإيميل والواتساب للإدارة
       await sendContractNotifications(data);
-
       toast.success('تم إرسال طلب العقد بنجاح للإدارة! سيتم التواصل معكم قريباً');
       resetNewContract();
 
@@ -173,7 +169,6 @@ const ContractManagement = () => {
 
   const sendContractNotifications = async (contractData: any) => {
     try {
-      // إرسال العقد للإدارة والعميل
       const { error } = await supabase.functions.invoke('send-contract-notification', {
         body: {
           contract: contractData,
@@ -220,248 +215,301 @@ const ContractManagement = () => {
     };
     
     const IconComponent = icons[categoryId] || icons.default;
-    return <IconComponent className="h-5 w-5" />;
+    return <IconComponent className="h-5 w-5 text-blue-600" />;
   };
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-green-50">
       <Header />
       
       <main className="container mx-auto px-4 py-8 mt-20">
-        {/* Header */}
-        <div className="mb-8">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="text-center mb-8"
-          >
-            <h1 className="text-4xl font-bold mb-4">
-              طلب <span className="text-gradient bg-gradient-primary bg-clip-text text-transparent">عقد جديد</span>
-            </h1>
-            <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-              اختر الخدمات التي تحتاجها وأرسل طلب العقد للإدارة
-            </p>
-          </motion.div>
-        </div>
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="text-center mb-12"
+        >
+          <h1 className="text-5xl font-bold mb-6 text-gradient bg-gradient-to-r from-blue-600 via-purple-600 to-green-600 bg-clip-text text-transparent">
+            طلب عقد جديد
+          </h1>
+          <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
+            اختر الخدمات التي تحتاجها وأرسل طلب العقد للإدارة
+          </p>
+        </motion.div>
 
-        {/* Contract Creation Form */}
-        <div className="max-w-4xl mx-auto">
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-2xl">إنشاء عقد جديد - التعاقد على الخدمات</CardTitle>
-              <CardDescription>
+        <div className="max-w-5xl mx-auto">
+          <Card className="shadow-2xl border-0 bg-white/80 backdrop-blur-sm">
+            <CardHeader className="bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-t-lg">
+              <CardTitle className="text-3xl font-bold">إنشاء عقد جديد - التعاقد على الخدمات</CardTitle>
+              <CardDescription className="text-blue-100 text-lg">
                 املأ النموذج أدناه لإرسال طلب العقد للإدارة
               </CardDescription>
             </CardHeader>
-            <CardContent className="space-y-6">
-              {/* تنبيه مهم */}
-              <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
-                <div className="flex items-start gap-3">
-                  <AlertTriangle className="h-5 w-5 text-yellow-600 mt-0.5" />
+            <CardContent className="space-y-8 p-8">
+              <motion.div 
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.5 }}
+                className="bg-gradient-to-r from-amber-50 via-yellow-50 to-orange-50 border-l-4 border-yellow-400 rounded-lg p-6"
+              >
+                <div className="flex items-start gap-4">
+                  <AlertTriangle className="h-6 w-6 text-yellow-600 mt-1" />
                   <div>
-                    <h3 className="font-semibold text-yellow-800 mb-1">تنبيه مهم</h3>
-                    <p className="text-yellow-700 text-sm">
+                    <h3 className="font-bold text-yellow-800 mb-2 text-lg">تنبيه مهم</h3>
+                    <p className="text-yellow-700 leading-relaxed">
                       الأسعار المذكورة في هذا النموذج هي أسعار تقديرية فقط. الأسعار النهائية المعتمدة ستكون واردة في الفاتورة المرفقة مع العقد النهائي.
                     </p>
                   </div>
                 </div>
-              </div>
+              </motion.div>
 
-              {/* معلومات العميل */}
-              <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
-                    <User className="h-5 w-5" />
-                    معلومات العميل
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                      <Label htmlFor="clientName">الاسم الكامل *</Label>
-                      <Input
-                        id="clientName"
-                        value={newContract.clientName}
-                        onChange={(e) => setNewContract(prev => ({...prev, clientName: e.target.value}))}
-                        placeholder="اسم العميل الكامل"
-                      />
-                    </div>
-                    <div>
-                      <Label htmlFor="clientEmail">البريد الإلكتروني *</Label>
-                      <Input
-                        id="clientEmail"
-                        type="email"
-                        value={newContract.clientEmail}
-                        onChange={(e) => setNewContract(prev => ({...prev, clientEmail: e.target.value}))}
-                        placeholder="example@email.com"
-                      />
-                    </div>
-                    <div>
-                      <Label htmlFor="clientPhone">رقم الهاتف *</Label>
-                      <Input
-                        id="clientPhone"
-                        value={newContract.clientPhone}
-                        onChange={(e) => setNewContract(prev => ({...prev, clientPhone: e.target.value}))}
-                        placeholder="+966xxxxxxxxx"
-                      />
-                    </div>
-                    <div>
-                      <Label htmlFor="clientCompany">اسم الشركة (اختياري)</Label>
-                      <Input
-                        id="clientCompany"
-                        value={newContract.clientCompany}
-                        onChange={(e) => setNewContract(prev => ({...prev, clientCompany: e.target.value}))}
-                        placeholder="اسم الشركة أو المؤسسة"
-                      />
-                    </div>
-                  </div>
-                  <div>
-                    <Label htmlFor="clientAddress">العنوان (اختياري)</Label>
-                    <Textarea
-                      id="clientAddress"
-                      value={newContract.clientAddress}
-                      onChange={(e) => setNewContract(prev => ({...prev, clientAddress: e.target.value}))}
-                      placeholder="العنوان الكامل"
-                      rows={2}
-                    />
-                  </div>
-                </CardContent>
-              </Card>
-
-              {/* اختيار الخدمات */}
-              <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
-                    <Package className="h-5 w-5" />
-                    اختيار الخدمات *
-                  </CardTitle>
-                  <CardDescription>
-                    اختر الخدمات التي تحتاج إليها من القائمة أدناه
-                  </CardDescription>
-                </CardHeader>
-                <CardContent>
-                  {isServicesLoading ? (
-                    <div className="text-center py-8">
-                      <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-4"></div>
-                      <p>جاري تحميل الخدمات...</p>
-                    </div>
-                  ) : services.length === 0 ? (
-                    <div className="text-center py-8 text-muted-foreground">
-                      <Package className="h-12 w-12 mx-auto mb-4 opacity-50" />
-                      <p>لا توجد خدمات متاحة حالياً</p>
-                    </div>
-                  ) : (
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                      {services.map((service) => (
-                        <Card 
-                          key={service.id}
-                          className={`cursor-pointer transition-colors hover:border-primary ${
-                            newContract.selectedServices.includes(service.id) 
-                              ? 'border-primary bg-primary/5' 
-                              : ''
-                          }`}
-                          onClick={() => handleServiceToggle(service.id)}
+              <motion.div
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.6, delay: 0.2 }}
+              >
+                <Card className="border-2 border-blue-100 hover:border-blue-200 transition-all duration-300 shadow-lg">
+                  <CardHeader className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-t-lg">
+                    <CardTitle className="flex items-center gap-3 text-xl text-blue-800">
+                      <div className="p-2 rounded-lg bg-blue-100">
+                        <User className="h-6 w-6 text-blue-600" />
+                      </div>
+                      معلومات العميل
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-6 p-6">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      {[
+                        { id: 'clientName', label: 'الاسم الكامل *', type: 'text', placeholder: 'اسم العميل الكامل', value: newContract.clientName, field: 'clientName' },
+                        { id: 'clientEmail', label: 'البريد الإلكتروني *', type: 'email', placeholder: 'example@email.com', value: newContract.clientEmail, field: 'clientEmail' },
+                        { id: 'clientPhone', label: 'رقم الهاتف *', type: 'tel', placeholder: '+966xxxxxxxxx', value: newContract.clientPhone, field: 'clientPhone' },
+                        { id: 'clientCompany', label: 'اسم الشركة (اختياري)', type: 'text', placeholder: 'اسم الشركة أو المؤسسة', value: newContract.clientCompany, field: 'clientCompany' }
+                      ].map((field, index) => (
+                        <motion.div
+                          key={field.id}
+                          initial={{ opacity: 0, y: 20 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          transition={{ duration: 0.5, delay: 0.3 + (index * 0.1) }}
                         >
-                          <CardContent className="p-4">
-                            <div className="flex items-start gap-3">
-                              <Checkbox
-                                checked={newContract.selectedServices.includes(service.id)}
-                                onChange={() => handleServiceToggle(service.id)}
-                                className="mt-1"
-                              />
-                              <div className="flex-1">
-                                <div className="flex items-center gap-2 mb-2">
-                                  {getServiceIcon(service.category_id)}
-                                  <h3 className="font-semibold">{service.name_ar}</h3>
-                                </div>
-                                <p className="text-sm text-muted-foreground">
-                                  {service.description_ar}
-                                </p>
-                              </div>
-                            </div>
-                          </CardContent>
-                        </Card>
+                          <Label htmlFor={field.id} className="text-sm font-medium text-gray-700 mb-2 block">
+                            {field.label}
+                          </Label>
+                          <Input
+                            id={field.id}
+                            type={field.type}
+                            value={field.value}
+                            onChange={(e) => setNewContract(prev => ({...prev, [field.field]: e.target.value}))}
+                            placeholder={field.placeholder}
+                            className="h-12 text-base border-2 border-gray-200 focus:border-blue-400 focus:ring-4 focus:ring-blue-100 transition-all duration-300"
+                          />
+                        </motion.div>
                       ))}
                     </div>
-                  )}
-                </CardContent>
-              </Card>
-
-              {/* تفاصيل إضافية */}
-              <Card>
-                <CardHeader>
-                  <CardTitle>تفاصيل إضافية</CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  <div>
-                    <Label htmlFor="deliveryTimeframe">الإطار الزمني المطلوب</Label>
-                    <Select 
-                      value={newContract.deliveryTimeframe} 
-                      onValueChange={(value) => setNewContract(prev => ({...prev, deliveryTimeframe: value}))}
+                    <motion.div
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.5, delay: 0.7 }}
                     >
-                      <SelectTrigger>
-                        <SelectValue placeholder="اختر الإطار الزمني المطلوب" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="urgent">عاجل (3-5 أيام)</SelectItem>
-                        <SelectItem value="standard">عادي (1-2 أسبوع)</SelectItem>
-                        <SelectItem value="extended">ممتد (3-4 أسابيع)</SelectItem>
-                        <SelectItem value="flexible">مرن (حسب المتاح)</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-                  
-                  <div>
-                    <Label htmlFor="additionalNotes">ملاحظات إضافية</Label>
-                    <Textarea
-                      id="additionalNotes"
-                      value={newContract.additionalNotes}
-                      onChange={(e) => setNewContract(prev => ({...prev, additionalNotes: e.target.value}))}
-                      placeholder="أي تفاصيل إضافية أو متطلبات خاصة..."
-                      rows={4}
-                    />
-                  </div>
-                </CardContent>
-              </Card>
+                      <Label htmlFor="clientAddress" className="text-sm font-medium text-gray-700 mb-2 block">
+                        العنوان (اختياري)
+                      </Label>
+                      <Textarea
+                        id="clientAddress"
+                        value={newContract.clientAddress}
+                        onChange={(e) => setNewContract(prev => ({...prev, clientAddress: e.target.value}))}
+                        placeholder="العنوان الكامل"
+                        rows={3}
+                        className="text-base border-2 border-gray-200 focus:border-blue-400 focus:ring-4 focus:ring-blue-100 transition-all duration-300"
+                      />
+                    </motion.div>
+                  </CardContent>
+                </Card>
+              </motion.div>
 
-              {/* الشروط والأحكام */}
-              <Card>
-                <CardContent className="p-6">
-                  <div className="flex items-start gap-3">
-                    <Checkbox
-                      checked={newContract.agreedTerms}
-                      onCheckedChange={(checked) => setNewContract(prev => ({...prev, agreedTerms: !!checked}))}
-                      className="mt-1"
-                    />
-                    <div className="text-sm">
-                      <p className="font-medium mb-2">الموافقة على الشروط والأحكام *</p>
-                      <p className="text-muted-foreground">
-                        بالنقر على "إرسال طلب العقد"، أوافق على شروط وأحكام الخدمة وسياسة الخصوصية.
-                        أتفهم أن الأسعار النهائية ستكون كما هو محدد في الفاتورة المرفقة مع العقد النهائي.
-                        سيتم التواصل معي من قبل فريق الإدارة لتأكيد التفاصيل وإرسال العقد النهائي.
-                      </p>
+              <motion.div
+                initial={{ opacity: 0, x: 20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.6, delay: 0.8 }}
+              >
+                <Card className="border-2 border-green-100 hover:border-green-200 transition-all duration-300 shadow-lg">
+                  <CardHeader className="bg-gradient-to-r from-green-50 to-emerald-50 rounded-t-lg">
+                    <CardTitle className="flex items-center gap-3 text-xl text-green-800">
+                      <div className="p-2 rounded-lg bg-green-100">
+                        <Package className="h-6 w-6 text-green-600" />
+                      </div>
+                      اختيار الخدمات *
+                    </CardTitle>
+                    <CardDescription className="mt-2 text-green-600 text-base">
+                      اختر الخدمات التي تحتاج إليها من القائمة أدناه
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent className="p-6">
+                    {isServicesLoading ? (
+                      <motion.div 
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        className="text-center py-16"
+                      >
+                        <div className="animate-spin rounded-full h-16 w-16 border-b-4 border-blue-500 mx-auto mb-6"></div>
+                        <p className="text-gray-500 text-lg">جاري تحميل الخدمات...</p>
+                      </motion.div>
+                    ) : services.length === 0 ? (
+                      <motion.div 
+                        initial={{ opacity: 0, scale: 0.9 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        className="text-center py-16"
+                      >
+                        <Package className="h-20 w-20 mx-auto mb-6 text-gray-300" />
+                        <p className="text-xl text-gray-500">لا توجد خدمات متاحة حالياً</p>
+                      </motion.div>
+                    ) : (
+                      <motion.div 
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        transition={{ duration: 0.5, delay: 1 }}
+                        className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+                      >
+                        {services.map((service, index) => (
+                          <motion.div
+                            key={service.id}
+                            initial={{ opacity: 0, y: 30 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ duration: 0.4, delay: 1.1 + (index * 0.1) }}
+                            whileHover={{ y: -5, scale: 1.02 }}
+                            whileTap={{ scale: 0.98 }}
+                          >
+                            <Card 
+                              className={`cursor-pointer h-full transition-all duration-300 border-2 ${
+                                newContract.selectedServices.includes(service.id) 
+                                  ? 'border-blue-400 bg-blue-50 shadow-xl ring-4 ring-blue-100' 
+                                  : 'border-gray-200 hover:border-blue-300 hover:shadow-lg'
+                              }`}
+                              onClick={() => handleServiceToggle(service.id)}
+                            >
+                              <CardContent className="p-5">
+                                <div className="flex items-start gap-4">
+                                  <Checkbox
+                                    checked={newContract.selectedServices.includes(service.id)}
+                                    className="mt-1 h-5 w-5"
+                                  />
+                                  <div className="flex-1">
+                                    <div className="flex items-center gap-3 mb-3">
+                                      <div className="p-2 rounded-lg bg-blue-100">
+                                        {getServiceIcon(service.category_id)}
+                                      </div>
+                                      <h3 className="font-bold text-gray-900 text-lg leading-tight">
+                                        {service.name_ar}
+                                      </h3>
+                                    </div>
+                                    <p className="text-gray-600 leading-relaxed text-sm">
+                                      {service.description_ar}
+                                    </p>
+                                  </div>
+                                </div>
+                              </CardContent>
+                            </Card>
+                          </motion.div>
+                        ))}
+                      </motion.div>
+                    )}
+                  </CardContent>
+                </Card>
+              </motion.div>
+
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 1.2 }}
+              >
+                <Card className="border-2 border-purple-100 hover:border-purple-200 transition-all duration-300 shadow-lg">
+                  <CardHeader className="bg-gradient-to-r from-purple-50 to-pink-50 rounded-t-lg">
+                    <CardTitle className="text-xl text-purple-800">تفاصيل إضافية</CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-6 p-6">
+                    <div>
+                      <Label htmlFor="deliveryTimeframe" className="text-sm font-medium text-gray-700 mb-2 block">
+                        الإطار الزمني المطلوب
+                      </Label>
+                      <Select 
+                        value={newContract.deliveryTimeframe} 
+                        onValueChange={(value) => setNewContract(prev => ({...prev, deliveryTimeframe: value}))}
+                      >
+                        <SelectTrigger className="h-12 text-base border-2 border-gray-200 focus:border-purple-400">
+                          <SelectValue placeholder="اختر الإطار الزمني المطلوب" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="urgent">عاجل (3-5 أيام)</SelectItem>
+                          <SelectItem value="standard">عادي (1-2 أسبوع)</SelectItem>
+                          <SelectItem value="extended">ممتد (3-4 أسابيع)</SelectItem>
+                          <SelectItem value="flexible">مرن (حسب المتاح)</SelectItem>
+                        </SelectContent>
+                      </Select>
                     </div>
-                  </div>
-                </CardContent>
-              </Card>
+                    
+                    <div>
+                      <Label htmlFor="additionalNotes" className="text-sm font-medium text-gray-700 mb-2 block">
+                        ملاحظات إضافية
+                      </Label>
+                      <Textarea
+                        id="additionalNotes"
+                        value={newContract.additionalNotes}
+                        onChange={(e) => setNewContract(prev => ({...prev, additionalNotes: e.target.value}))}
+                        placeholder="أي تفاصيل إضافية أو متطلبات خاصة..."
+                        rows={4}
+                        className="text-base border-2 border-gray-200 focus:border-purple-400 focus:ring-4 focus:ring-purple-100 transition-all duration-300"
+                      />
+                    </div>
+                  </CardContent>
+                </Card>
+              </motion.div>
 
-              {/* أزرار الإجراءات */}
-              <div className="flex gap-4 pt-4">
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 1.3 }}
+              >
+                <Card className="border-2 border-gray-200 bg-gray-50/50">
+                  <CardContent className="p-6">
+                    <div className="flex items-start gap-4">
+                      <Checkbox
+                        checked={newContract.agreedTerms}
+                        onCheckedChange={(checked) => setNewContract(prev => ({...prev, agreedTerms: !!checked}))}
+                        className="mt-1 h-5 w-5"
+                      />
+                      <div className="text-base">
+                        <p className="font-bold mb-3 text-gray-900">الموافقة على الشروط والأحكام *</p>
+                        <p className="text-gray-700 leading-relaxed">
+                          بالنقر على "إرسال طلب العقد"، أوافق على شروط وأحكام الخدمة وسياسة الخصوصية.
+                          أتفهم أن الأسعار النهائية ستكون كما هو محدد في الفاتورة المرفقة مع العقد النهائي.
+                          سيتم التواصل معي من قبل فريق الإدارة لتأكيد التفاصيل وإرسال العقد النهائي.
+                        </p>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              </motion.div>
+
+              <motion.div 
+                initial={{ opacity: 0, y: 30 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 1.4 }}
+                className="flex gap-6 pt-6"
+              >
                 <Button 
                   onClick={handleCreateContract}
                   disabled={isCreatingContract || newContract.selectedServices.length === 0 || !newContract.agreedTerms}
-                  className="flex-1"
+                  className="flex-1 h-14 text-lg font-bold bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 transition-all duration-300 transform hover:scale-[1.02] shadow-lg"
+                  size="lg"
                 >
                   {isCreatingContract ? (
-                    <>
-                      <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                    <div className="flex items-center gap-3">
+                      <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-white"></div>
                       جاري الإرسال...
-                    </>
+                    </div>
                   ) : (
-                    <>
-                      <Send className="h-4 w-4 mr-2" />
+                    <div className="flex items-center gap-3">
+                      <Send className="h-5 w-5" />
                       إرسال طلب العقد
-                    </>
+                    </div>
                   )}
                 </Button>
                 
@@ -469,10 +517,12 @@ const ContractManagement = () => {
                   onClick={resetNewContract}
                   variant="outline"
                   disabled={isCreatingContract}
+                  className="px-8 h-14 text-lg border-2 border-gray-300 hover:bg-gray-50 transition-all duration-300 transform hover:scale-[1.02]"
+                  size="lg"
                 >
                   إعادة تعيين
                 </Button>
-              </div>
+              </motion.div>
             </CardContent>
           </Card>
         </div>
