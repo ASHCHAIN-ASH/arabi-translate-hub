@@ -110,6 +110,7 @@ import LicenseRequest from "./pages/LicenseRequest";
 import Careers from "./pages/Careers";
 import ContactUs from "./pages/ContactUs";
 import Footer from "./components/Footer";
+import ChatBot from "./components/ChatBot";
 
 const queryClient = new QueryClient();
 
@@ -314,6 +315,7 @@ const App = () => (
             <Route path="*" element={<NotFound />} />
           </Routes>
           <Footer />
+          <ChatBot />
           </PageThemeProvider>
         </SimpleAuthProvider>
       </BrowserRouter>
