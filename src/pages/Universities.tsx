@@ -9,6 +9,17 @@ import kauLogo from "@/assets/universities/kau-logo.png";
 import kfupmLogo from "@/assets/universities/kfupm-logo.png";
 import harvardLogo from "@/assets/universities/harvard-logo.png";
 import mitLogo from "@/assets/universities/mit-logo.png";
+import uquLogo from "@/assets/universities/uqu-logo.png";
+import iuLogo from "@/assets/universities/iu-logo.png";
+import imamuLogo from "@/assets/universities/imamu-logo.png";
+import psuLogo from "@/assets/universities/psu-logo.png";
+import effatLogo from "@/assets/universities/effat-logo.png";
+import alfaisalLogo from "@/assets/universities/alfaisal-logo.png";
+import kuwaitLogo from "@/assets/universities/kuwait-logo.png";
+import uaeuLogo from "@/assets/universities/uaeu-logo.png";
+import quLogo from "@/assets/universities/qu-logo.png";
+import stanfordLogo from "@/assets/universities/stanford-logo.png";
+import oxfordLogo from "@/assets/universities/oxford-logo.png";
 import { memo, useState } from "react";
 
 // University card component with performance optimizations
@@ -231,7 +242,7 @@ const Universities = () => {
     {
       name: "جامعة أم القرى",
       nameEn: "Umm Al-Qura University",
-      logo: universityPlaceholder,
+      logo: uquLogo,
       website: "https://uqu.edu.sa",
       city: "مكة المكرمة",
       established: "1981",
@@ -244,7 +255,7 @@ const Universities = () => {
     {
       name: "الجامعة الإسلامية بالمدينة المنورة",
       nameEn: "Islamic University of Madinah",
-      logo: universityPlaceholder,
+      logo: iuLogo,
       website: "https://www.iu.edu.sa",
       city: "المدينة المنورة",
       established: "1961",
@@ -257,7 +268,7 @@ const Universities = () => {
     {
       name: "جامعة الإمام محمد بن سعود الإسلامية",
       nameEn: "Imam Mohammad Ibn Saud Islamic University",
-      logo: universityPlaceholder,
+      logo: imamuLogo,
       website: "https://imamu.edu.sa",
       city: "الرياض",
       established: "1953",
@@ -273,7 +284,7 @@ const Universities = () => {
     {
       name: "جامعة الأمير سلطان",
       nameEn: "Prince Sultan University",
-      logo: universityPlaceholder,
+      logo: psuLogo,
       website: "https://www.psu.edu.sa",
       city: "الرياض",
       established: "1999",
@@ -285,7 +296,7 @@ const Universities = () => {
     {
       name: "جامعة عفت",
       nameEn: "Effat University",
-      logo: universityPlaceholder,
+      logo: effatLogo,
       website: "https://www.effatuniversity.edu.sa",
       city: "جدة",
       established: "1999",
@@ -297,7 +308,7 @@ const Universities = () => {
     {
       name: "جامعة الفيصل",
       nameEn: "Alfaisal University",
-      logo: universityPlaceholder,
+      logo: alfaisalLogo,
       website: "https://www.alfaisal.edu",
       city: "الرياض",
       established: "2002",
@@ -312,7 +323,7 @@ const Universities = () => {
     {
       name: "جامعة الكويت",
       nameEn: "Kuwait University",
-      logo: universityPlaceholder,
+      logo: kuwaitLogo,
       website: "https://www.ku.edu.kw",
       city: "الكويت",
       country: "الكويت",
@@ -323,7 +334,7 @@ const Universities = () => {
     {
       name: "جامعة الإمارات العربية المتحدة",
       nameEn: "United Arab Emirates University",
-      logo: universityPlaceholder,
+      logo: uaeuLogo,
       website: "https://www.uaeu.ac.ae",
       city: "العين",
       country: "الإمارات",
@@ -334,7 +345,7 @@ const Universities = () => {
     {
       name: "جامعة قطر",
       nameEn: "Qatar University",
-      logo: universityPlaceholder,
+      logo: quLogo,
       website: "https://www.qu.edu.qa",
       city: "الدوحة",
       country: "قطر",
@@ -372,7 +383,7 @@ const Universities = () => {
     {
       name: "جامعة ستانفورد",
       nameEn: "Stanford University",
-      logo: universityPlaceholder,
+      logo: stanfordLogo,
       website: "https://www.stanford.edu",
       city: "ستانفورد",
       country: "الولايات المتحدة",
@@ -384,7 +395,7 @@ const Universities = () => {
     {
       name: "جامعة أكسفورد",
       nameEn: "University of Oxford",
-      logo: universityPlaceholder,
+      logo: oxfordLogo,
       website: "https://www.ox.ac.uk",
       city: "أكسفورد",
       country: "المملكة المتحدة",
