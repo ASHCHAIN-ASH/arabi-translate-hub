@@ -112,6 +112,7 @@ import ContactUs from "./pages/ContactUs";
 import PaymentMethods from "./pages/PaymentMethods";
 import Universities from "./pages/Universities";
 import JournalsDirectory from "./pages/JournalsDirectory";
+import ContractManagement from "./pages/ContractManagement";
 import Footer from "./components/Footer";
 import ChatBot from "./components/ChatBot";
 
@@ -158,6 +159,7 @@ const App = () => (
             <Route path="/payment-methods" element={<PaymentMethods />} />
             <Route path="/universities" element={<Universities />} />
             <Route path="/journals" element={<JournalsDirectory />} />
+            <Route path="/contract-management" element={<ContractManagement />} />
             <Route path="/careers" element={<Careers />} />
             <Route path="/contact" element={<ContactUs />} />
             <Route path="/contact-us" element={<ContactUs />} />
