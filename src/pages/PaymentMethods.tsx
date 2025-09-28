@@ -484,6 +484,116 @@ const PaymentMethods = () => {
         </div>
       </section>
 
+      {/* Payment Policy */}
+      <section className="py-16 md:py-24 bg-gradient-to-br from-red-50 to-orange-50">
+        <div className="container mx-auto px-4">
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+            viewport={{ once: true }}
+            className="max-w-4xl mx-auto"
+          >
+            <div className="text-center mb-12">
+              <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-red-500 to-red-600 rounded-full mb-6">
+                <AlertCircle className="h-8 w-8 text-white" />
+              </div>
+              <h2 className="text-3xl md:text-4xl font-bold mb-4 text-red-800">سياسة الدفع الرسمية</h2>
+              <p className="text-lg text-red-700 font-semibold">يرجى قراءة هذه السياسة بعناية قبل إجراء أي معاملة مالية</p>
+            </div>
+
+            <div className="space-y-6">
+              {/* Main Policy Card */}
+              <Card className="p-8 border-4 border-red-200 bg-white shadow-lg">
+                <div className="flex items-start gap-4">
+                  <div className="flex-shrink-0">
+                    <Building2 className="h-8 w-8 text-red-600" />
+                  </div>
+                  <div>
+                    <h3 className="font-bold text-2xl text-red-900 mb-4">الحساب البنكي الرسمي الموحد</h3>
+                    <p className="text-lg text-red-800 leading-relaxed mb-4">
+                      <strong>جميع التحويلات المالية يجب أن تتم حصرياً عن طريق حساب الشركة البنكي الرسمي الموحد فقط.</strong>
+                    </p>
+                    <div className="bg-red-100 border-2 border-red-300 rounded-lg p-4 mb-4">
+                      <p className="text-red-800 font-semibold">
+                        هذا هو الحساب الوحيد المعتمد لجميع التعاملات المالية مع شركتنا.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </Card>
+
+              {/* Warning Card */}
+              <Card className="p-8 border-4 border-orange-200 bg-orange-50 shadow-lg">
+                <div className="flex items-start gap-4">
+                  <div className="flex-shrink-0">
+                    <AlertCircle className="h-8 w-8 text-orange-600" />
+                  </div>
+                  <div>
+                    <h3 className="font-bold text-2xl text-orange-900 mb-4">تحذير صارم</h3>
+                    <div className="space-y-3">
+                      <p className="text-lg text-orange-800 leading-relaxed">
+                        <strong>نحن غير ملتزمين بأي طلب تحويل يتم عن طريق:</strong>
+                      </p>
+                      <ul className="space-y-2 text-orange-800">
+                        <li className="flex items-center">
+                          <div className="w-3 h-3 bg-orange-500 rounded-full mr-3"></div>
+                          حسابات شخصية لأي من الموظفين
+                        </li>
+                        <li className="flex items-center">
+                          <div className="w-3 h-3 bg-orange-500 rounded-full mr-3"></div>
+                          حسابات بنكية غير تابعة للشركة رسمياً
+                        </li>
+                        <li className="flex items-center">
+                          <div className="w-3 h-3 bg-orange-500 rounded-full mr-3"></div>
+                          أي طريقة دفع خارج النظام الرسمي
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+              </Card>
+
+              {/* Protection Notice */}
+              <Card className="p-8 border-4 border-blue-200 bg-blue-50 shadow-lg">
+                <div className="flex items-start gap-4">
+                  <div className="flex-shrink-0">
+                    <Shield className="h-8 w-8 text-blue-600" />
+                  </div>
+                  <div>
+                    <h3 className="font-bold text-2xl text-blue-900 mb-4">حماية العملاء</h3>
+                    <p className="text-lg text-blue-800 leading-relaxed">
+                      هذه السياسة وضعت لحمايتكم من الاحتيال والتأكد من وصول أموالكم للحساب الصحيح. 
+                      أي تحويل خارج هذا النظام قد يعرضكم لفقدان الأموال دون إمكانية استردادها.
+                    </p>
+                  </div>
+                </div>
+              </Card>
+
+              {/* Contact Info */}
+              <Card className="p-8 border-4 border-green-200 bg-green-50 shadow-lg">
+                <div className="flex items-start gap-4">
+                  <div className="flex-shrink-0">
+                    <Smartphone className="h-8 w-8 text-green-600" />
+                  </div>
+                  <div>
+                    <h3 className="font-bold text-2xl text-green-900 mb-4">للتأكد والاستفسار</h3>
+                    <p className="text-lg text-green-800 leading-relaxed mb-4">
+                      قبل إجراء أي تحويل، يرجى التواصل معنا للحصول على تفاصيل الحساب البنكي الرسمي الصحيح.
+                    </p>
+                    <div className="bg-green-100 border-2 border-green-300 rounded-lg p-4">
+                      <p className="text-green-800 font-semibold text-center">
+                        📱 واتساب: +9660500776343
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </Card>
+            </div>
+          </motion.div>
+        </div>
+      </section>
+
       {/* Important Notes */}
       <section className="py-16 md:py-24">
         <div className="container mx-auto px-4">
