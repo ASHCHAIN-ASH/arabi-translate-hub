@@ -24,7 +24,8 @@ import {
   Trophy,
   Search,
   Crown,
-  GraduationCap
+  GraduationCap,
+  Calculator
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -101,7 +102,7 @@ const Footer = () => {
       {/* Main Footer Content */}
       <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-16">
         {/* Main Footer Content */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-6 lg:gap-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-7 gap-6 lg:gap-8">
           
           {/* معلومات الشركة */}
           <motion.div 
@@ -262,6 +263,37 @@ const Footer = () => {
                      className="text-white/70 hover:text-white transition-colors text-sm md:text-base flex items-center gap-2 hover:translate-x-1 transition-transform duration-200"
                    >
                      <link.icon className="h-3 w-3 md:h-4 md:w-4 text-orange-400" />
+                     {link.name}
+                   </a>
+                 </li>
+               ))}
+             </ul>
+           </motion.div>
+
+           {/* الإدارة المالية */}
+           <motion.div 
+             initial={{ opacity: 0, y: 20 }}
+             whileInView={{ opacity: 1, y: 0 }}
+             transition={{ delay: 0.3, duration: 0.5 }}
+             className="space-y-4 md:space-y-6"
+           >
+             <h4 className="text-base md:text-lg font-bold text-white flex items-center gap-2">
+               <Calculator className="h-4 w-4 md:h-5 md:w-5 text-emerald-400" />
+               الإدارة المالية
+             </h4>
+             <ul className="space-y-2 md:space-y-3">
+               {[
+                 { name: 'لوحة المحاسبة', href: '/admin/accounting-dashboard', icon: Calculator },
+                 { name: 'الفواتير', href: '/admin/admin-invoices', icon: DollarSign },
+                 { name: 'المعاملات المالية', href: '/admin/admin-transactions', icon: TrendingUp },
+                 { name: 'التقارير المالية', href: '/admin/accounting-dashboard#reports', icon: Award }
+               ].map((link) => (
+                 <li key={link.name}>
+                   <a 
+                     href={link.href} 
+                     className="text-white/70 hover:text-white transition-colors text-sm md:text-base flex items-center gap-2 hover:translate-x-1 transition-transform duration-200"
+                   >
+                     <link.icon className="h-3 w-3 md:h-4 md:w-4 text-emerald-400" />
                      {link.name}
                    </a>
                  </li>
