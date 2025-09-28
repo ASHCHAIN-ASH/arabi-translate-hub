@@ -4,31 +4,15 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Badge } from '@/components/ui/badge';
 import { Textarea } from '@/components/ui/textarea';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { toast } from 'sonner';
 import { supabase } from '@/integrations/supabase/client';
 import { 
   FileText, 
-  Search, 
   Plus, 
-  Eye, 
-  Edit, 
-  Download,
-  Filter,
-  Calendar,
-  User,
-  DollarSign,
-  Clock,
-  CheckCircle,
-  XCircle,
-  AlertCircle,
   Send,
-  Mail,
   Package,
   Globe,
   BookOpen,
@@ -39,9 +23,9 @@ import {
   Building,
   Phone,
   MapPin,
-  Users
+  User,
+  AlertTriangle
 } from 'lucide-react';
-import { Contract, ContractStatus, ServiceType } from '@/types/contract';
 import Header from '@/components/Header';
 
 interface Service {
@@ -66,16 +50,9 @@ interface NewContract {
 }
 
 const ContractManagement = () => {
-  const [contracts, setContracts] = useState<any[]>([]);
-  const [filteredContracts, setFilteredContracts] = useState<any[]>([]);
   const [services, setServices] = useState<Service[]>([]);
-  const [searchTerm, setSearchTerm] = useState('');
-  const [statusFilter, setStatusFilter] = useState<string>('all');
-  const [isLoading, setIsLoading] = useState(true);
   const [isServicesLoading, setIsServicesLoading] = useState(false);
-  const [selectedContract, setSelectedContract] = useState<any>(null);
   const [isCreatingContract, setIsCreatingContract] = useState(false);
-  const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [newContract, setNewContract] = useState<NewContract>({
     clientName: '',
     clientEmail: '',
@@ -88,34 +65,10 @@ const ContractManagement = () => {
     agreedTerms: false
   });
 
-  // تحميل العقود والخدمات عند بداية التحميل
+  // تحميل الخدمات عند بداية التحميل
   useEffect(() => {
-    loadContracts();
     loadServices();
   }, []);
-
-  // تطبيق الفلاتر
-  useEffect(() => {
-    filterContracts();
-  }, [contracts, searchTerm, statusFilter]);
-
-  const loadContracts = async () => {
-    try {
-      setIsLoading(true);
-      const { data, error } = await supabase
-        .from('contracts')
-        .select('*')
-        .order('created_at', { ascending: false });
-
-      if (error) throw error;
-      setContracts(data || []);
-    } catch (error) {
-      console.error('Error loading contracts:', error);
-      toast.error('خطأ في تحميل العقود');
-    } finally {
-      setIsLoading(false);
-    }
-  };
 
   const loadServices = async () => {
     try {
@@ -135,24 +88,6 @@ const ContractManagement = () => {
     } finally {
       setIsServicesLoading(false);
     }
-  };
-
-  const filterContracts = () => {
-    let filtered = contracts;
-
-    if (searchTerm.trim()) {
-      filtered = filtered.filter(contract => 
-        contract.client_name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        contract.client_email?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        contract.contract_number?.toLowerCase().includes(searchTerm.toLowerCase())
-      );
-    }
-
-    if (statusFilter !== 'all') {
-      filtered = filtered.filter(contract => contract.status === statusFilter);
-    }
-
-    setFilteredContracts(filtered);
   };
 
   const handleServiceToggle = (serviceId: string) => {
@@ -222,17 +157,15 @@ const ContractManagement = () => {
 
       if (error) throw error;
 
-      // إرسال إشعارات بالإيميل
+      // إرسال إشعارات بالإيميل والواتساب للإدارة
       await sendContractNotifications(data);
 
-      toast.success('تم إنشاء العقد بنجاح وإرسال الإشعارات');
-      setIsDialogOpen(false);
+      toast.success('تم إرسال طلب العقد بنجاح للإدارة! سيتم التواصل معكم قريباً');
       resetNewContract();
-      loadContracts();
 
     } catch (error) {
       console.error('Error creating contract:', error);
-      toast.error('خطأ في إنشاء العقد');
+      toast.error('خطأ في إرسال طلب العقد');
     } finally {
       setIsCreatingContract(false);
     }
@@ -261,29 +194,6 @@ const ContractManagement = () => {
     }
   };
 
-  const downloadContractPDF = async (contractId: string) => {
-    try {
-      const { data, error } = await supabase.functions.invoke('generate-contract-pdf', {
-        body: { contract_id: contractId }
-      });
-
-      if (error) throw error;
-
-      // تحميل ملف PDF
-      const link = document.createElement('a');
-      link.href = data.pdf_url;
-      link.download = `contract-${contractId}.pdf`;
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-
-      toast.success('تم تحميل العقد بنجاح');
-    } catch (error) {
-      console.error('Error downloading contract:', error);
-      toast.error('خطأ في تحميل العقد');
-    }
-  };
-
   const resetNewContract = () => {
     setNewContract({
       clientName: '',
@@ -298,54 +208,20 @@ const ContractManagement = () => {
     });
   };
 
-  const getStatusColor = (status: string) => {
-    const colors: Record<string, string> = {
-      draft: 'bg-gray-100 text-gray-800',
-      sent: 'bg-blue-100 text-blue-800',
-      reviewed: 'bg-purple-100 text-purple-800',
-      approved: 'bg-green-100 text-green-800',
-      signed: 'bg-emerald-100 text-emerald-800',
-      active: 'bg-cyan-100 text-cyan-800',
-      completed: 'bg-indigo-100 text-indigo-800',
-      cancelled: 'bg-red-100 text-red-800'
+  const getServiceIcon = (categoryId: string) => {
+    const icons: Record<string, any> = {
+      'translation': Globe,
+      'legal': Briefcase,
+      'medical': Heart,
+      'technical': Zap,
+      'academic': BookOpen,
+      'business': Building,
+      'default': Package
     };
-    return colors[status] || 'bg-gray-100 text-gray-800';
+    
+    const IconComponent = icons[categoryId] || icons.default;
+    return <IconComponent className="h-5 w-5" />;
   };
-
-  const getStatusLabel = (status: string) => {
-    const labels: Record<string, string> = {
-      draft: 'مسودة',
-      sent: 'مرسل',
-      reviewed: 'تمت المراجعة',
-      approved: 'موافق عليه',
-      signed: 'موقع',
-      active: 'نشط',
-      completed: 'مكتمل',
-      cancelled: 'ملغي'
-    };
-    return labels[status] || status;
-  };
-
-  const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('ar-SA', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric'
-    });
-  };
-
-  const getContractStats = () => {
-    const stats = {
-      total: contracts.length,
-      pending: contracts.filter(c => ['draft', 'sent', 'reviewed'].includes(c.status)).length,
-      approved: contracts.filter(c => c.status === 'approved').length,
-      active: contracts.filter(c => c.status === 'active').length,
-      completed: contracts.filter(c => c.status === 'completed').length
-    };
-    return stats;
-  };
-
-  const stats = getContractStats();
 
   return (
     <div className="min-h-screen bg-background">
@@ -360,448 +236,245 @@ const ContractManagement = () => {
             className="text-center mb-8"
           >
             <h1 className="text-4xl font-bold mb-4">
-              إدارة <span className="text-gradient bg-gradient-primary bg-clip-text text-transparent">العقود</span>
+              طلب <span className="text-gradient bg-gradient-primary bg-clip-text text-transparent">عقد جديد</span>
             </h1>
             <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-              نظام شامل لإدارة العقود الإلكترونية وموافقات العملاء على جميع الخدمات
+              اختر الخدمات التي تحتاجها وأرسل طلب العقد للإدارة
             </p>
           </motion.div>
-
-          {/* Statistics Cards */}
-          <div className="grid grid-cols-1 md:grid-cols-5 gap-4 mb-8">
-            <Card>
-              <CardContent className="p-4 text-center">
-                <FileText className="h-8 w-8 mx-auto mb-2 text-primary" />
-                <div className="text-2xl font-bold">{stats.total}</div>
-                <div className="text-sm text-muted-foreground">إجمالي العقود</div>
-              </CardContent>
-            </Card>
-            <Card>
-              <CardContent className="p-4 text-center">
-                <Clock className="h-8 w-8 mx-auto mb-2 text-orange-600" />
-                <div className="text-2xl font-bold">{stats.pending}</div>
-                <div className="text-sm text-muted-foreground">في الانتظار</div>
-              </CardContent>
-            </Card>
-            <Card>
-              <CardContent className="p-4 text-center">
-                <CheckCircle className="h-8 w-8 mx-auto mb-2 text-green-600" />
-                <div className="text-2xl font-bold">{stats.approved}</div>
-                <div className="text-sm text-muted-foreground">موافق عليها</div>
-              </CardContent>
-            </Card>
-            <Card>
-              <CardContent className="p-4 text-center">
-                <AlertCircle className="h-8 w-8 mx-auto mb-2 text-blue-600" />
-                <div className="text-2xl font-bold">{stats.active}</div>
-                <div className="text-sm text-muted-foreground">نشطة</div>
-              </CardContent>
-            </Card>
-            <Card>
-              <CardContent className="p-4 text-center">
-                <XCircle className="h-8 w-8 mx-auto mb-2 text-purple-600" />
-                <div className="text-2xl font-bold">{stats.completed}</div>
-                <div className="text-sm text-muted-foreground">مكتملة</div>
-              </CardContent>
-            </Card>
-          </div>
         </div>
 
-        {/* Filters and Search */}
-        <Card className="mb-6">
-          <CardContent className="p-6">
-            <div className="flex flex-col md:flex-row gap-4 items-center">
-              <div className="flex-1 relative">
-                <Search className="absolute right-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
-                <Input
-                  placeholder="البحث في العقود..."
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  className="pr-10"
-                />
+        {/* Contract Creation Form */}
+        <div className="max-w-4xl mx-auto">
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-2xl">إنشاء عقد جديد - التعاقد على الخدمات</CardTitle>
+              <CardDescription>
+                املأ النموذج أدناه لإرسال طلب العقد للإدارة
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-6">
+              {/* تنبيه مهم */}
+              <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
+                <div className="flex items-start gap-3">
+                  <AlertTriangle className="h-5 w-5 text-yellow-600 mt-0.5" />
+                  <div>
+                    <h3 className="font-semibold text-yellow-800 mb-1">تنبيه مهم</h3>
+                    <p className="text-yellow-700 text-sm">
+                      الأسعار المذكورة في هذا النموذج هي أسعار تقديرية فقط. الأسعار النهائية المعتمدة ستكون واردة في الفاتورة المرفقة مع العقد النهائي.
+                    </p>
+                  </div>
+                </div>
               </div>
-              
-              <Select value={statusFilter} onValueChange={(value) => setStatusFilter(value)}>
-                <SelectTrigger className="w-full md:w-48">
-                  <SelectValue placeholder="فلترة حسب الحالة" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">جميع الأحوال</SelectItem>
-                  <SelectItem value="draft">مسودة</SelectItem>
-                  <SelectItem value="sent">مرسل</SelectItem>
-                  <SelectItem value="reviewed">تمت المراجعة</SelectItem>
-                  <SelectItem value="approved">موافق عليه</SelectItem>
-                  <SelectItem value="signed">موقع</SelectItem>
-                  <SelectItem value="active">نشط</SelectItem>
-                  <SelectItem value="completed">مكتمل</SelectItem>
-                  <SelectItem value="cancelled">ملغي</SelectItem>
-                </SelectContent>
-              </Select>
 
-              <Button onClick={loadContracts} variant="outline">
-                <Filter className="h-4 w-4 mr-2" />
-                تحديث
-              </Button>
-
-              <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-                <DialogTrigger asChild>
-                  <Button>
-                    <Plus className="h-4 w-4 mr-2" />
-                    عقد جديد
-                  </Button>
-                </DialogTrigger>
-                <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
-                  <DialogHeader>
-                    <DialogTitle className="text-xl font-bold">إنشاء عقد جديد - التعاقد على الخدمات</DialogTitle>
-                  </DialogHeader>
-                  
-                  <div className="space-y-6 p-4">
-                    {/* معلومات العميل */}
-                    <Card>
-                      <CardHeader>
-                        <CardTitle className="flex items-center gap-2">
-                          <User className="h-5 w-5" />
-                          معلومات العميل
-                        </CardTitle>
-                      </CardHeader>
-                      <CardContent className="space-y-4">
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                          <div>
-                            <Label htmlFor="clientName">الاسم الكامل *</Label>
-                            <Input
-                              id="clientName"
-                              value={newContract.clientName}
-                              onChange={(e) => setNewContract(prev => ({...prev, clientName: e.target.value}))}
-                              placeholder="اسم العميل الكامل"
-                            />
-                          </div>
-                          <div>
-                            <Label htmlFor="clientEmail">البريد الإلكتروني *</Label>
-                            <Input
-                              id="clientEmail"
-                              type="email"
-                              value={newContract.clientEmail}
-                              onChange={(e) => setNewContract(prev => ({...prev, clientEmail: e.target.value}))}
-                              placeholder="example@email.com"
-                            />
-                          </div>
-                          <div>
-                            <Label htmlFor="clientPhone">رقم الهاتف *</Label>
-                            <Input
-                              id="clientPhone"
-                              value={newContract.clientPhone}
-                              onChange={(e) => setNewContract(prev => ({...prev, clientPhone: e.target.value}))}
-                              placeholder="05xxxxxxxx"
-                            />
-                          </div>
-                          <div>
-                            <Label htmlFor="clientCompany">الشركة/المؤسسة</Label>
-                            <Input
-                              id="clientCompany"
-                              value={newContract.clientCompany}
-                              onChange={(e) => setNewContract(prev => ({...prev, clientCompany: e.target.value}))}
-                              placeholder="اسم الشركة (اختياري)"
-                            />
-                          </div>
-                        </div>
-                        <div>
-                          <Label htmlFor="clientAddress">العنوان</Label>
-                          <Textarea
-                            id="clientAddress"
-                            value={newContract.clientAddress}
-                            onChange={(e) => setNewContract(prev => ({...prev, clientAddress: e.target.value}))}
-                            placeholder="العنوان الكامل (اختياري)"
-                            rows={2}
-                          />
-                        </div>
-                      </CardContent>
-                    </Card>
-
-                    {/* اختيار الخدمات */}
-                    <Card>
-                      <CardHeader>
-                        <CardTitle className="flex items-center gap-2">
-                          <Package className="h-5 w-5" />
-                          اختيار الخدمات
-                        </CardTitle>
-                        <CardDescription>
-                          اختر الخدمات المطلوبة للتعاقد عليها (يمكن اختيار أكثر من خدمة)
-                        </CardDescription>
-                      </CardHeader>
-                      <CardContent>
-                        {isServicesLoading ? (
-                          <div className="text-center py-8">
-                            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-2"></div>
-                            <p>جاري تحميل الخدمات...</p>
-                          </div>
-                        ) : (
-                          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            {services.map((service) => (
-                              <Card
-                                key={service.id}
-                                className={`cursor-pointer transition-all duration-200 ${
-                                  newContract.selectedServices.includes(service.id)
-                                    ? 'ring-2 ring-primary bg-primary/5'
-                                    : 'hover:shadow-md'
-                                }`}
-                                onClick={() => handleServiceToggle(service.id)}
-                              >
-                                <CardContent className="p-4">
-                                  <div className="flex items-start space-x-3 space-x-reverse">
-                                    <Checkbox
-                                      checked={newContract.selectedServices.includes(service.id)}
-                                      onChange={() => handleServiceToggle(service.id)}
-                                    />
-                                    <div className="flex-1 min-w-0">
-                                      <h3 className="font-semibold text-sm">{service.name_ar}</h3>
-                                      <p className="text-xs text-muted-foreground mt-1 line-clamp-2">
-                                        {service.description_ar}
-                                      </p>
-                                      <Badge variant="outline" className="mt-2 text-xs">
-                                        {service.category_id}
-                                      </Badge>
-                                    </div>
-                                  </div>
-                                </CardContent>
-                              </Card>
-                            ))}
-                          </div>
-                        )}
-                      </CardContent>
-                    </Card>
-
-                    {/* تفاصيل إضافية */}
-                    <Card>
-                      <CardHeader>
-                        <CardTitle className="flex items-center gap-2">
-                          <Settings className="h-5 w-5" />
-                          تفاصيل إضافية
-                        </CardTitle>
-                      </CardHeader>
-                      <CardContent className="space-y-4">
-                        <div>
-                          <Label htmlFor="deliveryTimeframe">الإطار الزمني للتسليم</Label>
-                          <Input
-                            id="deliveryTimeframe"
-                            value={newContract.deliveryTimeframe}
-                            onChange={(e) => setNewContract(prev => ({...prev, deliveryTimeframe: e.target.value}))}
-                            placeholder="مثال: خلال أسبوعين من بداية العمل"
-                          />
-                        </div>
-                        <div>
-                          <Label htmlFor="additionalNotes">ملاحظات إضافية</Label>
-                          <Textarea
-                            id="additionalNotes"
-                            value={newContract.additionalNotes}
-                            onChange={(e) => setNewContract(prev => ({...prev, additionalNotes: e.target.value}))}
-                            placeholder="أي ملاحظات أو متطلبات خاصة..."
-                            rows={3}
-                          />
-                        </div>
-                      </CardContent>
-                    </Card>
-
-                    {/* تنبيه مهم حول الأسعار */}
-                    <Card className="border-orange-200 bg-orange-50">
-                      <CardContent className="p-4">
-                        <div className="flex items-start gap-3">
-                          <AlertCircle className="h-5 w-5 text-orange-600 mt-0.5" />
-                          <div>
-                            <h3 className="font-semibold text-orange-800 mb-1">تنبيه مهم حول التسعير</h3>
-                            <p className="text-sm text-orange-700">
-                              الأسعار النهائية للخدمات المختارة سيتم تحديدها وإدراجها في الفاتورة المرفقة مع العقد النهائي. 
-                              سيتم التواصل معكم لمناقشة التفاصيل والأسعار قبل إصدار العقد النهائي.
-                            </p>
-                          </div>
-                        </div>
-                      </CardContent>
-                    </Card>
-
-                    {/* الموافقة على الشروط */}
-                    <Card>
-                      <CardContent className="p-4">
-                        <div className="flex items-start space-x-3 space-x-reverse">
-                          <Checkbox
-                            id="agreedTerms"
-                            checked={newContract.agreedTerms}
-                            onCheckedChange={(checked) => 
-                              setNewContract(prev => ({...prev, agreedTerms: checked as boolean}))
-                            }
-                          />
-                          <Label htmlFor="agreedTerms" className="text-sm cursor-pointer">
-                            أوافق على <Button variant="link" className="p-0 h-auto text-sm">الشروط والأحكام</Button> الخاصة بالخدمات المختارة
-                          </Label>
-                        </div>
-                      </CardContent>
-                    </Card>
-
-                    {/* أزرار التحكم */}
-                    <div className="flex justify-end gap-3 pt-4 border-t">
-                      <Button
-                        variant="outline"
-                        onClick={() => {
-                          setIsDialogOpen(false);
-                          resetNewContract();
-                        }}
-                      >
-                        إلغاء
-                      </Button>
-                      <Button
-                        onClick={handleCreateContract}
-                        disabled={isCreatingContract || !newContract.agreedTerms}
-                        className="min-w-[120px]"
-                      >
-                        {isCreatingContract ? (
-                          <>
-                            <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
-                            جاري الإنشاء...
-                          </>
-                        ) : (
-                          <>
-                            <Send className="h-4 w-4 mr-2" />
-                            إنشاء العقد
-                          </>
-                        )}
-                      </Button>
+              {/* معلومات العميل */}
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <User className="h-5 w-5" />
+                    معلومات العميل
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <Label htmlFor="clientName">الاسم الكامل *</Label>
+                      <Input
+                        id="clientName"
+                        value={newContract.clientName}
+                        onChange={(e) => setNewContract(prev => ({...prev, clientName: e.target.value}))}
+                        placeholder="اسم العميل الكامل"
+                      />
+                    </div>
+                    <div>
+                      <Label htmlFor="clientEmail">البريد الإلكتروني *</Label>
+                      <Input
+                        id="clientEmail"
+                        type="email"
+                        value={newContract.clientEmail}
+                        onChange={(e) => setNewContract(prev => ({...prev, clientEmail: e.target.value}))}
+                        placeholder="example@email.com"
+                      />
+                    </div>
+                    <div>
+                      <Label htmlFor="clientPhone">رقم الهاتف *</Label>
+                      <Input
+                        id="clientPhone"
+                        value={newContract.clientPhone}
+                        onChange={(e) => setNewContract(prev => ({...prev, clientPhone: e.target.value}))}
+                        placeholder="+966xxxxxxxxx"
+                      />
+                    </div>
+                    <div>
+                      <Label htmlFor="clientCompany">اسم الشركة (اختياري)</Label>
+                      <Input
+                        id="clientCompany"
+                        value={newContract.clientCompany}
+                        onChange={(e) => setNewContract(prev => ({...prev, clientCompany: e.target.value}))}
+                        placeholder="اسم الشركة أو المؤسسة"
+                      />
                     </div>
                   </div>
-                </DialogContent>
-              </Dialog>
-            </div>
-          </CardContent>
-        </Card>
+                  <div>
+                    <Label htmlFor="clientAddress">العنوان (اختياري)</Label>
+                    <Textarea
+                      id="clientAddress"
+                      value={newContract.clientAddress}
+                      onChange={(e) => setNewContract(prev => ({...prev, clientAddress: e.target.value}))}
+                      placeholder="العنوان الكامل"
+                      rows={2}
+                    />
+                  </div>
+                </CardContent>
+              </Card>
 
-        {/* Contracts List */}
-        <div className="space-y-4">
-          {isLoading ? (
-            <div className="text-center py-12">
-              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
-              <p>جاري تحميل العقود...</p>
-            </div>
-          ) : filteredContracts.length === 0 ? (
-            <Card>
-              <CardContent className="text-center py-12">
-                <FileText className="h-12 w-12 mx-auto mb-4 text-muted-foreground" />
-                <h3 className="text-lg font-semibold mb-2">لا توجد عقود</h3>
-                <p className="text-muted-foreground">لم يتم العثور على عقود مطابقة للفلاتر المحددة</p>
-              </CardContent>
-            </Card>
-          ) : (
-            filteredContracts.map((contract) => (
-              <motion.div
-                key={contract.id}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                whileHover={{ scale: 1.01 }}
-              >
-                <Card className="hover:shadow-lg transition-shadow">
-                  <CardContent className="p-6">
-                    <div className="flex items-start justify-between mb-4">
-                      <div className="flex-1">
-                        <div className="flex items-center gap-2 mb-2">
-                          <h3 className="text-lg font-semibold">عقد رقم: {contract.contract_number || contract.id?.substring(0, 8)}</h3>
-                          <Badge className={getStatusColor(contract.status)}>
-                            {getStatusLabel(contract.status)}
-                          </Badge>
-                        </div>
-                        <div className="flex items-center gap-4 text-sm text-muted-foreground mb-2">
-                          <div className="flex items-center gap-1">
-                            <User className="h-4 w-4" />
-                            {contract.client_name}
-                          </div>
-                          <div className="flex items-center gap-1">
-                            <Mail className="h-4 w-4" />
-                            {contract.client_email}
-                          </div>
-                          <div className="flex items-center gap-1">
-                            <Phone className="h-4 w-4" />
-                            {contract.client_phone}
-                          </div>
-                        </div>
-                        <div className="flex items-center gap-4 text-sm text-muted-foreground">
-                          <div className="flex items-center gap-1">
-                            <Calendar className="h-4 w-4" />
-                            {formatDate(contract.created_at)}
-                          </div>
-                          <div className="flex items-center gap-1">
-                            <Package className="h-4 w-4" />
-                            {contract.service_details?.services?.length || 0} خدمة
-                          </div>
-                        </div>
-                      </div>
-                      
-                      <div className="flex items-center gap-2">
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          onClick={() => downloadContractPDF(contract.id)}
-                        >
-                          <Download className="h-4 w-4 mr-1" />
-                          تحميل PDF
-                        </Button>
-
-                        <Dialog>
-                          <DialogTrigger asChild>
-                            <Button variant="outline" size="sm">
-                              <Eye className="h-4 w-4" />
-                            </Button>
-                          </DialogTrigger>
-                          <DialogContent className="max-w-4xl max-h-[80vh] overflow-y-auto">
-                            <DialogHeader>
-                              <DialogTitle>تفاصيل العقد</DialogTitle>
-                            </DialogHeader>
-                            <div className="space-y-4 p-4">
-                              <div className="grid grid-cols-2 gap-4">
-                                <div>
-                                  <Label className="text-sm font-medium">اسم العميل</Label>
-                                  <p className="text-sm text-muted-foreground">{contract.client_name}</p>
-                                </div>
-                                <div>
-                                  <Label className="text-sm font-medium">البريد الإلكتروني</Label>
-                                  <p className="text-sm text-muted-foreground">{contract.client_email}</p>
-                                </div>
-                                <div>
-                                  <Label className="text-sm font-medium">رقم الهاتف</Label>
-                                  <p className="text-sm text-muted-foreground">{contract.client_phone}</p>
-                                </div>
-                                <div>
-                                  <Label className="text-sm font-medium">الحالة</Label>
-                                  <Badge className={getStatusColor(contract.status)}>
-                                    {getStatusLabel(contract.status)}
-                                  </Badge>
-                                </div>
-                              </div>
-                              
-                              {contract.service_details?.services && (
-                                <div>
-                                  <Label className="text-sm font-medium">الخدمات المطلوبة</Label>
-                                  <div className="mt-2 space-y-2">
-                                    {contract.service_details.services.map((service: any, index: number) => (
-                                      <div key={index} className="p-3 bg-muted rounded-lg">
-                                        <h4 className="font-medium">{service.name}</h4>
-                                        <p className="text-sm text-muted-foreground">{service.description}</p>
-                                      </div>
-                                    ))}
-                                  </div>
-                                </div>
-                              )}
-
-                              {contract.service_details?.additional_notes && (
-                                <div>
-                                  <Label className="text-sm font-medium">ملاحظات إضافية</Label>
-                                  <p className="text-sm text-muted-foreground mt-1">{contract.service_details.additional_notes}</p>
-                                </div>
-                              )}
-                            </div>
-                          </DialogContent>
-                        </Dialog>
-                      </div>
+              {/* اختيار الخدمات */}
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <Package className="h-5 w-5" />
+                    اختيار الخدمات *
+                  </CardTitle>
+                  <CardDescription>
+                    اختر الخدمات التي تحتاج إليها من القائمة أدناه
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  {isServicesLoading ? (
+                    <div className="text-center py-8">
+                      <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-4"></div>
+                      <p>جاري تحميل الخدمات...</p>
                     </div>
-                  </CardContent>
-                </Card>
-              </motion.div>
-            ))
-          )}
+                  ) : services.length === 0 ? (
+                    <div className="text-center py-8 text-muted-foreground">
+                      <Package className="h-12 w-12 mx-auto mb-4 opacity-50" />
+                      <p>لا توجد خدمات متاحة حالياً</p>
+                    </div>
+                  ) : (
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                      {services.map((service) => (
+                        <Card 
+                          key={service.id}
+                          className={`cursor-pointer transition-colors hover:border-primary ${
+                            newContract.selectedServices.includes(service.id) 
+                              ? 'border-primary bg-primary/5' 
+                              : ''
+                          }`}
+                          onClick={() => handleServiceToggle(service.id)}
+                        >
+                          <CardContent className="p-4">
+                            <div className="flex items-start gap-3">
+                              <Checkbox
+                                checked={newContract.selectedServices.includes(service.id)}
+                                onChange={() => handleServiceToggle(service.id)}
+                                className="mt-1"
+                              />
+                              <div className="flex-1">
+                                <div className="flex items-center gap-2 mb-2">
+                                  {getServiceIcon(service.category_id)}
+                                  <h3 className="font-semibold">{service.name_ar}</h3>
+                                </div>
+                                <p className="text-sm text-muted-foreground">
+                                  {service.description_ar}
+                                </p>
+                              </div>
+                            </div>
+                          </CardContent>
+                        </Card>
+                      ))}
+                    </div>
+                  )}
+                </CardContent>
+              </Card>
+
+              {/* تفاصيل إضافية */}
+              <Card>
+                <CardHeader>
+                  <CardTitle>تفاصيل إضافية</CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <div>
+                    <Label htmlFor="deliveryTimeframe">الإطار الزمني المطلوب</Label>
+                    <Select 
+                      value={newContract.deliveryTimeframe} 
+                      onValueChange={(value) => setNewContract(prev => ({...prev, deliveryTimeframe: value}))}
+                    >
+                      <SelectTrigger>
+                        <SelectValue placeholder="اختر الإطار الزمني المطلوب" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="urgent">عاجل (3-5 أيام)</SelectItem>
+                        <SelectItem value="standard">عادي (1-2 أسبوع)</SelectItem>
+                        <SelectItem value="extended">ممتد (3-4 أسابيع)</SelectItem>
+                        <SelectItem value="flexible">مرن (حسب المتاح)</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  
+                  <div>
+                    <Label htmlFor="additionalNotes">ملاحظات إضافية</Label>
+                    <Textarea
+                      id="additionalNotes"
+                      value={newContract.additionalNotes}
+                      onChange={(e) => setNewContract(prev => ({...prev, additionalNotes: e.target.value}))}
+                      placeholder="أي تفاصيل إضافية أو متطلبات خاصة..."
+                      rows={4}
+                    />
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* الشروط والأحكام */}
+              <Card>
+                <CardContent className="p-6">
+                  <div className="flex items-start gap-3">
+                    <Checkbox
+                      checked={newContract.agreedTerms}
+                      onCheckedChange={(checked) => setNewContract(prev => ({...prev, agreedTerms: !!checked}))}
+                      className="mt-1"
+                    />
+                    <div className="text-sm">
+                      <p className="font-medium mb-2">الموافقة على الشروط والأحكام *</p>
+                      <p className="text-muted-foreground">
+                        بالنقر على "إرسال طلب العقد"، أوافق على شروط وأحكام الخدمة وسياسة الخصوصية.
+                        أتفهم أن الأسعار النهائية ستكون كما هو محدد في الفاتورة المرفقة مع العقد النهائي.
+                        سيتم التواصل معي من قبل فريق الإدارة لتأكيد التفاصيل وإرسال العقد النهائي.
+                      </p>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* أزرار الإجراءات */}
+              <div className="flex gap-4 pt-4">
+                <Button 
+                  onClick={handleCreateContract}
+                  disabled={isCreatingContract || newContract.selectedServices.length === 0 || !newContract.agreedTerms}
+                  className="flex-1"
+                >
+                  {isCreatingContract ? (
+                    <>
+                      <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                      جاري الإرسال...
+                    </>
+                  ) : (
+                    <>
+                      <Send className="h-4 w-4 mr-2" />
+                      إرسال طلب العقد
+                    </>
+                  )}
+                </Button>
+                
+                <Button 
+                  onClick={resetNewContract}
+                  variant="outline"
+                  disabled={isCreatingContract}
+                >
+                  إعادة تعيين
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
         </div>
       </main>
     </div>

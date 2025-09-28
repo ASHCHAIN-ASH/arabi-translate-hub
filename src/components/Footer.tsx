@@ -255,7 +255,7 @@ const Footer = () => {
               </h4>
               <ul className="space-y-2 md:space-y-3">
                 {[
-                  { name: 'إدارة العقود', href: '/contract-management', icon: Briefcase }
+                  { name: 'طلب عقد جديد', href: '/contract-management', icon: Briefcase }
                 ].map((link) => (
                  <li key={link.name}>
                    <a 
