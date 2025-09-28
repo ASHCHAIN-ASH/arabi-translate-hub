@@ -152,7 +152,7 @@ const handler = async (req: Request): Promise<Response> => {
             
             <div class="footer">
               <p>تم إرسال هذه الرسالة تلقائياً من نظام إدارة التواصل</p>
-              <p>© 2024 منصة التعليم الأكاديمي. جميع الحقوق محفوظة.</p>
+              <p>© 2024 وكالة ماستر إيدو باث. جميع الحقوق محفوظة.</p>
             </div>
           </div>
         </body>
@@ -162,9 +162,9 @@ const handler = async (req: Request): Promise<Response> => {
 
     // Send confirmation email to customer
     const customerEmailResponse = await resend.emails.send({
-      from: "منصة التعليم الأكاديمي <info@masteredupath.com>",
+      from: "وكالة ماستر إيدو باث <info@masteredupath.com>",
       to: [email],
-      subject: "تأكيد استلام رسالتك - منصة التعليم الأكاديمي",
+      subject: "تأكيد استلام رسالتك - وكالة ماستر إيدو باث",
       html: `
         <!DOCTYPE html>
         <html dir="rtl" lang="ar">
@@ -289,7 +289,7 @@ const handler = async (req: Request): Promise<Response> => {
               
               <p style="margin-bottom: 0;">
                 مع أطيب التحيات،<br>
-                <strong>فريق منصة التعليم الأكاديمي</strong>
+                <strong>فريق وكالة ماستر إيدو باث</strong>
               </p>
             </div>
             
@@ -298,7 +298,7 @@ const handler = async (req: Request): Promise<Response> => {
                 هذا البريد الإلكتروني تم إرساله تلقائياً لتأكيد استلام رسالتك.
               </p>
               <p>
-                © 2024 منصة التعليم الأكاديمي. جميع الحقوق محفوظة.
+                © 2024 وكالة ماستر إيدو باث. جميع الحقوق محفوظة.
               </p>
             </div>
           </div>
