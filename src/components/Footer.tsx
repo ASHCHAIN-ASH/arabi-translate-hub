@@ -249,17 +249,14 @@ const Footer = () => {
              transition={{ delay: 0.25, duration: 0.5 }}
              className="space-y-4 md:space-y-6"
            >
-             <h4 className="text-base md:text-lg font-bold text-white flex items-center gap-2">
-               <Briefcase className="h-4 w-4 md:h-5 md:w-5 text-orange-400" />
-               التعاقد والإدارة المالية
-             </h4>
-             <ul className="space-y-2 md:space-y-3">
-               {[
-                 { name: 'إدارة العقود', href: '/contract-management', icon: Briefcase },
-                 { name: 'لوحة المحاسبة', href: '/admin/accounting-dashboard', icon: Calculator },
-                 { name: 'الفواتير', href: '/admin/admin-invoices', icon: DollarSign },
-                 { name: 'المعاملات المالية', href: '/admin/admin-transactions', icon: TrendingUp }
-               ].map((link) => (
+              <h4 className="text-base md:text-lg font-bold text-white flex items-center gap-2">
+                <Briefcase className="h-4 w-4 md:h-5 md:w-5 text-orange-400" />
+                التعاقد
+              </h4>
+              <ul className="space-y-2 md:space-y-3">
+                {[
+                  { name: 'إدارة العقود', href: '/contract-management', icon: Briefcase }
+                ].map((link) => (
                  <li key={link.name}>
                    <a 
                      href={link.href} 
