@@ -27,7 +27,6 @@ import {
 import { Contract, ContractStatus, ServiceType } from '@/types/contract';
 import { getAllContracts, searchContracts, updateContractStatus, getContractsByStatus } from '@/utils/supabaseContractService';
 import Header from '@/components/Header';
-import Footer from '@/components/Footer';
 
 const ContractManagement = () => {
   const [contracts, setContracts] = useState<Contract[]>([]);
@@ -427,7 +426,6 @@ const ContractManagement = () => {
         </div>
       </main>
       
-      <Footer />
     </div>
   );
 };

@@ -26,7 +26,6 @@ import {
 import { Contract, ClientApproval } from '@/types/contract';
 import { getContractById, saveClientApproval } from '@/utils/supabaseContractService';
 import Header from '@/components/Header';
-import Footer from '@/components/Footer';
 
 const ClientContractApproval = () => {
   const [searchParams] = useSearchParams();
@@ -171,7 +170,6 @@ const ClientContractApproval = () => {
             <p>جاري تحميل العقد...</p>
           </div>
         </main>
-        <Footer />
       </div>
     );
   }
@@ -189,7 +187,6 @@ const ClientContractApproval = () => {
             </CardContent>
           </Card>
         </main>
-        <Footer />
       </div>
     );
   }
@@ -223,7 +220,6 @@ const ClientContractApproval = () => {
             </Card>
           </motion.div>
         </main>
-        <Footer />
       </div>
     );
   }
@@ -443,7 +439,6 @@ const ClientContractApproval = () => {
         </motion.div>
       </main>
       
-      <Footer />
     </div>
   );
 };

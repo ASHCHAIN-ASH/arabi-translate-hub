@@ -19,8 +19,7 @@ import {
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import Header from "@/components/Header";
-import Footer from "@/components/Footer";
+import Header from '@/components/Header';
 import { WorkingHoursBannerRTL } from "@/components/WorkingHoursBannerRTL";
 import MembershipSubscriptionForm from "@/components/MembershipSubscriptionForm";
 
@@ -971,7 +970,6 @@ const MasterMembership = () => {
         />
       )}
 
-      <Footer />
     </div>
   );
 };

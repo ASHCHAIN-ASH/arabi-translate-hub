@@ -4,7 +4,6 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import Header from '@/components/Header';
-import Footer from '@/components/Footer';
 import ServiceInquiryForm from '@/components/ServiceInquiryForm';
 import { 
   Search, 
@@ -279,7 +278,6 @@ const ResearchToolsPage = () => {
         showFileSizeField={true}
       />
 
-      <Footer />
     </div>
   );
 };

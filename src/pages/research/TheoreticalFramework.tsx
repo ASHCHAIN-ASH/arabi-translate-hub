@@ -1,6 +1,5 @@
 import { useState } from "react";
 import Header from "@/components/Header";
-import Footer from "@/components/Footer";
 import ServiceInquiryForm from "@/components/ServiceInquiryForm";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -425,7 +424,6 @@ const TheoreticalFramework = () => {
         </div>
       )}
 
-      <Footer />
     </div>
   );
 };

@@ -3,7 +3,6 @@ import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import Header from '@/components/Header';
-import Footer from '@/components/Footer';
 import ServiceInquiryForm from '@/components/ServiceInquiryForm';
 
 import { 
@@ -424,7 +423,6 @@ const VideoTranslation = () => {
       </section>
 
 
-      <Footer />
     </div>
   );
 };

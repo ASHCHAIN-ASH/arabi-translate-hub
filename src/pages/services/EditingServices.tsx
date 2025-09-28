@@ -5,7 +5,6 @@ import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Edit3, FileCheck, BookOpen, CheckCircle, Users, Clock, Award, Zap } from 'lucide-react';
 import Header from '@/components/Header';
-import Footer from '@/components/Footer';
 import { useNavigate } from 'react-router-dom';
 
 const EditingServices = () => {
@@ -206,7 +205,6 @@ const EditingServices = () => {
         </div>
       </section>
 
-      <Footer />
     </div>
   );
 };

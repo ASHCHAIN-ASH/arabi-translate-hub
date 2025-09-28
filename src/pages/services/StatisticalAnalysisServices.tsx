@@ -5,7 +5,6 @@ import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { BarChart3, TrendingUp, Calculator, PieChart, Users, Clock, Award, Zap } from 'lucide-react';
 import Header from '@/components/Header';
-import Footer from '@/components/Footer';
 import { useNavigate } from 'react-router-dom';
 
 const StatisticalAnalysisServices = () => {
@@ -206,7 +205,6 @@ const StatisticalAnalysisServices = () => {
         </div>
       </section>
 
-      <Footer />
     </div>
   );
 };

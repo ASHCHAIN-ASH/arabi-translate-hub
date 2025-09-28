@@ -5,7 +5,6 @@ import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { BookOpen, Globe, FileText, Award, Users, Clock, Shield, Zap } from 'lucide-react';
 import Header from '@/components/Header';
-import Footer from '@/components/Footer';
 import { useNavigate } from 'react-router-dom';
 
 const PublishingServices = () => {
@@ -206,7 +205,6 @@ const PublishingServices = () => {
         </div>
       </section>
 
-      <Footer />
     </div>
   );
 };

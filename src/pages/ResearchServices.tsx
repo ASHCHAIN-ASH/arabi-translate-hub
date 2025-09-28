@@ -1,6 +1,5 @@
 import React from 'react';
 import Header from "@/components/Header";
-import Footer from "@/components/Footer";
 import { ResearchHeroSection } from "@/components/research/ResearchHeroSection";
 import { ResearchServicesGrid } from "@/components/research/ResearchServicesGrid";
 import { ResearchProcess } from "@/components/research/ResearchProcess";
@@ -12,7 +11,6 @@ const ResearchServices = () => {
       <ResearchHeroSection />
       <ResearchServicesGrid />
       <ResearchProcess />
-      <Footer />
     </div>
   );
 };

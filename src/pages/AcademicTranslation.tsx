@@ -6,7 +6,6 @@ import { GraduationCap, BookOpen, FileText, Award, Users, Globe, Microscope, Cal
 
 import AcademicTranslationForm from "@/components/AcademicTranslationForm";
 import Header from "@/components/Header";
-import Footer from "@/components/Footer";
 
 const AcademicTranslation = () => {
   const academicServices = [
@@ -470,7 +469,6 @@ const AcademicTranslation = () => {
         </div>
       </section>
 
-      <Footer />
     </div>
   );
 };
