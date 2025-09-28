@@ -202,9 +202,9 @@ const createClientEmailHtml = (
       
       <div class="contact-section">
         <div class="contact-title">معلومات التواصل</div>
-        <div class="contact-item">📞 الهاتف: +966 50 123 4567</div>
-        <div class="contact-item">📧 البريد الإلكتروني: admissions@masteredupath.com</div>
-        <div class="contact-item">📍 العنوان: جدة، المملكة العربية السعودية</div>
+        <div class="contact-item">📞 الهاتف: +966501234567</div>
+        <div class="contact-item">📧 البريد الإلكتروني: info@masteredupath.com</div>
+        <div class="contact-item">📍 العنوان: المملكة العربية السعودية</div>
         <div class="contact-item">🕐 ساعات العمل: الأحد - الخميس | 10:00 ص - 7:00 م</div>
       </div>
       

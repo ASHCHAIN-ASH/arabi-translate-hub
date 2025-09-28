@@ -8,6 +8,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Badge } from "@/components/ui/badge";
+import { Alert, AlertDescription } from "@/components/ui/alert";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import {
@@ -31,9 +32,13 @@ import {
   Zap,
   Calendar,
   User,
-  School
+  School,
+  CreditCard,
+  AlertTriangle,
+  Info
 } from "lucide-react";
 import { z } from "zod";
+import admissionBackground from "@/assets/university-admission-background.jpg";
 
 // Schema validation for the admission form
 const admissionSchema = z.object({
@@ -140,29 +145,29 @@ const AdmissionServices = () => {
       icon: School,
       title: "اختيار الجامعة المناسبة",
       description: "نساعدك في اختيار الجامعة التي تناسب تخصصك وأهدافك المهنية",
-      color: "text-blue-500",
-      bgColor: "bg-blue-50"
+      color: "text-white",
+      bgColor: "bg-gradient-to-br from-blue-500 to-blue-600"
     },
     {
       icon: FileText,
       title: "إعداد الوثائق",
       description: "نقوم بإعداد وترجمة جميع الوثائق المطلوبة للقبول الجامعي",
-      color: "text-green-500",
-      bgColor: "bg-green-50"
+      color: "text-white",
+      bgColor: "bg-gradient-to-br from-green-500 to-green-600"
     },
     {
       icon: Target,
       title: "كتابة المقالات الشخصية",
       description: "فريقنا المتخصص يساعدك في كتابة مقالات شخصية مميزة",
-      color: "text-purple-500",
-      bgColor: "bg-purple-50"
+      color: "text-white",
+      bgColor: "bg-gradient-to-br from-purple-500 to-purple-600"
     },
     {
       icon: Globe,
       title: "متابعة طلب القبول",
       description: "نتابع معك جميع مراحل طلب القبول حتى الحصول على القبول النهائي",
-      color: "text-orange-500",
-      bgColor: "bg-orange-50"
+      color: "text-white",
+      bgColor: "bg-gradient-to-br from-orange-500 to-orange-600"
     }
   ];
 
@@ -194,11 +199,8 @@ const AdmissionServices = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-white" dir="rtl">
       {/* Hero Section */}
-      <section className="bg-gradient-to-br from-primary/10 via-blue-50 to-white py-16 md:py-24 relative overflow-hidden">
-        <div className="absolute inset-0">
-          <div className="absolute top-10 right-10 w-32 h-32 bg-primary/10 rounded-full blur-3xl"></div>
-          <div className="absolute bottom-20 left-20 w-40 h-40 bg-blue-500/10 rounded-full blur-3xl"></div>
-        </div>
+      <section className="py-16 md:py-24 relative overflow-hidden bg-cover bg-center bg-no-repeat" style={{ backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.6)), url(${admissionBackground})` }}>
+        <div className="absolute inset-0 bg-gradient-to-br from-primary/20 via-blue-900/30 to-purple-900/20"></div>
         
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <motion.div
@@ -210,10 +212,10 @@ const AdmissionServices = () => {
             <div className="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-br from-primary to-blue-600 rounded-full mb-6 shadow-lg">
               <GraduationCap className="h-10 w-10 text-white" />
             </div>
-            <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-800 mb-6 leading-tight">
+            <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-6 leading-tight drop-shadow-lg">
               خدمات القبول الجامعي المتميزة
             </h1>
-            <p className="text-lg md:text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
+            <p className="text-lg md:text-xl text-gray-100 max-w-3xl mx-auto leading-relaxed drop-shadow-md">
               نحن شريكك المتخصص للحصول على القبول في أفضل الجامعات المحلية والدولية. 
               فريق خبراء متخصص لضمان نجاح رحلتك التعليمية
             </p>
@@ -230,20 +232,20 @@ const AdmissionServices = () => {
               { icon: Users, number: "5000+", label: "طالب حصل على القبول" },
               { icon: Award, number: "200+", label: "جامعة شريكة" },
               { icon: CheckCircle, number: "95%", label: "معدل نجاح القبول" },
-              { icon: Star, number: "4.9", label: "تقييم العملاء" }
+              { icon: Star, number: "5.0", label: "تقييم العملاء" }
             ].map((stat, index) => (
               <motion.div
                 key={index}
                 initial={{ opacity: 0, scale: 0.8 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ delay: 0.5 + index * 0.1, duration: 0.5 }}
-                className="text-center bg-white rounded-xl p-6 shadow-lg hover:shadow-xl transition-all duration-300"
+                className="text-center bg-white/95 backdrop-blur-sm rounded-xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 border border-white/20"
               >
-                <div className="inline-flex items-center justify-center w-12 h-12 bg-primary/10 rounded-full mb-4">
-                  <stat.icon className="h-6 w-6 text-primary" />
+                <div className="inline-flex items-center justify-center w-12 h-12 bg-gradient-to-br from-primary to-blue-600 rounded-full mb-4 shadow-md">
+                  <stat.icon className="h-6 w-6 text-white" />
                 </div>
                 <div className="text-2xl font-bold text-gray-800 mb-2">{stat.number}</div>
-                <div className="text-sm text-gray-600">{stat.label}</div>
+                <div className="text-sm text-gray-700 font-medium">{stat.label}</div>
               </motion.div>
             ))}
           </motion.div>
@@ -279,11 +281,15 @@ const AdmissionServices = () => {
                 whileHover={{ scale: 1.02, y: -5 }}
                 className="group"
               >
-                <Card className="h-full border-0 shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden">
+                <Card className="h-full border-0 shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden hover:scale-105">
                   <CardContent className="p-6 text-center">
-                    <div className={`inline-flex items-center justify-center w-16 h-16 ${service.bgColor} rounded-full mb-4 group-hover:scale-110 transition-transform duration-300`}>
+                    <motion.div 
+                      className={`inline-flex items-center justify-center w-16 h-16 ${service.bgColor} rounded-full mb-4 shadow-lg`}
+                      whileHover={{ scale: 1.1, rotate: 5 }}
+                      transition={{ type: "spring", stiffness: 300 }}
+                    >
                       <service.icon className={`h-8 w-8 ${service.color}`} />
-                    </div>
+                    </motion.div>
                     <h3 className="text-lg font-bold text-gray-800 mb-3">{service.title}</h3>
                     <p className="text-gray-600 text-sm leading-relaxed">{service.description}</p>
                   </CardContent>
@@ -295,7 +301,7 @@ const AdmissionServices = () => {
       </section>
 
       {/* Application Form Section */}
-      <section className="py-16 md:py-20 bg-gray-50">
+      <section className="py-16 md:py-20 bg-gradient-to-br from-gray-50 to-blue-50/30">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -307,9 +313,17 @@ const AdmissionServices = () => {
             <h2 className="text-2xl md:text-3xl font-bold text-gray-800 mb-4">
               ابدأ رحلتك الجامعية معنا
             </h2>
-            <p className="text-gray-600 max-w-2xl mx-auto">
+            <p className="text-gray-600 max-w-2xl mx-auto mb-6">
               املأ النموذج أدناه وسيتواصل معك فريقنا المتخصص لبدء إجراءات القبول
             </p>
+            
+            {/* Pricing Notice */}
+            <Alert className="max-w-2xl mx-auto bg-amber-50 border-amber-200">
+              <AlertTriangle className="h-4 w-4 text-amber-600" />
+              <AlertDescription className="text-amber-800 text-sm">
+                <strong>تنبيه مهم:</strong> خدمات القبول الجامعي مدفوعة الأجر. سيتم إرسال عرض الأسعار التفصيلي بعد مراجعة طلبكم والتأكد من صحة المعلومات المقدمة من قبل فريقنا الأكاديمي المتخصص.
+              </AlertDescription>
+            </Alert>
           </motion.div>
 
           <motion.div
@@ -327,72 +341,98 @@ const AdmissionServices = () => {
                 </CardTitle>
               </CardHeader>
               <CardContent className="p-6 md:p-8">
-                <form onSubmit={handleSubmit} className="space-y-6">
+                <form onSubmit={handleSubmit} className="space-y-8">
                   {/* Personal Information */}
-                  <div className="grid md:grid-cols-2 gap-6">
-                    <div className="space-y-2">
-                      <Label htmlFor="fullName" className="text-sm font-medium text-gray-700">
-                        الاسم الكامل *
-                      </Label>
-                      <Input
-                        id="fullName"
-                        type="text"
-                        value={formData.fullName}
-                        onChange={(e) => handleInputChange("fullName", e.target.value)}
-                        placeholder="أدخل اسمك الكامل"
-                        className="w-full"
-                        required
-                      />
-                    </div>
+                  <div className="space-y-6">
+                    <h3 className="text-lg font-semibold text-gray-800 flex items-center gap-2 border-b pb-2">
+                      <User className="h-5 w-5 text-primary" />
+                      المعلومات الشخصية
+                    </h3>
+                    <div className="grid md:grid-cols-2 gap-6">
+                      <motion.div 
+                        className="space-y-2"
+                        whileHover={{ scale: 1.02 }}
+                        transition={{ type: "spring", stiffness: 300 }}
+                      >
+                        <Label htmlFor="fullName" className="text-sm font-medium text-gray-700 flex items-center gap-2">
+                          <User className="h-4 w-4 text-primary" />
+                          الاسم الكامل *
+                        </Label>
+                        <Input
+                          id="fullName"
+                          type="text"
+                          value={formData.fullName}
+                          onChange={(e) => handleInputChange("fullName", e.target.value)}
+                          placeholder="أدخل اسمك الكامل"
+                          className="w-full transition-all duration-300 focus:scale-105"
+                          required
+                        />
+                      </motion.div>
 
-                    <div className="space-y-2">
-                      <Label htmlFor="email" className="text-sm font-medium text-gray-700">
-                        البريد الإلكتروني *
-                      </Label>
-                      <Input
-                        id="email"
-                        type="email"
-                        value={formData.email}
-                        onChange={(e) => handleInputChange("email", e.target.value)}
-                        placeholder="example@email.com"
-                        className="w-full"
-                        required
-                      />
-                    </div>
+                      <motion.div 
+                        className="space-y-2"
+                        whileHover={{ scale: 1.02 }}
+                        transition={{ type: "spring", stiffness: 300 }}
+                      >
+                        <Label htmlFor="email" className="text-sm font-medium text-gray-700 flex items-center gap-2">
+                          <Mail className="h-4 w-4 text-primary" />
+                          البريد الإلكتروني *
+                        </Label>
+                        <Input
+                          id="email"
+                          type="email"
+                          value={formData.email}
+                          onChange={(e) => handleInputChange("email", e.target.value)}
+                          placeholder="example@email.com"
+                          className="w-full transition-all duration-300 focus:scale-105"
+                          required
+                        />
+                      </motion.div>
 
-                    <div className="space-y-2">
-                      <Label htmlFor="phone" className="text-sm font-medium text-gray-700">
-                        رقم الهاتف *
-                      </Label>
-                      <Input
-                        id="phone"
-                        type="tel"
-                        value={formData.phone}
-                        onChange={(e) => handleInputChange("phone", e.target.value)}
-                        placeholder="05xxxxxxxx"
-                        className="w-full"
-                        required
-                      />
-                    </div>
+                      <motion.div 
+                        className="space-y-2"
+                        whileHover={{ scale: 1.02 }}
+                        transition={{ type: "spring", stiffness: 300 }}
+                      >
+                        <Label htmlFor="phone" className="text-sm font-medium text-gray-700 flex items-center gap-2">
+                          <Phone className="h-4 w-4 text-primary" />
+                          رقم الهاتف *
+                        </Label>
+                        <Input
+                          id="phone"
+                          type="tel"
+                          value={formData.phone}
+                          onChange={(e) => handleInputChange("phone", e.target.value)}
+                          placeholder="+966501234567"
+                          className="w-full transition-all duration-300 focus:scale-105"
+                          required
+                        />
+                      </motion.div>
 
-                    <div className="space-y-2">
-                      <Label htmlFor="nationality" className="text-sm font-medium text-gray-700">
-                        الجنسية *
-                      </Label>
-                      <Select value={formData.nationality} onValueChange={(value) => handleInputChange("nationality", value)}>
-                        <SelectTrigger>
-                          <SelectValue placeholder="اختر الجنسية" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="saudi">السعودية</SelectItem>
-                          <SelectItem value="egypt">مصر</SelectItem>
-                          <SelectItem value="jordan">الأردن</SelectItem>
-                          <SelectItem value="lebanon">لبنان</SelectItem>
-                          <SelectItem value="syria">سوريا</SelectItem>
-                          <SelectItem value="palestine">فلسطين</SelectItem>
-                          <SelectItem value="other">أخرى</SelectItem>
-                        </SelectContent>
-                      </Select>
+                      <motion.div 
+                        className="space-y-2"
+                        whileHover={{ scale: 1.02 }}
+                        transition={{ type: "spring", stiffness: 300 }}
+                      >
+                        <Label htmlFor="nationality" className="text-sm font-medium text-gray-700 flex items-center gap-2">
+                          <Globe className="h-4 w-4 text-primary" />
+                          الجنسية *
+                        </Label>
+                        <Select value={formData.nationality} onValueChange={(value) => handleInputChange("nationality", value)}>
+                          <SelectTrigger className="transition-all duration-300 hover:scale-105">
+                            <SelectValue placeholder="اختر الجنسية" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="saudi">السعودية</SelectItem>
+                            <SelectItem value="egypt">مصر</SelectItem>
+                            <SelectItem value="jordan">الأردن</SelectItem>
+                            <SelectItem value="lebanon">لبنان</SelectItem>
+                            <SelectItem value="syria">سوريا</SelectItem>
+                            <SelectItem value="palestine">فلسطين</SelectItem>
+                            <SelectItem value="other">أخرى</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </motion.div>
                     </div>
                   </div>
 
@@ -570,7 +610,7 @@ const AdmissionServices = () => {
                 icon: Phone,
                 title: "اتصل بنا",
                 description: "متاحون للرد على مكالماتك",
-                contact: "+966 50 123 4567",
+                contact: "+966501234567",
                 color: "text-green-500",
                 bgColor: "bg-green-50"
               },
@@ -578,15 +618,15 @@ const AdmissionServices = () => {
                 icon: Mail,
                 title: "راسلنا",
                 description: "نرد على رسائلك خلال ساعات",
-                contact: "admissions@masteredupath.com",
+                contact: "info@masteredupath.com",
                 color: "text-blue-500",
                 bgColor: "bg-blue-50"
               },
               {
                 icon: MapPin,
-                title: "زورنا",
-                description: "مكتبنا الرئيسي في جدة",
-                contact: "جدة، المملكة العربية السعودية",
+                title: "موقعنا",
+                description: "زورونا في مقرنا الرئيسي",
+                contact: "المملكة العربية السعودية",
                 color: "text-purple-500",
                 bgColor: "bg-purple-50"
               }
