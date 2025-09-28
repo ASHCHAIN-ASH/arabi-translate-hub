@@ -107,6 +107,7 @@ import NotFound from "./pages/NotFound";
 import IntellectualProperty from "./pages/IntellectualProperty";
 import LicenseRequest from "./pages/LicenseRequest";
 import Careers from "./pages/Careers";
+import ContactUs from "./pages/ContactUs";
 import Footer from "./components/Footer";
 
 const queryClient = new QueryClient();
@@ -150,6 +151,7 @@ const App = () => (
              <Route path="/pricing" element={<Pricing />} />
             <Route path="/intellectual-property" element={<IntellectualProperty />} />
             <Route path="/careers" element={<Careers />} />
+            <Route path="/contact" element={<ContactUs />} />
             <Route path="/marketing/affiliate" element={<AffiliateMarketing />} />
             <Route path="/marketing/affiliate" element={<AffiliateMarketing />} />
             <Route path="/license-request" element={<LicenseRequest />} />
