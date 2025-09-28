@@ -7,6 +7,7 @@ import PageThemeProvider from "./components/PageThemeProvider";
 import { SimpleAuthProvider } from "@/components/SimpleAuthProvider";
 import SimpleProtectedRoute from "@/components/SimpleProtectedRoute";
 import ScrollToTop from "@/components/ScrollToTop";
+import ContentProtection from "@/components/ContentProtection";
 import SimpleLogin from "./pages/SimpleLogin";
 import Login from "./pages/auth/Login";
 import Register from "./pages/auth/Register";
