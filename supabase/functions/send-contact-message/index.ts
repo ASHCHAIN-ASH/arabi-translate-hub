@@ -125,9 +125,9 @@ const handler = async (req: Request): Promise<Response> => {
                 <span class="value">${email}</span>
               </div>
               
-              <div class="info-row">
+              <div className="info-row">
                 <span class="label">رقم الهاتف:</span>
-                <span class="value">${phone}</span>
+                <span class="value">0500776343 (أساسي) | 0559600824 (ثانوي)</span>
               </div>
               
               <div class="info-row">
@@ -269,8 +269,9 @@ const handler = async (req: Request): Promise<Response> => {
               <div class="contact-info">
                 <h3 style="color: #1f2937; margin-bottom: 15px;">معلومات التواصل السريع:</h3>
                 <p>📧 البريد الإلكتروني: info@masteredupath.com</p>
-                <p>📞 الهاتف: +966 50 123 4567</p>
-                <p>💬 الواتساب: +966 50 123 4567</p>
+                <p>📞 الهاتف الأساسي: 0500776343</p>
+                <p>📞 الهاتف الثانوي: 0559600824</p>
+                <p>💬 الواتساب: 0500776343 | 0559600824</p>
                 <p>⏰ ساعات العمل: من الأحد إلى الخميس، 9 صباحاً - 6 مساءً</p>
               </div>
               

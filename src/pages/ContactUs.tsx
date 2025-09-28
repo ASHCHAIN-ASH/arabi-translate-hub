@@ -93,9 +93,9 @@ const ContactUs = () => {
     {
       icon: Phone,
       title: "الهاتف والواتساب",
-      value: "+966 50 123 4567 | +966 55 960 0824",
-      description: "خطوط الدعم المتاحة 24/7 للتواصل السريع",
-      action: "tel:+966501234567"
+      value: "0500776343 | 0559600824",
+      description: "خطوط الدعم المتاحة للتواصل السريع والفعال",
+      action: null
     },
     {
       icon: MapPin,
@@ -527,50 +527,63 @@ const ContactUs = () => {
                                   {info.title}
                                 </h3>
                                 {info.title === "الهاتف والواتساب" ? (
-                                  <div className="space-y-3 text-right">
-                                    <div className="flex items-center gap-2 justify-end">
-                                      <a 
-                                        href="tel:0500776343" 
-                                        className="text-primary hover:text-secondary transition-colors font-medium"
-                                        dir="ltr"
-                                      >
-                                        0500776343
-                                      </a>
-                                      <span className="text-sm text-muted-foreground">:أساسي</span>
-                                      <Phone className="w-4 h-4 text-primary" />
+                                  <div className="space-y-4 text-right w-full">
+                                    {/* الرقم الأساسي */}
+                                    <div className="bg-primary/5 rounded-lg p-3 border border-primary/20">
+                                      <div className="flex items-center justify-between">
+                                        <div className="flex items-center gap-2">
+                                          <a 
+                                            href="tel:0500776343" 
+                                            className="text-primary hover:text-secondary transition-colors font-medium"
+                                            dir="ltr"
+                                          >
+                                            0500776343
+                                          </a>
+                                          <Phone className="w-4 h-4 text-primary" />
+                                        </div>
+                                        <span className="text-sm font-semibold text-primary">الرقم الأساسي</span>
+                                      </div>
+                                      <div className="flex items-center justify-between mt-2">
+                                        <a 
+                                          href="https://wa.me/9660500776343" 
+                                          target="_blank" 
+                                          rel="noopener noreferrer"
+                                          className="text-green-600 hover:text-green-700 transition-colors font-medium flex items-center gap-2"
+                                        >
+                                          <MessageSquare className="w-4 h-4" />
+                                          واتساب
+                                        </a>
+                                        <span className="text-xs text-muted-foreground">متاح 24/7</span>
+                                      </div>
                                     </div>
-                                    <div className="flex items-center gap-2 justify-end">
-                                      <a 
-                                        href="https://wa.me/9660500776343" 
-                                        target="_blank" 
-                                        rel="noopener noreferrer"
-                                        className="text-green-600 hover:text-green-700 transition-colors font-medium"
-                                      >
-                                        واتساب أساسي
-                                      </a>
-                                      <MessageSquare className="w-4 h-4 text-green-600" />
-                                    </div>
-                                    <div className="flex items-center gap-2 justify-end">
-                                      <a 
-                                        href="tel:0559600824" 
-                                        className="text-primary hover:text-secondary transition-colors font-medium"
-                                        dir="ltr"
-                                      >
-                                        0559600824
-                                      </a>
-                                      <span className="text-sm text-muted-foreground">:ثانوي</span>
-                                      <Phone className="w-4 h-4 text-primary" />
-                                    </div>
-                                    <div className="flex items-center gap-2 justify-end">
-                                      <a 
-                                        href="https://wa.me/9660559600824" 
-                                        target="_blank" 
-                                        rel="noopener noreferrer"
-                                        className="text-green-600 hover:text-green-700 transition-colors font-medium"
-                                      >
-                                        واتساب ثانوي
-                                      </a>
-                                      <MessageSquare className="w-4 h-4 text-green-600" />
+                                    
+                                    {/* الرقم الثانوي */}
+                                    <div className="bg-secondary/5 rounded-lg p-3 border border-secondary/20">
+                                      <div className="flex items-center justify-between">
+                                        <div className="flex items-center gap-2">
+                                          <a 
+                                            href="tel:0559600824" 
+                                            className="text-secondary hover:text-primary transition-colors font-medium"
+                                            dir="ltr"
+                                          >
+                                            0559600824
+                                          </a>
+                                          <Phone className="w-4 h-4 text-secondary" />
+                                        </div>
+                                        <span className="text-sm font-semibold text-secondary">الرقم الثانوي</span>
+                                      </div>
+                                      <div className="flex items-center justify-between mt-2">
+                                        <a 
+                                          href="https://wa.me/9660559600824" 
+                                          target="_blank" 
+                                          rel="noopener noreferrer"
+                                          className="text-green-600 hover:text-green-700 transition-colors font-medium flex items-center gap-2"
+                                        >
+                                          <MessageSquare className="w-4 h-4" />
+                                          واتساب
+                                        </a>
+                                        <span className="text-xs text-muted-foreground">أوقات العمل</span>
+                                      </div>
                                     </div>
                                   </div>
                                 ) : (
