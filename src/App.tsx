@@ -110,6 +110,7 @@ import LicenseRequest from "./pages/LicenseRequest";
 import Careers from "./pages/Careers";
 import ContactUs from "./pages/ContactUs";
 import PaymentMethods from "./pages/PaymentMethods";
+import Universities from "./pages/Universities";
 import Footer from "./components/Footer";
 import ChatBot from "./components/ChatBot";
 
@@ -154,8 +155,10 @@ const App = () => (
              <Route path="/pricing" element={<Pricing />} />
             <Route path="/intellectual-property" element={<IntellectualProperty />} />
             <Route path="/payment-methods" element={<PaymentMethods />} />
+            <Route path="/universities" element={<Universities />} />
             <Route path="/careers" element={<Careers />} />
             <Route path="/contact" element={<ContactUs />} />
+            <Route path="/contact-us" element={<ContactUs />} />
             <Route path="/marketing/affiliate" element={<AffiliateMarketing />} />
             <Route path="/marketing/affiliate" element={<AffiliateMarketing />} />
             <Route path="/license-request" element={<LicenseRequest />} />
