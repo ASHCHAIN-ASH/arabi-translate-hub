@@ -77,7 +77,7 @@ import StatisticalAnalysis from "./pages/research/StatisticalAnalysis";
 import LanguageReview from "./pages/research/LanguageReview";
 import Formatting from "./pages/research/Formatting";
 import PlagiarismCheck from "./pages/research/PlagiarismCheck";
-import AdmissionServices from "./pages/research/AdmissionServices";
+import AdmissionServices from "./pages/AdmissionServices";
 import References from "./pages/research/References";
 import ResearchTools from "./pages/research/ResearchTools";
 import TextTranslation from "./pages/services/TextTranslation";
@@ -293,6 +293,7 @@ const App = () => (
             <Route path="/research/formatting" element={<Formatting />} />
             <Route path="/research/plagiarism-check" element={<PlagiarismCheck />} />
             <Route path="/research/admission-services" element={<AdmissionServices />} />
+            <Route path="/admission-services" element={<AdmissionServices />} />
             <Route path="/research/references" element={<References />} />
             <Route path="/research/research-tools" element={<ResearchTools />} />
             <Route path="/research/research-evaluation" element={<ResearchEvaluation />} />

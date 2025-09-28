@@ -23,7 +23,8 @@ import {
   Briefcase,
   Trophy,
   Search,
-  Crown
+  Crown,
+  GraduationCap
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -221,8 +222,7 @@ const Footer = () => {
             <ul className="space-y-2 md:space-y-3">
               {[
                 { name: 'دليل الجامعات', href: '/universities', icon: Building2 },
-                { name: 'الجامعات السعودية', href: '/universities#saudi', icon: Crown },
-                { name: 'الجامعات الدولية', href: '/universities#international', icon: Globe },
+                { name: 'القبول بالجامعات', href: '/admission-services', icon: GraduationCap },
                 { name: 'التسويق بالعمولة', href: '/marketing/affiliate', icon: DollarSign },
                 { name: 'الوظائف', href: '/careers', icon: Briefcase },
                 { name: 'طرق الدفع', href: '/payment-methods', icon: DollarSign }
