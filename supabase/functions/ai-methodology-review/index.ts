@@ -200,114 +200,115 @@ serve(async (req) => {
       `,
     });
 
-    // Send immediate notification to admin about new submission
-    console.log('Sending immediate admin notification...');
+    // Send comprehensive admin notification with immediate alert and detailed report
+    console.log("Sending comprehensive admin notification...");
     const fileBuffer = Uint8Array.from(atob(requestData.fileContent), c => c.charCodeAt(0));
     
-    await resend.emails.send({
-      from: 'نظام إدارة الأبحاث <no-reply@masteredupath.com>',
-      to: ['info@masteredupath.com'],
-      subject: '🔔 تنبيه فوري: تم استلام بحث جديد للمراجعة',
-      html: `
-        <div style="font-family: Arial, sans-serif; direction: rtl; text-align: right;">
-          <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 20px; border-radius: 8px 8px 0 0;">
-            <h2 style="margin: 0; font-size: 24px;">🔔 تنبيه فوري من النظام</h2>
-          </div>
-          <div style="background: #f8f9fa; padding: 30px; border-radius: 0 0 8px 8px;">
-            <div style="background: #fff3cd; border: 1px solid #ffeaa7; border-radius: 6px; padding: 15px; margin-bottom: 20px;">
-              <h3 style="color: #856404; margin: 0 0 10px 0;">📄 تم استلام بحث جديد للمراجعة</h3>
-              <p style="color: #856404; margin: 0; font-weight: bold;">يرجى المراجعة الفورية لتحديد السعر</p>
-            </div>
-            
-            <div style="background: white; padding: 20px; border-radius: 6px; border: 1px solid #e9ecef; margin-bottom: 20px;">
-              <h4 style="color: #495057; margin-bottom: 15px; border-bottom: 2px solid #e9ecef; padding-bottom: 10px;">📋 تفاصيل الطلب</h4>
-              <table style="width: 100%; border-collapse: collapse;">
-                <tr><td style="padding: 8px 0; color: #6c757d; font-weight: bold;">الاسم:</td><td style="padding: 8px 0;">${requestData.fullName}</td></tr>
-                <tr><td style="padding: 8px 0; color: #6c757d; font-weight: bold;">البريد الإلكتروني:</td><td style="padding: 8px 0;">${requestData.email}</td></tr>
-                <tr><td style="padding: 8px 0; color: #6c757d; font-weight: bold;">الجوال:</td><td style="padding: 8px 0;">${requestData.phone || 'غير متوفر'}</td></tr>
-                <tr><td style="padding: 8px 0; color: #6c757d; font-weight: bold;">اسم الملف:</td><td style="padding: 8px 0;">${requestData.fileName}</td></tr>
-                <tr><td style="padding: 8px 0; color: #6c757d; font-weight: bold;">وقت الاستلام:</td><td style="padding: 8px 0;">${new Date().toLocaleString('ar-SA')}</td></tr>
-              </table>
-            </div>
-
-            <div style="background: #d1ecf1; border: 1px solid #bee5eb; border-radius: 6px; padding: 15px; margin-bottom: 20px;">
-              <h4 style="color: #0c5460; margin-bottom: 10px;">⚡ إجراءات مطلوبة فورية</h4>
-              <ul style="color: #0c5460; margin: 0; padding-right: 20px;">
-                <li>مراجعة الملف المرفق وتحليل تعقيد البحث</li>
-                <li>تحديد سعر الخدمة حسب المعايير المعتمدة</li>
-                <li>التواصل مع العميل خلال 24 ساعة بعرض السعر</li>
-              </ul>
-            </div>
-
-            <div style="text-align: center; margin-top: 30px;">
-              <div style="background: #28a745; color: white; padding: 15px; border-radius: 6px; display: inline-block;">
-                <strong>📧 الملف مرفق مع هذا الإيميل للمراجعة المباشرة</strong>
-              </div>
-            </div>
-          </div>
-        </div>
-      `,
-      attachments: [{
-        filename: requestData.fileName,
-        content: fileBuffer
-      }]
-    });
-
-    // Send detailed report to admin with file attachment
-    console.log("Sending detailed report to admin...");
-    
     const adminEmailResponse = await resend.emails.send({
-      from: "Master Edu Path <no-reply@masteredupath.com>",
+      from: "نظام المراجعة المنهجية <no-reply@masteredupath.com>",
       to: ["info@masteredupath.com"],
-      subject: `تقرير مراجعة منهجية جديد - ${requestData.fileName}`,
+      subject: `🔔 تنبيه فوري: بحث جديد للمراجعة - ${requestData.fileName}`,
       html: `
         <div dir="rtl" style="font-family: Arial, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px;">
-          <div style="text-align: center; margin-bottom: 30px;">
-            <h1 style="color: #dc2626; margin-bottom: 10px;">🤖 تقرير المراجعة المنهجية بالذكاء الاصطناعي</h1>
-            <h2 style="color: #7c3aed; margin: 0;">طلب مراجعة جديد</h2>
-          </div>
-          
-          <div style="background: #fef2f2; padding: 20px; border-radius: 8px; border-right: 4px solid #dc2626; margin-bottom: 20px;">
-            <h3 style="color: #991b1b; margin-top: 0;">معلومات العميل:</h3>
-            <ul style="color: #7f1d1d; line-height: 1.8;">
-              <li><strong>الاسم:</strong> ${requestData.fullName}</li>
-              <li><strong>البريد الإلكتروني:</strong> ${requestData.email}</li>
-              <li><strong>رقم الجوال:</strong> ${requestData.phone || 'غير محدد'}</li>
-              <li><strong>اسم الملف:</strong> ${requestData.fileName}</li>
-              <li><strong>نوع الملف:</strong> ${requestData.fileType}</li>
-              <li><strong>تاريخ الطلب:</strong> ${new Date().toLocaleString('ar-SA')}</li>
-            </ul>
+          <!-- Header Alert -->
+          <div style="background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%); color: white; padding: 25px; border-radius: 12px 12px 0 0; text-align: center;">
+            <h1 style="margin: 0; font-size: 28px; margin-bottom: 10px;">🚨 تنبيه فوري من النظام</h1>
+            <div style="background: rgba(255,255,255,0.2); padding: 15px; border-radius: 8px; display: inline-block;">
+              <p style="margin: 0; font-size: 18px; font-weight: bold;">تم استلام بحث جديد للمراجعة المنهجية</p>
+              <p style="margin: 5px 0 0 0; font-size: 14px;">يرجى المراجعة الفورية وتحديد السعر</p>
+            </div>
           </div>
 
-          <div style="background: #f0f9ff; padding: 20px; border-radius: 8px; border-right: 4px solid #0ea5e9; margin-bottom: 20px;">
-            <h3 style="color: #0c4a6e; margin-top: 0;">📋 إجراءات مطلوبة:</h3>
-            <ol style="color: #0c4a6e; line-height: 1.8;">
-              <li><strong>مراجعة الملف المرفق:</strong> تم إرفاق ملف البحث الأصلي</li>
-              <li><strong>مراجعة التقرير:</strong> راجع تحليل الذكاء الاصطناعي أدناه</li>
-              <li><strong>تحديد السعر:</strong> حدد سعر الخدمة بناءً على تعقيد البحث</li>
-              <li><strong>التواصل مع العميل:</strong> تواصل عبر البريد الإلكتروني أو الواتساب لعرض السعر</li>
-            </ol>
+          <!-- Client Information -->
+          <div style="background: #fef2f2; padding: 25px; border-right: 6px solid #dc2626;">
+            <h2 style="color: #991b1b; margin-top: 0; margin-bottom: 20px; font-size: 22px;">👤 معلومات العميل</h2>
+            <div style="background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+              <table style="width: 100%; border-collapse: collapse;">
+                <tr style="border-bottom: 1px solid #f3f4f6;">
+                  <td style="padding: 12px 0; color: #6b7280; font-weight: bold; width: 30%;">الاسم الكامل:</td>
+                  <td style="padding: 12px 0; color: #1f2937;">${requestData.fullName}</td>
+                </tr>
+                <tr style="border-bottom: 1px solid #f3f4f6;">
+                  <td style="padding: 12px 0; color: #6b7280; font-weight: bold;">البريد الإلكتروني:</td>
+                  <td style="padding: 12px 0; color: #1f2937;">${requestData.email}</td>
+                </tr>
+                <tr style="border-bottom: 1px solid #f3f4f6;">
+                  <td style="padding: 12px 0; color: #6b7280; font-weight: bold;">رقم الواتساب:</td>
+                  <td style="padding: 12px 0; color: #1f2937;">${requestData.phone || 'غير متوفر'}</td>
+                </tr>
+                <tr style="border-bottom: 1px solid #f3f4f6;">
+                  <td style="padding: 12px 0; color: #6b7280; font-weight: bold;">اسم الملف:</td>
+                  <td style="padding: 12px 0; color: #1f2937;">${requestData.fileName}</td>
+                </tr>
+                <tr style="border-bottom: 1px solid #f3f4f6;">
+                  <td style="padding: 12px 0; color: #6b7280; font-weight: bold;">نوع الملف:</td>
+                  <td style="padding: 12px 0; color: #1f2937;">${requestData.fileType}</td>
+                </tr>
+                <tr>
+                  <td style="padding: 12px 0; color: #6b7280; font-weight: bold;">وقت الاستلام:</td>
+                  <td style="padding: 12px 0; color: #1f2937;">${new Date().toLocaleString('ar-SA')}</td>
+                </tr>
+              </table>
+            </div>
           </div>
 
-          <div style="background: #f0f9ff; padding: 20px; border-radius: 8px; border-right: 4px solid #0ea5e9; margin-bottom: 20px;">
-            <h3 style="color: #0c4a6e; margin-top: 0;">🔍 تقرير التحليل:</h3>
-            <div style="white-space: pre-line; background: white; padding: 15px; border-radius: 6px; color: #374151; line-height: 1.6;">
+          <!-- Action Required -->
+          <div style="background: #f0f9ff; padding: 25px; border-right: 6px solid #0ea5e9; margin: 20px 0;">
+            <h3 style="color: #0c4a6e; margin-top: 0; margin-bottom: 20px; font-size: 20px;">⚡ إجراءات مطلوبة فورية</h3>
+            <div style="background: white; padding: 20px; border-radius: 8px;">
+              <ol style="color: #0c4a6e; line-height: 1.8; margin: 0; padding-right: 20px;">
+                <li style="margin-bottom: 10px;"><strong>مراجعة الملف المرفق:</strong> تم إرفاق ملف البحث الأصلي مع هذا الإيميل</li>
+                <li style="margin-bottom: 10px;"><strong>تحليل التعقيد:</strong> قم بتقييم تعقيد البحث وطوله لتحديد السعر</li>
+                <li style="margin-bottom: 10px;"><strong>تحديد السعر:</strong> استخدم جدول التسعير المعتمد حسب نوع وتعقيد البحث</li>
+                <li style="margin-bottom: 10px;"><strong>التواصل السريع:</strong> تواصل مع العميل خلال 24 ساعة عبر:</li>
+                <ul style="margin: 10px 0; padding-right: 20px;">
+                  <li>الواتساب: ${requestData.phone || 'غير متوفر'}</li>
+                  <li>البريد الإلكتروني: ${requestData.email}</li>
+                </ul>
+              </ol>
+            </div>
+          </div>
+
+          <!-- AI Analysis Report -->
+          <div style="background: #f8fafc; padding: 25px; border-right: 6px solid #6366f1; margin: 20px 0;">
+            <h3 style="color: #4338ca; margin-top: 0; margin-bottom: 20px; font-size: 20px;">🤖 تقرير التحليل بالذكاء الاصطناعي</h3>
+            <div style="background: white; padding: 20px; border-radius: 8px; white-space: pre-line; color: #374151; line-height: 1.6; max-height: 400px; overflow-y: auto; border: 1px solid #e5e7eb;">
 ${pdfReport}
             </div>
           </div>
 
-          <div style="background: #fef3c7; padding: 15px; border-radius: 8px; margin-bottom: 20px;">
-            <h4 style="color: #92400e; margin-top: 0;">📞 معلومات الاتصال:</h4>
-            <p style="margin: 0; color: #92400e;">
-              <strong>البريد الإلكتروني:</strong> ${requestData.email}<br>
-              <strong>رقم الجوال:</strong> ${requestData.phone || 'غير محدد'}<br>
-              <strong>يُفضل التواصل عبر:</strong> الواتساب أو البريد الإلكتروني
+          <!-- Contact Information -->
+          <div style="background: #fef3c7; padding: 20px; border-radius: 8px; margin: 20px 0;">
+            <h4 style="color: #92400e; margin-top: 0; margin-bottom: 15px;">📞 معلومات التواصل السريع</h4>
+            <div style="color: #92400e; line-height: 1.6;">
+              <p style="margin: 0 0 8px 0;"><strong>البريد الإلكتروني:</strong> ${requestData.email}</p>
+              <p style="margin: 0 0 8px 0;"><strong>رقم الواتساب:</strong> ${requestData.phone || 'غير محدد'}</p>
+              <p style="margin: 0; font-weight: 500;">💡 <strong>يُفضل التواصل عبر الواتساب للاستجابة السريعة</strong></p>
+            </div>
+          </div>
+
+          <!-- File Attachment Notice -->
+          <div style="background: #ecfdf5; padding: 20px; border-radius: 8px; text-align: center; border: 2px solid #10b981;">
+            <div style="display: inline-block; background: #10b981; color: white; padding: 15px 25px; border-radius: 8px;">
+              <strong style="font-size: 16px;">📎 الملف الأصلي مرفق مع هذا الإيميل</strong>
+            </div>
+            <p style="margin: 15px 0 0 0; color: #065f46; font-weight: 500;">
+              يمكنك تحميل الملف مباشرة من المرفقات لبدء المراجعة
             </p>
           </div>
 
-          <div style="background: #ecfdf5; padding: 15px; border-radius: 8px;">
-            <p style="margin: 0; color: #065f46; font-weight: 500; text-align: center;">
-              📧 تم إرسال رسالة تأكيد للعميل على: ${requestData.email}
+          <!-- Success Notification -->
+          <div style="background: #dcfce7; padding: 15px; border-radius: 8px; margin-top: 20px; border: 1px solid #16a34a;">
+            <p style="margin: 0; color: #15803d; font-weight: 500; text-align: center;">
+              ✅ تم إرسال رسالة تأكيد للعميل على: ${requestData.email}
+            </p>
+          </div>
+
+          <!-- Footer -->
+          <div style="text-align: center; margin-top: 30px; padding-top: 20px; border-top: 2px solid #e5e7eb;">
+            <p style="color: #6b7280; font-size: 14px; margin: 0;">
+              تم إرسال هذا التنبيه تلقائياً من نظام المراجعة المنهجية بالذكاء الاصطناعي<br>
+              Master Edu Path - نظام إدارة الأبحاث
             </p>
           </div>
         </div>
