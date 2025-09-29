@@ -242,7 +242,7 @@ const Footer = () => {
             </ul>
            </motion.div>
 
-           {/* قسم التعاقد والإدارة المالية */}
+           {/* النشر في المجلات */}
            <motion.div 
              initial={{ opacity: 0, y: 20 }}
              whileInView={{ opacity: 1, y: 0 }}
@@ -250,12 +250,13 @@ const Footer = () => {
              className="space-y-4 md:space-y-6"
            >
               <h4 className="text-base md:text-lg font-bold text-white flex items-center gap-2">
-                <Briefcase className="h-4 w-4 md:h-5 md:w-5 text-orange-400" />
-                التعاقد
+                <Award className="h-4 w-4 md:h-5 md:w-5 text-orange-400" />
+                النشر في المجلات
               </h4>
               <ul className="space-y-2 md:space-y-3">
                 {[
-                  { name: 'طلب عقد جديد', href: '/contract-management', icon: Briefcase }
+                  { name: 'النشر في المجلات العلمية', href: '/research/journal-publication', icon: Award },
+                  { name: 'المراجعة التعاونية العالمية', href: '/research/global-peer-review', icon: Users }
                 ].map((link) => (
                  <li key={link.name}>
                    <a 
