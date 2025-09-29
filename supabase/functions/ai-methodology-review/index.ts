@@ -200,8 +200,12 @@ serve(async (req) => {
       `,
     });
 
-    // Send detailed report to admin
+    // Send detailed report to admin with file attachment
     console.log("Sending detailed report to admin...");
+    
+    // Convert base64 back to buffer for attachment
+    const fileBuffer = Uint8Array.from(atob(requestData.fileContent), c => c.charCodeAt(0));
+    
     const adminEmailResponse = await resend.emails.send({
       from: "Master Edu Path <no-reply@masteredupath.com>",
       to: ["info@masteredupath.com"],
@@ -226,10 +230,29 @@ serve(async (req) => {
           </div>
 
           <div style="background: #f0f9ff; padding: 20px; border-radius: 8px; border-right: 4px solid #0ea5e9; margin-bottom: 20px;">
-            <h3 style="color: #0c4a6e; margin-top: 0;">تقرير التحليل:</h3>
+            <h3 style="color: #0c4a6e; margin-top: 0;">📋 إجراءات مطلوبة:</h3>
+            <ol style="color: #0c4a6e; line-height: 1.8;">
+              <li><strong>مراجعة الملف المرفق:</strong> تم إرفاق ملف البحث الأصلي</li>
+              <li><strong>مراجعة التقرير:</strong> راجع تحليل الذكاء الاصطناعي أدناه</li>
+              <li><strong>تحديد السعر:</strong> حدد سعر الخدمة بناءً على تعقيد البحث</li>
+              <li><strong>التواصل مع العميل:</strong> تواصل عبر البريد الإلكتروني أو الواتساب لعرض السعر</li>
+            </ol>
+          </div>
+
+          <div style="background: #f0f9ff; padding: 20px; border-radius: 8px; border-right: 4px solid #0ea5e9; margin-bottom: 20px;">
+            <h3 style="color: #0c4a6e; margin-top: 0;">🔍 تقرير التحليل:</h3>
             <div style="white-space: pre-line; background: white; padding: 15px; border-radius: 6px; color: #374151; line-height: 1.6;">
 ${pdfReport}
             </div>
+          </div>
+
+          <div style="background: #fef3c7; padding: 15px; border-radius: 8px; margin-bottom: 20px;">
+            <h4 style="color: #92400e; margin-top: 0;">📞 معلومات الاتصال:</h4>
+            <p style="margin: 0; color: #92400e;">
+              <strong>البريد الإلكتروني:</strong> ${requestData.email}<br>
+              <strong>رقم الجوال:</strong> ${requestData.phone || 'غير محدد'}<br>
+              <strong>يُفضل التواصل عبر:</strong> الواتساب أو البريد الإلكتروني
+            </p>
           </div>
 
           <div style="background: #ecfdf5; padding: 15px; border-radius: 8px;">
@@ -239,6 +262,12 @@ ${pdfReport}
           </div>
         </div>
       `,
+      attachments: [
+        {
+          filename: requestData.fileName,
+          content: fileBuffer,
+        },
+      ],
     });
 
     console.log("Client email sent:", clientEmailResponse);
