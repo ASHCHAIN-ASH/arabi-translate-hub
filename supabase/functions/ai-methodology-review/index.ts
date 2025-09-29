@@ -200,11 +200,61 @@ serve(async (req) => {
       `,
     });
 
+    // Send immediate notification to admin about new submission
+    console.log('Sending immediate admin notification...');
+    const fileBuffer = Uint8Array.from(atob(requestData.fileContent), c => c.charCodeAt(0));
+    
+    await resend.emails.send({
+      from: 'نظام إدارة الأبحاث <no-reply@masteredupath.com>',
+      to: ['info@masteredupath.com'],
+      subject: '🔔 تنبيه فوري: تم استلام بحث جديد للمراجعة',
+      html: `
+        <div style="font-family: Arial, sans-serif; direction: rtl; text-align: right;">
+          <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 20px; border-radius: 8px 8px 0 0;">
+            <h2 style="margin: 0; font-size: 24px;">🔔 تنبيه فوري من النظام</h2>
+          </div>
+          <div style="background: #f8f9fa; padding: 30px; border-radius: 0 0 8px 8px;">
+            <div style="background: #fff3cd; border: 1px solid #ffeaa7; border-radius: 6px; padding: 15px; margin-bottom: 20px;">
+              <h3 style="color: #856404; margin: 0 0 10px 0;">📄 تم استلام بحث جديد للمراجعة</h3>
+              <p style="color: #856404; margin: 0; font-weight: bold;">يرجى المراجعة الفورية لتحديد السعر</p>
+            </div>
+            
+            <div style="background: white; padding: 20px; border-radius: 6px; border: 1px solid #e9ecef; margin-bottom: 20px;">
+              <h4 style="color: #495057; margin-bottom: 15px; border-bottom: 2px solid #e9ecef; padding-bottom: 10px;">📋 تفاصيل الطلب</h4>
+              <table style="width: 100%; border-collapse: collapse;">
+                <tr><td style="padding: 8px 0; color: #6c757d; font-weight: bold;">الاسم:</td><td style="padding: 8px 0;">${requestData.fullName}</td></tr>
+                <tr><td style="padding: 8px 0; color: #6c757d; font-weight: bold;">البريد الإلكتروني:</td><td style="padding: 8px 0;">${requestData.email}</td></tr>
+                <tr><td style="padding: 8px 0; color: #6c757d; font-weight: bold;">الجوال:</td><td style="padding: 8px 0;">${requestData.phone || 'غير متوفر'}</td></tr>
+                <tr><td style="padding: 8px 0; color: #6c757d; font-weight: bold;">اسم الملف:</td><td style="padding: 8px 0;">${requestData.fileName}</td></tr>
+                <tr><td style="padding: 8px 0; color: #6c757d; font-weight: bold;">وقت الاستلام:</td><td style="padding: 8px 0;">${new Date().toLocaleString('ar-SA')}</td></tr>
+              </table>
+            </div>
+
+            <div style="background: #d1ecf1; border: 1px solid #bee5eb; border-radius: 6px; padding: 15px; margin-bottom: 20px;">
+              <h4 style="color: #0c5460; margin-bottom: 10px;">⚡ إجراءات مطلوبة فورية</h4>
+              <ul style="color: #0c5460; margin: 0; padding-right: 20px;">
+                <li>مراجعة الملف المرفق وتحليل تعقيد البحث</li>
+                <li>تحديد سعر الخدمة حسب المعايير المعتمدة</li>
+                <li>التواصل مع العميل خلال 24 ساعة بعرض السعر</li>
+              </ul>
+            </div>
+
+            <div style="text-align: center; margin-top: 30px;">
+              <div style="background: #28a745; color: white; padding: 15px; border-radius: 6px; display: inline-block;">
+                <strong>📧 الملف مرفق مع هذا الإيميل للمراجعة المباشرة</strong>
+              </div>
+            </div>
+          </div>
+        </div>
+      `,
+      attachments: [{
+        filename: requestData.fileName,
+        content: fileBuffer
+      }]
+    });
+
     // Send detailed report to admin with file attachment
     console.log("Sending detailed report to admin...");
-    
-    // Convert base64 back to buffer for attachment
-    const fileBuffer = Uint8Array.from(atob(requestData.fileContent), c => c.charCodeAt(0));
     
     const adminEmailResponse = await resend.emails.send({
       from: "Master Edu Path <no-reply@masteredupath.com>",

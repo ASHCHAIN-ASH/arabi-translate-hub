@@ -205,14 +205,19 @@ const AiMethodologyReview = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-primary/5 via-secondary/5 to-accent/5" dir="rtl">
       {/* Hero Section */}
-      <div className="relative overflow-hidden bg-gradient-to-l from-primary/10 to-secondary/10 py-20">
-        <div className="absolute inset-0 bg-grid-white/[0.02] bg-[size:50px_50px]" />
-        <div className="container mx-auto px-4 relative">
+      <div className="relative overflow-hidden bg-gradient-to-br from-primary/20 via-secondary/10 to-accent/15 py-24">
+        <div className="absolute inset-0">
+          <div className="absolute inset-0 bg-grid-white/[0.02] bg-[size:60px_60px]" />
+          <div className="absolute top-0 left-0 w-72 h-72 bg-primary/20 rounded-full blur-3xl animate-pulse" />
+          <div className="absolute bottom-0 right-0 w-96 h-96 bg-secondary/20 rounded-full blur-3xl animate-pulse delay-1000" />
+          <div className="absolute top-1/2 left-1/2 w-64 h-64 bg-accent/15 rounded-full blur-2xl animate-pulse delay-500" />
+        </div>
+        <div className="container mx-auto px-4 relative z-10">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            className="text-center max-w-4xl mx-auto"
+            transition={{ duration: 0.8 }}
+            className="text-center max-w-5xl mx-auto"
           >
             <div className="flex justify-center items-center gap-4 mb-6">
               <motion.div
@@ -466,29 +471,101 @@ const AiMethodologyReview = () => {
           </Card>
         </motion.div>
 
-        {/* Info Card */}
+        {/* Pricing Card */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.6 }}
-          className="max-w-2xl mx-auto mt-8"
+          className="max-w-4xl mx-auto mt-8"
         >
-          <Card className="border-orange-200 bg-orange-50/50">
-            <CardContent className="p-6">
-              <div className="flex items-start gap-3">
-                <BookOpen className="h-6 w-6 text-orange-500 mt-1 flex-shrink-0" />
-                <div>
-                  <h4 className="font-semibold text-orange-800 mb-2">ملاحظة مهمة</h4>
-                  <p className="text-sm text-orange-700 leading-relaxed mb-3">
-                    سيقوم نظام الذكاء الاصطناعي بتحليل بحثك من جميع الجوانب المنهجية والعلمية، 
-                    وسيتم إرسال تقرير مفصل إلى الإدارة مع نسخة إلى بريدك الإلكتروني. 
-                    العملية تستغرق عادة من 15-30 دقيقة.
-                  </p>
-                  <div className="bg-orange-100 p-3 rounded-lg border border-orange-200">
-                    <p className="text-sm text-orange-800 font-medium">
-                      💰 <strong>التسعير:</strong> سيتم تحديد سعر الخدمة بناءً على تعقيد البحث وطوله، 
-                      وسيتم التواصل معك خلال 24 ساعة لإرسال عرض السعر عبر البريد الإلكتروني أو الواتساب.
+          <Card className="border-primary/20 bg-gradient-to-br from-white/90 to-primary/5 shadow-xl">
+            <CardContent className="p-8">
+              <div className="text-center mb-6">
+                <motion.div
+                  animate={{ scale: [1, 1.1, 1] }}
+                  transition={{ duration: 2, repeat: Infinity }}
+                  className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r from-primary to-secondary rounded-full mb-4"
+                >
+                  <span className="text-white text-2xl">💰</span>
+                </motion.div>
+                <h3 className="text-2xl font-bold text-primary mb-2">هيكل التسعير والشروط المالية</h3>
+                <p className="text-muted-foreground">نظام تسعير شفاف ومتدرج حسب نوعية البحث وتعقيده</p>
+              </div>
+              
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <motion.div
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ duration: 0.6, delay: 0.8 }}
+                  className="bg-white/80 p-4 rounded-lg border border-primary/10"
+                >
+                  <div className="text-center">
+                    <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-3">
+                      <span className="text-green-600 text-xl">📄</span>
+                    </div>
+                    <h4 className="font-semibold text-green-700 mb-2">الأبحاث البسيطة</h4>
+                    <p className="text-sm text-muted-foreground">
+                      • حتى 50 صفحة<br/>
+                      • منهجية واضحة<br/>
+                      • سعر تنافسي
                     </p>
+                  </div>
+                </motion.div>
+
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.6, delay: 1.0 }}
+                  className="bg-white/80 p-4 rounded-lg border border-primary/10"
+                >
+                  <div className="text-center">
+                    <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-3">
+                      <span className="text-blue-600 text-xl">📚</span>
+                    </div>
+                    <h4 className="font-semibold text-blue-700 mb-2">الأبحاث المتوسطة</h4>
+                    <p className="text-sm text-muted-foreground">
+                      • 50-150 صفحة<br/>
+                      • تحليل متقدم<br/>
+                      • تسعير متدرج
+                    </p>
+                  </div>
+                </motion.div>
+
+                <motion.div
+                  initial={{ opacity: 0, x: 20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ duration: 0.6, delay: 1.2 }}
+                  className="bg-white/80 p-4 rounded-lg border border-primary/10"
+                >
+                  <div className="text-center">
+                    <div className="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-3">
+                      <span className="text-purple-600 text-xl">🎓</span>
+                    </div>
+                    <h4 className="font-semibold text-purple-700 mb-2">الأبحاث المعقدة</h4>
+                    <p className="text-sm text-muted-foreground">
+                      • أكثر من 150 صفحة<br/>
+                      • تحليل شامل<br/>
+                      • استشارة مخصصة
+                    </p>
+                  </div>
+                </motion.div>
+              </div>
+
+              <div className="mt-6 p-4 bg-gradient-to-l from-primary/5 to-secondary/5 rounded-lg border border-primary/20">
+                <div className="flex items-center gap-3 mb-3">
+                  <div className="w-8 h-8 bg-primary/20 rounded-full flex items-center justify-center">
+                    <span className="text-primary text-sm">ℹ️</span>
+                  </div>
+                  <h4 className="font-semibold text-primary">شروط التسعير والدفع</h4>
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm text-muted-foreground">
+                  <div>
+                    <p className="mb-2">✅ <strong>عرض السعر:</strong> يتم إرسال عرض سعر مفصل خلال 24 ساعة</p>
+                    <p className="mb-2">✅ <strong>طرق التواصل:</strong> البريد الإلكتروني أو الواتساب</p>
+                  </div>
+                  <div>
+                    <p className="mb-2">✅ <strong>صالحية العرض:</strong> 7 أيام من تاريخ الإرسال</p>
+                    <p className="mb-2">✅ <strong>طرق الدفع:</strong> تحويل بنكي أو دفع إلكتروني</p>
                   </div>
                 </div>
               </div>
