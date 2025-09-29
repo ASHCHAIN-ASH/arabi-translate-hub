@@ -231,9 +231,18 @@ const AiMethodologyReview = () => {
             <h1 className="text-4xl md:text-6xl font-bold bg-gradient-to-l from-primary to-secondary bg-clip-text text-transparent mb-6">
               المراجعة المنهجية بالذكاء الاصطناعي
             </h1>
-            <p className="text-xl text-muted-foreground leading-relaxed max-w-3xl mx-auto">
+            <p className="text-xl text-muted-foreground leading-relaxed max-w-3xl mx-auto mb-4">
               خدمة مبتكرة تعتمد على الذكاء الاصطناعي لفحص وتحليل الأبحاث العلمية المرفقة، وإعداد تقرير مراجعة شامل يتم إرساله مباشرة إلى الإدارة بصيغة PDF.
             </p>
+            <div className="bg-white/80 backdrop-blur-sm p-4 rounded-lg border border-primary/20 max-w-2xl mx-auto">
+              <p className="text-lg font-semibold text-primary mb-2">💡 كيف تعمل الخدمة؟</p>
+              <div className="text-right space-y-2 text-muted-foreground">
+                <p>✅ 1. ارفع بحثك (PDF أو Word)</p>
+                <p>✅ 2. تحليل فوري بالذكاء الاصطناعي</p>
+                <p>✅ 3. تحديد السعر حسب تعقيد البحث</p>
+                <p>✅ 4. إرسال عرض السعر خلال 24 ساعة</p>
+              </div>
+            </div>
           </motion.div>
         </div>
       </div>
@@ -470,11 +479,17 @@ const AiMethodologyReview = () => {
                 <BookOpen className="h-6 w-6 text-orange-500 mt-1 flex-shrink-0" />
                 <div>
                   <h4 className="font-semibold text-orange-800 mb-2">ملاحظة مهمة</h4>
-                  <p className="text-sm text-orange-700 leading-relaxed">
+                  <p className="text-sm text-orange-700 leading-relaxed mb-3">
                     سيقوم نظام الذكاء الاصطناعي بتحليل بحثك من جميع الجوانب المنهجية والعلمية، 
                     وسيتم إرسال تقرير مفصل إلى الإدارة مع نسخة إلى بريدك الإلكتروني. 
                     العملية تستغرق عادة من 15-30 دقيقة.
                   </p>
+                  <div className="bg-orange-100 p-3 rounded-lg border border-orange-200">
+                    <p className="text-sm text-orange-800 font-medium">
+                      💰 <strong>التسعير:</strong> سيتم تحديد سعر الخدمة بناءً على تعقيد البحث وطوله، 
+                      وسيتم التواصل معك خلال 24 ساعة لإرسال عرض السعر عبر البريد الإلكتروني أو الواتساب.
+                    </p>
+                  </div>
                 </div>
               </div>
             </CardContent>
