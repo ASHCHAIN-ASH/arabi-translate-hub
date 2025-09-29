@@ -242,6 +242,35 @@ const Footer = () => {
             </ul>
            </motion.div>
 
+           {/* النشر في المجلات */}
+           <motion.div 
+             initial={{ opacity: 0, y: 20 }}
+             whileInView={{ opacity: 1, y: 0 }}
+             transition={{ delay: 0.25, duration: 0.5 }}
+             className="space-y-4 md:space-y-6"
+           >
+              <h4 className="text-base md:text-lg font-bold text-white flex items-center gap-2">
+                <Award className="h-4 w-4 md:h-5 md:w-5 text-orange-400" />
+                النشر في المجلات
+              </h4>
+              <ul className="space-y-2 md:space-y-3">
+                {[
+                  { name: 'النشر في المجلات العلمية', href: '/research/journal-publication', icon: Award },
+                  { name: 'المراجعة التعاونية العالمية', href: '/research/global-peer-review', icon: Users }
+                ].map((link) => (
+                 <li key={link.name}>
+                   <a 
+                     href={link.href} 
+                     className="text-white/70 hover:text-white transition-colors text-sm md:text-base flex items-center gap-2 hover:translate-x-1 transition-transform duration-200"
+                   >
+                     <link.icon className="h-3 w-3 md:h-4 md:w-4 text-orange-400" />
+                     {link.name}
+                   </a>
+                 </li>
+               ))}
+             </ul>
+           </motion.div>
+
             {/* الحقوق والسياسات */}
            <motion.div 
              initial={{ opacity: 0, y: 20 }}
