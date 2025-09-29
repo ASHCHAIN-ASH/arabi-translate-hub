@@ -1,6 +1,7 @@
 import "https://deno.land/x/xhr@0.1.0/mod.ts";
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 import { Resend } from "https://esm.sh/resend@4.0.0";
+import { PDFDocument, StandardFonts } from "https://esm.sh/pdf-lib@1.17.1?target=deno";
 
 const resend = new Resend(Deno.env.get("RESEND_API_KEY"));
 const openAIApiKey = Deno.env.get("OPENAI_API_KEY");
@@ -124,6 +125,67 @@ ${clientInfo.researchAbstract ? `الملخص: ${clientInfo.researchAbstract}` :
   return reportHeader + recommendations;
 }
 
+// Generate a simple PDF summary for the admin attachment
+async function generateResearchSummaryPdf(data: RecommendationRequest): Promise<string> {
+  try {
+    const pdfDoc = await PDFDocument.create();
+    const page = pdfDoc.addPage([595.28, 841.89]); // A4 size
+    const font = await pdfDoc.embedFont(StandardFonts.Helvetica);
+    const fontSize = 12;
+    const margin = 50;
+    let y = 800;
+
+    const drawLine = (text: string, size = fontSize) => {
+      page.drawText(text, { x: margin, y, size, font });
+      y -= size + 8;
+    };
+
+    drawLine('تقرير ملخص البحث - المحرر الذكي', 16);
+    drawLine('');
+    drawLine(`الاسم: ${data.fullName}`);
+    drawLine(`البريد: ${data.email}`);
+    if (data.phone) drawLine(`الجوال: ${data.phone}`);
+    drawLine(`التاريخ: ${new Date().toLocaleDateString('ar-SA')}`);
+    drawLine('');
+    drawLine('عنوان البحث:');
+    drawLine(data.researchTitle);
+    drawLine('');
+    if (data.researchAbstract) {
+      drawLine('الملخص:');
+      const text = data.researchAbstract;
+      const maxWidth = 595.28 - margin * 2;
+      const words = text.split(/\s+/);
+      let line = '';
+      for (const w of words) {
+        const trial = line ? line + ' ' + w : w;
+        const width = font.widthOfTextAtSize(trial, fontSize);
+        if (width < maxWidth) {
+          line = trial;
+        } else {
+          drawLine(line);
+          line = w;
+          if (y < 60) { y = 780; pdfDoc.addPage(); }
+        }
+      }
+      if (line) drawLine(line);
+    }
+
+    const bytes = await pdfDoc.save();
+    // Convert to base64
+    let binary = '';
+    const chunk = 0x8000;
+    for (let i = 0; i < bytes.length; i += chunk) {
+      const sub = bytes.subarray(i, i + chunk);
+      binary += String.fromCharCode.apply(null, Array.from(sub) as unknown as number[]);
+    }
+    const base64 = btoa(binary);
+    return base64;
+  } catch (e) {
+    console.error('PDF generation failed:', e);
+    return '';
+  }
+}
+
 serve(async (req) => {
   if (req.method === "OPTIONS") {
     return new Response(null, { headers: corsHeaders });
@@ -149,6 +211,10 @@ serve(async (req) => {
     // Generate detailed report
     console.log("Generating recommendation report...");
     const detailedReport = generateRecommendationReport(recommendations, requestData);
+
+    // Generate PDF summary attachment
+    console.log("Generating PDF summary attachment...");
+    const summaryPdfBase64 = await generateResearchSummaryPdf(requestData);
 
     // Send confirmation email to client
     console.log("Sending confirmation email to client...");
@@ -198,9 +264,11 @@ serve(async (req) => {
     // Send immediate notification to admin
     console.log("Sending immediate admin notification...");
     await resend.emails.send({
-      from: "المحرر الذكي - إشعار فوري <no-reply@masteredupath.com>",
+      from: "المحرر الذكي - إشعار فوري <onboarding@resend.dev>",
       to: ["info@masteredupath.com"],
       subject: `🔔 طلب توصيات جديد - ${requestData.researchTitle}`,
+      replyTo: "info@masteredupath.com",
+      attachments: (summaryPdfBase64 && summaryPdfBase64.length > 0) ? [{ filename: "research-summary.pdf", content: summaryPdfBase64 }] : [],
       html: `
         <div style="font-family: Arial, sans-serif; direction: rtl; text-align: right;">
           <div style="background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%); color: white; padding: 25px; border-radius: 12px 12px 0 0; text-align: center;">
