@@ -65,3 +65,9 @@ verify_jwt = false
 
 [functions.send-installment-request]
 verify_jwt = false
+
+[functions.smart-editor-recommendations]
+verify_jwt = false
+
+[functions.ai-methodology-review]
+verify_jwt = false

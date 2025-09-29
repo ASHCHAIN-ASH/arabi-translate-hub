@@ -194,13 +194,23 @@ const PublishingServices = () => {
             <p className="text-xl text-muted-foreground mb-8">
               اتخذ الخطوة الأولى نحو النشر الناجح لبحثك العلمي
             </p>
-            <Button 
-              size="lg" 
-              className="text-lg px-12 py-4"
-              onClick={() => navigate('/order-now')}
-            >
-              ابدأ رحلة النشر
-            </Button>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <Button 
+                size="lg" 
+                className="text-lg px-8 py-4"
+                onClick={() => navigate('/order-now')}
+              >
+                ابدأ رحلة النشر
+              </Button>
+              <Button 
+                size="lg" 
+                variant="outline"
+                className="text-lg px-8 py-4"
+                onClick={() => navigate('/research/smart-editor')}
+              >
+                🤖 المحرر الذكي - توصيات النشر
+              </Button>
+            </div>
           </motion.div>
         </div>
       </section>
