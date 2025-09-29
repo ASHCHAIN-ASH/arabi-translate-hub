@@ -1,11 +1,13 @@
 import { useState, useEffect } from 'react';
 
 export interface WorkingStatus {
-  status: 'open' | 'closed' | 'holiday';
+  status: 'open' | 'closed' | 'holiday' | 'prayer';
   label: string;
   nextOpenAt?: string;
   reason?: string;
   isLoading: boolean;
+  prayerName?: string;
+  nextPrayerTime?: Date;
   countdown?: {
     hours: number;
     minutes: number;
@@ -46,6 +48,47 @@ export const useWorkingStatus = () => {
     return { hours, minutes, seconds, totalSeconds };
   };
 
+  const getPrayerTimes = (date: Date) => {
+    // Prayer times for Jeddah (approximate - can be enhanced with proper calculation)
+    const prayers = {
+      fajr: { hour: 5, minute: 15, name: 'الفجر', duration: 20 },
+      dhuhr: { hour: 12, minute: 15, name: 'الظهر', duration: 15 },
+      asr: { hour: 15, minute: 30, name: 'العصر', duration: 15 },
+      maghrib: { hour: 18, minute: 15, name: 'المغرب', duration: 15 },
+      isha: { hour: 19, minute: 45, name: 'العشاء', duration: 15 }
+    };
+    
+    return Object.entries(prayers).map(([key, prayer]) => {
+      const prayerTime = new Date(date);
+      prayerTime.setHours(prayer.hour, prayer.minute, 0, 0);
+      return {
+        ...prayer,
+        time: prayerTime,
+        endTime: new Date(prayerTime.getTime() + prayer.duration * 60000)
+      };
+    });
+  };
+
+  const getCurrentPrayer = (currentTime: Date) => {
+    const prayers = getPrayerTimes(currentTime);
+    return prayers.find(prayer => 
+      currentTime >= prayer.time && currentTime < prayer.endTime
+    );
+  };
+
+  const getNextPrayer = (currentTime: Date) => {
+    const prayers = getPrayerTimes(currentTime);
+    const upcoming = prayers.find(prayer => currentTime < prayer.time);
+    
+    if (upcoming) return upcoming;
+    
+    // If no prayer today, get tomorrow's first prayer
+    const tomorrow = new Date(currentTime);
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    const tomorrowPrayers = getPrayerTimes(tomorrow);
+    return tomorrowPrayers[0];
+  };
+
   const getBusinessStatus = () => {
     try {
       const riyadhTime = getRiyadhTime();
@@ -53,6 +96,20 @@ export const useWorkingStatus = () => {
       const currentHour = riyadhTime.getHours();
       const currentMinute = riyadhTime.getMinutes();
       const currentTime = currentHour * 60 + currentMinute;
+
+      // Check if it's prayer time
+      const currentPrayer = getCurrentPrayer(riyadhTime);
+      if (currentPrayer) {
+        const nextPrayer = getNextPrayer(riyadhTime);
+        return {
+          status: 'prayer' as const,
+          label: `🕌 الموظفون يؤدون الصلاة الآن وسوف نعود لكم`,
+          prayerName: currentPrayer.name,
+          nextPrayerTime: nextPrayer?.time,
+          isLoading: false,
+          countdown: getCountdown(currentPrayer.endTime.toISOString())
+        };
+      }
 
       // Check for official holidays (simplified - can be enhanced later)
       const today = `${String(riyadhTime.getMonth() + 1).padStart(2, '0')}-${String(riyadhTime.getDate()).padStart(2, '0')}`;
