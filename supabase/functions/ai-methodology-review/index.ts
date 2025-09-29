@@ -204,7 +204,7 @@ serve(async (req) => {
     console.log("Sending detailed report to admin...");
     const adminEmailResponse = await resend.emails.send({
       from: "Master Edu Path <no-reply@masteredupath.com>",
-      to: ["info@alialshehriholding.com"],
+      to: ["info@masteredupath.com"],
       subject: `تقرير مراجعة منهجية جديد - ${requestData.fileName}`,
       html: `
         <div dir="rtl" style="font-family: Arial, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px;">
