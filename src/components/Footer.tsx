@@ -253,21 +253,22 @@ const Footer = () => {
                 <Award className="h-4 w-4 md:h-5 md:w-5 text-orange-400" />
                 النشر في المجلات
               </h4>
-               <ul className="space-y-2 md:space-y-3">
-                 {[
-                   { name: 'المراجعة التعاونية العالمية', href: '/research/global-peer-review', icon: Users }
-                 ].map((link) => (
-                 <li key={link.name}>
-                   <a 
-                     href={link.href} 
-                     className="text-white/70 hover:text-white transition-colors text-sm md:text-base flex items-center gap-2 hover:translate-x-1 transition-transform duration-200"
-                   >
-                     <link.icon className="h-3 w-3 md:h-4 md:w-4 text-orange-400" />
-                     {link.name}
-                   </a>
-                 </li>
-               ))}
-             </ul>
+              <ul className="space-y-2 md:space-y-3">
+                {[
+                  { name: 'المراجعة التعاونية العالمية', href: '/research/global-peer-review', icon: Users },
+                  { name: 'مراجعة منهجية بالذكاء الاصطناعي', href: '/research/ai-methodology-review', icon: Trophy }
+                ].map((link) => (
+                <li key={link.name}>
+                  <a 
+                    href={link.href} 
+                    className="text-white/70 hover:text-white transition-colors text-sm md:text-base flex items-center gap-2 hover:translate-x-1 transition-transform duration-200"
+                  >
+                    <link.icon className="h-3 w-3 md:h-4 md:w-4 text-orange-400" />
+                    {link.name}
+                  </a>
+                </li>
+              ))}
+            </ul>
            </motion.div>
 
             {/* الحقوق والسياسات */}
