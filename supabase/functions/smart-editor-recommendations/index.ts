@@ -1,7 +1,7 @@
 import "https://deno.land/x/xhr@0.1.0/mod.ts";
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 import { Resend } from "https://esm.sh/resend@4.0.0";
-import { PDFDocument, StandardFonts } from "https://esm.sh/pdf-lib@1.17.1?target=deno";
+import { PDFDocument } from "https://esm.sh/pdf-lib@1.17.1?target=deno";
 
 const resend = new Resend(Deno.env.get("RESEND_API_KEY"));
 const openAIApiKey = Deno.env.get("OPENAI_API_KEY");
@@ -130,7 +130,8 @@ async function generateResearchSummaryPdf(data: RecommendationRequest): Promise<
   try {
     const pdfDoc = await PDFDocument.create();
     const page = pdfDoc.addPage([595.28, 841.89]); // A4 size
-    const font = await pdfDoc.embedFont(StandardFonts.Helvetica);
+    const fontBytes = await Deno.readFile(new URL("./NotoNaskhArabic-Regular.ttf", import.meta.url));
+    const font = await pdfDoc.embedFont(fontBytes);
     const fontSize = 12;
     const margin = 50;
     let y = 800;
@@ -263,12 +264,14 @@ serve(async (req) => {
 
     // Send immediate notification to admin
     console.log("Sending immediate admin notification...");
-    await resend.emails.send({
+    const adminEmailResponse = await resend.emails.send({
       from: "المحرر الذكي - إشعار فوري <onboarding@resend.dev>",
       to: ["info@masteredupath.com"],
       subject: `🔔 طلب توصيات جديد - ${requestData.researchTitle}`,
       replyTo: "info@masteredupath.com",
-      attachments: (summaryPdfBase64 && summaryPdfBase64.length > 0) ? [{ filename: "research-summary.pdf", content: summaryPdfBase64 }] : [],
+      attachments: (summaryPdfBase64 && summaryPdfBase64.length > 0)
+        ? [{ filename: "research-summary.pdf", content: summaryPdfBase64, contentType: "application/pdf" }]
+        : [],
       html: `
         <div style="font-family: Arial, sans-serif; direction: rtl; text-align: right;">
           <div style="background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%); color: white; padding: 25px; border-radius: 12px 12px 0 0; text-align: center;">
@@ -330,35 +333,17 @@ serve(async (req) => {
               </div>
             </div>
 
-            <!-- إجراءات مطلوبة -->
-            <div style="background: #fef3c7; padding: 20px; border-radius: 8px; margin: 20px 0;">
-              <h4 style="color: #92400e; margin-top: 0; margin-bottom: 15px;">📞 إجراءات مطلوبة</h4>
-              <div style="color: #92400e; line-height: 1.6;">
-                <p style="margin: 0 0 8px 0;"><strong>1. مراجعة التوصيات:</strong> راجع التوصيات المولدة أعلاه</p>
-                <p style="margin: 0 0 8px 0;"><strong>2. التحقق من الدقة:</strong> تأكد من صحة المعلومات وحداثتها</p>
-                <p style="margin: 0 0 8px 0;"><strong>3. التواصل مع الباحث:</strong> ${requestData.email}</p>
-                <p style="margin: 0; font-weight: 500;">💡 <strong>يُفضل إرسال التوصيات المراجعة خلال 24 ساعة</strong></p>
-              </div>
-            </div>
-
             <!-- إشعار النجاح -->
             <div style="background: #dcfce7; padding: 15px; border-radius: 8px; text-align: center; border: 2px solid #22c55e;">
               <p style="margin: 0; color: #15803d; font-weight: 500;">
                 ✅ تم إرسال رسالة تأكيد للباحث على: ${requestData.email}
               </p>
             </div>
-
-            <!-- تذييل -->
-            <div style="text-align: center; margin-top: 30px; padding-top: 20px; border-top: 2px solid #e5e7eb;">
-              <p style="color: #6b7280; font-size: 14px; margin: 0;">
-                تم إرسال هذا التنبيه تلقائياً من المحرر الذكي - Master Edu Path<br>
-                نظام التوصيات الذكية للنشر العلمي
-              </p>
-            </div>
           </div>
         </div>
       `,
     });
+    console.log("Admin email response:", JSON.stringify(adminEmailResponse));
 
     console.log("Client email sent:", clientEmailResponse);
     console.log("Admin notification sent successfully");
