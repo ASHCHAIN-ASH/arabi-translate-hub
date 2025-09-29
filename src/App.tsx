@@ -80,6 +80,7 @@ import PlagiarismCheck from "./pages/research/PlagiarismCheck";
 import AdmissionServices from "./pages/AdmissionServices";
 import References from "./pages/research/References";
 import GlobalPeerReview from "./pages/research/GlobalPeerReview";
+import AiMethodologyReview from "./pages/research/AiMethodologyReview";
 import ResearchTools from "./pages/research/ResearchTools";
 import TextTranslation from "./pages/services/TextTranslation";
 import DocumentTranslation from "./pages/services/DocumentTranslation";
@@ -304,7 +305,8 @@ const App = () => (
             <Route path="/research/research-evaluation" element={<ResearchEvaluation />} />
             <Route path="/research/publication" element={<Publication />} />
             <Route path="/research/journal-publication" element={<JournalPublication />} />
-            <Route path="/research/global-peer-review" element={<GlobalPeerReview />} />
+          <Route path="/research/global-peer-review" element={<GlobalPeerReview />} />
+          <Route path="/research/ai-methodology-review" element={<AiMethodologyReview />} />
             <Route path="/research/academic-consultation" element={<AcademicConsultation />} />
             <Route path="/research/training-courses" element={<TrainingCourses />} />
             
