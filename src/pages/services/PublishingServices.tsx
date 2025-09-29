@@ -210,6 +210,14 @@ const PublishingServices = () => {
               >
                 🤖 المحرر الذكي - توصيات النشر
               </Button>
+              <Button 
+                size="lg" 
+                variant="outline"
+                className="text-lg px-8 py-4 border-2 border-purple-600 text-purple-600 hover:bg-purple-50"
+                onClick={() => navigate('/research/annotated-publishing')}
+              >
+                📑 النشر المشروح
+              </Button>
             </div>
           </motion.div>
         </div>

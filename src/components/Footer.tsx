@@ -257,7 +257,8 @@ const Footer = () => {
                 {[
                   { name: 'المراجعة التعاونية العالمية', href: '/research/global-peer-review', icon: Users },
                   { name: 'مراجعة منهجية بالذكاء الاصطناعي', href: '/research/ai-methodology-review', icon: Trophy },
-                  { name: 'المحرر الذكي - توصيات النشر', href: '/research/smart-editor', icon: Award }
+                  { name: 'المحرر الذكي - توصيات النشر', href: '/research/smart-editor', icon: Award },
+                  { name: 'النشر المشروح', href: '/research/annotated-publishing', icon: Award }
                 ].map((link) => (
                 <li key={link.name}>
                   <a 

@@ -70,6 +70,7 @@ import AdminWorkingHours from "./pages/admin/AdminWorkingHours";
 import ContractsSystem from "./pages/admin/ContractsSystem";
 
 import ThesisTitles from "./pages/research/ThesisTitles";
+import AnnotatedPublishing from './pages/research/AnnotatedPublishing';
 import ResearchPlan from "./pages/research/ResearchPlan";
 import TheoreticalFrameworkPage from "./pages/research/TheoreticalFrameworkPage";
 import TheoreticalFramework from "./pages/research/TheoreticalFramework";
@@ -308,7 +309,8 @@ const App = () => (
             <Route path="/research/journal-publication" element={<JournalPublication />} />
           <Route path="/research/global-peer-review" element={<GlobalPeerReview />} />
           <Route path="/research/ai-methodology-review" element={<AiMethodologyReview />} />
-            <Route path="/research/smart-editor" element={<SmartEditor />} />
+        <Route path="/research/smart-editor" element={<SmartEditor />} />
+        <Route path="/research/annotated-publishing" element={<AnnotatedPublishing />} />
             <Route path="/research/academic-consultation" element={<AcademicConsultation />} />
             <Route path="/research/training-courses" element={<TrainingCourses />} />
             

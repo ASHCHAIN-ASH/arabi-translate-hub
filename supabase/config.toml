@@ -69,5 +69,8 @@ verify_jwt = false
 [functions.smart-editor-recommendations]
 verify_jwt = false
 
+[functions.annotated-publishing-service]
+verify_jwt = false
+
 [functions.ai-methodology-review]
 verify_jwt = false
