@@ -253,11 +253,10 @@ const Footer = () => {
                 <Award className="h-4 w-4 md:h-5 md:w-5 text-orange-400" />
                 النشر في المجلات
               </h4>
-              <ul className="space-y-2 md:space-y-3">
-                {[
-                  { name: 'النشر في المجلات العلمية', href: '/research/journal-publication', icon: Award },
-                  { name: 'المراجعة التعاونية العالمية', href: '/research/global-peer-review', icon: Users }
-                ].map((link) => (
+               <ul className="space-y-2 md:space-y-3">
+                 {[
+                   { name: 'المراجعة التعاونية العالمية', href: '/research/global-peer-review', icon: Users }
+                 ].map((link) => (
                  <li key={link.name}>
                    <a 
                      href={link.href} 
