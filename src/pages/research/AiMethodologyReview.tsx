@@ -121,7 +121,7 @@ const AiMethodologyReview = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (!formData.fullName || !formData.email || !formData.file) {
+    if (!formData.fullName || !formData.email || !formData.phone || !formData.file) {
       toast({
         title: "بيانات ناقصة",
         description: "يرجى ملء جميع الحقول المطلوبة ورفع الملف",
@@ -402,7 +402,7 @@ const AiMethodologyReview = () => {
 
                   {/* Phone Field */}
                   <div className="space-y-2">
-                    <Label htmlFor="phone">رقم الجوال (اختياري)</Label>
+                    <Label htmlFor="phone">رقم الواتساب *</Label>
                     <Input
                       id="phone"
                       name="phone"
@@ -410,6 +410,7 @@ const AiMethodologyReview = () => {
                       value={formData.phone}
                       onChange={handleInputChange}
                       placeholder="+966xxxxxxxxx"
+                      required
                       className="text-right"
                     />
                   </div>
@@ -450,7 +451,7 @@ const AiMethodologyReview = () => {
                   {/* Submit Button */}
                   <Button
                     type="submit"
-                    disabled={isSubmitting || !formData.file || !formData.agreedToTerms}
+                    disabled={isSubmitting || !formData.file || !formData.phone || !formData.agreedToTerms}
                     className="w-full h-12 text-lg"
                   >
                     {isSubmitting ? (
