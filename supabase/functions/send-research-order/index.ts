@@ -22,6 +22,7 @@ interface ResearchOrderRequest {
   researchTitle: string;
   deadline: string;
   details?: string;
+  orderNumber?: string;
   attachments: Array<{
     url: string;
     name: string;
@@ -48,10 +49,14 @@ const handler = async (req: Request): Promise<Response> => {
 
     const orderData: ResearchOrderRequest = await req.json();
 
+    // توليد رقم الطلب إذا لم يتم تقديمه
+    const generatedOrderNumber = orderData.orderNumber || `RO${Date.now().toString().slice(-8)}`;
+    
     // حفظ الطلب في قاعدة البيانات
     const { data: order, error: dbError } = await supabaseClient
       .from('research_orders')
       .insert({
+        order_number: generatedOrderNumber,
         category: orderData.category,
         category_title: orderData.categoryTitle,
         specialization: orderData.specialization,
