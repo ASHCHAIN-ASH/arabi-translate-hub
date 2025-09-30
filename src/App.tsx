@@ -40,8 +40,6 @@ import BusinessResearch from "./pages/research/BusinessResearch";
 import SocialResearch from "./pages/research/SocialResearch";
 import LegalResearch from "./pages/research/LegalResearch";
 import MedicalResearch from "./pages/research/MedicalResearch";
-import OrderResearchService from "./pages/research/OrderResearchService";
-import ResearchRequest from "./pages/research/ResearchRequest";
 import AboutUs from "./pages/AboutUs";
 import AcademicCompetitions from "./pages/AcademicCompetitions";
 import Unauthorized from "./pages/Unauthorized";
@@ -160,8 +158,6 @@ const App = () => (
             <Route path="/research/social" element={<SocialResearch />} />
             <Route path="/research/legal" element={<LegalResearch />} />
             <Route path="/research/medical" element={<MedicalResearch />} />
-          <Route path="/research/order/:category" element={<OrderResearchService />} />
-          <Route path="/research/request" element={<ResearchRequest />} />
             <Route path="/about-us" element={<AboutUs />} />
              <Route path="/terms-of-service" element={<TermsOfService />} />
              <Route path="/privacy-policy" element={<PrivacyPolicy />} />

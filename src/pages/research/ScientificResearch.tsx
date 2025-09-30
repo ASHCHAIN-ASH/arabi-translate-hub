@@ -1,10 +1,10 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { useNavigate } from 'react-router-dom';
 import Header from "@/components/Header";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { SimpleResearchForm } from "@/components/SimpleResearchForm";
 import { 
   Microscope, FlaskConical, Atom, Dna, Waves, Zap, 
   Droplets, TestTube, Binary, Cpu, ArrowRight, CheckCircle, Star, Users
@@ -104,7 +104,8 @@ const scientificSpecializations = [
 ];
 
 const ScientificResearch = () => {
-  const navigate = useNavigate();
+  const specializations = scientificSpecializations.map(s => s.title);
+  const researchTypes = ['بحث علمي', 'رسالة ماجستير', 'أطروحة دكتوراه', 'مقال علمي', 'تقرير بحثي'];
   
   return (
     <div className="min-h-screen bg-gradient-to-b from-background via-purple-50/20 to-background">
@@ -229,7 +230,9 @@ const ScientificResearch = () => {
                       </div>
                     </div>
 
-                    <Button className="w-full" size="sm" onClick={() => navigate('/research/order/scientific')}>
+                    <Button className="w-full" size="sm" onClick={() => {
+                      document.getElementById('order-form')?.scrollIntoView({ behavior: 'smooth' });
+                    }}>
                       اطلب الخدمة
                       <ArrowRight className="h-4 w-4 mr-2" />
                     </Button>
@@ -238,6 +241,31 @@ const ScientificResearch = () => {
               </motion.div>
             ))}
           </div>
+        </div>
+      </section>
+
+      {/* Order Form Section */}
+      <section id="order-form" className="py-20 bg-gradient-to-br from-gray-50 to-purple-50 dark:from-gray-900 dark:to-purple-950">
+        <div className="container mx-auto px-4">
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+            className="text-center mb-12"
+          >
+            <h2 className="text-4xl font-bold mb-4">اطلب خدمتك البحثية الآن</h2>
+            <p className="text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
+              املأ النموذج وسيتواصل معك فريقنا المتخصص خلال 24 ساعة
+            </p>
+          </motion.div>
+          
+          <SimpleResearchForm
+            category="scientific"
+            categoryTitle="الأبحاث العلمية"
+            specializations={specializations}
+            researchTypes={researchTypes}
+          />
         </div>
       </section>
     </div>

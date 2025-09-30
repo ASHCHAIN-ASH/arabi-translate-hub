@@ -1,10 +1,10 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { useNavigate } from 'react-router-dom';
 import Header from "@/components/Header";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { SimpleResearchForm } from "@/components/SimpleResearchForm";
 import { 
   Heart, Stethoscope, Pill, FlaskConical, Brain, 
   Baby, Eye, Bone, Activity, Users,
@@ -105,7 +105,8 @@ const medicalSpecializations = [
 ];
 
 const MedicalResearch = () => {
-  const navigate = useNavigate();
+  const specializations = medicalSpecializations.map(s => s.title);
+  const researchTypes = ['بحث طبي', 'دراسة سريرية', 'رسالة ماجستير', 'أطروحة دكتوراه', 'تقرير طبي'];
   
   return (
     <div className="min-h-screen bg-gradient-to-b from-background via-pink-50/20 to-background">
@@ -223,7 +224,9 @@ const MedicalResearch = () => {
                       </div>
                     </div>
 
-                    <Button className="w-full" size="sm" onClick={() => navigate('/research/order/medical')}>
+                    <Button className="w-full" size="sm" onClick={() => {
+                      document.getElementById('order-form')?.scrollIntoView({ behavior: 'smooth' });
+                    }}>
                       اطلب الخدمة
                       <ArrowRight className="h-4 w-4 mr-2" />
                     </Button>
@@ -232,6 +235,31 @@ const MedicalResearch = () => {
               </motion.div>
             ))}
           </div>
+        </div>
+      </section>
+
+      {/* Order Form Section */}
+      <section id="order-form" className="py-20 bg-gradient-to-br from-gray-50 to-pink-50 dark:from-gray-900 dark:to-pink-950">
+        <div className="container mx-auto px-4">
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+            className="text-center mb-12"
+          >
+            <h2 className="text-4xl font-bold mb-4">اطلب خدمتك البحثية الآن</h2>
+            <p className="text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
+              املأ النموذج وسيتواصل معك فريقنا المتخصص خلال 24 ساعة
+            </p>
+          </motion.div>
+          
+          <SimpleResearchForm
+            category="medical"
+            categoryTitle="الأبحاث الطبية"
+            specializations={specializations}
+            researchTypes={researchTypes}
+          />
         </div>
       </section>
     </div>

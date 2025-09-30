@@ -49,33 +49,10 @@ const handler = async (req: Request): Promise<Response> => {
 
     const orderData: ResearchOrderRequest = await req.json();
 
-    // حفظ الطلب في قاعدة البيانات
-    const { data: order, error: dbError } = await supabaseClient
-      .from('research_orders')
-      .insert({
-        category: orderData.category,
-        category_title: orderData.categoryTitle,
-        specialization: orderData.specialization,
-        research_type: orderData.researchType,
-        research_title: orderData.researchTitle,
-        deadline: orderData.deadline,
-        details: orderData.details,
-        full_name: orderData.fullName,
-        email: orderData.email,
-        phone: orderData.phone,
-        whatsapp: orderData.whatsapp,
-        attachments: orderData.attachments,
-        status: 'pending'
-      })
-      .select()
-      .single();
-
-    if (dbError) {
-      console.error("Database error:", dbError);
-      throw new Error(`فشل في حفظ الطلب: ${dbError.message}`);
-    }
-
-    console.log("Order saved with ID:", order.id);
+    // توليد معرف فريد للطلب
+    const orderId = `RO${Date.now()}`;
+    
+    console.log("Processing research order:", orderId);
 
     // تجهيز قائمة المرفقات للإيميل
     const attachmentsList = orderData.attachments && orderData.attachments.length > 0
@@ -116,7 +93,7 @@ const handler = async (req: Request): Promise<Response> => {
           <div style="background: white; padding: 30px; border-radius: 0 0 10px 10px;">
             <div style="background: #dbeafe; padding: 15px; border-radius: 8px; margin-bottom: 20px; border-right: 4px solid #2563eb;">
               <h2 style="color: #1e40af; margin: 0;">نوع الخدمة: ${orderData.categoryTitle}</h2>
-              <p style="color: #6b7280; margin: 5px 0 0 0; font-size: 14px;">رقم الطلب في النظام: ${order.id}</p>
+              <p style="color: #6b7280; margin: 5px 0 0 0; font-size: 14px;">رقم الطلب: ${orderId}</p>
             </div>
 
             <h3 style="color: #2563eb; border-bottom: 2px solid #e5e7eb; padding-bottom: 10px;">معلومات البحث</h3>
@@ -264,10 +241,34 @@ const handler = async (req: Request): Promise<Response> => {
 
     console.log("Emails sent successfully:", { adminEmail, clientEmail });
 
+    // إرسال إشعار للعميل
+    await supabaseClient
+      .from('user_notifications')
+      .insert({
+        user_email: orderData.email,
+        title: 'تم استلام طلبك البحثي',
+        message: `شكراً لك على طلب خدمة ${orderData.categoryTitle}. سنتواصل معك قريباً.`,
+        type: 'success',
+        category: 'order',
+        metadata: { orderId, category: orderData.category }
+      });
+
+    // إرسال إشعار للإدارة
+    await supabaseClient
+      .from('user_notifications')
+      .insert({
+        user_email: 'info@masteredupath.com',
+        title: 'طلب بحثي جديد',
+        message: `طلب جديد من ${orderData.fullName} - ${orderData.categoryTitle}`,
+        type: 'info',
+        category: 'admin',
+        metadata: { orderId, customerEmail: orderData.email, category: orderData.category }
+      });
+
     return new Response(
       JSON.stringify({ 
         success: true,
-        orderId: order.id,
+        orderId,
         message: "تم إرسال الطلب بنجاح"
       }),
       {
