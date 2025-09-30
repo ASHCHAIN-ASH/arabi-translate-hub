@@ -69,11 +69,12 @@ const ServicesShowcase = () => {
     { icon: Star, text: "خدمة متميزة", color: "text-purple-600" }
   ];
 
+  // إحصائيات موحدة - نفس الأرقام في جميع أقسام الموقع
   const stats = [
-    { number: "15,000+", label: "بحث مكتمل", icon: CheckCircle },
+    { number: "25,000+", label: "بحث مكتمل", icon: CheckCircle },
     { number: "500+", label: "خبير أكاديمي", icon: Brain },
     { number: "50+", label: "تخصص علمي", icon: Target },
-    { number: "99%", label: "رضا العملاء", icon: TrendingUp }
+    { number: "98%", label: "رضا العملاء", icon: TrendingUp }
   ];
 
   return (

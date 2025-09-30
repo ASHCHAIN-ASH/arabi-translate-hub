@@ -13,56 +13,57 @@ import {
 } from 'lucide-react';
 
 const AcademicStats = () => {
+  // إحصائيات موحدة - نفس الأرقام في جميع أقسام الموقع
   const stats = [
     {
       icon: Users,
-      value: "+10,000",
+      value: "+50,000",
       label: "طالب وباحث",
       sublabel: "Students & Researchers",
-      description: "من جميع أنحاء العالم يثقون في خدماتنا",
+      description: "من جميع أنحاء العالم يثقون في خدماتنا الأكاديمية",
       color: "from-blue-600 to-indigo-600"
     },
     {
-      icon: Globe,
-      value: "+50",
-      label: "دولة",
-      sublabel: "Countries",
-      description: "نقدم خدماتنا في أكثر من 50 دولة حول العالم",
+      icon: BookOpen,
+      value: "+25,000",
+      label: "بحث علمي مكتمل",
+      sublabel: "Research Completed",
+      description: "من الأبحاث والرسائل والترجمات المتخصصة",
       color: "from-emerald-600 to-teal-600"
     },
     {
-      icon: Award,
-      value: "100%",
-      label: "نسبة النجاح",
-      sublabel: "Success Rate",
-      description: "معدل رضا استثنائي مع ضمان الجودة",
-      color: "from-amber-600 to-orange-600"
+      icon: Globe,
+      value: "+120",
+      label: "دولة حول العالم",
+      sublabel: "Countries Worldwide",
+      description: "نقدم خدماتنا في أكثر من 120 دولة حول العالم",
+      color: "from-purple-600 to-pink-600"
     },
     {
-      icon: BookOpen,
-      value: "+5,000",
-      label: "مشروع مكتمل",
-      sublabel: "Completed Projects",
-      description: "من الأبحاث والرسائل والترجمات المتخصصة",
-      color: "from-purple-600 to-pink-600"
+      icon: Award,
+      value: "98%",
+      label: "نسبة الرضا",
+      sublabel: "Satisfaction Rate",
+      description: "معدل رضا استثنائي مع ضمان الجودة الأكاديمية",
+      color: "from-amber-600 to-orange-600"
     }
   ];
 
   const achievements = [
     {
       icon: GraduationCap,
-      title: "شراكات أكاديمية",
-      description: "شريك معتمد لأكثر من 200 جامعة ومؤسسة تعليمية عالمية"
+      title: "شراكات أكاديمية عالمية",
+      description: "شريك معتمد لأكثر من 200 جامعة ومؤسسة تعليمية حول العالم"
     },
     {
       icon: TrendingUp,
-      title: "نمو مستمر",
-      description: "نسبة نمو سنوية 150% في عدد المشاريع المكتملة بنجاح"
+      title: "خبرة 15 عاماً",
+      description: "خبرة متراكمة في مجال الخدمات الأكاديمية والبحثية المتخصصة"
     },
     {
       icon: Building2,
-      title: "اعتماد دولي",
-      description: "معتمدون من المنظمات الدولية للتعليم والبحث العلمي"
+      title: "500+ خبير متخصص",
+      description: "فريق متعدد التخصصات من الخبراء الأكاديميين في 50+ مجال"
     }
   ];
 

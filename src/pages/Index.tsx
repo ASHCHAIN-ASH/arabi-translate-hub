@@ -28,7 +28,7 @@ const LoadingSpinner = () => (
 const Index = () => {
   const navigate = useNavigate();
   
-  // إحصائيات أكاديمية
+  // إحصائيات أكاديمية موحدة
   const academicStats = [
     { icon: Users, number: 50000, suffix: "+", title: "طالب وباحث", color: "from-blue-500 to-indigo-600" },
     { icon: BookOpen, number: 25000, suffix: "+", title: "بحث علمي مكتمل", color: "from-emerald-500 to-teal-600" },
