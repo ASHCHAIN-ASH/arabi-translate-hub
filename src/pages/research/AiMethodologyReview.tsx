@@ -12,6 +12,7 @@ import {
   Clock
 } from "lucide-react";
 import { Link } from "react-router-dom";
+import Footer from '@/components/Footer';
 
 const AiMethodologyReview = () => {
   return (
@@ -191,6 +192,8 @@ const AiMethodologyReview = () => {
           </motion.p>
         </motion.div>
       </div>
+
+      <Footer />
     </div>
   );
 };

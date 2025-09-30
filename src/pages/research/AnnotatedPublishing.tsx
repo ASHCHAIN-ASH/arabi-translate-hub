@@ -14,6 +14,8 @@ import {
   Mail
 } from "lucide-react";
 import { Link } from "react-router-dom";
+import Header from '@/components/Header';
+import Footer from '@/components/Footer';
 
 const AnnotatedPublishing = () => {
   const features = [
@@ -41,6 +43,8 @@ const AnnotatedPublishing = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-primary/5 via-secondary/5 to-accent/5" dir="rtl">
+      <Header />
+      
       {/* Animated Background Elements */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none">
         <motion.div
@@ -69,7 +73,7 @@ const AnnotatedPublishing = () => {
         />
       </div>
 
-      <div className="container mx-auto px-4 py-16 relative z-10">
+      <div className="container mx-auto px-4 py-16 pt-24 relative z-10">
         <div className="max-w-5xl mx-auto">
           {/* Main Card */}
           <motion.div
@@ -306,6 +310,8 @@ const AnnotatedPublishing = () => {
           </motion.div>
         </div>
       </div>
+
+      <Footer />
     </div>
   );
 };
