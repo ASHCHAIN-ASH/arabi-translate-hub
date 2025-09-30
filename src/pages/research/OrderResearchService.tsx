@@ -11,8 +11,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { 
-  Send, Upload, Phone, Mail, MapPin, Clock, CheckCircle,
-  FileText, Calendar, User, MessageSquare, Paperclip
+  Send, Phone, Mail, MapPin, Clock, CheckCircle,
+  FileText, Calendar, User, MessageSquare
 } from 'lucide-react';
 
 const categoryData: Record<string, { 
@@ -71,7 +71,6 @@ const OrderResearchService = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
   const [loading, setLoading] = useState(false);
-  const [files, setFiles] = useState<File[]>([]);
   
   const categoryInfo = category ? categoryData[category] : categoryData.academic;
 
@@ -87,62 +86,17 @@ const OrderResearchService = () => {
     details: ''
   });
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files) {
-      const newFiles = Array.from(e.target.files);
-      setFiles(prev => [...prev, ...newFiles]);
-    }
-  };
-
-  const removeFile = (index: number) => {
-    setFiles(prev => prev.filter((_, i) => i !== index));
-  };
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
 
     try {
-      // رفع الملفات أولاً
-      const uploadedFiles = [];
-      
-      if (files.length > 0) {
-        for (const file of files) {
-          const fileExt = file.name.split('.').pop();
-          const fileName = `${Math.random()}.${fileExt}`;
-          const filePath = `${Date.now()}-${fileName}`;
-
-          const { data: uploadData, error: uploadError } = await supabase.storage
-            .from('research-attachments')
-            .upload(filePath, file);
-
-          if (uploadError) {
-            console.error('Upload error:', uploadError);
-            throw new Error(`فشل رفع الملف ${file.name}`);
-          }
-
-          // الحصول على رابط الملف
-          const { data: { publicUrl } } = supabase.storage
-            .from('research-attachments')
-            .getPublicUrl(filePath);
-
-          uploadedFiles.push({
-            url: publicUrl,
-            name: file.name,
-            type: file.type,
-            size: file.size,
-            path: filePath
-          });
-        }
-      }
-
       // استدعاء edge function لحفظ الطلب وإرسال الإيميل
       const { data, error } = await supabase.functions.invoke('send-research-order', {
         body: {
           category: category || 'academic',
           categoryTitle: categoryInfo.title,
-          ...formData,
-          attachments: uploadedFiles
+          ...formData
         }
       });
 
@@ -362,53 +316,6 @@ const OrderResearchService = () => {
                       />
                     </div>
 
-                    {/* رفع الملفات */}
-                    <div>
-                      <Label htmlFor="files">إرفاق ملفات (اختياري)</Label>
-                      <div className="mt-2">
-                        <label htmlFor="files" className="flex items-center justify-center w-full h-32 px-4 transition bg-white border-2 border-gray-300 border-dashed rounded-lg appearance-none cursor-pointer hover:border-primary focus:outline-none">
-                          <div className="flex flex-col items-center space-y-2">
-                            <Upload className="h-8 w-8 text-gray-400" />
-                            <span className="font-medium text-gray-600">
-                              اضغط لرفع الملفات
-                            </span>
-                            <span className="text-xs text-gray-500">
-                              PDF, DOC, DOCX, PNG, JPG (حجم أقصى 10MB)
-                            </span>
-                          </div>
-                          <input
-                            id="files"
-                            type="file"
-                            multiple
-                            className="hidden"
-                            onChange={handleFileChange}
-                            accept=".pdf,.doc,.docx,.png,.jpg,.jpeg"
-                          />
-                        </label>
-                      </div>
-
-                      {files.length > 0 && (
-                        <div className="mt-4 space-y-2">
-                          {files.map((file, index) => (
-                            <div key={index} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-                              <div className="flex items-center gap-2">
-                                <Paperclip className="h-4 w-4 text-primary" />
-                                <span className="text-sm">{file.name}</span>
-                                <span className="text-xs text-gray-500">({(file.size / 1024).toFixed(2)} KB)</span>
-                              </div>
-                              <Button
-                                type="button"
-                                variant="ghost"
-                                size="sm"
-                                onClick={() => removeFile(index)}
-                              >
-                                حذف
-                              </Button>
-                            </div>
-                          ))}
-                        </div>
-                      )}
-                    </div>
                   </div>
 
                   {/* زر الإرسال */}
