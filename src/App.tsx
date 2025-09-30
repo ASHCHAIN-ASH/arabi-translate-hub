@@ -34,6 +34,7 @@ import MediaTranslation from "./pages/MediaTranslation";
 import LiteraryTranslation from "./pages/LiteraryTranslation";
 import AcademicTranslation from "./pages/AcademicTranslation";
 import ResearchServices from "./pages/ResearchServices";
+import AcademicResearch from "./pages/research/AcademicResearch";
 import AboutUs from "./pages/AboutUs";
 import AcademicCompetitions from "./pages/AcademicCompetitions";
 import Unauthorized from "./pages/Unauthorized";
@@ -146,6 +147,7 @@ const App = () => (
             <Route path="/literary-translation" element={<LiteraryTranslation />} />
             <Route path="/academic-translation" element={<AcademicTranslation />} />
             <Route path="/research-services" element={<ResearchServices />} />
+            <Route path="/research/academic" element={<AcademicResearch />} />
             <Route path="/about-us" element={<AboutUs />} />
              <Route path="/terms-of-service" element={<TermsOfService />} />
              <Route path="/privacy-policy" element={<PrivacyPolicy />} />
