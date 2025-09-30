@@ -7,6 +7,7 @@ import {
   GraduationCap, Shield, Clock, Award, Star, CheckCircle,
   ArrowRight, Sparkles, Target, Brain, TrendingUp
 } from "lucide-react";
+import { UNIFIED_STATS, STATS_LABELS } from "@/constants/academicStats";
 
 const ServicesShowcase = () => {
   const navigate = useNavigate();
@@ -71,10 +72,10 @@ const ServicesShowcase = () => {
 
   // إحصائيات موحدة - نفس الأرقام في جميع أقسام الموقع
   const stats = [
-    { number: "25,000+", label: "بحث مكتمل", icon: CheckCircle },
-    { number: "500+", label: "خبير أكاديمي", icon: Brain },
-    { number: "50+", label: "تخصص علمي", icon: Target },
-    { number: "98%", label: "رضا العملاء", icon: TrendingUp }
+    { number: `+${UNIFIED_STATS.researchCompleted.toLocaleString()}` , label: STATS_LABELS.researchCompleted, icon: CheckCircle },
+    { number: `+${UNIFIED_STATS.expertsCount.toLocaleString()}` , label: STATS_LABELS.expertsCount, icon: Brain },
+    { number: `+${UNIFIED_STATS.specializationsCount.toLocaleString()}` , label: STATS_LABELS.specializationsCount, icon: Target },
+    { number: `${UNIFIED_STATS.satisfactionRate}%` , label: STATS_LABELS.satisfactionRate, icon: TrendingUp }
   ];
 
   return (

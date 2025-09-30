@@ -11,38 +11,39 @@ import {
   Building2,
   CheckCircle
 } from 'lucide-react';
+import { UNIFIED_STATS, STATS_LABELS } from "@/constants/academicStats";
 
 const AcademicStats = () => {
   // إحصائيات موحدة - نفس الأرقام في جميع أقسام الموقع
   const stats = [
     {
       icon: Users,
-      value: "+50,000",
-      label: "طالب وباحث",
+      value: `+${UNIFIED_STATS.studentsServed.toLocaleString()}`,
+      label: STATS_LABELS.studentsServed,
       sublabel: "Students & Researchers",
       description: "من جميع أنحاء العالم يثقون في خدماتنا الأكاديمية",
       color: "from-blue-600 to-indigo-600"
     },
     {
       icon: BookOpen,
-      value: "+25,000",
-      label: "بحث علمي مكتمل",
+      value: `+${UNIFIED_STATS.researchCompleted.toLocaleString()}`,
+      label: STATS_LABELS.researchCompleted,
       sublabel: "Research Completed",
       description: "من الأبحاث والرسائل والترجمات المتخصصة",
       color: "from-emerald-600 to-teal-600"
     },
     {
       icon: Globe,
-      value: "+120",
-      label: "دولة حول العالم",
+      value: `+${UNIFIED_STATS.countriesServed.toLocaleString()}`,
+      label: STATS_LABELS.countriesServed,
       sublabel: "Countries Worldwide",
       description: "نقدم خدماتنا في أكثر من 120 دولة حول العالم",
       color: "from-purple-600 to-pink-600"
     },
     {
       icon: Award,
-      value: "98%",
-      label: "نسبة الرضا",
+      value: `${UNIFIED_STATS.satisfactionRate}%`,
+      label: STATS_LABELS.satisfactionRate,
       sublabel: "Satisfaction Rate",
       description: "معدل رضا استثنائي مع ضمان الجودة الأكاديمية",
       color: "from-amber-600 to-orange-600"

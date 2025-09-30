@@ -12,6 +12,7 @@ import {
   Star, TrendingUp, Shield, Clock, Languages, Target,
   Sparkles, ChevronRight, Zap, Heart, Brain
 } from "lucide-react";
+import { UNIFIED_STATS, STATS_LABELS } from "@/constants/academicStats";
 
 // Lazy loading للمكونات الثقيلة لتحسين الأداء
 const ServicesShowcase = lazy(() => import("@/components/ServicesShowcase"));
@@ -30,10 +31,10 @@ const Index = () => {
   
   // إحصائيات أكاديمية موحدة
   const academicStats = [
-    { icon: Users, number: 50000, suffix: "+", title: "طالب وباحث", color: "from-blue-500 to-indigo-600" },
-    { icon: BookOpen, number: 25000, suffix: "+", title: "بحث علمي مكتمل", color: "from-emerald-500 to-teal-600" },
-    { icon: Globe, number: 120, suffix: "+", title: "دولة حول العالم", color: "from-purple-500 to-pink-600" },
-    { icon: Award, number: 98, suffix: "%", title: "نسبة الرضا", color: "from-amber-500 to-orange-600" }
+    { icon: Users, number: UNIFIED_STATS.studentsServed, suffix: "+", title: STATS_LABELS.studentsServed, color: "from-blue-500 to-indigo-600" },
+    { icon: BookOpen, number: UNIFIED_STATS.researchCompleted, suffix: "+", title: STATS_LABELS.researchCompleted, color: "from-emerald-500 to-teal-600" },
+    { icon: Globe, number: UNIFIED_STATS.countriesServed, suffix: "+", title: STATS_LABELS.countriesServed, color: "from-purple-500 to-pink-600" },
+    { icon: Award, number: UNIFIED_STATS.satisfactionRate, suffix: "%", title: STATS_LABELS.satisfactionRate, color: "from-amber-500 to-orange-600" }
   ];
 
   // شركاء أكاديميون
