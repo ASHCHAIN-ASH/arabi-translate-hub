@@ -247,16 +247,16 @@ const handler = async (req: Request): Promise<Response> => {
       </html>
     `;
 
-    // إرسال إيميل للإدارة فقط (حتى يتم التحقق من domain في Resend)
+    // إرسال إيميل للإدارة (مؤقتاً على info@fekrahtech.com حتى يتم التحقق من domain)
     const adminEmail = await resend.emails.send({
       from: "Master Edu Path <onboarding@resend.dev>",
-      to: ["info@masteredupath.com"], // استخدام الإيميل الصحيح
+      to: ["info@fekrahtech.com"], // الإيميل المتحقق منه في Resend
       subject: `🎓 طلب جديد #${order.order_number}: ${orderData.categoryTitle} - ${orderData.fullName}`,
       html: adminEmailHtml,
     });
 
-    console.log("Admin email sent successfully:", adminEmail);
-    console.log("⚠️ Note: Client email not sent - Domain verification required at resend.com/domains");
+    console.log("Admin email sent to info@fekrahtech.com:", adminEmail);
+    console.log("⚠️ To send to other emails, verify domain at: https://resend.com/domains");
 
     return new Response(
       JSON.stringify({ 
