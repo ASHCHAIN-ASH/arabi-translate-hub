@@ -37,14 +37,20 @@ const Index = () => {
     { icon: Award, number: UNIFIED_STATS.satisfactionRate, suffix: "%", title: STATS_LABELS.satisfactionRate, color: "from-amber-500 to-orange-600" }
   ];
 
-  // شركاء أكاديميون
+  // شركاء أكاديميون عالميون
   const academicPartners = [
-    { name: "جامعة الملك سعود", logo: "/assets/universities/ksu-logo.png" },
-    { name: "جامعة الملك عبدالعزيز", logo: "/assets/universities/kau-logo.png" },
-    { name: "جامعة الإمام", logo: "/assets/universities/imamu-logo.png" },
-    { name: "جامعة الملك فهد", logo: "/assets/universities/kfupm-logo.png" },
-    { name: "جامعة الفيصل", logo: "/assets/universities/alfaisal-logo.png" },
-    { name: "جامعة عفت", logo: "/assets/universities/effat-logo.png" }
+    { name: "جامعة الملك سعود", nameEn: "King Saud University", icon: GraduationCap, color: "from-blue-600 to-indigo-600" },
+    { name: "جامعة الملك عبدالعزيز", nameEn: "King Abdulaziz University", icon: BookOpen, color: "from-emerald-600 to-teal-600" },
+    { name: "جامعة هارفارد", nameEn: "Harvard University", icon: Award, color: "from-red-600 to-rose-600" },
+    { name: "جامعة أكسفورد", nameEn: "Oxford University", icon: Building2, color: "from-blue-700 to-indigo-700" },
+    { name: "معهد MIT", nameEn: "Massachusetts Institute of Technology", icon: Brain, color: "from-purple-600 to-pink-600" },
+    { name: "جامعة ستانفورد", nameEn: "Stanford University", icon: Star, color: "from-amber-600 to-orange-600" },
+    { name: "جامعة الإمام", nameEn: "Imam University", icon: Users, color: "from-cyan-600 to-blue-600" },
+    { name: "جامعة الملك فهد", nameEn: "KFUPM", icon: Zap, color: "from-violet-600 to-purple-600" },
+    { name: "جامعة كامبريدج", nameEn: "Cambridge University", icon: CheckCircle, color: "from-green-600 to-emerald-600" },
+    { name: "جامعة طوكيو", nameEn: "University of Tokyo", icon: Globe, color: "from-pink-600 to-rose-600" },
+    { name: "جامعة سوربون", nameEn: "Sorbonne University", icon: Heart, color: "from-indigo-600 to-blue-600" },
+    { name: "جامعة كولومبيا", nameEn: "Columbia University", icon: Target, color: "from-teal-600 to-cyan-600" }
   ];
 
   // خدمات أكاديمية
@@ -510,36 +516,100 @@ const Index = () => {
             transition={{ duration: 0.8 }}
             viewport={{ once: true }}
           >
+            <motion.div
+              className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-amber-600/10 to-orange-600/10 border border-amber-200 dark:border-amber-700 rounded-full text-amber-700 dark:text-amber-300 text-sm font-medium mb-6"
+              initial={{ opacity: 0, scale: 0.8 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.6, delay: 0.2 }}
+              viewport={{ once: true }}
+            >
+              <Building2 className="h-4 w-4" />
+              شركاؤنا حول العالم
+            </motion.div>
+
             <h2 className="text-3xl sm:text-4xl font-bold mb-4 text-slate-800 dark:text-white">
-              شركاؤنا الأكاديميون
+              شراكات أكاديمية{" "}
+              <span className="bg-gradient-to-r from-amber-600 via-orange-600 to-red-600 bg-clip-text text-transparent">
+                عالمية
+              </span>
             </h2>
-            <p className="text-lg text-slate-600 dark:text-slate-400">
-              نفخر بشراكتنا مع أفضل الجامعات والمؤسسات الأكاديمية
+            <p className="text-lg text-slate-600 dark:text-slate-400 max-w-2xl mx-auto">
+              نفخر بشراكتنا مع أرقى الجامعات والمؤسسات الأكاديمية حول العالم
             </p>
           </motion.div>
 
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6">
-            {academicPartners.map((partner, index) => (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, scale: 0.8 }}
-                whileInView={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 0.5, delay: index * 0.1 }}
-                viewport={{ once: true }}
-                whileHover={{ scale: 1.05 }}
-                className="bg-white dark:bg-slate-800 p-6 rounded-xl shadow-md hover:shadow-xl transition-all duration-300 flex items-center justify-center"
-              >
-                <img 
-                  src={partner.logo} 
-                  alt={partner.name}
-                  className="w-full h-auto object-contain grayscale hover:grayscale-0 transition-all duration-300"
-                  onError={(e) => {
-                    e.currentTarget.src = '/assets/university-placeholder.png';
-                  }}
-                />
-              </motion.div>
-            ))}
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-6">
+            {academicPartners.map((partner, index) => {
+              const IconComponent = partner.icon;
+              return (
+                <motion.div
+                  key={index}
+                  initial={{ opacity: 0, scale: 0.8, y: 20 }}
+                  whileInView={{ opacity: 1, scale: 1, y: 0 }}
+                  transition={{ duration: 0.5, delay: index * 0.05 }}
+                  viewport={{ once: true }}
+                  whileHover={{ scale: 1.08, y: -8 }}
+                  className="group"
+                >
+                  <Card className="h-full bg-white dark:bg-slate-800 hover:shadow-2xl transition-all duration-300 border-0 overflow-hidden cursor-pointer">
+                    {/* خلفية تفاعلية */}
+                    <div className={`absolute inset-0 bg-gradient-to-br ${partner.color} opacity-0 group-hover:opacity-10 transition-opacity duration-300`} />
+                    
+                    <CardContent className="p-6 text-center relative">
+                      {/* الأيقونة */}
+                      <motion.div 
+                        className={`w-16 h-16 mx-auto mb-4 rounded-2xl bg-gradient-to-br ${partner.color} flex items-center justify-center shadow-lg group-hover:shadow-xl transition-all`}
+                        whileHover={{ 
+                          rotate: [0, -10, 10, -10, 0],
+                          scale: 1.1
+                        }}
+                        transition={{ duration: 0.6 }}
+                      >
+                        <IconComponent className="h-8 w-8 text-white" />
+                      </motion.div>
+                      
+                      {/* الاسم */}
+                      <h3 className="text-sm font-bold mb-1 text-slate-800 dark:text-white group-hover:text-amber-600 dark:group-hover:text-amber-400 transition-colors">
+                        {partner.name}
+                      </h3>
+                      
+                      {/* الاسم الإنجليزي */}
+                      <p className="text-xs text-slate-500 dark:text-slate-400">
+                        {partner.nameEn}
+                      </p>
+
+                      {/* علامة التحقق */}
+                      <motion.div 
+                        className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                        initial={{ scale: 0 }}
+                        whileInView={{ scale: 1 }}
+                        transition={{ duration: 0.3, delay: index * 0.05 + 0.3 }}
+                        viewport={{ once: true }}
+                      >
+                        <div className="w-6 h-6 bg-green-500 rounded-full flex items-center justify-center shadow-lg">
+                          <CheckCircle className="h-4 w-4 text-white" />
+                        </div>
+                      </motion.div>
+                    </CardContent>
+                  </Card>
+                </motion.div>
+              );
+            })}
           </div>
+
+          {/* إحصائية الشراكات */}
+          <motion.div
+            className="mt-12 text-center"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.4 }}
+            viewport={{ once: true }}
+          >
+            <div className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-amber-600 to-orange-600 rounded-full text-white shadow-lg">
+              <Building2 className="h-5 w-5" />
+              <span className="font-bold text-lg">200+ جامعة ومؤسسة شريكة حول العالم</span>
+            </div>
+          </motion.div>
         </div>
       </section>
 
