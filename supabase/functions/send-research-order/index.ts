@@ -250,7 +250,7 @@ const handler = async (req: Request): Promise<Response> => {
     // إرسال إيميل للإدارة فقط (حتى يتم التحقق من domain في Resend)
     const adminEmail = await resend.emails.send({
       from: "Master Edu Path <onboarding@resend.dev>",
-      to: ["info@fekrahtech.com"], // استخدام الإيميل المتحقق منه
+      to: ["info@masteredupath.com"], // استخدام الإيميل الصحيح
       subject: `🎓 طلب جديد #${order.order_number}: ${orderData.categoryTitle} - ${orderData.fullName}`,
       html: adminEmailHtml,
     });
