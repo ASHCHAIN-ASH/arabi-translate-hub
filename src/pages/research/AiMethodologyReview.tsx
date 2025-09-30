@@ -6,6 +6,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { motion } from "framer-motion";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
@@ -19,7 +20,8 @@ import {
   Download,
   Brain,
   Search,
-  BookOpen
+  BookOpen,
+  Construction
 } from "lucide-react";
 
 const AiMethodologyReview = () => {
@@ -204,6 +206,24 @@ const AiMethodologyReview = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-primary/5 via-secondary/5 to-accent/5" dir="rtl">
+      {/* Under Development Banner */}
+      <motion.div
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+        className="container mx-auto px-4 pt-8"
+      >
+        <Alert className="bg-gradient-to-r from-amber-500/20 via-orange-500/20 to-yellow-500/20 border-2 border-amber-500/50 shadow-lg">
+          <Construction className="h-6 w-6 text-amber-600" />
+          <AlertTitle className="text-2xl font-bold text-amber-700 mb-2">
+            🚧 هذه الصفحة قيد التطوير
+          </AlertTitle>
+          <AlertDescription className="text-lg text-amber-800">
+            نعمل حالياً على تطوير هذه الخدمة لتقديم أفضل تجربة لك. سيتم إطلاق الخدمة قريباً بإذن الله.
+          </AlertDescription>
+        </Alert>
+      </motion.div>
+
       {/* Hero Section */}
       <div className="relative overflow-hidden bg-gradient-to-br from-primary/20 via-secondary/10 to-accent/15 py-24">
         <div className="absolute inset-0">
@@ -330,7 +350,7 @@ const AiMethodologyReview = () => {
                   </p>
                 </motion.div>
               ) : (
-                <form onSubmit={handleSubmit} className="space-y-6">
+                <div className="space-y-6 opacity-60 pointer-events-none">
                   {/* File Upload */}
                   <div className="space-y-2">
                     <Label htmlFor="file" className="text-right flex items-center gap-2">
@@ -450,23 +470,18 @@ const AiMethodologyReview = () => {
 
                   {/* Submit Button */}
                   <Button
-                    type="submit"
-                    disabled={isSubmitting || !formData.file || !formData.phone || !formData.agreedToTerms}
+                    type="button"
+                    disabled={true}
                     className="w-full h-12 text-lg"
                   >
-                    {isSubmitting ? (
-                      <>
-                        <Loader2 className="mr-2 h-5 w-5 animate-spin" />
-                        جارٍ المعالجة...
-                      </>
-                    ) : (
-                      <>
-                        <Search className="mr-2 h-5 w-5" />
-                        إرسال للمراجعة
-                      </>
-                    )}
+                    <Construction className="mr-2 h-5 w-5" />
+                    الخدمة قيد التطوير
                   </Button>
-                </form>
+                  
+                  <p className="text-center text-sm text-muted-foreground">
+                    سيتم تفعيل النموذج بعد اكتمال التطوير
+                  </p>
+                </div>
               )}
             </CardContent>
           </Card>
