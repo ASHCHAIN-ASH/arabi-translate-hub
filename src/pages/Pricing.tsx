@@ -42,8 +42,7 @@ const Pricing = () => {
       icon: FileText,
       title: "ترجمة النصوص والوثائق",
       description: "ترجمة احترافية للمستندات والنصوص بجميع أنواعها",
-      pricePerWord: "0.10",
-      pricePerPage: "30",
+      priceNote: "يحدد السعر حسب عدد الكلمات ونوع المحتوى",
       features: [
         "ترجمة دقيقة ومعتمدة",
         "مراجعة لغوية شاملة",
@@ -57,8 +56,7 @@ const Pricing = () => {
       icon: Globe,
       title: "ترجمة المواقع الإلكترونية",
       description: "ترجمة كاملة للمواقع والتطبيقات الإلكترونية",
-      pricePerWord: "0.12",
-      customPrice: "حسب حجم الموقع",
+      priceNote: "يحدد السعر حسب حجم الموقع وعدد الصفحات",
       features: [
         "ترجمة واجهة المستخدم",
         "ترجمة المحتوى الديناميكي",
@@ -71,8 +69,7 @@ const Pricing = () => {
       icon: Video,
       title: "ترجمة الفيديو والسبتايتل",
       description: "إضافة ترجمات احترافية للفيديوهات والمحتوى المرئي",
-      pricePerMinute: "50",
-      customPrice: "50 ريال/دقيقة",
+      priceNote: "يحدد السعر حسب مدة الفيديو ونوع الترجمة",
       features: [
         "تفريغ صوتي دقيق",
         "ترجمة احترافية",
@@ -85,8 +82,7 @@ const Pricing = () => {
       icon: Mic,
       title: "الترجمة الصوتية",
       description: "تحويل المحتوى الصوتي إلى نص مترجم",
-      pricePerMinute: "40",
-      customPrice: "40 ريال/دقيقة",
+      priceNote: "يحدد السعر حسب مدة التسجيل وجودة الصوت",
       features: [
         "تفريغ صوتي احترافي",
         "ترجمة فورية",
@@ -103,7 +99,7 @@ const Pricing = () => {
       icon: Scale,
       title: "الترجمة القانونية",
       description: "ترجمة معتمدة للعقود والمستندات القانونية",
-      pricePerPage: "80",
+      priceNote: "يحدد السعر حسب نوع المستند ومدى تعقيده",
       features: [
         "ترجمة معتمدة من مترجمين قانونيين",
         "دقة قانونية عالية",
@@ -117,7 +113,7 @@ const Pricing = () => {
       icon: Stethoscope,
       title: "الترجمة الطبية",
       description: "ترجمة متخصصة للتقارير والأبحاث الطبية",
-      pricePerPage: "70",
+      priceNote: "يحدد السعر حسب التخصص الطبي وحجم المحتوى",
       features: [
         "مترجمون طبيون متخصصون",
         "دقة في المصطلحات الطبية",
@@ -130,7 +126,7 @@ const Pricing = () => {
       icon: Wrench,
       title: "الترجمة التقنية",
       description: "ترجمة الأدلة التقنية والمواصفات الفنية",
-      pricePerPage: "60",
+      priceNote: "يحدد السعر حسب المجال التقني ومدى التخصص",
       features: [
         "خبرة في المجال التقني",
         "دقة في المصطلحات",
@@ -143,7 +139,7 @@ const Pricing = () => {
       icon: Briefcase,
       title: "الترجمة التجارية",
       description: "ترجمة المستندات التجارية والعقود",
-      pricePerPage: "50",
+      priceNote: "يحدد السعر حسب نوع المستند التجاري والحجم",
       features: [
         "ترجمة تجارية احترافية",
         "فهم للسياق التجاري",
@@ -160,7 +156,7 @@ const Pricing = () => {
       icon: GraduationCap,
       title: "الترجمة الأكاديمية",
       description: "ترجمة الأبحاث والرسائل العلمية",
-      pricePerPage: "60",
+      priceNote: "يحدد السعر حسب التخصص العلمي وعدد الصفحات",
       features: [
         "مترجمون أكاديميون متخصصون",
         "دقة في المصطلحات العلمية",
@@ -174,8 +170,7 @@ const Pricing = () => {
       icon: BookOpen,
       title: "كتابة الأبحاث",
       description: "إعداد وكتابة الأبحاث العلمية",
-      customPrice: "حسب نوع البحث",
-      priceRange: "1,500 - 15,000 ريال",
+      priceNote: "يحدد السعر حسب نوع البحث والمستوى الأكاديمي",
       features: [
         "كتابة أكاديمية احترافية",
         "مراجعة علمية دقيقة",
@@ -188,7 +183,7 @@ const Pricing = () => {
       icon: FileText,
       title: "التدقيق اللغوي",
       description: "مراجعة وتدقيق النصوص الأكاديمية",
-      pricePerPage: "25",
+      priceNote: "يحدد السعر حسب طول النص ونوع التدقيق المطلوب",
       features: [
         "تدقيق لغوي شامل",
         "تحسين الأسلوب",
@@ -201,7 +196,7 @@ const Pricing = () => {
       icon: Languages,
       title: "المراجعة اللغوية",
       description: "مراجعة النصوص وتحسين الصياغة",
-      pricePerPage: "30",
+      priceNote: "يحدد السعر حسب مستوى المراجعة المطلوبة",
       features: [
         "تحسين الصياغة",
         "دقة لغوية عالية",
@@ -273,45 +268,14 @@ const Pricing = () => {
 
         <CardContent className="relative z-10">
           {/* Price Section */}
-          <div className="mb-6 p-6 bg-gradient-to-br from-muted/30 to-muted/10 rounded-xl border-2 border-muted/50">
-            {service.pricePerWord && (
-              <div className="text-center mb-2">
-                <span className="text-3xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
-                  {service.pricePerWord} ريال
-                </span>
-                <span className="text-muted-foreground mr-2">/ كلمة</span>
-              </div>
-            )}
-            {service.pricePerPage && (
-              <div className="text-center mb-2">
-                <span className="text-3xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
-                  {service.pricePerPage} ريال
-                </span>
-                <span className="text-muted-foreground mr-2">/ صفحة</span>
-              </div>
-            )}
-            {service.pricePerMinute && (
-              <div className="text-center mb-2">
-                <span className="text-3xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
-                  {service.pricePerMinute} ريال
-                </span>
-                <span className="text-muted-foreground mr-2">/ دقيقة</span>
-              </div>
-            )}
-            {service.customPrice && !service.pricePerWord && !service.pricePerPage && !service.pricePerMinute && (
-              <div className="text-center">
-                <span className="text-xl font-bold text-primary">
-                  {service.customPrice}
-                </span>
-              </div>
-            )}
-            {service.priceRange && (
-              <div className="text-center mt-2">
-                <span className="text-sm text-muted-foreground">
-                  {service.priceRange}
-                </span>
-              </div>
-            )}
+          <div className="mb-6 p-6 bg-gradient-to-br from-muted/30 to-muted/10 rounded-xl border-2 border-muted/50 text-center">
+            <div className="flex items-center justify-center gap-2 mb-3">
+              <DollarSign className="h-6 w-6 text-primary" />
+              <span className="text-lg font-bold text-primary">تسعير مخصص</span>
+            </div>
+            <p className="text-sm text-muted-foreground leading-relaxed">
+              {service.priceNote}
+            </p>
           </div>
 
           {/* Features List */}
@@ -584,25 +548,31 @@ const Pricing = () => {
                   <li className="flex items-start gap-3">
                     <Check className="h-5 w-5 text-primary mt-0.5 flex-shrink-0" />
                     <span className="text-muted-foreground">
-                      الأسعار المذكورة هي أسعار تقريبية وقد تختلف حسب حجم المشروع ومدى تعقيده
+                      لكل خدمة سعر خاص يحدد حسب حجم المشروع ونوع المحتوى ومدى التعقيد
                     </span>
                   </li>
                   <li className="flex items-start gap-3">
                     <Check className="h-5 w-5 text-primary mt-0.5 flex-shrink-0" />
                     <span className="text-muted-foreground">
-                      نقدم خصومات خاصة للمشاريع الكبيرة والعملاء الدائمين
+                      نقدم عروض أسعار مخصصة ومنافسة لكل مشروع بناءً على متطلباته الفريدة
                     </span>
                   </li>
                   <li className="flex items-start gap-3">
                     <Check className="h-5 w-5 text-primary mt-0.5 flex-shrink-0" />
                     <span className="text-muted-foreground">
-                      يمكنك طلب عرض سعر مخصص لمشروعك من خلال صفحة "اطلب الآن"
+                      نوفر خصومات خاصة للمشاريع الكبيرة والعملاء المستمرين
                     </span>
                   </li>
                   <li className="flex items-start gap-3">
                     <Check className="h-5 w-5 text-primary mt-0.5 flex-shrink-0" />
                     <span className="text-muted-foreground">
-                      جميع خدماتنا تشمل مراجعة لغوية ودعم فني مجاني
+                      احصل على عرض سعر فوري ومجاني من خلال التواصل معنا أو تقديم طلب
+                    </span>
+                  </li>
+                  <li className="flex items-start gap-3">
+                    <Check className="h-5 w-5 text-primary mt-0.5 flex-shrink-0" />
+                    <span className="text-muted-foreground">
+                      جميع خدماتنا تشمل مراجعة لغوية شاملة ودعم فني مجاني
                     </span>
                   </li>
                 </ul>
