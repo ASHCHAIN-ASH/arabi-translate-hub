@@ -60,7 +60,7 @@ const ServiceSteps = () => {
   ];
 
   return (
-    <section className="py-20 bg-gradient-to-br from-white via-slate-50 to-blue-50 dark:from-slate-950 dark:via-slate-900 dark:to-indigo-950 relative overflow-hidden">
+    <section className="py-20 bg-gradient-to-br from-rose-50 via-pink-50 to-fuchsia-50 dark:from-slate-950 dark:via-rose-950 dark:to-pink-950 relative overflow-hidden">
       
       {/* خلفية أكاديمية متطورة */}
       <div className="absolute inset-0 opacity-30">

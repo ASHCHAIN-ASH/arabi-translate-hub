@@ -127,7 +127,7 @@ const Index = () => {
       <Header />
       
       {/* Hero Section - القسم البطل الأكاديمي */}
-      <section className="relative min-h-[85vh] flex items-center overflow-hidden bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 dark:from-slate-900 dark:via-indigo-950 dark:to-purple-950">
+      <section className="relative min-h-[85vh] flex items-center overflow-hidden bg-gradient-to-br from-blue-50 via-sky-50 to-cyan-50 dark:from-slate-900 dark:via-blue-950 dark:to-indigo-950">
         {/* خلفية متحركة */}
         <div className="absolute inset-0 overflow-hidden">
           <motion.div 
@@ -323,7 +323,7 @@ const Index = () => {
       </section>
 
       {/* قسم الإحصائيات الأكاديمية */}
-      <section className="py-16 bg-gradient-to-r from-slate-50 to-blue-50 dark:from-slate-900 dark:to-indigo-950">
+      <section className="py-16 bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50 dark:from-indigo-950 dark:via-purple-950 dark:to-pink-950">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-6">
             {academicStats.map((stat, index) => {
@@ -357,7 +357,7 @@ const Index = () => {
       </section>
 
       {/* قسم الخدمات الأكاديمية */}
-      <section className="py-20 bg-gradient-to-br from-white via-slate-50 to-blue-50 dark:from-slate-950 dark:via-slate-900 dark:to-indigo-950 relative overflow-hidden">
+      <section className="py-20 bg-gradient-to-br from-emerald-50 via-teal-50 to-cyan-50 dark:from-slate-950 dark:via-teal-950 dark:to-cyan-950 relative overflow-hidden">
         {/* خلفية زخرفية */}
         <div className="absolute inset-0 opacity-5">
           <div className="absolute top-0 left-0 w-full h-full" 
@@ -440,7 +440,7 @@ const Index = () => {
       </section>
 
       {/* قسم مميزات الجودة */}
-      <section className="py-16 bg-gradient-to-br from-blue-600 via-indigo-600 to-purple-600 text-white relative overflow-hidden">
+      <section className="py-16 bg-gradient-to-br from-violet-600 via-purple-600 to-fuchsia-600 text-white relative overflow-hidden">
         {/* خلفية متحركة */}
         <div className="absolute inset-0">
           <motion.div
@@ -500,7 +500,7 @@ const Index = () => {
       </section>
 
       {/* قسم الشركاء الأكاديميين */}
-      <section className="py-16 bg-slate-50 dark:bg-slate-900">
+      <section className="py-16 bg-gradient-to-br from-amber-50 via-orange-50 to-red-50 dark:from-slate-900 dark:via-amber-950 dark:to-orange-950">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div
             className="text-center mb-12"
@@ -556,7 +556,7 @@ const Index = () => {
       </Suspense>
 
       {/* Call to Action النهائي */}
-      <section className="py-20 bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 text-white relative overflow-hidden">
+      <section className="py-20 bg-gradient-to-r from-blue-600 via-cyan-600 to-teal-600 text-white relative overflow-hidden">
         <div className="absolute inset-0">
           <motion.div
             className="absolute inset-0 bg-gradient-to-r from-blue-600/50 via-indigo-600/50 to-purple-600/50"

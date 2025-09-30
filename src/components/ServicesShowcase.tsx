@@ -78,7 +78,7 @@ const ServicesShowcase = () => {
   ];
 
   return (
-    <section className="py-20 bg-gradient-to-br from-slate-50 via-white to-blue-50 dark:from-slate-950 dark:via-slate-900 dark:to-indigo-950 relative overflow-hidden">
+    <section className="py-20 bg-gradient-to-br from-sky-50 via-blue-50 to-indigo-50 dark:from-slate-950 dark:via-blue-950 dark:to-indigo-950 relative overflow-hidden">
       
       {/* خلفية أكاديمية متطورة */}
       <div className="absolute inset-0 opacity-20">

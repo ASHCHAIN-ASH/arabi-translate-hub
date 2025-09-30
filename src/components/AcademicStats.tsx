@@ -68,7 +68,7 @@ const AcademicStats = () => {
   ];
 
   return (
-    <section className="py-12 sm:py-16 lg:py-20 bg-gradient-to-br from-amber-50 via-orange-50 to-red-50 dark:from-amber-950 dark:via-orange-950 dark:to-red-950 relative overflow-hidden">
+    <section className="py-12 sm:py-16 lg:py-20 bg-gradient-to-br from-lime-50 via-green-50 to-emerald-50 dark:from-slate-950 dark:via-green-950 dark:to-emerald-950 relative overflow-hidden">
       
       {/* خلفية إحصائيات متحركة */}
       <div className="absolute inset-0">

@@ -38,7 +38,7 @@ const MasterMembershipBanner = () => {
   ];
 
   return (
-    <section className="py-16 bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 dark:from-slate-950 dark:via-indigo-950 dark:to-purple-950 relative overflow-hidden">
+    <section className="py-16 bg-gradient-to-br from-violet-50 via-purple-50 to-indigo-50 dark:from-slate-950 dark:via-violet-950 dark:to-purple-950 relative overflow-hidden">
       
       {/* خلفية متحركة */}
       <div className="absolute inset-0 opacity-30">
