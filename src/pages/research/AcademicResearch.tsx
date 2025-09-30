@@ -256,7 +256,7 @@ const AcademicResearch = () => {
                     </div>
 
                     {/* CTA Button */}
-                    <Button className="w-full" size="sm">
+                    <Button className="w-full" size="sm" onClick={() => navigate('/research/order/academic')}>
                       اطلب الخدمة
                       <ArrowRight className="h-4 w-4 mr-2" />
                     </Button>

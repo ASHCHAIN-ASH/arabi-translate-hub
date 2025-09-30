@@ -1,5 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
+import { useNavigate } from 'react-router-dom';
 import Header from "@/components/Header";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -103,6 +104,8 @@ const scientificSpecializations = [
 ];
 
 const ScientificResearch = () => {
+  const navigate = useNavigate();
+  
   return (
     <div className="min-h-screen bg-gradient-to-b from-background via-purple-50/20 to-background">
       <Header />
@@ -226,7 +229,7 @@ const ScientificResearch = () => {
                       </div>
                     </div>
 
-                    <Button className="w-full" size="sm">
+                    <Button className="w-full" size="sm" onClick={() => navigate('/research/order/scientific')}>
                       اطلب الخدمة
                       <ArrowRight className="h-4 w-4 mr-2" />
                     </Button>
