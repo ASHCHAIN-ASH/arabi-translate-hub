@@ -91,8 +91,8 @@ export const ResearchServicesGrid = () => {
           <Badge variant="secondary" className="mb-3 sm:mb-4 px-4 sm:px-6 py-1.5 sm:py-2 text-base sm:text-lg">
             🎯 خدماتنا المتخصصة
           </Badge>
-          <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-4 sm:mb-6 bg-gradient-to-r from-blue-600 via-purple-600 to-teal-600 bg-clip-text text-transparent px-4">
-            رحلة النجاح الأكاديمي تبدأ هنا
+          <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-4 sm:mb-6 bg-gradient-to-r from-blue-600 via-purple-600 to-teal-600 bg-clip-text text-transparent px-4 drop-shadow-lg">
+            ✨ رحلة النجاح الأكاديمي تبدأ من هنا ✨
           </h2>
           <p className="text-base sm:text-lg md:text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto leading-relaxed px-4">
             مجموعة شاملة من الخدمات البحثية المصممة خصيصاً لضمان تفوقكم الأكاديمي وتحقيق أهدافكم العلمية

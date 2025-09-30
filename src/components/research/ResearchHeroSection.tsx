@@ -88,8 +88,8 @@ export const ResearchHeroSection = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1, delay: 0.3 }}
           >
-            <span className="bg-gradient-to-r from-white via-blue-200 to-white bg-clip-text text-transparent">
-              مركز ماستر للأبحاث
+            <span className="bg-gradient-to-r from-white via-blue-200 to-white bg-clip-text text-transparent drop-shadow-2xl">
+              🎓 مركز ماستر للأبحاث العلمية 🎓
             </span>
             <br />
             <span className="bg-gradient-to-r from-blue-300 via-purple-300 to-green-300 bg-clip-text text-transparent text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl">
