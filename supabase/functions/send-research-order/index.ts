@@ -214,7 +214,8 @@ const handler = async (req: Request): Promise<Response> => {
             <div style="margin-top: 30px; padding: 20px; background: #f3f4f6; border-radius: 8px; text-align: center;">
               <h3 style="color: #1f2937; margin-top: 0;">للتواصل معنا</h3>
               <p style="margin: 5px 0;">📧 البريد الإلكتروني: info@masteredupath.com</p>
-              <p style="margin: 5px 0;">📱 الواتساب: +966 50 123 4567</p>
+              <p style="margin: 5px 0;">📱 جوال: 0502463367</p>
+              <p style="margin: 5px 0;">📱 واتساب: 0502463367</p>
               <p style="margin: 5px 0;">⏰ ساعات العمل: الأحد - الخميس (9 صباحاً - 6 مساءً)</p>
             </div>
           </div>
@@ -261,8 +262,8 @@ const handler = async (req: Request): Promise<Response> => {
         title: 'طلب بحثي جديد',
         message: `طلب جديد من ${orderData.fullName} - ${orderData.categoryTitle}`,
         type: 'info',
-        category: 'admin',
-        metadata: { orderId, customerEmail: orderData.email, category: orderData.category }
+        category: 'general',
+        metadata: { orderId, customerEmail: orderData.email, category: orderData.category, isAdmin: true }
       });
 
     return new Response(
