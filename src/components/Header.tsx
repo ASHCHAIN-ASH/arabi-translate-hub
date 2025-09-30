@@ -56,18 +56,18 @@ const Header = () => {
       dir="rtl"
     >
       <div className="container mx-auto px-3 sm:px-4 lg:px-6">
-        <div className="flex items-center justify-between h-16 sm:h-20 md:h-24 lg:h-28">
+        <div className="flex items-center justify-between h-16 sm:h-18 lg:h-20">
           {/* الشعار محسن للجوال */}
           <motion.div 
             className="flex items-center gap-2 sm:gap-3 flex-1 min-w-0"
             whileHover={{ scale: 1.02 }}
             transition={{ duration: 0.2 }}
           >
-            <Link to="/" className="flex items-center min-w-0 py-2">
+            <Link to="/" className="flex items-center min-w-0 py-1">
               <motion.img
                 src={logo}
                 alt="MasterEduPath Agency - وكالة ماستر إيدو باث"
-                className="h-12 sm:h-16 md:h-20 lg:h-24 w-auto ml-2 sm:ml-3 flex-shrink-0 object-contain"
+                className="h-14 sm:h-16 md:h-20 lg:h-24 xl:h-28 w-auto ml-2 sm:ml-3 flex-shrink-0 object-contain"
                 whileHover={{ scale: 1.05 }}
                 transition={{ duration: 0.3 }}
               />
