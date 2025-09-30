@@ -74,7 +74,7 @@ const handler = async (req: Request): Promise<Response> => {
       throw new Error(`فشل في حفظ الطلب: ${dbError.message}`);
     }
 
-    console.log("Order saved with number:", order.order_number);
+    console.log("Order saved with ID:", order.id);
 
     // تجهيز قائمة المرفقات للإيميل
     const attachmentsList = orderData.attachments && orderData.attachments.length > 0
@@ -107,14 +107,15 @@ const handler = async (req: Request): Promise<Response> => {
         <div style="max-width: 600px; margin: 0 auto; padding: 20px; background: #f9fafb; border-radius: 10px;">
           <div style="background: linear-gradient(135deg, #2563eb 0%, #7c3aed 100%); padding: 30px; border-radius: 10px 10px 0 0; text-align: center;">
             <h1 style="color: white; margin: 0;">🎓 طلب خدمة بحثية جديد</h1>
-            <div style="background: white; color: #2563eb; font-size: 24px; font-weight: bold; padding: 15px; border-radius: 8px; margin-top: 15px;">
-              رقم الطلب: ${order.order_number}
+            <div style="background: white; color: #2563eb; font-size: 16px; font-weight: bold; padding: 15px; border-radius: 8px; margin-top: 15px;">
+              تم استلام طلب جديد
             </div>
           </div>
           
           <div style="background: white; padding: 30px; border-radius: 0 0 10px 10px;">
             <div style="background: #dbeafe; padding: 15px; border-radius: 8px; margin-bottom: 20px; border-right: 4px solid #2563eb;">
               <h2 style="color: #1e40af; margin: 0;">نوع الخدمة: ${orderData.categoryTitle}</h2>
+              <p style="color: #6b7280; margin: 5px 0 0 0; font-size: 14px;">رقم الطلب في النظام: ${order.id}</p>
             </div>
 
             <h3 style="color: #2563eb; border-bottom: 2px solid #e5e7eb; padding-bottom: 10px;">معلومات البحث</h3>
@@ -189,8 +190,8 @@ const handler = async (req: Request): Promise<Response> => {
         <div style="max-width: 600px; margin: 0 auto; padding: 20px; background: #f9fafb; border-radius: 10px;">
           <div style="background: linear-gradient(135deg, #10b981 0%, #059669 100%); padding: 30px; border-radius: 10px 10px 0 0; text-align: center;">
             <h1 style="color: white; margin: 0;">✅ تم استلام طلبك بنجاح</h1>
-            <div style="background: white; color: #10b981; font-size: 20px; font-weight: bold; padding: 12px; border-radius: 8px; margin-top: 15px;">
-              رقم الطلب: ${order.order_number}
+            <div style="background: white; color: #10b981; font-size: 18px; font-weight: bold; padding: 12px; border-radius: 8px; margin-top: 15px;">
+              شكراً لطلبك
             </div>
           </div>
           
@@ -198,15 +199,12 @@ const handler = async (req: Request): Promise<Response> => {
             <p style="font-size: 16px; color: #059669; font-weight: bold;">عزيزي ${orderData.fullName}،</p>
             
             <p style="font-size: 15px; line-height: 1.8;">
-              شكراً لك على طلب خدمة <strong>${orderData.categoryTitle}</strong>. تم استلام طلبك بنجاح برقم <strong>${order.order_number}</strong> وسيتم مراجعته من قبل فريقنا المتخصص.
+              شكراً لك على طلب خدمة <strong>${orderData.categoryTitle}</strong>. تم استلام طلبك بنجاح وسيتم مراجعته من قبل فريقنا المتخصص.
             </p>
 
             <div style="background: #d1fae5; padding: 20px; border-radius: 8px; margin: 20px 0; border-right: 4px solid #10b981;">
               <h3 style="color: #065f46; margin-top: 0;">ملخص طلبك:</h3>
               <ul style="list-style: none; padding: 0; margin: 0;">
-                <li style="padding: 8px 0; border-bottom: 1px solid #a7f3d0;">
-                  <strong>رقم الطلب:</strong> ${order.order_number}
-                </li>
                 <li style="padding: 8px 0; border-bottom: 1px solid #a7f3d0;">
                   <strong>التخصص:</strong> ${orderData.specialization}
                 </li>
@@ -231,7 +229,7 @@ const handler = async (req: Request): Promise<Response> => {
 
             <div style="background: #fef3c7; padding: 15px; border-radius: 8px; margin-top: 20px; border: 1px solid #f59e0b;">
               <p style="margin: 0; color: #92400e;">
-                <strong>💡 نصيحة:</strong> احتفظ برقم الطلب <strong>${order.order_number}</strong> للرجوع إليه عند التواصل معنا.
+                <strong>💡 نصيحة:</strong> سنتواصل معك قريباً عبر البريد الإلكتروني أو الهاتف.
               </p>
             </div>
 
@@ -249,9 +247,9 @@ const handler = async (req: Request): Promise<Response> => {
 
     // إرسال إيميل للإدارة
     const adminEmail = await resend.emails.send({
-      from: "Master Edu Path <info@masteredupath.com>", // استخدام domain المتحقق منه
+      from: "Master Edu Path <info@masteredupath.com>",
       to: ["info@masteredupath.com"],
-      subject: `🎓 طلب جديد #${order.order_number}: ${orderData.categoryTitle} - ${orderData.fullName}`,
+      subject: `🎓 طلب جديد: ${orderData.categoryTitle} - ${orderData.fullName}`,
       html: adminEmailHtml,
     });
 
@@ -259,7 +257,7 @@ const handler = async (req: Request): Promise<Response> => {
     const clientEmail = await resend.emails.send({
       from: "Master Edu Path <info@masteredupath.com>",
       to: [orderData.email],
-      subject: `✅ تم استلام طلبك #${order.order_number} - ${orderData.categoryTitle}`,
+      subject: `✅ تم استلام طلبك - ${orderData.categoryTitle}`,
       html: clientEmailHtml,
     });
 
@@ -268,7 +266,7 @@ const handler = async (req: Request): Promise<Response> => {
     return new Response(
       JSON.stringify({ 
         success: true,
-        orderNumber: order.order_number,
+        orderId: order.id,
         message: "تم إرسال الطلب بنجاح"
       }),
       {

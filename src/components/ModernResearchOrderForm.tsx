@@ -51,7 +51,6 @@ export const ModernResearchOrderForm = ({
   const { toast } = useToast();
   const [loading, setLoading] = useState(false);
   const [submitted, setSubmitted] = useState(false);
-  const [orderNumber, setOrderNumber] = useState('');
   
   const [formData, setFormData] = useState<FormData>({
     specialization: '',
@@ -100,12 +99,11 @@ export const ModernResearchOrderForm = ({
 
       if (error) throw error;
 
-      setOrderNumber(data.orderNumber);
       setSubmitted(true);
 
       toast({
         title: "✅ تم إرسال الطلب بنجاح",
-        description: `رقم الطلب: ${data.orderNumber}`,
+        description: "سنتواصل معك قريباً",
       });
 
       setTimeout(() => {
@@ -168,22 +166,10 @@ export const ModernResearchOrderForm = ({
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.3 }}
-            className="text-3xl font-bold text-emerald-700 dark:text-emerald-400 mb-4"
+            className="text-3xl font-bold text-emerald-700 dark:text-emerald-400 mb-8"
           >
             تم استلام طلبك بنجاح! 🎉
           </motion.h2>
-
-          <motion.div
-            initial={{ opacity: 0, scale: 0.8 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ delay: 0.5 }}
-            className="bg-white/80 dark:bg-gray-800/80 backdrop-blur p-6 rounded-lg mb-6"
-          >
-            <p className="text-lg text-gray-600 dark:text-gray-300 mb-2">رقم الطلب</p>
-            <p className="text-3xl font-bold text-emerald-600 dark:text-emerald-400">
-              {orderNumber}
-            </p>
-          </motion.div>
 
           <motion.p
             initial={{ opacity: 0 }}

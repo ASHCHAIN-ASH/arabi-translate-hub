@@ -4514,7 +4514,6 @@ export type Database = {
           email: string
           full_name: string
           id: string
-          order_number: string
           phone: string
           research_title: string
           research_type: string
@@ -4534,7 +4533,6 @@ export type Database = {
           email: string
           full_name: string
           id?: string
-          order_number: string
           phone: string
           research_title: string
           research_type: string
@@ -4554,7 +4552,6 @@ export type Database = {
           email?: string
           full_name?: string
           id?: string
-          order_number?: string
           phone?: string
           research_title?: string
           research_type?: string
@@ -6109,10 +6106,6 @@ export type Database = {
         Returns: string
       }
       generate_random_invoice_number: {
-        Args: Record<PropertyKey, never>
-        Returns: string
-      }
-      generate_research_order_number: {
         Args: Record<PropertyKey, never>
         Returns: string
       }
