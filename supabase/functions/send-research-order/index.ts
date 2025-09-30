@@ -255,16 +255,22 @@ const handler = async (req: Request): Promise<Response> => {
       });
 
     // إرسال إشعار للإدارة
-    await supabaseClient
+    const { error: adminNotifError } = await supabaseClient
       .from('user_notifications')
       .insert({
         user_email: 'info@masteredupath.com',
         title: 'طلب بحثي جديد',
         message: `طلب جديد من ${orderData.fullName} - ${orderData.categoryTitle}`,
         type: 'info',
-        category: 'general',
+        category: 'admin',
         metadata: { orderId, customerEmail: orderData.email, category: orderData.category, isAdmin: true }
       });
+    
+    if (adminNotifError) {
+      console.error('Error sending admin notification:', adminNotifError);
+    } else {
+      console.log('Admin notification sent successfully');
+    }
 
     return new Response(
       JSON.stringify({ 
