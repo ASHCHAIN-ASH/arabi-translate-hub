@@ -35,6 +35,11 @@ import LiteraryTranslation from "./pages/LiteraryTranslation";
 import AcademicTranslation from "./pages/AcademicTranslation";
 import ResearchServices from "./pages/ResearchServices";
 import AcademicResearch from "./pages/research/AcademicResearch";
+import ScientificResearch from "./pages/research/ScientificResearch";
+import BusinessResearch from "./pages/research/BusinessResearch";
+import SocialResearch from "./pages/research/SocialResearch";
+import LegalResearch from "./pages/research/LegalResearch";
+import MedicalResearch from "./pages/research/MedicalResearch";
 import AboutUs from "./pages/AboutUs";
 import AcademicCompetitions from "./pages/AcademicCompetitions";
 import Unauthorized from "./pages/Unauthorized";
@@ -148,6 +153,11 @@ const App = () => (
             <Route path="/academic-translation" element={<AcademicTranslation />} />
             <Route path="/research-services" element={<ResearchServices />} />
             <Route path="/research/academic" element={<AcademicResearch />} />
+            <Route path="/research/scientific" element={<ScientificResearch />} />
+            <Route path="/research/business" element={<BusinessResearch />} />
+            <Route path="/research/social" element={<SocialResearch />} />
+            <Route path="/research/legal" element={<LegalResearch />} />
+            <Route path="/research/medical" element={<MedicalResearch />} />
             <Route path="/about-us" element={<AboutUs />} />
              <Route path="/terms-of-service" element={<TermsOfService />} />
              <Route path="/privacy-policy" element={<PrivacyPolicy />} />
