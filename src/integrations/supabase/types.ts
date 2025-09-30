@@ -4502,6 +4502,69 @@ export type Database = {
         }
         Relationships: []
       }
+      research_orders: {
+        Row: {
+          admin_notes: string | null
+          attachments: Json | null
+          category: string
+          category_title: string
+          created_at: string | null
+          deadline: string
+          details: string | null
+          email: string
+          full_name: string
+          id: string
+          order_number: string
+          phone: string
+          research_title: string
+          research_type: string
+          specialization: string
+          status: string | null
+          updated_at: string | null
+          whatsapp: string | null
+        }
+        Insert: {
+          admin_notes?: string | null
+          attachments?: Json | null
+          category: string
+          category_title: string
+          created_at?: string | null
+          deadline: string
+          details?: string | null
+          email: string
+          full_name: string
+          id?: string
+          order_number: string
+          phone: string
+          research_title: string
+          research_type: string
+          specialization: string
+          status?: string | null
+          updated_at?: string | null
+          whatsapp?: string | null
+        }
+        Update: {
+          admin_notes?: string | null
+          attachments?: Json | null
+          category?: string
+          category_title?: string
+          created_at?: string | null
+          deadline?: string
+          details?: string | null
+          email?: string
+          full_name?: string
+          id?: string
+          order_number?: string
+          phone?: string
+          research_title?: string
+          research_type?: string
+          specialization?: string
+          status?: string | null
+          updated_at?: string | null
+          whatsapp?: string | null
+        }
+        Relationships: []
+      }
       security_audit_logs: {
         Row: {
           action: string
@@ -6046,6 +6109,10 @@ export type Database = {
         Returns: string
       }
       generate_random_invoice_number: {
+        Args: Record<PropertyKey, never>
+        Returns: string
+      }
+      generate_research_order_number: {
         Args: Record<PropertyKey, never>
         Returns: string
       }

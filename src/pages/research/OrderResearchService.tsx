@@ -18,42 +18,49 @@ import {
 const categoryData: Record<string, { 
   title: string; 
   color: string;
+  description: string;
   specializations: string[];
   researchTypes: string[];
 }> = {
   academic: {
     title: "الأبحاث الأكاديمية",
     color: "from-blue-600 to-cyan-600",
+    description: "نقدم خدمات بحثية متخصصة للطلاب والباحثين في مختلف التخصصات الأكاديمية، مع ضمان الجودة والالتزام بالمعايير الأكاديمية العالمية.",
     specializations: ["القانون", "الطب", "الهندسة", "الإدارة", "العلوم", "التربية", "الآداب", "المحاسبة", "علوم اجتماعية", "فنون", "IT", "زراعة"],
     researchTypes: ["ماجستير", "دكتوراه", "بحث علمي", "ورقة علمية", "دراسة حالة"]
   },
   scientific: {
     title: "البحوث العلمية",
     color: "from-purple-600 to-pink-600",
+    description: "فريقنا من الخبراء المتخصصين في العلوم الطبيعية والتطبيقية يساعدك في إجراء أبحاث علمية دقيقة ومبتكرة.",
     specializations: ["الأحياء", "الكيمياء", "الفيزياء", "علوم بيئية", "جيولوجيا", "علم مواد", "تقنية حيوية", "علوم طاقة", "تقنية نانو", "فلك"],
     researchTypes: ["بحث تجريبي", "دراسة معملية", "بحث تطبيقي", "مراجعة علمية", "تحليل بيانات"]
   },
   business: {
     title: "أبحاث الأعمال",
     color: "from-orange-600 to-amber-600",
+    description: "نساعدك في إعداد دراسات وأبحاث الأعمال الاحترافية التي تدعم قراراتك الاستراتيجية وتطور مشاريعك.",
     specializations: ["إدارة أعمال", "اقتصاد", "محاسبة", "مالية", "تسويق", "موارد بشرية", "إدارة عمليات", "أعمال دولية", "ريادة أعمال", "تحليل بيانات"],
     researchTypes: ["دراسة جدوى", "خطة عمل", "بحث سوق", "تحليل استراتيجي", "دراسة مالية"]
   },
   social: {
     title: "البحوث الاجتماعية",
     color: "from-green-600 to-emerald-600",
+    description: "نوفر لك خدمات بحثية متميزة في العلوم الإنسانية والاجتماعية مع استخدام أحدث المنهجيات البحثية.",
     specializations: ["علم النفس", "التربية", "علم الاجتماع", "خدمة اجتماعية", "إعلام", "أنثروبولوجيا", "جغرافيا", "تاريخ", "فلسفة", "دراسات أسرية"],
     researchTypes: ["دراسة ميدانية", "بحث استبياني", "دراسة تحليلية", "بحث نوعي", "بحث كمي"]
   },
   legal: {
     title: "البحوث القانونية",
     color: "from-red-600 to-rose-600",
+    description: "فريق من الخبراء القانونيين يقدم لك أبحاث قانونية دقيقة ومتخصصة في مختلف فروع القانون.",
     specializations: ["قانون عام", "قانون خاص", "قانون جنائي", "شريعة إسلامية", "قانون دولي", "قانون عمل", "قانون عقاري", "حقوق إنسان", "قانون بيئي", "أحوال شخصية"],
     researchTypes: ["بحث قانوني", "دراسة مقارنة", "تحليل قضائي", "بحث فقهي", "دراسة تشريعية"]
   },
   medical: {
     title: "الأبحاث الطبية",
     color: "from-rose-600 to-pink-600",
+    description: "نساعدك في إعداد الأبحاث الطبية والصحية وفق أعلى المعايير العلمية والأخلاقية المتبعة عالمياً.",
     specializations: ["طب سريري", "صيدلة", "تمريض", "صحة عامة", "مختبرات طبية", "طب أسنان", "أشعة", "علم نفس صحي", "طب أطفال", "تغذية"],
     researchTypes: ["دراسة سريرية", "بحث طبي", "مراجعة منهجية", "دراسة حالة", "تحليل بيانات طبية"]
   }
@@ -96,17 +103,46 @@ const OrderResearchService = () => {
     setLoading(true);
 
     try {
-      // استدعاء edge function لإرسال الإيميل
+      // رفع الملفات أولاً
+      const uploadedFiles = [];
+      
+      if (files.length > 0) {
+        for (const file of files) {
+          const fileExt = file.name.split('.').pop();
+          const fileName = `${Math.random()}.${fileExt}`;
+          const filePath = `${Date.now()}-${fileName}`;
+
+          const { data: uploadData, error: uploadError } = await supabase.storage
+            .from('research-attachments')
+            .upload(filePath, file);
+
+          if (uploadError) {
+            console.error('Upload error:', uploadError);
+            throw new Error(`فشل رفع الملف ${file.name}`);
+          }
+
+          // الحصول على رابط الملف
+          const { data: { publicUrl } } = supabase.storage
+            .from('research-attachments')
+            .getPublicUrl(filePath);
+
+          uploadedFiles.push({
+            url: publicUrl,
+            name: file.name,
+            type: file.type,
+            size: file.size,
+            path: filePath
+          });
+        }
+      }
+
+      // استدعاء edge function لحفظ الطلب وإرسال الإيميل
       const { data, error } = await supabase.functions.invoke('send-research-order', {
         body: {
           category: category || 'academic',
           categoryTitle: categoryInfo.title,
           ...formData,
-          attachments: files.map(file => ({
-            name: file.name,
-            type: file.type,
-            size: file.size
-          }))
+          attachments: uploadedFiles
         }
       });
 
@@ -114,19 +150,20 @@ const OrderResearchService = () => {
 
       toast({
         title: "✅ تم إرسال الطلب بنجاح",
-        description: "سنتواصل معك قريباً عبر البريد الإلكتروني أو الواتساب",
+        description: `رقم طلبك: ${data.orderNumber}. سنتواصل معك قريباً`,
+        duration: 5000,
       });
 
-      // إعادة توجيه بعد 2 ثانية
+      // إعادة توجيه بعد 3 ثواني
       setTimeout(() => {
         navigate('/research-services');
-      }, 2000);
+      }, 3000);
 
     } catch (error: any) {
       console.error('Error:', error);
       toast({
         title: "❌ حدث خطأ",
-        description: "فشل إرسال الطلب. يرجى المحاولة مرة أخرى",
+        description: error.message || "فشل إرسال الطلب. يرجى المحاولة مرة أخرى",
         variant: "destructive"
       });
     } finally {
@@ -153,9 +190,23 @@ const OrderResearchService = () => {
               <br />
               {categoryInfo.title}
             </h1>
-            <p className="text-lg md:text-xl mb-6 max-w-2xl mx-auto">
-              املأ النموذج وسنتواصل معك خلال 24 ساعة
+            <p className="text-lg md:text-xl mb-6 max-w-2xl mx-auto leading-relaxed">
+              {categoryInfo.description}
             </p>
+            <div className="flex items-center justify-center gap-4 text-sm md:text-base">
+              <div className="flex items-center gap-2 bg-white/20 px-4 py-2 rounded-full backdrop-blur-sm">
+                <CheckCircle className="h-5 w-5" />
+                <span>استجابة سريعة</span>
+              </div>
+              <div className="flex items-center gap-2 bg-white/20 px-4 py-2 rounded-full backdrop-blur-sm">
+                <CheckCircle className="h-5 w-5" />
+                <span>فريق متخصص</span>
+              </div>
+              <div className="flex items-center gap-2 bg-white/20 px-4 py-2 rounded-full backdrop-blur-sm">
+                <CheckCircle className="h-5 w-5" />
+                <span>جودة عالية</span>
+              </div>
+            </div>
           </motion.div>
         </div>
       </section>

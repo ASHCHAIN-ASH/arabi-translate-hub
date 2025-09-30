@@ -1,4 +1,5 @@
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 import { Resend } from "npm:resend@2.0.0";
 
 const resend = new Resend(Deno.env.get("RESEND_API_KEY"));
@@ -13,217 +14,261 @@ interface ResearchOrderRequest {
   category: string;
   categoryTitle: string;
   specialization: string;
+  researchType: string;
   fullName: string;
   email: string;
   phone: string;
-  whatsapp: string;
+  whatsapp?: string;
   researchTitle: string;
-  researchType: string;
   deadline: string;
-  details: string;
-  attachments?: Array<{ name: string; data: string; type: string }>;
+  details?: string;
+  attachments: Array<{
+    url: string;
+    name: string;
+    type: string;
+    size: number;
+  }>;
 }
 
 const handler = async (req: Request): Promise<Response> => {
-  // Handle CORS preflight requests
   if (req.method === "OPTIONS") {
     return new Response(null, { headers: corsHeaders });
   }
 
   try {
-    const orderData: ResearchOrderRequest = await req.json();
-    
-    console.log("Processing research order:", {
-      category: orderData.category,
-      email: orderData.email,
-      specialization: orderData.specialization
-    });
+    const supabaseClient = createClient(
+      Deno.env.get('SUPABASE_URL') ?? '',
+      Deno.env.get('SUPABASE_ANON_KEY') ?? '',
+      {
+        global: {
+          headers: { Authorization: req.headers.get('Authorization')! },
+        },
+      }
+    );
 
-    // إنشاء محتوى HTML للإيميل
-    const htmlContent = `
+    const orderData: ResearchOrderRequest = await req.json();
+
+    // حفظ الطلب في قاعدة البيانات
+    const { data: order, error: dbError } = await supabaseClient
+      .from('research_orders')
+      .insert({
+        category: orderData.category,
+        category_title: orderData.categoryTitle,
+        specialization: orderData.specialization,
+        research_type: orderData.researchType,
+        research_title: orderData.researchTitle,
+        deadline: orderData.deadline,
+        details: orderData.details,
+        full_name: orderData.fullName,
+        email: orderData.email,
+        phone: orderData.phone,
+        whatsapp: orderData.whatsapp,
+        attachments: orderData.attachments,
+        status: 'pending'
+      })
+      .select()
+      .single();
+
+    if (dbError) {
+      console.error("Database error:", dbError);
+      throw new Error(`فشل في حفظ الطلب: ${dbError.message}`);
+    }
+
+    console.log("Order saved with number:", order.order_number);
+
+    // تجهيز قائمة المرفقات للإيميل
+    const attachmentsList = orderData.attachments && orderData.attachments.length > 0
+      ? `
+        <h3 style="color: #2563eb; margin-top: 20px;">المرفقات (${orderData.attachments.length}):</h3>
+        <ul style="list-style: none; padding: 0;">
+          ${orderData.attachments.map(file => `
+            <li style="padding: 8px; background: #f3f4f6; margin: 5px 0; border-radius: 5px;">
+              <a href="${file.url}" style="color: #2563eb; text-decoration: none;">
+                📎 ${file.name} (${(file.size / 1024).toFixed(2)} KB)
+              </a>
+            </li>
+          `).join('')}
+        </ul>
+        <p style="color: #6b7280; font-size: 14px;">
+          💡 يمكن تحميل المرفقات من خلال لوحة التحكم أو من الروابط أعلاه
+        </p>
+      `
+      : '<p style="color: #6b7280;">لا توجد مرفقات</p>';
+
+    // إرسال إيميل للإدارة مع رقم الطلب
+    const adminEmailHtml = `
       <!DOCTYPE html>
-      <html dir="rtl" lang="ar">
+      <html dir="rtl">
       <head>
         <meta charset="UTF-8">
-        <style>
-          body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
-          .container { max-width: 600px; margin: 0 auto; padding: 20px; }
-          .header { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 30px; text-align: center; border-radius: 10px 10px 0 0; }
-          .content { background: #f9f9f9; padding: 30px; border-radius: 0 0 10px 10px; }
-          .info-row { margin: 15px 0; padding: 15px; background: white; border-radius: 8px; border-right: 4px solid #667eea; }
-          .label { font-weight: bold; color: #667eea; display: inline-block; width: 150px; }
-          .value { color: #333; }
-          .footer { text-align: center; margin-top: 30px; padding: 20px; color: #666; font-size: 14px; }
-          .contact-info { background: #667eea; color: white; padding: 20px; border-radius: 8px; margin-top: 20px; }
-        </style>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
       </head>
-      <body>
-        <div class="container">
-          <div class="header">
-            <h1>🎓 طلب خدمة بحثية جديد</h1>
-            <p>${orderData.categoryTitle}</p>
+      <body style="font-family: Arial, sans-serif; line-height: 1.6; color: #333; direction: rtl;">
+        <div style="max-width: 600px; margin: 0 auto; padding: 20px; background: #f9fafb; border-radius: 10px;">
+          <div style="background: linear-gradient(135deg, #2563eb 0%, #7c3aed 100%); padding: 30px; border-radius: 10px 10px 0 0; text-align: center;">
+            <h1 style="color: white; margin: 0;">🎓 طلب خدمة بحثية جديد</h1>
+            <div style="background: white; color: #2563eb; font-size: 24px; font-weight: bold; padding: 15px; border-radius: 8px; margin-top: 15px;">
+              رقم الطلب: ${order.order_number}
+            </div>
           </div>
           
-          <div class="content">
-            <h2 style="color: #667eea; border-bottom: 2px solid #667eea; padding-bottom: 10px;">معلومات العميل</h2>
-            
-            <div class="info-row">
-              <span class="label">الاسم الكامل:</span>
-              <span class="value">${orderData.fullName}</span>
+          <div style="background: white; padding: 30px; border-radius: 0 0 10px 10px;">
+            <div style="background: #dbeafe; padding: 15px; border-radius: 8px; margin-bottom: 20px; border-right: 4px solid #2563eb;">
+              <h2 style="color: #1e40af; margin: 0;">نوع الخدمة: ${orderData.categoryTitle}</h2>
             </div>
-            
-            <div class="info-row">
-              <span class="label">البريد الإلكتروني:</span>
-              <span class="value">${orderData.email}</span>
+
+            <h3 style="color: #2563eb; border-bottom: 2px solid #e5e7eb; padding-bottom: 10px;">معلومات البحث</h3>
+            <table style="width: 100%; border-collapse: collapse; margin-bottom: 20px;">
+              <tr style="background: #f9fafb;">
+                <td style="padding: 12px; font-weight: bold; border: 1px solid #e5e7eb;">التخصص:</td>
+                <td style="padding: 12px; border: 1px solid #e5e7eb;">${orderData.specialization}</td>
+              </tr>
+              <tr>
+                <td style="padding: 12px; font-weight: bold; border: 1px solid #e5e7eb;">نوع البحث:</td>
+                <td style="padding: 12px; border: 1px solid #e5e7eb;">${orderData.researchType}</td>
+              </tr>
+              <tr style="background: #f9fafb;">
+                <td style="padding: 12px; font-weight: bold; border: 1px solid #e5e7eb;">عنوان البحث:</td>
+                <td style="padding: 12px; border: 1px solid #e5e7eb;">${orderData.researchTitle}</td>
+              </tr>
+              <tr>
+                <td style="padding: 12px; font-weight: bold; border: 1px solid #e5e7eb;">الموعد النهائي:</td>
+                <td style="padding: 12px; border: 1px solid #e5e7eb;">${orderData.deadline}</td>
+              </tr>
+            </table>
+
+            <h3 style="color: #2563eb; border-bottom: 2px solid #e5e7eb; padding-bottom: 10px;">معلومات العميل</h3>
+            <table style="width: 100%; border-collapse: collapse; margin-bottom: 20px;">
+              <tr style="background: #f9fafb;">
+                <td style="padding: 12px; font-weight: bold; border: 1px solid #e5e7eb;">الاسم:</td>
+                <td style="padding: 12px; border: 1px solid #e5e7eb;">${orderData.fullName}</td>
+              </tr>
+              <tr>
+                <td style="padding: 12px; font-weight: bold; border: 1px solid #e5e7eb;">البريد الإلكتروني:</td>
+                <td style="padding: 12px; border: 1px solid #e5e7eb;">${orderData.email}</td>
+              </tr>
+              <tr style="background: #f9fafb;">
+                <td style="padding: 12px; font-weight: bold; border: 1px solid #e5e7eb;">رقم الهاتف:</td>
+                <td style="padding: 12px; border: 1px solid #e5e7eb;">${orderData.phone}</td>
+              </tr>
+              ${orderData.whatsapp ? `
+              <tr>
+                <td style="padding: 12px; font-weight: bold; border: 1px solid #e5e7eb;">واتساب:</td>
+                <td style="padding: 12px; border: 1px solid #e5e7eb;">${orderData.whatsapp}</td>
+              </tr>
+              ` : ''}
+            </table>
+
+            ${orderData.details ? `
+            <h3 style="color: #2563eb; border-bottom: 2px solid #e5e7eb; padding-bottom: 10px;">التفاصيل</h3>
+            <div style="background: #f9fafb; padding: 15px; border-radius: 8px; border-right: 3px solid #2563eb;">
+              <p style="margin: 0;">${orderData.details}</p>
             </div>
-            
-            <div class="info-row">
-              <span class="label">رقم الهاتف:</span>
-              <span class="value">${orderData.phone}</span>
-            </div>
-            
-            <div class="info-row">
-              <span class="label">رقم الواتساب:</span>
-              <span class="value">${orderData.whatsapp}</span>
-            </div>
-            
-            <h2 style="color: #667eea; border-bottom: 2px solid #667eea; padding-bottom: 10px; margin-top: 30px;">تفاصيل البحث</h2>
-            
-            <div class="info-row">
-              <span class="label">القسم:</span>
-              <span class="value">${orderData.categoryTitle}</span>
-            </div>
-            
-            <div class="info-row">
-              <span class="label">التخصص:</span>
-              <span class="value">${orderData.specialization}</span>
-            </div>
-            
-            <div class="info-row">
-              <span class="label">عنوان البحث:</span>
-              <span class="value">${orderData.researchTitle}</span>
-            </div>
-            
-            <div class="info-row">
-              <span class="label">نوع البحث:</span>
-              <span class="value">${orderData.researchType}</span>
-            </div>
-            
-            <div class="info-row">
-              <span class="label">الموعد النهائي:</span>
-              <span class="value">${orderData.deadline}</span>
-            </div>
-            
-            <div class="info-row">
-              <span class="label">التفاصيل:</span>
-              <div class="value" style="margin-top: 10px; white-space: pre-wrap;">${orderData.details}</div>
-            </div>
-            
-            ${orderData.attachments && orderData.attachments.length > 0 ? `
-              <div class="info-row">
-                <span class="label">المرفقات:</span>
-                <div class="value" style="margin-top: 10px;">
-                  ${orderData.attachments.map(att => `<div>📎 ${att.name}</div>`).join('')}
-                </div>
-              </div>
             ` : ''}
-            
-            <div class="contact-info">
-              <h3 style="margin-top: 0;">معلومات التواصل</h3>
-              <p><strong>📧 البريد الإلكتروني:</strong> info@masteredupath.com</p>
-              <p><strong>📱 الهاتف:</strong> +966 50 123 4567</p>
-              <p><strong>💬 الواتساب:</strong> +966 50 123 4567</p>
-              <p><strong>🌐 الموقع:</strong> www.masteredupath.com</p>
+
+            ${attachmentsList}
+
+            <div style="margin-top: 30px; padding: 20px; background: #fef3c7; border-radius: 8px; border: 2px solid #f59e0b;">
+              <p style="margin: 0; color: #92400e; font-weight: bold;">⚠️ يرجى المتابعة مع العميل في أقرب وقت ممكن</p>
             </div>
-          </div>
-          
-          <div class="footer">
-            <p>هذا الإيميل تم إرساله تلقائياً من نظام مركز ماستر للأبحاث</p>
-            <p>© 2024 MasterEduPath Research Center. All rights reserved.</p>
           </div>
         </div>
       </body>
       </html>
     `;
 
-    // إرسال إيميل للإدارة
-    const adminEmailResponse = await resend.emails.send({
-      from: "MasterEduPath <noreply@resend.dev>",
-      to: ["info@masteredupath.com"],
-      subject: `طلب خدمة بحثية جديد - ${orderData.categoryTitle} - ${orderData.fullName}`,
-      html: htmlContent,
-      // attachments: orderData.attachments || [],
-    });
-
-    console.log("Admin email sent:", adminEmailResponse);
-
-    // إرسال إيميل تأكيد للعميل
-    const clientConfirmation = `
+    // إرسال إيميل للعميل مع رقم الطلب
+    const clientEmailHtml = `
       <!DOCTYPE html>
-      <html dir="rtl" lang="ar">
+      <html dir="rtl">
       <head>
         <meta charset="UTF-8">
-        <style>
-          body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
-          .container { max-width: 600px; margin: 0 auto; padding: 20px; }
-          .header { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 30px; text-align: center; border-radius: 10px 10px 0 0; }
-          .content { background: #f9f9f9; padding: 30px; border-radius: 0 0 10px 10px; }
-          .success-icon { font-size: 48px; margin-bottom: 20px; }
-          .contact-box { background: white; padding: 20px; border-radius: 8px; margin: 20px 0; border: 2px solid #667eea; }
-        </style>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
       </head>
-      <body>
-        <div class="container">
-          <div class="header">
-            <div class="success-icon">✅</div>
-            <h1>تم استلام طلبك بنجاح!</h1>
+      <body style="font-family: Arial, sans-serif; line-height: 1.6; color: #333; direction: rtl;">
+        <div style="max-width: 600px; margin: 0 auto; padding: 20px; background: #f9fafb; border-radius: 10px;">
+          <div style="background: linear-gradient(135deg, #10b981 0%, #059669 100%); padding: 30px; border-radius: 10px 10px 0 0; text-align: center;">
+            <h1 style="color: white; margin: 0;">✅ تم استلام طلبك بنجاح</h1>
+            <div style="background: white; color: #10b981; font-size: 20px; font-weight: bold; padding: 12px; border-radius: 8px; margin-top: 15px;">
+              رقم الطلب: ${order.order_number}
+            </div>
           </div>
           
-          <div class="content">
-            <p>عزيزي/عزيزتي <strong>${orderData.fullName}</strong>,</p>
+          <div style="background: white; padding: 30px; border-radius: 0 0 10px 10px;">
+            <p style="font-size: 16px; color: #059669; font-weight: bold;">عزيزي ${orderData.fullName}،</p>
             
-            <p>نشكركم على تواصلكم مع <strong>مركز ماستر للأبحاث</strong>. تم استلام طلبكم للخدمة البحثية في تخصص <strong>${orderData.specialization}</strong> بنجاح.</p>
-            
-            <div class="contact-box">
-              <h3 style="color: #667eea; margin-top: 0;">ماذا بعد؟</h3>
-              <ul>
-                <li>سيقوم فريقنا المتخصص بمراجعة طلبكم خلال 24 ساعة</li>
-                <li>سنتواصل معكم عبر البريد الإلكتروني أو الواتساب</li>
-                <li>سنقدم لكم عرض سعر مفصل وخطة عمل</li>
+            <p style="font-size: 15px; line-height: 1.8;">
+              شكراً لك على طلب خدمة <strong>${orderData.categoryTitle}</strong>. تم استلام طلبك بنجاح برقم <strong>${order.order_number}</strong> وسيتم مراجعته من قبل فريقنا المتخصص.
+            </p>
+
+            <div style="background: #d1fae5; padding: 20px; border-radius: 8px; margin: 20px 0; border-right: 4px solid #10b981;">
+              <h3 style="color: #065f46; margin-top: 0;">ملخص طلبك:</h3>
+              <ul style="list-style: none; padding: 0; margin: 0;">
+                <li style="padding: 8px 0; border-bottom: 1px solid #a7f3d0;">
+                  <strong>رقم الطلب:</strong> ${order.order_number}
+                </li>
+                <li style="padding: 8px 0; border-bottom: 1px solid #a7f3d0;">
+                  <strong>التخصص:</strong> ${orderData.specialization}
+                </li>
+                <li style="padding: 8px 0; border-bottom: 1px solid #a7f3d0;">
+                  <strong>نوع البحث:</strong> ${orderData.researchType}
+                </li>
+                <li style="padding: 8px 0; border-bottom: 1px solid #a7f3d0;">
+                  <strong>عنوان البحث:</strong> ${orderData.researchTitle}
+                </li>
+                <li style="padding: 8px 0;">
+                  <strong>الموعد النهائي:</strong> ${orderData.deadline}
+                </li>
               </ul>
             </div>
-            
-            <div class="contact-box">
-              <h3 style="color: #667eea; margin-top: 0;">للاستفسارات والتواصل:</h3>
-              <p>📧 <strong>البريد الإلكتروني:</strong> info@masteredupath.com</p>
-              <p>📱 <strong>الهاتف:</strong> +966 50 123 4567</p>
-              <p>💬 <strong>الواتساب:</strong> +966 50 123 4567</p>
+
+            <h3 style="color: #059669; margin-top: 30px;">الخطوات القادمة:</h3>
+            <ol style="line-height: 2;">
+              <li>سنقوم بمراجعة طلبك خلال 24 ساعة</li>
+              <li>سنتواصل معك عبر البريد الإلكتروني أو الواتساب</li>
+              <li>سنقدم لك عرض سعر مفصل وجدول زمني</li>
+            </ol>
+
+            <div style="background: #fef3c7; padding: 15px; border-radius: 8px; margin-top: 20px; border: 1px solid #f59e0b;">
+              <p style="margin: 0; color: #92400e;">
+                <strong>💡 نصيحة:</strong> احتفظ برقم الطلب <strong>${order.order_number}</strong> للرجوع إليه عند التواصل معنا.
+              </p>
             </div>
-            
-            <p style="text-align: center; margin-top: 30px; color: #667eea; font-weight: bold;">
-              نتطلع لخدمتكم وتحقيق تميزكم الأكاديمي 🎓
-            </p>
+
+            <div style="margin-top: 30px; padding: 20px; background: #f3f4f6; border-radius: 8px; text-align: center;">
+              <h3 style="color: #1f2937; margin-top: 0;">للتواصل معنا</h3>
+              <p style="margin: 5px 0;">📧 البريد الإلكتروني: info@masteredupath.com</p>
+              <p style="margin: 5px 0;">📱 الواتساب: +966 50 123 4567</p>
+              <p style="margin: 5px 0;">⏰ ساعات العمل: الأحد - الخميس (9 صباحاً - 6 مساءً)</p>
+            </div>
           </div>
         </div>
       </body>
       </html>
     `;
 
-    const clientEmailResponse = await resend.emails.send({
-      from: "MasterEduPath <noreply@resend.dev>",
-      to: [orderData.email],
-      subject: "تأكيد استلام طلب الخدمة البحثية - مركز ماستر",
-      html: clientConfirmation,
+    // إرسال الإيميلات
+    const adminEmail = await resend.emails.send({
+      from: "Master Edu Path <onboarding@resend.dev>",
+      to: ["info@masteredupath.com"],
+      subject: `🎓 طلب جديد #${order.order_number}: ${orderData.categoryTitle} - ${orderData.fullName}`,
+      html: adminEmailHtml,
     });
 
-    console.log("Client confirmation email sent:", clientEmailResponse);
+    const clientEmail = await resend.emails.send({
+      from: "Master Edu Path <onboarding@resend.dev>",
+      to: [orderData.email],
+      subject: `✅ تم استلام طلبك #${order.order_number} - ${orderData.categoryTitle}`,
+      html: clientEmailHtml,
+    });
+
+    console.log("Emails sent successfully:", { adminEmail, clientEmail });
 
     return new Response(
-      JSON.stringify({
+      JSON.stringify({ 
         success: true,
-        message: "تم إرسال الطلب بنجاح",
-        adminEmailId: adminEmailResponse.id,
-        clientEmailId: clientEmailResponse.id
+        orderNumber: order.order_number,
+        message: "تم إرسال الطلب بنجاح"
       }),
       {
         status: 200,
@@ -236,10 +281,7 @@ const handler = async (req: Request): Promise<Response> => {
   } catch (error: any) {
     console.error("Error in send-research-order function:", error);
     return new Response(
-      JSON.stringify({ 
-        success: false,
-        error: error.message 
-      }),
+      JSON.stringify({ error: error.message }),
       {
         status: 500,
         headers: { "Content-Type": "application/json", ...corsHeaders },
