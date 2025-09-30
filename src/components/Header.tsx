@@ -15,6 +15,7 @@ import {
   ArrowLeft,
   FileText
 } from "lucide-react";
+import logo from "@/assets/master-edu-path-logo.png";
 import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
@@ -63,27 +64,13 @@ const Header = () => {
             transition={{ duration: 0.2 }}
           >
             <Link to="/" className="flex items-center min-w-0">
-              <motion.div 
-                className="relative w-10 h-10 sm:w-12 sm:h-12 lg:w-16 lg:h-16 ml-2 sm:ml-3 flex-shrink-0"
-                whileHover={{ rotate: 5 }}
+              <motion.img
+                src={logo}
+                alt="MasterEduPath Agency - وكالة ماستر إيدو باث"
+                className="h-10 sm:h-12 lg:h-16 w-auto ml-2 sm:ml-3 flex-shrink-0"
+                whileHover={{ scale: 1.05 }}
                 transition={{ duration: 0.3 }}
-              >
-                <div className="absolute inset-0 bg-gradient-to-br from-blue-600 via-indigo-600 to-purple-600 rounded-lg sm:rounded-xl shadow-md sm:shadow-lg flex items-center justify-center border border-white/30">
-                  <GraduationCap className="h-5 w-5 sm:h-6 sm:w-6 lg:h-8 lg:w-8 text-white" />
-                </div>
-                <div className="absolute -top-0.5 -right-0.5 w-3 h-3 sm:w-4 sm:h-4 lg:w-6 lg:h-6 bg-gradient-to-br from-amber-400 to-orange-500 rounded-full border border-white flex items-center justify-center">
-                  <span className="text-white text-[8px] sm:text-xs font-bold">M</span>
-                </div>
-              </motion.div>
-              <div className="text-right min-w-0 flex-1">
-                <h1 className="text-sm sm:text-base lg:text-2xl font-arabic-formal font-bold text-slate-800 leading-tight truncate">
-                  <span className="hidden sm:inline">وكالة ماستر إيدو باث</span>
-                  <span className="sm:hidden">ماستر إيدو باث</span>
-                </h1>
-                <p className="text-[10px] sm:text-xs lg:text-sm font-tajawal font-medium text-blue-600 truncate hidden sm:block">
-                  MasterEduPath Agency
-                </p>
-              </div>
+              />
             </Link>
           </motion.div>
 
@@ -143,16 +130,12 @@ const Header = () => {
               </SheetTrigger>
               <SheetContent side="right" className="w-72 sm:w-80 bg-white/95 backdrop-blur-xl" dir="rtl">
                 <div className="flex flex-col space-y-4 mt-6">
-                  <div className="flex items-center justify-end mb-4 pb-4 border-b">
-                    <div className="text-right ml-3">
-                      <span className="font-arabic-formal font-bold text-lg text-slate-800">ماستر إيدو باث</span>
-                      <p className="text-xs text-blue-600">MasterEduPath</p>
-                    </div>
-                    <div className="relative w-12 h-12">
-                      <div className="absolute inset-0 bg-gradient-to-br from-blue-600 via-indigo-600 to-purple-600 rounded-xl flex items-center justify-center">
-                        <GraduationCap className="h-6 w-6 text-white" />
-                      </div>
-                    </div>
+                  <div className="flex items-center justify-center mb-4 pb-4 border-b">
+                    <img
+                      src={logo}
+                      alt="MasterEduPath Agency - وكالة ماستر إيدو باث"
+                      className="h-12 w-auto"
+                    />
                   </div>
                   
                   <div className="space-y-1">
