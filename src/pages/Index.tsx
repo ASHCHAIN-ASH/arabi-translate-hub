@@ -1,4 +1,4 @@
-import { Suspense, lazy } from "react";
+import { Suspense, lazy, memo } from "react";
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -18,13 +18,15 @@ import { UNIFIED_STATS, STATS_LABELS } from "@/constants/academicStats";
 const ServicesShowcase = lazy(() => import("@/components/ServicesShowcase"));
 const MasterMembershipBanner = lazy(() => import("@/components/MasterMembershipBanner"));
 const ServiceSteps = lazy(() => import("@/components/ServiceSteps"));
+const AcademicStats = lazy(() => import("@/components/AcademicStats"));
 
-// مكون Loading بسيط
-const LoadingSpinner = () => (
-  <div className="flex items-center justify-center py-12">
-    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+// مكون Loading محسّن
+const LoadingSpinner = memo(() => (
+  <div className="flex items-center justify-center py-8 sm:py-12">
+    <div className="animate-spin rounded-full h-8 w-8 sm:h-12 sm:w-12 border-b-2 border-primary"></div>
   </div>
-);
+));
+LoadingSpinner.displayName = "LoadingSpinner";
 
 const Index = () => {
   const navigate = useNavigate();
@@ -101,30 +103,30 @@ const Index = () => {
       <motion.div
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6 }}
-        className="bg-gradient-to-l from-blue-600 to-purple-600 text-white py-3 px-4 relative overflow-hidden"
+        transition={{ duration: 0.5 }}
+        className="bg-gradient-to-l from-blue-600 to-purple-600 text-white py-2 sm:py-3 px-3 sm:px-4 relative overflow-hidden"
       >
         <div className="absolute inset-0 bg-gradient-to-l from-blue-600/90 to-purple-600/90" />
         <div className="container mx-auto relative">
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 text-center">
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-4 text-center">
             <motion.div animate={{ scale: [1, 1.1, 1] }} transition={{ duration: 2, repeat: Infinity }}>
-              <Bell className="h-5 w-5 sm:h-6 sm:w-6 text-yellow-300" />
+              <Bell className="h-4 w-4 sm:h-5 sm:w-5 text-yellow-300" />
             </motion.div>
             <div className="flex-1">
-              <p className="text-base sm:text-lg font-semibold mb-1">
+              <p className="text-xs sm:text-sm md:text-base font-semibold mb-0.5">
                 🤖 خدمة جديدة: المراجعة المنهجية بالذكاء الاصطناعي
               </p>
-              <p className="text-xs sm:text-sm opacity-90">
+              <p className="text-xs sm:text-sm opacity-90 hidden sm:block">
                 قم برفع بحثك واحصل على مراجعة شاملة فورية
               </p>
             </div>
             <Button 
               variant="secondary" 
               size="sm"
-              className="bg-white/20 hover:bg-white/30 text-white border-white/30"
+              className="bg-white/20 hover:bg-white/30 text-white border-white/30 text-xs sm:text-sm px-3 py-1.5 sm:px-4 sm:py-2"
               onClick={() => navigate('/research/ai-methodology-review')}
             >
-              <Bot className="ml-2 h-4 w-4" />
+              <Bot className="ml-1 sm:ml-2 h-3 w-3 sm:h-4 sm:w-4" />
               جرب الآن
             </Button>
           </div>
@@ -134,28 +136,28 @@ const Index = () => {
       <Header />
       
       {/* Hero Section - القسم البطل الأكاديمي */}
-      <section className="relative min-h-[85vh] flex items-center overflow-hidden bg-gradient-to-br from-blue-50 via-sky-50 to-cyan-50 dark:from-slate-900 dark:via-blue-950 dark:to-indigo-950">
-        {/* خلفية متحركة */}
-        <div className="absolute inset-0 overflow-hidden">
+      <section className="relative min-h-[70vh] sm:min-h-[80vh] lg:min-h-[85vh] flex items-center overflow-hidden bg-gradient-to-br from-blue-50 via-sky-50 to-cyan-50 dark:from-slate-900 dark:via-blue-950 dark:to-indigo-950">
+        {/* خلفية متحركة - مخفية على الجوال لتحسين الأداء */}
+        <div className="absolute inset-0 overflow-hidden hidden sm:block">
           <motion.div 
-            className="absolute top-10 left-10 w-72 h-72 bg-blue-400/20 rounded-full blur-3xl"
+            className="absolute top-10 left-10 w-48 sm:w-72 h-48 sm:h-72 bg-blue-400/20 rounded-full blur-3xl"
             animate={{ scale: [1, 1.2, 1], opacity: [0.3, 0.5, 0.3] }}
             transition={{ duration: 8, repeat: Infinity }}
           />
           <motion.div 
-            className="absolute bottom-10 right-10 w-96 h-96 bg-purple-400/20 rounded-full blur-3xl"
+            className="absolute bottom-10 right-10 w-60 sm:w-96 h-60 sm:h-96 bg-purple-400/20 rounded-full blur-3xl"
             animate={{ scale: [1, 1.3, 1], opacity: [0.3, 0.5, 0.3] }}
             transition={{ duration: 10, repeat: Infinity, delay: 1 }}
           />
           <motion.div 
-            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-80 h-80 bg-indigo-400/10 rounded-full blur-2xl"
+            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-48 sm:w-80 h-48 sm:h-80 bg-indigo-400/10 rounded-full blur-2xl"
             animate={{ scale: [1, 1.4, 1], opacity: [0.2, 0.4, 0.2] }}
             transition={{ duration: 12, repeat: Infinity, delay: 2 }}
           />
         </div>
 
         {/* شبكة أكاديمية في الخلفية */}
-        <div className="absolute inset-0 opacity-5">
+        <div className="absolute inset-0 opacity-5 hidden sm:block">
           <div 
             className="w-full h-full"
             style={{
@@ -163,41 +165,41 @@ const Index = () => {
                 linear-gradient(90deg, transparent 49%, hsl(var(--primary)) 49%, hsl(var(--primary)) 51%, transparent 51%),
                 linear-gradient(transparent 49%, hsl(var(--primary)) 49%, hsl(var(--primary)) 51%, transparent 51%)
               `,
-              backgroundSize: '100px 100px'
+              backgroundSize: '80px 80px'
             }}
           />
         </div>
 
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center">
             {/* المحتوى النصي */}
             <motion.div
               initial={{ opacity: 0, x: -50 }}
               animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.8 }}
+              transition={{ duration: 0.6 }}
               className="text-center lg:text-right"
             >
               {/* شعار الاعتماد */}
               <motion.div
-                className="inline-flex items-center gap-2 mb-6 px-4 py-2 bg-white/80 dark:bg-slate-800/80 rounded-full shadow-sm border border-slate-200/50 dark:border-slate-700/50"
+                className="inline-flex items-center gap-2 mb-4 sm:mb-6 px-3 sm:px-4 py-1.5 sm:py-2 bg-white/80 dark:bg-slate-800/80 rounded-full shadow-sm border border-slate-200/50 dark:border-slate-700/50"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: 0.2 }}
+                transition={{ duration: 0.5, delay: 0.2 }}
               >
-                <div className="w-5 h-5 bg-gradient-to-br from-blue-600 to-indigo-600 rounded-full flex items-center justify-center">
-                  <GraduationCap className="h-3 w-3 text-white" />
+                <div className="w-4 h-4 sm:w-5 sm:h-5 bg-gradient-to-br from-blue-600 to-indigo-600 rounded-full flex items-center justify-center">
+                  <GraduationCap className="h-2.5 w-2.5 sm:h-3 sm:w-3 text-white" />
                 </div>
-                <span className="text-sm font-medium text-slate-700 dark:text-slate-300">
+                <span className="text-xs sm:text-sm font-medium text-slate-700 dark:text-slate-300">
                   وكالة معتمدة للحلول الأكاديمية العالمية
                 </span>
               </motion.div>
 
               {/* العنوان الرئيسي */}
               <motion.h1 
-                className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold mb-4 leading-tight"
+                className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold mb-3 sm:mb-4 leading-tight"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.8, delay: 0.4 }}
+                transition={{ duration: 0.6, delay: 0.3 }}
               >
                 <span className="text-slate-800 dark:text-white">وكالة </span>
                 <span className="bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 bg-clip-text text-transparent">
@@ -206,68 +208,68 @@ const Index = () => {
               </motion.h1>
               
               <motion.h2 
-                className="text-2xl sm:text-3xl md:text-4xl font-medium text-slate-600 dark:text-slate-300 mb-6"
+                className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-medium text-slate-600 dark:text-slate-300 mb-4 sm:mb-6"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.8, delay: 0.6 }}
+                transition={{ duration: 0.6, delay: 0.4 }}
               >
                 MasterEduPath Agency
               </motion.h2>
               
               {/* الوصف */}
               <motion.p 
-                className="text-lg sm:text-xl text-slate-600 dark:text-slate-300 mb-8 max-w-2xl mx-auto lg:mx-0 leading-relaxed"
+                className="text-sm sm:text-base md:text-lg lg:text-xl text-slate-600 dark:text-slate-300 mb-6 sm:mb-8 max-w-2xl mx-auto lg:mx-0 leading-relaxed px-4 sm:px-0"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.8, delay: 0.8 }}
+                transition={{ duration: 0.6, delay: 0.5 }}
               >
                 شريكك الموثوق في التعليم العالي والبحث العلمي. نقدم حلولاً أكاديمية متطورة ومعتمدة للجامعات والمراكز البحثية والطلاب المتميزين في أكثر من 120 دولة حول العالم.
               </motion.p>
 
               {/* الأزرار */}
               <motion.div
-                className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start mb-8"
+                className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center lg:justify-start mb-6 sm:mb-8 px-4 sm:px-0"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.8, delay: 1 }}
+                transition={{ duration: 0.6, delay: 0.6 }}
               >
                 <Button 
                   size="lg"
-                  className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white shadow-lg hover:shadow-xl transition-all duration-300"
+                  className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white shadow-lg hover:shadow-xl transition-all duration-300 w-full sm:w-auto text-sm sm:text-base"
                   onClick={() => navigate('/order-now')}
                 >
                   ابدأ رحلتك التعليمية
-                  <ArrowRight className="h-5 w-5 mr-2" />
+                  <ArrowRight className="h-4 w-4 sm:h-5 sm:w-5 mr-2" />
                 </Button>
                 
                 <Button 
                   size="lg"
                   variant="outline"
-                  className="border-2 border-slate-300 dark:border-slate-600 hover:bg-slate-50 dark:hover:bg-slate-800"
+                  className="border-2 border-slate-300 dark:border-slate-600 hover:bg-slate-50 dark:hover:bg-slate-800 w-full sm:w-auto text-sm sm:text-base"
                 >
-                  <PlayCircle className="h-5 w-5 ml-2" />
+                  <PlayCircle className="h-4 w-4 sm:h-5 sm:w-5 ml-2" />
                   شاهد عرضنا التقديمي
                 </Button>
               </motion.div>
 
               {/* مؤشرات الثقة */}
               <motion.div
-                className="flex flex-wrap gap-6 justify-center lg:justify-start"
+                className="flex flex-wrap gap-4 sm:gap-6 justify-center lg:justify-start px-4 sm:px-0"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
-                transition={{ duration: 0.8, delay: 1.2 }}
+                transition={{ duration: 0.6, delay: 0.7 }}
               >
                 <div className="flex items-center gap-2">
-                  <CheckCircle className="h-5 w-5 text-emerald-600" />
-                  <span className="text-sm text-slate-600 dark:text-slate-400">معتمد دولياً</span>
+                  <CheckCircle className="h-4 w-4 sm:h-5 sm:w-5 text-emerald-600" />
+                  <span className="text-xs sm:text-sm text-slate-600 dark:text-slate-400">معتمد دولياً</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <Shield className="h-5 w-5 text-blue-600" />
-                  <span className="text-sm text-slate-600 dark:text-slate-400">سرية تامة</span>
+                  <Shield className="h-4 w-4 sm:h-5 sm:w-5 text-blue-600" />
+                  <span className="text-xs sm:text-sm text-slate-600 dark:text-slate-400">سرية تامة</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <Star className="h-5 w-5 text-amber-600" />
-                  <span className="text-sm text-slate-600 dark:text-slate-400">جودة مضمونة</span>
+                  <Star className="h-4 w-4 sm:h-5 sm:w-5 text-amber-600" />
+                  <span className="text-xs sm:text-sm text-slate-600 dark:text-slate-400">جودة مضمونة</span>
                 </div>
               </motion.div>
             </motion.div>
@@ -276,15 +278,15 @@ const Index = () => {
             <motion.div
               initial={{ opacity: 0, x: 50 }}
               animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.8, delay: 0.4 }}
-              className="relative flex justify-center"
+              transition={{ duration: 0.6, delay: 0.3 }}
+              className="relative flex justify-center mt-8 lg:mt-0"
             >
-              <div className="relative w-80 h-80 lg:w-96 lg:h-96">
+              <div className="relative w-64 h-64 sm:w-80 sm:h-80 lg:w-96 lg:h-96">
                 <div className="absolute inset-0 bg-gradient-to-br from-blue-100 via-indigo-50 to-purple-100 dark:from-blue-900/20 dark:via-indigo-900/20 dark:to-purple-900/20 rounded-full blur-3xl" />
                 
                 {/* الشعار المركزي */}
                 <motion.div
-                  className="relative w-64 h-64 lg:w-72 lg:h-72 mx-auto bg-gradient-to-br from-blue-600 via-indigo-600 to-purple-600 rounded-full shadow-2xl flex items-center justify-center"
+                  className="relative w-48 h-48 sm:w-64 sm:h-64 lg:w-72 lg:h-72 mx-auto bg-gradient-to-br from-blue-600 via-indigo-600 to-purple-600 rounded-full shadow-2xl flex items-center justify-center"
                   animate={{ 
                     boxShadow: [
                       "0 20px 40px -10px rgba(59, 130, 246, 0.4)",
@@ -295,31 +297,31 @@ const Index = () => {
                   }}
                   transition={{ duration: 4, repeat: Infinity }}
                 >
-                  <div className="text-center text-white p-6">
-                    <GraduationCap className="h-16 w-16 mx-auto mb-4" />
-                    <div className="text-2xl font-bold mb-2">ماستر إيدو باث</div>
-                    <div className="text-lg opacity-90">للتميز الأكاديمي</div>
+                  <div className="text-center text-white p-4 sm:p-6">
+                    <GraduationCap className="h-12 w-12 sm:h-16 sm:w-16 mx-auto mb-3 sm:mb-4" />
+                    <div className="text-xl sm:text-2xl font-bold mb-1 sm:mb-2">ماستر إيدو باث</div>
+                    <div className="text-sm sm:text-lg opacity-90">للتميز الأكاديمي</div>
                   </div>
                 </motion.div>
 
                 {/* عناصر متحركة */}
                 {[
-                  { icon: BookOpen, position: 'top-4 right-4', delay: 0.5, color: 'from-blue-500 to-indigo-500' },
-                  { icon: Users, position: 'bottom-4 right-4', delay: 1, color: 'from-emerald-500 to-teal-500' },
-                  { icon: Award, position: 'bottom-4 left-4', delay: 1.5, color: 'from-amber-500 to-orange-500' },
-                  { icon: Building2, position: 'top-4 left-4', delay: 2, color: 'from-purple-500 to-pink-500' }
+                  { icon: BookOpen, position: 'top-2 right-2 sm:top-4 sm:right-4', delay: 0.5, color: 'from-blue-500 to-indigo-500' },
+                  { icon: Users, position: 'bottom-2 right-2 sm:bottom-4 sm:right-4', delay: 1, color: 'from-emerald-500 to-teal-500' },
+                  { icon: Award, position: 'bottom-2 left-2 sm:bottom-4 sm:left-4', delay: 1.5, color: 'from-amber-500 to-orange-500' },
+                  { icon: Building2, position: 'top-2 left-2 sm:top-4 sm:left-4', delay: 2, color: 'from-purple-500 to-pink-500' }
                 ].map((item, index) => {
                   const IconComponent = item.icon;
                   return (
                     <motion.div
                       key={index}
-                      className={`absolute ${item.position} w-14 h-14 bg-gradient-to-br ${item.color} rounded-xl shadow-lg flex items-center justify-center`}
+                      className={`absolute ${item.position} w-10 h-10 sm:w-14 sm:h-14 bg-gradient-to-br ${item.color} rounded-xl shadow-lg flex items-center justify-center`}
                       initial={{ opacity: 0, scale: 0 }}
                       animate={{ opacity: 1, scale: 1 }}
-                      transition={{ duration: 0.5, delay: item.delay }}
+                      transition={{ duration: 0.4, delay: item.delay }}
                       whileHover={{ scale: 1.15, rotate: 5 }}
                     >
-                      <IconComponent className="h-6 w-6 text-white" />
+                      <IconComponent className="h-5 w-5 sm:h-6 sm:w-6 text-white" />
                     </motion.div>
                   );
                 })}
@@ -613,7 +615,11 @@ const Index = () => {
         </div>
       </section>
 
-      {/* Suspense Sections */}
+      {/* Suspense Sections مع Lazy Loading للأداء الأفضل */}
+      <Suspense fallback={<LoadingSpinner />}>
+        <AcademicStats />
+      </Suspense>
+      
       <Suspense fallback={<LoadingSpinner />}>
         <MasterMembershipBanner />
       </Suspense>
