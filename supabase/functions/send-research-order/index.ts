@@ -247,15 +247,15 @@ const handler = async (req: Request): Promise<Response> => {
 
     // إرسال إيميل للإدارة
     const adminEmail = await resend.emails.send({
-      from: "Master Edu Path <info@fekrahtech.com>",
-      to: ["info@fekrahtech.com"],
+      from: "Master Edu Path <info@masteredupath.com>",
+      to: ["info@masteredupath.com"],
       subject: `🎓 طلب جديد: ${orderData.categoryTitle} - ${orderData.fullName}`,
       html: adminEmailHtml,
     });
 
     // إرسال إيميل للعميل
     const clientEmail = await resend.emails.send({
-      from: "Master Edu Path <info@fekrahtech.com>",
+      from: "Master Edu Path <info@masteredupath.com>",
       to: [orderData.email],
       subject: `✅ تم استلام طلبك - ${orderData.categoryTitle}`,
       html: clientEmailHtml,
