@@ -1,6 +1,7 @@
-import React from 'react';
 import { motion } from 'framer-motion';
 import { Card, CardContent } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { useNavigate } from 'react-router-dom';
 import { 
   MessageSquare, 
   FileText, 
@@ -8,173 +9,257 @@ import {
   CheckCircle, 
   Clock, 
   ArrowRight,
-  Zap,
-  Shield
+  Sparkles,
+  Target
 } from 'lucide-react';
 
 const ServiceSteps = () => {
+  const navigate = useNavigate();
+  
   const steps = [
     {
       id: 1,
       icon: MessageSquare,
-      title: "التشاور والتقييم",
-      description: "استشارة مجانية لفهم احتياجاتكم وتحديد نطاق العمل بدقة",
-      details: ["تقييم شامل للمشروع", "تحديد المتطلبات", "استشارة متخصصة"],
+      title: "التشاور والتقييم المتخصص",
+      description: "استشارة أكاديمية مجانية لفهم احتياجاتكم البحثية وتحديد نطاق العمل بدقة عالية",
+      details: ["تقييم شامل للمشروع", "تحديد المتطلبات الأكاديمية", "استشارة متخصصة"],
       duration: "30 دقيقة",
-      color: "from-blue-500 to-cyan-500",
-      bgGradient: "from-blue-50 to-cyan-50"
+      color: "from-blue-600 to-indigo-600",
+      bgColor: "bg-blue-50 dark:bg-blue-950/20"
     },
     {
       id: 2,
       icon: FileText,
-      title: "إعداد خطة العمل",
-      description: "وضع استراتيجية شاملة ومخطط زمني مفصل لتنفيذ الخدمة",
-      details: ["خطة مفصلة", "جدول زمني واضح", "توزيع المهام"],
+      title: "إعداد خطة العمل الأكاديمية",
+      description: "وضع استراتيجية بحثية شاملة ومخطط زمني مفصل لتنفيذ الخدمة وفق المعايير العالمية",
+      details: ["خطة تنفيذية مفصلة", "جدول زمني واضح", "توزيع مهام محترف"],
       duration: "1-2 أيام",
-      color: "from-emerald-500 to-teal-500",
-      bgGradient: "from-emerald-50 to-teal-50"
+      color: "from-emerald-600 to-teal-600",
+      bgColor: "bg-emerald-50 dark:bg-emerald-950/20"
     },
     {
       id: 3,
       icon: Users,
-      title: "تنفيذ الخدمة",
-      description: "بدء العمل من قبل فريق متخصص مع متابعة مستمرة للتقدم",
+      title: "التنفيذ الاحترافي",
+      description: "بدء العمل من قبل فريق أكاديمي متخصص مع متابعة مستمرة للتقدم والجودة",
       details: ["فريق متخصص", "متابعة يومية", "تقارير دورية"],
       duration: "حسب المشروع",
-      color: "from-purple-500 to-pink-500",
-      bgGradient: "from-purple-50 to-pink-50"
+      color: "from-purple-600 to-pink-600",
+      bgColor: "bg-purple-50 dark:bg-purple-950/20"
     },
     {
       id: 4,
       icon: CheckCircle,
-      title: "المراجعة والتسليم",
-      description: "مراجعة شاملة للجودة وتسليم العمل النهائي مع ضمان الرضا",
-      details: ["مراجعة شاملة", "ضمان الجودة", "تسليم نهائي"],
+      title: "المراجعة والتسليم المتميز",
+      description: "مراجعة أكاديمية شاملة للجودة وتسليم العمل النهائي مع ضمان الرضا الكامل",
+      details: ["مراجعة شاملة", "ضمان الجودة", "تسليم نهائي احترافي"],
       duration: "1-3 أيام",
-      color: "from-amber-500 to-orange-500",
-      bgGradient: "from-amber-50 to-orange-50"
+      color: "from-amber-600 to-orange-600",
+      bgColor: "bg-amber-50 dark:bg-amber-950/20"
     }
   ];
 
   return (
-    <section className="py-12 sm:py-16 lg:py-20 bg-gradient-to-br from-slate-50 via-gray-50 to-zinc-50 dark:from-slate-950 dark:via-gray-950 dark:to-zinc-950 relative overflow-hidden">
+    <section className="py-20 bg-gradient-to-br from-white via-slate-50 to-blue-50 dark:from-slate-950 dark:via-slate-900 dark:to-indigo-950 relative overflow-hidden">
       
-      {/* خلفية للمراحل */}
-      <div className="absolute inset-0">
-        <div className="absolute inset-0 opacity-30">
-          <div className="absolute top-24 right-24 w-72 h-72 bg-gradient-to-br from-slate-400/20 to-gray-400/20 rounded-full blur-3xl animate-float"></div>
-          <div className="absolute bottom-24 left-24 w-80 h-80 bg-gradient-to-tl from-zinc-400/20 to-slate-400/20 rounded-full blur-3xl animate-float" style={{ animationDelay: '3s' }}></div>
-          <div className="absolute top-1/2 right-1/2 w-56 h-56 bg-gradient-to-r from-gray-400/15 to-zinc-400/15 rounded-full blur-2xl animate-float" style={{ animationDelay: '1.5s' }}></div>
-        </div>
+      {/* خلفية أكاديمية متطورة */}
+      <div className="absolute inset-0 opacity-30">
+        <motion.div 
+          className="absolute top-20 right-20 w-96 h-96 bg-blue-400/20 rounded-full blur-3xl"
+          animate={{ 
+            scale: [1, 1.2, 1],
+            opacity: [0.2, 0.4, 0.2]
+          }}
+          transition={{ duration: 8, repeat: Infinity }}
+        />
+        <motion.div 
+          className="absolute bottom-20 left-20 w-80 h-80 bg-purple-400/20 rounded-full blur-3xl"
+          animate={{ 
+            scale: [1, 1.3, 1],
+            opacity: [0.2, 0.4, 0.2]
+          }}
+          transition={{ duration: 10, repeat: Infinity, delay: 2 }}
+        />
+        <motion.div 
+          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-72 h-72 bg-indigo-400/15 rounded-full blur-2xl"
+          animate={{ 
+            scale: [1, 1.4, 1],
+            opacity: [0.1, 0.3, 0.1]
+          }}
+          transition={{ duration: 12, repeat: Infinity, delay: 4 }}
+        />
+      </div>
+
+      {/* شبكة نقاط */}
+      <div className="absolute inset-0 opacity-10">
+        <div 
+          className="w-full h-full"
+          style={{
+            backgroundImage: 'radial-gradient(circle at 2px 2px, currentColor 1px, transparent 0)',
+            backgroundSize: '40px 40px'
+          }}
+        />
       </div>
 
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         {/* العنوان الرئيسي */}
         <motion.div 
-          className="text-center mb-12 sm:mb-16"
-          initial={{ opacity: 0, y: 20 }}
+          className="text-center mb-16"
+          initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
+          transition={{ duration: 0.8 }}
           viewport={{ once: true }}
         >
-          <h2 className="text-2xl sm:text-3xl lg:text-4xl font-arabic-formal font-bold text-foreground mb-4">
-            مراحل تنفيذ الخدمة
+          <motion.div
+            className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-blue-600/10 to-purple-600/10 border border-blue-200 dark:border-blue-700 rounded-full text-blue-700 dark:text-blue-300 text-sm font-medium mb-6"
+            initial={{ opacity: 0, scale: 0.8 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.6, delay: 0.2 }}
+            viewport={{ once: true }}
+          >
+            <Target className="h-4 w-4" />
+            منهجية عمل احترافية
+          </motion.div>
+
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-6 text-slate-800 dark:text-white">
+            مراحل تنفيذ{" "}
+            <span className="bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 bg-clip-text text-transparent">
+              خدماتنا الأكاديمية
+            </span>
           </h2>
-          <p className="text-base sm:text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto">
-            عملية منظمة ومدروسة لضمان تقديم أفضل الخدمات التعليمية والبحثية
+          
+          <p className="text-lg sm:text-xl text-slate-600 dark:text-slate-400 max-w-3xl mx-auto leading-relaxed">
+            عملية منظمة ومدروسة تضمن تقديم أفضل الخدمات البحثية والأكاديمية بجودة عالمية
           </p>
         </motion.div>
 
         {/* المراحل */}
-        <div className="relative">
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8 relative z-10">{steps.map((step, index) => {
-              const IconComponent = step.icon;
-              return (
-                <motion.div
-                  key={step.id}
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  transition={{ 
-                    duration: 0.4, 
-                    delay: index * 0.1,
-                  }}
-                  viewport={{ once: true }}
-                  whileHover={{ y: -4 }}
-                  className="relative group cursor-pointer"
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-16">
+          {steps.map((step, index) => {
+            const IconComponent = step.icon;
+            return (
+              <motion.div
+                key={step.id}
+                initial={{ opacity: 0, y: 40 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ 
+                  duration: 0.6, 
+                  delay: index * 0.15,
+                  type: "spring",
+                  stiffness: 100
+                }}
+                viewport={{ once: true }}
+                whileHover={{ y: -8, scale: 1.02 }}
+                className="relative group"
+              >
+                {/* رقم المرحلة */}
+                <motion.div 
+                  className="absolute -top-3 -right-3 w-10 h-10 bg-gradient-to-br from-blue-600 to-indigo-600 rounded-full flex items-center justify-center text-white font-bold text-lg shadow-lg z-20 border-2 border-white dark:border-slate-800"
+                  whileHover={{ scale: 1.1, rotate: 5 }}
                 >
-                  {/* رقم المرحلة */}
-                  <div className="absolute -top-2 sm:-top-3 -right-2 sm:-right-3 w-6 h-6 sm:w-8 sm:h-8 bg-primary rounded-full flex items-center justify-center text-white font-semibold text-xs sm:text-sm shadow-md z-20">
-                    {step.id}
-                  </div>
-                  
-                  <Card className="relative overflow-hidden border border-border bg-card hover:shadow-lg transition-all duration-300 h-full">
-                    {/* خط علوي بسيط */}
-                    <div className={`absolute top-0 left-0 right-0 h-1 bg-gradient-to-r ${step.color}`} />
-                    
-                    <CardContent className="p-4 sm:p-6 relative z-10">
-                      {/* الأيقونة والعنوان */}
-                      <div className="mb-4 sm:mb-6">
-                        <div className={`w-10 h-10 sm:w-12 sm:h-12 rounded-lg bg-gradient-to-br ${step.color} flex items-center justify-center shadow-sm mb-3 mx-auto`}>
-                          <IconComponent className="h-5 w-5 sm:h-6 sm:w-6 text-white" />
-                        </div>
-                        
-                        <h3 className="text-base sm:text-lg lg:text-xl font-arabic-formal font-semibold text-foreground text-center mb-2">
-                          {step.title}
-                        </h3>
-                        
-                        {/* مدة التنفيذ */}
-                        <div className="flex items-center justify-center gap-1.5 sm:gap-2 mb-3">{/* <Clock className="h-3 w-3 text-muted-foreground" /> */}
-                          <span className="text-xs sm:text-sm text-muted-foreground">
-                            {step.duration}
-                          </span>
-                        </div>
-                      </div>
-                      
-                      {/* الوصف */}
-                      <p className="text-muted-foreground text-xs sm:text-sm leading-relaxed mb-3 sm:mb-4 text-center">
-                        {step.description}
-                      </p>
-                      
-                      {/* التفاصيل */}
-                      <div className="space-y-1.5 sm:space-y-2">{step.details.map((detail, i) => (
-                          <div
-                            key={i}
-                            className="flex items-center gap-2 text-xs sm:text-sm"
-                          >
-                            <div className={`w-1 h-1 sm:w-1.5 sm:h-1.5 rounded-full bg-gradient-to-r ${step.color} flex-shrink-0`} />
-                            <span className="text-muted-foreground">
-                              {detail}
-                            </span>
-                          </div>
-                        ))}
-                      </div>
-                    </CardContent>
-                  </Card>
+                  {step.id}
                 </motion.div>
-              );
-            })}
-          </div>
+                
+                <Card className="relative overflow-hidden border-0 bg-white dark:bg-slate-800 hover:shadow-2xl transition-all duration-300 h-full">
+                  {/* خط علوي متدرج */}
+                  <div className={`absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r ${step.color}`} />
+                  
+                  {/* خلفية تفاعلية */}
+                  <div className={`absolute inset-0 ${step.bgColor} opacity-0 group-hover:opacity-100 transition-opacity duration-300`} />
+                  
+                  <CardContent className="p-6 relative z-10">
+                    {/* الأيقونة */}
+                    <motion.div 
+                      className={`w-16 h-16 mx-auto mb-4 rounded-2xl bg-gradient-to-br ${step.color} flex items-center justify-center shadow-lg group-hover:shadow-xl transition-shadow`}
+                      whileHover={{ 
+                        rotate: [0, -5, 5, 0],
+                        scale: 1.1
+                      }}
+                      transition={{ duration: 0.5 }}
+                    >
+                      <IconComponent className="h-8 w-8 text-white" />
+                    </motion.div>
+                    
+                    {/* العنوان */}
+                    <h3 className="text-xl font-bold text-center mb-3 text-slate-800 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
+                      {step.title}
+                    </h3>
+                    
+                    {/* المدة */}
+                    <div className="flex items-center justify-center gap-2 mb-4">
+                      <Clock className="h-4 w-4 text-slate-500" />
+                      <span className="text-sm text-slate-600 dark:text-slate-400 font-medium">
+                        {step.duration}
+                      </span>
+                    </div>
+                    
+                    {/* الوصف */}
+                    <p className="text-sm text-slate-600 dark:text-slate-400 leading-relaxed mb-4 text-center">
+                      {step.description}
+                    </p>
+                    
+                    {/* التفاصيل */}
+                    <div className="space-y-2">
+                      {step.details.map((detail, i) => (
+                        <motion.div
+                          key={i}
+                          className="flex items-center gap-2 text-sm"
+                          initial={{ opacity: 0, x: -10 }}
+                          whileInView={{ opacity: 1, x: 0 }}
+                          transition={{ duration: 0.3, delay: 0.1 * i }}
+                          viewport={{ once: true }}
+                        >
+                          <div className={`w-2 h-2 rounded-full bg-gradient-to-r ${step.color} flex-shrink-0`} />
+                          <span className="text-slate-700 dark:text-slate-300">
+                            {detail}
+                          </span>
+                        </motion.div>
+                      ))}
+                    </div>
+                  </CardContent>
+                </Card>
+
+                {/* خط الربط للمرحلة التالية */}
+                {index < steps.length - 1 && (
+                  <motion.div
+                    className="hidden lg:block absolute top-1/2 -left-3 w-6 h-0.5 bg-gradient-to-r from-slate-300 to-transparent"
+                    initial={{ scaleX: 0 }}
+                    whileInView={{ scaleX: 1 }}
+                    transition={{ duration: 0.8, delay: index * 0.15 + 0.5 }}
+                    viewport={{ once: true }}
+                  />
+                )}
+              </motion.div>
+            );
+          })}
         </div>
 
-        {/* دعوة بسيطة للعمل */}
+        {/* Call to Action */}
         <motion.div
-          className="text-center mt-12 sm:mt-16"
-          initial={{ opacity: 0, y: 20 }}
+          className="text-center"
+          initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.4 }}
+          transition={{ duration: 0.8 }}
           viewport={{ once: true }}
         >
-          <p className="text-sm sm:text-base text-muted-foreground mb-4 sm:mb-6">
-            هل تريد البدء في مشروعك؟
-          </p>
-          <motion.button
-            className="inline-flex items-center gap-2 px-6 sm:px-8 py-3 sm:py-4 bg-primary text-primary-foreground rounded-lg font-medium text-sm sm:text-base hover:bg-primary/90 transition-colors duration-200"
-            whileHover={{ scale: 1.02 }}
-            whileTap={{ scale: 0.98 }}
+          <motion.div
+            className="inline-block"
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
           >
-            <span>ابدأ الآن</span>
-            <ArrowRight className="h-4 w-4 sm:h-5 sm:w-5" />
-          </motion.button>
+            <Button 
+              size="lg"
+              className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white shadow-lg hover:shadow-xl transition-all duration-300 text-lg px-8"
+              onClick={() => navigate('/order-now')}
+            >
+              <Sparkles className="h-5 w-5 ml-2" />
+              ابدأ مشروعك الآن
+              <ArrowRight className="h-5 w-5 mr-2" />
+            </Button>
+          </motion.div>
+          <p className="mt-4 text-sm text-slate-600 dark:text-slate-400">
+            انضم إلى آلاف الباحثين الذين وثقوا بخدماتنا الأكاديمية
+          </p>
         </motion.div>
       </div>
     </section>
