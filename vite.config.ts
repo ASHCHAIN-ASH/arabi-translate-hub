@@ -19,4 +19,27 @@ export default defineConfig(({ mode }) => ({
       "@": path.resolve(__dirname, "./src"),
     },
   },
+  build: {
+    // تحسين حجم الـ bundle
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          'react-vendor': ['react', 'react-dom', 'react-router-dom'],
+          'ui-vendor': ['framer-motion', 'lucide-react'],
+        },
+      },
+    },
+    // تفعيل minification
+    minify: 'terser',
+    terserOptions: {
+      compress: {
+        drop_console: mode === 'production',
+      },
+    },
+  },
+  // إلغاء الكاش بشكل كامل في التطوير
+  cacheDir: mode === 'development' ? 'node_modules/.vite-temp' : 'node_modules/.vite',
+  optimizeDeps: {
+    force: true, // إعادة بناء dependencies
+  },
 }));
