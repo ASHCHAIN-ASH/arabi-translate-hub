@@ -542,14 +542,10 @@ const Index = () => {
                     transition={{ duration: 0.4, ease: "easeOut" }}
                   >
                     <Card 
-                      className="h-full relative overflow-hidden border-0 bg-white/80 dark:bg-slate-900/70 shadow-lg hover:shadow-2xl transition-all duration-500 cursor-pointer backdrop-blur-xl rounded-3xl"
+                      className="h-full relative overflow-hidden border border-border/60 bg-background/80 dark:bg-slate-900/70 backdrop-blur-xl rounded-2xl shadow-sm hover:shadow-xl transition-all duration-300 cursor-pointer"
                       onClick={() => navigate(service.link)}
                     >
-                      {/* خلفية متدرجة ديناميكية */}
-                      <div className="absolute inset-0 bg-gradient-to-br from-transparent via-transparent to-transparent group-hover:from-blue-50/50 group-hover:via-purple-50/30 group-hover:to-pink-50/50 dark:group-hover:from-blue-950/20 dark:group-hover:via-purple-950/10 dark:group-hover:to-pink-950/20 transition-all duration-700"></div>
-                      
-                      {/* شريط علوي متحرك */}
-                      <div className="absolute top-0 right-0 left-0 h-1 bg-gradient-to-l from-blue-500 via-indigo-500 to-purple-500 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-700 origin-right"></div>
+                      {/* عناصر خلفية مبسطة للحصول على مظهر أنظف */}
                       
                       <CardContent className="p-6 sm:p-7 lg:p-8 text-right relative">
                         {/* حاوية الأيقونة */}
@@ -558,17 +554,17 @@ const Index = () => {
                           whileHover={{ rotate: [0, -5, 5, -5, 0] }}
                           transition={{ duration: 0.6 }}
                         >
-                          <div className={`w-20 h-20 sm:w-24 sm:h-24 bg-gradient-to-br ${service.color} rounded-[28px] flex items-center justify-center shadow-xl group-hover:shadow-2xl transition-all duration-500 relative mx-auto lg:mx-0 lg:mr-auto`}>
+                          <div className={`w-16 h-16 sm:w-20 sm:h-20 bg-gradient-to-br ${service.color} rounded-2xl flex items-center justify-center shadow-lg group-hover:shadow-xl transition-all duration-300 relative mx-auto lg:mx-0 lg:mr-auto`}>
                             {/* توهج خلف الأيقونة */}
                             <motion.div 
-                              className="absolute inset-0 bg-white/30 rounded-[28px] blur-2xl"
+                              className="absolute inset-0 bg-white/25 rounded-2xl blur-xl"
                               animate={{ 
-                                scale: [1, 1.2, 1],
-                                opacity: [0.3, 0.6, 0.3]
+                                scale: [1, 1.1, 1],
+                                opacity: [0.25, 0.5, 0.25]
                               }}
                               transition={{ duration: 3, repeat: Infinity }}
                             />
-                            <IconComponent className="h-10 w-10 sm:h-12 sm:w-12 text-white relative z-10" strokeWidth={1.8} />
+                            <IconComponent className="h-8 w-8 sm:h-9 sm:w-9 text-white relative z-10" strokeWidth={1.8} />
                           </div>
                         </motion.div>
                         
@@ -584,7 +580,7 @@ const Index = () => {
                         
                         {/* زر الإجراء */}
                         <motion.div 
-                          className="flex items-center justify-end gap-2 sm:gap-2.5 text-blue-600 dark:text-blue-400 font-bold text-sm sm:text-base"
+                          className="flex items-center justify-end gap-2 sm:gap-2.5 text-primary font-bold text-sm sm:text-base story-link"
                           whileHover={{ gap: "14px" }}
                           transition={{ duration: 0.3 }}
                         >
