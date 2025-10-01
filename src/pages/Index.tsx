@@ -492,9 +492,9 @@ const Index = () => {
                       <p className="text-slate-600 dark:text-slate-400 mb-4 leading-relaxed">
                         {service.description}
                       </p>
-                      <div className="flex items-center text-blue-600 dark:text-blue-400 font-medium group-hover:gap-2 transition-all">
+                      <div className="flex items-center justify-end text-blue-600 dark:text-blue-400 font-medium group-hover:gap-2 transition-all" dir="rtl">
+                        <ChevronRight className="h-4 w-4 group-hover:-translate-x-1 transition-transform" />
                         عرض الخدمات
-                        <ChevronRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
                       </div>
                     </CardContent>
                   </Card>
