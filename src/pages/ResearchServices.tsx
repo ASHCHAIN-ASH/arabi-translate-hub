@@ -1,324 +1,209 @@
 import React from 'react';
 import { motion } from 'framer-motion';
+import Header from '@/components/Header';
+import Footer from '@/components/Footer';
 import { useNavigate } from 'react-router-dom';
-import Header from "@/components/Header";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import { 
-  BookOpen, FileText, Microscope, Scale, Heart, Building2,
-  Briefcase, GraduationCap, FlaskConical, Calculator, Globe,
-  Rocket, ArrowRight, CheckCircle, Star, Users
+  FileEdit, CheckCheck, BarChart3, FileText, Presentation, 
+  ShieldCheck, MessageSquareMore, ArrowRight, Sparkles, Star
 } from 'lucide-react';
+import { Card } from '@/components/ui/card';
 
-const researchCategories = [
+const researchServices = [
   {
-    id: "academic-research",
-    title: "الأبحاث الأكاديمية",
-    description: "خدمات بحثية متكاملة للماجستير والدكتوراه في جميع التخصصات",
-    icon: <GraduationCap className="h-12 w-12" />,
-    gradient: "from-blue-600 via-blue-500 to-cyan-500",
-    stats: { projects: "5000+", rating: "4.9/5" },
-    href: "/research/academic",
-    specializations: [
-      { name: "القانون", icon: <Scale className="h-4 w-4" /> },
-      { name: "الطب", icon: <Heart className="h-4 w-4" /> },
-      { name: "الهندسة", icon: <Building2 className="h-4 w-4" /> },
-      { name: "الإدارة", icon: <Briefcase className="h-4 w-4" /> },
-      { name: "العلوم", icon: <FlaskConical className="h-4 w-4" /> },
-      { name: "المزيد...", icon: <Globe className="h-4 w-4" /> }
-    ]
+    icon: FileEdit,
+    title: 'مساعدة في كتابة الأبحاث الجامعية',
+    description: 'مساعدة شاملة في كتابة البحوث الجامعية للماجستير والدكتوراه',
+    gradient: 'from-blue-500 to-cyan-500',
+    href: '/research/academic-writing-service',
+    features: ['كتابة أكاديمية', 'منهجية علمية', 'مصادر موثوقة', 'مراجعة شاملة']
   },
   {
-    id: "scientific-research",
-    title: "البحوث العلمية والتطبيقية",
-    description: "أبحاث علمية متخصصة في العلوم الطبيعية والتطبيقية والتجريبية",
-    icon: <Microscope className="h-12 w-12" />,
-    gradient: "from-purple-600 via-purple-500 to-pink-500",
-    stats: { projects: "3000+", rating: "4.8/5" },
-    href: "/research/scientific",
-    specializations: [
-      { name: "الأحياء", icon: <FlaskConical className="h-4 w-4" /> },
-      { name: "الكيمياء", icon: <FlaskConical className="h-4 w-4" /> },
-      { name: "الفيزياء", icon: <Calculator className="h-4 w-4" /> },
-      { name: "البيئة", icon: <Globe className="h-4 w-4" /> },
-      { name: "التقنية", icon: <Building2 className="h-4 w-4" /> },
-      { name: "المزيد...", icon: <Microscope className="h-4 w-4" /> }
-    ]
+    icon: CheckCheck,
+    title: 'التدقيق اللغوي والمراجعة',
+    description: 'تدقيق لغوي ومراجعة أكاديمية احترافية لأبحاثك',
+    gradient: 'from-green-500 to-emerald-500',
+    href: '/research/proofreading-service',
+    features: ['تدقيق لغوي', 'مراجعة أكاديمية', 'تحسين الأسلوب', 'ضمان الجودة']
   },
   {
-    id: "business-research",
-    title: "أبحاث الأعمال والاقتصاد",
-    description: "دراسات وأبحاث متخصصة في إدارة الأعمال والاقتصاد والتسويق",
-    icon: <Briefcase className="h-12 w-12" />,
-    gradient: "from-orange-600 via-orange-500 to-amber-500",
-    stats: { projects: "4000+", rating: "4.9/5" },
-    href: "/research/business",
-    specializations: [
-      { name: "الإدارة", icon: <Briefcase className="h-4 w-4" /> },
-      { name: "الاقتصاد", icon: <Calculator className="h-4 w-4" /> },
-      { name: "المحاسبة", icon: <Calculator className="h-4 w-4" /> },
-      { name: "التسويق", icon: <Globe className="h-4 w-4" /> },
-      { name: "المالية", icon: <Calculator className="h-4 w-4" /> },
-      { name: "المزيد...", icon: <Briefcase className="h-4 w-4" /> }
-    ]
+    icon: BarChart3,
+    title: 'التحليل الإحصائي و SPSS',
+    description: 'تحليل إحصائي متقدم باستخدام SPSS والبرامج الإحصائية',
+    gradient: 'from-purple-500 to-pink-500',
+    href: '/research/statistical-spss-service',
+    features: ['SPSS & R', 'تحليل البيانات', 'رسوم بيانية', 'تفسير النتائج']
   },
   {
-    id: "social-research",
-    title: "البحوث الاجتماعية والإنسانية",
-    description: "أبحاث في العلوم الاجتماعية والنفسية والتربوية والإنسانية",
-    icon: <Users className="h-12 w-12" />,
-    gradient: "from-green-600 via-green-500 to-emerald-500",
-    stats: { projects: "3500+", rating: "4.8/5" },
-    href: "/research/social",
-    specializations: [
-      { name: "علم النفس", icon: <Heart className="h-4 w-4" /> },
-      { name: "التربية", icon: <GraduationCap className="h-4 w-4" /> },
-      { name: "الاجتماع", icon: <Users className="h-4 w-4" /> },
-      { name: "الإعلام", icon: <Globe className="h-4 w-4" /> },
-      { name: "الخدمة", icon: <Heart className="h-4 w-4" /> },
-      { name: "المزيد...", icon: <BookOpen className="h-4 w-4" /> }
-    ]
+    icon: FileText,
+    title: 'إعداد خطط البحث (Proposal)',
+    description: 'إعداد احترافي لخطط البحث والمقترحات البحثية',
+    gradient: 'from-orange-500 to-red-500',
+    href: '/research/proposal-service',
+    features: ['خطة متكاملة', 'منهجية واضحة', 'إطار نظري', 'جدول زمني']
   },
   {
-    id: "legal-research",
-    title: "البحوث القانونية والشرعية",
-    description: "أبحاث متخصصة في القانون والشريعة والأنظمة القانونية",
-    icon: <Scale className="h-12 w-12" />,
-    gradient: "from-red-600 via-red-500 to-rose-500",
-    stats: { projects: "2500+", rating: "4.9/5" },
-    href: "/research/legal",
-    specializations: [
-      { name: "القانون العام", icon: <Scale className="h-4 w-4" /> },
-      { name: "القانون الخاص", icon: <Scale className="h-4 w-4" /> },
-      { name: "الشريعة", icon: <BookOpen className="h-4 w-4" /> },
-      { name: "الأنظمة", icon: <FileText className="h-4 w-4" /> },
-      { name: "الدولي", icon: <Globe className="h-4 w-4" /> },
-      { name: "المزيد...", icon: <Scale className="h-4 w-4" /> }
-    ]
+    icon: Presentation,
+    title: 'إعداد عروض PowerPoint أكاديمية',
+    description: 'تصميم عروض تقديمية احترافية للأبحاث والمناقشات',
+    gradient: 'from-teal-500 to-cyan-500',
+    href: '/research/powerpoint-service',
+    features: ['تصميم احترافي', 'محتوى منظم', 'رسوم توضيحية', 'قوالب أكاديمية']
   },
   {
-    id: "medical-research",
-    title: "الأبحاث الطبية والصحية",
-    description: "أبحاث طبية وصحية متخصصة في جميع المجالات الطبية",
-    icon: <Heart className="h-12 w-12" />,
-    gradient: "from-rose-600 via-pink-500 to-fuchsia-500",
-    stats: { projects: "2000+", rating: "5.0/5" },
-    href: "/research/medical",
-    specializations: [
-      { name: "الطب", icon: <Heart className="h-4 w-4" /> },
-      { name: "الصيدلة", icon: <FlaskConical className="h-4 w-4" /> },
-      { name: "التمريض", icon: <Heart className="h-4 w-4" /> },
-      { name: "الصحة", icon: <Heart className="h-4 w-4" /> },
-      { name: "التغذية", icon: <FlaskConical className="h-4 w-4" /> },
-      { name: "المزيد...", icon: <Microscope className="h-4 w-4" /> }
-    ]
+    icon: ShieldCheck,
+    title: 'مراجعات أكاديمية للأوراق قبل النشر',
+    description: 'مراجعة شاملة لأوراقك البحثية قبل تقديمها للنشر',
+    gradient: 'from-rose-500 to-pink-500',
+    href: '/research/paper-review-service',
+    features: ['مراجعة شاملة', 'تقييم الجودة', 'توصيات', 'ضمان القبول']
+  },
+  {
+    icon: MessageSquareMore,
+    title: 'الاستشارات الأكاديمية',
+    description: 'استشارات أكاديمية متخصصة في جميع مراحل البحث',
+    gradient: 'from-amber-500 to-yellow-500',
+    href: '/research/consultation-service',
+    features: ['استشارة متخصصة', 'توجيه علمي', 'حلول عملية', 'دعم مستمر']
   }
 ];
 
-const ResearchServices = () => {
+export default function ResearchServices() {
   const navigate = useNavigate();
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-background via-blue-50/30 to-background">
+    <div className="min-h-screen bg-gradient-to-b from-background via-muted/20 to-background">
       <Header />
       
       {/* Hero Section */}
-      <section className="relative py-16 md:py-24 overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-blue-600/10 via-purple-600/10 to-teal-600/10"></div>
+      <section className="relative py-20 overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-secondary/10 to-accent/10"></div>
         
-        <div className="container relative mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="container relative z-10 px-4 mx-auto">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-            className="text-center max-w-4xl mx-auto"
+            className="max-w-4xl mx-auto text-center"
           >
-            <Badge variant="secondary" className="mb-6 px-6 py-2 text-lg">
-              🎯 مركز الأبحاث المتكامل
-            </Badge>
-            
-            <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold mb-6 bg-gradient-to-r from-blue-600 via-purple-600 to-teal-600 bg-clip-text text-transparent leading-tight">
-              خدمات بحثية احترافية
-              <br />
-              <span className="text-3xl sm:text-4xl md:text-5xl">في جميع التخصصات</span>
+            <motion.div
+              initial={{ scale: 0 }}
+              animate={{ scale: 1, rotate: 360 }}
+              transition={{ duration: 0.6 }}
+              className="inline-flex items-center justify-center w-24 h-24 mb-6 bg-gradient-to-br from-primary to-secondary rounded-3xl shadow-2xl"
+            >
+              <Sparkles className="w-14 h-14 text-white" />
+            </motion.div>
+
+            <h1 className="text-5xl md:text-6xl font-bold mb-6 bg-gradient-to-r from-primary via-secondary to-accent bg-clip-text text-transparent">
+              خدمات البحث العلمي
             </h1>
             
-            <p className="text-lg md:text-xl text-muted-foreground mb-8 leading-relaxed">
-              نقدم خدمات بحثية متكاملة في أكثر من <span className="font-bold text-primary">50 تخصص</span> أكاديمي وعلمي
-              <br />
-              بجودة عالية وأسعار تنافسية وضمان الجودة 100%
+            <p className="text-xl md:text-2xl text-muted-foreground leading-relaxed mb-8">
+              خدمات بحثية احترافية متكاملة تساعدك في جميع مراحل بحثك الأكاديمي
             </p>
-            
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button size="lg" className="text-lg px-8 py-6">
-                <Rocket className="h-5 w-5 ml-2" />
-                ابدأ مشروعك البحثي
-                <ArrowRight className="h-5 w-5 mr-2" />
-              </Button>
-              <Button size="lg" variant="outline" className="text-lg px-8 py-6">
-                <FileText className="h-5 w-5 ml-2" />
-                تحميل دليل الخدمات
-              </Button>
-            </div>
-          </motion.div>
 
-          {/* Stats */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.3 }}
-            className="grid grid-cols-2 md:grid-cols-4 gap-6 mt-16 max-w-4xl mx-auto"
-          >
-            {[
-              { number: "20,000+", label: "بحث مكتمل", icon: <CheckCircle className="h-6 w-6" /> },
-              { number: "50+", label: "تخصص متاح", icon: <BookOpen className="h-6 w-6" /> },
-              { number: "98%", label: "رضا العملاء", icon: <Star className="h-6 w-6" /> },
-              { number: "24/7", label: "دعم مستمر", icon: <Users className="h-6 w-6" /> }
-            ].map((stat, index) => (
-              <motion.div
-                key={index}
-                whileHover={{ scale: 1.05 }}
-                className="bg-white/80 backdrop-blur-sm rounded-2xl p-4 shadow-lg border border-primary/10 text-center"
-              >
-                <div className="text-primary mb-2 flex justify-center">{stat.icon}</div>
-                <div className="text-2xl md:text-3xl font-bold text-primary mb-1">{stat.number}</div>
-                <div className="text-sm text-muted-foreground">{stat.label}</div>
-              </motion.div>
-            ))}
+            <div className="flex items-center justify-center gap-4 mb-8">
+              {[1, 2, 3, 4, 5].map((star) => (
+                <Star key={star} className="w-8 h-8 fill-amber-400 text-amber-400" />
+              ))}
+              <span className="text-xl font-bold text-muted-foreground mr-2">تقييم 5/5</span>
+            </div>
           </motion.div>
         </div>
       </section>
 
-      {/* Research Categories */}
-      <section className="py-16 md:py-24">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+      {/* Services Grid */}
+      <section className="py-16">
+        <div className="container px-4 mx-auto">
           <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
             viewport={{ once: true }}
-            className="text-center mb-16"
+            className="max-w-7xl mx-auto"
           >
-            <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-4">
-              اختر مجال تخصصك
-            </h2>
-            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-              نوفر خدمات بحثية متخصصة في جميع المجالات الأكاديمية والعلمية
-            </p>
-          </motion.div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
-            {researchCategories.map((category, index) => (
-              <motion.div
-                key={category.id}
-                initial={{ opacity: 0, y: 50 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: "-50px" }}
-                transition={{ duration: 0.5, delay: index * 0.1 }}
-              >
-                <Card 
-                  className="h-full overflow-hidden border-0 shadow-xl hover:shadow-2xl transition-all duration-300 group cursor-pointer"
-                  onClick={() => navigate(category.href)}
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {researchServices.map((service, index) => (
+                <motion.div
+                  key={index}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: index * 0.1 }}
+                  whileHover={{ y: -8 }}
+                  className="cursor-pointer"
+                  onClick={() => navigate(service.href)}
                 >
-                  {/* Header with gradient */}
-                  <div className={`bg-gradient-to-r ${category.gradient} p-6 text-white relative overflow-hidden`}>
-                    <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full -translate-y-16 translate-x-16"></div>
-                    <div className="relative z-10">
+                  <Card className="h-full border-0 shadow-xl hover:shadow-2xl transition-all overflow-hidden bg-card/80 backdrop-blur-sm">
+                    <div className={`bg-gradient-to-r ${service.gradient} p-6 text-white relative overflow-hidden`}>
+                      <div className="absolute top-0 left-0 w-32 h-32 bg-white/10 rounded-full -translate-y-16 -translate-x-16"></div>
                       <motion.div
                         whileHover={{ scale: 1.1, rotate: 5 }}
-                        className="w-16 h-16 bg-white/20 rounded-2xl flex items-center justify-center mb-4 backdrop-blur-sm"
+                        className="relative z-10 w-16 h-16 bg-white/20 rounded-2xl flex items-center justify-center mb-4 backdrop-blur-sm"
                       >
-                        {category.icon}
+                        <service.icon className="w-10 h-10" />
                       </motion.div>
-                      <div className="flex items-center gap-2 mb-2">
-                        <Badge variant="secondary" className="bg-white/20 text-white border-white/30 text-xs">
-                          {category.stats.projects}
-                        </Badge>
-                        <Badge variant="secondary" className="bg-white/20 text-white border-white/30 text-xs">
-                          <Star className="h-3 w-3 ml-1 fill-current" />
-                          {category.stats.rating}
-                        </Badge>
-                      </div>
                     </div>
-                  </div>
 
-                  <CardHeader className="pb-4">
-                    <CardTitle className="text-xl font-bold group-hover:text-primary transition-colors">
-                      {category.title}
-                    </CardTitle>
-                    <CardDescription className="text-sm leading-relaxed">
-                      {category.description}
-                    </CardDescription>
-                  </CardHeader>
+                    <div className="p-6">
+                      <h3 className="text-xl font-bold mb-3">{service.title}</h3>
+                      <p className="text-muted-foreground mb-4 leading-relaxed">
+                        {service.description}
+                      </p>
 
-                  <CardContent className="space-y-4">
-                    {/* Specializations */}
-                    <div>
-                      <h4 className="text-sm font-semibold mb-3 text-muted-foreground">التخصصات المتاحة:</h4>
-                      <div className="grid grid-cols-2 gap-2">
-                        {category.specializations.map((spec, i) => (
+                      <div className="space-y-2 mb-6">
+                        {service.features.map((feature, i) => (
                           <div key={i} className="flex items-center gap-2 text-sm text-muted-foreground">
-                            <div className="text-primary">{spec.icon}</div>
-                            <span>{spec.name}</span>
+                            <div className="w-1.5 h-1.5 rounded-full bg-primary"></div>
+                            <span>{feature}</span>
                           </div>
                         ))}
                       </div>
-                    </div>
 
-                    {/* CTA Button */}
-                    <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
-                      <Button className="w-full" variant="default">
-                        استكشف الخدمات
-                        <ArrowRight className="h-4 w-4 mr-2 group-hover:translate-x-1 transition-transform" />
-                      </Button>
-                    </motion.div>
-                  </CardContent>
-                </Card>
-              </motion.div>
-            ))}
-          </div>
+                      <motion.button
+                        whileHover={{ scale: 1.02 }}
+                        whileTap={{ scale: 0.98 }}
+                        className="w-full flex items-center justify-center gap-2 bg-gradient-to-r from-primary to-secondary text-white py-3 rounded-lg font-semibold hover:shadow-lg transition-all"
+                      >
+                        اطلب الخدمة
+                        <ArrowRight className="w-4 h-4" />
+                      </motion.button>
+                    </div>
+                  </Card>
+                </motion.div>
+              ))}
+            </div>
+          </motion.div>
         </div>
       </section>
 
-      {/* Why Choose Us */}
-      <section className="py-16 md:py-24 bg-gradient-to-br from-blue-50 to-purple-50 dark:from-slate-900 dark:to-slate-800">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+      {/* Call to Action */}
+      <section className="py-16 bg-muted/30">
+        <div className="container px-4 mx-auto">
           <motion.div
-            initial={{ opacity: 0, y: 30 }}
+            initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="text-center mb-12"
+            className="max-w-4xl mx-auto text-center"
           >
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">لماذا تختار خدماتنا؟</h2>
-            <p className="text-lg text-muted-foreground">نضمن لك التميز والجودة في كل مرحلة</p>
+            <h2 className="text-3xl md:text-4xl font-bold mb-6">
+              هل لديك استفسار عن خدماتنا؟
+            </h2>
+            <p className="text-lg text-muted-foreground mb-8">
+              فريقنا الأكاديمي جاهز لمساعدتك في اختيار الخدمة المناسبة لبحثك
+            </p>
+            <motion.button
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              onClick={() => navigate('/contact-us')}
+              className="bg-gradient-to-r from-primary to-secondary text-white px-8 py-4 rounded-lg font-bold text-lg hover:shadow-xl transition-all"
+            >
+              تواصل معنا الآن
+            </motion.button>
           </motion.div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {[
-              { icon: <CheckCircle className="h-8 w-8" />, title: "ضمان الجودة", desc: "مراجعة متعددة المستويات" },
-              { icon: <Users className="h-8 w-8" />, title: "خبراء متخصصون", desc: "500+ باحث أكاديمي" },
-              { icon: <Rocket className="h-8 w-8" />, title: "تسليم سريع", desc: "التزام بالمواعيد 100%" },
-              { icon: <Star className="h-8 w-8" />, title: "دعم مستمر", desc: "متابعة حتى النجاح" }
-            ].map((feature, i) => (
-              <motion.div
-                key={i}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: i * 0.1 }}
-                whileHover={{ y: -8 }}
-                className="bg-white dark:bg-slate-800 rounded-2xl p-6 text-center shadow-lg"
-              >
-                <div className="text-primary mb-4 flex justify-center">{feature.icon}</div>
-                <h3 className="font-bold text-lg mb-2">{feature.title}</h3>
-                <p className="text-sm text-muted-foreground">{feature.desc}</p>
-              </motion.div>
-            ))}
-          </div>
         </div>
       </section>
+
+      <Footer />
     </div>
   );
-};
-
-export default ResearchServices;
+}
