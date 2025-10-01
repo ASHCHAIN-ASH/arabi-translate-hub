@@ -493,7 +493,7 @@ const Index = () => {
                         {service.description}
                       </p>
                       <div className="flex items-center text-blue-600 dark:text-blue-400 font-medium group-hover:gap-2 transition-all">
-                        اعرف المزيد
+                        عرض الخدمات
                         <ChevronRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
                       </div>
                     </CardContent>

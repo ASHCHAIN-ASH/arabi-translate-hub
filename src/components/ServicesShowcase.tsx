@@ -227,7 +227,7 @@ const ServicesShowcase = () => {
                       className="group-hover:bg-slate-100 dark:group-hover:bg-slate-700 transition-all p-0 h-auto"
                     >
                       <span className="flex items-center gap-2 text-blue-600 dark:text-blue-400 font-medium">
-                        اعرف المزيد
+                        عرض الخدمات
                         <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
                       </span>
                     </Button>
