@@ -18,7 +18,12 @@ import {
   Filter,
   ShoppingCart,
   User,
-  FileText
+  FileText,
+  Edit3,
+  CheckCheck,
+  FileCheck,
+  BookOpen,
+  Sparkles
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
@@ -155,7 +160,8 @@ const Services = () => {
       GraduationCap,
       Users,
       Search,
-      FileText
+      FileText,
+      Edit3
     };
     const Icon = icons[iconName] || Languages;
     return <Icon className="w-6 h-6" />;
@@ -451,7 +457,62 @@ const Services = () => {
           </>
         )}
 
-        {/* Call to Action */}
+            {/* خدمات التحرير والمراجعة المتخصصة */}
+            <motion.div
+              className="mb-20"
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6 }}
+            >
+              <Card className="border-2 border-primary/20 hover:border-primary/50 transition-all duration-300 overflow-hidden bg-gradient-to-br from-primary/5 via-background to-purple-500/5">
+                <CardContent className="p-10">
+                  <div className="flex flex-col md:flex-row items-center gap-8">
+                    <div className="flex-shrink-0">
+                      <div className="w-24 h-24 bg-gradient-to-br from-primary to-purple-600 rounded-2xl flex items-center justify-center text-white shadow-xl">
+                        <Edit3 className="w-12 h-12" />
+                      </div>
+                    </div>
+                    
+                    <div className="flex-1 text-center md:text-right">
+                      <h2 className="text-3xl md:text-4xl font-bold mb-3 bg-gradient-to-r from-primary to-purple-600 bg-clip-text text-transparent">
+                        خدمات التحرير والمراجعة الاحترافية
+                      </h2>
+                      <p className="text-muted-foreground text-lg mb-6 leading-relaxed">
+                        نوفر مجموعة شاملة من خدمات التحرير اللغوي والمراجعة الأكاديمية بأعلى معايير الجودة العالمية
+                      </p>
+                      <div className="flex flex-wrap gap-3 justify-center md:justify-start mb-6">
+                        <Badge variant="secondary" className="px-4 py-2 text-sm">
+                          <CheckCheck className="w-4 h-4 ml-2" />
+                          التدقيق اللغوي
+                        </Badge>
+                        <Badge variant="secondary" className="px-4 py-2 text-sm">
+                          <FileCheck className="w-4 h-4 ml-2" />
+                          المراجعة الأكاديمية
+                        </Badge>
+                        <Badge variant="secondary" className="px-4 py-2 text-sm">
+                          <BookOpen className="w-4 h-4 ml-2" />
+                          التحرير التنموي
+                        </Badge>
+                        <Badge variant="secondary" className="px-4 py-2 text-sm">
+                          <Sparkles className="w-4 h-4 ml-2" />
+                          مراجعة الأسلوب
+                        </Badge>
+                      </div>
+                      <Button
+                        size="lg"
+                        onClick={() => navigate('/services/editing-services')}
+                        className="px-8 py-6 text-lg shadow-lg hover:shadow-xl transition-all"
+                      >
+                        استكشف خدمات التحرير
+                        <ArrowLeft className="w-5 h-5 mr-2" />
+                      </Button>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </motion.div>
+
+            {/* Call to Action */}
         <motion.div 
           className="mt-20 text-center bg-gradient-to-r from-primary/5 to-purple-600/5 rounded-3xl p-12"
           initial={{ opacity: 0, y: 30 }}
