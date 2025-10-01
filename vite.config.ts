@@ -29,13 +29,8 @@ export default defineConfig(({ mode }) => ({
         },
       },
     },
-    // تفعيل minification
-    minify: 'terser',
-    terserOptions: {
-      compress: {
-        drop_console: mode === 'production',
-      },
-    },
+    // تفعيل minification باستخدام esbuild (أسرع من terser)
+    minify: 'esbuild',
   },
   // إلغاء الكاش بشكل كامل في التطوير
   cacheDir: mode === 'development' ? 'node_modules/.vite-temp' : 'node_modules/.vite',
