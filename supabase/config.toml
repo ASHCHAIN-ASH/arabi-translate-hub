@@ -74,3 +74,9 @@ verify_jwt = false
 
 [functions.ai-methodology-review]
 verify_jwt = false
+
+[functions.send-research-order]
+verify_jwt = false
+
+[functions.send-research-service-request]
+verify_jwt = false
