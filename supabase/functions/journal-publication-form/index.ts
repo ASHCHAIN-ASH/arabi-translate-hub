@@ -584,7 +584,7 @@ const handler = async (req: Request): Promise<Response> => {
     });
 
     // Send admin email
-    await resend.emails.send({
+    const adminEmailResponse = await resend.emails.send({
       from: "Master Edu Path <info@masteredupath.com>",
       to: ["info@masteredupath.com"],
       subject: `طلب جديد للنشر في المجلات المعتمدة من ${formData.fullName}`,
@@ -592,6 +592,43 @@ const handler = async (req: Request): Promise<Response> => {
     });
 
     console.log("Emails sent successfully for journal publication request");
+
+    // إرسال إشعار للإدارة في لوحة التحكم
+    const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
+    const supabaseServiceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
+    
+    try {
+      await fetch(`${supabaseUrl}/rest/v1/user_notifications`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'apikey': supabaseServiceKey,
+          'Authorization': `Bearer ${supabaseServiceKey}`,
+          'Prefer': 'return=minimal'
+        },
+        body: JSON.stringify({
+          user_email: 'info@masteredupath.com',
+          title: '📚 طلب نشر في المجلات المعتمدة',
+          message: `طلب جديد من ${formData.fullName} - ${formData.manuscriptTitle}`,
+          type: 'info',
+          category: 'research',
+          metadata: { 
+            fullName: formData.fullName,
+            email: formData.email,
+            phone: formData.phone,
+            institution: formData.institution,
+            researchField: formData.researchField,
+            journalType: formData.journalType,
+            manuscriptTitle: formData.manuscriptTitle,
+            service: 'journal_publication',
+            timestamp: new Date().toISOString()
+          }
+        })
+      });
+      console.log('Admin notification sent to dashboard');
+    } catch (notifError) {
+      console.error('Error sending admin notification:', notifError);
+    }
 
     return new Response(
       JSON.stringify({ 

@@ -159,10 +159,10 @@ const handler = async (req: Request): Promise<Response> => {
       return fieldMappings[field]?.[value] || fieldMappings['languages']?.[value] || value;
     };
 
-    // Send notification email to admin
+    // Send notification email to admin - الإيميل الرسمي للإدارة فقط
     const adminEmailResponse = await resend.emails.send({
       from: "نظام الترجمة الأكاديمية <noreply@masteredupath.com>",
-      to: ["info@masteredupath.com", "support@masteredupath.com"],
+      to: ["info@masteredupath.com"],
       subject: `📚 طلب جديد للترجمة الأكاديمية - ${inquiryData.documentTitle}`,
       html: `
         <!DOCTYPE html>

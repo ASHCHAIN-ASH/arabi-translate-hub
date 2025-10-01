@@ -124,10 +124,10 @@ const handler = async (req: Request): Promise<Response> => {
       return fieldMappings[field]?.[value] || value;
     };
 
-    // Send notification email to admin
+    // Send notification email to admin - الإيميل الرسمي للإدارة فقط
     const adminEmailResponse = await resend.emails.send({
       from: "نظام المنهجية العلمية <noreply@masteredupath.com>",
-      to: ["info@masteredupath.com", "support@masteredupath.com"],
+      to: ["info@masteredupath.com"],
       subject: `🔬 طلب جديد لتصميم منهجية علمية - ${inquiryData.researchTitle}`,
       html: `
         <!DOCTYPE html>
