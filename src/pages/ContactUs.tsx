@@ -10,6 +10,7 @@ import { Badge } from '@/components/ui/badge';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
 import Header from '@/components/Header';
+import SEO from '@/components/SEO';
 import contactHeroBackground from '@/assets/contact-hero-background.jpg';
 
 const ContactUs = () => {
@@ -147,6 +148,30 @@ const ContactUs = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-background to-secondary/10" dir="rtl">
+      <SEO 
+        title="تواصل معنا - MasterEduPath | استفسارات الخدمات الأكاديمية"
+        description="تواصل مع فريق MasterEduPath للحصول على استشارة مجانية حول خدماتنا الأكاديمية والبحثية. نرد على استفساراتك خلال 4 ساعات. اتصل: +966500776343"
+        keywords="تواصل معنا, استشارة أكاديمية مجانية, دعم عملاء MasterEduPath, استفسارات بحثية, خدمة عملاء 24/7"
+        url="https://ac43130c-4bba-404a-ade5-b9d62d1f8904.lovableproject.com/contact-us"
+        type="ContactPage"
+        schema={{
+          "@context": "https://schema.org",
+          "@type": "ContactPage",
+          "name": "تواصل معنا - MasterEduPath",
+          "description": "صفحة التواصل مع وكالة MasterEduPath",
+          "mainEntity": {
+            "@type": "Organization",
+            "name": "MasterEduPath Agency",
+            "telephone": "+966500776343",
+            "email": "info@masteredupath.com",
+            "address": {
+              "@type": "PostalAddress",
+              "addressLocality": "جدة",
+              "addressCountry": "SA"
+            }
+          }
+        }}
+      />
       <Header />
       
       <main className="pt-16">

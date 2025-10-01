@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
+  
+  <!-- Homepage -->
+  <url>
+    <loc>https://ac43130c-4bba-404a-ade5-b9d62d1f8904.lovableproject.com/</loc>
+    <lastmod>2025-01-01</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>1.0</priority>
+  </url>
+
+  <!-- About & Contact -->
+  <url>
+    <loc>https://ac43130c-4bba-404a-ade5-b9d62d1f8904.lovableproject.com/about-us</loc>
+    <lastmod>2025-01-01</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  
+  <url>
+    <loc>https://ac43130c-4bba-404a-ade5-b9d62d1f8904.lovableproject.com/contact-us</loc>
+    <lastmod>2025-01-01</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+
+  <!-- Main Services -->
+  <url>
+    <loc>https://ac43130c-4bba-404a-ade5-b9d62d1f8904.lovableproject.com/services</loc>
+    <lastmod>2025-01-01</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+
+  <url>
+    <loc>https://ac43130c-4bba-404a-ade5-b9d62d1f8904.lovableproject.com/translation-services</loc>
+    <lastmod>2025-01-01</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+
+  <url>
+    <loc>https://ac43130c-4bba-404a-ade5-b9d62d1f8904.lovableproject.com/research-services</loc>
+    <lastmod>2025-01-01</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+
+  <!-- Translation Services -->
+  <url>
+    <loc>https://ac43130c-4bba-404a-ade5-b9d62d1f8904.lovableproject.com/academic-translation</loc>
+    <lastmod>2025-01-01</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://ac43130c-4bba-404a-ade5-b9d62d1f8904.lovableproject.com/legal-translation</loc>
+    <lastmod>2025-01-01</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://ac43130c-4bba-404a-ade5-b9d62d1f8904.lovableproject.com/medical-translation</loc>
+    <lastmod>2025-01-01</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://ac43130c-4bba-404a-ade5-b9d62d1f8904.lovableproject.com/technical-translation</loc>
+    <lastmod>2025-01-01</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://ac43130c-4bba-404a-ade5-b9d62d1f8904.lovableproject.com/business-translation</loc>
+    <lastmod>2025-01-01</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <!-- Research Services -->
+  <url>
+    <loc>https://ac43130c-4bba-404a-ade5-b9d62d1f8904.lovableproject.com/research/journal-publication</loc>
+    <lastmod>2025-01-01</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://ac43130c-4bba-404a-ade5-b9d62d1f8904.lovableproject.com/research/statistical-analysis</loc>
+    <lastmod>2025-01-01</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://ac43130c-4bba-404a-ade5-b9d62d1f8904.lovableproject.com/research/plagiarism-check</loc>
+    <lastmod>2025-01-01</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://ac43130c-4bba-404a-ade5-b9d62d1f8904.lovableproject.com/research/language-review</loc>
+    <lastmod>2025-01-01</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <!-- Additional Pages -->
+  <url>
+    <loc>https://ac43130c-4bba-404a-ade5-b9d62d1f8904.lovableproject.com/blog</loc>
+    <lastmod>2025-01-01</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://ac43130c-4bba-404a-ade5-b9d62d1f8904.lovableproject.com/pricing</loc>
+    <lastmod>2025-01-01</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://ac43130c-4bba-404a-ade5-b9d62d1f8904.lovableproject.com/universities</loc>
+    <lastmod>2025-01-01</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <url>
+    <loc>https://ac43130c-4bba-404a-ade5-b9d62d1f8904.lovableproject.com/journals</loc>
+    <lastmod>2025-01-01</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <url>
+    <loc>https://ac43130c-4bba-404a-ade5-b9d62d1f8904.lovableproject.com/master-membership</loc>
+    <lastmod>2025-01-01</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <url>
+    <loc>https://ac43130c-4bba-404a-ade5-b9d62d1f8904.lovableproject.com/faq</loc>
+    <lastmod>2025-01-01</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+
+  <url>
+    <loc>https://ac43130c-4bba-404a-ade5-b9d62d1f8904.lovableproject.com/academic-integrity</loc>
+    <lastmod>2025-01-01</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+
+  <url>
+    <loc>https://ac43130c-4bba-404a-ade5-b9d62d1f8904.lovableproject.com/privacy-policy</loc>
+    <lastmod>2025-01-01</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.5</priority>
+  </url>
+
+  <url>
+    <loc>https://ac43130c-4bba-404a-ade5-b9d62d1f8904.lovableproject.com/terms-of-service</loc>
+    <lastmod>2025-01-01</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.5</priority>
+  </url>
+
+</urlset>

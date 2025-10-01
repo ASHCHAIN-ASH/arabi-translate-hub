@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import Header from "@/components/Header";
+import SEO from "@/components/SEO";
 import { WorkingHoursBannerRTL } from "@/components/WorkingHoursBannerRTL";
 import AnimatedCounter from "@/components/AnimatedCounter";
 import { 
@@ -107,6 +108,23 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-background" dir="rtl">
+      <SEO 
+        title="MasterEduPath - خدمات بحثية وأكاديمية متقدمة | ترجمة ونشر علمي"
+        description="وكالة MasterEduPath للحلول التعليمية المتقدمة - خدمات ترجمة أكاديمية، نشر علمي، تحليل إحصائي SPSS، تدقيق لغوي، وخدمات بحثية شاملة للطلاب والباحثين"
+        keywords="MasterEduPath, خدمات بحثية, ترجمة أكاديمية, نشر علمي, تدقيق لغوي, تحليل إحصائي SPSS, خدمات أكاديمية, جامعات سعودية, بحث علمي, رسائل ماجستير, رسائل دكتوراه"
+        url="https://ac43130c-4bba-404a-ade5-b9d62d1f8904.lovableproject.com/"
+        schema={{
+          "@context": "https://schema.org",
+          "@type": "EducationalOrganization",
+          "name": "MasterEduPath Agency",
+          "description": "وكالة متخصصة في تقديم الخدمات الأكاديمية والبحثية للطلاب والباحثين",
+          "url": "https://ac43130c-4bba-404a-ade5-b9d62d1f8904.lovableproject.com",
+          "logo": "https://ac43130c-4bba-404a-ade5-b9d62d1f8904.lovableproject.com/assets/national-day-logo-original.webp",
+          "serviceType": ["Academic Translation", "Research Services", "Statistical Analysis", "Publication Support"],
+          "areaServed": "Saudi Arabia",
+          "availableLanguage": ["Arabic", "English"]
+        }}
+      />
       <WorkingHoursBannerRTL />
       
       {/* Alert Banner - AI Service */}

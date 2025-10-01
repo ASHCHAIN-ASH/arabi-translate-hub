@@ -1,14 +1,43 @@
+# MasterEduPath Robots.txt
+User-agent: *
+Allow: /
+
+# Disallow admin and private pages
+Disallow: /admin/
+Disallow: /client/
+Disallow: /platform/
+Disallow: /auth/
+
+# Allow important pages
+Allow: /
+Allow: /about-us
+Allow: /services
+Allow: /translation-services
+Allow: /research-services
+Allow: /contact-us
+Allow: /blog
+Allow: /pricing
+Allow: /universities
+Allow: /journals
+
+# Sitemap location
+Sitemap: https://ac43130c-4bba-404a-ade5-b9d62d1f8904.lovableproject.com/sitemap.xml
+
+# Crawl delay (polite crawling)
+Crawl-delay: 1
+
+# Google
 User-agent: Googlebot
 Allow: /
 
+# Bing
 User-agent: Bingbot
 Allow: /
 
+# Twitter
 User-agent: Twitterbot
 Allow: /
 
+# Facebook
 User-agent: facebookexternalhit
-Allow: /
-
-User-agent: *
 Allow: /

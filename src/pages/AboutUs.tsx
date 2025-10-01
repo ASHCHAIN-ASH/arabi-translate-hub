@@ -4,6 +4,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import SEO from "@/components/SEO";
 import AnimatedCounter from "@/components/AnimatedCounter";
 import { Link } from "react-router-dom";
 
@@ -183,6 +184,25 @@ const AboutUs = () => {
 
   return (
     <div className="min-h-screen bg-background" dir="rtl">
+      <SEO 
+        title="من نحن - MasterEduPath | وكالة الحلول التعليمية المتقدمة"
+        description="تعرف على MasterEduPath - وكالة رائدة في تقديم الخدمات الأكاديمية والبحثية للطلاب والباحثين في السعودية والوطن العربي. خبرة أكثر من 10 سنوات في خدمة 50,000+ طالب وباحث"
+        keywords="من نحن MasterEduPath, وكالة تعليمية, خدمات أكاديمية, خبرة أكاديمية, شركاء جامعات, خدمات بحثية احترافية"
+        url="https://ac43130c-4bba-404a-ade5-b9d62d1f8904.lovableproject.com/about-us"
+        schema={{
+          "@context": "https://schema.org",
+          "@type": "AboutPage",
+          "name": "من نحن - MasterEduPath",
+          "description": "صفحة تعريفية بوكالة MasterEduPath للحلول التعليمية",
+          "mainEntity": {
+            "@type": "Organization",
+            "name": "MasterEduPath Agency",
+            "foundingDate": "2014",
+            "numberOfEmployees": "50+",
+            "slogan": "شريكك الموثوق للحلول التعليمية المتقدمة"
+          }
+        }}
+      />
       <Header />
       
       {/* Hero Section */}
