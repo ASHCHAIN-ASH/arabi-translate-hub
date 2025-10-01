@@ -243,26 +243,6 @@ const handler = async (req: Request): Promise<Response> => {
 
     console.log("Emails sent successfully:", { adminEmail, clientEmail });
 
-    // إرسال إشعار للعميل
-    const { error: clientNotifError } = await supabaseClient
-      .from('user_notifications')
-      .insert({
-        user_email: orderData.email,
-        title: 'تم استلام طلبك البحثي',
-        message: `شكراً لك على طلب خدمة ${orderData.categoryTitle}. سنتواصل معك قريباً.`,
-        type: 'success',
-        category: 'order',
-        metadata: { orderId, category: orderData.category }
-      });
-    
-    if (clientNotifError) {
-      console.error('Error sending client notification:', clientNotifError);
-    }
-
-    // Admin dashboard notification disabled as requested
-    // (Previously inserted a row into user_notifications for info@masteredupath.com)
-
-
     return new Response(
       JSON.stringify({ 
         success: true,
