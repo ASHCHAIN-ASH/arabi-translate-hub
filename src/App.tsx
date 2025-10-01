@@ -139,7 +139,7 @@ import Universities from "./pages/Universities";
 import JournalsDirectory from "./pages/JournalsDirectory";
 import ContractManagement from "./pages/ContractManagement";
 import Footer from "./components/Footer";
-import ChatBot from "./components/ChatBot";
+import BackToTopButton from "./components/BackToTopButton";
 
 const queryClient = new QueryClient();
 
@@ -380,7 +380,7 @@ const App = () => (
             <Route path="*" element={<NotFound />} />
           </Routes>
           <Footer />
-          <ChatBot />
+          <BackToTopButton />
           </PageThemeProvider>
         </SimpleAuthProvider>
       </BrowserRouter>
