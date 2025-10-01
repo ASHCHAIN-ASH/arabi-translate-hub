@@ -1,5 +1,6 @@
 import { useState } from "react";
 import Header from "@/components/Header";
+import Breadcrumb from '@/components/Breadcrumb';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -186,6 +187,10 @@ const ThesisTitles = () => {
   return (
     <div className="min-h-screen bg-background">
       <Header />
+      <Breadcrumb items={[
+        { label: 'الخدمات البحثية', href: '/research-services' },
+        { label: 'عناوين البحوث' }
+      ]} />
       
       {/* Hero Section */}
       <section className="relative py-20 bg-gradient-primary text-white overflow-hidden">

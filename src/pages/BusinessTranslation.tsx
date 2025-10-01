@@ -3,6 +3,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Briefcase, FileText, TrendingUp, Users, Globe, Award } from "lucide-react";
+import Header from "@/components/Header";
+import Breadcrumb from '@/components/Breadcrumb';
 
 import realBusinessServicesImg from "@/assets/real-business-services.jpg";
 
@@ -41,6 +43,11 @@ const BusinessTranslation = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-orange-50 to-white">
+      <Header />
+      <Breadcrumb items={[
+        { label: 'خدمات الترجمة', href: '/translation-services' },
+        { label: 'الترجمة التجارية' }
+      ]} />
       {/* Header */}
       <section className="relative py-20 px-4 text-center bg-gradient-to-r from-orange-600 to-orange-800 text-white">
         <div className="absolute inset-0 bg-black/20"></div>

@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import Header from '@/components/Header';
+import Breadcrumb from '@/components/Breadcrumb';
 import ServiceInquiryForm from '@/components/ServiceInquiryForm';
 
 import { 
@@ -83,6 +84,10 @@ const WebsiteTranslation = () => {
   return (
     <div className="min-h-screen bg-background" dir="rtl">
       <Header />
+      <Breadcrumb items={[
+        { label: 'خدمات الترجمة', href: '/services/translation-services' },
+        { label: 'ترجمة المواقع' }
+      ]} />
       
       {/* القسم الرئيسي */}
       <section className="relative pt-20 pb-16 bg-gradient-to-br from-cyan-50 via-blue-50 to-indigo-50 dark:from-cyan-950 dark:via-blue-950 dark:to-indigo-950 overflow-hidden">

@@ -1,6 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import Header from "@/components/Header";
+import Breadcrumb from '@/components/Breadcrumb';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -129,6 +130,10 @@ const AcademicResearch = () => {
   return (
     <div className="min-h-screen bg-gradient-to-b from-background via-blue-50/20 to-background">
       <Header />
+      <Breadcrumb items={[
+        { label: 'الخدمات البحثية', href: '/research-services' },
+        { label: 'البحوث الأكاديمية' }
+      ]} />
       
       {/* Hero Section */}
       <section className="relative py-16 md:py-20 overflow-hidden bg-gradient-to-br from-blue-600 via-purple-600 to-cyan-600">

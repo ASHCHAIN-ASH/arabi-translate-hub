@@ -3,6 +3,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Settings, Code, Cpu, Zap, Shield, Award } from "lucide-react";
+import Header from "@/components/Header";
+import Breadcrumb from '@/components/Breadcrumb';
 
 
 import ServiceInquiryForm from "@/components/ServiceInquiryForm";
@@ -42,6 +44,11 @@ const TechnicalTranslation = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-50 to-white">
+      <Header />
+      <Breadcrumb items={[
+        { label: 'خدمات الترجمة', href: '/translation-services' },
+        { label: 'الترجمة التقنية' }
+      ]} />
       {/* Header */}
       <section className="relative py-20 px-4 text-center bg-gradient-to-r from-purple-600 to-purple-800 text-white">
         <div className="absolute inset-0 bg-black/20"></div>

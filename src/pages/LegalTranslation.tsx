@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import Header from '@/components/Header';
+import Breadcrumb from '@/components/Breadcrumb';
 import { 
   Scale, 
   FileText, 
@@ -66,6 +67,10 @@ const LegalTranslation = () => {
   return (
     <div className="min-h-screen bg-background" dir="rtl">
       <Header />
+      <Breadcrumb items={[
+        { label: 'خدمات الترجمة', href: '/translation-services' },
+        { label: 'الترجمة القانونية' }
+      ]} />
       
       {/* القسم الرئيسي */}
       <section className="relative pt-20 pb-16 bg-gradient-to-br from-purple-50 via-indigo-50 to-blue-50 dark:from-purple-950 dark:via-indigo-950 dark:to-blue-950 overflow-hidden">

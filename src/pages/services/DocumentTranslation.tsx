@@ -9,6 +9,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
 import Header from '@/components/Header';
+import Breadcrumb from '@/components/Breadcrumb';
 
 import { 
   FileText, 
@@ -154,6 +155,10 @@ const DocumentTranslation = () => {
   return (
     <div className="min-h-screen bg-background" dir="rtl">
       <Header />
+      <Breadcrumb items={[
+        { label: 'خدمات الترجمة', href: '/services/translation-services' },
+        { label: 'ترجمة المستندات' }
+      ]} />
       
       {/* القسم الرئيسي */}
       <section className="relative pt-20 pb-16 bg-gradient-to-br from-emerald-50 via-teal-50 to-cyan-50 dark:from-emerald-950 dark:via-teal-950 dark:to-cyan-950 overflow-hidden">

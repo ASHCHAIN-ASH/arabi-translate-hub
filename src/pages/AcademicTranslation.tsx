@@ -6,6 +6,7 @@ import { GraduationCap, BookOpen, FileText, Award, Users, Globe, Microscope, Cal
 
 import AcademicTranslationForm from "@/components/AcademicTranslationForm";
 import Header from "@/components/Header";
+import Breadcrumb from '@/components/Breadcrumb';
 
 const AcademicTranslation = () => {
   const academicServices = [
@@ -109,6 +110,10 @@ const AcademicTranslation = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-blue-50 to-cyan-50">
       <Header />
+      <Breadcrumb items={[
+        { label: 'خدمات الترجمة', href: '/translation-services' },
+        { label: 'الترجمة الأكاديمية' }
+      ]} />
       
       {/* Academic Hero Section */}
       <section className="relative overflow-hidden">

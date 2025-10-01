@@ -1,5 +1,6 @@
 import { useState } from "react";
 import Header from "@/components/Header";
+import Breadcrumb from '@/components/Breadcrumb';
 import ServiceInquiryForm from "@/components/ServiceInquiryForm";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -141,6 +142,10 @@ const StatisticalAnalysis = () => {
   return (
     <div className="min-h-screen bg-background" dir="rtl">
       <Header />
+      <Breadcrumb items={[
+        { label: 'الخدمات البحثية', href: '/research-services' },
+        { label: 'التحليل الإحصائي' }
+      ]} />
       
       {/* Hero Section */}
       <section className="relative py-32 bg-gradient-to-br from-blue-900 via-purple-900 to-indigo-900 text-white overflow-hidden">
