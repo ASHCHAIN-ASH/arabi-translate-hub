@@ -130,21 +130,23 @@ const handler = async (req: Request): Promise<Response> => {
     `;
 
     // إرسال الإيميلات
-    await resend.emails.send({
-      from: "MasterEduPath <no-reply@masteredupath.com>",
+    const adminRes = await resend.emails.send({
+      from: "Master Edu Path System <info@masteredupath.com>",
       to: ["info@masteredupath.com"],
       replyTo: orderData.email,
       subject: `[MasterEduPath] طلب جديد – ${orderData.serviceTitle} – ${orderData.fullName}`,
       html: adminEmailHtml,
     });
 
-    await resend.emails.send({
-      from: "MasterEduPath <no-reply@masteredupath.com>",
+    const clientRes = await resend.emails.send({
+      from: "Master Edu Path <info@masteredupath.com>",
       replyTo: "info@masteredupath.com",
       to: [orderData.email],
       subject: `[MasterEduPath] تأكيد استلام طلبك – ${orderData.serviceTitle}`,
       html: clientEmailHtml,
     });
+
+    console.log("Resend send-research-service-request responses:", { adminRes, clientRes });
 
     console.log("Emails sent successfully for order:", orderId);
 
