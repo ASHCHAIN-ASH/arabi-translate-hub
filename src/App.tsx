@@ -367,6 +367,14 @@ const App = () => (
             <Route path="/services/statistical-analysis" element={<StatisticalAnalysisServices />} />
             <Route path="/services/publishing-services" element={<PublishingServices />} />
             
+            {/* Editing Service Detail Routes */}
+            <Route path="/services/editing/language-proofreading" element={<LanguageProofreading />} />
+            <Route path="/services/editing/academic-review" element={<AcademicReview />} />
+            <Route path="/services/editing/developmental-editing" element={<DevelopmentalEditing />} />
+            <Route path="/services/editing/technical-editing" element={<TechnicalEditing />} />
+            <Route path="/services/editing/style-review" element={<StyleReview />} />
+            <Route path="/services/editing/final-proofreading" element={<FinalProofreading />} />
+            
             <Route path="*" element={<NotFound />} />
           </Routes>
           <Footer />
