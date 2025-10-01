@@ -32,43 +32,227 @@ const handler = async (req: Request): Promise<Response> => {
 
     // إيميل الإدارة (Admin RTL Template)
     const adminEmailHtml = `
-      <!doctype html>
-      <html lang="ar" dir="rtl">
+      <!DOCTYPE html>
+      <html dir="rtl" lang="ar">
       <head>
-        <meta charset="utf-8">
+        <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>طلب جديد</title>
+        <title>طلب خدمة بحثية جديد</title>
         <style>
-          body{margin:0;background:#f8fafc;font-family:'Tahoma','Segoe UI','Cairo',sans-serif;direction:rtl}
-          .wrap{max-width:760px;margin:0 auto;padding:24px}
-          .head{background:#0a225d;color:#fff;border-radius:12px 12px 0 0;padding:18px}
-          .body{background:#fff;border:1px solid #e5e7eb;border-top:0;border-radius:0 0 12px 12px;padding:20px}
-          h1{margin:0 0 6px;font-size:20px}
-          table{width:100%;border-collapse:collapse}
-          td{padding:10px;border-bottom:1px solid #f0f2f5;vertical-align:top}
-          .label{color:#6b7280;width:180px}
-          .badge{display:inline-block;background:#eaf2ff;color:#0a225d;padding:4px 8px;border-radius:8px}
-          .foot{margin-top:16px;color:#6b7280;font-size:12px}
+          * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+          }
+          body {
+            font-family: 'Segoe UI', 'Cairo', 'Amiri', Tahoma, Arial, sans-serif;
+            line-height: 1.8;
+            color: #2c3e50;
+            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a52 100%);
+            margin: 0;
+            padding: 10px;
+            direction: rtl;
+            text-align: right;
+          }
+          .email-wrapper {
+            width: 100%;
+            max-width: 650px;
+            margin: 0 auto;
+            background: #ffffff;
+            border-radius: 20px;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.15);
+            overflow: hidden;
+            border: 3px solid #ff4757;
+          }
+          .urgent-banner {
+            background: linear-gradient(45deg, #ff4757 0%, #ff3838 100%);
+            color: white;
+            padding: 15px;
+            text-align: center;
+            font-weight: bold;
+            font-size: 16px;
+            animation: pulse 2s infinite;
+          }
+          @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.7; }
+            100% { opacity: 1; }
+          }
+          .header {
+            background: linear-gradient(135deg, #dc3545 0%, #fd7e14 100%);
+            color: white;
+            padding: 40px 30px;
+            text-align: center;
+            position: relative;
+          }
+          .header::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #ffd89b 0%, #19547b 100%);
+          }
+          .header h1 {
+            font-size: 28px;
+            margin-bottom: 10px;
+            font-weight: 700;
+          }
+          .header .timestamp {
+            background: rgba(255,255,255,0.2);
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 14px;
+            margin-top: 15px;
+            display: inline-block;
+          }
+          .content {
+            padding: 40px 30px;
+          }
+          .alert-card {
+            background: linear-gradient(145deg, #fff3cd 0%, #ffeaa7 100%);
+            border: 3px solid #ffc107;
+            border-radius: 15px;
+            padding: 25px;
+            margin: 25px 0;
+            text-align: center;
+            box-shadow: 0 8px 20px rgba(255,193,7,0.3);
+          }
+          .alert-card h3 {
+            color: #856404;
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 10px;
+          }
+          .client-section {
+            background: linear-gradient(145deg, #e3f2fd 0%, #bbdefb 100%);
+            border: 2px solid #2196f3;
+            border-radius: 15px;
+            padding: 25px;
+            margin: 25px 0;
+          }
+          .client-section h3 {
+            color: #1565c0;
+            font-size: 20px;
+            margin-bottom: 20px;
+            text-align: center;
+            font-weight: 700;
+          }
+          .info-table {
+            width: 100%;
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.05);
+          }
+          .info-table tr {
+            border-bottom: 1px solid #e3f2fd;
+          }
+          .info-table tr:last-child {
+            border-bottom: none;
+          }
+          .info-table td {
+            padding: 15px;
+          }
+          .info-table td:first-child {
+            font-weight: 700;
+            color: #1565c0;
+            width: 140px;
+            background: #f5f5f5;
+          }
+          .footer {
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+          }
+          .footer p {
+            margin: 8px 0;
+            font-size: 14px;
+          }
+          .footer .company-name {
+            font-size: 18px;
+            font-weight: 700;
+            color: #ecf0f1;
+          }
+          @media only screen and (max-width: 600px) {
+            body { padding: 5px; }
+            .email-wrapper { border-radius: 15px; }
+            .header { padding: 25px 20px; }
+            .header h1 { font-size: 24px; }
+            .content { padding: 25px 20px; }
+            .info-table td { padding: 12px 10px; font-size: 14px; }
+            .info-table td:first-child { width: 120px; }
+            .footer { padding: 25px 20px; }
+          }
         </style>
       </head>
       <body>
-        <div class="wrap">
-          <div class="head">
-            <h1>طلب جديد – <span class="badge">${orderData.serviceTitle}</span></h1>
-            <div>الطابع الزمني: ${new Date().toLocaleString('ar-SA')}</div>
+        <div class="email-wrapper">
+          <div class="urgent-banner">
+            🚨 طلب جديد يحتاج إلى متابعة فورية
           </div>
-          <div class="body">
-            <table>
-              <tr><td class="label">رقم الطلب</td><td>${orderId}</td></tr>
-              <tr><td class="label">الاسم الكامل</td><td>${orderData.fullName}</td></tr>
-              <tr><td class="label">البريد</td><td>${orderData.email}</td></tr>
-              <tr><td class="label">الجوال</td><td>${orderData.phone}</td></tr>
-              <tr><td class="label">التخصص</td><td>${orderData.specialization}</td></tr>
-              <tr><td class="label">تفاصيل الطلب</td><td>${orderData.details || 'لا توجد تفاصيل إضافية'}</td></tr>
-            </table>
-            <div class="foot">
-              هذه رسالة تنبيه داخلية. للرد على العميل استخدم "Reply-To".
+          
+          <div class="header">
+            <h1>🎓 ماستر إيدو باث - طلب خدمة بحثية</h1>
+            <div class="timestamp">
+              📅 ${new Date().toLocaleString('ar-SA', { 
+                weekday: 'long', 
+                year: 'numeric', 
+                month: 'long', 
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+              })}
             </div>
+          </div>
+          
+          <div class="content">
+            <div class="alert-card">
+              <h3>⚡ طلب جديد: ${orderData.serviceTitle}</h3>
+              <p style="color: #856404; font-size: 16px; margin-top: 10px;">رقم الطلب: <strong>${orderId}</strong></p>
+            </div>
+            
+            <div class="client-section">
+              <h3>👤 معلومات العميل</h3>
+              <table class="info-table">
+                <tr>
+                  <td>الاسم الكامل</td>
+                  <td>${orderData.fullName}</td>
+                </tr>
+                <tr>
+                  <td>البريد الإلكتروني</td>
+                  <td><a href="mailto:${orderData.email}" style="color: #2196f3; text-decoration: none;">${orderData.email}</a></td>
+                </tr>
+                <tr>
+                  <td>رقم الهاتف</td>
+                  <td><a href="tel:${orderData.phone}" style="color: #2196f3; text-decoration: none;">${orderData.phone}</a></td>
+                </tr>
+                <tr>
+                  <td>التخصص</td>
+                  <td>${orderData.specialization}</td>
+                </tr>
+                ${orderData.details ? `
+                <tr>
+                  <td>تفاصيل الطلب</td>
+                  <td style="white-space: pre-wrap;">${orderData.details}</td>
+                </tr>
+                ` : ''}
+              </table>
+            </div>
+            
+            <div style="background: linear-gradient(145deg, #ffebee 0%, #ffcdd2 100%); border: 2px solid #ef5350; border-radius: 15px; padding: 20px; margin: 25px 0; text-align: center;">
+              <p style="color: #c62828; font-weight: 700; font-size: 16px; margin: 0;">
+                📞 يُرجى التواصل مع العميل في أقرب وقت ممكن
+              </p>
+            </div>
+          </div>
+          
+          <div class="footer">
+            <p class="company-name">ماستر إيدو باث - نظام الإشعارات</p>
+            <p>&copy; 2025 جميع الحقوق محفوظة</p>
+            <p>هذه رسالة تلقائية من نظام إدارة الطلبات</p>
           </div>
         </div>
       </body>
@@ -77,52 +261,276 @@ const handler = async (req: Request): Promise<Response> => {
 
     // إيميل العميل (Client RTL Template)
     const clientEmailHtml = `
-      <!doctype html>
-      <html lang="ar" dir="rtl">
+      <!DOCTYPE html>
+      <html dir="rtl" lang="ar">
       <head>
-        <meta charset="utf-8">
-        <meta name="x-apple-disable-message-reformatting">
+        <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>تأكيد استلام طلبك</title>
         <style>
-          body{margin:0;background:#f5f7fb;font-family:'Tahoma','Segoe UI','Cairo',sans-serif;direction:rtl}
-          .container{max-width:640px;margin:0 auto;padding:24px}
-          .card{background:#ffffff;border-radius:16px;box-shadow:0 10px 25px rgba(0,0,0,.06);overflow:hidden}
-          .header{background:linear-gradient(135deg,#0a225d,#0087ff);color:#fff;padding:28px;text-align:center}
-          h1{margin:0 0 6px;font-size:22px}
-          p{margin:0;color:#e9eef7;font-size:14px}
-          .content{padding:22px 24px;color:#222}
-          .row{margin-bottom:12px}
-          .label{color:#4a5568;font-size:13px}
-          .val{font-weight:700}
-          .cta{display:inline-block;margin-top:16px;padding:12px 18px;background:#0a225d;color:#fff;text-decoration:none;border-radius:10px}
-          .note{margin-top:18px;font-size:12px;color:#6b7280}
-          .footer{padding:16px;text-align:center;font-size:12px;color:#6b7280}
-          @keyframes fadeInUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
-          .card{animation:fadeInUp .5s ease}
+          * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            direction: rtl !important;
+            text-align: right !important;
+          }
+          body {
+            font-family: 'Cairo', 'Segoe UI', Tahoma, Arial, sans-serif;
+            line-height: 1.8;
+            color: #2c3e50;
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            margin: 0;
+            padding: 15px;
+            direction: rtl !important;
+            text-align: right !important;
+          }
+          .email-wrapper {
+            width: 100%;
+            max-width: 600px;
+            margin: 0 auto;
+            background: #ffffff;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+          }
+          .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px 30px;
+            text-align: center;
+            position: relative;
+          }
+          .header::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #ffd89b 0%, #19547b 100%);
+          }
+          .header h1 {
+            font-size: 28px;
+            margin-bottom: 10px;
+            font-weight: 700;
+          }
+          .header h2 {
+            font-size: 18px;
+            font-weight: 400;
+            opacity: 0.9;
+          }
+          .content {
+            padding: 40px 30px;
+          }
+          .greeting {
+            font-size: 20px;
+            color: #2c3e50;
+            margin-bottom: 25px;
+            font-weight: 600;
+          }
+          .message {
+            font-size: 16px;
+            color: #34495e;
+            margin-bottom: 30px;
+            line-height: 1.8;
+          }
+          .info-card {
+            background: linear-gradient(145deg, #f8f9fa 0%, #e9ecef 100%);
+            border: 2px solid #e3f2fd;
+            border-radius: 15px;
+            padding: 25px;
+            margin: 25px 0;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+          }
+          .info-card h3 {
+            color: #1565c0;
+            font-size: 18px;
+            margin-bottom: 20px;
+            text-align: center;
+            font-weight: 700;
+          }
+          .info-list {
+            list-style: none;
+            padding: 0;
+          }
+          .info-list li {
+            background: white;
+            margin: 8px 0;
+            padding: 12px 20px;
+            border-radius: 10px;
+            border-right: 4px solid #667eea;
+            font-size: 14px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+          }
+          .info-list li strong {
+            color: #2c3e50;
+            display: inline-block;
+            min-width: 120px;
+          }
+          .steps-section {
+            background: linear-gradient(145deg, #e8f5e8 0%, #f1f8e9 100%);
+            border-radius: 15px;
+            padding: 25px;
+            margin: 25px 0;
+            border: 2px solid #c8e6c9;
+          }
+          .steps-section h3 {
+            color: #2e7d32;
+            font-size: 18px;
+            margin-bottom: 20px;
+            text-align: center;
+            font-weight: 700;
+          }
+          .steps-list {
+            list-style: none;
+            counter-reset: step-counter;
+          }
+          .steps-list li {
+            counter-increment: step-counter;
+            background: white;
+            margin: 10px 0;
+            padding: 15px 20px;
+            border-radius: 10px;
+            position: relative;
+            padding-right: 50px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.05);
+            font-size: 15px;
+          }
+          .steps-list li::before {
+            content: counter(step-counter);
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: #4caf50;
+            color: white;
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 12px;
+          }
+          .contact-section {
+            background: linear-gradient(145deg, #fff3e0 0%, #ffe0b2 100%);
+            border-radius: 15px;
+            padding: 25px;
+            margin: 25px 0;
+            border: 2px solid #ffcc02;
+            text-align: center;
+          }
+          .contact-section h3 {
+            color: #e65100;
+            font-size: 18px;
+            margin-bottom: 20px;
+            font-weight: 700;
+          }
+          .contact-item {
+            background: white;
+            margin: 10px 0;
+            padding: 12px 20px;
+            border-radius: 10px;
+            font-size: 15px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+          }
+          .footer {
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+          }
+          .footer p {
+            margin: 8px 0;
+            font-size: 14px;
+          }
+          .footer .company-name {
+            font-size: 18px;
+            font-weight: 700;
+            color: #ecf0f1;
+          }
+          
+          @media only screen and (max-width: 600px) {
+            body { padding: 5px; }
+            .email-wrapper { border-radius: 15px; }
+            .header { padding: 25px 20px; }
+            .header h1 { font-size: 24px; }
+            .header h2 { font-size: 16px; }
+            .content { padding: 25px 20px; }
+            .greeting { font-size: 18px; }
+            .message { font-size: 14px; }
+            .info-card, .steps-section, .contact-section { padding: 20px 15px; margin: 20px 0; }
+            .info-list li, .contact-item { padding: 10px 15px; font-size: 13px; }
+            .steps-list li { padding: 12px 15px 12px 45px; font-size: 14px; }
+            .footer { padding: 25px 20px; }
+          }
         </style>
       </head>
       <body>
-        <div class="container">
-          <div class="card">
-            <div class="header">
-              <h1>تم استلام طلبك 🎓</h1>
-              <p>شكرًا لتواصلك مع MasterEduPath</p>
+        <div class="email-wrapper">
+          <div class="header">
+            <h1>🎯 ماستر إيدو باث</h1>
+            <h2>تأكيد استلام طلبك</h2>
+          </div>
+          
+          <div class="content">
+            <div class="greeting">
+              السلام عليكم ورحمة الله وبركاته<br>
+              عزيزي/عزيزتي ${orderData.fullName}
             </div>
-            <div class="content">
-              <div class="row"><span class="label">الخدمة:</span> <span class="val">${orderData.serviceTitle}</span></div>
-              <div class="row"><span class="label">الاسم:</span> <span class="val">${orderData.fullName}</span></div>
-              <div class="row"><span class="label">البريد:</span> <span class="val">${orderData.email}</span></div>
-              <div class="row"><span class="label">الجوال:</span> <span class="val">${orderData.phone}</span></div>
-              <div class="row"><span class="label">التخصص:</span> <span class="val">${orderData.specialization}</span></div>
-              <div class="row"><span class="label">تفاصيل الطلب:</span><div>${orderData.details || 'لا توجد تفاصيل إضافية'}</div></div>
-              <div class="note">
-                سنراجع التفاصيل ونتواصل معك خلال وقت قصير عبر البريد أو الواتساب.
+            
+            <div class="message">
+              نشكرك على ثقتك في خدماتنا! يسعدنا إعلامك بأنه تم استلام طلبك لخدمة <strong>${orderData.serviceTitle}</strong> بنجاح، وسيتم التعامل معه بأقصى سرعة ودقة.
+            </div>
+            
+            <div class="info-card">
+              <h3>📋 تفاصيل طلبك المُستلم</h3>
+              <ul class="info-list">
+                <li><strong>رقم الطلب:</strong> ${orderId}</li>
+                <li><strong>الخدمة:</strong> ${orderData.serviceTitle}</li>
+                <li><strong>الاسم الكامل:</strong> ${orderData.fullName}</li>
+                <li><strong>البريد الإلكتروني:</strong> ${orderData.email}</li>
+                <li><strong>رقم الهاتف:</strong> ${orderData.phone}</li>
+                <li><strong>التخصص:</strong> ${orderData.specialization}</li>
+                ${orderData.details ? `<li><strong>تفاصيل الطلب:</strong> ${orderData.details}</li>` : ''}
+              </ul>
+            </div>
+            
+            <div class="steps-section">
+              <h3>⚡ الخطوات التالية</h3>
+              <ul class="steps-list">
+                <li>سيتواصل معك فريق الخبراء المتخصص خلال 24 ساعة كحد أقصى</li>
+                <li>سنقوم بمراجعة وتقييم طلبك بدقة عالية</li>
+                <li>سيتم إرسال عرض سعر مفصل وشامل لك</li>
+                <li>بعد موافقتك، سنبدأ العمل فوراً على تنفيذ الخدمة</li>
+                <li>ستحصل على خدمة احترافية معتمدة وعالية الجودة</li>
+              </ul>
+            </div>
+            
+            <div class="contact-section">
+              <h3>📞 طرق التواصل معنا</h3>
+              <div class="contact-item">
+                📧 البريد الإلكتروني: info@masteredupath.com
+              </div>
+              <div class="contact-item">
+                📱 جوال/واتساب: 0500776343 / 0559600824
+              </div>
+              <div class="contact-item">
+                🌐 الموقع الإلكتروني: www.masteredupath.com
+              </div>
+              <div class="contact-item">
+                ⏰ أوقات العمل: من الأحد إلى الخميس (9 صباحاً - 6 مساءً)
               </div>
             </div>
-            <div class="footer">
-              © 2025 MasterEduPath — للاستفسار السريع: 0500776343 / 0559600824
-            </div>
+          </div>
+          
+          <div class="footer">
+            <p class="company-name">ماستر إيدو باث</p>
+            <p>&copy; 2025 جميع الحقوق محفوظة</p>
+            <p>نحن ملتزمون بتقديم أفضل خدمات البحث العلمي الاحترافية والمعتمدة</p>
+            <p>شكراً لثقتكم بنا ونتطلع لخدمتكم</p>
           </div>
         </div>
       </body>
