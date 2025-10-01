@@ -91,23 +91,75 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
   // جلب الإشعارات الحقيقية
   const [realNotifications, setRealNotifications] = useState(defaultNotifications);
   
-  useEffect(() => {
-    const loadNotifications = async () => {
-      try {
-        const notifs = await AdminDashboardService.getRecentNotifications();
-        if (notifs.length > 0) {
-          setRealNotifications(notifs);
-        }
-      } catch (error) {
-        console.error('Error loading notifications:', error);
-        // نبقي على الإشعارات الافتراضية في حالة الخطأ
-      }
-    };
-    
-    loadNotifications();
-    loadCounts();
-  }, []);
+  // عناوين بريد الإدارة المستهدفة
+  const adminEmails = ['info@masteredupath.com','admin@masteredupath.com','support@masteredupath.com'];
 
+  const getTimeAgo = (iso: string) => {
+    const diff = Date.now() - new Date(iso).getTime();
+    const minutes = Math.floor(diff / 60000);
+    if (minutes < 1) return 'الآن';
+    if (minutes < 60) return `منذ ${minutes} دقيقة`;
+    const hours = Math.floor(minutes / 60);
+    if (hours < 24) return `منذ ${hours} ساعة`;
+    const days = Math.floor(hours / 24);
+    return `منذ ${days} يوم`;
+  };
+
+  const loadAdminNotifications = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('user_notifications')
+        .select('*')
+        .or(`user_email.eq.${adminEmails[0]},user_email.eq.${adminEmails[1]},user_email.eq.${adminEmails[2]},user_email.eq.all_admins`)
+        .order('created_at', { ascending: false })
+        .limit(10);
+
+      if (error) throw error;
+
+      const mapped = (data || []).map((n: any, idx: number) => ({
+        id: idx + 1,
+        title: n.title,
+        message: n.message,
+        time: getTimeAgo(n.created_at),
+        type: n.category || 'admin',
+      }));
+      if (mapped.length) setRealNotifications(mapped);
+    } catch (e) {
+      console.error('Error loading admin notifications:', e);
+    }
+  };
+  
+  useEffect(() => {
+    loadAdminNotifications();
+    loadCounts();
+
+    const channel = supabase
+      .channel('admin-user-notifications')
+      .on(
+        'postgres_changes',
+        { event: 'INSERT', schema: 'public', table: 'user_notifications' },
+        (payload) => {
+          const n: any = payload.new;
+          if (adminEmails.includes(n.user_email) || n.user_email === 'all_admins') {
+            setRealNotifications(prev => [
+              {
+                id: Date.now(),
+                title: n.title,
+                message: n.message,
+                time: getTimeAgo(n.created_at),
+                type: n.category || 'admin',
+              },
+              ...prev,
+            ].slice(0, 10));
+          }
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, []);
   // جلب الأعداد الديناميكية
   const loadCounts = async () => {
     try {
