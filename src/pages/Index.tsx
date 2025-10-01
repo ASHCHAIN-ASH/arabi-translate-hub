@@ -524,87 +524,87 @@ const Index = () => {
             {academicServices.map((service, index) => {
               const IconComponent = service.icon;
               return (
-                <motion.div
-                  key={index}
-                  initial={{ opacity: 0, y: 50, scale: 0.9 }}
-                  whileInView={{ opacity: 1, y: 0, scale: 1 }}
-                  transition={{ 
-                    duration: 0.6, 
-                    delay: index * 0.15,
-                    ease: [0.25, 0.46, 0.45, 0.94]
-                  }}
-                  viewport={{ once: true, margin: "-50px" }}
-                  className="group"
-                >
-                  <motion.div
-                    whileHover={{ y: -16, scale: 1.03 }}
-                    whileTap={{ scale: 0.98 }}
-                    transition={{ duration: 0.4, ease: "easeOut" }}
-                  >
-                    <Card 
-                      className="h-full relative overflow-hidden border border-border/60 bg-background/80 dark:bg-slate-900/70 backdrop-blur-xl rounded-2xl shadow-sm hover:shadow-xl transition-all duration-300 cursor-pointer"
-                      onClick={() => navigate(service.link)}
-                    >
-                      {/* عناصر خلفية مبسطة للحصول على مظهر أنظف */}
-                      
-                      <CardContent className="p-6 sm:p-7 lg:p-8 text-right relative">
-                        {/* حاوية الأيقونة */}
-                        <motion.div 
-                          className="relative mb-5 sm:mb-6"
-                          whileHover={{ rotate: [0, -5, 5, -5, 0] }}
-                          transition={{ duration: 0.6 }}
-                        >
-                          <div className={`w-16 h-16 sm:w-20 sm:h-20 bg-gradient-to-br ${service.color} rounded-2xl flex items-center justify-center shadow-lg group-hover:shadow-xl transition-all duration-300 relative mx-auto lg:mx-0 lg:mr-auto`}>
-                            {/* توهج خلف الأيقونة */}
-                            <motion.div 
-                              className="absolute inset-0 bg-white/25 rounded-2xl blur-xl"
-                              animate={{ 
-                                scale: [1, 1.1, 1],
-                                opacity: [0.25, 0.5, 0.25]
-                              }}
-                              transition={{ duration: 3, repeat: Infinity }}
-                            />
-                            <IconComponent className="h-8 w-8 sm:h-9 sm:w-9 text-white relative z-10" strokeWidth={1.8} />
-                          </div>
-                        </motion.div>
-                        
-                        {/* العنوان */}
-                        <h3 className="text-xl sm:text-2xl font-bold mb-3 sm:mb-4 text-slate-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors duration-400 leading-snug">
-                          {service.title}
-                        </h3>
-                        
-                        {/* الوصف */}
-                        <p className="text-sm sm:text-base text-slate-600 dark:text-slate-400 mb-5 sm:mb-6 leading-relaxed min-h-[48px] sm:min-h-[60px]">
-                          {service.description}
-                        </p>
-                        
-                        {/* زر الإجراء */}
-                        <motion.div 
-                          className="flex items-center justify-end gap-2 sm:gap-2.5 text-primary font-bold text-sm sm:text-base story-link"
-                          whileHover={{ gap: "14px" }}
-                          transition={{ duration: 0.3 }}
-                        >
-                          <span>عرض الخدمات</span>
-                          <motion.div
-                            animate={{ 
-                              x: [0, -6, 0],
-                            }}
-                            transition={{ 
-                              duration: 2, 
-                              repeat: Infinity,
-                              ease: "easeInOut"
-                            }}
-                          >
-                            <ChevronRight className="h-5 w-5 sm:h-6 sm:w-6" strokeWidth={2.5} />
-                          </motion.div>
-                        </motion.div>
+                 <motion.div
+                   key={index}
+                   initial={{ opacity: 0, y: 50, scale: 0.95 }}
+                   whileInView={{ opacity: 1, y: 0, scale: 1 }}
+                   transition={{ 
+                     duration: 0.6, 
+                     delay: index * 0.1,
+                     ease: [0.25, 0.46, 0.45, 0.94]
+                   }}
+                   viewport={{ once: true, margin: "-50px" }}
+                   className="group"
+                 >
+                   <motion.div
+                     whileHover={{ y: -12, scale: 1.02 }}
+                     whileTap={{ scale: 0.98 }}
+                     transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+                   >
+                     <Card 
+                       className="h-full relative overflow-hidden border-2 border-border/50 hover:border-primary/50 bg-card dark:bg-card/98 backdrop-blur-sm rounded-3xl shadow-lg hover:shadow-2xl transition-all duration-500 cursor-pointer"
+                       onClick={() => navigate(service.link)}
+                     >
+                       {/* خلفية متدرجة احترافية */}
+                       <div className="absolute inset-0 bg-gradient-to-br from-primary/[0.03] via-transparent to-accent/[0.03] opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                       
+                       {/* شريط علوي مميز */}
+                       <div className="absolute top-0 left-0 right-0 h-[3px] bg-gradient-to-l from-primary via-primary/90 to-primary/70 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-600 origin-right rounded-t-3xl"></div>
+                       
+                       <CardContent className="p-7 sm:p-8 lg:p-10 text-right relative z-10">
+                         {/* حاوية الأيقونة المطورة */}
+                         <motion.div 
+                           className="relative mb-6 sm:mb-7"
+                           whileHover={{ scale: 1.08, rotate: [0, -4, 4, 0] }}
+                           transition={{ duration: 0.5 }}
+                         >
+                           <div className={`w-20 h-20 sm:w-24 sm:h-24 bg-gradient-to-br ${service.color} rounded-[28px] flex items-center justify-center shadow-xl group-hover:shadow-2xl transition-all duration-500 relative mx-auto lg:mx-0 lg:mr-auto border-[3px] border-white/20 dark:border-white/10`}>
+                             {/* تأثير توهج متحرك */}
+                             <motion.div 
+                               className="absolute inset-0 bg-white/25 rounded-[28px] blur-2xl"
+                               animate={{ 
+                                 scale: [1, 1.2, 1],
+                                 opacity: [0.3, 0.6, 0.3]
+                               }}
+                               transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+                             />
+                             <IconComponent className="h-10 w-10 sm:h-12 sm:w-12 text-white relative z-10" strokeWidth={2.2} />
+                           </div>
+                         </motion.div>
+                         
+                         {/* العنوان المحسّن */}
+                         <h3 className="text-2xl sm:text-[27px] lg:text-3xl font-bold mb-4 sm:mb-5 text-foreground group-hover:text-primary transition-colors duration-400 leading-tight tracking-tight">
+                           {service.title}
+                         </h3>
+                         
+                         {/* الوصف المطور */}
+                         <p className="text-base sm:text-[17px] lg:text-lg text-muted-foreground leading-relaxed mb-6 sm:mb-8 font-medium min-h-[56px] sm:min-h-[70px]">
+                           {service.description}
+                         </p>
+                         
+                         {/* زر الإجراء الاحترافي */}
+                         <motion.div
+                           whileHover={{ x: -10 }}
+                           transition={{ duration: 0.35, ease: "easeOut" }}
+                           className="inline-flex w-full"
+                         >
+                           <div className="inline-flex items-center justify-center gap-3 px-7 py-3.5 bg-primary/[0.08] hover:bg-primary hover:text-primary-foreground rounded-[20px] font-bold text-base sm:text-lg text-primary transition-all duration-400 group/btn border-2 border-primary/30 hover:border-primary shadow-md hover:shadow-xl w-full sm:w-auto">
+                             <span className="tracking-wide">عرض الخدمات</span>
+                             <motion.div
+                               animate={{ x: [0, -6, 0] }}
+                               transition={{ duration: 1.8, repeat: Infinity, ease: "easeInOut" }}
+                             >
+                               <ChevronRight className="h-5 w-5 sm:h-6 sm:w-6 group-hover/btn:translate-x-[-4px] transition-transform duration-300" strokeWidth={2.8} />
+                             </motion.div>
+                           </div>
+                         </motion.div>
 
-                        {/* زخرفة زاوية */}
-                        <div className="absolute bottom-0 left-0 w-20 h-20 bg-gradient-to-tr from-blue-500/5 to-transparent rounded-tr-full opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-                      </CardContent>
-                    </Card>
-                  </motion.div>
-                </motion.div>
+                         {/* زخرفة زاوية محسّنة */}
+                         <div className="absolute bottom-0 left-0 w-24 h-24 bg-gradient-to-tr from-primary/10 to-transparent rounded-tr-[50px] opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                       </CardContent>
+                     </Card>
+                   </motion.div>
+                 </motion.div>
               );
             })}
           </div>
