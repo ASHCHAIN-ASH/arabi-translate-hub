@@ -131,6 +131,7 @@ import SubmitOrder from "./pages/SubmitOrder";
 import NotFound from "./pages/NotFound";
 import IntellectualProperty from "./pages/IntellectualProperty";
 import AcademicIntegrity from "./pages/AcademicIntegrity";
+import ServiceComparisons from "./pages/ServiceComparisons";
 import LicenseRequest from "./pages/LicenseRequest";
 import Careers from "./pages/Careers";
 import ContactUs from "./pages/ContactUs";
@@ -199,6 +200,7 @@ const App = () => (
              <Route path="/pricing" element={<Pricing />} />
             <Route path="/intellectual-property" element={<IntellectualProperty />} />
             <Route path="/academic-integrity" element={<AcademicIntegrity />} />
+            <Route path="/service-comparisons" element={<ServiceComparisons />} />
             <Route path="/payment-methods" element={<PaymentMethods />} />
             <Route path="/universities" element={<Universities />} />
             <Route path="/journals" element={<JournalsDirectory />} />
