@@ -107,6 +107,14 @@ import ResearchEvaluation from "./pages/research/ResearchEvaluation";
 import Publication from "./pages/research/Publication";
 import AcademicConsultation from "./pages/research/AcademicConsultation";
 import TrainingCourses from "./pages/research/TrainingCourses";
+import ResearchServicesHub from "./pages/research/ResearchServicesHub";
+import AcademicWritingService from "./pages/research/AcademicWritingService";
+import ProofreadingService from "./pages/research/ProofreadingService";
+import StatisticalSpssService from "./pages/research/StatisticalSpssService";
+import ProposalService from "./pages/research/ProposalService";
+import PowerPointService from "./pages/research/PowerPointService";
+import PaperReviewService from "./pages/research/PaperReviewService";
+import ConsultationService from "./pages/research/ConsultationService";
 import OrderForm from "./components/OrderForm";
 import TermsOfService from "./pages/TermsOfService";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
@@ -158,6 +166,17 @@ const App = () => (
             <Route path="/research/social" element={<SocialResearch />} />
             <Route path="/research/legal" element={<LegalResearch />} />
             <Route path="/research/medical" element={<MedicalResearch />} />
+            
+            {/* Research Services Hub */}
+            <Route path="/research/services-hub" element={<ResearchServicesHub />} />
+            <Route path="/research/academic-writing-service" element={<AcademicWritingService />} />
+            <Route path="/research/proofreading-service" element={<ProofreadingService />} />
+            <Route path="/research/statistical-spss-service" element={<StatisticalSpssService />} />
+            <Route path="/research/proposal-service" element={<ProposalService />} />
+            <Route path="/research/powerpoint-service" element={<PowerPointService />} />
+            <Route path="/research/paper-review-service" element={<PaperReviewService />} />
+            <Route path="/research/consultation-service" element={<ConsultationService />} />
+            
             <Route path="/about-us" element={<AboutUs />} />
              <Route path="/terms-of-service" element={<TermsOfService />} />
              <Route path="/privacy-policy" element={<PrivacyPolicy />} />
