@@ -1,15 +1,31 @@
 import React from 'react';
 import { motion } from 'framer-motion';
+import { useNavigate } from 'react-router-dom';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import { ResearchServiceForm } from '@/components/research/ResearchServiceForm';
-import { BookOpenCheck, CheckCircle, Clock, Shield, Users, Award } from 'lucide-react';
+import { BookOpenCheck, CheckCircle, Clock, Shield, Users, Award, ArrowRight } from 'lucide-react';
 import { Card } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
 
 export default function AcademicWritingService() {
+  const navigate = useNavigate();
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-background to-muted/20">
       <Header />
+      
+      {/* Back Button */}
+      <div className="container px-4 mx-auto pt-6">
+        <Button
+          variant="ghost"
+          onClick={() => navigate(-1)}
+          className="gap-2 hover:gap-3 transition-all"
+        >
+          <ArrowRight className="w-4 h-4 rotate-180" />
+          رجوع
+        </Button>
+      </div>
       
       {/* Hero Section */}
       <section className="relative py-20 overflow-hidden">
