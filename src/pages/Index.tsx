@@ -14,6 +14,12 @@ import {
 } from "lucide-react";
 import { UNIFIED_STATS, STATS_LABELS } from "@/constants/academicStats";
 
+// Import academic service images
+import academicTranslationImg from "@/assets/academic-service-translation.jpg";
+import academicResearchImg from "@/assets/academic-service-research.jpg";
+import academicEditingImg from "@/assets/academic-service-editing.jpg";
+import academicPublishingImg from "@/assets/academic-service-publishing.jpg";
+
 // Lazy loading للمكونات الثقيلة لتحسين الأداء
 const ServicesShowcase = lazy(() => import("@/components/ServicesShowcase"));
 const MasterMembershipBanner = lazy(() => import("@/components/MasterMembershipBanner"));
@@ -55,35 +61,39 @@ const Index = () => {
     { name: "جامعة كولومبيا", nameEn: "Columbia University", icon: Target, color: "from-teal-600 to-cyan-600" }
   ];
 
-  // خدمات أكاديمية
+  // خدمات أكاديمية مع صور حقيقية
   const academicServices = [
     {
       icon: Languages,
       title: "الترجمة الأكاديمية",
       description: "ترجمة احترافية للأبحاث والرسائل العلمية بدقة عالية",
       link: "/translation-services",
-      color: "from-blue-600 to-indigo-600"
+      color: "from-blue-600 to-indigo-600",
+      image: academicTranslationImg
     },
     {
       icon: Brain,
       title: "خدمات البحث العلمي",
       description: "دعم شامل للباحثين في جميع مراحل البحث العلمي",
       link: "/research-services",
-      color: "from-purple-600 to-pink-600"
+      color: "from-purple-600 to-pink-600",
+      image: academicResearchImg
     },
     {
       icon: CheckCircle,
       title: "المراجعة والتدقيق",
       description: "مراجعة لغوية ومنهجية متخصصة للأبحاث العلمية",
       link: "/services/editing-services",
-      color: "from-emerald-600 to-teal-600"
+      color: "from-emerald-600 to-teal-600",
+      image: academicEditingImg
     },
     {
       icon: Target,
       title: "النشر الأكاديمي",
       description: "مساعدة في نشر الأبحاث في المجلات العلمية المحكمة",
       link: "/research/journal-publication",
-      color: "from-amber-600 to-orange-600"
+      color: "from-amber-600 to-orange-600",
+      image: academicPublishingImg
     }
   ];
 
@@ -423,7 +433,7 @@ const Index = () => {
       </section>
 
       {/* قسم الخدمات الأكاديمية */}
-      <section className="py-16 sm:py-20 lg:py-28 bg-gradient-to-br from-slate-50 via-blue-50/40 to-purple-50/30 dark:from-slate-950 dark:via-slate-900/95 dark:to-slate-950 relative overflow-hidden" dir="rtl">
+      <section className="py-12 sm:py-16 lg:py-20 bg-gradient-to-br from-slate-50 via-blue-50/40 to-purple-50/30 dark:from-slate-950 dark:via-slate-900/95 dark:to-slate-950 relative overflow-hidden" dir="rtl">
         {/* شبكة الخلفية المتحركة */}
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_120%,rgba(120,119,198,0.1),rgba(255,255,255,0)_50%)] dark:bg-[radial-gradient(circle_at_50%_120%,rgba(120,119,198,0.05),rgba(0,0,0,0)_50%)]"></div>
@@ -461,18 +471,18 @@ const Index = () => {
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           {/* رأس القسم */}
           <motion.div
-            className="text-center mb-12 sm:mb-16 lg:mb-20"
+            className="text-center mb-8 sm:mb-10 lg:mb-12"
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, ease: "easeOut" }}
+            transition={{ duration: 0.6, ease: "easeOut" }}
             viewport={{ once: true, margin: "-100px" }}
           >
             {/* الشارة */}
             <motion.div
-              className="inline-flex items-center gap-2 sm:gap-3 px-5 sm:px-7 py-2.5 sm:py-3 bg-gradient-to-l from-blue-600/10 via-indigo-600/10 to-purple-600/10 dark:from-blue-400/10 dark:via-indigo-400/10 dark:to-purple-400/10 rounded-full mb-5 sm:mb-7 border border-blue-200/60 dark:border-blue-800/40 shadow-lg backdrop-blur-sm"
+              className="inline-flex items-center gap-2 px-4 sm:px-5 py-2 bg-gradient-to-l from-blue-600/10 via-indigo-600/10 to-purple-600/10 dark:from-blue-400/10 dark:via-indigo-400/10 dark:to-purple-400/10 rounded-full mb-4 sm:mb-5 border border-blue-200/60 dark:border-blue-800/40 shadow-md backdrop-blur-sm"
               initial={{ opacity: 0, scale: 0.85 }}
               whileInView={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.6, delay: 0.2, ease: "backOut" }}
+              transition={{ duration: 0.5, delay: 0.1, ease: "backOut" }}
               viewport={{ once: true }}
               whileHover={{ scale: 1.05 }}
             >
@@ -480,19 +490,19 @@ const Index = () => {
                 animate={{ rotate: [0, 360] }}
                 transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
               >
-                <Sparkles className="h-4 w-4 sm:h-5 sm:w-5 text-blue-600 dark:text-blue-400" />
+                <Sparkles className="h-4 w-4 text-blue-600 dark:text-blue-400" />
               </motion.div>
-              <span className="text-xs sm:text-sm lg:text-base font-bold bg-gradient-to-l from-blue-600 via-indigo-600 to-purple-600 dark:from-blue-400 dark:via-indigo-400 dark:to-purple-400 bg-clip-text text-transparent">
+              <span className="text-xs sm:text-sm font-bold bg-gradient-to-l from-blue-600 via-indigo-600 to-purple-600 dark:from-blue-400 dark:via-indigo-400 dark:to-purple-400 bg-clip-text text-transparent">
                 خدماتنا الأكاديمية المتميزة
               </span>
             </motion.div>
 
             {/* العنوان الرئيسي */}
             <motion.h2 
-              className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black mb-5 sm:mb-7 text-slate-900 dark:text-white leading-tight tracking-tight"
+              className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-black mb-3 sm:mb-4 text-slate-900 dark:text-white leading-tight tracking-tight"
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.7, delay: 0.3 }}
+              transition={{ duration: 0.6, delay: 0.2 }}
               viewport={{ once: true }}
             >
               حلول أكاديمية{" "}
@@ -509,98 +519,91 @@ const Index = () => {
 
             {/* الوصف */}
             <motion.p 
-              className="text-base sm:text-lg lg:text-xl text-slate-600 dark:text-slate-400 max-w-2xl lg:max-w-3xl mx-auto leading-relaxed px-4"
+              className="text-sm sm:text-base lg:text-lg text-slate-600 dark:text-slate-400 max-w-xl lg:max-w-2xl mx-auto leading-relaxed px-4"
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.7, delay: 0.4 }}
+              transition={{ duration: 0.6, delay: 0.3 }}
               viewport={{ once: true }}
             >
               نقدم مجموعة شاملة من الخدمات الأكاديمية المتخصصة لدعم رحلتك التعليمية والبحثية بأعلى معايير الجودة العالمية
             </motion.p>
           </motion.div>
 
-          {/* شبكة البطاقات */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 sm:gap-6 lg:gap-8">
+          {/* شبكة البطاقات المحسّنة - أصغر وأكثر تنظيماً */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5 lg:gap-6 max-w-7xl mx-auto">
             {academicServices.map((service, index) => {
               const IconComponent = service.icon;
               return (
                  <motion.div
                    key={index}
-                   initial={{ opacity: 0, y: 50, scale: 0.95 }}
+                   initial={{ opacity: 0, y: 40, scale: 0.96 }}
                    whileInView={{ opacity: 1, y: 0, scale: 1 }}
                    transition={{ 
-                     duration: 0.6, 
-                     delay: index * 0.1,
+                     duration: 0.5, 
+                     delay: index * 0.08,
                      ease: [0.25, 0.46, 0.45, 0.94]
                    }}
                    viewport={{ once: true, margin: "-50px" }}
                    className="group"
                  >
                    <motion.div
-                     whileHover={{ y: -12, scale: 1.02 }}
-                     whileTap={{ scale: 0.98 }}
-                     transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+                     whileHover={{ y: -8, scale: 1.01 }}
+                     whileTap={{ scale: 0.99 }}
+                     transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
                    >
                      <Card 
-                       className="h-full relative overflow-hidden border-2 border-border/50 hover:border-primary/50 bg-card dark:bg-card/98 backdrop-blur-sm rounded-3xl shadow-lg hover:shadow-2xl transition-all duration-500 cursor-pointer"
+                       className="h-full relative overflow-hidden border-2 border-border/40 hover:border-primary/50 bg-card dark:bg-card/98 backdrop-blur-sm rounded-2xl shadow-md hover:shadow-xl transition-all duration-400 cursor-pointer"
                        onClick={() => navigate(service.link)}
                      >
-                       {/* خلفية متدرجة احترافية */}
-                       <div className="absolute inset-0 bg-gradient-to-br from-primary/[0.03] via-transparent to-accent/[0.03] opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-                       
-                       {/* شريط علوي مميز */}
-                       <div className="absolute top-0 left-0 right-0 h-[3px] bg-gradient-to-l from-primary via-primary/90 to-primary/70 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-600 origin-right rounded-t-3xl"></div>
-                       
-                       <CardContent className="p-7 sm:p-8 lg:p-10 text-right relative z-10">
-                         {/* حاوية الأيقونة المطورة */}
+                       {/* صورة الخدمة */}
+                       <div className="relative h-32 sm:h-36 overflow-hidden">
+                         <img 
+                           src={service.image} 
+                           alt={service.title}
+                           className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                         />
+                         {/* تدرج فوق الصورة */}
+                         <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-card/95 dark:to-card/98"></div>
+                         
+                         {/* الأيقونة فوق الصورة */}
                          <motion.div 
-                           className="relative mb-6 sm:mb-7"
-                           whileHover={{ scale: 1.08, rotate: [0, -4, 4, 0] }}
-                           transition={{ duration: 0.5 }}
+                           className="absolute top-3 right-3"
+                           whileHover={{ scale: 1.1, rotate: [0, -5, 5, 0] }}
+                           transition={{ duration: 0.4 }}
                          >
-                           <div className={`w-20 h-20 sm:w-24 sm:h-24 bg-gradient-to-br ${service.color} rounded-[28px] flex items-center justify-center shadow-xl group-hover:shadow-2xl transition-all duration-500 relative mx-auto lg:mx-0 lg:mr-auto border-[3px] border-white/20 dark:border-white/10`}>
-                             {/* تأثير توهج متحرك */}
-                             <motion.div 
-                               className="absolute inset-0 bg-white/25 rounded-[28px] blur-2xl"
-                               animate={{ 
-                                 scale: [1, 1.2, 1],
-                                 opacity: [0.3, 0.6, 0.3]
-                               }}
-                               transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
-                             />
-                             <IconComponent className="h-10 w-10 sm:h-12 sm:w-12 text-white relative z-10" strokeWidth={2.2} />
+                           <div className={`w-12 h-12 sm:w-14 sm:h-14 bg-gradient-to-br ${service.color} rounded-xl flex items-center justify-center shadow-lg border-2 border-white/30 dark:border-white/20`}>
+                             <IconComponent className="h-6 w-6 sm:h-7 sm:w-7 text-white" strokeWidth={2.2} />
                            </div>
                          </motion.div>
-                         
+                       </div>
+                       
+                       <CardContent className="p-4 sm:p-5 lg:p-6 text-right relative z-10">
                          {/* العنوان المحسّن */}
-                         <h3 className="text-2xl sm:text-[27px] lg:text-3xl font-bold mb-4 sm:mb-5 text-foreground group-hover:text-primary transition-colors duration-400 leading-tight tracking-tight">
+                         <h3 className="text-lg sm:text-xl font-bold mb-2 sm:mb-3 text-foreground group-hover:text-primary transition-colors duration-300 leading-tight">
                            {service.title}
                          </h3>
                          
-                         {/* الوصف المطور */}
-                         <p className="text-base sm:text-[17px] lg:text-lg text-muted-foreground leading-relaxed mb-6 sm:mb-8 font-medium min-h-[56px] sm:min-h-[70px]">
+                         {/* الوصف المختصر */}
+                         <p className="text-sm sm:text-base text-muted-foreground leading-relaxed mb-4 sm:mb-5 line-clamp-2">
                            {service.description}
                          </p>
                          
-                         {/* زر الإجراء الاحترافي */}
+                         {/* زر الإجراء المدمج */}
                          <motion.div
-                           whileHover={{ x: -10 }}
-                           transition={{ duration: 0.35, ease: "easeOut" }}
-                           className="inline-flex w-full"
+                           whileHover={{ x: -6 }}
+                           transition={{ duration: 0.3, ease: "easeOut" }}
+                           className="inline-flex"
                          >
-                           <div className="inline-flex items-center justify-center gap-3 px-7 py-3.5 bg-primary/[0.08] hover:bg-primary hover:text-primary-foreground rounded-[20px] font-bold text-base sm:text-lg text-primary transition-all duration-400 group/btn border-2 border-primary/30 hover:border-primary shadow-md hover:shadow-xl w-full sm:w-auto">
-                             <span className="tracking-wide">عرض الخدمات</span>
+                           <div className="inline-flex items-center gap-2 px-4 py-2 bg-primary/10 hover:bg-primary hover:text-primary-foreground rounded-xl font-semibold text-sm text-primary transition-all duration-300 border border-primary/30 hover:border-primary shadow-sm hover:shadow-md">
+                             <span>عرض الخدمات</span>
                              <motion.div
-                               animate={{ x: [0, -6, 0] }}
-                               transition={{ duration: 1.8, repeat: Infinity, ease: "easeInOut" }}
+                               animate={{ x: [0, -4, 0] }}
+                               transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
                              >
-                               <ChevronRight className="h-5 w-5 sm:h-6 sm:w-6 group-hover/btn:translate-x-[-4px] transition-transform duration-300" strokeWidth={2.8} />
+                               <ChevronRight className="h-4 w-4" strokeWidth={2.5} />
                              </motion.div>
                            </div>
                          </motion.div>
-
-                         {/* زخرفة زاوية محسّنة */}
-                         <div className="absolute bottom-0 left-0 w-24 h-24 bg-gradient-to-tr from-primary/10 to-transparent rounded-tr-[50px] opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
                        </CardContent>
                      </Card>
                    </motion.div>
