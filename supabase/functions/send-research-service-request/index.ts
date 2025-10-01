@@ -43,6 +43,8 @@ const handler = async (req: Request): Promise<Response> => {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+            direction: rtl !important;
+            text-align: right !important;
           }
           body {
             font-family: 'Segoe UI', 'Cairo', 'Amiri', Tahoma, Arial, sans-serif;
@@ -51,8 +53,8 @@ const handler = async (req: Request): Promise<Response> => {
             background: linear-gradient(135deg, #ff6b6b 0%, #ee5a52 100%);
             margin: 0;
             padding: 10px;
-            direction: rtl;
-            text-align: right;
+            direction: rtl !important;
+            text-align: right !important;
           }
           .email-wrapper {
             width: 100%;
