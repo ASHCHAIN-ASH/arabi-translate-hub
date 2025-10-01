@@ -286,6 +286,7 @@ const Footer = () => {
              </h4>
              <ul className="space-y-2 md:space-y-3">
                {[
+                 { name: 'النزاهة الأكاديمية', href: '/academic-integrity', icon: Award },
                  { name: 'الملكية الفكرية', href: '/intellectual-property', icon: Shield },
                  { name: 'سياسة الخصوصية', href: '/privacy-policy', icon: Shield },
                  { name: 'شروط الاستخدام', href: '/terms-of-service', icon: HelpCircle },
