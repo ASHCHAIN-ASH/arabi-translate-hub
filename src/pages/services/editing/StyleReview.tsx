@@ -1,17 +1,22 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { Card, CardContent } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
-import { BookOpen, Feather, Eye, Sparkles } from 'lucide-react';
+import { BookOpen, Feather, Eye, Sparkles, ArrowLeft, Zap } from 'lucide-react';
 import Header from '@/components/Header';
 import { EditingServiceForm } from '@/components/editing/EditingServiceForm';
+import { useNavigate } from 'react-router-dom';
+import { Button } from '@/components/ui/button';
 
 const StyleReview = () => {
+  const navigate = useNavigate();
+  
   const features = [
-    { icon: <Feather className="w-6 h-6" />, title: "تحسين التدفق", description: "تحسين انسيابية النص وسلاسته" },
-    { icon: <BookOpen className="w-6 h-6" />, title: "توحيد الأسلوب", description: "اتساق الأسلوب في جميع الأقسام" },
-    { icon: <Eye className="w-6 h-6" />, title: "تعزيز الوضوح", description: "جعل النص أكثر وضوحاً وفهماً" },
-    { icon: <Sparkles className="w-6 h-6" />, title: "صقل اللغة", description: "تحسين جودة اللغة والتعبير" }
+    { icon: Feather, title: "تحسين التدفق", description: "تحسين انسيابية النص وسلاسته", color: "from-indigo-500 to-purple-500" },
+    { icon: BookOpen, title: "توحيد الأسلوب", description: "اتساق الأسلوب في جميع الأقسام", color: "from-purple-500 to-pink-500" },
+    { icon: Eye, title: "تعزيز الوضوح", description: "جعل النص أكثر وضوحاً وفهماً", color: "from-pink-500 to-rose-500" },
+    { icon: Sparkles, title: "صقل اللغة", description: "تحسين جودة اللغة والتعبير", color: "from-violet-500 to-indigo-500" }
   ];
 
   const processSteps = [
@@ -70,24 +75,27 @@ const StyleReview = () => {
         <div className="container mx-auto px-4">
           <h2 className="text-3xl font-bold text-center mb-12">ما نقدمه لك</h2>
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {features.map((feature, index) => (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ delay: index * 0.1 }}
-              >
-                <Card className="h-full">
-                  <CardContent className="p-6">
-                    <div className="w-12 h-12 bg-gradient-to-br from-indigo-500 to-purple-500 rounded-lg flex items-center justify-center text-white mb-4">
-                      {feature.icon}
-                    </div>
-                    <h3 className="font-semibold mb-2">{feature.title}</h3>
-                    <p className="text-sm text-muted-foreground">{feature.description}</p>
-                  </CardContent>
-                </Card>
-              </motion.div>
-            ))}
+            {features.map((feature, index) => {
+              const Icon = feature.icon;
+              return (
+                <motion.div
+                  key={index}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  transition={{ delay: index * 0.1 }}
+                >
+                  <Card className="h-full">
+                    <CardContent className="p-6">
+                      <div className={`w-12 h-12 bg-gradient-to-br ${feature.color} rounded-lg flex items-center justify-center text-white mb-4`}>
+                        <Icon className="w-6 h-6" />
+                      </div>
+                      <h3 className="font-semibold mb-2">{feature.title}</h3>
+                      <p className="text-sm text-muted-foreground">{feature.description}</p>
+                    </CardContent>
+                  </Card>
+                </motion.div>
+              );
+            })}
           </div>
         </div>
       </section>
