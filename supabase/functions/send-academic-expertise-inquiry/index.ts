@@ -1385,44 +1385,6 @@ const handler = async (req: Request): Promise<Response> => {
 
     console.log("Admin email sent:", adminEmailResponse);
 
-    // إرسال إشعار للإدارة في لوحة التحكم
-    const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
-    const supabaseServiceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
-    
-    try {
-      await fetch(`${supabaseUrl}/rest/v1/user_notifications`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'apikey': supabaseServiceKey,
-          'Authorization': `Bearer ${supabaseServiceKey}`,
-          'Prefer': 'return=minimal'
-        },
-        body: JSON.stringify({
-          user_email: 'info@masteredupath.com',
-          title: `🎓 طلب ${serviceTypeArabic}`,
-          message: `طلب جديد من ${consultationData.fullName} - ${consultationData.projectTitle}`,
-          type: 'info',
-          category: 'consultation',
-          metadata: { 
-            serviceType: consultationData.serviceType,
-            serviceTypeArabic,
-            fullName: consultationData.fullName,
-            email: consultationData.email,
-            phone: consultationData.phone,
-            university: consultationData.university,
-            academicLevel: consultationData.academicLevel,
-            specialization: consultationData.specialization,
-            projectTitle: consultationData.projectTitle,
-            timestamp: new Date().toISOString()
-          }
-        })
-      });
-      console.log('Admin notification sent to dashboard');
-    } catch (notifError) {
-      console.error('Error sending admin notification:', notifError);
-    }
-
     return new Response(
       JSON.stringify({ 
         success: true, 
