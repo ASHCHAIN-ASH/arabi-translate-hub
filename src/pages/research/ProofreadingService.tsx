@@ -4,8 +4,8 @@ import { useNavigate } from 'react-router-dom';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import { FloatingWhatsAppButton } from '@/components/FloatingWhatsAppButton';
-import { ResearchServiceForm } from '@/components/research/ResearchServiceForm';
-import { FileCheck, CheckCircle, Sparkles, Eye, Languages, FileText, ArrowRight } from 'lucide-react';
+import { ProofreadingServiceForm } from '@/components/research/forms/ProofreadingServiceForm';
+import { CheckCheck, CheckCircle, FileCheck, Globe, Clock, Shield, ArrowRight, Sparkles, Eye, Languages } from 'lucide-react';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 
@@ -29,8 +29,25 @@ export default function ProofreadingService() {
         </Button>
       </div>
       
-      <section className="relative py-20 overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/10 via-teal-500/10 to-cyan-500/10"></div>
+      <section className="relative py-16 md:py-24 overflow-hidden">
+        <div className="absolute inset-0">
+          <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/10 via-teal-500/10 to-cyan-500/10" />
+          <motion.div
+            animate={{
+              backgroundPosition: ['0% 0%', '100% 100%'],
+            }}
+            transition={{
+              duration: 20,
+              repeat: Infinity,
+              repeatType: 'reverse',
+            }}
+            className="absolute inset-0 opacity-30"
+            style={{
+              backgroundImage: 'radial-gradient(circle at 20% 50%, rgba(16, 185, 129, 0.1) 0%, transparent 50%), radial-gradient(circle at 80% 80%, rgba(20, 184, 166, 0.1) 0%, transparent 50%)',
+              backgroundSize: '100% 100%',
+            }}
+          />
+        </div>
         
         <div className="container relative z-10 px-4 mx-auto">
           <motion.div
@@ -39,21 +56,70 @@ export default function ProofreadingService() {
             className="max-w-4xl mx-auto text-center"
           >
             <motion.div
-              initial={{ scale: 0 }}
-              animate={{ scale: 1, rotate: 360 }}
-              transition={{ duration: 0.6 }}
-              className="inline-flex items-center justify-center w-20 h-20 mb-6 bg-gradient-to-br from-emerald-500 to-teal-500 rounded-2xl shadow-lg"
+              initial={{ scale: 0, rotate: -180 }}
+              animate={{ scale: 1, rotate: 0 }}
+              transition={{ 
+                type: "spring",
+                stiffness: 200,
+                damping: 15,
+                duration: 0.8 
+              }}
+              className="inline-flex items-center justify-center w-20 h-20 md:w-24 md:h-24 mb-6 bg-gradient-to-br from-emerald-500 via-teal-500 to-cyan-500 rounded-3xl shadow-2xl relative overflow-hidden"
             >
-              <FileCheck className="w-12 h-12 text-white" />
+              <motion.div
+                animate={{
+                  scale: [1, 1.2, 1],
+                  rotate: [0, 180, 360],
+                }}
+                transition={{
+                  duration: 3,
+                  repeat: Infinity,
+                  ease: "linear"
+                }}
+                className="absolute inset-0 bg-gradient-to-br from-white/20 to-transparent"
+              />
+              <CheckCheck className="w-12 h-12 md:w-14 md:h-14 text-white relative z-10" />
             </motion.div>
 
-            <h1 className="text-4xl md:text-5xl font-bold mb-6 bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent">
+            <motion.h1 
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.2 }}
+              className="text-3xl md:text-5xl lg:text-6xl font-bold mb-6 bg-gradient-to-r from-emerald-600 via-teal-600 to-cyan-600 bg-clip-text text-transparent"
+            >
               التدقيق اللغوي والمراجعة الأكاديمية
-            </h1>
+            </motion.h1>
             
-            <p className="text-xl text-muted-foreground leading-relaxed">
+            <motion.p 
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.3 }}
+              className="text-lg md:text-xl text-muted-foreground leading-relaxed max-w-3xl mx-auto"
+            >
               تدقيق لغوي شامل ومراجعة أكاديمية دقيقة لضمان خلو بحثك من الأخطاء
-            </p>
+            </motion.p>
+
+            <motion.div
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ delay: 0.4 }}
+              className="flex flex-wrap justify-center gap-4 mt-8"
+            >
+              {[
+                { icon: Sparkles, text: 'دقة عالية' },
+                { icon: Clock, text: 'سريع' },
+                { icon: Shield, text: 'موثوق' }
+              ].map((item, index) => (
+                <motion.div
+                  key={index}
+                  whileHover={{ scale: 1.05, y: -2 }}
+                  className="flex items-center gap-2 bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm px-4 py-2 rounded-full shadow-lg"
+                >
+                  <item.icon className="w-4 h-4 text-emerald-600" />
+                  <span className="text-sm font-medium">{item.text}</span>
+                </motion.div>
+              ))}
+            </motion.div>
           </motion.div>
         </div>
       </section>
@@ -91,12 +157,12 @@ export default function ProofreadingService() {
                   description: 'ضمان اتساق المصطلحات والأسلوب'
                 },
                 {
-                  icon: FileText,
+                  icon: FileCheck,
                   title: 'فحص الانسيابية',
                   description: 'تحسين تدفق الأفكار والربط بين الفقرات'
                 },
                 {
-                  icon: CheckCircle,
+                  icon: Globe,
                   title: 'مراجعة الاقتباسات',
                   description: 'التأكد من صحة الاقتباسات والتوثيق'
                 }
@@ -159,10 +225,7 @@ export default function ProofreadingService() {
               </ul>
             </motion.div>
 
-            <ResearchServiceForm 
-              serviceTitle="التدقيق اللغوي والمراجعة الأكاديمية"
-              serviceType="proofreading"
-            />
+            <ProofreadingServiceForm />
           </div>
         </div>
       </section>

@@ -4,8 +4,8 @@ import { useNavigate } from 'react-router-dom';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import { FloatingWhatsAppButton } from '@/components/FloatingWhatsAppButton';
-import { ResearchServiceForm } from '@/components/research/ResearchServiceForm';
-import { BarChart3, CheckCircle, TrendingUp, PieChart, LineChart, Database, ArrowRight } from 'lucide-react';
+import { StatisticalSpssServiceForm } from '@/components/research/forms/StatisticalSpssServiceForm';
+import { BarChart3, CheckCircle, TrendingUp, PieChart, LineChart, Database, ArrowRight, Sparkles, Clock, Shield } from 'lucide-react';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 
@@ -159,10 +159,7 @@ export default function StatisticalSpssService() {
               </ul>
             </motion.div>
 
-            <ResearchServiceForm 
-              serviceTitle="التحليل الإحصائي و SPSS"
-              serviceType="statistical-analysis"
-            />
+            <StatisticalSpssServiceForm />
           </div>
         </div>
       </section>
