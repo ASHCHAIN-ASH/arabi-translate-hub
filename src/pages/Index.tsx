@@ -423,14 +423,24 @@ const Index = () => {
       </section>
 
       {/* قسم الخدمات الأكاديمية */}
-      <section className="py-20 bg-gradient-to-br from-emerald-50 via-teal-50 to-cyan-50 dark:from-slate-950 dark:via-teal-950 dark:to-cyan-950 relative overflow-hidden">
-        {/* خلفية زخرفية */}
-        <div className="absolute inset-0 opacity-5">
-          <div className="absolute top-0 left-0 w-full h-full" 
-            style={{
-              backgroundImage: 'radial-gradient(circle at 2px 2px, currentColor 1px, transparent 0)',
-              backgroundSize: '40px 40px'
+      <section className="py-20 sm:py-24 bg-gradient-to-br from-slate-50 via-blue-50/50 to-purple-50/30 dark:from-slate-950 dark:via-slate-900 dark:to-slate-950 relative overflow-hidden" dir="rtl">
+        {/* خلفية متحركة */}
+        <div className="absolute inset-0 overflow-hidden pointer-events-none">
+          <motion.div
+            className="absolute top-20 right-10 w-72 h-72 bg-blue-500/10 dark:bg-blue-400/5 rounded-full blur-3xl"
+            animate={{ 
+              scale: [1, 1.2, 1],
+              opacity: [0.3, 0.5, 0.3]
             }}
+            transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
+          />
+          <motion.div
+            className="absolute bottom-20 left-10 w-96 h-96 bg-purple-500/10 dark:bg-purple-400/5 rounded-full blur-3xl"
+            animate={{ 
+              scale: [1.2, 1, 1.2],
+              opacity: [0.4, 0.6, 0.4]
+            }}
+            transition={{ duration: 10, repeat: Infinity, ease: "easeInOut", delay: 1 }}
           />
         </div>
 
@@ -438,64 +448,97 @@ const Index = () => {
           {/* العنوان */}
           <motion.div
             className="text-center mb-16"
-            initial={{ opacity: 0, y: 30 }}
+            initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
+            transition={{ duration: 0.6 }}
             viewport={{ once: true }}
           >
             <motion.div
-              className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-blue-600/10 to-purple-600/10 border border-blue-200 dark:border-blue-700 rounded-full text-blue-700 dark:text-blue-300 text-sm font-medium mb-6"
-              initial={{ opacity: 0, scale: 0.8 }}
+              className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-blue-600/10 to-purple-600/10 dark:from-blue-400/10 dark:to-purple-400/10 rounded-full mb-6 border border-blue-200/50 dark:border-blue-800/50"
+              initial={{ opacity: 0, scale: 0.9 }}
               whileInView={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.6, delay: 0.2 }}
               viewport={{ once: true }}
             >
-              <Sparkles className="h-4 w-4" />
-              خدماتنا الأكاديمية المتميزة
+              <Sparkles className="h-5 w-5 text-blue-600 dark:text-blue-400" />
+              <span className="text-sm sm:text-base font-semibold bg-gradient-to-r from-blue-600 to-purple-600 dark:from-blue-400 dark:to-purple-400 bg-clip-text text-transparent">
+                خدماتنا الأكاديمية المتميزة
+              </span>
             </motion.div>
 
-            <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-6 text-slate-800 dark:text-white">
+            <h2 className="text-4xl sm:text-5xl md:text-6xl font-bold mb-6 text-slate-900 dark:text-white leading-tight">
               حلول أكاديمية{" "}
-              <span className="bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 bg-clip-text text-transparent">
+              <span className="bg-gradient-to-l from-blue-600 via-indigo-600 to-purple-600 dark:from-blue-400 dark:via-indigo-400 dark:to-purple-400 bg-clip-text text-transparent">
                 متكاملة
               </span>
             </h2>
-            <p className="text-lg sm:text-xl text-slate-600 dark:text-slate-400 max-w-3xl mx-auto">
-              نقدم مجموعة شاملة من الخدمات الأكاديمية المتخصصة لدعم رحلتك التعليمية والبحثية
+            <p className="text-lg sm:text-xl text-slate-600 dark:text-slate-400 max-w-3xl mx-auto leading-relaxed">
+              نقدم مجموعة شاملة من الخدمات الأكاديمية المتخصصة لدعم رحلتك التعليمية والبحثية بأعلى معايير الجودة
             </p>
           </motion.div>
 
           {/* شبكة الخدمات */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8">
             {academicServices.map((service, index) => {
               const IconComponent = service.icon;
               return (
                 <motion.div
                   key={index}
-                  initial={{ opacity: 0, y: 30 }}
+                  initial={{ opacity: 0, y: 40 }}
                   whileInView={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.6, delay: index * 0.1 }}
+                  transition={{ duration: 0.5, delay: index * 0.1 }}
                   viewport={{ once: true }}
-                  whileHover={{ y: -8 }}
+                  whileHover={{ y: -12, scale: 1.02 }}
                   className="group"
                 >
-                  <Card className="h-full hover:shadow-2xl transition-all duration-300 border-0 bg-white dark:bg-slate-800 cursor-pointer"
+                  <Card 
+                    className="h-full relative overflow-hidden border-0 bg-white dark:bg-slate-900/50 shadow-lg hover:shadow-2xl transition-all duration-500 cursor-pointer backdrop-blur-sm"
                     onClick={() => navigate(service.link)}
                   >
-                    <CardContent className="p-6">
-                      <div className={`w-16 h-16 mb-4 bg-gradient-to-br ${service.color} rounded-2xl flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300`}>
-                        <IconComponent className="h-8 w-8 text-white" />
-                      </div>
-                      <h3 className="text-xl font-bold mb-3 text-slate-800 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
+                    {/* خلفية متحركة عند الـ hover */}
+                    <div className="absolute inset-0 bg-gradient-to-br opacity-0 group-hover:opacity-100 transition-opacity duration-500 -z-10"
+                      style={{
+                        backgroundImage: `linear-gradient(135deg, ${service.color.includes('blue') ? 'rgba(59, 130, 246, 0.05)' : service.color.includes('purple') ? 'rgba(147, 51, 234, 0.05)' : service.color.includes('emerald') ? 'rgba(16, 185, 129, 0.05)' : 'rgba(245, 158, 11, 0.05)'} 0%, transparent 100%)`
+                      }}
+                    />
+                    
+                    <CardContent className="p-8 text-right relative">
+                      {/* الأيقونة */}
+                      <motion.div 
+                        className={`w-20 h-20 mb-6 bg-gradient-to-br ${service.color} rounded-3xl flex items-center justify-center shadow-xl group-hover:shadow-2xl transition-all duration-500 relative`}
+                        whileHover={{ rotate: [0, -10, 10, -10, 0] }}
+                        transition={{ duration: 0.5 }}
+                      >
+                        <div className="absolute inset-0 bg-white/20 rounded-3xl blur-xl group-hover:blur-2xl transition-all duration-500"></div>
+                        <IconComponent className="h-10 w-10 text-white relative z-10" strokeWidth={1.5} />
+                      </motion.div>
+                      
+                      {/* العنوان */}
+                      <h3 className="text-2xl font-bold mb-4 text-slate-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors duration-300">
                         {service.title}
                       </h3>
-                      <p className="text-slate-600 dark:text-slate-400 mb-4 leading-relaxed">
+                      
+                      {/* الوصف */}
+                      <p className="text-base text-slate-600 dark:text-slate-400 mb-6 leading-relaxed min-h-[60px]">
                         {service.description}
                       </p>
-                      <div className="flex items-center justify-end text-blue-600 dark:text-blue-400 font-medium group-hover:gap-2 transition-all" dir="rtl">
-                        <ChevronRight className="h-4 w-4 group-hover:-translate-x-1 transition-transform" />
-                        عرض الخدمات
-                      </div>
+                      
+                      {/* زر الإجراء */}
+                      <motion.div 
+                        className="flex items-center justify-end gap-2 text-blue-600 dark:text-blue-400 font-semibold group-hover:gap-3 transition-all duration-300"
+                        whileHover={{ x: -5 }}
+                      >
+                        <span className="text-base">عرض الخدمات</span>
+                        <motion.div
+                          animate={{ x: [0, -4, 0] }}
+                          transition={{ duration: 1.5, repeat: Infinity }}
+                        >
+                          <ChevronRight className="h-5 w-5" strokeWidth={2.5} />
+                        </motion.div>
+                      </motion.div>
+
+                      {/* شريط الإضاءة */}
+                      <div className="absolute bottom-0 right-0 left-0 h-1 bg-gradient-to-l from-blue-500 via-purple-500 to-pink-500 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-right"></div>
                     </CardContent>
                   </Card>
                 </motion.div>
