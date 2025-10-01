@@ -5,6 +5,7 @@ import { Badge } from '@/components/ui/badge';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { Languages, CheckCircle, FileText, Search, Sparkles, ArrowLeft, Zap } from 'lucide-react';
 import Header from '@/components/Header';
+import Breadcrumb from '@/components/Breadcrumb';
 import { EditingServiceForm } from '@/components/editing/EditingServiceForm';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
@@ -44,6 +45,10 @@ const LanguageProofreading = () => {
   return (
     <div className="min-h-screen bg-background" dir="rtl">
       <Header />
+      <Breadcrumb items={[
+        { label: 'خدمات التحرير', href: '/services/editing-services' },
+        { label: 'التدقيق اللغوي' }
+      ]} />
 
       {/* Hero Section */}
       <section className="relative py-12 sm:py-20 lg:py-24 overflow-hidden">

@@ -4,6 +4,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { FileCheck, BookOpen, Award, Target, Sparkles } from 'lucide-react';
 import Header from '@/components/Header';
+import Breadcrumb from '@/components/Breadcrumb';
 import { EditingServiceForm } from '@/components/editing/EditingServiceForm';
 
 const AcademicReview = () => {
@@ -39,6 +40,10 @@ const AcademicReview = () => {
   return (
     <div className="min-h-screen bg-background" dir="rtl">
       <Header />
+      <Breadcrumb items={[
+        { label: 'خدمات التحرير', href: '/services/editing-services' },
+        { label: 'المراجعة الأكاديمية' }
+      ]} />
 
       {/* Hero Section */}
       <section className="relative py-20 overflow-hidden">

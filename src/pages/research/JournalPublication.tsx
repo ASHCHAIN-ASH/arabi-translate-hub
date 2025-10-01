@@ -4,6 +4,7 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/
 import { Button } from '@/components/ui/button';
 import { BookOpen, Award, TrendingUp, Shield, Sparkles, ArrowLeft, CheckCircle, FileText, Clock } from 'lucide-react';
 import Header from '@/components/Header';
+import Breadcrumb from '@/components/Breadcrumb';
 import { PublicationServiceForm } from '@/components/publication/PublicationServiceForm';
 import { useNavigate } from 'react-router-dom';
 
@@ -116,6 +117,10 @@ const JournalPublication = () => {
   return (
     <div className="min-h-screen bg-background" dir="rtl">
       <Header />
+      <Breadcrumb items={[
+        { label: 'الخدمات البحثية', href: '/research-services' },
+        { label: 'النشر في المجلات العلمية' }
+      ]} />
 
       {/* Hero Section */}
       <section className="relative py-24 sm:py-32 overflow-hidden">

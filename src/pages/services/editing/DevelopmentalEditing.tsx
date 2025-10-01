@@ -4,6 +4,7 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/
 import { Button } from '@/components/ui/button';
 import { BookOpen, Lightbulb, Users, TrendingUp, Sparkles, ArrowLeft } from 'lucide-react';
 import Header from '@/components/Header';
+import Breadcrumb from '@/components/Breadcrumb';
 import { EditingServiceForm } from '@/components/editing/EditingServiceForm';
 import { useNavigate } from 'react-router-dom';
 
@@ -42,6 +43,10 @@ const DevelopmentalEditing = () => {
   return (
     <div className="min-h-screen bg-background" dir="rtl">
       <Header />
+      <Breadcrumb items={[
+        { label: 'خدمات التحرير', href: '/services/editing-services' },
+        { label: 'التحرير التطويري' }
+      ]} />
 
       {/* Hero Section */}
       <section className="relative py-24 sm:py-32 overflow-hidden">
