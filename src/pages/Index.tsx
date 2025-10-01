@@ -331,37 +331,160 @@ const Index = () => {
         </div>
       </section>
 
-      {/* قسم الإحصائيات الأكاديمية */}
-      <section className="py-16 bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50 dark:from-indigo-950 dark:via-purple-950 dark:to-pink-950">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-6">
+      {/* قسم الإحصائيات الأكاديمية - تصميم متطور */}
+      <section className="relative py-20 sm:py-24 lg:py-28 overflow-hidden">
+        {/* خلفية متحركة */}
+        <div className="absolute inset-0 bg-gradient-to-br from-slate-50 via-blue-50/50 to-indigo-50 dark:from-slate-950 dark:via-blue-950/50 dark:to-indigo-950">
+          <motion.div
+            className="absolute top-0 right-0 w-96 h-96 bg-gradient-to-br from-blue-400/20 to-indigo-400/20 rounded-full blur-3xl"
+            animate={{
+              scale: [1, 1.2, 1],
+              opacity: [0.3, 0.5, 0.3],
+              x: [0, 50, 0],
+              y: [0, 30, 0],
+            }}
+            transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
+          />
+          <motion.div
+            className="absolute bottom-0 left-0 w-96 h-96 bg-gradient-to-tl from-purple-400/20 to-pink-400/20 rounded-full blur-3xl"
+            animate={{
+              scale: [1.2, 1, 1.2],
+              opacity: [0.2, 0.4, 0.2],
+              x: [0, -50, 0],
+              y: [0, -30, 0],
+            }}
+            transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
+          />
+        </div>
+
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+          {/* العنوان الرئيسي */}
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+            className="text-center mb-12 sm:mb-16"
+          >
+            <motion.div
+              initial={{ scale: 0.9, opacity: 0 }}
+              whileInView={{ scale: 1, opacity: 1 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5 }}
+              className="inline-flex items-center gap-2 bg-gradient-to-r from-blue-100 to-indigo-100 dark:from-blue-900/30 dark:to-indigo-900/30 px-4 py-2 rounded-full mb-4"
+            >
+              <TrendingUp className="w-5 h-5 text-blue-600 dark:text-blue-400" />
+              <span className="text-sm font-semibold text-blue-600 dark:text-blue-400">أرقام تتحدث عن التميز</span>
+            </motion.div>
+            
+            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold bg-gradient-to-r from-slate-800 via-blue-600 to-indigo-600 dark:from-slate-100 dark:via-blue-400 dark:to-indigo-400 bg-clip-text text-transparent mb-4">
+              إنجازاتنا الأكاديمية
+            </h2>
+            <p className="text-base sm:text-lg text-slate-600 dark:text-slate-400 max-w-2xl mx-auto">
+              نفخر بخدمة آلاف الطلاب والباحثين حول العالم وتحقيق نتائج استثنائية
+            </p>
+          </motion.div>
+
+          {/* الإحصائيات */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8">
             {academicStats.map((stat, index) => {
               const IconComponent = stat.icon;
               return (
                 <motion.div
                   key={index}
-                  initial={{ opacity: 0, y: 30 }}
+                  initial={{ opacity: 0, y: 40 }}
                   whileInView={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.6, delay: index * 0.1 }}
                   viewport={{ once: true }}
+                  transition={{ 
+                    duration: 0.6, 
+                    delay: index * 0.15,
+                    ease: [0.25, 0.4, 0.25, 1]
+                  }}
+                  whileHover={{ 
+                    y: -8,
+                    transition: { duration: 0.3 }
+                  }}
+                  className="group"
                 >
-                  <Card className="text-center hover:shadow-xl transition-all duration-300 border-0 bg-white dark:bg-slate-800">
-                    <CardContent className="p-6">
-                      <div className={`w-14 h-14 mx-auto mb-4 bg-gradient-to-br ${stat.color} rounded-xl flex items-center justify-center shadow-lg`}>
-                        <IconComponent className="h-7 w-7 text-white" />
+                  <Card className="relative overflow-hidden border-0 bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm shadow-lg hover:shadow-2xl transition-all duration-500">
+                    {/* خلفية متحركة للكارد */}
+                    <div className={`absolute inset-0 bg-gradient-to-br ${stat.color} opacity-0 group-hover:opacity-5 transition-opacity duration-500`} />
+                    
+                    {/* شريط علوي ملون */}
+                    <motion.div 
+                      className={`absolute top-0 left-0 right-0 h-1 bg-gradient-to-r ${stat.color}`}
+                      initial={{ scaleX: 0 }}
+                      whileInView={{ scaleX: 1 }}
+                      viewport={{ once: true }}
+                      transition={{ duration: 0.8, delay: index * 0.15 + 0.3 }}
+                    />
+
+                    <CardContent className="p-6 sm:p-8 relative">
+                      {/* الأيقونة مع أنيميشن */}
+                      <motion.div
+                        className="relative mb-6"
+                        whileHover={{ scale: 1.1, rotate: [0, -10, 10, -10, 0] }}
+                        transition={{ duration: 0.6 }}
+                      >
+                        <div className="absolute inset-0 -m-2">
+                          <motion.div
+                            className={`w-20 h-20 mx-auto bg-gradient-to-br ${stat.color} rounded-2xl blur-xl opacity-50`}
+                            animate={{
+                              scale: [1, 1.2, 1],
+                              opacity: [0.5, 0.7, 0.5],
+                            }}
+                            transition={{ duration: 3, repeat: Infinity }}
+                          />
+                        </div>
+                        <div className={`relative w-16 h-16 sm:w-20 sm:h-20 mx-auto bg-gradient-to-br ${stat.color} rounded-2xl flex items-center justify-center shadow-xl`}>
+                          <motion.div
+                            animate={{
+                              y: [0, -5, 0],
+                            }}
+                            transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+                          >
+                            <IconComponent className="h-8 w-8 sm:h-10 sm:w-10 text-white" />
+                          </motion.div>
+                        </div>
+                      </motion.div>
+
+                      {/* الرقم مع عداد متحرك */}
+                      <div className="text-center">
+                        <motion.div 
+                          className={`text-4xl sm:text-5xl font-bold bg-gradient-to-r ${stat.color} bg-clip-text text-transparent mb-3`}
+                          initial={{ scale: 0.5, opacity: 0 }}
+                          whileInView={{ scale: 1, opacity: 1 }}
+                          viewport={{ once: true }}
+                          transition={{ duration: 0.5, delay: index * 0.15 + 0.5 }}
+                        >
+                          <AnimatedCounter end={stat.number} suffix={stat.suffix} duration={2.5} />
+                        </motion.div>
+                        
+                        {/* العنوان */}
+                        <p className="text-sm sm:text-base font-medium text-slate-700 dark:text-slate-300">
+                          {stat.title}
+                        </p>
                       </div>
-                      <div className="text-3xl sm:text-4xl font-bold text-slate-800 dark:text-white mb-2">
-                        <AnimatedCounter end={stat.number} suffix={stat.suffix} duration={2.5} />
-                      </div>
-                      <p className="text-sm sm:text-base text-slate-600 dark:text-slate-400">
-                        {stat.title}
-                      </p>
+
+                      {/* خط زخرفي سفلي */}
+                      <motion.div
+                        className={`mt-6 h-1 bg-gradient-to-r ${stat.color} rounded-full mx-auto`}
+                        initial={{ width: 0 }}
+                        whileInView={{ width: "60%" }}
+                        viewport={{ once: true }}
+                        transition={{ duration: 0.8, delay: index * 0.15 + 0.6 }}
+                      />
                     </CardContent>
                   </Card>
                 </motion.div>
               );
             })}
           </div>
+
+          {/* عناصر زخرفية إضافية */}
+          <div className="absolute top-1/4 right-10 w-3 h-3 bg-blue-400 rounded-full animate-pulse opacity-40" />
+          <div className="absolute top-1/3 left-20 w-2 h-2 bg-indigo-400 rounded-full animate-pulse opacity-40" style={{ animationDelay: '1s' }} />
+          <div className="absolute bottom-1/4 right-1/4 w-2 h-2 bg-purple-400 rounded-full animate-pulse opacity-40" style={{ animationDelay: '2s' }} />
         </div>
       </section>
 
