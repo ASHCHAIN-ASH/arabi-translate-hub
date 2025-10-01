@@ -529,8 +529,8 @@ const Index = () => {
             </motion.p>
           </motion.div>
 
-          {/* شبكة البطاقات المحسّنة - أصغر وأكثر تنظيماً */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5 lg:gap-6 max-w-7xl mx-auto">
+          {/* شبكة البطاقات المحسّنة والموحدة */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 lg:gap-6 max-w-7xl mx-auto">
             {academicServices.map((service, index) => {
               const IconComponent = service.icon;
               return (
@@ -544,19 +544,20 @@ const Index = () => {
                      ease: [0.25, 0.46, 0.45, 0.94]
                    }}
                    viewport={{ once: true, margin: "-50px" }}
-                   className="group"
+                   className="group h-full"
                  >
                    <motion.div
                      whileHover={{ y: -8, scale: 1.01 }}
                      whileTap={{ scale: 0.99 }}
                      transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
+                     className="h-full"
                    >
                      <Card 
-                       className="h-full relative overflow-hidden border-2 border-border/40 hover:border-primary/50 bg-card dark:bg-card/98 backdrop-blur-sm rounded-2xl shadow-md hover:shadow-xl transition-all duration-400 cursor-pointer"
+                       className="h-full flex flex-col relative overflow-hidden border-2 border-border/40 hover:border-primary/50 bg-card dark:bg-card/98 backdrop-blur-sm rounded-2xl shadow-md hover:shadow-xl transition-all duration-400 cursor-pointer"
                        onClick={() => navigate(service.link)}
                      >
-                       {/* صورة الخدمة */}
-                       <div className="relative h-32 sm:h-36 overflow-hidden">
+                       {/* صورة الخدمة - ارتفاع موحد */}
+                       <div className="relative h-40 overflow-hidden flex-shrink-0">
                          <img 
                            src={service.image} 
                            alt={service.title}
@@ -565,36 +566,36 @@ const Index = () => {
                          {/* تدرج فوق الصورة */}
                          <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-card/95 dark:to-card/98"></div>
                          
-                         {/* الأيقونة فوق الصورة */}
+                         {/* الأيقونة فوق الصورة - حجم موحد */}
                          <motion.div 
                            className="absolute top-3 right-3"
                            whileHover={{ scale: 1.1, rotate: [0, -5, 5, 0] }}
                            transition={{ duration: 0.4 }}
                          >
-                           <div className={`w-12 h-12 sm:w-14 sm:h-14 bg-gradient-to-br ${service.color} rounded-xl flex items-center justify-center shadow-lg border-2 border-white/30 dark:border-white/20`}>
-                             <IconComponent className="h-6 w-6 sm:h-7 sm:w-7 text-white" strokeWidth={2.2} />
+                           <div className={`w-14 h-14 bg-gradient-to-br ${service.color} rounded-xl flex items-center justify-center shadow-lg border-2 border-white/30 dark:border-white/20`}>
+                             <IconComponent className="h-7 w-7 text-white" strokeWidth={2.2} />
                            </div>
                          </motion.div>
                        </div>
                        
-                       <CardContent className="p-4 sm:p-5 lg:p-6 text-right relative z-10">
-                         {/* العنوان المحسّن */}
-                         <h3 className="text-lg sm:text-xl font-bold mb-2 sm:mb-3 text-foreground group-hover:text-primary transition-colors duration-300 leading-tight">
+                       <CardContent className="p-5 text-right relative z-10 flex flex-col flex-grow">
+                         {/* العنوان - حجم موحد */}
+                         <h3 className="text-xl font-bold mb-3 text-foreground group-hover:text-primary transition-colors duration-300 leading-tight min-h-[3.5rem] flex items-center">
                            {service.title}
                          </h3>
                          
-                         {/* الوصف المختصر */}
-                         <p className="text-sm sm:text-base text-muted-foreground leading-relaxed mb-4 sm:mb-5 line-clamp-2">
+                         {/* الوصف - حجم موحد */}
+                         <p className="text-sm text-muted-foreground leading-relaxed mb-5 line-clamp-3 flex-grow min-h-[4.5rem]">
                            {service.description}
                          </p>
                          
-                         {/* زر الإجراء المدمج */}
+                         {/* زر الإجراء - حجم موحد */}
                          <motion.div
                            whileHover={{ x: -6 }}
                            transition={{ duration: 0.3, ease: "easeOut" }}
-                           className="inline-flex"
+                           className="inline-flex mt-auto"
                          >
-                           <div className="inline-flex items-center gap-2 px-4 py-2 bg-primary/10 hover:bg-primary hover:text-primary-foreground rounded-xl font-semibold text-sm text-primary transition-all duration-300 border border-primary/30 hover:border-primary shadow-sm hover:shadow-md">
+                           <div className="inline-flex items-center gap-2 px-4 py-2.5 bg-primary/10 hover:bg-primary hover:text-primary-foreground rounded-xl font-semibold text-sm text-primary transition-all duration-300 border border-primary/30 hover:border-primary shadow-sm hover:shadow-md">
                              <span>عرض الخدمات</span>
                              <motion.div
                                animate={{ x: [0, -4, 0] }}
