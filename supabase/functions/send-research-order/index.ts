@@ -244,7 +244,7 @@ const handler = async (req: Request): Promise<Response> => {
     console.log("Emails sent successfully:", { adminEmail, clientEmail });
 
     // إرسال إشعار للعميل
-    await supabaseClient
+    const { error: clientNotifError } = await supabaseClient
       .from('user_notifications')
       .insert({
         user_email: orderData.email,
@@ -254,23 +254,39 @@ const handler = async (req: Request): Promise<Response> => {
         category: 'order',
         metadata: { orderId, category: orderData.category }
       });
+    
+    if (clientNotifError) {
+      console.error('Error sending client notification:', clientNotifError);
+    }
 
-    // إرسال إشعار للإدارة
+    // إرسال إشعارات لجميع عناوين الإدارة
+    const adminEmails = ['info@masteredupath.com', 'admin@masteredupath.com', 'support@masteredupath.com'];
+    const adminNotifications = adminEmails.map(email => ({
+      user_email: email,
+      title: '🎓 طلب بحثي جديد',
+      message: `طلب جديد من ${orderData.fullName} - ${orderData.categoryTitle}`,
+      type: 'info',
+      category: 'admin',
+      metadata: { 
+        orderId, 
+        customerEmail: orderData.email, 
+        customerPhone: orderData.phone,
+        category: orderData.category,
+        specialization: orderData.specialization,
+        researchType: orderData.researchType,
+        deadline: orderData.deadline,
+        isAdmin: true 
+      }
+    }));
+
     const { error: adminNotifError } = await supabaseClient
       .from('user_notifications')
-      .insert({
-        user_email: 'info@masteredupath.com',
-        title: 'طلب بحثي جديد',
-        message: `طلب جديد من ${orderData.fullName} - ${orderData.categoryTitle}`,
-        type: 'info',
-        category: 'admin',
-        metadata: { orderId, customerEmail: orderData.email, category: orderData.category, isAdmin: true }
-      });
+      .insert(adminNotifications);
     
     if (adminNotifError) {
-      console.error('Error sending admin notification:', adminNotifError);
+      console.error('Error sending admin notifications:', adminNotifError);
     } else {
-      console.log('Admin notification sent successfully');
+      console.log(`Admin notifications sent successfully to ${adminEmails.length} emails`);
     }
 
     return new Response(
