@@ -419,66 +419,6 @@ const Index = () => {
               );
             })}
           </div>
-
-          {/* قسم إضافي - الإنجازات */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6, delay: 0.5 }}
-            className="mt-12 sm:mt-16 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"
-          >
-            {[
-              {
-                icon: Shield,
-                title: "+500 غير متخصص",
-                subtitle: "فريق متعدد التخصصات من الخبراء الأكاديميين في +50 مجال",
-                color: "from-pink-500 to-rose-600",
-                bgColor: "bg-pink-50 dark:bg-pink-950"
-              },
-              {
-                icon: TrendingUp,
-                title: "خبرة 15 عاماً",
-                subtitle: "خبرة متراكمة في مجال الخدمات الأكاديمية والبحثية المتخصصة",
-                color: "from-indigo-500 to-blue-600",
-                bgColor: "bg-indigo-50 dark:bg-indigo-950"
-              },
-              {
-                icon: Award,
-                title: "شراكات أكاديمية عالمية",
-                subtitle: "شريك معتمد لأكثر من 200 جامعة ومؤسسة تعليمية حول العالم",
-                color: "from-emerald-500 to-teal-600",
-                bgColor: "bg-emerald-50 dark:bg-emerald-950"
-              }
-            ].map((item, index) => {
-              const ItemIcon = item.icon;
-              return (
-                <motion.div
-                  key={index}
-                  initial={{ opacity: 0, x: -20 }}
-                  whileInView={{ opacity: 1, x: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.5, delay: index * 0.1 }}
-                  whileHover={{ y: -5 }}
-                  className={`${item.bgColor} rounded-2xl p-6 border border-slate-200 dark:border-slate-700 hover:shadow-lg transition-all duration-300`}
-                >
-                  <div className="flex items-start gap-4">
-                    <div className={`flex-shrink-0 w-12 h-12 rounded-xl bg-gradient-to-br ${item.color} flex items-center justify-center shadow-md`}>
-                      <ItemIcon className="w-6 h-6 text-white" />
-                    </div>
-                    <div className="flex-1">
-                      <h4 className="text-lg font-bold text-slate-800 dark:text-slate-100 mb-1">
-                        {item.title}
-                      </h4>
-                      <p className="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
-                        {item.subtitle}
-                      </p>
-                    </div>
-                  </div>
-                </motion.div>
-              );
-            })}
-          </motion.div>
         </div>
       </section>
 
