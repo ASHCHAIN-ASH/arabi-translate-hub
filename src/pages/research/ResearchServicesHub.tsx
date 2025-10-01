@@ -9,7 +9,7 @@ import { FloatingWhatsAppButton } from '@/components/FloatingWhatsAppButton';
 import {
   BookOpenCheck, FileCheck, BarChart3, FileText, 
   Presentation, ShieldCheck, MessageSquareMore, 
-  ArrowLeft, Sparkles, GraduationCap
+  ArrowLeft, Sparkles, GraduationCap, Eye
 } from 'lucide-react';
 
 const services = [
@@ -185,8 +185,8 @@ export default function ResearchServicesHub() {
                       <Button 
                         className={`w-full mt-4 bg-gradient-to-r ${service.gradient} hover:opacity-90 text-white font-bold py-6 group/btn`}
                       >
-                        <span>اطلب الخدمة الآن</span>
-                        <ArrowLeft className="mr-2 w-5 h-5 transition-transform group-hover/btn:-translate-x-1" />
+                        <span>عرض الخدمات</span>
+                        <Eye className="mr-2 w-5 h-5 transition-transform group-hover/btn:scale-110" />
                       </Button>
                     </Link>
                   </CardContent>

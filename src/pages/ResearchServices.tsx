@@ -6,7 +6,7 @@ import { FloatingWhatsAppButton } from '@/components/FloatingWhatsAppButton';
 import { useNavigate } from 'react-router-dom';
 import { 
   FileEdit, CheckCheck, BarChart3, FileText, Presentation, 
-  ShieldCheck, MessageSquareMore, ArrowRight, Sparkles, Star
+  ShieldCheck, MessageSquareMore, ArrowRight, Sparkles, Star, Eye
 } from 'lucide-react';
 import { Card } from '@/components/ui/card';
 
@@ -166,8 +166,8 @@ export default function ResearchServices() {
                         whileTap={{ scale: 0.98 }}
                         className="w-full flex items-center justify-center gap-2 bg-gradient-to-r from-primary to-secondary text-white py-3 rounded-lg font-semibold hover:shadow-lg transition-all"
                       >
-                        اطلب الخدمة
-                        <ArrowRight className="w-4 h-4" />
+                        عرض الخدمات
+                        <Eye className="w-4 h-4" />
                       </motion.button>
                     </div>
                   </Card>
