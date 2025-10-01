@@ -5,6 +5,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
+import { FloatingWhatsAppButton } from '@/components/FloatingWhatsAppButton';
 import {
   BookOpenCheck, FileCheck, BarChart3, FileText, 
   Presentation, ShieldCheck, MessageSquareMore, 
@@ -81,6 +82,7 @@ export default function ResearchServicesHub() {
   return (
     <div className="min-h-screen bg-gradient-to-b from-background via-muted/20 to-background">
       <Header />
+      <FloatingWhatsAppButton />
       
       {/* Hero Section */}
       <section className="relative py-20 overflow-hidden">

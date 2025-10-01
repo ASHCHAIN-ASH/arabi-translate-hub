@@ -15,6 +15,7 @@ interface ServiceRequest {
   fullName: string;
   email: string;
   phone: string;
+  specialization: string;
   details?: string;
 }
 
@@ -64,6 +65,10 @@ const handler = async (req: Request): Promise<Response> => {
               <tr style="background: #f9fafb;">
                 <td style="padding: 12px; font-weight: bold; border: 1px solid #e5e7eb;">رقم الهاتف:</td>
                 <td style="padding: 12px; border: 1px solid #e5e7eb;">${orderData.phone}</td>
+              </tr>
+              <tr>
+                <td style="padding: 12px; font-weight: bold; border: 1px solid #e5e7eb;">التخصص الجامعي:</td>
+                <td style="padding: 12px; border: 1px solid #e5e7eb;">${orderData.specialization}</td>
               </tr>
             </table>
 

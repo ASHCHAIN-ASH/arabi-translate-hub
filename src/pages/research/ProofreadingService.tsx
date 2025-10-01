@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
+import { FloatingWhatsAppButton } from '@/components/FloatingWhatsAppButton';
 import { ResearchServiceForm } from '@/components/research/ResearchServiceForm';
 import { FileCheck, CheckCircle, Sparkles, Eye, Languages, FileText, ArrowRight } from 'lucide-react';
 import { Card } from '@/components/ui/card';
@@ -14,6 +15,7 @@ export default function ProofreadingService() {
   return (
     <div className="min-h-screen bg-gradient-to-b from-background to-muted/20">
       <Header />
+      <FloatingWhatsAppButton />
       
       {/* Back Button */}
       <div className="container px-4 mx-auto pt-6">

@@ -8,9 +8,61 @@ import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { Card } from '@/components/ui/card';
 import {
-  User, Mail, Phone, FileText,
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
+import {
+  User, Mail, Phone, FileText, GraduationCap,
   Send, CheckCircle2, Loader2, Upload
 } from 'lucide-react';
+
+const SPECIALIZATIONS = [
+  'الطب البشري',
+  'طب الأسنان',
+  'الصيدلة',
+  'التمريض',
+  'الهندسة المدنية',
+  'الهندسة الكهربائية',
+  'الهندسة الميكانيكية',
+  'الهندسة الكيميائية',
+  'هندسة الحاسب',
+  'علوم الحاسب',
+  'تقنية المعلومات',
+  'إدارة الأعمال',
+  'المحاسبة',
+  'التسويق',
+  'الإدارة المالية',
+  'الموارد البشرية',
+  'القانون',
+  'الشريعة الإسلامية',
+  'العلوم السياسية',
+  'التربية وعلم النفس',
+  'التربية الخاصة',
+  'رياض الأطفال',
+  'اللغة العربية',
+  'اللغة الإنجليزية',
+  'الترجمة',
+  'الإعلام والاتصال',
+  'العلاقات العامة',
+  'علم الاجتماع',
+  'الخدمة الاجتماعية',
+  'علم النفس',
+  'الكيمياء',
+  'الفيزياء',
+  'الأحياء',
+  'الرياضيات',
+  'الإحصاء',
+  'الاقتصاد',
+  'العمارة',
+  'التصميم الداخلي',
+  'السياحة والضيافة',
+  'إدارة المستشفيات',
+  'الصحة العامة',
+  'تخصص آخر'
+];
 
 interface ResearchServiceFormProps {
   serviceTitle: string;
@@ -24,13 +76,14 @@ export const ResearchServiceForm = ({ serviceTitle, serviceType }: ResearchServi
     fullName: '',
     email: '',
     phone: '',
+    specialization: '',
     details: ''
   });
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (!formData.fullName || !formData.email || !formData.phone) {
+    if (!formData.fullName || !formData.email || !formData.phone || !formData.specialization) {
       toast.error('الرجاء تعبئة جميع الحقول المطلوبة');
       return;
     }
@@ -57,6 +110,7 @@ export const ResearchServiceForm = ({ serviceTitle, serviceType }: ResearchServi
           fullName: '',
           email: '',
           phone: '',
+          specialization: '',
           details: ''
         });
       }, 3000);
@@ -158,6 +212,29 @@ export const ResearchServiceForm = ({ serviceTitle, serviceType }: ResearchServi
               placeholder="05xxxxxxxx"
               className="h-12 text-base"
             />
+          </div>
+
+          {/* التخصص الجامعي */}
+          <div>
+            <Label className="flex items-center gap-2 mb-2 text-base font-semibold">
+              <GraduationCap className="w-5 h-5 text-primary" />
+              التخصص الجامعي *
+            </Label>
+            <Select
+              value={formData.specialization}
+              onValueChange={(value) => setFormData(prev => ({ ...prev, specialization: value }))}
+            >
+              <SelectTrigger className="h-12 text-base">
+                <SelectValue placeholder="اختر تخصصك الجامعي" />
+              </SelectTrigger>
+              <SelectContent className="max-h-64">
+                {SPECIALIZATIONS.map((spec) => (
+                  <SelectItem key={spec} value={spec}>
+                    {spec}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </div>
 
           {/* تفاصيل الطلب */}

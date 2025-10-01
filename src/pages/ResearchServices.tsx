@@ -2,6 +2,7 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
+import { FloatingWhatsAppButton } from '@/components/FloatingWhatsAppButton';
 import { useNavigate } from 'react-router-dom';
 import { 
   FileEdit, CheckCheck, BarChart3, FileText, Presentation, 
@@ -74,6 +75,7 @@ export default function ResearchServices() {
   return (
     <div className="min-h-screen bg-gradient-to-b from-background via-muted/20 to-background">
       <Header />
+      <FloatingWhatsAppButton />
       
       {/* Hero Section */}
       <section className="relative py-20 overflow-hidden">
