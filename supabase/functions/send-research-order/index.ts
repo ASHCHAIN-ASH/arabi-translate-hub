@@ -259,34 +259,31 @@ const handler = async (req: Request): Promise<Response> => {
       console.error('Error sending client notification:', clientNotifError);
     }
 
-    // إرسال إشعارات لجميع عناوين الإدارة
-    const adminEmails = ['info@masteredupath.com', 'admin@masteredupath.com', 'support@masteredupath.com'];
-    const adminNotifications = adminEmails.map(email => ({
-      user_email: email,
-      title: '🎓 طلب بحثي جديد',
-      message: `طلب جديد من ${orderData.fullName} - ${orderData.categoryTitle}`,
-      type: 'info',
-      category: 'admin',
-      metadata: { 
-        orderId, 
-        customerEmail: orderData.email, 
-        customerPhone: orderData.phone,
-        category: orderData.category,
-        specialization: orderData.specialization,
-        researchType: orderData.researchType,
-        deadline: orderData.deadline,
-        isAdmin: true 
-      }
-    }));
-
+    // إرسال إشعار للإدارة (الإيميل الرسمي فقط)
     const { error: adminNotifError } = await supabaseClient
       .from('user_notifications')
-      .insert(adminNotifications);
+      .insert({
+        user_email: 'info@masteredupath.com',
+        title: '🎓 طلب بحثي جديد',
+        message: `طلب جديد من ${orderData.fullName} - ${orderData.categoryTitle}`,
+        type: 'info',
+        category: 'admin',
+        metadata: { 
+          orderId, 
+          customerEmail: orderData.email, 
+          customerPhone: orderData.phone,
+          category: orderData.category,
+          specialization: orderData.specialization,
+          researchType: orderData.researchType,
+          deadline: orderData.deadline,
+          isAdmin: true 
+        }
+      });
     
     if (adminNotifError) {
-      console.error('Error sending admin notifications:', adminNotifError);
+      console.error('Error sending admin notification:', adminNotifError);
     } else {
-      console.log(`Admin notifications sent successfully to ${adminEmails.length} emails`);
+      console.log('Admin notification sent successfully to info@masteredupath.com');
     }
 
     return new Response(

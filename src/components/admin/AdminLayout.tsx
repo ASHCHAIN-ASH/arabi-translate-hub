@@ -91,8 +91,8 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
   // جلب الإشعارات الحقيقية
   const [realNotifications, setRealNotifications] = useState(defaultNotifications);
   
-  // عناوين بريد الإدارة المستهدفة
-  const adminEmails = ['info@masteredupath.com','admin@masteredupath.com','support@masteredupath.com'];
+  // الإيميل الرسمي للإدارة
+  const adminEmail = 'info@masteredupath.com';
 
   const getTimeAgo = (iso: string) => {
     const diff = Date.now() - new Date(iso).getTime();
@@ -110,7 +110,7 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
       const { data, error } = await supabase
         .from('user_notifications')
         .select('*')
-        .or(`user_email.eq.${adminEmails[0]},user_email.eq.${adminEmails[1]},user_email.eq.${adminEmails[2]},user_email.eq.all_admins`)
+        .or(`user_email.eq.${adminEmail},user_email.eq.all_admins`)
         .order('created_at', { ascending: false })
         .limit(10);
 
@@ -140,7 +140,7 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
         { event: 'INSERT', schema: 'public', table: 'user_notifications' },
         (payload) => {
           const n: any = payload.new;
-          if (adminEmails.includes(n.user_email) || n.user_email === 'all_admins') {
+          if (n.user_email === adminEmail || n.user_email === 'all_admins') {
             setRealNotifications(prev => [
               {
                 id: Date.now(),
