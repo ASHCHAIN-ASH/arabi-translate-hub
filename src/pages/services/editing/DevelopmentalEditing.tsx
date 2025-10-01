@@ -1,24 +1,27 @@
-import React from 'react';
 import { motion } from 'framer-motion';
 import { Card, CardContent } from '@/components/ui/card';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
-import { Edit3, Layout, Lightbulb, RefreshCw } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { BookOpen, Lightbulb, Users, TrendingUp, Sparkles, ArrowLeft } from 'lucide-react';
 import Header from '@/components/Header';
 import { EditingServiceForm } from '@/components/editing/EditingServiceForm';
+import { useNavigate } from 'react-router-dom';
 
 const DevelopmentalEditing = () => {
+  const navigate = useNavigate();
+
   const features = [
-    { icon: <Layout className="w-6 h-6" />, title: "تحسين البنية", description: "إعادة هيكلة المحتوى بشكل منطقي" },
-    { icon: <Lightbulb className="w-6 h-6" />, title: "تطوير الأفكار", description: "تعزيز الأفكار وتوضيحها" },
-    { icon: <Edit3 className="w-6 h-6" />, title: "تعزيز الأسلوب", description: "تطوير وتحسين الأسلوب الكتابي" },
-    { icon: <RefreshCw className="w-6 h-6" />, title: "إعادة هيكلة", description: "إعادة تنظيم الأقسام والفصول" }
+    { icon: <BookOpen className="w-6 h-6" />, title: "تحليل شامل", description: "تقييم عميق للبنية والمحتوى", color: "from-blue-500 to-indigo-500" },
+    { icon: <Lightbulb className="w-6 h-6" />, title: "أفكار إبداعية", description: "اقتراحات لتطوير المحتوى", color: "from-yellow-500 to-orange-500" },
+    { icon: <Users className="w-6 h-6" />, title: "فهم الجمهور", description: "تحسين الرسالة للوصول للقراء", color: "from-green-500 to-teal-500" },
+    { icon: <TrendingUp className="w-6 h-6" />, title: "تطوير مستمر", description: "مراجعات متعددة حتى الإتقان", color: "from-purple-500 to-pink-500" }
   ];
 
   const processSteps = [
-    { number: "01", title: "التقييم الأولي", description: "تحليل شامل للمحتوى والبنية" },
-    { number: "02", title: "التخطيط", description: "وضع خطة للتطوير والتحسين" },
-    { number: "03", title: "التحرير التنموي", description: "تنفيذ التعديلات الشاملة" },
-    { number: "04", title: "المراجعة النهائية", description: "تسليم النص المُطور" }
+    { number: "01", title: "التحليل الأولي", description: "دراسة شاملة للعمل", color: "from-blue-500 to-indigo-500" },
+    { number: "02", title: "التخطيط", description: "وضع خطة للتطوير", color: "from-green-500 to-teal-500" },
+    { number: "03", title: "التنفيذ", description: "تطبيق التحسينات", color: "from-orange-500 to-red-500" },
+    { number: "04", title: "المتابعة", description: "مراجعة نهائية وتقييم", color: "from-purple-500 to-pink-500" }
   ];
 
   const faqs = [
@@ -41,49 +44,129 @@ const DevelopmentalEditing = () => {
       <Header />
 
       {/* Hero Section */}
-      <section className="relative py-20 overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-green-500/10 via-emerald-500/5 to-background"></div>
+      <section className="relative py-24 sm:py-32 overflow-hidden">
+        {/* Animated Background */}
+        <div className="absolute inset-0">
+          <div className="absolute inset-0 bg-gradient-to-br from-blue-500/10 via-indigo-500/5 to-background" />
+          <motion.div
+            className="absolute top-20 right-20 w-72 h-72 bg-blue-500/20 rounded-full blur-3xl"
+            animate={{
+              scale: [1, 1.2, 1],
+              opacity: [0.3, 0.5, 0.3],
+            }}
+            transition={{ duration: 8, repeat: Infinity }}
+          />
+          <motion.div
+            className="absolute bottom-20 left-20 w-96 h-96 bg-indigo-500/20 rounded-full blur-3xl"
+            animate={{
+              scale: [1.2, 1, 1.2],
+              opacity: [0.2, 0.4, 0.2],
+            }}
+            transition={{ duration: 10, repeat: Infinity }}
+          />
+        </div>
+
         <div className="container relative z-10 mx-auto px-4">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             className="max-w-4xl mx-auto text-center"
           >
-            <div className="inline-flex items-center gap-2 bg-green-500/10 px-6 py-3 rounded-full mb-6">
-              <Edit3 className="w-5 h-5 text-green-600" />
-              <span className="text-green-600 font-semibold">التحرير التنموي الشامل</span>
-            </div>
+            <motion.div
+              initial={{ scale: 0.8, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              transition={{ delay: 0.2 }}
+              className="inline-flex items-center gap-2 bg-gradient-to-r from-blue-500/20 to-indigo-500/20 backdrop-blur-sm px-6 py-3 rounded-full mb-8 border border-blue-500/20"
+            >
+              <BookOpen className="w-5 h-5 text-blue-600" />
+              <span className="text-blue-600 font-semibold">تطوير شامل للمحتوى</span>
+            </motion.div>
             
-            <h1 className="text-5xl md:text-6xl font-bold mb-6 bg-gradient-to-r from-green-600 to-emerald-600 bg-clip-text text-transparent">
-              تطوير شامل للمحتوى والأسلوب
-            </h1>
+            <motion.h1
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.3 }}
+              className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold mb-6 bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 bg-clip-text text-transparent leading-tight"
+            >
+              تحرير تطويري متكامل
+            </motion.h1>
             
-            <p className="text-xl text-muted-foreground max-w-2xl mx-auto mb-8">
-              نحسّن بنية نصوصكم ونطور أفكاركم لتحقيق أقصى تأثير وفاعلية
-            </p>
+            <motion.p
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.4 }}
+              className="text-lg sm:text-xl text-muted-foreground max-w-2xl mx-auto mb-10"
+            >
+              نساعدك في تطوير عملك من الفكرة إلى النشر بمراجعة شاملة ومتعمقة
+            </motion.p>
+
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.5 }}
+              className="flex flex-wrap gap-4 justify-center"
+            >
+              <Button
+                size="lg"
+                onClick={() => document.getElementById('form-section')?.scrollIntoView({ behavior: 'smooth' })}
+                className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-lg px-8 py-6 rounded-full shadow-lg hover:shadow-xl transition-all"
+              >
+                <Sparkles className="w-5 h-5 ml-2" />
+                اطلب الخدمة الآن
+              </Button>
+              <Button
+                size="lg"
+                variant="outline"
+                onClick={() => navigate('/services/editing-services')}
+                className="text-lg px-8 py-6 rounded-full"
+              >
+                <ArrowLeft className="w-5 h-5 ml-2" />
+                خدمات التحرير الأخرى
+              </Button>
+            </motion.div>
           </motion.div>
         </div>
       </section>
 
       {/* Features Section */}
-      <section className="py-16 bg-muted/30">
+      <section className="py-20 relative">
         <div className="container mx-auto px-4">
-          <h2 className="text-3xl font-bold text-center mb-12">ما نقدمه لك</h2>
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="text-center mb-16"
+          >
+            <h2 className="text-3xl sm:text-4xl font-bold mb-4 bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
+              ما نقدمه لك
+            </h2>
+            <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
+              تطوير شامل ومتعمق لكل جوانب عملك
+            </p>
+          </motion.div>
+
+          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {features.map((feature, index) => (
               <motion.div
                 key={index}
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
                 transition={{ delay: index * 0.1 }}
+                whileHover={{ y: -8, transition: { duration: 0.2 } }}
               >
-                <Card className="h-full">
-                  <CardContent className="p-6">
-                    <div className="w-12 h-12 bg-gradient-to-br from-green-500 to-emerald-500 rounded-lg flex items-center justify-center text-white mb-4">
+                <Card className="h-full border-2 hover:border-primary/50 transition-all duration-300 group overflow-hidden relative">
+                  <div className={`absolute inset-0 bg-gradient-to-br ${feature.color} opacity-0 group-hover:opacity-5 transition-opacity duration-300`} />
+                  <CardContent className="p-8 relative">
+                    <motion.div
+                      className={`w-16 h-16 bg-gradient-to-br ${feature.color} rounded-2xl flex items-center justify-center text-white mb-6 shadow-lg`}
+                      whileHover={{ rotate: 360, scale: 1.1 }}
+                      transition={{ duration: 0.6 }}
+                    >
                       {feature.icon}
-                    </div>
-                    <h3 className="font-semibold mb-2">{feature.title}</h3>
-                    <p className="text-sm text-muted-foreground">{feature.description}</p>
+                    </motion.div>
+                    <h3 className="font-bold text-xl mb-3">{feature.title}</h3>
+                    <p className="text-muted-foreground leading-relaxed">{feature.description}</p>
                   </CardContent>
                 </Card>
               </motion.div>
@@ -93,27 +176,53 @@ const DevelopmentalEditing = () => {
       </section>
 
       {/* Process Steps */}
-      <section className="py-16">
+      <section className="py-20 bg-muted/30">
         <div className="container mx-auto px-4">
-          <h2 className="text-3xl font-bold text-center mb-12">كيف نعمل معك؟</h2>
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="text-center mb-16"
+          >
+            <h2 className="text-3xl sm:text-4xl font-bold mb-4 bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
+              كيف نعمل معك؟
+            </h2>
+            <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
+              منهجية منظمة لتطوير عملك خطوة بخطوة
+            </p>
+          </motion.div>
+
+          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {processSteps.map((step, index) => (
               <motion.div
                 key={index}
                 initial={{ opacity: 0, x: -20 }}
                 whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true }}
                 transition={{ delay: index * 0.1 }}
                 className="relative"
               >
-                <Card className="h-full">
-                  <CardContent className="p-6">
-                    <div className="text-4xl font-bold text-green-500/20 mb-4">{step.number}</div>
-                    <h3 className="font-semibold text-lg mb-2">{step.title}</h3>
-                    <p className="text-sm text-muted-foreground">{step.description}</p>
+                <Card className="h-full border-2 hover:border-primary/50 transition-all duration-300 group overflow-hidden">
+                  <CardContent className="p-8 relative">
+                    <motion.div
+                      className={`text-6xl font-bold bg-gradient-to-br ${step.color} bg-clip-text text-transparent mb-4 opacity-20 group-hover:opacity-40 transition-opacity`}
+                      whileHover={{ scale: 1.2 }}
+                      transition={{ duration: 0.3 }}
+                    >
+                      {step.number}
+                    </motion.div>
+                    <h3 className="font-bold text-xl mb-3">{step.title}</h3>
+                    <p className="text-muted-foreground leading-relaxed">{step.description}</p>
                   </CardContent>
                 </Card>
                 {index < processSteps.length - 1 && (
-                  <div className="hidden lg:block absolute top-1/2 left-full w-6 h-0.5 bg-gradient-to-l from-green-500 to-transparent"></div>
+                  <motion.div
+                    className={`hidden lg:block absolute top-1/2 left-full w-6 h-0.5 bg-gradient-to-l ${step.color}`}
+                    initial={{ scaleX: 0 }}
+                    whileInView={{ scaleX: 1 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: index * 0.1 + 0.3 }}
+                  />
                 )}
               </motion.div>
             ))}
@@ -122,33 +231,66 @@ const DevelopmentalEditing = () => {
       </section>
 
       {/* FAQ Section */}
-      <section className="py-16 bg-muted/30">
+      <section className="py-20">
         <div className="container mx-auto px-4 max-w-3xl">
-          <h2 className="text-3xl font-bold text-center mb-12">الأسئلة الشائعة</h2>
-          <Accordion type="single" collapsible className="w-full">
-            {faqs.map((faq, index) => (
-              <AccordionItem key={index} value={`item-${index}`}>
-                <AccordionTrigger className="text-right">{faq.question}</AccordionTrigger>
-                <AccordionContent className="text-muted-foreground">
-                  {faq.answer}
-                </AccordionContent>
-              </AccordionItem>
-            ))}
-          </Accordion>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="text-center mb-12"
+          >
+            <h2 className="text-3xl sm:text-4xl font-bold mb-4 bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
+              الأسئلة الشائعة
+            </h2>
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+          >
+            <Accordion type="single" collapsible className="w-full space-y-4">
+              {faqs.map((faq, index) => (
+                <motion.div
+                  key={index}
+                  initial={{ opacity: 0, x: -20 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: index * 0.1 }}
+                >
+                  <AccordionItem value={`item-${index}`} className="border-2 rounded-lg px-6 hover:border-primary/50 transition-colors">
+                    <AccordionTrigger className="text-right hover:no-underline py-6 text-lg font-semibold">
+                      {faq.question}
+                    </AccordionTrigger>
+                    <AccordionContent className="text-muted-foreground text-base leading-relaxed pb-6">
+                      {faq.answer}
+                    </AccordionContent>
+                  </AccordionItem>
+                </motion.div>
+              ))}
+            </Accordion>
+          </motion.div>
         </div>
       </section>
 
       {/* Form Section */}
-      <section className="py-20">
+      <section id="form-section" className="py-20 bg-muted/30">
         <div className="container mx-auto px-4">
-          <div className="text-center mb-12">
-            <h2 className="text-4xl font-bold mb-4">اطلب خدمة التحرير التنموي</h2>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="text-center mb-12"
+          >
+            <h2 className="text-3xl sm:text-4xl font-bold mb-4 bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
+              اطلب خدمة التحرير التطويري
+            </h2>
             <p className="text-muted-foreground text-lg">املأ النموذج وسنبدأ فوراً</p>
-          </div>
+          </motion.div>
           <EditingServiceForm
-            serviceTitle="التحرير التنموي"
+            serviceTitle="التحرير التطويري"
             serviceType="developmental-editing"
-            documentTypes={['كتاب', 'رواية', 'رسالة أكاديمية', 'تقرير', 'مقترح', 'دراسة']}
+            documentTypes={['رواية', 'كتاب غير روائي', 'أطروحة', 'بحث أكاديمي', 'مشروع أدبي']}
           />
         </div>
       </section>
