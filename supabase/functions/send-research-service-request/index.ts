@@ -542,9 +542,11 @@ const handler = async (req: Request): Promise<Response> => {
       from: "Master Edu Path System <info@masteredupath.com>",
       to: ["info@masteredupath.com"],
       replyTo: orderData.email,
-      subject: `[MasterEduPath] طلب جديد – ${orderData.serviceTitle} – ${orderData.fullName}`,
+      subject: `🚨 [طلب جديد ${orderId}] ${orderData.serviceTitle} - ${orderData.fullName}`,
       html: adminEmailHtml,
     });
+    
+    console.log("Admin email sent:", adminRes);
 
     const clientRes = await resend.emails.send({
       from: "Master Edu Path <info@masteredupath.com>",
