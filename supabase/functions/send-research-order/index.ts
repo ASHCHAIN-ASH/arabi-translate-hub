@@ -227,7 +227,8 @@ const handler = async (req: Request): Promise<Response> => {
     // إرسال إيميل للإدارة
     const adminEmail = await resend.emails.send({
       from: "Master Edu Path <info@masteredupath.com>",
-      to: ["info@masteredupath.com"],
+      to: ["info@masteredupath.com", "admin@masteredupath.com", "support@masteredupath.com"],
+      replyTo: orderData.email,
       subject: `🎓 طلب جديد: ${orderData.categoryTitle} - ${orderData.fullName}`,
       html: adminEmailHtml,
     });
