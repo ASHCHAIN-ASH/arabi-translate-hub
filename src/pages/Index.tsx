@@ -18,7 +18,7 @@ import { UNIFIED_STATS, STATS_LABELS } from "@/constants/academicStats";
 const ServicesShowcase = lazy(() => import("@/components/ServicesShowcase"));
 const MasterMembershipBanner = lazy(() => import("@/components/MasterMembershipBanner"));
 const ServiceSteps = lazy(() => import("@/components/ServiceSteps"));
-const AcademicStats = lazy(() => import("@/components/AcademicStats"));
+
 
 // مكون Loading محسّن
 const LoadingSpinner = memo(() => (
@@ -673,9 +673,6 @@ const Index = () => {
       </section>
 
       {/* Suspense Sections مع Lazy Loading للأداء الأفضل */}
-      <Suspense fallback={<LoadingSpinner />}>
-        <AcademicStats />
-      </Suspense>
       
       <Suspense fallback={<LoadingSpinner />}>
         <MasterMembershipBanner />
