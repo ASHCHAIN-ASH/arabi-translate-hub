@@ -306,37 +306,6 @@ const Footer = () => {
              </ul>
             </motion.div>
 
-            {/* مقارنات الخدمات */}
-           <motion.div 
-             initial={{ opacity: 0, y: 20 }}
-             whileInView={{ opacity: 1, y: 0 }}
-             transition={{ delay: 0.3, duration: 0.5 }}
-             className="space-y-4 md:space-y-6"
-           >
-             <h4 className="text-base md:text-lg font-bold text-white flex items-center gap-2">
-               <Calculator className="h-4 w-4 md:h-5 md:w-5 text-cyan-400" />
-               مقارنات الخدمات
-             </h4>
-             <ul className="space-y-2 md:space-y-3">
-               {[
-                 { name: 'مقارنة خدمات الترجمة', href: '/service-comparisons#translation', icon: Globe },
-                 { name: 'مقارنة الخدمات البحثية', href: '/service-comparisons#research', icon: Search },
-                 { name: 'مقارنة خطط العضوية', href: '/service-comparisons#membership', icon: Crown },
-                 { name: 'مقارنة الأسعار والباقات', href: '/service-comparisons#pricing', icon: Calculator }
-               ].map((link) => (
-                 <li key={link.name}>
-                   <a 
-                     href={link.href} 
-                     className="text-white/70 hover:text-white transition-colors text-sm md:text-base flex items-center gap-2 hover:translate-x-1 transition-transform duration-200"
-                   >
-                     <link.icon className="h-3 w-3 md:h-4 md:w-4 text-cyan-400" />
-                     {link.name}
-                   </a>
-                 </li>
-               ))}
-             </ul>
-           </motion.div>
-
         </div>
 
         {/* Newsletter Section */}
