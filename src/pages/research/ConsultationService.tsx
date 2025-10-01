@@ -135,12 +135,12 @@ export default function ConsultationService() {
               طرق التواصل للاستشارات
             </h2>
             
-            <div className="grid md:grid-cols-3 gap-8">
+            <div className="grid md:grid-cols-3 gap-6">
               {[
                 { icon: Video, title: 'جلسات فيديو', desc: 'جلسات مباشرة عبر الفيديو لمناقشة تفصيلية' },
                 { icon: Phone, title: 'مكالمات هاتفية', desc: 'استشارات سريعة عبر المكالمات الصوتية' },
                 { icon: MessageCircle, title: 'محادثات نصية', desc: 'تواصل مستمر عبر الرسائل النصية' }
-              ].map((item, index) => (
+              ].reverse().map((item, index) => (
                 <motion.div
                   key={index}
                   initial={{ opacity: 0, scale: 0.9 }}

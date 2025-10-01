@@ -135,12 +135,12 @@ export default function PaperReviewService() {
               مراحل المراجعة
             </h2>
             
-            <div className="grid md:grid-cols-3 gap-8">
+            <div className="grid md:grid-cols-3 gap-6">
               {[
                 { icon: FileCheck, title: 'الفحص الأولي', desc: 'فحص شامل لبنية الورقة ومحتواها' },
                 { icon: BookOpen, title: 'التحليل العميق', desc: 'تحليل المنهجية والنتائج والمراجع' },
                 { icon: Send, title: 'التقرير النهائي', desc: 'تقرير مفصل مع توصيات للتحسين' }
-              ].map((item, index) => (
+              ].reverse().map((item, index) => (
                 <motion.div
                   key={index}
                   initial={{ opacity: 0, y: 30 }}

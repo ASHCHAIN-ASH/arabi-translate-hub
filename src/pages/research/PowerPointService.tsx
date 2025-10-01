@@ -135,12 +135,12 @@ export default function PowerPointService() {
               خطوات إعداد العرض التقديمي
             </h2>
             
-            <div className="grid md:grid-cols-3 gap-8">
+            <div className="grid md:grid-cols-3 gap-6">
               {[
                 { icon: Wand2, title: 'التصميم الأولي', desc: 'نصمم مخطط أولي للعرض بناءً على محتوى بحثك' },
                 { icon: Palette, title: 'التنسيق والألوان', desc: 'نضيف تصميم احترافي متناسق مع هوية بحثك' },
                 { icon: Monitor, title: 'المراجعة والتسليم', desc: 'مراجعة نهائية وتسليم العرض جاهزاً للتقديم' }
-              ].map((item, index) => (
+              ].reverse().map((item, index) => (
                 <motion.div
                   key={index}
                   initial={{ opacity: 0, scale: 0.9 }}

@@ -137,13 +137,13 @@ export default function ProofreadingService() {
               كيف نعمل على تدقيق بحثك؟
             </h2>
             
-            <div className="grid md:grid-cols-4 gap-8">
+            <div className="grid md:grid-cols-4 gap-6">
               {[
                 { icon: FileText, title: 'استلام الملف', desc: 'نستلم ملف بحثك للتدقيق', step: '01', color: 'from-green-500 to-emerald-500' },
                 { icon: Search, title: 'الفحص الشامل', desc: 'فحص لغوي ونحوي دقيق', step: '02', color: 'from-emerald-500 to-teal-500' },
                 { icon: Edit, title: 'التصحيح', desc: 'تصحيح الأخطاء وتحسين الأسلوب', step: '03', color: 'from-teal-500 to-cyan-500' },
                 { icon: Send, title: 'التسليم', desc: 'تسليم البحث مع تقرير التدقيق', step: '04', color: 'from-cyan-500 to-blue-500' }
-              ].map((item, index) => (
+              ].reverse().map((item, index) => (
                 <motion.div
                   key={index}
                   initial={{ opacity: 0, y: 30 }}
@@ -168,7 +168,7 @@ export default function ProofreadingService() {
                     <p className="text-muted-foreground text-sm">{item.desc}</p>
                   </div>
                   {index < 3 && (
-                    <div className="hidden md:block absolute top-10 left-full w-full h-0.5 bg-gradient-to-r from-primary to-transparent -translate-x-1/2" />
+                    <div className="hidden md:block absolute top-10 right-full w-full h-0.5 bg-gradient-to-l from-primary to-transparent translate-x-1/2" />
                   )}
                 </motion.div>
               ))}

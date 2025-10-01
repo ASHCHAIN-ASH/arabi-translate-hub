@@ -137,13 +137,13 @@ export default function ProposalService() {
               خطوات إعداد خطة البحث
             </h2>
             
-            <div className="grid md:grid-cols-4 gap-8">
+            <div className="grid md:grid-cols-4 gap-6">
               {[
                 { icon: Lightbulb, title: 'اختيار الموضوع', desc: 'تحديد موضوع البحث والإشكالية', step: '01', color: 'from-orange-500 to-red-500' },
                 { icon: FileSearch, title: 'المراجعة الأدبية', desc: 'مراجعة الدراسات السابقة', step: '02', color: 'from-red-500 to-rose-500' },
                 { icon: Layers, title: 'بناء الإطار', desc: 'بناء الإطار النظري والمنهجية', step: '03', color: 'from-rose-500 to-pink-500' },
                 { icon: Send, title: 'التسليم', desc: 'تسليم الخطة كاملة للمراجعة', step: '04', color: 'from-pink-500 to-purple-500' }
-              ].map((item, index) => (
+              ].reverse().map((item, index) => (
                 <motion.div
                   key={index}
                   initial={{ opacity: 0, y: 30 }}
@@ -168,7 +168,7 @@ export default function ProposalService() {
                     <p className="text-muted-foreground text-sm">{item.desc}</p>
                   </div>
                   {index < 3 && (
-                    <div className="hidden md:block absolute top-10 left-full w-full h-0.5 bg-gradient-to-r from-primary to-transparent -translate-x-1/2" />
+                    <div className="hidden md:block absolute top-10 right-full w-full h-0.5 bg-gradient-to-l from-primary to-transparent translate-x-1/2" />
                   )}
                 </motion.div>
               ))}

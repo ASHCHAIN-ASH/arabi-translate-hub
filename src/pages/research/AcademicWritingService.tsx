@@ -137,13 +137,13 @@ export default function AcademicWritingService() {
               كيف نعمل معك؟
             </h2>
             
-            <div className="grid md:grid-cols-4 gap-8">
+            <div className="grid md:grid-cols-4 gap-6">
               {[
                 { icon: FileText, title: 'استلام الطلب', desc: 'نستلم تفاصيل بحثك ومتطلباتك', step: '01' },
                 { icon: Search, title: 'البحث والجمع', desc: 'جمع المصادر والمراجع العلمية', step: '02' },
                 { icon: Edit, title: 'الكتابة والمراجعة', desc: 'كتابة البحث ومراجعته أكاديمياً', step: '03' },
                 { icon: Send, title: 'التسليم', desc: 'تسليم البحث كاملاً مع التقارير', step: '04' }
-              ].map((item, index) => (
+              ].reverse().map((item, index) => (
                 <motion.div
                   key={index}
                   initial={{ opacity: 0, y: 30 }}
@@ -168,7 +168,7 @@ export default function AcademicWritingService() {
                     <p className="text-muted-foreground text-sm">{item.desc}</p>
                   </div>
                   {index < 3 && (
-                    <div className="hidden md:block absolute top-10 left-full w-full h-0.5 bg-gradient-to-r from-primary to-transparent -translate-x-1/2" />
+                    <div className="hidden md:block absolute top-10 right-full w-full h-0.5 bg-gradient-to-l from-primary to-transparent translate-x-1/2" />
                   )}
                 </motion.div>
               ))}
