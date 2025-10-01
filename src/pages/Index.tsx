@@ -75,7 +75,7 @@ const Index = () => {
       icon: CheckCircle,
       title: "المراجعة والتدقيق",
       description: "مراجعة لغوية ومنهجية متخصصة للأبحاث العلمية",
-      link: "/services/academic-writing",
+      link: "/services/editing-services",
       color: "from-emerald-600 to-teal-600"
     },
     {
