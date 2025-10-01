@@ -1,13 +1,14 @@
-import React from 'react';
-import { motion } from 'framer-motion';
+import React, { useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import { FloatingWhatsAppButton } from '@/components/FloatingWhatsAppButton';
 import { ResearchServiceForm } from '@/components/research/ResearchServiceForm';
-import { BookOpenCheck, CheckCircle, Clock, Shield, Users, Award, ArrowRight } from 'lucide-react';
+import { BookOpenCheck, CheckCircle, Clock, Shield, Users, Award, ArrowRight, FileText, Search, Edit, Send, ChevronDown } from 'lucide-react';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 
 export default function AcademicWritingService() {
   const navigate = useNavigate();
@@ -123,50 +124,152 @@ export default function AcademicWritingService() {
         </div>
       </section>
 
-      {/* Service Details */}
+      {/* Process Timeline */}
       <section className="py-16">
+        <div className="container px-4 mx-auto">
+          <motion.div
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true }}
+            className="max-w-5xl mx-auto"
+          >
+            <h2 className="text-3xl md:text-4xl font-bold text-center mb-16">
+              كيف نعمل معك؟
+            </h2>
+            
+            <div className="grid md:grid-cols-4 gap-8">
+              {[
+                { icon: FileText, title: 'استلام الطلب', desc: 'نستلم تفاصيل بحثك ومتطلباتك', step: '01' },
+                { icon: Search, title: 'البحث والجمع', desc: 'جمع المصادر والمراجع العلمية', step: '02' },
+                { icon: Edit, title: 'الكتابة والمراجعة', desc: 'كتابة البحث ومراجعته أكاديمياً', step: '03' },
+                { icon: Send, title: 'التسليم', desc: 'تسليم البحث كاملاً مع التقارير', step: '04' }
+              ].map((item, index) => (
+                <motion.div
+                  key={index}
+                  initial={{ opacity: 0, y: 30 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: index * 0.15 }}
+                  className="relative"
+                >
+                  <div className="text-center">
+                    <div className="relative inline-block mb-4">
+                      <motion.div
+                        whileHover={{ scale: 1.1, rotate: 5 }}
+                        className="w-20 h-20 bg-gradient-to-br from-primary to-secondary rounded-2xl flex items-center justify-center shadow-lg mx-auto"
+                      >
+                        <item.icon className="w-10 h-10 text-white" />
+                      </motion.div>
+                      <span className="absolute -top-2 -right-2 w-8 h-8 bg-accent text-white rounded-full flex items-center justify-center text-sm font-bold">
+                        {item.step}
+                      </span>
+                    </div>
+                    <h3 className="text-xl font-bold mb-2">{item.title}</h3>
+                    <p className="text-muted-foreground text-sm">{item.desc}</p>
+                  </div>
+                  {index < 3 && (
+                    <div className="hidden md:block absolute top-10 left-full w-full h-0.5 bg-gradient-to-r from-primary to-transparent -translate-x-1/2" />
+                  )}
+                </motion.div>
+              ))}
+            </div>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* Service Details */}
+      <section className="py-16 bg-muted/30">
         <div className="container px-4 mx-auto">
           <div className="max-w-4xl mx-auto">
             <motion.div
               initial={{ opacity: 0 }}
               whileInView={{ opacity: 1 }}
               viewport={{ once: true }}
-              className="prose prose-lg max-w-none dark:prose-invert mb-16"
+              className="mb-16"
             >
-              <h2 className="text-3xl font-bold mb-6">ما نقدمه لك</h2>
-              <ul className="space-y-3 text-lg">
-                <li className="flex items-start gap-3">
-                  <CheckCircle className="w-6 h-6 text-primary mt-1 flex-shrink-0" />
-                  <span>كتابة بحث علمي متكامل (المقدمة، الإطار النظري، المنهجية، التحليل، النتائج)</span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <CheckCircle className="w-6 h-6 text-primary mt-1 flex-shrink-0" />
-                  <span>استخدام مراجع علمية موثوقة ومحدثة</span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <CheckCircle className="w-6 h-6 text-primary mt-1 flex-shrink-0" />
-                  <span>توثيق المراجع وفقاً للنظام المطلوب</span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <CheckCircle className="w-6 h-6 text-primary mt-1 flex-shrink-0" />
-                  <span>فحص الانتحال العلمي (Plagiarism Check)</span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <CheckCircle className="w-6 h-6 text-primary mt-1 flex-shrink-0" />
-                  <span>تنسيق أكاديمي احترافي</span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <CheckCircle className="w-6 h-6 text-primary mt-1 flex-shrink-0" />
-                  <span>مراجعات مجانية حتى رضاك التام</span>
-                </li>
-              </ul>
+              <h2 className="text-3xl font-bold mb-8 text-center">ما نقدمه لك</h2>
+              <div className="grid md:grid-cols-2 gap-6">
+                {[
+                  'كتابة بحث علمي متكامل (المقدمة، الإطار النظري، المنهجية، التحليل، النتائج)',
+                  'استخدام مراجع علمية موثوقة ومحدثة',
+                  'توثيق المراجع وفقاً للنظام المطلوب (APA, MLA, Harvard)',
+                  'فحص الانتحال العلمي (Plagiarism Check)',
+                  'تنسيق أكاديمي احترافي',
+                  'مراجعات مجانية حتى رضاك التام'
+                ].map((item, index) => (
+                  <motion.div
+                    key={index}
+                    initial={{ opacity: 0, x: -20 }}
+                    whileInView={{ opacity: 1, x: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: index * 0.1 }}
+                    className="flex items-start gap-3 p-4 bg-background rounded-xl shadow-sm hover:shadow-md transition-all"
+                  >
+                    <CheckCircle className="w-6 h-6 text-primary mt-0.5 flex-shrink-0" />
+                    <span className="text-foreground">{item}</span>
+                  </motion.div>
+                ))}
+              </div>
+            </motion.div>
+
+            {/* FAQ Section */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1 }}
+              viewport={{ once: true }}
+              className="mb-16"
+            >
+              <h2 className="text-3xl font-bold mb-8 text-center">الأسئلة الشائعة</h2>
+              <Accordion type="single" collapsible className="space-y-4">
+                <AccordionItem value="item-1" className="bg-background rounded-lg shadow-sm border-0 px-6">
+                  <AccordionTrigger className="text-right hover:no-underline">
+                    ما هي المدة المتوقعة لإنجاز البحث؟
+                  </AccordionTrigger>
+                  <AccordionContent className="text-muted-foreground">
+                    تعتمد المدة على حجم البحث وتعقيده، لكن عادة تتراوح بين 7-14 يوم عمل. نلتزم بتسليم بحثك في الموعد المتفق عليه.
+                  </AccordionContent>
+                </AccordionItem>
+                
+                <AccordionItem value="item-2" className="bg-background rounded-lg shadow-sm border-0 px-6">
+                  <AccordionTrigger className="text-right hover:no-underline">
+                    هل تقدمون مراجعات مجانية؟
+                  </AccordionTrigger>
+                  <AccordionContent className="text-muted-foreground">
+                    نعم، نقدم مراجعات مجانية حتى رضاك التام. نحن ملتزمون بجودة العمل ورضا عملائنا.
+                  </AccordionContent>
+                </AccordionItem>
+                
+                <AccordionItem value="item-3" className="bg-background rounded-lg shadow-sm border-0 px-6">
+                  <AccordionTrigger className="text-right hover:no-underline">
+                    ما أنظمة التوثيق التي تدعمونها؟
+                  </AccordionTrigger>
+                  <AccordionContent className="text-muted-foreground">
+                    ندعم جميع أنظمة التوثيق الأكاديمية مثل APA, MLA, Harvard, Chicago وغيرها حسب متطلبات جامعتك.
+                  </AccordionContent>
+                </AccordionItem>
+
+                <AccordionItem value="item-4" className="bg-background rounded-lg shadow-sm border-0 px-6">
+                  <AccordionTrigger className="text-right hover:no-underline">
+                    هل تضمنون أصالة المحتوى؟
+                  </AccordionTrigger>
+                  <AccordionContent className="text-muted-foreground">
+                    بالتأكيد، جميع أبحاثنا أصلية 100% ونقدم تقرير فحص الانتحال (Turnitin) مع كل بحث.
+                  </AccordionContent>
+                </AccordionItem>
+              </Accordion>
             </motion.div>
 
             {/* Form Section */}
-            <ResearchServiceForm 
-              serviceTitle="مساعدة في كتابة الأبحاث الجامعية"
-              serviceType="academic-writing"
-            />
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+            >
+              <ResearchServiceForm 
+                serviceTitle="مساعدة في كتابة الأبحاث الجامعية"
+                serviceType="academic-writing"
+              />
+            </motion.div>
           </div>
         </div>
       </section>

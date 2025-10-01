@@ -5,9 +5,10 @@ import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import { FloatingWhatsAppButton } from '@/components/FloatingWhatsAppButton';
 import { ResearchServiceForm } from '@/components/research/ResearchServiceForm';
-import { MessageSquareMore, CheckCircle, Lightbulb, Users, HeartHandshake, TrendingUp, ArrowRight } from 'lucide-react';
+import { MessageSquareMore, CheckCircle, Lightbulb, Users, HeartHandshake, TrendingUp, ArrowRight, Phone, Video, MessageCircle } from 'lucide-react';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 
 export default function ConsultationService() {
   const navigate = useNavigate();
@@ -121,48 +122,132 @@ export default function ConsultationService() {
         </div>
       </section>
 
+      {/* Consultation Methods */}
       <section className="py-16">
+        <div className="container px-4 mx-auto">
+          <motion.div
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true }}
+            className="max-w-5xl mx-auto"
+          >
+            <h2 className="text-3xl md:text-4xl font-bold text-center mb-16">
+              طرق التواصل للاستشارات
+            </h2>
+            
+            <div className="grid md:grid-cols-3 gap-8">
+              {[
+                { icon: Video, title: 'جلسات فيديو', desc: 'جلسات مباشرة عبر الفيديو لمناقشة تفصيلية' },
+                { icon: Phone, title: 'مكالمات هاتفية', desc: 'استشارات سريعة عبر المكالمات الصوتية' },
+                { icon: MessageCircle, title: 'محادثات نصية', desc: 'تواصل مستمر عبر الرسائل النصية' }
+              ].map((item, index) => (
+                <motion.div
+                  key={index}
+                  initial={{ opacity: 0, scale: 0.9 }}
+                  whileInView={{ opacity: 1, scale: 1 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: index * 0.15 }}
+                  className="text-center"
+                >
+                  <motion.div
+                    whileHover={{ scale: 1.1, rotate: 360 }}
+                    transition={{ duration: 0.6 }}
+                    className="w-24 h-24 bg-gradient-to-br from-amber-500 to-yellow-500 rounded-3xl flex items-center justify-center shadow-xl mx-auto mb-6"
+                  >
+                    <item.icon className="w-12 h-12 text-white" />
+                  </motion.div>
+                  <h3 className="text-xl font-bold mb-3">{item.title}</h3>
+                  <p className="text-muted-foreground">{item.desc}</p>
+                </motion.div>
+              ))}
+            </div>
+          </motion.div>
+        </div>
+      </section>
+
+      <section className="py-16 bg-muted/30">
         <div className="container px-4 mx-auto">
           <div className="max-w-4xl mx-auto">
             <motion.div
               initial={{ opacity: 0 }}
               whileInView={{ opacity: 1 }}
               viewport={{ once: true }}
-              className="prose prose-lg max-w-none dark:prose-invert mb-16"
+              className="mb-16"
             >
-              <h2 className="text-3xl font-bold mb-6">ما نقدمه في الاستشارات</h2>
-              <ul className="space-y-3 text-lg">
-                <li className="flex items-start gap-3">
-                  <CheckCircle className="w-6 h-6 text-amber-600 mt-1 flex-shrink-0" />
-                  <span>جلسات استشارية مباشرة مع خبراء متخصصين</span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <CheckCircle className="w-6 h-6 text-amber-600 mt-1 flex-shrink-0" />
-                  <span>مساعدة في اختيار الموضوع والمنهجية</span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <CheckCircle className="w-6 h-6 text-amber-600 mt-1 flex-shrink-0" />
-                  <span>توجيه في تصميم أدوات البحث</span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <CheckCircle className="w-6 h-6 text-amber-600 mt-1 flex-shrink-0" />
-                  <span>حلول للتحديات والمشاكل البحثية</span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <CheckCircle className="w-6 h-6 text-amber-600 mt-1 flex-shrink-0" />
-                  <span>نصائح لتحسين جودة البحث</span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <CheckCircle className="w-6 h-6 text-amber-600 mt-1 flex-shrink-0" />
-                  <span>متابعة دورية ودعم مستمر</span>
-                </li>
-              </ul>
+              <h2 className="text-3xl font-bold mb-8 text-center">ما نقدمه في الاستشارات</h2>
+              <div className="grid md:grid-cols-2 gap-6">
+                {[
+                  'جلسات استشارية مباشرة مع خبراء أكاديميين متخصصين',
+                  'مساعدة في اختيار الموضوع البحثي والمنهجية المناسبة',
+                  'توجيه علمي في تصميم أدوات البحث وجمع البيانات',
+                  'حلول عملية وفورية للتحديات والمشاكل البحثية',
+                  'نصائح مهنية لتحسين جودة البحث وزيادة فرص النجاح',
+                  'متابعة دورية ودعم مستمر طوال مسيرتك البحثية'
+                ].map((item, index) => (
+                  <motion.div
+                    key={index}
+                    initial={{ opacity: 0, x: -20 }}
+                    whileInView={{ opacity: 1, x: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: index * 0.1 }}
+                    whileHover={{ scale: 1.02 }}
+                    className="flex items-start gap-3 p-4 bg-background rounded-xl shadow-sm hover:shadow-md transition-all"
+                  >
+                    <CheckCircle className="w-6 h-6 text-amber-600 mt-0.5 flex-shrink-0" />
+                    <span className="text-foreground">{item}</span>
+                  </motion.div>
+                ))}
+              </div>
             </motion.div>
 
-            <ResearchServiceForm 
-              serviceTitle="الاستشارات الأكاديمية"
-              serviceType="consultation"
-            />
+            {/* FAQ Section */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1 }}
+              viewport={{ once: true }}
+              className="mb-16"
+            >
+              <h2 className="text-3xl font-bold mb-8 text-center">الأسئلة الشائعة</h2>
+              <Accordion type="single" collapsible className="space-y-4">
+                <AccordionItem value="item-1" className="bg-background rounded-lg shadow-sm border-0 px-6">
+                  <AccordionTrigger className="text-right hover:no-underline">
+                    كم تستغرق الجلسة الاستشارية؟
+                  </AccordionTrigger>
+                  <AccordionContent className="text-muted-foreground">
+                    عادة تستغرق الجلسة من 30-60 دقيقة حسب الموضوع والاحتياجات. يمكنك حجز جلسات إضافية عند الحاجة.
+                  </AccordionContent>
+                </AccordionItem>
+                
+                <AccordionItem value="item-2" className="bg-background rounded-lg shadow-sm border-0 px-6">
+                  <AccordionTrigger className="text-right hover:no-underline">
+                    هل يمكن حجز أكثر من جلسة؟
+                  </AccordionTrigger>
+                  <AccordionContent className="text-muted-foreground">
+                    بالتأكيد! نوفر باقات استشارية متعددة، ويمكنك حجز جلسات دورية طوال فترة بحثك.
+                  </AccordionContent>
+                </AccordionItem>
+                
+                <AccordionItem value="item-3" className="bg-background rounded-lg shadow-sm border-0 px-6">
+                  <AccordionTrigger className="text-right hover:no-underline">
+                    من هم المستشارون الأكاديميون؟
+                  </AccordionTrigger>
+                  <AccordionContent className="text-muted-foreground">
+                    فريقنا من أساتذة جامعيين وحاملي درجات الدكتوراه المتخصصين في مختلف المجالات الأكاديمية.
+                  </AccordionContent>
+                </AccordionItem>
+              </Accordion>
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+            >
+              <ResearchServiceForm 
+                serviceTitle="الاستشارات الأكاديمية"
+                serviceType="consultation"
+              />
+            </motion.div>
           </div>
         </div>
       </section>

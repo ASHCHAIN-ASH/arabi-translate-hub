@@ -5,9 +5,10 @@ import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import { FloatingWhatsAppButton } from '@/components/FloatingWhatsAppButton';
 import { ProofreadingServiceForm } from '@/components/research/forms/ProofreadingServiceForm';
-import { CheckCheck, CheckCircle, FileCheck, Globe, Clock, Shield, ArrowRight, Sparkles, Eye, Languages } from 'lucide-react';
+import { CheckCheck, CheckCircle, Edit, FileText, Search, Send, ArrowRight, Languages, Shield, Sparkles, Eye } from 'lucide-react';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 
 export default function ProofreadingService() {
   const navigate = useNavigate();
@@ -29,25 +30,9 @@ export default function ProofreadingService() {
         </Button>
       </div>
       
-      <section className="relative py-16 md:py-24 overflow-hidden">
-        <div className="absolute inset-0">
-          <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/10 via-teal-500/10 to-cyan-500/10" />
-          <motion.div
-            animate={{
-              backgroundPosition: ['0% 0%', '100% 100%'],
-            }}
-            transition={{
-              duration: 20,
-              repeat: Infinity,
-              repeatType: 'reverse',
-            }}
-            className="absolute inset-0 opacity-30"
-            style={{
-              backgroundImage: 'radial-gradient(circle at 20% 50%, rgba(16, 185, 129, 0.1) 0%, transparent 50%), radial-gradient(circle at 80% 80%, rgba(20, 184, 166, 0.1) 0%, transparent 50%)',
-              backgroundSize: '100% 100%',
-            }}
-          />
-        </div>
+      {/* Hero Section */}
+      <section className="relative py-20 overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-br from-green-500/10 via-emerald-500/10 to-teal-500/10"></div>
         
         <div className="container relative z-10 px-4 mx-auto">
           <motion.div
@@ -56,74 +41,26 @@ export default function ProofreadingService() {
             className="max-w-4xl mx-auto text-center"
           >
             <motion.div
-              initial={{ scale: 0, rotate: -180 }}
-              animate={{ scale: 1, rotate: 0 }}
-              transition={{ 
-                type: "spring",
-                stiffness: 200,
-                damping: 15,
-                duration: 0.8 
-              }}
-              className="inline-flex items-center justify-center w-20 h-20 md:w-24 md:h-24 mb-6 bg-gradient-to-br from-emerald-500 via-teal-500 to-cyan-500 rounded-3xl shadow-2xl relative overflow-hidden"
+              initial={{ scale: 0 }}
+              animate={{ scale: 1, rotate: 360 }}
+              transition={{ duration: 0.6 }}
+              className="inline-flex items-center justify-center w-20 h-20 mb-6 bg-gradient-to-br from-green-500 to-emerald-500 rounded-2xl shadow-lg"
             >
-              <motion.div
-                animate={{
-                  scale: [1, 1.2, 1],
-                  rotate: [0, 180, 360],
-                }}
-                transition={{
-                  duration: 3,
-                  repeat: Infinity,
-                  ease: "linear"
-                }}
-                className="absolute inset-0 bg-gradient-to-br from-white/20 to-transparent"
-              />
-              <CheckCheck className="w-12 h-12 md:w-14 md:h-14 text-white relative z-10" />
+              <CheckCheck className="w-12 h-12 text-white" />
             </motion.div>
 
-            <motion.h1 
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.2 }}
-              className="text-3xl md:text-5xl lg:text-6xl font-bold mb-6 bg-gradient-to-r from-emerald-600 via-teal-600 to-cyan-600 bg-clip-text text-transparent"
-            >
-              التدقيق اللغوي والمراجعة الأكاديمية
-            </motion.h1>
+            <h1 className="text-4xl md:text-5xl font-bold mb-6 bg-gradient-to-r from-green-600 to-emerald-600 bg-clip-text text-transparent">
+              التدقيق اللغوي والمراجعة
+            </h1>
             
-            <motion.p 
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.3 }}
-              className="text-lg md:text-xl text-muted-foreground leading-relaxed max-w-3xl mx-auto"
-            >
-              تدقيق لغوي شامل ومراجعة أكاديمية دقيقة لضمان خلو بحثك من الأخطاء
-            </motion.p>
-
-            <motion.div
-              initial={{ opacity: 0, scale: 0.8 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ delay: 0.4 }}
-              className="flex flex-wrap justify-center gap-4 mt-8"
-            >
-              {[
-                { icon: Sparkles, text: 'دقة عالية' },
-                { icon: Clock, text: 'سريع' },
-                { icon: Shield, text: 'موثوق' }
-              ].map((item, index) => (
-                <motion.div
-                  key={index}
-                  whileHover={{ scale: 1.05, y: -2 }}
-                  className="flex items-center gap-2 bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm px-4 py-2 rounded-full shadow-lg"
-                >
-                  <item.icon className="w-4 h-4 text-emerald-600" />
-                  <span className="text-sm font-medium">{item.text}</span>
-                </motion.div>
-              ))}
-            </motion.div>
+            <p className="text-xl text-muted-foreground leading-relaxed">
+              تدقيق لغوي ونحوي شامل لأبحاثك الأكاديمية لضمان خلوها من الأخطاء ورفع جودتها
+            </p>
           </motion.div>
         </div>
       </section>
 
+      {/* Features Section */}
       <section className="py-16 bg-muted/30">
         <div className="container px-4 mx-auto">
           <motion.div
@@ -132,7 +69,7 @@ export default function ProofreadingService() {
             viewport={{ once: true }}
             className="max-w-6xl mx-auto"
           >
-            <h2 className="text-3xl font-bold text-center mb-12">ماذا يشمل التدقيق؟</h2>
+            <h2 className="text-3xl font-bold text-center mb-12">أنواع التدقيق التي نقدمها</h2>
             
             <div className="grid md:grid-cols-3 gap-6">
               {[
@@ -149,22 +86,22 @@ export default function ProofreadingService() {
                 {
                   icon: Sparkles,
                   title: 'تحسين الأسلوب',
-                  description: 'تطوير الصياغة والأسلوب الأكاديمي'
+                  description: 'رفع مستوى الصياغة الأكاديمية'
+                },
+                {
+                  icon: Shield,
+                  title: 'الانسيابية',
+                  description: 'ضمان التناسق والترابط المنطقي'
                 },
                 {
                   icon: Languages,
-                  title: 'الاتساق اللغوي',
-                  description: 'ضمان اتساق المصطلحات والأسلوب'
+                  title: 'دعم اللغتين',
+                  description: 'تدقيق باللغة العربية والإنجليزية'
                 },
                 {
-                  icon: FileCheck,
-                  title: 'فحص الانسيابية',
-                  description: 'تحسين تدفق الأفكار والربط بين الفقرات'
-                },
-                {
-                  icon: Globe,
-                  title: 'مراجعة الاقتباسات',
-                  description: 'التأكد من صحة الاقتباسات والتوثيق'
+                  icon: Edit,
+                  title: 'علامات الترقيم',
+                  description: 'مراجعة دقيقة لعلامات الترقيم'
                 }
               ].map((feature, index) => (
                 <motion.div
@@ -176,7 +113,7 @@ export default function ProofreadingService() {
                   whileHover={{ y: -5 }}
                 >
                   <Card className="p-6 h-full border-0 shadow-lg hover:shadow-xl transition-all bg-card/80 backdrop-blur-sm">
-                    <feature.icon className="w-12 h-12 text-emerald-600 mb-4" />
+                    <feature.icon className="w-12 h-12 text-green-600 mb-4" />
                     <h3 className="text-xl font-bold mb-2">{feature.title}</h3>
                     <p className="text-muted-foreground">{feature.description}</p>
                   </Card>
@@ -187,45 +124,140 @@ export default function ProofreadingService() {
         </div>
       </section>
 
+      {/* Process Timeline */}
       <section className="py-16">
+        <div className="container px-4 mx-auto">
+          <motion.div
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true }}
+            className="max-w-5xl mx-auto"
+          >
+            <h2 className="text-3xl md:text-4xl font-bold text-center mb-16">
+              كيف نعمل على تدقيق بحثك؟
+            </h2>
+            
+            <div className="grid md:grid-cols-4 gap-8">
+              {[
+                { icon: FileText, title: 'استلام الملف', desc: 'نستلم ملف بحثك للتدقيق', step: '01', color: 'from-green-500 to-emerald-500' },
+                { icon: Search, title: 'الفحص الشامل', desc: 'فحص لغوي ونحوي دقيق', step: '02', color: 'from-emerald-500 to-teal-500' },
+                { icon: Edit, title: 'التصحيح', desc: 'تصحيح الأخطاء وتحسين الأسلوب', step: '03', color: 'from-teal-500 to-cyan-500' },
+                { icon: Send, title: 'التسليم', desc: 'تسليم البحث مع تقرير التدقيق', step: '04', color: 'from-cyan-500 to-blue-500' }
+              ].map((item, index) => (
+                <motion.div
+                  key={index}
+                  initial={{ opacity: 0, y: 30 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: index * 0.15 }}
+                  className="relative"
+                >
+                  <div className="text-center">
+                    <div className="relative inline-block mb-4">
+                      <motion.div
+                        whileHover={{ scale: 1.1, rotate: 5 }}
+                        className={`w-20 h-20 bg-gradient-to-br ${item.color} rounded-2xl flex items-center justify-center shadow-lg mx-auto`}
+                      >
+                        <item.icon className="w-10 h-10 text-white" />
+                      </motion.div>
+                      <span className="absolute -top-2 -right-2 w-8 h-8 bg-accent text-white rounded-full flex items-center justify-center text-sm font-bold">
+                        {item.step}
+                      </span>
+                    </div>
+                    <h3 className="text-xl font-bold mb-2">{item.title}</h3>
+                    <p className="text-muted-foreground text-sm">{item.desc}</p>
+                  </div>
+                  {index < 3 && (
+                    <div className="hidden md:block absolute top-10 left-full w-full h-0.5 bg-gradient-to-r from-primary to-transparent -translate-x-1/2" />
+                  )}
+                </motion.div>
+              ))}
+            </div>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* Service Details */}
+      <section className="py-16 bg-muted/30">
         <div className="container px-4 mx-auto">
           <div className="max-w-4xl mx-auto">
             <motion.div
               initial={{ opacity: 0 }}
               whileInView={{ opacity: 1 }}
               viewport={{ once: true }}
-              className="prose prose-lg max-w-none dark:prose-invert mb-16"
+              className="mb-16"
             >
-              <h2 className="text-3xl font-bold mb-6">خدماتنا في التدقيق</h2>
-              <ul className="space-y-3 text-lg">
-                <li className="flex items-start gap-3">
-                  <CheckCircle className="w-6 h-6 text-emerald-600 mt-1 flex-shrink-0" />
-                  <span>تدقيق لغوي شامل لجميع أجزاء البحث</span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <CheckCircle className="w-6 h-6 text-emerald-600 mt-1 flex-shrink-0" />
-                  <span>مراجعة القواعد النحوية والصرفية</span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <CheckCircle className="w-6 h-6 text-emerald-600 mt-1 flex-shrink-0" />
-                  <span>تحسين الصياغة والأسلوب الأكاديمي</span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <CheckCircle className="w-6 h-6 text-emerald-600 mt-1 flex-shrink-0" />
-                  <span>ضمان الاتساق اللغوي والمصطلحات</span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <CheckCircle className="w-6 h-6 text-emerald-600 mt-1 flex-shrink-0" />
-                  <span>مراجعة علامات الترقيم والتنسيق</span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <CheckCircle className="w-6 h-6 text-emerald-600 mt-1 flex-shrink-0" />
-                  <span>تقرير مفصل بالملاحظات والتعديلات</span>
-                </li>
-              </ul>
+              <h2 className="text-3xl font-bold mb-8 text-center">خدمات التدقيق التي نقدمها</h2>
+              <div className="grid md:grid-cols-2 gap-6">
+                {[
+                  'تدقيق إملائي شامل لجميع الأخطاء الإملائية والطباعية',
+                  'مراجعة نحوية متقنة لضمان سلامة التراكيب اللغوية',
+                  'تحسين الأسلوب الأكاديمي وجودة الصياغة العلمية',
+                  'فحص الانسيابية والترابط المنطقي بين الفقرات',
+                  'مراجعة علامات الترقيم واستخداماتها الصحيحة',
+                  'تقرير مفصل بالتعديلات والملاحظات اللغوية'
+                ].map((item, index) => (
+                  <motion.div
+                    key={index}
+                    initial={{ opacity: 0, x: -20 }}
+                    whileInView={{ opacity: 1, x: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: index * 0.1 }}
+                    className="flex items-start gap-3 p-4 bg-background rounded-xl shadow-sm hover:shadow-md transition-all"
+                  >
+                    <CheckCircle className="w-6 h-6 text-green-600 mt-0.5 flex-shrink-0" />
+                    <span className="text-foreground">{item}</span>
+                  </motion.div>
+                ))}
+              </div>
             </motion.div>
 
-            <ProofreadingServiceForm />
+            {/* FAQ Section */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1 }}
+              viewport={{ once: true }}
+              className="mb-16"
+            >
+              <h2 className="text-3xl font-bold mb-8 text-center">الأسئلة الشائعة</h2>
+              <Accordion type="single" collapsible className="space-y-4">
+                <AccordionItem value="item-1" className="bg-background rounded-lg shadow-sm border-0 px-6">
+                  <AccordionTrigger className="text-right hover:no-underline">
+                    كم يستغرق تدقيق البحث؟
+                  </AccordionTrigger>
+                  <AccordionContent className="text-muted-foreground">
+                    يعتمد على طول البحث، لكن عادة نحتاج من 2-5 أيام عمل للتدقيق الشامل.
+                  </AccordionContent>
+                </AccordionItem>
+                
+                <AccordionItem value="item-2" className="bg-background rounded-lg shadow-sm border-0 px-6">
+                  <AccordionTrigger className="text-right hover:no-underline">
+                    هل تدعمون اللغتين العربية والإنجليزية؟
+                  </AccordionTrigger>
+                  <AccordionContent className="text-muted-foreground">
+                    نعم، نقدم خدمات التدقيق باللغتين العربية والإنجليزية بنفس الجودة العالية.
+                  </AccordionContent>
+                </AccordionItem>
+                
+                <AccordionItem value="item-3" className="bg-background rounded-lg shadow-sm border-0 px-6">
+                  <AccordionTrigger className="text-right hover:no-underline">
+                    ماذا لو احتجت مراجعة إضافية؟
+                  </AccordionTrigger>
+                  <AccordionContent className="text-muted-foreground">
+                    نقدم جولة مراجعة إضافية مجانية لضمان رضاك الكامل عن جودة التدقيق.
+                  </AccordionContent>
+                </AccordionItem>
+              </Accordion>
+            </motion.div>
+
+            {/* Form Section */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+            >
+              <ProofreadingServiceForm />
+            </motion.div>
           </div>
         </div>
       </section>

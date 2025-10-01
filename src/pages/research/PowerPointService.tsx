@@ -5,9 +5,10 @@ import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import { FloatingWhatsAppButton } from '@/components/FloatingWhatsAppButton';
 import { ResearchServiceForm } from '@/components/research/ResearchServiceForm';
-import { Presentation, CheckCircle, Palette, Layout, Image, Sparkles, ArrowRight } from 'lucide-react';
+import { Presentation, CheckCircle, Palette, Layout, Image, Sparkles, ArrowRight, Wand2, Monitor, Zap } from 'lucide-react';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 
 export default function PowerPointService() {
   const navigate = useNavigate();
@@ -121,48 +122,132 @@ export default function PowerPointService() {
         </div>
       </section>
 
+      {/* Process Steps */}
       <section className="py-16">
+        <div className="container px-4 mx-auto">
+          <motion.div
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true }}
+            className="max-w-5xl mx-auto"
+          >
+            <h2 className="text-3xl md:text-4xl font-bold text-center mb-16">
+              خطوات إعداد العرض التقديمي
+            </h2>
+            
+            <div className="grid md:grid-cols-3 gap-8">
+              {[
+                { icon: Wand2, title: 'التصميم الأولي', desc: 'نصمم مخطط أولي للعرض بناءً على محتوى بحثك' },
+                { icon: Palette, title: 'التنسيق والألوان', desc: 'نضيف تصميم احترافي متناسق مع هوية بحثك' },
+                { icon: Monitor, title: 'المراجعة والتسليم', desc: 'مراجعة نهائية وتسليم العرض جاهزاً للتقديم' }
+              ].map((item, index) => (
+                <motion.div
+                  key={index}
+                  initial={{ opacity: 0, scale: 0.9 }}
+                  whileInView={{ opacity: 1, scale: 1 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: index * 0.15 }}
+                  className="text-center"
+                >
+                  <motion.div
+                    whileHover={{ scale: 1.1, rotate: 360 }}
+                    transition={{ duration: 0.6 }}
+                    className="w-24 h-24 bg-gradient-to-br from-indigo-500 to-blue-500 rounded-3xl flex items-center justify-center shadow-xl mx-auto mb-6"
+                  >
+                    <item.icon className="w-12 h-12 text-white" />
+                  </motion.div>
+                  <h3 className="text-xl font-bold mb-3">{item.title}</h3>
+                  <p className="text-muted-foreground">{item.desc}</p>
+                </motion.div>
+              ))}
+            </div>
+          </motion.div>
+        </div>
+      </section>
+
+      <section className="py-16 bg-muted/30">
         <div className="container px-4 mx-auto">
           <div className="max-w-4xl mx-auto">
             <motion.div
               initial={{ opacity: 0 }}
               whileInView={{ opacity: 1 }}
               viewport={{ once: true }}
-              className="prose prose-lg max-w-none dark:prose-invert mb-16"
+              className="mb-16"
             >
-              <h2 className="text-3xl font-bold mb-6">ما نقدمه في العرض التقديمي</h2>
-              <ul className="space-y-3 text-lg">
-                <li className="flex items-start gap-3">
-                  <CheckCircle className="w-6 h-6 text-indigo-600 mt-1 flex-shrink-0" />
-                  <span>تصميم شرائح احترافية بهوية متسقة</span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <CheckCircle className="w-6 h-6 text-indigo-600 mt-1 flex-shrink-0" />
-                  <span>تلخيص المحتوى البحثي بطريقة مبسطة</span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <CheckCircle className="w-6 h-6 text-indigo-600 mt-1 flex-shrink-0" />
-                  <span>رسوم بيانية ملونة وجداول منسقة</span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <CheckCircle className="w-6 h-6 text-indigo-600 mt-1 flex-shrink-0" />
-                  <span>أيقونات توضيحية حديثة وجذابة</span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <CheckCircle className="w-6 h-6 text-indigo-600 mt-1 flex-shrink-0" />
-                  <span>انتقالات وحركات سلسة بين الشرائح</span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <CheckCircle className="w-6 h-6 text-indigo-600 mt-1 flex-shrink-0" />
-                  <span>ملاحظات للمتحدث على كل شريحة</span>
-                </li>
-              </ul>
+              <h2 className="text-3xl font-bold mb-8 text-center">محتويات العرض التقديمي</h2>
+              <div className="grid md:grid-cols-2 gap-6">
+                {[
+                  'تصميم شرائح احترافية بهوية بصرية متسقة',
+                  'تلخيص المحتوى البحثي بطريقة مبسطة ومفهومة',
+                  'رسوم بيانية ملونة وجداول منسقة بشكل احترافي',
+                  'أيقونات توضيحية حديثة تدعم الفهم البصري',
+                  'انتقالات وحركات سلسة وأنيقة بين الشرائح',
+                  'ملاحظات للمتحدث على كل شريحة لتسهيل العرض'
+                ].map((item, index) => (
+                  <motion.div
+                    key={index}
+                    initial={{ opacity: 0, x: -20 }}
+                    whileInView={{ opacity: 1, x: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: index * 0.1 }}
+                    whileHover={{ scale: 1.02 }}
+                    className="flex items-start gap-3 p-4 bg-background rounded-xl shadow-sm hover:shadow-md transition-all"
+                  >
+                    <CheckCircle className="w-6 h-6 text-indigo-600 mt-0.5 flex-shrink-0" />
+                    <span className="text-foreground">{item}</span>
+                  </motion.div>
+                ))}
+              </div>
             </motion.div>
 
-            <ResearchServiceForm 
-              serviceTitle="إعداد عروض PowerPoint أكاديمية"
-              serviceType="powerpoint"
-            />
+            {/* FAQ Section */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1 }}
+              viewport={{ once: true }}
+              className="mb-16"
+            >
+              <h2 className="text-3xl font-bold mb-8 text-center">الأسئلة الشائعة</h2>
+              <Accordion type="single" collapsible className="space-y-4">
+                <AccordionItem value="item-1" className="bg-background rounded-lg shadow-sm border-0 px-6">
+                  <AccordionTrigger className="text-right hover:no-underline">
+                    كم عدد الشرائح المتوقع في العرض؟
+                  </AccordionTrigger>
+                  <AccordionContent className="text-muted-foreground">
+                    يعتمد عدد الشرائح على حجم ومحتوى بحثك، لكن عادة يتراوح بين 15-30 شريحة للبحث الجامعي.
+                  </AccordionContent>
+                </AccordionItem>
+                
+                <AccordionItem value="item-2" className="bg-background rounded-lg shadow-sm border-0 px-6">
+                  <AccordionTrigger className="text-right hover:no-underline">
+                    هل يمكنني التعديل على التصميم؟
+                  </AccordionTrigger>
+                  <AccordionContent className="text-muted-foreground">
+                    بالتأكيد! نقدم لك الملف القابل للتعديل، ونوفر جولة تعديلات مجانية لضمان رضاك.
+                  </AccordionContent>
+                </AccordionItem>
+                
+                <AccordionItem value="item-3" className="bg-background rounded-lg shadow-sm border-0 px-6">
+                  <AccordionTrigger className="text-right hover:no-underline">
+                    ما الصيغة النهائية للعرض؟
+                  </AccordionTrigger>
+                  <AccordionContent className="text-muted-foreground">
+                    نسلمك العرض بصيغة PowerPoint (.pptx) القابلة للتعديل، وأيضاً بصيغة PDF للعرض النهائي.
+                  </AccordionContent>
+                </AccordionItem>
+              </Accordion>
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+            >
+              <ResearchServiceForm 
+                serviceTitle="إعداد عروض PowerPoint أكاديمية"
+                serviceType="powerpoint"
+              />
+            </motion.div>
           </div>
         </div>
       </section>

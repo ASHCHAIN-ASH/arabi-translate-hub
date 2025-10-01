@@ -5,9 +5,10 @@ import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import { FloatingWhatsAppButton } from '@/components/FloatingWhatsAppButton';
 import { ResearchServiceForm } from '@/components/research/ResearchServiceForm';
-import { ShieldCheck, CheckCircle, Eye, Award, FileSearch, Target, ArrowRight } from 'lucide-react';
+import { ShieldCheck, CheckCircle, Eye, Award, FileSearch, Target, ArrowRight, FileCheck, BookOpen, Send } from 'lucide-react';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 
 export default function PaperReviewService() {
   const navigate = useNavigate();
@@ -121,48 +122,132 @@ export default function PaperReviewService() {
         </div>
       </section>
 
+      {/* Review Process */}
       <section className="py-16">
+        <div className="container px-4 mx-auto">
+          <motion.div
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true }}
+            className="max-w-5xl mx-auto"
+          >
+            <h2 className="text-3xl md:text-4xl font-bold text-center mb-16">
+              مراحل المراجعة
+            </h2>
+            
+            <div className="grid md:grid-cols-3 gap-8">
+              {[
+                { icon: FileCheck, title: 'الفحص الأولي', desc: 'فحص شامل لبنية الورقة ومحتواها' },
+                { icon: BookOpen, title: 'التحليل العميق', desc: 'تحليل المنهجية والنتائج والمراجع' },
+                { icon: Send, title: 'التقرير النهائي', desc: 'تقرير مفصل مع توصيات للتحسين' }
+              ].map((item, index) => (
+                <motion.div
+                  key={index}
+                  initial={{ opacity: 0, y: 30 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: index * 0.15 }}
+                  className="text-center"
+                >
+                  <motion.div
+                    whileHover={{ scale: 1.1, rotate: 360 }}
+                    transition={{ duration: 0.6 }}
+                    className="w-24 h-24 bg-gradient-to-br from-rose-500 to-pink-500 rounded-3xl flex items-center justify-center shadow-xl mx-auto mb-6"
+                  >
+                    <item.icon className="w-12 h-12 text-white" />
+                  </motion.div>
+                  <h3 className="text-xl font-bold mb-3">{item.title}</h3>
+                  <p className="text-muted-foreground">{item.desc}</p>
+                </motion.div>
+              ))}
+            </div>
+          </motion.div>
+        </div>
+      </section>
+
+      <section className="py-16 bg-muted/30">
         <div className="container px-4 mx-auto">
           <div className="max-w-4xl mx-auto">
             <motion.div
               initial={{ opacity: 0 }}
               whileInView={{ opacity: 1 }}
               viewport={{ once: true }}
-              className="prose prose-lg max-w-none dark:prose-invert mb-16"
+              className="mb-16"
             >
-              <h2 className="text-3xl font-bold mb-6">خدمة المراجعة تشمل</h2>
-              <ul className="space-y-3 text-lg">
-                <li className="flex items-start gap-3">
-                  <CheckCircle className="w-6 h-6 text-rose-600 mt-1 flex-shrink-0" />
-                  <span>تقييم شامل لجودة الورقة العلمية</span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <CheckCircle className="w-6 h-6 text-rose-600 mt-1 flex-shrink-0" />
-                  <span>مراجعة المنهجية وأدوات البحث</span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <CheckCircle className="w-6 h-6 text-rose-600 mt-1 flex-shrink-0" />
-                  <span>فحص التوثيق ودقة الاقتباسات</span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <CheckCircle className="w-6 h-6 text-rose-600 mt-1 flex-shrink-0" />
-                  <span>تدقيق لغوي وأسلوبي متقدم</span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <CheckCircle className="w-6 h-6 text-rose-600 mt-1 flex-shrink-0" />
-                  <span>اقتراحات لتحسين الجودة</span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <CheckCircle className="w-6 h-6 text-rose-600 mt-1 flex-shrink-0" />
-                  <span>تقرير مفصل بالملاحظات والتوصيات</span>
-                </li>
-              </ul>
+              <h2 className="text-3xl font-bold mb-8 text-center">ما تشمله خدمة المراجعة</h2>
+              <div className="grid md:grid-cols-2 gap-6">
+                {[
+                  'تقييم شامل لجودة الورقة العلمية ومدى توافقها مع المعايير',
+                  'مراجعة المنهجية وأدوات البحث والتحقق من سلامتها',
+                  'فحص التوثيق ودقة الاقتباسات والمراجع العلمية',
+                  'تدقيق لغوي وأسلوبي متقدم لتحسين جودة الصياغة',
+                  'اقتراحات عملية وتفصيلية لتحسين جودة الورقة',
+                  'تقرير مفصل بالملاحظات والتوصيات والنقاط القوية'
+                ].map((item, index) => (
+                  <motion.div
+                    key={index}
+                    initial={{ opacity: 0, x: -20 }}
+                    whileInView={{ opacity: 1, x: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: index * 0.1 }}
+                    whileHover={{ scale: 1.02 }}
+                    className="flex items-start gap-3 p-4 bg-background rounded-xl shadow-sm hover:shadow-md transition-all"
+                  >
+                    <CheckCircle className="w-6 h-6 text-rose-600 mt-0.5 flex-shrink-0" />
+                    <span className="text-foreground">{item}</span>
+                  </motion.div>
+                ))}
+              </div>
             </motion.div>
 
-            <ResearchServiceForm 
-              serviceTitle="مراجعات أكاديمية للأوراق قبل النشر"
-              serviceType="paper-review"
-            />
+            {/* FAQ Section */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1 }}
+              viewport={{ once: true }}
+              className="mb-16"
+            >
+              <h2 className="text-3xl font-bold mb-8 text-center">الأسئلة الشائعة</h2>
+              <Accordion type="single" collapsible className="space-y-4">
+                <AccordionItem value="item-1" className="bg-background rounded-lg shadow-sm border-0 px-6">
+                  <AccordionTrigger className="text-right hover:no-underline">
+                    كم تستغرق عملية المراجعة؟
+                  </AccordionTrigger>
+                  <AccordionContent className="text-muted-foreground">
+                    عادة تستغرق المراجعة الشاملة من 3-5 أيام عمل حسب حجم الورقة وتعقيدها.
+                  </AccordionContent>
+                </AccordionItem>
+                
+                <AccordionItem value="item-2" className="bg-background rounded-lg shadow-sm border-0 px-6">
+                  <AccordionTrigger className="text-right hover:no-underline">
+                    هل تقدمون ضمان القبول في المجلة؟
+                  </AccordionTrigger>
+                  <AccordionContent className="text-muted-foreground">
+                    نضمن جاهزية ورقتك وفقاً لأعلى المعايير الأكاديمية، لكن القرار النهائي يعود للمجلة. نوفر كل المقومات لزيادة فرص القبول.
+                  </AccordionContent>
+                </AccordionItem>
+                
+                <AccordionItem value="item-3" className="bg-background rounded-lg shadow-sm border-0 px-6">
+                  <AccordionTrigger className="text-right hover:no-underline">
+                    ما هي المخرجات التي سأستلمها؟
+                  </AccordionTrigger>
+                  <AccordionContent className="text-muted-foreground">
+                    ستستلم تقرير مراجعة مفصل يشمل التقييم والملاحظات والاقتراحات، بالإضافة إلى نسخة معدلة من الورقة مع التوصيات المطبقة.
+                  </AccordionContent>
+                </AccordionItem>
+              </Accordion>
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+            >
+              <ResearchServiceForm 
+                serviceTitle="مراجعات أكاديمية للأوراق قبل النشر"
+                serviceType="paper-review"
+              />
+            </motion.div>
           </div>
         </div>
       </section>
