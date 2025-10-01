@@ -30,57 +30,44 @@ const handler = async (req: Request): Promise<Response> => {
     
     console.log("Processing service request:", orderId);
 
-    // إيميل الإدارة
+    // إيميل الإدارة (Admin RTL Template)
     const adminEmailHtml = `
-      <!DOCTYPE html>
-      <html dir="rtl">
+      <!doctype html>
+      <html lang="ar" dir="rtl">
       <head>
-        <meta charset="UTF-8">
+        <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>طلب جديد</title>
+        <style>
+          body{margin:0;background:#f8fafc;font-family:'Tahoma','Segoe UI','Cairo',sans-serif;direction:rtl}
+          .wrap{max-width:760px;margin:0 auto;padding:24px}
+          .head{background:#0a225d;color:#fff;border-radius:12px 12px 0 0;padding:18px}
+          .body{background:#fff;border:1px solid #e5e7eb;border-top:0;border-radius:0 0 12px 12px;padding:20px}
+          h1{margin:0 0 6px;font-size:20px}
+          table{width:100%;border-collapse:collapse}
+          td{padding:10px;border-bottom:1px solid #f0f2f5;vertical-align:top}
+          .label{color:#6b7280;width:180px}
+          .badge{display:inline-block;background:#eaf2ff;color:#0a225d;padding:4px 8px;border-radius:8px}
+          .foot{margin-top:16px;color:#6b7280;font-size:12px}
+        </style>
       </head>
-      <body style="font-family: Arial, sans-serif; line-height: 1.6; color: #333; direction: rtl;">
-        <div style="max-width: 600px; margin: 0 auto; padding: 20px; background: #f9fafb; border-radius: 10px;">
-          <div style="background: linear-gradient(135deg, #2563eb 0%, #7c3aed 100%); padding: 30px; border-radius: 10px 10px 0 0; text-align: center;">
-            <h1 style="color: white; margin: 0;">🎓 طلب خدمة بحثية جديد</h1>
-            <div style="background: white; color: #2563eb; font-size: 16px; font-weight: bold; padding: 15px; border-radius: 8px; margin-top: 15px;">
-              ${orderData.serviceTitle}
-            </div>
+      <body>
+        <div class="wrap">
+          <div class="head">
+            <h1>طلب جديد – <span class="badge">${orderData.serviceTitle}</span></h1>
+            <div>الطابع الزمني: ${new Date().toLocaleString('ar-SA')}</div>
           </div>
-          
-          <div style="background: white; padding: 30px; border-radius: 0 0 10px 10px;">
-            <div style="background: #dbeafe; padding: 15px; border-radius: 8px; margin-bottom: 20px; border-right: 4px solid #2563eb;">
-              <p style="color: #6b7280; margin: 5px 0 0 0; font-size: 14px;">رقم الطلب: ${orderId}</p>
-            </div>
-
-            <h3 style="color: #2563eb; border-bottom: 2px solid #e5e7eb; padding-bottom: 10px;">معلومات العميل</h3>
-            <table style="width: 100%; border-collapse: collapse; margin-bottom: 20px;">
-              <tr style="background: #f9fafb;">
-                <td style="padding: 12px; font-weight: bold; border: 1px solid #e5e7eb;">الاسم:</td>
-                <td style="padding: 12px; border: 1px solid #e5e7eb;">${orderData.fullName}</td>
-              </tr>
-              <tr>
-                <td style="padding: 12px; font-weight: bold; border: 1px solid #e5e7eb;">البريد الإلكتروني:</td>
-                <td style="padding: 12px; border: 1px solid #e5e7eb;">${orderData.email}</td>
-              </tr>
-              <tr style="background: #f9fafb;">
-                <td style="padding: 12px; font-weight: bold; border: 1px solid #e5e7eb;">رقم الهاتف:</td>
-                <td style="padding: 12px; border: 1px solid #e5e7eb;">${orderData.phone}</td>
-              </tr>
-              <tr>
-                <td style="padding: 12px; font-weight: bold; border: 1px solid #e5e7eb;">التخصص الجامعي:</td>
-                <td style="padding: 12px; border: 1px solid #e5e7eb;">${orderData.specialization}</td>
-              </tr>
+          <div class="body">
+            <table>
+              <tr><td class="label">رقم الطلب</td><td>${orderId}</td></tr>
+              <tr><td class="label">الاسم الكامل</td><td>${orderData.fullName}</td></tr>
+              <tr><td class="label">البريد</td><td>${orderData.email}</td></tr>
+              <tr><td class="label">الجوال</td><td>${orderData.phone}</td></tr>
+              <tr><td class="label">التخصص</td><td>${orderData.specialization}</td></tr>
+              <tr><td class="label">تفاصيل الطلب</td><td>${orderData.details || 'لا توجد تفاصيل إضافية'}</td></tr>
             </table>
-
-            ${orderData.details ? `
-            <h3 style="color: #2563eb; border-bottom: 2px solid #e5e7eb; padding-bottom: 10px;">تفاصيل الطلب</h3>
-            <div style="background: #f9fafb; padding: 15px; border-radius: 8px; border-right: 3px solid #2563eb;">
-              <p style="margin: 0;">${orderData.details}</p>
-            </div>
-            ` : ''}
-
-            <div style="margin-top: 30px; padding: 20px; background: #fef3c7; border-radius: 8px; border: 2px solid #f59e0b;">
-              <p style="margin: 0; color: #92400e; font-weight: bold;">⚠️ يرجى المتابعة مع العميل في أقرب وقت ممكن</p>
+            <div class="foot">
+              هذه رسالة تنبيه داخلية. للرد على العميل استخدم "Reply-To".
             </div>
           </div>
         </div>
@@ -88,44 +75,53 @@ const handler = async (req: Request): Promise<Response> => {
       </html>
     `;
 
-    // إيميل العميل
+    // إيميل العميل (Client RTL Template)
     const clientEmailHtml = `
-      <!DOCTYPE html>
-      <html dir="rtl">
+      <!doctype html>
+      <html lang="ar" dir="rtl">
       <head>
-        <meta charset="UTF-8">
+        <meta charset="utf-8">
+        <meta name="x-apple-disable-message-reformatting">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>تأكيد استلام طلبك</title>
+        <style>
+          body{margin:0;background:#f5f7fb;font-family:'Tahoma','Segoe UI','Cairo',sans-serif;direction:rtl}
+          .container{max-width:640px;margin:0 auto;padding:24px}
+          .card{background:#ffffff;border-radius:16px;box-shadow:0 10px 25px rgba(0,0,0,.06);overflow:hidden}
+          .header{background:linear-gradient(135deg,#0a225d,#0087ff);color:#fff;padding:28px;text-align:center}
+          h1{margin:0 0 6px;font-size:22px}
+          p{margin:0;color:#e9eef7;font-size:14px}
+          .content{padding:22px 24px;color:#222}
+          .row{margin-bottom:12px}
+          .label{color:#4a5568;font-size:13px}
+          .val{font-weight:700}
+          .cta{display:inline-block;margin-top:16px;padding:12px 18px;background:#0a225d;color:#fff;text-decoration:none;border-radius:10px}
+          .note{margin-top:18px;font-size:12px;color:#6b7280}
+          .footer{padding:16px;text-align:center;font-size:12px;color:#6b7280}
+          @keyframes fadeInUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+          .card{animation:fadeInUp .5s ease}
+        </style>
       </head>
-      <body style="font-family: Arial, sans-serif; line-height: 1.6; color: #333; direction: rtl;">
-        <div style="max-width: 600px; margin: 0 auto; padding: 20px; background: #f9fafb; border-radius: 10px;">
-          <div style="background: linear-gradient(135deg, #10b981 0%, #059669 100%); padding: 30px; border-radius: 10px 10px 0 0; text-align: center;">
-            <h1 style="color: white; margin: 0;">✅ تم استلام طلبك بنجاح</h1>
-            <div style="background: white; color: #10b981; font-size: 18px; font-weight: bold; padding: 12px; border-radius: 8px; margin-top: 15px;">
-              شكراً لطلبك
+      <body>
+        <div class="container">
+          <div class="card">
+            <div class="header">
+              <h1>تم استلام طلبك 🎓</h1>
+              <p>شكرًا لتواصلك مع MasterEduPath</p>
             </div>
-          </div>
-          
-          <div style="background: white; padding: 30px; border-radius: 0 0 10px 10px;">
-            <p style="font-size: 16px; color: #059669; font-weight: bold;">عزيزي ${orderData.fullName}،</p>
-            
-            <p style="font-size: 15px; line-height: 1.8;">
-              شكراً لك على طلب خدمة <strong>${orderData.serviceTitle}</strong>. تم استلام طلبك بنجاح وسيتم مراجعته من قبل فريقنا المتخصص.
-            </p>
-
-            <div style="background: #d1fae5; padding: 20px; border-radius: 8px; margin: 20px 0; border-right: 4px solid #10b981;">
-              <h3 style="color: #065f46; margin-top: 0;">الخطوات القادمة:</h3>
-              <ol style="line-height: 2; margin: 0; padding-right: 20px;">
-                <li>سنقوم بمراجعة طلبك خلال 24 ساعة</li>
-                <li>سنتواصل معك عبر البريد الإلكتروني أو الهاتف</li>
-                <li>سنقدم لك عرض سعر مفصل وجدول زمني</li>
-              </ol>
+            <div class="content">
+              <div class="row"><span class="label">الخدمة:</span> <span class="val">${orderData.serviceTitle}</span></div>
+              <div class="row"><span class="label">الاسم:</span> <span class="val">${orderData.fullName}</span></div>
+              <div class="row"><span class="label">البريد:</span> <span class="val">${orderData.email}</span></div>
+              <div class="row"><span class="label">الجوال:</span> <span class="val">${orderData.phone}</span></div>
+              <div class="row"><span class="label">التخصص:</span> <span class="val">${orderData.specialization}</span></div>
+              <div class="row"><span class="label">تفاصيل الطلب:</span><div>${orderData.details || 'لا توجد تفاصيل إضافية'}</div></div>
+              <div class="note">
+                سنراجع التفاصيل ونتواصل معك خلال وقت قصير عبر البريد أو الواتساب.
+              </div>
             </div>
-
-            <div style="margin-top: 30px; padding: 20px; background: #f3f4f6; border-radius: 8px; text-align: center;">
-              <h3 style="color: #1f2937; margin-top: 0;">للتواصل معنا</h3>
-              <p style="margin: 5px 0;">📧 البريد الإلكتروني: info@masteredupath.com</p>
-              <p style="margin: 5px 0;">📱 جوال: 0500776343</p>
-              <p style="margin: 5px 0;">📱 واتساب: 0500776343</p>
+            <div class="footer">
+              © 2025 MasterEduPath — للاستفسار السريع: 0500776343 / 0559600824
             </div>
           </div>
         </div>
@@ -135,17 +131,18 @@ const handler = async (req: Request): Promise<Response> => {
 
     // إرسال الإيميلات
     await resend.emails.send({
-      from: "MasterEduPath <noreply@masteredupath.com>",
+      from: "MasterEduPath <no-reply@masteredupath.com>",
       to: ["info@masteredupath.com"],
       replyTo: orderData.email,
-      subject: `🎓 طلب خدمة: ${orderData.serviceTitle} - ${orderData.fullName}`,
+      subject: `[MasterEduPath] طلب جديد – ${orderData.serviceTitle} – ${orderData.fullName}`,
       html: adminEmailHtml,
     });
 
     await resend.emails.send({
-      from: "Master Edu Path <info@masteredupath.com>",
+      from: "MasterEduPath <no-reply@masteredupath.com>",
+      replyTo: "info@masteredupath.com",
       to: [orderData.email],
-      subject: `✅ تم استلام طلبك - ${orderData.serviceTitle}`,
+      subject: `[MasterEduPath] تأكيد استلام طلبك – ${orderData.serviceTitle}`,
       html: clientEmailHtml,
     });
 

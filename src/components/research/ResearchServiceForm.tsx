@@ -80,11 +80,43 @@ export const ResearchServiceForm = ({ serviceTitle, serviceType }: ResearchServi
     details: ''
   });
 
+  const normalizeArabicNumbers = (str: string) => {
+    const arabicToEnglish: { [key: string]: string } = {
+      '٠': '0', '١': '1', '٢': '2', '٣': '3', '٤': '4',
+      '٥': '5', '٦': '6', '٧': '7', '٨': '8', '٩': '9'
+    };
+    return str.replace(/[٠-٩]/g, (digit) => arabicToEnglish[digit]);
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (!formData.fullName || !formData.email || !formData.phone || !formData.specialization) {
-      toast.error('الرجاء تعبئة جميع الحقول المطلوبة');
+    // Validation
+    if (!formData.fullName || formData.fullName.length < 2) {
+      toast.error('الاسم يجب أن يكون حرفين على الأقل');
+      return;
+    }
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!formData.email || !emailRegex.test(formData.email)) {
+      toast.error('البريد الإلكتروني غير صحيح');
+      return;
+    }
+
+    const normalizedPhone = normalizeArabicNumbers(formData.phone);
+    const phoneRegex = /^05\d{8}$/;
+    if (!normalizedPhone || !phoneRegex.test(normalizedPhone)) {
+      toast.error('رقم الجوال يجب أن يبدأ بـ 05 ويتكون من 10 أرقام');
+      return;
+    }
+
+    if (!formData.specialization) {
+      toast.error('يرجى اختيار التخصص الجامعي');
+      return;
+    }
+
+    if (formData.details && formData.details.length < 30) {
+      toast.error('التفاصيل يجب أن تكون 30 حرفاً على الأقل');
       return;
     }
 
@@ -95,7 +127,8 @@ export const ResearchServiceForm = ({ serviceTitle, serviceType }: ResearchServi
         body: {
           serviceTitle,
           serviceType,
-          ...formData
+          ...formData,
+          phone: normalizeArabicNumbers(formData.phone)
         }
       });
 
@@ -211,6 +244,8 @@ export const ResearchServiceForm = ({ serviceTitle, serviceType }: ResearchServi
               onChange={(e) => setFormData(prev => ({ ...prev, phone: e.target.value }))}
               placeholder="05xxxxxxxx"
               className="h-12 text-base"
+              maxLength={10}
+              pattern="^05\d{8}$"
             />
           </div>
 
@@ -246,11 +281,19 @@ export const ResearchServiceForm = ({ serviceTitle, serviceType }: ResearchServi
             <Textarea
               value={formData.details}
               onChange={(e) => setFormData(prev => ({ ...prev, details: e.target.value }))}
-              placeholder="أضف تفاصيل طلبك هنا... (اختياري)"
+              placeholder="أضف تفاصيل طلبك هنا... (30 حرفاً على الأقل إذا أردت إضافة تفاصيل)"
               rows={5}
               className="text-base resize-none"
+              minLength={30}
             />
             <p className="text-sm text-muted-foreground mt-2">
+              {formData.details.length > 0 && (
+                <span className={formData.details.length >= 30 ? 'text-emerald-600' : 'text-amber-600'}>
+                  {formData.details.length} / 30 حرفاً على الأقل
+                </span>
+              )}
+            </p>
+            <p className="text-sm text-muted-foreground mt-1">
               💡 يمكنك إرفاق الملفات لاحقاً عبر البريد الإلكتروني
             </p>
           </div>

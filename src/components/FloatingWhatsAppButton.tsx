@@ -13,7 +13,9 @@ export const FloatingWhatsAppButton = () => {
   ];
 
   const openWhatsApp = (phoneNumber: string) => {
-    const message = encodeURIComponent('مرحباً، أرغب في الاستفسار عن خدمات البحث العلمي');
+    const pageTitle = document.title || 'خدمات البحث العلمي';
+    const pageUrl = window.location.href;
+    const message = encodeURIComponent(`مرحبًا، أود المساعدة بخصوص: ${pageTitle} — ${pageUrl}`);
     window.open(`https://wa.me/966${phoneNumber.slice(1)}?text=${message}`, '_blank');
   };
 
