@@ -1,248 +1,228 @@
-import React, { useState } from 'react';
 import { motion } from 'framer-motion';
+import { Card, CardContent } from '@/components/ui/card';
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Label } from '@/components/ui/label';
+import { BookOpen, Award, TrendingUp, Shield, Sparkles, ArrowLeft, CheckCircle, FileText, Clock } from 'lucide-react';
 import Header from '@/components/Header';
-
-import { useToast } from '@/hooks/use-toast';
-import { 
-  FileText, 
-  BookOpen, 
-  CheckCircle, 
-  Star, 
-  Globe, 
-  Award,
-  Users,
-  Clock,
-  TrendingUp,
-  Search,
-  Edit3,
-  Send,
-  ArrowLeft,
-  GraduationCap,
-  Target,
-  Zap,
-  Shield,
-  Phone,
-  Mail,
-  User,
-  Building,
-  Calendar
-} from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { PublicationServiceForm } from '@/components/publication/PublicationServiceForm';
+import { useNavigate } from 'react-router-dom';
 
 const JournalPublication = () => {
-  const { toast } = useToast();
-  const [formData, setFormData] = useState({
-    fullName: '',
-    email: '',
-    phone: '',
-    institution: '',
-    researchField: '',
-    journalType: '',
-    manuscriptTitle: '',
-    currentStatus: '',
-    deadline: '',
-    additionalNotes: ''
-  });
-  const [isSubmitting, setIsSubmitting] = useState(false);
-
-  const handleInputChange = (field: string, value: string) => {
-    setFormData(prev => ({ ...prev, [field]: value }));
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsSubmitting(true);
-
-    try {
-      const response = await fetch("https://ibfcgweykqkzdodrfmci.supabase.co/functions/v1/journal-publication-form", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formData),
-      });
-
-      const result = await response.json();
-
-      if (response.ok) {
-        toast({
-          title: "تم إرسال الطلب بنجاح ✅",
-          description: result.message || "سنتواصل معك قريباً لمناقشة التفاصيل",
-        });
-        setFormData({
-          fullName: '',
-          email: '',
-          phone: '',
-          institution: '',
-          researchField: '',
-          journalType: '',
-          manuscriptTitle: '',
-          currentStatus: '',
-          deadline: '',
-          additionalNotes: ''
-        });
-      } else {
-        throw new Error(result.error || "حدث خطأ في إرسال الطلب");
-      }
-    } catch (error: any) {
-      console.error("Error submitting form:", error);
-      toast({
-        title: "خطأ في إرسال الطلب",
-        description: error.message || "يرجى المحاولة مرة أخرى لاحقاً",
-        variant: "destructive",
-      });
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
+  const navigate = useNavigate();
 
   const features = [
-    {
-      icon: Target,
-      title: "دقة الاستهداف",
-      description: "نحدد أفضل المجلات المناسبة لبحثك بناءً على التخصص ومعامل التأثير"
+    { 
+      icon: <BookOpen className="w-6 h-6" />, 
+      title: "نشر في أفضل المجلات", 
+      description: "نساعدك في النشر بمجلات مصنفة ومعتمدة عالمياً",
+      color: "from-blue-500 to-indigo-500"
     },
-    {
-      icon: Zap,
-      title: "سرعة النشر",
-      description: "نضمن أسرع مسار للنشر مع الحفاظ على أعلى معايير الجودة العلمية"
+    { 
+      icon: <Award className="w-6 h-6" />, 
+      title: "معامل تأثير عالي", 
+      description: "نستهدف المجلات ذات معامل التأثير المرتفع",
+      color: "from-purple-500 to-pink-500"
     },
-    {
-      icon: Shield,
-      title: "ضمان الجودة",
-      description: "مراجعة شاملة ومتابعة دقيقة لضمان نجاح عملية النشر"
+    { 
+      icon: <TrendingUp className="w-6 h-6" />, 
+      title: "زيادة الاستشهادات", 
+      description: "استراتيجيات لزيادة الاستشهادات ببحثك",
+      color: "from-green-500 to-emerald-500"
     },
-    {
-      icon: GraduationCap,
-      title: "خبرة أكاديمية",
-      description: "فريق من الخبراء الأكاديميين المتخصصين في جميع المجالات العلمية"
-    }
-  ];
-
-  const journalTypes = [
-    {
-      type: "Scopus",
-      description: "مجلات مفهرسة عالمياً",
-      impact: "عالي",
-      color: "from-blue-500 to-cyan-500"
-    },
-    {
-      type: "Web of Science",
-      description: "مجلات الفئة الأولى",
-      impact: "عالي جداً",
-      color: "from-emerald-500 to-teal-500"
-    },
-    {
-      type: "ISI Impact Factor",
-      description: "مجلات معامل التأثير",
-      impact: "ممتاز",
-      color: "from-purple-500 to-indigo-500"
-    },
-    {
-      type: "عربية محكمة",
-      description: "مجلات عربية معتمدة",
-      impact: "جيد",
+    { 
+      icon: <Shield className="w-6 h-6" />, 
+      title: "ضمان القبول", 
+      description: "نضمن قبول البحث أو إعادة المبلغ بالكامل",
       color: "from-orange-500 to-red-500"
     }
   ];
 
+  const services = [
+    {
+      title: "اختيار المجلة المناسبة",
+      description: "نساعدك في اختيار أفضل مجلة تناسب بحثك",
+      icon: <BookOpen className="w-5 h-5" />
+    },
+    {
+      title: "مراجعة البحث",
+      description: "مراجعة شاملة للبحث قبل التقديم",
+      icon: <CheckCircle className="w-5 h-5" />
+    },
+    {
+      title: "تحسين جودة البحث",
+      description: "تحسين المحتوى والمنهجية والنتائج",
+      icon: <TrendingUp className="w-5 h-5" />
+    },
+    {
+      title: "التواصل مع المجلة",
+      description: "متابعة عملية المراجعة والنشر",
+      icon: <Award className="w-5 h-5" />
+    }
+  ];
+
+  const processSteps = [
+    { 
+      number: "01", 
+      title: "تقييم البحث", 
+      description: "مراجعة شاملة للبحث وتحديد المجلات المناسبة",
+      color: "from-blue-500 to-indigo-500"
+    },
+    { 
+      number: "02", 
+      title: "التحسين والتطوير", 
+      description: "تحسين جودة البحث والمنهجية",
+      color: "from-purple-500 to-pink-500"
+    },
+    { 
+      number: "03", 
+      title: "التقديم والمتابعة", 
+      description: "تقديم البحث ومتابعة المراجعين",
+      color: "from-green-500 to-emerald-500"
+    },
+    { 
+      number: "04", 
+      title: "النشر النهائي", 
+      description: "نشر البحث في المجلة المستهدفة",
+      color: "from-orange-500 to-red-500"
+    }
+  ];
+
+  const faqs = [
+    {
+      question: "ما هي مدة عملية النشر؟",
+      answer: "تختلف المدة حسب المجلة والمجال، لكن عادة تتراوح بين 3-12 شهراً من التقديم حتى النشر النهائي."
+    },
+    {
+      question: "هل تضمنون القبول في المجلات؟",
+      answer: "نعم، نضمن قبول البحث في مجلة علمية محكمة معتمدة، وإلا نعيد المبلغ بالكامل."
+    },
+    {
+      question: "ما هي المجلات التي تتعاملون معها؟",
+      answer: "نتعامل مع مجلات Scopus و ISI و PubMed وغيرها من قواعد البيانات العالمية المعتمدة."
+    },
+    {
+      question: "هل تقدمون خدمة الترجمة؟",
+      answer: "نعم، نقدم خدمات ترجمة أكاديمية متخصصة للأبحاث العلمية."
+    }
+  ];
+
   const stats = [
-    { number: "500+", label: "بحث منشور", icon: FileText },
-    { number: "98%", label: "معدل النجاح", icon: TrendingUp },
-    { number: "50+", label: "مجلة متعاونة", icon: BookOpen },
-    { number: "15", label: "يوم متوسط النشر", icon: Clock }
+    { number: "500+", label: "بحث منشور", color: "from-blue-500 to-indigo-500" },
+    { number: "95%", label: "نسبة القبول", color: "from-purple-500 to-pink-500" },
+    { number: "50+", label: "مجلة معتمدة", color: "from-green-500 to-emerald-500" },
+    { number: "15+", label: "سنة خبرة", color: "from-orange-500 to-red-500" }
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background via-accent/5 to-primary/5" dir="rtl">
+    <div className="min-h-screen bg-background" dir="rtl">
       <Header />
-      
+
       {/* Hero Section */}
-      <motion.section 
-        className="relative py-20 lg:py-32 overflow-hidden"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.8 }}
-      >
-        <div className="absolute inset-0 bg-gradient-to-r from-primary/10 via-secondary/10 to-accent/10" />
-        <div className="container mx-auto px-4 relative z-10">
-          <div className="max-w-6xl mx-auto text-center">
+      <section className="relative py-24 sm:py-32 overflow-hidden">
+        <div className="absolute inset-0">
+          <div className="absolute inset-0 bg-gradient-to-br from-blue-500/10 via-indigo-500/5 to-background" />
+          <motion.div
+            className="absolute top-20 right-20 w-72 h-72 bg-blue-500/20 rounded-full blur-3xl"
+            animate={{
+              scale: [1, 1.2, 1],
+              opacity: [0.3, 0.5, 0.3],
+            }}
+            transition={{ duration: 8, repeat: Infinity }}
+          />
+          <motion.div
+            className="absolute bottom-20 left-20 w-96 h-96 bg-indigo-500/20 rounded-full blur-3xl"
+            animate={{
+              scale: [1.2, 1, 1.2],
+              opacity: [0.2, 0.4, 0.2],
+            }}
+            transition={{ duration: 10, repeat: Infinity }}
+          />
+        </div>
+
+        <div className="container relative z-10 mx-auto px-4">
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="max-w-4xl mx-auto text-center"
+          >
             <motion.div
-              initial={{ y: 30, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              transition={{ delay: 0.2, duration: 0.6 }}
-              className="flex justify-center mb-8"
+              initial={{ scale: 0.8, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              transition={{ delay: 0.2 }}
+              className="inline-flex items-center gap-2 bg-gradient-to-r from-blue-500/20 to-indigo-500/20 backdrop-blur-sm px-6 py-3 rounded-full mb-8 border border-blue-500/20"
             >
-              <div className="p-6 bg-gradient-to-r from-primary to-secondary rounded-3xl shadow-2xl">
-                <GraduationCap className="h-16 w-16 text-primary-foreground" />
-              </div>
+              <BookOpen className="w-5 h-5 text-blue-600" />
+              <span className="text-blue-600 font-semibold">النشر في المجلات العلمية</span>
             </motion.div>
             
             <motion.h1
-              initial={{ y: 30, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              transition={{ delay: 0.3, duration: 0.6 }}
-              className="text-5xl lg:text-7xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent mb-6 leading-tight"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.3 }}
+              className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold mb-6 bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 bg-clip-text text-transparent leading-tight"
             >
-              النشر في المجلات المعتمدة
+              نشر أبحاثك في المجلات العالمية المحكمة
             </motion.h1>
             
             <motion.p
-              initial={{ y: 30, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              transition={{ delay: 0.4, duration: 0.6 }}
-              className="text-xl text-muted-foreground mb-8 leading-relaxed max-w-4xl mx-auto"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.4 }}
+              className="text-lg sm:text-xl text-muted-foreground max-w-2xl mx-auto mb-10"
             >
-              شريكك الأكاديمي المتخصص في نشر البحوث العلمية في أرقى المجلات العالمية المحكمة مع ضمان أعلى معايير الجودة والمتابعة المهنية
+              نساعدك في نشر أبحاثك العلمية في مجلات محكمة معتمدة عالمياً مع ضمان القبول والجودة
             </motion.p>
-            
+
             <motion.div
-              initial={{ y: 30, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              transition={{ delay: 0.5, duration: 0.6 }}
-              className="flex flex-col sm:flex-row gap-4 justify-center"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.5 }}
+              className="flex flex-wrap gap-4 justify-center"
             >
-              <Button size="lg" className="bg-gradient-to-r from-primary to-secondary hover:shadow-lg transition-all duration-300 font-semibold px-10 py-6 rounded-2xl text-lg" asChild>
-                <Link to="#request-form" className="flex items-center gap-3">
-                  <span>احصل على استشارة مجانية</span>
-                  <ArrowLeft className="h-5 w-5" />
-                </Link>
+              <Button
+                size="lg"
+                onClick={() => document.getElementById('form-section')?.scrollIntoView({ behavior: 'smooth' })}
+                className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-lg px-8 py-6 rounded-full shadow-lg hover:shadow-xl transition-all"
+              >
+                <Sparkles className="w-5 h-5 ml-2" />
+                ابدأ النشر الآن
+              </Button>
+              <Button
+                size="lg"
+                variant="outline"
+                onClick={() => navigate('/research-services')}
+                className="text-lg px-8 py-6 rounded-full"
+              >
+                <ArrowLeft className="w-5 h-5 ml-2" />
+                الخدمات البحثية
               </Button>
             </motion.div>
-          </div>
+          </motion.div>
         </div>
-      </motion.section>
+      </section>
 
       {/* Stats Section */}
-      <section className="py-16 bg-card/50 backdrop-blur-sm">
+      <section className="py-16 bg-muted/30">
         <div className="container mx-auto px-4">
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-8">
-            {stats.map((stat, index) => {
-              const IconComponent = stat.icon;
-              return (
-                <motion.div
-                  key={stat.label}
-                  initial={{ y: 20, opacity: 0 }}
-                  whileInView={{ y: 0, opacity: 1 }}
-                  transition={{ delay: index * 0.1, duration: 0.6 }}
-                  viewport={{ once: true }}
-                  className="text-center p-6 rounded-2xl bg-card border shadow-sm hover:shadow-md transition-shadow"
-                >
-                  <div className="mb-4 p-3 bg-gradient-to-r from-primary to-secondary rounded-xl w-fit mx-auto">
-                    <IconComponent className="h-6 w-6 text-primary-foreground" />
-                  </div>
-                  <h3 className="text-3xl font-bold text-foreground mb-2">{stat.number}</h3>
-                  <p className="text-muted-foreground font-medium">{stat.label}</p>
-                </motion.div>
-              );
-            })}
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-6">
+            {stats.map((stat, index) => (
+              <motion.div
+                key={index}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: index * 0.1 }}
+              >
+                <Card className="text-center border-2 hover:border-primary/50 transition-all">
+                  <CardContent className="p-6">
+                    <div className={`text-4xl font-bold bg-gradient-to-r ${stat.color} bg-clip-text text-transparent mb-2`}>
+                      {stat.number}
+                    </div>
+                    <div className="text-muted-foreground">{stat.label}</div>
+                  </CardContent>
+                </Card>
+              </motion.div>
+            ))}
           </div>
         </div>
       </section>
@@ -251,90 +231,65 @@ const JournalPublication = () => {
       <section className="py-20">
         <div className="container mx-auto px-4">
           <motion.div
-            initial={{ y: 30, opacity: 0 }}
-            whileInView={{ y: 0, opacity: 1 }}
-            transition={{ duration: 0.6 }}
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             className="text-center mb-16"
           >
-            <h2 className="text-4xl lg:text-5xl font-bold text-foreground mb-6">
-              لماذا نحن الخيار الأمثل؟
+            <h2 className="text-3xl sm:text-4xl font-bold mb-4 bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
+              لماذا تختار خدماتنا؟
             </h2>
-            <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-              نجمع بين الخبرة الأكاديمية العميقة والتقنيات الحديثة لضمان نشر بحثك في أفضل المجلات العلمية
+            <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
+              نقدم حلولاً متكاملة لنشر أبحاثك في أرقى المجلات العالمية
             </p>
           </motion.div>
-          
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
-            {features.map((feature, index) => {
-              const IconComponent = feature.icon;
-              return (
-                <motion.div
-                  key={feature.title}
-                  initial={{ y: 30, opacity: 0 }}
-                  whileInView={{ y: 0, opacity: 1 }}
-                  transition={{ delay: index * 0.1, duration: 0.6 }}
-                  viewport={{ once: true }}
-                  className="group text-center"
-                >
-                  <Card className="h-full p-8 hover:shadow-xl transition-all duration-300 bg-card/80 backdrop-blur-sm border-0 shadow-lg group-hover:scale-105">
-                    <div className="mb-6 p-4 bg-gradient-to-r from-primary to-secondary rounded-2xl w-fit mx-auto group-hover:scale-110 transition-transform">
-                      <IconComponent className="h-8 w-8 text-primary-foreground" />
-                    </div>
-                    <h3 className="text-xl font-bold text-foreground mb-4">
-                      {feature.title}
-                    </h3>
-                    <p className="text-muted-foreground leading-relaxed">
-                      {feature.description}
-                    </p>
-                  </Card>
-                </motion.div>
-              );
-            })}
-          </div>
-        </div>
-      </section>
 
-      {/* Journal Types Section */}
-      <section className="py-20 bg-muted/20">
-        <div className="container mx-auto px-4">
-          <motion.div
-            initial={{ y: 30, opacity: 0 }}
-            whileInView={{ y: 0, opacity: 1 }}
-            transition={{ duration: 0.6 }}
-            viewport={{ once: true }}
-            className="text-center mb-16"
-          >
-            <h2 className="text-4xl lg:text-5xl font-bold text-foreground mb-6">
-              أنواع المجلات المعتمدة
-            </h2>
-            <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-              نتعامل مع جميع أنواع المجلات العلمية المحكمة والمعتمدة عالمياً
-            </p>
-          </motion.div>
-          
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {journalTypes.map((journal, index) => (
+          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-16">
+            {features.map((feature, index) => (
               <motion.div
-                key={journal.type}
-                initial={{ y: 30, opacity: 0 }}
-                whileInView={{ y: 0, opacity: 1 }}
-                transition={{ delay: index * 0.1, duration: 0.6 }}
+                key={index}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                className="group"
+                transition={{ delay: index * 0.1 }}
+                whileHover={{ y: -8, transition: { duration: 0.2 } }}
               >
-                <Card className={`h-full p-6 hover:shadow-xl transition-all duration-300 bg-gradient-to-br ${journal.color} text-white border-0 shadow-lg group-hover:scale-105`}>
-                  <div className="flex items-center justify-between mb-4">
-                    <h3 className="text-xl font-bold">
-                      {journal.type}
-                    </h3>
-                    <Badge variant="secondary" className="bg-white/20 text-white border-white/30">
-                      {journal.impact}
-                    </Badge>
-                  </div>
-                  <p className="text-white/90 leading-relaxed">
-                    {journal.description}
-                  </p>
+                <Card className="h-full border-2 hover:border-primary/50 transition-all duration-300 group overflow-hidden relative">
+                  <div className={`absolute inset-0 bg-gradient-to-br ${feature.color} opacity-0 group-hover:opacity-5 transition-opacity duration-300`} />
+                  <CardContent className="p-8 relative">
+                    <motion.div
+                      className={`w-16 h-16 bg-gradient-to-br ${feature.color} rounded-2xl flex items-center justify-center text-white mb-6 shadow-lg`}
+                      whileHover={{ rotate: 360, scale: 1.1 }}
+                      transition={{ duration: 0.6 }}
+                    >
+                      {feature.icon}
+                    </motion.div>
+                    <h3 className="font-bold text-xl mb-3">{feature.title}</h3>
+                    <p className="text-muted-foreground leading-relaxed">{feature.description}</p>
+                  </CardContent>
+                </Card>
+              </motion.div>
+            ))}
+          </div>
+
+          {/* Services Grid */}
+          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {services.map((service, index) => (
+              <motion.div
+                key={index}
+                initial={{ opacity: 0, scale: 0.9 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                viewport={{ once: true }}
+                transition={{ delay: index * 0.1 }}
+              >
+                <Card className="h-full hover:shadow-lg transition-all">
+                  <CardContent className="p-6">
+                    <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-indigo-500 rounded-lg flex items-center justify-center text-white mb-4">
+                      {service.icon}
+                    </div>
+                    <h3 className="font-bold text-lg mb-2">{service.title}</h3>
+                    <p className="text-sm text-muted-foreground">{service.description}</p>
+                  </CardContent>
                 </Card>
               </motion.div>
             ))}
@@ -342,242 +297,124 @@ const JournalPublication = () => {
         </div>
       </section>
 
-      {/* Request Form Section */}
-      <section id="request-form" className="py-20 bg-card">
+      {/* Process Steps */}
+      <section className="py-20 bg-muted/30">
         <div className="container mx-auto px-4">
-          <div className="max-w-4xl mx-auto">
-            <motion.div
-              initial={{ y: 30, opacity: 0 }}
-              whileInView={{ y: 0, opacity: 1 }}
-              transition={{ duration: 0.6 }}
-              viewport={{ once: true }}
-              className="text-center mb-12"
-            >
-              <h2 className="text-4xl lg:text-5xl font-bold text-foreground mb-6">
-                ابدأ رحلة النشر العلمي
-              </h2>
-              <p className="text-xl text-muted-foreground">
-                املأ النموذج أدناه وسنتواصل معك خلال 24 ساعة لمناقشة احتياجاتك البحثية
-              </p>
-            </motion.div>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="text-center mb-16"
+          >
+            <h2 className="text-3xl sm:text-4xl font-bold mb-4 bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
+              كيف نعمل معك؟
+            </h2>
+            <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
+              عملية منظمة لضمان نشر بحثك بنجاح
+            </p>
+          </motion.div>
 
-            <motion.div
-              initial={{ y: 30, opacity: 0 }}
-              whileInView={{ y: 0, opacity: 1 }}
-              transition={{ delay: 0.2, duration: 0.6 }}
-              viewport={{ once: true }}
-            >
-              <Card className="p-8 shadow-2xl border-0 bg-card/90 backdrop-blur-sm">
-                <form onSubmit={handleSubmit} className="space-y-6">
-                  <div className="grid md:grid-cols-2 gap-6">
-                    <div className="space-y-2">
-                      <Label htmlFor="fullName" className="flex items-center gap-2 text-foreground font-semibold">
-                        <User className="h-4 w-4" />
-                        الاسم الكامل *
-                      </Label>
-                      <Input
-                        id="fullName"
-                        value={formData.fullName}
-                        onChange={(e) => handleInputChange('fullName', e.target.value)}
-                        placeholder="أدخل اسمك الكامل"
-                        required
-                        className="bg-background/50 border-2 focus:border-primary"
-                      />
-                    </div>
-                    
-                    <div className="space-y-2">
-                      <Label htmlFor="email" className="flex items-center gap-2 text-foreground font-semibold">
-                        <Mail className="h-4 w-4" />
-                        البريد الإلكتروني *
-                      </Label>
-                      <Input
-                        id="email"
-                        type="email"
-                        value={formData.email}
-                        onChange={(e) => handleInputChange('email', e.target.value)}
-                        placeholder="example@email.com"
-                        required
-                        className="bg-background/50 border-2 focus:border-primary"
-                      />
-                    </div>
-                  </div>
-
-                  <div className="grid md:grid-cols-2 gap-6">
-                    <div className="space-y-2">
-                      <Label htmlFor="phone" className="flex items-center gap-2 text-foreground font-semibold">
-                        <Phone className="h-4 w-4" />
-                        رقم الهاتف *
-                      </Label>
-                      <Input
-                        id="phone"
-                        value={formData.phone}
-                        onChange={(e) => handleInputChange('phone', e.target.value)}
-                        placeholder="أدخل رقم هاتفك"
-                        required
-                        className="bg-background/50 border-2 focus:border-primary"
-                      />
-                    </div>
-                    
-                    <div className="space-y-2">
-                      <Label htmlFor="institution" className="flex items-center gap-2 text-foreground font-semibold">
-                        <Building className="h-4 w-4" />
-                        المؤسسة الأكاديمية *
-                      </Label>
-                      <Input
-                        id="institution"
-                        value={formData.institution}
-                        onChange={(e) => handleInputChange('institution', e.target.value)}
-                        placeholder="اسم الجامعة أو المؤسسة"
-                        required
-                        className="bg-background/50 border-2 focus:border-primary"
-                      />
-                    </div>
-                  </div>
-
-                  <div className="grid md:grid-cols-2 gap-6">
-                    <div className="space-y-2">
-                      <Label htmlFor="researchField" className="flex items-center gap-2 text-foreground font-semibold">
-                        <BookOpen className="h-4 w-4" />
-                        مجال البحث *
-                      </Label>
-                      <Select value={formData.researchField} onValueChange={(value) => handleInputChange('researchField', value)}>
-                        <SelectTrigger className="bg-background/50 border-2 focus:border-primary">
-                          <SelectValue placeholder="اختر مجال البحث" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="الطب">الطب</SelectItem>
-                          <SelectItem value="الهندسة">الهندسة</SelectItem>
-                          <SelectItem value="العلوم الطبيعية">العلوم الطبيعية</SelectItem>
-                          <SelectItem value="العلوم الاجتماعية">العلوم الاجتماعية</SelectItem>
-                          <SelectItem value="العلوم الإنسانية">العلوم الإنسانية</SelectItem>
-                          <SelectItem value="إدارة الأعمال">إدارة الأعمال</SelectItem>
-                          <SelectItem value="التربية والتعليم">التربية والتعليم</SelectItem>
-                          <SelectItem value="أخرى">أخرى</SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </div>
-                    
-                    <div className="space-y-2">
-                      <Label htmlFor="journalType" className="flex items-center gap-2 text-foreground font-semibold">
-                        <FileText className="h-4 w-4" />
-                        نوع المجلة المطلوبة *
-                      </Label>
-                      <Select value={formData.journalType} onValueChange={(value) => handleInputChange('journalType', value)}>
-                        <SelectTrigger className="bg-background/50 border-2 focus:border-primary">
-                          <SelectValue placeholder="اختر نوع المجلة" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="Scopus">مجلة Scopus</SelectItem>
-                          <SelectItem value="Web of Science">مجلة Web of Science</SelectItem>
-                          <SelectItem value="ISI Impact Factor">مجلة ISI</SelectItem>
-                          <SelectItem value="عربية محكمة">مجلة عربية محكمة</SelectItem>
-                          <SelectItem value="استشارة فقط">استشارة فقط</SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </div>
-                  </div>
-
-                  <div className="space-y-2">
-                    <Label htmlFor="manuscriptTitle" className="flex items-center gap-2 text-foreground font-semibold">
-                      <FileText className="h-4 w-4" />
-                      عنوان المخطوطة *
-                    </Label>
-                    <Input
-                      id="manuscriptTitle"
-                      value={formData.manuscriptTitle}
-                      onChange={(e) => handleInputChange('manuscriptTitle', e.target.value)}
-                      placeholder="أدخل عنوان البحث أو المخطوطة"
-                      required
-                      className="bg-background/50 border-2 focus:border-primary"
-                    />
-                  </div>
-
-                  <div className="grid md:grid-cols-2 gap-6">
-                    <div className="space-y-2">
-                      <Label htmlFor="currentStatus" className="flex items-center gap-2 text-foreground font-semibold">
-                        <CheckCircle className="h-4 w-4" />
-                        الحالة الحالية للبحث *
-                      </Label>
-                      <Select value={formData.currentStatus} onValueChange={(value) => handleInputChange('currentStatus', value)}>
-                        <SelectTrigger className="bg-background/50 border-2 focus:border-primary">
-                          <SelectValue placeholder="اختر الحالة الحالية" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="مسودة أولى">مسودة أولى</SelectItem>
-                          <SelectItem value="جاهز للمراجعة">جاهز للمراجعة</SelectItem>
-                          <SelectItem value="تم رفضه من مجلة سابقة">تم رفضه من مجلة سابقة</SelectItem>
-                          <SelectItem value="مكتمل ومراجع">مكتمل ومراجع</SelectItem>
-                          <SelectItem value="فكرة البحث فقط">فكرة البحث فقط</SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </div>
-
-                    <div className="space-y-2">
-                      <Label htmlFor="deadline" className="flex items-center gap-2 text-foreground font-semibold">
-                        <Calendar className="h-4 w-4" />
-                        الموعد النهائي المطلوب
-                      </Label>
-                      <Input
-                        id="deadline"
-                        type="date"
-                        value={formData.deadline}
-                        onChange={(e) => handleInputChange('deadline', e.target.value)}
-                        className="bg-background/50 border-2 focus:border-primary"
-                      />
-                    </div>
-                  </div>
-
-                  <div className="space-y-2">
-                    <Label htmlFor="additionalNotes" className="flex items-center gap-2 text-foreground font-semibold">
-                      <Edit3 className="h-4 w-4" />
-                      ملاحظات إضافية أو تفاصيل خاصة
-                    </Label>
-                    <Textarea
-                      id="additionalNotes"
-                      value={formData.additionalNotes}
-                      onChange={(e) => handleInputChange('additionalNotes', e.target.value)}
-                      placeholder="اكتب أي تفاصيل إضافية عن بحثك أو متطلبات خاصة..."
-                      rows={4}
-                      className="bg-background/50 border-2 focus:border-primary resize-none"
-                    />
-                  </div>
-
-                  <motion.div
-                    initial={{ y: 20, opacity: 0 }}
-                    whileInView={{ y: 0, opacity: 1 }}
-                    transition={{ delay: 0.3, duration: 0.6 }}
-                    viewport={{ once: true }}
-                    className="flex justify-center"
-                  >
-                    <Button 
-                      type="submit" 
-                      size="lg" 
-                      disabled={isSubmitting}
-                      className="bg-gradient-to-r from-primary to-secondary hover:shadow-lg transition-all duration-300 font-semibold px-12 py-6 rounded-2xl text-lg disabled:opacity-50"
+          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {processSteps.map((step, index) => (
+              <motion.div
+                key={index}
+                initial={{ opacity: 0, x: -20 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: index * 0.1 }}
+                className="relative"
+              >
+                <Card className="h-full border-2 hover:border-primary/50 transition-all duration-300 group">
+                  <CardContent className="p-8 relative">
+                    <motion.div
+                      className={`text-6xl font-bold bg-gradient-to-br ${step.color} bg-clip-text text-transparent mb-4 opacity-20 group-hover:opacity-40 transition-opacity`}
+                      whileHover={{ scale: 1.2 }}
+                      transition={{ duration: 0.3 }}
                     >
-                      <div className="flex items-center gap-3">
-                        {isSubmitting ? (
-                          <>
-                            <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
-                            <span>جاري الإرسال...</span>
-                          </>
-                        ) : (
-                          <>
-                            <Send className="h-5 w-5" />
-                            <span>إرسال الطلب</span>
-                          </>
-                        )}
-                      </div>
-                    </Button>
-                  </motion.div>
-                </form>
-              </Card>
-            </motion.div>
+                      {step.number}
+                    </motion.div>
+                    <h3 className="font-bold text-xl mb-3">{step.title}</h3>
+                    <p className="text-muted-foreground leading-relaxed">{step.description}</p>
+                  </CardContent>
+                </Card>
+                {index < processSteps.length - 1 && (
+                  <motion.div
+                    className={`hidden lg:block absolute top-1/2 left-full w-6 h-0.5 bg-gradient-to-l ${step.color}`}
+                    initial={{ scaleX: 0 }}
+                    whileInView={{ scaleX: 1 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: index * 0.1 + 0.3 }}
+                  />
+                )}
+              </motion.div>
+            ))}
           </div>
         </div>
       </section>
 
-      
+      {/* FAQ Section */}
+      <section className="py-20">
+        <div className="container mx-auto px-4 max-w-3xl">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="text-center mb-12"
+          >
+            <h2 className="text-3xl sm:text-4xl font-bold mb-4 bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
+              الأسئلة الشائعة
+            </h2>
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+          >
+            <Accordion type="single" collapsible className="w-full space-y-4">
+              {faqs.map((faq, index) => (
+                <motion.div
+                  key={index}
+                  initial={{ opacity: 0, x: -20 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: index * 0.1 }}
+                >
+                  <AccordionItem value={`item-${index}`} className="border-2 rounded-lg px-6 hover:border-primary/50 transition-colors">
+                    <AccordionTrigger className="text-right hover:no-underline py-6 text-lg font-semibold">
+                      {faq.question}
+                    </AccordionTrigger>
+                    <AccordionContent className="text-muted-foreground text-base leading-relaxed pb-6">
+                      {faq.answer}
+                    </AccordionContent>
+                  </AccordionItem>
+                </motion.div>
+              ))}
+            </Accordion>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* Form Section */}
+      <section id="form-section" className="py-20 bg-muted/30">
+        <div className="container mx-auto px-4">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="text-center mb-12"
+          >
+            <h2 className="text-3xl sm:text-4xl font-bold mb-4 bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
+              اطلب خدمة النشر في المجلات العلمية
+            </h2>
+            <p className="text-muted-foreground text-lg">املأ النموذج وسنتواصل معك خلال 24 ساعة</p>
+          </motion.div>
+          <PublicationServiceForm
+            serviceTitle="النشر في المجلات العلمية"
+            serviceType="journal-publication"
+          />
+        </div>
+      </section>
     </div>
   );
 };
