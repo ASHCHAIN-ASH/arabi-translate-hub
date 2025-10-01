@@ -226,7 +226,7 @@ const handler = async (req: Request): Promise<Response> => {
 
     // إرسال إيميل للإدارة (فقط للإيميل الموثق)
     const adminEmail = await resend.emails.send({
-      from: "Master Edu Path <info@masteredupath.com>",
+      from: "MasterEduPath <noreply@masteredupath.com>",
       to: ["info@masteredupath.com"],
       replyTo: orderData.email,
       subject: `🎓 طلب جديد: ${orderData.categoryTitle} - ${orderData.fullName}`,
@@ -259,32 +259,9 @@ const handler = async (req: Request): Promise<Response> => {
       console.error('Error sending client notification:', clientNotifError);
     }
 
-    // إرسال إشعار للإدارة (الإيميل الرسمي فقط)
-    const { error: adminNotifError } = await supabaseClient
-      .from('user_notifications')
-      .insert({
-        user_email: 'info@masteredupath.com',
-        title: '🎓 طلب بحثي جديد',
-        message: `طلب جديد من ${orderData.fullName} - ${orderData.categoryTitle}`,
-        type: 'info',
-        category: 'admin',
-        metadata: { 
-          orderId, 
-          customerEmail: orderData.email, 
-          customerPhone: orderData.phone,
-          category: orderData.category,
-          specialization: orderData.specialization,
-          researchType: orderData.researchType,
-          deadline: orderData.deadline,
-          isAdmin: true 
-        }
-      });
-    
-    if (adminNotifError) {
-      console.error('Error sending admin notification:', adminNotifError);
-    } else {
-      console.log('Admin notification sent successfully to info@masteredupath.com');
-    }
+    // Admin dashboard notification disabled as requested
+    // (Previously inserted a row into user_notifications for info@masteredupath.com)
+
 
     return new Response(
       JSON.stringify({ 
