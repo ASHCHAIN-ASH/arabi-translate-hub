@@ -1,4 +1,48 @@
-/* خطوط أكاديمية عربية حديثة */
+/* Custom Mega Menu enforced styles */
+#megaServices[dir="rtl"] {
+  position: fixed;
+  top: var(--header-bottom, 72px);
+  right: 16px;
+  z-index: 9999;
+  max-width: 960px;
+  max-height: 70vh;
+  overflow: auto;
+  -webkit-overflow-scrolling: touch;
+  background: #fff;
+  border: 1px solid #eef2f7;
+  border-radius: 16px;
+  box-shadow: 0 24px 48px rgba(2,6,23,.12);
+  direction: rtl;
+  text-align: right;
+  transform-origin: right top;
+  transform: translateY(8px);
+  opacity: 0;
+  pointer-events: none;
+  transition: transform .2s ease, opacity .2s ease;
+}
+#megaServices.open { transform: translateY(0); opacity: 1; pointer-events: auto; }
+
+#megaOverlay { position: fixed; inset: 0; background: rgba(2,6,23,.25); z-index: 9998; opacity: 0; pointer-events: none; transition: opacity .2s; }
+#megaOverlay.open { opacity: 1; pointer-events: auto; }
+
+#megaServices .grid { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 12px; padding: 12px; }
+@media (min-width: 768px){ #megaServices .grid { grid-template-columns: repeat(3,minmax(0,1fr)); } }
+
+.mega-item { display:flex; flex-direction:row-reverse; align-items:center; gap:8px; padding:10px 12px; border-radius:12px; color:#0a225d; }
+.mega-item:hover { background:#f6f8fb; }
+.mega-item .icon { width:22px; height:22px; flex:0 0 22px; color:#0a225d; transition: transform .15s, color .15s; }
+.mega-item:hover .icon { transform: scale(1.06); color:#0087ff; }
+
+@media (max-width: 767px){
+  #megaServices[dir="rtl"] { top: 0; right: 0; height: 100vh; max-height: none; max-width: 80vw; border-radius: 0; transform: translateX(100%); opacity: 1; pointer-events: auto; }
+  #megaServices.open { transform: translateX(0); }
+  #megaServices .grid { grid-template-columns: 1fr; padding: 8px; }
+  .mega-item { padding: 14px 16px; }
+}
+
+.mega-chevron { transform: scaleX(-1); }
+
+/* keep existing code */
 @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Arabic:wght@300;400;500;600;700&display=swap');
 
