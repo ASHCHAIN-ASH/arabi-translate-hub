@@ -17,6 +17,35 @@
     scrollbar-width: none;
   }
   
+  /* Custom Mega Menu RTL Styles */
+  .mega-rtl {
+    direction: rtl;
+    text-align: right;
+    transform-origin: right top;
+  }
+  
+  .mega-overlay.open {
+    opacity: 1;
+    pointer-events: auto;
+  }
+  
+  .mega-item {
+    touch-action: manipulation;
+  }
+  
+  .mega-icon {
+    color: hsl(var(--primary));
+  }
+  
+  @media (prefers-reduced-motion: reduce) {
+    .mega-rtl,
+    .mega-item,
+    .mega-icon {
+      transition: none !important;
+      animation: none !important;
+    }
+  }
+  
   /* تحسين الصور */
   .img-optimized {
     image-rendering: -webkit-optimize-contrast;

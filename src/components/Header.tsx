@@ -16,7 +16,7 @@ import {
   ChevronDown,
   Mail
 } from "lucide-react";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { motion, AnimatePresence } from "framer-motion";
@@ -28,7 +28,21 @@ const Header = () => {
   const [isMobileServicesOpen, setIsMobileServicesOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const [headerHeight, setHeaderHeight] = useState(0);
+  const [isMobile, setIsMobile] = useState(false);
   const location = useLocation();
+  const menuRef = useRef<HTMLDivElement>(null);
+  const touchStartX = useRef(0);
+  const touchCurrentX = useRef(0);
+
+  // Detect mobile viewport
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
 
   // Track header height for mega menu positioning
   useEffect(() => {
@@ -72,6 +86,78 @@ const Header = () => {
     };
     document.addEventListener('keydown', handleEscape);
     return () => document.removeEventListener('keydown', handleEscape);
+  }, [isServicesOpen]);
+
+  // Handle swipe to close on mobile
+  useEffect(() => {
+    if (!isMobile || !isServicesOpen) return;
+
+    const handleTouchStart = (e: TouchEvent) => {
+      touchStartX.current = e.touches[0].clientX;
+    };
+
+    const handleTouchMove = (e: TouchEvent) => {
+      touchCurrentX.current = e.touches[0].clientX;
+    };
+
+    const handleTouchEnd = () => {
+      const diff = touchCurrentX.current - touchStartX.current;
+      if (diff > 60) { // Swipe right to close (RTL)
+        setIsServicesOpen(false);
+      }
+      touchStartX.current = 0;
+      touchCurrentX.current = 0;
+    };
+
+    const menu = menuRef.current;
+    if (menu) {
+      menu.addEventListener('touchstart', handleTouchStart);
+      menu.addEventListener('touchmove', handleTouchMove);
+      menu.addEventListener('touchend', handleTouchEnd);
+
+      return () => {
+        menu.removeEventListener('touchstart', handleTouchStart);
+        menu.removeEventListener('touchmove', handleTouchMove);
+        menu.removeEventListener('touchend', handleTouchEnd);
+      };
+    }
+  }, [isMobile, isServicesOpen]);
+
+  // Focus trap when menu is open
+  useEffect(() => {
+    if (!isServicesOpen) return;
+
+    const menu = menuRef.current;
+    if (!menu) return;
+
+    const focusableElements = menu.querySelectorAll(
+      'a, button, [tabindex]:not([tabindex="-1"])'
+    );
+    const firstElement = focusableElements[0] as HTMLElement;
+    const lastElement = focusableElements[focusableElements.length - 1] as HTMLElement;
+
+    const handleTab = (e: KeyboardEvent) => {
+      if (e.key !== 'Tab') return;
+
+      if (e.shiftKey) {
+        if (document.activeElement === firstElement) {
+          e.preventDefault();
+          lastElement?.focus();
+        }
+      } else {
+        if (document.activeElement === lastElement) {
+          e.preventDefault();
+          firstElement?.focus();
+        }
+      }
+    };
+
+    document.addEventListener('keydown', handleTab);
+    firstElement?.focus();
+
+    return () => {
+      document.removeEventListener('keydown', handleTab);
+    };
   }, [isServicesOpen]);
 
   const navigation = [
@@ -193,7 +279,7 @@ const Header = () => {
               <div className="relative">
                 <button
                   onClick={() => setIsServicesOpen(!isServicesOpen)}
-                  onMouseEnter={() => setIsServicesOpen(true)}
+                  onMouseEnter={() => !isMobile && setIsServicesOpen(true)}
                   aria-haspopup="true"
                   aria-expanded={isServicesOpen}
                   className="font-medium flex items-center flex-row-reverse gap-2 px-4 py-2 rounded-lg hover:text-primary hover:bg-primary/5 transition-all duration-200 group"
@@ -358,36 +444,58 @@ const Header = () => {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.2 }}
-              className="fixed inset-0 bg-black/25 z-40"
+              className="fixed inset-0 bg-black/25 z-40 mega-overlay"
               onClick={() => setIsServicesOpen(false)}
-              onMouseEnter={() => setIsServicesOpen(false)}
+              onMouseEnter={() => !isMobile && setIsServicesOpen(false)}
             />
             
             {/* Mega Menu */}
             <motion.div
-              initial={{ opacity: 0, y: 8 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: 8 }}
-              transition={{ duration: 0.2 }}
-              style={{ top: `${headerHeight}px` }}
-              className="fixed right-4 z-50 w-[min(960px,calc(100vw-2rem))] max-h-[70vh] bg-white border border-border rounded-2xl shadow-strong overflow-hidden"
+              ref={menuRef}
+              initial={isMobile ? { x: "100%" } : { opacity: 0, y: 8 }}
+              animate={isMobile ? { x: 0 } : { opacity: 1, y: 0 }}
+              exit={isMobile ? { x: "100%" } : { opacity: 0, y: 8 }}
+              transition={{ duration: 0.2, ease: "easeOut" }}
+              style={!isMobile ? { top: `${headerHeight}px` } : undefined}
+              className={`mega-rtl fixed z-50 bg-white border-border shadow-strong ${
+                isMobile 
+                  ? 'top-0 right-0 h-screen w-[80vw] rounded-none border-l overflow-y-auto' 
+                  : 'right-4 max-w-[min(960px,calc(100vw-2rem))] max-h-[70vh] rounded-2xl border overflow-hidden'
+              }`}
               dir="rtl"
-              onMouseLeave={() => setIsServicesOpen(false)}
-              onMouseEnter={() => setIsServicesOpen(true)}
+              onMouseLeave={() => !isMobile && setIsServicesOpen(false)}
+              onMouseEnter={() => !isMobile && setIsServicesOpen(true)}
+              role="dialog"
+              aria-label="قائمة الخدمات"
             >
-              <div className="p-6 overflow-y-auto max-h-[calc(70vh-80px)] bg-white">
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              {/* Close button for mobile */}
+              {isMobile && (
+                <div className="sticky top-0 bg-white border-b p-4 flex items-center justify-between z-10">
+                  <button
+                    onClick={() => setIsServicesOpen(false)}
+                    className="p-2 hover:bg-muted rounded-lg transition-colors"
+                    aria-label="إغلاق القائمة"
+                  >
+                    <X className="h-5 w-5" />
+                  </button>
+                  <h3 className="font-bold text-lg text-primary">خدماتنا</h3>
+                </div>
+              )}
+
+              <div className={`overflow-y-auto ${isMobile ? 'p-4' : 'p-6 max-h-[calc(70vh-80px)]'} bg-white`} style={{ WebkitOverflowScrolling: 'touch' }}>
+                <div className={`grid gap-4 ${isMobile ? 'grid-cols-1' : 'grid-cols-2'}`}>
                   {servicesMenu.map((service) => (
                     <Link
                       key={service.name}
                       to={service.href}
-                      className="flex items-start flex-row-reverse gap-3 p-4 rounded-xl hover:bg-primary/5 transition-all duration-200 group"
+                      className="mega-item flex items-start flex-row-reverse gap-3 p-4 rounded-xl hover:bg-primary/5 transition-all duration-200 group min-h-[44px]"
                       onClick={() => setIsServicesOpen(false)}
+                      tabIndex={0}
                     >
                       <div className="flex-1 text-right">
-                        <div className="font-semibold text-sm mb-1 text-foreground group-hover:text-primary transition-colors duration-200 flex items-center justify-end gap-2">
+                        <div className="font-semibold text-sm mb-1 text-foreground group-hover:text-primary transition-colors duration-200 flex items-center justify-end gap-3">
                           <span>{service.name}</span>
-                          <div className="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center flex-shrink-0 group-hover:bg-primary/15 transition-all duration-200">
+                          <div className="mega-icon w-11 h-11 bg-primary/10 rounded-xl flex items-center justify-center flex-shrink-0 group-hover:bg-primary/15 transition-all duration-200">
                             <service.icon className="h-5 w-5 text-primary transition-transform duration-200 group-hover:scale-110" />
                           </div>
                         </div>
@@ -400,16 +508,19 @@ const Header = () => {
                 </div>
               </div>
               
-              <div className="p-4 border-t bg-muted/30">
-                <Link 
-                  to="/services" 
-                  className="text-sm text-primary hover:text-primary-dark font-medium flex items-center justify-center flex-row-reverse gap-2 transition-colors duration-200 group"
-                  onClick={() => setIsServicesOpen(false)}
-                >
-                  <span>عرض جميع الخدمات</span>
-                  <ChevronDown className="h-4 w-4 -rotate-90 transition-transform duration-200 group-hover:translate-x-1" />
-                </Link>
-              </div>
+              {!isMobile && (
+                <div className="p-4 border-t bg-muted/30">
+                  <Link 
+                    to="/services" 
+                    className="text-sm text-primary hover:text-primary-dark font-medium flex items-center justify-center flex-row-reverse gap-2 transition-colors duration-200 group"
+                    onClick={() => setIsServicesOpen(false)}
+                    tabIndex={0}
+                  >
+                    <span>عرض جميع الخدمات</span>
+                    <ChevronDown className="h-4 w-4 -rotate-90 transition-transform duration-200 group-hover:translate-x-1" />
+                  </Link>
+                </div>
+              )}
             </motion.div>
           </>
         )}
