@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useRef } from "react";
 import { createPortal } from "react-dom";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { X } from "lucide-react";
 
 type Item = {
@@ -29,6 +29,7 @@ const MegaServicesPortal: React.FC<MegaServicesPortalProps> = ({
   const menuRef = useRef<HTMLDivElement | null>(null);
   const overlayRef = useRef<HTMLDivElement | null>(null);
   const container = useMemo(() => document.body, []);
+  const location = useLocation();
 
   // Lock body scroll and set header bottom var
   useEffect(() => {
@@ -107,8 +108,46 @@ const MegaServicesPortal: React.FC<MegaServicesPortalProps> = ({
     };
   }, [isMobile, isOpen, onClose]);
 
-  if (!isOpen) return null;
+  // Close on scroll/resize
+  useEffect(() => {
+    if (!isOpen) return;
+    const onScroll = () => onClose();
+    const onResize = () => onClose();
+    window.addEventListener("scroll", onScroll, { passive: true } as EventListenerOptions);
+    window.addEventListener("resize", onResize);
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", onResize);
+    };
+  }, [isOpen, onClose]);
 
+  // Close on route/hash changes (SPA)
+  useEffect(() => {
+    if (!isOpen) return;
+    const onHash = () => onClose();
+    const onPop = () => onClose();
+    window.addEventListener("hashchange", onHash);
+    window.addEventListener("popstate", onPop);
+    return () => {
+      window.removeEventListener("hashchange", onHash);
+      window.removeEventListener("popstate", onPop);
+    };
+  }, [isOpen, onClose, location]);
+
+  // Close when clicking any actionable inside menu (links/buttons)
+  useEffect(() => {
+    if (!isOpen || !menuRef.current) return;
+    const handler = (e: MouseEvent) => {
+      const target = e.target as HTMLElement | null;
+      const actionable = target?.closest("a, button, [role='menuitem']");
+      if (actionable) onClose();
+    };
+    const node = menuRef.current;
+    node.addEventListener("click", handler);
+    return () => node.removeEventListener("click", handler);
+  }, [isOpen, onClose]);
+
+  if (!isOpen) return null;
   return createPortal(
     <>
       <div
@@ -127,6 +166,10 @@ const MegaServicesPortal: React.FC<MegaServicesPortalProps> = ({
         ref={menuRef}
         className={isOpen ? "open" : ""}
         style={!isMobile ? ({ top: `var(--header-bottom, ${headerHeight}px)` } as React.CSSProperties) : undefined}
+        onClickCapture={(e) => {
+          const target = e.target as HTMLElement | null;
+          if (target?.closest("a, button, [role='menuitem']")) onClose();
+        }}
       >
         {isMobile && (
           <div className="sticky top-0 bg-white border-b p-3 flex items-center justify-between z-10">
