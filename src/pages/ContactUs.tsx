@@ -457,7 +457,7 @@ const ContactUs = () => {
                                     <span className="text-xs sm:text-sm font-semibold text-primary">الرقم الأساسي</span>
                                   </div>
                                   <a 
-                                    href="https://wa.me/9660500776343" 
+                                    href="https://wa.me/966500776343" 
                                     target="_blank" 
                                     rel="noopener noreferrer"
                                     className="text-green-600 hover:text-green-700 transition-colors font-medium flex items-center gap-1 sm:gap-2 text-xs sm:text-sm"

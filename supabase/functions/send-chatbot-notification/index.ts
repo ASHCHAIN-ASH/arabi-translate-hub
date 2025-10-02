@@ -285,10 +285,10 @@ const handler = async (req: Request): Promise<Response> => {
                 <p style="margin: 10px 0; color: #64748b;">يمكنك التواصل مباشرة مع العميل عبر واتساب:</p>
                 
                 <div class="whatsapp-links">
-                  <a href="https://wa.me/9660500776343" class="whatsapp-btn" target="_blank">
+                  <a href="https://wa.me/966500776343" class="whatsapp-btn" target="_blank">
                     📱 الدعم الفني والاستشارات
                   </a>
-                  <a href="https://wa.me/9660500776343" class="whatsapp-btn" target="_blank">
+                  <a href="https://wa.me/966500776343" class="whatsapp-btn" target="_blank">
                     💬 خدمة العملاء
                   </a>
                 </div>

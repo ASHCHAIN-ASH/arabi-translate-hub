@@ -207,7 +207,7 @@ export const AdminEmail = ({
                             <td style={detailValue}>
                               <div style={phoneNumberContainer}>
                                 <span style={saudiFlag}>🇸🇦</span>
-                                <Link href={`https://api.whatsapp.com/send?phone=${phone.replace(/\D/g, '')}&text=مرحباً ${contactPerson}، شكراً على طلب الشراكة`} style={phoneLink}>
+                                <Link href={`https://wa.me/${phone.replace(/\D/g, '')}`} style={phoneLink}>
                                   +{phone.replace(/\D/g, '').substring(0, 3)} {phone.replace(/\D/g, '').substring(3)}
                                 </Link>
                                 <span style={whatsappBadge}>💬 واتساب</span>
@@ -280,7 +280,7 @@ export const AdminEmail = ({
                         </div>
                         
                         <div style={{ marginTop: '15px' }}>
-                          <Link href={`https://api.whatsapp.com/send?phone=${phone.replace(/\D/g, '')}&text=مرحباً ${contactPerson}، شكراً على طلب الشراكة مع Master Edu Path`} style={whatsappButton}>
+                          <Link href={`https://wa.me/${phone.replace(/\D/g, '')}`} style={whatsappButton}>
                             <span style={{ fontSize: '24px', marginLeft: '10px' }}>💬</span>
                             التواصل عبر واتساب
                             <div style={{ fontSize: '14px', marginTop: '5px', opacity: 0.9 }}>
