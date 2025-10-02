@@ -68,9 +68,9 @@ serve(async (req) => {
 
     // Send email to admin
     const adminEmailResult = await resend.emails.send({
-      from: 'Partnership System <system@masteredupath.com>',
-      to: ['admin@masteredupath.com'], // Replace with actual admin email
-      subject: `🔔 طلب شراكة جديد من ${requestData.institutionName}`,
+      from: 'Partnership System <partnerships@masteredupath.com>',
+      to: ['info@masteredupath.com'],
+      subject: `🔔 طلب شراكة مؤسسية عاجل من ${requestData.institutionName}`,
       html: adminHtml,
       replyTo: requestData.email,
     });
