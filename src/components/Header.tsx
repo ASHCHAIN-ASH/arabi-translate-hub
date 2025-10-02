@@ -2,9 +2,12 @@ import { Button } from "@/components/ui/button";
 import { 
   Menu, 
   GraduationCap, 
-  Home,
-  Users,
+  House,
+  Info,
   Phone,
+  Grid,
+  HelpCircle,
+  Send,
   BookOpen,
   CheckCircle2,
   BarChart3,
@@ -18,8 +21,6 @@ import {
   Library,
   X,
   ChevronDown,
-  ArrowLeft,
-  HelpCircle,
   Mail
 } from "lucide-react";
 import { useState, useEffect } from "react";
@@ -44,8 +45,8 @@ const Header = () => {
   }, []);
 
   const navigation = [
-    { name: 'الرئيسية', href: '/', icon: Home },
-    { name: 'من نحن', href: '/about-us', icon: Users },
+    { name: 'الرئيسية', href: '/', icon: House },
+    { name: 'من نحن', href: '/about-us', icon: Info },
     { name: 'الأسئلة الشائعة', href: '/faq', icon: HelpCircle },
     { name: 'تواصل معنا', href: '/contact', icon: Phone },
   ];
@@ -183,14 +184,16 @@ const Header = () => {
                 <Link
                   key={item.name}
                   to={item.href}
-                  className={`relative font-medium flex items-center gap-2 px-4 py-2 rounded-lg transition-all duration-200 group ${
+                  className={`relative font-medium flex items-center flex-row-reverse gap-2 px-4 py-2 rounded-lg transition-all duration-200 group ${
                     isActive(item.href) 
                       ? 'text-primary bg-primary/10' 
                       : 'text-foreground hover:text-primary hover:bg-primary/5'
                   }`}
                 >
                   <span>{item.name}</span>
-                  <item.icon className="h-5 w-5" />
+                  <item.icon className={`h-5 w-5 transition-transform duration-200 ${
+                    isActive(item.href) ? 'scale-110' : 'group-hover:scale-110'
+                  }`} />
                   {isActive(item.href) && (
                     <motion.div
                       layoutId="activeTab"
@@ -211,9 +214,10 @@ const Header = () => {
                 onMouseLeave={() => setIsServicesOpen(false)}
               >
                 <button
-                  className="font-medium flex items-center gap-2 px-4 py-2 rounded-lg hover:text-primary hover:bg-primary/5 transition-all duration-200"
+                  className="font-medium flex items-center flex-row-reverse gap-2 px-4 py-2 rounded-lg hover:text-primary hover:bg-primary/5 transition-all duration-200 group"
                 >
                   <span>خدماتنا</span>
+                  <Grid className="h-5 w-5 transition-transform duration-200 group-hover:scale-110" />
                   <ChevronDown className={`h-4 w-4 transition-transform duration-200 ${isServicesOpen ? 'rotate-180' : ''}`} />
                 </button>
                 
@@ -251,11 +255,11 @@ const Header = () => {
                       <div className="mt-4 pt-4 border-t">
                         <Link 
                           to="/services" 
-                          className="text-sm text-primary hover:text-primary-dark font-medium flex items-center justify-center gap-2 transition-colors duration-200"
+                          className="text-sm text-primary hover:text-primary-dark font-medium flex items-center justify-center flex-row-reverse gap-2 transition-colors duration-200 group"
                           onClick={() => setIsServicesOpen(false)}
                         >
                           <span>عرض جميع الخدمات</span>
-                          <ArrowLeft className="h-4 w-4" />
+                          <ChevronDown className="h-4 w-4 -rotate-90 transition-transform duration-200 group-hover:translate-x-1" />
                         </Link>
                       </div>
                     </motion.div>
@@ -265,15 +269,15 @@ const Header = () => {
             </nav>
 
             <div className="flex items-center gap-3">
-              <Button
+              <Button 
                 size={isScrolled ? "sm" : "default"}
-                className="bg-gradient-to-r from-primary via-primary-dark to-primary text-primary-foreground hover:shadow-primary transition-all duration-300 hover:scale-105"
+                className="bg-gradient-to-r from-primary via-primary-dark to-primary text-primary-foreground hover:shadow-primary transition-all duration-300 hover:scale-105 group"
                 asChild
               >
-                <Link to="/order-now" className="flex items-center gap-2">
+                <Link to="/order-now" className="flex items-center flex-row-reverse gap-2">
                   <span className="hidden sm:inline">اطلب الآن</span>
                   <span className="sm:hidden">طلب</span>
-                  <ArrowLeft className="h-4 w-4" />
+                  <Send className="h-4 w-4 transition-transform duration-200 group-hover:scale-110" />
                 </Link>
               </Button>
 
@@ -312,15 +316,17 @@ const Header = () => {
                           <Link
                             key={item.name}
                             to={item.href}
-                            className={`flex items-center gap-3 p-3 rounded-lg transition-all duration-200 ${
+                            className={`flex items-center flex-row-reverse gap-3 p-3 rounded-lg transition-all duration-200 group ${
                               isActive(item.href)
                                 ? 'text-primary bg-primary/10'
                                 : 'hover:bg-muted'
                             }`}
                             onClick={() => setIsOpen(false)}
                           >
-                            <item.icon className="h-5 w-5" />
                             <span className="font-medium">{item.name}</span>
+                            <item.icon className={`h-5 w-5 transition-transform duration-200 ${
+                              isActive(item.href) ? 'scale-110' : 'group-hover:scale-110'
+                            }`} />
                           </Link>
                         ))}
                       </div>
@@ -328,9 +334,12 @@ const Header = () => {
                       <div className="border-t pt-4">
                         <button
                           onClick={() => setIsMobileServicesOpen(!isMobileServicesOpen)}
-                          className="w-full flex items-center justify-between p-3 rounded-lg hover:bg-muted transition-all duration-200"
+                          className="w-full flex items-center justify-between p-3 rounded-lg hover:bg-muted transition-all duration-200 group"
                         >
-                          <span className="font-semibold">خدماتنا</span>
+                          <div className="flex items-center flex-row-reverse gap-3">
+                            <span className="font-semibold">خدماتنا</span>
+                            <Grid className="h-5 w-5 transition-transform duration-200 group-hover:scale-110" />
+                          </div>
                           <ChevronDown className={`h-5 w-5 transition-transform duration-200 ${isMobileServicesOpen ? 'rotate-180' : ''}`} />
                         </button>
                         
@@ -366,12 +375,12 @@ const Header = () => {
 
                     <div className="p-6 border-t space-y-3">
                       <Button 
-                        className="w-full bg-gradient-to-r from-primary via-primary-dark to-primary" 
+                        className="w-full bg-gradient-to-r from-primary via-primary-dark to-primary group" 
                         asChild
                       >
-                        <Link to="/order-now" onClick={() => setIsOpen(false)}>
+                        <Link to="/order-now" onClick={() => setIsOpen(false)} className="flex items-center flex-row-reverse gap-2">
                           <span>اطلب خدمتك الآن</span>
-                          <ArrowLeft className="h-4 w-4 mr-2" />
+                          <Send className="h-5 w-5 transition-transform duration-200 group-hover:scale-110" />
                         </Link>
                       </Button>
                       
