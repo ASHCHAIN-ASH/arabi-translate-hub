@@ -202,21 +202,27 @@ export const ClientEmail = ({
                           </tr>
                           <tr>
                             <td style={contactItem}>
-                              <span style={contactIconStyle}>💬</span>
+                              <div style={whatsappIconContainer}>
+                                <span style={whatsappIcon}>💬</span>
+                              </div>
                               <div>
-                                <Text style={contactLabel}>واتساب (24/7)</Text>
-                                <Link href="https://wa.me/966500776343" style={contactValue}>
-                                  +966 50 077 6343
+                                <Text style={contactLabel}>واتساب (متوفر 24 ساعة)</Text>
+                                <Link href="https://api.whatsapp.com/send?phone=966500776343&text=مرحباً، أود الاستفسار عن الشراكة المؤسسية" style={contactValue}>
+                                  <span style={countryCode}>🇸🇦 +966</span> 50 077 6343
                                 </Link>
                               </div>
                             </td>
                           </tr>
                           <tr>
                             <td style={contactItem}>
-                              <span style={contactIconStyle}>☎️</span>
+                              <div style={phoneIconContainer}>
+                                <span style={phoneIconStyle}>☎️</span>
+                              </div>
                               <div>
                                 <Text style={contactLabel}>الهاتف</Text>
-                                <Text style={contactValuePlain}>+966 50 077 6343</Text>
+                                <Text style={contactValuePlain}>
+                                  <span style={countryCodePlain}>🇸🇦 +966</span> 50 077 6343
+                                </Text>
                               </div>
                             </td>
                           </tr>
@@ -240,9 +246,10 @@ export const ClientEmail = ({
                   <table style={{ width: '100%', marginTop: '30px' }}>
                     <tr>
                       <td style={{ textAlign: 'center', padding: '10px 20px' }}>
-                        <Link href="https://wa.me/966500776343" style={whatsappButton}>
-                          <span style={{ fontSize: '20px', marginLeft: '10px' }}>💬</span>
+                        <Link href="https://api.whatsapp.com/send?phone=966500776343&text=مرحباً، أود الاستفسار عن الشراكة المؤسسية" style={whatsappButton}>
+                          <span style={{ fontSize: '24px', marginLeft: '10px' }}>💬</span>
                           تواصل معنا عبر واتساب
+                          <span style={{ fontSize: '16px', marginRight: '8px', opacity: 0.9 }}>🇸🇦 +966 50 077 6343</span>
                         </Link>
                       </td>
                     </tr>
@@ -503,6 +510,38 @@ const contactItem = {
   borderBottom: '1px solid rgba(252,129,129,0.15)',
 };
 
+const whatsappIconContainer = {
+  backgroundColor: '#25D366',
+  borderRadius: '50%',
+  width: '50px',
+  height: '50px',
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  marginLeft: '15px',
+  boxShadow: '0 4px 12px rgba(37,211,102,0.3)',
+};
+
+const whatsappIcon = {
+  fontSize: '28px',
+};
+
+const phoneIconContainer = {
+  backgroundColor: '#4299e1',
+  borderRadius: '50%',
+  width: '50px',
+  height: '50px',
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  marginLeft: '15px',
+  boxShadow: '0 4px 12px rgba(66,153,225,0.3)',
+};
+
+const phoneIconStyle = {
+  fontSize: '28px',
+};
+
 const contactIconStyle = {
   fontSize: '32px',
   marginLeft: '15px',
@@ -531,6 +570,30 @@ const contactValuePlain = {
   fontWeight: '700',
   margin: '0',
   textAlign: 'right' as const,
+};
+
+const countryCode = {
+  display: 'inline-block',
+  backgroundColor: '#f0f7ff',
+  color: '#2d5aa0',
+  padding: '4px 10px',
+  borderRadius: '6px',
+  fontSize: '14px',
+  fontWeight: '700',
+  marginLeft: '8px',
+  border: '1px solid #bee3f8',
+};
+
+const countryCodePlain = {
+  display: 'inline-block',
+  backgroundColor: '#f0f7ff',
+  color: '#2d5aa0',
+  padding: '4px 10px',
+  borderRadius: '6px',
+  fontSize: '14px',
+  fontWeight: '700',
+  marginLeft: '8px',
+  border: '1px solid #bee3f8',
 };
 
 const whatsappButton = {

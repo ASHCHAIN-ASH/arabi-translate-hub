@@ -205,9 +205,13 @@ export const AdminEmail = ({
                               رقم الجوال:
                             </td>
                             <td style={detailValue}>
-                              <Link href={`https://wa.me/${phone.replace(/\D/g, '')}`} style={phoneLink}>
-                                {phone}
-                              </Link>
+                              <div style={phoneNumberContainer}>
+                                <span style={saudiFlag}>🇸🇦</span>
+                                <Link href={`https://api.whatsapp.com/send?phone=${phone.replace(/\D/g, '')}&text=مرحباً ${contactPerson}، شكراً على طلب الشراكة`} style={phoneLink}>
+                                  +{phone.replace(/\D/g, '').substring(0, 3)} {phone.replace(/\D/g, '').substring(3)}
+                                </Link>
+                                <span style={whatsappBadge}>💬 واتساب</span>
+                              </div>
                             </td>
                           </tr>
                         </table>
@@ -276,9 +280,12 @@ export const AdminEmail = ({
                         </div>
                         
                         <div style={{ marginTop: '15px' }}>
-                          <Link href={`https://wa.me/${phone.replace(/\D/g, '')}`} style={whatsappButton}>
-                            <span style={{ fontSize: '22px', marginLeft: '10px' }}>💬</span>
+                          <Link href={`https://api.whatsapp.com/send?phone=${phone.replace(/\D/g, '')}&text=مرحباً ${contactPerson}، شكراً على طلب الشراكة مع Master Edu Path`} style={whatsappButton}>
+                            <span style={{ fontSize: '24px', marginLeft: '10px' }}>💬</span>
                             التواصل عبر واتساب
+                            <div style={{ fontSize: '14px', marginTop: '5px', opacity: 0.9 }}>
+                              🇸🇦 +{phone.replace(/\D/g, '').substring(0, 3)} {phone.replace(/\D/g, '').substring(3)}
+                            </div>
                           </Link>
                         </div>
                       </td>
@@ -544,7 +551,30 @@ const phoneLink = {
   color: '#25D366',
   textDecoration: 'none',
   fontWeight: '700',
-  fontSize: '15px',
+  fontSize: '16px',
+  marginLeft: '8px',
+  marginRight: '8px',
+};
+
+const phoneNumberContainer = {
+  display: 'flex',
+  alignItems: 'center',
+  gap: '8px',
+};
+
+const saudiFlag = {
+  fontSize: '24px',
+  marginLeft: '5px',
+};
+
+const whatsappBadge = {
+  backgroundColor: '#25D366',
+  color: '#ffffff',
+  padding: '4px 12px',
+  borderRadius: '12px',
+  fontSize: '12px',
+  fontWeight: '600',
+  marginRight: '8px',
 };
 
 const packageBadgeContainer = {
