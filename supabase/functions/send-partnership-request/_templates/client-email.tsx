@@ -208,7 +208,7 @@ export const ClientEmail = ({
                               <div>
                                 <Text style={contactLabel}>واتساب (متوفر 24 ساعة)</Text>
                                 <Link href="https://api.whatsapp.com/send?phone=966500776343&text=مرحباً، أود الاستفسار عن الشراكة المؤسسية" style={contactValue}>
-                                  <span style={countryCode}>🇸🇦 +966</span> 50 077 6343
+                                  0500776343
                                 </Link>
                               </div>
                             </td>
@@ -221,7 +221,7 @@ export const ClientEmail = ({
                               <div>
                                 <Text style={contactLabel}>الهاتف</Text>
                                 <Text style={contactValuePlain}>
-                                  <span style={countryCodePlain}>🇸🇦 +966</span> 50 077 6343
+                                  0500776343
                                 </Text>
                               </div>
                             </td>
@@ -249,7 +249,6 @@ export const ClientEmail = ({
                         <Link href="https://api.whatsapp.com/send?phone=966500776343&text=مرحباً، أود الاستفسار عن الشراكة المؤسسية" style={whatsappButton}>
                           <span style={{ fontSize: '24px', marginLeft: '10px' }}>💬</span>
                           تواصل معنا عبر واتساب
-                          <span style={{ fontSize: '16px', marginRight: '8px', opacity: 0.9 }}>🇸🇦 +966 50 077 6343</span>
                         </Link>
                       </td>
                     </tr>
