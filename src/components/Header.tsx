@@ -279,7 +279,7 @@ const Header = () => {
                     <Menu className="h-5 w-5" />
                   </Button>
                 </SheetTrigger>
-                <SheetContent side="right" className="w-[85%] sm:w-96 bg-white/98 backdrop-blur-xl p-0" dir="rtl">
+                <SheetContent side="right" className="w-[85%] sm:w-96 bg-white p-0" dir="rtl">
                   <div className="flex flex-col h-full">
                     <div className="flex items-center justify-between p-6 border-b">
                       <div className="flex items-center gap-3">
@@ -425,12 +425,12 @@ const Header = () => {
               exit={{ opacity: 0, y: 8 }}
               transition={{ duration: 0.2 }}
               style={{ top: `${headerHeight}px` }}
-              className="fixed right-4 z-50 w-[min(960px,calc(100vw-2rem))] max-h-[70vh] bg-white/98 backdrop-blur-xl border border-border rounded-2xl shadow-strong overflow-hidden"
+              className="fixed right-4 z-50 w-[min(960px,calc(100vw-2rem))] max-h-[70vh] bg-white border border-border rounded-2xl shadow-strong overflow-hidden"
               dir="rtl"
               onMouseLeave={() => setIsServicesOpen(false)}
               onMouseEnter={() => setIsServicesOpen(true)}
             >
-              <div className="p-6 overflow-y-auto max-h-[calc(70vh-80px)]">
+              <div className="p-6 overflow-y-auto max-h-[calc(70vh-80px)] bg-white">
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
                   {servicesMenu.map((service) => (
                     <Link
