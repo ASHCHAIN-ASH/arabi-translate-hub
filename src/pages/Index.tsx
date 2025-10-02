@@ -14,6 +14,7 @@ import {
   Sparkles, ChevronRight, Zap, Heart, Brain
 } from "lucide-react";
 import { UNIFIED_STATS, STATS_LABELS } from "@/constants/academicStats";
+import { InstitutionalPartnershipBanner } from "@/components/InstitutionalPartnershipBanner";
 
 // Import academic service images
 import academicTranslationImg from "@/assets/academic-service-translation.jpg";
@@ -825,6 +826,9 @@ const Index = () => {
           </motion.div>
         </div>
       </section>
+
+      {/* Institutional Partnership Banner */}
+      <InstitutionalPartnershipBanner />
 
       {/* Suspense Sections مع Lazy Loading للأداء الأفضل */}
       
