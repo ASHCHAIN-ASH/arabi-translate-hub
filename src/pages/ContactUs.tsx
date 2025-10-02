@@ -1,6 +1,10 @@
 import React, { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { MapPin, Phone, Mail, Clock, Send, MessageCircle, Users, Award, Zap, MessageSquare } from 'lucide-react';
+import { motion } from 'framer-motion';
+import { 
+  MapPin, Phone, Mail, Clock, Send, MessageCircle, Users, Award, Zap, MessageSquare,
+  Globe2, Shield, CheckCircle2, Star, TrendingUp, HeartHandshake, Sparkles, 
+  Building2, Target, Rocket
+} from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
@@ -146,6 +150,22 @@ const ContactUs = () => {
     }
   ];
 
+  const trustedPartners = [
+    { name: "Harvard University", logo: "🎓" },
+    { name: "MIT", logo: "🏛️" },
+    { name: "Stanford", logo: "🌟" },
+    { name: "Oxford", logo: "📚" },
+    { name: "Cambridge", logo: "🎯" },
+    { name: "Yale", logo: "🏆" }
+  ];
+
+  const achievements = [
+    { icon: CheckCircle2, number: "10,000+", label: "مشروع منجز", color: "text-blue-500" },
+    { icon: Users, number: "5,000+", label: "عميل راضٍ", color: "text-green-500" },
+    { icon: Globe2, number: "50+", label: "دولة حول العالم", color: "text-purple-500" },
+    { icon: Star, number: "4.9/5", label: "تقييم العملاء", color: "text-yellow-500" }
+  ];
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-background to-secondary/10" dir="rtl">
       <SEO 
@@ -175,13 +195,39 @@ const ContactUs = () => {
       <Header />
       
       <main className="pt-16">
-        {/* Hero Section */}
-        <section className="relative py-12 sm:py-16 lg:py-20 overflow-hidden">
-          <div 
-            className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-            style={{ backgroundImage: `url(${contactHeroBackground})` }}
-          >
-            <div className="absolute inset-0 bg-gradient-to-r from-primary/80 via-secondary/70 to-accent/80 backdrop-blur-[1px]" />
+        {/* Hero Section with Animated Background */}
+        <section className="relative py-16 sm:py-20 lg:py-28 overflow-hidden">
+          {/* Animated Background */}
+          <div className="absolute inset-0">
+            <div 
+              className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+              style={{ backgroundImage: `url(${contactHeroBackground})` }}
+            >
+              <div className="absolute inset-0 bg-gradient-to-br from-primary/90 via-secondary/80 to-accent/90 backdrop-blur-[2px]" />
+            </div>
+            
+            {/* Floating Particles */}
+            {[...Array(20)].map((_, i) => (
+              <motion.div
+                key={i}
+                className="absolute w-2 h-2 bg-white/20 rounded-full"
+                initial={{ 
+                  x: Math.random() * window.innerWidth, 
+                  y: Math.random() * 600,
+                  scale: Math.random() * 0.5 + 0.5
+                }}
+                animate={{ 
+                  y: [null, Math.random() * -200],
+                  opacity: [0, 1, 0]
+                }}
+                transition={{ 
+                  duration: Math.random() * 3 + 2, 
+                  repeat: Infinity,
+                  ease: "easeInOut",
+                  delay: Math.random() * 2
+                }}
+              />
+            ))}
           </div>
 
           <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
@@ -189,47 +235,101 @@ const ContactUs = () => {
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8 }}
-              className="text-center max-w-4xl mx-auto"
+              className="text-center max-w-5xl mx-auto"
             >
+              {/* Animated Icon */}
+              <motion.div
+                initial={{ scale: 0, rotate: -180 }}
+                animate={{ scale: 1, rotate: 0 }}
+                transition={{ duration: 1, type: "spring", bounce: 0.5 }}
+                className="mb-6 sm:mb-8"
+              >
+                <div className="inline-flex items-center justify-center w-20 h-20 sm:w-24 sm:h-24 rounded-full bg-white/10 backdrop-blur-md border-2 border-white/20">
+                  <MessageCircle className="w-10 h-10 sm:w-12 sm:h-12 text-white" />
+                </div>
+              </motion.div>
+
               <motion.h1 
-                className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-4 sm:mb-6 text-white drop-shadow-lg"
-                initial={{ opacity: 0, scale: 0.9 }}
-                animate={{ opacity: 1, scale: 1 }}
+                className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold mb-6 sm:mb-8 text-white drop-shadow-2xl"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 1, delay: 0.2 }}
               >
-                تواصل معنا
+                <motion.span
+                  initial={{ display: "inline-block" }}
+                  animate={{ 
+                    textShadow: [
+                      "0 0 20px rgba(255,255,255,0.5)",
+                      "0 0 40px rgba(255,255,255,0.8)",
+                      "0 0 20px rgba(255,255,255,0.5)"
+                    ]
+                  }}
+                  transition={{ duration: 2, repeat: Infinity }}
+                >
+                  تواصل معنا
+                </motion.span>
               </motion.h1>
               
               <motion.p 
-                className="text-lg sm:text-xl lg:text-2xl text-white/90 mb-6 sm:mb-8 leading-relaxed drop-shadow-md px-4"
+                className="text-xl sm:text-2xl lg:text-3xl text-white/95 mb-8 sm:mb-10 leading-relaxed drop-shadow-lg px-4 max-w-3xl mx-auto"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8, delay: 0.4 }}
               >
-                نحن هنا لخدمتك على مدار الساعة. تواصل معنا للحصول على أفضل خدمات الترجمة والبحث الأكاديمي
+                شريكك الموثوق في التميز الأكاديمي والبحثي
+                <br />
+                <span className="text-lg sm:text-xl text-white/80">نخدم عملاءنا على مدار الساعة بأعلى معايير الجودة</span>
               </motion.p>
+
+              {/* Achievements Bar */}
+              <motion.div 
+                className="grid grid-cols-2 sm:grid-cols-4 gap-4 sm:gap-6 mb-8"
+                initial={{ opacity: 0, y: 30 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8, delay: 0.6 }}
+              >
+                {achievements.map((achievement, index) => (
+                  <motion.div
+                    key={index}
+                    initial={{ opacity: 0, scale: 0.5 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ 
+                      delay: index * 0.1 + 0.7,
+                      type: "spring",
+                      stiffness: 200
+                    }}
+                    whileHover={{ scale: 1.1, y: -5 }}
+                    className="bg-white/10 backdrop-blur-md rounded-2xl p-4 sm:p-6 border border-white/20 hover:bg-white/20 transition-all duration-300"
+                  >
+                    <achievement.icon className={`w-8 h-8 sm:w-10 sm:h-10 mx-auto mb-2 ${achievement.color}`} />
+                    <div className="text-2xl sm:text-3xl font-bold text-white mb-1">{achievement.number}</div>
+                    <div className="text-xs sm:text-sm text-white/80">{achievement.label}</div>
+                  </motion.div>
+                ))}
+              </motion.div>
               
+              {/* Feature Badges */}
               <motion.div 
                 className="flex flex-wrap justify-center gap-3 sm:gap-4"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
-                transition={{ duration: 0.6, delay: 0.6 }}
+                transition={{ duration: 0.6, delay: 0.8 }}
               >
                 {features.map((feature, index) => (
                   <motion.div
                     key={index}
-                    initial={{ opacity: 0, scale: 0.5, y: 50 }}
-                    animate={{ opacity: 1, scale: 1, y: 0 }}
+                    initial={{ opacity: 0, x: -50, rotate: -10 }}
+                    animate={{ opacity: 1, x: 0, rotate: 0 }}
                     transition={{ 
-                      delay: index * 0.15 + 0.8,
+                      delay: index * 0.15 + 1,
                       duration: 0.6,
                       type: "spring"
                     }}
-                    whileHover={{ scale: 1.05 }}
+                    whileHover={{ scale: 1.1, rotate: 5 }}
                   >
-                    <Badge variant="outline" className="px-4 sm:px-6 py-2 sm:py-3 text-sm sm:text-base font-medium bg-white/20 backdrop-blur-md border-white/30 text-white hover:bg-white/30 transition-colors">
+                    <Badge variant="outline" className="px-5 sm:px-7 py-3 sm:py-4 text-sm sm:text-base font-semibold bg-white/20 backdrop-blur-md border-white/30 text-white hover:bg-white/30 transition-all duration-300 shadow-lg">
+                      <feature.icon className="w-5 h-5 sm:w-6 sm:h-6 ml-2" />
                       {feature.title}
-                      <feature.icon className="w-4 h-4 sm:w-5 sm:h-5 ml-2" />
                     </Badge>
                   </motion.div>
                 ))}
@@ -238,31 +338,116 @@ const ContactUs = () => {
           </div>
         </section>
 
-        {/* Main Content */}
-        <section className="py-8 sm:py-12 lg:py-16">
+        {/* Trusted Partners Section */}
+        <section className="py-12 sm:py-16 bg-gradient-to-r from-muted/30 via-background to-muted/30">
           <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.8 }}
+              className="text-center mb-8 sm:mb-12"
+            >
+              <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold mb-3 bg-gradient-to-r from-primary via-secondary to-accent bg-clip-text text-transparent">
+                <Sparkles className="inline-block w-6 h-6 sm:w-8 sm:h-8 mb-2 text-primary" />
+                {" "}شركاؤنا حول العالم{" "}
+                <Sparkles className="inline-block w-6 h-6 sm:w-8 sm:h-8 mb-2 text-accent" />
+              </h2>
+              <p className="text-base sm:text-lg text-muted-foreground">
+                نفخر بثقة أفضل المؤسسات الأكاديمية العالمية
+              </p>
+            </motion.div>
+
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4 sm:gap-6">
+              {trustedPartners.map((partner, index) => (
+                <motion.div
+                  key={index}
+                  initial={{ opacity: 0, scale: 0.5, y: 20 }}
+                  whileInView={{ opacity: 1, scale: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ 
+                    delay: index * 0.1,
+                    duration: 0.5,
+                    type: "spring"
+                  }}
+                  whileHover={{ 
+                    scale: 1.1, 
+                    y: -10,
+                    rotateZ: [0, -5, 5, 0]
+                  }}
+                  className="relative group"
+                >
+                  <Card className="p-6 sm:p-8 hover:shadow-2xl transition-all duration-500 border-2 hover:border-primary/50 bg-card/60 backdrop-blur-sm">
+                    <div className="text-center">
+                      <motion.div 
+                        className="text-4xl sm:text-5xl mb-3"
+                        whileHover={{ scale: 1.2, rotate: 360 }}
+                        transition={{ duration: 0.6 }}
+                      >
+                        {partner.logo}
+                      </motion.div>
+                      <p className="text-xs sm:text-sm font-semibold text-muted-foreground group-hover:text-primary transition-colors">
+                        {partner.name}
+                      </p>
+                    </div>
+                  </Card>
+                </motion.div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* Main Content */}
+        <section className="py-12 sm:py-16 lg:py-20 relative overflow-hidden">
+          {/* Background Pattern */}
+          <div className="absolute inset-0 opacity-5">
+            <div className="absolute inset-0" style={{
+              backgroundImage: 'radial-gradient(circle, currentColor 1px, transparent 1px)',
+              backgroundSize: '50px 50px'
+            }} />
+          </div>
+
+          <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
             <div className="grid grid-cols-1 xl:grid-cols-2 gap-8 lg:gap-12">
               
               {/* Contact Form */}
               <motion.div
                 initial={{ opacity: 0, x: 50 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.8, delay: 0.3 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.8 }}
                 className="order-2 xl:order-1"
               >
-                <Card className="shadow-2xl border-0 bg-card/60 backdrop-blur-md hover:shadow-3xl transition-all duration-500 overflow-hidden">
-                  <CardHeader className="text-center bg-gradient-to-r from-primary/10 via-secondary/10 to-accent/10 p-6 sm:p-8">
-                    <CardTitle className="text-xl sm:text-2xl lg:text-3xl font-bold flex items-center justify-center gap-3">
-                      <MessageCircle className="w-6 h-6 sm:w-8 sm:h-8 text-primary" />
-                      أرسل رسالتك
+                <Card className="shadow-2xl border-2 border-primary/20 bg-card/80 backdrop-blur-xl hover:shadow-3xl transition-all duration-500 overflow-hidden relative group">
+                  {/* Card Glow Effect */}
+                  <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-secondary/5 to-accent/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                  
+                  <CardHeader className="text-center relative z-10 bg-gradient-to-br from-primary/10 via-secondary/10 to-accent/10 p-6 sm:p-8 border-b-2 border-primary/10">
+                    <motion.div
+                      initial={{ scale: 0, rotate: -180 }}
+                      whileInView={{ scale: 1, rotate: 0 }}
+                      viewport={{ once: true }}
+                      transition={{ type: "spring", stiffness: 200, delay: 0.2 }}
+                      className="mb-4"
+                    >
+                      <div className="inline-flex items-center justify-center w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-gradient-to-br from-primary via-secondary to-accent p-1">
+                        <div className="w-full h-full rounded-full bg-background flex items-center justify-center">
+                          <Send className="w-7 h-7 sm:w-9 sm:h-9 text-primary" />
+                        </div>
+                      </div>
+                    </motion.div>
+                    
+                    <CardTitle className="text-2xl sm:text-3xl lg:text-4xl font-bold bg-gradient-to-r from-primary via-secondary to-accent bg-clip-text text-transparent">
+                      أرسل رسالتك الآن
                     </CardTitle>
-                    <CardDescription className="text-sm sm:text-base mt-2">
-                      املأ النموذج أدناه وسنتواصل معك خلال 4 ساعات كحد أقصى
+                    <CardDescription className="text-sm sm:text-base mt-3 text-muted-foreground">
+                      <Clock className="inline-block w-4 h-4 ml-1 text-primary" />
+                      نضمن الرد خلال 4 ساعات كحد أقصى
                     </CardDescription>
                   </CardHeader>
                   
-                  <CardContent className="p-6 sm:p-8">
-                    <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-6">
+                  <CardContent className="p-6 sm:p-8 relative z-10">
+                    <form onSubmit={handleSubmit} className="space-y-5 sm:space-y-7">
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <motion.div
                           initial={{ opacity: 0, y: 20 }}
@@ -375,28 +560,49 @@ const ContactUs = () => {
 
                       <motion.div
                         initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: 1.1 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true }}
+                        transition={{ delay: 0.4 }}
                         whileHover={{ scale: 1.02 }}
                         whileTap={{ scale: 0.98 }}
                       >
                         <Button 
                           type="submit" 
-                          className="w-full h-12 sm:h-14 text-base sm:text-lg font-semibold bg-gradient-to-r from-primary via-secondary to-accent hover:from-primary/90 hover:via-secondary/90 hover:to-accent/90 transition-all duration-500 shadow-lg hover:shadow-xl"
+                          className="w-full h-14 sm:h-16 text-lg sm:text-xl font-bold bg-gradient-to-r from-primary via-secondary to-accent hover:from-primary/90 hover:via-secondary/90 hover:to-accent/90 transition-all duration-500 shadow-2xl hover:shadow-3xl relative overflow-hidden group"
                           disabled={loading}
                         >
+                          <div className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/20 to-white/0 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000" />
                           {loading ? (
-                            <div className="flex items-center gap-3">
+                            <div className="flex items-center gap-3 relative z-10">
                               <span>جار الإرسال...</span>
                               <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
                             </div>
                           ) : (
-                            <div className="flex items-center gap-3 justify-center">
-                              <span>إرسال الرسالة</span>
-                              <Send className="w-5 h-5" />
+                            <div className="flex items-center gap-3 justify-center relative z-10">
+                              <Rocket className="w-6 h-6" />
+                              <span>إرسال الرسالة الآن</span>
+                              <Sparkles className="w-5 h-5" />
                             </div>
                           )}
                         </Button>
+                      </motion.div>
+
+                      {/* Trust Indicators */}
+                      <motion.div 
+                        className="flex items-center justify-center gap-6 pt-4 text-sm text-muted-foreground"
+                        initial={{ opacity: 0 }}
+                        whileInView={{ opacity: 1 }}
+                        viewport={{ once: true }}
+                        transition={{ delay: 0.5 }}
+                      >
+                        <div className="flex items-center gap-2">
+                          <Shield className="w-4 h-4 text-green-500" />
+                          <span>محمي بالكامل</span>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <CheckCircle2 className="w-4 h-4 text-blue-500" />
+                          <span>استجابة سريعة</span>
+                        </div>
                       </motion.div>
                     </form>
                   </CardContent>
@@ -406,38 +612,63 @@ const ContactUs = () => {
               {/* Contact Information */}
               <motion.div
                 initial={{ opacity: 0, x: -50 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.8, delay: 0.5 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.8 }}
                 className="space-y-6 sm:space-y-8 order-1 xl:order-2"
               >
-                <div className="text-center xl:text-right">
-                  <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold mb-3 sm:mb-4 bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
+                <motion.div 
+                  className="text-center xl:text-right"
+                  initial={{ opacity: 0, y: -20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                >
+                  <motion.div
+                    initial={{ scale: 0 }}
+                    whileInView={{ scale: 1 }}
+                    viewport={{ once: true }}
+                    transition={{ type: "spring", stiffness: 200 }}
+                    className="inline-block mb-4"
+                  >
+                    <div className="p-4 rounded-full bg-gradient-to-br from-primary/20 to-secondary/20 border-2 border-primary/30">
+                      <Phone className="w-8 h-8 sm:w-10 sm:h-10 text-primary" />
+                    </div>
+                  </motion.div>
+                  
+                  <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-3 sm:mb-4 bg-gradient-to-r from-primary via-secondary to-accent bg-clip-text text-transparent">
                     معلومات التواصل
                   </h2>
                   <p className="text-base sm:text-lg text-muted-foreground">
-                    تواصل معنا عبر إحدى الطرق التالية
+                    <HeartHandshake className="inline-block w-5 h-5 ml-1 text-primary" />
+                    نحن متواجدون دائماً لخدمتك
                   </p>
-                </div>
+                </motion.div>
 
-                <div className="grid grid-cols-1 gap-3 sm:gap-4">
+                <div className="grid grid-cols-1 gap-4 sm:gap-5">
                   {contactInfo.map((info, index) => (
                     <motion.div
                       key={index}
-                      initial={{ opacity: 0, x: 50, scale: 0.9 }}
-                      animate={{ opacity: 1, x: 0, scale: 1 }}
+                      initial={{ opacity: 0, x: 50, scale: 0.8, rotate: 5 }}
+                      whileInView={{ opacity: 1, x: 0, scale: 1, rotate: 0 }}
+                      viewport={{ once: true }}
                       transition={{ 
-                        delay: index * 0.1 + 0.7,
-                        duration: 0.6
+                        delay: index * 0.15,
+                        duration: 0.6,
+                        type: "spring"
                       }}
-                      whileHover={{ scale: 1.02, y: -2 }}
+                      whileHover={{ scale: 1.03, y: -5, rotate: -1 }}
                     >
-                      <Card className="p-4 sm:p-6 hover:shadow-xl transition-all duration-500 border-0 bg-card/40 backdrop-blur-lg hover:bg-card/60">
-                        <div className="flex items-start gap-3 sm:gap-4">
+                      <Card className="p-5 sm:p-7 hover:shadow-2xl transition-all duration-500 border-2 hover:border-primary/50 bg-gradient-to-br from-card/60 to-card/40 backdrop-blur-xl hover:from-card/80 hover:to-card/60 relative overflow-hidden group">
+                        {/* Shine Effect */}
+                        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000" />
+                        
+                        <div className="flex items-start gap-4 sm:gap-5 relative z-10">
                           <motion.div 
-                            className="p-2 sm:p-3 rounded-full bg-gradient-to-br from-primary/20 to-secondary/20"
-                            whileHover={{ rotate: 10, scale: 1.1 }}
+                            className="p-3 sm:p-4 rounded-2xl bg-gradient-to-br from-primary/20 via-secondary/20 to-accent/20 shadow-lg"
+                            whileHover={{ rotate: [0, -10, 10, -10, 0], scale: 1.1 }}
+                            transition={{ duration: 0.5 }}
                           >
-                            <info.icon className="w-5 h-5 sm:w-6 sm:h-6 text-primary" />
+                            <info.icon className="w-6 h-6 sm:w-7 sm:h-7 text-primary" />
                           </motion.div>
                           <div className="flex-1 text-right">
                             <h3 className="font-semibold text-base sm:text-lg mb-1 sm:mb-2">
@@ -506,53 +737,86 @@ const ContactUs = () => {
 
                 {/* Why Choose Us Section */}
                 <motion.div 
-                  className="space-y-4 sm:space-y-6 mt-8 sm:mt-12"
+                  className="space-y-6 sm:space-y-8 mt-10 sm:mt-14"
                   initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ delay: 1.2, duration: 0.6 }}
+                  whileInView={{ opacity: 1 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.6 }}
                 >
-                  <div className="text-center xl:text-right">
-                    <h3 className="text-xl sm:text-2xl lg:text-3xl font-bold mb-2 sm:mb-4 bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
-                      لماذا تختارنا؟
+                  <motion.div 
+                    className="text-center xl:text-right"
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                  >
+                    <motion.div
+                      initial={{ scale: 0, rotate: -180 }}
+                      whileInView={{ scale: 1, rotate: 0 }}
+                      viewport={{ once: true }}
+                      transition={{ type: "spring", stiffness: 200 }}
+                      className="inline-block mb-4"
+                    >
+                      <div className="p-3 rounded-full bg-gradient-to-br from-green-500/20 to-blue-500/20">
+                        <Target className="w-8 h-8 text-primary" />
+                      </div>
+                    </motion.div>
+                    
+                    <h3 className="text-2xl sm:text-3xl lg:text-4xl font-bold mb-3 sm:mb-4 bg-gradient-to-r from-primary via-secondary to-accent bg-clip-text text-transparent">
+                      <Star className="inline-block w-6 h-6 sm:w-8 sm:h-8 mb-1 text-yellow-500" />
+                      {" "}لماذا تختارنا؟{" "}
+                      <Star className="inline-block w-6 h-6 sm:w-8 sm:h-8 mb-1 text-yellow-500" />
                     </h3>
                     <p className="text-sm sm:text-base text-muted-foreground">
-                      اكتشف المزايا التي تجعلنا الخيار الأول
+                      المزايا التي تجعلنا الخيار الأول والأفضل
                     </p>
-                  </div>
+                  </motion.div>
                   
-                  <div className="grid grid-cols-1 gap-3 sm:gap-4">
+                  <div className="grid grid-cols-1 gap-4 sm:gap-5">
                     {features.map((feature, index) => (
                       <motion.div
                         key={index}
-                        initial={{ opacity: 0, x: 30, scale: 0.9 }}
-                        animate={{ opacity: 1, x: 0, scale: 1 }}
+                        initial={{ opacity: 0, x: 30, scale: 0.8, rotate: -5 }}
+                        whileInView={{ opacity: 1, x: 0, scale: 1, rotate: 0 }}
+                        viewport={{ once: true }}
                         transition={{ 
-                          delay: index * 0.15 + 1.4,
-                          duration: 0.6
+                          delay: index * 0.15,
+                          duration: 0.6,
+                          type: "spring"
                         }}
-                        whileHover={{ scale: 1.03, y: -3 }}
+                        whileHover={{ scale: 1.05, y: -5, rotate: 2 }}
                       >
-                        <Card className="p-4 sm:p-6 hover:shadow-lg transition-all duration-500 border-0 bg-gradient-to-r from-primary/5 to-secondary/5 hover:from-primary/10 hover:to-secondary/10 group">
-                          <div className="flex items-center gap-3 text-right">
+                        <Card className="p-5 sm:p-7 hover:shadow-2xl transition-all duration-500 border-2 hover:border-primary/50 bg-gradient-to-br from-primary/10 via-secondary/5 to-accent/10 hover:from-primary/20 hover:via-secondary/10 hover:to-accent/20 group relative overflow-hidden">
+                          {/* Animated Background */}
+                          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000" />
+                          
+                          <div className="flex items-center gap-4 text-right relative z-10">
                             <div className="flex-1">
-                              <div className="flex items-center justify-between mb-1 sm:mb-2">
-                                <Badge className={`bg-gradient-to-r ${feature.color} text-white text-xs px-2 py-1`}>
-                                  {feature.stats}
-                                </Badge>
-                                <h4 className="font-semibold text-sm sm:text-base group-hover:text-primary transition-colors duration-300">
+                              <div className="flex items-center justify-between mb-2 sm:mb-3">
+                                <motion.div
+                                  whileHover={{ scale: 1.1 }}
+                                >
+                                  <Badge className={`bg-gradient-to-r ${feature.color} text-white text-xs sm:text-sm px-3 py-1.5 shadow-lg`}>
+                                    <TrendingUp className="w-3 h-3 ml-1" />
+                                    {feature.stats}
+                                  </Badge>
+                                </motion.div>
+                                <h4 className="font-bold text-base sm:text-lg group-hover:text-primary transition-colors duration-300">
                                   {feature.title}
                                 </h4>
                               </div>
-                              <p className="text-xs sm:text-sm text-muted-foreground group-hover:text-foreground/80 transition-colors duration-300">
+                              <p className="text-sm sm:text-base text-muted-foreground group-hover:text-foreground/90 transition-colors duration-300 leading-relaxed">
                                 {feature.description}
                               </p>
                             </div>
                             <motion.div 
-                              className={`p-2 sm:p-3 rounded-full bg-gradient-to-br ${feature.color} shadow-lg`}
-                              whileHover={{ rotate: 360, scale: 1.1 }}
+                              className={`p-4 sm:p-5 rounded-2xl bg-gradient-to-br ${feature.color} shadow-xl`}
+                              whileHover={{ 
+                                rotate: [0, -10, 10, -10, 10, 0],
+                                scale: 1.15
+                              }}
                               transition={{ duration: 0.6 }}
                             >
-                              <feature.icon className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
+                              <feature.icon className="w-6 h-6 sm:w-7 sm:h-7 text-white" />
                             </motion.div>
                           </div>
                         </Card>
@@ -562,20 +826,66 @@ const ContactUs = () => {
 
                   {/* Response Time Alert */}
                   <motion.div
-                    initial={{ opacity: 0, scale: 0.9, y: 30 }}
-                    animate={{ opacity: 1, scale: 1, y: 0 }}
-                    transition={{ delay: 2.0, duration: 0.8 }}
-                    whileHover={{ scale: 1.02, y: -2 }}
+                    initial={{ opacity: 0, scale: 0.8, y: 30 }}
+                    whileInView={{ opacity: 1, scale: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.8, type: "spring" }}
+                    whileHover={{ scale: 1.03, y: -5 }}
                   >
-                    <Card className="p-4 sm:p-6 bg-gradient-to-r from-green-50 via-emerald-50 to-teal-50 border-green-200 hover:border-green-300 transition-all duration-500 relative overflow-hidden group">
-                      <div className="text-center">
-                        <h4 className="font-bold text-green-800 text-base sm:text-lg mb-1 sm:mb-2 flex items-center justify-center gap-2">
-                          <span>⚡</span>
-                          استجابة سريعة
+                    <Card className="p-6 sm:p-8 bg-gradient-to-br from-green-50 via-emerald-50 to-teal-50 dark:from-green-950/30 dark:via-emerald-950/30 dark:to-teal-950/30 border-2 border-green-300 dark:border-green-700 hover:border-green-400 dark:hover:border-green-600 transition-all duration-500 relative overflow-hidden group shadow-lg hover:shadow-2xl">
+                      {/* Animated Background Pattern */}
+                      <div className="absolute inset-0 opacity-10">
+                        <motion.div
+                          animate={{ 
+                            backgroundPosition: ["0% 0%", "100% 100%"]
+                          }}
+                          transition={{ duration: 20, repeat: Infinity, repeatType: "reverse" }}
+                          className="w-full h-full"
+                          style={{
+                            backgroundImage: 'radial-gradient(circle, currentColor 1px, transparent 1px)',
+                            backgroundSize: '30px 30px'
+                          }}
+                        />
+                      </div>
+                      
+                      <div className="text-center relative z-10">
+                        <motion.div
+                          initial={{ scale: 0 }}
+                          whileInView={{ scale: 1 }}
+                          viewport={{ once: true }}
+                          transition={{ type: "spring", stiffness: 200, delay: 0.2 }}
+                          className="inline-block mb-4"
+                        >
+                          <div className="p-4 rounded-full bg-gradient-to-br from-green-400 to-emerald-500 shadow-xl">
+                            <Zap className="w-8 h-8 text-white" />
+                          </div>
+                        </motion.div>
+                        
+                        <h4 className="font-bold text-green-800 dark:text-green-200 text-xl sm:text-2xl mb-2 flex items-center justify-center gap-3">
+                          <motion.span
+                            animate={{ scale: [1, 1.2, 1] }}
+                            transition={{ duration: 1, repeat: Infinity }}
+                          >
+                            ⚡
+                          </motion.span>
+                          استجابة فورية وسريعة
+                          <motion.span
+                            animate={{ scale: [1, 1.2, 1] }}
+                            transition={{ duration: 1, repeat: Infinity, delay: 0.5 }}
+                          >
+                            ⚡
+                          </motion.span>
                         </h4>
-                        <p className="text-xs sm:text-sm text-green-700">
+                        <p className="text-sm sm:text-base text-green-700 dark:text-green-300 leading-relaxed">
                           نضمن لك الرد على استفسارك خلال{" "}
-                          <span className="font-bold">4 ساعات كحد أقصى</span>{" "}
+                          <motion.span 
+                            className="font-bold text-lg text-green-900 dark:text-green-100"
+                            animate={{ scale: [1, 1.1, 1] }}
+                            transition={{ duration: 2, repeat: Infinity }}
+                          >
+                            4 ساعات كحد أقصى
+                          </motion.span>{" "}
+                          <br className="hidden sm:block" />
                           خلال أوقات العمل الرسمية
                         </p>
                       </div>
