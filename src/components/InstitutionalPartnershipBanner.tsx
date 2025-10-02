@@ -87,7 +87,7 @@ export const InstitutionalPartnershipBanner = () => {
                 >
                   <Button
                     size="lg"
-                    onClick={() => navigate('/contact-us')}
+                    onClick={() => navigate('/institutional-partnerships')}
                     className="bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 text-primary-foreground shadow-lg hover:shadow-xl transition-all duration-300 group"
                   >
                     ابدأ التعاون معنا
