@@ -8,17 +8,10 @@ import {
   Grid,
   HelpCircle,
   Send,
-  BookOpen,
   CheckCircle2,
-  BarChart3,
-  FileSignature,
-  Monitor,
-  FileSearch,
-  MessagesSquare,
+  Microscope,
   Newspaper,
   Languages,
-  School,
-  Library,
   X,
   ChevronDown,
   Mail
@@ -90,76 +83,28 @@ const Header = () => {
 
   const servicesMenu = [
     { 
-      name: 'كتابة الأبحاث الجامعية', 
-      href: '/research-services', 
-      icon: BookOpen,
-      description: 'إعداد الرسائل والأطروحات العلمية بمعايير أكاديمية عالية'
-    },
-    { 
-      name: 'التدقيق اللغوي والمراجعة', 
-      href: '/services/editing-services', 
-      icon: CheckCircle2,
-      description: 'مراجعة لغوية دقيقة وتدقيق شامل للنصوص الأكاديمية'
-    },
-    { 
-      name: 'التحليل الإحصائي SPSS', 
-      href: '/research/statistical-spss-service', 
-      icon: BarChart3,
-      description: 'تحليل البيانات الإحصائية باستخدام أحدث البرامج'
-    },
-    { 
-      name: 'إعداد خطة البحث', 
-      href: '/research/proposal-service', 
-      icon: FileSignature,
-      description: 'صياغة مقترحات البحث وخطط الدراسة العلمية'
-    },
-    { 
-      name: 'عروض PowerPoint أكاديمية', 
-      href: '/research/powerpoint-service', 
-      icon: Monitor,
-      description: 'تصميم عروض تقديمية احترافية للأبحاث والمشاريع'
-    },
-    { 
-      name: 'مراجعات ما قبل النشر', 
-      href: '/research/proofreading-service', 
-      icon: FileSearch,
-      description: 'مراجعة شاملة قبل النشر في المجلات العلمية'
-    },
-    { 
-      name: 'الاستشارات الأكاديمية', 
-      href: '/research/consultation-service', 
-      icon: MessagesSquare,
-      description: 'استشارات متخصصة في البحث العلمي والنشر الأكاديمي'
-    },
-    { 
-      name: 'النشر في المجلات', 
+      name: 'النشر الأكاديمي', 
       href: '/research/journal-publication', 
       icon: Newspaper,
-      description: 'خدمات النشر في المجلات العلمية المحكمة دولياً'
+      description: 'مساعدة في نشر الأبحاث في المجلات العلمية المحكمة'
     },
     { 
-      name: 'الترجمة الأكاديمية المعتمدة', 
+      name: 'المراجعة والتدقيق', 
+      href: '/services/editing-services', 
+      icon: CheckCircle2,
+      description: 'مراجعة لغوية ومنهجية متخصصة للأبحاث العلمية'
+    },
+    { 
+      name: 'خدمات البحث العلمي', 
+      href: '/research-services', 
+      icon: Microscope,
+      description: 'دعم شامل للباحثين في جميع مراحل البحث العلمي'
+    },
+    { 
+      name: 'الترجمة الأكاديمية', 
       href: '/translation-services', 
       icon: Languages,
-      description: 'ترجمة معتمدة للأبحاث والوثائق الأكاديمية'
-    },
-    { 
-      name: 'التدريب وورش العمل', 
-      href: '/research/training-courses', 
-      icon: GraduationCap,
-      description: 'دورات تدريبية في البحث العلمي والنشر الأكاديمي'
-    },
-    { 
-      name: 'القبول الجامعي والمنح', 
-      href: '/admission-services', 
-      icon: School,
-      description: 'مساعدة في القبول الجامعي والحصول على المنح الدراسية'
-    },
-    { 
-      name: 'مركز الموارد', 
-      href: '/research/research-tools', 
-      icon: Library,
-      description: 'مكتبة شاملة من الأدوات والموارد البحثية'
+      description: 'ترجمة احترافية للأبحاث والرسائل العلمية بدقة عالية'
     },
   ];
 
@@ -431,7 +376,7 @@ const Header = () => {
               onMouseEnter={() => setIsServicesOpen(true)}
             >
               <div className="p-6 overflow-y-auto max-h-[calc(70vh-80px)] bg-white">
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   {servicesMenu.map((service) => (
                     <Link
                       key={service.name}
