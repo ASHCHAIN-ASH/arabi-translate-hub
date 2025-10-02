@@ -36,23 +36,48 @@ export const ClientEmail = ({
       <Head>
         <meta httpEquiv="Content-Type" content="text/html; charset=utf-8" />
         <style>{`
-          * { font-family: 'Segoe UI', Tahoma, Arial, sans-serif; }
+          @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Arabic:wght@400;600;700&display=swap');
+          * { 
+            font-family: 'Noto Sans Arabic', 'Segoe UI', Tahoma, Arial, sans-serif;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+          }
           body { direction: rtl; text-align: right; }
+          .button-hover:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4) !important;
+          }
         `}</style>
       </Head>
-      <Preview>شكراً لاهتمامك بالشراكة المؤسسية مع Master Edu Path - سنتواصل معك خلال 24 ساعة</Preview>
+      <Preview>🎉 شكراً لاهتمامك بالشراكة المؤسسية مع Master Edu Path</Preview>
       <Body style={main}>
         <Container style={container}>
-          {/* Header */}
+          
+          {/* Premium Header with Gradient */}
           <Section style={header}>
             <table style={{ width: '100%', textAlign: 'center' }}>
               <tr>
                 <td>
-                  <div style={logoBox}>
+                  <div style={logoContainer}>
                     <span style={logoIcon}>🎓</span>
                     <Heading style={logoText}>Master Edu Path</Heading>
-                    <Text style={tagline}>✨ التميز الأكاديمي شراكتنا معكم ✨</Text>
+                    <Text style={tagline}>شريكك الأكاديمي الموثوق 🌟</Text>
                   </div>
+                </td>
+              </tr>
+            </table>
+          </Section>
+
+          {/* Success Banner */}
+          <Section style={successBanner}>
+            <table style={{ width: '100%' }}>
+              <tr>
+                <td style={{ textAlign: 'center', padding: '20px' }}>
+                  <span style={{ fontSize: '48px', display: 'block', marginBottom: '15px' }}>✅</span>
+                  <Heading style={successTitle}>تم استلام طلبكم بنجاح!</Heading>
+                  <Text style={successSubtext}>
+                    سيتواصل معكم فريقنا المتخصص خلال 24 ساعة
+                  </Text>
                 </td>
               </tr>
             </table>
@@ -63,141 +88,144 @@ export const ClientEmail = ({
             <table style={{ width: '100%', direction: 'rtl' }}>
               <tr>
                 <td style={{ textAlign: 'right' }}>
-                  <Heading style={h1}>
-                    🌟 مرحباً {contactPerson}
-                  </Heading>
                   
-                  <Text style={text}>
-                    نشكركم على اهتمامكم بالشراكة المؤسسية معنا. يسعدنا استلام طلبكم للانضمام إلى شبكة شركائنا الأكاديميين المتميزين.
-                  </Text>
+                  {/* Personalized Greeting */}
+                  <div style={greetingBox}>
+                    <Text style={greetingText}>
+                      🙋‍♂️ مرحباً <strong>{contactPerson}</strong>،
+                    </Text>
+                    <Text style={normalText}>
+                      يسعدنا اهتمامكم بالانضمام إلى شبكة شركائنا المتميزين. نحن متحمسون لبدء رحلة التعاون مع <strong>{institutionName}</strong>
+                    </Text>
+                  </div>
 
-                  {/* Info Box */}
-                  <table style={infoBox}>
-                    <tr>
-                      <td style={{ padding: '20px' }}>
-                        <Heading style={h2}>📋 تفاصيل طلبكم</Heading>
-                        <Hr style={innerDivider} />
-                        <table style={{ width: '100%', marginTop: '15px' }}>
-                          <tr>
-                            <td style={labelCell}>
-                              <span style={labelIcon}>🏛️</span> المؤسسة:
-                            </td>
-                            <td style={valueCell}>{institutionName}</td>
-                          </tr>
-                          <tr>
-                            <td style={labelCell}>
-                              <span style={labelIcon}>📦</span> الباقة المختارة:
-                            </td>
-                            <td style={valueCell}>
-                              <strong>{packageNames[selectedPackage] || 'باقة مخصصة'}</strong>
-                            </td>
-                          </tr>
-                        </table>
-                      </td>
-                    </tr>
-                  </table>
-
-                  {/* Success Message */}
-                  <table style={successBox}>
-                    <tr>
-                      <td style={{ padding: '15px', textAlign: 'center' }}>
-                        <span style={{ fontSize: '32px' }}>✅</span>
-                        <Text style={successText}>
-                          تم استلام طلبكم بنجاح!
-                        </Text>
-                        <Text style={successSubtext}>
-                          سيقوم فريقنا المتخصص بمراجعة طلبكم والتواصل معكم خلال <strong>24 ساعة</strong> كحد أقصى
-                        </Text>
-                      </td>
-                    </tr>
-                  </table>
-
-                  {/* Benefits */}
-                  <table style={benefitsBox}>
-                    <tr>
-                      <td style={{ padding: '20px' }}>
-                        <Heading style={h2}>🎁 مزايا الشراكة معنا</Heading>
-                        <Hr style={innerDivider} />
-                        <table style={{ width: '100%', marginTop: '15px' }}>
-                          <tr>
-                            <td style={benefitItem}>
-                              <span style={checkmark}>✓</span>
-                              <span style={benefitText}>خصم <strong>50%</strong> على جميع الخدمات الأكاديمية</span>
-                            </td>
-                          </tr>
-                          <tr>
-                            <td style={benefitItem}>
-                              <span style={checkmark}>✓</span>
-                              <span style={benefitText}>دعم فني عبر واتساب متوفر <strong>24/7</strong></span>
-                            </td>
-                          </tr>
-                          <tr>
-                            <td style={benefitItem}>
-                              <span style={checkmark}>✓</span>
-                              <span style={benefitText}>مدير حساب مخصص لمؤسستكم</span>
-                            </td>
-                          </tr>
-                          <tr>
-                            <td style={benefitItem}>
-                              <span style={checkmark}>✓</span>
-                              <span style={benefitText}>أولوية في التسليم والمراجعة</span>
-                            </td>
-                          </tr>
-                          <tr>
-                            <td style={benefitItem}>
-                              <span style={checkmark}>✓</span>
-                              <span style={benefitText}>تقارير دورية عن الأداء والجودة</span>
-                            </td>
-                          </tr>
-                        </table>
-                      </td>
-                    </tr>
-                  </table>
-
-                  {/* Contact Information */}
-                  <table style={contactBox}>
+                  {/* Package Details Card */}
+                  <table style={packageCard}>
                     <tr>
                       <td style={{ padding: '25px' }}>
-                        <Heading style={h2}>📞 معلومات التواصل</Heading>
-                        <Hr style={innerDivider} />
-                        <table style={{ width: '100%', marginTop: '15px' }}>
+                        <div style={{ textAlign: 'center', marginBottom: '15px' }}>
+                          <span style={{ fontSize: '40px' }}>📦</span>
+                        </div>
+                        <Heading style={cardTitle}>الباقة المختارة</Heading>
+                        <div style={packageBadge}>
+                          {packageNames[selectedPackage] || 'باقة مخصصة'}
+                        </div>
+                        <Text style={cardSubtext}>
+                          تم حفظ طلبكم وسنقوم بإعداد عرض تفصيلي مخصص لمؤسستكم
+                        </Text>
+                      </td>
+                    </tr>
+                  </table>
+
+                  {/* Benefits Grid */}
+                  <table style={benefitsSection}>
+                    <tr>
+                      <td style={{ padding: '25px' }}>
+                        <Heading style={sectionTitle}>
+                          <span style={{ marginLeft: '10px' }}>🎁</span>
+                          مزايا الشراكة الحصرية
+                        </Heading>
+                        <Hr style={dividerLine} />
+                        
+                        <table style={{ width: '100%', marginTop: '20px' }}>
                           <tr>
-                            <td style={contactRow}>
-                              <span style={contactIcon}>📧</span>
-                              <div style={contactInfo}>
-                                <Text style={contactLabel}>البريد الإلكتروني:</Text>
-                                <Link href="mailto:info@masteredupath.com" style={contactLink}>
+                            <td style={benefitRow}>
+                              <div style={benefitIcon}>💰</div>
+                              <div style={benefitContent}>
+                                <Text style={benefitTitle}>خصم 50%</Text>
+                                <Text style={benefitDesc}>على جميع الخدمات الأكاديمية والترجمة</Text>
+                              </div>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td style={benefitRow}>
+                              <div style={benefitIcon}>⚡</div>
+                              <div style={benefitContent}>
+                                <Text style={benefitTitle}>دعم 24/7</Text>
+                                <Text style={benefitDesc}>فريق متخصص متوفر على مدار الساعة</Text>
+                              </div>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td style={benefitRow}>
+                              <div style={benefitIcon}>👤</div>
+                              <div style={benefitContent}>
+                                <Text style={benefitTitle}>مدير حساب مخصص</Text>
+                                <Text style={benefitDesc}>متابعة شخصية لجميع طلباتكم</Text>
+                              </div>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td style={benefitRow}>
+                              <div style={benefitIcon}>🚀</div>
+                              <div style={benefitContent}>
+                                <Text style={benefitTitle}>أولوية التسليم</Text>
+                                <Text style={benefitDesc}>معالجة سريعة لجميع المشاريع</Text>
+                              </div>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td style={benefitRow}>
+                              <div style={benefitIcon}>📊</div>
+                              <div style={benefitContent}>
+                                <Text style={benefitTitle}>تقارير دورية</Text>
+                                <Text style={benefitDesc}>تحليل شامل للأداء والجودة</Text>
+                              </div>
+                            </td>
+                          </tr>
+                        </table>
+                      </td>
+                    </tr>
+                  </table>
+
+                  {/* Contact Section */}
+                  <table style={contactSection}>
+                    <tr>
+                      <td style={{ padding: '30px' }}>
+                        <Heading style={sectionTitle}>
+                          <span style={{ marginLeft: '10px' }}>📞</span>
+                          تواصل معنا الآن
+                        </Heading>
+                        <Hr style={dividerLine} />
+                        
+                        <table style={{ width: '100%', marginTop: '20px' }}>
+                          <tr>
+                            <td style={contactItem}>
+                              <span style={contactIconStyle}>📧</span>
+                              <div>
+                                <Text style={contactLabel}>البريد الإلكتروني</Text>
+                                <Link href="mailto:info@masteredupath.com" style={contactValue}>
                                   info@masteredupath.com
                                 </Link>
                               </div>
                             </td>
                           </tr>
                           <tr>
-                            <td style={contactRow}>
-                              <span style={contactIcon}>💬</span>
-                              <div style={contactInfo}>
-                                <Text style={contactLabel}>واتساب (متوفر 24 ساعة):</Text>
-                                <Link href="https://wa.me/966500776343" style={contactLink}>
+                            <td style={contactItem}>
+                              <span style={contactIconStyle}>💬</span>
+                              <div>
+                                <Text style={contactLabel}>واتساب (24/7)</Text>
+                                <Link href="https://wa.me/966500776343" style={contactValue}>
                                   +966 50 077 6343
                                 </Link>
                               </div>
                             </td>
                           </tr>
                           <tr>
-                            <td style={contactRow}>
-                              <span style={contactIcon}>☎️</span>
-                              <div style={contactInfo}>
-                                <Text style={contactLabel}>الهاتف:</Text>
-                                <Text style={contactValue}>+966 50 077 6343</Text>
+                            <td style={contactItem}>
+                              <span style={contactIconStyle}>☎️</span>
+                              <div>
+                                <Text style={contactLabel}>الهاتف</Text>
+                                <Text style={contactValuePlain}>+966 50 077 6343</Text>
                               </div>
                             </td>
                           </tr>
                           <tr>
-                            <td style={contactRow}>
-                              <span style={contactIcon}>🌐</span>
-                              <div style={contactInfo}>
-                                <Text style={contactLabel}>الموقع الإلكتروني:</Text>
-                                <Link href="https://masteredupath.com" style={contactLink}>
+                            <td style={contactItem}>
+                              <span style={contactIconStyle}>🌐</span>
+                              <div>
+                                <Text style={contactLabel}>الموقع الإلكتروني</Text>
+                                <Link href="https://masteredupath.com" style={contactValue}>
                                   www.masteredupath.com
                                 </Link>
                               </div>
@@ -211,16 +239,18 @@ export const ClientEmail = ({
                   {/* CTA Buttons */}
                   <table style={{ width: '100%', marginTop: '30px' }}>
                     <tr>
-                      <td style={{ textAlign: 'center', padding: '10px' }}>
+                      <td style={{ textAlign: 'center', padding: '10px 20px' }}>
                         <Link href="https://wa.me/966500776343" style={whatsappButton}>
-                          💬 تواصل معنا عبر واتساب
+                          <span style={{ fontSize: '20px', marginLeft: '10px' }}>💬</span>
+                          تواصل معنا عبر واتساب
                         </Link>
                       </td>
                     </tr>
                     <tr>
-                      <td style={{ textAlign: 'center', padding: '10px' }}>
+                      <td style={{ textAlign: 'center', padding: '10px 20px' }}>
                         <Link href="https://masteredupath.com" style={websiteButton}>
-                          🌐 زيارة الموقع الإلكتروني
+                          <span style={{ fontSize: '20px', marginLeft: '10px' }}>🌐</span>
+                          زيارة الموقع الإلكتروني
                         </Link>
                       </td>
                     </tr>
@@ -231,23 +261,26 @@ export const ClientEmail = ({
             </table>
           </Section>
 
-          <Hr style={divider} />
+          <Hr style={mainDivider} />
 
-          {/* Footer */}
+          {/* Premium Footer */}
           <Section style={footer}>
             <table style={{ width: '100%' }}>
               <tr>
                 <td style={{ textAlign: 'center' }}>
                   <Text style={footerText}>
-                    شكراً لثقتكم بنا، ونتطلع للتعاون معكم
+                    شكراً لثقتكم بنا 🙏
                   </Text>
                   <Text style={footerBrand}>
-                    <strong>🎓 فريق Master Edu Path</strong>
+                    <strong>🎓 Master Edu Path</strong>
                   </Text>
+                  <Text style={footerTagline}>
+                    التميز الأكاديمي في خدمتكم
+                  </Text>
+                  <Hr style={{ borderColor: '#e0e0e0', margin: '20px 0', width: '50%', marginLeft: 'auto', marginRight: 'auto' }} />
                   <Text style={footerSmall}>
                     هذه رسالة تلقائية، للتواصل استخدم معلومات الاتصال أعلاه
                   </Text>
-                  <Hr style={{ borderColor: '#e0e0e0', margin: '15px 0' }} />
                   <Text style={footerSmall}>
                     © 2024 Master Edu Path. جميع الحقوق محفوظة
                   </Text>
@@ -263,275 +296,311 @@ export const ClientEmail = ({
 
 export default ClientEmail;
 
-// Styles
+// Premium Styles
 const main = {
-  backgroundColor: '#f5f5f5',
-  fontFamily: "'Segoe UI', Tahoma, Arial, sans-serif",
+  backgroundColor: '#f8f9fc',
+  fontFamily: "'Noto Sans Arabic', 'Segoe UI', Tahoma, Arial, sans-serif",
   direction: 'rtl' as const,
-  padding: '20px 0',
+  padding: '40px 20px',
 };
 
 const container = {
   margin: '0 auto',
-  maxWidth: '650px',
+  maxWidth: '600px',
   backgroundColor: '#ffffff',
-  borderRadius: '12px',
+  borderRadius: '16px',
   overflow: 'hidden',
-  boxShadow: '0 4px 20px rgba(0,0,0,0.1)',
+  boxShadow: '0 10px 40px rgba(0,0,0,0.08)',
 };
 
 const header = {
   background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-  padding: '40px 20px',
+  padding: '50px 30px',
+  position: 'relative' as const,
 };
 
-const logoBox = {
+const logoContainer = {
   textAlign: 'center' as const,
 };
 
 const logoIcon = {
-  fontSize: '48px',
+  fontSize: '56px',
   display: 'block',
-  marginBottom: '10px',
+  marginBottom: '15px',
+  filter: 'drop-shadow(0 4px 8px rgba(0,0,0,0.2))',
 };
 
 const logoText = {
   color: '#ffffff',
-  fontSize: '32px',
-  fontWeight: 'bold',
+  fontSize: '36px',
+  fontWeight: '700',
   margin: '10px 0',
   textAlign: 'center' as const,
-  textShadow: '0 2px 4px rgba(0,0,0,0.2)',
+  textShadow: '0 3px 6px rgba(0,0,0,0.3)',
+  letterSpacing: '0.5px',
 };
 
 const tagline = {
   color: '#ffffff',
-  fontSize: '16px',
-  margin: '5px 0 0',
+  fontSize: '18px',
+  margin: '10px 0 0',
   opacity: 0.95,
   textAlign: 'center' as const,
+  fontWeight: '400',
 };
 
-const content = {
-  padding: '35px 25px',
-};
-
-const h1 = {
-  color: '#1a1a1a',
-  fontSize: '26px',
-  fontWeight: 'bold',
-  margin: '0 0 20px',
-  textAlign: 'right' as const,
-  borderRight: '4px solid #667eea',
-  paddingRight: '15px',
-};
-
-const h2 = {
-  color: '#667eea',
-  fontSize: '20px',
-  fontWeight: 'bold',
-  margin: '0 0 10px',
-  textAlign: 'right' as const,
-};
-
-const text = {
-  color: '#333333',
-  fontSize: '16px',
-  lineHeight: '26px',
-  margin: '0 0 20px',
-  textAlign: 'right' as const,
-};
-
-const infoBox = {
-  width: '100%',
-  backgroundColor: '#f0f4ff',
-  borderRadius: '10px',
-  margin: '25px 0',
-  border: '3px solid #667eea',
-  boxShadow: '0 2px 8px rgba(102,126,234,0.15)',
-};
-
-const innerDivider = {
-  borderColor: '#667eea',
-  margin: '10px 0',
-  opacity: 0.3,
-};
-
-const labelCell = {
-  color: '#667eea',
-  fontSize: '15px',
-  fontWeight: 'bold',
-  padding: '12px 15px 12px 0',
-  textAlign: 'right' as const,
-  width: '45%',
-  verticalAlign: 'middle' as const,
-};
-
-const labelIcon = {
-  marginLeft: '8px',
-  fontSize: '18px',
-};
-
-const valueCell = {
-  color: '#1a1a1a',
-  fontSize: '15px',
-  padding: '12px 0',
-  textAlign: 'right' as const,
-  verticalAlign: 'middle' as const,
-};
-
-const successBox = {
-  width: '100%',
+const successBanner = {
   backgroundColor: '#d4edda',
-  borderRadius: '10px',
-  margin: '25px 0',
-  border: '2px solid #28a745',
+  borderTop: '4px solid #28a745',
+  borderBottom: '4px solid #28a745',
 };
 
-const successText = {
+const successTitle = {
   color: '#155724',
-  fontSize: '20px',
-  fontWeight: 'bold',
-  margin: '10px 0 5px',
+  fontSize: '26px',
+  fontWeight: '700',
+  margin: '0 0 10px',
   textAlign: 'center' as const,
 };
 
 const successSubtext = {
   color: '#155724',
-  fontSize: '14px',
-  margin: '5px 0 0',
+  fontSize: '16px',
+  margin: '0',
+  textAlign: 'center' as const,
+  fontWeight: '500',
+};
+
+const content = {
+  padding: '40px 30px',
+};
+
+const greetingBox = {
+  marginBottom: '30px',
+};
+
+const greetingText = {
+  color: '#1a1a1a',
+  fontSize: '20px',
+  fontWeight: '600',
+  margin: '0 0 15px',
+  textAlign: 'right' as const,
+};
+
+const normalText = {
+  color: '#4a5568',
+  fontSize: '16px',
+  lineHeight: '26px',
+  margin: '0',
+  textAlign: 'right' as const,
+};
+
+const packageCard = {
+  width: '100%',
+  backgroundColor: '#fff8e1',
+  borderRadius: '12px',
+  margin: '30px 0',
+  border: '3px solid #ffc107',
+  boxShadow: '0 4px 12px rgba(255,193,7,0.15)',
+};
+
+const cardTitle = {
+  color: '#1a1a1a',
+  fontSize: '22px',
+  fontWeight: '700',
+  margin: '0 0 15px',
   textAlign: 'center' as const,
 };
 
-const benefitsBox = {
-  width: '100%',
-  backgroundColor: '#e8f5e9',
-  borderRadius: '10px',
-  margin: '25px 0',
-  border: '2px solid #4caf50',
+const packageBadge = {
+  backgroundColor: '#ffc107',
+  color: '#1a1a1a',
+  padding: '12px 30px',
+  borderRadius: '50px',
+  fontSize: '18px',
+  fontWeight: '700',
+  display: 'inline-block',
+  margin: '0 auto',
+  textAlign: 'center' as const,
+  boxShadow: '0 4px 12px rgba(255,193,7,0.3)',
 };
 
-const benefitItem = {
-  padding: '10px 0',
+const cardSubtext = {
+  color: '#666',
+  fontSize: '14px',
+  margin: '15px 0 0',
+  textAlign: 'center' as const,
+  lineHeight: '22px',
+};
+
+const benefitsSection = {
+  width: '100%',
+  backgroundColor: '#f0f7ff',
+  borderRadius: '12px',
+  margin: '30px 0',
+  border: '2px solid #4299e1',
+};
+
+const sectionTitle = {
+  color: '#1a1a1a',
+  fontSize: '22px',
+  fontWeight: '700',
+  margin: '0 0 10px',
   textAlign: 'right' as const,
 };
 
-const checkmark = {
-  color: '#4caf50',
-  fontSize: '22px',
-  fontWeight: 'bold',
-  marginLeft: '12px',
-  verticalAlign: 'middle' as const,
+const dividerLine = {
+  borderColor: 'rgba(0,0,0,0.1)',
+  margin: '15px 0',
 };
 
-const benefitText = {
-  color: '#1a1a1a',
-  fontSize: '15px',
-  verticalAlign: 'middle' as const,
+const benefitRow = {
+  display: 'flex',
+  alignItems: 'flex-start',
+  padding: '15px 0',
+  borderBottom: '1px solid rgba(66,153,225,0.15)',
 };
 
-const contactBox = {
+const benefitIcon = {
+  fontSize: '32px',
+  marginLeft: '15px',
+  minWidth: '40px',
+  textAlign: 'center' as const,
+};
+
+const benefitContent = {
+  flex: 1,
+};
+
+const benefitTitle = {
+  color: '#2d3748',
+  fontSize: '17px',
+  fontWeight: '700',
+  margin: '0 0 5px',
+  textAlign: 'right' as const,
+};
+
+const benefitDesc = {
+  color: '#718096',
+  fontSize: '14px',
+  margin: '0',
+  textAlign: 'right' as const,
+  lineHeight: '20px',
+};
+
+const contactSection = {
   width: '100%',
-  backgroundColor: '#fff8e1',
-  borderRadius: '10px',
-  margin: '25px 0',
-  border: '2px solid #ffc107',
+  backgroundColor: '#fff5f5',
+  borderRadius: '12px',
+  margin: '30px 0',
+  border: '2px solid #fc8181',
 };
 
-const contactRow = {
-  padding: '12px 0',
-  borderBottom: '1px solid #ffe082',
+const contactItem = {
   display: 'flex',
   alignItems: 'center',
+  padding: '15px 0',
+  borderBottom: '1px solid rgba(252,129,129,0.15)',
 };
 
-const contactIcon = {
-  fontSize: '28px',
+const contactIconStyle = {
+  fontSize: '32px',
   marginLeft: '15px',
-  minWidth: '35px',
-};
-
-const contactInfo = {
-  flex: 1,
-  textAlign: 'right' as const,
+  minWidth: '40px',
 };
 
 const contactLabel = {
-  color: '#666666',
+  color: '#718096',
   fontSize: '13px',
-  margin: '0 0 3px',
+  margin: '0 0 5px',
   textAlign: 'right' as const,
+  fontWeight: '500',
 };
 
-const contactLink = {
-  color: '#667eea',
-  fontSize: '15px',
-  fontWeight: 'bold',
+const contactValue = {
+  color: '#2d3748',
+  fontSize: '16px',
+  fontWeight: '700',
   textDecoration: 'none',
   margin: '0',
 };
 
-const contactValue = {
-  color: '#1a1a1a',
-  fontSize: '15px',
-  fontWeight: 'bold',
+const contactValuePlain = {
+  color: '#2d3748',
+  fontSize: '16px',
+  fontWeight: '700',
   margin: '0',
   textAlign: 'right' as const,
 };
 
 const whatsappButton = {
   display: 'inline-block',
-  backgroundColor: '#25D366',
+  background: 'linear-gradient(135deg, #25D366 0%, #128C7E 100%)',
   color: '#ffffff',
-  padding: '14px 35px',
-  borderRadius: '8px',
+  padding: '16px 40px',
+  borderRadius: '50px',
   textDecoration: 'none',
-  fontSize: '16px',
-  fontWeight: 'bold',
-  boxShadow: '0 4px 12px rgba(37,211,102,0.3)',
-  transition: 'transform 0.2s',
+  fontSize: '18px',
+  fontWeight: '700',
+  boxShadow: '0 6px 20px rgba(37,211,102,0.35)',
+  transition: 'all 0.3s ease',
+  textAlign: 'center' as const,
+  border: 'none',
 };
 
 const websiteButton = {
   display: 'inline-block',
-  backgroundColor: '#667eea',
+  background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
   color: '#ffffff',
-  padding: '14px 35px',
-  borderRadius: '8px',
+  padding: '16px 40px',
+  borderRadius: '50px',
   textDecoration: 'none',
-  fontSize: '16px',
-  fontWeight: 'bold',
-  boxShadow: '0 4px 12px rgba(102,126,234,0.3)',
-  transition: 'transform 0.2s',
+  fontSize: '18px',
+  fontWeight: '700',
+  boxShadow: '0 6px 20px rgba(102,126,234,0.35)',
+  transition: 'all 0.3s ease',
+  textAlign: 'center' as const,
+  border: 'none',
 };
 
-const divider = {
-  borderColor: '#e0e0e0',
+const mainDivider = {
+  borderColor: '#e2e8f0',
   margin: '0',
 };
 
 const footer = {
-  padding: '30px 25px',
-  backgroundColor: '#f8f9fa',
+  padding: '40px 30px',
+  backgroundColor: '#f8f9fc',
 };
 
 const footerText = {
-  color: '#666666',
-  fontSize: '15px',
+  color: '#4a5568',
+  fontSize: '16px',
   margin: '5px 0',
   textAlign: 'center' as const,
+  fontWeight: '500',
 };
 
 const footerBrand = {
   color: '#1a1a1a',
-  fontSize: '16px',
-  margin: '8px 0',
+  fontSize: '20px',
+  margin: '10px 0',
   textAlign: 'center' as const,
+  fontWeight: '700',
+};
+
+const footerTagline = {
+  color: '#718096',
+  fontSize: '14px',
+  margin: '5px 0',
+  textAlign: 'center' as const,
+  fontStyle: 'italic',
 };
 
 const footerSmall = {
-  color: '#999999',
+  color: '#a0aec0',
   fontSize: '12px',
   margin: '8px 0',
   textAlign: 'center' as const,
+  lineHeight: '18px',
 };

@@ -61,27 +61,62 @@ export const AdminEmail = ({
       <Head>
         <meta httpEquiv="Content-Type" content="text/html; charset=utf-8" />
         <style>{`
-          * { font-family: 'Segoe UI', Tahoma, Arial, sans-serif; }
+          @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Arabic:wght@400;600;700&display=swap');
+          * { 
+            font-family: 'Noto Sans Arabic', 'Segoe UI', Tahoma, Arial, sans-serif;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+          }
           body { direction: rtl; text-align: right; }
         `}</style>
       </Head>
-      <Preview>🔔 طلب شراكة مؤسسية عاجل من {institutionName} - يتطلب المراجعة الفورية</Preview>
+      <Preview>🚨 طلب شراكة مؤسسية عاجل من {institutionName} - يتطلب المراجعة الفورية</Preview>
       <Body style={main}>
         <Container style={container}>
-          {/* Alert Header */}
+          
+          {/* Urgent Alert Header */}
           <Section style={alertHeader}>
             <table style={{ width: '100%', textAlign: 'center' }}>
               <tr>
                 <td>
-                  <span style={{ fontSize: '42px', display: 'block', marginBottom: '10px' }}>🚨</span>
-                  <Heading style={alertTitle}>طلب شراكة مؤسسية جديد</Heading>
-                  <Text style={alertSubtitle}>يتطلب المراجعة والرد خلال 24 ساعة</Text>
+                  <span style={{ fontSize: '56px', display: 'block', marginBottom: '15px', animation: 'pulse 2s infinite' }}>🚨</span>
+                  <Heading style={alertTitle}>طلب شراكة مؤسسية عاجل</Heading>
+                  <div style={urgencyBadge}>
+                    <span style={{ fontSize: '20px', marginLeft: '8px' }}>⏰</span>
+                    يتطلب الرد خلال 24 ساعة
+                  </div>
                 </td>
               </tr>
             </table>
           </Section>
 
-          <Hr style={divider} />
+          {/* Quick Summary Card */}
+          <Section style={summaryCard}>
+            <table style={{ width: '100%' }}>
+              <tr>
+                <td style={{ padding: '25px', textAlign: 'center' }}>
+                  <Heading style={summaryTitle}>ملخص الطلب</Heading>
+                  <div style={summaryGrid}>
+                    <div style={summaryItem}>
+                      <span style={summaryIcon}>🏛️</span>
+                      <Text style={summaryLabel}>المؤسسة</Text>
+                      <Text style={summaryValue}>{institutionName}</Text>
+                    </div>
+                    <div style={summaryItem}>
+                      <span style={summaryIcon}>👤</span>
+                      <Text style={summaryLabel}>المسؤول</Text>
+                      <Text style={summaryValue}>{contactPerson}</Text>
+                    </div>
+                    <div style={summaryItem}>
+                      <span style={summaryIcon}>📦</span>
+                      <Text style={summaryLabel}>الباقة</Text>
+                      <Text style={summaryValue}>{packageNames[selectedPackage]}</Text>
+                    </div>
+                  </div>
+                </td>
+              </tr>
+            </table>
+          </Section>
 
           {/* Main Content */}
           <Section style={content}>
@@ -90,25 +125,37 @@ export const AdminEmail = ({
                 <td style={{ textAlign: 'right' }}>
                   
                   {/* Institution Details */}
-                  <table style={sectionBox}>
+                  <table style={detailsCard}>
                     <tr>
-                      <td style={{ padding: '20px' }}>
-                        <Heading style={sectionTitle}>
-                          🏛️ معلومات المؤسسة
-                        </Heading>
-                        <Hr style={innerDivider} />
-                        <table style={{ width: '100%', marginTop: '15px' }}>
+                      <td style={{ padding: '25px' }}>
+                        <div style={cardHeader}>
+                          <span style={cardIcon}>🏢</span>
+                          <Heading style={cardTitle}>معلومات المؤسسة</Heading>
+                        </div>
+                        <Hr style={cardDivider} />
+                        <table style={detailsTable}>
                           <tr>
-                            <td style={labelCell}>اسم المؤسسة:</td>
-                            <td style={valueCell}><strong>{institutionName}</strong></td>
+                            <td style={detailLabel}>
+                              <span style={detailIcon}>🏛️</span>
+                              اسم المؤسسة:
+                            </td>
+                            <td style={detailValue}>
+                              <strong>{institutionName}</strong>
+                            </td>
                           </tr>
                           <tr>
-                            <td style={labelCell}>نوع المؤسسة:</td>
-                            <td style={valueCell}>{institutionTypes[institutionType]}</td>
+                            <td style={detailLabel}>
+                              <span style={detailIcon}>🏷️</span>
+                              نوع المؤسسة:
+                            </td>
+                            <td style={detailValue}>{institutionTypes[institutionType]}</td>
                           </tr>
-                           <tr>
-                            <td style={labelCell}>عدد الموظفين:</td>
-                            <td style={valueCell}>{employeesCount}</td>
+                          <tr>
+                            <td style={detailLabel}>
+                              <span style={detailIcon}>👥</span>
+                              عدد الموظفين:
+                            </td>
+                            <td style={detailValue}>{employeesCount}</td>
                           </tr>
                         </table>
                       </td>
@@ -116,35 +163,48 @@ export const AdminEmail = ({
                   </table>
 
                   {/* Contact Person Details */}
-                  <table style={sectionBox}>
+                  <table style={detailsCard}>
                     <tr>
-                      <td style={{ padding: '20px' }}>
-                        <Heading style={sectionTitle}>
-                          👤 معلومات الشخص المسؤول
-                        </Heading>
-                        <Hr style={innerDivider} />
-                        <table style={{ width: '100%', marginTop: '15px' }}>
+                      <td style={{ padding: '25px' }}>
+                        <div style={cardHeader}>
+                          <span style={cardIcon}>👤</span>
+                          <Heading style={cardTitle}>معلومات الشخص المسؤول</Heading>
+                        </div>
+                        <Hr style={cardDivider} />
+                        <table style={detailsTable}>
                           <tr>
-                            <td style={labelCell}>الاسم:</td>
-                            <td style={valueCell}><strong>{contactPerson}</strong></td>
-                          </tr>
-                          <tr>
-                            <td style={labelCell}>المنصب:</td>
-                            <td style={valueCell}>{position}</td>
-                          </tr>
-                          <tr>
-                            <td style={labelCell}>
-                              <span style={{ marginLeft: '5px' }}>📧</span> البريد الإلكتروني:
+                            <td style={detailLabel}>
+                              <span style={detailIcon}>✍️</span>
+                              الاسم:
                             </td>
-                            <td style={valueCell}>
-                              <Link href={`mailto:${email}`} style={emailLink}>{email}</Link>
+                            <td style={detailValue}>
+                              <strong>{contactPerson}</strong>
                             </td>
                           </tr>
                           <tr>
-                            <td style={labelCell}>
-                              <span style={{ marginLeft: '5px' }}>📱</span> رقم الجوال:
+                            <td style={detailLabel}>
+                              <span style={detailIcon}>💼</span>
+                              المنصب:
                             </td>
-                            <td style={valueCell}>
+                            <td style={detailValue}>{position}</td>
+                          </tr>
+                          <tr>
+                            <td style={detailLabel}>
+                              <span style={detailIcon}>📧</span>
+                              البريد الإلكتروني:
+                            </td>
+                            <td style={detailValue}>
+                              <Link href={`mailto:${email}`} style={emailLink}>
+                                {email}
+                              </Link>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td style={detailLabel}>
+                              <span style={detailIcon}>📱</span>
+                              رقم الجوال:
+                            </td>
+                            <td style={detailValue}>
                               <Link href={`https://wa.me/${phone.replace(/\D/g, '')}`} style={phoneLink}>
                                 {phone}
                               </Link>
@@ -156,23 +216,26 @@ export const AdminEmail = ({
                   </table>
 
                   {/* Package & Services */}
-                  <table style={packageBox}>
+                  <table style={packageCard}>
                     <tr>
-                      <td style={{ padding: '20px' }}>
-                        <Heading style={sectionTitle}>
-                          📦 الباقة والخدمات المطلوبة
-                        </Heading>
-                        <Hr style={innerDivider} />
-                        <table style={{ width: '100%', marginTop: '15px' }}>
+                      <td style={{ padding: '25px' }}>
+                        <div style={cardHeader}>
+                          <span style={cardIcon}>📦</span>
+                          <Heading style={cardTitle}>الباقة والخدمات المطلوبة</Heading>
+                        </div>
+                        <Hr style={cardDivider} />
+                        <div style={packageBadgeContainer}>
+                          <div style={packageBadge}>
+                            {packageNames[selectedPackage]}
+                          </div>
+                        </div>
+                        <table style={detailsTable}>
                           <tr>
-                            <td style={labelCell}>الباقة المختارة:</td>
-                            <td style={valueCell}>
-                              <span style={packageBadge}>{packageNames[selectedPackage]}</span>
+                            <td style={detailLabel}>
+                              <span style={detailIcon}>🎯</span>
+                              الخدمات المتوقعة:
                             </td>
-                          </tr>
-                          <tr>
-                            <td style={labelCell}>الخدمات المتوقعة:</td>
-                            <td style={valueCell}>{expectedServices}</td>
+                            <td style={detailValue}>{expectedServices}</td>
                           </tr>
                         </table>
                       </td>
@@ -181,13 +244,14 @@ export const AdminEmail = ({
 
                   {/* Additional Notes */}
                   {additionalNotes && (
-                    <table style={notesBox}>
+                    <table style={notesCard}>
                       <tr>
-                        <td style={{ padding: '20px' }}>
-                          <Heading style={sectionTitle}>
-                            📝 ملاحظات إضافية
-                          </Heading>
-                          <Hr style={innerDivider} />
+                        <td style={{ padding: '25px' }}>
+                          <div style={cardHeader}>
+                            <span style={cardIcon}>📝</span>
+                            <Heading style={cardTitle}>ملاحظات إضافية</Heading>
+                          </div>
+                          <Hr style={cardDivider} />
                           <Text style={notesText}>{additionalNotes}</Text>
                         </td>
                       </tr>
@@ -195,22 +259,26 @@ export const AdminEmail = ({
                   )}
 
                   {/* Action Required */}
-                  <table style={actionBox}>
+                  <table style={actionCard}>
                     <tr>
-                      <td style={{ padding: '25px', textAlign: 'center' }}>
-                        <span style={{ fontSize: '32px', display: 'block', marginBottom: '10px' }}>⚡</span>
-                        <Heading style={actionTitle}>إجراء مطلوب</Heading>
+                      <td style={{ padding: '30px', textAlign: 'center' }}>
+                        <span style={{ fontSize: '48px', display: 'block', marginBottom: '15px' }}>⚡</span>
+                        <Heading style={actionTitle}>إجراء مطلوب فوراً</Heading>
                         <Text style={actionText}>
-                          يرجى التواصل مع العميل خلال <strong>24 ساعة</strong> لمناقشة تفاصيل الشراكة
+                          يرجى التواصل مع العميل خلال <strong style={{ fontSize: '18px' }}>24 ساعة</strong> لمناقشة تفاصيل الشراكة
                         </Text>
-                        <div style={{ marginTop: '20px' }}>
-                          <Link href={`mailto:${email}`} style={actionButton}>
-                            📧 الرد عبر البريد الإلكتروني
+                        
+                        <div style={{ marginTop: '25px' }}>
+                          <Link href={`mailto:${email}`} style={primaryButton}>
+                            <span style={{ fontSize: '22px', marginLeft: '10px' }}>📧</span>
+                            الرد عبر البريد الإلكتروني
                           </Link>
                         </div>
-                        <div style={{ marginTop: '10px' }}>
-                          <Link href={`https://wa.me/${phone.replace(/\D/g, '')}`} style={whatsappActionButton}>
-                            💬 التواصل عبر واتساب
+                        
+                        <div style={{ marginTop: '15px' }}>
+                          <Link href={`https://wa.me/${phone.replace(/\D/g, '')}`} style={whatsappButton}>
+                            <span style={{ fontSize: '22px', marginLeft: '10px' }}>💬</span>
+                            التواصل عبر واتساب
                           </Link>
                         </div>
                       </td>
@@ -218,11 +286,11 @@ export const AdminEmail = ({
                   </table>
 
                   {/* Timestamp */}
-                  <table style={timestampBox}>
+                  <table style={timestampCard}>
                     <tr>
-                      <td style={{ padding: '15px', textAlign: 'center' }}>
+                      <td style={{ padding: '20px', textAlign: 'center' }}>
                         <Text style={timestampText}>
-                          🕐 تاريخ الطلب: {new Date(submittedAt).toLocaleString('ar-SA', {
+                          🕐 <strong>تاريخ الطلب:</strong> {new Date(submittedAt).toLocaleString('ar-SA', {
                             dateStyle: 'full',
                             timeStyle: 'short',
                             timeZone: 'Asia/Riyadh'
@@ -237,7 +305,7 @@ export const AdminEmail = ({
             </table>
           </Section>
 
-          <Hr style={divider} />
+          <Hr style={mainDivider} />
 
           {/* Footer */}
           <Section style={footer}>
@@ -253,7 +321,7 @@ export const AdminEmail = ({
                   <Text style={footerSmall}>
                     هذه رسالة تلقائية من نظام إدارة الطلبات
                   </Text>
-                  <Hr style={{ borderColor: '#e0e0e0', margin: '15px 0' }} />
+                  <Hr style={{ borderColor: '#e0e0e0', margin: '15px 0', width: '50%', marginLeft: 'auto', marginRight: 'auto' }} />
                   <Text style={footerSmall}>
                     © 2024 Master Edu Path. جميع الحقوق محفوظة
                   </Text>
@@ -269,90 +337,142 @@ export const AdminEmail = ({
 
 export default AdminEmail;
 
-// Styles
+// Premium Admin Styles
 const main = {
-  backgroundColor: '#f5f5f5',
-  fontFamily: "'Segoe UI', Tahoma, Arial, sans-serif",
+  backgroundColor: '#f8f9fc',
+  fontFamily: "'Noto Sans Arabic', 'Segoe UI', Tahoma, Arial, sans-serif",
   direction: 'rtl' as const,
-  padding: '20px 0',
+  padding: '40px 20px',
 };
 
 const container = {
   margin: '0 auto',
-  maxWidth: '650px',
+  maxWidth: '700px',
   backgroundColor: '#ffffff',
-  borderRadius: '12px',
+  borderRadius: '16px',
   overflow: 'hidden',
-  boxShadow: '0 4px 20px rgba(0,0,0,0.1)',
+  boxShadow: '0 10px 40px rgba(0,0,0,0.1)',
 };
 
 const alertHeader = {
   background: 'linear-gradient(135deg, #dc3545 0%, #c82333 100%)',
-  padding: '35px 20px',
+  padding: '50px 30px',
+  position: 'relative' as const,
 };
 
 const alertTitle = {
   color: '#ffffff',
-  fontSize: '28px',
-  fontWeight: 'bold',
-  margin: '0 0 10px',
+  fontSize: '32px',
+  fontWeight: '700',
+  margin: '15px 0',
   textAlign: 'center' as const,
-  textShadow: '0 2px 4px rgba(0,0,0,0.2)',
+  textShadow: '0 3px 6px rgba(0,0,0,0.3)',
 };
 
-const alertSubtitle = {
+const urgencyBadge = {
+  backgroundColor: 'rgba(255, 255, 255, 0.2)',
   color: '#ffffff',
+  padding: '12px 25px',
+  borderRadius: '50px',
   fontSize: '16px',
-  margin: '0',
-  opacity: 0.95,
+  fontWeight: '600',
+  display: 'inline-block',
+  margin: '10px auto 0',
+  backdropFilter: 'blur(10px)',
+  border: '2px solid rgba(255, 255, 255, 0.3)',
+};
+
+const summaryCard = {
+  backgroundColor: '#fff3cd',
+  borderTop: '4px solid #ffc107',
+  borderBottom: '4px solid #ffc107',
+};
+
+const summaryTitle = {
+  color: '#856404',
+  fontSize: '24px',
+  fontWeight: '700',
+  margin: '0 0 20px',
   textAlign: 'center' as const,
+};
+
+const summaryGrid = {
+  display: 'grid',
+  gridTemplateColumns: 'repeat(3, 1fr)',
+  gap: '20px',
+  marginTop: '20px',
+};
+
+const summaryItem = {
+  textAlign: 'center' as const,
+  padding: '15px',
+  backgroundColor: 'rgba(255, 255, 255, 0.6)',
+  borderRadius: '12px',
+};
+
+const summaryIcon = {
+  fontSize: '36px',
+  display: 'block',
+  marginBottom: '10px',
+};
+
+const summaryLabel = {
+  color: '#666',
+  fontSize: '13px',
+  margin: '5px 0',
+  textAlign: 'center' as const,
+  fontWeight: '500',
+};
+
+const summaryValue = {
+  color: '#1a1a1a',
+  fontSize: '15px',
+  margin: '5px 0',
+  textAlign: 'center' as const,
+  fontWeight: '700',
 };
 
 const content = {
-  padding: '35px 25px',
+  padding: '40px 30px',
 };
 
-const sectionTitle = {
-  color: '#1a1a1a',
-  fontSize: '20px',
-  fontWeight: 'bold',
-  margin: '0 0 10px',
-  textAlign: 'right' as const,
-};
-
-const sectionBox = {
+const detailsCard = {
   width: '100%',
   backgroundColor: '#f8f9fa',
-  borderRadius: '10px',
+  borderRadius: '12px',
   margin: '20px 0',
   border: '2px solid #dee2e6',
+  boxShadow: '0 2px 8px rgba(0,0,0,0.05)',
 };
 
-const packageBox = {
+const packageCard = {
   width: '100%',
-  backgroundColor: '#fff3cd',
-  borderRadius: '10px',
+  backgroundColor: '#fff8e1',
+  borderRadius: '12px',
   margin: '20px 0',
-  border: '2px solid #ffc107',
+  border: '3px solid #ffc107',
+  boxShadow: '0 4px 12px rgba(255,193,7,0.15)',
 };
 
-const notesBox = {
+const notesCard = {
   width: '100%',
   backgroundColor: '#e7f3ff',
-  borderRadius: '10px',
+  borderRadius: '12px',
   margin: '20px 0',
   border: '2px solid #2196F3',
+  boxShadow: '0 2px 8px rgba(33,150,243,0.1)',
 };
 
-const actionBox = {
+const actionCard = {
   width: '100%',
-  backgroundColor: '#d4edda',
-  borderRadius: '10px',
-  margin: '25px 0',
+  background: 'linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%)',
+  borderRadius: '12px',
+  margin: '30px 0',
   border: '3px solid #28a745',
+  boxShadow: '0 6px 20px rgba(40,167,69,0.2)',
 };
 
-const timestampBox = {
+const timestampCard = {
   width: '100%',
   backgroundColor: '#e9ecef',
   borderRadius: '8px',
@@ -360,134 +480,183 @@ const timestampBox = {
   border: '1px solid #ced4da',
 };
 
-const innerDivider = {
-  borderColor: '#dee2e6',
-  margin: '10px 0',
-  opacity: 0.5,
+const cardHeader = {
+  display: 'flex',
+  alignItems: 'center',
+  marginBottom: '15px',
 };
 
-const labelCell = {
+const cardIcon = {
+  fontSize: '32px',
+  marginLeft: '12px',
+};
+
+const cardTitle = {
+  color: '#1a1a1a',
+  fontSize: '20px',
+  fontWeight: '700',
+  margin: '0',
+  textAlign: 'right' as const,
+};
+
+const cardDivider = {
+  borderColor: 'rgba(0,0,0,0.1)',
+  margin: '15px 0',
+};
+
+const detailsTable = {
+  width: '100%',
+  marginTop: '15px',
+};
+
+const detailLabel = {
   color: '#6c757d',
   fontSize: '14px',
-  fontWeight: 'bold',
-  padding: '10px 15px 10px 0',
+  fontWeight: '600',
+  padding: '12px 15px 12px 0',
   textAlign: 'right' as const,
-  width: '40%',
+  width: '35%',
   verticalAlign: 'top' as const,
 };
 
-const valueCell = {
+const detailValue = {
   color: '#1a1a1a',
   fontSize: '15px',
-  padding: '10px 0',
+  padding: '12px 0',
   textAlign: 'right' as const,
   verticalAlign: 'top' as const,
+  fontWeight: '500',
+};
+
+const detailIcon = {
+  fontSize: '18px',
+  marginLeft: '8px',
 };
 
 const emailLink = {
   color: '#0066cc',
   textDecoration: 'none',
-  fontWeight: 'bold',
+  fontWeight: '700',
+  fontSize: '15px',
 };
 
 const phoneLink = {
   color: '#25D366',
   textDecoration: 'none',
-  fontWeight: 'bold',
+  fontWeight: '700',
+  fontSize: '15px',
+};
+
+const packageBadgeContainer = {
+  textAlign: 'center' as const,
+  margin: '20px 0',
 };
 
 const packageBadge = {
   backgroundColor: '#ffc107',
   color: '#1a1a1a',
-  padding: '6px 15px',
-  borderRadius: '20px',
-  fontSize: '14px',
-  fontWeight: 'bold',
+  padding: '12px 30px',
+  borderRadius: '50px',
+  fontSize: '16px',
+  fontWeight: '700',
   display: 'inline-block',
+  boxShadow: '0 4px 12px rgba(255,193,7,0.3)',
 };
 
 const notesText = {
   color: '#333333',
   fontSize: '15px',
-  lineHeight: '24px',
+  lineHeight: '26px',
   margin: '15px 0 0',
   textAlign: 'right' as const,
   whiteSpace: 'pre-wrap' as const,
+  padding: '15px',
+  backgroundColor: 'rgba(255, 255, 255, 0.5)',
+  borderRadius: '8px',
 };
 
 const actionTitle = {
   color: '#155724',
-  fontSize: '22px',
-  fontWeight: 'bold',
-  margin: '0 0 10px',
+  fontSize: '26px',
+  fontWeight: '700',
+  margin: '0 0 15px',
   textAlign: 'center' as const,
 };
 
 const actionText = {
   color: '#155724',
-  fontSize: '15px',
+  fontSize: '16px',
   margin: '10px 0',
   textAlign: 'center' as const,
+  lineHeight: '26px',
 };
 
-const actionButton = {
+const primaryButton = {
   display: 'inline-block',
-  backgroundColor: '#dc3545',
+  background: 'linear-gradient(135deg, #dc3545 0%, #c82333 100%)',
   color: '#ffffff',
-  padding: '14px 30px',
-  borderRadius: '8px',
+  padding: '16px 40px',
+  borderRadius: '50px',
   textDecoration: 'none',
-  fontSize: '16px',
-  fontWeight: 'bold',
-  boxShadow: '0 4px 12px rgba(220,53,69,0.3)',
+  fontSize: '18px',
+  fontWeight: '700',
+  boxShadow: '0 6px 20px rgba(220,53,69,0.35)',
+  transition: 'all 0.3s ease',
+  border: 'none',
 };
 
-const whatsappActionButton = {
+const whatsappButton = {
   display: 'inline-block',
-  backgroundColor: '#25D366',
+  background: 'linear-gradient(135deg, #25D366 0%, #128C7E 100%)',
   color: '#ffffff',
-  padding: '14px 30px',
-  borderRadius: '8px',
+  padding: '16px 40px',
+  borderRadius: '50px',
   textDecoration: 'none',
-  fontSize: '16px',
-  fontWeight: 'bold',
-  boxShadow: '0 4px 12px rgba(37,211,102,0.3)',
+  fontSize: '18px',
+  fontWeight: '700',
+  boxShadow: '0 6px 20px rgba(37,211,102,0.35)',
+  transition: 'all 0.3s ease',
+  border: 'none',
 };
 
 const timestampText = {
   color: '#6c757d',
-  fontSize: '13px',
+  fontSize: '14px',
   margin: '0',
   textAlign: 'center' as const,
+  fontWeight: '500',
 };
 
-const divider = {
-  borderColor: '#e0e0e0',
+const mainDivider = {
+  borderColor: '#e2e8f0',
   margin: '0',
 };
 
 const footer = {
-  padding: '30px 25px',
-  backgroundColor: '#f8f9fa',
+  padding: '40px 30px',
+  backgroundColor: '#f8f9fc',
 };
 
 const footerText = {
-  color: '#666666',
+  color: '#4a5568',
   fontSize: '15px',
   margin: '5px 0',
   textAlign: 'center' as const,
+  fontWeight: '500',
 };
 
 const footerBrand = {
   color: '#1a1a1a',
-  fontSize: '16px',
-  margin: '8px 0',
+  fontSize: '20px',
+  margin: '10px 0',
   textAlign: 'center' as const,
+  fontWeight: '700',
 };
 
 const footerSmall = {
-  color: '#999999',
+  color: '#a0aec0',
   fontSize: '12px',
   margin: '8px 0',
   textAlign: 'center' as const,
+  lineHeight: '18px',
 };
