@@ -1,4 +1,4 @@
-import { motion } from "framer-motion";
+import { motion, useScroll, useTransform } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -15,7 +15,15 @@ import {
   MessageSquare,
   Crown,
   Zap,
-  Award
+  Award,
+  Shield,
+  Target,
+  TrendingUp,
+  BookOpen,
+  Globe,
+  Clock,
+  HeadphonesIcon,
+  BarChart3
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import Breadcrumb from "@/components/Breadcrumb";
@@ -23,6 +31,9 @@ import SEO from "@/components/SEO";
 
 const InstitutionalPartnerships = () => {
   const navigate = useNavigate();
+  const { scrollYProgress } = useScroll();
+  const opacity = useTransform(scrollYProgress, [0, 0.2], [1, 0]);
+  const scale = useTransform(scrollYProgress, [0, 0.2], [1, 0.95]);
 
   const packages = [
     {
@@ -32,6 +43,7 @@ const InstitutionalPartnerships = () => {
       color: "from-blue-500/20 to-cyan-500/20",
       borderColor: "border-blue-500/50",
       iconBg: "from-blue-500/20 to-cyan-500/20",
+      glowColor: "shadow-blue-500/20",
       price: "5,000",
       originalPrice: "10,000",
       discount: "50%",
@@ -58,6 +70,7 @@ const InstitutionalPartnerships = () => {
       color: "from-primary/30 to-secondary/30",
       borderColor: "border-primary",
       iconBg: "from-primary/30 to-secondary/30",
+      glowColor: "shadow-primary/30",
       price: "12,000",
       originalPrice: "24,000",
       discount: "50%",
@@ -88,6 +101,7 @@ const InstitutionalPartnerships = () => {
       color: "from-amber-500/20 to-orange-500/20",
       borderColor: "border-amber-500/50",
       iconBg: "from-amber-500/20 to-orange-500/20",
+      glowColor: "shadow-amber-500/20",
       price: "حسب الطلب",
       originalPrice: null,
       discount: "50%",
@@ -118,39 +132,88 @@ const InstitutionalPartnerships = () => {
 
   const benefits = [
     {
-      icon: Users,
-      title: "فريق متخصص",
-      description: "فريق من المترجمين والمراجعين المتخصصين في المجال الأكاديمي"
+      icon: BookOpen,
+      title: "خبرة أكاديمية متخصصة",
+      description: "فريق من الأكاديميين والباحثين المتخصصين في مختلف المجالات العلمية"
     },
     {
-      icon: Zap,
-      title: "سرعة في التنفيذ",
-      description: "أولوية قصوى في معالجة طلباتكم مع ضمان الجودة"
+      icon: Shield,
+      title: "ضمان الجودة والسرية",
+      description: "التزام تام بمعايير الجودة الأكاديمية مع حماية كاملة لخصوصية البيانات"
     },
     {
-      icon: Award,
-      title: "ضمان الجودة",
-      description: "مراجعة متعددة المستويات لضمان أعلى معايير الجودة"
+      icon: Clock,
+      title: "التزام بالمواعيد",
+      description: "نضمن تسليم جميع المشاريع في المواعيد المحددة دون تأخير"
     },
     {
-      icon: MessageSquare,
-      title: "تواصل مباشر",
-      description: "قناة تواصل مباشرة مع فريق العمل والإدارة"
+      icon: HeadphonesIcon,
+      title: "دعم أكاديمي متواصل",
+      description: "فريق دعم متخصص متاح على مدار الساعة للإجابة على استفساراتكم"
+    },
+    {
+      icon: Target,
+      title: "حلول مخصصة",
+      description: "نقدم حلولاً مصممة خصيصاً لتلبية احتياجات كل مؤسسة على حدة"
+    },
+    {
+      icon: TrendingUp,
+      title: "تطوير مستمر",
+      description: "نواكب أحدث المعايير الأكاديمية والتقنيات الحديثة في مجالنا"
     }
   ];
 
   const stats = [
-    { number: "200+", label: "مؤسسة شريكة" },
-    { number: "50,000+", label: "مشروع منجز" },
-    { number: "98%", label: "نسبة رضا العملاء" },
-    { number: "24/7", label: "دعم متواصل" }
+    { 
+      number: "200+", 
+      label: "مؤسسة شريكة",
+      icon: Building2
+    },
+    { 
+      number: "50,000+", 
+      label: "مشروع منجز",
+      icon: BarChart3
+    },
+    { 
+      number: "98%", 
+      label: "نسبة رضا العملاء",
+      icon: Star
+    },
+    { 
+      number: "24/7", 
+      label: "دعم متواصل",
+      icon: HeadphonesIcon
+    }
   ];
+
+  const floatingAnimation = {
+    initial: { y: 0 },
+    animate: {
+      y: [-10, 10, -10],
+      transition: {
+        duration: 4,
+        repeat: Infinity,
+        ease: "easeInOut" as const
+      }
+    }
+  };
+
+  const rotateAnimation = {
+    animate: {
+      rotate: [0, 360],
+      transition: {
+        duration: 20,
+        repeat: Infinity,
+        ease: "linear" as const
+      }
+    }
+  };
 
   return (
     <>
       <SEO
         title="الشراكات المؤسسية | حلول مخصصة للمكاتب التعليمية والشركات"
-        description="انضم إلى أكثر من 200 مؤسسة شريكة واستفد من باقاتنا المخصصة للمكاتب التعليمية والشركات. خصومات حصرية تصل إلى 45% وحلول مرنة."
+        description="انضم إلى أكثر من 200 مؤسسة شريكة واستفد من باقاتنا المخصصة للمكاتب التعليمية والشركات. خصومات حصرية تصل إلى 50% وحلول مرنة."
         keywords="شراكات مؤسسية، باقات للمكاتب التعليمية، خدمات ترجمة للشركات، خصومات مؤسسية"
       />
       
@@ -160,13 +223,13 @@ const InstitutionalPartnerships = () => {
         ]}
       />
 
-      <div className="min-h-screen bg-gradient-to-b from-background via-muted/30 to-background">
+      <div className="min-h-screen bg-gradient-to-b from-background via-muted/30 to-background overflow-hidden">
         {/* Hero Section */}
-        <section className="relative py-12 md:py-20 overflow-hidden">
-          {/* Animated Background */}
-          <div className="absolute inset-0">
+        <section className="relative py-16 md:py-24 lg:py-32 overflow-hidden">
+          {/* Animated Background Elements */}
+          <div className="absolute inset-0 pointer-events-none">
             <motion.div
-              className="absolute top-20 right-20 w-96 h-96 bg-primary/10 rounded-full blur-3xl"
+              className="absolute top-20 right-20 w-72 h-72 md:w-96 md:h-96 bg-primary/10 rounded-full blur-3xl"
               animate={{
                 scale: [1, 1.2, 1],
                 opacity: [0.3, 0.5, 0.3],
@@ -174,98 +237,144 @@ const InstitutionalPartnerships = () => {
               transition={{ duration: 8, repeat: Infinity }}
             />
             <motion.div
-              className="absolute bottom-20 left-20 w-96 h-96 bg-secondary/10 rounded-full blur-3xl"
+              className="absolute bottom-20 left-20 w-80 h-80 md:w-96 md:h-96 bg-secondary/10 rounded-full blur-3xl"
               animate={{
                 scale: [1, 1.3, 1],
                 opacity: [0.3, 0.5, 0.3],
               }}
               transition={{ duration: 10, repeat: Infinity, delay: 1 }}
             />
+            <motion.div
+              className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 md:w-[600px] md:h-[600px] bg-accent/5 rounded-full blur-3xl"
+              animate={{
+                scale: [1, 1.1, 1],
+                opacity: [0.2, 0.4, 0.2],
+              }}
+              transition={{ duration: 12, repeat: Infinity, delay: 2 }}
+            />
           </div>
 
-          <div className="container mx-auto px-4 relative z-10">
+          <motion.div 
+            style={{ opacity, scale }}
+            className="container mx-auto px-4 relative z-10"
+          >
             <motion.div
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6 }}
-              className="text-center max-w-4xl mx-auto"
+              transition={{ duration: 0.8 }}
+              className="text-center max-w-5xl mx-auto"
             >
               <motion.div
                 initial={{ opacity: 0, scale: 0.9 }}
                 animate={{ opacity: 1, scale: 1 }}
-                transition={{ delay: 0.2 }}
-                className="inline-flex items-center gap-2 px-6 py-3 bg-primary/10 rounded-full mb-6"
+                transition={{ delay: 0.2, duration: 0.6 }}
+                className="inline-flex items-center gap-2 px-4 sm:px-6 py-2 sm:py-3 bg-gradient-to-r from-primary/10 via-secondary/10 to-accent/10 rounded-full mb-6 sm:mb-8 backdrop-blur-sm border border-primary/20"
               >
-                <Sparkles className="h-5 w-5 text-primary" />
-                <span className="text-sm font-semibold text-primary">
-                  أكثر من 200 مؤسسة شريكة
+                <motion.div
+                  animate={{ rotate: 360 }}
+                  transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
+                >
+                  <Sparkles className="h-4 w-4 sm:h-5 sm:w-5 text-primary" />
+                </motion.div>
+                <span className="text-xs sm:text-sm font-semibold bg-gradient-to-r from-primary via-secondary to-accent bg-clip-text text-transparent">
+                  أكثر من 200 مؤسسة شريكة معتمدة
                 </span>
               </motion.div>
 
               <motion.h1
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.3 }}
-                className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-6 bg-gradient-to-l from-primary via-secondary to-accent bg-clip-text text-transparent leading-tight"
+                transition={{ delay: 0.4, duration: 0.8 }}
+                className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold mb-6 sm:mb-8 leading-tight"
               >
-                حلول شاملة للمكاتب التعليمية والشركات
+                <span className="block mb-2 sm:mb-4">شراكات استراتيجية</span>
+                <span className="bg-gradient-to-l from-primary via-secondary to-accent bg-clip-text text-transparent">
+                  لمستقبل أكاديمي متميز
+                </span>
               </motion.h1>
 
               <motion.p
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.4 }}
-                className="text-base sm:text-lg md:text-xl text-muted-foreground mb-8 leading-relaxed px-4"
+                transition={{ delay: 0.6, duration: 0.8 }}
+                className="text-base sm:text-lg md:text-xl lg:text-2xl text-muted-foreground mb-10 sm:mb-12 leading-relaxed max-w-3xl mx-auto px-4"
               >
-                نوفر باقات مخصصة تناسب احتياجات مؤسستكم مع خصومات حصرية تصل إلى 50%
+                نوفر باقات مخصصة تناسب احتياجات مؤسستكم مع{" "}
+                <span className="text-primary font-bold">خصومات حصرية 50%</span>
                 <br className="hidden sm:block" />
-                <span className="block sm:inline"> وخدمات متميزة مع فريق دعم مخصص (لا تشمل النشر بالمجلات)</span>
+                <span className="block sm:inline mt-2 sm:mt-0"> وخدمات متميزة مع فريق دعم أكاديمي متخصص</span>
               </motion.p>
 
-              {/* Stats */}
+              {/* Animated Stats */}
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.5 }}
-                className="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6 mb-12 px-4"
+                transition={{ delay: 0.8, duration: 0.8 }}
+                className="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6 mb-12 px-4 max-w-5xl mx-auto"
               >
                 {stats.map((stat, index) => (
                   <motion.div
                     key={index}
-                    initial={{ opacity: 0, scale: 0.9 }}
+                    initial={{ opacity: 0, scale: 0.8 }}
                     animate={{ opacity: 1, scale: 1 }}
-                    transition={{ delay: 0.6 + index * 0.1, duration: 0.5 }}
-                    whileHover={{ scale: 1.05 }}
-                    className="text-center p-4 rounded-lg bg-card/50 backdrop-blur-sm border border-border/50"
+                    transition={{ delay: 1 + index * 0.1, duration: 0.6 }}
+                    whileHover={{ 
+                      scale: 1.1, 
+                      y: -10,
+                      transition: { duration: 0.3 }
+                    }}
+                    className="relative group"
                   >
-                    <div className="text-2xl sm:text-3xl md:text-4xl font-bold text-primary mb-2">
-                      {stat.number}
-                    </div>
-                    <div className="text-xs sm:text-sm text-muted-foreground">
-                      {stat.label}
+                    <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-secondary/5 to-accent/5 rounded-2xl blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                    <div className="relative bg-card/70 backdrop-blur-md rounded-2xl p-4 sm:p-6 border border-border/50 hover:border-primary/50 transition-all duration-300 shadow-lg hover:shadow-2xl">
+                      <motion.div
+                        className="w-10 h-10 sm:w-12 sm:h-12 mx-auto mb-3 sm:mb-4 rounded-xl bg-gradient-to-br from-primary/20 to-secondary/20 flex items-center justify-center"
+                        whileHover={{ rotate: 360 }}
+                        transition={{ duration: 0.6 }}
+                      >
+                        <stat.icon className="w-5 h-5 sm:w-6 sm:h-6 text-primary" />
+                      </motion.div>
+                      <div className="text-2xl sm:text-3xl md:text-4xl font-bold text-primary mb-2">
+                        {stat.number}
+                      </div>
+                      <div className="text-xs sm:text-sm text-muted-foreground font-medium">
+                        {stat.label}
+                      </div>
                     </div>
                   </motion.div>
                 ))}
               </motion.div>
             </motion.div>
-          </div>
+          </motion.div>
         </section>
 
         {/* Packages Section */}
-        <section className="py-12 md:py-20">
+        <section className="py-16 md:py-24 relative">
           <div className="container mx-auto px-4">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.6 }}
+              transition={{ duration: 0.8 }}
               className="text-center mb-8 md:mb-12"
             >
-              <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-4 px-4">
+              <motion.div
+                initial={{ opacity: 0, scale: 0.9 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                viewport={{ once: true }}
+                className="inline-block mb-4 sm:mb-6"
+              >
+                <Badge className="px-4 sm:px-6 py-2 text-xs sm:text-sm bg-gradient-to-r from-primary/10 to-secondary/10 text-primary border-primary/20">
+                  <GraduationCap className="w-4 h-4 sm:w-5 sm:h-5 mr-2" />
+                  باقات الشراكة الأكاديمية
+                </Badge>
+              </motion.div>
+              
+              <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-4 sm:mb-6 px-4">
                 اختر الباقة المناسبة لمؤسستك
               </h2>
-              <p className="text-base sm:text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto px-4">
-                باقات مرنة ومخصصة تلبي جميع احتياجاتكم مع خصومات استثنائية
+              <p className="text-base sm:text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto px-4 leading-relaxed">
+                باقات مرنة ومخصصة تلبي جميع احتياجاتكم الأكاديمية مع خصومات استثنائية
               </p>
             </motion.div>
 
@@ -274,36 +383,62 @@ const InstitutionalPartnerships = () => {
               initial={{ opacity: 0, scale: 0.95 }}
               whileInView={{ opacity: 1, scale: 1 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: 0.2 }}
-              className="max-w-4xl mx-auto mb-12 md:mb-16"
+              transition={{ duration: 0.6, delay: 0.2 }}
+              className="max-w-5xl mx-auto mb-12 md:mb-16"
             >
-              <Card className="bg-gradient-to-br from-amber-500/10 via-orange-500/5 to-amber-500/10 border-2 border-amber-500/30">
-                <CardContent className="p-4 sm:p-6 md:p-8">
+              <Card className="relative overflow-hidden bg-gradient-to-br from-amber-500/10 via-orange-500/5 to-amber-500/10 border-2 border-amber-500/30 shadow-xl hover:shadow-2xl transition-shadow duration-500">
+                <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-amber-500/20 to-transparent rounded-full blur-2xl" />
+                <CardContent className="p-4 sm:p-6 md:p-8 relative">
                   <div className="flex items-start gap-3 sm:gap-4">
-                    <div className="flex-shrink-0 w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-amber-500/20 flex items-center justify-center">
-                      <Sparkles className="w-4 h-4 sm:w-5 sm:h-5 text-amber-600 dark:text-amber-400" />
-                    </div>
+                    <motion.div 
+                      className="flex-shrink-0 w-10 h-10 sm:w-12 sm:h-12 rounded-2xl bg-gradient-to-br from-amber-500/20 to-orange-500/20 flex items-center justify-center"
+                      animate={{ rotate: [0, 10, -10, 0] }}
+                      transition={{ duration: 4, repeat: Infinity }}
+                    >
+                      <Sparkles className="w-5 h-5 sm:w-6 sm:h-6 text-amber-600 dark:text-amber-400" />
+                    </motion.div>
                     <div className="flex-1 text-right">
-                      <h3 className="text-base sm:text-lg md:text-xl font-bold text-foreground mb-2 sm:mb-3">
-                        💡 كيف يعمل نظام الاشتراك؟
+                      <h3 className="text-base sm:text-lg md:text-xl font-bold text-foreground mb-3 sm:mb-4 flex items-center gap-2">
+                        <Globe className="w-5 h-5 sm:w-6 sm:h-6 text-amber-600 dark:text-amber-400" />
+                        كيف يعمل نظام الاشتراك السنوي؟
                       </h3>
-                      <div className="space-y-2 text-sm sm:text-base text-muted-foreground leading-relaxed">
-                        <p className="flex items-start gap-2">
-                          <CheckCircle className="w-4 h-4 sm:w-5 sm:h-5 text-primary flex-shrink-0 mt-0.5" />
-                          <span><strong className="text-foreground">الأسعار المعروضة:</strong> رسوم الاشتراك السنوي في الباقة فقط</span>
-                        </p>
-                        <p className="flex items-start gap-2">
-                          <CheckCircle className="w-4 h-4 sm:w-5 sm:h-5 text-primary flex-shrink-0 mt-0.5" />
-                          <span><strong className="text-foreground">الخدمات:</strong> يتم احتساب كل خدمة بشكل منفصل حسب نوعها وحجمها</span>
-                        </p>
-                        <p className="flex items-start gap-2">
-                          <CheckCircle className="w-4 h-4 sm:w-5 sm:h-5 text-primary flex-shrink-0 mt-0.5" />
-                          <span><strong className="text-foreground">الخصم:</strong> بعد الاشتراك، تحصلون على خصم 50% على جميع الخدمات طوال فترة الاشتراك</span>
-                        </p>
-                        <p className="flex items-start gap-2">
-                          <CheckCircle className="w-4 h-4 sm:w-5 sm:h-5 text-primary flex-shrink-0 mt-0.5" />
-                          <span><strong className="text-foreground">استثناء:</strong> خدمات النشر بالمجلات غير مشمولة في الاشتراك أو الخصم</span>
-                        </p>
+                      <div className="space-y-3 text-sm sm:text-base">
+                        <motion.p 
+                          className="flex items-start gap-2 sm:gap-3 p-3 rounded-lg bg-card/50 backdrop-blur-sm"
+                          whileHover={{ x: -5 }}
+                        >
+                          <CheckCircle className="w-5 h-5 text-primary flex-shrink-0 mt-0.5" />
+                          <span className="text-muted-foreground">
+                            <strong className="text-foreground">الأسعار المعروضة:</strong> رسوم الاشتراك السنوي في الباقة فقط
+                          </span>
+                        </motion.p>
+                        <motion.p 
+                          className="flex items-start gap-2 sm:gap-3 p-3 rounded-lg bg-card/50 backdrop-blur-sm"
+                          whileHover={{ x: -5 }}
+                        >
+                          <CheckCircle className="w-5 h-5 text-primary flex-shrink-0 mt-0.5" />
+                          <span className="text-muted-foreground">
+                            <strong className="text-foreground">الخدمات:</strong> يتم احتساب كل خدمة بشكل منفصل حسب نوعها وحجمها
+                          </span>
+                        </motion.p>
+                        <motion.p 
+                          className="flex items-start gap-2 sm:gap-3 p-3 rounded-lg bg-card/50 backdrop-blur-sm"
+                          whileHover={{ x: -5 }}
+                        >
+                          <CheckCircle className="w-5 h-5 text-primary flex-shrink-0 mt-0.5" />
+                          <span className="text-muted-foreground">
+                            <strong className="text-foreground">الخصم 50%:</strong> يُطبق على جميع الخدمات المطلوبة طوال فترة الاشتراك
+                          </span>
+                        </motion.p>
+                        <motion.p 
+                          className="flex items-start gap-2 sm:gap-3 p-3 rounded-lg bg-amber-500/10 backdrop-blur-sm border border-amber-500/20"
+                          whileHover={{ x: -5 }}
+                        >
+                          <Shield className="w-5 h-5 text-amber-600 dark:text-amber-400 flex-shrink-0 mt-0.5" />
+                          <span className="text-muted-foreground">
+                            <strong className="text-amber-600 dark:text-amber-400">استثناء مهم:</strong> خدمات النشر بالمجلات غير مشمولة في الاشتراك أو الخصم
+                          </span>
+                        </motion.p>
                       </div>
                     </div>
                   </div>
@@ -311,68 +446,105 @@ const InstitutionalPartnerships = () => {
               </Card>
             </motion.div>
 
+            {/* Packages Grid */}
             <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 max-w-7xl mx-auto">
               {packages.map((pkg, index) => (
                 <motion.div
                   key={pkg.id}
-                  initial={{ opacity: 0, y: 30 }}
+                  initial={{ opacity: 0, y: 50 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
-                  transition={{ duration: 0.5, delay: index * 0.15 }}
-                  whileHover={{ y: -8, scale: 1.02 }}
+                  transition={{ 
+                    duration: 0.6, 
+                    delay: index * 0.2,
+                    type: "spring",
+                    stiffness: 100
+                  }}
+                  whileHover={{ 
+                    y: -15, 
+                    scale: 1.03,
+                    transition: { duration: 0.4 }
+                  }}
                   className="relative w-full"
                 >
                   {pkg.popular && (
-                    <div className="absolute -top-3 sm:-top-4 left-0 right-0 flex justify-center z-10">
-                      <Badge className="bg-gradient-to-r from-primary to-secondary text-primary-foreground px-3 sm:px-4 py-1 text-xs sm:text-sm shadow-lg">
-                        <Star className="w-3 h-3 sm:w-4 sm:h-4 mr-1 inline" />
+                    <motion.div 
+                      className="absolute -top-4 left-0 right-0 flex justify-center z-10"
+                      initial={{ y: -20, opacity: 0 }}
+                      animate={{ y: 0, opacity: 1 }}
+                      transition={{ delay: 0.5 + index * 0.2 }}
+                    >
+                      <Badge className="bg-gradient-to-r from-primary via-secondary to-accent text-primary-foreground px-4 sm:px-6 py-2 text-xs sm:text-sm shadow-2xl border-0">
+                        <motion.div
+                          animate={{ rotate: 360 }}
+                          transition={{ duration: 3, repeat: Infinity }}
+                        >
+                          <Star className="w-4 h-4 sm:w-5 sm:h-5 mr-2 inline fill-current" />
+                        </motion.div>
                         الأكثر شعبية
                       </Badge>
-                    </div>
+                    </motion.div>
                   )}
 
-                  <Card className={`h-full border-2 ${pkg.borderColor} bg-gradient-to-br ${pkg.color} backdrop-blur-sm hover:shadow-2xl transition-all duration-500 ${pkg.popular ? 'sm:scale-105' : ''}`}>
-                    <CardHeader className="text-center pb-6 sm:pb-8 pt-6 sm:pt-8">
-                      <div className={`w-16 h-16 sm:w-20 sm:h-20 mx-auto mb-4 sm:mb-6 rounded-2xl bg-gradient-to-br ${pkg.iconBg} flex items-center justify-center transition-transform duration-300 hover:scale-110`}>
-                        <pkg.icon className="w-8 h-8 sm:w-10 sm:h-10 text-primary" />
-                      </div>
+                  <Card className={`h-full border-2 ${pkg.borderColor} bg-gradient-to-br ${pkg.color} backdrop-blur-md hover:${pkg.glowColor} hover:shadow-2xl transition-all duration-500 ${pkg.popular ? 'sm:scale-105 shadow-xl' : ''} relative overflow-hidden group`}>
+                    {/* Animated background effect */}
+                    <div className="absolute inset-0 bg-gradient-to-br from-transparent via-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                    
+                    <CardHeader className="text-center pb-6 sm:pb-8 pt-8 sm:pt-10 relative">
+                      <motion.div 
+                        className={`w-20 h-20 sm:w-24 sm:h-24 mx-auto mb-4 sm:mb-6 rounded-3xl bg-gradient-to-br ${pkg.iconBg} flex items-center justify-center relative overflow-hidden group-hover:shadow-2xl transition-shadow duration-500`}
+                        whileHover={{ 
+                          scale: 1.1,
+                          rotate: [0, -10, 10, 0],
+                          transition: { duration: 0.6 }
+                        }}
+                      >
+                        <motion.div
+                          {...rotateAnimation}
+                          className="absolute inset-0 bg-gradient-to-br from-primary/20 to-transparent opacity-50"
+                        />
+                        <pkg.icon className="w-10 h-10 sm:w-12 sm:h-12 text-primary relative z-10" />
+                      </motion.div>
                       
-                      <CardTitle className="text-xl sm:text-2xl font-bold mb-2 px-2">
+                      <CardTitle className="text-xl sm:text-2xl font-bold mb-3 px-2 bg-gradient-to-l from-primary via-foreground to-primary bg-clip-text text-transparent">
                         {pkg.name}
                       </CardTitle>
                       
-                      <CardDescription className="text-sm sm:text-base px-2">
+                      <CardDescription className="text-sm sm:text-base px-2 text-muted-foreground font-medium">
                         {pkg.description}
                       </CardDescription>
 
-                      <div className="mt-4 sm:mt-6">
+                      <div className="mt-6 sm:mt-8">
                         {pkg.originalPrice && (
-                          <div className="flex items-center justify-center gap-2 mb-2 flex-wrap">
-                            <span className="text-xs sm:text-sm text-muted-foreground line-through">
+                          <div className="flex items-center justify-center gap-2 mb-3 flex-wrap">
+                            <span className="text-sm sm:text-base text-muted-foreground line-through">
                               {pkg.originalPrice} ريال
                             </span>
-                            <Badge variant="destructive" className="text-xs">
-                              خصم {pkg.discount}
+                            <Badge variant="destructive" className="text-xs sm:text-sm font-bold animate-pulse">
+                              وفّر {pkg.discount}
                             </Badge>
                           </div>
                         )}
-                        <div className="flex items-baseline justify-center gap-2">
-                          <span className="text-3xl sm:text-4xl md:text-5xl font-bold text-primary">
+                        <motion.div 
+                          className="flex items-baseline justify-center gap-2"
+                          whileHover={{ scale: 1.05 }}
+                        >
+                          <span className="text-4xl sm:text-5xl md:text-6xl font-bold bg-gradient-to-l from-primary via-secondary to-accent bg-clip-text text-transparent">
                             {pkg.price}
                           </span>
                           {pkg.originalPrice && (
-                            <span className="text-lg sm:text-xl text-muted-foreground">
+                            <span className="text-lg sm:text-xl text-muted-foreground font-semibold">
                               ريال
                             </span>
                           )}
-                        </div>
-                        <p className="text-xs sm:text-sm text-muted-foreground mt-2">
+                        </motion.div>
+                        <p className="text-xs sm:text-sm text-muted-foreground mt-2 font-medium">
                           {pkg.period}
                         </p>
                       </div>
                     </CardHeader>
 
-                    <CardContent className="px-4 sm:px-6">
+                    <CardContent className="px-4 sm:px-6 relative">
                       <ul className="space-y-3 sm:space-y-4">
                         {pkg.features.map((feature, idx) => (
                           <motion.li
@@ -380,11 +552,25 @@ const InstitutionalPartnerships = () => {
                             initial={{ opacity: 0, x: -20 }}
                             whileInView={{ opacity: 1, x: 0 }}
                             viewport={{ once: true }}
-                            transition={{ delay: 0.05 * idx, duration: 0.4 }}
-                            className="flex items-start gap-2 sm:gap-3"
+                            transition={{ 
+                              delay: 0.05 * idx, 
+                              duration: 0.4,
+                              type: "spring"
+                            }}
+                            whileHover={{ x: 5 }}
+                            className="flex items-start gap-2 sm:gap-3 p-2 rounded-lg hover:bg-card/50 transition-colors duration-300"
                           >
-                            <CheckCircle className="w-4 h-4 sm:w-5 sm:h-5 text-primary flex-shrink-0 mt-0.5" />
-                            <span className="text-xs sm:text-sm leading-relaxed text-foreground">
+                            <motion.div
+                              animate={{ scale: [1, 1.2, 1] }}
+                              transition={{ 
+                                duration: 2, 
+                                repeat: Infinity,
+                                delay: idx * 0.1
+                              }}
+                            >
+                              <CheckCircle className="w-5 h-5 text-primary flex-shrink-0 mt-0.5" />
+                            </motion.div>
+                            <span className="text-xs sm:text-sm leading-relaxed text-foreground font-medium">
                               {feature}
                             </span>
                           </motion.li>
@@ -392,14 +578,25 @@ const InstitutionalPartnerships = () => {
                       </ul>
                     </CardContent>
 
-                    <CardFooter className="pt-4 sm:pt-6 px-4 sm:px-6">
+                    <CardFooter className="pt-6 sm:pt-8 px-4 sm:px-6 pb-6 sm:pb-8 relative">
                       <Button
                         onClick={() => navigate('/contact-us')}
-                        className="w-full bg-gradient-to-r from-primary to-secondary hover:from-primary/90 hover:to-secondary/90 text-primary-foreground transition-all duration-300 hover:scale-105"
+                        className="w-full bg-gradient-to-r from-primary via-secondary to-accent hover:from-primary/90 hover:via-secondary/90 hover:to-accent/90 text-primary-foreground transition-all duration-500 hover:scale-105 hover:shadow-2xl group relative overflow-hidden"
                         size="lg"
                       >
-                        <span className="text-sm sm:text-base">ابدأ الآن</span>
-                        <ArrowLeft className="mr-2 h-4 w-4 sm:h-5 sm:w-5" />
+                        <motion.div
+                          className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent"
+                          animate={{ x: [-200, 200] }}
+                          transition={{ duration: 2, repeat: Infinity }}
+                        />
+                        <span className="text-sm sm:text-base font-bold relative z-10">ابدأ الشراكة الآن</span>
+                        <motion.div
+                          animate={{ x: [0, 5, 0] }}
+                          transition={{ duration: 1.5, repeat: Infinity }}
+                          className="relative z-10"
+                        >
+                          <ArrowLeft className="mr-2 h-5 w-5" />
+                        </motion.div>
                       </Button>
                     </CardFooter>
                   </Card>
@@ -410,42 +607,80 @@ const InstitutionalPartnerships = () => {
         </section>
 
         {/* Benefits Section */}
-        <section className="py-12 md:py-20 bg-muted/50">
-          <div className="container mx-auto px-4">
+        <section className="py-16 md:py-24 bg-gradient-to-br from-muted/50 via-background to-muted/30 relative overflow-hidden">
+          <div className="absolute inset-0 bg-grid-pattern opacity-5" />
+          
+          <div className="container mx-auto px-4 relative z-10">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
+              transition={{ duration: 0.8 }}
               className="text-center mb-12 md:mb-16"
             >
-              <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-4 px-4">
-                لماذا الشراكة معنا؟
+              <motion.div
+                {...floatingAnimation}
+                className="inline-block mb-4 sm:mb-6"
+              >
+                <Badge className="px-4 sm:px-6 py-2 text-xs sm:text-sm bg-gradient-to-r from-secondary/10 to-accent/10 text-secondary border-secondary/20">
+                  <Award className="w-4 h-4 sm:w-5 sm:h-5 mr-2" />
+                  مميزات الشراكة معنا
+                </Badge>
+              </motion.div>
+              
+              <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-4 sm:mb-6 px-4">
+                لماذا نحن الخيار الأمثل؟
               </h2>
-              <p className="text-base sm:text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto px-4">
-                نقدم أكثر من مجرد خدمات ترجمة، نحن شريككم في النجاح
+              <p className="text-base sm:text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto px-4 leading-relaxed">
+                نقدم أكثر من مجرد خدمات، نحن شريككم الاستراتيجي في التميز الأكاديمي
               </p>
             </motion.div>
 
-            <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8 max-w-7xl mx-auto">
+            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 max-w-7xl mx-auto">
               {benefits.map((benefit, index) => (
                 <motion.div
                   key={index}
                   initial={{ opacity: 0, y: 30 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
-                  transition={{ duration: 0.5, delay: index * 0.1 }}
-                  whileHover={{ scale: 1.05, y: -5 }}
-                  className="text-center p-4 rounded-xl bg-card/50 backdrop-blur-sm border border-border/50"
+                  transition={{ 
+                    duration: 0.6, 
+                    delay: index * 0.15,
+                    type: "spring"
+                  }}
+                  whileHover={{ 
+                    scale: 1.05, 
+                    y: -10,
+                    transition: { duration: 0.3 }
+                  }}
+                  className="relative group"
                 >
-                  <div className="w-14 h-14 sm:w-16 sm:h-16 mx-auto mb-4 sm:mb-6 rounded-2xl bg-gradient-to-br from-primary/20 to-secondary/20 flex items-center justify-center transition-transform duration-300 hover:scale-110">
-                    <benefit.icon className="w-7 h-7 sm:w-8 sm:h-8 text-primary" />
+                  <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-secondary/5 to-accent/10 rounded-2xl blur-xl opacity-0 group-hover:opacity-100 transition-all duration-500" />
+                  
+                  <div className="relative bg-card/80 backdrop-blur-md rounded-2xl p-6 sm:p-8 border border-border/50 hover:border-primary/50 transition-all duration-500 shadow-lg hover:shadow-2xl h-full">
+                    <motion.div
+                      className="w-16 h-16 sm:w-20 sm:h-20 mx-auto mb-4 sm:mb-6 rounded-2xl bg-gradient-to-br from-primary/20 via-secondary/20 to-accent/20 flex items-center justify-center relative overflow-hidden"
+                      whileHover={{ 
+                        rotate: [0, 360],
+                        scale: 1.1,
+                        transition: { duration: 0.8 }
+                      }}
+                    >
+                      <motion.div
+                        {...rotateAnimation}
+                        className="absolute inset-0 bg-gradient-to-br from-primary/30 to-transparent"
+                      />
+                      <benefit.icon className="w-8 h-8 sm:w-10 sm:h-10 text-primary relative z-10" />
+                    </motion.div>
+                    
+                    <h3 className="text-lg sm:text-xl font-bold mb-3 sm:mb-4 text-center bg-gradient-to-l from-primary via-foreground to-primary bg-clip-text text-transparent">
+                      {benefit.title}
+                    </h3>
+                    
+                    <p className="text-sm sm:text-base text-muted-foreground leading-relaxed text-center">
+                      {benefit.description}
+                    </p>
                   </div>
-                  <h3 className="text-lg sm:text-xl font-bold mb-2 sm:mb-3">
-                    {benefit.title}
-                  </h3>
-                  <p className="text-sm sm:text-base text-muted-foreground leading-relaxed">
-                    {benefit.description}
-                  </p>
                 </motion.div>
               ))}
             </div>
@@ -453,42 +688,75 @@ const InstitutionalPartnerships = () => {
         </section>
 
         {/* CTA Section */}
-        <section className="py-12 md:py-20">
-          <div className="container mx-auto px-4">
+        <section className="py-16 md:py-24 relative overflow-hidden">
+          <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-secondary/5 to-accent/5" />
+          
+          <div className="container mx-auto px-4 relative z-10">
             <motion.div
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.6 }}
-              className="max-w-4xl mx-auto"
+              transition={{ duration: 0.8 }}
+              className="max-w-5xl mx-auto"
             >
-              <Card className="bg-gradient-to-br from-primary/10 via-secondary/5 to-accent/10 border-primary/20">
-                <CardContent className="p-6 sm:p-8 md:p-12 text-center">
-                  <GraduationCap className="w-12 h-12 sm:w-16 sm:h-16 mx-auto mb-4 sm:mb-6 text-primary" />
-                  <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-3 sm:mb-4 px-2">
-                    هل أنتم مستعدون للبدء؟
+              <Card className="relative overflow-hidden bg-gradient-to-br from-primary/10 via-secondary/5 to-accent/10 border-2 border-primary/30 shadow-2xl hover:shadow-3xl transition-shadow duration-500">
+                <div className="absolute top-0 right-0 w-64 h-64 bg-gradient-to-br from-primary/20 to-transparent rounded-full blur-3xl" />
+                <div className="absolute bottom-0 left-0 w-64 h-64 bg-gradient-to-tr from-secondary/20 to-transparent rounded-full blur-3xl" />
+                
+                <CardContent className="p-6 sm:p-10 md:p-16 text-center relative">
+                  <motion.div
+                    {...floatingAnimation}
+                    className="inline-block mb-6 sm:mb-8"
+                  >
+                    <div className="w-16 h-16 sm:w-20 sm:h-20 mx-auto rounded-3xl bg-gradient-to-br from-primary/30 to-secondary/30 flex items-center justify-center shadow-2xl">
+                      <GraduationCap className="w-8 h-8 sm:w-10 sm:h-10 text-primary" />
+                    </div>
+                  </motion.div>
+                  
+                  <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-4 sm:mb-6 px-2 bg-gradient-to-l from-primary via-secondary to-accent bg-clip-text text-transparent">
+                    هل أنتم مستعدون للانضمام إلينا؟
                   </h2>
-                  <p className="text-sm sm:text-base md:text-xl text-muted-foreground mb-6 sm:mb-8 max-w-2xl mx-auto px-2">
-                    تواصلوا معنا اليوم للحصول على استشارة مجانية وعرض سعر مخصص لمؤسستكم
+                  
+                  <p className="text-sm sm:text-base md:text-xl text-muted-foreground mb-8 sm:mb-10 max-w-3xl mx-auto px-2 leading-relaxed">
+                    تواصلوا معنا اليوم للحصول على استشارة مجانية وعرض سعر مخصص يناسب احتياجات مؤسستكم الأكاديمية
                   </p>
-                  <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center px-2">
-                    <Button
-                      onClick={() => navigate('/contact-us')}
-                      size="lg"
-                      className="bg-gradient-to-r from-primary to-secondary hover:from-primary/90 hover:to-secondary/90 text-primary-foreground transition-all duration-300 hover:scale-105 w-full sm:w-auto"
+                  
+                  <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 justify-center px-2 max-w-2xl mx-auto">
+                    <motion.div
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                      className="flex-1"
                     >
-                      <Phone className="mr-2 h-4 w-4 sm:h-5 sm:w-5" />
-                      <span className="text-sm sm:text-base">تواصل معنا</span>
-                    </Button>
-                    <Button
-                      onClick={() => navigate('/contact-us')}
-                      size="lg"
-                      variant="outline"
-                      className="transition-all duration-300 hover:scale-105 w-full sm:w-auto"
+                      <Button
+                        onClick={() => navigate('/contact-us')}
+                        size="lg"
+                        className="w-full bg-gradient-to-r from-primary via-secondary to-accent hover:from-primary/90 hover:via-secondary/90 hover:to-accent/90 text-primary-foreground transition-all duration-500 hover:shadow-2xl group relative overflow-hidden"
+                      >
+                        <motion.div
+                          className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent"
+                          animate={{ x: [-200, 200] }}
+                          transition={{ duration: 2, repeat: Infinity }}
+                        />
+                        <Phone className="mr-2 h-5 w-5 group-hover:animate-pulse relative z-10" />
+                        <span className="text-sm sm:text-base font-bold relative z-10">تواصل معنا الآن</span>
+                      </Button>
+                    </motion.div>
+                    
+                    <motion.div
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                      className="flex-1"
                     >
-                      <Mail className="mr-2 h-4 w-4 sm:h-5 sm:w-5" />
-                      <span className="text-sm sm:text-base">احصل على عرض سعر</span>
-                    </Button>
+                      <Button
+                        onClick={() => navigate('/contact-us')}
+                        size="lg"
+                        variant="outline"
+                        className="w-full border-2 border-primary/50 hover:bg-primary/10 transition-all duration-500 hover:shadow-xl group"
+                      >
+                        <Mail className="mr-2 h-5 w-5 group-hover:animate-pulse" />
+                        <span className="text-sm sm:text-base font-bold">احصل على عرض مخصص</span>
+                      </Button>
+                    </motion.div>
                   </div>
                 </CardContent>
               </Card>
