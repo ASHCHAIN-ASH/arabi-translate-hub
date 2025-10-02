@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useRef } from "react";
 import { createPortal } from "react-dom";
 import { Link } from "react-router-dom";
-import { ChevronDown, X } from "lucide-react";
+import { X } from "lucide-react";
 
 type Item = {
   name: string;
@@ -147,14 +147,6 @@ const MegaServicesPortal: React.FC<MegaServicesPortalProps> = ({
             </Link>
           ))}
         </div>
-
-        {!isMobile && (
-          <div style={{ padding: 12, textAlign: "left" }}>
-            <Link to="/services" className="mega-more" aria-label="عرض جميع الخدمات">
-              عرض جميع الخدمات <ChevronDown className="inline-block mega-chevron -rotate-90" size={16} />
-            </Link>
-          </div>
-        )}
       </nav>
     </>,
     container
