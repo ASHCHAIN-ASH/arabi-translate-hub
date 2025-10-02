@@ -34,7 +34,21 @@ const Header = () => {
   const [isServicesOpen, setIsServicesOpen] = useState(false);
   const [isMobileServicesOpen, setIsMobileServicesOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
+  const [headerHeight, setHeaderHeight] = useState(0);
   const location = useLocation();
+
+  // Track header height for mega menu positioning
+  useEffect(() => {
+    const updateHeaderHeight = () => {
+      const header = document.querySelector('header');
+      if (header) {
+        setHeaderHeight(header.offsetHeight);
+      }
+    };
+    updateHeaderHeight();
+    window.addEventListener('resize', updateHeaderHeight);
+    return () => window.removeEventListener('resize', updateHeaderHeight);
+  }, [isScrolled]);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -43,6 +57,29 @@ const Header = () => {
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
+
+  // Prevent body scroll when mega menu is open
+  useEffect(() => {
+    if (isServicesOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [isServicesOpen]);
+
+  // Close mega menu on ESC key
+  useEffect(() => {
+    const handleEscape = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' && isServicesOpen) {
+        setIsServicesOpen(false);
+      }
+    };
+    document.addEventListener('keydown', handleEscape);
+    return () => document.removeEventListener('keydown', handleEscape);
+  }, [isServicesOpen]);
 
   const navigation = [
     { name: 'الرئيسية', href: '/', icon: House },
@@ -208,63 +245,18 @@ const Header = () => {
                 </Link>
               ))}
               
-              <div 
-                className="relative"
-                onMouseEnter={() => setIsServicesOpen(true)}
-                onMouseLeave={() => setIsServicesOpen(false)}
-              >
+              <div className="relative">
                 <button
+                  onClick={() => setIsServicesOpen(!isServicesOpen)}
+                  onMouseEnter={() => setIsServicesOpen(true)}
+                  aria-haspopup="true"
+                  aria-expanded={isServicesOpen}
                   className="font-medium flex items-center flex-row-reverse gap-2 px-4 py-2 rounded-lg hover:text-primary hover:bg-primary/5 transition-all duration-200 group"
                 >
                   <span>خدماتنا</span>
                   <Grid className="h-5 w-5 transition-transform duration-200 group-hover:scale-110" />
                   <ChevronDown className={`h-4 w-4 transition-transform duration-200 ${isServicesOpen ? 'rotate-180' : ''}`} />
                 </button>
-                
-                <AnimatePresence>
-                  {isServicesOpen && (
-                    <motion.div
-                      initial={{ opacity: 0, y: 10 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, y: 10 }}
-                      transition={{ duration: 0.2 }}
-                      className="absolute top-full right-0 mt-2 w-[800px] bg-white/98 backdrop-blur-xl border border-border rounded-xl shadow-strong p-6"
-                    >
-                      <div className="grid grid-cols-2 gap-3 max-h-[500px] overflow-y-auto">
-                        {servicesMenu.map((service) => (
-                          <Link
-                            key={service.name}
-                            to={service.href}
-                            className="flex items-start gap-3 p-3 rounded-lg hover:bg-primary/5 transition-all duration-200 group"
-                            onClick={() => setIsServicesOpen(false)}
-                          >
-                            <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center flex-shrink-0 group-hover:bg-primary/15 transition-colors duration-200">
-                              <service.icon className="h-5 w-5 text-primary" />
-                            </div>
-                            <div className="flex-1 text-right">
-                              <div className="font-semibold text-sm mb-1 text-foreground group-hover:text-primary transition-colors duration-200">
-                                {service.name}
-                              </div>
-                              <div className="text-xs text-muted-foreground leading-relaxed">
-                                {service.description}
-                              </div>
-                            </div>
-                          </Link>
-                        ))}
-                      </div>
-                      <div className="mt-4 pt-4 border-t">
-                        <Link 
-                          to="/services" 
-                          className="text-sm text-primary hover:text-primary-dark font-medium flex items-center justify-center flex-row-reverse gap-2 transition-colors duration-200 group"
-                          onClick={() => setIsServicesOpen(false)}
-                        >
-                          <span>عرض جميع الخدمات</span>
-                          <ChevronDown className="h-4 w-4 -rotate-90 transition-transform duration-200 group-hover:translate-x-1" />
-                        </Link>
-                      </div>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
               </div>
             </nav>
 
@@ -410,6 +402,73 @@ const Header = () => {
           </div>
         </div>
       </motion.header>
+
+      {/* Mega Menu Overlay & Content - Rendered outside header to avoid overflow issues */}
+      <AnimatePresence>
+        {isServicesOpen && (
+          <>
+            {/* Backdrop/Overlay */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.2 }}
+              className="fixed inset-0 bg-black/25 z-40"
+              onClick={() => setIsServicesOpen(false)}
+              onMouseEnter={() => setIsServicesOpen(false)}
+            />
+            
+            {/* Mega Menu */}
+            <motion.div
+              initial={{ opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: 8 }}
+              transition={{ duration: 0.2 }}
+              style={{ top: `${headerHeight}px` }}
+              className="fixed right-4 z-50 w-[min(960px,calc(100vw-2rem))] max-h-[70vh] bg-white/98 backdrop-blur-xl border border-border rounded-2xl shadow-strong overflow-hidden"
+              dir="rtl"
+              onMouseLeave={() => setIsServicesOpen(false)}
+              onMouseEnter={() => setIsServicesOpen(true)}
+            >
+              <div className="p-6 overflow-y-auto max-h-[calc(70vh-80px)]">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                  {servicesMenu.map((service) => (
+                    <Link
+                      key={service.name}
+                      to={service.href}
+                      className="flex items-start flex-row-reverse gap-3 p-4 rounded-xl hover:bg-primary/5 transition-all duration-200 group"
+                      onClick={() => setIsServicesOpen(false)}
+                    >
+                      <div className="flex-1 text-right">
+                        <div className="font-semibold text-sm mb-1 text-foreground group-hover:text-primary transition-colors duration-200 flex items-center justify-end gap-2">
+                          <span>{service.name}</span>
+                          <div className="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center flex-shrink-0 group-hover:bg-primary/15 transition-all duration-200">
+                            <service.icon className="h-5 w-5 text-primary transition-transform duration-200 group-hover:scale-110" />
+                          </div>
+                        </div>
+                        <div className="text-xs text-muted-foreground leading-relaxed">
+                          {service.description}
+                        </div>
+                      </div>
+                    </Link>
+                  ))}
+                </div>
+              </div>
+              
+              <div className="p-4 border-t bg-muted/30">
+                <Link 
+                  to="/services" 
+                  className="text-sm text-primary hover:text-primary-dark font-medium flex items-center justify-center flex-row-reverse gap-2 transition-colors duration-200 group"
+                  onClick={() => setIsServicesOpen(false)}
+                >
+                  <span>عرض جميع الخدمات</span>
+                  <ChevronDown className="h-4 w-4 -rotate-90 transition-transform duration-200 group-hover:translate-x-1" />
+                </Link>
+              </div>
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
     </>
   );
 };
