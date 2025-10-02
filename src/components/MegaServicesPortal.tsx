@@ -164,7 +164,7 @@ const MegaServicesPortal: React.FC<MegaServicesPortalProps> = ({
         aria-label="قائمة خدماتنا"
         role="menu"
         ref={menuRef}
-        className={isOpen ? "open" : ""}
+        className={`mega-services-portal ${isOpen ? "open" : ""}`}
         style={!isMobile ? ({ top: `var(--header-bottom, ${headerHeight}px)` } as React.CSSProperties) : undefined}
         onClickCapture={(e) => {
           const target = e.target as HTMLElement | null;
@@ -172,21 +172,23 @@ const MegaServicesPortal: React.FC<MegaServicesPortalProps> = ({
         }}
       >
         {isMobile && (
-          <div className="sticky top-0 bg-white border-b p-3 flex items-center justify-between z-10">
-            <button onClick={onClose} className="p-2 hover:bg-muted rounded-lg" aria-label="إغلاق القائمة">
+          <div className="mega-mobile-header">
+            <h3 className="mega-mobile-title">خدماتنا</h3>
+            <button onClick={onClose} className="mega-close-btn" aria-label="إغلاق القائمة">
               <X className="h-5 w-5" />
             </button>
-            <h3 className="font-bold text-base text-primary">خدماتنا</h3>
           </div>
         )}
 
-        <div className="grid">
+        <div className="mega-services-grid">
           {items.map((service) => (
-            <Link key={service.name} to={service.href} role="menuitem" className="mega-item" onClick={onClose}>
-              <span className="icon" aria-hidden>
-                <service.icon size={22} />
-              </span>
-              <span>{service.name}</span>
+            <Link key={service.name} to={service.href} role="menuitem" className="mega-service-item" onClick={onClose}>
+              <div className="mega-service-content">
+                <span className="mega-service-text">{service.name}</span>
+                <span className="mega-service-icon" aria-hidden="true">
+                  <service.icon className="h-5 w-5" strokeWidth={1.5} />
+                </span>
+              </div>
             </Link>
           ))}
         </div>
