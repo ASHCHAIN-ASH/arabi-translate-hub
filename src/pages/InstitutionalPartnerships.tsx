@@ -162,7 +162,7 @@ const InstitutionalPartnerships = () => {
 
       <div className="min-h-screen bg-gradient-to-b from-background via-muted/30 to-background">
         {/* Hero Section */}
-        <section className="relative py-20 overflow-hidden">
+        <section className="relative py-12 md:py-20 overflow-hidden">
           {/* Animated Background */}
           <div className="absolute inset-0">
             <motion.div
@@ -206,7 +206,7 @@ const InstitutionalPartnerships = () => {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.3 }}
-                className="text-4xl md:text-6xl font-bold mb-6 bg-gradient-to-l from-primary via-secondary to-accent bg-clip-text text-transparent"
+                className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-6 bg-gradient-to-l from-primary via-secondary to-accent bg-clip-text text-transparent leading-tight"
               >
                 حلول شاملة للمكاتب التعليمية والشركات
               </motion.h1>
@@ -215,11 +215,11 @@ const InstitutionalPartnerships = () => {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.4 }}
-                className="text-xl text-muted-foreground mb-8 leading-relaxed"
+                className="text-base sm:text-lg md:text-xl text-muted-foreground mb-8 leading-relaxed px-4"
               >
                 نوفر باقات مخصصة تناسب احتياجات مؤسستكم مع خصومات حصرية تصل إلى 50%
-                <br />
-                وخدمات متميزة مع فريق دعم مخصص (لا تشمل النشر بالمجلات)
+                <br className="hidden sm:block" />
+                <span className="block sm:inline"> وخدمات متميزة مع فريق دعم مخصص (لا تشمل النشر بالمجلات)</span>
               </motion.p>
 
               {/* Stats */}
@@ -227,20 +227,21 @@ const InstitutionalPartnerships = () => {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.5 }}
-                className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-12"
+                className="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6 mb-12 px-4"
               >
                 {stats.map((stat, index) => (
                   <motion.div
                     key={index}
                     initial={{ opacity: 0, scale: 0.9 }}
                     animate={{ opacity: 1, scale: 1 }}
-                    transition={{ delay: 0.6 + index * 0.1 }}
-                    className="text-center"
+                    transition={{ delay: 0.6 + index * 0.1, duration: 0.5 }}
+                    whileHover={{ scale: 1.05 }}
+                    className="text-center p-4 rounded-lg bg-card/50 backdrop-blur-sm border border-border/50"
                   >
-                    <div className="text-3xl md:text-4xl font-bold text-primary mb-2">
+                    <div className="text-2xl sm:text-3xl md:text-4xl font-bold text-primary mb-2">
                       {stat.number}
                     </div>
-                    <div className="text-sm text-muted-foreground">
+                    <div className="text-xs sm:text-sm text-muted-foreground">
                       {stat.label}
                     </div>
                   </motion.div>
@@ -251,61 +252,61 @@ const InstitutionalPartnerships = () => {
         </section>
 
         {/* Packages Section */}
-        <section className="py-20">
+        <section className="py-12 md:py-20">
           <div className="container mx-auto px-4">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.6 }}
-              className="text-center mb-16"
+              className="text-center mb-12 md:mb-16"
             >
-              <h2 className="text-3xl md:text-5xl font-bold mb-4">
+              <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-4 px-4">
                 اختر الباقة المناسبة لمؤسستك
               </h2>
-              <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+              <p className="text-base sm:text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto px-4">
                 باقات مرنة ومخصصة تلبي جميع احتياجاتكم مع خصومات استثنائية
               </p>
             </motion.div>
 
-            <div className="grid md:grid-cols-3 gap-8 max-w-7xl mx-auto">
+            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 max-w-7xl mx-auto">
               {packages.map((pkg, index) => (
                 <motion.div
                   key={pkg.id}
                   initial={{ opacity: 0, y: 30 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
-                  transition={{ duration: 0.6, delay: index * 0.1 }}
-                  whileHover={{ y: -10 }}
-                  className="relative"
+                  transition={{ duration: 0.5, delay: index * 0.15 }}
+                  whileHover={{ y: -8, scale: 1.02 }}
+                  className="relative w-full"
                 >
                   {pkg.popular && (
-                    <div className="absolute -top-4 left-0 right-0 flex justify-center z-10">
-                      <Badge className="bg-gradient-to-r from-primary to-secondary text-primary-foreground px-4 py-1 text-sm">
-                        <Star className="w-4 h-4 mr-1 inline" />
+                    <div className="absolute -top-3 sm:-top-4 left-0 right-0 flex justify-center z-10">
+                      <Badge className="bg-gradient-to-r from-primary to-secondary text-primary-foreground px-3 sm:px-4 py-1 text-xs sm:text-sm shadow-lg">
+                        <Star className="w-3 h-3 sm:w-4 sm:h-4 mr-1 inline" />
                         الأكثر شعبية
                       </Badge>
                     </div>
                   )}
 
-                  <Card className={`h-full border-2 ${pkg.borderColor} bg-gradient-to-br ${pkg.color} backdrop-blur-sm hover:shadow-2xl transition-all duration-300 ${pkg.popular ? 'scale-105' : ''}`}>
-                    <CardHeader className="text-center pb-8">
-                      <div className={`w-20 h-20 mx-auto mb-6 rounded-2xl bg-gradient-to-br ${pkg.iconBg} flex items-center justify-center`}>
-                        <pkg.icon className="w-10 h-10 text-primary" />
+                  <Card className={`h-full border-2 ${pkg.borderColor} bg-gradient-to-br ${pkg.color} backdrop-blur-sm hover:shadow-2xl transition-all duration-500 ${pkg.popular ? 'sm:scale-105' : ''}`}>
+                    <CardHeader className="text-center pb-6 sm:pb-8 pt-6 sm:pt-8">
+                      <div className={`w-16 h-16 sm:w-20 sm:h-20 mx-auto mb-4 sm:mb-6 rounded-2xl bg-gradient-to-br ${pkg.iconBg} flex items-center justify-center transition-transform duration-300 hover:scale-110`}>
+                        <pkg.icon className="w-8 h-8 sm:w-10 sm:h-10 text-primary" />
                       </div>
                       
-                      <CardTitle className="text-2xl font-bold mb-2">
+                      <CardTitle className="text-xl sm:text-2xl font-bold mb-2 px-2">
                         {pkg.name}
                       </CardTitle>
                       
-                      <CardDescription className="text-base">
+                      <CardDescription className="text-sm sm:text-base px-2">
                         {pkg.description}
                       </CardDescription>
 
-                      <div className="mt-6">
+                      <div className="mt-4 sm:mt-6">
                         {pkg.originalPrice && (
-                          <div className="flex items-center justify-center gap-2 mb-2">
-                            <span className="text-sm text-muted-foreground line-through">
+                          <div className="flex items-center justify-center gap-2 mb-2 flex-wrap">
+                            <span className="text-xs sm:text-sm text-muted-foreground line-through">
                               {pkg.originalPrice} ريال
                             </span>
                             <Badge variant="destructive" className="text-xs">
@@ -314,34 +315,34 @@ const InstitutionalPartnerships = () => {
                           </div>
                         )}
                         <div className="flex items-baseline justify-center gap-2">
-                          <span className="text-5xl font-bold text-primary">
+                          <span className="text-3xl sm:text-4xl md:text-5xl font-bold text-primary">
                             {pkg.price}
                           </span>
                           {pkg.originalPrice && (
-                            <span className="text-xl text-muted-foreground">
+                            <span className="text-lg sm:text-xl text-muted-foreground">
                               ريال
                             </span>
                           )}
                         </div>
-                        <p className="text-sm text-muted-foreground mt-2">
+                        <p className="text-xs sm:text-sm text-muted-foreground mt-2">
                           {pkg.period}
                         </p>
                       </div>
                     </CardHeader>
 
-                    <CardContent>
-                      <ul className="space-y-4">
+                    <CardContent className="px-4 sm:px-6">
+                      <ul className="space-y-3 sm:space-y-4">
                         {pkg.features.map((feature, idx) => (
                           <motion.li
                             key={idx}
                             initial={{ opacity: 0, x: -20 }}
                             whileInView={{ opacity: 1, x: 0 }}
                             viewport={{ once: true }}
-                            transition={{ delay: 0.1 * idx }}
-                            className="flex items-start gap-3"
+                            transition={{ delay: 0.05 * idx, duration: 0.4 }}
+                            className="flex items-start gap-2 sm:gap-3"
                           >
-                            <CheckCircle className="w-5 h-5 text-primary flex-shrink-0 mt-0.5" />
-                            <span className="text-sm leading-relaxed">
+                            <CheckCircle className="w-4 h-4 sm:w-5 sm:h-5 text-primary flex-shrink-0 mt-0.5" />
+                            <span className="text-xs sm:text-sm leading-relaxed text-foreground">
                               {feature}
                             </span>
                           </motion.li>
@@ -349,14 +350,14 @@ const InstitutionalPartnerships = () => {
                       </ul>
                     </CardContent>
 
-                    <CardFooter className="pt-6">
+                    <CardFooter className="pt-4 sm:pt-6 px-4 sm:px-6">
                       <Button
                         onClick={() => navigate('/contact-us')}
-                        className="w-full bg-gradient-to-r from-primary to-secondary hover:from-primary/90 hover:to-secondary/90 text-primary-foreground"
+                        className="w-full bg-gradient-to-r from-primary to-secondary hover:from-primary/90 hover:to-secondary/90 text-primary-foreground transition-all duration-300 hover:scale-105"
                         size="lg"
                       >
-                        ابدأ الآن
-                        <ArrowLeft className="mr-2 h-5 w-5" />
+                        <span className="text-sm sm:text-base">ابدأ الآن</span>
+                        <ArrowLeft className="mr-2 h-4 w-4 sm:h-5 sm:w-5" />
                       </Button>
                     </CardFooter>
                   </Card>
@@ -367,40 +368,40 @@ const InstitutionalPartnerships = () => {
         </section>
 
         {/* Benefits Section */}
-        <section className="py-20 bg-muted/50">
+        <section className="py-12 md:py-20 bg-muted/50">
           <div className="container mx-auto px-4">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              className="text-center mb-16"
+              className="text-center mb-12 md:mb-16"
             >
-              <h2 className="text-3xl md:text-5xl font-bold mb-4">
+              <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-4 px-4">
                 لماذا الشراكة معنا؟
               </h2>
-              <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+              <p className="text-base sm:text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto px-4">
                 نقدم أكثر من مجرد خدمات ترجمة، نحن شريككم في النجاح
               </p>
             </motion.div>
 
-            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8 max-w-7xl mx-auto">
+            <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8 max-w-7xl mx-auto">
               {benefits.map((benefit, index) => (
                 <motion.div
                   key={index}
                   initial={{ opacity: 0, y: 30 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
-                  transition={{ duration: 0.6, delay: index * 0.1 }}
-                  whileHover={{ scale: 1.05 }}
-                  className="text-center"
+                  transition={{ duration: 0.5, delay: index * 0.1 }}
+                  whileHover={{ scale: 1.05, y: -5 }}
+                  className="text-center p-4 rounded-xl bg-card/50 backdrop-blur-sm border border-border/50"
                 >
-                  <div className="w-16 h-16 mx-auto mb-6 rounded-2xl bg-gradient-to-br from-primary/20 to-secondary/20 flex items-center justify-center">
-                    <benefit.icon className="w-8 h-8 text-primary" />
+                  <div className="w-14 h-14 sm:w-16 sm:h-16 mx-auto mb-4 sm:mb-6 rounded-2xl bg-gradient-to-br from-primary/20 to-secondary/20 flex items-center justify-center transition-transform duration-300 hover:scale-110">
+                    <benefit.icon className="w-7 h-7 sm:w-8 sm:h-8 text-primary" />
                   </div>
-                  <h3 className="text-xl font-bold mb-3">
+                  <h3 className="text-lg sm:text-xl font-bold mb-2 sm:mb-3">
                     {benefit.title}
                   </h3>
-                  <p className="text-muted-foreground leading-relaxed">
+                  <p className="text-sm sm:text-base text-muted-foreground leading-relaxed">
                     {benefit.description}
                   </p>
                 </motion.div>
@@ -410,39 +411,41 @@ const InstitutionalPartnerships = () => {
         </section>
 
         {/* CTA Section */}
-        <section className="py-20">
+        <section className="py-12 md:py-20">
           <div className="container mx-auto px-4">
             <motion.div
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
+              transition={{ duration: 0.6 }}
               className="max-w-4xl mx-auto"
             >
               <Card className="bg-gradient-to-br from-primary/10 via-secondary/5 to-accent/10 border-primary/20">
-                <CardContent className="p-12 text-center">
-                  <GraduationCap className="w-16 h-16 mx-auto mb-6 text-primary" />
-                  <h2 className="text-3xl md:text-4xl font-bold mb-4">
+                <CardContent className="p-6 sm:p-8 md:p-12 text-center">
+                  <GraduationCap className="w-12 h-12 sm:w-16 sm:h-16 mx-auto mb-4 sm:mb-6 text-primary" />
+                  <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-3 sm:mb-4 px-2">
                     هل أنتم مستعدون للبدء؟
                   </h2>
-                  <p className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto">
+                  <p className="text-sm sm:text-base md:text-xl text-muted-foreground mb-6 sm:mb-8 max-w-2xl mx-auto px-2">
                     تواصلوا معنا اليوم للحصول على استشارة مجانية وعرض سعر مخصص لمؤسستكم
                   </p>
-                  <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                  <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center px-2">
                     <Button
                       onClick={() => navigate('/contact-us')}
                       size="lg"
-                      className="bg-gradient-to-r from-primary to-secondary hover:from-primary/90 hover:to-secondary/90 text-primary-foreground"
+                      className="bg-gradient-to-r from-primary to-secondary hover:from-primary/90 hover:to-secondary/90 text-primary-foreground transition-all duration-300 hover:scale-105 w-full sm:w-auto"
                     >
-                      <Phone className="mr-2 h-5 w-5" />
-                      تواصل معنا
+                      <Phone className="mr-2 h-4 w-4 sm:h-5 sm:w-5" />
+                      <span className="text-sm sm:text-base">تواصل معنا</span>
                     </Button>
                     <Button
                       onClick={() => navigate('/contact-us')}
                       size="lg"
                       variant="outline"
+                      className="transition-all duration-300 hover:scale-105 w-full sm:w-auto"
                     >
-                      <Mail className="mr-2 h-5 w-5" />
-                      احصل على عرض سعر
+                      <Mail className="mr-2 h-4 w-4 sm:h-5 sm:w-5" />
+                      <span className="text-sm sm:text-base">احصل على عرض سعر</span>
                     </Button>
                   </div>
                 </CardContent>
