@@ -35,7 +35,7 @@ const InstitutionalPartnerships = () => {
       price: "5,000",
       originalPrice: "10,000",
       discount: "50%",
-      period: "شهرياً",
+      period: "سنوياً",
       description: "مثالية للمكاتب الصغيرة والناشئة",
       features: [
         "خدمات ترجمة أكاديمية وعامة",
@@ -61,7 +61,7 @@ const InstitutionalPartnerships = () => {
       price: "12,000",
       originalPrice: "24,000",
       discount: "50%",
-      period: "شهرياً",
+      period: "سنوياً",
       description: "الأكثر شعبية للمكاتب المتوسطة",
       features: [
         "خدمات ترجمة أكاديمية ومتخصصة",
