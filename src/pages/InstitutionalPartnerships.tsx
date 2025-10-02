@@ -259,7 +259,7 @@ const InstitutionalPartnerships = () => {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.6 }}
-              className="text-center mb-12 md:mb-16"
+              className="text-center mb-8 md:mb-12"
             >
               <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-4 px-4">
                 اختر الباقة المناسبة لمؤسستك
@@ -267,6 +267,48 @@ const InstitutionalPartnerships = () => {
               <p className="text-base sm:text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto px-4">
                 باقات مرنة ومخصصة تلبي جميع احتياجاتكم مع خصومات استثنائية
               </p>
+            </motion.div>
+
+            {/* Important Notice */}
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: 0.2 }}
+              className="max-w-4xl mx-auto mb-12 md:mb-16"
+            >
+              <Card className="bg-gradient-to-br from-amber-500/10 via-orange-500/5 to-amber-500/10 border-2 border-amber-500/30">
+                <CardContent className="p-4 sm:p-6 md:p-8">
+                  <div className="flex items-start gap-3 sm:gap-4">
+                    <div className="flex-shrink-0 w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-amber-500/20 flex items-center justify-center">
+                      <Sparkles className="w-4 h-4 sm:w-5 sm:h-5 text-amber-600 dark:text-amber-400" />
+                    </div>
+                    <div className="flex-1 text-right">
+                      <h3 className="text-base sm:text-lg md:text-xl font-bold text-foreground mb-2 sm:mb-3">
+                        💡 كيف يعمل نظام الاشتراك؟
+                      </h3>
+                      <div className="space-y-2 text-sm sm:text-base text-muted-foreground leading-relaxed">
+                        <p className="flex items-start gap-2">
+                          <CheckCircle className="w-4 h-4 sm:w-5 sm:h-5 text-primary flex-shrink-0 mt-0.5" />
+                          <span><strong className="text-foreground">الأسعار المعروضة:</strong> رسوم الاشتراك السنوي في الباقة فقط</span>
+                        </p>
+                        <p className="flex items-start gap-2">
+                          <CheckCircle className="w-4 h-4 sm:w-5 sm:h-5 text-primary flex-shrink-0 mt-0.5" />
+                          <span><strong className="text-foreground">الخدمات:</strong> يتم احتساب كل خدمة بشكل منفصل حسب نوعها وحجمها</span>
+                        </p>
+                        <p className="flex items-start gap-2">
+                          <CheckCircle className="w-4 h-4 sm:w-5 sm:h-5 text-primary flex-shrink-0 mt-0.5" />
+                          <span><strong className="text-foreground">الخصم:</strong> بعد الاشتراك، تحصلون على خصم 50% على جميع الخدمات طوال فترة الاشتراك</span>
+                        </p>
+                        <p className="flex items-start gap-2">
+                          <CheckCircle className="w-4 h-4 sm:w-5 sm:h-5 text-primary flex-shrink-0 mt-0.5" />
+                          <span><strong className="text-foreground">استثناء:</strong> خدمات النشر بالمجلات غير مشمولة في الاشتراك أو الخصم</span>
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
             </motion.div>
 
             <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 max-w-7xl mx-auto">
