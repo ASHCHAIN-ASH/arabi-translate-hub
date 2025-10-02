@@ -209,11 +209,20 @@ const Header = () => {
                   onMouseEnter={() => !isMobile && setIsServicesOpen(true)}
                   aria-haspopup="true"
                   aria-expanded={isServicesOpen}
-                  className="font-medium flex items-center flex-row-reverse gap-2 px-4 py-2 rounded-lg hover:text-primary hover:bg-primary/5 transition-all duration-200 group"
+                  className={`font-semibold flex items-center gap-2.5 px-4 py-2.5 rounded-xl transition-all duration-300 group relative overflow-hidden ${
+                    isServicesOpen 
+                      ? 'bg-primary/10 text-primary shadow-sm' 
+                      : 'hover:bg-primary/5 hover:text-primary'
+                  }`}
                 >
-                  <span>خدماتنا</span>
-                  <Grid className="h-5 w-5 transition-transform duration-200 group-hover:scale-110" />
-                  <ChevronDown className={`h-4 w-4 transition-transform duration-200 ${isServicesOpen ? 'rotate-180' : ''}`} />
+                  <span className="relative z-10 transition-transform duration-200 group-hover:translate-x-0.5">خدماتنا</span>
+                  <Grid className={`h-5 w-5 transition-all duration-300 relative z-10 ${
+                    isServicesOpen ? 'scale-110 rotate-90' : 'group-hover:scale-110 group-hover:-rotate-6'
+                  }`} />
+                  <ChevronDown className={`h-4 w-4 transition-all duration-300 relative z-10 ${
+                    isServicesOpen ? 'rotate-180 scale-110' : 'group-hover:translate-y-0.5'
+                  }`} />
+                  <span className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-primary/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                 </button>
               </div>
             </nav>
