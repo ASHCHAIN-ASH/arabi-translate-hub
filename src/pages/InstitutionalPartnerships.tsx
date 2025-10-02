@@ -26,11 +26,16 @@ import {
   BarChart3
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { useState } from "react";
 import Breadcrumb from "@/components/Breadcrumb";
 import SEO from "@/components/SEO";
+import Header from "@/components/Header";
+import InstitutionalPartnershipForm from "@/components/InstitutionalPartnershipForm";
 
 const InstitutionalPartnerships = () => {
   const navigate = useNavigate();
+  const [isFormOpen, setIsFormOpen] = useState(false);
+  const [selectedPackage, setSelectedPackage] = useState<string>("");
   const { scrollYProgress } = useScroll();
   const opacity = useTransform(scrollYProgress, [0, 0.2], [1, 0]);
   const scale = useTransform(scrollYProgress, [0, 0.2], [1, 0.95]);
@@ -142,14 +147,14 @@ const InstitutionalPartnerships = () => {
       description: "التزام تام بمعايير الجودة الأكاديمية مع حماية كاملة لخصوصية البيانات"
     },
     {
+      icon: MessageSquare,
+      title: "دعم واتساب 24/7",
+      description: "خدمة دعم فني عبر الواتساب متوفرة على مدار الساعة للرد الفوري على استفساراتكم"
+    },
+    {
       icon: Clock,
       title: "التزام بالمواعيد",
       description: "نضمن تسليم جميع المشاريع في المواعيد المحددة دون تأخير"
-    },
-    {
-      icon: HeadphonesIcon,
-      title: "دعم أكاديمي متواصل",
-      description: "فريق دعم متخصص متاح على مدار الساعة للإجابة على استفساراتكم"
     },
     {
       icon: Target,
@@ -217,10 +222,18 @@ const InstitutionalPartnerships = () => {
         keywords="شراكات مؤسسية، باقات للمكاتب التعليمية، خدمات ترجمة للشركات، خصومات مؤسسية"
       />
       
+      <Header />
+      
       <Breadcrumb
         items={[
           { label: "الشراكات المؤسسية" }
         ]}
+      />
+
+      <InstitutionalPartnershipForm 
+        open={isFormOpen}
+        onOpenChange={setIsFormOpen}
+        selectedPackage={selectedPackage}
       />
 
       <div className="min-h-screen bg-gradient-to-b from-background via-muted/30 to-background overflow-hidden">
@@ -580,7 +593,10 @@ const InstitutionalPartnerships = () => {
 
                     <CardFooter className="pt-6 sm:pt-8 px-4 sm:px-6 pb-6 sm:pb-8 relative">
                       <Button
-                        onClick={() => navigate('/contact-us')}
+                        onClick={() => {
+                          setSelectedPackage(pkg.id);
+                          setIsFormOpen(true);
+                        }}
                         className="w-full bg-gradient-to-r from-primary via-secondary to-accent hover:from-primary/90 hover:via-secondary/90 hover:to-accent/90 text-primary-foreground transition-all duration-500 hover:scale-105 hover:shadow-2xl group relative overflow-hidden"
                         size="lg"
                       >
@@ -728,7 +744,10 @@ const InstitutionalPartnerships = () => {
                       className="flex-1"
                     >
                       <Button
-                        onClick={() => navigate('/contact-us')}
+                        onClick={() => {
+                          setSelectedPackage("");
+                          setIsFormOpen(true);
+                        }}
                         size="lg"
                         className="w-full bg-gradient-to-r from-primary via-secondary to-accent hover:from-primary/90 hover:via-secondary/90 hover:to-accent/90 text-primary-foreground transition-all duration-500 hover:shadow-2xl group relative overflow-hidden"
                       >
@@ -738,7 +757,7 @@ const InstitutionalPartnerships = () => {
                           transition={{ duration: 2, repeat: Infinity }}
                         />
                         <Phone className="mr-2 h-5 w-5 group-hover:animate-pulse relative z-10" />
-                        <span className="text-sm sm:text-base font-bold relative z-10">تواصل معنا الآن</span>
+                        <span className="text-sm sm:text-base font-bold relative z-10">ابدأ الشراكة الآن</span>
                       </Button>
                     </motion.div>
                     
@@ -754,7 +773,7 @@ const InstitutionalPartnerships = () => {
                         className="w-full border-2 border-primary/50 hover:bg-primary/10 transition-all duration-500 hover:shadow-xl group"
                       >
                         <Mail className="mr-2 h-5 w-5 group-hover:animate-pulse" />
-                        <span className="text-sm sm:text-base font-bold">احصل على عرض مخصص</span>
+                        <span className="text-sm sm:text-base font-bold">تواصل معنا مباشرة</span>
                       </Button>
                     </motion.div>
                   </div>
