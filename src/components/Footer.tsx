@@ -25,7 +25,8 @@ import {
   Search,
   Crown,
   GraduationCap,
-  Calculator
+  Calculator,
+  Newspaper
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -192,10 +193,40 @@ const Footer = () => {
               {[
                 { name: 'عن الشركة', href: '/about-us' },
                 { name: 'الأسعار', href: '/pricing' },
-                { name: 'المدونة', href: '/blog' },
                 { name: 'عضوية ماستر', href: '/master-membership' },
                 { name: 'الأسئلة الشائعة', href: '/faq' },
                 { name: 'اتصل بنا', href: '/contact-us' }
+              ].map((link) => (
+                <li key={link.name}>
+                  <a 
+                    href={link.href} 
+                    className="text-white/70 hover:text-white transition-colors text-sm md:text-base block hover:translate-x-1 transition-transform duration-200"
+                  >
+                    {link.name}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </motion.div>
+
+          {/* المركز الإعلامي */}
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.175, duration: 0.5 }}
+            className="space-y-4 md:space-y-6"
+          >
+            <h4 className="text-base md:text-lg font-bold text-white flex items-center gap-2">
+              <Newspaper className="h-4 w-4 md:h-5 md:w-5 text-cyan-400" />
+              المركز الإعلامي
+            </h4>
+            <ul className="space-y-2 md:space-y-3">
+              {[
+                { name: 'المدونة', href: '/blog' },
+                { name: 'الأخبار', href: '/blog' },
+                { name: 'قصص النجاح', href: '/success-stories' },
+                { name: 'المقالات', href: '/blog' },
+                { name: 'الموارد التعليمية', href: '/research-services' }
               ].map((link) => (
                 <li key={link.name}>
                   <a 
