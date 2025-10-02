@@ -20,8 +20,7 @@ import {
   ChevronDown,
   ArrowLeft,
   HelpCircle,
-  Mail,
-  Newspaper as BlogIcon
+  Mail
 } from "lucide-react";
 import { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
@@ -47,7 +46,6 @@ const Header = () => {
   const navigation = [
     { name: 'الرئيسية', href: '/', icon: Home },
     { name: 'من نحن', href: '/about-us', icon: Users },
-    { name: 'المدونة', href: '/blog', icon: BlogIcon },
     { name: 'الأسئلة الشائعة', href: '/faq', icon: HelpCircle },
     { name: 'تواصل معنا', href: '/contact', icon: Phone },
   ];
