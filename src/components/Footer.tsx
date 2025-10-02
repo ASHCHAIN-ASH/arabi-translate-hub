@@ -209,7 +209,7 @@ const Footer = () => {
             </ul>
           </motion.div>
 
-          {/* المركز الإعلامي */}
+          {/* تحديثات الوكالة */}
           <motion.div 
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -218,13 +218,13 @@ const Footer = () => {
           >
             <h4 className="text-base md:text-lg font-bold text-white flex items-center gap-2">
               <Newspaper className="h-4 w-4 md:h-5 md:w-5 text-cyan-400" />
-              المركز الإعلامي
+              تحديثات الوكالة
             </h4>
             <ul className="space-y-2 md:space-y-3">
               {[
-                { name: 'الأخبار', href: '/media' },
-                { name: 'قصص النجاح', href: '/media' },
-                { name: 'المقالات', href: '/media' },
+                { name: 'آخر الأخبار', href: '/agency-updates' },
+                { name: 'الإنجازات', href: '/agency-updates' },
+                { name: 'الشراكات', href: '/agency-updates' },
                 { name: 'الموارد التعليمية', href: '/research-services' }
               ].map((link) => (
                 <li key={link.name}>
