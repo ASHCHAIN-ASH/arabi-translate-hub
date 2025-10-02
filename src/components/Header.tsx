@@ -16,7 +16,6 @@ import {
   Languages,
   School,
   Library,
-  Search,
   X,
   ChevronDown,
   ArrowLeft,
@@ -25,7 +24,7 @@ import {
   Newspaper as BlogIcon
 } from "lucide-react";
 import { useState, useEffect } from "react";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { motion, AnimatePresence } from "framer-motion";
 import TopBar from "./TopBar";
@@ -35,9 +34,7 @@ const Header = () => {
   const [isServicesOpen, setIsServicesOpen] = useState(false);
   const [isMobileServicesOpen, setIsMobileServicesOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
-  const [searchQuery, setSearchQuery] = useState("");
   const location = useLocation();
-  const navigate = useNavigate();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -131,14 +128,6 @@ const Header = () => {
   ];
 
   const isActive = (path: string) => location.pathname === path;
-
-  const handleSearch = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (searchQuery.trim()) {
-      navigate(`/services?search=${encodeURIComponent(searchQuery)}`);
-      setSearchQuery("");
-    }
-  };
 
   return (
     <>
@@ -278,27 +267,7 @@ const Header = () => {
             </nav>
 
             <div className="flex items-center gap-3">
-              <form onSubmit={handleSearch} className="hidden lg:flex items-center">
-                <div className="relative">
-                  <input
-                    type="text"
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                    placeholder="ابحث في الخدمات…"
-                    className="w-64 px-4 py-2 pr-10 text-sm bg-muted/50 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all duration-200"
-                    dir="rtl"
-                  />
-                  <button
-                    type="submit"
-                    className="absolute right-2 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-primary transition-colors duration-200"
-                    aria-label="بحث"
-                  >
-                    <Search className="h-4 w-4" />
-                  </button>
-                </div>
-              </form>
-
-              <Button 
+              <Button
                 size={isScrolled ? "sm" : "default"}
                 className="bg-gradient-to-r from-primary via-primary-dark to-primary text-primary-foreground hover:shadow-primary transition-all duration-300 hover:scale-105"
                 asChild
@@ -340,26 +309,6 @@ const Header = () => {
                     </div>
 
                     <div className="flex-1 overflow-y-auto p-6 space-y-6">
-                      <form onSubmit={handleSearch}>
-                        <div className="relative">
-                          <input
-                            type="text"
-                            value={searchQuery}
-                            onChange={(e) => setSearchQuery(e.target.value)}
-                            placeholder="ابحث في الخدمات…"
-                            className="w-full px-4 py-2 pr-10 text-sm bg-muted/50 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/50"
-                            dir="rtl"
-                          />
-                          <button
-                            type="submit"
-                            className="absolute right-2 top-1/2 -translate-y-1/2 text-muted-foreground"
-                            aria-label="بحث"
-                          >
-                            <Search className="h-4 w-4" />
-                          </button>
-                        </div>
-                      </form>
-
                       <div className="space-y-1">
                         {navigation.map((item) => (
                           <Link
