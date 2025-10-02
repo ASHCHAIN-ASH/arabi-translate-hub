@@ -222,8 +222,9 @@ const Footer = () => {
             </h4>
             <ul className="space-y-2 md:space-y-3">
               {[
-                { name: 'الأخبار', href: '/success-stories' },
-                { name: 'قصص النجاح', href: '/success-stories' },
+                { name: 'الأخبار', href: '/media' },
+                { name: 'قصص النجاح', href: '/media' },
+                { name: 'المقالات', href: '/media' },
                 { name: 'الموارد التعليمية', href: '/research-services' }
               ].map((link) => (
                 <li key={link.name}>

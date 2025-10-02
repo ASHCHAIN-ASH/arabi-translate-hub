@@ -136,6 +136,8 @@ import ContactUs from "./pages/ContactUs";
 import PaymentMethods from "./pages/PaymentMethods";
 import Universities from "./pages/Universities";
 import JournalsDirectory from "./pages/JournalsDirectory";
+import MediaCenter from "./pages/MediaCenter";
+import MediaPost from "./pages/MediaPost";
 import ContractManagement from "./pages/ContractManagement";
 import Footer from "./components/Footer";
 import BackToTopButton from "./components/BackToTopButton";
@@ -197,6 +199,8 @@ const App = () => (
              <Route path="/pricing" element={<Pricing />} />
             <Route path="/intellectual-property" element={<IntellectualProperty />} />
             <Route path="/academic-integrity" element={<AcademicIntegrity />} />
+            <Route path="/media" element={<MediaCenter />} />
+            <Route path="/media/:id" element={<MediaPost />} />
             <Route path="/payment-methods" element={<PaymentMethods />} />
             <Route path="/universities" element={<Universities />} />
             <Route path="/journals" element={<JournalsDirectory />} />
