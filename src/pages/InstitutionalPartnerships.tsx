@@ -33,8 +33,8 @@ const InstitutionalPartnerships = () => {
       borderColor: "border-blue-500/50",
       iconBg: "from-blue-500/20 to-cyan-500/20",
       price: "5,000",
-      originalPrice: "7,000",
-      discount: "28%",
+      originalPrice: "10,000",
+      discount: "50%",
       period: "شهرياً",
       description: "مثالية للمكاتب الصغيرة والناشئة",
       features: [
@@ -43,10 +43,11 @@ const InstitutionalPartnerships = () => {
         "تدقيق لغوي وأكاديمي مجاني",
         "مساعدة في إعداد الأبحاث والرسائل",
         "مراجعة المراجع والببليوغرافيا",
-        "خصم 25% على جميع الخدمات",
+        "خصم 50% على جميع الخدمات",
         "دعم فني عبر البريد الإلكتروني",
         "تسليم خلال 5 أيام عمل",
-        "حساب مدير مخصص"
+        "حساب مدير مخصص",
+        "⚠️ لا يشمل خدمات النشر بالمجلات"
       ],
       popular: false
     },
@@ -58,8 +59,8 @@ const InstitutionalPartnerships = () => {
       borderColor: "border-primary",
       iconBg: "from-primary/30 to-secondary/30",
       price: "12,000",
-      originalPrice: "18,000",
-      discount: "33%",
+      originalPrice: "24,000",
+      discount: "50%",
       period: "شهرياً",
       description: "الأكثر شعبية للمكاتب المتوسطة",
       features: [
@@ -70,12 +71,13 @@ const InstitutionalPartnerships = () => {
         "تحليل إحصائي باستخدام SPSS",
         "مراجعة المنهجية البحثية",
         "صياغة وتحسين الأبحاث الأكاديمية",
-        "خصم 35% على جميع الخدمات",
+        "خصم 50% على جميع الخدمات",
         "دعم فني على مدار الساعة",
         "تسليم خلال 3 أيام عمل",
         "مدير حساب مخصص مع اجتماعات شهرية",
         "أولوية في المشاريع العاجلة",
-        "تقارير شهرية مفصلة"
+        "تقارير شهرية مفصلة",
+        "⚠️ لا يشمل خدمات النشر بالمجلات"
       ],
       popular: true
     },
@@ -88,7 +90,7 @@ const InstitutionalPartnerships = () => {
       iconBg: "from-amber-500/20 to-orange-500/20",
       price: "حسب الطلب",
       originalPrice: null,
-      discount: "45%",
+      discount: "50%",
       period: "حلول مخصصة",
       description: "للمؤسسات الكبيرة والجامعات",
       features: [
@@ -101,13 +103,14 @@ const InstitutionalPartnerships = () => {
         "كتابة وتحرير الأبحاث الأكاديمية",
         "استشارات بحثية متخصصة",
         "مراجعة الأقران (Peer Review)",
-        "خصم حتى 45% على جميع الخدمات",
+        "خصم 50% على جميع الخدمات",
         "فريق دعم مخصص 24/7",
         "تسليم فوري للمشاريع العاجلة",
         "مدير حساب تنفيذي مخصص",
         "API مخصص للتكامل مع أنظمتكم",
         "تدريب مجاني للموظفين",
-        "عقود مرنة طويلة الأجل"
+        "عقود مرنة طويلة الأجل",
+        "⚠️ لا يشمل خدمات النشر بالمجلات"
       ],
       popular: false
     }
@@ -214,9 +217,9 @@ const InstitutionalPartnerships = () => {
                 transition={{ delay: 0.4 }}
                 className="text-xl text-muted-foreground mb-8 leading-relaxed"
               >
-                نوفر باقات مخصصة تناسب احتياجات مؤسستكم مع خصومات حصرية تصل إلى 45%
+                نوفر باقات مخصصة تناسب احتياجات مؤسستكم مع خصومات حصرية تصل إلى 50%
                 <br />
-                وخدمات متميزة مع فريق دعم مخصص
+                وخدمات متميزة مع فريق دعم مخصص (لا تشمل النشر بالمجلات)
               </motion.p>
 
               {/* Stats */}
