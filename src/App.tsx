@@ -23,7 +23,7 @@ import PrivacySecurity from "./pages/academic/PrivacySecurity";
 import TimelineCommitment from "./pages/academic/TimelineCommitment";
 import OrderNow from "./pages/OrderNow";
 import Index from "./pages/Index";
-import AffiliateMarketing from "./pages/marketing/AffiliateMarketing";
+
 import TranslationServices from "./pages/TranslationServices";
 import LegalTranslation from "./pages/LegalTranslation";
 import BusinessTranslation from "./pages/BusinessTranslation";
@@ -209,8 +209,6 @@ const App = () => (
             <Route path="/careers" element={<Careers />} />
             <Route path="/contact" element={<ContactUs />} />
             <Route path="/contact-us" element={<ContactUs />} />
-            <Route path="/marketing/affiliate" element={<AffiliateMarketing />} />
-            <Route path="/marketing/affiliate" element={<AffiliateMarketing />} />
             <Route path="/license-request" element={<LicenseRequest />} />
             
             {/* Auth Routes */}
