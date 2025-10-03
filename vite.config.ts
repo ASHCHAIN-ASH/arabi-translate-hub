@@ -20,21 +20,23 @@ export default defineConfig(({ mode }) => ({
     },
   },
   build: {
-    // تحسين حجم الـ bundle
     rollupOptions: {
       output: {
         manualChunks: {
           'react-vendor': ['react', 'react-dom', 'react-router-dom'],
-          'ui-vendor': ['framer-motion', 'lucide-react'],
+          'framer-motion': ['framer-motion'],
+          'ui-vendor': ['lucide-react'],
+          'charts': ['recharts'],
         },
       },
     },
-    // تفعيل minification باستخدام esbuild (أسرع من terser)
     minify: 'esbuild',
+    chunkSizeWarningLimit: 1000,
+    cssCodeSplit: true,
   },
-  // إلغاء الكاش بشكل كامل في التطوير
-  cacheDir: mode === 'development' ? 'node_modules/.vite-temp' : 'node_modules/.vite',
+  cacheDir: 'node_modules/.vite',
   optimizeDeps: {
-    force: true, // إعادة بناء dependencies
+    include: ['react', 'react-dom', 'react-router-dom', 'framer-motion'],
+    exclude: [],
   },
 }));

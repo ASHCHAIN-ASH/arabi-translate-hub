@@ -166,23 +166,10 @@ const Index = () => {
       
       {/* Hero Section - القسم البطل الأكاديمي */}
       <section className="relative min-h-[70vh] sm:min-h-[80vh] lg:min-h-[85vh] flex items-center overflow-hidden bg-gradient-to-br from-blue-50 via-sky-50 to-cyan-50 dark:from-slate-900 dark:via-blue-950 dark:to-indigo-950">
-        {/* خلفية متحركة - مخفية على الجوال لتحسين الأداء */}
-        <div className="absolute inset-0 overflow-hidden hidden sm:block">
-          <motion.div 
-            className="absolute top-10 left-10 w-48 sm:w-72 h-48 sm:h-72 bg-blue-400/20 rounded-full blur-3xl"
-            animate={{ scale: [1, 1.2, 1], opacity: [0.3, 0.5, 0.3] }}
-            transition={{ duration: 8, repeat: Infinity }}
-          />
-          <motion.div 
-            className="absolute bottom-10 right-10 w-60 sm:w-96 h-60 sm:h-96 bg-purple-400/20 rounded-full blur-3xl"
-            animate={{ scale: [1, 1.3, 1], opacity: [0.3, 0.5, 0.3] }}
-            transition={{ duration: 10, repeat: Infinity, delay: 1 }}
-          />
-          <motion.div 
-            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-48 sm:w-80 h-48 sm:h-80 bg-indigo-400/10 rounded-full blur-2xl"
-            animate={{ scale: [1, 1.4, 1], opacity: [0.2, 0.4, 0.2] }}
-            transition={{ duration: 12, repeat: Infinity, delay: 2 }}
-          />
+        {/* خلفية متحركة مبسطة */}
+        <div className="absolute inset-0 overflow-hidden hidden lg:block pointer-events-none">
+          <div className="absolute top-10 left-10 w-72 h-72 bg-blue-400/20 rounded-full blur-3xl" />
+          <div className="absolute bottom-10 right-10 w-96 h-96 bg-purple-400/20 rounded-full blur-3xl" />
         </div>
 
         {/* شبكة أكاديمية في الخلفية */}
