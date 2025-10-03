@@ -185,102 +185,253 @@ const SuccessStories = () => {
     : successStories.filter(story => story.category === selectedCategory);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-blue-50" dir="rtl">
+    <div className="min-h-screen bg-gradient-to-br from-background via-background/95 to-primary/5" dir="rtl">
       <Header />
       
       {/* Hero Section */}
-      <section className="relative py-12 md:py-20 bg-gradient-to-r from-primary via-blue-600 to-purple-600 overflow-hidden">
+      <section className="relative py-16 md:py-24 lg:py-32 bg-gradient-to-br from-primary via-accent to-primary/90 overflow-hidden">
+        {/* Animated Background */}
         <div className="absolute inset-0">
-          <div className="absolute inset-0 bg-gradient-to-b from-blue-600/10 to-purple-600/10 opacity-30"></div>
-          <div className="absolute top-5 md:top-10 right-5 md:right-10 w-16 h-16 md:w-32 md:h-32 bg-white/10 rounded-full animate-float blur-xl"></div>
-          <div className="absolute bottom-10 md:bottom-20 left-10 md:left-20 w-12 h-12 md:w-24 md:h-24 bg-white/10 rounded-full animate-float blur-xl" style={{animationDelay: '1s'}}></div>
-        </div>
-        
-        <div className="container mx-auto px-4 relative z-10">
           <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-            className="text-center text-white max-w-4xl mx-auto"
-          >
+            className="absolute inset-0"
+            style={{
+              backgroundImage: `radial-gradient(circle at 2px 2px, rgba(255,255,255,0.15) 1px, transparent 0)`,
+              backgroundSize: '50px 50px'
+            }}
+            animate={{
+              backgroundPosition: ['0px 0px', '50px 50px']
+            }}
+            transition={{
+              duration: 20,
+              repeat: Infinity,
+              ease: "linear"
+            }}
+          />
+          <div className="absolute inset-0 bg-gradient-to-b from-transparent via-primary/20 to-transparent"></div>
+        </div>
+
+        {/* Floating Elements */}
+        <div className="absolute inset-0 overflow-hidden pointer-events-none">
+          {[...Array(20)].map((_, i) => (
             <motion.div
-              animate={{ 
-                rotate: 360,
+              key={i}
+              className="absolute rounded-full bg-white/10 backdrop-blur-sm"
+              style={{
+                width: Math.random() * 80 + 20 + 'px',
+                height: Math.random() * 80 + 20 + 'px',
+                left: Math.random() * 100 + '%',
+                top: Math.random() * 100 + '%',
+              }}
+              animate={{
+                y: [0, -30, 0],
+                x: [0, Math.random() * 20 - 10, 0],
+                opacity: [0.1, 0.3, 0.1],
                 scale: [1, 1.1, 1]
               }}
-              transition={{ 
-                rotate: { duration: 20, repeat: Infinity, ease: "linear" },
-                scale: { duration: 2, repeat: Infinity, ease: "easeInOut" }
+              transition={{
+                duration: 5 + Math.random() * 5,
+                repeat: Infinity,
+                delay: Math.random() * 3,
+                ease: "easeInOut"
               }}
-              className="inline-flex items-center justify-center w-16 h-16 md:w-20 md:h-20 bg-white/20 backdrop-blur-sm rounded-full mb-6 shadow-2xl"
+            />
+          ))}
+        </div>
+        
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+          <motion.div
+            initial={{ opacity: 0, y: 40 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.7 }}
+            className="text-center text-white max-w-5xl mx-auto"
+          >
+            {/* Icon with Animation */}
+            <motion.div
+              initial={{ scale: 0, rotate: -180 }}
+              animate={{ scale: 1, rotate: 0 }}
+              transition={{ 
+                duration: 0.8,
+                type: "spring",
+                stiffness: 150
+              }}
+              className="mb-8 md:mb-10 flex justify-center"
             >
-              <Trophy className="h-8 w-8 md:h-10 md:w-10 text-white drop-shadow-lg" />
+              <div className="relative">
+                <motion.div
+                  className="w-20 h-20 sm:w-24 sm:h-24 md:w-28 md:h-28 rounded-full bg-white/20 backdrop-blur-xl border-2 border-white/30 flex items-center justify-center shadow-2xl"
+                  animate={{
+                    boxShadow: [
+                      "0 0 30px rgba(255,255,255,0.3)",
+                      "0 0 60px rgba(255,255,255,0.5)",
+                      "0 0 30px rgba(255,255,255,0.3)"
+                    ]
+                  }}
+                  transition={{
+                    duration: 3,
+                    repeat: Infinity,
+                    ease: "easeInOut"
+                  }}
+                >
+                  <motion.div
+                    animate={{
+                      rotate: [0, 10, -10, 0],
+                      y: [0, -5, 0]
+                    }}
+                    transition={{
+                      duration: 4,
+                      repeat: Infinity,
+                      ease: "easeInOut"
+                    }}
+                  >
+                    <Trophy className="h-10 w-10 sm:h-12 sm:w-12 md:h-14 md:w-14 text-white drop-shadow-2xl" />
+                  </motion.div>
+                </motion.div>
+
+                {/* Pulse Rings */}
+                {[...Array(3)].map((_, i) => (
+                  <motion.div
+                    key={i}
+                    className="absolute inset-0 rounded-full border-2 border-white/30"
+                    initial={{ scale: 1, opacity: 0.8 }}
+                    animate={{
+                      scale: [1, 1.5, 2],
+                      opacity: [0.8, 0.4, 0]
+                    }}
+                    transition={{
+                      duration: 2.5,
+                      repeat: Infinity,
+                      delay: i * 0.7,
+                      ease: "easeOut"
+                    }}
+                  />
+                ))}
+              </div>
             </motion.div>
             
-            <h1 className="text-3xl md:text-5xl lg:text-6xl font-bold mb-4 md:mb-6 font-arabic-title leading-tight">
-              <span className="bg-gradient-to-r from-white to-blue-100 bg-clip-text text-transparent">
+            <motion.h1
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.2, duration: 0.7 }}
+              className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold mb-4 sm:mb-5 md:mb-6 leading-tight"
+            >
+              <span className="bg-gradient-to-r from-white via-white to-white/80 bg-clip-text text-transparent drop-shadow-lg">
                 قصص نجاح حقيقية
               </span>
-            </h1>
+            </motion.h1>
             
-            <p className="text-lg md:text-xl lg:text-2xl opacity-95 mb-6 md:mb-8 leading-relaxed px-4">
+            <motion.p
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.4, duration: 0.7 }}
+              className="text-base sm:text-lg md:text-xl lg:text-2xl opacity-95 mb-8 sm:mb-10 md:mb-12 leading-relaxed px-4 max-w-4xl mx-auto"
+            >
               شاهد كيف غيّرنا مسار الأعمال وحققنا نتائج استثنائية لعملائنا في جميع أنحاء المنطقة
-            </p>
+            </motion.p>
             
-            <div className="flex flex-col sm:flex-row gap-3 md:gap-4 justify-center items-center px-4">
-              <Button size="lg" className="bg-white/20 backdrop-blur-sm text-white border border-white/30 hover:bg-white/30 font-semibold w-full sm:w-auto shadow-xl">
-                <Award className="ml-2 h-4 w-4 md:h-5 md:w-5" />
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.6, duration: 0.7 }}
+              className="flex flex-col sm:flex-row gap-3 sm:gap-4 md:gap-5 justify-center items-center px-4"
+            >
+              <Button 
+                size="lg" 
+                className="group bg-white/20 backdrop-blur-md text-white border-2 border-white/40 hover:bg-white/30 hover:border-white/50 font-semibold w-full sm:w-auto shadow-2xl hover:shadow-white/20 transition-all px-6 sm:px-8 py-4 sm:py-6 text-base sm:text-lg"
+              >
+                <Award className="ml-2 h-5 w-5 group-hover:scale-110 transition-transform" />
                 شارك قصة نجاحك
               </Button>
-              <Button size="lg" variant="outline" className="border-white/50 text-white hover:bg-white/10 w-full sm:w-auto backdrop-blur-sm">
-                <Phone className="ml-2 h-4 w-4 md:h-5 md:w-5" />
+              <Button 
+                size="lg" 
+                variant="outline" 
+                className="group border-2 border-white/50 text-white hover:bg-white/10 hover:border-white/60 w-full sm:w-auto backdrop-blur-md shadow-xl px-6 sm:px-8 py-4 sm:py-6 text-base sm:text-lg"
+              >
+                <Phone className="ml-2 h-5 w-5 group-hover:scale-110 transition-transform" />
                 استشارة مجانية
               </Button>
-            </div>
+            </motion.div>
           </motion.div>
         </div>
       </section>
 
       {/* Statistics Section */}
-      <section className="py-12 md:py-16 bg-white relative">
-        <div className="absolute inset-0 bg-gradient-to-r from-blue-50/50 to-purple-50/50"></div>
-        <div className="container mx-auto px-4 relative z-10">
+      <section className="py-12 sm:py-16 md:py-20 bg-gradient-to-br from-background via-primary/5 to-background relative overflow-hidden">
+        {/* Background Pattern */}
+        <div className="absolute inset-0 opacity-5">
+          <div className="absolute inset-0" style={{
+            backgroundImage: `radial-gradient(circle at 2px 2px, hsl(var(--primary)) 1px, transparent 0)`,
+            backgroundSize: '30px 30px'
+          }} />
+        </div>
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
             viewport={{ once: true }}
-            className="text-center mb-8 md:mb-12"
+            className="text-center mb-10 sm:mb-12 md:mb-16"
           >
-            <h2 className="text-2xl md:text-3xl font-bold mb-3 md:mb-4 font-arabic-title">إنجازاتنا بالأرقام</h2>
-            <p className="text-slate-600 max-w-2xl mx-auto leading-relaxed">
+            <motion.h2 
+              className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-3 sm:mb-4 md:mb-6 bg-gradient-to-l from-primary via-accent to-primary bg-[length:200%_auto] bg-clip-text text-transparent"
+              animate={{
+                backgroundPosition: ["0% center", "200% center", "0% center"]
+              }}
+              transition={{
+                duration: 5,
+                repeat: Infinity,
+                ease: "linear"
+              }}
+            >
+              إنجازاتنا بالأرقام
+            </motion.h2>
+            <p className="text-base sm:text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed px-4">
               أرقام حقيقية تعكس التزامنا بتحقيق النتائج الاستثنائية لعملائنا
             </p>
           </motion.div>
 
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 md:gap-6">
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4 sm:gap-5 md:gap-6">
             {statistics.map((stat, index) => (
               <motion.div
                 key={index}
-                initial={{ opacity: 0, y: 20, scale: 0.9 }}
+                initial={{ opacity: 0, y: 30, scale: 0.8 }}
                 whileInView={{ opacity: 1, y: 0, scale: 1 }}
-                whileHover={{ y: -5, scale: 1.02 }}
+                whileHover={{ y: -8, scale: 1.05 }}
                 transition={{ 
-                  delay: index * 0.1, 
-                  duration: 0.6,
+                  delay: index * 0.08, 
+                  duration: 0.5,
                   type: "spring",
-                  stiffness: 300
+                  stiffness: 200
                 }}
                 viewport={{ once: true }}
                 className="group"
               >
-                <Card className={`border-0 shadow-lg hover:shadow-2xl transition-all duration-300 ${stat.bgColor} h-full`}>
-                  <CardContent className="pt-4 md:pt-6 pb-4 md:pb-6 text-center">
-                    <stat.icon className={`h-6 w-6 md:h-8 md:w-8 mx-auto mb-2 md:mb-3 ${stat.color} group-hover:scale-110 transition-transform`} />
-                    <h3 className="text-lg md:text-2xl font-bold mb-1 md:mb-2">{stat.number}</h3>
-                    <p className="text-slate-700 font-medium text-xs md:text-sm mb-1">{stat.label}</p>
-                    <p className="text-xs text-slate-500 hidden lg:block leading-relaxed">{stat.description}</p>
+                <Card className="relative border-0 shadow-lg hover:shadow-2xl bg-card/50 backdrop-blur-sm hover:bg-card transition-all duration-300 h-full overflow-hidden">
+                  {/* Gradient Overlay */}
+                  <div className={`absolute inset-0 bg-gradient-to-br ${stat.bgColor.replace('bg-', 'from-')}/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300`} />
+                  
+                  <CardContent className="relative pt-5 sm:pt-6 md:pt-7 pb-5 sm:pb-6 md:pb-7 text-center">
+                    <motion.div
+                      className={`w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 mx-auto mb-3 sm:mb-4 rounded-2xl bg-gradient-to-br ${stat.bgColor.replace('bg-', 'from-')}/20 ${stat.bgColor.replace('bg-', 'to-')}/40 flex items-center justify-center shadow-md group-hover:shadow-lg transition-all`}
+                      whileHover={{ rotate: [0, -10, 10, 0], scale: 1.1 }}
+                      transition={{ duration: 0.5 }}
+                    >
+                      <stat.icon className={`h-6 w-6 sm:h-7 sm:w-7 md:h-8 md:w-8 ${stat.color}`} />
+                    </motion.div>
+                    <motion.h3 
+                      className="text-xl sm:text-2xl md:text-3xl font-bold mb-1 sm:mb-2 text-foreground tabular-nums"
+                      initial={{ scale: 1 }}
+                      whileInView={{ scale: [1, 1.1, 1] }}
+                      transition={{ duration: 0.5, delay: index * 0.1 + 0.3 }}
+                      viewport={{ once: true }}
+                    >
+                      {stat.number}
+                    </motion.h3>
+                    <p className="text-foreground/80 font-semibold text-xs sm:text-sm md:text-base mb-1 sm:mb-2">{stat.label}</p>
+                    <p className="text-xs sm:text-sm text-muted-foreground hidden lg:block leading-relaxed">{stat.description}</p>
                   </CardContent>
+
+                  {/* Corner Decoration */}
+                  <div className={`absolute top-0 right-0 w-16 h-16 bg-gradient-to-br ${stat.bgColor.replace('bg-', 'from-')}/10 to-transparent rounded-full blur-xl -translate-y-1/2 translate-x-1/2 group-hover:scale-150 transition-transform duration-300`} />
                 </Card>
               </motion.div>
             ))}
@@ -289,28 +440,68 @@ const SuccessStories = () => {
       </section>
 
       {/* Category Filter */}
-      <section className="py-6 md:py-8 bg-gradient-to-r from-slate-100 to-blue-50">
-        <div className="container mx-auto px-4">
+      <section className="py-6 sm:py-8 md:py-10 bg-gradient-to-r from-primary/5 via-accent/5 to-primary/5 relative overflow-hidden">
+        {/* Animated Background Lines */}
+        <motion.div
+          className="absolute inset-0 opacity-10"
+          style={{
+            backgroundImage: `linear-gradient(90deg, hsl(var(--primary)) 1px, transparent 1px), linear-gradient(hsl(var(--primary)) 1px, transparent 1px)`,
+            backgroundSize: '60px 60px'
+          }}
+          animate={{
+            backgroundPosition: ['0px 0px', '60px 60px']
+          }}
+          transition={{
+            duration: 15,
+            repeat: Infinity,
+            ease: "linear"
+          }}
+        />
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
             viewport={{ once: true }}
-            className="flex flex-wrap justify-center gap-2 md:gap-4"
+            className="flex flex-wrap justify-center gap-3 sm:gap-4"
           >
-            {categories.map((category) => (
+            {categories.map((category, index) => (
               <motion.button
                 key={category.value}
                 onClick={() => setSelectedCategory(category.value)}
-                whileHover={{ scale: 1.05 }}
+                initial={{ opacity: 0, scale: 0.8 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                whileHover={{ scale: 1.08, y: -2 }}
                 whileTap={{ scale: 0.95 }}
-                className={`px-4 md:px-6 py-2 md:py-3 rounded-full font-semibold text-sm md:text-base transition-all duration-300 ${
+                transition={{
+                  delay: index * 0.08,
+                  type: "spring",
+                  stiffness: 200
+                }}
+                viewport={{ once: true }}
+                className={`relative px-5 sm:px-6 md:px-8 py-2.5 sm:py-3 md:py-4 rounded-2xl font-bold text-sm sm:text-base md:text-lg transition-all duration-300 overflow-hidden ${
                   selectedCategory === category.value
-                    ? 'bg-primary text-white shadow-lg shadow-primary/30'
-                    : 'bg-white text-slate-700 hover:bg-slate-100 border border-slate-200'
+                    ? 'bg-gradient-to-r from-primary to-accent text-white shadow-xl shadow-primary/30'
+                    : 'bg-card text-foreground hover:bg-card/80 border-2 border-border/50 hover:border-primary/30'
                 }`}
               >
-                {category.label} ({category.count})
+                {/* Shine Effect */}
+                {selectedCategory === category.value && (
+                  <motion.div
+                    className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent"
+                    animate={{
+                      x: ['-100%', '200%']
+                    }}
+                    transition={{
+                      duration: 1.5,
+                      repeat: Infinity,
+                      repeatDelay: 1
+                    }}
+                  />
+                )}
+                <span className="relative z-10">
+                  {category.label} <span className="opacity-75">({category.count})</span>
+                </span>
               </motion.button>
             ))}
           </motion.div>
@@ -318,24 +509,24 @@ const SuccessStories = () => {
       </section>
 
       {/* Success Stories */}
-      <section className="py-12 md:py-16">
-        <div className="container mx-auto px-4">
+      <section className="py-12 sm:py-16 md:py-20">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
             viewport={{ once: true }}
-            className="text-center mb-8 md:mb-12"
+            className="text-center mb-10 sm:mb-12 md:mb-16"
           >
-            <h2 className="text-3xl md:text-4xl font-bold mb-4 font-arabic-title">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-4 sm:mb-5 md:mb-6 text-foreground">
               قصص نجاح موثقة ومؤكدة
             </h2>
-            <p className="text-lg text-slate-600 max-w-3xl mx-auto leading-relaxed">
+            <p className="text-base sm:text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed px-4">
               كل قصة تحكي رحلة حقيقية من التحدي إلى النجاح، مع عملاء حقيقيين وأرقام موثقة
             </p>
           </motion.div>
 
-          <div className="space-y-8 md:space-y-12">
+          <div className="space-y-8 sm:space-y-10 md:space-y-12">
             {filteredStories.map((story, index) => (
               <motion.div
                 key={story.id}
@@ -350,8 +541,8 @@ const SuccessStories = () => {
                 }}
                 viewport={{ once: true }}
               >
-                <Card className={`overflow-hidden shadow-xl hover:shadow-2xl transition-all duration-500 border-0 ${
-                  story.featured ? 'ring-2 ring-primary/30 bg-gradient-to-br from-white to-blue-50/30' : 'bg-white'
+                <Card className={`relative overflow-hidden shadow-xl hover:shadow-2xl transition-all duration-500 border-0 bg-card ${
+                  story.featured ? 'ring-2 ring-primary/40 before:absolute before:inset-0 before:bg-gradient-to-br before:from-primary/5 before:to-accent/5' : ''
                 }`}>
                   {/* Featured Badge */}
                   {story.featured && (
