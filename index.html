@@ -4,10 +4,6 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes" />
     
-    <!-- Cache Control - منع الكاش -->
-    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
-    <meta http-equiv="Pragma" content="no-cache" />
-    <meta http-equiv="Expires" content="0" />
     
     <!-- Mobile Optimization -->
     <meta name="mobile-web-app-capable" content="yes" />
@@ -63,27 +59,5 @@
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
     
-    <!-- Clear Cache Script -->
-    <script>
-      // حذف الكاش عند تحميل الصفحة
-      if ('caches' in window) {
-        caches.keys().then(function(names) {
-          for (let name of names) {
-            caches.delete(name);
-          }
-        });
-      }
-      
-      // منع تخزين الصفحة في الكاش
-      window.addEventListener('beforeunload', function() {
-        if ('serviceWorker' in navigator) {
-          navigator.serviceWorker.getRegistrations().then(function(registrations) {
-            for (let registration of registrations) {
-              registration.unregister();
-            }
-          });
-        }
-      });
-    </script>
   </body>
 </html>
