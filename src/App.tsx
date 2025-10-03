@@ -136,6 +136,7 @@ import ContactUs from "./pages/ContactUs";
 import PaymentMethods from "./pages/PaymentMethods";
 import Universities from "./pages/Universities";
 import JournalsDirectory from "./pages/JournalsDirectory";
+import AcademicServices from "./pages/AcademicServices";
 import InstitutionalPartnerships from "./pages/InstitutionalPartnerships";
 import ContractManagement from "./pages/ContractManagement";
 import Footer from "./components/Footer";
@@ -198,7 +199,8 @@ const App = () => (
              <Route path="/pricing" element={<Pricing />} />
             <Route path="/intellectual-property" element={<IntellectualProperty />} />
             <Route path="/academic-integrity" element={<AcademicIntegrity />} />
-           <Route path="/institutional-partnerships" element={<InstitutionalPartnerships />} />
+            <Route path="/academic-services" element={<AcademicServices />} />
+            <Route path="/institutional-partnerships" element={<InstitutionalPartnerships />} />
             <Route path="/payment-methods" element={<PaymentMethods />} />
             <Route path="/universities" element={<Universities />} />
             <Route path="/journals" element={<JournalsDirectory />} />
