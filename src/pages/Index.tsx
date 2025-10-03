@@ -11,7 +11,7 @@ import {
   Bot, Bell, GraduationCap, BookOpen, Users, Award, 
   ArrowRight, PlayCircle, Building2, Globe, CheckCircle,
   Star, TrendingUp, Shield, Clock, Languages, Target,
-  Sparkles, ChevronRight, Zap, Heart, Brain
+  Sparkles, ChevronRight, Zap, Heart, Brain, FileText, Presentation
 } from "lucide-react";
 import { UNIFIED_STATS, STATS_LABELS } from "@/constants/academicStats";
 import { InstitutionalPartnershipBanner } from "@/components/InstitutionalPartnershipBanner";
@@ -451,6 +451,118 @@ const Index = () => {
         </div>
       </section>
 
+      {/* قسم الخدمات الأكاديمية - رابط للصفحة المستقلة */}
+      <section className="py-20 bg-gradient-to-br from-slate-50 via-blue-50/40 to-purple-50/30 dark:from-slate-950 dark:via-slate-900/95 dark:to-slate-950 relative overflow-hidden" dir="rtl">
+        {/* خلفية متحركة */}
+        <div className="absolute inset-0 overflow-hidden pointer-events-none">
+          <motion.div
+            className="absolute top-20 right-[10%] w-72 h-72 bg-blue-500/10 rounded-full blur-3xl"
+            animate={{ 
+              scale: [1, 1.3, 1],
+              opacity: [0.3, 0.5, 0.3]
+            }}
+            transition={{ duration: 10, repeat: Infinity }}
+          />
+          <motion.div
+            className="absolute bottom-20 left-[10%] w-96 h-96 bg-purple-500/10 rounded-full blur-3xl"
+            animate={{ 
+              scale: [1.2, 1, 1.2],
+              opacity: [0.4, 0.6, 0.4]
+            }}
+            transition={{ duration: 12, repeat: Infinity, delay: 1 }}
+          />
+        </div>
+
+        <div className="container mx-auto px-4 relative z-10">
+          {/* رأس القسم */}
+          <motion.div
+            className="text-center mb-12"
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            viewport={{ once: true }}
+          >
+            <motion.div
+              className="inline-flex items-center gap-2 px-5 py-2 bg-gradient-to-l from-blue-600/10 to-purple-600/10 rounded-full mb-5 border border-blue-200/60"
+              initial={{ opacity: 0, scale: 0.9 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.5 }}
+              viewport={{ once: true }}
+            >
+              <Sparkles className="h-4 w-4 text-blue-600" />
+              <span className="text-sm font-bold bg-gradient-to-l from-blue-600 to-purple-600 bg-clip-text text-transparent">
+                خدماتنا الأكاديمية
+              </span>
+            </motion.div>
+
+            <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-4">
+              <span className="text-slate-900 dark:text-white">حلول أكاديمية </span>
+              <span className="bg-gradient-to-l from-blue-600 to-purple-600 bg-clip-text text-transparent">
+                شاملة ومتكاملة
+              </span>
+            </h2>
+
+            <p className="text-base md:text-lg text-slate-600 dark:text-slate-400 max-w-2xl mx-auto leading-relaxed mb-8">
+              نقدم مجموعة واسعة من الخدمات الأكاديمية المتخصصة: كتابة المقالات والأبحاث، التدقيق اللغوي، فحص الانتحال، إعادة الصياغة، العروض التقديمية، مراجعة الأدبيات، والمزيد
+            </p>
+
+            {/* عرض سريع للخدمات */}
+            <motion.div
+              className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4 max-w-4xl mx-auto mb-10"
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.2 }}
+              viewport={{ once: true }}
+            >
+              {[
+                { icon: FileText, label: "كتابة المقالات", color: "from-blue-500 to-blue-600" },
+                { icon: BookOpen, label: "كتابة الأبحاث", color: "from-indigo-500 to-indigo-600" },
+                { icon: GraduationCap, label: "الأطروحات", color: "from-purple-500 to-purple-600" },
+                { icon: CheckCircle, label: "التدقيق", color: "from-emerald-500 to-emerald-600" },
+                { icon: Shield, label: "فحص الانتحال", color: "from-red-500 to-red-600" },
+                { icon: Presentation, label: "العروض", color: "from-violet-500 to-violet-600" }
+              ].map((service, index) => {
+                const IconComponent = service.icon;
+                return (
+                  <motion.div
+                    key={index}
+                    initial={{ opacity: 0, scale: 0.8 }}
+                    whileInView={{ opacity: 1, scale: 1 }}
+                    transition={{ duration: 0.4, delay: index * 0.1 }}
+                    viewport={{ once: true }}
+                    whileHover={{ scale: 1.05, y: -5 }}
+                    className="bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm rounded-xl p-4 border border-slate-200/50 dark:border-slate-700/50 shadow-md hover:shadow-lg transition-all"
+                  >
+                    <div className={`w-12 h-12 bg-gradient-to-br ${service.color} rounded-lg flex items-center justify-center mb-2 mx-auto`}>
+                      <IconComponent className="h-6 w-6 text-white" />
+                    </div>
+                    <p className="text-xs font-medium text-slate-700 dark:text-slate-300 text-center">
+                      {service.label}
+                    </p>
+                  </motion.div>
+                );
+              })}
+            </motion.div>
+
+            {/* زر الانتقال للصفحة الكاملة */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.4 }}
+              viewport={{ once: true }}
+            >
+              <Button
+                size="lg"
+                className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white shadow-lg hover:shadow-xl transition-all text-base px-8"
+                onClick={() => navigate('/academic-services')}
+              >
+                عرض جميع الخدمات الأكاديمية
+                <ArrowRight className="h-5 w-5 mr-2" />
+              </Button>
+            </motion.div>
+          </motion.div>
+        </div>
+      </section>
 
       {/* قسم مميزات الجودة */}
       <section className="py-16 bg-gradient-to-br from-violet-600 via-purple-600 to-fuchsia-600 text-white relative overflow-hidden">
