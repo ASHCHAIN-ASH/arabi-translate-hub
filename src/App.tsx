@@ -42,6 +42,7 @@ import LegalResearch from "./pages/research/LegalResearch";
 import MedicalResearch from "./pages/research/MedicalResearch";
 import AboutUs from "./pages/AboutUs";
 import AcademicCompetitions from "./pages/AcademicCompetitions";
+import SpinTheWheel from "./pages/SpinTheWheel";
 import Unauthorized from "./pages/Unauthorized";
 import MasterMembership from "./pages/MasterMembership";
 import FAQ from "./pages/FAQ";
@@ -191,6 +192,7 @@ const App = () => (
               <Route path="/master-membership" element={<MasterMembership />} />
              <Route path="/faq" element={<FAQ />} />
              <Route path="/academic-competitions" element={<AcademicCompetitions />} />
+             <Route path="/spin-the-wheel" element={<SpinTheWheel />} />
              <Route path="/client-guide" element={<ClientGuide />} />
              <Route path="/order-tracking" element={<OrderTracking />} />
              <Route path="/submit-order" element={<OrderForm />} />

@@ -361,21 +361,49 @@ const AcademicCompetitions = () => {
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.8, duration: 0.6 }}
-          className="mt-16 text-center p-8 bg-gradient-to-br from-primary via-blue-600 to-purple-700 rounded-2xl text-white"
+          className="mt-16 space-y-8"
         >
-          <Trophy className="h-16 w-16 mx-auto mb-6 text-yellow-300" />
-          <h3 className="text-3xl font-bold mb-4">ابدأ رحلتك نحو التميز الأكاديمي</h3>
-          <p className="text-xl opacity-90 mb-8 max-w-2xl mx-auto">
-            انضم إلى مجتمع المتميزين وشارك في المسابقات الأكاديمية لتطوير مهاراتك والحصول على جوائز قيمة
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button size="lg" className="bg-white text-primary hover:bg-gray-100">
-              <Trophy className="ml-2 h-5 w-5" />
-              ابدأ المشاركة الآن
-            </Button>
-            <Button size="lg" variant="outline" className="border-white text-white hover:bg-white hover:text-primary">
-              تواصل معنا للاستفسار
-            </Button>
+          {/* Spin the Wheel Promotion */}
+          <div className="p-8 bg-gradient-to-br from-purple-600 via-pink-600 to-blue-600 rounded-2xl text-white shadow-xl">
+            <div className="text-center">
+              <motion.div
+                animate={{ rotate: [0, 360] }}
+                transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
+                className="inline-block mb-6"
+              >
+                <Gift className="h-20 w-20 text-yellow-300" />
+              </motion.div>
+              <h3 className="text-4xl font-bold mb-4">لف العجلة واربح الآن!</h3>
+              <p className="text-xl opacity-90 mb-8 max-w-2xl mx-auto">
+                جرب حظك في عجلة الجوائز واحصل على خصومات فورية وجوائز قيمة
+              </p>
+              <Button 
+                size="lg" 
+                className="bg-white text-purple-600 hover:bg-yellow-300 hover:text-purple-700 transform hover:scale-105 transition-all duration-300 shadow-lg text-xl px-10 py-6"
+                onClick={() => window.location.href = '/spin-the-wheel'}
+              >
+                <Gift className="ml-2 h-6 w-6" />
+                لف العجلة الآن
+              </Button>
+            </div>
+          </div>
+
+          {/* Original CTA */}
+          <div className="text-center p-8 bg-gradient-to-br from-primary via-blue-600 to-purple-700 rounded-2xl text-white">
+            <Trophy className="h-16 w-16 mx-auto mb-6 text-yellow-300" />
+            <h3 className="text-3xl font-bold mb-4">ابدأ رحلتك نحو التميز الأكاديمي</h3>
+            <p className="text-xl opacity-90 mb-8 max-w-2xl mx-auto">
+              انضم إلى مجتمع المتميزين وشارك في المسابقات الأكاديمية لتطوير مهاراتك والحصول على جوائز قيمة
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <Button size="lg" className="bg-white text-primary hover:bg-gray-100">
+                <Trophy className="ml-2 h-5 w-5" />
+                ابدأ المشاركة الآن
+              </Button>
+              <Button size="lg" variant="outline" className="border-white text-white hover:bg-white hover:text-primary">
+                تواصل معنا للاستفسار
+              </Button>
+            </div>
           </div>
         </motion.div>
       </div>
