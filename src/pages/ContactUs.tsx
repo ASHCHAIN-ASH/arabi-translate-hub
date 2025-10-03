@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 import { 
   MapPin, Phone, Mail, Clock, Send, MessageCircle, Users, Award, Zap, MessageSquare,
   Globe2, Shield, CheckCircle2, Star, TrendingUp, HeartHandshake, Sparkles, 
-  Building2, Target, Rocket
+  Building2, Target, Rocket, Facebook, Twitter, Instagram, Linkedin
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -734,6 +734,85 @@ const ContactUs = () => {
                     </motion.div>
                   ))}
                 </div>
+
+                {/* Social Media Section */}
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.6, delay: 0.4 }}
+                  className="mt-8"
+                >
+                  <Card className="p-6 sm:p-8 bg-gradient-to-br from-primary/5 via-secondary/5 to-accent/5 border-2 hover:border-primary/30 transition-all duration-500">
+                    <div className="text-center space-y-5">
+                      <motion.div
+                        initial={{ scale: 0 }}
+                        whileInView={{ scale: 1 }}
+                        viewport={{ once: true }}
+                        transition={{ type: "spring", stiffness: 200 }}
+                      >
+                        <div className="inline-flex items-center gap-2 mb-3">
+                          <Sparkles className="w-6 h-6 text-primary" />
+                          <h3 className="text-xl sm:text-2xl font-bold">تابعنا على وسائل التواصل</h3>
+                          <Sparkles className="w-6 h-6 text-primary" />
+                        </div>
+                        <p className="text-sm text-muted-foreground">كن على اطلاع بآخر الأخبار والعروض الحصرية</p>
+                      </motion.div>
+                      
+                      <div className="flex justify-center gap-4 flex-wrap">
+                        {[
+                          { 
+                            Icon: Facebook, 
+                            href: "https://facebook.com/masteredupath", 
+                            label: "فيسبوك",
+                            color: "from-blue-500 to-blue-700",
+                            hoverColor: "hover:shadow-blue-500/50"
+                          },
+                          { 
+                            Icon: Twitter, 
+                            href: "https://twitter.com/masteredupath", 
+                            label: "تويتر",
+                            color: "from-sky-400 to-sky-600",
+                            hoverColor: "hover:shadow-sky-500/50"
+                          },
+                          { 
+                            Icon: Instagram, 
+                            href: "https://instagram.com/masteredupath", 
+                            label: "انستغرام",
+                            color: "from-pink-500 to-purple-600",
+                            hoverColor: "hover:shadow-pink-500/50"
+                          },
+                          { 
+                            Icon: Linkedin, 
+                            href: "https://linkedin.com/company/masteredupath", 
+                            label: "لينكدإن",
+                            color: "from-blue-600 to-blue-800",
+                            hoverColor: "hover:shadow-blue-700/50"
+                          }
+                        ].map(({ Icon, href, label, color, hoverColor }, idx) => (
+                          <motion.a
+                            key={idx}
+                            href={href}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className={`group relative p-4 rounded-2xl bg-gradient-to-br ${color} text-white shadow-lg ${hoverColor} hover:shadow-xl transition-all duration-300`}
+                            whileHover={{ scale: 1.1, y: -5 }}
+                            whileTap={{ scale: 0.95 }}
+                            initial={{ opacity: 0, y: 20 }}
+                            whileInView={{ opacity: 1, y: 0 }}
+                            viewport={{ once: true }}
+                            transition={{ delay: idx * 0.1 }}
+                          >
+                            <Icon className="w-7 h-7 sm:w-8 sm:h-8" />
+                            <span className="absolute -bottom-8 left-1/2 -translate-x-1/2 text-xs font-medium opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap text-foreground">
+                              {label}
+                            </span>
+                          </motion.a>
+                        ))}
+                      </div>
+                    </div>
+                  </Card>
+                </motion.div>
 
                 {/* Why Choose Us Section */}
                 <motion.div 

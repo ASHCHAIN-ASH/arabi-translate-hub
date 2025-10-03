@@ -130,19 +130,21 @@ const Footer = () => {
             {/* Social Media */}
             <div className="flex gap-3 justify-start">
               {[
-                { Icon: Facebook, color: "hover:text-blue-400" },
-                { Icon: Twitter, color: "hover:text-sky-400" },
-                { Icon: Instagram, color: "hover:text-pink-400" },
-                { Icon: Linkedin, color: "hover:text-blue-600" }
-              ].map(({ Icon, color }, index) => (
-                <Button 
+                { Icon: Facebook, color: "hover:text-blue-400", href: "https://facebook.com/masteredupath", label: "فيسبوك" },
+                { Icon: Twitter, color: "hover:text-sky-400", href: "https://twitter.com/masteredupath", label: "تويتر" },
+                { Icon: Instagram, color: "hover:text-pink-400", href: "https://instagram.com/masteredupath", label: "انستغرام" },
+                { Icon: Linkedin, color: "hover:text-blue-600", href: "https://linkedin.com/company/masteredupath", label: "لينكدإن" }
+              ].map(({ Icon, color, href, label }, index) => (
+                <a
                   key={index}
-                  variant="ghost" 
-                  size="sm" 
-                  className={`w-10 h-10 rounded-full bg-white/5 hover:bg-white/10 text-white/70 ${color} transition-all duration-300 border border-white/10`}
+                  href={href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={label}
+                  className={`w-10 h-10 rounded-full bg-white/5 hover:bg-white/10 text-white/70 ${color} transition-all duration-300 border border-white/10 flex items-center justify-center hover:scale-110`}
                 >
                   <Icon className="h-4 w-4" />
-                </Button>
+                </a>
               ))}
             </div>
           </motion.div>

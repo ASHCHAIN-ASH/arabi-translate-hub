@@ -14,7 +14,11 @@ import {
   X,
   ArrowLeft,
   FileText,
-  MapIcon
+  MapIcon,
+  Facebook,
+  Twitter,
+  Instagram,
+  Linkedin
 } from "lucide-react";
 import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
@@ -130,6 +134,26 @@ const Header = () => {
 
           {/* أزرار الجوال */}
           <div className="flex items-center gap-2">
+            {/* Social Media Icons - Desktop */}
+            <div className="hidden lg:flex items-center gap-1 mr-2">
+              {[
+                { Icon: Facebook, href: "https://facebook.com/masteredupath", color: "hover:text-blue-500" },
+                { Icon: Twitter, href: "https://twitter.com/masteredupath", color: "hover:text-sky-400" },
+                { Icon: Instagram, href: "https://instagram.com/masteredupath", color: "hover:text-pink-500" },
+                { Icon: Linkedin, href: "https://linkedin.com/company/masteredupath", color: "hover:text-blue-600" }
+              ].map(({ Icon, href, color }, idx) => (
+                <a
+                  key={idx}
+                  href={href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={`p-2 rounded-lg ${color} transition-colors`}
+                >
+                  <Icon className="h-4 w-4" />
+                </a>
+              ))}
+            </div>
+            
             <Button size="sm" className="bg-gradient-to-r from-primary to-primary/80 text-primary-foreground px-3 py-1.5 sm:px-4 sm:py-2 text-xs sm:text-sm rounded-md" asChild>
               <Link to="/order-now" className="flex items-center gap-1 whitespace-nowrap">
                 <span>اطلب الآن</span>
@@ -182,7 +206,27 @@ const Header = () => {
                     </div>
                   </div>
 
-                  <div className="pt-4 border-t">
+                  <div className="pt-4 border-t space-y-3">
+                    {/* Social Media - Mobile */}
+                    <div className="flex justify-center gap-3">
+                      {[
+                        { Icon: Facebook, href: "https://facebook.com/masteredupath", color: "text-blue-600" },
+                        { Icon: Twitter, href: "https://twitter.com/masteredupath", color: "text-sky-500" },
+                        { Icon: Instagram, href: "https://instagram.com/masteredupath", color: "text-pink-600" },
+                        { Icon: Linkedin, href: "https://linkedin.com/company/masteredupath", color: "text-blue-700" }
+                      ].map(({ Icon, href, color }, idx) => (
+                        <a
+                          key={idx}
+                          href={href}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className={`w-10 h-10 rounded-full bg-primary/5 hover:bg-primary/10 flex items-center justify-center ${color} transition-all`}
+                        >
+                          <Icon className="h-5 w-5" />
+                        </a>
+                      ))}
+                    </div>
+                    
                     <Button className="w-full bg-gradient-to-r from-primary to-primary/80" asChild>
                       <Link to="/order-now" className="flex items-center justify-center gap-2" onClick={() => setIsOpen(false)}>
                         <span>اطلب خدمتك الآن</span>
