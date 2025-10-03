@@ -97,20 +97,20 @@ const PrivacyPolicy = () => {
                       في وكالة ماستر إيدو باث، نؤمن بأن حماية خصوصيتكم ليست مجرد التزام قانوني، بل قيمة أساسية في علاقتنا المهنية.
                     </p>
                     <div className="grid lg:grid-cols-3 gap-4">
-                      <div className="bg-blue-50 p-4 rounded-lg text-center">
+                      <div className="bg-blue-50 dark:bg-blue-950/20 p-4 rounded-lg text-center">
                         <Shield className="w-8 h-8 text-blue-600 mx-auto mb-2" />
-                        <p className="text-sm font-semibold text-blue-800">حماية مطلقة</p>
-                        <p className="text-xs text-blue-600">للبيانات الشخصية</p>
+                        <p className="text-sm font-semibold text-blue-800 dark:text-blue-300">حماية مطلقة</p>
+                        <p className="text-xs text-blue-600 dark:text-blue-400">للبيانات الشخصية</p>
                       </div>
-                      <div className="bg-green-50 p-4 rounded-lg text-center">
+                      <div className="bg-green-50 dark:bg-green-950/20 p-4 rounded-lg text-center">
                         <Lock className="w-8 h-8 text-green-600 mx-auto mb-2" />
-                        <p className="text-sm font-semibold text-green-800">سرية تامة</p>
-                        <p className="text-xs text-green-600">للمحتوى الأكاديمي</p>
+                        <p className="text-sm font-semibold text-green-800 dark:text-green-300">سرية تامة</p>
+                        <p className="text-xs text-green-600 dark:text-green-400">للمحتوى الأكاديمي</p>
                       </div>
-                      <div className="bg-purple-50 p-4 rounded-lg text-center">
+                      <div className="bg-purple-50 dark:bg-purple-950/20 p-4 rounded-lg text-center">
                         <UserCheck className="w-8 h-8 text-purple-600 mx-auto mb-2" />
-                        <p className="text-sm font-semibold text-purple-800">شفافية كاملة</p>
-                        <p className="text-xs text-purple-600">في جميع العمليات</p>
+                        <p className="text-sm font-semibold text-purple-800 dark:text-purple-300">شفافية كاملة</p>
+                        <p className="text-xs text-purple-600 dark:text-purple-400">في جميع العمليات</p>
                       </div>
                     </div>
                   </div>
