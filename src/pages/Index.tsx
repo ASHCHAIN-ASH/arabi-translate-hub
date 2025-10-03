@@ -632,9 +632,6 @@ const Index = () => {
         <ServiceSteps />
       </Suspense>
 
-      <Suspense fallback={<LoadingSpinner />}>
-        <ServicesShowcase />
-      </Suspense>
 
       {/* Call to Action النهائي */}
       <section className="py-20 bg-gradient-to-r from-blue-600 via-cyan-600 to-teal-600 text-white relative overflow-hidden">
