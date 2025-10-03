@@ -5002,6 +5002,33 @@ export type Database = {
         }
         Relationships: []
       }
+      spin_attempts: {
+        Row: {
+          attempt_date: string
+          created_at: string | null
+          email: string
+          id: string
+          prize: string
+          user_identifier: string
+        }
+        Insert: {
+          attempt_date?: string
+          created_at?: string | null
+          email: string
+          id?: string
+          prize: string
+          user_identifier: string
+        }
+        Update: {
+          attempt_date?: string
+          created_at?: string | null
+          email?: string
+          id?: string
+          prize?: string
+          user_identifier?: string
+        }
+        Relationships: []
+      }
       subscription_plans: {
         Row: {
           billing_interval: string

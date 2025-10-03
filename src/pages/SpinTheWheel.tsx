@@ -24,7 +24,48 @@ const SpinTheWheel = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [hasSpunToday, setHasSpunToday] = useState(false);
+  const [isChecking, setIsChecking] = useState(true);
   const { toast } = useToast();
+
+  // التحقق من المحاولات اليومية عند تحميل الصفحة
+  useEffect(() => {
+    checkDailyAttempt();
+  }, []);
+
+  const getUserIdentifier = () => {
+    // استخدام معرف فريد من المتصفح
+    let identifier = localStorage.getItem('spin_user_id');
+    if (!identifier) {
+      identifier = `user_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+      localStorage.setItem('spin_user_id', identifier);
+    }
+    return identifier;
+  };
+
+  const checkDailyAttempt = async () => {
+    try {
+      const userIdentifier = getUserIdentifier();
+      const today = new Date().toISOString().split('T')[0];
+
+      const { data, error } = await supabase
+        .from('spin_attempts')
+        .select('*')
+        .eq('user_identifier', userIdentifier)
+        .eq('attempt_date', today)
+        .maybeSingle();
+
+      if (error && error.code !== 'PGRST116') {
+        console.error('Error checking attempts:', error);
+      }
+
+      setHasSpunToday(!!data);
+    } catch (error) {
+      console.error('Error checking daily attempt:', error);
+    } finally {
+      setIsChecking(false);
+    }
+  };
 
   const segments: Segment[] = [
     { text: "خصم 10%", color: "#FF5733" },
@@ -116,7 +157,16 @@ const SpinTheWheel = () => {
   }, [startAngle]);
 
   const spinWheel = () => {
-    if (isSpinning) return;
+    if (isSpinning || hasSpunToday) {
+      if (hasSpunToday) {
+        toast({
+          title: "تم استخدام المحاولة اليومية",
+          description: "يمكنك المحاولة مرة أخرى غداً",
+          variant: "destructive",
+        });
+      }
+      return;
+    }
 
     setIsSpinning(true);
     const spinRotations = Math.random() * 5 + 10; // 10-15 دورة
@@ -179,11 +229,21 @@ const SpinTheWheel = () => {
     setIsSubmitting(true);
 
     try {
+      const userIdentifier = getUserIdentifier();
+
       const { error } = await supabase.functions.invoke("send-spin-winner", {
-        body: { name, email, prize: wonPrize },
+        body: { 
+          name, 
+          email, 
+          prize: wonPrize,
+          userIdentifier 
+        },
       });
 
       if (error) throw error;
+
+      // تحديث حالة المحاولة اليومية
+      setHasSpunToday(true);
 
       toast({
         title: "تم الإرسال بنجاح!",
@@ -246,30 +306,51 @@ const SpinTheWheel = () => {
             />
           </div>
 
-          <Button
-            onClick={spinWheel}
-            disabled={isSpinning}
-            size="lg"
-            className="text-xl px-12 py-6 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 shadow-lg hover:shadow-xl transition-all duration-300"
-          >
-            {isSpinning ? (
-              <>
-                <motion.div
-                  animate={{ rotate: 360 }}
-                  transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
-                  className="mr-2"
-                >
-                  <Sparkles className="w-6 h-6" />
-                </motion.div>
-                جاري الدوران...
-              </>
-            ) : (
-              <>
-                <Gift className="w-6 h-6 mr-2" />
-                ابدأ الدوران
-              </>
-            )}
-          </Button>
+          {isChecking ? (
+            <Button size="lg" disabled className="text-xl px-12 py-6">
+              جاري التحميل...
+            </Button>
+          ) : (
+            <Button
+              onClick={spinWheel}
+              disabled={isSpinning || hasSpunToday}
+              size="lg"
+              className={`text-xl px-12 py-6 ${
+                hasSpunToday 
+                  ? 'bg-gray-400 cursor-not-allowed' 
+                  : 'bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700'
+              } shadow-lg hover:shadow-xl transition-all duration-300`}
+            >
+              {isSpinning ? (
+                <>
+                  <motion.div
+                    animate={{ rotate: 360 }}
+                    transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+                    className="mr-2"
+                  >
+                    <Sparkles className="w-6 h-6" />
+                  </motion.div>
+                  جاري الدوران...
+                </>
+              ) : hasSpunToday ? (
+                <>
+                  <Trophy className="w-6 h-6 mr-2" />
+                  تم استخدام المحاولة اليومية
+                </>
+              ) : (
+                <>
+                  <Gift className="w-6 h-6 mr-2" />
+                  ابدأ الدوران
+                </>
+              )}
+            </Button>
+          )}
+
+          {hasSpunToday && (
+            <p className="text-center text-gray-600 mt-4">
+              يمكنك المحاولة مرة أخرى غداً! 🎁
+            </p>
+          )}
         </motion.div>
 
         {/* Features */}
