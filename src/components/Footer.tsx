@@ -196,6 +196,7 @@ const Footer = () => {
                 { name: 'عن الشركة', href: '/about-us' },
                 { name: 'الأسعار', href: '/pricing' },
                 { name: 'عضوية ماستر', href: '/master-membership' },
+                { name: 'المسابقات', href: '/academic-competitions' },
                 { name: 'الأسئلة الشائعة', href: '/faq' },
                 { name: 'اتصل بنا', href: '/contact-us' }
               ].map((link) => (
