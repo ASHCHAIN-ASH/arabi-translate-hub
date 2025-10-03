@@ -22,88 +22,17 @@ import {
   Eye,
   Clock
 } from "lucide-react";
-import { useState } from "react";
+import { Link } from "react-router-dom";
 
 const AgencyUpdates = () => {
-  const [selectedCategory, setSelectedCategory] = useState("all");
-
-  const updates = [
-    {
-      id: 1,
-      title: "إطلاق منصة الترجمة الذكية المدعومة بالذكاء الاصطناعي",
-      category: "إعلان",
-      date: "2025-03-15",
-      image: "https://images.unsplash.com/photo-1677442136019-21780ecad995?w=800&q=80",
-      excerpt: "أعلنت MasterEduPath عن إطلاق منصتها الجديدة للترجمة الذكية التي تجمع بين قوة الذكاء الاصطناعي وخبرة المترجمين البشريين",
-      featured: true,
-      views: "2.5K",
-      readTime: "5 دقائق"
-    },
-    {
-      id: 2,
-      title: "تحقيق إنجاز تاريخي: ترجمة 10 مليون كلمة في شهر واحد",
-      category: "إنجاز",
-      date: "2025-03-10",
-      image: "https://images.unsplash.com/photo-1551434678-e076c223a692?w=800&q=80",
-      excerpt: "حققت وكالتنا رقماً قياسياً جديداً بترجمة أكثر من 10 مليون كلمة خلال شهر مارس، مع الحفاظ على أعلى معايير الجودة",
-      featured: true,
-      views: "3.2K",
-      readTime: "4 دقائق"
-    },
-    {
-      id: 3,
-      title: "شراكة استراتيجية مع أكبر 5 جامعات سعودية",
-      category: "شراكة",
-      date: "2025-03-05",
-      image: "https://images.unsplash.com/photo-1523050854058-8df90110c9f1?w=800&q=80",
-      excerpt: "وقعت MasterEduPath اتفاقيات شراكة استراتيجية مع خمس من أبرز الجامعات السعودية لتقديم خدمات الترجمة والبحث الأكاديمي",
-      featured: false,
-      views: "1.8K",
-      readTime: "6 دقائق"
-    },
-    {
-      id: 4,
-      title: "حصول الوكالة على شهادة ISO 17100 للجودة",
-      category: "جائزة",
-      date: "2025-02-28",
-      image: "https://images.unsplash.com/photo-1589829545856-d10d557cf95f?w=800&q=80",
-      excerpt: "حصلت وكالتنا على شهادة ISO 17100 الدولية للجودة في خدمات الترجمة، مما يؤكد التزامنا بأعلى معايير الجودة العالمية",
-      featured: false,
-      views: "2.1K",
-      readTime: "3 دقائق"
-    },
-    {
-      id: 5,
-      title: "انضمام 50 مترجم معتمد جديد إلى فريقنا",
-      category: "فريق",
-      date: "2025-02-20",
-      image: "https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=800&q=80",
-      excerpt: "نرحب بانضمام 50 مترجماً ومترجمة معتمدين من مختلف التخصصات إلى عائلة MasterEduPath، لتعزيز قدراتنا وتوسيع نطاق خدماتنا",
-      featured: false,
-      views: "1.5K",
-      readTime: "4 دقائق"
-    },
-    {
-      id: 6,
-      title: "إطلاق برنامج التدريب المجاني للمترجمين الناشئين",
-      category: "برنامج",
-      date: "2025-02-15",
-      image: "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=800&q=80",
-      excerpt: "أطلقت MasterEduPath برنامجاً تدريبياً مجانياً لتأهيل المترجمين الناشئين وتطوير مهاراتهم في مجال الترجمة المهنية",
-      featured: false,
-      views: "2.8K",
-      readTime: "5 دقائق"
-    }
-  ];
-
   const categories = [
-    { label: "الكل", value: "all", count: updates.length, icon: Newspaper },
-    { label: "إعلانات", value: "إعلان", count: 1, icon: Megaphone },
-    { label: "إنجازات", value: "إنجاز", count: 1, icon: Trophy },
-    { label: "شراكات", value: "شراكة", count: 1, icon: Users },
-    { label: "جوائز", value: "جائزة", count: 1, icon: Award },
-    { label: "الفريق", value: "فريق", count: 1, icon: Users },
-    { label: "برامج", value: "برنامج", count: 1, icon: Target }
+    { label: "الكل", value: "all", count: 6, icon: Newspaper, link: "/agency-updates" },
+    { label: "إعلانات", value: "إعلان", count: 3, icon: Megaphone, link: "/updates/announcements" },
+    { label: "إنجازات", value: "إنجاز", count: 3, icon: Trophy, link: "/updates/achievements" },
+    { label: "شراكات", value: "شراكة", count: 2, icon: Users, link: "/updates/partnerships" },
+    { label: "جوائز", value: "جائزة", count: 1, icon: Award, link: "#" },
+    { label: "الفريق", value: "فريق", count: 1, icon: Users, link: "#" },
+    { label: "برامج", value: "برنامج", count: 1, icon: Target, link: "#" }
   ];
 
   const stats = [
@@ -112,10 +41,6 @@ const AgencyUpdates = () => {
     { number: "50K+", label: "قارئ نشط", icon: Users, color: "text-purple-600", bgColor: "from-purple-500/10 to-purple-600/20" },
     { number: "24/7", label: "تحديثات فورية", icon: Sparkles, color: "text-orange-600", bgColor: "from-orange-500/10 to-orange-600/20" }
   ];
-
-  const filteredUpdates = selectedCategory === "all" 
-    ? updates 
-    : updates.filter(update => update.category === selectedCategory);
 
   return (
     <div className="min-h-screen bg-background" dir="rtl">
@@ -276,24 +201,29 @@ const AgencyUpdates = () => {
             className="flex flex-wrap justify-center gap-3"
           >
             {categories.map((category, index) => (
-              <motion.button
-                key={category.value}
-                onClick={() => setSelectedCategory(category.value)}
-                initial={{ opacity: 0, scale: 0.8 }}
-                whileInView={{ opacity: 1, scale: 1 }}
-                whileHover={{ scale: 1.05, y: -2 }}
-                whileTap={{ scale: 0.95 }}
-                transition={{ delay: index * 0.05 }}
-                viewport={{ once: true }}
-                className={`px-5 sm:px-6 py-2.5 sm:py-3 rounded-xl font-semibold text-sm sm:text-base transition-all duration-300 flex items-center gap-2 ${
-                  selectedCategory === category.value
-                    ? 'bg-gradient-to-r from-primary to-accent text-white shadow-lg'
-                    : 'bg-card text-foreground hover:bg-card/80 border border-border'
-                }`}
+              <Link 
+                key={category.value} 
+                to={category.link}
+                className={category.link === "#" ? "pointer-events-none opacity-50" : ""}
               >
-                <category.icon className="w-4 h-4" />
-                {category.label} ({category.count})
-              </motion.button>
+                <motion.button
+                  initial={{ opacity: 0, scale: 0.8 }}
+                  whileInView={{ opacity: 1, scale: 1 }}
+                  whileHover={{ scale: 1.05, y: -2 }}
+                  whileTap={{ scale: 0.95 }}
+                  transition={{ delay: index * 0.05 }}
+                  viewport={{ once: true }}
+                  className={`px-5 sm:px-6 py-2.5 sm:py-3 rounded-xl font-semibold text-sm sm:text-base transition-all duration-300 flex items-center gap-2 ${
+                    category.link === "#"
+                      ? 'bg-card/50 text-muted-foreground border border-border/50 cursor-not-allowed'
+                      : 'bg-gradient-to-r from-primary to-accent text-white shadow-lg hover:shadow-xl'
+                  }`}
+                  disabled={category.link === "#"}
+                >
+                  <category.icon className="w-4 h-4" />
+                  {category.label} ({category.count})
+                </motion.button>
+              </Link>
             ))}
           </motion.div>
         </div>
