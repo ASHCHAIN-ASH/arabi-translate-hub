@@ -3,42 +3,137 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { FloatingWhatsAppButton } from "@/components/FloatingWhatsAppButton";
 import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
 import { 
-  Rocket,
+  Megaphone,
   Sparkles, 
   TrendingUp, 
   Bell,
-  Home,
-  Zap,
+  Calendar,
+  Award,
+  Newspaper,
+  Users,
+  Target,
+  BarChart,
+  CheckCircle,
+  ArrowLeft,
+  Trophy,
+  Eye,
   Clock
 } from "lucide-react";
+import { useState } from "react";
 
 const AgencyUpdates = () => {
+  const [selectedCategory, setSelectedCategory] = useState("all");
+
+  const updates = [
+    {
+      id: 1,
+      title: "إطلاق منصة الترجمة الذكية المدعومة بالذكاء الاصطناعي",
+      category: "إعلان",
+      date: "2025-03-15",
+      image: "https://images.unsplash.com/photo-1677442136019-21780ecad995?w=800&q=80",
+      excerpt: "أعلنت MasterEduPath عن إطلاق منصتها الجديدة للترجمة الذكية التي تجمع بين قوة الذكاء الاصطناعي وخبرة المترجمين البشريين",
+      featured: true,
+      views: "2.5K",
+      readTime: "5 دقائق"
+    },
+    {
+      id: 2,
+      title: "تحقيق إنجاز تاريخي: ترجمة 10 مليون كلمة في شهر واحد",
+      category: "إنجاز",
+      date: "2025-03-10",
+      image: "https://images.unsplash.com/photo-1551434678-e076c223a692?w=800&q=80",
+      excerpt: "حققت وكالتنا رقماً قياسياً جديداً بترجمة أكثر من 10 مليون كلمة خلال شهر مارس، مع الحفاظ على أعلى معايير الجودة",
+      featured: true,
+      views: "3.2K",
+      readTime: "4 دقائق"
+    },
+    {
+      id: 3,
+      title: "شراكة استراتيجية مع أكبر 5 جامعات سعودية",
+      category: "شراكة",
+      date: "2025-03-05",
+      image: "https://images.unsplash.com/photo-1523050854058-8df90110c9f1?w=800&q=80",
+      excerpt: "وقعت MasterEduPath اتفاقيات شراكة استراتيجية مع خمس من أبرز الجامعات السعودية لتقديم خدمات الترجمة والبحث الأكاديمي",
+      featured: false,
+      views: "1.8K",
+      readTime: "6 دقائق"
+    },
+    {
+      id: 4,
+      title: "حصول الوكالة على شهادة ISO 17100 للجودة",
+      category: "جائزة",
+      date: "2025-02-28",
+      image: "https://images.unsplash.com/photo-1589829545856-d10d557cf95f?w=800&q=80",
+      excerpt: "حصلت وكالتنا على شهادة ISO 17100 الدولية للجودة في خدمات الترجمة، مما يؤكد التزامنا بأعلى معايير الجودة العالمية",
+      featured: false,
+      views: "2.1K",
+      readTime: "3 دقائق"
+    },
+    {
+      id: 5,
+      title: "انضمام 50 مترجم معتمد جديد إلى فريقنا",
+      category: "فريق",
+      date: "2025-02-20",
+      image: "https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=800&q=80",
+      excerpt: "نرحب بانضمام 50 مترجماً ومترجمة معتمدين من مختلف التخصصات إلى عائلة MasterEduPath، لتعزيز قدراتنا وتوسيع نطاق خدماتنا",
+      featured: false,
+      views: "1.5K",
+      readTime: "4 دقائق"
+    },
+    {
+      id: 6,
+      title: "إطلاق برنامج التدريب المجاني للمترجمين الناشئين",
+      category: "برنامج",
+      date: "2025-02-15",
+      image: "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=800&q=80",
+      excerpt: "أطلقت MasterEduPath برنامجاً تدريبياً مجانياً لتأهيل المترجمين الناشئين وتطوير مهاراتهم في مجال الترجمة المهنية",
+      featured: false,
+      views: "2.8K",
+      readTime: "5 دقائق"
+    }
+  ];
+
+  const categories = [
+    { label: "الكل", value: "all", count: updates.length, icon: Newspaper },
+    { label: "إعلانات", value: "إعلان", count: 1, icon: Megaphone },
+    { label: "إنجازات", value: "إنجاز", count: 1, icon: Trophy },
+    { label: "شراكات", value: "شراكة", count: 1, icon: Users },
+    { label: "جوائز", value: "جائزة", count: 1, icon: Award },
+    { label: "الفريق", value: "فريق", count: 1, icon: Users },
+    { label: "برامج", value: "برنامج", count: 1, icon: Target }
+  ];
+
+  const stats = [
+    { number: "250+", label: "تحديث سنوي", icon: Bell, color: "text-blue-600", bgColor: "from-blue-500/10 to-blue-600/20" },
+    { number: "98%", label: "معدل التفاعل", icon: TrendingUp, color: "text-green-600", bgColor: "from-green-500/10 to-green-600/20" },
+    { number: "50K+", label: "قارئ نشط", icon: Users, color: "text-purple-600", bgColor: "from-purple-500/10 to-purple-600/20" },
+    { number: "24/7", label: "تحديثات فورية", icon: Sparkles, color: "text-orange-600", bgColor: "from-orange-500/10 to-orange-600/20" }
+  ];
+
+  const filteredUpdates = selectedCategory === "all" 
+    ? updates 
+    : updates.filter(update => update.category === selectedCategory);
+
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background" dir="rtl">
       <Header />
       <FloatingWhatsAppButton />
-      
-      {/* Hero Section */}
-      <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-gradient-to-b from-background via-background/95 to-primary/5 py-12 md:py-20">
-        {/* Geometric Background Pattern */}
-        <div className="absolute inset-0 opacity-10">
-          <div className="absolute inset-0" style={{
-            backgroundImage: `radial-gradient(circle at 2px 2px, hsl(var(--primary)) 1px, transparent 0)`,
-            backgroundSize: '40px 40px'
-          }} />
-        </div>
 
-        {/* Animated Grid Lines */}
-        <div className="absolute inset-0 overflow-hidden pointer-events-none opacity-20">
+      {/* Hero Section */}
+      <section className="relative py-16 md:py-24 lg:py-32 bg-gradient-to-br from-primary via-accent to-primary/90 overflow-hidden">
+        {/* Animated Background */}
+        <div className="absolute inset-0">
           <motion.div
             className="absolute inset-0"
             style={{
-              backgroundImage: `linear-gradient(90deg, hsl(var(--primary)) 1px, transparent 1px), linear-gradient(hsl(var(--primary)) 1px, transparent 1px)`,
-              backgroundSize: '80px 80px'
+              backgroundImage: `radial-gradient(circle at 2px 2px, rgba(255,255,255,0.15) 1px, transparent 0)`,
+              backgroundSize: '50px 50px'
             }}
             animate={{
-              backgroundPosition: ['0px 0px', '80px 80px']
+              backgroundPosition: ['0px 0px', '50px 50px']
             }}
             transition={{
               duration: 20,
@@ -48,27 +143,25 @@ const AgencyUpdates = () => {
           />
         </div>
 
-        {/* Floating Particles */}
+        {/* Floating Elements */}
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
-          {[...Array(20)].map((_, i) => (
+          {[...Array(15)].map((_, i) => (
             <motion.div
               key={i}
-              className="absolute rounded-full blur-sm"
+              className="absolute rounded-full bg-white/10"
               style={{
-                width: Math.random() * 8 + 3 + 'px',
-                height: Math.random() * 8 + 3 + 'px',
+                width: Math.random() * 60 + 20 + 'px',
+                height: Math.random() * 60 + 20 + 'px',
                 left: Math.random() * 100 + '%',
                 top: Math.random() * 100 + '%',
-                background: `hsl(var(--${i % 2 === 0 ? 'primary' : 'accent'}) / ${Math.random() * 0.4 + 0.2})`
               }}
               animate={{
-                y: [0, -40, 0],
-                x: [0, Math.random() * 20 - 10, 0],
-                opacity: [0.2, 0.6, 0.2],
-                scale: [1, 1.3, 1]
+                y: [0, -30, 0],
+                opacity: [0.1, 0.3, 0.1],
+                scale: [1, 1.1, 1]
               }}
               transition={{
-                duration: 5 + Math.random() * 4,
+                duration: 5 + Math.random() * 5,
                 repeat: Infinity,
                 delay: Math.random() * 3,
                 ease: "easeInOut"
@@ -77,316 +170,253 @@ const AgencyUpdates = () => {
           ))}
         </div>
 
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10" dir="rtl">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <motion.div
-            initial={{ opacity: 0, y: 30 }}
+            initial={{ opacity: 0, y: 40 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            className="text-center max-w-6xl mx-auto"
+            transition={{ duration: 0.7 }}
+            className="text-center text-white max-w-5xl mx-auto"
           >
-            {/* Modern Icon Container */}
+            {/* Icon */}
             <motion.div
-              initial={{ scale: 0, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              transition={{ 
-                duration: 0.6,
-                type: "spring",
-                stiffness: 150
-              }}
-              className="mb-8 sm:mb-10 md:mb-12 flex justify-center"
+              initial={{ scale: 0, rotate: -180 }}
+              animate={{ scale: 1, rotate: 0 }}
+              transition={{ duration: 0.8, type: "spring" }}
+              className="mb-8 md:mb-10 flex justify-center"
             >
-              <div className="relative">
-                {/* Main Icon Circle */}
-                <motion.div
-                  className="relative w-28 h-28 sm:w-36 sm:h-36 md:w-44 md:h-44 rounded-full bg-gradient-to-br from-primary/20 via-accent/20 to-primary/20 backdrop-blur-xl border-2 border-primary/30 flex items-center justify-center shadow-2xl"
-                  animate={{ 
-                    boxShadow: [
-                      "0 0 20px hsl(var(--primary) / 0.3)",
-                      "0 0 50px hsl(var(--primary) / 0.5)",
-                      "0 0 20px hsl(var(--primary) / 0.3)"
-                    ]
-                  }}
-                  transition={{ 
-                    duration: 3,
-                    repeat: Infinity,
-                    ease: "easeInOut"
-                  }}
-                >
-                  <motion.div
-                    animate={{ 
-                      rotate: [0, 10, -10, 0],
-                      y: [0, -5, 0]
-                    }}
-                    transition={{ 
-                      duration: 4,
-                      repeat: Infinity,
-                      ease: "easeInOut"
-                    }}
-                  >
-                    <Rocket className="w-14 h-14 sm:w-18 sm:h-18 md:w-24 md:h-24 text-primary" />
-                  </motion.div>
-                </motion.div>
-                
-                {/* Pulse Rings */}
-                {[...Array(3)].map((_, i) => (
-                  <motion.div
-                    key={i}
-                    className="absolute inset-0 rounded-full border-2 border-primary/30"
-                    initial={{ scale: 1, opacity: 0.8 }}
-                    animate={{ 
-                      scale: [1, 1.5, 2],
-                      opacity: [0.8, 0.4, 0]
-                    }}
-                    transition={{
-                      duration: 2.5,
-                      repeat: Infinity,
-                      delay: i * 0.7,
-                      ease: "easeOut"
-                    }}
-                  />
-                ))}
-
-                {/* Floating Icons */}
-                {[Sparkles, TrendingUp, Bell].map((Icon, i) => (
-                  <motion.div
-                    key={i}
-                    className="absolute hidden md:block"
-                    style={{
-                      top: '50%',
-                      left: '50%',
-                    }}
-                    animate={{
-                      x: [0, Math.cos((i * 120) * Math.PI / 180) * 100],
-                      y: [0, Math.sin((i * 120) * Math.PI / 180) * 100],
-                      rotate: [0, 360],
-                      scale: [0.8, 1, 0.8],
-                      opacity: [0.4, 0.8, 0.4]
-                    }}
-                    transition={{
-                      duration: 4,
-                      repeat: Infinity,
-                      delay: i * 0.4,
-                      ease: "easeInOut"
-                    }}
-                  >
-                    <div className="w-10 h-10 rounded-xl bg-primary/20 backdrop-blur-sm border border-primary/30 flex items-center justify-center">
-                      <Icon className="w-5 h-5 text-primary" />
-                    </div>
-                  </motion.div>
-                ))}
-              </div>
-            </motion.div>
-
-            {/* Title */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.2, duration: 0.6 }}
-              className="mb-6 sm:mb-8 md:mb-10 px-4"
-            >
-              <motion.h1 
-                className="text-4xl sm:text-5xl md:text-7xl lg:text-8xl font-bold mb-4 sm:mb-6 bg-gradient-to-l from-primary via-accent to-primary bg-[length:200%_auto] bg-clip-text text-transparent leading-tight"
-                animate={{ 
-                  backgroundPosition: ["0% center", "200% center", "0% center"]
-                }}
-                transition={{ 
-                  duration: 5,
-                  repeat: Infinity,
-                  ease: "linear"
-                }}
-              >
-                قريباً
-              </motion.h1>
-              
-              {/* Status Badge */}
               <motion.div
-                initial={{ opacity: 0, scale: 0.8 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ delay: 0.4 }}
-                className="inline-flex items-center gap-2 px-4 sm:px-6 py-2 sm:py-3 rounded-full bg-primary/10 border border-primary/30 backdrop-blur-sm shadow-lg"
+                className="w-20 h-20 sm:w-24 sm:h-24 md:w-28 md:h-28 rounded-full bg-white/20 backdrop-blur-xl border-2 border-white/30 flex items-center justify-center shadow-2xl"
+                animate={{
+                  boxShadow: [
+                    "0 0 30px rgba(255,255,255,0.3)",
+                    "0 0 60px rgba(255,255,255,0.5)",
+                    "0 0 30px rgba(255,255,255,0.3)"
+                  ]
+                }}
+                transition={{ duration: 3, repeat: Infinity }}
               >
-                <motion.div
-                  animate={{ scale: [1, 1.3, 1], rotate: [0, 180, 360] }}
-                  transition={{ duration: 2, repeat: Infinity }}
-                >
-                  <Zap className="w-4 h-4 sm:w-5 sm:h-5 text-primary" />
-                </motion.div>
-                <span className="text-primary font-medium text-sm sm:text-base">تحت التطوير</span>
+                <Megaphone className="h-12 w-12 sm:h-14 sm:w-14 md:h-16 md:w-16 text-white" />
               </motion.div>
             </motion.div>
 
-            {/* Description */}
+            <motion.h1
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.2, duration: 0.7 }}
+              className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold mb-5 md:mb-6 leading-tight"
+            >
+              تحديثات الوكالة
+            </motion.h1>
+
+            <motion.p
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.4, duration: 0.7 }}
+              className="text-base sm:text-lg md:text-xl lg:text-2xl opacity-95 mb-8 md:mb-12 leading-relaxed max-w-4xl mx-auto px-4"
+            >
+              آخر الأخبار والإنجازات والفعاليات من MasterEduPath - كن على اطلاع دائم بكل جديد
+            </motion.p>
+
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.5, duration: 0.6 }}
-              className="mb-10 sm:mb-12 md:mb-16 space-y-3 sm:space-y-4 px-4"
+              transition={{ delay: 0.6, duration: 0.7 }}
+              className="flex flex-col sm:flex-row gap-4 justify-center items-center"
             >
-              <p className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold text-foreground">
-                تحديثات الوكالة
-              </p>
-              <p className="text-base sm:text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
-                نعمل على إطلاق منصة متكاملة لآخر الأخبار والإنجازات والتحديثات الحصرية من وكالتنا
-              </p>
-            </motion.div>
-
-            {/* Feature Cards */}
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.7, duration: 0.6 }}
-              className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5 md:gap-6 mb-10 sm:mb-12 md:mb-16 max-w-6xl mx-auto px-4"
-            >
-              {[
-                { icon: Sparkles, title: "محتوى حصري", desc: "أخبار وتحديثات مميزة", gradient: "from-primary/10 to-accent/10" },
-                { icon: TrendingUp, title: "تحديثات مستمرة", desc: "متابعة دورية للإنجازات", gradient: "from-accent/10 to-primary/10" },
-                { icon: Bell, title: "إشعارات فورية", desc: "تنبيهات لحظية", gradient: "from-primary/10 to-primary/20" },
-                { icon: Clock, title: "سرعة النشر", desc: "تحديثات في الوقت الفعلي", gradient: "from-accent/10 to-accent/20" }
-              ].map((item, index) => (
-                <motion.div
-                  key={index}
-                  initial={{ opacity: 0, y: 30 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ 
-                    delay: 0.8 + index * 0.1,
-                    duration: 0.5,
-                    type: "spring",
-                    stiffness: 100
-                  }}
-                  whileHover={{ 
-                    scale: 1.05,
-                    y: -8,
-                    transition: { duration: 0.2 }
-                  }}
-                  className={`group relative p-5 sm:p-6 rounded-2xl bg-gradient-to-br ${item.gradient} border border-border/50 backdrop-blur-sm hover:border-primary/40 hover:shadow-2xl hover:shadow-primary/20 transition-all duration-300 overflow-hidden`}
-                >
-                  {/* Hover Effect Background */}
-                  <motion.div
-                    className="absolute inset-0 bg-gradient-to-br from-primary/5 to-accent/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-                    initial={{ scale: 0 }}
-                    whileHover={{ scale: 1 }}
-                  />
-                  
-                  <div className="relative z-10">
-                    <motion.div
-                      className="mb-3 sm:mb-4 w-12 h-12 sm:w-14 sm:h-14 rounded-xl bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-all duration-300 shadow-lg"
-                      whileHover={{ rotate: [0, -15, 15, 0], scale: 1.1 }}
-                      transition={{ duration: 0.6 }}
-                    >
-                      <item.icon className="w-6 h-6 sm:w-7 sm:h-7 text-primary" />
-                    </motion.div>
-                    <h3 className="text-base sm:text-lg font-bold text-foreground mb-1.5 sm:mb-2">{item.title}</h3>
-                    <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">{item.desc}</p>
-                  </div>
-
-                  {/* Corner Decoration */}
-                  <div className="absolute top-0 left-0 w-20 h-20 bg-primary/5 rounded-full blur-2xl -translate-x-1/2 -translate-y-1/2 group-hover:bg-primary/10 transition-colors duration-300" />
-                </motion.div>
-              ))}
-            </motion.div>
-
-            {/* Progress Indicator */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 1.2, duration: 0.6 }}
-              className="mb-8 sm:mb-10 md:mb-12 px-4"
-            >
-              <div className="max-w-md mx-auto p-5 sm:p-6 rounded-2xl bg-card/40 border border-border/50 backdrop-blur-md shadow-xl">
-                <div className="flex items-center justify-between mb-3 sm:mb-4">
-                  <div className="flex items-center gap-2">
-                    <motion.div
-                      animate={{ rotate: 360 }}
-                      transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
-                    >
-                      <Zap className="w-4 h-4 sm:w-5 sm:h-5 text-primary" />
-                    </motion.div>
-                    <p className="text-sm sm:text-base font-semibold text-foreground">التقدم في التطوير</p>
-                  </div>
-                  <motion.p 
-                    className="text-xl sm:text-2xl font-bold text-primary tabular-nums"
-                    initial={{ opacity: 0, scale: 0.5 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    transition={{ delay: 2, type: "spring" }}
-                  >
-                    85%
-                  </motion.p>
-                </div>
-                
-                <div className="relative h-3 sm:h-4 bg-muted rounded-full overflow-hidden shadow-inner">
-                  <motion.div
-                    className="absolute inset-0 bg-gradient-to-r from-primary/20 to-accent/20"
-                    animate={{
-                      x: ['-100%', '100%']
-                    }}
-                    transition={{
-                      duration: 2,
-                      repeat: Infinity,
-                      ease: "linear"
-                    }}
-                  />
-                  <motion.div
-                    className="relative h-full bg-gradient-to-r from-primary via-accent to-primary rounded-full shadow-lg"
-                    style={{ backgroundSize: '200% 100%' }}
-                    initial={{ width: "0%", backgroundPosition: "0% center" }}
-                    animate={{ 
-                      width: "85%",
-                      backgroundPosition: ["0% center", "200% center", "0% center"]
-                    }}
-                    transition={{ 
-                      width: { duration: 2, ease: "easeOut", delay: 1.8 },
-                      backgroundPosition: { duration: 3, repeat: Infinity, ease: "linear" }
-                    }}
-                  >
-                    <motion.div
-                      className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent"
-                      animate={{
-                        x: ['-100%', '200%']
-                      }}
-                      transition={{
-                        duration: 1.5,
-                        repeat: Infinity,
-                        ease: "easeInOut",
-                        delay: 2
-                      }}
-                    />
-                  </motion.div>
-                </div>
-                
-                <motion.p
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ delay: 2.5 }}
-                  className="text-xs sm:text-sm text-muted-foreground text-center mt-3"
-                >
-                  قريباً جداً...
-                </motion.p>
-              </div>
-            </motion.div>
-
-            {/* CTA Button */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 1.4, duration: 0.6 }}
-              className="px-4"
-            >
-              <Button
-                size="lg"
-                className="gap-2 sm:gap-3 group px-6 sm:px-8 py-4 sm:py-6 text-base sm:text-lg rounded-xl sm:rounded-2xl shadow-xl hover:shadow-2xl hover:shadow-primary/30 transition-all duration-300"
-                onClick={() => window.location.href = '/'}
-              >
-                <Home className="w-4 h-4 sm:w-5 sm:h-5 group-hover:scale-110 transition-transform" />
-                <span>العودة للرئيسية</span>
-                <motion.span
-                  animate={{ x: [-3, 3, -3] }}
-                  transition={{ duration: 1.5, repeat: Infinity }}
-                  className="text-lg sm:text-xl"
-                >
-                  ←
-                </motion.span>
+              <Button size="lg" className="bg-white text-primary hover:bg-white/90 font-semibold shadow-2xl px-8 py-6 text-lg">
+                <Bell className="ml-2 h-5 w-5" />
+                اشترك في التحديثات
               </Button>
             </motion.div>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* Stats Section */}
+      <section className="py-12 sm:py-16 md:py-20 bg-gradient-to-br from-background via-primary/5 to-background">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6">
+            {stats.map((stat, index) => (
+              <motion.div
+                key={index}
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                whileHover={{ y: -5, scale: 1.02 }}
+                transition={{ delay: index * 0.1, duration: 0.5 }}
+                viewport={{ once: true }}
+              >
+                <Card className="relative border-0 shadow-lg hover:shadow-xl bg-card backdrop-blur-sm transition-all h-full overflow-hidden group">
+                  <div className={`absolute inset-0 bg-gradient-to-br ${stat.bgColor} opacity-0 group-hover:opacity-100 transition-opacity`} />
+                  <CardContent className="relative pt-6 pb-6 text-center">
+                    <motion.div
+                      className={`w-14 h-14 mx-auto mb-4 rounded-xl bg-gradient-to-br ${stat.bgColor} flex items-center justify-center`}
+                      whileHover={{ rotate: 360, scale: 1.1 }}
+                      transition={{ duration: 0.6 }}
+                    >
+                      <stat.icon className={`h-7 w-7 ${stat.color}`} />
+                    </motion.div>
+                    <h3 className="text-2xl sm:text-3xl font-bold mb-2 text-foreground">{stat.number}</h3>
+                    <p className="text-sm text-muted-foreground font-medium">{stat.label}</p>
+                  </CardContent>
+                </Card>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Category Filter */}
+      <section className="py-6 sm:py-8 bg-primary/5">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            viewport={{ once: true }}
+            className="flex flex-wrap justify-center gap-3"
+          >
+            {categories.map((category, index) => (
+              <motion.button
+                key={category.value}
+                onClick={() => setSelectedCategory(category.value)}
+                initial={{ opacity: 0, scale: 0.8 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                whileHover={{ scale: 1.05, y: -2 }}
+                whileTap={{ scale: 0.95 }}
+                transition={{ delay: index * 0.05 }}
+                viewport={{ once: true }}
+                className={`px-5 sm:px-6 py-2.5 sm:py-3 rounded-xl font-semibold text-sm sm:text-base transition-all duration-300 flex items-center gap-2 ${
+                  selectedCategory === category.value
+                    ? 'bg-gradient-to-r from-primary to-accent text-white shadow-lg'
+                    : 'bg-card text-foreground hover:bg-card/80 border border-border'
+                }`}
+              >
+                <category.icon className="w-4 h-4" />
+                {category.label} ({category.count})
+              </motion.button>
+            ))}
+          </motion.div>
+        </div>
+      </section>
+
+      {/* Updates Grid */}
+      <section className="py-12 sm:py-16 md:py-20">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            viewport={{ once: true }}
+            className="text-center mb-10 sm:mb-12 md:mb-16"
+          >
+            <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-4 text-foreground">
+              آخر التحديثات
+            </h2>
+            <p className="text-base sm:text-lg text-muted-foreground max-w-3xl mx-auto">
+              تابع أحدث الأخبار والإنجازات والفعاليات من وكالتنا
+            </p>
+          </motion.div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
+            {filteredUpdates.map((update, index) => (
+              <motion.div
+                key={update.id}
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                whileHover={{ y: -10 }}
+                transition={{ delay: index * 0.1, duration: 0.5 }}
+                viewport={{ once: true }}
+              >
+                <Card className={`relative overflow-hidden border-0 shadow-lg hover:shadow-2xl transition-all duration-500 h-full group ${
+                  update.featured ? 'ring-2 ring-primary/40' : ''
+                }`}>
+                  {/* Featured Badge */}
+                  {update.featured && (
+                    <div className="absolute top-4 right-4 z-10">
+                      <Badge className="bg-gradient-to-r from-primary to-accent text-white border-0 shadow-lg">
+                        <Sparkles className="w-3 h-3 ml-1" />
+                        مميز
+                      </Badge>
+                    </div>
+                  )}
+
+                  {/* Image */}
+                  <div className="relative h-48 sm:h-56 overflow-hidden">
+                    <motion.img
+                      src={update.image}
+                      alt={update.title}
+                      className="w-full h-full object-cover"
+                      whileHover={{ scale: 1.1 }}
+                      transition={{ duration: 0.6 }}
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
+                    
+                    {/* Category Badge */}
+                    <div className="absolute bottom-4 right-4">
+                      <Badge className="bg-white/90 backdrop-blur-sm text-foreground border-0">
+                        {update.category}
+                      </Badge>
+                    </div>
+                  </div>
+
+                  <CardContent className="p-5 sm:p-6">
+                    {/* Date */}
+                    <div className="flex items-center gap-4 text-xs sm:text-sm text-muted-foreground mb-3">
+                      <div className="flex items-center gap-1">
+                        <Calendar className="w-4 h-4" />
+                        {new Date(update.date).toLocaleDateString('ar-SA', {
+                          year: 'numeric',
+                          month: 'long',
+                          day: 'numeric'
+                        })}
+                      </div>
+                    </div>
+
+                    {/* Title */}
+                    <h3 className="text-lg sm:text-xl font-bold text-foreground mb-3 leading-tight line-clamp-2">
+                      {update.title}
+                    </h3>
+
+                    {/* Excerpt */}
+                    <p className="text-sm sm:text-base text-muted-foreground leading-relaxed mb-4 line-clamp-3">
+                      {update.excerpt}
+                    </p>
+
+                    {/* Footer */}
+                    <div className="flex items-center justify-between pt-4 border-t border-border">
+                      <div className="flex items-center gap-4 text-xs text-muted-foreground">
+                        <div className="flex items-center gap-1">
+                          <Eye className="w-4 h-4" />
+                          {update.views}
+                        </div>
+                        <div className="flex items-center gap-1">
+                          <Clock className="w-4 h-4" />
+                          {update.readTime}
+                        </div>
+                      </div>
+                      <Button variant="ghost" size="sm" className="group/btn">
+                        اقرأ المزيد
+                        <ArrowLeft className="w-4 h-4 mr-2 group-hover/btn:-translate-x-1 transition-transform" />
+                      </Button>
+                    </div>
+                  </CardContent>
+                </Card>
+              </motion.div>
+            ))}
+          </div>
+
+          {/* Load More */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            viewport={{ once: true }}
+            className="text-center mt-12"
+          >
+            <Button size="lg" variant="outline" className="px-8 py-6 text-lg">
+              تحميل المزيد من التحديثات
+              <TrendingUp className="w-5 h-5 mr-2" />
+            </Button>
           </motion.div>
         </div>
       </section>
