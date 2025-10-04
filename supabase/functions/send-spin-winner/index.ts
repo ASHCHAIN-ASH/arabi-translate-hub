@@ -1,5 +1,9 @@
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 import { Resend } from "npm:resend@2.0.0";
+import React from 'npm:react@18.3.1';
+import { renderAsync } from 'npm:@react-email/components@0.0.22';
+import { WinnerClientEmail } from './_templates/winner-client-email.tsx';
+import { WinnerAdminEmail } from './_templates/winner-admin-email.tsx';
 
 const resend = new Resend(Deno.env.get("RESEND_API_KEY"));
 
@@ -58,64 +62,37 @@ const handler = async (req: Request): Promise<Response> => {
       attempt_date: today,
     });
 
+    // إنشاء قالب البريد للإدارة
+    const adminHtml = await renderAsync(
+      React.createElement(WinnerAdminEmail, {
+        name,
+        email,
+        prize,
+      })
+    );
+
+    // إنشاء قالب البريد للعميل
+    const clientHtml = await renderAsync(
+      React.createElement(WinnerClientEmail, {
+        name,
+        prize,
+      })
+    );
+
     // إرسال إيميل للإدارة
     await resend.emails.send({
-      from: "MasterEduPath <onboarding@resend.dev>",
+      from: "مسار الخبراء للتعليم <onboarding@resend.dev>",
       to: ["info@masteredupath.com"],
-      subject: "🎉 فائز جديد في مسابقة العجلة",
-      html: `
-        <div style="font-family: Arial, sans-serif; padding: 20px; direction: rtl;">
-          <h2 style="color: #8B5CF6;">فائز جديد في المسابقة!</h2>
-          <div style="background: #F3F4F6; padding: 15px; border-radius: 8px; margin: 20px 0;">
-            <p><strong>الاسم:</strong> ${name}</p>
-            <p><strong>البريد الإلكتروني:</strong> ${email}</p>
-            <p><strong>الجائزة:</strong> <span style="color: #8B5CF6; font-size: 20px;">${prize}</span></p>
-          </div>
-          <p>يرجى التواصل مع العميل لتفعيل الجائزة.</p>
-        </div>
-      `,
+      subject: "🎊 فائز جديد في مسابقة دوران العجلة - يتطلب إجراء",
+      html: adminHtml,
     });
 
-    // إرسال إيميل للعميل
+    // إرسال إيميل للعميل الفائز
     await resend.emails.send({
-      from: "MasterEduPath <onboarding@resend.dev>",
+      from: "مسار الخبراء للتعليم <onboarding@resend.dev>",
       to: [email],
-      subject: "🎉 تهانينا! لقد ربحت في مسابقة العجلة",
-      html: `
-        <div style="font-family: Arial, sans-serif; padding: 20px; direction: rtl;">
-          <div style="text-align: center; margin-bottom: 30px;">
-            <h1 style="color: #8B5CF6;">🎉 تهانينا ${name}! 🎉</h1>
-          </div>
-          
-          <div style="background: linear-gradient(135deg, #8B5CF6 0%, #EC4899 100%); padding: 30px; border-radius: 12px; color: white; text-align: center;">
-            <h2 style="margin: 0 0 10px 0;">لقد ربحت:</h2>
-            <div style="font-size: 32px; font-weight: bold; margin: 20px 0;">
-              ${prize}
-            </div>
-          </div>
-
-          <div style="background: #F9FAFB; padding: 20px; border-radius: 8px; margin: 30px 0;">
-            <h3 style="color: #374151;">كيفية استخدام الجائزة:</h3>
-            <ol style="color: #6B7280; line-height: 1.8;">
-              <li>احتفظ بهذا الإيميل</li>
-              <li>تواصل معنا عبر الواتساب أو البريد الإلكتروني</li>
-              <li>أخبرنا بالخدمة التي تريد استخدام الكوبون معها</li>
-              <li>سنقوم بتفعيل الخصم أو الخدمة المجانية فوراً</li>
-            </ol>
-          </div>
-
-          <div style="text-align: center; margin-top: 30px;">
-            <a href="https://masteredupath.com/contact-us" style="background: #8B5CF6; color: white; padding: 15px 30px; border-radius: 8px; text-decoration: none; display: inline-block;">
-              تواصل معنا الآن
-            </a>
-          </div>
-
-          <div style="margin-top: 40px; padding-top: 20px; border-top: 1px solid #E5E7EB; color: #6B7280; font-size: 14px;">
-            <p>شكراً لاختيارك MasterEduPath</p>
-            <p>للاستفسارات: info@masteredupath.com</p>
-          </div>
-        </div>
-      `,
+      subject: "🎉 مبروك! لقد فزت في مسابقة دوران العجلة",
+      html: clientHtml,
     });
 
     console.log("Emails sent successfully");
