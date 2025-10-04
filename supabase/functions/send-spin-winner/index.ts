@@ -61,7 +61,7 @@ const handler = async (req: Request): Promise<Response> => {
     // إرسال إيميل للإدارة
     await resend.emails.send({
       from: "MasterEduPath <onboarding@resend.dev>",
-      to: ["admin@masteredupath.com"],
+      to: ["info@masteredupath.com"],
       subject: "🎉 فائز جديد في مسابقة العجلة",
       html: `
         <div style="font-family: Arial, sans-serif; padding: 20px; direction: rtl;">
