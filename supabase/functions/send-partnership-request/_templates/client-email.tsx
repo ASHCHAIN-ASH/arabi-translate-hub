@@ -122,7 +122,7 @@ export const ClientEmail = ({
                     <tr>
                       <td style={{ padding: '25px' }}>
                         <Heading style={sectionTitle}>
-                          <span style={{ marginRight: '10px' }}>🎁</span>
+                          <span style={{ marginLeft: '10px' }}>🎁</span>
                           مزايا الشراكة الحصرية
                         </Heading>
                         <Hr style={dividerLine} />
@@ -183,7 +183,7 @@ export const ClientEmail = ({
                     <tr>
                       <td style={{ padding: '30px' }}>
                         <Heading style={sectionTitle}>
-                          <span style={{ marginRight: '10px' }}>📞</span>
+                          <span style={{ marginLeft: '10px' }}>📞</span>
                           تواصل معنا الآن
                         </Heading>
                         <Hr style={dividerLine} />
@@ -247,7 +247,7 @@ export const ClientEmail = ({
                     <tr>
                       <td style={{ textAlign: 'center', padding: '10px 20px' }}>
                         <Link href="https://wa.me/966500776343" style={whatsappButton}>
-                          <span style={{ fontSize: '24px', marginRight: '10px' }}>💬</span>
+                          <span style={{ fontSize: '24px', marginLeft: '10px' }}>💬</span>
                           تواصل معنا عبر واتساب
                         </Link>
                       </td>
@@ -255,7 +255,7 @@ export const ClientEmail = ({
                     <tr>
                       <td style={{ textAlign: 'center', padding: '10px 20px' }}>
                         <Link href="https://masteredupath.com" style={websiteButton}>
-                          <span style={{ fontSize: '20px', marginRight: '10px' }}>🌐</span>
+                          <span style={{ fontSize: '20px', marginLeft: '10px' }}>🌐</span>
                           زيارة الموقع الإلكتروني
                         </Link>
                       </td>
@@ -464,12 +464,13 @@ const benefitRow = {
   display: 'flex',
   alignItems: 'flex-start',
   padding: '15px 0',
+  flexDirection: 'row-reverse',
   borderBottom: '1px solid rgba(66,153,225,0.15)',
 };
 
 const benefitIcon = {
   fontSize: '32px',
-  marginRight: '15px',
+  marginLeft: '15px',
   minWidth: '40px',
   textAlign: 'center' as const,
 };
@@ -507,6 +508,7 @@ const contactItem = {
   alignItems: 'center',
   padding: '15px 0',
   borderBottom: '1px solid rgba(252,129,129,0.15)',
+  flexDirection: 'row-reverse',
 };
 
 const whatsappIconContainer = {
@@ -517,7 +519,7 @@ const whatsappIconContainer = {
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
-  marginLeft: '15px',
+  marginRight: '15px',
   boxShadow: '0 4px 12px rgba(37,211,102,0.3)',
 };
 
@@ -533,7 +535,7 @@ const phoneIconContainer = {
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
-  marginLeft: '15px',
+  marginRight: '15px',
   boxShadow: '0 4px 12px rgba(66,153,225,0.3)',
 };
 
@@ -543,7 +545,7 @@ const phoneIconStyle = {
 
 const contactIconStyle = {
   fontSize: '32px',
-  marginLeft: '15px',
+  marginRight: '15px',
   minWidth: '40px',
 };
 

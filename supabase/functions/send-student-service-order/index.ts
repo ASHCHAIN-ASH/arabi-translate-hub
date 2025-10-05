@@ -214,7 +214,7 @@ const handler = async (req: Request): Promise<Response> => {
               color: #333;
               font-weight: 500;
               font-size: 15px;
-              text-align: left;
+              text-align: right;
             }
 
             /* WhatsApp Section */

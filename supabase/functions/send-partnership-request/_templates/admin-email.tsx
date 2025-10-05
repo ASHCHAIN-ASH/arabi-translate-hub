@@ -274,7 +274,7 @@ export const AdminEmail = ({
                         
                         <div style={{ marginTop: '25px' }}>
                           <Link href={`mailto:${email}`} style={primaryButton}>
-                            <span style={{ fontSize: '22px', marginRight: '10px' }}>📧</span>
+                            <span style={{ fontSize: '22px', marginLeft: '10px' }}>📧</span>
                             الرد عبر البريد الإلكتروني
                           </Link>
                         </div>
@@ -491,11 +491,12 @@ const cardHeader = {
   display: 'flex',
   alignItems: 'center',
   marginBottom: '15px',
+  flexDirection: 'row-reverse',
 };
 
 const cardIcon = {
   fontSize: '32px',
-  marginLeft: '12px',
+  marginRight: '12px',
 };
 
 const cardTitle = {
@@ -537,7 +538,7 @@ const detailValue = {
 
 const detailIcon = {
   fontSize: '18px',
-  marginLeft: '8px',
+  marginRight: '8px',
 };
 
 const emailLink = {
@@ -560,11 +561,12 @@ const phoneNumberContainer = {
   display: 'flex',
   alignItems: 'center',
   gap: '8px',
+  flexDirection: 'row-reverse',
 };
 
 const saudiFlag = {
   fontSize: '24px',
-  marginLeft: '5px',
+  marginRight: '5px',
 };
 
 const whatsappBadge = {
