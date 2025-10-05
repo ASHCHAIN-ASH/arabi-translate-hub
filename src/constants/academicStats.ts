@@ -5,7 +5,7 @@ export const UNIFIED_STATS = {
   studentsServed: 50000,
   researchCompleted: 25000,
   countriesServed: 120,
-  satisfactionRate: 98,
+  satisfactionRate: 100,
   expertsCount: 500,
   specializationsCount: 50,
   yearsExperience: 15,
