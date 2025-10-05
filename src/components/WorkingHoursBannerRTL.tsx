@@ -44,74 +44,66 @@ export const WorkingHoursBannerRTL: React.FC<WorkingHoursBannerProps> = ({
     switch (status) {
       case 'open':
         return {
-          icon: <CheckCircle2 className="h-5 w-5" />,
+          icon: <CheckCircle2 className="h-4 w-4" />,
           dot: (
             <div className="relative flex items-center justify-center">
-              <div className="absolute w-5 h-5 bg-emerald-500/30 rounded-full animate-ping" />
-              <div className="w-3 h-3 bg-gradient-to-br from-emerald-400 to-emerald-600 rounded-full shadow-lg shadow-emerald-500/50" />
+              <div className="absolute w-4 h-4 bg-emerald-500/30 rounded-full animate-ping" />
+              <div className="w-2.5 h-2.5 bg-gradient-to-br from-emerald-400 to-emerald-600 rounded-full" />
             </div>
           ),
           text: 'متاح الآن',
-          description: 'نحن جاهزون لخدمتك',
-          bgClass: 'bg-gradient-to-r from-emerald-500/10 via-emerald-400/5 to-transparent',
-          borderClass: 'border-emerald-500/30',
+          workingHours: 'الأحد - الخميس: 9 صباحاً - 5 مساءً',
+          bgClass: 'bg-gradient-to-r from-emerald-500/5 to-transparent',
+          borderClass: 'border-emerald-500/20',
           textClass: 'text-emerald-600 dark:text-emerald-400',
-          iconClass: 'text-emerald-500',
-          cardClass: 'bg-gradient-to-br from-emerald-500/10 to-emerald-600/5 border-emerald-500/30'
+          iconClass: 'text-emerald-500'
         };
       case 'prayer':
         return {
-          icon: <Moon className="h-5 w-5" />,
+          icon: <Moon className="h-4 w-4" />,
           dot: (
             <div className="relative flex items-center justify-center">
-              <div className="absolute w-6 h-6 bg-amber-500/40 rounded-full animate-pulse" />
-              <div className="w-3 h-3 bg-gradient-to-br from-amber-400 to-amber-600 rounded-full shadow-lg shadow-amber-500/60">
-                <div className="absolute -top-1 -right-1 text-xs">🕌</div>
-              </div>
+              <div className="absolute w-4 h-4 bg-amber-500/30 rounded-full animate-pulse" />
+              <div className="w-2.5 h-2.5 bg-gradient-to-br from-amber-400 to-amber-600 rounded-full" />
             </div>
           ),
           text: 'وقت الصلاة',
-          description: 'الموظفون في الصلاة',
-          bgClass: 'bg-gradient-to-r from-amber-500/10 via-amber-400/5 to-transparent',
-          borderClass: 'border-amber-500/30',
+          workingHours: 'سنعود بعد الصلاة مباشرة',
+          bgClass: 'bg-gradient-to-r from-amber-500/5 to-transparent',
+          borderClass: 'border-amber-500/20',
           textClass: 'text-amber-600 dark:text-amber-400',
-          iconClass: 'text-amber-500',
-          cardClass: 'bg-gradient-to-br from-amber-500/15 to-amber-600/10 border-amber-500/40'
+          iconClass: 'text-amber-500'
         };
       case 'holiday':
         return {
-          icon: <Calendar className="h-5 w-5" />,
+          icon: <Calendar className="h-4 w-4" />,
           dot: (
             <div className="relative flex items-center justify-center">
-              <div className="w-3 h-3 bg-gradient-to-br from-purple-400 to-purple-600 rounded-full shadow-lg animate-bounce">
-                <div className="absolute -top-1 -right-1 text-xs">🎉</div>
-              </div>
+              <div className="w-2.5 h-2.5 bg-gradient-to-br from-purple-400 to-purple-600 rounded-full animate-bounce" />
             </div>
           ),
           text: 'إجازة رسمية',
-          description: 'سنعود قريباً',
-          bgClass: 'bg-gradient-to-r from-purple-500/10 via-purple-400/5 to-transparent',
-          borderClass: 'border-purple-500/30',
+          workingHours: 'سنعود في يوم العمل التالي',
+          bgClass: 'bg-gradient-to-r from-purple-500/5 to-transparent',
+          borderClass: 'border-purple-500/20',
           textClass: 'text-purple-600 dark:text-purple-400',
-          iconClass: 'text-purple-500',
-          cardClass: 'bg-gradient-to-br from-purple-500/10 to-purple-600/5 border-purple-500/30'
+          iconClass: 'text-purple-500'
         };
       case 'closed':
       default:
         return {
-          icon: <XCircle className="h-5 w-5" />,
+          icon: <XCircle className="h-4 w-4" />,
           dot: (
             <div className="relative flex items-center justify-center">
-              <div className="w-3 h-3 bg-gradient-to-br from-slate-400 to-slate-600 rounded-full shadow-md opacity-70" />
+              <div className="w-2.5 h-2.5 bg-slate-400 rounded-full opacity-60" />
             </div>
           ),
           text: 'مغلق حالياً',
-          description: 'سنعود في الموعد المحدد',
-          bgClass: 'bg-gradient-to-r from-muted/20 via-muted/10 to-transparent',
-          borderClass: 'border-border/40',
+          workingHours: 'الأحد - الخميس: 9 صباحاً - 5 مساءً',
+          bgClass: 'bg-gradient-to-r from-muted/10 to-transparent',
+          borderClass: 'border-border/30',
           textClass: 'text-muted-foreground',
-          iconClass: 'text-muted-foreground/70',
-          cardClass: 'bg-gradient-to-br from-muted/15 to-muted/5 border-border/30'
+          iconClass: 'text-muted-foreground/60'
         };
     }
   };
@@ -131,60 +123,37 @@ export const WorkingHoursBannerRTL: React.FC<WorkingHoursBannerProps> = ({
     
     return (
       <div className={cn(
-        "group flex items-center gap-2.5 px-4 py-2 rounded-xl text-sm transition-all duration-300",
-        "backdrop-blur-xl border shadow-lg hover:shadow-xl hover:scale-[1.02]",
+        "flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs border",
+        "backdrop-blur-sm transition-all duration-300",
         isPrayerTime 
-          ? "border-amber-500/40 bg-gradient-to-br from-amber-500/20 via-amber-400/10 to-amber-500/5 text-amber-700 dark:text-amber-300 shadow-amber-500/30" 
+          ? "border-amber-500/30 bg-amber-500/10 text-amber-700 dark:text-amber-300" 
           : isClosingSoon 
-            ? "border-orange-500/40 bg-gradient-to-br from-orange-500/20 via-orange-400/10 to-orange-500/5 text-orange-700 dark:text-orange-300 shadow-orange-500/30" 
-            : "border-border/50 bg-gradient-to-br from-card/80 to-card/40 text-muted-foreground shadow-black/5"
+            ? "border-orange-500/30 bg-orange-500/10 text-orange-700 dark:text-orange-300" 
+            : "border-border/30 bg-card/50 text-muted-foreground"
       )}>
         <Timer className={cn(
-          "h-5 w-5 transition-all duration-300 group-hover:rotate-12",
-          isPrayerTime ? "text-amber-600 dark:text-amber-400 animate-pulse" 
-          : isClosingSoon ? "text-orange-600 dark:text-orange-400 animate-pulse" 
-          : "text-primary/70"
+          "h-3.5 w-3.5",
+          isPrayerTime || isClosingSoon ? "animate-pulse" : ""
         )} />
         
-        <div className="flex items-center gap-2 font-semibold">
+        <div className="flex items-center gap-1 font-medium tabular-nums">
           {countdown.hours > 0 && (
             <>
-              <div className="flex flex-col items-center">
-                <span className="text-lg tabular-nums bg-background/50 px-2.5 py-1 rounded-lg shadow-inner">
-                  {countdown.hours}
-                </span>
-                <span className="text-[10px] opacity-70 font-normal mt-0.5">ساعة</span>
-              </div>
-              <span className="text-lg opacity-40 font-bold">:</span>
+              <span>{countdown.hours}</span>
+              <span className="opacity-60">س</span>
+              <span className="opacity-40">:</span>
             </>
           )}
-          
-          <div className="flex flex-col items-center">
-            <span className="text-lg tabular-nums bg-background/50 px-2.5 py-1 rounded-lg shadow-inner">
-              {String(countdown.minutes).padStart(2, '0')}
-            </span>
-            <span className="text-[10px] opacity-70 font-normal mt-0.5">دقيقة</span>
-          </div>
-          
+          <span>{String(countdown.minutes).padStart(2, '0')}</span>
+          <span className="opacity-60">د</span>
           {isPrayerTime && (
             <>
-              <span className="text-lg opacity-40 font-bold">:</span>
-              <div className="flex flex-col items-center">
-                <span className="text-lg tabular-nums bg-amber-600/20 dark:bg-amber-400/20 px-2.5 py-1 rounded-lg shadow-inner font-bold">
-                  {String(countdown.seconds).padStart(2, '0')}
-                </span>
-                <span className="text-[10px] opacity-70 font-normal mt-0.5">ثانية</span>
-              </div>
+              <span className="opacity-40">:</span>
+              <span>{String(countdown.seconds).padStart(2, '0')}</span>
+              <span className="opacity-60">ث</span>
             </>
           )}
         </div>
-        
-        {isPrayerTime && (
-          <div className="flex items-center gap-1 text-xs font-bold bg-amber-600/20 dark:bg-amber-400/20 px-3 py-1 rounded-full">
-            <Bell className="h-3 w-3 animate-pulse" />
-            <span>متبقي</span>
-          </div>
-        )}
       </div>
     );
   };
@@ -194,103 +163,51 @@ export const WorkingHoursBannerRTL: React.FC<WorkingHoursBannerProps> = ({
   return (
     <div 
       className={cn(
-        "sticky top-0 z-40 backdrop-blur-xl border-b transition-all duration-500 shadow-sm",
+        "sticky top-0 z-40 backdrop-blur-xl border-b transition-all duration-300",
         statusInfo.bgClass,
         statusInfo.borderClass,
         className
       )}
       dir="rtl"
     >
-      <div className="container mx-auto px-4 py-3">
-        <div className={cn(
-          "flex items-center gap-4 transition-all duration-300",
-          compact ? "justify-between flex-wrap" : "flex-col gap-3"
-        )}>
-          {/* Main status section */}
-          <div className="flex items-center gap-4 flex-1 min-w-0">
-            <div className={cn(
-              "flex items-center gap-3 px-4 py-2 rounded-xl border transition-all duration-300",
-              "backdrop-blur-md shadow-lg hover:shadow-xl hover:scale-[1.02]",
-              statusInfo.cardClass
-            )}>
-              {/* Animated dot indicator */}
-              <div className="flex-shrink-0">
-                {statusInfo.dot}
-              </div>
-              
-              {/* Icon */}
-              <div className={cn("flex-shrink-0", statusInfo.iconClass)}>
+      <div className="container mx-auto px-4 py-2">
+        <div className="flex items-center justify-between gap-3 flex-wrap">
+          {/* Status section */}
+          <div className="flex items-center gap-3">
+            <div className="flex items-center gap-2">
+              {statusInfo.dot}
+              <div className={statusInfo.iconClass}>
                 {statusInfo.icon}
               </div>
-              
-              {/* Status text */}
-              <div className="flex flex-col min-w-0">
-                <span className={cn(
-                  "font-bold text-base leading-tight",
-                  statusInfo.textClass
-                )}>
+              <div className="flex flex-col">
+                <span className={cn("font-semibold text-sm", statusInfo.textClass)}>
                   {statusInfo.text}
+                  {status === 'prayer' && prayerName && ` - ${prayerName}`}
                 </span>
-                <span className="text-xs opacity-75 truncate">
-                  {status === 'prayer' && prayerName ? `صلاة ${prayerName}` : statusInfo.description}
+                <span className="text-xs text-muted-foreground">
+                  {statusInfo.workingHours}
                 </span>
               </div>
             </div>
             
-            {compact && <CountdownDisplay />}
+            <CountdownDisplay />
           </div>
           
-          {/* Support and countdown section */}
-          <div className="flex items-center gap-3 flex-shrink-0">
-            {!compact && <CountdownDisplay />}
-            
-            <div className={cn(
-              "group flex items-center gap-2.5 px-4 py-2 rounded-xl border transition-all duration-300",
-              "bg-gradient-to-br from-primary/15 via-primary/10 to-primary/5 border-primary/40",
-              "backdrop-blur-md shadow-lg hover:shadow-xl hover:scale-[1.02]",
-              "hover:from-primary/20 hover:to-primary/10"
-            )}>
-              <div className="relative">
-                <Phone className="h-5 w-5 text-primary group-hover:rotate-12 transition-transform duration-300" />
-                <div className="absolute -top-1 -right-1 w-2 h-2 bg-emerald-500 rounded-full animate-pulse shadow-lg shadow-emerald-500/50" />
-              </div>
-              
-              <div className="flex flex-col">
-                <span className="text-xs text-muted-foreground leading-tight">دعم فني</span>
-                <div className="flex items-center gap-1.5">
-                  <Sun className="h-3 w-3 text-amber-500 animate-pulse" />
-                  <span className="text-sm font-bold text-primary">24/7</span>
-                  <Moon className="h-3 w-3 text-indigo-500 animate-pulse" />
-                </div>
-              </div>
-            </div>
+          {/* Support badge */}
+          <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg border border-primary/30 bg-primary/5">
+            <Phone className="h-3.5 w-3.5 text-primary" />
+            <span className="text-xs font-medium text-primary">دعم 24/7</span>
           </div>
         </div>
         
-        {/* Prayer message - only show when in prayer time */}
+        {/* Prayer message */}
         {status === 'prayer' && (
-          <div className="mt-3 animate-fade-in">
-            <div className={cn(
-              "relative overflow-hidden rounded-2xl p-4 transition-all duration-500",
-              "bg-gradient-to-br from-amber-500/20 via-amber-400/10 to-amber-500/5",
-              "border border-amber-500/40 shadow-xl shadow-amber-500/20",
-              "backdrop-blur-md hover:shadow-2xl hover:shadow-amber-500/30"
-            )}>
-              {/* Decorative background pattern */}
-              <div className="absolute inset-0 opacity-5">
-                <div className="absolute top-0 right-0 w-32 h-32 bg-amber-500 rounded-full blur-3xl" />
-                <div className="absolute bottom-0 left-0 w-32 h-32 bg-amber-600 rounded-full blur-3xl" />
-              </div>
-              
-              <div className="relative flex items-center justify-center gap-3">
-                <Sparkles className="h-5 w-5 text-amber-500 animate-pulse" />
-                <p className="text-sm md:text-base text-amber-700 dark:text-amber-300 text-center font-semibold flex items-center gap-2 flex-wrap justify-center">
-                  <span className="text-xl animate-bounce">🕌</span>
-                  <span>الموظفون يؤدون الصلاة الآن وسوف نعود لكم بعد انتهاء الصلاة</span>
-                  <span className="text-xl animate-pulse">✨</span>
-                </p>
-                <Sparkles className="h-5 w-5 text-amber-500 animate-pulse" />
-              </div>
+          <div className="mt-2">
+            <div className="flex items-center justify-center gap-2 px-3 py-1.5 rounded-lg bg-amber-500/10 border border-amber-500/20">
+              <span className="text-sm">🕌</span>
+              <p className="text-xs text-amber-700 dark:text-amber-300 font-medium">
+                سنعود بعد انتهاء الصلاة مباشرة
+              </p>
             </div>
           </div>
         )}
