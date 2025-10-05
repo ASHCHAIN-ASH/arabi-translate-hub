@@ -50,7 +50,7 @@ const ModernStatsSection = () => {
       number: UNIFIED_STATS.countriesServed,
       suffix: '+',
       title: STATS_LABELS.countriesServed,
-      description: 'نقدم خدماتنا في جميع القارات',
+      description: 'نستقبل الطلبات الأكاديمية من جميع أنحاء العالم',
       color: {
         from: 'from-purple-500',
         to: 'to-pink-500',

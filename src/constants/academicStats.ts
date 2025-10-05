@@ -17,7 +17,7 @@ export const UNIFIED_STATS = {
 export const STATS_LABELS = {
   studentsServed: "طالب وباحث",
   researchCompleted: "بحث علمي مكتمل",
-  countriesServed: "دولة حول العالم",
+  countriesServed: "دولة نستقبل طلباتها",
   satisfactionRate: "نسبة الرضا",
   expertsCount: "خبير متخصص",
   specializationsCount: "تخصص أكاديمي",
