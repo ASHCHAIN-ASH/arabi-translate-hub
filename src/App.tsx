@@ -193,6 +193,16 @@ const App = () => (
             <Route path="/research/paper-review-service" element={<PaperReviewService />} />
             <Route path="/research/consultation-service" element={<ConsultationService />} />
             <Route path="/research/other-student-services" element={<OtherStudentServices />} />
+            
+            {/* Other Student Services */}
+            <Route path="/research/book-summarization" element={<BookSummarization />} />
+            <Route path="/research/assignment-execution" element={<AssignmentExecution />} />
+            <Route path="/research/ebook-creation" element={<EbookCreation />} />
+            <Route path="/research/research-proposal" element={<ResearchProposalService />} />
+            <Route path="/research/references-provision" element={<ReferencesProvision />} />
+            <Route path="/research/homework-assistance" element={<HomeworkAssistance />} />
+            <Route path="/research/premium-templates" element={<PremiumTemplates />} />
+            
             <Route path="/research/journey" element={<ResearchJourney />} />
             
             <Route path="/about-us" element={<AboutUs />} />
