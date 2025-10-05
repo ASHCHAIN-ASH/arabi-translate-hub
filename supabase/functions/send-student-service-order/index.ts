@@ -130,6 +130,7 @@ const handler = async (req: Request): Promise<Response> => {
               border-radius: 16px;
               margin-bottom: 25px;
               border-right: 5px solid #667eea;
+              flex-direction: row-reverse;
             }
             .greeting-icon {
               font-size: 32px;
@@ -170,6 +171,7 @@ const handler = async (req: Request): Promise<Response> => {
               margin-bottom: 20px;
               padding-bottom: 15px;
               border-bottom: 2px solid #e8ecf1;
+              flex-direction: row-reverse;
             }
             .info-box-header-icon {
               font-size: 28px;
@@ -188,10 +190,11 @@ const handler = async (req: Request): Promise<Response> => {
               background: #f8f9fb;
               border-radius: 10px;
               transition: all 0.3s ease;
+              flex-direction: row-reverse;
             }
             .info-row:hover {
               background: #f0f2f5;
-              transform: translateX(-5px);
+              transform: translateX(5px);
             }
             .info-label { 
               font-weight: 600; 
@@ -201,9 +204,11 @@ const handler = async (req: Request): Promise<Response> => {
               gap: 8px;
               font-size: 15px;
               text-align: right;
+              flex-direction: row-reverse;
             }
             .info-label-icon {
               font-size: 18px;
+              margin-left: 8px;
             }
             .info-value { 
               color: #333;
@@ -282,6 +287,7 @@ const handler = async (req: Request): Promise<Response> => {
               display: flex;
               align-items: center;
               gap: 15px;
+              flex-direction: row-reverse;
             }
             .alert-icon {
               font-size: 32px;
@@ -605,6 +611,7 @@ const handler = async (req: Request): Promise<Response> => {
               margin-bottom: 25px;
               padding-bottom: 20px;
               border-bottom: 3px solid #ff6b6b;
+              flex-direction: row-reverse;
             }
             .client-avatar {
               width: 60px;
@@ -652,9 +659,11 @@ const handler = async (req: Request): Promise<Response> => {
               align-items: center;
               gap: 10px;
               margin-bottom: 12px;
+              flex-direction: row-reverse;
             }
             .info-card-icon {
               font-size: 24px;
+              margin-left: 10px;
             }
             .info-card h4 { 
               margin: 0; 
@@ -686,9 +695,11 @@ const handler = async (req: Request): Promise<Response> => {
               margin-bottom: 20px;
               padding-bottom: 15px;
               border-bottom: 2px solid #e8ecf1;
+              flex-direction: row-reverse;
             }
             .details-box-icon {
               font-size: 28px;
+              margin-left: 12px;
             }
             .details-box h3 { 
               margin: 0; 
@@ -725,6 +736,7 @@ const handler = async (req: Request): Promise<Response> => {
               font-size: 15px;
               border: 2px solid #e8ecf1;
               transition: all 0.3s ease;
+              flex-direction: row-reverse;
             }
             .action-btn:hover {
               transform: translateY(-3px);
