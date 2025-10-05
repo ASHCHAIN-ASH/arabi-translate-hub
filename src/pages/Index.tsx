@@ -26,6 +26,7 @@ import academicPublishingImg from "@/assets/academic-service-publishing.jpg";
 const ServicesShowcase = lazy(() => import("@/components/ServicesShowcase"));
 const MasterMembershipBanner = lazy(() => import("@/components/MasterMembershipBanner"));
 const ServiceSteps = lazy(() => import("@/components/ServiceSteps"));
+const ModernStatsSection = lazy(() => import("@/components/ModernStatsSection"));
 
 
 // مكون Loading محسّن
@@ -347,96 +348,12 @@ const Index = () => {
         </div>
       </section>
 
-      {/* قسم الإحصائيات الأكاديمية - تصميم حديث */}
-      <section className="relative py-16 sm:py-20 lg:py-24 overflow-hidden bg-gradient-to-b from-white via-slate-50 to-white dark:from-slate-950 dark:via-slate-900 dark:to-slate-950">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-          {/* العنوان */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-            className="text-center mb-12 sm:mb-16"
-          >
-            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-3">
-              <span className="text-slate-800 dark:text-slate-100">أرقام تتحدث عن </span>
-              <span className="bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">التميز</span>
-            </h2>
-            <p className="text-base sm:text-lg text-slate-600 dark:text-slate-400 max-w-2xl mx-auto">
-              إنجازاتنا وأرقامنا تعكس الثقة التي يوليها لنا شركاؤنا الأكاديميون حول العالم
-            </p>
-          </motion.div>
 
-          {/* الإحصائيات - Grid محسّن */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
-            {academicStats.map((stat, index) => {
-              const IconComponent = stat.icon;
-              const colors = [
-                { gradient: "from-orange-500 to-orange-600", border: "border-orange-200 dark:border-orange-800", bg: "bg-orange-50 dark:bg-orange-950" },
-                { gradient: "from-purple-500 to-purple-600", border: "border-purple-200 dark:border-purple-800", bg: "bg-purple-50 dark:bg-purple-950" },
-                { gradient: "from-teal-500 to-teal-600", border: "border-teal-200 dark:border-teal-800", bg: "bg-teal-50 dark:bg-teal-950" },
-                { gradient: "from-blue-500 to-blue-600", border: "border-blue-200 dark:border-blue-800", bg: "bg-blue-50 dark:bg-blue-950" }
-              ];
-              const color = colors[index % colors.length];
+      {/* قسم الإحصائيات - مكون محسّن */}
+      <Suspense fallback={<LoadingSpinner />}>
+        <ModernStatsSection />
+      </Suspense>
 
-              return (
-                <motion.div
-                  key={index}
-                  initial={{ opacity: 0, y: 30 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.5, delay: index * 0.1 }}
-                  className="group"
-                >
-                  <Card className={`relative overflow-hidden border-2 ${color.border} bg-white dark:bg-slate-800 hover:shadow-xl transition-all duration-300`}>
-                    {/* شريط علوي ملون */}
-                    <div className={`absolute top-0 left-0 right-0 h-1 bg-gradient-to-r ${color.gradient}`} />
-                    
-                    <CardContent className="p-6 text-center">
-                      {/* الأيقونة */}
-                      <motion.div
-                        className="mb-4 mx-auto"
-                        whileHover={{ scale: 1.1, rotate: 5 }}
-                        transition={{ duration: 0.3 }}
-                      >
-                        <div className={`w-16 h-16 sm:w-20 sm:h-20 mx-auto rounded-full bg-gradient-to-br ${color.gradient} flex items-center justify-center shadow-lg`}>
-                          <IconComponent className="w-8 h-8 sm:w-10 sm:h-10 text-white" />
-                        </div>
-                      </motion.div>
-
-                      {/* الرقم */}
-                      <motion.div
-                        initial={{ scale: 0.5, opacity: 0 }}
-                        whileInView={{ scale: 1, opacity: 1 }}
-                        viewport={{ once: true }}
-                        transition={{ duration: 0.5, delay: index * 0.1 + 0.3 }}
-                        className="mb-3"
-                      >
-                        <div className="text-4xl sm:text-5xl font-bold text-slate-800 dark:text-slate-100">
-                          <AnimatedCounter end={stat.number} suffix={stat.suffix} duration={2.5} />
-                        </div>
-                      </motion.div>
-
-                      {/* العنوان */}
-                      <h3 className="text-base sm:text-lg font-semibold text-slate-700 dark:text-slate-300 mb-2">
-                        {stat.title}
-                      </h3>
-
-                      {/* النص التوضيحي */}
-                      <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 leading-relaxed">
-                        {index === 0 && "معدل رضا استثنائي مع ضمان الجودة الأكاديمية"}
-                        {index === 1 && "نقدم خدماتنا في أكثر من 120 دولة حول العالم"}
-                        {index === 2 && "من الأبحاث والرسائل والترجمات المتخصصة"}
-                        {index === 3 && "من جميع أنحاء العالم يثقون في خدماتنا الأكاديمية"}
-                      </p>
-                    </CardContent>
-                  </Card>
-                </motion.div>
-              );
-            })}
-          </div>
-        </div>
-      </section>
 
       {/* قسم الخدمات الأكاديمية */}
       <section className="py-12 sm:py-16 lg:py-20 bg-gradient-to-br from-slate-50 via-blue-50/40 to-purple-50/30 dark:from-slate-950 dark:via-slate-900/95 dark:to-slate-950 relative overflow-hidden" dir="rtl">
