@@ -70,57 +70,6 @@ const researchServices = [
   }
 ];
 
-const otherStudentServices = [
-  {
-    icon: Languages,
-    title: 'الترجمة الأكاديمية',
-    description: 'ترجمة احترافية للأبحاث والمستندات الأكاديمية',
-    gradient: 'from-indigo-500 to-blue-500',
-    href: '/translation-services',
-    features: ['ترجمة دقيقة', 'لغات متعددة', 'مراجعة لغوية', 'تسليم سريع']
-  },
-  {
-    icon: FileType,
-    title: 'تنسيق الأبحاث والرسائل',
-    description: 'تنسيق احترافي وفق معايير الجامعات العالمية',
-    gradient: 'from-violet-500 to-purple-500',
-    href: '/research/formatting',
-    features: ['تنسيق APA & MLA', 'فهرسة آلية', 'جداول ورسوم', 'مراجعة نهائية']
-  },
-  {
-    icon: ScrollText,
-    title: 'كتابة المراجع والتوثيق',
-    description: 'إعداد قوائم المراجع وفق أنظمة التوثيق المختلفة',
-    gradient: 'from-sky-500 to-cyan-500',
-    href: '/research/references',
-    features: ['APA & MLA & Harvard', 'توثيق دقيق', 'مراجع متنوعة', 'Mendeley & Zotero']
-  },
-  {
-    icon: UserCheck,
-    title: 'التقديم للقبول الجامعي',
-    description: 'مساعدة شاملة في إعداد ملفات القبول الجامعي',
-    gradient: 'from-emerald-500 to-green-500',
-    href: '/admission-services',
-    features: ['السيرة الذاتية', 'خطاب التحفيز', 'خطابات التوصية', 'استشارات']
-  },
-  {
-    icon: BookMarked,
-    title: 'الإطار النظري والدراسات السابقة',
-    description: 'إعداد الإطار النظري ومراجعة الأدبيات البحثية',
-    gradient: 'from-pink-500 to-rose-500',
-    href: '/research/theoretical-framework',
-    features: ['مراجعة أدبيات', 'إطار نظري', 'دراسات سابقة', 'تحليل نقدي']
-  },
-  {
-    icon: GraduationCap,
-    title: 'دورات تدريبية أكاديمية',
-    description: 'دورات متخصصة في مهارات البحث العلمي والكتابة',
-    gradient: 'from-amber-500 to-orange-500',
-    href: '/research/training-courses',
-    features: ['منهجية البحث', 'SPSS', 'كتابة أكاديمية', 'شهادات معتمدة']
-  }
-];
-
 export default function ResearchServices() {
   const navigate = useNavigate();
 
@@ -237,7 +186,7 @@ export default function ResearchServices() {
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="text-center mb-12"
+            className="text-center"
           >
             <motion.div
               initial={{ scale: 0 }}
@@ -246,68 +195,28 @@ export default function ResearchServices() {
               className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-primary/10 to-secondary/10 rounded-full mb-4 border border-primary/20"
             >
               <Sparkles className="w-5 h-5 text-primary" />
-              <span className="text-sm font-semibold text-primary">خدمات إضافية</span>
+              <span className="text-sm font-semibold text-primary">قريباً</span>
             </motion.div>
 
             <h2 className="text-3xl md:text-4xl font-bold mb-4 bg-gradient-to-r from-primary via-secondary to-accent bg-clip-text text-transparent">
               خدمات الطلاب الأخرى
             </h2>
-            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+            <p className="text-lg text-muted-foreground max-w-2xl mx-auto mb-8">
               مجموعة متنوعة من الخدمات الأكاديمية الداعمة لرحلتك التعليمية
             </p>
+
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              viewport={{ once: true }}
+              className="max-w-md mx-auto p-8 bg-card/50 backdrop-blur-sm border-2 border-dashed border-primary/30 rounded-2xl"
+            >
+              <GraduationCap className="w-16 h-16 mx-auto mb-4 text-primary/50" />
+              <p className="text-muted-foreground">
+                المزيد من الخدمات الأكاديمية المميزة قادمة قريباً
+              </p>
+            </motion.div>
           </motion.div>
-
-          <div className="max-w-7xl mx-auto">
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {otherStudentServices.map((service, index) => (
-                <motion.div
-                  key={index}
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: index * 0.1 }}
-                  whileHover={{ y: -5 }}
-                  className="cursor-pointer group"
-                  onClick={() => navigate(service.href)}
-                >
-                  <Card className="h-full border-2 border-muted hover:border-primary/50 transition-all shadow-lg hover:shadow-xl bg-card/50 backdrop-blur-sm overflow-hidden">
-                    <div className={`bg-gradient-to-r ${service.gradient} p-5 text-white relative`}>
-                      <div className="absolute top-0 right-0 w-24 h-24 bg-white/10 rounded-full -translate-y-12 translate-x-12"></div>
-                      <motion.div
-                        whileHover={{ scale: 1.1, rotate: 5 }}
-                        className="relative z-10 w-14 h-14 bg-white/20 rounded-xl flex items-center justify-center mb-3 backdrop-blur-sm"
-                      >
-                        <service.icon className="w-8 h-8" />
-                      </motion.div>
-                    </div>
-
-                    <div className="p-5">
-                      <h3 className="text-lg font-bold mb-2 group-hover:text-primary transition-colors">
-                        {service.title}
-                      </h3>
-                      <p className="text-sm text-muted-foreground mb-4 leading-relaxed">
-                        {service.description}
-                      </p>
-
-                      <div className="space-y-1.5 mb-4">
-                        {service.features.map((feature, i) => (
-                          <div key={i} className="flex items-center gap-2 text-xs text-muted-foreground">
-                            <div className="w-1 h-1 rounded-full bg-primary"></div>
-                            <span>{feature}</span>
-                          </div>
-                        ))}
-                      </div>
-
-                      <div className="flex items-center gap-2 text-sm font-semibold text-primary group-hover:gap-3 transition-all">
-                        <span>اكتشف المزيد</span>
-                        <ArrowRight className="w-4 h-4" />
-                      </div>
-                    </div>
-                  </Card>
-                </motion.div>
-              ))}
-            </div>
-          </div>
         </div>
       </section>
 
