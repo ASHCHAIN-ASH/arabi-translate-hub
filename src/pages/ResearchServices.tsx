@@ -67,6 +67,14 @@ const researchServices = [
     gradient: 'from-amber-500 to-yellow-500',
     href: '/research/consultation-service',
     features: ['استشارة متخصصة', 'توجيه علمي', 'حلول عملية', 'دعم مستمر']
+  },
+  {
+    icon: GraduationCap,
+    title: 'خدمات الطلاب الأخرى',
+    description: 'مجموعة متنوعة من الخدمات الأكاديمية الداعمة للطلاب',
+    gradient: 'from-indigo-500 to-purple-500',
+    href: '/research/other-student-services',
+    features: ['ترجمة أكاديمية', 'تنسيق الأبحاث', 'قبول جامعي', 'خدمات متنوعة']
   }
 ];
 
@@ -175,47 +183,6 @@ export default function ResearchServices() {
                 </motion.div>
               ))}
             </div>
-          </motion.div>
-        </div>
-      </section>
-
-      {/* Other Student Services Section */}
-      <section className="py-16 bg-gradient-to-br from-muted/30 via-background to-muted/20">
-        <div className="container px-4 mx-auto">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="text-center"
-          >
-            <motion.div
-              initial={{ scale: 0 }}
-              whileInView={{ scale: 1 }}
-              viewport={{ once: true }}
-              className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-primary/10 to-secondary/10 rounded-full mb-4 border border-primary/20"
-            >
-              <Sparkles className="w-5 h-5 text-primary" />
-              <span className="text-sm font-semibold text-primary">خدمات إضافية</span>
-            </motion.div>
-
-            <h2 className="text-3xl md:text-4xl font-bold mb-4 bg-gradient-to-r from-primary via-secondary to-accent bg-clip-text text-transparent">
-              خدمات الطلاب الأخرى
-            </h2>
-            <p className="text-lg text-muted-foreground max-w-2xl mx-auto mb-8">
-              مجموعة متنوعة من الخدمات الأكاديمية الداعمة لرحلتك التعليمية
-            </p>
-
-            <motion.button
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              onClick={() => navigate('/research/other-student-services')}
-              className="bg-gradient-to-r from-primary via-secondary to-accent text-white px-8 py-4 rounded-xl font-bold text-lg hover:shadow-2xl transition-all shadow-lg"
-            >
-              <span className="flex items-center gap-2">
-                استكشف الخدمات
-                <Eye className="w-5 h-5" />
-              </span>
-            </motion.button>
           </motion.div>
         </div>
       </section>
