@@ -122,7 +122,7 @@ export const ClientEmail = ({
                     <tr>
                       <td style={{ padding: '25px' }}>
                         <Heading style={sectionTitle}>
-                          <span style={{ marginLeft: '10px' }}>🎁</span>
+                          <span style={{ marginRight: '10px' }}>🎁</span>
                           مزايا الشراكة الحصرية
                         </Heading>
                         <Hr style={dividerLine} />
@@ -183,7 +183,7 @@ export const ClientEmail = ({
                     <tr>
                       <td style={{ padding: '30px' }}>
                         <Heading style={sectionTitle}>
-                          <span style={{ marginLeft: '10px' }}>📞</span>
+                          <span style={{ marginRight: '10px' }}>📞</span>
                           تواصل معنا الآن
                         </Heading>
                         <Hr style={dividerLine} />
@@ -247,7 +247,7 @@ export const ClientEmail = ({
                     <tr>
                       <td style={{ textAlign: 'center', padding: '10px 20px' }}>
                         <Link href="https://wa.me/966500776343" style={whatsappButton}>
-                          <span style={{ fontSize: '24px', marginLeft: '10px' }}>💬</span>
+                          <span style={{ fontSize: '24px', marginRight: '10px' }}>💬</span>
                           تواصل معنا عبر واتساب
                         </Link>
                       </td>
@@ -255,7 +255,7 @@ export const ClientEmail = ({
                     <tr>
                       <td style={{ textAlign: 'center', padding: '10px 20px' }}>
                         <Link href="https://masteredupath.com" style={websiteButton}>
-                          <span style={{ fontSize: '20px', marginLeft: '10px' }}>🌐</span>
+                          <span style={{ fontSize: '20px', marginRight: '10px' }}>🌐</span>
                           زيارة الموقع الإلكتروني
                         </Link>
                       </td>
@@ -469,7 +469,7 @@ const benefitRow = {
 
 const benefitIcon = {
   fontSize: '32px',
-  marginLeft: '15px',
+  marginRight: '15px',
   minWidth: '40px',
   textAlign: 'center' as const,
 };

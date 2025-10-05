@@ -200,6 +200,7 @@ const handler = async (req: Request): Promise<Response> => {
               align-items: center;
               gap: 8px;
               font-size: 15px;
+              text-align: right;
             }
             .info-label-icon {
               font-size: 18px;
@@ -208,6 +209,7 @@ const handler = async (req: Request): Promise<Response> => {
               color: #333;
               font-weight: 500;
               font-size: 15px;
+              text-align: left;
             }
 
             /* WhatsApp Section */

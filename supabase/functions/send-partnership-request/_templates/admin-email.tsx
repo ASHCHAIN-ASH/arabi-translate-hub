@@ -274,14 +274,14 @@ export const AdminEmail = ({
                         
                         <div style={{ marginTop: '25px' }}>
                           <Link href={`mailto:${email}`} style={primaryButton}>
-                            <span style={{ fontSize: '22px', marginLeft: '10px' }}>📧</span>
+                            <span style={{ fontSize: '22px', marginRight: '10px' }}>📧</span>
                             الرد عبر البريد الإلكتروني
                           </Link>
                         </div>
                         
                         <div style={{ marginTop: '15px' }}>
                           <Link href={`https://wa.me/${phone.replace(/\D/g, '')}`} style={whatsappButton}>
-                            <span style={{ fontSize: '24px', marginLeft: '10px' }}>💬</span>
+                            <span style={{ fontSize: '24px', marginRight: '10px' }}>💬</span>
                             التواصل عبر واتساب
                             <div style={{ fontSize: '14px', marginTop: '5px', opacity: 0.9 }}>
                               🇸🇦 +{phone.replace(/\D/g, '').substring(0, 3)} {phone.replace(/\D/g, '').substring(3)}
