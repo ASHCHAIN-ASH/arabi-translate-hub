@@ -47,10 +47,11 @@ const ModernStatsSection = () => {
     },
     {
       icon: Globe,
-      number: UNIFIED_STATS.countriesServed,
-      suffix: '+',
-      title: STATS_LABELS.countriesServed,
-      description: 'نستقبل الطلبات الأكاديمية من جميع أنحاء العالم',
+      number: null, // لا يوجد رقم
+      suffix: '',
+      title: 'خدماتنا الأكاديمية',
+      textValue: 'عالمية الوصول',
+      description: 'نستقبل الطلبات من جميع أنحاء العالم',
       color: {
         from: 'from-purple-500',
         to: 'to-pink-500',
@@ -202,7 +203,7 @@ const ModernStatsSection = () => {
                       <IconComponent className={cn("h-7 w-7", stat.color.text)} />
                     </motion.div>
 
-                    {/* Number */}
+                    {/* Number or Text */}
                     <motion.div
                       className="mb-3"
                       initial={{ scale: 0.5 }}
@@ -210,12 +211,21 @@ const ModernStatsSection = () => {
                       viewport={{ once: true }}
                       transition={{ duration: 0.5, delay: index * 0.1 + 0.3 }}
                     >
-                      <div className={cn(
-                        "text-5xl font-bold text-center",
-                        stat.color.text
-                      )}>
-                        <AnimatedCounter end={stat.number} suffix={stat.suffix} duration={2.5} />
-                      </div>
+                      {stat.number !== null ? (
+                        <div className={cn(
+                          "text-5xl font-bold text-center",
+                          stat.color.text
+                        )}>
+                          <AnimatedCounter end={stat.number} suffix={stat.suffix} duration={2.5} />
+                        </div>
+                      ) : (
+                        <div className={cn(
+                          "text-2xl font-bold text-center",
+                          stat.color.text
+                        )}>
+                          {stat.textValue}
+                        </div>
+                      )}
                     </motion.div>
 
                     {/* Title */}
