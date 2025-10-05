@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import Header from '@/components/Header';
-import Footer from '@/components/Footer';
 import { FloatingWhatsAppButton } from '@/components/FloatingWhatsAppButton';
 import { FileText, CheckCircle, ArrowRight, Award, Users, Clock, Target, BookOpen, Shield } from 'lucide-react';
 import { Card } from '@/components/ui/card';
@@ -317,7 +316,6 @@ export default function AssignmentExecution() {
         </div>
       </section>
 
-      <Footer />
     </div>
   );
 }
