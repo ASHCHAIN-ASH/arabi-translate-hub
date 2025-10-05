@@ -14,8 +14,6 @@ import {
   BookOpen, 
   ArrowRight,
   Languages,
-  FileType,
-  UserCheck,
   BookMarked,
   ScrollText,
   Sparkles
@@ -29,34 +27,53 @@ export default function OtherStudentServices() {
 
   const availableServices = [
     {
-      icon: Languages,
-      title: 'الترجمة الأكاديمية',
-      description: 'ترجمة احترافية للأبحاث والمستندات'
+      icon: BookOpen,
+      title: 'تلخيص الكتب والمراجع',
+      description: 'تلخيص احترافي ودقيق للكتب والمراجع العلمية',
+      href: '/research/book-summarization',
+      gradient: 'from-blue-500 to-cyan-500'
     },
     {
-      icon: FileType,
-      title: 'تنسيق الأبحاث',
-      description: 'تنسيق وفق معايير الجامعات العالمية'
-    },
-    {
-      icon: ScrollText,
-      title: 'كتابة المراجع',
-      description: 'إعداد قوائم المراجع وفق أنظمة التوثيق'
-    },
-    {
-      icon: UserCheck,
-      title: 'القبول الجامعي',
-      description: 'إعداد ملفات القبول الجامعي'
+      icon: FileText,
+      title: 'تنفيذ التكاليف والأسايمنت',
+      description: 'إنجاز الواجبات الجامعية والتقارير بجودة عالية',
+      href: '/research/assignment-execution',
+      gradient: 'from-purple-500 to-pink-500'
     },
     {
       icon: BookMarked,
-      title: 'الإطار النظري',
-      description: 'إعداد الإطار النظري والدراسات السابقة'
+      title: 'عمل كتاب إلكتروني',
+      description: 'تصميم وإنتاج كتب إلكترونية احترافية',
+      href: '/research/ebook-creation',
+      gradient: 'from-green-500 to-emerald-500'
     },
     {
-      icon: GraduationCap,
-      title: 'دورات تدريبية',
-      description: 'دورات متخصصة في البحث العلمي'
+      icon: ScrollText,
+      title: 'إعداد خطة بحث',
+      description: 'صياغة خطط بحثية متكاملة ومعتمدة',
+      href: '/research/research-proposal',
+      gradient: 'from-orange-500 to-red-500'
+    },
+    {
+      icon: Languages,
+      title: 'توفير المراجع والمصادر',
+      description: 'جمع وتوفير المراجع العلمية الموثوقة',
+      href: '/research/references-provision',
+      gradient: 'from-indigo-500 to-blue-500'
+    },
+    {
+      icon: CheckCircle,
+      title: 'المساعدة في حل الواجبات',
+      description: 'دعم في حل الواجبات والتقارير الجامعية',
+      href: '/research/homework-assistance',
+      gradient: 'from-teal-500 to-cyan-500'
+    },
+    {
+      icon: Award,
+      title: 'قوالب خدمات ممتازة',
+      description: 'قوالب احترافية جاهزة لجميع أنواع الخدمات',
+      href: '/research/premium-templates',
+      gradient: 'from-yellow-500 to-amber-500'
     }
   ];
 
@@ -131,11 +148,13 @@ export default function OtherStudentServices() {
                   viewport={{ once: true }}
                   transition={{ delay: index * 0.1 }}
                   whileHover={{ y: -5 }}
+                  className="cursor-pointer"
+                  onClick={() => navigate(service.href)}
                 >
                   <Card className="p-6 h-full border-0 shadow-lg hover:shadow-xl transition-all bg-card/80 backdrop-blur-sm group">
                     <motion.div
                       whileHover={{ scale: 1.1, rotate: 5 }}
-                      className="w-14 h-14 bg-gradient-to-br from-blue-500 to-purple-500 rounded-xl flex items-center justify-center mb-4 shadow-md group-hover:shadow-lg transition-all"
+                      className={`w-14 h-14 bg-gradient-to-br ${service.gradient} rounded-xl flex items-center justify-center mb-4 shadow-md group-hover:shadow-lg transition-all`}
                     >
                       <service.icon className="w-8 h-8 text-white" />
                     </motion.div>
@@ -143,6 +162,10 @@ export default function OtherStudentServices() {
                       {service.title}
                     </h3>
                     <p className="text-muted-foreground">{service.description}</p>
+                    <div className="mt-4 flex items-center gap-2 text-primary font-semibold">
+                      <span>اعرف المزيد</span>
+                      <ArrowRight className="w-4 h-4" />
+                    </div>
                   </Card>
                 </motion.div>
               ))}
