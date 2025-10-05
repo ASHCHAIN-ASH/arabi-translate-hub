@@ -120,6 +120,7 @@ import ProposalService from "./pages/research/ProposalService";
 import PowerPointService from "./pages/research/PowerPointService";
 import PaperReviewService from "./pages/research/PaperReviewService";
 import ConsultationService from "./pages/research/ConsultationService";
+import OtherStudentServices from "./pages/research/OtherStudentServices";
 import ResearchJourney from "./pages/research/ResearchJourney";
 import OrderForm from "./components/OrderForm";
 import TermsOfService from "./pages/TermsOfService";
@@ -184,6 +185,7 @@ const App = () => (
             <Route path="/research/powerpoint-service" element={<PowerPointService />} />
             <Route path="/research/paper-review-service" element={<PaperReviewService />} />
             <Route path="/research/consultation-service" element={<ConsultationService />} />
+            <Route path="/research/other-student-services" element={<OtherStudentServices />} />
             <Route path="/research/journey" element={<ResearchJourney />} />
             
             <Route path="/about-us" element={<AboutUs />} />

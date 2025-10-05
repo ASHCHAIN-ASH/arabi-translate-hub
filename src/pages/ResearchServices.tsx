@@ -195,7 +195,7 @@ export default function ResearchServices() {
               className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-primary/10 to-secondary/10 rounded-full mb-4 border border-primary/20"
             >
               <Sparkles className="w-5 h-5 text-primary" />
-              <span className="text-sm font-semibold text-primary">قريباً</span>
+              <span className="text-sm font-semibold text-primary">خدمات إضافية</span>
             </motion.div>
 
             <h2 className="text-3xl md:text-4xl font-bold mb-4 bg-gradient-to-r from-primary via-secondary to-accent bg-clip-text text-transparent">
@@ -205,17 +205,17 @@ export default function ResearchServices() {
               مجموعة متنوعة من الخدمات الأكاديمية الداعمة لرحلتك التعليمية
             </p>
 
-            <motion.div
-              initial={{ opacity: 0, scale: 0.9 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              viewport={{ once: true }}
-              className="max-w-md mx-auto p-8 bg-card/50 backdrop-blur-sm border-2 border-dashed border-primary/30 rounded-2xl"
+            <motion.button
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              onClick={() => navigate('/research/other-student-services')}
+              className="bg-gradient-to-r from-primary via-secondary to-accent text-white px-8 py-4 rounded-xl font-bold text-lg hover:shadow-2xl transition-all shadow-lg"
             >
-              <GraduationCap className="w-16 h-16 mx-auto mb-4 text-primary/50" />
-              <p className="text-muted-foreground">
-                المزيد من الخدمات الأكاديمية المميزة قادمة قريباً
-              </p>
-            </motion.div>
+              <span className="flex items-center gap-2">
+                استكشف الخدمات
+                <Eye className="w-5 h-5" />
+              </span>
+            </motion.button>
           </motion.div>
         </div>
       </section>
