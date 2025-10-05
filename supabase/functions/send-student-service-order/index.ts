@@ -50,6 +50,7 @@ const handler = async (req: Request): Promise<Response> => {
         <head>
           <meta charset="UTF-8">
           <meta name="viewport" content="width=device-width, initial-scale=1.0">
+          <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
           <style>
             * {
               margin: 0;
@@ -58,7 +59,7 @@ const handler = async (req: Request): Promise<Response> => {
             }
             
             body {
-              font-family: 'Segoe UI', 'Cairo', Tahoma, sans-serif;
+              font-family: 'Cairo', 'Segoe UI', Tahoma, sans-serif;
               background: #f5f7fa;
               direction: rtl;
               text-align: right;
@@ -109,7 +110,11 @@ const handler = async (req: Request): Promise<Response> => {
               align-items: center;
               justify-content: center;
               gap: 10px;
-              flex-direction: row-reverse;
+              direction: rtl;
+            }
+            
+            .success-badge h2 span {
+              order: -1;
             }
             
             .content {
@@ -131,7 +136,11 @@ const handler = async (req: Request): Promise<Response> => {
               display: flex;
               align-items: center;
               gap: 10px;
-              flex-direction: row-reverse;
+              direction: rtl;
+            }
+            
+            .greeting h3 span {
+              order: -1;
             }
             
             .greeting p {
@@ -155,17 +164,22 @@ const handler = async (req: Request): Promise<Response> => {
               display: flex;
               align-items: center;
               gap: 10px;
-              flex-direction: row-reverse;
+              direction: rtl;
               padding-bottom: 15px;
               border-bottom: 2px solid #e8ecf1;
+            }
+            
+            .info-box h3 span {
+              order: -1;
             }
             
             .info-row {
               display: flex;
               justify-content: space-between;
+              align-items: center;
               padding: 12px 0;
               border-bottom: 1px solid #f0f2f5;
-              flex-direction: row-reverse;
+              direction: rtl;
             }
             
             .info-row:last-child {
@@ -178,7 +192,11 @@ const handler = async (req: Request): Promise<Response> => {
               display: flex;
               align-items: center;
               gap: 8px;
-              flex-direction: row-reverse;
+              direction: rtl;
+            }
+            
+            .info-label span {
+              order: -1;
             }
             
             .info-value {
@@ -202,7 +220,11 @@ const handler = async (req: Request): Promise<Response> => {
               align-items: center;
               justify-content: center;
               gap: 10px;
-              flex-direction: row-reverse;
+              direction: rtl;
+            }
+            
+            .whatsapp-box h3 span {
+              order: -1;
             }
             
             .whatsapp-number {
@@ -229,7 +251,12 @@ const handler = async (req: Request): Promise<Response> => {
               display: flex;
               align-items: start;
               gap: 10px;
-              flex-direction: row-reverse;
+              direction: rtl;
+            }
+            
+            .alert-box p span {
+              order: -1;
+              flex-shrink: 0;
             }
             
             .footer {
@@ -325,6 +352,7 @@ const handler = async (req: Request): Promise<Response> => {
         <head>
           <meta charset="UTF-8">
           <meta name="viewport" content="width=device-width, initial-scale=1.0">
+          <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
           <style>
             * {
               margin: 0;
@@ -333,7 +361,7 @@ const handler = async (req: Request): Promise<Response> => {
             }
             
             body {
-              font-family: 'Segoe UI', 'Cairo', Tahoma, sans-serif;
+              font-family: 'Cairo', 'Segoe UI', Tahoma, sans-serif;
               background: #f5f7fa;
               direction: rtl;
               text-align: right;
@@ -385,7 +413,11 @@ const handler = async (req: Request): Promise<Response> => {
               align-items: center;
               justify-content: center;
               gap: 12px;
-              flex-direction: row-reverse;
+              direction: rtl;
+            }
+            
+            .urgent-banner span {
+              order: -1;
             }
             
             .content {
@@ -407,7 +439,11 @@ const handler = async (req: Request): Promise<Response> => {
               margin-bottom: 20px;
               padding-bottom: 20px;
               border-bottom: 3px solid #ff6b6b;
-              flex-direction: row-reverse;
+              direction: rtl;
+            }
+            
+            .client-header .client-avatar {
+              order: -1;
             }
             
             .client-avatar {
@@ -454,7 +490,11 @@ const handler = async (req: Request): Promise<Response> => {
               display: flex;
               align-items: center;
               gap: 8px;
-              flex-direction: row-reverse;
+              direction: rtl;
+            }
+            
+            .info-card h4 span {
+              order: -1;
             }
             
             .info-card p {
@@ -479,9 +519,13 @@ const handler = async (req: Request): Promise<Response> => {
               display: flex;
               align-items: center;
               gap: 10px;
-              flex-direction: row-reverse;
+              direction: rtl;
               padding-bottom: 15px;
               border-bottom: 2px solid #e8ecf1;
+            }
+            
+            .details-box h3 span {
+              order: -1;
             }
             
             .details-content {
@@ -508,7 +552,11 @@ const handler = async (req: Request): Promise<Response> => {
               border-radius: 12px;
               font-weight: 600;
               text-decoration: none;
-              flex-direction: row-reverse;
+              direction: rtl;
+            }
+            
+            .action-btn span {
+              order: -1;
             }
             
             .btn-phone {
