@@ -67,13 +67,6 @@ export default function OtherStudentServices() {
       description: 'دعم في حل الواجبات والتقارير الجامعية',
       href: '/research/homework-assistance',
       gradient: 'from-teal-500 to-cyan-500'
-    },
-    {
-      icon: Award,
-      title: 'قوالب خدمات ممتازة',
-      description: 'قوالب احترافية جاهزة لجميع أنواع الخدمات',
-      href: '/research/premium-templates',
-      gradient: 'from-yellow-500 to-amber-500'
     }
   ];
 

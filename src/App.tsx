@@ -127,7 +127,6 @@ import EbookCreation from "./pages/research/EbookCreation";
 import ResearchProposalService from "./pages/research/ResearchProposalService";
 import ReferencesProvision from "./pages/research/ReferencesProvision";
 import HomeworkAssistance from "./pages/research/HomeworkAssistance";
-import PremiumTemplates from "./pages/research/PremiumTemplates";
 import ResearchJourney from "./pages/research/ResearchJourney";
 import OrderForm from "./components/OrderForm";
 import TermsOfService from "./pages/TermsOfService";
@@ -201,7 +200,6 @@ const App = () => (
             <Route path="/research/research-proposal" element={<ResearchProposalService />} />
             <Route path="/research/references-provision" element={<ReferencesProvision />} />
             <Route path="/research/homework-assistance" element={<HomeworkAssistance />} />
-            <Route path="/research/premium-templates" element={<PremiumTemplates />} />
             
             <Route path="/research/journey" element={<ResearchJourney />} />
             
