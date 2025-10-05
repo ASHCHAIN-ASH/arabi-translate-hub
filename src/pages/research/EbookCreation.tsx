@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import Header from '@/components/Header';
 import { FloatingWhatsAppButton } from '@/components/FloatingWhatsAppButton';
-import { BookMarked, CheckCircle, ArrowRight, Palette, Sparkles, FileType, Eye, Download, Layout } from 'lucide-react';
+import { BookMarked, CheckCircle, ArrowRight, Award, Users, Clock, Target, Sparkles, Palette, Layers } from 'lucide-react';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -37,7 +37,7 @@ export default function EbookCreation() {
       const { error } = await supabase.functions.invoke('send-student-service-order', {
         body: {
           ...formData,
-          serviceTitle: 'عمل كتاب إلكتروني',
+          serviceTitle: 'صناعة الكتب الإلكترونية',
           serviceType: 'ebook-creation'
         }
       });
@@ -63,68 +63,180 @@ export default function EbookCreation() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-background to-muted/20">
+    <div className="min-h-screen bg-gradient-to-b from-background via-orange-50/30 dark:via-orange-950/10 to-background">
       <Header />
       <FloatingWhatsAppButton />
       
       <div className="container px-4 mx-auto pt-6">
-        <Button variant="ghost" onClick={() => navigate(-1)} className="gap-2 hover:gap-3 transition-all">
-          <ArrowRight className="w-4 h-4 rotate-180" />
-          رجوع
-        </Button>
+        <motion.div
+          initial={{ opacity: 0, x: -20 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.3 }}
+        >
+          <Button variant="ghost" onClick={() => navigate(-1)} className="gap-2 hover:gap-3 transition-all group">
+            <ArrowRight className="w-4 h-4 rotate-180 group-hover:scale-110 transition-transform" />
+            <span>رجوع</span>
+          </Button>
+        </motion.div>
       </div>
       
-      <section className="relative py-20 overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-green-500/10 via-emerald-500/10 to-green-600/10"></div>
+      {/* Hero Section */}
+      <section className="relative py-24 overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-br from-orange-500/10 via-amber-500/10 to-orange-600/10"></div>
+        <motion.div
+          className="absolute inset-0"
+          animate={{
+            background: [
+              'radial-gradient(circle at 20% 50%, rgba(249, 115, 22, 0.1) 0%, transparent 50%)',
+              'radial-gradient(circle at 80% 50%, rgba(245, 158, 11, 0.1) 0%, transparent 50%)',
+              'radial-gradient(circle at 20% 50%, rgba(249, 115, 22, 0.1) 0%, transparent 50%)',
+            ]
+          }}
+          transition={{ duration: 10, repeat: Infinity }}
+        />
         
         <div className="container relative z-10 px-4 mx-auto">
-          <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} className="max-w-4xl mx-auto text-center">
+          <motion.div 
+            initial={{ opacity: 0, y: 30 }} 
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            className="max-w-4xl mx-auto text-center"
+          >
             <motion.div
-              initial={{ scale: 0 }}
-              animate={{ scale: 1, rotate: 360 }}
-              transition={{ duration: 0.6 }}
-              className="inline-flex items-center justify-center w-20 h-20 mb-6 bg-gradient-to-br from-green-500 to-emerald-500 rounded-2xl shadow-lg"
+              initial={{ scale: 0, rotate: -180 }}
+              animate={{ scale: 1, rotate: 0 }}
+              transition={{ duration: 0.8, type: "spring" }}
+              className="inline-flex items-center justify-center w-24 h-24 mb-8 bg-gradient-to-br from-orange-500 to-amber-500 rounded-3xl shadow-2xl"
             >
-              <BookMarked className="w-12 h-12 text-white" />
+              <BookMarked className="w-14 h-14 text-white" />
             </motion.div>
 
-            <h1 className="text-4xl md:text-5xl font-bold mb-6 bg-gradient-to-r from-green-600 to-emerald-600 bg-clip-text text-transparent">
-              عمل كتاب إلكتروني
-            </h1>
+            <motion.h1 
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.2, duration: 0.6 }}
+              className="text-5xl md:text-6xl font-bold mb-6 bg-gradient-to-r from-orange-600 via-amber-600 to-orange-600 bg-clip-text text-transparent"
+            >
+              صناعة الكتب الإلكترونية
+            </motion.h1>
             
-            <p className="text-xl text-muted-foreground leading-relaxed">
-              تصميم وإنتاج كتب إلكترونية احترافية بتصاميم جذابة ومحتوى متميز
-            </p>
+            <motion.p 
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.4, duration: 0.6 }}
+              className="text-xl md:text-2xl text-muted-foreground leading-relaxed max-w-3xl mx-auto"
+            >
+              نحول أفكارك وأبحاثك إلى كتب إلكترونية احترافية بتصميم جذاب وتنسيق متقن
+            </motion.p>
+
+            <motion.div
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ delay: 0.6, duration: 0.6 }}
+              className="mt-8 flex flex-wrap items-center justify-center gap-6"
+            >
+              {[
+                { icon: Palette, text: 'تصميم احترافي' },
+                { icon: Layers, text: 'تنسيق متقن' },
+                { icon: Sparkles, text: 'جودة عالية' }
+              ].map((item, index) => (
+                <motion.div
+                  key={index}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.8 + index * 0.1 }}
+                  whileHover={{ scale: 1.05, y: -2 }}
+                  className="flex items-center gap-2 bg-white/80 dark:bg-card/80 backdrop-blur-sm px-5 py-3 rounded-full shadow-lg border border-orange-200 dark:border-orange-800"
+                >
+                  <item.icon className="w-5 h-5 text-orange-600" />
+                  <span className="font-medium text-sm">{item.text}</span>
+                </motion.div>
+              ))}
+            </motion.div>
           </motion.div>
         </div>
       </section>
 
-      <section className="py-16 bg-muted/30">
+      {/* Features Section */}
+      <section className="py-20 bg-muted/30">
         <div className="container px-4 mx-auto">
-          <motion.div initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} className="max-w-6xl mx-auto">
-            <h2 className="text-3xl font-bold text-center mb-12">ما نقدمه في إنشاء الكتب الإلكترونية</h2>
+          <motion.div 
+            initial={{ opacity: 0 }} 
+            whileInView={{ opacity: 1 }} 
+            viewport={{ once: true }}
+            className="max-w-6xl mx-auto"
+          >
+            <motion.div 
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              className="text-center mb-16"
+            >
+              <h2 className="text-4xl md:text-5xl font-bold mb-4">مميزات خدمة صناعة الكتب</h2>
+              <p className="text-xl text-muted-foreground">نحول محتواك إلى كتاب إلكتروني احترافي وجذاب</p>
+            </motion.div>
             
-            <div className="grid md:grid-cols-3 gap-6">
+            <div className="grid md:grid-cols-3 gap-8">
               {[
-                { icon: Palette, title: 'تصميم احترافي', description: 'تصاميم جذابة وعصرية للكتب' },
-                { icon: FileType, title: 'صيغ متعددة', description: 'PDF، EPUB، MOBI وصيغ أخرى' },
-                { icon: Layout, title: 'تنسيق متقن', description: 'تنسيق احترافي للنصوص والصور' },
-                { icon: Sparkles, title: 'محتوى متميز', description: 'كتابة وتحرير بمستوى عالي' },
-                { icon: Eye, title: 'معاينة تفاعلية', description: 'معاينة قبل النشر النهائي' },
-                { icon: Download, title: 'جاهز للنشر', description: 'ملفات جاهزة للنشر فوراً' }
+                { 
+                  icon: Palette, 
+                  title: 'تصميم جذاب ومميز', 
+                  description: 'تصميمات احترافية تناسب محتوى الكتاب وتجذب القارئ',
+                  color: 'from-orange-500 to-amber-500'
+                },
+                { 
+                  icon: Layers, 
+                  title: 'تنسيق احترافي', 
+                  description: 'تنسيق دقيق للنصوص والصور والعناصر بشكل متناسق',
+                  color: 'from-blue-500 to-cyan-500'
+                },
+                { 
+                  icon: Award, 
+                  title: 'جودة النشر', 
+                  description: 'مراعاة معايير النشر الإلكتروني والمطبوع',
+                  color: 'from-green-500 to-emerald-500'
+                },
+                { 
+                  icon: Clock, 
+                  title: 'إنجاز سريع', 
+                  description: 'تسليم الكتاب في الوقت المحدد مع المراجعات',
+                  color: 'from-purple-500 to-pink-500'
+                },
+                { 
+                  icon: CheckCircle, 
+                  title: 'صيغ متعددة', 
+                  description: 'توفير الكتاب بصيغ مختلفة (PDF, EPUB, MOBI)',
+                  color: 'from-teal-500 to-cyan-500'
+                },
+                { 
+                  icon: Users, 
+                  title: 'فريق متخصص', 
+                  description: 'مصممين ومنسقين محترفين في إعداد الكتب',
+                  color: 'from-indigo-500 to-purple-500'
+                }
               ].map((feature, index) => (
                 <motion.div
                   key={index}
-                  initial={{ opacity: 0, y: 20 }}
+                  initial={{ opacity: 0, y: 30 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
-                  transition={{ delay: index * 0.1 }}
-                  whileHover={{ y: -5 }}
+                  transition={{ delay: index * 0.1, duration: 0.5 }}
+                  whileHover={{ y: -8, scale: 1.02 }}
+                  className="group"
                 >
-                  <Card className="p-6 h-full border-0 shadow-lg hover:shadow-xl transition-all bg-card/80 backdrop-blur-sm">
-                    <feature.icon className="w-12 h-12 text-green-600 mb-4" />
-                    <h3 className="text-xl font-bold mb-2">{feature.title}</h3>
-                    <p className="text-muted-foreground">{feature.description}</p>
+                  <Card className="p-8 h-full border-0 shadow-xl hover:shadow-2xl transition-all duration-500 bg-card/80 backdrop-blur-sm relative overflow-hidden">
+                    <motion.div
+                      className={`absolute inset-0 opacity-0 group-hover:opacity-10 bg-gradient-to-br ${feature.color} transition-opacity duration-500`}
+                    />
+                    <motion.div
+                      whileHover={{ rotate: [0, -10, 10, 0], scale: 1.1 }}
+                      transition={{ duration: 0.5 }}
+                      className={`inline-flex p-4 rounded-2xl bg-gradient-to-br ${feature.color} mb-6 shadow-lg`}
+                    >
+                      <feature.icon className="w-8 h-8 text-white" />
+                    </motion.div>
+                    <h3 className="text-2xl font-bold mb-3">{feature.title}</h3>
+                    <p className="text-muted-foreground leading-relaxed">{feature.description}</p>
                   </Card>
                 </motion.div>
               ))}
@@ -133,14 +245,169 @@ export default function EbookCreation() {
         </div>
       </section>
 
-      <section className="py-16">
+      {/* Process Section */}
+      <section className="py-20 bg-gradient-to-br from-orange-50 to-amber-50 dark:from-orange-950/20 dark:to-amber-950/20">
+        <div className="container px-4 mx-auto">
+          <motion.div 
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="max-w-5xl mx-auto"
+          >
+            <div className="text-center mb-16">
+              <motion.div
+                initial={{ scale: 0.5, opacity: 0 }}
+                whileInView={{ scale: 1, opacity: 1 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5 }}
+                className="inline-block mb-4"
+              >
+                <span className="text-7xl">📖</span>
+              </motion.div>
+              <h2 className="text-4xl md:text-5xl font-bold mb-6 bg-gradient-to-r from-orange-600 to-amber-600 bg-clip-text text-transparent">
+                كيف نصنع كتابك الإلكتروني؟
+              </h2>
+              <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+                نتبع عملية احترافية لتحويل محتواك إلى كتاب إلكتروني متميز
+              </p>
+            </div>
+
+            <div className="grid md:grid-cols-2 gap-10 mb-16">
+              {[
+                {
+                  icon: '📝',
+                  title: 'مراجعة المحتوى',
+                  description: 'ندرس المحتوى المقدم ونحدد الهيكل العام والتصميم المناسب للكتاب',
+                  number: '01'
+                },
+                {
+                  icon: '🎨',
+                  title: 'التصميم والتنسيق',
+                  description: 'نصمم الغلاف والصفحات الداخلية بشكل احترافي مع تنسيق العناصر',
+                  number: '02'
+                },
+                {
+                  icon: '✏️',
+                  title: 'التحرير والإخراج',
+                  description: 'نقوم بالتحرير اللغوي والإخراج النهائي للكتاب بصيغ مختلفة',
+                  number: '03'
+                },
+                {
+                  icon: '✅',
+                  title: 'المراجعة والتسليم',
+                  description: 'نراجع الكتاب نهائياً ونسلمه بالصيغ المطلوبة مع إمكانية التعديل',
+                  number: '04'
+                }
+              ].map((step, index) => (
+                <motion.div
+                  key={index}
+                  initial={{ opacity: 0, x: index % 2 === 0 ? -50 : 50 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: index * 0.15, duration: 0.6 }}
+                  whileHover={{ scale: 1.03, y: -5 }}
+                  className="relative"
+                >
+                  <Card className="p-8 h-full bg-white dark:bg-card backdrop-blur-sm border-2 border-orange-200 dark:border-orange-800 shadow-xl hover:shadow-2xl transition-all duration-300 relative overflow-hidden">
+                    <div className="absolute top-4 right-4 text-6xl font-bold text-orange-100 dark:text-orange-900/30">{step.number}</div>
+                    <div className="flex items-start gap-6 relative z-10">
+                      <motion.div
+                        animate={{ 
+                          rotate: [0, 10, -10, 0],
+                          scale: [1, 1.1, 1]
+                        }}
+                        transition={{ duration: 3, repeat: Infinity, delay: index * 0.3 }}
+                        className="text-6xl flex-shrink-0"
+                      >
+                        {step.icon}
+                      </motion.div>
+                      <div>
+                        <h3 className="text-2xl font-bold mb-3 text-orange-700 dark:text-orange-400">{step.title}</h3>
+                        <p className="text-muted-foreground leading-relaxed text-lg">{step.description}</p>
+                      </div>
+                    </div>
+                  </Card>
+                  {index < 3 && (
+                    <motion.div
+                      initial={{ scale: 0, opacity: 0 }}
+                      whileInView={{ scale: 1, opacity: 1 }}
+                      viewport={{ once: true }}
+                      transition={{ delay: index * 0.15 + 0.4 }}
+                      className="hidden md:block absolute -bottom-5 left-1/2 transform -translate-x-1/2 text-4xl z-20"
+                    >
+                      ⬇️
+                    </motion.div>
+                  )}
+                </motion.div>
+              ))}
+            </div>
+
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6 }}
+              className="bg-gradient-to-r from-orange-600 via-amber-600 to-orange-600 text-white p-10 rounded-3xl shadow-2xl relative overflow-hidden"
+            >
+              <motion.div
+                className="absolute inset-0"
+                animate={{
+                  background: [
+                    'linear-gradient(45deg, rgba(255,255,255,0.1) 0%, transparent 100%)',
+                    'linear-gradient(135deg, transparent 0%, rgba(255,255,255,0.1) 100%)',
+                    'linear-gradient(45deg, rgba(255,255,255,0.1) 0%, transparent 100%)',
+                  ]
+                }}
+                transition={{ duration: 5, repeat: Infinity }}
+              />
+              <div className="relative z-10">
+                <div className="flex items-center gap-4 mb-6">
+                  <motion.span 
+                    animate={{ rotate: [0, 360] }}
+                    transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
+                    className="text-5xl"
+                  >
+                    📚
+                  </motion.span>
+                  <h3 className="text-3xl md:text-4xl font-bold">أنواع الكتب التي نصنعها</h3>
+                </div>
+                <div className="grid md:grid-cols-3 gap-5">
+                  {[
+                    'كتب أكاديمية', 
+                    'كتب تعليمية', 
+                    'روايات ومؤلفات', 
+                    'دلائل وإرشادات', 
+                    'تقارير بحثية', 
+                    'منشورات علمية'
+                  ].map((type, index) => (
+                    <motion.div
+                      key={index}
+                      initial={{ opacity: 0, scale: 0.5 }}
+                      whileInView={{ opacity: 1, scale: 1 }}
+                      viewport={{ once: true }}
+                      transition={{ delay: index * 0.1, duration: 0.4 }}
+                      whileHover={{ scale: 1.1, rotate: 2 }}
+                      className="bg-white/20 backdrop-blur-md px-6 py-4 rounded-xl text-center font-bold border-2 border-white/30 shadow-lg cursor-default"
+                    >
+                      {type}
+                    </motion.div>
+                  ))}
+                </div>
+              </div>
+            </motion.div>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* WhatsApp & Form Section */}
+      <section className="py-20">
         <div className="container px-4 mx-auto">
           <div className="max-w-4xl mx-auto">
             <motion.div 
               initial={{ opacity: 0, scale: 0.8 }}
               whileInView={{ opacity: 1, scale: 1 }}
               viewport={{ once: true }}
-              className="bg-gradient-to-br from-green-500/10 to-emerald-500/10 p-10 rounded-3xl border-2 border-green-300 mb-12 shadow-2xl"
+              className="bg-gradient-to-br from-orange-500/10 to-amber-500/10 p-10 rounded-3xl border-2 border-orange-300 mb-12 shadow-2xl"
             >
               <div className="flex items-center justify-center gap-3 mb-6">
                 <motion.div
@@ -159,7 +426,7 @@ export default function EbookCreation() {
                     <path d="M12 0C5.373 0 0 5.373 0 12c0 2.625.846 5.059 2.284 7.034L.784 23.456l4.568-1.455A11.952 11.952 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-2.149 0-4.16-.68-5.805-1.837l-.416-.268-3.124.996.998-3.064-.294-.431A9.918 9.918 0 012 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z" fill="#25D366"/>
                   </svg>
                 </motion.div>
-                <h3 className="text-3xl font-bold text-center bg-gradient-to-r from-green-600 to-emerald-600 bg-clip-text text-transparent">
+                <h3 className="text-3xl font-bold text-center bg-gradient-to-r from-orange-600 to-amber-600 bg-clip-text text-transparent">
                   للتواصل الفوري عبر واتساب
                 </h3>
                 <motion.div
@@ -196,7 +463,7 @@ export default function EbookCreation() {
                     whileTap={{ scale: 0.95 }}
                     className="relative group"
                   >
-                    <div className="bg-gradient-to-br from-green-500 to-emerald-600 text-white p-6 rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-300 overflow-hidden">
+                    <div className="bg-gradient-to-br from-orange-500 to-amber-600 text-white p-6 rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-300 overflow-hidden">
                       <motion.div
                         className="absolute inset-0 bg-white opacity-0 group-hover:opacity-10"
                         animate={{
@@ -306,7 +573,7 @@ export default function EbookCreation() {
                     />
                   </div>
 
-                  <Button type="submit" disabled={loading} className="w-full bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white py-6 text-lg font-bold">
+                  <Button type="submit" disabled={loading} className="w-full bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 text-white py-6 text-lg font-bold">
                     {loading ? 'جاري الإرسال...' : 'إرسال الطلب'}
                   </Button>
                 </form>
