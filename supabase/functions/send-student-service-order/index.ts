@@ -29,20 +29,20 @@ const handler = async (req: Request): Promise<Response> => {
 
     // WhatsApp numbers for different services
     const whatsappNumbers: Record<string, string> = {
-      'book-summarization': '+966500647447',
-      'assignment-execution': '+966500647447',
-      'ebook-creation': '+966500647447',
-      'research-proposal': '+966500647447',
-      'references-provision': '+966500647447',
-      'homework-assistance': '+966500647447',
-      'premium-templates': '+966500647447'
+      'book-summarization': '+966500776343',
+      'assignment-execution': '+966500776343',
+      'ebook-creation': '+966500776343',
+      'research-proposal': '+966559600824',
+      'references-provision': '+966559600824',
+      'homework-assistance': '+966559600824',
+      'premium-templates': '+966559600824'
     };
 
-    const whatsappNumber = whatsappNumbers[orderData.serviceType] || '+966500647447';
+    const whatsappNumber = whatsappNumbers[orderData.serviceType] || '+966500776343';
 
     // Email to client
     const clientEmail = await resend.emails.send({
-      from: "خدمات الطلاب <onboarding@resend.dev>",
+      from: "خدمات الطلاب <info@masteredupath.com>",
       to: [orderData.email],
       subject: `تأكيد طلب خدمة: ${orderData.serviceTitle}`,
       html: `
@@ -125,8 +125,8 @@ const handler = async (req: Request): Promise<Response> => {
 
     // Email to admin
     const adminEmail = await resend.emails.send({
-      from: "طلب خدمة جديد <onboarding@resend.dev>",
-      to: ["admin@masteredupath.com"],
+      from: "طلب خدمة جديد <info@masteredupath.com>",
+      to: ["info@masteredupath.com"],
       subject: `طلب خدمة جديد: ${orderData.serviceTitle}`,
       html: `
         <!DOCTYPE html>
