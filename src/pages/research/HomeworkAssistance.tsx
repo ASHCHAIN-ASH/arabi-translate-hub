@@ -26,8 +26,8 @@ export default function HomeworkAssistance() {
   });
 
   const whatsappNumbers = [
-    { number: '500647447', label: 'واتساب 1' },
-    { number: '555123456', label: 'واتساب 2' }
+    { number: '0500776343', label: 'واتساب 1' },
+    { number: '0559600824', label: 'واتساب 2' }
   ];
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -245,9 +245,29 @@ export default function HomeworkAssistance() {
               </p>
             </motion.div>
 
-            <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
-              <Card className="p-8 shadow-xl">
-                <h2 className="text-3xl font-bold mb-6 text-center">اطلب الخدمة الآن</h2>
+            <motion.div 
+              initial={{ opacity: 0, y: 20 }} 
+              whileInView={{ opacity: 1, y: 0 }} 
+              viewport={{ once: true }}
+              transition={{ duration: 0.5 }}
+            >
+              <Card className="p-8 shadow-2xl border-2 border-primary/20 bg-gradient-to-br from-card to-card/80 backdrop-blur-sm">
+                <motion.h2 
+                  initial={{ scale: 0.9, opacity: 0 }}
+                  animate={{ scale: 1, opacity: 1 }}
+                  transition={{ delay: 0.2 }}
+                  className="text-3xl font-bold mb-2 text-center bg-gradient-to-r from-primary to-primary/60 bg-clip-text text-transparent"
+                >
+                  اطلب الخدمة الآن
+                </motion.h2>
+                <motion.p
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ delay: 0.3 }}
+                  className="text-center text-muted-foreground mb-6"
+                >
+                  املأ النموذج وسنتواصل معك عبر الواتساب لإرفاق الملفات
+                </motion.p>
                 <form onSubmit={handleSubmit} className="space-y-6">
                   <div>
                     <Label htmlFor="fullName">الاسم الكامل *</Label>
@@ -303,13 +323,45 @@ export default function HomeworkAssistance() {
                       required
                       rows={5}
                       className="mt-2"
-                      placeholder="يرجى ذكر نوع الواجب، الأسئلة أو المتطلبات، الموعد النهائي، وأي ملفات أو تفاصيل أخرى مهمة..."
+                      placeholder="يرجى ذكر نوع الواجب، الأسئلة أو المتطلبات، الموعد النهائي، وأي تفاصيل أخرى مهمة..."
                     />
+                    <motion.div 
+                      initial={{ opacity: 0, x: -20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: 0.5 }}
+                      className="mt-2 flex items-start gap-2 p-3 bg-blue-50 dark:bg-blue-950/30 border border-blue-200 dark:border-blue-800 rounded-lg"
+                    >
+                      <svg className="w-5 h-5 text-blue-600 dark:text-blue-400 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                        <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd"/>
+                      </svg>
+                      <p className="text-sm text-blue-800 dark:text-blue-200">
+                        <strong>ملاحظة:</strong> إرفاق الملفات والمستندات سيتم عبر الواتساب بعد إرسال الطلب
+                      </p>
+                    </motion.div>
                   </div>
 
-                  <Button type="submit" disabled={loading} className="w-full bg-gradient-to-r from-teal-500 to-cyan-500 hover:from-teal-600 hover:to-cyan-600 text-white py-6 text-lg font-bold">
-                    {loading ? 'جاري الإرسال...' : 'إرسال الطلب'}
-                  </Button>
+                  <motion.div
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                  >
+                    <Button 
+                      type="submit" 
+                      disabled={loading} 
+                      className="w-full bg-gradient-to-r from-teal-500 to-cyan-500 hover:from-teal-600 hover:to-cyan-600 text-white py-6 text-lg font-bold shadow-lg hover:shadow-xl transition-all duration-300"
+                    >
+                      {loading ? (
+                        <span className="flex items-center justify-center gap-2">
+                          <svg className="animate-spin h-5 w-5" viewBox="0 0 24 24">
+                            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none"/>
+                            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"/>
+                          </svg>
+                          جاري الإرسال...
+                        </span>
+                      ) : (
+                        'إرسال الطلب'
+                      )}
+                    </Button>
+                  </motion.div>
                 </form>
               </Card>
             </motion.div>
