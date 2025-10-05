@@ -125,51 +125,145 @@ export default function OtherStudentServices() {
       </section>
 
       {/* Services Grid */}
-      <section className="py-16 bg-muted/30">
+      <section className="py-20 bg-gradient-to-b from-background via-muted/30 to-background">
         <div className="container px-4 mx-auto">
           <motion.div
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
             viewport={{ once: true }}
-            className="max-w-6xl mx-auto"
+            className="max-w-7xl mx-auto"
           >
-            <div className="flex items-center justify-center gap-2 mb-8">
-              <Sparkles className="w-5 h-5 text-primary" />
-              <h2 className="text-3xl font-bold text-center">الخدمات المتاحة</h2>
-              <Sparkles className="w-5 h-5 text-primary" />
+            <div className="flex items-center justify-center gap-3 mb-12">
+              <motion.div
+                animate={{ rotate: [0, 360] }}
+                transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
+              >
+                <Sparkles className="w-8 h-8 text-primary" />
+              </motion.div>
+              <h2 className="text-4xl md:text-5xl font-bold text-center bg-gradient-to-r from-primary via-secondary to-accent bg-clip-text text-transparent">
+                الخدمات المتاحة
+              </h2>
+              <motion.div
+                animate={{ rotate: [360, 0] }}
+                transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
+              >
+                <Sparkles className="w-8 h-8 text-primary" />
+              </motion.div>
             </div>
             
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
               {availableServices.map((service, index) => (
                 <motion.div
                   key={index}
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
+                  initial={{ opacity: 0, y: 50, scale: 0.9 }}
+                  whileInView={{ opacity: 1, y: 0, scale: 1 }}
                   viewport={{ once: true }}
-                  transition={{ delay: index * 0.1 }}
-                  whileHover={{ y: -5 }}
-                  className="cursor-pointer"
+                  transition={{ 
+                    delay: index * 0.1,
+                    duration: 0.5,
+                    type: "spring",
+                    stiffness: 100
+                  }}
+                  whileHover={{ 
+                    y: -10, 
+                    scale: 1.03,
+                    transition: { duration: 0.3 }
+                  }}
+                  className="cursor-pointer group"
                   onClick={() => navigate(service.href)}
                 >
-                  <Card className="p-6 h-full border-0 shadow-lg hover:shadow-xl transition-all bg-card/80 backdrop-blur-sm group">
+                  <Card className="relative h-full border-0 shadow-2xl hover:shadow-3xl transition-all duration-500 bg-card/90 backdrop-blur-md overflow-hidden">
+                    {/* Gradient Background */}
+                    <div className={`absolute inset-0 bg-gradient-to-br ${service.gradient} opacity-5 group-hover:opacity-10 transition-opacity duration-500`}></div>
+                    
+                    {/* Animated Border */}
                     <motion.div
-                      whileHover={{ scale: 1.1, rotate: 5 }}
-                      className={`w-14 h-14 bg-gradient-to-br ${service.gradient} rounded-xl flex items-center justify-center mb-4 shadow-md group-hover:shadow-lg transition-all`}
-                    >
-                      <service.icon className="w-8 h-8 text-white" />
-                    </motion.div>
-                    <h3 className="text-xl font-bold mb-2 group-hover:text-primary transition-colors">
-                      {service.title}
-                    </h3>
-                    <p className="text-muted-foreground">{service.description}</p>
-                    <div className="mt-4 flex items-center gap-2 text-primary font-semibold">
-                      <span>اعرف المزيد</span>
-                      <ArrowRight className="w-4 h-4" />
+                      className={`absolute inset-0 bg-gradient-to-r ${service.gradient} opacity-0 group-hover:opacity-20`}
+                      initial={false}
+                      animate={{ 
+                        backgroundPosition: ['0% 50%', '100% 50%', '0% 50%'],
+                      }}
+                      transition={{ 
+                        duration: 3, 
+                        repeat: Infinity,
+                        ease: "linear" 
+                      }}
+                    ></motion.div>
+
+                    <div className="relative p-8">
+                      {/* Icon with Animation */}
+                      <motion.div
+                        whileHover={{ 
+                          rotate: [0, -10, 10, -10, 0],
+                          scale: 1.1
+                        }}
+                        transition={{ duration: 0.5 }}
+                        className={`w-20 h-20 bg-gradient-to-br ${service.gradient} rounded-2xl flex items-center justify-center mb-6 shadow-xl group-hover:shadow-2xl transition-all duration-500`}
+                      >
+                        <service.icon className="w-10 h-10 text-white" />
+                      </motion.div>
+
+                      {/* Title */}
+                      <h3 className="text-2xl font-bold mb-3 group-hover:text-primary transition-colors duration-300">
+                        {service.title}
+                      </h3>
+
+                      {/* Description */}
+                      <p className="text-muted-foreground mb-6 leading-relaxed">
+                        {service.description}
+                      </p>
+
+                      {/* CTA Button */}
+                      <motion.div
+                        className={`flex items-center gap-3 px-6 py-3 bg-gradient-to-r ${service.gradient} rounded-xl text-white font-bold shadow-lg group-hover:shadow-2xl transition-all duration-300`}
+                        whileHover={{ x: 5 }}
+                      >
+                        <span className="text-lg">اطلب الخدمة الآن</span>
+                        <motion.div
+                          animate={{ x: [0, 5, 0] }}
+                          transition={{ 
+                            duration: 1.5, 
+                            repeat: Infinity,
+                            ease: "easeInOut"
+                          }}
+                        >
+                          <ArrowRight className="w-5 h-5" />
+                        </motion.div>
+                      </motion.div>
+
+                      {/* Decorative Elements */}
+                      <motion.div
+                        className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+                        animate={{ 
+                          scale: [1, 1.2, 1],
+                          rotate: [0, 180, 360]
+                        }}
+                        transition={{ 
+                          duration: 3, 
+                          repeat: Infinity,
+                          ease: "linear"
+                        }}
+                      >
+                        <Sparkles className={`w-6 h-6 text-primary`} />
+                      </motion.div>
                     </div>
                   </Card>
                 </motion.div>
               ))}
             </div>
+
+            {/* Bottom Decorative Text */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.8 }}
+              className="text-center mt-16"
+            >
+              <p className="text-xl text-muted-foreground">
+                ✨ خدمات متميزة بجودة عالمية وأسعار تنافسية ✨
+              </p>
+            </motion.div>
           </motion.div>
         </div>
       </section>
