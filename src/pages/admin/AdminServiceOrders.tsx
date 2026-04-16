@@ -710,6 +710,69 @@ const ServiceOrderCard = ({
             )}
           </div>
 
+          {/* Price Quote Section */}
+          {showPriceQuote && (
+            <motion.div
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: 'auto' }}
+              exit={{ opacity: 0, height: 0 }}
+              className="p-4 bg-primary/5 rounded-lg border border-primary/20 space-y-3"
+            >
+              <div className="flex items-center justify-between">
+                <h4 className="font-semibold text-primary flex items-center gap-2">
+                  <DollarSign className="w-4 h-4" />
+                  تحديد عرض السعر
+                </h4>
+                <Button variant="ghost" size="icon" className="h-7 w-7" onClick={() => setShowPriceQuote(false)}>
+                  <X className="w-4 h-4" />
+                </Button>
+              </div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div>
+                  <Label className="text-sm mb-1.5 block">السعر (ر.س)</Label>
+                  <Input
+                    type="number"
+                    min="0"
+                    step="0.01"
+                    value={quotePrice}
+                    onChange={(e) => setQuotePrice(e.target.value)}
+                    placeholder="أدخل السعر..."
+                    className="text-lg font-bold"
+                    dir="ltr"
+                  />
+                </div>
+                <div>
+                  <Label className="text-sm mb-1.5 block">ملاحظات (اختياري)</Label>
+                  <Textarea
+                    value={quoteNotes}
+                    onChange={(e) => setQuoteNotes(e.target.value)}
+                    placeholder="ملاحظات إضافية للعميل..."
+                    rows={2}
+                    className="resize-none"
+                  />
+                </div>
+              </div>
+              <div className="flex gap-2 justify-end">
+                <Button variant="outline" size="sm" onClick={() => setShowPriceQuote(false)}>
+                  إلغاء
+                </Button>
+                <Button 
+                  size="sm" 
+                  className="gap-2" 
+                  onClick={sendPriceQuote}
+                  disabled={sendingQuote || !quotePrice}
+                >
+                  {sendingQuote ? (
+                    <RefreshCw className="w-4 h-4 animate-spin" />
+                  ) : (
+                    <Send className="w-4 h-4" />
+                  )}
+                  إرسال عرض السعر للعميل
+                </Button>
+              </div>
+            </motion.div>
+          )}
+
           {/* Actions */}
           <div className="flex flex-wrap gap-2 pt-4 border-t">
             <Select
@@ -729,6 +792,16 @@ const ServiceOrderCard = ({
                 <SelectItem value="cancelled">ملغي</SelectItem>
               </SelectContent>
             </Select>
+            
+            <Button 
+              variant={showPriceQuote ? "default" : "outline"} 
+              size="sm" 
+              className="gap-2"
+              onClick={() => setShowPriceQuote(!showPriceQuote)}
+            >
+              <DollarSign className="w-4 h-4" />
+              عرض سعر
+            </Button>
             
             <Button variant="outline" size="sm">
               <Eye className="w-4 h-4 ml-2" />
