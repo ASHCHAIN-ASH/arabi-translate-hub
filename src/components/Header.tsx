@@ -211,7 +211,37 @@ const Header = () => {
                   </div>
 
                   {/* Mobile CTA */}
-                  <div className="p-4 border-t border-border/40">
+                  <div className="p-4 border-t border-border/40 space-y-2">
+                    {!authLoading && !user && (
+                      <div className="flex gap-2 mb-2">
+                        <Button variant="outline" className="flex-1 text-sm gap-1.5" asChild>
+                          <Link to="/login" onClick={() => setIsOpen(false)}>
+                            <LogIn className="h-4 w-4" />
+                            دخول
+                          </Link>
+                        </Button>
+                        <Button variant="outline" className="flex-1 text-sm gap-1.5" asChild>
+                          <Link to="/register" onClick={() => setIsOpen(false)}>
+                            <UserPlus className="h-4 w-4" />
+                            تسجيل
+                          </Link>
+                        </Button>
+                      </div>
+                    )}
+                    {!authLoading && user && (
+                      <div className="flex gap-2 mb-2">
+                        <Button variant="outline" className="flex-1 text-sm gap-1.5" asChild>
+                          <Link to="/client/dashboard" onClick={() => setIsOpen(false)}>
+                            <User className="h-4 w-4" />
+                            حسابي
+                          </Link>
+                        </Button>
+                        <Button variant="outline" className="flex-1 text-sm gap-1.5 text-destructive" onClick={() => { signOut(); setIsOpen(false); }}>
+                          <LogOut className="h-4 w-4" />
+                          خروج
+                        </Button>
+                      </div>
+                    )}
                     <Button className="w-full bg-gradient-to-r from-primary to-primary/90 shadow-primary/20 shadow-md" asChild>
                       <Link to="/order-now" className="flex items-center justify-center gap-2" onClick={() => setIsOpen(false)}>
                         اطلب خدمتك الآن
