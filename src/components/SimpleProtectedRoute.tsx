@@ -35,8 +35,9 @@ const SimpleProtectedRoute: React.FC<ProtectedRouteProps> = ({
     return <Navigate to={loginPath} state={{ from: location }} replace />;
   }
 
+  // Admin-only: non-admin gets redirected to client dashboard (not unauthorized)
   if (adminOnly && userRole !== 'admin') {
-    return <Navigate to="/unauthorized" replace />;
+    return <Navigate to="/dashboard" replace />;
   }
 
   if (requiredRole && userRole !== requiredRole && userRole !== 'admin') {

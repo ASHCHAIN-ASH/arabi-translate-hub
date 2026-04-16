@@ -14,15 +14,22 @@ const AdminLogin = () => {
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   
-  const { signIn, user, userRole } = useAuth();
+  const { signIn, user, userRole, loading: authLoading } = useAuth();
   const navigate = useNavigate();
 
-  // If already logged in as admin, redirect
+  // Redirect based on role once resolved
   React.useEffect(() => {
-    if (user && userRole === 'admin') {
-      navigate('/adminmaster');
+    if (authLoading) return;
+    if (!user) return;
+    
+    if (userRole === 'admin') {
+      navigate('/adminmaster', { replace: true });
+    } else if (userRole) {
+      // Non-admin user trying admin login → send to client dashboard
+      toast.error('هذا الحساب ليس حساب إدارة');
+      navigate('/dashboard', { replace: true });
     }
-  }, [user, userRole, navigate]);
+  }, [user, userRole, authLoading, navigate]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
