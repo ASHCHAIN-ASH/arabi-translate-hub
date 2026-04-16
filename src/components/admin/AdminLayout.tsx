@@ -13,6 +13,7 @@ import {
   BarChart3, Package, Ticket, UserPlus, Star
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import ChatFloatingButton from '@/components/chat/ChatFloatingButton';
 
 interface AdminLayoutProps {
   children: React.ReactNode;
@@ -83,6 +84,7 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
       items: [
         { name: 'إدارة الخدمات', href: '/adminmaster/services', icon: Briefcase },
         { name: 'الإشعارات البريدية', href: '/adminmaster/email-notifications', icon: Mail },
+        { name: 'المحادثات', href: '/adminmaster/chat', icon: Activity },
       ]
     },
     {
@@ -389,6 +391,9 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
           </div>
         </main>
       </div>
+
+      {/* Chat */}
+      {user?.id && <ChatFloatingButton userId={user.id} isAdmin />}
     </div>
   );
 };

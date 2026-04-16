@@ -17,6 +17,7 @@ import {
   X
 } from 'lucide-react';
 import { motion } from 'framer-motion';
+import ChatFloatingButton from '@/components/chat/ChatFloatingButton';
 
 interface ClientLayoutProps {
   children: React.ReactNode;
@@ -212,6 +213,9 @@ const ClientLayout: React.FC<ClientLayoutProps> = ({ children }) => {
           </main>
         </div>
       </div>
+
+      {/* Chat */}
+      {user?.id && <ChatFloatingButton userId={user.id} />}
     </div>
   );
 };
