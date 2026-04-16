@@ -1,36 +1,29 @@
 import { supabase } from '@/integrations/supabase/client';
 import { Contract, ContractStatus, ClientApproval, ServiceType } from '@/types/contract';
 
-// ==============================
-// Contract Service — Real Supabase Queries
-// Uses the `contracts` table
-// ==============================
-
 const mapRowToContract = (row: any): Contract => ({
   id: row.id,
   clientId: row.user_id,
-  clientName: row.client_name,
-  clientEmail: row.client_email,
-  clientPhone: row.client_phone,
-  serviceType: row.service_type as ServiceType,
+  clientName: row.client_name || row.title || '',
+  clientEmail: row.client_email || '',
+  clientPhone: row.client_phone || '',
+  serviceType: (row.service_type || 'other') as ServiceType,
   serviceDetails: {
-    title: row.service_description || '',
-    description: row.service_description || '',
-    specifications: row.service_details || {},
+    title: row.title || '',
+    description: row.content || '',
+    specifications: {},
     attachments: [],
-    estimatedDuration: row.contract_duration || '',
+    estimatedDuration: '',
     deliverables: [],
   },
-  contractContent: row.contract_content || '',
+  contractContent: row.content || '',
   status: row.status as ContractStatus,
   createdAt: row.created_at,
   updatedAt: row.updated_at,
-  approvedAt: row.client_approved_at || undefined,
-  clientSignature: row.signed_by_client || undefined,
-  digitalSignature: row.signed_by_company || undefined,
-  totalAmount: row.service_price,
-  paymentTerms: row.payment_terms || '',
-  deliveryDate: row.delivery_date || '',
+  approvedAt: row.signed_at || undefined,
+  totalAmount: 0,
+  paymentTerms: '',
+  deliveryDate: '',
   terms: [],
 });
 
@@ -38,23 +31,13 @@ export const createContract = async (contractData: Omit<Contract, 'id' | 'create
   const { data: user } = await supabase.auth.getUser();
   if (!user?.user) throw new Error('المستخدم غير مسجل الدخول');
 
-  const { data, error } = await supabase
+  const { data, error } = await (supabase as any)
     .from('contracts')
     .insert({
       user_id: user.user.id,
-      client_name: contractData.clientName,
-      client_email: contractData.clientEmail,
-      client_phone: contractData.clientPhone,
-      client_type: 'individual',
-      service_type: contractData.serviceType,
-      service_description: contractData.serviceDetails.title,
-      service_details: contractData.serviceDetails.specifications,
-      contract_content: contractData.contractContent,
-      service_price: contractData.totalAmount,
-      payment_terms: contractData.paymentTerms,
-      delivery_date: contractData.deliveryDate,
+      title: contractData.serviceDetails.title || contractData.clientName,
+      content: contractData.contractContent || contractData.serviceDetails.description,
       status: contractData.status || 'draft',
-      contract_number: `CNT-${Date.now()}`,
     })
     .select('id')
     .single();
@@ -94,16 +77,11 @@ export const updateContractStatus = async (
 ): Promise<void> => {
   const updateData: Record<string, any> = { status, updated_at: new Date().toISOString() };
   
-  if (status === 'approved') {
-    updateData.client_approved = true;
-    updateData.client_approved_at = new Date().toISOString();
-  }
   if (status === 'signed') {
-    updateData.company_approved = true;
-    updateData.company_approved_at = new Date().toISOString();
+    updateData.signed_at = new Date().toISOString();
   }
 
-  const { error } = await supabase
+  const { error } = await (supabase as any)
     .from('contracts')
     .update(updateData)
     .eq('id', contractId);
@@ -115,7 +93,7 @@ export const searchContracts = async (query: string): Promise<Contract[]> => {
   const { data, error } = await supabase
     .from('contracts')
     .select('*')
-    .or(`client_name.ilike.%${query}%,client_email.ilike.%${query}%,service_description.ilike.%${query}%`)
+    .or(`title.ilike.%${query}%,contract_number.ilike.%${query}%`)
     .order('created_at', { ascending: false });
 
   if (error) {
@@ -147,12 +125,10 @@ export const saveClientApproval = async (
     comments?: string;
   }
 ): Promise<void> => {
-  const { error } = await supabase
+  const { error } = await (supabase as any)
     .from('contracts')
     .update({
-      client_approved: true,
-      client_approved_at: new Date().toISOString(),
-      signed_by_client: approvalData.signature,
+      signed_at: new Date().toISOString(),
       status: 'approved',
       updated_at: new Date().toISOString(),
     })
