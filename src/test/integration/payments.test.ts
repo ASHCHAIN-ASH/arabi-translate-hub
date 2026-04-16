@@ -32,7 +32,7 @@ describe('Payments Integration', () => {
         invoice_id: 'inv-1',
         amount: 750,
         payment_method: 'bank_transfer',
-        status: 'completed',
+        status: 'completed' as const,
         payment_date: '2024-02-01',
       };
 
