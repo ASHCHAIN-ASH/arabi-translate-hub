@@ -67,11 +67,11 @@ interface TimelineEntry {
 
 const STATUS_CONFIG: Record<string, { label: string; color: string; icon: React.ReactNode; bgClass: string }> = {
   pending: { label: 'معلق', color: 'bg-gray-100 text-gray-700 border-gray-300', icon: <Clock className="w-3 h-3" />, bgClass: 'border-l-gray-400' },
-  received: { label: 'مستلم', color: 'bg-blue-50 text-blue-700 border-blue-300', icon: <Bell className="w-3 h-3" />, bgClass: 'border-l-blue-500' },
-  under_review: { label: 'تحت المراجعة', color: 'bg-amber-50 text-amber-700 border-amber-300', icon: <Eye className="w-3 h-3" />, bgClass: 'border-l-amber-500' },
+  confirmed: { label: 'مؤكد', color: 'bg-blue-50 text-blue-700 border-blue-300', icon: <Bell className="w-3 h-3" />, bgClass: 'border-l-blue-500' },
+  review: { label: 'تحت المراجعة', color: 'bg-amber-50 text-amber-700 border-amber-300', icon: <Eye className="w-3 h-3" />, bgClass: 'border-l-amber-500' },
   in_progress: { label: 'قيد التنفيذ', color: 'bg-purple-50 text-purple-700 border-purple-300', icon: <Zap className="w-3 h-3" />, bgClass: 'border-l-purple-500' },
   completed: { label: 'مكتمل', color: 'bg-green-50 text-green-700 border-green-300', icon: <CheckCircle className="w-3 h-3" />, bgClass: 'border-l-green-500' },
-  delivered: { label: 'تم التسليم', color: 'bg-emerald-50 text-emerald-700 border-emerald-300', icon: <CheckCircle className="w-3 h-3" />, bgClass: 'border-l-emerald-600' },
+  refunded: { label: 'مسترد', color: 'bg-orange-50 text-orange-700 border-orange-300', icon: <DollarSign className="w-3 h-3" />, bgClass: 'border-l-orange-500' },
   cancelled: { label: 'ملغي', color: 'bg-red-50 text-red-700 border-red-300', icon: <X className="w-3 h-3" />, bgClass: 'border-l-red-500' },
 };
 
@@ -258,9 +258,9 @@ const AdminServiceOrders = () => {
 
   const stats = {
     total: orders.length,
-    active: orders.filter(o => !['delivered', 'cancelled', 'completed'].includes(o.current_status)).length,
-    completed: orders.filter(o => ['delivered', 'completed'].includes(o.current_status)).length,
-    pending: orders.filter(o => ['pending', 'received', 'under_review'].includes(o.current_status)).length,
+    active: orders.filter(o => !['completed', 'cancelled', 'refunded'].includes(o.current_status)).length,
+    completed: orders.filter(o => o.current_status === 'completed').length,
+    pending: orders.filter(o => ['pending', 'confirmed', 'review'].includes(o.current_status)).length,
     totalRevenue: orders.reduce((sum, o) => sum + (o.total_amount || 0), 0),
   };
 
