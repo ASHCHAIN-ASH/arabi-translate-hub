@@ -57,7 +57,7 @@ const AdminDashboard = () => {
         <div className="flex flex-col items-center justify-center min-h-[60vh] gap-4">
           <AlertTriangle className="w-8 h-8 text-destructive" />
           <p className="text-sm text-muted-foreground">{error || 'لا توجد بيانات'}</p>
-          <Button onClick={handleRefresh} variant="outline" size="sm"><RefreshCw className="w-4 h-4 ml-2" /> إعادة</Button>
+          <Button onClick={handleRefresh} variant="outline" size="sm"><RefreshCw className="w-4 h-4 me-2" /> إعادة</Button>
         </div>
       </AdminLayout>
     );
@@ -212,7 +212,7 @@ const AdminDashboard = () => {
                       <div key={i} className="flex items-center gap-1.5 text-xs">
                         <div className="w-2 h-2 rounded-full flex-shrink-0" style={{ backgroundColor: CHART_COLORS[i] }} />
                         <span className="text-muted-foreground">{item.name}</span>
-                        <span className="font-semibold text-foreground mr-auto">{item.value}%</span>
+                        <span className="font-semibold text-foreground ms-auto">{item.value}%</span>
                       </div>
                     ))}
                   </div>
@@ -256,7 +256,7 @@ const AdminDashboard = () => {
                     </div>
                     <p className="text-xs text-muted-foreground truncate">{order.serviceName}</p>
                   </div>
-                  <div className="text-start flex-shrink-0 mr-3">
+                  <div className="text-start flex-shrink-0 ms-3">
                     <p className="text-sm font-bold">{fmt(order.total)} ر.س</p>
                     <p className="text-[10px] text-muted-foreground">{order.createdAt}</p>
                   </div>
