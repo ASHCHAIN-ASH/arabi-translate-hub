@@ -51,11 +51,28 @@ export class ClientDashboardService {
         .limit(1)
         .maybeSingle();
 
+      // Calculate real avg execution time from completed orders
+      let avgExecutionTime = '-';
+      const { data: completedOrders } = await supabase.from('service_orders')
+        .select('created_at, updated_at')
+        .eq('user_id', userId)
+        .eq('current_status', 'completed')
+        .limit(20);
+
+      if (completedOrders && completedOrders.length > 0) {
+        const totalDays = completedOrders.reduce((sum, o) => {
+          const diff = new Date(o.updated_at).getTime() - new Date(o.created_at).getTime();
+          return sum + Math.max(1, Math.round(diff / (1000 * 60 * 60 * 24)));
+        }, 0);
+        const avg = Math.round(totalDays / completedOrders.length);
+        avgExecutionTime = `${avg} أيام`;
+      }
+
       return {
         totalOrders: totalOrdersCount || 0,
         unpaidInvoices: unpaidInvoicesCount || 0,
         lastPayment: lastPaymentData?.amount || 0,
-        avgExecutionTime: '5 أيام',
+        avgExecutionTime,
         pendingOrders: pendingOrdersCount || 0
       };
     } catch (error) {
