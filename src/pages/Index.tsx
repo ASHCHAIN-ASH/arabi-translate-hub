@@ -1,4 +1,4 @@
-import { Suspense, lazy, memo } from "react";
+import { Suspense, lazy, memo, useState } from "react";
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -15,6 +15,8 @@ import {
 } from "lucide-react";
 import { UNIFIED_STATS, STATS_LABELS } from "@/constants/academicStats";
 import { InstitutionalPartnershipBanner } from "@/components/InstitutionalPartnershipBanner";
+import { FloatingWhatsAppButton } from "@/components/FloatingWhatsAppButton";
+import Footer from "@/components/Footer";
 
 // Import academic service images
 import academicTranslationImg from "@/assets/academic-service-translation.jpg";
@@ -904,6 +906,9 @@ const Index = () => {
           </motion.div>
         </div>
       </section>
+
+      <Footer />
+      <FloatingWhatsAppButton />
     </div>
   );
 };
