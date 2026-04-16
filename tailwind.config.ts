@@ -19,13 +19,13 @@ export default {
 		},
 		extend: {
 			fontFamily: {
-				'sans': ['Noto Sans Arabic', 'Inter', 'system-ui', 'sans-serif'],
-				'noto-arabic': ['Noto Sans Arabic', 'Inter', 'sans-serif'],
-				'inter': ['Inter', 'Noto Sans Arabic', 'sans-serif'],
-				'arabic-title': ['Noto Sans Arabic', 'Inter', 'sans-serif'],
-				'arabic-body': ['Noto Sans Arabic', 'Inter', 'sans-serif'],
-				'academic': ['Noto Sans Arabic', 'Inter', 'sans-serif'],
-				'academic-title': ['Noto Sans Arabic', 'Inter', 'sans-serif'],
+				'sans': ['Tajawal', 'Inter', 'system-ui', 'sans-serif'],
+				'tajawal': ['Tajawal', 'Inter', 'sans-serif'],
+				'inter': ['Inter', 'Tajawal', 'sans-serif'],
+				'arabic-title': ['Tajawal', 'Inter', 'sans-serif'],
+				'arabic-body': ['Tajawal', 'Inter', 'sans-serif'],
+				'academic': ['Tajawal', 'Inter', 'sans-serif'],
+				'academic-title': ['Tajawal', 'Inter', 'sans-serif'],
 			},
 			colors: {
 				border: 'hsl(var(--border))',
