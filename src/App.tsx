@@ -316,6 +316,11 @@ const App = () => (
                 <AdminTransactions />
               </SimpleProtectedRoute>
             } />
+            <Route path="/adminmaster/financial" element={
+              <SimpleProtectedRoute adminOnly>
+                <AdminFinancial />
+              </SimpleProtectedRoute>
+            } />
             <Route path="/adminmaster/users" element={
               <SimpleProtectedRoute adminOnly>
                 <AdminUsers />
