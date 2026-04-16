@@ -48,11 +48,11 @@ const SpinTheWheel = () => {
       const userIdentifier = getUserIdentifier();
       const today = new Date().toISOString().split('T')[0];
 
-      const { data, error } = await supabase
-        .from('spin_attempts')
+      const { data, error } = await (supabase
+        .from('spin_attempts') as any)
         .select('*')
-        .eq('user_identifier', userIdentifier)
-        .eq('attempt_date', today)
+        .eq('email', userIdentifier)
+        .gte('created_at', today)
         .maybeSingle();
 
       if (error && error.code !== 'PGRST116') {

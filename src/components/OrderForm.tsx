@@ -81,27 +81,10 @@ const OrderForm: React.FC<OrderFormProps> = ({ selectedService, onSuccess }) => 
   const loadServices = async () => {
     try {
       setLoading(true);
-      const { data, error } = await supabase
-        .from('services')
-        .select(`
-          id,
-          name_ar,
-          name_en,
-          description_ar,
-          unit_type,
-          min_units,
-          max_units,
-          base_price,
-          price_per_unit,
-          delivery_time_days,
-          rush_delivery_available,
-          service_categories (
-            name_ar,
-            color
-          )
-        `)
-        .eq('is_active', true)
-        .eq('show_to_clients', true);
+      const { data, error } = await (supabase
+        .from('services') as any)
+        .select('*')
+        .eq('is_active', true);
 
       if (error) throw error;
       setServices(data || []);
@@ -184,24 +167,14 @@ const OrderForm: React.FC<OrderFormProps> = ({ selectedService, onSuccess }) => 
       const deliveryTime = calculateDeliveryTime();
       
       // Create order
-      const { data: orderData, error: orderError } = await supabase
-        .from('service_orders')
+      const { data: orderData, error: orderError } = await (supabase
+        .from('service_orders') as any)
         .insert({
           tracking_id: trackingId,
           service_id: formData.service_id,
-          client_name: formData.client_name,
-          client_email: formData.client_email,
-          client_phone: formData.client_phone,
-          title: formData.title,
-          description: formData.description,
-          requirements: formData.requirements,
-          quantity: formData.quantity,
-          unit_type: service?.unit_type || 'page',
-          estimated_price: estimatedPrice,
-          rush_delivery: formData.rush_delivery,
-          expected_delivery: new Date(Date.now() + (deliveryTime * 24 * 60 * 60 * 1000)).toISOString().split('T')[0],
-          additional_notes: formData.additional_notes,
-          current_status: 'received'
+          service_name: formData.title,
+          notes: formData.description,
+          current_status: 'pending'
         })
         .select()
         .single();
@@ -228,17 +201,13 @@ const OrderForm: React.FC<OrderFormProps> = ({ selectedService, onSuccess }) => 
       }
 
       // Create initial timeline entry
-      await supabase
-        .from('service_order_timeline')
-        .insert({
+      await (supabase
+        .from('service_order_timeline') as any)
+        .insert([{
           order_id: orderData.id,
-          title: 'تم استلام الطلب',
-          description: 'تم استلام طلبكم بنجاح وسيتم مراجعته قريباً',
-          status: 'received',
-          actor_type: 'system',
-          actor_name: 'النظام',
-          completed_date: new Date().toISOString().split('T')[0]
-        });
+          status: 'pending',
+          note: 'تم استلام الطلب بنجاح'
+        }]);
 
       toast({
         title: "تم إرسال الطلب بنجاح! 🎉",

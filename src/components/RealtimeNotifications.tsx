@@ -12,10 +12,10 @@ interface Notification {
   title: string;
   message: string;
   type: 'info' | 'success' | 'warning' | 'error';
-  category: string;
+  category?: string;
   read_at: string | null;
   created_at: string;
-  metadata: any;
+  metadata?: any;
 }
 
 interface RealtimeNotificationsProps {
@@ -70,10 +70,9 @@ const RealtimeNotifications: React.FC<RealtimeNotificationsProps> = ({ userEmail
 
   const loadNotifications = async () => {
     try {
-      const { data, error } = await supabase
-        .from('user_notifications')
+      const { data, error } = await (supabase
+        .from('user_notifications') as any)
         .select('*')
-        .or(`user_email.eq.${userEmail || 'all_clients'},user_email.eq.all_clients`)
         .order('created_at', { ascending: false })
         .limit(50);
 

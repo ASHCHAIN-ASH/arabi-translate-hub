@@ -20,13 +20,15 @@ import { Separator } from "@/components/ui/separator";
 
 interface EmailTemplate {
   id: string;
-  template_key: string;
-  subject_template: string;
-  html_template: string;
+  name: string;
+  subject: string;
+  body: string;
   is_active: boolean;
   variables?: any;
-  created_at: string;
-  category?: string;
+  template_key?: string;
+  subject_template?: string;
+  html_template?: string;
+  [key: string]: any;
 }
 
 interface SmartFormData {

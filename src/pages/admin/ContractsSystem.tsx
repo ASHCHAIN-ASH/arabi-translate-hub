@@ -87,16 +87,16 @@ const ContractsSystem = () => {
 
       if (error) throw error;
 
-      const formattedContracts = data?.map(contract => ({
+      const formattedContracts = data?.map((contract: any) => ({
         id: contract.id,
         contract_no: contract.contract_number,
-        client_name: contract.client_name,
-        service_type: contract.service_type,
-        total_amount: contract.service_price || 0,
-        currency: contract.currency || 'SAR',
+        client_name: contract.title || '',
+        service_type: contract.content || '',
+        total_amount: 0,
+        currency: 'SAR',
         status: contract.status || 'draft',
         created_at: contract.created_at,
-        pdf_path: contract.contract_pdf_url
+        pdf_path: null
       })) || [];
 
       setContracts(formattedContracts);
@@ -110,15 +110,15 @@ const ContractsSystem = () => {
 
   const loadClients = async () => {
     try {
-      const { data, error } = await supabase
-        .from('clients')
-        .select('id, display_name')
+      const { data, error } = await (supabase
+        .from('customers') as any)
+        .select('id, name')
         .order('created_at', { ascending: false });
 
       if (error) throw error;
-      const formattedClients = data?.map(client => ({
+      const formattedClients = data?.map((client: any) => ({
         id: client.id,
-        full_name: client.display_name || 'غير محدد'
+        full_name: client.name || 'غير محدد'
       })) || [];
       setClients(formattedClients);
     } catch (error) {
@@ -128,9 +128,8 @@ const ContractsSystem = () => {
 
   const generateContractNumber = async () => {
     try {
-      const { data, error } = await supabase.rpc('next_contract_number');
-      if (error) throw error;
-      setContractNumber(data || `MUP-${new Date().getFullYear()}-0001`);
+      const contractNum = `MUP-${new Date().getFullYear()}-${String(Math.floor(Math.random() * 9999)).padStart(4, '0')}`;
+      setContractNumber(contractNum);
     } catch (error) {
       console.error('Error generating contract number:', error);
       setContractNumber(`MUP-${new Date().getFullYear()}-0001`);
@@ -189,8 +188,8 @@ const ContractsSystem = () => {
 
       console.log('Saving contract data:', contractData);
 
-      const { error, data } = await supabase
-        .from('contracts')
+      const { error, data } = await (supabase
+        .from('contracts') as any)
         .insert([contractData])
         .select();
 

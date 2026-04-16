@@ -35,29 +35,21 @@ export class ClientDashboardService {
   static async getClientStats(userId: string): Promise<ClientStats> {
     try {
       // إجمالي الطلبات
-      const { count: totalOrdersCount } = await supabase
-        .from('contracts')
-        .select('*', { count: 'exact', head: true })
+      const { count: totalOrdersCount } = await (supabase as any).from('contracts').select('*', { count: 'exact', head: true })
         .eq('user_id', userId);
 
       // الطلبات قيد المعالجة
-      const { count: pendingOrdersCount } = await supabase
-        .from('contracts')
-        .select('*', { count: 'exact', head: true })
+      const { count: pendingOrdersCount } = await (supabase as any).from('contracts').select('*', { count: 'exact', head: true })
         .eq('user_id', userId)
         .in('status', ['draft', 'pending']);
 
       // الفواتير غير المدفوعة
-      const { count: unpaidInvoicesCount } = await supabase
-        .from('invoices')
-        .select('*', { count: 'exact', head: true })
+      const { count: unpaidInvoicesCount } = await (supabase as any).from('invoices').select('*', { count: 'exact', head: true })
         .eq('user_id', userId)
-        .neq('payment_status', 'paid');
+        .neq('status', 'paid');
 
       // آخر دفعة
-      const { data: lastPaymentData } = await supabase
-        .from('payment_transactions')
-        .select('amount')
+      const { data: lastPaymentData } = await (supabase as any).from('payment_transactions').select('amount')
         .eq('user_id', userId)
         .eq('status', 'COMPLETED')
         .order('created_at', { ascending: false })
@@ -80,9 +72,7 @@ export class ClientDashboardService {
   // أحدث طلبات العميل
   static async getClientOrders(userId: string): Promise<ClientOrder[]> {
     try {
-      const { data, error } = await supabase
-        .from('contracts')
-        .select(`
+      const { data, error } = await (supabase as any).from('contracts').select(`
           id,
           contract_number,
           service_type,
@@ -101,14 +91,14 @@ export class ClientDashboardService {
       return data?.map(order => ({
         id: order.id,
         orderNumber: order.contract_number,
-        service: order.service_type,
-        title: order.service_description || order.service_type,
+        service: order.title || '',
+        title: order.content || order.title || '',
         status: this.translateContractStatus(order.status),
-        total: order.service_price,
+        total: 0,
         date: new Date(order.created_at).toLocaleDateString('ar-SA'),
-        priority: this.calculatePriority(order.service_price),
+        priority: this.calculatePriority(0),
         progress: this.calculateProgress(order.status),
-        serviceType: order.service_type
+        serviceType: order.title || ''
       })) || [];
     } catch (error) {
       console.error('خطأ في جلب طلبات العميل:', error);
@@ -119,9 +109,7 @@ export class ClientDashboardService {
   // فواتير العميل
   static async getClientInvoices(userId: string): Promise<ClientInvoice[]> {
     try {
-      const { data, error } = await supabase
-        .from('invoices')
-        .select('*')
+      const { data, error } = await (supabase as any).from('invoices').select('*')
         .eq('user_id', userId)
         .order('created_at', { ascending: false })
         .limit(10);
@@ -131,10 +119,10 @@ export class ClientDashboardService {
       return data?.map(invoice => ({
         id: invoice.id,
         invoiceNumber: invoice.invoice_number,
-        amount: invoice.amount,
-        status: invoice.payment_status,
+        amount: (invoice.total_amount || 0),
+        status: invoice.status,
         dueDate: invoice.due_date ? new Date(invoice.due_date).toLocaleDateString('ar-SA') : '',
-        issueDate: new Date(invoice.issue_date).toLocaleDateString('ar-SA')
+        issueDate: new Date(invoice.created_at).toLocaleDateString('ar-SA')
       })) || [];
     } catch (error) {
       console.error('خطأ في جلب فواتير العميل:', error);
@@ -145,9 +133,7 @@ export class ClientDashboardService {
   // آخر المدفوعات
   static async getClientPayments(userId: string, limit = 5) {
     try {
-      const { data, error } = await supabase
-        .from('payment_transactions')
-        .select('*')
+      const { data, error } = await (supabase as any).from('payment_transactions').select('*')
         .eq('user_id', userId)
         .order('created_at', { ascending: false })
         .limit(limit);
@@ -156,13 +142,13 @@ export class ClientDashboardService {
 
       return data?.map(payment => ({
         id: payment.id,
-        transactionId: payment.transaction_id,
+        transactionId: payment.reference,
         amount: payment.amount,
-        currency: payment.currency,
+        currency: 'SAR',
         status: payment.status,
-        paymentMethod: payment.payment_method,
+        paymentMethod: payment.type,
         date: new Date(payment.created_at).toLocaleDateString('ar-SA'),
-        description: payment.description || payment.offer_title
+        description: payment.description || ''
       })) || [];
     } catch (error) {
       console.error('خطأ في جلب مدفوعات العميل:', error);
@@ -173,9 +159,7 @@ export class ClientDashboardService {
   // التذاكر النشطة للعميل
   static async getClientTickets(userId: string) {
     try {
-      const { data, error } = await supabase
-        .from('tickets')
-        .select('*')
+      const { data, error } = await (supabase as any).from('tickets').select('*')
         .eq('user_id', userId)
         .neq('status', 'closed')
         .order('created_at', { ascending: false })
@@ -186,7 +170,7 @@ export class ClientDashboardService {
       return data?.map(ticket => ({
         id: ticket.id,
         ticketNumber: ticket.ticket_number,
-        title: ticket.title,
+        title: ticket.subject,
         description: ticket.description,
         status: this.translateTicketStatus(ticket.status),
         priority: ticket.priority,

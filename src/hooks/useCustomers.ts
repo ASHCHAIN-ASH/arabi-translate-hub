@@ -4,14 +4,12 @@ import { supabase } from '@/integrations/supabase/client';
 export interface Customer {
   id: string;
   user_id?: string;
-  full_name: string;
-  email: string;
+  name: string;
+  email?: string;
   phone?: string;
-  status: 'active' | 'inactive' | 'blocked';
-  email_verified: boolean;
-  phone_verified: boolean;
-  last_login_at?: string;
-  profile_data?: any;
+  company?: string;
+  notes?: string;
+  status: string;
   created_at: string;
   updated_at: string;
 }

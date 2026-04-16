@@ -34,7 +34,7 @@ const NotificationCenter: React.FC = () => {
       .on('postgres_changes', {
         event: 'INSERT',
         schema: 'public',
-        table: 'notifications',
+        table: 'user_notifications',
         filter: `user_id=eq.${user.id}`
       }, (payload) => {
         setNotifications(prev => [payload.new as Notification, ...prev]);
@@ -48,12 +48,12 @@ const NotificationCenter: React.FC = () => {
     if (!user?.id) return;
     try {
       const { data } = await supabase
-        .from('notifications')
+        .from('user_notifications')
         .select('*')
         .eq('user_id', user.id)
         .order('created_at', { ascending: false })
         .limit(20);
-      if (data) setNotifications(data as Notification[]);
+      if (data) setNotifications(data.map((n: any) => ({ ...n, is_read: !!n.read_at })) as Notification[]);
     } catch (err) {
       console.error('Error loading notifications:', err);
     }
@@ -61,7 +61,7 @@ const NotificationCenter: React.FC = () => {
 
   const markAsRead = async (id: string) => {
     try {
-      await supabase.from('notifications').update({ is_read: true } as any).eq('id', id);
+      await supabase.from('user_notifications').update({ read_at: new Date().toISOString() } as any).eq('id', id);
       setNotifications(prev => prev.map(n => n.id === id ? { ...n, is_read: true } : n));
     } catch (err) {
       console.error(err);
@@ -71,7 +71,7 @@ const NotificationCenter: React.FC = () => {
   const markAllAsRead = async () => {
     if (!user?.id) return;
     try {
-      await supabase.from('notifications').update({ is_read: true } as any).eq('user_id', user.id).eq('is_read', false);
+      await supabase.from('user_notifications').update({ read_at: new Date().toISOString() } as any).eq('user_id', user.id).is('read_at', null);
       setNotifications(prev => prev.map(n => ({ ...n, is_read: true })));
     } catch (err) {
       console.error(err);

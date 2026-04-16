@@ -29,6 +29,7 @@ import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 
 interface ServiceCategory {
+  [key: string]: any;
   id: string;
   name_ar: string;
   name_en: string;
@@ -41,6 +42,7 @@ interface ServiceCategory {
 }
 
 interface Service {
+  [key: string]: any;
   id: string;
   category_id: string;
   name_ar: string;
@@ -91,35 +93,21 @@ const Services = () => {
     try {
       setLoading(true);
       
-      // Load categories
-      const { data: categoriesData, error: categoriesError } = await supabase
-        .from('service_categories')
+      const { data: categoriesData, error: categoriesError } = await (supabase
+        .from('service_categories') as any)
         .select('*')
-        .eq('is_active', true)
         .order('sort_order', { ascending: true });
 
-      // Load services with categories (only show to clients)
-      const { data: servicesData, error: servicesError } = await supabase
-        .from('services')
-        .select(`
-          *,
-          service_categories (
-            id,
-            name_ar,
-            name_en,
-            icon,
-            color
-          )
-        `)
-        .eq('is_active', true)
-        .eq('show_to_clients', true)
-        .order('sort_order', { ascending: true });
+      const { data: servicesData, error: servicesError } = await (supabase
+        .from('services') as any)
+        .select('*')
+        .eq('is_active', true);
 
       if (categoriesError) throw categoriesError;
       if (servicesError) throw servicesError;
 
-      setCategories(categoriesData || []);
-      setServices((servicesData || []) as Service[]);
+      setCategories((categoriesData || []) as ServiceCategory[]);
+      setServices((servicesData || []) as any);
     } catch (error) {
       console.error('Error loading data:', error);
       toast({

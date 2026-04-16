@@ -95,11 +95,11 @@ const AdminCustomers = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [newStatus, setNewStatus] = useState('');
   const [statusReason, setStatusReason] = useState('');
-  const [editFormData, setEditFormData] = useState({ full_name: '', phone: '' });
+  const [editFormData, setEditFormData] = useState({ name: '', phone: '' });
 
   // تصفية العملاء
   const filteredCustomers = customers.filter(customer => {
-    const matchesSearch = customer.full_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    const matchesSearch = customer.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          customer.email.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesStatus = statusFilter === 'all' || customer.status === statusFilter;
     return matchesSearch && matchesStatus;
@@ -137,7 +137,7 @@ const AdminCustomers = () => {
   // الحصول على شارة التحقق
   const getVerificationBadge = (customer: Customer) => {
     const badges = [];
-    if (customer.email_verified) {
+    if (false) {
       badges.push(
         <Badge key="email" variant="outline" className="text-xs bg-primary/10 text-primary border-primary/20">
           <Mail className="w-3 h-3 ml-1" />
@@ -145,7 +145,7 @@ const AdminCustomers = () => {
         </Badge>
       );
     }
-    if (customer.phone_verified) {
+    if (false) {
       badges.push(
         <Badge key="phone" variant="outline" className="text-xs bg-accent/10 text-accent-foreground border-accent/20">
           <Phone className="w-3 h-3 ml-1" />
@@ -180,14 +180,14 @@ const AdminCustomers = () => {
     const csvContent = [
       headers.join(','),
       ...filteredCustomers.map(customer => [
-        customer.full_name,
+        customer.name,
         customer.email,
         customer.phone || 'غير محدد',
         customer.status === 'active' ? 'نشط' : customer.status === 'blocked' ? 'محظور' : 'غير نشط',
-        customer.email_verified ? 'نعم' : 'لا',
-        customer.phone_verified ? 'نعم' : 'لا',
+        false ? 'نعم' : 'لا',
+        false ? 'نعم' : 'لا',
         new Date(customer.created_at).toLocaleDateString('ar-SA'),
-        customer.last_login_at ? new Date(customer.last_login_at).toLocaleDateString('ar-SA') : 'لم يدخل بعد'
+        customer.updated_at ? new Date(customer.updated_at).toLocaleDateString('ar-SA') : 'لم يدخل بعد'
       ].join(','))
     ].join('\n');
 
@@ -254,7 +254,7 @@ const AdminCustomers = () => {
       if (result.success) {
         toast.success('تم تحديث بيانات العميل بنجاح');
         setEditModal({ isOpen: false, customer: null });
-        setEditFormData({ full_name: '', phone: '' });
+        setEditFormData({ name: '', phone: '' });
       } else {
         toast.error(result.message || 'فشل في تحديث البيانات');
       }
@@ -265,7 +265,7 @@ const AdminCustomers = () => {
 
   // التعامل مع حذف العميل
   const handleDeleteCustomer = async (customer: Customer) => {
-    if (!confirm(`هل أنت متأكد من حذف العميل ${customer.full_name}؟`)) return;
+    if (!confirm(`هل أنت متأكد من حذف العميل ${customer.name}؟`)) return;
 
     try {
       const result = await deleteCustomer(customer.id);
@@ -605,7 +605,7 @@ const AdminCustomers = () => {
                             </div>
                             <div className="flex-1 min-w-0">
                               <div className="font-medium text-foreground text-sm mb-0.5 truncate">
-                                {customer.full_name}
+                                {customer.name}
                               </div>
                               <div className="text-xs text-muted-foreground flex items-center gap-1 truncate">
                                 <Mail className="w-3 h-3 flex-shrink-0" />
@@ -633,19 +633,19 @@ const AdminCustomers = () => {
                         </TableCell>
                         <TableCell className="py-4 px-3">
                           <div className="flex flex-col gap-1">
-                            {customer.email_verified && (
+                            {false && (
                               <Badge variant="outline" className="text-xs bg-primary/10 text-primary border-primary/20 px-1.5 py-0.5">
                                 <Mail className="w-2.5 h-2.5 ml-1" />
                                 بريد
                               </Badge>
                             )}
-                            {customer.phone_verified && (
+                            {false && (
                               <Badge variant="outline" className="text-xs bg-accent/10 text-accent-foreground border-accent/20 px-1.5 py-0.5">
                                 <Phone className="w-2.5 h-2.5 ml-1" />
                                 هاتف
                               </Badge>
                             )}
-                            {!customer.email_verified && !customer.phone_verified && (
+                            {!false && !false && (
                               <Badge variant="outline" className="text-xs bg-muted/50 text-muted-foreground border-muted px-1.5 py-0.5">
                                 <Shield className="w-2.5 h-2.5 ml-1" />
                                 غير محقق
@@ -668,16 +668,16 @@ const AdminCustomers = () => {
                         </TableCell>
                         <TableCell className="py-4 px-3">
                           <div className="text-xs text-center">
-                            {customer.last_login_at ? (
+                            {customer.updated_at ? (
                               <>
                                 <div className="font-medium text-foreground">
-                                  {new Date(customer.last_login_at).toLocaleDateString('ar-SA', {
+                                  {new Date(customer.updated_at).toLocaleDateString('ar-SA', {
                                     day: '2-digit',
                                     month: '2-digit'
                                   })}
                                 </div>
                                 <div className="text-xs text-muted-foreground">
-                                  {new Date(customer.last_login_at).getFullYear()}
+                                  {new Date(customer.updated_at).getFullYear()}
                                 </div>
                               </>
                             ) : (
@@ -713,7 +713,7 @@ const AdminCustomers = () => {
                                    onClick={() => {
                                      setEditModal({ isOpen: true, customer });
                                      setEditFormData({
-                                       full_name: customer.full_name,
+                                       name: customer.name,
                                        phone: customer.phone || ''
                                      });
                                    }}
@@ -804,7 +804,7 @@ const AdminCustomers = () => {
       <Dialog open={passwordModal.isOpen} onOpenChange={(open) => setPasswordModal({ isOpen: open, customer: null })}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>تغيير كلمة المرور - {passwordModal.customer?.full_name}</DialogTitle>
+            <DialogTitle>تغيير كلمة المرور - {passwordModal.customer?.name}</DialogTitle>
           </DialogHeader>
           
           <div className="space-y-4">
@@ -850,7 +850,7 @@ const AdminCustomers = () => {
       <Dialog open={statusModal.isOpen} onOpenChange={(open) => setStatusModal({ isOpen: open, customer: null })}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>تغيير حالة العميل - {statusModal.customer?.full_name}</DialogTitle>
+            <DialogTitle>تغيير حالة العميل - {statusModal.customer?.name}</DialogTitle>
           </DialogHeader>
           
           <div className="space-y-4">
@@ -895,7 +895,7 @@ const AdminCustomers = () => {
       <Dialog open={editModal.isOpen} onOpenChange={(open) => setEditModal({ isOpen: open, customer: null })}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>تعديل بيانات العميل - {editModal.customer?.full_name}</DialogTitle>
+            <DialogTitle>تعديل بيانات العميل - {editModal.customer?.name}</DialogTitle>
           </DialogHeader>
           
           <div className="space-y-4">
@@ -903,8 +903,8 @@ const AdminCustomers = () => {
               <Label htmlFor="edit-name">الاسم الكامل</Label>
               <Input
                 id="edit-name"
-                value={editFormData.full_name}
-                onChange={(e) => setEditFormData(prev => ({ ...prev, full_name: e.target.value }))}
+                value={editFormData.name}
+                onChange={(e) => setEditFormData(prev => ({ ...prev, name: e.target.value }))}
                 placeholder="الاسم الكامل"
               />
             </div>

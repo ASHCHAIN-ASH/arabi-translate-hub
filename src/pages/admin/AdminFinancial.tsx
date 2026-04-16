@@ -31,21 +31,21 @@ const AdminFinancial = () => {
   const loadFinancialData = async () => {
     try {
       // Revenue stats
-      const { data: payments } = await supabase
-        .from('payment_transactions')
-        .select('amount, status, created_at, payment_method, description, user_id')
+      const { data: payments } = await (supabase
+        .from('payment_transactions') as any)
+        .select('amount, status, created_at, description, user_id, type')
         .order('created_at', { ascending: false });
 
-      const completed = payments?.filter(p => p.status === 'COMPLETED') || [];
-      const pending = payments?.filter(p => p.status === 'PENDING') || [];
+      const completed = payments?.filter((p: any) => p.status === 'completed') || [];
+      const pending = payments?.filter((p: any) => p.status === 'pending') || [];
 
       const { count: invoiceCount } = await supabase
         .from('invoices')
         .select('*', { count: 'exact', head: true });
 
       setStats({
-        totalRevenue: completed.reduce((sum, p) => sum + (p.amount || 0), 0),
-        pendingPayments: pending.reduce((sum, p) => sum + (p.amount || 0), 0),
+        totalRevenue: completed.reduce((sum: number, p: any) => sum + (p.amount || 0), 0),
+        pendingPayments: pending.reduce((sum: number, p: any) => sum + (p.amount || 0), 0),
         completedPayments: completed.length,
         totalInvoices: invoiceCount || 0
       });

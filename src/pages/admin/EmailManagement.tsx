@@ -74,12 +74,12 @@ export default function EmailManagement() {
       return;
     }
 
-    setTemplates(data || []);
+    setTemplates((data || []).map((t: any) => ({ ...t, template_key: t.name, subject_template: t.subject, html_template: t.body })) as any);
   };
 
   const fetchEmailLogs = async () => {
-    const { data, error } = await supabase
-      .from('email_outbox')
+    const { data, error } = await (supabase
+      .from('audit_logs') as any)
       .select('*')
       .order('created_at', { ascending: false })
       .limit(50);
@@ -89,7 +89,7 @@ export default function EmailManagement() {
       return;
     }
 
-    setEmailLogs(data || []);
+    setEmailLogs((data || []) as any);
   };
 
   const handleCreateTemplate = async () => {
@@ -103,9 +103,9 @@ export default function EmailManagement() {
       const { error } = await supabase
         .from('email_templates')
         .insert({
-          template_key: templateForm.template_key,
-          subject_template: templateForm.subject_template,
-          html_template: templateForm.html_template,
+          name: templateForm.template_key,
+          subject: templateForm.subject_template,
+          body: templateForm.html_template,
           is_active: templateForm.is_active,
           variables: variables
         });
