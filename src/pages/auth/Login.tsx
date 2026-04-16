@@ -15,8 +15,15 @@ const Login = () => {
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   
-  const { signIn } = useAuth();
+  const { signIn, user } = useAuth();
   const navigate = useNavigate();
+
+  // If already logged in, redirect
+  React.useEffect(() => {
+    if (user) {
+      navigate('/dashboard');
+    }
+  }, [user, navigate]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -35,11 +42,7 @@ const Login = () => {
       }
       
       toast.success('تم تسجيل الدخول بنجاح');
-      
-      // Small delay to allow auth state to update
-      setTimeout(() => {
-        navigate('/dashboard');
-      }, 100);
+      navigate('/dashboard');
     } catch (error: any) {
       toast.error(error.message || 'خطأ في تسجيل الدخول');
     } finally {
@@ -52,10 +55,7 @@ const Login = () => {
     visible: {
       opacity: 1,
       y: 0,
-      transition: {
-        duration: 0.6,
-        staggerChildren: 0.1
-      }
+      transition: { duration: 0.6, staggerChildren: 0.1 }
     }
   };
 

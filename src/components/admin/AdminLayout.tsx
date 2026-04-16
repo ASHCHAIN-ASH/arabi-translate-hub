@@ -375,7 +375,7 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
               <div className="flex items-center space-x-3 space-x-reverse">
                 <div className="text-right hidden sm:block">
                   <p className="text-sm font-medium bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
-                    {user?.name || user?.email}
+                    {user?.user_metadata?.full_name || user?.email}
                   </p>
                   <div className="flex items-center text-xs text-muted-foreground">
                     <TrendingUp className="w-3 h-3 ml-1" />
@@ -388,7 +388,7 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
                   whileTap={{ scale: 0.95 }}
                 >
                   <span className="text-white text-sm font-bold">
-                    {(user?.name || user?.email || '').charAt(0).toUpperCase()}
+                    {(user?.user_metadata?.full_name || user?.email || '').charAt(0).toUpperCase()}
                   </span>
                 </motion.div>
               </div>

@@ -77,7 +77,6 @@ const Register = () => {
       const { error } = await signUp(formData.email, formData.password, {
         name: formData.name,
         phone: formData.phone,
-        role: 'client'
       });
       
       if (error) {

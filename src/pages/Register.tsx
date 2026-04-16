@@ -76,9 +76,8 @@ const Register = () => {
 
     try {
       await signUp(formData.email, formData.password, {
-        fullName: formData.fullName,
+        name: formData.fullName,
         phone: formData.phone,
-        role: 'client'
       });
       
       setSuccess('تم إنشاء الحساب بنجاح! يرجى تسجيل الدخول.');

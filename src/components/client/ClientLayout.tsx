@@ -198,15 +198,13 @@ const ClientLayout: React.FC<ClientLayoutProps> = ({ children }) => {
                 <div className="flex items-center space-x-2 sm:space-x-3 space-x-reverse">
                   <div className="text-right hidden sm:block">
                     <p className="text-sm font-medium truncate max-w-24 sm:max-w-none">
-                      {user?.name || user?.email?.split('@')[0]}
+                      {user?.user_metadata?.full_name || user?.email?.split('@')[0]}
                     </p>
-                    <p className="text-xs text-muted-foreground">
-                      {user?.role === 'admin' ? 'مدير' : 'عميل'}
-                    </p>
+                    <p className="text-xs text-muted-foreground">عميل</p>
                   </div>
                   <div className="w-8 h-8 bg-gradient-to-br from-primary to-secondary rounded-full flex items-center justify-center">
                     <span className="text-white text-sm font-medium">
-                      {(user?.name || user?.email || '').charAt(0).toUpperCase()}
+                      {(user?.user_metadata?.full_name || user?.email || '').charAt(0).toUpperCase()}
                     </span>
                   </div>
                 </div>
