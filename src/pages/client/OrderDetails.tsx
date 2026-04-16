@@ -1,17 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { motion } from 'framer-motion';
-import { 
+import { motion, AnimatePresence } from 'framer-motion';
+import {
   ArrowRight, Calendar, Clock, FileText, DollarSign,
   CheckCircle, Download, Package, AlertCircle, RefreshCw,
-  Check, X, MessageSquare
+  Check, X, MessageSquare, TrendingUp, Shield, Sparkles, Copy
 } from 'lucide-react';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Progress } from '@/components/ui/progress';
 import { Textarea } from '@/components/ui/textarea';
-import { Separator } from '@/components/ui/separator';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/components/SimpleAuthProvider';
 import { toast } from 'sonner';
@@ -50,18 +48,11 @@ interface Attachment {
   created_at: string;
 }
 
-const statusMap: Record<string, string> = {
-  pending: 'في الانتظار',
-  in_progress: 'قيد التنفيذ',
-  completed: 'مكتمل',
-  cancelled: 'ملغي',
-};
-
-const statusColorMap: Record<string, string> = {
-  pending: 'bg-yellow-100 text-yellow-800',
-  in_progress: 'bg-blue-100 text-blue-800',
-  completed: 'bg-green-100 text-green-800',
-  cancelled: 'bg-red-100 text-red-800',
+const statusMap: Record<string, { label: string; color: string; bg: string; icon: React.ReactNode }> = {
+  pending: { label: 'في الانتظار', color: 'text-amber-700 dark:text-amber-400', bg: 'bg-amber-100/80 dark:bg-amber-900/40', icon: <Clock className="w-4 h-4" /> },
+  in_progress: { label: 'قيد التنفيذ', color: 'text-blue-700 dark:text-blue-400', bg: 'bg-blue-100/80 dark:bg-blue-900/40', icon: <TrendingUp className="w-4 h-4" /> },
+  completed: { label: 'مكتمل', color: 'text-green-700 dark:text-green-400', bg: 'bg-green-100/80 dark:bg-green-900/40', icon: <CheckCircle className="w-4 h-4" /> },
+  cancelled: { label: 'ملغي', color: 'text-red-700 dark:text-red-400', bg: 'bg-red-100/80 dark:bg-red-900/40', icon: <X className="w-4 h-4" /> },
 };
 
 const progressMap: Record<string, number> = {
@@ -70,6 +61,12 @@ const progressMap: Record<string, number> = {
   completed: 100,
   cancelled: 0,
 };
+
+const stepsConfig = [
+  { key: 'pending', label: 'تم الاستلام', icon: Package },
+  { key: 'in_progress', label: 'قيد التنفيذ', icon: TrendingUp },
+  { key: 'completed', label: 'مكتمل', icon: CheckCircle },
+];
 
 const OrderDetails = () => {
   const { id } = useParams();
@@ -92,7 +89,6 @@ const OrderDetails = () => {
         supabase.from('service_order_timeline').select('*').eq('order_id', id).order('created_at', { ascending: true }),
         supabase.from('order_attachments').select('*').eq('order_id', id).order('created_at', { ascending: false }),
       ]);
-      
       if (orderRes.data) setOrder(orderRes.data);
       if (timelineRes.data) setTimeline(timelineRes.data);
       if (attachRes.data) setAttachments(attachRes.data);
@@ -106,14 +102,12 @@ const OrderDetails = () => {
 
   useEffect(() => {
     fetchData();
-
     if (!id) return;
     const channel = supabase
       .channel(`order-detail-${id}`)
       .on('postgres_changes', { event: '*', schema: 'public', table: 'service_orders', filter: `id=eq.${id}` }, () => fetchData())
       .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'service_order_timeline', filter: `order_id=eq.${id}` }, () => fetchData())
       .subscribe();
-
     return () => { supabase.removeChannel(channel); };
   }, [id]);
 
@@ -122,17 +116,17 @@ const OrderDetails = () => {
     setSubmitting(true);
     try {
       await (supabase.from('service_orders') as any).update({ quote_status: 'accepted', updated_at: new Date().toISOString() }).eq('id', order.id);
-      
       const { data: admins } = await supabase.from('user_roles').select('user_id').eq('role', 'admin');
       if (admins) {
-        const notifications = admins.map(a => ({
-          user_id: a.user_id,
-          title: '✅ تم قبول عرض السعر',
-          message: `قبل العميل عرض السعر للطلب ${order.tracking_id}`,
-          type: 'order',
-          link: '/adminmaster/orders',
-        }));
-        await supabase.from('user_notifications').insert(notifications);
+        await supabase.from('user_notifications').insert(
+          admins.map(a => ({
+            user_id: a.user_id,
+            title: '✅ تم قبول عرض السعر',
+            message: `قبل العميل عرض السعر للطلب ${order.tracking_id}`,
+            type: 'order',
+            link: '/adminmaster/orders',
+          }))
+        );
       }
       toast.success('تم قبول عرض السعر بنجاح');
       fetchData();
@@ -143,22 +137,22 @@ const OrderDetails = () => {
     if (!order) return;
     setSubmitting(true);
     try {
-      await (supabase.from('service_orders') as any).update({ 
-        quote_status: 'rejected', 
+      await (supabase.from('service_orders') as any).update({
+        quote_status: 'rejected',
         quote_notes: rejectionReason || null,
-        updated_at: new Date().toISOString() 
+        updated_at: new Date().toISOString(),
       }).eq('id', order.id);
-
       const { data: admins } = await supabase.from('user_roles').select('user_id').eq('role', 'admin');
       if (admins) {
-        const notifications = admins.map(a => ({
-          user_id: a.user_id,
-          title: '❌ تم رفض عرض السعر',
-          message: `رفض العميل عرض السعر للطلب ${order.tracking_id}${rejectionReason ? ` - السبب: ${rejectionReason}` : ''}`,
-          type: 'order',
-          link: '/adminmaster/orders',
-        }));
-        await supabase.from('user_notifications').insert(notifications);
+        await supabase.from('user_notifications').insert(
+          admins.map(a => ({
+            user_id: a.user_id,
+            title: '❌ تم رفض عرض السعر',
+            message: `رفض العميل عرض السعر للطلب ${order.tracking_id}${rejectionReason ? ` - السبب: ${rejectionReason}` : ''}`,
+            type: 'order',
+            link: '/adminmaster/orders',
+          }))
+        );
       }
       toast.success('تم رفض عرض السعر');
       setShowRejectForm(false);
@@ -182,11 +176,19 @@ const OrderDetails = () => {
     return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
   };
 
+  const copyTrackingId = () => {
+    if (order) {
+      navigator.clipboard.writeText(order.tracking_id);
+      toast.success('تم نسخ رقم التتبع');
+    }
+  };
+
   if (loading) {
     return (
       <ClientLayout>
-        <div className="flex items-center justify-center min-h-[400px]">
+        <div className="flex flex-col items-center justify-center min-h-[400px] gap-3">
           <RefreshCw className="w-8 h-8 animate-spin text-primary" />
+          <p className="text-muted-foreground">جاري تحميل تفاصيل الطلب...</p>
         </div>
       </ClientLayout>
     );
@@ -196,9 +198,14 @@ const OrderDetails = () => {
     return (
       <ClientLayout>
         <div className="flex flex-col items-center justify-center min-h-[400px] gap-4">
-          <AlertCircle className="w-12 h-12 text-muted-foreground" />
+          <div className="w-16 h-16 rounded-full bg-muted flex items-center justify-center">
+            <AlertCircle className="w-8 h-8 text-muted-foreground" />
+          </div>
           <h2 className="text-xl font-bold">الطلب غير موجود</h2>
-          <Button onClick={() => navigate('/orders')}>العودة للطلبات</Button>
+          <Button onClick={() => navigate('/orders')} className="gap-2">
+            <ArrowRight className="w-4 h-4" />
+            العودة للطلبات
+          </Button>
         </div>
       </ClientLayout>
     );
@@ -206,164 +213,240 @@ const OrderDetails = () => {
 
   const status = order.current_status || 'pending';
   const progress = progressMap[status] || 0;
+  const sc = statusMap[status] || statusMap.pending;
+  const currentStepIndex = stepsConfig.findIndex(s => s.key === status);
 
   return (
     <ClientLayout>
-      <div className="p-4 lg:p-6 space-y-6" dir="rtl">
-        {/* Header */}
-        <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }}>
-          <Button variant="ghost" onClick={() => navigate('/orders')} className="mb-4 gap-2">
+      <div className="p-4 lg:p-6 space-y-6 max-w-5xl mx-auto" dir="rtl">
+        {/* Back Button */}
+        <motion.div initial={{ opacity: 0, x: 10 }} animate={{ opacity: 1, x: 0 }}>
+          <Button variant="ghost" size="sm" onClick={() => navigate('/orders')} className="gap-2 text-muted-foreground hover:text-foreground">
             <ArrowRight className="w-4 h-4" />
-            العودة للطلبات
+            العودة لسجل الطلبات
           </Button>
-
-          <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
-            <div>
-              <h1 className="text-2xl lg:text-3xl font-bold">{order.service_name || 'طلب خدمة'}</h1>
-              <div className="flex items-center gap-3 mt-2 flex-wrap">
-                <Badge variant="outline" className="font-mono">#{order.tracking_id}</Badge>
-                <Badge className={statusColorMap[status]}>{statusMap[status] || status}</Badge>
-                {order.priority === 'urgent' && <Badge className="bg-red-100 text-red-800">عاجل</Badge>}
-              </div>
-            </div>
-            <div className="text-left lg:text-right">
-              <p className="text-sm text-muted-foreground">تاريخ الطلب</p>
-              <p className="font-medium">{new Date(order.created_at).toLocaleDateString('ar-SA')}</p>
-            </div>
-          </div>
         </motion.div>
 
-        {/* Progress Bar */}
-        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.1 }}>
-          <Card>
-            <CardContent className="p-4">
-              <div className="flex items-center justify-between mb-2">
-                <span className="text-sm font-medium">تقدم الطلب</span>
-                <span className="text-sm font-bold text-primary">{progress}%</span>
+        {/* Hero Header */}
+        <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }}>
+          <Card className="overflow-hidden border-0 shadow-lg">
+            <div className={`h-2 ${status === 'completed' ? 'bg-green-500' : status === 'in_progress' ? 'bg-blue-500' : status === 'cancelled' ? 'bg-red-500' : 'bg-amber-500'}`} />
+            <CardContent className="p-5 lg:p-6">
+              <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+                <div className="flex items-start gap-4">
+                  <div className={`w-14 h-14 rounded-2xl ${sc.bg} flex items-center justify-center shrink-0`}>
+                    <Package className={`w-7 h-7 ${sc.color}`} />
+                  </div>
+                  <div>
+                    <h1 className="text-xl lg:text-2xl font-bold">{order.service_name || 'طلب خدمة'}</h1>
+                    <div className="flex items-center gap-2 mt-1.5 flex-wrap">
+                      <button onClick={copyTrackingId} className="flex items-center gap-1.5 text-xs font-mono text-muted-foreground hover:text-foreground transition-colors bg-muted px-2.5 py-1 rounded-md">
+                        <Copy className="w-3 h-3" />
+                        #{order.tracking_id}
+                      </button>
+                      <Badge className={`${sc.bg} ${sc.color} border-0 gap-1 text-xs`}>
+                        {sc.icon}
+                        {sc.label}
+                      </Badge>
+                      {order.priority === 'urgent' && (
+                        <Badge className="bg-red-100 text-red-700 dark:bg-red-900/40 dark:text-red-400 border-0 text-xs">عاجل</Badge>
+                      )}
+                    </div>
+                  </div>
+                </div>
+                <div className="flex items-center gap-6 text-sm">
+                  <div className="text-center">
+                    <p className="text-muted-foreground text-xs">تاريخ الطلب</p>
+                    <p className="font-semibold">{new Date(order.created_at).toLocaleDateString('ar-SA')}</p>
+                  </div>
+                  {order.deadline && (
+                    <div className="text-center">
+                      <p className="text-muted-foreground text-xs">الموعد النهائي</p>
+                      <p className="font-semibold">{new Date(order.deadline).toLocaleDateString('ar-SA')}</p>
+                    </div>
+                  )}
+                </div>
               </div>
-              <Progress value={progress} className="h-3" />
+
+              {/* Stepper Progress */}
+              {status !== 'cancelled' && (
+                <div className="mt-6 pt-5 border-t">
+                  <div className="flex items-center justify-between relative">
+                    {/* Connecting Line */}
+                    <div className="absolute top-5 right-6 left-6 h-0.5 bg-muted z-0" />
+                    <div className="absolute top-5 right-6 h-0.5 bg-primary z-0 transition-all duration-700"
+                      style={{ width: `${currentStepIndex >= 0 ? (currentStepIndex / (stepsConfig.length - 1)) * 100 : 0}%` }} />
+
+                    {stepsConfig.map((step, i) => {
+                      const isActive = i <= currentStepIndex;
+                      const isCurrent = i === currentStepIndex;
+                      return (
+                        <div key={step.key} className="flex flex-col items-center z-10 relative">
+                          <motion.div
+                            initial={{ scale: 0.8 }}
+                            animate={{ scale: isCurrent ? 1.1 : 1 }}
+                            className={`w-10 h-10 rounded-full flex items-center justify-center border-2 transition-all duration-300 ${
+                              isActive
+                                ? 'bg-primary border-primary text-primary-foreground shadow-md'
+                                : 'bg-background border-muted-foreground/30 text-muted-foreground'
+                            }`}
+                          >
+                            <step.icon className="w-5 h-5" />
+                          </motion.div>
+                          <span className={`text-xs mt-2 font-medium ${isActive ? 'text-primary' : 'text-muted-foreground'}`}>
+                            {step.label}
+                          </span>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
             </CardContent>
           </Card>
         </motion.div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          {/* Main Content */}
-          <div className="lg:col-span-2 space-y-6">
-            {/* Quote Section */}
-            {order.quote_status && (
-              <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}>
-                <Card className={
-                  order.quote_status === 'pending' ? 'border-amber-300 bg-amber-50/50 dark:bg-amber-950/20' :
-                  order.quote_status === 'accepted' ? 'border-green-300 bg-green-50/50 dark:bg-green-950/20' :
-                  'border-red-300 bg-red-50/50 dark:bg-red-950/20'
-                }>
-                  <CardHeader>
-                    <CardTitle className="flex items-center gap-2 text-lg">
-                      <DollarSign className="w-5 h-5" />
-                      عرض السعر
-                      {order.quote_status === 'pending' && <Badge className="bg-amber-100 text-amber-800">بانتظار الرد</Badge>}
-                      {order.quote_status === 'accepted' && <Badge className="bg-green-100 text-green-800">مقبول</Badge>}
-                      {order.quote_status === 'rejected' && <Badge className="bg-red-100 text-red-800">مرفوض</Badge>}
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent className="space-y-4">
-                    <div className="flex items-center justify-between">
-                      <span className="text-muted-foreground">السعر المقترح</span>
-                      <span className="text-3xl font-bold text-primary">
-                        {(order.total_amount || 0).toLocaleString()} ر.س
-                      </span>
+        {/* Quote Section */}
+        <AnimatePresence>
+          {order.quote_status && (
+            <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.15 }}>
+              <Card className={`overflow-hidden ${
+                order.quote_status === 'pending' ? 'ring-2 ring-amber-300 dark:ring-amber-700' :
+                order.quote_status === 'accepted' ? 'border-green-200 dark:border-green-800' :
+                'border-red-200 dark:border-red-800'
+              }`}>
+                <div className={`h-1 ${
+                  order.quote_status === 'pending' ? 'bg-amber-400' :
+                  order.quote_status === 'accepted' ? 'bg-green-500' : 'bg-red-500'
+                }`} />
+                <CardContent className="p-5">
+                  <div className="flex items-start gap-4">
+                    <div className={`w-12 h-12 rounded-xl flex items-center justify-center shrink-0 ${
+                      order.quote_status === 'pending' ? 'bg-amber-100 dark:bg-amber-900/40' :
+                      order.quote_status === 'accepted' ? 'bg-green-100 dark:bg-green-900/40' :
+                      'bg-red-100 dark:bg-red-900/40'
+                    }`}>
+                      <DollarSign className={`w-6 h-6 ${
+                        order.quote_status === 'pending' ? 'text-amber-600' :
+                        order.quote_status === 'accepted' ? 'text-green-600' : 'text-red-600'
+                      }`} />
                     </div>
-                    {order.quote_sent_at && (
-                      <p className="text-xs text-muted-foreground">
-                        تاريخ الإرسال: {new Date(order.quote_sent_at).toLocaleDateString('ar-SA')}
-                      </p>
-                    )}
-                    {order.quote_notes && order.quote_status === 'rejected' && (
-                      <div className="p-3 bg-red-100/50 rounded-lg">
-                        <p className="text-sm"><strong>سبب الرفض:</strong> {order.quote_notes}</p>
+                    <div className="flex-1">
+                      <div className="flex items-center justify-between flex-wrap gap-2">
+                        <div>
+                          <h3 className="font-bold text-lg">عرض السعر</h3>
+                          <p className="text-xs text-muted-foreground mt-0.5">
+                            {order.quote_status === 'pending' && 'بانتظار ردك على العرض'}
+                            {order.quote_status === 'accepted' && 'تم قبول هذا العرض'}
+                            {order.quote_status === 'rejected' && 'تم رفض هذا العرض'}
+                          </p>
+                        </div>
+                        <div className="text-left">
+                          <p className="text-3xl font-bold text-primary">{(order.total_amount || 0).toLocaleString()} <span className="text-base">ر.س</span></p>
+                          {order.quote_sent_at && (
+                            <p className="text-xs text-muted-foreground mt-1">
+                              أُرسل في {new Date(order.quote_sent_at).toLocaleDateString('ar-SA')}
+                            </p>
+                          )}
+                        </div>
                       </div>
-                    )}
 
-                    {order.quote_status === 'pending' && (
-                      <>
-                        {showRejectForm ? (
-                          <div className="space-y-3">
-                            <Textarea
-                              placeholder="سبب الرفض (اختياري)..."
-                              value={rejectionReason}
-                              onChange={(e) => setRejectionReason(e.target.value)}
-                              rows={2}
-                              className="resize-none"
-                            />
-                            <div className="flex gap-2">
-                              <Button size="sm" variant="destructive" onClick={handleRejectQuote} disabled={submitting} className="flex-1 gap-2">
-                                {submitting ? <RefreshCw className="w-4 h-4 animate-spin" /> : <X className="w-4 h-4" />}
-                                تأكيد الرفض
-                              </Button>
-                              <Button size="sm" variant="outline" onClick={() => setShowRejectForm(false)} disabled={submitting}>
-                                رجوع
-                              </Button>
-                            </div>
-                          </div>
-                        ) : (
-                          <div className="flex gap-2">
-                            <Button onClick={handleAcceptQuote} disabled={submitting} className="flex-1 gap-2 bg-green-600 hover:bg-green-700">
-                              {submitting ? <RefreshCw className="w-4 h-4 animate-spin" /> : <Check className="w-4 h-4" />}
-                              قبول العرض
-                            </Button>
-                            <Button variant="outline" onClick={() => setShowRejectForm(true)} disabled={submitting} className="flex-1 gap-2 border-red-300 text-red-600 hover:bg-red-50">
-                              <X className="w-4 h-4" />
-                              رفض العرض
-                            </Button>
-                          </div>
-                        )}
-                      </>
-                    )}
-                  </CardContent>
-                </Card>
-              </motion.div>
-            )}
+                      {order.quote_notes && order.quote_status === 'rejected' && (
+                        <div className="mt-3 p-3 bg-red-50 dark:bg-red-950/30 rounded-lg border border-red-200 dark:border-red-800">
+                          <p className="text-sm"><strong>سبب الرفض:</strong> {order.quote_notes}</p>
+                        </div>
+                      )}
 
+                      {order.quote_status === 'pending' && (
+                        <div className="mt-4">
+                          <AnimatePresence mode="wait">
+                            {showRejectForm ? (
+                              <motion.div key="reject" initial={{ opacity: 0, y: -5 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} className="space-y-3">
+                                <Textarea
+                                  placeholder="سبب الرفض (اختياري)..."
+                                  value={rejectionReason}
+                                  onChange={(e) => setRejectionReason(e.target.value)}
+                                  rows={2}
+                                  className="resize-none"
+                                />
+                                <div className="flex gap-2">
+                                  <Button size="sm" variant="destructive" onClick={handleRejectQuote} disabled={submitting} className="flex-1 gap-2">
+                                    {submitting ? <RefreshCw className="w-4 h-4 animate-spin" /> : <X className="w-4 h-4" />}
+                                    تأكيد الرفض
+                                  </Button>
+                                  <Button size="sm" variant="outline" onClick={() => setShowRejectForm(false)} disabled={submitting}>رجوع</Button>
+                                </div>
+                              </motion.div>
+                            ) : (
+                              <motion.div key="buttons" className="flex gap-3">
+                                <Button onClick={handleAcceptQuote} disabled={submitting} className="flex-1 gap-2 bg-green-600 hover:bg-green-700 shadow-md">
+                                  {submitting ? <RefreshCw className="w-4 h-4 animate-spin" /> : <Check className="w-4 h-4" />}
+                                  قبول العرض
+                                </Button>
+                                <Button variant="outline" onClick={() => setShowRejectForm(true)} disabled={submitting} className="flex-1 gap-2 border-red-300 text-red-600 hover:bg-red-50 dark:hover:bg-red-950/30">
+                                  <X className="w-4 h-4" />
+                                  رفض العرض
+                                </Button>
+                              </motion.div>
+                            )}
+                          </AnimatePresence>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
+          {/* Main Content */}
+          <div className="lg:col-span-2 space-y-5">
             {/* Timeline */}
-            <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }}>
-              <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
-                    <Clock className="w-5 h-5" />
+            <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}>
+              <Card className="border-0 shadow-md">
+                <CardHeader className="pb-3">
+                  <CardTitle className="flex items-center gap-2 text-base">
+                    <Clock className="w-5 h-5 text-primary" />
                     سجل التحديثات
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
                   {timeline.length === 0 ? (
-                    <div className="text-center py-8 text-muted-foreground">
-                      <Clock className="w-10 h-10 mx-auto mb-3 opacity-50" />
-                      <p>لا توجد تحديثات بعد</p>
+                    <div className="text-center py-10 text-muted-foreground">
+                      <Clock className="w-10 h-10 mx-auto mb-3 opacity-30" />
+                      <p className="text-sm">لا توجد تحديثات بعد</p>
                     </div>
                   ) : (
-                    <div className="space-y-4">
-                      {timeline.map((entry, i) => (
-                        <div key={entry.id} className="flex items-start gap-3 relative">
-                          {i < timeline.length - 1 && (
-                            <div className="absolute right-[15px] top-8 w-0.5 h-full bg-border" />
-                          )}
-                          <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center z-10 shrink-0">
-                            <CheckCircle className="w-4 h-4 text-primary" />
-                          </div>
-                          <div className="flex-1 pb-4">
-                            <div className="flex items-center justify-between">
-                              <Badge variant="outline" className="text-xs">
-                                {statusMap[entry.status] || entry.status}
-                              </Badge>
-                              <span className="text-xs text-muted-foreground">
-                                {new Date(entry.created_at).toLocaleDateString('ar-SA')}
-                              </span>
-                            </div>
-                            {entry.note && (
-                              <p className="text-sm text-muted-foreground mt-1">{entry.note}</p>
+                    <div className="relative">
+                      {timeline.map((entry, i) => {
+                        const es = statusMap[entry.status] || statusMap.pending;
+                        return (
+                          <div key={entry.id} className="flex gap-4 relative pb-6 last:pb-0">
+                            {/* Vertical Line */}
+                            {i < timeline.length - 1 && (
+                              <div className="absolute right-[19px] top-10 bottom-0 w-0.5 bg-border" />
                             )}
+                            {/* Dot */}
+                            <div className={`w-10 h-10 rounded-full ${es.bg} flex items-center justify-center z-10 shrink-0 ring-4 ring-background`}>
+                              {es.icon}
+                            </div>
+                            {/* Content */}
+                            <div className="flex-1 pt-1">
+                              <div className="flex items-center justify-between gap-2">
+                                <span className={`font-semibold text-sm ${es.color}`}>{es.label}</span>
+                                <span className="text-xs text-muted-foreground">
+                                  {new Date(entry.created_at).toLocaleDateString('ar-SA')} — {new Date(entry.created_at).toLocaleTimeString('ar-SA', { hour: '2-digit', minute: '2-digit' })}
+                                </span>
+                              </div>
+                              {entry.note && (
+                                <p className="text-sm text-muted-foreground mt-1 bg-muted/40 p-2.5 rounded-lg">{entry.note}</p>
+                              )}
+                            </div>
                           </div>
-                        </div>
-                      ))}
+                        );
+                      })}
                     </div>
                   )}
                 </CardContent>
@@ -371,39 +454,57 @@ const OrderDetails = () => {
             </motion.div>
 
             {/* Attachments */}
-            <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }}>
-              <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
-                    <FileText className="w-5 h-5" />
-                    المرفقات ({attachments.length})
+            <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }}>
+              <Card className="border-0 shadow-md">
+                <CardHeader className="pb-3">
+                  <CardTitle className="flex items-center gap-2 text-base">
+                    <FileText className="w-5 h-5 text-primary" />
+                    المرفقات
+                    {attachments.length > 0 && (
+                      <Badge variant="secondary" className="text-xs">{attachments.length}</Badge>
+                    )}
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
                   {attachments.length === 0 ? (
-                    <div className="text-center py-8 text-muted-foreground">
-                      <FileText className="w-10 h-10 mx-auto mb-3 opacity-50" />
-                      <p>لا توجد مرفقات</p>
+                    <div className="text-center py-10 text-muted-foreground">
+                      <FileText className="w-10 h-10 mx-auto mb-3 opacity-30" />
+                      <p className="text-sm">لا توجد مرفقات</p>
                     </div>
                   ) : (
-                    <div className="space-y-3">
-                      {attachments.map((file) => (
-                        <div key={file.id} className="flex items-center gap-3 p-3 border rounded-lg hover:bg-muted/30 transition-colors">
-                          <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
-                            <FileText className="w-5 h-5 text-primary" />
+                    <div className="space-y-2">
+                      {attachments.map((file) => {
+                        const ext = file.file_name.split('.').pop()?.toLowerCase() || '';
+                        const extColors: Record<string, string> = {
+                          pdf: 'bg-red-100 text-red-700 dark:bg-red-900/40 dark:text-red-400',
+                          doc: 'bg-blue-100 text-blue-700 dark:bg-blue-900/40 dark:text-blue-400',
+                          docx: 'bg-blue-100 text-blue-700 dark:bg-blue-900/40 dark:text-blue-400',
+                          xlsx: 'bg-green-100 text-green-700 dark:bg-green-900/40 dark:text-green-400',
+                          xls: 'bg-green-100 text-green-700 dark:bg-green-900/40 dark:text-green-400',
+                          png: 'bg-purple-100 text-purple-700 dark:bg-purple-900/40 dark:text-purple-400',
+                          jpg: 'bg-purple-100 text-purple-700 dark:bg-purple-900/40 dark:text-purple-400',
+                          jpeg: 'bg-purple-100 text-purple-700 dark:bg-purple-900/40 dark:text-purple-400',
+                        };
+                        const extColor = extColors[ext] || 'bg-muted text-muted-foreground';
+
+                        return (
+                          <div key={file.id} className="flex items-center gap-3 p-3 rounded-xl border hover:bg-muted/30 transition-colors group">
+                            <div className={`w-10 h-10 rounded-lg ${extColor} flex items-center justify-center shrink-0 text-xs font-bold uppercase`}>
+                              {ext.slice(0, 4)}
+                            </div>
+                            <div className="flex-1 min-w-0">
+                              <p className="font-medium text-sm truncate">{file.file_name}</p>
+                              <p className="text-xs text-muted-foreground">
+                                {formatFileSize(file.file_size)} • {new Date(file.created_at).toLocaleDateString('ar-SA')}
+                              </p>
+                            </div>
+                            <Button size="sm" variant="ghost" onClick={() => handleDownload(file)} className="gap-1.5 shrink-0 opacity-70 group-hover:opacity-100 transition-opacity">
+                              <Download className="w-4 h-4" />
+                              <span className="hidden sm:inline">تحميل</span>
+                            </Button>
                           </div>
-                          <div className="flex-1 min-w-0">
-                            <p className="font-medium text-sm truncate">{file.file_name}</p>
-                            <p className="text-xs text-muted-foreground">
-                              {formatFileSize(file.file_size)} • {new Date(file.created_at).toLocaleDateString('ar-SA')}
-                            </p>
-                          </div>
-                          <Button size="sm" variant="outline" onClick={() => handleDownload(file)} className="gap-1 shrink-0">
-                            <Download className="w-4 h-4" />
-                            تحميل
-                          </Button>
-                        </div>
-                      ))}
+                        );
+                      })}
                     </div>
                   )}
                 </CardContent>
@@ -412,71 +513,101 @@ const OrderDetails = () => {
           </div>
 
           {/* Sidebar */}
-          <div className="space-y-6">
-            {/* Order Info Card */}
+          <div className="space-y-5">
+            {/* Financial Summary */}
             <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.2 }}>
-              <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2 text-lg">
-                    <Package className="w-5 h-5" />
+              <Card className="border-0 shadow-md overflow-hidden">
+                <div className="h-1 bg-primary" />
+                <CardHeader className="pb-2">
+                  <CardTitle className="flex items-center gap-2 text-base">
+                    <DollarSign className="w-5 h-5 text-primary" />
+                    الملخص المالي
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-3">
+                  <div className="flex justify-between items-center py-2">
+                    <span className="text-sm text-muted-foreground">القيمة الإجمالية</span>
+                    <span className="font-bold text-lg text-primary">{(order.total_amount || 0).toLocaleString()} ر.س</span>
+                  </div>
+                  <div className="h-px bg-border" />
+                  <div className="flex justify-between items-center py-2">
+                    <span className="text-sm text-muted-foreground">المدفوع</span>
+                    <span className="font-semibold text-green-600">{(order.paid_amount || 0).toLocaleString()} ر.س</span>
+                  </div>
+                  <div className="h-px bg-border" />
+                  <div className="flex justify-between items-center py-2">
+                    <span className="text-sm text-muted-foreground">المتبقي</span>
+                    <span className="font-semibold text-amber-600">
+                      {((order.total_amount || 0) - (order.paid_amount || 0)).toLocaleString()} ر.س
+                    </span>
+                  </div>
+
+                  {/* Payment Progress */}
+                  {(order.total_amount || 0) > 0 && (
+                    <div className="pt-2">
+                      <div className="flex justify-between text-xs mb-1.5">
+                        <span className="text-muted-foreground">نسبة السداد</span>
+                        <span className="font-bold">{Math.round(((order.paid_amount || 0) / (order.total_amount || 1)) * 100)}%</span>
+                      </div>
+                      <div className="w-full bg-muted rounded-full h-2 overflow-hidden">
+                        <motion.div
+                          className="h-full rounded-full bg-green-500"
+                          initial={{ width: 0 }}
+                          animate={{ width: `${Math.min(((order.paid_amount || 0) / (order.total_amount || 1)) * 100, 100)}%` }}
+                          transition={{ duration: 0.8, delay: 0.4 }}
+                        />
+                      </div>
+                    </div>
+                  )}
+                </CardContent>
+              </Card>
+            </motion.div>
+
+            {/* Order Info */}
+            <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.3 }}>
+              <Card className="border-0 shadow-md">
+                <CardHeader className="pb-2">
+                  <CardTitle className="flex items-center gap-2 text-base">
+                    <Shield className="w-5 h-5 text-primary" />
                     معلومات الطلب
                   </CardTitle>
                 </CardHeader>
-                <CardContent className="space-y-4 text-sm">
-                  <div className="flex justify-between">
-                    <span className="text-muted-foreground">رقم التتبع</span>
-                    <span className="font-mono font-medium">{order.tracking_id}</span>
-                  </div>
-                  <Separator />
-                  <div className="flex justify-between">
-                    <span className="text-muted-foreground">الحالة</span>
-                    <Badge className={statusColorMap[status]}>{statusMap[status] || status}</Badge>
-                  </div>
-                  <Separator />
-                  <div className="flex justify-between">
-                    <span className="text-muted-foreground">القيمة</span>
-                    <span className="font-bold text-primary">{(order.total_amount || 0).toLocaleString()} ر.س</span>
-                  </div>
-                  <Separator />
-                  <div className="flex justify-between">
-                    <span className="text-muted-foreground">المدفوع</span>
-                    <span className="font-medium">{(order.paid_amount || 0).toLocaleString()} ر.س</span>
-                  </div>
-                  {order.deadline && (
-                    <>
-                      <Separator />
-                      <div className="flex justify-between">
-                        <span className="text-muted-foreground">الموعد النهائي</span>
-                        <span className="font-medium">{new Date(order.deadline).toLocaleDateString('ar-SA')}</span>
+                <CardContent className="space-y-3 text-sm">
+                  {[
+                    { label: 'رقم التتبع', value: order.tracking_id, mono: true },
+                    { label: 'الحالة', value: sc.label, badge: true },
+                    { label: 'تاريخ الإنشاء', value: new Date(order.created_at).toLocaleDateString('ar-SA') },
+                    { label: 'آخر تحديث', value: new Date(order.updated_at).toLocaleDateString('ar-SA') },
+                    ...(order.deadline ? [{ label: 'الموعد النهائي', value: new Date(order.deadline).toLocaleDateString('ar-SA') }] : []),
+                  ].map((item, i) => (
+                    <div key={i}>
+                      <div className="flex justify-between items-center py-1.5">
+                        <span className="text-muted-foreground">{item.label}</span>
+                        {item.badge ? (
+                          <Badge className={`${sc.bg} ${sc.color} border-0 text-xs`}>{item.value}</Badge>
+                        ) : (
+                          <span className={`font-medium ${item.mono ? 'font-mono text-xs' : ''}`}>{item.value}</span>
+                        )}
                       </div>
-                    </>
-                  )}
-                  <Separator />
-                  <div className="flex justify-between">
-                    <span className="text-muted-foreground">تاريخ الإنشاء</span>
-                    <span>{new Date(order.created_at).toLocaleDateString('ar-SA')}</span>
-                  </div>
-                  <Separator />
-                  <div className="flex justify-between">
-                    <span className="text-muted-foreground">آخر تحديث</span>
-                    <span>{new Date(order.updated_at).toLocaleDateString('ar-SA')}</span>
-                  </div>
+                      {i < 4 && <div className="h-px bg-border" />}
+                    </div>
+                  ))}
                 </CardContent>
               </Card>
             </motion.div>
 
             {/* Notes */}
             {order.notes && (
-              <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.3 }}>
-                <Card>
-                  <CardHeader>
-                    <CardTitle className="flex items-center gap-2 text-lg">
-                      <MessageSquare className="w-5 h-5" />
+              <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.4 }}>
+                <Card className="border-0 shadow-md">
+                  <CardHeader className="pb-2">
+                    <CardTitle className="flex items-center gap-2 text-base">
+                      <MessageSquare className="w-5 h-5 text-primary" />
                       ملاحظات
                     </CardTitle>
                   </CardHeader>
                   <CardContent>
-                    <p className="text-sm text-muted-foreground leading-relaxed">{order.notes}</p>
+                    <p className="text-sm text-muted-foreground leading-relaxed bg-muted/30 p-3 rounded-lg">{order.notes}</p>
                   </CardContent>
                 </Card>
               </motion.div>
