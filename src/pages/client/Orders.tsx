@@ -11,7 +11,7 @@ import { useAuth } from '@/components/SimpleAuthProvider';
 import { useClientData } from '@/hooks/useClientData';
 import { ClientDashboardService } from '@/utils/clientDashboardService';
 import { 
-  Plus, Search, Filter, Eye, Edit, Calendar, DollarSign,
+  Search, Filter, Eye, Edit, Calendar, DollarSign,
   CheckCircle, Clock, AlertCircle, RefreshCw, ShoppingBag
 } from 'lucide-react';
 import { motion } from 'framer-motion';
