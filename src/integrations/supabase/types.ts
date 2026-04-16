@@ -809,6 +809,42 @@ export type Database = {
         }
         Returns: boolean
       }
+      insert_audit_log: {
+        Args: {
+          _action: string
+          _new_data?: Json
+          _old_data?: Json
+          _record_id?: string
+          _table_name: string
+        }
+        Returns: undefined
+      }
+      track_order: {
+        Args: { _phone_last_four: string; _tracking_id: string }
+        Returns: {
+          client_email: string
+          client_name: string
+          client_phone: string
+          created_at: string
+          current_status: string | null
+          degree: string
+          description: string | null
+          estimated_delivery: string | null
+          id: string
+          phone_last_four: string
+          service_type: string
+          title: string
+          tracking_id: string
+          updated_at: string
+          user_id: string | null
+        }[]
+        SetofOptions: {
+          from: "*"
+          to: "orders"
+          isOneToOne: false
+          isSetofReturn: true
+        }
+      }
     }
     Enums: {
       app_role: "admin" | "moderator" | "user"
