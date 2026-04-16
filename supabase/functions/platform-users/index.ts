@@ -22,27 +22,9 @@ const handler = async (req: Request): Promise<Response> => {
   const userId = segments[segments.length - 1];
 
   try {
-    // Authenticate user
-    const authHeader = req.headers.get('authorization');
-    let currentUser = null;
-    
-    if (authHeader && authHeader.startsWith('Bearer ')) {
-      const token = authHeader.substring(7);
-      try {
-        const payload = JSON.parse(atob(token));
-        if (payload.exp > Date.now()) {
-          const { data: user } = await supabase
-            .from('platform_users')
-            .select('id, role, status')
-            .eq('id', payload.sub)
-            .eq('status', 'active')
-            .single();
-          currentUser = user;
-        }
-      } catch (e) {
-        console.log('Invalid token:', e);
-      }
-    }
+    // Authenticate user with signed JWT
+    const { authenticatePlatformRequest } = await import('../_shared/platform-jwt.ts');
+    const currentUser = await authenticatePlatformRequest(req, supabase);
 
     if (!currentUser) {
       return new Response(JSON.stringify({ error: 'مطلوب تسجيل الدخول' }), {
