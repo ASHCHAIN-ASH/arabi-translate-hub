@@ -13,6 +13,7 @@ import {
   BarChart3, Package, Ticket, UserPlus, Star
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import ChatFloatingButton from '@/components/chat/ChatFloatingButton';
 
 interface AdminLayoutProps {
   children: React.ReactNode;
