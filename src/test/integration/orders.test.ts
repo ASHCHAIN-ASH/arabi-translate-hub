@@ -1,6 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 
-// Mock supabase
 const mockFrom = vi.fn();
 const mockSelect = vi.fn().mockReturnThis();
 const mockInsert = vi.fn().mockReturnThis();
@@ -32,42 +31,35 @@ describe('Orders Integration', () => {
   });
 
   describe('Order Tracking Query', () => {
-    it('finds order by tracking ID and phone', async () => {
+    it('finds order by tracking ID', async () => {
       const mockOrder = {
         id: '123',
-        tracking_id: 'TR001234',
-        phone_last_four: '4567',
-        title: 'بحث علمي',
-        degree: 'ماجستير',
-        current_status: 'data_collection',
-        estimated_delivery: '2024-03-15',
+        tracking_id: 'ORD-001234',
+        service_name: 'ترجمة أكاديمية',
+        current_status: 'pending',
         created_at: '2024-01-01',
-        client_name: 'أحمد',
-        client_phone: '0501234567',
-        client_email: 'ahmed@test.com',
       };
 
       mockSingle.mockResolvedValueOnce({ data: mockOrder, error: null });
 
       const { supabase } = await import('@/integrations/supabase/client');
-      const result = await supabase
-        .from('orders')
+      const result = await (supabase as any)
+        .from('service_orders')
         .select('*')
-        .eq('tracking_id', 'TR001234')
-        .eq('phone_last_four', '4567')
+        .eq('tracking_id', 'ORD-001234')
         .single();
 
-      expect(mockFrom).toHaveBeenCalledWith('orders');
+      expect(mockFrom).toHaveBeenCalledWith('service_orders');
       expect(result.data).toEqual(mockOrder);
-      expect(result.data.tracking_id).toBe('TR001234');
+      expect(result.data.tracking_id).toBe('ORD-001234');
     });
 
     it('returns null for non-existent order', async () => {
       mockSingle.mockResolvedValueOnce({ data: null, error: { message: 'Not found' } });
 
       const { supabase } = await import('@/integrations/supabase/client');
-      const result = await supabase
-        .from('orders')
+      const result = await (supabase as any)
+        .from('service_orders')
         .select('*')
         .eq('tracking_id', 'INVALID')
         .single();
@@ -79,16 +71,16 @@ describe('Orders Integration', () => {
 
   describe('Order Status Update', () => {
     it('updates order status', async () => {
-      mockEq.mockResolvedValueOnce({ data: { id: '123', current_status: 'first_draft' }, error: null });
+      mockEq.mockResolvedValueOnce({ data: { id: '123', current_status: 'in_progress' }, error: null });
 
       const { supabase } = await import('@/integrations/supabase/client');
-      const result = await supabase
-        .from('orders')
-        .update({ current_status: 'first_draft' })
+      const result = await (supabase as any)
+        .from('service_orders')
+        .update({ current_status: 'in_progress' })
         .eq('id', '123');
 
-      expect(mockFrom).toHaveBeenCalledWith('orders');
-      expect(mockUpdate).toHaveBeenCalledWith({ current_status: 'first_draft' });
+      expect(mockFrom).toHaveBeenCalledWith('service_orders');
+      expect(mockUpdate).toHaveBeenCalledWith({ current_status: 'in_progress' });
     });
   });
 });

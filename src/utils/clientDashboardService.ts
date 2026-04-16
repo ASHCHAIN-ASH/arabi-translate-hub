@@ -31,36 +31,31 @@ export interface ClientInvoice {
 }
 
 export class ClientDashboardService {
-  // احصائيات العميل
   static async getClientStats(userId: string): Promise<ClientStats> {
     try {
-      // إجمالي الطلبات
-      const { count: totalOrdersCount } = await (supabase as any).from('contracts').select('*', { count: 'exact', head: true })
+      const { count: totalOrdersCount } = await supabase.from('service_orders').select('*', { count: 'exact', head: true })
         .eq('user_id', userId);
 
-      // الطلبات قيد المعالجة
-      const { count: pendingOrdersCount } = await (supabase as any).from('contracts').select('*', { count: 'exact', head: true })
+      const { count: pendingOrdersCount } = await supabase.from('service_orders').select('*', { count: 'exact', head: true })
         .eq('user_id', userId)
-        .in('status', ['draft', 'pending']);
+        .in('current_status', ['pending', 'in_progress']);
 
-      // الفواتير غير المدفوعة
-      const { count: unpaidInvoicesCount } = await (supabase as any).from('invoices').select('*', { count: 'exact', head: true })
+      const { count: unpaidInvoicesCount } = await supabase.from('invoices').select('*', { count: 'exact', head: true })
         .eq('user_id', userId)
         .neq('status', 'paid');
 
-      // آخر دفعة
-      const { data: lastPaymentData } = await (supabase as any).from('payment_transactions').select('amount')
+      const { data: lastPaymentData } = await supabase.from('payment_transactions').select('amount')
         .eq('user_id', userId)
-        .eq('status', 'COMPLETED')
+        .eq('status', 'completed')
         .order('created_at', { ascending: false })
         .limit(1)
-        .single();
+        .maybeSingle();
 
       return {
         totalOrders: totalOrdersCount || 0,
         unpaidInvoices: unpaidInvoicesCount || 0,
         lastPayment: lastPaymentData?.amount || 0,
-        avgExecutionTime: '5 أيام', // سيتم حسابها لاحقاً من البيانات التاريخية
+        avgExecutionTime: '5 أيام',
         pendingOrders: pendingOrdersCount || 0
       };
     } catch (error) {
@@ -69,18 +64,10 @@ export class ClientDashboardService {
     }
   }
 
-  // أحدث طلبات العميل
   static async getClientOrders(userId: string): Promise<ClientOrder[]> {
     try {
-      const { data, error } = await (supabase as any).from('contracts').select(`
-          id,
-          contract_number,
-          service_type,
-          service_description,
-          status,
-          service_price,
-          created_at,
-          client_name
+      const { data, error } = await supabase.from('service_orders').select(`
+          id, tracking_id, service_name, current_status, total_amount, created_at, priority
         `)
         .eq('user_id', userId)
         .order('created_at', { ascending: false })
@@ -90,15 +77,15 @@ export class ClientDashboardService {
 
       return data?.map(order => ({
         id: order.id,
-        orderNumber: order.contract_number,
-        service: order.title || '',
-        title: order.content || order.title || '',
-        status: this.translateContractStatus(order.status),
-        total: 0,
+        orderNumber: order.tracking_id,
+        service: order.service_name || '',
+        title: order.service_name || '',
+        status: this.translateContractStatus(order.current_status || ''),
+        total: order.total_amount || 0,
         date: new Date(order.created_at).toLocaleDateString('ar-SA'),
-        priority: this.calculatePriority(0),
-        progress: this.calculateProgress(order.status),
-        serviceType: order.title || ''
+        priority: order.priority || 'normal',
+        progress: this.calculateProgress(order.current_status || ''),
+        serviceType: order.service_name || ''
       })) || [];
     } catch (error) {
       console.error('خطأ في جلب طلبات العميل:', error);
@@ -106,10 +93,9 @@ export class ClientDashboardService {
     }
   }
 
-  // فواتير العميل
   static async getClientInvoices(userId: string): Promise<ClientInvoice[]> {
     try {
-      const { data, error } = await (supabase as any).from('invoices').select('*')
+      const { data, error } = await supabase.from('invoices').select('*')
         .eq('user_id', userId)
         .order('created_at', { ascending: false })
         .limit(10);
@@ -119,8 +105,8 @@ export class ClientDashboardService {
       return data?.map(invoice => ({
         id: invoice.id,
         invoiceNumber: invoice.invoice_number,
-        amount: (invoice.total_amount || 0),
-        status: invoice.status,
+        amount: invoice.total_amount || 0,
+        status: invoice.status || '',
         dueDate: invoice.due_date ? new Date(invoice.due_date).toLocaleDateString('ar-SA') : '',
         issueDate: new Date(invoice.created_at).toLocaleDateString('ar-SA')
       })) || [];
@@ -130,10 +116,9 @@ export class ClientDashboardService {
     }
   }
 
-  // آخر المدفوعات
   static async getClientPayments(userId: string, limit = 5) {
     try {
-      const { data, error } = await (supabase as any).from('payment_transactions').select('*')
+      const { data, error } = await supabase.from('payment_transactions').select('*')
         .eq('user_id', userId)
         .order('created_at', { ascending: false })
         .limit(limit);
@@ -156,10 +141,9 @@ export class ClientDashboardService {
     }
   }
 
-  // التذاكر النشطة للعميل
   static async getClientTickets(userId: string) {
     try {
-      const { data, error } = await (supabase as any).from('tickets').select('*')
+      const { data, error } = await supabase.from('tickets').select('*')
         .eq('user_id', userId)
         .neq('status', 'closed')
         .order('created_at', { ascending: false })
@@ -172,7 +156,7 @@ export class ClientDashboardService {
         ticketNumber: ticket.ticket_number,
         title: ticket.subject,
         description: ticket.description,
-        status: this.translateTicketStatus(ticket.status),
+        status: this.translateTicketStatus(ticket.status || ''),
         priority: ticket.priority,
         createdAt: new Date(ticket.created_at).toLocaleDateString('ar-SA'),
         category: ticket.category
@@ -183,20 +167,16 @@ export class ClientDashboardService {
     }
   }
 
-  // ترجمة حالات العقود
   private static translateContractStatus(status: string): string {
     const statusMap: { [key: string]: string } = {
-      'draft': 'مسودة',
       'pending': 'في الانتظار',
-      'active': 'قيد المعالجة',
+      'in_progress': 'قيد التنفيذ',
       'completed': 'مكتمل',
       'cancelled': 'ملغي',
-      'expired': 'منتهي الصلاحية'
     };
     return statusMap[status] || status;
   }
 
-  // ترجمة حالات التذاكر
   private static translateTicketStatus(status: string): string {
     const statusMap: { [key: string]: string } = {
       'open': 'مفتوح',
@@ -208,35 +188,20 @@ export class ClientDashboardService {
     return statusMap[status] || status;
   }
 
-  // حساب الأولوية بناءً على قيمة المشروع
-  private static calculatePriority(price: number): string {
-    if (price > 1000) return 'عالية';
-    if (price > 500) return 'متوسطة';
-    return 'منخفضة';
-  }
-
-  // حساب نسبة التقدم بناءً على الحالة
   private static calculateProgress(status: string): number {
     const progressMap: { [key: string]: number } = {
-      'draft': 0,
       'pending': 15,
-      'active': 50,
+      'in_progress': 50,
       'completed': 100,
       'cancelled': 0,
-      'expired': 0
     };
     return progressMap[status] || 0;
   }
 
-  // تنسيق العملة
   static formatCurrency(amount: number, currency = 'SAR'): string {
-    return new Intl.NumberFormat('ar-SA', {
-      style: 'currency',
-      currency: currency
-    }).format(amount);
+    return new Intl.NumberFormat('ar-SA', { style: 'currency', currency }).format(amount);
   }
 
-  // حساب الوقت المنقضي
   static getTimeAgo(dateString: string): string {
     const date = new Date(dateString);
     const now = new Date();
@@ -245,12 +210,8 @@ export class ClientDashboardService {
     const diffInHours = Math.floor(diffInMs / (1000 * 60 * 60));
     const diffInDays = Math.floor(diffInMs / (1000 * 60 * 60 * 24));
 
-    if (diffInMins < 60) {
-      return `منذ ${diffInMins} دقيقة`;
-    } else if (diffInHours < 24) {
-      return `منذ ${diffInHours} ساعة`;
-    } else {
-      return `منذ ${diffInDays} يوم`;
-    }
+    if (diffInMins < 60) return `منذ ${diffInMins} دقيقة`;
+    if (diffInHours < 24) return `منذ ${diffInHours} ساعة`;
+    return `منذ ${diffInDays} يوم`;
   }
 }

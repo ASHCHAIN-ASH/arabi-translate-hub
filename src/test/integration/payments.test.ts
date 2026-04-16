@@ -27,14 +27,14 @@ describe('Payments Integration', () => {
     vi.clearAllMocks();
   });
 
-  describe('Create Payment', () => {
-    it('inserts payment record linked to invoice', async () => {
+  describe('Create Payment Transaction', () => {
+    it('inserts payment transaction record', async () => {
       const payment = {
         invoice_id: 'inv-1',
         amount: 750,
-        payment_method: 'bank_transfer',
+        type: 'payment',
         status: 'completed' as const,
-        payment_date: '2024-02-01',
+        user_id: 'u1',
       };
 
       mockSingle.mockResolvedValueOnce({
@@ -43,13 +43,13 @@ describe('Payments Integration', () => {
       });
 
       const { supabase } = await import('@/integrations/supabase/client');
-      const result = await supabase
-        .from('business_payments')
+      const result = await (supabase as any)
+        .from('payment_transactions')
         .insert([payment])
         .select()
         .single();
 
-      expect(mockFrom).toHaveBeenCalledWith('business_payments');
+      expect(mockFrom).toHaveBeenCalledWith('payment_transactions');
       expect(mockInsert).toHaveBeenCalledWith([payment]);
       expect(result.data.amount).toBe(750);
     });
@@ -63,38 +63,36 @@ describe('Payments Integration', () => {
       });
 
       const { supabase } = await import('@/integrations/supabase/client');
-      await supabase
-        .from('business_invoices')
+      await (supabase as any)
+        .from('invoices')
         .update({ status: 'paid', paid_at: new Date().toISOString() })
         .eq('id', 'inv-1');
 
-      expect(mockFrom).toHaveBeenCalledWith('business_invoices');
+      expect(mockFrom).toHaveBeenCalledWith('invoices');
     });
   });
 
-  describe('Wallet Transaction', () => {
-    it('records wallet deposit', async () => {
+  describe('Payment Transaction Record', () => {
+    it('records a payment transaction', async () => {
       const txn = {
         user_id: 'u1',
-        wallet_id: 'w1',
         amount: 500,
-        balance_before: 0,
         balance_after: 500,
-        transaction_type: 'deposit',
+        type: 'deposit',
         status: 'completed',
       };
 
       mockSingle.mockResolvedValueOnce({ data: { id: 'txn-1', ...txn }, error: null });
 
       const { supabase } = await import('@/integrations/supabase/client');
-      const result = await supabase
-        .from('wallet_transactions')
-        .insert(txn)
+      const result = await (supabase as any)
+        .from('payment_transactions')
+        .insert([txn])
         .select()
         .single();
 
       expect(result.data.balance_after).toBe(500);
-      expect(result.data.transaction_type).toBe('deposit');
+      expect(result.data.type).toBe('deposit');
     });
   });
 });
