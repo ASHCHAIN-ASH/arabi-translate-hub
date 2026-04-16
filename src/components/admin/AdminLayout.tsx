@@ -187,7 +187,7 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
               className="w-full flex items-center justify-between px-5 py-2 text-[11px] font-bold text-muted-foreground/70 uppercase tracking-wider hover:text-muted-foreground transition-colors"
             >
               <span>{group.label}</span>
-              <ChevronDown className={`w-3 h-3 transition-transform ${collapsedGroups[group.label] ? '-rotate-90' : ''}`} />
+              <ChevronDown className={`w-3 h-3 transition-transform ${collapsedGroups[group.label] ? 'rotate-90' : ''}`} />
             </button>
 
             <AnimatePresence initial={false}>
@@ -310,7 +310,7 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
                 <Button variant="ghost" size="icon" className="relative h-9 w-9" onClick={() => setIsNotificationOpen(!isNotificationOpen)}>
                   <Bell className="w-[18px] h-[18px]" />
                   {unreadCount > 0 && (
-                    <span className="absolute -top-0.5 -left-0.5 w-4 h-4 bg-destructive rounded-full flex items-center justify-center text-[9px] text-destructive-foreground font-bold">
+                    <span className="absolute -top-0.5 start-0 w-4 h-4 bg-destructive rounded-full flex items-center justify-center text-[9px] text-destructive-foreground font-bold">
                       {unreadCount}
                     </span>
                   )}
@@ -324,7 +324,7 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
                         initial={{ opacity: 0, y: 8, scale: 0.96 }}
                         animate={{ opacity: 1, y: 0, scale: 1 }}
                         exit={{ opacity: 0, y: 8, scale: 0.96 }}
-                        className="absolute left-0 mt-2 w-80 bg-card border border-border/50 rounded-xl shadow-xl z-50"
+                        className="absolute start-0 mt-2 w-80 bg-card border border-border/50 rounded-xl shadow-xl z-50"
                       >
                         <div className="p-3 border-b border-border/40">
                           <h3 className="text-sm font-bold">الإشعارات</h3>
