@@ -1,10 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   ArrowRight, Calendar, Clock, FileText, DollarSign,
   CheckCircle, Download, Package, AlertCircle, RefreshCw,
-  Check, X, MessageSquare, TrendingUp, Shield, Sparkles, Copy
+  Check, X, MessageSquare, TrendingUp, Shield, Sparkles, Copy,
+  Upload, Loader2
 } from 'lucide-react';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -79,6 +80,74 @@ const OrderDetails = () => {
   const [rejectionReason, setRejectionReason] = useState('');
   const [showRejectForm, setShowRejectForm] = useState(false);
   const [submitting, setSubmitting] = useState(false);
+  const [uploading, setUploading] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const MAX_FILE_SIZE = 20 * 1024 * 1024; // 20MB
+  const MAX_FILES = 5;
+
+  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (!e.target.files || !id || !user) return;
+    const files = Array.from(e.target.files);
+
+    if (files.length > MAX_FILES) {
+      toast.error(`يمكنك رفع ${MAX_FILES} ملفات كحد أقصى في المرة الواحدة`);
+      return;
+    }
+
+    const oversized = files.filter(f => f.size > MAX_FILE_SIZE);
+    if (oversized.length > 0) {
+      toast.error(`حجم الملف يجب ألا يتجاوز 20 ميجابايت`);
+      return;
+    }
+
+    setUploading(true);
+    let successCount = 0;
+
+    try {
+      for (const file of files) {
+        const ext = file.name.split('.').pop();
+        const storagePath = `${user.id}/${id}/${Date.now()}_${Math.random().toString(36).slice(2)}.${ext}`;
+
+        const { error: uploadError } = await supabase.storage
+          .from('order-attachments')
+          .upload(storagePath, file);
+
+        if (uploadError) {
+          console.error('Upload error:', uploadError);
+          toast.error(`فشل رفع ${file.name}`);
+          continue;
+        }
+
+        const { error: dbError } = await supabase.from('order_attachments').insert({
+          order_id: id,
+          user_id: user.id,
+          file_name: file.name,
+          file_size: file.size,
+          file_type: file.type || null,
+          storage_path: storagePath,
+        });
+
+        if (dbError) {
+          console.error('DB error:', dbError);
+          toast.error(`فشل حفظ بيانات ${file.name}`);
+          continue;
+        }
+        successCount++;
+      }
+
+      if (successCount > 0) {
+        toast.success(`تم رفع ${successCount} ملف بنجاح`);
+        fetchData();
+      }
+    } catch (err) {
+      console.error(err);
+      toast.error('حدث خطأ أثناء رفع الملفات');
+    } finally {
+      setUploading(false);
+      if (fileInputRef.current) fileInputRef.current.value = '';
+    }
+  };
 
   const fetchData = async () => {
     if (!id) return;
@@ -457,19 +526,42 @@ const OrderDetails = () => {
             <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }}>
               <Card className="border-0 shadow-md">
                 <CardHeader className="pb-3">
-                  <CardTitle className="flex items-center gap-2 text-base">
-                    <FileText className="w-5 h-5 text-primary" />
-                    المرفقات
-                    {attachments.length > 0 && (
-                      <Badge variant="secondary" className="text-xs">{attachments.length}</Badge>
-                    )}
-                  </CardTitle>
+                  <div className="flex items-center justify-between">
+                    <CardTitle className="flex items-center gap-2 text-base">
+                      <FileText className="w-5 h-5 text-primary" />
+                      المرفقات
+                      {attachments.length > 0 && (
+                        <Badge variant="secondary" className="text-xs">{attachments.length}</Badge>
+                      )}
+                    </CardTitle>
+                    <div>
+                      <input
+                        ref={fileInputRef}
+                        type="file"
+                        multiple
+                        className="hidden"
+                        onChange={handleFileUpload}
+                        accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.jpg,.jpeg,.png,.gif,.zip,.rar,.txt"
+                      />
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        onClick={() => fileInputRef.current?.click()}
+                        disabled={uploading}
+                        className="gap-2"
+                      >
+                        {uploading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Upload className="w-4 h-4" />}
+                        {uploading ? 'جاري الرفع...' : 'رفع ملف'}
+                      </Button>
+                    </div>
+                  </div>
                 </CardHeader>
                 <CardContent>
                   {attachments.length === 0 ? (
                     <div className="text-center py-10 text-muted-foreground">
-                      <FileText className="w-10 h-10 mx-auto mb-3 opacity-30" />
-                      <p className="text-sm">لا توجد مرفقات</p>
+                      <Upload className="w-10 h-10 mx-auto mb-3 opacity-30" />
+                      <p className="text-sm">لا توجد مرفقات بعد</p>
+                      <p className="text-xs mt-1">اضغط "رفع ملف" لإضافة مرفقات</p>
                     </div>
                   ) : (
                     <div className="space-y-2">
