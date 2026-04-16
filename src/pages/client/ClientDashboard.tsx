@@ -189,7 +189,7 @@ const ClientDashboard = () => {
               <Button 
                 size="lg" 
                 className="bg-white text-indigo-600 hover:bg-white/95 font-black shadow-2xl border-0 px-10 py-5 text-xl rounded-2xl"
-                onClick={() => navigate('/orders/new')}
+                onClick={() => navigate('/client-services')}
               >
                 <Plus className="w-6 h-6 ml-3" />
                 ابدأ طلب جديد
