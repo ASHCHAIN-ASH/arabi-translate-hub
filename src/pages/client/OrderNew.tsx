@@ -9,7 +9,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import {
-  ArrowRight, ShoppingCart, FileText, Calculator, RefreshCw,
+  ArrowRight, ShoppingCart, FileText, RefreshCw,
   Search, Check, Languages, BookOpen, GraduationCap, Microscope,
   CheckCircle, ChevronRight
 } from 'lucide-react';
