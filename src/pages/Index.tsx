@@ -11,7 +11,7 @@ import {
   Bot, Bell, GraduationCap, BookOpen, Users, Award, 
   ArrowRight, PlayCircle, Building2, Globe, CheckCircle,
   Star, TrendingUp, Shield, Clock, Languages, Target,
-  Sparkles, ChevronRight, Zap, Heart, Brain
+  Sparkles, ChevronRight, Zap, Heart, Brain, MessageCircle, Quote
 } from "lucide-react";
 import { UNIFIED_STATS, STATS_LABELS } from "@/constants/academicStats";
 import { InstitutionalPartnershipBanner } from "@/components/InstitutionalPartnershipBanner";
