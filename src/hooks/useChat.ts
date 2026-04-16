@@ -122,9 +122,11 @@ export function useChat(userId?: string, isAdmin = false) {
     loadConversations();
     loadUnreadCount();
 
-    const channel = supabase
-      .channel('chat-realtime')
-      .on('postgres_changes', { event: '*', schema: 'public', table: 'chat_messages' }, (payload) => {
+    const channelName = `chat-realtime-${Date.now()}`;
+    const channel = supabase.channel(channelName);
+
+    channel
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'chat_messages' }, () => {
         if (activeConversation) {
           loadMessages(activeConversation);
         }
