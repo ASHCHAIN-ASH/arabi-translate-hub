@@ -93,7 +93,7 @@ const ClientLayout: React.FC<ClientLayoutProps> = ({ children }) => {
     <div className="min-h-screen w-full bg-background" dir="rtl">
       <div className="flex">
         {/* Desktop Sidebar - Always visible on screens 900px+ */}
-        <aside className="w-64 bg-card/80 backdrop-blur-sm border-l border-border flex-shrink-0 hidden md:block">
+        <aside className="w-64 bg-card/80 backdrop-blur-sm border-l rtl:border-l-0 rtl:border-r border-border flex-shrink-0 hidden md:block">
           <div className="sticky top-0 h-screen overflow-y-auto">
             {/* Sidebar Header */}
             <div className="p-4 border-b border-border bg-gradient-to-r from-primary/5 to-secondary/5">
