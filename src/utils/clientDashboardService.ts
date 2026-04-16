@@ -19,6 +19,9 @@ export interface ClientOrder {
   priority: string;
   progress: number;
   serviceType: string;
+  quoteStatus: string | null;
+  quoteNotes: string | null;
+  quoteSentAt: string | null;
 }
 
 export interface ClientInvoice {
@@ -83,8 +86,8 @@ export class ClientDashboardService {
 
   static async getClientOrders(userId: string): Promise<ClientOrder[]> {
     try {
-      const { data, error } = await supabase.from('service_orders').select(`
-          id, tracking_id, service_name, current_status, total_amount, created_at, priority
+      const { data, error } = await (supabase.from('service_orders') as any).select(`
+          id, tracking_id, service_name, current_status, total_amount, created_at, priority, quote_status, quote_notes, quote_sent_at
         `)
         .eq('user_id', userId)
         .order('created_at', { ascending: false })
@@ -92,7 +95,7 @@ export class ClientDashboardService {
 
       if (error) throw error;
 
-      return data?.map(order => ({
+      return data?.map((order: any) => ({
         id: order.id,
         orderNumber: order.tracking_id,
         service: order.service_name || '',
@@ -102,7 +105,10 @@ export class ClientDashboardService {
         date: new Date(order.created_at).toLocaleDateString('ar-SA'),
         priority: order.priority || 'normal',
         progress: this.calculateProgress(order.current_status || ''),
-        serviceType: order.service_name || ''
+        serviceType: order.service_name || '',
+        quoteStatus: order.quote_status || null,
+        quoteNotes: order.quote_notes || null,
+        quoteSentAt: order.quote_sent_at || null,
       })) || [];
     } catch (error) {
       console.error('خطأ في جلب طلبات العميل:', error);
