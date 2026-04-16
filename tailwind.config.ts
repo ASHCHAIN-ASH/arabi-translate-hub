@@ -19,13 +19,13 @@ export default {
 		},
 		extend: {
 			fontFamily: {
-				'sans': ['Dubai', 'IBM Plex Sans Arabic', 'system-ui', 'sans-serif'],
-				'dubai': ['Dubai', 'IBM Plex Sans Arabic', 'sans-serif'],
-				'ibm-plex': ['IBM Plex Sans Arabic', 'Dubai', 'sans-serif'],
-				'arabic-title': ['Dubai', 'IBM Plex Sans Arabic', 'sans-serif'],
-				'arabic-body': ['Dubai', 'IBM Plex Sans Arabic', 'sans-serif'],
-				'academic': ['Dubai', 'IBM Plex Sans Arabic', 'sans-serif'],
-				'academic-title': ['Dubai', 'IBM Plex Sans Arabic', 'sans-serif'],
+				'sans': ['Noto Sans Arabic', 'Inter', 'system-ui', 'sans-serif'],
+				'noto-arabic': ['Noto Sans Arabic', 'Inter', 'sans-serif'],
+				'inter': ['Inter', 'Noto Sans Arabic', 'sans-serif'],
+				'arabic-title': ['Noto Sans Arabic', 'Inter', 'sans-serif'],
+				'arabic-body': ['Noto Sans Arabic', 'Inter', 'sans-serif'],
+				'academic': ['Noto Sans Arabic', 'Inter', 'sans-serif'],
+				'academic-title': ['Noto Sans Arabic', 'Inter', 'sans-serif'],
 			},
 			colors: {
 				border: 'hsl(var(--border))',
