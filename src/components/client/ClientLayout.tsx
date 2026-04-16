@@ -171,10 +171,7 @@ const ClientLayout: React.FC<ClientLayoutProps> = ({ children }) => {
               {/* User Menu */}
               <div className="flex items-center space-x-2 sm:space-x-4 space-x-reverse">
                 {/* Notifications */}
-                <Button variant="ghost" size="sm" className="relative p-2">
-                  <Bell className="w-4 h-4 sm:w-5 sm:h-5" />
-                  <span className="absolute -top-1 -right-1 w-2 h-2 bg-red-500 rounded-full"></span>
-                </Button>
+                <NotificationCenter />
 
                 {/* User Profile */}
                 <div className="flex items-center space-x-2 sm:space-x-3 space-x-reverse">
