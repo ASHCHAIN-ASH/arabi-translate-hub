@@ -84,6 +84,7 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
       items: [
         { name: 'إدارة الخدمات', href: '/adminmaster/services', icon: Briefcase },
         { name: 'الإشعارات البريدية', href: '/adminmaster/email-notifications', icon: Mail },
+        { name: 'المحادثات', href: '/adminmaster/chat', icon: Activity },
       ]
     },
     {
