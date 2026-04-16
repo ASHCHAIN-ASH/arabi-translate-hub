@@ -318,6 +318,107 @@ export type Database = {
         }
         Relationships: []
       }
+      order_timeline: {
+        Row: {
+          actor_name: string | null
+          actor_type: string
+          completed_date: string | null
+          created_at: string
+          description: string | null
+          id: string
+          order_id: string
+          scheduled_date: string | null
+          status: string
+          title: string
+        }
+        Insert: {
+          actor_name?: string | null
+          actor_type?: string
+          completed_date?: string | null
+          created_at?: string
+          description?: string | null
+          id?: string
+          order_id: string
+          scheduled_date?: string | null
+          status: string
+          title?: string
+        }
+        Update: {
+          actor_name?: string | null
+          actor_type?: string
+          completed_date?: string | null
+          created_at?: string
+          description?: string | null
+          id?: string
+          order_id?: string
+          scheduled_date?: string | null
+          status?: string
+          title?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "order_timeline_order_id_fkey"
+            columns: ["order_id"]
+            isOneToOne: false
+            referencedRelation: "orders"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      orders: {
+        Row: {
+          client_email: string
+          client_name: string
+          client_phone: string
+          created_at: string
+          current_status: string | null
+          degree: string
+          description: string | null
+          estimated_delivery: string | null
+          id: string
+          phone_last_four: string
+          service_type: string
+          title: string
+          tracking_id: string
+          updated_at: string
+          user_id: string | null
+        }
+        Insert: {
+          client_email: string
+          client_name: string
+          client_phone: string
+          created_at?: string
+          current_status?: string | null
+          degree?: string
+          description?: string | null
+          estimated_delivery?: string | null
+          id?: string
+          phone_last_four: string
+          service_type?: string
+          title: string
+          tracking_id?: string
+          updated_at?: string
+          user_id?: string | null
+        }
+        Update: {
+          client_email?: string
+          client_name?: string
+          client_phone?: string
+          created_at?: string
+          current_status?: string | null
+          degree?: string
+          description?: string | null
+          estimated_delivery?: string | null
+          id?: string
+          phone_last_four?: string
+          service_type?: string
+          title?: string
+          tracking_id?: string
+          updated_at?: string
+          user_id?: string | null
+        }
+        Relationships: []
+      }
       payment_transactions: {
         Row: {
           amount: number
