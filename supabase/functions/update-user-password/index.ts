@@ -9,7 +9,6 @@ const corsHeaders = {
 interface UpdatePasswordRequest {
   userId: string;
   newPassword: string;
-  adminUserId?: string;
   sendEmail?: boolean;
 }
 
@@ -26,7 +25,12 @@ const handler = async (req: Request): Promise<Response> => {
   }
 
   try {
-    const { userId, newPassword, adminUserId, sendEmail = true }: UpdatePasswordRequest = await req.json();
+    // Verify caller is an authenticated admin
+    const { requireAdmin } = await import('../_shared/supabase-auth.ts');
+    const adminResult = await requireAdmin(req, corsHeaders);
+    if (adminResult instanceof Response) return adminResult;
+
+    const { userId, newPassword, sendEmail = true }: UpdatePasswordRequest = await req.json();
 
     // Validate input
     if (!userId || !newPassword) {
