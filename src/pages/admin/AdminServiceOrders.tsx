@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import AdminLayout from '@/components/admin/AdminLayout';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -9,30 +9,30 @@ import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { 
-  Search, 
-  Filter, 
-  RefreshCw, 
-  TrendingUp, 
-  Clock, 
-  CheckCircle, 
-  Users,
-  Eye,
-  Edit,
-  FileText,
-  Calendar,
-  Paperclip,
-  Download,
-  File,
-  ChevronDown,
-  ChevronUp,
-  DollarSign,
-  Send,
-  X,
-  Check
+  Search, Filter, RefreshCw, TrendingUp, Clock, CheckCircle, Users,
+  Eye, Edit, FileText, Calendar, Paperclip, Download, File,
+  ChevronDown, ChevronUp, DollarSign, Send, X, User, Mail, Phone,
+  ArrowUpDown, MoreHorizontal, AlertCircle, Zap, Bell
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
+
+interface CustomerInfo {
+  id: string;
+  name: string;
+  email?: string | null;
+  phone?: string | null;
+  company?: string | null;
+}
+
+interface ProfileInfo {
+  full_name?: string | null;
+  phone?: string | null;
+  avatar_url?: string | null;
+}
 
 interface ServiceOrder {
   id: string;
@@ -49,190 +49,244 @@ interface ServiceOrder {
   updated_at: string;
   user_id?: string;
   customer_id?: string;
-  services?: any;
+  quote_status?: string;
+  quote_notes?: string;
+  quote_sent_at?: string;
+  // Joined data
+  customer?: CustomerInfo | null;
+  profile?: ProfileInfo | null;
 }
+
+interface TimelineEntry {
+  id: string;
+  status: string;
+  note?: string;
+  created_at: string;
+  created_by?: string;
+}
+
+const STATUS_CONFIG: Record<string, { label: string; color: string; icon: React.ReactNode; bgClass: string }> = {
+  pending: { label: 'معلق', color: 'bg-gray-100 text-gray-700 border-gray-300', icon: <Clock className="w-3 h-3" />, bgClass: 'border-l-gray-400' },
+  received: { label: 'مستلم', color: 'bg-blue-50 text-blue-700 border-blue-300', icon: <Bell className="w-3 h-3" />, bgClass: 'border-l-blue-500' },
+  under_review: { label: 'تحت المراجعة', color: 'bg-amber-50 text-amber-700 border-amber-300', icon: <Eye className="w-3 h-3" />, bgClass: 'border-l-amber-500' },
+  in_progress: { label: 'قيد التنفيذ', color: 'bg-purple-50 text-purple-700 border-purple-300', icon: <Zap className="w-3 h-3" />, bgClass: 'border-l-purple-500' },
+  completed: { label: 'مكتمل', color: 'bg-green-50 text-green-700 border-green-300', icon: <CheckCircle className="w-3 h-3" />, bgClass: 'border-l-green-500' },
+  delivered: { label: 'تم التسليم', color: 'bg-emerald-50 text-emerald-700 border-emerald-300', icon: <CheckCircle className="w-3 h-3" />, bgClass: 'border-l-emerald-600' },
+  cancelled: { label: 'ملغي', color: 'bg-red-50 text-red-700 border-red-300', icon: <X className="w-3 h-3" />, bgClass: 'border-l-red-500' },
+};
+
+const PRIORITY_CONFIG: Record<string, { label: string; color: string }> = {
+  low: { label: 'منخفض', color: 'bg-slate-100 text-slate-600' },
+  normal: { label: 'عادي', color: 'bg-blue-100 text-blue-600' },
+  high: { label: 'عالي', color: 'bg-orange-100 text-orange-700' },
+  urgent: { label: 'عاجل', color: 'bg-red-100 text-red-700' },
+};
 
 const AdminServiceOrders = () => {
   const [orders, setOrders] = useState<ServiceOrder[]>([]);
-  const [filteredOrders, setFilteredOrders] = useState<ServiceOrder[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
+  const [priorityFilter, setPriorityFilter] = useState('all');
+  const [sortBy, setSortBy] = useState<'date' | 'priority' | 'amount'>('date');
   const [isRefreshing, setIsRefreshing] = useState(false);
+  const [selectedOrder, setSelectedOrder] = useState<ServiceOrder | null>(null);
+  const [timeline, setTimeline] = useState<TimelineEntry[]>([]);
+  const [loadingTimeline, setLoadingTimeline] = useState(false);
+  const [newOrderFlash, setNewOrderFlash] = useState<string | null>(null);
   const { toast } = useToast();
 
-  useEffect(() => {
-    loadOrders();
-    
-    // إعداد Real-time للطلبات الجديدة
-    const ordersChannel = supabase
-      .channel('service-orders-realtime')
-      .on(
-        'postgres_changes',
-        {
-          event: '*',
-          schema: 'public',
-          table: 'service_orders'
-        },
-        (payload) => {
-          console.log('تحديث طلب خدمة:', payload);
-          
-          if (payload.eventType === 'INSERT') {
-            toast({
-              title: "طلب جديد! 🎉",
-              description: `تم استلام طلب جديد من ${payload.new.client_name}`,
-            });
-            loadOrders(); // إعادة تحميل الطلبات
-          } else if (payload.eventType === 'UPDATE') {
-            toast({
-              title: "تم تحديث طلب ✨",
-              description: `طلب ${payload.new.tracking_id} تم تحديثه`,
-            });
-            loadOrders();
-          }
-        }
-      )
-      .subscribe();
-
-    return () => {
-      supabase.removeChannel(ordersChannel);
-    };
-  }, []);
-
-  useEffect(() => {
-    filterOrders();
-  }, [orders, searchTerm, statusFilter]);
-
-  const loadOrders = async () => {
+  const loadOrders = useCallback(async () => {
     try {
       setLoading(true);
-      const { data, error } = await (supabase
-        .from('service_orders') as any)
+      // Load orders with customer data
+      const { data: ordersData, error } = await supabase
+        .from('service_orders')
         .select('*')
         .order('created_at', { ascending: false });
 
       if (error) throw error;
-      setOrders((data || []) as ServiceOrder[]);
+
+      const rawOrders = (ordersData || []) as any[];
+
+      // Fetch customer and profile info for orders
+      const customerIds = [...new Set(rawOrders.filter(o => o.customer_id).map(o => o.customer_id))];
+      const userIds = [...new Set(rawOrders.filter(o => o.user_id).map(o => o.user_id))];
+
+      let customersMap: Record<string, CustomerInfo> = {};
+      let profilesMap: Record<string, ProfileInfo> = {};
+
+      if (customerIds.length > 0) {
+        const { data: customers } = await supabase
+          .from('customers')
+          .select('id, name, email, phone, company')
+          .in('id', customerIds);
+        if (customers) {
+          customers.forEach(c => { customersMap[c.id] = c; });
+        }
+      }
+
+      if (userIds.length > 0) {
+        const { data: profiles } = await supabase
+          .from('profiles')
+          .select('id, full_name, phone, avatar_url')
+          .in('id', userIds);
+        if (profiles) {
+          profiles.forEach((p: any) => { profilesMap[p.id] = p; });
+        }
+      }
+
+      const enrichedOrders: ServiceOrder[] = rawOrders.map(o => ({
+        ...o,
+        customer: o.customer_id ? customersMap[o.customer_id] || null : null,
+        profile: o.user_id ? profilesMap[o.user_id] || null : null,
+      }));
+
+      setOrders(enrichedOrders);
     } catch (error) {
       console.error('Error loading orders:', error);
-      toast({
-        title: "خطأ في تحميل الطلبات",
-        description: "حدث خطأ أثناء تحميل الطلبات، يرجى المحاولة مرة أخرى",
-        variant: "destructive",
-      });
+      toast({ title: "خطأ في تحميل الطلبات", variant: "destructive" });
     } finally {
       setLoading(false);
     }
-  };
+  }, [toast]);
 
-  const filterOrders = () => {
-    let filtered = orders;
+  // Realtime subscriptions
+  useEffect(() => {
+    loadOrders();
+
+    const ordersChannel = supabase
+      .channel('admin-service-orders-rt')
+      .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'service_orders' }, (payload) => {
+        setNewOrderFlash(payload.new.id as string);
+        setTimeout(() => setNewOrderFlash(null), 5000);
+        toast({ title: "🎉 طلب جديد!", description: `طلب جديد: ${(payload.new as any).tracking_id}` });
+        loadOrders();
+      })
+      .on('postgres_changes', { event: 'UPDATE', schema: 'public', table: 'service_orders' }, () => {
+        loadOrders();
+      })
+      .on('postgres_changes', { event: 'DELETE', schema: 'public', table: 'service_orders' }, () => {
+        loadOrders();
+      })
+      .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'service_order_timeline' }, (payload) => {
+        toast({ title: "📝 تحديث جدول زمني", description: (payload.new as any).note || 'تم إضافة تحديث' });
+      })
+      .subscribe();
+
+    return () => { supabase.removeChannel(ordersChannel); };
+  }, [loadOrders, toast]);
+
+  // Filter and sort
+  const filteredOrders = React.useMemo(() => {
+    let result = [...orders];
+    
     if (searchTerm.trim()) {
-      const query = searchTerm.toLowerCase();
-      filtered = filtered.filter(order =>
-        (order.service_name || '').toLowerCase().includes(query) ||
-        order.tracking_id.toLowerCase().includes(query)
+      const q = searchTerm.toLowerCase();
+      result = result.filter(o =>
+        (o.service_name || '').toLowerCase().includes(q) ||
+        o.tracking_id.toLowerCase().includes(q) ||
+        (o.customer?.name || '').toLowerCase().includes(q) ||
+        (o.customer?.email || '').toLowerCase().includes(q) ||
+        (o.profile?.full_name || '').toLowerCase().includes(q) ||
+        (o.notes || '').toLowerCase().includes(q)
       );
     }
-    if (statusFilter !== 'all') {
-      filtered = filtered.filter(order => order.current_status === statusFilter);
+    if (statusFilter !== 'all') result = result.filter(o => o.current_status === statusFilter);
+    if (priorityFilter !== 'all') result = result.filter(o => o.priority === priorityFilter);
+
+    if (sortBy === 'priority') {
+      const pOrder: Record<string, number> = { urgent: 0, high: 1, normal: 2, low: 3 };
+      result.sort((a, b) => (pOrder[a.priority || 'normal'] ?? 2) - (pOrder[b.priority || 'normal'] ?? 2));
+    } else if (sortBy === 'amount') {
+      result.sort((a, b) => (b.total_amount || 0) - (a.total_amount || 0));
     }
 
-    setFilteredOrders(filtered);
-  };
+    return result;
+  }, [orders, searchTerm, statusFilter, priorityFilter, sortBy]);
 
   const updateOrderStatus = async (orderId: string, newStatus: string) => {
     try {
       const { error } = await supabase
         .from('service_orders')
-        .update({ 
-          current_status: newStatus,
-          updated_at: new Date().toISOString()
-        })
+        .update({ current_status: newStatus, updated_at: new Date().toISOString() })
         .eq('id', orderId);
-
       if (error) throw error;
 
-      // إضافة إدخال في timeline
-      await (supabase
-        .from('service_order_timeline') as any)
-        .insert([{
-          order_id: orderId,
-          status: newStatus,
-          note: `تم تغيير حالة الطلب إلى: ${getStatusLabel(newStatus)}`
+      // Add timeline
+      await (supabase.from('service_order_timeline') as any).insert([{
+        order_id: orderId,
+        status: newStatus,
+        note: `تم تغيير حالة الطلب إلى: ${STATUS_CONFIG[newStatus]?.label || newStatus}`
+      }]);
+
+      // Notify client
+      const order = orders.find(o => o.id === orderId);
+      if (order?.user_id) {
+        await (supabase.from('user_notifications') as any).insert([{
+          user_id: order.user_id,
+          title: '🔄 تحديث حالة الطلب',
+          message: `تم تحديث حالة طلبك ${order.tracking_id} إلى: ${STATUS_CONFIG[newStatus]?.label || newStatus}`,
+          type: 'order_update',
+          link: '/orders'
         }]);
+      }
 
-      toast({
-        title: "تم تحديث حالة الطلب",
-        description: `تم تغيير الحالة إلى: ${getStatusLabel(newStatus)}`,
-      });
-
-      loadOrders();
+      toast({ title: "✅ تم تحديث الحالة", description: STATUS_CONFIG[newStatus]?.label });
     } catch (error) {
-      console.error('Error updating order status:', error);
-      toast({
-        title: "خطأ في التحديث",
-        description: "حدث خطأ أثناء تحديث حالة الطلب",
-        variant: "destructive",
-      });
+      console.error('Error:', error);
+      toast({ title: "خطأ في التحديث", variant: "destructive" });
     }
   };
 
-  const getStatusLabel = (status: string) => {
-    const labels: Record<string, string> = {
-      received: 'مستلم',
-      under_review: 'تحت المراجعة',
-      in_progress: 'قيد التنفيذ',
-      completed: 'مكتمل',
-      delivered: 'تم التسليم',
-      cancelled: 'ملغي'
-    };
-    return labels[status] || status;
+  const loadTimeline = async (orderId: string) => {
+    setLoadingTimeline(true);
+    try {
+      const { data } = await (supabase.from('service_order_timeline') as any)
+        .select('*')
+        .eq('order_id', orderId)
+        .order('created_at', { ascending: false });
+      setTimeline(data || []);
+    } catch (e) { console.error(e); }
+    finally { setLoadingTimeline(false); }
   };
 
-  const getStatusTitle = (status: string) => {
-    const titles: Record<string, string> = {
-      received: 'تم استلام الطلب',
-      under_review: 'بدء المراجعة',
-      in_progress: 'بدء التنفيذ',
-      completed: 'إكمال العمل',
-      delivered: 'تسليم الطلب',
-      cancelled: 'إلغاء الطلب'
-    };
-    return titles[status] || 'تحديث الحالة';
+  const openOrderDetails = (order: ServiceOrder) => {
+    setSelectedOrder(order);
+    loadTimeline(order.id);
   };
 
-  const getStatusColor = (status: string) => {
-    const colors: Record<string, string> = {
-      received: 'bg-blue-100 text-blue-800',
-      under_review: 'bg-yellow-100 text-yellow-800',
-      in_progress: 'bg-purple-100 text-purple-800',
-      completed: 'bg-green-100 text-green-800',
-      delivered: 'bg-emerald-100 text-emerald-800',
-      cancelled: 'bg-red-100 text-red-800'
-    };
-    return colors[status] || 'bg-gray-100 text-gray-800';
+  const stats = {
+    total: orders.length,
+    active: orders.filter(o => !['delivered', 'cancelled', 'completed'].includes(o.current_status)).length,
+    completed: orders.filter(o => ['delivered', 'completed'].includes(o.current_status)).length,
+    pending: orders.filter(o => ['pending', 'received', 'under_review'].includes(o.current_status)).length,
+    totalRevenue: orders.reduce((sum, o) => sum + (o.total_amount || 0), 0),
   };
 
   const handleRefresh = async () => {
     setIsRefreshing(true);
     await loadOrders();
-    setTimeout(() => setIsRefreshing(false), 1000);
+    setTimeout(() => setIsRefreshing(false), 600);
   };
 
-  // Calculate statistics
-  const stats = {
-    total: orders.length,
-    active: orders.filter(o => !['delivered', 'cancelled'].includes(o.current_status)).length,
-    completed: orders.filter(o => o.current_status === 'delivered').length,
-    pending: orders.filter(o => ['received', 'under_review'].includes(o.current_status)).length
+  const getClientName = (order: ServiceOrder) => {
+    return order.customer?.name || order.profile?.full_name || 'غير محدد';
+  };
+
+  const getClientEmail = (order: ServiceOrder) => {
+    return order.customer?.email || '';
+  };
+
+  const getClientPhone = (order: ServiceOrder) => {
+    return order.customer?.phone || order.profile?.phone || '';
   };
 
   if (loading) {
     return (
       <AdminLayout>
         <div className="container mx-auto p-6">
-          <div className="text-center py-12">
+          <div className="text-center py-16">
             <div className="w-12 h-12 border-4 border-primary border-t-transparent rounded-full animate-spin mx-auto mb-4" />
             <p className="text-muted-foreground">جاري تحميل طلبات الخدمات...</p>
           </div>
@@ -243,617 +297,504 @@ const AdminServiceOrders = () => {
 
   return (
     <AdminLayout>
-      <div className="container mx-auto p-6 space-y-6">
+      <div className="container mx-auto p-4 md:p-6 space-y-6">
         {/* Header */}
         <motion.div 
           className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4"
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
         >
           <div>
-            <h1 className="text-3xl font-bold flex items-center gap-3">
+            <h1 className="text-2xl md:text-3xl font-bold flex items-center gap-3">
               🛎️ طلبات الخدمات
-              <Badge variant="secondary" className="animate-pulse">
-                {orders.length} طلب
-              </Badge>
+              <Badge variant="secondary" className="text-sm">{orders.length} طلب</Badge>
+              <span className="relative flex h-3 w-3">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+                <span className="relative inline-flex rounded-full h-3 w-3 bg-green-500"></span>
+              </span>
             </h1>
-            <p className="text-muted-foreground mt-1">
-              إدارة ومتابعة طلبات الخدمات مع الإشعارات اللحظية
+            <p className="text-muted-foreground mt-1 text-sm">
+              إدارة ومتابعة طلبات الخدمات • مربوط لحظياً بالعملاء
             </p>
           </div>
-          <Button 
-            onClick={handleRefresh} 
-            variant="outline" 
-            className="gap-2"
-            disabled={isRefreshing}
-          >
+          <Button onClick={handleRefresh} variant="outline" size="sm" className="gap-2" disabled={isRefreshing}>
             <RefreshCw className={cn("h-4 w-4", isRefreshing && "animate-spin")} />
             تحديث
           </Button>
         </motion.div>
 
-        {/* Statistics Cards */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.1 }}
-          >
-            <Card className="hover:shadow-md transition-shadow">
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">إجمالي الطلبات</CardTitle>
-                <Users className="h-4 w-4 text-muted-foreground" />
-              </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-bold text-primary">{stats.total}</div>
-                <p className="text-xs text-muted-foreground">جميع طلبات الخدمات</p>
-              </CardContent>
-            </Card>
-          </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.2 }}
-          >
-            <Card className="hover:shadow-md transition-shadow">
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">قيد التنفيذ</CardTitle>
-                <TrendingUp className="h-4 w-4 text-muted-foreground" />
-              </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-bold text-blue-600">{stats.active}</div>
-                <p className="text-xs text-muted-foreground">طلبات نشطة</p>
-              </CardContent>
-            </Card>
-          </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.3 }}
-          >
-            <Card className="hover:shadow-md transition-shadow">
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">في الانتظار</CardTitle>
-                <Clock className="h-4 w-4 text-muted-foreground" />
-              </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-bold text-amber-600">{stats.pending}</div>
-                <p className="text-xs text-muted-foreground">بحاجة للمراجعة</p>
-              </CardContent>
-            </Card>
-          </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.4 }}
-          >
-            <Card className="hover:shadow-md transition-shadow">
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">مكتملة</CardTitle>
-                <CheckCircle className="h-4 w-4 text-muted-foreground" />
-              </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-bold text-green-600">{stats.completed}</div>
-                <p className="text-xs text-muted-foreground">تم الانتهاء منها</p>
-              </CardContent>
-            </Card>
-          </motion.div>
+        {/* Stats */}
+        <div className="grid grid-cols-2 lg:grid-cols-5 gap-3">
+          {[
+            { label: 'إجمالي', value: stats.total, icon: <Users className="h-4 w-4" />, color: 'text-primary' },
+            { label: 'نشطة', value: stats.active, icon: <TrendingUp className="h-4 w-4" />, color: 'text-blue-600' },
+            { label: 'بالانتظار', value: stats.pending, icon: <Clock className="h-4 w-4" />, color: 'text-amber-600' },
+            { label: 'مكتملة', value: stats.completed, icon: <CheckCircle className="h-4 w-4" />, color: 'text-green-600' },
+            { label: 'الإيرادات', value: `${stats.totalRevenue.toLocaleString()} ر.س`, icon: <DollarSign className="h-4 w-4" />, color: 'text-emerald-600' },
+          ].map((s, i) => (
+            <motion.div key={i} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.05 }}>
+              <Card className="hover:shadow-sm transition-shadow">
+                <CardContent className="p-3 md:p-4">
+                  <div className="flex items-center gap-2 mb-1">
+                    <span className="text-muted-foreground">{s.icon}</span>
+                    <span className="text-xs text-muted-foreground">{s.label}</span>
+                  </div>
+                  <p className={cn("text-xl font-bold", s.color)}>{s.value}</p>
+                </CardContent>
+              </Card>
+            </motion.div>
+          ))}
         </div>
 
         {/* Filters */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.5 }}
-        >
-          <Card>
-            <CardContent className="p-4">
-              <div className="flex flex-col sm:flex-row gap-4">
-                <div className="flex-1 relative">
-                  <Search className="absolute right-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                  <Input
-                    placeholder="البحث في الطلبات (الاسم، العنوان، رقم التتبع...)"
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                    className="pr-10"
-                  />
-                </div>
-                <div className="sm:w-48">
-                  <Select value={statusFilter} onValueChange={setStatusFilter}>
-                    <SelectTrigger>
-                      <Filter className="h-4 w-4 ml-2" />
-                      <SelectValue placeholder="تصفية بالحالة" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="all">جميع الحالات</SelectItem>
-                      <SelectItem value="received">مستلم</SelectItem>
-                      <SelectItem value="under_review">تحت المراجعة</SelectItem>
-                      <SelectItem value="in_progress">قيد التنفيذ</SelectItem>
-                      <SelectItem value="completed">مكتمل</SelectItem>
-                      <SelectItem value="delivered">تم التسليم</SelectItem>
-                      <SelectItem value="cancelled">ملغي</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
+        <Card>
+          <CardContent className="p-3 md:p-4">
+            <div className="flex flex-col md:flex-row gap-3">
+              <div className="flex-1 relative">
+                <Search className="absolute right-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                <Input
+                  placeholder="بحث بالاسم، العميل، رقم التتبع..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className="pr-10"
+                />
               </div>
+              <Select value={statusFilter} onValueChange={setStatusFilter}>
+                <SelectTrigger className="w-full md:w-40">
+                  <Filter className="h-4 w-4 ml-1" />
+                  <SelectValue placeholder="الحالة" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">جميع الحالات</SelectItem>
+                  {Object.entries(STATUS_CONFIG).map(([k, v]) => (
+                    <SelectItem key={k} value={k}>{v.label}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              <Select value={priorityFilter} onValueChange={setPriorityFilter}>
+                <SelectTrigger className="w-full md:w-36">
+                  <AlertCircle className="h-4 w-4 ml-1" />
+                  <SelectValue placeholder="الأولوية" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">جميع الأولويات</SelectItem>
+                  {Object.entries(PRIORITY_CONFIG).map(([k, v]) => (
+                    <SelectItem key={k} value={k}>{v.label}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              <Select value={sortBy} onValueChange={(v: any) => setSortBy(v)}>
+                <SelectTrigger className="w-full md:w-36">
+                  <ArrowUpDown className="h-4 w-4 ml-1" />
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="date">بالتاريخ</SelectItem>
+                  <SelectItem value="priority">بالأولوية</SelectItem>
+                  <SelectItem value="amount">بالمبلغ</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Orders Table */}
+        {filteredOrders.length === 0 ? (
+          <Card>
+            <CardContent className="p-12 text-center">
+              <div className="text-5xl mb-4">📋</div>
+              <h3 className="text-lg font-semibold mb-2">لا توجد طلبات</h3>
+              <p className="text-muted-foreground text-sm">
+                {searchTerm || statusFilter !== 'all' ? 'لم يتم العثور على نتائج' : 'لم يتم إنشاء أي طلبات بعد'}
+              </p>
             </CardContent>
           </Card>
-        </motion.div>
+        ) : (
+          <Card>
+            <div className="overflow-x-auto">
+              <Table>
+                <TableHeader>
+                  <TableRow className="bg-muted/50">
+                    <TableHead className="text-right font-semibold">رقم التتبع</TableHead>
+                    <TableHead className="text-right font-semibold">الخدمة</TableHead>
+                    <TableHead className="text-right font-semibold">العميل</TableHead>
+                    <TableHead className="text-right font-semibold">الحالة</TableHead>
+                    <TableHead className="text-right font-semibold">الأولوية</TableHead>
+                    <TableHead className="text-right font-semibold">المبلغ</TableHead>
+                    <TableHead className="text-right font-semibold">التاريخ</TableHead>
+                    <TableHead className="text-right font-semibold">إجراءات</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  <AnimatePresence>
+                    {filteredOrders.map((order) => {
+                      const statusConf = STATUS_CONFIG[order.current_status] || STATUS_CONFIG.pending;
+                      const priorityConf = PRIORITY_CONFIG[order.priority || 'normal'] || PRIORITY_CONFIG.normal;
+                      const isNew = newOrderFlash === order.id;
 
-        {/* Orders List */}
-        <div className="space-y-4">
-          {filteredOrders.length === 0 ? (
-            <Card>
-              <CardContent className="p-12 text-center">
-                <div className="text-6xl mb-4">📋</div>
-                <h3 className="text-lg font-semibold mb-2">لا توجد طلبات</h3>
-                <p className="text-muted-foreground">
-                  {searchTerm || statusFilter !== 'all' 
-                    ? 'لم يتم العثور على طلبات تطابق البحث المحدد'
-                    : 'لم يتم إنشاء أي طلبات خدمة بعد'
-                  }
-                </p>
-              </CardContent>
-            </Card>
-          ) : (
-            filteredOrders.map((order, index) => (
-              <motion.div
-                key={order.id}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: index * 0.1 }}
-              >
-                <ServiceOrderCard
-                  order={order}
-                  onStatusUpdate={updateOrderStatus}
-                />
-              </motion.div>
-            ))
-          )}
-        </div>
+                      return (
+                        <motion.tr
+                          key={order.id}
+                          initial={{ opacity: 0, x: 20 }}
+                          animate={{ opacity: 1, x: 0, backgroundColor: isNew ? 'hsl(var(--primary) / 0.08)' : 'transparent' }}
+                          transition={{ duration: 0.3 }}
+                          className={cn(
+                            "border-b hover:bg-muted/30 transition-colors cursor-pointer border-l-4",
+                            statusConf.bgClass,
+                            isNew && "ring-2 ring-primary/30"
+                          )}
+                          onClick={() => openOrderDetails(order)}
+                        >
+                          <TableCell className="font-mono text-sm font-medium text-primary">
+                            {order.tracking_id}
+                          </TableCell>
+                          <TableCell>
+                            <div className="max-w-[200px]">
+                              <p className="font-medium text-sm truncate">{order.service_name || '—'}</p>
+                            </div>
+                          </TableCell>
+                          <TableCell>
+                            <div className="flex items-center gap-2">
+                              <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0">
+                                <User className="w-4 h-4 text-primary" />
+                              </div>
+                              <div className="min-w-0">
+                                <p className="text-sm font-medium truncate">{getClientName(order)}</p>
+                                {getClientEmail(order) && (
+                                  <p className="text-xs text-muted-foreground truncate">{getClientEmail(order)}</p>
+                                )}
+                              </div>
+                            </div>
+                          </TableCell>
+                          <TableCell>
+                            <Badge className={cn("gap-1 text-xs border", statusConf.color)}>
+                              {statusConf.icon}
+                              {statusConf.label}
+                            </Badge>
+                          </TableCell>
+                          <TableCell>
+                            <Badge className={cn("text-xs", priorityConf.color)}>
+                              {priorityConf.label}
+                            </Badge>
+                          </TableCell>
+                          <TableCell>
+                            {order.total_amount ? (
+                              <span className="font-semibold text-sm">{order.total_amount.toLocaleString()} ر.س</span>
+                            ) : (
+                              <span className="text-xs text-muted-foreground">لم يحدد</span>
+                            )}
+                          </TableCell>
+                          <TableCell>
+                            <div className="text-sm">
+                              <p>{new Date(order.created_at).toLocaleDateString('ar-SA')}</p>
+                              <p className="text-xs text-muted-foreground">
+                                {new Date(order.created_at).toLocaleTimeString('ar-SA', { hour: '2-digit', minute: '2-digit' })}
+                              </p>
+                            </div>
+                          </TableCell>
+                          <TableCell>
+                            <div className="flex gap-1" onClick={(e) => e.stopPropagation()}>
+                              <Select
+                                value={order.current_status}
+                                onValueChange={(v) => updateOrderStatus(order.id, v)}
+                              >
+                                <SelectTrigger className="w-28 h-8 text-xs">
+                                  <SelectValue />
+                                </SelectTrigger>
+                                <SelectContent>
+                                  {Object.entries(STATUS_CONFIG).map(([k, v]) => (
+                                    <SelectItem key={k} value={k}>{v.label}</SelectItem>
+                                  ))}
+                                </SelectContent>
+                              </Select>
+                            </div>
+                          </TableCell>
+                        </motion.tr>
+                      );
+                    })}
+                  </AnimatePresence>
+                </TableBody>
+              </Table>
+            </div>
+            <div className="p-3 border-t text-sm text-muted-foreground text-center">
+              عرض {filteredOrders.length} من {orders.length} طلب
+            </div>
+          </Card>
+        )}
+
+        {/* Order Detail Dialog */}
+        <Dialog open={!!selectedOrder} onOpenChange={() => setSelectedOrder(null)}>
+          <DialogContent className="max-w-2xl max-h-[85vh] overflow-y-auto">
+            {selectedOrder && (
+              <OrderDetailPanel
+                order={selectedOrder}
+                timeline={timeline}
+                loadingTimeline={loadingTimeline}
+                onStatusUpdate={updateOrderStatus}
+                onClose={() => setSelectedOrder(null)}
+              />
+            )}
+          </DialogContent>
+        </Dialog>
       </div>
     </AdminLayout>
   );
 };
 
-// Service Order Card Component
-const ServiceOrderCard = ({ 
-  order, 
-  onStatusUpdate 
-}: { 
-  order: ServiceOrder; 
-  onStatusUpdate: (orderId: string, status: string) => void;
+// Order Detail Panel
+const OrderDetailPanel = ({
+  order,
+  timeline,
+  loadingTimeline,
+  onStatusUpdate,
+  onClose,
+}: {
+  order: ServiceOrder;
+  timeline: TimelineEntry[];
+  loadingTimeline: boolean;
+  onStatusUpdate: (id: string, status: string) => void;
+  onClose: () => void;
 }) => {
   const [attachments, setAttachments] = useState<any[]>([]);
-  const [showAttachments, setShowAttachments] = useState(false);
-  const [loadingAttachments, setLoadingAttachments] = useState(false);
-  const [showPriceQuote, setShowPriceQuote] = useState(false);
+  const [loadingAttachments, setLoadingAttachments] = useState(true);
+  const [showQuote, setShowQuote] = useState(false);
   const [quotePrice, setQuotePrice] = useState(order.total_amount?.toString() || '');
   const [quoteNotes, setQuoteNotes] = useState('');
   const [sendingQuote, setSendingQuote] = useState(false);
   const { toast } = useToast();
 
+  useEffect(() => {
+    loadAttachments();
+  }, [order.id]);
+
+  const loadAttachments = async () => {
+    try {
+      const { data } = await (supabase.from('order_attachments') as any)
+        .select('*').eq('order_id', order.id).order('created_at', { ascending: false });
+      setAttachments(data || []);
+    } catch (e) { console.error(e); }
+    finally { setLoadingAttachments(false); }
+  };
+
+  const downloadFile = async (storagePath: string, fileName: string) => {
+    const { data, error } = await supabase.storage.from('order-attachments').download(storagePath);
+    if (error) { toast({ title: "خطأ في التحميل", variant: "destructive" }); return; }
+    const url = URL.createObjectURL(data);
+    const a = document.createElement('a');
+    a.href = url; a.download = fileName; a.click();
+    URL.revokeObjectURL(url);
+  };
+
   const sendPriceQuote = async () => {
     if (!quotePrice || parseFloat(quotePrice) <= 0) {
-      toast({ title: "خطأ", description: "يرجى إدخال سعر صحيح", variant: "destructive" });
+      toast({ title: "يرجى إدخال سعر صحيح", variant: "destructive" });
       return;
     }
     setSendingQuote(true);
     try {
-      // Update the order total_amount
-      const { error: updateError } = await supabase
-        .from('service_orders')
-        .update({ 
-          total_amount: parseFloat(quotePrice),
-          quote_status: 'pending',
-          quote_notes: quoteNotes || null,
-          quote_sent_at: new Date().toISOString(),
-          updated_at: new Date().toISOString()
-        } as any)
-        .eq('id', order.id);
+      await supabase.from('service_orders').update({
+        total_amount: parseFloat(quotePrice),
+        quote_status: 'pending',
+        quote_notes: quoteNotes || null,
+        quote_sent_at: new Date().toISOString(),
+        updated_at: new Date().toISOString(),
+      } as any).eq('id', order.id);
 
-      if (updateError) throw updateError;
-
-      // Add timeline entry
       await (supabase.from('service_order_timeline') as any).insert([{
         order_id: order.id,
         status: 'price_quote',
-        note: `تم إرسال عرض سعر: ${parseFloat(quotePrice).toLocaleString()} ر.س${quoteNotes ? ' - ' + quoteNotes : ''}`
+        note: `تم إرسال عرض سعر: ${parseFloat(quotePrice).toLocaleString()} ر.س`,
       }]);
 
-      // Send notification to client
       if (order.user_id) {
         await (supabase.from('user_notifications') as any).insert([{
           user_id: order.user_id,
           title: '💰 عرض سعر جديد',
-          message: `تم تحديد سعر طلبك رقم ${order.tracking_id}: ${parseFloat(quotePrice).toLocaleString()} ر.س${quoteNotes ? '\n' + quoteNotes : ''}`,
+          message: `تم تحديد سعر طلبك ${order.tracking_id}: ${parseFloat(quotePrice).toLocaleString()} ر.س`,
           type: 'price_quote',
-          link: '/orders'
+          link: '/orders',
         }]);
-        }
-
-      // Send email notification to client
-      if (order.user_id) {
-        // Get client email from profiles or auth
-        const { data: profile } = await supabase
-          .from('profiles')
-          .select('full_name')
-          .eq('id', order.user_id)
-          .maybeSingle();
-
-        // Get email from auth via a workaround - use the customers table
-        const { data: customer } = await supabase
-          .from('customers')
-          .select('email')
-          .eq('user_id', order.user_id)
-          .maybeSingle();
-
-        const clientEmail = customer?.email;
-        if (clientEmail) {
-          await supabase.functions.invoke('send-transactional-email', {
-            body: {
-              templateName: 'quote-notification',
-              recipientEmail: clientEmail,
-              idempotencyKey: `quote-${order.id}-${Date.now()}`,
-              templateData: {
-                serviceName: order.service_name || 'خدمة',
-                trackingId: order.tracking_id,
-                amount: parseFloat(quotePrice).toLocaleString(),
-                ordersUrl: 'https://masteredupath.com/orders',
-              },
-            },
-          });
-        }
       }
 
-      toast({
-        title: "تم إرسال عرض السعر ✅",
-        description: `تم إرسال عرض سعر بقيمة ${parseFloat(quotePrice).toLocaleString()} ر.س للعميل`,
-      });
-
-      setShowPriceQuote(false);
-      setQuoteNotes('');
-      // Reload to reflect changes
-      window.location.reload();
-    } catch (error) {
-      console.error('Error sending quote:', error);
-      toast({ title: "خطأ", description: "حدث خطأ أثناء إرسال عرض السعر", variant: "destructive" });
-    } finally {
-      setSendingQuote(false);
-    }
-  };
-
-  const loadAttachments = async () => {
-    if (attachments.length > 0) {
-      setShowAttachments(!showAttachments);
-      return;
-    }
-    setLoadingAttachments(true);
-    try {
-      const { data, error } = await (supabase
-        .from('order_attachments') as any)
-        .select('*')
-        .eq('order_id', order.id)
-        .order('created_at', { ascending: false });
-      if (!error) setAttachments(data || []);
+      toast({ title: "✅ تم إرسال عرض السعر" });
+      setShowQuote(false);
+      onClose();
     } catch (e) {
-      console.error('Error loading attachments:', e);
-    } finally {
-      setLoadingAttachments(false);
-      setShowAttachments(true);
-    }
+      toast({ title: "خطأ", variant: "destructive" });
+    } finally { setSendingQuote(false); }
   };
 
-  const downloadFile = async (storagePath: string, fileName: string) => {
-    try {
-      const { data, error } = await supabase.storage
-        .from('order-attachments')
-        .download(storagePath);
-      if (error) throw error;
-      const url = URL.createObjectURL(data);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = fileName;
-      a.click();
-      URL.revokeObjectURL(url);
-    } catch (e) {
-      console.error('Download error:', e);
-    }
-  };
-
-  const formatFileSize = (bytes: number) => {
-    if (bytes < 1024) return `${bytes} B`;
-    if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`;
-    return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
-  };
-
-  const getStatusColor = (status: string) => {
-    const colors: Record<string, string> = {
-      received: 'bg-blue-100 text-blue-800',
-      under_review: 'bg-yellow-100 text-yellow-800',
-      in_progress: 'bg-purple-100 text-purple-800',
-      completed: 'bg-green-100 text-green-800',
-      delivered: 'bg-emerald-100 text-emerald-800',
-      cancelled: 'bg-red-100 text-red-800'
-    };
-    return colors[status] || 'bg-gray-100 text-gray-800';
-  };
-
-  const getStatusLabel = (status: string) => {
-    const labels: Record<string, string> = {
-      received: 'مستلم',
-      under_review: 'تحت المراجعة',
-      in_progress: 'قيد التنفيذ',
-      completed: 'مكتمل',
-      delivered: 'تم التسليم',
-      cancelled: 'ملغي'
-    };
-    return labels[status] || status;
-  };
+  const statusConf = STATUS_CONFIG[order.current_status] || STATUS_CONFIG.pending;
+  const clientName = order.customer?.name || order.profile?.full_name || 'غير محدد';
+  const clientEmail = order.customer?.email || '';
+  const clientPhone = order.customer?.phone || order.profile?.phone || '';
 
   return (
-    <Card className="hover:shadow-lg transition-all duration-300">
-      <CardContent className="p-6">
-        <div className="space-y-4">
-          {/* Header */}
-          <div className="flex flex-col sm:flex-row justify-between items-start gap-4">
-            <div className="flex-1">
-              <div className="flex items-start gap-3 mb-2">
-                <div className="flex-1">
-                  <h3 className="text-lg font-semibold text-primary mb-1">{order.service_name || ''}</h3>
-                  <p className="text-sm text-muted-foreground mb-2">{order.tracking_id}</p>
-                  {order.services && (
-                    <div className="flex items-center gap-2">
-                      <Badge 
-                        style={{ backgroundColor: order.services.service_categories?.color }}
-                        className="text-white"
-                      >
-                        {order.services.service_categories?.name_ar}
-                      </Badge>
-                      <span className="text-sm font-medium">{order.services.name_ar}</span>
-                    </div>
-                  )}
-                </div>
-              </div>
-            </div>
-            
-            <div className="flex flex-col items-end gap-2">
-              <Badge className={getStatusColor(order.current_status)}>
-                {getStatusLabel(order.current_status)}
-              </Badge>
-              <div className="text-sm text-muted-foreground">
-                {new Date(order.created_at).toLocaleDateString('ar-SA')}
-              </div>
-            </div>
-          </div>
+    <>
+      <DialogHeader>
+        <DialogTitle className="flex items-center justify-between">
+          <span className="flex items-center gap-2">
+            <FileText className="w-5 h-5 text-primary" />
+            تفاصيل الطلب {order.tracking_id}
+          </span>
+          <Badge className={cn("gap-1 border", statusConf.color)}>
+            {statusConf.icon} {statusConf.label}
+          </Badge>
+        </DialogTitle>
+      </DialogHeader>
 
-          {/* Client Info */}
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 p-4 bg-muted/30 rounded-lg">
-            <div>
-              <p className="text-sm text-muted-foreground">العميل:</p>
-              <p className="font-medium">{order.notes || ''}</p>
-            </div>
-            <div>
-              <p className="text-sm text-muted-foreground">البريد الإلكتروني:</p>
-              <p className="font-medium text-sm">{''}</p>
-            </div>
-            <div>
-              <p className="text-sm text-muted-foreground">الهاتف:</p>
-              <p className="font-medium">{'غير محدد'}</p>
-            </div>
-          </div>
-
-          {/* Order Details */}
-          <div className="grid grid-cols-1 sm:grid-cols-4 gap-4">
-            <div>
-              <p className="text-sm text-muted-foreground">الكمية:</p>
-              <p className="font-medium">{order.total_amount || 0} {'unit'}</p>
-            </div>
+      <div className="space-y-5 mt-2">
+        {/* Service Info */}
+        <div className="p-4 bg-primary/5 rounded-xl border border-primary/10">
+          <h4 className="font-semibold mb-2 text-primary">{order.service_name || 'خدمة'}</h4>
+          {order.notes && <p className="text-sm text-muted-foreground">{order.notes}</p>}
+          <div className="flex flex-wrap gap-4 mt-3 text-sm">
             {order.total_amount && (
-              <div>
-                <p className="text-sm text-muted-foreground">السعر المقدر:</p>
-                <p className="font-medium text-primary">{order.total_amount.toLocaleString()} ر.س</p>
-              </div>
+              <span className="flex items-center gap-1"><DollarSign className="w-4 h-4" /> {order.total_amount.toLocaleString()} ر.س</span>
             )}
             {order.deadline && (
-              <div>
-                <p className="text-sm text-muted-foreground">التسليم المتوقع:</p>
-                <p className="font-medium flex items-center gap-1">
-                  <Calendar className="w-4 h-4" />
-                  {new Date(order.deadline).toLocaleDateString('ar-SA')}
-                </p>
-              </div>
+              <span className="flex items-center gap-1"><Calendar className="w-4 h-4" /> {new Date(order.deadline).toLocaleDateString('ar-SA')}</span>
             )}
-            {false && (
-              <div>
-                <Badge variant="outline" className="text-amber-600 border-amber-600">
-                  تسليم عاجل
-                </Badge>
-              </div>
+            {order.priority && (
+              <Badge className={cn("text-xs", PRIORITY_CONFIG[order.priority]?.color)}>
+                {PRIORITY_CONFIG[order.priority]?.label}
+              </Badge>
             )}
           </div>
+        </div>
 
-          {/* Description */}
-          {order.notes && (
-            <div>
-              <p className="text-sm text-muted-foreground mb-1">الوصف:</p>
-              <p className="text-sm bg-muted/30 p-3 rounded-lg">{order.notes}</p>
+        {/* Client Info */}
+        <div className="p-4 bg-muted/40 rounded-xl">
+          <h4 className="font-semibold mb-3 flex items-center gap-2"><User className="w-4 h-4" /> بيانات العميل</h4>
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-sm">
+            <div className="flex items-center gap-2">
+              <User className="w-4 h-4 text-muted-foreground" />
+              <span>{clientName}</span>
             </div>
-          )}
-
-          {/* Attachments Section */}
-          <div>
-            <Button
-              variant="outline"
-              size="sm"
-              className="gap-2"
-              onClick={loadAttachments}
-              disabled={loadingAttachments}
-            >
-              <Paperclip className="w-4 h-4" />
-              المرفقات
-              {loadingAttachments ? (
-                <RefreshCw className="w-3 h-3 animate-spin" />
-              ) : showAttachments ? (
-                <ChevronUp className="w-3 h-3" />
-              ) : (
-                <ChevronDown className="w-3 h-3" />
-              )}
-            </Button>
-
-            {showAttachments && (
-              <motion.div
-                initial={{ opacity: 0, height: 0 }}
-                animate={{ opacity: 1, height: 'auto' }}
-                className="mt-3"
-              >
-                {attachments.length === 0 ? (
-                  <p className="text-sm text-muted-foreground bg-muted/30 p-3 rounded-lg">
-                    لا توجد مرفقات لهذا الطلب
-                  </p>
-                ) : (
-                  <div className="space-y-2 p-3 bg-muted/20 rounded-lg border">
-                    <p className="text-xs font-medium text-muted-foreground mb-2">
-                      {attachments.length} ملف مرفق
-                    </p>
-                    {attachments.map((att: any) => (
-                      <div
-                        key={att.id}
-                        className="flex items-center gap-3 p-2.5 bg-card rounded-lg border hover:shadow-sm transition-shadow"
-                      >
-                        <File className="w-4 h-4 text-primary flex-shrink-0" />
-                        <div className="flex-1 min-w-0">
-                          <p className="text-sm font-medium truncate">{att.file_name}</p>
-                          <p className="text-xs text-muted-foreground">
-                            {formatFileSize(att.file_size)} • {new Date(att.created_at).toLocaleDateString('ar-SA')}
-                          </p>
-                        </div>
-                        <Button
-                          variant="ghost"
-                          size="icon"
-                          className="h-8 w-8 flex-shrink-0"
-                          onClick={() => downloadFile(att.storage_path, att.file_name)}
-                        >
-                          <Download className="w-4 h-4" />
-                        </Button>
-                      </div>
-                    ))}
-                  </div>
-                )}
-              </motion.div>
-            )}
+            <div className="flex items-center gap-2">
+              <Mail className="w-4 h-4 text-muted-foreground" />
+              <span className="truncate">{clientEmail || 'غير محدد'}</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <Phone className="w-4 h-4 text-muted-foreground" />
+              <span>{clientPhone || 'غير محدد'}</span>
+            </div>
           </div>
+          {order.customer?.company && (
+            <p className="text-xs text-muted-foreground mt-2">🏢 {order.customer.company}</p>
+          )}
+        </div>
 
-          {/* Price Quote Section */}
-          {showPriceQuote && (
+        {/* Status Update */}
+        <div className="flex items-center gap-3">
+          <Label className="text-sm whitespace-nowrap">تغيير الحالة:</Label>
+          <Select value={order.current_status} onValueChange={(v) => onStatusUpdate(order.id, v)}>
+            <SelectTrigger className="flex-1">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              {Object.entries(STATUS_CONFIG).map(([k, v]) => (
+                <SelectItem key={k} value={k}>{v.label}</SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+          <Button variant="outline" size="sm" className="gap-1" onClick={() => setShowQuote(!showQuote)}>
+            <DollarSign className="w-4 h-4" /> عرض سعر
+          </Button>
+        </div>
+
+        {/* Quote Form */}
+        <AnimatePresence>
+          {showQuote && (
             <motion.div
               initial={{ opacity: 0, height: 0 }}
               animate={{ opacity: 1, height: 'auto' }}
               exit={{ opacity: 0, height: 0 }}
-              className="p-4 bg-primary/5 rounded-lg border border-primary/20 space-y-3"
+              className="p-4 bg-primary/5 rounded-xl border border-primary/20 space-y-3"
             >
-              <div className="flex items-center justify-between">
-                <h4 className="font-semibold text-primary flex items-center gap-2">
-                  <DollarSign className="w-4 h-4" />
-                  تحديد عرض السعر
-                </h4>
-                <Button variant="ghost" size="icon" className="h-7 w-7" onClick={() => setShowPriceQuote(false)}>
-                  <X className="w-4 h-4" />
-                </Button>
-              </div>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <Label className="text-sm mb-1.5 block">السعر (ر.س)</Label>
-                  <Input
-                    type="number"
-                    min="0"
-                    step="0.01"
-                    value={quotePrice}
-                    onChange={(e) => setQuotePrice(e.target.value)}
-                    placeholder="أدخل السعر..."
-                    className="text-lg font-bold"
-                    dir="ltr"
-                  />
+                  <Label className="text-sm">السعر (ر.س)</Label>
+                  <Input type="number" value={quotePrice} onChange={(e) => setQuotePrice(e.target.value)} dir="ltr" className="font-bold" />
                 </div>
                 <div>
-                  <Label className="text-sm mb-1.5 block">ملاحظات (اختياري)</Label>
-                  <Textarea
-                    value={quoteNotes}
-                    onChange={(e) => setQuoteNotes(e.target.value)}
-                    placeholder="ملاحظات إضافية للعميل..."
-                    rows={2}
-                    className="resize-none"
-                  />
+                  <Label className="text-sm">ملاحظات</Label>
+                  <Textarea value={quoteNotes} onChange={(e) => setQuoteNotes(e.target.value)} rows={1} className="resize-none" />
                 </div>
               </div>
-              <div className="flex gap-2 justify-end">
-                <Button variant="outline" size="sm" onClick={() => setShowPriceQuote(false)}>
-                  إلغاء
-                </Button>
-                <Button 
-                  size="sm" 
-                  className="gap-2" 
-                  onClick={sendPriceQuote}
-                  disabled={sendingQuote || !quotePrice}
-                >
-                  {sendingQuote ? (
-                    <RefreshCw className="w-4 h-4 animate-spin" />
-                  ) : (
-                    <Send className="w-4 h-4" />
-                  )}
-                  إرسال عرض السعر للعميل
-                </Button>
-              </div>
+              <Button size="sm" className="gap-2 w-full" onClick={sendPriceQuote} disabled={sendingQuote || !quotePrice}>
+                {sendingQuote ? <RefreshCw className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}
+                إرسال عرض السعر
+              </Button>
             </motion.div>
           )}
+        </AnimatePresence>
 
-          {/* Actions */}
-          <div className="flex flex-wrap gap-2 pt-4 border-t">
-            <Select
-              value={order.current_status}
-              onValueChange={(value) => onStatusUpdate(order.id, value)}
-            >
-              <SelectTrigger className="w-48">
-                <Edit className="w-4 h-4 ml-2" />
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="received">مستلم</SelectItem>
-                <SelectItem value="under_review">تحت المراجعة</SelectItem>
-                <SelectItem value="in_progress">قيد التنفيذ</SelectItem>
-                <SelectItem value="completed">مكتمل</SelectItem>
-                <SelectItem value="delivered">تم التسليم</SelectItem>
-                <SelectItem value="cancelled">ملغي</SelectItem>
-              </SelectContent>
-            </Select>
-            
-            <Button 
-              variant={showPriceQuote ? "default" : "outline"} 
-              size="sm" 
-              className="gap-2"
-              onClick={() => setShowPriceQuote(!showPriceQuote)}
-            >
-              <DollarSign className="w-4 h-4" />
-              عرض سعر
-            </Button>
-            
-            <Button variant="outline" size="sm">
-              <Eye className="w-4 h-4 ml-2" />
-              تفاصيل أكثر
-            </Button>
-            
-            <Button variant="outline" size="sm">
-              <FileText className="w-4 h-4 ml-2" />
-              Timeline
-            </Button>
-          </div>
+        {/* Attachments */}
+        <div>
+          <h4 className="font-semibold mb-2 flex items-center gap-2">
+            <Paperclip className="w-4 h-4" /> المرفقات ({attachments.length})
+          </h4>
+          {loadingAttachments ? (
+            <div className="text-center py-3"><RefreshCw className="w-4 h-4 animate-spin mx-auto" /></div>
+          ) : attachments.length === 0 ? (
+            <p className="text-sm text-muted-foreground bg-muted/30 p-3 rounded-lg">لا توجد مرفقات</p>
+          ) : (
+            <div className="space-y-2">
+              {attachments.map((att: any) => (
+                <div key={att.id} className="flex items-center gap-3 p-2.5 bg-card rounded-lg border hover:shadow-sm transition-shadow">
+                  <File className="w-4 h-4 text-primary flex-shrink-0" />
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm font-medium truncate">{att.file_name}</p>
+                    <p className="text-xs text-muted-foreground">
+                      {att.file_size < 1024 * 1024 ? `${(att.file_size / 1024).toFixed(1)} KB` : `${(att.file_size / (1024 * 1024)).toFixed(1)} MB`}
+                      {' • '}
+                      {new Date(att.created_at).toLocaleDateString('ar-SA')}
+                    </p>
+                  </div>
+                  <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => downloadFile(att.storage_path, att.file_name)}>
+                    <Download className="w-4 h-4" />
+                  </Button>
+                </div>
+              ))}
+            </div>
+          )}
         </div>
-      </CardContent>
-    </Card>
+
+        {/* Timeline */}
+        <div>
+          <h4 className="font-semibold mb-3 flex items-center gap-2">
+            <Clock className="w-4 h-4" /> الجدول الزمني
+          </h4>
+          {loadingTimeline ? (
+            <div className="text-center py-3"><RefreshCw className="w-4 h-4 animate-spin mx-auto" /></div>
+          ) : timeline.length === 0 ? (
+            <p className="text-sm text-muted-foreground bg-muted/30 p-3 rounded-lg">لا توجد أحداث بعد</p>
+          ) : (
+            <div className="relative border-r-2 border-primary/20 pr-4 space-y-4">
+              {timeline.map((entry) => {
+                const entryConf = STATUS_CONFIG[entry.status];
+                return (
+                  <div key={entry.id} className="relative">
+                    <div className="absolute -right-[1.35rem] top-1 w-3 h-3 rounded-full bg-primary border-2 border-background" />
+                    <div className="bg-muted/30 p-3 rounded-lg">
+                      <div className="flex items-center gap-2 mb-1">
+                        {entryConf && <Badge className={cn("text-xs border", entryConf.color)}>{entryConf.label}</Badge>}
+                        {!entryConf && <Badge variant="outline" className="text-xs">{entry.status}</Badge>}
+                        <span className="text-xs text-muted-foreground mr-auto">
+                          {new Date(entry.created_at).toLocaleDateString('ar-SA')} • {new Date(entry.created_at).toLocaleTimeString('ar-SA', { hour: '2-digit', minute: '2-digit' })}
+                        </span>
+                      </div>
+                      {entry.note && <p className="text-sm text-muted-foreground">{entry.note}</p>}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          )}
+        </div>
+      </div>
+    </>
   );
 };
 
