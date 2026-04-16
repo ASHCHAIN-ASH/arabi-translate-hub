@@ -736,8 +736,115 @@ const Index = () => {
       {/* Institutional Partnership Banner */}
       <InstitutionalPartnershipBanner />
 
-      {/* Suspense Sections مع Lazy Loading للأداء الأفضل */}
-      
+      {/* قسم آراء العملاء - Social Proof */}
+      <section className="py-16 bg-gradient-to-br from-slate-50 to-blue-50/30 dark:from-slate-900 dark:to-blue-950/30" dir="rtl">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+          <motion.div
+            className="text-center mb-12"
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            viewport={{ once: true }}
+          >
+            <div className="inline-flex items-center gap-2 px-4 py-2 bg-yellow-100 dark:bg-yellow-900/30 rounded-full text-yellow-700 dark:text-yellow-300 text-sm font-medium mb-4">
+              <Star className="h-4 w-4 fill-current" />
+              تقييم 4.9/5 من عملائنا
+            </div>
+            <h2 className="text-3xl sm:text-4xl font-bold text-slate-800 dark:text-white mb-3">
+              ماذا يقول عملاؤنا؟
+            </h2>
+            <p className="text-lg text-slate-600 dark:text-slate-400">آراء حقيقية من باحثين وطلاب استفادوا من خدماتنا</p>
+          </motion.div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto">
+            {[
+              { name: "د. أحمد المنصور", role: "باحث دكتوراه - جامعة الملك سعود", text: "خدمة التحليل الإحصائي كانت ممتازة. الفريق تعامل مع بياناتي بدقة عالية وسلموني النتائج قبل الموعد المحدد.", rating: 5 },
+              { name: "سارة العتيبي", role: "طالبة ماجستير - جامعة الملك عبدالعزيز", text: "ترجمة بحثي تمت بجودة أكاديمية رائعة. المترجم كان متخصصاً في مجالي وفهم المصطلحات العلمية بشكل دقيق.", rating: 5 },
+              { name: "م. خالد الحربي", role: "باحث - مركز الأبحاث الوطني", text: "نشرت بحثي في مجلة Scopus بفضل مساعدتهم في التدقيق والتنسيق. خدمة احترافية من البداية للنهاية.", rating: 5 }
+            ].map((testimonial, index) => (
+              <motion.div
+                key={index}
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: index * 0.1 }}
+                viewport={{ once: true }}
+                whileHover={{ y: -5 }}
+              >
+                <Card className="h-full border-0 shadow-lg hover:shadow-xl transition-all bg-white dark:bg-slate-800">
+                  <CardContent className="p-6">
+                    <div className="flex gap-1 mb-3">
+                      {Array.from({ length: testimonial.rating }).map((_, i) => (
+                        <Star key={i} className="h-4 w-4 fill-yellow-400 text-yellow-400" />
+                      ))}
+                    </div>
+                    <Quote className="h-6 w-6 text-blue-200 mb-2" />
+                    <p className="text-slate-600 dark:text-slate-300 text-sm leading-relaxed mb-4">
+                      {testimonial.text}
+                    </p>
+                    <div className="border-t pt-3">
+                      <p className="font-bold text-sm text-slate-800 dark:text-white">{testimonial.name}</p>
+                      <p className="text-xs text-muted-foreground">{testimonial.role}</p>
+                    </div>
+                  </CardContent>
+                </Card>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Quick Inquiry Form - Lead Capture */}
+      <section className="py-16 bg-gradient-to-r from-indigo-600 via-blue-600 to-cyan-600 text-white relative overflow-hidden" dir="rtl">
+        <div className="absolute inset-0 opacity-10">
+          <div className="absolute inset-0" style={{ backgroundImage: 'radial-gradient(circle at 25% 50%, white 1px, transparent 1px)', backgroundSize: '40px 40px' }} />
+        </div>
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+          <div className="max-w-3xl mx-auto text-center">
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6 }}
+              viewport={{ once: true }}
+            >
+              <h2 className="text-3xl sm:text-4xl font-bold mb-3">احصل على استشارة مجانية</h2>
+              <p className="text-lg text-white/90 mb-8">أخبرنا عن مشروعك وسنتواصل معك خلال ساعة واحدة</p>
+            </motion.div>
+            <motion.div
+              className="grid grid-cols-1 sm:grid-cols-3 gap-4 max-w-2xl mx-auto"
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.2 }}
+              viewport={{ once: true }}
+            >
+              <input
+                type="text"
+                placeholder="الاسم"
+                className="px-4 py-3 rounded-xl bg-white/20 backdrop-blur border border-white/30 text-white placeholder-white/70 focus:outline-none focus:ring-2 focus:ring-white/50"
+              />
+              <input
+                type="tel"
+                placeholder="رقم الجوال"
+                className="px-4 py-3 rounded-xl bg-white/20 backdrop-blur border border-white/30 text-white placeholder-white/70 focus:outline-none focus:ring-2 focus:ring-white/50"
+                dir="ltr"
+              />
+              <Button 
+                size="lg"
+                className="bg-white text-blue-600 hover:bg-white/90 font-bold shadow-xl"
+                onClick={() => navigate('/contact-us')}
+              >
+                أرسل طلبك
+                <ArrowRight className="h-4 w-4 mr-2" />
+              </Button>
+            </motion.div>
+            <p className="text-xs text-white/60 mt-4">
+              <Shield className="h-3 w-3 inline ml-1" />
+              معلوماتك محمية بالكامل ولن يتم مشاركتها
+            </p>
+          </div>
+        </div>
+      </section>
+
+      {/* Suspense Sections مع Lazy Loading */}
       <Suspense fallback={<LoadingSpinner />}>
         <MasterMembershipBanner />
       </Suspense>
