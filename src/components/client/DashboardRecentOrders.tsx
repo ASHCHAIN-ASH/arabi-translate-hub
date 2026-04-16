@@ -37,7 +37,7 @@ export default function DashboardRecentOrders({ orders }: Props) {
           <div className="text-center py-12 text-muted-foreground">
             <Package className="w-10 h-10 mx-auto mb-3 opacity-40" />
             <p className="font-medium">لا توجد طلبات حتى الآن</p>
-            <Button variant="link" className="mt-2 text-primary" onClick={() => navigate('/orders/new')}>
+            <Button variant="link" className="mt-2 text-primary" onClick={() => navigate('/client-services')}>
               أنشئ طلبك الأول
             </Button>
           </div>

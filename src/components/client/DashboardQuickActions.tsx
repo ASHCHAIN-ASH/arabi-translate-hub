@@ -7,7 +7,7 @@ const actions = [
   {
     title: 'طلب جديد',
     icon: Plus,
-    href: '/orders/new',
+    href: '/client-services',
     color: 'bg-primary text-primary-foreground',
   },
   {

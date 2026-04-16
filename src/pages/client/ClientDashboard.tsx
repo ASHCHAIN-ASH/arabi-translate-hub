@@ -77,7 +77,7 @@ const ClientDashboard = () => {
       title: 'إنشاء طلب جديد',
       description: 'ابدأ مشروعك الأكاديمي الجديد',
       icon: Plus,
-      action: () => navigate('/orders/new'),
+      action: () => navigate('/client-services'),
       gradient: 'from-orange-500 via-pink-500 to-red-500',
       bgPattern: 'bg-orange-50'
     }
@@ -189,7 +189,7 @@ const ClientDashboard = () => {
               <Button 
                 size="lg" 
                 className="bg-white text-indigo-600 hover:bg-white/95 font-black shadow-2xl border-0 px-10 py-5 text-xl rounded-2xl"
-                onClick={() => navigate('/orders/new')}
+                onClick={() => navigate('/client-services')}
               >
                 <Plus className="w-6 h-6 ml-3" />
                 ابدأ طلب جديد
@@ -395,7 +395,7 @@ const ClientDashboard = () => {
                     <p className="text-gray-400 mt-2">ابدأ بإنشاء طلبك الأول</p>
                     <Button 
                       className="mt-6" 
-                      onClick={() => navigate('/orders/new')}
+                      onClick={() => navigate('/client-services')}
                     >
                       <Plus className="w-4 h-4 ml-2" />
                       إنشاء طلب جديد
