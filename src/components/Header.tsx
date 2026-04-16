@@ -103,6 +103,53 @@ const Header = () => {
 
           {/* Actions */}
           <div className="flex items-center gap-2">
+            {!authLoading && !user && (
+              <>
+                <Button variant="ghost" size="sm" className="hidden sm:inline-flex text-xs font-medium text-muted-foreground hover:text-foreground gap-1.5" asChild>
+                  <Link to="/login">
+                    <LogIn className="h-3.5 w-3.5" />
+                    تسجيل الدخول
+                  </Link>
+                </Button>
+                <Button variant="outline" size="sm" className="hidden sm:inline-flex text-xs font-medium gap-1.5" asChild>
+                  <Link to="/register">
+                    <UserPlus className="h-3.5 w-3.5" />
+                    حساب جديد
+                  </Link>
+                </Button>
+              </>
+            )}
+            {!authLoading && user && (
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="ghost" size="sm" className="hidden sm:inline-flex text-xs font-medium gap-1.5">
+                    <User className="h-3.5 w-3.5" />
+                    {user.user_metadata?.full_name || 'حسابي'}
+                    <ChevronDown className="h-3 w-3" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="w-48 glass border-border/50 rounded-xl p-1">
+                  {userRole === 'admin' && (
+                    <DropdownMenuItem asChild>
+                      <Link to="/adminmaster" className="flex items-center gap-2 text-sm cursor-pointer">
+                        <Briefcase className="h-4 w-4" />
+                        لوحة التحكم
+                      </Link>
+                    </DropdownMenuItem>
+                  )}
+                  <DropdownMenuItem asChild>
+                    <Link to="/client/dashboard" className="flex items-center gap-2 text-sm cursor-pointer">
+                      <User className="h-4 w-4" />
+                      حسابي
+                    </Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => signOut()} className="flex items-center gap-2 text-sm cursor-pointer text-destructive">
+                    <LogOut className="h-4 w-4" />
+                    تسجيل الخروج
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            )}
             <Button size="sm" className="bg-gradient-to-r from-primary to-primary/90 text-primary-foreground shadow-primary/20 shadow-md hover:shadow-primary/30 hover:shadow-lg transition-all duration-200 text-xs sm:text-sm rounded-lg px-4" asChild>
               <Link to="/order-now" className="flex items-center gap-1.5">
                 <span>اطلب الآن</span>
