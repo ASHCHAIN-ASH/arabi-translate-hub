@@ -203,7 +203,7 @@ const handler = async (req: Request): Promise<Response> => {
           resource_id: userId,
           risk_level: 'high',
           metadata: {
-            admin_user_id: adminUserId,
+            admin_user_id: adminResult.id,
             admin_email: adminData?.email,
             admin_name: adminData?.full_name,
             user_email: userData.email,
