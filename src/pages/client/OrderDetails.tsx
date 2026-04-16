@@ -2,432 +2,489 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { 
-  ArrowRight, User, Mail, Phone, Calendar, Clock, 
-  FileText, MessageSquare, Eye, CheckCircle, AlertCircle, PlayCircle
+  ArrowRight, Calendar, Clock, FileText, DollarSign,
+  CheckCircle, Download, Package, AlertCircle, RefreshCw,
+  Check, X, MessageSquare
 } from 'lucide-react';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Avatar, AvatarFallback } from '@/components/ui/avatar';
-import { useToast } from '@/hooks/use-toast';
+import { Progress } from '@/components/ui/progress';
 import { Textarea } from '@/components/ui/textarea';
+import { Separator } from '@/components/ui/separator';
 import { supabase } from '@/integrations/supabase/client';
-import { 
-  DatabaseOrder, 
-  OrderTimeline, 
-  OrderFile, 
-  OrderCommunication,
-  getOrderById,
-  getOrderTimeline,
-  getOrderFiles,
-  getOrderCommunications
-} from '@/utils/supabaseOrderManagement';
-import { OrderStatusBadge } from '@/components/OrderStatusBadge';
+import { useAuth } from '@/components/SimpleAuthProvider';
+import { toast } from 'sonner';
+import ClientLayout from '@/components/client/ClientLayout';
+
+interface ServiceOrder {
+  id: string;
+  tracking_id: string;
+  service_name: string | null;
+  current_status: string | null;
+  total_amount: number | null;
+  paid_amount: number | null;
+  priority: string | null;
+  notes: string | null;
+  deadline: string | null;
+  quote_status: string | null;
+  quote_notes: string | null;
+  quote_sent_at: string | null;
+  created_at: string;
+  updated_at: string;
+}
+
+interface TimelineEntry {
+  id: string;
+  status: string;
+  note: string | null;
+  created_at: string;
+}
+
+interface Attachment {
+  id: string;
+  file_name: string;
+  file_size: number;
+  file_type: string | null;
+  storage_path: string;
+  created_at: string;
+}
+
+const statusMap: Record<string, string> = {
+  pending: 'في الانتظار',
+  in_progress: 'قيد التنفيذ',
+  completed: 'مكتمل',
+  cancelled: 'ملغي',
+};
+
+const statusColorMap: Record<string, string> = {
+  pending: 'bg-yellow-100 text-yellow-800',
+  in_progress: 'bg-blue-100 text-blue-800',
+  completed: 'bg-green-100 text-green-800',
+  cancelled: 'bg-red-100 text-red-800',
+};
+
+const progressMap: Record<string, number> = {
+  pending: 15,
+  in_progress: 50,
+  completed: 100,
+  cancelled: 0,
+};
 
 const OrderDetails = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { toast } = useToast();
-  const [activeTab, setActiveTab] = useState('overview');
-  const [newMessage, setNewMessage] = useState('');
+  const { user } = useAuth();
+  const [order, setOrder] = useState<ServiceOrder | null>(null);
+  const [timeline, setTimeline] = useState<TimelineEntry[]>([]);
+  const [attachments, setAttachments] = useState<Attachment[]>([]);
   const [loading, setLoading] = useState(true);
-  
-  const [order, setOrder] = useState<DatabaseOrder | null>(null);
-  const [files, setFiles] = useState<OrderFile[]>([]);
-  const [timeline, setTimeline] = useState<OrderTimeline[]>([]);
-  const [communications, setCommunications] = useState<OrderCommunication[]>([]);
+  const [rejectionReason, setRejectionReason] = useState('');
+  const [showRejectForm, setShowRejectForm] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
 
-  // تحميل البيانات
-  const fetchOrderData = async () => {
+  const fetchData = async () => {
     if (!id) return;
-    
     try {
       setLoading(true);
-      
-      const [orderData, timelineData, filesData, communicationsData] = await Promise.all([
-        getOrderById(id),
-        getOrderTimeline(id),
-        getOrderFiles(id),
-        getOrderCommunications(id)
+      const [orderRes, timelineRes, attachRes] = await Promise.all([
+        (supabase.from('service_orders') as any).select('*').eq('id', id).maybeSingle(),
+        supabase.from('service_order_timeline').select('*').eq('order_id', id).order('created_at', { ascending: true }),
+        supabase.from('order_attachments').select('*').eq('order_id', id).order('created_at', { ascending: false }),
       ]);
-
-      setOrder(orderData);
-      setTimeline(timelineData);
-      setFiles(filesData);
-      setCommunications(communicationsData);
-
-    } catch (error) {
-      console.error('Error fetching order data:', error);
-      toast({
-        title: "خطأ في تحميل البيانات",
-        description: "حدث خطأ أثناء تحميل بيانات الطلب",
-        variant: "destructive"
-      });
+      
+      if (orderRes.data) setOrder(orderRes.data);
+      if (timelineRes.data) setTimeline(timelineRes.data);
+      if (attachRes.data) setAttachments(attachRes.data);
+    } catch (err) {
+      console.error(err);
+      toast.error('حدث خطأ في تحميل البيانات');
     } finally {
       setLoading(false);
     }
   };
 
-  // Real-time subscriptions
   useEffect(() => {
-    fetchOrderData();
+    fetchData();
 
     if (!id) return;
-
-    const orderChannel = supabase
-      .channel('order-details-changes')
-      .on(
-        'postgres_changes',
-        {
-          event: '*',
-          schema: 'public',
-          table: 'orders',
-          filter: `id=eq.${id}`
-        },
-        (payload) => {
-          if (payload.eventType === 'UPDATE') {
-            setOrder(payload.new as DatabaseOrder);
-            toast({
-              title: "تم تحديث الطلب",
-              description: "تم تحديث بيانات الطلب من قبل الإدارة",
-            });
-          }
-        }
-      )
-      .on(
-        'postgres_changes',
-        {
-          event: 'INSERT',
-          schema: 'public',
-          table: 'order_timeline',
-          filter: `order_id=eq.${id}`
-        },
-        (payload) => {
-          setTimeline(prev => [...prev, payload.new as OrderTimeline]);
-          toast({
-            title: "تحديث جديد",
-            description: `${payload.new.title}`,
-          });
-        }
-      )
+    const channel = supabase
+      .channel(`order-detail-${id}`)
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'service_orders', filter: `id=eq.${id}` }, () => fetchData())
+      .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'service_order_timeline', filter: `order_id=eq.${id}` }, () => fetchData())
       .subscribe();
 
-    return () => {
-      supabase.removeChannel(orderChannel);
-    };
+    return () => { supabase.removeChannel(channel); };
   }, [id]);
+
+  const handleAcceptQuote = async () => {
+    if (!order) return;
+    setSubmitting(true);
+    try {
+      await (supabase.from('service_orders') as any).update({ quote_status: 'accepted', updated_at: new Date().toISOString() }).eq('id', order.id);
+      
+      const { data: admins } = await supabase.from('user_roles').select('user_id').eq('role', 'admin');
+      if (admins) {
+        const notifications = admins.map(a => ({
+          user_id: a.user_id,
+          title: '✅ تم قبول عرض السعر',
+          message: `قبل العميل عرض السعر للطلب ${order.tracking_id}`,
+          type: 'order',
+          link: '/adminmaster/orders',
+        }));
+        await supabase.from('user_notifications').insert(notifications);
+      }
+      toast.success('تم قبول عرض السعر بنجاح');
+      fetchData();
+    } catch { toast.error('حدث خطأ'); } finally { setSubmitting(false); }
+  };
+
+  const handleRejectQuote = async () => {
+    if (!order) return;
+    setSubmitting(true);
+    try {
+      await (supabase.from('service_orders') as any).update({ 
+        quote_status: 'rejected', 
+        quote_notes: rejectionReason || null,
+        updated_at: new Date().toISOString() 
+      }).eq('id', order.id);
+
+      const { data: admins } = await supabase.from('user_roles').select('user_id').eq('role', 'admin');
+      if (admins) {
+        const notifications = admins.map(a => ({
+          user_id: a.user_id,
+          title: '❌ تم رفض عرض السعر',
+          message: `رفض العميل عرض السعر للطلب ${order.tracking_id}${rejectionReason ? ` - السبب: ${rejectionReason}` : ''}`,
+          type: 'order',
+          link: '/adminmaster/orders',
+        }));
+        await supabase.from('user_notifications').insert(notifications);
+      }
+      toast.success('تم رفض عرض السعر');
+      setShowRejectForm(false);
+      setRejectionReason('');
+      fetchData();
+    } catch { toast.error('حدث خطأ'); } finally { setSubmitting(false); }
+  };
+
+  const handleDownload = async (attachment: Attachment) => {
+    const { data } = await supabase.storage.from('order-attachments').createSignedUrl(attachment.storage_path, 300);
+    if (data?.signedUrl) {
+      window.open(data.signedUrl, '_blank');
+    } else {
+      toast.error('تعذر تحميل الملف');
+    }
+  };
+
+  const formatFileSize = (bytes: number) => {
+    if (bytes < 1024) return `${bytes} B`;
+    if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`;
+    return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
+  };
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-background to-muted/20 flex items-center justify-center">
-        <div className="w-12 h-12 border-4 border-primary border-t-transparent rounded-full animate-spin" />
-      </div>
+      <ClientLayout>
+        <div className="flex items-center justify-center min-h-[400px]">
+          <RefreshCw className="w-8 h-8 animate-spin text-primary" />
+        </div>
+      </ClientLayout>
     );
   }
 
   if (!order) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-background to-muted/20 flex items-center justify-center">
-        <div className="text-center">
-          <h2 className="text-2xl font-bold mb-4">الطلب غير موجود</h2>
-          <Button onClick={() => navigate('/client/orders')}>العودة للطلبات</Button>
+      <ClientLayout>
+        <div className="flex flex-col items-center justify-center min-h-[400px] gap-4">
+          <AlertCircle className="w-12 h-12 text-muted-foreground" />
+          <h2 className="text-xl font-bold">الطلب غير موجود</h2>
+          <Button onClick={() => navigate('/orders')}>العودة للطلبات</Button>
         </div>
-      </div>
+      </ClientLayout>
     );
   }
 
+  const status = order.current_status || 'pending';
+  const progress = progressMap[status] || 0;
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background to-muted/20 p-6">
-      <div className="max-w-6xl mx-auto space-y-6">
-        
+    <ClientLayout>
+      <div className="p-4 lg:p-6 space-y-6" dir="rtl">
         {/* Header */}
-        <motion.div
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="flex items-center justify-between"
-        >
-          <Button
-            variant="ghost"
-            onClick={() => navigate('/client/orders')}
-            className="flex items-center gap-2"
-          >
+        <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }}>
+          <Button variant="ghost" onClick={() => navigate('/orders')} className="mb-4 gap-2">
             <ArrowRight className="w-4 h-4" />
             العودة للطلبات
           </Button>
-          
-          <div className="text-center">
-            <h1 className="text-3xl font-bold mb-2">{order.title}</h1>
-            <div className="flex items-center gap-3 justify-center">
-              <Badge variant="outline">{order.tracking_id}</Badge>
-              <OrderStatusBadge status={order.current_status} />
+
+          <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+            <div>
+              <h1 className="text-2xl lg:text-3xl font-bold">{order.service_name || 'طلب خدمة'}</h1>
+              <div className="flex items-center gap-3 mt-2 flex-wrap">
+                <Badge variant="outline" className="font-mono">#{order.tracking_id}</Badge>
+                <Badge className={statusColorMap[status]}>{statusMap[status] || status}</Badge>
+                {order.priority === 'urgent' && <Badge className="bg-red-100 text-red-800">عاجل</Badge>}
+              </div>
+            </div>
+            <div className="text-left lg:text-right">
+              <p className="text-sm text-muted-foreground">تاريخ الطلب</p>
+              <p className="font-medium">{new Date(order.created_at).toLocaleDateString('ar-SA')}</p>
             </div>
           </div>
-          
-          <div /> {/* Spacer */}
         </motion.div>
 
-        <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-          
-          {/* Tabs Navigation */}
-          <TabsList className="grid w-full grid-cols-4">
-            <TabsTrigger value="overview">نظرة عامة</TabsTrigger>
-            <TabsTrigger value="timeline">المراحل</TabsTrigger>
-            <TabsTrigger value="files">الملفات</TabsTrigger>
-            <TabsTrigger value="communication">التواصل</TabsTrigger>
-          </TabsList>
+        {/* Progress Bar */}
+        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.1 }}>
+          <Card>
+            <CardContent className="p-4">
+              <div className="flex items-center justify-between mb-2">
+                <span className="text-sm font-medium">تقدم الطلب</span>
+                <span className="text-sm font-bold text-primary">{progress}%</span>
+              </div>
+              <Progress value={progress} className="h-3" />
+            </CardContent>
+          </Card>
+        </motion.div>
 
-          {/* Overview Tab */}
-          <TabsContent value="overview" className="space-y-6">
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              
-              {/* Order Info */}
-              <Card className="animate-fade-in">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          {/* Main Content */}
+          <div className="lg:col-span-2 space-y-6">
+            {/* Quote Section */}
+            {order.quote_status && (
+              <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}>
+                <Card className={
+                  order.quote_status === 'pending' ? 'border-amber-300 bg-amber-50/50 dark:bg-amber-950/20' :
+                  order.quote_status === 'accepted' ? 'border-green-300 bg-green-50/50 dark:bg-green-950/20' :
+                  'border-red-300 bg-red-50/50 dark:bg-red-950/20'
+                }>
+                  <CardHeader>
+                    <CardTitle className="flex items-center gap-2 text-lg">
+                      <DollarSign className="w-5 h-5" />
+                      عرض السعر
+                      {order.quote_status === 'pending' && <Badge className="bg-amber-100 text-amber-800">بانتظار الرد</Badge>}
+                      {order.quote_status === 'accepted' && <Badge className="bg-green-100 text-green-800">مقبول</Badge>}
+                      {order.quote_status === 'rejected' && <Badge className="bg-red-100 text-red-800">مرفوض</Badge>}
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-4">
+                    <div className="flex items-center justify-between">
+                      <span className="text-muted-foreground">السعر المقترح</span>
+                      <span className="text-3xl font-bold text-primary">
+                        {(order.total_amount || 0).toLocaleString()} ر.س
+                      </span>
+                    </div>
+                    {order.quote_sent_at && (
+                      <p className="text-xs text-muted-foreground">
+                        تاريخ الإرسال: {new Date(order.quote_sent_at).toLocaleDateString('ar-SA')}
+                      </p>
+                    )}
+                    {order.quote_notes && order.quote_status === 'rejected' && (
+                      <div className="p-3 bg-red-100/50 rounded-lg">
+                        <p className="text-sm"><strong>سبب الرفض:</strong> {order.quote_notes}</p>
+                      </div>
+                    )}
+
+                    {order.quote_status === 'pending' && (
+                      <>
+                        {showRejectForm ? (
+                          <div className="space-y-3">
+                            <Textarea
+                              placeholder="سبب الرفض (اختياري)..."
+                              value={rejectionReason}
+                              onChange={(e) => setRejectionReason(e.target.value)}
+                              rows={2}
+                              className="resize-none"
+                            />
+                            <div className="flex gap-2">
+                              <Button size="sm" variant="destructive" onClick={handleRejectQuote} disabled={submitting} className="flex-1 gap-2">
+                                {submitting ? <RefreshCw className="w-4 h-4 animate-spin" /> : <X className="w-4 h-4" />}
+                                تأكيد الرفض
+                              </Button>
+                              <Button size="sm" variant="outline" onClick={() => setShowRejectForm(false)} disabled={submitting}>
+                                رجوع
+                              </Button>
+                            </div>
+                          </div>
+                        ) : (
+                          <div className="flex gap-2">
+                            <Button onClick={handleAcceptQuote} disabled={submitting} className="flex-1 gap-2 bg-green-600 hover:bg-green-700">
+                              {submitting ? <RefreshCw className="w-4 h-4 animate-spin" /> : <Check className="w-4 h-4" />}
+                              قبول العرض
+                            </Button>
+                            <Button variant="outline" onClick={() => setShowRejectForm(true)} disabled={submitting} className="flex-1 gap-2 border-red-300 text-red-600 hover:bg-red-50">
+                              <X className="w-4 h-4" />
+                              رفض العرض
+                            </Button>
+                          </div>
+                        )}
+                      </>
+                    )}
+                  </CardContent>
+                </Card>
+              </motion.div>
+            )}
+
+            {/* Timeline */}
+            <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }}>
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <Clock className="w-5 h-5" />
+                    سجل التحديثات
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  {timeline.length === 0 ? (
+                    <div className="text-center py-8 text-muted-foreground">
+                      <Clock className="w-10 h-10 mx-auto mb-3 opacity-50" />
+                      <p>لا توجد تحديثات بعد</p>
+                    </div>
+                  ) : (
+                    <div className="space-y-4">
+                      {timeline.map((entry, i) => (
+                        <div key={entry.id} className="flex items-start gap-3 relative">
+                          {i < timeline.length - 1 && (
+                            <div className="absolute right-[15px] top-8 w-0.5 h-full bg-border" />
+                          )}
+                          <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center z-10 shrink-0">
+                            <CheckCircle className="w-4 h-4 text-primary" />
+                          </div>
+                          <div className="flex-1 pb-4">
+                            <div className="flex items-center justify-between">
+                              <Badge variant="outline" className="text-xs">
+                                {statusMap[entry.status] || entry.status}
+                              </Badge>
+                              <span className="text-xs text-muted-foreground">
+                                {new Date(entry.created_at).toLocaleDateString('ar-SA')}
+                              </span>
+                            </div>
+                            {entry.note && (
+                              <p className="text-sm text-muted-foreground mt-1">{entry.note}</p>
+                            )}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </CardContent>
+              </Card>
+            </motion.div>
+
+            {/* Attachments */}
+            <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }}>
+              <Card>
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2">
                     <FileText className="w-5 h-5" />
-                    معلومات الطلب
+                    المرفقات ({attachments.length})
                   </CardTitle>
                 </CardHeader>
-                <CardContent className="space-y-4">
-                  <div className="grid grid-cols-2 gap-4 text-sm">
-                    <div>
-                      <span className="text-muted-foreground">الدرجة العلمية:</span>
-                      <p className="font-medium">{order.degree}</p>
+                <CardContent>
+                  {attachments.length === 0 ? (
+                    <div className="text-center py-8 text-muted-foreground">
+                      <FileText className="w-10 h-10 mx-auto mb-3 opacity-50" />
+                      <p>لا توجد مرفقات</p>
                     </div>
-                    <div>
-                      <span className="text-muted-foreground">نوع الخدمة:</span>
-                      <p className="font-medium">{order.service_type}</p>
-                    </div>
-                    <div>
-                      <span className="text-muted-foreground">تاريخ الإنشاء:</span>
-                      <p className="font-medium">{new Date(order.created_at).toLocaleDateString('ar-SA')}</p>
-                    </div>
-                    <div>
-                      <span className="text-muted-foreground">التسليم المتوقع:</span>
-                      <p className="font-medium">{new Date(order.estimated_delivery).toLocaleDateString('ar-SA')}</p>
-                    </div>
-                  </div>
-                  
-                  {order.description && (
-                    <div className="pt-4 border-t">
-                      <h4 className="font-semibold mb-2">وصف المشروع:</h4>
-                      <p className="text-muted-foreground text-sm leading-relaxed">
-                        {order.description}
-                      </p>
-                    </div>
-                  )}
-                </CardContent>
-              </Card>
-
-              {/* Client Info */}
-              <Card className="animate-fade-in" style={{ animationDelay: '0.1s' }}>
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
-                    <User className="w-5 h-5" />
-                    معلومات العميل
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  <div className="flex items-center gap-4 mb-4">
-                    <Avatar className="w-12 h-12">
-                      <AvatarFallback className="bg-primary text-primary-foreground">
-                        {order.client_name.split(' ').map(n => n[0]).join('')}
-                      </AvatarFallback>
-                    </Avatar>
-                    <div>
-                      <h3 className="font-semibold">{order.client_name}</h3>
-                    </div>
-                  </div>
-                  
-                  <div className="space-y-3 text-sm">
-                    <div className="flex items-center gap-2">
-                      <Mail className="w-4 h-4 text-muted-foreground" />
-                      <span>{order.client_email}</span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <Phone className="w-4 h-4 text-muted-foreground" />
-                      <span>{order.client_phone}</span>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            </div>
-          </TabsContent>
-
-          {/* Timeline Tab */}
-          <TabsContent value="timeline" className="space-y-6">
-            <Card className="animate-fade-in">
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Clock className="w-5 h-5" />
-                  مراحل المشروع
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-6">
-                  {timeline.length === 0 ? (
-                    <p className="text-center text-muted-foreground py-8">
-                      لا توجد مراحل محددة بعد
-                    </p>
                   ) : (
-                    timeline.map((item, index) => (
-                      <div key={item.id} className="flex items-start gap-4 relative">
-                        {index < timeline.length - 1 && (
-                          <div className="absolute right-5 top-12 w-0.5 h-16 bg-border" />
-                        )}
-                        
-                        <div className={`
-                          w-10 h-10 rounded-full flex items-center justify-center border-2 border-background z-10
-                          ${item.completed_date ? 'bg-green-500 text-white' : 'bg-muted text-muted-foreground'}
-                        `}>
-                          {item.completed_date ? (
-                            <CheckCircle className="w-5 h-5" />
-                          ) : (
-                            <Clock className="w-5 h-5" />
-                          )}
-                        </div>
-
-                        <div className="flex-1 bg-muted/30 rounded-lg p-4">
-                          <div className="flex justify-between items-start mb-2">
-                            <h4 className="font-semibold">{item.title}</h4>
-                            <Badge variant={item.completed_date ? "default" : "secondary"}>
-                              {item.completed_date ? 'مكتمل' : 'في الانتظار'}
-                            </Badge>
+                    <div className="space-y-3">
+                      {attachments.map((file) => (
+                        <div key={file.id} className="flex items-center gap-3 p-3 border rounded-lg hover:bg-muted/30 transition-colors">
+                          <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
+                            <FileText className="w-5 h-5 text-primary" />
                           </div>
-                          {item.description && (
-                            <p className="text-sm text-muted-foreground mb-2">{item.description}</p>
-                          )}
-                          <div className="flex justify-between text-xs text-muted-foreground">
-                            <span>{item.actor_name || 'النظام'}</span>
-                            <span>
-                              {item.completed_date ? 
-                                new Date(item.completed_date).toLocaleDateString('ar-SA') : 
-                                item.scheduled_date ? 
-                                  new Date(item.scheduled_date).toLocaleDateString('ar-SA') : 
-                                  'غير محدد'
-                              }
-                            </span>
-                          </div>
-                        </div>
-                      </div>
-                    ))
-                  )}
-                </div>
-              </CardContent>
-            </Card>
-          </TabsContent>
-
-          {/* Files Tab */}
-          <TabsContent value="files" className="space-y-6">
-            <Card className="animate-fade-in">
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <FileText className="w-5 h-5" />
-                  ملفات المشروع
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                {files.length === 0 ? (
-                  <div className="text-center py-8">
-                    <FileText className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
-                    <p className="text-muted-foreground">لا توجد ملفات متاحة حالياً</p>
-                  </div>
-                ) : (
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    {files.map((file) => (
-                      <div key={file.id} className="p-4 border rounded-lg hover:bg-muted/30 transition-colors">
-                        <div className="flex items-center gap-3">
-                          <FileText className="w-5 h-5 text-primary" />
-                          <div className="flex-1">
-                            <h4 className="font-medium">{file.file_name}</h4>
+                          <div className="flex-1 min-w-0">
+                            <p className="font-medium text-sm truncate">{file.file_name}</p>
                             <p className="text-xs text-muted-foreground">
-                              {new Date(file.uploaded_at).toLocaleDateString('ar-SA')}
+                              {formatFileSize(file.file_size)} • {new Date(file.created_at).toLocaleDateString('ar-SA')}
                             </p>
                           </div>
-                          <Button size="sm" variant="outline">
+                          <Button size="sm" variant="outline" onClick={() => handleDownload(file)} className="gap-1 shrink-0">
+                            <Download className="w-4 h-4" />
                             تحميل
                           </Button>
                         </div>
-                      </div>
-                    ))}
-                  </div>
-                )}
-              </CardContent>
-            </Card>
-          </TabsContent>
-
-          {/* Communication Tab */}
-          <TabsContent value="communication" className="space-y-6">
-            <Card className="animate-fade-in">
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <MessageSquare className="w-5 h-5" />
-                  رسائل التواصل
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-4 max-h-96 overflow-y-auto mb-6">
-                  {communications.length === 0 ? (
-                    <p className="text-center text-muted-foreground py-8">
-                      لا توجد رسائل بعد
-                    </p>
-                  ) : (
-                    communications.map((msg) => (
-                      <div
-                        key={msg.id}
-                        className={`flex gap-3 ${msg.sender_type === 'client' ? 'justify-end' : 'justify-start'}`}
-                      >
-                        <div className={`
-                          max-w-sm p-4 rounded-lg
-                          ${msg.sender_type === 'client' ? 
-                            'bg-primary text-primary-foreground' : 
-                            'bg-muted text-foreground'}
-                        `}>
-                          <div className="mb-2">
-                            <span className="font-medium text-sm">{msg.sender_name}</span>
-                            <span className="text-xs opacity-75 mr-2">
-                              {new Date(msg.created_at).toLocaleDateString('ar-SA')}
-                            </span>
-                          </div>
-                          <p className="text-sm">{msg.message}</p>
-                        </div>
-                      </div>
-                    ))
+                      ))}
+                    </div>
                   )}
-                </div>
-                
-                {/* Message input */}
-                <div className="border-t pt-6">
-                  <div className="flex gap-3">
-                    <Textarea
-                      value={newMessage}
-                      onChange={(e) => setNewMessage(e.target.value)}
-                      placeholder="اكتب رسالتك هنا..."
-                      className="flex-1 min-h-[60px] resize-none"
-                    />
-                    <Button 
-                      onClick={() => {
-                        if (newMessage.trim()) {
-                          toast({
-                            title: "تم إرسال الرسالة",
-                            description: "سيتم الرد عليك قريباً",
-                          });
-                          setNewMessage('');
-                        }
-                      }}
-                      disabled={!newMessage.trim()}
-                    >
-                      إرسال
-                    </Button>
+                </CardContent>
+              </Card>
+            </motion.div>
+          </div>
+
+          {/* Sidebar */}
+          <div className="space-y-6">
+            {/* Order Info Card */}
+            <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.2 }}>
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2 text-lg">
+                    <Package className="w-5 h-5" />
+                    معلومات الطلب
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-4 text-sm">
+                  <div className="flex justify-between">
+                    <span className="text-muted-foreground">رقم التتبع</span>
+                    <span className="font-mono font-medium">{order.tracking_id}</span>
                   </div>
-                </div>
-              </CardContent>
-            </Card>
-          </TabsContent>
-        </Tabs>
+                  <Separator />
+                  <div className="flex justify-between">
+                    <span className="text-muted-foreground">الحالة</span>
+                    <Badge className={statusColorMap[status]}>{statusMap[status] || status}</Badge>
+                  </div>
+                  <Separator />
+                  <div className="flex justify-between">
+                    <span className="text-muted-foreground">القيمة</span>
+                    <span className="font-bold text-primary">{(order.total_amount || 0).toLocaleString()} ر.س</span>
+                  </div>
+                  <Separator />
+                  <div className="flex justify-between">
+                    <span className="text-muted-foreground">المدفوع</span>
+                    <span className="font-medium">{(order.paid_amount || 0).toLocaleString()} ر.س</span>
+                  </div>
+                  {order.deadline && (
+                    <>
+                      <Separator />
+                      <div className="flex justify-between">
+                        <span className="text-muted-foreground">الموعد النهائي</span>
+                        <span className="font-medium">{new Date(order.deadline).toLocaleDateString('ar-SA')}</span>
+                      </div>
+                    </>
+                  )}
+                  <Separator />
+                  <div className="flex justify-between">
+                    <span className="text-muted-foreground">تاريخ الإنشاء</span>
+                    <span>{new Date(order.created_at).toLocaleDateString('ar-SA')}</span>
+                  </div>
+                  <Separator />
+                  <div className="flex justify-between">
+                    <span className="text-muted-foreground">آخر تحديث</span>
+                    <span>{new Date(order.updated_at).toLocaleDateString('ar-SA')}</span>
+                  </div>
+                </CardContent>
+              </Card>
+            </motion.div>
+
+            {/* Notes */}
+            {order.notes && (
+              <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.3 }}>
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="flex items-center gap-2 text-lg">
+                      <MessageSquare className="w-5 h-5" />
+                      ملاحظات
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="text-sm text-muted-foreground leading-relaxed">{order.notes}</p>
+                  </CardContent>
+                </Card>
+              </motion.div>
+            )}
+          </div>
+        </div>
       </div>
-    </div>
+    </ClientLayout>
   );
 };
 
