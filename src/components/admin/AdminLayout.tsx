@@ -178,7 +178,7 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
     location.pathname === href || (href !== '/adminmaster' && location.pathname.startsWith(href));
 
   const SidebarNav = ({ onItemClick }: { onItemClick?: () => void }) => (
-    <ScrollArea className="h-full">
+    <ScrollArea className="h-full" dir="rtl">
       <div className="py-3 space-y-1">
         {navGroups.map((group) => (
           <div key={group.label}>
