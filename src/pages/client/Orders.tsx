@@ -11,7 +11,7 @@ import { useAuth } from '@/components/SimpleAuthProvider';
 import { useClientData } from '@/hooks/useClientData';
 import { ClientDashboardService } from '@/utils/clientDashboardService';
 import { 
-  Plus, Search, Filter, Eye, Edit, Calendar, DollarSign,
+  Search, Filter, Eye, Edit, Calendar, DollarSign,
   CheckCircle, Clock, AlertCircle, RefreshCw, ShoppingBag
 } from 'lucide-react';
 import { motion } from 'framer-motion';
@@ -72,10 +72,6 @@ const Orders = () => {
               <RefreshCw className="w-4 h-4 ml-2" />
               تحديث
             </Button>
-            <Button onClick={() => navigate('/orders/new')}>
-              <Plus className="w-4 h-4 ml-2" />
-              طلب جديد
-            </Button>
           </div>
         </div>
 
@@ -121,10 +117,9 @@ const Orders = () => {
               <div className="text-center py-12">
                 <ShoppingBag className="w-12 h-12 mx-auto text-muted-foreground mb-4" />
                 <p className="text-lg font-medium">لا توجد طلبات</p>
-                <p className="text-muted-foreground mb-4">ابدأ بإنشاء طلب جديد</p>
-                <Button onClick={() => navigate('/orders/new')}>
-                  <Plus className="w-4 h-4 ml-2" />
-                  طلب جديد
+                <p className="text-muted-foreground mb-4">يمكنك إنشاء طلب جديد من قسم خدماتنا</p>
+                <Button onClick={() => navigate('/client-services')}>
+                  اذهب لخدماتنا
                 </Button>
               </div>
             ) : (
