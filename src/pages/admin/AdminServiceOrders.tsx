@@ -258,9 +258,9 @@ const AdminServiceOrders = () => {
 
   const stats = {
     total: orders.length,
-    active: orders.filter(o => !['delivered', 'cancelled', 'completed'].includes(o.current_status)).length,
-    completed: orders.filter(o => ['delivered', 'completed'].includes(o.current_status)).length,
-    pending: orders.filter(o => ['pending', 'received', 'under_review'].includes(o.current_status)).length,
+    active: orders.filter(o => !['completed', 'cancelled', 'refunded'].includes(o.current_status)).length,
+    completed: orders.filter(o => o.current_status === 'completed').length,
+    pending: orders.filter(o => ['pending', 'confirmed', 'review'].includes(o.current_status)).length,
     totalRevenue: orders.reduce((sum, o) => sum + (o.total_amount || 0), 0),
   };
 
