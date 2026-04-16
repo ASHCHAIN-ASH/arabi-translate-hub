@@ -3,6 +3,7 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '@/components/SimpleAuthProvider';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
+import NotificationCenter from '@/components/NotificationCenter';
 import { 
   LayoutDashboard, 
   ShoppingCart, 
@@ -11,7 +12,7 @@ import {
   HelpCircle,
   LogOut,
   GraduationCap,
-  Bell,
+  Wallet,
   Menu,
   X
 } from 'lucide-react';
@@ -28,31 +29,12 @@ const ClientLayout: React.FC<ClientLayoutProps> = ({ children }) => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   const navItems = [
-    { 
-      name: 'لوحة التحكم', 
-      href: '/dashboard', 
-      icon: LayoutDashboard 
-    },
-    { 
-      name: 'سجل الطلبات', 
-      href: '/orders', 
-      icon: ShoppingCart 
-    },
-    { 
-      name: 'فواتيري', 
-      href: '/billing/invoices', 
-      icon: FileText 
-    },
-    { 
-      name: 'المدفوعات', 
-      href: '/billing/payments', 
-      icon: CreditCard 
-    },
-    { 
-      name: 'الدعم الفني', 
-      href: '/support/tickets', 
-      icon: HelpCircle 
-    },
+    { name: 'لوحة التحكم', href: '/dashboard', icon: LayoutDashboard },
+    { name: 'سجل الطلبات', href: '/orders', icon: ShoppingCart },
+    { name: 'فواتيري', href: '/invoices', icon: FileText },
+    { name: 'محفظتي', href: '/wallet', icon: Wallet },
+    { name: 'المدفوعات', href: '/billing/payments', icon: CreditCard },
+    { name: 'الدعم الفني', href: '/support/tickets', icon: HelpCircle },
   ];
 
   const handleSignOut = async () => {
