@@ -16,6 +16,7 @@ const Header = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const location = useLocation();
+  const { user, userRole, loading: authLoading, signOut } = useAuth();
 
   const navigation = [
     { name: 'الرئيسية', href: '/', icon: Home },
