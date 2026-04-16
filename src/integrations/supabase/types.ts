@@ -770,6 +770,9 @@ export type Database = {
           notes: string | null
           paid_amount: number | null
           priority: string | null
+          quote_notes: string | null
+          quote_sent_at: string | null
+          quote_status: string | null
           service_id: string | null
           service_name: string | null
           total_amount: number | null
@@ -786,6 +789,9 @@ export type Database = {
           notes?: string | null
           paid_amount?: number | null
           priority?: string | null
+          quote_notes?: string | null
+          quote_sent_at?: string | null
+          quote_status?: string | null
           service_id?: string | null
           service_name?: string | null
           total_amount?: number | null
@@ -802,6 +808,9 @@ export type Database = {
           notes?: string | null
           paid_amount?: number | null
           priority?: string | null
+          quote_notes?: string | null
+          quote_sent_at?: string | null
+          quote_status?: string | null
           service_id?: string | null
           service_name?: string | null
           total_amount?: number | null
