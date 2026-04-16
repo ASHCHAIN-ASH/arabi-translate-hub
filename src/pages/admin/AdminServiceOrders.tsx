@@ -422,6 +422,54 @@ const ServiceOrderCard = ({
   order: ServiceOrder; 
   onStatusUpdate: (orderId: string, status: string) => void;
 }) => {
+  const [attachments, setAttachments] = useState<any[]>([]);
+  const [showAttachments, setShowAttachments] = useState(false);
+  const [loadingAttachments, setLoadingAttachments] = useState(false);
+
+  const loadAttachments = async () => {
+    if (attachments.length > 0) {
+      setShowAttachments(!showAttachments);
+      return;
+    }
+    setLoadingAttachments(true);
+    try {
+      const { data, error } = await (supabase
+        .from('order_attachments') as any)
+        .select('*')
+        .eq('order_id', order.id)
+        .order('created_at', { ascending: false });
+      if (!error) setAttachments(data || []);
+    } catch (e) {
+      console.error('Error loading attachments:', e);
+    } finally {
+      setLoadingAttachments(false);
+      setShowAttachments(true);
+    }
+  };
+
+  const downloadFile = async (storagePath: string, fileName: string) => {
+    try {
+      const { data, error } = await supabase.storage
+        .from('order-attachments')
+        .download(storagePath);
+      if (error) throw error;
+      const url = URL.createObjectURL(data);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = fileName;
+      a.click();
+      URL.revokeObjectURL(url);
+    } catch (e) {
+      console.error('Download error:', e);
+    }
+  };
+
+  const formatFileSize = (bytes: number) => {
+    if (bytes < 1024) return `${bytes} B`;
+    if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`;
+    return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
+  };
+
   const getStatusColor = (status: string) => {
     const colors: Record<string, string> = {
       received: 'bg-blue-100 text-blue-800',
