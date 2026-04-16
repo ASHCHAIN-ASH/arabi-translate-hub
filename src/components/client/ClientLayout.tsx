@@ -85,9 +85,6 @@ const ClientLayout: React.FC<ClientLayoutProps> = ({ children }) => {
     </nav>
   );
 
-  // Debug log
-  console.log('ClientLayout rendering - window width:', typeof window !== 'undefined' ? window.innerWidth : 'server');
-  console.log('Should show sidebar:', typeof window !== 'undefined' ? window.innerWidth >= 900 : 'server');
 
   return (
     <div className="min-h-screen w-full bg-background" dir="rtl">
