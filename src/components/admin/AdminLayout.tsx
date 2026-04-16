@@ -185,6 +185,7 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
             <button
               onClick={() => toggleGroup(group.label)}
               className="w-full flex items-center justify-between px-5 py-2 text-[11px] font-bold text-muted-foreground/70 uppercase tracking-wider hover:text-muted-foreground transition-colors"
+              dir="rtl"
             >
               <span>{group.label}</span>
               <ChevronDown className={`w-3 h-3 transition-transform ${collapsedGroups[group.label] ? 'rotate-90' : ''}`} />
@@ -213,6 +214,7 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
                             : 'text-muted-foreground hover:text-foreground hover:bg-muted/60'
                           }
                         `}
+                        dir="rtl"
                       >
                         <div className="flex items-center gap-3">
                           <item.icon className={`w-[18px] h-[18px] ${active ? 'text-primary-foreground' : 'text-muted-foreground group-hover:text-primary'}`} />
