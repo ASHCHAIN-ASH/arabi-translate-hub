@@ -611,9 +611,13 @@ const ServiceOrderCard = ({
               </SelectContent>
             </Select>
             
-            <Button variant="outline" size="sm">
-              <Eye className="w-4 h-4 ml-2" />
-              تفاصيل أكثر
+            <Button variant="outline" size="sm" onClick={loadAttachments} disabled={loadingAttachments}>
+              {loadingAttachments ? (
+                <RefreshCw className="w-4 h-4 ml-2 animate-spin" />
+              ) : (
+                <Paperclip className="w-4 h-4 ml-2" />
+              )}
+              المرفقات {attachments.length > 0 && `(${attachments.length})`}
             </Button>
             
             <Button variant="outline" size="sm">
@@ -621,6 +625,46 @@ const ServiceOrderCard = ({
               Timeline
             </Button>
           </div>
+
+          {/* Attachments Section */}
+          {showAttachments && (
+            <div className="pt-4 border-t space-y-2">
+              <p className="text-sm font-medium flex items-center gap-2">
+                <Paperclip className="w-4 h-4" />
+                الملفات المرفقة
+              </p>
+              {attachments.length === 0 ? (
+                <p className="text-sm text-muted-foreground bg-muted/30 p-3 rounded-lg text-center">
+                  لا توجد ملفات مرفقة بهذا الطلب
+                </p>
+              ) : (
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                  {attachments.map((att) => (
+                    <div
+                      key={att.id}
+                      className="flex items-center gap-3 p-3 bg-muted/30 rounded-lg hover:bg-muted/50 transition-colors"
+                    >
+                      <File className="w-5 h-5 text-primary flex-shrink-0" />
+                      <div className="flex-1 min-w-0">
+                        <p className="text-sm font-medium truncate">{att.file_name}</p>
+                        <p className="text-xs text-muted-foreground">
+                          {formatFileSize(att.file_size)} • {new Date(att.created_at).toLocaleDateString('ar-SA')}
+                        </p>
+                      </div>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className="h-8 w-8 flex-shrink-0"
+                        onClick={() => downloadFile(att)}
+                      >
+                        <Download className="w-4 h-4" />
+                      </Button>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
         </div>
       </CardContent>
     </Card>
