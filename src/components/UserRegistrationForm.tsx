@@ -55,16 +55,14 @@ const UserRegistrationForm: React.FC<UserRegistrationFormProps> = ({ onSuccess }
 
     try {
       // تسجيل المستخدم في جدول المستخدمين
-      const { data: userData, error: userError } = await supabase
-        .from('users')
+      const { data: userData, error: userError } = await (supabase
+        .from('customers') as any)
         .insert([
           {
             name: formData.name.trim(),
             email: formData.email.toLowerCase().trim(),
             phone: formData.phone.trim() || null,
-            role: 'client',
-            status: 'active',
-            password_hash: 'registration_pending' // سيتم تحديثها لاحقاً
+            status: 'active'
           }
         ])
         .select()

@@ -18,6 +18,9 @@ interface EmailTemplate {
   html_template: string;
   is_active: boolean;
   variables?: any;
+  name?: string;
+  subject?: string;
+  body?: string;
 }
 
 interface EmailComposerProps {
@@ -77,7 +80,12 @@ export default function EmailComposer({ defaultTo = "", defaultTemplateKey = "",
       return;
     }
 
-    setTemplates(data || []);
+    setTemplates((data || []).map((t: any) => ({
+      ...t,
+      template_key: t.name,
+      subject_template: t.subject,
+      html_template: t.body,
+    })) as EmailTemplate[]);
   };
 
   const handleTemplateChange = (templateKey: string) => {
