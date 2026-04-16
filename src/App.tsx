@@ -52,6 +52,7 @@ import ClientGuide from "./pages/ClientGuide";
 // Client Pages
 import ClientDashboard from "./pages/client/Dashboard";
 import ClientServices from "./pages/client/ClientServices";
+import ServiceDetail from "./pages/client/ServiceDetail";
 import Orders from "./pages/client/Orders";
 import OrderNew from "./pages/client/OrderNew";
 import OrderDetails from "./pages/client/OrderDetails";
