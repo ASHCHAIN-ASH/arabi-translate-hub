@@ -44,7 +44,7 @@ describe('Payments Integration', () => {
       const { supabase } = await import('@/integrations/supabase/client');
       const result = await supabase
         .from('business_payments')
-        .insert(payment)
+        .insert([payment])
         .select()
         .single();
 
