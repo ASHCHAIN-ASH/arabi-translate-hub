@@ -51,193 +51,71 @@ export interface OrderCommunication {
   read_at?: string;
 }
 
-// Get order by ID from Supabase
+const db = supabase as any;
+
 export const getOrderById = async (orderId: string): Promise<DatabaseOrder | null> => {
   try {
-    const { data, error } = await (supabase as any)
-      .from('orders')
-      .select('*')
-      .eq('id', orderId)
-      .single();
-
-    if (error) {
-      console.error('Error fetching order:', error);
-      return null;
-    }
-
+    const { data, error } = await db.from('orders').select('*').eq('id', orderId).single();
+    if (error) { console.error('Error fetching order:', error); return null; }
     return data;
-  } catch (error) {
-    console.error('Error in getOrderById:', error);
-    return null;
-  }
+  } catch (error) { console.error('Error in getOrderById:', error); return null; }
 };
 
-// Get order timeline from Supabase
 export const getOrderTimeline = async (orderId: string): Promise<OrderTimeline[]> => {
   try {
-    const { data, error } = await (supabase as any)
-      .from('order_timeline')
-      .select('*')
-      .eq('order_id', orderId)
-      .order('created_at', { ascending: true });
-
-    if (error) {
-      console.error('Error fetching timeline:', error);
-      return [];
-    }
-
+    const { data, error } = await db.from('order_timeline').select('*').eq('order_id', orderId).order('created_at', { ascending: true });
+    if (error) { console.error('Error fetching timeline:', error); return []; }
     return data || [];
-  } catch (error) {
-    console.error('Error in getOrderTimeline:', error);
-    return [];
-  }
+  } catch (error) { console.error('Error in getOrderTimeline:', error); return []; }
 };
 
-// Get order files (placeholder - files table needs to be created)
-export const getOrderFiles = async (orderId: string): Promise<OrderFile[]> => {
-  // TODO: Implement when files table is created
-  return [];
-};
+export const getOrderFiles = async (orderId: string): Promise<OrderFile[]> => { return []; };
 
-// Get order communications (placeholder - communications table needs to be created)
-export const getOrderCommunications = async (orderId: string): Promise<OrderCommunication[]> => {
-  // TODO: Implement when communications table is created
-  return [];
-};
+export const getOrderCommunications = async (orderId: string): Promise<OrderCommunication[]> => { return []; };
 
-// Add order communication (placeholder)
 export const addOrderCommunication = async (
-  orderId: string, 
-  message: string, 
-  senderType: 'client' | 'admin' | 'specialist' = 'client'
+  orderId: string, message: string, senderType: 'client' | 'admin' | 'specialist' = 'client'
 ): Promise<OrderCommunication> => {
-  // TODO: Implement when communications table is created
-  const newCommunication: OrderCommunication = {
-    id: Date.now().toString(),
-    order_id: orderId,
-    message,
-    sender_type: senderType,
-    created_at: new Date().toISOString()
-  };
-  
-  return newCommunication;
+  return { id: Date.now().toString(), order_id: orderId, message, sender_type: senderType, created_at: new Date().toISOString() };
 };
 
-// Update order status
 export const updateOrderStatus = async (orderId: string, status: string, progress?: number): Promise<void> => {
   try {
-    const { error } = await (supabase as any)
-      .from('orders')
-      .update({ 
-        current_status: status,
-        updated_at: new Date().toISOString()
-      })
-      .eq('id', orderId);
-
-    if (error) {
-      console.error('Error updating order status:', error);
-      throw error;
-    }
-  } catch (error) {
-    console.error('Error in updateOrderStatus:', error);
-    throw error;
-  }
+    const { error } = await db.from('orders').update({ current_status: status, updated_at: new Date().toISOString() }).eq('id', orderId);
+    if (error) throw error;
+  } catch (error) { console.error('Error in updateOrderStatus:', error); throw error; }
 };
 
-// Update order timeline
 export const updateOrderTimeline = async (orderId: string, status: string, completed: boolean): Promise<void> => {
   try {
-    const { error } = await (supabase as any)
-      .from('order_timeline')
-      .update({ 
-        completed_date: completed ? new Date().toISOString().split('T')[0] : null
-      })
-      .eq('order_id', orderId)
-      .eq('status', status);
-
-    if (error) {
-      console.error('Error updating timeline:', error);
-      throw error;
-    }
-  } catch (error) {
-    console.error('Error in updateOrderTimeline:', error);
-    throw error;
-  }
+    const { error } = await db.from('order_timeline').update({ completed_date: completed ? new Date().toISOString().split('T')[0] : null }).eq('order_id', orderId).eq('status', status);
+    if (error) throw error;
+  } catch (error) { console.error('Error in updateOrderTimeline:', error); throw error; }
 };
 
-// Upload order file (placeholder)
 export const uploadOrderFile = async (orderId: string, file: File, fileType: 'input' | 'output'): Promise<OrderFile> => {
-  // TODO: Implement file upload functionality
-  const newFile: OrderFile = {
-    id: Date.now().toString(),
-    order_id: orderId,
-    file_name: file.name,
-    file_url: URL.createObjectURL(file),
-    file_type: fileType,
-    uploaded_at: new Date().toISOString()
-  };
-  
-  return newFile;
+  return { id: Date.now().toString(), order_id: orderId, file_name: file.name, file_url: URL.createObjectURL(file), file_type: fileType, uploaded_at: new Date().toISOString() };
 };
 
-// Update order
 export const updateOrder = async (orderId: string, updates: Partial<DatabaseOrder>): Promise<void> => {
   try {
-    const { error } = await (supabase as any)
-      .from('orders')
-      .update({ 
-        ...updates,
-        updated_at: new Date().toISOString()
-      })
-      .eq('id', orderId);
-
-    if (error) {
-      console.error('Error updating order:', error);
-      throw error;
-    }
-  } catch (error) {
-    console.error('Error in updateOrder:', error);
-    throw error;
-  }
+    const { error } = await db.from('orders').update({ ...updates, updated_at: new Date().toISOString() }).eq('id', orderId);
+    if (error) throw error;
+  } catch (error) { console.error('Error in updateOrder:', error); throw error; }
 };
 
-// Get all orders for admin
 export const getAllOrdersForAdmin = async (): Promise<DatabaseOrder[]> => {
   try {
-    const { data, error } = await (supabase as any)
-      .from('orders')
-      .select('*')
-      .order('created_at', { ascending: false });
-
-    if (error) {
-      console.error('Error fetching orders:', error);
-      return [];
-    }
-
+    const { data, error } = await db.from('orders').select('*').order('created_at', { ascending: false });
+    if (error) { console.error('Error fetching orders:', error); return []; }
     return data || [];
-  } catch (error) {
-    console.error('Error in getAllOrdersForAdmin:', error);
-    return [];
-  }
+  } catch (error) { console.error('Error in getAllOrdersForAdmin:', error); return []; }
 };
 
-// Get orders for specific client
 export const getOrdersForClient = async (clientId: string): Promise<DatabaseOrder[]> => {
   try {
-    const { data, error } = await (supabase as any)
-      .from('orders')
-      .select('*')
-      .eq('user_id', clientId)
-      .order('created_at', { ascending: false });
-
-    if (error) {
-      console.error('Error fetching client orders:', error);
-      return [];
-    }
-
+    const { data, error } = await db.from('orders').select('*').eq('user_id', clientId).order('created_at', { ascending: false });
+    if (error) { console.error('Error fetching client orders:', error); return []; }
     return data || [];
-  } catch (error) {
-    console.error('Error in getOrdersForClient:', error);
-    return [];
-  }
+  } catch (error) { console.error('Error in getOrdersForClient:', error); return []; }
 };
