@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo, useRef } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import ClientLayout from '@/components/client/ClientLayout';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -73,6 +73,7 @@ const formatFileSize = (bytes: number) => {
 
 const OrderNew = () => {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const { user } = useAuth();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [categories, setCategories] = useState<Category[]>([]);
@@ -100,6 +101,16 @@ const OrderNew = () => {
       if (svcRes.error) throw svcRes.error;
       setCategories(catsRes.data || []);
       setServices(svcRes.data || []);
+
+      // Pre-select service from URL param
+      const preSelectedId = searchParams.get('service');
+      if (preSelectedId && svcRes.data) {
+        const found = svcRes.data.find(s => s.id === preSelectedId);
+        if (found) {
+          setSelectedService(found);
+          if (found.category_id) setSelectedCategory(found.category_id);
+        }
+      }
     } catch (e) {
       console.error('Error loading data:', e);
       toast.error('فشل في تحميل الخدمات');
