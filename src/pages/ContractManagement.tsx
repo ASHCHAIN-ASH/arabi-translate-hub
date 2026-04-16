@@ -134,7 +134,7 @@ const ContractManagement = () => {
           services: selectedServiceDetails.map(service => ({
             id: service.id,
             name: service.name_ar,
-            description: service.description_ar,
+            description: service.description,
             category: service.category_id
           })),
           additional_notes: newContract.additionalNotes,
@@ -389,7 +389,7 @@ const ContractManagement = () => {
                                       </h3>
                                     </div>
                                     <p className="text-gray-600 leading-relaxed text-sm">
-                                      {service.description_ar}
+                                      {service.description}
                                     </p>
                                   </div>
                                 </div>
