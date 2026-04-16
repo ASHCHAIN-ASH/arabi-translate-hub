@@ -53,40 +53,45 @@ export const SimpleAuthProvider: React.FC<{ children: React.ReactNode }> = ({ ch
   }, []);
 
   useEffect(() => {
-    // Set up auth state listener FIRST (before getSession)
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      async (event, currentSession) => {
-        console.log('Auth state change:', event);
-        setSession(currentSession);
-        setUser(currentSession?.user ?? null);
+    let isMounted = true;
 
-        if (currentSession?.user) {
-          // Use setTimeout to avoid Supabase client deadlock
-          setTimeout(async () => {
-            const role = await fetchUserRole(currentSession.user.id);
-            setUserRole(role);
-            setLoading(false);
-          }, 0);
-        } else {
-          setUserRole(null);
-          setLoading(false);
-        }
-      }
-    );
+    const applySession = async (currentSession: Session | null) => {
+      if (!isMounted) return;
 
-    // THEN get the initial session
-    supabase.auth.getSession().then(async ({ data: { session: initialSession } }) => {
-      setSession(initialSession);
-      setUser(initialSession?.user ?? null);
+      setSession(currentSession);
+      setUser(currentSession?.user ?? null);
 
-      if (initialSession?.user) {
-        const role = await fetchUserRole(initialSession.user.id);
+      if (currentSession?.user) {
+        setLoading(true);
+        setUserRole(null);
+
+        const role = await fetchUserRole(currentSession.user.id);
+        if (!isMounted) return;
+
         setUserRole(role);
+        setLoading(false);
+        return;
       }
+
+      setUserRole(null);
       setLoading(false);
+    };
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, currentSession) => {
+      console.log('Auth state change:', event);
+      setTimeout(() => {
+        void applySession(currentSession);
+      }, 0);
     });
 
-    return () => subscription.unsubscribe();
+    supabase.auth.getSession().then(({ data: { session: initialSession } }) => {
+      void applySession(initialSession);
+    });
+
+    return () => {
+      isMounted = false;
+      subscription.unsubscribe();
+    };
   }, [fetchUserRole]);
 
   const signIn = async (email: string, password: string): Promise<{ error?: string }> => {

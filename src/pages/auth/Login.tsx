@@ -15,15 +15,14 @@ const Login = () => {
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   
-  const { signIn, user } = useAuth();
+  const { signIn, user, userRole, loading: authLoading } = useAuth();
   const navigate = useNavigate();
 
-  // If already logged in, redirect
   React.useEffect(() => {
-    if (user) {
-      navigate('/dashboard');
+    if (!authLoading && user) {
+      navigate(userRole === 'admin' ? '/adminmaster' : '/dashboard', { replace: true });
     }
-  }, [user, navigate]);
+  }, [authLoading, user, userRole, navigate]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -42,7 +41,6 @@ const Login = () => {
       }
       
       toast.success('تم تسجيل الدخول بنجاح');
-      navigate('/dashboard');
     } catch (error: any) {
       toast.error(error.message || 'خطأ في تسجيل الدخول');
     } finally {

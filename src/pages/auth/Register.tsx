@@ -84,8 +84,8 @@ const Register = () => {
         return;
       }
       
-      toast.success('تم إنشاء الحساب بنجاح! مرحباً بك في منصة التعليم الأكاديمي');
-      navigate('/dashboard');
+      toast.success('تم إنشاء الحساب بنجاح، يرجى تأكيد البريد الإلكتروني ثم تسجيل الدخول');
+      navigate('/login');
     } catch (error: any) {
       toast.error(error.message || 'خطأ في إنشاء الحساب');
     } finally {
