@@ -139,6 +139,7 @@ import Pricing from "./pages/Pricing";
 import OrderTracking from "./pages/OrderTracking";
 import SubmitOrder from "./pages/SubmitOrder";
 import NotFound from "./pages/NotFound";
+import Unsubscribe from "./pages/Unsubscribe";
 import IntellectualProperty from "./pages/IntellectualProperty";
 import AcademicIntegrity from "./pages/AcademicIntegrity";
 import LicenseRequest from "./pages/LicenseRequest";
@@ -417,6 +418,7 @@ const App = () => (
             <Route path="/services/editing/technical-editing" element={<TechnicalEditing />} />
             <Route path="/services/editing/style-review" element={<StyleReview />} />
             <Route path="/services/editing/final-proofreading" element={<FinalProofreading />} />
+            <Route path="/unsubscribe" element={<Unsubscribe />} />
             
             <Route path="*" element={<NotFound />} />
           </Routes>
