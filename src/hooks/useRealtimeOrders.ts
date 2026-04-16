@@ -81,9 +81,9 @@ export const useRealtimeOrders = () => {
   useEffect(() => {
     loadOrders();
 
-    // Subscribe to orders table changes
+    // Subscribe to orders table changes (admin-only hook, no user filter needed)
     const ordersChannel = supabase
-      .channel('orders-changes')
+      .channel('admin-orders-changes')
       .on(
         'postgres_changes',
         {
@@ -113,9 +113,9 @@ export const useRealtimeOrders = () => {
       )
       .subscribe();
 
-    // Subscribe to order timeline changes for additional notifications
+    // Subscribe to order timeline changes (admin-only)
     const timelineChannel = supabase
-      .channel('order-timeline-changes')
+      .channel('admin-timeline-changes')
       .on(
         'postgres_changes',
         {

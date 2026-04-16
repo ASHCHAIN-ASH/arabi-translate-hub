@@ -61,13 +61,13 @@ const ClientOrders = () => {
   useEffect(() => {
     loadOrders();
 
-    // Subscribe to orders table changes for real-time updates
+    // Subscribe to own orders changes only (RLS will filter server-side)
     const ordersChannel = supabase
-      .channel('client-orders-changes')
+      .channel('my-orders-changes')
       .on(
         'postgres_changes',
         {
-          event: '*',
+          event: 'UPDATE',
           schema: 'public',
           table: 'orders'
         },
@@ -101,9 +101,9 @@ const ClientOrders = () => {
       )
       .subscribe();
 
-    // Subscribe to timeline updates
+    // Subscribe to own timeline updates
     const timelineChannel = supabase
-      .channel('client-timeline-changes')
+      .channel('my-timeline-changes')
       .on(
         'postgres_changes',
         {

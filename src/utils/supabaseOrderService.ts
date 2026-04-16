@@ -37,7 +37,7 @@ export const updateOrderStatus = async (orderId: string, newStatus: string): Pro
 
 export const searchOrderByTracking = async (trackingId: string, phoneLastFour: string): Promise<OrderStatus | null> => {
   try {
-    const { data, error } = await db.from('orders').select('*').eq('tracking_id', trackingId.toUpperCase()).eq('phone_last_four', phoneLastFour).single();
+    const { data, error } = await db.rpc('track_order', { _tracking_id: trackingId.toUpperCase(), _phone_last_four: phoneLastFour }).single();
     if (error || !data) return null;
     const currentStepIndex = TIMELINE_STEPS.findIndex(step => step.status === data.current_status);
     const progress = currentStepIndex >= 0 ? ((currentStepIndex + 1) / TIMELINE_STEPS.length) * 100 : 10;
