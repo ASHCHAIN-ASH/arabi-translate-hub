@@ -208,7 +208,6 @@ const OrderForm: React.FC<OrderFormProps> = ({ selectedService, onSuccess }) => 
           status: 'pending',
           note: 'تم استلام الطلب بنجاح'
         }]);
-        });
 
       toast({
         title: "تم إرسال الطلب بنجاح! 🎉",
