@@ -18,7 +18,10 @@ import {
   Eye,
   Edit,
   FileText,
-  Calendar
+  Calendar,
+  Paperclip,
+  Download,
+  File
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { motion } from 'framer-motion';
