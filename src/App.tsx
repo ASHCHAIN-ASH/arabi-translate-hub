@@ -2,7 +2,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import PageThemeProvider from "./components/PageThemeProvider";
 import { SimpleAuthProvider } from "@/components/SimpleAuthProvider";
 import SimpleProtectedRoute from "@/components/SimpleProtectedRoute";
@@ -240,6 +240,7 @@ const App = () => (
             <Route path="/unauthorized" element={<Unauthorized />} />
             
             {/* Client Dashboard Routes */}
+            <Route path="/client/dashboard" element={<Navigate to="/dashboard" replace />} />
             <Route path="/dashboard" element={
               <SimpleProtectedRoute requiredRole="client">
                 <ClientDashboard />
