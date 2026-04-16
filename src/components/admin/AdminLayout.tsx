@@ -390,6 +390,9 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
           </div>
         </main>
       </div>
+
+      {/* Chat */}
+      {user?.id && <ChatFloatingButton userId={user.id} isAdmin />}
     </div>
   );
 };

@@ -213,6 +213,9 @@ const ClientLayout: React.FC<ClientLayoutProps> = ({ children }) => {
           </main>
         </div>
       </div>
+
+      {/* Chat */}
+      {user?.id && <ChatFloatingButton userId={user.id} />}
     </div>
   );
 };
