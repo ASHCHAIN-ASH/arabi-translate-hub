@@ -73,7 +73,6 @@ const SimpleLogin = () => {
         {
           name: registerData.name,
           phone: registerData.phone,
-          role: 'client'
         }
       );
       
