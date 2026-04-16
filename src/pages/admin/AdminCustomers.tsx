@@ -254,7 +254,7 @@ const AdminCustomers = () => {
       if (result.success) {
         toast.success('تم تحديث بيانات العميل بنجاح');
         setEditModal({ isOpen: false, customer: null });
-        setEditFormData({ full_name: '', phone: '' });
+        setEditFormData({ name: '', phone: '' });
       } else {
         toast.error(result.message || 'فشل في تحديث البيانات');
       }
@@ -804,7 +804,7 @@ const AdminCustomers = () => {
       <Dialog open={passwordModal.isOpen} onOpenChange={(open) => setPasswordModal({ isOpen: open, customer: null })}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>تغيير كلمة المرور - {passwordModal.customer?.full_name}</DialogTitle>
+            <DialogTitle>تغيير كلمة المرور - {passwordModal.customer?.name}</DialogTitle>
           </DialogHeader>
           
           <div className="space-y-4">
@@ -850,7 +850,7 @@ const AdminCustomers = () => {
       <Dialog open={statusModal.isOpen} onOpenChange={(open) => setStatusModal({ isOpen: open, customer: null })}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>تغيير حالة العميل - {statusModal.customer?.full_name}</DialogTitle>
+            <DialogTitle>تغيير حالة العميل - {statusModal.customer?.name}</DialogTitle>
           </DialogHeader>
           
           <div className="space-y-4">
@@ -895,7 +895,7 @@ const AdminCustomers = () => {
       <Dialog open={editModal.isOpen} onOpenChange={(open) => setEditModal({ isOpen: open, customer: null })}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>تعديل بيانات العميل - {editModal.customer?.full_name}</DialogTitle>
+            <DialogTitle>تعديل بيانات العميل - {editModal.customer?.name}</DialogTitle>
           </DialogHeader>
           
           <div className="space-y-4">
@@ -904,7 +904,7 @@ const AdminCustomers = () => {
               <Input
                 id="edit-name"
                 value={editFormData.name}
-                onChange={(e) => setEditFormData(prev => ({ ...prev, full_name: e.target.value }))}
+                onChange={(e) => setEditFormData(prev => ({ ...prev, name: e.target.value }))}
                 placeholder="الاسم الكامل"
               />
             </div>
