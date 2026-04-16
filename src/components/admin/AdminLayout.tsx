@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '@/components/SimpleAuthProvider';
 import { Button } from '@/components/ui/button';
@@ -7,11 +7,10 @@ import { supabase } from '@/integrations/supabase/client';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Separator } from '@/components/ui/separator';
 import { 
-  LayoutDashboard, Users, ShoppingCart, FileText, FileSignature, 
-  CreditCard, HelpCircle, Settings, LogOut, Shield, Bell, Menu, X,
-  Activity, TrendingUp, Mail, Briefcase, Clock, Receipt, ChevronDown,
-  ChevronLeft, BarChart3, Package, Ticket, UserPlus, Globe,
-  Palette, Megaphone, Star, Wrench
+  LayoutDashboard, Users, ShoppingCart, FileText, 
+  CreditCard, HelpCircle, Settings, LogOut, Shield, Bell, Menu,
+  Activity, Mail, Briefcase, Clock, Receipt, ChevronDown,
+  BarChart3, Package, Ticket, UserPlus, Star
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -39,6 +38,8 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
   const [isNotificationOpen, setIsNotificationOpen] = useState(false);
   const [collapsedGroups, setCollapsedGroups] = useState<Record<string, boolean>>({});
   const [counts, setCounts] = useState({ invoices: 0, tickets: 0, orders: 0 });
+  const [notifications, setNotifications] = useState<Array<{ id: string; title: string; message: string; time: string; type: string }>>([]);
+  const [unreadCount, setUnreadCount] = useState(0);
 
   const navGroups: NavGroup[] = [
     {
@@ -81,7 +82,7 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
       label: 'الخدمات والمحتوى',
       items: [
         { name: 'إدارة الخدمات', href: '/adminmaster/services', icon: Briefcase },
-        { name: 'الإشعارات البريدية', href: '/adminmaster/email-notifications', icon: Mail, badge: 'جديد' },
+        { name: 'الإشعارات البريدية', href: '/adminmaster/email-notifications', icon: Mail },
       ]
     },
     {
@@ -91,14 +92,6 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
       ]
     },
   ];
-
-  const defaultNotifications = [
-    { id: 1, title: 'طلب جديد', message: 'تم استلام طلب خدمة جديد', time: 'منذ دقيقتين', type: 'order' },
-    { id: 2, title: 'دفعة جديدة', message: 'تم استلام دفعة بقيمة 500 ريال', time: 'منذ 5 دقائق', type: 'payment' },
-  ];
-
-  const [realNotifications, setRealNotifications] = useState(defaultNotifications);
-  const adminEmail = 'info@masteredupath.com';
 
   const getTimeAgo = (iso: string) => {
     const diff = Date.now() - new Date(iso).getTime();
@@ -110,54 +103,7 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
     return `منذ ${Math.floor(hours / 24)} يوم`;
   };
 
-  useEffect(() => {
-    loadCounts();
-    loadNotifications();
-
-    const channel = supabase
-      .channel('admin-layout-notifications')
-      .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'user_notifications' },
-        (payload) => {
-          const n: any = payload.new;
-          if (n.user_id === user?.id) {
-            setRealNotifications(prev => [{
-              id: Date.now(),
-              title: n.title,
-              message: n.message || '',
-              time: 'الآن',
-              type: n.type || 'info',
-            }, ...prev].slice(0, 10));
-          }
-        }
-      )
-      .subscribe();
-
-    return () => { supabase.removeChannel(channel); };
-  }, []);
-
-  const loadNotifications = async () => {
-    try {
-      const { data } = await supabase
-        .from('user_notifications')
-        .select('*')
-        .order('created_at', { ascending: false })
-        .limit(10);
-
-      if (data?.length) {
-        setRealNotifications(data.map((n: any, idx: number) => ({
-          id: idx + 1,
-          title: n.title,
-          message: n.message || '',
-          time: getTimeAgo(n.created_at),
-          type: n.type || 'info',
-        })));
-      }
-    } catch (e) {
-      console.error('Error loading notifications:', e);
-    }
-  };
-
-  const loadCounts = async () => {
+  const loadCounts = useCallback(async () => {
     try {
       const [inv, tkt, ord] = await Promise.all([
         supabase.from('invoices').select('*', { count: 'exact', head: true }).eq('status', 'pending'),
@@ -168,7 +114,57 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
     } catch (e) {
       console.error('Error loading counts:', e);
     }
-  };
+  }, []);
+
+  const loadNotifications = useCallback(async () => {
+    try {
+      const { data } = await supabase
+        .from('user_notifications')
+        .select('*')
+        .order('created_at', { ascending: false })
+        .limit(10);
+
+      if (data) {
+        setNotifications(data.map((n: any) => ({
+          id: n.id,
+          title: n.title,
+          message: n.message || '',
+          time: getTimeAgo(n.created_at),
+          type: n.type || 'info',
+        })));
+        setUnreadCount(data.filter((n: any) => !n.read_at).length);
+      } else {
+        setNotifications([]);
+        setUnreadCount(0);
+      }
+    } catch (e) {
+      console.error('Error loading notifications:', e);
+    }
+  }, []);
+
+  useEffect(() => {
+    loadCounts();
+    loadNotifications();
+
+    // Realtime subscriptions for badge counts
+    const countChannel = supabase
+      .channel('admin-layout-counts')
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'invoices' }, () => loadCounts())
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'tickets' }, () => loadCounts())
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'service_orders' }, () => loadCounts())
+      .subscribe();
+
+    // Realtime for notifications
+    const notifChannel = supabase
+      .channel('admin-layout-notifications')
+      .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'user_notifications' }, () => loadNotifications())
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(countChannel);
+      supabase.removeChannel(notifChannel);
+    };
+  }, [loadCounts, loadNotifications]);
 
   const handleSignOut = async () => {
     try { await signOut(); navigate('/'); } catch (e) { console.error(e); }
@@ -191,7 +187,7 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
               className="w-full flex items-center justify-between px-5 py-2 text-[11px] font-bold text-muted-foreground/70 uppercase tracking-wider hover:text-muted-foreground transition-colors"
             >
               <span>{group.label}</span>
-              <ChevronDown className={`w-3 h-3 transition-transform ${collapsedGroups[group.label] ? 'rotate-180' : ''}`} />
+              <ChevronDown className={`w-3 h-3 transition-transform ${collapsedGroups[group.label] ? '-rotate-90' : ''}`} />
             </button>
 
             <AnimatePresence initial={false}>
@@ -226,9 +222,7 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
                           <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${
                             active
                               ? 'bg-primary-foreground/20 text-primary-foreground'
-                              : item.badge === 'جديد'
-                                ? 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400'
-                                : 'bg-destructive/10 text-destructive'
+                              : 'bg-destructive/10 text-destructive'
                           }`}>
                             {item.badge}
                           </span>
@@ -303,7 +297,7 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
               </Link>
             </div>
 
-            {/* Right side */}
+            {/* Left side (in RTL) */}
             <div className="flex items-center gap-2">
               {/* Status */}
               <div className="hidden lg:flex items-center gap-1.5 px-3 py-1 bg-emerald-50 dark:bg-emerald-950/30 text-emerald-700 dark:text-emerald-400 rounded-full text-xs font-medium">
@@ -315,9 +309,9 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
               <div className="relative">
                 <Button variant="ghost" size="icon" className="relative h-9 w-9" onClick={() => setIsNotificationOpen(!isNotificationOpen)}>
                   <Bell className="w-[18px] h-[18px]" />
-                  {realNotifications.length > 0 && (
-                    <span className="absolute -top-0.5 -right-0.5 w-4 h-4 bg-destructive rounded-full flex items-center justify-center text-[9px] text-destructive-foreground font-bold">
-                      {realNotifications.length}
+                  {unreadCount > 0 && (
+                    <span className="absolute -top-0.5 -left-0.5 w-4 h-4 bg-destructive rounded-full flex items-center justify-center text-[9px] text-destructive-foreground font-bold">
+                      {unreadCount}
                     </span>
                   )}
                 </Button>
@@ -336,13 +330,20 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
                           <h3 className="text-sm font-bold">الإشعارات</h3>
                         </div>
                         <div className="max-h-64 overflow-y-auto">
-                          {realNotifications.map((n) => (
-                            <div key={n.id} className="p-3 border-b border-border/20 last:border-0 hover:bg-muted/40 transition-colors">
-                              <h4 className="text-sm font-medium">{n.title}</h4>
-                              <p className="text-xs text-muted-foreground">{n.message}</p>
-                              <p className="text-[11px] text-primary mt-1">{n.time}</p>
+                          {notifications.length === 0 ? (
+                            <div className="p-6 text-center">
+                              <Bell className="w-6 h-6 mx-auto mb-2 text-muted-foreground/40" />
+                              <p className="text-xs text-muted-foreground">لا توجد إشعارات</p>
                             </div>
-                          ))}
+                          ) : (
+                            notifications.map((n) => (
+                              <div key={n.id} className="p-3 border-b border-border/20 last:border-0 hover:bg-muted/40 transition-colors">
+                                <h4 className="text-sm font-medium">{n.title}</h4>
+                                <p className="text-xs text-muted-foreground">{n.message}</p>
+                                <p className="text-[11px] text-primary mt-1">{n.time}</p>
+                              </div>
+                            ))
+                          )}
                         </div>
                       </motion.div>
                     </>
@@ -352,7 +353,7 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
 
               {/* User */}
               <div className="flex items-center gap-2">
-                <div className="text-left hidden sm:block">
+                <div className="text-start hidden sm:block">
                   <p className="text-xs font-semibold text-foreground leading-tight">
                     {user?.user_metadata?.full_name || 'admin'}
                   </p>
@@ -373,7 +374,7 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
 
       <div className="flex">
         {/* Desktop Sidebar */}
-        <aside className="w-[260px] bg-card/60 backdrop-blur-sm border-l rtl:border-l-0 rtl:border-r border-border/30 min-h-[calc(100vh-56px)] hidden lg:block">
+        <aside className="w-[260px] bg-card/60 backdrop-blur-sm border-border/30 border-l rtl:border-l-0 rtl:border-r min-h-[calc(100vh-56px)] hidden lg:block">
           <div className="sticky top-14 h-[calc(100vh-56px)]">
             <SidebarNav />
           </div>
