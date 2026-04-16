@@ -559,8 +559,9 @@ const OrderDetails = () => {
                 <CardContent>
                   {attachments.length === 0 ? (
                     <div className="text-center py-10 text-muted-foreground">
-                      <FileText className="w-10 h-10 mx-auto mb-3 opacity-30" />
-                      <p className="text-sm">لا توجد مرفقات</p>
+                      <Upload className="w-10 h-10 mx-auto mb-3 opacity-30" />
+                      <p className="text-sm">لا توجد مرفقات بعد</p>
+                      <p className="text-xs mt-1">اضغط "رفع ملف" لإضافة مرفقات</p>
                     </div>
                   ) : (
                     <div className="space-y-2">
