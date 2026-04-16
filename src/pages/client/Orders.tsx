@@ -12,7 +12,7 @@ import { useClientData } from '@/hooks/useClientData';
 import { ClientDashboardService } from '@/utils/clientDashboardService';
 import { 
   Plus, Search, Filter, Eye, Edit, Calendar, DollarSign,
-  CheckCircle, Clock, AlertCircle, RefreshCw
+  CheckCircle, Clock, AlertCircle, RefreshCw, ShoppingBag
 } from 'lucide-react';
 import { motion } from 'framer-motion';
 
@@ -23,14 +23,13 @@ const Orders = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
 
-  const filteredOrders = orders
-    .filter(order => {
-      const matchesSearch = order.title.includes(searchTerm) || 
-                          order.service.includes(searchTerm) || 
-                          order.orderNumber.includes(searchTerm);
-      const matchesStatus = statusFilter === 'all' || order.status === statusFilter;
-      return matchesSearch && matchesStatus;
-    });
+  const filteredOrders = orders.filter(order => {
+    const matchesSearch = order.title.includes(searchTerm) || 
+                        order.service.includes(searchTerm) || 
+                        order.orderNumber.includes(searchTerm);
+    const matchesStatus = statusFilter === 'all' || order.status === statusFilter;
+    return matchesSearch && matchesStatus;
+  });
 
   const getStatusColor = (status: string) => {
     const colors: Record<string, string> = {
@@ -59,354 +58,177 @@ const Orders = () => {
     );
   }
 
-  const getStatusColor = (status: string) => {
-    const colors = {
-      pending: 'bg-yellow-100 text-yellow-700 border-yellow-200',
-      under_review: 'bg-blue-100 text-blue-700 border-blue-200',
-      in_progress: 'bg-purple-100 text-purple-700 border-purple-200',
-      completed: 'bg-green-100 text-green-700 border-green-200',
-      delivered: 'bg-emerald-100 text-emerald-700 border-emerald-200'
-    };
-    return colors[status as keyof typeof colors] || 'bg-gray-100 text-gray-700 border-gray-200';
-  };
-
-  const getStatusLabel = (status: string) => {
-    const labels = {
-      pending: 'في الانتظار',
-      under_review: 'تحت المراجعة',
-      in_progress: 'قيد التنفيذ',
-      completed: 'مكتمل',
-      delivered: 'مسلم'
-    };
-    return labels[status as keyof typeof labels] || status;
-  };
-
-  const getPriorityColor = (priority: string) => {
-    const colors = {
-      low: 'bg-blue-100 text-blue-700',
-      medium: 'bg-yellow-100 text-yellow-700',
-      high: 'bg-red-100 text-red-700'
-    };
-    return colors[priority as keyof typeof colors] || 'bg-gray-100 text-gray-700';
-  };
-
-  const getPriorityLabel = (priority: string) => {
-    const labels = {
-      low: 'منخفضة',
-      medium: 'متوسطة',
-      high: 'عالية'
-    };
-    return labels[priority as keyof typeof labels] || priority;
-  };
-
-  const getProgressColor = (progress: number) => {
-    if (progress < 30) return 'bg-red-500';
-    if (progress < 70) return 'bg-yellow-500';
-    return 'bg-green-500';
-  };
-
   return (
     <ClientLayout>
-      <div className="space-y-6" dir="rtl">
+      <div className="p-4 lg:p-6 space-y-6" dir="rtl">
         {/* Header */}
         <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
-          <div className="text-right">
-            <h1 className="text-2xl lg:text-3xl font-bold text-foreground">سجل الطلبات</h1>
-            <p className="text-muted-foreground">إدارة ومتابعة جميع طلباتك الأكاديمية</p>
+          <div>
+            <h1 className="text-2xl lg:text-3xl font-bold">سجل الطلبات</h1>
+            <p className="text-muted-foreground">إدارة ومتابعة جميع طلباتك</p>
           </div>
-          <Button 
-            onClick={() => navigate('/orders/new')}
-            className="flex items-center gap-2"
-          >
-            <Plus className="w-4 h-4" />
-            طلب جديد
-          </Button>
+          <div className="flex gap-2">
+            <Button variant="outline" onClick={refresh} size="sm">
+              <RefreshCw className="w-4 h-4 ml-2" />
+              تحديث
+            </Button>
+            <Button onClick={() => navigate('/orders/new')}>
+              <Plus className="w-4 h-4 ml-2" />
+              طلب جديد
+            </Button>
+          </div>
         </div>
 
         {/* Filters */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2 text-right">
-              <Filter className="w-5 h-5" />
-              الفلاتر والبحث
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
+        <Card className="border-0 shadow-lg">
+          <CardContent className="p-4">
             <div className="flex flex-col lg:flex-row gap-4">
-              <div className="flex-1">
-                <div className="relative">
-                  <Search className="absolute right-3 top-3 h-4 w-4 text-muted-foreground" />
-                  <Input
-                    placeholder="ابحث في الطلبات..."
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                    className="pl-4 pr-10 text-right"
-                    dir="rtl"
-                  />
-                </div>
+              <div className="flex-1 relative">
+                <Search className="absolute right-3 top-3 h-4 w-4 text-muted-foreground" />
+                <Input
+                  placeholder="ابحث في الطلبات..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className="pr-10"
+                />
               </div>
-              <div className="flex gap-3">
-                <Select value={statusFilter} onValueChange={setStatusFilter}>
-                  <SelectTrigger className="w-[180px]">
-                    <SelectValue placeholder="حالة الطلب" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="all">جميع الحالات</SelectItem>
-                    <SelectItem value="pending">في الانتظار</SelectItem>
-                    <SelectItem value="in_progress">قيد التنفيذ</SelectItem>
-                    <SelectItem value="completed">مكتمل</SelectItem>
-                    <SelectItem value="delivered">مسلم</SelectItem>
-                  </SelectContent>
-                </Select>
-                <Select value={sortBy} onValueChange={setSortBy}>
-                  <SelectTrigger className="w-[150px]">
-                    <SelectValue placeholder="ترتيب" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="date">التاريخ</SelectItem>
-                    <SelectItem value="priority">الأولوية</SelectItem>
-                    <SelectItem value="value">القيمة</SelectItem>
-                    <SelectItem value="progress">التقدم</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
+              <Select value={statusFilter} onValueChange={setStatusFilter}>
+                <SelectTrigger className="w-[180px]">
+                  <SelectValue placeholder="حالة الطلب" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">جميع الحالات</SelectItem>
+                  <SelectItem value="مسودة">مسودة</SelectItem>
+                  <SelectItem value="في الانتظار">في الانتظار</SelectItem>
+                  <SelectItem value="قيد المعالجة">قيد المعالجة</SelectItem>
+                  <SelectItem value="مكتمل">مكتمل</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
           </CardContent>
         </Card>
 
-        {/* Desktop Table View */}
-        <div className="hidden lg:block">
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-right">قائمة الطلبات</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="overflow-x-auto">
-                <Table dir="rtl">
-                  <TableHeader>
-                    <TableRow>
-                      <TableHead className="text-right">رقم الطلب</TableHead>
-                      <TableHead className="text-right">الخدمة</TableHead>
-                      <TableHead className="text-right">الحالة</TableHead>
-                      <TableHead className="text-right">الأولوية</TableHead>
-                      <TableHead className="text-right">التقدم</TableHead>
-                      <TableHead className="text-right">القيمة</TableHead>
-                      <TableHead className="text-right">تاريخ الإنشاء</TableHead>
-                      <TableHead className="text-right">الموعد النهائي</TableHead>
-                      <TableHead className="text-right">الإجراءات</TableHead>
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    {filteredOrders.map((order) => {
-                      const ServiceIcon = order.serviceIcon;
-                      return (
+        {/* Orders */}
+        <Card className="border-0 shadow-xl">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <ShoppingBag className="w-5 h-5" />
+              قائمة الطلبات ({filteredOrders.length})
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            {filteredOrders.length === 0 ? (
+              <div className="text-center py-12">
+                <ShoppingBag className="w-12 h-12 mx-auto text-muted-foreground mb-4" />
+                <p className="text-lg font-medium">لا توجد طلبات</p>
+                <p className="text-muted-foreground mb-4">ابدأ بإنشاء طلب جديد</p>
+                <Button onClick={() => navigate('/orders/new')}>
+                  <Plus className="w-4 h-4 ml-2" />
+                  طلب جديد
+                </Button>
+              </div>
+            ) : (
+              <>
+                {/* Desktop Table */}
+                <div className="hidden lg:block">
+                  <Table>
+                    <TableHeader>
+                      <TableRow>
+                        <TableHead className="text-right">رقم الطلب</TableHead>
+                        <TableHead className="text-right">الخدمة</TableHead>
+                        <TableHead className="text-right">الحالة</TableHead>
+                        <TableHead className="text-right">التقدم</TableHead>
+                        <TableHead className="text-right">القيمة</TableHead>
+                        <TableHead className="text-right">التاريخ</TableHead>
+                        <TableHead className="text-right">الإجراءات</TableHead>
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                      {filteredOrders.map((order) => (
                         <TableRow key={order.id} className="hover:bg-muted/50">
-                          <TableCell className="font-medium text-right">
-                            #{order.id}
-                          </TableCell>
-                          <TableCell className="text-right">
-                            <div className="flex items-center gap-3 justify-end">
-                              <div className="text-right">
-                                <p className="font-medium">{order.service}</p>
-                                <p className="text-sm text-muted-foreground line-clamp-1">{order.title}</p>
-                              </div>
-                              <ServiceIcon className="w-5 h-5 text-primary" />
+                          <TableCell className="font-mono text-sm">#{order.orderNumber}</TableCell>
+                          <TableCell>
+                            <div>
+                              <p className="font-medium">{order.service}</p>
+                              <p className="text-sm text-muted-foreground line-clamp-1">{order.title}</p>
                             </div>
                           </TableCell>
-                          <TableCell className="text-right">
-                            <Badge className={getStatusColor(order.status)}>
-                              {getStatusLabel(order.status)}
-                            </Badge>
+                          <TableCell>
+                            <Badge className={getStatusColor(order.status)}>{order.status}</Badge>
                           </TableCell>
-                          <TableCell className="text-right">
-                            <Badge className={getPriorityColor(order.priority)}>
-                              {getPriorityLabel(order.priority)}
-                            </Badge>
-                          </TableCell>
-                          <TableCell className="text-right">
-                            <div className="space-y-1">
-                              <div className="flex items-center justify-between text-sm">
+                          <TableCell>
+                            <div className="w-24">
+                              <div className="flex justify-between text-xs mb-1">
                                 <span>{order.progress}%</span>
-                                <span className="text-muted-foreground">التقدم</span>
                               </div>
-                              <div className="w-full bg-muted rounded-full h-2">
+                              <div className="w-full bg-muted rounded-full h-1.5">
                                 <div 
-                                  className={`h-2 rounded-full transition-all duration-300 ${getProgressColor(order.progress)}`}
+                                  className={`h-1.5 rounded-full ${getProgressColor(order.progress)}`}
                                   style={{ width: `${order.progress}%` }}
                                 />
                               </div>
                             </div>
                           </TableCell>
-                          <TableCell className="text-right">
-                            <div className="flex items-center gap-1 justify-end">
-                              <span className="text-sm">ريال</span>
-                              <span className="font-bold text-primary">{order.value}</span>
-                              <DollarSign className="w-4 h-4 text-muted-foreground" />
-                            </div>
+                          <TableCell className="font-bold text-primary">
+                            {ClientDashboardService.formatCurrency(order.total)}
                           </TableCell>
-                          <TableCell className="text-right">
-                            <div className="flex items-center gap-2 justify-end">
-                              <span className="text-sm">{order.createdAt}</span>
-                              <Calendar className="w-4 h-4 text-muted-foreground" />
-                            </div>
-                          </TableCell>
-                          <TableCell className="text-right">
-                            <span className="text-sm">{order.deadline}</span>
-                          </TableCell>
-                          <TableCell className="text-right">
-                            <div className="flex items-center gap-2 justify-end">
-                              <Button
-                                variant="outline"
-                                size="sm"
-                                onClick={() => navigate(`/orders/${order.id}`)}
-                              >
-                                <Eye className="w-4 h-4 ml-1" />
-                                عرض
+                          <TableCell className="text-sm">{order.date}</TableCell>
+                          <TableCell>
+                            <div className="flex gap-1">
+                              <Button variant="ghost" size="sm" onClick={() => navigate(`/orders/${order.id}`)}>
+                                <Eye className="w-4 h-4" />
                               </Button>
-                              <Button
-                                variant="ghost"
-                                size="sm"
-                                onClick={() => navigate(`/orders/${order.id}/edit`)}
-                              >
-                                <Edit className="w-4 h-4 ml-1" />
-                                تعديل
+                              <Button variant="ghost" size="sm" onClick={() => navigate(`/orders/${order.id}/edit`)}>
+                                <Edit className="w-4 h-4" />
                               </Button>
                             </div>
                           </TableCell>
                         </TableRow>
-                      );
-                    })}
-                  </TableBody>
-                </Table>
-              </div>
-            </CardContent>
-          </Card>
-        </div>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </div>
 
-        {/* Mobile Card View */}
-        <div className="lg:hidden space-y-4">
-          {filteredOrders.map((order) => {
-            const ServiceIcon = order.serviceIcon;
-            return (
-              <motion.div
-                key={order.id}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.3 }}
-              >
-                <Card className="hover:shadow-md transition-shadow" dir="rtl">
-                  <CardContent className="p-4">
-                    <div className="space-y-4 text-right">
-                      {/* Header */}
-                      <div className="flex items-start justify-between">
-                        <div className="flex gap-2">
-                          <Badge className={getStatusColor(order.status)}>
-                            {getStatusLabel(order.status)}
-                          </Badge>
-                          <Badge className={getPriorityColor(order.priority)}>
-                            {getPriorityLabel(order.priority)}
-                          </Badge>
-                        </div>
-                        <div className="flex items-center gap-3">
-                          <div className="text-right">
-                            <p className="font-medium">#{order.id}</p>
-                            <p className="text-xs text-muted-foreground">{order.service}</p>
+                {/* Mobile Cards */}
+                <div className="lg:hidden space-y-3">
+                  {filteredOrders.map((order, index) => (
+                    <motion.div
+                      key={order.id}
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: index * 0.05 }}
+                    >
+                      <Card className="border hover:shadow-md transition-shadow cursor-pointer"
+                        onClick={() => navigate(`/orders/${order.id}`)}
+                      >
+                        <CardContent className="p-4 space-y-3">
+                          <div className="flex items-start justify-between">
+                            <Badge className={getStatusColor(order.status)}>{order.status}</Badge>
+                            <span className="font-mono text-sm text-muted-foreground">#{order.orderNumber}</span>
                           </div>
-                          <ServiceIcon className="w-6 h-6 text-primary" />
-                        </div>
-                      </div>
-
-                      {/* Title */}
-                      <div>
-                        <h3 className="font-semibold text-sm line-clamp-2 text-right">{order.title}</h3>
-                      </div>
-
-                      {/* Progress */}
-                      <div className="space-y-2">
-                        <div className="flex items-center justify-between text-sm">
-                          <span>{order.progress}%</span>
-                          <span className="text-muted-foreground">التقدم</span>
-                        </div>
-                        <div className="w-full bg-muted rounded-full h-2">
-                          <div 
-                            className={`h-2 rounded-full transition-all duration-300 ${getProgressColor(order.progress)}`}
-                            style={{ width: `${order.progress}%` }}
-                          />
-                        </div>
-                      </div>
-
-                      {/* Details */}
-                      <div className="grid grid-cols-2 gap-4 text-sm">
-                        <div className="text-right">
-                          <p className="text-muted-foreground">القيمة</p>
-                          <div className="flex items-center gap-1 justify-end">
-                            <span>ريال</span>
-                            <span className="font-bold text-primary">{order.value}</span>
-                            <DollarSign className="w-3 h-3" />
+                          <div>
+                            <p className="font-medium">{order.service}</p>
+                            <p className="text-sm text-muted-foreground line-clamp-1">{order.title}</p>
                           </div>
-                        </div>
-                        <div className="text-right">
-                          <p className="text-muted-foreground">تاريخ الإنشاء</p>
-                          <div className="flex items-center gap-1 justify-end">
-                            <span>{order.createdAt}</span>
-                            <Calendar className="w-3 h-3" />
+                          <div className="flex items-center justify-between">
+                            <span className="text-sm text-muted-foreground">{order.date}</span>
+                            <span className="font-bold text-primary">{ClientDashboardService.formatCurrency(order.total)}</span>
                           </div>
-                        </div>
-                        <div className="text-right">
-                          <p className="text-muted-foreground">الموعد النهائي</p>
-                          <span>{order.deadline}</span>
-                        </div>
-                        <div className="text-right">
-                          <p className="text-muted-foreground">الدرجة</p>
-                          <span>{order.degree}</span>
-                        </div>
-                      </div>
-
-                      {/* Actions */}
-                      <div className="flex gap-2 pt-2">
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          onClick={() => navigate(`/orders/${order.id}`)}
-                          className="flex-1"
-                        >
-                          <Eye className="w-4 h-4 ml-1" />
-                          عرض التفاصيل
-                        </Button>
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          onClick={() => navigate(`/orders/${order.id}/edit`)}
-                          className="flex-1"
-                        >
-                          <Edit className="w-4 h-4 ml-1" />
-                          تعديل
-                        </Button>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
-              </motion.div>
-            );
-          })}
-        </div>
-
-        {/* Empty State */}
-        {filteredOrders.length === 0 && (
-          <div className="text-center py-12" dir="rtl">
-            <BookOpen className="w-16 h-16 text-muted-foreground mx-auto mb-4" />
-            <h3 className="text-lg font-semibold mb-2">لا توجد طلبات</h3>
-            <p className="text-muted-foreground mb-4">
-              {searchTerm || statusFilter !== 'all' 
-                ? 'لم يتم العثور على طلبات تطابق معايير البحث' 
-                : 'لم تقم بإنشاء أي طلبات بعد'}
-            </p>
-            <Button onClick={() => navigate('/orders/new')}>
-              <Plus className="w-4 h-4 ml-2" />
-              إنشاء طلب جديد
-            </Button>
-          </div>
-        )}
+                          <div className="w-full bg-muted rounded-full h-1.5">
+                            <div 
+                              className={`h-1.5 rounded-full ${getProgressColor(order.progress)}`}
+                              style={{ width: `${order.progress}%` }}
+                            />
+                          </div>
+                        </CardContent>
+                      </Card>
+                    </motion.div>
+                  ))}
+                </div>
+              </>
+            )}
+          </CardContent>
+        </Card>
       </div>
     </ClientLayout>
   );
