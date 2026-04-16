@@ -29,6 +29,7 @@ import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 
 interface ServiceCategory {
+  [key: string]: any;
   id: string;
   name_ar: string;
   name_en: string;
@@ -41,6 +42,7 @@ interface ServiceCategory {
 }
 
 interface Service {
+  [key: string]: any;
   id: string;
   category_id: string;
   name_ar: string;
@@ -105,7 +107,7 @@ const Services = () => {
       if (servicesError) throw servicesError;
 
       setCategories((categoriesData || []) as ServiceCategory[]);
-      setServices((servicesData || []) as Service[]);
+      setServices((servicesData || []) as any);
     } catch (error) {
       console.error('Error loading data:', error);
       toast({

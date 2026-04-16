@@ -713,7 +713,7 @@ const AdminCustomers = () => {
                                    onClick={() => {
                                      setEditModal({ isOpen: true, customer });
                                      setEditFormData({
-                                       full_name: customer.name,
+                                       name: customer.name,
                                        phone: customer.phone || ''
                                      });
                                    }}
@@ -903,7 +903,7 @@ const AdminCustomers = () => {
               <Label htmlFor="edit-name">الاسم الكامل</Label>
               <Input
                 id="edit-name"
-                value={editFormData.full_name}
+                value={editFormData.name}
                 onChange={(e) => setEditFormData(prev => ({ ...prev, full_name: e.target.value }))}
                 placeholder="الاسم الكامل"
               />
