@@ -216,7 +216,8 @@ export const getWhatsappLogs = async (
     toDate?: string;
   }
 ): Promise<WhatsappLog[]> => {
-  let query = supabase
+  const db = supabase as any;
+  let query = db
     .from('email_logs')
     .select('*')
     .ilike('subject', '%whatsapp%')
@@ -245,7 +246,8 @@ export const getWhatsappLogs = async (
 export const createWhatsappLog = async (
   logData: Omit<WhatsappLog, 'id' | 'createdAt'>
 ): Promise<string> => {
-  const { data, error } = await supabase
+  const db = supabase as any;
+  const { data, error } = await db
     .from('email_logs')
     .insert({
       to_email: logData.toPhone,
@@ -293,7 +295,8 @@ export const getWhatsappStats = async (
   totalFailed: number;
   totalRead: number;
 }> => {
-  let query = supabase
+  const db = supabase as any;
+  let query = db
     .from('email_logs')
     .select('status')
     .ilike('subject', '%whatsapp%');
