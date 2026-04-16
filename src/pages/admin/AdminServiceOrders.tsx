@@ -143,16 +143,13 @@ const AdminServiceOrders = () => {
       if (error) throw error;
 
       // إضافة إدخال في timeline
-      await supabase
-        .from('service_order_timeline')
-        .insert({
+      await (supabase
+        .from('service_order_timeline') as any)
+        .insert([{
           order_id: orderId,
-          title: getStatusTitle(newStatus),
-          description: `تم تغيير حالة الطلب إلى: ${getStatusLabel(newStatus)}`,
           status: newStatus,
-          actor_type: 'admin',
-          actor_name: 'المدير',
-          completed_date: new Date().toISOString().split('T')[0]
+          note: `تم تغيير حالة الطلب إلى: ${getStatusLabel(newStatus)}`
+        }]);
         });
 
       toast({

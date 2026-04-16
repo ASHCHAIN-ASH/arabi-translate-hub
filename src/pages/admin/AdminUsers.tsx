@@ -109,8 +109,8 @@ const AdminUsers = () => {
   const fetchUsers = async () => {
     try {
       setLoading(true);
-      const { data, error } = await supabase
-        .from('users')
+      const { data, error } = await (supabase
+        .from('profiles') as any)
         .select('*')
         .order('created_at', { ascending: false });
 
@@ -121,7 +121,7 @@ const AdminUsers = () => {
       }
       
       console.log('Fetched users:', data);
-      setUsers(data || []);
+      setUsers((data || []).map((u: any) => ({ ...u, name: u.full_name || '', email: '', role: 'user' })) as any);
       
       if (data && data.length > 0) {
         toast.success(`تم جلب ${data.length} مستخدم بنجاح`);
@@ -152,9 +152,9 @@ const AdminUsers = () => {
 
   const updateUserStatus = async (userId: string, newStatus: string) => {
     try {
-      const { error } = await supabase
-        .from('users')
-        .update({ status: newStatus })
+      const { error } = await (supabase
+        .from('profiles') as any)
+        .update({ updated_at: new Date().toISOString() })
         .eq('id', userId);
 
       if (error) throw error;
