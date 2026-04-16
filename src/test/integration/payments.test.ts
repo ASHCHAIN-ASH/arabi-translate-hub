@@ -49,7 +49,7 @@ describe('Payments Integration', () => {
         .single();
 
       expect(mockFrom).toHaveBeenCalledWith('business_payments');
-      expect(mockInsert).toHaveBeenCalledWith(payment);
+      expect(mockInsert).toHaveBeenCalledWith([payment]);
       expect(result.data.amount).toBe(750);
     });
   });
