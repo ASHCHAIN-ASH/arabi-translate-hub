@@ -412,6 +412,21 @@ const AdminServiceOrders = () => {
   );
 };
 
+interface Attachment {
+  id: string;
+  file_name: string;
+  file_size: number;
+  file_type: string | null;
+  storage_path: string;
+  created_at: string;
+}
+
+const formatFileSize = (bytes: number) => {
+  if (bytes < 1024) return `${bytes} B`;
+  if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`;
+  return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
+};
+
 // Service Order Card Component
 const ServiceOrderCard = ({ 
   order, 
@@ -420,6 +435,48 @@ const ServiceOrderCard = ({
   order: ServiceOrder; 
   onStatusUpdate: (orderId: string, status: string) => void;
 }) => {
+  const [attachments, setAttachments] = useState<Attachment[]>([]);
+  const [showAttachments, setShowAttachments] = useState(false);
+  const [loadingAttachments, setLoadingAttachments] = useState(false);
+
+  const loadAttachments = async () => {
+    if (attachments.length > 0) {
+      setShowAttachments(!showAttachments);
+      return;
+    }
+    setLoadingAttachments(true);
+    try {
+      const { data, error } = await (supabase
+        .from('order_attachments') as any)
+        .select('id, file_name, file_size, file_type, storage_path, created_at')
+        .eq('order_id', order.id)
+        .order('created_at', { ascending: true });
+      if (error) throw error;
+      setAttachments(data || []);
+      setShowAttachments(true);
+    } catch (e) {
+      console.error('Error loading attachments:', e);
+    } finally {
+      setLoadingAttachments(false);
+    }
+  };
+
+  const downloadFile = async (attachment: Attachment) => {
+    try {
+      const { data, error } = await supabase.storage
+        .from('order-attachments')
+        .download(attachment.storage_path);
+      if (error) throw error;
+      const url = URL.createObjectURL(data);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = attachment.file_name;
+      a.click();
+      URL.revokeObjectURL(url);
+    } catch (e) {
+      console.error('Download error:', e);
+    }
+  };
   const getStatusColor = (status: string) => {
     const colors: Record<string, string> = {
       received: 'bg-blue-100 text-blue-800',
