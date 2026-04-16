@@ -207,7 +207,7 @@ const AdminServices = () => {
 
       const serviceData = {
         name_ar: serviceForm.name_ar.trim(),
-        name_en: serviceForm.name_en?.trim() || '',
+        name: serviceForm.name_en?.trim() || '',
         category_id: 'default-category',
         is_active: serviceForm.is_active
       };

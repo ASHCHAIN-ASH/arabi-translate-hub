@@ -21,40 +21,24 @@ import {
 interface ServiceCategory {
   id: string;
   name_ar: string;
-  name_en: string;
-  description_ar?: string;
-  description_en?: string;
-  icon: string;
-  color: string;
-  sort_order: number;
-  is_active: boolean;
+  name?: string;
+  description?: string;
+  icon?: string;
+  sort_order?: number;
+  [key: string]: any;
 }
 
 interface Service {
   id: string;
-  category_id: string;
+  category_id?: string;
   name_ar: string;
-  name_en: string;
-  description_ar?: string;
-  description_en?: string;
-  features_ar: string[];
-  features_en: string[];
-  unit_type: string;
-  min_units: number;
-  max_units?: number;
-  delivery_time_days: number;
-  rush_delivery_available: boolean;
-  image_url?: string;
-  sort_order: number;
-  is_active: boolean;
-  show_to_clients: boolean;
-  service_categories?: {
-    id: string;
-    name_ar: string;
-    name_en: string;
-    icon: string;
-    color: string;
-  };
+  name?: string;
+  description?: string;
+  price?: number;
+  unit?: string;
+  is_active?: boolean;
+  [key: string]: any;
+};
 }
 
 const ClientServices = () => {

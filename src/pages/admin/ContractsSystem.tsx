@@ -188,8 +188,8 @@ const ContractsSystem = () => {
 
       console.log('Saving contract data:', contractData);
 
-      const { error, data } = await supabase
-        .from('contracts')
+      const { error, data } = await (supabase
+        .from('contracts') as any)
         .insert([contractData])
         .select();
 

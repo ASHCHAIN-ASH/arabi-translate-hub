@@ -37,7 +37,7 @@ const Wallet = () => {
       // Get balance from payment_transactions (sum of completed payments)
       const { data: payments, error } = await supabase
         .from('payment_transactions')
-        .select('amount, status, payment_method, created_at, description, transaction_id, id')
+        .select('amount, status, type, created_at, description, reference, id')
         .eq('user_id', user.id)
         .order('created_at', { ascending: false });
 
@@ -45,21 +45,21 @@ const Wallet = () => {
 
       // Calculate wallet balance from completed transactions
       const totalCredits = payments
-        ?.filter(p => p.status === 'COMPLETED' && p.payment_method === 'wallet_topup')
+        ?.filter(p => p.status === 'completed' && p.type === 'credit')
         .reduce((sum, p) => sum + (p.amount || 0), 0) || 0;
 
       const totalDebits = payments
-        ?.filter(p => p.status === 'COMPLETED' && p.payment_method === 'wallet_debit')
+        ?.filter(p => p.status === 'completed' && p.type === 'debit')
         .reduce((sum, p) => sum + (p.amount || 0), 0) || 0;
 
       setBalance(totalCredits - totalDebits);
       setTransactions(payments?.map(p => ({
         id: p.id,
-        type: p.payment_method === 'wallet_topup' ? 'credit' : 'debit',
+        type: p.type === 'credit' ? 'credit' : 'debit',
         amount: p.amount || 0,
-        description: p.description || (p.payment_method === 'wallet_topup' ? 'شحن المحفظة' : 'خصم من المحفظة'),
+        description: p.description || (p.type === 'credit' ? 'شحن المحفظة' : 'خصم من المحفظة'),
         created_at: p.created_at,
-        reference_id: p.transaction_id
+        reference_id: p.reference
       })) || []);
     } catch (err) {
       console.error('Error loading wallet:', err);
