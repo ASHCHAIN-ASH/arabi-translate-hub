@@ -17,20 +17,28 @@ import { Plus, FileText, Mail, Trash2, Edit, Download, Send } from 'lucide-react
 interface Invoice {
   id: string;
   invoice_number: string;
-  customer_name: string;
-  customer_email: string;
+  customer_name?: string;
+  customer_email?: string;
   customer_phone?: string;
-  amount: number;
-  subtotal: number;
-  vat_amount: number;
-  vat_rate: number;
-  include_vat: boolean;
+  customer_id?: string;
+  order_id?: string;
+  user_id?: string;
+  subtotal?: number;
+  tax_amount?: number;
+  discount_amount?: number;
+  total_amount?: number;
+  amount?: number;
+  vat_amount?: number;
+  vat_rate?: number;
+  include_vat?: boolean;
   status: string;
-  payment_status: string;
-  issue_date: string;
+  payment_status?: string;
+  issue_date?: string;
   due_date?: string;
+  paid_at?: string;
+  notes?: string;
   created_at: string;
-  pdf_generated: boolean;
+  pdf_generated?: boolean;
   pdf_url?: string;
   invoice_items?: InvoiceItem[];
 }
@@ -89,7 +97,7 @@ const AdminInvoices = () => {
         .order('created_at', { ascending: false });
 
       if (error) throw error;
-      setInvoices(data || []);
+      setInvoices((data || []) as any);
     } catch (error: any) {
       toast({
         title: "خطأ",

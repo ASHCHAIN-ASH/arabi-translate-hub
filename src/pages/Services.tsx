@@ -91,34 +91,20 @@ const Services = () => {
     try {
       setLoading(true);
       
-      // Load categories
-      const { data: categoriesData, error: categoriesError } = await supabase
-        .from('service_categories')
+      const { data: categoriesData, error: categoriesError } = await (supabase
+        .from('service_categories') as any)
         .select('*')
-        .eq('is_active', true)
         .order('sort_order', { ascending: true });
 
-      // Load services with categories (only show to clients)
-      const { data: servicesData, error: servicesError } = await supabase
-        .from('services')
-        .select(`
-          *,
-          service_categories (
-            id,
-            name_ar,
-            name_en,
-            icon,
-            color
-          )
-        `)
-        .eq('is_active', true)
-        .eq('show_to_clients', true)
-        .order('sort_order', { ascending: true });
+      const { data: servicesData, error: servicesError } = await (supabase
+        .from('services') as any)
+        .select('*')
+        .eq('is_active', true);
 
       if (categoriesError) throw categoriesError;
       if (servicesError) throw servicesError;
 
-      setCategories(categoriesData || []);
+      setCategories((categoriesData || []) as ServiceCategory[]);
       setServices((servicesData || []) as Service[]);
     } catch (error) {
       console.error('Error loading data:', error);
