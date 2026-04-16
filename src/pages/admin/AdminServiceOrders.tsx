@@ -150,7 +150,6 @@ const AdminServiceOrders = () => {
           status: newStatus,
           note: `تم تغيير حالة الطلب إلى: ${getStatusLabel(newStatus)}`
         }]);
-        });
 
       toast({
         title: "تم تحديث حالة الطلب",
