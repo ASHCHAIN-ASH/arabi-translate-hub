@@ -19,14 +19,13 @@ export default {
 		},
 		extend: {
 			fontFamily: {
-				'sans': ['IBM Plex Sans Arabic', 'Noto Sans Arabic', 'Cairo', 'system-ui', 'sans-serif'],
-				'cairo': ['Cairo', 'IBM Plex Sans Arabic', 'sans-serif'],
-				'noto-arabic': ['Noto Sans Arabic', 'IBM Plex Sans Arabic', 'sans-serif'],
-				'ibm-plex': ['IBM Plex Sans Arabic', 'Noto Sans Arabic', 'sans-serif'],
-				'arabic-title': ['Cairo', 'IBM Plex Sans Arabic', 'sans-serif'],
-				'arabic-body': ['IBM Plex Sans Arabic', 'Noto Sans Arabic', 'sans-serif'],
-				'academic': ['IBM Plex Sans Arabic', 'Noto Sans Arabic', 'sans-serif'],
-				'academic-title': ['Cairo', 'IBM Plex Sans Arabic', 'sans-serif'],
+				'sans': ['Dubai', 'IBM Plex Sans Arabic', 'system-ui', 'sans-serif'],
+				'dubai': ['Dubai', 'IBM Plex Sans Arabic', 'sans-serif'],
+				'ibm-plex': ['IBM Plex Sans Arabic', 'Dubai', 'sans-serif'],
+				'arabic-title': ['Dubai', 'IBM Plex Sans Arabic', 'sans-serif'],
+				'arabic-body': ['Dubai', 'IBM Plex Sans Arabic', 'sans-serif'],
+				'academic': ['Dubai', 'IBM Plex Sans Arabic', 'sans-serif'],
+				'academic-title': ['Dubai', 'IBM Plex Sans Arabic', 'sans-serif'],
 			},
 			colors: {
 				border: 'hsl(var(--border))',
