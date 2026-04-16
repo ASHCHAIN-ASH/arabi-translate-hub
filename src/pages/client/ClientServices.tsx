@@ -8,11 +8,13 @@ import { Input } from "@/components/ui/input";
 import { supabase } from "@/integrations/supabase/client";
 import { motion, AnimatePresence } from 'framer-motion';
 import {
-  Search, ArrowLeft, ShoppingCart, Sparkles, ArrowRight,
-  Zap, TrendingUp, Award, Shield, ChevronLeft, Eye
+  Search, ShoppingCart, Sparkles, ArrowRight,
+  Zap, TrendingUp, Award, Shield, ChevronLeft, Eye,
+  Languages, BookOpen, PenTool, Printer, BarChart3, GraduationCap,
+  FileText, Mic, Globe, Video, CheckCircle, Star,
+  Clock, HeadphonesIcon, Layers, Target, Lightbulb, Users
 } from 'lucide-react';
 
-// Category images
 import translationImg from '@/assets/categories/translation.png';
 import researchImg from '@/assets/categories/research.png';
 import editingImg from '@/assets/categories/editing.png';
@@ -39,7 +41,6 @@ interface Service {
   is_active: boolean | null;
 }
 
-// Map category icon names to images (fallback order)
 const categoryImages: Record<string, string> = {
   Languages: translationImg,
   BookOpen: researchImg,
@@ -50,7 +51,6 @@ const categoryImages: Record<string, string> = {
   Users: studentImg,
 };
 
-// Fallback order for categories by index
 const categoryImagesByIndex: string[] = [
   translationImg, researchImg, editingImg, publishingImg, statisticsImg, studentImg,
 ];
@@ -72,6 +72,63 @@ const categoryBgs = [
   'bg-rose-50 dark:bg-rose-950/30 border-rose-200 dark:border-rose-800',
   'bg-cyan-50 dark:bg-cyan-950/30 border-cyan-200 dark:border-cyan-800',
 ];
+
+const categoryTextColors = [
+  'text-blue-600 dark:text-blue-400',
+  'text-emerald-600 dark:text-emerald-400',
+  'text-violet-600 dark:text-violet-400',
+  'text-amber-600 dark:text-amber-400',
+  'text-rose-600 dark:text-rose-400',
+  'text-cyan-600 dark:text-cyan-400',
+];
+
+const categoryIconBgs = [
+  'bg-blue-100 dark:bg-blue-900/40',
+  'bg-emerald-100 dark:bg-emerald-900/40',
+  'bg-violet-100 dark:bg-violet-900/40',
+  'bg-amber-100 dark:bg-amber-900/40',
+  'bg-rose-100 dark:bg-rose-900/40',
+  'bg-cyan-100 dark:bg-cyan-900/40',
+];
+
+// Service icon pool based on name keywords
+const serviceIconMap: { keywords: string[]; icon: React.ElementType }[] = [
+  { keywords: ['ترجمة نص', 'نصوص', 'text'], icon: FileText },
+  { keywords: ['صوت', 'audio', 'صوتي'], icon: Mic },
+  { keywords: ['فيديو', 'video', 'مرئي'], icon: Video },
+  { keywords: ['موقع', 'website', 'ويب'], icon: Globe },
+  { keywords: ['مستند', 'document', 'وثائق', 'ملف'], icon: FileText },
+  { keywords: ['بحث', 'research', 'أكاديم'], icon: BookOpen },
+  { keywords: ['تحرير', 'editing', 'تدقيق', 'مراجعة'], icon: PenTool },
+  { keywords: ['نشر', 'publish', 'طباعة'], icon: Printer },
+  { keywords: ['إحصا', 'statist', 'تحليل', 'spss'], icon: BarChart3 },
+  { keywords: ['طالب', 'student', 'تعليم', 'واجب'], icon: GraduationCap },
+  { keywords: ['ترجمة', 'translat', 'لغ'], icon: Languages },
+  { keywords: ['استشار', 'consult'], icon: Lightbulb },
+  { keywords: ['تنسيق', 'format'], icon: Layers },
+  { keywords: ['عنوان', 'خطة', 'plan'], icon: Target },
+];
+
+function getServiceIcon(service: Service): React.ElementType {
+  const name = ((service.name_ar || '') + ' ' + service.name + ' ' + (service.description || '')).toLowerCase();
+  for (const entry of serviceIconMap) {
+    if (entry.keywords.some(k => name.includes(k))) return entry.icon;
+  }
+  return FileText;
+}
+
+// Quick feature badges for services
+function getServiceFeatures(service: Service): string[] {
+  const name = ((service.name_ar || '') + ' ' + service.name + ' ' + (service.description || '')).toLowerCase();
+  const features: string[] = [];
+  if (name.includes('ترجمة') || name.includes('translat')) features.push('متعدد اللغات');
+  if (name.includes('بحث') || name.includes('أكاديم')) features.push('أكاديمي');
+  if (name.includes('تدقيق') || name.includes('مراجعة')) features.push('مراجعة دقيقة');
+  if (name.includes('إحصا') || name.includes('تحليل')) features.push('تحليل متقدم');
+  if (features.length === 0) features.push('احترافي');
+  features.push('سرية تامة');
+  return features.slice(0, 3);
+}
 
 const ClientServices = () => {
   const navigate = useNavigate();
@@ -118,7 +175,7 @@ const ClientServices = () => {
   const getCatImage = (cat: ServiceCategory, index: number) =>
     categoryImages[cat.icon || ''] || categoryImagesByIndex[index % categoryImagesByIndex.length];
 
-  const features = [
+  const heroFeatures = [
     { icon: Shield, label: 'سرية تامة' },
     { icon: Zap, label: 'تنفيذ سريع' },
     { icon: Award, label: 'جودة مضمونة' },
@@ -173,7 +230,7 @@ const ClientServices = () => {
               اختر الخدمة المناسبة وأنشئ طلبك بخطوات بسيطة — فريقنا جاهز لخدمتك
             </p>
             <div className="flex flex-wrap justify-center gap-2">
-              {features.map((f, i) => (
+              {heroFeatures.map((f, i) => (
                 <div key={i} className="flex items-center gap-1.5 px-3 py-1.5 bg-white/10 backdrop-blur-sm rounded-full text-xs font-medium border border-white/10">
                   <f.icon className="w-3.5 h-3.5" />
                   {f.label}
@@ -196,7 +253,6 @@ const ClientServices = () => {
           </div>
         </motion.div>
 
-        {/* View Modes */}
         <AnimatePresence mode="wait">
           {!selectedCategory && !searchQuery.trim() ? (
             /* ── Categories Grid ── */
@@ -227,7 +283,6 @@ const ClientServices = () => {
                         onClick={() => setSelectedCategory(cat.id)}
                       >
                         <CardContent className="p-0">
-                          {/* Image Area */}
                           <div className="relative h-32 sm:h-36 flex items-center justify-center overflow-hidden">
                             <div className={`absolute inset-0 bg-gradient-to-br ${gradient} opacity-5 group-hover:opacity-10 transition-opacity`} />
                             <motion.img
@@ -241,7 +296,6 @@ const ClientServices = () => {
                               transition={{ type: 'spring', stiffness: 200 }}
                             />
                           </div>
-                          {/* Info */}
                           <div className="p-4 pt-2 text-center space-y-2">
                             <h3 className="font-bold text-sm sm:text-base">{cat.name_ar || cat.name}</h3>
                             {cat.description && (
@@ -260,14 +314,13 @@ const ClientServices = () => {
               </div>
             </motion.div>
           ) : (
-            /* ── Services List ── */
+            /* ── Enhanced Services List ── */
             <motion.div
               key="services"
               initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
               exit={{ opacity: 0, x: 20 }}
             >
-              {/* Back button */}
               {selectedCategory && (
                 <Button
                   variant="ghost"
@@ -288,14 +341,25 @@ const ClientServices = () => {
                 const img = getCatImage(cat, catIdx);
                 const gradient = categoryGradients[catIdx % categoryGradients.length];
                 return (
-                  <div className="flex items-center gap-4 mb-6 p-4 rounded-2xl bg-muted/30 border">
-                    <img src={img} alt="" className="w-14 h-14 object-contain" loading="lazy" width={56} height={56} />
-                    <div>
-                      <h2 className="text-xl font-bold">{cat.name_ar || cat.name}</h2>
-                      {cat.description && <p className="text-sm text-muted-foreground">{cat.description}</p>}
+                  <motion.div
+                    initial={{ opacity: 0, y: -10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className={`relative overflow-hidden rounded-2xl bg-gradient-to-r ${gradient} p-6 mb-6 text-white`}
+                  >
+                    <div className="absolute top-0 left-0 w-48 h-48 bg-white/10 rounded-full -translate-x-20 -translate-y-20 blur-2xl" />
+                    <div className="relative flex items-center gap-5">
+                      <div className="w-16 h-16 bg-white/20 backdrop-blur-sm rounded-2xl flex items-center justify-center shrink-0">
+                        <img src={img} alt="" className="w-10 h-10 object-contain" loading="lazy" width={40} height={40} />
+                      </div>
+                      <div className="flex-1">
+                        <h2 className="text-xl sm:text-2xl font-black">{cat.name_ar || cat.name}</h2>
+                        {cat.description && <p className="text-white/80 text-sm mt-1">{cat.description}</p>}
+                      </div>
+                      <Badge className="bg-white/20 text-white border-white/30 text-sm shrink-0">
+                        {filteredServices.length} خدمة
+                      </Badge>
                     </div>
-                    <Badge variant="secondary" className="mr-auto">{filteredServices.length} خدمة</Badge>
-                  </div>
+                  </motion.div>
                 );
               })()}
 
@@ -311,47 +375,93 @@ const ClientServices = () => {
                   </Button>
                 </div>
               ) : (
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                   {filteredServices.map((service, i) => {
                     const catIdx = categories.findIndex(c => c.id === service.category_id);
-                    const gradient = categoryGradients[Math.max(catIdx, 0) % categoryGradients.length];
+                    const safeIdx = Math.max(catIdx, 0) % categoryGradients.length;
+                    const gradient = categoryGradients[safeIdx];
+                    const textColor = categoryTextColors[safeIdx];
+                    const iconBg = categoryIconBgs[safeIdx];
+                    const IconComp = getServiceIcon(service);
+                    const features = getServiceFeatures(service);
 
                     return (
                       <motion.div
                         key={service.id}
-                        initial={{ opacity: 0, y: 15 }}
+                        initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: i * 0.04 }}
+                        transition={{ delay: i * 0.05 }}
+                        whileHover={{ y: -4 }}
                       >
                         <Card
-                          className="group h-full border hover:border-primary/30 hover:shadow-lg transition-all duration-200 cursor-pointer overflow-hidden"
+                          className="group h-full border-0 shadow-md hover:shadow-xl transition-all duration-300 cursor-pointer overflow-hidden bg-card"
                           onClick={() => navigate(`/client-services/${service.id}`)}
                         >
-                          <div className={`h-1.5 bg-gradient-to-r ${gradient} opacity-50 group-hover:opacity-100 transition-opacity`} />
-                          <CardContent className="p-5 flex flex-col h-full">
-                            <h3 className="font-bold text-sm mb-2 group-hover:text-primary transition-colors line-clamp-2">
-                              {service.name_ar || service.name}
-                            </h3>
-                            {service.description && (
-                              <p className="text-xs text-muted-foreground mb-4 line-clamp-3 leading-relaxed flex-1">{service.description}</p>
-                            )}
-                            <div className="flex items-center justify-between pt-3 border-t border-border/50 mt-auto gap-2">
+                          {/* Top gradient strip */}
+                          <div className={`h-1 bg-gradient-to-r ${gradient}`} />
+
+                          <CardContent className="p-0">
+                            <div className="p-5 pb-4">
+                              {/* Icon + Title Row */}
+                              <div className="flex items-start gap-4 mb-3">
+                                <motion.div
+                                  className={`w-12 h-12 rounded-xl ${iconBg} flex items-center justify-center shrink-0`}
+                                  whileHover={{ rotate: 10, scale: 1.1 }}
+                                  transition={{ type: 'spring', stiffness: 300 }}
+                                >
+                                  <IconComp className={`w-6 h-6 ${textColor}`} />
+                                </motion.div>
+                                <div className="flex-1 min-w-0">
+                                  <h3 className="font-bold text-base group-hover:text-primary transition-colors line-clamp-2 leading-snug">
+                                    {service.name_ar || service.name}
+                                  </h3>
+                                  {service.unit && (
+                                    <span className="text-xs text-muted-foreground mt-0.5 inline-block">
+                                      الوحدة: {service.unit}
+                                    </span>
+                                  )}
+                                </div>
+                              </div>
+
+                              {/* Description */}
+                              {service.description && (
+                                <p className="text-sm text-muted-foreground leading-relaxed line-clamp-2 mb-3">
+                                  {service.description}
+                                </p>
+                              )}
+
+                              {/* Feature badges */}
+                              <div className="flex flex-wrap gap-1.5 mb-4">
+                                {features.map((f, fi) => (
+                                  <span
+                                    key={fi}
+                                    className="inline-flex items-center gap-1 px-2.5 py-1 bg-muted/60 rounded-full text-[11px] font-medium text-muted-foreground"
+                                  >
+                                    <CheckCircle className="w-3 h-3 text-emerald-500" />
+                                    {f}
+                                  </span>
+                                ))}
+                              </div>
+                            </div>
+
+                            {/* Bottom actions bar */}
+                            <div className="border-t border-border/50 px-5 py-3 flex items-center justify-between bg-muted/20">
                               <Button
                                 size="sm"
                                 variant="ghost"
-                                className="gap-1 text-xs text-primary"
+                                className="gap-1.5 text-xs text-muted-foreground hover:text-primary"
                                 onClick={(e) => { e.stopPropagation(); navigate(`/client-services/${service.id}`); }}
                               >
                                 <Eye className="w-3.5 h-3.5" />
-                                التفاصيل
+                                عرض التفاصيل
                               </Button>
                               <Button
                                 size="sm"
-                                className={`h-8 text-xs gap-1.5 rounded-full bg-gradient-to-r ${gradient} hover:opacity-90 text-white border-0 shadow-md px-4`}
+                                className={`h-9 text-xs gap-1.5 rounded-full bg-gradient-to-r ${gradient} hover:opacity-90 text-white border-0 shadow-md px-5`}
                                 onClick={(e) => { e.stopPropagation(); navigate(`/orders/new?service=${service.id}`); }}
                               >
-                                <ShoppingCart className="w-3 h-3" />
-                                اطلب
+                                <ShoppingCart className="w-3.5 h-3.5" />
+                                اطلب الآن
                               </Button>
                             </div>
                           </CardContent>
