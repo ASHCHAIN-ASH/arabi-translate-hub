@@ -7,155 +7,57 @@ import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import { useAuth } from '@/components/SimpleAuthProvider';
+import { useClientData } from '@/hooks/useClientData';
+import { ClientDashboardService } from '@/utils/clientDashboardService';
 import { 
-  Plus, 
-  Search, 
-  Filter, 
-  GraduationCap,
-  BookOpen,
-  FileText,
-  Award,
-  Brain,
-  PenTool,
-  Calculator,
-  CheckCircle,
-  Clock,
-  AlertCircle,
-  Calendar,
-  Eye,
-  Edit,
-  Sparkles,
-  Trophy,
-  Target,
-  Activity,
-  TrendingUp,
-  Star,
-  BookMarked,
-  ArrowUpDown,
-  Download,
-  MoreHorizontal,
-  DollarSign
+  Plus, Search, Filter, Eye, Edit, Calendar, DollarSign,
+  CheckCircle, Clock, AlertCircle, RefreshCw
 } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 const Orders = () => {
   const navigate = useNavigate();
+  const { user } = useAuth();
+  const { orders, loading, refresh } = useClientData(user?.id);
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
-  const [sortBy, setSortBy] = useState('date');
-  const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc');
 
-  // Enhanced sample data with academic services
-  const orders = [
-    {
-      id: 'MEP250001',
-      service: 'تحليل إحصائي متقدم',
-      serviceIcon: Calculator,
-      title: 'تحليل إحصائي شامل للبيانات البحثية باستخدام SPSS و R مع تفسير النتائج',
-      status: 'completed',
-      priority: 'high',
-      progress: 100,
-      value: 1250,
-      createdAt: '2024-01-10',
-      deadline: '2024-01-25',
-      degree: 'دكتوراه',
-      university: 'جامعة الملك سعود'
-    },
-    {
-      id: 'MEP250002',
-      service: 'مراجعة لغوية أكاديمية',
-      serviceIcon: PenTool,
-      title: 'مراجعة لغوية وتدقيق إملائي ونحوي للرسالة الجامعية مع تحسين الأسلوب',
-      status: 'delivered',
-      priority: 'medium',
-      progress: 100,
-      value: 650,
-      createdAt: '2024-01-12',
-      deadline: '2024-01-20',
-      degree: 'ماجستير',
-      university: 'جامعة الإمام'
-    },
-    {
-      id: 'MEP250003',
-      service: 'تحليل إحصائي متقدم',
-      serviceIcon: Calculator,
-      title: 'مراجعة لغوية وتدوية متخصصة للنص الأكاديمي مع تحسين الأسلوب',
-      status: 'in_progress',
-      priority: 'medium',
-      progress: 45,
-      value: 899,
-      createdAt: '2024-01-15',
-      deadline: '2024-01-30',
-      degree: 'دكتوراه',
-      university: 'جامعة الملك فهد'
-    },
-    {
-      id: 'MEP250004',
-      service: 'خطة بحث علمية',
-      serviceIcon: Target,
-      title: 'إعداد خطة بحث مفصلة للدراسات العليا في تخصص إدارة الأعمال',
-      status: 'pending',
-      priority: 'low',
-      progress: 15,
-      value: 750,
-      createdAt: '2024-01-18',
-      deadline: '2024-02-05',
-      degree: 'ماجستير',
-      university: 'جامعة الملك عبدالعزيز'
-    },
-    {
-      id: 'MEP250005',
-      service: 'كتابة أكاديمية',
-      serviceIcon: BookOpen,
-      title: 'كتابة الفصل النظري للرسالة مع المراجع والاقتباسات الصحيحة',
-      status: 'under_review',
-      priority: 'high',
-      progress: 80,
-      value: 1850,
-      createdAt: '2024-01-20',
-      deadline: '2024-02-10',
-      degree: 'دكتوراه',
-      university: 'جامعة أم القرى'
-    }
-  ];
-
-  // Filter and sort orders
   const filteredOrders = orders
     .filter(order => {
       const matchesSearch = order.title.includes(searchTerm) || 
                           order.service.includes(searchTerm) || 
-                          order.id.includes(searchTerm);
+                          order.orderNumber.includes(searchTerm);
       const matchesStatus = statusFilter === 'all' || order.status === statusFilter;
       return matchesSearch && matchesStatus;
-    })
-    .sort((a, b) => {
-      let aValue: any, bValue: any;
-      
-      switch (sortBy) {
-        case 'priority':
-          const priorityOrder = { high: 3, medium: 2, low: 1 };
-          aValue = priorityOrder[a.priority as keyof typeof priorityOrder];
-          bValue = priorityOrder[b.priority as keyof typeof priorityOrder];
-          break;
-        case 'value':
-          aValue = a.value;
-          bValue = b.value;
-          break;
-        case 'progress':
-          aValue = a.progress;
-          bValue = b.progress;
-          break;
-        default:
-          aValue = new Date(a.createdAt);
-          bValue = new Date(b.createdAt);
-      }
-      
-      if (sortOrder === 'asc') {
-        return aValue > bValue ? 1 : -1;
-      } else {
-        return aValue < bValue ? 1 : -1;
-      }
     });
+
+  const getStatusColor = (status: string) => {
+    const colors: Record<string, string> = {
+      'مسودة': 'bg-gray-100 text-gray-700',
+      'في الانتظار': 'bg-yellow-100 text-yellow-700',
+      'قيد المعالجة': 'bg-blue-100 text-blue-700',
+      'مكتمل': 'bg-green-100 text-green-700',
+      'ملغي': 'bg-red-100 text-red-700'
+    };
+    return colors[status] || 'bg-gray-100 text-gray-700';
+  };
+
+  const getProgressColor = (progress: number) => {
+    if (progress < 30) return 'bg-red-500';
+    if (progress < 70) return 'bg-yellow-500';
+    return 'bg-green-500';
+  };
+
+  if (loading) {
+    return (
+      <ClientLayout>
+        <div className="flex items-center justify-center min-h-[400px]">
+          <RefreshCw className="w-8 h-8 animate-spin text-primary" />
+        </div>
+      </ClientLayout>
+    );
+  }
 
   const getStatusColor = (status: string) => {
     const colors = {
