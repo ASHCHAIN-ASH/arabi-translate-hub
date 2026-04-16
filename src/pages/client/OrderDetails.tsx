@@ -1,10 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   ArrowRight, Calendar, Clock, FileText, DollarSign,
   CheckCircle, Download, Package, AlertCircle, RefreshCw,
-  Check, X, MessageSquare, TrendingUp, Shield, Sparkles, Copy
+  Check, X, MessageSquare, TrendingUp, Shield, Sparkles, Copy,
+  Upload, Loader2
 } from 'lucide-react';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
