@@ -175,7 +175,7 @@ export const getAllEsignDocuments = async (): Promise<EsignDocument[]> => {
     docTitle: c.service_description || 'عقد',
     docPdfUrl: c.contract_pdf_url || undefined,
     status: mapContractStatusToEsign(c.status),
-    hashChecksum: c.signed_by_client || undefined,
+    hashChecksum: c.client_approved ? 'approved' : undefined,
     createdAt: c.created_at,
     updatedAt: c.updated_at,
     signers: [],
@@ -210,7 +210,7 @@ export const getEsignDocumentById = async (id: string): Promise<EsignDocument | 
     docTitle: data.service_description || 'عقد',
     docPdfUrl: data.contract_pdf_url || undefined,
     status: mapContractStatusToEsign(data.status),
-    hashChecksum: data.signed_by_client || undefined,
+    hashChecksum: data.client_approved ? 'approved' : undefined,
     createdAt: data.created_at,
     updatedAt: data.updated_at,
     signers: [{
