@@ -1,89 +1,67 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { AdminDashboardService } from '@/utils/adminDashboardService';
-import type { DashboardStats, RecentOrder, OverdueInvoice, HighPriorityTicket } from '@/utils/adminDashboardService';
+import type { DashboardStats, RecentOrder, OverdueInvoice, HighPriorityTicket, MonthlyRevenue, ServiceDistItem } from '@/utils/adminDashboardService';
 
 export function useAdminStats() {
   const [stats, setStats] = useState<DashboardStats | null>(null);
   const [recentOrders, setRecentOrders] = useState<RecentOrder[]>([]);
   const [overdueInvoices, setOverdueInvoices] = useState<OverdueInvoice[]>([]);
   const [highPriorityTickets, setHighPriorityTickets] = useState<HighPriorityTicket[]>([]);
+  const [monthlyRevenue, setMonthlyRevenue] = useState<MonthlyRevenue[]>([]);
+  const [serviceDistribution, setServiceDistribution] = useState<ServiceDistItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  // تحميل البيانات
-  const loadData = async () => {
+  const loadData = useCallback(async () => {
     try {
       setError(null);
-      const [statsData, ordersData, invoicesData, ticketsData] = await Promise.all([
+      const [statsData, ordersData, invoicesData, ticketsData, revenueData, distData] = await Promise.all([
         AdminDashboardService.getDashboardStats(),
         AdminDashboardService.getRecentOrders(),
         AdminDashboardService.getOverdueInvoices(),
-        AdminDashboardService.getHighPriorityTickets()
+        AdminDashboardService.getHighPriorityTickets(),
+        AdminDashboardService.getMonthlyRevenue(),
+        AdminDashboardService.getServiceDistribution()
       ]);
 
       setStats(statsData);
       setRecentOrders(ordersData);
       setOverdueInvoices(invoicesData);
       setHighPriorityTickets(ticketsData);
+      setMonthlyRevenue(revenueData);
+      setServiceDistribution(distData);
     } catch (err) {
       console.error('Error loading admin stats:', err);
       setError('فشل في تحميل البيانات');
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
 
   useEffect(() => {
-    // تحميل البيانات الأولية
     loadData();
 
-    // إعداد التحديثات المباشرة
-    const subscriptions: any[] = [];
+    const tables = ['contracts', 'invoices', 'payment_transactions', 'tickets', 'service_orders'] as const;
+    const channels = tables.map(table =>
+      supabase
+        .channel(`admin-${table}-changes`)
+        .on('postgres_changes', { event: '*', schema: 'public', table }, () => loadData())
+        .subscribe()
+    );
 
-    const contractsChannel = supabase
-      .channel('admin-contracts-changes')
-      .on('postgres_changes', { event: '*', schema: 'public', table: 'contracts' }, () => loadData());
-
-    const invoicesChannel = supabase
-      .channel('admin-invoices-changes')
-      .on('postgres_changes', { event: '*', schema: 'public', table: 'invoices' }, () => loadData());
-
-    const paymentsChannel = supabase
-      .channel('admin-payments-changes')
-      .on('postgres_changes', { event: '*', schema: 'public', table: 'payment_transactions' }, () => loadData());
-
-    const ticketsChannel = supabase
-      .channel('admin-tickets-changes')
-      .on('postgres_changes', { event: '*', schema: 'public', table: 'tickets' }, () => loadData());
-
-    const ordersChannel = supabase
-      .channel('admin-service-orders-changes')
-      .on('postgres_changes', { event: '*', schema: 'public', table: 'service_orders' }, () => loadData());
-
-    Promise.all([
-      contractsChannel.subscribe(),
-      invoicesChannel.subscribe(),
-      paymentsChannel.subscribe(),
-      ticketsChannel.subscribe(),
-      ordersChannel.subscribe()
-    ]).then(() => {
-      subscriptions.push(contractsChannel, invoicesChannel, paymentsChannel, ticketsChannel, ordersChannel);
-    });
-
-    // تنظيف الاشتراكات
     return () => {
-      subscriptions.forEach(subscription => {
-        supabase.removeChannel(subscription);
-      });
+      channels.forEach(ch => { supabase.removeChannel(ch); });
     };
-  }, []);
+  }, [loadData]);
 
   return {
     stats,
     recentOrders,
     overdueInvoices,
     highPriorityTickets,
+    monthlyRevenue,
+    serviceDistribution,
     loading,
     error,
     refresh: loadData

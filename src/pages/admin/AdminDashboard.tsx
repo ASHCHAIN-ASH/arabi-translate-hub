@@ -20,22 +20,6 @@ import { Link } from 'react-router-dom';
 
 const CHART_COLORS = ['hsl(234, 89%, 56%)', 'hsl(172, 66%, 50%)', 'hsl(38, 92%, 50%)', 'hsl(262, 80%, 60%)'];
 
-const revenueData = [
-  { month: 'يناير', revenue: 12400 },
-  { month: 'فبراير', revenue: 15600 },
-  { month: 'مارس', revenue: 18200 },
-  { month: 'أبريل', revenue: 21000 },
-  { month: 'مايو', revenue: 19800 },
-  { month: 'يونيو', revenue: 24500 },
-];
-
-const serviceDistribution = [
-  { name: 'ترجمة', value: 45 },
-  { name: 'أبحاث', value: 30 },
-  { name: 'تدقيق', value: 15 },
-  { name: 'نشر', value: 10 },
-];
-
 const fadeUp = {
   hidden: { opacity: 0, y: 16 },
   show: { opacity: 1, y: 0, transition: { duration: 0.35 } },
@@ -48,7 +32,7 @@ const stagger = {
 
 const AdminDashboard = () => {
   const { toast } = useToast();
-  const { stats, recentOrders, overdueInvoices, highPriorityTickets, loading, error, refresh } = useAdminStats();
+  const { stats, recentOrders, overdueInvoices, highPriorityTickets, monthlyRevenue, serviceDistribution, loading, error, refresh } = useAdminStats();
 
   const handleRefresh = async () => {
     await refresh();
@@ -80,10 +64,10 @@ const AdminDashboard = () => {
   }
 
   const statCards = [
-    { label: 'إجمالي المبيعات', value: stats.totalSales, suffix: ' ر.س', icon: DollarSign, color: 'bg-emerald-500', lightBg: 'bg-emerald-50 dark:bg-emerald-950/30', textColor: 'text-emerald-600', trend: '+12.5%', up: true },
-    { label: 'طلبات جديدة', value: stats.newOrders, icon: ShoppingCart, color: 'bg-blue-500', lightBg: 'bg-blue-50 dark:bg-blue-950/30', textColor: 'text-blue-600', trend: 'اليوم', up: true },
-    { label: 'فواتير متأخرة', value: stats.overdueInvoices, icon: AlertTriangle, color: 'bg-amber-500', lightBg: 'bg-amber-50 dark:bg-amber-950/30', textColor: 'text-amber-600', trend: 'تحتاج انتباه', up: false },
-    { label: 'نسبة التحصيل', value: stats.collectionRate, suffix: '%', icon: Target, color: 'bg-violet-500', lightBg: 'bg-violet-50 dark:bg-violet-950/30', textColor: 'text-violet-600', trend: 'ممتازة', up: true },
+    { label: 'إجمالي المبيعات (الشهر)', value: stats.totalSales, suffix: ' ر.س', icon: DollarSign, color: 'bg-emerald-500', trend: stats.totalSales > 0 ? 'هذا الشهر' : 'لا مبيعات', up: stats.totalSales > 0 },
+    { label: 'طلبات جديدة', value: stats.newOrders, icon: ShoppingCart, color: 'bg-blue-500', trend: 'اليوم', up: true },
+    { label: 'فواتير غير مسددة', value: stats.overdueInvoices, icon: AlertTriangle, color: 'bg-amber-500', trend: stats.overdueInvoices > 0 ? 'تحتاج انتباه' : 'لا توجد', up: stats.overdueInvoices === 0 },
+    { label: 'نسبة التحصيل', value: stats.collectionRate, suffix: '%', icon: Target, color: 'bg-violet-500', trend: stats.collectionRate >= 80 ? 'ممتازة' : stats.collectionRate >= 50 ? 'جيدة' : 'تحتاج تحسين', up: stats.collectionRate >= 50 },
   ];
 
   const quickLinks = [
@@ -92,6 +76,9 @@ const AdminDashboard = () => {
     { label: 'الفواتير', href: '/adminmaster/invoices', icon: FileText, count: stats.overdueInvoices },
     { label: 'تذاكر الدعم', href: '/adminmaster/tickets', icon: HelpCircle, count: highPriorityTickets.length },
   ];
+
+  const hasRevenueData = monthlyRevenue.some(m => m.revenue > 0);
+  const hasServiceData = serviceDistribution.length > 0;
 
   return (
     <AdminLayout>
@@ -168,26 +155,35 @@ const AdminDashboard = () => {
               </div>
             </CardHeader>
             <CardContent className="px-2 pb-3">
-              <div className="h-[220px]" dir="ltr">
-                <ResponsiveContainer width="100%" height="100%">
-                  <AreaChart data={revenueData} margin={{ top: 5, right: 10, left: 0, bottom: 5 }}>
-                    <defs>
-                      <linearGradient id="revGrad" x1="0" y1="0" x2="0" y2="1">
-                        <stop offset="5%" stopColor="hsl(234, 89%, 56%)" stopOpacity={0.12} />
-                        <stop offset="95%" stopColor="hsl(234, 89%, 56%)" stopOpacity={0} />
-                      </linearGradient>
-                    </defs>
-                    <CartesianGrid strokeDasharray="3 3" stroke="hsl(220, 13%, 91%)" vertical={false} />
-                    <XAxis dataKey="month" tick={{ fontSize: 11 }} tickLine={false} axisLine={false} />
-                    <YAxis tick={{ fontSize: 11 }} tickLine={false} axisLine={false} tickFormatter={(v) => `${(v/1000).toFixed(0)}k`} width={35} />
-                    <Tooltip
-                      contentStyle={{ borderRadius: '10px', border: '1px solid hsl(220, 13%, 91%)', fontSize: '12px', direction: 'rtl' }}
-                      formatter={(value: number) => [`${value.toLocaleString()} ريال`, 'الإيرادات']}
-                    />
-                    <Area type="monotone" dataKey="revenue" stroke="hsl(234, 89%, 56%)" strokeWidth={2} fill="url(#revGrad)" />
-                  </AreaChart>
-                </ResponsiveContainer>
-              </div>
+              {hasRevenueData ? (
+                <div className="h-[220px]" dir="ltr">
+                  <ResponsiveContainer width="100%" height="100%">
+                    <AreaChart data={monthlyRevenue} margin={{ top: 5, right: 10, left: 0, bottom: 5 }}>
+                      <defs>
+                        <linearGradient id="revGrad" x1="0" y1="0" x2="0" y2="1">
+                          <stop offset="5%" stopColor="hsl(234, 89%, 56%)" stopOpacity={0.12} />
+                          <stop offset="95%" stopColor="hsl(234, 89%, 56%)" stopOpacity={0} />
+                        </linearGradient>
+                      </defs>
+                      <CartesianGrid strokeDasharray="3 3" stroke="hsl(220, 13%, 91%)" vertical={false} />
+                      <XAxis dataKey="month" tick={{ fontSize: 11 }} tickLine={false} axisLine={false} />
+                      <YAxis tick={{ fontSize: 11 }} tickLine={false} axisLine={false} tickFormatter={(v) => `${(v/1000).toFixed(0)}k`} width={35} />
+                      <Tooltip
+                        contentStyle={{ borderRadius: '10px', border: '1px solid hsl(220, 13%, 91%)', fontSize: '12px', direction: 'rtl' }}
+                        formatter={(value: number) => [`${value.toLocaleString()} ريال`, 'الإيرادات']}
+                      />
+                      <Area type="monotone" dataKey="revenue" stroke="hsl(234, 89%, 56%)" strokeWidth={2} fill="url(#revGrad)" />
+                    </AreaChart>
+                  </ResponsiveContainer>
+                </div>
+              ) : (
+                <div className="h-[220px] flex items-center justify-center">
+                  <div className="text-center">
+                    <Activity className="w-8 h-8 text-muted-foreground/30 mx-auto mb-2" />
+                    <p className="text-sm text-muted-foreground">لا توجد إيرادات مسجلة بعد</p>
+                  </div>
+                </div>
+              )}
             </CardContent>
           </Card>
 
@@ -197,27 +193,38 @@ const AdminDashboard = () => {
               <CardTitle className="text-sm font-bold">توزيع الخدمات</CardTitle>
             </CardHeader>
             <CardContent className="px-4 pb-3">
-              <div className="h-[160px]" dir="ltr">
-                <ResponsiveContainer width="100%" height="100%">
-                  <PieChart>
-                    <Pie data={serviceDistribution} cx="50%" cy="50%" innerRadius={45} outerRadius={70} paddingAngle={3} dataKey="value">
-                      {serviceDistribution.map((_, i) => (
-                        <Cell key={i} fill={CHART_COLORS[i % CHART_COLORS.length]} />
-                      ))}
-                    </Pie>
-                    <Tooltip contentStyle={{ borderRadius: '10px', fontSize: '12px' }} formatter={(v: number) => [`${v}%`, '']} />
-                  </PieChart>
-                </ResponsiveContainer>
-              </div>
-              <div className="grid grid-cols-2 gap-x-4 gap-y-1.5 mt-2">
-                {serviceDistribution.map((item, i) => (
-                  <div key={i} className="flex items-center gap-1.5 text-xs">
-                    <div className="w-2 h-2 rounded-full flex-shrink-0" style={{ backgroundColor: CHART_COLORS[i] }} />
-                    <span className="text-muted-foreground">{item.name}</span>
-                    <span className="font-semibold text-foreground mr-auto">{item.value}%</span>
+              {hasServiceData ? (
+                <>
+                  <div className="h-[160px]" dir="ltr">
+                    <ResponsiveContainer width="100%" height="100%">
+                      <PieChart>
+                        <Pie data={serviceDistribution} cx="50%" cy="50%" innerRadius={45} outerRadius={70} paddingAngle={3} dataKey="value">
+                          {serviceDistribution.map((_, i) => (
+                            <Cell key={i} fill={CHART_COLORS[i % CHART_COLORS.length]} />
+                          ))}
+                        </Pie>
+                        <Tooltip contentStyle={{ borderRadius: '10px', fontSize: '12px' }} formatter={(v: number) => [`${v}%`, '']} />
+                      </PieChart>
+                    </ResponsiveContainer>
                   </div>
-                ))}
-              </div>
+                  <div className="grid grid-cols-2 gap-x-4 gap-y-1.5 mt-2">
+                    {serviceDistribution.map((item, i) => (
+                      <div key={i} className="flex items-center gap-1.5 text-xs">
+                        <div className="w-2 h-2 rounded-full flex-shrink-0" style={{ backgroundColor: CHART_COLORS[i] }} />
+                        <span className="text-muted-foreground">{item.name}</span>
+                        <span className="font-semibold text-foreground mr-auto">{item.value}%</span>
+                      </div>
+                    ))}
+                  </div>
+                </>
+              ) : (
+                <div className="h-[200px] flex items-center justify-center">
+                  <div className="text-center">
+                    <Package className="w-8 h-8 text-muted-foreground/30 mx-auto mb-2" />
+                    <p className="text-sm text-muted-foreground">لا توجد طلبات خدمات بعد</p>
+                  </div>
+                </div>
+              )}
             </CardContent>
           </Card>
         </motion.div>
@@ -249,7 +256,7 @@ const AdminDashboard = () => {
                     </div>
                     <p className="text-xs text-muted-foreground truncate">{order.serviceName}</p>
                   </div>
-                  <div className="text-left flex-shrink-0 mr-3">
+                  <div className="text-start flex-shrink-0 mr-3">
                     <p className="text-sm font-bold">{fmt(order.total)} ر.س</p>
                     <p className="text-[10px] text-muted-foreground">{order.createdAt}</p>
                   </div>
@@ -282,7 +289,7 @@ const AdminDashboard = () => {
                       <p className="text-xs font-semibold">{inv.invoiceNumber}</p>
                       <p className="text-[10px] text-muted-foreground">{inv.clientName}</p>
                     </div>
-                    <div className="text-left">
+                    <div className="text-start">
                       <p className="text-xs font-bold text-destructive">{fmt(inv.amount)} ر.س</p>
                       <p className="text-[10px] text-destructive/70">متأخر {inv.daysOverdue} أيام</p>
                     </div>
@@ -316,9 +323,9 @@ const AdminDashboard = () => {
         {/* Bottom Stats */}
         <motion.div variants={fadeUp} className="grid grid-cols-1 sm:grid-cols-3 gap-3">
           {[
-            { label: 'إجمالي المستخدمين', value: stats.totalUsers, icon: Users, color: 'bg-indigo-500', pct: 75 },
-            { label: 'الخدمات النشطة', value: stats.activeServices, icon: CheckCircle, color: 'bg-teal-500', pct: 90 },
-            { label: 'معدل النمو', value: stats.monthlyGrowth, suffix: '%', icon: TrendingUp, color: 'bg-emerald-500', pct: 95 },
+            { label: 'إجمالي المستخدمين', value: stats.totalUsers, icon: Users, color: 'bg-indigo-500', pct: Math.min(stats.totalUsers * 10, 100) },
+            { label: 'الخدمات النشطة', value: stats.activeServices, icon: CheckCircle, color: 'bg-teal-500', pct: Math.min(stats.activeServices * 10, 100) },
+            { label: 'نمو الشهر', value: stats.monthlyGrowth, suffix: '%', icon: TrendingUp, color: 'bg-emerald-500', pct: Math.min(Math.abs(stats.monthlyGrowth), 100) },
           ].map((item, i) => (
             <Card key={i} className="border-border/40">
               <CardContent className="p-4">

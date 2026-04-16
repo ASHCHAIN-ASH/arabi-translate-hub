@@ -38,12 +38,14 @@ export interface HighPriorityTicket {
   createdAt: string;
 }
 
-export interface AdminNotification {
-  id: number;
-  title: string;
-  message: string;
-  time: string;
-  type: string;
+export interface MonthlyRevenue {
+  month: string;
+  revenue: number;
+}
+
+export interface ServiceDistItem {
+  name: string;
+  value: number;
 }
 
 export class AdminDashboardService {
@@ -53,13 +55,12 @@ export class AdminDashboardService {
       startOfMonth.setDate(1);
       startOfMonth.setHours(0, 0, 0, 0);
 
+      // Sum ALL completed payments this month
       const { data: salesData } = await supabase.from('payment_transactions').select('amount')
         .eq('status', 'completed')
-        .gte('created_at', startOfMonth.toISOString())
-        .limit(1)
-        .maybeSingle();
+        .gte('created_at', startOfMonth.toISOString());
 
-      const totalSales = salesData?.amount || 0;
+      const totalSales = salesData?.reduce((sum, p) => sum + (p.amount || 0), 0) || 0;
 
       const startOfDay = new Date();
       startOfDay.setHours(0, 0, 0, 0);
@@ -68,8 +69,8 @@ export class AdminDashboardService {
         .gte('created_at', startOfDay.toISOString());
 
       const { count: overdueCount } = await supabase.from('invoices').select('*', { count: 'exact', head: true })
-        .eq('status', 'overdue')
-        .lt('due_date', new Date().toISOString());
+        .neq('status', 'paid')
+        .not('due_date', 'is', null);
 
       const { count: paidCount } = await supabase.from('invoices').select('*', { count: 'exact', head: true })
         .eq('status', 'paid');
@@ -83,6 +84,26 @@ export class AdminDashboardService {
       const { count: activeServicesCount } = await supabase.from('services').select('*', { count: 'exact', head: true })
         .eq('is_active', true);
 
+      // Calculate real monthly growth based on orders
+      const prevMonth = new Date();
+      prevMonth.setMonth(prevMonth.getMonth() - 1);
+      prevMonth.setDate(1);
+      prevMonth.setHours(0, 0, 0, 0);
+      const prevMonthEnd = new Date(startOfMonth);
+      prevMonthEnd.setMilliseconds(-1);
+
+      const { count: thisMonthOrders } = await supabase.from('service_orders').select('*', { count: 'exact', head: true })
+        .gte('created_at', startOfMonth.toISOString());
+
+      const { count: prevMonthOrders } = await supabase.from('service_orders').select('*', { count: 'exact', head: true })
+        .gte('created_at', prevMonth.toISOString())
+        .lt('created_at', startOfMonth.toISOString());
+
+      let monthlyGrowth = 0;
+      if (prevMonthOrders && prevMonthOrders > 0) {
+        monthlyGrowth = Math.round(((thisMonthOrders || 0) - prevMonthOrders) / prevMonthOrders * 100);
+      }
+
       return {
         totalSales,
         newOrders: newOrdersCount || 0,
@@ -90,7 +111,7 @@ export class AdminDashboardService {
         collectionRate,
         totalUsers: usersCount || 0,
         activeServices: activeServicesCount || 0,
-        monthlyGrowth: 18.5
+        monthlyGrowth
       };
     } catch (error) {
       console.error('خطأ في جلب الإحصائيات:', error);
@@ -98,10 +119,64 @@ export class AdminDashboardService {
     }
   }
 
+  static async getMonthlyRevenue(): Promise<MonthlyRevenue[]> {
+    try {
+      const months: MonthlyRevenue[] = [];
+      const monthNames = ['يناير', 'فبراير', 'مارس', 'أبريل', 'مايو', 'يونيو', 'يوليو', 'أغسطس', 'سبتمبر', 'أكتوبر', 'نوفمبر', 'ديسمبر'];
+      const now = new Date();
+
+      for (let i = 5; i >= 0; i--) {
+        const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
+        const end = new Date(d.getFullYear(), d.getMonth() + 1, 1);
+        
+        const { data } = await supabase.from('payment_transactions').select('amount')
+          .eq('status', 'completed')
+          .gte('created_at', d.toISOString())
+          .lt('created_at', end.toISOString());
+
+        months.push({
+          month: monthNames[d.getMonth()],
+          revenue: data?.reduce((sum, p) => sum + (p.amount || 0), 0) || 0
+        });
+      }
+
+      return months;
+    } catch (error) {
+      console.error('خطأ في جلب الإيرادات الشهرية:', error);
+      return [];
+    }
+  }
+
+  static async getServiceDistribution(): Promise<ServiceDistItem[]> {
+    try {
+      const { data } = await supabase.from('service_orders').select('service_name');
+
+      if (!data || data.length === 0) return [];
+
+      const countMap: Record<string, number> = {};
+      data.forEach(order => {
+        const name = order.service_name || 'أخرى';
+        countMap[name] = (countMap[name] || 0) + 1;
+      });
+
+      const total = data.length;
+      return Object.entries(countMap)
+        .sort((a, b) => b[1] - a[1])
+        .slice(0, 4)
+        .map(([name, count]) => ({
+          name,
+          value: Math.round((count / total) * 100)
+        }));
+    } catch (error) {
+      console.error('خطأ في جلب توزيع الخدمات:', error);
+      return [];
+    }
+  }
+
   static async getRecentOrders(): Promise<RecentOrder[]> {
     try {
       const { data, error } = await supabase.from('service_orders').select(`
-          id, tracking_id, service_name, current_status, total_amount, created_at
+          id, tracking_id, service_name, current_status, total_amount, created_at, customer_id
         `)
         .order('created_at', { ascending: false })
         .limit(5);
@@ -126,27 +201,29 @@ export class AdminDashboardService {
   static async getOverdueInvoices(): Promise<OverdueInvoice[]> {
     try {
       const { data, error } = await supabase.from('invoices').select('*')
-        .lt('due_date', new Date().toISOString())
         .neq('status', 'paid')
+        .not('due_date', 'is', null)
         .order('due_date', { ascending: true })
         .limit(5);
 
       if (error) throw error;
 
-      return data?.map(invoice => {
-        const dueDate = new Date(invoice.due_date || '');
-        const today = new Date();
-        const daysOverdue = Math.floor((today.getTime() - dueDate.getTime()) / (1000 * 60 * 60 * 24));
+      const today = new Date();
+      return (data || [])
+        .filter(inv => inv.due_date && new Date(inv.due_date) < today)
+        .map(invoice => {
+          const dueDate = new Date(invoice.due_date!);
+          const daysOverdue = Math.floor((today.getTime() - dueDate.getTime()) / (1000 * 60 * 60 * 24));
 
-        return {
-          id: invoice.id,
-          invoiceNumber: invoice.invoice_number,
-          clientName: invoice.notes || 'عميل',
-          amount: invoice.total_amount || 0,
-          dueDate: dueDate.toLocaleDateString('ar-SA'),
-          daysOverdue
-        };
-      }) || [];
+          return {
+            id: invoice.id,
+            invoiceNumber: invoice.invoice_number,
+            clientName: invoice.notes || 'عميل',
+            amount: invoice.total_amount || 0,
+            dueDate: dueDate.toLocaleDateString('ar-SA'),
+            daysOverdue
+          };
+        });
     } catch (error) {
       console.error('خطأ في جلب الفواتير المتأخرة:', error);
       return [];
@@ -173,63 +250,6 @@ export class AdminDashboardService {
       })) || [];
     } catch (error) {
       console.error('خطأ في جلب التذاكر عالية الأولوية:', error);
-      return [];
-    }
-  }
-
-  static async getRecentNotifications(): Promise<AdminNotification[]> {
-    try {
-      const notifications: AdminNotification[] = [];
-
-      const { data: newContracts } = await supabase.from('contracts').select('*')
-        .gte('created_at', new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString())
-        .order('created_at', { ascending: false })
-        .limit(3);
-
-      newContracts?.forEach((contract, index) => {
-        notifications.push({
-          id: index + 1,
-          title: 'عقد جديد',
-          message: `تم إنشاء عقد جديد: ${contract.title}`,
-          time: this.getTimeAgo(contract.created_at),
-          type: 'contract'
-        });
-      });
-
-      const { data: newPayments } = await supabase.from('payment_transactions').select('*')
-        .eq('status', 'completed')
-        .gte('created_at', new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString())
-        .order('created_at', { ascending: false })
-        .limit(2);
-
-      newPayments?.forEach((payment, index) => {
-        notifications.push({
-          id: notifications.length + index + 1,
-          title: 'دفعة جديدة',
-          message: `تم استلام دفعة بقيمة ${payment.amount} SAR`,
-          time: this.getTimeAgo(payment.created_at),
-          type: 'payment'
-        });
-      });
-
-      const { data: newTickets } = await supabase.from('tickets').select('*')
-        .gte('created_at', new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString())
-        .order('created_at', { ascending: false })
-        .limit(2);
-
-      newTickets?.forEach((ticket, index) => {
-        notifications.push({
-          id: notifications.length + index + 1,
-          title: 'تذكرة دعم جديدة',
-          message: `تذكرة جديدة: ${ticket.subject}`,
-          time: this.getTimeAgo(ticket.created_at),
-          type: 'support'
-        });
-      });
-
-      return notifications.slice(0, 5);
-    } catch (error) {
-      console.error('خطأ في جلب الإشعارات:', error);
       return [];
     }
   }

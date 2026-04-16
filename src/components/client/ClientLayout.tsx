@@ -172,7 +172,7 @@ const ClientLayout: React.FC<ClientLayoutProps> = ({ children }) => {
 
                 {/* User Profile */}
                 <div className="flex items-center space-x-2 sm:space-x-3 space-x-reverse">
-                  <div className="text-right hidden sm:block">
+                  <div className="text-start hidden sm:block">
                     <p className="text-sm font-medium truncate max-w-24 sm:max-w-none">
                       {user?.user_metadata?.full_name || user?.email?.split('@')[0]}
                     </p>
