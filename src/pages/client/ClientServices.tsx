@@ -38,7 +38,6 @@ interface Service {
   unit?: string;
   is_active?: boolean;
   [key: string]: any;
-};
 }
 
 const ClientServices = () => {

@@ -78,7 +78,7 @@ export default function EmailManagement() {
   };
 
   const fetchEmailLogs = async () => {
-    const { data, error } = await supabase
+    const { data, error } = await (supabase
       .from('audit_logs') as any)
       .select('*')
       .order('created_at', { ascending: false })
