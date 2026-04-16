@@ -479,6 +479,47 @@ export type Database = {
         }
         Relationships: []
       }
+      order_attachments: {
+        Row: {
+          created_at: string
+          file_name: string
+          file_size: number
+          file_type: string | null
+          id: string
+          order_id: string
+          storage_path: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          file_name: string
+          file_size: number
+          file_type?: string | null
+          id?: string
+          order_id: string
+          storage_path: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          file_name?: string
+          file_size?: number
+          file_type?: string | null
+          id?: string
+          order_id?: string
+          storage_path?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "order_attachments_order_id_fkey"
+            columns: ["order_id"]
+            isOneToOne: false
+            referencedRelation: "service_orders"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       order_timeline: {
         Row: {
           actor_name: string | null
