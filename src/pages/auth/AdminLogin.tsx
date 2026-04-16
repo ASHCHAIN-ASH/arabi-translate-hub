@@ -14,8 +14,15 @@ const AdminLogin = () => {
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   
-  const { signIn } = useAuth();
+  const { signIn, user, userRole } = useAuth();
   const navigate = useNavigate();
+
+  // If already logged in as admin, redirect
+  React.useEffect(() => {
+    if (user && userRole === 'admin') {
+      navigate('/adminmaster');
+    }
+  }, [user, userRole, navigate]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -34,11 +41,7 @@ const AdminLogin = () => {
       }
       
       toast.success('تم تسجيل الدخول بنجاح');
-      
-      // Small delay to allow auth state to update
-      setTimeout(() => {
-        navigate('/adminmaster');
-      }, 100);
+      // Navigation will happen via useEffect when userRole is set
     } catch (error: any) {
       toast.error(error.message || 'خطأ في تسجيل الدخول');
     } finally {
