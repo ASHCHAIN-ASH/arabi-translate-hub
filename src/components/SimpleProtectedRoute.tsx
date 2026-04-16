@@ -14,7 +14,7 @@ const SimpleProtectedRoute: React.FC<ProtectedRouteProps> = ({
   requiredRole,
   adminOnly = false
 }) => {
-  const { user, loading } = useAuth();
+  const { user, userRole, loading } = useAuth();
   const location = useLocation();
 
   if (loading) {
@@ -28,21 +28,20 @@ const SimpleProtectedRoute: React.FC<ProtectedRouteProps> = ({
     );
   }
 
+  // No authenticated Supabase session → redirect to login
   if (!user) {
-    // Redirect to appropriate login page based on route
     const isAdminRoute = location.pathname.startsWith('/adminmaster');
     const loginPath = isAdminRoute ? '/adminmaster/login' : '/login';
-    console.log('User not authenticated, redirecting to:', loginPath);
     return <Navigate to={loginPath} state={{ from: location }} replace />;
   }
 
-  // Check admin access
-  if (adminOnly && user.role !== 'admin') {
+  // Admin-only routes: check role from user_roles table
+  if (adminOnly && userRole !== 'admin') {
     return <Navigate to="/unauthorized" replace />;
   }
 
-  // Check specific role requirement
-  if (requiredRole && user.role !== requiredRole && user.role !== 'admin') {
+  // Specific role requirement
+  if (requiredRole && userRole !== requiredRole && userRole !== 'admin') {
     return <Navigate to="/unauthorized" replace />;
   }
 
