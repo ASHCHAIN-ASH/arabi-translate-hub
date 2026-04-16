@@ -41,79 +41,34 @@ export function useAdminStats() {
     // إعداد التحديثات المباشرة
     const subscriptions: any[] = [];
 
-    // مراقبة تغييرات العقود
     const contractsChannel = supabase
       .channel('admin-contracts-changes')
-      .on(
-        'postgres_changes',
-        {
-          event: '*',
-          schema: 'public',
-          table: 'contracts'
-        },
-        () => {
-          console.log('Contract change detected - refreshing stats');
-          loadData();
-        }
-      );
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'contracts' }, () => loadData());
 
-    // مراقبة تغييرات الفواتير
     const invoicesChannel = supabase
       .channel('admin-invoices-changes')
-      .on(
-        'postgres_changes',
-        {
-          event: '*',
-          schema: 'public',
-          table: 'invoices'
-        },
-        () => {
-          console.log('Invoice change detected - refreshing stats');
-          loadData();
-        }
-      );
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'invoices' }, () => loadData());
 
-    // مراقبة تغييرات المدفوعات
     const paymentsChannel = supabase
       .channel('admin-payments-changes')
-      .on(
-        'postgres_changes',
-        {
-          event: '*',
-          schema: 'public',
-          table: 'payment_transactions'
-        },
-        () => {
-          console.log('Payment change detected - refreshing stats');
-          loadData();
-        }
-      );
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'payment_transactions' }, () => loadData());
 
-    // مراقبة تغييرات التذاكر
     const ticketsChannel = supabase
       .channel('admin-tickets-changes')
-      .on(
-        'postgres_changes',
-        {
-          event: '*',
-          schema: 'public',
-          table: 'tickets'
-        },
-        () => {
-          console.log('Ticket change detected - refreshing stats');
-          loadData();
-        }
-      );
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'tickets' }, () => loadData());
 
-    // الاشتراك في جميع القنوات
+    const ordersChannel = supabase
+      .channel('admin-service-orders-changes')
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'service_orders' }, () => loadData());
+
     Promise.all([
       contractsChannel.subscribe(),
       invoicesChannel.subscribe(),
       paymentsChannel.subscribe(),
-      ticketsChannel.subscribe()
-    ]).then((results) => {
-      console.log('Subscribed to real-time updates:', results);
-      subscriptions.push(contractsChannel, invoicesChannel, paymentsChannel, ticketsChannel);
+      ticketsChannel.subscribe(),
+      ordersChannel.subscribe()
+    ]).then(() => {
+      subscriptions.push(contractsChannel, invoicesChannel, paymentsChannel, ticketsChannel, ordersChannel);
     });
 
     // تنظيف الاشتراكات

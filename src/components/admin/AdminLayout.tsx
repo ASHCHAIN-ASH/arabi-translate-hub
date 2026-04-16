@@ -275,7 +275,7 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
                     <Menu className="w-5 h-5" />
                   </Button>
                 </SheetTrigger>
-                <SheetContent side="right" className="w-72 p-0 border-l border-border/40" dir="rtl">
+                <SheetContent side="right" className="w-72 p-0" dir="rtl">
                   <div className="p-4 border-b border-border/40">
                     <div className="flex items-center gap-3">
                       <div className="w-9 h-9 bg-primary rounded-xl flex items-center justify-center">
@@ -373,7 +373,7 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
 
       <div className="flex">
         {/* Desktop Sidebar */}
-        <aside className="w-[260px] bg-card/60 backdrop-blur-sm border-l border-border/30 min-h-[calc(100vh-56px)] hidden lg:block">
+        <aside className="w-[260px] bg-card/60 backdrop-blur-sm border-l rtl:border-l-0 rtl:border-r border-border/30 min-h-[calc(100vh-56px)] hidden lg:block">
           <div className="sticky top-14 h-[calc(100vh-56px)]">
             <SidebarNav />
           </div>

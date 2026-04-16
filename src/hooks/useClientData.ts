@@ -47,83 +47,34 @@ export function useClientData(userId: string | undefined) {
       // إعداد التحديثات المباشرة
       const subscriptions: any[] = [];
 
-      // مراقبة تغييرات العقود الخاصة بالعميل
       const contractsChannel = supabase
         .channel(`client-contracts-${userId}`)
-        .on(
-          'postgres_changes',
-          {
-            event: '*',
-            schema: 'public',
-            table: 'contracts',
-            filter: `user_id=eq.${userId}`
-          },
-          (payload) => {
-            console.log('Client contract change detected:', payload);
-            loadData();
-          }
-        );
+        .on('postgres_changes', { event: '*', schema: 'public', table: 'contracts', filter: `user_id=eq.${userId}` }, () => loadData());
 
-      // مراقبة تغييرات الفواتير الخاصة بالعميل
       const invoicesChannel = supabase
         .channel(`client-invoices-${userId}`)
-        .on(
-          'postgres_changes',
-          {
-            event: '*',
-            schema: 'public',
-            table: 'invoices',
-            filter: `user_id=eq.${userId}`
-          },
-          (payload) => {
-            console.log('Client invoice change detected:', payload);
-            loadData();
-          }
-        );
+        .on('postgres_changes', { event: '*', schema: 'public', table: 'invoices', filter: `user_id=eq.${userId}` }, () => loadData());
 
-      // مراقبة تغييرات المدفوعات الخاصة بالعميل
       const paymentsChannel = supabase
         .channel(`client-payments-${userId}`)
-        .on(
-          'postgres_changes',
-          {
-            event: '*',
-            schema: 'public',
-            table: 'payment_transactions',
-            filter: `user_id=eq.${userId}`
-          },
-          (payload) => {
-            console.log('Client payment change detected:', payload);
-            loadData();
-          }
-        );
+        .on('postgres_changes', { event: '*', schema: 'public', table: 'payment_transactions', filter: `user_id=eq.${userId}` }, () => loadData());
 
-      // مراقبة تغييرات التذاكر الخاصة بالعميل
       const ticketsChannel = supabase
         .channel(`client-tickets-${userId}`)
-        .on(
-          'postgres_changes',
-          {
-            event: '*',
-            schema: 'public',
-            table: 'tickets',
-            filter: `user_id=eq.${userId}`
-          },
-          (payload) => {
-            console.log('Client ticket change detected:', payload);
-            loadData();
-          }
-        );
+        .on('postgres_changes', { event: '*', schema: 'public', table: 'tickets', filter: `user_id=eq.${userId}` }, () => loadData());
 
-      // الاشتراك في جميع القنوات
+      const ordersChannel = supabase
+        .channel(`client-orders-${userId}`)
+        .on('postgres_changes', { event: '*', schema: 'public', table: 'service_orders', filter: `user_id=eq.${userId}` }, () => loadData());
+
       Promise.all([
         contractsChannel.subscribe(),
         invoicesChannel.subscribe(),
         paymentsChannel.subscribe(),
-        ticketsChannel.subscribe()
-      ]).then((results) => {
-        console.log('Client subscribed to real-time updates:', results);
-        subscriptions.push(contractsChannel, invoicesChannel, paymentsChannel, ticketsChannel);
+        ticketsChannel.subscribe(),
+        ordersChannel.subscribe()
+      ]).then(() => {
+        subscriptions.push(contractsChannel, invoicesChannel, paymentsChannel, ticketsChannel, ordersChannel);
       });
 
       // تنظيف الاشتراكات
