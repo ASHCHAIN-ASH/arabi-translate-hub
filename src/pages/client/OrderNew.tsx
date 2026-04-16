@@ -94,11 +94,7 @@ const OrderNew = () => {
     return list;
   }, [services, selectedCategory, searchQuery]);
 
-  const VAT_RATE = 0.15;
   const unitPrice = selectedService?.price || 0;
-  const subtotal = unitPrice * quantity;
-  const vatAmount = subtotal * VAT_RATE;
-  const total = subtotal + vatAmount;
 
   const handleSubmit = async () => {
     if (!selectedService) return toast.error('يرجى اختيار خدمة');
