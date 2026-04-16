@@ -274,6 +274,11 @@ const App = () => (
                 <ClientTickets />
               </SimpleProtectedRoute>
             } />
+            <Route path="/wallet" element={
+              <SimpleProtectedRoute requiredRole="client">
+                <ClientWallet />
+              </SimpleProtectedRoute>
+            } />
             
             {/* Admin Dashboard Routes - Hidden Path */}
             <Route path="/adminmaster" element={
