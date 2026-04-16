@@ -73,6 +73,7 @@ const formatFileSize = (bytes: number) => {
 
 const OrderNew = () => {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const { user } = useAuth();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [categories, setCategories] = useState<Category[]>([]);
