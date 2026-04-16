@@ -22,10 +22,10 @@ export function usePlatformRealtime(userId?: string) {
     const loadStats = async () => {
       try {
         const [usersCount, servicesCount, ordersCount, notificationsCount] = await Promise.all([
-          supabase.from('platform_users').select('id', { count: 'exact', head: true }),
-          supabase.from('platform_services').select('id', { count: 'exact', head: true }),
-          supabase.from('platform_orders').select('id', { count: 'exact', head: true }),
-          supabase.from('platform_notifications').select('id', { count: 'exact', head: true })
+          (supabase as any).from('profiles').select('id', { count: 'exact', head: true }),
+          (supabase as any).from('services').select('id', { count: 'exact', head: true }),
+          (supabase as any).from('service_orders').select('id', { count: 'exact', head: true }),
+          (supabase as any).from('user_notifications').select('id', { count: 'exact', head: true })
         ]);
 
         setStats({
@@ -47,7 +47,7 @@ export function usePlatformRealtime(userId?: string) {
       .on('postgres_changes', {
         event: '*',
         schema: 'public',
-        table: 'platform_users'
+        table: 'profiles'
       }, (payload) => {
         console.log('Platform users change:', payload);
         setLastUpdate(new Date().toISOString());
@@ -60,7 +60,7 @@ export function usePlatformRealtime(userId?: string) {
       .on('postgres_changes', {
         event: '*',
         schema: 'public',
-        table: 'platform_services'
+        table: 'services'
       }, (payload) => {
         console.log('Platform services change:', payload);
         setLastUpdate(new Date().toISOString());
@@ -73,7 +73,7 @@ export function usePlatformRealtime(userId?: string) {
       .on('postgres_changes', {
         event: '*',
         schema: 'public',
-        table: 'platform_orders'
+        table: 'service_orders'
       }, (payload) => {
         console.log('Platform orders change:', payload);
         setLastUpdate(new Date().toISOString());
@@ -86,7 +86,7 @@ export function usePlatformRealtime(userId?: string) {
       .on('postgres_changes', {
         event: '*',
         schema: 'public',
-        table: 'platform_notifications'
+        table: 'user_notifications'
       }, (payload) => {
         console.log('Platform notifications change:', payload);
         if (!userId || 

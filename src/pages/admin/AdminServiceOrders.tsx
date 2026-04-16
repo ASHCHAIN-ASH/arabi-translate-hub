@@ -26,31 +26,19 @@ import { motion } from 'framer-motion';
 interface ServiceOrder {
   id: string;
   tracking_id: string;
-  service_id: string;
-  client_name: string;
-  client_email: string;
-  client_phone?: string;
-  title: string;
-  description?: string;
-  requirements?: string;
-  quantity: number;
-  unit_type: string;
-  estimated_price?: number;
-  rush_delivery: boolean;
-  expected_delivery?: string;
-  additional_notes?: string;
+  service_id?: string;
+  service_name?: string;
+  notes?: string;
   current_status: string;
+  priority?: string;
+  total_amount?: number;
+  paid_amount?: number;
+  deadline?: string;
   created_at: string;
   updated_at: string;
-  services?: {
-    id: string;
-    name_ar: string;
-    name_en: string;
-    service_categories?: {
-      name_ar: string;
-      color: string;
-    };
-  };
+  user_id?: string;
+  customer_id?: string;
+  services?: any;
 }
 
 const AdminServiceOrders = () => {
@@ -107,24 +95,13 @@ const AdminServiceOrders = () => {
   const loadOrders = async () => {
     try {
       setLoading(true);
-      const { data, error } = await supabase
-        .from('service_orders')
-        .select(`
-          *,
-          services (
-            id,
-            name_ar,
-            name_en,
-            service_categories (
-              name_ar,
-              color
-            )
-          )
-        `)
+      const { data, error } = await (supabase
+        .from('service_orders') as any)
+        .select('*')
         .order('created_at', { ascending: false });
 
       if (error) throw error;
-      setOrders(data || []);
+      setOrders((data || []) as ServiceOrder[]);
     } catch (error) {
       console.error('Error loading orders:', error);
       toast({
@@ -139,19 +116,13 @@ const AdminServiceOrders = () => {
 
   const filterOrders = () => {
     let filtered = orders;
-
-    // Filter by search term
     if (searchTerm.trim()) {
       const query = searchTerm.toLowerCase();
       filtered = filtered.filter(order =>
-        order.title.toLowerCase().includes(query) ||
-        order.client_name.toLowerCase().includes(query) ||
-        order.tracking_id.toLowerCase().includes(query) ||
-        order.client_email.toLowerCase().includes(query)
+        (order.service_name || '').toLowerCase().includes(query) ||
+        order.tracking_id.toLowerCase().includes(query)
       );
     }
-
-    // Filter by status
     if (statusFilter !== 'all') {
       filtered = filtered.filter(order => order.current_status === statusFilter);
     }

@@ -31,9 +31,9 @@ import Header from '@/components/Header';
 interface Service {
   id: string;
   name_ar: string;
-  name_en: string;
-  description_ar: string;
-  category_id: string;
+  name?: string;
+  description?: string;
+  category_id?: string;
   is_active: boolean;
 }
 
@@ -72,15 +72,13 @@ const ContractManagement = () => {
   const loadServices = async () => {
     try {
       setIsServicesLoading(true);
-      const { data, error } = await supabase
-        .from('services')
+      const { data, error } = await (supabase
+        .from('services') as any)
         .select('*')
-        .eq('is_active', true)
-        .eq('show_to_clients', true)
-        .order('sort_order', { ascending: true });
+        .eq('is_active', true);
 
       if (error) throw error;
-      setServices(data || []);
+      setServices((data || []) as Service[]);
     } catch (error) {
       console.error('Error loading services:', error);
       toast.error('خطأ في تحميل الخدمات');
