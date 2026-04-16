@@ -12,32 +12,36 @@ import {
 // ==============================
 // WhatsApp Service — Real Supabase Edge Function Calls
 // Messages are sent via the `send-whatsapp` edge function
-// Logs are stored in `email_logs` table (multi-channel)
+// Logs tracked via email_logs table (to_email used for phone)
 // ==============================
 
 // إدارة مزودي واتساب — stored in system_settings
 export const getAllWhatsappProviders = async (): Promise<WhatsappProvider[]> => {
-  const { data, error } = await supabase
-    .from('system_settings')
-    .select('*')
-    .eq('category', 'whatsapp_provider');
+  try {
+    const { data, error } = await supabase
+      .from('system_settings' as any)
+      .select('*')
+      .eq('category', 'whatsapp_provider');
 
-  if (error || !data) return [];
+    if (error || !data) return [];
 
-  return data.map(row => ({
-    id: row.id,
-    name: (row as any).value?.provider_type || 'twilio',
-    configJson: (row as any).value || {},
-    isEnabled: (row as any).value?.is_enabled || false,
-    updatedAt: row.updated_at || '',
-  }));
+    return (data as any[]).map(row => ({
+      id: row.id,
+      name: row.value?.provider_type || 'twilio',
+      configJson: row.value || {},
+      isEnabled: row.value?.is_enabled || false,
+      updatedAt: row.updated_at || '',
+    }));
+  } catch {
+    return [];
+  }
 };
 
 export const createWhatsappProvider = async (
   providerData: Omit<WhatsappProvider, 'id' | 'createdAt' | 'updatedAt'>
 ): Promise<string> => {
   const { data, error } = await supabase
-    .from('system_settings')
+    .from('system_settings' as any)
     .insert({
       key: `whatsapp_provider_${providerData.name}`,
       category: 'whatsapp_provider',
@@ -46,12 +50,12 @@ export const createWhatsappProvider = async (
         is_enabled: providerData.isEnabled,
         ...providerData.configJson,
       },
-    } as any)
+    })
     .select('id')
     .single();
 
   if (error) throw error;
-  return data.id;
+  return (data as any).id;
 };
 
 export const updateWhatsappProvider = async (
@@ -59,15 +63,14 @@ export const updateWhatsappProvider = async (
   updates: Partial<WhatsappProvider>
 ): Promise<void> => {
   const { error } = await supabase
-    .from('system_settings')
+    .from('system_settings' as any)
     .update({
       value: {
         provider_type: updates.name,
         is_enabled: updates.isEnabled,
         ...updates.configJson,
       },
-      updated_at: new Date().toISOString(),
-    } as any)
+    })
     .eq('id', providerId);
 
   if (error) throw error;
@@ -75,40 +78,41 @@ export const updateWhatsappProvider = async (
 
 export const deleteWhatsappProvider = async (providerId: string): Promise<void> => {
   const { error } = await supabase
-    .from('system_settings')
+    .from('system_settings' as any)
     .delete()
     .eq('id', providerId);
 
   if (error) throw error;
 };
 
-// إدارة القوالب — stored in system_settings
+// إدارة القوالب
 export const getAllWhatsappTemplates = async (): Promise<WhatsappTemplate[]> => {
-  const { data, error } = await supabase
-    .from('system_settings')
-    .select('*')
-    .eq('category', 'whatsapp_template');
+  try {
+    const { data, error } = await supabase
+      .from('system_settings' as any)
+      .select('*')
+      .eq('category', 'whatsapp_template');
 
-  if (error || !data) return [];
+    if (error || !data) return [];
 
-  return data.map(row => {
-    const val = (row as any).value || {};
-    return {
+    return (data as any[]).map(row => ({
       id: row.id,
-      templateName: val.template_name || '',
-      language: val.language || 'ar',
-      bodyText: val.body_text || '',
-      variables: val.variables || [],
-      isApproved: val.is_approved || false,
-    };
-  });
+      templateName: row.value?.template_name || '',
+      language: row.value?.language || 'ar',
+      bodyText: row.value?.body_text || '',
+      variables: row.value?.variables || [],
+      isApproved: row.value?.is_approved || false,
+    }));
+  } catch {
+    return [];
+  }
 };
 
 export const createWhatsappTemplate = async (
   templateData: Omit<WhatsappTemplate, 'id' | 'createdAt' | 'updatedAt'>
 ): Promise<string> => {
   const { data, error } = await supabase
-    .from('system_settings')
+    .from('system_settings' as any)
     .insert({
       key: `whatsapp_template_${templateData.templateName}`,
       category: 'whatsapp_template',
@@ -119,12 +123,12 @@ export const createWhatsappTemplate = async (
         variables: templateData.variables,
         is_approved: templateData.isApproved,
       },
-    } as any)
+    })
     .select('id')
     .single();
 
   if (error) throw error;
-  return data.id;
+  return (data as any).id;
 };
 
 export const updateWhatsappTemplate = async (
@@ -132,7 +136,7 @@ export const updateWhatsappTemplate = async (
   updates: Partial<WhatsappTemplate>
 ): Promise<void> => {
   const { data: existing } = await supabase
-    .from('system_settings')
+    .from('system_settings' as any)
     .select('value')
     .eq('id', templateId)
     .single();
@@ -140,7 +144,7 @@ export const updateWhatsappTemplate = async (
   const currentVal = (existing as any)?.value || {};
 
   const { error } = await supabase
-    .from('system_settings')
+    .from('system_settings' as any)
     .update({
       value: {
         ...currentVal,
@@ -150,7 +154,7 @@ export const updateWhatsappTemplate = async (
         ...(updates.variables && { variables: updates.variables }),
         ...(updates.isApproved !== undefined && { is_approved: updates.isApproved }),
       },
-    } as any)
+    })
     .eq('id', templateId);
 
   if (error) throw error;
@@ -158,7 +162,7 @@ export const updateWhatsappTemplate = async (
 
 export const deleteWhatsappTemplate = async (templateId: string): Promise<void> => {
   const { error } = await supabase
-    .from('system_settings')
+    .from('system_settings' as any)
     .delete()
     .eq('id', templateId);
 
@@ -203,7 +207,7 @@ export const sendBulkWhatsappMessages = async (
   return results;
 };
 
-// سجل الرسائل — from email_logs (multi-channel)
+// سجل الرسائل — from email_logs (using to_email for phone tracking)
 export const getWhatsappLogs = async (
   filters?: {
     providerId?: string;
@@ -215,7 +219,7 @@ export const getWhatsappLogs = async (
   let query = supabase
     .from('email_logs')
     .select('*')
-    .eq('channel', 'whatsapp')
+    .ilike('subject', '%whatsapp%')
     .order('created_at', { ascending: false });
 
   if (filters?.status) query = query.eq('status', filters.status);
@@ -226,15 +230,15 @@ export const getWhatsappLogs = async (
 
   if (error || !data) return [];
 
-  return data.map((row: any) => ({
+  return data.map(row => ({
     id: row.id,
-    toPhone: row.recipient || '',
-    templateName: row.template_name || '',
-    variablesJson: row.metadata || {},
-    status: row.status === 'sent' ? 'sent' : row.status === 'failed' ? 'failed' : 'queued',
-    providerMessageId: row.provider_message_id || undefined,
-    errorMessage: row.error_message || undefined,
-    createdAt: row.created_at,
+    toPhone: row.to_email || '',
+    templateName: row.subject || '',
+    variablesJson: {},
+    status: row.status === 'sent' ? 'sent' as const : row.status === 'failed' ? 'failed' as const : 'queued' as const,
+    providerMessageId: undefined,
+    errorMessage: row.error || undefined,
+    createdAt: row.created_at || '',
   }));
 };
 
@@ -244,14 +248,11 @@ export const createWhatsappLog = async (
   const { data, error } = await supabase
     .from('email_logs')
     .insert({
-      channel: 'whatsapp',
-      recipient: logData.toPhone,
-      template_name: logData.templateName,
+      to_email: logData.toPhone,
+      subject: `whatsapp:${logData.templateName || ''}`,
       status: logData.status,
-      metadata: logData.variablesJson,
-      error_message: logData.errorMessage,
-      provider_message_id: logData.providerMessageId,
-    } as any)
+      error: logData.errorMessage || null,
+    })
     .select('id')
     .single();
 
@@ -263,13 +264,6 @@ export const createWhatsappLog = async (
 export const getUserNotificationPreferences = async (
   userId: string
 ): Promise<NotificationPreference[]> => {
-  const { data, error } = await supabase
-    .from('notifications')
-    .select('*')
-    .eq('user_id', userId);
-
-  if (error || !data) return [];
-
   return [{
     id: userId,
     customerId: userId,
@@ -290,7 +284,7 @@ export const updateNotificationPreference = async (
 
 // إحصائيات
 export const getWhatsappStats = async (
-  providerId?: string,
+  _providerId?: string,
   fromDate?: string,
   toDate?: string
 ): Promise<{
@@ -301,8 +295,8 @@ export const getWhatsappStats = async (
 }> => {
   let query = supabase
     .from('email_logs')
-    .select('status', { count: 'exact' })
-    .eq('channel', 'whatsapp');
+    .select('status')
+    .ilike('subject', '%whatsapp%');
 
   if (fromDate) query = query.gte('created_at', fromDate);
   if (toDate) query = query.lte('created_at', toDate);
@@ -313,14 +307,14 @@ export const getWhatsappStats = async (
     return { totalSent: 0, totalDelivered: 0, totalFailed: 0, totalRead: 0 };
   }
 
-  const sent = data.filter((r: any) => r.status === 'sent').length;
-  const failed = data.filter((r: any) => r.status === 'failed').length;
+  const sent = data.filter(r => r.status === 'sent').length;
+  const failed = data.filter(r => r.status === 'failed').length;
 
   return {
     totalSent: data.length,
     totalDelivered: sent,
     totalFailed: failed,
-    totalRead: 0, // Read tracking requires webhook callback
+    totalRead: 0,
   };
 };
 
@@ -329,7 +323,6 @@ export const testWhatsappConnection = async (providerId: string): Promise<boolea
   const { data, error } = await supabase.functions.invoke('send-whatsapp', {
     body: { provider_id: providerId, test: true },
   });
-
   return !error && data?.success;
 };
 
