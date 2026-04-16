@@ -25,6 +25,7 @@ const Header = () => {
   ];
 
   const servicesDropdown = [
+    { name: 'جميع خدماتنا', href: '/our-services', icon: Briefcase, description: 'تصفح جميع الأقسام والخدمات المتاحة' },
     { name: 'خدمات الترجمة', href: '/translation-services', icon: Languages, description: 'ترجمة احترافية للنصوص والوثائق' },
     { name: 'خدمات الأبحاث والكتابة', href: '/research-services', icon: Microscope, description: 'دعم شامل للباحثين الأكاديميين' },
     { name: 'رحلة الباحث', href: '/research/journey', icon: MapIcon, description: 'خارطة شاملة لمراحل البحث' },

@@ -46,6 +46,7 @@ import SpinTheWheel from "./pages/SpinTheWheel";
 import Unauthorized from "./pages/Unauthorized";
 import MasterMembership from "./pages/MasterMembership";
 import FAQ from "./pages/FAQ";
+import OurServices from "./pages/OurServices";
 import SuccessStories from "./pages/SuccessStories";
 import ClientGuide from "./pages/ClientGuide";
 
@@ -168,6 +169,7 @@ const App = () => (
             <Route path="/" element={<Index />} />
             <Route path="/order-now" element={<OrderNow />} />
             <Route path="/services" element={<Services />} />
+            <Route path="/our-services" element={<OurServices />} />
             <Route path="/translation-services" element={<TranslationServices />} />
             <Route path="/legal-translation" element={<LegalTranslation />} />
             <Route path="/business-translation" element={<BusinessTranslation />} />
