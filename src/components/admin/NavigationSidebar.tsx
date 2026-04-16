@@ -1,19 +1,12 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { FileText, CreditCard, FileSignature, MessageCircle, Receipt, Users, Settings } from 'lucide-react';
+import { FileText, CreditCard, FileSignature, MessageCircle, Receipt, Users, Settings, BarChart3 } from 'lucide-react';
 import { Sidebar, SidebarContent, SidebarGroup, SidebarGroupContent, SidebarGroupLabel, SidebarMenu, SidebarMenuButton, SidebarMenuItem, SidebarTrigger } from '@/components/ui/sidebar';
 
 const items = [
-  {
-    title: 'إدارة العملاء',
-    url: '/adminmaster/customers',
-    icon: Users,
-  },
-  {
-    title: 'إدارة المستخدمين',
-    url: '/adminmaster/users',
-    icon: Settings,
-  },
+  { title: 'إدارة العملاء', url: '/adminmaster/customers', icon: Users },
+  { title: 'إدارة المستخدمين', url: '/adminmaster/users', icon: Settings },
+  { title: 'اللوحة المالية', url: '/adminmaster/financial', icon: BarChart3 },
   {
     title: 'العقود',
     url: '/adminmaster/contracts',

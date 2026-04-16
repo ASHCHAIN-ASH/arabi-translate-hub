@@ -58,6 +58,7 @@ import OrderDetails from "./pages/client/OrderDetails";
 import OrderEdit from "./pages/client/OrderEdit";
 import ClientInvoices from "./pages/client/Invoices";
 import ClientTickets from "./pages/client/Tickets";
+import ClientWallet from "./pages/client/Wallet";
 
 // Admin Pages
 import AdminDashboard from "./pages/admin/AdminDashboard";
@@ -65,6 +66,7 @@ import AdminServices from "./pages/admin/AdminServices";
 import AdminOrders from "./pages/admin/AdminOrders";
 import AdminInvoices from "./pages/admin/AdminInvoices";
 import AdminTransactions from "./pages/admin/AdminTransactions";
+import AdminFinancial from "./pages/admin/AdminFinancial";
 import AdminUsers from "./pages/admin/AdminUsers";
 import AdminCustomers from "./pages/admin/AdminCustomers";
 import AdminTickets from "./pages/admin/AdminTickets";
@@ -272,6 +274,11 @@ const App = () => (
                 <ClientTickets />
               </SimpleProtectedRoute>
             } />
+            <Route path="/wallet" element={
+              <SimpleProtectedRoute requiredRole="client">
+                <ClientWallet />
+              </SimpleProtectedRoute>
+            } />
             
             {/* Admin Dashboard Routes - Hidden Path */}
             <Route path="/adminmaster" element={
@@ -307,6 +314,11 @@ const App = () => (
             <Route path="/adminmaster/transactions" element={
               <SimpleProtectedRoute adminOnly>
                 <AdminTransactions />
+              </SimpleProtectedRoute>
+            } />
+            <Route path="/adminmaster/financial" element={
+              <SimpleProtectedRoute adminOnly>
+                <AdminFinancial />
               </SimpleProtectedRoute>
             } />
             <Route path="/adminmaster/users" element={
