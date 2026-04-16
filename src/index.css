@@ -1,288 +1,246 @@
 /* خطوط أكاديمية عربية حديثة */
 @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Arabic:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-/* تحسينات الأداء والاستجابة */
-@layer utilities {
-  /* منع scroll الأفقي */
-  .no-scrollbar::-webkit-scrollbar {
-    display: none;
-  }
-  .no-scrollbar {
-    -ms-overflow-style: none;
-    scrollbar-width: none;
-  }
-  
-  /* تحسين الصور */
-  .img-optimized {
-    image-rendering: -webkit-optimize-contrast;
-    image-rendering: crisp-edges;
-  }
-  
-  /* Container محسن */
-  .container-responsive {
-    @apply w-full mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl;
-  }
-  
-  /* Text محسن للقراءة */
-  .text-responsive {
-    @apply text-sm sm:text-base lg:text-lg;
-  }
-  
-  /* Spacing محسن */
-  .spacing-responsive {
-    @apply py-8 sm:py-12 lg:py-16;
-  }
-  
-  /* Grid محسن */
-  .grid-responsive {
-    @apply grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8;
-  }
-}
-
-/* نظام التصميم لوكالة ماستر إيدو باث - للحلول التعليمية المتقدمة 
-جميع الألوان والتدرجات والخطوط يجب تعريفها هنا.
-جميع الألوان يجب أن تكون HSL.
-*/
+/* ====================================
+   SaaS Enterprise Design System
+   Inspired by: Linear, Stripe, Notion
+==================================== */
 
 @layer base {
   :root {
-    /* نظام الألوان الأكاديمي العصري - اليوم الوطني السعودي */
-    --background: 0 0% 100%;
-    --foreground: 120 20% 15%;
+    /* Clean, neutral base */
+    --background: 0 0% 99%;
+    --foreground: 224 71% 4%;
 
     --card: 0 0% 100%;
-    --card-foreground: 120 20% 15%;
+    --card-foreground: 224 71% 4%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 120 20% 15%;
+    --popover-foreground: 224 71% 4%;
 
-    /* الألوان الأساسية - أخضر العلم السعودي */
-    --primary: 120 100% 25%;
+    /* Primary — deep indigo-blue */
+    --primary: 234 89% 56%;
     --primary-foreground: 0 0% 100%;
-    --primary-dark: 120 100% 20%;
-    --primary-light: 120 60% 35%;
+    --primary-dark: 234 89% 46%;
+    --primary-light: 234 70% 68%;
 
-    /* ألوان اليوم الوطني الخاصة */
+    /* Saudi identity colors */
     --saudi-green: 120 100% 25%;
     --saudi-white: 0 0% 100%;
     --saudi-gold: 45 100% 50%;
     --national-day-accent: 45 90% 55%;
 
-    /* اللون الثانوي - أخضر الثقة */
-    --secondary: 142 69% 48%;
+    /* Secondary — warm violet */
+    --secondary: 262 80% 60%;
     --secondary-foreground: 0 0% 100%;
-    --secondary-light: 142 69% 60%;
+    --secondary-light: 262 70% 72%;
 
-    /* لون التمييز - بنفسجي خفيف */
-    --accent: 262 83% 70%;
+    /* Accent — teal */
+    --accent: 172 66% 50%;
     --accent-foreground: 0 0% 100%;
-    --accent-light: 262 83% 80%;
+    --accent-light: 172 55% 65%;
 
-    /* الألوان المساعدة */
-    --muted: 220 13% 95%;
-    --muted-foreground: 220 10% 45%;
+    /* Neutrals */
+    --muted: 220 14% 96%;
+    --muted-foreground: 220 9% 46%;
 
-    --success: 142 76% 36%;
+    --success: 152 69% 41%;
     --success-foreground: 0 0% 100%;
 
     --warning: 38 92% 50%;
     --warning-foreground: 0 0% 100%;
 
-    --destructive: 0 84% 60%;
+    --destructive: 0 72% 51%;
     --destructive-foreground: 0 0% 100%;
 
-    /* حدود ومدخلات */
+    /* Borders & inputs */
     --border: 220 13% 91%;
-    --input: 220 13% 95%;
-    --ring: 220 90% 56%;
+    --input: 220 13% 91%;
+    --ring: 234 89% 56%;
 
-    /* التدرجات الخاصة باليوم الوطني السعودي */
-    --gradient-primary: linear-gradient(135deg, hsl(120 100% 25%) 0%, hsl(120 60% 35%) 100%);
-    --gradient-secondary: linear-gradient(135deg, hsl(142 69% 48%) 0%, hsl(142 69% 60%) 100%);
-    --gradient-accent: linear-gradient(135deg, hsl(45 100% 50%) 0%, hsl(45 90% 55%) 100%);
-    --gradient-hero: linear-gradient(135deg, hsl(120 100% 25%) 0%, hsl(0 0% 100%) 30%, hsl(45 100% 50%) 100%);
-    --gradient-card: linear-gradient(145deg, hsl(0 0% 100%) 0%, hsl(120 20% 98%) 100%);
-    --gradient-vibrant: linear-gradient(45deg, hsl(120 100% 25%) 0%, hsl(0 0% 100%) 25%, hsl(45 100% 50%) 50%, hsl(120 60% 35%) 75%, hsl(45 90% 55%) 100%);
-    --gradient-academic: linear-gradient(120deg, hsl(120 100% 25%) 0%, hsl(0 0% 100%) 50%, hsl(45 100% 50%) 100%);
-    --gradient-national: linear-gradient(135deg, hsl(120 100% 25%) 0%, hsl(120 80% 30%) 25%, hsl(0 0% 100%) 50%, hsl(45 100% 50%) 75%, hsl(45 90% 55%) 100%);
-    
-    /* ظلال أكاديمية ناعمة */
-    --shadow-primary: 0 4px 20px -5px hsl(199 89% 48% / 0.3);
-    --shadow-secondary: 0 4px 20px -5px hsl(142 69% 48% / 0.25);
-    --shadow-accent: 0 4px 20px -5px hsl(262 83% 70% / 0.3);
-    --shadow-soft: 0 2px 12px -3px hsl(220 15% 20% / 0.08);
-    --shadow-medium: 0 6px 25px -6px hsl(220 15% 20% / 0.12);
-    --shadow-strong: 0 15px 45px -10px hsl(220 15% 20% / 0.15);
-    --shadow-academic: 0 8px 30px -8px hsl(199 89% 48% / 0.2);
+    /* Enterprise gradients */
+    --gradient-primary: linear-gradient(135deg, hsl(234 89% 56%) 0%, hsl(262 80% 60%) 100%);
+    --gradient-secondary: linear-gradient(135deg, hsl(172 66% 50%) 0%, hsl(152 69% 41%) 100%);
+    --gradient-hero: linear-gradient(135deg, hsl(234 89% 56%) 0%, hsl(262 80% 60%) 50%, hsl(172 66% 50%) 100%);
+    --gradient-card: linear-gradient(145deg, hsl(0 0% 100%) 0%, hsl(220 14% 98%) 100%);
+    --gradient-vibrant: linear-gradient(45deg, hsl(234 89% 56%) 0%, hsl(262 80% 60%) 50%, hsl(172 66% 50%) 100%);
+    --gradient-accent: linear-gradient(135deg, hsl(45 100% 50%) 0%, hsl(38 92% 50%) 100%);
+    --gradient-academic: linear-gradient(120deg, hsl(234 89% 56%) 0%, hsl(262 80% 60%) 100%);
+    --gradient-national: linear-gradient(135deg, hsl(120 100% 25%) 0%, hsl(45 100% 50%) 100%);
+    --gradient-success: linear-gradient(135deg, hsl(152 69% 41%) 0%, hsl(172 66% 50%) 100%);
 
-    /* ألوان خاصة لكل صفحة */
-    /* الصفحة الرئيسية - أزرق فاتح */
-    --page-home-primary: 217 91% 60%;
-    --page-home-secondary: 220 85% 70%;
-    --page-home-accent: 25 95% 53%;
-    --page-home-bg: 217 30% 96%;
+    /* Enterprise shadows */
+    --shadow-xs: 0 1px 2px 0 hsl(0 0% 0% / 0.05);
+    --shadow-sm: 0 1px 3px 0 hsl(0 0% 0% / 0.06), 0 1px 2px -1px hsl(0 0% 0% / 0.06);
+    --shadow-soft: 0 4px 6px -1px hsl(0 0% 0% / 0.05), 0 2px 4px -2px hsl(0 0% 0% / 0.05);
+    --shadow-medium: 0 10px 15px -3px hsl(0 0% 0% / 0.06), 0 4px 6px -4px hsl(0 0% 0% / 0.06);
+    --shadow-strong: 0 20px 25px -5px hsl(0 0% 0% / 0.06), 0 8px 10px -6px hsl(0 0% 0% / 0.06);
+    --shadow-primary: 0 4px 14px 0 hsl(234 89% 56% / 0.25);
+    --shadow-secondary: 0 4px 14px 0 hsl(262 80% 60% / 0.2);
+    --shadow-accent: 0 4px 14px 0 hsl(172 66% 50% / 0.2);
+    --shadow-academic: 0 4px 14px 0 hsl(234 89% 56% / 0.15);
 
-    /* خدمات الترجمة القانونية - أرجواني فاتح */
+    /* Glass effect */
+    --glass-bg: hsl(0 0% 100% / 0.7);
+    --glass-border: hsl(0 0% 100% / 0.2);
+
+    /* Page-specific colors */
+    --page-home-primary: 234 89% 56%;
+    --page-home-secondary: 262 80% 60%;
+    --page-home-accent: 172 66% 50%;
+    --page-home-bg: 220 14% 98%;
+
     --page-legal-primary: 270 85% 60%;
     --page-legal-secondary: 280 75% 65%;
     --page-legal-accent: 260 80% 55%;
     --page-legal-bg: 270 30% 96%;
 
-    /* خدمات الترجمة التجارية - أخضر فاتح */
-    --page-business-primary: 142 69% 58%;
-    --page-business-secondary: 150 65% 60%;
-    --page-business-accent: 135 70% 55%;
-    --page-business-bg: 142 25% 96%;
+    --page-business-primary: 152 69% 50%;
+    --page-business-secondary: 160 65% 55%;
+    --page-business-accent: 145 70% 48%;
+    --page-business-bg: 152 25% 96%;
 
-    /* خدمات الترجمة التقنية - برتقالي فاتح */
     --page-technical-primary: 25 95% 53%;
     --page-technical-secondary: 35 90% 60%;
     --page-technical-accent: 15 85% 50%;
     --page-technical-bg: 25 35% 96%;
 
-    /* خدمات الترجمة الطبية - أحمر فاتح */
-    --page-medical-primary: 0 84% 60%;
-    --page-medical-secondary: 10 80% 65%;
-    --page-medical-accent: 350 75% 55%;
+    --page-medical-primary: 0 72% 51%;
+    --page-medical-secondary: 10 70% 60%;
+    --page-medical-accent: 350 68% 48%;
     --page-medical-bg: 0 30% 96%;
 
-    /* خدمات الترجمة الأكاديمية - زمردي فاتح */
-    --page-academic-primary: 185 84% 52%;
-    --page-academic-secondary: 190 80% 60%;
-    --page-academic-accent: 175 75% 45%;
-    --page-academic-bg: 185 30% 96%;
+    --page-academic-primary: 234 89% 56%;
+    --page-academic-secondary: 240 80% 62%;
+    --page-academic-accent: 228 75% 50%;
+    --page-academic-bg: 234 30% 96%;
 
-    /* خدمات الترجمة الفورية - وردي فاتح */
     --page-instant-primary: 340 82% 65%;
     --page-instant-secondary: 350 75% 70%;
     --page-instant-accent: 330 80% 60%;
     --page-instant-bg: 340 25% 96%;
 
-    /* خدمات الترجمة الإعلامية - بنفسجي فاتح */
     --page-media-primary: 260 85% 65%;
     --page-media-secondary: 270 80% 70%;
     --page-media-accent: 250 75% 60%;
     --page-media-bg: 260 30% 96%;
 
-    /* خدمات الترجمة الأدبية - ذهبي فاتح */
     --page-literary-primary: 45 95% 58%;
     --page-literary-secondary: 50 90% 65%;
     --page-literary-accent: 40 85% 50%;
     --page-literary-bg: 45 35% 96%;
 
-    /* خدمات البحث العلمي - أزرق داكن فاتح */
-    --page-research-primary: 210 90% 55%;
-    --page-research-secondary: 220 85% 60%;
-    --page-research-accent: 200 80% 50%;
-    --page-research-bg: 210 30% 96%;
+    --page-research-primary: 234 89% 56%;
+    --page-research-secondary: 240 80% 62%;
+    --page-research-accent: 228 75% 50%;
+    --page-research-bg: 234 30% 96%;
 
-    /* صفحة من نحن - رمادي أنيق فاتح */
     --page-about-primary: 220 15% 40%;
     --page-about-secondary: 215 20% 45%;
     --page-about-accent: 225 10% 35%;
     --page-about-bg: 220 8% 96%;
 
-    /* متغيرات الألوان المفقودة للسايدبار */
-    --sidebar-background: 0 0% 98%;
-    --sidebar-foreground: 220 20% 15%;
-    --sidebar-primary: 120 100% 25%;
+    /* Sidebar */
+    --sidebar-background: 0 0% 99%;
+    --sidebar-foreground: 224 71% 4%;
+    --sidebar-primary: 234 89% 56%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 120 60% 35%;
+    --sidebar-accent: 172 66% 50%;
     --sidebar-accent-foreground: 0 0% 100%;
     --sidebar-border: 220 13% 91%;
-    --sidebar-ring: 220 90% 56%;
+    --sidebar-ring: 234 89% 56%;
 
-    --radius: 1rem;
+    --radius: 0.75rem;
   }
 
   .dark {
-    --background: 220 15% 8%;
-    --foreground: 0 0% 95%;
+    --background: 224 71% 4%;
+    --foreground: 210 20% 98%;
 
-    --card: 220 15% 10%;
-    --card-foreground: 0 0% 95%;
+    --card: 224 50% 8%;
+    --card-foreground: 210 20% 98%;
 
-    --popover: 220 15% 10%;
-    --popover-foreground: 0 0% 95%;
+    --popover: 224 50% 8%;
+    --popover-foreground: 210 20% 98%;
 
-    --primary: 220 85% 70%;
-    --primary-foreground: 220 15% 8%;
-    --primary-dark: 220 90% 60%;
-    --primary-light: 220 80% 80%;
+    --primary: 234 85% 68%;
+    --primary-foreground: 0 0% 100%;
+    --primary-dark: 234 85% 58%;
+    --primary-light: 234 70% 78%;
 
-    --secondary: 25 90% 60%;
-    --secondary-foreground: 220 15% 8%;
-    --secondary-light: 25 85% 75%;
+    --secondary: 262 70% 65%;
+    --secondary-foreground: 0 0% 100%;
+    --secondary-light: 262 60% 75%;
 
-    --accent: 142 70% 45%;
-    --accent-foreground: 220 15% 8%;
-    --accent-light: 142 65% 60%;
+    --accent: 172 56% 55%;
+    --accent-foreground: 0 0% 100%;
+    --accent-light: 172 45% 65%;
 
-    --muted: 220 15% 15%;
-    --muted-foreground: 220 10% 70%;
+    --muted: 224 50% 12%;
+    --muted-foreground: 218 11% 65%;
 
-    --success: 142 70% 45%;
-    --success-foreground: 220 15% 8%;
+    --success: 152 60% 50%;
+    --success-foreground: 0 0% 100%;
 
     --warning: 38 85% 60%;
-    --warning-foreground: 220 15% 8%;
+    --warning-foreground: 224 71% 4%;
 
-    --destructive: 0 75% 65%;
+    --destructive: 0 62% 60%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 220 15% 20%;
-    --input: 220 15% 18%;
-    --ring: 220 85% 70%;
+    --border: 224 30% 18%;
+    --input: 224 30% 15%;
+    --ring: 234 85% 68%;
 
-    --gradient-primary: linear-gradient(135deg, hsl(220 85% 70%) 0%, hsl(220 90% 60%) 100%);
-    --gradient-secondary: linear-gradient(135deg, hsl(25 90% 60%) 0%, hsl(38 85% 60%) 100%);
-    --gradient-success: linear-gradient(135deg, hsl(142 70% 45%) 0%, hsl(142 65% 60%) 100%);
-    --gradient-hero: linear-gradient(135deg, hsl(220 85% 70%) 0%, hsl(25 90% 60%) 50%, hsl(142 70% 45%) 100%);
-    --gradient-card: linear-gradient(145deg, hsl(220 15% 10%) 0%, hsl(220 15% 15%) 100%);
-    --gradient-vibrant: linear-gradient(45deg, hsl(220 85% 70%) 0%, hsl(25 90% 60%) 25%, hsl(142 70% 45%) 50%, hsl(260 85% 70%) 75%, hsl(320 80% 65%) 100%);
-    
-    --shadow-primary: 0 4px 25px -5px hsl(220 85% 70% / 0.4);
-    --shadow-secondary: 0 4px 25px -5px hsl(25 95% 53% / 0.4);
-    --shadow-success: 0 4px 25px -5px hsl(142 69% 58% / 0.4);
-    --shadow-soft: 0 2px 15px -3px hsl(0 0% 0% / 0.4);
-    --shadow-medium: 0 8px 35px -8px hsl(0 0% 0% / 0.5);
-    --shadow-strong: 0 20px 60px -15px hsl(0 0% 0% / 0.6);
+    --gradient-primary: linear-gradient(135deg, hsl(234 85% 68%) 0%, hsl(262 70% 65%) 100%);
+    --gradient-secondary: linear-gradient(135deg, hsl(172 56% 55%) 0%, hsl(152 60% 50%) 100%);
+    --gradient-hero: linear-gradient(135deg, hsl(234 85% 68%) 0%, hsl(262 70% 65%) 50%, hsl(172 56% 55%) 100%);
+    --gradient-card: linear-gradient(145deg, hsl(224 50% 8%) 0%, hsl(224 50% 12%) 100%);
+    --gradient-vibrant: linear-gradient(45deg, hsl(234 85% 68%) 0%, hsl(262 70% 65%) 50%, hsl(172 56% 55%) 100%);
+    --gradient-success: linear-gradient(135deg, hsl(152 60% 50%) 0%, hsl(172 56% 55%) 100%);
 
-    /* ألوان خاصة لكل صفحة - الوضع المظلم */
-    --page-home-primary: 220 85% 70%;
-    --page-home-secondary: 225 80% 75%;
-    --page-home-accent: 30 85% 65%;
-    --page-home-bg: 217 25% 12%;
+    --shadow-soft: 0 4px 6px -1px hsl(0 0% 0% / 0.3);
+    --shadow-medium: 0 10px 15px -3px hsl(0 0% 0% / 0.4);
+    --shadow-strong: 0 20px 25px -5px hsl(0 0% 0% / 0.5);
+    --shadow-primary: 0 4px 14px 0 hsl(234 85% 68% / 0.3);
+
+    --glass-bg: hsl(224 50% 8% / 0.7);
+    --glass-border: hsl(224 30% 18% / 0.5);
+
+    --page-home-primary: 234 85% 68%;
+    --page-home-secondary: 262 70% 65%;
+    --page-home-accent: 172 56% 55%;
+    --page-home-bg: 224 50% 6%;
 
     --page-legal-primary: 275 80% 70%;
     --page-legal-secondary: 285 75% 75%;
     --page-legal-accent: 265 75% 65%;
     --page-legal-bg: 270 25% 12%;
 
-    --page-business-primary: 145 65% 65%;
-    --page-business-secondary: 155 60% 70%;
-    --page-business-accent: 140 70% 60%;
-    --page-business-bg: 142 25% 12%;
+    --page-business-primary: 155 60% 60%;
+    --page-business-secondary: 165 55% 65%;
+    --page-business-accent: 148 65% 55%;
+    --page-business-bg: 152 25% 10%;
 
     --page-technical-primary: 30 85% 65%;
     --page-technical-secondary: 40 80% 70%;
     --page-technical-accent: 20 80% 60%;
     --page-technical-bg: 25 25% 12%;
 
-    --page-medical-primary: 5 75% 70%;
-    --page-medical-secondary: 15 70% 75%;
-    --page-medical-accent: 355 70% 65%;
+    --page-medical-primary: 5 62% 65%;
+    --page-medical-secondary: 15 58% 70%;
+    --page-medical-accent: 355 58% 60%;
     --page-medical-bg: 0 25% 12%;
 
-    --page-academic-primary: 190 75% 60%;
-    --page-academic-secondary: 195 70% 70%;
-    --page-academic-accent: 180 70% 55%;
-    --page-academic-bg: 185 25% 12%;
+    --page-academic-primary: 234 85% 68%;
+    --page-academic-secondary: 240 75% 72%;
+    --page-academic-accent: 228 70% 62%;
+    --page-academic-bg: 234 25% 10%;
 
     --page-instant-primary: 345 75% 75%;
     --page-instant-secondary: 355 70% 80%;
@@ -299,25 +257,24 @@
     --page-literary-accent: 45 80% 65%;
     --page-literary-bg: 45 25% 12%;
 
-    --page-research-primary: 215 85% 65%;
-    --page-research-secondary: 225 80% 70%;
-    --page-research-accent: 205 75% 60%;
-    --page-research-bg: 210 25% 12%;
-
-    /* متغيرات الألوان المفقودة للسايدبار - الوضع المظلم */
-    --sidebar-background: 220 15% 10%;
-    --sidebar-foreground: 0 0% 95%;
-    --sidebar-primary: 220 85% 70%;
-    --sidebar-primary-foreground: 220 15% 8%;
-    --sidebar-accent: 142 70% 45%;
-    --sidebar-accent-foreground: 220 15% 8%;
-    --sidebar-border: 220 15% 20%;
-    --sidebar-ring: 220 85% 70%;
+    --page-research-primary: 234 85% 68%;
+    --page-research-secondary: 240 75% 72%;
+    --page-research-accent: 228 70% 62%;
+    --page-research-bg: 234 25% 10%;
 
     --page-about-primary: 225 20% 60%;
     --page-about-secondary: 220 25% 65%;
     --page-about-accent: 230 15% 55%;
     --page-about-bg: 220 15% 12%;
+
+    --sidebar-background: 224 50% 6%;
+    --sidebar-foreground: 210 20% 98%;
+    --sidebar-primary: 234 85% 68%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 172 56% 55%;
+    --sidebar-accent-foreground: 0 0% 100%;
+    --sidebar-border: 224 30% 18%;
+    --sidebar-ring: 234 85% 68%;
   }
 }
 
@@ -337,422 +294,244 @@
   }
 
   body {
-    @apply text-foreground font-academic-body;
+    @apply text-foreground;
+    font-family: 'Cairo', 'Inter', system-ui, sans-serif;
     background-color: hsl(var(--background));
-    font-feature-settings: "kern" 1;
-    transition: background-color 0.3s ease;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
     direction: rtl;
-    scroll-behavior: auto !important;
   }
 
-  /* Force scroll to top for all page transitions */
   #root, [data-reactroot] {
     scroll-behavior: auto !important;
   }
 }
 
 @layer base {
-  /* خطوط أكاديمية عصرية */
   .font-academic-title {
-    font-family: 'Cairo', 'IBM Plex Sans Arabic', sans-serif;
+    font-family: 'Cairo', system-ui, sans-serif;
     font-weight: 700;
-    letter-spacing: 0.01em;
+    letter-spacing: -0.01em;
   }
   
   .font-academic-body {
-    font-family: 'IBM Plex Sans Arabic', 'Noto Sans Arabic', sans-serif;
+    font-family: 'Cairo', 'Inter', system-ui, sans-serif;
     font-weight: 400;
-    line-height: 1.6;
+    line-height: 1.7;
   }
   
   .font-academic-heading {
-    font-family: 'Cairo', 'IBM Plex Sans Arabic', sans-serif;
+    font-family: 'Cairo', system-ui, sans-serif;
     font-weight: 600;
-    letter-spacing: 0.02em;
+    letter-spacing: -0.02em;
   }
 }
 
-/* أنيميشن وحركات سلسة - محسّنة للأداء */
+/* ====================================
+   SaaS Utility Classes
+==================================== */
+
 @layer utilities {
-  /* تحسين الأداء - استخدام will-change فقط عند الحاجة */
-  .animate-optimized {
-    will-change: transform;
+  .no-scrollbar::-webkit-scrollbar { display: none; }
+  .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+  .container-responsive { @apply w-full mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl; }
+
+  /* Glass morphism */
+  .glass {
+    background: var(--glass-bg);
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    border: 1px solid var(--glass-border);
   }
-  
-  .animate-fade-in-up {
-    animation: fadeInUp 0.5s ease-out;
+
+  .glass-subtle {
+    background: hsl(var(--background) / 0.8);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
   }
-  
-  .animate-float {
-    animation: float 3s ease-in-out infinite;
-  }
-  
-  .animate-pulse-soft {
-    animation: pulseSoft 2s ease-in-out infinite;
-  }
-  
-  .hover-lift {
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-  }
-  
-  .hover-lift:hover {
-    transform: translateY(-4px);
-    box-shadow: var(--shadow-medium);
-  }
-  
-  .bg-gradient-hero {
-    background: var(--gradient-hero);
-  }
-  
+
+  /* Gradient text */
   .text-gradient {
     background: var(--gradient-primary);
     background-clip: text;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
   }
-  
-  .bg-gradient-primary {
-    background: var(--gradient-primary);
-  }
-  
-  .bg-gradient-secondary {
+
+  .text-gradient-accent {
     background: var(--gradient-secondary);
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
   }
-  
-  .bg-gradient-success {
-    background: var(--gradient-success);
+
+  /* Background gradients */
+  .bg-gradient-hero { background: var(--gradient-hero); }
+  .bg-gradient-primary { background: var(--gradient-primary); }
+  .bg-gradient-secondary { background: var(--gradient-secondary); }
+  .bg-gradient-success { background: var(--gradient-success); }
+  .bg-gradient-card { background: var(--gradient-card); }
+  .bg-gradient-vibrant { background: var(--gradient-vibrant); }
+  .bg-gradient-academic { background: var(--gradient-academic); }
+  .bg-gradient-accent { background: var(--gradient-accent); }
+  .bg-gradient-national { background: var(--gradient-national); }
+
+  /* Enterprise shadows */
+  .shadow-xs { box-shadow: var(--shadow-xs); }
+  .shadow-soft { box-shadow: var(--shadow-soft); }
+  .shadow-medium { box-shadow: var(--shadow-medium); }
+  .shadow-strong { box-shadow: var(--shadow-strong); }
+  .shadow-primary { box-shadow: var(--shadow-primary); }
+  .shadow-secondary { box-shadow: var(--shadow-secondary); }
+  .shadow-accent { box-shadow: var(--shadow-accent); }
+  .shadow-academic { box-shadow: var(--shadow-academic); }
+
+  /* Hover interactions */
+  .hover-lift {
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
   }
-  
-  .bg-gradient-card {
-    background: var(--gradient-card);
-  }
-  
-  .bg-gradient-vibrant {
-    background: var(--gradient-vibrant);
-  }
-  
-  .bg-gradient-academic {
-    background: var(--gradient-academic);
-  }
-  
-  .bg-gradient-accent {
-    background: var(--gradient-accent);
-  }
-  
-  .bg-gradient-national {
-    background: var(--gradient-national);
-  }
-  
-  .shadow-primary {
-    box-shadow: var(--shadow-primary);
-  }
-  
-  .shadow-secondary {
-    box-shadow: var(--shadow-secondary);
-  }
-  
-  .shadow-success {
-    box-shadow: var(--shadow-success);
-  }
-  
-  .shadow-soft {
-    box-shadow: var(--shadow-soft);
-  }
-  
-  .shadow-medium {
+  .hover-lift:hover {
+    transform: translateY(-2px);
     box-shadow: var(--shadow-medium);
   }
-  
-  .shadow-strong {
-    box-shadow: var(--shadow-strong);
-  }
-  
-  .shadow-academic {
-    box-shadow: var(--shadow-academic);
-  }
-  
-  .shadow-accent {
-    box-shadow: var(--shadow-accent);
-  }
-}
 
-/* Responsive Design System for Mobile Devices - محسّن */
-@layer utilities {
-  /* Mobile-First Responsive Utilities */
-  .mobile-container {
-    @apply px-3 sm:px-4 md:px-6 lg:px-8;
+  .hover-glow:hover {
+    box-shadow: var(--shadow-primary);
   }
-  
-  .mobile-grid {
-    @apply grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-4 lg:gap-6;
-  }
-  
-  .mobile-text-responsive {
-    @apply text-xs sm:text-sm md:text-base lg:text-lg;
-  }
-  
-  .mobile-heading-responsive {
-    @apply text-base sm:text-lg md:text-xl lg:text-2xl xl:text-3xl;
-  }
-  
-  .mobile-subheading-responsive {
-    @apply text-sm sm:text-base md:text-lg lg:text-xl xl:text-2xl;
-  }
-  
-  .mobile-padding-responsive {
-    @apply p-3 sm:p-4 md:p-6 lg:p-8;
-  }
-  
-  .mobile-margin-responsive {
-    @apply m-3 sm:m-4 md:m-6 lg:m-8;
-  }
-  
-  .mobile-gap-responsive {
-    @apply gap-2 sm:gap-3 md:gap-4 lg:gap-6;
-  }
-  
-  .mobile-button-responsive {
-    @apply px-3 py-1.5 sm:px-4 sm:py-2 md:px-6 md:py-3 lg:px-8 lg:py-4 text-xs sm:text-sm md:text-base lg:text-lg;
-  }
-  
-  /* Touch-Friendly Interactive Elements */
-  .touch-target {
-    @apply min-h-[44px] min-w-[44px];
-  }
-  
-  .mobile-touch-area {
-    @apply p-2 sm:p-3 md:p-4 lg:p-6;
-  }
-  
-  /* Mobile Navigation */
-  .mobile-nav-item {
-    @apply block w-full text-right py-2 sm:py-3 px-3 sm:px-4 rounded-lg transition-colors duration-200;
-  }
-  
-  .mobile-nav-item:hover {
-    @apply bg-primary/10 text-primary;
-  }
-  
-  /* Mobile Cards */
-  .mobile-card {
-    @apply p-3 sm:p-4 md:p-6 lg:p-8 rounded-lg sm:rounded-xl lg:rounded-2xl;
-  }
-  
-  .mobile-card-shadow {
-    @apply shadow-sm sm:shadow-md lg:shadow-lg;
-  }
-  
-  /* Mobile Typography */
-  .mobile-title {
-    @apply text-xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-bold leading-tight;
-  }
-  
-  .mobile-subtitle {
-    @apply text-lg sm:text-xl md:text-2xl lg:text-3xl font-semibold;
-  }
-  
-  .mobile-body {
-    @apply text-xs sm:text-sm md:text-base lg:text-lg leading-relaxed;
-  }
-  
-  .mobile-caption {
-    @apply text-xs sm:text-sm lg:text-base;
-  }
-  
-  /* Mobile Layout */
-  .mobile-section {
-    @apply py-6 sm:py-8 md:py-12 lg:py-16 xl:py-20;
-  }
-  
-  .mobile-container-wide {
-    @apply container mx-auto px-3 sm:px-4 md:px-6 lg:px-8 xl:px-12;
-  }
-  
-  /* Mobile Forms */
-  .mobile-input {
-    @apply w-full px-2 py-1.5 sm:px-3 sm:py-2 md:px-4 md:py-3 lg:px-5 lg:py-4 text-xs sm:text-sm md:text-base lg:text-lg;
-  }
-  
-  .mobile-label {
-    @apply text-xs sm:text-sm md:text-base font-medium mb-1 sm:mb-2;
-  }
-  
-  /* Mobile Images */
-  .mobile-image-responsive {
-    @apply w-full h-auto object-cover rounded-lg sm:rounded-xl lg:rounded-2xl;
-  }
-  
-  /* Performance Optimizations */
-  .gpu-accelerated {
-    transform: translateZ(0);
-    backface-visibility: hidden;
-    perspective: 1000px;
-  }
-  
-  /* Reduce motion for accessibility and performance */
-  @media (prefers-reduced-motion: reduce) {
-    * {
-      animation-duration: 0.01ms !important;
-      animation-iteration-count: 1 !important;
-      transition-duration: 0.01ms !important;
-    }
-  }
-}
 
-@keyframes fadeInUp {
-  0% {
-    opacity: 0;
-    transform: translateY(20px);
+  /* SaaS card styles */
+  .saas-card {
+    @apply bg-card rounded-xl border border-border/50 shadow-soft transition-all duration-200;
   }
-  100% {
-    opacity: 1;
-    transform: translateY(0);
+  .saas-card:hover {
+    @apply shadow-medium border-border;
   }
-}
 
-@keyframes float {
-  0%, 100% {
-    transform: translateY(0);
+  /* Dot grid background */
+  .bg-dots {
+    background-image: radial-gradient(circle, hsl(var(--border)) 1px, transparent 1px);
+    background-size: 24px 24px;
   }
-  50% {
-    transform: translateY(-10px);
-  }
-}
 
-@keyframes pulseSoft {
-  0%, 100% {
-    opacity: 1;
+  /* Mesh gradient */
+  .bg-mesh {
+    background-image:
+      radial-gradient(at 40% 20%, hsl(234 89% 56% / 0.08) 0px, transparent 50%),
+      radial-gradient(at 80% 0%, hsl(262 80% 60% / 0.06) 0px, transparent 50%),
+      radial-gradient(at 0% 50%, hsl(172 66% 50% / 0.06) 0px, transparent 50%),
+      radial-gradient(at 80% 50%, hsl(234 89% 56% / 0.04) 0px, transparent 50%),
+      radial-gradient(at 0% 100%, hsl(262 80% 60% / 0.06) 0px, transparent 50%);
   }
-  50% {
-    opacity: 0.6;
-  }
+
+  /* Responsive utilities */
+  .mobile-container { @apply px-4 sm:px-6 lg:px-8; }
+  .section-spacing { @apply py-16 sm:py-20 lg:py-24; }
+
+  /* Touch targets */
+  .touch-target { @apply min-h-[44px] min-w-[44px]; }
 }
 
 /* ====================================
-   تحسينات الاستجابة والأداء
+   Animations
 ==================================== */
 
 @layer utilities {
-  /* تحسين الصور للأداء */
-  .img-responsive {
-    @apply w-full h-auto object-cover;
-    image-rendering: -webkit-optimize-contrast;
-    image-rendering: crisp-edges;
-  }
-  
-  /* Container متجاوب */
-  .container-fluid {
-    @apply w-full px-4 sm:px-6 lg:px-8;
-  }
-  
-  .container-narrow {
-    @apply max-w-4xl mx-auto px-4 sm:px-6;
-  }
-  
-  .container-wide {
-    @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
-  }
-  
-  /* Text محسن */
-  .text-balance {
-    text-wrap: balance;
-  }
-  
-  .text-pretty {
-    text-wrap: pretty;
-  }
-  
-  /* Grid متجاوب */
-  .grid-auto-fit {
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  }
-  
-  .grid-auto-fill {
-    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-  }
-  
-  /* Spacing متدرج */
-  .section-spacing {
-    @apply py-12 sm:py-16 lg:py-20;
-  }
-  
-  .element-spacing {
-    @apply mb-8 sm:mb-10 lg:mb-12;
-  }
-  
-  /* إخفاء scrollbar */
-  .hide-scrollbar::-webkit-scrollbar {
-    display: none;
-  }
-  
-  .hide-scrollbar {
-    -ms-overflow-style: none;
-    scrollbar-width: none;
-  }
-  
-  /* تحسين الأداء */
-  .gpu-accelerated {
-    transform: translateZ(0);
-    will-change: transform;
-  }
-  
-  .optimize-legibility {
-    text-rendering: optimizeLegibility;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-  }
-  
-  /* منع التحديد */
-  .no-select {
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
-  }
-  
-  /* Touch optimization */
-  .touch-optimized {
-    -webkit-tap-highlight-color: transparent;
-    touch-action: manipulation;
+  .animate-fade-in-up { animation: fadeInUp 0.5s ease-out; }
+  .animate-float { animation: float 3s ease-in-out infinite; }
+  .animate-pulse-soft { animation: pulseSoft 2s ease-in-out infinite; }
+}
+
+@keyframes fadeInUp {
+  0% { opacity: 0; transform: translateY(20px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+@keyframes pulseSoft {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.6; }
+}
+
+/* ====================================
+   Responsive
+==================================== */
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
   }
 }
 
-/* تحسينات responsive للجداول */
-@media (max-width: 768px) {
-  .table-responsive {
-    display: block;
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-  }
-  
-  .table-responsive table {
-    min-width: 100%;
-  }
-}
-
-/* تحسين الخطوط للشاشات الصغيرة */
 @media (max-width: 640px) {
-  html {
-    font-size: 14px;
-  }
+  html { font-size: 14px; }
 }
 
 @media (min-width: 1024px) {
-  html {
-    font-size: 16px;
-  }
+  html { font-size: 16px; }
 }
 
-/* تحسين للطباعة */
 @media print {
-  .no-print {
-    display: none !important;
-  }
+  .no-print { display: none !important; }
+  * { background: white !important; color: black !important; box-shadow: none !important; }
+}
+
+/* Mobile responsive utilities */
+@layer utilities {
+  .mobile-grid { @apply grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6; }
+  .mobile-text-responsive { @apply text-xs sm:text-sm md:text-base; }
+  .mobile-heading-responsive { @apply text-lg sm:text-xl md:text-2xl lg:text-3xl; }
+  .mobile-title { @apply text-xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-bold leading-tight; }
+  .mobile-body { @apply text-sm sm:text-base leading-relaxed; }
+  .mobile-section { @apply py-8 sm:py-12 lg:py-16; }
+
+  .text-responsive { @apply text-sm sm:text-base lg:text-lg; }
+  .grid-responsive { @apply grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8; }
+  .spacing-responsive { @apply py-8 sm:py-12 lg:py-16; }
   
-  * {
-    background: white !important;
-    color: black !important;
-    box-shadow: none !important;
-    text-shadow: none !important;
-  }
+  .mobile-subheading-responsive { @apply text-sm sm:text-base md:text-lg lg:text-xl xl:text-2xl; }
+  .mobile-card { @apply p-4 sm:p-6 rounded-xl; }
+  .mobile-card-shadow { @apply shadow-soft; }
+  .mobile-subtitle { @apply text-lg sm:text-xl md:text-2xl font-semibold; }
+  .mobile-caption { @apply text-xs sm:text-sm; }
+  .mobile-container-wide { @apply container mx-auto px-4 sm:px-6 lg:px-8; }
+  .mobile-input { @apply w-full px-3 py-2 sm:px-4 sm:py-3 text-sm sm:text-base; }
+  .mobile-label { @apply text-sm font-medium mb-1.5; }
+  .mobile-image-responsive { @apply w-full h-auto object-cover rounded-xl; }
+  .mobile-nav-item { @apply block w-full text-right py-3 px-4 rounded-lg transition-colors duration-200; }
+  .mobile-nav-item:hover { @apply bg-primary/10 text-primary; }
+  .mobile-padding-responsive { @apply p-4 sm:p-6 lg:p-8; }
+  .mobile-margin-responsive { @apply m-4 sm:m-6 lg:m-8; }
+  .mobile-gap-responsive { @apply gap-3 sm:gap-4 lg:gap-6; }
+  .mobile-button-responsive { @apply px-4 py-2 sm:px-6 sm:py-3 text-sm sm:text-base; }
+  .mobile-touch-area { @apply p-3 sm:p-4; }
+
+  .container-fluid { @apply w-full px-4 sm:px-6 lg:px-8; }
+  .container-narrow { @apply max-w-4xl mx-auto px-4 sm:px-6; }
+  .container-wide { @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8; }
+  .text-balance { text-wrap: balance; }
+  .text-pretty { text-wrap: pretty; }
+  .grid-auto-fit { grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); }
+  .grid-auto-fill { grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); }
+  .element-spacing { @apply mb-8 sm:mb-10 lg:mb-12; }
+  .hide-scrollbar::-webkit-scrollbar { display: none; }
+  .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+  .img-responsive { @apply w-full h-auto object-cover; }
+  .img-optimized { image-rendering: -webkit-optimize-contrast; }
+  .gpu-accelerated { transform: translateZ(0); will-change: transform; }
+  .optimize-legibility { text-rendering: optimizeLegibility; -webkit-font-smoothing: antialiased; }
+  .no-select { user-select: none; }
+  .touch-optimized { -webkit-tap-highlight-color: transparent; touch-action: manipulation; }
+}
+
+/* Table responsive */
+@media (max-width: 768px) {
+  .table-responsive { display: block; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  .table-responsive table { min-width: 100%; }
 }
