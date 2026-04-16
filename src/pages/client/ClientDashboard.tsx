@@ -77,7 +77,7 @@ const ClientDashboard = () => {
       title: 'إنشاء طلب جديد',
       description: 'ابدأ مشروعك الأكاديمي الجديد',
       icon: Plus,
-      action: () => navigate('/orders/new'),
+      action: () => navigate('/client-services'),
       gradient: 'from-orange-500 via-pink-500 to-red-500',
       bgPattern: 'bg-orange-50'
     }
