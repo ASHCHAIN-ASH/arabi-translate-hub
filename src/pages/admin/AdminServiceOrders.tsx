@@ -18,7 +18,12 @@ import {
   Eye,
   Edit,
   FileText,
-  Calendar
+  Calendar,
+  Paperclip,
+  Download,
+  File,
+  ChevronDown,
+  ChevronUp
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { motion } from 'framer-motion';
@@ -417,6 +422,54 @@ const ServiceOrderCard = ({
   order: ServiceOrder; 
   onStatusUpdate: (orderId: string, status: string) => void;
 }) => {
+  const [attachments, setAttachments] = useState<any[]>([]);
+  const [showAttachments, setShowAttachments] = useState(false);
+  const [loadingAttachments, setLoadingAttachments] = useState(false);
+
+  const loadAttachments = async () => {
+    if (attachments.length > 0) {
+      setShowAttachments(!showAttachments);
+      return;
+    }
+    setLoadingAttachments(true);
+    try {
+      const { data, error } = await (supabase
+        .from('order_attachments') as any)
+        .select('*')
+        .eq('order_id', order.id)
+        .order('created_at', { ascending: false });
+      if (!error) setAttachments(data || []);
+    } catch (e) {
+      console.error('Error loading attachments:', e);
+    } finally {
+      setLoadingAttachments(false);
+      setShowAttachments(true);
+    }
+  };
+
+  const downloadFile = async (storagePath: string, fileName: string) => {
+    try {
+      const { data, error } = await supabase.storage
+        .from('order-attachments')
+        .download(storagePath);
+      if (error) throw error;
+      const url = URL.createObjectURL(data);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = fileName;
+      a.click();
+      URL.revokeObjectURL(url);
+    } catch (e) {
+      console.error('Download error:', e);
+    }
+  };
+
+  const formatFileSize = (bytes: number) => {
+    if (bytes < 1024) return `${bytes} B`;
+    if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`;
+    return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
+  };
+
   const getStatusColor = (status: string) => {
     const colors: Record<string, string> = {
       received: 'bg-blue-100 text-blue-800',
@@ -530,6 +583,69 @@ const ServiceOrderCard = ({
               <p className="text-sm bg-muted/30 p-3 rounded-lg">{order.notes}</p>
             </div>
           )}
+
+          {/* Attachments Section */}
+          <div>
+            <Button
+              variant="outline"
+              size="sm"
+              className="gap-2"
+              onClick={loadAttachments}
+              disabled={loadingAttachments}
+            >
+              <Paperclip className="w-4 h-4" />
+              المرفقات
+              {loadingAttachments ? (
+                <RefreshCw className="w-3 h-3 animate-spin" />
+              ) : showAttachments ? (
+                <ChevronUp className="w-3 h-3" />
+              ) : (
+                <ChevronDown className="w-3 h-3" />
+              )}
+            </Button>
+
+            {showAttachments && (
+              <motion.div
+                initial={{ opacity: 0, height: 0 }}
+                animate={{ opacity: 1, height: 'auto' }}
+                className="mt-3"
+              >
+                {attachments.length === 0 ? (
+                  <p className="text-sm text-muted-foreground bg-muted/30 p-3 rounded-lg">
+                    لا توجد مرفقات لهذا الطلب
+                  </p>
+                ) : (
+                  <div className="space-y-2 p-3 bg-muted/20 rounded-lg border">
+                    <p className="text-xs font-medium text-muted-foreground mb-2">
+                      {attachments.length} ملف مرفق
+                    </p>
+                    {attachments.map((att: any) => (
+                      <div
+                        key={att.id}
+                        className="flex items-center gap-3 p-2.5 bg-card rounded-lg border hover:shadow-sm transition-shadow"
+                      >
+                        <File className="w-4 h-4 text-primary flex-shrink-0" />
+                        <div className="flex-1 min-w-0">
+                          <p className="text-sm font-medium truncate">{att.file_name}</p>
+                          <p className="text-xs text-muted-foreground">
+                            {formatFileSize(att.file_size)} • {new Date(att.created_at).toLocaleDateString('ar-SA')}
+                          </p>
+                        </div>
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          className="h-8 w-8 flex-shrink-0"
+                          onClick={() => downloadFile(att.storage_path, att.file_name)}
+                        >
+                          <Download className="w-4 h-4" />
+                        </Button>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </motion.div>
+            )}
+          </div>
 
           {/* Actions */}
           <div className="flex flex-wrap gap-2 pt-4 border-t">
