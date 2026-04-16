@@ -1,8 +1,9 @@
 import { Button } from "@/components/ui/button";
 import { 
   Menu, GraduationCap, ChevronDown, Languages, Home, Users, Phone, 
-  Briefcase, Microscope, ArrowLeft, FileText, MapIcon
+  Briefcase, Microscope, ArrowLeft, FileText, MapIcon, LogIn, UserPlus, LogOut, User
 } from "lucide-react";
+import { useAuth } from "./SimpleAuthProvider";
 import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
