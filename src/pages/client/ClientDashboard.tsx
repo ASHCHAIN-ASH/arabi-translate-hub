@@ -395,7 +395,7 @@ const ClientDashboard = () => {
                     <p className="text-gray-400 mt-2">ابدأ بإنشاء طلبك الأول</p>
                     <Button 
                       className="mt-6" 
-                      onClick={() => navigate('/orders/new')}
+                      onClick={() => navigate('/client-services')}
                     >
                       <Plus className="w-4 h-4 ml-2" />
                       إنشاء طلب جديد
