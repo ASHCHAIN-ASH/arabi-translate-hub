@@ -157,13 +157,14 @@ async function handleRegister(req: Request, supabase: any, resend: any): Promise
       user_agent: req.headers.get('user-agent')
     });
 
-  // Generate JWT token (simplified)
-  const token = btoa(JSON.stringify({
+  // Generate signed JWT token
+  const { signPlatformToken } = await import('../_shared/platform-jwt.ts');
+  const token = await signPlatformToken({
     sub: user.id,
     email: user.email,
     role: user.role,
-    exp: Date.now() + (24 * 60 * 60 * 1000) // 24 hours
-  }));
+    exp: Math.floor(Date.now() / 1000) + (24 * 60 * 60) // 24 hours
+  });
 
   return new Response(JSON.stringify({
     success: true,
@@ -222,13 +223,14 @@ async function handleLogin(req: Request, supabase: any): Promise<Response> {
     .update({ last_login_at: new Date().toISOString() })
     .eq('id', user.id);
 
-  // Generate JWT token
-  const token = btoa(JSON.stringify({
+  // Generate signed JWT token
+  const { signPlatformToken } = await import('../_shared/platform-jwt.ts');
+  const token = await signPlatformToken({
     sub: user.id,
     email: user.email,
     role: user.role,
-    exp: Date.now() + (24 * 60 * 60 * 1000) // 24 hours
-  }));
+    exp: Math.floor(Date.now() / 1000) + (24 * 60 * 60) // 24 hours
+  });
 
   return new Response(JSON.stringify({
     success: true,
