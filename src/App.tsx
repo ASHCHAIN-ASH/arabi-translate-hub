@@ -139,6 +139,7 @@ import Pricing from "./pages/Pricing";
 import OrderTracking from "./pages/OrderTracking";
 import SubmitOrder from "./pages/SubmitOrder";
 import NotFound from "./pages/NotFound";
+import Unsubscribe from "./pages/Unsubscribe";
 import IntellectualProperty from "./pages/IntellectualProperty";
 import AcademicIntegrity from "./pages/AcademicIntegrity";
 import LicenseRequest from "./pages/LicenseRequest";
