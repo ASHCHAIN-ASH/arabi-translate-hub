@@ -525,40 +525,64 @@ const OrderDetails = () => {
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-3">
-                  <div className="flex justify-between items-center py-2">
-                    <span className="text-sm text-muted-foreground">القيمة الإجمالية</span>
-                    <span className="font-bold text-lg text-primary">{(order.total_amount || 0).toLocaleString()} ر.س</span>
-                  </div>
-                  <div className="h-px bg-border" />
-                  <div className="flex justify-between items-center py-2">
-                    <span className="text-sm text-muted-foreground">المدفوع</span>
-                    <span className="font-semibold text-green-600">{(order.paid_amount || 0).toLocaleString()} ر.س</span>
-                  </div>
-                  <div className="h-px bg-border" />
-                  <div className="flex justify-between items-center py-2">
-                    <span className="text-sm text-muted-foreground">المتبقي</span>
-                    <span className="font-semibold text-amber-600">
-                      {((order.total_amount || 0) - (order.paid_amount || 0)).toLocaleString()} ر.س
-                    </span>
-                  </div>
+                  {(() => {
+                    const subtotal = order.total_amount || 0;
+                    const taxRate = 0.15;
+                    const tax = Math.round(subtotal * taxRate * 100) / 100;
+                    const totalWithTax = subtotal + tax;
+                    const paid = order.paid_amount || 0;
+                    const remaining = totalWithTax - paid;
+                    return (
+                      <>
+                        <div className="flex justify-between items-center py-2">
+                          <span className="text-sm text-muted-foreground">المبلغ قبل الضريبة</span>
+                          <span className="font-semibold">{subtotal.toLocaleString()} ر.س</span>
+                        </div>
+                        <div className="h-px bg-border" />
+                        <div className="flex justify-between items-center py-2">
+                          <span className="text-sm text-muted-foreground">ضريبة القيمة المضافة (15%)</span>
+                          <span className="font-semibold text-muted-foreground">{tax.toLocaleString()} ر.س</span>
+                        </div>
+                        <div className="h-px bg-border" />
+                        <div className="flex justify-between items-center py-2 bg-primary/5 -mx-4 px-4 rounded-lg">
+                          <span className="text-sm font-bold">الإجمالي شامل الضريبة</span>
+                          <span className="font-bold text-lg text-primary">{totalWithTax.toLocaleString()} ر.س</span>
+                        </div>
+                        <div className="h-px bg-border" />
+                        <div className="flex justify-between items-center py-2">
+                          <span className="text-sm text-muted-foreground">المدفوع</span>
+                          <span className="font-semibold text-green-600">{paid.toLocaleString()} ر.س</span>
+                        </div>
+                        <div className="h-px bg-border" />
+                        <div className="flex justify-between items-center py-2">
+                          <span className="text-sm text-muted-foreground">المتبقي</span>
+                          <span className="font-semibold text-amber-600">{remaining.toLocaleString()} ر.س</span>
+                        </div>
+                      </>
+                    );
+                  })()}
 
                   {/* Payment Progress */}
-                  {(order.total_amount || 0) > 0 && (
-                    <div className="pt-2">
-                      <div className="flex justify-between text-xs mb-1.5">
-                        <span className="text-muted-foreground">نسبة السداد</span>
-                        <span className="font-bold">{Math.round(((order.paid_amount || 0) / (order.total_amount || 1)) * 100)}%</span>
+                  {(order.total_amount || 0) > 0 && (() => {
+                    const totalWithTax = (order.total_amount || 0) * 1.15;
+                    const pct = Math.round(((order.paid_amount || 0) / totalWithTax) * 100);
+                    return (
+                      <div className="pt-2">
+                        <div className="flex justify-between text-xs mb-1.5">
+                          <span className="text-muted-foreground">نسبة السداد</span>
+                          <span className="font-bold">{Math.min(pct, 100)}%</span>
+                        </div>
+                        <div className="w-full bg-muted rounded-full h-2 overflow-hidden">
+                          <motion.div
+                            className="h-full rounded-full bg-green-500"
+                            initial={{ width: 0 }}
+                            animate={{ width: `${Math.min(pct, 100)}%` }}
+                            transition={{ duration: 0.8, delay: 0.4 }}
+                          />
+                        </div>
                       </div>
-                      <div className="w-full bg-muted rounded-full h-2 overflow-hidden">
-                        <motion.div
-                          className="h-full rounded-full bg-green-500"
-                          initial={{ width: 0 }}
-                          animate={{ width: `${Math.min(((order.paid_amount || 0) / (order.total_amount || 1)) * 100, 100)}%` }}
-                          transition={{ duration: 0.8, delay: 0.4 }}
-                        />
-                      </div>
-                    </div>
-                  )}
+                    );
+                  })()}
                 </CardContent>
               </Card>
             </motion.div>
