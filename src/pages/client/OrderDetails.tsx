@@ -563,22 +563,26 @@ const OrderDetails = () => {
                   })()}
 
                   {/* Payment Progress */}
-                  {(order.total_amount || 0) > 0 && (
-                    <div className="pt-2">
-                      <div className="flex justify-between text-xs mb-1.5">
-                        <span className="text-muted-foreground">نسبة السداد</span>
-                        <span className="font-bold">{Math.round(((order.paid_amount || 0) / (order.total_amount || 1)) * 100)}%</span>
+                  {(order.total_amount || 0) > 0 && (() => {
+                    const totalWithTax = (order.total_amount || 0) * 1.15;
+                    const pct = Math.round(((order.paid_amount || 0) / totalWithTax) * 100);
+                    return (
+                      <div className="pt-2">
+                        <div className="flex justify-between text-xs mb-1.5">
+                          <span className="text-muted-foreground">نسبة السداد</span>
+                          <span className="font-bold">{Math.min(pct, 100)}%</span>
+                        </div>
+                        <div className="w-full bg-muted rounded-full h-2 overflow-hidden">
+                          <motion.div
+                            className="h-full rounded-full bg-green-500"
+                            initial={{ width: 0 }}
+                            animate={{ width: `${Math.min(pct, 100)}%` }}
+                            transition={{ duration: 0.8, delay: 0.4 }}
+                          />
+                        </div>
                       </div>
-                      <div className="w-full bg-muted rounded-full h-2 overflow-hidden">
-                        <motion.div
-                          className="h-full rounded-full bg-green-500"
-                          initial={{ width: 0 }}
-                          animate={{ width: `${Math.min(((order.paid_amount || 0) / (order.total_amount || 1)) * 100, 100)}%` }}
-                          transition={{ duration: 0.8, delay: 0.4 }}
-                        />
-                      </div>
-                    </div>
-                  )}
+                    );
+                  })()}
                 </CardContent>
               </Card>
             </motion.div>
