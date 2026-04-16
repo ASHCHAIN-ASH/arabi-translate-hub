@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo, useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import ClientLayout from '@/components/client/ClientLayout';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -6,23 +6,15 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
-import { Separator } from '@/components/ui/separator';
+import { Badge } from '@/components/ui/badge';
 import {
-  ArrowRight, ShoppingCart, FileText, RefreshCw,
-  Search, Check, Languages, BookOpen, GraduationCap, Microscope,
-  CheckCircle, Upload, X, File, Paperclip
+  ArrowRight, ShoppingCart, RefreshCw,
+  Upload, X, File, Paperclip, CheckCircle, FileText, Send
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { toast } from 'sonner';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/components/SimpleAuthProvider';
-
-interface Category {
-  id: string;
-  name_ar: string | null;
-  icon: string | null;
-  description: string | null;
-}
 
 interface ServiceItem {
   id: string;
@@ -39,17 +31,7 @@ interface UploadedFile {
   id: string;
 }
 
-const categoryIcons: Record<string, React.ElementType> = {
-  Languages, BookOpen, GraduationCap, Microscope, FileText, CheckCircle,
-};
-
-const unitLabels: Record<string, string> = {
-  page: 'لكل صفحة',
-  hour: 'لكل ساعة',
-  project: 'للمشروع',
-};
-
-const MAX_FILE_SIZE = 20 * 1024 * 1024; // 20MB
+const MAX_FILE_SIZE = 20 * 1024 * 1024;
 const MAX_FILES = 5;
 const ALLOWED_TYPES = [
   'application/pdf',
@@ -71,72 +53,58 @@ const formatFileSize = (bytes: number) => {
   return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
 };
 
+const unitLabels: Record<string, string> = {
+  page: 'صفحة',
+  hour: 'ساعة',
+  project: 'مشروع',
+  word: 'كلمة',
+};
+
 const OrderNew = () => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const { user } = useAuth();
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const [categories, setCategories] = useState<Category[]>([]);
-  const [services, setServices] = useState<ServiceItem[]>([]);
-  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
-  const [selectedService, setSelectedService] = useState<ServiceItem | null>(null);
-  const [quantity, setQuantity] = useState(1);
+  const [service, setService] = useState<ServiceItem | null>(null);
   const [notes, setNotes] = useState('');
-  const [searchQuery, setSearchQuery] = useState('');
   const [loading, setLoading] = useState(false);
   const [loadingData, setLoadingData] = useState(true);
   const [files, setFiles] = useState<UploadedFile[]>([]);
+  const [submitted, setSubmitted] = useState(false);
 
   useEffect(() => {
-    loadData();
-  }, []);
+    const serviceId = searchParams.get('service');
+    if (!serviceId) {
+      navigate('/client-services');
+      return;
+    }
+    loadService(serviceId);
+  }, [searchParams]);
 
-  const loadData = async () => {
+  const loadService = async (serviceId: string) => {
     try {
-      const [catsRes, svcRes] = await Promise.all([
-        supabase.from('service_categories').select('id, name_ar, icon, description').order('sort_order'),
-        supabase.from('services').select('id, name, name_ar, description, price, unit, category_id').eq('is_active', true),
-      ]);
-      if (catsRes.error) throw catsRes.error;
-      if (svcRes.error) throw svcRes.error;
-      setCategories(catsRes.data || []);
-      setServices(svcRes.data || []);
-
-      // Pre-select service from URL param
-      const preSelectedId = searchParams.get('service');
-      if (preSelectedId && svcRes.data) {
-        const found = svcRes.data.find(s => s.id === preSelectedId);
-        if (found) {
-          setSelectedService(found);
-          if (found.category_id) setSelectedCategory(found.category_id);
-        }
+      const { data, error } = await supabase
+        .from('services')
+        .select('id, name, name_ar, description, price, unit, category_id')
+        .eq('id', serviceId)
+        .single();
+      if (error || !data) {
+        toast.error('الخدمة غير موجودة');
+        navigate('/client-services');
+        return;
       }
+      setService(data);
     } catch (e) {
-      console.error('Error loading data:', e);
-      toast.error('فشل في تحميل الخدمات');
+      console.error('Error loading service:', e);
+      navigate('/client-services');
     } finally {
       setLoadingData(false);
     }
   };
 
-  const filteredServices = useMemo(() => {
-    let list = services;
-    if (selectedCategory) list = list.filter(s => s.category_id === selectedCategory);
-    if (searchQuery.trim()) {
-      const q = searchQuery.toLowerCase();
-      list = list.filter(s =>
-        (s.name_ar || '').toLowerCase().includes(q) ||
-        s.name.toLowerCase().includes(q) ||
-        (s.description || '').toLowerCase().includes(q)
-      );
-    }
-    return list;
-  }, [services, selectedCategory, searchQuery]);
-
   const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
     const selected = e.target.files;
     if (!selected) return;
-
     const newFiles: UploadedFile[] = [];
     for (let i = 0; i < selected.length; i++) {
       const file = selected[i];
@@ -191,15 +159,15 @@ const OrderNew = () => {
   };
 
   const handleSubmit = async () => {
-    if (!selectedService) return toast.error('يرجى اختيار خدمة');
+    if (!service) return;
     if (!user) return toast.error('يرجى تسجيل الدخول أولاً');
 
     setLoading(true);
     try {
       const { data, error } = await supabase.from('service_orders').insert({
         user_id: user.id,
-        service_id: selectedService.id,
-        service_name: selectedService.name_ar || selectedService.name,
+        service_id: service.id,
+        service_name: service.name_ar || service.name,
         total_amount: 0,
         paid_amount: 0,
         current_status: 'pending',
@@ -208,13 +176,11 @@ const OrderNew = () => {
       }).select('id').single();
       if (error) throw error;
 
-      // Upload files if any
       if (files.length > 0 && data?.id) {
         await uploadFiles(data.id, user.id);
       }
 
-      toast.success('تم إنشاء الطلب بنجاح!');
-      navigate('/orders');
+      setSubmitted(true);
     } catch (error: any) {
       console.error('Error creating order:', error);
       toast.error(error.message || 'خطأ في إنشاء الطلب');
@@ -233,274 +199,239 @@ const OrderNew = () => {
     );
   }
 
+  if (submitted) {
+    return (
+      <ClientLayout>
+        <div className="p-4 sm:p-6 lg:p-8" dir="rtl">
+          <motion.div
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            className="max-w-lg mx-auto text-center py-16"
+          >
+            <motion.div
+              initial={{ scale: 0 }}
+              animate={{ scale: 1 }}
+              transition={{ type: 'spring', stiffness: 200, delay: 0.2 }}
+              className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6"
+            >
+              <CheckCircle className="w-10 h-10 text-green-600" />
+            </motion.div>
+            <h2 className="text-2xl font-bold mb-3">تم إرسال طلبك بنجاح! 🎉</h2>
+            <p className="text-muted-foreground mb-2">
+              تم إرسال طلب <span className="font-semibold text-foreground">{service?.name_ar || service?.name}</span> للمراجعة
+            </p>
+            <p className="text-sm text-muted-foreground mb-8">
+              سيتم تحديد السعر من قبل الإدارة بعد مراجعة الطلب وإرسال عرض سعر لك
+            </p>
+            <div className="flex gap-3 justify-center">
+              <Button onClick={() => navigate('/orders')} className="gap-2">
+                <ShoppingCart className="w-4 h-4" />
+                سجل الطلبات
+              </Button>
+              <Button variant="outline" onClick={() => navigate('/client-services')}>
+                طلب خدمة أخرى
+              </Button>
+            </div>
+          </motion.div>
+        </div>
+      </ClientLayout>
+    );
+  }
+
   return (
     <ClientLayout>
-      <div className="p-3 sm:p-5 lg:p-6 space-y-5" dir="rtl">
-        {/* Header */}
-        <div className="flex items-center justify-between">
-          <div>
-            <h1 className="text-2xl sm:text-3xl font-bold">إنشاء طلب جديد</h1>
-            <p className="text-muted-foreground text-sm mt-1">اختر القسم ثم الخدمة وأنشئ طلبك</p>
-          </div>
-          <Button variant="outline" size="sm" onClick={() => navigate('/orders')}>
-            <ArrowRight className="w-4 h-4 me-2" />
-            العودة
-          </Button>
-        </div>
+      <div className="p-4 sm:p-6 lg:p-8" dir="rtl">
+        <div className="max-w-2xl mx-auto space-y-6">
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
-          {/* Left: Categories & Services */}
-          <div className="lg:col-span-2 space-y-4">
-            {/* Search */}
-            <div className="relative">
-              <Search className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-              <Input
-                placeholder="ابحث في الخدمات..."
-                value={searchQuery}
-                onChange={e => setSearchQuery(e.target.value)}
-                className="pr-10"
-              />
+          {/* Header */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="flex items-center justify-between"
+          >
+            <div>
+              <h1 className="text-2xl sm:text-3xl font-bold">طلب خدمة</h1>
+              <p className="text-muted-foreground text-sm mt-1">أكمل تفاصيل طلبك</p>
             </div>
+            <Button variant="outline" size="sm" onClick={() => navigate('/client-services')}>
+              <ArrowRight className="w-4 h-4 me-2" />
+              العودة
+            </Button>
+          </motion.div>
 
-            {/* Category Tabs */}
-            <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-hide">
-              <Button
-                variant={!selectedCategory ? 'default' : 'outline'}
-                size="sm"
-                className="whitespace-nowrap"
-                onClick={() => setSelectedCategory(null)}
-              >
-                الكل
-              </Button>
-              {categories.map(cat => {
-                const Icon = categoryIcons[cat.icon || ''] || Languages;
-                return (
-                  <Button
-                    key={cat.id}
-                    variant={selectedCategory === cat.id ? 'default' : 'outline'}
-                    size="sm"
-                    className="whitespace-nowrap"
-                    onClick={() => setSelectedCategory(cat.id)}
-                  >
-                    <Icon className="w-4 h-4 me-1" />
-                    {cat.name_ar}
-                  </Button>
-                );
-              })}
-            </div>
-
-            {/* Services Grid */}
-            {filteredServices.length === 0 ? (
-              <Card>
-                <CardContent className="py-12 text-center">
-                  <Search className="w-10 h-10 text-muted-foreground/40 mx-auto mb-3" />
-                  <p className="text-muted-foreground">لا توجد خدمات مطابقة</p>
-                </CardContent>
-              </Card>
-            ) : (
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                <AnimatePresence mode="popLayout">
-                  {filteredServices.map(service => {
-                    const isSelected = selectedService?.id === service.id;
-                    return (
-                      <motion.div
-                        key={service.id}
-                        layout
-                        initial={{ opacity: 0, scale: 0.95 }}
-                        animate={{ opacity: 1, scale: 1 }}
-                        exit={{ opacity: 0, scale: 0.95 }}
-                        transition={{ duration: 0.2 }}
-                      >
-                        <Card
-                          className={`cursor-pointer transition-all hover:shadow-md ${
-                            isSelected ? 'ring-2 ring-primary bg-primary/5' : 'hover:border-primary/40'
-                          }`}
-                          onClick={() => { setSelectedService(service); setQuantity(1); }}
-                        >
-                          <CardContent className="p-4">
-                            <div className="flex items-start justify-between mb-2">
-                              <h4 className="font-semibold text-sm leading-tight">
-                                {service.name_ar || service.name}
-                              </h4>
-                              {isSelected && (
-                                <div className="w-5 h-5 bg-primary rounded-full flex items-center justify-center flex-shrink-0">
-                                  <Check className="w-3 h-3 text-primary-foreground" />
-                                </div>
-                              )}
-                            </div>
-                            {service.description && (
-                              <p className="text-xs text-muted-foreground mb-3 line-clamp-2">{service.description}</p>
-                            )}
-                            <div className="flex items-center">
-                              <span className="text-xs text-muted-foreground">
-                                {unitLabels[service.unit || 'project'] || service.unit}
-                              </span>
-                            </div>
-                          </CardContent>
-                        </Card>
-                      </motion.div>
-                    );
-                  })}
-                </AnimatePresence>
-              </div>
-            )}
-
-            {/* Order Details (visible when service selected) */}
-            <AnimatePresence>
-              {selectedService && (
-                <motion.div
-                  initial={{ opacity: 0, height: 0 }}
-                  animate={{ opacity: 1, height: 'auto' }}
-                  exit={{ opacity: 0, height: 0 }}
-                >
-                  <Card>
-                    <CardHeader className="pb-3">
-                      <CardTitle className="text-base flex items-center gap-2">
-                        <FileText className="w-4 h-4" />
-                        تفاصيل إضافية
-                      </CardTitle>
-                    </CardHeader>
-                    <CardContent className="space-y-4">
-                      <div className="grid grid-cols-2 gap-4">
-                        <div>
-                          <Label htmlFor="quantity">
-                            الكمية ({unitLabels[selectedService.unit || 'project']})
-                          </Label>
-                          <Input
-                            id="quantity"
-                            type="number"
-                            min="1"
-                            value={quantity}
-                            onChange={e => setQuantity(Math.max(1, parseInt(e.target.value) || 1))}
-                          />
-                        </div>
-                      </div>
-                      <div>
-                        <Label htmlFor="notes">ملاحظات إضافية (اختياري)</Label>
-                        <Textarea
-                          id="notes"
-                          placeholder="أضف أي ملاحظات أو متطلبات خاصة بطلبك..."
-                          value={notes}
-                          onChange={e => setNotes(e.target.value)}
-                          rows={3}
-                        />
-                      </div>
-
-                      {/* File Upload Section */}
-                      <div>
-                        <Label className="flex items-center gap-2 mb-2">
-                          <Paperclip className="w-4 h-4" />
-                          إرفاق ملفات (اختياري)
-                        </Label>
-                        <div
-                          className="border-2 border-dashed border-muted-foreground/25 rounded-lg p-6 text-center hover:border-primary/50 transition-colors cursor-pointer"
-                          onClick={() => fileInputRef.current?.click()}
-                        >
-                          <Upload className="w-8 h-8 text-muted-foreground/40 mx-auto mb-2" />
-                          <p className="text-sm text-muted-foreground">
-                            اضغط لاختيار الملفات أو اسحبها هنا
-                          </p>
-                          <p className="text-xs text-muted-foreground/60 mt-1">
-                            PDF, Word, Excel, PowerPoint, صور — حتى 20MB لكل ملف (الحد: {MAX_FILES} ملفات)
-                          </p>
-                        </div>
-                        <input
-                          ref={fileInputRef}
-                          type="file"
-                          multiple
-                          accept=".pdf,.doc,.docx,.ppt,.pptx,.xls,.xlsx,.jpg,.jpeg,.png,.webp,.txt"
-                          onChange={handleFileSelect}
-                          className="hidden"
-                        />
-
-                        {/* File List */}
-                        {files.length > 0 && (
-                          <div className="mt-3 space-y-2">
-                            {files.map(({ file, id }) => (
-                              <div
-                                key={id}
-                                className="flex items-center gap-3 p-2.5 bg-muted/50 rounded-lg"
-                              >
-                                <File className="w-4 h-4 text-primary flex-shrink-0" />
-                                <div className="flex-1 min-w-0">
-                                  <p className="text-sm font-medium truncate">{file.name}</p>
-                                  <p className="text-xs text-muted-foreground">{formatFileSize(file.size)}</p>
-                                </div>
-                                <Button
-                                  variant="ghost"
-                                  size="icon"
-                                  className="h-7 w-7 flex-shrink-0"
-                                  onClick={() => removeFile(id)}
-                                >
-                                  <X className="w-3.5 h-3.5" />
-                                </Button>
-                              </div>
-                            ))}
-                          </div>
-                        )}
-                      </div>
-                    </CardContent>
-                  </Card>
-                </motion.div>
-              )}
-            </AnimatePresence>
-          </div>
-
-          {/* Right: Order Summary */}
-          <div>
-            <Card className="sticky top-20">
-              <CardHeader className="pb-3">
-                <CardTitle className="text-base flex items-center gap-2">
-                  <ShoppingCart className="w-4 h-4" />
-                  ملخص الطلب
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                {selectedService ? (
-                  <div className="space-y-4">
-                    <div className="p-3 bg-muted/50 rounded-lg">
-                      <p className="font-semibold text-sm">{selectedService.name_ar || selectedService.name}</p>
-                      <p className="text-xs text-muted-foreground mt-1">
-                        الكمية: {quantity} {unitLabels[selectedService.unit || 'project']}
-                      </p>
-                    </div>
-
-                    {files.length > 0 && (
-                      <div className="p-3 bg-muted/50 rounded-lg">
-                        <p className="text-xs font-medium flex items-center gap-1.5">
-                          <Paperclip className="w-3.5 h-3.5" />
-                          {files.length} ملف مرفق
-                        </p>
-                      </div>
+          {/* Service Info Card */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.1 }}
+          >
+            <Card className="border-primary/20 bg-primary/5">
+              <CardContent className="p-5">
+                <div className="flex items-start gap-4">
+                  <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center flex-shrink-0">
+                    <FileText className="w-6 h-6 text-primary" />
+                  </div>
+                  <div className="flex-1">
+                    <h3 className="text-lg font-bold text-primary">
+                      {service?.name_ar || service?.name}
+                    </h3>
+                    {service?.description && (
+                      <p className="text-sm text-muted-foreground mt-1">{service.description}</p>
                     )}
-
-                    <Separator />
-                    <p className="text-xs text-muted-foreground text-center">
-                      سيتم تحديد السعر من قبل الإدارة بعد مراجعة الطلب
-                    </p>
-                    <Button className="w-full" onClick={handleSubmit} disabled={loading}>
-                      {loading ? (
-                        <>
-                          <RefreshCw className="w-4 h-4 me-2 animate-spin" />
-                          جاري الإنشاء...
-                        </>
-                      ) : (
-                        'تأكيد الطلب'
+                    <div className="flex items-center gap-3 mt-3">
+                      {service?.unit && (
+                        <Badge variant="secondary" className="text-xs">
+                          {unitLabels[service.unit] || service.unit}
+                        </Badge>
                       )}
-                    </Button>
-                    <p className="text-[11px] text-muted-foreground text-center">
-                      سيتم إنشاء الطلب وإرساله للأدمن للمراجعة
-                    </p>
+                      <Badge variant="outline" className="text-xs text-amber-600 border-amber-300">
+                        السعر بعد المراجعة
+                      </Badge>
+                    </div>
                   </div>
-                ) : (
-                  <div className="text-center py-8">
-                    <ShoppingCart className="w-10 h-10 text-muted-foreground/30 mx-auto mb-3" />
-                    <p className="text-sm text-muted-foreground">اختر خدمة لعرض الملخص</p>
-                  </div>
-                )}
+                </div>
               </CardContent>
             </Card>
-          </div>
+          </motion.div>
+
+          {/* Order Form */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.2 }}
+          >
+            <Card>
+              <CardHeader>
+                <CardTitle className="text-lg flex items-center gap-2">
+                  <Paperclip className="w-5 h-5" />
+                  تفاصيل الطلب
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-5">
+                {/* Notes */}
+                <div>
+                  <Label className="text-sm font-medium mb-2 block">
+                    وصف الطلب والملاحظات
+                  </Label>
+                  <Textarea
+                    value={notes}
+                    onChange={(e) => setNotes(e.target.value)}
+                    placeholder="اكتب تفاصيل طلبك هنا... (مثال: عدد الصفحات، اللغة المطلوبة، الموعد المطلوب...)"
+                    rows={4}
+                    className="resize-none"
+                  />
+                </div>
+
+                {/* File Upload */}
+                <div>
+                  <Label className="text-sm font-medium mb-2 block">
+                    المرفقات (اختياري)
+                  </Label>
+                  <p className="text-xs text-muted-foreground mb-3">
+                    يمكنك رفع حتى {MAX_FILES} ملفات (PDF, Word, Excel, PowerPoint, صور) بحد أقصى 20 ميجابايت للملف
+                  </p>
+
+                  <input
+                    ref={fileInputRef}
+                    type="file"
+                    multiple
+                    accept={ALLOWED_TYPES.join(',')}
+                    onChange={handleFileSelect}
+                    className="hidden"
+                  />
+
+                  <Button
+                    variant="outline"
+                    type="button"
+                    onClick={() => fileInputRef.current?.click()}
+                    disabled={files.length >= MAX_FILES}
+                    className="w-full border-dashed border-2 h-20 gap-3 text-muted-foreground hover:text-primary hover:border-primary/50 transition-colors"
+                  >
+                    <Upload className="w-5 h-5" />
+                    <div className="text-sm">
+                      <span className="font-medium">اضغط لرفع الملفات</span>
+                      <br />
+                      <span className="text-xs">{files.length}/{MAX_FILES} ملفات</span>
+                    </div>
+                  </Button>
+
+                  {/* File List */}
+                  <AnimatePresence>
+                    {files.length > 0 && (
+                      <motion.div
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        className="mt-3 space-y-2"
+                      >
+                        {files.map((f) => (
+                          <motion.div
+                            key={f.id}
+                            initial={{ opacity: 0, x: -10 }}
+                            animate={{ opacity: 1, x: 0 }}
+                            exit={{ opacity: 0, x: 10 }}
+                            className="flex items-center gap-3 p-3 bg-muted/50 rounded-lg"
+                          >
+                            <File className="w-4 h-4 text-primary flex-shrink-0" />
+                            <div className="flex-1 min-w-0">
+                              <p className="text-sm font-medium truncate">{f.file.name}</p>
+                              <p className="text-xs text-muted-foreground">{formatFileSize(f.file.size)}</p>
+                            </div>
+                            <Button
+                              variant="ghost"
+                              size="icon"
+                              className="h-7 w-7 text-red-500 hover:text-red-700"
+                              onClick={() => removeFile(f.id)}
+                            >
+                              <X className="w-4 h-4" />
+                            </Button>
+                          </motion.div>
+                        ))}
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </div>
+              </CardContent>
+            </Card>
+          </motion.div>
+
+          {/* Submit */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.3 }}
+          >
+            <Card className="bg-gradient-to-br from-primary/5 to-primary/10 border-primary/20">
+              <CardContent className="p-5">
+                <div className="flex items-center justify-between mb-4">
+                  <div>
+                    <p className="font-semibold">{service?.name_ar || service?.name}</p>
+                    <p className="text-sm text-muted-foreground">سيتم تحديد السعر بعد مراجعة الطلب</p>
+                  </div>
+                  <Badge className="bg-primary/10 text-primary border-0 text-sm px-3 py-1">
+                    بانتظار التسعير
+                  </Badge>
+                </div>
+
+                <Button
+                  onClick={handleSubmit}
+                  disabled={loading}
+                  className="w-full h-12 text-base gap-3"
+                  size="lg"
+                >
+                  {loading ? (
+                    <RefreshCw className="w-5 h-5 animate-spin" />
+                  ) : (
+                    <Send className="w-5 h-5" />
+                  )}
+                  {loading ? 'جاري إرسال الطلب...' : 'إرسال الطلب'}
+                </Button>
+
+                <p className="text-xs text-center text-muted-foreground mt-3">
+                  سيتم إنشاء الطلب وإرساله للإدارة للمراجعة والتسعير
+                </p>
+              </CardContent>
+            </Card>
+          </motion.div>
         </div>
       </div>
     </ClientLayout>
