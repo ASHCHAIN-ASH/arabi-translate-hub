@@ -240,6 +240,7 @@ const App = () => (
             <Route path="/unauthorized" element={<Unauthorized />} />
             
             {/* Client Dashboard Routes */}
+            <Route path="/client/dashboard" element={<Navigate to="/dashboard" replace />} />
             <Route path="/dashboard" element={
               <SimpleProtectedRoute requiredRole="client">
                 <ClientDashboard />
