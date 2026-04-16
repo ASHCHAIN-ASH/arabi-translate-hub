@@ -65,27 +65,8 @@ const handler = async (req: Request): Promise<Response> => {
       }
     );
 
-    // Get admin details
-    let adminData = null;
-    if (adminUserId) {
-      const { data: adminCheck, error: adminError } = await supabaseAdmin
-        .from('admin_credentials')
-        .select('id, email, full_name, role, is_active')
-        .eq('id', adminUserId)
-        .single();
-
-      if (adminError || !adminCheck || !adminCheck.is_active || adminCheck.role !== 'admin') {
-        console.log('Admin verification failed:', adminError, adminCheck);
-        return new Response(
-          JSON.stringify({ error: 'Insufficient privileges' }),
-          {
-            status: 403,
-            headers: { 'Content-Type': 'application/json', ...corsHeaders },
-          }
-        );
-      }
-      adminData = adminCheck;
-    }
+    // Admin already verified via requireAdmin above
+    const adminData = { id: adminResult.id, email: adminResult.email, full_name: adminResult.email, role: 'admin' };
 
     // Get user details
     const { data: userData, error: userError } = await supabaseAdmin
