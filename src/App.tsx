@@ -246,6 +246,11 @@ const App = () => (
                 <ClientDashboard />
               </SimpleProtectedRoute>
             } />
+            <Route path="/client-services" element={
+              <SimpleProtectedRoute requiredRole="client">
+                <ClientServices />
+              </SimpleProtectedRoute>
+            } />
             <Route path="/orders" element={
               <SimpleProtectedRoute requiredRole="client">
                 <Orders />

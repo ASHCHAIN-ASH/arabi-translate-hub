@@ -14,7 +14,8 @@ import {
   GraduationCap,
   Wallet,
   Menu,
-  X
+  X,
+  Sparkles
 } from 'lucide-react';
 import { motion } from 'framer-motion';
 import ChatFloatingButton from '@/components/chat/ChatFloatingButton';
@@ -31,6 +32,7 @@ const ClientLayout: React.FC<ClientLayoutProps> = ({ children }) => {
 
   const navItems = [
     { name: 'لوحة التحكم', href: '/dashboard', icon: LayoutDashboard },
+    { name: 'خدماتنا', href: '/client-services', icon: Sparkles },
     { name: 'سجل الطلبات', href: '/orders', icon: ShoppingCart },
     { name: 'فواتيري', href: '/invoices', icon: FileText },
     { name: 'محفظتي', href: '/wallet', icon: Wallet },
