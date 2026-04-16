@@ -437,7 +437,59 @@ const ServiceOrderCard = ({
   const [sendingQuote, setSendingQuote] = useState(false);
   const { toast } = useToast();
 
-  const loadAttachments = async () => {
+  const sendPriceQuote = async () => {
+    if (!quotePrice || parseFloat(quotePrice) <= 0) {
+      toast({ title: "خطأ", description: "يرجى إدخال سعر صحيح", variant: "destructive" });
+      return;
+    }
+    setSendingQuote(true);
+    try {
+      // Update the order total_amount
+      const { error: updateError } = await supabase
+        .from('service_orders')
+        .update({ 
+          total_amount: parseFloat(quotePrice),
+          updated_at: new Date().toISOString()
+        })
+        .eq('id', order.id);
+
+      if (updateError) throw updateError;
+
+      // Add timeline entry
+      await (supabase.from('service_order_timeline') as any).insert([{
+        order_id: order.id,
+        status: 'price_quote',
+        note: `تم إرسال عرض سعر: ${parseFloat(quotePrice).toLocaleString()} ر.س${quoteNotes ? ' - ' + quoteNotes : ''}`
+      }]);
+
+      // Send notification to client
+      if (order.user_id) {
+        await (supabase.from('user_notifications') as any).insert([{
+          user_id: order.user_id,
+          title: '💰 عرض سعر جديد',
+          message: `تم تحديد سعر طلبك رقم ${order.tracking_id}: ${parseFloat(quotePrice).toLocaleString()} ر.س${quoteNotes ? '\n' + quoteNotes : ''}`,
+          type: 'price_quote',
+          link: '/orders'
+        }]);
+      }
+
+      toast({
+        title: "تم إرسال عرض السعر ✅",
+        description: `تم إرسال عرض سعر بقيمة ${parseFloat(quotePrice).toLocaleString()} ر.س للعميل`,
+      });
+
+      setShowPriceQuote(false);
+      setQuoteNotes('');
+      // Reload to reflect changes
+      window.location.reload();
+    } catch (error) {
+      console.error('Error sending quote:', error);
+      toast({ title: "خطأ", description: "حدث خطأ أثناء إرسال عرض السعر", variant: "destructive" });
+    } finally {
+      setSendingQuote(false);
+    }
+  };
+
     if (attachments.length > 0) {
       setShowAttachments(!showAttachments);
       return;
