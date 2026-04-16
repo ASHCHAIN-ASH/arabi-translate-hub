@@ -1,6 +1,5 @@
-/* خطوط أكاديمية عربية حديثة */
-@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+/* خطوط احترافية */
+@import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800&family=Inter:wght@300;400;500;600;700&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -295,7 +294,8 @@
 
   body {
     @apply text-foreground;
-    font-family: 'Cairo', 'Inter', system-ui, sans-serif;
+    font-family: 'Tajawal', 'Inter', system-ui, sans-serif;
+    font-weight: 400;
     background-color: hsl(var(--background));
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
@@ -309,20 +309,20 @@
 
 @layer base {
   .font-academic-title {
-    font-family: 'Cairo', system-ui, sans-serif;
+    font-family: 'Tajawal', system-ui, sans-serif;
     font-weight: 700;
     letter-spacing: -0.01em;
   }
   
   .font-academic-body {
-    font-family: 'Cairo', 'Inter', system-ui, sans-serif;
+    font-family: 'Tajawal', 'Inter', system-ui, sans-serif;
     font-weight: 400;
     line-height: 1.7;
   }
   
   .font-academic-heading {
-    font-family: 'Cairo', system-ui, sans-serif;
-    font-weight: 600;
+    font-family: 'Tajawal', system-ui, sans-serif;
+    font-weight: 500;
     letter-spacing: -0.02em;
   }
 }
