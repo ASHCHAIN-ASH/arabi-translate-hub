@@ -122,8 +122,8 @@ export function useChat(userId?: string, isAdmin = false) {
     loadConversations();
     loadUnreadCount();
 
-    const channelName = `chat-realtime-${Date.now()}`;
-    const channel = supabase.channel(channelName);
+    const channelId = globalThis.crypto?.randomUUID?.() ?? `${Date.now()}-${Math.random().toString(36).slice(2)}`;
+    const channel = supabase.channel(`chat-realtime-${channelId}`);
 
     channel
       .on('postgres_changes', { event: '*', schema: 'public', table: 'chat_messages' }, () => {
