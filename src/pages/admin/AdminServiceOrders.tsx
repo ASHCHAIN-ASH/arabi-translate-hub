@@ -490,7 +490,7 @@ const ServiceOrderCard = ({
     }
   };
 
-    if (attachments.length > 0) {
+    const loadAttachments = async () => {
       setShowAttachments(!showAttachments);
       return;
     }
