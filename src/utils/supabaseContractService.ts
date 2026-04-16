@@ -1,133 +1,140 @@
+import { supabase } from '@/integrations/supabase/client';
 import { Contract, ContractStatus, ClientApproval, ServiceType } from '@/types/contract';
 
-// Mock data - Contract tables not configured yet
-console.warn('Supabase contract tables not configured, using mock data');
+// ==============================
+// Contract Service — Real Supabase Queries
+// Uses the `contracts` table
+// ==============================
 
-// بيانات وهمية للاختبار
-const mockContracts: Contract[] = [
-  {
-    id: '1',
-    clientId: 'client-1',
-    clientName: 'أحمد محمد علي',
-    clientEmail: 'ahmed@example.com',
-    clientPhone: '+966501234567',
-    serviceType: 'translation-legal',
-    serviceDetails: {
-      title: 'ترجمة عقد عمل',
-      description: 'ترجمة عقد عمل من الإنجليزية إلى العربية',
-      specifications: {
-        wordCount: 1500,
-        sourceLang: 'الإنجليزية',
-        targetLang: 'العربية',
-        domain: 'قانوني'
-      },
-      attachments: [],
-      estimatedDuration: '5-7 أيام عمل',
-      deliverables: ['ملف الترجمة النهائي', 'مراجعة لغوية']
-    },
-    contractContent: 'محتوى العقد الخاص بترجمة عقد العمل...',
-    status: 'draft',
-    createdAt: '2024-01-15T10:00:00Z',
-    updatedAt: '2024-01-15T10:00:00Z',
-    approvedAt: null,
-    clientSignature: null,
-    digitalSignature: null,
-    totalAmount: 450,
-    deliveryDate: '2024-01-22',
-    paymentTerms: 'دفع مقدم',
-    terms: [
-      {
-        id: '1',
-        title: 'المدة الزمنية',
-        content: 'سيتم تسليم الترجمة خلال 7 أيام عمل',
-        required: true
-      },
-      {
-        id: '2',
-        title: 'الدفع',
-        content: 'الدفع مقدماً قبل البدء في العمل',
-        required: true
-      }
-    ]
+const mapRowToContract = (row: any): Contract => ({
+  id: row.id,
+  clientId: row.user_id,
+  clientName: row.client_name,
+  clientEmail: row.client_email,
+  clientPhone: row.client_phone,
+  serviceType: row.service_type as ServiceType,
+  serviceDetails: {
+    title: row.service_description || '',
+    description: row.service_description || '',
+    specifications: row.service_details || {},
+    attachments: [],
+    estimatedDuration: row.contract_duration || '',
+    deliverables: [],
   },
-  {
-    id: '2',
-    clientId: 'client-2',
-    clientName: 'فاطمة سالم',
-    clientEmail: 'fatima@example.com',
-    clientPhone: '+966507654321',
-    serviceType: 'translation-medical',
-    serviceDetails: {
-      title: 'ترجمة تقرير طبي',
-      description: 'ترجمة تقرير طبي من العربية إلى الإنجليزية',
-      specifications: {
-        wordCount: 800,
-        sourceLang: 'العربية',
-        targetLang: 'الإنجليزية',
-        domain: 'طبي'
-      },
-      attachments: [],
-      estimatedDuration: '3-5 أيام عمل',
-      deliverables: ['ترجمة طبية معتمدة', 'شهادة ترجمة']
-    },
-    contractContent: 'محتوى العقد الخاص بترجمة التقرير الطبي...',
-    status: 'approved',
-    createdAt: '2024-01-10T14:30:00Z',
-    updatedAt: '2024-01-12T09:15:00Z',
-    approvedAt: '2024-01-12T09:15:00Z',
-    clientSignature: 'signature_hash_123',
-    digitalSignature: 'digital_sig_456',
-    totalAmount: 320,
-    deliveryDate: '2024-01-17',
-    paymentTerms: 'دفع عند التسليم',
-    terms: [
-      {
-        id: '3',
-        title: 'السرية',
-        content: 'الالتزام بسرية المعلومات الطبية',
-        required: true
-      }
-    ]
-  }
-];
+  contractContent: row.contract_content || '',
+  status: row.status as ContractStatus,
+  createdAt: row.created_at,
+  updatedAt: row.updated_at,
+  approvedAt: row.client_approved_at || undefined,
+  clientSignature: row.signed_by_client || undefined,
+  digitalSignature: row.signed_by_company || undefined,
+  totalAmount: row.service_price,
+  paymentTerms: row.payment_terms || '',
+  deliveryDate: row.delivery_date || '',
+  terms: [],
+});
 
 export const createContract = async (contractData: Omit<Contract, 'id' | 'createdAt' | 'updatedAt'>): Promise<string> => {
-  // Mock implementation - return a fake ID
-  const newId = 'contract-' + Date.now();
-  console.log('Mock contract created with ID:', newId);
-  return newId;
+  const { data: user } = await supabase.auth.getUser();
+  if (!user?.user) throw new Error('المستخدم غير مسجل الدخول');
+
+  const { data, error } = await supabase
+    .from('contracts')
+    .insert({
+      user_id: user.user.id,
+      client_name: contractData.clientName,
+      client_email: contractData.clientEmail,
+      client_phone: contractData.clientPhone,
+      client_type: 'individual',
+      service_type: contractData.serviceType,
+      service_description: contractData.serviceDetails.title,
+      service_details: contractData.serviceDetails.specifications,
+      contract_content: contractData.contractContent,
+      service_price: contractData.totalAmount,
+      payment_terms: contractData.paymentTerms,
+      delivery_date: contractData.deliveryDate,
+      status: contractData.status || 'draft',
+      contract_number: `CNT-${Date.now()}`,
+    })
+    .select('id')
+    .single();
+
+  if (error) throw error;
+  return data.id;
 };
 
 export const getAllContracts = async (): Promise<Contract[]> => {
-  // Return mock data
-  return [...mockContracts];
+  const { data, error } = await supabase
+    .from('contracts')
+    .select('*')
+    .order('created_at', { ascending: false });
+
+  if (error) {
+    console.error('Error fetching contracts:', error);
+    return [];
+  }
+
+  return (data || []).map(mapRowToContract);
 };
 
 export const getContractById = async (id: string): Promise<Contract | null> => {
-  const contract = mockContracts.find(c => c.id === id);
-  return contract || null;
+  const { data, error } = await supabase
+    .from('contracts')
+    .select('*')
+    .eq('id', id)
+    .single();
+
+  if (error || !data) return null;
+  return mapRowToContract(data);
 };
 
 export const updateContractStatus = async (
   contractId: string, 
   status: ContractStatus
 ): Promise<void> => {
-  // Mock implementation - log the update
-  console.log(`Contract ${contractId} status updated to ${status}`);
+  const updateData: Record<string, any> = { status, updated_at: new Date().toISOString() };
+  
+  if (status === 'approved') {
+    updateData.client_approved = true;
+    updateData.client_approved_at = new Date().toISOString();
+  }
+  if (status === 'signed') {
+    updateData.company_approved = true;
+    updateData.company_approved_at = new Date().toISOString();
+  }
+
+  const { error } = await supabase
+    .from('contracts')
+    .update(updateData)
+    .eq('id', contractId);
+
+  if (error) throw error;
 };
 
 export const searchContracts = async (query: string): Promise<Contract[]> => {
-  // Mock search implementation
-  const lowerQuery = query.toLowerCase();
-  return mockContracts.filter(contract => 
-    contract.clientName.toLowerCase().includes(lowerQuery) ||
-    contract.clientEmail.toLowerCase().includes(lowerQuery) ||
-    contract.serviceDetails.title.toLowerCase().includes(lowerQuery)
-  );
+  const { data, error } = await supabase
+    .from('contracts')
+    .select('*')
+    .or(`client_name.ilike.%${query}%,client_email.ilike.%${query}%,service_description.ilike.%${query}%`)
+    .order('created_at', { ascending: false });
+
+  if (error) {
+    console.error('Error searching contracts:', error);
+    return [];
+  }
+
+  return (data || []).map(mapRowToContract);
 };
 
 export const getContractsByStatus = async (status: ContractStatus): Promise<Contract[]> => {
-  return mockContracts.filter(contract => contract.status === status);
+  const { data, error } = await supabase
+    .from('contracts')
+    .select('*')
+    .eq('status', status)
+    .order('created_at', { ascending: false });
+
+  if (error) return [];
+  return (data || []).map(mapRowToContract);
 };
 
 export const saveClientApproval = async (
@@ -140,6 +147,16 @@ export const saveClientApproval = async (
     comments?: string;
   }
 ): Promise<void> => {
-  // Mock implementation - log the approval
-  console.log(`Client approval saved for contract ${contractId}:`, approvalData);
+  const { error } = await supabase
+    .from('contracts')
+    .update({
+      client_approved: true,
+      client_approved_at: new Date().toISOString(),
+      signed_by_client: approvalData.signature,
+      status: 'approved',
+      updated_at: new Date().toISOString(),
+    })
+    .eq('id', contractId);
+
+  if (error) throw error;
 };
