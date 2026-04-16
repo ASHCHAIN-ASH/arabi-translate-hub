@@ -431,6 +431,11 @@ const ServiceOrderCard = ({
   const [attachments, setAttachments] = useState<any[]>([]);
   const [showAttachments, setShowAttachments] = useState(false);
   const [loadingAttachments, setLoadingAttachments] = useState(false);
+  const [showPriceQuote, setShowPriceQuote] = useState(false);
+  const [quotePrice, setQuotePrice] = useState(order.total_amount?.toString() || '');
+  const [quoteNotes, setQuoteNotes] = useState('');
+  const [sendingQuote, setSendingQuote] = useState(false);
+  const { toast } = useToast();
 
   const loadAttachments = async () => {
     if (attachments.length > 0) {
