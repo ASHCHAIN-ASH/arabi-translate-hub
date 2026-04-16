@@ -232,6 +232,22 @@ const AdminServiceOrders = () => {
         }]);
       }
 
+      // Send email notification
+      const clientEmail = getClientEmail(order!);
+      const clientName = getClientName(order!);
+      if (clientEmail) {
+        supabase.functions.invoke('send-order-status-email', {
+          body: {
+            orderId,
+            newStatus,
+            orderTitle: order?.service_name || 'طلب خدمة',
+            clientName,
+            clientEmail,
+            trackingId: order?.tracking_id,
+          }
+        }).catch(err => console.error('Email send error:', err));
+      }
+
       toast({ title: "✅ تم تحديث الحالة", description: STATUS_CONFIG[newStatus]?.label });
     } catch (error) {
       console.error('Error:', error);
