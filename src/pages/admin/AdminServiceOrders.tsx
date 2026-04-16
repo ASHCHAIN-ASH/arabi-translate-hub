@@ -206,6 +206,17 @@ const AdminServiceOrders = () => {
   }, [orders, searchTerm, statusFilter, priorityFilter, sortBy]);
 
   const updateOrderStatus = async (orderId: string, newStatus: string) => {
+    const order = orders.find(o => o.id === orderId);
+    const previousStatus = order?.current_status;
+
+    // Optimistic update - تحديث فوري في الواجهة
+    setOrders(prev => prev.map(o => 
+      o.id === orderId ? { ...o, current_status: newStatus, updated_at: new Date().toISOString() } : o
+    ));
+    if (selectedOrder?.id === orderId) {
+      setSelectedOrder(prev => prev ? { ...prev, current_status: newStatus } : prev);
+    }
+
     try {
       const { error } = await supabase
         .from('service_orders')
@@ -213,36 +224,33 @@ const AdminServiceOrders = () => {
         .eq('id', orderId);
       if (error) throw error;
 
-      // Add timeline
-      await (supabase.from('service_order_timeline') as any).insert([{
+      // Add timeline (fire & forget)
+      (supabase.from('service_order_timeline') as any).insert([{
         order_id: orderId,
         status: newStatus,
         note: `تم تغيير حالة الطلب إلى: ${STATUS_CONFIG[newStatus]?.label || newStatus}`
-      }]);
+      }]).then(() => {});
 
-      // Notify client
-      const order = orders.find(o => o.id === orderId);
+      // Notify client (fire & forget)
       if (order?.user_id) {
-        await (supabase.from('user_notifications') as any).insert([{
+        (supabase.from('user_notifications') as any).insert([{
           user_id: order.user_id,
           title: '🔄 تحديث حالة الطلب',
           message: `تم تحديث حالة طلبك ${order.tracking_id} إلى: ${STATUS_CONFIG[newStatus]?.label || newStatus}`,
           type: 'order_update',
           link: '/orders'
-        }]);
+        }]).then(() => {});
       }
 
-      // Send email notification
+      // Send email (fire & forget)
       const clientEmail = getClientEmail(order!);
       const clientName = getClientName(order!);
       if (clientEmail) {
         supabase.functions.invoke('send-order-status-email', {
           body: {
-            orderId,
-            newStatus,
+            orderId, newStatus,
             orderTitle: order?.service_name || 'طلب خدمة',
-            clientName,
-            clientEmail,
+            clientName, clientEmail,
             trackingId: order?.tracking_id,
           }
         }).catch(err => console.error('Email send error:', err));
@@ -250,6 +258,10 @@ const AdminServiceOrders = () => {
 
       toast({ title: "✅ تم تحديث الحالة", description: STATUS_CONFIG[newStatus]?.label });
     } catch (error) {
+      // Revert on failure
+      setOrders(prev => prev.map(o => 
+        o.id === orderId ? { ...o, current_status: previousStatus || o.current_status } : o
+      ));
       console.error('Error:', error);
       toast({ title: "خطأ في التحديث", variant: "destructive" });
     }
