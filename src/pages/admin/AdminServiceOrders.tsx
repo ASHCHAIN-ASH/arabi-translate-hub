@@ -474,6 +474,40 @@ const ServiceOrderCard = ({
           type: 'price_quote',
           link: '/orders'
         }]);
+        }
+
+      // Send email notification to client
+      if (order.user_id) {
+        // Get client email from profiles or auth
+        const { data: profile } = await supabase
+          .from('profiles')
+          .select('full_name')
+          .eq('id', order.user_id)
+          .maybeSingle();
+
+        // Get email from auth via a workaround - use the customers table
+        const { data: customer } = await supabase
+          .from('customers')
+          .select('email')
+          .eq('user_id', order.user_id)
+          .maybeSingle();
+
+        const clientEmail = customer?.email;
+        if (clientEmail) {
+          await supabase.functions.invoke('send-transactional-email', {
+            body: {
+              templateName: 'quote-notification',
+              recipientEmail: clientEmail,
+              idempotencyKey: `quote-${order.id}-${Date.now()}`,
+              templateData: {
+                serviceName: order.service_name || 'خدمة',
+                trackingId: order.tracking_id,
+                amount: parseFloat(quotePrice).toLocaleString(),
+                ordersUrl: 'https://masteredupath.com/orders',
+              },
+            },
+          });
+        }
       }
 
       toast({
