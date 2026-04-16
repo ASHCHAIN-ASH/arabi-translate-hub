@@ -13,6 +13,7 @@ vi.mock('@/integrations/supabase/client', () => ({
       return {
         select: mockSelect,
         insert: mockInsert,
+        update: vi.fn().mockReturnValue({ eq: mockEq }),
         eq: mockEq,
         single: mockSingle,
         order: vi.fn().mockReturnThis(),
