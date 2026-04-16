@@ -55,8 +55,8 @@ export class AdminDashboardService {
       startOfMonth.setDate(1);
       startOfMonth.setHours(0, 0, 0, 0);
 
-      const { data: salesData } = await supabase
-        .from('payment_transactions')
+      const { data: salesData } = await ((supabase as any)
+    .from('payment_transactions'))
         .select('amount')
         .eq('status', 'COMPLETED')
         .gte('created_at', startOfMonth.toISOString())
@@ -68,38 +68,38 @@ export class AdminDashboardService {
       const startOfDay = new Date();
       startOfDay.setHours(0, 0, 0, 0);
 
-      const { count: newOrdersCount } = await supabase
-        .from('contracts')
+      const { count: newOrdersCount } = await ((supabase as any)
+    .from('contracts'))
         .select('*', { count: 'exact', head: true })
         .gte('created_at', startOfDay.toISOString());
 
       // الفواتير المتأخرة
-      const { count: overdueCount } = await supabase
-        .from('invoices')
+      const { count: overdueCount } = await ((supabase as any)
+    .from('invoices'))
         .select('*', { count: 'exact', head: true })
         .eq('status', 'overdue')
         .lt('due_date', new Date().toISOString());
 
       // نسبة التحصيل
-      const { data: paidInvoices, count: paidCount } = await supabase
-        .from('invoices')
+      const { data: paidInvoices, count: paidCount } = await ((supabase as any)
+    .from('invoices'))
         .select('*', { count: 'exact' })
         .eq('payment_status', 'paid');
 
-      const { count: totalInvoicesCount } = await supabase
-        .from('invoices')
+      const { count: totalInvoicesCount } = await ((supabase as any)
+    .from('invoices'))
         .select('*', { count: 'exact', head: true });
 
       const collectionRate = totalInvoicesCount ? Math.round((paidCount || 0) / totalInvoicesCount * 100) : 0;
 
       // إجمالي المستخدمين
-      const { count: usersCount } = await supabase
-        .from('contracts')
+      const { count: usersCount } = await ((supabase as any)
+    .from('contracts'))
         .select('user_id', { count: 'exact', head: true });
 
       // الخدمات النشطة
-      const { count: activeServicesCount } = await supabase
-        .from('contracts')
+      const { count: activeServicesCount } = await ((supabase as any)
+    .from('contracts'))
         .select('*', { count: 'exact', head: true })
         .eq('status', 'active');
 
@@ -121,8 +121,8 @@ export class AdminDashboardService {
   // أحدث الطلبات
   static async getRecentOrders(): Promise<RecentOrder[]> {
     try {
-      const { data, error } = await supabase
-        .from('contracts')
+      const { data, error } = await ((supabase as any)
+    .from('contracts'))
         .select(`
           id,
           contract_number,
@@ -155,8 +155,8 @@ export class AdminDashboardService {
   // الفواتير المتأخرة
   static async getOverdueInvoices(): Promise<OverdueInvoice[]> {
     try {
-      const { data, error } = await supabase
-        .from('invoices')
+      const { data, error } = await ((supabase as any)
+    .from('invoices'))
         .select('*')
         .lt('due_date', new Date().toISOString())
         .neq('payment_status', 'paid')
@@ -188,8 +188,8 @@ export class AdminDashboardService {
   // التذاكر عالية الأولوية
   static async getHighPriorityTickets(): Promise<HighPriorityTicket[]> {
     try {
-      const { data, error } = await supabase
-        .from('tickets')
+      const { data, error } = await ((supabase as any)
+    .from('tickets'))
         .select('*')
         .eq('priority', 'high')
         .eq('status', 'open')
@@ -216,8 +216,8 @@ export class AdminDashboardService {
   static async getRecentNotifications(): Promise<AdminNotification[]> {
     try {
       // نحصل على أحدث الأنشطة من سجلات النشاط
-      const { data, error } = await supabase
-        .from('user_activity_logs')
+      const { data, error } = await ((supabase as any)
+    .from('user_activity_logs'))
         .select('*')
         .order('created_at', { ascending: false })
         .limit(10);
@@ -227,8 +227,8 @@ export class AdminDashboardService {
       const notifications: AdminNotification[] = [];
 
       // إضافة إشعارات للعقود الجديدة
-      const { data: newContracts } = await supabase
-        .from('contracts')
+      const { data: newContracts } = await ((supabase as any)
+    .from('contracts'))
         .select('*')
         .gte('created_at', new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString())
         .order('created_at', { ascending: false })
@@ -245,8 +245,8 @@ export class AdminDashboardService {
       });
 
       // إضافة إشعارات للمدفوعات الجديدة
-      const { data: newPayments } = await supabase
-        .from('payment_transactions')
+      const { data: newPayments } = await ((supabase as any)
+    .from('payment_transactions'))
         .select('*')
         .eq('status', 'COMPLETED')
         .gte('created_at', new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString())
@@ -264,8 +264,8 @@ export class AdminDashboardService {
       });
 
       // إضافة إشعارات التذاكر الجديدة
-      const { data: newTickets } = await supabase
-        .from('tickets')
+      const { data: newTickets } = await ((supabase as any)
+    .from('tickets'))
         .select('*')
         .gte('created_at', new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString())
         .order('created_at', { ascending: false })

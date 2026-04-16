@@ -35,28 +35,28 @@ export class ClientDashboardService {
   static async getClientStats(userId: string): Promise<ClientStats> {
     try {
       // إجمالي الطلبات
-      const { count: totalOrdersCount } = await supabase
-        .from('contracts')
+      const { count: totalOrdersCount } = await ((supabase as any)
+    .from('contracts'))
         .select('*', { count: 'exact', head: true })
         .eq('user_id', userId);
 
       // الطلبات قيد المعالجة
-      const { count: pendingOrdersCount } = await supabase
-        .from('contracts')
+      const { count: pendingOrdersCount } = await ((supabase as any)
+    .from('contracts'))
         .select('*', { count: 'exact', head: true })
         .eq('user_id', userId)
         .in('status', ['draft', 'pending']);
 
       // الفواتير غير المدفوعة
-      const { count: unpaidInvoicesCount } = await supabase
-        .from('invoices')
+      const { count: unpaidInvoicesCount } = await ((supabase as any)
+    .from('invoices'))
         .select('*', { count: 'exact', head: true })
         .eq('user_id', userId)
         .neq('payment_status', 'paid');
 
       // آخر دفعة
-      const { data: lastPaymentData } = await supabase
-        .from('payment_transactions')
+      const { data: lastPaymentData } = await ((supabase as any)
+    .from('payment_transactions'))
         .select('amount')
         .eq('user_id', userId)
         .eq('status', 'COMPLETED')
@@ -80,8 +80,8 @@ export class ClientDashboardService {
   // أحدث طلبات العميل
   static async getClientOrders(userId: string): Promise<ClientOrder[]> {
     try {
-      const { data, error } = await supabase
-        .from('contracts')
+      const { data, error } = await ((supabase as any)
+    .from('contracts'))
         .select(`
           id,
           contract_number,
@@ -119,8 +119,8 @@ export class ClientDashboardService {
   // فواتير العميل
   static async getClientInvoices(userId: string): Promise<ClientInvoice[]> {
     try {
-      const { data, error } = await supabase
-        .from('invoices')
+      const { data, error } = await ((supabase as any)
+    .from('invoices'))
         .select('*')
         .eq('user_id', userId)
         .order('created_at', { ascending: false })
@@ -145,8 +145,8 @@ export class ClientDashboardService {
   // آخر المدفوعات
   static async getClientPayments(userId: string, limit = 5) {
     try {
-      const { data, error } = await supabase
-        .from('payment_transactions')
+      const { data, error } = await ((supabase as any)
+    .from('payment_transactions'))
         .select('*')
         .eq('user_id', userId)
         .order('created_at', { ascending: false })
@@ -173,8 +173,8 @@ export class ClientDashboardService {
   // التذاكر النشطة للعميل
   static async getClientTickets(userId: string) {
     try {
-      const { data, error } = await supabase
-        .from('tickets')
+      const { data, error } = await ((supabase as any)
+    .from('tickets'))
         .select('*')
         .eq('user_id', userId)
         .neq('status', 'closed')
