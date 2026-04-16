@@ -526,13 +526,35 @@ const OrderDetails = () => {
             <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }}>
               <Card className="border-0 shadow-md">
                 <CardHeader className="pb-3">
-                  <CardTitle className="flex items-center gap-2 text-base">
-                    <FileText className="w-5 h-5 text-primary" />
-                    المرفقات
-                    {attachments.length > 0 && (
-                      <Badge variant="secondary" className="text-xs">{attachments.length}</Badge>
-                    )}
-                  </CardTitle>
+                  <div className="flex items-center justify-between">
+                    <CardTitle className="flex items-center gap-2 text-base">
+                      <FileText className="w-5 h-5 text-primary" />
+                      المرفقات
+                      {attachments.length > 0 && (
+                        <Badge variant="secondary" className="text-xs">{attachments.length}</Badge>
+                      )}
+                    </CardTitle>
+                    <div>
+                      <input
+                        ref={fileInputRef}
+                        type="file"
+                        multiple
+                        className="hidden"
+                        onChange={handleFileUpload}
+                        accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.jpg,.jpeg,.png,.gif,.zip,.rar,.txt"
+                      />
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        onClick={() => fileInputRef.current?.click()}
+                        disabled={uploading}
+                        className="gap-2"
+                      >
+                        {uploading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Upload className="w-4 h-4" />}
+                        {uploading ? 'جاري الرفع...' : 'رفع ملف'}
+                      </Button>
+                    </div>
+                  </div>
                 </CardHeader>
                 <CardContent>
                   {attachments.length === 0 ? (
