@@ -1,236 +1,333 @@
 import { supabase } from '@/integrations/supabase/client';
-import { 
-  LedgerAccount, 
-  JournalEntry, 
-  JournalLine, 
-  TaxRate, 
-  TrialBalance, 
+import type {
+  LedgerAccount,
+  JournalEntry,
+  JournalLine,
+  TaxRate,
+  TrialBalance,
   GLEntry,
   TaxSummary,
   AccountType,
 } from '@/types/accounting';
 
 // ==============================
-// Accounting Service — Real Supabase Queries
-// Uses business_invoices + business_payments as the ledger source
+// Chart of Accounts — Real DB
 // ==============================
 
-// خدمات دليل الحسابات — مشتقة من الفواتير والمدفوعات
 export const getAllAccounts = async (): Promise<LedgerAccount[]> => {
-  // Derive accounts from the chart of business invoices
-  // Since we don't have a dedicated ledger_accounts table,
-  // we provide a standard chart of accounts
-  const standardAccounts: LedgerAccount[] = [
-    { id: 'acc-cash', code: '1001', name: 'النقدية', type: 'asset', isActive: true, createdAt: '', updatedAt: '' },
-    { id: 'acc-ar', code: '1200', name: 'الذمم المدينة', nameEn: 'Accounts Receivable', type: 'asset', isActive: true, createdAt: '', updatedAt: '' },
-    { id: 'acc-revenue', code: '4000', name: 'إيرادات الخدمات', nameEn: 'Service Revenue', type: 'revenue', isActive: true, createdAt: '', updatedAt: '' },
-    { id: 'acc-vat', code: '2100', name: 'ضريبة القيمة المضافة', nameEn: 'VAT Payable', type: 'liability', isActive: true, createdAt: '', updatedAt: '' },
-    { id: 'acc-bank', code: '1002', name: 'البنك', nameEn: 'Bank', type: 'asset', isActive: true, createdAt: '', updatedAt: '' },
-    { id: 'acc-expense', code: '5000', name: 'مصاريف عامة', nameEn: 'General Expenses', type: 'expense', isActive: true, createdAt: '', updatedAt: '' },
-    { id: 'acc-equity', code: '3000', name: 'رأس المال', nameEn: 'Capital', type: 'equity', isActive: true, createdAt: '', updatedAt: '' },
-  ];
-  return standardAccounts;
+  const { data, error } = await (supabase as any)
+    .from('ledger_accounts')
+    .select('*')
+    .eq('is_active', true)
+    .order('code');
+
+  if (error) {
+    console.error('Error fetching ledger accounts:', error);
+    return [];
+  }
+
+  return (data || []).map((row: any) => ({
+    id: row.id,
+    code: row.code,
+    name: row.name,
+    nameEn: row.name_en,
+    type: row.account_type as AccountType,
+    parentId: row.parent_id,
+    isActive: row.is_active,
+    createdAt: row.created_at,
+    updatedAt: row.updated_at,
+  }));
 };
 
 export const getAccountsByType = async (type: AccountType): Promise<LedgerAccount[]> => {
-  const allAccounts = await getAllAccounts();
-  return allAccounts.filter(a => a.type === type);
+  const all = await getAllAccounts();
+  return all.filter(a => a.type === type);
 };
 
-export const createAccount = async (accountData: Omit<LedgerAccount, 'id' | 'createdAt' | 'updatedAt'>): Promise<string> => {
-  // Without a dedicated table, we cannot persist custom accounts
-  console.warn('Custom account creation requires a ledger_accounts table migration');
-  return 'acc-' + Date.now();
+export const createAccount = async (
+  accountData: Omit<LedgerAccount, 'id' | 'createdAt' | 'updatedAt'>
+): Promise<string> => {
+  const { data, error } = await (supabase as any)
+    .from('ledger_accounts')
+    .insert({
+      code: accountData.code,
+      name: accountData.name,
+      name_en: accountData.nameEn,
+      account_type: accountData.type,
+      parent_id: accountData.parentId,
+      is_active: accountData.isActive,
+    })
+    .select('id')
+    .single();
+
+  if (error) throw error;
+  return data.id;
 };
 
-// خدمات قيود اليومية — مشتقة من الفواتير والمدفوعات
+// ==============================
+// Journal Entries — Immutable after posting
+// ==============================
+
 export const createJournalEntry = async (
   entryData: Omit<JournalEntry, 'id' | 'createdAt'>
 ): Promise<string> => {
-  // Journal entries are auto-derived from invoices/payments
-  console.warn('Direct journal entry creation requires a journal_entries table migration');
-  return 'entry-' + Date.now();
-};
-
-// إنشاء قيد من فاتورة — يُنشأ تلقائياً عند إنشاء فاتورة
-export const createInvoiceJournalEntry = async (
-  invoiceData: {
-    invoiceId: string;
-    customerId: string;
-    totalAmount: number;
-    taxAmount: number;
-    netAmount: number;
-    invoiceDate: string;
+  // Validate double-entry balance
+  const totalDebit = entryData.lines.reduce((s, l) => s + l.debitAmount, 0);
+  const totalCredit = entryData.lines.reduce((s, l) => s + l.creditAmount, 0);
+  if (Math.abs(totalDebit - totalCredit) > 0.01) {
+    throw new Error(`Debits (${totalDebit}) must equal credits (${totalCredit})`);
   }
-): Promise<string> => {
-  // The invoice itself in business_invoices IS the journal entry
-  // We just return the invoice ID as the entry reference
-  return invoiceData.invoiceId;
+
+  const { data: header, error: hErr } = await (supabase as any)
+    .from('ledger_entries')
+    .insert({
+      entry_number: '',
+      entry_date: entryData.entryDate,
+      reference: entryData.reference,
+      reference_type: entryData.referenceId ? 'manual' : null,
+      reference_id: entryData.referenceId,
+      memo: entryData.memo,
+      is_posted: false,
+    })
+    .select()
+    .single();
+
+  if (hErr) throw hErr;
+
+  const lineRows = entryData.lines.map(l => ({
+    entry_id: header.id,
+    account_id: l.accountId,
+    debit_amount: l.debitAmount,
+    credit_amount: l.creditAmount,
+    description: null,
+    client_id: l.customerId,
+    invoice_id: l.invoiceId,
+    contract_id: l.contractId,
+  }));
+
+  const { error: lErr } = await (supabase as any)
+    .from('ledger_lines')
+    .insert(lineRows);
+
+  if (lErr) throw lErr;
+  return header.id;
 };
 
-// إنشاء قيد من دفعة
-export const createPaymentJournalEntry = async (
-  paymentData: {
-    paymentId: string;
-    customerId: string;
-    amount: number;
-    paymentDate: string;
-    paymentMethod: string;
-    feeAmount?: number;
+export const createInvoiceJournalEntry = async (invoiceData: {
+  invoiceId: string;
+  customerId: string;
+  totalAmount: number;
+  taxAmount: number;
+  netAmount: number;
+  invoiceDate: string;
+}): Promise<string> => {
+  const accounts = await getAllAccounts();
+  const arAccount = accounts.find(a => a.code === '1100');
+  const revenueAccount = accounts.find(a => a.code === '4000');
+  const vatAccount = accounts.find(a => a.code === '2100');
+
+  if (!arAccount || !revenueAccount || !vatAccount) {
+    throw new Error('Required accounts not found in chart of accounts');
   }
-): Promise<string> => {
-  return paymentData.paymentId;
+
+  const entry: Omit<JournalEntry, 'id' | 'createdAt'> = {
+    entryNumber: '',
+    entryDate: invoiceData.invoiceDate,
+    reference: 'فاتورة',
+    referenceId: invoiceData.invoiceId,
+    memo: `قيد فاتورة ${invoiceData.invoiceId.substring(0, 8)}`,
+    lines: [
+      { id: '', entryId: '', accountId: arAccount.id, debitAmount: invoiceData.totalAmount, creditAmount: 0, currency: 'SAR', customerId: invoiceData.customerId, invoiceId: invoiceData.invoiceId },
+      { id: '', entryId: '', accountId: revenueAccount.id, debitAmount: 0, creditAmount: invoiceData.netAmount, currency: 'SAR', invoiceId: invoiceData.invoiceId },
+      { id: '', entryId: '', accountId: vatAccount.id, debitAmount: 0, creditAmount: invoiceData.taxAmount, currency: 'SAR', invoiceId: invoiceData.invoiceId },
+    ],
+  };
+
+  const entryId = await createJournalEntry(entry);
+  // Auto-post invoice entries
+  await postJournalEntry(entryId);
+  return entryId;
 };
 
-// تقرير ميزان المراجعة — محسوب من الفواتير والمدفوعات
-export const getTrialBalance = async (
-  fromDate: string,
-  toDate: string
-): Promise<TrialBalance[]> => {
-  // Fetch invoices in date range
-  const { data: invoices, error: invErr } = await supabase
+export const createPaymentJournalEntry = async (paymentData: {
+  paymentId: string;
+  customerId: string;
+  amount: number;
+  paymentDate: string;
+  paymentMethod: string;
+  feeAmount?: number;
+}): Promise<string> => {
+  const accounts = await getAllAccounts();
+  const cashAccount = accounts.find(a => a.code === '1000');
+  const arAccount = accounts.find(a => a.code === '1100');
+
+  if (!cashAccount || !arAccount) {
+    throw new Error('Required accounts not found');
+  }
+
+  const entry: Omit<JournalEntry, 'id' | 'createdAt'> = {
+    entryNumber: '',
+    entryDate: paymentData.paymentDate,
+    reference: 'دفعة',
+    referenceId: paymentData.paymentId,
+    memo: `تحصيل دفعة - ${paymentData.paymentMethod}`,
+    lines: [
+      { id: '', entryId: '', accountId: cashAccount.id, debitAmount: paymentData.amount, creditAmount: 0, currency: 'SAR', customerId: paymentData.customerId },
+      { id: '', entryId: '', accountId: arAccount.id, debitAmount: 0, creditAmount: paymentData.amount, currency: 'SAR', customerId: paymentData.customerId },
+    ],
+  };
+
+  const entryId = await createJournalEntry(entry);
+  await postJournalEntry(entryId);
+  return entryId;
+};
+
+const postJournalEntry = async (entryId: string): Promise<void> => {
+  const { error } = await (supabase as any)
+    .from('ledger_entries')
+    .update({ is_posted: true, posted_at: new Date().toISOString() })
+    .eq('id', entryId)
+    .eq('is_posted', false);
+
+  if (error) throw error;
+};
+
+// ==============================
+// Trial Balance — Real DB via RPC
+// ==============================
+
+export const getTrialBalance = async (fromDate: string, toDate: string): Promise<TrialBalance[]> => {
+  const { data, error } = await (supabase as any).rpc('get_trial_balance', {
+    p_from_date: fromDate,
+    p_to_date: toDate,
+  });
+
+  if (error) {
+    console.error('Trial balance error, falling back to invoice-based:', error);
+    return getTrialBalanceFallback(fromDate, toDate);
+  }
+
+  return (data || []).map((row: any) => ({
+    accountCode: row.account_code,
+    accountName: row.account_name,
+    debitTotal: Number(row.debit_total),
+    creditTotal: Number(row.credit_total),
+    balance: Number(row.balance),
+  }));
+};
+
+// Fallback: derive from invoices/payments if ledger tables not yet migrated
+const getTrialBalanceFallback = async (fromDate: string, toDate: string): Promise<TrialBalance[]> => {
+  const { data: invoices } = await supabase
     .from('business_invoices')
     .select('subtotal, vat_amount, total, status')
     .gte('issue_date', fromDate)
     .lte('issue_date', toDate);
 
-  if (invErr) {
-    console.error('Error fetching invoices for trial balance:', invErr);
-    return [];
-  }
-
-  // Fetch payments in date range
-  const { data: payments, error: payErr } = await supabase
+  const { data: payments } = await supabase
     .from('business_payments')
     .select('amount, status')
     .gte('payment_date', fromDate)
     .lte('payment_date', toDate);
 
-  if (payErr) {
-    console.error('Error fetching payments for trial balance:', payErr);
-    return [];
-  }
-
-  const totalRevenue = (invoices || []).reduce((sum, inv) => sum + (inv.subtotal || 0), 0);
-  const totalVat = (invoices || []).reduce((sum, inv) => sum + (inv.vat_amount || 0), 0);
-  const totalInvoiced = (invoices || []).reduce((sum, inv) => sum + (inv.total || 0), 0);
-  const totalPaid = (payments || []).filter(p => p.status === 'completed').reduce((sum, p) => sum + p.amount, 0);
-  const totalAR = totalInvoiced - totalPaid;
+  const totalRevenue = (invoices || []).reduce((s, i) => s + (i.subtotal || 0), 0);
+  const totalVat = (invoices || []).reduce((s, i) => s + (i.vat_amount || 0), 0);
+  const totalInvoiced = (invoices || []).reduce((s, i) => s + (i.total || 0), 0);
+  const totalPaid = (payments || []).filter(p => p.status === 'completed').reduce((s, p) => s + p.amount, 0);
 
   return [
-    { accountCode: '1001', accountName: 'النقدية / البنك', debitTotal: totalPaid, creditTotal: 0, balance: totalPaid },
-    { accountCode: '1200', accountName: 'الذمم المدينة', debitTotal: totalAR > 0 ? totalAR : 0, creditTotal: totalAR < 0 ? Math.abs(totalAR) : 0, balance: totalAR },
+    { accountCode: '1000', accountName: 'النقدية / البنك', debitTotal: totalPaid, creditTotal: 0, balance: totalPaid },
+    { accountCode: '1100', accountName: 'الذمم المدينة', debitTotal: Math.max(totalInvoiced - totalPaid, 0), creditTotal: 0, balance: totalInvoiced - totalPaid },
     { accountCode: '2100', accountName: 'ضريبة القيمة المضافة', debitTotal: 0, creditTotal: totalVat, balance: -totalVat },
     { accountCode: '4000', accountName: 'إيرادات الخدمات', debitTotal: 0, creditTotal: totalRevenue, balance: -totalRevenue },
   ];
 };
 
-// تقرير دفتر الأستاذ العام
-export const getGeneralLedger = async (
-  accountId: string,
-  fromDate: string,
-  toDate: string
-): Promise<GLEntry[]> => {
-  const entries: GLEntry[] = [];
+// ==============================
+// General Ledger
+// ==============================
 
-  if (accountId === 'acc-ar' || accountId === 'acc-revenue' || accountId === 'acc-vat') {
-    const { data: invoices } = await supabase
-      .from('business_invoices')
-      .select('invoice_number, issue_date, title, subtotal, vat_amount, total')
-      .gte('issue_date', fromDate)
-      .lte('issue_date', toDate)
-      .order('issue_date', { ascending: true });
+export const getGeneralLedger = async (accountId: string, fromDate: string, toDate: string): Promise<GLEntry[]> => {
+  const { data, error } = await (supabase as any)
+    .from('ledger_lines')
+    .select('*, ledger_entries!inner(*)')
+    .eq('account_id', accountId)
+    .eq('ledger_entries.is_posted', true)
+    .gte('ledger_entries.entry_date', fromDate)
+    .lte('ledger_entries.entry_date', toDate)
+    .order('created_at');
 
-    let balance = 0;
-    (invoices || []).forEach(inv => {
-      const amount = accountId === 'acc-vat' ? (inv.vat_amount || 0) : 
-                     accountId === 'acc-revenue' ? (inv.subtotal || 0) : (inv.total || 0);
-      const isDebit = accountId === 'acc-ar';
-      balance += isDebit ? amount : -amount;
-      entries.push({
-        date: inv.issue_date || '',
-        entryNumber: inv.invoice_number,
-        reference: 'فاتورة',
-        memo: inv.title,
-        debitAmount: isDebit ? amount : 0,
-        creditAmount: isDebit ? 0 : amount,
-        balance,
-      });
-    });
+  if (error) {
+    console.error('GL query error:', error);
+    return [];
   }
 
-  if (accountId === 'acc-cash' || accountId === 'acc-bank' || accountId === 'acc-ar') {
-    const { data: payments } = await supabase
-      .from('business_payments')
-      .select('id, payment_date, payment_method, amount, notes')
-      .gte('payment_date', fromDate)
-      .lte('payment_date', toDate)
-      .eq('status', 'completed')
-      .order('payment_date', { ascending: true });
-
-    let balance = entries.length > 0 ? entries[entries.length - 1].balance : 0;
-    (payments || []).forEach(pay => {
-      const isDebit = accountId === 'acc-cash' || accountId === 'acc-bank';
-      balance += isDebit ? pay.amount : -pay.amount;
-      entries.push({
-        date: pay.payment_date || '',
-        entryNumber: pay.id.substring(0, 8),
-        reference: 'دفعة',
-        memo: pay.notes || pay.payment_method,
-        debitAmount: isDebit ? pay.amount : 0,
-        creditAmount: isDebit ? 0 : pay.amount,
-        balance,
-      });
-    });
-  }
-
-  return entries;
+  let balance = 0;
+  return (data || []).map((row: any) => {
+    balance += Number(row.debit_amount) - Number(row.credit_amount);
+    return {
+      date: row.ledger_entries.entry_date,
+      entryNumber: row.ledger_entries.entry_number,
+      reference: row.ledger_entries.reference,
+      memo: row.description || row.ledger_entries.memo,
+      debitAmount: Number(row.debit_amount),
+      creditAmount: Number(row.credit_amount),
+      balance,
+    };
+  });
 };
 
-// ملخص الضريبة
-export const getTaxSummary = async (
-  fromDate: string,
-  toDate: string
-): Promise<TaxSummary[]> => {
-  const { data: invoices, error } = await supabase
+// ==============================
+// Tax Summary
+// ==============================
+
+export const getTaxSummary = async (fromDate: string, toDate: string): Promise<TaxSummary[]> => {
+  const { data: invoices } = await supabase
     .from('business_invoices')
     .select('subtotal, vat_amount, vat_rate, issue_date')
     .gte('issue_date', fromDate)
     .lte('issue_date', toDate);
 
-  if (error || !invoices) return [];
+  if (!invoices) return [];
 
-  // Group by quarter
   const quarters = new Map<string, { taxableSales: number; taxAmount: number; taxRate: number }>();
-  
   invoices.forEach(inv => {
-    const date = new Date(inv.issue_date || '');
-    const q = `Q${Math.ceil((date.getMonth() + 1) / 3)} ${date.getFullYear()}`;
-    const existing = quarters.get(q) || { taxableSales: 0, taxAmount: 0, taxRate: inv.vat_rate || 15 };
-    existing.taxableSales += inv.subtotal || 0;
-    existing.taxAmount += inv.vat_amount || 0;
-    quarters.set(q, existing);
+    const d = new Date(inv.issue_date || '');
+    const q = `Q${Math.ceil((d.getMonth() + 1) / 3)} ${d.getFullYear()}`;
+    const ex = quarters.get(q) || { taxableSales: 0, taxAmount: 0, taxRate: inv.vat_rate || 15 };
+    ex.taxableSales += inv.subtotal || 0;
+    ex.taxAmount += inv.vat_amount || 0;
+    quarters.set(q, ex);
   });
 
-  return Array.from(quarters.entries()).map(([period, data]) => ({
-    period,
-    ...data,
-  }));
+  return Array.from(quarters.entries()).map(([period, d]) => ({ period, ...d }));
 };
 
-// خدمات معدلات الضريبة
+// ==============================
+// Tax Rates — Real DB
+// ==============================
+
 export const getAllTaxRates = async (): Promise<TaxRate[]> => {
-  // Standard Saudi VAT rate
-  return [
-    {
-      id: 'vat-sa-15',
-      name: 'ضريبة القيمة المضافة',
-      ratePercent: 15,
-      isDefault: true,
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
-    },
-  ];
+  const { data, error } = await (supabase as any)
+    .from('tax_rates')
+    .select('*')
+    .order('created_at');
+
+  if (error) {
+    return [{
+      id: 'vat-sa-15', name: 'ضريبة القيمة المضافة', ratePercent: 15,
+      isDefault: true, createdAt: new Date().toISOString(), updatedAt: new Date().toISOString(),
+    }];
+  }
+
+  return (data || []).map((r: any) => ({
+    id: r.id,
+    name: r.name,
+    ratePercent: Number(r.rate_percent),
+    isDefault: r.is_default,
+    createdAt: r.created_at,
+    updatedAt: r.updated_at,
+  }));
 };
 
 export const getDefaultTaxRate = async (): Promise<TaxRate | null> => {
@@ -238,7 +335,10 @@ export const getDefaultTaxRate = async (): Promise<TaxRate | null> => {
   return rates.find(r => r.isDefault) || null;
 };
 
-// خدمات المزامنة
+// ==============================
+// Sync (placeholder)
+// ==============================
+
 export const syncWithProvider = async (provider: string): Promise<void> => {
-  console.log(`Sync with ${provider} — not implemented (no external integration configured)`);
+  console.log(`Sync with ${provider} — not implemented`);
 };
