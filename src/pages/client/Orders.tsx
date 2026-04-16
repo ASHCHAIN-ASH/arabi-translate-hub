@@ -72,10 +72,6 @@ const Orders = () => {
               <RefreshCw className="w-4 h-4 ml-2" />
               تحديث
             </Button>
-            <Button onClick={() => navigate('/orders/new')}>
-              <Plus className="w-4 h-4 ml-2" />
-              طلب جديد
-            </Button>
           </div>
         </div>
 
