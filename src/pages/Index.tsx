@@ -218,9 +218,9 @@ const Index = () => {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: 0.3 }}
               >
-                <span className="text-slate-800 dark:text-white">وكالة </span>
+                <span className="text-slate-800 dark:text-white">أبحاثك تستحق </span>
                 <span className="bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 bg-clip-text text-transparent">
-                  ماستر إيدو باث
+                  الأفضل
                 </span>
               </motion.h1>
               
@@ -230,7 +230,7 @@ const Index = () => {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: 0.4 }}
               >
-                MasterEduPath Agency
+                ترجمة • بحث علمي • نشر أكاديمي • تدقيق لغوي
               </motion.h2>
               
               {/* الوصف */}
@@ -240,7 +240,8 @@ const Index = () => {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: 0.5 }}
               >
-                شريكك الموثوق في التعليم العالي والبحث العلمي. نقدم حلولاً أكاديمية متطورة ومعتمدة للجامعات والمراكز البحثية والطلاب المتميزين في أكثر من 120 دولة حول العالم.
+                أكثر من {UNIFIED_STATS.studentsServed.toLocaleString()} باحث وطالب وثقوا بنا في {UNIFIED_STATS.countriesServed}+ دولة.
+                احصل على خدمة احترافية خلال 24 ساعة.
               </motion.p>
 
               {/* الأزرار */}
@@ -252,20 +253,21 @@ const Index = () => {
               >
                 <Button 
                   size="lg"
-                  className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white shadow-lg hover:shadow-xl transition-all duration-300 w-full sm:w-auto text-sm sm:text-base"
+                  className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white shadow-lg hover:shadow-xl transition-all duration-300 w-full sm:w-auto text-sm sm:text-base px-8"
                   onClick={() => navigate('/order-now')}
                 >
-                  ابدأ رحلتك التعليمية
+                  اطلب خدمتك الآن — مجاناً للاستشارة
                   <ArrowRight className="h-4 w-4 sm:h-5 sm:w-5 mr-2" />
                 </Button>
                 
                 <Button 
                   size="lg"
                   variant="outline"
-                  className="border-2 border-slate-300 dark:border-slate-600 hover:bg-slate-50 dark:hover:bg-slate-800 w-full sm:w-auto text-sm sm:text-base"
+                  className="border-2 border-green-500 text-green-600 hover:bg-green-50 dark:hover:bg-green-950 w-full sm:w-auto text-sm sm:text-base"
+                  onClick={() => window.open('https://wa.me/966500776343?text=' + encodeURIComponent('مرحباً، أريد الاستفسار عن خدماتكم'), '_blank')}
                 >
-                  <PlayCircle className="h-4 w-4 sm:h-5 sm:w-5 ml-2" />
-                  شاهد عرضنا التقديمي
+                  <MessageCircle className="h-4 w-4 sm:h-5 sm:w-5 ml-2" />
+                  تواصل واتساب
                 </Button>
               </motion.div>
 
