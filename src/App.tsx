@@ -72,6 +72,7 @@ import AdminCustomers from "./pages/admin/AdminCustomers";
 import AdminTickets from "./pages/admin/AdminTickets";
 import AdminServiceOrders from "./pages/admin/AdminServiceOrders";
 import EmailNotifications from "./pages/admin/EmailNotifications";
+import AdminChat from "./pages/admin/AdminChat";
 import AddUser from "./pages/admin/AddUser";
 import AdminWorkingHours from "./pages/admin/AdminWorkingHours";
 import ContractsSystem from "./pages/admin/ContractsSystem";
@@ -344,6 +345,11 @@ const App = () => (
             <Route path="/adminmaster/email-notifications" element={
               <SimpleProtectedRoute adminOnly>
                 <EmailNotifications />
+              </SimpleProtectedRoute>
+            } />
+            <Route path="/adminmaster/chat" element={
+              <SimpleProtectedRoute adminOnly>
+                <AdminChat />
               </SimpleProtectedRoute>
             } />
             <Route path="/adminmaster/working-hours" element={
