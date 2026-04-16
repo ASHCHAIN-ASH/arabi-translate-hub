@@ -54,7 +54,7 @@ export interface OrderCommunication {
 // Get order by ID from Supabase
 export const getOrderById = async (orderId: string): Promise<DatabaseOrder | null> => {
   try {
-    const { data, error } = await supabase
+    const { data, error } = await (supabase as any)
       .from('orders')
       .select('*')
       .eq('id', orderId)
@@ -75,7 +75,7 @@ export const getOrderById = async (orderId: string): Promise<DatabaseOrder | nul
 // Get order timeline from Supabase
 export const getOrderTimeline = async (orderId: string): Promise<OrderTimeline[]> => {
   try {
-    const { data, error } = await supabase
+    const { data, error } = await (supabase as any)
       .from('order_timeline')
       .select('*')
       .eq('order_id', orderId)
@@ -126,7 +126,7 @@ export const addOrderCommunication = async (
 // Update order status
 export const updateOrderStatus = async (orderId: string, status: string, progress?: number): Promise<void> => {
   try {
-    const { error } = await supabase
+    const { error } = await (supabase as any)
       .from('orders')
       .update({ 
         current_status: status,
@@ -147,7 +147,7 @@ export const updateOrderStatus = async (orderId: string, status: string, progres
 // Update order timeline
 export const updateOrderTimeline = async (orderId: string, status: string, completed: boolean): Promise<void> => {
   try {
-    const { error } = await supabase
+    const { error } = await (supabase as any)
       .from('order_timeline')
       .update({ 
         completed_date: completed ? new Date().toISOString().split('T')[0] : null
@@ -183,7 +183,7 @@ export const uploadOrderFile = async (orderId: string, file: File, fileType: 'in
 // Update order
 export const updateOrder = async (orderId: string, updates: Partial<DatabaseOrder>): Promise<void> => {
   try {
-    const { error } = await supabase
+    const { error } = await (supabase as any)
       .from('orders')
       .update({ 
         ...updates,
@@ -204,7 +204,7 @@ export const updateOrder = async (orderId: string, updates: Partial<DatabaseOrde
 // Get all orders for admin
 export const getAllOrdersForAdmin = async (): Promise<DatabaseOrder[]> => {
   try {
-    const { data, error } = await supabase
+    const { data, error } = await (supabase as any)
       .from('orders')
       .select('*')
       .order('created_at', { ascending: false });
@@ -224,7 +224,7 @@ export const getAllOrdersForAdmin = async (): Promise<DatabaseOrder[]> => {
 // Get orders for specific client
 export const getOrdersForClient = async (clientId: string): Promise<DatabaseOrder[]> => {
   try {
-    const { data, error } = await supabase
+    const { data, error } = await (supabase as any)
       .from('orders')
       .select('*')
       .eq('user_id', clientId)

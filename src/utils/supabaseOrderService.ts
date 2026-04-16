@@ -22,7 +22,7 @@ import { supabase } from '@/integrations/supabase/client';
 // Get all orders from Supabase
 export const getAllOrders = async (): Promise<DatabaseOrder[]> => {
   try {
-    const { data, error } = await supabase
+    const { data, error } = await (supabase as any)
       .from('orders')
       .select('*')
       .order('created_at', { ascending: false });
@@ -45,7 +45,7 @@ export const updateOrderStatus = async (
   newStatus: string
 ): Promise<void> => {
   try {
-    const { error } = await supabase
+    const { error } = await (supabase as any)
       .from('orders')
       .update({ 
         current_status: newStatus,
@@ -71,7 +71,7 @@ export const searchOrderByTracking = async (
   phoneLastFour: string
 ): Promise<OrderStatus | null> => {
   try {
-    const { data, error } = await supabase
+    const { data, error } = await (supabase as any)
       .from('orders')
       .select('*')
       .eq('tracking_id', trackingId.toUpperCase())
@@ -117,7 +117,7 @@ export const createOrder = async (orderData: {
   clientEmail: string;
 }): Promise<string> => {
   try {
-    const { data, error } = await supabase
+    const { data, error } = await (supabase as any)
       .from('orders')
       .insert({
         tracking_id: orderData.trackingId,

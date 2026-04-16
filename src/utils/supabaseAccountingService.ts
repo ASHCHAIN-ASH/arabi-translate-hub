@@ -218,13 +218,13 @@ export const getTrialBalance = async (fromDate: string, toDate: string): Promise
 
 // Fallback: derive from invoices/payments if ledger tables not yet migrated
 const getTrialBalanceFallback = async (fromDate: string, toDate: string): Promise<TrialBalance[]> => {
-  const { data: invoices } = await supabase
+  const { data: invoices } = await (supabase as any)
     .from('business_invoices')
     .select('subtotal, vat_amount, total, status')
     .gte('issue_date', fromDate)
     .lte('issue_date', toDate);
 
-  const { data: payments } = await supabase
+  const { data: payments } = await (supabase as any)
     .from('business_payments')
     .select('amount, status')
     .gte('payment_date', fromDate)
@@ -282,7 +282,7 @@ export const getGeneralLedger = async (accountId: string, fromDate: string, toDa
 // ==============================
 
 export const getTaxSummary = async (fromDate: string, toDate: string): Promise<TaxSummary[]> => {
-  const { data: invoices } = await supabase
+  const { data: invoices } = await (supabase as any)
     .from('business_invoices')
     .select('subtotal, vat_amount, vat_rate, issue_date')
     .gte('issue_date', fromDate)
