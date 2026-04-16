@@ -9,7 +9,6 @@ const corsHeaders = {
 interface UpdatePasswordRequest {
   userId: string;
   newPassword: string;
-  adminUserId?: string;
   sendEmail?: boolean;
 }
 
@@ -26,7 +25,12 @@ const handler = async (req: Request): Promise<Response> => {
   }
 
   try {
-    const { userId, newPassword, adminUserId, sendEmail = true }: UpdatePasswordRequest = await req.json();
+    // Verify caller is an authenticated admin
+    const { requireAdmin } = await import('../_shared/supabase-auth.ts');
+    const adminResult = await requireAdmin(req, corsHeaders);
+    if (adminResult instanceof Response) return adminResult;
+
+    const { userId, newPassword, sendEmail = true }: UpdatePasswordRequest = await req.json();
 
     // Validate input
     if (!userId || !newPassword) {
@@ -61,27 +65,8 @@ const handler = async (req: Request): Promise<Response> => {
       }
     );
 
-    // Get admin details
-    let adminData = null;
-    if (adminUserId) {
-      const { data: adminCheck, error: adminError } = await supabaseAdmin
-        .from('admin_credentials')
-        .select('id, email, full_name, role, is_active')
-        .eq('id', adminUserId)
-        .single();
-
-      if (adminError || !adminCheck || !adminCheck.is_active || adminCheck.role !== 'admin') {
-        console.log('Admin verification failed:', adminError, adminCheck);
-        return new Response(
-          JSON.stringify({ error: 'Insufficient privileges' }),
-          {
-            status: 403,
-            headers: { 'Content-Type': 'application/json', ...corsHeaders },
-          }
-        );
-      }
-      adminData = adminCheck;
-    }
+    // Admin already verified via requireAdmin above
+    const adminData = { id: adminResult.id, email: adminResult.email, full_name: adminResult.email, role: 'admin' };
 
     // Get user details
     const { data: userData, error: userError } = await supabaseAdmin
@@ -218,7 +203,7 @@ const handler = async (req: Request): Promise<Response> => {
           resource_id: userId,
           risk_level: 'high',
           metadata: {
-            admin_user_id: adminUserId,
+            admin_user_id: adminResult.id,
             admin_email: adminData?.email,
             admin_name: adminData?.full_name,
             user_email: userData.email,

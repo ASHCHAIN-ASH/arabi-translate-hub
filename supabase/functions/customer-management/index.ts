@@ -22,7 +22,12 @@ const handler = async (req: Request): Promise<Response> => {
   }
 
   try {
-    console.log('🔧 Customer management function called');
+    // Verify caller is an authenticated admin
+    const { requireAdmin } = await import('../_shared/supabase-auth.ts');
+    const adminResult = await requireAdmin(req, corsHeaders);
+    if (adminResult instanceof Response) return adminResult;
+
+    console.log('🔧 Customer management called by admin:', adminResult.id);
     
     const supabaseAdmin = createClient(
       Deno.env.get('SUPABASE_URL') ?? '',
@@ -37,9 +42,6 @@ const handler = async (req: Request): Promise<Response> => {
 
     const { customerId, action, data }: CustomerRequest = await req.json();
     console.log('📝 Customer management request:', { customerId, action });
-
-    // السماح بالوصول العام للوظائف الإدارية
-    const adminId = 'system-admin';
 
     let result;
 
