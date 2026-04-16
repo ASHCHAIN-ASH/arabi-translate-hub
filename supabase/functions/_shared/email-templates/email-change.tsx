@@ -9,7 +9,6 @@ import {
   Head,
   Heading,
   Html,
-  Link,
   Preview,
   Text,
 } from 'npm:@react-email/components@0.0.22'
@@ -22,37 +21,28 @@ interface EmailChangeEmailProps {
 }
 
 export const EmailChangeEmail = ({
-  siteName,
   email,
   newEmail,
   confirmationUrl,
 }: EmailChangeEmailProps) => (
-  <Html lang="en" dir="ltr">
+  <Html lang="ar" dir="rtl">
     <Head />
-    <Preview>Confirm your email change for {siteName}</Preview>
+    <Preview>تأكيد تغيير البريد الإلكتروني - Master Edu Path</Preview>
     <Body style={main}>
       <Container style={container}>
-        <Heading style={h1}>Confirm your email change</Heading>
+        <Text style={logo}>Master Edu Path</Text>
+        <Heading style={h1}>تأكيد تغيير البريد الإلكتروني</Heading>
         <Text style={text}>
-          You requested to change your email address for {siteName} from{' '}
-          <Link href={`mailto:${email}`} style={link}>
-            {email}
-          </Link>{' '}
-          to{' '}
-          <Link href={`mailto:${newEmail}`} style={link}>
-            {newEmail}
-          </Link>
-          .
+          لقد طلبت تغيير بريدك الإلكتروني من <strong>{email}</strong> إلى <strong>{newEmail}</strong>.
         </Text>
         <Text style={text}>
-          Click the button below to confirm this change:
+          اضغط على الزر أدناه لتأكيد هذا التغيير:
         </Text>
         <Button style={button} href={confirmationUrl}>
-          Confirm Email Change
+          تأكيد تغيير البريد
         </Button>
         <Text style={footer}>
-          If you didn't request this change, please secure your account
-          immediately.
+          إذا لم تطلب هذا التغيير، يرجى تأمين حسابك فوراً.
         </Text>
       </Container>
     </Body>
@@ -61,27 +51,21 @@ export const EmailChangeEmail = ({
 
 export default EmailChangeEmail
 
-const main = { backgroundColor: '#ffffff', fontFamily: 'Arial, sans-serif' }
-const container = { padding: '20px 25px' }
-const h1 = {
-  fontSize: '22px',
-  fontWeight: 'bold' as const,
-  color: '#000000',
-  margin: '0 0 20px',
-}
-const text = {
-  fontSize: '14px',
-  color: '#55575d',
-  lineHeight: '1.5',
-  margin: '0 0 25px',
-}
-const link = { color: 'inherit', textDecoration: 'underline' }
+const main = { backgroundColor: '#ffffff', fontFamily: "'IBM Plex Sans Arabic', 'Noto Sans Arabic', Arial, sans-serif" }
+const container = { padding: '30px 25px', direction: 'rtl' as const, textAlign: 'right' as const }
+const logo = { fontSize: '20px', fontWeight: 'bold' as const, color: '#3644DB', margin: '0 0 24px', textAlign: 'center' as const }
+const h1 = { fontSize: '24px', fontWeight: 'bold' as const, color: '#0a0f1e', margin: '0 0 20px', textAlign: 'center' as const }
+const text = { fontSize: '15px', color: '#555555', lineHeight: '1.8', margin: '0 0 20px' }
 const button = {
-  backgroundColor: '#000000',
+  backgroundColor: '#3644DB',
   color: '#ffffff',
-  fontSize: '14px',
+  fontSize: '16px',
+  fontWeight: 'bold' as const,
   borderRadius: '8px',
-  padding: '12px 20px',
+  padding: '14px 28px',
   textDecoration: 'none',
+  display: 'block' as const,
+  textAlign: 'center' as const,
+  margin: '0 auto 20px',
 }
-const footer = { fontSize: '12px', color: '#999999', margin: '30px 0 0' }
+const footer = { fontSize: '12px', color: '#999999', margin: '30px 0 0', textAlign: 'center' as const }

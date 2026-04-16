@@ -19,25 +19,26 @@ interface RecoveryEmailProps {
 }
 
 export const RecoveryEmail = ({
-  siteName,
   confirmationUrl,
 }: RecoveryEmailProps) => (
-  <Html lang="en" dir="ltr">
+  <Html lang="ar" dir="rtl">
     <Head />
-    <Preview>Reset your password for {siteName}</Preview>
+    <Preview>إعادة تعيين كلمة المرور - Master Edu Path</Preview>
     <Body style={main}>
       <Container style={container}>
-        <Heading style={h1}>Reset your password</Heading>
+        <Text style={logo}>Master Edu Path</Text>
+        <Heading style={h1}>إعادة تعيين كلمة المرور</Heading>
         <Text style={text}>
-          We received a request to reset your password for {siteName}. Click
-          the button below to choose a new password.
+          تلقينا طلباً لإعادة تعيين كلمة المرور الخاصة بحسابك في <strong>Master Edu Path</strong>.
+        </Text>
+        <Text style={text}>
+          اضغط على الزر أدناه لاختيار كلمة مرور جديدة:
         </Text>
         <Button style={button} href={confirmationUrl}>
-          Reset Password
+          إعادة تعيين كلمة المرور
         </Button>
         <Text style={footer}>
-          If you didn't request a password reset, you can safely ignore this
-          email. Your password will not be changed.
+          إذا لم تطلب إعادة تعيين كلمة المرور، يمكنك تجاهل هذا البريد بأمان.
         </Text>
       </Container>
     </Body>
@@ -46,26 +47,21 @@ export const RecoveryEmail = ({
 
 export default RecoveryEmail
 
-const main = { backgroundColor: '#ffffff', fontFamily: 'Arial, sans-serif' }
-const container = { padding: '20px 25px' }
-const h1 = {
-  fontSize: '22px',
-  fontWeight: 'bold' as const,
-  color: '#000000',
-  margin: '0 0 20px',
-}
-const text = {
-  fontSize: '14px',
-  color: '#55575d',
-  lineHeight: '1.5',
-  margin: '0 0 25px',
-}
+const main = { backgroundColor: '#ffffff', fontFamily: "'IBM Plex Sans Arabic', 'Noto Sans Arabic', Arial, sans-serif" }
+const container = { padding: '30px 25px', direction: 'rtl' as const, textAlign: 'right' as const }
+const logo = { fontSize: '20px', fontWeight: 'bold' as const, color: '#3644DB', margin: '0 0 24px', textAlign: 'center' as const }
+const h1 = { fontSize: '24px', fontWeight: 'bold' as const, color: '#0a0f1e', margin: '0 0 20px', textAlign: 'center' as const }
+const text = { fontSize: '15px', color: '#555555', lineHeight: '1.8', margin: '0 0 20px' }
 const button = {
-  backgroundColor: '#000000',
+  backgroundColor: '#3644DB',
   color: '#ffffff',
-  fontSize: '14px',
+  fontSize: '16px',
+  fontWeight: 'bold' as const,
   borderRadius: '8px',
-  padding: '12px 20px',
+  padding: '14px 28px',
   textDecoration: 'none',
+  display: 'block' as const,
+  textAlign: 'center' as const,
+  margin: '0 auto 20px',
 }
-const footer = { fontSize: '12px', color: '#999999', margin: '30px 0 0' }
+const footer = { fontSize: '12px', color: '#999999', margin: '30px 0 0', textAlign: 'center' as const }

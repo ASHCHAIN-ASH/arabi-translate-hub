@@ -19,24 +19,23 @@ interface MagicLinkEmailProps {
 }
 
 export const MagicLinkEmail = ({
-  siteName,
   confirmationUrl,
 }: MagicLinkEmailProps) => (
-  <Html lang="en" dir="ltr">
+  <Html lang="ar" dir="rtl">
     <Head />
-    <Preview>Your login link for {siteName}</Preview>
+    <Preview>رابط تسجيل الدخول - Master Edu Path</Preview>
     <Body style={main}>
       <Container style={container}>
-        <Heading style={h1}>Your login link</Heading>
+        <Text style={logo}>Master Edu Path</Text>
+        <Heading style={h1}>رابط تسجيل الدخول</Heading>
         <Text style={text}>
-          Click the button below to log in to {siteName}. This link will expire
-          shortly.
+          اضغط على الزر أدناه لتسجيل الدخول إلى حسابك. هذا الرابط صالح لفترة محدودة.
         </Text>
         <Button style={button} href={confirmationUrl}>
-          Log In
+          تسجيل الدخول
         </Button>
         <Text style={footer}>
-          If you didn't request this link, you can safely ignore this email.
+          إذا لم تطلب هذا الرابط، يمكنك تجاهل هذا البريد بأمان.
         </Text>
       </Container>
     </Body>
@@ -45,26 +44,21 @@ export const MagicLinkEmail = ({
 
 export default MagicLinkEmail
 
-const main = { backgroundColor: '#ffffff', fontFamily: 'Arial, sans-serif' }
-const container = { padding: '20px 25px' }
-const h1 = {
-  fontSize: '22px',
-  fontWeight: 'bold' as const,
-  color: '#000000',
-  margin: '0 0 20px',
-}
-const text = {
-  fontSize: '14px',
-  color: '#55575d',
-  lineHeight: '1.5',
-  margin: '0 0 25px',
-}
+const main = { backgroundColor: '#ffffff', fontFamily: "'IBM Plex Sans Arabic', 'Noto Sans Arabic', Arial, sans-serif" }
+const container = { padding: '30px 25px', direction: 'rtl' as const, textAlign: 'right' as const }
+const logo = { fontSize: '20px', fontWeight: 'bold' as const, color: '#3644DB', margin: '0 0 24px', textAlign: 'center' as const }
+const h1 = { fontSize: '24px', fontWeight: 'bold' as const, color: '#0a0f1e', margin: '0 0 20px', textAlign: 'center' as const }
+const text = { fontSize: '15px', color: '#555555', lineHeight: '1.8', margin: '0 0 20px' }
 const button = {
-  backgroundColor: '#000000',
+  backgroundColor: '#3644DB',
   color: '#ffffff',
-  fontSize: '14px',
+  fontSize: '16px',
+  fontWeight: 'bold' as const,
   borderRadius: '8px',
-  padding: '12px 20px',
+  padding: '14px 28px',
   textDecoration: 'none',
+  display: 'block' as const,
+  textAlign: 'center' as const,
+  margin: '0 auto 20px',
 }
-const footer = { fontSize: '12px', color: '#999999', margin: '30px 0 0' }
+const footer = { fontSize: '12px', color: '#999999', margin: '30px 0 0', textAlign: 'center' as const }
