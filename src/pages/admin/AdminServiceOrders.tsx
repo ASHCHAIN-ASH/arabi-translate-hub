@@ -449,8 +449,11 @@ const ServiceOrderCard = ({
         .from('service_orders')
         .update({ 
           total_amount: parseFloat(quotePrice),
+          quote_status: 'pending',
+          quote_notes: quoteNotes || null,
+          quote_sent_at: new Date().toISOString(),
           updated_at: new Date().toISOString()
-        })
+        } as any)
         .eq('id', order.id);
 
       if (updateError) throw updateError;

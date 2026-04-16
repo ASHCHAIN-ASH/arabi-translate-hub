@@ -19,6 +19,9 @@ export interface ClientOrder {
   priority: string;
   progress: number;
   serviceType: string;
+  quoteStatus: string | null;
+  quoteNotes: string | null;
+  quoteSentAt: string | null;
 }
 
 export interface ClientInvoice {
