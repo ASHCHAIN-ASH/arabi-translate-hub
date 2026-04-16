@@ -31,7 +31,6 @@ const ClientLayout: React.FC<ClientLayoutProps> = ({ children }) => {
 
   const navItems = [
     { name: 'لوحة التحكم', href: '/dashboard', icon: LayoutDashboard },
-    { name: 'خدماتنا', href: '/our-services', icon: GraduationCap },
     { name: 'سجل الطلبات', href: '/orders', icon: ShoppingCart },
     { name: 'فواتيري', href: '/invoices', icon: FileText },
     { name: 'محفظتي', href: '/wallet', icon: Wallet },
