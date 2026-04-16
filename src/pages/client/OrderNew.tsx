@@ -94,7 +94,7 @@ const OrderNew = () => {
     return list;
   }, [services, selectedCategory, searchQuery]);
 
-  const unitPrice = selectedService?.price || 0;
+  
 
   const handleSubmit = async () => {
     if (!selectedService) return toast.error('يرجى اختيار خدمة');
@@ -106,7 +106,7 @@ const OrderNew = () => {
         user_id: user.id,
         service_id: selectedService.id,
         service_name: selectedService.name_ar || selectedService.name,
-        total_amount: total,
+        total_amount: 0,
         paid_amount: 0,
         current_status: 'pending',
         priority: 'normal',
@@ -231,12 +231,9 @@ const OrderNew = () => {
                             {service.description && (
                               <p className="text-xs text-muted-foreground mb-3 line-clamp-2">{service.description}</p>
                             )}
-                            <div className="flex items-center justify-between">
+                            <div className="flex items-center">
                               <span className="text-xs text-muted-foreground">
                                 {unitLabels[service.unit || 'project'] || service.unit}
-                              </span>
-                              <span className="font-bold text-primary">
-                                {service.price?.toFixed(0)} ر.س
                               </span>
                             </div>
                           </CardContent>
@@ -310,25 +307,13 @@ const OrderNew = () => {
                     <div className="p-3 bg-muted/50 rounded-lg">
                       <p className="font-semibold text-sm">{selectedService.name_ar || selectedService.name}</p>
                       <p className="text-xs text-muted-foreground mt-1">
-                        {unitPrice.toFixed(0)} ر.س × {quantity} {unitLabels[selectedService.unit || 'project']}
+                        الكمية: {quantity} {unitLabels[selectedService.unit || 'project']}
                       </p>
                     </div>
                     <Separator />
-                    <div className="space-y-2 text-sm">
-                      <div className="flex justify-between">
-                        <span className="text-muted-foreground">المجموع الفرعي</span>
-                        <span>{subtotal.toFixed(2)} ر.س</span>
-                      </div>
-                      <div className="flex justify-between">
-                        <span className="text-muted-foreground">ضريبة القيمة المضافة (15%)</span>
-                        <span>{vatAmount.toFixed(2)} ر.س</span>
-                      </div>
-                      <Separator />
-                      <div className="flex justify-between font-bold text-lg">
-                        <span>الإجمالي</span>
-                        <span className="text-primary">{total.toFixed(2)} ر.س</span>
-                      </div>
-                    </div>
+                    <p className="text-xs text-muted-foreground text-center">
+                      سيتم تحديد السعر من قبل الإدارة بعد مراجعة الطلب
+                    </p>
                     <Button className="w-full" onClick={handleSubmit} disabled={loading}>
                       {loading ? (
                         <>
