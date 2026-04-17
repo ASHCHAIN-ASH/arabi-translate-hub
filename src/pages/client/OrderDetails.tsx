@@ -184,22 +184,47 @@ const OrderDetails = () => {
     if (!order) return;
     setSubmitting(true);
     try {
-      await (supabase.from('service_orders') as any).update({ quote_status: 'accepted', updated_at: new Date().toISOString() }).eq('id', order.id);
-      const { data: admins } = await supabase.from('user_roles').select('user_id').eq('role', 'admin');
-      if (admins) {
-        await supabase.from('user_notifications').insert(
-          admins.map(a => ({
-            user_id: a.user_id,
-            title: '✅ تم قبول عرض السعر',
-            message: `قبل العميل عرض السعر للطلب ${order.tracking_id}`,
-            type: 'order',
-            link: '/adminmaster/orders',
-          }))
-        );
-      }
-      toast.success('تم قبول عرض السعر بنجاح');
-      fetchData();
-    } catch { toast.error('حدث خطأ'); } finally { setSubmitting(false); }
+      // Update both quote_status AND current_status to move order to next stage
+      const { error: updateError } = await (supabase.from('service_orders') as any)
+        .update({
+          quote_status: 'accepted',
+          current_status: 'in_progress',
+          updated_at: new Date().toISOString(),
+        })
+        .eq('id', order.id);
+
+      if (updateError) throw updateError;
+
+      // Add timeline entry for the transition
+      await supabase.from('service_order_timeline').insert({
+        order_id: order.id,
+        status: 'in_progress',
+        note: 'تم قبول عرض السعر من قبل العميل — انتقل الطلب إلى قيد التنفيذ',
+      });
+
+      // Notify admins (fire-and-forget)
+      supabase.from('user_roles').select('user_id').eq('role', 'admin').then(({ data: admins }) => {
+        if (admins) {
+          supabase.from('user_notifications').insert(
+            admins.map(a => ({
+              user_id: a.user_id,
+              title: '✅ تم قبول عرض السعر',
+              message: `قبل العميل عرض السعر للطلب ${order.tracking_id}`,
+              type: 'order',
+              link: '/adminmaster/orders',
+            }))
+          );
+        }
+      });
+
+      toast.success('تم قبول عرض السعر — الطلب الآن قيد التنفيذ');
+      await fetchData();
+    } catch (e) {
+      console.error('Accept quote error:', e);
+      toast.error('حدث خطأ أثناء قبول العرض');
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   const handleRejectQuote = async () => {
