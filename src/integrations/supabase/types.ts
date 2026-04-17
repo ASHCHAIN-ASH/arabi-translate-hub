@@ -243,6 +243,8 @@ export type Database = {
           service_order_id: string | null
           service_type: string | null
           signed_at: string | null
+          signed_pdf_generated_at: string | null
+          signed_pdf_path: string | null
           status: string | null
           title: string
           total_amount: number | null
@@ -271,6 +273,8 @@ export type Database = {
           service_order_id?: string | null
           service_type?: string | null
           signed_at?: string | null
+          signed_pdf_generated_at?: string | null
+          signed_pdf_path?: string | null
           status?: string | null
           title: string
           total_amount?: number | null
@@ -299,6 +303,8 @@ export type Database = {
           service_order_id?: string | null
           service_type?: string | null
           signed_at?: string | null
+          signed_pdf_generated_at?: string | null
+          signed_pdf_path?: string | null
           status?: string | null
           title?: string
           total_amount?: number | null
