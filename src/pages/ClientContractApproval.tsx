@@ -1,444 +1,317 @@
-import React, { useState, useEffect } from 'react';
-import { useSearchParams } from 'react-router-dom';
-import { motion } from 'framer-motion';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Textarea } from '@/components/ui/textarea';
-import { Badge } from '@/components/ui/badge';
-import { Checkbox } from '@/components/ui/checkbox';
-import { Separator } from '@/components/ui/separator';
-import { toast } from 'sonner';
-import { 
-  FileText, 
-  Calendar, 
-  DollarSign, 
-  User, 
-  Phone, 
-  Mail,
-  CheckCircle,
-  AlertCircle,
-  Download,
-  Signature,
-  Shield
-} from 'lucide-react';
-import { Contract, ClientApproval } from '@/types/contract';
-import { getContractById, saveClientApproval } from '@/utils/supabaseContractService';
-import Header from '@/components/Header';
+import React, { useEffect, useMemo, useState } from "react";
+import { useParams, useSearchParams, useNavigate, Link } from "react-router-dom";
+import { motion } from "framer-motion";
+import ReactMarkdown from "react-markdown";
+import { supabase } from "@/integrations/supabase/client";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import { Badge } from "@/components/ui/badge";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Separator } from "@/components/ui/separator";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { toast } from "sonner";
+import {
+  FileText, ShieldCheck, Calendar, DollarSign, User, Building2,
+  CheckCircle2, AlertCircle, ArrowRight, Printer, Clock,
+} from "lucide-react";
+import {
+  getContract, getContractTimeline, getContractSignatures,
+  signContract, getClientIP, generateContractContent,
+  STATUS_LABELS, STATUS_COLORS, ContractRow, ContractSignature, ContractTimelineEvent,
+} from "@/utils/supabaseContractService";
+import { REQUIRED_TERMS, PARENT_COMPANY } from "@/utils/contractTemplates";
 
 const ClientContractApproval = () => {
-  const [searchParams] = useSearchParams();
-  const contractId = searchParams.get('id');
-  
-  const [contract, setContract] = useState<Contract | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [isApproved, setIsApproved] = useState(false);
-  
-  // بيانات الموافقة
-  const [clientName, setClientName] = useState('');
-  const [signature, setSignature] = useState('');
-  const [comments, setComments] = useState('');
-  const [acceptedTerms, setAcceptedTerms] = useState<string[]>([]);
-  const [finalAcceptance, setFinalAcceptance] = useState(false);
+  const params = useParams();
+  const [sp] = useSearchParams();
+  const navigate = useNavigate();
+  const contractId = params.id || sp.get("id") || "";
 
-  useEffect(() => {
-    if (contractId) {
-      loadContract();
-    }
-  }, [contractId]);
+  const [contract, setContract] = useState<ContractRow | null>(null);
+  const [signatures, setSignatures] = useState<ContractSignature[]>([]);
+  const [timeline, setTimeline] = useState<ContractTimelineEvent[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [submitting, setSubmitting] = useState(false);
 
-  const loadContract = async () => {
-    if (!contractId) return;
-    
+  const [signerName, setSignerName] = useState("");
+  const [signerId, setSignerId] = useState("");
+  const [signature, setSignature] = useState("");
+  const [comments, setComments] = useState("");
+  const [accepted, setAccepted] = useState<string[]>([]);
+
+  useEffect(() => { if (contractId) load(); }, [contractId]);
+
+  async function load() {
+    setLoading(true);
     try {
-      setIsLoading(true);
-      const contractData = await getContractById(contractId);
-      
-      if (contractData) {
-        setContract(contractData);
-        setClientName(contractData.clientName);
-        
-        // التحقق من حالة العقد
-        if (contractData.status === 'approved' || contractData.status === 'signed') {
-          setIsApproved(true);
-        }
-      } else {
-        toast.error('لم يتم العثور على العقد');
+      let c = await getContract(contractId);
+      if (c && (!c.content || c.content.trim().length < 50)) {
+        await generateContractContent(contractId);
+        c = await getContract(contractId);
       }
-    } catch (error) {
-      console.error('Error loading contract:', error);
-      toast.error('خطأ في تحميل العقد');
+      setContract(c);
+      if (c) {
+        setSignerName(c.client_full_name || "");
+        const [sigs, tl] = await Promise.all([
+          getContractSignatures(contractId),
+          getContractTimeline(contractId),
+        ]);
+        setSignatures(sigs);
+        setTimeline(tl);
+      }
+    } catch (e: any) {
+      toast.error(e.message || "خطأ في تحميل العقد");
     } finally {
-      setIsLoading(false);
+      setLoading(false);
     }
-  };
+  }
 
-  const handleTermAcceptance = (termId: string, accepted: boolean) => {
-    if (accepted) {
-      setAcceptedTerms(prev => [...prev.filter(id => id !== termId), termId]);
-    } else {
-      setAcceptedTerms(prev => prev.filter(id => id !== termId));
-    }
-  };
+  const isSigned = contract?.status === "signed" || contract?.status === "active" || contract?.status === "completed";
+  const allTermsAccepted = accepted.length === REQUIRED_TERMS.length;
 
-  const handleSubmitApproval = async () => {
+  async function handleSign() {
     if (!contract) return;
-
-    // التحقق من صحة البيانات
-    if (!clientName.trim()) {
-      toast.error('يجب إدخال الاسم الكامل');
+    if (!signerName.trim() || !signature.trim()) {
+      toast.error("يرجى إدخال الاسم الكامل والتوقيع");
       return;
     }
-
-    if (!signature.trim()) {
-      toast.error('يجب كتابة التوقيع الرقمي');
+    if (!allTermsAccepted) {
+      toast.error("يرجى الموافقة على جميع الشروط");
       return;
     }
-
-    if (acceptedTerms.length !== contract.terms.filter(t => t.required).length) {
-      toast.error('يجب الموافقة على جميع الشروط المطلوبة');
-      return;
-    }
-
-    if (!finalAcceptance) {
-      toast.error('يجب الموافقة النهائية على العقد');
-      return;
-    }
-
+    setSubmitting(true);
     try {
-      setIsSubmitting(true);
-
-      const approval: ClientApproval = {
-        contractId: contract.id,
-        clientName: clientName,
-        approvalDate: new Date().toISOString(),
-        ipAddress: await getClientIP(),
-        userAgent: navigator.userAgent,
-        signature: signature,
-        comments: comments
-      };
-
-      await saveClientApproval(contract.id, {
-        clientName: approval.clientName,
-        signature: approval.signature,
-        ipAddress: approval.ipAddress,
-        userAgent: approval.userAgent,
-        comments: approval.comments
+      const { data: u } = await supabase.auth.getUser();
+      if (!u.user) {
+        toast.error("يجب تسجيل الدخول لتوقيع العقد");
+        navigate("/login");
+        return;
+      }
+      const ip = await getClientIP();
+      await signContract({
+        contract_id: contract.id,
+        signer_user_id: u.user.id,
+        signer_name: signerName.trim(),
+        signer_email: contract.client_email || u.user.email || undefined,
+        signer_id_number: signerId.trim() || undefined,
+        signature_text: signature.trim(),
+        ip_address: ip,
+        user_agent: navigator.userAgent,
+        accepted_terms: accepted,
+        comments: comments.trim() || undefined,
       });
-      
-      toast.success('تم حفظ موافقتك بنجاح!', {
-        description: 'سيتم التواصل معك قريباً لبدء تنفيذ المشروع'
-      });
-      
-      setIsApproved(true);
-      
-    } catch (error) {
-      console.error('Error saving approval:', error);
-      toast.error('خطأ في حفظ الموافقة، يرجى المحاولة مرة أخرى');
+      toast.success("تم توقيع العقد بنجاح ✓");
+      await load();
+    } catch (e: any) {
+      toast.error(e.message || "تعذّر حفظ التوقيع");
     } finally {
-      setIsSubmitting(false);
+      setSubmitting(false);
     }
-  };
+  }
 
-  const getClientIP = async (): Promise<string> => {
-    try {
-      const response = await fetch('https://api.ipify.org?format=json');
-      const data = await response.json();
-      return data.ip;
-    } catch (error) {
-      return 'unknown';
-    }
-  };
+  const fmtDate = (d?: string | null) =>
+    d ? new Date(d).toLocaleString("ar-SA", { dateStyle: "long", timeStyle: "short" }) : "—";
 
-  const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('ar-SA', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric'
-    });
-  };
-
-  if (isLoading) {
+  if (loading) {
     return (
-      <div className="min-h-screen bg-background">
-        <Header />
-        <main className="container mx-auto px-4 py-8 mt-20">
-          <div className="text-center py-12">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
-            <p>جاري تحميل العقد...</p>
-          </div>
-        </main>
+      <div className="min-h-screen flex items-center justify-center bg-background" dir="rtl">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-3" />
+          <p className="text-muted-foreground">جاري تحميل العقد…</p>
+        </div>
       </div>
     );
   }
 
   if (!contract) {
     return (
-      <div className="min-h-screen bg-background">
-        <Header />
-        <main className="container mx-auto px-4 py-8 mt-20">
-          <Card className="max-w-2xl mx-auto">
-            <CardContent className="text-center py-12">
-              <AlertCircle className="h-12 w-12 mx-auto mb-4 text-destructive" />
-              <h2 className="text-xl font-semibold mb-2">عقد غير موجود</h2>
-              <p className="text-muted-foreground">لم يتم العثور على العقد المطلوب</p>
-            </CardContent>
-          </Card>
-        </main>
-      </div>
-    );
-  }
-
-  if (isApproved) {
-    return (
-      <div className="min-h-screen bg-background">
-        <Header />
-        <main className="container mx-auto px-4 py-8 mt-20">
-          <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            className="max-w-2xl mx-auto text-center"
-          >
-            <Card>
-              <CardContent className="py-12">
-                <CheckCircle className="h-16 w-16 mx-auto mb-6 text-green-600" />
-                <h1 className="text-3xl font-bold mb-4 text-green-600">تمت الموافقة بنجاح!</h1>
-                <p className="text-lg text-muted-foreground mb-6">
-                  شكراً لك على موافقتك على العقد. سيتم التواصل معك قريباً لبدء تنفيذ المشروع.
-                </p>
-                <div className="bg-muted p-4 rounded-lg mb-6">
-                  <p className="text-sm"><strong>رقم العقد:</strong> {contract.id}</p>
-                  <p className="text-sm"><strong>تاريخ الموافقة:</strong> {formatDate(new Date().toISOString())}</p>
-                </div>
-                <Button>
-                  <Download className="h-4 w-4 mr-2" />
-                  تحميل نسخة من العقد
-                </Button>
-              </CardContent>
-            </Card>
-          </motion.div>
-        </main>
+      <div className="min-h-screen flex items-center justify-center bg-background" dir="rtl">
+        <Card className="max-w-md">
+          <CardContent className="py-10 text-center">
+            <AlertCircle className="h-12 w-12 mx-auto mb-3 text-destructive" />
+            <h2 className="text-lg font-bold mb-2">العقد غير موجود</h2>
+            <Button asChild variant="outline"><Link to="/contracts"><ArrowRight className="h-4 w-4 ml-2" />عودة لعقودي</Link></Button>
+          </CardContent>
+        </Card>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-background">
-      <Header />
-      
-      <main className="container mx-auto px-4 py-8 mt-20">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="max-w-4xl mx-auto"
-        >
-          {/* Header */}
-          <div className="text-center mb-8">
-            <h1 className="text-4xl font-bold mb-4">
-              موافقة على <span className="text-gradient bg-gradient-primary bg-clip-text text-transparent">العقد</span>
-            </h1>
-            <p className="text-xl text-muted-foreground">
-              يرجى مراجعة تفاصيل العقد والموافقة عليه لبدء تنفيذ المشروع
-            </p>
+    <div className="min-h-screen bg-gradient-to-b from-background to-muted/20" dir="rtl">
+      {/* Header */}
+      <header className="border-b bg-card/80 backdrop-blur sticky top-0 z-10">
+        <div className="container mx-auto px-4 py-4 flex items-center justify-between gap-4">
+          <div className="flex items-center gap-3 min-w-0">
+            <Button asChild variant="ghost" size="sm">
+              <Link to="/contracts"><ArrowRight className="h-4 w-4 ml-1" /> عودة</Link>
+            </Button>
+            <div className="min-w-0">
+              <h1 className="font-bold text-lg truncate">عقد رقم {contract.contract_number}</h1>
+              <p className="text-xs text-muted-foreground truncate">
+                <Building2 className="inline h-3 w-3 ml-1" />
+                {PARENT_COMPANY.platformName} — تابعة لـ {PARENT_COMPANY.legalEntity}
+              </p>
+            </div>
           </div>
+          <div className="flex items-center gap-2 shrink-0">
+            <Badge className={STATUS_COLORS[contract.status]}>{STATUS_LABELS[contract.status]}</Badge>
+            <Button variant="outline" size="sm" onClick={() => window.print()}>
+              <Printer className="h-4 w-4 ml-2" /> طباعة
+            </Button>
+          </div>
+        </div>
+      </header>
 
-          {/* Contract Details */}
-          <Card className="mb-8">
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <FileText className="h-5 w-5" />
-                تفاصيل العقد
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-                <div className="space-y-4">
-                  <div className="flex items-center gap-2">
-                    <User className="h-4 w-4 text-muted-foreground" />
-                    <span className="font-medium">العميل:</span>
-                    <span>{contract.clientName}</span>
-                  </div>
-                  
-                  <div className="flex items-center gap-2">
-                    <Mail className="h-4 w-4 text-muted-foreground" />
-                    <span className="font-medium">البريد:</span>
-                    <span>{contract.clientEmail}</span>
-                  </div>
-                  
-                  <div className="flex items-center gap-2">
-                    <Phone className="h-4 w-4 text-muted-foreground" />
-                    <span className="font-medium">الهاتف:</span>
-                    <span>{contract.clientPhone}</span>
-                  </div>
+      <main className="container mx-auto px-4 py-6">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          {/* Contract Body */}
+          <motion.div
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="lg:col-span-2 space-y-6"
+          >
+            {/* Summary Card */}
+            <Card className="border-primary/20 shadow-sm">
+              <CardContent className="p-6 grid grid-cols-2 sm:grid-cols-4 gap-4">
+                <div className="flex items-start gap-2"><User className="h-4 w-4 text-primary mt-0.5" />
+                  <div><p className="text-xs text-muted-foreground">العميل</p><p className="font-semibold text-sm truncate">{contract.client_full_name || "—"}</p></div>
                 </div>
-                
-                <div className="space-y-4">
-                  <div className="flex items-center gap-2">
-                    <DollarSign className="h-4 w-4 text-muted-foreground" />
-                    <span className="font-medium">التكلفة:</span>
-                    <span className="font-bold text-primary">{contract.totalAmount.toLocaleString()} ريال</span>
-                  </div>
-                  
-                  <div className="flex items-center gap-2">
-                    <Calendar className="h-4 w-4 text-muted-foreground" />
-                    <span className="font-medium">تاريخ التسليم:</span>
-                    <span>{contract.deliveryDate}</span>
-                  </div>
-                  
-                  <Badge variant="outline" className="w-fit">
-                    {contract.serviceDetails.title}
-                  </Badge>
+                <div className="flex items-start gap-2"><FileText className="h-4 w-4 text-primary mt-0.5" />
+                  <div><p className="text-xs text-muted-foreground">الخدمة</p><p className="font-semibold text-sm truncate">{contract.service_name || "—"}</p></div>
                 </div>
-              </div>
-
-              <Separator className="my-6" />
-
-              {/* Service Details */}
-              <div>
-                <h3 className="text-lg font-semibold mb-3">وصف الخدمة</h3>
-                <p className="text-muted-foreground mb-4">{contract.serviceDetails.description}</p>
-                
-                <div className="bg-muted p-4 rounded-lg">
-                  <h4 className="font-medium mb-2">المواصفات:</h4>
-                  <ul className="text-sm space-y-1">
-                    {Object.entries(contract.serviceDetails.specifications).map(([key, value]) => (
-                      <li key={key}>
-                        <strong>{key}:</strong> {String(value)}
-                      </li>
-                    ))}
-                  </ul>
+                <div className="flex items-start gap-2"><DollarSign className="h-4 w-4 text-primary mt-0.5" />
+                  <div><p className="text-xs text-muted-foreground">القيمة</p><p className="font-semibold text-sm">{Number(contract.total_amount || 0).toLocaleString("ar-SA")} {contract.currency || "SAR"}</p></div>
                 </div>
-              </div>
-            </CardContent>
-          </Card>
-
-          {/* Terms Acceptance */}
-          {contract.terms.length > 0 && (
-            <Card className="mb-8">
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Shield className="h-5 w-5" />
-                  الشروط والأحكام
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-4">
-                  {contract.terms.map((term) => (
-                    <div key={term.id} className="flex items-start space-x-3 space-x-reverse">
-                      <Checkbox
-                        id={term.id}
-                        checked={acceptedTerms.includes(term.id)}
-                        onCheckedChange={(checked) => handleTermAcceptance(term.id, !!checked)}
-                        required={term.required}
-                      />
-                      <div className="flex-1">
-                        <Label 
-                          htmlFor={term.id} 
-                          className={`font-medium ${term.required ? 'text-red-600' : ''}`}
-                        >
-                          {term.title} {term.required && '*'}
-                        </Label>
-                        <p className="text-sm text-muted-foreground mt-1">
-                          {term.content}
-                        </p>
-                      </div>
-                    </div>
-                  ))}
+                <div className="flex items-start gap-2"><Calendar className="h-4 w-4 text-primary mt-0.5" />
+                  <div><p className="text-xs text-muted-foreground">التحرير</p><p className="font-semibold text-sm">{new Date(contract.created_at).toLocaleDateString("ar-SA")}</p></div>
                 </div>
               </CardContent>
             </Card>
-          )}
 
-          {/* Approval Form */}
-          <Card className="mb-8">
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Signature className="h-5 w-5" />
-                الموافقة والتوقيع
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-6">
-              <div>
-                <Label htmlFor="clientName">الاسم الكامل *</Label>
-                <Input
-                  id="clientName"
-                  value={clientName}
-                  onChange={(e) => setClientName(e.target.value)}
-                  placeholder="أدخل اسمك الكامل كما هو في الهوية"
-                  required
-                />
-              </div>
+            {/* Markdown Content */}
+            <Card>
+              <CardHeader className="border-b"><CardTitle className="flex items-center gap-2"><FileText className="h-5 w-5 text-primary" /> نص العقد الكامل</CardTitle></CardHeader>
+              <CardContent className="p-6">
+                <ScrollArea className="max-h-[60vh] pr-2">
+                  <article className="prose prose-sm sm:prose-base max-w-none rtl-prose
+                    prose-headings:text-foreground prose-p:text-foreground/90 prose-strong:text-foreground
+                    prose-li:text-foreground/90 prose-hr:border-border">
+                    <ReactMarkdown>{contract.content || ""}</ReactMarkdown>
+                  </article>
+                </ScrollArea>
+              </CardContent>
+            </Card>
 
-              <div>
-                <Label htmlFor="signature">التوقيع الرقمي *</Label>
-                <Input
-                  id="signature"
-                  value={signature}
-                  onChange={(e) => setSignature(e.target.value)}
-                  placeholder="اكتب اسمك كتوقيع رقمي"
-                  required
-                />
-                <p className="text-xs text-muted-foreground mt-1">
-                  بكتابة اسمك هنا، فإنك توافق على أن هذا بمثابة توقيعك الرقمي على العقد
-                </p>
-              </div>
+            {/* Signing block - only if pending */}
+            {!isSigned && contract.status === "pending_signature" && (
+              <Card className="border-primary/40 shadow-md">
+                <CardHeader className="bg-primary/5 border-b">
+                  <CardTitle className="flex items-center gap-2"><ShieldCheck className="h-5 w-5 text-primary" /> الموافقة والتوقيع الإلكتروني</CardTitle>
+                </CardHeader>
+                <CardContent className="p-6 space-y-5">
+                  <div className="space-y-3">
+                    {REQUIRED_TERMS.map(t => (
+                      <label key={t.id} className="flex items-start gap-3 p-3 rounded-lg border hover:bg-muted/40 cursor-pointer transition">
+                        <Checkbox
+                          checked={accepted.includes(t.id)}
+                          onCheckedChange={(c) => setAccepted(prev => c ? [...prev, t.id] : prev.filter(x => x !== t.id))}
+                        />
+                        <span className="text-sm leading-relaxed">{t.label}</span>
+                      </label>
+                    ))}
+                  </div>
 
-              <div>
-                <Label htmlFor="comments">تعليقات إضافية (اختياري)</Label>
-                <Textarea
-                  id="comments"
-                  value={comments}
-                  onChange={(e) => setComments(e.target.value)}
-                  placeholder="أي ملاحظات أو استفسارات إضافية"
-                  rows={3}
-                />
-              </div>
+                  <Separator />
 
-              <div className="flex items-start space-x-3 space-x-reverse">
-                <Checkbox
-                  id="finalAcceptance"
-                  checked={finalAcceptance}
-                  onCheckedChange={(checked) => setFinalAcceptance(!!checked)}
-                  required
-                />
-                <Label htmlFor="finalAcceptance" className="text-sm font-medium">
-                  أوافق على جميع بنود العقد المذكورة أعلاه وأتعهد بالالتزام بها. 
-                  أؤكد أنني قرأت العقد بالكامل وفهمت جميع الشروط والأحكام. *
-                </Label>
-              </div>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                      <Label htmlFor="signerName">الاسم الكامل (كما في الهوية) *</Label>
+                      <Input id="signerName" value={signerName} onChange={(e) => setSignerName(e.target.value)} />
+                    </div>
+                    <div>
+                      <Label htmlFor="signerId">رقم الهوية/الإقامة (اختياري)</Label>
+                      <Input id="signerId" value={signerId} onChange={(e) => setSignerId(e.target.value)} placeholder="1xxxxxxxxx" />
+                    </div>
+                  </div>
 
-              <div className="bg-blue-50 p-4 rounded-lg">
-                <p className="text-sm text-blue-800">
-                  <strong>ملاحظة مهمة:</strong> بالموافقة على هذا العقد، فإنك تتعهد بالالتزام بجميع الشروط المذكورة. 
-                  سيتم حفظ موافقتك مع معلومات التوقيع الرقمي وتاريخ الموافقة لأغراض التوثيق القانوني.
-                </p>
-              </div>
+                  <div>
+                    <Label htmlFor="sig">التوقيع الإلكتروني (اكتب اسمك الكامل) *</Label>
+                    <Input id="sig" value={signature} onChange={(e) => setSignature(e.target.value)} className="font-bold text-lg" placeholder="اكتب اسمك هنا للتوقيع" />
+                    <p className="text-xs text-muted-foreground mt-1">سيُسجَّل توقيعك مع وقت التوقيع وعنوان IP لأغراض التوثيق القانوني.</p>
+                  </div>
 
-              <Button 
-                onClick={handleSubmitApproval}
-                disabled={isSubmitting || !finalAcceptance || !clientName.trim() || !signature.trim()}
-                className="w-full"
-                size="lg"
-              >
-                {isSubmitting ? (
-                  <>
-                    <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
-                    جاري الحفظ...
-                  </>
-                ) : (
-                  <>
-                    <CheckCircle className="h-4 w-4 mr-2" />
-                    أوافق على العقد وأوقعه رقمياً
-                  </>
-                )}
-              </Button>
-            </CardContent>
-          </Card>
-        </motion.div>
+                  <div>
+                    <Label htmlFor="cmts">ملاحظات (اختياري)</Label>
+                    <Textarea id="cmts" value={comments} onChange={(e) => setComments(e.target.value)} rows={2} />
+                  </div>
+
+                  <Button onClick={handleSign} disabled={submitting || !allTermsAccepted} size="lg" className="w-full">
+                    {submitting ? "جاري الحفظ…" : (<><CheckCircle2 className="h-5 w-5 ml-2" /> أوافق وأوقّع إلكترونياً</>)}
+                  </Button>
+                </CardContent>
+              </Card>
+            )}
+
+            {isSigned && (
+              <Card className="border-emerald-500/40 bg-emerald-50/40 dark:bg-emerald-950/20">
+                <CardContent className="p-6 flex items-center gap-3">
+                  <CheckCircle2 className="h-8 w-8 text-emerald-600" />
+                  <div>
+                    <p className="font-bold">تم توقيع هذا العقد إلكترونياً</p>
+                    <p className="text-sm text-muted-foreground">آخر توقيع في {fmtDate(contract.signed_at)}</p>
+                  </div>
+                </CardContent>
+              </Card>
+            )}
+          </motion.div>
+
+          {/* Sidebar */}
+          <motion.aside
+            initial={{ opacity: 0, x: 16 }}
+            animate={{ opacity: 1, x: 0 }}
+            className="space-y-4"
+          >
+            {/* Signatures */}
+            <Card>
+              <CardHeader className="pb-3"><CardTitle className="text-base flex items-center gap-2"><ShieldCheck className="h-4 w-4" /> التوقيعات</CardTitle></CardHeader>
+              <CardContent className="space-y-3">
+                {signatures.length === 0 ? (
+                  <p className="text-sm text-muted-foreground">لا توجد توقيعات بعد</p>
+                ) : signatures.map(s => (
+                  <div key={s.id} className="border rounded-lg p-3 text-xs space-y-1 bg-muted/30">
+                    <p className="font-bold text-sm">{s.signer_name}</p>
+                    <p className="font-mono text-base text-primary">{s.signature_text}</p>
+                    <p className="text-muted-foreground"><Clock className="inline h-3 w-3 ml-1" /> {fmtDate(s.signed_at)}</p>
+                    {s.ip_address && <p className="text-muted-foreground">IP: {s.ip_address}</p>}
+                  </div>
+                ))}
+              </CardContent>
+            </Card>
+
+            {/* Timeline */}
+            <Card>
+              <CardHeader className="pb-3"><CardTitle className="text-base flex items-center gap-2"><Clock className="h-4 w-4" /> سجل النشاط</CardTitle></CardHeader>
+              <CardContent>
+                <ol className="relative border-r-2 border-border pr-4 space-y-3">
+                  {timeline.length === 0 && <p className="text-sm text-muted-foreground">لا يوجد نشاط</p>}
+                  {timeline.map(t => (
+                    <li key={t.id} className="relative">
+                      <span className="absolute -right-[22px] top-1 h-3 w-3 rounded-full bg-primary ring-4 ring-background" />
+                      <p className="text-sm font-semibold">{t.action_label}</p>
+                      {t.description && <p className="text-xs text-muted-foreground">{t.description}</p>}
+                      <p className="text-[10px] text-muted-foreground mt-0.5">{fmtDate(t.created_at)}</p>
+                    </li>
+                  ))}
+                </ol>
+              </CardContent>
+            </Card>
+          </motion.aside>
+        </div>
       </main>
-      
     </div>
   );
 };
