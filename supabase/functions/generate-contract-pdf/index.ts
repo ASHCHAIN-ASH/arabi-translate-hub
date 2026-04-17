@@ -295,8 +295,11 @@ function buildHtml(contract: any, signature: any, verifyHash: string) {
   </div>
 
   <div class="preamble">
-    بتاريخ <strong>${fmtDate(contract.created_at)}</strong>، أُبرم هذا العقد بين الطرفين أدناه وفقاً للأحكام الواردة فيه،
-    ويُقدَّم حصرياً عبر منصة <strong>${esc(PLATFORM.name)}</strong> (${esc(PLATFORM.domain)}) بإشراف ${esc(PLATFORM.legal)}.
+    إنه في يوم <strong>${fmtDate(contract.created_at)}</strong>، وانطلاقاً من رسالة <strong>${esc(PLATFORM.legal)}</strong>
+    في دعم المسيرة الأكاديمية والبحثية وتقديم خدمات علمية تتوافق مع أعلى المعايير المهنية والأخلاقية المُعتمدة في الأوساط الجامعية،
+    وبناءً على رغبة الطرف الثاني الصريحة في الإفادة من الخدمات الأكاديمية المُقدَّمة عبر منصة <strong>${esc(PLATFORM.name)}</strong>
+    (${esc(PLATFORM.domain)})، فقد اتفق الطرفان — وهما بكامل أهليتهما المعتبرة شرعاً ونظاماً — على إبرام هذا العقد
+    وفق البنود والأحكام المُبيَّنة أدناه، التي تُعدّ هذه الديباجة جزءاً لا يتجزأ منها ومُكمِّلةً لأحكامها.
   </div>
 
   <h3 class="section">المادة الأولى: أطراف العقد</h3>
