@@ -125,21 +125,22 @@ const ClientTickets = () => {
 
   return (
     <ClientLayout>
-      <div className="p-4 lg:p-6 space-y-6" dir="rtl">
+      <div className="p-3 sm:p-4 lg:p-6 space-y-4 sm:space-y-6" dir="rtl">
         {/* Header */}
-        <div className="flex items-center justify-between">
-          <div>
-            <h1 className="text-2xl lg:text-3xl font-bold">الدعم الفني</h1>
-            <p className="text-muted-foreground">إدارة تذاكر الدعم والتواصل مع فريقنا</p>
+        <div className="flex items-start sm:items-center justify-between gap-3 flex-wrap">
+          <div className="min-w-0 flex-1">
+            <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold">الدعم الفني</h1>
+            <p className="text-muted-foreground text-xs sm:text-sm">إدارة تذاكر الدعم والتواصل مع فريقنا</p>
           </div>
           <Dialog open={isOpen} onOpenChange={setIsOpen}>
             <DialogTrigger asChild>
-              <Button>
-                <Plus className="w-4 h-4 ml-2" />
-                تذكرة جديدة
+              <Button size="sm" className="shrink-0">
+                <Plus className="w-4 h-4 ml-1 sm:ml-2" />
+                <span className="hidden xs:inline">تذكرة جديدة</span>
+                <span className="xs:hidden">جديدة</span>
               </Button>
             </DialogTrigger>
-            <DialogContent className="max-w-md" dir="rtl">
+            <DialogContent className="max-w-[calc(100vw-2rem)] sm:max-w-md max-h-[90vh] overflow-y-auto" dir="rtl">
               <DialogHeader>
                 <DialogTitle>إنشاء تذكرة دعم جديدة</DialogTitle>
               </DialogHeader>
@@ -204,23 +205,23 @@ const ClientTickets = () => {
         </div>
 
         {/* Stats */}
-        <div className="grid grid-cols-3 gap-4">
-          <Card className="border-0 shadow-lg">
-            <CardContent className="p-4 text-center">
-              <p className="text-3xl font-bold text-blue-600">{tickets.filter(t => t.status === 'مفتوح').length}</p>
-              <p className="text-sm text-muted-foreground">مفتوحة</p>
+        <div className="grid grid-cols-3 gap-2 sm:gap-4">
+          <Card className="border-0 shadow-md sm:shadow-lg">
+            <CardContent className="p-2.5 sm:p-4 text-center">
+              <p className="text-xl sm:text-3xl font-bold text-blue-600">{tickets.filter(t => t.status === 'مفتوح').length}</p>
+              <p className="text-[10px] sm:text-sm text-muted-foreground">مفتوحة</p>
             </CardContent>
           </Card>
-          <Card className="border-0 shadow-lg">
-            <CardContent className="p-4 text-center">
-              <p className="text-3xl font-bold text-yellow-600">{tickets.filter(t => t.status === 'قيد المعالجة').length}</p>
-              <p className="text-sm text-muted-foreground">قيد المعالجة</p>
+          <Card className="border-0 shadow-md sm:shadow-lg">
+            <CardContent className="p-2.5 sm:p-4 text-center">
+              <p className="text-xl sm:text-3xl font-bold text-yellow-600">{tickets.filter(t => t.status === 'قيد المعالجة').length}</p>
+              <p className="text-[10px] sm:text-sm text-muted-foreground">قيد المعالجة</p>
             </CardContent>
           </Card>
-          <Card className="border-0 shadow-lg">
-            <CardContent className="p-4 text-center">
-              <p className="text-3xl font-bold text-green-600">{tickets.filter(t => t.status === 'محلول').length}</p>
-              <p className="text-sm text-muted-foreground">محلولة</p>
+          <Card className="border-0 shadow-md sm:shadow-lg">
+            <CardContent className="p-2.5 sm:p-4 text-center">
+              <p className="text-xl sm:text-3xl font-bold text-green-600">{tickets.filter(t => t.status === 'محلول').length}</p>
+              <p className="text-[10px] sm:text-sm text-muted-foreground">محلولة</p>
             </CardContent>
           </Card>
         </div>
@@ -254,20 +255,20 @@ const ClientTickets = () => {
                     transition={{ delay: index * 0.05 }}
                   >
                     <Card className="border hover:shadow-md transition-shadow cursor-pointer">
-                      <CardContent className="p-4">
-                        <div className="flex items-start justify-between">
-                          <div className="flex items-start gap-3">
-                            {getStatusIcon(ticket.status)}
-                            <div>
-                              <h3 className="font-semibold">{ticket.title}</h3>
-                              <p className="text-sm text-muted-foreground line-clamp-1">{ticket.description}</p>
-                              <div className="flex items-center gap-2 mt-2">
-                                <span className="text-xs text-muted-foreground">#{ticket.ticketNumber}</span>
-                                <span className="text-xs text-muted-foreground">• {ticket.createdAt}</span>
+                      <CardContent className="p-3 sm:p-4">
+                        <div className="flex items-start justify-between gap-2">
+                          <div className="flex items-start gap-2 sm:gap-3 min-w-0 flex-1">
+                            <div className="shrink-0 mt-0.5">{getStatusIcon(ticket.status)}</div>
+                            <div className="min-w-0 flex-1">
+                              <h3 className="font-semibold text-sm sm:text-base truncate">{ticket.title}</h3>
+                              <p className="text-xs sm:text-sm text-muted-foreground line-clamp-1">{ticket.description}</p>
+                              <div className="flex items-center gap-1.5 sm:gap-2 mt-1.5 sm:mt-2 flex-wrap">
+                                <span className="text-[10px] sm:text-xs text-muted-foreground font-mono">#{ticket.ticketNumber}</span>
+                                <span className="text-[10px] sm:text-xs text-muted-foreground">• {ticket.createdAt}</span>
                               </div>
                             </div>
                           </div>
-                          <Badge className={getStatusColor(ticket.status)}>{ticket.status}</Badge>
+                          <Badge className={`${getStatusColor(ticket.status)} text-[10px] sm:text-xs shrink-0`}>{ticket.status}</Badge>
                         </div>
                       </CardContent>
                     </Card>
