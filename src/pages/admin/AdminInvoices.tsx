@@ -205,7 +205,14 @@ export default function AdminInvoices() {
                   <Badge className={InvoiceService.statusColor(inv.status)}>{InvoiceService.statusLabel(inv.status)}</Badge>
                 </div>
                 <div className="text-sm">
-                  <div className="font-medium">{inv.customer_name ?? '-'}</div>
+                  <div className="font-medium flex items-center gap-1.5 flex-wrap">
+                    <span>{inv.customer_name ?? '-'}</span>
+                    {inv.customer_id && customerCodes[inv.customer_id] && (
+                      <span className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-muted text-muted-foreground border border-border/50">
+                        #{customerCodes[inv.customer_id]}
+                      </span>
+                    )}
+                  </div>
                   <div className="text-xs text-muted-foreground">{inv.issue_date}</div>
                 </div>
                 <div className="grid grid-cols-3 gap-2 text-xs bg-muted/40 rounded-md p-2">
