@@ -162,7 +162,14 @@ export default function AdminInvoices() {
                     <TableRow key={inv.id}>
                       <TableCell className="font-bold"><Link to={`/adminmaster/invoices/${inv.id}`} className="text-primary hover:underline">{inv.invoice_number}</Link></TableCell>
                       <TableCell>
-                        <div className="font-medium">{inv.customer_name ?? '-'}</div>
+                        <div className="font-medium flex items-center gap-1.5 flex-wrap">
+                          <span>{inv.customer_name ?? '-'}</span>
+                          {inv.customer_id && customerCodes[inv.customer_id] && (
+                            <span className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-muted text-muted-foreground border border-border/50">
+                              #{customerCodes[inv.customer_id]}
+                            </span>
+                          )}
+                        </div>
                         {inv.customer_email && <div className="text-xs text-muted-foreground">{inv.customer_email}</div>}
                       </TableCell>
                       <TableCell className="text-sm">{inv.issue_date}</TableCell>
