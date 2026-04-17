@@ -117,7 +117,10 @@ export default function AdminInvoiceDetails() {
           <div className="flex flex-wrap gap-2">
             <Button size="sm" variant="outline" onClick={() => openInvoicePrintWindow(invoice, items, payments)}><Printer className="w-4 h-4 ml-1" />طباعة</Button>
             <Button size="sm" variant="outline" onClick={() => downloadInvoiceAsPDF(invoice, items, payments)}><Download className="w-4 h-4 ml-1" />PDF</Button>
-            {invoice.status === 'pending' && <Button size="sm" variant="outline" onClick={handleSend}><Send className="w-4 h-4 ml-1" />إرسال</Button>}
+            <Button size="sm" variant="outline" onClick={handleSend} disabled={sending}>
+              {sending ? <Loader2 className="w-4 h-4 ml-1 animate-spin" /> : <Send className="w-4 h-4 ml-1" />}
+              إرسال بالبريد
+            </Button>
             <Button size="sm" variant="outline" onClick={() => setEditOpen(true)}><Edit className="w-4 h-4 ml-1" />تعديل</Button>
             {invoice.remaining_amount > 0 && <Button size="sm" onClick={() => setPayOpen(true)}><CreditCard className="w-4 h-4 ml-1" />دفعة</Button>}
             <Button size="sm" variant="outline" className="text-destructive" onClick={handleDelete}><Trash2 className="w-4 h-4" /></Button>
