@@ -9,8 +9,8 @@ import type { Invoice, InvoiceItem, InvoicePayment } from './invoiceService';
 import { InvoiceService } from './invoiceService';
 
 const COMPANY = {
-  name: 'مسترد باث',
-  nameEn: 'Mastered Path',
+  name: 'ماستر إدو باث',
+  nameEn: 'Mastered Edu Path',
   address: 'المملكة العربية السعودية',
   email: 'info@masteredupath.com',
   phone: '+966 50 000 0000',
@@ -61,9 +61,9 @@ export function buildInvoiceHTML(invoice: Invoice, items: InvoiceItem[], payment
   html, body { font-family: 'Cairo', system-ui, -apple-system, sans-serif; color: #1a1a1a; background: #fff; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
   body { padding: 28px; direction: rtl; line-height: 1.6; font-size: 13px; }
   .page { max-width: 800px; margin: 0 auto; background: #fff; }
-  .header { display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 3px solid #0f766e; padding-bottom: 18px; margin-bottom: 22px; }
+  .header { display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 3px solid #1e3a8a; padding-bottom: 18px; margin-bottom: 22px; }
   .brand { display: flex; flex-direction: column; gap: 4px; }
-  .brand-name { font-size: 22px; font-weight: 800; color: #0f766e; }
+  .brand-name { font-size: 22px; font-weight: 800; color: #1e3a8a; }
   .brand-en { font-size: 12px; color: #6b7280; letter-spacing: 1px; }
   .brand-meta { font-size: 11px; color: #6b7280; margin-top: 6px; line-height: 1.7; }
   .doc-title { text-align: left; }
@@ -85,7 +85,7 @@ export function buildInvoiceHTML(invoice: Invoice, items: InvoiceItem[], payment
   .card .name { font-size: 15px; font-weight: 700; color: #0f172a; margin-bottom: 6px; }
 
   table.items { width: 100%; border-collapse: collapse; margin-bottom: 16px; }
-  table.items thead { background: #0f766e; color: #fff; }
+  table.items thead { background: linear-gradient(135deg, #1e3a8a 0%, #312e81 100%); color: #fff; }
   table.items th { padding: 10px 12px; font-size: 12px; font-weight: 600; text-align: right; }
   table.items th.num, table.items td.num { text-align: center; }
   table.items td { padding: 12px; border-bottom: 1px solid #e2e8f0; font-size: 12px; vertical-align: top; }
@@ -98,7 +98,7 @@ export function buildInvoiceHTML(invoice: Invoice, items: InvoiceItem[], payment
   .totals { width: 320px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 12px 16px; }
   .totals .row { display: flex; justify-content: space-between; padding: 6px 0; font-size: 13px; border-bottom: 1px dashed #e2e8f0; }
   .totals .row:last-child { border-bottom: none; }
-  .totals .row.grand { font-size: 15px; font-weight: 800; color: #0f766e; padding-top: 10px; margin-top: 4px; border-top: 2px solid #0f766e; border-bottom: none; }
+  .totals .row.grand { font-size: 15px; font-weight: 800; color: #1e3a8a; padding-top: 10px; margin-top: 4px; border-top: 2px solid #1e3a8a; border-bottom: none; }
   .totals .row.paid { color: #047857; }
   .totals .row.remaining { color: #b91c1c; font-weight: 700; }
 
@@ -110,11 +110,11 @@ export function buildInvoiceHTML(invoice: Invoice, items: InvoiceItem[], payment
   table.payments th { background: #fff; color: #64748b; font-weight: 600; }
 
   .footer { margin-top: 26px; padding-top: 14px; border-top: 1px solid #e2e8f0; text-align: center; font-size: 11px; color: #94a3b8; }
-  .footer .thanks { font-size: 14px; color: #0f766e; font-weight: 700; margin-bottom: 6px; }
+  .footer .thanks { font-size: 14px; color: #1e3a8a; font-weight: 700; margin-bottom: 6px; }
 
   .actions { position: fixed; top: 12px; left: 12px; display: flex; gap: 8px; z-index: 1000; }
   .actions button { font-family: 'Cairo', sans-serif; padding: 8px 16px; border: none; border-radius: 8px; cursor: pointer; font-size: 13px; font-weight: 600; }
-  .btn-print { background: #0f766e; color: #fff; }
+  .btn-print { background: #1e3a8a; color: #fff; }
   .btn-close { background: #e5e7eb; color: #374151; }
   @media print {
     .actions { display: none; }
