@@ -457,8 +457,8 @@ const AdminServiceOrderDetails = () => {
         </Card>
 
         {/* Tabs */}
-        <Tabs value={activeTab} onValueChange={setActiveTab}>
-          <TabsList className="grid grid-cols-3 sm:grid-cols-6 w-full h-auto">
+        <Tabs value={activeTab} onValueChange={setActiveTab} dir="rtl">
+          <TabsList className="grid grid-cols-3 sm:grid-cols-6 w-full h-auto" dir="rtl">
             <TabsTrigger value="overview" className="gap-1.5 text-xs sm:text-sm py-2"><Eye className="w-3.5 h-3.5" /> نظرة عامة</TabsTrigger>
             <TabsTrigger value="timeline" className="gap-1.5 text-xs sm:text-sm py-2"><Clock className="w-3.5 h-3.5" /> الجدول {timeline.length > 0 && <Badge variant="secondary" className="h-4 px-1 text-[10px]">{timeline.length}</Badge>}</TabsTrigger>
             <TabsTrigger value="files" className="gap-1.5 text-xs sm:text-sm py-2"><Paperclip className="w-3.5 h-3.5" /> ملفات {attachments.length > 0 && <Badge variant="secondary" className="h-4 px-1 text-[10px]">{attachments.length}</Badge>}</TabsTrigger>
