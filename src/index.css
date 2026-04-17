@@ -300,6 +300,15 @@
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     direction: rtl;
+    /* فرض الأرقام اللاتينية (الإنجليزية) في جميع أنحاء التطبيق */
+    font-feature-settings: "lnum" 1, "tnum" 0;
+    font-variant-numeric: lining-nums;
+  }
+
+  /* إجبار جميع العناصر على استخدام الأرقام اللاتينية */
+  *, *::before, *::after {
+    font-feature-settings: "lnum" 1;
+    font-variant-numeric: lining-nums;
   }
 
   h1, h2, h3, h4, h5, h6 {
