@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import ClientLayout from '@/components/client/ClientLayout';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -13,16 +14,54 @@ import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 import { 
   Plus, HelpCircle, MessageSquare, Clock, CheckCircle, 
-  AlertCircle, RefreshCw, Send 
+  AlertCircle, RefreshCw, Send, FileText, Package
 } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 const ClientTickets = () => {
   const { user } = useAuth();
   const { tickets, loading, refresh } = useClientData(user?.id);
+  const [searchParams, setSearchParams] = useSearchParams();
   const [isOpen, setIsOpen] = useState(false);
   const [newTicket, setNewTicket] = useState({ title: '', description: '', category: 'general', priority: 'medium' });
+  const [linkedRef, setLinkedRef] = useState<{ type: 'invoice' | 'order'; id: string; number: string } | null>(null);
   const [submitting, setSubmitting] = useState(false);
+
+  // Auto-open dialog when arriving with ?new=1 and prefill linked invoice/order
+  useEffect(() => {
+    if (searchParams.get('new') !== '1') return;
+    const invoiceId = searchParams.get('invoice_id');
+    const invoiceNumber = searchParams.get('invoice_number') || '';
+    const orderId = searchParams.get('order_id');
+    const orderNumber = searchParams.get('order_number') || '';
+
+    if (invoiceId) {
+      setLinkedRef({ type: 'invoice', id: invoiceId, number: invoiceNumber });
+      setNewTicket((p) => ({
+        ...p,
+        category: 'billing',
+        title: `استفسار بخصوص الفاتورة ${invoiceNumber || `#${invoiceId.slice(0, 8)}`}`,
+        description: `تذكرة دعم متعلقة بالفاتورة رقم: ${invoiceNumber || invoiceId}\n\n`,
+      }));
+    } else if (orderId) {
+      setLinkedRef({ type: 'order', id: orderId, number: orderNumber });
+      setNewTicket((p) => ({
+        ...p,
+        category: 'order',
+        title: `استفسار بخصوص الطلب ${orderNumber || `#${orderId.slice(0, 8)}`}`,
+        description: `تذكرة دعم متعلقة بالطلب رقم: ${orderNumber || orderId}\n\n`,
+      }));
+    }
+    setIsOpen(true);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const clearLinkedRef = () => {
+    setLinkedRef(null);
+    const next = new URLSearchParams(searchParams);
+    ['new', 'invoice_id', 'invoice_number', 'order_id', 'order_number'].forEach((k) => next.delete(k));
+    setSearchParams(next, { replace: true });
+  };
 
   const handleCreateTicket = async () => {
     if (!newTicket.title.trim() || !user?.id) return;
