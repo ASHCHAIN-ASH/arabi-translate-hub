@@ -3,7 +3,10 @@ import { createClient } from "https://esm.sh/@supabase/supabase-js@2.49.4";
 import { Resend } from "https://esm.sh/resend@4.0.0";
 
 const resend = new Resend(Deno.env.get("RESEND_API_KEY"));
-const FROM = Deno.env.get("RESEND_FROM_EMAIL") || "MasterEduPath <info@masteredupath.com>";
+const RAW_FROM = Deno.env.get("RESEND_FROM_EMAIL") || "";
+const FROM = /^[^<>@]+@[^<>@]+\.[^<>@]+$/.test(RAW_FROM) || /<[^<>@]+@[^<>@]+\.[^<>@]+>/.test(RAW_FROM)
+  ? RAW_FROM
+  : "MasterEduPath <onboarding@resend.dev>";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
