@@ -359,7 +359,7 @@ const AdminServices = () => {
         </div>
 
         {/* === Stats Grid (Banking style) === */}
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3 md:gap-4">
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3 md:gap-4">
           <StatCard icon={<Package />} label="إجمالي الخدمات" value={stats.total} tone="primary" />
           <StatCard icon={<CheckCircle2 />} label="نشطة" value={stats.active} tone="success" />
           <StatCard icon={<XCircle />} label="معطلة" value={stats.inactive} tone="muted" />
@@ -370,6 +370,7 @@ const AdminServices = () => {
             value={formatCurrency(stats.avgPrice)}
             tone="accent"
             isCurrency
+            className="col-span-2"
           />
         </div>
 
