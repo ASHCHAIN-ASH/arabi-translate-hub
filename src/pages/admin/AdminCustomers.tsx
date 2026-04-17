@@ -750,7 +750,8 @@ const AdminCustomers = () => {
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: index * 0.05, duration: 0.3 }}
-                        className="hover:bg-muted/30 transition-all duration-200 border-b group"
+                        onClick={() => navigate(`/adminmaster/customers/${customer.id}`)}
+                        className="hover:bg-muted/30 transition-all duration-200 border-b group cursor-pointer"
                       >
                         <TableCell className="py-4 px-4">
                           <div className="flex items-center gap-3">
@@ -840,7 +841,7 @@ const AdminCustomers = () => {
                           </div>
                         </TableCell>
                          <TableCell className="py-4 px-3">
-                           <div className="flex items-center justify-center">
+                           <div className="flex items-center justify-center" onClick={(e) => e.stopPropagation()}>
                              <DropdownMenu>
                                <DropdownMenuTrigger asChild>
                                  <Button 
