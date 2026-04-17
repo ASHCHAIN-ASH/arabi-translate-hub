@@ -335,7 +335,17 @@ const App = () => (
                 <ClientContracts />
               </SimpleProtectedRoute>
             } />
+            <Route path="/client/contracts" element={
+              <SimpleProtectedRoute requiredRole="client">
+                <ClientContracts />
+              </SimpleProtectedRoute>
+            } />
             <Route path="/contracts/:id" element={
+              <SimpleProtectedRoute requiredRole="client">
+                <ClientContractApproval />
+              </SimpleProtectedRoute>
+            } />
+            <Route path="/client/contracts/:id" element={
               <SimpleProtectedRoute requiredRole="client">
                 <ClientContractApproval />
               </SimpleProtectedRoute>
