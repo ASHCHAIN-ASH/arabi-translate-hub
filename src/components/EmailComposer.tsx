@@ -35,6 +35,7 @@ export default function EmailComposer({ defaultTo = "", defaultTemplateKey = "",
   const [loading, setLoading] = useState(false);
   const [previewOpen, setPreviewOpen] = useState(false);
   const [previewContent, setPreviewContent] = useState("");
+  const [previewDevice, setPreviewDevice] = useState<'mobile' | 'desktop'>('desktop');
 
   // بيانات إرسال البريد
   const [emailForm, setEmailForm] = useState({
@@ -106,10 +107,74 @@ export default function EmailComposer({ defaultTo = "", defaultTemplateKey = "",
     }
   };
 
+  const buildResponsiveEmail = (subject: string, bodyHtml: string) => `
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="x-apple-disable-message-reformatting" />
+  <title>${subject}</title>
+  <style>
+    body { margin:0; padding:0; background:#f3f4f6; font-family: 'IBM Plex Sans Arabic', -apple-system, BlinkMacSystemFont, 'Segoe UI', Tahoma, Arial, sans-serif; }
+    table { border-collapse: collapse; }
+    img { border:0; outline:none; text-decoration:none; max-width:100%; height:auto; display:block; }
+    a { color:#1e40af; text-decoration:none; }
+    .wrapper { width:100%; background:#f3f4f6; padding:24px 12px; }
+    .container { max-width:600px; margin:0 auto; background:#ffffff; border-radius:14px; overflow:hidden; box-shadow:0 4px 24px rgba(0,0,0,0.06); }
+    .header { background: linear-gradient(135deg, #1e3a8a 0%, #1e40af 100%); padding:28px 24px; text-align:center; color:#ffffff; }
+    .brand { font-size:20px; font-weight:700; margin:0; }
+    .tagline { font-size:13px; opacity:0.85; margin-top:6px; }
+    .subject-bar { background:#f8fafc; border-bottom:1px solid #e5e7eb; padding:14px 24px; font-size:14px; color:#334155; }
+    .content { padding:28px 24px; color:#1f2937; font-size:15px; line-height:1.85; word-wrap:break-word; }
+    .content p { margin:0 0 14px; }
+    .content h1, .content h2, .content h3 { color:#0f172a; }
+    .content a { color:#1e40af; text-decoration:underline; }
+    .footer { background:#0f172a; color:#cbd5e1; padding:20px 24px; text-align:center; font-size:12px; line-height:1.7; }
+    .footer a { color:#93c5fd; }
+    .footer .links { margin-top:8px; }
+    .footer .links a { margin:0 6px; }
+    @media only screen and (max-width:600px) {
+      .wrapper { padding:12px 6px; }
+      .container { border-radius:10px; }
+      .header { padding:22px 16px; }
+      .brand { font-size:18px; }
+      .subject-bar { padding:12px 16px; font-size:13px; }
+      .content { padding:20px 16px; font-size:14px; }
+      .footer { padding:16px; font-size:11px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrapper">
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
+      <tr><td align="center">
+        <table role="presentation" class="container" width="600" cellpadding="0" cellspacing="0" style="width:100%;max-width:600px;">
+          <tr><td class="header">
+            <p class="brand">منصة ماستر إيدو باث</p>
+            <p class="tagline">للخدمات الأكاديمية والترجمة المتخصصة</p>
+          </td></tr>
+          <tr><td class="subject-bar"><strong>الموضوع:</strong> ${subject}</td></tr>
+          <tr><td class="content">${bodyHtml}</td></tr>
+          <tr><td class="footer">
+            © ${new Date().getFullYear()} منصة ماستر إيدو باث - جميع الحقوق محفوظة<br/>
+            للتواصل: <a href="mailto:info@masteredupath.com">info@masteredupath.com</a> · واتساب: 0500776343
+            <div class="links">
+              <a href="https://masteredupath.com">الموقع</a> ·
+              <a href="https://masteredupath.com/contact-us">تواصل معنا</a>
+            </div>
+          </td></tr>
+        </table>
+      </td></tr>
+    </table>
+  </div>
+</body>
+</html>`;
+
   const handlePreview = () => {
     let content = emailForm.content;
     let subject = emailForm.subject;
-    
+
     try {
       const variables = JSON.parse(emailForm.variables);
       Object.entries(variables).forEach(([key, value]) => {
@@ -117,17 +182,12 @@ export default function EmailComposer({ defaultTo = "", defaultTemplateKey = "",
         content = content.replace(placeholder, String(value));
         subject = subject.replace(placeholder, String(value));
       });
-    } catch (error) {
+    } catch {
       toast.error("خطأ في تحليل المتغيرات");
       return;
     }
 
-    setPreviewContent(`
-      <div style="border-bottom: 2px solid #eee; padding: 10px; margin-bottom: 20px;">
-        <strong>الموضوع:</strong> ${subject}
-      </div>
-      ${content}
-    `);
+    setPreviewContent(buildResponsiveEmail(subject || "(بدون موضوع)", content || "<p>(لا يوجد محتوى)</p>"));
     setPreviewOpen(true);
   };
 
@@ -146,11 +206,13 @@ export default function EmailComposer({ defaultTo = "", defaultTemplateKey = "",
         variables = {};
       }
 
+      const wrappedContent = buildResponsiveEmail(emailForm.subject, emailForm.content);
+
       const response = await supabase.functions.invoke('send-email', {
         body: {
           to: emailForm.to.split(',').map(email => email.trim()),
           subject: emailForm.subject,
-          content: emailForm.content,
+          content: wrappedContent,
           template_key: emailForm.template_key || undefined,
           variables
         }
@@ -270,14 +332,28 @@ export default function EmailComposer({ defaultTo = "", defaultTemplateKey = "",
         </div>
 
         <Dialog open={previewOpen} onOpenChange={setPreviewOpen}>
-          <DialogContent className="max-w-4xl max-h-[80vh] overflow-auto">
+          <DialogContent className="max-w-5xl max-h-[90vh] overflow-hidden flex flex-col">
             <DialogHeader>
-              <DialogTitle>معاينة البريد الإلكتروني</DialogTitle>
+              <DialogTitle className="flex items-center justify-between flex-wrap gap-2">
+                <span>معاينة البريد الإلكتروني</span>
+                <div className="flex gap-2">
+                  <Button size="sm" variant={previewDevice === 'mobile' ? 'default' : 'outline'} onClick={() => setPreviewDevice('mobile')}>📱 جوال</Button>
+                  <Button size="sm" variant={previewDevice === 'desktop' ? 'default' : 'outline'} onClick={() => setPreviewDevice('desktop')}>💻 كمبيوتر</Button>
+                </div>
+              </DialogTitle>
             </DialogHeader>
-            <div 
-              className="border rounded-lg p-4 bg-white"
-              dangerouslySetInnerHTML={{ __html: previewContent }}
-            />
+            <div className="flex-1 overflow-auto bg-muted/30 rounded-lg p-4 flex justify-center">
+              <iframe
+                title="معاينة البريد"
+                srcDoc={previewContent}
+                className="bg-white border rounded-lg shadow-sm transition-all"
+                style={{
+                  width: previewDevice === 'mobile' ? '375px' : '100%',
+                  maxWidth: previewDevice === 'mobile' ? '375px' : '720px',
+                  height: '70vh',
+                }}
+              />
+            </div>
           </DialogContent>
         </Dialog>
       </CardContent>
