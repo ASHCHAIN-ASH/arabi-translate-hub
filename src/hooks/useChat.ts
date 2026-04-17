@@ -132,9 +132,6 @@ export function useChat(userId?: string, isAdmin = false) {
 
     channel
       .on('postgres_changes', { event: '*', schema: 'public', table: 'chat_messages' }, () => {
-        if (activeConversation) {
-          loadMessages(activeConversation);
-        }
         loadConversations();
         loadUnreadCount();
       })
@@ -144,7 +141,21 @@ export function useChat(userId?: string, isAdmin = false) {
       .subscribe();
 
     return () => { supabase.removeChannel(channel); };
-  }, [loadConversations, loadMessages, activeConversation, loadUnreadCount]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [userId]);
+
+  // Separate effect: reload messages of active conversation on any message change
+  useEffect(() => {
+    if (!activeConversation) return;
+    const ch = supabase
+      .channel(`chat-msgs-${activeConversation}`)
+      .on('postgres_changes', {
+        event: '*', schema: 'public', table: 'chat_messages',
+        filter: `conversation_id=eq.${activeConversation}`,
+      }, () => loadMessages(activeConversation))
+      .subscribe();
+    return () => { supabase.removeChannel(ch); };
+  }, [activeConversation, loadMessages]);
 
   useEffect(() => {
     if (activeConversation) {
