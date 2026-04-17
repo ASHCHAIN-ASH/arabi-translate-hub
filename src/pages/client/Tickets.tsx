@@ -68,19 +68,24 @@ const ClientTickets = () => {
     setSubmitting(true);
     try {
       const ticketNumber = `TKT-${Date.now().toString(36).toUpperCase()}`;
-      const { error } = await supabase.from('tickets').insert({
+      const payload: any = {
         user_id: user.id,
         ticket_number: ticketNumber,
-        title: newTicket.title,
+        subject: newTicket.title,
         description: newTicket.description,
         category: newTicket.category,
         priority: newTicket.priority,
-        status: 'open'
-      } as any);
+        status: 'open',
+      };
+      if (linkedRef?.type === 'invoice') payload.related_invoice_id = linkedRef.id;
+      if (linkedRef?.type === 'order') payload.related_order_id = linkedRef.id;
+
+      const { error } = await supabase.from('tickets').insert(payload);
       if (error) throw error;
       toast.success('تم إنشاء التذكرة بنجاح');
       setIsOpen(false);
       setNewTicket({ title: '', description: '', category: 'general', priority: 'medium' });
+      clearLinkedRef();
       refresh();
     } catch (err) {
       console.error(err);
