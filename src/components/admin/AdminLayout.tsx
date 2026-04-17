@@ -295,7 +295,7 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
                   <Shield className="w-5 h-5 text-primary-foreground" />
                 </div>
                 <div className="hidden sm:block">
-                  <h1 className="text-sm font-bold text-foreground leading-tight">منصة التعليم</h1>
+                  <h1 className="text-sm font-bold text-foreground leading-tight">منصة ماستر إيدو باث</h1>
                   <p className="text-[11px] text-muted-foreground leading-tight">لوحة الإدارة</p>
                 </div>
               </Link>

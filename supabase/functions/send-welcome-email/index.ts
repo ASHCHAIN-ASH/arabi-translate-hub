@@ -27,9 +27,9 @@ const handler = async (req: Request): Promise<Response> => {
     console.log(`Sending welcome email to: ${user_email}`);
 
     const emailResponse = await resend.emails.send({
-      from: "منصة التعليم الأكاديمي <info@masteredupath.com>",
+      from: "منصة ماستر إيدو باث <info@masteredupath.com>",
       to: [user_email],
-      subject: "مرحباً بك في منصة التعليم الأكاديمي!",
+      subject: "مرحباً بك في منصة ماستر إيدو باث!",
       html: `
         <!DOCTYPE html>
         <html dir="rtl" lang="ar">
@@ -128,7 +128,7 @@ const handler = async (req: Request): Promise<Response> => {
         <body>
           <div class="container">
             <div class="header">
-              <h1>🎓 مرحباً بك في منصة التعليم الأكاديمي</h1>
+              <h1>🎓 مرحباً بك في منصة ماستر إيدو باث</h1>
               <p>أهلاً وسهلاً ${user_name}</p>
             </div>
             
@@ -138,7 +138,7 @@ const handler = async (req: Request): Promise<Response> => {
               </div>
               
               <p>
-                نحن سعداء لانضمامك إلى منصة التعليم الأكاديمي، المنصة الرائدة في تقديم خدمات الترجمة والبحث الأكاديمي عالية الجودة.
+                نحن سعداء لانضمامك إلى منصة ماستر إيدو باث، المنصة الرائدة في تقديم خدمات الترجمة والبحث الأكاديمي عالية الجودة.
               </p>
               
               <div class="features">
@@ -181,16 +181,16 @@ const handler = async (req: Request): Promise<Response> => {
               
               <p style="margin-bottom: 0;">
                 مع أطيب التحيات،<br>
-                <strong>فريق منصة التعليم الأكاديمي</strong>
+                <strong>فريق منصة ماستر إيدو باث</strong>
               </p>
             </div>
             
             <div class="footer">
               <p>
-                هذا البريد الإلكتروني تم إرساله إليك لأنك قمت بإنشاء حساب في منصة التعليم الأكاديمي.
+                هذا البريد الإلكتروني تم إرساله إليك لأنك قمت بإنشاء حساب في منصة ماستر إيدو باث.
               </p>
               <p>
-                © 2024 منصة التعليم الأكاديمي. جميع الحقوق محفوظة.
+                © 2024 منصة ماستر إيدو باث. جميع الحقوق محفوظة.
               </p>
             </div>
           </div>

@@ -128,7 +128,7 @@ const Register = () => {
             إنشاء حساب جديد
           </h1>
           <p className="text-slate-600 text-lg">
-            انضم لمنصة التعليم الأكاديمي الرائدة
+            انضم لمنصة ماستر إيدو باث
           </p>
         </motion.div>
 

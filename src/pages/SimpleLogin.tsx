@@ -219,7 +219,7 @@ const SimpleLogin = () => {
               وكالة ماستر إيدو باث
             </h1>
             <p className="text-muted-foreground text-base sm:text-lg">
-              منصة التعليم الأكاديمي المتقدمة
+              منصة ماستر إيدو باث
             </p>
           </div>
 
