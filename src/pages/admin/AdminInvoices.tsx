@@ -15,6 +15,7 @@ import { InvoiceService, type Invoice } from '@/utils/invoiceService';
 import { openInvoicePrintWindow, downloadInvoiceAsPDF } from '@/utils/invoicePdf';
 import InvoiceFormDialog from '@/components/admin/invoices/InvoiceFormDialog';
 import PaymentDialog from '@/components/admin/invoices/PaymentDialog';
+import SendInvoiceDialog from '@/components/admin/invoices/SendInvoiceDialog';
 
 export default function AdminInvoices() {
   const [invoices, setInvoices] = useState<Invoice[]>([]);
@@ -24,7 +25,7 @@ export default function AdminInvoices() {
   const [formOpen, setFormOpen] = useState(false);
   const [editing, setEditing] = useState<Invoice | null>(null);
   const [paymentFor, setPaymentFor] = useState<Invoice | null>(null);
-  const [sendingId, setSendingId] = useState<string | null>(null);
+  const [sendFor, setSendFor] = useState<Invoice | null>(null);
 
   const load = async () => {
     setLoading(true);
@@ -75,20 +76,7 @@ export default function AdminInvoices() {
     const [items, payments] = await Promise.all([InvoiceService.getItems(inv.id), InvoiceService.getPayments(inv.id)]);
     openInvoicePrintWindow(inv, items, payments);
   };
-  const handleSend = async (inv: Invoice) => {
-    if (!inv.customer_email) { toast.error('لا يوجد بريد إلكتروني للعميل'); return; }
-    setSendingId(inv.id);
-    try {
-      const { error } = await supabase.functions.invoke('send-invoice-email', { body: { invoice_id: inv.id } });
-      if (error) throw error;
-      toast.success('تم إرسال الفاتورة', { description: inv.customer_email });
-      load();
-    } catch (e: any) {
-      toast.error('فشل الإرسال', { description: e.message });
-    } finally {
-      setSendingId(null);
-    }
-  };
+  const handleSend = (inv: Invoice) => setSendFor(inv);
 
   return (
     <AdminLayout>
@@ -171,11 +159,11 @@ export default function AdminInvoices() {
                       <TableCell><Badge className={InvoiceService.statusColor(inv.status)}>{InvoiceService.statusLabel(inv.status)}</Badge></TableCell>
                       <TableCell>
                         <div className="flex items-center gap-1">
-                          <Button size="sm" variant="outline" disabled={sendingId === inv.id || !inv.customer_email} onClick={() => handleSend(inv)} title={inv.customer_email ? 'إرسال بالبريد' : 'لا يوجد بريد للعميل'}>
-                            {sendingId === inv.id ? <Loader2 className="w-4 h-4 animate-spin" /> : <Mail className="w-4 h-4" />}
+                          <Button size="sm" variant="outline" onClick={() => handleSend(inv)} title="إرسال بالبريد">
+                            <Mail className="w-4 h-4" />
                             <span className="hidden xl:inline mr-1">إرسال</span>
                           </Button>
-                          <RowActions inv={inv} sending={sendingId === inv.id} onSend={() => handleSend(inv)} onEdit={() => { setEditing(inv); setFormOpen(true); }} onPay={() => setPaymentFor(inv)} onDelete={() => handleDelete(inv)} onPrint={() => handlePrint(inv)} onDownload={() => handleDownload(inv)} />
+                          <RowActions inv={inv} onSend={() => handleSend(inv)} onEdit={() => { setEditing(inv); setFormOpen(true); }} onPay={() => setPaymentFor(inv)} onDelete={() => handleDelete(inv)} onPrint={() => handlePrint(inv)} onDownload={() => handleDownload(inv)} />
                         </div>
                       </TableCell>
                     </TableRow>
@@ -207,11 +195,11 @@ export default function AdminInvoices() {
                 </div>
                 <div className="flex gap-2">
                   <Button size="sm" variant="outline" className="flex-1" asChild><Link to={`/adminmaster/invoices/${inv.id}`}><Eye className="w-3 h-3 ml-1" />عرض</Link></Button>
-                  <Button size="sm" variant="outline" className="flex-1" disabled={sendingId === inv.id || !inv.customer_email} onClick={() => handleSend(inv)}>
-                    {sendingId === inv.id ? <Loader2 className="w-3 h-3 ml-1 animate-spin" /> : <Mail className="w-3 h-3 ml-1" />}
+                  <Button size="sm" variant="outline" className="flex-1" onClick={() => handleSend(inv)}>
+                    <Mail className="w-3 h-3 ml-1" />
                     إرسال
                   </Button>
-                  <RowActions inv={inv} sending={sendingId === inv.id} onSend={() => handleSend(inv)} onEdit={() => { setEditing(inv); setFormOpen(true); }} onPay={() => setPaymentFor(inv)} onDelete={() => handleDelete(inv)} onPrint={() => handlePrint(inv)} onDownload={() => handleDownload(inv)} />
+                  <RowActions inv={inv} onSend={() => handleSend(inv)} onEdit={() => { setEditing(inv); setFormOpen(true); }} onPay={() => setPaymentFor(inv)} onDelete={() => handleDelete(inv)} onPrint={() => handlePrint(inv)} onDownload={() => handleDownload(inv)} />
                 </div>
               </CardContent>
             </Card>
@@ -221,6 +209,7 @@ export default function AdminInvoices() {
 
       <InvoiceFormDialog open={formOpen} onOpenChange={setFormOpen} invoice={editing} onSaved={load} />
       {paymentFor && <PaymentDialog open={!!paymentFor} onOpenChange={(o) => !o && setPaymentFor(null)} invoice={paymentFor} onSaved={load} />}
+      <SendInvoiceDialog open={!!sendFor} onOpenChange={(o) => !o && setSendFor(null)} invoice={sendFor} onSent={load} />
     </AdminLayout>
   );
 }
@@ -260,7 +249,7 @@ function EmptyState() {
     </div>
   );
 }
-function RowActions({ inv, onEdit, onPay, onDelete, onPrint, onDownload, onSend, sending }: any) {
+function RowActions({ inv, onEdit, onPay, onDelete, onPrint, onDownload, onSend }: any) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild><Button variant="ghost" size="icon"><MoreVertical className="w-4 h-4" /></Button></DropdownMenuTrigger>
@@ -268,8 +257,8 @@ function RowActions({ inv, onEdit, onPay, onDelete, onPrint, onDownload, onSend,
         <DropdownMenuItem asChild><Link to={`/adminmaster/invoices/${inv.id}`}><Eye className="w-4 h-4 ml-2" />التفاصيل</Link></DropdownMenuItem>
         <DropdownMenuItem onClick={onEdit}><Edit className="w-4 h-4 ml-2" />تعديل</DropdownMenuItem>
         <DropdownMenuItem onClick={onPay}><CreditCard className="w-4 h-4 ml-2" />دفعة</DropdownMenuItem>
-        <DropdownMenuItem onClick={onSend} disabled={sending || !inv.customer_email}>
-          {sending ? <Loader2 className="w-4 h-4 ml-2 animate-spin" /> : <Mail className="w-4 h-4 ml-2" />}
+        <DropdownMenuItem onClick={onSend}>
+          <Mail className="w-4 h-4 ml-2" />
           إرسال بالبريد
         </DropdownMenuItem>
         <DropdownMenuSeparator />
