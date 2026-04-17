@@ -616,6 +616,9 @@ const AdminServiceOrderDetails = () => {
                         className={cn('flex', m.sender_type === 'admin' ? 'justify-start' : 'justify-end')}>
                         <div className={cn('max-w-[75%] rounded-2xl px-3 py-2 text-sm',
                           m.sender_type === 'admin' ? 'bg-primary text-primary-foreground rounded-tr-sm' : 'bg-card border rounded-tl-sm')}>
+                          <p className={cn('text-[10px] font-semibold mb-1', m.sender_type === 'admin' ? 'opacity-90' : 'text-primary')}>
+                            {m.sender_type === 'admin' ? 'فريق خدمة العملاء' : (order?.client_name || 'العميل')}
+                          </p>
                           <p className="whitespace-pre-wrap">{m.content}</p>
                           <p className={cn('text-[10px] mt-1', m.sender_type === 'admin' ? 'opacity-70' : 'text-muted-foreground')}>
                             {new Date(m.created_at).toLocaleTimeString('ar-SA', { hour: '2-digit', minute: '2-digit' })}
