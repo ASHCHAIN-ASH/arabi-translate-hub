@@ -184,6 +184,7 @@ export const ContractDocument: React.FC<Props> = ({ contract, signature }) => {
         <tbody>
           <FinRow label="اسم الخدمة" value={contract.service_name || "—"} />
           {contract.payment_terms && <FinRow label="شروط الدفع" value={contract.payment_terms} />}
+          {(contract.metadata as any)?.workDuration && <FinRow label="مدة تنفيذ العمل" value={(contract.metadata as any).workDuration} />}
           {contract.delivery_date && <FinRow label="موعد التسليم" value={fmtDate(contract.delivery_date)} />}
           <tr style={{ background: NAVY }}>
             <td className="p-3 font-bold" style={{ color: GOLD }}>القيمة الإجمالية</td>
