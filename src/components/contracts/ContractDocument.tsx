@@ -65,6 +65,7 @@ interface Props {
 }
 
 export const ContractDocument: React.FC<Props> = ({ contract, signature }) => {
+  useArefFont();
   const total = Number(contract.total_amount || 0);
   const currency = contract.currency || "SAR";
 
