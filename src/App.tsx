@@ -66,6 +66,7 @@ import AdminDashboard from "./pages/admin/AdminDashboard";
 import AdminServices from "./pages/admin/AdminServices";
 import AdminOrders from "./pages/admin/AdminOrders";
 import AdminInvoices from "./pages/admin/AdminInvoices";
+import AdminInvoiceDetails from "./pages/admin/AdminInvoiceDetails";
 import AdminTransactions from "./pages/admin/AdminTransactions";
 import AdminFinancial from "./pages/admin/AdminFinancial";
 import AdminUsers from "./pages/admin/AdminUsers";
@@ -329,6 +330,11 @@ const App = () => (
             <Route path="/adminmaster/invoices" element={
               <SimpleProtectedRoute adminOnly>
                 <AdminInvoices />
+              </SimpleProtectedRoute>
+            } />
+            <Route path="/adminmaster/invoices/:id" element={
+              <SimpleProtectedRoute adminOnly>
+                <AdminInvoiceDetails />
               </SimpleProtectedRoute>
             } />
             <Route path="/adminmaster/transactions" element={
