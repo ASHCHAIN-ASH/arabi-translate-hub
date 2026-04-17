@@ -89,6 +89,11 @@ export default function EmailComposer({ defaultTo = "", defaultTemplateKey = "",
   };
 
   const handleTemplateChange = (templateKey: string) => {
+    if (templateKey === "__none__") {
+      setSelectedTemplate(null);
+      setEmailForm(prev => ({ ...prev, template_key: "" }));
+      return;
+    }
     const template = templates.find(t => t.template_key === templateKey);
     if (template) {
       setSelectedTemplate(template);
@@ -195,14 +200,14 @@ export default function EmailComposer({ defaultTo = "", defaultTemplateKey = "",
           <div>
             <Label>استخدام قالب (اختياري)</Label>
             <Select
-              value={emailForm.template_key}
+              value={emailForm.template_key || "__none__"}
               onValueChange={handleTemplateChange}
             >
               <SelectTrigger>
                 <SelectValue placeholder="اختر قالب أو اتركه فارغاً" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="">بدون قالب</SelectItem>
+                <SelectItem value="__none__">بدون قالب</SelectItem>
                 {templates.map((template) => (
                   <SelectItem key={template.id} value={template.template_key}>
                     {template.template_key}
