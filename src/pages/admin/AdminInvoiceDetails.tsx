@@ -173,7 +173,7 @@ export default function AdminInvoiceDetails() {
                 <div className="p-4 bg-muted/40 space-y-2 text-sm">
                   <div className="flex justify-between"><span>المجموع الفرعي</span><span className="font-medium">{InvoiceService.formatCurrency(invoice.subtotal, invoice.currency)}</span></div>
                   {invoice.discount_amount > 0 && <div className="flex justify-between"><span>الخصم</span><span className="text-red-600">- {InvoiceService.formatCurrency(invoice.discount_amount, invoice.currency)}</span></div>}
-                  {invoice.tax_amount > 0 && <div className="flex justify-between"><span>الضريبة</span><span>{InvoiceService.formatCurrency(invoice.tax_amount, invoice.currency)}</span></div>}
+                  {invoice.tax_amount > 0 && <div className="flex justify-between"><span>ضريبة القيمة المضافة</span><span>{InvoiceService.formatCurrency(invoice.tax_amount, invoice.currency)}</span></div>}
                   <Separator />
                   <div className="flex justify-between text-base font-bold text-primary"><span>الإجمالي</span><span>{InvoiceService.formatCurrency(invoice.total_amount, invoice.currency)}</span></div>
                   <div className="flex justify-between text-emerald-600"><span>المدفوع</span><span className="font-bold">{InvoiceService.formatCurrency(invoice.paid_amount, invoice.currency)}</span></div>

@@ -181,7 +181,7 @@ export function buildInvoiceHTML(invoice: Invoice, items: InvoiceItem[], payment
     <div class="totals">
       <div class="row"><span>المجموع الفرعي</span><span>${fmt(invoice.subtotal)}</span></div>
       ${invoice.discount_amount ? `<div class="row"><span>الخصم</span><span>- ${fmt(invoice.discount_amount)}</span></div>` : ''}
-      ${invoice.tax_amount ? `<div class="row"><span>الضريبة</span><span>${fmt(invoice.tax_amount)}</span></div>` : ''}
+      ${invoice.tax_amount ? `<div class="row"><span>ضريبة القيمة المضافة</span><span>${fmt(invoice.tax_amount)}</span></div>` : ''}
       <div class="row grand"><span>الإجمالي</span><span>${fmt(invoice.total_amount)}</span></div>
       <div class="row paid"><span>المدفوع</span><span>${fmt(invoice.paid_amount)}</span></div>
       <div class="row remaining"><span>المتبقي</span><span>${fmt(invoice.remaining_amount)}</span></div>
