@@ -39,10 +39,11 @@ const PAYMENT_METHODS = [
   { value: 'cash', label: 'نقدي', icon: '💵' },
 ];
 
-const BANK_INFO = {
-  bank: 'البنك الأهلي السعودي',
-  iban: 'SA00 0000 0000 0000 0000 0000',
-  beneficiary: 'وكالة ماستر إيدو باث',
+export const BANK_INFO = {
+  bank: 'Alawwal Bank — البنك الأول',
+  iban: 'SA5345000000262359391004',
+  ibanFormatted: 'SA53 4500 0000 0262 3593 9100 4',
+  beneficiary: 'شركة علي صالح الشهري القابضة',
 };
 
 const ClientWallet: React.FC = () => {
