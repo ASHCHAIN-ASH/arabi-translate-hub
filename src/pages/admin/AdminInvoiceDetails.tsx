@@ -121,7 +121,7 @@ export default function AdminInvoiceDetails() {
                     <Link to={`/adminmaster/service-orders/${order.id}`} className="text-primary hover:underline">
                       <div className="font-bold">{order.tracking_id}</div>
                       <div className="text-muted-foreground">{order.service_name ?? '-'}</div>
-                      <div className="text-xs mt-1">الحالة: {order.current_status}</div>
+                      <div className="text-xs mt-1">الحالة: {orderStatusLabel(order.current_status)}</div>
                     </Link>
                   ) : <div className="text-muted-foreground">لا يوجد طلب مرتبط</div>}
                 </CardContent>
