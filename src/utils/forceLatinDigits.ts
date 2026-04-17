@@ -55,27 +55,24 @@ export function installLatinDigitsEnforcer() {
 
   // Intl.NumberFormat
   const OrigNumberFormat = Intl.NumberFormat;
-  // @ts-ignore
-  Intl.NumberFormat = function (locales?: any, options?: any) {
+  const IntlAny = Intl as any;
+  IntlAny.NumberFormat = function (locales?: any, options?: any) {
     const inst = new OrigNumberFormat(normalizeLocale(locales), options);
     const origFormat = inst.format.bind(inst);
     inst.format = (v: number) => toLatinDigits(origFormat(v));
     return inst;
-  } as any;
-  (Intl.NumberFormat as any).prototype = OrigNumberFormat.prototype;
-  // @ts-ignore
-  Intl.NumberFormat.supportedLocalesOf = OrigNumberFormat.supportedLocalesOf;
+  };
+  IntlAny.NumberFormat.prototype = OrigNumberFormat.prototype;
+  IntlAny.NumberFormat.supportedLocalesOf = OrigNumberFormat.supportedLocalesOf;
 
   // Intl.DateTimeFormat
   const OrigDTF = Intl.DateTimeFormat;
-  // @ts-ignore
-  Intl.DateTimeFormat = function (locales?: any, options?: any) {
+  IntlAny.DateTimeFormat = function (locales?: any, options?: any) {
     const inst = new OrigDTF(normalizeLocale(locales), options);
     const origFormat = inst.format.bind(inst);
     inst.format = (v?: Date | number) => toLatinDigits(origFormat(v));
     return inst;
-  } as any;
-  (Intl.DateTimeFormat as any).prototype = OrigDTF.prototype;
-  // @ts-ignore
-  Intl.DateTimeFormat.supportedLocalesOf = OrigDTF.supportedLocalesOf;
+  };
+  IntlAny.DateTimeFormat.prototype = OrigDTF.prototype;
+  IntlAny.DateTimeFormat.supportedLocalesOf = OrigDTF.supportedLocalesOf;
 }
