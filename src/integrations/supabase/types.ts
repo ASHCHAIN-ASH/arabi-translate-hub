@@ -1117,14 +1117,145 @@ export type Database = {
         }
         Relationships: []
       }
+      ticket_attachments: {
+        Row: {
+          created_at: string
+          file_name: string
+          file_size: number
+          file_type: string | null
+          id: string
+          storage_path: string
+          ticket_id: string
+          uploaded_by_admin: boolean
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          file_name: string
+          file_size: number
+          file_type?: string | null
+          id?: string
+          storage_path: string
+          ticket_id: string
+          uploaded_by_admin?: boolean
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          file_name?: string
+          file_size?: number
+          file_type?: string | null
+          id?: string
+          storage_path?: string
+          ticket_id?: string
+          uploaded_by_admin?: boolean
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ticket_attachments_ticket_id_fkey"
+            columns: ["ticket_id"]
+            isOneToOne: false
+            referencedRelation: "tickets"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      ticket_messages: {
+        Row: {
+          content: string
+          created_at: string
+          id: string
+          read_at: string | null
+          sender_id: string
+          sender_type: string
+          ticket_id: string
+        }
+        Insert: {
+          content: string
+          created_at?: string
+          id?: string
+          read_at?: string | null
+          sender_id: string
+          sender_type?: string
+          ticket_id: string
+        }
+        Update: {
+          content?: string
+          created_at?: string
+          id?: string
+          read_at?: string | null
+          sender_id?: string
+          sender_type?: string
+          ticket_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ticket_messages_ticket_id_fkey"
+            columns: ["ticket_id"]
+            isOneToOne: false
+            referencedRelation: "tickets"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      ticket_timeline: {
+        Row: {
+          action_label: string
+          action_type: string
+          actor_id: string | null
+          actor_type: string
+          created_at: string
+          description: string | null
+          id: string
+          metadata: Json | null
+          ticket_id: string
+        }
+        Insert: {
+          action_label: string
+          action_type: string
+          actor_id?: string | null
+          actor_type?: string
+          created_at?: string
+          description?: string | null
+          id?: string
+          metadata?: Json | null
+          ticket_id: string
+        }
+        Update: {
+          action_label?: string
+          action_type?: string
+          actor_id?: string | null
+          actor_type?: string
+          created_at?: string
+          description?: string | null
+          id?: string
+          metadata?: Json | null
+          ticket_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ticket_timeline_ticket_id_fkey"
+            columns: ["ticket_id"]
+            isOneToOne: false
+            referencedRelation: "tickets"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       tickets: {
         Row: {
           assigned_to: string | null
           category: string | null
           created_at: string
+          customer_id: string | null
           description: string | null
           id: string
+          last_message_at: string | null
           priority: string | null
+          related_invoice_id: string | null
+          related_order_id: string | null
+          resolved_at: string | null
           status: string | null
           subject: string
           ticket_number: string
@@ -1135,9 +1266,14 @@ export type Database = {
           assigned_to?: string | null
           category?: string | null
           created_at?: string
+          customer_id?: string | null
           description?: string | null
           id?: string
+          last_message_at?: string | null
           priority?: string | null
+          related_invoice_id?: string | null
+          related_order_id?: string | null
+          resolved_at?: string | null
           status?: string | null
           subject: string
           ticket_number?: string
@@ -1148,16 +1284,36 @@ export type Database = {
           assigned_to?: string | null
           category?: string | null
           created_at?: string
+          customer_id?: string | null
           description?: string | null
           id?: string
+          last_message_at?: string | null
           priority?: string | null
+          related_invoice_id?: string | null
+          related_order_id?: string | null
+          resolved_at?: string | null
           status?: string | null
           subject?: string
           ticket_number?: string
           updated_at?: string
           user_id?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "tickets_related_invoice_id_fkey"
+            columns: ["related_invoice_id"]
+            isOneToOne: false
+            referencedRelation: "invoices"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "tickets_related_order_id_fkey"
+            columns: ["related_order_id"]
+            isOneToOne: false
+            referencedRelation: "service_orders"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       user_notifications: {
         Row: {
