@@ -223,10 +223,22 @@ const ClientContractApproval = () => {
             <Card>
               <CardHeader className="border-b"><CardTitle className="flex items-center gap-2"><FileText className="h-5 w-5 text-primary" /> نص العقد الكامل</CardTitle></CardHeader>
               <CardContent className="p-6">
-                <ScrollArea className="max-h-[60vh] pr-2">
-                  <article className="prose prose-sm sm:prose-base max-w-none rtl-prose
-                    prose-headings:text-foreground prose-p:text-foreground/90 prose-strong:text-foreground
-                    prose-li:text-foreground/90 prose-hr:border-border">
+                <ScrollArea className="max-h-[60vh]" dir="rtl">
+                  <article
+                    dir="rtl"
+                    lang="ar"
+                    className="prose prose-sm sm:prose-base max-w-none text-right
+                      [&_*]:!text-right
+                      prose-headings:text-foreground prose-headings:font-bold prose-headings:mt-6 prose-headings:mb-3
+                      prose-h1:text-2xl prose-h1:border-b prose-h1:pb-2
+                      prose-h2:text-lg prose-h2:text-primary
+                      prose-p:text-foreground/90 prose-p:leading-loose
+                      prose-strong:text-foreground prose-strong:font-bold
+                      prose-li:text-foreground/90 prose-li:my-1
+                      prose-ol:pr-6 prose-ul:pr-6
+                      prose-hr:border-border prose-hr:my-6"
+                    style={{ fontFamily: "'IBM Plex Sans Arabic', 'Tajawal', system-ui, sans-serif" }}
+                  >
                     <ReactMarkdown>{contract.content || ""}</ReactMarkdown>
                   </article>
                 </ScrollArea>
