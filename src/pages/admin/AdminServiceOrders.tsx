@@ -555,7 +555,7 @@ const AdminServiceOrders = () => {
 
         {/* Order Detail Dialog */}
         <Dialog open={!!selectedOrder} onOpenChange={() => setSelectedOrder(null)}>
-          <DialogContent className="max-w-2xl max-h-[85vh] overflow-y-auto">
+          <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto p-0 gap-0">
             {selectedOrder && (
               <OrderDetailPanel
                 order={selectedOrder}
@@ -563,6 +563,7 @@ const AdminServiceOrders = () => {
                 loadingTimeline={loadingTimeline}
                 onStatusUpdate={updateOrderStatus}
                 onClose={() => setSelectedOrder(null)}
+                onRefresh={loadOrders}
               />
             )}
           </DialogContent>
