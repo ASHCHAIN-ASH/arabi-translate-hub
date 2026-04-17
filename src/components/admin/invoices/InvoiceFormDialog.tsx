@@ -195,7 +195,7 @@ export default function InvoiceFormDialog({ open, onOpenChange, invoice, onSaved
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3 bg-muted/40 p-3 rounded-md">
             <div><Label className="text-xs">المجموع</Label><div className="font-bold pt-1">{subtotal.toFixed(2)}</div></div>
             <div><Label className="text-xs">الخصم</Label><Input type="number" value={discount} onChange={(e) => setDiscount(Number(e.target.value) || 0)} /></div>
-            <div><Label className="text-xs">الضريبة</Label><Input type="number" value={tax} onChange={(e) => setTax(Number(e.target.value) || 0)} /></div>
+            <div><Label className="text-xs">ضريبة القيمة المضافة</Label><Input type="number" value={tax} onChange={(e) => setTax(Number(e.target.value) || 0)} /></div>
             <div><Label className="text-xs">الإجمالي</Label><div className="font-bold text-lg text-primary pt-1">{total.toFixed(2)}</div></div>
           </div>
 
