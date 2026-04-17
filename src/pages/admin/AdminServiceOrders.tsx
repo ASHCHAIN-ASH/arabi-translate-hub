@@ -573,19 +573,21 @@ const AdminServiceOrders = () => {
   );
 };
 
-// Order Detail Panel
+// Order Detail Panel — Professional admin view
 const OrderDetailPanel = ({
   order,
   timeline,
   loadingTimeline,
   onStatusUpdate,
   onClose,
+  onRefresh,
 }: {
   order: ServiceOrder;
   timeline: TimelineEntry[];
   loadingTimeline: boolean;
   onStatusUpdate: (id: string, status: string) => void;
   onClose: () => void;
+  onRefresh: () => Promise<void>;
 }) => {
   const [attachments, setAttachments] = useState<any[]>([]);
   const [loadingAttachments, setLoadingAttachments] = useState(true);
@@ -593,10 +595,18 @@ const OrderDetailPanel = ({
   const [quotePrice, setQuotePrice] = useState(order.total_amount?.toString() || '');
   const [quoteNotes, setQuoteNotes] = useState('');
   const [sendingQuote, setSendingQuote] = useState(false);
+  const [activeTab, setActiveTab] = useState('overview');
   const { toast } = useToast();
 
   useEffect(() => {
     loadAttachments();
+    // realtime attachments for this order
+    const ch = supabase
+      .channel(`admin-order-attach-${order.id}`)
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'order_attachments', filter: `order_id=eq.${order.id}` }, () => loadAttachments())
+      .subscribe();
+    return () => { supabase.removeChannel(ch); };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [order.id]);
 
   const loadAttachments = async () => {
@@ -609,12 +619,13 @@ const OrderDetailPanel = ({
   };
 
   const downloadFile = async (storagePath: string, fileName: string) => {
-    const { data, error } = await supabase.storage.from('order-attachments').download(storagePath);
-    if (error) { toast({ title: "خطأ في التحميل", variant: "destructive" }); return; }
-    const url = URL.createObjectURL(data);
+    const { data, error } = await supabase.storage.from('order-attachments').createSignedUrl(storagePath, 300);
+    if (error || !data?.signedUrl) {
+      toast({ title: "خطأ في التحميل", variant: "destructive" });
+      return;
+    }
     const a = document.createElement('a');
-    a.href = url; a.download = fileName; a.click();
-    URL.revokeObjectURL(url);
+    a.href = data.signedUrl; a.download = fileName; a.target = '_blank'; a.click();
   };
 
   const sendPriceQuote = async () => {
@@ -648,91 +659,142 @@ const OrderDetailPanel = ({
         }]);
       }
 
-      toast({ title: "✅ تم إرسال عرض السعر" });
+      toast({ title: "✅ تم إرسال عرض السعر للعميل" });
       setShowQuote(false);
-      onClose();
+      onRefresh();
     } catch (e) {
-      toast({ title: "خطأ", variant: "destructive" });
+      toast({ title: "خطأ في إرسال العرض", variant: "destructive" });
     } finally { setSendingQuote(false); }
   };
 
+  const copyTrackingId = () => {
+    navigator.clipboard.writeText(order.tracking_id);
+    toast({ title: "📋 تم نسخ رقم التتبع" });
+  };
+
   const statusConf = STATUS_CONFIG[order.current_status] || STATUS_CONFIG.pending;
+  const priorityConf = PRIORITY_CONFIG[order.priority || 'normal'];
   const clientName = order.customer?.name || order.profile?.full_name || 'غير محدد';
   const clientEmail = order.customer?.email || '';
   const clientPhone = order.customer?.phone || order.profile?.phone || '';
 
+  // Financial calculations
+  const subtotal = order.total_amount || 0;
+  const tax = Math.round(subtotal * 0.15 * 100) / 100;
+  const totalWithTax = subtotal + tax;
+  const paid = order.paid_amount || 0;
+  const remaining = totalWithTax - paid;
+  const paymentPct = totalWithTax > 0 ? Math.min(Math.round((paid / totalWithTax) * 100), 100) : 0;
+
+  // Progress estimation
+  const statusOrder = ['pending', 'confirmed', 'review', 'in_progress', 'completed'];
+  const stepIndex = statusOrder.indexOf(order.current_status);
+  const progressPct = stepIndex >= 0 ? Math.round(((stepIndex + 1) / statusOrder.length) * 100) : 10;
+
+  const whatsappLink = clientPhone ? `https://wa.me/${clientPhone.replace(/\D/g, '')}?text=${encodeURIComponent(`مرحباً، بخصوص طلبك ${order.tracking_id}`)}` : null;
+  const mailLink = clientEmail ? `mailto:${clientEmail}?subject=${encodeURIComponent(`بخصوص طلبك ${order.tracking_id}`)}` : null;
+  const telLink = clientPhone ? `tel:${clientPhone}` : null;
+
   return (
     <>
-      <DialogHeader>
-        <DialogTitle className="flex items-center justify-between">
-          <span className="flex items-center gap-2">
-            <FileText className="w-5 h-5 text-primary" />
-            تفاصيل الطلب {order.tracking_id}
-          </span>
-          <Badge className={cn("gap-1 border", statusConf.color)}>
-            {statusConf.icon} {statusConf.label}
-          </Badge>
-        </DialogTitle>
-      </DialogHeader>
-
-      <div className="space-y-5 mt-2">
-        {/* Service Info */}
-        <div className="p-4 bg-primary/5 rounded-xl border border-primary/10">
-          <h4 className="font-semibold mb-2 text-primary">{order.service_name || 'خدمة'}</h4>
-          {order.notes && <p className="text-sm text-muted-foreground">{order.notes}</p>}
-          <div className="flex flex-wrap gap-4 mt-3 text-sm">
-            {order.total_amount && (
-              <span className="flex items-center gap-1"><DollarSign className="w-4 h-4" /> {order.total_amount.toLocaleString()} ر.س</span>
-            )}
-            {order.deadline && (
-              <span className="flex items-center gap-1"><Calendar className="w-4 h-4" /> {new Date(order.deadline).toLocaleDateString('ar-SA')}</span>
-            )}
-            {order.priority && (
-              <Badge className={cn("text-xs", PRIORITY_CONFIG[order.priority]?.color)}>
-                {PRIORITY_CONFIG[order.priority]?.label}
+      {/* Hero Header */}
+      <div className={cn("relative overflow-hidden border-b", statusConf.bgClass, "border-l-0 border-r-0 border-t-0")}>
+        <div className={cn("h-1.5 w-full", 
+          order.current_status === 'completed' ? 'bg-green-500' :
+          order.current_status === 'in_progress' ? 'bg-purple-500' :
+          order.current_status === 'cancelled' ? 'bg-red-500' :
+          'bg-amber-500'
+        )} />
+        <DialogHeader className="p-5 pb-4 space-y-0">
+          <DialogTitle className="sr-only">تفاصيل الطلب {order.tracking_id}</DialogTitle>
+          <div className="flex items-start justify-between gap-3">
+            <div className="flex items-start gap-3 min-w-0">
+              <motion.div
+                initial={{ scale: 0.8, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center flex-shrink-0"
+              >
+                <FileText className="w-6 h-6 text-primary" />
+              </motion.div>
+              <div className="min-w-0">
+                <div className="flex items-center gap-2 flex-wrap">
+                  <h2 className="text-lg font-bold truncate">{order.service_name || 'طلب خدمة'}</h2>
+                  <Badge className={cn("gap-1 border", statusConf.color)}>
+                    {statusConf.icon} {statusConf.label}
+                  </Badge>
+                </div>
+                <button
+                  onClick={copyTrackingId}
+                  className="mt-1 inline-flex items-center gap-1.5 text-xs font-mono text-muted-foreground hover:text-primary transition-colors bg-background/60 px-2 py-0.5 rounded"
+                >
+                  <Copy className="w-3 h-3" />
+                  {order.tracking_id}
+                </button>
+              </div>
+            </div>
+            {priorityConf && order.priority && order.priority !== 'normal' && (
+              <Badge className={cn("text-xs", priorityConf.color)}>
+                {priorityConf.label}
               </Badge>
             )}
           </div>
-        </div>
 
-        {/* Client Info */}
-        <div className="p-4 bg-muted/40 rounded-xl">
-          <h4 className="font-semibold mb-3 flex items-center gap-2"><User className="w-4 h-4" /> بيانات العميل</h4>
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-sm">
-            <div className="flex items-center gap-2">
-              <User className="w-4 h-4 text-muted-foreground" />
-              <span>{clientName}</span>
+          {/* Quick progress */}
+          <div className="mt-4">
+            <div className="flex justify-between text-xs mb-1.5">
+              <span className="text-muted-foreground">تقدّم الطلب</span>
+              <span className="font-bold">{progressPct}%</span>
             </div>
-            <div className="flex items-center gap-2">
-              <Mail className="w-4 h-4 text-muted-foreground" />
-              <span className="truncate">{clientEmail || 'غير محدد'}</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <Phone className="w-4 h-4 text-muted-foreground" />
-              <span>{clientPhone || 'غير محدد'}</span>
-            </div>
+            <Progress value={progressPct} className="h-2" />
           </div>
-          {order.customer?.company && (
-            <p className="text-xs text-muted-foreground mt-2">🏢 {order.customer.company}</p>
-          )}
-        </div>
 
-        {/* Status Update */}
-        <div className="flex items-center gap-3">
-          <Label className="text-sm whitespace-nowrap">تغيير الحالة:</Label>
+          {/* Quick action chips */}
+          <div className="flex flex-wrap gap-2 mt-3">
+            {whatsappLink && (
+              <a href={whatsappLink} target="_blank" rel="noreferrer">
+                <Button size="sm" variant="outline" className="h-8 gap-1.5 bg-green-50 border-green-200 text-green-700 hover:bg-green-100 dark:bg-green-950/30 dark:border-green-800 dark:text-green-400">
+                  <MessageSquare className="w-3.5 h-3.5" /> واتساب
+                </Button>
+              </a>
+            )}
+            {mailLink && (
+              <a href={mailLink}>
+                <Button size="sm" variant="outline" className="h-8 gap-1.5">
+                  <Mail className="w-3.5 h-3.5" /> إيميل
+                </Button>
+              </a>
+            )}
+            {telLink && (
+              <a href={telLink}>
+                <Button size="sm" variant="outline" className="h-8 gap-1.5">
+                  <Phone className="w-3.5 h-3.5" /> اتصال
+                </Button>
+              </a>
+            )}
+            <Button size="sm" variant="outline" className="h-8 gap-1.5 mr-auto" onClick={() => setShowQuote(!showQuote)}>
+              <DollarSign className="w-3.5 h-3.5" /> {showQuote ? 'إغلاق' : 'إرسال عرض سعر'}
+            </Button>
+          </div>
+        </DialogHeader>
+      </div>
+
+      <div className="p-5 space-y-4">
+        {/* Status update strip */}
+        <div className="flex items-center gap-3 p-3 bg-muted/40 rounded-xl">
+          <Activity className="w-4 h-4 text-primary flex-shrink-0" />
+          <Label className="text-sm whitespace-nowrap">تحديث الحالة:</Label>
           <Select value={order.current_status} onValueChange={(v) => onStatusUpdate(order.id, v)}>
-            <SelectTrigger className="flex-1">
+            <SelectTrigger className="flex-1 h-9 bg-background">
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
               {Object.entries(STATUS_CONFIG).map(([k, v]) => (
-                <SelectItem key={k} value={k}>{v.label}</SelectItem>
+                <SelectItem key={k} value={k}>
+                  <span className="flex items-center gap-2">{v.icon} {v.label}</span>
+                </SelectItem>
               ))}
             </SelectContent>
           </Select>
-          <Button variant="outline" size="sm" className="gap-1" onClick={() => setShowQuote(!showQuote)}>
-            <DollarSign className="w-4 h-4" /> عرض سعر
-          </Button>
         </div>
 
         {/* Quote Form */}
@@ -742,89 +804,320 @@ const OrderDetailPanel = ({
               initial={{ opacity: 0, height: 0 }}
               animate={{ opacity: 1, height: 'auto' }}
               exit={{ opacity: 0, height: 0 }}
-              className="p-4 bg-primary/5 rounded-xl border border-primary/20 space-y-3"
+              className="overflow-hidden"
             >
-              <div className="grid grid-cols-2 gap-3">
-                <div>
-                  <Label className="text-sm">السعر (ر.س)</Label>
-                  <Input type="number" value={quotePrice} onChange={(e) => setQuotePrice(e.target.value)} dir="ltr" className="font-bold" />
+              <div className="p-4 bg-gradient-to-l from-primary/5 to-primary/10 rounded-xl border border-primary/20 space-y-3">
+                <div className="flex items-center gap-2 text-sm font-semibold text-primary">
+                  <DollarSign className="w-4 h-4" /> إرسال عرض سعر للعميل
                 </div>
-                <div>
-                  <Label className="text-sm">ملاحظات</Label>
-                  <Textarea value={quoteNotes} onChange={(e) => setQuoteNotes(e.target.value)} rows={1} className="resize-none" />
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <div>
+                    <Label className="text-xs">السعر (ر.س)</Label>
+                    <Input type="number" value={quotePrice} onChange={(e) => setQuotePrice(e.target.value)} dir="ltr" className="font-bold mt-1" placeholder="0.00" />
+                  </div>
+                  <div>
+                    <Label className="text-xs">ملاحظات (اختياري)</Label>
+                    <Input value={quoteNotes} onChange={(e) => setQuoteNotes(e.target.value)} className="mt-1" placeholder="تفاصيل العرض..." />
+                  </div>
                 </div>
+                <Button size="sm" className="gap-2 w-full" onClick={sendPriceQuote} disabled={sendingQuote || !quotePrice}>
+                  {sendingQuote ? <RefreshCw className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}
+                  إرسال للعميل
+                </Button>
               </div>
-              <Button size="sm" className="gap-2 w-full" onClick={sendPriceQuote} disabled={sendingQuote || !quotePrice}>
-                {sendingQuote ? <RefreshCw className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}
-                إرسال عرض السعر
-              </Button>
             </motion.div>
           )}
         </AnimatePresence>
 
-        {/* Attachments */}
-        <div>
-          <h4 className="font-semibold mb-2 flex items-center gap-2">
-            <Paperclip className="w-4 h-4" /> المرفقات ({attachments.length})
-          </h4>
-          {loadingAttachments ? (
-            <div className="text-center py-3"><RefreshCw className="w-4 h-4 animate-spin mx-auto" /></div>
-          ) : attachments.length === 0 ? (
-            <p className="text-sm text-muted-foreground bg-muted/30 p-3 rounded-lg">لا توجد مرفقات</p>
-          ) : (
-            <div className="space-y-2">
-              {attachments.map((att: any) => (
-                <div key={att.id} className="flex items-center gap-3 p-2.5 bg-card rounded-lg border hover:shadow-sm transition-shadow">
-                  <File className="w-4 h-4 text-primary flex-shrink-0" />
-                  <div className="flex-1 min-w-0">
-                    <p className="text-sm font-medium truncate">{att.file_name}</p>
-                    <p className="text-xs text-muted-foreground">
-                      {att.file_size < 1024 * 1024 ? `${(att.file_size / 1024).toFixed(1)} KB` : `${(att.file_size / (1024 * 1024)).toFixed(1)} MB`}
-                      {' • '}
-                      {new Date(att.created_at).toLocaleDateString('ar-SA')}
-                    </p>
-                  </div>
-                  <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => downloadFile(att.storage_path, att.file_name)}>
-                    <Download className="w-4 h-4" />
-                  </Button>
-                </div>
-              ))}
-            </div>
-          )}
-        </div>
+        {/* Tabs */}
+        <Tabs value={activeTab} onValueChange={setActiveTab}>
+          <TabsList className="grid grid-cols-4 w-full">
+            <TabsTrigger value="overview" className="gap-1.5">
+              <Eye className="w-3.5 h-3.5" /> نظرة عامة
+            </TabsTrigger>
+            <TabsTrigger value="timeline" className="gap-1.5">
+              <Clock className="w-3.5 h-3.5" /> الجدول الزمني
+              {timeline.length > 0 && <Badge variant="secondary" className="h-4 px-1 text-[10px]">{timeline.length}</Badge>}
+            </TabsTrigger>
+            <TabsTrigger value="files" className="gap-1.5">
+              <Paperclip className="w-3.5 h-3.5" /> المرفقات
+              {attachments.length > 0 && <Badge variant="secondary" className="h-4 px-1 text-[10px]">{attachments.length}</Badge>}
+            </TabsTrigger>
+            <TabsTrigger value="financial" className="gap-1.5">
+              <Wallet className="w-3.5 h-3.5" /> المالية
+            </TabsTrigger>
+          </TabsList>
 
-        {/* Timeline */}
-        <div>
-          <h4 className="font-semibold mb-3 flex items-center gap-2">
-            <Clock className="w-4 h-4" /> الجدول الزمني
-          </h4>
-          {loadingTimeline ? (
-            <div className="text-center py-3"><RefreshCw className="w-4 h-4 animate-spin mx-auto" /></div>
-          ) : timeline.length === 0 ? (
-            <p className="text-sm text-muted-foreground bg-muted/30 p-3 rounded-lg">لا توجد أحداث بعد</p>
-          ) : (
-            <div className="relative border-r-2 border-primary/20 pr-4 space-y-4">
-              {timeline.map((entry) => {
-                const entryConf = STATUS_CONFIG[entry.status];
-                return (
-                  <div key={entry.id} className="relative">
-                    <div className="absolute -right-[1.35rem] top-1 w-3 h-3 rounded-full bg-primary border-2 border-background" />
-                    <div className="bg-muted/30 p-3 rounded-lg">
-                      <div className="flex items-center gap-2 mb-1">
-                        {entryConf && <Badge className={cn("text-xs border", entryConf.color)}>{entryConf.label}</Badge>}
-                        {!entryConf && <Badge variant="outline" className="text-xs">{entry.status}</Badge>}
-                        <span className="text-xs text-muted-foreground mr-auto">
-                          {new Date(entry.created_at).toLocaleDateString('ar-SA')} • {new Date(entry.created_at).toLocaleTimeString('ar-SA', { hour: '2-digit', minute: '2-digit' })}
-                        </span>
-                      </div>
-                      {entry.note && <p className="text-sm text-muted-foreground">{entry.note}</p>}
+          {/* Overview */}
+          <TabsContent value="overview" className="space-y-4 mt-4">
+            <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} className="space-y-4">
+              {/* Client card */}
+              <div className="p-4 bg-card border rounded-xl">
+                <h4 className="font-semibold mb-3 flex items-center gap-2 text-sm">
+                  <User className="w-4 h-4 text-primary" /> بيانات العميل
+                </h4>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
+                  <div className="flex items-center gap-2">
+                    <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0">
+                      <User className="w-4 h-4 text-primary" />
+                    </div>
+                    <div className="min-w-0">
+                      <p className="text-xs text-muted-foreground">الاسم</p>
+                      <p className="font-medium truncate">{clientName}</p>
                     </div>
                   </div>
-                );
-              })}
-            </div>
-          )}
-        </div>
+                  <div className="flex items-center gap-2">
+                    <div className="w-8 h-8 rounded-full bg-blue-500/10 flex items-center justify-center flex-shrink-0">
+                      <Mail className="w-4 h-4 text-blue-500" />
+                    </div>
+                    <div className="min-w-0">
+                      <p className="text-xs text-muted-foreground">الإيميل</p>
+                      <p className="font-medium truncate">{clientEmail || 'غير محدد'}</p>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <div className="w-8 h-8 rounded-full bg-green-500/10 flex items-center justify-center flex-shrink-0">
+                      <Phone className="w-4 h-4 text-green-500" />
+                    </div>
+                    <div className="min-w-0">
+                      <p className="text-xs text-muted-foreground">الجوال</p>
+                      <p className="font-medium truncate" dir="ltr">{clientPhone || 'غير محدد'}</p>
+                    </div>
+                  </div>
+                  {order.customer?.company && (
+                    <div className="flex items-center gap-2">
+                      <div className="w-8 h-8 rounded-full bg-amber-500/10 flex items-center justify-center flex-shrink-0">
+                        <Building2 className="w-4 h-4 text-amber-500" />
+                      </div>
+                      <div className="min-w-0">
+                        <p className="text-xs text-muted-foreground">الشركة</p>
+                        <p className="font-medium truncate">{order.customer.company}</p>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              {/* Service description */}
+              {order.notes && (
+                <div className="p-4 bg-card border rounded-xl">
+                  <h4 className="font-semibold mb-2 flex items-center gap-2 text-sm">
+                    <MessageSquare className="w-4 h-4 text-primary" /> وصف الطلب
+                  </h4>
+                  <p className="text-sm text-muted-foreground leading-relaxed bg-muted/30 p-3 rounded-lg whitespace-pre-wrap">{order.notes}</p>
+                </div>
+              )}
+
+              {/* Quick info grid */}
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                {[
+                  { icon: <Calendar className="w-4 h-4" />, label: 'الإنشاء', value: new Date(order.created_at).toLocaleDateString('ar-SA') },
+                  { icon: <RefreshCw className="w-4 h-4" />, label: 'آخر تحديث', value: new Date(order.updated_at).toLocaleDateString('ar-SA') },
+                  ...(order.deadline ? [{ icon: <AlertCircle className="w-4 h-4" />, label: 'الموعد النهائي', value: new Date(order.deadline).toLocaleDateString('ar-SA') }] : []),
+                  { icon: <DollarSign className="w-4 h-4" />, label: 'المبلغ', value: order.total_amount ? `${order.total_amount.toLocaleString()} ر.س` : '—' },
+                ].map((item, i) => (
+                  <div key={i} className="p-3 bg-muted/30 rounded-lg">
+                    <div className="flex items-center gap-1.5 text-muted-foreground mb-1">
+                      {item.icon}
+                      <span className="text-xs">{item.label}</span>
+                    </div>
+                    <p className="font-semibold text-sm">{item.value}</p>
+                  </div>
+                ))}
+              </div>
+            </motion.div>
+          </TabsContent>
+
+          {/* Timeline */}
+          <TabsContent value="timeline" className="mt-4">
+            <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}>
+              {loadingTimeline ? (
+                <div className="text-center py-8"><RefreshCw className="w-5 h-5 animate-spin mx-auto text-primary" /></div>
+              ) : timeline.length === 0 ? (
+                <div className="text-center py-10 text-muted-foreground">
+                  <Clock className="w-10 h-10 mx-auto mb-3 opacity-30" />
+                  <p className="text-sm">لا توجد أحداث بعد</p>
+                </div>
+              ) : (
+                <div className="relative">
+                  {timeline.map((entry, i) => {
+                    const ec = STATUS_CONFIG[entry.status];
+                    return (
+                      <motion.div
+                        key={entry.id}
+                        initial={{ opacity: 0, x: 10 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ delay: i * 0.05 }}
+                        className="flex gap-3 relative pb-5 last:pb-0"
+                      >
+                        {i < timeline.length - 1 && (
+                          <div className="absolute right-[19px] top-10 bottom-0 w-0.5 bg-border" />
+                        )}
+                        <div className={cn("w-10 h-10 rounded-full flex items-center justify-center z-10 flex-shrink-0 ring-4 ring-background", ec?.color || 'bg-muted')}>
+                          {ec?.icon || <Activity className="w-4 h-4" />}
+                        </div>
+                        <div className="flex-1 pt-1.5">
+                          <div className="flex items-center justify-between gap-2 flex-wrap">
+                            {ec ? (
+                              <Badge className={cn("text-xs border", ec.color)}>{ec.label}</Badge>
+                            ) : (
+                              <Badge variant="outline" className="text-xs">{entry.status}</Badge>
+                            )}
+                            <span className="text-xs text-muted-foreground">
+                              {new Date(entry.created_at).toLocaleDateString('ar-SA')} • {new Date(entry.created_at).toLocaleTimeString('ar-SA', { hour: '2-digit', minute: '2-digit' })}
+                            </span>
+                          </div>
+                          {entry.note && <p className="text-sm text-muted-foreground mt-1.5 bg-muted/40 p-2.5 rounded-lg">{entry.note}</p>}
+                        </div>
+                      </motion.div>
+                    );
+                  })}
+                </div>
+              )}
+            </motion.div>
+          </TabsContent>
+
+          {/* Files */}
+          <TabsContent value="files" className="mt-4">
+            <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}>
+              {loadingAttachments ? (
+                <div className="text-center py-8"><RefreshCw className="w-5 h-5 animate-spin mx-auto text-primary" /></div>
+              ) : attachments.length === 0 ? (
+                <div className="text-center py-10 text-muted-foreground">
+                  <Paperclip className="w-10 h-10 mx-auto mb-3 opacity-30" />
+                  <p className="text-sm">لا توجد مرفقات</p>
+                </div>
+              ) : (
+                <div className="space-y-2">
+                  {attachments.map((att: any, i: number) => {
+                    const ext = att.file_name.split('.').pop()?.toLowerCase() || '';
+                    const extColors: Record<string, string> = {
+                      pdf: 'bg-red-100 text-red-700 dark:bg-red-900/40 dark:text-red-400',
+                      doc: 'bg-blue-100 text-blue-700 dark:bg-blue-900/40 dark:text-blue-400',
+                      docx: 'bg-blue-100 text-blue-700 dark:bg-blue-900/40 dark:text-blue-400',
+                      xlsx: 'bg-green-100 text-green-700 dark:bg-green-900/40 dark:text-green-400',
+                      xls: 'bg-green-100 text-green-700 dark:bg-green-900/40 dark:text-green-400',
+                      png: 'bg-purple-100 text-purple-700 dark:bg-purple-900/40 dark:text-purple-400',
+                      jpg: 'bg-purple-100 text-purple-700 dark:bg-purple-900/40 dark:text-purple-400',
+                      jpeg: 'bg-purple-100 text-purple-700 dark:bg-purple-900/40 dark:text-purple-400',
+                    };
+                    const extColor = extColors[ext] || 'bg-muted text-muted-foreground';
+                    return (
+                      <motion.div
+                        key={att.id}
+                        initial={{ opacity: 0, y: 5 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: i * 0.04 }}
+                        className="flex items-center gap-3 p-3 bg-card border rounded-xl hover:shadow-md hover:border-primary/30 transition-all group"
+                      >
+                        <div className={cn("w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0 text-xs font-bold uppercase", extColor)}>
+                          {ext.slice(0, 4) || <File className="w-4 h-4" />}
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <p className="text-sm font-medium truncate">{att.file_name}</p>
+                          <p className="text-xs text-muted-foreground">
+                            {att.file_size < 1024 * 1024 ? `${(att.file_size / 1024).toFixed(1)} KB` : `${(att.file_size / (1024 * 1024)).toFixed(1)} MB`}
+                            {' • '}
+                            {new Date(att.created_at).toLocaleDateString('ar-SA')}
+                          </p>
+                        </div>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className="gap-1.5 opacity-70 group-hover:opacity-100"
+                          onClick={() => downloadFile(att.storage_path, att.file_name)}
+                        >
+                          <Download className="w-4 h-4" />
+                          <span className="hidden sm:inline text-xs">تحميل</span>
+                        </Button>
+                      </motion.div>
+                    );
+                  })}
+                </div>
+              )}
+            </motion.div>
+          </TabsContent>
+
+          {/* Financial */}
+          <TabsContent value="financial" className="mt-4">
+            <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} className="space-y-3">
+              <div className="p-4 bg-card border rounded-xl space-y-3">
+                <h4 className="font-semibold flex items-center gap-2 text-sm">
+                  <Wallet className="w-4 h-4 text-primary" /> الملخص المالي
+                </h4>
+                <div className="space-y-2">
+                  <div className="flex justify-between items-center py-1.5">
+                    <span className="text-sm text-muted-foreground">المبلغ قبل الضريبة</span>
+                    <span className="font-semibold">{subtotal.toLocaleString()} ر.س</span>
+                  </div>
+                  <div className="h-px bg-border" />
+                  <div className="flex justify-between items-center py-1.5">
+                    <span className="text-sm text-muted-foreground">ضريبة القيمة المضافة (15%)</span>
+                    <span className="font-semibold">{tax.toLocaleString()} ر.س</span>
+                  </div>
+                  <div className="h-px bg-border" />
+                  <div className="flex justify-between items-center py-2 bg-primary/5 -mx-4 px-4 rounded-lg">
+                    <span className="text-sm font-bold">الإجمالي شامل الضريبة</span>
+                    <span className="font-bold text-lg text-primary">{totalWithTax.toLocaleString()} ر.س</span>
+                  </div>
+                  <div className="h-px bg-border" />
+                  <div className="flex justify-between items-center py-1.5">
+                    <span className="text-sm text-muted-foreground">المدفوع</span>
+                    <span className="font-semibold text-green-600">{paid.toLocaleString()} ر.س</span>
+                  </div>
+                  <div className="h-px bg-border" />
+                  <div className="flex justify-between items-center py-1.5">
+                    <span className="text-sm text-muted-foreground">المتبقي</span>
+                    <span className="font-semibold text-amber-600">{remaining.toLocaleString()} ر.س</span>
+                  </div>
+                </div>
+
+                {totalWithTax > 0 && (
+                  <div className="pt-2">
+                    <div className="flex justify-between text-xs mb-1.5">
+                      <span className="text-muted-foreground">نسبة السداد</span>
+                      <span className="font-bold">{paymentPct}%</span>
+                    </div>
+                    <div className="w-full bg-muted rounded-full h-2 overflow-hidden">
+                      <motion.div
+                        className="h-full rounded-full bg-green-500"
+                        initial={{ width: 0 }}
+                        animate={{ width: `${paymentPct}%` }}
+                        transition={{ duration: 0.8 }}
+                      />
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              {/* Quote status info */}
+              {order.quote_status && (
+                <div className={cn(
+                  "p-4 rounded-xl border-2",
+                  order.quote_status === 'pending' ? 'border-amber-300 bg-amber-50 dark:bg-amber-950/30 dark:border-amber-700' :
+                  order.quote_status === 'accepted' ? 'border-green-300 bg-green-50 dark:bg-green-950/30 dark:border-green-700' :
+                  'border-red-300 bg-red-50 dark:bg-red-950/30 dark:border-red-700'
+                )}>
+                  <p className="text-sm font-semibold mb-1">
+                    حالة عرض السعر: {
+                      order.quote_status === 'pending' ? '⏳ بانتظار رد العميل' :
+                      order.quote_status === 'accepted' ? '✅ مقبول من العميل' :
+                      '❌ مرفوض من العميل'
+                    }
+                  </p>
+                  {order.quote_sent_at && (
+                    <p className="text-xs text-muted-foreground">
+                      أُرسل: {new Date(order.quote_sent_at).toLocaleDateString('ar-SA')}
+                    </p>
+                  )}
+                  {order.quote_notes && order.quote_status === 'rejected' && (
+                    <p className="text-xs mt-2"><strong>سبب الرفض:</strong> {order.quote_notes}</p>
+                  )}
+                </div>
+              )}
+            </motion.div>
+          </TabsContent>
+        </Tabs>
       </div>
     </>
   );
