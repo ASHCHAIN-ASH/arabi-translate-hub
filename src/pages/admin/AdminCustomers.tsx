@@ -57,7 +57,97 @@ interface EditProfileModal {
 }
 
 const AdminCustomers = () => {
+  const navigate = useNavigate();
   const { customers, stats, loading, error, updateCustomerPassword, updateCustomerStatus, updateCustomerProfile, deleteCustomer, refresh } = useCustomers();
+
+  // ===== Quick Actions =====
+  const copyToClipboard = async (text: string, label: string) => {
+    try {
+      await navigator.clipboard.writeText(text);
+      toast.success(`تم نسخ ${label}`);
+    } catch {
+      toast.error('تعذر النسخ');
+    }
+  };
+
+  const openWhatsApp = (phone: string | null | undefined) => {
+    if (!phone) return toast.error('لا يوجد رقم هاتف');
+    const cleaned = phone.replace(/[^\d+]/g, '');
+    window.open(`https://wa.me/${cleaned.replace(/^\+/, '')}`, '_blank');
+  };
+
+  const openEmail = (email: string | null | undefined) => {
+    if (!email) return toast.error('لا يوجد بريد إلكتروني');
+    window.open(`mailto:${email}`, '_blank');
+  };
+
+  const startChatWithCustomer = async (customer: Customer) => {
+    if (!customer.user_id) return toast.error('هذا العميل بدون حساب مستخدم');
+    try {
+      const { data: { user: adminUser } } = await supabase.auth.getUser();
+      if (!adminUser) return toast.error('يجب تسجيل الدخول');
+
+      const { data: existing } = await supabase
+        .from('chat_conversations')
+        .select('id')
+        .eq('user_id', customer.user_id)
+        .eq('status', 'open')
+        .order('last_message_at', { ascending: false })
+        .limit(1)
+        .maybeSingle();
+
+      if (existing?.id) {
+        toast.success('فتح المحادثة الحالية');
+        navigate('/adminmaster/chat');
+        return;
+      }
+
+      const { data: conv, error } = await supabase
+        .from('chat_conversations')
+        .insert({
+          user_id: customer.user_id,
+          admin_id: adminUser.id,
+          subject: `محادثة مع ${customer.name}`,
+          last_message: 'بدأت الإدارة هذه المحادثة',
+          status: 'open',
+        })
+        .select()
+        .single();
+      if (error || !conv) throw error || new Error('فشل');
+
+      await supabase.from('chat_messages').insert({
+        conversation_id: conv.id,
+        sender_id: adminUser.id,
+        sender_type: 'admin',
+        content: `مرحباً ${customer.name}، كيف يمكننا مساعدتك؟`,
+      });
+      toast.success('تم بدء المحادثة');
+      navigate('/adminmaster/chat');
+    } catch (e: any) {
+      toast.error(e?.message || 'تعذر بدء المحادثة');
+    }
+  };
+
+  const sendNotification = async (customer: Customer) => {
+    if (!customer.user_id) return toast.error('هذا العميل بدون حساب مستخدم');
+    const message = prompt(`اكتب رسالة الإشعار للعميل ${customer.name}:`);
+    if (!message?.trim()) return;
+    try {
+      const { error } = await supabase.from('user_notifications').insert({
+        user_id: customer.user_id,
+        title: 'رسالة من الإدارة',
+        message: message.trim(),
+        type: 'admin',
+        link: '/client/dashboard',
+      });
+      if (error) throw error;
+      toast.success('تم إرسال الإشعار');
+    } catch (e: any) {
+      toast.error(e?.message || 'فشل الإرسال');
+    }
+  };
+  // ===== End Quick Actions =====
+
   
   // تشخيص البيانات
   console.log('🔍 AdminCustomers Debug Info:', {
