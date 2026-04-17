@@ -182,6 +182,57 @@ export async function updateContractStatus(id: string, status: ContractStatus) {
 export async function sendContractToClient(id: string) {
   await generateContractContent(id);
   await updateContractStatus(id, "pending_signature");
+  // notify client
+  const c = await getContract(id);
+  if (c?.user_id) {
+    await (supabase.from("user_notifications" as any) as any).insert({
+      user_id: c.user_id,
+      title: "📝 عقد جديد بانتظار توقيعك",
+      message: `العقد رقم ${c.contract_number} — ${c.title}`,
+      type: "contract",
+      link: `/client/contracts/${c.id}`,
+    });
+  }
+}
+
+export async function remindClientToSign(id: string) {
+  const c = await getContract(id);
+  if (!c) throw new Error("Contract not found");
+  if (c.user_id) {
+    await (supabase.from("user_notifications" as any) as any).insert({
+      user_id: c.user_id,
+      title: "⏰ تذكير: عقدك بانتظار التوقيع",
+      message: `يرجى مراجعة وتوقيع العقد رقم ${c.contract_number}`,
+      type: "contract",
+      link: `/client/contracts/${c.id}`,
+    });
+  }
+  await (supabase.from("contract_timeline" as any) as any).insert({
+    contract_id: id,
+    actor_type: "admin",
+    action_type: "reminder_sent",
+    action_label: "تذكير العميل",
+    description: "أرسلت الإدارة تذكيراً للعميل لإكمال التوقيع",
+  });
+}
+
+export async function cancelContract(id: string, reason?: string) {
+  const { error } = await (supabase.from(TBL) as any)
+    .update({ status: "cancelled", updated_at: new Date().toISOString() })
+    .eq("id", id);
+  if (error) throw error;
+  await (supabase.from("contract_timeline" as any) as any).insert({
+    contract_id: id,
+    actor_type: "admin",
+    action_type: "cancelled",
+    action_label: "إلغاء العقد",
+    description: reason || "ألغى المسؤول العقد",
+  });
+}
+
+export async function deleteContract(id: string) {
+  const { error } = await (supabase.from(TBL) as any).delete().eq("id", id);
+  if (error) throw error;
 }
 
 export async function signContract(input: {
