@@ -30,6 +30,7 @@ interface CustomerInfo {
   email?: string | null;
   phone?: string | null;
   company?: string | null;
+  customer_code?: string | null;
 }
 
 interface ProfileInfo {
@@ -123,7 +124,7 @@ const AdminServiceOrders = () => {
       if (customerIds.length > 0) {
         const { data: customers } = await supabase
           .from('customers')
-          .select('id, name, email, phone, company')
+          .select('id, name, email, phone, company, customer_code')
           .in('id', customerIds);
         if (customers) {
           customers.forEach(c => { customersMap[c.id] = c; });
@@ -491,7 +492,14 @@ const AdminServiceOrders = () => {
                                 <User className="w-4 h-4 text-primary" />
                               </div>
                               <div className="min-w-0">
-                                <p className="text-sm font-medium truncate">{getClientName(order)}</p>
+                                <div className="flex items-center gap-1.5">
+                                  <p className="text-sm font-medium truncate">{getClientName(order)}</p>
+                                  {order.customer?.customer_code && (
+                                    <span className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-muted text-muted-foreground border border-border/50 flex-shrink-0">
+                                      #{order.customer.customer_code}
+                                    </span>
+                                  )}
+                                </div>
                                 {getClientEmail(order) && (
                                   <p className="text-xs text-muted-foreground truncate">{getClientEmail(order)}</p>
                                 )}

@@ -19,6 +19,7 @@ import SendInvoiceDialog from '@/components/admin/invoices/SendInvoiceDialog';
 
 export default function AdminInvoices() {
   const [invoices, setInvoices] = useState<Invoice[]>([]);
+  const [customerCodes, setCustomerCodes] = useState<Record<string, string>>({});
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
@@ -29,7 +30,19 @@ export default function AdminInvoices() {
 
   const load = async () => {
     setLoading(true);
-    try { setInvoices(await InvoiceService.list()); }
+    try {
+      const list = await InvoiceService.list();
+      setInvoices(list);
+      const ids = [...new Set(list.map(i => i.customer_id).filter(Boolean) as string[])];
+      if (ids.length) {
+        const { data } = await supabase.from('customers').select('id, customer_code').in('id', ids);
+        const map: Record<string, string> = {};
+        (data || []).forEach((c: any) => { if (c.customer_code) map[c.id] = c.customer_code; });
+        setCustomerCodes(map);
+      } else {
+        setCustomerCodes({});
+      }
+    }
     catch (e: any) { toast.error('فشل التحميل', { description: e.message }); }
     finally { setLoading(false); }
   };
@@ -149,7 +162,14 @@ export default function AdminInvoices() {
                     <TableRow key={inv.id}>
                       <TableCell className="font-bold"><Link to={`/adminmaster/invoices/${inv.id}`} className="text-primary hover:underline">{inv.invoice_number}</Link></TableCell>
                       <TableCell>
-                        <div className="font-medium">{inv.customer_name ?? '-'}</div>
+                        <div className="font-medium flex items-center gap-1.5 flex-wrap">
+                          <span>{inv.customer_name ?? '-'}</span>
+                          {inv.customer_id && customerCodes[inv.customer_id] && (
+                            <span className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-muted text-muted-foreground border border-border/50">
+                              #{customerCodes[inv.customer_id]}
+                            </span>
+                          )}
+                        </div>
                         {inv.customer_email && <div className="text-xs text-muted-foreground">{inv.customer_email}</div>}
                       </TableCell>
                       <TableCell className="text-sm">{inv.issue_date}</TableCell>
@@ -185,7 +205,14 @@ export default function AdminInvoices() {
                   <Badge className={InvoiceService.statusColor(inv.status)}>{InvoiceService.statusLabel(inv.status)}</Badge>
                 </div>
                 <div className="text-sm">
-                  <div className="font-medium">{inv.customer_name ?? '-'}</div>
+                  <div className="font-medium flex items-center gap-1.5 flex-wrap">
+                    <span>{inv.customer_name ?? '-'}</span>
+                    {inv.customer_id && customerCodes[inv.customer_id] && (
+                      <span className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-muted text-muted-foreground border border-border/50">
+                        #{customerCodes[inv.customer_id]}
+                      </span>
+                    )}
+                  </div>
                   <div className="text-xs text-muted-foreground">{inv.issue_date}</div>
                 </div>
                 <div className="grid grid-cols-3 gap-2 text-xs bg-muted/40 rounded-md p-2">
