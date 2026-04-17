@@ -84,6 +84,7 @@ import AddUser from "./pages/admin/AddUser";
 import AdminWorkingHours from "./pages/admin/AdminWorkingHours";
 import ContractsSystem from "./pages/admin/ContractsSystem";
 import AdminContractDetails from "./pages/admin/AdminContractDetails";
+import ContractsAnalytics from "./pages/admin/ContractsAnalytics";
 import ClientContracts from "./pages/ClientContracts";
 import ClientContractApproval from "./pages/ClientContractApproval";
 
@@ -317,6 +318,11 @@ const App = () => (
             <Route path="/adminmaster/contracts" element={
               <SimpleProtectedRoute adminOnly>
                 <ContractsSystem />
+              </SimpleProtectedRoute>
+            } />
+            <Route path="/adminmaster/contracts/analytics" element={
+              <SimpleProtectedRoute adminOnly>
+                <ContractsAnalytics />
               </SimpleProtectedRoute>
             } />
             <Route path="/adminmaster/contracts/:id" element={

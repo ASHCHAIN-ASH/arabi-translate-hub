@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { FileText, CreditCard, FileSignature, MessageCircle, Receipt, Users, Settings, BarChart3 } from 'lucide-react';
+import { FileText, CreditCard, FileSignature, MessageCircle, Receipt, Users, Settings, BarChart3, TrendingUp } from 'lucide-react';
 import { Sidebar, SidebarContent, SidebarGroup, SidebarGroupContent, SidebarGroupLabel, SidebarMenu, SidebarMenuButton, SidebarMenuItem, SidebarTrigger } from '@/components/ui/sidebar';
 
 const items = [
@@ -11,6 +11,11 @@ const items = [
     title: 'العقود',
     url: '/adminmaster/contracts',
     icon: FileText,
+  },
+  {
+    title: 'إحصائيات العقود',
+    url: '/adminmaster/contracts/analytics',
+    icon: TrendingUp,
   },
   {
     title: 'إنشاء عقد جديد',
