@@ -5,6 +5,7 @@ import {
   ArrowRight, Mail, Phone, Building2, Calendar, Copy, MessageSquare,
   MessageCircle, Send, Bell, ShoppingCart, FileText, Edit, Key, Ban,
   CheckCircle, Trash2, Loader2, User, Activity, DollarSign, Clock,
+  History, UserPlus, CreditCard,
 } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import AdminLayout from '@/components/admin/AdminLayout';
