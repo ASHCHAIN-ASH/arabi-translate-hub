@@ -155,10 +155,11 @@ const AdminContractDetails = () => {
           <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} className="lg:col-span-2 space-y-4">
             {/* Summary */}
             <Card>
-              <CardContent className="p-5 grid grid-cols-2 sm:grid-cols-4 gap-4 text-sm">
+              <CardContent className="p-5 grid grid-cols-2 sm:grid-cols-5 gap-4 text-sm">
                 <div><p className="text-xs text-muted-foreground"><User className="inline h-3 w-3 ml-1" />العميل</p><p className="font-semibold truncate">{c.client_full_name || "—"}</p></div>
                 <div><p className="text-xs text-muted-foreground"><FileText className="inline h-3 w-3 ml-1" />الخدمة</p><p className="font-semibold truncate">{c.service_name || "—"}</p></div>
                 <div><p className="text-xs text-muted-foreground"><DollarSign className="inline h-3 w-3 ml-1" />القيمة</p><p className="font-semibold">{Number(c.total_amount || 0).toLocaleString("ar-SA")} {c.currency}</p></div>
+                <div><p className="text-xs text-muted-foreground"><Clock className="inline h-3 w-3 ml-1" />مدة العمل</p><p className="font-semibold truncate">{(c.metadata as any)?.workDuration || "—"}</p></div>
                 <div><p className="text-xs text-muted-foreground"><Calendar className="inline h-3 w-3 ml-1" />التحرير</p><p className="font-semibold">{new Date(c.created_at).toLocaleDateString("ar-SA")}</p></div>
               </CardContent>
             </Card>
