@@ -145,11 +145,79 @@ const AdminChat = () => {
             <h1 className="text-xl font-bold">المحادثات</h1>
             <p className="text-xs text-muted-foreground">التواصل المباشر مع العملاء</p>
           </div>
-          <Badge variant="secondary" className="gap-1">
-            <MessageSquare className="w-3 h-3" />
-            {conversations.length} محادثة
-          </Badge>
+          <div className="flex items-center gap-2">
+            <Badge variant="secondary" className="gap-1">
+              <MessageSquare className="w-3 h-3" />
+              {conversations.length} محادثة
+            </Badge>
+            <Button onClick={() => setNewOpen(true)} size="sm" className="gap-1.5">
+              <Plus className="w-4 h-4" /> بدء محادثة جديدة
+            </Button>
+          </div>
         </div>
+
+        <Dialog open={newOpen} onOpenChange={setNewOpen}>
+          <DialogContent className="max-w-md" dir="rtl">
+            <DialogHeader>
+              <DialogTitle className="text-right">بدء محادثة جديدة مع عميل</DialogTitle>
+            </DialogHeader>
+            <div className="space-y-4 py-2">
+              <div className="space-y-1.5">
+                <label className="text-xs font-medium">العميل</label>
+                <Popover open={customerPickerOpen} onOpenChange={setCustomerPickerOpen}>
+                  <PopoverTrigger asChild>
+                    <Button variant="outline" role="combobox" className="w-full justify-between text-right font-normal">
+                      {selectedCustomer ? selectedCustomer.name : 'اختر عميلاً...'}
+                      <ChevronsUpDown className="w-4 h-4 opacity-50" />
+                    </Button>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-[380px] p-0" align="start">
+                    <Command>
+                      <CommandInput placeholder="ابحث بالاسم أو البريد..." />
+                      <CommandList>
+                        <CommandEmpty>لا يوجد عملاء مطابقون</CommandEmpty>
+                        <CommandGroup>
+                          {customers.map((c) => (
+                            <CommandItem
+                              key={c.id}
+                              value={`${c.name} ${c.email || ''}`}
+                              onSelect={() => {
+                                if (c.user_id) {
+                                  setSelectedCustomer({ user_id: c.user_id, name: c.name });
+                                  setCustomerPickerOpen(false);
+                                }
+                              }}
+                            >
+                              <div className="flex flex-col">
+                                <span className="font-medium">{c.name}</span>
+                                {c.email && <span className="text-xs text-muted-foreground">{c.email}</span>}
+                              </div>
+                            </CommandItem>
+                          ))}
+                        </CommandGroup>
+                      </CommandList>
+                    </Command>
+                  </PopoverContent>
+                </Popover>
+              </div>
+              <div className="space-y-1.5">
+                <label className="text-xs font-medium">الموضوع</label>
+                <Input value={newSubject} onChange={(e) => setNewSubject(e.target.value)} placeholder="مثال: متابعة طلبك" />
+              </div>
+              <div className="space-y-1.5">
+                <label className="text-xs font-medium">الرسالة الأولى</label>
+                <Textarea value={newFirstMessage} onChange={(e) => setNewFirstMessage(e.target.value)} placeholder="اكتب رسالتك..." rows={4} />
+              </div>
+            </div>
+            <DialogFooter className="gap-2">
+              <Button variant="outline" onClick={() => setNewOpen(false)} disabled={creating}>إلغاء</Button>
+              <Button onClick={handleCreateConversation} disabled={creating} className="gap-1.5">
+                {creating ? <RefreshCw className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}
+                بدء المحادثة
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 h-[calc(100vh-200px)]">
           {/* Conversations List */}
