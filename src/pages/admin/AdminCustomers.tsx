@@ -841,7 +841,7 @@ const AdminCustomers = () => {
                           </div>
                         </TableCell>
                          <TableCell className="py-4 px-3">
-                           <div className="flex items-center justify-center">
+                           <div className="flex items-center justify-center" onClick={(e) => e.stopPropagation()}>
                              <DropdownMenu>
                                <DropdownMenuTrigger asChild>
                                  <Button 
