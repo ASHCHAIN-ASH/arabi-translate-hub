@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
+import { useNavigate } from 'react-router-dom';
 import AdminLayout from '@/components/admin/AdminLayout';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -282,9 +283,9 @@ const AdminServiceOrders = () => {
     finally { setLoadingTimeline(false); }
   };
 
+  const navigate = useNavigate();
   const openOrderDetails = (order: ServiceOrder) => {
-    setSelectedOrder(order);
-    loadTimeline(order.id);
+    navigate(`/adminmaster/service-orders/${order.id}`);
   };
 
   const stats = {
@@ -553,21 +554,6 @@ const AdminServiceOrders = () => {
           </Card>
         )}
 
-        {/* Order Detail Dialog */}
-        <Dialog open={!!selectedOrder} onOpenChange={() => setSelectedOrder(null)}>
-          <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto p-0 gap-0">
-            {selectedOrder && (
-              <OrderDetailPanel
-                order={selectedOrder}
-                timeline={timeline}
-                loadingTimeline={loadingTimeline}
-                onStatusUpdate={updateOrderStatus}
-                onClose={() => setSelectedOrder(null)}
-                onRefresh={loadOrders}
-              />
-            )}
-          </DialogContent>
-        </Dialog>
       </div>
     </AdminLayout>
   );
