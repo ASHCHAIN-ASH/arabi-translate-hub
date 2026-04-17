@@ -178,6 +178,7 @@ export type Database = {
         Row: {
           company: string | null
           created_at: string
+          customer_code: string | null
           email: string | null
           id: string
           name: string
@@ -190,6 +191,7 @@ export type Database = {
         Insert: {
           company?: string | null
           created_at?: string
+          customer_code?: string | null
           email?: string | null
           id?: string
           name: string
@@ -202,6 +204,7 @@ export type Database = {
         Update: {
           company?: string | null
           created_at?: string
+          customer_code?: string | null
           email?: string | null
           id?: string
           name?: string
@@ -1223,6 +1226,7 @@ export type Database = {
         Args: { payload: Json; queue_name: string }
         Returns: number
       }
+      generate_customer_code: { Args: never; Returns: string }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
