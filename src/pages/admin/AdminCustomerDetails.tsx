@@ -314,7 +314,14 @@ const AdminCustomerDetails: React.FC = () => {
             <ArrowRight className="w-5 h-5" />
           </Button>
           <div className="flex-1">
-            <h1 className="text-2xl font-bold">{customer.name}</h1>
+            <h1 className="text-2xl font-bold flex items-center gap-3 flex-wrap">
+              {customer.name}
+              {customer.customer_code && (
+                <span className="text-xs font-mono px-2 py-1 rounded-md bg-primary/10 text-primary border border-primary/20">
+                  #{customer.customer_code}
+                </span>
+              )}
+            </h1>
             <p className="text-sm text-muted-foreground">تفاصيل العميل وكافة الإجراءات</p>
           </div>
           <Badge className={customer.status === 'active'
