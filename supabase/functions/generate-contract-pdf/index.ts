@@ -311,8 +311,15 @@ Deno.serve(async (req: Request) => {
   if (req.method === "OPTIONS") return new Response(null, { headers: corsHeaders });
 
   try {
-    const body = await req.json().catch(() => ({}));
-    const contractId: string | undefined = body.contract_id || body.contractId;
+    const url = new URL(req.url);
+    let contractId: string | undefined;
+    let body: any = {};
+    if (req.method === "GET") {
+      contractId = url.searchParams.get("contract_id") || url.searchParams.get("contractId") || undefined;
+    } else {
+      body = await req.json().catch(() => ({}));
+      contractId = body.contract_id || body.contractId || url.searchParams.get("contract_id") || undefined;
+    }
     if (!contractId) {
       return new Response(JSON.stringify({ error: "contract_id required" }), {
         status: 400,
@@ -346,26 +353,46 @@ Deno.serve(async (req: Request) => {
     const userId = contract.user_id || "system";
     const path = `${userId}/${contract.id}.html`;
 
-    const { error: upErr } = await supabase.storage
-      .from("contracts")
-      .upload(path, new Blob([html], { type: "text/html; charset=utf-8" }), {
-        contentType: "text/html; charset=utf-8",
-        upsert: true,
+    // Save a copy in storage (best-effort, don't fail the request)
+    try {
+      await supabase.storage
+        .from("contracts")
+        .upload(path, new Blob([html], { type: "text/html; charset=utf-8" }), {
+          contentType: "text/html; charset=utf-8",
+          upsert: true,
+        });
+      await supabase.from("contracts").update({
+        signed_pdf_path: path,
+        signed_pdf_generated_at: new Date().toISOString(),
+      }).eq("id", contract.id);
+    } catch (e) {
+      console.warn("storage upload failed:", e);
+    }
+
+    // If client requests raw HTML, return it directly so the browser renders
+    // the styled document immediately and triggers print/save-as-PDF.
+    const url = new URL(req.url);
+    const wantsHtml =
+      url.searchParams.get("format") === "html" ||
+      body.format === "html" ||
+      (req.headers.get("accept") || "").includes("text/html");
+
+    if (wantsHtml) {
+      return new Response(html, {
+        headers: {
+          ...corsHeaders,
+          "Content-Type": "text/html; charset=utf-8",
+          "Content-Disposition": `inline; filename="contract-${contract.contract_number || contract.id}.html"`,
+          "Cache-Control": "no-store",
+        },
       });
-    if (upErr) throw upErr;
-
-    await supabase.from("contracts").update({
-      signed_pdf_path: path,
-      signed_pdf_generated_at: new Date().toISOString(),
-    }).eq("id", contract.id);
-
-    const { data: signed } = await supabase.storage
-      .from("contracts").createSignedUrl(path, 60 * 60 * 24 * 7);
+    }
 
     return new Response(JSON.stringify({
-      success: true, path,
-      signed_url: signed?.signedUrl || null,
+      success: true,
+      path,
       contract_id: contract.id,
+      html,
     }), { headers: { ...corsHeaders, "Content-Type": "application/json" } });
   } catch (e: any) {
     console.error("generate-contract-pdf error:", e);
