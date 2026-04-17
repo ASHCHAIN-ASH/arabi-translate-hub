@@ -19,7 +19,7 @@ import {
   ArrowRight, RefreshCw, FileText, Clock, CheckCircle, X, Eye, Zap, Bell, DollarSign,
   User, Mail, Phone, Building2, Calendar, Copy, MessageSquare, Send, Paperclip,
   Download, Upload, Activity, Wallet, AlertCircle, NotebookPen, Wifi, WifiOff,
-  PackageCheck, FileCheck2, Receipt,
+  PackageCheck, FileCheck2, Receipt, ScrollText,
 } from 'lucide-react';
 
 const STATUS_CONFIG: Record<string, { label: string; color: string; icon: React.ReactNode; barClass: string }> = {
@@ -430,6 +430,24 @@ const AdminServiceOrderDetails = () => {
               <Button size="sm" variant="outline" className="h-8 gap-1.5" onClick={() => setShowQuote(!showQuote)}><DollarSign className="w-3.5 h-3.5" /> {showQuote ? 'إغلاق' : 'إرسال عرض سعر'}</Button>
               <Button size="sm" variant="outline" className="h-8 gap-1.5" onClick={createInvoice} disabled={creatingInvoice}>
                 {creatingInvoice ? <RefreshCw className="w-3.5 h-3.5 animate-spin" /> : <Receipt className="w-3.5 h-3.5" />} إنشاء فاتورة
+              </Button>
+              <Button
+                size="sm"
+                variant="outline"
+                className="h-8 gap-1.5 border-primary/30 text-primary hover:bg-primary/5"
+                onClick={async () => {
+                  const { data } = await supabase
+                    .from('contracts')
+                    .select('id')
+                    .eq('service_order_id', order.id)
+                    .order('created_at', { ascending: false })
+                    .limit(1)
+                    .maybeSingle();
+                  if (data?.id) navigate(`/adminmaster/contracts/${data.id}`);
+                  else toast({ title: 'لا يوجد عقد مرتبط', description: 'يُنشأ العقد تلقائياً بعد قبول العميل لعرض السعر' });
+                }}
+              >
+                <ScrollText className="w-3.5 h-3.5" /> عرض العقد
               </Button>
             </div>
 
