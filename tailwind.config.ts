@@ -19,14 +19,14 @@ export default {
 		},
 		extend: {
 		fontFamily: {
-				'sans': ['Tajawal', 'Inter', 'system-ui', 'sans-serif'],
-				'heading': ['Tajawal', 'Inter', 'sans-serif'],
-				'body': ['Tajawal', 'Inter', 'sans-serif'],
-				'inter': ['Inter', 'Tajawal', 'sans-serif'],
-				'arabic-title': ['Tajawal', 'Inter', 'sans-serif'],
-				'arabic-body': ['Tajawal', 'Inter', 'sans-serif'],
-				'academic': ['Tajawal', 'Inter', 'sans-serif'],
-				'academic-title': ['Tajawal', 'Inter', 'sans-serif'],
+				'sans': ['Almarai', 'Inter', 'system-ui', 'sans-serif'],
+				'heading': ['Cairo', 'Inter', 'sans-serif'],
+				'body': ['Almarai', 'Inter', 'sans-serif'],
+				'inter': ['Inter', 'Almarai', 'sans-serif'],
+				'arabic-title': ['Cairo', 'Inter', 'sans-serif'],
+				'arabic-body': ['Almarai', 'Inter', 'sans-serif'],
+				'academic': ['Almarai', 'Inter', 'sans-serif'],
+				'academic-title': ['Cairo', 'Inter', 'sans-serif'],
 			},
 			colors: {
 				border: 'hsl(var(--border))',
