@@ -85,7 +85,7 @@ export function buildInvoiceHTML(invoice: Invoice, items: InvoiceItem[], payment
   .card .name { font-size: 15px; font-weight: 700; color: #0f172a; margin-bottom: 6px; }
 
   table.items { width: 100%; border-collapse: collapse; margin-bottom: 16px; }
-  table.items thead { background: #0f766e; color: #fff; }
+  table.items thead { background: linear-gradient(135deg, #1e3a8a 0%, #312e81 100%); color: #fff; }
   table.items th { padding: 10px 12px; font-size: 12px; font-weight: 600; text-align: right; }
   table.items th.num, table.items td.num { text-align: center; }
   table.items td { padding: 12px; border-bottom: 1px solid #e2e8f0; font-size: 12px; vertical-align: top; }
