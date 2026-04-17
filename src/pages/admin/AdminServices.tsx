@@ -359,7 +359,7 @@ const AdminServices = () => {
         </div>
 
         {/* === Stats Grid (Banking style) === */}
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3 md:gap-4">
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3 md:gap-4">
           <StatCard icon={<Package />} label="إجمالي الخدمات" value={stats.total} tone="primary" />
           <StatCard icon={<CheckCircle2 />} label="نشطة" value={stats.active} tone="success" />
           <StatCard icon={<XCircle />} label="معطلة" value={stats.inactive} tone="muted" />
@@ -370,6 +370,7 @@ const AdminServices = () => {
             value={formatCurrency(stats.avgPrice)}
             tone="accent"
             isCurrency
+            className="col-span-2"
           />
         </div>
 
@@ -685,11 +686,12 @@ const AdminServices = () => {
 
 // === Sub-components ===
 const StatCard = ({
-  icon, label, value, tone, isCurrency,
+  icon, label, value, tone, isCurrency, className,
 }: {
   icon: React.ReactNode; label: string; value: number | string;
   tone: 'primary' | 'success' | 'muted' | 'info' | 'accent';
   isCurrency?: boolean;
+  className?: string;
 }) => {
   const tones: Record<string, string> = {
     primary: 'bg-primary/10 text-primary',
@@ -699,7 +701,7 @@ const StatCard = ({
     accent: 'bg-amber-500/10 text-amber-600 dark:text-amber-400',
   };
   return (
-    <Card className="border-border/60 shadow-sm hover:shadow-md transition-shadow">
+    <Card className={`border-border/60 shadow-sm hover:shadow-md transition-shadow ${className ?? ''}`}>
       <CardContent className="p-3 md:p-4">
         <div className="flex items-center gap-3">
           <div className={`h-10 w-10 rounded-xl flex items-center justify-center shrink-0 ${tones[tone]}`}>
@@ -707,7 +709,7 @@ const StatCard = ({
           </div>
           <div className="min-w-0 flex-1">
             <p className="text-xs text-muted-foreground truncate">{label}</p>
-            <p className={`font-bold tabular-nums truncate ${isCurrency ? 'text-sm md:text-base' : 'text-xl md:text-2xl'}`}>
+            <p className={`font-bold tabular-nums whitespace-nowrap ${isCurrency ? 'text-base md:text-lg' : 'text-xl md:text-2xl'}`}>
               {value}
             </p>
           </div>
