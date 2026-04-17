@@ -250,7 +250,7 @@ export const WalletService = {
       throw new Error(`الرصيد غير كافٍ. رصيدك الحالي: ${WalletService.formatCurrency(w.balance)}`);
     }
 
-    const { error } = await supabase.from('invoice_payments' as any).insert({
+    const { data: payment, error } = await supabase.from('invoice_payments' as any).insert({
       invoice_id: args.invoice_id,
       amount: args.amount,
       payment_method: 'wallet',
@@ -258,8 +258,40 @@ export const WalletService = {
       status: 'completed',
       notes: `دفع من المحفظة الرقمية${args.invoice_number ? ' - فاتورة ' + args.invoice_number : ''}`,
       created_by: args.user_id,
-    } as any);
+    } as any).select().single();
     if (error) throw error;
+
+    // Send banking-style payment receipt email (non-blocking).
+    try {
+      const newBalance = (w.balance || 0) - args.amount;
+      const [{ data: profile }, { data: authUser }] = await Promise.all([
+        supabase.from('profiles').select('full_name').eq('id', args.user_id).maybeSingle(),
+        supabase.auth.getUser(),
+      ]);
+      const recipientEmail = authUser?.user?.email;
+      if (recipientEmail) {
+        const origin = typeof window !== 'undefined' ? window.location.origin : 'https://masteredupath.com';
+        await supabase.functions.invoke('send-transactional-email', {
+          body: {
+            templateName: 'wallet-invoice-payment',
+            recipientEmail,
+            idempotencyKey: `wallet-pay-${(payment as any)?.id || args.invoice_id}`,
+            templateData: {
+              customerName: profile?.full_name || authUser?.user?.email?.split('@')[0] || 'العميل',
+              invoiceNumber: args.invoice_number || '—',
+              amount: WalletService.formatCurrency(args.amount).replace(' ر.س', ''),
+              newBalance: WalletService.formatCurrency(newBalance).replace(' ر.س', ''),
+              paidAt: new Date().toLocaleString('ar-SA'),
+              transactionId: ((payment as any)?.id || '').toString().slice(0, 8),
+              invoiceUrl: `${origin}/invoices`,
+              walletUrl: `${origin}/wallet`,
+            },
+          },
+        });
+      }
+    } catch (mailErr) {
+      console.warn('wallet-invoice-payment email failed:', mailErr);
+    }
   },
 
   formatCurrency(n: number, currency = 'SAR') {
