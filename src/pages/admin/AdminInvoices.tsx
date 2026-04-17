@@ -19,6 +19,7 @@ import SendInvoiceDialog from '@/components/admin/invoices/SendInvoiceDialog';
 
 export default function AdminInvoices() {
   const [invoices, setInvoices] = useState<Invoice[]>([]);
+  const [customerCodes, setCustomerCodes] = useState<Record<string, string>>({});
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
@@ -29,7 +30,19 @@ export default function AdminInvoices() {
 
   const load = async () => {
     setLoading(true);
-    try { setInvoices(await InvoiceService.list()); }
+    try {
+      const list = await InvoiceService.list();
+      setInvoices(list);
+      const ids = [...new Set(list.map(i => i.customer_id).filter(Boolean) as string[])];
+      if (ids.length) {
+        const { data } = await supabase.from('customers').select('id, customer_code').in('id', ids);
+        const map: Record<string, string> = {};
+        (data || []).forEach((c: any) => { if (c.customer_code) map[c.id] = c.customer_code; });
+        setCustomerCodes(map);
+      } else {
+        setCustomerCodes({});
+      }
+    }
     catch (e: any) { toast.error('فشل التحميل', { description: e.message }); }
     finally { setLoading(false); }
   };
