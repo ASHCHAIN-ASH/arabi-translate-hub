@@ -73,7 +73,7 @@ export default function EmailComposer({ defaultTo = "", defaultTemplateKey = "",
       .from('email_templates')
       .select('*')
       .eq('is_active', true)
-      .order('template_key');
+      .order('name');
 
     if (error) {
       toast.error("خطأ في جلب القوالب: " + error.message);
