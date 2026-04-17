@@ -445,7 +445,7 @@ const AdminServices = () => {
 
             {/* Services Table - Desktop */}
             <Card className="hidden md:block border-border/60 shadow-sm overflow-hidden">
-              <Table>
+              <Table dir="rtl">
                 <TableHeader className="bg-muted/40">
                   <TableRow>
                     <TableHead className="text-right font-semibold">الخدمة</TableHead>
