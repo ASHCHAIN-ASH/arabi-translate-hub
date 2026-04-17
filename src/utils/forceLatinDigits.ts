@@ -53,25 +53,47 @@ export function installLatinDigitsEnforcer() {
     return toLatinDigits(r);
   };
 
-  // Intl.NumberFormat
+  // Intl.NumberFormat - wrap via Proxy since `format` is a getter on instances
   const OrigNumberFormat = Intl.NumberFormat;
   const IntlAny = Intl as any;
   IntlAny.NumberFormat = function (locales?: any, options?: any) {
     const inst = new OrigNumberFormat(normalizeLocale(locales), options);
-    const origFormat = inst.format.bind(inst);
-    inst.format = (v: number) => toLatinDigits(origFormat(v));
-    return inst;
+    return new Proxy(inst, {
+      get(target, prop, receiver) {
+        if (prop === 'format') {
+          const fn = target.format.bind(target);
+          return (v: number) => toLatinDigits(fn(v));
+        }
+        if (prop === 'formatToParts') {
+          const fn = target.formatToParts.bind(target);
+          return (v: number) => fn(v).map((p) => ({ ...p, value: toLatinDigits(p.value) }));
+        }
+        const val = Reflect.get(target, prop, receiver);
+        return typeof val === 'function' ? val.bind(target) : val;
+      },
+    });
   };
   IntlAny.NumberFormat.prototype = OrigNumberFormat.prototype;
   IntlAny.NumberFormat.supportedLocalesOf = OrigNumberFormat.supportedLocalesOf;
 
-  // Intl.DateTimeFormat
+  // Intl.DateTimeFormat - same approach
   const OrigDTF = Intl.DateTimeFormat;
   IntlAny.DateTimeFormat = function (locales?: any, options?: any) {
     const inst = new OrigDTF(normalizeLocale(locales), options);
-    const origFormat = inst.format.bind(inst);
-    inst.format = (v?: Date | number) => toLatinDigits(origFormat(v));
-    return inst;
+    return new Proxy(inst, {
+      get(target, prop, receiver) {
+        if (prop === 'format') {
+          const fn = target.format.bind(target);
+          return (v?: Date | number) => toLatinDigits(fn(v));
+        }
+        if (prop === 'formatToParts') {
+          const fn = target.formatToParts.bind(target);
+          return (v?: Date | number) => fn(v).map((p) => ({ ...p, value: toLatinDigits(p.value) }));
+        }
+        const val = Reflect.get(target, prop, receiver);
+        return typeof val === 'function' ? val.bind(target) : val;
+      },
+    });
   };
   IntlAny.DateTimeFormat.prototype = OrigDTF.prototype;
   IntlAny.DateTimeFormat.supportedLocalesOf = OrigDTF.supportedLocalesOf;
