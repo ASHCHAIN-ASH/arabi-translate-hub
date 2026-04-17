@@ -9,6 +9,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Textarea } from '@/components/ui/textarea';
 import { useAuth } from '@/components/SimpleAuthProvider';
 import { useClientData } from '@/hooks/useClientData';
+import { useRealtimeServiceOrders } from '@/hooks/useRealtimeServiceOrders';
 import { ClientDashboardService } from '@/utils/clientDashboardService';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
@@ -174,11 +175,13 @@ const OrderCard = ({
   index,
   onNavigate,
   onRespond,
+  isHighlighted,
 }: {
   order: any;
   index: number;
   onNavigate: (id: string) => void;
   onRespond: () => void;
+  isHighlighted?: boolean;
 }) => {
   const sc = statusConfig[order.status] || statusConfig['في الانتظار'];
   const qc = order.quoteStatus ? quoteConfig[order.quoteStatus] : null;
@@ -187,10 +190,20 @@ const OrderCard = ({
   return (
     <motion.div
       initial={{ opacity: 0, y: 12 }}
-      animate={{ opacity: 1, y: 0 }}
+      animate={{
+        opacity: 1,
+        y: 0,
+        scale: isHighlighted ? [1, 1.02, 1] : 1,
+      }}
       transition={{ delay: index * 0.04, duration: 0.3 }}
     >
-      <Card className={`overflow-hidden transition-all duration-200 hover:shadow-lg group ${hasPendingQuote ? 'ring-2 ring-amber-300 dark:ring-amber-700' : 'hover:ring-1 hover:ring-primary/20'}`}>
+      <Card className={`overflow-hidden transition-all duration-500 hover:shadow-lg group ${
+        isHighlighted
+          ? 'ring-2 ring-primary shadow-lg shadow-primary/20 bg-primary/5'
+          : hasPendingQuote
+            ? 'ring-2 ring-amber-300 dark:ring-amber-700'
+            : 'hover:ring-1 hover:ring-primary/20'
+      }`}>
         <CardContent className="p-0">
           {/* Main Row */}
           <div className="p-4 lg:p-5">
@@ -285,6 +298,7 @@ const Orders = () => {
   const navigate = useNavigate();
   const { user } = useAuth();
   const { orders, loading, refresh } = useClientData(user?.id);
+  const { isLive, highlightedId } = useRealtimeServiceOrders(user?.id, refresh);
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
 
@@ -320,11 +334,24 @@ const Orders = () => {
           className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4"
         >
           <div>
-            <h1 className="text-2xl lg:text-3xl font-bold flex items-center gap-2">
+            <h1 className="text-2xl lg:text-3xl font-bold flex items-center gap-2 flex-wrap">
               <ShoppingBag className="w-7 h-7 text-primary" />
               سجل الطلبات
+              {isLive && (
+                <motion.span
+                  initial={{ opacity: 0, scale: 0.8 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-green-50 dark:bg-green-950/40 border border-green-200 dark:border-green-800 text-xs font-medium text-green-700 dark:text-green-400"
+                >
+                  <span className="relative flex h-2 w-2">
+                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+                    <span className="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
+                  </span>
+                  متصل لحظياً
+                </motion.span>
+              )}
             </h1>
-            <p className="text-muted-foreground text-sm mt-1">تتبع ومتابعة جميع طلباتك في مكان واحد</p>
+            <p className="text-muted-foreground text-sm mt-1">تتبع ومتابعة جميع طلباتك في مكان واحد • التحديثات تصل تلقائياً</p>
           </div>
           <Button variant="outline" onClick={refresh} size="sm" className="gap-2 self-start">
             <RefreshCw className="w-4 h-4" />
@@ -446,6 +473,7 @@ const Orders = () => {
                 index={index}
                 onNavigate={(id) => navigate(`/orders/${id}`)}
                 onRespond={refresh}
+                isHighlighted={highlightedId === order.id}
               />
             ))}
           </div>
