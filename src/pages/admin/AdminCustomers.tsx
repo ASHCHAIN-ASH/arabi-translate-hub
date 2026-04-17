@@ -759,8 +759,13 @@ const AdminCustomers = () => {
                               <Users className="w-4 h-4 text-primary" />
                             </div>
                             <div className="flex-1 min-w-0">
-                              <div className="font-medium text-foreground text-sm mb-0.5 truncate">
-                                {customer.name}
+                              <div className="font-medium text-foreground text-sm mb-0.5 flex items-center gap-2">
+                                <span className="truncate">{customer.name}</span>
+                                {customer.customer_code && (
+                                  <span className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-muted text-muted-foreground border border-border/50 flex-shrink-0">
+                                    #{customer.customer_code}
+                                  </span>
+                                )}
                               </div>
                               <div className="text-xs text-muted-foreground flex items-center gap-1 truncate">
                                 <Mail className="w-3 h-3 flex-shrink-0" />
