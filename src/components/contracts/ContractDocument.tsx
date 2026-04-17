@@ -139,14 +139,18 @@ export const ContractDocument: React.FC<Props> = ({ contract, signature }) => {
         </p>
       </div>
 
-      {/* Preamble */}
+      {/* Preamble — Academic */}
       <div
         className="rounded-lg px-5 py-4 mb-7 text-[13.5px] leading-loose"
         style={{ background: "#fff", borderRight: `4px solid ${GOLD}`, border: `1px solid ${GOLD}55` }}
       >
-        بتاريخ <strong>{fmtDate(contract.created_at)}</strong>، أُبرم هذا العقد بين الطرفين أدناه وفقاً للأحكام
-        الواردة فيه، ويُقدَّم حصرياً عبر منصة <strong>{PLATFORM.name}</strong> ({PLATFORM.domain}) بإشراف
-        {" "}{PLATFORM.legal}.
+        إنه في يوم <strong>{fmtDate(contract.created_at)}</strong>، وانطلاقاً من رسالة{" "}
+        <strong>{PLATFORM.legal}</strong> في دعم المسيرة الأكاديمية والبحثية وتقديم خدمات علمية
+        تتوافق مع أعلى المعايير المهنية والأخلاقية المُعتمدة في الأوساط الجامعية، وبناءً على رغبة
+        الطرف الثاني الصريحة في الإفادة من الخدمات الأكاديمية المُقدَّمة عبر منصة{" "}
+        <strong>{PLATFORM.name}</strong> ({PLATFORM.domain})، فقد اتفق الطرفان — وهما بكامل أهليتهما
+        المعتبرة شرعاً ونظاماً — على إبرام هذا العقد وفق البنود والأحكام المُبيَّنة أدناه، التي تُعدّ
+        هذه الديباجة جزءاً لا يتجزأ منها ومُكمِّلةً لأحكامها.
       </div>
 
       {/* Parties */}
