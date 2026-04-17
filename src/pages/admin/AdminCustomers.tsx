@@ -1,35 +1,12 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
-  Users, 
-  UserCheck, 
-  UserX, 
-  Calendar,
-  Search,
-  Filter,
-  MoreVertical,
-  Key,
-  Ban,
-  CheckCircle,
-  Edit,
-  Trash2,
-  Eye,
-  EyeOff,
-  Mail,
-  Phone,
-  Shield,
-  ShieldCheck,
-  Clock,
-  Settings,
-  Star,
-  TrendingUp,
-  Activity,
-  Download,
-  FileSpreadsheet,
-  UserPlus,
-  Loader2,
-  RefreshCw,
-  Copy
+  Users, UserCheck, UserX, Calendar, Search, Filter, MoreVertical, Key, Ban,
+  CheckCircle, Edit, Trash2, Eye, EyeOff, Mail, Phone, Shield, ShieldCheck,
+  Clock, Settings, Star, TrendingUp, Activity, Download, FileSpreadsheet,
+  UserPlus, Loader2, RefreshCw, Copy, MessageSquare, MessageCircle, Send,
+  ShoppingCart, FileText, ExternalLink, Bell
 } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import AdminLayout from '@/components/admin/AdminLayout';
@@ -44,7 +21,8 @@ import {
   DropdownMenuContent, 
   DropdownMenuItem, 
   DropdownMenuTrigger,
-  DropdownMenuSeparator
+  DropdownMenuSeparator,
+  DropdownMenuLabel
 } from '@/components/ui/dropdown-menu';
 import { 
   Dialog, 
@@ -80,7 +58,97 @@ interface EditProfileModal {
 }
 
 const AdminCustomers = () => {
+  const navigate = useNavigate();
   const { customers, stats, loading, error, updateCustomerPassword, updateCustomerStatus, updateCustomerProfile, deleteCustomer, refresh } = useCustomers();
+
+  // ===== Quick Actions =====
+  const copyToClipboard = async (text: string, label: string) => {
+    try {
+      await navigator.clipboard.writeText(text);
+      toast.success(`تم نسخ ${label}`);
+    } catch {
+      toast.error('تعذر النسخ');
+    }
+  };
+
+  const openWhatsApp = (phone: string | null | undefined) => {
+    if (!phone) return toast.error('لا يوجد رقم هاتف');
+    const cleaned = phone.replace(/[^\d+]/g, '');
+    window.open(`https://wa.me/${cleaned.replace(/^\+/, '')}`, '_blank');
+  };
+
+  const openEmail = (email: string | null | undefined) => {
+    if (!email) return toast.error('لا يوجد بريد إلكتروني');
+    window.open(`mailto:${email}`, '_blank');
+  };
+
+  const startChatWithCustomer = async (customer: Customer) => {
+    if (!customer.user_id) return toast.error('هذا العميل بدون حساب مستخدم');
+    try {
+      const { data: { user: adminUser } } = await supabase.auth.getUser();
+      if (!adminUser) return toast.error('يجب تسجيل الدخول');
+
+      const { data: existing } = await supabase
+        .from('chat_conversations')
+        .select('id')
+        .eq('user_id', customer.user_id)
+        .eq('status', 'open')
+        .order('last_message_at', { ascending: false })
+        .limit(1)
+        .maybeSingle();
+
+      if (existing?.id) {
+        toast.success('فتح المحادثة الحالية');
+        navigate('/adminmaster/chat');
+        return;
+      }
+
+      const { data: conv, error } = await supabase
+        .from('chat_conversations')
+        .insert({
+          user_id: customer.user_id,
+          admin_id: adminUser.id,
+          subject: `محادثة مع ${customer.name}`,
+          last_message: 'بدأت الإدارة هذه المحادثة',
+          status: 'open',
+        })
+        .select()
+        .single();
+      if (error || !conv) throw error || new Error('فشل');
+
+      await supabase.from('chat_messages').insert({
+        conversation_id: conv.id,
+        sender_id: adminUser.id,
+        sender_type: 'admin',
+        content: `مرحباً ${customer.name}، كيف يمكننا مساعدتك؟`,
+      });
+      toast.success('تم بدء المحادثة');
+      navigate('/adminmaster/chat');
+    } catch (e: any) {
+      toast.error(e?.message || 'تعذر بدء المحادثة');
+    }
+  };
+
+  const sendNotification = async (customer: Customer) => {
+    if (!customer.user_id) return toast.error('هذا العميل بدون حساب مستخدم');
+    const message = prompt(`اكتب رسالة الإشعار للعميل ${customer.name}:`);
+    if (!message?.trim()) return;
+    try {
+      const { error } = await supabase.from('user_notifications').insert({
+        user_id: customer.user_id,
+        title: 'رسالة من الإدارة',
+        message: message.trim(),
+        type: 'admin',
+        link: '/client/dashboard',
+      });
+      if (error) throw error;
+      toast.success('تم إرسال الإشعار');
+    } catch (e: any) {
+      toast.error(e?.message || 'فشل الإرسال');
+    }
+  };
+  // ===== End Quick Actions =====
+
   
   // تشخيص البيانات
   console.log('🔍 AdminCustomers Debug Info:', {
@@ -783,7 +851,102 @@ const AdminCustomers = () => {
                                    <MoreVertical className="h-3.5 w-3.5" />
                                  </Button>
                                </DropdownMenuTrigger>
-                               <DropdownMenuContent align="end" className="z-50 w-44">
+                               <DropdownMenuContent align="end" className="z-50 w-60">
+                                 <DropdownMenuLabel className="text-xs text-muted-foreground">
+                                   {customer.name}
+                                 </DropdownMenuLabel>
+                                 <DropdownMenuSeparator />
+
+                                 {/* تواصل سريع */}
+                                 <DropdownMenuLabel className="text-[10px] text-muted-foreground/70 font-normal py-1">
+                                   تواصل سريع
+                                 </DropdownMenuLabel>
+                                 <DropdownMenuItem
+                                   onClick={() => startChatWithCustomer(customer)}
+                                   className="cursor-pointer gap-2 py-2 text-xs"
+                                 >
+                                   <MessageSquare className="h-3.5 w-3.5 text-primary" />
+                                   بدء محادثة داخلية
+                                 </DropdownMenuItem>
+                                 <DropdownMenuItem
+                                   onClick={() => sendNotification(customer)}
+                                   className="cursor-pointer gap-2 py-2 text-xs"
+                                 >
+                                   <Bell className="h-3.5 w-3.5 text-amber-600" />
+                                   إرسال إشعار للوحة العميل
+                                 </DropdownMenuItem>
+                                 <DropdownMenuItem
+                                   onClick={() => openWhatsApp(customer.phone)}
+                                   className="cursor-pointer gap-2 py-2 text-xs"
+                                 >
+                                   <MessageCircle className="h-3.5 w-3.5 text-emerald-600" />
+                                   مراسلة عبر واتساب
+                                 </DropdownMenuItem>
+                                 <DropdownMenuItem
+                                   onClick={() => openEmail(customer.email)}
+                                   className="cursor-pointer gap-2 py-2 text-xs"
+                                 >
+                                   <Send className="h-3.5 w-3.5 text-blue-600" />
+                                   إرسال بريد إلكتروني
+                                 </DropdownMenuItem>
+
+                                 <DropdownMenuSeparator />
+
+                                 {/* عرض البيانات */}
+                                 <DropdownMenuLabel className="text-[10px] text-muted-foreground/70 font-normal py-1">
+                                   عرض السجلات
+                                 </DropdownMenuLabel>
+                                 <DropdownMenuItem
+                                   onClick={() => navigate(`/adminmaster/orders?customer=${customer.user_id || ''}`)}
+                                   className="cursor-pointer gap-2 py-2 text-xs"
+                                 >
+                                   <ShoppingCart className="h-3.5 w-3.5 text-indigo-600" />
+                                   عرض طلبات العميل
+                                 </DropdownMenuItem>
+                                 <DropdownMenuItem
+                                   onClick={() => navigate(`/adminmaster/invoices?customer=${customer.id}`)}
+                                   className="cursor-pointer gap-2 py-2 text-xs"
+                                 >
+                                   <FileText className="h-3.5 w-3.5 text-violet-600" />
+                                   عرض فواتير العميل
+                                 </DropdownMenuItem>
+
+                                 <DropdownMenuSeparator />
+
+                                 {/* نسخ */}
+                                 <DropdownMenuItem
+                                   onClick={() => copyToClipboard(customer.email || '', 'البريد الإلكتروني')}
+                                   disabled={!customer.email}
+                                   className="cursor-pointer gap-2 py-2 text-xs"
+                                 >
+                                   <Copy className="h-3.5 w-3.5" />
+                                   نسخ البريد
+                                 </DropdownMenuItem>
+                                 <DropdownMenuItem
+                                   onClick={() => copyToClipboard(customer.phone || '', 'رقم الهاتف')}
+                                   disabled={!customer.phone}
+                                   className="cursor-pointer gap-2 py-2 text-xs"
+                                 >
+                                   <Copy className="h-3.5 w-3.5" />
+                                   نسخ الهاتف
+                                 </DropdownMenuItem>
+
+                                 <DropdownMenuSeparator />
+
+                                 {/* إدارة الحساب */}
+                                 <DropdownMenuLabel className="text-[10px] text-muted-foreground/70 font-normal py-1">
+                                   إدارة الحساب
+                                 </DropdownMenuLabel>
+                                 <DropdownMenuItem 
+                                   onClick={() => {
+                                     setEditModal({ isOpen: true, customer });
+                                     setEditFormData({ name: customer.name, phone: customer.phone || '' });
+                                   }}
+                                   className="cursor-pointer gap-2 py-2 text-xs"
+                                 >
+                                   <Edit className="h-3.5 w-3.5 text-accent-foreground" />
+                                   تعديل البيانات
+                                 </DropdownMenuItem>
                                  <DropdownMenuItem 
                                    onClick={() => {
                                      setPasswordModal({ isOpen: true, customer });
@@ -794,29 +957,10 @@ const AdminCustomers = () => {
                                    <Key className="h-3.5 w-3.5 text-primary" />
                                    تغيير كلمة المرور
                                  </DropdownMenuItem>
-                                 
-                                 <DropdownMenuItem 
-                                   onClick={() => {
-                                     setEditModal({ isOpen: true, customer });
-                                     setEditFormData({
-                                       name: customer.name,
-                                       phone: customer.phone || ''
-                                     });
-                                   }}
-                                   className="cursor-pointer gap-2 py-2 text-xs"
-                                 >
-                                   <Edit className="h-3.5 w-3.5 text-accent-foreground" />
-                                   تعديل البيانات
-                                 </DropdownMenuItem>
 
-                                 <DropdownMenuSeparator />
-                                 
                                  {customer.status === 'active' ? (
                                    <DropdownMenuItem 
-                                     onClick={() => {
-                                       setStatusModal({ isOpen: true, customer });
-                                       setNewStatus('blocked');
-                                     }}
+                                     onClick={() => { setStatusModal({ isOpen: true, customer }); setNewStatus('blocked'); }}
                                      className="text-destructive cursor-pointer gap-2 py-2 text-xs"
                                    >
                                      <Ban className="h-3.5 w-3.5" />
@@ -824,10 +968,7 @@ const AdminCustomers = () => {
                                    </DropdownMenuItem>
                                  ) : (
                                    <DropdownMenuItem 
-                                     onClick={() => {
-                                       setStatusModal({ isOpen: true, customer });
-                                       setNewStatus('active');
-                                     }}
+                                     onClick={() => { setStatusModal({ isOpen: true, customer }); setNewStatus('active'); }}
                                      className="text-success cursor-pointer gap-2 py-2 text-xs"
                                    >
                                      <CheckCircle className="h-3.5 w-3.5" />
