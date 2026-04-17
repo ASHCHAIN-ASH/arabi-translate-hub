@@ -176,7 +176,13 @@ const AdminContractDetails = () => {
                 <div><p className="text-xs text-muted-foreground"><User className="inline h-3 w-3 ml-1" />العميل</p><p className="font-semibold truncate">{c.client_full_name || "—"}</p></div>
                 <div><p className="text-xs text-muted-foreground"><FileText className="inline h-3 w-3 ml-1" />الخدمة</p><p className="font-semibold truncate">{c.service_name || "—"}</p></div>
                 <div><p className="text-xs text-muted-foreground"><DollarSign className="inline h-3 w-3 ml-1" />القيمة</p><p className="font-semibold">{Number(c.total_amount || 0).toLocaleString("ar-SA")} {c.currency}</p></div>
-                <div><p className="text-xs text-muted-foreground"><Clock className="inline h-3 w-3 ml-1" />مدة العمل</p><p className="font-semibold truncate">{(c.metadata as any)?.workDuration || "—"}</p></div>
+                <div className="flex items-start justify-between gap-1">
+                  <div className="min-w-0 flex-1">
+                    <p className="text-xs text-muted-foreground"><Clock className="inline h-3 w-3 ml-1" />مدة العمل</p>
+                    <p className="font-semibold truncate">{(c.metadata as any)?.workDuration || "—"}</p>
+                  </div>
+                  <Button size="sm" variant="ghost" className="h-6 px-1.5 text-xs" onClick={editWorkDuration}>تعديل</Button>
+                </div>
                 <div><p className="text-xs text-muted-foreground"><Calendar className="inline h-3 w-3 ml-1" />التحرير</p><p className="font-semibold">{new Date(c.created_at).toLocaleDateString("ar-SA")}</p></div>
               </CardContent>
             </Card>
