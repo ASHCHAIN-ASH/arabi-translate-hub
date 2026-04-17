@@ -59,6 +59,7 @@ import OrderDetails from "./pages/client/OrderDetails";
 import OrderEdit from "./pages/client/OrderEdit";
 import ClientInvoices from "./pages/client/Invoices";
 import ClientTickets from "./pages/client/Tickets";
+import ClientTicketDetails from "./pages/client/TicketDetails";
 import ClientWallet from "./pages/client/Wallet";
 
 // Admin Pages
@@ -74,6 +75,7 @@ import AdminCustomers from "./pages/admin/AdminCustomers";
 import AdminCustomerDetails from "./pages/admin/AdminCustomerDetails";
 import AdminCustomerEmail from "./pages/admin/AdminCustomerEmail";
 import AdminTickets from "./pages/admin/AdminTickets";
+import AdminTicketDetails from "./pages/admin/AdminTicketDetails";
 import AdminServiceOrders from "./pages/admin/AdminServiceOrders";
 import AdminServiceOrderDetails from "./pages/admin/AdminServiceOrderDetails";
 import EmailNotifications from "./pages/admin/EmailNotifications";
@@ -292,6 +294,11 @@ const App = () => (
                 <ClientTickets />
               </SimpleProtectedRoute>
             } />
+            <Route path="/support/tickets/:id" element={
+              <SimpleProtectedRoute requiredRole="client">
+                <ClientTicketDetails />
+              </SimpleProtectedRoute>
+            } />
             <Route path="/wallet" element={
               <SimpleProtectedRoute requiredRole="client">
                 <ClientWallet />
@@ -377,6 +384,11 @@ const App = () => (
             <Route path="/adminmaster/tickets" element={
               <SimpleProtectedRoute adminOnly>
                 <AdminTickets />
+              </SimpleProtectedRoute>
+            } />
+            <Route path="/adminmaster/tickets/:id" element={
+              <SimpleProtectedRoute adminOnly>
+                <AdminTicketDetails />
               </SimpleProtectedRoute>
             } />
             <Route path="/adminmaster/email-notifications" element={
