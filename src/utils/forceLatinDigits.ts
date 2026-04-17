@@ -62,7 +62,7 @@ export function installLatinDigitsEnforcer() {
     inst.format = (v: number) => toLatinDigits(origFormat(v));
     return inst;
   } as any;
-  Intl.NumberFormat.prototype = OrigNumberFormat.prototype;
+  (Intl.NumberFormat as any).prototype = OrigNumberFormat.prototype;
   // @ts-ignore
   Intl.NumberFormat.supportedLocalesOf = OrigNumberFormat.supportedLocalesOf;
 
@@ -75,7 +75,7 @@ export function installLatinDigitsEnforcer() {
     inst.format = (v?: Date | number) => toLatinDigits(origFormat(v));
     return inst;
   } as any;
-  Intl.DateTimeFormat.prototype = OrigDTF.prototype;
+  (Intl.DateTimeFormat as any).prototype = OrigDTF.prototype;
   // @ts-ignore
   Intl.DateTimeFormat.supportedLocalesOf = OrigDTF.supportedLocalesOf;
 }
