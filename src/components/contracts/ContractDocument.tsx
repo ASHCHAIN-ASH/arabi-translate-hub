@@ -1,7 +1,30 @@
-import React from "react";
+import React, { useEffect } from "react";
 import ReactMarkdown from "react-markdown";
 import { ShieldCheck, Building2, User, Mail, Phone, IdCard, Calendar, DollarSign, FileText } from "lucide-react";
 import type { ContractRow, ContractSignature } from "@/utils/supabaseContractService";
+
+const SigRow: React.FC<{ k: string; v: string; last?: boolean }> = ({ k, v, last }) => (
+  <div
+    className="flex justify-between gap-2 py-0.5"
+    style={{ borderBottom: last ? "none" : `1px dotted #c9a96155` }}
+  >
+    <span style={{ color: "#0a1f3d99", fontWeight: 600 }}>{k}</span>
+    <span style={{ color: "#0a1f3d", fontWeight: 700, fontFamily: "ui-monospace, Menlo, monospace", fontSize: 10 }}>{v}</span>
+  </div>
+);
+
+// Lazy-load decorative Arabic signature font once
+let _arefLoaded = false;
+function useArefFont() {
+  useEffect(() => {
+    if (_arefLoaded || typeof document === "undefined") return;
+    const link = document.createElement("link");
+    link.rel = "stylesheet";
+    link.href = "https://fonts.googleapis.com/css2?family=Aref+Ruqaa:wght@400;700&display=swap";
+    document.head.appendChild(link);
+    _arefLoaded = true;
+  }, []);
+}
 
 /**
  * Bank-grade contract document — RTL Arabic.
