@@ -373,8 +373,8 @@ const AdminServices = () => {
           />
         </div>
 
-        <Tabs defaultValue="services" className="space-y-5">
-          <TabsList className="grid w-full md:w-auto md:inline-grid grid-cols-2 h-auto p-1">
+        <Tabs defaultValue="services" dir="rtl" className="space-y-5">
+          <TabsList dir="rtl" className="grid w-full md:w-auto md:inline-grid grid-cols-2 h-auto p-1">
             <TabsTrigger value="services" className="flex items-center gap-2 py-2.5">
               <Package className="h-4 w-4" />
               الخدمات
@@ -445,7 +445,7 @@ const AdminServices = () => {
 
             {/* Services Table - Desktop */}
             <Card className="hidden md:block border-border/60 shadow-sm overflow-hidden">
-              <Table>
+              <Table dir="rtl">
                 <TableHeader className="bg-muted/40">
                   <TableRow>
                     <TableHead className="text-right font-semibold">الخدمة</TableHead>
