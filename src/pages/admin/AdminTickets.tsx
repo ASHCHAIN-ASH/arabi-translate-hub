@@ -131,7 +131,7 @@ export default function AdminTickets() {
         </div>
 
         <Tabs value={categoryFilter} onValueChange={setCategoryFilter} dir="rtl">
-          <TabsList className="flex-row-reverse w-full justify-start gap-1 h-auto flex-wrap p-1">
+          <TabsList className="w-full justify-start gap-1 h-auto flex-wrap p-1">
             <TabsTrigger value="all" className="gap-2"><Filter className="w-3.5 h-3.5" /> الكل</TabsTrigger>
             {Object.entries(CATEGORY_LABELS).map(([k, v]) => {
               const Icon = CATEGORY_ICONS[k] || TicketIcon;
