@@ -96,13 +96,7 @@ const AdminServiceOrderDetails = () => {
   const loadAll = useCallback(async () => {
     if (!id) return;
     const [{ data: orderData, error: orderErr }, { data: tl }, { data: atts }, { data: msgs }, { data: notes }] = await Promise.all([
-      (supabase.from('service_orders') as any)
-        .select(`*,
-          customer:customers!service_orders_customer_id_fkey(id,name,email,phone,company),
-          profile:profiles!service_orders_user_id_fkey(full_name,phone)
-        `)
-        .eq('id', id)
-        .maybeSingle(),
+      (supabase.from('service_orders') as any).select('*').eq('id', id).maybeSingle(),
       (supabase.from('service_order_timeline') as any).select('*').eq('order_id', id).order('created_at', { ascending: true }),
       (supabase.from('order_attachments') as any).select('*').eq('order_id', id).order('created_at', { ascending: false }),
       (supabase.from('service_order_messages') as any).select('*').eq('order_id', id).order('created_at', { ascending: true }),
@@ -110,11 +104,26 @@ const AdminServiceOrderDetails = () => {
     ]);
 
     if (orderErr || !orderData) {
+      console.error('[order detail] load error', orderErr);
       toast({ title: 'تعذّر تحميل الطلب', variant: 'destructive' });
       navigate('/adminmaster/service-orders');
       return;
     }
-    setOrder(orderData as Order);
+
+    let customer: any = null;
+    let profile: any = null;
+    if ((orderData as any).customer_id) {
+      const { data: c } = await (supabase.from('customers') as any)
+        .select('id,name,email,phone,company').eq('id', (orderData as any).customer_id).maybeSingle();
+      customer = c;
+    }
+    if ((orderData as any).user_id) {
+      const { data: p } = await (supabase.from('profiles') as any)
+        .select('full_name,phone').eq('id', (orderData as any).user_id).maybeSingle();
+      profile = p;
+    }
+
+    setOrder({ ...(orderData as any), customer, profile } as Order);
     setTimeline(tl || []);
     setAttachments(atts || []);
     setMessages(msgs || []);
