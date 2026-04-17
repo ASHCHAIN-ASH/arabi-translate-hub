@@ -240,3 +240,40 @@ export const STATUS_COLORS: Record<ContractStatus, string> = {
   cancelled: "bg-destructive/10 text-destructive",
   expired: "bg-orange-100 text-orange-800 dark:bg-orange-900/30 dark:text-orange-300",
 };
+
+// ===== Backward-compatible shims =====
+export const getAllContracts = listContracts;
+export const getContractById = getContract;
+export const searchContracts = async (q: string) => {
+  const all = await listContracts();
+  const t = q.toLowerCase();
+  return all.filter(c =>
+    (c.title || "").toLowerCase().includes(t) ||
+    (c.contract_number || "").toLowerCase().includes(t) ||
+    (c.client_full_name || "").toLowerCase().includes(t)
+  );
+};
+export const createContract = async (data: any) => {
+  return createManualContract({
+    service_name: data.serviceName || data.service_name || data.title || "خدمة",
+    total_amount: Number(data.totalAmount || data.total_amount || 0),
+    client_full_name: data.clientName || data.client_full_name || "العميل",
+    client_email: data.clientEmail || data.client_email,
+    client_phone: data.clientPhone || data.client_phone,
+  });
+};
+export const saveClientApproval = async (
+  contractId: string,
+  approval: { clientName: string; signature: string; ipAddress: string; userAgent: string; comments?: string }
+) => {
+  const { data: u } = await supabase.auth.getUser();
+  await signContract({
+    contract_id: contractId,
+    signer_user_id: u.user?.id || "",
+    signer_name: approval.clientName,
+    signature_text: approval.signature,
+    ip_address: approval.ipAddress,
+    user_agent: approval.userAgent,
+    comments: approval.comments,
+  });
+};
