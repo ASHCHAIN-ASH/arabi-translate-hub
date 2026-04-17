@@ -1,154 +1,51 @@
-import React, { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Badge } from '@/components/ui/badge';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar';
-import { ClientSidebar } from '@/components/ClientSidebar';
-import { 
-  FileText, 
-  Search, 
-  Eye, 
-  Download,
-  Filter,
-  Calendar,
-  DollarSign,
-  Plus
-} from 'lucide-react';
-import { Contract, ContractStatus } from '@/types/contract';
-import { getAllContracts, searchContracts } from '@/utils/supabaseContractService';
+import React, { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
+import { motion } from "framer-motion";
+import { supabase } from "@/integrations/supabase/client";
+import { Card, CardContent } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Badge } from "@/components/ui/badge";
+import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
+import { ClientSidebar } from "@/components/ClientSidebar";
+import { FileText, Search, Eye, Calendar, DollarSign, ShieldCheck, Building2 } from "lucide-react";
+import {
+  listContracts, ContractRow, STATUS_LABELS, STATUS_COLORS,
+} from "@/utils/supabaseContractService";
+import { PARENT_COMPANY } from "@/utils/contractTemplates";
 
 const ClientContracts = () => {
-  const [contracts, setContracts] = useState<Contract[]>([]);
-  const [filteredContracts, setFilteredContracts] = useState<Contract[]>([]);
-  const [searchTerm, setSearchTerm] = useState('');
-  const [statusFilter, setStatusFilter] = useState<ContractStatus | 'all'>('all');
-  const [isLoading, setIsLoading] = useState(true);
+  const [contracts, setContracts] = useState<ContractRow[]>([]);
+  const [search, setSearch] = useState("");
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    loadContracts();
+    (async () => {
+      const { data: u } = await supabase.auth.getUser();
+      if (!u.user) { setLoading(false); return; }
+      try {
+        const list = await listContracts({ userId: u.user.id });
+        setContracts(list);
+      } finally { setLoading(false); }
+    })();
   }, []);
 
-  useEffect(() => {
-    filterContracts();
-  }, [contracts, searchTerm, statusFilter]);
+  const filtered = contracts.filter(c =>
+    !search.trim() ||
+    c.contract_number.toLowerCase().includes(search.toLowerCase()) ||
+    (c.title || "").toLowerCase().includes(search.toLowerCase()) ||
+    (c.service_name || "").toLowerCase().includes(search.toLowerCase())
+  );
 
-  const loadContracts = async () => {
-    try {
-      setIsLoading(true);
-      const allContracts = await getAllContracts();
-      // In real app, filter by authenticated client
-      setContracts(allContracts);
-    } catch (error) {
-      console.error('Error loading contracts:', error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const filterContracts = async () => {
-    let filtered = contracts;
-
-    // Search filter
-    if (searchTerm.trim()) {
-      filtered = await searchContracts(searchTerm);
-    }
-
-    // Status filter
-    if (statusFilter !== 'all') {
-      filtered = filtered.filter(contract => contract.status === statusFilter);
-    }
-
-    setFilteredContracts(filtered);
-  };
-
-  const getStatusColor = (status: ContractStatus) => {
-    const colors = {
-      draft: 'bg-gray-100 text-gray-800',
-      sent: 'bg-blue-100 text-blue-800',
-      reviewed: 'bg-purple-100 text-purple-800',
-      approved: 'bg-green-100 text-green-800',
-      signed: 'bg-emerald-100 text-emerald-800',
-      active: 'bg-cyan-100 text-cyan-800',
-      completed: 'bg-indigo-100 text-indigo-800',
-      cancelled: 'bg-red-100 text-red-800',
-      expired: 'bg-orange-100 text-orange-800'
-    };
-    return colors[status] || 'bg-gray-100 text-gray-800';
-  };
-
-  const getStatusLabel = (status: ContractStatus) => {
-    const labels = {
-      draft: 'مسودة',
-      sent: 'مرسل',
-      reviewed: 'تمت المراجعة',
-      approved: 'موافق عليه',
-      signed: 'موقع',
-      active: 'نشط',
-      completed: 'مكتمل',
-      cancelled: 'ملغي',
-      expired: 'منتهي الصلاحية'
-    };
-    return labels[status] || status;
-  };
-
-  const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('ar-SA', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric'
-    });
-  };
-
-  const getActionButton = (contract: Contract) => {
-    switch (contract.status) {
-      case 'sent':
-      case 'reviewed':
-        return (
-          <Button 
-            size="sm"
-            onClick={() => window.location.href = `/contract-approval?id=${contract.id}`}
-          >
-            مراجعة والموافقة
-          </Button>
-        );
-      case 'approved':
-      case 'signed':
-      case 'active':
-      case 'completed':
-        return (
-          <Button 
-            variant="outline" 
-            size="sm"
-            onClick={() => window.location.href = `/contract-approval?id=${contract.id}`}
-          >
-            <Eye className="h-4 w-4 mr-2" />
-            عرض
-          </Button>
-        );
-      default:
-        return (
-          <Button 
-            variant="outline" 
-            size="sm"
-            onClick={() => window.location.href = `/contract-approval?id=${contract.id}`}
-          >
-            <Eye className="h-4 w-4 mr-2" />
-            عرض
-          </Button>
-        );
-    }
-  };
+  const pendingCount = contracts.filter(c => c.status === "pending_signature").length;
+  const signedCount = contracts.filter(c => ["signed","active","completed"].includes(c.status)).length;
 
   return (
     <div className="min-h-screen bg-background" dir="rtl">
       <SidebarProvider>
-        {/* Header */}
-        <header className="h-16 flex items-center border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 sticky top-0 z-50">
+        <header className="h-16 flex items-center border-b bg-background/95 backdrop-blur sticky top-0 z-50">
           <div className="flex items-center gap-4 px-6">
-            <SidebarTrigger className="ml-2" />
+            <SidebarTrigger />
             <div className="flex items-center gap-2">
               <FileText className="h-6 w-6 text-primary" />
               <h1 className="text-xl font-semibold">عقودي</h1>
@@ -158,163 +55,66 @@ const ClientContracts = () => {
 
         <div className="flex min-h-screen w-full">
           <ClientSidebar />
-
-          <main className="flex-1 p-6">
-            {/* Page Header */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="mb-8"
-            >
-              <div className="flex items-center justify-between mb-6">
-                <div>
-                  <h2 className="text-3xl font-bold">عقودي</h2>
-                  <p className="text-muted-foreground">
-                    جميع العقود الخاصة بك ومتابعة حالاتها
-                  </p>
-                </div>
-                <Button 
-                  onClick={() => window.location.href = '/contract-request'}
-                  className="bg-gradient-primary"
-                >
-                  <Plus className="h-4 w-4 mr-2" />
-                  طلب عقد جديد
-                </Button>
+          <main className="flex-1 p-6 max-w-6xl mx-auto w-full">
+            <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}>
+              <div className="mb-6">
+                <h2 className="text-3xl font-bold mb-1">عقودي</h2>
+                <p className="text-sm text-muted-foreground flex items-center gap-1">
+                  <Building2 className="h-3 w-3" />
+                  جميع عقود خدماتك مع {PARENT_COMPANY.platformName}
+                </p>
               </div>
-            </motion.div>
 
-            {/* Filters and Search */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.1 }}
-              className="mb-6"
-            >
-              <Card>
-                <CardContent className="p-6">
-                  <div className="flex flex-col md:flex-row gap-4 items-center">
-                    <div className="flex-1 relative">
-                      <Search className="absolute right-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
-                      <Input
-                        placeholder="البحث في العقود..."
-                        value={searchTerm}
-                        onChange={(e) => setSearchTerm(e.target.value)}
-                        className="pr-10"
-                      />
-                    </div>
-                    
-                    <Select value={statusFilter} onValueChange={(value) => setStatusFilter(value as ContractStatus | 'all')}>
-                      <SelectTrigger className="w-full md:w-48">
-                        <SelectValue placeholder="فلترة حسب الحالة" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="all">جميع الأحوال</SelectItem>
-                        <SelectItem value="draft">مسودة</SelectItem>
-                        <SelectItem value="sent">مرسل</SelectItem>
-                        <SelectItem value="reviewed">تمت المراجعة</SelectItem>
-                        <SelectItem value="approved">موافق عليه</SelectItem>
-                        <SelectItem value="signed">موقع</SelectItem>
-                        <SelectItem value="active">نشط</SelectItem>
-                        <SelectItem value="completed">مكتمل</SelectItem>
-                        <SelectItem value="cancelled">ملغي</SelectItem>
-                        <SelectItem value="expired">منتهي الصلاحية</SelectItem>
-                      </SelectContent>
-                    </Select>
+              {/* Stats */}
+              <div className="grid grid-cols-3 gap-4 mb-6">
+                <Card><CardContent className="p-4"><p className="text-xs text-muted-foreground">إجمالي العقود</p><p className="text-2xl font-bold">{contracts.length}</p></CardContent></Card>
+                <Card className="border-amber-500/30 bg-amber-50/40 dark:bg-amber-950/20"><CardContent className="p-4"><p className="text-xs text-muted-foreground">بانتظار التوقيع</p><p className="text-2xl font-bold text-amber-600">{pendingCount}</p></CardContent></Card>
+                <Card className="border-emerald-500/30 bg-emerald-50/40 dark:bg-emerald-950/20"><CardContent className="p-4"><p className="text-xs text-muted-foreground">موقّعة</p><p className="text-2xl font-bold text-emerald-600">{signedCount}</p></CardContent></Card>
+              </div>
 
-                    <Button onClick={loadContracts} variant="outline">
-                      <Filter className="h-4 w-4 mr-2" />
-                      تحديث
-                    </Button>
+              {/* Search */}
+              <Card className="mb-6">
+                <CardContent className="p-4">
+                  <div className="relative">
+                    <Search className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                    <Input placeholder="ابحث برقم العقد أو اسم الخدمة…" value={search} onChange={(e) => setSearch(e.target.value)} className="pr-10" />
                   </div>
                 </CardContent>
               </Card>
-            </motion.div>
 
-            {/* Contracts List */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.2 }}
-            >
-              {isLoading ? (
-                <Card>
-                  <CardContent className="text-center py-12">
-                    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
-                    <p>جاري تحميل العقود...</p>
-                  </CardContent>
-                </Card>
-              ) : filteredContracts.length === 0 ? (
-                <Card>
-                  <CardContent className="text-center py-12">
-                    <FileText className="h-12 w-12 mx-auto mb-4 text-muted-foreground" />
-                    <h3 className="text-lg font-semibold mb-2">لا توجد عقود</h3>
-                    <p className="text-muted-foreground mb-4">
-                      {searchTerm || statusFilter !== 'all' 
-                        ? 'لم يتم العثور على عقود مطابقة للفلاتر المحددة'
-                        : 'لم تقم بإنشاء أي عقود بعد'
-                      }
-                    </p>
-                    <Button onClick={() => window.location.href = '/contract-request'}>
-                      <Plus className="h-4 w-4 mr-2" />
-                      إنشاء عقد جديد
-                    </Button>
-                  </CardContent>
-                </Card>
+              {loading ? (
+                <Card><CardContent className="text-center py-12"><div className="animate-spin h-10 w-10 border-b-2 border-primary rounded-full mx-auto" /></CardContent></Card>
+              ) : filtered.length === 0 ? (
+                <Card><CardContent className="text-center py-12">
+                  <FileText className="h-12 w-12 mx-auto mb-3 text-muted-foreground" />
+                  <p className="font-semibold mb-1">لا توجد عقود</p>
+                  <p className="text-sm text-muted-foreground">سيظهر العقد هنا تلقائياً عند قبولك لعرض السعر لأي خدمة</p>
+                </CardContent></Card>
               ) : (
-                <div className="space-y-4">
-                  {filteredContracts.map((contract, index) => (
-                    <motion.div
-                      key={contract.id}
-                      initial={{ opacity: 0, y: 20 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: index * 0.1 }}
-                    >
-                      <Card className="hover:shadow-lg transition-shadow">
-                        <CardContent className="p-6">
-                          <div className="flex items-start justify-between">
-                            <div className="flex-1">
-                              <div className="flex items-center gap-2 mb-2">
-                                <h3 className="text-lg font-semibold">{contract.serviceDetails.title}</h3>
-                                <Badge className={getStatusColor(contract.status)}>
-                                  {getStatusLabel(contract.status)}
-                                </Badge>
+                <div className="space-y-3">
+                  {filtered.map((c, i) => (
+                    <motion.div key={c.id} initial={{ opacity: 0, x: 16 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: i * 0.05 }}>
+                      <Card className="hover:shadow-md transition group">
+                        <CardContent className="p-5">
+                          <div className="flex flex-wrap items-start justify-between gap-3">
+                            <div className="flex-1 min-w-0">
+                              <div className="flex items-center gap-2 mb-2 flex-wrap">
+                                <Badge variant="outline" className="font-mono">{c.contract_number}</Badge>
+                                <Badge className={STATUS_COLORS[c.status]}>{STATUS_LABELS[c.status]}</Badge>
                               </div>
-                              
-                              <p className="text-muted-foreground mb-3">
-                                {contract.serviceDetails.description}
-                              </p>
-                              
-                              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
-                                <div className="flex items-center gap-1 text-muted-foreground">
-                                  <Calendar className="h-4 w-4" />
-                                  <span>تاريخ الإنشاء: {formatDate(contract.createdAt)}</span>
-                                </div>
-                                
-                                <div className="flex items-center gap-1 text-muted-foreground">
-                                  <DollarSign className="h-4 w-4" />
-                                  <span>القيمة: {contract.totalAmount.toLocaleString()} ر.س</span>
-                                </div>
-                                
-                                <div className="flex items-center gap-1 text-muted-foreground">
-                                  <Calendar className="h-4 w-4" />
-                                  <span>تاريخ التسليم: {contract.deliveryDate}</span>
-                                </div>
+                              <h3 className="font-bold mb-1 truncate">{c.title}</h3>
+                              {c.service_name && <p className="text-sm text-muted-foreground mb-2">{c.service_name}</p>}
+                              <div className="flex flex-wrap gap-3 text-xs text-muted-foreground">
+                                <span className="flex items-center gap-1"><Calendar className="h-3 w-3" /> {new Date(c.created_at).toLocaleDateString("ar-SA")}</span>
+                                <span className="flex items-center gap-1"><DollarSign className="h-3 w-3" /> {Number(c.total_amount || 0).toLocaleString("ar-SA")} {c.currency}</span>
+                                {c.signed_at && <span className="flex items-center gap-1 text-emerald-600"><ShieldCheck className="h-3 w-3" /> وُقِّع في {new Date(c.signed_at).toLocaleDateString("ar-SA")}</span>}
                               </div>
-                              
-                              {contract.approvedAt && (
-                                <div className="mt-2 text-sm text-green-600">
-                                  تمت الموافقة في: {formatDate(contract.approvedAt)}
-                                </div>
-                              )}
                             </div>
-                            
-                            <div className="flex items-center gap-2 ml-4">
-                              {getActionButton(contract)}
-                              
-                              <Button variant="outline" size="sm">
-                                <Download className="h-4 w-4" />
-                              </Button>
-                            </div>
+                            <Button asChild size="sm" variant={c.status === "pending_signature" ? "default" : "outline"}>
+                              <Link to={`/contracts/${c.id}`}>
+                                {c.status === "pending_signature" ? <><ShieldCheck className="h-4 w-4 ml-2" /> راجع ووقّع</> : <><Eye className="h-4 w-4 ml-2" /> عرض</>}
+                              </Link>
+                            </Button>
                           </div>
                         </CardContent>
                       </Card>

@@ -1,297 +1,186 @@
-import { ContractTemplate, ServiceType } from "@/types/contract";
+// =============================================================
+// قالب موحد للعقد القانوني/الأكاديمي
+// منصة ماستر إيدو باث - أحد مشاريع شركة علي صالح الشهري القابضة
+// =============================================================
 
-export const contractTemplates: Record<ServiceType, ContractTemplate> = {
-  'translation-legal': {
-    id: 'tpl-legal',
-    serviceType: 'translation-legal',
-    name: 'عقد ترجمة قانونية',
-    content: `
-# عقد ترجمة قانونية
+export const PARENT_COMPANY = {
+  name: "شركة علي صالح الشهري القابضة",
+  platformName: "منصة ماستر إيدو باث",
+  shortDescription:
+    "منصة ماستر إيدو باث (MasteredUPath) هي إحدى مشاريع شركة علي صالح الشهري القابضة، متخصصة في الخدمات الأكاديمية والاستشارية والترجمة والتدقيق والنشر العلمي.",
+  legalEntity: "شركة علي صالح الشهري القابضة",
+  jurisdiction: "المملكة العربية السعودية",
+  governingLaw: "أنظمة المملكة العربية السعودية ذات العلاقة (نظام التجارة الإلكترونية، نظام المعاملات المدنية، ونظام حماية البيانات الشخصية)",
+  arbitrationVenue: "مركز التحكيم التجاري السعودي بمدينة الرياض",
+};
 
-**بين:** {{agencyName}}
-**والعميل:** {{clientName}}
+export interface LegalTemplateContext {
+  contractNumber: string;
+  serviceName: string;
+  serviceDescription?: string;
+  clientFullName: string;
+  clientIdNumber?: string;
+  clientEmail?: string;
+  clientPhone?: string;
+  totalAmount: number;
+  currency?: string;
+  paymentTerms?: string;
+  deliveryDate?: string;
+  issueDate: string;
+}
 
-## تفاصيل الخدمة
-- **نوع الترجمة:** ترجمة قانونية
-- **المستندات:** {{documentTypes}}
-- **اللغات:** من {{sourceLang}} إلى {{targetLang}}
-- **عدد الكلمات المتوقع:** {{wordCount}}
-- **تاريخ التسليم:** {{deliveryDate}}
+const fmtMoney = (n: number, c: string = "SAR") =>
+  new Intl.NumberFormat("ar-SA", { style: "currency", currency: c, maximumFractionDigits: 2 }).format(n || 0);
 
-## الشروط والأحكام
-1. **السرية:** نتعهد بالحفاظ على سرية جميع المستندات المترجمة
-2. **الدقة:** نضمن دقة الترجمة وفقاً للمعايير القانونية المعتمدة
-3. **التوثيق:** سيتم توثيق الترجمة من جهات معتمدة حسب الطلب
-4. **المراجعة:** حق العميل في طلب مراجعة واحدة مجانية خلال 7 أيام
-
-## التكلفة والدفع
-- **إجمالي التكلفة:** {{totalAmount}} ريال سعودي
-- **طريقة الدفع:** {{paymentMethod}}
-- **شروط الدفع:** {{paymentTerms}}
-`,
-    terms: [
-      {
-        id: 'legal-1',
-        title: 'السرية والحماية',
-        content: 'نتعهد بالحفاظ التام على سرية المستندات وعدم الكشف عنها لأي طرف ثالث',
-        required: true
-      },
-      {
-        id: 'legal-2', 
-        title: 'التوثيق القانوني',
-        content: 'يمكن توثيق الترجمة من الجهات المختصة مقابل رسوم إضافية',
-        required: false
-      }
-    ],
-    variables: [
-      { key: 'documentTypes', label: 'أنواع المستندات', type: 'text', required: true },
-      { key: 'sourceLang', label: 'اللغة المصدر', type: 'select', required: true, options: ['العربية', 'الإنجليزية', 'الفرنسية', 'الألمانية'] },
-      { key: 'targetLang', label: 'اللغة المستهدفة', type: 'select', required: true, options: ['العربية', 'الإنجليزية', 'الفرنسية', 'الألمانية'] },
-      { key: 'wordCount', label: 'عدد الكلمات', type: 'number', required: true }
-    ]
-  },
-
-  'translation-business': {
-    id: 'tpl-business',
-    serviceType: 'translation-business',
-    name: 'عقد ترجمة تجارية',
-    content: `
-# عقد ترجمة تجارية
-
-**المقاول:** {{agencyName}}
-**العميل:** {{clientName}}
-
-## وصف الخدمة
-- **نوع المشروع:** ترجمة تجارية
-- **المواد:** {{materials}}
-- **اللغات:** {{sourceLang}} → {{targetLang}}
-- **الحجم:** {{wordCount}} كلمة تقريباً
-- **موعد التسليم:** {{deliveryDate}}
-
-## معايير الجودة
-1. ترجمة احترافية تراعي المصطلحات التجارية
-2. مراجعة لغوية شاملة
-3. ضمان الدقة في الأرقام والمبالغ المالية
-4. تنسيق يحافظ على شكل المستند الأصلي
-
-## الالتزامات المالية
-- **القيمة الإجمالية:** {{totalAmount}} ريال
-- **الدفع:** {{paymentTerms}}
-- **رسوم إضافية:** التعديلات الجوهرية بعد التسليم قد تتطلب رسوماً إضافية
-`,
-    terms: [
-      {
-        id: 'business-1',
-        title: 'المصطلحات التجارية',
-        content: 'نلتزم باستخدام المصطلحات التجارية المعتمدة والدارجة في السوق',
-        required: true
-      }
-    ],
-    variables: [
-      { key: 'materials', label: 'المواد المراد ترجمتها', type: 'text', required: true },
-      { key: 'sourceLang', label: 'من لغة', type: 'select', required: true, options: ['العربية', 'الإنجليزية', 'الفرنسية'] },
-      { key: 'targetLang', label: 'إلى لغة', type: 'select', required: true, options: ['العربية', 'الإنجليزية', 'الفرنسية'] }
-    ]
-  },
-
-  'research-thesis': {
-    id: 'tpl-thesis',
-    serviceType: 'research-thesis',
-    name: 'عقد كتابة رسالة علمية',
-    content: `
-# عقد إعداد رسالة علمية
-
-**مقدم الخدمة:** {{agencyName}}
-**الطالب/الباحث:** {{clientName}}
-
-## تفاصيل المشروع البحثي
-- **نوع الرسالة:** {{thesisType}}
-- **التخصص:** {{major}}
-- **موضوع البحث:** {{researchTopic}}
-- **عدد الصفحات المتوقع:** {{pageCount}}
-- **الجامعة:** {{university}}
-- **تاريخ التسليم النهائي:** {{deliveryDate}}
-
-## نطاق العمل
-1. **إعداد خطة البحث** شاملة المقدمة والأهداف والمنهجية
-2. **مراجعة الأدبيات** واستعراض الدراسات السابقة
-3. **جمع وتحليل البيانات** باستخدام الأدوات الإحصائية المناسبة
-4. **كتابة الفصول** وفقاً لمعايير الجامعة
-5. **التوثيق والمراجع** حسب نظام APA/MLA
-6. **المراجعة النهائية** والتدقيق اللغوي
-
-## ضمانات الجودة
-- أصالة المحتوى 100% (فحص السرقة الأدبية)
-- مراجعة من متخصصين في المجال
-- التزام بمعايير الجامعة ومتطلبات القسم
-- دعم فني حتى المناقشة
-
-## الجوانب المالية
-- **إجمالي التكلفة:** {{totalAmount}} ريال سعودي
-- **نظام الدفع:** {{paymentTerms}}
-- **التعديلات:** تعديل مجاني واحد، التعديلات الإضافية بـ {{revisionRate}} ريال/صفحة
-`,
-    terms: [
-      {
-        id: 'thesis-1',
-        title: 'الأصالة الأكاديمية',
-        content: 'نضمن أن جميع المحتويات أصلية وخالية من السرقة الأدبية',
-        required: true
-      },
-      {
-        id: 'thesis-2',
-        title: 'السرية البحثية',
-        content: 'نتعهد بعدم نشر أو مشاركة محتوى البحث مع أي طرف آخر',
-        required: true
-      }
-    ],
-    variables: [
-      { key: 'thesisType', label: 'نوع الرسالة', type: 'select', required: true, options: ['ماجستير', 'دكتوراه', 'بكالوريوس'] },
-      { key: 'major', label: 'التخصص', type: 'text', required: true },
-      { key: 'researchTopic', label: 'موضوع البحث', type: 'text', required: true },
-      { key: 'pageCount', label: 'عدد الصفحات المتوقع', type: 'number', required: true },
-      { key: 'university', label: 'الجامعة', type: 'text', required: true },
-      { key: 'revisionRate', label: 'سعر التعديل للصفحة', type: 'number', required: true }
-    ]
-  },
-
-  // إضافة باقي القوالب...
-  'translation-technical': {
-    id: 'tpl-technical',
-    serviceType: 'translation-technical',
-    name: 'عقد ترجمة تقنية',
-    content: `# عقد ترجمة تقنية\n\n**بين:** {{agencyName}}\n**والعميل:** {{clientName}}\n\n## الخدمة المطلوبة\nترجمة تقنية متخصصة للمجال: {{technicalField}}\n\n**التفاصيل:**\n- المستندات: {{documentTypes}}\n- عدد الكلمات: {{wordCount}}\n- التسليم: {{deliveryDate}}\n- التكلفة: {{totalAmount}} ريال`,
-    terms: [],
-    variables: [
-      { key: 'technicalField', label: 'المجال التقني', type: 'text', required: true },
-      { key: 'documentTypes', label: 'نوع المستندات', type: 'text', required: true }
-    ]
-  },
-
-  'translation-medical': {
-    id: 'tpl-medical',
-    serviceType: 'translation-medical',
-    name: 'عقد ترجمة طبية',
-    content: `# عقد ترجمة طبية\n\nترجمة طبية متخصصة مع ضمان الدقة في المصطلحات الطبية`,
-    terms: [],
-    variables: []
-  },
-
-  'translation-academic': {
-    id: 'tpl-academic', 
-    serviceType: 'translation-academic',
-    name: 'عقد ترجمة أكاديمية',
-    content: `# عقد ترجمة أكاديمية\n\nترجمة أكاديمية للأوراق البحثية والمنشورات العلمية`,
-    terms: [],
-    variables: []
-  },
-
-  'translation-literary': {
-    id: 'tpl-literary',
-    serviceType: 'translation-literary', 
-    name: 'عقد ترجمة أدبية',
-    content: `# عقد ترجمة أدبية\n\nترجمة أدبية إبداعية تحافظ على روح النص الأصلي`,
-    terms: [],
-    variables: []
-  },
-
-  'translation-media': {
-    id: 'tpl-media',
-    serviceType: 'translation-media',
-    name: 'عقد ترجمة إعلامية', 
-    content: `# عقد ترجمة إعلامية\n\nترجمة للمحتوى الإعلامي والمرئي والمسموع`,
-    terms: [],
-    variables: []
-  },
-
-  'research-plan': {
-    id: 'tpl-research-plan',
-    serviceType: 'research-plan',
-    name: 'عقد إعداد خطة بحث',
-    content: `# عقد إعداد خطة بحث\n\nإعداد خطة بحث شاملة ومنهجية`,
-    terms: [],
-    variables: []
-  },
-
-  'research-analysis': {
-    id: 'tpl-analysis',
-    serviceType: 'research-analysis', 
-    name: 'عقد تحليل إحصائي',
-    content: `# عقد تحليل إحصائي\n\nتحليل البيانات والنتائج الإحصائية باستخدام أحدث البرامج`,
-    terms: [],
-    variables: []
-  },
-
-  'research-formatting': {
-    id: 'tpl-formatting',
-    serviceType: 'research-formatting',
-    name: 'عقد تنسيق أكاديمي',
-    content: `# عقد تنسيق أكاديمي\n\nتنسيق الرسائل والأبحاث وفقاً لمعايير الجامعات`,
-    terms: [],
-    variables: []
-  },
-
-  'research-publication': {
-    id: 'tpl-publication',
-    serviceType: 'research-publication',
-    name: 'عقد خدمات النشر',
-    content: `# عقد خدمات النشر العلمي\n\nمساعدة في نشر البحوث في المجلات المحكمة`,
-    terms: [],
-    variables: []
-  },
-
-  'research-consultation': {
-    id: 'tpl-consultation',
-    serviceType: 'research-consultation',
-    name: 'عقد استشارة أكاديمية',
-    content: `# عقد استشارة أكاديمية\n\nخدمات استشارية متخصصة للباحثين والطلاب`,
-    terms: [],
-    variables: []
-  },
-
-  'custom-service': {
-    id: 'tpl-custom',
-    serviceType: 'custom-service',
-    name: 'عقد خدمة مخصصة',
-    content: `# عقد خدمة مخصصة\n\n**الوصف:** {{serviceDescription}}\n**التفاصيل:** {{serviceDetails}}\n**التكلفة:** {{totalAmount}} ريال\n**مدة التنفيذ:** {{duration}}`,
-    terms: [],
-    variables: [
-      { key: 'serviceDescription', label: 'وصف الخدمة', type: 'text', required: true },
-      { key: 'serviceDetails', label: 'تفاصيل الخدمة', type: 'text', required: true },
-      { key: 'duration', label: 'مدة التنفيذ', type: 'text', required: true }
-    ]
+const fmtDate = (d?: string) => {
+  if (!d) return "—";
+  try {
+    return new Date(d).toLocaleDateString("ar-SA", { year: "numeric", month: "long", day: "numeric" });
+  } catch {
+    return d;
   }
 };
 
-export const getContractTemplate = (serviceType: ServiceType): ContractTemplate => {
-  return contractTemplates[serviceType];
+/**
+ * العقد الموحّد القانوني/الأكاديمي - مرتفع الجودة، صالح كأساس قانوني
+ * يتكوّن من 12 بنداً + ديباجة + توقيع رقمي.
+ */
+export function buildLegalAcademicContract(ctx: LegalTemplateContext): string {
+  const {
+    contractNumber, serviceName, serviceDescription,
+    clientFullName, clientIdNumber, clientEmail, clientPhone,
+    totalAmount, currency = "SAR", paymentTerms, deliveryDate, issueDate,
+  } = ctx;
+
+  return `
+# عقد تقديم خدمات أكاديمية واستشارية
+### رقم العقد: ${contractNumber}
+### تاريخ التحرير: ${fmtDate(issueDate)}
+
+---
+
+## الديباجة
+إنه في يوم ${fmtDate(issueDate)} الموافق التاريخ المُبيّن أعلاه، تم إبرام هذا العقد بين كلٍّ من:
+
+**الطرف الأول (مُقدِّم الخدمة):**
+${PARENT_COMPANY.platformName} — التابعة لـ **${PARENT_COMPANY.legalEntity}**
+ومقرها الرئيسي: ${PARENT_COMPANY.jurisdiction}
+ويُشار إليها فيما بعد بـ **"المنصة"**.
+
+**الطرف الثاني (المستفيد من الخدمة):**
+الاسم الكامل: ${clientFullName}
+${clientIdNumber ? `رقم الهوية/الإقامة: ${clientIdNumber}` : ""}
+${clientEmail ? `البريد الإلكتروني: ${clientEmail}` : ""}
+${clientPhone ? `رقم الجوال: ${clientPhone}` : ""}
+ويُشار إليه فيما بعد بـ **"العميل"**.
+
+وقد اتفق الطرفان — وهما بكامل الأهلية المعتبرة شرعاً ونظاماً — على ما يلي:
+
+---
+
+## التمهيد
+حيث إن **${PARENT_COMPANY.platformName}** تُعدّ إحدى مشاريع **${PARENT_COMPANY.legalEntity}**، وتعمل في تقديم الخدمات الأكاديمية والاستشارية والبحثية والترجمة والتدقيق والنشر العلمي وفق أعلى المعايير المهنية والأخلاقية، ورغبةً من العميل في الحصول على الخدمة المُبيّنة أدناه؛ فقد اتفق الطرفان على إبرام هذا العقد وفق البنود الآتية، التي يُعدّ التمهيد جزءاً لا يتجزأ منها:
+
+---
+
+## البند الأول: موضوع العقد
+يلتزم الطرف الأول بأن يُقدّم للطرف الثاني الخدمة التالية:
+
+- **اسم الخدمة:** ${serviceName}
+${serviceDescription ? `- **وصف الخدمة:** ${serviceDescription}` : ""}
+- **القيمة الإجمالية:** ${fmtMoney(totalAmount, currency)}
+${paymentTerms ? `- **شروط الدفع:** ${paymentTerms}` : ""}
+${deliveryDate ? `- **الموعد التقديري للتسليم:** ${fmtDate(deliveryDate)}` : ""}
+
+## البند الثاني: التزامات الطرف الأول (المنصة)
+1. تنفيذ الخدمة بأعلى معايير الجودة المهنية والأكاديمية المتعارف عليها.
+2. الالتزام بالمواعيد المتفق عليها وإبلاغ العميل بأي ظرف قاهر يستوجب التأجيل.
+3. تخصيص متخصص أو فريق مؤهل في مجال الخدمة المطلوبة.
+4. تقديم تعديل واحد رئيسي مجاناً بعد التسليم خلال (7) أيام، وفق ضوابط النطاق المتفق عليه.
+5. الحفاظ التام على سرية بيانات العميل ووثائقه ومحتوى الخدمة.
+
+## البند الثالث: التزامات الطرف الثاني (العميل)
+1. تزويد المنصة بكافة البيانات والمستندات الصحيحة والكاملة اللازمة لتنفيذ الخدمة.
+2. سداد القيمة المتفق عليها وفق شروط الدفع الواردة في البند الأول.
+3. الردّ على استفسارات الفريق المُنفّذ في وقت معقول لضمان الالتزام بالموعد.
+4. عدم استخدام مخرجات الخدمة بما يُخالف الأنظمة أو الأخلاقيات الأكاديمية المعتمدة.
+
+## البند الرابع: السرية وحماية المعلومات
+1. تتعهّد المنصة بعدم إفشاء أو نشر أو مشاركة أي معلومات أو وثائق خاصة بالعميل لأي طرف ثالث، ما لم يكن ذلك بإذن كتابي من العميل أو بموجب نظام نافذ.
+2. يُعدّ هذا الالتزام مستمراً حتى بعد انتهاء العقد لمدة لا تقل عن خمس (5) سنوات.
+3. تخضع جميع البيانات الشخصية لنظام حماية البيانات الشخصية المعمول به في ${PARENT_COMPANY.jurisdiction}.
+
+## البند الخامس: النزاهة الأكاديمية والملكية الفكرية
+1. تُؤكّد المنصة أن جميع المخرجات أصلية، ويتم فحصها ضد الانتحال (Plagiarism) قبل التسليم.
+2. تُقدَّم الخدمة لأغراض الاستشارة الأكاديمية والاستفادة العلمية، ويتحمّل العميل وحده مسؤولية الالتزام بأنظمة جامعته أو جهته الأكاديمية في الاستخدام النهائي.
+3. تنتقل حقوق استخدام المخرجات إلى العميل بعد سداد كامل المستحقات؛ مع احتفاظ المنصة بحق العرض المرجعي مجهول الهوية في أعمالها التسويقية ما لم يطلب العميل خلاف ذلك خطياً.
+
+## البند السادس: المقابل المالي وآلية الدفع
+1. القيمة الإجمالية المتفق عليها هي ${fmtMoney(totalAmount, currency)}.
+2. تُعدّ الفاتورة الصادرة من المنصة جزءاً مكمّلاً لهذا العقد.
+3. لا تبدأ المنصة في تنفيذ الخدمة إلا بعد سداد الدفعة الأولى وفق ما هو منصوص عليه في شروط الدفع.
+4. أي تعديلات جوهرية خارج النطاق المتفق عليه تستوجب اتفاقاً مكتوباً وقد يترتب عليها رسوم إضافية.
+
+## البند السابع: مدة العقد وتاريخ التسليم
+يبدأ هذا العقد من تاريخ توقيع العميل عليه إلكترونياً، وينتهي بتسليم الخدمة المتفق عليها واعتماد العميل لها${deliveryDate ? ` في موعد أقصاه ${fmtDate(deliveryDate)}` : ""}، أو وفق ما يتفق عليه الطرفان كتابياً.
+
+## البند الثامن: الإلغاء والاسترداد
+1. للعميل الحق في إلغاء العقد قبل بدء التنفيذ مع استرداد كامل المبلغ المسدّد بعد خصم رسوم إدارية لا تتجاوز (10٪).
+2. في حال طلب الإلغاء بعد بدء التنفيذ، يُحسب المستحق بناءً على نسبة الإنجاز الفعلي، ويُسترد الفرق إن وُجد.
+3. لا يحقّ الاسترداد بعد تسليم الخدمة كاملةً واعتمادها من العميل.
+
+## البند التاسع: المسؤولية وحدودها
+1. تبذل المنصة العناية المهنية المعتادة في تنفيذ الخدمة، ولا تُسأل عن نتائج خارجة عن إرادتها كقرارات الجهات الأكاديمية أو متطلبات لاحقة لم تُفصح عنها وقت التعاقد.
+2. تقتصر المسؤولية المالية القصوى للمنصة عن أي أضرار مباشرة على ما تم تحصيله من العميل لقاء الخدمة محل النزاع.
+
+## البند العاشر: القوة القاهرة
+لا يُعدّ أي طرف مُخلّاً بالتزاماته إذا حالت دون التنفيذ ظروف قاهرة خارجة عن إرادته (كالكوارث الطبيعية، انقطاع الخدمات الحكومية، الأوبئة)، ويتعيّن إخطار الطرف الآخر فور وقوعها.
+
+## البند الحادي عشر: القانون الواجب التطبيق وتسوية النزاعات
+1. يخضع هذا العقد ويُفسَّر وفق ${PARENT_COMPANY.governingLaw}.
+2. يسعى الطرفان لتسوية أي نزاع ودياً خلال (15) يوماً من نشوئه.
+3. في حال تعذُّر التسوية الودية، يُحال النزاع إلى ${PARENT_COMPANY.arbitrationVenue} وفق نظامه المعتمد.
+
+## البند الثاني عشر: أحكام عامة
+1. حُرِّر هذا العقد إلكترونياً، ويُعدّ التوقيع الإلكتروني المُسجَّل في النظام (مع توثيق وقت التوقيع وعنوان IP) قائماً مقام التوقيع اليدوي وله ذات الحجّية القانونية وفق نظام التعاملات الإلكترونية في ${PARENT_COMPANY.jurisdiction}.
+2. أي تعديل أو إضافة على هذا العقد لا يُعتدّ به إلا إذا كان مكتوباً وموقَّعاً من الطرفين.
+3. يُعدّ هذا العقد ساري المفعول من تاريخ التوقيع، وتسلَّم نسخة إلكترونية للعميل عبر حسابه في المنصة.
+
+---
+
+### إقرار الطرف الأول
+**${PARENT_COMPANY.platformName}** — تابعة لـ **${PARENT_COMPANY.legalEntity}**
+موقّعة إلكترونياً عبر النظام.
+
+### إقرار الطرف الثاني
+أقرّ أنا/${clientFullName} بأنني قرأتُ هذا العقد بكامل بنوده، وفهمتُ مضمونه، وأوافق على جميع ما ورد فيه، وأن توقيعي الإلكتروني أدناه يُعبّر عن قبولي التام والصريح والملزم.
+`.trim();
+}
+
+// خريطة أنواع الخدمات (للعرض في الواجهة فقط)
+export const SERVICE_TYPE_LABELS: Record<string, string> = {
+  "translation-legal": "ترجمة قانونية",
+  "translation-business": "ترجمة تجارية",
+  "translation-technical": "ترجمة تقنية",
+  "translation-medical": "ترجمة طبية",
+  "translation-academic": "ترجمة أكاديمية",
+  "translation-literary": "ترجمة أدبية",
+  "translation-media": "ترجمة إعلامية",
+  "research-thesis": "إعداد رسالة علمية",
+  "research-plan": "إعداد خطة بحث",
+  "research-analysis": "تحليل إحصائي",
+  "research-formatting": "تنسيق أكاديمي",
+  "research-publication": "نشر علمي",
+  "research-consultation": "استشارة أكاديمية",
+  "custom-service": "خدمة مخصصة",
+  general: "خدمة عامة",
 };
 
-export const generateContractContent = (
-  template: ContractTemplate, 
-  variables: Record<string, string>,
-  commonData: {
-    agencyName: string;
-    clientName: string;
-    totalAmount: number;
-    deliveryDate: string;
-    paymentTerms: string;
-  }
-): string => {
-  let content = template.content;
-  
-  // استبدال المتغيرات الأساسية
-  content = content.replace(/{{agencyName}}/g, commonData.agencyName);
-  content = content.replace(/{{clientName}}/g, commonData.clientName);
-  content = content.replace(/{{totalAmount}}/g, commonData.totalAmount.toString());
-  content = content.replace(/{{deliveryDate}}/g, commonData.deliveryDate);
-  content = content.replace(/{{paymentTerms}}/g, commonData.paymentTerms);
-  
-  // استبدال المتغيرات المخصصة
-  Object.entries(variables).forEach(([key, value]) => {
-    const regex = new RegExp(`{{${key}}}`, 'g');
-    content = content.replace(regex, value);
-  });
-  
-  return content;
-};
+// الشروط الأساسية المطلوب الموافقة عليها قبل التوقيع
+export const REQUIRED_TERMS = [
+  { id: "t1", label: "أقرّ بأنني قرأتُ بنود العقد كاملةً وفهمتُها." },
+  { id: "t2", label: "أوافق على شروط السرية وحماية المعلومات." },
+  { id: "t3", label: "أوافق على شروط الدفع والإلغاء والاسترداد." },
+  { id: "t4", label: "أتعهّد بالالتزام بالنزاهة الأكاديمية وعدم استخدام المخرجات بما يُخالف أنظمة جهتي الأكاديمية." },
+  { id: "t5", label: "أوافق على أن التوقيع الإلكتروني له حُجّية قانونية كاملة." },
+];

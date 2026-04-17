@@ -49,9 +49,9 @@ import {
   createEsignDocument,
   generateSigningToken
 } from '@/utils/supabaseEsignService';
-import { getAllContracts } from '@/utils/supabaseContractService';
+import { listContracts } from '@/utils/supabaseContractService';
 import { EsignDocument, EsignStatus } from '@/types/esign';
-import { Contract } from '@/types/contract';
+type Contract = any;
 import { toast } from 'sonner';
 
 const EsignManagement: React.FC = () => {

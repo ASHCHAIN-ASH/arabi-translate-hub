@@ -1,0 +1,147 @@
+import React, { useEffect, useState } from "react";
+import { useParams, Link } from "react-router-dom";
+import { motion } from "framer-motion";
+import ReactMarkdown from "react-markdown";
+import AdminLayout from "@/components/admin/AdminLayout";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  ArrowRight, FileText, Send, Clock, ShieldCheck, Building2,
+  User, DollarSign, Calendar, Printer, RefreshCw,
+} from "lucide-react";
+import { toast } from "sonner";
+import {
+  getContract, getContractTimeline, getContractSignatures,
+  generateContractContent, sendContractToClient, updateContractStatus,
+  STATUS_LABELS, STATUS_COLORS, ContractRow, ContractSignature, ContractTimelineEvent, ContractStatus,
+} from "@/utils/supabaseContractService";
+import { PARENT_COMPANY } from "@/utils/contractTemplates";
+
+const AdminContractDetails = () => {
+  const { id = "" } = useParams();
+  const [c, setC] = useState<ContractRow | null>(null);
+  const [sigs, setSigs] = useState<ContractSignature[]>([]);
+  const [tl, setTl] = useState<ContractTimelineEvent[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => { load(); }, [id]);
+
+  async function load() {
+    setLoading(true);
+    try {
+      const [contract, signatures, timeline] = await Promise.all([
+        getContract(id), getContractSignatures(id), getContractTimeline(id),
+      ]);
+      setC(contract); setSigs(signatures); setTl(timeline);
+    } finally { setLoading(false); }
+  }
+
+  async function regenerate() {
+    try { await generateContractContent(id); toast.success("تم تحديث محتوى العقد"); load(); }
+    catch (e: any) { toast.error(e.message); }
+  }
+
+  const fmtDate = (d?: string | null) =>
+    d ? new Date(d).toLocaleString("ar-SA", { dateStyle: "long", timeStyle: "short" }) : "—";
+
+  if (loading) {
+    return <AdminLayout><div className="flex items-center justify-center py-20"><div className="animate-spin h-10 w-10 border-b-2 border-primary rounded-full" /></div></AdminLayout>;
+  }
+
+  if (!c) {
+    return <AdminLayout><Card><CardContent className="text-center py-12"><p>العقد غير موجود</p></CardContent></Card></AdminLayout>;
+  }
+
+  return (
+    <AdminLayout>
+      <div className="space-y-4" dir="rtl">
+        {/* Header */}
+        <div className="flex flex-wrap items-start justify-between gap-3">
+          <div className="flex items-center gap-3">
+            <Button asChild variant="ghost" size="sm"><Link to="/adminmaster/contracts"><ArrowRight className="h-4 w-4 ml-1" /> عودة</Link></Button>
+            <div>
+              <h1 className="text-xl font-bold">{c.title}</h1>
+              <p className="text-xs text-muted-foreground"><Building2 className="inline h-3 w-3 ml-1" /> {PARENT_COMPANY.platformName}</p>
+            </div>
+          </div>
+          <div className="flex items-center gap-2 flex-wrap">
+            <Badge variant="outline" className="font-mono">{c.contract_number}</Badge>
+            <Badge className={STATUS_COLORS[c.status]}>{STATUS_LABELS[c.status]}</Badge>
+            <Select value={c.status} onValueChange={async (v) => { await updateContractStatus(c.id, v as ContractStatus); toast.success("تم تحديث الحالة"); load(); }}>
+              <SelectTrigger className="w-40 h-8"><SelectValue /></SelectTrigger>
+              <SelectContent>
+                {(Object.keys(STATUS_LABELS) as ContractStatus[]).map(k => <SelectItem key={k} value={k}>{STATUS_LABELS[k]}</SelectItem>)}
+              </SelectContent>
+            </Select>
+            <Button size="sm" variant="outline" onClick={regenerate}><RefreshCw className="h-4 w-4 ml-1" /> توليد المحتوى</Button>
+            {c.status === "draft" && <Button size="sm" onClick={async () => { await sendContractToClient(c.id); toast.success("تم الإرسال"); load(); }}><Send className="h-4 w-4 ml-1" /> إرسال للعميل</Button>}
+            <Button size="sm" variant="outline" onClick={() => window.print()}><Printer className="h-4 w-4 ml-1" /> طباعة</Button>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+          <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} className="lg:col-span-2 space-y-4">
+            {/* Summary */}
+            <Card><CardContent className="p-5 grid grid-cols-2 sm:grid-cols-4 gap-4 text-sm">
+              <div><p className="text-xs text-muted-foreground"><User className="inline h-3 w-3 ml-1" />العميل</p><p className="font-semibold truncate">{c.client_full_name}</p></div>
+              <div><p className="text-xs text-muted-foreground"><FileText className="inline h-3 w-3 ml-1" />الخدمة</p><p className="font-semibold truncate">{c.service_name}</p></div>
+              <div><p className="text-xs text-muted-foreground"><DollarSign className="inline h-3 w-3 ml-1" />القيمة</p><p className="font-semibold">{Number(c.total_amount || 0).toLocaleString("ar-SA")} {c.currency}</p></div>
+              <div><p className="text-xs text-muted-foreground"><Calendar className="inline h-3 w-3 ml-1" />التحرير</p><p className="font-semibold">{new Date(c.created_at).toLocaleDateString("ar-SA")}</p></div>
+            </CardContent></Card>
+
+            {/* Content */}
+            <Card>
+              <CardHeader className="border-b"><CardTitle className="flex items-center gap-2"><FileText className="h-5 w-5" /> نص العقد</CardTitle></CardHeader>
+              <CardContent className="p-6">
+                <ScrollArea className="max-h-[60vh] pr-2">
+                  <article className="prose prose-sm max-w-none rtl-prose prose-headings:text-foreground prose-p:text-foreground/90 prose-strong:text-foreground prose-li:text-foreground/90 prose-hr:border-border">
+                    <ReactMarkdown>{c.content || "لم يُوَلَّد المحتوى بعد. اضغط على زر «توليد المحتوى»."}</ReactMarkdown>
+                  </article>
+                </ScrollArea>
+              </CardContent>
+            </Card>
+          </motion.div>
+
+          <motion.aside initial={{ opacity: 0, x: 8 }} animate={{ opacity: 1, x: 0 }} className="space-y-4">
+            <Card>
+              <CardHeader className="pb-3"><CardTitle className="text-base flex items-center gap-2"><ShieldCheck className="h-4 w-4" /> التوقيعات ({sigs.length})</CardTitle></CardHeader>
+              <CardContent className="space-y-3">
+                {sigs.length === 0 ? <p className="text-sm text-muted-foreground">لا توقيعات بعد</p> :
+                  sigs.map(s => (
+                    <div key={s.id} className="border rounded-lg p-3 text-xs space-y-1 bg-muted/30">
+                      <p className="font-bold text-sm">{s.signer_name}</p>
+                      <p className="font-mono text-base text-primary">{s.signature_text}</p>
+                      <p className="text-muted-foreground"><Clock className="inline h-3 w-3 ml-1" />{fmtDate(s.signed_at)}</p>
+                      {s.ip_address && <p className="text-muted-foreground">IP: {s.ip_address}</p>}
+                      {s.signer_id_number && <p className="text-muted-foreground">هوية: {s.signer_id_number}</p>}
+                    </div>
+                  ))}
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader className="pb-3"><CardTitle className="text-base flex items-center gap-2"><Clock className="h-4 w-4" /> سجل النشاط</CardTitle></CardHeader>
+              <CardContent>
+                <ol className="relative border-r-2 border-border pr-4 space-y-3">
+                  {tl.map(t => (
+                    <li key={t.id} className="relative">
+                      <span className="absolute -right-[22px] top-1 h-3 w-3 rounded-full bg-primary ring-4 ring-background" />
+                      <p className="text-sm font-semibold">{t.action_label}</p>
+                      {t.description && <p className="text-xs text-muted-foreground">{t.description}</p>}
+                      <p className="text-[10px] text-muted-foreground mt-0.5">{fmtDate(t.created_at)}</p>
+                    </li>
+                  ))}
+                </ol>
+              </CardContent>
+            </Card>
+          </motion.aside>
+        </div>
+      </div>
+    </AdminLayout>
+  );
+};
+
+export default AdminContractDetails;
