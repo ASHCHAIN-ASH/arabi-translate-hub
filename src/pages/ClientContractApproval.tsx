@@ -104,6 +104,33 @@ const ClientContractApproval = () => {
         comments: comments.trim() || undefined,
       });
       toast.success("تم توقيع العقد بنجاح ✓");
+
+      // Generate signed PDF + email client (fire-and-forget; don't block UI)
+      (async () => {
+        try {
+          const { data: pdfRes } = await supabase.functions.invoke('generate-contract-pdf', {
+            body: { contract_id: contract.id },
+          });
+          await supabase.functions.invoke('send-transactional-email', {
+            body: {
+              templateName: 'contract-signed',
+              recipientEmail: contract.client_email,
+              idempotencyKey: `contract-signed-${contract.id}`,
+              templateData: {
+                clientName: signerName.trim(),
+                contractNumber: contract.contract_number,
+                contractTitle: contract.title,
+                signedAt: new Date().toLocaleString('ar-SA'),
+                pdfUrl: (pdfRes as any)?.signed_url || undefined,
+              },
+            },
+          });
+          toast.success('تم إرسال نسخة PDF إلى بريدك الإلكتروني');
+        } catch (err) {
+          console.error('PDF/email post-sign error:', err);
+        }
+      })();
+
       await load();
     } catch (e: any) {
       toast.error(e.message || "تعذّر حفظ التوقيع");
