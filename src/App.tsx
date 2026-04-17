@@ -443,6 +443,11 @@ const App = () => (
                 <AdminWorkingHours />
               </SimpleProtectedRoute>
             } />
+            <Route path="/adminmaster/wallets" element={
+              <SimpleProtectedRoute adminOnly>
+                <AdminWallets />
+              </SimpleProtectedRoute>
+            } />
             
             {/* Academic Pages */}
             <Route path="/academic/expertise" element={<AcademicExpertise />} />
