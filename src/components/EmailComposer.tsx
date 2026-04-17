@@ -35,6 +35,7 @@ export default function EmailComposer({ defaultTo = "", defaultTemplateKey = "",
   const [loading, setLoading] = useState(false);
   const [previewOpen, setPreviewOpen] = useState(false);
   const [previewContent, setPreviewContent] = useState("");
+  const [previewDevice, setPreviewDevice] = useState<'mobile' | 'desktop'>('desktop');
 
   // بيانات إرسال البريد
   const [emailForm, setEmailForm] = useState({
