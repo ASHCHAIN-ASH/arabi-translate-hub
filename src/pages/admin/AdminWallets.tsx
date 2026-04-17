@@ -54,7 +54,23 @@ const AdminWallets: React.FC = () => {
     } finally { setLoading(false); }
   };
 
-  useEffect(() => { load(); }, []);
+  useEffect(() => {
+    load();
+    // Realtime subscription for wallets, topup requests, and transactions
+    import('@/integrations/supabase/client').then(({ supabase }) => {
+      const channel = supabase
+        .channel('admin-wallets-realtime')
+        .on('postgres_changes', { event: '*', schema: 'public', table: 'wallets' }, () => load())
+        .on('postgres_changes', { event: '*', schema: 'public', table: 'wallet_topup_requests' }, () => load())
+        .on('postgres_changes', { event: '*', schema: 'public', table: 'wallet_transactions' }, () => load())
+        .subscribe();
+      (window as any).__adminWalletsChannel = channel;
+    });
+    return () => {
+      const ch = (window as any).__adminWalletsChannel;
+      if (ch) import('@/integrations/supabase/client').then(({ supabase }) => supabase.removeChannel(ch));
+    };
+  }, []);
 
   const filtered = useMemo(() => {
     if (!search) return wallets;
