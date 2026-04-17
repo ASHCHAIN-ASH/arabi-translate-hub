@@ -149,7 +149,7 @@ const ClientWallet: React.FC = () => {
 
   const polylinePath = chartPoints.map((p) => `${p.x},${p.y}`).join(' ');
   const areaPath = chartPoints.length
-    ? `M0,100 L${polylinePath.replaceAll(' ', ' L')} L100,100 Z` : '';
+    ? `M0,100 L${polylinePath.split(' ').join(' L')} L100,100 Z` : '';
 
   const bonus = getBonus(amount);
 
