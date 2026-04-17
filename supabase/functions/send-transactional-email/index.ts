@@ -2,6 +2,7 @@ import * as React from 'npm:react@18.3.1'
 import { renderAsync } from 'npm:@react-email/components@0.0.22'
 import { createClient } from 'npm:@supabase/supabase-js@2'
 import { TEMPLATES } from '../_shared/transactional-email-templates/registry.ts'
+import { verifySupabaseAuth } from '../_shared/supabase-auth.ts'
 
 // Configuration baked in at scaffold time — do NOT change these manually.
 // To update, re-run the email domain setup flow.
@@ -30,9 +31,21 @@ function generateToken(): string {
     .join('')
 }
 
-// Auth note: this function uses verify_jwt = true in config.toml, so Supabase's
-// gateway validates the caller's JWT (anon or service_role) before the request
-// reaches this code. No in-function auth check is needed.
+async function authorizeRequest(req: Request): Promise<boolean> {
+  const serviceRoleKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')
+  const authHeader = req.headers.get('Authorization')
+  const apiKey = req.headers.get('apikey')
+
+  if (
+    serviceRoleKey &&
+    (authHeader === `Bearer ${serviceRoleKey}` || apiKey === serviceRoleKey)
+  ) {
+    return true
+  }
+
+  const user = await verifySupabaseAuth(req)
+  return Boolean(user)
+}
 
 Deno.serve(async (req) => {
   // Handle CORS preflight
@@ -52,6 +65,14 @@ Deno.serve(async (req) => {
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       }
     )
+  }
+
+  const isAuthorized = await authorizeRequest(req)
+  if (!isAuthorized) {
+    return new Response(JSON.stringify({ error: 'Unauthorized' }), {
+      status: 401,
+      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+    })
   }
 
   // Parse request body
