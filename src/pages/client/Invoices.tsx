@@ -118,6 +118,7 @@ export default function ClientInvoices() {
                               <Button size="icon" variant="ghost" onClick={() => handlePrint(inv)} title="عرض/طباعة"><Eye className="w-4 h-4" /></Button>
                               <Button size="icon" variant="ghost" onClick={() => handlePrint(inv)} title="طباعة"><Printer className="w-4 h-4" /></Button>
                               <Button size="icon" variant="ghost" onClick={() => handleDownload(inv)} title="تحميل PDF"><Download className="w-4 h-4" /></Button>
+                              <Button size="icon" variant="ghost" onClick={() => openSupportTicket(inv)} title="فتح تذكرة دعم"><LifeBuoy className="w-4 h-4 text-amber-600" /></Button>
                             </div>
                           </TableCell>
                         </TableRow>
@@ -143,6 +144,7 @@ export default function ClientInvoices() {
                         <div className="flex gap-2">
                           <Button size="sm" variant="outline" className="flex-1" onClick={() => handlePrint(inv)}><Printer className="w-3 h-3 ml-1" />عرض/طباعة</Button>
                           <Button size="sm" variant="outline" className="flex-1" onClick={() => handleDownload(inv)}><Download className="w-3 h-3 ml-1" />PDF</Button>
+                          <Button size="sm" variant="outline" className="flex-1" onClick={() => openSupportTicket(inv)}><LifeBuoy className="w-3 h-3 ml-1" />دعم</Button>
                         </div>
                       </CardContent>
                     </Card>
