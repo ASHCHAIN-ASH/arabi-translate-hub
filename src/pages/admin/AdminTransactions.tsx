@@ -13,11 +13,17 @@ import {
   AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent,
   AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
+import {
+  Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle,
+} from '@/components/ui/dialog';
+import { Separator } from '@/components/ui/separator';
+import { Link } from 'react-router-dom';
 import { toast } from 'sonner';
 import {
   Wallet, TrendingUp, TrendingDown, Clock, CheckCircle2,
   Search, Download, RefreshCw, CreditCard, Banknote, Building2,
-  Smartphone, ArrowUpRight, Activity, Calendar, Undo2, AlertTriangle
+  Smartphone, ArrowUpRight, Activity, Calendar, Undo2, AlertTriangle,
+  FileText, User, Mail, Phone, Hash, Receipt, ExternalLink, StickyNote
 } from 'lucide-react';
 import {
   AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip,
