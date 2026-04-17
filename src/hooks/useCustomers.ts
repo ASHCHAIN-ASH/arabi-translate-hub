@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
+import { toast } from 'sonner';
 
 export interface Customer {
   id: string;
@@ -172,9 +173,16 @@ export function useCustomers() {
           schema: 'public',
           table: 'customers'
         },
-        (payload) => {
+        (payload: any) => {
           console.log('✅ Customer realtime update received:', payload);
-          fetchCustomers(); // إعادة تحميل البيانات عند أي تغيير
+          fetchCustomers();
+          if (payload.eventType === 'INSERT') {
+            toast.success('عميل جديد', { description: payload.new?.name || 'تم إضافة عميل جديد' });
+          } else if (payload.eventType === 'UPDATE') {
+            toast.info('تم تحديث بيانات عميل', { description: payload.new?.name });
+          } else if (payload.eventType === 'DELETE') {
+            toast.warning('تم حذف عميل');
+          }
         }
       )
       .subscribe((status) => {
