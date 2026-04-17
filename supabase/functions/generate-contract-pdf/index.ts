@@ -1,24 +1,26 @@
-// Generates a modern, RTL Arabic, print-ready contract document.
-// Output is a styled standalone HTML file (page-sized A4) stored in the
-// "contracts" bucket. Browsers render it perfectly in Arabic and the user
-// can "Save as PDF" from the print dialog. Avoids jsPDF Arabic shaping issues.
+// Bank-grade RTL contract PDF generator — Master U Path
+// Navy + Gold banking aesthetic. Renders standalone HTML for print/save-as-PDF.
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.57.4";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers":
-    "authorization, x-client-info, apikey, content-type",
+  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
 };
 
-const PARENT_COMPANY = "شركة علي صالح الشهري القابضة";
-const BRAND = "منصة ماستر إيدو باث";
+const PLATFORM = {
+  name: "Master U Path",
+  nameAr: "ماستر يو المسار",
+  legal: "منصة ماستر إيدو باث للخدمات الأكاديمية",
+  domain: "masteredupath.com",
+  jurisdiction: "المملكة العربية السعودية",
+};
+
+const NAVY = "#0a1f3d";
+const GOLD = "#c9a961";
+const CREAM = "#fdfbf5";
 
 const esc = (s: unknown) =>
-  String(s ?? "")
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;");
+  String(s ?? "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
 
 const fmtMoney = (n: number, c = "SAR") =>
   new Intl.NumberFormat("ar-SA", { style: "currency", currency: c, maximumFractionDigits: 2 }).format(n || 0);
@@ -35,126 +37,178 @@ const fmtDateTime = (d?: string | null) => {
   catch { return String(d); }
 };
 
+// Convert markdown-ish content to HTML (basic: headings, bold, lists, hr).
+function mdToHtml(md: string): string {
+  if (!md) return "";
+  const lines = md.split("\n");
+  let html = "";
+  let inList: "ol" | "ul" | null = null;
+  const closeList = () => { if (inList) { html += `</${inList}>`; inList = null; } };
+
+  for (const raw of lines) {
+    const line = raw.trim();
+    if (!line) { closeList(); continue; }
+    if (/^---+$/.test(line)) { closeList(); html += "<hr/>"; continue; }
+    let m;
+    if ((m = line.match(/^###\s+(.+)/))) { closeList(); html += `<h3>${esc(m[1])}</h3>`; continue; }
+    if ((m = line.match(/^##\s+(.+)/))) { closeList(); html += `<h2>${esc(m[1])}</h2>`; continue; }
+    if ((m = line.match(/^#\s+(.+)/))) { closeList(); html += `<h1>${esc(m[1])}</h1>`; continue; }
+    if ((m = line.match(/^\d+\.\s+(.+)/))) {
+      if (inList !== "ol") { closeList(); html += "<ol>"; inList = "ol"; }
+      html += `<li>${inlineFmt(m[1])}</li>`; continue;
+    }
+    if ((m = line.match(/^[-*]\s+(.+)/))) {
+      if (inList !== "ul") { closeList(); html += "<ul>"; inList = "ul"; }
+      html += `<li>${inlineFmt(m[1])}</li>`; continue;
+    }
+    closeList();
+    html += `<p>${inlineFmt(line)}</p>`;
+  }
+  closeList();
+  return html;
+}
+
+function inlineFmt(s: string): string {
+  return esc(s).replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>").replace(/\*(.+?)\*/g, "<em>$1</em>");
+}
+
 function buildHtml(contract: any, signature: any, verifyHash: string) {
   const total = Number(contract.total_amount || 0);
   const currency = contract.currency || "SAR";
+  const bodyHtml = mdToHtml(contract.content || "");
+
+  const partyRow = (k: string, v: string) =>
+    `<tr><td class="pk">${esc(k)}:</td><td class="pv">${esc(v)}</td></tr>`;
 
   return `<!doctype html>
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="utf-8" />
-<title>عقد رقم ${esc(contract.contract_number)}</title>
+<title>عقد ${esc(contract.contract_number)} — ${esc(PLATFORM.name)}</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
-  :root {
-    --ink:#0f172a; --muted:#64748b; --line:#e2e8f0; --accent:#0f766e;
-    --soft:#f8fafc; --brand:#0f172a;
-  }
+  :root { --navy:${NAVY}; --gold:${GOLD}; --cream:${CREAM}; }
   * { box-sizing:border-box; }
-  html,body { margin:0; padding:0; background:#eef2f7; color:var(--ink);
+  html,body { margin:0; padding:0; background:#e9ecf1; color:var(--navy);
     font-family:'IBM Plex Sans Arabic',Tajawal,system-ui,sans-serif; line-height:1.85; }
-  .page {
-    width:210mm; min-height:297mm; margin:16px auto; background:#fff;
-    padding:18mm 16mm; box-shadow:0 6px 30px rgba(15,23,42,.08); position:relative;
-  }
+  .page { width:210mm; min-height:297mm; margin:16px auto; background:var(--cream);
+    padding:20mm 18mm; box-shadow:0 8px 40px rgba(10,31,61,.15); position:relative; }
   @media print {
     body { background:#fff; }
     .page { margin:0; box-shadow:none; width:auto; min-height:auto; padding:14mm 12mm; }
     .toolbar { display:none !important; }
     @page { size:A4; margin:0; }
   }
-  .toolbar {
-    position:fixed; top:12px; left:12px; z-index:50; display:flex; gap:8px;
-  }
-  .toolbar button {
-    background:var(--brand); color:#fff; border:0; padding:10px 16px; border-radius:10px;
-    font-family:inherit; font-weight:600; cursor:pointer; box-shadow:0 4px 14px rgba(15,23,42,.2);
-  }
-  .toolbar button.alt { background:#fff; color:var(--brand); border:1px solid var(--line); }
+  .toolbar { position:fixed; top:14px; left:14px; z-index:50; display:flex; gap:8px; }
+  .toolbar button { background:var(--navy); color:var(--gold); border:1px solid var(--gold);
+    padding:10px 18px; border-radius:8px; font-family:inherit; font-weight:700; cursor:pointer;
+    box-shadow:0 4px 14px rgba(10,31,61,.25); }
+  .toolbar button.alt { background:#fff; color:var(--navy); border:1px solid var(--navy); }
 
-  header.brand {
-    display:flex; justify-content:space-between; align-items:flex-start;
-    border-bottom:3px solid var(--brand); padding-bottom:14px; margin-bottom:22px;
-  }
-  .brand h1 { margin:0; font-size:22px; color:var(--brand); letter-spacing:-0.3px; }
-  .brand .sub { font-size:12px; color:var(--muted); margin-top:4px; }
-  .brand .meta { text-align:left; font-size:12px; color:var(--muted); }
-  .brand .meta strong { color:var(--ink); display:block; font-size:13px; margin-bottom:2px; }
+  .confidential { background:var(--navy); color:var(--gold); text-align:center;
+    font-weight:700; letter-spacing:.25em; padding:10px; border-radius:6px;
+    margin-bottom:22px; font-size:13px; }
 
-  .title-block {
-    background:linear-gradient(135deg,#0f172a 0%,#1e293b 100%); color:#fff;
-    border-radius:14px; padding:20px 22px; margin-bottom:22px;
-  }
-  .title-block h2 { margin:0 0 6px; font-size:20px; }
-  .title-block .row { display:flex; gap:16px; flex-wrap:wrap; font-size:13px; opacity:.95; }
-  .title-block .row span { background:rgba(255,255,255,.12); padding:4px 10px; border-radius:6px; }
+  header.brand { display:flex; justify-content:space-between; align-items:flex-start;
+    gap:20px; margin-bottom:20px; flex-wrap:wrap; }
+  .meta-card { background:#fff; border:1px solid ${GOLD}66; border-radius:8px;
+    padding:12px 16px; flex:1; min-width:240px; }
+  .meta-card table { width:100%; border-collapse:collapse; }
+  .meta-card td { padding:3px 0; font-size:12.5px; }
+  .meta-card td.k { color:${NAVY}99; padding-left:12px; }
+  .meta-card td.v { color:var(--navy); font-weight:700; }
+  .meta-card td.v.mono { font-family:ui-monospace,Menlo,monospace; }
 
-  table.kv {
-    width:100%; border-collapse:collapse; margin:14px 0 22px;
-    font-size:13px; border:1px solid var(--line); border-radius:10px; overflow:hidden;
-  }
-  table.kv th, table.kv td {
-    padding:10px 14px; text-align:right; border-bottom:1px solid var(--line); vertical-align:top;
-  }
-  table.kv tr:last-child th, table.kv tr:last-child td { border-bottom:0; }
-  table.kv th {
-    width:32%; background:var(--soft); color:var(--muted); font-weight:600;
-  }
-  table.kv td { font-weight:600; color:var(--ink); }
+  .brand-mark { text-align:left; }
+  .brand-mark h1 { margin:0; font-size:20px; color:var(--navy); }
+  .brand-mark .en { color:var(--gold); font-size:10.5px; letter-spacing:.25em;
+    margin:4px 0 8px; font-weight:600; }
+  .seal { display:inline-flex; align-items:center; justify-content:center;
+    width:64px; height:64px; background:var(--navy); color:var(--gold);
+    border-radius:12px; border:2px solid var(--gold); font-weight:700; font-size:16px; }
 
-  h3.section {
-    color:var(--brand); font-size:15px; margin:22px 0 8px;
-    padding-right:12px; border-right:4px solid var(--accent);
-  }
-  p, li { font-size:13.5px; color:#1e293b; }
-  ol, ul { padding-right:22px; }
-  ol li, ul li { margin:4px 0; }
+  .divider { border-top:2px solid var(--gold); margin:18px 0; }
 
-  .price-table {
-    width:100%; border-collapse:collapse; margin:10px 0 22px;
-    font-size:13px; border:1px solid var(--line); border-radius:10px; overflow:hidden;
-  }
-  .price-table th { background:var(--brand); color:#fff; padding:12px; text-align:right; font-weight:600; }
-  .price-table td { padding:12px; border-bottom:1px solid var(--line); }
-  .price-table tr.total td {
-    background:var(--soft); font-weight:700; font-size:14px; color:var(--brand); border-top:2px solid var(--accent);
-  }
+  .title-block { background:var(--navy); color:#fff; border:2px solid var(--gold);
+    border-radius:12px; padding:24px 22px; text-align:center; margin-bottom:24px; }
+  .title-block h2 { margin:0 0 6px; font-size:22px; color:#fff; }
+  .title-block .en { margin:0; color:var(--gold); font-size:11px; letter-spacing:.3em; font-weight:600; }
 
-  .signatures {
-    margin-top:24px; display:grid; grid-template-columns:1fr 1fr; gap:16px;
-  }
-  .sigbox {
-    border:1px dashed var(--line); border-radius:12px; padding:16px; background:var(--soft);
-  }
-  .sigbox .label { font-size:11px; color:var(--muted); margin-bottom:6px; }
-  .sigbox .name { font-weight:700; color:var(--brand); margin-bottom:8px; }
-  .sigbox .signed {
-    font-family:'Brush Script MT',cursive; font-size:24px; color:var(--accent); margin:6px 0;
-  }
-  .sigbox .meta { font-size:11px; color:var(--muted); line-height:1.6; }
+  .preamble { background:#fff; border:1px solid ${GOLD}55; border-right:4px solid var(--gold);
+    border-radius:8px; padding:14px 18px; margin-bottom:24px; font-size:13.5px; }
 
-  .verify {
-    margin-top:18px; padding:12px 14px; background:#ecfdf5; border:1px solid #a7f3d0;
-    border-radius:10px; font-size:11px; color:#065f46;
-  }
-  .verify strong { color:#064e3b; }
-  .verify code {
-    display:block; word-break:break-all; font-family:ui-monospace,Menlo,monospace;
-    font-size:10px; margin-top:4px; color:#047857;
-  }
+  h3.section { color:var(--navy); font-size:15px; margin:22px 0 12px;
+    padding-right:12px; border-right:4px solid var(--gold); font-weight:700; }
+  h3.section::before { content:"◆ "; color:var(--gold); }
 
-  footer.doc {
-    margin-top:30px; padding-top:14px; border-top:1px solid var(--line);
-    text-align:center; font-size:11px; color:var(--muted);
-  }
-  .badge-status {
-    display:inline-block; padding:4px 10px; border-radius:999px;
-    font-size:11px; font-weight:600;
-  }
-  .badge-status.signed { background:#d1fae5; color:#065f46; }
-  .badge-status.pending { background:#fef3c7; color:#92400e; }
+  .parties { display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-bottom:24px; }
+  .party { background:#fff; border:1px solid ${GOLD}66; border-radius:8px; padding:14px 16px; }
+  .party .lbl { font-weight:700; color:var(--navy); font-size:13px; padding-bottom:8px;
+    border-bottom:2px solid var(--gold); margin-bottom:10px; }
+  .party table { width:100%; border-collapse:collapse; font-size:13px; }
+  .party td.pk { color:${NAVY}99; padding:3px 12px 3px 0; width:32%; vertical-align:top; }
+  .party td.pv { color:var(--navy); font-weight:600; padding:3px 0; }
+
+  table.fin { width:100%; border-collapse:collapse; margin-bottom:24px;
+    border:1px solid ${GOLD}55; border-radius:8px; overflow:hidden; font-size:13.5px; }
+  table.fin th { background:var(--navy); color:var(--gold); padding:12px;
+    text-align:right; font-weight:700; }
+  table.fin td { padding:12px; border-bottom:1px solid ${GOLD}33; }
+  table.fin tr.total td { background:var(--navy); color:var(--gold);
+    font-weight:700; font-size:15px; border-bottom:0; }
+
+  .body { font-size:13.5px; color:var(--navy); }
+  .body h1, .body h2, .body h3 { color:var(--navy); border-right:4px solid var(--gold);
+    padding-right:12px; margin:18px 0 8px; font-weight:700; }
+  .body h1 { font-size:18px; } .body h2 { font-size:16px; } .body h3 { font-size:14px; }
+  .body p { margin:6px 0; }
+  .body strong { color:var(--navy); font-weight:700; }
+  .body ol, .body ul { padding-right:22px; }
+  .body li { margin:4px 0; }
+  .body hr { border:0; border-top:1px solid ${GOLD}55; margin:18px 0; }
+
+  .sig-divider { border-top:2px solid var(--gold); margin:28px 0 14px; }
+  .sig-title { text-align:center; font-weight:700; font-size:18px; color:var(--navy); margin-bottom:18px; }
+
+  .sigs { display:grid; grid-template-columns:1fr 1fr; gap:14px; }
+  .sigbox { background:#fff; border:1px solid ${GOLD}66; border-radius:10px;
+    padding:18px; text-align:center; }
+  .sigbox .lbl { font-weight:700; color:var(--navy); font-size:13px; }
+  .sigbox .who { font-size:12px; color:var(--navy); margin:4px 0 14px; }
+
+  .seal-circle { margin:0 auto 12px; width:120px; height:120px;
+    border:3px double var(--navy); border-radius:50%; background:var(--cream);
+    display:flex; align-items:center; justify-content:center; flex-direction:column; }
+  .seal-circle .sn { font-size:10px; color:var(--navy); margin:0; }
+  .seal-circle .sm { font-size:18px; color:var(--navy); font-weight:700; margin:2px 0; }
+  .seal-circle .sd { font-size:9px; color:var(--gold); margin:0; }
+  .stamp-ok { display:inline-block; padding:5px 12px; background:${GOLD}33;
+    color:var(--navy); border:1px solid var(--gold); border-radius:6px;
+    font-weight:700; font-size:12px; }
+
+  .signed-card { background:var(--cream); border:1px dashed var(--gold);
+    border-radius:8px; padding:14px; font-size:12px; color:var(--navy); }
+  .signed-card .ok { font-weight:700; margin-bottom:6px; }
+  .signed-card .sigtext { font-family:'Brush Script MT',cursive; font-size:24px;
+    color:var(--navy); margin:6px 0; }
+  .signed-card .meta { font-size:11px; color:${NAVY}99; line-height:1.7; }
+  .pending { background:var(--cream); border:1px dashed ${NAVY}55; border-radius:8px;
+    padding:24px; color:${NAVY}99; font-size:12px; }
+
+  .verify { margin-top:18px; padding:12px 14px; background:${GOLD}11;
+    border:1px solid ${GOLD}66; border-radius:8px; font-size:11px; color:var(--navy); }
+  .verify code { display:block; word-break:break-all; font-family:ui-monospace,Menlo,monospace;
+    font-size:10px; margin-top:4px; color:${NAVY}cc; }
+
+  footer.doc { margin-top:24px; padding-top:14px; border-top:1px solid ${GOLD}55;
+    display:flex; justify-content:space-between; align-items:center;
+    font-size:10.5px; color:${NAVY}99; }
+  footer.doc .num { font-family:ui-monospace,Menlo,monospace; font-weight:700;
+    color:var(--navy); border:1px solid var(--gold); padding:4px 8px; border-radius:4px; }
+  footer.doc .center { text-align:center; }
+  footer.doc .center b { color:var(--navy); display:block; }
 </style>
 </head>
 <body>
@@ -164,129 +218,100 @@ function buildHtml(contract: any, signature: any, verifyHash: string) {
 </div>
 
 <div class="page">
+  <div class="confidential">◆ سري وخاص &nbsp;—&nbsp; CONFIDENTIAL ◆</div>
+
   <header class="brand">
-    <div>
-      <h1>${esc(BRAND)}</h1>
-      <div class="sub">تابعة لـ ${esc(PARENT_COMPANY)} • المملكة العربية السعودية</div>
+    <div class="meta-card">
+      <table>
+        <tr><td class="k">رقم العقد:</td><td class="v mono">${esc(contract.contract_number)}</td></tr>
+        <tr><td class="k">التاريخ:</td><td class="v">${fmtDate(contract.created_at)}</td></tr>
+        <tr><td class="k">النوع:</td><td class="v">${esc(contract.service_type || "خدمة أكاديمية")}</td></tr>
+        <tr><td class="k">الخدمة:</td><td class="v">${esc(contract.service_name || "—")}</td></tr>
+      </table>
     </div>
-    <div class="meta">
-      <strong>عقد رقم</strong>
-      <div style="font-family:ui-monospace,Menlo,monospace;color:var(--brand);font-size:14px;">${esc(contract.contract_number)}</div>
-      <div style="margin-top:6px;">
-        <span class="badge-status ${signature ? "signed" : "pending"}">
-          ${signature ? "موقّع إلكترونياً ✓" : "بانتظار التوقيع"}
-        </span>
-      </div>
+    <div class="brand-mark">
+      <h1>${esc(PLATFORM.nameAr)}</h1>
+      <p class="en">MASTER U PATH — ACADEMIC SERVICES</p>
+      <div class="seal">MUP</div>
     </div>
   </header>
 
+  <div class="divider"></div>
+
   <div class="title-block">
-    <h2>${esc(contract.title || "عقد تقديم خدمة")}</h2>
-    <div class="row">
-      <span>📅 تاريخ التحرير: ${fmtDate(contract.created_at)}</span>
-      ${contract.delivery_date ? `<span>🗓 موعد التسليم: ${fmtDate(contract.delivery_date)}</span>` : ""}
-      <span>💰 ${fmtMoney(total, currency)}</span>
+    <h2>${esc(contract.title || "عقد تقديم خدمات أكاديمية")}</h2>
+    <p class="en">ACADEMIC SERVICES AGREEMENT</p>
+  </div>
+
+  <div class="preamble">
+    بتاريخ <strong>${fmtDate(contract.created_at)}</strong>، أُبرم هذا العقد بين الطرفين أدناه وفقاً للأحكام الواردة فيه،
+    ويُقدَّم حصرياً عبر منصة <strong>${esc(PLATFORM.name)}</strong> (${esc(PLATFORM.domain}) بإشراف ${esc(PLATFORM.legal)}.
+  </div>
+
+  <h3 class="section">المادة الأولى: أطراف العقد</h3>
+  <div class="parties">
+    <div class="party">
+      <div class="lbl">الطرف الأول (مقدّم الخدمة)</div>
+      <table>
+        ${partyRow("الاسم", PLATFORM.legal)}
+        ${partyRow("العلامة التجارية", PLATFORM.name)}
+        ${partyRow("النطاق الرسمي", PLATFORM.domain)}
+        ${partyRow("المقر", PLATFORM.jurisdiction)}
+      </table>
+    </div>
+    <div class="party">
+      <div class="lbl">الطرف الثاني (العميل)</div>
+      <table>
+        ${partyRow("الاسم", contract.client_full_name || "—")}
+        ${partyRow("البريد", contract.client_email || "—")}
+        ${partyRow("الجوال", contract.client_phone || "—")}
+        ${partyRow("الهوية", contract.client_id_number || "—")}
+      </table>
     </div>
   </div>
 
-  <h3 class="section">١. أطراف العقد</h3>
-  <table class="kv">
-    <tr><th>الطرف الأول (مُقدِّم الخدمة)</th><td>${esc(BRAND)} — التابعة لـ ${esc(PARENT_COMPANY)}</td></tr>
-    <tr><th>الجهة القانونية</th><td>${esc(PARENT_COMPANY)} — المملكة العربية السعودية</td></tr>
-    <tr><th>الطرف الثاني (العميل)</th><td>${esc(contract.client_full_name || "—")}</td></tr>
-    ${contract.client_id_number ? `<tr><th>رقم الهوية / الإقامة</th><td>${esc(contract.client_id_number)}</td></tr>` : ""}
-    ${contract.client_email ? `<tr><th>البريد الإلكتروني</th><td>${esc(contract.client_email)}</td></tr>` : ""}
-    ${contract.client_phone ? `<tr><th>رقم الجوال</th><td>${esc(contract.client_phone)}</td></tr>` : ""}
-  </table>
-
-  <h3 class="section">٢. تفاصيل الخدمة والمقابل المالي</h3>
-  <table class="price-table">
-    <thead>
-      <tr>
-        <th style="width:55%">البيان</th>
-        <th>التفاصيل</th>
-      </tr>
-    </thead>
+  <h3 class="section">المادة الثانية: قيمة الخدمة</h3>
+  <table class="fin">
+    <thead><tr><th>البند</th><th>التفاصيل</th></tr></thead>
     <tbody>
-      <tr><td>اسم الخدمة</td><td><strong>${esc(contract.service_name || "خدمة أكاديمية")}</strong></td></tr>
+      <tr><td>اسم الخدمة</td><td><strong>${esc(contract.service_name || "—")}</strong></td></tr>
       ${contract.payment_terms ? `<tr><td>شروط الدفع</td><td>${esc(contract.payment_terms)}</td></tr>` : ""}
-      ${contract.delivery_date ? `<tr><td>الموعد التقديري للتسليم</td><td>${fmtDate(contract.delivery_date)}</td></tr>` : ""}
+      ${contract.delivery_date ? `<tr><td>موعد التسليم</td><td>${fmtDate(contract.delivery_date)}</td></tr>` : ""}
       <tr class="total"><td>القيمة الإجمالية المتفق عليها</td><td>${fmtMoney(total, currency)}</td></tr>
     </tbody>
   </table>
 
-  <h3 class="section">٣. التزامات الطرف الأول (المنصة)</h3>
-  <ol>
-    <li>تنفيذ الخدمة بأعلى معايير الجودة المهنية والأكاديمية المتعارف عليها.</li>
-    <li>الالتزام بالمواعيد المتفق عليها وإبلاغ العميل بأي ظرف قاهر يستوجب التأجيل.</li>
-    <li>تخصيص متخصص أو فريق مؤهل في مجال الخدمة المطلوبة.</li>
-    <li>تقديم تعديل واحد رئيسي مجاناً بعد التسليم خلال (7) أيام، وفق ضوابط النطاق المتفق عليه.</li>
-    <li>الحفاظ التام على سرية بيانات العميل ووثائقه ومحتوى الخدمة.</li>
-  </ol>
+  ${bodyHtml ? `<div class="body">${bodyHtml}</div>` : ""}
 
-  <h3 class="section">٤. التزامات الطرف الثاني (العميل)</h3>
-  <ol>
-    <li>تزويد المنصة بكافة البيانات والمستندات الصحيحة والكاملة اللازمة لتنفيذ الخدمة.</li>
-    <li>سداد القيمة المتفق عليها وفق شروط الدفع المنصوص عليها.</li>
-    <li>الردّ على استفسارات الفريق المُنفّذ في وقت معقول لضمان الالتزام بالموعد.</li>
-    <li>عدم استخدام مخرجات الخدمة بما يُخالف الأنظمة أو الأخلاقيات الأكاديمية المعتمدة.</li>
-  </ol>
+  <div class="sig-divider"></div>
+  <div class="sig-title">◆ التوقيع والاعتماد ◆</div>
 
-  <h3 class="section">٥. السرية وحماية المعلومات</h3>
-  <ol>
-    <li>تتعهّد المنصة بعدم إفشاء أو نشر أو مشاركة أي معلومات أو وثائق خاصة بالعميل لأي طرف ثالث، ما لم يكن ذلك بإذن كتابي من العميل أو بموجب نظام نافذ.</li>
-    <li>يُعدّ هذا الالتزام مستمراً حتى بعد انتهاء العقد لمدة لا تقل عن خمس (5) سنوات.</li>
-    <li>تخضع جميع البيانات الشخصية لنظام حماية البيانات الشخصية المعمول به في المملكة العربية السعودية.</li>
-  </ol>
-
-  <h3 class="section">٦. النزاهة الأكاديمية والملكية الفكرية</h3>
-  <ol>
-    <li>تُؤكّد المنصة أن جميع المخرجات أصلية، ويتم فحصها ضد الانتحال (Plagiarism) قبل التسليم.</li>
-    <li>تُقدَّم الخدمة لأغراض الاستشارة الأكاديمية، ويتحمّل العميل مسؤولية الالتزام بأنظمة جهته الأكاديمية في الاستخدام النهائي.</li>
-    <li>تنتقل حقوق استخدام المخرجات إلى العميل بعد سداد كامل المستحقات.</li>
-  </ol>
-
-  <h3 class="section">٧. الإلغاء والاسترداد</h3>
-  <ol>
-    <li>للعميل الحق في إلغاء العقد قبل بدء التنفيذ مع استرداد كامل المبلغ المسدّد بعد خصم رسوم إدارية لا تتجاوز (10%).</li>
-    <li>في حال طلب الإلغاء بعد بدء التنفيذ، يُحسب المستحق بناءً على نسبة الإنجاز الفعلي، ويُسترد الفرق إن وُجد.</li>
-    <li>لا يحقّ الاسترداد بعد تسليم الخدمة كاملةً واعتمادها من العميل.</li>
-  </ol>
-
-  <h3 class="section">٨. القانون الواجب التطبيق وتسوية النزاعات</h3>
-  <ol>
-    <li>يخضع هذا العقد ويُفسَّر وفق أنظمة المملكة العربية السعودية ذات العلاقة.</li>
-    <li>يسعى الطرفان لتسوية أي نزاع ودياً خلال (15) يوماً من نشوئه.</li>
-    <li>في حال تعذُّر التسوية الودية، يُحال النزاع إلى مركز التحكيم التجاري السعودي بمدينة الرياض وفق نظامه المعتمد.</li>
-  </ol>
-
-  <h3 class="section">٩. أحكام عامة</h3>
-  <ol>
-    <li>حُرِّر هذا العقد إلكترونياً، ويُعدّ التوقيع الإلكتروني المُسجَّل في النظام (مع توثيق وقت التوقيع وعنوان IP) قائماً مقام التوقيع اليدوي وله ذات الحجّية القانونية وفق نظام التعاملات الإلكترونية في المملكة العربية السعودية.</li>
-    <li>أي تعديل أو إضافة على هذا العقد لا يُعتدّ به إلا إذا كان مكتوباً وموقَّعاً من الطرفين.</li>
-    <li>يُعدّ هذا العقد ساري المفعول من تاريخ التوقيع، وتسلَّم نسخة إلكترونية للعميل عبر حسابه في المنصة.</li>
-  </ol>
-
-  <h3 class="section">١٠. التوقيعات</h3>
-  <div class="signatures">
+  <div class="sigs">
     <div class="sigbox">
-      <div class="label">الطرف الأول (المنصة)</div>
-      <div class="name">${esc(BRAND)}</div>
-      <div class="signed">موقّع إلكترونياً</div>
-      <div class="meta">${esc(PARENT_COMPANY)}<br/>تاريخ الإصدار: ${fmtDateTime(contract.created_at)}</div>
+      <div class="lbl">الطرف الأول</div>
+      <div class="who">${esc(PLATFORM.legal)}</div>
+      <div class="seal-circle">
+        <p class="sn">${esc(PLATFORM.nameAr)}</p>
+        <p class="sm">MUP</p>
+        <p class="sd">${fmtDate(contract.created_at)}</p>
+      </div>
+      <div class="stamp-ok">✓ معتمد ومختوم رسمياً</div>
     </div>
+
     <div class="sigbox">
-      <div class="label">الطرف الثاني (العميل)</div>
-      <div class="name">${esc(contract.client_full_name || "—")}</div>
+      <div class="lbl">الطرف الثاني</div>
+      <div class="who">${esc(contract.client_full_name || "—")}</div>
       ${signature ? `
-        <div class="signed">${esc(signature.signature_text)}</div>
-        <div class="meta">
-          ✓ موقّع إلكترونياً<br/>
-          التاريخ: ${fmtDateTime(signature.signed_at)}<br/>
-          ${signature.ip_address ? `IP: ${esc(signature.ip_address)}<br/>` : ""}
-          ${signature.signer_id_number ? `الهوية: ${esc(signature.signer_id_number)}` : ""}
+        <div class="signed-card">
+          <div class="ok">✓ تم التوقيع إلكترونياً</div>
+          <div class="sigtext">${esc(signature.signature_text)}</div>
+          <div class="meta">
+            التاريخ: ${fmtDateTime(signature.signed_at)}<br/>
+            ${signature.ip_address ? `IP: ${esc(signature.ip_address)}<br/>` : ""}
+            ${signature.signer_id_number ? `الهوية: ${esc(signature.signer_id_number)}` : ""}
+          </div>
         </div>
-      ` : `<div class="meta" style="padding:18px 0;text-align:center;color:var(--muted);">— لم يتم التوقيع بعد —</div>`}
+      ` : `<div class="pending">— لم يتم التوقيع بعد —</div>`}
     </div>
   </div>
 
@@ -294,13 +319,16 @@ function buildHtml(contract: any, signature: any, verifyHash: string) {
     <div class="verify">
       <strong>🔐 بصمة التحقق الرقمي (SHA-256):</strong>
       <code>${esc(verifyHash)}</code>
-      هذه البصمة تُستخدم للتحقق من سلامة العقد وعدم التلاعب به.
     </div>
   ` : ""}
 
   <footer class="doc">
-    ${esc(BRAND)} • ${esc(PARENT_COMPANY)} • وثيقة مُولّدة إلكترونياً<br/>
-    masteredupath.com
+    <span class="num">${esc(contract.contract_number)}</span>
+    <div class="center">
+      <b>${esc(PLATFORM.legal)} | ${esc(PLATFORM.name)}</b>
+      جميع الحقوق محفوظة © ${new Date().getFullYear()}
+    </div>
+    <span>${esc(PLATFORM.domain)}</span>
   </footer>
 </div>
 </body>
@@ -352,16 +380,12 @@ Deno.serve(async (req: Request) => {
     const html = buildHtml(contract, signature, hash);
     const userId = contract.user_id || "system";
     const path = `${userId}/${contract.id}.html`;
-
     let signedUrl: string | undefined;
 
-    // Save a copy in storage (best-effort, don't fail the request)
     try {
-      await supabase.storage
-        .from("contracts")
+      await supabase.storage.from("contracts")
         .upload(path, new Blob([html], { type: "text/html; charset=utf-8" }), {
-          contentType: "text/html; charset=utf-8",
-          upsert: true,
+          contentType: "text/html; charset=utf-8", upsert: true,
         });
       await supabase.from("contracts").update({
         signed_pdf_path: path,
@@ -369,14 +393,12 @@ Deno.serve(async (req: Request) => {
       }).eq("id", contract.id);
 
       const { data: urlData } = await supabase.storage
-        .from("contracts")
-        .createSignedUrl(path, 60 * 60 * 24 * 7);
+        .from("contracts").createSignedUrl(path, 60 * 60 * 24 * 7);
       signedUrl = urlData?.signedUrl;
     } catch (e) {
       console.warn("storage upload failed:", e);
     }
 
-    // Notify admins automatically when contract is signed (best-effort)
     if (signature) {
       try {
         const { data: adminRoles } = await supabase
@@ -386,7 +408,6 @@ Deno.serve(async (req: Request) => {
           const { data: u } = await supabase.auth.admin.getUserById(r.user_id);
           if (u?.user?.email) adminEmails.add(u.user.email);
         }
-
         const fmt = (n: number, c = "SAR") =>
           new Intl.NumberFormat("ar-SA", { style: "currency", currency: c }).format(n || 0);
 
@@ -404,8 +425,7 @@ Deno.serve(async (req: Request) => {
                 signedAt: new Date(signature.signed_at).toLocaleString("ar-SA"),
                 ipAddress: signature.ip_address,
                 totalAmount: contract.total_amount
-                  ? fmt(Number(contract.total_amount), contract.currency || "SAR")
-                  : undefined,
+                  ? fmt(Number(contract.total_amount), contract.currency || "SAR") : undefined,
                 pdfUrl: signedUrl,
               },
             },
@@ -416,8 +436,6 @@ Deno.serve(async (req: Request) => {
       }
     }
 
-    // If client requests raw HTML, return it directly so the browser renders
-    // the styled document immediately and triggers print/save-as-PDF.
     const wantsHtml =
       url.searchParams.get("format") === "html" ||
       body.format === "html" ||
@@ -435,11 +453,8 @@ Deno.serve(async (req: Request) => {
     }
 
     return new Response(JSON.stringify({
-      success: true,
-      path,
-      signed_url: signedUrl,
-      contract_id: contract.id,
-      html,
+      success: true, path, signed_url: signedUrl,
+      contract_id: contract.id, html,
     }), { headers: { ...corsHeaders, "Content-Type": "application/json" } });
   } catch (e: any) {
     console.error("generate-contract-pdf error:", e);
