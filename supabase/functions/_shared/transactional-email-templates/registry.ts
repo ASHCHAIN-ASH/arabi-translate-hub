@@ -14,6 +14,7 @@ import { template as orderUpdate } from './order-update.tsx'
 import { template as contractSigned } from './contract-signed.tsx'
 import { template as contractSignedAdmin } from './contract-signed-admin.tsx'
 import { template as contractOtp } from './contract-otp.tsx'
+import { template as contractReminder } from './contract-reminder.tsx'
 
 export const TEMPLATES: Record<string, TemplateEntry> = {
   'quote-notification': quoteNotification,
@@ -21,4 +22,5 @@ export const TEMPLATES: Record<string, TemplateEntry> = {
   'contract-signed': contractSigned,
   'contract-signed-admin': contractSignedAdmin,
   'contract-otp': contractOtp,
+  'contract-reminder': contractReminder,
 }
