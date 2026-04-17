@@ -326,7 +326,8 @@
     line-height: 1.7;
   }
   
-  .font-academic-heading {
+  .font-academic-heading,
+  .font-arabic-formal {
     font-family: 'Cairo', system-ui, sans-serif;
     font-weight: 600;
     letter-spacing: -0.02em;
