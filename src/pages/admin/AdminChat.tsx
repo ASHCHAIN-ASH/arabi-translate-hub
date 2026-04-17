@@ -27,13 +27,29 @@ const AdminChat = () => {
     activeConversation,
     setActiveConversation,
     sendMessage,
+    createConversation,
     loading,
+    refresh,
   } = useChat(user?.id, true);
 
   const [newMessage, setNewMessage] = useState('');
   const [searchTerm, setSearchTerm] = useState('');
   const [sending, setSending] = useState(false);
+  const [newOpen, setNewOpen] = useState(false);
+  const [customers, setCustomers] = useState<Array<{ id: string; user_id: string | null; name: string; email: string | null }>>([]);
+  const [selectedCustomer, setSelectedCustomer] = useState<{ user_id: string; name: string } | null>(null);
+  const [customerPickerOpen, setCustomerPickerOpen] = useState(false);
+  const [newSubject, setNewSubject] = useState('');
+  const [newFirstMessage, setNewFirstMessage] = useState('');
+  const [creating, setCreating] = useState(false);
   const messagesEndRef = React.useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!newOpen) return;
+    supabase.from('customers').select('id, user_id, name, email').not('user_id', 'is', null).order('name').then(({ data }) => {
+      if (data) setCustomers(data as any);
+    });
+  }, [newOpen]);
 
   React.useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
