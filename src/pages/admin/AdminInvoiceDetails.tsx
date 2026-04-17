@@ -13,6 +13,7 @@ import { InvoiceService, type Invoice, type InvoiceItem, type InvoicePayment, ty
 import { openInvoicePrintWindow, downloadInvoiceAsPDF } from '@/utils/invoicePdf';
 import InvoiceFormDialog from '@/components/admin/invoices/InvoiceFormDialog';
 import PaymentDialog from '@/components/admin/invoices/PaymentDialog';
+import SendInvoiceDialog from '@/components/admin/invoices/SendInvoiceDialog';
 
 const ORDER_STATUS_AR: Record<string, string> = {
   pending: 'قيد الانتظار',
@@ -40,6 +41,7 @@ export default function AdminInvoiceDetails() {
   const [loading, setLoading] = useState(true);
   const [editOpen, setEditOpen] = useState(false);
   const [payOpen, setPayOpen] = useState(false);
+  const [sendOpen, setSendOpen] = useState(false);
 
   const load = async () => {
     if (!id) return;
@@ -74,19 +76,7 @@ export default function AdminInvoiceDetails() {
     return () => { supabase.removeChannel(ch); };
   }, [id]);
 
-  const [sending, setSending] = useState(false);
-  const handleSend = async () => {
-    if (!invoice) return;
-    if (!invoice.customer_email) { toast.error('لا يوجد بريد إلكتروني للعميل'); return; }
-    setSending(true);
-    try {
-      const { error } = await supabase.functions.invoke('send-invoice-email', { body: { invoice_id: invoice.id } });
-      if (error) throw error;
-      toast.success(`تم إرسال الفاتورة إلى ${invoice.customer_email}`);
-      load();
-    } catch (e: any) { toast.error('فشل الإرسال', { description: e.message }); }
-    finally { setSending(false); }
-  };
+  const handleSend = () => setSendOpen(true);
 
   const handleDelete = async () => {
     if (!invoice) return;
@@ -117,8 +107,8 @@ export default function AdminInvoiceDetails() {
           <div className="flex flex-wrap gap-2">
             <Button size="sm" variant="outline" onClick={() => openInvoicePrintWindow(invoice, items, payments)}><Printer className="w-4 h-4 ml-1" />طباعة</Button>
             <Button size="sm" variant="outline" onClick={() => downloadInvoiceAsPDF(invoice, items, payments)}><Download className="w-4 h-4 ml-1" />PDF</Button>
-            <Button size="sm" variant="outline" onClick={handleSend} disabled={sending}>
-              {sending ? <Loader2 className="w-4 h-4 ml-1 animate-spin" /> : <Send className="w-4 h-4 ml-1" />}
+            <Button size="sm" variant="outline" onClick={handleSend}>
+              <Send className="w-4 h-4 ml-1" />
               إرسال بالبريد
             </Button>
             <Button size="sm" variant="outline" onClick={() => setEditOpen(true)}><Edit className="w-4 h-4 ml-1" />تعديل</Button>
@@ -249,6 +239,7 @@ export default function AdminInvoiceDetails() {
 
       <InvoiceFormDialog open={editOpen} onOpenChange={setEditOpen} invoice={invoice} onSaved={load} />
       <PaymentDialog open={payOpen} onOpenChange={setPayOpen} invoice={invoice} onSaved={load} />
+      <SendInvoiceDialog open={sendOpen} onOpenChange={setSendOpen} invoice={invoice} onSent={load} />
     </AdminLayout>
   );
 }
