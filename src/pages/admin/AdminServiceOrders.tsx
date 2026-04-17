@@ -30,6 +30,7 @@ interface CustomerInfo {
   email?: string | null;
   phone?: string | null;
   company?: string | null;
+  customer_code?: string | null;
 }
 
 interface ProfileInfo {
