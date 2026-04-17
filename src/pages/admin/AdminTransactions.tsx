@@ -100,6 +100,7 @@ const AdminTransactions = () => {
   const [refundTarget, setRefundTarget] = useState<Payment | null>(null);
   const [refundReason, setRefundReason] = useState('');
   const [refunding, setRefunding] = useState(false);
+  const [detailsTarget, setDetailsTarget] = useState<Payment | null>(null);
 
   const handleRefund = async () => {
     if (!refundTarget) return;
