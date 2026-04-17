@@ -5,7 +5,7 @@ import {
   ArrowRight, Calendar, Clock, FileText, DollarSign,
   CheckCircle, Download, Package, AlertCircle, RefreshCw,
   Check, X, MessageSquare, TrendingUp, Shield, Sparkles, Copy,
-  Upload, Loader2
+  Upload, Loader2, ScrollText
 } from 'lucide-react';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -289,10 +289,30 @@ const OrderDetails = () => {
     <ClientLayout>
       <div className="p-4 lg:p-6 space-y-6 max-w-5xl mx-auto" dir="rtl">
         {/* Back Button */}
-        <motion.div initial={{ opacity: 0, x: 10 }} animate={{ opacity: 1, x: 0 }}>
+        <motion.div initial={{ opacity: 0, x: 10 }} animate={{ opacity: 1, x: 0 }} className="flex items-center justify-between gap-2 flex-wrap">
           <Button variant="ghost" size="sm" onClick={() => navigate('/orders')} className="gap-2 text-muted-foreground hover:text-foreground">
             <ArrowRight className="w-4 h-4" />
             العودة لسجل الطلبات
+          </Button>
+          <Button
+            variant="outline"
+            size="sm"
+            className="gap-2 border-primary/30 text-primary hover:bg-primary/5"
+            onClick={async () => {
+              if (!order) return;
+              const { data } = await supabase
+                .from('contracts')
+                .select('id, status')
+                .eq('service_order_id', order.id)
+                .order('created_at', { ascending: false })
+                .limit(1)
+                .maybeSingle();
+              if (data?.id) navigate(`/contracts/${data.id}`);
+              else toast.info('لا يوجد عقد مرتبط بعد', { description: 'يتم إنشاء العقد تلقائياً بعد قبول عرض السعر' });
+            }}
+          >
+            <ScrollText className="w-4 h-4" />
+            عرض العقد
           </Button>
         </motion.div>
 
