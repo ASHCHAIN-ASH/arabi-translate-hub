@@ -36,7 +36,7 @@ const ContractsSystem = () => {
   const [contracts, setContracts] = useState<ContractRow[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
-  const [tab, setTab] = useState<ContractStatus | "all">("all");
+  const [tab, setTab] = useState<ContractStatus | "all" | "expired">("all");
   const [openNew, setOpenNew] = useState(false);
   const [customers, setCustomers] = useState<any[]>([]);
   const [serviceTypeFilter, setServiceTypeFilter] = useState<string>("all");
@@ -78,12 +78,18 @@ const ContractsSystem = () => {
     setCustomers(data || []);
   }
 
+  const isExpired = (c: ContractRow) =>
+    !!c.expires_at &&
+    new Date(c.expires_at).getTime() < Date.now() &&
+    !["signed", "active", "completed", "cancelled"].includes(c.status);
+
   const stats = useMemo(() => ({
     total: contracts.length,
     pending: contracts.filter(c => c.status === "pending_signature").length,
     signed: contracts.filter(c => ["signed","active","completed"].includes(c.status)).length,
     draft: contracts.filter(c => c.status === "draft").length,
     cancelled: contracts.filter(c => c.status === "cancelled").length,
+    expired: contracts.filter(isExpired).length,
     revenue: contracts.filter(c => ["signed","active","completed"].includes(c.status))
       .reduce((s,c) => s + Number(c.total_amount || 0), 0),
   }), [contracts]);
@@ -95,7 +101,10 @@ const ContractsSystem = () => {
         (c.client_full_name || "").toLowerCase().includes(search.toLowerCase()) ||
         (c.client_email || "").toLowerCase().includes(search.toLowerCase()) ||
         (c.title || "").toLowerCase().includes(search.toLowerCase());
-      const matchTab = tab === "all" || c.status === tab;
+      const matchTab =
+        tab === "all" ? true :
+        tab === "expired" ? isExpired(c) :
+        c.status === tab;
       const matchType = serviceTypeFilter === "all" || c.service_type === serviceTypeFilter;
       return matchSearch && matchTab && matchType;
     });
@@ -311,6 +320,7 @@ const ContractsSystem = () => {
             <TabsTrigger value="pending_signature">بانتظار التوقيع ({stats.pending})</TabsTrigger>
             <TabsTrigger value="signed">موقّعة ({stats.signed})</TabsTrigger>
             <TabsTrigger value="cancelled">ملغاة ({stats.cancelled})</TabsTrigger>
+            <TabsTrigger value="expired" className="data-[state=active]:text-destructive">منتهية الصلاحية ({stats.expired})</TabsTrigger>
           </TabsList>
 
           <TabsContent value={tab} className="mt-4">
