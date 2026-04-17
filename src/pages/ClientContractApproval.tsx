@@ -43,6 +43,20 @@ const ClientContractApproval = () => {
   const [comments, setComments] = useState("");
   const [accepted, setAccepted] = useState<string[]>([]);
 
+  // OTP state
+  const [otpStep, setOtpStep] = useState<"idle" | "sent" | "verified">("idle");
+  const [otpCode, setOtpCode] = useState("");
+  const [otpSending, setOtpSending] = useState(false);
+  const [otpVerifying, setOtpVerifying] = useState(false);
+  const [otpResendCooldown, setOtpResendCooldown] = useState(0);
+  const [maskedEmail, setMaskedEmail] = useState("");
+
+  useEffect(() => {
+    if (otpResendCooldown <= 0) return;
+    const t = setTimeout(() => setOtpResendCooldown((s) => s - 1), 1000);
+    return () => clearTimeout(t);
+  }, [otpResendCooldown]);
+
   useEffect(() => { if (contractId) load(); }, [contractId]);
 
   async function load() {
