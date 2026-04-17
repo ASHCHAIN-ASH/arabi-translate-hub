@@ -705,9 +705,9 @@ const StatCard = ({
           <div className={`h-10 w-10 rounded-xl flex items-center justify-center shrink-0 ${tones[tone]}`}>
             {React.cloneElement(icon as React.ReactElement, { className: 'h-5 w-5' })}
           </div>
-          <div className="min-w-0">
+          <div className="min-w-0 flex-1">
             <p className="text-xs text-muted-foreground truncate">{label}</p>
-            <p className={`font-bold tabular-nums ${isCurrency ? 'text-base md:text-lg' : 'text-xl md:text-2xl'}`}>
+            <p className={`font-bold tabular-nums truncate ${isCurrency ? 'text-sm md:text-base' : 'text-xl md:text-2xl'}`}>
               {value}
             </p>
           </div>
