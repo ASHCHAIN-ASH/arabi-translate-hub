@@ -1,6 +1,6 @@
 import { motion } from 'framer-motion';
 import { Card, CardContent } from '@/components/ui/card';
-import { Plus, HeadphonesIcon, FileText, CreditCard } from 'lucide-react';
+import { Plus, HeadphonesIcon, FileText, CreditCard, ScrollText } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
 const actions = [
@@ -15,6 +15,12 @@ const actions = [
     icon: FileText,
     href: '/invoices',
     color: 'bg-emerald-600 text-white',
+  },
+  {
+    title: 'عقودي',
+    icon: ScrollText,
+    href: '/client/contracts',
+    color: 'bg-primary text-primary-foreground',
   },
   {
     title: 'المدفوعات',
@@ -34,7 +40,7 @@ export default function DashboardQuickActions() {
   const navigate = useNavigate();
 
   return (
-    <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+    <div className="grid grid-cols-2 sm:grid-cols-5 gap-3">
       {actions.map((action, i) => (
         <motion.div
           key={action.title}

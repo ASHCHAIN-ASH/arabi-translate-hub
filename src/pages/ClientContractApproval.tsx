@@ -25,6 +25,7 @@ import {
 } from "@/utils/supabaseContractService";
 import { REQUIRED_TERMS, PARENT_COMPANY } from "@/utils/contractTemplates";
 import ContractDocument from "@/components/contracts/ContractDocument";
+import ClientLayout from "@/components/client/ClientLayout";
 
 const ClientContractApproval = () => {
   const params = useParams();
@@ -209,37 +210,42 @@ const ClientContractApproval = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-background" dir="rtl">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-3" />
-          <p className="text-muted-foreground">جاري تحميل العقد…</p>
+      <ClientLayout>
+        <div className="flex items-center justify-center min-h-[60vh]" dir="rtl">
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-3" />
+            <p className="text-muted-foreground">جاري تحميل العقد…</p>
+          </div>
         </div>
-      </div>
+      </ClientLayout>
     );
   }
 
   if (!contract) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-background" dir="rtl">
-        <Card className="max-w-md">
-          <CardContent className="py-10 text-center">
-            <AlertCircle className="h-12 w-12 mx-auto mb-3 text-destructive" />
-            <h2 className="text-lg font-bold mb-2">العقد غير موجود</h2>
-            <Button asChild variant="outline"><Link to="/contracts"><ArrowRight className="h-4 w-4 ml-2" />عودة لعقودي</Link></Button>
-          </CardContent>
-        </Card>
-      </div>
+      <ClientLayout>
+        <div className="flex items-center justify-center min-h-[60vh]" dir="rtl">
+          <Card className="max-w-md w-full">
+            <CardContent className="py-10 text-center">
+              <AlertCircle className="h-12 w-12 mx-auto mb-3 text-destructive" />
+              <h2 className="text-lg font-bold mb-2">العقد غير موجود</h2>
+              <Button asChild variant="outline"><Link to="/client/contracts"><ArrowRight className="h-4 w-4 ml-2" />عودة لعقودي</Link></Button>
+            </CardContent>
+          </Card>
+        </div>
+      </ClientLayout>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-background to-muted/20" dir="rtl">
+    <ClientLayout>
+      <div className="bg-gradient-to-b from-background to-muted/20 p-4 sm:p-6 lg:p-8" dir="rtl">
       {/* Header */}
-      <header className="border-b bg-card/80 backdrop-blur sticky top-0 z-10">
-        <div className="container mx-auto px-4 py-4 flex items-center justify-between gap-4">
+      <header className="max-w-7xl mx-auto border rounded-2xl bg-card/80 backdrop-blur">
+        <div className="px-4 py-4 sm:px-6 flex items-center justify-between gap-4">
           <div className="flex items-center gap-3 min-w-0">
             <Button asChild variant="ghost" size="sm">
-              <Link to="/contracts"><ArrowRight className="h-4 w-4 ml-1" /> عودة</Link>
+              <Link to="/client/contracts"><ArrowRight className="h-4 w-4 ml-1" /> عودة</Link>
             </Button>
             <div className="min-w-0">
               <h1 className="font-bold text-lg truncate">عقد رقم {contract.contract_number}</h1>
@@ -258,7 +264,7 @@ const ClientContractApproval = () => {
         </div>
       </header>
 
-      <main className="container mx-auto px-4 py-6">
+      <main className="max-w-7xl mx-auto py-6">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Contract Body */}
           <motion.div
@@ -552,7 +558,8 @@ const ClientContractApproval = () => {
           </motion.aside>
         </div>
       </main>
-    </div>
+      </div>
+    </ClientLayout>
   );
 };
 

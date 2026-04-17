@@ -33,6 +33,18 @@ export interface ClientInvoice {
   issueDate: string;
 }
 
+export interface ClientContract {
+  id: string;
+  contractNumber: string;
+  title: string;
+  serviceName: string;
+  status: string;
+  amount: number;
+  currency: string;
+  createdAt: string;
+  signedAt: string | null;
+}
+
 export class ClientDashboardService {
   static async getClientStats(userId: string): Promise<ClientStats> {
     try {
@@ -135,6 +147,33 @@ export class ClientDashboardService {
       })) || [];
     } catch (error) {
       console.error('خطأ في جلب فواتير العميل:', error);
+      return [];
+    }
+  }
+
+  static async getClientContracts(_userId: string, limit = 5): Promise<ClientContract[]> {
+    try {
+      const { data, error } = await supabase
+        .from('contracts')
+        .select('id, contract_number, title, service_name, status, total_amount, currency, created_at, signed_at')
+        .order('created_at', { ascending: false })
+        .limit(limit);
+
+      if (error) throw error;
+
+      return data?.map((contract) => ({
+        id: contract.id,
+        contractNumber: contract.contract_number,
+        title: contract.title,
+        serviceName: contract.service_name || '',
+        status: contract.status || 'draft',
+        amount: contract.total_amount || 0,
+        currency: contract.currency || 'SAR',
+        createdAt: new Date(contract.created_at).toLocaleDateString('ar-SA'),
+        signedAt: contract.signed_at || null,
+      })) || [];
+    } catch (error) {
+      console.error('خطأ في جلب عقود العميل:', error);
       return [];
     }
   }

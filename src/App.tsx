@@ -2,7 +2,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate, useParams } from "react-router-dom";
 import PageThemeProvider from "./components/PageThemeProvider";
 import { SimpleAuthProvider } from "@/components/SimpleAuthProvider";
 import SimpleProtectedRoute from "@/components/SimpleProtectedRoute";
@@ -165,6 +165,12 @@ import Footer from "./components/Footer";
 import BackToTopButton from "./components/BackToTopButton";
 
 const queryClient = new QueryClient();
+
+const LegacyContractRedirect = () => {
+  const { id } = useParams();
+
+  return <Navigate to={id ? `/client/contracts/${id}` : "/client/contracts"} replace />;
+};
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
@@ -331,9 +337,7 @@ const App = () => (
               </SimpleProtectedRoute>
             } />
             <Route path="/contracts" element={
-              <SimpleProtectedRoute requiredRole="client">
-                <ClientContracts />
-              </SimpleProtectedRoute>
+              <LegacyContractRedirect />
             } />
             <Route path="/client/contracts" element={
               <SimpleProtectedRoute requiredRole="client">
@@ -341,9 +345,7 @@ const App = () => (
               </SimpleProtectedRoute>
             } />
             <Route path="/contracts/:id" element={
-              <SimpleProtectedRoute requiredRole="client">
-                <ClientContractApproval />
-              </SimpleProtectedRoute>
+              <LegacyContractRedirect />
             } />
             <Route path="/client/contracts/:id" element={
               <SimpleProtectedRoute requiredRole="client">

@@ -10,6 +10,7 @@ import ClientLayout from '@/components/client/ClientLayout';
 import DashboardStatsGrid from '@/components/client/DashboardStatsGrid';
 import DashboardQuickActions from '@/components/client/DashboardQuickActions';
 import DashboardRecentOrders from '@/components/client/DashboardRecentOrders';
+import DashboardRecentContracts from '@/components/client/DashboardRecentContracts';
 import DashboardRecentInvoices from '@/components/client/DashboardRecentInvoices';
 import DashboardActiveTickets from '@/components/client/DashboardActiveTickets';
 
@@ -17,7 +18,7 @@ const ClientDashboard = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
   const { toast } = useToast();
-  const { stats, orders, invoices, tickets, payments, loading, error, refresh } = useClientData(user?.id);
+  const { stats, orders, invoices, contracts, tickets, payments, loading, error, refresh } = useClientData(user?.id);
 
   const handleRefresh = async () => {
     await refresh();
@@ -105,8 +106,9 @@ const ClientDashboard = () => {
 
         {/* Main content grid */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
-          <div className="lg:col-span-2">
+          <div className="lg:col-span-2 space-y-5">
             <DashboardRecentOrders orders={orders} />
+            <DashboardRecentContracts contracts={contracts} />
           </div>
           <div className="space-y-5">
             <DashboardRecentInvoices invoices={invoices} />
