@@ -11,11 +11,14 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
+import { Progress } from '@/components/ui/progress';
 import { 
   Search, Filter, RefreshCw, TrendingUp, Clock, CheckCircle, Users,
   Eye, Edit, FileText, Calendar, Paperclip, Download, File,
   ChevronDown, ChevronUp, DollarSign, Send, X, User, Mail, Phone,
-  ArrowUpDown, MoreHorizontal, AlertCircle, Zap, Bell
+  ArrowUpDown, MoreHorizontal, AlertCircle, Zap, Bell, Copy, MessageSquare,
+  Activity, Wallet, ExternalLink, Building2
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { motion, AnimatePresence } from 'framer-motion';
