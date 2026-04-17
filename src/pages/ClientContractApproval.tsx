@@ -352,9 +352,93 @@ const ClientContractApproval = () => {
                     <Textarea id="cmts" value={comments} onChange={(e) => setComments(e.target.value)} rows={2} />
                   </div>
 
-                  <Button onClick={handleSign} disabled={submitting || !allTermsAccepted} size="lg" className="w-full">
-                    {submitting ? "جاري الحفظ…" : (<><CheckCircle2 className="h-5 w-5 ml-2" /> أوافق وأوقّع إلكترونياً</>)}
-                  </Button>
+                  {/* OTP step */}
+                  {otpStep === "idle" && (
+                    <div className="rounded-lg border border-dashed border-primary/40 bg-primary/5 p-4 space-y-3">
+                      <div className="flex items-start gap-3">
+                        <Mail className="h-5 w-5 text-primary mt-0.5 shrink-0" />
+                        <div className="text-sm">
+                          <p className="font-semibold mb-1">التحقق برمز عبر البريد الإلكتروني</p>
+                          <p className="text-muted-foreground text-xs leading-relaxed">
+                            لحماية توقيعك، سنرسل رمز تحقق مكون من 6 أرقام إلى بريدك المسجل
+                            {contract.client_email && (
+                              <span className="font-medium text-foreground"> ({contract.client_email.replace(/(.{2}).+(@.+)/, "$1***$2")})</span>
+                            )}.
+                          </p>
+                        </div>
+                      </div>
+                      <Button
+                        onClick={handleSendOtp}
+                        disabled={otpSending || !baseFormValid}
+                        size="lg"
+                        className="w-full"
+                      >
+                        {otpSending ? (
+                          <><Loader2 className="h-5 w-5 ml-2 animate-spin" /> جاري الإرسال…</>
+                        ) : (
+                          <><Mail className="h-5 w-5 ml-2" /> إرسال رمز التحقق إلى بريدي</>
+                        )}
+                      </Button>
+                    </div>
+                  )}
+
+                  {otpStep === "sent" && (
+                    <div className="rounded-lg border border-primary/40 bg-card p-5 space-y-4">
+                      <div className="text-center space-y-1">
+                        <KeyRound className="h-8 w-8 mx-auto text-primary" />
+                        <p className="font-bold">أدخل رمز التحقق</p>
+                        <p className="text-xs text-muted-foreground">
+                          أُرسل الرمز إلى <span className="font-semibold text-foreground">{maskedEmail}</span> — صالح لـ 10 دقائق
+                        </p>
+                      </div>
+
+                      <div className="flex justify-center" dir="ltr">
+                        <InputOTP maxLength={6} value={otpCode} onChange={setOtpCode}>
+                          <InputOTPGroup>
+                            <InputOTPSlot index={0} />
+                            <InputOTPSlot index={1} />
+                            <InputOTPSlot index={2} />
+                            <InputOTPSlot index={3} />
+                            <InputOTPSlot index={4} />
+                            <InputOTPSlot index={5} />
+                          </InputOTPGroup>
+                        </InputOTP>
+                      </div>
+
+                      <Button
+                        onClick={handleVerifyAndSign}
+                        disabled={otpVerifying || submitting || otpCode.length !== 6}
+                        size="lg"
+                        className="w-full"
+                      >
+                        {(otpVerifying || submitting) ? (
+                          <><Loader2 className="h-5 w-5 ml-2 animate-spin" /> جاري التحقق والتوقيع…</>
+                        ) : (
+                          <><CheckCircle2 className="h-5 w-5 ml-2" /> تحقّق ووقّع العقد</>
+                        )}
+                      </Button>
+
+                      <div className="flex items-center justify-between text-xs">
+                        <button
+                          type="button"
+                          onClick={handleSendOtp}
+                          disabled={otpResendCooldown > 0 || otpSending}
+                          className="text-primary hover:underline disabled:text-muted-foreground disabled:no-underline"
+                        >
+                          {otpResendCooldown > 0
+                            ? `إعادة الإرسال خلال ${otpResendCooldown}ث`
+                            : "إعادة إرسال الرمز"}
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => { setOtpStep("idle"); setOtpCode(""); }}
+                          className="text-muted-foreground hover:text-foreground"
+                        >
+                          تغيير البيانات
+                        </button>
+                      </div>
+                    </div>
+                  )}
                 </CardContent>
               </Card>
             )}
