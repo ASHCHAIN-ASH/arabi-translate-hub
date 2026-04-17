@@ -124,50 +124,206 @@ export type Database = {
           },
         ]
       }
-      contracts: {
+      contract_signatures: {
         Row: {
-          content: string | null
-          contract_number: string
-          created_at: string
-          expires_at: string | null
+          accepted_terms: Json | null
+          comments: string | null
+          contract_id: string
           id: string
-          order_id: string | null
-          signed_at: string | null
-          status: string | null
-          title: string
-          updated_at: string
-          user_id: string | null
+          ip_address: string | null
+          signature_text: string
+          signed_at: string
+          signer_email: string | null
+          signer_id_number: string | null
+          signer_name: string
+          signer_user_id: string | null
+          user_agent: string | null
         }
         Insert: {
-          content?: string | null
-          contract_number?: string
-          created_at?: string
-          expires_at?: string | null
+          accepted_terms?: Json | null
+          comments?: string | null
+          contract_id: string
           id?: string
-          order_id?: string | null
-          signed_at?: string | null
-          status?: string | null
-          title: string
-          updated_at?: string
-          user_id?: string | null
+          ip_address?: string | null
+          signature_text: string
+          signed_at?: string
+          signer_email?: string | null
+          signer_id_number?: string | null
+          signer_name: string
+          signer_user_id?: string | null
+          user_agent?: string | null
         }
         Update: {
-          content?: string | null
-          contract_number?: string
-          created_at?: string
-          expires_at?: string | null
+          accepted_terms?: Json | null
+          comments?: string | null
+          contract_id?: string
           id?: string
-          order_id?: string | null
-          signed_at?: string | null
-          status?: string | null
-          title?: string
-          updated_at?: string
-          user_id?: string | null
+          ip_address?: string | null
+          signature_text?: string
+          signed_at?: string
+          signer_email?: string | null
+          signer_id_number?: string | null
+          signer_name?: string
+          signer_user_id?: string | null
+          user_agent?: string | null
         }
         Relationships: [
           {
+            foreignKeyName: "contract_signatures_contract_id_fkey"
+            columns: ["contract_id"]
+            isOneToOne: false
+            referencedRelation: "contracts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      contract_timeline: {
+        Row: {
+          action_label: string
+          action_type: string
+          actor_id: string | null
+          actor_type: string
+          contract_id: string
+          created_at: string
+          description: string | null
+          id: string
+          metadata: Json | null
+        }
+        Insert: {
+          action_label: string
+          action_type: string
+          actor_id?: string | null
+          actor_type?: string
+          contract_id: string
+          created_at?: string
+          description?: string | null
+          id?: string
+          metadata?: Json | null
+        }
+        Update: {
+          action_label?: string
+          action_type?: string
+          actor_id?: string | null
+          actor_type?: string
+          contract_id?: string
+          created_at?: string
+          description?: string | null
+          id?: string
+          metadata?: Json | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "contract_timeline_contract_id_fkey"
+            columns: ["contract_id"]
+            isOneToOne: false
+            referencedRelation: "contracts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      contracts: {
+        Row: {
+          client_email: string | null
+          client_full_name: string | null
+          client_id_number: string | null
+          client_phone: string | null
+          content: string | null
+          contract_number: string
+          created_at: string
+          currency: string | null
+          customer_id: string | null
+          delivery_date: string | null
+          expires_at: string | null
+          id: string
+          metadata: Json | null
+          order_id: string | null
+          payment_terms: string | null
+          sent_at: string | null
+          service_name: string | null
+          service_order_id: string | null
+          service_type: string | null
+          signed_at: string | null
+          status: string | null
+          title: string
+          total_amount: number | null
+          updated_at: string
+          user_id: string | null
+          variables: Json | null
+        }
+        Insert: {
+          client_email?: string | null
+          client_full_name?: string | null
+          client_id_number?: string | null
+          client_phone?: string | null
+          content?: string | null
+          contract_number?: string
+          created_at?: string
+          currency?: string | null
+          customer_id?: string | null
+          delivery_date?: string | null
+          expires_at?: string | null
+          id?: string
+          metadata?: Json | null
+          order_id?: string | null
+          payment_terms?: string | null
+          sent_at?: string | null
+          service_name?: string | null
+          service_order_id?: string | null
+          service_type?: string | null
+          signed_at?: string | null
+          status?: string | null
+          title: string
+          total_amount?: number | null
+          updated_at?: string
+          user_id?: string | null
+          variables?: Json | null
+        }
+        Update: {
+          client_email?: string | null
+          client_full_name?: string | null
+          client_id_number?: string | null
+          client_phone?: string | null
+          content?: string | null
+          contract_number?: string
+          created_at?: string
+          currency?: string | null
+          customer_id?: string | null
+          delivery_date?: string | null
+          expires_at?: string | null
+          id?: string
+          metadata?: Json | null
+          order_id?: string | null
+          payment_terms?: string | null
+          sent_at?: string | null
+          service_name?: string | null
+          service_order_id?: string | null
+          service_type?: string | null
+          signed_at?: string | null
+          status?: string | null
+          title?: string
+          total_amount?: number | null
+          updated_at?: string
+          user_id?: string | null
+          variables?: Json | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "contracts_customer_id_fkey"
+            columns: ["customer_id"]
+            isOneToOne: false
+            referencedRelation: "customers"
+            referencedColumns: ["id"]
+          },
+          {
             foreignKeyName: "contracts_order_id_fkey"
             columns: ["order_id"]
+            isOneToOne: false
+            referencedRelation: "service_orders"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "contracts_service_order_id_fkey"
+            columns: ["service_order_id"]
             isOneToOne: false
             referencedRelation: "service_orders"
             referencedColumns: ["id"]
