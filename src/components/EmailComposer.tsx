@@ -331,14 +331,28 @@ export default function EmailComposer({ defaultTo = "", defaultTemplateKey = "",
         </div>
 
         <Dialog open={previewOpen} onOpenChange={setPreviewOpen}>
-          <DialogContent className="max-w-4xl max-h-[80vh] overflow-auto">
+          <DialogContent className="max-w-5xl max-h-[90vh] overflow-hidden flex flex-col">
             <DialogHeader>
-              <DialogTitle>معاينة البريد الإلكتروني</DialogTitle>
+              <DialogTitle className="flex items-center justify-between flex-wrap gap-2">
+                <span>معاينة البريد الإلكتروني</span>
+                <div className="flex gap-2">
+                  <Button size="sm" variant={previewDevice === 'mobile' ? 'default' : 'outline'} onClick={() => setPreviewDevice('mobile')}>📱 جوال</Button>
+                  <Button size="sm" variant={previewDevice === 'desktop' ? 'default' : 'outline'} onClick={() => setPreviewDevice('desktop')}>💻 كمبيوتر</Button>
+                </div>
+              </DialogTitle>
             </DialogHeader>
-            <div 
-              className="border rounded-lg p-4 bg-white"
-              dangerouslySetInnerHTML={{ __html: previewContent }}
-            />
+            <div className="flex-1 overflow-auto bg-muted/30 rounded-lg p-4 flex justify-center">
+              <iframe
+                title="معاينة البريد"
+                srcDoc={previewContent}
+                className="bg-white border rounded-lg shadow-sm transition-all"
+                style={{
+                  width: previewDevice === 'mobile' ? '375px' : '100%',
+                  maxWidth: previewDevice === 'mobile' ? '375px' : '720px',
+                  height: '70vh',
+                }}
+              />
+            </div>
           </DialogContent>
         </Dialog>
       </CardContent>
