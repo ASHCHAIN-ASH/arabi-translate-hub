@@ -103,19 +103,29 @@ const ClientWallet: React.FC = () => {
   const submitTopup = async () => {
     if (!user?.id) return;
     if (!amount || amount <= 0) return toast.error('يرجى إدخال مبلغ صحيح');
+    if (method === 'bank_transfer' && !receiptFile) {
+      return toast.error('يرجى إرفاق صورة إيصال التحويل البنكي');
+    }
     setSubmitting(true);
     try {
+      let receipt_path: string | undefined;
+      if (receiptFile) {
+        setUploadingReceipt(true);
+        receipt_path = await WalletService.uploadReceipt(user.id, receiptFile);
+        setUploadingReceipt(false);
+      }
       await WalletService.createTopupRequest({
         user_id: user.id, amount, payment_method: method,
         reference_number: reference || undefined, notes: notes || undefined,
+        receipt_path,
       });
       toast.success('تم إرسال طلب الشحن بانتظار موافقة الإدارة', {
         description: bonus.pct > 0 ? `🎁 ستحصل على ${bonus.label} عند الموافقة!` : undefined,
       });
-      setTopupOpen(false); setAmount(0); setReference(''); setNotes(''); load();
+      setTopupOpen(false); setAmount(0); setReference(''); setNotes(''); setReceiptFile(null); load();
     } catch (e: any) {
       toast.error('فشل إرسال الطلب', { description: e.message });
-    } finally { setSubmitting(false); }
+    } finally { setSubmitting(false); setUploadingReceipt(false); }
   };
 
   const copy = (text: string, key: string) => {
