@@ -83,6 +83,9 @@ import AdminChat from "./pages/admin/AdminChat";
 import AddUser from "./pages/admin/AddUser";
 import AdminWorkingHours from "./pages/admin/AdminWorkingHours";
 import ContractsSystem from "./pages/admin/ContractsSystem";
+import AdminContractDetails from "./pages/admin/AdminContractDetails";
+import ClientContracts from "./pages/ClientContracts";
+import ClientContractApproval from "./pages/ClientContractApproval";
 
 import ThesisTitles from "./pages/research/ThesisTitles";
 import AnnotatedPublishing from './pages/research/AnnotatedPublishing';
@@ -314,6 +317,21 @@ const App = () => (
             <Route path="/adminmaster/contracts" element={
               <SimpleProtectedRoute adminOnly>
                 <ContractsSystem />
+              </SimpleProtectedRoute>
+            } />
+            <Route path="/adminmaster/contracts/:id" element={
+              <SimpleProtectedRoute adminOnly>
+                <AdminContractDetails />
+              </SimpleProtectedRoute>
+            } />
+            <Route path="/contracts" element={
+              <SimpleProtectedRoute requiredRole="client">
+                <ClientContracts />
+              </SimpleProtectedRoute>
+            } />
+            <Route path="/contracts/:id" element={
+              <SimpleProtectedRoute requiredRole="client">
+                <ClientContractApproval />
               </SimpleProtectedRoute>
             } />
             <Route path="/adminmaster/services" element={
