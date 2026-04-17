@@ -91,6 +91,41 @@ const AdminTransactions = () => {
   const [methodFilter, setMethodFilter] = useState<string>('all');
   const [statusFilter, setStatusFilter] = useState<string>('all');
   const [periodFilter, setPeriodFilter] = useState<string>('30');
+  const [refundTarget, setRefundTarget] = useState<Payment | null>(null);
+  const [refundReason, setRefundReason] = useState('');
+  const [refunding, setRefunding] = useState(false);
+
+  const handleRefund = async () => {
+    if (!refundTarget) return;
+    setRefunding(true);
+    try {
+      const newNotes = [refundTarget.notes, `[استرداد] ${refundReason || 'بدون سبب محدد'}`]
+        .filter(Boolean).join(' | ');
+      const { error } = await supabase
+        .from('invoice_payments')
+        .update({ status: 'refunded', notes: newNotes })
+        .eq('id', refundTarget.id);
+      if (error) throw error;
+
+      // Log to invoice timeline (trigger doesn't auto-log refunds)
+      await supabase.from('invoice_timeline').insert({
+        invoice_id: refundTarget.invoice_id,
+        action_type: 'payment_refunded',
+        action_label: 'استرداد دفعة',
+        action_description: `تم استرداد دفعة بمبلغ ${formatSAR(Number(refundTarget.amount))}${refundReason ? ' - السبب: ' + refundReason : ''}`,
+        metadata: { amount: refundTarget.amount, payment_id: refundTarget.id, reason: refundReason },
+      });
+
+      toast.success(`تم استرداد ${formatSAR(Number(refundTarget.amount))} وتحديث الفاتورة تلقائياً`);
+      setRefundTarget(null);
+      setRefundReason('');
+    } catch (e: any) {
+      console.error(e);
+      toast.error(e.message || 'تعذر استرداد الدفعة');
+    } finally {
+      setRefunding(false);
+    }
+  };
 
   const loadPayments = useCallback(async (silent = false) => {
     if (!silent) setLoading(true);
