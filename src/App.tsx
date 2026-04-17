@@ -320,6 +320,11 @@ const App = () => (
                 <ContractsSystem />
               </SimpleProtectedRoute>
             } />
+            <Route path="/adminmaster/contracts/analytics" element={
+              <SimpleProtectedRoute adminOnly>
+                <ContractsAnalytics />
+              </SimpleProtectedRoute>
+            } />
             <Route path="/adminmaster/contracts/:id" element={
               <SimpleProtectedRoute adminOnly>
                 <AdminContractDetails />
