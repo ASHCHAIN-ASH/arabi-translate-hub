@@ -110,11 +110,11 @@ export function buildInvoiceHTML(invoice: Invoice, items: InvoiceItem[], payment
   table.payments th { background: #fff; color: #64748b; font-weight: 600; }
 
   .footer { margin-top: 26px; padding-top: 14px; border-top: 1px solid #e2e8f0; text-align: center; font-size: 11px; color: #94a3b8; }
-  .footer .thanks { font-size: 14px; color: #0f766e; font-weight: 700; margin-bottom: 6px; }
+  .footer .thanks { font-size: 14px; color: #1e3a8a; font-weight: 700; margin-bottom: 6px; }
 
   .actions { position: fixed; top: 12px; left: 12px; display: flex; gap: 8px; z-index: 1000; }
   .actions button { font-family: 'Cairo', sans-serif; padding: 8px 16px; border: none; border-radius: 8px; cursor: pointer; font-size: 13px; font-weight: 600; }
-  .btn-print { background: #0f766e; color: #fff; }
+  .btn-print { background: #1e3a8a; color: #fff; }
   .btn-close { background: #e5e7eb; color: #374151; }
   @media print {
     .actions { display: none; }
