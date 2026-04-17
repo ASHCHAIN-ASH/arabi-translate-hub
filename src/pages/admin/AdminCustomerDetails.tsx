@@ -398,8 +398,8 @@ const AdminCustomerDetails: React.FC = () => {
                 </ActionGroup>
 
                 <ActionGroup title="إدارة الحساب">
-                  <ActionBtn icon={Edit} label="تعديل البيانات" onClick={() => toast.info('قريباً من قائمة العملاء')} color="text-foreground" />
-                  <ActionBtn icon={Key} label="تغيير كلمة المرور" onClick={() => toast.info('قريباً من قائمة العملاء')} color="text-foreground" />
+                  <ActionBtn icon={Edit} label="تعديل البيانات" onClick={openEdit} color="text-foreground" />
+                  <ActionBtn icon={Key} label="تغيير كلمة المرور" onClick={() => setPwdOpen(true)} color="text-foreground" />
                   <ActionBtn
                     icon={customer.status === 'active' ? Ban : CheckCircle}
                     label={customer.status === 'active' ? 'حظر العميل' : 'تفعيل العميل'}
@@ -502,6 +502,51 @@ const AdminCustomerDetails: React.FC = () => {
           </TabsContent>
         </Tabs>
       </div>
+
+      {/* Edit Customer Dialog */}
+      <Dialog open={editOpen} onOpenChange={setEditOpen}>
+        <DialogContent dir="rtl">
+          <DialogHeader><DialogTitle>تعديل بيانات العميل</DialogTitle></DialogHeader>
+          <div className="space-y-3">
+            <div><Label>الاسم *</Label><Input value={editForm.name} onChange={e => setEditForm({ ...editForm, name: e.target.value })} /></div>
+            <div><Label>البريد الإلكتروني</Label><Input type="email" value={editForm.email} onChange={e => setEditForm({ ...editForm, email: e.target.value })} /></div>
+            <div><Label>الهاتف</Label><Input value={editForm.phone} onChange={e => setEditForm({ ...editForm, phone: e.target.value })} /></div>
+            <div><Label>الشركة</Label><Input value={editForm.company} onChange={e => setEditForm({ ...editForm, company: e.target.value })} /></div>
+            <div><Label>ملاحظات</Label><Textarea rows={3} value={editForm.notes} onChange={e => setEditForm({ ...editForm, notes: e.target.value })} /></div>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setEditOpen(false)}>إلغاء</Button>
+            <Button onClick={saveEdit} disabled={savingEdit}>
+              {savingEdit && <Loader2 className="w-4 h-4 animate-spin ml-2" />}حفظ
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Password Dialog */}
+      <Dialog open={pwdOpen} onOpenChange={(o) => { setPwdOpen(o); if (!o) { setNewPwd(''); setConfirmPwd(''); } }}>
+        <DialogContent dir="rtl">
+          <DialogHeader><DialogTitle>تغيير كلمة مرور العميل</DialogTitle></DialogHeader>
+          <div className="space-y-3">
+            {!customer.user_id && (
+              <div className="text-xs text-destructive bg-destructive/10 p-2 rounded">
+                هذا العميل لا يملك حساب مستخدم — لا يمكن تغيير كلمة المرور
+              </div>
+            )}
+            <div><Label>كلمة المرور الجديدة (8 أحرف فأكثر)</Label>
+              <Input type="password" value={newPwd} onChange={e => setNewPwd(e.target.value)} disabled={!customer.user_id} /></div>
+            <div><Label>تأكيد كلمة المرور</Label>
+              <Input type="password" value={confirmPwd} onChange={e => setConfirmPwd(e.target.value)} disabled={!customer.user_id} /></div>
+            <p className="text-xs text-muted-foreground">سيتم تحديث كلمة مرور العميل فوراً وسيحتاج لإعادة تسجيل الدخول.</p>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setPwdOpen(false)}>إلغاء</Button>
+            <Button onClick={savePassword} disabled={savingPwd || !customer.user_id}>
+              {savingPwd && <Loader2 className="w-4 h-4 animate-spin ml-2" />}تحديث
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
 
       {/* Notification Dialog */}
       <Dialog open={notifyOpen} onOpenChange={setNotifyOpen}>
