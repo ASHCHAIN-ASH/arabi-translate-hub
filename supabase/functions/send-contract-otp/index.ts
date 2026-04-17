@@ -23,17 +23,17 @@ serve(async (req) => {
       Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!,
     );
 
-    const { contract_id } = await req.json();
+    const { contract_id, override_email } = await req.json();
     if (!contract_id) {
       return new Response(JSON.stringify({ error: "contract_id مطلوب" }), {
         status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
 
-    // Load contract & client email
+    // Load contract
     const { data: contract, error: cErr } = await supabase
       .from("contracts")
-      .select("id, contract_number, title, client_full_name, client_email, user_id")
+      .select("id, contract_number, title, client_full_name, client_email, customer_id, user_id")
       .eq("id", contract_id)
       .single();
 
@@ -43,10 +43,39 @@ serve(async (req) => {
       });
     }
 
-    if (!contract.client_email) {
-      return new Response(JSON.stringify({ error: "لا يوجد بريد إلكتروني مسجل للعميل" }), {
+    // Resolve recipient email — try multiple sources
+    let recipient: string | null =
+      (typeof override_email === "string" && override_email.trim()) ||
+      contract.client_email ||
+      null;
+
+    if (!recipient && contract.customer_id) {
+      const { data: cust } = await supabase
+        .from("customers").select("email").eq("id", contract.customer_id).maybeSingle();
+      if (cust?.email) recipient = cust.email;
+    }
+
+    if (!recipient && contract.user_id) {
+      try {
+        const { data: ures } = await supabase.auth.admin.getUserById(contract.user_id);
+        if (ures?.user?.email) recipient = ures.user.email;
+      } catch (_) { /* ignore */ }
+    }
+
+    if (!recipient) {
+      return new Response(JSON.stringify({
+        error: "لا يوجد بريد إلكتروني مسجل لهذا العقد. يرجى تحديث بيانات العميل من لوحة الإدارة.",
+        code: "NO_EMAIL",
+      }), {
         status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
+    }
+
+    // Persist resolved email back onto contract for downstream use
+    if (!contract.client_email) {
+      await supabase.from("contracts")
+        .update({ client_email: recipient })
+        .eq("id", contract_id);
     }
 
     // Generate 6-digit OTP
@@ -59,20 +88,21 @@ serve(async (req) => {
       .from("contract_otp_codes")
       .update({ used: true })
       .eq("contract_id", contract_id)
-      .eq("email", contract.client_email)
+      .eq("email", recipient)
       .eq("used", false);
 
     const { error: insErr } = await supabase.from("contract_otp_codes").insert({
-      contract_id, email: contract.client_email, code_hash, expires_at,
+      contract_id, email: recipient, code_hash, expires_at,
     });
     if (insErr) throw insErr;
 
-    // Send via transactional email
+    // Send via transactional email (do not fail if email gateway hiccups)
+    let mailDelivered = true;
     try {
-      await supabase.functions.invoke("send-transactional-email", {
+      const { error: mailErr } = await supabase.functions.invoke("send-transactional-email", {
         body: {
           templateName: "contract-otp",
-          recipientEmail: contract.client_email,
+          recipientEmail: recipient,
           idempotencyKey: `contract-otp-${contract_id}-${Date.now()}`,
           templateData: {
             clientName: contract.client_full_name || "عميلنا الكريم",
@@ -83,20 +113,24 @@ serve(async (req) => {
           },
         },
       });
+      if (mailErr) { mailDelivered = false; console.error("transactional email error:", mailErr); }
     } catch (mailErr) {
+      mailDelivered = false;
       console.error("email send (non-blocking):", mailErr);
-      // Fallback: also log so admin can recover
     }
 
-    console.log(`[contract-otp] sent to ${contract.client_email} for contract ${contract.contract_number}`);
+    console.log(`[contract-otp] code generated for ${recipient} (contract ${contract.contract_number}) delivered=${mailDelivered}`);
 
     return new Response(
       JSON.stringify({
         success: true,
-        message: "تم إرسال رمز التحقق إلى بريدك الإلكتروني",
-        masked_email: contract.client_email.replace(/(.{2}).+(@.+)/, "$1***$2"),
+        delivered: mailDelivered,
+        message: mailDelivered
+          ? "تم إرسال رمز التحقق إلى بريدك الإلكتروني"
+          : "تم توليد رمز التحقق — قد يتأخر وصوله بضع دقائق",
+        masked_email: recipient.replace(/(.{2}).+(@.+)/, "$1***$2"),
       }),
-      { headers: { ...corsHeaders, "Content-Type": "application/json" } },
+      { headers: { ...corsHeaders, "Content-Type": "application/json" }, status: 200 },
     );
   } catch (err: any) {
     console.error("send-contract-otp error:", err);

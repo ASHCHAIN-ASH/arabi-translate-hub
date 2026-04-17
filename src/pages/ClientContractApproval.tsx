@@ -352,92 +352,161 @@ const ClientContractApproval = () => {
                     <Textarea id="cmts" value={comments} onChange={(e) => setComments(e.target.value)} rows={2} />
                   </div>
 
-                  {/* OTP step */}
+                  {/* OTP step — modern, animated, non-classic */}
                   {otpStep === "idle" && (
-                    <div className="rounded-lg border border-dashed border-primary/40 bg-primary/5 p-4 space-y-3">
-                      <div className="flex items-start gap-3">
-                        <Mail className="h-5 w-5 text-primary mt-0.5 shrink-0" />
-                        <div className="text-sm">
-                          <p className="font-semibold mb-1">التحقق برمز عبر البريد الإلكتروني</p>
-                          <p className="text-muted-foreground text-xs leading-relaxed">
-                            لحماية توقيعك، سنرسل رمز تحقق مكون من 6 أرقام إلى بريدك المسجل
-                            {contract.client_email && (
-                              <span className="font-medium text-foreground"> ({contract.client_email.replace(/(.{2}).+(@.+)/, "$1***$2")})</span>
-                            )}.
-                          </p>
+                    <motion.div
+                      initial={{ opacity: 0, y: 12 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.4 }}
+                      className="relative overflow-hidden rounded-2xl p-[1.5px] bg-gradient-to-br from-primary via-primary/40 to-primary/10"
+                    >
+                      <div className="relative rounded-2xl bg-card p-6 space-y-5">
+                        <div className="absolute -top-12 -left-12 w-40 h-40 bg-primary/10 rounded-full blur-3xl" />
+                        <div className="absolute -bottom-12 -right-12 w-40 h-40 bg-primary/5 rounded-full blur-3xl" />
+
+                        <div className="relative flex items-start gap-4">
+                          <motion.div
+                            animate={{ y: [0, -4, 0] }}
+                            transition={{ duration: 2.4, repeat: Infinity, ease: "easeInOut" }}
+                            className="h-14 w-14 rounded-2xl bg-gradient-to-br from-primary to-primary/70 flex items-center justify-center shadow-lg shadow-primary/30 shrink-0"
+                          >
+                            <ShieldCheck className="h-7 w-7 text-primary-foreground" />
+                          </motion.div>
+                          <div className="flex-1">
+                            <h3 className="text-base font-bold mb-1">توثيق التوقيع برمز التحقق</h3>
+                            <p className="text-xs text-muted-foreground leading-relaxed">
+                              لضمان حُجِّية توقيعك القانونية، سنُرسل رمزاً مكوناً من 6 أرقام إلى بريدك الإلكتروني
+                              {contract.client_email && (
+                                <span className="font-semibold text-foreground"> ({contract.client_email.replace(/(.{2}).+(@.+)/, "$1***$2")})</span>
+                              )}
+                            </p>
+                          </div>
                         </div>
-                      </div>
-                      <Button
-                        onClick={handleSendOtp}
-                        disabled={otpSending || !baseFormValid}
-                        size="lg"
-                        className="w-full"
-                      >
-                        {otpSending ? (
-                          <><Loader2 className="h-5 w-5 ml-2 animate-spin" /> جاري الإرسال…</>
-                        ) : (
-                          <><Mail className="h-5 w-5 ml-2" /> إرسال رمز التحقق إلى بريدي</>
+
+                        <div className="relative grid grid-cols-3 gap-2 text-center">
+                          {[
+                            { icon: Mail, label: "إرسال" },
+                            { icon: KeyRound, label: "إدخال" },
+                            { icon: CheckCircle2, label: "توقيع" },
+                          ].map((s, i) => (
+                            <motion.div
+                              key={s.label}
+                              initial={{ opacity: 0, scale: 0.9 }}
+                              animate={{ opacity: 1, scale: 1 }}
+                              transition={{ delay: 0.1 * i, duration: 0.3 }}
+                              className="flex flex-col items-center gap-1 p-2 rounded-lg bg-muted/40"
+                            >
+                              <s.icon className="h-4 w-4 text-primary" />
+                              <span className="text-[10px] font-medium text-muted-foreground">{s.label}</span>
+                            </motion.div>
+                          ))}
+                        </div>
+
+                        <Button
+                          onClick={handleSendOtp}
+                          disabled={otpSending || !baseFormValid}
+                          size="lg"
+                          className="relative w-full bg-gradient-to-l from-primary to-primary/80 hover:from-primary/90 hover:to-primary text-primary-foreground shadow-md shadow-primary/20 transition-all hover:shadow-lg hover:shadow-primary/30 hover:-translate-y-0.5"
+                        >
+                          {otpSending ? (
+                            <><Loader2 className="h-5 w-5 ml-2 animate-spin" /> جارٍ الإرسال…</>
+                          ) : (
+                            <><Mail className="h-5 w-5 ml-2" /> إرسال رمز التحقق</>
+                          )}
+                        </Button>
+
+                        {!baseFormValid && (
+                          <p className="relative text-[11px] text-amber-600 dark:text-amber-400 text-center">
+                            ⚠ يرجى إكمال البيانات والموافقة على جميع الشروط أولاً
+                          </p>
                         )}
-                      </Button>
-                    </div>
+                      </div>
+                    </motion.div>
                   )}
 
                   {otpStep === "sent" && (
-                    <div className="rounded-lg border border-primary/40 bg-card p-5 space-y-4">
-                      <div className="text-center space-y-1">
-                        <KeyRound className="h-8 w-8 mx-auto text-primary" />
-                        <p className="font-bold">أدخل رمز التحقق</p>
-                        <p className="text-xs text-muted-foreground">
-                          أُرسل الرمز إلى <span className="font-semibold text-foreground">{maskedEmail}</span> — صالح لـ 10 دقائق
-                        </p>
-                      </div>
+                    <motion.div
+                      initial={{ opacity: 0, scale: 0.96, y: 12 }}
+                      animate={{ opacity: 1, scale: 1, y: 0 }}
+                      transition={{ duration: 0.45, ease: "easeOut" }}
+                      className="relative overflow-hidden rounded-2xl p-[1.5px] bg-gradient-to-br from-emerald-400 via-primary to-primary/30"
+                    >
+                      <div className="relative rounded-2xl bg-card p-6 space-y-5">
+                        <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-emerald-500/5 pointer-events-none" />
 
-                      <div className="flex justify-center" dir="ltr">
-                        <InputOTP maxLength={6} value={otpCode} onChange={setOtpCode}>
-                          <InputOTPGroup>
-                            <InputOTPSlot index={0} />
-                            <InputOTPSlot index={1} />
-                            <InputOTPSlot index={2} />
-                            <InputOTPSlot index={3} />
-                            <InputOTPSlot index={4} />
-                            <InputOTPSlot index={5} />
-                          </InputOTPGroup>
-                        </InputOTP>
-                      </div>
+                        <div className="relative text-center space-y-2">
+                          <motion.div
+                            initial={{ scale: 0, rotate: -90 }}
+                            animate={{ scale: 1, rotate: 0 }}
+                            transition={{ type: "spring", stiffness: 200, damping: 15 }}
+                            className="inline-flex h-16 w-16 items-center justify-center rounded-full bg-gradient-to-br from-primary/20 to-primary/5 border-2 border-primary/30"
+                          >
+                            <KeyRound className="h-8 w-8 text-primary" />
+                          </motion.div>
+                          <h3 className="text-lg font-bold">أدخل رمز التحقق</h3>
+                          <p className="text-xs text-muted-foreground">
+                            أُرسل الرمز إلى <span className="font-bold text-foreground">{maskedEmail}</span>
+                          </p>
+                          <div className="inline-flex items-center gap-1.5 text-[11px] text-amber-600 dark:text-amber-400 bg-amber-500/10 px-2.5 py-1 rounded-full">
+                            <Clock className="h-3 w-3" /> صالح لـ 10 دقائق
+                          </div>
+                        </div>
 
-                      <Button
-                        onClick={handleVerifyAndSign}
-                        disabled={otpVerifying || submitting || otpCode.length !== 6}
-                        size="lg"
-                        className="w-full"
-                      >
-                        {(otpVerifying || submitting) ? (
-                          <><Loader2 className="h-5 w-5 ml-2 animate-spin" /> جاري التحقق والتوقيع…</>
-                        ) : (
-                          <><CheckCircle2 className="h-5 w-5 ml-2" /> تحقّق ووقّع العقد</>
-                        )}
-                      </Button>
-
-                      <div className="flex items-center justify-between text-xs">
-                        <button
-                          type="button"
-                          onClick={handleSendOtp}
-                          disabled={otpResendCooldown > 0 || otpSending}
-                          className="text-primary hover:underline disabled:text-muted-foreground disabled:no-underline"
+                        <motion.div
+                          initial={{ opacity: 0, y: 8 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          transition={{ delay: 0.2 }}
+                          className="relative flex justify-center"
+                          dir="ltr"
                         >
-                          {otpResendCooldown > 0
-                            ? `إعادة الإرسال خلال ${otpResendCooldown}ث`
-                            : "إعادة إرسال الرمز"}
-                        </button>
-                        <button
-                          type="button"
-                          onClick={() => { setOtpStep("idle"); setOtpCode(""); }}
-                          className="text-muted-foreground hover:text-foreground"
+                          <InputOTP maxLength={6} value={otpCode} onChange={setOtpCode}>
+                            <InputOTPGroup className="gap-2">
+                              {[0,1,2,3,4,5].map(i => (
+                                <InputOTPSlot
+                                  key={i}
+                                  index={i}
+                                  className="h-12 w-11 text-lg font-bold border-2 rounded-xl bg-background data-[active=true]:border-primary data-[active=true]:ring-2 data-[active=true]:ring-primary/20 transition-all"
+                                />
+                              ))}
+                            </InputOTPGroup>
+                          </InputOTP>
+                        </motion.div>
+
+                        <Button
+                          onClick={handleVerifyAndSign}
+                          disabled={otpVerifying || submitting || otpCode.length !== 6}
+                          size="lg"
+                          className="relative w-full bg-gradient-to-l from-emerald-600 to-primary hover:from-emerald-700 hover:to-primary/90 text-white shadow-lg shadow-primary/20 transition-all hover:-translate-y-0.5 disabled:translate-y-0"
                         >
-                          تغيير البيانات
-                        </button>
+                          {(otpVerifying || submitting) ? (
+                            <><Loader2 className="h-5 w-5 ml-2 animate-spin" /> جاري التحقق والتوقيع…</>
+                          ) : (
+                            <><ShieldCheck className="h-5 w-5 ml-2" /> تحقّق ووقّع العقد رسمياً</>
+                          )}
+                        </Button>
+
+                        <div className="relative flex items-center justify-between text-xs pt-1 border-t border-border/50">
+                          <button
+                            type="button"
+                            onClick={handleSendOtp}
+                            disabled={otpResendCooldown > 0 || otpSending}
+                            className="text-primary hover:underline font-medium disabled:text-muted-foreground disabled:no-underline disabled:cursor-not-allowed inline-flex items-center gap-1"
+                          >
+                            <Mail className="h-3 w-3" />
+                            {otpResendCooldown > 0
+                              ? `إعادة الإرسال خلال ${otpResendCooldown}ث`
+                              : "إعادة إرسال الرمز"}
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => { setOtpStep("idle"); setOtpCode(""); }}
+                            className="text-muted-foreground hover:text-foreground inline-flex items-center gap-1"
+                          >
+                            ← تغيير البيانات
+                          </button>
+                        </div>
                       </div>
-                    </div>
+                    </motion.div>
                   )}
                 </CardContent>
               </Card>
