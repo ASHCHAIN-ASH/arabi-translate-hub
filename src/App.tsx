@@ -82,6 +82,7 @@ import EmailNotifications from "./pages/admin/EmailNotifications";
 import AdminChat from "./pages/admin/AdminChat";
 import AddUser from "./pages/admin/AddUser";
 import AdminWorkingHours from "./pages/admin/AdminWorkingHours";
+import AdminWallets from "./pages/admin/AdminWallets";
 import ContractsSystem from "./pages/admin/ContractsSystem";
 import AdminContractDetails from "./pages/admin/AdminContractDetails";
 import ContractsAnalytics from "./pages/admin/ContractsAnalytics";
