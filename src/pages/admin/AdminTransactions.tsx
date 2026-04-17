@@ -532,7 +532,7 @@ const AdminTransactions = () => {
                       const Icon = METHOD_ICONS[p.payment_method] || CreditCard;
                       const status = STATUS_LABELS[p.status] || { label: p.status, variant: 'outline' as const };
                       return (
-                        <TableRow key={p.id} className="hover:bg-muted/40">
+                        <TableRow key={p.id} className="hover:bg-muted/40 cursor-pointer" onClick={() => setDetailsTarget(p)}>
                           <TableCell className="whitespace-nowrap text-sm">
                             <div>{formatDate(p.payment_date)}</div>
                             <div className="text-xs text-muted-foreground">{formatDateTime(p.created_at)}</div>
