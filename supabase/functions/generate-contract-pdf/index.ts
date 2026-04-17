@@ -87,7 +87,7 @@ function buildHtml(contract: any, signature: any, verifyHash: string) {
 <title>عقد ${esc(contract.contract_number)} — ${esc(PLATFORM.name)}</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=Aref+Ruqaa:wght@400;700&family=Reem+Kufi+Fun:wght@400;700&display=swap" rel="stylesheet">
 <style>
   :root { --navy:${NAVY}; --gold:${GOLD}; --cream:${CREAM}; }
   * { box-sizing:border-box; }
