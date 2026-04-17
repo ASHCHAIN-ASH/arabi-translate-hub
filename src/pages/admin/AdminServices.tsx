@@ -376,15 +376,15 @@ const AdminServices = () => {
 
         <Tabs defaultValue="services" dir="rtl" className="space-y-5">
           <TabsList dir="rtl" className="grid w-full md:w-auto md:inline-grid grid-cols-2 h-auto p-1">
-            <TabsTrigger value="services" className="flex items-center gap-2 py-2.5">
-              <Package className="h-4 w-4" />
-              الخدمات
-              <Badge variant="secondary" className="mr-1">{services.length}</Badge>
-            </TabsTrigger>
             <TabsTrigger value="categories" className="flex items-center gap-2 py-2.5">
               <Layers className="h-4 w-4" />
               الأقسام
               <Badge variant="secondary" className="mr-1">{categories.length}</Badge>
+            </TabsTrigger>
+            <TabsTrigger value="services" className="flex items-center gap-2 py-2.5">
+              <Package className="h-4 w-4" />
+              الخدمات
+              <Badge variant="secondary" className="mr-1">{services.length}</Badge>
             </TabsTrigger>
           </TabsList>
 
