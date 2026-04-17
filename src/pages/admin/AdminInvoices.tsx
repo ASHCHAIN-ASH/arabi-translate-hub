@@ -572,7 +572,7 @@ const AdminInvoices = () => {
                     
                     <div className="flex flex-col sm:flex-row sm:items-center sm:space-x-4 space-y-2 sm:space-y-0">
                       <div className="text-lg font-bold text-primary">
-                        {invoice.amount.toFixed(2)} ر.س
+                        {Number(invoice.amount ?? 0).toFixed(2)} ر.س
                       </div>
                       {invoice.include_vat && (
                         <Badge variant="outline" className="text-amber-600">
