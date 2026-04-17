@@ -232,9 +232,28 @@ export class ClientDashboardService {
   private static translateContractStatus(status: string): string {
     const statusMap: { [key: string]: string } = {
       'pending': 'في الانتظار',
+      'confirmed': 'مؤكد',
+      'review': 'قيد المراجعة',
       'in_progress': 'قيد التنفيذ',
+      'processing': 'قيد المعالجة',
       'completed': 'مكتمل',
+      'closed': 'مغلق',
       'cancelled': 'ملغي',
+      'rejected': 'مرفوض',
+      'approved': 'معتمد',
+      'draft': 'مسودة',
+      'sent': 'مُرسل',
+      'signed': 'موقَّع',
+      'expired': 'منتهي',
+      'on_hold': 'معلَّق',
+      'data_collection': 'جمع البيانات',
+      'statistical_analysis': 'التحليل الإحصائي',
+      'first_draft': 'المسودة الأولى',
+      'revisions': 'المراجعات',
+      'final_delivery': 'التسليم النهائي',
+      'research_plan': 'خطة البحث',
+      'under_review': 'تحت المراجعة',
+      'received': 'مستلم',
     };
     return statusMap[status] || status;
   }
@@ -252,9 +271,18 @@ export class ClientDashboardService {
 
   private static calculateProgress(status: string): number {
     const progressMap: { [key: string]: number } = {
-      'pending': 15,
+      'pending': 10,
+      'confirmed': 20,
+      'review': 30,
       'in_progress': 50,
+      'processing': 50,
+      'data_collection': 40,
+      'statistical_analysis': 60,
+      'first_draft': 70,
+      'revisions': 85,
+      'final_delivery': 95,
       'completed': 100,
+      'closed': 100,
       'cancelled': 0,
     };
     return progressMap[status] || 0;
