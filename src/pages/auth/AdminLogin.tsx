@@ -74,7 +74,7 @@ const AdminLogin = () => {
             دخول الإدارة
           </h1>
           <p className="text-slate-300 text-lg">
-            منصة التعليم الأكاديمي المتقدمة
+            منصة ماستر إيدو باث
           </p>
         </div>
 

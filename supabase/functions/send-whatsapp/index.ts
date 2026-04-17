@@ -80,7 +80,7 @@ serve(async (req) => {
         body: new URLSearchParams({
           To: `whatsapp:${to}`,
           From: TWILIO_WHATSAPP_FROM || 'whatsapp:+14155238886',
-          Body: messageBody || 'رسالة من منصة التعليم الأكاديمي',
+          Body: messageBody || 'رسالة من منصة ماستر إيدو باث',
         }),
       });
 
@@ -103,7 +103,7 @@ serve(async (req) => {
         body: new URLSearchParams({
           To: `whatsapp:${to}`,
           From: TWILIO_WHATSAPP_FROM || 'whatsapp:+14155238886',
-          Body: messageBody || 'رسالة من منصة التعليم الأكاديمي',
+          Body: messageBody || 'رسالة من منصة ماستر إيدو باث',
         }),
       });
 

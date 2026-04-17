@@ -47,7 +47,7 @@ serve(async (req) => {
     <div dir="rtl" style="font-family:Tahoma,Arial;max-width:680px;margin:0 auto;background:#f8fafc;padding:24px">
       <div style="background:linear-gradient(135deg,#1e40af,#3b82f6);color:#fff;padding:24px;border-radius:12px;text-align:center">
         <h1 style="margin:0;font-size:22px">فاتورة ${invoice.invoice_number}</h1>
-        <p style="margin:8px 0 0">منصة التعليم — MasterEduPath</p>
+        <p style="margin:8px 0 0">منصة ماستر إيدو باث — MasterEduPath</p>
       </div>
       <div style="background:#fff;border-radius:12px;padding:24px;margin-top:16px">
         <p>عزيزنا <strong>${invoice.customer_name ?? ""}</strong>،</p>
@@ -71,14 +71,14 @@ serve(async (req) => {
         ${invoice.due_date ? `<p style="margin-top:16px;color:#64748b">تاريخ الاستحقاق: ${invoice.due_date}</p>` : ""}
         ${invoice.notes ? `<div style="background:#f8fafc;padding:12px;border-radius:8px;margin-top:12px"><strong>ملاحظات:</strong> ${invoice.notes}</div>` : ""}
         <p style="margin-top:24px">للاستفسار يرجى التواصل معنا.</p>
-        <p style="color:#64748b;font-size:13px">شكراً لثقتكم — منصة التعليم</p>
+        <p style="color:#64748b;font-size:13px">شكراً لثقتكم — منصة ماستر إيدو باث</p>
       </div>
     </div>`;
 
     const { error: sendErr } = await resend.emails.send({
       from: FROM,
       to: [recipient],
-      subject: `فاتورة ${invoice.invoice_number} — منصة التعليم`,
+      subject: `فاتورة ${invoice.invoice_number} — منصة ماستر إيدو باث`,
       html,
     });
     if (sendErr) throw sendErr;
