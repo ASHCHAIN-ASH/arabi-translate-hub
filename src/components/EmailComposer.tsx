@@ -205,11 +205,13 @@ export default function EmailComposer({ defaultTo = "", defaultTemplateKey = "",
         variables = {};
       }
 
+      const wrappedContent = buildResponsiveEmail(emailForm.subject, emailForm.content);
+
       const response = await supabase.functions.invoke('send-email', {
         body: {
           to: emailForm.to.split(',').map(email => email.trim()),
           subject: emailForm.subject,
-          content: emailForm.content,
+          content: wrappedContent,
           template_key: emailForm.template_key || undefined,
           variables
         }
