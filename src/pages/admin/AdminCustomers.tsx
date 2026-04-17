@@ -1,35 +1,12 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
-  Users, 
-  UserCheck, 
-  UserX, 
-  Calendar,
-  Search,
-  Filter,
-  MoreVertical,
-  Key,
-  Ban,
-  CheckCircle,
-  Edit,
-  Trash2,
-  Eye,
-  EyeOff,
-  Mail,
-  Phone,
-  Shield,
-  ShieldCheck,
-  Clock,
-  Settings,
-  Star,
-  TrendingUp,
-  Activity,
-  Download,
-  FileSpreadsheet,
-  UserPlus,
-  Loader2,
-  RefreshCw,
-  Copy
+  Users, UserCheck, UserX, Calendar, Search, Filter, MoreVertical, Key, Ban,
+  CheckCircle, Edit, Trash2, Eye, EyeOff, Mail, Phone, Shield, ShieldCheck,
+  Clock, Settings, Star, TrendingUp, Activity, Download, FileSpreadsheet,
+  UserPlus, Loader2, RefreshCw, Copy, MessageSquare, MessageCircle, Send,
+  ShoppingCart, FileText, ExternalLink, Bell
 } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import AdminLayout from '@/components/admin/AdminLayout';
