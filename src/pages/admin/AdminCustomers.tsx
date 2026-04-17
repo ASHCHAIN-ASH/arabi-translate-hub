@@ -25,8 +25,13 @@ import {
   TrendingUp,
   Activity,
   Download,
-  FileSpreadsheet
+  FileSpreadsheet,
+  UserPlus,
+  Loader2,
+  RefreshCw,
+  Copy
 } from 'lucide-react';
+import { supabase } from '@/integrations/supabase/client';
 import AdminLayout from '@/components/admin/AdminLayout';
 import { useCustomers, Customer } from '@/hooks/useCustomers';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
