@@ -60,43 +60,43 @@ const ClientContracts = () => {
 
   return (
     <ClientLayout>
-      <div className="p-4 sm:p-6 lg:p-8 max-w-6xl mx-auto w-full space-y-6" dir="rtl">
-        <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} className="space-y-6">
+      <div className="p-3 sm:p-6 lg:p-8 max-w-6xl mx-auto w-full space-y-4 sm:space-y-6" dir="rtl">
+        <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} className="space-y-4 sm:space-y-6">
           <Card className="border-border/60 shadow-sm">
-            <CardContent className="p-6 sm:p-8">
-              <div className="flex items-start justify-between gap-4 flex-wrap">
-                <div className="space-y-2">
+            <CardContent className="p-4 sm:p-6 lg:p-8">
+              <div className="flex flex-col xl:flex-row items-start xl:items-center justify-between gap-4">
+                <div className="space-y-2 w-full xl:w-auto">
                   <div className="flex items-center gap-3">
-                    <div className="h-11 w-11 rounded-2xl bg-primary/10 text-primary flex items-center justify-center">
+                    <div className="h-10 w-10 sm:h-11 sm:w-11 rounded-2xl bg-primary/10 text-primary flex items-center justify-center shrink-0">
                       <FileText className="h-5 w-5" />
                     </div>
-                    <div>
-                      <h1 className="text-2xl sm:text-3xl font-bold">عقودي</h1>
-                      <p className="text-sm text-muted-foreground flex items-center gap-1">
-                        <Building2 className="h-3.5 w-3.5" />
-                        جميع عقود خدماتك مع {PARENT_COMPANY.platformName}
+                    <div className="min-w-0">
+                      <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold">عقودي</h1>
+                      <p className="text-xs sm:text-sm text-muted-foreground flex items-center gap-1">
+                        <Building2 className="h-3 w-3 sm:h-3.5 sm:w-3.5 shrink-0" />
+                        <span className="truncate">جميع عقود خدماتك مع {PARENT_COMPANY.platformName}</span>
                       </p>
                     </div>
                   </div>
                 </div>
 
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 w-full xl:w-auto xl:min-w-[540px]">
+                <div className="grid grid-cols-3 gap-2 sm:gap-3 w-full xl:w-auto xl:min-w-[540px]">
                   <Card className="shadow-none">
-                    <CardContent className="p-4">
-                      <p className="text-xs text-muted-foreground mb-1">إجمالي العقود</p>
-                      <p className="text-2xl font-bold">{contracts.length}</p>
+                    <CardContent className="p-2.5 sm:p-4">
+                      <p className="text-[10px] sm:text-xs text-muted-foreground mb-1">إجمالي العقود</p>
+                      <p className="text-lg sm:text-2xl font-bold">{contracts.length}</p>
                     </CardContent>
                   </Card>
                   <Card className="shadow-none border-primary/20 bg-primary/5">
-                    <CardContent className="p-4">
-                      <p className="text-xs text-muted-foreground mb-1">بانتظار التوقيع</p>
-                      <p className="text-2xl font-bold text-primary">{pendingCount}</p>
+                    <CardContent className="p-2.5 sm:p-4">
+                      <p className="text-[10px] sm:text-xs text-muted-foreground mb-1">بانتظار التوقيع</p>
+                      <p className="text-lg sm:text-2xl font-bold text-primary">{pendingCount}</p>
                     </CardContent>
                   </Card>
                   <Card className="shadow-none">
-                    <CardContent className="p-4">
-                      <p className="text-xs text-muted-foreground mb-1">موقّعة</p>
-                      <p className="text-2xl font-bold">{signedCount}</p>
+                    <CardContent className="p-2.5 sm:p-4">
+                      <p className="text-[10px] sm:text-xs text-muted-foreground mb-1">موقّعة</p>
+                      <p className="text-lg sm:text-2xl font-bold">{signedCount}</p>
                     </CardContent>
                   </Card>
                 </div>
@@ -138,22 +138,22 @@ const ClientContracts = () => {
               {filtered.map((c, i) => (
                 <motion.div key={c.id} initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.05 }}>
                   <Card className="transition-all hover:shadow-md hover:border-primary/20">
-                    <CardContent className="p-5 sm:p-6">
-                      <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-4">
-                        <div className="flex-1 min-w-0 space-y-3">
-                          <div className="flex items-center gap-2 flex-wrap">
-                            <Badge variant="outline" className="font-mono">{c.contract_number}</Badge>
-                            <Badge className={STATUS_COLORS[c.status]}>{STATUS_LABELS[c.status]}</Badge>
+                    <CardContent className="p-3 sm:p-5 lg:p-6">
+                      <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-3 sm:gap-4">
+                        <div className="flex-1 min-w-0 space-y-2 sm:space-y-3">
+                          <div className="flex items-center gap-1.5 flex-wrap">
+                            <Badge variant="outline" className="font-mono text-[10px] sm:text-xs">{c.contract_number}</Badge>
+                            <Badge className={`${STATUS_COLORS[c.status]} text-[10px] sm:text-xs`}>{STATUS_LABELS[c.status]}</Badge>
                           </div>
 
                           <div>
-                            <h3 className="font-bold text-lg leading-relaxed">{c.title}</h3>
+                            <h3 className="font-bold text-sm sm:text-lg leading-snug sm:leading-relaxed">{c.title}</h3>
                             {c.service_name && (
-                              <p className="text-sm text-muted-foreground mt-1">{c.service_name}</p>
+                              <p className="text-xs sm:text-sm text-muted-foreground mt-1">{c.service_name}</p>
                             )}
                           </div>
 
-                          <div className="flex flex-wrap gap-4 text-xs text-muted-foreground">
+                          <div className="flex flex-wrap gap-2 sm:gap-4 text-[10px] sm:text-xs text-muted-foreground">
                             <span className="flex items-center gap-1">
                               <Calendar className="h-3.5 w-3.5" />
                               {new Date(c.created_at).toLocaleDateString("ar-SA")}

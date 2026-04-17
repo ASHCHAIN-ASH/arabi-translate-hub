@@ -63,13 +63,13 @@ export default function ClientInvoices() {
 
   return (
     <ClientLayout>
-      <div className="p-4 lg:p-6 space-y-6" dir="rtl">
-        <div className="flex items-center justify-between">
-          <div>
-            <h1 className="text-2xl lg:text-3xl font-bold">فواتيري</h1>
-            <p className="text-muted-foreground text-sm">عرض وتحميل فواتيرك</p>
+      <div className="p-3 sm:p-4 lg:p-6 space-y-4 sm:space-y-6" dir="rtl">
+        <div className="flex items-start sm:items-center justify-between gap-2">
+          <div className="min-w-0">
+            <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold">فواتيري</h1>
+            <p className="text-muted-foreground text-xs sm:text-sm">عرض وتحميل فواتيرك</p>
           </div>
-          <Button variant="outline" size="sm" onClick={load}><RefreshCw className="w-4 h-4 ml-1" />تحديث</Button>
+          <Button variant="outline" size="sm" onClick={load} className="shrink-0"><RefreshCw className="w-4 h-4 sm:ml-1" /><span className="hidden sm:inline">تحديث</span></Button>
         </div>
 
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
@@ -135,20 +135,20 @@ export default function ClientInvoices() {
                   {invoices.map((inv) => (
                     <Card key={inv.id} className="border shadow-sm">
                       <CardContent className="p-3 space-y-2">
-                        <div className="flex items-center justify-between">
-                          <span className="font-bold text-primary">{inv.invoice_number}</span>
-                          <Badge className={InvoiceService.statusColor(inv.status)}>{InvoiceService.statusLabel(inv.status)}</Badge>
+                        <div className="flex items-center justify-between gap-2">
+                          <span className="font-bold text-primary text-sm truncate">{inv.invoice_number}</span>
+                          <Badge className={`${InvoiceService.statusColor(inv.status)} text-[10px] shrink-0`}>{InvoiceService.statusLabel(inv.status)}</Badge>
                         </div>
-                        <div className="text-xs text-muted-foreground">{inv.issue_date}</div>
-                        <div className="grid grid-cols-3 gap-2 text-xs bg-muted/40 rounded-md p-2">
-                          <div><div className="text-muted-foreground">الإجمالي</div><div className="font-bold">{InvoiceService.formatCurrency(inv.total_amount, inv.currency)}</div></div>
-                          <div><div className="text-muted-foreground">المدفوع</div><div className="font-bold text-emerald-600">{InvoiceService.formatCurrency(inv.paid_amount, inv.currency)}</div></div>
-                          <div><div className="text-muted-foreground">المتبقي</div><div className="font-bold text-red-600">{InvoiceService.formatCurrency(inv.remaining_amount, inv.currency)}</div></div>
+                        <div className="text-[10px] text-muted-foreground">{inv.issue_date}</div>
+                        <div className="grid grid-cols-3 gap-1.5 text-[11px] bg-muted/40 rounded-md p-2">
+                          <div><div className="text-muted-foreground text-[10px]">الإجمالي</div><div className="font-bold truncate">{InvoiceService.formatCurrency(inv.total_amount, inv.currency)}</div></div>
+                          <div><div className="text-muted-foreground text-[10px]">المدفوع</div><div className="font-bold text-emerald-600 truncate">{InvoiceService.formatCurrency(inv.paid_amount, inv.currency)}</div></div>
+                          <div><div className="text-muted-foreground text-[10px]">المتبقي</div><div className="font-bold text-red-600 truncate">{InvoiceService.formatCurrency(inv.remaining_amount, inv.currency)}</div></div>
                         </div>
-                        <div className="flex gap-2">
-                          <Button size="sm" variant="outline" className="flex-1" onClick={() => handlePrint(inv)}><Printer className="w-3 h-3 ml-1" />عرض/طباعة</Button>
-                          <Button size="sm" variant="outline" className="flex-1" onClick={() => handleDownload(inv)}><Download className="w-3 h-3 ml-1" />PDF</Button>
-                          <Button size="sm" variant="outline" className="flex-1" onClick={() => openSupportTicket(inv)}><LifeBuoy className="w-3 h-3 ml-1" />دعم</Button>
+                        <div className="grid grid-cols-3 gap-1.5">
+                          <Button size="sm" variant="outline" className="text-[11px] px-1.5" onClick={() => handlePrint(inv)}><Printer className="w-3 h-3 ml-1" />طباعة</Button>
+                          <Button size="sm" variant="outline" className="text-[11px] px-1.5" onClick={() => handleDownload(inv)}><Download className="w-3 h-3 ml-1" />PDF</Button>
+                          <Button size="sm" variant="outline" className="text-[11px] px-1.5" onClick={() => openSupportTicket(inv)}><LifeBuoy className="w-3 h-3 ml-1" />دعم</Button>
                         </div>
                         {Number(inv.remaining_amount ?? 0) > 0 && (
                           <Button size="sm" className="w-full bg-gradient-to-l from-violet-600 to-fuchsia-600 hover:from-violet-700 hover:to-fuchsia-700 text-white gap-1" onClick={() => payFromWallet(inv)}>

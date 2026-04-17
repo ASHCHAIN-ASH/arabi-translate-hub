@@ -312,7 +312,7 @@ const OrderDetails = () => {
 
   return (
     <ClientLayout>
-      <div className="p-4 lg:p-6 space-y-6 max-w-5xl mx-auto" dir="rtl">
+      <div className="p-3 sm:p-4 lg:p-6 space-y-4 sm:space-y-6 max-w-5xl mx-auto" dir="rtl">
         {/* Back Button */}
         <motion.div initial={{ opacity: 0, x: 10 }} animate={{ opacity: 1, x: 0 }} className="flex items-center justify-between gap-2 flex-wrap">
           <Button variant="ghost" size="sm" onClick={() => navigate('/orders')} className="gap-2 text-muted-foreground hover:text-foreground">
@@ -345,38 +345,38 @@ const OrderDetails = () => {
         <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }}>
           <Card className="overflow-hidden border-0 shadow-lg">
             <div className={`h-2 ${status === 'completed' ? 'bg-green-500' : status === 'in_progress' ? 'bg-blue-500' : status === 'cancelled' ? 'bg-red-500' : 'bg-amber-500'}`} />
-            <CardContent className="p-5 lg:p-6">
+            <CardContent className="p-4 sm:p-5 lg:p-6">
               <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
-                <div className="flex items-start gap-4">
-                  <div className={`w-14 h-14 rounded-2xl ${sc.bg} flex items-center justify-center shrink-0`}>
-                    <Package className={`w-7 h-7 ${sc.color}`} />
+                <div className="flex items-start gap-3 sm:gap-4 min-w-0">
+                  <div className={`w-12 h-12 sm:w-14 sm:h-14 rounded-2xl ${sc.bg} flex items-center justify-center shrink-0`}>
+                    <Package className={`w-6 h-6 sm:w-7 sm:h-7 ${sc.color}`} />
                   </div>
-                  <div>
-                    <h1 className="text-xl lg:text-2xl font-bold">{order.service_name || 'طلب خدمة'}</h1>
-                    <div className="flex items-center gap-2 mt-1.5 flex-wrap">
-                      <button onClick={copyTrackingId} className="flex items-center gap-1.5 text-xs font-mono text-muted-foreground hover:text-foreground transition-colors bg-muted px-2.5 py-1 rounded-md">
+                  <div className="min-w-0 flex-1">
+                    <h1 className="text-lg sm:text-xl lg:text-2xl font-bold leading-tight">{order.service_name || 'طلب خدمة'}</h1>
+                    <div className="flex items-center gap-1.5 sm:gap-2 mt-1.5 flex-wrap">
+                      <button onClick={copyTrackingId} className="flex items-center gap-1 text-[10px] sm:text-xs font-mono text-muted-foreground hover:text-foreground transition-colors bg-muted px-2 py-1 rounded-md">
                         <Copy className="w-3 h-3" />
                         #{order.tracking_id}
                       </button>
-                      <Badge className={`${sc.bg} ${sc.color} border-0 gap-1 text-xs`}>
+                      <Badge className={`${sc.bg} ${sc.color} border-0 gap-1 text-[10px] sm:text-xs`}>
                         {sc.icon}
                         {sc.label}
                       </Badge>
                       {order.priority === 'urgent' && (
-                        <Badge className="bg-red-100 text-red-700 dark:bg-red-900/40 dark:text-red-400 border-0 text-xs">عاجل</Badge>
+                        <Badge className="bg-red-100 text-red-700 dark:bg-red-900/40 dark:text-red-400 border-0 text-[10px] sm:text-xs">عاجل</Badge>
                       )}
                     </div>
                   </div>
                 </div>
-                <div className="flex items-center gap-6 text-sm">
+                <div className="flex items-center justify-around sm:justify-start sm:gap-6 text-sm border-t lg:border-t-0 pt-3 lg:pt-0">
                   <div className="text-center">
-                    <p className="text-muted-foreground text-xs">تاريخ الطلب</p>
-                    <p className="font-semibold">{new Date(order.created_at).toLocaleDateString('ar-SA')}</p>
+                    <p className="text-muted-foreground text-[10px] sm:text-xs">تاريخ الطلب</p>
+                    <p className="font-semibold text-xs sm:text-sm">{new Date(order.created_at).toLocaleDateString('ar-SA')}</p>
                   </div>
                   {order.deadline && (
                     <div className="text-center">
-                      <p className="text-muted-foreground text-xs">الموعد النهائي</p>
-                      <p className="font-semibold">{new Date(order.deadline).toLocaleDateString('ar-SA')}</p>
+                      <p className="text-muted-foreground text-[10px] sm:text-xs">الموعد النهائي</p>
+                      <p className="font-semibold text-xs sm:text-sm">{new Date(order.deadline).toLocaleDateString('ar-SA')}</p>
                     </div>
                   )}
                 </div>
@@ -399,15 +399,15 @@ const OrderDetails = () => {
                           <motion.div
                             initial={{ scale: 0.8 }}
                             animate={{ scale: isCurrent ? 1.1 : 1 }}
-                            className={`w-10 h-10 rounded-full flex items-center justify-center border-2 transition-all duration-300 ${
+                            className={`w-9 h-9 sm:w-10 sm:h-10 rounded-full flex items-center justify-center border-2 transition-all duration-300 ${
                               isActive
                                 ? 'bg-primary border-primary text-primary-foreground shadow-md'
                                 : 'bg-background border-muted-foreground/30 text-muted-foreground'
                             }`}
                           >
-                            <step.icon className="w-5 h-5" />
+                            <step.icon className="w-4 h-4 sm:w-5 sm:h-5" />
                           </motion.div>
-                          <span className={`text-xs mt-2 font-medium ${isActive ? 'text-primary' : 'text-muted-foreground'}`}>
+                          <span className={`text-[10px] sm:text-xs mt-1.5 sm:mt-2 font-medium text-center ${isActive ? 'text-primary' : 'text-muted-foreground'}`}>
                             {step.label}
                           </span>
                         </div>

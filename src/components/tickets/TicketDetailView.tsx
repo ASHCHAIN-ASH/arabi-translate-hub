@@ -163,43 +163,43 @@ export default function TicketDetailView({ ticketId, currentUserId, isAdmin, bac
   const Icon = CATEGORY_ICONS[ticket.category] || TicketIcon;
 
   return (
-    <div className="container mx-auto p-4 md:p-6 space-y-4" dir="rtl">
+    <div className="container mx-auto p-3 sm:p-4 md:p-6 space-y-3 sm:space-y-4" dir="rtl">
       {/* Header */}
-      <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} className="flex items-center gap-3 flex-wrap">
-        <Button variant="ghost" size="icon" onClick={() => navigate(backTo)} className="rounded-full">
-          <ArrowRight className="w-5 h-5" />
+      <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} className="flex items-start gap-2 sm:gap-3 flex-wrap">
+        <Button variant="ghost" size="icon" onClick={() => navigate(backTo)} className="rounded-full shrink-0 h-9 w-9 sm:h-10 sm:w-10">
+          <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5" />
         </Button>
-        <div className={`w-12 h-12 rounded-xl flex items-center justify-center border ${CATEGORY_COLOR[ticket.category] || CATEGORY_COLOR.general}`}>
-          <Icon className="w-6 h-6" />
+        <div className={`w-10 h-10 sm:w-12 sm:h-12 rounded-xl flex items-center justify-center border shrink-0 ${CATEGORY_COLOR[ticket.category] || CATEGORY_COLOR.general}`}>
+          <Icon className="w-5 h-5 sm:w-6 sm:h-6" />
         </div>
         <div className="flex-1 min-w-0">
-          <h1 className="text-xl md:text-2xl font-bold flex items-center gap-2 flex-wrap">
-            {ticket.subject}
-            <span className="text-xs font-mono text-muted-foreground">{ticket.ticket_number}</span>
+          <h1 className="text-base sm:text-xl md:text-2xl font-bold flex items-center gap-2 flex-wrap leading-tight">
+            <span className="break-words">{ticket.subject}</span>
+            <span className="text-[10px] sm:text-xs font-mono text-muted-foreground">{ticket.ticket_number}</span>
           </h1>
-          <div className="flex items-center gap-2 mt-1 flex-wrap">
-            <Badge variant="outline" className={CATEGORY_COLOR[ticket.category]}>{CATEGORY_LABELS[ticket.category]}</Badge>
-            <Badge variant="outline" className={STATUS_COLOR[ticket.status]}>{STATUS_LABELS[ticket.status]}</Badge>
-            <Badge variant="outline" className={PRIORITY_COLOR[ticket.priority]}>{PRIORITY_LABELS[ticket.priority]}</Badge>
-            <span className="text-xs text-muted-foreground">{formatDistanceToNow(new Date(ticket.created_at), { addSuffix: true, locale: ar })}</span>
+          <div className="flex items-center gap-1.5 mt-1.5 flex-wrap">
+            <Badge variant="outline" className={`${CATEGORY_COLOR[ticket.category]} text-[10px] sm:text-xs`}>{CATEGORY_LABELS[ticket.category]}</Badge>
+            <Badge variant="outline" className={`${STATUS_COLOR[ticket.status]} text-[10px] sm:text-xs`}>{STATUS_LABELS[ticket.status]}</Badge>
+            <Badge variant="outline" className={`${PRIORITY_COLOR[ticket.priority]} text-[10px] sm:text-xs`}>{PRIORITY_LABELS[ticket.priority]}</Badge>
+            <span className="text-[10px] sm:text-xs text-muted-foreground">{formatDistanceToNow(new Date(ticket.created_at), { addSuffix: true, locale: ar })}</span>
           </div>
         </div>
       </motion.div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-3 sm:gap-4">
         {/* Main: Chat + Timeline + Attachments */}
-        <div className="lg:col-span-2 space-y-4">
+        <div className="lg:col-span-2 space-y-3 sm:space-y-4">
           <Tabs defaultValue="chat" dir="rtl">
-            <TabsList className="w-full">
-              <TabsTrigger value="chat" className="gap-2 flex-1"><MessageSquare className="w-4 h-4" /> المحادثة ({messages.length})</TabsTrigger>
-              <TabsTrigger value="timeline" className="gap-2 flex-1"><History className="w-4 h-4" /> السجل ({timeline.length})</TabsTrigger>
-              <TabsTrigger value="files" className="gap-2 flex-1"><Paperclip className="w-4 h-4" /> المرفقات ({attachments.length})</TabsTrigger>
+            <TabsList className="w-full h-auto">
+              <TabsTrigger value="chat" className="gap-1 sm:gap-2 flex-1 text-[11px] sm:text-sm px-2 sm:px-3"><MessageSquare className="w-3.5 h-3.5 sm:w-4 sm:h-4" /><span className="hidden xs:inline">المحادثة</span><span className="xs:hidden">رسائل</span> ({messages.length})</TabsTrigger>
+              <TabsTrigger value="timeline" className="gap-1 sm:gap-2 flex-1 text-[11px] sm:text-sm px-2 sm:px-3"><History className="w-3.5 h-3.5 sm:w-4 sm:h-4" /> السجل ({timeline.length})</TabsTrigger>
+              <TabsTrigger value="files" className="gap-1 sm:gap-2 flex-1 text-[11px] sm:text-sm px-2 sm:px-3"><Paperclip className="w-3.5 h-3.5 sm:w-4 sm:h-4" /><span className="hidden xs:inline">المرفقات</span><span className="xs:hidden">ملفات</span> ({attachments.length})</TabsTrigger>
             </TabsList>
 
             <TabsContent value="chat">
               <Card className="border-0 shadow-sm">
-                <CardContent className="p-0 flex flex-col h-[60vh]">
-                  <div className="flex-1 overflow-y-auto p-4 space-y-3 bg-muted/20">
+                <CardContent className="p-0 flex flex-col h-[60vh] sm:h-[60vh]">
+                  <div className="flex-1 overflow-y-auto p-3 sm:p-4 space-y-3 bg-muted/20">
                     {ticket.description && (
                       <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="bg-card border rounded-lg p-3 text-sm">
                         <div className="text-xs text-muted-foreground mb-1">وصف التذكرة</div>
@@ -240,9 +240,9 @@ export default function TicketDetailView({ ticketId, currentUserId, isAdmin, bac
                     </AnimatePresence>
                     <div ref={messagesEndRef} />
                   </div>
-                  <div className="border-t p-3 flex items-end gap-2 bg-card">
+                  <div className="border-t p-2 sm:p-3 flex items-end gap-1.5 sm:gap-2 bg-card">
                     <input ref={fileRef} type="file" hidden onChange={handleUpload} />
-                    <Button variant="outline" size="icon" onClick={() => fileRef.current?.click()} disabled={uploading} title="إرفاق">
+                    <Button variant="outline" size="icon" onClick={() => fileRef.current?.click()} disabled={uploading} title="إرفاق" className="shrink-0 h-9 w-9 sm:h-10 sm:w-10">
                       {uploading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Paperclip className="w-4 h-4" />}
                     </Button>
                     <Textarea
@@ -250,12 +250,12 @@ export default function TicketDetailView({ ticketId, currentUserId, isAdmin, bac
                       onChange={(e) => setReply(e.target.value)}
                       placeholder="اكتب رسالتك..."
                       rows={2}
-                      className="flex-1 resize-none"
+                      className="flex-1 resize-none text-sm min-h-[40px]"
                       onKeyDown={(e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); handleSend(); } }}
                     />
-                    <Button onClick={handleSend} disabled={!reply.trim() || sending} className="gap-2 self-stretch">
+                    <Button onClick={handleSend} disabled={!reply.trim() || sending} size="icon" className="shrink-0 self-stretch h-auto w-10 sm:w-auto sm:px-4 sm:gap-2">
                       {sending ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}
-                      إرسال
+                      <span className="hidden sm:inline">إرسال</span>
                     </Button>
                   </div>
                 </CardContent>
