@@ -317,8 +317,16 @@ const AdminCustomerDetails: React.FC = () => {
             <h1 className="text-2xl font-bold flex items-center gap-3 flex-wrap">
               {customer.name}
               {customer.customer_code && (
-                <span className="text-xs font-mono px-2 py-1 rounded-md bg-primary/10 text-primary border border-primary/20">
+                <span className="inline-flex items-center gap-1.5 text-xs font-mono px-2 py-1 rounded-md bg-primary/10 text-primary border border-primary/20">
                   #{customer.customer_code}
+                  <button
+                    type="button"
+                    onClick={() => copyText(customer.customer_code!, 'رقم الهوية')}
+                    className="hover:bg-primary/20 rounded p-0.5 transition-colors"
+                    aria-label="نسخ رقم الهوية"
+                  >
+                    <Copy className="w-3 h-3" />
+                  </button>
                 </span>
               )}
             </h1>
