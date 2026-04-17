@@ -1,0 +1,253 @@
+import { useEffect, useMemo, useState } from 'react';
+import AdminLayout from '@/components/admin/AdminLayout';
+import { Card, CardContent } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Badge } from '@/components/ui/badge';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger, DropdownMenuSeparator } from '@/components/ui/dropdown-menu';
+import { FileText, Plus, Search, RefreshCw, Eye, Edit, Trash2, Download, Printer, CreditCard, MoreVertical, TrendingUp, Clock, CheckCircle2 } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import { toast } from 'sonner';
+import { supabase } from '@/integrations/supabase/client';
+import { InvoiceService, type Invoice } from '@/utils/invoiceService';
+import { openInvoicePrintWindow, downloadInvoiceAsPDF } from '@/utils/invoicePdf';
+import InvoiceFormDialog from '@/components/admin/invoices/InvoiceFormDialog';
+import PaymentDialog from '@/components/admin/invoices/PaymentDialog';
+
+export default function AdminInvoices() {
+  const [invoices, setInvoices] = useState<Invoice[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [search, setSearch] = useState('');
+  const [statusFilter, setStatusFilter] = useState('all');
+  const [formOpen, setFormOpen] = useState(false);
+  const [editing, setEditing] = useState<Invoice | null>(null);
+  const [paymentFor, setPaymentFor] = useState<Invoice | null>(null);
+
+  const load = async () => {
+    setLoading(true);
+    try { setInvoices(await InvoiceService.list()); }
+    catch (e: any) { toast.error('فشل التحميل', { description: e.message }); }
+    finally { setLoading(false); }
+  };
+
+  useEffect(() => { load(); }, []);
+  useEffect(() => {
+    const ch = supabase.channel('admin-invoices')
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'invoices' }, () => load())
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'invoice_payments' }, () => load())
+      .subscribe();
+    return () => { supabase.removeChannel(ch); };
+  }, []);
+
+  const filtered = useMemo(() => invoices.filter((i) => {
+    if (statusFilter !== 'all' && i.status !== statusFilter) return false;
+    if (search) {
+      const q = search.toLowerCase();
+      return i.invoice_number.toLowerCase().includes(q) || (i.customer_name ?? '').toLowerCase().includes(q) || (i.customer_email ?? '').toLowerCase().includes(q);
+    }
+    return true;
+  }), [invoices, search, statusFilter]);
+
+  const stats = useMemo(() => ({
+    total: invoices.length,
+    paid: invoices.filter(i => i.status === 'paid').length,
+    unpaid: invoices.filter(i => ['pending','sent','partially_paid','overdue'].includes(i.status)).length,
+    totalAmount: invoices.reduce((s,i) => s + Number(i.total_amount ?? 0), 0),
+    totalPaid: invoices.reduce((s,i) => s + Number(i.paid_amount ?? 0), 0),
+    totalRemaining: invoices.reduce((s,i) => s + Number(i.remaining_amount ?? 0), 0),
+  }), [invoices]);
+
+  const handleDelete = async (inv: Invoice) => {
+    if (!confirm(`حذف الفاتورة ${inv.invoice_number}؟`)) return;
+    try { await InvoiceService.remove(inv.id); toast.success('تم الحذف'); }
+    catch (e: any) { toast.error('فشل', { description: e.message }); }
+  };
+  const handleDownload = async (inv: Invoice) => {
+    try {
+      const [items, payments] = await Promise.all([InvoiceService.getItems(inv.id), InvoiceService.getPayments(inv.id)]);
+      await downloadInvoiceAsPDF(inv, items, payments);
+    } catch (e: any) { toast.error('فشل PDF', { description: e.message }); }
+  };
+  const handlePrint = async (inv: Invoice) => {
+    const [items, payments] = await Promise.all([InvoiceService.getItems(inv.id), InvoiceService.getPayments(inv.id)]);
+    openInvoicePrintWindow(inv, items, payments);
+  };
+
+  return (
+    <AdminLayout>
+      <div className="p-4 lg:p-6 space-y-6" dir="rtl">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <div>
+            <h1 className="text-2xl lg:text-3xl font-bold flex items-center gap-2"><FileText className="w-7 h-7 text-primary" />الفواتير</h1>
+            <p className="text-muted-foreground text-sm mt-1">إدارة كاملة للفواتير والمدفوعات</p>
+          </div>
+          <div className="flex gap-2">
+            <Button variant="outline" size="sm" onClick={load}><RefreshCw className="w-4 h-4 ml-1" />تحديث</Button>
+            <Button onClick={() => { setEditing(null); setFormOpen(true); }}><Plus className="w-4 h-4 ml-1" />فاتورة جديدة</Button>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
+          <StatCard icon={FileText} label="إجمالي الفواتير" value={stats.total} color="text-primary" bg="bg-primary/10" />
+          <StatCard icon={CheckCircle2} label="مدفوعة" value={stats.paid} color="text-emerald-600" bg="bg-emerald-50" />
+          <StatCard icon={Clock} label="غير مدفوعة" value={stats.unpaid} color="text-amber-600" bg="bg-amber-50" />
+          <StatCard icon={TrendingUp} label="المتبقي" value={InvoiceService.formatCurrency(stats.totalRemaining)} color="text-red-600" bg="bg-red-50" small />
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-3">
+          <SummaryBar label="إجمالي المبالغ" value={stats.totalAmount} color="bg-primary" />
+          <SummaryBar label="إجمالي المدفوع" value={stats.totalPaid} color="bg-emerald-500" />
+        </div>
+
+        <Card className="border-0 shadow-md">
+          <CardContent className="p-4 flex flex-col md:flex-row gap-3">
+            <div className="relative flex-1">
+              <Search className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+              <Input className="pr-9" placeholder="بحث برقم الفاتورة أو العميل" value={search} onChange={(e) => setSearch(e.target.value)} />
+            </div>
+            <Select value={statusFilter} onValueChange={setStatusFilter}>
+              <SelectTrigger className="w-full md:w-48"><SelectValue /></SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">جميع الحالات</SelectItem>
+                <SelectItem value="draft">مسودة</SelectItem>
+                <SelectItem value="pending">بانتظار الإرسال</SelectItem>
+                <SelectItem value="sent">مرسلة</SelectItem>
+                <SelectItem value="partially_paid">مدفوعة جزئياً</SelectItem>
+                <SelectItem value="paid">مدفوعة</SelectItem>
+                <SelectItem value="overdue">متأخرة</SelectItem>
+                <SelectItem value="cancelled">ملغاة</SelectItem>
+              </SelectContent>
+            </Select>
+          </CardContent>
+        </Card>
+
+        <Card className="border-0 shadow-md hidden lg:block">
+          <CardContent className="p-0">
+            {loading ? <div className="p-12 text-center"><RefreshCw className="w-8 h-8 animate-spin mx-auto text-primary" /></div>
+            : filtered.length === 0 ? <EmptyState />
+            : (
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead className="text-right">رقم الفاتورة</TableHead>
+                    <TableHead className="text-right">العميل</TableHead>
+                    <TableHead className="text-right">التاريخ</TableHead>
+                    <TableHead className="text-right">الإجمالي</TableHead>
+                    <TableHead className="text-right">المدفوع</TableHead>
+                    <TableHead className="text-right">المتبقي</TableHead>
+                    <TableHead className="text-right">الحالة</TableHead>
+                    <TableHead className="text-right">إجراءات</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {filtered.map((inv) => (
+                    <TableRow key={inv.id}>
+                      <TableCell className="font-bold"><Link to={`/adminmaster/invoices/${inv.id}`} className="text-primary hover:underline">{inv.invoice_number}</Link></TableCell>
+                      <TableCell>
+                        <div className="font-medium">{inv.customer_name ?? '-'}</div>
+                        {inv.customer_email && <div className="text-xs text-muted-foreground">{inv.customer_email}</div>}
+                      </TableCell>
+                      <TableCell className="text-sm">{inv.issue_date}</TableCell>
+                      <TableCell className="font-bold">{InvoiceService.formatCurrency(inv.total_amount, inv.currency)}</TableCell>
+                      <TableCell className="text-emerald-600">{InvoiceService.formatCurrency(inv.paid_amount, inv.currency)}</TableCell>
+                      <TableCell className="text-red-600 font-medium">{InvoiceService.formatCurrency(inv.remaining_amount, inv.currency)}</TableCell>
+                      <TableCell><Badge className={InvoiceService.statusColor(inv.status)}>{InvoiceService.statusLabel(inv.status)}</Badge></TableCell>
+                      <TableCell><RowActions inv={inv} onEdit={() => { setEditing(inv); setFormOpen(true); }} onPay={() => setPaymentFor(inv)} onDelete={() => handleDelete(inv)} onPrint={() => handlePrint(inv)} onDownload={() => handleDownload(inv)} /></TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            )}
+          </CardContent>
+        </Card>
+
+        <div className="lg:hidden space-y-3">
+          {loading ? <div className="p-8 text-center"><RefreshCw className="w-6 h-6 animate-spin mx-auto" /></div>
+          : filtered.length === 0 ? <EmptyState />
+          : filtered.map((inv) => (
+            <Card key={inv.id} className="border-0 shadow-md">
+              <CardContent className="p-4 space-y-3">
+                <div className="flex items-center justify-between gap-2">
+                  <Link to={`/adminmaster/invoices/${inv.id}`} className="font-bold text-primary">{inv.invoice_number}</Link>
+                  <Badge className={InvoiceService.statusColor(inv.status)}>{InvoiceService.statusLabel(inv.status)}</Badge>
+                </div>
+                <div className="text-sm">
+                  <div className="font-medium">{inv.customer_name ?? '-'}</div>
+                  <div className="text-xs text-muted-foreground">{inv.issue_date}</div>
+                </div>
+                <div className="grid grid-cols-3 gap-2 text-xs bg-muted/40 rounded-md p-2">
+                  <div><div className="text-muted-foreground">الإجمالي</div><div className="font-bold">{InvoiceService.formatCurrency(inv.total_amount, inv.currency)}</div></div>
+                  <div><div className="text-muted-foreground">المدفوع</div><div className="font-bold text-emerald-600">{InvoiceService.formatCurrency(inv.paid_amount, inv.currency)}</div></div>
+                  <div><div className="text-muted-foreground">المتبقي</div><div className="font-bold text-red-600">{InvoiceService.formatCurrency(inv.remaining_amount, inv.currency)}</div></div>
+                </div>
+                <div className="flex gap-2">
+                  <Button size="sm" variant="outline" className="flex-1" asChild><Link to={`/adminmaster/invoices/${inv.id}`}><Eye className="w-3 h-3 ml-1" />عرض</Link></Button>
+                  <Button size="sm" variant="outline" className="flex-1" onClick={() => handlePrint(inv)}><Printer className="w-3 h-3 ml-1" />طباعة</Button>
+                  <RowActions inv={inv} onEdit={() => { setEditing(inv); setFormOpen(true); }} onPay={() => setPaymentFor(inv)} onDelete={() => handleDelete(inv)} onPrint={() => handlePrint(inv)} onDownload={() => handleDownload(inv)} />
+                </div>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+      </div>
+
+      <InvoiceFormDialog open={formOpen} onOpenChange={setFormOpen} invoice={editing} onSaved={load} />
+      {paymentFor && <PaymentDialog open={!!paymentFor} onOpenChange={(o) => !o && setPaymentFor(null)} invoice={paymentFor} onSaved={load} />}
+    </AdminLayout>
+  );
+}
+
+function StatCard({ icon: Icon, label, value, color, bg, small }: any) {
+  return (
+    <Card className="border-0 shadow-md">
+      <CardContent className="p-4 flex items-center gap-3">
+        <div className={`w-12 h-12 rounded-xl ${bg} flex items-center justify-center`}><Icon className={`w-6 h-6 ${color}`} /></div>
+        <div className="min-w-0 flex-1">
+          <div className="text-xs text-muted-foreground">{label}</div>
+          <div className={`font-bold ${color} ${small ? 'text-base' : 'text-2xl'} truncate`}>{value}</div>
+        </div>
+      </CardContent>
+    </Card>
+  );
+}
+function SummaryBar({ label, value, color }: { label: string; value: number; color: string }) {
+  return (
+    <Card className="border-0 shadow-md">
+      <CardContent className="p-4">
+        <div className="flex items-center justify-between mb-2">
+          <span className="text-sm text-muted-foreground">{label}</span>
+          <span className="font-bold text-lg">{InvoiceService.formatCurrency(value)}</span>
+        </div>
+        <div className="h-2 bg-muted rounded-full overflow-hidden"><div className={`h-full ${color}`} style={{ width: '100%' }} /></div>
+      </CardContent>
+    </Card>
+  );
+}
+function EmptyState() {
+  return (
+    <div className="p-12 text-center">
+      <FileText className="w-12 h-12 mx-auto text-muted-foreground mb-3" />
+      <p className="font-medium">لا توجد فواتير</p>
+      <p className="text-sm text-muted-foreground mt-1">ابدأ بإنشاء فاتورة جديدة</p>
+    </div>
+  );
+}
+function RowActions({ inv, onEdit, onPay, onDelete, onPrint, onDownload }: any) {
+  return (
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild><Button variant="ghost" size="icon"><MoreVertical className="w-4 h-4" /></Button></DropdownMenuTrigger>
+      <DropdownMenuContent align="end">
+        <DropdownMenuItem asChild><Link to={`/adminmaster/invoices/${inv.id}`}><Eye className="w-4 h-4 ml-2" />التفاصيل</Link></DropdownMenuItem>
+        <DropdownMenuItem onClick={onEdit}><Edit className="w-4 h-4 ml-2" />تعديل</DropdownMenuItem>
+        <DropdownMenuItem onClick={onPay}><CreditCard className="w-4 h-4 ml-2" />دفعة</DropdownMenuItem>
+        <DropdownMenuSeparator />
+        <DropdownMenuItem onClick={onPrint}><Printer className="w-4 h-4 ml-2" />طباعة</DropdownMenuItem>
+        <DropdownMenuItem onClick={onDownload}><Download className="w-4 h-4 ml-2" />تحميل PDF</DropdownMenuItem>
+        <DropdownMenuSeparator />
+        <DropdownMenuItem onClick={onDelete} className="text-destructive"><Trash2 className="w-4 h-4 ml-2" />حذف</DropdownMenuItem>
+      </DropdownMenuContent>
+    </DropdownMenu>
+  );
+}
