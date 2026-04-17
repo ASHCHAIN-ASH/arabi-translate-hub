@@ -60,6 +60,8 @@ const ClientWallet: React.FC = () => {
   const [reference, setReference] = useState('');
   const [notes, setNotes] = useState('');
   const [copied, setCopied] = useState<string | null>(null);
+  const [receiptFile, setReceiptFile] = useState<File | null>(null);
+  const [uploadingReceipt, setUploadingReceipt] = useState(false);
 
   const load = async () => {
     if (!user?.id) return;
