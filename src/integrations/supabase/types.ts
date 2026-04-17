@@ -380,54 +380,169 @@ export type Database = {
           },
         ]
       }
+      invoice_payments: {
+        Row: {
+          amount: number
+          created_at: string
+          created_by: string | null
+          id: string
+          invoice_id: string
+          notes: string | null
+          payment_date: string
+          payment_method: string
+          reference_number: string | null
+          status: string
+        }
+        Insert: {
+          amount: number
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          invoice_id: string
+          notes?: string | null
+          payment_date?: string
+          payment_method?: string
+          reference_number?: string | null
+          status?: string
+        }
+        Update: {
+          amount?: number
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          invoice_id?: string
+          notes?: string | null
+          payment_date?: string
+          payment_method?: string
+          reference_number?: string | null
+          status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "invoice_payments_invoice_id_fkey"
+            columns: ["invoice_id"]
+            isOneToOne: false
+            referencedRelation: "invoices"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      invoice_timeline: {
+        Row: {
+          action_description: string | null
+          action_label: string
+          action_type: string
+          actor_user_id: string | null
+          created_at: string
+          id: string
+          invoice_id: string
+          metadata: Json | null
+        }
+        Insert: {
+          action_description?: string | null
+          action_label: string
+          action_type: string
+          actor_user_id?: string | null
+          created_at?: string
+          id?: string
+          invoice_id: string
+          metadata?: Json | null
+        }
+        Update: {
+          action_description?: string | null
+          action_label?: string
+          action_type?: string
+          actor_user_id?: string | null
+          created_at?: string
+          id?: string
+          invoice_id?: string
+          metadata?: Json | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "invoice_timeline_invoice_id_fkey"
+            columns: ["invoice_id"]
+            isOneToOne: false
+            referencedRelation: "invoices"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       invoices: {
         Row: {
           created_at: string
+          currency: string
+          customer_email: string | null
           customer_id: string | null
+          customer_name: string | null
+          customer_phone: string | null
           discount_amount: number | null
           due_date: string | null
           id: string
           invoice_number: string
+          issue_date: string
           notes: string | null
           order_id: string | null
+          paid_amount: number
           paid_at: string | null
+          remaining_amount: number | null
+          sent_at: string | null
           status: string | null
           subtotal: number | null
           tax_amount: number | null
+          terms: string | null
           total_amount: number | null
           updated_at: string
           user_id: string | null
         }
         Insert: {
           created_at?: string
+          currency?: string
+          customer_email?: string | null
           customer_id?: string | null
+          customer_name?: string | null
+          customer_phone?: string | null
           discount_amount?: number | null
           due_date?: string | null
           id?: string
           invoice_number?: string
+          issue_date?: string
           notes?: string | null
           order_id?: string | null
+          paid_amount?: number
           paid_at?: string | null
+          remaining_amount?: number | null
+          sent_at?: string | null
           status?: string | null
           subtotal?: number | null
           tax_amount?: number | null
+          terms?: string | null
           total_amount?: number | null
           updated_at?: string
           user_id?: string | null
         }
         Update: {
           created_at?: string
+          currency?: string
+          customer_email?: string | null
           customer_id?: string | null
+          customer_name?: string | null
+          customer_phone?: string | null
           discount_amount?: number | null
           due_date?: string | null
           id?: string
           invoice_number?: string
+          issue_date?: string
           notes?: string | null
           order_id?: string | null
+          paid_amount?: number
           paid_at?: string | null
+          remaining_amount?: number | null
+          sent_at?: string | null
           status?: string | null
           subtotal?: number | null
           tax_amount?: number | null
+          terms?: string | null
           total_amount?: number | null
           updated_at?: string
           user_id?: string | null
