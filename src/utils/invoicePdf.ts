@@ -98,7 +98,7 @@ export function buildInvoiceHTML(invoice: Invoice, items: InvoiceItem[], payment
   .totals { width: 320px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 12px 16px; }
   .totals .row { display: flex; justify-content: space-between; padding: 6px 0; font-size: 13px; border-bottom: 1px dashed #e2e8f0; }
   .totals .row:last-child { border-bottom: none; }
-  .totals .row.grand { font-size: 15px; font-weight: 800; color: #0f766e; padding-top: 10px; margin-top: 4px; border-top: 2px solid #0f766e; border-bottom: none; }
+  .totals .row.grand { font-size: 15px; font-weight: 800; color: #1e3a8a; padding-top: 10px; margin-top: 4px; border-top: 2px solid #1e3a8a; border-bottom: none; }
   .totals .row.paid { color: #047857; }
   .totals .row.remaining { color: #b91c1c; font-weight: 700; }
 
