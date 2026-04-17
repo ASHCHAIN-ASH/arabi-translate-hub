@@ -332,6 +332,11 @@ const App = () => (
                 <AdminInvoices />
               </SimpleProtectedRoute>
             } />
+            <Route path="/adminmaster/invoices/:id" element={
+              <SimpleProtectedRoute adminOnly>
+                <AdminInvoiceDetails />
+              </SimpleProtectedRoute>
+            } />
             <Route path="/adminmaster/transactions" element={
               <SimpleProtectedRoute adminOnly>
                 <AdminTransactions />
