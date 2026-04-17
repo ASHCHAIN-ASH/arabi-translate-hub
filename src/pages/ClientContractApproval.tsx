@@ -86,6 +86,55 @@ const ClientContractApproval = () => {
 
   const isSigned = contract?.status === "signed" || contract?.status === "active" || contract?.status === "completed";
   const allTermsAccepted = accepted.length === REQUIRED_TERMS.length;
+  const baseFormValid =
+    !!signerName.trim() && !!signature.trim() && allTermsAccepted;
+
+  async function handleSendOtp() {
+    if (!contract) return;
+    if (!baseFormValid) {
+      toast.error("يرجى إكمال البيانات والموافقة على الشروط أولاً");
+      return;
+    }
+    setOtpSending(true);
+    try {
+      const { data, error } = await supabase.functions.invoke("send-contract-otp", {
+        body: { contract_id: contract.id },
+      });
+      if (error) throw error;
+      if ((data as any)?.error) throw new Error((data as any).error);
+      setMaskedEmail((data as any)?.masked_email || contract.client_email || "");
+      setOtpStep("sent");
+      setOtpResendCooldown(60);
+      toast.success("تم إرسال رمز التحقق إلى بريدك الإلكتروني");
+    } catch (e: any) {
+      toast.error(e.message || "تعذّر إرسال رمز التحقق");
+    } finally {
+      setOtpSending(false);
+    }
+  }
+
+  async function handleVerifyAndSign() {
+    if (!contract) return;
+    if (otpCode.trim().length !== 6) {
+      toast.error("يرجى إدخال رمز التحقق المكون من 6 أرقام");
+      return;
+    }
+    setOtpVerifying(true);
+    try {
+      const { data, error } = await supabase.functions.invoke("verify-contract-otp", {
+        body: { contract_id: contract.id, code: otpCode.trim() },
+      });
+      if (error) throw error;
+      if (!(data as any)?.verified) throw new Error((data as any)?.error || "رمز غير صحيح");
+      setOtpStep("verified");
+      toast.success("تم التحقق ✓ — جاري إتمام التوقيع");
+      await handleSign();
+    } catch (e: any) {
+      toast.error(e.message || "رمز التحقق غير صحيح");
+    } finally {
+      setOtpVerifying(false);
+    }
+  }
 
   async function handleSign() {
     if (!contract) return;
