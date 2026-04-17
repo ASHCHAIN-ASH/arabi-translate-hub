@@ -101,6 +101,78 @@ const AdminCustomers = () => {
   const [newStatus, setNewStatus] = useState('');
   const [statusReason, setStatusReason] = useState('');
   const [editFormData, setEditFormData] = useState({ name: '', phone: '' });
+  const [addModalOpen, setAddModalOpen] = useState(false);
+  const [addForm, setAddForm] = useState({
+    name: '',
+    email: '',
+    phone: '',
+    company: '',
+    notes: '',
+    password: '',
+    role: 'user' as 'user' | 'moderator' | 'admin',
+    sendWelcomeEmail: true,
+  });
+  const [addingCustomer, setAddingCustomer] = useState(false);
+
+  const generatePassword = () => {
+    const chars = 'ABCDEFGHJKMNPQRSTUVWXYZabcdefghjkmnpqrstuvwxyz23456789!@#$%';
+    let pwd = '';
+    for (let i = 0; i < 12; i++) pwd += chars[Math.floor(Math.random() * chars.length)];
+    setAddForm((f) => ({ ...f, password: pwd }));
+    toast.success('تم توليد كلمة مرور قوية');
+  };
+
+  const handleAddCustomer = async () => {
+    const name = addForm.name.trim();
+    const email = addForm.email.trim().toLowerCase();
+    if (!name || name.length < 2) return toast.error('الاسم مطلوب (حرفين على الأقل)');
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return toast.error('بريد إلكتروني غير صالح');
+    if (!addForm.password || addForm.password.length < 8) return toast.error('كلمة المرور 8 أحرف على الأقل');
+
+    setAddingCustomer(true);
+    try {
+      const { data, error } = await supabase.functions.invoke('admin-create-user', {
+        body: {
+          email,
+          password: addForm.password,
+          fullName: name,
+          phone: addForm.phone.trim() || null,
+          role: addForm.role,
+          sendWelcomeEmail: addForm.sendWelcomeEmail,
+          metadata: {
+            company: addForm.company.trim() || null,
+            notes: addForm.notes.trim() || null,
+          },
+        },
+      });
+      if (error) throw error;
+      if (data?.error) throw new Error(data.error);
+
+      // Update customer record with company/notes (trigger created the base record)
+      if (data?.user?.id && (addForm.company.trim() || addForm.notes.trim())) {
+        await supabase
+          .from('customers')
+          .update({
+            company: addForm.company.trim() || null,
+            notes: addForm.notes.trim() || null,
+          })
+          .eq('user_id', data.user.id);
+      }
+
+      toast.success(`تم إنشاء العميل ${name} بنجاح`);
+      setAddModalOpen(false);
+      setAddForm({
+        name: '', email: '', phone: '', company: '', notes: '',
+        password: '', role: 'user', sendWelcomeEmail: true,
+      });
+      refresh();
+    } catch (err: any) {
+      console.error('Add customer error:', err);
+      toast.error(err?.message || 'فشل إنشاء العميل');
+    } finally {
+      setAddingCustomer(false);
+    }
+  };
 
   // تصفية العملاء
   const filteredCustomers = customers.filter(customer => {
