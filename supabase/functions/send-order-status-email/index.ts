@@ -76,7 +76,7 @@ const createOrderStatusEmailTemplate = (data: OrderStatusEmailRequest): string =
     <title>تحديث حالة الطلب</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; direction: rtl !important; text-align: right !important; }
-        body { font-family: 'Cairo', 'Segoe UI', Tahoma, Arial, sans-serif; line-height: 1.8; color: #2c3e50; background: linear-gradient(135deg, #10b981 0%, #059669 100%); margin: 0; padding: 15px; direction: rtl !important; }
+        body { font-family: 'IBM Plex Sans Arabic', 'Segoe UI', Tahoma, Arial, sans-serif; line-height: 1.8; color: #2c3e50; background: linear-gradient(135deg, #10b981 0%, #059669 100%); margin: 0; padding: 15px; direction: rtl !important; }
         .text-center { text-align: center !important; }
         .container { max-width: 650px; margin: 0 auto; background: white; border-radius: 25px; box-shadow: 0 25px 50px rgba(0,0,0,0.15); overflow: hidden; }
         .header { background: linear-gradient(135deg, #10b981, #059669); color: white; padding: 40px 30px; text-align: center !important; }

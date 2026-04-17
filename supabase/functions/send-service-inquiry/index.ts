@@ -81,7 +81,7 @@ const generateCustomerEmailTemplate = (inquiry: ServiceInquiry, serviceName: str
       <meta charset="UTF-8">
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <title>تأكيد استلام طلبكم - وكالة ماستر إيدو باث</title>
-      <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;700;800&display=swap" rel="stylesheet">
+      <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&display=swap" rel="stylesheet">
       <style>
         * {
           margin: 0;
@@ -90,7 +90,7 @@ const generateCustomerEmailTemplate = (inquiry: ServiceInquiry, serviceName: str
         }
         
         body {
-          font-family: 'Cairo', 'Cairo', 'Amiri', system-ui, -apple-system, sans-serif;
+          font-family: 'IBM Plex Sans Arabic', 'IBM Plex Sans Arabic', 'Amiri', system-ui, -apple-system, sans-serif;
           line-height: 1.6;
           color: #1a202c;
           background: linear-gradient(135deg, #4299e1 0%, #3182ce 50%, #2b77cb 100%);
@@ -864,7 +864,7 @@ const generateAdminEmailTemplate = (inquiry: ServiceInquiry, serviceName: string
       <meta charset="UTF-8">
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <title>طلب خدمة جديد - وكالة ماستر إيدو باث</title>
-      <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;700;800&display=swap" rel="stylesheet">
+      <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&display=swap" rel="stylesheet">
       <style>
         * {
           margin: 0;
@@ -873,7 +873,7 @@ const generateAdminEmailTemplate = (inquiry: ServiceInquiry, serviceName: string
         }
         
         body {
-          font-family: 'Cairo', 'Cairo', system-ui, -apple-system, sans-serif;
+          font-family: 'IBM Plex Sans Arabic', 'IBM Plex Sans Arabic', system-ui, -apple-system, sans-serif;
           line-height: 1.6;
           color: #1f2937;
           background: linear-gradient(135deg, #ef4444 0%, #dc2626 50%, #b91c1c 100%);

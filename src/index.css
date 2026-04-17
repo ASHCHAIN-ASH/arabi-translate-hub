@@ -294,7 +294,7 @@
 
   body {
     @apply text-foreground;
-    font-family: 'Almarai', 'Inter', system-ui, sans-serif;
+    font-family: 'IBM Plex Sans Arabic', 'Inter', system-ui, sans-serif;
     font-weight: 400;
     background-color: hsl(var(--background));
     -webkit-font-smoothing: antialiased;
@@ -303,7 +303,7 @@
   }
 
   h1, h2, h3, h4, h5, h6 {
-    font-family: 'Cairo', 'Inter', system-ui, sans-serif;
+    font-family: 'IBM Plex Sans Arabic', 'Inter', system-ui, sans-serif;
     font-weight: 700;
     letter-spacing: -0.01em;
   }
@@ -315,20 +315,20 @@
 
 @layer base {
   .font-academic-title {
-    font-family: 'Cairo', system-ui, sans-serif;
+    font-family: 'IBM Plex Sans Arabic', system-ui, sans-serif;
     font-weight: 700;
     letter-spacing: -0.01em;
   }
   
   .font-academic-body {
-    font-family: 'Almarai', 'Inter', system-ui, sans-serif;
+    font-family: 'IBM Plex Sans Arabic', 'Inter', system-ui, sans-serif;
     font-weight: 400;
     line-height: 1.7;
   }
   
   .font-academic-heading,
   .font-arabic-formal {
-    font-family: 'Cairo', system-ui, sans-serif;
+    font-family: 'IBM Plex Sans Arabic', system-ui, sans-serif;
     font-weight: 600;
     letter-spacing: -0.02em;
   }

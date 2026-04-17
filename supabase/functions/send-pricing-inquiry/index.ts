@@ -62,7 +62,7 @@ const handler = async (req: Request): Promise<Response> => {
           <style>
             * { margin: 0; padding: 0; box-sizing: border-box; }
             body { 
-              font-family: 'Cairo', 'Segoe UI', Tahoma, Arial, sans-serif; 
+              font-family: 'IBM Plex Sans Arabic', 'Segoe UI', Tahoma, Arial, sans-serif; 
               margin: 0; 
               padding: 15px; 
               background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); 

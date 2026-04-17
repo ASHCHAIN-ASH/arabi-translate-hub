@@ -55,7 +55,7 @@ const getClientEmailTemplate = (data: LicenseRequestData, requestNumber: string)
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>تأكيد طلب ترخيص الاستخدام</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@200;300;400;500;600;700;800;900&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&display=swap');
         
         * {
             margin: 0;
@@ -64,7 +64,7 @@ const getClientEmailTemplate = (data: LicenseRequestData, requestNumber: string)
         }
         
         body {
-            font-family: 'Cairo', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'IBM Plex Sans Arabic', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             line-height: 1.8;
             color: #1a202c;
             background: linear-gradient(135deg, #1e40af 0%, #7c3aed 100%);
@@ -186,7 +186,7 @@ const getClientEmailTemplate = (data: LicenseRequestData, requestNumber: string)
         .request-number-value {
             font-size: 32px;
             font-weight: 800;
-            font-family: 'Cairo', monospace;
+            font-family: 'IBM Plex Sans Arabic', monospace;
             letter-spacing: 3px;
         }
         

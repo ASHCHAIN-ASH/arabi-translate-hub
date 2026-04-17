@@ -170,7 +170,7 @@ const handler = async (req: Request): Promise<Response> => {
                       text-align: right !important;
                   }
                   body {
-                      font-family: 'Cairo', 'Segoe UI', Tahoma, Arial, sans-serif;
+                      font-family: 'IBM Plex Sans Arabic', 'Segoe UI', Tahoma, Arial, sans-serif;
                       background: linear-gradient(135deg, #10b981 0%, #059669 100%);
                       margin: 0;
                       padding: 15px;

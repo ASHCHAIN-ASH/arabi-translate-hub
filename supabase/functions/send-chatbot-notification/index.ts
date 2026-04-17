@@ -46,7 +46,7 @@ const handler = async (req: Request): Promise<Response> => {
             @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Arabic:wght@400;500;600;700&display=swap');
             
             body {
-              font-family: 'Almarai', 'Arial', sans-serif;
+              font-family: 'IBM Plex Sans Arabic', 'Arial', sans-serif;
               margin: 0;
               padding: 0;
               background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
