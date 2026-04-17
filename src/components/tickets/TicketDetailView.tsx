@@ -190,7 +190,7 @@ export default function TicketDetailView({ ticketId, currentUserId, isAdmin, bac
         {/* Main: Chat + Timeline + Attachments */}
         <div className="lg:col-span-2 space-y-4">
           <Tabs defaultValue="chat" dir="rtl">
-            <TabsList className="flex-row-reverse w-full">
+            <TabsList className="w-full">
               <TabsTrigger value="chat" className="gap-2 flex-1"><MessageSquare className="w-4 h-4" /> المحادثة ({messages.length})</TabsTrigger>
               <TabsTrigger value="timeline" className="gap-2 flex-1"><History className="w-4 h-4" /> السجل ({timeline.length})</TabsTrigger>
               <TabsTrigger value="files" className="gap-2 flex-1"><Paperclip className="w-4 h-4" /> المرفقات ({attachments.length})</TabsTrigger>
