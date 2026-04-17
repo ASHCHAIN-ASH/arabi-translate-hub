@@ -486,8 +486,11 @@ export type Database = {
           file_size: number
           file_type: string | null
           id: string
+          is_delivery: boolean
           order_id: string
+          service_order_id: string | null
           storage_path: string
+          uploaded_by_admin: boolean
           user_id: string
         }
         Insert: {
@@ -496,8 +499,11 @@ export type Database = {
           file_size: number
           file_type?: string | null
           id?: string
+          is_delivery?: boolean
           order_id: string
+          service_order_id?: string | null
           storage_path: string
+          uploaded_by_admin?: boolean
           user_id: string
         }
         Update: {
@@ -506,8 +512,11 @@ export type Database = {
           file_size?: number
           file_type?: string | null
           id?: string
+          is_delivery?: boolean
           order_id?: string
+          service_order_id?: string | null
           storage_path?: string
+          uploaded_by_admin?: boolean
           user_id?: string
         }
         Relationships: [
@@ -722,6 +731,60 @@ export type Database = {
           name?: string
           name_ar?: string | null
           sort_order?: number | null
+        }
+        Relationships: []
+      }
+      service_order_admin_notes: {
+        Row: {
+          author_id: string
+          content: string
+          created_at: string
+          id: string
+          order_id: string
+        }
+        Insert: {
+          author_id: string
+          content: string
+          created_at?: string
+          id?: string
+          order_id: string
+        }
+        Update: {
+          author_id?: string
+          content?: string
+          created_at?: string
+          id?: string
+          order_id?: string
+        }
+        Relationships: []
+      }
+      service_order_messages: {
+        Row: {
+          content: string
+          created_at: string
+          id: string
+          order_id: string
+          read_at: string | null
+          sender_id: string
+          sender_type: string
+        }
+        Insert: {
+          content: string
+          created_at?: string
+          id?: string
+          order_id: string
+          read_at?: string | null
+          sender_id: string
+          sender_type?: string
+        }
+        Update: {
+          content?: string
+          created_at?: string
+          id?: string
+          order_id?: string
+          read_at?: string | null
+          sender_id?: string
+          sender_type?: string
         }
         Relationships: []
       }

@@ -72,6 +72,7 @@ import AdminUsers from "./pages/admin/AdminUsers";
 import AdminCustomers from "./pages/admin/AdminCustomers";
 import AdminTickets from "./pages/admin/AdminTickets";
 import AdminServiceOrders from "./pages/admin/AdminServiceOrders";
+import AdminServiceOrderDetails from "./pages/admin/AdminServiceOrderDetails";
 import EmailNotifications from "./pages/admin/EmailNotifications";
 import AdminChat from "./pages/admin/AdminChat";
 import AddUser from "./pages/admin/AddUser";
@@ -313,6 +314,11 @@ const App = () => (
             <Route path="/adminmaster/service-orders" element={
               <SimpleProtectedRoute adminOnly>
                 <AdminServiceOrders />
+              </SimpleProtectedRoute>
+            } />
+            <Route path="/adminmaster/service-orders/:id" element={
+              <SimpleProtectedRoute adminOnly>
+                <AdminServiceOrderDetails />
               </SimpleProtectedRoute>
             } />
             <Route path="/adminmaster/orders" element={
