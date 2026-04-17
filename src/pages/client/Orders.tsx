@@ -16,7 +16,7 @@ import { toast } from 'sonner';
 import {
   Search, Eye, Calendar, DollarSign,
   CheckCircle, Clock, AlertCircle, RefreshCw, ShoppingBag,
-  Check, X, ArrowUpDown, Package, Sparkles, TrendingUp, FileText
+  Check, X, ArrowUpDown, Package, Sparkles, TrendingUp, FileText, LifeBuoy
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -175,12 +175,14 @@ const OrderCard = ({
   index,
   onNavigate,
   onRespond,
+  onSupport,
   isHighlighted,
 }: {
   order: any;
   index: number;
   onNavigate: (id: string) => void;
   onRespond: () => void;
+  onSupport: (order: any) => void;
   isHighlighted?: boolean;
 }) => {
   const sc = statusConfig[order.status] || statusConfig['في الانتظار'];
@@ -267,7 +269,16 @@ const OrderCard = ({
 
             {/* View Button */}
             {!hasPendingQuote && (
-              <div className="flex justify-end mt-3">
+              <div className="flex justify-end gap-2 mt-3">
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => onSupport(order)}
+                  className="gap-2 text-amber-600 hover:text-amber-700 hover:bg-amber-50 dark:hover:bg-amber-950/30 font-medium"
+                >
+                  <LifeBuoy className="w-4 h-4" />
+                  فتح تذكرة دعم
+                </Button>
                 <Button
                   variant="ghost"
                   size="sm"
@@ -473,6 +484,7 @@ const Orders = () => {
                 index={index}
                 onNavigate={(id) => navigate(`/orders/${id}`)}
                 onRespond={refresh}
+                onSupport={(o) => navigate(`/support/tickets?new=1&order_id=${o.id}&order_number=${encodeURIComponent(o.orderNumber || '')}`)}
                 isHighlighted={highlightedId === order.id}
               />
             ))}

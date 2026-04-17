@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import ClientLayout from '@/components/client/ClientLayout';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -13,35 +14,78 @@ import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 import { 
   Plus, HelpCircle, MessageSquare, Clock, CheckCircle, 
-  AlertCircle, RefreshCw, Send 
+  AlertCircle, RefreshCw, Send, FileText, Package
 } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 const ClientTickets = () => {
   const { user } = useAuth();
   const { tickets, loading, refresh } = useClientData(user?.id);
+  const [searchParams, setSearchParams] = useSearchParams();
   const [isOpen, setIsOpen] = useState(false);
   const [newTicket, setNewTicket] = useState({ title: '', description: '', category: 'general', priority: 'medium' });
+  const [linkedRef, setLinkedRef] = useState<{ type: 'invoice' | 'order'; id: string; number: string } | null>(null);
   const [submitting, setSubmitting] = useState(false);
+
+  // Auto-open dialog when arriving with ?new=1 and prefill linked invoice/order
+  useEffect(() => {
+    if (searchParams.get('new') !== '1') return;
+    const invoiceId = searchParams.get('invoice_id');
+    const invoiceNumber = searchParams.get('invoice_number') || '';
+    const orderId = searchParams.get('order_id');
+    const orderNumber = searchParams.get('order_number') || '';
+
+    if (invoiceId) {
+      setLinkedRef({ type: 'invoice', id: invoiceId, number: invoiceNumber });
+      setNewTicket((p) => ({
+        ...p,
+        category: 'billing',
+        title: `استفسار بخصوص الفاتورة ${invoiceNumber || `#${invoiceId.slice(0, 8)}`}`,
+        description: `تذكرة دعم متعلقة بالفاتورة رقم: ${invoiceNumber || invoiceId}\n\n`,
+      }));
+    } else if (orderId) {
+      setLinkedRef({ type: 'order', id: orderId, number: orderNumber });
+      setNewTicket((p) => ({
+        ...p,
+        category: 'order',
+        title: `استفسار بخصوص الطلب ${orderNumber || `#${orderId.slice(0, 8)}`}`,
+        description: `تذكرة دعم متعلقة بالطلب رقم: ${orderNumber || orderId}\n\n`,
+      }));
+    }
+    setIsOpen(true);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const clearLinkedRef = () => {
+    setLinkedRef(null);
+    const next = new URLSearchParams(searchParams);
+    ['new', 'invoice_id', 'invoice_number', 'order_id', 'order_number'].forEach((k) => next.delete(k));
+    setSearchParams(next, { replace: true });
+  };
 
   const handleCreateTicket = async () => {
     if (!newTicket.title.trim() || !user?.id) return;
     setSubmitting(true);
     try {
       const ticketNumber = `TKT-${Date.now().toString(36).toUpperCase()}`;
-      const { error } = await supabase.from('tickets').insert({
+      const payload: any = {
         user_id: user.id,
         ticket_number: ticketNumber,
-        title: newTicket.title,
+        subject: newTicket.title,
         description: newTicket.description,
         category: newTicket.category,
         priority: newTicket.priority,
-        status: 'open'
-      } as any);
+        status: 'open',
+      };
+      if (linkedRef?.type === 'invoice') payload.related_invoice_id = linkedRef.id;
+      if (linkedRef?.type === 'order') payload.related_order_id = linkedRef.id;
+
+      const { error } = await supabase.from('tickets').insert(payload);
       if (error) throw error;
       toast.success('تم إنشاء التذكرة بنجاح');
       setIsOpen(false);
       setNewTicket({ title: '', description: '', category: 'general', priority: 'medium' });
+      clearLinkedRef();
       refresh();
     } catch (err) {
       console.error(err);
@@ -100,6 +144,26 @@ const ClientTickets = () => {
                 <DialogTitle>إنشاء تذكرة دعم جديدة</DialogTitle>
               </DialogHeader>
               <div className="space-y-4">
+                {linkedRef && (
+                  <div className="flex items-center justify-between gap-2 p-3 rounded-lg border border-primary/30 bg-primary/5">
+                    <div className="flex items-center gap-2 text-sm">
+                      {linkedRef.type === 'invoice' ? (
+                        <FileText className="w-4 h-4 text-primary" />
+                      ) : (
+                        <Package className="w-4 h-4 text-primary" />
+                      )}
+                      <span className="text-muted-foreground">
+                        مرتبط بـ {linkedRef.type === 'invoice' ? 'الفاتورة' : 'الطلب'}:
+                      </span>
+                      <span className="font-bold text-primary">
+                        {linkedRef.number || `#${linkedRef.id.slice(0, 8)}`}
+                      </span>
+                    </div>
+                    <Button size="sm" variant="ghost" onClick={clearLinkedRef} className="h-7 px-2 text-xs">
+                      إلغاء الربط
+                    </Button>
+                  </div>
+                )}
                 <Input
                   placeholder="عنوان التذكرة"
                   value={newTicket.title}

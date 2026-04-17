@@ -1,11 +1,12 @@
 import { useEffect, useMemo, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import ClientLayout from '@/components/client/ClientLayout';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { useAuth } from '@/components/SimpleAuthProvider';
-import { FileText, Eye, Download, Printer, RefreshCw, CheckCircle2, Clock, AlertCircle, CreditCard } from 'lucide-react';
+import { FileText, Eye, Download, Printer, RefreshCw, CheckCircle2, Clock, AlertCircle, CreditCard, LifeBuoy } from 'lucide-react';
 import { toast } from 'sonner';
 import { supabase } from '@/integrations/supabase/client';
 import { InvoiceService, type Invoice } from '@/utils/invoiceService';
@@ -13,8 +14,12 @@ import { openInvoicePrintWindow, downloadInvoiceAsPDF } from '@/utils/invoicePdf
 
 export default function ClientInvoices() {
   const { user } = useAuth();
+  const navigate = useNavigate();
   const [invoices, setInvoices] = useState<Invoice[]>([]);
   const [loading, setLoading] = useState(true);
+
+  const openSupportTicket = (inv: Invoice) =>
+    navigate(`/support/tickets?new=1&invoice_id=${inv.id}&invoice_number=${encodeURIComponent(inv.invoice_number)}`);
 
   const load = async () => {
     if (!user?.id) return;
@@ -113,6 +118,7 @@ export default function ClientInvoices() {
                               <Button size="icon" variant="ghost" onClick={() => handlePrint(inv)} title="عرض/طباعة"><Eye className="w-4 h-4" /></Button>
                               <Button size="icon" variant="ghost" onClick={() => handlePrint(inv)} title="طباعة"><Printer className="w-4 h-4" /></Button>
                               <Button size="icon" variant="ghost" onClick={() => handleDownload(inv)} title="تحميل PDF"><Download className="w-4 h-4" /></Button>
+                              <Button size="icon" variant="ghost" onClick={() => openSupportTicket(inv)} title="فتح تذكرة دعم"><LifeBuoy className="w-4 h-4 text-amber-600" /></Button>
                             </div>
                           </TableCell>
                         </TableRow>
@@ -138,6 +144,7 @@ export default function ClientInvoices() {
                         <div className="flex gap-2">
                           <Button size="sm" variant="outline" className="flex-1" onClick={() => handlePrint(inv)}><Printer className="w-3 h-3 ml-1" />عرض/طباعة</Button>
                           <Button size="sm" variant="outline" className="flex-1" onClick={() => handleDownload(inv)}><Download className="w-3 h-3 ml-1" />PDF</Button>
+                          <Button size="sm" variant="outline" className="flex-1" onClick={() => openSupportTicket(inv)}><LifeBuoy className="w-3 h-3 ml-1" />دعم</Button>
                         </div>
                       </CardContent>
                     </Card>
