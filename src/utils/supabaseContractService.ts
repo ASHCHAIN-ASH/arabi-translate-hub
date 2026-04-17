@@ -148,6 +148,10 @@ export async function createManualContract(input: {
   client_email?: string;
   client_phone?: string;
 }) {
+  // Auto-compute delivery_date from work_duration if not provided
+  // Supports patterns like: "14 يوم", "14 يوم عمل", "أسبوعين", "شهر", "X day(s)", "X week(s)"
+  const computedDelivery = input.delivery_date || computeDeliveryFromDuration(input.work_duration);
+
   const { data, error } = await (supabase.from(TBL) as any)
     .insert({
       user_id: input.user_id ?? null,
@@ -159,7 +163,7 @@ export async function createManualContract(input: {
       total_amount: input.total_amount,
       currency: input.currency || "SAR",
       payment_terms: input.payment_terms,
-      delivery_date: input.delivery_date,
+      delivery_date: computedDelivery,
       client_full_name: input.client_full_name,
       client_id_number: input.client_id_number,
       client_email: input.client_email,
