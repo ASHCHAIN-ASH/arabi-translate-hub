@@ -113,10 +113,61 @@ const AdminWallets: React.FC = () => {
     }
   };
 
+  const sendTopupEmail = async (r: TopupRequest, kind: 'approved' | 'rejected', reason?: string) => {
+    try {
+      const { supabase } = await import('@/integrations/supabase/client');
+      // Resolve recipient email + name from customers/profiles
+      const { data: cust } = await supabase
+        .from('customers').select('email, name').eq('user_id', r.user_id).maybeSingle();
+      const { data: prof } = await supabase
+        .from('profiles').select('full_name').eq('id', r.user_id).maybeSingle();
+      const { data: walletAfter } = await supabase
+        .from('wallets').select('balance').eq('user_id', r.user_id).maybeSingle();
+
+      const recipient = cust?.email;
+      if (!recipient) return; // silently skip if no email on file
+
+      const customerName = cust?.name || prof?.full_name || 'العميل';
+      const baseUrl = window.location.origin;
+      const methodMap: Record<string, string> = {
+        bank_transfer: 'تحويل بنكي', stc_pay: 'STC Pay', mada: 'مدى', cash: 'نقدي',
+      };
+
+      await supabase.functions.invoke('send-transactional-email', {
+        body: {
+          templateName: kind === 'approved' ? 'wallet-topup-approved' : 'wallet-topup-rejected',
+          recipientEmail: recipient,
+          idempotencyKey: `wallet-topup-${kind}-${r.id}`,
+          templateData: {
+            customerName,
+            amount: Number(r.amount).toLocaleString('ar-SA'),
+            requestId: r.id.slice(0, 8),
+            paymentMethod: methodMap[r.payment_method] || r.payment_method,
+            walletUrl: `${baseUrl}/wallet`,
+            ...(kind === 'approved'
+              ? {
+                  newBalance: Number(walletAfter?.balance || 0).toLocaleString('ar-SA'),
+                  approvedAt: new Date().toLocaleDateString('ar-SA'),
+                }
+              : {
+                  rejectedAt: new Date().toLocaleDateString('ar-SA'),
+                  reason: reason || 'لم يتم تحديد سبب',
+                  supportUrl: `${baseUrl}/support/tickets`,
+                }),
+          },
+        },
+      });
+    } catch (err) {
+      console.error('Failed to send wallet email:', err);
+    }
+  };
+
   const approve = async (r: TopupRequest) => {
     try {
       await WalletService.approveTopup(r.id, user!.id);
       toast.success('تمت الموافقة وإضافة الرصيد');
+      // Wait briefly for the trigger to update the wallet balance, then send email
+      setTimeout(() => sendTopupEmail(r, 'approved'), 1200);
       load();
     } catch (e: any) { toast.error('فشلت الموافقة', { description: e.message }); }
   };
@@ -127,6 +178,7 @@ const AdminWallets: React.FC = () => {
     try {
       await WalletService.rejectTopup(rejectTarget.id, user!.id, rejectReason);
       toast.success('تم رفض الطلب');
+      sendTopupEmail(rejectTarget, 'rejected', rejectReason);
       setRejectOpen(false); load();
     } catch (e: any) { toast.error('فشل الرفض', { description: e.message }); }
   };
