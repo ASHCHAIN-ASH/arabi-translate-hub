@@ -353,6 +353,8 @@ Deno.serve(async (req: Request) => {
     const userId = contract.user_id || "system";
     const path = `${userId}/${contract.id}.html`;
 
+    let signedUrl: string | undefined;
+
     // Save a copy in storage (best-effort, don't fail the request)
     try {
       await supabase.storage
@@ -365,8 +367,53 @@ Deno.serve(async (req: Request) => {
         signed_pdf_path: path,
         signed_pdf_generated_at: new Date().toISOString(),
       }).eq("id", contract.id);
+
+      const { data: urlData } = await supabase.storage
+        .from("contracts")
+        .createSignedUrl(path, 60 * 60 * 24 * 7);
+      signedUrl = urlData?.signedUrl;
     } catch (e) {
       console.warn("storage upload failed:", e);
+    }
+
+    // Notify admins automatically when contract is signed (best-effort)
+    if (signature) {
+      try {
+        const { data: adminRoles } = await supabase
+          .from("user_roles").select("user_id").eq("role", "admin");
+        const adminEmails = new Set<string>();
+        for (const r of (adminRoles || [])) {
+          const { data: u } = await supabase.auth.admin.getUserById(r.user_id);
+          if (u?.user?.email) adminEmails.add(u.user.email);
+        }
+
+        const fmt = (n: number, c = "SAR") =>
+          new Intl.NumberFormat("ar-SA", { style: "currency", currency: c }).format(n || 0);
+
+        for (const email of adminEmails) {
+          await supabase.functions.invoke("send-transactional-email", {
+            body: {
+              templateName: "contract-signed-admin",
+              recipientEmail: email,
+              idempotencyKey: `contract-signed-admin-${contract.id}-${email}`,
+              templateData: {
+                clientName: signature.signer_name,
+                clientEmail: signature.signer_email || contract.client_email,
+                contractNumber: contract.contract_number,
+                contractTitle: contract.title,
+                signedAt: new Date(signature.signed_at).toLocaleString("ar-SA"),
+                ipAddress: signature.ip_address,
+                totalAmount: contract.total_amount
+                  ? fmt(Number(contract.total_amount), contract.currency || "SAR")
+                  : undefined,
+                pdfUrl: signedUrl,
+              },
+            },
+          });
+        }
+      } catch (e) {
+        console.warn("admin notification failed:", e);
+      }
     }
 
     // If client requests raw HTML, return it directly so the browser renders
@@ -390,6 +437,7 @@ Deno.serve(async (req: Request) => {
     return new Response(JSON.stringify({
       success: true,
       path,
+      signed_url: signedUrl,
       contract_id: contract.id,
       html,
     }), { headers: { ...corsHeaders, "Content-Type": "application/json" } });
