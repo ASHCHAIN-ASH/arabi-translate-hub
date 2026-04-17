@@ -14,8 +14,12 @@ import { openInvoicePrintWindow, downloadInvoiceAsPDF } from '@/utils/invoicePdf
 
 export default function ClientInvoices() {
   const { user } = useAuth();
+  const navigate = useNavigate();
   const [invoices, setInvoices] = useState<Invoice[]>([]);
   const [loading, setLoading] = useState(true);
+
+  const openSupportTicket = (inv: Invoice) =>
+    navigate(`/support/tickets?new=1&invoice_id=${inv.id}&invoice_number=${encodeURIComponent(inv.invoice_number)}`);
 
   const load = async () => {
     if (!user?.id) return;
