@@ -77,6 +77,26 @@ const ClientWallet: React.FC = () => {
 
   useEffect(() => { load(); }, [user?.id]);
 
+  // Realtime — wallet, transactions, top-up requests
+  useEffect(() => {
+    if (!user?.id) return;
+    let cancelled = false;
+    let channel: any = null;
+    import('@/integrations/supabase/client').then(({ supabase }) => {
+      if (cancelled) return;
+      channel = supabase
+        .channel(`client-wallet-${user.id}`)
+        .on('postgres_changes', { event: '*', schema: 'public', table: 'wallets', filter: `user_id=eq.${user.id}` }, () => load())
+        .on('postgres_changes', { event: '*', schema: 'public', table: 'wallet_transactions', filter: `user_id=eq.${user.id}` }, () => load())
+        .on('postgres_changes', { event: '*', schema: 'public', table: 'wallet_topup_requests', filter: `user_id=eq.${user.id}` }, () => load())
+        .subscribe();
+    });
+    return () => {
+      cancelled = true;
+      if (channel) import('@/integrations/supabase/client').then(({ supabase }) => supabase.removeChannel(channel));
+    };
+  }, [user?.id]);
+
   const submitTopup = async () => {
     if (!user?.id) return;
     if (!amount || amount <= 0) return toast.error('يرجى إدخال مبلغ صحيح');
