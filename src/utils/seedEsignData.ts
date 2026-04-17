@@ -17,13 +17,13 @@ export const seedEsignData = async () => {
           role: 'customer',
           name: 'أحمد محمد علي',
           email: 'ahmed@example.com',
-          phone: '+966501234567'
+          phone: '+966559600824'
         },
         {
           role: 'company',
           name: 'وكالة ماستر إيدو باث',
           email: 'admin@masteredupath.com',
-          phone: '+966500000000'
+          phone: '+966559600824'
         }
       ]
     );
@@ -37,13 +37,13 @@ export const seedEsignData = async () => {
           role: 'customer',
           name: 'فاطمة أحمد',
           email: 'fatima@example.com',
-          phone: '+966507654321'
+          phone: '+966559600824'
         },
         {
           role: 'company',
           name: 'وكالة ماستر إيدو باث',
           email: 'admin@masteredupath.com',
-          phone: '+966500000000'
+          phone: '+966559600824'
         }
       ]
     );

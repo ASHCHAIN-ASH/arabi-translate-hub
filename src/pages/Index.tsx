@@ -266,7 +266,7 @@ const Index = () => {
                   size="lg"
                   variant="outline"
                   className="border-2 border-green-500 text-green-600 hover:bg-green-50 dark:hover:bg-green-950 w-full sm:w-auto text-sm sm:text-base"
-                  onClick={() => window.open('https://wa.me/966500776343?text=' + encodeURIComponent('مرحباً، أريد الاستفسار عن خدماتكم'), '_blank')}
+                  onClick={() => window.open('https://wa.me/966559600824?text=' + encodeURIComponent('مرحباً، أريد الاستفسار عن خدماتكم'), '_blank')}
                 >
                   <MessageCircle className="h-4 w-4 sm:h-5 sm:w-5 ml-2" />
                   تواصل واتساب

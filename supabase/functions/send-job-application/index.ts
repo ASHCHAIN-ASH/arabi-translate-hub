@@ -154,7 +154,7 @@ const handler = async (req: Request): Promise<Response> => {
                             <a href="mailto:info@masteredupath.com" class="contact-link">📧 info@masteredupath.com</a>
                         </div>
                         <div class="contact-info">
-                            <a href="tel:0500776343" class="contact-link">📱 0500776343</a>
+                            <a href="tel:0559600824" class="contact-link">📱 0559600824</a>
                         </div>
                     </div>
                 </div>

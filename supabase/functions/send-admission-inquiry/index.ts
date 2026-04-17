@@ -202,7 +202,7 @@ const createClientEmailHtml = (
       
       <div class="contact-section">
         <div class="contact-title">معلومات التواصل</div>
-        <div class="contact-item">📞 الهاتف: 0500776343</div>
+        <div class="contact-item">📞 الهاتف: 0559600824</div>
         <div class="contact-item">📧 البريد الإلكتروني: info@masteredupath.com</div>
         <div class="contact-item">📍 العنوان: المملكة العربية السعودية</div>
         <div class="contact-item">🕐 ساعات العمل: الأحد - الخميس | 10:00 ص - 7:00 م</div>
@@ -512,7 +512,7 @@ const createAdminEmailHtml = (
     <div class="footer">
       <div class="footer-text">نظام إدارة القبول الجامعي - وكالة MasterEduPath</div>
       <div class="footer-subtext">هذا البريد تم إرساله تلقائياً من نظام إدارة طلبات القبول</div>
-      <div class="footer-contact">للدعم التقني: info@masteredupath.com | 0500776343</div>
+      <div class="footer-contact">للدعم التقني: info@masteredupath.com | 0559600824</div>
     </div>
   </div>
 </body>

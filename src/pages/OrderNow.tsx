@@ -493,7 +493,7 @@ const OrderNow = () => {
                                <FormControl>
                                  <Input
                                    {...field}
-                                   placeholder="+966501234567"
+                                   placeholder="+966559600824"
                                    className="border-2 border-green-200 dark:border-green-700 focus:border-green-500 h-12 text-right"
                                    dir="rtl"
                                  />
@@ -832,7 +832,7 @@ const OrderNow = () => {
                       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
                         <div className="flex items-center gap-2 text-amber-700 dark:text-amber-300">
                           <Phone className="h-4 w-4" />
-                          <span>0500776343</span>
+                          <span>0559600824</span>
                         </div>
                         <div className="flex items-center gap-2 text-amber-700 dark:text-amber-300">
                           <Mail className="h-4 w-4" />

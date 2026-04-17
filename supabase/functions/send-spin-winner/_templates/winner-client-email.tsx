@@ -103,7 +103,7 @@ export const WinnerClientEmail = ({
           <Section style={contactSection}>
             <Text style={contactTitle}>📞 للاستفسارات</Text>
             <Text style={contactInfo}>📧 info@masteredupath.com</Text>
-            <Text style={contactInfo}>📱 966501234567+</Text>
+            <Text style={contactInfo}>📱 966559600824+</Text>
             <Text style={contactInfo}>🌐 www.masteredupath.com</Text>
           </Section>
         </Section>

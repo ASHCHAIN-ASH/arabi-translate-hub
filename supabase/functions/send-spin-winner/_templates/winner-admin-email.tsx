@@ -118,7 +118,7 @@ export const WinnerAdminEmail = ({
             </Link>
 
             <Link 
-              href={`https://wa.me/966501234567?text=مرحباً ${name}، تهانينا بالفوز في مسابقة دوران العجلة`}
+              href={`https://wa.me/966559600824?text=مرحباً ${name}، تهانينا بالفوز في مسابقة دوران العجلة`}
               style={actionButton}
             >
               💬 التواصل عبر واتساب

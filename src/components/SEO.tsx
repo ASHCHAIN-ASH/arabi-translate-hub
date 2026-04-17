@@ -36,7 +36,7 @@ const SEO = ({
     "logo": "https://ac43130c-4bba-404a-ade5-b9d62d1f8904.lovableproject.com/assets/national-day-logo-original.webp",
     "contactPoint": {
       "@type": "ContactPoint",
-      "telephone": "+966500776343",
+      "telephone": "+966559600824",
       "contactType": "customer service",
       "email": "info@masteredupath.com",
       "areaServed": "SA",

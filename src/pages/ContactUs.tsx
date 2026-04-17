@@ -96,7 +96,7 @@ const ContactUs = () => {
     {
       icon: Phone,
       title: "الهاتف والواتساب",
-      value: "0500776343 | 0559600824",
+      value: "0559600824 | 0559600824",
       description: "خطوط الدعم المتاحة للتواصل السريع والفعال"
     },
     {
@@ -170,7 +170,7 @@ const ContactUs = () => {
     <div className="min-h-screen bg-gradient-to-br from-background via-background to-secondary/10" dir="rtl">
       <SEO 
         title="تواصل معنا - MasterEduPath | استفسارات الخدمات الأكاديمية"
-        description="تواصل مع فريق MasterEduPath للحصول على استشارة مجانية حول خدماتنا الأكاديمية والبحثية. نرد على استفساراتك خلال 4 ساعات. اتصل: +966500776343"
+        description="تواصل مع فريق MasterEduPath للحصول على استشارة مجانية حول خدماتنا الأكاديمية والبحثية. نرد على استفساراتك خلال 4 ساعات. اتصل: +966559600824"
         keywords="تواصل معنا, استشارة أكاديمية مجانية, دعم عملاء MasterEduPath, استفسارات بحثية, خدمة عملاء 24/7"
         url="https://ac43130c-4bba-404a-ade5-b9d62d1f8904.lovableproject.com/contact-us"
         type="ContactPage"
@@ -182,7 +182,7 @@ const ContactUs = () => {
           "mainEntity": {
             "@type": "Organization",
             "name": "MasterEduPath Agency",
-            "telephone": "+966500776343",
+            "telephone": "+966559600824",
             "email": "info@masteredupath.com",
             "address": {
               "@type": "PostalAddress",
@@ -496,7 +496,7 @@ const ContactUs = () => {
                           <label className="block text-sm font-medium mb-2 text-right">رقم الهاتف</label>
                           <Input
                             type="tel"
-                            placeholder="0500776343"
+                            placeholder="0559600824"
                             value={formData.phone}
                             onChange={(e) => handleInputChange('phone', e.target.value)}
                             className="h-10 sm:h-12 text-right"
@@ -679,16 +679,16 @@ const ContactUs = () => {
                                 <div className="bg-primary/5 rounded-lg p-2 sm:p-3 border border-primary/20">
                                   <div className="flex items-center justify-between mb-1 sm:mb-2">
                                     <a 
-                                      href="tel:0500776343" 
+                                      href="tel:0559600824" 
                                       className="text-primary hover:text-secondary transition-colors font-medium text-sm sm:text-base"
                                       dir="ltr"
                                     >
-                                      0500776343
+                                      0559600824
                                     </a>
                                     <span className="text-xs sm:text-sm font-semibold text-primary">الرقم الأساسي</span>
                                   </div>
                                   <a 
-                                    href="https://wa.me/966500776343" 
+                                    href="https://wa.me/966559600824" 
                                     target="_blank" 
                                     rel="noopener noreferrer"
                                     className="text-green-600 hover:text-green-700 transition-colors font-medium flex items-center gap-1 sm:gap-2 text-xs sm:text-sm"

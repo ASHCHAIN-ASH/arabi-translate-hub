@@ -403,7 +403,7 @@ const AdmissionServices = () => {
                           type="tel"
                           value={formData.phone}
                           onChange={(e) => handleInputChange("phone", e.target.value)}
-                          placeholder="+966501234567"
+                          placeholder="+966559600824"
                           className="w-full transition-all duration-300 focus:scale-105"
                           required
                         />
@@ -610,7 +610,7 @@ const AdmissionServices = () => {
                 icon: Phone,
                 title: "اتصل بنا",
                 description: "متاحون للرد على مكالماتك",
-                contact: "0500776343",
+                contact: "0559600824",
                 color: "text-green-500",
                 bgColor: "bg-green-50"
               },

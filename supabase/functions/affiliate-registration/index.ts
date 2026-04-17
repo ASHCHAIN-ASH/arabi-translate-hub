@@ -468,7 +468,7 @@ const handler = async (req: Request): Promise<Response> => {
           <div class="footer">
             <p class="company-name">🎯 وكالة ماستر إيدو باث</p>
             <p>للحلول التعليمية والأكاديمية المتقدمة</p>
-            <p>📞 0500776343 | 📧 legal@masteredupath.com</p>
+            <p>📞 0559600824 | 📧 legal@masteredupath.com</p>
             <p>🌐 www.masteredupath.com</p>
             <p style="margin-top: 15px; font-size: 12px; opacity: 0.8;">
               &copy; 2024 جميع الحقوق محفوظة
@@ -495,7 +495,7 @@ const handler = async (req: Request): Promise<Response> => {
 شكراً لانضمامك إلى فريقنا!
 
 وكالة ماستر إيدو باث
-📞 0500776343 | 📧 legal@masteredupath.com
+📞 0559600824 | 📧 legal@masteredupath.com
     `;
 
     // إرسال بريد العميل بشكل متزامن والتبليغ عن أي خطأ
@@ -854,7 +854,7 @@ const handler = async (req: Request): Promise<Response> => {
           <div class="footer">
             <p><strong>نظام إدارة التسويق بالعمولة</strong></p>
             <p>وكالة ماستر إيدو باث للحلول التعليمية المتقدمة</p>
-            <p>📞 0500776343 | 📧 legal@masteredupath.com</p>
+            <p>📞 0559600824 | 📧 legal@masteredupath.com</p>
             <p style="margin-top: 15px; font-size: 12px; opacity: 0.8;">
               تم إرسال هذا التنبيه تلقائياً من نظام إدارة الشركاء
             </p>

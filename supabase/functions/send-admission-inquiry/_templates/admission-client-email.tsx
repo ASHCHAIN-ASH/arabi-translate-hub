@@ -68,7 +68,7 @@ export const AdmissionClientEmail = ({
           <Section style={contactSection}>
             <Text style={contactTitle}>للاستفسارات والمتابعة</Text>
             <Text style={contactInfo}>📧 البريد الإلكتروني: info@masteredupath.com</Text>
-            <Text style={contactInfo}>📱 الهاتف: 966501234567+</Text>
+            <Text style={contactInfo}>📱 الهاتف: 966559600824+</Text>
             <Text style={contactInfo}>📍 الموقع: المملكة العربية السعودية</Text>
           </Section>
         </Section>

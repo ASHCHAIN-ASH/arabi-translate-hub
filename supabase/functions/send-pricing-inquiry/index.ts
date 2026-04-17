@@ -274,7 +274,7 @@ const handler = async (req: Request): Promise<Response> => {
                 </div>
                  <div class="contact-item">
                    <strong>📱 خدمة المبيعات</strong><br>
-                   <a href="tel:+966500776343">0500776343</a>
+                   <a href="tel:+966559600824">0559600824</a>
                  </div>
                 <div class="contact-item">
                   <strong>🌐 الموقع الإلكتروني</strong><br>
