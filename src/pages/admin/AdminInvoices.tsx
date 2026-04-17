@@ -260,7 +260,7 @@ function EmptyState() {
     </div>
   );
 }
-function RowActions({ inv, onEdit, onPay, onDelete, onPrint, onDownload }: any) {
+function RowActions({ inv, onEdit, onPay, onDelete, onPrint, onDownload, onSend, sending }: any) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild><Button variant="ghost" size="icon"><MoreVertical className="w-4 h-4" /></Button></DropdownMenuTrigger>
@@ -268,6 +268,10 @@ function RowActions({ inv, onEdit, onPay, onDelete, onPrint, onDownload }: any) 
         <DropdownMenuItem asChild><Link to={`/adminmaster/invoices/${inv.id}`}><Eye className="w-4 h-4 ml-2" />التفاصيل</Link></DropdownMenuItem>
         <DropdownMenuItem onClick={onEdit}><Edit className="w-4 h-4 ml-2" />تعديل</DropdownMenuItem>
         <DropdownMenuItem onClick={onPay}><CreditCard className="w-4 h-4 ml-2" />دفعة</DropdownMenuItem>
+        <DropdownMenuItem onClick={onSend} disabled={sending || !inv.customer_email}>
+          {sending ? <Loader2 className="w-4 h-4 ml-2 animate-spin" /> : <Mail className="w-4 h-4 ml-2" />}
+          إرسال بالبريد
+        </DropdownMenuItem>
         <DropdownMenuSeparator />
         <DropdownMenuItem onClick={onPrint}><Printer className="w-4 h-4 ml-2" />طباعة</DropdownMenuItem>
         <DropdownMenuItem onClick={onDownload}><Download className="w-4 h-4 ml-2" />تحميل PDF</DropdownMenuItem>
