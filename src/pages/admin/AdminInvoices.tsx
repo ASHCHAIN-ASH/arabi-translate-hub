@@ -7,7 +7,7 @@ import { Badge } from '@/components/ui/badge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger, DropdownMenuSeparator } from '@/components/ui/dropdown-menu';
-import { FileText, Plus, Search, RefreshCw, Eye, Edit, Trash2, Download, Printer, CreditCard, MoreVertical, TrendingUp, Clock, CheckCircle2 } from 'lucide-react';
+import { FileText, Plus, Search, RefreshCw, Eye, Edit, Trash2, Download, Printer, CreditCard, MoreVertical, TrendingUp, Clock, CheckCircle2, Mail, Loader2 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { toast } from 'sonner';
 import { supabase } from '@/integrations/supabase/client';
