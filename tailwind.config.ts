@@ -19,14 +19,14 @@ export default {
 		},
 		extend: {
 		fontFamily: {
-				'sans': ['Almarai', 'Inter', 'system-ui', 'sans-serif'],
-				'heading': ['Cairo', 'Inter', 'sans-serif'],
-				'body': ['Almarai', 'Inter', 'sans-serif'],
-				'inter': ['Inter', 'Almarai', 'sans-serif'],
-				'arabic-title': ['Cairo', 'Inter', 'sans-serif'],
-				'arabic-body': ['Almarai', 'Inter', 'sans-serif'],
-				'academic': ['Almarai', 'Inter', 'sans-serif'],
-				'academic-title': ['Cairo', 'Inter', 'sans-serif'],
+				'sans': ['IBM Plex Sans Arabic', 'Inter', 'system-ui', 'sans-serif'],
+				'heading': ['IBM Plex Sans Arabic', 'Inter', 'sans-serif'],
+				'body': ['IBM Plex Sans Arabic', 'Inter', 'sans-serif'],
+				'inter': ['Inter', 'IBM Plex Sans Arabic', 'sans-serif'],
+				'arabic-title': ['IBM Plex Sans Arabic', 'Inter', 'sans-serif'],
+				'arabic-body': ['IBM Plex Sans Arabic', 'Inter', 'sans-serif'],
+				'academic': ['IBM Plex Sans Arabic', 'Inter', 'sans-serif'],
+				'academic-title': ['IBM Plex Sans Arabic', 'Inter', 'sans-serif'],
 			},
 			colors: {
 				border: 'hsl(var(--border))',
