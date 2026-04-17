@@ -81,7 +81,7 @@ const generateCustomerEmailTemplate = (inquiry: ServiceInquiry, serviceName: str
       <meta charset="UTF-8">
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <title>تأكيد استلام طلبكم - وكالة ماستر إيدو باث</title>
-      <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;700;800&display=swap" rel="stylesheet">
+      <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&display=swap" rel="stylesheet">
       <style>
         * {
           margin: 0;
@@ -864,7 +864,7 @@ const generateAdminEmailTemplate = (inquiry: ServiceInquiry, serviceName: string
       <meta charset="UTF-8">
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <title>طلب خدمة جديد - وكالة ماستر إيدو باث</title>
-      <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;700;800&display=swap" rel="stylesheet">
+      <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&display=swap" rel="stylesheet">
       <style>
         * {
           margin: 0;

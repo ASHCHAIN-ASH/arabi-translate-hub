@@ -31,7 +31,7 @@ const generateCustomerEmailTemplate = (consultationData: ConsultationRequest, se
       <meta charset="UTF-8">
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <title>تأكيد طلب الاستشارة الأكاديمية - وكالة ماستر إيدو باث</title>
-      <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;700;800&display=swap" rel="stylesheet">
+      <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&display=swap" rel="stylesheet">
       <style>
         * {
           margin: 0;
@@ -795,7 +795,7 @@ const generateAdminEmailTemplate = (consultationData: ConsultationRequest, servi
       <meta charset="UTF-8">
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <title>طلب استشارة أكاديمية جديد - وكالة ماستر إيدو باث</title>
-      <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;700;800&display=swap" rel="stylesheet">
+      <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&display=swap" rel="stylesheet">
       <style>
         * {
           margin: 0;
