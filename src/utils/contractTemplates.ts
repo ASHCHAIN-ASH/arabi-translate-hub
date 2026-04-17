@@ -26,6 +26,7 @@ export interface LegalTemplateContext {
   currency?: string;
   paymentTerms?: string;
   deliveryDate?: string;
+  workDuration?: string;
   issueDate: string;
 }
 
@@ -49,7 +50,7 @@ export function buildLegalAcademicContract(ctx: LegalTemplateContext): string {
   const {
     contractNumber, serviceName, serviceDescription,
     clientFullName, clientIdNumber, clientEmail, clientPhone,
-    totalAmount, currency = "SAR", paymentTerms, deliveryDate, issueDate,
+    totalAmount, currency = "SAR", paymentTerms, deliveryDate, workDuration, issueDate,
   } = ctx;
 
   return `
@@ -101,6 +102,7 @@ ${clientPhone ? `رقم الجوال للتواصل: ${clientPhone}` : ""}
 ${serviceDescription ? `- **الوصف التفصيلي:** ${serviceDescription}` : ""}
 - **القيمة الإجمالية:** ${fmtMoney(totalAmount, currency)} (شامل ضريبة القيمة المضافة إن وُجدت)
 ${paymentTerms ? `- **شروط الدفع:** ${paymentTerms}` : "- **شروط الدفع:** يتم الاتفاق عليها كتابياً قبل بدء التنفيذ"}
+${workDuration ? `- **مدة تنفيذ العمل:** ${workDuration}` : ""}
 ${deliveryDate ? `- **الموعد التقديري للتسليم:** ${fmtDate(deliveryDate)}` : ""}
 
 ويُعدّ أي ملحق أو وثيقة مُرفقة بهذا العقد جزءاً لا يتجزأ منه ومُكمّلاً لأحكامه.
@@ -148,7 +150,7 @@ ${deliveryDate ? `- **الموعد التقديري للتسليم:** ${fmtDate(
 
 ## البند الثامن: مدة العقد وتاريخ التسليم
 1. يبدأ هذا العقد من تاريخ توقيع العميل عليه إلكترونياً.
-2. ينتهي بتسليم الخدمة المتفق عليها واعتماد العميل لها${deliveryDate ? ` في موعد أقصاه ${fmtDate(deliveryDate)}` : ""}، أو وفق ما يتفق عليه الطرفان كتابياً.
+${workDuration ? `2. **المدة المتوقعة لتنفيذ العمل:** ${workDuration} من تاريخ سداد الدفعة الأولى وبدء التنفيذ الفعلي.\n3. ينتهي بتسليم الخدمة المتفق عليها واعتماد العميل لها${deliveryDate ? ` في موعد أقصاه ${fmtDate(deliveryDate)}` : ""}، أو وفق ما يتفق عليه الطرفان كتابياً.` : `2. ينتهي بتسليم الخدمة المتفق عليها واعتماد العميل لها${deliveryDate ? ` في موعد أقصاه ${fmtDate(deliveryDate)}` : ""}، أو وفق ما يتفق عليه الطرفان كتابياً.`}
 3. يُعدّ سكوت العميل عن الاعتراض على المخرجات لمدة (15) يوماً من تاريخ التسليم قبولاً ضمنياً واعتماداً نهائياً لها.
 
 ## البند التاسع: الإلغاء والاسترداد

@@ -94,6 +94,23 @@ const AdminContractDetails = () => {
     toast.success("تم نسخ رابط العميل");
   }
 
+  async function editWorkDuration() {
+    if (!c) return;
+    const current = (c.metadata as any)?.workDuration || "";
+    const next = window.prompt("أدخل مدة تنفيذ العمل (مثال: 14 يوم عمل)", current);
+    if (next === null) return;
+    const newMeta = { ...(c.metadata || {}), workDuration: next.trim() };
+    try {
+      const { error } = await (supabase.from("contracts") as any)
+        .update({ metadata: newMeta, updated_at: new Date().toISOString() })
+        .eq("id", c.id);
+      if (error) throw error;
+      await generateContractContent(c.id);
+      toast.success("تم تحديث مدة تنفيذ العمل");
+      load();
+    } catch (e: any) { toast.error(e.message || "تعذّر التحديث"); }
+  }
+
   const fmtDate = (d?: string | null) =>
     d ? new Date(d).toLocaleString("ar-SA", { dateStyle: "long", timeStyle: "short" }) : "—";
 
@@ -155,10 +172,17 @@ const AdminContractDetails = () => {
           <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} className="lg:col-span-2 space-y-4">
             {/* Summary */}
             <Card>
-              <CardContent className="p-5 grid grid-cols-2 sm:grid-cols-4 gap-4 text-sm">
+              <CardContent className="p-5 grid grid-cols-2 sm:grid-cols-5 gap-4 text-sm">
                 <div><p className="text-xs text-muted-foreground"><User className="inline h-3 w-3 ml-1" />العميل</p><p className="font-semibold truncate">{c.client_full_name || "—"}</p></div>
                 <div><p className="text-xs text-muted-foreground"><FileText className="inline h-3 w-3 ml-1" />الخدمة</p><p className="font-semibold truncate">{c.service_name || "—"}</p></div>
                 <div><p className="text-xs text-muted-foreground"><DollarSign className="inline h-3 w-3 ml-1" />القيمة</p><p className="font-semibold">{Number(c.total_amount || 0).toLocaleString("ar-SA")} {c.currency}</p></div>
+                <div className="flex items-start justify-between gap-1">
+                  <div className="min-w-0 flex-1">
+                    <p className="text-xs text-muted-foreground"><Clock className="inline h-3 w-3 ml-1" />مدة العمل</p>
+                    <p className="font-semibold truncate">{(c.metadata as any)?.workDuration || "—"}</p>
+                  </div>
+                  <Button size="sm" variant="ghost" className="h-6 px-1.5 text-xs" onClick={editWorkDuration}>تعديل</Button>
+                </div>
                 <div><p className="text-xs text-muted-foreground"><Calendar className="inline h-3 w-3 ml-1" />التحرير</p><p className="font-semibold">{new Date(c.created_at).toLocaleDateString("ar-SA")}</p></div>
               </CardContent>
             </Card>

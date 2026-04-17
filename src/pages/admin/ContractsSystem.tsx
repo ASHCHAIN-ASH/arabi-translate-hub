@@ -49,6 +49,7 @@ const ContractsSystem = () => {
     total_amount: 0,
     payment_terms: "دفعة واحدة عند بدء التنفيذ",
     delivery_date: "",
+    work_duration: "",
     client_full_name: "",
     client_id_number: "",
     client_email: "",
@@ -134,6 +135,7 @@ const ContractsSystem = () => {
         total_amount: Number(form.total_amount),
         payment_terms: form.payment_terms,
         delivery_date: form.delivery_date || undefined,
+        work_duration: form.work_duration || undefined,
         client_full_name: form.client_full_name,
         client_id_number: form.client_id_number || undefined,
         client_email: form.client_email || undefined,
@@ -141,7 +143,7 @@ const ContractsSystem = () => {
       });
       toast.success("تم إنشاء العقد بنجاح");
       setOpenNew(false);
-      setForm({ customer_id:"", service_name:"", service_type:"general", total_amount:0, payment_terms:"دفعة واحدة عند بدء التنفيذ", delivery_date:"", client_full_name:"", client_id_number:"", client_email:"", client_phone:"" });
+      setForm({ customer_id:"", service_name:"", service_type:"general", total_amount:0, payment_terms:"دفعة واحدة عند بدء التنفيذ", delivery_date:"", work_duration:"", client_full_name:"", client_id_number:"", client_email:"", client_phone:"" });
       await load();
     } catch (e: any) { toast.error(e.message || "تعذّر إنشاء العقد"); }
   }
@@ -250,6 +252,7 @@ const ContractsSystem = () => {
                   <div><Label>القيمة الإجمالية (SAR) *</Label><Input type="number" value={form.total_amount} onChange={e => setForm(p => ({...p, total_amount: Number(e.target.value)}))} /></div>
                   <div className="sm:col-span-2"><Label>شروط الدفع</Label><Input value={form.payment_terms} onChange={e => setForm(p => ({...p, payment_terms: e.target.value}))} /></div>
                   <div><Label>تاريخ التسليم المتوقع</Label><Input type="date" value={form.delivery_date} onChange={e => setForm(p => ({...p, delivery_date: e.target.value}))} /></div>
+                  <div><Label>مدة تنفيذ العمل</Label><Input value={form.work_duration} onChange={e => setForm(p => ({...p, work_duration: e.target.value}))} placeholder="مثال: 14 يوم عمل" /></div>
                 </div>
                 <DialogFooter>
                   <Button variant="outline" onClick={() => setOpenNew(false)}>إلغاء</Button>

@@ -120,6 +120,7 @@ export async function generateContractContent(contractId: string) {
     currency: c.currency || "SAR",
     paymentTerms: c.payment_terms || undefined,
     deliveryDate: c.delivery_date || undefined,
+    workDuration: (c.metadata as any)?.workDuration || undefined,
     issueDate: c.created_at,
   };
 
@@ -141,6 +142,7 @@ export async function createManualContract(input: {
   currency?: string;
   payment_terms?: string;
   delivery_date?: string;
+  work_duration?: string;
   client_full_name: string;
   client_id_number?: string;
   client_email?: string;
@@ -164,6 +166,7 @@ export async function createManualContract(input: {
       client_phone: input.client_phone,
       status: "draft",
       content: "",
+      metadata: input.work_duration ? { workDuration: input.work_duration } : {},
     })
     .select("id")
     .single();

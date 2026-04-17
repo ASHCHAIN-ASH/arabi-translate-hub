@@ -327,6 +327,7 @@ function buildHtml(contract: any, signature: any, verifyHash: string) {
     <tbody>
       <tr><td>اسم الخدمة</td><td><strong>${esc(contract.service_name || "—")}</strong></td></tr>
       ${contract.payment_terms ? `<tr><td>شروط الدفع</td><td>${esc(contract.payment_terms)}</td></tr>` : ""}
+      ${(contract.metadata as any)?.workDuration ? `<tr><td>مدة تنفيذ العمل</td><td><strong>${esc(String((contract.metadata as any).workDuration))}</strong></td></tr>` : ""}
       ${contract.delivery_date ? `<tr><td>موعد التسليم</td><td>${fmtDate(contract.delivery_date)}</td></tr>` : ""}
       <tr class="total"><td>القيمة الإجمالية المتفق عليها</td><td>${fmtMoney(total, currency)}</td></tr>
     </tbody>
