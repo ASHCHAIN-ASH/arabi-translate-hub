@@ -6,7 +6,7 @@ import { toast } from 'sonner';
 import {
   Wallet as WalletIcon, Plus, ArrowDownToLine, ArrowUpFromLine, TrendingUp,
   TrendingDown, Sparkles, Receipt, RefreshCw, History, CreditCard, Eye, EyeOff,
-  Gift, Zap, Copy, Check, Shield, Clock,
+  Gift, Zap, Copy, Check, Shield, Clock, Upload, FileImage, X, Building2,
 } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -39,10 +39,11 @@ const PAYMENT_METHODS = [
   { value: 'cash', label: 'نقدي', icon: '💵' },
 ];
 
-const BANK_INFO = {
-  bank: 'البنك الأهلي السعودي',
-  iban: 'SA00 0000 0000 0000 0000 0000',
-  beneficiary: 'وكالة ماستر إيدو باث',
+export const BANK_INFO = {
+  bank: 'Alawwal Bank — البنك الأول',
+  iban: 'SA5345000000262359391004',
+  ibanFormatted: 'SA53 4500 0000 0262 3593 9100 4',
+  beneficiary: 'شركة علي صالح الشهري القابضة',
 };
 
 const ClientWallet: React.FC = () => {
@@ -59,6 +60,8 @@ const ClientWallet: React.FC = () => {
   const [reference, setReference] = useState('');
   const [notes, setNotes] = useState('');
   const [copied, setCopied] = useState<string | null>(null);
+  const [receiptFile, setReceiptFile] = useState<File | null>(null);
+  const [uploadingReceipt, setUploadingReceipt] = useState(false);
 
   const load = async () => {
     if (!user?.id) return;
@@ -100,19 +103,29 @@ const ClientWallet: React.FC = () => {
   const submitTopup = async () => {
     if (!user?.id) return;
     if (!amount || amount <= 0) return toast.error('يرجى إدخال مبلغ صحيح');
+    if (method === 'bank_transfer' && !receiptFile) {
+      return toast.error('يرجى إرفاق صورة إيصال التحويل البنكي');
+    }
     setSubmitting(true);
     try {
+      let receipt_path: string | undefined;
+      if (receiptFile) {
+        setUploadingReceipt(true);
+        receipt_path = await WalletService.uploadReceipt(user.id, receiptFile);
+        setUploadingReceipt(false);
+      }
       await WalletService.createTopupRequest({
         user_id: user.id, amount, payment_method: method,
         reference_number: reference || undefined, notes: notes || undefined,
+        receipt_path,
       });
       toast.success('تم إرسال طلب الشحن بانتظار موافقة الإدارة', {
         description: bonus.pct > 0 ? `🎁 ستحصل على ${bonus.label} عند الموافقة!` : undefined,
       });
-      setTopupOpen(false); setAmount(0); setReference(''); setNotes(''); load();
+      setTopupOpen(false); setAmount(0); setReference(''); setNotes(''); setReceiptFile(null); load();
     } catch (e: any) {
       toast.error('فشل إرسال الطلب', { description: e.message });
-    } finally { setSubmitting(false); }
+    } finally { setSubmitting(false); setUploadingReceipt(false); }
   };
 
   const copy = (text: string, key: string) => {
@@ -281,17 +294,83 @@ const ClientWallet: React.FC = () => {
                     </div>
 
                     {method === 'bank_transfer' && (
-                      <div className="rounded-lg bg-muted/40 border border-border p-2.5 space-y-1.5 text-xs">
-                        <div className="font-bold text-muted-foreground mb-1">حوّل على الحساب التالي:</div>
-                        <div className="flex items-center justify-between gap-2"><span>{BANK_INFO.bank}</span></div>
-                        <div className="flex items-center justify-between gap-2">
-                          <span className="font-mono">{BANK_INFO.iban}</span>
-                          <button onClick={() => copy(BANK_INFO.iban, 'iban')} className="text-violet-600 hover:bg-violet-50 p-1 rounded">
-                            {copied === 'iban' ? <Check className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5" />}
-                          </button>
+                      <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}
+                        className="rounded-2xl border-2 border-violet-200 dark:border-violet-900 bg-gradient-to-br from-violet-50 via-white to-fuchsia-50 dark:from-violet-950/40 dark:via-background dark:to-fuchsia-950/40 overflow-hidden shadow-md">
+                        {/* Bank header strip */}
+                        <div className="bg-gradient-to-l from-violet-700 to-fuchsia-700 px-3 py-2 flex items-center gap-2 text-white">
+                          <div className="w-7 h-7 rounded-lg bg-white/20 backdrop-blur flex items-center justify-center">
+                            <Building2 className="w-4 h-4" />
+                          </div>
+                          <div className="flex-1">
+                            <div className="text-[10px] opacity-90 font-medium">حوّل للحساب البنكي التالي</div>
+                            <div className="text-xs font-black">{BANK_INFO.bank}</div>
+                          </div>
+                          <Badge className="bg-white/20 backdrop-blur border-white/30 text-white text-[9px]">معتمد</Badge>
                         </div>
-                        <div className="text-muted-foreground">المستفيد: {BANK_INFO.beneficiary}</div>
-                      </div>
+
+                        <div className="p-3 space-y-2">
+                          {/* IBAN — premium */}
+                          <div className="rounded-xl bg-white dark:bg-card border border-violet-200 dark:border-violet-900 p-2.5">
+                            <div className="flex items-center justify-between mb-1">
+                              <span className="text-[10px] font-bold text-violet-700 dark:text-violet-300 uppercase tracking-wider">رقم الآيبان (IBAN)</span>
+                              <button onClick={() => copy(BANK_INFO.iban, 'iban')}
+                                className="flex items-center gap-1 text-[10px] font-bold text-violet-700 dark:text-violet-300 hover:bg-violet-100 dark:hover:bg-violet-900/40 px-2 py-0.5 rounded-md transition">
+                                {copied === 'iban' ? <><Check className="w-3 h-3" /> تم النسخ</> : <><Copy className="w-3 h-3" /> نسخ</>}
+                              </button>
+                            </div>
+                            <div className="font-mono text-sm font-black tracking-wider text-foreground select-all">
+                              {BANK_INFO.ibanFormatted}
+                            </div>
+                          </div>
+
+                          {/* Beneficiary */}
+                          <div className="rounded-xl bg-white dark:bg-card border border-violet-200 dark:border-violet-900 p-2.5">
+                            <div className="flex items-center justify-between">
+                              <div className="min-w-0">
+                                <div className="text-[10px] font-bold text-violet-700 dark:text-violet-300 uppercase tracking-wider mb-0.5">اسم المستفيد</div>
+                                <div className="text-xs font-bold text-foreground truncate">{BANK_INFO.beneficiary}</div>
+                              </div>
+                              <button onClick={() => copy(BANK_INFO.beneficiary, 'ben')}
+                                className="shrink-0 text-violet-600 hover:bg-violet-100 dark:hover:bg-violet-900/40 p-1.5 rounded-md transition">
+                                {copied === 'ben' ? <Check className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5" />}
+                              </button>
+                            </div>
+                          </div>
+
+                          {/* Receipt upload */}
+                          <div>
+                            <Label className="text-[10px] font-bold text-violet-700 dark:text-violet-300 uppercase tracking-wider flex items-center gap-1">
+                              <FileImage className="w-3 h-3" /> إيصال التحويل <span className="text-rose-600">*</span>
+                            </Label>
+                            {!receiptFile ? (
+                              <label className="mt-1 cursor-pointer flex items-center justify-center gap-2 border-2 border-dashed border-violet-300 dark:border-violet-800 rounded-xl p-3 hover:bg-violet-50 dark:hover:bg-violet-950/40 transition">
+                                <Upload className="w-4 h-4 text-violet-600" />
+                                <span className="text-xs font-bold text-violet-700 dark:text-violet-300">ارفع صورة الإيصال (jpg / png / pdf)</span>
+                                <input type="file" accept="image/*,application/pdf" hidden
+                                  onChange={(e) => {
+                                    const f = e.target.files?.[0];
+                                    if (!f) return;
+                                    if (f.size > 5 * 1024 * 1024) return toast.error('الحجم الأقصى 5 ميجابايت');
+                                    setReceiptFile(f);
+                                  }} />
+                              </label>
+                            ) : (
+                              <div className="mt-1 flex items-center gap-2 bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-900 rounded-xl p-2">
+                                <div className="w-8 h-8 rounded-lg bg-emerald-100 dark:bg-emerald-900 flex items-center justify-center">
+                                  <FileImage className="w-4 h-4 text-emerald-600" />
+                                </div>
+                                <div className="flex-1 min-w-0">
+                                  <div className="text-xs font-bold truncate">{receiptFile.name}</div>
+                                  <div className="text-[10px] text-muted-foreground">{(receiptFile.size / 1024).toFixed(0)} KB</div>
+                                </div>
+                                <button onClick={() => setReceiptFile(null)} className="text-rose-600 hover:bg-rose-100 dark:hover:bg-rose-950 p-1 rounded">
+                                  <X className="w-3.5 h-3.5" />
+                                </button>
+                              </div>
+                            )}
+                          </div>
+                        </div>
+                      </motion.div>
                     )}
 
                     <div>
