@@ -36,10 +36,10 @@ interface ChatBotProps {
 }
 
 const WHATSAPP_NUMBERS = [
-  { number: '+9660500776343', label: 'الدعم الفني والاستشارات' },
-  { number: '+9660500776343', label: 'خدمة العملاء' },
-  { number: '+9660500776343', label: 'الترجمة المتخصصة' },
-  { number: '+9660500776343', label: 'البحث العلمي' }
+  { number: '+966559600824', label: 'الدعم الفني والاستشارات' },
+  { number: '+966559600824', label: 'خدمة العملاء' },
+  { number: '+966559600824', label: 'الترجمة المتخصصة' },
+  { number: '+966559600824', label: 'البحث العلمي' }
 ];
 
 const QUICK_REPLIES = [

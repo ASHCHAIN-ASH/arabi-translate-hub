@@ -470,7 +470,7 @@ const LicenseRequest = () => {
                             </Label>
                             <Input
                               id="phone"
-                              placeholder="0500776343"
+                              placeholder="0559600824"
                               value={formData.phone || ''}
                               onChange={(e) => handleInputChange('phone', e.target.value)}
                               className={`h-12 ${errors.phone ? 'border-red-500' : ''}`}

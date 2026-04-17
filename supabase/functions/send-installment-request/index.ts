@@ -99,7 +99,7 @@ const handler = async (req: Request): Promise<Response> => {
               <div style="text-align: center; margin: 30px 0;">
                 <p style="color: #666; margin-bottom: 15px;">للاستفسارات أو المساعدة:</p>
                 <div style="background: #667eea; color: white; padding: 15px; border-radius: 8px; display: inline-block;">
-                  <p style="margin: 0; font-size: 18px; font-weight: bold;">📱 واتساب: +9660500776343</p>
+                  <p style="margin: 0; font-size: 18px; font-weight: bold;">📱 واتساب: +966559600824</p>
                 </div>
               </div>
               

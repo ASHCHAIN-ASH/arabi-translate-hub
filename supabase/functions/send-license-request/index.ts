@@ -493,7 +493,7 @@ const getClientEmailTemplate = (data: LicenseRequestData, requestNumber: string)
                 </div>
                 <div class="contact-item">
                     <span class="icon">📱</span>
-                    <div class="text">0500776343</div>
+                    <div class="text">0559600824</div>
                 </div>
                 <div class="contact-item">
                     <span class="icon">🌐</span>

@@ -29,15 +29,15 @@ const handler = async (req: Request): Promise<Response> => {
 
     // WhatsApp numbers for different services
     const whatsappNumbers: Record<string, string> = {
-      'book-summarization': '+966500776343',
-      'assignment-execution': '+966500776343',
-      'ebook-creation': '+966500776343',
+      'book-summarization': '+966559600824',
+      'assignment-execution': '+966559600824',
+      'ebook-creation': '+966559600824',
       'research-proposal': '+966559600824',
       'references-provision': '+966559600824',
       'homework-assistance': '+966559600824',
     };
 
-    const whatsappNumber = whatsappNumbers[orderData.serviceType] || '+966500776343';
+    const whatsappNumber = whatsappNumbers[orderData.serviceType] || '+966559600824';
 
     // Email to client
     const clientEmail = await resend.emails.send({

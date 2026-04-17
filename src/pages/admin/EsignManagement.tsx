@@ -139,13 +139,13 @@ const EsignManagement: React.FC = () => {
           role: 'customer' as const,
           name: 'العميل',
           email: 'client@example.com',
-          phone: '+966500000000'
+          phone: '+966559600824'
         },
         {
           role: 'company' as const,
           name: 'وكالة الترجمة المتخصصة',
           email: 'admin@translation-agency.com',
-          phone: '+966500000000'
+          phone: '+966559600824'
         }
       ];
 

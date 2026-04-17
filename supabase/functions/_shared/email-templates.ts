@@ -572,7 +572,7 @@ export const generateClientEmailTemplate = (
             </div>
             <div class="contact-item">
               <span class="contact-icon">📱</span>
-              <div class="contact-text">0500776343</div>
+              <div class="contact-text">0559600824</div>
             </div>
             <div class="contact-item">
               <span class="contact-icon">🌐</span>
@@ -612,7 +612,7 @@ export const generateClientEmailTemplate = (
     
     للتواصل:
     📧 legal@masteredupath.com
-    📱 0500776343
+    📱 0559600824
     🌐 www.masteredupath.com
     
     © 2024 وكالة ماستر إيدو باث للحلول التعليمية المتقدمة
@@ -748,7 +748,7 @@ export const generateAdminEmailTemplate = (
             نظام الإدارة المتقدم - وكالة ماستر إيدو باث
           </p>
           <p style="font-size: 14px; opacity: 0.8;">
-            📧 legal@masteredupath.com | 📱 0500776343 | 🌐 masteredupath.com
+            📧 legal@masteredupath.com | 📱 0559600824 | 🌐 masteredupath.com
           </p>
         </div>
       </div>
@@ -768,7 +768,7 @@ export const generateAdminEmailTemplate = (
     ${data.additionalInfo || ''}
     
     النظام الإداري - وكالة ماستر إيدو باث
-    📧 legal@masteredupath.com | 📱 0500776343
+    📧 legal@masteredupath.com | 📱 0559600824
   `;
   
   return {

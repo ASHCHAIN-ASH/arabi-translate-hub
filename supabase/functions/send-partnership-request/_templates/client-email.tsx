@@ -207,8 +207,8 @@ export const ClientEmail = ({
                               </div>
                               <div>
                                 <Text style={contactLabel}>واتساب (متوفر 24 ساعة)</Text>
-                                <Link href="https://wa.me/966500776343" style={contactValue}>
-                                  0500776343
+                                <Link href="https://wa.me/966559600824" style={contactValue}>
+                                  0559600824
                                 </Link>
                               </div>
                             </td>
@@ -221,7 +221,7 @@ export const ClientEmail = ({
                               <div>
                                 <Text style={contactLabel}>الهاتف</Text>
                                 <Text style={contactValuePlain}>
-                                  0500776343
+                                  0559600824
                                 </Text>
                               </div>
                             </td>
@@ -246,7 +246,7 @@ export const ClientEmail = ({
                   <table style={{ width: '100%', marginTop: '30px' }}>
                     <tr>
                       <td style={{ textAlign: 'center', padding: '10px 20px' }}>
-                        <Link href="https://wa.me/966500776343" style={whatsappButton}>
+                        <Link href="https://wa.me/966559600824" style={whatsappButton}>
                           <span style={{ fontSize: '24px', marginLeft: '10px' }}>💬</span>
                           تواصل معنا عبر واتساب
                         </Link>

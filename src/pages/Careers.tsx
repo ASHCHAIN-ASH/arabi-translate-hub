@@ -873,7 +873,7 @@ const Careers = () => {
                       className="bg-white/70 backdrop-blur-sm border-blue-200 hover:bg-white/90 px-8 py-4 text-lg"
                     >
                       <Phone className="ml-2 h-6 w-6" />
-                      0500776343
+                      0559600824
                     </Button>
                   </motion.div>
                 </div>

@@ -449,7 +449,7 @@ const PrivacyPolicy = () => {
                       <div className="text-center">
                         <p className="font-semibold text-primary">الطريقة الثانية</p>
                         <p className="text-muted-foreground">التواصل الهاتفي المباشر</p>
-                        <p className="text-xs text-primary">0500776343 / 0559600824</p>
+                        <p className="text-xs text-primary">0559600824</p>
                       </div>
                       <div className="text-center">
                         <p className="font-semibold text-primary">الطريقة الثالثة</p>
@@ -694,20 +694,15 @@ const PrivacyPolicy = () => {
 
                   <div className="mt-6 bg-gradient-to-r from-purple-50 to-indigo-50 border border-purple-200 p-6 rounded-lg">
                     <h4 className="font-semibold text-purple-800 mb-4 text-center">📞 قنوات التواصل المباشر</h4>
-                    <div className="grid lg:grid-cols-4 gap-4 text-center">
+                    <div className="grid lg:grid-cols-3 gap-4 text-center">
                       <div>
-                        <div className="text-purple-600 font-semibold">الهاتف الأساسي</div>
-                        <p className="text-sm text-purple-700">0500776343</p>
-                        <p className="text-xs text-purple-600">9 ص - 9 م</p>
-                      </div>
-                      <div>
-                        <div className="text-purple-600 font-semibold">الهاتف الثانوي</div>
+                        <div className="text-purple-600 font-semibold">الهاتف</div>
                         <p className="text-sm text-purple-700">0559600824</p>
                         <p className="text-xs text-purple-600">متاح دائماً</p>
                       </div>
                       <div>
                         <div className="text-purple-600 font-semibold">الواتساب</div>
-                        <p className="text-sm text-purple-700">نفس الأرقام</p>
+                        <p className="text-sm text-purple-700">0559600824</p>
                         <p className="text-xs text-purple-600">رد سريع</p>
                       </div>
                       <div>
@@ -776,10 +771,6 @@ const PrivacyPolicy = () => {
               <div className="flex items-center gap-2 text-primary">
                 <span>📧</span>
                 <span>info@masteredupath.com</span>
-              </div>
-              <div className="flex items-center gap-2 text-primary">
-                <span>📞</span>
-                <span>0500776343</span>
               </div>
               <div className="flex items-center gap-2 text-primary">
                 <span>📞</span>

@@ -274,7 +274,7 @@ const handler = async (req: Request): Promise<Response> => {
                 </div>
                  <div class="contact-item">
                    <strong>📱 خدمة المبيعات</strong><br>
-                   <a href="tel:+966500776343">0500776343</a>
+                   <a href="tel:+966559600824">0559600824</a>
                  </div>
                 <div class="contact-item">
                   <strong>🌐 الموقع الإلكتروني</strong><br>
@@ -473,7 +473,7 @@ const handler = async (req: Request): Promise<Response> => {
             <div class="footer">
               <h4>🏢 معلومات الشركة</h4>
               <div class="contact-item">📧 <a href="mailto:info@masteredupath.com">info@masteredupath.com</a></div>
-              <div class="contact-item">📱 <a href="tel:+966555123456">0555 123 456</a></div>
+              <div class="contact-item">📱 <a href="tel:+966559600824">0559600824</a></div>
               <div class="contact-item">🌐 <a href="https://masteredupath.com">www.masteredupath.com</a></div>
               <div class="contact-item">📍 الرياض، المملكة العربية السعودية</div>
               <p style="margin-top: 20px; font-size: 12px; opacity: 0.8;">

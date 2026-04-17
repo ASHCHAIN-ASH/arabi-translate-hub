@@ -191,7 +191,7 @@ const WhatsappManagement: React.FC = () => {
                 <div>
                   <label className="text-sm font-medium">رقم الهاتف</label>
                   <Input
-                    placeholder="+966500000000"
+                    placeholder="+966559600824"
                     value={testPhone}
                     onChange={(e) => setTestPhone(e.target.value)}
                   />
