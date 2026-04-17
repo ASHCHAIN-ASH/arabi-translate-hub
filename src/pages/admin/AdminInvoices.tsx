@@ -24,6 +24,7 @@ export default function AdminInvoices() {
   const [formOpen, setFormOpen] = useState(false);
   const [editing, setEditing] = useState<Invoice | null>(null);
   const [paymentFor, setPaymentFor] = useState<Invoice | null>(null);
+  const [sendingId, setSendingId] = useState<string | null>(null);
 
   const load = async () => {
     setLoading(true);
