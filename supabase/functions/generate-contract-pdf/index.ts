@@ -245,7 +245,7 @@ function buildHtml(contract: any, signature: any, verifyHash: string) {
 
   <div class="preamble">
     بتاريخ <strong>${fmtDate(contract.created_at)}</strong>، أُبرم هذا العقد بين الطرفين أدناه وفقاً للأحكام الواردة فيه،
-    ويُقدَّم حصرياً عبر منصة <strong>${esc(PLATFORM.name)}</strong> (${esc(PLATFORM.domain}) بإشراف ${esc(PLATFORM.legal)}.
+    ويُقدَّم حصرياً عبر منصة <strong>${esc(PLATFORM.name)}</strong> (${esc(PLATFORM.domain)}) بإشراف ${esc(PLATFORM.legal)}.
   </div>
 
   <h3 class="section">المادة الأولى: أطراف العقد</h3>
