@@ -83,7 +83,7 @@ const EsignManagement: React.FC = () => {
 
   const loadContracts = async () => {
     try {
-      const contractsData = await getAllContracts();
+      const contractsData = await listContracts();
       setContracts(contractsData);
     } catch (error) {
       console.error('Error loading contracts:', error);

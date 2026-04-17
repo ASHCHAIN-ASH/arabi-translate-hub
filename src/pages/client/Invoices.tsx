@@ -1,11 +1,12 @@
 import { useEffect, useMemo, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import ClientLayout from '@/components/client/ClientLayout';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { useAuth } from '@/components/SimpleAuthProvider';
-import { FileText, Eye, Download, Printer, RefreshCw, CheckCircle2, Clock, AlertCircle, CreditCard } from 'lucide-react';
+import { FileText, Eye, Download, Printer, RefreshCw, CheckCircle2, Clock, AlertCircle, CreditCard, LifeBuoy } from 'lucide-react';
 import { toast } from 'sonner';
 import { supabase } from '@/integrations/supabase/client';
 import { InvoiceService, type Invoice } from '@/utils/invoiceService';
