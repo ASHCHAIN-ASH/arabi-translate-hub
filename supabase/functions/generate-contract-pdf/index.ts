@@ -339,6 +339,7 @@ function buildHtml(contract: any, signature: any, verifyHash: string) {
 
   <div class="sigs">
     <div class="sigbox">
+      <div class="badge-corner">OFFICIAL</div>
       <div class="lbl">الطرف الأول</div>
       <div class="who">${esc(PLATFORM.legal)}</div>
       <div class="seal-circle">
@@ -346,30 +347,35 @@ function buildHtml(contract: any, signature: any, verifyHash: string) {
         <p class="sm">MUP</p>
         <p class="sd">${fmtDate(contract.created_at)}</p>
       </div>
-      <div class="stamp-ok">✓ معتمد ومختوم رسمياً</div>
+      <div class="stamp-ok">معتمد ومختوم رسمياً</div>
     </div>
 
     <div class="sigbox">
+      <div class="badge-corner">E-SIGNED</div>
       <div class="lbl">الطرف الثاني</div>
       <div class="who">${esc(contract.client_full_name || "—")}</div>
       ${signature ? `
         <div class="signed-card">
-          <div class="ok">✓ تم التوقيع إلكترونياً</div>
-          <div class="sigtext">${esc(signature.signature_text)}</div>
+          <div class="verified">موقّع إلكترونياً ومُوثّق</div>
+          <div class="sig-frame">
+            <div class="sigtext">${esc(signature.signature_text)}</div>
+          </div>
           <div class="meta">
-            التاريخ: ${fmtDateTime(signature.signed_at)}<br/>
-            ${signature.ip_address ? `IP: ${esc(signature.ip_address)}<br/>` : ""}
-            ${signature.signer_id_number ? `الهوية: ${esc(signature.signer_id_number)}` : ""}
+            <div class="row"><span class="k">التاريخ والوقت</span><span class="v">${fmtDateTime(signature.signed_at)}</span></div>
+            ${signature.ip_address ? `<div class="row"><span class="k">عنوان IP</span><span class="v">${esc(signature.ip_address)}</span></div>` : ""}
+            ${signature.signer_id_number ? `<div class="row"><span class="k">رقم الهوية</span><span class="v">${esc(signature.signer_id_number)}</span></div>` : ""}
+            <div class="row"><span class="k">معرّف التوقيع</span><span class="v">${esc(String(signature.id || "").slice(0,8))}</span></div>
           </div>
         </div>
-      ` : `<div class="pending">— لم يتم التوقيع بعد —</div>`}
+      ` : `<div class="pending">لم يتم التوقيع بعد</div>`}
     </div>
   </div>
 
   ${signature ? `
     <div class="verify">
-      <strong>🔐 بصمة التحقق الرقمي (SHA-256):</strong>
+      <div class="vh"><span class="lock">🔒</span> بصمة التحقق الرقمي (SHA-256)</div>
       <code>${esc(verifyHash)}</code>
+      <div class="note">هذه البصمة تُستخدم للتحقق من سلامة العقد وعدم التلاعب به. أي تعديل سيؤدي إلى تغيير البصمة.</div>
     </div>
   ` : ""}
 
