@@ -14,6 +14,21 @@ import { openInvoicePrintWindow, downloadInvoiceAsPDF } from '@/utils/invoicePdf
 import InvoiceFormDialog from '@/components/admin/invoices/InvoiceFormDialog';
 import PaymentDialog from '@/components/admin/invoices/PaymentDialog';
 
+const ORDER_STATUS_AR: Record<string, string> = {
+  pending: 'قيد الانتظار',
+  in_progress: 'قيد التنفيذ',
+  in_review: 'قيد المراجعة',
+  completed: 'مكتمل',
+  delivered: 'تم التسليم',
+  cancelled: 'ملغي',
+  on_hold: 'متوقف مؤقتاً',
+  awaiting_payment: 'بانتظار الدفع',
+  awaiting_quote: 'بانتظار التسعير',
+  quote_sent: 'تم إرسال العرض',
+  draft: 'مسودة',
+};
+const orderStatusLabel = (s?: string | null) => (s ? ORDER_STATUS_AR[s] ?? s : '-');
+
 export default function AdminInvoiceDetails() {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -121,7 +136,7 @@ export default function AdminInvoiceDetails() {
                     <Link to={`/adminmaster/service-orders/${order.id}`} className="text-primary hover:underline">
                       <div className="font-bold">{order.tracking_id}</div>
                       <div className="text-muted-foreground">{order.service_name ?? '-'}</div>
-                      <div className="text-xs mt-1">الحالة: {order.current_status}</div>
+                      <div className="text-xs mt-1">الحالة: {orderStatusLabel(order.current_status)}</div>
                     </Link>
                   ) : <div className="text-muted-foreground">لا يوجد طلب مرتبط</div>}
                 </CardContent>
