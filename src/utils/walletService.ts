@@ -119,6 +119,7 @@ export const WalletService = {
     payment_method: string;
     reference_number?: string;
     notes?: string;
+    receipt_path?: string;
   }): Promise<TopupRequest> {
     const { data, error } = await supabase
       .from('wallet_topup_requests' as any)
@@ -127,6 +128,25 @@ export const WalletService = {
       .single();
     if (error) throw error;
     return data as any;
+  },
+
+  // Upload bank-transfer receipt to private storage; returns the storage path.
+  async uploadReceipt(userId: string, file: File): Promise<string> {
+    const ext = file.name.split('.').pop() || 'jpg';
+    const path = `${userId}/${Date.now()}-${Math.random().toString(36).slice(2, 8)}.${ext}`;
+    const { error } = await supabase.storage
+      .from('wallet-receipts')
+      .upload(path, file, { cacheControl: '3600', upsert: false });
+    if (error) throw error;
+    return path;
+  },
+
+  async getReceiptSignedUrl(path: string, expiresIn = 3600): Promise<string | null> {
+    const { data, error } = await supabase.storage
+      .from('wallet-receipts')
+      .createSignedUrl(path, expiresIn);
+    if (error) return null;
+    return data?.signedUrl || null;
   },
 
   // ===== Admin =====
