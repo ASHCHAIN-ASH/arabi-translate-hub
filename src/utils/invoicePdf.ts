@@ -61,9 +61,9 @@ export function buildInvoiceHTML(invoice: Invoice, items: InvoiceItem[], payment
   html, body { font-family: 'Cairo', system-ui, -apple-system, sans-serif; color: #1a1a1a; background: #fff; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
   body { padding: 28px; direction: rtl; line-height: 1.6; font-size: 13px; }
   .page { max-width: 800px; margin: 0 auto; background: #fff; }
-  .header { display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 3px solid #0f766e; padding-bottom: 18px; margin-bottom: 22px; }
+  .header { display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 3px solid #1e3a8a; padding-bottom: 18px; margin-bottom: 22px; }
   .brand { display: flex; flex-direction: column; gap: 4px; }
-  .brand-name { font-size: 22px; font-weight: 800; color: #0f766e; }
+  .brand-name { font-size: 22px; font-weight: 800; color: #1e3a8a; }
   .brand-en { font-size: 12px; color: #6b7280; letter-spacing: 1px; }
   .brand-meta { font-size: 11px; color: #6b7280; margin-top: 6px; line-height: 1.7; }
   .doc-title { text-align: left; }
