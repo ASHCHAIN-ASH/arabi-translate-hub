@@ -19,14 +19,14 @@ export default {
 		},
 		extend: {
 		fontFamily: {
-				'sans': ['IBM Plex Sans Arabic', 'Noto Sans Arabic', 'Inter', 'system-ui', 'sans-serif'],
-				'heading': ['IBM Plex Sans Arabic', 'Inter', 'sans-serif'],
-				'body': ['Noto Sans Arabic', 'Inter', 'sans-serif'],
-				'inter': ['Inter', 'IBM Plex Sans Arabic', 'sans-serif'],
-				'arabic-title': ['IBM Plex Sans Arabic', 'Inter', 'sans-serif'],
-				'arabic-body': ['Noto Sans Arabic', 'Inter', 'sans-serif'],
-				'academic': ['IBM Plex Sans Arabic', 'Inter', 'sans-serif'],
-				'academic-title': ['IBM Plex Sans Arabic', 'Inter', 'sans-serif'],
+				'sans': ['Tajawal', 'Inter', 'system-ui', 'sans-serif'],
+				'heading': ['Tajawal', 'Inter', 'sans-serif'],
+				'body': ['Tajawal', 'Inter', 'sans-serif'],
+				'inter': ['Inter', 'Tajawal', 'sans-serif'],
+				'arabic-title': ['Tajawal', 'Inter', 'sans-serif'],
+				'arabic-body': ['Tajawal', 'Inter', 'sans-serif'],
+				'academic': ['Tajawal', 'Inter', 'sans-serif'],
+				'academic-title': ['Tajawal', 'Inter', 'sans-serif'],
 			},
 			colors: {
 				border: 'hsl(var(--border))',
