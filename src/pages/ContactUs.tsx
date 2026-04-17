@@ -697,7 +697,6 @@ const ContactUs = () => {
                                     واتساب
                                   </a>
                                 </div>
-                                </div>
                               </div>
                             ) : (
                               <p className="text-primary font-medium mb-1 sm:mb-2 text-sm sm:text-base">
