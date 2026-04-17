@@ -31,7 +31,7 @@ const generateCustomerEmailTemplate = (consultationData: ConsultationRequest, se
       <meta charset="UTF-8">
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <title>تأكيد طلب الاستشارة الأكاديمية - وكالة ماستر إيدو باث</title>
-      <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800&display=swap" rel="stylesheet">
+      <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;700;800&display=swap" rel="stylesheet">
       <style>
         * {
           margin: 0;
@@ -40,7 +40,7 @@ const generateCustomerEmailTemplate = (consultationData: ConsultationRequest, se
         }
         
         body {
-          font-family: 'Tajawal', 'Cairo', 'Amiri', system-ui, -apple-system, sans-serif;
+          font-family: 'Cairo', 'Cairo', 'Amiri', system-ui, -apple-system, sans-serif;
           line-height: 1.6;
           color: #1a202c;
           background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
@@ -795,7 +795,7 @@ const generateAdminEmailTemplate = (consultationData: ConsultationRequest, servi
       <meta charset="UTF-8">
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <title>طلب استشارة أكاديمية جديد - وكالة ماستر إيدو باث</title>
-      <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800&display=swap" rel="stylesheet">
+      <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;700;800&display=swap" rel="stylesheet">
       <style>
         * {
           margin: 0;
@@ -804,7 +804,7 @@ const generateAdminEmailTemplate = (consultationData: ConsultationRequest, servi
         }
         
         body {
-          font-family: 'Tajawal', 'Cairo', system-ui, -apple-system, sans-serif;
+          font-family: 'Cairo', 'Cairo', system-ui, -apple-system, sans-serif;
           line-height: 1.6;
           color: #1f2937;
           background: linear-gradient(135deg, #dc2626 0%, #ef4444 50%, #f87171 100%);

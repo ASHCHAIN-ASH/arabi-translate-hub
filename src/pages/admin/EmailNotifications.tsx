@@ -410,7 +410,7 @@ export default function EmailNotifications() {
 
   const generateInvoiceTemplate = (data: SmartFormData) => {
     return `
-    <div dir="rtl" style="max-width: 800px; margin: 0 auto; font-family: 'IBM Plex Sans Arabic', 'Cairo', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%); padding: 20px; direction: rtl; text-align: right;">
+    <div dir="rtl" style="max-width: 800px; margin: 0 auto; font-family: 'Cairo', 'Cairo', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%); padding: 20px; direction: rtl; text-align: right;">
       <style>
         @media (max-width: 768px) {
           .mobile-container { padding: 12px !important; }
@@ -589,14 +589,14 @@ export default function EmailNotifications() {
             
             <!-- Mobile-Optimized Corporate Name -->
             <div class="mobile-card" style="background: rgba(255,255,255,0.08); backdrop-filter: blur(20px); border: 2px solid rgba(255,255,255,0.1); border-radius: 15px; padding: 20px; margin: 0 auto; max-width: 90%; box-shadow: 0 8px 20px rgba(0,0,0,0.2);">
-              <h1 class="mobile-header" style="color: white; font-size: 24px; margin: 0 0 10px 0; font-weight: 900; text-shadow: 2px 2px 6px rgba(0,0,0,0.5); direction: rtl; font-family: 'IBM Plex Sans Arabic', 'Cairo'; letter-spacing: 1px; line-height: 1.2;">وكالة ماستر إيدو باث</h1>
+              <h1 class="mobile-header" style="color: white; font-size: 24px; margin: 0 0 10px 0; font-weight: 900; text-shadow: 2px 2px 6px rgba(0,0,0,0.5); direction: rtl; font-family: 'Cairo', 'Cairo'; letter-spacing: 1px; line-height: 1.2;">وكالة ماستر إيدو باث</h1>
               
               <div style="background: linear-gradient(90deg, transparent, rgba(59, 130, 246, 0.6), rgba(14, 165, 233, 0.6), transparent); height: 3px; width: 80px; margin: 12px auto; border-radius: 2px; box-shadow: 0 2px 8px rgba(59, 130, 246, 0.3);"></div>
               
-              <h2 class="mobile-subheader" style="color: rgba(255,255,255,0.95); margin: 8px 0 12px 0; font-size: 16px; font-weight: 700; direction: rtl; font-family: 'IBM Plex Sans Arabic'; text-shadow: 1px 1px 4px rgba(0,0,0,0.3);">للخدمات التعليمية والتدريب المتقدم</h2>
+              <h2 class="mobile-subheader" style="color: rgba(255,255,255,0.95); margin: 8px 0 12px 0; font-size: 16px; font-weight: 700; direction: rtl; font-family: 'Cairo'; text-shadow: 1px 1px 4px rgba(0,0,0,0.3);">للخدمات التعليمية والتدريب المتقدم</h2>
               
               <div style="background: rgba(255,255,255,0.1); border-radius: 10px; padding: 10px; margin: 12px 0; border: 1px solid rgba(255,255,255,0.15);">
-                <p class="mobile-text" style="color: rgba(255,255,255,0.9); margin: 0; font-size: 12px; direction: rtl; font-family: 'IBM Plex Sans Arabic'; font-weight: 500;">Master Edu Path Educational Services Agency</p>
+                <p class="mobile-text" style="color: rgba(255,255,255,0.9); margin: 0; font-size: 12px; direction: rtl; font-family: 'Cairo'; font-weight: 500;">Master Edu Path Educational Services Agency</p>
               </div>
             </div>
           </div>
@@ -629,47 +629,47 @@ export default function EmailNotifications() {
           <!-- Company & Invoice Info Grid -->
           <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 25px; margin-bottom: 30px; direction: rtl;" class="mobile-flex">
             <div style="background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%); border-radius: 15px; padding: 25px; border: 1px solid #e2e8f0; direction: rtl;">
-              <h3 style="color: #1e293b; margin: 0 0 20px 0; font-size: 18px; font-weight: 700; direction: rtl; font-family: 'IBM Plex Sans Arabic';" class="mobile-text">🏢 بيانات الشركة</h3>
+              <h3 style="color: #1e293b; margin: 0 0 20px 0; font-size: 18px; font-weight: 700; direction: rtl; font-family: 'Cairo';" class="mobile-text">🏢 بيانات الشركة</h3>
               <div style="space-y: 12px; direction: rtl;">
-                <p style="margin: 8px 0; color: #334155; line-height: 1.8; text-align: right; direction: rtl; font-size: 15px; font-weight: 600; font-family: 'IBM Plex Sans Arabic';" class="mobile-text">وكالة ماستر إيدو باث</p>
-                <p style="margin: 6px 0; color: #64748b; text-align: right; direction: rtl; font-size: 14px; font-family: 'IBM Plex Sans Arabic';" class="mobile-text">🌍 المملكة العربية السعودية</p>
-                <p style="margin: 6px 0; color: #64748b; text-align: right; direction: rtl; font-size: 14px; font-family: 'IBM Plex Sans Arabic';" class="mobile-text">📧 info@masteredupath.com</p>
-                <p style="margin: 6px 0; color: #64748b; text-align: right; direction: rtl; font-size: 14px; font-family: 'IBM Plex Sans Arabic';" class="mobile-text">📱 0500776343</p>
+                <p style="margin: 8px 0; color: #334155; line-height: 1.8; text-align: right; direction: rtl; font-size: 15px; font-weight: 600; font-family: 'Cairo';" class="mobile-text">وكالة ماستر إيدو باث</p>
+                <p style="margin: 6px 0; color: #64748b; text-align: right; direction: rtl; font-size: 14px; font-family: 'Cairo';" class="mobile-text">🌍 المملكة العربية السعودية</p>
+                <p style="margin: 6px 0; color: #64748b; text-align: right; direction: rtl; font-size: 14px; font-family: 'Cairo';" class="mobile-text">📧 info@masteredupath.com</p>
+                <p style="margin: 6px 0; color: #64748b; text-align: right; direction: rtl; font-size: 14px; font-family: 'Cairo';" class="mobile-text">📱 0500776343</p>
               </div>
             </div>
             
             <div style="background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%); border-radius: 15px; padding: 25px; border: 1px solid #bae6fd; direction: rtl;">
-              <h3 style="color: #0c4a6e; margin: 0 0 20px 0; font-size: 18px; font-weight: 700; direction: rtl; font-family: 'IBM Plex Sans Arabic';" class="mobile-text">📋 تفاصيل الفاتورة</h3>
+              <h3 style="color: #0c4a6e; margin: 0 0 20px 0; font-size: 18px; font-weight: 700; direction: rtl; font-family: 'Cairo';" class="mobile-text">📋 تفاصيل الفاتورة</h3>
               <div style="space-y: 12px; direction: rtl;">
-                <p style="margin: 8px 0; color: #075985; text-align: right; direction: rtl; font-size: 15px; font-weight: 600; font-family: 'IBM Plex Sans Arabic';" class="mobile-text">رقم الفاتورة: <span style="color: #0ea5e9; font-weight: 800;">#${data.invoiceNumber || 'غير محدد'}</span></p>
-                <p style="margin: 6px 0; color: #0369a1; text-align: right; direction: rtl; font-size: 14px; font-family: 'IBM Plex Sans Arabic';" class="mobile-text">📅 تاريخ الإصدار: ${new Date().toLocaleDateString('ar-SA')}</p>
-                <p style="margin: 6px 0; color: #0369a1; text-align: right; direction: rtl; font-size: 14px; font-family: 'IBM Plex Sans Arabic';" class="mobile-text">⏰ تاريخ الاستحقاق: ${data.dueDate || 'غير محدد'}</p>
+                <p style="margin: 8px 0; color: #075985; text-align: right; direction: rtl; font-size: 15px; font-weight: 600; font-family: 'Cairo';" class="mobile-text">رقم الفاتورة: <span style="color: #0ea5e9; font-weight: 800;">#${data.invoiceNumber || 'غير محدد'}</span></p>
+                <p style="margin: 6px 0; color: #0369a1; text-align: right; direction: rtl; font-size: 14px; font-family: 'Cairo';" class="mobile-text">📅 تاريخ الإصدار: ${new Date().toLocaleDateString('ar-SA')}</p>
+                <p style="margin: 6px 0; color: #0369a1; text-align: right; direction: rtl; font-size: 14px; font-family: 'Cairo';" class="mobile-text">⏰ تاريخ الاستحقاق: ${data.dueDate || 'غير محدد'}</p>
               </div>
             </div>
           </div>
 
           <!-- Customer Information -->
           <div style="background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%); border-radius: 15px; padding: 25px; margin: 25px 0; border-right: 5px solid #22c55e; border: 1px solid #bbf7d0; direction: rtl;">
-            <h3 style="color: #14532d; margin: 0 0 20px 0; font-size: 18px; font-weight: 700; text-align: center; direction: rtl; font-family: 'IBM Plex Sans Arabic';" class="mobile-text">👤 بيانات العميل</h3>
+            <h3 style="color: #14532d; margin: 0 0 20px 0; font-size: 18px; font-weight: 700; text-align: center; direction: rtl; font-family: 'Cairo';" class="mobile-text">👤 بيانات العميل</h3>
             <div style="background: rgba(255,255,255,0.7); border-radius: 12px; padding: 20px; direction: rtl;">
-              <p style="color: #15803d; margin: 10px 0; font-size: 16px; font-weight: 600; text-align: right; direction: rtl; font-family: 'IBM Plex Sans Arabic';" class="mobile-text">الاسم: ${data.customerName || 'غير محدد'}</p>
-              <p style="color: #15803d; margin: 10px 0; text-align: right; direction: rtl; font-size: 15px; word-break: break-all; font-family: 'IBM Plex Sans Arabic';" class="mobile-text">البريد الإلكتروني: ${data.customerEmail || 'غير محدد'}</p>
+              <p style="color: #15803d; margin: 10px 0; font-size: 16px; font-weight: 600; text-align: right; direction: rtl; font-family: 'Cairo';" class="mobile-text">الاسم: ${data.customerName || 'غير محدد'}</p>
+              <p style="color: #15803d; margin: 10px 0; text-align: right; direction: rtl; font-size: 15px; word-break: break-all; font-family: 'Cairo';" class="mobile-text">البريد الإلكتروني: ${data.customerEmail || 'غير محدد'}</p>
             </div>
           </div>
 
           <!-- Service Details -->
           <div style="background: white; border: 2px solid #e5e7eb; border-radius: 15px; padding: 25px; margin: 25px 0; box-shadow: 0 4px 15px rgba(0,0,0,0.05); direction: rtl;">
-            <h3 style="color: #1f2937; margin: 0 0 25px 0; font-size: 18px; font-weight: 700; text-align: center; direction: rtl; border-bottom: 2px solid #e5e7eb; padding-bottom: 15px; font-family: 'IBM Plex Sans Arabic';" class="mobile-text">📦 تفاصيل الخدمة</h3>
+            <h3 style="color: #1f2937; margin: 0 0 25px 0; font-size: 18px; font-weight: 700; text-align: center; direction: rtl; border-bottom: 2px solid #e5e7eb; padding-bottom: 15px; font-family: 'Cairo';" class="mobile-text">📦 تفاصيل الخدمة</h3>
             
             <div style="display: grid; gap: 20px; direction: rtl;">
               <div style="background: #f9fafb; border-radius: 12px; padding: 20px; border: 1px solid #e5e7eb; direction: rtl;">
-                <p style="margin: 0 0 12px 0; color: #374151; font-weight: 700; font-size: 15px; text-align: right; direction: rtl; font-family: 'IBM Plex Sans Arabic';" class="mobile-text">وصف الخدمة:</p>
-                <p style="margin: 0; color: #1f2937; font-size: 16px; text-align: right; direction: rtl; font-family: 'IBM Plex Sans Arabic';" class="mobile-text">${data.serviceDescription || 'خدمة عامة'}</p>
+                <p style="margin: 0 0 12px 0; color: #374151; font-weight: 700; font-size: 15px; text-align: right; direction: rtl; font-family: 'Cairo';" class="mobile-text">وصف الخدمة:</p>
+                <p style="margin: 0; color: #1f2937; font-size: 16px; text-align: right; direction: rtl; font-family: 'Cairo';" class="mobile-text">${data.serviceDescription || 'خدمة عامة'}</p>
               </div>
               
               <div style="background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%); border-radius: 12px; padding: 20px; border-right: 4px solid #22c55e; direction: rtl;">
-                <p style="margin: 0 0 12px 0; color: #15803d; font-weight: 700; font-size: 15px; text-align: right; direction: rtl; font-family: 'IBM Plex Sans Arabic';" class="mobile-text">قيمة الخدمة:</p>
-                <p style="margin: 0; color: #14532d; font-size: 24px; font-weight: 800; text-align: right; direction: rtl; font-family: 'IBM Plex Sans Arabic';">${data.amount || '0'} ${data.currency || 'ر.س'}</p>
+                <p style="margin: 0 0 12px 0; color: #15803d; font-weight: 700; font-size: 15px; text-align: right; direction: rtl; font-family: 'Cairo';" class="mobile-text">قيمة الخدمة:</p>
+                <p style="margin: 0; color: #14532d; font-size: 24px; font-weight: 800; text-align: right; direction: rtl; font-family: 'Cairo';">${data.amount || '0'} ${data.currency || 'ر.س'}</p>
               </div>
             </div>
           </div>
@@ -677,9 +677,9 @@ export default function EmailNotifications() {
           <!-- Total Amount with Enhanced Design -->
           <div style="background: linear-gradient(135deg, #16a34a 0%, #15803d 100%); border-radius: 20px; padding: 30px; margin: 30px 0; text-align: center; box-shadow: 0 15px 35px rgba(22, 163, 74, 0.3); position: relative; overflow: hidden; direction: rtl;">
             <div style="position: absolute; top: -10px; right: -10px; width: 60px; height: 60px; background: rgba(255,255,255,0.1); border-radius: 50%; opacity: 0.7;"></div>
-            <h2 style="color: white; margin: 0 0 15px 0; font-size: 24px; font-weight: 800; text-shadow: 2px 2px 4px rgba(0,0,0,0.3); direction: rtl; font-family: 'IBM Plex Sans Arabic';" class="mobile-text">💰 المبلغ الإجمالي</h2>
+            <h2 style="color: white; margin: 0 0 15px 0; font-size: 24px; font-weight: 800; text-shadow: 2px 2px 4px rgba(0,0,0,0.3); direction: rtl; font-family: 'Cairo';" class="mobile-text">💰 المبلغ الإجمالي</h2>
             <div style="background: rgba(255,255,255,0.15); border-radius: 15px; padding: 20px; display: inline-block; backdrop-filter: blur(10px); border: 2px solid rgba(255,255,255,0.2); direction: rtl;">
-              <span style="color: white; font-size: 32px; font-weight: 900; text-shadow: 2px 2px 4px rgba(0,0,0,0.3); direction: rtl; font-family: 'IBM Plex Sans Arabic';">${data.amount || '0'} ${data.currency || 'ر.س'}</span>
+              <span style="color: white; font-size: 32px; font-weight: 900; text-shadow: 2px 2px 4px rgba(0,0,0,0.3); direction: rtl; font-family: 'Cairo';">${data.amount || '0'} ${data.currency || 'ر.س'}</span>
             </div>
           </div>
 
@@ -689,8 +689,8 @@ export default function EmailNotifications() {
               <div style="background: rgba(255,255,255,0.15); width: 70px; height: 70px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 15px auto; border: 2px solid rgba(255,255,255,0.2); backdrop-filter: blur(5px);">
                 <span style="font-size: 30px;">🏛️</span>
               </div>
-              <h2 style="color: white; margin: 0; font-size: 20px; font-weight: 800; text-shadow: 2px 2px 4px rgba(0,0,0,0.3); direction: rtl; font-family: 'IBM Plex Sans Arabic';" class="mobile-text">معلومات التحويل البنكي</h2>
-              <p style="color: rgba(255,255,255,0.9); margin: 8px 0 0 0; font-size: 14px; direction: rtl; font-family: 'IBM Plex Sans Arabic';" class="mobile-text">نسخ سريع بنقرة واحدة</p>
+              <h2 style="color: white; margin: 0; font-size: 20px; font-weight: 800; text-shadow: 2px 2px 4px rgba(0,0,0,0.3); direction: rtl; font-family: 'Cairo';" class="mobile-text">معلومات التحويل البنكي</h2>
+              <p style="color: rgba(255,255,255,0.9); margin: 8px 0 0 0; font-size: 14px; direction: rtl; font-family: 'Cairo';" class="mobile-text">نسخ سريع بنقرة واحدة</p>
             </div>
 
             <!-- Compact Bank Card Design -->
@@ -700,8 +700,8 @@ export default function EmailNotifications() {
               <div style="display: flex; align-items: center; justify-content: center; gap: 15px; margin-bottom: 20px; padding: 15px; background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%); border-radius: 12px; direction: rtl;">
                 <div style="background: rgba(255,255,255,0.2); width: 45px; height: 45px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 20px;">🏛️</div>
                 <div style="text-align: right; direction: rtl;">
-                  <h3 style="color: white; margin: 0; font-size: 18px; font-weight: 800; font-family: 'IBM Plex Sans Arabic';">مصرف الراجحي</h3>
-                  <p style="color: rgba(255,255,255,0.9); margin: 2px 0 0 0; font-size: 12px; font-family: 'IBM Plex Sans Arabic';">Al Rajhi Bank</p>
+                  <h3 style="color: white; margin: 0; font-size: 18px; font-weight: 800; font-family: 'Cairo';">مصرف الراجحي</h3>
+                  <p style="color: rgba(255,255,255,0.9); margin: 2px 0 0 0; font-size: 12px; font-family: 'Cairo';">Al Rajhi Bank</p>
                 </div>
               </div>
 
@@ -710,11 +710,11 @@ export default function EmailNotifications() {
                 <div style="display: flex; align-items: center; justify-content: space-between; direction: rtl;">
                   <div style="display: flex; align-items: center; gap: 10px; direction: rtl;">
                     <div style="background: #1e40af; color: white; width: 35px; height: 35px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: bold;">👤</div>
-                    <span style="color: #374151; font-size: 14px; font-weight: 600; font-family: 'IBM Plex Sans Arabic';">اسم صاحب الحساب</span>
+                    <span style="color: #374151; font-size: 14px; font-weight: 600; font-family: 'Cairo';">اسم صاحب الحساب</span>
                   </div>
                   <div style="text-align: left; direction: rtl;">
-                    <p style="margin: 0; color: #1e293b; font-size: 15px; font-weight: 700; text-align: right; direction: rtl; font-family: 'IBM Plex Sans Arabic';">شركة علي صالح الشهري القابضة</p>
-                    <p style="margin: 2px 0 0 0; color: #64748b; font-size: 11px; text-align: right; direction: rtl; font-family: 'IBM Plex Sans Arabic';">Ali Saleh Al-Shehri Holding Company</p>
+                    <p style="margin: 0; color: #1e293b; font-size: 15px; font-weight: 700; text-align: right; direction: rtl; font-family: 'Cairo';">شركة علي صالح الشهري القابضة</p>
+                    <p style="margin: 2px 0 0 0; color: #64748b; font-size: 11px; text-align: right; direction: rtl; font-family: 'Cairo';">Ali Saleh Al-Shehri Holding Company</p>
                   </div>
                 </div>
               </div>
@@ -728,13 +728,13 @@ export default function EmailNotifications() {
                     <div style="display: flex; align-items: center; gap: 8px; direction: rtl;">
                       <div style="background: #3b82f6; color: white; width: 30px; height: 30px; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: bold;">رح</div>
                       <div style="direction: rtl; text-align: right;">
-                        <p style="margin: 0; color: #374151; font-size: 12px; font-weight: 600; font-family: 'IBM Plex Sans Arabic';">رقم الحساب</p>
-                        <p style="margin: 1px 0 0 0; color: #64748b; font-size: 10px; font-family: 'IBM Plex Sans Arabic';">Account Number</p>
+                        <p style="margin: 0; color: #374151; font-size: 12px; font-weight: 600; font-family: 'Cairo';">رقم الحساب</p>
+                        <p style="margin: 1px 0 0 0; color: #64748b; font-size: 10px; font-family: 'Cairo';">Account Number</p>
                       </div>
                     </div>
                     <div style="text-align: left; direction: ltr;" class="mobile-copy-btn">
                       <p style="margin: 0; color: #1e293b; font-size: 15px; font-weight: bold; font-family: 'Courier New', monospace; direction: ltr; background: #f1f5f9; padding: 6px 10px; border-radius: 6px;">161000010006086071040</p>
-                      <button onclick="copyToClipboard('161000010006086071040', 'copyAccBtn')" id="copyAccBtn" class="copy-btn" style="margin-top: 6px; font-size: 11px; padding: 6px 12px; font-family: 'IBM Plex Sans Arabic';">
+                      <button onclick="copyToClipboard('161000010006086071040', 'copyAccBtn')" id="copyAccBtn" class="copy-btn" style="margin-top: 6px; font-size: 11px; padding: 6px 12px; font-family: 'Cairo';">
                         📄 نسخ
                       </button>
                     </div>
@@ -747,13 +747,13 @@ export default function EmailNotifications() {
                     <div style="display: flex; align-items: center; gap: 8px; direction: rtl;">
                       <div style="background: #1e40af; color: white; width: 30px; height: 30px; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: bold;">IB</div>
                       <div style="direction: rtl; text-align: right;">
-                        <p style="margin: 0; color: #374151; font-size: 12px; font-weight: 600; font-family: 'IBM Plex Sans Arabic';">الآيبان</p>
-                        <p style="margin: 1px 0 0 0; color: #64748b; font-size: 10px; font-family: 'IBM Plex Sans Arabic';">IBAN</p>
+                        <p style="margin: 0; color: #374151; font-size: 12px; font-weight: 600; font-family: 'Cairo';">الآيبان</p>
+                        <p style="margin: 1px 0 0 0; color: #64748b; font-size: 10px; font-family: 'Cairo';">IBAN</p>
                       </div>
                     </div>
                     <div style="text-align: left; direction: ltr;" class="mobile-copy-btn">
                       <p style="margin: 0; color: #1e293b; font-size: 15px; font-weight: bold; font-family: 'Courier New', monospace; direction: ltr; background: #f0f9ff; padding: 6px 10px; border-radius: 6px;">SA1980000161608016071040</p>
-                      <button onclick="copyToClipboard('SA1980000161608016071040', 'copyIbanBtn')" id="copyIbanBtn" class="copy-btn" style="margin-top: 6px; font-size: 11px; padding: 6px 12px; font-family: 'IBM Plex Sans Arabic';">
+                      <button onclick="copyToClipboard('SA1980000161608016071040', 'copyIbanBtn')" id="copyIbanBtn" class="copy-btn" style="margin-top: 6px; font-size: 11px; padding: 6px 12px; font-family: 'Cairo';">
                         📄 نسخ
                       </button>
                     </div>
@@ -764,7 +764,7 @@ export default function EmailNotifications() {
 
               <!-- Copy All Button -->
               <div style="margin: 15px 0 10px 0; text-align: center;">
-                <button id="copyFullBtn" onclick="copyFullAccountInfo()" class="copy-btn copy-tooltip" style="font-size: 13px; padding: 10px 20px; font-family: 'IBM Plex Sans Arabic'; background: linear-gradient(135deg, #059669 0%, #047857 100%);" class="mobile-copy-btn">
+                <button id="copyFullBtn" onclick="copyFullAccountInfo()" class="copy-btn copy-tooltip" style="font-size: 13px; padding: 10px 20px; font-family: 'Cairo'; background: linear-gradient(135deg, #059669 0%, #047857 100%);" class="mobile-copy-btn">
                   📋 نسخ جميع البيانات البنكية
                 </button>
               </div>
@@ -773,9 +773,9 @@ export default function EmailNotifications() {
               <div style="background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%); border: 1px solid #bfdbfe; border-radius: 8px; padding: 12px; margin-top: 15px; direction: rtl; text-align: center;">
                 <div style="display: flex; align-items: center; justify-content: center; gap: 8px; margin-bottom: 8px; direction: rtl;">
                   <div style="background: #1e40af; color: white; width: 25px; height: 25px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px;">ℹ️</div>
-                  <span style="color: #1e40af; font-size: 12px; font-weight: 700; font-family: 'IBM Plex Sans Arabic';">تعليمات التحويل البنكي</span>
+                  <span style="color: #1e40af; font-size: 12px; font-weight: 700; font-family: 'Cairo';">تعليمات التحويل البنكي</span>
                 </div>
-                <ul style="color: #1e3a8a; font-size: 11px; margin: 0; padding: 0; list-style: none; line-height: 1.6; font-family: 'IBM Plex Sans Arabic';">
+                <ul style="color: #1e3a8a; font-size: 11px; margin: 0; padding: 0; list-style: none; line-height: 1.6; font-family: 'Cairo';">
                   <li style="margin-bottom: 4px;">• استخدم رقم الحساب للتحويلات المحلية</li>
                   <li style="margin-bottom: 4px;">• استخدم الآيبان للتحويلات الدولية</li>
                   <li style="margin-bottom: 4px;">• احتفظ بإيصال التحويل للمراجعة</li>
@@ -789,11 +789,11 @@ export default function EmailNotifications() {
               <div style="background: rgba(255,255,255,0.15); width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 10px auto; border: 2px solid rgba(255,255,255,0.2);">
                 <span style="font-size: 20px;">📱</span>
               </div>
-              <p style="margin: 0 0 8px 0; color: white; font-size: 14px; font-weight: 700; direction: rtl; font-family: 'IBM Plex Sans Arabic';" class="mobile-text">أرسل إيصال التحويل فوراً</p>
+              <p style="margin: 0 0 8px 0; color: white; font-size: 14px; font-weight: 700; direction: rtl; font-family: 'Cairo';" class="mobile-text">أرسل إيصال التحويل فوراً</p>
               <div style="background: rgba(255,255,255,0.2); border-radius: 8px; padding: 8px; display: inline-block; backdrop-filter: blur(5px);">
                 <p style="margin: 0; color: white; font-size: 18px; font-weight: bold; direction: rtl; font-family: 'Courier New', monospace;" class="mobile-text">0500776343</p>
               </div>
-              <p style="margin: 8px 0 0 0; color: rgba(255,255,255,0.9); font-size: 10px; direction: rtl; font-family: 'IBM Plex Sans Arabic';" class="mobile-text">WhatsApp Business • متاح 24/7</p>
+              <p style="margin: 8px 0 0 0; color: rgba(255,255,255,0.9); font-size: 10px; direction: rtl; font-family: 'Cairo';" class="mobile-text">WhatsApp Business • متاح 24/7</p>
             </div>
 
             <!-- Security & Verification Badge -->
@@ -801,8 +801,8 @@ export default function EmailNotifications() {
               <div style="display: flex; align-items: center; justify-content: center; gap: 8px; direction: rtl;">
                 <div style="background: #dc2626; color: white; width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 14px;">🔒</div>
                 <div style="direction: rtl; text-align: center;">
-                  <p style="margin: 0; color: #dc2626; font-size: 12px; font-weight: 700; font-family: 'IBM Plex Sans Arabic';">تحويل مصرفي آمن ومشفر</p>
-                  <p style="margin: 2px 0 0 0; color: #991b1b; font-size: 10px; font-family: 'IBM Plex Sans Arabic';">Secure & Encrypted Banking Transfer</p>
+                  <p style="margin: 0; color: #dc2626; font-size: 12px; font-weight: 700; font-family: 'Cairo';">تحويل مصرفي آمن ومشفر</p>
+                  <p style="margin: 2px 0 0 0; color: #991b1b; font-size: 10px; font-family: 'Cairo';">Secure & Encrypted Banking Transfer</p>
                 </div>
               </div>
             </div>
@@ -812,8 +812,8 @@ export default function EmailNotifications() {
 
           <!-- Important Notes -->
           <div style="background: linear-gradient(135deg, #fef3f2 0%, #fee2e2 100%); border-right: 4px solid #ef4444; border-radius: 15px; padding: 20px; margin: 25px 0; direction: rtl; text-align: right; box-shadow: 0 4px 15px rgba(239, 68, 68, 0.1);">
-            <h4 style="color: #dc2626; margin: 0 0 15px 0; font-size: 16px; font-weight: 700; text-align: right; direction: rtl; font-family: 'IBM Plex Sans Arabic';" class="mobile-text">⚠️ تعليمات مهمة:</h4>
-            <ul style="color: #7f1d1d; margin: 0; padding-right: 20px; line-height: 2; text-align: right; direction: rtl; list-style-position: inside; font-size: 14px; font-family: 'IBM Plex Sans Arabic';" class="mobile-text">
+            <h4 style="color: #dc2626; margin: 0 0 15px 0; font-size: 16px; font-weight: 700; text-align: right; direction: rtl; font-family: 'Cairo';" class="mobile-text">⚠️ تعليمات مهمة:</h4>
+            <ul style="color: #7f1d1d; margin: 0; padding-right: 20px; line-height: 2; text-align: right; direction: rtl; list-style-position: inside; font-size: 14px; font-family: 'Cairo';" class="mobile-text">
               <li style="text-align: right; direction: rtl; margin-bottom: 8px; font-weight: 600;">⏰ يرجى سداد الفاتورة في الموعد المحدد</li>
               <li style="text-align: right; direction: rtl; margin-bottom: 8px; font-weight: bold; color: #dc2626;">⚠️ لا يتم اعتماد أي طلب إلا بإيصال الحساب البنكي</li>
               <li style="text-align: right; direction: rtl; margin-bottom: 8px; font-weight: 600;">📱 يرجى إرسال إيصال التحويل على الواتساب فور السداد</li>
@@ -827,11 +827,11 @@ export default function EmailNotifications() {
               <div style="background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%); width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 15px auto;">
                 <span style="color: white; font-size: 24px;">🙏</span>
               </div>
-              <p style="color: #475569; margin: 0 0 8px 0; font-size: 16px; font-weight: 600; direction: rtl; font-family: 'IBM Plex Sans Arabic';" class="mobile-text">شكراً لثقتك في خدماتنا</p>
-              <p style="color: #64748b; margin: 0; font-size: 14px; direction: rtl; font-family: 'IBM Plex Sans Arabic';" class="mobile-text">نحن نقدر اختيارك لوكالة ماستر إيدو باث</p>
+              <p style="color: #475569; margin: 0 0 8px 0; font-size: 16px; font-weight: 600; direction: rtl; font-family: 'Cairo';" class="mobile-text">شكراً لثقتك في خدماتنا</p>
+              <p style="color: #64748b; margin: 0; font-size: 14px; direction: rtl; font-family: 'Cairo';" class="mobile-text">نحن نقدر اختيارك لوكالة ماستر إيدو باث</p>
             </div>
             <div style="background: #f1f5f9; border-radius: 8px; padding: 12px; direction: rtl;">
-              <p style="color: #94a3b8; font-size: 12px; margin: 0; direction: rtl; font-family: 'IBM Plex Sans Arabic';" class="mobile-text">© ${new Date().getFullYear()} وكالة ماستر إيدو باث - جميع الحقوق محفوظة</p>
+              <p style="color: #94a3b8; font-size: 12px; margin: 0; direction: rtl; font-family: 'Cairo';" class="mobile-text">© ${new Date().getFullYear()} وكالة ماستر إيدو باث - جميع الحقوق محفوظة</p>
             </div>
           </div>
         </div>
@@ -961,11 +961,11 @@ export default function EmailNotifications() {
           
           <!-- Mobile-Optimized Corporate Name -->
           <div class="mobile-card" style="background: rgba(255,255,255,0.08); backdrop-filter: blur(20px); border: 2px solid rgba(255,255,255,0.1); border-radius: 15px; padding: 18px; margin: 0 auto; max-width: 90%; box-shadow: 0 8px 20px rgba(0,0,0,0.2);">
-            <h1 class="mobile-header" style="margin: 0 0 8px 0; font-size: 22px; font-weight: 900; text-shadow: 2px 2px 6px rgba(0,0,0,0.5); direction: rtl; font-family: 'IBM Plex Sans Arabic';">وكالة ماستر إيدو باث</h1>
+            <h1 class="mobile-header" style="margin: 0 0 8px 0; font-size: 22px; font-weight: 900; text-shadow: 2px 2px 6px rgba(0,0,0,0.5); direction: rtl; font-family: 'Cairo';">وكالة ماستر إيدو باث</h1>
             
             <div style="background: linear-gradient(90deg, transparent, rgba(22, 163, 74, 0.6), rgba(21, 128, 61, 0.6), transparent); height: 2px; width: 60px; margin: 10px auto; border-radius: 1px; box-shadow: 0 2px 6px rgba(22, 163, 74, 0.3);"></div>
             
-            <h2 class="mobile-subheader" style="color: rgba(255,255,255,0.95); margin: 6px 0 10px 0; font-size: 14px; font-weight: 700; direction: rtl; font-family: 'IBM Plex Sans Arabic';">للخدمات التعليمية والتدريب المتقدم</h2>
+            <h2 class="mobile-subheader" style="color: rgba(255,255,255,0.95); margin: 6px 0 10px 0; font-size: 14px; font-weight: 700; direction: rtl; font-family: 'Cairo';">للخدمات التعليمية والتدريب المتقدم</h2>
             
             <div style="background: rgba(22, 163, 74, 0.15); border-radius: 10px; padding: 8px; margin: 10px 0; border: 1px solid rgba(22, 163, 74, 0.25);">
               <span class="mobile-text" style="color: #34d399; font-size: 12px; font-weight: 800; direction: rtl;">📋 سند دفع رسمي</span>
@@ -1118,14 +1118,14 @@ export default function EmailNotifications() {
         
         <!-- Mobile-Optimized Corporate Name -->
         <div class="mobile-card" style="background: rgba(255,255,255,0.08); backdrop-filter: blur(20px); border: 2px solid rgba(255,255,255,0.1); border-radius: 18px; padding: 20px; margin: 0 auto; max-width: 90%; box-shadow: 0 8px 25px rgba(0,0,0,0.2);">
-          <h1 class="mobile-header" style="margin: 0 0 10px 0; font-size: 24px; font-weight: 900; text-shadow: 2px 2px 6px rgba(0,0,0,0.5); direction: rtl; font-family: 'IBM Plex Sans Arabic'; letter-spacing: 0.5px;">وكالة ماستر إيدو باث</h1>
+          <h1 class="mobile-header" style="margin: 0 0 10px 0; font-size: 24px; font-weight: 900; text-shadow: 2px 2px 6px rgba(0,0,0,0.5); direction: rtl; font-family: 'Cairo'; letter-spacing: 0.5px;">وكالة ماستر إيدو باث</h1>
           
           <div style="background: linear-gradient(90deg, transparent, rgba(16, 185, 129, 0.6), rgba(5, 150, 105, 0.6), transparent); height: 3px; width: 80px; margin: 12px auto; border-radius: 2px; box-shadow: 0 2px 8px rgba(16, 185, 129, 0.3);"></div>
           
-          <h2 class="mobile-subheader" style="color: rgba(255,255,255,0.95); margin: 8px 0 12px 0; font-size: 16px; font-weight: 700; direction: rtl; font-family: 'IBM Plex Sans Arabic'; text-shadow: 2px 2px 4px rgba(0,0,0,0.3);">للخدمات التعليمية والتدريب المتقدم</h2>
+          <h2 class="mobile-subheader" style="color: rgba(255,255,255,0.95); margin: 8px 0 12px 0; font-size: 16px; font-weight: 700; direction: rtl; font-family: 'Cairo'; text-shadow: 2px 2px 4px rgba(0,0,0,0.3);">للخدمات التعليمية والتدريب المتقدم</h2>
           
           <div style="background: rgba(255,255,255,0.1); border-radius: 12px; padding: 12px; margin: 12px 0; border: 1px solid rgba(255,255,255,0.15);">
-            <p class="mobile-text" style="color: rgba(255,255,255,0.9); margin: 0; font-size: 13px; direction: rtl; font-family: 'IBM Plex Sans Arabic'; font-weight: 500;">Master Edu Path Educational Services Agency</p>
+            <p class="mobile-text" style="color: rgba(255,255,255,0.9); margin: 0; font-size: 13px; direction: rtl; font-family: 'Cairo'; font-weight: 500;">Master Edu Path Educational Services Agency</p>
           </div>
           
           <!-- Welcome Message -->
@@ -1247,11 +1247,11 @@ export default function EmailNotifications() {
           
           <!-- Mobile-Optimized Corporate Name -->
           <div class="mobile-card" style="background: rgba(255,255,255,0.08); backdrop-filter: blur(20px); border: 2px solid rgba(255,255,255,0.1); border-radius: 18px; padding: 20px; margin: 0 auto; max-width: 90%; box-shadow: 0 8px 25px rgba(0,0,0,0.2);">
-            <h1 class="mobile-header" style="margin: 0 0 10px 0; font-size: 22px; font-weight: 900; text-shadow: 2px 2px 6px rgba(0,0,0,0.5); direction: rtl; font-family: 'IBM Plex Sans Arabic';">وكالة ماستر إيدو باث</h1>
+            <h1 class="mobile-header" style="margin: 0 0 10px 0; font-size: 22px; font-weight: 900; text-shadow: 2px 2px 6px rgba(0,0,0,0.5); direction: rtl; font-family: 'Cairo';">وكالة ماستر إيدو باث</h1>
             
             <div style="background: linear-gradient(90deg, transparent, rgba(255, 107, 107, 0.6), rgba(238, 90, 36, 0.6), transparent); height: 3px; width: 70px; margin: 12px auto; border-radius: 2px; box-shadow: 0 2px 8px rgba(255, 107, 107, 0.3);"></div>
             
-            <h2 class="mobile-subheader" style="margin: 8px 0 15px 0; font-size: 15px; font-weight: 700; direction: rtl; font-family: 'IBM Plex Sans Arabic'; text-shadow: 2px 2px 4px rgba(0,0,0,0.3);">للخدمات التعليمية والتدريب المتقدم</h2>
+            <h2 class="mobile-subheader" style="margin: 8px 0 15px 0; font-size: 15px; font-weight: 700; direction: rtl; font-family: 'Cairo'; text-shadow: 2px 2px 4px rgba(0,0,0,0.3);">للخدمات التعليمية والتدريب المتقدم</h2>
             
             <div style="background: rgba(255,255,255,0.1); border-radius: 12px; padding: 10px; margin: 12px 0; border: 1px solid rgba(255,255,255,0.15);">
               <p class="mobile-text" style="margin: 0; font-size: 11px; opacity: 0.9; direction: rtl; font-weight: 500;">Master Edu Path Educational Services Agency</p>

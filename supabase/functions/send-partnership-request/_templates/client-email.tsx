@@ -38,7 +38,7 @@ export const ClientEmail = ({
         <style>{`
           @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Arabic:wght@400;600;700&display=swap');
           * { 
-            font-family: 'Noto Sans Arabic', 'Segoe UI', Tahoma, Arial, sans-serif;
+            font-family: 'Almarai', 'Segoe UI', Tahoma, Arial, sans-serif;
             -webkit-font-smoothing: antialiased;
             -moz-osx-font-smoothing: grayscale;
           }
@@ -305,7 +305,7 @@ export default ClientEmail;
 // Premium Styles
 const main = {
   backgroundColor: '#f8f9fc',
-  fontFamily: "'Noto Sans Arabic', 'Segoe UI', Tahoma, Arial, sans-serif",
+  fontFamily: "'Almarai', 'Segoe UI', Tahoma, Arial, sans-serif",
   direction: 'rtl' as const,
   padding: '40px 20px',
 };
