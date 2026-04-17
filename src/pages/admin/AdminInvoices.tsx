@@ -75,6 +75,20 @@ export default function AdminInvoices() {
     const [items, payments] = await Promise.all([InvoiceService.getItems(inv.id), InvoiceService.getPayments(inv.id)]);
     openInvoicePrintWindow(inv, items, payments);
   };
+  const handleSend = async (inv: Invoice) => {
+    if (!inv.customer_email) { toast.error('لا يوجد بريد إلكتروني للعميل'); return; }
+    setSendingId(inv.id);
+    try {
+      const { error } = await supabase.functions.invoke('send-invoice-email', { body: { invoice_id: inv.id } });
+      if (error) throw error;
+      toast.success('تم إرسال الفاتورة', { description: inv.customer_email });
+      load();
+    } catch (e: any) {
+      toast.error('فشل الإرسال', { description: e.message });
+    } finally {
+      setSendingId(null);
+    }
+  };
 
   return (
     <AdminLayout>
