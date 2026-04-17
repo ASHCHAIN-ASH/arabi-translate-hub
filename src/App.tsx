@@ -331,9 +331,7 @@ const App = () => (
               </SimpleProtectedRoute>
             } />
             <Route path="/contracts" element={
-              <SimpleProtectedRoute requiredRole="client">
-                <ClientContracts />
-              </SimpleProtectedRoute>
+              <Navigate to="/client/contracts" replace />
             } />
             <Route path="/client/contracts" element={
               <SimpleProtectedRoute requiredRole="client">
@@ -341,9 +339,7 @@ const App = () => (
               </SimpleProtectedRoute>
             } />
             <Route path="/contracts/:id" element={
-              <SimpleProtectedRoute requiredRole="client">
-                <ClientContractApproval />
-              </SimpleProtectedRoute>
+              <Navigate to="/client/contracts" replace />
             } />
             <Route path="/client/contracts/:id" element={
               <SimpleProtectedRoute requiredRole="client">
