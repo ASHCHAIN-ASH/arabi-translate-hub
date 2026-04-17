@@ -124,7 +124,7 @@ const AdminServiceOrders = () => {
       if (customerIds.length > 0) {
         const { data: customers } = await supabase
           .from('customers')
-          .select('id, name, email, phone, company')
+          .select('id, name, email, phone, company, customer_code')
           .in('id', customerIds);
         if (customers) {
           customers.forEach(c => { customersMap[c.id] = c; });
