@@ -10,9 +10,10 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import {
   ArrowRight, FileText, Send, Clock, ShieldCheck, Building2,
-  User, DollarSign, Calendar, Printer, RefreshCw,
+  User, DollarSign, Calendar, Printer, Download,
 } from "lucide-react";
 import { toast } from "sonner";
+import { supabase } from "@/integrations/supabase/client";
 import {
   getContract, getContractTimeline, getContractSignatures,
   generateContractContent, sendContractToClient, updateContractStatus,
@@ -32,16 +33,35 @@ const AdminContractDetails = () => {
   async function load() {
     setLoading(true);
     try {
-      const [contract, signatures, timeline] = await Promise.all([
-        getContract(id), getContractSignatures(id), getContractTimeline(id),
+      let contract = await getContract(id);
+      // Auto-generate content if missing — admin no longer needs a manual button
+      if (contract && (!contract.content || contract.content.trim().length < 50)) {
+        try {
+          await generateContractContent(id);
+          contract = await getContract(id);
+        } catch (e) { console.error("auto-gen content failed", e); }
+      }
+      const [signatures, timeline] = await Promise.all([
+        getContractSignatures(id), getContractTimeline(id),
       ]);
       setC(contract); setSigs(signatures); setTl(timeline);
     } finally { setLoading(false); }
   }
 
-  async function regenerate() {
-    try { await generateContractContent(id); toast.success("تم تحديث محتوى العقد"); load(); }
-    catch (e: any) { toast.error(e.message); }
+  async function downloadPdf() {
+    try {
+      toast.loading("جاري تجهيز نسخة PDF…", { id: "pdf" });
+      const { data, error } = await supabase.functions.invoke("generate-contract-pdf", {
+        body: { contract_id: id },
+      });
+      if (error) throw error;
+      const url = (data as any)?.signed_url;
+      if (!url) throw new Error("تعذّر توليد الرابط");
+      window.open(url, "_blank");
+      toast.success("تم تجهيز العقد", { id: "pdf" });
+    } catch (e: any) {
+      toast.error(e.message || "تعذّر تجهيز PDF", { id: "pdf" });
+    }
   }
 
   const fmtDate = (d?: string | null) =>
@@ -76,8 +96,8 @@ const AdminContractDetails = () => {
                 {(Object.keys(STATUS_LABELS) as ContractStatus[]).map(k => <SelectItem key={k} value={k}>{STATUS_LABELS[k]}</SelectItem>)}
               </SelectContent>
             </Select>
-            <Button size="sm" variant="outline" onClick={regenerate}><RefreshCw className="h-4 w-4 ml-1" /> توليد المحتوى</Button>
             {c.status === "draft" && <Button size="sm" onClick={async () => { await sendContractToClient(c.id); toast.success("تم الإرسال"); load(); }}><Send className="h-4 w-4 ml-1" /> إرسال للعميل</Button>}
+            <Button size="sm" variant="outline" onClick={downloadPdf}><Download className="h-4 w-4 ml-1" /> تحميل PDF</Button>
             <Button size="sm" variant="outline" onClick={() => window.print()}><Printer className="h-4 w-4 ml-1" /> طباعة</Button>
           </div>
         </div>
@@ -96,9 +116,23 @@ const AdminContractDetails = () => {
             <Card>
               <CardHeader className="border-b"><CardTitle className="flex items-center gap-2"><FileText className="h-5 w-5" /> نص العقد</CardTitle></CardHeader>
               <CardContent className="p-6">
-                <ScrollArea className="max-h-[60vh] pr-2">
-                  <article className="prose prose-sm max-w-none rtl-prose prose-headings:text-foreground prose-p:text-foreground/90 prose-strong:text-foreground prose-li:text-foreground/90 prose-hr:border-border">
-                    <ReactMarkdown>{c.content || "لم يُوَلَّد المحتوى بعد. اضغط على زر «توليد المحتوى»."}</ReactMarkdown>
+                <ScrollArea className="max-h-[60vh]" dir="rtl">
+                  <article
+                    dir="rtl"
+                    lang="ar"
+                    className="prose prose-sm sm:prose-base max-w-none text-right
+                      [&_*]:!text-right [&_*]:!direction-rtl
+                      prose-headings:text-foreground prose-headings:font-bold prose-headings:mt-6 prose-headings:mb-3
+                      prose-h1:text-2xl prose-h1:border-b prose-h1:pb-2
+                      prose-h2:text-lg prose-h2:text-primary
+                      prose-p:text-foreground/90 prose-p:leading-loose
+                      prose-strong:text-foreground prose-strong:font-bold
+                      prose-li:text-foreground/90 prose-li:my-1
+                      prose-ol:pr-6 prose-ul:pr-6
+                      prose-hr:border-border prose-hr:my-6"
+                    style={{ fontFamily: "'IBM Plex Sans Arabic', 'Tajawal', system-ui, sans-serif" }}
+                  >
+                    <ReactMarkdown>{c.content || "جاري تحضير محتوى العقد…"}</ReactMarkdown>
                   </article>
                 </ScrollArea>
               </CardContent>
