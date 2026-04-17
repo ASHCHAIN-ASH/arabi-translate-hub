@@ -247,9 +247,12 @@ const AdminServiceOrderDetails = () => {
     const content = newMessage.trim();
     setNewMessage('');
     try {
-      await (supabase.from('service_order_messages') as any).insert([{
+      const { data: inserted } = await (supabase.from('service_order_messages') as any).insert([{
         order_id: order.id, sender_id: me, sender_type: 'admin', content,
-      }]);
+      }]).select().single();
+      if (inserted) {
+        setMessages((prev) => prev.some((m) => m.id === inserted.id) ? prev : [...prev, inserted]);
+      }
       if (order.user_id) {
         await (supabase.from('user_notifications') as any).insert([{
           user_id: order.user_id, title: '💬 رسالة جديدة',
