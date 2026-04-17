@@ -72,6 +72,7 @@ import AdminFinancial from "./pages/admin/AdminFinancial";
 import AdminUsers from "./pages/admin/AdminUsers";
 import AdminCustomers from "./pages/admin/AdminCustomers";
 import AdminCustomerDetails from "./pages/admin/AdminCustomerDetails";
+import AdminCustomerEmail from "./pages/admin/AdminCustomerEmail";
 import AdminTickets from "./pages/admin/AdminTickets";
 import AdminServiceOrders from "./pages/admin/AdminServiceOrders";
 import AdminServiceOrderDetails from "./pages/admin/AdminServiceOrderDetails";
@@ -361,6 +362,11 @@ const App = () => (
             <Route path="/adminmaster/customers/:id" element={
               <SimpleProtectedRoute adminOnly>
                 <AdminCustomerDetails />
+              </SimpleProtectedRoute>
+            } />
+            <Route path="/adminmaster/customers/:id/email" element={
+              <SimpleProtectedRoute adminOnly>
+                <AdminCustomerEmail />
               </SimpleProtectedRoute>
             } />
             <Route path="/adminmaster/add-user" element={

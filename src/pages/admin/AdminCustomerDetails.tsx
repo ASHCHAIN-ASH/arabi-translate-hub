@@ -335,7 +335,7 @@ const AdminCustomerDetails: React.FC = () => {
                   <ActionBtn icon={MessageSquare} label="بدء محادثة داخلية" onClick={startChat} color="text-primary" />
                   <ActionBtn icon={Bell} label="إرسال إشعار" onClick={() => setNotifyOpen(true)} color="text-amber-600" />
                   <ActionBtn icon={MessageCircle} label="واتساب" onClick={openWhatsApp} color="text-emerald-600" />
-                  <ActionBtn icon={Send} label="بريد إلكتروني" onClick={openEmail} color="text-blue-600" />
+                  <ActionBtn icon={Send} label="بريد إلكتروني" onClick={() => navigate(`/adminmaster/customers/${customer.id}/email`)} color="text-blue-600" />
                 </ActionGroup>
 
                 <ActionGroup title="إدارة الحساب">
