@@ -74,10 +74,18 @@ export default function AdminInvoiceDetails() {
     return () => { supabase.removeChannel(ch); };
   }, [id]);
 
+  const [sending, setSending] = useState(false);
   const handleSend = async () => {
     if (!invoice) return;
-    try { await InvoiceService.markSent(invoice.id); toast.success('تم تحديد كمرسلة'); }
-    catch (e: any) { toast.error('فشل', { description: e.message }); }
+    if (!invoice.customer_email) { toast.error('لا يوجد بريد إلكتروني للعميل'); return; }
+    setSending(true);
+    try {
+      const { error } = await supabase.functions.invoke('send-invoice-email', { body: { invoice_id: invoice.id } });
+      if (error) throw error;
+      toast.success(`تم إرسال الفاتورة إلى ${invoice.customer_email}`);
+      load();
+    } catch (e: any) { toast.error('فشل الإرسال', { description: e.message }); }
+    finally { setSending(false); }
   };
 
   const handleDelete = async () => {
