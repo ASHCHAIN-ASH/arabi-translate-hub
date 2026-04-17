@@ -415,12 +415,24 @@ const AdminCustomerDetails: React.FC = () => {
         </div>
 
         {/* Tabs */}
-        <Tabs defaultValue="orders" className="w-full">
+        <Tabs defaultValue="timeline" className="w-full">
           <TabsList>
+            <TabsTrigger value="timeline" className="gap-2"><History className="w-4 h-4" />النشاط</TabsTrigger>
             <TabsTrigger value="orders" className="gap-2"><ShoppingCart className="w-4 h-4" />الطلبات ({orders.length})</TabsTrigger>
             <TabsTrigger value="invoices" className="gap-2"><FileText className="w-4 h-4" />الفواتير ({invoices.length})</TabsTrigger>
             <TabsTrigger value="chats" className="gap-2"><MessageSquare className="w-4 h-4" />المحادثات ({conversations.length})</TabsTrigger>
           </TabsList>
+
+          <TabsContent value="timeline">
+            <Card><CardContent className="p-6">
+              <CustomerTimeline
+                customer={customer}
+                orders={orders}
+                invoices={invoices}
+                conversations={conversations}
+              />
+            </CardContent></Card>
+          </TabsContent>
 
           <TabsContent value="orders">
             <Card><CardContent className="p-0">
