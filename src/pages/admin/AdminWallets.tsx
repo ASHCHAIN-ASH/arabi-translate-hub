@@ -180,7 +180,7 @@ const AdminWallets: React.FC = () => {
         </div>
 
         {/* Tabs */}
-        <Tabs defaultValue="topups">
+        <Tabs defaultValue="topups" dir="rtl">
           <TabsList className="grid grid-cols-3 w-full sm:w-[500px]">
             <TabsTrigger value="topups" className="gap-2">
               <Receipt className="w-4 h-4" />
