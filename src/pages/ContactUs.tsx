@@ -697,27 +697,6 @@ const ContactUs = () => {
                                     واتساب
                                   </a>
                                 </div>
-                                
-                                <div className="bg-secondary/5 rounded-lg p-2 sm:p-3 border border-secondary/20">
-                                  <div className="flex items-center justify-between mb-1 sm:mb-2">
-                                    <a 
-                                      href="tel:0559600824" 
-                                      className="text-secondary hover:text-primary transition-colors font-medium text-sm sm:text-base"
-                                      dir="ltr"
-                                    >
-                                      0559600824
-                                    </a>
-                                    <span className="text-xs sm:text-sm font-semibold text-secondary">الرقم الثانوي</span>
-                                  </div>
-                                  <a 
-                                    href="https://wa.me/9660559600824" 
-                                    target="_blank" 
-                                    rel="noopener noreferrer"
-                                    className="text-green-600 hover:text-green-700 transition-colors font-medium flex items-center gap-1 sm:gap-2 text-xs sm:text-sm"
-                                  >
-                                    <MessageSquare className="w-3 h-3 sm:w-4 sm:h-4" />
-                                    واتساب
-                                  </a>
                                 </div>
                               </div>
                             ) : (

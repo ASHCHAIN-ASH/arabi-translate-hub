@@ -437,7 +437,6 @@ const TermsOfService = () => {
             <div className="flex flex-wrap justify-center gap-4 text-sm text-primary">
               <span>📧 info@masteredupath.com</span>
               <span>📞 0559600824</span>
-              <span>📞 0559600824</span>
             </div>
           </motion.div>
         </div>

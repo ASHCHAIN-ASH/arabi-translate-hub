@@ -934,8 +934,7 @@ const FAQ = () => {
                 <h3 className="font-semibold text-primary mb-2">اتصل بنا</h3>
                 <p className="text-sm text-muted-foreground mb-3">متاح 24/7</p>
                 <div className="space-y-1 text-sm">
-                  <p>الأساسي: 0559600824</p>
-                  <p>الثانوي: 0559600824</p>
+                  <p>0559600824</p>
                 </div>
               </motion.div>
 
@@ -949,8 +948,7 @@ const FAQ = () => {
                 <h3 className="font-semibold text-primary mb-2">واتساب</h3>
                 <p className="text-sm text-muted-foreground mb-3">رد سريع</p>
                 <div className="space-y-1 text-sm">
-                  <p>الأساسي: 0559600824</p>
-                  <p>الثانوي: 0559600824</p>
+                  <p>0559600824</p>
                 </div>
               </motion.div>
 
