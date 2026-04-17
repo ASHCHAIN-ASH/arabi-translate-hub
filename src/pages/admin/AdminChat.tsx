@@ -63,6 +63,48 @@ const AdminChat = () => {
     setSending(false);
   };
 
+  const handleCreateConversation = async () => {
+    if (!selectedCustomer || !newSubject.trim() || !newFirstMessage.trim() || !user?.id) {
+      toast.error('يرجى تعبئة جميع الحقول واختيار العميل');
+      return;
+    }
+    setCreating(true);
+    try {
+      const { data: conv, error: convErr } = await supabase
+        .from('chat_conversations')
+        .insert({
+          user_id: selectedCustomer.user_id,
+          admin_id: user.id,
+          subject: newSubject.trim(),
+          last_message: newFirstMessage.trim(),
+          status: 'open',
+        })
+        .select()
+        .single();
+      if (convErr || !conv) throw convErr || new Error('فشل الإنشاء');
+
+      const { error: msgErr } = await supabase.from('chat_messages').insert({
+        conversation_id: conv.id,
+        sender_id: user.id,
+        sender_type: 'admin',
+        content: newFirstMessage.trim(),
+      });
+      if (msgErr) throw msgErr;
+
+      toast.success(`تم بدء محادثة جديدة مع ${selectedCustomer.name}`);
+      setNewOpen(false);
+      setSelectedCustomer(null);
+      setNewSubject('');
+      setNewFirstMessage('');
+      await refresh();
+      setActiveConversation(conv.id);
+    } catch (e: any) {
+      toast.error(e?.message || 'تعذر إنشاء المحادثة');
+    } finally {
+      setCreating(false);
+    }
+  };
+
   const getTimeStr = (iso: string) => {
     const d = new Date(iso);
     const now = new Date();
