@@ -81,21 +81,26 @@ export function useChat(userId?: string, isAdmin = false) {
         user_id: userId,
         subject,
         last_message: firstMessage,
+        last_message_at: new Date().toISOString(),
       })
       .select()
       .single();
 
-    if (data && !error) {
-      await supabase.from('chat_messages').insert({
-        conversation_id: data.id,
-        sender_id: userId,
-        sender_type: 'client',
-        content: firstMessage,
-      });
-      await loadConversations();
-      return data as ChatConversation;
+    if (error || !data) {
+      console.error('createConversation failed:', error);
+      return null;
     }
-    return null;
+
+    const { error: msgError } = await supabase.from('chat_messages').insert({
+      conversation_id: data.id,
+      sender_id: userId,
+      sender_type: 'client',
+      content: firstMessage,
+    });
+    if (msgError) console.error('first message insert failed:', msgError);
+
+    await loadConversations();
+    return data as ChatConversation;
   }, [loadConversations]);
 
   const markAsRead = useCallback(async (conversationId: string, readerId: string) => {
@@ -127,9 +132,6 @@ export function useChat(userId?: string, isAdmin = false) {
 
     channel
       .on('postgres_changes', { event: '*', schema: 'public', table: 'chat_messages' }, () => {
-        if (activeConversation) {
-          loadMessages(activeConversation);
-        }
         loadConversations();
         loadUnreadCount();
       })
@@ -139,7 +141,21 @@ export function useChat(userId?: string, isAdmin = false) {
       .subscribe();
 
     return () => { supabase.removeChannel(channel); };
-  }, [loadConversations, loadMessages, activeConversation, loadUnreadCount]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [userId]);
+
+  // Separate effect: reload messages of active conversation on any message change
+  useEffect(() => {
+    if (!activeConversation) return;
+    const ch = supabase
+      .channel(`chat-msgs-${activeConversation}`)
+      .on('postgres_changes', {
+        event: '*', schema: 'public', table: 'chat_messages',
+        filter: `conversation_id=eq.${activeConversation}`,
+      }, () => loadMessages(activeConversation))
+      .subscribe();
+    return () => { supabase.removeChannel(ch); };
+  }, [activeConversation, loadMessages]);
 
   useEffect(() => {
     if (activeConversation) {
