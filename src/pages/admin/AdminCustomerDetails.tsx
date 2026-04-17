@@ -5,6 +5,7 @@ import {
   ArrowRight, Mail, Phone, Building2, Calendar, Copy, MessageSquare,
   MessageCircle, Send, Bell, ShoppingCart, FileText, Edit, Key, Ban,
   CheckCircle, Trash2, Loader2, User, Activity, DollarSign, Clock,
+  History, UserPlus, CreditCard,
 } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import AdminLayout from '@/components/admin/AdminLayout';
@@ -414,12 +415,24 @@ const AdminCustomerDetails: React.FC = () => {
         </div>
 
         {/* Tabs */}
-        <Tabs defaultValue="orders" className="w-full">
+        <Tabs defaultValue="timeline" className="w-full">
           <TabsList>
+            <TabsTrigger value="timeline" className="gap-2"><History className="w-4 h-4" />النشاط</TabsTrigger>
             <TabsTrigger value="orders" className="gap-2"><ShoppingCart className="w-4 h-4" />الطلبات ({orders.length})</TabsTrigger>
             <TabsTrigger value="invoices" className="gap-2"><FileText className="w-4 h-4" />الفواتير ({invoices.length})</TabsTrigger>
             <TabsTrigger value="chats" className="gap-2"><MessageSquare className="w-4 h-4" />المحادثات ({conversations.length})</TabsTrigger>
           </TabsList>
+
+          <TabsContent value="timeline">
+            <Card><CardContent className="p-6">
+              <CustomerTimeline
+                customer={customer}
+                orders={orders}
+                invoices={invoices}
+                conversations={conversations}
+              />
+            </CardContent></Card>
+          </TabsContent>
 
           <TabsContent value="orders">
             <Card><CardContent className="p-0">
@@ -606,5 +619,134 @@ const ActionBtn: React.FC<{ icon: any; label: string; onClick: () => void; color
 const Empty: React.FC<{ msg: string }> = ({ msg }) => (
   <div className="text-center py-12 text-sm text-muted-foreground">{msg}</div>
 );
+
+// ============ Customer Timeline ============
+type TimelineEvent = {
+  id: string;
+  date: string;
+  type: 'signup' | 'order' | 'invoice' | 'payment' | 'chat';
+  title: string;
+  description?: string;
+  icon: any;
+  iconBg: string;
+  iconColor: string;
+  onClick?: () => void;
+};
+
+const CustomerTimeline: React.FC<{
+  customer: Customer;
+  orders: OrderRow[];
+  invoices: InvoiceRow[];
+  conversations: ConversationRow[];
+}> = ({ customer, orders, invoices, conversations }) => {
+  const navigate = useNavigate();
+  const events: TimelineEvent[] = [];
+
+  // Signup
+  events.push({
+    id: `signup-${customer.id}`,
+    date: customer.created_at,
+    type: 'signup',
+    title: 'تسجيل العميل',
+    description: `انضم ${customer.name} إلى المنصة`,
+    icon: UserPlus,
+    iconBg: 'bg-primary/10',
+    iconColor: 'text-primary',
+  });
+
+  // Orders
+  orders.forEach(o => {
+    events.push({
+      id: `order-${o.id}`,
+      date: o.created_at,
+      type: 'order',
+      title: `طلب جديد: ${o.service_name || 'بدون اسم'}`,
+      description: `رقم التتبع ${o.tracking_id} • الحالة: ${o.current_status || '—'}`,
+      icon: ShoppingCart,
+      iconBg: 'bg-amber-500/10',
+      iconColor: 'text-amber-600',
+      onClick: () => navigate(`/adminmaster/service-orders/${o.id}`),
+    });
+  });
+
+  // Invoices + Payments
+  invoices.forEach(i => {
+    events.push({
+      id: `invoice-${i.id}`,
+      date: i.created_at,
+      type: 'invoice',
+      title: `فاتورة ${i.invoice_number}`,
+      description: `الإجمالي ${i.total_amount?.toLocaleString('ar') || '0'} ر.س • الحالة: ${i.status || '—'}`,
+      icon: FileText,
+      iconBg: 'bg-blue-500/10',
+      iconColor: 'text-blue-600',
+      onClick: () => navigate(`/adminmaster/invoices/${i.id}`),
+    });
+    if ((i.paid_amount || 0) > 0) {
+      events.push({
+        id: `payment-${i.id}`,
+        date: i.created_at,
+        type: 'payment',
+        title: 'دفعة مستلمة',
+        description: `${i.paid_amount?.toLocaleString('ar')} ر.س على فاتورة ${i.invoice_number}`,
+        icon: CreditCard,
+        iconBg: 'bg-emerald-500/10',
+        iconColor: 'text-emerald-600',
+        onClick: () => navigate(`/adminmaster/invoices/${i.id}`),
+      });
+    }
+  });
+
+  // Conversations
+  conversations.forEach(c => {
+    events.push({
+      id: `chat-${c.id}`,
+      date: c.last_message_at || customer.created_at,
+      type: 'chat',
+      title: `محادثة: ${c.subject}`,
+      description: c.last_message || 'لا توجد رسائل',
+      icon: MessageSquare,
+      iconBg: 'bg-purple-500/10',
+      iconColor: 'text-purple-600',
+      onClick: () => navigate('/adminmaster/chat'),
+    });
+  });
+
+  events.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+
+  if (events.length === 0) {
+    return <Empty msg="لا يوجد نشاط حتى الآن" />;
+  }
+
+  return (
+    <div className="relative pr-6 before:absolute before:top-2 before:bottom-2 before:right-[11px] before:w-0.5 before:bg-border">
+      {events.map((e) => {
+        const Icon = e.icon;
+        return (
+          <div key={e.id} className="relative mb-5 last:mb-0">
+            <div className={`absolute right-[-22px] top-1 w-6 h-6 rounded-full ${e.iconBg} flex items-center justify-center ring-4 ring-background`}>
+              <Icon className={`w-3.5 h-3.5 ${e.iconColor}`} />
+            </div>
+            <div
+              className={`bg-muted/30 rounded-lg p-3 ${e.onClick ? 'cursor-pointer hover:bg-muted/60 transition-colors' : ''}`}
+              onClick={e.onClick}
+            >
+              <div className="flex items-center justify-between gap-2 mb-1">
+                <span className="text-sm font-semibold">{e.title}</span>
+                <span className="text-[10px] text-muted-foreground whitespace-nowrap flex items-center gap-1">
+                  <Clock className="w-3 h-3" />
+                  {new Date(e.date).toLocaleString('ar-SA', { dateStyle: 'medium', timeStyle: 'short' })}
+                </span>
+              </div>
+              {e.description && (
+                <p className="text-xs text-muted-foreground">{e.description}</p>
+              )}
+            </div>
+          </div>
+        );
+      })}
+    </div>
+  );
+};
 
 export default AdminCustomerDetails;
