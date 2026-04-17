@@ -1016,6 +1016,164 @@ const AdminCustomers = () => {
           </DialogFooter>
         </DialogContent>
       </Dialog>
+
+      {/* Modal إضافة عميل جديد */}
+      <Dialog open={addModalOpen} onOpenChange={setAddModalOpen}>
+        <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2 text-xl">
+              <div className="p-2 bg-primary/10 rounded-lg">
+                <UserPlus className="w-5 h-5 text-primary" />
+              </div>
+              إضافة عميل جديد
+            </DialogTitle>
+            <p className="text-sm text-muted-foreground mt-1">
+              سيتم إنشاء حساب كامل وربطه تلقائياً بسجل العميل
+            </p>
+          </DialogHeader>
+
+          <div className="space-y-4 py-2">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="add-name">الاسم الكامل *</Label>
+                <Input
+                  id="add-name"
+                  value={addForm.name}
+                  onChange={(e) => setAddForm({ ...addForm, name: e.target.value })}
+                  placeholder="محمد أحمد"
+                  maxLength={100}
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="add-email">البريد الإلكتروني *</Label>
+                <Input
+                  id="add-email"
+                  type="email"
+                  value={addForm.email}
+                  onChange={(e) => setAddForm({ ...addForm, email: e.target.value })}
+                  placeholder="user@example.com"
+                  dir="ltr"
+                  maxLength={255}
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="add-phone">رقم الجوال</Label>
+                <Input
+                  id="add-phone"
+                  value={addForm.phone}
+                  onChange={(e) => setAddForm({ ...addForm, phone: e.target.value })}
+                  placeholder="+9665xxxxxxxx"
+                  dir="ltr"
+                  maxLength={20}
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="add-company">الشركة / الجهة</Label>
+                <Input
+                  id="add-company"
+                  value={addForm.company}
+                  onChange={(e) => setAddForm({ ...addForm, company: e.target.value })}
+                  placeholder="اختياري"
+                  maxLength={150}
+                />
+              </div>
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="add-password">كلمة المرور *</Label>
+              <div className="flex gap-2">
+                <Input
+                  id="add-password"
+                  type="text"
+                  value={addForm.password}
+                  onChange={(e) => setAddForm({ ...addForm, password: e.target.value })}
+                  placeholder="8 أحرف على الأقل"
+                  dir="ltr"
+                  className="font-mono"
+                />
+                <Button type="button" variant="outline" size="icon" onClick={generatePassword} title="توليد قوي">
+                  <RefreshCw className="w-4 h-4" />
+                </Button>
+                {addForm.password && (
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="icon"
+                    onClick={() => {
+                      navigator.clipboard.writeText(addForm.password);
+                      toast.success('تم النسخ');
+                    }}
+                    title="نسخ"
+                  >
+                    <Copy className="w-4 h-4" />
+                  </Button>
+                )}
+              </div>
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="add-role">الصلاحية</Label>
+              <Select
+                value={addForm.role}
+                onValueChange={(v: 'user' | 'moderator' | 'admin') => setAddForm({ ...addForm, role: v })}
+              >
+                <SelectTrigger id="add-role">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="user">عميل عادي</SelectItem>
+                  <SelectItem value="moderator">مشرف</SelectItem>
+                  <SelectItem value="admin">مدير</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="add-notes">ملاحظات</Label>
+              <Textarea
+                id="add-notes"
+                value={addForm.notes}
+                onChange={(e) => setAddForm({ ...addForm, notes: e.target.value })}
+                placeholder="ملاحظات داخلية حول العميل (اختياري)"
+                rows={3}
+                maxLength={500}
+              />
+            </div>
+
+            <div className="flex items-center gap-2 p-3 rounded-lg bg-muted/50 border">
+              <input
+                type="checkbox"
+                id="add-welcome"
+                checked={addForm.sendWelcomeEmail}
+                onChange={(e) => setAddForm({ ...addForm, sendWelcomeEmail: e.target.checked })}
+                className="w-4 h-4 rounded accent-primary"
+              />
+              <Label htmlFor="add-welcome" className="cursor-pointer text-sm">
+                إرسال بريد ترحيبي مع بيانات تسجيل الدخول
+              </Label>
+            </div>
+          </div>
+
+          <DialogFooter className="gap-2">
+            <Button variant="outline" onClick={() => setAddModalOpen(false)} disabled={addingCustomer}>
+              إلغاء
+            </Button>
+            <Button onClick={handleAddCustomer} disabled={addingCustomer} className="gap-2">
+              {addingCustomer ? (
+                <>
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                  جاري الإنشاء...
+                </>
+              ) : (
+                <>
+                  <UserPlus className="w-4 h-4" />
+                  إنشاء العميل
+                </>
+              )}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </AdminLayout>
   );
 };
