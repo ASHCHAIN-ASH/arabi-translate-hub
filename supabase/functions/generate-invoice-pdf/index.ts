@@ -42,8 +42,22 @@ const handler = async (req: Request): Promise<Response> => {
 
     // إنشاء HTML للفاتورة بتصميم احترافي
     const invoiceHTML = generateProfessionalInvoiceHTML(invoice);
-    
-    // تحويل HTML إلى PDF باستخدام Deno WebKit
+    const fullHTML = invoiceHTML.replace('</head>', `<style>${generateInvoiceCSS()}</style></head>`);
+    const base64HTML = btoa(unescape(encodeURIComponent(fullHTML)));
+
+    return new Response(JSON.stringify({
+      success: true,
+      message: "تم إنشاء الفاتورة بنجاح",
+      html_data: base64HTML,
+      pdf_data: base64HTML,
+      invoice_number: invoice.invoice_number,
+      content_type: "text/html"
+    }), {
+      status: 200,
+      headers: { "Content-Type": "application/json", ...corsHeaders }
+    });
+
+    // legacy code (unreachable) kept below
     const pdfResponse = await fetch("https://api.htmlcsstoimage.com/v1/image", {
       method: "POST",
       headers: {
