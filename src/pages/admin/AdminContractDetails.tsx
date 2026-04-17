@@ -50,17 +50,27 @@ const AdminContractDetails = () => {
 
   async function downloadPdf() {
     try {
-      toast.loading("جاري تجهيز نسخة PDF…", { id: "pdf" });
+      toast.loading("جاري تجهيز العقد…", { id: "pdf" });
       const { data, error } = await supabase.functions.invoke("generate-contract-pdf", {
-        body: { contract_id: id },
+        body: { contract_id: id, format: "html" },
       });
       if (error) throw error;
-      const url = (data as any)?.signed_url;
-      if (!url) throw new Error("تعذّر توليد الرابط");
-      window.open(url, "_blank");
+      // Edge function returns raw HTML when format=html
+      const html = typeof data === "string" ? data : (data as any)?.html;
+      if (!html) throw new Error("تعذّر توليد المستند");
+      const blob = new Blob([html], { type: "text/html;charset=utf-8" });
+      const url = URL.createObjectURL(blob);
+      const win = window.open(url, "_blank");
+      // Auto-trigger print dialog so user can save as PDF
+      if (win) {
+        win.addEventListener("load", () => {
+          setTimeout(() => { try { win.print(); } catch {} }, 600);
+        });
+      }
+      setTimeout(() => URL.revokeObjectURL(url), 60_000);
       toast.success("تم تجهيز العقد", { id: "pdf" });
     } catch (e: any) {
-      toast.error(e.message || "تعذّر تجهيز PDF", { id: "pdf" });
+      toast.error(e.message || "تعذّر تجهيز المستند", { id: "pdf" });
     }
   }
 
