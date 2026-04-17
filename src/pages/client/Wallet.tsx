@@ -6,7 +6,7 @@ import { toast } from 'sonner';
 import {
   Wallet as WalletIcon, Plus, ArrowDownToLine, ArrowUpFromLine, TrendingUp,
   TrendingDown, Sparkles, Receipt, RefreshCw, History, CreditCard, Eye, EyeOff,
-  Gift, Zap, Copy, Check, Shield, Clock,
+  Gift, Zap, Copy, Check, Shield, Clock, Upload, FileImage, X, Building2,
 } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
