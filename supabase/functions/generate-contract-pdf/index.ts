@@ -170,37 +170,88 @@ function buildHtml(contract: any, signature: any, verifyHash: string) {
   .body hr { border:0; border-top:1px solid ${GOLD}55; margin:18px 0; }
 
   .sig-divider { border-top:2px solid var(--gold); margin:28px 0 14px; }
-  .sig-title { text-align:center; font-weight:700; font-size:18px; color:var(--navy); margin-bottom:18px; }
+  .sig-title { text-align:center; font-weight:700; font-size:18px; color:var(--navy); margin-bottom:18px;
+    letter-spacing:.15em; }
+  .sig-title::before, .sig-title::after { content:"━━━"; color:var(--gold); margin:0 12px; font-weight:400; }
 
-  .sigs { display:grid; grid-template-columns:1fr 1fr; gap:14px; }
-  .sigbox { background:#fff; border:1px solid ${GOLD}66; border-radius:10px;
-    padding:18px; text-align:center; }
-  .sigbox .lbl { font-weight:700; color:var(--navy); font-size:13px; }
-  .sigbox .who { font-size:12px; color:var(--navy); margin:4px 0 14px; }
+  .sigs { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+  .sigbox { position:relative; background:linear-gradient(180deg,#fff 0%,#fdfbf5 100%);
+    border:1px solid ${GOLD}88; border-radius:12px; padding:20px 18px 22px; text-align:center;
+    box-shadow:0 4px 16px rgba(10,31,61,.08); overflow:hidden; }
+  .sigbox::before { content:""; position:absolute; top:0; right:0; left:0; height:4px;
+    background:linear-gradient(90deg,${GOLD} 0%,${NAVY} 50%,${GOLD} 100%); }
+  .sigbox::after { content:""; position:absolute; bottom:8px; right:8px; left:8px;
+    height:1px; border-bottom:1px dashed ${GOLD}55; }
+  .sigbox .badge-corner { position:absolute; top:10px; left:10px; background:var(--navy);
+    color:var(--gold); padding:3px 8px; border-radius:4px; font-size:9px; font-weight:700;
+    letter-spacing:.15em; }
+  .sigbox .lbl { font-weight:700; color:var(--navy); font-size:13px; margin-top:6px; }
+  .sigbox .who { font-size:13px; color:var(--navy); margin:6px 0 16px; font-weight:600; }
 
-  .seal-circle { margin:0 auto 12px; width:120px; height:120px;
-    border:3px double var(--navy); border-radius:50%; background:var(--cream);
-    display:flex; align-items:center; justify-content:center; flex-direction:column; }
-  .seal-circle .sn { font-size:10px; color:var(--navy); margin:0; }
-  .seal-circle .sm { font-size:18px; color:var(--navy); font-weight:700; margin:2px 0; }
-  .seal-circle .sd { font-size:9px; color:var(--gold); margin:0; }
-  .stamp-ok { display:inline-block; padding:5px 12px; background:${GOLD}33;
-    color:var(--navy); border:1px solid var(--gold); border-radius:6px;
-    font-weight:700; font-size:12px; }
+  /* Premium digital seal — official platform */
+  .seal-circle { position:relative; margin:0 auto 14px; width:140px; height:140px;
+    border-radius:50%; background:radial-gradient(circle,${CREAM} 60%,${GOLD}15 100%);
+    display:flex; align-items:center; justify-content:center; flex-direction:column;
+    box-shadow:inset 0 0 0 2px var(--navy), inset 0 0 0 4px ${CREAM},
+      inset 0 0 0 6px var(--navy), 0 2px 12px rgba(10,31,61,.2); }
+  .seal-circle::before { content:""; position:absolute; inset:10px; border-radius:50%;
+    border:1px dashed ${NAVY}55; }
+  .seal-circle .sn { font-size:9px; color:var(--navy); margin:0; letter-spacing:.1em;
+    font-weight:600; text-transform:uppercase; }
+  .seal-circle .sm { font-family:'Aref Ruqaa',serif; font-size:22px; color:var(--navy);
+    font-weight:700; margin:4px 0; line-height:1; }
+  .seal-circle .sd { font-size:8.5px; color:var(--gold); margin:2px 0 0; font-weight:700;
+    letter-spacing:.1em; }
+  .seal-circle .ring-text { position:absolute; inset:0; }
 
-  .signed-card { background:var(--cream); border:1px dashed var(--gold);
-    border-radius:8px; padding:14px; font-size:12px; color:var(--navy); }
-  .signed-card .ok { font-weight:700; margin-bottom:6px; }
-  .signed-card .sigtext { font-family:'Brush Script MT',cursive; font-size:24px;
-    color:var(--navy); margin:6px 0; }
-  .signed-card .meta { font-size:11px; color:${NAVY}99; line-height:1.7; }
-  .pending { background:var(--cream); border:1px dashed ${NAVY}55; border-radius:8px;
-    padding:24px; color:${NAVY}99; font-size:12px; }
+  .stamp-ok { display:inline-flex; align-items:center; gap:6px; padding:6px 14px;
+    background:linear-gradient(135deg,${GOLD}33,${GOLD}15); color:var(--navy);
+    border:1.5px solid var(--gold); border-radius:20px; font-weight:700; font-size:11.5px;
+    letter-spacing:.05em; box-shadow:0 2px 6px ${GOLD}33; }
+  .stamp-ok::before { content:"✓"; background:var(--navy); color:var(--gold);
+    width:16px; height:16px; border-radius:50%; display:inline-flex;
+    align-items:center; justify-content:center; font-size:10px; }
 
-  .verify { margin-top:18px; padding:12px 14px; background:${GOLD}11;
-    border:1px solid ${GOLD}66; border-radius:8px; font-size:11px; color:var(--navy); }
+  /* Client e-signature card — bank receipt aesthetic */
+  .signed-card { position:relative; background:linear-gradient(180deg,#fff,${CREAM});
+    border:1.5px solid var(--gold); border-radius:10px; padding:14px 12px 12px;
+    color:var(--navy); box-shadow:inset 0 0 0 1px ${GOLD}33; }
+  .signed-card .verified { display:inline-flex; align-items:center; gap:5px;
+    background:#16a34a; color:#fff; padding:3px 9px; border-radius:12px;
+    font-size:10px; font-weight:700; margin-bottom:8px; letter-spacing:.05em; }
+  .signed-card .verified::before { content:"✓"; font-weight:900; }
+  .signed-card .sig-frame { background:#fff; border:1px solid ${GOLD}66;
+    border-radius:6px; padding:10px 8px; margin:6px 0 10px; position:relative; }
+  .signed-card .sig-frame::before { content:"التوقيع"; position:absolute; top:-7px; right:10px;
+    background:#fff; padding:0 6px; font-size:9px; color:${NAVY}99; font-weight:600; }
+  .signed-card .sigtext { font-family:'Aref Ruqaa','Brush Script MT',cursive;
+    font-size:30px; color:var(--navy); line-height:1.2; font-weight:700;
+    text-shadow:1px 1px 0 ${GOLD}22; }
+  .signed-card .meta { font-size:10.5px; color:${NAVY}cc; line-height:1.9;
+    text-align:right; padding:4px 6px; }
+  .signed-card .meta .row { display:flex; justify-content:space-between; gap:8px;
+    border-bottom:1px dotted ${GOLD}55; padding:2px 0; }
+  .signed-card .meta .row:last-child { border:0; }
+  .signed-card .meta .k { color:${NAVY}99; font-weight:600; }
+  .signed-card .meta .v { color:var(--navy); font-weight:700;
+    font-family:ui-monospace,Menlo,monospace; font-size:10px; }
+
+  .pending { background:repeating-linear-gradient(45deg,${CREAM},${CREAM} 10px,#f6f1e3 10px,#f6f1e3 20px);
+    border:1.5px dashed ${NAVY}66; border-radius:8px; padding:30px 14px;
+    color:${NAVY}88; font-size:12px; font-weight:600; }
+  .pending::before { content:"⏳ "; font-size:18px; }
+
+  .verify { margin-top:18px; padding:14px 16px;
+    background:linear-gradient(135deg,${GOLD}11,${NAVY}05);
+    border:1px solid ${GOLD}66; border-radius:10px; font-size:11px; color:var(--navy); }
+  .verify .vh { display:flex; align-items:center; gap:8px; font-weight:700;
+    margin-bottom:6px; color:var(--navy); }
+  .verify .vh .lock { background:var(--navy); color:var(--gold); width:22px; height:22px;
+    border-radius:50%; display:inline-flex; align-items:center; justify-content:center; font-size:11px; }
   .verify code { display:block; word-break:break-all; font-family:ui-monospace,Menlo,monospace;
-    font-size:10px; margin-top:4px; color:${NAVY}cc; }
+    font-size:10px; padding:8px 10px; background:#fff; border:1px dashed ${GOLD}55;
+    border-radius:6px; color:var(--navy); margin-top:6px; letter-spacing:.02em; }
+  .verify .note { margin-top:6px; font-size:10px; color:${NAVY}99; }
 
   footer.doc { margin-top:24px; padding-top:14px; border-top:1px solid ${GOLD}55;
     display:flex; justify-content:space-between; align-items:center;
