@@ -396,8 +396,17 @@ const AdminCustomers = () => {
             <h1 className="text-3xl font-bold text-foreground">إدارة العملاء</h1>
             <p className="text-muted-foreground">إدارة جميع عملاء النظام بالتفصيل</p>
           </div>
-          <div className="text-sm text-muted-foreground">
-            إجمالي العملاء: {stats.total}
+          <div className="flex items-center gap-3">
+            <div className="text-sm text-muted-foreground">
+              إجمالي العملاء: {stats.total}
+            </div>
+            <Button
+              onClick={() => setAddModalOpen(true)}
+              className="gap-2 bg-gradient-to-r from-primary to-primary/80 hover:opacity-90 shadow-lg"
+            >
+              <UserPlus className="w-4 h-4" />
+              إضافة عميل جديد
+            </Button>
           </div>
         </motion.div>
 
