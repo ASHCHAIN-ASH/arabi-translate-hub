@@ -560,7 +560,7 @@ const AdminTransactions = () => {
                               {status.label}
                             </Badge>
                           </TableCell>
-                          <TableCell className="text-left">
+                          <TableCell className="text-left" onClick={(e) => e.stopPropagation()}>
                             {p.status === 'completed' ? (
                               <Button
                                 variant="ghost"
