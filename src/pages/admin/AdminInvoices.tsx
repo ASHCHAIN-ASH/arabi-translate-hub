@@ -207,8 +207,11 @@ export default function AdminInvoices() {
                 </div>
                 <div className="flex gap-2">
                   <Button size="sm" variant="outline" className="flex-1" asChild><Link to={`/adminmaster/invoices/${inv.id}`}><Eye className="w-3 h-3 ml-1" />عرض</Link></Button>
-                  <Button size="sm" variant="outline" className="flex-1" onClick={() => handlePrint(inv)}><Printer className="w-3 h-3 ml-1" />طباعة</Button>
-                  <RowActions inv={inv} onEdit={() => { setEditing(inv); setFormOpen(true); }} onPay={() => setPaymentFor(inv)} onDelete={() => handleDelete(inv)} onPrint={() => handlePrint(inv)} onDownload={() => handleDownload(inv)} />
+                  <Button size="sm" variant="outline" className="flex-1" disabled={sendingId === inv.id || !inv.customer_email} onClick={() => handleSend(inv)}>
+                    {sendingId === inv.id ? <Loader2 className="w-3 h-3 ml-1 animate-spin" /> : <Mail className="w-3 h-3 ml-1" />}
+                    إرسال
+                  </Button>
+                  <RowActions inv={inv} sending={sendingId === inv.id} onSend={() => handleSend(inv)} onEdit={() => { setEditing(inv); setFormOpen(true); }} onPay={() => setPaymentFor(inv)} onDelete={() => handleDelete(inv)} onPrint={() => handlePrint(inv)} onDownload={() => handleDownload(inv)} />
                 </div>
               </CardContent>
             </Card>
