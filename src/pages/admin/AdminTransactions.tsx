@@ -577,6 +577,61 @@ const AdminTransactions = () => {
             )}
           </CardContent>
         </Card>
+
+        {/* Refund Confirmation Dialog */}
+        <AlertDialog open={!!refundTarget} onOpenChange={(open) => !open && setRefundTarget(null)}>
+          <AlertDialogContent dir="rtl">
+            <AlertDialogHeader>
+              <AlertDialogTitle className="flex items-center gap-2">
+                <AlertTriangle className="h-5 w-5 text-destructive" />
+                تأكيد استرداد الدفعة
+              </AlertDialogTitle>
+              <AlertDialogDescription asChild>
+                <div className="space-y-3 pt-2">
+                  <div className="text-sm">
+                    سيتم تغيير حالة الدفعة إلى <span className="font-bold text-destructive">مستردة</span> وتحديث الفاتورة تلقائياً (إعادة احتساب المبلغ المدفوع وحالتها).
+                  </div>
+                  {refundTarget && (
+                    <div className="rounded-lg border bg-muted/30 p-3 space-y-1 text-sm">
+                      <div className="flex justify-between">
+                        <span className="text-muted-foreground">المبلغ:</span>
+                        <span className="font-bold">{formatSAR(Number(refundTarget.amount))}</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-muted-foreground">الفاتورة:</span>
+                        <span className="font-mono">{refundTarget.invoice?.invoice_number}</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-muted-foreground">العميل:</span>
+                        <span>{refundTarget.invoice?.customer_name || '—'}</span>
+                      </div>
+                    </div>
+                  )}
+                  <div>
+                    <label className="text-sm font-medium block mb-1.5">سبب الاسترداد (اختياري)</label>
+                    <Textarea
+                      value={refundReason}
+                      onChange={(e) => setRefundReason(e.target.value)}
+                      placeholder="مثال: طلب العميل، خطأ في الفاتورة..."
+                      rows={3}
+                    />
+                  </div>
+                </div>
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel disabled={refunding}>إلغاء</AlertDialogCancel>
+              <AlertDialogAction
+                onClick={(e) => { e.preventDefault(); handleRefund(); }}
+                disabled={refunding}
+                className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+              >
+                {refunding ? <RefreshCw className="h-4 w-4 ml-2 animate-spin" /> : <Undo2 className="h-4 w-4 ml-2" />}
+                تأكيد الاسترداد
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
       </div>
     </AdminLayout>
   );
