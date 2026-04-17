@@ -62,6 +62,17 @@ const AdminCustomerDetails: React.FC = () => {
   const [notifyTitle, setNotifyTitle] = useState('رسالة من الإدارة');
   const [sending, setSending] = useState(false);
 
+  // Edit dialog
+  const [editOpen, setEditOpen] = useState(false);
+  const [editForm, setEditForm] = useState({ name: '', email: '', phone: '', company: '', notes: '' });
+  const [savingEdit, setSavingEdit] = useState(false);
+
+  // Password dialog
+  const [pwdOpen, setPwdOpen] = useState(false);
+  const [newPwd, setNewPwd] = useState('');
+  const [confirmPwd, setConfirmPwd] = useState('');
+  const [savingPwd, setSavingPwd] = useState(false);
+
   const loadCustomer = useCallback(async () => {
     if (!id) return;
     setLoading(true);
@@ -219,7 +230,55 @@ const AdminCustomerDetails: React.FC = () => {
     navigate('/adminmaster/customers');
   };
 
-  // ===== Stats =====
+  const openEdit = () => {
+    if (!customer) return;
+    setEditForm({
+      name: customer.name || '',
+      email: customer.email || '',
+      phone: customer.phone || '',
+      company: customer.company || '',
+      notes: customer.notes || '',
+    });
+    setEditOpen(true);
+  };
+
+  const saveEdit = async () => {
+    if (!customer) return;
+    if (!editForm.name.trim()) return toast.error('الاسم مطلوب');
+    setSavingEdit(true);
+    const { error } = await supabase
+      .from('customers')
+      .update({
+        name: editForm.name.trim(),
+        email: editForm.email.trim() || null,
+        phone: editForm.phone.trim() || null,
+        company: editForm.company.trim() || null,
+        notes: editForm.notes.trim() || null,
+      })
+      .eq('id', customer.id);
+    setSavingEdit(false);
+    if (error) return toast.error(error.message);
+    setCustomer({ ...customer, ...editForm });
+    toast.success('تم حفظ التعديلات');
+    setEditOpen(false);
+  };
+
+  const savePassword = async () => {
+    if (!customer?.user_id) return toast.error('هذا العميل بدون حساب مستخدم');
+    if (newPwd.length < 8) return toast.error('كلمة المرور يجب أن تكون 8 أحرف فأكثر');
+    if (newPwd !== confirmPwd) return toast.error('كلمتا المرور غير متطابقتين');
+    setSavingPwd(true);
+    const { data, error } = await supabase.functions.invoke('admin-update-customer-password', {
+      body: { userId: customer.user_id, newPassword: newPwd },
+    });
+    setSavingPwd(false);
+    if (error || (data as any)?.error) {
+      return toast.error((data as any)?.error || error?.message || 'فشل التحديث');
+    }
+    toast.success('تم تحديث كلمة المرور');
+    setPwdOpen(false);
+    setNewPwd(''); setConfirmPwd('');
+  };
   const totalRevenue = invoices.reduce((s, i) => s + Number(i.paid_amount || 0), 0);
   const openOrders = orders.filter(o => !['paid', 'completed', 'cancelled'].includes(o.current_status || '')).length;
 
