@@ -311,8 +311,15 @@ Deno.serve(async (req: Request) => {
   if (req.method === "OPTIONS") return new Response(null, { headers: corsHeaders });
 
   try {
-    const body = await req.json().catch(() => ({}));
-    const contractId: string | undefined = body.contract_id || body.contractId;
+    const url = new URL(req.url);
+    let contractId: string | undefined;
+    let body: any = {};
+    if (req.method === "GET") {
+      contractId = url.searchParams.get("contract_id") || url.searchParams.get("contractId") || undefined;
+    } else {
+      body = await req.json().catch(() => ({}));
+      contractId = body.contract_id || body.contractId || url.searchParams.get("contract_id") || undefined;
+    }
     if (!contractId) {
       return new Response(JSON.stringify({ error: "contract_id required" }), {
         status: 400,
