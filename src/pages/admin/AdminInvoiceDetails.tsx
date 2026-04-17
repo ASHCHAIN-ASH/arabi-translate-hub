@@ -74,10 +74,18 @@ export default function AdminInvoiceDetails() {
     return () => { supabase.removeChannel(ch); };
   }, [id]);
 
+  const [sending, setSending] = useState(false);
   const handleSend = async () => {
     if (!invoice) return;
-    try { await InvoiceService.markSent(invoice.id); toast.success('تم تحديد كمرسلة'); }
-    catch (e: any) { toast.error('فشل', { description: e.message }); }
+    if (!invoice.customer_email) { toast.error('لا يوجد بريد إلكتروني للعميل'); return; }
+    setSending(true);
+    try {
+      const { error } = await supabase.functions.invoke('send-invoice-email', { body: { invoice_id: invoice.id } });
+      if (error) throw error;
+      toast.success(`تم إرسال الفاتورة إلى ${invoice.customer_email}`);
+      load();
+    } catch (e: any) { toast.error('فشل الإرسال', { description: e.message }); }
+    finally { setSending(false); }
   };
 
   const handleDelete = async () => {
@@ -109,7 +117,10 @@ export default function AdminInvoiceDetails() {
           <div className="flex flex-wrap gap-2">
             <Button size="sm" variant="outline" onClick={() => openInvoicePrintWindow(invoice, items, payments)}><Printer className="w-4 h-4 ml-1" />طباعة</Button>
             <Button size="sm" variant="outline" onClick={() => downloadInvoiceAsPDF(invoice, items, payments)}><Download className="w-4 h-4 ml-1" />PDF</Button>
-            {invoice.status === 'pending' && <Button size="sm" variant="outline" onClick={handleSend}><Send className="w-4 h-4 ml-1" />إرسال</Button>}
+            <Button size="sm" variant="outline" onClick={handleSend} disabled={sending}>
+              {sending ? <Loader2 className="w-4 h-4 ml-1 animate-spin" /> : <Send className="w-4 h-4 ml-1" />}
+              إرسال بالبريد
+            </Button>
             <Button size="sm" variant="outline" onClick={() => setEditOpen(true)}><Edit className="w-4 h-4 ml-1" />تعديل</Button>
             {invoice.remaining_amount > 0 && <Button size="sm" onClick={() => setPayOpen(true)}><CreditCard className="w-4 h-4 ml-1" />دفعة</Button>}
             <Button size="sm" variant="outline" className="text-destructive" onClick={handleDelete}><Trash2 className="w-4 h-4" /></Button>
