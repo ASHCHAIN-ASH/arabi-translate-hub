@@ -94,6 +94,23 @@ const AdminContractDetails = () => {
     toast.success("تم نسخ رابط العميل");
   }
 
+  async function editWorkDuration() {
+    if (!c) return;
+    const current = (c.metadata as any)?.workDuration || "";
+    const next = window.prompt("أدخل مدة تنفيذ العمل (مثال: 14 يوم عمل)", current);
+    if (next === null) return;
+    const newMeta = { ...(c.metadata || {}), workDuration: next.trim() };
+    try {
+      const { error } = await (supabase.from("contracts") as any)
+        .update({ metadata: newMeta, updated_at: new Date().toISOString() })
+        .eq("id", c.id);
+      if (error) throw error;
+      await generateContractContent(c.id);
+      toast.success("تم تحديث مدة تنفيذ العمل");
+      load();
+    } catch (e: any) { toast.error(e.message || "تعذّر التحديث"); }
+  }
+
   const fmtDate = (d?: string | null) =>
     d ? new Date(d).toLocaleString("ar-SA", { dateStyle: "long", timeStyle: "short" }) : "—";
 
