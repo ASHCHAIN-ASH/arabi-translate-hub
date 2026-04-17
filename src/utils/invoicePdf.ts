@@ -240,55 +240,36 @@ export function openInvoicePrintWindow(invoice: Invoice, items: InvoiceItem[], p
   w.document.close();
 }
 
+/**
+ * Download as PDF using the browser's native print engine.
+ * This preserves Arabic shaping perfectly because the browser handles text rendering,
+ * unlike html2canvas which rasterizes glyphs incorrectly for Arabic.
+ *
+ * Flow: opens a print window with the invoice + auto-triggers print dialog.
+ * User chooses "Save as PDF" destination.
+ */
 export async function downloadInvoiceAsPDF(invoice: Invoice, items: InvoiceItem[], payments: InvoicePayment[] = []) {
-  const [{ default: html2canvas }, { default: jsPDF }] = await Promise.all([
-    import('html2canvas'),
-    import('jspdf'),
-  ]);
   const html = buildInvoiceHTML(invoice, items, payments);
-  const container = document.createElement('div');
-  container.style.position = 'fixed';
-  container.style.left = '-9999px';
-  container.style.top = '0';
-  container.style.width = '800px';
-  container.style.background = '#fff';
-  // strip the on-screen action buttons
-  const cleaned = html
-    .replace(/<div class="actions">[\s\S]*?<\/div>/, '')
-    .replace(/<script[\s\S]*?<\/script>/g, '');
-  container.innerHTML = cleaned;
-  document.body.appendChild(container);
-
-  // Wait for fonts
-  if ((document as any).fonts?.ready) {
-    try { await (document as any).fonts.ready; } catch {}
+  const w = window.open('', '_blank', 'width=900,height=1000');
+  if (!w) {
+    alert('يرجى السماح بالنوافذ المنبثقة لتحميل الفاتورة كـ PDF');
+    return;
   }
-  await new Promise((r) => setTimeout(r, 400));
-
-  try {
-    const canvas = await html2canvas(container.querySelector('.page') as HTMLElement, {
-      scale: 2,
-      useCORS: true,
-      backgroundColor: '#ffffff',
-    });
-    const imgData = canvas.toDataURL('image/png');
-    const pdf = new jsPDF({ orientation: 'p', unit: 'mm', format: 'a4' });
-    const pageWidth = pdf.internal.pageSize.getWidth();
-    const pageHeight = pdf.internal.pageSize.getHeight();
-    const imgWidth = pageWidth - 20;
-    const imgHeight = (canvas.height * imgWidth) / canvas.width;
-    let heightLeft = imgHeight;
-    let position = 10;
-    pdf.addImage(imgData, 'PNG', 10, position, imgWidth, imgHeight);
-    heightLeft -= pageHeight - 20;
-    while (heightLeft > 0) {
-      position = heightLeft - imgHeight + 10;
-      pdf.addPage();
-      pdf.addImage(imgData, 'PNG', 10, position, imgWidth, imgHeight);
-      heightLeft -= pageHeight - 20;
-    }
-    pdf.save(`${invoice.invoice_number}.pdf`);
-  } finally {
-    document.body.removeChild(container);
-  }
+  // Inject auto-print script and set document title (becomes default PDF filename)
+  const withAutoPrint = html.replace(
+    '</body>',
+    `<script>
+      document.title = ${JSON.stringify(invoice.invoice_number)};
+      window.addEventListener('load', function() {
+        if (document.fonts && document.fonts.ready) {
+          document.fonts.ready.then(function() { setTimeout(function(){ window.print(); }, 300); });
+        } else {
+          setTimeout(function(){ window.print(); }, 800);
+        }
+      });
+    </script></body>`
+  );
+  w.document.open();
+  w.document.write(withAutoPrint);
+  w.document.close();
 }
