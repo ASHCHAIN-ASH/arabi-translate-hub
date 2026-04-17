@@ -517,6 +517,7 @@ const AdminTransactions = () => {
                       <TableHead>الطريقة</TableHead>
                       <TableHead>المرجع</TableHead>
                       <TableHead>الحالة</TableHead>
+                      <TableHead className="text-left">إجراءات</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
