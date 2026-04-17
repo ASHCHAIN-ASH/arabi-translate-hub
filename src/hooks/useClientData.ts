@@ -1,12 +1,13 @@
 import { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { ClientDashboardService } from '@/utils/clientDashboardService';
-import type { ClientStats, ClientOrder, ClientInvoice } from '@/utils/clientDashboardService';
+import type { ClientStats, ClientOrder, ClientInvoice, ClientContract } from '@/utils/clientDashboardService';
 
 export function useClientData(userId: string | undefined) {
   const [stats, setStats] = useState<ClientStats | null>(null);
   const [orders, setOrders] = useState<ClientOrder[]>([]);
   const [invoices, setInvoices] = useState<ClientInvoice[]>([]);
+  const [contracts, setContracts] = useState<ClientContract[]>([]);
   const [tickets, setTickets] = useState<any[]>([]);
   const [payments, setPayments] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
@@ -18,10 +19,11 @@ export function useClientData(userId: string | undefined) {
 
     try {
       setError(null);
-      const [statsData, ordersData, invoicesData, ticketsData, paymentsData] = await Promise.all([
+      const [statsData, ordersData, invoicesData, contractsData, ticketsData, paymentsData] = await Promise.all([
         ClientDashboardService.getClientStats(userId),
         ClientDashboardService.getClientOrders(userId),
         ClientDashboardService.getClientInvoices(userId),
+        ClientDashboardService.getClientContracts(userId),
         ClientDashboardService.getClientTickets(userId),
         ClientDashboardService.getClientPayments(userId)
       ]);
@@ -29,6 +31,7 @@ export function useClientData(userId: string | undefined) {
       setStats(statsData);
       setOrders(ordersData);
       setInvoices(invoicesData);
+      setContracts(contractsData);
       setTickets(ticketsData);
       setPayments(paymentsData);
     } catch (err) {
@@ -90,6 +93,7 @@ export function useClientData(userId: string | undefined) {
     stats,
     orders,
     invoices,
+    contracts,
     tickets,
     payments,
     loading,
