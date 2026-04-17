@@ -332,7 +332,7 @@ const OrderDetails = () => {
                 .order('created_at', { ascending: false })
                 .limit(1)
                 .maybeSingle();
-              if (data?.id) navigate(`/contracts/${data.id}`);
+              if (data?.id) navigate(`/client/contracts/${data.id}`);
               else toast.info('لا يوجد عقد مرتبط بعد', { description: 'يتم إنشاء العقد تلقائياً بعد قبول عرض السعر' });
             }}
           >
