@@ -25,8 +25,7 @@ export default function HomeworkAssistance() {
   });
 
   const whatsappNumbers = [
-    { number: '0559600824', label: 'واتساب 1' },
-    { number: '0559600824', label: 'واتساب 2' }
+    { number: '0559600824', label: 'واتساب' }
   ];
 
   const handleSubmit = async (e: React.FormEvent) => {

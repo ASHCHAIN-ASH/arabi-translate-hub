@@ -449,7 +449,7 @@ const PrivacyPolicy = () => {
                       <div className="text-center">
                         <p className="font-semibold text-primary">الطريقة الثانية</p>
                         <p className="text-muted-foreground">التواصل الهاتفي المباشر</p>
-                        <p className="text-xs text-primary">0559600824 / 0559600824</p>
+                        <p className="text-xs text-primary">0559600824</p>
                       </div>
                       <div className="text-center">
                         <p className="font-semibold text-primary">الطريقة الثالثة</p>

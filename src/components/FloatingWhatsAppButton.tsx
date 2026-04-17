@@ -8,8 +8,7 @@ export const FloatingWhatsAppButton = () => {
   const [isOpen, setIsOpen] = useState(false);
 
   const phoneNumbers = [
-    { number: '0559600824', label: 'خدمة العملاء 1' },
-    { number: '0559600824', label: 'خدمة العملاء 2' }
+    { number: '0559600824', label: 'خدمة العملاء' }
   ];
 
   const openWhatsApp = (phoneNumber: string) => {
