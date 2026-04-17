@@ -14,6 +14,21 @@ import { openInvoicePrintWindow, downloadInvoiceAsPDF } from '@/utils/invoicePdf
 import InvoiceFormDialog from '@/components/admin/invoices/InvoiceFormDialog';
 import PaymentDialog from '@/components/admin/invoices/PaymentDialog';
 
+const ORDER_STATUS_AR: Record<string, string> = {
+  pending: 'قيد الانتظار',
+  in_progress: 'قيد التنفيذ',
+  in_review: 'قيد المراجعة',
+  completed: 'مكتمل',
+  delivered: 'تم التسليم',
+  cancelled: 'ملغي',
+  on_hold: 'متوقف مؤقتاً',
+  awaiting_payment: 'بانتظار الدفع',
+  awaiting_quote: 'بانتظار التسعير',
+  quote_sent: 'تم إرسال العرض',
+  draft: 'مسودة',
+};
+const orderStatusLabel = (s?: string | null) => (s ? ORDER_STATUS_AR[s] ?? s : '-');
+
 export default function AdminInvoiceDetails() {
   const { id } = useParams();
   const navigate = useNavigate();
