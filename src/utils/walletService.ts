@@ -217,6 +217,31 @@ export const WalletService = {
     if (error) throw error;
   },
 
+  // Pay an invoice using wallet balance. DB trigger handles deduction + status update.
+  async payInvoiceFromWallet(args: {
+    invoice_id: string;
+    user_id: string;
+    amount: number;
+    invoice_number?: string;
+  }): Promise<void> {
+    const w = await WalletService.getMyWallet(args.user_id);
+    if (!w) throw new Error('لم يتم العثور على محفظتك');
+    if ((w.balance || 0) < args.amount) {
+      throw new Error(`الرصيد غير كافٍ. رصيدك الحالي: ${WalletService.formatCurrency(w.balance)}`);
+    }
+
+    const { error } = await supabase.from('invoice_payments' as any).insert({
+      invoice_id: args.invoice_id,
+      amount: args.amount,
+      payment_method: 'wallet',
+      payment_date: new Date().toISOString().split('T')[0],
+      status: 'completed',
+      notes: `دفع من المحفظة الرقمية${args.invoice_number ? ' - فاتورة ' + args.invoice_number : ''}`,
+      created_by: args.user_id,
+    } as any);
+    if (error) throw error;
+  },
+
   formatCurrency(n: number, currency = 'SAR') {
     return `${Number(n || 0).toLocaleString('ar-SA', { maximumFractionDigits: 2 })} ${currency === 'SAR' ? 'ر.س' : currency}`;
   },
