@@ -415,8 +415,8 @@ const AdminCustomerDetails: React.FC = () => {
         </div>
 
         {/* Tabs */}
-        <Tabs defaultValue="timeline" className="w-full">
-          <TabsList>
+        <Tabs defaultValue="timeline" className="w-full" dir="rtl">
+          <TabsList className="flex-row-reverse">
             <TabsTrigger value="timeline" className="gap-2"><History className="w-4 h-4" />النشاط</TabsTrigger>
             <TabsTrigger value="orders" className="gap-2"><ShoppingCart className="w-4 h-4" />الطلبات ({orders.length})</TabsTrigger>
             <TabsTrigger value="invoices" className="gap-2"><FileText className="w-4 h-4" />الفواتير ({invoices.length})</TabsTrigger>
