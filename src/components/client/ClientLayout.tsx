@@ -13,6 +13,7 @@ import {
   LogOut,
   GraduationCap,
   Wallet,
+  ScrollText,
   Menu,
   X,
   Sparkles
@@ -35,6 +36,7 @@ const ClientLayout: React.FC<ClientLayoutProps> = ({ children }) => {
     { name: 'خدماتنا', href: '/client-services', icon: Sparkles },
     { name: 'سجل الطلبات', href: '/orders', icon: ShoppingCart },
     { name: 'فواتيري', href: '/invoices', icon: FileText },
+    { name: 'عقودي', href: '/client/contracts', icon: ScrollText },
     { name: 'محفظتي', href: '/wallet', icon: Wallet },
     { name: 'المدفوعات', href: '/billing/payments', icon: CreditCard },
     { name: 'الدعم الفني', href: '/support/tickets', icon: HelpCircle },
