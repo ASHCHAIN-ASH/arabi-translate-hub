@@ -8,11 +8,16 @@ import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Textarea } from '@/components/ui/textarea';
+import {
+  AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent,
+  AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle,
+} from '@/components/ui/alert-dialog';
 import { toast } from 'sonner';
 import {
   Wallet, TrendingUp, TrendingDown, Clock, CheckCircle2,
   Search, Download, RefreshCw, CreditCard, Banknote, Building2,
-  Smartphone, ArrowUpRight, Activity, Calendar
+  Smartphone, ArrowUpRight, Activity, Calendar, Undo2, AlertTriangle
 } from 'lucide-react';
 import {
   AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip,
@@ -86,6 +91,41 @@ const AdminTransactions = () => {
   const [methodFilter, setMethodFilter] = useState<string>('all');
   const [statusFilter, setStatusFilter] = useState<string>('all');
   const [periodFilter, setPeriodFilter] = useState<string>('30');
+  const [refundTarget, setRefundTarget] = useState<Payment | null>(null);
+  const [refundReason, setRefundReason] = useState('');
+  const [refunding, setRefunding] = useState(false);
+
+  const handleRefund = async () => {
+    if (!refundTarget) return;
+    setRefunding(true);
+    try {
+      const newNotes = [refundTarget.notes, `[استرداد] ${refundReason || 'بدون سبب محدد'}`]
+        .filter(Boolean).join(' | ');
+      const { error } = await supabase
+        .from('invoice_payments')
+        .update({ status: 'refunded', notes: newNotes })
+        .eq('id', refundTarget.id);
+      if (error) throw error;
+
+      // Log to invoice timeline (trigger doesn't auto-log refunds)
+      await supabase.from('invoice_timeline').insert({
+        invoice_id: refundTarget.invoice_id,
+        action_type: 'payment_refunded',
+        action_label: 'استرداد دفعة',
+        action_description: `تم استرداد دفعة بمبلغ ${formatSAR(Number(refundTarget.amount))}${refundReason ? ' - السبب: ' + refundReason : ''}`,
+        metadata: { amount: refundTarget.amount, payment_id: refundTarget.id, reason: refundReason },
+      });
+
+      toast.success(`تم استرداد ${formatSAR(Number(refundTarget.amount))} وتحديث الفاتورة تلقائياً`);
+      setRefundTarget(null);
+      setRefundReason('');
+    } catch (e: any) {
+      console.error(e);
+      toast.error(e.message || 'تعذر استرداد الدفعة');
+    } finally {
+      setRefunding(false);
+    }
+  };
 
   const loadPayments = useCallback(async (silent = false) => {
     if (!silent) setLoading(true);
@@ -477,6 +517,7 @@ const AdminTransactions = () => {
                       <TableHead>الطريقة</TableHead>
                       <TableHead>المرجع</TableHead>
                       <TableHead>الحالة</TableHead>
+                      <TableHead className="text-left">إجراءات</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
@@ -512,6 +553,21 @@ const AdminTransactions = () => {
                               {status.label}
                             </Badge>
                           </TableCell>
+                          <TableCell className="text-left">
+                            {p.status === 'completed' ? (
+                              <Button
+                                variant="ghost"
+                                size="sm"
+                                onClick={() => setRefundTarget(p)}
+                                className="text-destructive hover:text-destructive hover:bg-destructive/10"
+                              >
+                                <Undo2 className="h-4 w-4 ml-1" />
+                                استرداد
+                              </Button>
+                            ) : (
+                              <span className="text-xs text-muted-foreground">—</span>
+                            )}
+                          </TableCell>
                         </TableRow>
                       );
                     })}
@@ -521,6 +577,61 @@ const AdminTransactions = () => {
             )}
           </CardContent>
         </Card>
+
+        {/* Refund Confirmation Dialog */}
+        <AlertDialog open={!!refundTarget} onOpenChange={(open) => !open && setRefundTarget(null)}>
+          <AlertDialogContent dir="rtl">
+            <AlertDialogHeader>
+              <AlertDialogTitle className="flex items-center gap-2">
+                <AlertTriangle className="h-5 w-5 text-destructive" />
+                تأكيد استرداد الدفعة
+              </AlertDialogTitle>
+              <AlertDialogDescription asChild>
+                <div className="space-y-3 pt-2">
+                  <div className="text-sm">
+                    سيتم تغيير حالة الدفعة إلى <span className="font-bold text-destructive">مستردة</span> وتحديث الفاتورة تلقائياً (إعادة احتساب المبلغ المدفوع وحالتها).
+                  </div>
+                  {refundTarget && (
+                    <div className="rounded-lg border bg-muted/30 p-3 space-y-1 text-sm">
+                      <div className="flex justify-between">
+                        <span className="text-muted-foreground">المبلغ:</span>
+                        <span className="font-bold">{formatSAR(Number(refundTarget.amount))}</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-muted-foreground">الفاتورة:</span>
+                        <span className="font-mono">{refundTarget.invoice?.invoice_number}</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-muted-foreground">العميل:</span>
+                        <span>{refundTarget.invoice?.customer_name || '—'}</span>
+                      </div>
+                    </div>
+                  )}
+                  <div>
+                    <label className="text-sm font-medium block mb-1.5">سبب الاسترداد (اختياري)</label>
+                    <Textarea
+                      value={refundReason}
+                      onChange={(e) => setRefundReason(e.target.value)}
+                      placeholder="مثال: طلب العميل، خطأ في الفاتورة..."
+                      rows={3}
+                    />
+                  </div>
+                </div>
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel disabled={refunding}>إلغاء</AlertDialogCancel>
+              <AlertDialogAction
+                onClick={(e) => { e.preventDefault(); handleRefund(); }}
+                disabled={refunding}
+                className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+              >
+                {refunding ? <RefreshCw className="h-4 w-4 ml-2 animate-spin" /> : <Undo2 className="h-4 w-4 ml-2" />}
+                تأكيد الاسترداد
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
       </div>
     </AdminLayout>
   );
