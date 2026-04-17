@@ -144,6 +144,26 @@ const ClientTickets = () => {
                 <DialogTitle>إنشاء تذكرة دعم جديدة</DialogTitle>
               </DialogHeader>
               <div className="space-y-4">
+                {linkedRef && (
+                  <div className="flex items-center justify-between gap-2 p-3 rounded-lg border border-primary/30 bg-primary/5">
+                    <div className="flex items-center gap-2 text-sm">
+                      {linkedRef.type === 'invoice' ? (
+                        <FileText className="w-4 h-4 text-primary" />
+                      ) : (
+                        <Package className="w-4 h-4 text-primary" />
+                      )}
+                      <span className="text-muted-foreground">
+                        مرتبط بـ {linkedRef.type === 'invoice' ? 'الفاتورة' : 'الطلب'}:
+                      </span>
+                      <span className="font-bold text-primary">
+                        {linkedRef.number || `#${linkedRef.id.slice(0, 8)}`}
+                      </span>
+                    </div>
+                    <Button size="sm" variant="ghost" onClick={clearLinkedRef} className="h-7 px-2 text-xs">
+                      إلغاء الربط
+                    </Button>
+                  </div>
+                )}
                 <Input
                   placeholder="عنوان التذكرة"
                   value={newTicket.title}
