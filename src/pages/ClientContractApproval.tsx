@@ -15,8 +15,9 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { toast } from "sonner";
 import {
   FileText, ShieldCheck, Calendar, DollarSign, User, Building2,
-  CheckCircle2, AlertCircle, ArrowRight, Printer, Clock,
+  CheckCircle2, AlertCircle, ArrowRight, Printer, Clock, Mail, KeyRound, Loader2,
 } from "lucide-react";
+import { InputOTP, InputOTPGroup, InputOTPSlot } from "@/components/ui/input-otp";
 import {
   getContract, getContractTimeline, getContractSignatures,
   signContract, getClientIP, generateContractContent,
@@ -41,6 +42,20 @@ const ClientContractApproval = () => {
   const [signature, setSignature] = useState("");
   const [comments, setComments] = useState("");
   const [accepted, setAccepted] = useState<string[]>([]);
+
+  // OTP state
+  const [otpStep, setOtpStep] = useState<"idle" | "sent" | "verified">("idle");
+  const [otpCode, setOtpCode] = useState("");
+  const [otpSending, setOtpSending] = useState(false);
+  const [otpVerifying, setOtpVerifying] = useState(false);
+  const [otpResendCooldown, setOtpResendCooldown] = useState(0);
+  const [maskedEmail, setMaskedEmail] = useState("");
+
+  useEffect(() => {
+    if (otpResendCooldown <= 0) return;
+    const t = setTimeout(() => setOtpResendCooldown((s) => s - 1), 1000);
+    return () => clearTimeout(t);
+  }, [otpResendCooldown]);
 
   useEffect(() => { if (contractId) load(); }, [contractId]);
 
@@ -71,6 +86,55 @@ const ClientContractApproval = () => {
 
   const isSigned = contract?.status === "signed" || contract?.status === "active" || contract?.status === "completed";
   const allTermsAccepted = accepted.length === REQUIRED_TERMS.length;
+  const baseFormValid =
+    !!signerName.trim() && !!signature.trim() && allTermsAccepted;
+
+  async function handleSendOtp() {
+    if (!contract) return;
+    if (!baseFormValid) {
+      toast.error("يرجى إكمال البيانات والموافقة على الشروط أولاً");
+      return;
+    }
+    setOtpSending(true);
+    try {
+      const { data, error } = await supabase.functions.invoke("send-contract-otp", {
+        body: { contract_id: contract.id },
+      });
+      if (error) throw error;
+      if ((data as any)?.error) throw new Error((data as any).error);
+      setMaskedEmail((data as any)?.masked_email || contract.client_email || "");
+      setOtpStep("sent");
+      setOtpResendCooldown(60);
+      toast.success("تم إرسال رمز التحقق إلى بريدك الإلكتروني");
+    } catch (e: any) {
+      toast.error(e.message || "تعذّر إرسال رمز التحقق");
+    } finally {
+      setOtpSending(false);
+    }
+  }
+
+  async function handleVerifyAndSign() {
+    if (!contract) return;
+    if (otpCode.trim().length !== 6) {
+      toast.error("يرجى إدخال رمز التحقق المكون من 6 أرقام");
+      return;
+    }
+    setOtpVerifying(true);
+    try {
+      const { data, error } = await supabase.functions.invoke("verify-contract-otp", {
+        body: { contract_id: contract.id, code: otpCode.trim() },
+      });
+      if (error) throw error;
+      if (!(data as any)?.verified) throw new Error((data as any)?.error || "رمز غير صحيح");
+      setOtpStep("verified");
+      toast.success("تم التحقق ✓ — جاري إتمام التوقيع");
+      await handleSign();
+    } catch (e: any) {
+      toast.error(e.message || "رمز التحقق غير صحيح");
+    } finally {
+      setOtpVerifying(false);
+    }
+  }
 
   async function handleSign() {
     if (!contract) return;
@@ -288,9 +352,93 @@ const ClientContractApproval = () => {
                     <Textarea id="cmts" value={comments} onChange={(e) => setComments(e.target.value)} rows={2} />
                   </div>
 
-                  <Button onClick={handleSign} disabled={submitting || !allTermsAccepted} size="lg" className="w-full">
-                    {submitting ? "جاري الحفظ…" : (<><CheckCircle2 className="h-5 w-5 ml-2" /> أوافق وأوقّع إلكترونياً</>)}
-                  </Button>
+                  {/* OTP step */}
+                  {otpStep === "idle" && (
+                    <div className="rounded-lg border border-dashed border-primary/40 bg-primary/5 p-4 space-y-3">
+                      <div className="flex items-start gap-3">
+                        <Mail className="h-5 w-5 text-primary mt-0.5 shrink-0" />
+                        <div className="text-sm">
+                          <p className="font-semibold mb-1">التحقق برمز عبر البريد الإلكتروني</p>
+                          <p className="text-muted-foreground text-xs leading-relaxed">
+                            لحماية توقيعك، سنرسل رمز تحقق مكون من 6 أرقام إلى بريدك المسجل
+                            {contract.client_email && (
+                              <span className="font-medium text-foreground"> ({contract.client_email.replace(/(.{2}).+(@.+)/, "$1***$2")})</span>
+                            )}.
+                          </p>
+                        </div>
+                      </div>
+                      <Button
+                        onClick={handleSendOtp}
+                        disabled={otpSending || !baseFormValid}
+                        size="lg"
+                        className="w-full"
+                      >
+                        {otpSending ? (
+                          <><Loader2 className="h-5 w-5 ml-2 animate-spin" /> جاري الإرسال…</>
+                        ) : (
+                          <><Mail className="h-5 w-5 ml-2" /> إرسال رمز التحقق إلى بريدي</>
+                        )}
+                      </Button>
+                    </div>
+                  )}
+
+                  {otpStep === "sent" && (
+                    <div className="rounded-lg border border-primary/40 bg-card p-5 space-y-4">
+                      <div className="text-center space-y-1">
+                        <KeyRound className="h-8 w-8 mx-auto text-primary" />
+                        <p className="font-bold">أدخل رمز التحقق</p>
+                        <p className="text-xs text-muted-foreground">
+                          أُرسل الرمز إلى <span className="font-semibold text-foreground">{maskedEmail}</span> — صالح لـ 10 دقائق
+                        </p>
+                      </div>
+
+                      <div className="flex justify-center" dir="ltr">
+                        <InputOTP maxLength={6} value={otpCode} onChange={setOtpCode}>
+                          <InputOTPGroup>
+                            <InputOTPSlot index={0} />
+                            <InputOTPSlot index={1} />
+                            <InputOTPSlot index={2} />
+                            <InputOTPSlot index={3} />
+                            <InputOTPSlot index={4} />
+                            <InputOTPSlot index={5} />
+                          </InputOTPGroup>
+                        </InputOTP>
+                      </div>
+
+                      <Button
+                        onClick={handleVerifyAndSign}
+                        disabled={otpVerifying || submitting || otpCode.length !== 6}
+                        size="lg"
+                        className="w-full"
+                      >
+                        {(otpVerifying || submitting) ? (
+                          <><Loader2 className="h-5 w-5 ml-2 animate-spin" /> جاري التحقق والتوقيع…</>
+                        ) : (
+                          <><CheckCircle2 className="h-5 w-5 ml-2" /> تحقّق ووقّع العقد</>
+                        )}
+                      </Button>
+
+                      <div className="flex items-center justify-between text-xs">
+                        <button
+                          type="button"
+                          onClick={handleSendOtp}
+                          disabled={otpResendCooldown > 0 || otpSending}
+                          className="text-primary hover:underline disabled:text-muted-foreground disabled:no-underline"
+                        >
+                          {otpResendCooldown > 0
+                            ? `إعادة الإرسال خلال ${otpResendCooldown}ث`
+                            : "إعادة إرسال الرمز"}
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => { setOtpStep("idle"); setOtpCode(""); }}
+                          className="text-muted-foreground hover:text-foreground"
+                        >
+                          تغيير البيانات
+                        </button>
+                      </div>
+                    </div>
+                  )}
                 </CardContent>
               </Card>
             )}

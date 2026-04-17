@@ -124,6 +124,47 @@ export type Database = {
           },
         ]
       }
+      contract_otp_codes: {
+        Row: {
+          attempts: number
+          code_hash: string
+          contract_id: string
+          created_at: string
+          email: string
+          expires_at: string
+          id: string
+          used: boolean
+        }
+        Insert: {
+          attempts?: number
+          code_hash: string
+          contract_id: string
+          created_at?: string
+          email: string
+          expires_at: string
+          id?: string
+          used?: boolean
+        }
+        Update: {
+          attempts?: number
+          code_hash?: string
+          contract_id?: string
+          created_at?: string
+          email?: string
+          expires_at?: string
+          id?: string
+          used?: boolean
+        }
+        Relationships: [
+          {
+            foreignKeyName: "contract_otp_codes_contract_id_fkey"
+            columns: ["contract_id"]
+            isOneToOne: false
+            referencedRelation: "contracts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       contract_signatures: {
         Row: {
           accepted_terms: Json | null
