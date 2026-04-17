@@ -104,6 +104,7 @@ const ContractsSystem = () => {
       const matchTab =
         tab === "all" ? true :
         tab === "expired" ? isExpired(c) :
+        tab === "signed" ? ["signed","active","completed"].includes(c.status) :
         c.status === tab;
       const matchType = serviceTypeFilter === "all" || c.service_type === serviceTypeFilter;
       return matchSearch && matchTab && matchType;
