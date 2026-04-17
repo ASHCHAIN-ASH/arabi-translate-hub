@@ -639,6 +639,158 @@ const AdminTransactions = () => {
             </AlertDialogFooter>
           </AlertDialogContent>
         </AlertDialog>
+
+        {/* Payment Details Dialog */}
+        <Dialog open={!!detailsTarget} onOpenChange={(open) => !open && setDetailsTarget(null)}>
+          <DialogContent dir="rtl" className="max-w-2xl max-h-[90vh] overflow-y-auto">
+            <DialogHeader>
+              <DialogTitle className="flex items-center gap-2">
+                <Receipt className="h-5 w-5 text-primary" />
+                تفاصيل الدفعة
+              </DialogTitle>
+              <DialogDescription>
+                عرض شامل لبيانات الدفعة والفاتورة والعميل
+              </DialogDescription>
+            </DialogHeader>
+
+            {detailsTarget && (() => {
+              const Icon = METHOD_ICONS[detailsTarget.payment_method] || CreditCard;
+              const status = STATUS_LABELS[detailsTarget.status] || { label: detailsTarget.status, variant: 'outline' as const };
+              const inv = detailsTarget.invoice;
+              const total = Number(inv?.total_amount || 0);
+              return (
+                <div className="space-y-5">
+                  {/* Hero amount */}
+                  <div className="rounded-xl border bg-gradient-to-br from-primary/5 to-accent/5 p-5 text-center">
+                    <p className="text-xs text-muted-foreground mb-1">المبلغ المدفوع</p>
+                    <p className="text-4xl font-bold text-primary">{formatSAR(Number(detailsTarget.amount))}</p>
+                    <Badge variant={status.variant} className="mt-2">
+                      {detailsTarget.status === 'completed' && <CheckCircle2 className="h-3 w-3 ml-1" />}
+                      {status.label}
+                    </Badge>
+                  </div>
+
+                  {/* Payment Info */}
+                  <div>
+                    <h4 className="text-sm font-semibold mb-2 flex items-center gap-1.5">
+                      <Wallet className="h-4 w-4 text-muted-foreground" />
+                      بيانات الدفعة
+                    </h4>
+                    <div className="grid grid-cols-2 gap-3 text-sm">
+                      <div className="flex items-center gap-2 p-2 rounded-lg bg-muted/30">
+                        <Icon className="h-4 w-4 text-muted-foreground" />
+                        <div>
+                          <div className="text-xs text-muted-foreground">طريقة الدفع</div>
+                          <div className="font-medium">{METHOD_LABELS[detailsTarget.payment_method] || detailsTarget.payment_method}</div>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-2 p-2 rounded-lg bg-muted/30">
+                        <Calendar className="h-4 w-4 text-muted-foreground" />
+                        <div>
+                          <div className="text-xs text-muted-foreground">تاريخ الدفع</div>
+                          <div className="font-medium">{formatDate(detailsTarget.payment_date)}</div>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-2 p-2 rounded-lg bg-muted/30">
+                        <Hash className="h-4 w-4 text-muted-foreground" />
+                        <div>
+                          <div className="text-xs text-muted-foreground">رقم المرجع</div>
+                          <div className="font-mono text-xs">{detailsTarget.reference_number || '—'}</div>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-2 p-2 rounded-lg bg-muted/30">
+                        <Clock className="h-4 w-4 text-muted-foreground" />
+                        <div>
+                          <div className="text-xs text-muted-foreground">سُجّلت في</div>
+                          <div className="font-medium text-xs">{formatDateTime(detailsTarget.created_at)}</div>
+                        </div>
+                      </div>
+                    </div>
+                    {detailsTarget.notes && (
+                      <div className="mt-2 p-3 rounded-lg bg-muted/30 text-sm">
+                        <div className="flex items-center gap-1.5 text-xs text-muted-foreground mb-1">
+                          <StickyNote className="h-3.5 w-3.5" />
+                          ملاحظات
+                        </div>
+                        <div className="whitespace-pre-wrap">{detailsTarget.notes}</div>
+                      </div>
+                    )}
+                  </div>
+
+                  <Separator />
+
+                  {/* Invoice Info */}
+                  <div>
+                    <h4 className="text-sm font-semibold mb-2 flex items-center gap-1.5">
+                      <FileText className="h-4 w-4 text-muted-foreground" />
+                      بيانات الفاتورة
+                    </h4>
+                    {inv ? (
+                      <div className="rounded-lg border p-3 space-y-2 text-sm">
+                        <div className="flex justify-between">
+                          <span className="text-muted-foreground">رقم الفاتورة</span>
+                          <span className="font-mono font-bold">{inv.invoice_number}</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span className="text-muted-foreground">إجمالي الفاتورة</span>
+                          <span className="font-bold">{formatSAR(total)}</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span className="text-muted-foreground">المتبقي بعد هذه الدفعة</span>
+                          <span className="font-bold text-orange-600">
+                            {formatSAR(Math.max(0, total - Number(detailsTarget.amount)))}
+                          </span>
+                        </div>
+                        <div className="flex justify-between items-center">
+                          <span className="text-muted-foreground">حالة الفاتورة</span>
+                          <Badge variant="outline">{inv.status || '—'}</Badge>
+                        </div>
+                      </div>
+                    ) : (
+                      <p className="text-sm text-muted-foreground">لا توجد بيانات فاتورة مرتبطة</p>
+                    )}
+                  </div>
+
+                  <Separator />
+
+                  {/* Customer Info */}
+                  <div>
+                    <h4 className="text-sm font-semibold mb-2 flex items-center gap-1.5">
+                      <User className="h-4 w-4 text-muted-foreground" />
+                      بيانات العميل
+                    </h4>
+                    <div className="rounded-lg border p-3 space-y-2 text-sm">
+                      <div className="flex items-center gap-2">
+                        <User className="h-4 w-4 text-muted-foreground" />
+                        <span className="font-medium">{inv?.customer_name || '—'}</span>
+                      </div>
+                      {inv?.customer_email && (
+                        <div className="flex items-center gap-2">
+                          <Mail className="h-4 w-4 text-muted-foreground" />
+                          <a href={`mailto:${inv.customer_email}`} className="text-primary hover:underline">
+                            {inv.customer_email}
+                          </a>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              );
+            })()}
+
+            <DialogFooter className="gap-2 sm:gap-2">
+              <Button variant="outline" onClick={() => setDetailsTarget(null)}>إغلاق</Button>
+              {detailsTarget?.invoice_id && (
+                <Button asChild>
+                  <Link to={`/adminmaster/invoices/${detailsTarget.invoice_id}`}>
+                    <ExternalLink className="h-4 w-4 ml-2" />
+                    فتح صفحة الفاتورة
+                  </Link>
+                </Button>
+              )}
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
       </div>
     </AdminLayout>
   );
