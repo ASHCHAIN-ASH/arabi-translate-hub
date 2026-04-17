@@ -60,37 +60,66 @@ const ClientDashboard = () => {
   return (
     <ClientLayout>
       <div className="p-3 sm:p-5 lg:p-6 space-y-5" dir="rtl">
-        {/* Hero Section — compact */}
+        {/* Hero — animated */}
         <motion.div
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-          className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-primary via-primary/90 to-purple-700 p-5 sm:p-8 text-white"
+          transition={{ duration: 0.6, type: 'spring' }}
+          className="relative overflow-hidden rounded-3xl p-6 sm:p-8 text-white"
         >
-          <div className="absolute inset-0 opacity-10">
-            <div className="absolute -top-16 -right-16 w-64 h-64 bg-white rounded-full blur-3xl" />
-            <div className="absolute -bottom-16 -left-16 w-48 h-48 bg-purple-300 rounded-full blur-3xl" />
-          </div>
+          {/* Animated gradient bg */}
+          <div className="absolute inset-0 bg-gradient-to-br from-indigo-600 via-purple-600 to-fuchsia-600" />
+          <motion.div
+            animate={{ x: [0, 30, 0], y: [0, -20, 0] }}
+            transition={{ duration: 14, repeat: Infinity, ease: 'easeInOut' }}
+            className="absolute -top-24 -right-24 w-80 h-80 bg-pink-400/30 rounded-full blur-3xl"
+          />
+          <motion.div
+            animate={{ x: [0, -25, 0], y: [0, 20, 0] }}
+            transition={{ duration: 16, repeat: Infinity, ease: 'easeInOut' }}
+            className="absolute -bottom-24 -left-24 w-72 h-72 bg-cyan-400/30 rounded-full blur-3xl"
+          />
+          {/* Shimmer */}
+          <div className="absolute inset-0 opacity-[0.08]" style={{
+            backgroundImage: 'linear-gradient(45deg, transparent 25%, white 25%, white 26%, transparent 26%, transparent 75%, white 75%, white 76%, transparent 76%)',
+            backgroundSize: '40px 40px',
+          }} />
 
-          <div className="relative z-10 flex items-center justify-between">
+          <div className="relative z-10 flex items-center justify-between gap-4 flex-wrap">
             <div className="flex items-center gap-4">
-              <div className="w-12 h-12 sm:w-14 sm:h-14 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center">
-                <GraduationCap className="w-6 h-6 sm:w-7 sm:h-7" />
-              </div>
+              <motion.div
+                initial={{ scale: 0, rotate: -180 }}
+                animate={{ scale: 1, rotate: 0 }}
+                transition={{ type: 'spring', stiffness: 180, delay: 0.2 }}
+                className="w-14 h-14 sm:w-16 sm:h-16 bg-white/20 backdrop-blur-md rounded-2xl flex items-center justify-center ring-2 ring-white/30 shadow-2xl"
+              >
+                <GraduationCap className="w-7 h-7 sm:w-8 sm:h-8" />
+              </motion.div>
               <div>
-                <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold">
-                  مرحباً، {displayName}
+                <motion.div
+                  initial={{ opacity: 0, x: -10 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: 0.3 }}
+                  className="inline-flex items-center gap-2 px-3 py-1 bg-white/20 backdrop-blur-md rounded-full text-[11px] font-bold mb-2 ring-1 ring-white/30"
+                >
+                  <span className="relative flex w-2 h-2">
+                    <span className="absolute inline-flex w-full h-full rounded-full bg-emerald-400 opacity-75 animate-ping" />
+                    <span className="relative inline-flex w-2 h-2 rounded-full bg-emerald-400" />
+                  </span>
+                  أهلاً بعودتك
+                </motion.div>
+                <h1 className="text-2xl sm:text-3xl lg:text-4xl font-black tracking-tight">
+                  مرحباً، {displayName} 👋
                 </h1>
-                <p className="text-white/80 text-sm sm:text-base mt-1">
-                  ابدأ رحلتك الأكاديمية مع خدماتنا المتخصصة
+                <p className="text-white/85 text-sm sm:text-base mt-1 font-medium">
+                  لوحة تحكمك الذكية — كل ما تحتاجه في مكان واحد
                 </p>
               </div>
             </div>
             <Button
               onClick={handleRefresh}
-              variant="secondary"
               size="sm"
-              className="bg-white/20 backdrop-blur-sm border-white/30 text-white hover:bg-white/30 hidden sm:flex"
+              className="bg-white/20 backdrop-blur-md border border-white/30 text-white hover:bg-white/30 rounded-xl"
             >
               <RefreshCw className="w-4 h-4 ml-2" />
               تحديث
