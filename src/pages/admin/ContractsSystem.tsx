@@ -304,8 +304,8 @@ const ContractsSystem = () => {
         </Card>
 
         {/* Tabs */}
-        <Tabs value={tab} onValueChange={(v) => setTab(v as any)}>
-          <TabsList className="bg-muted w-full sm:w-auto overflow-x-auto">
+        <Tabs value={tab} onValueChange={(v) => setTab(v as any)} dir="rtl">
+          <TabsList className="bg-muted w-full sm:w-auto overflow-x-auto flex-row-reverse">
             <TabsTrigger value="all">الكل ({contracts.length})</TabsTrigger>
             <TabsTrigger value="draft">مسودة ({stats.draft})</TabsTrigger>
             <TabsTrigger value="pending_signature">بانتظار التوقيع ({stats.pending})</TabsTrigger>
