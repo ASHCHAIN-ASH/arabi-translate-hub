@@ -9,8 +9,8 @@ import type { Invoice, InvoiceItem, InvoicePayment } from './invoiceService';
 import { InvoiceService } from './invoiceService';
 
 const COMPANY = {
-  name: 'مسترد باث',
-  nameEn: 'Mastered Path',
+  name: 'ماستر إدو باث',
+  nameEn: 'Mastered Edu Path',
   address: 'المملكة العربية السعودية',
   email: 'info@masteredupath.com',
   phone: '+966 50 000 0000',
