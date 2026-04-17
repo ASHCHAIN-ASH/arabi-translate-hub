@@ -81,7 +81,7 @@ export const template = {
   },
 } satisfies TemplateEntry
 
-const main = { backgroundColor: '#ffffff', fontFamily: "'IBM Plex Sans Arabic', 'Noto Sans Arabic', Arial, sans-serif" }
+const main = { backgroundColor: '#ffffff', fontFamily: "'Cairo', 'Almarai', Arial, sans-serif" }
 const container = { padding: '30px 25px', maxWidth: '580px', margin: '0 auto' }
 const headerSection = { textAlign: 'center' as const, padding: '10px 0' }
 const logo = { fontSize: '20px', fontWeight: '700' as const, color: '#3b4ede', margin: '0' }

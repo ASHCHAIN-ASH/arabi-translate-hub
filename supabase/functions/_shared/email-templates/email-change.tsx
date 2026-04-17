@@ -51,7 +51,7 @@ export const EmailChangeEmail = ({
 
 export default EmailChangeEmail
 
-const main = { backgroundColor: '#ffffff', fontFamily: "'IBM Plex Sans Arabic', 'Noto Sans Arabic', Arial, sans-serif" }
+const main = { backgroundColor: '#ffffff', fontFamily: "'Cairo', 'Almarai', Arial, sans-serif" }
 const container = { padding: '30px 25px', direction: 'rtl' as const, textAlign: 'right' as const }
 const logo = { fontSize: '20px', fontWeight: 'bold' as const, color: '#3644DB', margin: '0 0 24px', textAlign: 'center' as const }
 const h1 = { fontSize: '24px', fontWeight: 'bold' as const, color: '#0a0f1e', margin: '0 0 20px', textAlign: 'center' as const }
