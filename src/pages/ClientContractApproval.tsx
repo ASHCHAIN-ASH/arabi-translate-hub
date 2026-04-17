@@ -15,8 +15,9 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { toast } from "sonner";
 import {
   FileText, ShieldCheck, Calendar, DollarSign, User, Building2,
-  CheckCircle2, AlertCircle, ArrowRight, Printer, Clock,
+  CheckCircle2, AlertCircle, ArrowRight, Printer, Clock, Mail, KeyRound, Loader2,
 } from "lucide-react";
+import { InputOTP, InputOTPGroup, InputOTPSlot } from "@/components/ui/input-otp";
 import {
   getContract, getContractTimeline, getContractSignatures,
   signContract, getClientIP, generateContractContent,
