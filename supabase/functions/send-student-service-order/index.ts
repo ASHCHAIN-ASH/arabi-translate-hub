@@ -59,7 +59,7 @@ const handler = async (req: Request): Promise<Response> => {
             }
             
             body {
-              font-family: 'Cairo', 'Segoe UI', Tahoma, sans-serif;
+              font-family: 'IBM Plex Sans Arabic', 'Segoe UI', Tahoma, sans-serif;
               background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
               direction: rtl;
               text-align: right;
@@ -561,7 +561,7 @@ const handler = async (req: Request): Promise<Response> => {
             }
             
             body {
-              font-family: 'Cairo', 'Segoe UI', Tahoma, sans-serif;
+              font-family: 'IBM Plex Sans Arabic', 'Segoe UI', Tahoma, sans-serif;
               background: linear-gradient(135deg, #fc5c7d 0%, #6a82fb 100%);
               direction: rtl;
               text-align: right;

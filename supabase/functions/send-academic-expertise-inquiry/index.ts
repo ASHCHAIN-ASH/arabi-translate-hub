@@ -40,7 +40,7 @@ const generateCustomerEmailTemplate = (consultationData: ConsultationRequest, se
         }
         
         body {
-          font-family: 'Cairo', 'Cairo', 'Amiri', system-ui, -apple-system, sans-serif;
+          font-family: 'IBM Plex Sans Arabic', 'IBM Plex Sans Arabic', 'Amiri', system-ui, -apple-system, sans-serif;
           line-height: 1.6;
           color: #1a202c;
           background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
@@ -804,7 +804,7 @@ const generateAdminEmailTemplate = (consultationData: ConsultationRequest, servi
         }
         
         body {
-          font-family: 'Cairo', 'Cairo', system-ui, -apple-system, sans-serif;
+          font-family: 'IBM Plex Sans Arabic', 'IBM Plex Sans Arabic', system-ui, -apple-system, sans-serif;
           line-height: 1.6;
           color: #1f2937;
           background: linear-gradient(135deg, #dc2626 0%, #ef4444 50%, #f87171 100%);

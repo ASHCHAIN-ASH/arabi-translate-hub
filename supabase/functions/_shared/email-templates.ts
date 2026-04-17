@@ -33,7 +33,7 @@ const getBaseEmailCSS = () => `
   }
   
   body {
-    font-family: 'Almarai', 'Tahoma', 'Arial', sans-serif;
+    font-family: 'IBM Plex Sans Arabic', 'Tahoma', 'Arial', sans-serif;
     line-height: 1.8;
     color: #1a202c;
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
@@ -194,7 +194,7 @@ const getBaseEmailCSS = () => `
     font-size: 36px;
     font-weight: 800;
     letter-spacing: 3px;
-    font-family: 'Almarai', monospace;
+    font-family: 'IBM Plex Sans Arabic', monospace;
   }
   
   .info-card {

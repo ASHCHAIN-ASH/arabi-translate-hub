@@ -64,7 +64,7 @@ const getClientEmailTemplate = (data: LicenseRequestData, requestNumber: string)
         }
         
         body {
-            font-family: 'Cairo', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'IBM Plex Sans Arabic', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             line-height: 1.8;
             color: #1a202c;
             background: linear-gradient(135deg, #1e40af 0%, #7c3aed 100%);
@@ -186,7 +186,7 @@ const getClientEmailTemplate = (data: LicenseRequestData, requestNumber: string)
         .request-number-value {
             font-size: 32px;
             font-weight: 800;
-            font-family: 'Cairo', monospace;
+            font-family: 'IBM Plex Sans Arabic', monospace;
             letter-spacing: 3px;
         }
         
