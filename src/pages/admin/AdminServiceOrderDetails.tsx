@@ -30,6 +30,11 @@ const STATUS_CONFIG: Record<string, { label: string; color: string; icon: React.
   completed: { label: 'مكتمل', color: 'bg-green-50 text-green-700 border-green-300', icon: <CheckCircle className="w-3 h-3" />, barClass: 'bg-green-500' },
   refunded: { label: 'مسترد', color: 'bg-orange-50 text-orange-700 border-orange-300', icon: <DollarSign className="w-3 h-3" />, barClass: 'bg-orange-500' },
   cancelled: { label: 'ملغي', color: 'bg-red-50 text-red-700 border-red-300', icon: <X className="w-3 h-3" />, barClass: 'bg-red-500' },
+  price_quote: { label: 'عرض سعر', color: 'bg-indigo-50 text-indigo-700 border-indigo-300', icon: <DollarSign className="w-3 h-3" />, barClass: 'bg-indigo-500' },
+  attachment: { label: 'مرفق جديد', color: 'bg-teal-50 text-teal-700 border-teal-300', icon: <Paperclip className="w-3 h-3" />, barClass: 'bg-teal-500' },
+  delivery: { label: 'تسليم', color: 'bg-emerald-50 text-emerald-700 border-emerald-300', icon: <PackageCheck className="w-3 h-3" />, barClass: 'bg-emerald-500' },
+  message: { label: 'رسالة', color: 'bg-sky-50 text-sky-700 border-sky-300', icon: <Bell className="w-3 h-3" />, barClass: 'bg-sky-500' },
+  note: { label: 'ملاحظة', color: 'bg-yellow-50 text-yellow-700 border-yellow-300', icon: <Activity className="w-3 h-3" />, barClass: 'bg-yellow-500' },
 };
 
 const PRIORITY_CONFIG: Record<string, { label: string; color: string }> = {
