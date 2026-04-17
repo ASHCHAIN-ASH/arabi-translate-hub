@@ -132,6 +132,53 @@ export async function generateContractContent(contractId: string) {
   return content;
 }
 
+/**
+ * Parse work duration text and compute the delivery date (today + N days).
+ * Supports Arabic & English patterns:
+ *   - "14 يوم", "14 يوم عمل", "يومين", "يوم"
+ *   - "أسبوع" (7), "أسبوعين" (14), "3 أسابيع"
+ *   - "شهر" (30), "شهرين" (60), "2 شهر"
+ *   - "14 day", "2 weeks", "1 month"
+ * Returns ISO date string (YYYY-MM-DD) or undefined if can't parse.
+ */
+export function computeDeliveryFromDuration(duration?: string): string | undefined {
+  if (!duration) return undefined;
+  const text = duration.trim().toLowerCase();
+  if (!text) return undefined;
+
+  // Pure word (no digits): يوم/يومين/أسبوع/أسبوعين/شهر/شهرين
+  const wordMap: Record<string, number> = {
+    "يوم": 1, "يومين": 2,
+    "أسبوع": 7, "اسبوع": 7, "أسبوعين": 14, "اسبوعين": 14,
+    "شهر": 30, "شهرين": 60,
+  };
+  if (wordMap[text] !== undefined) return addDaysISO(wordMap[text]);
+
+  // Numeric pattern: number followed by Arabic/English unit
+  const m = text.match(/(\d+)\s*([\u0600-\u06FFa-z]+)/);
+  if (m) {
+    const n = parseInt(m[1], 10);
+    const unit = m[2];
+    let multiplier = 0;
+    if (/^(يوم|أيام|ايام|day|days)/.test(unit)) multiplier = 1;
+    else if (/^(أسبوع|اسبوع|أسابيع|اسابيع|week|weeks)/.test(unit)) multiplier = 7;
+    else if (/^(شهر|شهور|أشهر|اشهر|month|months)/.test(unit)) multiplier = 30;
+    if (multiplier > 0) return addDaysISO(n * multiplier);
+  }
+
+  // Fallback: just a number → treat as days
+  const numOnly = text.match(/^(\d+)$/);
+  if (numOnly) return addDaysISO(parseInt(numOnly[1], 10));
+
+  return undefined;
+}
+
+function addDaysISO(days: number): string {
+  const d = new Date();
+  d.setDate(d.getDate() + days);
+  return d.toISOString().split("T")[0];
+}
+
 export async function createManualContract(input: {
   user_id?: string | null;
   customer_id?: string | null;
@@ -148,6 +195,10 @@ export async function createManualContract(input: {
   client_email?: string;
   client_phone?: string;
 }) {
+  // Auto-compute delivery_date from work_duration if not provided
+  // Supports patterns like: "14 يوم", "14 يوم عمل", "أسبوعين", "شهر", "X day(s)", "X week(s)"
+  const computedDelivery = input.delivery_date || computeDeliveryFromDuration(input.work_duration);
+
   const { data, error } = await (supabase.from(TBL) as any)
     .insert({
       user_id: input.user_id ?? null,
@@ -159,7 +210,7 @@ export async function createManualContract(input: {
       total_amount: input.total_amount,
       currency: input.currency || "SAR",
       payment_terms: input.payment_terms,
-      delivery_date: input.delivery_date,
+      delivery_date: computedDelivery,
       client_full_name: input.client_full_name,
       client_id_number: input.client_id_number,
       client_email: input.client_email,
