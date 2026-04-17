@@ -371,7 +371,6 @@ Deno.serve(async (req: Request) => {
 
     // If client requests raw HTML, return it directly so the browser renders
     // the styled document immediately and triggers print/save-as-PDF.
-    const url = new URL(req.url);
     const wantsHtml =
       url.searchParams.get("format") === "html" ||
       body.format === "html" ||
