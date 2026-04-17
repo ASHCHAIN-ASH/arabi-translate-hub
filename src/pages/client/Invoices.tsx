@@ -119,6 +119,9 @@ export default function ClientInvoices() {
                               <Button size="icon" variant="ghost" onClick={() => handlePrint(inv)} title="عرض/طباعة"><Eye className="w-4 h-4" /></Button>
                               <Button size="icon" variant="ghost" onClick={() => handlePrint(inv)} title="طباعة"><Printer className="w-4 h-4" /></Button>
                               <Button size="icon" variant="ghost" onClick={() => handleDownload(inv)} title="تحميل PDF"><Download className="w-4 h-4" /></Button>
+                              {Number(inv.remaining_amount ?? 0) > 0 && (
+                                <Button size="icon" variant="ghost" onClick={() => payFromWallet(inv)} title="ادفع من المحفظة"><WalletIcon className="w-4 h-4 text-violet-600" /></Button>
+                              )}
                               <Button size="icon" variant="ghost" onClick={() => openSupportTicket(inv)} title="فتح تذكرة دعم"><LifeBuoy className="w-4 h-4 text-amber-600" /></Button>
                             </div>
                           </TableCell>
@@ -147,6 +150,11 @@ export default function ClientInvoices() {
                           <Button size="sm" variant="outline" className="flex-1" onClick={() => handleDownload(inv)}><Download className="w-3 h-3 ml-1" />PDF</Button>
                           <Button size="sm" variant="outline" className="flex-1" onClick={() => openSupportTicket(inv)}><LifeBuoy className="w-3 h-3 ml-1" />دعم</Button>
                         </div>
+                        {Number(inv.remaining_amount ?? 0) > 0 && (
+                          <Button size="sm" className="w-full bg-gradient-to-l from-violet-600 to-fuchsia-600 hover:from-violet-700 hover:to-fuchsia-700 text-white gap-1" onClick={() => payFromWallet(inv)}>
+                            <WalletIcon className="w-3.5 h-3.5" /> ادفع من المحفظة
+                          </Button>
+                        )}
                       </CardContent>
                     </Card>
                   ))}
