@@ -1,639 +1,253 @@
-import React, { useState, useEffect } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import AdminLayout from '@/components/admin/AdminLayout';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Textarea } from '@/components/ui/textarea';
-import { Checkbox } from '@/components/ui/checkbox';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Badge } from '@/components/ui/badge';
-import { Separator } from '@/components/ui/separator';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
-import { toast } from '@/hooks/use-toast';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger, DropdownMenuSeparator } from '@/components/ui/dropdown-menu';
+import { FileText, Plus, Search, RefreshCw, Eye, Edit, Trash2, Download, Printer, CreditCard, MoreVertical, TrendingUp, Clock, CheckCircle2 } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import { toast } from 'sonner';
 import { supabase } from '@/integrations/supabase/client';
-import { Plus, FileText, Mail, Trash2, Edit, Download, Send } from 'lucide-react';
+import { InvoiceService, type Invoice } from '@/utils/invoiceService';
+import { openInvoicePrintWindow, downloadInvoiceAsPDF } from '@/utils/invoicePdf';
+import InvoiceFormDialog from '@/components/admin/invoices/InvoiceFormDialog';
+import PaymentDialog from '@/components/admin/invoices/PaymentDialog';
 
-interface Invoice {
-  id: string;
-  invoice_number: string;
-  customer_name?: string;
-  customer_email?: string;
-  customer_phone?: string;
-  customer_id?: string;
-  order_id?: string;
-  user_id?: string;
-  subtotal?: number;
-  tax_amount?: number;
-  discount_amount?: number;
-  total_amount?: number;
-  amount?: number;
-  vat_amount?: number;
-  vat_rate?: number;
-  include_vat?: boolean;
-  status: string;
-  payment_status?: string;
-  issue_date?: string;
-  due_date?: string;
-  paid_at?: string;
-  notes?: string;
-  created_at: string;
-  pdf_generated?: boolean;
-  pdf_url?: string;
-  invoice_items?: InvoiceItem[];
-}
-
-interface InvoiceItem {
-  id?: string;
-  item_name: string;
-  description?: string;
-  quantity: number;
-  unit_price: number;
-  total_price: number;
-  discount_percentage?: number;
-  discount_amount?: number;
-}
-
-const AdminInvoices = () => {
+export default function AdminInvoices() {
   const [invoices, setInvoices] = useState<Invoice[]>([]);
   const [loading, setLoading] = useState(true);
-  const [showCreateDialog, setShowCreateDialog] = useState(false);
-  const [editingInvoice, setEditingInvoice] = useState<Invoice | null>(null);
-  const [generatingPdf, setGeneratingPdf] = useState<string | null>(null);
+  const [search, setSearch] = useState('');
+  const [statusFilter, setStatusFilter] = useState('all');
+  const [formOpen, setFormOpen] = useState(false);
+  const [editing, setEditing] = useState<Invoice | null>(null);
+  const [paymentFor, setPaymentFor] = useState<Invoice | null>(null);
 
-  const [newInvoice, setNewInvoice] = useState<Partial<Invoice>>({
-    customer_name: '',
-    customer_email: '',
-    customer_phone: '',
-    include_vat: true,
-    vat_rate: 15,
-    status: 'draft',
-    payment_status: 'pending',
-    due_date: ''
-  });
+  const load = async () => {
+    setLoading(true);
+    try { setInvoices(await InvoiceService.list()); }
+    catch (e: any) { toast.error('فشل التحميل', { description: e.message }); }
+    finally { setLoading(false); }
+  };
 
-  const [invoiceItems, setInvoiceItems] = useState<InvoiceItem[]>([{
-    item_name: '',
-    description: '',
-    quantity: 1,
-    unit_price: 0,
-    total_price: 0,
-    discount_percentage: 0,
-    discount_amount: 0
-  }]);
-
+  useEffect(() => { load(); }, []);
   useEffect(() => {
-    fetchInvoices();
+    const ch = supabase.channel('admin-invoices')
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'invoices' }, () => load())
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'invoice_payments' }, () => load())
+      .subscribe();
+    return () => { supabase.removeChannel(ch); };
   }, []);
 
-  const fetchInvoices = async () => {
+  const filtered = useMemo(() => invoices.filter((i) => {
+    if (statusFilter !== 'all' && i.status !== statusFilter) return false;
+    if (search) {
+      const q = search.toLowerCase();
+      return i.invoice_number.toLowerCase().includes(q) || (i.customer_name ?? '').toLowerCase().includes(q) || (i.customer_email ?? '').toLowerCase().includes(q);
+    }
+    return true;
+  }), [invoices, search, statusFilter]);
+
+  const stats = useMemo(() => ({
+    total: invoices.length,
+    paid: invoices.filter(i => i.status === 'paid').length,
+    unpaid: invoices.filter(i => ['pending','sent','partially_paid','overdue'].includes(i.status)).length,
+    totalAmount: invoices.reduce((s,i) => s + Number(i.total_amount ?? 0), 0),
+    totalPaid: invoices.reduce((s,i) => s + Number(i.paid_amount ?? 0), 0),
+    totalRemaining: invoices.reduce((s,i) => s + Number(i.remaining_amount ?? 0), 0),
+  }), [invoices]);
+
+  const handleDelete = async (inv: Invoice) => {
+    if (!confirm(`حذف الفاتورة ${inv.invoice_number}؟`)) return;
+    try { await InvoiceService.remove(inv.id); toast.success('تم الحذف'); }
+    catch (e: any) { toast.error('فشل', { description: e.message }); }
+  };
+  const handleDownload = async (inv: Invoice) => {
     try {
-      const { data, error } = await supabase
-        .from('invoices')
-        .select(`
-          *,
-          invoice_items (*)
-        `)
-        .order('created_at', { ascending: false });
-
-      if (error) throw error;
-      setInvoices((data || []) as any);
-    } catch (error: any) {
-      toast({
-        title: "خطأ",
-        description: "فشل في تحميل الفواتير: " + error.message,
-        variant: "destructive"
-      });
-    } finally {
-      setLoading(false);
-    }
+      const [items, payments] = await Promise.all([InvoiceService.getItems(inv.id), InvoiceService.getPayments(inv.id)]);
+      await downloadInvoiceAsPDF(inv, items, payments);
+    } catch (e: any) { toast.error('فشل PDF', { description: e.message }); }
   };
-
-  const calculateItemTotal = (item: InvoiceItem) => {
-    const subtotal = item.quantity * item.unit_price;
-    const discountAmount = item.discount_percentage ? (subtotal * item.discount_percentage) / 100 : (item.discount_amount || 0);
-    return subtotal - discountAmount;
+  const handlePrint = async (inv: Invoice) => {
+    const [items, payments] = await Promise.all([InvoiceService.getItems(inv.id), InvoiceService.getPayments(inv.id)]);
+    openInvoicePrintWindow(inv, items, payments);
   };
-
-  const calculateInvoiceTotals = () => {
-    const subtotal = invoiceItems.reduce((sum, item) => sum + calculateItemTotal(item), 0);
-    const vatAmount = newInvoice.include_vat ? (subtotal * (newInvoice.vat_rate || 15)) / 100 : 0;
-    const total = subtotal + vatAmount;
-
-    return { subtotal, vatAmount, total };
-  };
-
-  const handleItemChange = (index: number, field: keyof InvoiceItem, value: any) => {
-    const updatedItems = [...invoiceItems];
-    updatedItems[index] = { ...updatedItems[index], [field]: value };
-    
-    // إعادة حساب المجموع للعنصر
-    if (['quantity', 'unit_price', 'discount_percentage', 'discount_amount'].includes(field)) {
-      updatedItems[index].total_price = calculateItemTotal(updatedItems[index]);
-    }
-    
-    setInvoiceItems(updatedItems);
-  };
-
-  const addInvoiceItem = () => {
-    setInvoiceItems([...invoiceItems, {
-      item_name: '',
-      description: '',
-      quantity: 1,
-      unit_price: 0,
-      total_price: 0,
-      discount_percentage: 0,
-      discount_amount: 0
-    }]);
-  };
-
-  const removeInvoiceItem = (index: number) => {
-    if (invoiceItems.length > 1) {
-      const updatedItems = invoiceItems.filter((_, i) => i !== index);
-      setInvoiceItems(updatedItems);
-    }
-  };
-
-  const handleCreateInvoice = async () => {
-    try {
-      if (!newInvoice.customer_name || !newInvoice.customer_email) {
-        toast({
-          title: "خطأ",
-          description: "يرجى ملء جميع البيانات المطلوبة",
-          variant: "destructive"
-        });
-        return;
-      }
-
-      const { subtotal, vatAmount, total } = calculateInvoiceTotals();
-
-      // إنشاء الفاتورة  
-      const invoiceData: any = {
-        customer_name: newInvoice.customer_name!,
-        customer_email: newInvoice.customer_email!,
-        customer_phone: newInvoice.customer_phone || null,
-        amount: total,
-        status: newInvoice.status || 'draft',
-        payment_status: newInvoice.payment_status || 'pending',
-        issue_date: new Date().toISOString(),
-        due_date: newInvoice.due_date || null,
-        offer_title: `فاتورة ضريبية - ${invoiceItems[0]?.item_name || 'خدمات متنوعة'}`
-      };
-
-      const { data: invoice, error: invoiceError } = await supabase
-        .from('invoices')
-        .insert(invoiceData)
-        .select()
-        .single();
-
-      if (invoiceError) throw invoiceError;
-
-      // إضافة عناصر الفاتورة
-      const itemsToInsert = invoiceItems
-        .filter(item => item.item_name.trim() !== '')
-        .map(item => ({
-          ...item,
-          invoice_id: invoice.id,
-          total_price: calculateItemTotal(item)
-        }));
-
-      if (itemsToInsert.length > 0) {
-        const { error: itemsError } = await supabase
-          .from('invoice_items')
-          .insert(itemsToInsert);
-
-        if (itemsError) throw itemsError;
-      }
-
-      toast({
-        title: "نجح الإنشاء",
-        description: `تم إنشاء الفاتورة ${invoice.invoice_number} بنجاح`,
-      });
-
-      setShowCreateDialog(false);
-      resetForm();
-      fetchInvoices();
-    } catch (error: any) {
-      toast({
-        title: "خطأ",
-        description: "فشل في إنشاء الفاتورة: " + error.message,
-        variant: "destructive"
-      });
-    }
-  };
-
-  const generatePDFAndSendEmail = async (invoiceId: string, sendEmail: boolean = false) => {
-    setGeneratingPdf(invoiceId);
-    try {
-      const invoice = invoices.find(inv => inv.id === invoiceId);
-      if (!invoice) throw new Error("الفاتورة غير موجودة");
-
-      const { data, error } = await supabase.functions.invoke('generate-invoice-pdf', {
-        body: {
-          invoice_id: invoiceId,
-          send_email: sendEmail,
-          recipient_email: sendEmail ? invoice.customer_email : undefined
-        }
-      });
-
-      if (error) throw error;
-
-      toast({
-        title: "تم بنجاح",
-        description: sendEmail ? "تم إنشاء وإرسال الفاتورة بالإيميل" : "تم إنشاء الفاتورة PDF",
-      });
-
-      if (data?.pdf_data && !sendEmail) {
-        // تحميل PDF
-        const link = document.createElement('a');
-        link.href = `data:application/pdf;base64,${data.pdf_data}`;
-        link.download = `فاتورة_${invoice.invoice_number}.pdf`;
-        link.click();
-      }
-
-      fetchInvoices();
-    } catch (error: any) {
-      toast({
-        title: "خطأ",
-        description: "فشل في إنشاء PDF: " + error.message,
-        variant: "destructive"
-      });
-    } finally {
-      setGeneratingPdf(null);
-    }
-  };
-
-  const resetForm = () => {
-    setNewInvoice({
-      customer_name: '',
-      customer_email: '',
-      customer_phone: '',
-      include_vat: true,
-      vat_rate: 15,
-      status: 'draft',
-      payment_status: 'pending',
-      due_date: ''
-    });
-    setInvoiceItems([{
-      item_name: '',
-      description: '',
-      quantity: 1,
-      unit_price: 0,
-      total_price: 0,
-      discount_percentage: 0,
-      discount_amount: 0
-    }]);
-  };
-
-  const { subtotal, vatAmount, total } = calculateInvoiceTotals();
-
-  if (loading) {
-    return (
-      <AdminLayout>
-        <div className="p-6">
-          <div className="text-center">جاري التحميل...</div>
-        </div>
-      </AdminLayout>
-    );
-  }
 
   return (
     <AdminLayout>
-      <div className="p-6 space-y-6">
-        <div className="flex justify-between items-center">
-          <h1 className="text-3xl font-bold">إدارة الفواتير الضريبية</h1>
-          <Dialog open={showCreateDialog} onOpenChange={setShowCreateDialog}>
-            <DialogTrigger asChild>
-              <Button onClick={() => setShowCreateDialog(true)}>
-                <Plus className="h-4 w-4 ml-2" />
-                فاتورة جديدة
-              </Button>
-            </DialogTrigger>
-            <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
-              <DialogHeader>
-                <DialogTitle>إنشاء فاتورة ضريبية جديدة</DialogTitle>
-              </DialogHeader>
-              
-              <div className="space-y-6">
-                {/* بيانات العميل */}
-                <Card>
-                  <CardHeader>
-                    <CardTitle className="text-lg">بيانات العميل</CardTitle>
-                  </CardHeader>
-                  <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                      <Label htmlFor="customer_name">اسم العميل *</Label>
-                      <Input
-                        id="customer_name"
-                        value={newInvoice.customer_name || ''}
-                        onChange={(e) => setNewInvoice({...newInvoice, customer_name: e.target.value})}
-                        placeholder="أدخل اسم العميل"
-                      />
-                    </div>
-                    
-                    <div>
-                      <Label htmlFor="customer_email">البريد الإلكتروني *</Label>
-                      <Input
-                        id="customer_email"
-                        type="email"
-                        value={newInvoice.customer_email || ''}
-                        onChange={(e) => setNewInvoice({...newInvoice, customer_email: e.target.value})}
-                        placeholder="example@domain.com"
-                      />
-                    </div>
-                    
-                    <div>
-                      <Label htmlFor="customer_phone">رقم الهاتف</Label>
-                      <Input
-                        id="customer_phone"
-                        value={newInvoice.customer_phone || ''}
-                        onChange={(e) => setNewInvoice({...newInvoice, customer_phone: e.target.value})}
-                        placeholder="+966 50 000 0000"
-                      />
-                    </div>
-                    
-                    <div>
-                      <Label htmlFor="due_date">تاريخ الاستحقاق</Label>
-                      <Input
-                        id="due_date"
-                        type="date"
-                        value={newInvoice.due_date || ''}
-                        onChange={(e) => setNewInvoice({...newInvoice, due_date: e.target.value})}
-                      />
-                    </div>
-                  </CardContent>
-                </Card>
-
-                {/* إعدادات الضريبة */}
-                <Card>
-                  <CardHeader>
-                    <CardTitle className="text-lg">إعدادات الضريبة</CardTitle>
-                  </CardHeader>
-                  <CardContent className="space-y-4">
-                    <div className="flex items-center space-x-2">
-                      <Checkbox
-                        id="include_vat"
-                        checked={newInvoice.include_vat}
-                        onCheckedChange={(checked) => setNewInvoice({...newInvoice, include_vat: !!checked})}
-                      />
-                      <Label htmlFor="include_vat">تطبيق ضريبة القيمة المضافة</Label>
-                    </div>
-                    
-                    {newInvoice.include_vat && (
-                      <div className="w-32">
-                        <Label htmlFor="vat_rate">نسبة الضريبة (%)</Label>
-                        <Input
-                          id="vat_rate"
-                          type="number"
-                          value={newInvoice.vat_rate || 15}
-                          onChange={(e) => setNewInvoice({...newInvoice, vat_rate: parseFloat(e.target.value) || 0})}
-                          min="0"
-                          max="100"
-                        />
-                      </div>
-                    )}
-                  </CardContent>
-                </Card>
-
-                {/* عناصر الفاتورة */}
-                <Card>
-                  <CardHeader>
-                    <CardTitle className="text-lg flex justify-between items-center">
-                      عناصر الفاتورة
-                      <Button onClick={addInvoiceItem} size="sm" variant="outline">
-                        <Plus className="h-4 w-4 ml-2" />
-                        إضافة عنصر
-                      </Button>
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent className="space-y-4">
-                    {invoiceItems.map((item, index) => (
-                      <div key={index} className="p-4 border rounded-lg space-y-4">
-                        <div className="flex justify-between items-center">
-                          <h4 className="font-medium">العنصر #{index + 1}</h4>
-                          {invoiceItems.length > 1 && (
-                            <Button
-                              onClick={() => removeInvoiceItem(index)}
-                              size="sm"
-                              variant="destructive"
-                            >
-                              <Trash2 className="h-4 w-4" />
-                            </Button>
-                          )}
-                        </div>
-                        
-                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                          <div>
-                            <Label>اسم الخدمة *</Label>
-                            <Input
-                              value={item.item_name}
-                              onChange={(e) => handleItemChange(index, 'item_name', e.target.value)}
-                              placeholder="مثال: ترجمة مستند"
-                            />
-                          </div>
-                          
-                          <div>
-                            <Label>الكمية</Label>
-                            <Input
-                              type="number"
-                              value={item.quantity}
-                              onChange={(e) => handleItemChange(index, 'quantity', parseFloat(e.target.value) || 1)}
-                              min="1"
-                            />
-                          </div>
-                          
-                          <div>
-                            <Label>سعر الوحدة (ر.س)</Label>
-                            <Input
-                              type="number"
-                              value={item.unit_price}
-                              onChange={(e) => handleItemChange(index, 'unit_price', parseFloat(e.target.value) || 0)}
-                              min="0"
-                              step="0.01"
-                            />
-                          </div>
-                          
-                          <div>
-                            <Label>المجموع (ر.س)</Label>
-                            <Input
-                              value={item.total_price.toFixed(2)}
-                              disabled
-                              className="bg-gray-100"
-                            />
-                          </div>
-                        </div>
-                        
-                        <div>
-                          <Label>وصف الخدمة</Label>
-                          <Textarea
-                            value={item.description || ''}
-                            onChange={(e) => handleItemChange(index, 'description', e.target.value)}
-                            placeholder="وصف تفصيلي للخدمة..."
-                            rows={2}
-                          />
-                        </div>
-                        
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                          <div>
-                            <Label>نسبة الخصم (%)</Label>
-                            <Input
-                              type="number"
-                              value={item.discount_percentage || 0}
-                              onChange={(e) => handleItemChange(index, 'discount_percentage', parseFloat(e.target.value) || 0)}
-                              min="0"
-                              max="100"
-                            />
-                          </div>
-                          
-                          <div>
-                            <Label>مبلغ الخصم (ر.س)</Label>
-                            <Input
-                              type="number"
-                              value={item.discount_amount || 0}
-                              onChange={(e) => handleItemChange(index, 'discount_amount', parseFloat(e.target.value) || 0)}
-                              min="0"
-                              step="0.01"
-                            />
-                          </div>
-                        </div>
-                      </div>
-                    ))}
-                  </CardContent>
-                </Card>
-
-                {/* ملخص الفاتورة */}
-                <Card>
-                  <CardHeader>
-                    <CardTitle className="text-lg">ملخص الفاتورة</CardTitle>
-                  </CardHeader>
-                  <CardContent className="space-y-3">
-                    <div className="flex justify-between">
-                      <span>المجموع الفرعي:</span>
-                      <span>{subtotal.toFixed(2)} ر.س</span>
-                    </div>
-                    
-                    {newInvoice.include_vat && (
-                      <div className="flex justify-between text-orange-600">
-                        <span>ضريبة القيمة المضافة ({newInvoice.vat_rate}%):</span>
-                        <span>{vatAmount.toFixed(2)} ر.س</span>
-                      </div>
-                    )}
-                    
-                    <Separator />
-                    
-                    <div className="flex justify-between font-bold text-lg">
-                      <span>المجموع الإجمالي:</span>
-                      <span className="text-primary">{total.toFixed(2)} ر.س</span>
-                    </div>
-                    
-                    {newInvoice.include_vat && (
-                      <p className="text-sm text-amber-600 bg-amber-50 p-2 rounded">
-                        ⚠️ هذه الفاتورة شاملة ضريبة القيمة المضافة
-                      </p>
-                    )}
-                  </CardContent>
-                </Card>
-
-                <div className="flex justify-end space-x-2">
-                  <Button variant="outline" onClick={() => setShowCreateDialog(false)}>
-                    إلغاء
-                  </Button>
-                  <Button onClick={handleCreateInvoice} disabled={!newInvoice.customer_name || !newInvoice.customer_email}>
-                    إنشاء الفاتورة
-                  </Button>
-                </div>
-              </div>
-            </DialogContent>
-          </Dialog>
+      <div className="p-4 lg:p-6 space-y-6" dir="rtl">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <div>
+            <h1 className="text-2xl lg:text-3xl font-bold flex items-center gap-2"><FileText className="w-7 h-7 text-primary" />الفواتير</h1>
+            <p className="text-muted-foreground text-sm mt-1">إدارة كاملة للفواتير والمدفوعات</p>
+          </div>
+          <div className="flex gap-2">
+            <Button variant="outline" size="sm" onClick={load}><RefreshCw className="w-4 h-4 ml-1" />تحديث</Button>
+            <Button onClick={() => { setEditing(null); setFormOpen(true); }}><Plus className="w-4 h-4 ml-1" />فاتورة جديدة</Button>
+          </div>
         </div>
 
-        {/* قائمة الفواتير */}
-        <div className="grid gap-4">
-          {invoices.map((invoice) => (
-            <Card key={invoice.id}>
-              <CardContent className="p-6">
-                <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between space-y-4 lg:space-y-0">
-                  <div className="space-y-2">
-                    <div className="flex items-center space-x-4">
-                      <h3 className="text-lg font-semibold">{invoice.invoice_number}</h3>
-                      <Badge variant={invoice.status === 'paid' ? 'default' : 'secondary'}>
-                        {invoice.status}
-                      </Badge>
-                      <Badge variant={invoice.payment_status === 'paid' ? 'default' : 'destructive'}>
-                        {invoice.payment_status}
-                      </Badge>
-                    </div>
-                    
-                    <div className="text-sm text-muted-foreground space-y-1">
-                      <p><strong>العميل:</strong> {invoice.customer_name}</p>
-                      <p><strong>البريد:</strong> {invoice.customer_email}</p>
-                      <p><strong>تاريخ الإصدار:</strong> {new Date(invoice.issue_date).toLocaleDateString('ar-SA')}</p>
-                    </div>
-                    
-                    <div className="flex flex-col sm:flex-row sm:items-center sm:space-x-4 space-y-2 sm:space-y-0">
-                      <div className="text-lg font-bold text-primary">
-                        {Number(invoice.amount ?? 0).toFixed(2)} ر.س
-                      </div>
-                      {invoice.include_vat && (
-                        <Badge variant="outline" className="text-amber-600">
-                          شامل ضريبة {invoice.vat_rate}%
-                        </Badge>
-                      )}
-                    </div>
-                  </div>
-                  
-                  <div className="flex flex-wrap gap-2">
-                    <Button
-                      onClick={() => generatePDFAndSendEmail(invoice.id, false)}
-                      disabled={generatingPdf === invoice.id}
-                      size="sm"
-                      variant="outline"
-                    >
-                      <Download className="h-4 w-4 ml-2" />
-                      {generatingPdf === invoice.id ? 'جاري الإنشاء...' : 'تحميل PDF'}
-                    </Button>
-                    
-                    <Button
-                      onClick={() => generatePDFAndSendEmail(invoice.id, true)}
-                      disabled={generatingPdf === invoice.id}
-                      size="sm"
-                      variant="default"
-                    >
-                      <Send className="h-4 w-4 ml-2" />
-                      إرسال بالإيميل
-                    </Button>
-                  </div>
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
+          <StatCard icon={FileText} label="إجمالي الفواتير" value={stats.total} color="text-primary" bg="bg-primary/10" />
+          <StatCard icon={CheckCircle2} label="مدفوعة" value={stats.paid} color="text-emerald-600" bg="bg-emerald-50" />
+          <StatCard icon={Clock} label="غير مدفوعة" value={stats.unpaid} color="text-amber-600" bg="bg-amber-50" />
+          <StatCard icon={TrendingUp} label="المتبقي" value={InvoiceService.formatCurrency(stats.totalRemaining)} color="text-red-600" bg="bg-red-50" small />
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-3">
+          <SummaryBar label="إجمالي المبالغ" value={stats.totalAmount} color="bg-primary" />
+          <SummaryBar label="إجمالي المدفوع" value={stats.totalPaid} color="bg-emerald-500" />
+        </div>
+
+        <Card className="border-0 shadow-md">
+          <CardContent className="p-4 flex flex-col md:flex-row gap-3">
+            <div className="relative flex-1">
+              <Search className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+              <Input className="pr-9" placeholder="بحث برقم الفاتورة أو العميل" value={search} onChange={(e) => setSearch(e.target.value)} />
+            </div>
+            <Select value={statusFilter} onValueChange={setStatusFilter}>
+              <SelectTrigger className="w-full md:w-48"><SelectValue /></SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">جميع الحالات</SelectItem>
+                <SelectItem value="draft">مسودة</SelectItem>
+                <SelectItem value="pending">بانتظار الإرسال</SelectItem>
+                <SelectItem value="sent">مرسلة</SelectItem>
+                <SelectItem value="partially_paid">مدفوعة جزئياً</SelectItem>
+                <SelectItem value="paid">مدفوعة</SelectItem>
+                <SelectItem value="overdue">متأخرة</SelectItem>
+                <SelectItem value="cancelled">ملغاة</SelectItem>
+              </SelectContent>
+            </Select>
+          </CardContent>
+        </Card>
+
+        <Card className="border-0 shadow-md hidden lg:block">
+          <CardContent className="p-0">
+            {loading ? <div className="p-12 text-center"><RefreshCw className="w-8 h-8 animate-spin mx-auto text-primary" /></div>
+            : filtered.length === 0 ? <EmptyState />
+            : (
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead className="text-right">رقم الفاتورة</TableHead>
+                    <TableHead className="text-right">العميل</TableHead>
+                    <TableHead className="text-right">التاريخ</TableHead>
+                    <TableHead className="text-right">الإجمالي</TableHead>
+                    <TableHead className="text-right">المدفوع</TableHead>
+                    <TableHead className="text-right">المتبقي</TableHead>
+                    <TableHead className="text-right">الحالة</TableHead>
+                    <TableHead className="text-right">إجراءات</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {filtered.map((inv) => (
+                    <TableRow key={inv.id}>
+                      <TableCell className="font-bold"><Link to={`/adminmaster/invoices/${inv.id}`} className="text-primary hover:underline">{inv.invoice_number}</Link></TableCell>
+                      <TableCell>
+                        <div className="font-medium">{inv.customer_name ?? '-'}</div>
+                        {inv.customer_email && <div className="text-xs text-muted-foreground">{inv.customer_email}</div>}
+                      </TableCell>
+                      <TableCell className="text-sm">{inv.issue_date}</TableCell>
+                      <TableCell className="font-bold">{InvoiceService.formatCurrency(inv.total_amount, inv.currency)}</TableCell>
+                      <TableCell className="text-emerald-600">{InvoiceService.formatCurrency(inv.paid_amount, inv.currency)}</TableCell>
+                      <TableCell className="text-red-600 font-medium">{InvoiceService.formatCurrency(inv.remaining_amount, inv.currency)}</TableCell>
+                      <TableCell><Badge className={InvoiceService.statusColor(inv.status)}>{InvoiceService.statusLabel(inv.status)}</Badge></TableCell>
+                      <TableCell><RowActions inv={inv} onEdit={() => { setEditing(inv); setFormOpen(true); }} onPay={() => setPaymentFor(inv)} onDelete={() => handleDelete(inv)} onPrint={() => handlePrint(inv)} onDownload={() => handleDownload(inv)} /></TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            )}
+          </CardContent>
+        </Card>
+
+        <div className="lg:hidden space-y-3">
+          {loading ? <div className="p-8 text-center"><RefreshCw className="w-6 h-6 animate-spin mx-auto" /></div>
+          : filtered.length === 0 ? <EmptyState />
+          : filtered.map((inv) => (
+            <Card key={inv.id} className="border-0 shadow-md">
+              <CardContent className="p-4 space-y-3">
+                <div className="flex items-center justify-between gap-2">
+                  <Link to={`/adminmaster/invoices/${inv.id}`} className="font-bold text-primary">{inv.invoice_number}</Link>
+                  <Badge className={InvoiceService.statusColor(inv.status)}>{InvoiceService.statusLabel(inv.status)}</Badge>
                 </div>
-                
-                {invoice.invoice_items && invoice.invoice_items.length > 0 && (
-                  <div className="mt-4 pt-4 border-t">
-                    <h4 className="font-medium mb-2">عناصر الفاتورة:</h4>
-                    <div className="space-y-1 text-sm">
-                      {invoice.invoice_items.map((item: any) => (
-                        <div key={item.id} className="flex justify-between">
-                          <span>{item.item_name} (×{item.quantity})</span>
-                          <span>{item.total_price.toFixed(2)} ر.س</span>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                )}
+                <div className="text-sm">
+                  <div className="font-medium">{inv.customer_name ?? '-'}</div>
+                  <div className="text-xs text-muted-foreground">{inv.issue_date}</div>
+                </div>
+                <div className="grid grid-cols-3 gap-2 text-xs bg-muted/40 rounded-md p-2">
+                  <div><div className="text-muted-foreground">الإجمالي</div><div className="font-bold">{InvoiceService.formatCurrency(inv.total_amount, inv.currency)}</div></div>
+                  <div><div className="text-muted-foreground">المدفوع</div><div className="font-bold text-emerald-600">{InvoiceService.formatCurrency(inv.paid_amount, inv.currency)}</div></div>
+                  <div><div className="text-muted-foreground">المتبقي</div><div className="font-bold text-red-600">{InvoiceService.formatCurrency(inv.remaining_amount, inv.currency)}</div></div>
+                </div>
+                <div className="flex gap-2">
+                  <Button size="sm" variant="outline" className="flex-1" asChild><Link to={`/adminmaster/invoices/${inv.id}`}><Eye className="w-3 h-3 ml-1" />عرض</Link></Button>
+                  <Button size="sm" variant="outline" className="flex-1" onClick={() => handlePrint(inv)}><Printer className="w-3 h-3 ml-1" />طباعة</Button>
+                  <RowActions inv={inv} onEdit={() => { setEditing(inv); setFormOpen(true); }} onPay={() => setPaymentFor(inv)} onDelete={() => handleDelete(inv)} onPrint={() => handlePrint(inv)} onDownload={() => handleDownload(inv)} />
+                </div>
               </CardContent>
             </Card>
           ))}
         </div>
-
-        {invoices.length === 0 && (
-          <Card>
-            <CardContent className="text-center py-8">
-              <FileText className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
-              <p className="text-muted-foreground">لا توجد فواتير محفوظة</p>
-            </CardContent>
-          </Card>
-        )}
       </div>
+
+      <InvoiceFormDialog open={formOpen} onOpenChange={setFormOpen} invoice={editing} onSaved={load} />
+      {paymentFor && <PaymentDialog open={!!paymentFor} onOpenChange={(o) => !o && setPaymentFor(null)} invoice={paymentFor} onSaved={load} />}
     </AdminLayout>
   );
-};
+}
 
-export default AdminInvoices;
+function StatCard({ icon: Icon, label, value, color, bg, small }: any) {
+  return (
+    <Card className="border-0 shadow-md">
+      <CardContent className="p-4 flex items-center gap-3">
+        <div className={`w-12 h-12 rounded-xl ${bg} flex items-center justify-center`}><Icon className={`w-6 h-6 ${color}`} /></div>
+        <div className="min-w-0 flex-1">
+          <div className="text-xs text-muted-foreground">{label}</div>
+          <div className={`font-bold ${color} ${small ? 'text-base' : 'text-2xl'} truncate`}>{value}</div>
+        </div>
+      </CardContent>
+    </Card>
+  );
+}
+function SummaryBar({ label, value, color }: { label: string; value: number; color: string }) {
+  return (
+    <Card className="border-0 shadow-md">
+      <CardContent className="p-4">
+        <div className="flex items-center justify-between mb-2">
+          <span className="text-sm text-muted-foreground">{label}</span>
+          <span className="font-bold text-lg">{InvoiceService.formatCurrency(value)}</span>
+        </div>
+        <div className="h-2 bg-muted rounded-full overflow-hidden"><div className={`h-full ${color}`} style={{ width: '100%' }} /></div>
+      </CardContent>
+    </Card>
+  );
+}
+function EmptyState() {
+  return (
+    <div className="p-12 text-center">
+      <FileText className="w-12 h-12 mx-auto text-muted-foreground mb-3" />
+      <p className="font-medium">لا توجد فواتير</p>
+      <p className="text-sm text-muted-foreground mt-1">ابدأ بإنشاء فاتورة جديدة</p>
+    </div>
+  );
+}
+function RowActions({ inv, onEdit, onPay, onDelete, onPrint, onDownload }: any) {
+  return (
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild><Button variant="ghost" size="icon"><MoreVertical className="w-4 h-4" /></Button></DropdownMenuTrigger>
+      <DropdownMenuContent align="end">
+        <DropdownMenuItem asChild><Link to={`/adminmaster/invoices/${inv.id}`}><Eye className="w-4 h-4 ml-2" />التفاصيل</Link></DropdownMenuItem>
+        <DropdownMenuItem onClick={onEdit}><Edit className="w-4 h-4 ml-2" />تعديل</DropdownMenuItem>
+        <DropdownMenuItem onClick={onPay}><CreditCard className="w-4 h-4 ml-2" />دفعة</DropdownMenuItem>
+        <DropdownMenuSeparator />
+        <DropdownMenuItem onClick={onPrint}><Printer className="w-4 h-4 ml-2" />طباعة</DropdownMenuItem>
+        <DropdownMenuItem onClick={onDownload}><Download className="w-4 h-4 ml-2" />تحميل PDF</DropdownMenuItem>
+        <DropdownMenuSeparator />
+        <DropdownMenuItem onClick={onDelete} className="text-destructive"><Trash2 className="w-4 h-4 ml-2" />حذف</DropdownMenuItem>
+      </DropdownMenuContent>
+    </DropdownMenu>
+  );
+}
