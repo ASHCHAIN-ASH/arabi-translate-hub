@@ -553,6 +553,21 @@ const AdminTransactions = () => {
                               {status.label}
                             </Badge>
                           </TableCell>
+                          <TableCell className="text-left">
+                            {p.status === 'completed' ? (
+                              <Button
+                                variant="ghost"
+                                size="sm"
+                                onClick={() => setRefundTarget(p)}
+                                className="text-destructive hover:text-destructive hover:bg-destructive/10"
+                              >
+                                <Undo2 className="h-4 w-4 ml-1" />
+                                استرداد
+                              </Button>
+                            ) : (
+                              <span className="text-xs text-muted-foreground">—</span>
+                            )}
+                          </TableCell>
                         </TableRow>
                       );
                     })}
