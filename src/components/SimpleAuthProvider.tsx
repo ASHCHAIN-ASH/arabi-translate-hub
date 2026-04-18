@@ -2,6 +2,9 @@ import React, { createContext, useContext, useState, useEffect, useCallback } fr
 import { supabase } from '@/integrations/supabase/client';
 import { User, Session } from '@supabase/supabase-js';
 
+// IMPORTANT: 'client' is a UI alias for the DB role 'user'.
+// DB enum app_role is: 'admin' | 'moderator' | 'user'.
+// We map DB 'user' → UI 'client'. Anything else that is NOT 'admin' is treated as 'client'.
 type AppRole = 'admin' | 'client';
 
 interface AuthContextType {
@@ -32,23 +35,32 @@ export const SimpleAuthProvider: React.FC<{ children: React.ReactNode }> = ({ ch
   const [userRole, setUserRole] = useState<AppRole | null>(null);
   const [loading, setLoading] = useState(true);
 
-  const fetchUserRole = useCallback(async (userId: string): Promise<AppRole> => {
+  // SECURITY: Fetch ALL roles for the user from DB. Admin status requires an
+  // explicit 'admin' row in public.user_roles. We never trust client-side state
+  // or any fallback to elevate privileges.
+  const fetchUserRole = useCallback(async (userId: string): Promise<AppRole | null> => {
     try {
       const { data, error } = await supabase
         .from('user_roles')
         .select('role')
-        .eq('user_id', userId)
-        .single();
+        .eq('user_id', userId);
 
-      if (error || !data) {
-        console.warn('No role found for user, defaulting to client:', error?.message);
-        return 'client';
+      if (error) {
+        // Hard fail — do NOT default to any role. Caller will sign the user out.
+        console.error('[SECURITY] Failed to fetch user role:', error.message);
+        return null;
       }
 
-      return data.role === 'admin' ? 'admin' : 'client';
-    } catch (err) {
-      console.error('Error fetching user role:', err);
+      const roles = (data ?? []).map((r) => r.role as string);
+
+      // Strict whitelist: admin only if an 'admin' row exists.
+      if (roles.includes('admin')) return 'admin';
+
+      // Any authenticated user without 'admin' is a client (UI alias for 'user').
       return 'client';
+    } catch (err) {
+      console.error('[SECURITY] Unexpected error fetching user role:', err);
+      return null;
     }
   }, []);
 
@@ -67,6 +79,20 @@ export const SimpleAuthProvider: React.FC<{ children: React.ReactNode }> = ({ ch
 
         const role = await fetchUserRole(currentSession.user.id);
         if (!isMounted) return;
+
+        // SECURITY: If we cannot resolve a role (DB error, RLS issue, network),
+        // we MUST NOT proceed. Force sign-out so the user cannot land on any
+        // protected route with an unknown privilege level.
+        if (role === null) {
+          console.error('[SECURITY] Role resolution failed — forcing sign-out');
+          await supabase.auth.signOut();
+          if (!isMounted) return;
+          setSession(null);
+          setUser(null);
+          setUserRole(null);
+          setLoading(false);
+          return;
+        }
 
         setUserRole(role);
         setLoading(false);
