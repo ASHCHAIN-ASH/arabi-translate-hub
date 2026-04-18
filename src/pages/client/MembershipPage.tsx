@@ -9,6 +9,8 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Label } from '@/components/ui/label';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { ReferralsTab } from '@/components/membership/ReferralsTab';
 import {
   Crown, Check, Wallet, Receipt, Sparkles, Calendar, TrendingUp, Zap, Shield,
   Gift, HeadphonesIcon, Star, Award, ArrowLeft, Info, HelpCircle, Rocket,
@@ -718,6 +720,12 @@ export default function MembershipPage() {
             </DialogFooter>
           </DialogContent>
         </Dialog>
+          </TabsContent>
+
+          <TabsContent value="referrals" className="mt-0">
+            <ReferralsTab />
+          </TabsContent>
+        </Tabs>
       </div>
     </ClientLayout>
   );
