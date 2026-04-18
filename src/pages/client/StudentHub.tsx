@@ -283,13 +283,15 @@ const StudentHub: React.FC = () => {
             tone={isPremium ? 'secondary' : 'primary'}
             delay={0.15}
           />
-          <StatTile
-            icon={BookOpen}
-            label="موارد المكتبة"
-            value={resources.length}
-            tone="accent"
-            delay={0.2}
-          />
+          <Link to="/student/library" className="block">
+            <StatTile
+              icon={BookOpen}
+              label="موارد المكتبة"
+              value={resources.length}
+              tone="accent"
+              delay={0.2}
+            />
+          </Link>
         </div>
 
         {/* ============================== BENTO FEATURE GRID ============================== */}

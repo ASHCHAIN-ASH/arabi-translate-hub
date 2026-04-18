@@ -105,6 +105,8 @@ import AdminGamification from "./pages/admin/AdminGamification";
 import ContractsSystem from "./pages/admin/ContractsSystem";
 import AdminContractDetails from "./pages/admin/AdminContractDetails";
 import ContractsAnalytics from "./pages/admin/ContractsAnalytics";
+import AdminStudentResources from "./pages/admin/AdminStudentResources";
+import StudentLibrary from "./pages/client/StudentLibrary";
 import ClientContracts from "./pages/ClientContracts";
 import ClientContractApproval from "./pages/ClientContractApproval";
 
@@ -550,6 +552,11 @@ const App = () => (
             <Route path="/student/statistical-analysis" element={
               <SimpleProtectedRoute requiredRole="client">
                 <StudentStatisticalAnalysis />
+              </SimpleProtectedRoute>
+            } />
+            <Route path="/student/library" element={
+              <SimpleProtectedRoute requiredRole="client">
+                <StudentLibrary />
               </SimpleProtectedRoute>
             } />
             
