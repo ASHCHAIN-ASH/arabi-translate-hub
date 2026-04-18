@@ -157,7 +157,7 @@ const AcademicWritingServices = () => {
             className="text-center mb-12"
           >
             <h2 className="text-4xl font-bold mb-4">مميزات خدماتنا</h2>
-            <p className="text-muted-foreground text-lg">ما يميز خدمات الكتابة الأكاديمية لدينا</p>
+            <p className="text-muted-foreground text-lg">ما يميز خدمات المساعدة الأكاديمية لدينا</p>
           </motion.div>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
