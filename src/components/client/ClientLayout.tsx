@@ -79,14 +79,11 @@ const ClientLayout: React.FC<ClientLayoutProps> = ({ children }) => {
         <div className="absolute -top-10 -right-10 w-40 h-40 bg-white/10 rounded-full blur-3xl" />
         <div className="absolute -bottom-10 -left-10 w-32 h-32 bg-white/10 rounded-full blur-3xl" />
         <div className="relative flex items-center gap-3 text-white">
-          <motion.div
-            initial={{ rotate: -10, scale: 0.9 }}
-            animate={{ rotate: 0, scale: 1 }}
-            transition={{ type: 'spring', stiffness: 200 }}
+          <div
             className="w-11 h-11 bg-white/20 backdrop-blur-md rounded-xl flex items-center justify-center shadow-lg ring-1 ring-white/30"
           >
             <GraduationCap className="w-6 h-6" />
-          </motion.div>
+          </div>
           <div>
             <h2 className="text-base font-black tracking-tight">ماستر إيدو باث</h2>
             <p className="text-xs text-white/80">لوحة العميل</p>
