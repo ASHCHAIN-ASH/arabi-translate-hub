@@ -21,6 +21,8 @@ import {
   Download, Upload, Activity, Wallet, AlertCircle, NotebookPen, Wifi, WifiOff,
   PackageCheck, FileCheck2, Receipt, ScrollText,
 } from 'lucide-react';
+import OrderLifecycleTimeline, { LifecycleStatus } from '@/components/orders/OrderLifecycleTimeline';
+import { AdminQuoteSender } from '@/components/orders/AdminQuoteSender';
 
 const STATUS_CONFIG: Record<string, { label: string; color: string; icon: React.ReactNode; barClass: string }> = {
   pending: { label: 'معلق', color: 'bg-gray-100 text-gray-700 border-gray-300', icon: <Clock className="w-3 h-3" />, barClass: 'bg-gray-400' },
@@ -65,6 +67,10 @@ interface Order {
   quote_sent_at?: string | null;
   customer?: { id: string; name: string; email?: string | null; phone?: string | null; company?: string | null } | null;
   profile?: { full_name?: string | null; phone?: string | null } | null;
+  lifecycle_status?: string | null;
+  progress_percentage?: number | null;
+  signed_contract_id?: string | null;
+  active_invoice_id?: string | null;
 }
 
 const AdminServiceOrderDetails = () => {
@@ -505,6 +511,27 @@ const AdminServiceOrderDetails = () => {
           {/* Overview */}
           <TabsContent value="overview" className="space-y-4 mt-4">
             <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} className="space-y-4">
+              {/* Lifecycle visual timeline (12 stages) */}
+              <OrderLifecycleTimeline
+                status={(order.lifecycle_status as LifecycleStatus) || 'received'}
+                progress={order.progress_percentage ?? 0}
+              />
+
+              {/* Quote sender — controls quote_status / lifecycle entry */}
+              <AdminQuoteSender
+                order={{
+                  id: order.id,
+                  tracking_id: order.tracking_id,
+                  service_name: order.service_name ?? null,
+                  total_amount: order.total_amount ?? null,
+                  deadline: order.deadline ?? null,
+                  quote_status: order.quote_status ?? null,
+                  quote_notes: order.quote_notes ?? null,
+                  lifecycle_status: order.lifecycle_status || 'received',
+                }}
+                onSent={loadAll}
+              />
+
               <Card>
                 <CardHeader className="pb-3"><CardTitle className="text-sm flex items-center gap-2"><User className="w-4 h-4 text-primary" /> بيانات العميل</CardTitle></CardHeader>
                 <CardContent className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">

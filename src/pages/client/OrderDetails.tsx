@@ -15,6 +15,9 @@ import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/components/SimpleAuthProvider';
 import { toast } from 'sonner';
 import ClientLayout from '@/components/client/ClientLayout';
+import OrderLifecycleTimeline, { LifecycleStatus } from '@/components/orders/OrderLifecycleTimeline';
+import { ContractSigningCard } from '@/components/orders/ContractSigningCard';
+import { PaymentCard } from '@/components/orders/PaymentCard';
 
 interface ServiceOrder {
   id: string;
@@ -31,6 +34,11 @@ interface ServiceOrder {
   quote_sent_at: string | null;
   created_at: string;
   updated_at: string;
+  lifecycle_status?: string | null;
+  progress_percentage?: number | null;
+  signed_contract_id?: string | null;
+  active_invoice_id?: string | null;
+  user_id?: string | null;
 }
 
 interface TimelineEntry {
@@ -76,6 +84,8 @@ const OrderDetails = () => {
   const [order, setOrder] = useState<ServiceOrder | null>(null);
   const [timeline, setTimeline] = useState<TimelineEntry[]>([]);
   const [attachments, setAttachments] = useState<Attachment[]>([]);
+  const [contract, setContract] = useState<any | null>(null);
+  const [invoice, setInvoice] = useState<any | null>(null);
   const [loading, setLoading] = useState(true);
   const [rejectionReason, setRejectionReason] = useState('');
   const [showRejectForm, setShowRejectForm] = useState(false);
@@ -161,6 +171,23 @@ const OrderDetails = () => {
       if (orderRes.data) setOrder(orderRes.data);
       if (timelineRes.data) setTimeline(timelineRes.data);
       if (attachRes.data) setAttachments(attachRes.data);
+
+      // Load related contract & invoice for lifecycle UI
+      const ord = orderRes.data;
+      if (ord?.signed_contract_id) {
+        const { data: c } = await (supabase.from('contracts') as any).select('*').eq('id', ord.signed_contract_id).maybeSingle();
+        setContract(c || null);
+      } else {
+        const { data: c } = await (supabase.from('contracts') as any).select('*').eq('service_order_id', id).maybeSingle();
+        setContract(c || null);
+      }
+      if (ord?.active_invoice_id) {
+        const { data: inv } = await (supabase.from('invoices') as any).select('*').eq('id', ord.active_invoice_id).maybeSingle();
+        setInvoice(inv || null);
+      } else {
+        const { data: inv } = await (supabase.from('invoices') as any).select('*').eq('order_id', id).maybeSingle();
+        setInvoice(inv || null);
+      }
     } catch (err) {
       console.error(err);
       toast.error('حدث خطأ في تحميل البيانات');
@@ -518,6 +545,22 @@ const OrderDetails = () => {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
           {/* Main Content */}
           <div className="lg:col-span-2 space-y-5">
+            {/* Order Lifecycle Timeline (12 stages) */}
+            <OrderLifecycleTimeline
+              status={(order.lifecycle_status as LifecycleStatus) || 'received'}
+              progress={order.progress_percentage ?? 0}
+            />
+
+            {/* Contract signing — shown when contract_pending */}
+            {contract && order.lifecycle_status === 'contract_pending' && (
+              <ContractSigningCard contract={contract} onSigned={fetchData} />
+            )}
+
+            {/* Payment — shown when payment_pending */}
+            {invoice && order.lifecycle_status === 'payment_pending' && user && (
+              <PaymentCard invoice={invoice} userId={user.id} onPaid={fetchData} />
+            )}
+
             {/* Timeline */}
             <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}>
               <Card className="border-0 shadow-md">
