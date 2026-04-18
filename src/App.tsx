@@ -74,6 +74,7 @@ import MindMapPage from "./pages/client/MindMapPage";
 import TracksPage from "./pages/client/TracksPage";
 import TrackDetailPage from "./pages/client/TrackDetailPage";
 import TrackToolPage from "./pages/client/TrackToolPage";
+import AcademicCVPage from "./pages/client/AcademicCVPage";
 import AdminMemberships from "./pages/admin/AdminMemberships";
 import AdminReferrals from "./pages/admin/AdminReferrals";
 
@@ -538,6 +539,11 @@ const App = () => (
             <Route path="/student/tracks/:trackSlug/tools/:toolSlug" element={
               <SimpleProtectedRoute requiredRole="client">
                 <TrackToolPage />
+              </SimpleProtectedRoute>
+            } />
+            <Route path="/student/academic-cv" element={
+              <SimpleProtectedRoute requiredRole="client">
+                <AcademicCVPage />
               </SimpleProtectedRoute>
             } />
             
