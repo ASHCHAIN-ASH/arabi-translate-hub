@@ -2419,6 +2419,81 @@ export type Database = {
         }
         Relationships: []
       }
+      statistical_analyses: {
+        Row: {
+          analysis_params: Json | null
+          analysis_type: string | null
+          assumptions: Json | null
+          column_count: number | null
+          columns_meta: Json
+          created_at: string
+          data_sample: Json | null
+          file_name: string | null
+          file_size: number | null
+          id: string
+          interpretation_ar: string | null
+          interpretation_en: string | null
+          is_paid: boolean
+          language: string
+          pdf_exports_count: number
+          pdf_purchased: boolean
+          results: Json | null
+          row_count: number | null
+          status: string
+          title: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          analysis_params?: Json | null
+          analysis_type?: string | null
+          assumptions?: Json | null
+          column_count?: number | null
+          columns_meta?: Json
+          created_at?: string
+          data_sample?: Json | null
+          file_name?: string | null
+          file_size?: number | null
+          id?: string
+          interpretation_ar?: string | null
+          interpretation_en?: string | null
+          is_paid?: boolean
+          language?: string
+          pdf_exports_count?: number
+          pdf_purchased?: boolean
+          results?: Json | null
+          row_count?: number | null
+          status?: string
+          title?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          analysis_params?: Json | null
+          analysis_type?: string | null
+          assumptions?: Json | null
+          column_count?: number | null
+          columns_meta?: Json
+          created_at?: string
+          data_sample?: Json | null
+          file_name?: string | null
+          file_size?: number | null
+          id?: string
+          interpretation_ar?: string | null
+          interpretation_en?: string | null
+          is_paid?: boolean
+          language?: string
+          pdf_exports_count?: number
+          pdf_purchased?: boolean
+          results?: Json | null
+          row_count?: number | null
+          status?: string
+          title?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       student_ai_usage: {
         Row: {
           created_at: string
@@ -3519,6 +3594,8 @@ export type Database = {
         Returns: Json
       }
       purchase_cv_export: { Args: { _cv_id: string }; Returns: Json }
+      purchase_stat_analysis: { Args: { _analysis_id: string }; Returns: Json }
+      purchase_stat_pdf: { Args: { _analysis_id: string }; Returns: Json }
       read_email_batch: {
         Args: { batch_size: number; queue_name: string; vt: number }
         Returns: {
