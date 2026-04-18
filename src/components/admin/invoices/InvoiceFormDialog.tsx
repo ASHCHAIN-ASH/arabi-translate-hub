@@ -39,6 +39,8 @@ export default function InvoiceFormDialog({ open, onOpenChange, invoice, onSaved
   const [terms, setTerms] = useState('الدفع خلال 14 يوماً من تاريخ الإصدار.');
   const [status, setStatus] = useState<string>('pending');
   const [saving, setSaving] = useState(false);
+  const [memberInfo, setMemberInfo] = useState<{ name_ar: string; code: string; discount_percentage: number } | null>(null);
+  const [autoDiscountApplied, setAutoDiscountApplied] = useState(false);
 
   useEffect(() => {
     if (!open) return;
