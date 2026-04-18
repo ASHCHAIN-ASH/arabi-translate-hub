@@ -1,0 +1,175 @@
+import React, { useEffect, useState } from 'react';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Textarea } from '@/components/ui/textarea';
+import { CreditCard, Wallet, Upload, Loader2, CheckCircle2 } from 'lucide-react';
+import { supabase } from '@/integrations/supabase/client';
+import { useToast } from '@/hooks/use-toast';
+
+interface Invoice {
+  id: string;
+  invoice_number: string;
+  total_amount: number | null;
+  paid_amount: number | null;
+  status: string | null;
+  currency: string | null;
+}
+
+interface Props {
+  invoice: Invoice;
+  userId: string;
+  onPaid?: () => void;
+}
+
+export const PaymentCard: React.FC<Props> = ({ invoice, userId, onPaid }) => {
+  const { toast } = useToast();
+  const [walletBalance, setWalletBalance] = useState<number>(0);
+  const [loading, setLoading] = useState(false);
+  const [reference, setReference] = useState('');
+  const [notes, setNotes] = useState('');
+
+  const remaining = Number(invoice.total_amount || 0) - Number(invoice.paid_amount || 0);
+  const isPaid = invoice.status === 'paid' || remaining <= 0;
+
+  useEffect(() => {
+    (async () => {
+      const { data } = await (supabase as any).from('wallets').select('balance').eq('user_id', userId).maybeSingle();
+      setWalletBalance(Number(data?.balance || 0));
+    })();
+  }, [userId]);
+
+  const payFromWallet = async () => {
+    if (walletBalance < remaining) {
+      toast({ title: 'رصيد غير كافٍ', description: 'يرجى شحن المحفظة أولاً', variant: 'destructive' });
+      return;
+    }
+    setLoading(true);
+    try {
+      const { error } = await (supabase as any).from('invoice_payments').insert({
+        invoice_id: invoice.id,
+        amount: remaining,
+        payment_method: 'wallet',
+        status: 'completed',
+        notes: 'دفع من المحفظة',
+      });
+      if (error) throw error;
+      toast({ title: '✅ تم الدفع بنجاح', description: 'سيبدأ تنفيذ طلبك الآن' });
+      onPaid?.();
+    } catch (e: any) {
+      toast({ title: 'فشل الدفع', description: e.message, variant: 'destructive' });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const submitBankTransfer = async () => {
+    if (!reference.trim()) {
+      toast({ title: 'أدخل رقم المرجع', variant: 'destructive' });
+      return;
+    }
+    setLoading(true);
+    try {
+      const { error } = await (supabase as any).from('invoice_payments').insert({
+        invoice_id: invoice.id,
+        amount: remaining,
+        payment_method: 'bank_transfer',
+        status: 'pending',
+        reference_number: reference,
+        notes,
+      });
+      if (error) throw error;
+      toast({ title: '📨 تم استلام طلب الدفع', description: 'سيتم التحقق من التحويل قريباً' });
+      setReference(''); setNotes('');
+    } catch (e: any) {
+      toast({ title: 'فشل الإرسال', description: e.message, variant: 'destructive' });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  if (isPaid) {
+    return (
+      <Card className="border-green-500/40 bg-green-500/5">
+        <CardContent className="p-4 flex items-center gap-3">
+          <CheckCircle2 className="h-6 w-6 text-green-600" />
+          <div className="flex-1">
+            <p className="font-semibold">تم الدفع بالكامل</p>
+            <p className="text-sm text-muted-foreground">فاتورة: {invoice.invoice_number}</p>
+          </div>
+          <Badge className="bg-green-600">مدفوعة</Badge>
+        </CardContent>
+      </Card>
+    );
+  }
+
+  return (
+    <Card className="border-primary/30">
+      <CardHeader>
+        <div className="flex items-start justify-between">
+          <div>
+            <CardTitle className="flex items-center gap-2">
+              <CreditCard className="h-5 w-5 text-primary" />
+              إتمام الدفع
+            </CardTitle>
+            <CardDescription>فاتورة: {invoice.invoice_number}</CardDescription>
+          </div>
+          <Badge variant="secondary" className="text-base">
+            {remaining.toLocaleString('ar-SA')} {invoice.currency || 'SAR'}
+          </Badge>
+        </div>
+      </CardHeader>
+      <CardContent>
+        <Tabs defaultValue="wallet" dir="rtl">
+          <TabsList className="grid grid-cols-2 w-full">
+            <TabsTrigger value="wallet"><Wallet className="h-4 w-4 ml-1" /> المحفظة</TabsTrigger>
+            <TabsTrigger value="bank"><Upload className="h-4 w-4 ml-1" /> تحويل بنكي</TabsTrigger>
+          </TabsList>
+
+          <TabsContent value="wallet" className="space-y-4 mt-4">
+            <div className="rounded-lg bg-muted/40 p-4 flex justify-between items-center">
+              <span className="text-sm text-muted-foreground">رصيد محفظتك</span>
+              <span className="font-bold text-lg">
+                {walletBalance.toLocaleString('ar-SA')} {invoice.currency || 'SAR'}
+              </span>
+            </div>
+            {walletBalance < remaining && (
+              <p className="text-sm text-destructive">
+                ينقصك {(remaining - walletBalance).toLocaleString('ar-SA')} لإتمام الدفع
+              </p>
+            )}
+            <Button onClick={payFromWallet} disabled={loading || walletBalance < remaining} className="w-full" size="lg">
+              {loading ? <Loader2 className="h-4 w-4 ml-2 animate-spin" /> : <Wallet className="h-4 w-4 ml-2" />}
+              دفع {remaining.toLocaleString('ar-SA')} من المحفظة
+            </Button>
+          </TabsContent>
+
+          <TabsContent value="bank" className="space-y-4 mt-4">
+            <div className="rounded-lg bg-muted/40 p-4 text-sm space-y-1">
+              <p className="font-semibold">حوّل المبلغ إلى:</p>
+              <p>البنك: الراجحي — IBAN: SA00 0000 0000 0000 0000 0000</p>
+              <p>المستفيد: مسار التميز للخدمات الأكاديمية</p>
+            </div>
+            <div className="space-y-2">
+              <Label>رقم مرجع التحويل</Label>
+              <Input value={reference} onChange={(e) => setReference(e.target.value)} placeholder="مثلاً: TXN123456" />
+            </div>
+            <div className="space-y-2">
+              <Label>ملاحظات (اختياري)</Label>
+              <Textarea value={notes} onChange={(e) => setNotes(e.target.value)} rows={2} />
+            </div>
+            <Button onClick={submitBankTransfer} disabled={loading} className="w-full" size="lg" variant="secondary">
+              {loading ? <Loader2 className="h-4 w-4 ml-2 animate-spin" /> : <Upload className="h-4 w-4 ml-2" />}
+              إرسال إثبات التحويل
+            </Button>
+          </TabsContent>
+        </Tabs>
+      </CardContent>
+    </Card>
+  );
+};
+
+export default PaymentCard;
