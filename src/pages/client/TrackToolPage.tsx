@@ -347,6 +347,11 @@ function CaseAnalyzerRunner({ tool }: { tool: TrackTool }) {
   const [caseText, setCaseText] = useState('');
   const [running, setRunning] = useState(false);
   const [result, setResult] = useState('');
+  const [mode, setMode] = useState<'standard' | 'pro'>('standard');
+
+  const proPrice = Number((tool as any)?.metadata?.pro_price ?? 0);
+  const standardPrice = Number((tool as any)?.price ?? 0);
+  const hasPro = proPrice > 0;
 
   const run = async () => {
     if (caseText.trim().length < 50) {
@@ -357,15 +362,18 @@ function CaseAnalyzerRunner({ tool }: { tool: TrackTool }) {
     setResult('');
     try {
       const { data: rpc, error: rpcErr } = await (supabase as any)
-        .rpc('use_track_tool', { _tool_id: tool.id });
+        .rpc('use_track_tool', { _tool_id: tool.id, _mode: mode });
       if (rpcErr) throw new Error(rpcErr.message);
       if (!rpc?.ok) throw new Error('تعذّر بدء الاستخدام');
 
-      const { data, error } = await supabase.functions.invoke('clinical-case-analyzer', { body: { caseText } });
+      const { data, error } = await supabase.functions.invoke('clinical-case-analyzer', { body: { caseText, mode } });
       if (error) throw new Error(error.message);
       if ((data as any)?.error) throw new Error((data as any).error);
       setResult((data as any).analysis || '');
-      toast({ title: '✅ تم التحليل بنجاح' });
+      toast({
+        title: mode === 'pro' ? '✅ تم التحليل المتقدم بنجاح' : '✅ تم التحليل بنجاح',
+        description: rpc.was_free ? 'استخدمت طلباً مجانياً' : `تم خصم ${rpc.charged} ر.س`,
+      });
     } catch (e: any) {
       toast({ title: e?.message || 'حدث خطأ', variant: 'destructive' });
     } finally {
@@ -377,6 +385,56 @@ function CaseAnalyzerRunner({ tool }: { tool: TrackTool }) {
     <>
       <Card>
         <CardContent className="p-6 space-y-4">
+          {hasPro && (
+            <div className="space-y-2">
+              <Label className="text-base font-semibold">اختر مستوى التحليل</Label>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                <button
+                  type="button"
+                  onClick={() => setMode('standard')}
+                  className={`text-right p-4 rounded-lg border-2 transition-all ${
+                    mode === 'standard'
+                      ? 'border-primary bg-primary/5 shadow-sm'
+                      : 'border-border hover:border-primary/50'
+                  }`}
+                  disabled={running}
+                >
+                  <div className="flex items-center justify-between mb-1">
+                    <span className="font-bold">⚡ تحليل قياسي</span>
+                    <span className="text-sm font-semibold text-primary">
+                      {standardPrice > 0 ? `${standardPrice} ر.س` : 'مجاني'}
+                    </span>
+                  </div>
+                  <p className="text-xs text-muted-foreground">
+                    سريع ودقيق — مناسب لمعظم الحالات التعليمية الكلاسيكية
+                  </p>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setMode('pro')}
+                  className={`text-right p-4 rounded-lg border-2 transition-all ${
+                    mode === 'pro'
+                      ? 'border-amber-500 bg-amber-500/5 shadow-sm'
+                      : 'border-border hover:border-amber-500/50'
+                  }`}
+                  disabled={running}
+                >
+                  <div className="flex items-center justify-between mb-1">
+                    <span className="font-bold flex items-center gap-1">
+                      💎 تحليل متقدم <span className="text-xs px-1.5 py-0.5 rounded bg-amber-500/20 text-amber-700 dark:text-amber-300">Pro</span>
+                    </span>
+                    <span className="text-sm font-semibold text-amber-600 dark:text-amber-400">
+                      {proPrice} ر.س
+                    </span>
+                  </div>
+                  <p className="text-xs text-muted-foreground">
+                    تحليل عميق بنموذج متقدم — للحالات المعقدة والأمراض النادرة
+                  </p>
+                </button>
+              </div>
+            </div>
+          )}
+
           <Label className="text-base font-semibold flex items-center gap-2">
             <Stethoscope className="w-4 h-4 text-primary" /> وصف الحالة السريرية
           </Label>
@@ -391,12 +449,12 @@ function CaseAnalyzerRunner({ tool }: { tool: TrackTool }) {
             <span className="text-xs text-muted-foreground">{caseText.length.toLocaleString('ar-SA')} حرف</span>
             <Button onClick={run} disabled={running || caseText.trim().length < 50} size="lg" className="gap-2">
               {running ? <Loader2 className="w-4 h-4 animate-spin" /> : <Sparkles className="w-4 h-4" />}
-              {running ? 'جاري التحليل...' : 'حلّل الحالة'}
+              {running ? 'جاري التحليل...' : mode === 'pro' ? `حلّل بالوضع المتقدم (${proPrice} ر.س)` : 'حلّل الحالة'}
             </Button>
           </div>
         </CardContent>
       </Card>
-      {result && <ResultPanel title={`تحليل سريري`} content={result} />}
+      {result && <ResultPanel title={mode === 'pro' ? 'تحليل سريري متقدم 💎' : 'تحليل سريري'} content={result} />}
     </>
   );
 }
