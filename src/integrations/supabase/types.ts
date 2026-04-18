@@ -542,6 +542,128 @@ export type Database = {
         }
         Relationships: []
       }
+      gamification_levels: {
+        Row: {
+          badge_color: string | null
+          badge_label: string | null
+          created_at: string
+          icon: string | null
+          id: string
+          is_active: boolean
+          name_ar: string
+          name_en: string
+          perks_json: Json
+          required_points: number
+          slug: string
+          sort_order: number
+          updated_at: string
+        }
+        Insert: {
+          badge_color?: string | null
+          badge_label?: string | null
+          created_at?: string
+          icon?: string | null
+          id?: string
+          is_active?: boolean
+          name_ar: string
+          name_en: string
+          perks_json?: Json
+          required_points?: number
+          slug: string
+          sort_order?: number
+          updated_at?: string
+        }
+        Update: {
+          badge_color?: string | null
+          badge_label?: string | null
+          created_at?: string
+          icon?: string | null
+          id?: string
+          is_active?: boolean
+          name_ar?: string
+          name_en?: string
+          perks_json?: Json
+          required_points?: number
+          slug?: string
+          sort_order?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      gamification_rewards: {
+        Row: {
+          badge_color: string | null
+          cost_points: number
+          created_at: string
+          description_ar: string | null
+          expires_in_days: number | null
+          icon: string | null
+          id: string
+          is_active: boolean
+          level_required_id: string | null
+          max_redemptions_per_user: number | null
+          metadata: Json
+          sort_order: number
+          title_ar: string
+          title_en: string | null
+          total_redeemed: number
+          total_stock: number | null
+          type: string
+          updated_at: string
+          value: number
+        }
+        Insert: {
+          badge_color?: string | null
+          cost_points?: number
+          created_at?: string
+          description_ar?: string | null
+          expires_in_days?: number | null
+          icon?: string | null
+          id?: string
+          is_active?: boolean
+          level_required_id?: string | null
+          max_redemptions_per_user?: number | null
+          metadata?: Json
+          sort_order?: number
+          title_ar: string
+          title_en?: string | null
+          total_redeemed?: number
+          total_stock?: number | null
+          type: string
+          updated_at?: string
+          value?: number
+        }
+        Update: {
+          badge_color?: string | null
+          cost_points?: number
+          created_at?: string
+          description_ar?: string | null
+          expires_in_days?: number | null
+          icon?: string | null
+          id?: string
+          is_active?: boolean
+          level_required_id?: string | null
+          max_redemptions_per_user?: number | null
+          metadata?: Json
+          sort_order?: number
+          title_ar?: string
+          title_en?: string | null
+          total_redeemed?: number
+          total_stock?: number | null
+          type?: string
+          updated_at?: string
+          value?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "gamification_rewards_level_required_id_fkey"
+            columns: ["level_required_id"]
+            isOneToOne: false
+            referencedRelation: "gamification_levels"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       gateway_webhooks: {
         Row: {
           created_at: string
@@ -1470,6 +1592,54 @@ export type Database = {
           },
         ]
       }
+      point_transactions: {
+        Row: {
+          balance_after: number | null
+          base_points: number | null
+          created_at: string
+          created_by: string | null
+          description: string | null
+          id: string
+          metadata: Json
+          multiplier: number
+          points: number
+          source_id: string | null
+          source_type: string
+          type: string
+          user_id: string
+        }
+        Insert: {
+          balance_after?: number | null
+          base_points?: number | null
+          created_at?: string
+          created_by?: string | null
+          description?: string | null
+          id?: string
+          metadata?: Json
+          multiplier?: number
+          points: number
+          source_id?: string | null
+          source_type: string
+          type: string
+          user_id: string
+        }
+        Update: {
+          balance_after?: number | null
+          base_points?: number | null
+          created_at?: string
+          created_by?: string | null
+          description?: string | null
+          id?: string
+          metadata?: Json
+          multiplier?: number
+          points?: number
+          source_id?: string | null
+          source_type?: string
+          type?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           avatar_url: string | null
@@ -2176,6 +2346,110 @@ export type Database = {
         }
         Relationships: []
       }
+      user_points: {
+        Row: {
+          created_at: string
+          current_level_id: string | null
+          level_reached_at: string | null
+          lifetime_earned: number
+          lifetime_spent: number
+          total_points: number
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          current_level_id?: string | null
+          level_reached_at?: string | null
+          lifetime_earned?: number
+          lifetime_spent?: number
+          total_points?: number
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          current_level_id?: string | null
+          level_reached_at?: string | null
+          lifetime_earned?: number
+          lifetime_spent?: number
+          total_points?: number
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_points_current_level_id_fkey"
+            columns: ["current_level_id"]
+            isOneToOne: false
+            referencedRelation: "gamification_levels"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      user_rewards: {
+        Row: {
+          awarded_at: string
+          created_at: string
+          expires_at: string | null
+          id: string
+          metadata: Json
+          point_transaction_id: string | null
+          redemption_code: string | null
+          reward_id: string
+          source: string
+          status: string
+          updated_at: string
+          used_at: string | null
+          user_id: string
+        }
+        Insert: {
+          awarded_at?: string
+          created_at?: string
+          expires_at?: string | null
+          id?: string
+          metadata?: Json
+          point_transaction_id?: string | null
+          redemption_code?: string | null
+          reward_id: string
+          source?: string
+          status?: string
+          updated_at?: string
+          used_at?: string | null
+          user_id: string
+        }
+        Update: {
+          awarded_at?: string
+          created_at?: string
+          expires_at?: string | null
+          id?: string
+          metadata?: Json
+          point_transaction_id?: string | null
+          redemption_code?: string | null
+          reward_id?: string
+          source?: string
+          status?: string
+          updated_at?: string
+          used_at?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_rewards_point_transaction_id_fkey"
+            columns: ["point_transaction_id"]
+            isOneToOne: false
+            referencedRelation: "point_transactions"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "user_rewards_reward_id_fkey"
+            columns: ["reward_id"]
+            isOneToOne: false
+            referencedRelation: "gamification_rewards"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       user_roles: {
         Row: {
           created_at: string
@@ -2361,7 +2635,20 @@ export type Database = {
     }
     Functions: {
       accept_service_quote: { Args: { _order_id: string }; Returns: Json }
+      award_points: {
+        Args: {
+          _apply_multiplier?: boolean
+          _base_points: number
+          _description?: string
+          _metadata?: Json
+          _source_id?: string
+          _source_type: string
+          _user_id: string
+        }
+        Returns: string
+      }
       client_confirm_delivery: { Args: { _order_id: string }; Returns: Json }
+      compute_level_for_points: { Args: { _points: number }; Returns: string }
       delete_email: {
         Args: { message_id: number; queue_name: string }
         Returns: boolean
@@ -2386,6 +2673,10 @@ export type Database = {
           plan_name_ar: string
           priority_level: number
         }[]
+      }
+      get_membership_points_multiplier: {
+        Args: { _user_id: string }
+        Returns: number
       }
       get_referrer_by_code: {
         Args: { _code: string }
