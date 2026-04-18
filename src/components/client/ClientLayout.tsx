@@ -216,18 +216,9 @@ const ClientLayout: React.FC<ClientLayoutProps> = ({ children }) => {
 
           {/* Main Content */}
           <main className="flex-1 overflow-auto">
-            <AnimatePresence mode="wait">
-              <motion.div
-                key={location.pathname}
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -8 }}
-                transition={{ duration: 0.3 }}
-                className="w-full h-full"
-              >
-                {children}
-              </motion.div>
-            </AnimatePresence>
+            <div className="w-full h-full">
+              {children}
+            </div>
           </main>
         </div>
       </div>
