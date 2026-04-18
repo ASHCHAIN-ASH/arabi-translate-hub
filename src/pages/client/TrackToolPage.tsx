@@ -2,17 +2,30 @@ import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import * as Icons from 'lucide-react';
-import { ArrowRight, Loader2, Sparkles, Construction, Gift, Crown } from 'lucide-react';
+import {
+  ArrowRight, Loader2, Sparkles, Construction, Gift, Crown,
+  Copy, Download, Check, Wand2, BookOpen, Stethoscope, ListChecks,
+} from 'lucide-react';
+import ReactMarkdown from 'react-markdown';
+import jsPDF from 'jspdf';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { Textarea } from '@/components/ui/textarea';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { useToast } from '@/hooks/use-toast';
 import ClientLayout from '@/components/client/ClientLayout';
 import { supabase } from '@/integrations/supabase/client';
 import type { TrackTool, Track } from '@/hooks/useTracks';
 
+type ToolKey = 'medical-summarizer' | 'medical-terms' | 'clinical-case-analyzer' | 'medical-quiz-generator';
+
 export default function TrackToolPage() {
   const { trackSlug, toolSlug } = useParams<{ trackSlug: string; toolSlug: string }>();
   const navigate = useNavigate();
+  const { toast } = useToast();
   const [loading, setLoading] = useState(true);
   const [tool, setTool] = useState<TrackTool | null>(null);
   const [track, setTrack] = useState<Track | null>(null);
@@ -71,6 +84,7 @@ export default function TrackToolPage() {
   }
 
   const Icon = getIcon(tool.icon);
+  const toolKey = tool.slug as ToolKey;
 
   return (
     <ClientLayout>
@@ -83,7 +97,7 @@ export default function TrackToolPage() {
         <motion.div
           initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
-          className={`relative overflow-hidden rounded-3xl bg-gradient-to-l ${track.color} p-8 mb-6 text-white shadow-xl`}
+          className={`relative overflow-hidden rounded-3xl bg-gradient-to-l ${(track as any).color || 'from-primary to-primary/70'} p-8 mb-6 text-white shadow-xl`}
         >
           <div className="absolute -top-16 -left-16 w-48 h-48 rounded-full bg-white/10 blur-3xl" />
           <div className="relative flex items-start gap-4">
@@ -110,27 +124,438 @@ export default function TrackToolPage() {
           </div>
         </motion.div>
 
-        <Card>
-          <CardContent className="p-12 text-center space-y-4">
-            <div className="w-20 h-20 rounded-2xl bg-primary/10 flex items-center justify-center mx-auto">
-              <Sparkles className="w-10 h-10 text-primary" />
-            </div>
-            <h2 className="text-xl font-bold">واجهة الأداة قيد التطوير</h2>
-            <p className="text-muted-foreground max-w-xl mx-auto">
-              تم تأكيد طلبك وتسجيل الاستخدام بنجاح. واجهة هذه الأداة الذكية ستكون متاحة قريبًا — سنعلمك فور جاهزيتها.
-              في هذه الأثناء، يمكنك تجربة باقي الأدوات المتاحة في المسار.
-            </p>
-            <div className="flex items-center justify-center gap-2 pt-2">
-              <Button variant="outline" onClick={() => navigate(`/student/tracks/${trackSlug}`)} className="gap-2">
+        {toolKey === 'medical-summarizer' && <SummarizerRunner tool={tool} />}
+        {toolKey === 'medical-terms' && <TermsRunner tool={tool} />}
+        {toolKey === 'clinical-case-analyzer' && <CaseAnalyzerRunner tool={tool} />}
+        {toolKey === 'medical-quiz-generator' && <QuizRunner tool={tool} />}
+        {!['medical-summarizer','medical-terms','clinical-case-analyzer','medical-quiz-generator'].includes(toolKey) && (
+          <Card>
+            <CardContent className="p-12 text-center space-y-4">
+              <div className="w-20 h-20 rounded-2xl bg-primary/10 flex items-center justify-center mx-auto">
+                <Sparkles className="w-10 h-10 text-primary" />
+              </div>
+              <h2 className="text-xl font-bold">واجهة الأداة قيد الإعداد</h2>
+              <p className="text-muted-foreground max-w-xl mx-auto">
+                هذه الأداة ستكون متاحة قريبًا. جرّب باقي الأدوات في المسار في هذه الأثناء.
+              </p>
+              <Button onClick={() => navigate(`/student/tracks/${trackSlug}`)} className="gap-2">
                 <ArrowRight className="w-4 h-4" /> أدوات المسار
               </Button>
-              <Button onClick={() => navigate('/student/tracks')} className="gap-2">
-                كل المسارات
-              </Button>
+            </CardContent>
+          </Card>
+        )}
+      </div>
+    </ClientLayout>
+  );
+}
+
+// ────────────────────────────────────────────────────────────────────────────
+// Shared output panel (markdown + copy + download PDF)
+// ────────────────────────────────────────────────────────────────────────────
+function ResultPanel({ title, content }: { title: string; content: string }) {
+  const { toast } = useToast();
+  const [copied, setCopied] = useState(false);
+
+  const handleCopy = async () => {
+    try {
+      await navigator.clipboard.writeText(content);
+      setCopied(true);
+      toast({ title: '✅ تم النسخ' });
+      setTimeout(() => setCopied(false), 2000);
+    } catch {
+      toast({ title: 'تعذّر النسخ', variant: 'destructive' });
+    }
+  };
+
+  const handlePdf = () => {
+    try {
+      const doc = new jsPDF({ orientation: 'p', unit: 'pt', format: 'a4' });
+      const pageW = doc.internal.pageSize.getWidth();
+      const pageH = doc.internal.pageSize.getHeight();
+      const margin = 40;
+      const maxW = pageW - margin * 2;
+      doc.setFontSize(16);
+      doc.text(title, pageW - margin, margin, { align: 'right' });
+      doc.setFontSize(11);
+      const plain = content.replace(/[#*`_>]/g, '').replace(/\n{3,}/g, '\n\n');
+      const lines = doc.splitTextToSize(plain, maxW);
+      let y = margin + 30;
+      for (const line of lines) {
+        if (y > pageH - margin) { doc.addPage(); y = margin; }
+        doc.text(line, pageW - margin, y, { align: 'right' });
+        y += 16;
+      }
+      doc.save(`${title}.pdf`);
+      toast({ title: '📄 تم تحميل PDF' });
+    } catch (e) {
+      toast({ title: 'تعذّر إنشاء PDF', variant: 'destructive' });
+    }
+  };
+
+  return (
+    <Card className="mt-6">
+      <CardContent className="p-6">
+        <div className="flex items-center justify-between mb-4 flex-wrap gap-2">
+          <h3 className="font-bold text-lg">📋 النتيجة</h3>
+          <div className="flex items-center gap-2">
+            <Button variant="outline" size="sm" onClick={handleCopy} className="gap-2">
+              {copied ? <Check className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
+              {copied ? 'تم' : 'نسخ'}
+            </Button>
+            <Button variant="outline" size="sm" onClick={handlePdf} className="gap-2">
+              <Download className="w-4 h-4" /> PDF
+            </Button>
+          </div>
+        </div>
+        <div className="prose prose-sm dark:prose-invert max-w-none rtl text-right leading-relaxed">
+          <ReactMarkdown>{content}</ReactMarkdown>
+        </div>
+      </CardContent>
+    </Card>
+  );
+}
+
+// ────────────────────────────────────────────────────────────────────────────
+// Tool 1: Summarizer
+// ────────────────────────────────────────────────────────────────────────────
+function SummarizerRunner({ tool }: { tool: TrackTool }) {
+  const { toast } = useToast();
+  const [text, setText] = useState('');
+  const [running, setRunning] = useState(false);
+  const [result, setResult] = useState('');
+
+  const run = async () => {
+    if (text.trim().length < 50) {
+      toast({ title: 'النص قصير جداً (50 حرفاً على الأقل)', variant: 'destructive' });
+      return;
+    }
+    setRunning(true);
+    setResult('');
+    try {
+      const { data: rpc, error: rpcErr } = await (supabase as any)
+        .rpc('use_track_tool', { _tool_id: tool.id });
+      if (rpcErr) throw new Error(rpcErr.message);
+      if (!rpc?.ok) throw new Error('تعذّر بدء الاستخدام');
+
+      const { data, error } = await supabase.functions.invoke('medical-summarizer', { body: { text } });
+      if (error) throw new Error(error.message);
+      if ((data as any)?.error) throw new Error((data as any).error);
+      setResult((data as any).summary || '');
+      toast({ title: '✅ تم التلخيص بنجاح' });
+    } catch (e: any) {
+      toast({ title: e?.message || 'حدث خطأ', variant: 'destructive' });
+    } finally {
+      setRunning(false);
+    }
+  };
+
+  return (
+    <>
+      <Card>
+        <CardContent className="p-6 space-y-4">
+          <Label className="text-base font-semibold flex items-center gap-2">
+            <Wand2 className="w-4 h-4 text-primary" /> النص الطبي المراد تلخيصه
+          </Label>
+          <Textarea
+            value={text}
+            onChange={(e) => setText(e.target.value)}
+            placeholder="الصق هنا نص البحث أو المقال الطبي (50 حرفاً على الأقل، حتى 15000 حرف)..."
+            className="min-h-[240px] text-base leading-relaxed"
+            disabled={running}
+          />
+          <div className="flex items-center justify-between flex-wrap gap-2">
+            <span className="text-xs text-muted-foreground">{text.length.toLocaleString('ar-SA')} حرف</span>
+            <Button onClick={run} disabled={running || text.trim().length < 50} size="lg" className="gap-2">
+              {running ? <Loader2 className="w-4 h-4 animate-spin" /> : <Sparkles className="w-4 h-4" />}
+              {running ? 'جاري التلخيص...' : 'لخّص الآن'}
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
+      {result && <ResultPanel title={`ملخص — ${tool.name_ar}`} content={result} />}
+    </>
+  );
+}
+
+// ────────────────────────────────────────────────────────────────────────────
+// Tool 2: Medical Terms
+// ────────────────────────────────────────────────────────────────────────────
+function TermsRunner({ tool }: { tool: TrackTool }) {
+  const { toast } = useToast();
+  const [term, setTerm] = useState('');
+  const [running, setRunning] = useState(false);
+  const [result, setResult] = useState('');
+
+  const run = async () => {
+    if (term.trim().length < 2) {
+      toast({ title: 'أدخل مصطلحاً صحيحاً', variant: 'destructive' });
+      return;
+    }
+    setRunning(true);
+    setResult('');
+    try {
+      const { data: rpc, error: rpcErr } = await (supabase as any)
+        .rpc('use_track_tool', { _tool_id: tool.id });
+      if (rpcErr) throw new Error(rpcErr.message);
+      if (!rpc?.ok) throw new Error('تعذّر بدء الاستخدام');
+
+      const { data, error } = await supabase.functions.invoke('medical-terms', { body: { term } });
+      if (error) throw new Error(error.message);
+      if ((data as any)?.error) throw new Error((data as any).error);
+      setResult((data as any).explanation || '');
+      toast({ title: '✅ تم الشرح بنجاح' });
+    } catch (e: any) {
+      toast({ title: e?.message || 'حدث خطأ', variant: 'destructive' });
+    } finally {
+      setRunning(false);
+    }
+  };
+
+  return (
+    <>
+      <Card>
+        <CardContent className="p-6 space-y-4">
+          <Label className="text-base font-semibold flex items-center gap-2">
+            <BookOpen className="w-4 h-4 text-primary" /> المصطلح الطبي
+          </Label>
+          <Input
+            value={term}
+            onChange={(e) => setTerm(e.target.value)}
+            onKeyDown={(e) => { if (e.key === 'Enter' && !running) run(); }}
+            placeholder="مثال: Hypertension أو ارتفاع ضغط الدم"
+            className="text-base h-12"
+            disabled={running}
+          />
+          <div className="flex items-center justify-end">
+            <Button onClick={run} disabled={running || term.trim().length < 2} size="lg" className="gap-2">
+              {running ? <Loader2 className="w-4 h-4 animate-spin" /> : <Sparkles className="w-4 h-4" />}
+              {running ? 'جاري الشرح...' : 'اشرح المصطلح'}
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
+      {result && <ResultPanel title={`شرح — ${term}`} content={result} />}
+    </>
+  );
+}
+
+// ────────────────────────────────────────────────────────────────────────────
+// Tool 3: Clinical Case Analyzer
+// ────────────────────────────────────────────────────────────────────────────
+function CaseAnalyzerRunner({ tool }: { tool: TrackTool }) {
+  const { toast } = useToast();
+  const [caseText, setCaseText] = useState('');
+  const [running, setRunning] = useState(false);
+  const [result, setResult] = useState('');
+
+  const run = async () => {
+    if (caseText.trim().length < 50) {
+      toast({ title: 'وصف الحالة قصير جداً', variant: 'destructive' });
+      return;
+    }
+    setRunning(true);
+    setResult('');
+    try {
+      const { data: rpc, error: rpcErr } = await (supabase as any)
+        .rpc('use_track_tool', { _tool_id: tool.id });
+      if (rpcErr) throw new Error(rpcErr.message);
+      if (!rpc?.ok) throw new Error('تعذّر بدء الاستخدام');
+
+      const { data, error } = await supabase.functions.invoke('clinical-case-analyzer', { body: { caseText } });
+      if (error) throw new Error(error.message);
+      if ((data as any)?.error) throw new Error((data as any).error);
+      setResult((data as any).analysis || '');
+      toast({ title: '✅ تم التحليل بنجاح' });
+    } catch (e: any) {
+      toast({ title: e?.message || 'حدث خطأ', variant: 'destructive' });
+    } finally {
+      setRunning(false);
+    }
+  };
+
+  return (
+    <>
+      <Card>
+        <CardContent className="p-6 space-y-4">
+          <Label className="text-base font-semibold flex items-center gap-2">
+            <Stethoscope className="w-4 h-4 text-primary" /> وصف الحالة السريرية
+          </Label>
+          <Textarea
+            value={caseText}
+            onChange={(e) => setCaseText(e.target.value)}
+            placeholder="مثال: مريض ذكر، 45 سنة، يشكو من ألم صدري ضاغط منذ ساعتين، يمتد للذراع الأيسر، مع تعرّق وغثيان..."
+            className="min-h-[260px] text-base leading-relaxed"
+            disabled={running}
+          />
+          <div className="flex items-center justify-between flex-wrap gap-2">
+            <span className="text-xs text-muted-foreground">{caseText.length.toLocaleString('ar-SA')} حرف</span>
+            <Button onClick={run} disabled={running || caseText.trim().length < 50} size="lg" className="gap-2">
+              {running ? <Loader2 className="w-4 h-4 animate-spin" /> : <Sparkles className="w-4 h-4" />}
+              {running ? 'جاري التحليل...' : 'حلّل الحالة'}
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
+      {result && <ResultPanel title={`تحليل سريري`} content={result} />}
+    </>
+  );
+}
+
+// ────────────────────────────────────────────────────────────────────────────
+// Tool 4: Quiz Generator
+// ────────────────────────────────────────────────────────────────────────────
+type QuizQ = { question: string; options: string[]; correct_index: number; explanation: string };
+
+function QuizRunner({ tool }: { tool: TrackTool }) {
+  const { toast } = useToast();
+  const [topic, setTopic] = useState('');
+  const [count, setCount] = useState(5);
+  const [difficulty, setDifficulty] = useState<'easy'|'medium'|'hard'>('medium');
+  const [running, setRunning] = useState(false);
+  const [quiz, setQuiz] = useState<QuizQ[]>([]);
+  const [answers, setAnswers] = useState<Record<number, number>>({});
+  const [revealed, setRevealed] = useState(false);
+
+  const run = async () => {
+    if (topic.trim().length < 2) {
+      toast({ title: 'أدخل موضوعاً للاختبار', variant: 'destructive' });
+      return;
+    }
+    setRunning(true);
+    setQuiz([]);
+    setAnswers({});
+    setRevealed(false);
+    try {
+      const { data: rpc, error: rpcErr } = await (supabase as any)
+        .rpc('use_track_tool', { _tool_id: tool.id });
+      if (rpcErr) throw new Error(rpcErr.message);
+      if (!rpc?.ok) throw new Error('تعذّر بدء الاستخدام');
+
+      const { data, error } = await supabase.functions.invoke('medical-quiz-generator', {
+        body: { topic, count, difficulty },
+      });
+      if (error) throw new Error(error.message);
+      if ((data as any)?.error) throw new Error((data as any).error);
+      setQuiz(((data as any).quiz || []) as QuizQ[]);
+      toast({ title: '✅ جاهز! ابدأ الاختبار' });
+    } catch (e: any) {
+      toast({ title: e?.message || 'حدث خطأ', variant: 'destructive' });
+    } finally {
+      setRunning(false);
+    }
+  };
+
+  const score = quiz.length === 0 ? 0
+    : quiz.reduce((acc, q, i) => acc + (answers[i] === q.correct_index ? 1 : 0), 0);
+
+  return (
+    <>
+      <Card>
+        <CardContent className="p-6 space-y-4">
+          <Label className="text-base font-semibold flex items-center gap-2">
+            <ListChecks className="w-4 h-4 text-primary" /> موضوع الاختبار
+          </Label>
+          <Input
+            value={topic}
+            onChange={(e) => setTopic(e.target.value)}
+            placeholder="مثال: علم الأدوية – مضادات الالتهاب"
+            className="text-base h-12"
+            disabled={running}
+          />
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <Label className="text-sm mb-2 block">عدد الأسئلة</Label>
+              <Select value={String(count)} onValueChange={(v) => setCount(Number(v))} disabled={running}>
+                <SelectTrigger><SelectValue /></SelectTrigger>
+                <SelectContent>
+                  {[3,5,7,10,15].map(n => <SelectItem key={n} value={String(n)}>{n} أسئلة</SelectItem>)}
+                </SelectContent>
+              </Select>
+            </div>
+            <div>
+              <Label className="text-sm mb-2 block">المستوى</Label>
+              <Select value={difficulty} onValueChange={(v) => setDifficulty(v as any)} disabled={running}>
+                <SelectTrigger><SelectValue /></SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="easy">سهل</SelectItem>
+                  <SelectItem value="medium">متوسط</SelectItem>
+                  <SelectItem value="hard">صعب</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+          <div className="flex items-center justify-end">
+            <Button onClick={run} disabled={running || topic.trim().length < 2} size="lg" className="gap-2">
+              {running ? <Loader2 className="w-4 h-4 animate-spin" /> : <Sparkles className="w-4 h-4" />}
+              {running ? 'جاري التوليد...' : 'ولّد الاختبار'}
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
+
+      {quiz.length > 0 && (
+        <Card className="mt-6">
+          <CardContent className="p-6 space-y-6">
+            <div className="flex items-center justify-between flex-wrap gap-3">
+              <h3 className="font-bold text-lg">📝 الاختبار ({quiz.length} أسئلة)</h3>
+              {revealed && (
+                <Badge className="bg-primary text-primary-foreground text-base px-4 py-1.5">
+                  النتيجة: {score} / {quiz.length}
+                </Badge>
+              )}
+            </div>
+
+            {quiz.map((q, i) => (
+              <div key={i} className="border rounded-xl p-4 space-y-3">
+                <p className="font-semibold leading-relaxed">
+                  <span className="text-primary">س{i + 1}.</span> {q.question}
+                </p>
+                <div className="space-y-2">
+                  {q.options.map((opt, j) => {
+                    const selected = answers[i] === j;
+                    const isCorrect = j === q.correct_index;
+                    const showState = revealed && (selected || isCorrect);
+                    return (
+                      <button
+                        key={j}
+                        type="button"
+                        disabled={revealed}
+                        onClick={() => setAnswers(prev => ({ ...prev, [i]: j }))}
+                        className={`w-full text-right p-3 rounded-lg border transition-all ${
+                          showState && isCorrect ? 'bg-emerald-500/10 border-emerald-500 text-emerald-700 dark:text-emerald-300' :
+                          showState && selected && !isCorrect ? 'bg-destructive/10 border-destructive text-destructive' :
+                          selected ? 'bg-primary/10 border-primary' :
+                          'hover:bg-muted border-border'
+                        }`}
+                      >
+                        <span className="font-bold ml-2">{['أ','ب','ج','د'][j]}.</span>
+                        {opt}
+                      </button>
+                    );
+                  })}
+                </div>
+                {revealed && (
+                  <div className="text-sm bg-muted/50 rounded-lg p-3 mt-2">
+                    <strong>💡 الشرح: </strong>{q.explanation}
+                  </div>
+                )}
+              </div>
+            ))}
+
+            <div className="flex items-center justify-end gap-2">
+              {!revealed ? (
+                <Button onClick={() => setRevealed(true)} size="lg" className="gap-2">
+                  <Check className="w-4 h-4" /> عرض النتائج
+                </Button>
+              ) : (
+                <Button variant="outline" onClick={() => { setAnswers({}); setRevealed(false); }} className="gap-2">
+                  إعادة المحاولة
+                </Button>
+              )}
             </div>
           </CardContent>
         </Card>
-      </div>
-    </ClientLayout>
+      )}
+    </>
   );
 }
