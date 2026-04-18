@@ -107,9 +107,9 @@ const AcademicWritingServices = () => {
             transition={{ duration: 0.6 }}
             className="text-center mb-12"
           >
-            <h2 className="text-4xl font-bold mb-4 text-foreground">خدمات الكتابة الأكاديمية</h2>
+            <h2 className="text-4xl font-bold mb-4 text-foreground">خدمات المساعدة الأكاديمية</h2>
             <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
-              نوفر مجموعة شاملة من خدمات الكتابة الأكاديمية لجميع المستويات التعليمية
+              نوفر مجموعة شاملة من خدمات الدعم الأكاديمي والإرشاد العلمي لجميع المستويات التعليمية
             </p>
           </motion.div>
 
