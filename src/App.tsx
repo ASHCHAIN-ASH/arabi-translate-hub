@@ -456,6 +456,11 @@ const App = () => (
                 <AdminMemberships />
               </SimpleProtectedRoute>
             } />
+            <Route path="/adminmaster/referrals" element={
+              <SimpleProtectedRoute adminOnly>
+                <AdminReferrals />
+              </SimpleProtectedRoute>
+            } />
             <Route path="/membership" element={
               <SimpleProtectedRoute>
                 <MembershipPage />
