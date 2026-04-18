@@ -1349,60 +1349,96 @@ export type Database = {
       }
       service_orders: {
         Row: {
+          active_invoice_id: string | null
           assistance_type: string | null
+          cancelled_at: string | null
+          client_confirmed_at: string | null
+          completed_at: string | null
+          contract_pending_at: string | null
+          contract_signed_at: string | null
           created_at: string
           current_status: string | null
           customer_id: string | null
           deadline: string | null
+          delivered_at: string | null
+          execution_started_at: string | null
           id: string
+          lifecycle_status: Database["public"]["Enums"]["order_lifecycle_status"]
           notes: string | null
           paid_amount: number | null
+          payment_completed_at: string | null
           priority: string | null
+          progress_percentage: number
           quote_notes: string | null
           quote_sent_at: string | null
           quote_status: string | null
           service_id: string | null
           service_name: string | null
+          signed_contract_id: string | null
           total_amount: number | null
           tracking_id: string
           updated_at: string
           user_id: string | null
         }
         Insert: {
+          active_invoice_id?: string | null
           assistance_type?: string | null
+          cancelled_at?: string | null
+          client_confirmed_at?: string | null
+          completed_at?: string | null
+          contract_pending_at?: string | null
+          contract_signed_at?: string | null
           created_at?: string
           current_status?: string | null
           customer_id?: string | null
           deadline?: string | null
+          delivered_at?: string | null
+          execution_started_at?: string | null
           id?: string
+          lifecycle_status?: Database["public"]["Enums"]["order_lifecycle_status"]
           notes?: string | null
           paid_amount?: number | null
+          payment_completed_at?: string | null
           priority?: string | null
+          progress_percentage?: number
           quote_notes?: string | null
           quote_sent_at?: string | null
           quote_status?: string | null
           service_id?: string | null
           service_name?: string | null
+          signed_contract_id?: string | null
           total_amount?: number | null
           tracking_id?: string
           updated_at?: string
           user_id?: string | null
         }
         Update: {
+          active_invoice_id?: string | null
           assistance_type?: string | null
+          cancelled_at?: string | null
+          client_confirmed_at?: string | null
+          completed_at?: string | null
+          contract_pending_at?: string | null
+          contract_signed_at?: string | null
           created_at?: string
           current_status?: string | null
           customer_id?: string | null
           deadline?: string | null
+          delivered_at?: string | null
+          execution_started_at?: string | null
           id?: string
+          lifecycle_status?: Database["public"]["Enums"]["order_lifecycle_status"]
           notes?: string | null
           paid_amount?: number | null
+          payment_completed_at?: string | null
           priority?: string | null
+          progress_percentage?: number
           quote_notes?: string | null
           quote_sent_at?: string | null
           quote_status?: string | null
           service_id?: string | null
           service_name?: string | null
+          signed_contract_id?: string | null
           total_amount?: number | null
           tracking_id?: string
           updated_at?: string
@@ -2006,6 +2042,8 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      accept_service_quote: { Args: { _order_id: string }; Returns: Json }
+      client_confirm_delivery: { Args: { _order_id: string }; Returns: Json }
       delete_email: {
         Args: { message_id: number; queue_name: string }
         Returns: boolean
@@ -2055,6 +2093,10 @@ export type Database = {
         }
         Returns: undefined
       }
+      lifecycle_progress: {
+        Args: { _status: Database["public"]["Enums"]["order_lifecycle_status"] }
+        Returns: number
+      }
       move_to_dlq: {
         Args: {
           dlq_name: string
@@ -2071,6 +2113,17 @@ export type Database = {
           msg_id: number
           read_ct: number
         }[]
+      }
+      sign_contract_with_otp: {
+        Args: {
+          _contract_id: string
+          _ip?: string
+          _otp_code: string
+          _signature_text: string
+          _signer_name?: string
+          _ua?: string
+        }
+        Returns: Json
       }
       track_order: {
         Args: { _phone_last_four: string; _tracking_id: string }
@@ -2102,6 +2155,19 @@ export type Database = {
     }
     Enums: {
       app_role: "admin" | "moderator" | "user"
+      order_lifecycle_status:
+        | "received"
+        | "under_review"
+        | "quote_sent"
+        | "quote_accepted"
+        | "contract_pending"
+        | "contract_signed"
+        | "payment_pending"
+        | "paid"
+        | "in_progress"
+        | "delivered"
+        | "completed"
+        | "cancelled"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -2230,6 +2296,20 @@ export const Constants = {
   public: {
     Enums: {
       app_role: ["admin", "moderator", "user"],
+      order_lifecycle_status: [
+        "received",
+        "under_review",
+        "quote_sent",
+        "quote_accepted",
+        "contract_pending",
+        "contract_signed",
+        "payment_pending",
+        "paid",
+        "in_progress",
+        "delivered",
+        "completed",
+        "cancelled",
+      ],
     },
   },
 } as const
