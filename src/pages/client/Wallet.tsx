@@ -279,8 +279,56 @@ const ClientWallet: React.FC = () => {
                       )}
                     </div>
 
+                    {/* INSTANT card top-up — bypasses bank-transfer review */}
+                    <div className="rounded-xl border-2 border-emerald-300 bg-gradient-to-l from-emerald-50 to-teal-50 p-3">
+                      <div className="flex items-center justify-between gap-2 mb-2">
+                        <div className="flex items-center gap-2">
+                          <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-emerald-500 to-teal-600 flex items-center justify-center">
+                            <Zap className="w-4 h-4 text-white" />
+                          </div>
+                          <div>
+                            <div className="text-xs font-black text-emerald-900">شحن فوري بالبطاقة</div>
+                            <div className="text-[10px] text-emerald-700">مدى • فيزا • ماستر • Apple Pay</div>
+                          </div>
+                        </div>
+                        <Badge className="bg-emerald-600 text-white text-[9px]">فوري</Badge>
+                      </div>
+                      <Button
+                        type="button"
+                        disabled={!amount || amount <= 0 || submitting}
+                        onClick={async () => {
+                          if (!amount || amount <= 0) return toast.error('يرجى إدخال مبلغ صحيح');
+                          setSubmitting(true);
+                          try {
+                            const { supabase } = await import('@/integrations/supabase/client');
+                            const { data, error } = await supabase.functions.invoke('create-payment-intent', {
+                              body: { purpose: 'wallet_topup', amount, note: 'شحن المحفظة بالبطاقة' },
+                            });
+                            if (error) throw error;
+                            if (!data?.checkout_url) throw new Error('لم يتم استلام رابط الدفع');
+                            window.location.href = data.checkout_url;
+                          } catch (e: any) {
+                            toast.error('فشل بدء عملية الدفع', { description: e.message });
+                            setSubmitting(false);
+                          }
+                        }}
+                        className="w-full bg-gradient-to-l from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white font-bold gap-2"
+                      >
+                        <CreditCard className="w-4 h-4" />
+                        ادفع الآن {amount > 0 ? `(${WalletService.formatCurrency(amount)})` : ''}
+                      </Button>
+                      <p className="text-[10px] text-emerald-700/80 mt-1.5 text-center">
+                        شحن فوري آمن — يضاف الرصيد لمحفظتك خلال ثوانٍ بعد الدفع
+                      </p>
+                    </div>
+
+                    <div className="relative">
+                      <div className="absolute inset-0 flex items-center"><div className="w-full border-t border-border"></div></div>
+                      <div className="relative flex justify-center text-[10px]"><span className="bg-background px-2 text-muted-foreground">أو اختر طريقة دفع يدوية</span></div>
+                    </div>
+
                     <div>
-                      <Label className="text-xs">طريقة الدفع</Label>
+                      <Label className="text-xs">طريقة الدفع اليدوية (تتطلب موافقة)</Label>
                       <div className="grid grid-cols-2 gap-1.5 mt-1">
                         {PAYMENT_METHODS.map((m) => (
                           <button key={m.value} type="button" onClick={() => setMethod(m.value)}
