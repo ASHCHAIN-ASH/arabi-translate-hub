@@ -244,7 +244,7 @@ const SmartEditor = () => {
                 {meta && (
                   <CardDescription className="flex flex-wrap gap-2 mt-2">
                     {meta.was_free ? (
-                      <Badge className="bg-emerald-500/10 text-emerald-700 border-emerald-300">
+                      <Badge variant="default" className="bg-primary/15 text-primary border-primary/30 hover:bg-primary/20">
                         مجاناً ✨ (تبقى {meta.quota_left})
                       </Badge>
                     ) : (
