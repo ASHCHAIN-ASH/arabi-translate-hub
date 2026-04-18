@@ -262,6 +262,38 @@ const StudentHub: React.FC = () => {
           </Link>
         </motion.div>
 
+        {/* المحرر الذكي CTA */}
+        <motion.div
+          initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
+          className="mb-6"
+        >
+          <Link to="/research/smart-editor" className="block group">
+            <Card className="relative overflow-hidden border-2 border-emerald-500/30 hover:border-emerald-500/60 transition-all hover:shadow-2xl bg-gradient-to-l from-emerald-500/10 via-emerald-500/5 to-transparent">
+              <div className="absolute -top-16 -left-16 w-48 h-48 rounded-full bg-emerald-500/20 blur-3xl group-hover:scale-110 transition-transform duration-500" />
+              <CardContent className="relative p-6 flex items-center justify-between gap-4">
+                <div className="flex items-center gap-4">
+                  <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-emerald-500 to-teal-600 flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform">
+                    <Wand2 className="w-7 h-7 text-white" />
+                  </div>
+                  <div>
+                    <div className="flex items-center gap-2 mb-1">
+                      <h3 className="text-lg md:text-xl font-bold">المحرر الذكي</h3>
+                      <Badge className="bg-emerald-500 text-white border-0">جديد</Badge>
+                    </div>
+                    <p className="text-sm text-muted-foreground">
+                      تصحيح، إعادة صياغة، رفع الأسلوب الأكاديمي، اختصار، وتوسيع — Standard مجاناً 3 مرات/يوم أو Pro متقدم
+                    </p>
+                  </div>
+                </div>
+                <Button variant="default" size="lg" className="shrink-0 gap-2 group-hover:gap-3 transition-all hidden sm:inline-flex bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700">
+                  ابدأ الآن
+                  <ArrowLeft className="w-5 h-5" />
+                </Button>
+              </CardContent>
+            </Card>
+          </Link>
+        </motion.div>
+
         {/* TABS */}
         <Tabs defaultValue="ai" className="w-full" dir="rtl">
           <TabsList className="grid w-full grid-cols-2 md:grid-cols-5 h-auto p-1 bg-muted/60">
