@@ -34,6 +34,11 @@ interface ServiceOrder {
   quote_sent_at: string | null;
   created_at: string;
   updated_at: string;
+  lifecycle_status?: string | null;
+  progress_percentage?: number | null;
+  signed_contract_id?: string | null;
+  active_invoice_id?: string | null;
+  user_id?: string | null;
 }
 
 interface TimelineEntry {
