@@ -119,36 +119,36 @@ const WalletTopup: React.FC = () => {
 
         {/* Header */}
         <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
-          className="rounded-2xl bg-gradient-to-l from-violet-600 via-purple-600 to-fuchsia-600 text-white p-5 shadow-xl">
-          <div className="flex items-start justify-between gap-3">
-            <div>
+          className="rounded-2xl bg-gradient-to-l from-primary to-primary/80 text-primary-foreground p-4 sm:p-5 shadow-lg">
+          <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3">
+            <div className="min-w-0">
               <div className="flex items-center gap-2 mb-1">
-                <Sparkles className="w-5 h-5" />
-                <h1 className="text-xl sm:text-2xl font-black">شحن المحفظة</h1>
+                <Sparkles className="w-5 h-5 shrink-0" />
+                <h1 className="text-lg sm:text-2xl font-black">شحن المحفظة</h1>
               </div>
-              <p className="text-white/85 text-xs sm:text-sm">اختر المبلغ وطريقة الدفع المفضلة لديك</p>
+              <p className="text-primary-foreground/85 text-xs sm:text-sm">اختر المبلغ وطريقة الدفع المفضلة لديك</p>
             </div>
             {wallet && (
-              <div className="text-left bg-white/15 backdrop-blur-md px-3 py-2 rounded-xl border border-white/20">
+              <div className="sm:text-left bg-background/15 backdrop-blur-md px-3 py-2 rounded-xl border border-background/20 self-start">
                 <div className="text-[10px] opacity-90">رصيدك الحالي</div>
-                <div className="text-lg font-black">{WalletService.formatCurrency(wallet.balance, wallet.currency)}</div>
+                <div className="text-base sm:text-lg font-black whitespace-nowrap">{WalletService.formatCurrency(wallet.balance, wallet.currency)}</div>
               </div>
             )}
           </div>
         </motion.div>
 
         {/* Bonus Banner */}
-        <Card className="overflow-hidden border-amber-200">
-          <CardContent className="p-4 bg-gradient-to-l from-amber-50 to-orange-50">
+        <Card className="overflow-hidden">
+          <CardContent className="p-3 sm:p-4 bg-accent/30">
             <div className="flex items-center gap-2 mb-3">
-              <Gift className="w-5 h-5 text-amber-600" />
-              <h2 className="text-sm font-black text-amber-900">عروض الشحن — كلما زاد المبلغ زاد البونص</h2>
+              <Gift className="w-5 h-5 text-primary" />
+              <h2 className="text-xs sm:text-sm font-black text-foreground">عروض الشحن — كلما زاد المبلغ زاد البونص</h2>
             </div>
-            <div className="grid grid-cols-4 gap-2 text-center text-xs font-bold">
-              <div className="bg-white rounded-xl p-2.5 border border-amber-100"><div className="text-amber-700">+500</div><div className="text-muted-foreground text-[10px] mt-0.5">2%</div></div>
-              <div className="bg-white rounded-xl p-2.5 border border-amber-100"><div className="text-amber-700">+1000</div><div className="text-muted-foreground text-[10px] mt-0.5">5%</div></div>
-              <div className="bg-white rounded-xl p-2.5 border border-amber-100"><div className="text-amber-700">+2500</div><div className="text-muted-foreground text-[10px] mt-0.5">10%</div></div>
-              <div className="bg-gradient-to-br from-amber-400 to-orange-500 text-white rounded-xl p-2.5 shadow-md"><div>+5000</div><div className="text-[10px] mt-0.5">15% 🎁</div></div>
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-center text-xs font-bold">
+              <div className="bg-card rounded-xl p-2.5 border"><div className="text-primary">+500</div><div className="text-muted-foreground text-[10px] mt-0.5">2%</div></div>
+              <div className="bg-card rounded-xl p-2.5 border"><div className="text-primary">+1000</div><div className="text-muted-foreground text-[10px] mt-0.5">5%</div></div>
+              <div className="bg-card rounded-xl p-2.5 border"><div className="text-primary">+2500</div><div className="text-muted-foreground text-[10px] mt-0.5">10%</div></div>
+              <div className="bg-gradient-to-br from-primary to-primary/80 text-primary-foreground rounded-xl p-2.5 shadow-md"><div>+5000</div><div className="text-[10px] mt-0.5">15% 🎁</div></div>
             </div>
           </CardContent>
         </Card>
