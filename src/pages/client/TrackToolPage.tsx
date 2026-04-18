@@ -7,7 +7,7 @@ import {
   Copy, Download, Check, Wand2, BookOpen, Stethoscope, ListChecks,
 } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
-import jsPDF from 'jspdf';
+// PDF: نولّده عبر نافذة طباعة المتصفح لدعم العربية و RTL بشكل كامل
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
