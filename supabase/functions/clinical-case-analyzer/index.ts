@@ -90,7 +90,7 @@ Deno.serve(async (req) => {
 
     const data = await r.json();
     const content = data?.choices?.[0]?.message?.content || "";
-    return json({ ok: true, analysis: content });
+    return json({ ok: true, analysis: content, mode: isPro ? "pro" : "standard" });
   } catch (e) {
     console.error("clinical-case-analyzer error:", e);
     return json({ error: e instanceof Error ? e.message : "خطأ غير متوقع" }, 500);
