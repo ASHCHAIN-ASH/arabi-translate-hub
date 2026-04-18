@@ -10,7 +10,7 @@ import {
   LayoutDashboard, Users, ShoppingCart, FileText, 
   CreditCard, HelpCircle, Settings, LogOut, Shield, Bell, Menu,
   Activity, Mail, Briefcase, Clock, Receipt, ChevronDown,
-  BarChart3, Package, Ticket, UserPlus, Star, Wallet, Gift, Trophy
+  BarChart3, Package, Ticket, UserPlus, Star, Wallet, Gift, Trophy, BookOpen
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import ChatFloatingButton from '@/components/chat/ChatFloatingButton';
@@ -90,6 +90,7 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
         { name: 'إدارة الخدمات', href: '/adminmaster/services', icon: Briefcase },
         { name: 'الإشعارات البريدية', href: '/adminmaster/email-notifications', icon: Mail },
         { name: 'المحادثات', href: '/adminmaster/chat', icon: Activity },
+        { name: 'مكتبة الطالب', href: '/adminmaster/student-resources', icon: BookOpen },
       ]
     },
     {
