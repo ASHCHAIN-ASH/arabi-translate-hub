@@ -1,4 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import ClientLayout from '@/components/client/ClientLayout';
 import { useAuth } from '@/components/SimpleAuthProvider';
 import { motion, AnimatePresence } from 'framer-motion';
