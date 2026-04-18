@@ -11,6 +11,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
+import { AcademicAssistanceDisclaimer } from '@/components/AcademicAssistanceDisclaimer';
 
 export default function HomeworkAssistance() {
   const navigate = useNavigate();
@@ -36,7 +37,7 @@ export default function HomeworkAssistance() {
       const { error } = await supabase.functions.invoke('send-student-service-order', {
         body: {
           ...formData,
-          serviceTitle: 'المساعدة في حل الواجبات',
+          serviceTitle: 'المساعدة الأكاديمية في الواجبات',
           serviceType: 'homework-assistance'
         }
       });
@@ -88,12 +89,16 @@ export default function HomeworkAssistance() {
             </motion.div>
 
             <h1 className="text-4xl md:text-5xl font-bold mb-6 bg-gradient-to-r from-teal-600 to-cyan-600 bg-clip-text text-transparent">
-              المساعدة في حل الواجبات والتقارير
+              المساعدة الأكاديمية في الواجبات والتقارير
             </h1>
             
-            <p className="text-xl text-muted-foreground leading-relaxed">
-              دعم أكاديمي متكامل في حل الواجبات والتقارير الجامعية بجودة عالية
+            <p className="text-xl text-muted-foreground leading-relaxed mb-8">
+              دعم أكاديمي وإرشاد علمي متكامل لفهم الواجبات والتقارير الجامعية وتطوير مهاراتك بجودة عالية
             </p>
+
+            <div className="max-w-3xl mx-auto">
+              <AcademicAssistanceDisclaimer />
+            </div>
           </motion.div>
         </div>
       </section>
@@ -101,15 +106,15 @@ export default function HomeworkAssistance() {
       <section className="py-16 bg-muted/30">
         <div className="container px-4 mx-auto">
           <motion.div initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} className="max-w-6xl mx-auto">
-            <h2 className="text-3xl font-bold text-center mb-12">ما نقدمه في المساعدة بالواجبات</h2>
+            <h2 className="text-3xl font-bold text-center mb-12">ما نقدمه من دعم أكاديمي</h2>
             
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
               {[
-                { icon: FileCheck, title: 'حل دقيق', description: 'حلول صحيحة ومدروسة بعناية' },
-                { icon: Target, title: 'تفسير واضح', description: 'شرح مفصل للحلول والخطوات' },
+                { icon: FileCheck, title: 'إرشاد دقيق', description: 'توجيه علمي مدروس بعناية' },
+                { icon: Target, title: 'تفسير واضح', description: 'شرح مفصل للمفاهيم والخطوات' },
                 { icon: Users, title: 'خبراء متخصصون', description: 'فريق من الأكاديميين المؤهلين' },
-                { icon: Award, title: 'جودة مضمونة', description: 'حلول وفق المعايير الأكاديمية' },
-                { icon: Clock, title: 'سرعة في الإنجاز', description: 'التزام بمواعيد التسليم' },
+                { icon: Award, title: 'جودة مضمونة', description: 'دعم وفق المعايير الأكاديمية' },
+                { icon: Clock, title: 'استجابة سريعة', description: 'التزام بمواعيد التسليم' },
                 { icon: HeartHandshake, title: 'دعم مستمر', description: 'متابعة ومساعدة على مدار الساعة' }
               ].map((feature, index) => (
                 <motion.div
@@ -135,14 +140,14 @@ export default function HomeworkAssistance() {
       <section className="py-12 md:py-16">
         <div className="container px-4 mx-auto">
           <motion.div initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} className="max-w-4xl mx-auto mb-12">
-            <h2 className="text-2xl md:text-3xl font-bold text-center mb-8 md:mb-12">كيف نساعدك في حل الواجبات؟</h2>
+            <h2 className="text-2xl md:text-3xl font-bold text-center mb-8 md:mb-12">كيف ندعمك في إعداد واجباتك؟</h2>
             
             <div className="space-y-4 md:space-y-6">
               {[
-                { step: '1', title: 'استلام الواجب', description: 'نستلم واجبك ونتأكد من فهم المتطلبات' },
-                { step: '2', title: 'التحليل والحل', description: 'نحلل الأسئلة ونضع الحلول الصحيحة' },
-                { step: '3', title: 'الشرح والتوضيح', description: 'نشرح الحلول بطريقة واضحة ومفصلة' },
-                { step: '4', title: 'المراجعة والتسليم', description: 'مراجعة نهائية وتسليم الحلول جاهزة' }
+                { step: '1', title: 'استلام الواجب', description: 'نستلم تفاصيل واجبك ونتأكد من فهم المتطلبات' },
+                { step: '2', title: 'التحليل والإرشاد', description: 'نحلل الأسئلة ونوفر المراجع والإرشاد العلمي' },
+                { step: '3', title: 'الشرح والتوضيح', description: 'نشرح المفاهيم والمنهجية بطريقة واضحة ومفصلة' },
+                { step: '4', title: 'المراجعة والتسليم', description: 'مراجعة نهائية وتسليم المخرجات كمرجع إرشادي' }
               ].map((step, index) => (
                 <motion.div
                   key={index}

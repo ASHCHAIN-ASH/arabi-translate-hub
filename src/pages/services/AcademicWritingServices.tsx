@@ -13,32 +13,32 @@ const AcademicWritingServices = () => {
   const services = [
     {
       icon: <GraduationCap className="w-8 h-8" />,
-      title: "كتابة الأطروحات",
-      description: "كتابة أطروحات الماجستير والدكتوراه بأعلى معايير الجودة",
-      features: ["بحث أصيل", "منهجية علمية", "مراجع موثقة"]
+      title: "دعم إعداد الأطروحات",
+      description: "إرشاد ومساعدة أكاديمية لإعداد أطروحات الماجستير والدكتوراه بأعلى معايير الجودة",
+      features: ["دعم بحثي أصيل", "منهجية علمية", "مراجع موثقة"]
     },
     {
       icon: <FileText className="w-8 h-8" />,
       title: "الأوراق البحثية",
-      description: "إعداد الأوراق البحثية للنشر في المجلات العلمية",
-      features: ["كتابة احترافية", "تنسيق دقيق", "مراجعة علمية"]
+      description: "دعم إعداد الأوراق البحثية للنشر في المجلات العلمية",
+      features: ["إرشاد احترافي", "تنسيق دقيق", "مراجعة علمية"]
     },
     {
       icon: <BookOpen className="w-8 h-8" />,
       title: "التقارير الأكاديمية",
-      description: "إعداد التقارير الأكاديمية والدراسات التخصصية",
+      description: "دعم في إعداد التقارير الأكاديمية والدراسات التخصصية",
       features: ["تحليل عميق", "عرض منظم", "نتائج موثقة"]
     },
     {
       icon: <PenTool className="w-8 h-8" />,
       title: "المقالات العلمية",
-      description: "كتابة المقالات العلمية والأكاديمية المتخصصة",
+      description: "دعم وإرشاد في إعداد المقالات العلمية والأكاديمية المتخصصة",
       features: ["محتوى أصيل", "أسلوب علمي", "دقة المعلومات"]
     }
   ];
 
   const features = [
-    { icon: <Users className="w-6 h-6" />, title: "كتّاب أكاديميون", description: "فريق من الكتّاب الأكاديميين المتخصصين" },
+    { icon: <Users className="w-6 h-6" />, title: "مرشدون أكاديميون", description: "فريق من المرشدين الأكاديميين المتخصصين" },
     { icon: <Clock className="w-6 h-6" />, title: "التزام بالمواعيد", description: "تسليم المشاريع في الوقت المحدد" },
     { icon: <Award className="w-6 h-6" />, title: "جودة معتمدة", description: "معايير أكاديمية عالية ومعتمدة" },
     { icon: <Zap className="w-6 h-6" />, title: "بحث متقدم", description: "استخدام أحدث مصادر البحث العلمي" }
@@ -65,7 +65,7 @@ const AcademicWritingServices = () => {
           >
             <Badge className="mb-6 text-lg px-6 py-2" variant="secondary">
               <PenTool className="w-5 h-5 mr-2" />
-              الكتابة الأكاديمية المتخصصة
+              المساعدة الأكاديمية المتخصصة
             </Badge>
             
             <h1 className="text-5xl md:text-6xl font-bold mb-6 bg-gradient-to-r from-primary via-accent to-primary bg-clip-text text-transparent">
@@ -107,9 +107,9 @@ const AcademicWritingServices = () => {
             transition={{ duration: 0.6 }}
             className="text-center mb-12"
           >
-            <h2 className="text-4xl font-bold mb-4 text-foreground">خدمات الكتابة الأكاديمية</h2>
+            <h2 className="text-4xl font-bold mb-4 text-foreground">خدمات المساعدة الأكاديمية</h2>
             <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
-              نوفر مجموعة شاملة من خدمات الكتابة الأكاديمية لجميع المستويات التعليمية
+              نوفر مجموعة شاملة من خدمات الدعم الأكاديمي والإرشاد العلمي لجميع المستويات التعليمية
             </p>
           </motion.div>
 
@@ -157,7 +157,7 @@ const AcademicWritingServices = () => {
             className="text-center mb-12"
           >
             <h2 className="text-4xl font-bold mb-4">مميزات خدماتنا</h2>
-            <p className="text-muted-foreground text-lg">ما يميز خدمات الكتابة الأكاديمية لدينا</p>
+            <p className="text-muted-foreground text-lg">ما يميز خدمات المساعدة الأكاديمية لدينا</p>
           </motion.div>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">

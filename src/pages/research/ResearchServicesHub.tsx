@@ -15,12 +15,12 @@ import {
 const services = [
   {
     id: 'academic-writing',
-    title: 'مساعدة في كتابة الأبحاث الجامعية',
-    description: 'نساعدك في كتابة أبحاثك الجامعية بجودة عالية واحترافية وفقاً للمعايير الأكاديمية',
+    title: 'المساعدة الأكاديمية في إعداد الأبحاث',
+    description: 'دعم وإرشاد علمي احترافي لإعداد بحثك الجامعي وفقاً للمعايير الأكاديمية',
     icon: BookOpenCheck,
     gradient: 'from-blue-500 to-cyan-500',
     href: '/research/academic-writing-service',
-    features: ['بحث علمي موثق', 'مراجع محدثة', 'توثيق أكاديمي', 'جودة مضمونة']
+    features: ['دعم بحثي موثق', 'مراجع محدثة', 'إرشاد توثيقي', 'جودة مضمونة']
   },
   {
     id: 'proofreading',

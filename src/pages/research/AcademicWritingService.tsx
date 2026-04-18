@@ -9,6 +9,7 @@ import { BookOpenCheck, CheckCircle, Clock, Shield, Users, Award, ArrowRight, Fi
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
+import { AcademicAssistanceDisclaimer } from '@/components/AcademicAssistanceDisclaimer';
 
 export default function AcademicWritingService() {
   const navigate = useNavigate();
@@ -50,12 +51,16 @@ export default function AcademicWritingService() {
             </motion.div>
 
             <h1 className="text-4xl md:text-5xl font-bold mb-6 bg-gradient-to-r from-blue-600 to-cyan-600 bg-clip-text text-transparent">
-              مساعدة في كتابة الأبحاث الجامعية
+              المساعدة الأكاديمية في إعداد الأبحاث الجامعية
             </h1>
             
-            <p className="text-xl text-muted-foreground leading-relaxed">
-              نقدم لك خدمة احترافية في كتابة الأبحاث الجامعية بجودة عالية تتوافق مع المعايير الأكاديمية العالمية
+            <p className="text-xl text-muted-foreground leading-relaxed mb-8">
+              نقدم لك دعماً أكاديمياً احترافياً وإرشاداً علمياً متخصصاً لإعداد بحثك الجامعي بجودة عالية وفق المعايير الأكاديمية العالمية
             </p>
+
+            <div className="max-w-3xl mx-auto">
+              <AcademicAssistanceDisclaimer />
+            </div>
           </motion.div>
         </div>
       </section>
@@ -76,12 +81,12 @@ export default function AcademicWritingService() {
                 {
                   icon: CheckCircle,
                   title: 'جودة مضمونة',
-                  description: 'نضمن لك بحثاً علمياً موثقاً بأعلى معايير الجودة'
+                  description: 'دعم بحثي بأعلى معايير الجودة الأكاديمية'
                 },
                 {
                   icon: Clock,
-                  title: 'تسليم في الموعد',
-                  description: 'نلتزم بالمواعيد المحددة دون تأخير'
+                  title: 'التزام بالمواعيد',
+                  description: 'نسلّم المخرجات في المواعيد المتفق عليها'
                 },
                 {
                   icon: Shield,
@@ -141,8 +146,8 @@ export default function AcademicWritingService() {
               {[
                 { icon: FileText, title: 'استلام الطلب', desc: 'نستلم تفاصيل بحثك ومتطلباتك', step: '01' },
                 { icon: Search, title: 'البحث والجمع', desc: 'جمع المصادر والمراجع العلمية', step: '02' },
-                { icon: Edit, title: 'الكتابة والمراجعة', desc: 'كتابة البحث ومراجعته أكاديمياً', step: '03' },
-                { icon: Send, title: 'التسليم', desc: 'تسليم البحث كاملاً مع التقارير', step: '04' }
+                { icon: Edit, title: 'الإعداد والمراجعة', desc: 'إعداد المحتوى ومراجعته أكاديمياً', step: '03' },
+                { icon: Send, title: 'التسليم والإرشاد', desc: 'تسليم المخرجات مع توجيه إرشادي', step: '04' }
               ].reverse().map((item, index) => (
                 <motion.div
                   key={index}
@@ -190,9 +195,9 @@ export default function AcademicWritingService() {
               <h2 className="text-3xl font-bold mb-8 text-center">ما نقدمه لك</h2>
               <div className="grid md:grid-cols-2 gap-6">
                 {[
-                  'كتابة بحث علمي متكامل (المقدمة، الإطار النظري، المنهجية، التحليل، النتائج)',
-                  'استخدام مراجع علمية موثوقة ومحدثة',
-                  'توثيق المراجع وفقاً للنظام المطلوب (APA, MLA, Harvard)',
+                  'دعم في إعداد بحث علمي متكامل (المقدمة، الإطار النظري، المنهجية، التحليل، النتائج)',
+                  'تزويدك بمراجع علمية موثوقة ومحدثة',
+                  'إرشاد لتوثيق المراجع وفقاً للنظام المطلوب (APA, MLA, Harvard)',
                   'فحص الانتحال العلمي (Plagiarism Check)',
                   'تنسيق أكاديمي احترافي',
                   'مراجعات مجانية حتى رضاك التام'
@@ -265,8 +270,9 @@ export default function AcademicWritingService() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
             >
+              <AcademicAssistanceDisclaimer className="mb-6" />
               <ResearchServiceForm 
-                serviceTitle="مساعدة في كتابة الأبحاث الجامعية"
+                serviceTitle="المساعدة الأكاديمية في إعداد الأبحاث الجامعية"
                 serviceType="academic-writing"
               />
             </motion.div>

@@ -136,8 +136,8 @@ const AboutUs = () => {
     },
     {
       icon: PenTool,
-      title: "كتابة الأبحاث",
-      description: "دعم شامل في إعداد وكتابة البحوث العلمية"
+      title: "الدعم البحثي",
+      description: "دعم وإرشاد شامل في إعداد البحوث العلمية"
     },
     {
       icon: FileText,

@@ -35,8 +35,8 @@ export default function OtherStudentServices() {
     },
     {
       icon: FileText,
-      title: 'تنفيذ التكاليف والأسايمنت',
-      description: 'إنجاز الواجبات الجامعية والتقارير بجودة عالية',
+      title: 'المساعدة الأكاديمية في التكاليف',
+      description: 'دعم وإرشاد علمي في إعداد الواجبات الجامعية والتقارير بجودة عالية',
       href: '/research/assignment-execution',
       gradient: 'from-purple-500 to-pink-500'
     },
@@ -63,8 +63,8 @@ export default function OtherStudentServices() {
     },
     {
       icon: CheckCircle,
-      title: 'المساعدة في حل الواجبات',
-      description: 'دعم في حل الواجبات والتقارير الجامعية',
+      title: 'المساعدة في فهم الواجبات',
+      description: 'دعم أكاديمي وإرشاد علمي لفهم الواجبات والتقارير الجامعية',
       href: '/research/homework-assistance',
       gradient: 'from-teal-500 to-cyan-500'
     }

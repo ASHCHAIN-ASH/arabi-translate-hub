@@ -14,11 +14,11 @@ import { Card } from '@/components/ui/card';
 const researchServices = [
   {
     icon: FileEdit,
-    title: 'مساعدة في كتابة الأبحاث الجامعية',
-    description: 'مساعدة شاملة في كتابة البحوث الجامعية للماجستير والدكتوراه',
+    title: 'المساعدة الأكاديمية في إعداد الأبحاث',
+    description: 'دعم بحثي شامل وإرشاد علمي للماجستير والدكتوراه',
     gradient: 'from-blue-500 to-cyan-500',
     href: '/research/academic-writing-service',
-    features: ['كتابة أكاديمية', 'منهجية علمية', 'مصادر موثوقة', 'مراجعة شاملة']
+    features: ['دعم أكاديمي', 'منهجية علمية', 'مصادر موثوقة', 'مراجعة شاملة']
   },
   {
     icon: CheckCheck,

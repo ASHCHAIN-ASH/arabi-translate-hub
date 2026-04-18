@@ -23,8 +23,8 @@ const ServicesShowcase = () => {
     },
     {
       id: 2,
-      title: "الكتابة الأكاديمية المتخصصة",
-      description: "كتابة الأبحاث والرسائل والمقالات العلمية وفق المعايير الأكاديمية العالمية",
+      title: "الدعم الأكاديمي المتخصص",
+      description: "إرشاد ودعم في إعداد الأبحاث والرسائل والمقالات العلمية وفق المعايير الأكاديمية العالمية",
       icon: BookOpen,
       color: "from-emerald-600 to-teal-600",
       route: "/services/academic-writing"
