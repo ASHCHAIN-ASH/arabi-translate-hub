@@ -84,6 +84,8 @@ const OrderDetails = () => {
   const [order, setOrder] = useState<ServiceOrder | null>(null);
   const [timeline, setTimeline] = useState<TimelineEntry[]>([]);
   const [attachments, setAttachments] = useState<Attachment[]>([]);
+  const [contract, setContract] = useState<any | null>(null);
+  const [invoice, setInvoice] = useState<any | null>(null);
   const [loading, setLoading] = useState(true);
   const [rejectionReason, setRejectionReason] = useState('');
   const [showRejectForm, setShowRejectForm] = useState(false);
