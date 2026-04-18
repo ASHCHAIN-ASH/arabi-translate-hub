@@ -82,13 +82,13 @@ export const ReferralService = {
         : Promise.resolve({ data: [] as any[] } as any),
     ]);
 
-    const cMap = new Map((customers || []).map((c: any) => [c.user_id, c]));
-    const pMap = new Map((plans || []).map((p: any) => [p.id, p.name_ar]));
+    const cMap = new Map<string, any>(((customers as any[]) || []).map((c: any) => [c.user_id, c]));
+    const pMap = new Map<string, string>(((plans as any[]) || []).map((p: any) => [p.id, p.name_ar as string]));
 
     return rows.map((r) => ({
       ...r,
-      referred_name: cMap.get(r.referred_user_id)?.name,
-      referred_email: cMap.get(r.referred_user_id)?.email,
+      referred_name: cMap.get(r.referred_user_id)?.name as string | undefined,
+      referred_email: cMap.get(r.referred_user_id)?.email as string | undefined,
       plan_name: r.plan_id ? pMap.get(r.plan_id) : undefined,
     }));
   },
