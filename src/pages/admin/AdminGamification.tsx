@@ -147,8 +147,8 @@ const AdminGamification: React.FC = () => {
           ))}
         </div>
 
-        <Tabs defaultValue="users" className="w-full">
-          <TabsList className="grid grid-cols-3 w-full max-w-md">
+        <Tabs dir="rtl" defaultValue="users" className="w-full">
+          <TabsList className="grid grid-cols-3 w-full max-w-md" dir="rtl">
             <TabsTrigger value="users">المستخدمون</TabsTrigger>
             <TabsTrigger value="levels">المستويات</TabsTrigger>
             <TabsTrigger value="rewards">المكافآت</TabsTrigger>
