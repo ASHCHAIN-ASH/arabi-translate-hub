@@ -57,8 +57,18 @@ const OrderForm: React.FC<OrderFormProps> = ({ selectedService, onSuccess }) => 
     requirements: '',
     quantity: selectedService?.min_units || 1,
     rush_delivery: false,
-    additional_notes: ''
+    additional_notes: '',
+    assistance_type: ''
   });
+
+  const ASSISTANCE_TYPES = [
+    { value: 'review', label: 'مراجعة وتقييم' },
+    { value: 'proofreading', label: 'تدقيق لغوي وعلمي' },
+    { value: 'improvement', label: 'تطوير وتحسين المحتوى' },
+    { value: 'guidance', label: 'إرشاد منهجي وتوجيه' },
+    { value: 'analysis', label: 'تحليل ومناقشة نتائج' },
+    { value: 'structuring', label: 'مساعدة في الهيكلة والتنظيم' }
+  ];
   
   const [services, setServices] = useState<Service[]>([]);
   const [loading, setLoading] = useState(false);
@@ -231,7 +241,8 @@ const OrderForm: React.FC<OrderFormProps> = ({ selectedService, onSuccess }) => 
         requirements: '',
         quantity: 1,
         rush_delivery: false,
-        additional_notes: ''
+        additional_notes: '',
+        assistance_type: ''
       });
       setFiles(null);
 
@@ -259,10 +270,10 @@ const OrderForm: React.FC<OrderFormProps> = ({ selectedService, onSuccess }) => 
         <CardHeader className="text-center">
           <CardTitle className="text-3xl font-bold flex items-center justify-center gap-3">
             <FileText className="w-8 h-8 text-primary" />
-            نموذج طلب خدمة
+            طلب مساعدة أكاديمية
           </CardTitle>
           <CardDescription className="text-lg">
-            املأ النموذج أدناه لطلب الخدمة المناسبة لاحتياجاتك
+            املأ النموذج أدناه للحصول على الدعم والإرشاد الأكاديمي المناسب لاحتياجاتك
           </CardDescription>
         </CardHeader>
         
