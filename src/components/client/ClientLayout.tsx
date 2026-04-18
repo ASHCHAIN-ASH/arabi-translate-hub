@@ -176,8 +176,8 @@ const ClientLayout: React.FC<ClientLayoutProps> = ({ children }) => {
   return (
     <div className="min-h-screen w-full bg-gradient-to-br from-background via-muted/20 to-background" dir="rtl">
       <div className="flex">
-        {/* Desktop Sidebar */}
-        <aside className="w-72 flex-shrink-0 hidden md:block">
+        {/* Desktop Sidebar — visible on lg and up */}
+        <aside className="w-72 flex-shrink-0 hidden lg:block">
           <div className="sticky top-0 h-screen bg-card/80 backdrop-blur-xl border-s border-border/60 shadow-sm">
             <SidebarInner />
           </div>
@@ -190,23 +190,23 @@ const ClientLayout: React.FC<ClientLayoutProps> = ({ children }) => {
             <div className="px-3 sm:px-4 lg:px-6">
               <div className="flex items-center justify-between h-14 sm:h-16">
                 <div className="flex items-center gap-3">
-                  {/* Mobile Menu */}
+                  {/* Mobile/Tablet Menu — visible below lg */}
                   <Sheet open={isSidebarOpen} onOpenChange={setIsSidebarOpen}>
                     <SheetTrigger asChild>
-                      <Button variant="ghost" size="sm" className="md:hidden p-2">
+                      <Button variant="ghost" size="sm" className="lg:hidden p-2 shrink-0">
                         <Menu className="w-5 h-5" />
                       </Button>
                     </SheetTrigger>
-                    <SheetContent side="right" className="w-80 p-0 border-l border-border/60" dir="rtl">
+                    <SheetContent side="right" className="w-[85vw] max-w-sm p-0 border-l border-border/60 overflow-y-auto" dir="rtl">
                       <SidebarInner onItemClick={() => setIsSidebarOpen(false)} />
                     </SheetContent>
                   </Sheet>
 
-                  <Link to="/dashboard" className="flex items-center gap-2 md:hidden">
-                    <div className="w-8 h-8 bg-gradient-to-br from-primary to-secondary rounded-lg flex items-center justify-center shadow">
+                  <Link to="/dashboard" className="flex items-center gap-2 lg:hidden">
+                    <div className="w-8 h-8 bg-gradient-to-br from-primary to-secondary rounded-lg flex items-center justify-center shadow shrink-0">
                       <GraduationCap className="w-5 h-5 text-white" />
                     </div>
-                    <h1 className="text-base font-black hidden sm:block">ماستر إيدو باث</h1>
+                    <h1 className="text-sm sm:text-base font-black hidden xs:block truncate">ماستر إيدو باث</h1>
                   </Link>
                 </div>
 
