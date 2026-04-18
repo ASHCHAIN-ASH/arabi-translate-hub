@@ -1,0 +1,1 @@
+UPDATE public.track_tools SET action_link = '/student/tracks/tech/' || slug WHERE slug IN ('code-review','algorithm-explainer','unit-test-gen','code-documenter');
