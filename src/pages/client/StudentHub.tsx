@@ -232,9 +232,14 @@ const StudentHub: React.FC = () => {
 
         {/* TABS */}
         <Tabs defaultValue="ai" className="w-full" dir="rtl">
-          <TabsList className="grid w-full grid-cols-2 md:grid-cols-4 h-auto p-1 bg-muted/60">
+          <TabsList className="grid w-full grid-cols-2 md:grid-cols-5 h-auto p-1 bg-muted/60">
             <TabsTrigger value="ai" className="gap-2 data-[state=active]:shadow-md">
               <Sparkles className="w-4 h-4" />أدوات AI
+            </TabsTrigger>
+            <TabsTrigger value="mindmap" className="gap-2 data-[state=active]:shadow-md" asChild>
+              <Link to="/student/mind-map">
+                <Wand2 className="w-4 h-4" />الخريطة الذهنية
+              </Link>
             </TabsTrigger>
             <TabsTrigger value="tasks" className="gap-2 data-[state=active]:shadow-md">
               <Target className="w-4 h-4" />المهام اليومية

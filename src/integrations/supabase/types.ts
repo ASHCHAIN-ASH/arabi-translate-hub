@@ -1357,6 +1357,81 @@ export type Database = {
         }
         Relationships: []
       }
+      mind_map_usage: {
+        Row: {
+          created_at: string
+          exported_pdf: boolean
+          exported_png: boolean
+          id: string
+          input_length: number | null
+          is_premium_user: boolean
+          language: string
+          saved: boolean
+          usage_date: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          exported_pdf?: boolean
+          exported_png?: boolean
+          id?: string
+          input_length?: number | null
+          is_premium_user?: boolean
+          language: string
+          saved?: boolean
+          usage_date?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          exported_pdf?: boolean
+          exported_png?: boolean
+          id?: string
+          input_length?: number | null
+          is_premium_user?: boolean
+          language?: string
+          saved?: boolean
+          usage_date?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      mind_maps: {
+        Row: {
+          created_at: string
+          id: string
+          is_premium_generation: boolean
+          language: string
+          map_data: Json
+          source_text: string
+          title: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          is_premium_generation?: boolean
+          language?: string
+          map_data: Json
+          source_text: string
+          title: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          is_premium_generation?: boolean
+          language?: string
+          map_data?: Json
+          source_text?: string
+          title?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       notifications: {
         Row: {
           created_at: string
@@ -3124,6 +3199,7 @@ export type Database = {
         Args: { _user_id: string }
         Returns: number
       }
+      get_mind_map_usage_today: { Args: never; Returns: number }
       get_referrer_by_code: {
         Args: { _code: string }
         Returns: {
