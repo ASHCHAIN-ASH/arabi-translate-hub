@@ -1060,6 +1060,7 @@ export type Database = {
       }
       orders: {
         Row: {
+          assistance_type: string | null
           client_email: string
           client_name: string
           client_phone: string
@@ -1077,6 +1078,7 @@ export type Database = {
           user_id: string | null
         }
         Insert: {
+          assistance_type?: string | null
           client_email: string
           client_name: string
           client_phone: string
@@ -1094,6 +1096,7 @@ export type Database = {
           user_id?: string | null
         }
         Update: {
+          assistance_type?: string | null
           client_email?: string
           client_name?: string
           client_phone?: string
@@ -1346,6 +1349,7 @@ export type Database = {
       }
       service_orders: {
         Row: {
+          assistance_type: string | null
           created_at: string
           current_status: string | null
           customer_id: string | null
@@ -1365,6 +1369,7 @@ export type Database = {
           user_id: string | null
         }
         Insert: {
+          assistance_type?: string | null
           created_at?: string
           current_status?: string | null
           customer_id?: string | null
@@ -1384,6 +1389,7 @@ export type Database = {
           user_id?: string | null
         }
         Update: {
+          assistance_type?: string | null
           created_at?: string
           current_status?: string | null
           customer_id?: string | null
@@ -2069,6 +2075,7 @@ export type Database = {
       track_order: {
         Args: { _phone_last_four: string; _tracking_id: string }
         Returns: {
+          assistance_type: string | null
           client_email: string
           client_name: string
           client_phone: string

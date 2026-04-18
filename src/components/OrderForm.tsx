@@ -22,6 +22,7 @@ import {
 } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
+import { AcademicAssistanceDisclaimer } from '@/components/AcademicAssistanceDisclaimer';
 
 interface Service {
   id: string;
@@ -57,8 +58,18 @@ const OrderForm: React.FC<OrderFormProps> = ({ selectedService, onSuccess }) => 
     requirements: '',
     quantity: selectedService?.min_units || 1,
     rush_delivery: false,
-    additional_notes: ''
+    additional_notes: '',
+    assistance_type: ''
   });
+
+  const ASSISTANCE_TYPES = [
+    { value: 'review', label: 'مراجعة وتقييم' },
+    { value: 'proofreading', label: 'تدقيق لغوي وعلمي' },
+    { value: 'improvement', label: 'تطوير وتحسين المحتوى' },
+    { value: 'guidance', label: 'إرشاد منهجي وتوجيه' },
+    { value: 'analysis', label: 'تحليل ومناقشة نتائج' },
+    { value: 'structuring', label: 'مساعدة في الهيكلة والتنظيم' }
+  ];
   
   const [services, setServices] = useState<Service[]>([]);
   const [loading, setLoading] = useState(false);
@@ -231,7 +242,8 @@ const OrderForm: React.FC<OrderFormProps> = ({ selectedService, onSuccess }) => 
         requirements: '',
         quantity: 1,
         rush_delivery: false,
-        additional_notes: ''
+        additional_notes: '',
+        assistance_type: ''
       });
       setFiles(null);
 
@@ -259,10 +271,10 @@ const OrderForm: React.FC<OrderFormProps> = ({ selectedService, onSuccess }) => 
         <CardHeader className="text-center">
           <CardTitle className="text-3xl font-bold flex items-center justify-center gap-3">
             <FileText className="w-8 h-8 text-primary" />
-            نموذج طلب خدمة
+            طلب مساعدة أكاديمية
           </CardTitle>
           <CardDescription className="text-lg">
-            املأ النموذج أدناه لطلب الخدمة المناسبة لاحتياجاتك
+            املأ النموذج أدناه للحصول على الدعم والإرشاد الأكاديمي المناسب لاحتياجاتك
           </CardDescription>
         </CardHeader>
         
@@ -310,7 +322,33 @@ const OrderForm: React.FC<OrderFormProps> = ({ selectedService, onSuccess }) => 
               )}
             </div>
 
-            {/* Client Information */}
+            {/* Assistance Type — رسالة قانونية واضحة */}
+            <div className="space-y-3">
+              <label className="text-sm font-medium flex items-center gap-2">
+                <CheckCircle className="w-4 h-4 text-primary" />
+                نوع المساعدة الأكاديمية المطلوبة *
+              </label>
+              <Select
+                value={formData.assistance_type}
+                onValueChange={(value) => handleInputChange('assistance_type', value)}
+              >
+                <SelectTrigger className="text-right">
+                  <SelectValue placeholder="اختر نوع المساعدة (مراجعة، تدقيق، إرشاد...)" />
+                </SelectTrigger>
+                <SelectContent>
+                  {ASSISTANCE_TYPES.map((t) => (
+                    <SelectItem key={t.value} value={t.value}>{t.label}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              <p className="text-xs text-muted-foreground">
+                💡 جميع خدماتنا تُقدَّم لأغراض الدعم الأكاديمي والإرشاد العلمي فقط
+              </p>
+            </div>
+
+            <AcademicAssistanceDisclaimer variant="compact" />
+
+
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-3">
                 <label className="text-sm font-medium flex items-center gap-2">

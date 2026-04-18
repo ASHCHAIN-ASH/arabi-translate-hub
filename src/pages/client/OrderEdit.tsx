@@ -42,11 +42,11 @@ const OrderEdit = () => {
   const [isLoading, setIsLoading] = useState(false);
 
   const services = [
-    { value: 'statistical_analysis', label: 'تحليل إحصائي متقدم' },
-    { value: 'language_review', label: 'مراجعة لغوية' },
-    { value: 'research_plan', label: 'خطة البحث' },
-    { value: 'thesis_writing', label: 'كتابة أطروحة' },
-    { value: 'data_analysis', label: 'تحليل البيانات' }
+    { value: 'statistical_analysis', label: 'مساعدة في التحليل الإحصائي' },
+    { value: 'language_review', label: 'مراجعة وتدقيق لغوي' },
+    { value: 'research_plan', label: 'إعداد خطة البحث' },
+    { value: 'thesis_assistance', label: 'مساعدة أكاديمية في الأطروحة' },
+    { value: 'data_analysis', label: 'تحليل ومناقشة البيانات' }
   ];
 
   const priorities = [
