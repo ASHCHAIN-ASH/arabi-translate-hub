@@ -461,6 +461,11 @@ const App = () => (
                 <AdminPayments />
               </SimpleProtectedRoute>
             } />
+            <Route path="/adminmaster/gamification" element={
+              <SimpleProtectedRoute adminOnly>
+                <AdminGamification />
+              </SimpleProtectedRoute>
+            } />
             <Route path="/adminmaster/memberships" element={
               <SimpleProtectedRoute adminOnly>
                 <AdminMemberships />
