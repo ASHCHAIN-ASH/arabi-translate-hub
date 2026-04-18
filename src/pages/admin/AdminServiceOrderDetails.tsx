@@ -511,6 +511,27 @@ const AdminServiceOrderDetails = () => {
           {/* Overview */}
           <TabsContent value="overview" className="space-y-4 mt-4">
             <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} className="space-y-4">
+              {/* Lifecycle visual timeline (12 stages) */}
+              <OrderLifecycleTimeline
+                status={(order.lifecycle_status as LifecycleStatus) || 'received'}
+                progress={order.progress_percentage ?? 0}
+              />
+
+              {/* Quote sender — controls quote_status / lifecycle entry */}
+              <AdminQuoteSender
+                order={{
+                  id: order.id,
+                  tracking_id: order.tracking_id,
+                  service_name: order.service_name ?? null,
+                  total_amount: order.total_amount ?? null,
+                  deadline: order.deadline ?? null,
+                  quote_status: order.quote_status ?? null,
+                  quote_notes: order.quote_notes ?? null,
+                  lifecycle_status: order.lifecycle_status || 'received',
+                }}
+                onSent={loadAll}
+              />
+
               <Card>
                 <CardHeader className="pb-3"><CardTitle className="text-sm flex items-center gap-2"><User className="w-4 h-4 text-primary" /> بيانات العميل</CardTitle></CardHeader>
                 <CardContent className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
