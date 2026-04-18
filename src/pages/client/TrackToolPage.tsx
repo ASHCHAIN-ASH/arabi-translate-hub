@@ -23,7 +23,49 @@ import type { TrackTool, Track } from '@/hooks/useTracks';
 
 type ToolKey =
   | 'medical-summarizer' | 'med-terms' | 'case-analyzer' | 'med-quiz'
-  | 'code-review' | 'algorithm-explainer' | 'unit-test-gen' | 'code-documenter';
+  | 'code-review' | 'algorithm-explainer' | 'unit-test-gen' | 'code-documenter'
+  // الأدوات العامة (تستخدم track-tool-runner)
+  | 'swot-analysis' | 'business-plan' | 'financial-analysis' | 'marketing-strategy'
+  | 'contract-analyzer' | 'legal-drafting' | 'legal-research' | 'law-explainer'
+  | 'pro-translator' | 'grammar-checker' | 'essay-writer' | 'vocab-builder'
+  | 'color-palette' | 'design-brief' | 'ux-feedback' | 'logo-concepts'
+  | 'ad-copy' | 'social-media-plan' | 'seo-optimizer' | 'email-campaign'
+  | 'smart-summarizer' | 'idea-generator' | 'study-planner' | 'presentation-outliner';
+
+// أدوات تستعمل المُشغّل العام مع إعدادات مخصّصة (placeholder, options, etc.)
+const GENERIC_TOOLS: Record<string, {
+  placeholder: string;
+  inputLabel: string;
+  ctaLabel: string;
+  minLen: number;
+  maxLen: number;
+  options?: 'translate' | 'language' | 'tone' | 'docType';
+}> = {
+  'swot-analysis':       { inputLabel: 'وصف المشروع/الفكرة', placeholder: 'صف مشروعك، نشاطك، القطاع، المنافسين، الموارد...', ctaLabel: 'حلّل SWOT', minLen: 20, maxLen: 5000 },
+  'business-plan':       { inputLabel: 'الفكرة والسوق', placeholder: 'وصف الفكرة، المنتج/الخدمة، الجمهور، الميزة التنافسية، رأس المال المتاح...', ctaLabel: 'أنشئ الخطة', minLen: 30, maxLen: 5000 },
+  'financial-analysis':  { inputLabel: 'البيانات المالية', placeholder: 'الإيرادات، التكاليف، الأرباح، التدفقات النقدية، الديون...', ctaLabel: 'حلّل ماليّاً', minLen: 20, maxLen: 5000 },
+  'marketing-strategy':  { inputLabel: 'حالة المشروع التسويقية', placeholder: 'المنتج، الجمهور، الميزانية، الأهداف...', ctaLabel: 'ابنِ الاستراتيجية', minLen: 30, maxLen: 5000 },
+  'contract-analyzer':   { inputLabel: 'نص العقد', placeholder: 'الصق نص العقد كاملاً هنا...', ctaLabel: 'حلّل العقد', minLen: 50, maxLen: 15000 },
+  'legal-drafting':      { inputLabel: 'تفاصيل الوثيقة المطلوبة', placeholder: 'نوع الوثيقة (عقد عمل/شراكة/إيجار...)، الأطراف، المبلغ، المدة، الشروط الخاصة...', ctaLabel: 'صُغ الوثيقة', minLen: 20, maxLen: 5000, options: 'docType' },
+  'legal-research':      { inputLabel: 'المسألة القانونية', placeholder: 'اكتب سؤالك أو موضوع البحث القانوني بدقّة...', ctaLabel: 'ابحث', minLen: 10, maxLen: 2000 },
+  'law-explainer':       { inputLabel: 'القانون أو المادة', placeholder: 'اكتب اسم القانون أو رقم المادة، أو الصق نصها...', ctaLabel: 'اشرح', minLen: 5, maxLen: 1000 },
+  'pro-translator':      { inputLabel: 'النص للترجمة', placeholder: 'الصق النص الذي تريد ترجمته...', ctaLabel: 'ترجم', minLen: 5, maxLen: 10000, options: 'translate' },
+  'grammar-checker':     { inputLabel: 'النص للتدقيق', placeholder: 'الصق النص الذي تريد تدقيقه لغوياً...', ctaLabel: 'دقّق', minLen: 10, maxLen: 8000, options: 'language' },
+  'essay-writer':        { inputLabel: 'موضوع المقال', placeholder: 'اكتب موضوع المقال أو السؤال البحثي...', ctaLabel: 'اكتب المقال', minLen: 10, maxLen: 1000, options: 'tone' },
+  'vocab-builder':       { inputLabel: 'الكلمات أو المصطلحات', placeholder: 'كلمة واحدة أو قائمة كلمات مفصولة بفاصلة...', ctaLabel: 'أنشئ البطاقات', minLen: 2, maxLen: 200, options: 'language' },
+  'color-palette':       { inputLabel: 'وصف المشروع/العلامة', placeholder: 'وصف المشروع، الجمهور، الإحساس المطلوب (هادئ/طاقة/فاخر...)...', ctaLabel: 'أنشئ اللوحة', minLen: 5, maxLen: 500 },
+  'design-brief':        { inputLabel: 'تفاصيل المشروع التصميمي', placeholder: 'العميل، نوع المشروع، الأهداف، الجمهور، المخرجات المطلوبة...', ctaLabel: 'اكتب البريف', minLen: 20, maxLen: 3000 },
+  'ux-feedback':         { inputLabel: 'وصف الواجهة/التجربة', placeholder: 'صف الواجهة بالتفصيل، أو الصق رابط/ملاحظات...', ctaLabel: 'حلّل التجربة', minLen: 30, maxLen: 5000 },
+  'logo-concepts':       { inputLabel: 'وصف العلامة', placeholder: 'اسم العلامة، نشاطها، قيمها، جمهورها، الإحساس المطلوب...', ctaLabel: 'اقترح المفاهيم', minLen: 10, maxLen: 1000 },
+  'ad-copy':             { inputLabel: 'وصف المنتج/العرض', placeholder: 'المنتج، الميزات، الجمهور، السعر، العرض الترويجي...', ctaLabel: 'اكتب النسخ', minLen: 10, maxLen: 1500 },
+  'social-media-plan':   { inputLabel: 'تفاصيل العلامة والأهداف', placeholder: 'النشاط، الجمهور، المنصات، الأهداف...', ctaLabel: 'أنشئ الخطة', minLen: 30, maxLen: 3000 },
+  'seo-optimizer':       { inputLabel: 'المحتوى أو الموضوع', placeholder: 'الصق المحتوى أو اكتب موضوع/منتج تريد تحسينه لمحركات البحث...', ctaLabel: 'حسّن SEO', minLen: 20, maxLen: 5000 },
+  'email-campaign':      { inputLabel: 'وصف المنتج/العرض', placeholder: 'صف المنتج/الخدمة/العرض، الجمهور، هدف الحملة...', ctaLabel: 'صمّم الحملة', minLen: 20, maxLen: 3000 },
+  'smart-summarizer':    { inputLabel: 'النص المراد تلخيصه', placeholder: 'الصق أي نص هنا (مقال/كتاب/محاضرة/تقرير)...', ctaLabel: 'لخّص', minLen: 50, maxLen: 20000 },
+  'idea-generator':      { inputLabel: 'الموضوع أو المجال', placeholder: 'اكتب الموضوع/المشكلة/الفكرة الأم...', ctaLabel: 'ولّد أفكاراً', minLen: 5, maxLen: 1000 },
+  'study-planner':       { inputLabel: 'الهدف الدراسي', placeholder: 'ما الذي تريد تعلّمه؟ المدة المتاحة؟ المستوى الحالي؟ الموارد المتاحة؟', ctaLabel: 'أنشئ الخطة', minLen: 10, maxLen: 1000 },
+  'presentation-outliner': { inputLabel: 'موضوع العرض', placeholder: 'موضوع العرض، الجمهور، المدة، الهدف...', ctaLabel: 'صمّم الهيكل', minLen: 10, maxLen: 1000 },
+};
 
 export default function TrackToolPage() {
   const { trackSlug, toolSlug } = useParams<{ trackSlug: string; toolSlug: string }>();
