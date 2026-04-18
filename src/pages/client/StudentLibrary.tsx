@@ -85,14 +85,7 @@ const StudentLibrary: React.FC = () => {
       a.remove();
       setTimeout(() => URL.revokeObjectURL(blobUrl), 1000);
     } catch (err) {
-      // Fallback: native anchor with download attribute
-      const a = document.createElement('a');
-      a.href = downloadUrl;
-      a.download = fileName;
-      a.rel = 'noopener';
-      document.body.appendChild(a);
-      a.click();
-      a.remove();
+      console.error('Download failed:', err);
     }
   };
 
