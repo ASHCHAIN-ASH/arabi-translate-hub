@@ -44,9 +44,20 @@ const daysUntil = (iso: string | null): number | null => {
 
 const STATUS_AR: Record<string, string> = {
   draft: 'مسودة', pending_quote: 'بانتظار العرض', quote_sent: 'تم إرسال العرض',
-  awaiting_payment: 'بانتظار الدفع', paid: 'مدفوع', in_progress: 'قيد التنفيذ',
+  quote_accepted: 'تم قبول العرض', quote_rejected: 'تم رفض العرض',
+  awaiting_payment: 'بانتظار الدفع', payment_pending: 'بانتظار الدفع',
+  payment_completed: 'تم الدفع', paid: 'مدفوع', in_progress: 'قيد التنفيذ',
+  execution: 'قيد التنفيذ', execution_started: 'بدأ التنفيذ',
   delivered: 'تم التسليم', completed: 'مكتمل', cancelled: 'ملغي',
   contract_pending: 'بانتظار التوقيع', contract_signed: 'تم التوقيع',
+  client_confirmed: 'تم التأكيد', new: 'جديد', received: 'تم الاستلام',
+};
+
+const translateTracking = (id: string) => id?.startsWith('ORD-') ? id.replace('ORD-', 'طلب-') : id;
+
+const RESOURCE_TYPE_AR: Record<string, string> = {
+  pdf: 'ملف PDF', link: 'رابط', template: 'قالب', video: 'فيديو',
+  doc: 'مستند', article: 'مقال', course: 'دورة',
 };
 
 const StudentHub: React.FC = () => {
