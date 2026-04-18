@@ -6,7 +6,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
-import { CreditCard, Wallet, Upload, Loader2, CheckCircle2 } from 'lucide-react';
+import { CreditCard, Wallet, Upload, Loader2, CheckCircle2, ShieldCheck } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 
@@ -62,6 +62,25 @@ export const PaymentCard: React.FC<Props> = ({ invoice, userId, onPaid }) => {
     } catch (e: any) {
       toast({ title: 'فشل الدفع', description: e.message, variant: 'destructive' });
     } finally {
+      setLoading(false);
+    }
+  };
+
+  const payByCard = async () => {
+    setLoading(true);
+    try {
+      const { data, error } = await supabase.functions.invoke('create-payment-intent', {
+        body: {
+          purpose: 'invoice_payment',
+          invoice_id: invoice.id,
+          amount: remaining,
+        },
+      });
+      if (error) throw error;
+      if (!data?.checkout_url) throw new Error('تعذّر إنشاء رابط الدفع');
+      window.location.href = data.checkout_url;
+    } catch (e: any) {
+      toast({ title: 'تعذّر بدء الدفع', description: e.message, variant: 'destructive' });
       setLoading(false);
     }
   };
