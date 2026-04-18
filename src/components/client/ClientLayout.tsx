@@ -20,6 +20,7 @@ import {
   Crown,
   Trophy,
   Users,
+  GraduationCap as StudentIcon,
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import ChatFloatingButton from '@/components/chat/ChatFloatingButton';
@@ -38,6 +39,7 @@ type NavItem = {
 
 const navItems: NavItem[] = [
   { name: 'لوحة التحكم', href: '/dashboard', icon: LayoutDashboard, description: 'نظرة عامة', gradient: 'from-indigo-500 to-purple-600' },
+  { name: 'قسم الطالب', href: '/student', icon: StudentIcon, description: 'AI ومهام يومية ومكتبة', gradient: 'from-emerald-500 to-cyan-600' },
   { name: 'خدماتنا', href: '/client-services', icon: Sparkles, description: 'استكشف الخدمات', gradient: 'from-fuchsia-500 to-pink-600' },
   { name: 'سجل الطلبات', href: '/orders', icon: ShoppingCart, description: 'كل طلباتك', gradient: 'from-blue-500 to-cyan-600' },
   { name: 'الطلبات الجماعية', href: '/group-orders', icon: Users, description: 'شارك التكلفة مع زملائك', gradient: 'from-indigo-500 to-purple-600' },
