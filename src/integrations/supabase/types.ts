@@ -2308,6 +2308,45 @@ export type Database = {
           },
         ]
       }
+      smart_editor_usage: {
+        Row: {
+          cost: number
+          created_at: string
+          id: string
+          input_length: number
+          mode: string
+          operation: string
+          output_length: number
+          user_id: string
+          wallet_transaction_id: string | null
+          was_free: boolean
+        }
+        Insert: {
+          cost?: number
+          created_at?: string
+          id?: string
+          input_length?: number
+          mode?: string
+          operation: string
+          output_length?: number
+          user_id: string
+          wallet_transaction_id?: string | null
+          was_free?: boolean
+        }
+        Update: {
+          cost?: number
+          created_at?: string
+          id?: string
+          input_length?: number
+          mode?: string
+          operation?: string
+          output_length?: number
+          user_id?: string
+          wallet_transaction_id?: string | null
+          was_free?: boolean
+        }
+        Relationships: []
+      }
       spin_attempts: {
         Row: {
           claimed: boolean | null
@@ -3412,6 +3451,18 @@ export type Database = {
         Args: { _status: Database["public"]["Enums"]["order_lifecycle_status"] }
         Returns: number
       }
+      log_smart_editor_usage: {
+        Args: {
+          _cost: number
+          _input_length: number
+          _mode: string
+          _operation: string
+          _output_length: number
+          _wallet_transaction_id?: string
+          _was_free: boolean
+        }
+        Returns: string
+      }
       move_to_dlq: {
         Args: {
           dlq_name: string
@@ -3470,6 +3521,10 @@ export type Database = {
           isOneToOne: false
           isSetofReturn: true
         }
+      }
+      use_smart_editor: {
+        Args: { _input_length: number; _mode: string; _operation: string }
+        Returns: Json
       }
       use_track_tool:
         | { Args: { _tool_id: string }; Returns: Json }
