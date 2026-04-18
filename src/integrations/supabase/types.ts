@@ -387,6 +387,7 @@ export type Database = {
           name: string
           notes: string | null
           phone: string | null
+          referral_code: string | null
           status: string | null
           updated_at: string
           user_id: string | null
@@ -400,6 +401,7 @@ export type Database = {
           name: string
           notes?: string | null
           phone?: string | null
+          referral_code?: string | null
           status?: string | null
           updated_at?: string
           user_id?: string | null
@@ -413,6 +415,7 @@ export type Database = {
           name?: string
           notes?: string | null
           phone?: string | null
+          referral_code?: string | null
           status?: string | null
           updated_at?: string
           user_id?: string | null
@@ -770,6 +773,54 @@ export type Database = {
           },
         ]
       }
+      member_referrals: {
+        Row: {
+          commission_amount: number
+          commission_paid_at: string | null
+          created_at: string
+          id: string
+          membership_id: string | null
+          notes: string | null
+          plan_id: string | null
+          referral_code: string
+          referred_user_id: string
+          referrer_user_id: string
+          status: string
+          updated_at: string
+          wallet_transaction_id: string | null
+        }
+        Insert: {
+          commission_amount?: number
+          commission_paid_at?: string | null
+          created_at?: string
+          id?: string
+          membership_id?: string | null
+          notes?: string | null
+          plan_id?: string | null
+          referral_code: string
+          referred_user_id: string
+          referrer_user_id: string
+          status?: string
+          updated_at?: string
+          wallet_transaction_id?: string | null
+        }
+        Update: {
+          commission_amount?: number
+          commission_paid_at?: string | null
+          created_at?: string
+          id?: string
+          membership_id?: string | null
+          notes?: string | null
+          plan_id?: string | null
+          referral_code?: string
+          referred_user_id?: string
+          referrer_user_id?: string
+          status?: string
+          updated_at?: string
+          wallet_transaction_id?: string | null
+        }
+        Relationships: []
+      }
       membership_history: {
         Row: {
           action: string
@@ -831,6 +882,8 @@ export type Database = {
           name_en: string
           price: number
           priority_level: number
+          referral_commission_fixed: number
+          referral_commission_percentage: number
           sort_order: number | null
           updated_at: string
         }
@@ -850,6 +903,8 @@ export type Database = {
           name_en: string
           price?: number
           priority_level?: number
+          referral_commission_fixed?: number
+          referral_commission_percentage?: number
           sort_order?: number | null
           updated_at?: string
         }
@@ -869,6 +924,8 @@ export type Database = {
           name_en?: string
           price?: number
           priority_level?: number
+          referral_commission_fixed?: number
+          referral_commission_percentage?: number
           sort_order?: number | null
           updated_at?: string
         }
@@ -1635,6 +1692,8 @@ export type Database = {
           notes: string | null
           payment_method: string | null
           plan_id: string
+          referral_code_used: string | null
+          referred_by: string | null
           starts_at: string | null
           status: string
           updated_at: string
@@ -1652,6 +1711,8 @@ export type Database = {
           notes?: string | null
           payment_method?: string | null
           plan_id: string
+          referral_code_used?: string | null
+          referred_by?: string | null
           starts_at?: string | null
           status?: string
           updated_at?: string
@@ -1669,6 +1730,8 @@ export type Database = {
           notes?: string | null
           payment_method?: string | null
           plan_id?: string
+          referral_code_used?: string | null
+          referred_by?: string | null
           starts_at?: string | null
           status?: string
           updated_at?: string
@@ -1907,6 +1970,7 @@ export type Database = {
         Returns: number
       }
       generate_customer_code: { Args: never; Returns: string }
+      generate_referral_code: { Args: never; Returns: string }
       get_active_membership: {
         Args: { _user_id: string }
         Returns: {
@@ -1919,6 +1983,14 @@ export type Database = {
           plan_id: string
           plan_name_ar: string
           priority_level: number
+        }[]
+      }
+      get_referrer_by_code: {
+        Args: { _code: string }
+        Returns: {
+          customer_id: string
+          name: string
+          user_id: string
         }[]
       }
       has_role: {
