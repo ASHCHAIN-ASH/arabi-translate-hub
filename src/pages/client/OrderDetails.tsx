@@ -176,6 +176,7 @@ const OrderDetails = () => {
       .channel(`order-detail-${id}`)
       .on('postgres_changes', { event: '*', schema: 'public', table: 'service_orders', filter: `id=eq.${id}` }, () => fetchData())
       .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'service_order_timeline', filter: `order_id=eq.${id}` }, () => fetchData())
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'order_attachments', filter: `order_id=eq.${id}` }, () => fetchData())
       .subscribe();
     return () => { supabase.removeChannel(channel); };
   }, [id]);
