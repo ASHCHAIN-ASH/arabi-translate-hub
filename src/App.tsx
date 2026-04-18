@@ -73,6 +73,7 @@ import StudentHub from "./pages/client/StudentHub";
 import MindMapPage from "./pages/client/MindMapPage";
 import TracksPage from "./pages/client/TracksPage";
 import TrackDetailPage from "./pages/client/TrackDetailPage";
+import TrackToolPage from "./pages/client/TrackToolPage";
 import AdminMemberships from "./pages/admin/AdminMemberships";
 import AdminReferrals from "./pages/admin/AdminReferrals";
 
