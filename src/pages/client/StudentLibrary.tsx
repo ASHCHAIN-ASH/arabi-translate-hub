@@ -24,7 +24,8 @@ const TYPE_META: Record<string, { label: string; icon: any; color: string }> = {
 
 const StudentLibrary: React.FC = () => {
   const { resources, loading } = useStudentResources();
-  const { isPremium } = useUserMembership();
+  const { membership } = useUserMembership();
+  const isPremium = !!membership;
   const [search, setSearch] = useState('');
   const [activeType, setActiveType] = useState<string>('all');
   const [activeCategory, setActiveCategory] = useState<string>('all');
@@ -176,7 +177,7 @@ const StudentLibrary: React.FC = () => {
                             {meta.label}
                           </Badge>
                           {r.is_premium && (
-                            <Badge className="backdrop-blur bg-gradient-to-r from-amber-500 to-orange-500 text-white border-0 text-xs">
+                            <Badge className="backdrop-blur bg-gradient-to-r from-warning to-secondary text-secondary-foreground border-0 text-xs">
                               <Crown className="w-3 h-3 mr-1" /> مميز
                             </Badge>
                           )}

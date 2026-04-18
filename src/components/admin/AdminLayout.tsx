@@ -90,6 +90,7 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
         { name: 'إدارة الخدمات', href: '/adminmaster/services', icon: Briefcase },
         { name: 'الإشعارات البريدية', href: '/adminmaster/email-notifications', icon: Mail },
         { name: 'المحادثات', href: '/adminmaster/chat', icon: Activity },
+        { name: 'مكتبة الطالب', href: '/adminmaster/student-resources', icon: BookOpen },
       ]
     },
     {

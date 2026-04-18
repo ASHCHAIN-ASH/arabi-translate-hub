@@ -222,8 +222,8 @@ const AdminStudentResources: React.FC = () => {
                     <td className="px-4 py-3 hidden lg:table-cell text-muted-foreground">{r.category ?? '—'}</td>
                     <td className="px-4 py-3">
                       <div className="flex flex-wrap gap-1">
-                        {r.is_published ? <Badge variant="default" className="bg-green-500/10 text-green-700 dark:text-green-400 border-green-500/20">منشور</Badge> : <Badge variant="secondary">مخفي</Badge>}
-                        {r.is_premium && <Badge className="bg-amber-500/10 text-amber-700 dark:text-amber-400 border-amber-500/20"><Crown className="w-3 h-3 mr-1" />مميز</Badge>}
+                        {r.is_published ? <Badge variant="default" className="bg-success/10 text-success border-success/20">منشور</Badge> : <Badge variant="secondary">مخفي</Badge>}
+                        {r.is_premium && <Badge className="bg-warning/10 text-warning border-warning/20"><Crown className="w-3 h-3 mr-1" />مميز</Badge>}
                       </div>
                     </td>
                     <td className="px-4 py-3 hidden md:table-cell text-muted-foreground">{r.views_count}</td>
@@ -336,9 +336,9 @@ const AdminStudentResources: React.FC = () => {
 
 const StatCard: React.FC<{ label: string; value: number; icon: any; tone?: 'success' | 'warning' | 'info' }> = ({ label, value, icon: Icon, tone }) => {
   const tones = {
-    success: 'bg-green-500/10 text-green-600',
-    warning: 'bg-amber-500/10 text-amber-600',
-    info: 'bg-blue-500/10 text-blue-600',
+    success: 'bg-success/10 text-success',
+    warning: 'bg-warning/10 text-warning',
+    info: 'bg-accent/10 text-accent',
   } as const;
   const toneClass = tone ? tones[tone] : 'bg-primary/10 text-primary';
   return (
