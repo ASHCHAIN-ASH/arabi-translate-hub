@@ -63,6 +63,7 @@ import ClientTicketDetails from "./pages/client/TicketDetails";
 import ClientWallet from "./pages/client/Wallet";
 import MembershipPage from "./pages/client/MembershipPage";
 import AdminMemberships from "./pages/admin/AdminMemberships";
+import AdminReferrals from "./pages/admin/AdminReferrals";
 
 // Admin Pages
 import AdminDashboard from "./pages/admin/AdminDashboard";
