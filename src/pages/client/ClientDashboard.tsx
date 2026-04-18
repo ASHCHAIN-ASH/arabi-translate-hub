@@ -50,6 +50,7 @@ import { useNavigate } from 'react-router-dom';
 import ClientLayout from '@/components/client/ClientLayout';
 import { useClientData } from '@/hooks/useClientData';
 import { ClientDashboardService } from '@/utils/clientDashboardService';
+import { UpcomingReminders } from '@/components/shared/UpcomingReminders';
 
 const ClientDashboard = () => {
   const { user } = useAuth();
@@ -288,7 +289,12 @@ const ClientDashboard = () => {
           </motion.div>
         </motion.div>
 
-        {/* Quick Actions Section */}
+        {/* Upcoming Deadline Reminders */}
+        <div className="mb-8">
+          <UpcomingReminders />
+        </div>
+
+
         <motion.div
           initial={{ opacity: 0, y: 40 }}
           animate={{ opacity: 1, y: 0 }}
