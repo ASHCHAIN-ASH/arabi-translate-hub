@@ -15,6 +15,9 @@ import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/components/SimpleAuthProvider';
 import { toast } from 'sonner';
 import ClientLayout from '@/components/client/ClientLayout';
+import OrderLifecycleTimeline, { LifecycleStatus } from '@/components/orders/OrderLifecycleTimeline';
+import { ContractSigningCard } from '@/components/orders/ContractSigningCard';
+import { PaymentCard } from '@/components/orders/PaymentCard';
 
 interface ServiceOrder {
   id: string;
