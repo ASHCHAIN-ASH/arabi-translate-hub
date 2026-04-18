@@ -2636,12 +2636,15 @@ export type Database = {
           author: string | null
           category: string | null
           category_id: string | null
+          content_html: string | null
           cover_image_url: string | null
           created_at: string
           created_by: string | null
           description: string | null
           difficulty: string | null
+          download_count: number
           duration_minutes: number | null
+          file_size_kb: number | null
           id: string
           is_featured: boolean | null
           is_premium: boolean
@@ -2660,12 +2663,15 @@ export type Database = {
           author?: string | null
           category?: string | null
           category_id?: string | null
+          content_html?: string | null
           cover_image_url?: string | null
           created_at?: string
           created_by?: string | null
           description?: string | null
           difficulty?: string | null
+          download_count?: number
           duration_minutes?: number | null
+          file_size_kb?: number | null
           id?: string
           is_featured?: boolean | null
           is_premium?: boolean
@@ -2684,12 +2690,15 @@ export type Database = {
           author?: string | null
           category?: string | null
           category_id?: string | null
+          content_html?: string | null
           cover_image_url?: string | null
           created_at?: string
           created_by?: string | null
           description?: string | null
           difficulty?: string | null
+          download_count?: number
           duration_minutes?: number | null
+          file_size_kb?: number | null
           id?: string
           is_featured?: boolean | null
           is_premium?: boolean
