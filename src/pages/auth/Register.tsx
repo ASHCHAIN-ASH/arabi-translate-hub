@@ -146,6 +146,28 @@ const Register = () => {
           </p>
         </motion.div>
 
+        {refCode && (
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            className="mb-4 rounded-2xl border-2 border-emerald-200 bg-gradient-to-br from-emerald-50 to-teal-50 p-4 shadow-lg"
+          >
+            <div className="flex items-center gap-3">
+              <div className="h-11 w-11 shrink-0 rounded-xl bg-gradient-to-br from-emerald-500 to-teal-500 flex items-center justify-center shadow-md">
+                <Gift className="h-6 w-6 text-white" />
+              </div>
+              <div className="flex-1 min-w-0">
+                <div className="font-bold text-emerald-900">
+                  {referrerName ? `تمت دعوتك من ${referrerName} 🎉` : 'لديك دعوة إحالة 🎉'}
+                </div>
+                <div className="text-sm text-emerald-700 mt-0.5">
+                  رمز الإحالة: <span className="font-mono font-bold">{refCode.toUpperCase()}</span>
+                </div>
+              </div>
+            </div>
+          </motion.div>
+        )}
+
         <motion.div variants={itemVariants}>
           <Card className="p-8 shadow-2xl border-0 bg-white/80 backdrop-blur-sm">
             <form onSubmit={handleSubmit} className="space-y-6">
