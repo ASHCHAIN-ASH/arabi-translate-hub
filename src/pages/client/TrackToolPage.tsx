@@ -23,7 +23,49 @@ import type { TrackTool, Track } from '@/hooks/useTracks';
 
 type ToolKey =
   | 'medical-summarizer' | 'med-terms' | 'case-analyzer' | 'med-quiz'
-  | 'code-review' | 'algorithm-explainer' | 'unit-test-gen' | 'code-documenter';
+  | 'code-review' | 'algorithm-explainer' | 'unit-test-gen' | 'code-documenter'
+  // الأدوات العامة (تستخدم track-tool-runner)
+  | 'swot-analysis' | 'business-plan' | 'financial-analysis' | 'marketing-strategy'
+  | 'contract-analyzer' | 'legal-drafting' | 'legal-research' | 'law-explainer'
+  | 'pro-translator' | 'grammar-checker' | 'essay-writer' | 'vocab-builder'
+  | 'color-palette' | 'design-brief' | 'ux-feedback' | 'logo-concepts'
+  | 'ad-copy' | 'social-media-plan' | 'seo-optimizer' | 'email-campaign'
+  | 'smart-summarizer' | 'idea-generator' | 'study-planner' | 'presentation-outliner';
+
+// أدوات تستعمل المُشغّل العام مع إعدادات مخصّصة (placeholder, options, etc.)
+const GENERIC_TOOLS: Record<string, {
+  placeholder: string;
+  inputLabel: string;
+  ctaLabel: string;
+  minLen: number;
+  maxLen: number;
+  options?: 'translate' | 'language' | 'tone' | 'docType';
+}> = {
+  'swot-analysis':       { inputLabel: 'وصف المشروع/الفكرة', placeholder: 'صف مشروعك، نشاطك، القطاع، المنافسين، الموارد...', ctaLabel: 'حلّل SWOT', minLen: 20, maxLen: 5000 },
+  'business-plan':       { inputLabel: 'الفكرة والسوق', placeholder: 'وصف الفكرة، المنتج/الخدمة، الجمهور، الميزة التنافسية، رأس المال المتاح...', ctaLabel: 'أنشئ الخطة', minLen: 30, maxLen: 5000 },
+  'financial-analysis':  { inputLabel: 'البيانات المالية', placeholder: 'الإيرادات، التكاليف، الأرباح، التدفقات النقدية، الديون...', ctaLabel: 'حلّل ماليّاً', minLen: 20, maxLen: 5000 },
+  'marketing-strategy':  { inputLabel: 'حالة المشروع التسويقية', placeholder: 'المنتج، الجمهور، الميزانية، الأهداف...', ctaLabel: 'ابنِ الاستراتيجية', minLen: 30, maxLen: 5000 },
+  'contract-analyzer':   { inputLabel: 'نص العقد', placeholder: 'الصق نص العقد كاملاً هنا...', ctaLabel: 'حلّل العقد', minLen: 50, maxLen: 15000 },
+  'legal-drafting':      { inputLabel: 'تفاصيل الوثيقة المطلوبة', placeholder: 'نوع الوثيقة (عقد عمل/شراكة/إيجار...)، الأطراف، المبلغ، المدة، الشروط الخاصة...', ctaLabel: 'صُغ الوثيقة', minLen: 20, maxLen: 5000, options: 'docType' },
+  'legal-research':      { inputLabel: 'المسألة القانونية', placeholder: 'اكتب سؤالك أو موضوع البحث القانوني بدقّة...', ctaLabel: 'ابحث', minLen: 10, maxLen: 2000 },
+  'law-explainer':       { inputLabel: 'القانون أو المادة', placeholder: 'اكتب اسم القانون أو رقم المادة، أو الصق نصها...', ctaLabel: 'اشرح', minLen: 5, maxLen: 1000 },
+  'pro-translator':      { inputLabel: 'النص للترجمة', placeholder: 'الصق النص الذي تريد ترجمته...', ctaLabel: 'ترجم', minLen: 5, maxLen: 10000, options: 'translate' },
+  'grammar-checker':     { inputLabel: 'النص للتدقيق', placeholder: 'الصق النص الذي تريد تدقيقه لغوياً...', ctaLabel: 'دقّق', minLen: 10, maxLen: 8000, options: 'language' },
+  'essay-writer':        { inputLabel: 'موضوع المقال', placeholder: 'اكتب موضوع المقال أو السؤال البحثي...', ctaLabel: 'اكتب المقال', minLen: 10, maxLen: 1000, options: 'tone' },
+  'vocab-builder':       { inputLabel: 'الكلمات أو المصطلحات', placeholder: 'كلمة واحدة أو قائمة كلمات مفصولة بفاصلة...', ctaLabel: 'أنشئ البطاقات', minLen: 2, maxLen: 200, options: 'language' },
+  'color-palette':       { inputLabel: 'وصف المشروع/العلامة', placeholder: 'وصف المشروع، الجمهور، الإحساس المطلوب (هادئ/طاقة/فاخر...)...', ctaLabel: 'أنشئ اللوحة', minLen: 5, maxLen: 500 },
+  'design-brief':        { inputLabel: 'تفاصيل المشروع التصميمي', placeholder: 'العميل، نوع المشروع، الأهداف، الجمهور، المخرجات المطلوبة...', ctaLabel: 'اكتب البريف', minLen: 20, maxLen: 3000 },
+  'ux-feedback':         { inputLabel: 'وصف الواجهة/التجربة', placeholder: 'صف الواجهة بالتفصيل، أو الصق رابط/ملاحظات...', ctaLabel: 'حلّل التجربة', minLen: 30, maxLen: 5000 },
+  'logo-concepts':       { inputLabel: 'وصف العلامة', placeholder: 'اسم العلامة، نشاطها، قيمها، جمهورها، الإحساس المطلوب...', ctaLabel: 'اقترح المفاهيم', minLen: 10, maxLen: 1000 },
+  'ad-copy':             { inputLabel: 'وصف المنتج/العرض', placeholder: 'المنتج، الميزات، الجمهور، السعر، العرض الترويجي...', ctaLabel: 'اكتب النسخ', minLen: 10, maxLen: 1500 },
+  'social-media-plan':   { inputLabel: 'تفاصيل العلامة والأهداف', placeholder: 'النشاط، الجمهور، المنصات، الأهداف...', ctaLabel: 'أنشئ الخطة', minLen: 30, maxLen: 3000 },
+  'seo-optimizer':       { inputLabel: 'المحتوى أو الموضوع', placeholder: 'الصق المحتوى أو اكتب موضوع/منتج تريد تحسينه لمحركات البحث...', ctaLabel: 'حسّن SEO', minLen: 20, maxLen: 5000 },
+  'email-campaign':      { inputLabel: 'وصف المنتج/العرض', placeholder: 'صف المنتج/الخدمة/العرض، الجمهور، هدف الحملة...', ctaLabel: 'صمّم الحملة', minLen: 20, maxLen: 3000 },
+  'smart-summarizer':    { inputLabel: 'النص المراد تلخيصه', placeholder: 'الصق أي نص هنا (مقال/كتاب/محاضرة/تقرير)...', ctaLabel: 'لخّص', minLen: 50, maxLen: 20000 },
+  'idea-generator':      { inputLabel: 'الموضوع أو المجال', placeholder: 'اكتب الموضوع/المشكلة/الفكرة الأم...', ctaLabel: 'ولّد أفكاراً', minLen: 5, maxLen: 1000 },
+  'study-planner':       { inputLabel: 'الهدف الدراسي', placeholder: 'ما الذي تريد تعلّمه؟ المدة المتاحة؟ المستوى الحالي؟ الموارد المتاحة؟', ctaLabel: 'أنشئ الخطة', minLen: 10, maxLen: 1000 },
+  'presentation-outliner': { inputLabel: 'موضوع العرض', placeholder: 'موضوع العرض، الجمهور، المدة، الهدف...', ctaLabel: 'صمّم الهيكل', minLen: 10, maxLen: 1000 },
+};
 
 export default function TrackToolPage() {
   const { trackSlug, toolSlug } = useParams<{ trackSlug: string; toolSlug: string }>();
@@ -135,7 +177,8 @@ export default function TrackToolPage() {
         {toolKey === 'algorithm-explainer' && <AlgorithmExplainerRunner tool={tool} />}
         {toolKey === 'unit-test-gen' && <UnitTestGenRunner tool={tool} />}
         {toolKey === 'code-documenter' && <CodeDocumenterRunner tool={tool} />}
-        {!['medical-summarizer','med-terms','case-analyzer','med-quiz','code-review','algorithm-explainer','unit-test-gen','code-documenter'].includes(toolKey) && (
+        {GENERIC_TOOLS[toolKey] && <GenericRunner tool={tool} />}
+        {!['medical-summarizer','med-terms','case-analyzer','med-quiz','code-review','algorithm-explainer','unit-test-gen','code-documenter'].includes(toolKey) && !GENERIC_TOOLS[toolKey] && (
           <Card>
             <CardContent className="p-12 text-center space-y-4">
               <div className="w-20 h-20 rounded-2xl bg-primary/10 flex items-center justify-center mx-auto">
@@ -1075,6 +1118,174 @@ function CodeDocumenterRunner({ tool }: { tool: TrackTool }) {
         </CardContent>
       </Card>
       {result && <ResultPanel title={`توثيق — ${tool.name_ar}`} content={result} />}
+    </>
+  );
+}
+
+// ────────────────────────────────────────────────────────────────────────────
+// Generic Runner — يخدم 24 أداة من 6 مسارات (business/law/languages/design/marketing/general)
+// يستدعي edge function: track-tool-runner
+// ────────────────────────────────────────────────────────────────────────────
+function GenericRunner({ tool }: { tool: TrackTool }) {
+  const { toast } = useToast();
+  const cfg = GENERIC_TOOLS[tool.slug];
+  const [input, setInput] = useState('');
+  const [running, setRunning] = useState(false);
+  const [result, setResult] = useState('');
+  const [from, setFrom] = useState('English');
+  const [to, setTo] = useState('Arabic');
+  const [lang, setLang] = useState('Arabic');
+  const [tone, setTone] = useState('أكاديمي');
+  const [docType, setDocType] = useState('عقد عمل');
+  const [wordCount, setWordCount] = useState('600-800');
+
+  if (!cfg) return null;
+
+  const buildOptions = () => {
+    if (cfg.options === 'translate') return { from, to };
+    if (cfg.options === 'language') return { lang };
+    if (cfg.options === 'tone') return { tone, wordCount };
+    if (cfg.options === 'docType') return { docType };
+    return {};
+  };
+
+  const run = async () => {
+    const trimmed = input.trim();
+    if (trimmed.length < cfg.minLen) {
+      toast({ title: `المُدخل قصير (الحد ${cfg.minLen} حرف)`, variant: 'destructive' });
+      return;
+    }
+    if (trimmed.length > cfg.maxLen) {
+      toast({ title: `المُدخل طويل (الحد ${cfg.maxLen} حرف)`, variant: 'destructive' });
+      return;
+    }
+    setRunning(true);
+    setResult('');
+    try {
+      const { data: rpc, error: rpcErr } = await (supabase as any)
+        .rpc('use_track_tool', { _tool_id: tool.id });
+      if (rpcErr) throw new Error(rpcErr.message);
+      if (!rpc?.ok) throw new Error('تعذّر بدء الاستخدام');
+
+      const { data, error } = await supabase.functions.invoke('track-tool-runner', {
+        body: { tool_slug: tool.slug, input: trimmed, options: buildOptions(), mode: tool.is_premium ? 'pro' : 'standard' },
+      });
+      if (error) throw new Error(error.message);
+      if ((data as any)?.error) throw new Error((data as any).error);
+      setResult((data as any).result || '');
+      toast({ title: '✅ تم بنجاح' });
+    } catch (e: any) {
+      toast({ title: e?.message || 'حدث خطأ', variant: 'destructive' });
+    } finally {
+      setRunning(false);
+    }
+  };
+
+  return (
+    <>
+      <Card>
+        <CardContent className="p-6 space-y-4">
+          {cfg.options === 'translate' && (
+            <div className="grid grid-cols-2 gap-3">
+              <div>
+                <Label className="mb-2 block">من</Label>
+                <Select value={from} onValueChange={setFrom}>
+                  <SelectTrigger><SelectValue /></SelectTrigger>
+                  <SelectContent>
+                    {['Arabic','English','French','Spanish','German','Turkish','Chinese','Japanese','Russian','Italian','Portuguese','Urdu','Hindi'].map(l => (
+                      <SelectItem key={l} value={l}>{l}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+              <div>
+                <Label className="mb-2 block">إلى</Label>
+                <Select value={to} onValueChange={setTo}>
+                  <SelectTrigger><SelectValue /></SelectTrigger>
+                  <SelectContent>
+                    {['Arabic','English','French','Spanish','German','Turkish','Chinese','Japanese','Russian','Italian','Portuguese','Urdu','Hindi'].map(l => (
+                      <SelectItem key={l} value={l}>{l}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+          )}
+          {cfg.options === 'language' && (
+            <div>
+              <Label className="mb-2 block">اللغة</Label>
+              <Select value={lang} onValueChange={setLang}>
+                <SelectTrigger><SelectValue /></SelectTrigger>
+                <SelectContent>
+                  {['Arabic','English','French','Spanish','German','Turkish'].map(l => (
+                    <SelectItem key={l} value={l}>{l}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+          )}
+          {cfg.options === 'tone' && (
+            <div className="grid grid-cols-2 gap-3">
+              <div>
+                <Label className="mb-2 block">الأسلوب</Label>
+                <Select value={tone} onValueChange={setTone}>
+                  <SelectTrigger><SelectValue /></SelectTrigger>
+                  <SelectContent>
+                    {['أكاديمي','صحفي','إبداعي','ساخر','رسمي','شخصي','تحفيزي'].map(l => (
+                      <SelectItem key={l} value={l}>{l}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+              <div>
+                <Label className="mb-2 block">عدد الكلمات</Label>
+                <Select value={wordCount} onValueChange={setWordCount}>
+                  <SelectTrigger><SelectValue /></SelectTrigger>
+                  <SelectContent>
+                    {['300-400','600-800','1000-1200','1500-2000'].map(l => (
+                      <SelectItem key={l} value={l}>{l}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+          )}
+          {cfg.options === 'docType' && (
+            <div>
+              <Label className="mb-2 block">نوع الوثيقة</Label>
+              <Select value={docType} onValueChange={setDocType}>
+                <SelectTrigger><SelectValue /></SelectTrigger>
+                <SelectContent>
+                  {['عقد عمل','عقد شراكة','عقد إيجار','اتفاقية عدم إفصاح','إقرار','وكالة','إنذار قانوني','استشارة قانونية','مذكرة دفاع'].map(l => (
+                    <SelectItem key={l} value={l}>{l}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+          )}
+
+          <Label className="text-base font-semibold flex items-center gap-2">
+            <Wand2 className="w-4 h-4 text-primary" /> {cfg.inputLabel}
+          </Label>
+          <Textarea
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
+            placeholder={cfg.placeholder}
+            className="min-h-[220px] text-base leading-relaxed"
+            disabled={running}
+          />
+          <div className="flex items-center justify-between flex-wrap gap-2">
+            <span className="text-xs text-muted-foreground">
+              {input.length.toLocaleString('ar-SA')} / {cfg.maxLen.toLocaleString('ar-SA')} حرف
+            </span>
+            <Button onClick={run} disabled={running || input.trim().length < cfg.minLen} size="lg" className="gap-2">
+              {running ? <Loader2 className="w-4 h-4 animate-spin" /> : <Sparkles className="w-4 h-4" />}
+              {running ? 'جاري التشغيل...' : cfg.ctaLabel}
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
+      {result && <ResultPanel title={`نتيجة — ${tool.name_ar}`} content={result} />}
     </>
   );
 }
