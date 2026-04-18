@@ -1,15 +1,29 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useAuth } from '@/components/SimpleAuthProvider';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { toast } from 'sonner';
 import { Card } from '@/components/ui/card';
-import { UserPlus, Mail, User, Phone, Lock, Eye, EyeOff, CheckCircle } from 'lucide-react';
+import { UserPlus, Mail, User, Phone, Lock, Eye, EyeOff, CheckCircle, Gift } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { ReferralService } from '@/utils/referralService';
 
 const Register = () => {
+  const [searchParams] = useSearchParams();
+  const refCode = searchParams.get('ref');
+  const [referrerName, setReferrerName] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (refCode) {
+      ReferralService.storePendingCode(refCode);
+      ReferralService.resolveReferrer(refCode).then((r) => {
+        if (r) setReferrerName(r.name);
+      });
+    }
+  }, [refCode]);
+
   const [formData, setFormData] = useState({
     name: '',
     email: '',
