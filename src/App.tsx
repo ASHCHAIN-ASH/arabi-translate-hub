@@ -63,6 +63,7 @@ import ClientTickets from "./pages/client/Tickets";
 import ClientTicketDetails from "./pages/client/TicketDetails";
 import ClientWallet from "./pages/client/Wallet";
 import MembershipPage from "./pages/client/MembershipPage";
+import RewardsPage from "./pages/client/Rewards";
 import AdminMemberships from "./pages/admin/AdminMemberships";
 import AdminReferrals from "./pages/admin/AdminReferrals";
 
@@ -472,6 +473,11 @@ const App = () => (
             <Route path="/membership" element={
               <SimpleProtectedRoute>
                 <MembershipPage />
+              </SimpleProtectedRoute>
+            } />
+            <Route path="/rewards" element={
+              <SimpleProtectedRoute requiredRole="client">
+                <RewardsPage />
               </SimpleProtectedRoute>
             } />
             
