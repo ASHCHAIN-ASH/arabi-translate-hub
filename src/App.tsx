@@ -534,6 +534,11 @@ const App = () => (
                 <TrackDetailPage />
               </SimpleProtectedRoute>
             } />
+            <Route path="/student/tracks/:trackSlug/tools/:toolSlug" element={
+              <SimpleProtectedRoute requiredRole="client">
+                <TrackToolPage />
+              </SimpleProtectedRoute>
+            } />
             
             {/* Academic Pages */}
             <Route path="/academic/expertise" element={<AcademicExpertise />} />
