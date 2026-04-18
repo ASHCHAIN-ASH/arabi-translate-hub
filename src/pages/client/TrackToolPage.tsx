@@ -701,3 +701,381 @@ function QuizRunner({ tool }: { tool: TrackTool }) {
     </>
   );
 }
+
+// ════════════════════════════════════════════════════════════════════════════
+//  TECH TRACK RUNNERS
+// ════════════════════════════════════════════════════════════════════════════
+
+// ────────────────────────────────────────────────────────────────────────────
+// Tool: Code Review (with Pro mode)
+// ────────────────────────────────────────────────────────────────────────────
+const TECH_LANGS = [
+  'auto', 'javascript', 'typescript', 'python', 'java', 'csharp',
+  'cpp', 'c', 'go', 'rust', 'php', 'ruby', 'swift', 'kotlin', 'sql', 'bash', 'other',
+];
+
+function CodeReviewRunner({ tool }: { tool: TrackTool }) {
+  const { toast } = useToast();
+  const [code, setCode] = useState('');
+  const [language, setLanguage] = useState('auto');
+  const [mode, setMode] = useState<'standard' | 'pro'>('standard');
+  const [running, setRunning] = useState(false);
+  const [result, setResult] = useState('');
+
+  const proPrice = Number((tool as any)?.metadata?.pro_price ?? 0);
+  const standardPrice = Number((tool as any)?.price ?? 0);
+  const hasPro = proPrice > 0;
+
+  const run = async () => {
+    if (code.trim().length < 10) {
+      toast({ title: 'الكود قصير جداً (10 أحرف على الأقل)', variant: 'destructive' });
+      return;
+    }
+    setRunning(true);
+    setResult('');
+    try {
+      const { data: rpc, error: rpcErr } = await (supabase as any)
+        .rpc('use_track_tool', { _tool_id: tool.id, _mode: mode });
+      if (rpcErr) throw new Error(rpcErr.message);
+      if (!rpc?.ok) throw new Error('تعذّر بدء الاستخدام');
+
+      const { data, error } = await supabase.functions.invoke('code-reviewer', {
+        body: { code, language, mode },
+      });
+      if (error) throw new Error(error.message);
+      if ((data as any)?.error) throw new Error((data as any).error);
+      setResult((data as any).review || '');
+      toast({
+        title: mode === 'pro' ? '✅ تمت المراجعة المتقدمة' : '✅ تمت المراجعة',
+        description: rpc.was_free ? 'استخدمت طلباً مجانياً' : `تم خصم ${rpc.charged} ر.س`,
+      });
+    } catch (e: any) {
+      toast({ title: e?.message || 'حدث خطأ', variant: 'destructive' });
+    } finally {
+      setRunning(false);
+    }
+  };
+
+  return (
+    <>
+      <Card>
+        <CardContent className="p-6 space-y-4">
+          {hasPro && (
+            <div className="space-y-2">
+              <Label className="text-base font-semibold">اختر مستوى المراجعة</Label>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                <button
+                  type="button"
+                  onClick={() => setMode('standard')}
+                  className={`text-right p-4 rounded-lg border-2 transition-all ${
+                    mode === 'standard' ? 'border-primary bg-primary/5 shadow-sm' : 'border-border hover:border-primary/50'
+                  }`}
+                  disabled={running}
+                >
+                  <div className="flex items-center justify-between mb-1">
+                    <span className="font-bold">⚡ مراجعة قياسية</span>
+                    <span className="text-sm font-semibold text-primary">
+                      {standardPrice > 0 ? `${standardPrice} ر.س` : 'مجاني'}
+                    </span>
+                  </div>
+                  <p className="text-xs text-muted-foreground">سريعة ودقيقة — مناسبة لمعظم المراجعات اليومية</p>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setMode('pro')}
+                  className={`text-right p-4 rounded-lg border-2 transition-all ${
+                    mode === 'pro' ? 'border-amber-500 bg-amber-500/5 shadow-sm' : 'border-border hover:border-amber-500/50'
+                  }`}
+                  disabled={running}
+                >
+                  <div className="flex items-center justify-between mb-1">
+                    <span className="font-bold flex items-center gap-1">
+                      💎 مراجعة متقدمة <span className="text-xs px-1.5 py-0.5 rounded bg-amber-500/20 text-amber-700 dark:text-amber-300">Pro</span>
+                    </span>
+                    <span className="text-sm font-semibold text-amber-600 dark:text-amber-400">{proPrice} ر.س</span>
+                  </div>
+                  <p className="text-xs text-muted-foreground">تحليل عميق — للأكواد المعقدة والمشاريع الإنتاجية</p>
+                </button>
+              </div>
+            </div>
+          )}
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+            <div className="md:col-span-1">
+              <Label className="text-sm mb-2 block">لغة البرمجة</Label>
+              <Select value={language} onValueChange={setLanguage} disabled={running}>
+                <SelectTrigger><SelectValue /></SelectTrigger>
+                <SelectContent>
+                  {TECH_LANGS.map(l => <SelectItem key={l} value={l}>{l}</SelectItem>)}
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+
+          <Label className="text-base font-semibold flex items-center gap-2">
+            <Code2 className="w-4 h-4 text-primary" /> الكود المراد مراجعته
+          </Label>
+          <Textarea
+            value={code}
+            onChange={(e) => setCode(e.target.value)}
+            placeholder={`// Paste your code here...\nfunction example() {\n  return 'hello';\n}`}
+            className="min-h-[280px] text-sm leading-relaxed font-mono ltr text-left"
+            dir="ltr"
+            disabled={running}
+          />
+          <div className="flex items-center justify-between flex-wrap gap-2">
+            <span className="text-xs text-muted-foreground">{code.length.toLocaleString('ar-SA')} حرف</span>
+            <Button onClick={run} disabled={running || code.trim().length < 10} size="lg" className="gap-2">
+              {running ? <Loader2 className="w-4 h-4 animate-spin" /> : <Sparkles className="w-4 h-4" />}
+              {running ? 'جاري المراجعة...' : mode === 'pro' ? `راجع بالوضع المتقدم (${proPrice} ر.س)` : 'راجع الكود'}
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
+      {result && <ResultPanel title={mode === 'pro' ? 'مراجعة كود متقدمة 💎' : 'مراجعة كود'} content={result} />}
+    </>
+  );
+}
+
+// ────────────────────────────────────────────────────────────────────────────
+// Tool: Algorithm Explainer
+// ────────────────────────────────────────────────────────────────────────────
+function AlgorithmExplainerRunner({ tool }: { tool: TrackTool }) {
+  const { toast } = useToast();
+  const [code, setCode] = useState('');
+  const [language, setLanguage] = useState('auto');
+  const [running, setRunning] = useState(false);
+  const [result, setResult] = useState('');
+
+  const run = async () => {
+    if (code.trim().length < 5) {
+      toast({ title: 'أدخل كوداً أو خوارزمية', variant: 'destructive' });
+      return;
+    }
+    setRunning(true);
+    setResult('');
+    try {
+      const { data: rpc, error: rpcErr } = await (supabase as any)
+        .rpc('use_track_tool', { _tool_id: tool.id });
+      if (rpcErr) throw new Error(rpcErr.message);
+      if (!rpc?.ok) throw new Error('تعذّر بدء الاستخدام');
+
+      const { data, error } = await supabase.functions.invoke('algorithm-explainer', {
+        body: { code, language },
+      });
+      if (error) throw new Error(error.message);
+      if ((data as any)?.error) throw new Error((data as any).error);
+      setResult((data as any).explanation || '');
+      toast({ title: '✅ تم الشرح بنجاح' });
+    } catch (e: any) {
+      toast({ title: e?.message || 'حدث خطأ', variant: 'destructive' });
+    } finally {
+      setRunning(false);
+    }
+  };
+
+  return (
+    <>
+      <Card>
+        <CardContent className="p-6 space-y-4">
+          <div>
+            <Label className="text-sm mb-2 block">لغة البرمجة</Label>
+            <Select value={language} onValueChange={setLanguage} disabled={running}>
+              <SelectTrigger className="md:max-w-xs"><SelectValue /></SelectTrigger>
+              <SelectContent>
+                {TECH_LANGS.map(l => <SelectItem key={l} value={l}>{l}</SelectItem>)}
+              </SelectContent>
+            </Select>
+          </div>
+
+          <Label className="text-base font-semibold flex items-center gap-2">
+            <Brain className="w-4 h-4 text-primary" /> الكود / الخوارزمية
+          </Label>
+          <Textarea
+            value={code}
+            onChange={(e) => setCode(e.target.value)}
+            placeholder={`// Paste algorithm or code...\nfunction binarySearch(arr, target) {\n  // ...\n}`}
+            className="min-h-[260px] text-sm leading-relaxed font-mono ltr text-left"
+            dir="ltr"
+            disabled={running}
+          />
+          <div className="flex items-center justify-between flex-wrap gap-2">
+            <span className="text-xs text-muted-foreground">{code.length.toLocaleString('ar-SA')} حرف</span>
+            <Button onClick={run} disabled={running || code.trim().length < 5} size="lg" className="gap-2">
+              {running ? <Loader2 className="w-4 h-4 animate-spin" /> : <Sparkles className="w-4 h-4" />}
+              {running ? 'جاري الشرح...' : 'اشرح الخوارزمية'}
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
+      {result && <ResultPanel title={`شرح خوارزمية — ${tool.name_ar}`} content={result} />}
+    </>
+  );
+}
+
+// ────────────────────────────────────────────────────────────────────────────
+// Tool: Unit Test Generator
+// ────────────────────────────────────────────────────────────────────────────
+const TEST_FRAMEWORKS = ['auto', 'jest', 'vitest', 'mocha', 'pytest', 'unittest', 'junit', 'xunit', 'nunit', 'go-testing', 'rust-cargo'];
+
+function UnitTestGenRunner({ tool }: { tool: TrackTool }) {
+  const { toast } = useToast();
+  const [code, setCode] = useState('');
+  const [language, setLanguage] = useState('auto');
+  const [framework, setFramework] = useState('auto');
+  const [running, setRunning] = useState(false);
+  const [result, setResult] = useState('');
+
+  const run = async () => {
+    if (code.trim().length < 10) {
+      toast({ title: 'الكود قصير جداً', variant: 'destructive' });
+      return;
+    }
+    setRunning(true);
+    setResult('');
+    try {
+      const { data: rpc, error: rpcErr } = await (supabase as any)
+        .rpc('use_track_tool', { _tool_id: tool.id });
+      if (rpcErr) throw new Error(rpcErr.message);
+      if (!rpc?.ok) throw new Error('تعذّر بدء الاستخدام');
+
+      const { data, error } = await supabase.functions.invoke('unit-test-generator', {
+        body: { code, language, framework },
+      });
+      if (error) throw new Error(error.message);
+      if ((data as any)?.error) throw new Error((data as any).error);
+      setResult((data as any).tests || '');
+      toast({ title: '✅ تم توليد الاختبارات' });
+    } catch (e: any) {
+      toast({ title: e?.message || 'حدث خطأ', variant: 'destructive' });
+    } finally {
+      setRunning(false);
+    }
+  };
+
+  return (
+    <>
+      <Card>
+        <CardContent className="p-6 space-y-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+            <div>
+              <Label className="text-sm mb-2 block">لغة البرمجة</Label>
+              <Select value={language} onValueChange={setLanguage} disabled={running}>
+                <SelectTrigger><SelectValue /></SelectTrigger>
+                <SelectContent>
+                  {TECH_LANGS.map(l => <SelectItem key={l} value={l}>{l}</SelectItem>)}
+                </SelectContent>
+              </Select>
+            </div>
+            <div>
+              <Label className="text-sm mb-2 block">إطار الاختبار</Label>
+              <Select value={framework} onValueChange={setFramework} disabled={running}>
+                <SelectTrigger><SelectValue /></SelectTrigger>
+                <SelectContent>
+                  {TEST_FRAMEWORKS.map(f => <SelectItem key={f} value={f}>{f}</SelectItem>)}
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+
+          <Label className="text-base font-semibold flex items-center gap-2">
+            <TestTube2 className="w-4 h-4 text-primary" /> الكود المراد اختباره
+          </Label>
+          <Textarea
+            value={code}
+            onChange={(e) => setCode(e.target.value)}
+            placeholder={`// Paste the function/class to generate tests for...\nexport function add(a: number, b: number) {\n  return a + b;\n}`}
+            className="min-h-[280px] text-sm leading-relaxed font-mono ltr text-left"
+            dir="ltr"
+            disabled={running}
+          />
+          <div className="flex items-center justify-between flex-wrap gap-2">
+            <span className="text-xs text-muted-foreground">{code.length.toLocaleString('ar-SA')} حرف</span>
+            <Button onClick={run} disabled={running || code.trim().length < 10} size="lg" className="gap-2">
+              {running ? <Loader2 className="w-4 h-4 animate-spin" /> : <Sparkles className="w-4 h-4" />}
+              {running ? 'جاري التوليد...' : 'ولّد الاختبارات'}
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
+      {result && <ResultPanel title={`اختبارات وحدة — ${tool.name_ar}`} content={result} />}
+    </>
+  );
+}
+
+// ────────────────────────────────────────────────────────────────────────────
+// Tool: Code Documenter
+// ────────────────────────────────────────────────────────────────────────────
+function CodeDocumenterRunner({ tool }: { tool: TrackTool }) {
+  const { toast } = useToast();
+  const [code, setCode] = useState('');
+  const [language, setLanguage] = useState('auto');
+  const [running, setRunning] = useState(false);
+  const [result, setResult] = useState('');
+
+  const run = async () => {
+    if (code.trim().length < 10) {
+      toast({ title: 'الكود قصير جداً', variant: 'destructive' });
+      return;
+    }
+    setRunning(true);
+    setResult('');
+    try {
+      const { data: rpc, error: rpcErr } = await (supabase as any)
+        .rpc('use_track_tool', { _tool_id: tool.id });
+      if (rpcErr) throw new Error(rpcErr.message);
+      if (!rpc?.ok) throw new Error('تعذّر بدء الاستخدام');
+
+      const { data, error } = await supabase.functions.invoke('code-documenter', {
+        body: { code, language },
+      });
+      if (error) throw new Error(error.message);
+      if ((data as any)?.error) throw new Error((data as any).error);
+      setResult((data as any).documentation || '');
+      toast({ title: '✅ تم توليد التوثيق' });
+    } catch (e: any) {
+      toast({ title: e?.message || 'حدث خطأ', variant: 'destructive' });
+    } finally {
+      setRunning(false);
+    }
+  };
+
+  return (
+    <>
+      <Card>
+        <CardContent className="p-6 space-y-4">
+          <div>
+            <Label className="text-sm mb-2 block">لغة البرمجة</Label>
+            <Select value={language} onValueChange={setLanguage} disabled={running}>
+              <SelectTrigger className="md:max-w-xs"><SelectValue /></SelectTrigger>
+              <SelectContent>
+                {TECH_LANGS.map(l => <SelectItem key={l} value={l}>{l}</SelectItem>)}
+              </SelectContent>
+            </Select>
+          </div>
+
+          <Label className="text-base font-semibold flex items-center gap-2">
+            <FileCode2 className="w-4 h-4 text-primary" /> الكود المراد توثيقه
+          </Label>
+          <Textarea
+            value={code}
+            onChange={(e) => setCode(e.target.value)}
+            placeholder={`// Paste your code/module/class to document...\nclass UserService {\n  // ...\n}`}
+            className="min-h-[280px] text-sm leading-relaxed font-mono ltr text-left"
+            dir="ltr"
+            disabled={running}
+          />
+          <div className="flex items-center justify-between flex-wrap gap-2">
+            <span className="text-xs text-muted-foreground">{code.length.toLocaleString('ar-SA')} حرف</span>
+            <Button onClick={run} disabled={running || code.trim().length < 10} size="lg" className="gap-2">
+              {running ? <Loader2 className="w-4 h-4 animate-spin" /> : <Sparkles className="w-4 h-4" />}
+              {running ? 'جاري التوثيق...' : 'وثّق الكود'}
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
+      {result && <ResultPanel title={`توثيق — ${tool.name_ar}`} content={result} />}
+    </>
+  );
+}
+
