@@ -63,9 +63,32 @@ const StudentLibrary: React.FC = () => {
 
   const featured = filteredBySearch.filter(r => r.is_featured).slice(0, 3);
 
-  const handleOpen = (r: StudentResource) => {
+  const handleOpen = async (r: StudentResource) => {
     if (r.is_premium && !isPremium) return;
-    window.open(r.url, '_blank', 'noopener,noreferrer');
+    try {
+      const res = await fetch(r.url, { mode: 'cors' });
+      if (!res.ok) throw new Error('fetch failed');
+      const blob = await res.blob();
+      const ext = (r.url.split('.').pop() || 'pdf').split('?')[0].slice(0, 5);
+      const fileName = `${r.title.replace(/[\\/:*?"<>|]/g, '_')}.${ext}`;
+      const blobUrl = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = blobUrl;
+      a.download = fileName;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      setTimeout(() => URL.revokeObjectURL(blobUrl), 1000);
+    } catch {
+      // fallback: trigger native download attribute
+      const a = document.createElement('a');
+      a.href = r.url;
+      a.download = r.title;
+      a.rel = 'noopener noreferrer';
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+    }
   };
 
   return (
