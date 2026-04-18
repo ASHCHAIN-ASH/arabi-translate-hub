@@ -109,7 +109,7 @@ const ClientLayout: React.FC<ClientLayoutProps> = ({ children }) => {
             <p className="text-sm font-bold truncate">{displayName}</p>
             <p className="text-[11px] text-muted-foreground">عميل مميز ✨</p>
           </div>
-        </motion.div>
+        </div>
       </div>
 
       {/* Nav */}
