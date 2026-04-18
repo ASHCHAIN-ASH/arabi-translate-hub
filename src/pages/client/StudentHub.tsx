@@ -15,31 +15,32 @@ import { supabase } from '@/integrations/supabase/client';
 import { useGamification } from '@/hooks/useGamification';
 import { useUserMembership } from '@/hooks/useMembership';
 import { useDailyTasks, useStudentResources, useUpcomingOrders } from '@/hooks/useStudentHub';
+import { BentoCard } from '@/components/student/BentoCard';
+import { StatTile } from '@/components/student/StatTile';
+import { FeatureTile } from '@/components/student/FeatureTile';
 import {
   Sparkles, Trophy, Flame, CheckCircle2, Circle, Crown, Lock, FileText,
   Wand2, BookOpen, Calendar, BarChart3, ExternalLink, Loader2, GraduationCap, Target,
-  Clock, ArrowLeft, Copy, Check, Zap,
+  Clock, ArrowLeft, Copy, Check, Zap, Brain, Rocket, TrendingUp, Award, Flag,
+  Compass, Library, MessageSquare,
 } from 'lucide-react';
 
 type ToolKey = 'summarize' | 'rephrase' | 'analyze';
 
 const TOOL_META: Record<ToolKey, { label: string; desc: string; icon: any; premium: boolean; gradient: string }> = {
-  summarize: { label: 'تلخيص', desc: 'لخّص نصاً طويلاً في نقاط واضحة', icon: FileText, premium: false, gradient: 'from-blue-500/20 to-cyan-500/20' },
-  rephrase: { label: 'إعادة صياغة', desc: 'صياغة احترافية مع الحفاظ على المعنى', icon: Wand2, premium: false, gradient: 'from-violet-500/20 to-fuchsia-500/20' },
-  analyze: { label: 'تحليل نص', desc: 'تحليل أكاديمي عميق', icon: BarChart3, premium: true, gradient: 'from-amber-500/20 to-orange-500/20' },
+  summarize: { label: 'تلخيص', desc: 'لخّص نصاً طويلاً في نقاط واضحة', icon: FileText, premium: false, gradient: 'from-primary/20 to-accent/20' },
+  rephrase: { label: 'إعادة صياغة', desc: 'صياغة احترافية مع الحفاظ على المعنى', icon: Wand2, premium: false, gradient: 'from-secondary/20 to-primary/20' },
+  analyze: { label: 'تحليل نص', desc: 'تحليل أكاديمي عميق', icon: BarChart3, premium: true, gradient: 'from-warning/20 to-secondary/20' },
 };
 
 const formatDate = (iso: string | null) => {
   if (!iso) return null;
-  try {
-    return new Date(iso).toLocaleDateString('ar-SA', { day: 'numeric', month: 'short', year: 'numeric' });
-  } catch { return null; }
+  try { return new Date(iso).toLocaleDateString('ar-SA', { day: 'numeric', month: 'short', year: 'numeric' }); }
+  catch { return null; }
 };
-
 const daysUntil = (iso: string | null): number | null => {
   if (!iso) return null;
-  const ms = new Date(iso).getTime() - Date.now();
-  return Math.ceil(ms / (1000 * 60 * 60 * 24));
+  return Math.ceil((new Date(iso).getTime() - Date.now()) / (1000 * 60 * 60 * 24));
 };
 
 const STATUS_AR: Record<string, string> = {
@@ -78,14 +79,11 @@ const StudentHub: React.FC = () => {
   const displayName = user?.user_metadata?.full_name || user?.email?.split('@')[0] || 'طالب';
   const completedCount = useMemo(() => tasks.filter(t => t.is_completed).length, [tasks]);
   const totalTasks = tasks.length || 1;
+  const dailyProgressPct = Math.round((completedCount / totalTasks) * 100);
 
   const runAI = async () => {
-    if (input.trim().length < 20) {
-      toast.error('أدخل نصاً لا يقل عن 20 حرفاً');
-      return;
-    }
-    setRunning(true);
-    setOutput('');
+    if (input.trim().length < 20) { toast.error('أدخل نصاً لا يقل عن 20 حرفاً'); return; }
+    setRunning(true); setOutput('');
     try {
       const { data, error } = await supabase.functions.invoke('student-ai-tools', {
         body: { tool, text: input },
@@ -93,32 +91,22 @@ const StudentHub: React.FC = () => {
       if (error) {
         const ctx: any = (error as any).context;
         let msg = error.message || 'تعذر تنفيذ الطلب';
-        try {
-          const j = ctx?.body ? JSON.parse(ctx.body) : null;
-          if (j?.error) msg = j.error;
-        } catch {}
-        toast.error(msg);
-        return;
+        try { const j = ctx?.body ? JSON.parse(ctx.body) : null; if (j?.error) msg = j.error; } catch {}
+        toast.error(msg); return;
       }
-      if ((data as any)?.error) {
-        toast.error((data as any).error);
-        return;
-      }
+      if ((data as any)?.error) { toast.error((data as any).error); return; }
       setOutput((data as any)?.output || '');
       toast.success('تم التنفيذ بنجاح — اكتسبت نقاطاً 🎉');
       refreshTasks();
     } catch (e: any) {
       toast.error(e?.message || 'خطأ غير متوقع');
-    } finally {
-      setRunning(false);
-    }
+    } finally { setRunning(false); }
   };
 
   const copyOutput = async () => {
     if (!output) return;
     await navigator.clipboard.writeText(output);
-    setCopied(true);
-    toast.success('تم النسخ');
+    setCopied(true); toast.success('تم النسخ');
     setTimeout(() => setCopied(false), 1500);
   };
 
@@ -126,610 +114,598 @@ const StudentHub: React.FC = () => {
     if (code === 'daily_login') {
       const { error } = await completeTask(code);
       if (!error) toast.success('+5 نقاط على دخولك اليومي 🎉');
-    } else if (link) {
-      window.location.href = link;
-    }
+    } else if (link) { window.location.href = link; }
   };
 
   return (
     <ClientLayout>
-      <div dir="rtl" className="space-y-6">
-        {/* HERO */}
-        <motion.div
-          initial={{ opacity: 0, y: -10 }}
+      <div dir="rtl" className="space-y-8">
+        {/* ============================== HERO 3D ============================== */}
+        <motion.section
+          initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, ease: 'easeOut' }}
-          className="relative overflow-hidden rounded-2xl border border-border bg-gradient-to-bl from-primary/15 via-secondary/10 to-primary/5 p-6 md:p-8"
+          transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+          className="relative overflow-hidden rounded-[28px] border border-border/60"
         >
+          {/* Layered gradient background */}
+          <div className="absolute inset-0 bg-gradient-to-br from-primary via-secondary to-accent opacity-95" />
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,hsl(var(--background)/0.15),transparent_60%)]" />
+          <div className="absolute inset-0 bento-grid-pattern opacity-15" />
+
+          {/* Floating orbs */}
           <motion.div
-            animate={{ scale: [1, 1.1, 1], opacity: [0.5, 0.7, 0.5] }}
-            transition={{ duration: 8, repeat: Infinity }}
-            className="absolute -top-20 -left-20 w-72 h-72 bg-primary/20 rounded-full blur-3xl"
+            animate={{ scale: [1, 1.2, 1], x: [0, 30, 0], y: [0, -20, 0] }}
+            transition={{ duration: 12, repeat: Infinity, ease: 'easeInOut' }}
+            className="absolute top-10 -right-20 w-72 h-72 rounded-full bg-white/15 blur-3xl"
           />
           <motion.div
-            animate={{ scale: [1, 1.15, 1], opacity: [0.4, 0.6, 0.4] }}
-            transition={{ duration: 10, repeat: Infinity, delay: 1 }}
-            className="absolute -bottom-24 -right-24 w-72 h-72 bg-secondary/20 rounded-full blur-3xl"
+            animate={{ scale: [1, 1.3, 1], x: [0, -20, 0], y: [0, 30, 0] }}
+            transition={{ duration: 14, repeat: Infinity, ease: 'easeInOut', delay: 2 }}
+            className="absolute -bottom-20 -left-20 w-80 h-80 rounded-full bg-warning/30 blur-3xl"
           />
-          <div className="relative z-10 flex flex-col md:flex-row md:items-center md:justify-between gap-6">
-            <div>
-              <div className="flex items-center gap-2 mb-2">
-                <GraduationCap className="w-6 h-6 text-primary" />
-                <span className="text-sm text-muted-foreground">قسم الطالب</span>
+
+          {/* Orbiting decorative icons */}
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 hidden lg:block pointer-events-none">
+            {[Brain, Rocket, Award, Compass].map((I, i) => (
+              <motion.div
+                key={i}
+                className="absolute"
+                animate={{ rotate: 360 }}
+                transition={{ duration: 20 + i * 4, repeat: Infinity, ease: 'linear' }}
+                style={{ width: 200 + i * 40, height: 200 + i * 40, left: -100 - i * 20, top: -100 - i * 20 }}
+              >
+                <I className="w-5 h-5 text-white/40 absolute top-0 left-1/2 -translate-x-1/2" />
+              </motion.div>
+            ))}
+          </div>
+
+          <div className="relative z-10 p-6 md:p-10 grid lg:grid-cols-12 gap-6 items-center">
+            <div className="lg:col-span-7 text-white">
+              <motion.div
+                initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.2 }}
+                className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/15 backdrop-blur-md border border-white/20 mb-4"
+              >
+                <GraduationCap className="w-4 h-4" />
+                <span className="text-xs font-medium">قسم الطالب الذكي</span>
                 {isPremium && (
-                  <Badge className="bg-gradient-to-l from-amber-500 to-orange-600 text-white border-0">
+                  <Badge className="bg-warning text-warning-foreground border-0 text-[10px] mr-1">
                     <Crown className="w-3 h-3 ml-1" /> بريميوم
                   </Badge>
                 )}
-              </div>
+              </motion.div>
               <motion.h1
-                initial={{ opacity: 0, x: 20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: 0.15 }}
-                className="text-2xl md:text-3xl font-bold mb-2"
+                initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }}
+                className="text-3xl md:text-5xl font-extrabold mb-3 tracking-tight leading-tight"
               >
-                أهلاً، {displayName} <motion.span animate={{ rotate: [0, 14, -8, 14, 0] }} transition={{ duration: 1.5, repeat: Infinity, repeatDelay: 3 }} className="inline-block">👋</motion.span>
+                أهلاً، {displayName}{' '}
+                <motion.span
+                  animate={{ rotate: [0, 14, -8, 14, 0] }}
+                  transition={{ duration: 1.5, repeat: Infinity, repeatDelay: 3 }}
+                  className="inline-block"
+                >👋</motion.span>
               </motion.h1>
-              <p className="text-muted-foreground">مساعدك الأكاديمي اليومي — أدوات ذكية، نقاط، ومكافآت.</p>
+              <motion.p
+                initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.4 }}
+                className="text-white/85 text-base md:text-lg max-w-xl mb-6"
+              >
+                منصتك الأكاديمية المتكاملة — أدوات AI، تحليل إحصائي، CV احترافي، خرائط ذهنية، ومسارات تخصصية.
+              </motion.p>
+              <motion.div
+                initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5 }}
+                className="flex flex-wrap gap-3"
+              >
+                <Button asChild size="lg" className="bg-white text-primary hover:bg-white/90 gap-2 shadow-xl">
+                  <Link to="/student/tracks">
+                    <Compass className="w-5 h-5" /> ابدأ مسارك
+                  </Link>
+                </Button>
+                <Button asChild size="lg" variant="outline" className="bg-white/10 backdrop-blur-md border-white/30 text-white hover:bg-white/20 gap-2">
+                  <Link to="/services">
+                    تصفح الخدمات <ArrowLeft className="w-4 h-4" />
+                  </Link>
+                </Button>
+              </motion.div>
             </div>
 
+            {/* Stats card */}
             {!gLoading && summary && (
               <motion.div
-                initial={{ opacity: 0, scale: 0.95 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ delay: 0.2 }}
-                className="bg-background/80 backdrop-blur-md rounded-xl p-4 min-w-[260px] border border-border shadow-lg"
+                initial={{ opacity: 0, scale: 0.9, y: 20 }}
+                animate={{ opacity: 1, scale: 1, y: 0 }}
+                transition={{ delay: 0.4, duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+                className="lg:col-span-5"
               >
-                <div className="flex items-center justify-between mb-2">
-                  <div className="flex items-center gap-2">
-                    <Trophy className="w-5 h-5 text-amber-500" />
-                    <span className="font-semibold">{summary.total_points} نقطة</span>
+                <div className="relative p-6 rounded-3xl bg-white/10 backdrop-blur-xl border border-white/25 shadow-2xl">
+                  <div className="absolute inset-0 rounded-3xl bg-gradient-to-br from-white/20 to-transparent pointer-events-none" />
+                  <div className="relative">
+                    <div className="flex items-center justify-between mb-4">
+                      <div className="flex items-center gap-2 text-white">
+                        <div className="w-10 h-10 rounded-xl bg-warning/90 flex items-center justify-center shadow-lg">
+                          <Trophy className="w-5 h-5 text-warning-foreground" />
+                        </div>
+                        <div>
+                          <p className="text-xs text-white/70">رصيد النقاط</p>
+                          <p className="text-2xl font-bold">{summary.total_points}</p>
+                        </div>
+                      </div>
+                      <Badge className="bg-white/20 text-white border-white/30">
+                        {summary.current_level?.name_ar || 'مبتدئ'}
+                      </Badge>
+                    </div>
+                    {summary.next_level && (
+                      <>
+                        <div className="flex items-center justify-between text-xs text-white/85 mb-1.5">
+                          <span>المستوى التالي: {summary.next_level.name_ar}</span>
+                          <span className="font-bold">{summary.progress_percent}%</span>
+                        </div>
+                        <div className="h-2.5 rounded-full bg-white/15 overflow-hidden">
+                          <motion.div
+                            initial={{ width: 0 }}
+                            animate={{ width: `${summary.progress_percent}%` }}
+                            transition={{ duration: 1.2, delay: 0.6, ease: 'easeOut' }}
+                            className="h-full bg-gradient-to-r from-warning via-white to-warning rounded-full"
+                          />
+                        </div>
+                        <p className="text-[11px] text-white/70 mt-2">
+                          {summary.points_to_next} نقطة للوصول إلى {summary.next_level.name_ar}
+                        </p>
+                      </>
+                    )}
                   </div>
-                  <Badge variant="secondary">{summary.current_level?.name_ar || 'مبتدئ'}</Badge>
                 </div>
-                {summary.next_level && (
-                  <>
-                    <Progress value={summary.progress_percent} className="h-2 mb-1" />
-                    <p className="text-xs text-muted-foreground">
-                      {summary.points_to_next} نقطة للوصول إلى {summary.next_level.name_ar}
-                    </p>
-                  </>
-                )}
               </motion.div>
             )}
           </div>
-        </motion.div>
+        </motion.section>
 
-        {/* QUICK STATS */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-          {[
-            { icon: Flame, label: 'مهام اليوم', value: `${completedCount}/${tasks.length}`, color: 'text-orange-500', bg: 'bg-orange-500/10' },
-            { icon: Trophy, label: 'نقاطك', value: summary?.total_points ?? 0, color: 'text-amber-500', bg: 'bg-amber-500/10' },
-            { icon: Crown, label: 'حالتك', value: isPremium ? 'بريميوم' : 'مجاني', color: 'text-purple-500', bg: 'bg-purple-500/10' },
-            { icon: BookOpen, label: 'موارد المكتبة', value: resources.length, color: 'text-blue-500', bg: 'bg-blue-500/10' },
-          ].map((s, i) => (
-            <motion.div
-              key={i}
-              initial={{ opacity: 0, y: 15 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: i * 0.07 }}
-              whileHover={{ y: -3, transition: { duration: 0.2 } }}
-            >
-              <Card className="hover:shadow-lg transition-shadow border-border/60">
-                <CardContent className="p-4 flex items-center gap-3">
-                  <div className={`p-2.5 rounded-xl ${s.bg} ${s.color}`}>
-                    <s.icon className="w-5 h-5" />
-                  </div>
-                  <div>
-                    <p className="text-xs text-muted-foreground">{s.label}</p>
-                    <p className="text-lg font-bold">{s.value}</p>
-                  </div>
-                </CardContent>
-              </Card>
-            </motion.div>
-          ))}
+        {/* ============================== STATS ============================== */}
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4">
+          <StatTile
+            icon={Flame}
+            label="مهام اليوم"
+            value={`${completedCount}/${tasks.length}`}
+            tone="warning"
+            delay={0.05}
+            trend={{ value: `${dailyProgressPct}% مكتمل`, up: dailyProgressPct > 0 }}
+          />
+          <StatTile
+            icon={Trophy}
+            label="نقاطك"
+            value={summary?.total_points ?? 0}
+            tone="warning"
+            delay={0.1}
+            trend={{ value: summary?.current_level?.name_ar || 'مبتدئ', up: true }}
+          />
+          <StatTile
+            icon={isPremium ? Crown : Award}
+            label="حالتك"
+            value={isPremium ? 'بريميوم' : 'مجاني'}
+            tone={isPremium ? 'secondary' : 'primary'}
+            delay={0.15}
+          />
+          <StatTile
+            icon={BookOpen}
+            label="موارد المكتبة"
+            value={resources.length}
+            tone="accent"
+            delay={0.2}
+          />
         </div>
 
-        {/* مسارات تخصصية CTA */}
-        <motion.div
-          initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
-          className="mb-6"
-        >
-          <Link to="/student/tracks" className="block group">
-            <Card className="relative overflow-hidden border-2 border-primary/20 hover:border-primary/50 transition-all hover:shadow-2xl bg-gradient-to-l from-primary/10 via-primary/5 to-transparent">
-              <div className="absolute -top-16 -left-16 w-48 h-48 rounded-full bg-primary/20 blur-3xl group-hover:scale-110 transition-transform duration-500" />
-              <CardContent className="relative p-6 flex items-center justify-between gap-4">
-                <div className="flex items-center gap-4">
-                  <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-primary to-primary/70 flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform">
-                    <Sparkles className="w-7 h-7 text-primary-foreground" />
-                  </div>
-                  <div>
-                    <div className="flex items-center gap-2 mb-1">
-                      <h3 className="text-lg md:text-xl font-bold">المسارات التخصصية</h3>
-                      <Badge className="bg-amber-500 text-white border-0">جديد</Badge>
-                    </div>
-                    <p className="text-sm text-muted-foreground">
-                      أدوات AI وخدمات احترافية لكل تخصص — طبي، تقني، أعمال، قانون والمزيد
-                    </p>
-                  </div>
-                </div>
-                <Button variant="default" size="lg" className="shrink-0 gap-2 group-hover:gap-3 transition-all hidden sm:inline-flex">
-                  استكشف
-                  <ArrowLeft className="w-5 h-5" />
-                </Button>
-              </CardContent>
-            </Card>
-          </Link>
-        </motion.div>
+        {/* ============================== BENTO FEATURE GRID ============================== */}
+        <div>
+          <motion.div
+            initial={{ opacity: 0, y: 10 }} whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }} className="flex items-end justify-between mb-4"
+          >
+            <div>
+              <p className="text-xs text-muted-foreground mb-1">الأدوات الذكية</p>
+              <h2 className="text-2xl md:text-3xl font-bold">
+                <span className="text-shimmer">منصتك الأكاديمية</span>
+              </h2>
+            </div>
+            <Badge variant="outline" className="hidden md:inline-flex">
+              <Sparkles className="w-3 h-3 ml-1 text-primary" /> {6} أدوات
+            </Badge>
+          </motion.div>
 
-        {/* CV الأكاديمي الذكي CTA */}
-        <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="mb-6">
-          <Link to="/student/academic-cv" className="block group">
-            <Card className="relative overflow-hidden border-2 border-indigo-500/30 hover:border-indigo-500/60 transition-all hover:shadow-2xl bg-gradient-to-l from-indigo-500/10 via-purple-500/5 to-transparent">
-              <div className="absolute -top-16 -left-16 w-48 h-48 rounded-full bg-indigo-500/20 blur-3xl group-hover:scale-110 transition-transform duration-500" />
-              <CardContent className="relative p-6 flex items-center justify-between gap-4">
-                <div className="flex items-center gap-4">
-                  <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform">
-                    <FileText className="w-7 h-7 text-white" />
-                  </div>
-                  <div>
-                    <div className="flex items-center gap-2 mb-1">
-                      <h3 className="text-lg md:text-xl font-bold">CV الأكاديمي الذكي</h3>
-                      <Badge className="bg-indigo-500 text-white border-0">جديد</Badge>
-                    </div>
-                    <p className="text-sm text-muted-foreground">
-                      6 قوالب احترافية • عربي/إنجليزي • تحميل وطباعة بدون علامة تجارية • مجاني للأعضاء
-                    </p>
-                  </div>
-                </div>
-                <Button variant="default" size="lg" className="shrink-0 gap-2 group-hover:gap-3 transition-all hidden sm:inline-flex bg-gradient-to-r from-indigo-500 to-purple-600 hover:opacity-95">
-                  أنشئ سيرتك
-                  <ArrowLeft className="w-5 h-5" />
-                </Button>
-              </CardContent>
-            </Card>
-          </Link>
-        </motion.div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-5" style={{ perspective: 1200 }}>
+            <FeatureTile
+              to="/student/tracks"
+              icon={Compass}
+              title="المسارات التخصصية"
+              description="أدوات AI وخدمات احترافية لكل تخصص — طبي، تقني، أعمال، قانون والمزيد"
+              gradient="from-primary to-secondary"
+              glow="primary"
+              badge="جديد"
+              cta="استكشف المسارات"
+              delay={0.05}
+              decorIcons={[Flag, Brain]}
+              pills={['طبي', 'تقني', 'أعمال', 'قانون', '+8 مسارات']}
+            />
+            <FeatureTile
+              to="/student/academic-cv"
+              icon={FileText}
+              title="CV الأكاديمي الذكي"
+              description="6 قوالب احترافية • عربي/إنجليزي • تحميل وطباعة بدون علامة تجارية"
+              gradient="from-secondary to-primary"
+              glow="secondary"
+              badge="جديد"
+              cta="أنشئ سيرتك"
+              delay={0.1}
+              decorIcons={[Award]}
+              pills={['6 قوالب', 'PDF', 'مجاني للأعضاء']}
+            />
+            <FeatureTile
+              to="/student/statistical-analysis"
+              icon={BarChart3}
+              title="التحليل الإحصائي"
+              description="ارفع CSV/Excel • T-Test, ANOVA, Correlation, Chi² • تفسير أكاديمي + تقرير PDF"
+              gradient="from-accent to-primary"
+              glow="accent"
+              badge="جديد"
+              cta="ابدأ التحليل"
+              delay={0.15}
+              decorIcons={[TrendingUp]}
+              pills={['T-Test', 'ANOVA', 'Correlation', 'Chi²']}
+            />
+            <FeatureTile
+              to="/research/smart-editor"
+              icon={Wand2}
+              title="المحرر الذكي"
+              description="تصحيح، إعادة صياغة، رفع الأسلوب الأكاديمي، اختصار، وتوسيع نصوصك"
+              gradient="from-success to-accent"
+              glow="accent"
+              cta="ابدأ الكتابة"
+              delay={0.2}
+              decorIcons={[Sparkles]}
+              pills={['Standard مجاني', 'Pro متقدم']}
+            />
+            <FeatureTile
+              to="/student/mind-map"
+              icon={Brain}
+              title="الخريطة الذهنية"
+              description="حوّل أي نص إلى خريطة ذهنية تفاعلية قابلة للتصدير PDF/PNG"
+              gradient="from-warning to-secondary"
+              glow="secondary"
+              cta="أنشئ خريطة"
+              delay={0.25}
+              decorIcons={[Library]}
+              pills={['تفاعلي', 'PDF', 'PNG']}
+            />
+            <FeatureTile
+              to="/services"
+              icon={Rocket}
+              title="كل الخدمات"
+              description="استعرض كل الخدمات الأكاديمية — ترجمة، أبحاث، رسائل، عروض، تدقيق وأكثر"
+              gradient="from-primary to-accent"
+              glow="primary"
+              cta="تصفح الكل"
+              delay={0.3}
+              pills={['+25 خدمة']}
+            />
+          </div>
+        </div>
 
-        {/* التحليل الإحصائي الجامعي CTA */}
-        <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="mb-6">
-          <Link to="/student/statistical-analysis" className="block group">
-            <Card className="relative overflow-hidden border-2 border-blue-500/30 hover:border-blue-500/60 transition-all hover:shadow-2xl bg-gradient-to-l from-blue-500/10 via-cyan-500/5 to-transparent">
-              <div className="absolute -top-16 -left-16 w-48 h-48 rounded-full bg-blue-500/20 blur-3xl group-hover:scale-110 transition-transform duration-500" />
-              <CardContent className="relative p-6 flex items-center justify-between gap-4">
-                <div className="flex items-center gap-4">
-                  <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-blue-500 to-cyan-600 flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform">
-                    <BarChart3 className="w-7 h-7 text-white" />
-                  </div>
-                  <div>
-                    <div className="flex items-center gap-2 mb-1">
-                      <h3 className="text-lg md:text-xl font-bold">التحليل الإحصائي الجامعي</h3>
-                      <Badge className="bg-blue-500 text-white border-0">جديد</Badge>
-                    </div>
-                    <p className="text-sm text-muted-foreground">
-                      ارفع CSV/Excel • T-Test, ANOVA, Correlation, Chi² • تفسير أكاديمي • تقرير PDF
-                    </p>
-                  </div>
-                </div>
-                <Button variant="default" size="lg" className="shrink-0 gap-2 group-hover:gap-3 transition-all hidden sm:inline-flex bg-gradient-to-r from-blue-500 to-cyan-600 hover:opacity-95">
-                  ابدأ التحليل
-                  <ArrowLeft className="w-5 h-5" />
-                </Button>
-              </CardContent>
-            </Card>
-          </Link>
-        </motion.div>
-
-        {/* المحرر الذكي CTA */}
-        <motion.div
-          initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
-          className="mb-6"
-        >
-          <Link to="/research/smart-editor" className="block group">
-            <Card className="relative overflow-hidden border-2 border-emerald-500/30 hover:border-emerald-500/60 transition-all hover:shadow-2xl bg-gradient-to-l from-emerald-500/10 via-emerald-500/5 to-transparent">
-              <div className="absolute -top-16 -left-16 w-48 h-48 rounded-full bg-emerald-500/20 blur-3xl group-hover:scale-110 transition-transform duration-500" />
-              <CardContent className="relative p-6 flex items-center justify-between gap-4">
-                <div className="flex items-center gap-4">
-                  <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-emerald-500 to-teal-600 flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform">
-                    <Wand2 className="w-7 h-7 text-white" />
-                  </div>
-                  <div>
-                    <div className="flex items-center gap-2 mb-1">
-                      <h3 className="text-lg md:text-xl font-bold">المحرر الذكي</h3>
-                      <Badge className="bg-emerald-500 text-white border-0">جديد</Badge>
-                    </div>
-                    <p className="text-sm text-muted-foreground">
-                      تصحيح، إعادة صياغة، رفع الأسلوب الأكاديمي، اختصار، وتوسيع — Standard مجاناً 3 مرات/يوم أو Pro متقدم
-                    </p>
-                  </div>
-                </div>
-                <Button variant="default" size="lg" className="shrink-0 gap-2 group-hover:gap-3 transition-all hidden sm:inline-flex bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700">
-                  ابدأ الآن
-                  <ArrowLeft className="w-5 h-5" />
-                </Button>
-              </CardContent>
-            </Card>
-          </Link>
-        </motion.div>
-
-        {/* TABS */}
+        {/* ============================== TABS ============================== */}
         <Tabs defaultValue="ai" className="w-full" dir="rtl">
-          <TabsList className="grid w-full grid-cols-2 md:grid-cols-5 h-auto p-1 bg-muted/60">
-            <TabsTrigger value="ai" className="gap-2 data-[state=active]:shadow-md">
+          <TabsList className="grid w-full grid-cols-2 md:grid-cols-4 h-auto p-1.5 bg-muted/50 rounded-2xl">
+            <TabsTrigger value="ai" className="gap-2 data-[state=active]:shadow-md rounded-xl">
               <Sparkles className="w-4 h-4" />أدوات AI
             </TabsTrigger>
-            <TabsTrigger value="mindmap" className="gap-2 data-[state=active]:shadow-md" asChild>
-              <Link to="/student/mind-map">
-                <Wand2 className="w-4 h-4" />الخريطة الذهنية
-              </Link>
+            <TabsTrigger value="tasks" className="gap-2 data-[state=active]:shadow-md rounded-xl">
+              <Target className="w-4 h-4" />مهام اليوم
             </TabsTrigger>
-            <TabsTrigger value="tasks" className="gap-2 data-[state=active]:shadow-md">
-              <Target className="w-4 h-4" />المهام اليومية
-            </TabsTrigger>
-            <TabsTrigger value="library" className="gap-2 data-[state=active]:shadow-md">
+            <TabsTrigger value="library" className="gap-2 data-[state=active]:shadow-md rounded-xl">
               <BookOpen className="w-4 h-4" />المكتبة
             </TabsTrigger>
-            <TabsTrigger value="schedule" className="gap-2 data-[state=active]:shadow-md">
+            <TabsTrigger value="schedule" className="gap-2 data-[state=active]:shadow-md rounded-xl">
               <Calendar className="w-4 h-4" />جدولي
             </TabsTrigger>
           </TabsList>
 
           {/* AI TOOLS */}
-          <TabsContent value="ai" className="space-y-4 mt-4">
-            <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}>
-              <Card className="border-border/60">
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
-                    <Sparkles className="w-5 h-5 text-primary" />
-                    أدوات الذكاء الاصطناعي
-                  </CardTitle>
-                  <CardDescription>
-                    المجاني: 3 استخدامات يومياً لكل أداة. للمشتركين: 50 يومياً + أداة التحليل.
-                  </CardDescription>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-                    {(Object.keys(TOOL_META) as ToolKey[]).map((k, i) => {
-                      const T = TOOL_META[k];
-                      const locked = T.premium && !isPremium;
-                      const active = tool === k;
-                      return (
-                        <motion.button
-                          key={k}
-                          initial={{ opacity: 0, y: 10 }}
-                          animate={{ opacity: 1, y: 0 }}
-                          transition={{ delay: i * 0.05 }}
-                          whileHover={!locked ? { scale: 1.02, y: -2 } : {}}
-                          whileTap={!locked ? { scale: 0.98 } : {}}
-                          onClick={() => !locked && setTool(k)}
-                          disabled={locked}
-                          className={`relative text-right p-4 rounded-xl border transition-all overflow-hidden ${
-                            active
-                              ? 'border-primary bg-gradient-to-bl ' + T.gradient + ' shadow-md'
-                              : 'border-border hover:border-primary/50 bg-card'
-                          } ${locked ? 'opacity-60 cursor-not-allowed' : 'cursor-pointer'}`}
-                        >
-                          {active && (
-                            <motion.div
-                              layoutId="activeTool"
-                              className="absolute inset-0 border-2 border-primary rounded-xl pointer-events-none"
-                            />
-                          )}
-                          <div className="flex items-center justify-between mb-2 relative z-10">
-                            <T.icon className={`w-5 h-5 ${active ? 'text-primary' : 'text-muted-foreground'}`} />
-                            {locked && <Lock className="w-4 h-4 text-muted-foreground" />}
-                            {T.premium && !locked && <Crown className="w-4 h-4 text-amber-500" />}
-                          </div>
-                          <p className="font-semibold mb-1 relative z-10">{T.label}</p>
-                          <p className="text-xs text-muted-foreground relative z-10">{T.desc}</p>
-                        </motion.button>
-                      );
-                    })}
-                  </div>
+          <TabsContent value="ai" className="space-y-4 mt-5">
+            <BentoCard delay={0.05} glow="primary" pattern>
+              <div className="p-6">
+                <div className="flex items-center gap-2 mb-1">
+                  <Sparkles className="w-5 h-5 text-primary" />
+                  <h3 className="text-lg font-bold">أدوات الذكاء الاصطناعي</h3>
+                </div>
+                <p className="text-sm text-muted-foreground mb-5">
+                  المجاني: 3 استخدامات يومياً لكل أداة. للمشتركين: 50 يومياً + أداة التحليل.
+                </p>
 
-                  <Textarea
-                    value={input}
-                    onChange={(e) => setInput(e.target.value)}
-                    placeholder="ألصق نصك هنا (20 حرف على الأقل)..."
-                    rows={6}
-                    dir="rtl"
-                    maxLength={8000}
-                    className="resize-y text-right"
-                  />
-                  <div className="flex flex-wrap items-center gap-2 justify-between">
-                    <p className="text-xs text-muted-foreground">{input.length} / 8000 حرف</p>
-                    <Button onClick={runAI} disabled={running || input.trim().length < 20} className="gap-2">
-                      {running ? (
-                        <><Loader2 className="w-4 h-4 animate-spin" />جارٍ التنفيذ</>
-                      ) : (
-                        <><Zap className="w-4 h-4" />تنفيذ</>
-                      )}
-                    </Button>
-                  </div>
-
-                  <AnimatePresence>
-                    {output && (
-                      <motion.div
-                        initial={{ opacity: 0, y: 10, height: 0 }}
-                        animate={{ opacity: 1, y: 0, height: 'auto' }}
-                        exit={{ opacity: 0, height: 0 }}
-                        className="p-4 bg-gradient-to-bl from-primary/5 to-secondary/5 rounded-lg border border-primary/20"
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-3 mb-4">
+                  {(Object.keys(TOOL_META) as ToolKey[]).map((k, i) => {
+                    const T = TOOL_META[k];
+                    const locked = T.premium && !isPremium;
+                    const active = tool === k;
+                    return (
+                      <motion.button
+                        key={k}
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: i * 0.05 }}
+                        whileHover={!locked ? { scale: 1.02, y: -2 } : {}}
+                        whileTap={!locked ? { scale: 0.98 } : {}}
+                        onClick={() => !locked && setTool(k)}
+                        disabled={locked}
+                        className={`relative text-right p-4 rounded-xl border transition-all overflow-hidden ${
+                          active
+                            ? 'border-primary bg-gradient-to-bl ' + T.gradient + ' shadow-md'
+                            : 'border-border hover:border-primary/50 bg-card'
+                        } ${locked ? 'opacity-60 cursor-not-allowed' : 'cursor-pointer'}`}
                       >
-                        <div className="flex items-center justify-between mb-2">
-                          <p className="text-sm font-semibold flex items-center gap-2">
-                            <Sparkles className="w-4 h-4 text-primary" />
-                            النتيجة
-                          </p>
-                          <Button size="sm" variant="ghost" onClick={copyOutput} className="gap-1.5 h-8">
-                            {copied ? <Check className="w-3.5 h-3.5 text-emerald-500" /> : <Copy className="w-3.5 h-3.5" />}
-                            {copied ? 'تم النسخ' : 'نسخ'}
-                          </Button>
+                        {active && (
+                          <motion.div
+                            layoutId="activeTool"
+                            className="absolute inset-0 border-2 border-primary rounded-xl pointer-events-none"
+                          />
+                        )}
+                        <div className="flex items-center justify-between mb-2 relative z-10">
+                          <T.icon className={`w-5 h-5 ${active ? 'text-primary' : 'text-muted-foreground'}`} />
+                          {locked && <Lock className="w-4 h-4 text-muted-foreground" />}
+                          {T.premium && !locked && <Crown className="w-4 h-4 text-warning" />}
                         </div>
-                        <p className="text-sm whitespace-pre-wrap leading-relaxed">{output}</p>
-                      </motion.div>
-                    )}
-                  </AnimatePresence>
+                        <p className="font-semibold mb-1 relative z-10">{T.label}</p>
+                        <p className="text-xs text-muted-foreground relative z-10">{T.desc}</p>
+                      </motion.button>
+                    );
+                  })}
+                </div>
 
-                  {!isPremium && (
+                <Textarea
+                  value={input}
+                  onChange={(e) => setInput(e.target.value)}
+                  placeholder="ألصق نصك هنا (20 حرف على الأقل)..."
+                  rows={6} dir="rtl" maxLength={8000}
+                  className="resize-y text-right rounded-xl"
+                />
+                <div className="flex flex-wrap items-center gap-2 justify-between mt-3">
+                  <p className="text-xs text-muted-foreground">{input.length} / 8000 حرف</p>
+                  <Button onClick={runAI} disabled={running || input.trim().length < 20} className="gap-2 rounded-xl">
+                    {running ? (<><Loader2 className="w-4 h-4 animate-spin" />جارٍ التنفيذ</>)
+                             : (<><Zap className="w-4 h-4" />تنفيذ</>)}
+                  </Button>
+                </div>
+
+                <AnimatePresence>
+                  {output && (
                     <motion.div
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      className="p-4 rounded-lg border border-amber-500/30 bg-gradient-to-l from-amber-500/10 to-orange-500/5 flex flex-wrap items-center justify-between gap-3"
+                      initial={{ opacity: 0, y: 10, height: 0 }}
+                      animate={{ opacity: 1, y: 0, height: 'auto' }}
+                      exit={{ opacity: 0, height: 0 }}
+                      className="mt-4 p-4 bg-gradient-to-bl from-primary/5 to-secondary/5 rounded-xl border border-primary/20"
                     >
-                      <div className="flex items-center gap-2">
-                        <Crown className="w-5 h-5 text-amber-500" />
-                        <p className="text-sm">فعّل العضوية لـ 50 استخدام يومياً + أداة التحليل</p>
+                      <div className="flex items-center justify-between mb-2">
+                        <p className="text-sm font-semibold flex items-center gap-2">
+                          <Sparkles className="w-4 h-4 text-primary" /> النتيجة
+                        </p>
+                        <Button size="sm" variant="ghost" onClick={copyOutput} className="gap-1.5 h-8">
+                          {copied ? <Check className="w-3.5 h-3.5 text-success" /> : <Copy className="w-3.5 h-3.5" />}
+                          {copied ? 'تم النسخ' : 'نسخ'}
+                        </Button>
                       </div>
-                      <Button asChild size="sm" className="bg-gradient-to-l from-amber-500 to-orange-600 hover:opacity-90 text-white border-0">
-                        <Link to="/membership" className="gap-1.5">
-                          ترقية <ArrowLeft className="w-3.5 h-3.5" />
-                        </Link>
-                      </Button>
+                      <p className="text-sm whitespace-pre-wrap leading-relaxed">{output}</p>
                     </motion.div>
                   )}
-                </CardContent>
-              </Card>
-            </motion.div>
+                </AnimatePresence>
+
+                {!isPremium && (
+                  <motion.div
+                    initial={{ opacity: 0 }} animate={{ opacity: 1 }}
+                    className="mt-4 p-4 rounded-xl border border-warning/30 bg-gradient-to-l from-warning/10 to-warning/5 flex flex-wrap items-center justify-between gap-3"
+                  >
+                    <div className="flex items-center gap-2">
+                      <Crown className="w-5 h-5 text-warning" />
+                      <p className="text-sm">فعّل العضوية لـ 50 استخدام يومياً + أداة التحليل</p>
+                    </div>
+                    <Button asChild size="sm" className="bg-gradient-to-l from-warning to-secondary hover:opacity-90 text-warning-foreground border-0">
+                      <Link to="/membership" className="gap-1.5">ترقية <ArrowLeft className="w-3.5 h-3.5" /></Link>
+                    </Button>
+                  </motion.div>
+                )}
+              </div>
+            </BentoCard>
           </TabsContent>
 
           {/* DAILY TASKS */}
-          <TabsContent value="tasks" className="space-y-4 mt-4">
-            <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}>
-              <Card className="border-border/60">
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
-                    <Target className="w-5 h-5 text-primary" />
-                    مهامك اليومية
-                  </CardTitle>
-                  <CardDescription>أنجز المهام واكسب نقاطاً تترجم إلى مكافآت ومستويات.</CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <div className="mb-4">
-                    <div className="flex items-center justify-between mb-2">
-                      <p className="text-xs text-muted-foreground">
-                        أنجزت {completedCount} من {tasks.length} مهام اليوم
-                      </p>
-                      <p className="text-xs font-semibold text-primary">
-                        {Math.round((completedCount / totalTasks) * 100)}%
-                      </p>
-                    </div>
-                    <Progress value={(completedCount / totalTasks) * 100} className="h-2" />
-                  </div>
+          <TabsContent value="tasks" className="space-y-4 mt-5">
+            <BentoCard delay={0.05} glow="warning">
+              <div className="p-6">
+                <div className="flex items-center gap-2 mb-1">
+                  <Target className="w-5 h-5 text-primary" />
+                  <h3 className="text-lg font-bold">مهامك اليومية</h3>
+                </div>
+                <p className="text-sm text-muted-foreground mb-4">أنجز المهام واكسب نقاطاً تترجم إلى مكافآت ومستويات.</p>
 
-                  {tasksLoading ? (
-                    <div className="space-y-2">
-                      {[1, 2, 3].map(i => <Skeleton key={i} className="h-16 w-full" />)}
-                    </div>
-                  ) : (
-                    <div className="space-y-2">
-                      {tasks.map((t, i) => (
-                        <motion.div
-                          key={t.id}
-                          initial={{ opacity: 0, x: 20 }}
-                          animate={{ opacity: 1, x: 0 }}
-                          transition={{ delay: i * 0.05 }}
-                          whileHover={{ scale: 1.005, x: -2 }}
-                          className={`p-4 rounded-lg border flex items-center justify-between gap-3 transition-colors ${
-                            t.is_completed
-                              ? 'bg-emerald-500/5 border-emerald-500/30'
-                              : 'bg-card border-border hover:border-primary/40'
-                          }`}
-                        >
-                          <div className="flex items-center gap-3 flex-1 min-w-0">
-                            {t.is_completed ? (
-                              <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }}>
-                                <CheckCircle2 className="w-5 h-5 text-emerald-500 shrink-0" />
-                              </motion.div>
-                            ) : (
-                              <Circle className="w-5 h-5 text-muted-foreground shrink-0" />
-                            )}
-                            <div className="min-w-0">
-                              <p className="font-medium truncate">{t.title_ar}</p>
-                              {t.description_ar && (
-                                <p className="text-xs text-muted-foreground truncate">{t.description_ar}</p>
-                              )}
-                            </div>
+                <div className="mb-5 p-4 rounded-xl bg-gradient-to-l from-primary/5 to-secondary/5 border border-primary/15">
+                  <div className="flex items-center justify-between mb-2">
+                    <p className="text-xs text-muted-foreground">
+                      أنجزت <span className="font-bold text-foreground">{completedCount}</span> من {tasks.length} مهام اليوم
+                    </p>
+                    <p className="text-sm font-bold text-primary">{dailyProgressPct}%</p>
+                  </div>
+                  <div className="h-2.5 rounded-full bg-muted overflow-hidden">
+                    <motion.div
+                      initial={{ width: 0 }} animate={{ width: `${dailyProgressPct}%` }}
+                      transition={{ duration: 1, ease: 'easeOut' }}
+                      className="h-full bg-gradient-to-r from-primary via-secondary to-accent rounded-full"
+                    />
+                  </div>
+                </div>
+
+                {tasksLoading ? (
+                  <div className="space-y-2">{[1, 2, 3].map(i => <Skeleton key={i} className="h-16 w-full rounded-xl" />)}</div>
+                ) : (
+                  <div className="space-y-2">
+                    {tasks.map((t, i) => (
+                      <motion.div
+                        key={t.id}
+                        initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }}
+                        transition={{ delay: i * 0.05 }} whileHover={{ scale: 1.005 }}
+                        className={`p-4 rounded-xl border flex items-center justify-between gap-3 transition-colors ${
+                          t.is_completed ? 'bg-success/5 border-success/30' : 'bg-card border-border hover:border-primary/40'
+                        }`}
+                      >
+                        <div className="flex items-center gap-3 flex-1 min-w-0">
+                          {t.is_completed ? (
+                            <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }}>
+                              <CheckCircle2 className="w-5 h-5 text-success shrink-0" />
+                            </motion.div>
+                          ) : (<Circle className="w-5 h-5 text-muted-foreground shrink-0" />)}
+                          <div className="min-w-0">
+                            <p className="font-medium truncate">{t.title_ar}</p>
+                            {t.description_ar && (<p className="text-xs text-muted-foreground truncate">{t.description_ar}</p>)}
                           </div>
-                          <div className="flex items-center gap-2 shrink-0">
-                            <Badge variant="secondary" className="font-bold">+{t.points_reward}</Badge>
-                            {!t.is_completed && (
-                              <Button size="sm" variant="outline" onClick={() => handleTaskAction(t.code, t.action_link)}>
-                                {t.code === 'daily_login' ? 'تنفيذ' : 'فتح'}
-                              </Button>
-                            )}
-                          </div>
-                        </motion.div>
-                      ))}
-                    </div>
-                  )}
-                </CardContent>
-              </Card>
-            </motion.div>
+                        </div>
+                        <div className="flex items-center gap-2 shrink-0">
+                          <Badge variant="secondary" className="font-bold">+{t.points_reward}</Badge>
+                          {!t.is_completed && (
+                            <Button size="sm" variant="outline" onClick={() => handleTaskAction(t.code, t.action_link)}>
+                              {t.code === 'daily_login' ? 'تنفيذ' : 'فتح'}
+                            </Button>
+                          )}
+                        </div>
+                      </motion.div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </BentoCard>
           </TabsContent>
 
           {/* LIBRARY */}
-          <TabsContent value="library" className="space-y-4 mt-4">
-            <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}>
-              <Card className="border-border/60">
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
-                    <BookOpen className="w-5 h-5 text-primary" />
-                    مكتبة الطالب
-                  </CardTitle>
-                  <CardDescription>موارد وقوالب أكاديمية مختارة بعناية</CardDescription>
-                </CardHeader>
-                <CardContent>
-                  {resLoading ? (
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                      {[1, 2, 3, 4].map(i => <Skeleton key={i} className="h-28 w-full" />)}
-                    </div>
-                  ) : resources.length === 0 ? (
-                    <motion.div
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      className="text-center py-12 text-muted-foreground"
-                    >
-                      <BookOpen className="w-12 h-12 mx-auto mb-3 opacity-50" />
-                      <p>لا توجد موارد منشورة بعد</p>
-                      <p className="text-xs mt-1">سيتم إضافة موارد قريباً من قبل الفريق</p>
-                    </motion.div>
-                  ) : (
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                      {resources.map((r, i) => {
-                        const locked = r.is_premium && !isPremium;
-                        return (
-                          <motion.a
-                            key={r.id}
-                            href={locked ? '/membership' : r.url}
-                            target={locked ? '_self' : '_blank'}
-                            rel="noopener noreferrer"
-                            initial={{ opacity: 0, y: 10 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ delay: i * 0.05 }}
-                            whileHover={{ y: -3 }}
-                            className="block p-4 rounded-lg border border-border bg-card hover:border-primary/50 hover:shadow-md transition-all"
-                          >
-                            <div className="flex items-start justify-between gap-2 mb-2">
-                              <div className="flex items-center gap-2">
-                                <Badge variant="outline" className="text-xs">{RESOURCE_TYPE_AR[r.resource_type] || r.resource_type}</Badge>
-                                {r.is_premium && <Crown className="w-4 h-4 text-amber-500" />}
-                              </div>
-                              {locked ? (
-                                <Lock className="w-4 h-4 text-muted-foreground" />
-                              ) : (
-                                <ExternalLink className="w-4 h-4 text-muted-foreground" />
-                              )}
+          <TabsContent value="library" className="space-y-4 mt-5">
+            <BentoCard delay={0.05} glow="accent">
+              <div className="p-6">
+                <div className="flex items-center gap-2 mb-1">
+                  <BookOpen className="w-5 h-5 text-primary" />
+                  <h3 className="text-lg font-bold">مكتبة الطالب</h3>
+                </div>
+                <p className="text-sm text-muted-foreground mb-4">موارد وقوالب أكاديمية مختارة بعناية</p>
+                {resLoading ? (
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3">{[1, 2, 3, 4].map(i => <Skeleton key={i} className="h-28 w-full rounded-xl" />)}</div>
+                ) : resources.length === 0 ? (
+                  <div className="text-center py-12 text-muted-foreground">
+                    <BookOpen className="w-12 h-12 mx-auto mb-3 opacity-50" />
+                    <p>لا توجد موارد منشورة بعد</p>
+                    <p className="text-xs mt-1">سيتم إضافة موارد قريباً من قبل الفريق</p>
+                  </div>
+                ) : (
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                    {resources.map((r, i) => {
+                      const locked = r.is_premium && !isPremium;
+                      return (
+                        <motion.a
+                          key={r.id}
+                          href={locked ? '/membership' : r.url}
+                          target={locked ? '_self' : '_blank'}
+                          rel="noopener noreferrer"
+                          initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
+                          transition={{ delay: i * 0.05 }} whileHover={{ y: -3 }}
+                          className="block p-4 rounded-xl border border-border bg-card hover:border-primary/50 hover:shadow-md transition-all"
+                        >
+                          <div className="flex items-start justify-between gap-2 mb-2">
+                            <div className="flex items-center gap-2">
+                              <Badge variant="outline" className="text-xs">{RESOURCE_TYPE_AR[r.resource_type] || r.resource_type}</Badge>
+                              {r.is_premium && <Crown className="w-4 h-4 text-warning" />}
                             </div>
-                            <p className="font-semibold mb-1">{r.title}</p>
-                            {r.description && (
-                              <p className="text-xs text-muted-foreground line-clamp-2">{r.description}</p>
-                            )}
-                          </motion.a>
-                        );
-                      })}
-                    </div>
-                  )}
-                </CardContent>
-              </Card>
-            </motion.div>
+                            {locked ? (<Lock className="w-4 h-4 text-muted-foreground" />)
+                                    : (<ExternalLink className="w-4 h-4 text-muted-foreground" />)}
+                          </div>
+                          <p className="font-semibold mb-1">{r.title}</p>
+                          {r.description && (<p className="text-xs text-muted-foreground line-clamp-2">{r.description}</p>)}
+                        </motion.a>
+                      );
+                    })}
+                  </div>
+                )}
+              </div>
+            </BentoCard>
           </TabsContent>
 
           {/* SCHEDULE */}
-          <TabsContent value="schedule" className="space-y-4 mt-4">
-            <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}>
-              <Card className="border-border/60">
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
-                    <Calendar className="w-5 h-5 text-primary" />
-                    جدولي والمواعيد النهائية
-                  </CardTitle>
-                  <CardDescription>طلباتك النشطة مرتبة حسب الموعد النهائي</CardDescription>
-                </CardHeader>
-                <CardContent>
-                  {ordersLoading ? (
-                    <div className="space-y-2">
-                      {[1, 2, 3].map(i => <Skeleton key={i} className="h-24 w-full" />)}
-                    </div>
-                  ) : upcoming.length === 0 ? (
-                    <motion.div
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      className="text-center py-10"
-                    >
-                      <Calendar className="w-12 h-12 mx-auto mb-3 text-muted-foreground/50" />
-                      <p className="text-muted-foreground mb-4">لا توجد طلبات نشطة حالياً</p>
-                      <Button asChild>
-                        <Link to="/services" className="gap-2">
-                          تصفح الخدمات <ArrowLeft className="w-4 h-4" />
-                        </Link>
-                      </Button>
-                    </motion.div>
-                  ) : (
-                    <div className="space-y-3">
-                      {upcoming.map((o, i) => {
-                        const days = daysUntil(o.deadline);
-                        const urgent = days !== null && days <= 3 && days >= 0;
-                        const overdue = days !== null && days < 0;
-                        return (
-                          <motion.div
-                            key={o.id}
-                            initial={{ opacity: 0, x: 20 }}
-                            animate={{ opacity: 1, x: 0 }}
-                            transition={{ delay: i * 0.05 }}
-                            whileHover={{ scale: 1.005 }}
+          <TabsContent value="schedule" className="space-y-4 mt-5">
+            <BentoCard delay={0.05} glow="secondary">
+              <div className="p-6">
+                <div className="flex items-center gap-2 mb-1">
+                  <Calendar className="w-5 h-5 text-primary" />
+                  <h3 className="text-lg font-bold">جدولي والمواعيد النهائية</h3>
+                </div>
+                <p className="text-sm text-muted-foreground mb-4">طلباتك النشطة مرتبة حسب الموعد النهائي</p>
+                {ordersLoading ? (
+                  <div className="space-y-2">{[1, 2, 3].map(i => <Skeleton key={i} className="h-24 w-full rounded-xl" />)}</div>
+                ) : upcoming.length === 0 ? (
+                  <div className="text-center py-10">
+                    <Calendar className="w-12 h-12 mx-auto mb-3 text-muted-foreground/50" />
+                    <p className="text-muted-foreground mb-4">لا توجد طلبات نشطة حالياً</p>
+                    <Button asChild>
+                      <Link to="/services" className="gap-2">تصفح الخدمات <ArrowLeft className="w-4 h-4" /></Link>
+                    </Button>
+                  </div>
+                ) : (
+                  <div className="space-y-3">
+                    {upcoming.map((o, i) => {
+                      const days = daysUntil(o.deadline);
+                      const urgent = days !== null && days <= 3 && days >= 0;
+                      const overdue = days !== null && days < 0;
+                      return (
+                        <motion.div
+                          key={o.id}
+                          initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }}
+                          transition={{ delay: i * 0.05 }} whileHover={{ scale: 1.005 }}
+                        >
+                          <Link
+                            to={`/orders/${o.id}`}
+                            className={`block p-4 rounded-xl border transition-all hover:shadow-md ${
+                              overdue ? 'border-destructive/40 bg-destructive/5' :
+                              urgent ? 'border-warning/40 bg-warning/5' :
+                              'border-border bg-card hover:border-primary/40'
+                            }`}
                           >
-                            <Link
-                              to={`/orders/${o.id}`}
-                              className={`block p-4 rounded-lg border transition-all hover:shadow-md ${
-                                overdue ? 'border-destructive/40 bg-destructive/5' :
-                                urgent ? 'border-amber-500/40 bg-amber-500/5' :
-                                'border-border bg-card hover:border-primary/40'
-                              }`}
-                            >
-                              <div className="flex items-start justify-between gap-3 mb-3">
-                                <div className="min-w-0 flex-1">
-                                  <div className="flex items-center gap-2 mb-1 flex-wrap">
-                                    <p className="font-semibold truncate">{o.service_name || 'طلب'}</p>
-                                    <Badge variant="outline" className="text-xs">{translateTracking(o.tracking_id)}</Badge>
-                                  </div>
-                                  <Badge variant="secondary" className="text-xs">
-                                    {STATUS_AR[o.lifecycle_status] || o.lifecycle_status}
-                                  </Badge>
+                            <div className="flex items-start justify-between gap-3 mb-3">
+                              <div className="min-w-0 flex-1">
+                                <div className="flex items-center gap-2 mb-1 flex-wrap">
+                                  <p className="font-semibold truncate">{o.service_name || 'طلب'}</p>
+                                  <Badge variant="outline" className="text-xs">{translateTracking(o.tracking_id)}</Badge>
                                 </div>
-                                {o.deadline && (
-                                  <div className={`text-left shrink-0 ${overdue ? 'text-destructive' : urgent ? 'text-amber-600' : 'text-muted-foreground'}`}>
-                                    <div className="flex items-center gap-1 text-xs justify-end">
-                                      <Clock className="w-3.5 h-3.5" />
-                                      {overdue ? `متأخر ${Math.abs(days!)}ي` :
-                                       days === 0 ? 'اليوم' :
-                                       days === 1 ? 'غداً' :
-                                       `بعد ${days} أيام`}
-                                    </div>
-                                    <p className="text-[10px] mt-0.5">{formatDate(o.deadline)}</p>
+                                <Badge variant="secondary" className="text-xs">
+                                  {STATUS_AR[o.lifecycle_status] || o.lifecycle_status}
+                                </Badge>
+                              </div>
+                              {o.deadline && (
+                                <div className={`text-left shrink-0 ${overdue ? 'text-destructive' : urgent ? 'text-warning' : 'text-muted-foreground'}`}>
+                                  <div className="flex items-center gap-1 text-xs justify-end">
+                                    <Clock className="w-3.5 h-3.5" />
+                                    {overdue ? `متأخر ${Math.abs(days!)}ي` :
+                                     days === 0 ? 'اليوم' :
+                                     days === 1 ? 'غداً' :
+                                     `بعد ${days} أيام`}
                                   </div>
-                                )}
-                              </div>
-                              <div className="space-y-1">
-                                <div className="flex items-center justify-between text-xs">
-                                  <span className="text-muted-foreground">التقدم</span>
-                                  <span className="font-semibold">{o.progress_percentage}%</span>
+                                  <p className="text-[10px] mt-0.5">{formatDate(o.deadline)}</p>
                                 </div>
-                                <Progress value={o.progress_percentage} className="h-1.5" />
+                              )}
+                            </div>
+                            <div className="space-y-1">
+                              <div className="flex items-center justify-between text-xs">
+                                <span className="text-muted-foreground">التقدم</span>
+                                <span className="font-semibold">{o.progress_percentage}%</span>
                               </div>
-                            </Link>
-                          </motion.div>
-                        );
-                      })}
-                      <Button asChild variant="outline" className="w-full mt-2">
-                        <Link to="/orders" className="gap-2">
-                          عرض كل الطلبات <ArrowLeft className="w-4 h-4" />
-                        </Link>
-                      </Button>
-                    </div>
-                  )}
-                </CardContent>
-              </Card>
-            </motion.div>
+                              <Progress value={o.progress_percentage} className="h-1.5" />
+                            </div>
+                          </Link>
+                        </motion.div>
+                      );
+                    })}
+                    <Button asChild variant="outline" className="w-full mt-2">
+                      <Link to="/orders" className="gap-2">عرض كل الطلبات <ArrowLeft className="w-4 h-4" /></Link>
+                    </Button>
+                  </div>
+                )}
+              </div>
+            </BentoCard>
           </TabsContent>
         </Tabs>
       </div>

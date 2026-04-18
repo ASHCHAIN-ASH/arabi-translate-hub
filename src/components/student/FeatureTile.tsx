@@ -66,7 +66,7 @@ export const FeatureTile: React.FC<FeatureTileProps> = ({
               transition={{ duration: 2.5, repeat: Infinity }}
               className="absolute -top-1 -end-1"
             >
-              <Sparkles className="w-3.5 h-3.5 text-amber-300" />
+              <Sparkles className="w-3.5 h-3.5 text-warning" />
             </motion.div>
           </motion.div>
           {badge && (
