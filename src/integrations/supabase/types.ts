@@ -1186,6 +1186,45 @@ export type Database = {
         }
         Relationships: []
       }
+      referral_audit_logs: {
+        Row: {
+          action_type: string
+          amount: number | null
+          created_at: string
+          id: string
+          membership_id: string | null
+          metadata: Json | null
+          reason: string | null
+          referral_id: string | null
+          referred_user_id: string | null
+          referrer_user_id: string | null
+        }
+        Insert: {
+          action_type: string
+          amount?: number | null
+          created_at?: string
+          id?: string
+          membership_id?: string | null
+          metadata?: Json | null
+          reason?: string | null
+          referral_id?: string | null
+          referred_user_id?: string | null
+          referrer_user_id?: string | null
+        }
+        Update: {
+          action_type?: string
+          amount?: number | null
+          created_at?: string
+          id?: string
+          membership_id?: string | null
+          metadata?: Json | null
+          reason?: string | null
+          referral_id?: string | null
+          referred_user_id?: string | null
+          referrer_user_id?: string | null
+        }
+        Relationships: []
+      }
       service_categories: {
         Row: {
           created_at: string
