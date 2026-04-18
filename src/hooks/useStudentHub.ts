@@ -18,13 +18,33 @@ export interface StudentResource {
   id: string;
   title: string;
   description: string | null;
+  long_description?: string | null;
   resource_type: string;
   url: string;
   category: string | null;
   cover_image_url: string | null;
   tags: string[];
   is_premium: boolean;
+  is_featured?: boolean;
   views_count: number;
+  author?: string | null;
+  duration_minutes?: number | null;
+  difficulty?: string | null;
+  category_id?: string | null;
+  subcategory_id?: string | null;
+}
+
+export interface LibraryCategory {
+  id: string;
+  parent_id: string | null;
+  slug: string;
+  name_ar: string;
+  name_en?: string | null;
+  description_ar?: string | null;
+  icon?: string | null;
+  color?: string | null;
+  sort_order: number;
+  is_active: boolean;
 }
 
 export function useDailyTasks(userId?: string) {
@@ -105,4 +125,27 @@ export function useStudentResources() {
   }, []);
 
   return { resources, loading };
+}
+
+export function useLibraryCategories() {
+  const [categories, setCategories] = useState<LibraryCategory[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    (async () => {
+      setLoading(true);
+      const { data } = await (supabase as any)
+        .from('library_categories')
+        .select('*')
+        .eq('is_active', true)
+        .order('sort_order', { ascending: true });
+      setCategories((data || []) as LibraryCategory[]);
+      setLoading(false);
+    })();
+  }, []);
+
+  const roots = categories.filter(c => !c.parent_id);
+  const childrenOf = (parentId: string) => categories.filter(c => c.parent_id === parentId);
+
+  return { categories, roots, childrenOf, loading };
 }
