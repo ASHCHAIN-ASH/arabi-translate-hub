@@ -1241,6 +1241,59 @@ export type Database = {
           },
         ]
       }
+      library_categories: {
+        Row: {
+          color: string | null
+          created_at: string
+          description_ar: string | null
+          icon: string | null
+          id: string
+          is_active: boolean
+          name_ar: string
+          name_en: string | null
+          parent_id: string | null
+          slug: string
+          sort_order: number
+          updated_at: string
+        }
+        Insert: {
+          color?: string | null
+          created_at?: string
+          description_ar?: string | null
+          icon?: string | null
+          id?: string
+          is_active?: boolean
+          name_ar: string
+          name_en?: string | null
+          parent_id?: string | null
+          slug: string
+          sort_order?: number
+          updated_at?: string
+        }
+        Update: {
+          color?: string | null
+          created_at?: string
+          description_ar?: string | null
+          icon?: string | null
+          id?: string
+          is_active?: boolean
+          name_ar?: string
+          name_en?: string | null
+          parent_id?: string | null
+          slug?: string
+          sort_order?: number
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "library_categories_parent_id_fkey"
+            columns: ["parent_id"]
+            isOneToOne: false
+            referencedRelation: "library_categories"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       member_referrals: {
         Row: {
           commission_amount: number
@@ -2580,16 +2633,23 @@ export type Database = {
       }
       student_resources: {
         Row: {
+          author: string | null
           category: string | null
+          category_id: string | null
           cover_image_url: string | null
           created_at: string
           created_by: string | null
           description: string | null
+          difficulty: string | null
+          duration_minutes: number | null
           id: string
+          is_featured: boolean | null
           is_premium: boolean
           is_published: boolean
+          long_description: string | null
           resource_type: string
           sort_order: number
+          subcategory_id: string | null
           tags: string[] | null
           title: string
           updated_at: string
@@ -2597,16 +2657,23 @@ export type Database = {
           views_count: number
         }
         Insert: {
+          author?: string | null
           category?: string | null
+          category_id?: string | null
           cover_image_url?: string | null
           created_at?: string
           created_by?: string | null
           description?: string | null
+          difficulty?: string | null
+          duration_minutes?: number | null
           id?: string
+          is_featured?: boolean | null
           is_premium?: boolean
           is_published?: boolean
+          long_description?: string | null
           resource_type: string
           sort_order?: number
+          subcategory_id?: string | null
           tags?: string[] | null
           title: string
           updated_at?: string
@@ -2614,23 +2681,45 @@ export type Database = {
           views_count?: number
         }
         Update: {
+          author?: string | null
           category?: string | null
+          category_id?: string | null
           cover_image_url?: string | null
           created_at?: string
           created_by?: string | null
           description?: string | null
+          difficulty?: string | null
+          duration_minutes?: number | null
           id?: string
+          is_featured?: boolean | null
           is_premium?: boolean
           is_published?: boolean
+          long_description?: string | null
           resource_type?: string
           sort_order?: number
+          subcategory_id?: string | null
           tags?: string[] | null
           title?: string
           updated_at?: string
           url?: string
           views_count?: number
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "student_resources_category_id_fkey"
+            columns: ["category_id"]
+            isOneToOne: false
+            referencedRelation: "library_categories"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "student_resources_subcategory_id_fkey"
+            columns: ["subcategory_id"]
+            isOneToOne: false
+            referencedRelation: "library_categories"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       student_task_completions: {
         Row: {
