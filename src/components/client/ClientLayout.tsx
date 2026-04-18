@@ -139,17 +139,17 @@ const ClientLayout: React.FC<ClientLayoutProps> = ({ children }) => {
                     transition={{ type: 'spring', stiffness: 380, damping: 30 }}
                   />
                 )}
-                <span className={`relative z-10 w-9 h-9 rounded-lg flex items-center justify-center transition-all
+                <span className={`relative z-10 w-9 h-9 rounded-lg flex items-center justify-center transition-all shrink-0
                   ${active
                     ? 'bg-white/20 text-white'
                     : `bg-gradient-to-br ${item.gradient} text-white opacity-80 group-hover:opacity-100 group-hover:scale-110`
                   }`}
                 >
-                  <item.icon className="w-4.5 h-4.5" strokeWidth={2.2} />
+                  <item.icon className="w-[18px] h-[18px]" strokeWidth={2.2} />
                 </span>
-                <span className="relative z-10 flex-1 truncate">{item.name}</span>
-                <ChevronLeft className={`relative z-10 w-4 h-4 transition-all
-                  ${active ? 'text-white opacity-100 -translate-x-0' : 'opacity-0 group-hover:opacity-60 -translate-x-1 group-hover:translate-x-0'}`}
+                <span className="relative z-10 flex-1 truncate text-right">{item.name}</span>
+                <ChevronLeft className={`relative z-10 w-4 h-4 transition-all shrink-0
+                  ${active ? 'text-white opacity-100 translate-x-0' : 'opacity-0 group-hover:opacity-60 translate-x-1 group-hover:translate-x-0'}`}
                 />
               </Link>
             </motion.div>
@@ -176,7 +176,7 @@ const ClientLayout: React.FC<ClientLayoutProps> = ({ children }) => {
       <div className="flex">
         {/* Desktop Sidebar */}
         <aside className="w-72 flex-shrink-0 hidden md:block">
-          <div className="sticky top-0 h-screen bg-card/80 backdrop-blur-xl border-l rtl:border-l-0 rtl:border-r border-border/60 shadow-sm">
+          <div className="sticky top-0 h-screen bg-card/80 backdrop-blur-xl border-s border-border/60 shadow-sm">
             <SidebarInner />
           </div>
         </aside>
@@ -210,7 +210,7 @@ const ClientLayout: React.FC<ClientLayoutProps> = ({ children }) => {
 
                 <div className="flex items-center gap-2 sm:gap-3">
                   <NotificationCenter />
-                  <div className="hidden sm:flex items-center gap-2 pl-2 border-r rtl:border-r-0 rtl:border-l border-border/60 pr-3">
+                  <div className="hidden sm:flex items-center gap-2 ps-2 pe-3 border-s border-border/60">
                     <div className="text-end">
                       <p className="text-xs font-bold leading-tight">{displayName}</p>
                       <p className="text-[10px] text-muted-foreground leading-tight">عميل</p>

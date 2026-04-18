@@ -317,7 +317,7 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
                 <Button variant="ghost" size="icon" className="relative h-9 w-9" onClick={() => setIsNotificationOpen(!isNotificationOpen)}>
                   <Bell className="w-[18px] h-[18px]" />
                   {unreadCount > 0 && (
-                    <span className="absolute -top-0.5 start-0 w-4 h-4 bg-destructive rounded-full flex items-center justify-center text-[9px] text-destructive-foreground font-bold">
+                    <span className="absolute -top-0.5 -end-0.5 min-w-4 h-4 px-1 bg-destructive rounded-full flex items-center justify-center text-[9px] text-destructive-foreground font-bold">
                       {unreadCount}
                     </span>
                   )}
@@ -331,7 +331,7 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
                         initial={{ opacity: 0, y: 8, scale: 0.96 }}
                         animate={{ opacity: 1, y: 0, scale: 1 }}
                         exit={{ opacity: 0, y: 8, scale: 0.96 }}
-                        className="absolute start-0 mt-2 w-80 bg-card border border-border/50 rounded-xl shadow-xl z-50"
+                        className="absolute end-0 mt-2 w-80 max-w-[calc(100vw-1rem)] bg-card border border-border/50 rounded-xl shadow-xl z-50"
                       >
                         <div className="p-3 border-b border-border/40">
                           <h3 className="text-sm font-bold">الإشعارات</h3>
@@ -381,7 +381,7 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
 
       <div className="flex">
         {/* Desktop Sidebar */}
-        <aside className="w-[260px] bg-card/60 backdrop-blur-sm border-border/30 border-l rtl:border-l-0 rtl:border-r min-h-[calc(100vh-56px)] hidden lg:block">
+        <aside className="w-[260px] bg-card/60 backdrop-blur-sm border-border/30 border-s min-h-[calc(100vh-56px)] hidden lg:block">
           <div className="sticky top-14 h-[calc(100vh-56px)]">
             <SidebarNav />
           </div>
