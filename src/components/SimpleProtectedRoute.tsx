@@ -5,19 +5,32 @@ import { Loader2 } from 'lucide-react';
 
 interface ProtectedRouteProps {
   children: React.ReactNode;
-  requiredRole?: string;
+  /**
+   * If provided, only users whose DB role matches will be allowed.
+   * 'admin' → only admins. 'client' → only NON-admin authenticated users.
+   * NOTE: Admins are NOT auto-allowed on client-only routes — this prevents
+   * bleed-through and mixed UI states.
+   */
+  requiredRole?: 'admin' | 'client';
+  /**
+   * Convenience flag equivalent to requiredRole="admin".
+   * Kept for backwards compatibility with existing route definitions.
+   */
   adminOnly?: boolean;
 }
 
-const SimpleProtectedRoute: React.FC<ProtectedRouteProps> = ({ 
-  children, 
+const SimpleProtectedRoute: React.FC<ProtectedRouteProps> = ({
+  children,
   requiredRole,
-  adminOnly = false
+  adminOnly = false,
 }) => {
   const { user, userRole, loading } = useAuth();
   const location = useLocation();
-  const isResolvingRole = Boolean(user && !userRole);
 
+  // While auth state is initializing OR while a logged-in user's role is being
+  // resolved from the DB, render a loader. We must NEVER render protected
+  // content with an unresolved role.
+  const isResolvingRole = Boolean(user && !userRole);
   if (loading || isResolvingRole) {
     return (
       <div className="min-h-screen flex items-center justify-center">
@@ -29,19 +42,34 @@ const SimpleProtectedRoute: React.FC<ProtectedRouteProps> = ({
     );
   }
 
+  // Not authenticated → send to the appropriate login page.
   if (!user) {
-    const isAdminRoute = location.pathname.startsWith('/adminmaster');
+    const isAdminRoute =
+      adminOnly ||
+      requiredRole === 'admin' ||
+      location.pathname.startsWith('/adminmaster');
     const loginPath = isAdminRoute ? '/adminmaster/login' : '/login';
     return <Navigate to={loginPath} state={{ from: location }} replace />;
   }
 
-  // Admin-only: non-admin gets redirected to client dashboard (not unauthorized)
-  if (adminOnly && userRole !== 'admin') {
-    return <Navigate to="/dashboard" replace />;
-  }
+  // Normalize the requirement.
+  const effectiveRequired: 'admin' | 'client' | undefined = adminOnly
+    ? 'admin'
+    : requiredRole;
 
-  if (requiredRole && userRole !== requiredRole && userRole !== 'admin') {
-    return <Navigate to="/unauthorized" replace />;
+  // SECURITY: explicit whitelist checks — no implicit "admin can access
+  // everything" bleed-through.
+  if (effectiveRequired === 'admin') {
+    // Only true admins. Anyone else (including unresolved/null) → client area.
+    if (userRole !== 'admin') {
+      return <Navigate to="/dashboard" replace />;
+    }
+  } else if (effectiveRequired === 'client') {
+    // Only non-admin authenticated users. Admins get sent to their console so
+    // they don't accidentally operate inside the client UI with elevated rights.
+    if (userRole !== 'client') {
+      return <Navigate to="/adminmaster" replace />;
+    }
   }
 
   return <>{children}</>;
