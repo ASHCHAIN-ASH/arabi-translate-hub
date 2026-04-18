@@ -61,6 +61,8 @@ import ClientInvoices from "./pages/client/Invoices";
 import ClientTickets from "./pages/client/Tickets";
 import ClientTicketDetails from "./pages/client/TicketDetails";
 import ClientWallet from "./pages/client/Wallet";
+import MembershipPage from "./pages/client/MembershipPage";
+import AdminMemberships from "./pages/admin/AdminMemberships";
 
 // Admin Pages
 import AdminDashboard from "./pages/admin/AdminDashboard";
@@ -446,6 +448,16 @@ const App = () => (
             <Route path="/adminmaster/wallets" element={
               <SimpleProtectedRoute adminOnly>
                 <AdminWallets />
+              </SimpleProtectedRoute>
+            } />
+            <Route path="/adminmaster/memberships" element={
+              <SimpleProtectedRoute adminOnly>
+                <AdminMemberships />
+              </SimpleProtectedRoute>
+            } />
+            <Route path="/membership" element={
+              <SimpleProtectedRoute>
+                <MembershipPage />
               </SimpleProtectedRoute>
             } />
             
