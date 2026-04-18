@@ -155,24 +155,24 @@ const WalletTopup: React.FC = () => {
 
         {/* Amount Section */}
         <Card>
-          <CardContent className="p-4 space-y-3">
+          <CardContent className="p-3 sm:p-4 space-y-3">
             <div>
               <Label className="text-sm font-bold">المبلغ المراد شحنه (ر.س)</Label>
               <Input type="number" min={1} value={amount || ''} onChange={(e) => setAmount(Number(e.target.value))}
-                placeholder="أدخل المبلغ" className="text-2xl font-black mt-2 h-14 text-center" />
+                placeholder="أدخل المبلغ" className="text-xl sm:text-2xl font-black mt-2 h-12 sm:h-14 text-center" />
               <div className="flex flex-wrap gap-1.5 mt-3 justify-center">
                 {QUICK_AMOUNTS.map((q) => (
                   <button key={q} type="button" onClick={() => setAmount(q)}
                     className={`px-3 py-1.5 rounded-lg text-xs font-bold border transition-all ${
-                      amount === q ? 'bg-violet-600 text-white border-violet-600 shadow-md scale-105' : 'bg-muted hover:bg-muted/80 border-border'
+                      amount === q ? 'bg-primary text-primary-foreground border-primary shadow-md scale-105' : 'bg-muted hover:bg-muted/80 border-border'
                     }`}>{q}</button>
                 ))}
               </div>
               {bonus.pct > 0 && (
                 <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }}
-                  className="mt-3 flex items-center gap-2 bg-gradient-to-l from-emerald-50 to-teal-50 border border-emerald-200 rounded-xl p-2.5">
-                  <Gift className="w-4 h-4 text-emerald-600 shrink-0" />
-                  <span className="text-xs font-bold text-emerald-800">
+                  className="mt-3 flex items-center gap-2 bg-accent/40 border rounded-xl p-2.5">
+                  <Gift className="w-4 h-4 text-primary shrink-0" />
+                  <span className="text-xs font-bold text-foreground">
                     🎁 ستحصل على {bonus.label} = +{WalletService.formatCurrency(amount * bonus.pct / 100)} مكافأة
                   </span>
                 </motion.div>
@@ -183,48 +183,50 @@ const WalletTopup: React.FC = () => {
 
         {/* Method Tabs */}
         <Tabs value={tab} onValueChange={(v) => setTab(v as any)} dir="rtl">
-          <TabsList className="grid grid-cols-2 w-full h-12 bg-muted/50">
-            <TabsTrigger value="instant" className="gap-2 data-[state=active]:bg-emerald-600 data-[state=active]:text-white font-bold">
-              <Zap className="w-4 h-4" /> دفع فوري بالبطاقة
+          <TabsList className="grid grid-cols-2 w-full h-auto p-1 bg-muted/50">
+            <TabsTrigger value="instant" className="gap-1.5 sm:gap-2 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground font-bold text-xs sm:text-sm py-2.5 px-2">
+              <Zap className="w-4 h-4 shrink-0" />
+              <span className="truncate">دفع فوري بالبطاقة</span>
             </TabsTrigger>
-            <TabsTrigger value="manual" className="gap-2 data-[state=active]:bg-violet-600 data-[state=active]:text-white font-bold">
-              <Building2 className="w-4 h-4" /> دفع يدوي
+            <TabsTrigger value="manual" className="gap-1.5 sm:gap-2 data-[state=active]:bg-secondary data-[state=active]:text-secondary-foreground font-bold text-xs sm:text-sm py-2.5 px-2">
+              <Building2 className="w-4 h-4 shrink-0" />
+              <span className="truncate">دفع يدوي</span>
             </TabsTrigger>
           </TabsList>
 
           {/* Instant Payment */}
           <TabsContent value="instant" className="mt-3">
-            <Card className="border-2 border-emerald-300 overflow-hidden">
-              <CardContent className="p-4 bg-gradient-to-br from-emerald-50 to-teal-50">
+            <Card className="overflow-hidden">
+              <CardContent className="p-3 sm:p-4 bg-accent/20">
                 <div className="flex items-center gap-3 mb-3">
-                  <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-emerald-500 to-teal-600 flex items-center justify-center shadow-lg">
-                    <Zap className="w-6 h-6 text-white" />
+                  <div className="w-11 h-11 sm:w-12 sm:h-12 rounded-xl bg-primary flex items-center justify-center shadow-md shrink-0">
+                    <Zap className="w-5 h-5 sm:w-6 sm:h-6 text-primary-foreground" />
                   </div>
-                  <div className="flex-1">
-                    <div className="text-sm font-black text-emerald-900">شحن فوري آمن</div>
-                    <div className="text-xs text-emerald-700">مدى • فيزا • ماستر • Apple Pay</div>
+                  <div className="flex-1 min-w-0">
+                    <div className="text-sm font-black text-foreground">شحن فوري آمن</div>
+                    <div className="text-[11px] sm:text-xs text-muted-foreground">مدى • فيزا • ماستر • Apple Pay</div>
                   </div>
-                  <Badge className="bg-emerald-600 text-white">فوري ⚡</Badge>
+                  <Badge className="bg-primary text-primary-foreground shrink-0 text-[10px] sm:text-xs">فوري ⚡</Badge>
                 </div>
 
-                <div className="bg-white rounded-xl p-3 mb-3 border border-emerald-200">
-                  <div className="flex items-center gap-2 text-xs text-emerald-800">
-                    <Shield className="w-4 h-4 text-emerald-600" />
-                    <span className="font-bold">معاملة مشفرة عبر بوابة Paylink المعتمدة من ساما</span>
+                <div className="bg-card rounded-xl p-3 mb-3 border">
+                  <div className="flex items-center gap-2 text-[11px] sm:text-xs text-foreground">
+                    <Shield className="w-4 h-4 text-primary shrink-0" />
+                    <span className="font-bold">معاملة مشفّرة عبر بوابة دفع آمنة معتمدة من ساما</span>
                   </div>
                 </div>
 
                 <Button onClick={payInstant} disabled={!amount || amount <= 0 || submitting}
-                  className="w-full h-14 bg-gradient-to-l from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white font-black text-base gap-2 shadow-lg">
+                  className="w-full h-12 sm:h-14 font-black text-sm sm:text-base gap-2 shadow-md">
                   {submitting ? 'جارٍ التحويل...' : (
                     <>
-                      <CreditCard className="w-5 h-5" />
-                      ادفع الآن {amount > 0 ? `(${WalletService.formatCurrency(amount)})` : ''}
-                      <ArrowRight className="w-4 h-4 mr-1" />
+                      <CreditCard className="w-5 h-5 shrink-0" />
+                      <span className="truncate">ادفع الآن {amount > 0 ? `(${WalletService.formatCurrency(amount)})` : ''}</span>
+                      <ArrowRight className="w-4 h-4 mr-1 shrink-0" />
                     </>
                   )}
                 </Button>
-                <p className="text-[11px] text-emerald-700/80 mt-2 text-center">
+                <p className="text-[10px] sm:text-[11px] text-muted-foreground mt-2 text-center">
                   يضاف الرصيد لمحفظتك خلال ثوانٍ بعد إتمام الدفع
                 </p>
               </CardContent>
@@ -234,14 +236,14 @@ const WalletTopup: React.FC = () => {
           {/* Manual Payment */}
           <TabsContent value="manual" className="mt-3 space-y-3">
             <Card>
-              <CardContent className="p-4 space-y-3">
+              <CardContent className="p-3 sm:p-4 space-y-3">
                 <div>
                   <Label className="text-sm font-bold mb-2 block">اختر طريقة الدفع</Label>
                   <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
                     {PAYMENT_METHODS.map((m) => (
                       <button key={m.value} type="button" onClick={() => setMethod(m.value)}
                         className={`flex flex-col items-center gap-1 px-2 py-3 rounded-xl text-xs font-bold border-2 transition-all ${
-                          method === m.value ? 'bg-violet-50 border-violet-500 text-violet-700 shadow-md' : 'bg-muted/30 border-border hover:bg-muted'
+                          method === m.value ? 'bg-primary/10 border-primary text-primary shadow-md' : 'bg-muted/30 border-border hover:bg-muted'
                         }`}>
                         <span className="text-2xl">{m.icon}</span>{m.label}
                       </button>
@@ -252,53 +254,53 @@ const WalletTopup: React.FC = () => {
             </Card>
 
             {method === 'bank_transfer' && (
-              <Card className="border-2 border-violet-200 overflow-hidden">
-                <div className="bg-gradient-to-l from-violet-700 to-fuchsia-700 px-4 py-3 flex items-center gap-2 text-white">
-                  <div className="w-9 h-9 rounded-lg bg-white/20 backdrop-blur flex items-center justify-center">
+              <Card className="overflow-hidden">
+                <div className="bg-primary px-3 sm:px-4 py-3 flex items-center gap-2 text-primary-foreground">
+                  <div className="w-9 h-9 rounded-lg bg-primary-foreground/20 backdrop-blur flex items-center justify-center shrink-0">
                     <Building2 className="w-5 h-5" />
                   </div>
-                  <div className="flex-1">
+                  <div className="flex-1 min-w-0">
                     <div className="text-[10px] opacity-90">حوّل للحساب البنكي التالي</div>
-                    <div className="text-sm font-black">{BANK_INFO.bank}</div>
+                    <div className="text-xs sm:text-sm font-black truncate">{BANK_INFO.bank}</div>
                   </div>
-                  <Badge className="bg-white/20 backdrop-blur border-white/30 text-white">معتمد ✓</Badge>
+                  <Badge className="bg-primary-foreground/20 backdrop-blur border-primary-foreground/30 text-primary-foreground shrink-0 text-[10px]">معتمد ✓</Badge>
                 </div>
 
-                <CardContent className="p-3 space-y-2.5 bg-gradient-to-br from-violet-50/50 to-fuchsia-50/50">
-                  <div className="rounded-xl bg-white border border-violet-200 p-3">
-                    <div className="flex items-center justify-between mb-1">
-                      <span className="text-[11px] font-bold text-violet-700 uppercase tracking-wider">رقم الآيبان (IBAN)</span>
+                <CardContent className="p-3 space-y-2.5 bg-accent/20">
+                  <div className="rounded-xl bg-card border p-3">
+                    <div className="flex items-center justify-between mb-1 gap-2">
+                      <span className="text-[10px] sm:text-[11px] font-bold text-primary uppercase tracking-wider">رقم الآيبان (IBAN)</span>
                       <button onClick={() => copy(BANK_INFO.iban, 'iban')}
-                        className="flex items-center gap-1 text-[11px] font-bold text-violet-700 hover:bg-violet-100 px-2 py-1 rounded-md transition">
+                        className="flex items-center gap-1 text-[10px] sm:text-[11px] font-bold text-primary hover:bg-primary/10 px-2 py-1 rounded-md transition shrink-0">
                         {copied === 'iban' ? <><Check className="w-3 h-3" /> تم النسخ</> : <><Copy className="w-3 h-3" /> نسخ</>}
                       </button>
                     </div>
-                    <div className="font-mono text-base font-black tracking-wider text-foreground select-all">
+                    <div className="font-mono text-sm sm:text-base font-black tracking-wider text-foreground select-all break-all">
                       {BANK_INFO.ibanFormatted}
                     </div>
                   </div>
 
-                  <div className="rounded-xl bg-white border border-violet-200 p-3">
-                    <div className="flex items-center justify-between">
+                  <div className="rounded-xl bg-card border p-3">
+                    <div className="flex items-center justify-between gap-2">
                       <div className="min-w-0">
-                        <div className="text-[11px] font-bold text-violet-700 uppercase tracking-wider mb-0.5">اسم المستفيد</div>
-                        <div className="text-sm font-bold text-foreground truncate">{BANK_INFO.beneficiary}</div>
+                        <div className="text-[10px] sm:text-[11px] font-bold text-primary uppercase tracking-wider mb-0.5">اسم المستفيد</div>
+                        <div className="text-xs sm:text-sm font-bold text-foreground truncate">{BANK_INFO.beneficiary}</div>
                       </div>
                       <button onClick={() => copy(BANK_INFO.beneficiary, 'ben')}
-                        className="shrink-0 text-violet-600 hover:bg-violet-100 p-2 rounded-md transition">
+                        className="shrink-0 text-primary hover:bg-primary/10 p-2 rounded-md transition">
                         {copied === 'ben' ? <Check className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
                       </button>
                     </div>
                   </div>
 
                   <div>
-                    <Label className="text-[11px] font-bold text-violet-700 uppercase tracking-wider flex items-center gap-1 mb-1">
-                      <FileImage className="w-3 h-3" /> إيصال التحويل <span className="text-rose-600">*</span>
+                    <Label className="text-[10px] sm:text-[11px] font-bold text-primary uppercase tracking-wider flex items-center gap-1 mb-1">
+                      <FileImage className="w-3 h-3" /> إيصال التحويل <span className="text-destructive">*</span>
                     </Label>
                     {!receiptFile ? (
-                      <label className="cursor-pointer flex items-center justify-center gap-2 border-2 border-dashed border-violet-300 rounded-xl p-4 hover:bg-violet-50 transition bg-white">
-                        <Upload className="w-4 h-4 text-violet-600" />
-                        <span className="text-xs font-bold text-violet-700">ارفع صورة الإيصال (jpg / png / pdf)</span>
+                      <label className="cursor-pointer flex items-center justify-center gap-2 border-2 border-dashed border-primary/40 rounded-xl p-3 sm:p-4 hover:bg-primary/5 transition bg-card text-center">
+                        <Upload className="w-4 h-4 text-primary shrink-0" />
+                        <span className="text-[11px] sm:text-xs font-bold text-primary">ارفع صورة الإيصال (jpg / png / pdf)</span>
                         <input type="file" accept="image/*,application/pdf" hidden
                           onChange={(e) => {
                             const f = e.target.files?.[0];
@@ -308,15 +310,15 @@ const WalletTopup: React.FC = () => {
                           }} />
                       </label>
                     ) : (
-                      <div className="flex items-center gap-2 bg-emerald-50 border border-emerald-200 rounded-xl p-2.5">
-                        <div className="w-10 h-10 rounded-lg bg-emerald-100 flex items-center justify-center">
-                          <FileImage className="w-5 h-5 text-emerald-600" />
+                      <div className="flex items-center gap-2 bg-accent/40 border rounded-xl p-2.5">
+                        <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
+                          <FileImage className="w-5 h-5 text-primary" />
                         </div>
                         <div className="flex-1 min-w-0">
                           <div className="text-xs font-bold truncate">{receiptFile.name}</div>
                           <div className="text-[10px] text-muted-foreground">{(receiptFile.size / 1024).toFixed(0)} KB</div>
                         </div>
-                        <button onClick={() => setReceiptFile(null)} className="text-rose-600 hover:bg-rose-100 p-1.5 rounded">
+                        <button onClick={() => setReceiptFile(null)} className="text-destructive hover:bg-destructive/10 p-1.5 rounded shrink-0">
                           <X className="w-4 h-4" />
                         </button>
                       </div>
@@ -327,7 +329,7 @@ const WalletTopup: React.FC = () => {
             )}
 
             <Card>
-              <CardContent className="p-4 space-y-3">
+              <CardContent className="p-3 sm:p-4 space-y-3">
                 <div>
                   <Label className="text-xs font-bold">رقم الحوالة / المرجع (اختياري)</Label>
                   <Input value={reference} onChange={(e) => setReference(e.target.value)} placeholder="رقم العملية" className="mt-1.5" />
@@ -337,15 +339,14 @@ const WalletTopup: React.FC = () => {
                   <Textarea value={notes} onChange={(e) => setNotes(e.target.value)} rows={2} className="mt-1.5" />
                 </div>
 
-                <div className="flex items-center gap-2 text-xs text-muted-foreground bg-muted/40 rounded-lg p-2.5">
-                  <Shield className="w-4 h-4 text-emerald-600 shrink-0" />
-                  معاملاتك آمنة ومشفّرة • سيتم مراجعة الطلب خلال 24 ساعة
+                <div className="flex items-center gap-2 text-[11px] sm:text-xs text-muted-foreground bg-muted/40 rounded-lg p-2.5">
+                  <Shield className="w-4 h-4 text-primary shrink-0" />
+                  <span>معاملاتك آمنة ومشفّرة • سيتم مراجعة الطلب خلال 24 ساعة</span>
                 </div>
 
-                <div className="flex gap-2 pt-1">
+                <div className="flex flex-col-reverse sm:flex-row gap-2 pt-1">
                   <Button variant="outline" onClick={() => navigate('/wallet')} className="flex-1">إلغاء</Button>
-                  <Button onClick={submitManual} disabled={submitting}
-                    className="flex-1 bg-gradient-to-l from-violet-600 to-fuchsia-600 hover:from-violet-700 hover:to-fuchsia-700 font-bold gap-2">
+                  <Button onClick={submitManual} disabled={submitting} className="flex-1 font-bold gap-2">
                     {submitting ? 'جارٍ الإرسال...' : <><Zap className="w-4 h-4" /> إرسال الطلب</>}
                   </Button>
                 </div>
