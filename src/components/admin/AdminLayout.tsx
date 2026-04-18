@@ -72,6 +72,7 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
         { name: 'الفواتير', href: '/adminmaster/invoices', icon: Receipt, badge: counts.invoices > 0 ? counts.invoices.toString() : null },
         { name: 'المدفوعات', href: '/adminmaster/transactions', icon: CreditCard },
         { name: 'المحافظ الرقمية', href: '/adminmaster/wallets', icon: Wallet },
+        { name: 'العضويات', href: '/adminmaster/memberships', icon: Star },
       ]
     },
     {
