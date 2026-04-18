@@ -776,6 +776,188 @@ export type Database = {
           },
         ]
       }
+      group_order_audit: {
+        Row: {
+          action_type: string
+          actor_id: string | null
+          created_at: string
+          description: string | null
+          group_order_id: string
+          id: string
+          metadata: Json
+        }
+        Insert: {
+          action_type: string
+          actor_id?: string | null
+          created_at?: string
+          description?: string | null
+          group_order_id: string
+          id?: string
+          metadata?: Json
+        }
+        Update: {
+          action_type?: string
+          actor_id?: string | null
+          created_at?: string
+          description?: string | null
+          group_order_id?: string
+          id?: string
+          metadata?: Json
+        }
+        Relationships: [
+          {
+            foreignKeyName: "group_order_audit_group_order_id_fkey"
+            columns: ["group_order_id"]
+            isOneToOne: false
+            referencedRelation: "group_orders"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      group_order_members: {
+        Row: {
+          amount_due: number
+          amount_paid: number
+          group_order_id: string
+          id: string
+          is_creator: boolean
+          joined_at: string
+          paid_at: string | null
+          paid_via: string | null
+          payment_intent_id: string | null
+          refunded_at: string | null
+          status: Database["public"]["Enums"]["group_member_status"]
+          user_id: string
+          wallet_transaction_id: string | null
+        }
+        Insert: {
+          amount_due: number
+          amount_paid?: number
+          group_order_id: string
+          id?: string
+          is_creator?: boolean
+          joined_at?: string
+          paid_at?: string | null
+          paid_via?: string | null
+          payment_intent_id?: string | null
+          refunded_at?: string | null
+          status?: Database["public"]["Enums"]["group_member_status"]
+          user_id: string
+          wallet_transaction_id?: string | null
+        }
+        Update: {
+          amount_due?: number
+          amount_paid?: number
+          group_order_id?: string
+          id?: string
+          is_creator?: boolean
+          joined_at?: string
+          paid_at?: string | null
+          paid_via?: string | null
+          payment_intent_id?: string | null
+          refunded_at?: string | null
+          status?: Database["public"]["Enums"]["group_member_status"]
+          user_id?: string
+          wallet_transaction_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "group_order_members_group_order_id_fkey"
+            columns: ["group_order_id"]
+            isOneToOne: false
+            referencedRelation: "group_orders"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "group_order_members_payment_intent_id_fkey"
+            columns: ["payment_intent_id"]
+            isOneToOne: false
+            referencedRelation: "payment_intents"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      group_orders: {
+        Row: {
+          cancelled_at: string | null
+          created_at: string
+          creator_id: string
+          currency: string
+          deadline: string | null
+          description: string | null
+          id: string
+          invite_code: string
+          max_members: number
+          metadata: Json
+          min_members: number
+          seat_price: number
+          service_id: string
+          service_name: string | null
+          service_order_id: string | null
+          started_at: string | null
+          status: Database["public"]["Enums"]["group_order_status"]
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          cancelled_at?: string | null
+          created_at?: string
+          creator_id: string
+          currency?: string
+          deadline?: string | null
+          description?: string | null
+          id?: string
+          invite_code: string
+          max_members: number
+          metadata?: Json
+          min_members?: number
+          seat_price: number
+          service_id: string
+          service_name?: string | null
+          service_order_id?: string | null
+          started_at?: string | null
+          status?: Database["public"]["Enums"]["group_order_status"]
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          cancelled_at?: string | null
+          created_at?: string
+          creator_id?: string
+          currency?: string
+          deadline?: string | null
+          description?: string | null
+          id?: string
+          invite_code?: string
+          max_members?: number
+          metadata?: Json
+          min_members?: number
+          seat_price?: number
+          service_id?: string
+          service_name?: string | null
+          service_order_id?: string | null
+          started_at?: string | null
+          status?: Database["public"]["Enums"]["group_order_status"]
+          title?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "group_orders_service_id_fkey"
+            columns: ["service_id"]
+            isOneToOne: false
+            referencedRelation: "services"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "group_orders_service_order_id_fkey"
+            columns: ["service_order_id"]
+            isOneToOne: false
+            referencedRelation: "service_orders"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       invoice_items: {
         Row: {
           created_at: string
@@ -1997,8 +2179,12 @@ export type Database = {
           category_id: string | null
           created_at: string
           description: string | null
+          group_max_members: number
+          group_min_members: number
+          group_seat_price: number | null
           id: string
           is_active: boolean | null
+          is_group_eligible: boolean
           name: string
           name_ar: string | null
           price: number | null
@@ -2009,8 +2195,12 @@ export type Database = {
           category_id?: string | null
           created_at?: string
           description?: string | null
+          group_max_members?: number
+          group_min_members?: number
+          group_seat_price?: number | null
           id?: string
           is_active?: boolean | null
+          is_group_eligible?: boolean
           name: string
           name_ar?: string | null
           price?: number | null
@@ -2021,8 +2211,12 @@ export type Database = {
           category_id?: string | null
           created_at?: string
           description?: string | null
+          group_max_members?: number
+          group_min_members?: number
+          group_seat_price?: number | null
           id?: string
           is_active?: boolean | null
+          is_group_eligible?: boolean
           name?: string
           name_ar?: string | null
           price?: number | null
@@ -2700,8 +2894,22 @@ export type Database = {
         }
         Returns: string
       }
+      cancel_group_order: {
+        Args: { _group_order_id: string; _reason?: string }
+        Returns: Json
+      }
       client_confirm_delivery: { Args: { _order_id: string }; Returns: Json }
       compute_level_for_points: { Args: { _points: number }; Returns: string }
+      create_group_order: {
+        Args: {
+          _deadline?: string
+          _description: string
+          _max_members: number
+          _service_id: string
+          _title: string
+        }
+        Returns: string
+      }
       delete_email: {
         Args: { message_id: number; queue_name: string }
         Returns: boolean
@@ -2711,6 +2919,7 @@ export type Database = {
         Returns: number
       }
       generate_customer_code: { Args: never; Returns: string }
+      generate_group_invite_code: { Args: never; Returns: string }
       generate_internal_order_number: { Args: never; Returns: string }
       generate_referral_code: { Args: never; Returns: string }
       get_active_membership: {
@@ -2756,6 +2965,7 @@ export type Database = {
         }
         Returns: undefined
       }
+      join_group_order: { Args: { _invite_code: string }; Returns: string }
       lifecycle_progress: {
         Args: { _status: Database["public"]["Enums"]["order_lifecycle_status"] }
         Returns: number
@@ -2768,6 +2978,10 @@ export type Database = {
           source_queue: string
         }
         Returns: number
+      }
+      pay_group_seat_with_wallet: {
+        Args: { _group_order_id: string }
+        Returns: Json
       }
       read_email_batch: {
         Args: { batch_size: number; queue_name: string; vt: number }
@@ -2818,6 +3032,15 @@ export type Database = {
     }
     Enums: {
       app_role: "admin" | "moderator" | "user"
+      group_member_status: "joined" | "paid" | "refunded" | "left"
+      group_order_status:
+        | "open"
+        | "partially_paid"
+        | "full"
+        | "in_progress"
+        | "completed"
+        | "cancelled"
+        | "expired"
       order_lifecycle_status:
         | "received"
         | "under_review"
@@ -2959,6 +3182,16 @@ export const Constants = {
   public: {
     Enums: {
       app_role: ["admin", "moderator", "user"],
+      group_member_status: ["joined", "paid", "refunded", "left"],
+      group_order_status: [
+        "open",
+        "partially_paid",
+        "full",
+        "in_progress",
+        "completed",
+        "cancelled",
+        "expired",
+      ],
       order_lifecycle_status: [
         "received",
         "under_review",
