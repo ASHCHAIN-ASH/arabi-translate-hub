@@ -87,6 +87,7 @@ import AdminChat from "./pages/admin/AdminChat";
 import AddUser from "./pages/admin/AddUser";
 import AdminWorkingHours from "./pages/admin/AdminWorkingHours";
 import AdminWallets from "./pages/admin/AdminWallets";
+import AdminPayments from "./pages/admin/AdminPayments";
 import ContractsSystem from "./pages/admin/ContractsSystem";
 import AdminContractDetails from "./pages/admin/AdminContractDetails";
 import ContractsAnalytics from "./pages/admin/ContractsAnalytics";
@@ -451,6 +452,11 @@ const App = () => (
             <Route path="/adminmaster/wallets" element={
               <SimpleProtectedRoute adminOnly>
                 <AdminWallets />
+              </SimpleProtectedRoute>
+            } />
+            <Route path="/adminmaster/payments" element={
+              <SimpleProtectedRoute adminOnly>
+                <AdminPayments />
               </SimpleProtectedRoute>
             } />
             <Route path="/adminmaster/memberships" element={
