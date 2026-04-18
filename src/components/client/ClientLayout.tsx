@@ -79,14 +79,11 @@ const ClientLayout: React.FC<ClientLayoutProps> = ({ children }) => {
         <div className="absolute -top-10 -right-10 w-40 h-40 bg-white/10 rounded-full blur-3xl" />
         <div className="absolute -bottom-10 -left-10 w-32 h-32 bg-white/10 rounded-full blur-3xl" />
         <div className="relative flex items-center gap-3 text-white">
-          <motion.div
-            initial={{ rotate: -10, scale: 0.9 }}
-            animate={{ rotate: 0, scale: 1 }}
-            transition={{ type: 'spring', stiffness: 200 }}
+          <div
             className="w-11 h-11 bg-white/20 backdrop-blur-md rounded-xl flex items-center justify-center shadow-lg ring-1 ring-white/30"
           >
             <GraduationCap className="w-6 h-6" />
-          </motion.div>
+          </div>
           <div>
             <h2 className="text-base font-black tracking-tight">ماستر إيدو باث</h2>
             <p className="text-xs text-white/80">لوحة العميل</p>
@@ -96,10 +93,7 @@ const ClientLayout: React.FC<ClientLayoutProps> = ({ children }) => {
 
       {/* User chip */}
       <div className="p-4">
-        <motion.div
-          initial={{ opacity: 0, y: 8 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.4 }}
+        <div
           className="flex items-center gap-3 p-3 rounded-2xl bg-gradient-to-br from-muted/60 to-muted/20 border border-border/50"
         >
           <div className="relative">
@@ -112,51 +106,43 @@ const ClientLayout: React.FC<ClientLayoutProps> = ({ children }) => {
             <p className="text-sm font-bold truncate">{displayName}</p>
             <p className="text-[11px] text-muted-foreground">عميل مميز ✨</p>
           </div>
-        </motion.div>
+        </div>
       </div>
 
       {/* Nav */}
       <nav className="flex-1 overflow-y-auto px-3 pb-4 space-y-1.5">
         <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground px-3 mb-2">القائمة الرئيسية</p>
-        {navItems.map((item, idx) => {
+        {navItems.map((item) => {
           const active = isActiveItem(item.href);
           return (
-            <motion.div
+            <Link
               key={item.href}
-              initial={{ opacity: 0, x: 12 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.25, delay: idx * 0.04 }}
+              to={item.href}
+              onClick={onItemClick}
+              className={`group relative flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-semibold overflow-hidden transition-colors duration-200
+                ${active
+                  ? 'text-white shadow-lg'
+                  : 'text-foreground/80 hover:text-foreground hover:bg-muted/60'
+                }`}
             >
-              <Link
-                to={item.href}
-                onClick={onItemClick}
-                className={`group relative flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-semibold overflow-hidden transition-all duration-300
-                  ${active
-                    ? 'text-white shadow-lg'
-                    : 'text-foreground/80 hover:text-foreground hover:bg-muted/60'
-                  }`}
-              >
-                {active && (
-                  <motion.span
-                    layoutId="active-nav-bg"
-                    className={`absolute inset-0 bg-gradient-to-r ${item.gradient}`}
-                    transition={{ type: 'spring', stiffness: 380, damping: 30 }}
-                  />
-                )}
-                <span className={`relative z-10 w-9 h-9 rounded-lg flex items-center justify-center transition-all shrink-0
-                  ${active
-                    ? 'bg-white/20 text-white'
-                    : `bg-gradient-to-br ${item.gradient} text-white opacity-80 group-hover:opacity-100 group-hover:scale-110`
-                  }`}
-                >
-                  <item.icon className="w-[18px] h-[18px]" strokeWidth={2.2} />
-                </span>
-                <span className="relative z-10 flex-1 truncate text-right">{item.name}</span>
-                <ChevronLeft className={`relative z-10 w-4 h-4 transition-all shrink-0
-                  ${active ? 'text-white opacity-100 translate-x-0' : 'opacity-0 group-hover:opacity-60 translate-x-1 group-hover:translate-x-0'}`}
+              {active && (
+                <span
+                  className={`absolute inset-0 bg-gradient-to-r ${item.gradient}`}
                 />
-              </Link>
-            </motion.div>
+              )}
+              <span className={`relative z-10 w-9 h-9 rounded-lg flex items-center justify-center transition-all shrink-0
+                ${active
+                  ? 'bg-white/20 text-white'
+                  : `bg-gradient-to-br ${item.gradient} text-white opacity-80 group-hover:opacity-100 group-hover:scale-110`
+                }`}
+              >
+                <item.icon className="w-[18px] h-[18px]" strokeWidth={2.2} />
+              </span>
+              <span className="relative z-10 flex-1 truncate text-right">{item.name}</span>
+              <ChevronLeft className={`relative z-10 w-4 h-4 transition-all shrink-0
+                ${active ? 'text-white opacity-100 translate-x-0' : 'opacity-0 group-hover:opacity-60 translate-x-1 group-hover:translate-x-0'}`}
+              />
+            </Link>
           );
         })}
       </nav>
@@ -230,18 +216,9 @@ const ClientLayout: React.FC<ClientLayoutProps> = ({ children }) => {
 
           {/* Main Content */}
           <main className="flex-1 overflow-auto">
-            <AnimatePresence mode="wait">
-              <motion.div
-                key={location.pathname}
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -8 }}
-                transition={{ duration: 0.3 }}
-                className="w-full h-full"
-              >
-                {children}
-              </motion.div>
-            </AnimatePresence>
+            <div className="w-full h-full">
+              {children}
+            </div>
           </main>
         </div>
       </div>
