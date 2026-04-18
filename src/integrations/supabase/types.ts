@@ -14,6 +14,48 @@ export type Database = {
   }
   public: {
     Tables: {
+      academic_cvs: {
+        Row: {
+          created_at: string
+          data: Json
+          exports_count: number
+          id: string
+          language: string
+          last_exported_at: string | null
+          status: string
+          template_key: string
+          title: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          data?: Json
+          exports_count?: number
+          id?: string
+          language?: string
+          last_exported_at?: string | null
+          status?: string
+          template_key?: string
+          title?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          data?: Json
+          exports_count?: number
+          id?: string
+          language?: string
+          last_exported_at?: string | null
+          status?: string
+          template_key?: string
+          title?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       audit_logs: {
         Row: {
           action: string
@@ -3476,6 +3518,7 @@ export type Database = {
         Args: { _group_order_id: string }
         Returns: Json
       }
+      purchase_cv_export: { Args: { _cv_id: string }; Returns: Json }
       read_email_batch: {
         Args: { batch_size: number; queue_name: string; vt: number }
         Returns: {
