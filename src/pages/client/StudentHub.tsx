@@ -158,7 +158,7 @@ const StudentHub: React.FC = () => {
                 <span className="text-sm text-muted-foreground">قسم الطالب</span>
                 {isPremium && (
                   <Badge className="bg-gradient-to-l from-amber-500 to-orange-600 text-white border-0">
-                    <Crown className="w-3 h-3 ml-1" /> Premium
+                    <Crown className="w-3 h-3 ml-1" /> بريميوم
                   </Badge>
                 )}
               </div>
