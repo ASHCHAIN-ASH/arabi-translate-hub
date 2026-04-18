@@ -89,6 +89,7 @@ import AddUser from "./pages/admin/AddUser";
 import AdminWorkingHours from "./pages/admin/AdminWorkingHours";
 import AdminWallets from "./pages/admin/AdminWallets";
 import AdminPayments from "./pages/admin/AdminPayments";
+import AdminGamification from "./pages/admin/AdminGamification";
 import ContractsSystem from "./pages/admin/ContractsSystem";
 import AdminContractDetails from "./pages/admin/AdminContractDetails";
 import ContractsAnalytics from "./pages/admin/ContractsAnalytics";
