@@ -18,6 +18,7 @@ import {
   Sparkles,
   ChevronLeft,
   Crown,
+  Trophy,
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import ChatFloatingButton from '@/components/chat/ChatFloatingButton';
@@ -42,6 +43,7 @@ const navItems: NavItem[] = [
   { name: 'عقودي', href: '/client/contracts', icon: ScrollText, description: 'عقود الخدمة', gradient: 'from-amber-500 to-orange-600' },
   { name: 'محفظتي', href: '/wallet', icon: Wallet, description: 'الرصيد والحركات', gradient: 'from-violet-500 to-purple-600' },
   { name: 'عضويتي', href: '/membership', icon: Crown, description: 'باقات ماستر', gradient: 'from-yellow-500 to-amber-600' },
+  { name: 'مكافآتي', href: '/rewards', icon: Trophy, description: 'النقاط والمستويات', gradient: 'from-amber-500 to-orange-600' },
   { name: 'المدفوعات', href: '/billing/payments', icon: CreditCard, description: 'سجل المدفوعات', gradient: 'from-rose-500 to-pink-600' },
   { name: 'الدعم الفني', href: '/support/tickets', icon: HelpCircle, description: 'تذاكر الدعم', gradient: 'from-sky-500 to-blue-600' },
 ];
