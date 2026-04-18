@@ -257,7 +257,7 @@ const StudentHub: React.FC = () => {
                     أدوات الذكاء الاصطناعي
                   </CardTitle>
                   <CardDescription>
-                    المجاني: 3 استخدامات يومياً لكل أداة. Premium: 50 يومياً + أداة التحليل.
+                    المجاني: 3 استخدامات يومياً لكل أداة. للمشتركين: 50 يومياً + أداة التحليل.
                   </CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-4">
