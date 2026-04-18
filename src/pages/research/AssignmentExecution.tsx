@@ -11,6 +11,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
+import { AcademicAssistanceDisclaimer } from '@/components/AcademicAssistanceDisclaimer';
 
 export default function AssignmentExecution() {
   const navigate = useNavigate();
@@ -36,8 +37,8 @@ export default function AssignmentExecution() {
       const { error } = await supabase.functions.invoke('send-student-service-order', {
         body: {
           ...formData,
-          serviceTitle: 'تنفيذ التكاليف والأسايمنت',
-          serviceType: 'assignment-execution'
+          serviceTitle: 'المساعدة الأكاديمية في إعداد التكاليف',
+          serviceType: 'assignment-assistance'
         }
       });
 
@@ -116,7 +117,7 @@ export default function AssignmentExecution() {
               transition={{ delay: 0.2, duration: 0.6 }}
               className="text-5xl md:text-6xl font-bold mb-6 bg-gradient-to-r from-purple-600 via-pink-600 to-purple-600 bg-clip-text text-transparent"
             >
-              تنفيذ التكاليف والأسايمنت
+              المساعدة الأكاديمية في إعداد التكاليف
             </motion.h1>
             
             <motion.p 
@@ -125,7 +126,7 @@ export default function AssignmentExecution() {
               transition={{ delay: 0.4, duration: 0.6 }}
               className="text-xl md:text-2xl text-muted-foreground leading-relaxed max-w-3xl mx-auto"
             >
-              إنجاز احترافي للواجبات والتقارير الجامعية بجودة عالية ووفق المعايير الأكاديمية
+              دعم وإرشاد أكاديمي احترافي لإعداد الواجبات والتقارير الجامعية بجودة عالية ووفق المعايير الأكاديمية
             </motion.p>
 
             <motion.div
@@ -135,7 +136,7 @@ export default function AssignmentExecution() {
               className="mt-8 flex flex-wrap items-center justify-center gap-6"
             >
               {[
-                { icon: Zap, text: 'إنجاز سريع' },
+                { icon: Zap, text: 'استجابة سريعة' },
                 { icon: Star, text: 'جودة مميزة' },
                 { icon: Shield, text: 'سرية تامة' }
               ].map((item, index) => (
@@ -152,6 +153,16 @@ export default function AssignmentExecution() {
                 </motion.div>
               ))}
             </motion.div>
+          </motion.div>
+
+          {/* Legal Disclaimer */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 1, duration: 0.5 }}
+            className="max-w-3xl mx-auto mt-10"
+          >
+            <AcademicAssistanceDisclaimer />
           </motion.div>
         </div>
       </section>
@@ -171,16 +182,16 @@ export default function AssignmentExecution() {
               viewport={{ once: true }}
               className="text-center mb-16"
             >
-              <h2 className="text-4xl md:text-5xl font-bold mb-4">مميزات خدمة تنفيذ التكاليف</h2>
-              <p className="text-xl text-muted-foreground">نساعدك في إنجاز واجباتك الجامعية بكفاءة واحترافية</p>
+              <h2 className="text-4xl md:text-5xl font-bold mb-4">مميزات خدمة المساعدة الأكاديمية</h2>
+              <p className="text-xl text-muted-foreground">ندعمك بإرشاد علمي احترافي لإعداد واجباتك الجامعية</p>
             </motion.div>
             
             <div className="grid md:grid-cols-3 gap-8">
               {[
                 { 
                   icon: FileText, 
-                  title: 'حل دقيق ومفصل', 
-                  description: 'نقدم حلول كاملة ومفصلة لجميع أنواع الواجبات الجامعية',
+                  title: 'دعم دقيق ومفصل', 
+                  description: 'نقدم إرشاداً ودعماً مفصلاً لإعداد جميع أنواع الواجبات الجامعية',
                   color: 'from-purple-500 to-pink-500'
                 },
                 { 
@@ -264,7 +275,7 @@ export default function AssignmentExecution() {
                 <span className="text-7xl">📝</span>
               </motion.div>
               <h2 className="text-4xl md:text-5xl font-bold mb-6 bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
-                كيف نساعدك في إنجاز التكاليف؟
+                كيف نساعدك في إعداد التكاليف؟
               </h2>
               <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
                 نتبع خطوات محددة لضمان تقديم عمل متميز يلبي جميع متطلباتك
@@ -287,8 +298,8 @@ export default function AssignmentExecution() {
                 },
                 {
                   icon: '✍️',
-                  title: 'الكتابة والإعداد',
-                  description: 'نكتب الواجب بأسلوب أكاديمي احترافي مع الالتزام بالتنسيق المطلوب',
+                  title: 'الإعداد والصياغة',
+                  description: 'نُعد المحتوى بأسلوب أكاديمي احترافي مع الالتزام بالتنسيق المطلوب كمرجع إرشادي للطالب',
                   number: '03'
                 },
                 {
@@ -368,7 +379,7 @@ export default function AssignmentExecution() {
                   >
                     📚
                   </motion.span>
-                  <h3 className="text-3xl md:text-4xl font-bold">أنواع التكاليف التي ننجزها</h3>
+                  <h3 className="text-3xl md:text-4xl font-bold">أنواع التكاليف التي ندعمك فيها</h3>
                 </div>
                 <div className="grid md:grid-cols-3 gap-5">
                   {[
