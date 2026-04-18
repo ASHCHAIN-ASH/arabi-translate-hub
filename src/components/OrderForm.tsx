@@ -321,7 +321,33 @@ const OrderForm: React.FC<OrderFormProps> = ({ selectedService, onSuccess }) => 
               )}
             </div>
 
-            {/* Client Information */}
+            {/* Assistance Type — رسالة قانونية واضحة */}
+            <div className="space-y-3">
+              <label className="text-sm font-medium flex items-center gap-2">
+                <CheckCircle className="w-4 h-4 text-primary" />
+                نوع المساعدة الأكاديمية المطلوبة *
+              </label>
+              <Select
+                value={formData.assistance_type}
+                onValueChange={(value) => handleInputChange('assistance_type', value)}
+              >
+                <SelectTrigger className="text-right">
+                  <SelectValue placeholder="اختر نوع المساعدة (مراجعة، تدقيق، إرشاد...)" />
+                </SelectTrigger>
+                <SelectContent>
+                  {ASSISTANCE_TYPES.map((t) => (
+                    <SelectItem key={t.value} value={t.value}>{t.label}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              <p className="text-xs text-muted-foreground">
+                💡 جميع خدماتنا تُقدَّم لأغراض الدعم الأكاديمي والإرشاد العلمي فقط
+              </p>
+            </div>
+
+            <AcademicAssistanceDisclaimer variant="compact" />
+
+
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-3">
                 <label className="text-sm font-medium flex items-center gap-2">
