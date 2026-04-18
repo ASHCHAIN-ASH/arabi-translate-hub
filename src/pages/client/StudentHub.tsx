@@ -484,7 +484,7 @@ const StudentHub: React.FC = () => {
                           >
                             <div className="flex items-start justify-between gap-2 mb-2">
                               <div className="flex items-center gap-2">
-                                <Badge variant="outline" className="uppercase text-xs">{r.resource_type}</Badge>
+                                <Badge variant="outline" className="text-xs">{RESOURCE_TYPE_AR[r.resource_type] || r.resource_type}</Badge>
                                 {r.is_premium && <Crown className="w-4 h-4 text-amber-500" />}
                               </div>
                               {locked ? (
