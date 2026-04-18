@@ -1,6 +1,8 @@
 project_id = "kziujhdqogqeehtxgpax"
 
 [functions]
+  [functions.library-download]
+    verify_jwt = false
   [functions.auth-email-hook]
     verify_jwt = false
   [functions.process-email-queue]

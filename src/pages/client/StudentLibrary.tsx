@@ -63,32 +63,18 @@ const StudentLibrary: React.FC = () => {
 
   const featured = filteredBySearch.filter(r => r.is_featured).slice(0, 3);
 
-  const handleOpen = async (r: StudentResource) => {
+  const handleOpen = (r: StudentResource) => {
     if (r.is_premium && !isPremium) return;
-    try {
-      const res = await fetch(r.url, { mode: 'cors' });
-      if (!res.ok) throw new Error('fetch failed');
-      const blob = await res.blob();
-      const ext = (r.url.split('.').pop() || 'pdf').split('?')[0].slice(0, 5);
-      const fileName = `${r.title.replace(/[\\/:*?"<>|]/g, '_')}.${ext}`;
-      const blobUrl = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = blobUrl;
-      a.download = fileName;
-      document.body.appendChild(a);
-      a.click();
-      a.remove();
-      setTimeout(() => URL.revokeObjectURL(blobUrl), 1000);
-    } catch {
-      // fallback: trigger native download attribute
-      const a = document.createElement('a');
-      a.href = r.url;
-      a.download = r.title;
-      a.rel = 'noopener noreferrer';
-      document.body.appendChild(a);
-      a.click();
-      a.remove();
-    }
+    const ext = (r.url.split('?')[0].split('.').pop() || 'pdf').slice(0, 5);
+    const fileName = `${r.title.replace(/[\\/:*?"<>|]/g, '_')}.${ext}`;
+    const proxyBase = `https://kziujhdqogqeehtxgpax.supabase.co/functions/v1/library-download`;
+    const downloadUrl = `${proxyBase}?url=${encodeURIComponent(r.url)}&filename=${encodeURIComponent(fileName)}`;
+    // Hidden iframe forces download via Content-Disposition without opening a tab
+    const iframe = document.createElement('iframe');
+    iframe.style.display = 'none';
+    iframe.src = downloadUrl;
+    document.body.appendChild(iframe);
+    setTimeout(() => iframe.remove(), 60000);
   };
 
   return (
