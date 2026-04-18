@@ -230,6 +230,38 @@ const StudentHub: React.FC = () => {
           ))}
         </div>
 
+        {/* مسارات تخصصية CTA */}
+        <motion.div
+          initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
+          className="mb-6"
+        >
+          <Link to="/student/tracks" className="block group">
+            <Card className="relative overflow-hidden border-2 border-primary/20 hover:border-primary/50 transition-all hover:shadow-2xl bg-gradient-to-l from-primary/10 via-primary/5 to-transparent">
+              <div className="absolute -top-16 -left-16 w-48 h-48 rounded-full bg-primary/20 blur-3xl group-hover:scale-110 transition-transform duration-500" />
+              <CardContent className="relative p-6 flex items-center justify-between gap-4">
+                <div className="flex items-center gap-4">
+                  <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-primary to-primary/70 flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform">
+                    <Sparkles className="w-7 h-7 text-primary-foreground" />
+                  </div>
+                  <div>
+                    <div className="flex items-center gap-2 mb-1">
+                      <h3 className="text-lg md:text-xl font-bold">المسارات التخصصية</h3>
+                      <Badge className="bg-amber-500 text-white border-0">جديد</Badge>
+                    </div>
+                    <p className="text-sm text-muted-foreground">
+                      أدوات AI وخدمات احترافية لكل تخصص — طبي، تقني، أعمال، قانون والمزيد
+                    </p>
+                  </div>
+                </div>
+                <Button variant="default" size="lg" className="shrink-0 gap-2 group-hover:gap-3 transition-all hidden sm:inline-flex">
+                  استكشف
+                  <ArrowLeft className="w-5 h-5" />
+                </Button>
+              </CardContent>
+            </Card>
+          </Link>
+        </motion.div>
+
         {/* TABS */}
         <Tabs defaultValue="ai" className="w-full" dir="rtl">
           <TabsList className="grid w-full grid-cols-2 md:grid-cols-5 h-auto p-1 bg-muted/60">
