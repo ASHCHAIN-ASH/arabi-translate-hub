@@ -62,6 +62,7 @@ import ClientInvoices from "./pages/client/Invoices";
 import ClientTickets from "./pages/client/Tickets";
 import ClientTicketDetails from "./pages/client/TicketDetails";
 import ClientWallet from "./pages/client/Wallet";
+import WalletTopup from "./pages/client/WalletTopup";
 import MembershipPage from "./pages/client/MembershipPage";
 import RewardsPage from "./pages/client/Rewards";
 import AdminMemberships from "./pages/admin/AdminMemberships";
@@ -321,6 +322,11 @@ const App = () => (
             <Route path="/wallet" element={
               <SimpleProtectedRoute requiredRole="client">
                 <ClientWallet />
+              </SimpleProtectedRoute>
+            } />
+            <Route path="/wallet/topup" element={
+              <SimpleProtectedRoute requiredRole="client">
+                <WalletTopup />
               </SimpleProtectedRoute>
             } />
             
