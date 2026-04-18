@@ -2739,6 +2739,173 @@ export type Database = {
           },
         ]
       }
+      track_tool_usage_logs: {
+        Row: {
+          cost: number
+          created_at: string
+          id: string
+          metadata: Json
+          tool_id: string
+          track_id: string
+          user_id: string
+          wallet_transaction_id: string | null
+          was_free: boolean
+        }
+        Insert: {
+          cost?: number
+          created_at?: string
+          id?: string
+          metadata?: Json
+          tool_id: string
+          track_id: string
+          user_id: string
+          wallet_transaction_id?: string | null
+          was_free?: boolean
+        }
+        Update: {
+          cost?: number
+          created_at?: string
+          id?: string
+          metadata?: Json
+          tool_id?: string
+          track_id?: string
+          user_id?: string
+          wallet_transaction_id?: string | null
+          was_free?: boolean
+        }
+        Relationships: [
+          {
+            foreignKeyName: "track_tool_usage_logs_tool_id_fkey"
+            columns: ["tool_id"]
+            isOneToOne: false
+            referencedRelation: "track_tools"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "track_tool_usage_logs_track_id_fkey"
+            columns: ["track_id"]
+            isOneToOne: false
+            referencedRelation: "tracks"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      track_tools: {
+        Row: {
+          action_link: string | null
+          badge: string | null
+          created_at: string
+          description_ar: string | null
+          free_daily_quota: number
+          icon: string | null
+          id: string
+          is_active: boolean
+          is_premium: boolean
+          metadata: Json
+          name_ar: string
+          name_en: string | null
+          price: number
+          slug: string
+          sort_order: number
+          tool_type: string
+          track_id: string
+          updated_at: string
+        }
+        Insert: {
+          action_link?: string | null
+          badge?: string | null
+          created_at?: string
+          description_ar?: string | null
+          free_daily_quota?: number
+          icon?: string | null
+          id?: string
+          is_active?: boolean
+          is_premium?: boolean
+          metadata?: Json
+          name_ar: string
+          name_en?: string | null
+          price?: number
+          slug: string
+          sort_order?: number
+          tool_type?: string
+          track_id: string
+          updated_at?: string
+        }
+        Update: {
+          action_link?: string | null
+          badge?: string | null
+          created_at?: string
+          description_ar?: string | null
+          free_daily_quota?: number
+          icon?: string | null
+          id?: string
+          is_active?: boolean
+          is_premium?: boolean
+          metadata?: Json
+          name_ar?: string
+          name_en?: string | null
+          price?: number
+          slug?: string
+          sort_order?: number
+          tool_type?: string
+          track_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "track_tools_track_id_fkey"
+            columns: ["track_id"]
+            isOneToOne: false
+            referencedRelation: "tracks"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      tracks: {
+        Row: {
+          color: string | null
+          cover_image_url: string | null
+          created_at: string
+          description_ar: string | null
+          icon: string | null
+          id: string
+          is_active: boolean
+          name_ar: string
+          name_en: string | null
+          slug: string
+          sort_order: number
+          updated_at: string
+        }
+        Insert: {
+          color?: string | null
+          cover_image_url?: string | null
+          created_at?: string
+          description_ar?: string | null
+          icon?: string | null
+          id?: string
+          is_active?: boolean
+          name_ar: string
+          name_en?: string | null
+          slug: string
+          sort_order?: number
+          updated_at?: string
+        }
+        Update: {
+          color?: string | null
+          cover_image_url?: string | null
+          created_at?: string
+          description_ar?: string | null
+          icon?: string | null
+          id?: string
+          is_active?: boolean
+          name_ar?: string
+          name_en?: string | null
+          slug?: string
+          sort_order?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
       user_memberships: {
         Row: {
           activated_by: string | null
@@ -3304,6 +3471,7 @@ export type Database = {
           isSetofReturn: true
         }
       }
+      use_track_tool: { Args: { _tool_id: string }; Returns: Json }
     }
     Enums: {
       app_role: "admin" | "moderator" | "user"
