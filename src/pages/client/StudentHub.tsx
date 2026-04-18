@@ -44,9 +44,20 @@ const daysUntil = (iso: string | null): number | null => {
 
 const STATUS_AR: Record<string, string> = {
   draft: 'مسودة', pending_quote: 'بانتظار العرض', quote_sent: 'تم إرسال العرض',
-  awaiting_payment: 'بانتظار الدفع', paid: 'مدفوع', in_progress: 'قيد التنفيذ',
+  quote_accepted: 'تم قبول العرض', quote_rejected: 'تم رفض العرض',
+  awaiting_payment: 'بانتظار الدفع', payment_pending: 'بانتظار الدفع',
+  payment_completed: 'تم الدفع', paid: 'مدفوع', in_progress: 'قيد التنفيذ',
+  execution: 'قيد التنفيذ', execution_started: 'بدأ التنفيذ',
   delivered: 'تم التسليم', completed: 'مكتمل', cancelled: 'ملغي',
   contract_pending: 'بانتظار التوقيع', contract_signed: 'تم التوقيع',
+  client_confirmed: 'تم التأكيد', new: 'جديد', received: 'تم الاستلام',
+};
+
+const translateTracking = (id: string) => id?.startsWith('ORD-') ? id.replace('ORD-', 'طلب-') : id;
+
+const RESOURCE_TYPE_AR: Record<string, string> = {
+  pdf: 'ملف PDF', link: 'رابط', template: 'قالب', video: 'فيديو',
+  doc: 'مستند', article: 'مقال', course: 'دورة',
 };
 
 const StudentHub: React.FC = () => {
@@ -147,7 +158,7 @@ const StudentHub: React.FC = () => {
                 <span className="text-sm text-muted-foreground">قسم الطالب</span>
                 {isPremium && (
                   <Badge className="bg-gradient-to-l from-amber-500 to-orange-600 text-white border-0">
-                    <Crown className="w-3 h-3 ml-1" /> Premium
+                    <Crown className="w-3 h-3 ml-1" /> بريميوم
                   </Badge>
                 )}
               </div>
@@ -194,7 +205,7 @@ const StudentHub: React.FC = () => {
           {[
             { icon: Flame, label: 'مهام اليوم', value: `${completedCount}/${tasks.length}`, color: 'text-orange-500', bg: 'bg-orange-500/10' },
             { icon: Trophy, label: 'نقاطك', value: summary?.total_points ?? 0, color: 'text-amber-500', bg: 'bg-amber-500/10' },
-            { icon: Crown, label: 'حالتك', value: isPremium ? 'Premium' : 'مجاني', color: 'text-purple-500', bg: 'bg-purple-500/10' },
+            { icon: Crown, label: 'حالتك', value: isPremium ? 'بريميوم' : 'مجاني', color: 'text-purple-500', bg: 'bg-purple-500/10' },
             { icon: BookOpen, label: 'موارد المكتبة', value: resources.length, color: 'text-blue-500', bg: 'bg-blue-500/10' },
           ].map((s, i) => (
             <motion.div
@@ -246,7 +257,7 @@ const StudentHub: React.FC = () => {
                     أدوات الذكاء الاصطناعي
                   </CardTitle>
                   <CardDescription>
-                    المجاني: 3 استخدامات يومياً لكل أداة. Premium: 50 يومياً + أداة التحليل.
+                    المجاني: 3 استخدامات يومياً لكل أداة. للمشتركين: 50 يومياً + أداة التحليل.
                   </CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-4">
@@ -473,7 +484,7 @@ const StudentHub: React.FC = () => {
                           >
                             <div className="flex items-start justify-between gap-2 mb-2">
                               <div className="flex items-center gap-2">
-                                <Badge variant="outline" className="uppercase text-xs">{r.resource_type}</Badge>
+                                <Badge variant="outline" className="text-xs">{RESOURCE_TYPE_AR[r.resource_type] || r.resource_type}</Badge>
                                 {r.is_premium && <Crown className="w-4 h-4 text-amber-500" />}
                               </div>
                               {locked ? (
@@ -552,7 +563,7 @@ const StudentHub: React.FC = () => {
                                 <div className="min-w-0 flex-1">
                                   <div className="flex items-center gap-2 mb-1 flex-wrap">
                                     <p className="font-semibold truncate">{o.service_name || 'طلب'}</p>
-                                    <Badge variant="outline" className="text-xs">{o.tracking_id}</Badge>
+                                    <Badge variant="outline" className="text-xs">{translateTracking(o.tracking_id)}</Badge>
                                   </div>
                                   <Badge variant="secondary" className="text-xs">
                                     {STATUS_AR[o.lifecycle_status] || o.lifecycle_status}
