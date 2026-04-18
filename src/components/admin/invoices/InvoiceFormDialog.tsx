@@ -5,8 +5,9 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Plus, Trash2, Loader2 } from 'lucide-react';
+import { Plus, Trash2, Loader2, Crown, Sparkles } from 'lucide-react';
 import { toast } from 'sonner';
+import { Badge } from '@/components/ui/badge';
 import { supabase } from '@/integrations/supabase/client';
 import { InvoiceService, type Invoice, type InvoiceItem } from '@/utils/invoiceService';
 
@@ -38,6 +39,8 @@ export default function InvoiceFormDialog({ open, onOpenChange, invoice, onSaved
   const [terms, setTerms] = useState('الدفع خلال 14 يوماً من تاريخ الإصدار.');
   const [status, setStatus] = useState<string>('pending');
   const [saving, setSaving] = useState(false);
+  const [memberInfo, setMemberInfo] = useState<{ name_ar: string; code: string; discount_percentage: number } | null>(null);
+  const [autoDiscountApplied, setAutoDiscountApplied] = useState(false);
 
   useEffect(() => {
     if (!open) return;
@@ -70,6 +73,8 @@ export default function InvoiceFormDialog({ open, onOpenChange, invoice, onSaved
 
   const linkOrder = async (oid: string) => {
     setOrderId(oid);
+    setMemberInfo(null);
+    setAutoDiscountApplied(false);
     if (!oid) return;
     const order = orders.find((o) => o.id === oid);
     if (!order) return;
@@ -79,11 +84,27 @@ export default function InvoiceFormDialog({ open, onOpenChange, invoice, onSaved
       if (data?.full_name) setCustomerName(data.full_name);
       if (data?.phone) setCustomerPhone(data.phone);
       if ((ud as any)?.user?.email) setCustomerEmail((ud as any).user.email);
+
+      // 🎖️ Check active membership and auto-apply discount
+      const { data: memData } = await supabase.rpc('get_active_membership' as any, { _user_id: order.user_id });
+      const mem = Array.isArray(memData) && memData.length > 0 ? (memData[0] as any) : null;
+      if (mem && Number(mem.discount_percentage) > 0) {
+        setMemberInfo({ name_ar: mem.plan_name_ar, code: mem.plan_code, discount_percentage: Number(mem.discount_percentage) });
+      }
     }
     if (order.service_name && items.length === 1 && !items[0].item_name) {
       setItems([{ ...empty(), item_name: order.service_name, unit_price: Number(order.total_amount ?? 0), quantity: 1 }]);
     }
   };
+
+  // Auto-apply membership discount whenever items change & member detected
+  useEffect(() => {
+    if (!memberInfo || isEdit) return;
+    const sub = items.reduce((s, it) => s + InvoiceService.computeItemTotal(it), 0);
+    const calculated = +(sub * (memberInfo.discount_percentage / 100)).toFixed(2);
+    setDiscount(calculated);
+    setAutoDiscountApplied(true);
+  }, [memberInfo, items, isEdit]);
 
   const updateItem = (idx: number, patch: Partial<ItemRow>) => setItems((prev) => prev.map((r, i) => (i === idx ? { ...r, ...patch } : r)));
   const addItem = () => setItems((p) => [...p, empty()]);
@@ -161,6 +182,28 @@ export default function InvoiceFormDialog({ open, onOpenChange, invoice, onSaved
               </Select>
             </div>
           </div>
+
+          {memberInfo && (
+            <div className="flex items-center justify-between gap-3 p-3 rounded-lg border-2 border-amber-400/50 bg-gradient-to-l from-amber-50 to-yellow-50 dark:from-amber-950/30 dark:to-yellow-950/20">
+              <div className="flex items-center gap-2">
+                <div className="w-9 h-9 rounded-full bg-gradient-to-br from-amber-400 to-yellow-500 flex items-center justify-center shadow">
+                  <Crown className="w-5 h-5 text-white" />
+                </div>
+                <div>
+                  <p className="text-sm font-bold flex items-center gap-1.5">
+                    عميل عضو: {memberInfo.name_ar}
+                    <Sparkles className="w-3.5 h-3.5 text-amber-500" />
+                  </p>
+                  <p className="text-xs text-muted-foreground">
+                    {autoDiscountApplied ? 'تم تطبيق خصم العضوية تلقائياً' : 'سيُطبَّق خصم العضوية على الإجمالي'}
+                  </p>
+                </div>
+              </div>
+              <Badge className="bg-amber-500 text-white text-base px-3 py-1">
+                خصم {memberInfo.discount_percentage}%
+              </Badge>
+            </div>
+          )}
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
             <div><Label>اسم العميل *</Label><Input value={customerName} onChange={(e) => setCustomerName(e.target.value)} /></div>
