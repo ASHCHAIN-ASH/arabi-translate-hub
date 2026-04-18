@@ -21,7 +21,9 @@ import ClientLayout from '@/components/client/ClientLayout';
 import { supabase } from '@/integrations/supabase/client';
 import type { TrackTool, Track } from '@/hooks/useTracks';
 
-type ToolKey = 'medical-summarizer' | 'med-terms' | 'case-analyzer' | 'med-quiz';
+type ToolKey =
+  | 'medical-summarizer' | 'med-terms' | 'case-analyzer' | 'med-quiz'
+  | 'code-review' | 'algorithm-explainer' | 'unit-test-gen' | 'code-documenter';
 
 export default function TrackToolPage() {
   const { trackSlug, toolSlug } = useParams<{ trackSlug: string; toolSlug: string }>();
@@ -129,7 +131,11 @@ export default function TrackToolPage() {
         {toolKey === 'med-terms' && <TermsRunner tool={tool} />}
         {toolKey === 'case-analyzer' && <CaseAnalyzerRunner tool={tool} />}
         {toolKey === 'med-quiz' && <QuizRunner tool={tool} />}
-        {!['medical-summarizer','med-terms','case-analyzer','med-quiz'].includes(toolKey) && (
+        {toolKey === 'code-review' && <CodeReviewRunner tool={tool} />}
+        {toolKey === 'algorithm-explainer' && <AlgorithmExplainerRunner tool={tool} />}
+        {toolKey === 'unit-test-gen' && <UnitTestGenRunner tool={tool} />}
+        {toolKey === 'code-documenter' && <CodeDocumenterRunner tool={tool} />}
+        {!['medical-summarizer','med-terms','case-analyzer','med-quiz','code-review','algorithm-explainer','unit-test-gen','code-documenter'].includes(toolKey) && (
           <Card>
             <CardContent className="p-12 text-center space-y-4">
               <div className="w-20 h-20 rounded-2xl bg-primary/10 flex items-center justify-center mx-auto">
