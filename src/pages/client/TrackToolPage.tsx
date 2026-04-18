@@ -7,7 +7,7 @@ import {
   Copy, Download, Check, Wand2, BookOpen, Stethoscope, ListChecks,
 } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
-import jsPDF from 'jspdf';
+// PDF: نولّده عبر نافذة طباعة المتصفح لدعم العربية و RTL بشكل كامل
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -169,24 +169,100 @@ function ResultPanel({ title, content }: { title: string; content: string }) {
 
   const handlePdf = () => {
     try {
-      const doc = new jsPDF({ orientation: 'p', unit: 'pt', format: 'a4' });
-      const pageW = doc.internal.pageSize.getWidth();
-      const pageH = doc.internal.pageSize.getHeight();
-      const margin = 40;
-      const maxW = pageW - margin * 2;
-      doc.setFontSize(16);
-      doc.text(title, pageW - margin, margin, { align: 'right' });
-      doc.setFontSize(11);
-      const plain = content.replace(/[#*`_>]/g, '').replace(/\n{3,}/g, '\n\n');
-      const lines = doc.splitTextToSize(plain, maxW);
-      let y = margin + 30;
-      for (const line of lines) {
-        if (y > pageH - margin) { doc.addPage(); y = margin; }
-        doc.text(line, pageW - margin, y, { align: 'right' });
-        y += 16;
+      // نستخدم نافذة طباعة المتصفح — تدعم العربية و RTL وأي خط بشكل كامل
+      // Markdown → HTML بسيط
+      const escapeHtml = (s: string) =>
+        s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+      const mdToHtml = (md: string) => {
+        const lines = md.split('\n');
+        const out: string[] = [];
+        let inList = false;
+        const closeList = () => { if (inList) { out.push('</ul>'); inList = false; } };
+        for (const raw of lines) {
+          const line = raw.trimEnd();
+          if (/^##\s+/.test(line))      { closeList(); out.push(`<h2>${escapeHtml(line.replace(/^##\s+/, ''))}</h2>`); }
+          else if (/^#\s+/.test(line))  { closeList(); out.push(`<h1>${escapeHtml(line.replace(/^#\s+/, ''))}</h1>`); }
+          else if (/^[-*]\s+/.test(line)) {
+            if (!inList) { out.push('<ul>'); inList = true; }
+            out.push(`<li>${escapeHtml(line.replace(/^[-*]\s+/, ''))}</li>`);
+          } else if (/^\d+\.\s+/.test(line)) {
+            closeList();
+            out.push(`<p>${escapeHtml(line)}</p>`);
+          } else if (line === '') { closeList(); out.push(''); }
+          else { closeList(); out.push(`<p>${escapeHtml(line)}</p>`); }
+        }
+        closeList();
+        return out.join('\n')
+          .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+          .replace(/\*(.+?)\*/g, '<em>$1</em>');
+      };
+
+      const html = `<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8" />
+<title>${escapeHtml(title)}</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; }
+  html, body {
+    font-family: 'IBM Plex Sans Arabic', system-ui, -apple-system, sans-serif;
+    direction: rtl; text-align: right;
+    color: #0f172a; background: #fff;
+    margin: 0; padding: 0;
+  }
+  .wrap { padding: 32px 40px; line-height: 1.85; font-size: 13pt; }
+  h1.doc-title {
+    font-size: 22pt; margin: 0 0 6px; color: #0f172a;
+    border-bottom: 3px solid #2563eb; padding-bottom: 10px;
+  }
+  .meta { color: #64748b; font-size: 10pt; margin-bottom: 24px; }
+  h1 { font-size: 18pt; margin: 22px 0 8px; color: #1e3a8a; }
+  h2 { font-size: 15pt; margin: 20px 0 8px; color: #1e40af;
+       border-right: 4px solid #2563eb; padding-right: 10px; }
+  p  { margin: 6px 0; }
+  ul { padding-right: 22px; padding-left: 0; margin: 6px 0; }
+  li { margin: 4px 0; }
+  strong { color: #0f172a; }
+  @page { size: A4; margin: 18mm; }
+  @media print { .no-print { display: none; } }
+  .no-print {
+    position: fixed; top: 12px; left: 12px;
+    background: #2563eb; color: #fff; border: 0;
+    padding: 10px 18px; border-radius: 8px;
+    font-family: inherit; font-size: 11pt; cursor: pointer;
+  }
+</style>
+</head>
+<body>
+<button class="no-print" onclick="window.print()">🖨️ طباعة / حفظ PDF</button>
+<div class="wrap">
+  <h1 class="doc-title">${escapeHtml(title)}</h1>
+  <div class="meta">${new Date().toLocaleDateString('ar-SA', { year: 'numeric', month: 'long', day: 'numeric' })}</div>
+  ${mdToHtml(content)}
+</div>
+<script>
+  // ننتظر تحميل الخط ثم نفتح نافذة الطباعة تلقائياً
+  if (document.fonts && document.fonts.ready) {
+    document.fonts.ready.then(() => setTimeout(() => window.print(), 300));
+  } else {
+    setTimeout(() => window.print(), 700);
+  }
+</script>
+</body>
+</html>`;
+
+      const w = window.open('', '_blank');
+      if (!w) {
+        toast({ title: 'فضلاً اسمح بالنوافذ المنبثقة', variant: 'destructive' });
+        return;
       }
-      doc.save(`${title}.pdf`);
-      toast({ title: '📄 تم تحميل PDF' });
+      w.document.open();
+      w.document.write(html);
+      w.document.close();
+      toast({ title: '📄 جاهز للطباعة / الحفظ كـ PDF' });
     } catch (e) {
       toast({ title: 'تعذّر إنشاء PDF', variant: 'destructive' });
     }
