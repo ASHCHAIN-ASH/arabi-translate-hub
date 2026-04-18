@@ -47,6 +47,8 @@ Deno.serve(async (req) => {
 
     const contentType = upstream.headers.get('content-type') || 'application/octet-stream';
     const safeName = filename.replace(/[\r\n"]/g, '_');
+    // ASCII-only fallback for the plain filename (HTTP headers must be ByteString/Latin-1)
+    const asciiName = safeName.replace(/[^\x20-\x7E]/g, '_').replace(/_+/g, '_') || 'download';
     const encoded = encodeURIComponent(safeName);
 
     return new Response(upstream.body, {
@@ -54,7 +56,7 @@ Deno.serve(async (req) => {
       headers: {
         ...corsHeaders,
         'Content-Type': contentType,
-        'Content-Disposition': `attachment; filename="${safeName}"; filename*=UTF-8''${encoded}`,
+        'Content-Disposition': `attachment; filename="${asciiName}"; filename*=UTF-8''${encoded}`,
         'Cache-Control': 'public, max-age=86400, immutable',
         'X-Content-Type-Options': 'nosniff',
       },
