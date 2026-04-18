@@ -177,7 +177,8 @@ export default function TrackToolPage() {
         {toolKey === 'algorithm-explainer' && <AlgorithmExplainerRunner tool={tool} />}
         {toolKey === 'unit-test-gen' && <UnitTestGenRunner tool={tool} />}
         {toolKey === 'code-documenter' && <CodeDocumenterRunner tool={tool} />}
-        {!['medical-summarizer','med-terms','case-analyzer','med-quiz','code-review','algorithm-explainer','unit-test-gen','code-documenter'].includes(toolKey) && (
+        {GENERIC_TOOLS[toolKey] && <GenericRunner tool={tool} />}
+        {!['medical-summarizer','med-terms','case-analyzer','med-quiz','code-review','algorithm-explainer','unit-test-gen','code-documenter'].includes(toolKey) && !GENERIC_TOOLS[toolKey] && (
           <Card>
             <CardContent className="p-12 text-center space-y-4">
               <div className="w-20 h-20 rounded-2xl bg-primary/10 flex items-center justify-center mx-auto">
