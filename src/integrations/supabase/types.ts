@@ -542,6 +542,65 @@ export type Database = {
         }
         Relationships: []
       }
+      gateway_webhooks: {
+        Row: {
+          created_at: string
+          error_message: string | null
+          event_type: string | null
+          external_transaction_no: string | null
+          headers: Json | null
+          id: string
+          internal_order_number: string | null
+          ip_address: string | null
+          payload: Json
+          payment_intent_id: string | null
+          processed: boolean
+          processed_at: string | null
+          provider: string
+          signature_status: string
+        }
+        Insert: {
+          created_at?: string
+          error_message?: string | null
+          event_type?: string | null
+          external_transaction_no?: string | null
+          headers?: Json | null
+          id?: string
+          internal_order_number?: string | null
+          ip_address?: string | null
+          payload: Json
+          payment_intent_id?: string | null
+          processed?: boolean
+          processed_at?: string | null
+          provider?: string
+          signature_status?: string
+        }
+        Update: {
+          created_at?: string
+          error_message?: string | null
+          event_type?: string | null
+          external_transaction_no?: string | null
+          headers?: Json | null
+          id?: string
+          internal_order_number?: string | null
+          ip_address?: string | null
+          payload?: Json
+          payment_intent_id?: string | null
+          processed?: boolean
+          processed_at?: string | null
+          provider?: string
+          signature_status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "gateway_webhooks_payment_intent_id_fkey"
+            columns: ["payment_intent_id"]
+            isOneToOne: false
+            referencedRelation: "payment_intents"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       invoice_items: {
         Row: {
           created_at: string
@@ -598,6 +657,7 @@ export type Database = {
           invoice_id: string
           notes: string | null
           payment_date: string
+          payment_intent_id: string | null
           payment_method: string
           reference_number: string | null
           status: string
@@ -610,6 +670,7 @@ export type Database = {
           invoice_id: string
           notes?: string | null
           payment_date?: string
+          payment_intent_id?: string | null
           payment_method?: string
           reference_number?: string | null
           status?: string
@@ -622,6 +683,7 @@ export type Database = {
           invoice_id?: string
           notes?: string | null
           payment_date?: string
+          payment_intent_id?: string | null
           payment_method?: string
           reference_number?: string | null
           status?: string
@@ -632,6 +694,13 @@ export type Database = {
             columns: ["invoice_id"]
             isOneToOne: false
             referencedRelation: "invoices"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "invoice_payments_payment_intent_id_fkey"
+            columns: ["payment_intent_id"]
+            isOneToOne: false
+            referencedRelation: "payment_intents"
             referencedColumns: ["id"]
           },
         ]
@@ -1112,6 +1181,245 @@ export type Database = {
           tracking_id?: string
           updated_at?: string
           user_id?: string | null
+        }
+        Relationships: []
+      }
+      payment_attempts: {
+        Row: {
+          action: string
+          attempt_no: number
+          created_at: string
+          error_message: string | null
+          http_status: number | null
+          id: string
+          payment_intent_id: string
+          request_payload: Json | null
+          response_payload: Json | null
+          status: string
+        }
+        Insert: {
+          action: string
+          attempt_no?: number
+          created_at?: string
+          error_message?: string | null
+          http_status?: number | null
+          id?: string
+          payment_intent_id: string
+          request_payload?: Json | null
+          response_payload?: Json | null
+          status?: string
+        }
+        Update: {
+          action?: string
+          attempt_no?: number
+          created_at?: string
+          error_message?: string | null
+          http_status?: number | null
+          id?: string
+          payment_intent_id?: string
+          request_payload?: Json | null
+          response_payload?: Json | null
+          status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "payment_attempts_payment_intent_id_fkey"
+            columns: ["payment_intent_id"]
+            isOneToOne: false
+            referencedRelation: "payment_intents"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      payment_intents: {
+        Row: {
+          amount: number
+          callback_url: string | null
+          checkout_url: string | null
+          contract_id: string | null
+          created_at: string
+          currency: string
+          expires_at: string | null
+          external_invoice_id: string | null
+          external_transaction_no: string | null
+          failed_at: string | null
+          failure_reason: string | null
+          id: string
+          internal_order_number: string
+          invoice_id: string | null
+          metadata: Json
+          payment_method_type: string | null
+          provider: string
+          provider_mode: string
+          purpose: string
+          return_url: string | null
+          service_order_id: string | null
+          status: string
+          succeeded_at: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          amount: number
+          callback_url?: string | null
+          checkout_url?: string | null
+          contract_id?: string | null
+          created_at?: string
+          currency?: string
+          expires_at?: string | null
+          external_invoice_id?: string | null
+          external_transaction_no?: string | null
+          failed_at?: string | null
+          failure_reason?: string | null
+          id?: string
+          internal_order_number: string
+          invoice_id?: string | null
+          metadata?: Json
+          payment_method_type?: string | null
+          provider?: string
+          provider_mode?: string
+          purpose: string
+          return_url?: string | null
+          service_order_id?: string | null
+          status?: string
+          succeeded_at?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          amount?: number
+          callback_url?: string | null
+          checkout_url?: string | null
+          contract_id?: string | null
+          created_at?: string
+          currency?: string
+          expires_at?: string | null
+          external_invoice_id?: string | null
+          external_transaction_no?: string | null
+          failed_at?: string | null
+          failure_reason?: string | null
+          id?: string
+          internal_order_number?: string
+          invoice_id?: string | null
+          metadata?: Json
+          payment_method_type?: string | null
+          provider?: string
+          provider_mode?: string
+          purpose?: string
+          return_url?: string | null
+          service_order_id?: string | null
+          status?: string
+          succeeded_at?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      payment_reconciliation_items: {
+        Row: {
+          actual_amount: number | null
+          actual_status: string | null
+          created_at: string
+          expected_amount: number | null
+          expected_status: string | null
+          external_transaction_no: string | null
+          id: string
+          internal_order_number: string | null
+          matched: boolean
+          mismatch_reason: string | null
+          payment_intent_id: string | null
+          raw_external: Json | null
+          run_id: string
+        }
+        Insert: {
+          actual_amount?: number | null
+          actual_status?: string | null
+          created_at?: string
+          expected_amount?: number | null
+          expected_status?: string | null
+          external_transaction_no?: string | null
+          id?: string
+          internal_order_number?: string | null
+          matched?: boolean
+          mismatch_reason?: string | null
+          payment_intent_id?: string | null
+          raw_external?: Json | null
+          run_id: string
+        }
+        Update: {
+          actual_amount?: number | null
+          actual_status?: string | null
+          created_at?: string
+          expected_amount?: number | null
+          expected_status?: string | null
+          external_transaction_no?: string | null
+          id?: string
+          internal_order_number?: string | null
+          matched?: boolean
+          mismatch_reason?: string | null
+          payment_intent_id?: string | null
+          raw_external?: Json | null
+          run_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "payment_reconciliation_items_payment_intent_id_fkey"
+            columns: ["payment_intent_id"]
+            isOneToOne: false
+            referencedRelation: "payment_intents"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "payment_reconciliation_items_run_id_fkey"
+            columns: ["run_id"]
+            isOneToOne: false
+            referencedRelation: "payment_reconciliation_runs"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      payment_reconciliation_runs: {
+        Row: {
+          created_at: string
+          created_by: string | null
+          finished_at: string | null
+          id: string
+          provider: string
+          run_type: string
+          started_at: string
+          status: string
+          summary: Json | null
+          total_checked: number
+          total_matched: number
+          total_mismatched: number
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string | null
+          finished_at?: string | null
+          id?: string
+          provider?: string
+          run_type?: string
+          started_at?: string
+          status?: string
+          summary?: Json | null
+          total_checked?: number
+          total_matched?: number
+          total_mismatched?: number
+        }
+        Update: {
+          created_at?: string
+          created_by?: string | null
+          finished_at?: string | null
+          id?: string
+          provider?: string
+          run_type?: string
+          started_at?: string
+          status?: string
+          summary?: Json | null
+          total_checked?: number
+          total_matched?: number
+          total_mismatched?: number
         }
         Relationships: []
       }
@@ -1957,6 +2265,7 @@ export type Database = {
           description: string | null
           id: string
           metadata: Json | null
+          payment_intent_id: string | null
           reference_id: string | null
           reference_type: string | null
           type: string
@@ -1971,6 +2280,7 @@ export type Database = {
           description?: string | null
           id?: string
           metadata?: Json | null
+          payment_intent_id?: string | null
           reference_id?: string | null
           reference_type?: string | null
           type: string
@@ -1985,6 +2295,7 @@ export type Database = {
           description?: string | null
           id?: string
           metadata?: Json | null
+          payment_intent_id?: string | null
           reference_id?: string | null
           reference_type?: string | null
           type?: string
@@ -1992,6 +2303,13 @@ export type Database = {
           wallet_id?: string
         }
         Relationships: [
+          {
+            foreignKeyName: "wallet_transactions_payment_intent_id_fkey"
+            columns: ["payment_intent_id"]
+            isOneToOne: false
+            referencedRelation: "payment_intents"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "wallet_transactions_wallet_id_fkey"
             columns: ["wallet_id"]
@@ -2053,6 +2371,7 @@ export type Database = {
         Returns: number
       }
       generate_customer_code: { Args: never; Returns: string }
+      generate_internal_order_number: { Args: never; Returns: string }
       generate_referral_code: { Args: never; Returns: string }
       get_active_membership: {
         Args: { _user_id: string }
