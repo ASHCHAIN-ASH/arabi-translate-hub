@@ -19,6 +19,7 @@ import { template as walletTopupRequested } from './wallet-topup-requested.tsx'
 import { template as walletTopupApproved } from './wallet-topup-approved.tsx'
 import { template as walletTopupRejected } from './wallet-topup-rejected.tsx'
 import { template as walletInvoicePayment } from './wallet-invoice-payment.tsx'
+import { template as deadlineReminder } from './deadline-reminder.tsx'
 
 export const TEMPLATES: Record<string, TemplateEntry> = {
   'quote-notification': quoteNotification,
@@ -31,4 +32,5 @@ export const TEMPLATES: Record<string, TemplateEntry> = {
   'wallet-topup-approved': walletTopupApproved,
   'wallet-topup-rejected': walletTopupRejected,
   'wallet-invoice-payment': walletInvoicePayment,
+  'deadline-reminder': deadlineReminder,
 }
