@@ -88,7 +88,7 @@ function MindMapCanvas({
 const MindMapPage: React.FC = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
-  const { membership } = useUserMembership(user?.id);
+  const { membership } = useUserMembership();
   const isPremium = !!membership && membership.status === 'active';
 
   const [text, setText] = useState('');
