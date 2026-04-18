@@ -55,7 +55,8 @@ Deno.serve(async (req) => {
         ...corsHeaders,
         'Content-Type': contentType,
         'Content-Disposition': `attachment; filename="${safeName}"; filename*=UTF-8''${encoded}`,
-        'Cache-Control': 'public, max-age=3600',
+        'Cache-Control': 'public, max-age=86400, immutable',
+        'X-Content-Type-Options': 'nosniff',
       },
     });
   } catch (e) {
