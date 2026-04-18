@@ -12,15 +12,15 @@ import {
 } from '@/components/ui/alert-dialog';
 import { toast } from 'sonner';
 import ClientLayout from '@/components/client/ClientLayout';
-import { useTrack, useToolUsageToday, useTrackTool, type TrackTool } from '@/hooks/useTracks';
-import { useSimpleAuth } from '@/components/SimpleAuthProvider';
+import { useTrack, useToolUsageToday, useTrackTool as runTrackTool, type TrackTool } from '@/hooks/useTracks';
+import { useAuth } from '@/components/SimpleAuthProvider';
 import { WalletService } from '@/utils/walletService';
 import { supabase } from '@/integrations/supabase/client';
 
 export default function TrackDetailPage() {
   const { slug } = useParams<{ slug: string }>();
   const navigate = useNavigate();
-  const { user } = useSimpleAuth();
+  const { user } = useAuth();
   const { track, tools, loading } = useTrack(slug);
   const { usageMap, refresh: refreshUsage } = useToolUsageToday(user?.id);
   const [walletBalance, setWalletBalance] = useState<number>(0);
@@ -52,7 +52,7 @@ export default function TrackDetailPage() {
   const handleUseTool = async () => {
     if (!selectedTool) return;
     setRunning(true);
-    const result = await useTrackTool(selectedTool.id);
+    const result = await runTrackTool(selectedTool.id);
     setRunning(false);
     if (!result.ok) {
       toast.error(result.error || 'تعذّر تشغيل الأداة');
@@ -271,8 +271,3 @@ export default function TrackDetailPage() {
   );
 }
 
-// helper: import named export from hook
-async function useTrackTool(toolId: string) {
-  const mod = await import('@/hooks/useTracks');
-  return mod.useTrackTool(toolId);
-}
