@@ -213,7 +213,7 @@ function ResultPanel({ title, content }: { title: string; content: string }) {
     color: #0f172a; background: #fff;
     margin: 0; padding: 0;
   }
-  .wrap { padding: 32px 40px; line-height: 1.85; font-size: 13pt; }
+  .wrap { padding: 18mm 18mm; line-height: 1.85; font-size: 13pt; }
   h1.doc-title {
     font-size: 22pt; margin: 0 0 6px; color: #0f172a;
     border-bottom: 3px solid #2563eb; padding-bottom: 10px;
@@ -226,7 +226,8 @@ function ResultPanel({ title, content }: { title: string; content: string }) {
   ul { padding-right: 22px; padding-left: 0; margin: 6px 0; }
   li { margin: 4px 0; }
   strong { color: #0f172a; }
-  @page { size: A4; margin: 18mm; }
+  @page { size: A4; margin: 0; }
+  @page :first { margin: 0; }
   @media print { .no-print { display: none; } }
   .no-print {
     position: fixed; top: 12px; left: 12px;
