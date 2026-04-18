@@ -11,6 +11,7 @@ import { Label } from '@/components/ui/label';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { ReferralsTab } from '@/components/membership/ReferralsTab';
+import { ReferralService } from '@/utils/referralService';
 import {
   Crown, Check, Wallet, Receipt, Sparkles, Calendar, TrendingUp, Zap, Shield,
   Gift, HeadphonesIcon, Star, Award, ArrowLeft, Info, HelpCircle, Rocket,
@@ -128,14 +129,25 @@ export default function MembershipPage() {
           return;
         }
       }
+      // Resolve pending referral code (captured during ?ref= signup)
+      const pendingCode = ReferralService.readPendingCode();
+      let referredBy: string | null = null;
+      if (pendingCode) {
+        const r = await ReferralService.resolveReferrer(pendingCode);
+        if (r && r.user_id !== user.id) referredBy = r.user_id;
+      }
+
       const { error } = await supabase.from('user_memberships' as any).insert({
         user_id: user.id,
         plan_id: selectedPlan.id,
         status: 'pending',
         payment_method: paymentMethod,
         amount_paid: 0,
-      });
+        referred_by: referredBy,
+        referral_code_used: pendingCode || null,
+      } as any);
       if (error) throw error;
+      if (referredBy) ReferralService.clearPendingCode();
       toast.success('تم إرسال طلب الاشتراك بنجاح. ستصلك إشعارات عند المراجعة.');
       setSelectedPlan(null);
       reload();
