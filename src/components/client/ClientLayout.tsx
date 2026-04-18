@@ -19,6 +19,7 @@ import {
   ChevronLeft,
   Crown,
   Trophy,
+  Users,
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import ChatFloatingButton from '@/components/chat/ChatFloatingButton';
@@ -39,6 +40,7 @@ const navItems: NavItem[] = [
   { name: 'لوحة التحكم', href: '/dashboard', icon: LayoutDashboard, description: 'نظرة عامة', gradient: 'from-indigo-500 to-purple-600' },
   { name: 'خدماتنا', href: '/client-services', icon: Sparkles, description: 'استكشف الخدمات', gradient: 'from-fuchsia-500 to-pink-600' },
   { name: 'سجل الطلبات', href: '/orders', icon: ShoppingCart, description: 'كل طلباتك', gradient: 'from-blue-500 to-cyan-600' },
+  { name: 'الطلبات الجماعية', href: '/group-orders', icon: Users, description: 'شارك التكلفة مع زملائك', gradient: 'from-indigo-500 to-purple-600' },
   { name: 'فواتيري', href: '/invoices', icon: FileText, description: 'الفواتير والمدفوعات', gradient: 'from-emerald-500 to-teal-600' },
   { name: 'عقودي', href: '/client/contracts', icon: ScrollText, description: 'عقود الخدمة', gradient: 'from-amber-500 to-orange-600' },
   { name: 'محفظتي', href: '/wallet', icon: Wallet, description: 'الرصيد والحركات', gradient: 'from-violet-500 to-purple-600' },
