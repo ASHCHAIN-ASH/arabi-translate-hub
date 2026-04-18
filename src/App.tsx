@@ -70,6 +70,7 @@ import GroupOrderJoin from "./pages/client/GroupOrderJoin";
 import MembershipPage from "./pages/client/MembershipPage";
 import RewardsPage from "./pages/client/Rewards";
 import StudentHub from "./pages/client/StudentHub";
+import MindMapPage from "./pages/client/MindMapPage";
 import AdminMemberships from "./pages/admin/AdminMemberships";
 import AdminReferrals from "./pages/admin/AdminReferrals";
 
@@ -514,6 +515,11 @@ const App = () => (
             <Route path="/student" element={
               <SimpleProtectedRoute requiredRole="client">
                 <StudentHub />
+              </SimpleProtectedRoute>
+            } />
+            <Route path="/student/mind-map" element={
+              <SimpleProtectedRoute requiredRole="client">
+                <MindMapPage />
               </SimpleProtectedRoute>
             } />
             
