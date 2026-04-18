@@ -2263,6 +2263,185 @@ export type Database = {
         }
         Relationships: []
       }
+      student_ai_usage: {
+        Row: {
+          created_at: string
+          id: string
+          input_length: number | null
+          is_premium_user: boolean
+          metadata: Json
+          output_length: number | null
+          tool_type: string
+          usage_date: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          input_length?: number | null
+          is_premium_user?: boolean
+          metadata?: Json
+          output_length?: number | null
+          tool_type: string
+          usage_date?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          input_length?: number | null
+          is_premium_user?: boolean
+          metadata?: Json
+          output_length?: number | null
+          tool_type?: string
+          usage_date?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      student_daily_tasks: {
+        Row: {
+          action_link: string | null
+          action_type: string
+          code: string
+          created_at: string
+          daily_limit: number
+          description_ar: string | null
+          icon: string | null
+          id: string
+          is_active: boolean
+          points_reward: number
+          sort_order: number
+          title_ar: string
+          updated_at: string
+        }
+        Insert: {
+          action_link?: string | null
+          action_type: string
+          code: string
+          created_at?: string
+          daily_limit?: number
+          description_ar?: string | null
+          icon?: string | null
+          id?: string
+          is_active?: boolean
+          points_reward?: number
+          sort_order?: number
+          title_ar: string
+          updated_at?: string
+        }
+        Update: {
+          action_link?: string | null
+          action_type?: string
+          code?: string
+          created_at?: string
+          daily_limit?: number
+          description_ar?: string | null
+          icon?: string | null
+          id?: string
+          is_active?: boolean
+          points_reward?: number
+          sort_order?: number
+          title_ar?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      student_resources: {
+        Row: {
+          category: string | null
+          cover_image_url: string | null
+          created_at: string
+          created_by: string | null
+          description: string | null
+          id: string
+          is_premium: boolean
+          is_published: boolean
+          resource_type: string
+          sort_order: number
+          tags: string[] | null
+          title: string
+          updated_at: string
+          url: string
+          views_count: number
+        }
+        Insert: {
+          category?: string | null
+          cover_image_url?: string | null
+          created_at?: string
+          created_by?: string | null
+          description?: string | null
+          id?: string
+          is_premium?: boolean
+          is_published?: boolean
+          resource_type: string
+          sort_order?: number
+          tags?: string[] | null
+          title: string
+          updated_at?: string
+          url: string
+          views_count?: number
+        }
+        Update: {
+          category?: string | null
+          cover_image_url?: string | null
+          created_at?: string
+          created_by?: string | null
+          description?: string | null
+          id?: string
+          is_premium?: boolean
+          is_published?: boolean
+          resource_type?: string
+          sort_order?: number
+          tags?: string[] | null
+          title?: string
+          updated_at?: string
+          url?: string
+          views_count?: number
+        }
+        Relationships: []
+      }
+      student_task_completions: {
+        Row: {
+          completion_date: string
+          created_at: string
+          id: string
+          metadata: Json
+          points_awarded: number
+          task_code: string
+          task_id: string
+          user_id: string
+        }
+        Insert: {
+          completion_date?: string
+          created_at?: string
+          id?: string
+          metadata?: Json
+          points_awarded?: number
+          task_code: string
+          task_id: string
+          user_id: string
+        }
+        Update: {
+          completion_date?: string
+          created_at?: string
+          id?: string
+          metadata?: Json
+          points_awarded?: number
+          task_code?: string
+          task_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "student_task_completions_task_id_fkey"
+            columns: ["task_id"]
+            isOneToOne: false
+            referencedRelation: "student_daily_tasks"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       suppressed_emails: {
         Row: {
           created_at: string
@@ -2899,6 +3078,10 @@ export type Database = {
         Returns: Json
       }
       client_confirm_delivery: { Args: { _order_id: string }; Returns: Json }
+      complete_daily_task: {
+        Args: { _metadata?: Json; _task_code: string }
+        Returns: Json
+      }
       compute_level_for_points: { Args: { _points: number }; Returns: string }
       create_group_order: {
         Args: {
@@ -2936,6 +3119,7 @@ export type Database = {
           priority_level: number
         }[]
       }
+      get_ai_usage_today: { Args: { _tool_type: string }; Returns: number }
       get_membership_points_multiplier: {
         Args: { _user_id: string }
         Returns: number
@@ -2946,6 +3130,21 @@ export type Database = {
           customer_id: string
           name: string
           user_id: string
+        }[]
+      }
+      get_today_student_tasks: {
+        Args: never
+        Returns: {
+          action_link: string
+          action_type: string
+          code: string
+          completed_at: string
+          description_ar: string
+          icon: string
+          id: string
+          is_completed: boolean
+          points_reward: number
+          title_ar: string
         }[]
       }
       has_role: {
