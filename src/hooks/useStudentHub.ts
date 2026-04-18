@@ -52,6 +52,41 @@ export function useDailyTasks(userId?: string) {
   return { tasks, loading, refresh, completeTask };
 }
 
+export interface UpcomingOrder {
+  id: string;
+  tracking_id: string;
+  service_name: string | null;
+  lifecycle_status: string;
+  current_status: string | null;
+  deadline: string | null;
+  progress_percentage: number;
+  total_amount: number | null;
+  created_at: string;
+}
+
+export function useUpcomingOrders(userId?: string) {
+  const [orders, setOrders] = useState<UpcomingOrder[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    if (!userId) { setLoading(false); return; }
+    (async () => {
+      setLoading(true);
+      const { data } = await (supabase as any)
+        .from('service_orders')
+        .select('id, tracking_id, service_name, lifecycle_status, current_status, deadline, progress_percentage, total_amount, created_at')
+        .eq('user_id', userId)
+        .not('lifecycle_status', 'in', '(completed,cancelled)')
+        .order('deadline', { ascending: true, nullsFirst: false })
+        .limit(10);
+      setOrders((data || []) as UpcomingOrder[]);
+      setLoading(false);
+    })();
+  }, [userId]);
+
+  return { orders, loading };
+}
+
 export function useStudentResources() {
   const [resources, setResources] = useState<StudentResource[]>([]);
   const [loading, setLoading] = useState(true);
