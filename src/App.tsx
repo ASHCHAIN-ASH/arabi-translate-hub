@@ -62,6 +62,7 @@ import ClientInvoices from "./pages/client/Invoices";
 import ClientTickets from "./pages/client/Tickets";
 import ClientTicketDetails from "./pages/client/TicketDetails";
 import ClientWallet from "./pages/client/Wallet";
+import WalletTopup from "./pages/client/WalletTopup";
 import MembershipPage from "./pages/client/MembershipPage";
 import RewardsPage from "./pages/client/Rewards";
 import AdminMemberships from "./pages/admin/AdminMemberships";
