@@ -770,6 +770,110 @@ export type Database = {
           },
         ]
       }
+      membership_history: {
+        Row: {
+          action: string
+          actor_id: string | null
+          actor_type: string
+          created_at: string
+          description: string | null
+          id: string
+          membership_id: string
+          metadata: Json | null
+          user_id: string
+        }
+        Insert: {
+          action: string
+          actor_id?: string | null
+          actor_type?: string
+          created_at?: string
+          description?: string | null
+          id?: string
+          membership_id: string
+          metadata?: Json | null
+          user_id: string
+        }
+        Update: {
+          action?: string
+          actor_id?: string | null
+          actor_type?: string
+          created_at?: string
+          description?: string | null
+          id?: string
+          membership_id?: string
+          metadata?: Json | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "membership_history_membership_id_fkey"
+            columns: ["membership_id"]
+            isOneToOne: false
+            referencedRelation: "user_memberships"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      membership_plans: {
+        Row: {
+          badge_color: string | null
+          benefits: Json | null
+          cashback_amount: number
+          code: string
+          created_at: string
+          currency: string
+          description: string | null
+          discount_percentage: number
+          duration_months: number
+          id: string
+          is_active: boolean
+          name_ar: string
+          name_en: string
+          price: number
+          priority_level: number
+          sort_order: number | null
+          updated_at: string
+        }
+        Insert: {
+          badge_color?: string | null
+          benefits?: Json | null
+          cashback_amount?: number
+          code: string
+          created_at?: string
+          currency?: string
+          description?: string | null
+          discount_percentage?: number
+          duration_months?: number
+          id?: string
+          is_active?: boolean
+          name_ar: string
+          name_en: string
+          price?: number
+          priority_level?: number
+          sort_order?: number | null
+          updated_at?: string
+        }
+        Update: {
+          badge_color?: string | null
+          benefits?: Json | null
+          cashback_amount?: number
+          code?: string
+          created_at?: string
+          currency?: string
+          description?: string | null
+          discount_percentage?: number
+          duration_months?: number
+          id?: string
+          is_active?: boolean
+          name_ar?: string
+          name_en?: string
+          price?: number
+          priority_level?: number
+          sort_order?: number | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
       notifications: {
         Row: {
           created_at: string
@@ -1518,6 +1622,75 @@ export type Database = {
           },
         ]
       }
+      user_memberships: {
+        Row: {
+          activated_by: string | null
+          amount_paid: number
+          cancelled_at: string | null
+          cashback_credited: boolean
+          created_at: string
+          expires_at: string | null
+          id: string
+          invoice_id: string | null
+          notes: string | null
+          payment_method: string | null
+          plan_id: string
+          starts_at: string | null
+          status: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          activated_by?: string | null
+          amount_paid?: number
+          cancelled_at?: string | null
+          cashback_credited?: boolean
+          created_at?: string
+          expires_at?: string | null
+          id?: string
+          invoice_id?: string | null
+          notes?: string | null
+          payment_method?: string | null
+          plan_id: string
+          starts_at?: string | null
+          status?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          activated_by?: string | null
+          amount_paid?: number
+          cancelled_at?: string | null
+          cashback_credited?: boolean
+          created_at?: string
+          expires_at?: string | null
+          id?: string
+          invoice_id?: string | null
+          notes?: string | null
+          payment_method?: string | null
+          plan_id?: string
+          starts_at?: string | null
+          status?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_memberships_invoice_id_fkey"
+            columns: ["invoice_id"]
+            isOneToOne: false
+            referencedRelation: "invoices"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "user_memberships_plan_id_fkey"
+            columns: ["plan_id"]
+            isOneToOne: false
+            referencedRelation: "membership_plans"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       user_notifications: {
         Row: {
           created_at: string
@@ -1734,6 +1907,20 @@ export type Database = {
         Returns: number
       }
       generate_customer_code: { Args: never; Returns: string }
+      get_active_membership: {
+        Args: { _user_id: string }
+        Returns: {
+          badge_color: string
+          cashback_amount: number
+          discount_percentage: number
+          expires_at: string
+          membership_id: string
+          plan_code: string
+          plan_id: string
+          plan_name_ar: string
+          priority_level: number
+        }[]
+      }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
