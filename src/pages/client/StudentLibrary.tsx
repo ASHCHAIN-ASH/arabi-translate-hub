@@ -11,7 +11,7 @@ import { useStudentResources, useLibraryCategories, StudentResource, LibraryCate
 import { useUserMembership } from '@/hooks/useMembership';
 import * as LucideIcons from 'lucide-react';
 import {
-  Library, Search, ExternalLink, FileText, Video, Link as LinkIcon,
+  Library, Search, Download, FileText, Video, Link as LinkIcon,
   LayoutTemplate, Crown, Eye, ArrowLeft, Sparkles, BookOpen, Clock, User as UserIcon, Star,
 } from 'lucide-react';
 
@@ -63,9 +63,32 @@ const StudentLibrary: React.FC = () => {
 
   const featured = filteredBySearch.filter(r => r.is_featured).slice(0, 3);
 
-  const handleOpen = (r: StudentResource) => {
+  const handleOpen = async (r: StudentResource) => {
     if (r.is_premium && !isPremium) return;
-    window.open(r.url, '_blank', 'noopener,noreferrer');
+    try {
+      const res = await fetch(r.url, { mode: 'cors' });
+      if (!res.ok) throw new Error('fetch failed');
+      const blob = await res.blob();
+      const ext = (r.url.split('.').pop() || 'pdf').split('?')[0].slice(0, 5);
+      const fileName = `${r.title.replace(/[\\/:*?"<>|]/g, '_')}.${ext}`;
+      const blobUrl = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = blobUrl;
+      a.download = fileName;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      setTimeout(() => URL.revokeObjectURL(blobUrl), 1000);
+    } catch {
+      // fallback: trigger native download attribute
+      const a = document.createElement('a');
+      a.href = r.url;
+      a.download = r.title;
+      a.rel = 'noopener noreferrer';
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+    }
   };
 
   return (
@@ -331,7 +354,7 @@ const ResourceCard: React.FC<{
               <Eye className="w-3.5 h-3.5" /><span>{r.views_count}</span>
             </div>
             <Button size="sm" variant={locked ? 'secondary' : 'default'} className="h-8 text-xs">
-              {locked ? <><Crown className="w-3 h-3 mr-1" /> للأعضاء</> : <>افتح <ExternalLink className="w-3 h-3 ml-1" /></>}
+              {locked ? <><Crown className="w-3 h-3 mr-1" /> للأعضاء</> : <>تحميل <Download className="w-3 h-3 ml-1" /></>}
             </Button>
           </div>
         </CardContent>
