@@ -63,18 +63,37 @@ const StudentLibrary: React.FC = () => {
 
   const featured = filteredBySearch.filter(r => r.is_featured).slice(0, 3);
 
-  const handleOpen = (r: StudentResource) => {
+  const handleOpen = async (r: StudentResource) => {
     if (r.is_premium && !isPremium) return;
     const ext = (r.url.split('?')[0].split('.').pop() || 'pdf').slice(0, 5);
     const fileName = `${r.title.replace(/[\\/:*?"<>|]/g, '_')}.${ext}`;
     const proxyBase = `https://kziujhdqogqeehtxgpax.supabase.co/functions/v1/library-download`;
     const downloadUrl = `${proxyBase}?url=${encodeURIComponent(r.url)}&filename=${encodeURIComponent(fileName)}`;
-    // Hidden iframe forces download via Content-Disposition without opening a tab
-    const iframe = document.createElement('iframe');
-    iframe.style.display = 'none';
-    iframe.src = downloadUrl;
-    document.body.appendChild(iframe);
-    setTimeout(() => iframe.remove(), 60000);
+
+    try {
+      // Fetch as blob and trigger immediate download to the Downloads folder
+      const res = await fetch(downloadUrl);
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const blob = await res.blob();
+      const blobUrl = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = blobUrl;
+      a.download = fileName;
+      a.style.display = 'none';
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      setTimeout(() => URL.revokeObjectURL(blobUrl), 1000);
+    } catch (err) {
+      // Fallback: native anchor with download attribute
+      const a = document.createElement('a');
+      a.href = downloadUrl;
+      a.download = fileName;
+      a.rel = 'noopener';
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+    }
   };
 
   return (
