@@ -228,7 +228,7 @@ export default function TracksPage() {
                 </div>
                 <Button
                   size="lg"
-                  onClick={() => navigate('/student/support')}
+                  onClick={() => navigate('/support/tickets')}
                   className="bg-primary hover:bg-primary/90 shadow-lg shadow-primary/20 gap-2"
                 >
                   <Sparkles className="w-4 h-4" />
