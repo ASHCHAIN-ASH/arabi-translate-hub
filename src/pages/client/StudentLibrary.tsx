@@ -11,7 +11,7 @@ import { useStudentResources, useLibraryCategories, StudentResource, LibraryCate
 import { useUserMembership } from '@/hooks/useMembership';
 import * as LucideIcons from 'lucide-react';
 import {
-  Library, Search, ExternalLink, FileText, Video, Link as LinkIcon,
+  Library, Search, Download, FileText, Video, Link as LinkIcon,
   LayoutTemplate, Crown, Eye, ArrowLeft, Sparkles, BookOpen, Clock, User as UserIcon, Star,
 } from 'lucide-react';
 
