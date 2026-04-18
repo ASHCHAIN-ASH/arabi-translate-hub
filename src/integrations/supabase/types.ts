@@ -422,6 +422,59 @@ export type Database = {
         }
         Relationships: []
       }
+      deadline_reminders: {
+        Row: {
+          channel: string
+          created_at: string
+          deadline_at: string
+          due_at: string
+          error_message: string | null
+          id: string
+          reminder_type: string
+          sent: boolean
+          sent_at: string | null
+          service_order_id: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          channel?: string
+          created_at?: string
+          deadline_at: string
+          due_at: string
+          error_message?: string | null
+          id?: string
+          reminder_type: string
+          sent?: boolean
+          sent_at?: string | null
+          service_order_id: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          channel?: string
+          created_at?: string
+          deadline_at?: string
+          due_at?: string
+          error_message?: string | null
+          id?: string
+          reminder_type?: string
+          sent?: boolean
+          sent_at?: string | null
+          service_order_id?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "deadline_reminders_service_order_id_fkey"
+            columns: ["service_order_id"]
+            isOneToOne: false
+            referencedRelation: "service_orders"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       email_send_log: {
         Row: {
           created_at: string
