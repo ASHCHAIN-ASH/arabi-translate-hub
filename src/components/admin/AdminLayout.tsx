@@ -73,6 +73,7 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
         { name: 'المدفوعات', href: '/adminmaster/transactions', icon: CreditCard },
         { name: 'المحافظ الرقمية', href: '/adminmaster/wallets', icon: Wallet },
         { name: 'العضويات', href: '/adminmaster/memberships', icon: Star },
+        { name: 'الإحالات والعمولات', href: '/adminmaster/referrals', icon: Gift },
       ]
     },
     {
