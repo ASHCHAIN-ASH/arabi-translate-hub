@@ -382,6 +382,72 @@ const AcademicIntegrity = () => {
         </div>
       </section>
 
+      {/* Our Professional Model Section */}
+      <section className="py-16 md:py-20 bg-gradient-to-br from-amber-50 via-white to-orange-50 dark:from-amber-950/20 dark:via-slate-900 dark:to-orange-950/20">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            viewport={{ once: true }}
+            className="max-w-4xl mx-auto"
+          >
+            <div className="text-center mb-10">
+              <div className="inline-flex items-center gap-2 px-4 py-2 bg-amber-500/10 rounded-full mb-4">
+                <Shield className="h-4 w-4 text-amber-600" />
+                <span className="text-sm font-bold text-amber-700 dark:text-amber-400">نموذجنا المهني</span>
+              </div>
+              <h2 className="text-3xl md:text-4xl font-bold mb-4">
+                مساعدة أكاديمية، لا استبدال
+              </h2>
+              <p className="text-lg text-muted-foreground">
+                هدفنا دعم رحلتك التعليمية وتعزيز مهاراتك البحثية، لا الاستعاضة عنك
+              </p>
+            </div>
+
+            <Card className="border-2 border-amber-300/50 shadow-xl">
+              <CardContent className="p-8 space-y-6">
+                <div className="grid md:grid-cols-2 gap-6">
+                  <div className="space-y-3">
+                    <h3 className="text-xl font-bold text-green-700 dark:text-green-400 flex items-center gap-2">
+                      <CheckCircle2 className="h-6 w-6" />
+                      ما نقدّمه
+                    </h3>
+                    <ul className="space-y-2 text-muted-foreground">
+                      <li className="flex items-start gap-2"><CheckCircle2 className="h-5 w-5 text-green-500 mt-0.5 flex-shrink-0" /><span>إرشاد علمي ومنهجي</span></li>
+                      <li className="flex items-start gap-2"><CheckCircle2 className="h-5 w-5 text-green-500 mt-0.5 flex-shrink-0" /><span>مراجعة وتدقيق وتحسين الجودة</span></li>
+                      <li className="flex items-start gap-2"><CheckCircle2 className="h-5 w-5 text-green-500 mt-0.5 flex-shrink-0" /><span>دعم في الهيكلة والتوثيق</span></li>
+                      <li className="flex items-start gap-2"><CheckCircle2 className="h-5 w-5 text-green-500 mt-0.5 flex-shrink-0" /><span>استشارات أكاديمية متخصصة</span></li>
+                      <li className="flex items-start gap-2"><CheckCircle2 className="h-5 w-5 text-green-500 mt-0.5 flex-shrink-0" /><span>محتوى مرجعي وأدلة إرشادية</span></li>
+                    </ul>
+                  </div>
+                  <div className="space-y-3">
+                    <h3 className="text-xl font-bold text-red-700 dark:text-red-400 flex items-center gap-2">
+                      <Shield className="h-6 w-6" />
+                      ما لا نقدّمه
+                    </h3>
+                    <ul className="space-y-2 text-muted-foreground">
+                      <li className="flex items-start gap-2"><span className="text-red-500 mt-0.5 flex-shrink-0">✕</span><span>أعمال جاهزة للتسليم باسم العميل مباشرة</span></li>
+                      <li className="flex items-start gap-2"><span className="text-red-500 mt-0.5 flex-shrink-0">✕</span><span>الانتحال أو خرق سياسات الجامعات</span></li>
+                      <li className="flex items-start gap-2"><span className="text-red-500 mt-0.5 flex-shrink-0">✕</span><span>محتوى مخالف للنزاهة الأكاديمية</span></li>
+                      <li className="flex items-start gap-2"><span className="text-red-500 mt-0.5 flex-shrink-0">✕</span><span>التزوير العلمي بأي شكل</span></li>
+                    </ul>
+                  </div>
+                </div>
+
+                <div className="bg-amber-100/50 dark:bg-amber-950/30 border-r-4 border-amber-500 p-5 rounded-lg">
+                  <p className="text-sm leading-relaxed text-foreground/90">
+                    <strong className="text-amber-700 dark:text-amber-400">📌 التزام العميل:</strong> يلتزم العميل
+                    باستخدام جميع المخرجات كـ <strong>مرجع علمي أو دليل إرشادي</strong> لتطوير عمله الخاص،
+                    بما يتوافق مع سياسات جامعته ومعايير النزاهة الأكاديمية المعتمدة لديه.
+                  </p>
+                </div>
+              </CardContent>
+            </Card>
+          </motion.div>
+        </div>
+      </section>
+
       {/* CTA Section */}
       <section className="py-16 md:py-20 bg-gradient-to-br from-blue-600 via-indigo-600 to-purple-600 text-white relative overflow-hidden">
         <div className="absolute inset-0">
