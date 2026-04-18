@@ -295,29 +295,19 @@ export const useCompetitions = () => {
     }
   };
 
-  // جلب لوحة الترتيب
-  const fetchLeaderboard = async (competitionId: string, limit = 10) => {
-    try {
-      // بيانات ترتيب وهمية
-      const mockLeaderboard = Array.from({ length: Math.min(limit, 10) }, (_, i) => ({
-        id: `participant-${i + 1}`,
-        user_id: `user-${i + 1}`,
-        score: 95 - (i * 5) + Math.random() * 5,
-        rank: i + 1,
-        status: 'evaluated',
-        submission_date: new Date(Date.now() - Math.random() * 7 * 24 * 60 * 60 * 1000).toISOString(),
-        votes: [{ count: Math.floor(Math.random() * 50) + 10 }]
-      }));
-
-      return mockLeaderboard;
-    } catch (err: any) {
-      toast({
-        title: 'خطأ في جلب الترتيب',
-        description: err.message,
-        variant: 'destructive',
-      });
-      throw err;
-    }
+  // جلب لوحة الترتيب — حقيقي من DB (إن لم يوجد جدول مشاركات بعد، يرجع فارغ)
+  const fetchLeaderboard = async (_competitionId: string, _limit = 10) => {
+    // لا توجد جداول competitions/participations مفعّلة حالياً.
+    // تُعاد قائمة فارغة بدلاً من توليد بيانات وهمية.
+    return [] as Array<{
+      id: string;
+      user_id: string;
+      score: number;
+      rank: number;
+      status: string;
+      submission_date: string;
+      votes: { count: number }[];
+    }>;
   };
 
   // إرسال المشاركة
