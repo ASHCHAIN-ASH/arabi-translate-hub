@@ -9,6 +9,9 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Label } from '@/components/ui/label';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { ReferralsTab } from '@/components/membership/ReferralsTab';
+import { ReferralService } from '@/utils/referralService';
 import {
   Crown, Check, Wallet, Receipt, Sparkles, Calendar, TrendingUp, Zap, Shield,
   Gift, HeadphonesIcon, Star, Award, ArrowLeft, Info, HelpCircle, Rocket,
@@ -126,14 +129,25 @@ export default function MembershipPage() {
           return;
         }
       }
+      // Resolve pending referral code (captured during ?ref= signup)
+      const pendingCode = ReferralService.readPendingCode();
+      let referredBy: string | null = null;
+      if (pendingCode) {
+        const r = await ReferralService.resolveReferrer(pendingCode);
+        if (r && r.user_id !== user.id) referredBy = r.user_id;
+      }
+
       const { error } = await supabase.from('user_memberships' as any).insert({
         user_id: user.id,
         plan_id: selectedPlan.id,
         status: 'pending',
         payment_method: paymentMethod,
         amount_paid: 0,
-      });
+        referred_by: referredBy,
+        referral_code_used: pendingCode || null,
+      } as any);
       if (error) throw error;
+      if (referredBy) ReferralService.clearPendingCode();
       toast.success('تم إرسال طلب الاشتراك بنجاح. ستصلك إشعارات عند المراجعة.');
       setSelectedPlan(null);
       reload();
@@ -147,6 +161,17 @@ export default function MembershipPage() {
   return (
     <ClientLayout>
       <div className="max-w-7xl mx-auto p-2 md:p-4 space-y-8 pb-12" dir="rtl">
+        <Tabs defaultValue="plans" className="space-y-6">
+          <TabsList className="grid w-full md:w-auto md:inline-grid grid-cols-2 h-12 p-1 bg-muted/60">
+            <TabsTrigger value="plans" className="gap-2 text-base">
+              <Crown className="h-4 w-4" /> باقات العضوية
+            </TabsTrigger>
+            <TabsTrigger value="referrals" className="gap-2 text-base">
+              <Gift className="h-4 w-4" /> الإحالات والعمولات
+            </TabsTrigger>
+          </TabsList>
+
+          <TabsContent value="plans" className="space-y-8 mt-0">
         {/* === Hero with animated background === */}
         <motion.section
           initial={{ opacity: 0, y: -20 }}
@@ -707,6 +732,12 @@ export default function MembershipPage() {
             </DialogFooter>
           </DialogContent>
         </Dialog>
+          </TabsContent>
+
+          <TabsContent value="referrals" className="mt-0">
+            <ReferralsTab />
+          </TabsContent>
+        </Tabs>
       </div>
     </ClientLayout>
   );
