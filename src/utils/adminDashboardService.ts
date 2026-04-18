@@ -176,22 +176,23 @@ export class AdminDashboardService {
   static async getRecentOrders(): Promise<RecentOrder[]> {
     try {
       const { data, error } = await supabase.from('service_orders').select(`
-          id, tracking_id, service_name, current_status, total_amount, created_at, customer_id
+          id, tracking_id, service_name, current_status, total_amount, created_at, customer_id,
+          customers:customer_id ( name )
         `)
         .order('created_at', { ascending: false })
         .limit(5);
 
       if (error) throw error;
 
-      return data?.map(order => ({
+      return (data || []).map((order: any) => ({
         id: order.id,
         orderNumber: order.tracking_id,
-        clientName: 'عميل',
+        clientName: order.customers?.name || '—',
         serviceName: order.service_name || '',
         status: this.translateStatus(order.current_status || ''),
         total: order.total_amount || 0,
         createdAt: new Date(order.created_at).toLocaleDateString('ar-SA')
-      })) || [];
+      }));
     } catch (error) {
       console.error('خطأ في جلب الطلبات الحديثة:', error);
       return [];
@@ -200,7 +201,9 @@ export class AdminDashboardService {
 
   static async getOverdueInvoices(): Promise<OverdueInvoice[]> {
     try {
-      const { data, error } = await supabase.from('invoices').select('*')
+      const { data, error } = await supabase.from('invoices').select(`
+          *, customers:customer_id ( name )
+        `)
         .neq('status', 'paid')
         .not('due_date', 'is', null)
         .order('due_date', { ascending: true })
@@ -210,15 +213,15 @@ export class AdminDashboardService {
 
       const today = new Date();
       return (data || [])
-        .filter(inv => inv.due_date && new Date(inv.due_date) < today)
-        .map(invoice => {
+        .filter((inv: any) => inv.due_date && new Date(inv.due_date) < today)
+        .map((invoice: any) => {
           const dueDate = new Date(invoice.due_date!);
           const daysOverdue = Math.floor((today.getTime() - dueDate.getTime()) / (1000 * 60 * 60 * 24));
 
           return {
             id: invoice.id,
             invoiceNumber: invoice.invoice_number,
-            clientName: invoice.notes || 'عميل',
+            clientName: invoice.customer_name || invoice.customers?.name || '—',
             amount: invoice.total_amount || 0,
             dueDate: dueDate.toLocaleDateString('ar-SA'),
             daysOverdue
@@ -232,7 +235,9 @@ export class AdminDashboardService {
 
   static async getHighPriorityTickets(): Promise<HighPriorityTicket[]> {
     try {
-      const { data, error } = await supabase.from('tickets').select('*')
+      const { data, error } = await supabase.from('tickets').select(`
+          *, customers:customer_id ( name )
+        `)
         .eq('priority', 'high')
         .eq('status', 'open')
         .order('created_at', { ascending: false })
@@ -240,14 +245,14 @@ export class AdminDashboardService {
 
       if (error) throw error;
 
-      return data?.map(ticket => ({
+      return (data || []).map((ticket: any) => ({
         id: ticket.id,
         ticketNumber: ticket.ticket_number,
-        clientName: 'عميل',
+        clientName: ticket.customers?.name || '—',
         subject: ticket.subject,
         priority: 'عالية',
         createdAt: new Date(ticket.created_at).toLocaleDateString('ar-SA')
-      })) || [];
+      }));
     } catch (error) {
       console.error('خطأ في جلب التذاكر عالية الأولوية:', error);
       return [];
