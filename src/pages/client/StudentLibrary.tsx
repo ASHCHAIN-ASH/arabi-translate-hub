@@ -354,7 +354,7 @@ const ResourceCard: React.FC<{
               <Eye className="w-3.5 h-3.5" /><span>{r.views_count}</span>
             </div>
             <Button size="sm" variant={locked ? 'secondary' : 'default'} className="h-8 text-xs">
-              {locked ? <><Crown className="w-3 h-3 mr-1" /> للأعضاء</> : <>افتح <ExternalLink className="w-3 h-3 ml-1" /></>}
+              {locked ? <><Crown className="w-3 h-3 mr-1" /> للأعضاء</> : <>تحميل <Download className="w-3 h-3 ml-1" /></>}
             </Button>
           </div>
         </CardContent>
