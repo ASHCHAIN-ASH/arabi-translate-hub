@@ -49,6 +49,7 @@ export const BANK_INFO = {
 
 const ClientWallet: React.FC = () => {
   const { user } = useAuth();
+  const navigate = useNavigate();
   const [wallet, setWallet] = useState<WalletT | null>(null);
   const [txs, setTxs] = useState<WalletTransaction[]>([]);
   const [topups, setTopups] = useState<TopupRequest[]>([]);
