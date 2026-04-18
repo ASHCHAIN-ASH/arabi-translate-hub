@@ -20,8 +20,8 @@ project_id = "kziujhdqogqeehtxgpax"
   [functions.paylink-webhook]
     verify_jwt = false
   [functions.paylink-auth]
-    verify_jwt = true
+    verify_jwt = false
   [functions.create-payment-intent]
-    verify_jwt = true
+    verify_jwt = false
   [functions.verify-payment]
-    verify_jwt = true
+    verify_jwt = false
