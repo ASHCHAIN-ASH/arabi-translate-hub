@@ -169,7 +169,11 @@ const ClientWallet: React.FC = () => {
   const deposited = wallet?.total_deposited || 0;
   const spent = wallet?.total_spent || 0;
   const pendingTopups = topups.filter((t) => t.status === 'pending');
-  const lastTopup = topups.find((t) => t.status === 'approved');
+  // آخر شحن فعلي = أحدث معاملة إيداع في المحفظة (يشمل بوابة الدفع + الشحن اليدوي)
+  const lastDepositTx = txs.find((t) => t.type === 'deposit');
+  const lastTopup = lastDepositTx
+    ? { amount: Number(lastDepositTx.amount) }
+    : topups.find((t) => t.status === 'approved');
 
   return (
     <ClientLayout>
