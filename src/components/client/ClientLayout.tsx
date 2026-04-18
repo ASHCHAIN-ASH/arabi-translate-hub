@@ -96,10 +96,7 @@ const ClientLayout: React.FC<ClientLayoutProps> = ({ children }) => {
 
       {/* User chip */}
       <div className="p-4">
-        <motion.div
-          initial={{ opacity: 0, y: 8 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.4 }}
+        <div
           className="flex items-center gap-3 p-3 rounded-2xl bg-gradient-to-br from-muted/60 to-muted/20 border border-border/50"
         >
           <div className="relative">
