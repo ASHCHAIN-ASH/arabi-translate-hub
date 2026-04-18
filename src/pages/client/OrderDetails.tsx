@@ -171,6 +171,23 @@ const OrderDetails = () => {
       if (orderRes.data) setOrder(orderRes.data);
       if (timelineRes.data) setTimeline(timelineRes.data);
       if (attachRes.data) setAttachments(attachRes.data);
+
+      // Load related contract & invoice for lifecycle UI
+      const ord = orderRes.data;
+      if (ord?.signed_contract_id) {
+        const { data: c } = await (supabase.from('contracts') as any).select('*').eq('id', ord.signed_contract_id).maybeSingle();
+        setContract(c || null);
+      } else {
+        const { data: c } = await (supabase.from('contracts') as any).select('*').eq('service_order_id', id).maybeSingle();
+        setContract(c || null);
+      }
+      if (ord?.active_invoice_id) {
+        const { data: inv } = await (supabase.from('invoices') as any).select('*').eq('id', ord.active_invoice_id).maybeSingle();
+        setInvoice(inv || null);
+      } else {
+        const { data: inv } = await (supabase.from('invoices') as any).select('*').eq('order_id', id).maybeSingle();
+        setInvoice(inv || null);
+      }
     } catch (err) {
       console.error(err);
       toast.error('حدث خطأ في تحميل البيانات');
