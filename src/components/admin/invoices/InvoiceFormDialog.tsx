@@ -183,6 +183,28 @@ export default function InvoiceFormDialog({ open, onOpenChange, invoice, onSaved
             </div>
           </div>
 
+          {memberInfo && (
+            <div className="flex items-center justify-between gap-3 p-3 rounded-lg border-2 border-amber-400/50 bg-gradient-to-l from-amber-50 to-yellow-50 dark:from-amber-950/30 dark:to-yellow-950/20">
+              <div className="flex items-center gap-2">
+                <div className="w-9 h-9 rounded-full bg-gradient-to-br from-amber-400 to-yellow-500 flex items-center justify-center shadow">
+                  <Crown className="w-5 h-5 text-white" />
+                </div>
+                <div>
+                  <p className="text-sm font-bold flex items-center gap-1.5">
+                    عميل عضو: {memberInfo.name_ar}
+                    <Sparkles className="w-3.5 h-3.5 text-amber-500" />
+                  </p>
+                  <p className="text-xs text-muted-foreground">
+                    {autoDiscountApplied ? 'تم تطبيق خصم العضوية تلقائياً' : 'سيُطبَّق خصم العضوية على الإجمالي'}
+                  </p>
+                </div>
+              </div>
+              <Badge className="bg-amber-500 text-white text-base px-3 py-1">
+                خصم {memberInfo.discount_percentage}%
+              </Badge>
+            </div>
+          )}
+
           <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
             <div><Label>اسم العميل *</Label><Input value={customerName} onChange={(e) => setCustomerName(e.target.value)} /></div>
             <div><Label>البريد الإلكتروني</Label><Input type="email" value={customerEmail} onChange={(e) => setCustomerEmail(e.target.value)} /></div>
