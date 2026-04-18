@@ -5,6 +5,7 @@ import * as Icons from 'lucide-react';
 import {
   ArrowRight, Loader2, Sparkles, Construction, Gift, Crown,
   Copy, Download, Check, Wand2, BookOpen, Stethoscope, ListChecks,
+  Code2, Brain, TestTube2, FileCode2,
 } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
 // PDF: نولّده عبر نافذة طباعة المتصفح لدعم العربية و RTL بشكل كامل
