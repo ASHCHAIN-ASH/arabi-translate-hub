@@ -63,6 +63,10 @@ import ClientTickets from "./pages/client/Tickets";
 import ClientTicketDetails from "./pages/client/TicketDetails";
 import ClientWallet from "./pages/client/Wallet";
 import WalletTopup from "./pages/client/WalletTopup";
+import GroupOrders from "./pages/client/GroupOrders";
+import GroupOrderNew from "./pages/client/GroupOrderNew";
+import GroupOrderDetails from "./pages/client/GroupOrderDetails";
+import GroupOrderJoin from "./pages/client/GroupOrderJoin";
 import MembershipPage from "./pages/client/MembershipPage";
 import RewardsPage from "./pages/client/Rewards";
 import AdminMemberships from "./pages/admin/AdminMemberships";
@@ -328,6 +332,20 @@ const App = () => (
               <SimpleProtectedRoute requiredRole="client">
                 <WalletTopup />
               </SimpleProtectedRoute>
+            } />
+
+            {/* Group Orders */}
+            <Route path="/group-orders" element={
+              <SimpleProtectedRoute requiredRole="client"><GroupOrders /></SimpleProtectedRoute>
+            } />
+            <Route path="/group-orders/new" element={
+              <SimpleProtectedRoute requiredRole="client"><GroupOrderNew /></SimpleProtectedRoute>
+            } />
+            <Route path="/group-orders/join/:code" element={
+              <SimpleProtectedRoute requiredRole="client"><GroupOrderJoin /></SimpleProtectedRoute>
+            } />
+            <Route path="/group-orders/:id" element={
+              <SimpleProtectedRoute requiredRole="client"><GroupOrderDetails /></SimpleProtectedRoute>
             } />
             
             {/* Admin Dashboard Routes - Hidden Path */}
