@@ -563,7 +563,7 @@ const StudentHub: React.FC = () => {
                                 <div className="min-w-0 flex-1">
                                   <div className="flex items-center gap-2 mb-1 flex-wrap">
                                     <p className="font-semibold truncate">{o.service_name || 'طلب'}</p>
-                                    <Badge variant="outline" className="text-xs">{o.tracking_id}</Badge>
+                                    <Badge variant="outline" className="text-xs">{translateTracking(o.tracking_id)}</Badge>
                                   </div>
                                   <Badge variant="secondary" className="text-xs">
                                     {STATUS_AR[o.lifecycle_status] || o.lifecycle_status}
