@@ -73,6 +73,8 @@ export default function InvoiceFormDialog({ open, onOpenChange, invoice, onSaved
 
   const linkOrder = async (oid: string) => {
     setOrderId(oid);
+    setMemberInfo(null);
+    setAutoDiscountApplied(false);
     if (!oid) return;
     const order = orders.find((o) => o.id === oid);
     if (!order) return;
@@ -82,11 +84,27 @@ export default function InvoiceFormDialog({ open, onOpenChange, invoice, onSaved
       if (data?.full_name) setCustomerName(data.full_name);
       if (data?.phone) setCustomerPhone(data.phone);
       if ((ud as any)?.user?.email) setCustomerEmail((ud as any).user.email);
+
+      // 🎖️ Check active membership and auto-apply discount
+      const { data: memData } = await supabase.rpc('get_active_membership' as any, { _user_id: order.user_id });
+      const mem = Array.isArray(memData) && memData.length > 0 ? (memData[0] as any) : null;
+      if (mem && Number(mem.discount_percentage) > 0) {
+        setMemberInfo({ name_ar: mem.plan_name_ar, code: mem.plan_code, discount_percentage: Number(mem.discount_percentage) });
+      }
     }
     if (order.service_name && items.length === 1 && !items[0].item_name) {
       setItems([{ ...empty(), item_name: order.service_name, unit_price: Number(order.total_amount ?? 0), quantity: 1 }]);
     }
   };
+
+  // Auto-apply membership discount whenever items change & member detected
+  useEffect(() => {
+    if (!memberInfo || isEdit) return;
+    const sub = items.reduce((s, it) => s + InvoiceService.computeItemTotal(it), 0);
+    const calculated = +(sub * (memberInfo.discount_percentage / 100)).toFixed(2);
+    setDiscount(calculated);
+    setAutoDiscountApplied(true);
+  }, [memberInfo, items, isEdit]);
 
   const updateItem = (idx: number, patch: Partial<ItemRow>) => setItems((prev) => prev.map((r, i) => (i === idx ? { ...r, ...patch } : r)));
   const addItem = () => setItems((p) => [...p, empty()]);
