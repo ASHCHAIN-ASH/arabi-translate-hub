@@ -75,6 +75,7 @@ import TracksPage from "./pages/client/TracksPage";
 import TrackDetailPage from "./pages/client/TrackDetailPage";
 import TrackToolPage from "./pages/client/TrackToolPage";
 import AcademicCVPage from "./pages/client/AcademicCVPage";
+import StudentStatisticalAnalysis from "./pages/client/StudentStatisticalAnalysis";
 import AdminMemberships from "./pages/admin/AdminMemberships";
 import AdminReferrals from "./pages/admin/AdminReferrals";
 
@@ -544,6 +545,11 @@ const App = () => (
             <Route path="/student/academic-cv" element={
               <SimpleProtectedRoute requiredRole="client">
                 <AcademicCVPage />
+              </SimpleProtectedRoute>
+            } />
+            <Route path="/student/statistical-analysis" element={
+              <SimpleProtectedRoute requiredRole="client">
+                <StudentStatisticalAnalysis />
               </SimpleProtectedRoute>
             } />
             

@@ -56,7 +56,7 @@ export default function StudentStatisticalAnalysis() {
   const runAnalysis = async () => {
     if (!parsed) return;
     try {
-      let action = analysisType, payload: any = {};
+      let action: string = analysisType, payload: any = {};
       const meta = ANALYSES.find(a => a.key === analysisType)!;
 
       if (analysisType === 'descriptives') {
