@@ -23,6 +23,7 @@ import PrivacySecurity from "./pages/academic/PrivacySecurity";
 import TimelineCommitment from "./pages/academic/TimelineCommitment";
 import OrderNow from "./pages/OrderNow";
 import Index from "./pages/Index";
+import PaymentReturn from "./pages/PaymentReturn";
 
 import TranslationServices from "./pages/TranslationServices";
 import LegalTranslation from "./pages/LegalTranslation";
@@ -244,6 +245,7 @@ const App = () => (
             <Route path="/academic-integrity" element={<AcademicIntegrity />} />
            <Route path="/institutional-partnerships" element={<InstitutionalPartnerships />} />
             <Route path="/payment-methods" element={<PaymentMethods />} />
+            <Route path="/payment/return" element={<PaymentReturn />} />
             <Route path="/universities" element={<Universities />} />
             <Route path="/journals" element={<JournalsDirectory />} />
             <Route path="/contract-management" element={<ContractManagement />} />

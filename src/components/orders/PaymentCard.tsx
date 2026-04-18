@@ -142,11 +142,29 @@ export const PaymentCard: React.FC<Props> = ({ invoice, userId, onPaid }) => {
         </div>
       </CardHeader>
       <CardContent>
-        <Tabs defaultValue="wallet" dir="rtl">
-          <TabsList className="grid grid-cols-2 w-full">
+        <Tabs defaultValue="card" dir="rtl">
+          <TabsList className="grid grid-cols-3 w-full">
+            <TabsTrigger value="card"><CreditCard className="h-4 w-4 ml-1" /> بطاقة</TabsTrigger>
             <TabsTrigger value="wallet"><Wallet className="h-4 w-4 ml-1" /> المحفظة</TabsTrigger>
             <TabsTrigger value="bank"><Upload className="h-4 w-4 ml-1" /> تحويل بنكي</TabsTrigger>
           </TabsList>
+
+          <TabsContent value="card" className="space-y-4 mt-4">
+            <div className="rounded-lg border border-primary/20 bg-primary/5 p-4 text-sm space-y-2">
+              <div className="flex items-center gap-2 font-semibold">
+                <ShieldCheck className="h-4 w-4 text-primary" />
+                دفع آمن ببطاقة مدى / فيزا / ماستركارد / Apple Pay
+              </div>
+              <p className="text-muted-foreground text-xs">
+                ستتحوّل لصفحة دفع آمنة ومشفرة، وسنحدّث حالة فاتورتك تلقائياً عند إتمام العملية.
+              </p>
+            </div>
+            <Button onClick={payByCard} disabled={loading} className="w-full" size="lg">
+              {loading ? <Loader2 className="h-4 w-4 ml-2 animate-spin" /> : <CreditCard className="h-4 w-4 ml-2" />}
+              ادفع {remaining.toLocaleString('ar-SA')} {invoice.currency || 'SAR'} الآن
+            </Button>
+          </TabsContent>
+
 
           <TabsContent value="wallet" className="space-y-4 mt-4">
             <div className="rounded-lg bg-muted/40 p-4 flex justify-between items-center">
