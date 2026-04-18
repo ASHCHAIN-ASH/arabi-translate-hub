@@ -71,6 +71,8 @@ import MembershipPage from "./pages/client/MembershipPage";
 import RewardsPage from "./pages/client/Rewards";
 import StudentHub from "./pages/client/StudentHub";
 import MindMapPage from "./pages/client/MindMapPage";
+import TracksPage from "./pages/client/TracksPage";
+import TrackDetailPage from "./pages/client/TrackDetailPage";
 import AdminMemberships from "./pages/admin/AdminMemberships";
 import AdminReferrals from "./pages/admin/AdminReferrals";
 
@@ -520,6 +522,16 @@ const App = () => (
             <Route path="/student/mind-map" element={
               <SimpleProtectedRoute requiredRole="client">
                 <MindMapPage />
+              </SimpleProtectedRoute>
+            } />
+            <Route path="/student/tracks" element={
+              <SimpleProtectedRoute requiredRole="client">
+                <TracksPage />
+              </SimpleProtectedRoute>
+            } />
+            <Route path="/student/tracks/:slug" element={
+              <SimpleProtectedRoute requiredRole="client">
+                <TrackDetailPage />
               </SimpleProtectedRoute>
             } />
             
