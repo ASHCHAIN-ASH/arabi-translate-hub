@@ -205,7 +205,7 @@ const StudentHub: React.FC = () => {
           {[
             { icon: Flame, label: 'مهام اليوم', value: `${completedCount}/${tasks.length}`, color: 'text-orange-500', bg: 'bg-orange-500/10' },
             { icon: Trophy, label: 'نقاطك', value: summary?.total_points ?? 0, color: 'text-amber-500', bg: 'bg-amber-500/10' },
-            { icon: Crown, label: 'حالتك', value: isPremium ? 'Premium' : 'مجاني', color: 'text-purple-500', bg: 'bg-purple-500/10' },
+            { icon: Crown, label: 'حالتك', value: isPremium ? 'بريميوم' : 'مجاني', color: 'text-purple-500', bg: 'bg-purple-500/10' },
             { icon: BookOpen, label: 'موارد المكتبة', value: resources.length, color: 'text-blue-500', bg: 'bg-blue-500/10' },
           ].map((s, i) => (
             <motion.div
