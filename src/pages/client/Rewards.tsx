@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Trophy, Sparkles, Gift, TrendingUp, Crown, Star, RefreshCw, AlertCircle, Award, Zap } from 'lucide-react';
+import { Trophy, Sparkles, Gift, TrendingUp, Crown, Star, RefreshCw, AlertCircle, Award, Zap, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
@@ -8,10 +8,14 @@ import { Badge } from '@/components/ui/badge';
 import { useAuth } from '@/components/SimpleAuthProvider';
 import { useGamification } from '@/hooks/useGamification';
 import { GamificationService } from '@/utils/gamificationService';
+import { supabase } from '@/integrations/supabase/client';
+import { useToast } from '@/hooks/use-toast';
 import ClientLayout from '@/components/client/ClientLayout';
 
 const RewardsPage: React.FC = () => {
   const { user } = useAuth();
+  const { toast } = useToast();
+  const [redeemingId, setRedeemingId] = useState<string | null>(null);
   const { summary, transactions, rewards, userRewards, loading, error, refresh } =
     useGamification(user?.id);
 
@@ -188,8 +192,29 @@ const RewardsPage: React.FC = () => {
                       {r.description_ar || '—'}
                     </p>
                     <div className="mt-4">
-                      <Button disabled={!affordable} size="sm" className="w-full">
-                        {affordable ? 'استبدل الآن' : `تحتاج ${(r.cost_points - total).toLocaleString('ar-SA')} نقطة`}
+                      <Button
+                        disabled={!affordable || redeemingId === r.id}
+                        onClick={async () => {
+                          setRedeemingId(r.id);
+                          try {
+                            const { data, error: invErr } = await supabase.functions.invoke('redeem-reward', {
+                              body: { reward_id: r.id },
+                            });
+                            if (invErr || (data as any)?.error) {
+                              throw new Error((data as any)?.error || invErr?.message || 'فشل الاستبدال');
+                            }
+                            toast({ title: '🎉 تم استبدال المكافأة بنجاح', description: r.title_ar });
+                            await refresh();
+                          } catch (e: any) {
+                            toast({ title: 'تعذّر الاستبدال', description: e?.message, variant: 'destructive' });
+                          } finally {
+                            setRedeemingId(null);
+                          }
+                        }}
+                        size="sm" className="w-full"
+                      >
+                        {redeemingId === r.id ? <Loader2 className="w-4 h-4 animate-spin" /> :
+                          affordable ? 'استبدل الآن' : `تحتاج ${(r.cost_points - total).toLocaleString('ar-SA')} نقطة`}
                       </Button>
                     </div>
                   </motion.div>
