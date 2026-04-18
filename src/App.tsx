@@ -63,6 +63,7 @@ import ClientTicketDetails from "./pages/client/TicketDetails";
 import ClientWallet from "./pages/client/Wallet";
 import MembershipPage from "./pages/client/MembershipPage";
 import AdminMemberships from "./pages/admin/AdminMemberships";
+import AdminReferrals from "./pages/admin/AdminReferrals";
 
 // Admin Pages
 import AdminDashboard from "./pages/admin/AdminDashboard";
@@ -453,6 +454,11 @@ const App = () => (
             <Route path="/adminmaster/memberships" element={
               <SimpleProtectedRoute adminOnly>
                 <AdminMemberships />
+              </SimpleProtectedRoute>
+            } />
+            <Route path="/adminmaster/referrals" element={
+              <SimpleProtectedRoute adminOnly>
+                <AdminReferrals />
               </SimpleProtectedRoute>
             } />
             <Route path="/membership" element={
