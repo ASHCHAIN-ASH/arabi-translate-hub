@@ -41,7 +41,7 @@ const InvoicePayment: React.FC = () => {
       setLoading(true);
       try {
         const [inv, w] = await Promise.all([
-          InvoiceService.getById(invoiceId),
+          InvoiceService.get(invoiceId),
           WalletService.getMyWallet(user.id),
         ]);
         setInvoice(inv);
