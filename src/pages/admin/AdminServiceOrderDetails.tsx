@@ -21,6 +21,8 @@ import {
   Download, Upload, Activity, Wallet, AlertCircle, NotebookPen, Wifi, WifiOff,
   PackageCheck, FileCheck2, Receipt, ScrollText,
 } from 'lucide-react';
+import OrderLifecycleTimeline, { LifecycleStatus } from '@/components/orders/OrderLifecycleTimeline';
+import { AdminQuoteSender } from '@/components/orders/AdminQuoteSender';
 
 const STATUS_CONFIG: Record<string, { label: string; color: string; icon: React.ReactNode; barClass: string }> = {
   pending: { label: 'معلق', color: 'bg-gray-100 text-gray-700 border-gray-300', icon: <Clock className="w-3 h-3" />, barClass: 'bg-gray-400' },
@@ -65,6 +67,10 @@ interface Order {
   quote_sent_at?: string | null;
   customer?: { id: string; name: string; email?: string | null; phone?: string | null; company?: string | null } | null;
   profile?: { full_name?: string | null; phone?: string | null } | null;
+  lifecycle_status?: string | null;
+  progress_percentage?: number | null;
+  signed_contract_id?: string | null;
+  active_invoice_id?: string | null;
 }
 
 const AdminServiceOrderDetails = () => {
