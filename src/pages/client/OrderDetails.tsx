@@ -545,6 +545,22 @@ const OrderDetails = () => {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
           {/* Main Content */}
           <div className="lg:col-span-2 space-y-5">
+            {/* Order Lifecycle Timeline (12 stages) */}
+            <OrderLifecycleTimeline
+              status={(order.lifecycle_status as LifecycleStatus) || 'received'}
+              progress={order.progress_percentage ?? 0}
+            />
+
+            {/* Contract signing — shown when contract_pending */}
+            {contract && order.lifecycle_status === 'contract_pending' && (
+              <ContractSigningCard contract={contract} onSigned={fetchData} />
+            )}
+
+            {/* Payment — shown when payment_pending */}
+            {invoice && order.lifecycle_status === 'payment_pending' && user && (
+              <PaymentCard invoice={invoice} userId={user.id} onPaid={fetchData} />
+            )}
+
             {/* Timeline */}
             <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}>
               <Card className="border-0 shadow-md">
