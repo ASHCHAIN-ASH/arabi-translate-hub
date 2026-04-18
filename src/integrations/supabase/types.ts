@@ -3471,7 +3471,9 @@ export type Database = {
           isSetofReturn: true
         }
       }
-      use_track_tool: { Args: { _tool_id: string }; Returns: Json }
+      use_track_tool:
+        | { Args: { _tool_id: string }; Returns: Json }
+        | { Args: { _mode: string; _tool_id: string }; Returns: Json }
     }
     Enums: {
       app_role: "admin" | "moderator" | "user"

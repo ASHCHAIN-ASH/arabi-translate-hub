@@ -54,13 +54,17 @@ Deno.serve(async (req) => {
     const { data: u } = await supabase.auth.getUser();
     if (!u?.user) return json({ error: "غير مصرح" }, 401);
 
-    const { caseText } = await req.json();
+    const { caseText, mode } = await req.json();
     if (!caseText || typeof caseText !== "string" || caseText.trim().length < 50) {
       return json({ error: "وصف الحالة قصير جداً (50 حرفاً على الأقل)" }, 400);
     }
     if (caseText.length > 15000) {
       return json({ error: "النص طويل جداً (الحد 15000 حرف)" }, 400);
     }
+
+    // mode: "pro" => deep analysis (gemini-2.5-pro), default => fast (gemini-2.5-flash)
+    const isPro = mode === "pro";
+    const model = isPro ? "google/gemini-2.5-pro" : "google/gemini-2.5-flash";
 
     const r = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
       method: "POST",
@@ -69,7 +73,7 @@ Deno.serve(async (req) => {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        model: "google/gemini-2.5-pro",
+        model,
         messages: [
           { role: "system", content: SYSTEM },
           { role: "user", content: `حلّل الحالة السريرية التالية:\n\n${caseText}` },
@@ -86,7 +90,7 @@ Deno.serve(async (req) => {
 
     const data = await r.json();
     const content = data?.choices?.[0]?.message?.content || "";
-    return json({ ok: true, analysis: content });
+    return json({ ok: true, analysis: content, mode: isPro ? "pro" : "standard" });
   } catch (e) {
     console.error("clinical-case-analyzer error:", e);
     return json({ error: e instanceof Error ? e.message : "خطأ غير متوقع" }, 500);
