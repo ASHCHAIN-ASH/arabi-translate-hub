@@ -23,6 +23,38 @@ import {
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { motion, AnimatePresence } from 'framer-motion';
+import { InteractiveTour, startTour, type TourStep } from '@/components/InteractiveTour';
+import { InfoCard, HelpHint } from '@/components/HelpHint';
+import { HelpCircle } from 'lucide-react';
+
+const ADMIN_ORDERS_TOUR_KEY = 'tour:admin-service-orders:v1';
+
+const ADMIN_TOUR_STEPS: TourStep[] = [
+  {
+    target: '[data-tour="admin-orders-header"]',
+    title: 'لوحة إدارة طلبات الخدمات',
+    content: 'مركز التحكم الكامل بطلبات العملاء — مربوط لحظياً، أي طلب جديد يظهر هنا فوراً مع إشعار.',
+    placement: 'bottom',
+  },
+  {
+    target: '[data-tour="admin-orders-stats"]',
+    title: 'مؤشرات الأداء (KPIs)',
+    content: 'نظرة فورية على إجمالي الطلبات، النشطة، المعلقة، المكتملة، وإجمالي الإيرادات. كل رقم تفاعلي ومحدّث لحظياً.',
+    placement: 'bottom',
+  },
+  {
+    target: '[data-tour="admin-orders-filters"]',
+    title: 'فلاتر متقدمة وبحث ذكي',
+    content: 'صفّ الطلبات حسب الحالة، الأولوية، أو رتّبها بالمبلغ والتاريخ. البحث يعمل عبر اسم العميل، الإيميل، ورقم التتبع.',
+    placement: 'bottom',
+  },
+  {
+    target: '[data-tour="admin-orders-table"]',
+    title: 'جدول الطلبات التفاعلي',
+    content: 'كل صف يعرض كل التفاصيل المهمة. اضغط على أي طلب لفتح لوحة التفاصيل الكاملة، إدارة المراحل، الفواتير، والمرفقات.',
+    placement: 'top',
+  },
+];
 
 interface CustomerInfo {
   id: string;
@@ -333,6 +365,7 @@ const AdminServiceOrders = () => {
       <div className="container mx-auto p-4 md:p-6 space-y-6">
         {/* Header */}
         <motion.div 
+          data-tour="admin-orders-header"
           className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4"
           initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
@@ -350,27 +383,48 @@ const AdminServiceOrders = () => {
               إدارة ومتابعة طلبات الخدمات • مربوط لحظياً بالعملاء
             </p>
           </div>
-          <Button onClick={handleRefresh} variant="outline" size="sm" className="gap-2" disabled={isRefreshing}>
-            <RefreshCw className={cn("h-4 w-4", isRefreshing && "animate-spin")} />
-            تحديث
-          </Button>
+          <div className="flex items-center gap-2">
+            <Button
+              onClick={() => startTour(ADMIN_ORDERS_TOUR_KEY)}
+              variant="ghost"
+              size="sm"
+              className="gap-2 text-primary hover:bg-primary/10"
+              title="ابدأ الجولة التعريفية"
+            >
+              <HelpCircle className="h-4 w-4" />
+              <span className="hidden sm:inline">جولة تعريفية</span>
+            </Button>
+            <Button onClick={handleRefresh} variant="outline" size="sm" className="gap-2" disabled={isRefreshing}>
+              <RefreshCw className={cn("h-4 w-4", isRefreshing && "animate-spin")} />
+              تحديث
+            </Button>
+          </div>
         </motion.div>
 
+        {/* Tip Card */}
+        <InfoCard
+          storageKey="admin-orders-realtime"
+          title="مركز قيادة لحظي 🚀"
+          description="أي طلب جديد، تحديث حالة، أو رسالة من عميل تظهر هنا فوراً بدون الحاجة لتحديث الصفحة. النقطة الخضراء تؤكد الاتصال المباشر."
+          variant="info"
+        />
+
         {/* Stats */}
-        <div className="grid grid-cols-2 lg:grid-cols-5 gap-3">
+        <div data-tour="admin-orders-stats" className="grid grid-cols-2 lg:grid-cols-5 gap-3">
           {[
-            { label: 'إجمالي', value: stats.total, icon: <Users className="h-4 w-4" />, color: 'text-primary' },
-            { label: 'نشطة', value: stats.active, icon: <TrendingUp className="h-4 w-4" />, color: 'text-blue-600' },
-            { label: 'بالانتظار', value: stats.pending, icon: <Clock className="h-4 w-4" />, color: 'text-amber-600' },
-            { label: 'مكتملة', value: stats.completed, icon: <CheckCircle className="h-4 w-4" />, color: 'text-green-600' },
-            { label: 'الإيرادات', value: `${stats.totalRevenue.toLocaleString()} ر.س`, icon: <DollarSign className="h-4 w-4" />, color: 'text-emerald-600' },
+            { key: 'total', label: 'إجمالي', value: stats.total, hint: 'العدد الكلي لجميع الطلبات في النظام.', icon: <Users className="h-4 w-4" />, color: 'text-primary' },
+            { key: 'active', label: 'نشطة', value: stats.active, hint: 'الطلبات قيد التنفيذ التي يعمل عليها الفريق حالياً.', icon: <TrendingUp className="h-4 w-4" />, color: 'text-blue-600' },
+            { key: 'pending', label: 'بالانتظار', value: stats.pending, hint: 'طلبات معلقة بانتظار المراجعة أو إجراء من الإدارة.', icon: <Clock className="h-4 w-4" />, color: 'text-amber-600' },
+            { key: 'done', label: 'مكتملة', value: stats.completed, hint: 'الطلبات المسلّمة والمغلقة بنجاح.', icon: <CheckCircle className="h-4 w-4" />, color: 'text-green-600' },
+            { key: 'rev', label: 'الإيرادات', value: `${stats.totalRevenue.toLocaleString()} ر.س`, hint: 'مجموع المبالغ من الطلبات المكتملة.', icon: <DollarSign className="h-4 w-4" />, color: 'text-emerald-600' },
           ].map((s, i) => (
-            <motion.div key={i} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.05 }}>
+            <motion.div key={s.key} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.05 }}>
               <Card className="hover:shadow-sm transition-shadow">
                 <CardContent className="p-3 md:p-4">
                   <div className="flex items-center gap-2 mb-1">
                     <span className="text-muted-foreground">{s.icon}</span>
                     <span className="text-xs text-muted-foreground">{s.label}</span>
+                    <HelpHint text={s.hint} className="ml-auto" />
                   </div>
                   <p className={cn("text-xl font-bold", s.color)}>{s.value}</p>
                 </CardContent>
@@ -380,7 +434,7 @@ const AdminServiceOrders = () => {
         </div>
 
         {/* Filters */}
-        <Card>
+        <Card data-tour="admin-orders-filters">
           <CardContent className="p-3 md:p-4">
             <div className="flex flex-col md:flex-row gap-3">
               <div className="flex-1 relative">
@@ -432,6 +486,7 @@ const AdminServiceOrders = () => {
         </Card>
 
         {/* Orders Table */}
+        <div data-tour="admin-orders-table">
         {filteredOrders.length === 0 ? (
           <Card>
             <CardContent className="p-12 text-center">
@@ -561,8 +616,11 @@ const AdminServiceOrders = () => {
             </div>
           </Card>
         )}
+        </div>
 
       </div>
+
+      <InteractiveTour steps={ADMIN_TOUR_STEPS} storageKey={ADMIN_ORDERS_TOUR_KEY} />
     </AdminLayout>
   );
 };
