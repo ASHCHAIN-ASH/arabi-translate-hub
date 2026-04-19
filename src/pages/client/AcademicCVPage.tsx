@@ -458,7 +458,23 @@ const AcademicCVPage: React.FC = () => {
                             </div>
                           </RowCard>
                         ))}
-                        <Button variant="outline" onClick={addCourse} className="w-full gap-2"><Plus className="w-4 h-4" /> {T.fields.addCourse}</Button>
+                        <div className="flex gap-2">
+                          <Button variant="outline" onClick={addCourse} className="flex-1 gap-2"><Plus className="w-4 h-4" /> {T.fields.addCourse}</Button>
+                          <AIBtn
+                            label={lang === 'ar' ? 'اقتراحات بالذكاء' : 'AI Suggest'}
+                            className="h-9 px-3 text-sm"
+                            onClick={async () => {
+                              const t = await runAI('course_suggest', undefined, { jobTitle: data.personal.jobTitle, education: data.education });
+                              if (!t) return;
+                              const lines = t.split('\n').map(l => l.trim()).filter(Boolean).slice(0, 8);
+                              const newCourses = lines.map(line => {
+                                const [name, issuer] = line.split(/[-—–]/).map(s => s.trim());
+                                return { id: uid(), name: name || line, issuer: issuer || '', date: '' };
+                              });
+                              updateData(d => ({ ...d, courses: [...d.courses, ...newCourses] }));
+                            }}
+                          />
+                        </div>
                       </TabsContent>
 
                       <TabsContent value="activities" className="space-y-3 mt-0">
