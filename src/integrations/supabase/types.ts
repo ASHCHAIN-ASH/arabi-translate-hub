@@ -4122,17 +4122,33 @@ export type Database = {
         }[]
       }
       record_cv_export: { Args: { _cv_id: string }; Returns: Json }
-      sign_contract_with_otp: {
-        Args: {
-          _contract_id: string
-          _ip?: string
-          _otp_code: string
-          _signature_text: string
-          _signer_name?: string
-          _ua?: string
-        }
-        Returns: Json
-      }
+      sign_contract_with_otp:
+        | {
+            Args: {
+              _contract_id: string
+              _ip?: string
+              _otp_code: string
+              _signature_text: string
+              _signer_name?: string
+              _ua?: string
+            }
+            Returns: Json
+          }
+        | {
+            Args: {
+              _accepted_terms?: Json
+              _comments?: string
+              _contract_id: string
+              _ip?: string
+              _otp_code: string
+              _signature_image?: string
+              _signature_text: string
+              _signer_id_number?: string
+              _signer_name?: string
+              _ua?: string
+            }
+            Returns: Json
+          }
       swap_cv_template: {
         Args: { _cv_id: string; _new_template_key: string }
         Returns: Json

@@ -30,7 +30,7 @@ import {
   sendContractToClient, createManualContract, ContractStatus,
   remindClientToSign, cancelContract, deleteContract,
 } from "@/utils/supabaseContractService";
-import { PARENT_COMPANY, SERVICE_TYPE_LABELS } from "@/utils/contractTemplates";
+import { PARENT_COMPANY, SERVICE_TYPE_LABELS, TEMPLATE_TYPE_LABELS, TEMPLATE_TYPE_DESCRIPTIONS, ContractTemplateType } from "@/utils/contractTemplates";
 
 const ContractsSystem = () => {
   const [contracts, setContracts] = useState<ContractRow[]>([]);
@@ -44,6 +44,7 @@ const ContractsSystem = () => {
 
   const [form, setForm] = useState({
     customer_id: "",
+    template_type: "academic" as ContractTemplateType,
     service_name: "",
     service_type: "general",
     total_amount: 0,
@@ -54,6 +55,7 @@ const ContractsSystem = () => {
     client_id_number: "",
     client_email: "",
     client_phone: "",
+    client_company: "",
   });
 
   useEffect(() => { load(); loadCustomers(); }, []);
@@ -130,6 +132,7 @@ const ContractsSystem = () => {
       await createManualContract({
         customer_id: form.customer_id || null,
         user_id: cust?.user_id || null,
+        template_type: form.template_type,
         service_name: form.service_name,
         service_type: form.service_type,
         total_amount: Number(form.total_amount),
@@ -140,10 +143,11 @@ const ContractsSystem = () => {
         client_id_number: form.client_id_number || undefined,
         client_email: form.client_email || undefined,
         client_phone: form.client_phone || undefined,
+        client_company: form.client_company || undefined,
       });
       toast.success("تم إنشاء العقد بنجاح");
       setOpenNew(false);
-      setForm({ customer_id:"", service_name:"", service_type:"general", total_amount:0, payment_terms:"دفعة واحدة عند بدء التنفيذ", delivery_date:"", work_duration:"", client_full_name:"", client_id_number:"", client_email:"", client_phone:"" });
+      setForm({ customer_id:"", template_type:"academic", service_name:"", service_type:"general", total_amount:0, payment_terms:"دفعة واحدة عند بدء التنفيذ", delivery_date:"", work_duration:"", client_full_name:"", client_id_number:"", client_email:"", client_phone:"", client_company:"" });
       await load();
     } catch (e: any) { toast.error(e.message || "تعذّر إنشاء العقد"); }
   }
@@ -224,6 +228,28 @@ const ContractsSystem = () => {
               <DialogContent dir="rtl" className="max-w-2xl max-h-[85vh] overflow-y-auto">
                 <DialogHeader><DialogTitle>إنشاء عقد قانوني/أكاديمي</DialogTitle></DialogHeader>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  {/* اختيار نوع القالب */}
+                  <div className="sm:col-span-2">
+                    <Label className="text-base font-semibold">نوع قالب العقد *</Label>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 mt-2">
+                      {(Object.keys(TEMPLATE_TYPE_LABELS) as ContractTemplateType[]).map(key => (
+                        <button
+                          key={key}
+                          type="button"
+                          onClick={() => setForm(p => ({ ...p, template_type: key }))}
+                          className={`text-right p-3 rounded-lg border-2 transition ${
+                            form.template_type === key
+                              ? "border-primary bg-primary/5"
+                              : "border-border hover:border-primary/50"
+                          }`}
+                        >
+                          <div className="font-bold text-sm">{TEMPLATE_TYPE_LABELS[key]}</div>
+                          <div className="text-xs text-muted-foreground mt-1 leading-relaxed">{TEMPLATE_TYPE_DESCRIPTIONS[key]}</div>
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
                   <div className="sm:col-span-2">
                     <Label>اختر عميلاً مسجّلاً (اختياري)</Label>
                     <Select value={form.customer_id} onValueChange={pickCustomer}>
@@ -235,6 +261,12 @@ const ContractsSystem = () => {
                       </SelectContent>
                     </Select>
                   </div>
+                  {form.template_type === "corporate" && (
+                    <div className="sm:col-span-2">
+                      <Label>اسم الشركة / الكيان القانوني *</Label>
+                      <Input value={form.client_company} onChange={e => setForm(p => ({...p, client_company: e.target.value}))} placeholder="مثال: شركة النور للاستشارات" />
+                    </div>
+                  )}
                   <div><Label>اسم العميل الكامل *</Label><Input value={form.client_full_name} onChange={e => setForm(p => ({...p, client_full_name: e.target.value}))} /></div>
                   <div><Label>رقم الهوية</Label><Input value={form.client_id_number} onChange={e => setForm(p => ({...p, client_id_number: e.target.value}))} /></div>
                   <div><Label>البريد الإلكتروني</Label><Input type="email" value={form.client_email} onChange={e => setForm(p => ({...p, client_email: e.target.value}))} /></div>

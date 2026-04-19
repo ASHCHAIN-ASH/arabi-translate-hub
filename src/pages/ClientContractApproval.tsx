@@ -16,16 +16,18 @@ import { toast } from "sonner";
 import {
   FileText, ShieldCheck, Calendar, DollarSign, User, Building2,
   CheckCircle2, AlertCircle, ArrowRight, Printer, Clock, Mail, KeyRound, Loader2,
+  Download,
 } from "lucide-react";
 import { InputOTP, InputOTPGroup, InputOTPSlot } from "@/components/ui/input-otp";
 import {
   getContract, getContractTimeline, getContractSignatures,
-  signContract, getClientIP, generateContractContent,
+  signContract, getClientIP, generateContractContent, downloadContractPdf,
   STATUS_LABELS, STATUS_COLORS, ContractRow, ContractSignature, ContractTimelineEvent,
 } from "@/utils/supabaseContractService";
 import { REQUIRED_TERMS, PARENT_COMPANY } from "@/utils/contractTemplates";
 import ContractDocument from "@/components/contracts/ContractDocument";
 import ClientLayout from "@/components/client/ClientLayout";
+import SignaturePad from "@/components/contracts/SignaturePad";
 
 const ClientContractApproval = () => {
   const params = useParams();
@@ -42,8 +44,13 @@ const ClientContractApproval = () => {
   const [signerName, setSignerName] = useState("");
   const [signerId, setSignerId] = useState("");
   const [signature, setSignature] = useState("");
+  const [signatureImage, setSignatureImage] = useState<string | null>(null);
   const [comments, setComments] = useState("");
   const [accepted, setAccepted] = useState<string[]>([]);
+  const [downloading, setDownloading] = useState(false);
+
+  // التحقق من رقم الهوية السعودي (10 أرقام يبدأ بـ 1 أو 2)
+  const isValidSaudiId = (id: string) => /^[12]\d{9}$/.test(id.trim());
 
   // OTP state
   const [otpStep, setOtpStep] = useState<"idle" | "sent" | "verified">("idle");
@@ -89,7 +96,24 @@ const ClientContractApproval = () => {
   const isSigned = contract?.status === "signed" || contract?.status === "active" || contract?.status === "completed";
   const allTermsAccepted = accepted.length === REQUIRED_TERMS.length;
   const baseFormValid =
-    !!signerName.trim() && !!signature.trim() && allTermsAccepted;
+    !!signerName.trim() &&
+    !!signature.trim() &&
+    !!signatureImage &&
+    isValidSaudiId(signerId) &&
+    allTermsAccepted;
+
+  async function handleDownloadPdf() {
+    if (!contract) return;
+    setDownloading(true);
+    try {
+      await downloadContractPdf(contract.id);
+      toast.success("جاري فتح/تحميل العقد…");
+    } catch (e: any) {
+      toast.error(e.message || "تعذّر تحميل العقد");
+    } finally {
+      setDownloading(false);
+    }
+  }
 
   async function handleSendOtp() {
     if (!contract) return;
@@ -125,6 +149,14 @@ const ClientContractApproval = () => {
       toast.error("يرجى إدخال الاسم الكامل والتوقيع");
       return;
     }
+    if (!isValidSaudiId(signerId)) {
+      toast.error("رقم الهوية الوطنية غير صحيح (10 أرقام يبدأ بـ 1 أو 2)");
+      return;
+    }
+    if (!signatureImage) {
+      toast.error("يرجى رسم توقيعك في اللوحة المخصصة");
+      return;
+    }
     if (!allTermsAccepted) {
       toast.error("يرجى الموافقة على جميع الشروط");
       return;
@@ -134,7 +166,6 @@ const ClientContractApproval = () => {
     setSubmitting(true);
 
     try {
-      // التحقق من تسجيل الدخول
       const { data: u } = await supabase.auth.getUser();
       if (!u.user) {
         toast.error("يجب تسجيل الدخول لتوقيع العقد");
@@ -142,8 +173,11 @@ const ClientContractApproval = () => {
         return;
       }
 
-      // ✅ استدعاء ذرّي واحد: يتحقق من الرمز ويسجّل التوقيع في معاملة واحدة
-      // هذا يمنع المشكلة السابقة حيث كان الرمز يُعلَّم "مستخدماً" حتى عند فشل التوقيع
+      const acceptedTermsRecord = REQUIRED_TERMS
+        .filter(t => accepted.includes(t.id))
+        .map(t => ({ id: t.id, label: t.label, accepted_at: new Date().toISOString() }));
+
+      // ✅ استدعاء ذرّي واحد: يتحقق من الرمز ويسجّل التوقيع مع الصورة ورقم الهوية
       const { data, error } = await (supabase.rpc as any)("sign_contract_with_otp", {
         _contract_id: contract.id,
         _otp_code: otpCode.trim(),
@@ -151,6 +185,10 @@ const ClientContractApproval = () => {
         _signer_name: signerName.trim(),
         _ip: await getClientIP(),
         _ua: navigator.userAgent,
+        _signature_image: signatureImage,
+        _signer_id_number: signerId.trim(),
+        _accepted_terms: acceptedTermsRecord,
+        _comments: comments.trim() || null,
       });
 
       if (error) throw error;
@@ -260,7 +298,11 @@ const ClientContractApproval = () => {
           </div>
           <div className="flex items-center gap-2 shrink-0">
             <Badge className={STATUS_COLORS[contract.status]}>{STATUS_LABELS[contract.status]}</Badge>
-            <Button variant="outline" size="sm" onClick={() => window.print()}>
+            <Button variant="outline" size="sm" onClick={handleDownloadPdf} disabled={downloading}>
+              {downloading ? <Loader2 className="h-4 w-4 ml-2 animate-spin" /> : <Download className="h-4 w-4 ml-2" />}
+              تحميل العقد
+            </Button>
+            <Button variant="ghost" size="sm" onClick={() => window.print()}>
               <Printer className="h-4 w-4 ml-2" /> طباعة
             </Button>
           </div>
@@ -329,15 +371,33 @@ const ClientContractApproval = () => {
                       <Input id="signerName" value={signerName} onChange={(e) => setSignerName(e.target.value)} />
                     </div>
                     <div>
-                      <Label htmlFor="signerId">رقم الهوية/الإقامة (اختياري)</Label>
-                      <Input id="signerId" value={signerId} onChange={(e) => setSignerId(e.target.value)} placeholder="1xxxxxxxxx" />
+                      <Label htmlFor="signerId">رقم الهوية الوطنية / الإقامة *</Label>
+                      <Input
+                        id="signerId"
+                        value={signerId}
+                        onChange={(e) => setSignerId(e.target.value.replace(/\D/g, "").slice(0, 10))}
+                        placeholder="1xxxxxxxxx"
+                        inputMode="numeric"
+                        maxLength={10}
+                        className={signerId && !isValidSaudiId(signerId) ? "border-destructive" : ""}
+                      />
+                      {signerId && !isValidSaudiId(signerId) && (
+                        <p className="text-xs text-destructive mt-1">رقم الهوية يجب أن يكون 10 أرقام يبدأ بـ 1 أو 2</p>
+                      )}
                     </div>
                   </div>
 
                   <div>
-                    <Label htmlFor="sig">التوقيع الإلكتروني (اكتب اسمك الكامل) *</Label>
+                    <Label htmlFor="sig">التوقيع المكتوب (الاسم الكامل للتوثيق) *</Label>
                     <Input id="sig" value={signature} onChange={(e) => setSignature(e.target.value)} className="font-bold text-lg" placeholder="اكتب اسمك هنا للتوقيع" />
-                    <p className="text-xs text-muted-foreground mt-1">سيُسجَّل توقيعك مع وقت التوقيع وعنوان IP لأغراض التوثيق القانوني.</p>
+                  </div>
+
+                  <div>
+                    <Label>التوقيع المرسوم بخط اليد *</Label>
+                    <SignaturePad value={signatureImage || undefined} onChange={setSignatureImage} />
+                    <p className="text-xs text-muted-foreground mt-2">
+                      🔒 سيُسجَّل توقيعك مع وقت التوقيع، عنوان IP، رقم الهوية، وبصمة المتصفح وفق <strong>نظام التعاملات الإلكترونية السعودي</strong>.
+                    </p>
                   </div>
 
                   <div>

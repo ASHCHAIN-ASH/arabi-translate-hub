@@ -361,9 +361,16 @@ function buildHtml(contract: any, signature: any, verifyHash: string) {
       ${signature ? `
         <div class="signed-card">
           <div class="verified">موقّع إلكترونياً ومُوثّق</div>
-          <div class="sig-frame">
-            <div class="sigtext">${esc(signature.signature_text)}</div>
-          </div>
+          ${signature.signature_image ? `
+            <div class="sig-frame">
+              <img src="${esc(signature.signature_image)}" alt="التوقيع المرسوم"
+                   style="max-width:100%;max-height:90px;display:block;margin:0 auto;" />
+            </div>
+          ` : `
+            <div class="sig-frame">
+              <div class="sigtext">${esc(signature.signature_text)}</div>
+            </div>
+          `}
           <div class="meta">
             <div class="row"><span class="k">التاريخ والوقت</span><span class="v">${fmtDateTime(signature.signed_at)}</span></div>
             ${signature.ip_address ? `<div class="row"><span class="k">عنوان IP</span><span class="v">${esc(signature.ip_address)}</span></div>` : ""}
