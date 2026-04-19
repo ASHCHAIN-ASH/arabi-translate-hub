@@ -49,15 +49,42 @@ const AcademicCVPage: React.FC = () => {
   const alreadyPaid = cv?.status === 'paid';
   const needsPayment = !isMember && !alreadyPaid;
 
-  const tabsAr: Record<string, string> = {
-    personal: 'البيانات الأساسية', education: 'التعليم', experience: 'الخبرات',
-    projects: 'المشاريع', skills: 'المهارات', courses: 'الدورات', activities: 'الأنشطة',
+  // Full bilingual UI strings
+  const T = lang === 'ar' ? {
+    back: 'الرجوع', title: 'CV الأكاديمي الذكي',
+    subtitle: 'صمّم سيرتك بقالب احترافي — حمّلها واطبعها مباشرة',
+    print: 'طباعة', download: 'تحميل PDF', downloadPaid: `تحميل (${EXPORT_PRICE} ر.س)`,
+    cvTitle: 'عنوان السيرة', placeholderTitle: 'سيرتي الذاتية', language: 'اللغة',
+    freeMember: 'تصدير مجاني (عضو)', paidDone: 'تم الدفع — تحميل غير محدود',
+    exportPrice: `تصدير: ${EXPORT_PRICE} ر.س`, pickTemplate: 'اختر قالباً واحداً',
+    templateHint: '— يمكنك التبديل في أي وقت، وستُطبَّق نفس البيانات',
+    livePreview: 'معاينة مباشرة', tryDemo: 'تعبئة بيانات تجريبية',
+    demoFilled: 'تم تعبئة بيانات تجريبية — جرّب القوالب!',
+    confirmPay: 'تأكيد الدفع', pay: 'ادفع وحمّل الآن', cancel: 'إلغاء',
+    payDesc: 'تصدير وتحميل السيرة الذاتية كملف PDF احترافي.',
+    pricePrefix: 'السعر:', priceSuffix: 'ر.س — تُخصم من محفظتك.',
+    payNote: 'بعد الدفع يمكنك تحميل وطباعة هذه السيرة بدون رسوم إضافية.',
+    tabs: { personal: 'البيانات الأساسية', education: 'التعليم', experience: 'الخبرات', projects: 'المشاريع', skills: 'المهارات', courses: 'الدورات', activities: 'الأنشطة' },
+    fields: { fullName: 'الاسم الكامل *', jobTitle: 'المسمى الوظيفي', email: 'البريد الإلكتروني', phone: 'رقم الجوال', city: 'المدينة', country: 'الدولة', linkedin: 'LinkedIn', website: 'الموقع الشخصي', summary: 'النبذة الشخصية', summaryHint: 'اكتب نبذة قصيرة (3-5 أسطر) تلخّص خبراتك وأهدافك', university: 'الجامعة', degree: 'الدرجة', major: 'التخصص', gpa: 'المعدل (اختياري)', from: 'من', to: 'إلى', addEdu: 'إضافة تعليم', org: 'الجهة', role: 'المسمى', desc: 'الوصف', addExp: 'إضافة خبرة', projectName: 'اسم المشروع/البحث', date: 'التاريخ', addProject: 'إضافة مشروع', techSkills: 'مهارات تقنية (افصل بفاصلة)', softSkills: 'مهارات شخصية', langs: 'اللغات', course: 'الدورة/الشهادة', issuer: 'الجهة', addCourse: 'إضافة دورة', activity: 'النشاط', addActivity: 'إضافة نشاط' },
+  } : {
+    back: 'Back', title: 'Smart Academic CV',
+    subtitle: 'Design a professional CV — download and print instantly',
+    print: 'Print', download: 'Download PDF', downloadPaid: `Download (${EXPORT_PRICE} SAR)`,
+    cvTitle: 'CV Title', placeholderTitle: 'My CV', language: 'Language',
+    freeMember: 'Free export (member)', paidDone: 'Paid — unlimited downloads',
+    exportPrice: `Export: ${EXPORT_PRICE} SAR`, pickTemplate: 'Pick one template',
+    templateHint: '— switch anytime, same data applies',
+    livePreview: 'Live Preview', tryDemo: 'Fill with sample data',
+    demoFilled: 'Sample data loaded — try the templates!',
+    confirmPay: 'Confirm Payment', pay: 'Pay & download', cancel: 'Cancel',
+    payDesc: 'Export and download your CV as a professional PDF.',
+    pricePrefix: 'Price:', priceSuffix: 'SAR — deducted from your wallet.',
+    payNote: 'After payment, you can download and print this CV with no extra fees.',
+    tabs: { personal: 'Personal', education: 'Education', experience: 'Experience', projects: 'Projects', skills: 'Skills', courses: 'Courses', activities: 'Activities' },
+    fields: { fullName: 'Full Name *', jobTitle: 'Job Title', email: 'Email', phone: 'Phone', city: 'City', country: 'Country', linkedin: 'LinkedIn', website: 'Website', summary: 'Profile Summary', summaryHint: 'Write a short summary (3-5 lines) about your experience and goals', university: 'University', degree: 'Degree', major: 'Field', gpa: 'GPA (optional)', from: 'From', to: 'To', addEdu: 'Add Education', org: 'Organization', role: 'Role', desc: 'Description', addExp: 'Add Experience', projectName: 'Project / Research Name', date: 'Date', addProject: 'Add Project', techSkills: 'Technical Skills (comma-separated)', softSkills: 'Soft Skills', langs: 'Languages', course: 'Course / Certificate', issuer: 'Issuer', addCourse: 'Add Course', activity: 'Activity', addActivity: 'Add Activity' },
   };
-  const tabsEn: Record<string, string> = {
-    personal: 'Personal', education: 'Education', experience: 'Experience',
-    projects: 'Projects', skills: 'Skills', courses: 'Courses', activities: 'Activities',
-  };
-  const tabLabels = lang === 'ar' ? tabsAr : tabsEn;
+  const tabLabels = T.tabs;
+  const fillDemo = () => { updateData(() => (lang === 'ar' ? DEMO_CV_AR : DEMO_CV_EN)); toast.success(T.demoFilled); };
 
   // ---- Mutators ----
   const setPersonal = (k: keyof CVData['personal'], v: string) =>
