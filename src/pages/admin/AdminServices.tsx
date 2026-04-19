@@ -198,8 +198,8 @@ const AdminServices = () => {
   // === Services CRUD ===
   const resetServiceForm = () => {
     setServiceForm({
-      name_ar: '', name: '', description: '', category_id: '',
-      price: 0, unit: 'service', is_active: true,
+      name_ar: '', name: '', description: '', description_ar: '', category_id: '', subcategory_id: '',
+      price: 0, unit: 'service', image_url: '', is_featured: false, is_active: true, sort_order: 0,
     });
     setEditingService(null);
   };
@@ -210,12 +210,39 @@ const AdminServices = () => {
       name_ar: s.name_ar ?? '',
       name: s.name ?? '',
       description: s.description ?? '',
+      description_ar: s.description_ar ?? '',
       category_id: s.category_id ?? '',
+      subcategory_id: s.subcategory_id ?? '',
       price: Number(s.price ?? 0),
       unit: s.unit ?? 'service',
+      image_url: s.image_url ?? '',
+      is_featured: !!s.is_featured,
       is_active: !!s.is_active,
+      sort_order: s.sort_order ?? 0,
     });
     setIsServiceDialogOpen(true);
+  };
+
+  const handleImageUpload = async (file: File) => {
+    if (!file) return;
+    if (file.size > 2 * 1024 * 1024) {
+      toast({ title: 'الصورة كبيرة', description: 'الحد الأقصى 2MB', variant: 'destructive' });
+      return;
+    }
+    setUploadingImage(true);
+    try {
+      const ext = file.name.split('.').pop();
+      const path = `services/${Date.now()}-${Math.random().toString(36).slice(2, 8)}.${ext}`;
+      const { error: upErr } = await supabase.storage.from('service-images').upload(path, file);
+      if (upErr) throw upErr;
+      const { data } = supabase.storage.from('service-images').getPublicUrl(path);
+      setServiceForm((f) => ({ ...f, image_url: data.publicUrl }));
+      toast({ title: '✅ تم رفع الصورة' });
+    } catch (e: any) {
+      toast({ title: 'خطأ', description: e.message, variant: 'destructive' });
+    } finally {
+      setUploadingImage(false);
+    }
   };
 
   const handleSaveService = async () => {
@@ -228,14 +255,23 @@ const AdminServices = () => {
       return;
     }
 
-    const payload = {
+    const slug = (serviceForm.name || serviceForm.name_ar).trim()
+      .toLowerCase().replace(/[^a-zA-Z0-9\u0600-\u06FF]+/g, '-').replace(/^-|-$/g, '');
+
+    const payload: any = {
       name_ar: serviceForm.name_ar.trim(),
       name: (serviceForm.name || serviceForm.name_ar).trim(),
       description: serviceForm.description.trim() || null,
+      description_ar: serviceForm.description_ar.trim() || null,
       category_id: serviceForm.category_id || null,
+      subcategory_id: serviceForm.subcategory_id || null,
       price: serviceForm.price,
       unit: serviceForm.unit,
+      image_url: serviceForm.image_url || null,
+      is_featured: serviceForm.is_featured,
       is_active: serviceForm.is_active,
+      sort_order: serviceForm.sort_order,
+      slug: editingService?.slug || slug || null,
     };
 
     const { error } = editingService
@@ -280,7 +316,7 @@ const AdminServices = () => {
 
   // === Categories CRUD ===
   const resetCategoryForm = () => {
-    setCategoryForm({ name_ar: '', name: '', description: '', icon: '', sort_order: 0 });
+    setCategoryForm({ name_ar: '', name: '', description: '', icon: '', color: '', parent_id: '', sort_order: 0, is_active: true });
     setEditingCategory(null);
   };
 
@@ -291,7 +327,10 @@ const AdminServices = () => {
       name: c.name ?? '',
       description: c.description ?? '',
       icon: c.icon ?? '',
+      color: c.color ?? '',
+      parent_id: c.parent_id ?? '',
       sort_order: c.sort_order ?? 0,
+      is_active: c.is_active ?? true,
     });
     setIsCategoryDialogOpen(true);
   };
@@ -301,12 +340,18 @@ const AdminServices = () => {
       toast({ title: 'حقل مطلوب', description: 'اسم القسم بالعربية مطلوب', variant: 'destructive' });
       return;
     }
-    const payload = {
+    const slug = (categoryForm.name || categoryForm.name_ar).trim()
+      .toLowerCase().replace(/[^a-zA-Z0-9\u0600-\u06FF]+/g, '-').replace(/^-|-$/g, '');
+    const payload: any = {
       name_ar: categoryForm.name_ar.trim(),
       name: (categoryForm.name || categoryForm.name_ar).trim(),
       description: categoryForm.description.trim() || null,
       icon: categoryForm.icon.trim() || null,
+      color: categoryForm.color.trim() || null,
+      parent_id: categoryForm.parent_id || null,
       sort_order: categoryForm.sort_order,
+      is_active: categoryForm.is_active,
+      slug: editingCategory?.slug || slug || null,
     };
     const { error } = editingCategory
       ? await supabase.from('service_categories').update(payload).eq('id', editingCategory.id)
