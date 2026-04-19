@@ -20,7 +20,7 @@ import { useAuth } from '@/components/SimpleAuthProvider';
 import { cn } from '@/lib/utils';
 import DynamicServiceFields from '@/components/client/DynamicServiceFields';
 import {
-  getFieldsConfig, getFieldLabel, getOptionLabel, URGENCY_MULTIPLIER,
+  getFieldsConfig, getFieldLabel, getOptionLabel, URGENCY_MULTIPLIER, resolveServiceFields,
 } from '@/config/serviceFieldsConfig';
 
 interface ServiceItem {
@@ -33,6 +33,9 @@ interface ServiceItem {
   category_id: string | null;
   category_slug?: string | null;
   category_name?: string | null;
+  dynamic_fields?: any[];
+  quantity_unit_label?: string | null;
+  default_quantity?: number | null;
 }
 
 interface UploadedFile { file: File; id: string; preview?: string }
@@ -85,8 +88,8 @@ const OrderNew = () => {
   const [trackingId, setTrackingId] = useState<string>('');
 
   const fieldsConfig = useMemo(
-    () => getFieldsConfig(service?.category_slug),
-    [service?.category_slug],
+    () => resolveServiceFields(service ?? undefined, service?.category_slug),
+    [service]
   );
 
   // Pre-fill defaults when service loads
@@ -105,7 +108,7 @@ const OrderNew = () => {
     try {
       const { data, error } = await supabase
         .from('services')
-        .select('id, name, name_ar, description, price, unit, category_id, service_categories(slug, name_ar)')
+        .select('id, name, name_ar, description, price, unit, category_id, dynamic_fields, quantity_unit_label, default_quantity, service_categories(slug, name_ar)')
         .eq('id', serviceId).single();
       if (error || !data) { toast.error('الخدمة غير موجودة'); navigate('/client-services'); return; }
       const cat = (data as any).service_categories;
@@ -115,6 +118,9 @@ const OrderNew = () => {
         category_id: data.category_id,
         category_slug: cat?.slug ?? null,
         category_name: cat?.name_ar ?? null,
+        dynamic_fields: Array.isArray((data as any).dynamic_fields) ? (data as any).dynamic_fields : [],
+        quantity_unit_label: (data as any).quantity_unit_label ?? null,
+        default_quantity: (data as any).default_quantity ?? null,
       });
     } catch (e) { console.error(e); navigate('/client-services'); }
     finally { setLoadingData(false); }

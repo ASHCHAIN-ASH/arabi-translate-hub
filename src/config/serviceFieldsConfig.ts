@@ -195,6 +195,23 @@ export const getFieldsConfig = (categorySlug: string | null | undefined): Catego
   return SERVICE_FIELDS[categorySlug] ?? DEFAULT_FIELDS_CONFIG;
 };
 
+/**
+ * Resolve the effective fields config for a given service.
+ * Priority: service-level overrides (admin-defined) → category defaults.
+ */
+export const resolveServiceFields = (
+  service: { dynamic_fields?: any; quantity_unit_label?: string | null; default_quantity?: number | null } | null | undefined,
+  categorySlug: string | null | undefined
+): CategoryFieldsConfig => {
+  const base = getFieldsConfig(categorySlug);
+  const customFields = Array.isArray(service?.dynamic_fields) ? service!.dynamic_fields as DynamicField[] : [];
+  return {
+    quantityUnitLabel: service?.quantity_unit_label?.trim() || base.quantityUnitLabel,
+    defaultQuantity: service?.default_quantity ?? base.defaultQuantity,
+    fields: customFields.length > 0 ? customFields : base.fields,
+  };
+};
+
 /** Friendly label for a stored answer (used in admin & review screens). */
 export const getFieldLabel = (categorySlug: string | null | undefined, key: string): string => {
   const cfg = getFieldsConfig(categorySlug);

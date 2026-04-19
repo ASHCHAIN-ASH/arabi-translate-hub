@@ -25,6 +25,7 @@ import {
   Plus, Search, Edit, Trash2, Eye, EyeOff, Package, Layers,
   Tag, TrendingUp, CheckCircle2, XCircle, Wallet, FolderTree, Star, Upload, Image as ImageIcon,
 } from 'lucide-react';
+import { DynamicFieldsEditor } from '@/components/admin/DynamicFieldsEditor';
 
 interface Service {
   id: string;
@@ -96,6 +97,9 @@ const AdminServices = () => {
     is_featured: false,
     is_active: true,
     sort_order: 0,
+    dynamic_fields: [] as any[],
+    quantity_unit_label: '',
+    default_quantity: 1,
   });
   const [uploadingImage, setUploadingImage] = useState(false);
 
@@ -200,6 +204,7 @@ const AdminServices = () => {
     setServiceForm({
       name_ar: '', name: '', description: '', description_ar: '', category_id: '', subcategory_id: '',
       price: 0, unit: 'service', image_url: '', is_featured: false, is_active: true, sort_order: 0,
+      dynamic_fields: [], quantity_unit_label: '', default_quantity: 1,
     });
     setEditingService(null);
   };
@@ -219,6 +224,9 @@ const AdminServices = () => {
       is_featured: !!s.is_featured,
       is_active: !!s.is_active,
       sort_order: s.sort_order ?? 0,
+      dynamic_fields: Array.isArray((s as any).dynamic_fields) ? (s as any).dynamic_fields : [],
+      quantity_unit_label: (s as any).quantity_unit_label ?? '',
+      default_quantity: (s as any).default_quantity ?? 1,
     });
     setIsServiceDialogOpen(true);
   };
@@ -272,6 +280,9 @@ const AdminServices = () => {
       is_active: serviceForm.is_active,
       sort_order: serviceForm.sort_order,
       slug: editingService?.slug || slug || null,
+      dynamic_fields: serviceForm.dynamic_fields ?? [],
+      quantity_unit_label: serviceForm.quantity_unit_label?.trim() || null,
+      default_quantity: serviceForm.default_quantity || 1,
     };
 
     const { error } = editingService
@@ -937,6 +948,35 @@ const ServiceDialog = ({
           </div>
           <Switch checked={form.is_active} onCheckedChange={(c) => setForm({ ...form, is_active: c })} />
         </div>
+      </div>
+
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2 border-t">
+        <div>
+          <Label>وحدة الكمية في فورم الطلب</Label>
+          <Input
+            value={form.quantity_unit_label ?? ''}
+            onChange={(e) => setForm({ ...form, quantity_unit_label: e.target.value })}
+            placeholder="مثال: صفحة / جلسة / تصميم"
+            className="mt-1.5"
+          />
+          <p className="text-xs text-muted-foreground mt-1">يظهر بجانب حقل الكمية للعميل. اتركه فارغاً لاستخدام الافتراضي.</p>
+        </div>
+        <div>
+          <Label>الكمية الافتراضية</Label>
+          <Input
+            type="number" min="1"
+            value={form.default_quantity ?? 1}
+            onChange={(e) => setForm({ ...form, default_quantity: parseInt(e.target.value) || 1 })}
+            className="mt-1.5"
+          />
+        </div>
+      </div>
+
+      <div className="pt-2 border-t">
+        <DynamicFieldsEditor
+          fields={form.dynamic_fields ?? []}
+          onChange={(fields) => setForm({ ...form, dynamic_fields: fields })}
+        />
       </div>
     </div>
     <DialogFooter className="gap-2">
