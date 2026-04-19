@@ -276,115 +276,125 @@ const AcademicCVPage: React.FC = () => {
             {/* EDITOR */}
             <Card className="border-border/60">
               <CardContent className="p-4">
-                <Tabs value={tab} onValueChange={v => setTab(v as any)} dir="rtl">
-                  <TabsList className="grid grid-cols-4 lg:grid-cols-7 h-auto p-1 mb-4">
-                    <TabsTrigger value="personal" className="text-xs gap-1"><User className="w-3 h-3" /> {tabLabels.personal}</TabsTrigger>
-                    <TabsTrigger value="education" className="text-xs gap-1"><GraduationCap className="w-3 h-3" /> {tabLabels.education}</TabsTrigger>
-                    <TabsTrigger value="experience" className="text-xs gap-1"><Briefcase className="w-3 h-3" /> {tabLabels.experience}</TabsTrigger>
-                    <TabsTrigger value="projects" className="text-xs gap-1"><Lightbulb className="w-3 h-3" /> {tabLabels.projects}</TabsTrigger>
-                    <TabsTrigger value="skills" className="text-xs gap-1"><Wrench className="w-3 h-3" /> {tabLabels.skills}</TabsTrigger>
-                    <TabsTrigger value="courses" className="text-xs gap-1"><Award className="w-3 h-3" /> {tabLabels.courses}</TabsTrigger>
-                    <TabsTrigger value="activities" className="text-xs gap-1"><HeartHandshake className="w-3 h-3" /> {tabLabels.activities}</TabsTrigger>
+                <Tabs value={tab} onValueChange={v => setTab(v as any)} dir={lang === 'ar' ? 'rtl' : 'ltr'}>
+                  <TabsList className="grid grid-cols-4 lg:grid-cols-7 h-auto p-1 mb-4 gap-0.5">
+                    <TabsTrigger value="personal" className="text-xs gap-1 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground transition-all"><User className="w-3 h-3" /> {tabLabels.personal}</TabsTrigger>
+                    <TabsTrigger value="education" className="text-xs gap-1 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground transition-all"><GraduationCap className="w-3 h-3" /> {tabLabels.education}</TabsTrigger>
+                    <TabsTrigger value="experience" className="text-xs gap-1 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground transition-all"><Briefcase className="w-3 h-3" /> {tabLabels.experience}</TabsTrigger>
+                    <TabsTrigger value="projects" className="text-xs gap-1 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground transition-all"><Lightbulb className="w-3 h-3" /> {tabLabels.projects}</TabsTrigger>
+                    <TabsTrigger value="skills" className="text-xs gap-1 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground transition-all"><Wrench className="w-3 h-3" /> {tabLabels.skills}</TabsTrigger>
+                    <TabsTrigger value="courses" className="text-xs gap-1 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground transition-all"><Award className="w-3 h-3" /> {tabLabels.courses}</TabsTrigger>
+                    <TabsTrigger value="activities" className="text-xs gap-1 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground transition-all"><HeartHandshake className="w-3 h-3" /> {tabLabels.activities}</TabsTrigger>
                   </TabsList>
 
-                  <TabsContent value="personal" className="space-y-3">
-                    <div className="grid sm:grid-cols-2 gap-3">
-                      <Field label="الاسم الكامل *" value={data.personal.fullName} onChange={v => setPersonal('fullName', v)} />
-                      <Field label="المسمى الوظيفي" value={data.personal.jobTitle} onChange={v => setPersonal('jobTitle', v)} />
-                      <Field label="البريد الإلكتروني" value={data.personal.email} onChange={v => setPersonal('email', v)} type="email" />
-                      <Field label="رقم الجوال" value={data.personal.phone} onChange={v => setPersonal('phone', v)} />
-                      <Field label="المدينة" value={data.personal.city} onChange={v => setPersonal('city', v)} />
-                      <Field label="الدولة" value={data.personal.country} onChange={v => setPersonal('country', v)} />
-                      <Field label="LinkedIn" value={data.personal.linkedin || ''} onChange={v => setPersonal('linkedin', v)} />
-                      <Field label="الموقع الشخصي" value={data.personal.website || ''} onChange={v => setPersonal('website', v)} />
-                    </div>
-                    <div>
-                      <Label className="text-xs mb-1.5 block">النبذة الشخصية / Profile</Label>
-                      <Textarea value={data.personal.summary} onChange={e => setPersonal('summary', e.target.value)} rows={4} placeholder="اكتب نبذة قصيرة (3-5 أسطر) تلخّص خبراتك وأهدافك" />
-                    </div>
-                  </TabsContent>
+                  <AnimatePresence mode="wait">
+                    <motion.div
+                      key={tab}
+                      initial={{ opacity: 0, x: lang === 'ar' ? -8 : 8 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      exit={{ opacity: 0, x: lang === 'ar' ? 8 : -8 }}
+                      transition={{ duration: 0.2 }}
+                    >
+                      <TabsContent value="personal" className="space-y-3 mt-0">
+                        <div className="grid sm:grid-cols-2 gap-3">
+                          <Field label={T.fields.fullName} value={data.personal.fullName} onChange={v => setPersonal('fullName', v)} />
+                          <Field label={T.fields.jobTitle} value={data.personal.jobTitle} onChange={v => setPersonal('jobTitle', v)} />
+                          <Field label={T.fields.email} value={data.personal.email} onChange={v => setPersonal('email', v)} type="email" />
+                          <Field label={T.fields.phone} value={data.personal.phone} onChange={v => setPersonal('phone', v)} />
+                          <Field label={T.fields.city} value={data.personal.city} onChange={v => setPersonal('city', v)} />
+                          <Field label={T.fields.country} value={data.personal.country} onChange={v => setPersonal('country', v)} />
+                          <Field label={T.fields.linkedin} value={data.personal.linkedin || ''} onChange={v => setPersonal('linkedin', v)} />
+                          <Field label={T.fields.website} value={data.personal.website || ''} onChange={v => setPersonal('website', v)} />
+                        </div>
+                        <div>
+                          <Label className="text-xs mb-1.5 block">{T.fields.summary}</Label>
+                          <Textarea value={data.personal.summary} onChange={e => setPersonal('summary', e.target.value)} rows={4} placeholder={T.fields.summaryHint} />
+                        </div>
+                      </TabsContent>
 
-                  <TabsContent value="education" className="space-y-3">
-                    {data.education.map(e => (
-                      <RowCard key={e.id} onDelete={() => delEdu(e.id)}>
-                        <div className="grid sm:grid-cols-2 gap-2">
-                          <Field label="الجامعة" value={e.institution} onChange={v => updEdu(e.id, { institution: v })} />
-                          <Field label="الدرجة" value={e.degree} onChange={v => updEdu(e.id, { degree: v })} />
-                          <Field label="التخصص" value={e.field} onChange={v => updEdu(e.id, { field: v })} />
-                          <Field label="المعدل (اختياري)" value={e.gpa || ''} onChange={v => updEdu(e.id, { gpa: v })} />
-                          <Field label="من" value={e.startDate} onChange={v => updEdu(e.id, { startDate: v })} placeholder="2020" />
-                          <Field label="إلى" value={e.endDate} onChange={v => updEdu(e.id, { endDate: v })} placeholder="2024" />
-                        </div>
-                      </RowCard>
-                    ))}
-                    <Button variant="outline" onClick={addEdu} className="w-full gap-2"><Plus className="w-4 h-4" /> إضافة تعليم</Button>
-                  </TabsContent>
+                      <TabsContent value="education" className="space-y-3 mt-0">
+                        {data.education.map(e => (
+                          <RowCard key={e.id} onDelete={() => delEdu(e.id)}>
+                            <div className="grid sm:grid-cols-2 gap-2">
+                              <Field label={T.fields.university} value={e.institution} onChange={v => updEdu(e.id, { institution: v })} />
+                              <Field label={T.fields.degree} value={e.degree} onChange={v => updEdu(e.id, { degree: v })} />
+                              <Field label={T.fields.major} value={e.field} onChange={v => updEdu(e.id, { field: v })} />
+                              <Field label={T.fields.gpa} value={e.gpa || ''} onChange={v => updEdu(e.id, { gpa: v })} />
+                              <Field label={T.fields.from} value={e.startDate} onChange={v => updEdu(e.id, { startDate: v })} placeholder="2020" />
+                              <Field label={T.fields.to} value={e.endDate} onChange={v => updEdu(e.id, { endDate: v })} placeholder="2024" />
+                            </div>
+                          </RowCard>
+                        ))}
+                        <Button variant="outline" onClick={addEdu} className="w-full gap-2"><Plus className="w-4 h-4" /> {T.fields.addEdu}</Button>
+                      </TabsContent>
 
-                  <TabsContent value="experience" className="space-y-3">
-                    {data.experience.map(e => (
-                      <RowCard key={e.id} onDelete={() => delExp(e.id)}>
-                        <div className="grid sm:grid-cols-2 gap-2">
-                          <Field label="الجهة" value={e.company} onChange={v => updExp(e.id, { company: v })} />
-                          <Field label="المسمى" value={e.role} onChange={v => updExp(e.id, { role: v })} />
-                          <Field label="من" value={e.startDate} onChange={v => updExp(e.id, { startDate: v })} placeholder="2022" />
-                          <Field label="إلى" value={e.endDate} onChange={v => updExp(e.id, { endDate: v })} placeholder="حتى الآن" />
-                        </div>
-                        <div className="mt-2">
-                          <Label className="text-xs mb-1 block">الوصف</Label>
-                          <Textarea rows={3} value={e.description} onChange={ev => updExp(e.id, { description: ev.target.value })} />
-                        </div>
-                      </RowCard>
-                    ))}
-                    <Button variant="outline" onClick={addExp} className="w-full gap-2"><Plus className="w-4 h-4" /> إضافة خبرة</Button>
-                  </TabsContent>
+                      <TabsContent value="experience" className="space-y-3 mt-0">
+                        {data.experience.map(e => (
+                          <RowCard key={e.id} onDelete={() => delExp(e.id)}>
+                            <div className="grid sm:grid-cols-2 gap-2">
+                              <Field label={T.fields.org} value={e.company} onChange={v => updExp(e.id, { company: v })} />
+                              <Field label={T.fields.role} value={e.role} onChange={v => updExp(e.id, { role: v })} />
+                              <Field label={T.fields.from} value={e.startDate} onChange={v => updExp(e.id, { startDate: v })} placeholder="2022" />
+                              <Field label={T.fields.to} value={e.endDate} onChange={v => updExp(e.id, { endDate: v })} placeholder={lang === 'ar' ? 'حتى الآن' : 'Present'} />
+                            </div>
+                            <div className="mt-2">
+                              <Label className="text-xs mb-1 block">{T.fields.desc}</Label>
+                              <Textarea rows={3} value={e.description} onChange={ev => updExp(e.id, { description: ev.target.value })} />
+                            </div>
+                          </RowCard>
+                        ))}
+                        <Button variant="outline" onClick={addExp} className="w-full gap-2"><Plus className="w-4 h-4" /> {T.fields.addExp}</Button>
+                      </TabsContent>
 
-                  <TabsContent value="projects" className="space-y-3">
-                    {data.projects.map(p => (
-                      <RowCard key={p.id} onDelete={() => delProj(p.id)}>
-                        <div className="grid sm:grid-cols-2 gap-2">
-                          <Field label="اسم المشروع/البحث" value={p.name} onChange={v => updProj(p.id, { name: v })} />
-                          <Field label="التاريخ" value={p.date || ''} onChange={v => updProj(p.id, { date: v })} />
-                        </div>
-                        <div className="mt-2">
-                          <Label className="text-xs mb-1 block">الوصف</Label>
-                          <Textarea rows={3} value={p.description} onChange={e => updProj(p.id, { description: e.target.value })} />
-                        </div>
-                      </RowCard>
-                    ))}
-                    <Button variant="outline" onClick={addProj} className="w-full gap-2"><Plus className="w-4 h-4" /> إضافة مشروع</Button>
-                  </TabsContent>
+                      <TabsContent value="projects" className="space-y-3 mt-0">
+                        {data.projects.map(p => (
+                          <RowCard key={p.id} onDelete={() => delProj(p.id)}>
+                            <div className="grid sm:grid-cols-2 gap-2">
+                              <Field label={T.fields.projectName} value={p.name} onChange={v => updProj(p.id, { name: v })} />
+                              <Field label={T.fields.date} value={p.date || ''} onChange={v => updProj(p.id, { date: v })} />
+                            </div>
+                            <div className="mt-2">
+                              <Label className="text-xs mb-1 block">{T.fields.desc}</Label>
+                              <Textarea rows={3} value={p.description} onChange={e => updProj(p.id, { description: e.target.value })} />
+                            </div>
+                          </RowCard>
+                        ))}
+                        <Button variant="outline" onClick={addProj} className="w-full gap-2"><Plus className="w-4 h-4" /> {T.fields.addProject}</Button>
+                      </TabsContent>
 
-                  <TabsContent value="skills" className="space-y-3">
-                    <Field label="مهارات تقنية (افصل بفاصلة)" value={data.skills.technical.join(', ')} onChange={v => setSkills('technical', v)} placeholder="Python, SPSS, LaTeX" />
-                    <Field label="مهارات شخصية" value={data.skills.soft.join(', ')} onChange={v => setSkills('soft', v)} placeholder="القيادة، التواصل، حل المشكلات" />
-                    <Field label="اللغات" value={data.skills.languages.join(', ')} onChange={v => setSkills('languages', v)} placeholder="العربية (لغة أم)، الإنجليزية (متقدم)" />
-                  </TabsContent>
+                      <TabsContent value="skills" className="space-y-3 mt-0">
+                        <Field label={T.fields.techSkills} value={data.skills.technical.join(', ')} onChange={v => setSkills('technical', v)} placeholder="Python, SPSS, LaTeX" />
+                        <Field label={T.fields.softSkills} value={data.skills.soft.join(', ')} onChange={v => setSkills('soft', v)} placeholder={lang === 'ar' ? 'القيادة، التواصل، حل المشكلات' : 'Leadership, Communication, Problem-solving'} />
+                        <Field label={T.fields.langs} value={data.skills.languages.join(', ')} onChange={v => setSkills('languages', v)} placeholder={lang === 'ar' ? 'العربية (لغة أم)، الإنجليزية (متقدم)' : 'Arabic (Native), English (Advanced)'} />
+                      </TabsContent>
 
-                  <TabsContent value="courses" className="space-y-3">
-                    {data.courses.map(c => (
-                      <RowCard key={c.id} onDelete={() => delCourse(c.id)}>
-                        <div className="grid sm:grid-cols-3 gap-2">
-                          <Field label="الدورة/الشهادة" value={c.name} onChange={v => updCourse(c.id, { name: v })} />
-                          <Field label="الجهة" value={c.issuer} onChange={v => updCourse(c.id, { issuer: v })} />
-                          <Field label="التاريخ" value={c.date || ''} onChange={v => updCourse(c.id, { date: v })} />
-                        </div>
-                      </RowCard>
-                    ))}
-                    <Button variant="outline" onClick={addCourse} className="w-full gap-2"><Plus className="w-4 h-4" /> إضافة دورة</Button>
-                  </TabsContent>
+                      <TabsContent value="courses" className="space-y-3 mt-0">
+                        {data.courses.map(c => (
+                          <RowCard key={c.id} onDelete={() => delCourse(c.id)}>
+                            <div className="grid sm:grid-cols-3 gap-2">
+                              <Field label={T.fields.course} value={c.name} onChange={v => updCourse(c.id, { name: v })} />
+                              <Field label={T.fields.issuer} value={c.issuer} onChange={v => updCourse(c.id, { issuer: v })} />
+                              <Field label={T.fields.date} value={c.date || ''} onChange={v => updCourse(c.id, { date: v })} />
+                            </div>
+                          </RowCard>
+                        ))}
+                        <Button variant="outline" onClick={addCourse} className="w-full gap-2"><Plus className="w-4 h-4" /> {T.fields.addCourse}</Button>
+                      </TabsContent>
 
-                  <TabsContent value="activities" className="space-y-3">
-                    {data.activities.map(a => (
-                      <RowCard key={a.id} onDelete={() => delAct(a.id)}>
-                        <Field label="النشاط" value={a.name} onChange={v => updAct(a.id, { name: v })} />
-                        <div className="mt-2">
-                          <Label className="text-xs mb-1 block">الوصف</Label>
-                          <Textarea rows={2} value={a.description || ''} onChange={e => updAct(a.id, { description: e.target.value })} />
-                        </div>
-                      </RowCard>
-                    ))}
-                    <Button variant="outline" onClick={addAct} className="w-full gap-2"><Plus className="w-4 h-4" /> إضافة نشاط</Button>
-                  </TabsContent>
+                      <TabsContent value="activities" className="space-y-3 mt-0">
+                        {data.activities.map(a => (
+                          <RowCard key={a.id} onDelete={() => delAct(a.id)}>
+                            <Field label={T.fields.activity} value={a.name} onChange={v => updAct(a.id, { name: v })} />
+                            <div className="mt-2">
+                              <Label className="text-xs mb-1 block">{T.fields.desc}</Label>
+                              <Textarea rows={2} value={a.description || ''} onChange={e => updAct(a.id, { description: e.target.value })} />
+                            </div>
+                          </RowCard>
+                        ))}
+                        <Button variant="outline" onClick={addAct} className="w-full gap-2"><Plus className="w-4 h-4" /> {T.fields.addActivity}</Button>
+                      </TabsContent>
+                    </motion.div>
+                  </AnimatePresence>
                 </Tabs>
               </CardContent>
             </Card>
