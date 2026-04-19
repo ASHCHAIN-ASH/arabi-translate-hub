@@ -18,6 +18,7 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { supabase } from '@/integrations/supabase/client';
 import { WalletService, type Wallet as WalletT } from '@/utils/walletService';
 import { InvoiceService, type Invoice } from '@/utils/invoiceService';
+import { recordInvoicePayment } from '@/utils/invoicePaymentService';
 import { BANK_INFO } from './Wallet';
 
 const InvoicePayment: React.FC = () => {
@@ -92,17 +93,13 @@ const InvoicePayment: React.FC = () => {
     setSubmitting(true);
     try {
       const receiptPath = await WalletService.uploadReceipt(user.id, receiptFile);
-      const { error } = await supabase.from('invoice_payments' as any).insert({
+      await recordInvoicePayment({
         invoice_id: invoice.id,
-        amount: remaining,
         payment_method: 'bank_transfer',
         payment_date: new Date().toISOString().split('T')[0],
-        status: 'pending',
         reference_number: reference || null,
         notes: `تحويل بنكي — إيصال: ${receiptPath}${reference ? ' • مرجع: ' + reference : ''}`,
-        created_by: user.id,
-      } as any);
-      if (error) throw error;
+      });
       toast.success('تم تسجيل دفعتك ✅', {
         description: 'سيتم تأكيدها بعد مراجعة الإيصال (خلال 24 ساعة)',
       });

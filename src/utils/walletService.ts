@@ -1,4 +1,5 @@
 import { supabase } from '@/integrations/supabase/client';
+import { recordInvoicePayment } from '@/utils/invoicePaymentService';
 
 export interface Wallet {
   id: string;
@@ -250,16 +251,12 @@ export const WalletService = {
       throw new Error(`الرصيد غير كافٍ. رصيدك الحالي: ${WalletService.formatCurrency(w.balance)}`);
     }
 
-    const { data: payment, error } = await supabase.from('invoice_payments' as any).insert({
+    const payment = await recordInvoicePayment({
       invoice_id: args.invoice_id,
-      amount: args.amount,
       payment_method: 'wallet',
       payment_date: new Date().toISOString().split('T')[0],
-      status: 'completed',
       notes: `دفع من المحفظة الرقمية${args.invoice_number ? ' - فاتورة ' + args.invoice_number : ''}`,
-      created_by: args.user_id,
-    } as any).select().single();
-    if (error) throw error;
+    });
 
     // Send banking-style payment receipt email (non-blocking).
     try {
@@ -275,14 +272,14 @@ export const WalletService = {
           body: {
             templateName: 'wallet-invoice-payment',
             recipientEmail,
-            idempotencyKey: `wallet-pay-${(payment as any)?.id || args.invoice_id}`,
+            idempotencyKey: `wallet-pay-${payment.payment_id || args.invoice_id}`,
             templateData: {
               customerName: profile?.full_name || authUser?.user?.email?.split('@')[0] || 'العميل',
               invoiceNumber: args.invoice_number || '—',
               amount: WalletService.formatCurrency(args.amount).replace(' ر.س', ''),
               newBalance: WalletService.formatCurrency(newBalance).replace(' ر.س', ''),
               paidAt: new Date().toLocaleString('ar-SA'),
-              transactionId: ((payment as any)?.id || '').toString().slice(0, 8),
+              transactionId: (payment.payment_id || '').toString().slice(0, 8),
               invoiceUrl: `${origin}/invoices`,
               walletUrl: `${origin}/wallet`,
             },
