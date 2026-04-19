@@ -71,6 +71,11 @@ interface Order {
   progress_percentage?: number | null;
   signed_contract_id?: string | null;
   active_invoice_id?: string | null;
+  metadata?: Record<string, any> | null;
+  estimated_amount?: number | null;
+  quantity?: number | null;
+  quantity_unit?: string | null;
+  preferred_language?: string | null;
 }
 
 const AdminServiceOrderDetails = () => {
@@ -561,12 +566,57 @@ const AdminServiceOrderDetails = () => {
                 </Card>
               )}
 
+              {/* Dynamic order details from client wizard */}
+              {(() => {
+                const meta = order.metadata || {};
+                const entries = Object.entries(meta).filter(
+                  ([k, v]) => v != null && v !== '' && !['category_slug', 'base_unit_price'].includes(k),
+                );
+                if (entries.length === 0 && !order.quantity) return null;
+                const labelMap: Record<string, string> = {
+                  source_language: 'اللغة المصدر', target_language: 'اللغة الهدف',
+                  language: 'اللغة', specialty: 'التخصص', urgency: 'الاستعجال',
+                  research_type: 'نوع البحث', field: 'المجال', review_focus: 'محور المراجعة',
+                  journal_target: 'المجلة المستهدفة', analysis_software: 'البرنامج',
+                  sample_size: 'حجم العينة', analysis_type: 'نوع التحليل',
+                  task_type: 'نوع المهمة', subject: 'المادة', design_type: 'نوع التصميم',
+                  slides_count: 'عدد الشرائح', color_palette: 'الألوان',
+                  session_type: 'نوع الجلسة', topic: 'الموضوع',
+                  preferred_date: 'الموعد المقترح', channel: 'وسيلة التواصل',
+                };
+                return (
+                  <Card>
+                    <CardHeader className="pb-3">
+                      <CardTitle className="text-sm flex items-center gap-2">
+                        <ClipboardList className="w-4 h-4 text-primary" /> تفاصيل الخدمة
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <dl className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
+                        {order.quantity != null && (
+                          <div className="flex justify-between gap-2 p-2 rounded bg-muted/30">
+                            <dt className="text-muted-foreground">الكمية</dt>
+                            <dd className="font-semibold">{order.quantity} {order.quantity_unit || ''}</dd>
+                          </div>
+                        )}
+                        {entries.map(([k, v]) => (
+                          <div key={k} className="flex justify-between gap-2 p-2 rounded bg-muted/30">
+                            <dt className="text-muted-foreground">{labelMap[k] || k}</dt>
+                            <dd className="font-semibold text-end break-words">{String(v)}</dd>
+                          </div>
+                        ))}
+                      </dl>
+                    </CardContent>
+                  </Card>
+                );
+              })()}
+
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
                 {[
                   { icon: <Calendar className="w-4 h-4" />, label: 'الإنشاء', value: new Date(order.created_at).toLocaleDateString('ar-SA') },
                   { icon: <RefreshCw className="w-4 h-4" />, label: 'آخر تحديث', value: new Date(order.updated_at).toLocaleDateString('ar-SA') },
                   ...(order.deadline ? [{ icon: <AlertCircle className="w-4 h-4" />, label: 'الموعد', value: new Date(order.deadline).toLocaleDateString('ar-SA') }] : []),
-                  { icon: <DollarSign className="w-4 h-4" />, label: 'المبلغ', value: order.total_amount ? `${order.total_amount.toLocaleString()} ر.س` : '—' },
+                  { icon: <DollarSign className="w-4 h-4" />, label: 'المبلغ', value: order.total_amount ? `${order.total_amount.toLocaleString()} ر.س` : (order.estimated_amount ? `~${order.estimated_amount.toLocaleString()} ر.س (تقديري)` : '—') },
                 ].map((it, i) => (
                   <div key={i} className="p-3 bg-card border rounded-lg">
                     <div className="flex items-center gap-1.5 text-muted-foreground mb-1">{it.icon}<span className="text-xs">{it.label}</span></div>
