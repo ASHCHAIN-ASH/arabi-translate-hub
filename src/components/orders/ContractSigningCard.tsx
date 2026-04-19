@@ -180,8 +180,8 @@ export const ContractSigningCard: React.FC<Props> = ({ contract, onSigned }) => 
       </Card>
 
       <Dialog open={open} onOpenChange={setOpen}>
-        <DialogContent className="max-w-4xl w-[95vw] max-h-[95vh] flex flex-col p-0 overflow-hidden" dir="rtl">
-          <DialogHeader className="px-6 pt-6 pb-3 border-b shrink-0">
+        <DialogContent className="max-w-5xl w-[97vw] max-h-[97vh] flex flex-col p-0 overflow-hidden bg-slate-100" dir="rtl">
+          <DialogHeader className="px-6 pt-5 pb-3 border-b shrink-0 bg-white">
             <DialogTitle className="text-xl">{step === 'review' ? 'مراجعة العقد' : 'تأكيد التوقيع'}</DialogTitle>
             <DialogDescription>
               {step === 'review'
@@ -192,33 +192,27 @@ export const ContractSigningCard: React.FC<Props> = ({ contract, onSigned }) => 
 
           {step === 'review' ? (
             <>
-              <div className="flex-1 min-h-0 overflow-hidden px-6 pt-4">
-                <ScrollArea className="h-[65vh] rounded-md border bg-card">
-                  <div className="px-6 py-6">
-                    {loadingContent ? (
-                      <div className="flex flex-col items-center justify-center py-20 gap-3 text-muted-foreground">
-                        <Loader2 className="h-8 w-8 animate-spin" />
-                        <span className="text-sm">جارٍ تحضير العقد بصيغته الكاملة...</span>
-                      </div>
-                    ) : (
-                      <article className="prose prose-sm md:prose-base max-w-none text-foreground leading-loose
-                        prose-headings:text-foreground prose-headings:font-bold prose-headings:mt-6 prose-headings:mb-3
-                        prose-h1:text-2xl prose-h1:border-b prose-h1:pb-2
-                        prose-h2:text-lg prose-h2:text-primary
-                        prose-h3:text-base
-                        prose-p:my-2 prose-p:text-foreground/90
-                        prose-strong:text-foreground prose-strong:font-bold
-                        prose-ul:my-2 prose-ol:my-2 prose-li:my-1
-                        prose-table:border prose-table:border-border prose-table:my-4
-                        prose-th:bg-muted prose-th:p-2 prose-th:border prose-th:border-border prose-th:text-right
-                        prose-td:p-2 prose-td:border prose-td:border-border prose-td:text-right
-                        prose-hr:my-6 prose-hr:border-border">
-                        <ReactMarkdown remarkPlugins={[remarkGfm]}>
-                          {content || 'محتوى العقد سيظهر هنا...'}
-                        </ReactMarkdown>
-                      </article>
-                    )}
-                  </div>
+              <div className="flex-1 min-h-0 overflow-hidden p-4 md:p-6 bg-slate-100">
+                <ScrollArea className="h-[70vh] rounded-lg border border-slate-300 shadow-xl bg-white">
+                  {loadingContent ? (
+                    <div className="flex flex-col items-center justify-center py-32 gap-3 text-muted-foreground">
+                      <Loader2 className="h-8 w-8 animate-spin" />
+                      <span className="text-sm">جارٍ تحضير العقد بصيغته الكاملة...</span>
+                    </div>
+                  ) : (
+                    <ContractDocumentView
+                      contractNumber={contract.contract_number}
+                      title={contract.title}
+                      content={content || 'محتوى العقد سيظهر هنا...'}
+                      totalAmount={contract.total_amount}
+                      currency={contract.currency}
+                      clientName={contract.client_full_name}
+                      clientEmail={contract.client_email}
+                      issueDateHijri={new Intl.DateTimeFormat('ar-SA-u-ca-islamic', {
+                        day: 'numeric', month: 'long', year: 'numeric',
+                      }).format(new Date())}
+                    />
+                  )}
                 </ScrollArea>
               </div>
               <div className="px-6 pt-3 pb-3 space-y-3 border-t shrink-0 bg-card">
