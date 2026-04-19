@@ -577,6 +577,13 @@ const AdminServiceOrderDetails = () => {
                 progress={order.progress_percentage ?? 0}
               />
 
+              {/* Admin lifecycle control — safe state machine + auto email */}
+              <AdminLifecycleControl
+                orderId={order.id}
+                currentStatus={order.lifecycle_status || 'received'}
+                onChanged={loadAll}
+              />
+
               {/* Quote sender — controls quote_status / lifecycle entry */}
               <AdminQuoteSender
                 order={{
