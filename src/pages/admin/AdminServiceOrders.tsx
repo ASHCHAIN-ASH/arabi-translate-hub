@@ -616,8 +616,11 @@ const AdminServiceOrders = () => {
             </div>
           </Card>
         )}
+        </div>
 
       </div>
+
+      <InteractiveTour steps={ADMIN_TOUR_STEPS} storageKey={ADMIN_ORDERS_TOUR_KEY} />
     </AdminLayout>
   );
 };
