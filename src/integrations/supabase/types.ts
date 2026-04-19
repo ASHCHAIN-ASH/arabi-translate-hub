@@ -3246,8 +3246,10 @@ export type Database = {
           id: string
           last_message_at: string | null
           priority: string | null
+          related_contract_id: string | null
           related_invoice_id: string | null
           related_order_id: string | null
+          related_payment_id: string | null
           resolved_at: string | null
           sla_due_at: string | null
           source: string
@@ -3276,8 +3278,10 @@ export type Database = {
           id?: string
           last_message_at?: string | null
           priority?: string | null
+          related_contract_id?: string | null
           related_invoice_id?: string | null
           related_order_id?: string | null
+          related_payment_id?: string | null
           resolved_at?: string | null
           sla_due_at?: string | null
           source?: string
@@ -3306,8 +3310,10 @@ export type Database = {
           id?: string
           last_message_at?: string | null
           priority?: string | null
+          related_contract_id?: string | null
           related_invoice_id?: string | null
           related_order_id?: string | null
+          related_payment_id?: string | null
           resolved_at?: string | null
           sla_due_at?: string | null
           source?: string
@@ -3322,6 +3328,13 @@ export type Database = {
         }
         Relationships: [
           {
+            foreignKeyName: "tickets_related_contract_id_fkey"
+            columns: ["related_contract_id"]
+            isOneToOne: false
+            referencedRelation: "contracts"
+            referencedColumns: ["id"]
+          },
+          {
             foreignKeyName: "tickets_related_invoice_id_fkey"
             columns: ["related_invoice_id"]
             isOneToOne: false
@@ -3333,6 +3346,13 @@ export type Database = {
             columns: ["related_order_id"]
             isOneToOne: false
             referencedRelation: "service_orders"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "tickets_related_payment_id_fkey"
+            columns: ["related_payment_id"]
+            isOneToOne: false
+            referencedRelation: "invoice_payments"
             referencedColumns: ["id"]
           },
         ]

@@ -19,6 +19,8 @@ export interface Ticket {
   assigned_admin_id?: string | null;
   related_invoice_id?: string | null;
   related_order_id?: string | null;
+  related_contract_id?: string | null;
+  related_payment_id?: string | null;
   last_message_at?: string | null;
   first_response_at?: string | null;
   resolved_at?: string | null;
