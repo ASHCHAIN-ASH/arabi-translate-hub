@@ -24,6 +24,7 @@ import {
 } from 'lucide-react';
 import OrderLifecycleTimeline, { LifecycleStatus } from '@/components/orders/OrderLifecycleTimeline';
 import { AdminQuoteSender } from '@/components/orders/AdminQuoteSender';
+import { AdminLifecycleControl } from '@/components/admin/orders/AdminLifecycleControl';
 
 const STATUS_CONFIG: Record<string, { label: string; color: string; icon: React.ReactNode; barClass: string }> = {
   pending: { label: 'معلق', color: 'bg-gray-100 text-gray-700 border-gray-300', icon: <Clock className="w-3 h-3" />, barClass: 'bg-gray-400' },
