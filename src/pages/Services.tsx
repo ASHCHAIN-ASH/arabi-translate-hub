@@ -159,8 +159,16 @@ const Services = () => {
     return filteredServices.filter(service => service.category_id === categoryId);
   };
 
-  const handleOrderService = (service: Service) => {
-    // Check if user is logged in
+  const handleOrderService = async (service: Service) => {
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) {
+      toast({
+        title: 'يجب تسجيل الدخول',
+        description: 'يرجى تسجيل الدخول لطلب الخدمة',
+      });
+      navigate('/auth', { state: { redirectTo: '/services' } });
+      return;
+    }
     navigate('/order-now', { state: { selectedService: service } });
   };
 
