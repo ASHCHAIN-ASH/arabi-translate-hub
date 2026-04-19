@@ -163,42 +163,52 @@ const AcademicCVPage: React.FC = () => {
       <div className="min-h-screen bg-gradient-to-b from-background via-background to-muted/30">
         <div className="container mx-auto px-3 sm:px-4 py-6 max-w-[1400px]">
           {/* Header */}
-          <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4 mb-6">
+          <motion.div
+            initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}
+            className="flex flex-col md:flex-row md:items-end md:justify-between gap-4 mb-6"
+          >
             <div>
               <Button variant="ghost" size="sm" onClick={() => navigate('/student')} className="mb-2 gap-1">
                 <ArrowRight className="w-4 h-4" />
-                <span>الرجوع</span>
+                <span>{T.back}</span>
               </Button>
               <div className="flex items-center gap-3">
-                <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center shadow-lg">
+                <motion.div
+                  whileHover={{ rotate: [0, -8, 8, 0], scale: 1.05 }}
+                  transition={{ duration: 0.5 }}
+                  className="w-12 h-12 rounded-2xl bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center shadow-lg"
+                >
                   <FileText className="w-6 h-6 text-white" />
-                </div>
+                </motion.div>
                 <div>
-                  <h1 className="text-2xl md:text-3xl font-bold">CV الأكاديمي الذكي</h1>
-                  <p className="text-sm text-muted-foreground">صمّم سيرتك بقالب احترافي — حمّلها واطبعها مباشرة</p>
+                  <h1 className="text-2xl md:text-3xl font-bold">{T.title}</h1>
+                  <p className="text-sm text-muted-foreground">{T.subtitle}</p>
                 </div>
               </div>
             </div>
             <div className="flex flex-wrap gap-2">
+              <Button variant="outline" onClick={fillDemo} className="gap-2 border-dashed">
+                <Wand2 className="w-4 h-4" /> {T.tryDemo}
+              </Button>
               <Button variant="outline" onClick={handlePrint} disabled={exporting} className="gap-2">
-                <Printer className="w-4 h-4" /> طباعة
+                <Printer className="w-4 h-4" /> {T.print}
               </Button>
               <Button onClick={handleDownload} disabled={exporting} className="gap-2 bg-gradient-to-r from-indigo-500 to-purple-600 hover:opacity-95">
                 {exporting ? <Loader2 className="w-4 h-4 animate-spin" /> : <Download className="w-4 h-4" />}
-                {needsPayment ? `تحميل (${EXPORT_PRICE} ر.س)` : 'تحميل PDF'}
+                {needsPayment ? T.downloadPaid : T.download}
               </Button>
             </div>
-          </div>
+          </motion.div>
 
           {/* Top controls: language + template + title */}
           <Card className="mb-5 border-border/60">
             <CardContent className="p-4 flex flex-col lg:flex-row gap-4 items-stretch lg:items-end">
               <div className="flex-1 min-w-0">
-                <Label className="text-xs mb-1.5 block">عنوان السيرة</Label>
-                <Input value={cv.title} onChange={e => setTitle(e.target.value)} placeholder="سيرتي الذاتية" />
+                <Label className="text-xs mb-1.5 block">{T.cvTitle}</Label>
+                <Input value={cv.title} onChange={e => setTitle(e.target.value)} placeholder={T.placeholderTitle} />
               </div>
               <div>
-                <Label className="text-xs mb-1.5 flex items-center gap-1"><Languages className="w-3.5 h-3.5" />اللغة</Label>
+                <Label className="text-xs mb-1.5 flex items-center gap-1"><Languages className="w-3.5 h-3.5" />{T.language}</Label>
                 <div className="flex gap-2">
                   <Button size="sm" variant={lang === 'ar' ? 'default' : 'outline'} onClick={() => setLanguage('ar')}>عربي</Button>
                   <Button size="sm" variant={lang === 'en' ? 'default' : 'outline'} onClick={() => setLanguage('en')}>English</Button>
@@ -206,11 +216,11 @@ const AcademicCVPage: React.FC = () => {
               </div>
               <div className="flex items-center gap-2">
                 {isMember ? (
-                  <Badge className="gap-1 bg-amber-500/15 text-amber-700 border-amber-500/30"><Crown className="w-3 h-3" />تصدير مجاني (عضو)</Badge>
+                  <Badge className="gap-1 bg-amber-500/15 text-amber-700 border-amber-500/30"><Crown className="w-3 h-3" />{T.freeMember}</Badge>
                 ) : alreadyPaid ? (
-                  <Badge className="gap-1 bg-emerald-500/15 text-emerald-700 border-emerald-500/30"><Check className="w-3 h-3" />تم الدفع — تحميل غير محدود</Badge>
+                  <Badge className="gap-1 bg-emerald-500/15 text-emerald-700 border-emerald-500/30"><Check className="w-3 h-3" />{T.paidDone}</Badge>
                 ) : (
-                  <Badge variant="outline" className="gap-1"><Sparkles className="w-3 h-3" />تصدير: {EXPORT_PRICE} ر.س</Badge>
+                  <Badge variant="outline" className="gap-1"><Sparkles className="w-3 h-3" />{T.exportPrice}</Badge>
                 )}
               </div>
             </CardContent>
@@ -221,32 +231,40 @@ const AcademicCVPage: React.FC = () => {
             <CardContent className="p-4">
               <div className="flex items-center gap-2 mb-3">
                 <LayoutTemplate className="w-4 h-4 text-primary" />
-                <h3 className="font-semibold text-sm">اختر قالباً واحداً</h3>
-                <span className="text-xs text-muted-foreground">— يمكنك التبديل في أي وقت، وستُطبَّق نفس البيانات</span>
+                <h3 className="font-semibold text-sm">{T.pickTemplate}</h3>
+                <span className="text-xs text-muted-foreground">{T.templateHint}</span>
               </div>
               <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
-                {TEMPLATES_META.map(t => {
+                {TEMPLATES_META.map((t, idx) => {
                   const active = cv.template_key === t.key;
                   return (
-                    <button
+                    <motion.button
                       key={t.key}
                       onClick={() => setTemplate(t.key as CVTemplate)}
+                      initial={{ opacity: 0, y: 12 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: idx * 0.05, duration: 0.35 }}
+                      whileHover={{ y: -3, scale: 1.02 }}
+                      whileTap={{ scale: 0.98 }}
                       className={cn(
-                        'relative text-right rounded-xl border-2 p-3 transition-all hover:shadow-md',
-                        active ? 'border-primary bg-primary/5 shadow-md' : 'border-border/60 hover:border-primary/40'
+                        'relative text-start rounded-xl border-2 p-2.5 transition-colors hover:shadow-lg bg-card',
+                        active ? 'border-primary shadow-lg ring-2 ring-primary/20' : 'border-border/60 hover:border-primary/40'
                       )}
                     >
                       {active && (
-                        <div className="absolute top-2 left-2 w-5 h-5 rounded-full bg-primary text-primary-foreground flex items-center justify-center">
+                        <motion.div
+                          initial={{ scale: 0 }} animate={{ scale: 1 }}
+                          className="absolute top-1.5 left-1.5 z-10 w-5 h-5 rounded-full bg-primary text-primary-foreground flex items-center justify-center shadow-md"
+                        >
                           <Check className="w-3 h-3" />
-                        </div>
+                        </motion.div>
                       )}
-                      <div className="h-12 rounded-md mb-2 border" style={{ background: `linear-gradient(135deg, ${t.accent}15, ${t.accent}05)` }}>
-                        <div className="h-1.5 rounded-t-md" style={{ background: t.accent }} />
+                      <div className="mb-2 rounded-md overflow-hidden border border-border/40">
+                        <TemplateThumbnail template={t.key} accent={t.accent} />
                       </div>
                       <div className="text-xs font-semibold leading-tight">{lang === 'ar' ? t.nameAr : t.nameEn}</div>
                       <div className="text-[10px] text-muted-foreground leading-tight mt-0.5 line-clamp-2">{lang === 'ar' ? t.descAr : t.descEn}</div>
-                    </button>
+                    </motion.button>
                   );
                 })}
               </div>
