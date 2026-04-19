@@ -22,8 +22,14 @@ export type Database = {
           id: string
           language: string
           last_exported_at: string | null
+          locked_template_key: string | null
+          paid_amount: number | null
+          paid_at: string | null
+          purchase_id: string | null
           status: string
           template_key: string
+          template_swap_deadline: string | null
+          template_swap_used: boolean
           title: string
           updated_at: string
           user_id: string
@@ -35,8 +41,14 @@ export type Database = {
           id?: string
           language?: string
           last_exported_at?: string | null
+          locked_template_key?: string | null
+          paid_amount?: number | null
+          paid_at?: string | null
+          purchase_id?: string | null
           status?: string
           template_key?: string
+          template_swap_deadline?: string | null
+          template_swap_used?: boolean
           title?: string
           updated_at?: string
           user_id: string
@@ -48,8 +60,14 @@ export type Database = {
           id?: string
           language?: string
           last_exported_at?: string | null
+          locked_template_key?: string | null
+          paid_amount?: number | null
+          paid_at?: string | null
+          purchase_id?: string | null
           status?: string
           template_key?: string
+          template_swap_deadline?: string | null
+          template_swap_used?: boolean
           title?: string
           updated_at?: string
           user_id?: string
@@ -463,6 +481,76 @@ export type Database = {
           user_id?: string | null
         }
         Relationships: []
+      }
+      cv_purchases: {
+        Row: {
+          amount: number
+          created_at: string
+          cv_id: string
+          free_reason: string | null
+          id: string
+          metadata: Json
+          payment_intent_id: string | null
+          payment_method: string
+          status: string
+          template_key: string
+          user_id: string
+          wallet_transaction_id: string | null
+          was_free: boolean
+        }
+        Insert: {
+          amount?: number
+          created_at?: string
+          cv_id: string
+          free_reason?: string | null
+          id?: string
+          metadata?: Json
+          payment_intent_id?: string | null
+          payment_method?: string
+          status?: string
+          template_key: string
+          user_id: string
+          wallet_transaction_id?: string | null
+          was_free?: boolean
+        }
+        Update: {
+          amount?: number
+          created_at?: string
+          cv_id?: string
+          free_reason?: string | null
+          id?: string
+          metadata?: Json
+          payment_intent_id?: string | null
+          payment_method?: string
+          status?: string
+          template_key?: string
+          user_id?: string
+          wallet_transaction_id?: string | null
+          was_free?: boolean
+        }
+        Relationships: [
+          {
+            foreignKeyName: "cv_purchases_cv_id_fkey"
+            columns: ["cv_id"]
+            isOneToOne: true
+            referencedRelation: "academic_cvs"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "cv_purchases_payment_intent_id_fkey"
+            columns: ["payment_intent_id"]
+            isOneToOne: false
+            referencedRelation: "payment_intents"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "cv_purchases_wallet_transaction_id_fkey"
+            columns: ["wallet_transaction_id"]
+            isOneToOne: false
+            referencedRelation: "wallet_transactions"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       deadline_reminders: {
         Row: {
@@ -3724,6 +3812,10 @@ export type Database = {
         Args: { _group_order_id: string }
         Returns: Json
       }
+      purchase_cv: {
+        Args: { _cv_id: string; _template_key: string }
+        Returns: Json
+      }
       purchase_cv_export: { Args: { _cv_id: string }; Returns: Json }
       purchase_stat_analysis: { Args: { _analysis_id: string }; Returns: Json }
       purchase_stat_pdf: { Args: { _analysis_id: string }; Returns: Json }
@@ -3735,6 +3827,7 @@ export type Database = {
           read_ct: number
         }[]
       }
+      record_cv_export: { Args: { _cv_id: string }; Returns: Json }
       sign_contract_with_otp: {
         Args: {
           _contract_id: string
@@ -3744,6 +3837,10 @@ export type Database = {
           _signer_name?: string
           _ua?: string
         }
+        Returns: Json
+      }
+      swap_cv_template: {
+        Args: { _cv_id: string; _new_template_key: string }
         Returns: Json
       }
       track_order: {
