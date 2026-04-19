@@ -20,7 +20,7 @@ import { useAuth } from '@/components/SimpleAuthProvider';
 import { cn } from '@/lib/utils';
 import DynamicServiceFields from '@/components/client/DynamicServiceFields';
 import {
-  getFieldsConfig, getFieldLabel, getOptionLabel, URGENCY_MULTIPLIER,
+  getFieldsConfig, getFieldLabel, getOptionLabel, URGENCY_MULTIPLIER, resolveServiceFields,
 } from '@/config/serviceFieldsConfig';
 
 interface ServiceItem {
