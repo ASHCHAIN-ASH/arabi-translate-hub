@@ -488,4 +488,27 @@ const RowCard: React.FC<{ children: React.ReactNode; onDelete: () => void }> = (
   </div>
 );
 
+const AIBtn: React.FC<{ onClick: () => void | Promise<void>; label?: string; loading?: boolean; className?: string }> = ({ onClick, label, loading, className }) => {
+  const [busy, setBusy] = React.useState(false);
+  const handle = async () => {
+    if (busy) return;
+    setBusy(true);
+    try { await onClick(); } finally { setBusy(false); }
+  };
+  return (
+    <Button
+      type="button"
+      size="sm"
+      variant="outline"
+      onClick={handle}
+      disabled={busy || loading}
+      className={cn('h-7 px-2 gap-1 text-xs border-primary/30 text-primary hover:bg-primary/10', className)}
+    >
+      {busy ? <Loader2 className="w-3 h-3 animate-spin" /> : <Sparkles className="w-3 h-3" />}
+      {label || 'AI'}
+    </Button>
+  );
+};
+
+
 export default AcademicCVPage;
