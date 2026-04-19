@@ -319,6 +319,17 @@ const AcademicCVPage: React.FC = () => {
                         {data.education.map(e => (
                           <RowCard key={e.id} onDelete={() => delEdu(e.id)}>
                             <div className="grid sm:grid-cols-2 gap-2">
+                              <div>
+                                <Label className="text-xs mb-1 block">{T.fields.level}</Label>
+                                <Select value={e.level || 'bachelor'} onValueChange={(v) => updEdu(e.id, { level: v as any })}>
+                                  <SelectTrigger className="h-9 text-sm"><SelectValue /></SelectTrigger>
+                                  <SelectContent>
+                                    {(Object.keys(T.levels) as Array<keyof typeof T.levels>).map(k => (
+                                      <SelectItem key={k} value={k}>{T.levels[k]}</SelectItem>
+                                    ))}
+                                  </SelectContent>
+                                </Select>
+                              </div>
                               <Field label={T.fields.university} value={e.institution} onChange={v => updEdu(e.id, { institution: v })} />
                               <Field label={T.fields.degree} value={e.degree} onChange={v => updEdu(e.id, { degree: v })} />
                               <Field label={T.fields.major} value={e.field} onChange={v => updEdu(e.id, { field: v })} />
