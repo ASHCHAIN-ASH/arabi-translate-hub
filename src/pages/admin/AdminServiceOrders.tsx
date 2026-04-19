@@ -365,6 +365,7 @@ const AdminServiceOrders = () => {
       <div className="container mx-auto p-4 md:p-6 space-y-6">
         {/* Header */}
         <motion.div 
+          data-tour="admin-orders-header"
           className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4"
           initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
@@ -382,27 +383,48 @@ const AdminServiceOrders = () => {
               إدارة ومتابعة طلبات الخدمات • مربوط لحظياً بالعملاء
             </p>
           </div>
-          <Button onClick={handleRefresh} variant="outline" size="sm" className="gap-2" disabled={isRefreshing}>
-            <RefreshCw className={cn("h-4 w-4", isRefreshing && "animate-spin")} />
-            تحديث
-          </Button>
+          <div className="flex items-center gap-2">
+            <Button
+              onClick={() => startTour(ADMIN_ORDERS_TOUR_KEY)}
+              variant="ghost"
+              size="sm"
+              className="gap-2 text-primary hover:bg-primary/10"
+              title="ابدأ الجولة التعريفية"
+            >
+              <HelpCircle className="h-4 w-4" />
+              <span className="hidden sm:inline">جولة تعريفية</span>
+            </Button>
+            <Button onClick={handleRefresh} variant="outline" size="sm" className="gap-2" disabled={isRefreshing}>
+              <RefreshCw className={cn("h-4 w-4", isRefreshing && "animate-spin")} />
+              تحديث
+            </Button>
+          </div>
         </motion.div>
 
+        {/* Tip Card */}
+        <InfoCard
+          storageKey="admin-orders-realtime"
+          title="مركز قيادة لحظي 🚀"
+          description="أي طلب جديد، تحديث حالة، أو رسالة من عميل تظهر هنا فوراً بدون الحاجة لتحديث الصفحة. النقطة الخضراء تؤكد الاتصال المباشر."
+          variant="info"
+        />
+
         {/* Stats */}
-        <div className="grid grid-cols-2 lg:grid-cols-5 gap-3">
+        <div data-tour="admin-orders-stats" className="grid grid-cols-2 lg:grid-cols-5 gap-3">
           {[
-            { label: 'إجمالي', value: stats.total, icon: <Users className="h-4 w-4" />, color: 'text-primary' },
-            { label: 'نشطة', value: stats.active, icon: <TrendingUp className="h-4 w-4" />, color: 'text-blue-600' },
-            { label: 'بالانتظار', value: stats.pending, icon: <Clock className="h-4 w-4" />, color: 'text-amber-600' },
-            { label: 'مكتملة', value: stats.completed, icon: <CheckCircle className="h-4 w-4" />, color: 'text-green-600' },
-            { label: 'الإيرادات', value: `${stats.totalRevenue.toLocaleString()} ر.س`, icon: <DollarSign className="h-4 w-4" />, color: 'text-emerald-600' },
+            { key: 'total', label: 'إجمالي', value: stats.total, hint: 'العدد الكلي لجميع الطلبات في النظام.', icon: <Users className="h-4 w-4" />, color: 'text-primary' },
+            { key: 'active', label: 'نشطة', value: stats.active, hint: 'الطلبات قيد التنفيذ التي يعمل عليها الفريق حالياً.', icon: <TrendingUp className="h-4 w-4" />, color: 'text-blue-600' },
+            { key: 'pending', label: 'بالانتظار', value: stats.pending, hint: 'طلبات معلقة بانتظار المراجعة أو إجراء من الإدارة.', icon: <Clock className="h-4 w-4" />, color: 'text-amber-600' },
+            { key: 'done', label: 'مكتملة', value: stats.completed, hint: 'الطلبات المسلّمة والمغلقة بنجاح.', icon: <CheckCircle className="h-4 w-4" />, color: 'text-green-600' },
+            { key: 'rev', label: 'الإيرادات', value: `${stats.totalRevenue.toLocaleString()} ر.س`, hint: 'مجموع المبالغ من الطلبات المكتملة.', icon: <DollarSign className="h-4 w-4" />, color: 'text-emerald-600' },
           ].map((s, i) => (
-            <motion.div key={i} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.05 }}>
+            <motion.div key={s.key} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.05 }}>
               <Card className="hover:shadow-sm transition-shadow">
                 <CardContent className="p-3 md:p-4">
                   <div className="flex items-center gap-2 mb-1">
                     <span className="text-muted-foreground">{s.icon}</span>
                     <span className="text-xs text-muted-foreground">{s.label}</span>
+                    <HelpHint text={s.hint} className="ml-auto" />
                   </div>
                   <p className={cn("text-xl font-bold", s.color)}>{s.value}</p>
                 </CardContent>
