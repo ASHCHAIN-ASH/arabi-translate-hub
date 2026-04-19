@@ -102,9 +102,16 @@ export interface AcademicCVRow {
   language: CVLanguage;
   template_key: CVTemplate;
   data: CVData;
-  status: 'draft' | 'paid';
+  status: 'draft' | 'pending_payment' | 'paid' | 'archived';
   exports_count: number;
   last_exported_at: string | null;
+  // Purchase-lock fields (server-managed)
+  locked_template_key: CVTemplate | null;
+  paid_at: string | null;
+  paid_amount: number | null;
+  template_swap_used: boolean;
+  template_swap_deadline: string | null;
+  purchase_id: string | null;
   created_at: string;
   updated_at: string;
 }
