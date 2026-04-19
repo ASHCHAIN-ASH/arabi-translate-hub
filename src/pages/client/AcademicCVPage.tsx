@@ -39,7 +39,10 @@ const AcademicCVPage: React.FC = () => {
   const navigate = useNavigate();
   const { user } = useAuth();
   const { membership } = useUserMembership();
-  const { cv, loading, updateData, setLanguage, setTemplate, setTitle, purchaseExport } = useMyCV(user?.id);
+  const {
+    cv, loading, updateData, setLanguage, setTemplate, setTitle,
+    purchaseCv, recordExport, isLocked, canSwapTemplate,
+  } = useMyCV(user?.id);
 
   const previewRef = useRef<HTMLDivElement>(null);
   const [tab, setTab] = useState<'personal' | 'education' | 'experience' | 'projects' | 'skills' | 'courses' | 'activities'>('personal');
