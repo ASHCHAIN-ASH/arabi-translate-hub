@@ -61,6 +61,7 @@ import OrderEdit from "./pages/client/OrderEdit";
 import ClientInvoices from "./pages/client/Invoices";
 import ClientTickets from "./pages/client/Tickets";
 import ClientTicketDetails from "./pages/client/TicketDetails";
+import NewTicket from "./pages/client/NewTicket";
 import ClientWallet from "./pages/client/Wallet";
 import WalletTopup from "./pages/client/WalletTopup";
 import InvoicePayment from "./pages/client/InvoicePayment";
@@ -327,6 +328,11 @@ const App = () => (
             <Route path="/support/tickets" element={
               <SimpleProtectedRoute requiredRole="client">
                 <ClientTickets />
+              </SimpleProtectedRoute>
+            } />
+            <Route path="/support/tickets/new" element={
+              <SimpleProtectedRoute requiredRole="client">
+                <NewTicket />
               </SimpleProtectedRoute>
             } />
             <Route path="/support/tickets/:id" element={
