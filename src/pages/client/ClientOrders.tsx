@@ -27,6 +27,44 @@ import {
 } from 'lucide-react';
 import { type DatabaseOrder } from '@/utils/supabaseOrderService';
 import { cn } from '@/lib/utils';
+import { InteractiveTour, startTour, type TourStep } from '@/components/InteractiveTour';
+import { InfoCard, HelpHint } from '@/components/HelpHint';
+import { HelpCircle, Filter as FilterIcon } from 'lucide-react';
+
+const CLIENT_ORDERS_TOUR_KEY = 'tour:client-orders:v1';
+
+const CLIENT_TOUR_STEPS: TourStep[] = [
+  {
+    target: '[data-tour="orders-hero"]',
+    title: 'مرحباً بك في سجل طلباتك',
+    content: 'هنا تجد جميع طلباتك في مكان واحد، مع تحديثات تصل تلقائياً عند تغير حالة أي طلب.',
+    placement: 'bottom',
+  },
+  {
+    target: '[data-tour="orders-stats"]',
+    title: 'لوحة الإحصائيات السريعة',
+    content: 'نظرة سريعة على عدد طلباتك المكتملة، النشطة، وقيد التنفيذ. الأرقام تتحدث لحظياً.',
+    placement: 'bottom',
+  },
+  {
+    target: '[data-tour="orders-search"]',
+    title: 'بحث وفلترة ذكية',
+    content: 'ابحث برقم الطلب أو اسم الخدمة، وفلتر حسب الحالة، ورتّب من الأحدث للأقدم بكل سهولة.',
+    placement: 'bottom',
+  },
+  {
+    target: '[data-tour="orders-list"]',
+    title: 'قائمة طلباتك التفاعلية',
+    content: 'كل بطاقة تعرض شريط تقدم مرئي وحالة الطلب. اضغط "عرض التفاصيل" للاطلاع على المراحل والمدفوعات.',
+    placement: 'top',
+  },
+  {
+    target: '[data-tour="orders-refresh"]',
+    title: 'تحديث يدوي عند الحاجة',
+    content: 'البيانات تصلك تلقائياً، لكن يمكنك الضغط هنا لتحديث القائمة فوراً متى شئت.',
+    placement: 'bottom',
+  },
+];
 
 type StatusFilter = 'all' | 'active' | 'in_progress' | 'completed';
 type SortOrder = 'newest' | 'oldest';
