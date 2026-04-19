@@ -98,9 +98,11 @@ export const PaymentCard: React.FC<Props> = ({ invoice, userId, onPaid }) => {
         invoice_id: invoice.id,
         amount: remaining,
         payment_method: 'bank_transfer',
+        payment_date: new Date().toISOString().split('T')[0],
         status: 'pending',
         reference_number: reference,
         notes,
+        created_by: userId,
       });
       if (error) throw error;
       toast({ title: '📨 تم استلام طلب الدفع', description: 'سيتم التحقق من التحويل قريباً' });
