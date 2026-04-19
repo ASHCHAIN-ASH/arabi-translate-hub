@@ -42,6 +42,13 @@ export const PaymentCard: React.FC<Props> = ({ invoice, userId, onPaid }) => {
     })();
   }, [userId]);
 
+  const ensurePaymentOwner = async () => {
+    const { data, error } = await supabase.auth.getUser();
+    if (error || !data.user || data.user.id !== userId) {
+      throw new Error('الدفع متاح فقط من حساب صاحب الطلب');
+    }
+  };
+
   const payFromWallet = async () => {
     if (walletBalance < remaining) {
       toast({ title: 'رصيد غير كافٍ', description: 'يرجى شحن المحفظة أولاً', variant: 'destructive' });
@@ -49,6 +56,7 @@ export const PaymentCard: React.FC<Props> = ({ invoice, userId, onPaid }) => {
     }
     setLoading(true);
     try {
+      await ensurePaymentOwner();
       const { error } = await (supabase as any).from('invoice_payments').insert({
         invoice_id: invoice.id,
         amount: remaining,
@@ -94,6 +102,7 @@ export const PaymentCard: React.FC<Props> = ({ invoice, userId, onPaid }) => {
     }
     setLoading(true);
     try {
+      await ensurePaymentOwner();
       const { error } = await (supabase as any).from('invoice_payments').insert({
         invoice_id: invoice.id,
         amount: remaining,

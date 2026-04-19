@@ -560,8 +560,8 @@ const OrderDetails = () => {
               <ContractSigningCard contract={contract} onSigned={fetchData} />
             )}
 
-            {/* Payment — shown when payment_pending */}
-            {invoice && order.lifecycle_status === 'payment_pending' && user && (
+            {/* Payment — shown when payment_pending and only for the order owner */}
+            {invoice && order.lifecycle_status === 'payment_pending' && user && order.user_id === user.id && (
               <PaymentCard invoice={invoice} userId={user.id} onPaid={fetchData} />
             )}
 
