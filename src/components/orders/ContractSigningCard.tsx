@@ -179,36 +179,62 @@ export const ContractSigningCard: React.FC<Props> = ({ contract, onSigned }) => 
       </Card>
 
       <Dialog open={open} onOpenChange={setOpen}>
-        <DialogContent className="max-w-2xl max-h-[90vh]" dir="rtl">
-          <DialogHeader>
-            <DialogTitle>{step === 'review' ? 'مراجعة العقد' : 'تأكيد التوقيع'}</DialogTitle>
+        <DialogContent className="max-w-4xl w-[95vw] max-h-[95vh] flex flex-col p-0 overflow-hidden" dir="rtl">
+          <DialogHeader className="px-6 pt-6 pb-3 border-b shrink-0">
+            <DialogTitle className="text-xl">{step === 'review' ? 'مراجعة العقد' : 'تأكيد التوقيع'}</DialogTitle>
             <DialogDescription>
               {step === 'review'
-                ? 'اقرأ العقد بعناية ثم اطلب رمز التحقق'
+                ? 'اقرأ بنود العقد كاملةً قبل الموافقة وطلب رمز التحقق'
                 : 'أدخل الرمز الذي وصلك على البريد الإلكتروني'}
             </DialogDescription>
           </DialogHeader>
 
           {step === 'review' ? (
             <>
-              <ScrollArea className="h-[40vh] rounded-md border p-4 bg-muted/20">
-                <div className="whitespace-pre-wrap text-sm leading-relaxed">
-                  {contract.content || 'محتوى العقد سيظهر هنا...'}
-                </div>
-              </ScrollArea>
-              <div className="flex items-start gap-2 pt-2">
-                <Checkbox id="accept" checked={accepted} onCheckedChange={(c) => setAccepted(!!c)} />
-                <Label htmlFor="accept" className="text-sm cursor-pointer leading-relaxed">
-                  أقر بأنني قرأت العقد وأوافق على جميع بنوده وشروطه
-                </Label>
+              <div className="flex-1 min-h-0 overflow-hidden px-6 pt-4">
+                <ScrollArea className="h-[65vh] rounded-md border bg-card">
+                  <div className="px-6 py-6">
+                    {loadingContent ? (
+                      <div className="flex flex-col items-center justify-center py-20 gap-3 text-muted-foreground">
+                        <Loader2 className="h-8 w-8 animate-spin" />
+                        <span className="text-sm">جارٍ تحضير العقد بصيغته الكاملة...</span>
+                      </div>
+                    ) : (
+                      <article className="prose prose-sm md:prose-base max-w-none text-foreground leading-loose
+                        prose-headings:text-foreground prose-headings:font-bold prose-headings:mt-6 prose-headings:mb-3
+                        prose-h1:text-2xl prose-h1:border-b prose-h1:pb-2
+                        prose-h2:text-lg prose-h2:text-primary
+                        prose-h3:text-base
+                        prose-p:my-2 prose-p:text-foreground/90
+                        prose-strong:text-foreground prose-strong:font-bold
+                        prose-ul:my-2 prose-ol:my-2 prose-li:my-1
+                        prose-table:border prose-table:border-border prose-table:my-4
+                        prose-th:bg-muted prose-th:p-2 prose-th:border prose-th:border-border prose-th:text-right
+                        prose-td:p-2 prose-td:border prose-td:border-border prose-td:text-right
+                        prose-hr:my-6 prose-hr:border-border">
+                        <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                          {content || 'محتوى العقد سيظهر هنا...'}
+                        </ReactMarkdown>
+                      </article>
+                    )}
+                  </div>
+                </ScrollArea>
               </div>
-              <DialogFooter>
-                <Button variant="outline" onClick={() => setOpen(false)}>إلغاء</Button>
-                <Button onClick={sendOtp} disabled={sending || !accepted}>
-                  {sending ? <Loader2 className="h-4 w-4 ml-2 animate-spin" /> : <MailCheck className="h-4 w-4 ml-2" />}
-                  إرسال رمز التحقق
-                </Button>
-              </DialogFooter>
+              <div className="px-6 pt-3 pb-3 space-y-3 border-t shrink-0 bg-card">
+                <div className="flex items-start gap-2">
+                  <Checkbox id="accept" checked={accepted} onCheckedChange={(c) => setAccepted(!!c)} className="mt-1" />
+                  <Label htmlFor="accept" className="text-sm cursor-pointer leading-relaxed">
+                    أقر بأنني قرأتُ العقد كاملاً وأوافق على جميع بنوده وشروطه
+                  </Label>
+                </div>
+                <DialogFooter className="gap-2 sm:gap-2">
+                  <Button variant="outline" onClick={() => setOpen(false)}>إلغاء</Button>
+                  <Button onClick={sendOtp} disabled={sending || !accepted || loadingContent}>
+                    {sending ? <Loader2 className="h-4 w-4 ml-2 animate-spin" /> : <MailCheck className="h-4 w-4 ml-2" />}
+                    إرسال رمز التحقق
+                  </Button>
+                </DialogFooter>
+              </div>
             </>
           ) : (
             <>
