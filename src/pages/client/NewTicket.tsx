@@ -9,7 +9,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { useAuth } from '@/components/SimpleAuthProvider';
 import { toast } from 'sonner';
 import {
-  ArrowRight, Sparkles, FileText, Package, Loader2, X, Headphones,
+  ArrowRight, ArrowLeft, Sparkles, FileText, Package, Loader2, X, Headphones,
 } from 'lucide-react';
 import {
   SupportService, CATEGORY_LABELS, PRIORITY_LABELS,
@@ -91,10 +91,10 @@ export default function NewTicket() {
 
   return (
     <ClientLayout>
-      <div className="p-3 sm:p-4 lg:p-6 space-y-4 sm:space-y-6 max-w-3xl mx-auto" dir="rtl">
+      <div className="p-3 sm:p-4 lg:p-6 space-y-4 sm:space-y-6 max-w-3xl mx-auto text-right" dir="rtl">
         {/* Header */}
         <div className="flex items-center justify-between gap-3">
-          <div>
+          <div className="w-full">
             <Link to="/support/tickets" className="inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-primary transition-colors mb-2">
               <ArrowRight className="w-4 h-4" />
               العودة إلى خدمة العملاء
@@ -124,15 +124,15 @@ export default function NewTicket() {
               </div>
             )}
 
-            <div className="space-y-2">
-              <label className="text-sm font-medium">عنوان التذكرة *</label>
-              <Input placeholder="عنوان مختصر يصف المشكلة" value={form.title}
+            <div className="space-y-2 text-right">
+              <label className="text-sm font-medium block">عنوان التذكرة *</label>
+              <Input placeholder="عنوان مختصر يصف المشكلة" value={form.title} dir="rtl" className="text-right"
                 onChange={(e) => setForm({ ...form, title: e.target.value })} />
             </div>
 
-            <div className="space-y-2">
-              <label className="text-sm font-medium">الوصف التفصيلي</label>
-              <Textarea placeholder="اشرح مشكلتك بالتفصيل..." value={form.description}
+            <div className="space-y-2 text-right">
+              <label className="text-sm font-medium block">الوصف التفصيلي</label>
+              <Textarea placeholder="اشرح مشكلتك بالتفصيل..." value={form.description} dir="rtl" className="text-right"
                 onChange={(e) => setForm({ ...form, description: e.target.value })} rows={8} />
             </div>
 
@@ -142,19 +142,19 @@ export default function NewTicket() {
             </Button>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-              <div className="space-y-2">
-                <label className="text-sm font-medium">التصنيف</label>
-                <Select value={form.category} onValueChange={(v) => setForm({ ...form, category: v })}>
-                  <SelectTrigger><SelectValue /></SelectTrigger>
+              <div className="space-y-2 text-right">
+                <label className="text-sm font-medium block">التصنيف</label>
+                <Select value={form.category} onValueChange={(v) => setForm({ ...form, category: v })} dir="rtl">
+                  <SelectTrigger className="text-right"><SelectValue /></SelectTrigger>
                   <SelectContent>
                     {Object.entries(CATEGORY_LABELS).map(([k, v]) => <SelectItem key={k} value={k}>{v}</SelectItem>)}
                   </SelectContent>
                 </Select>
               </div>
-              <div className="space-y-2">
-                <label className="text-sm font-medium">الأولوية</label>
-                <Select value={form.priority} onValueChange={(v) => setForm({ ...form, priority: v })}>
-                  <SelectTrigger><SelectValue /></SelectTrigger>
+              <div className="space-y-2 text-right">
+                <label className="text-sm font-medium block">الأولوية</label>
+                <Select value={form.priority} onValueChange={(v) => setForm({ ...form, priority: v })} dir="rtl">
+                  <SelectTrigger className="text-right"><SelectValue /></SelectTrigger>
                   <SelectContent>
                     {Object.entries(PRIORITY_LABELS).map(([k, v]) => <SelectItem key={k} value={k}>{v}</SelectItem>)}
                   </SelectContent>
@@ -162,12 +162,12 @@ export default function NewTicket() {
               </div>
             </div>
 
-            <div className="flex items-center justify-end gap-2 pt-2 border-t">
-              <Button variant="outline" onClick={() => navigate('/support/tickets')}>إلغاء</Button>
+            <div className="flex items-center justify-start gap-2 pt-2 border-t">
               <Button onClick={handleCreate} disabled={submitting || !form.title.trim()} className="gap-2">
                 {submitting ? <Loader2 className="w-4 h-4 animate-spin" /> : null}
                 إنشاء التذكرة
               </Button>
+              <Button variant="outline" onClick={() => navigate('/support/tickets')}>إلغاء</Button>
             </div>
           </CardContent>
         </Card>
