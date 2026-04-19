@@ -37,8 +37,10 @@ function buildPrintHtml(opts: PrintOptions): string {
   const { data, lang, template, fileName = 'CV', autoPrint = true } = opts;
 
   // Render the template to static HTML — no React runtime, no transforms.
+  // mode="print" tells the renderer to drop on-screen-only sizing
+  // (min-height: 297mm, flex:1) so content flows naturally across PDF pages.
   const cvMarkup = renderToStaticMarkup(
-    React.createElement(CVRenderer, { data, lang, template })
+    React.createElement(CVRenderer, { data, lang, template, mode: 'print' })
   );
 
   const dir = lang === 'ar' ? 'rtl' : 'ltr';
@@ -56,7 +58,7 @@ function buildPrintHtml(opts: PrintOptions): string {
   <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700;800&family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
   ${collectStyles()}
   <style>
-    /* Reset for print window */
+    /* ─── Reset ─── */
     *, *::before, *::after { box-sizing: border-box; }
     html, body {
       margin: 0; padding: 0; background: #ffffff;
@@ -64,18 +66,32 @@ function buildPrintHtml(opts: PrintOptions): string {
       print-color-adjust: exact !important;
       color-adjust: exact !important;
     }
-    body { font-family: ${fontFamily}; color: #0a0a0a; }
+    body {
+      font-family: ${fontFamily};
+      color: #0a0a0a;
+      direction: ${dir};
+      text-align: ${lang === 'ar' ? 'right' : 'left'};
+    }
 
-    /* The CV page — exactly A4 with no extra padding from the wrapper */
+    /* ─── The CV page wrapper — exactly A4 ─── */
     .cv-print-page {
       width: 210mm;
-      min-height: 297mm;
       margin: 0 auto;
       background: #ffffff;
-      overflow: hidden;
-      /* Kill any transform/opacity that may have leaked in */
     }
-    .cv-print-page > * {
+
+    /* ─── Neutralize on-screen-only sizing inside the rendered template ───
+       Templates set min-height: 297mm + flex:1 to fill the live preview.
+       In print that forces phantom blank space on page 2. */
+    [data-cv-root][data-cv-mode="print"],
+    [data-cv-root][data-cv-mode="print"] > * {
+      min-height: 0 !important;
+      height: auto !important;
+      flex: none !important;
+    }
+
+    /* ─── Strip any runtime transforms / opacity / animations ─── */
+    .cv-print-page * {
       transform: none !important;
       opacity: 1 !important;
       animation: none !important;
@@ -83,11 +99,17 @@ function buildPrintHtml(opts: PrintOptions): string {
       filter: none !important;
     }
 
-    /* Page-break behavior */
+    /* ─── Page-break behavior ─── */
     h1, h2, h3 { page-break-after: avoid; break-after: avoid; }
     p, li, tr { page-break-inside: avoid; break-inside: avoid; }
-    section, article { break-inside: avoid; }
+    section, article, header { break-inside: avoid; page-break-inside: avoid; }
+    /* Each "card" / item block in templates */
+    [data-cv-root] > div > div > section { break-inside: avoid; }
     img, svg { max-width: 100%; }
+
+    /* ─── RTL fixes that some browsers miss in print ─── */
+    [dir="rtl"] { direction: rtl; }
+    [dir="ltr"] { direction: ltr; }
 
     @page {
       size: A4;
@@ -103,7 +125,7 @@ function buildPrintHtml(opts: PrintOptions): string {
         box-shadow: none !important;
         margin: 0 !important;
       }
-      /* Force colors / gradients to print */
+      /* Force colors / gradients / backgrounds to render */
       * {
         -webkit-print-color-adjust: exact !important;
         print-color-adjust: exact !important;
