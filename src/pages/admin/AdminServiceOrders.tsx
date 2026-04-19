@@ -434,7 +434,7 @@ const AdminServiceOrders = () => {
         </div>
 
         {/* Filters */}
-        <Card>
+        <Card data-tour="admin-orders-filters">
           <CardContent className="p-3 md:p-4">
             <div className="flex flex-col md:flex-row gap-3">
               <div className="flex-1 relative">
@@ -486,6 +486,7 @@ const AdminServiceOrders = () => {
         </Card>
 
         {/* Orders Table */}
+        <div data-tour="admin-orders-table">
         {filteredOrders.length === 0 ? (
           <Card>
             <CardContent className="p-12 text-center">
