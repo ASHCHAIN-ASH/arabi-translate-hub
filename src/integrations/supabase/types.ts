@@ -2474,8 +2474,10 @@ export type Database = {
         Row: {
           category_id: string | null
           created_at: string
+          default_quantity: number
           description: string | null
           description_ar: string | null
+          dynamic_fields: Json
           group_max_members: number
           group_min_members: number
           group_seat_price: number | null
@@ -2487,6 +2489,7 @@ export type Database = {
           name: string
           name_ar: string | null
           price: number | null
+          quantity_unit_label: string | null
           slug: string | null
           sort_order: number
           subcategory_id: string | null
@@ -2496,8 +2499,10 @@ export type Database = {
         Insert: {
           category_id?: string | null
           created_at?: string
+          default_quantity?: number
           description?: string | null
           description_ar?: string | null
+          dynamic_fields?: Json
           group_max_members?: number
           group_min_members?: number
           group_seat_price?: number | null
@@ -2509,6 +2514,7 @@ export type Database = {
           name: string
           name_ar?: string | null
           price?: number | null
+          quantity_unit_label?: string | null
           slug?: string | null
           sort_order?: number
           subcategory_id?: string | null
@@ -2518,8 +2524,10 @@ export type Database = {
         Update: {
           category_id?: string | null
           created_at?: string
+          default_quantity?: number
           description?: string | null
           description_ar?: string | null
+          dynamic_fields?: Json
           group_max_members?: number
           group_min_members?: number
           group_seat_price?: number | null
@@ -2531,6 +2539,7 @@ export type Database = {
           name?: string
           name_ar?: string | null
           price?: number | null
+          quantity_unit_label?: string | null
           slug?: string | null
           sort_order?: number
           subcategory_id?: string | null
