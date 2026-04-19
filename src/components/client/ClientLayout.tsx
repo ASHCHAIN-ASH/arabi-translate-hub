@@ -75,14 +75,14 @@ const ClientLayout: React.FC<ClientLayoutProps> = ({ children }) => {
   const SidebarInner = ({ onItemClick }: { onItemClick?: () => void }) => (
     <div className="h-full flex flex-col">
       {/* Brand header */}
-      <div className="relative overflow-hidden p-5 border-b border-white/10">
-        <div className="absolute inset-0 bg-gradient-to-br from-primary via-secondary to-primary opacity-95" />
-        <div className="absolute -top-10 -right-10 w-40 h-40 bg-white/10 rounded-full blur-3xl" />
-        <div className="absolute -bottom-10 -left-10 w-32 h-32 bg-white/10 rounded-full blur-3xl" />
-        <div className="relative flex items-center gap-3 text-white">
-          <div
-            className="w-11 h-11 bg-white/20 backdrop-blur-md rounded-xl flex items-center justify-center shadow-lg ring-1 ring-white/30"
-          >
+        <div className="relative overflow-hidden p-5 border-b border-white/10">
+          <div className="absolute inset-0 bg-gradient-to-br from-primary via-secondary to-primary opacity-95" />
+          <div className="absolute -top-10 -right-10 w-40 h-40 bg-white/10 rounded-full opacity-20" />
+          <div className="absolute -bottom-10 -left-10 w-32 h-32 bg-white/10 rounded-full opacity-20" />
+          <div className="relative flex items-center gap-3 text-white">
+            <div
+              className="w-11 h-11 bg-white/20 rounded-xl flex items-center justify-center shadow-lg ring-1 ring-white/30"
+            >
             <GraduationCap className="w-6 h-6" />
           </div>
           <div>
@@ -162,29 +162,29 @@ const ClientLayout: React.FC<ClientLayoutProps> = ({ children }) => {
     <div className="min-h-screen w-full bg-gradient-to-br from-background via-muted/20 to-background" dir="rtl">
       <div className="flex">
         {/* Desktop Sidebar — visible on lg and up */}
-        <aside className="w-72 flex-shrink-0 hidden lg:block">
-          <div className="sticky top-0 h-screen bg-card/80 backdrop-blur-xl border-s border-border/60 shadow-sm">
-            <SidebarInner />
-          </div>
-        </aside>
+          <aside className="w-72 flex-shrink-0 hidden lg:block">
+            <div className="sticky top-0 h-screen bg-card border-s border-border/60 shadow-sm">
+              <SidebarInner />
+            </div>
+          </aside>
 
-        {/* Main Area */}
-        <div className="flex-1 min-w-0">
-          {/* Header */}
-          <header className="bg-card/80 backdrop-blur-xl border-b border-border/60 sticky top-0 z-40">
-            <div className="px-3 sm:px-4 lg:px-6">
-              <div className="flex items-center justify-between h-14 sm:h-16">
-                <div className="flex items-center gap-3">
-                  {/* Mobile/Tablet Menu — visible below lg */}
-                  <Sheet open={isSidebarOpen} onOpenChange={setIsSidebarOpen}>
-                    <SheetTrigger asChild>
-                      <Button variant="ghost" size="sm" className="lg:hidden p-2 shrink-0">
-                        <Menu className="w-5 h-5" />
-                      </Button>
-                    </SheetTrigger>
-                    <SheetContent side="right" className="w-[85vw] max-w-sm p-0 border-l border-border/60 overflow-y-auto" dir="rtl">
-                      <SidebarInner onItemClick={() => setIsSidebarOpen(false)} />
-                    </SheetContent>
+          {/* Main Area */}
+          <div className="flex-1 min-w-0">
+            {/* Header */}
+            <header className="bg-card border-b border-border/60 sticky top-0 z-40">
+              <div className="px-3 sm:px-4 lg:px-6">
+                <div className="flex items-center justify-between h-14 sm:h-16">
+                  <div className="flex items-center gap-3">
+                    {/* Mobile/Tablet Menu — visible below lg */}
+                    <Sheet open={isSidebarOpen} onOpenChange={setIsSidebarOpen}>
+                      <SheetTrigger asChild>
+                        <Button variant="ghost" size="sm" className="lg:hidden p-2 shrink-0">
+                          <Menu className="w-5 h-5" />
+                        </Button>
+                      </SheetTrigger>
+                      <SheetContent disableAnimation side="right" className="w-[85vw] max-w-sm p-0 border-l border-border/60 overflow-y-auto bg-background" dir="rtl">
+                        <SidebarInner onItemClick={() => setIsSidebarOpen(false)} />
+                      </SheetContent>
                   </Sheet>
 
                   <Link to="/dashboard" className="flex items-center gap-2 lg:hidden">
