@@ -19,7 +19,7 @@ import {
   ArrowRight, RefreshCw, FileText, Clock, CheckCircle, X, Eye, Zap, Bell, DollarSign,
   User, Mail, Phone, Building2, Calendar, Copy, MessageSquare, Send, Paperclip,
   Download, Upload, Activity, Wallet, AlertCircle, NotebookPen, Wifi, WifiOff,
-  PackageCheck, FileCheck2, Receipt, ScrollText,
+  PackageCheck, FileCheck2, Receipt, ScrollText, ClipboardList,
 } from 'lucide-react';
 import OrderLifecycleTimeline, { LifecycleStatus } from '@/components/orders/OrderLifecycleTimeline';
 import { AdminQuoteSender } from '@/components/orders/AdminQuoteSender';
