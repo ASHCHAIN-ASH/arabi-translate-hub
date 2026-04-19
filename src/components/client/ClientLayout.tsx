@@ -9,7 +9,7 @@ import {
   ShoppingCart,
   FileText,
   CreditCard,
-  HelpCircle,
+  Headphones,
   LogOut,
   GraduationCap,
   Wallet,
@@ -46,7 +46,7 @@ const navItems: NavItem[] = [
   { name: 'عضويتي', href: '/membership', icon: Crown },
   { name: 'مكافآتي', href: '/rewards', icon: Trophy },
   { name: 'المدفوعات', href: '/billing/payments', icon: CreditCard },
-  { name: 'الدعم الفني', href: '/support/tickets', icon: HelpCircle },
+  { name: 'خدمة العملاء', href: '/support/tickets', icon: Headphones },
 ];
 
 interface SidebarInnerProps {

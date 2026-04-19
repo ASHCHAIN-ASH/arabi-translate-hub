@@ -62,7 +62,7 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
         { name: 'العملاء', href: '/adminmaster/customers', icon: Users },
         { name: 'المستخدمين', href: '/adminmaster/users', icon: Settings },
         { name: 'إضافة مستخدم', href: '/adminmaster/add-user', icon: UserPlus },
-        { name: 'تذاكر الدعم', href: '/adminmaster/tickets', icon: Ticket, badge: counts.tickets > 0 ? counts.tickets.toString() : null },
+        { name: 'خدمة العملاء', href: '/adminmaster/tickets', icon: Ticket, badge: counts.tickets > 0 ? counts.tickets.toString() : null },
       ]
     },
     {
