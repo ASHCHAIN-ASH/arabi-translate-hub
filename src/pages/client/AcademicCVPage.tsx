@@ -289,21 +289,43 @@ const AcademicCVPage: React.FC = () => {
                 <h3 className="font-semibold text-sm">{T.pickTemplate}</h3>
                 <span className="text-xs text-muted-foreground">{T.templateHint}</span>
               </div>
+              {/* Lock-status banner */}
+              {alreadyPaid && (
+                <div className="mb-3 rounded-lg border border-border/60 bg-muted/40 px-3 py-2 text-xs flex items-center gap-2 flex-wrap">
+                  <Check className="w-3.5 h-3.5 text-emerald-600" />
+                  <span className="font-medium">
+                    {lang === 'ar' ? 'القالب المقفول:' : 'Locked template:'} {cv.locked_template_key || cv.template_key}
+                  </span>
+                  {canSwapTemplate ? (
+                    <Badge variant="outline" className="gap-1 text-[10px]">
+                      <Sparkles className="w-3 h-3" />
+                      {lang === 'ar' ? 'تبديل مجاني متاح حتى:' : 'Free swap until:'} {new Date(cv.template_swap_deadline!).toLocaleString(lang === 'ar' ? 'ar-SA' : 'en-US')}
+                    </Badge>
+                  ) : (
+                    <span className="text-muted-foreground">
+                      {lang === 'ar' ? '— تبديل القالب غير متاح' : '— template swap unavailable'}
+                    </span>
+                  )}
+                </div>
+              )}
               <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
                 {TEMPLATES_META.map((t, idx) => {
                   const active = cv.template_key === t.key;
+                  const isLockedOther = alreadyPaid && !canSwapTemplate && t.key !== cv.locked_template_key;
                   return (
                     <motion.button
                       key={t.key}
-                      onClick={() => setTemplate(t.key as CVTemplate)}
+                      onClick={() => handleSelectTemplate(t.key as CVTemplate)}
+                      disabled={isLockedOther}
                       initial={{ opacity: 0, y: 12 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ delay: idx * 0.05, duration: 0.35 }}
-                      whileHover={{ y: -3, scale: 1.02 }}
-                      whileTap={{ scale: 0.98 }}
+                      whileHover={isLockedOther ? undefined : { y: -3, scale: 1.02 }}
+                      whileTap={isLockedOther ? undefined : { scale: 0.98 }}
                       className={cn(
                         'relative text-start rounded-xl border-2 p-2.5 transition-colors hover:shadow-lg bg-card',
-                        active ? 'border-primary shadow-lg ring-2 ring-primary/20' : 'border-border/60 hover:border-primary/40'
+                        active ? 'border-primary shadow-lg ring-2 ring-primary/20' : 'border-border/60 hover:border-primary/40',
+                        isLockedOther && 'opacity-40 cursor-not-allowed hover:shadow-none'
                       )}
                     >
                       {active && (
