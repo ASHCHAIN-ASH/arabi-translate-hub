@@ -398,7 +398,16 @@ const AcademicCVPage: React.FC = () => {
                               <Field label={T.fields.date} value={p.date || ''} onChange={v => updProj(p.id, { date: v })} />
                             </div>
                             <div className="mt-2">
-                              <Label className="text-xs mb-1 block">{T.fields.desc}</Label>
+                              <div className="flex items-center justify-between mb-1">
+                                <Label className="text-xs">{T.fields.desc}</Label>
+                                <AIBtn
+                                  label={p.description ? aiImproveLabel : aiLabel}
+                                  onClick={async () => {
+                                    const t = await runAI('project_desc', p.description, { name: p.name });
+                                    if (t) updProj(p.id, { description: t });
+                                  }}
+                                />
+                              </div>
                               <Textarea rows={3} value={p.description} onChange={e => updProj(p.id, { description: e.target.value })} />
                             </div>
                           </RowCard>
