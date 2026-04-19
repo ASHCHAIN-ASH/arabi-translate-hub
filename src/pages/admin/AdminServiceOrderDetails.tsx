@@ -226,27 +226,37 @@ const AdminServiceOrderDetails = () => {
     }
     setSendingQuote(true);
     try {
-      const amt = parseFloat(quotePrice);
+      const entered = parseFloat(quotePrice);
+      // إذا كان المبلغ شاملاً للضريبة: نستخرج الصافي والضريبة من نفس المبلغ.
+      // إذا غير شامل: نضيف الضريبة فوقه ليصبح الإجمالي = صافي + ضريبة.
+      const net = taxIncluded ? +(entered / (1 + VAT_RATE)).toFixed(2) : entered;
+      const vat = taxIncluded ? +(entered - net).toFixed(2) : +(entered * VAT_RATE).toFixed(2);
+      const gross = taxIncluded ? entered : +(entered + vat).toFixed(2);
+
+      const taxNote = `الصافي: ${net.toLocaleString()} ر.س + ضريبة 15%: ${vat.toLocaleString()} ر.س = الإجمالي: ${gross.toLocaleString()} ر.س`;
+      const fullNote = quoteNotes ? `${quoteNotes} — ${taxNote}` : taxNote;
+
       await (supabase.from('service_orders') as any).update({
-        total_amount: amt, quote_status: 'pending', quote_notes: quoteNotes || null,
+        total_amount: gross, quote_status: 'pending', quote_notes: fullNote,
         quote_sent_at: new Date().toISOString(), updated_at: new Date().toISOString(),
       }).eq('id', order.id);
       await (supabase.from('service_order_timeline') as any).insert([{
-        order_id: order.id, status: 'price_quote', note: `عرض سعر: ${amt.toLocaleString()} ر.س${quoteNotes ? ` — ${quoteNotes}` : ''}`,
+        order_id: order.id, status: 'price_quote',
+        note: `عرض سعر: ${gross.toLocaleString()} ر.س (شامل ض.ق.م) — ${taxNote}${quoteNotes ? ` — ${quoteNotes}` : ''}`,
       }]);
       if (order.user_id) {
         await (supabase.from('user_notifications') as any).insert([{
           user_id: order.user_id, title: '💰 عرض سعر جديد',
-          message: `عرض سعر للطلب ${order.tracking_id}: ${amt.toLocaleString()} ر.س`,
+          message: `عرض سعر للطلب ${order.tracking_id}: ${gross.toLocaleString()} ر.س (شامل ض.ق.م)`,
           type: 'price_quote', link: `/orders/${order.id}`,
         }]);
       }
       sendOrderEmail({
         orderId: order.id, trackingId: order.tracking_id, eventType: 'quote',
-        amount: amt.toLocaleString(), note: quoteNotes || undefined,
+        amount: gross.toLocaleString(), note: fullNote,
         recipientEmail: clientEmail, clientName, serviceName: order.service_name,
       });
-      toast({ title: '✅ تم إرسال عرض السعر' });
+      toast({ title: '✅ تم إرسال عرض السعر', description: taxNote });
       setShowQuote(false);
       loadAll();
     } catch (e: any) {
