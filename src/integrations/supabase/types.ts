@@ -232,6 +232,7 @@ export type Database = {
           contract_id: string
           id: string
           ip_address: string | null
+          signature_image: string | null
           signature_text: string
           signed_at: string
           signer_email: string | null
@@ -246,6 +247,7 @@ export type Database = {
           contract_id: string
           id?: string
           ip_address?: string | null
+          signature_image?: string | null
           signature_text: string
           signed_at?: string
           signer_email?: string | null
@@ -260,6 +262,7 @@ export type Database = {
           contract_id?: string
           id?: string
           ip_address?: string | null
+          signature_image?: string | null
           signature_text?: string
           signed_at?: string
           signer_email?: string | null
@@ -347,6 +350,7 @@ export type Database = {
           signed_pdf_generated_at: string | null
           signed_pdf_path: string | null
           status: string | null
+          template_type: string | null
           title: string
           total_amount: number | null
           updated_at: string
@@ -377,6 +381,7 @@ export type Database = {
           signed_pdf_generated_at?: string | null
           signed_pdf_path?: string | null
           status?: string | null
+          template_type?: string | null
           title: string
           total_amount?: number | null
           updated_at?: string
@@ -407,6 +412,7 @@ export type Database = {
           signed_pdf_generated_at?: string | null
           signed_pdf_path?: string | null
           status?: string | null
+          template_type?: string | null
           title?: string
           total_amount?: number | null
           updated_at?: string

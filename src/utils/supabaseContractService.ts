@@ -1,5 +1,5 @@
 import { supabase } from "@/integrations/supabase/client";
-import { buildLegalAcademicContract, LegalTemplateContext } from "./contractTemplates";
+import { buildLegalAcademicContract, LegalTemplateContext, ContractTemplateType } from "./contractTemplates";
 
 export type ContractStatus =
   | "draft"
@@ -46,11 +46,32 @@ export interface ContractSignature {
   signer_email: string | null;
   signer_id_number: string | null;
   signature_text: string;
+  signature_image: string | null;
   ip_address: string | null;
   user_agent: string | null;
   accepted_terms: any;
   comments: string | null;
   signed_at: string;
+}
+
+/** تنزيل/توليد PDF (HTML) للعقد - متاح في أي وقت قبل أو بعد التوقيع */
+export async function downloadContractPdf(contractId: string) {
+  const { data, error } = await supabase.functions.invoke("generate-contract-pdf", {
+    body: { contract_id: contractId },
+  });
+  if (error) throw error;
+  const url = (data as any)?.signed_url;
+  if (url) {
+    window.open(url, "_blank", "noopener");
+    return url;
+  }
+  // احتياطي: افتح HTML مباشرة في نافذة جديدة
+  const html = (data as any)?.html;
+  if (html) {
+    const w = window.open("", "_blank");
+    if (w) { w.document.write(html); w.document.close(); }
+  }
+  return null;
 }
 
 export interface ContractTimelineEvent {
@@ -108,20 +129,26 @@ export async function generateContractContent(contractId: string) {
   const c = await getContract(contractId);
   if (!c) throw new Error("Contract not found");
 
+  const meta = (c.metadata as any) || {};
   const ctx: LegalTemplateContext = {
     contractNumber: c.contract_number,
     serviceName: c.service_name || c.title || "خدمة",
-    serviceDescription: (c.metadata as any)?.serviceDescription,
+    serviceDescription: meta.serviceDescription,
     clientFullName: c.client_full_name || "العميل",
     clientIdNumber: c.client_id_number || undefined,
     clientEmail: c.client_email || undefined,
     clientPhone: c.client_phone || undefined,
+    clientCompany: meta.clientCompany || undefined,
     totalAmount: Number(c.total_amount || 0),
     currency: c.currency || "SAR",
     paymentTerms: c.payment_terms || undefined,
     deliveryDate: c.delivery_date || undefined,
-    workDuration: (c.metadata as any)?.workDuration || undefined,
+    workDuration: meta.workDuration || undefined,
     issueDate: c.created_at,
+    templateType: ((c as any).template_type as ContractTemplateType) || "academic",
+    deliverables: meta.deliverables,
+    paymentSchedule: meta.paymentSchedule,
+    scopeItems: meta.scopeItems,
   };
 
   const content = buildLegalAcademicContract(ctx);
@@ -185,6 +212,7 @@ export async function createManualContract(input: {
   service_order_id?: string | null;
   service_name: string;
   service_type?: string;
+  template_type?: ContractTemplateType;
   total_amount: number;
   currency?: string;
   payment_terms?: string;
@@ -194,10 +222,16 @@ export async function createManualContract(input: {
   client_id_number?: string;
   client_email?: string;
   client_phone?: string;
+  client_company?: string;
+  deliverables?: string[];
+  payment_schedule?: Array<{ stage: string; percent: number; due: string }>;
 }) {
-  // Auto-compute delivery_date from work_duration if not provided
-  // Supports patterns like: "14 يوم", "14 يوم عمل", "أسبوعين", "شهر", "X day(s)", "X week(s)"
   const computedDelivery = input.delivery_date || computeDeliveryFromDuration(input.work_duration);
+  const meta: any = {};
+  if (input.work_duration) meta.workDuration = input.work_duration;
+  if (input.client_company) meta.clientCompany = input.client_company;
+  if (input.deliverables?.length) meta.deliverables = input.deliverables;
+  if (input.payment_schedule?.length) meta.paymentSchedule = input.payment_schedule;
 
   const { data, error } = await (supabase.from(TBL) as any)
     .insert({
@@ -207,6 +241,7 @@ export async function createManualContract(input: {
       title: `عقد خدمة: ${input.service_name}`,
       service_name: input.service_name,
       service_type: input.service_type || "general",
+      template_type: input.template_type || "academic",
       total_amount: input.total_amount,
       currency: input.currency || "SAR",
       payment_terms: input.payment_terms,
@@ -217,7 +252,7 @@ export async function createManualContract(input: {
       client_phone: input.client_phone,
       status: "draft",
       content: "",
-      metadata: input.work_duration ? { workDuration: input.work_duration } : {},
+      metadata: meta,
     })
     .select("id")
     .single();
