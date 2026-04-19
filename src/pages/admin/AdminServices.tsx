@@ -23,7 +23,7 @@ import {
 import { useToast } from '@/hooks/use-toast';
 import {
   Plus, Search, Edit, Trash2, Eye, EyeOff, Package, Layers,
-  Tag, TrendingUp, CheckCircle2, XCircle, Wallet, FolderTree,
+  Tag, TrendingUp, CheckCircle2, XCircle, Wallet, FolderTree, Star, Upload, Image as ImageIcon,
 } from 'lucide-react';
 
 interface Service {
@@ -31,10 +31,16 @@ interface Service {
   name: string;
   name_ar: string | null;
   description: string | null;
+  description_ar: string | null;
   price: number | null;
   unit: string | null;
   category_id: string | null;
+  subcategory_id: string | null;
+  image_url: string | null;
+  slug: string | null;
+  is_featured: boolean;
   is_active: boolean | null;
+  sort_order: number;
   created_at: string;
   updated_at: string;
 }
@@ -45,6 +51,10 @@ interface Category {
   name_ar: string | null;
   description: string | null;
   icon: string | null;
+  color: string | null;
+  slug: string | null;
+  parent_id: string | null;
+  is_active: boolean;
   sort_order: number | null;
   created_at: string;
 }
@@ -77,11 +87,17 @@ const AdminServices = () => {
     name_ar: '',
     name: '',
     description: '',
+    description_ar: '',
     category_id: '',
+    subcategory_id: '',
     price: 0,
     unit: 'service',
+    image_url: '',
+    is_featured: false,
     is_active: true,
+    sort_order: 0,
   });
+  const [uploadingImage, setUploadingImage] = useState(false);
 
   // Category Dialog
   const [isCategoryDialogOpen, setIsCategoryDialogOpen] = useState(false);
@@ -91,7 +107,10 @@ const AdminServices = () => {
     name: '',
     description: '',
     icon: '',
+    color: '',
+    parent_id: '',
     sort_order: 0,
+    is_active: true,
   });
 
   // Delete confirmations
@@ -179,8 +198,8 @@ const AdminServices = () => {
   // === Services CRUD ===
   const resetServiceForm = () => {
     setServiceForm({
-      name_ar: '', name: '', description: '', category_id: '',
-      price: 0, unit: 'service', is_active: true,
+      name_ar: '', name: '', description: '', description_ar: '', category_id: '', subcategory_id: '',
+      price: 0, unit: 'service', image_url: '', is_featured: false, is_active: true, sort_order: 0,
     });
     setEditingService(null);
   };
@@ -191,12 +210,39 @@ const AdminServices = () => {
       name_ar: s.name_ar ?? '',
       name: s.name ?? '',
       description: s.description ?? '',
+      description_ar: s.description_ar ?? '',
       category_id: s.category_id ?? '',
+      subcategory_id: s.subcategory_id ?? '',
       price: Number(s.price ?? 0),
       unit: s.unit ?? 'service',
+      image_url: s.image_url ?? '',
+      is_featured: !!s.is_featured,
       is_active: !!s.is_active,
+      sort_order: s.sort_order ?? 0,
     });
     setIsServiceDialogOpen(true);
+  };
+
+  const handleImageUpload = async (file: File) => {
+    if (!file) return;
+    if (file.size > 2 * 1024 * 1024) {
+      toast({ title: 'الصورة كبيرة', description: 'الحد الأقصى 2MB', variant: 'destructive' });
+      return;
+    }
+    setUploadingImage(true);
+    try {
+      const ext = file.name.split('.').pop();
+      const path = `services/${Date.now()}-${Math.random().toString(36).slice(2, 8)}.${ext}`;
+      const { error: upErr } = await supabase.storage.from('service-images').upload(path, file);
+      if (upErr) throw upErr;
+      const { data } = supabase.storage.from('service-images').getPublicUrl(path);
+      setServiceForm((f) => ({ ...f, image_url: data.publicUrl }));
+      toast({ title: '✅ تم رفع الصورة' });
+    } catch (e: any) {
+      toast({ title: 'خطأ', description: e.message, variant: 'destructive' });
+    } finally {
+      setUploadingImage(false);
+    }
   };
 
   const handleSaveService = async () => {
@@ -209,14 +255,23 @@ const AdminServices = () => {
       return;
     }
 
-    const payload = {
+    const slug = (serviceForm.name || serviceForm.name_ar).trim()
+      .toLowerCase().replace(/[^a-zA-Z0-9\u0600-\u06FF]+/g, '-').replace(/^-|-$/g, '');
+
+    const payload: any = {
       name_ar: serviceForm.name_ar.trim(),
       name: (serviceForm.name || serviceForm.name_ar).trim(),
       description: serviceForm.description.trim() || null,
+      description_ar: serviceForm.description_ar.trim() || null,
       category_id: serviceForm.category_id || null,
+      subcategory_id: serviceForm.subcategory_id || null,
       price: serviceForm.price,
       unit: serviceForm.unit,
+      image_url: serviceForm.image_url || null,
+      is_featured: serviceForm.is_featured,
       is_active: serviceForm.is_active,
+      sort_order: serviceForm.sort_order,
+      slug: editingService?.slug || slug || null,
     };
 
     const { error } = editingService
@@ -261,7 +316,7 @@ const AdminServices = () => {
 
   // === Categories CRUD ===
   const resetCategoryForm = () => {
-    setCategoryForm({ name_ar: '', name: '', description: '', icon: '', sort_order: 0 });
+    setCategoryForm({ name_ar: '', name: '', description: '', icon: '', color: '', parent_id: '', sort_order: 0, is_active: true });
     setEditingCategory(null);
   };
 
@@ -272,7 +327,10 @@ const AdminServices = () => {
       name: c.name ?? '',
       description: c.description ?? '',
       icon: c.icon ?? '',
+      color: c.color ?? '',
+      parent_id: c.parent_id ?? '',
       sort_order: c.sort_order ?? 0,
+      is_active: c.is_active ?? true,
     });
     setIsCategoryDialogOpen(true);
   };
@@ -282,12 +340,18 @@ const AdminServices = () => {
       toast({ title: 'حقل مطلوب', description: 'اسم القسم بالعربية مطلوب', variant: 'destructive' });
       return;
     }
-    const payload = {
+    const slug = (categoryForm.name || categoryForm.name_ar).trim()
+      .toLowerCase().replace(/[^a-zA-Z0-9\u0600-\u06FF]+/g, '-').replace(/^-|-$/g, '');
+    const payload: any = {
       name_ar: categoryForm.name_ar.trim(),
       name: (categoryForm.name || categoryForm.name_ar).trim(),
       description: categoryForm.description.trim() || null,
       icon: categoryForm.icon.trim() || null,
+      color: categoryForm.color.trim() || null,
+      parent_id: categoryForm.parent_id || null,
       sort_order: categoryForm.sort_order,
+      is_active: categoryForm.is_active,
+      slug: editingCategory?.slug || slug || null,
     };
     const { error } = editingCategory
       ? await supabase.from('service_categories').update(payload).eq('id', editingCategory.id)
@@ -438,6 +502,8 @@ const AdminServices = () => {
                       categories={categories}
                       onSave={handleSaveService}
                       onCancel={() => setIsServiceDialogOpen(false)}
+                      onImageUpload={handleImageUpload}
+                      uploadingImage={uploadingImage}
                     />
                   </Dialog>
                 </div>
@@ -589,6 +655,7 @@ const AdminServices = () => {
                     setForm={setCategoryForm}
                     onSave={handleSaveCategory}
                     onCancel={() => setIsCategoryDialogOpen(false)}
+                    allCategories={categories}
                   />
                 </Dialog>
               </CardContent>
@@ -720,7 +787,7 @@ const StatCard = ({
 };
 
 const ServiceDialog = ({
-  editing, form, setForm, categories, onSave, onCancel,
+  editing, form, setForm, categories, onSave, onCancel, onImageUpload, uploadingImage,
 }: {
   editing: Service | null;
   form: any;
@@ -728,8 +795,13 @@ const ServiceDialog = ({
   categories: Category[];
   onSave: () => void;
   onCancel: () => void;
-}) => (
-  <DialogContent className="max-w-xl max-h-[90vh] overflow-y-auto" dir="rtl">
+  onImageUpload: (file: File) => Promise<void>;
+  uploadingImage: boolean;
+}) => {
+  const parentCategories = categories.filter((c) => !c.parent_id);
+  const subCategories = categories.filter((c) => c.parent_id === form.category_id);
+  return (
+  <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto" dir="rtl">
     <DialogHeader>
       <DialogTitle className="flex items-center gap-2">
         <Package className="h-5 w-5 text-primary" />
@@ -752,11 +824,46 @@ const ServiceDialog = ({
             placeholder="Certified Translation" className="mt-1.5" />
         </div>
       </div>
+
       <div>
-        <Label>الوصف</Label>
-        <Textarea value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })}
-          placeholder="وصف مختصر يساعد العميل على فهم الخدمة..." rows={3} className="mt-1.5 resize-none" />
+        <Label>الوصف بالعربية</Label>
+        <Textarea value={form.description_ar} onChange={(e) => setForm({ ...form, description_ar: e.target.value })}
+          placeholder="وصف يساعد العميل على فهم الخدمة..." rows={2} className="mt-1.5 resize-none" />
       </div>
+      <div>
+        <Label>الوصف بالإنجليزية</Label>
+        <Textarea value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })}
+          placeholder="English description..." rows={2} className="mt-1.5 resize-none" />
+      </div>
+
+      {/* Image upload */}
+      <div>
+        <Label className="flex items-center gap-2"><ImageIcon className="h-4 w-4" /> صورة الخدمة</Label>
+        <div className="mt-1.5 flex items-center gap-3">
+          {form.image_url ? (
+            <img src={form.image_url} alt="" className="h-16 w-16 rounded-lg object-cover border" />
+          ) : (
+            <div className="h-16 w-16 rounded-lg border-2 border-dashed flex items-center justify-center bg-muted/30">
+              <ImageIcon className="h-6 w-6 text-muted-foreground/50" />
+            </div>
+          )}
+          <div className="flex-1 flex gap-2">
+            <Input
+              type="file" accept="image/*"
+              onChange={(e) => { const f = e.target.files?.[0]; if (f) onImageUpload(f); }}
+              disabled={uploadingImage}
+              className="text-xs"
+            />
+            {form.image_url && (
+              <Button type="button" variant="ghost" size="sm" onClick={() => setForm({ ...form, image_url: '' })}>
+                <Trash2 className="h-4 w-4" />
+              </Button>
+            )}
+          </div>
+        </div>
+        {uploadingImage && <p className="text-xs text-muted-foreground mt-1">جارٍ الرفع...</p>}
+      </div>
+
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
         <div>
           <Label>السعر (ر.س) *</Label>
@@ -775,27 +882,61 @@ const ServiceDialog = ({
           </Select>
         </div>
         <div>
-          <Label>القسم</Label>
+          <Label>ترتيب العرض</Label>
+          <Input type="number" min="0" value={form.sort_order}
+            onChange={(e) => setForm({ ...form, sort_order: parseInt(e.target.value) || 0 })} className="mt-1.5" />
+        </div>
+      </div>
+
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+        <div>
+          <Label>القسم الرئيسي</Label>
           <Select value={form.category_id || 'none'}
-            onValueChange={(v) => setForm({ ...form, category_id: v === 'none' ? '' : v })}>
+            onValueChange={(v) => setForm({ ...form, category_id: v === 'none' ? '' : v, subcategory_id: '' })}>
             <SelectTrigger className="mt-1.5"><SelectValue placeholder="بدون قسم" /></SelectTrigger>
             <SelectContent>
               <SelectItem value="none">بدون قسم</SelectItem>
-              {categories.map((c) => (
+              {parentCategories.map((c) => (
+                <SelectItem key={c.id} value={c.id}>{c.name_ar ?? c.name}</SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+        <div>
+          <Label>القسم الفرعي (اختياري)</Label>
+          <Select value={form.subcategory_id || 'none'}
+            onValueChange={(v) => setForm({ ...form, subcategory_id: v === 'none' ? '' : v })}
+            disabled={!form.category_id || subCategories.length === 0}>
+            <SelectTrigger className="mt-1.5">
+              <SelectValue placeholder={subCategories.length === 0 ? 'لا توجد أقسام فرعية' : 'بدون'} />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="none">بدون</SelectItem>
+              {subCategories.map((c) => (
                 <SelectItem key={c.id} value={c.id}>{c.name_ar ?? c.name}</SelectItem>
               ))}
             </SelectContent>
           </Select>
         </div>
       </div>
-      <div className="flex items-center justify-between bg-muted/40 rounded-lg p-3">
-        <div>
-          <Label className="font-semibold">حالة الخدمة</Label>
-          <p className="text-xs text-muted-foreground mt-0.5">
-            {form.is_active ? 'الخدمة ظاهرة وقابلة للطلب' : 'الخدمة مخفية عن العملاء'}
-          </p>
+
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+        <div className="flex items-center justify-between bg-muted/40 rounded-lg p-3">
+          <div>
+            <Label className="font-semibold flex items-center gap-1"><Star className="h-4 w-4 text-amber-500" /> خدمة مميزة</Label>
+            <p className="text-xs text-muted-foreground mt-0.5">تظهر في الواجهة الرئيسية</p>
+          </div>
+          <Switch checked={form.is_featured} onCheckedChange={(c) => setForm({ ...form, is_featured: c })} />
         </div>
-        <Switch checked={form.is_active} onCheckedChange={(c) => setForm({ ...form, is_active: c })} />
+        <div className="flex items-center justify-between bg-muted/40 rounded-lg p-3">
+          <div>
+            <Label className="font-semibold">حالة الخدمة</Label>
+            <p className="text-xs text-muted-foreground mt-0.5">
+              {form.is_active ? 'ظاهرة للعملاء' : 'مخفية'}
+            </p>
+          </div>
+          <Switch checked={form.is_active} onCheckedChange={(c) => setForm({ ...form, is_active: c })} />
+        </div>
       </div>
     </div>
     <DialogFooter className="gap-2">
@@ -806,18 +947,24 @@ const ServiceDialog = ({
       </Button>
     </DialogFooter>
   </DialogContent>
-);
+  );
+};
 
 const CategoryDialog = ({
-  editing, form, setForm, onSave, onCancel,
+  editing, form, setForm, onSave, onCancel, allCategories,
 }: {
   editing: Category | null;
   form: any;
   setForm: React.Dispatch<React.SetStateAction<any>>;
   onSave: () => void;
   onCancel: () => void;
-}) => (
-  <DialogContent className="max-w-md" dir="rtl">
+  allCategories: Category[];
+}) => {
+  const possibleParents = allCategories.filter(
+    (c) => !c.parent_id && c.id !== editing?.id
+  );
+  return (
+  <DialogContent className="max-w-md max-h-[90vh] overflow-y-auto" dir="rtl">
     <DialogHeader>
       <DialogTitle className="flex items-center gap-2">
         <Layers className="h-5 w-5 text-primary" />
@@ -825,15 +972,17 @@ const CategoryDialog = ({
       </DialogTitle>
     </DialogHeader>
     <div className="space-y-4 py-2">
-      <div>
-        <Label>الاسم العربي *</Label>
-        <Input value={form.name_ar} onChange={(e) => setForm({ ...form, name_ar: e.target.value })}
-          placeholder="مثال: خدمات الترجمة" className="mt-1.5" />
-      </div>
-      <div>
-        <Label>الاسم الإنجليزي</Label>
-        <Input value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })}
-          placeholder="Translation Services" className="mt-1.5" />
+      <div className="grid grid-cols-2 gap-3">
+        <div>
+          <Label>الاسم العربي *</Label>
+          <Input value={form.name_ar} onChange={(e) => setForm({ ...form, name_ar: e.target.value })}
+            placeholder="خدمات الترجمة" className="mt-1.5" />
+        </div>
+        <div>
+          <Label>الاسم الإنجليزي</Label>
+          <Input value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })}
+            placeholder="Translation" className="mt-1.5" />
+        </div>
       </div>
       <div>
         <Label>الوصف</Label>
@@ -841,10 +990,38 @@ const CategoryDialog = ({
           rows={2} className="mt-1.5 resize-none" />
       </div>
       <div>
+        <Label>القسم الأب (اتركه فارغًا للقسم الرئيسي)</Label>
+        <Select value={form.parent_id || 'none'}
+          onValueChange={(v) => setForm({ ...form, parent_id: v === 'none' ? '' : v })}>
+          <SelectTrigger className="mt-1.5"><SelectValue placeholder="قسم رئيسي" /></SelectTrigger>
+          <SelectContent>
+            <SelectItem value="none">— قسم رئيسي —</SelectItem>
+            {possibleParents.map((c) => (
+              <SelectItem key={c.id} value={c.id}>{c.name_ar ?? c.name}</SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+      </div>
+      <div className="grid grid-cols-2 gap-3">
+        <div>
+          <Label>أيقونة (lucide)</Label>
+          <Input value={form.icon} onChange={(e) => setForm({ ...form, icon: e.target.value })}
+            placeholder="Languages" className="mt-1.5" />
+        </div>
+        <div>
+          <Label>اللون (HEX)</Label>
+          <Input value={form.color} onChange={(e) => setForm({ ...form, color: e.target.value })}
+            placeholder="#3b82f6" className="mt-1.5" />
+        </div>
+      </div>
+      <div>
         <Label>ترتيب العرض</Label>
         <Input type="number" min="0" value={form.sort_order}
           onChange={(e) => setForm({ ...form, sort_order: parseInt(e.target.value) || 0 })} className="mt-1.5" />
-        <p className="text-xs text-muted-foreground mt-1">الأرقام الأصغر تظهر أولاً</p>
+      </div>
+      <div className="flex items-center justify-between bg-muted/40 rounded-lg p-3">
+        <Label className="font-semibold">تفعيل القسم</Label>
+        <Switch checked={form.is_active} onCheckedChange={(c) => setForm({ ...form, is_active: c })} />
       </div>
     </div>
     <DialogFooter className="gap-2">
@@ -855,6 +1032,7 @@ const CategoryDialog = ({
       </Button>
     </DialogFooter>
   </DialogContent>
-);
+  );
+};
 
 export default AdminServices;
