@@ -22,7 +22,6 @@ import {
   Users,
   GraduationCap as StudentIcon,
 } from 'lucide-react';
-import { motion, AnimatePresence } from 'framer-motion';
 import ChatFloatingButton from '@/components/chat/ChatFloatingButton';
 
 interface ClientLayoutProps {
@@ -121,29 +120,25 @@ const ClientLayout: React.FC<ClientLayoutProps> = ({ children }) => {
               key={item.href}
               to={item.href}
               onClick={onItemClick}
-              className={`group relative flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-semibold overflow-hidden transition-colors duration-200
+              className={`group relative flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-semibold overflow-hidden
                 ${active
                   ? 'text-white shadow-lg'
-                  : 'text-foreground/80 hover:text-foreground hover:bg-muted/60'
+                  : 'text-foreground/80 hover:bg-muted/60'
                 }`}
             >
               {active && (
-                <span
-                  className={`absolute inset-0 bg-gradient-to-r ${item.gradient}`}
-                />
+                <span className={`absolute inset-0 bg-gradient-to-r ${item.gradient}`} />
               )}
-              <span className={`relative z-10 w-9 h-9 rounded-lg flex items-center justify-center transition-all shrink-0
+              <span className={`relative z-10 w-9 h-9 rounded-lg flex items-center justify-center shrink-0
                 ${active
                   ? 'bg-white/20 text-white'
-                  : `bg-gradient-to-br ${item.gradient} text-white opacity-80 group-hover:opacity-100 group-hover:scale-110`
+                  : `bg-gradient-to-br ${item.gradient} text-white`
                 }`}
               >
                 <item.icon className="w-[18px] h-[18px]" strokeWidth={2.2} />
               </span>
               <span className="relative z-10 flex-1 truncate text-right">{item.name}</span>
-              <ChevronLeft className={`relative z-10 w-4 h-4 transition-all shrink-0
-                ${active ? 'text-white opacity-100 translate-x-0' : 'opacity-0 group-hover:opacity-60 translate-x-1 group-hover:translate-x-0'}`}
-              />
+              {active && <ChevronLeft className="relative z-10 w-4 h-4 text-white shrink-0" />}
             </Link>
           );
         })}
