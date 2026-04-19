@@ -402,24 +402,31 @@ const AcademicCVPage: React.FC = () => {
             {/* PREVIEW */}
             <div className="lg:sticky lg:top-4 lg:self-start">
               <div className="flex items-center gap-2 mb-2 text-sm text-muted-foreground">
-                <Eye className="w-4 h-4" /> معاينة مباشرة
+                <Eye className="w-4 h-4" /> {T.livePreview}
               </div>
               <div className="rounded-xl border-2 border-border/60 bg-muted/30 p-2 sm:p-4 overflow-auto max-h-[80vh]">
-                <div
-                  ref={previewRef}
-                  style={{
-                    width: '210mm',
-                    minHeight: '297mm',
-                    margin: '0 auto',
-                    background: 'white',
-                    boxShadow: '0 1px 3px rgba(0,0,0,0.06), 0 8px 24px rgba(0,0,0,0.08)',
-                    transform: 'scale(0.62)',
-                    transformOrigin: lang === 'ar' ? 'top right' : 'top left',
-                  }}
-                  className="origin-top"
-                >
-                  <CVRenderer template={cv.template_key} data={data} lang={lang} />
-                </div>
+                <AnimatePresence mode="wait">
+                  <motion.div
+                    key={cv.template_key + lang}
+                    initial={{ opacity: 0, scale: 0.97 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 0, scale: 0.97 }}
+                    transition={{ duration: 0.3, ease: 'easeOut' }}
+                    ref={previewRef as any}
+                    style={{
+                      width: '210mm',
+                      minHeight: '297mm',
+                      margin: '0 auto',
+                      background: 'white',
+                      boxShadow: '0 1px 3px rgba(0,0,0,0.06), 0 8px 24px rgba(0,0,0,0.08)',
+                      transform: 'scale(0.62)',
+                      transformOrigin: lang === 'ar' ? 'top right' : 'top left',
+                    }}
+                    className="origin-top"
+                  >
+                    <CVRenderer template={cv.template_key} data={data} lang={lang} />
+                  </motion.div>
+                </AnimatePresence>
               </div>
             </div>
           </div>
@@ -428,19 +435,19 @@ const AcademicCVPage: React.FC = () => {
 
       {/* Payment dialog */}
       <Dialog open={paymentOpen} onOpenChange={setPaymentOpen}>
-        <DialogContent dir="rtl">
+        <DialogContent dir={lang === 'ar' ? 'rtl' : 'ltr'}>
           <DialogHeader>
-            <DialogTitle className="flex items-center gap-2"><Sparkles className="w-5 h-5 text-primary" /> تأكيد الدفع</DialogTitle>
+            <DialogTitle className="flex items-center gap-2"><Sparkles className="w-5 h-5 text-primary" /> {T.confirmPay}</DialogTitle>
             <DialogDescription>
-              تصدير وتحميل السيرة الذاتية كملف PDF احترافي. <br />
-              <strong className="text-foreground">السعر:</strong> {EXPORT_PRICE} ر.س — تُخصم من محفظتك.
-              <br /><span className="text-xs text-muted-foreground mt-2 block">بعد الدفع يمكنك تحميل وطباعة هذه السيرة بدون رسوم إضافية.</span>
+              {T.payDesc} <br />
+              <strong className="text-foreground">{T.pricePrefix}</strong> {EXPORT_PRICE} {T.priceSuffix}
+              <br /><span className="text-xs text-muted-foreground mt-2 block">{T.payNote}</span>
             </DialogDescription>
           </DialogHeader>
           <DialogFooter className="gap-2 sm:gap-2">
-            <Button variant="outline" onClick={() => setPaymentOpen(false)}>إلغاء</Button>
+            <Button variant="outline" onClick={() => setPaymentOpen(false)}>{T.cancel}</Button>
             <Button onClick={confirmPay} className="gap-2 bg-gradient-to-r from-indigo-500 to-purple-600">
-              <Check className="w-4 h-4" /> ادفع وحمّل الآن
+              <Check className="w-4 h-4" /> {T.pay}
             </Button>
           </DialogFooter>
         </DialogContent>
