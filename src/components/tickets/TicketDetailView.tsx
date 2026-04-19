@@ -1,32 +1,36 @@
-import React, { useEffect, useRef, useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
+import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
+import { Popover, PopoverTrigger, PopoverContent } from '@/components/ui/popover';
 import {
   ArrowRight, Send, Paperclip, Download, MessageSquare, History,
   DollarSign, ShoppingBag, ShieldAlert, Wrench, Ticket as TicketIcon,
-  CheckCircle2, Clock, AlertCircle, FileText, Loader2, User, Hash,
+  CheckCircle2, Clock, AlertCircle, FileText, Loader2, User, Sparkles,
+  Star, Zap, Eye, ExternalLink, Lightbulb, Wand2, BookOpen, X,
 } from 'lucide-react';
-import { Link, useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import {
-  TicketsService, type Ticket, type TicketMessage, type TicketTimelineEntry,
-  type TicketAttachment, CATEGORY_LABELS, STATUS_LABELS, PRIORITY_LABELS,
+  SupportService, type Ticket, type TicketMessage, type TicketTimelineEntry,
+  type TicketAttachment, type TicketPresence, type QuickReply,
+  CATEGORY_LABELS, STATUS_LABELS, PRIORITY_LABELS,
   CATEGORY_COLOR, STATUS_COLOR, PRIORITY_COLOR,
 } from '@/utils/ticketsService';
 import { toast } from 'sonner';
-import { format, formatDistanceToNow } from 'date-fns';
+import { format, formatDistanceToNow, formatDistanceToNowStrict } from 'date-fns';
 import { ar } from 'date-fns/locale';
 
 const CATEGORY_ICONS: Record<string, any> = {
-  financial: DollarSign,
-  service_order: ShoppingBag,
-  complaint: ShieldAlert,
+  billing: DollarSign,
   technical: Wrench,
+  complaint: ShieldAlert,
+  suggestion: Sparkles,
   general: TicketIcon,
 };
 
@@ -35,39 +39,74 @@ interface Props {
   currentUserId: string;
   isAdmin: boolean;
   backTo: string;
+  displayName?: string;
 }
 
-export default function TicketDetailView({ ticketId, currentUserId, isAdmin, backTo }: Props) {
+function SLABadge({ ticket }: { ticket: Ticket }) {
+  if (!ticket.sla_due_at || ticket.status === 'resolved' || ticket.status === 'closed') return null;
+  const due = new Date(ticket.sla_due_at).getTime();
+  const now = Date.now();
+  const overdue = now > due;
+  const within = !overdue && (due - now) < 60 * 60 * 1000;
+  const cls = overdue
+    ? 'bg-rose-500/15 text-rose-600 border-rose-500/30'
+    : within
+    ? 'bg-amber-500/15 text-amber-600 border-amber-500/30'
+    : 'bg-emerald-500/10 text-emerald-600 border-emerald-500/20';
+  return (
+    <Badge variant="outline" className={`gap-1 ${cls}`}>
+      <Clock className="w-3 h-3" />
+      {overdue ? 'متأخرة' : `استحقاق خلال ${formatDistanceToNowStrict(new Date(ticket.sla_due_at), { locale: ar })}`}
+    </Badge>
+  );
+}
+
+export default function TicketDetailView({ ticketId, currentUserId, isAdmin, backTo, displayName }: Props) {
   const navigate = useNavigate();
   const [ticket, setTicket] = useState<Ticket | null>(null);
   const [messages, setMessages] = useState<TicketMessage[]>([]);
   const [timeline, setTimeline] = useState<TicketTimelineEntry[]>([]);
   const [attachments, setAttachments] = useState<TicketAttachment[]>([]);
   const [linked, setLinked] = useState<{ invoice?: any; order?: any; customer?: any }>({});
+  const [presence, setPresence] = useState<TicketPresence[]>([]);
+  const [otherTyping, setOtherTyping] = useState<boolean>(false);
+  const [quickReplies, setQuickReplies] = useState<QuickReply[]>([]);
+  const [aiSuggestions, setAiSuggestions] = useState<{ label: string; content: string }[]>([]);
+  const [aiLoading, setAiLoading] = useState(false);
+  const [aiSummary, setAiSummary] = useState<string>('');
   const [reply, setReply] = useState('');
   const [sending, setSending] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [csatOpen, setCsatOpen] = useState(false);
+  const [csatRating, setCsatRating] = useState(5);
+  const [csatComment, setCsatComment] = useState('');
   const fileRef = useRef<HTMLInputElement>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const typingTimer = useRef<any>(null);
 
   const load = async () => {
     try {
-      const t = await TicketsService.get(ticketId);
+      const t = await SupportService.get(ticketId);
       if (!t) { toast.error('التذكرة غير موجودة'); navigate(backTo); return; }
       setTicket(t);
-      const [msgs, tl, atts] = await Promise.all([
-        TicketsService.getMessages(ticketId),
-        TicketsService.getTimeline(ticketId),
-        TicketsService.getAttachments(ticketId),
+      const [msgs, tl, atts, qr] = await Promise.all([
+        SupportService.getMessages(ticketId),
+        SupportService.getTimeline(ticketId),
+        SupportService.getAttachments(ticketId),
+        isAdmin ? SupportService.listQuickReplies() : Promise.resolve([]),
       ]);
       setMessages(msgs);
       setTimeline(tl);
       setAttachments(atts);
+      setQuickReplies(qr);
+
+      // Mark as read
+      SupportService.markRead(ticketId, isAdmin).catch(() => {});
 
       const linkedData: any = {};
       if (t.related_invoice_id) {
-        const { data } = await supabase.from('invoices').select('id, invoice_number, total_amount, status, currency').eq('id', t.related_invoice_id).maybeSingle();
+        const { data } = await supabase.from('invoices').select('id, invoice_number, total_amount, paid_amount, remaining_amount, status, currency').eq('id', t.related_invoice_id).maybeSingle();
         linkedData.invoice = data;
       }
       if (t.related_order_id) {
@@ -89,28 +128,62 @@ export default function TicketDetailView({ ticketId, currentUserId, isAdmin, bac
     }
   };
 
-  useEffect(() => { load(); }, [ticketId]);
+  useEffect(() => { load(); /* eslint-disable-next-line */ }, [ticketId]);
 
+  // Realtime subscriptions
   useEffect(() => {
-    const ch = supabase.channel(`ticket-${ticketId}`)
+    const ch = supabase.channel(`support-${ticketId}`)
       .on('postgres_changes', { event: '*', schema: 'public', table: 'ticket_messages', filter: `ticket_id=eq.${ticketId}` }, () => load())
       .on('postgres_changes', { event: '*', schema: 'public', table: 'ticket_timeline', filter: `ticket_id=eq.${ticketId}` }, () => load())
       .on('postgres_changes', { event: '*', schema: 'public', table: 'ticket_attachments', filter: `ticket_id=eq.${ticketId}` }, () => load())
       .on('postgres_changes', { event: '*', schema: 'public', table: 'tickets', filter: `id=eq.${ticketId}` }, () => load())
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'ticket_presence', filter: `ticket_id=eq.${ticketId}` }, async () => {
+        const p = await SupportService.getPresence(ticketId);
+        setPresence(p.filter(x => x.user_id !== currentUserId));
+      })
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'ticket_typing', filter: `ticket_id=eq.${ticketId}` }, async () => {
+        const t = await SupportService.getTyping(ticketId, currentUserId);
+        setOtherTyping(t.length > 0);
+      })
       .subscribe();
     return () => { supabase.removeChannel(ch); };
+    // eslint-disable-next-line
   }, [ticketId]);
+
+  // Heartbeat presence every 30s
+  useEffect(() => {
+    const userType = isAdmin ? 'admin' : 'client';
+    SupportService.heartbeat(ticketId, currentUserId, userType, displayName);
+    const i = setInterval(() => SupportService.heartbeat(ticketId, currentUserId, userType, displayName), 30000);
+    return () => {
+      clearInterval(i);
+      SupportService.leavePresence(ticketId, currentUserId).catch(() => {});
+    };
+  }, [ticketId, currentUserId, isAdmin, displayName]);
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
 
+  const handleTyping = (value: string) => {
+    setReply(value);
+    const userType = isAdmin ? 'admin' : 'client';
+    if (value.trim()) {
+      SupportService.setTyping(ticketId, currentUserId, userType, true).catch(() => {});
+      if (typingTimer.current) clearTimeout(typingTimer.current);
+      typingTimer.current = setTimeout(() => {
+        SupportService.setTyping(ticketId, currentUserId, userType, false).catch(() => {});
+      }, 3000);
+    }
+  };
+
   const handleSend = async () => {
     if (!reply.trim() || !ticket) return;
     setSending(true);
     try {
-      await TicketsService.sendMessage(ticketId, currentUserId, isAdmin ? 'admin' : 'client', reply.trim());
+      await SupportService.sendMessage(ticketId, currentUserId, isAdmin ? 'admin' : 'client', reply.trim());
       setReply('');
+      SupportService.setTyping(ticketId, currentUserId, isAdmin ? 'admin' : 'client', false).catch(() => {});
     } catch (e: any) {
       toast.error('فشل الإرسال', { description: e.message });
     } finally {
@@ -123,7 +196,7 @@ export default function TicketDetailView({ ticketId, currentUserId, isAdmin, bac
     if (!file || !ticket) return;
     setUploading(true);
     try {
-      await TicketsService.uploadAttachment(ticketId, currentUserId, file, isAdmin);
+      await SupportService.uploadAttachment(ticketId, currentUserId, file, isAdmin);
       toast.success('تم رفع الملف');
     } catch (err: any) {
       toast.error('فشل الرفع', { description: err.message });
@@ -136,7 +209,7 @@ export default function TicketDetailView({ ticketId, currentUserId, isAdmin, bac
   const handleStatusChange = async (status: string) => {
     if (!ticket) return;
     try {
-      await TicketsService.updateStatus(ticket.id, status as any);
+      await SupportService.update(ticket.id, { status });
       toast.success('تم تحديث الحالة');
     } catch (e: any) { toast.error('فشل', { description: e.message }); }
   };
@@ -144,17 +217,56 @@ export default function TicketDetailView({ ticketId, currentUserId, isAdmin, bac
   const handlePriorityChange = async (priority: string) => {
     if (!ticket) return;
     try {
-      await TicketsService.updatePriority(ticket.id, priority as any);
+      await SupportService.update(ticket.id, { priority });
       toast.success('تم تحديث الأولوية');
     } catch (e: any) { toast.error('فشل', { description: e.message }); }
   };
 
   const downloadFile = async (a: TicketAttachment) => {
     try {
-      const url = await TicketsService.getSignedUrl(a.storage_path);
+      const url = await SupportService.getSignedUrl(a.storage_path);
       window.open(url, '_blank');
     } catch (e: any) { toast.error('فشل', { description: e.message }); }
   };
+
+  const requestAiReplies = async () => {
+    if (!ticket) return;
+    setAiLoading(true);
+    try {
+      const data = await SupportService.ai('suggest_reply', {
+        context: `${ticket.subject}\n${ticket.description || ''}`,
+        messages: messages.slice(-10),
+      });
+      setAiSuggestions(data?.replies || []);
+    } catch (e: any) { toast.error('تعذّر توليد الردود', { description: e.message }); }
+    finally { setAiLoading(false); }
+  };
+
+  const requestAiSummary = async () => {
+    if (!ticket) return;
+    setAiLoading(true);
+    try {
+      const data = await SupportService.ai('summarize', {
+        context: `${ticket.subject}\n${ticket.description || ''}`,
+        messages,
+      });
+      setAiSummary(data?.summary || '');
+    } catch (e: any) { toast.error('تعذّر التلخيص', { description: e.message }); }
+    finally { setAiLoading(false); }
+  };
+
+  const submitCsat = async () => {
+    if (!ticket) return;
+    try {
+      await SupportService.submitCsat(ticket.id, csatRating, csatComment);
+      toast.success('شكراً لتقييمك!');
+      setCsatOpen(false);
+    } catch (e: any) { toast.error('فشل الإرسال', { description: e.message }); }
+  };
+
+  const showCsatPrompt = useMemo(() =>
+    !isAdmin && ticket && (ticket.status === 'resolved' || ticket.status === 'closed') && !ticket.csat_submitted_at
+  , [isAdmin, ticket]);
 
   if (loading || !ticket) {
     return <div className="flex items-center justify-center py-20"><Loader2 className="w-8 h-8 animate-spin text-primary" /></div>;
@@ -165,7 +277,7 @@ export default function TicketDetailView({ ticketId, currentUserId, isAdmin, bac
   return (
     <div className="container mx-auto p-3 sm:p-4 md:p-6 space-y-3 sm:space-y-4" dir="rtl">
       {/* Header */}
-      <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} className="flex items-start gap-2 sm:gap-3 flex-wrap">
+      <div className="flex items-start gap-2 sm:gap-3 flex-wrap">
         <Button variant="ghost" size="icon" onClick={() => navigate(backTo)} className="rounded-full shrink-0 h-9 w-9 sm:h-10 sm:w-10">
           <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5" />
         </Button>
@@ -178,33 +290,62 @@ export default function TicketDetailView({ ticketId, currentUserId, isAdmin, bac
             <span className="text-[10px] sm:text-xs font-mono text-muted-foreground">{ticket.ticket_number}</span>
           </h1>
           <div className="flex items-center gap-1.5 mt-1.5 flex-wrap">
-            <Badge variant="outline" className={`${CATEGORY_COLOR[ticket.category]} text-[10px] sm:text-xs`}>{CATEGORY_LABELS[ticket.category]}</Badge>
-            <Badge variant="outline" className={`${STATUS_COLOR[ticket.status]} text-[10px] sm:text-xs`}>{STATUS_LABELS[ticket.status]}</Badge>
-            <Badge variant="outline" className={`${PRIORITY_COLOR[ticket.priority]} text-[10px] sm:text-xs`}>{PRIORITY_LABELS[ticket.priority]}</Badge>
+            <Badge variant="outline" className={`${CATEGORY_COLOR[ticket.category]} text-[10px] sm:text-xs`}>{CATEGORY_LABELS[ticket.category] || ticket.category}</Badge>
+            <Badge variant="outline" className={`${STATUS_COLOR[ticket.status]} text-[10px] sm:text-xs`}>{STATUS_LABELS[ticket.status] || ticket.status}</Badge>
+            <Badge variant="outline" className={`${PRIORITY_COLOR[ticket.priority]} text-[10px] sm:text-xs`}>{PRIORITY_LABELS[ticket.priority] || ticket.priority}</Badge>
+            <SLABadge ticket={ticket} />
+            {presence.length > 0 && (
+              <Badge variant="outline" className="bg-emerald-500/10 text-emerald-600 border-emerald-500/20 gap-1">
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                <Eye className="w-3 h-3" />
+                {presence[0].user_type === 'admin' ? 'الفريق متصل' : 'العميل متصل'}
+              </Badge>
+            )}
             <span className="text-[10px] sm:text-xs text-muted-foreground">{formatDistanceToNow(new Date(ticket.created_at), { addSuffix: true, locale: ar })}</span>
           </div>
         </div>
-      </motion.div>
+      </div>
+
+      {/* CSAT Prompt */}
+      {showCsatPrompt && (
+        <Card className="border-emerald-500/30 bg-emerald-500/5">
+          <CardContent className="p-3 sm:p-4 flex items-center justify-between gap-3 flex-wrap">
+            <div className="flex items-center gap-2 text-sm">
+              <Star className="w-5 h-5 text-emerald-600" />
+              <span>كيف كانت تجربتك مع فريق الدعم؟</span>
+            </div>
+            <Button size="sm" onClick={() => setCsatOpen(true)}>قيّم الخدمة</Button>
+          </CardContent>
+        </Card>
+      )}
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-3 sm:gap-4">
         {/* Main: Chat + Timeline + Attachments */}
         <div className="lg:col-span-2 space-y-3 sm:space-y-4">
           <Tabs defaultValue="chat" dir="rtl">
             <TabsList className="w-full h-auto">
-              <TabsTrigger value="chat" className="gap-1 sm:gap-2 flex-1 text-[11px] sm:text-sm px-2 sm:px-3"><MessageSquare className="w-3.5 h-3.5 sm:w-4 sm:h-4" /><span className="hidden xs:inline">المحادثة</span><span className="xs:hidden">رسائل</span> ({messages.length})</TabsTrigger>
-              <TabsTrigger value="timeline" className="gap-1 sm:gap-2 flex-1 text-[11px] sm:text-sm px-2 sm:px-3"><History className="w-3.5 h-3.5 sm:w-4 sm:h-4" /> السجل ({timeline.length})</TabsTrigger>
-              <TabsTrigger value="files" className="gap-1 sm:gap-2 flex-1 text-[11px] sm:text-sm px-2 sm:px-3"><Paperclip className="w-3.5 h-3.5 sm:w-4 sm:h-4" /><span className="hidden xs:inline">المرفقات</span><span className="xs:hidden">ملفات</span> ({attachments.length})</TabsTrigger>
+              <TabsTrigger value="chat" className="gap-1 sm:gap-2 flex-1 text-[11px] sm:text-sm px-2 sm:px-3">
+                <MessageSquare className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+                <span>المحادثة</span> ({messages.length})
+              </TabsTrigger>
+              <TabsTrigger value="timeline" className="gap-1 sm:gap-2 flex-1 text-[11px] sm:text-sm px-2 sm:px-3">
+                <History className="w-3.5 h-3.5 sm:w-4 sm:h-4" /> السجل ({timeline.length})
+              </TabsTrigger>
+              <TabsTrigger value="files" className="gap-1 sm:gap-2 flex-1 text-[11px] sm:text-sm px-2 sm:px-3">
+                <Paperclip className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+                <span>المرفقات</span> ({attachments.length})
+              </TabsTrigger>
             </TabsList>
 
             <TabsContent value="chat">
               <Card className="border-0 shadow-sm">
-                <CardContent className="p-0 flex flex-col h-[60vh] sm:h-[60vh]">
+                <CardContent className="p-0 flex flex-col h-[60vh]">
                   <div className="flex-1 overflow-y-auto p-3 sm:p-4 space-y-3 bg-muted/20">
                     {ticket.description && (
-                      <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="bg-card border rounded-lg p-3 text-sm">
+                      <div className="bg-card border rounded-lg p-3 text-sm">
                         <div className="text-xs text-muted-foreground mb-1">وصف التذكرة</div>
                         {ticket.description}
-                      </motion.div>
+                      </div>
                     )}
                     {messages.length === 0 && !ticket.description && (
                       <div className="text-center text-muted-foreground py-12">
@@ -212,42 +353,95 @@ export default function TicketDetailView({ ticketId, currentUserId, isAdmin, bac
                         لا توجد رسائل بعد. ابدأ المحادثة الآن.
                       </div>
                     )}
-                    <AnimatePresence>
-                      {messages.map((m) => {
-                        const mine = m.sender_id === currentUserId;
-                        const isAdminMsg = m.sender_type === 'admin';
-                        return (
-                          <motion.div
-                            key={m.id}
-                            initial={{ opacity: 0, y: 10, scale: 0.95 }}
-                            animate={{ opacity: 1, y: 0, scale: 1 }}
-                            className={`flex ${mine ? 'justify-end' : 'justify-start'}`}
-                          >
-                            <div className={`max-w-[80%] rounded-2xl px-4 py-2 ${
-                              mine ? 'bg-primary text-primary-foreground' : isAdminMsg ? 'bg-emerald-500/10 border border-emerald-500/20' : 'bg-card border'
-                            }`}>
-                              <div className="text-[10px] opacity-70 mb-1 flex items-center gap-1">
-                                {isAdminMsg ? <ShieldAlert className="w-3 h-3" /> : <User className="w-3 h-3" />}
-                                {isAdminMsg ? 'الإدارة' : 'العميل'}
-                                <span>·</span>
-                                {format(new Date(m.created_at), 'HH:mm', { locale: ar })}
-                              </div>
-                              <div className="text-sm whitespace-pre-wrap">{m.content}</div>
+                    {messages.map((m) => {
+                      const mine = m.sender_id === currentUserId;
+                      const isAdminMsg = m.sender_type === 'admin';
+                      return (
+                        <div key={m.id} className={`flex ${mine ? 'justify-end' : 'justify-start'}`}>
+                          <div className={`max-w-[80%] rounded-2xl px-4 py-2 ${
+                            mine ? 'bg-primary text-primary-foreground' :
+                            isAdminMsg ? 'bg-emerald-500/10 border border-emerald-500/20' :
+                            'bg-card border'
+                          }`}>
+                            <div className="text-[10px] opacity-70 mb-1 flex items-center gap-1">
+                              {isAdminMsg ? <ShieldAlert className="w-3 h-3" /> : <User className="w-3 h-3" />}
+                              {isAdminMsg ? 'الدعم' : 'العميل'}
+                              <span>·</span>
+                              {format(new Date(m.created_at), 'HH:mm', { locale: ar })}
                             </div>
-                          </motion.div>
-                        );
-                      })}
-                    </AnimatePresence>
+                            <div className="text-sm whitespace-pre-wrap">{m.content}</div>
+                          </div>
+                        </div>
+                      );
+                    })}
+                    {otherTyping && (
+                      <div className="flex justify-start">
+                        <div className="bg-card border rounded-2xl px-4 py-2 flex items-center gap-2 text-xs text-muted-foreground">
+                          <span className="flex gap-1">
+                            <span className="w-1.5 h-1.5 rounded-full bg-muted-foreground/60 animate-bounce" style={{ animationDelay: '0ms' }} />
+                            <span className="w-1.5 h-1.5 rounded-full bg-muted-foreground/60 animate-bounce" style={{ animationDelay: '150ms' }} />
+                            <span className="w-1.5 h-1.5 rounded-full bg-muted-foreground/60 animate-bounce" style={{ animationDelay: '300ms' }} />
+                          </span>
+                          يكتب الآن...
+                        </div>
+                      </div>
+                    )}
                     <div ref={messagesEndRef} />
                   </div>
+
+                  {/* AI Suggestions (admin only) */}
+                  {isAdmin && aiSuggestions.length > 0 && (
+                    <div className="border-t bg-violet-500/5 p-2 space-y-1">
+                      <div className="text-[10px] text-violet-600 font-medium px-1 flex items-center gap-1">
+                        <Sparkles className="w-3 h-3" /> اقتراحات ذكية
+                      </div>
+                      {aiSuggestions.map((s, i) => (
+                        <button key={i}
+                          onClick={() => setReply(s.content)}
+                          className="w-full text-right text-xs p-2 rounded border bg-card hover:bg-violet-500/10 transition-colors">
+                          <span className="font-medium text-violet-600">{s.label}:</span> {s.content.slice(0, 100)}...
+                        </button>
+                      ))}
+                    </div>
+                  )}
+
                   <div className="border-t p-2 sm:p-3 flex items-end gap-1.5 sm:gap-2 bg-card">
                     <input ref={fileRef} type="file" hidden onChange={handleUpload} />
                     <Button variant="outline" size="icon" onClick={() => fileRef.current?.click()} disabled={uploading} title="إرفاق" className="shrink-0 h-9 w-9 sm:h-10 sm:w-10">
                       {uploading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Paperclip className="w-4 h-4" />}
                     </Button>
+
+                    {isAdmin && (
+                      <>
+                        <Popover>
+                          <PopoverTrigger asChild>
+                            <Button variant="outline" size="icon" title="ردود سريعة" className="shrink-0 h-9 w-9 sm:h-10 sm:w-10">
+                              <Zap className="w-4 h-4 text-amber-500" />
+                            </Button>
+                          </PopoverTrigger>
+                          <PopoverContent align="end" className="w-80 max-h-80 overflow-y-auto">
+                            <div className="text-xs font-medium mb-2">قوالب جاهزة</div>
+                            <div className="space-y-1">
+                              {quickReplies.map(q => (
+                                <button key={q.id}
+                                  onClick={() => setReply(q.content)}
+                                  className="w-full text-right p-2 rounded text-xs hover:bg-muted">
+                                  <div className="font-medium">{q.title}</div>
+                                  <div className="text-muted-foreground line-clamp-2">{q.content}</div>
+                                </button>
+                              ))}
+                            </div>
+                          </PopoverContent>
+                        </Popover>
+                        <Button variant="outline" size="icon" onClick={requestAiReplies} disabled={aiLoading} title="اقتراحات AI" className="shrink-0 h-9 w-9 sm:h-10 sm:w-10">
+                          {aiLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Wand2 className="w-4 h-4 text-violet-500" />}
+                        </Button>
+                      </>
+                    )}
+
                     <Textarea
                       value={reply}
-                      onChange={(e) => setReply(e.target.value)}
+                      onChange={(e) => handleTyping(e.target.value)}
                       placeholder="اكتب رسالتك..."
                       rows={2}
                       className="flex-1 resize-none text-sm min-h-[40px]"
@@ -270,16 +464,14 @@ export default function TicketDetailView({ ticketId, currentUserId, isAdmin, bac
                   ) : (
                     <div className="relative pr-6">
                       <div className="absolute right-2.5 top-2 bottom-2 w-px bg-border" />
-                      <AnimatePresence>
-                        {timeline.map((t, i) => (
-                          <motion.div key={t.id} initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: i * 0.04 }} className="relative pb-4 pr-2">
-                            <div className="absolute right-[-22px] top-1 w-3 h-3 rounded-full bg-primary ring-4 ring-background" />
-                            <div className="text-sm font-medium">{t.action_label}</div>
-                            {t.description && <div className="text-xs text-muted-foreground mt-0.5">{t.description}</div>}
-                            <div className="text-[10px] text-muted-foreground/70 mt-1">{format(new Date(t.created_at), 'PPp', { locale: ar })}</div>
-                          </motion.div>
-                        ))}
-                      </AnimatePresence>
+                      {timeline.map((t) => (
+                        <div key={t.id} className="relative pb-4 pr-2">
+                          <div className="absolute right-[-22px] top-1 w-3 h-3 rounded-full bg-primary ring-4 ring-background" />
+                          <div className="text-sm font-medium">{t.action_label}</div>
+                          {t.description && <div className="text-xs text-muted-foreground mt-0.5">{t.description}</div>}
+                          <div className="text-[10px] text-muted-foreground/70 mt-1">{format(new Date(t.created_at), 'PPp', { locale: ar })}</div>
+                        </div>
+                      ))}
                     </div>
                   )}
                 </CardContent>
@@ -292,16 +484,16 @@ export default function TicketDetailView({ ticketId, currentUserId, isAdmin, bac
                   {attachments.length === 0 ? (
                     <div className="text-center text-muted-foreground py-12"><Paperclip className="w-10 h-10 mx-auto opacity-30 mb-2" />لا توجد مرفقات</div>
                   ) : attachments.map((a) => (
-                    <motion.div key={a.id} initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex items-center justify-between p-3 rounded-lg border hover:bg-muted/50 transition-colors">
+                    <div key={a.id} className="flex items-center justify-between p-3 rounded-lg border hover:bg-muted/50 transition-colors">
                       <div className="flex items-center gap-3 min-w-0">
                         <FileText className="w-5 h-5 text-primary shrink-0" />
                         <div className="min-w-0">
                           <div className="text-sm font-medium truncate">{a.file_name}</div>
-                          <div className="text-xs text-muted-foreground">{(a.file_size / 1024).toFixed(1)} KB · {a.uploaded_by_admin ? 'الإدارة' : 'العميل'}</div>
+                          <div className="text-xs text-muted-foreground">{(a.file_size / 1024).toFixed(1)} KB · {a.uploaded_by_admin ? 'الدعم' : 'العميل'}</div>
                         </div>
                       </div>
                       <Button size="sm" variant="ghost" onClick={() => downloadFile(a)}><Download className="w-4 h-4" /></Button>
-                    </motion.div>
+                    </div>
                   ))}
                 </CardContent>
               </Card>
@@ -313,7 +505,7 @@ export default function TicketDetailView({ ticketId, currentUserId, isAdmin, bac
         <div className="space-y-4">
           {isAdmin && (
             <Card className="border-0 shadow-sm">
-              <CardHeader className="pb-3"><CardTitle className="text-sm">إجراءات الإدارة</CardTitle></CardHeader>
+              <CardHeader className="pb-3"><CardTitle className="text-sm flex items-center gap-2"><ShieldAlert className="w-4 h-4 text-primary" />إجراءات الإدارة</CardTitle></CardHeader>
               <CardContent className="space-y-3">
                 <div>
                   <label className="text-xs text-muted-foreground mb-1 block">الحالة</label>
@@ -333,67 +525,94 @@ export default function TicketDetailView({ ticketId, currentUserId, isAdmin, bac
                     </SelectContent>
                   </Select>
                 </div>
+                <Button variant="outline" size="sm" className="w-full gap-2" onClick={requestAiSummary} disabled={aiLoading}>
+                  {aiLoading ? <Loader2 className="w-3 h-3 animate-spin" /> : <Sparkles className="w-3 h-3 text-violet-500" />}
+                  تلخيص ذكي للتذكرة
+                </Button>
+                {aiSummary && (
+                  <div className="text-xs p-2 rounded bg-violet-500/5 border border-violet-500/20">
+                    {aiSummary}
+                  </div>
+                )}
               </CardContent>
             </Card>
           )}
 
           {linked.customer && (
             <Card className="border-0 shadow-sm">
-              <CardHeader className="pb-3"><CardTitle className="text-sm flex items-center gap-2"><User className="w-4 h-4" /> العميل</CardTitle></CardHeader>
-              <CardContent className="space-y-2 text-sm">
+              <CardHeader className="pb-3"><CardTitle className="text-sm flex items-center gap-2"><User className="w-4 h-4 text-primary" />العميل</CardTitle></CardHeader>
+              <CardContent className="space-y-1 text-sm">
                 <div className="font-medium">{linked.customer.name}</div>
-                {linked.customer.customer_code && (
-                  <div className="text-xs flex items-center gap-1.5 font-mono">
-                    <Hash className="w-3 h-3" />{linked.customer.customer_code}
-                  </div>
-                )}
-                {linked.customer.email && <div className="text-xs text-muted-foreground truncate">{linked.customer.email}</div>}
+                {linked.customer.email && <div className="text-xs text-muted-foreground">{linked.customer.email}</div>}
                 {linked.customer.phone && <div className="text-xs text-muted-foreground">{linked.customer.phone}</div>}
-                {isAdmin && (
-                  <Link to={`/adminmaster/customers/${linked.customer.id}`} className="text-xs text-primary hover:underline block pt-1">عرض ملف العميل ←</Link>
-                )}
+                {linked.customer.customer_code && <Badge variant="outline" className="font-mono text-[10px]">#{linked.customer.customer_code}</Badge>}
               </CardContent>
             </Card>
           )}
 
           {linked.invoice && (
-            <Card className="border-0 shadow-sm border-r-4 border-r-emerald-500">
-              <CardHeader className="pb-3"><CardTitle className="text-sm flex items-center gap-2"><DollarSign className="w-4 h-4 text-emerald-600" /> فاتورة مرتبطة</CardTitle></CardHeader>
-              <CardContent className="text-sm space-y-1">
-                <div className="font-mono font-bold">{linked.invoice.invoice_number}</div>
-                <div className="text-xs text-muted-foreground">الإجمالي: {linked.invoice.total_amount} {linked.invoice.currency}</div>
-                <Badge variant="outline" className="text-[10px]">{linked.invoice.status}</Badge>
-                <Link to={isAdmin ? `/adminmaster/invoices/${linked.invoice.id}` : `/invoices`} className="text-xs text-primary hover:underline block pt-1">فتح الفاتورة ←</Link>
+            <Card className="border-0 shadow-sm border-emerald-500/20">
+              <CardHeader className="pb-3"><CardTitle className="text-sm flex items-center gap-2"><DollarSign className="w-4 h-4 text-emerald-600" />فاتورة مرتبطة</CardTitle></CardHeader>
+              <CardContent className="space-y-2 text-sm">
+                <div className="flex items-center justify-between">
+                  <span className="text-muted-foreground">رقم</span>
+                  <span className="font-mono">{linked.invoice.invoice_number}</span>
+                </div>
+                <div className="flex items-center justify-between">
+                  <span className="text-muted-foreground">المبلغ</span>
+                  <span className="font-bold">{linked.invoice.total_amount} {linked.invoice.currency}</span>
+                </div>
+                <div className="flex items-center justify-between">
+                  <span className="text-muted-foreground">الحالة</span>
+                  <Badge variant="outline" className="text-[10px]">{linked.invoice.status}</Badge>
+                </div>
+                <Button variant="outline" size="sm" className="w-full gap-2" onClick={() => navigate(isAdmin ? `/adminmaster/invoices/${linked.invoice.id}` : `/invoices`)}>
+                  <ExternalLink className="w-3 h-3" /> عرض الفاتورة
+                </Button>
               </CardContent>
             </Card>
           )}
 
           {linked.order && (
-            <Card className="border-0 shadow-sm border-r-4 border-r-blue-500">
-              <CardHeader className="pb-3"><CardTitle className="text-sm flex items-center gap-2"><ShoppingBag className="w-4 h-4 text-blue-600" /> طلب مرتبط</CardTitle></CardHeader>
-              <CardContent className="text-sm space-y-1">
-                <div className="font-mono font-bold">{linked.order.tracking_id}</div>
-                <div className="text-xs text-muted-foreground">{linked.order.service_name}</div>
-                <Badge variant="outline" className="text-[10px]">{linked.order.current_status}</Badge>
-                <Link to={isAdmin ? `/adminmaster/service-orders/${linked.order.id}` : `/orders`} className="text-xs text-primary hover:underline block pt-1">فتح الطلب ←</Link>
+            <Card className="border-0 shadow-sm border-blue-500/20">
+              <CardHeader className="pb-3"><CardTitle className="text-sm flex items-center gap-2"><ShoppingBag className="w-4 h-4 text-blue-600" />طلب مرتبط</CardTitle></CardHeader>
+              <CardContent className="space-y-2 text-sm">
+                <div className="flex items-center justify-between">
+                  <span className="text-muted-foreground">المتابعة</span>
+                  <span className="font-mono text-xs">{linked.order.tracking_id}</span>
+                </div>
+                {linked.order.service_name && <div className="text-xs">{linked.order.service_name}</div>}
+                <Button variant="outline" size="sm" className="w-full gap-2" onClick={() => navigate(isAdmin ? `/adminmaster/service-orders/${linked.order.id}` : `/orders/${linked.order.id}`)}>
+                  <ExternalLink className="w-3 h-3" /> عرض الطلب
+                </Button>
               </CardContent>
             </Card>
           )}
-
-          <Card className="border-0 shadow-sm">
-            <CardHeader className="pb-3"><CardTitle className="text-sm">معلومات</CardTitle></CardHeader>
-            <CardContent className="space-y-2 text-xs">
-              <InfoLine label="تاريخ الإنشاء" value={format(new Date(ticket.created_at), 'PPp', { locale: ar })} />
-              {ticket.last_message_at && <InfoLine label="آخر رسالة" value={formatDistanceToNow(new Date(ticket.last_message_at), { addSuffix: true, locale: ar })} />}
-              {ticket.resolved_at && <InfoLine label="تم الحل في" value={format(new Date(ticket.resolved_at), 'PPp', { locale: ar })} />}
-            </CardContent>
-          </Card>
         </div>
       </div>
+
+      {/* CSAT dialog */}
+      <Dialog open={csatOpen} onOpenChange={setCsatOpen}>
+        <DialogContent dir="rtl">
+          <DialogHeader>
+            <DialogTitle>تقييم الخدمة</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4">
+            <div className="flex items-center justify-center gap-1">
+              {[1, 2, 3, 4, 5].map(n => (
+                <button key={n} onClick={() => setCsatRating(n)} className="p-1">
+                  <Star className={`w-8 h-8 ${n <= csatRating ? 'fill-amber-400 text-amber-400' : 'text-muted-foreground/40'}`} />
+                </button>
+              ))}
+            </div>
+            <Textarea placeholder="ملاحظاتك (اختياري)" value={csatComment} onChange={(e) => setCsatComment(e.target.value)} rows={3} />
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setCsatOpen(false)}>إلغاء</Button>
+            <Button onClick={submitCsat}>إرسال التقييم</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
-
-const InfoLine = ({ label, value }: { label: string; value: string }) => (
-  <div className="flex justify-between gap-2"><span className="text-muted-foreground">{label}</span><span className="font-medium text-left">{value}</span></div>
-);

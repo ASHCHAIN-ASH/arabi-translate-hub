@@ -9,7 +9,7 @@ export default function ClientTicketDetails() {
   if (!id || !user) return null;
   return (
     <ClientLayout>
-      <TicketDetailView ticketId={id} currentUserId={user.id} isAdmin={false} backTo="/support/tickets" />
+      <TicketDetailView ticketId={id} currentUserId={user.id} isAdmin={false} backTo="/support/tickets" displayName={user.email || 'عميل'} />
     </ClientLayout>
   );
 }
