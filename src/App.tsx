@@ -63,6 +63,7 @@ import ClientTickets from "./pages/client/Tickets";
 import ClientTicketDetails from "./pages/client/TicketDetails";
 import ClientWallet from "./pages/client/Wallet";
 import WalletTopup from "./pages/client/WalletTopup";
+import InvoicePayment from "./pages/client/InvoicePayment";
 import GroupOrders from "./pages/client/GroupOrders";
 import GroupOrderNew from "./pages/client/GroupOrderNew";
 import GroupOrderDetails from "./pages/client/GroupOrderDetails";
@@ -340,6 +341,11 @@ const App = () => (
             <Route path="/wallet/topup" element={
               <SimpleProtectedRoute requiredRole="client">
                 <WalletTopup />
+              </SimpleProtectedRoute>
+            } />
+            <Route path="/invoices/:invoiceId/pay" element={
+              <SimpleProtectedRoute requiredRole="client">
+                <InvoicePayment />
               </SimpleProtectedRoute>
             } />
 
