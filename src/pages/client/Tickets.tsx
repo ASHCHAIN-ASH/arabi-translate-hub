@@ -139,7 +139,7 @@ export default function ClientTickets() {
                 <CardContent className="text-center py-12">
                   <MessageSquare className="w-12 h-12 mx-auto opacity-30 mb-3" />
                   <p className="text-muted-foreground mb-4">لا توجد تذاكر بعد</p>
-                  <Button onClick={() => setIsOpen(true)}><Plus className="w-4 h-4 ml-2" />تذكرة جديدة</Button>
+                  <Button onClick={() => navigate('/support/tickets/new')}><Plus className="w-4 h-4 ml-2" />تذكرة جديدة</Button>
                 </CardContent>
               </Card>
             ) : (
