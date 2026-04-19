@@ -19,6 +19,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogDescription } from '@/components/ui/dialog';
 import { Skeleton } from '@/components/ui/skeleton';
 import { cn } from '@/lib/utils';
@@ -65,7 +66,8 @@ const AcademicCVPage: React.FC = () => {
     pricePrefix: 'السعر:', priceSuffix: 'ر.س — تُخصم من محفظتك.',
     payNote: 'بعد الدفع يمكنك تحميل وطباعة هذه السيرة بدون رسوم إضافية.',
     tabs: { personal: 'البيانات الأساسية', education: 'التعليم', experience: 'الخبرات', projects: 'المشاريع', skills: 'المهارات', courses: 'الدورات', activities: 'الأنشطة' },
-    fields: { fullName: 'الاسم الكامل *', jobTitle: 'المسمى الوظيفي', email: 'البريد الإلكتروني', phone: 'رقم الجوال', city: 'المدينة', country: 'الدولة', linkedin: 'LinkedIn', website: 'الموقع الشخصي', summary: 'النبذة الشخصية', summaryHint: 'اكتب نبذة قصيرة (3-5 أسطر) تلخّص خبراتك وأهدافك', university: 'الجامعة', degree: 'الدرجة', major: 'التخصص', gpa: 'المعدل (اختياري)', from: 'من', to: 'إلى', addEdu: 'إضافة تعليم', org: 'الجهة', role: 'المسمى', desc: 'الوصف', addExp: 'إضافة خبرة', projectName: 'اسم المشروع/البحث', date: 'التاريخ', addProject: 'إضافة مشروع', techSkills: 'مهارات تقنية (افصل بفاصلة)', softSkills: 'مهارات شخصية', langs: 'اللغات', course: 'الدورة/الشهادة', issuer: 'الجهة', addCourse: 'إضافة دورة', activity: 'النشاط', addActivity: 'إضافة نشاط' },
+    fields: { fullName: 'الاسم الكامل *', jobTitle: 'المسمى الوظيفي', email: 'البريد الإلكتروني', phone: 'رقم الجوال', city: 'المدينة', country: 'الدولة', linkedin: 'LinkedIn', website: 'الموقع الشخصي', summary: 'النبذة الشخصية', summaryHint: 'اكتب نبذة قصيرة (3-5 أسطر) تلخّص خبراتك وأهدافك', level: 'المرحلة الدراسية', university: 'اسم الجهة التعليمية', degree: 'الدرجة / الشهادة', major: 'التخصص (اختياري)', gpa: 'المعدل (اختياري)', from: 'من', to: 'إلى', addEdu: 'إضافة تعليم', org: 'الجهة', role: 'المسمى', desc: 'الوصف', addExp: 'إضافة خبرة', projectName: 'اسم المشروع/البحث', date: 'التاريخ', addProject: 'إضافة مشروع', techSkills: 'مهارات تقنية (افصل بفاصلة)', softSkills: 'مهارات شخصية', langs: 'اللغات', course: 'الدورة/الشهادة', issuer: 'الجهة', addCourse: 'إضافة دورة', activity: 'النشاط', addActivity: 'إضافة نشاط' },
+    levels: { high_school: 'الثانوية العامة', diploma: 'دبلوم', bachelor: 'بكالوريوس', master: 'ماجستير', phd: 'دكتوراه', other: 'أخرى' },
   } : {
     back: 'Back', title: 'Smart Academic CV',
     subtitle: 'Design a professional CV — download and print instantly',
@@ -81,7 +83,8 @@ const AcademicCVPage: React.FC = () => {
     pricePrefix: 'Price:', priceSuffix: 'SAR — deducted from your wallet.',
     payNote: 'After payment, you can download and print this CV with no extra fees.',
     tabs: { personal: 'Personal', education: 'Education', experience: 'Experience', projects: 'Projects', skills: 'Skills', courses: 'Courses', activities: 'Activities' },
-    fields: { fullName: 'Full Name *', jobTitle: 'Job Title', email: 'Email', phone: 'Phone', city: 'City', country: 'Country', linkedin: 'LinkedIn', website: 'Website', summary: 'Profile Summary', summaryHint: 'Write a short summary (3-5 lines) about your experience and goals', university: 'University', degree: 'Degree', major: 'Field', gpa: 'GPA (optional)', from: 'From', to: 'To', addEdu: 'Add Education', org: 'Organization', role: 'Role', desc: 'Description', addExp: 'Add Experience', projectName: 'Project / Research Name', date: 'Date', addProject: 'Add Project', techSkills: 'Technical Skills (comma-separated)', softSkills: 'Soft Skills', langs: 'Languages', course: 'Course / Certificate', issuer: 'Issuer', addCourse: 'Add Course', activity: 'Activity', addActivity: 'Add Activity' },
+    fields: { fullName: 'Full Name *', jobTitle: 'Job Title', email: 'Email', phone: 'Phone', city: 'City', country: 'Country', linkedin: 'LinkedIn', website: 'Website', summary: 'Profile Summary', summaryHint: 'Write a short summary (3-5 lines) about your experience and goals', level: 'Education Level', university: 'Institution Name', degree: 'Degree / Certificate', major: 'Field (optional)', gpa: 'GPA (optional)', from: 'From', to: 'To', addEdu: 'Add Education', org: 'Organization', role: 'Role', desc: 'Description', addExp: 'Add Experience', projectName: 'Project / Research Name', date: 'Date', addProject: 'Add Project', techSkills: 'Technical Skills (comma-separated)', softSkills: 'Soft Skills', langs: 'Languages', course: 'Course / Certificate', issuer: 'Issuer', addCourse: 'Add Course', activity: 'Activity', addActivity: 'Add Activity' },
+    levels: { high_school: 'High School', diploma: 'Diploma', bachelor: 'Bachelor', master: 'Master', phd: 'PhD', other: 'Other' },
   };
   const tabLabels = T.tabs;
   const fillDemo = () => { updateData(() => (lang === 'ar' ? DEMO_CV_AR : DEMO_CV_EN)); toast.success(T.demoFilled); };
@@ -90,7 +93,7 @@ const AcademicCVPage: React.FC = () => {
   const setPersonal = (k: keyof CVData['personal'], v: string) =>
     updateData(d => ({ ...d, personal: { ...d.personal, [k]: v } }));
 
-  const addEdu = () => updateData(d => ({ ...d, education: [...d.education, { id: uid(), institution: '', degree: '', field: '', gpa: '', startDate: '', endDate: '', description: '' }] }));
+  const addEdu = () => updateData(d => ({ ...d, education: [...d.education, { id: uid(), level: 'bachelor', institution: '', degree: '', field: '', gpa: '', startDate: '', endDate: '', description: '' }] }));
   const updEdu = (id: string, patch: Partial<CVEducation>) => updateData(d => ({ ...d, education: d.education.map(e => e.id === id ? { ...e, ...patch } : e) }));
   const delEdu = (id: string) => updateData(d => ({ ...d, education: d.education.filter(e => e.id !== id) }));
 
@@ -316,6 +319,17 @@ const AcademicCVPage: React.FC = () => {
                         {data.education.map(e => (
                           <RowCard key={e.id} onDelete={() => delEdu(e.id)}>
                             <div className="grid sm:grid-cols-2 gap-2">
+                              <div>
+                                <Label className="text-xs mb-1 block">{T.fields.level}</Label>
+                                <Select value={e.level || 'bachelor'} onValueChange={(v) => updEdu(e.id, { level: v as any })}>
+                                  <SelectTrigger className="h-9 text-sm"><SelectValue /></SelectTrigger>
+                                  <SelectContent>
+                                    {(Object.keys(T.levels) as Array<keyof typeof T.levels>).map(k => (
+                                      <SelectItem key={k} value={k}>{T.levels[k]}</SelectItem>
+                                    ))}
+                                  </SelectContent>
+                                </Select>
+                              </div>
                               <Field label={T.fields.university} value={e.institution} onChange={v => updEdu(e.id, { institution: v })} />
                               <Field label={T.fields.degree} value={e.degree} onChange={v => updEdu(e.id, { degree: v })} />
                               <Field label={T.fields.major} value={e.field} onChange={v => updEdu(e.id, { field: v })} />
