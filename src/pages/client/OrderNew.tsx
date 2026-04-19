@@ -96,6 +96,9 @@ const OrderNew = () => {
     [service]
   );
 
+  // Theme drives the entire visual identity of the wizard for this category.
+  const theme = useMemo(() => getCategoryTheme(service?.category_slug), [service?.category_slug]);
+
   // Pre-fill defaults when service loads
   useEffect(() => {
     if (service) setQuantity(fieldsConfig.defaultQuantity);
@@ -152,15 +155,6 @@ const OrderNew = () => {
     }
     finally { setLoadingData(false); }
   };
-
-  // ---------- Price estimation ----------
-  const estimatedPrice = useMemo(() => {
-    if (!service?.price) return 0;
-    const base = Number(service.price) * (Number(quantity) || 0);
-    const urgency = dynamicValues.urgency as string | undefined;
-    const mult = urgency ? (URGENCY_MULTIPLIER[urgency] ?? 1) : 1;
-    return Math.round(base * mult * 100) / 100;
-  }, [service?.price, quantity, dynamicValues.urgency]);
 
   // ---------- Files ----------
   const acceptFiles = useCallback((selected: FileList | File[]) => {
@@ -230,7 +224,7 @@ const OrderNew = () => {
         service_name: service.name_ar || service.name,
         total_amount: 0,
         paid_amount: 0,
-        estimated_amount: estimatedPrice || null,
+        // estimated_amount intentionally omitted — pricing handled by admin after review
         quantity: quantity || null,
         quantity_unit: fieldsConfig.quantityUnitLabel,
         preferred_language: language,
@@ -290,12 +284,15 @@ const OrderNew = () => {
       <ClientLayout>
         <div className="p-4 sm:p-6 lg:p-8 min-h-[80vh] flex items-center justify-center" dir="rtl">
           <motion.div initial={{ opacity: 0, scale: 0.92 }} animate={{ opacity: 1, scale: 1 }} className="max-w-lg w-full">
-            <Card className="border-0 bg-gradient-to-br from-emerald-50 via-background to-primary/5 shadow-2xl overflow-hidden">
-              <div className="p-8 text-center">
+            <Card className={cn(
+              'border-0 shadow-2xl overflow-hidden bg-gradient-to-br',
+              theme.gradient,
+            )}>
+              <div className="p-8 text-center bg-card/50 backdrop-blur-sm">
                 <motion.div
                   initial={{ scale: 0, rotate: -180 }} animate={{ scale: 1, rotate: 0 }}
                   transition={{ type: 'spring', stiffness: 200, delay: 0.15 }}
-                  className="w-24 h-24 bg-gradient-to-br from-emerald-400 to-emerald-600 rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg shadow-emerald-500/30"
+                  className="w-24 h-24 bg-emerald-500 rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg shadow-emerald-500/30"
                 >
                   <CheckCircle2 className="w-12 h-12 text-white" strokeWidth={2.5} />
                 </motion.div>
@@ -309,13 +306,10 @@ const OrderNew = () => {
                     <span className="font-mono font-bold text-primary">{trackingId}</span>
                   </div>
                 )}
-                {estimatedPrice > 0 && (
-                  <div className="my-3 text-sm">
-                    <span className="text-muted-foreground">السعر التقديري: </span>
-                    <span className="font-bold text-primary">{estimatedPrice.toLocaleString()} ر.س</span>
-                    <p className="text-xs text-muted-foreground mt-1">السعر النهائي سيُؤكَّد من الإدارة</p>
-                  </div>
-                )}
+                <div className="my-4 rounded-xl bg-amber-500/10 border border-amber-500/30 p-4 text-sm">
+                  <Clock className="w-4 h-4 inline-block ms-1 text-amber-600" />
+                  <span className="font-medium">سيتم التواصل معك خلال ساعات قليلة لتأكيد عرض السعر النهائي</span>
+                </div>
                 {files.length > 0 && uploadProgress < 100 && (
                   <div className="my-4 space-y-2">
                     <p className="text-xs text-muted-foreground">جارٍ رفع المرفقات في الخلفية…</p>
@@ -341,355 +335,427 @@ const OrderNew = () => {
   return (
     <ClientLayout>
       <div className="p-4 sm:p-6 lg:p-8 relative" dir="rtl">
+        {/* Ambient background */}
         <div className="absolute inset-0 -z-10 overflow-hidden pointer-events-none">
-          <div className="absolute top-0 right-1/4 w-96 h-96 bg-primary/10 rounded-full blur-3xl" />
-          <div className="absolute bottom-0 left-1/4 w-96 h-96 bg-accent/10 rounded-full blur-3xl" />
+          <div
+            className="absolute top-0 right-1/4 w-96 h-96 rounded-full blur-3xl opacity-50"
+            style={{ background: `hsl(var(--${theme.glow}) / 0.3)` }}
+          />
+          <div
+            className="absolute bottom-0 left-1/4 w-96 h-96 rounded-full blur-3xl opacity-40"
+            style={{ background: `hsl(var(--${theme.accent}) / 0.2)` }}
+          />
         </div>
 
-        <div className="max-w-3xl mx-auto space-y-6">
-          {/* Header */}
-          <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }}
-            className="flex items-center justify-between">
-            <div>
-              <h1 className="text-2xl sm:text-3xl font-bold bg-gradient-to-l from-primary to-accent bg-clip-text text-transparent">
-                طلب خدمة جديدة
-              </h1>
-              <p className="text-muted-foreground text-sm mt-1">أكمل الخطوات الأربع لإرسال طلبك</p>
-            </div>
+        <div className="max-w-6xl mx-auto space-y-6">
+          {/* Top bar */}
+          <div className="flex items-center justify-between">
             <Button variant="ghost" size="sm" onClick={() => navigate('/client-services')}>
-              <ArrowRight className="w-4 h-4 me-1" /> رجوع
+              <ArrowRight className="w-4 h-4 me-1" /> رجوع للخدمات
             </Button>
-          </motion.div>
-
-          {/* Stepper */}
-          <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
-            className="rounded-2xl border bg-card/60 backdrop-blur-xl p-4 sm:p-6 shadow-sm">
-            <div className="flex items-center justify-between gap-2 sm:gap-4">
-              {STEPS.map((s, i) => {
-                const Icon = s.icon;
-                const active = step === s.id;
-                const done = step > s.id;
-                return (
-                  <React.Fragment key={s.id}>
-                    <button type="button" onClick={() => done && setStep(s.id as Step)}
-                      className={cn('flex flex-col items-center gap-2 flex-shrink-0 transition-all', done && 'cursor-pointer')}>
-                      <div className={cn(
-                        'relative w-12 h-12 rounded-2xl flex items-center justify-center transition-all duration-300',
-                        active && 'bg-gradient-to-br from-primary to-accent text-primary-foreground shadow-lg shadow-primary/30 scale-110',
-                        done && 'bg-emerald-500 text-white shadow-md shadow-emerald-500/30',
-                        !active && !done && 'bg-muted text-muted-foreground',
-                      )}>
-                        {done ? <CheckCircle2 className="w-5 h-5" /> : <Icon className="w-5 h-5" />}
-                        {active && (
-                          <motion.div className="absolute inset-0 rounded-2xl border-2 border-primary"
-                            animate={{ scale: [1, 1.15, 1], opacity: [0.6, 0, 0.6] }}
-                            transition={{ duration: 2, repeat: Infinity }} />
-                        )}
-                      </div>
-                      <div className="text-center hidden sm:block">
-                        <div className={cn('text-sm font-semibold', active ? 'text-primary' : 'text-foreground')}>
-                          {s.title}
-                        </div>
-                      </div>
-                    </button>
-                    {i < STEPS.length - 1 && (
-                      <div className="flex-1 h-1 rounded-full bg-muted overflow-hidden">
-                        <motion.div className="h-full bg-gradient-to-l from-primary to-accent"
-                          initial={{ width: '0%' }}
-                          animate={{ width: step > s.id ? '100%' : '0%' }}
-                          transition={{ duration: 0.4 }} />
-                      </div>
-                    )}
-                  </React.Fragment>
-                );
-              })}
+            <div className="text-xs text-muted-foreground hidden sm:block">
+              الخطوة <span className="font-bold text-foreground">{step + 1}</span> من {STEPS.length}
             </div>
-          </motion.div>
+          </div>
 
-          {/* Step content */}
-          <AnimatePresence mode="wait">
-            <motion.div key={step}
-              initial={{ opacity: 0, x: 30 }} animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: -30 }} transition={{ duration: 0.25 }}>
-              <Card className="border-0 shadow-xl bg-card/70 backdrop-blur-xl overflow-hidden">
-                <div className="h-1 bg-gradient-to-l from-primary via-accent to-primary" />
-                <CardContent className="p-6 sm:p-8 space-y-6">
+          {/* Category-specific Hero */}
+          {service && (
+            <CategoryHero
+              theme={theme}
+              serviceName={service.name_ar || service.name}
+              serviceDescription={service.description}
+              categoryLabel={service.category_name}
+            />
+          )}
 
-                  {/* STEP 0 — Service */}
-                  {step === 0 && (
-                    <div>
-                      <div className="flex items-center gap-3 mb-5">
-                        <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center">
-                          <Sparkles className="w-5 h-5 text-primary" />
-                        </div>
-                        <div>
-                          <h3 className="text-lg font-bold">الخدمة المختارة</h3>
-                          <p className="text-xs text-muted-foreground">تأكد من تفاصيل الخدمة قبل المتابعة</p>
-                        </div>
-                      </div>
-                      <div className="rounded-2xl bg-gradient-to-br from-primary/10 to-accent/5 border border-primary/20 p-5">
-                        <div className="flex items-start gap-4">
-                          <div className="w-14 h-14 rounded-2xl bg-primary text-primary-foreground flex items-center justify-center flex-shrink-0 shadow-lg shadow-primary/20">
-                            <FileText className="w-7 h-7" />
+          {/* Two-column layout: wizard + side guide */}
+          <div className="grid grid-cols-1 lg:grid-cols-[1fr_320px] gap-6">
+            {/* MAIN — wizard */}
+            <div className="space-y-6 min-w-0">
+              {/* Stepper */}
+              <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
+                className="rounded-2xl border border-border/40 bg-card/60 backdrop-blur-xl p-4 sm:p-6 shadow-sm">
+                <div className="flex items-center justify-between gap-2 sm:gap-4">
+                  {STEPS.map((s, i) => {
+                    const Icon = s.icon;
+                    const active = step === s.id;
+                    const done = step > s.id;
+                    return (
+                      <React.Fragment key={s.id}>
+                        <button type="button" onClick={() => done && setStep(s.id as Step)}
+                          className={cn('flex flex-col items-center gap-2 flex-shrink-0 transition-all', done && 'cursor-pointer')}>
+                          <div
+                            className={cn(
+                              'relative w-12 h-12 rounded-2xl flex items-center justify-center transition-all duration-300',
+                              !active && !done && 'bg-muted text-muted-foreground',
+                              done && 'bg-emerald-500 text-white shadow-md shadow-emerald-500/30',
+                            )}
+                            style={active ? {
+                              background: `hsl(var(--${theme.accent}))`,
+                              color: 'white',
+                              boxShadow: `0 8px 24px hsl(var(--${theme.accent}) / 0.4)`,
+                              transform: 'scale(1.1)',
+                            } : undefined}
+                          >
+                            {done ? <CheckCircle2 className="w-5 h-5" /> : <Icon className="w-5 h-5" />}
+                            {active && (
+                              <motion.div
+                                className="absolute inset-0 rounded-2xl border-2"
+                                style={{ borderColor: `hsl(var(--${theme.accent}))` }}
+                                animate={{ scale: [1, 1.15, 1], opacity: [0.6, 0, 0.6] }}
+                                transition={{ duration: 2, repeat: Infinity }}
+                              />
+                            )}
                           </div>
-                          <div className="flex-1">
-                            {service?.category_name && (
-                              <Badge variant="secondary" className="text-xs mb-2">{service.category_name}</Badge>
-                            )}
-                            <h4 className="text-xl font-bold text-primary">{service?.name_ar || service?.name}</h4>
-                            {service?.description && (
-                              <p className="text-sm text-muted-foreground mt-2 leading-relaxed">{service.description}</p>
-                            )}
-                            <div className="flex items-center gap-2 mt-4 flex-wrap">
-                              {service?.price ? (
-                                <Badge className="text-xs bg-primary/10 text-primary border-primary/30">
-                                  ابتداءً من {Number(service.price).toLocaleString()} ر.س / {fieldsConfig.quantityUnitLabel}
-                                </Badge>
-                              ) : (
-                                <Badge className="text-xs bg-amber-500/10 text-amber-700 border-amber-500/30">
-                                  السعر بعد المراجعة
-                                </Badge>
+                          <div className="text-center hidden sm:block">
+                            <div className={cn('text-sm font-semibold', active ? 'text-foreground' : 'text-muted-foreground')}>
+                              {s.title}
+                            </div>
+                          </div>
+                        </button>
+                        {i < STEPS.length - 1 && (
+                          <div className="flex-1 h-1 rounded-full bg-muted overflow-hidden">
+                            <motion.div
+                              className="h-full"
+                              style={{ background: `hsl(var(--${theme.accent}))` }}
+                              initial={{ width: '0%' }}
+                              animate={{ width: step > s.id ? '100%' : '0%' }}
+                              transition={{ duration: 0.4 }}
+                            />
+                          </div>
+                        )}
+                      </React.Fragment>
+                    );
+                  })}
+                </div>
+              </motion.div>
+
+              {/* Step content */}
+              <AnimatePresence mode="wait">
+                <motion.div key={step}
+                  initial={{ opacity: 0, x: 30 }} animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: -30 }} transition={{ duration: 0.25 }}>
+                  <Card className="border-0 shadow-xl bg-card/70 backdrop-blur-xl overflow-hidden">
+                    <div
+                      className="h-1"
+                      style={{
+                        background: `linear-gradient(90deg, hsl(var(--${theme.accent})), hsl(var(--${theme.glow})), hsl(var(--${theme.accent})))`,
+                      }}
+                    />
+                    <CardContent className="p-6 sm:p-8 space-y-6">
+
+                      {/* STEP 0 — Confirm service */}
+                      {step === 0 && (
+                        <div className="space-y-4">
+                          <div className="flex items-center gap-3 mb-2">
+                            <div
+                              className="w-10 h-10 rounded-xl flex items-center justify-center"
+                              style={{ background: `hsl(var(--${theme.accent}) / 0.12)` }}
+                            >
+                              <Sparkles className="w-5 h-5" style={{ color: `hsl(var(--${theme.accent}))` }} />
+                            </div>
+                            <div>
+                              <h3 className="text-lg font-bold">تأكيد الخدمة المختارة</h3>
+                              <p className="text-xs text-muted-foreground">راجع المعلومات أدناه ثم انتقل للتفاصيل</p>
+                            </div>
+                          </div>
+
+                          <div className="rounded-2xl border border-border/40 bg-muted/30 p-5">
+                            <div className="flex items-start justify-between gap-3 flex-wrap">
+                              <div className="flex-1 min-w-0">
+                                <p className="text-xs text-muted-foreground mb-1">الخدمة</p>
+                                <p className="font-bold text-base">{service?.name_ar || service?.name}</p>
+                              </div>
+                              {service?.category_name && (
+                                <Badge variant="secondary" className="text-xs">{service.category_name}</Badge>
                               )}
                             </div>
                           </div>
-                        </div>
-                      </div>
-                    </div>
-                  )}
 
-                  {/* STEP 1 — Details + dynamic fields + quantity */}
-                  {step === 1 && (
-                    <div className="space-y-5">
-                      <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center">
-                          <ClipboardList className="w-5 h-5 text-primary" />
-                        </div>
-                        <div>
-                          <h3 className="text-lg font-bold">تفاصيل الطلب</h3>
-                          <p className="text-xs text-muted-foreground">أدخل المعلومات اللازمة لتسعير دقيق</p>
-                        </div>
-                      </div>
-
-                      {/* Quantity */}
-                      <div>
-                        <Label className="text-sm font-medium mb-1.5 block">
-                          الكمية ({fieldsConfig.quantityUnitLabel}) <span className="text-destructive">*</span>
-                        </Label>
-                        <Input type="number" min={1} value={quantity}
-                          onChange={(e) => setQuantity(Number(e.target.value) || 0)}
-                          className="rounded-xl bg-background/60 max-w-[200px]" />
-                      </div>
-
-                      {/* Dynamic fields per category */}
-                      <DynamicServiceFields
-                        config={fieldsConfig}
-                        values={dynamicValues}
-                        onChange={(k, v) => setDynamicValues(prev => ({ ...prev, [k]: v }))}
-                      />
-
-                      {/* Notes */}
-                      <div>
-                        <Label className="text-sm font-medium mb-1.5 block">
-                          وصف وملاحظات إضافية <span className="text-destructive">*</span>
-                        </Label>
-                        <Textarea value={notes} onChange={(e) => setNotes(e.target.value)}
-                          placeholder="أي تفاصيل تخص الموضوع، مراجع، توقعات…"
-                          rows={5}
-                          className="resize-none rounded-xl bg-background/60" />
-                        <div className="flex items-center justify-between mt-2 text-xs text-muted-foreground">
-                          <span>يفضّل ٥ أحرف على الأقل</span>
-                          <span className={cn(notes.length >= 5 && 'text-emerald-600 font-medium')}>
-                            {notes.length} حرف
-                          </span>
-                        </div>
-                      </div>
-
-                      {/* Live price estimate */}
-                      {estimatedPrice > 0 && (
-                        <motion.div initial={{ opacity: 0, y: 5 }} animate={{ opacity: 1, y: 0 }}
-                          className="rounded-xl bg-gradient-to-l from-primary/10 to-accent/10 border border-primary/30 p-4 flex items-center gap-3">
-                          <div className="w-10 h-10 rounded-xl bg-primary text-primary-foreground flex items-center justify-center">
-                            <Calculator className="w-5 h-5" />
-                          </div>
-                          <div className="flex-1">
-                            <p className="text-xs text-muted-foreground">السعر التقديري</p>
-                            <p className="text-xl font-bold text-primary">{estimatedPrice.toLocaleString()} ر.س</p>
-                          </div>
-                          <Badge variant="secondary" className="text-xs">قابل للمراجعة</Badge>
-                        </motion.div>
-                      )}
-                    </div>
-                  )}
-
-                  {/* STEP 2 — Attachments with drag&drop + previews */}
-                  {step === 2 && (
-                    <div>
-                      <div className="flex items-center gap-3 mb-5">
-                        <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center">
-                          <Paperclip className="w-5 h-5 text-primary" />
-                        </div>
-                        <div>
-                          <h3 className="text-lg font-bold">المرفقات</h3>
-                          <p className="text-xs text-muted-foreground">اسحب الملفات أو اضغط للرفع</p>
-                        </div>
-                      </div>
-
-                      <input ref={fileInputRef} type="file" multiple
-                        accept={ALLOWED_TYPES.join(',')}
-                        onChange={handleFileSelect}
-                        className="hidden" />
-
-                      <div
-                        onDragOver={(e) => { e.preventDefault(); setDragOver(true); }}
-                        onDragLeave={() => setDragOver(false)}
-                        onDrop={(e) => {
-                          e.preventDefault(); setDragOver(false);
-                          if (e.dataTransfer.files.length > 0) acceptFiles(e.dataTransfer.files);
-                        }}
-                        onClick={() => fileInputRef.current?.click()}
-                        className={cn(
-                          'w-full rounded-2xl border-2 border-dashed p-8 transition-all duration-200 cursor-pointer',
-                          'flex flex-col items-center gap-3',
-                          dragOver
-                            ? 'border-primary bg-primary/10 scale-[1.01]'
-                            : 'border-border/60 hover:border-primary hover:bg-primary/5 text-muted-foreground hover:text-primary',
-                          files.length >= MAX_FILES && 'opacity-50 cursor-not-allowed pointer-events-none',
-                        )}
-                      >
-                        <div className="w-14 h-14 rounded-full bg-primary/10 flex items-center justify-center">
-                          <Upload className="w-7 h-7 text-primary" />
-                        </div>
-                        <span className="font-semibold">اسحب الملفات هنا أو اضغط للاختيار</span>
-                        <span className="text-xs">PDF, Word, Excel, PowerPoint, صور — حد ٢٠MB للملف</span>
-                        <span className="text-xs font-mono">{files.length}/{MAX_FILES}</span>
-                      </div>
-
-                      <AnimatePresence>
-                        {files.length > 0 && (
-                          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-3">
-                            {files.map((f) => (
-                              <motion.div key={f.id}
-                                initial={{ opacity: 0, scale: 0.95 }}
-                                animate={{ opacity: 1, scale: 1 }}
-                                exit={{ opacity: 0, scale: 0.95 }}
-                                className="flex items-center gap-3 p-3 bg-muted/40 hover:bg-muted/60 rounded-xl border border-border/40 transition-colors group"
-                              >
-                                {f.preview ? (
-                                  <img src={f.preview} alt={f.file.name}
-                                    className="w-12 h-12 rounded-lg object-cover flex-shrink-0" />
-                                ) : (
-                                  <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0">
-                                    {f.file.type.startsWith('image/')
-                                      ? <ImageIcon className="w-5 h-5 text-primary" />
-                                      : <File className="w-5 h-5 text-primary" />}
-                                  </div>
-                                )}
-                                <div className="flex-1 min-w-0">
-                                  <p className="text-sm font-medium truncate">{f.file.name}</p>
-                                  <p className="text-xs text-muted-foreground">{formatFileSize(f.file.size)}</p>
-                                </div>
-                                <Button variant="ghost" size="icon"
-                                  className="h-8 w-8 text-destructive hover:text-destructive hover:bg-destructive/10 opacity-70 group-hover:opacity-100"
-                                  onClick={(e) => { e.stopPropagation(); removeFile(f.id); }}>
-                                  <X className="w-4 h-4" />
-                                </Button>
-                              </motion.div>
-                            ))}
-                          </motion.div>
-                        )}
-                      </AnimatePresence>
-                    </div>
-                  )}
-
-                  {/* STEP 3 — Review */}
-                  {step === 3 && (
-                    <div className="space-y-5">
-                      <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center">
-                          <Eye className="w-5 h-5 text-primary" />
-                        </div>
-                        <div>
-                          <h3 className="text-lg font-bold">المراجعة النهائية</h3>
-                          <p className="text-xs text-muted-foreground">تأكد من البيانات قبل الإرسال</p>
-                        </div>
-                      </div>
-
-                      <div className="rounded-2xl bg-gradient-to-br from-primary/5 to-accent/5 border border-primary/20 p-5 space-y-3">
-                        <div className="flex justify-between gap-2 text-sm">
-                          <span className="text-muted-foreground">الخدمة</span>
-                          <span className="font-semibold text-end">{service?.name_ar || service?.name}</span>
-                        </div>
-                        <div className="flex justify-between gap-2 text-sm">
-                          <span className="text-muted-foreground">الكمية</span>
-                          <span className="font-semibold">{quantity} {fieldsConfig.quantityUnitLabel}</span>
-                        </div>
-
-                        {fieldsConfig.fields.map((f) => {
-                          const v = dynamicValues[f.key];
-                          if (!v) return null;
-                          const display = f.type === 'select'
-                            ? getOptionLabel(service?.category_slug, f.key, v)
-                            : String(v);
-                          return (
-                            <div key={f.key} className="flex justify-between gap-2 text-sm">
-                              <span className="text-muted-foreground">{getFieldLabel(service?.category_slug, f.key)}</span>
-                              <span className="font-semibold text-end">{display}</span>
+                          {/* Pricing message — replaces approximate price */}
+                          <div className="rounded-2xl border border-amber-500/30 bg-amber-500/5 p-5 flex items-start gap-3">
+                            <div className="w-10 h-10 rounded-xl bg-amber-500/15 flex items-center justify-center flex-shrink-0">
+                              <Clock className="w-5 h-5 text-amber-600 dark:text-amber-400" />
                             </div>
-                          );
-                        })}
-
-                        <div className="flex justify-between gap-2 text-sm">
-                          <span className="text-muted-foreground">المرفقات</span>
-                          <span className="font-semibold">{files.length} ملف</span>
+                            <div>
+                              <p className="font-semibold text-sm">سيتم تحديد السعر بعد المراجعة</p>
+                              <p className="text-xs text-muted-foreground mt-1 leading-relaxed">
+                                نراجع طلبك ومرفقاتك بعناية، ثم نُرسل لك عرض سعر دقيق ومدّة تنفيذ مناسبة — عادةً خلال ساعات قليلة.
+                              </p>
+                            </div>
+                          </div>
                         </div>
-                      </div>
+                      )}
 
-                      {/* Final price card */}
-                      <div className="rounded-2xl bg-gradient-to-l from-primary to-accent text-primary-foreground p-5 shadow-xl shadow-primary/20">
-                        <div className="flex items-center justify-between">
+                      {/* STEP 1 — Details + dynamic fields + quantity */}
+                      {step === 1 && (
+                        <div className="space-y-5">
+                          <div className="flex items-center gap-3">
+                            <div
+                              className="w-10 h-10 rounded-xl flex items-center justify-center"
+                              style={{ background: `hsl(var(--${theme.accent}) / 0.12)` }}
+                            >
+                              <ClipboardList className="w-5 h-5" style={{ color: `hsl(var(--${theme.accent}))` }} />
+                            </div>
+                            <div>
+                              <h3 className="text-lg font-bold">تفاصيل الطلب</h3>
+                              <p className="text-xs text-muted-foreground">كلما زادت دقّة المعلومات، كان عرض السعر أدق</p>
+                            </div>
+                          </div>
+
+                          {/* Quantity */}
                           <div>
-                            <p className="text-xs opacity-80">السعر التقديري</p>
-                            <p className="text-3xl font-bold mt-1">{estimatedPrice.toLocaleString()} ر.س</p>
+                            <Label className="text-sm font-medium mb-1.5 flex items-center gap-1.5">
+                              <Hash className="w-3.5 h-3.5" style={{ color: `hsl(var(--${theme.accent}))` }} />
+                              <span>الكمية ({fieldsConfig.quantityUnitLabel})</span>
+                              <span className="text-destructive">*</span>
+                            </Label>
+                            <Input type="number" min={1} value={quantity}
+                              onChange={(e) => setQuantity(Number(e.target.value) || 0)}
+                              className="rounded-xl bg-background/60 max-w-[200px]" />
                           </div>
-                          <div className="w-14 h-14 rounded-2xl bg-white/20 flex items-center justify-center">
-                            <Calculator className="w-7 h-7" />
+
+                          {/* Dynamic fields per category — themed */}
+                          <DynamicServiceFields
+                            config={fieldsConfig}
+                            values={dynamicValues}
+                            onChange={(k, v) => setDynamicValues(prev => ({ ...prev, [k]: v }))}
+                            theme={theme}
+                          />
+
+                          {/* Notes with category-tailored placeholder */}
+                          <div className="space-y-3">
+                            <Label className="text-sm font-medium mb-1.5 flex items-center gap-1.5">
+                              <ClipboardList className="w-3.5 h-3.5" style={{ color: `hsl(var(--${theme.accent}))` }} />
+                              <span>وصف الطلب وملاحظات إضافية</span>
+                              <span className="text-destructive">*</span>
+                            </Label>
+                            <Textarea value={notes} onChange={(e) => setNotes(e.target.value)}
+                              placeholder={theme.notesPlaceholder}
+                              rows={5}
+                              className="resize-none rounded-xl bg-background/60" />
+                            <div className="flex items-center justify-between text-xs text-muted-foreground">
+                              <span>كلّما كان الوصف مفصّلاً، حصلت على نتيجة أفضل</span>
+                              <span className={cn(notes.length >= 5 && 'text-emerald-600 font-medium')}>
+                                {notes.length} حرف
+                              </span>
+                            </div>
+
+                            {/* Example prompts (clickable) */}
+                            <ExamplePrompts theme={theme} onPick={(t) => setNotes(t)} />
                           </div>
                         </div>
-                        <p className="text-xs opacity-80 mt-3">
-                          * السعر تقديري وقابل للتعديل بعد مراجعة الإدارة وفحص المرفقات
-                        </p>
-                      </div>
-                    </div>
-                  )}
+                      )}
 
-                  {/* Navigation */}
-                  <div className="flex items-center justify-between pt-4 border-t border-border/40">
-                    <Button variant="outline" disabled={step === 0 || loading}
-                      onClick={() => setStep((s) => (s - 1) as Step)} className="gap-2">
-                      <ArrowRight className="w-4 h-4" /> السابق
-                    </Button>
+                      {/* STEP 2 — Attachments */}
+                      {step === 2 && (
+                        <div>
+                          <div className="flex items-center gap-3 mb-5">
+                            <div
+                              className="w-10 h-10 rounded-xl flex items-center justify-center"
+                              style={{ background: `hsl(var(--${theme.accent}) / 0.12)` }}
+                            >
+                              <Paperclip className="w-5 h-5" style={{ color: `hsl(var(--${theme.accent}))` }} />
+                            </div>
+                            <div>
+                              <h3 className="text-lg font-bold">المرفقات</h3>
+                              <p className="text-xs text-muted-foreground">اسحب الملفات أو اضغط للرفع — اختياري لكن يُسرّع التسعير</p>
+                            </div>
+                          </div>
 
-                    {step < 3 ? (
-                      <Button onClick={() => canNext() && setStep((s) => (s + 1) as Step)}
-                        disabled={!canNext()}
-                        className="gap-2 bg-gradient-to-l from-primary to-accent hover:opacity-90">
-                        التالي <ArrowLeft className="w-4 h-4" />
-                      </Button>
-                    ) : (
-                      <Button onClick={handleSubmit} disabled={loading}
-                        className="gap-2 bg-gradient-to-l from-primary to-accent hover:opacity-90 shadow-lg shadow-primary/20 min-w-[160px]" size="lg">
-                        {loading ? (
-                          <><RefreshCw className="w-4 h-4 animate-spin" /> جارٍ الإرسال…</>
+                          <input ref={fileInputRef} type="file" multiple
+                            accept={ALLOWED_TYPES.join(',')}
+                            onChange={handleFileSelect}
+                            className="hidden" />
+
+                          <div
+                            onDragOver={(e) => { e.preventDefault(); setDragOver(true); }}
+                            onDragLeave={() => setDragOver(false)}
+                            onDrop={(e) => {
+                              e.preventDefault(); setDragOver(false);
+                              if (e.dataTransfer.files.length > 0) acceptFiles(e.dataTransfer.files);
+                            }}
+                            onClick={() => fileInputRef.current?.click()}
+                            className={cn(
+                              'w-full rounded-2xl border-2 border-dashed p-8 transition-all duration-200 cursor-pointer',
+                              'flex flex-col items-center gap-3',
+                              dragOver
+                                ? 'scale-[1.01]'
+                                : 'border-border/60 hover:border-primary hover:bg-primary/5 text-muted-foreground hover:text-primary',
+                              files.length >= MAX_FILES && 'opacity-50 cursor-not-allowed pointer-events-none',
+                            )}
+                            style={dragOver ? {
+                              borderColor: `hsl(var(--${theme.accent}))`,
+                              background: `hsl(var(--${theme.accent}) / 0.08)`,
+                            } : undefined}
+                          >
+                            <div
+                              className="w-14 h-14 rounded-full flex items-center justify-center"
+                              style={{ background: `hsl(var(--${theme.accent}) / 0.12)` }}
+                            >
+                              <Upload className="w-7 h-7" style={{ color: `hsl(var(--${theme.accent}))` }} />
+                            </div>
+                            <span className="font-semibold">اسحب الملفات هنا أو اضغط للاختيار</span>
+                            <span className="text-xs">PDF, Word, Excel, PowerPoint, صور — حد ٢٠MB للملف</span>
+                            <span className="text-xs font-mono">{files.length}/{MAX_FILES}</span>
+                          </div>
+
+                          <AnimatePresence>
+                            {files.length > 0 && (
+                              <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-3">
+                                {files.map((f) => (
+                                  <motion.div key={f.id}
+                                    initial={{ opacity: 0, scale: 0.95 }}
+                                    animate={{ opacity: 1, scale: 1 }}
+                                    exit={{ opacity: 0, scale: 0.95 }}
+                                    className="flex items-center gap-3 p-3 bg-muted/40 hover:bg-muted/60 rounded-xl border border-border/40 transition-colors group"
+                                  >
+                                    {f.preview ? (
+                                      <img src={f.preview} alt={f.file.name}
+                                        className="w-12 h-12 rounded-lg object-cover flex-shrink-0" />
+                                    ) : (
+                                      <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0">
+                                        {f.file.type.startsWith('image/')
+                                          ? <ImageIcon className="w-5 h-5 text-primary" />
+                                          : <File className="w-5 h-5 text-primary" />}
+                                      </div>
+                                    )}
+                                    <div className="flex-1 min-w-0">
+                                      <p className="text-sm font-medium truncate">{f.file.name}</p>
+                                      <p className="text-xs text-muted-foreground">{formatFileSize(f.file.size)}</p>
+                                    </div>
+                                    <Button variant="ghost" size="icon"
+                                      className="h-8 w-8 text-destructive hover:text-destructive hover:bg-destructive/10 opacity-70 group-hover:opacity-100"
+                                      onClick={(e) => { e.stopPropagation(); removeFile(f.id); }}>
+                                      <X className="w-4 h-4" />
+                                    </Button>
+                                  </motion.div>
+                                ))}
+                              </motion.div>
+                            )}
+                          </AnimatePresence>
+                        </div>
+                      )}
+
+                      {/* STEP 3 — Review */}
+                      {step === 3 && (
+                        <div className="space-y-5">
+                          <div className="flex items-center gap-3">
+                            <div
+                              className="w-10 h-10 rounded-xl flex items-center justify-center"
+                              style={{ background: `hsl(var(--${theme.accent}) / 0.12)` }}
+                            >
+                              <Eye className="w-5 h-5" style={{ color: `hsl(var(--${theme.accent}))` }} />
+                            </div>
+                            <div>
+                              <h3 className="text-lg font-bold">المراجعة النهائية</h3>
+                              <p className="text-xs text-muted-foreground">تأكد من البيانات قبل الإرسال</p>
+                            </div>
+                          </div>
+
+                          <div className="rounded-2xl border border-border/40 bg-muted/30 p-5 space-y-3">
+                            <div className="flex justify-between gap-2 text-sm">
+                              <span className="text-muted-foreground">الخدمة</span>
+                              <span className="font-semibold text-end">{service?.name_ar || service?.name}</span>
+                            </div>
+                            <div className="flex justify-between gap-2 text-sm">
+                              <span className="text-muted-foreground">الكمية</span>
+                              <span className="font-semibold">{quantity} {fieldsConfig.quantityUnitLabel}</span>
+                            </div>
+
+                            {fieldsConfig.fields.map((f) => {
+                              const v = dynamicValues[f.key];
+                              if (!v) return null;
+                              const display = f.type === 'select'
+                                ? getOptionLabel(service?.category_slug, f.key, v)
+                                : String(v);
+                              return (
+                                <div key={f.key} className="flex justify-between gap-2 text-sm">
+                                  <span className="text-muted-foreground">{getFieldLabel(service?.category_slug, f.key)}</span>
+                                  <span className="font-semibold text-end">{display}</span>
+                                </div>
+                              );
+                            })}
+
+                            <div className="flex justify-between gap-2 text-sm">
+                              <span className="text-muted-foreground">المرفقات</span>
+                              <span className="font-semibold">{files.length} ملف</span>
+                            </div>
+                          </div>
+
+                          {/* Replaces "approximate price" card */}
+                          <div
+                            className="rounded-2xl p-5 shadow-xl text-white relative overflow-hidden"
+                            style={{
+                              background: `linear-gradient(135deg, hsl(var(--${theme.accent})), hsl(var(--${theme.glow})))`,
+                            }}
+                          >
+                            <div className="flex items-center gap-4">
+                              <div className="w-14 h-14 rounded-2xl bg-white/20 flex items-center justify-center flex-shrink-0">
+                                <Clock className="w-7 h-7" />
+                              </div>
+                              <div className="flex-1">
+                                <p className="text-xs opacity-90">عرض السعر</p>
+                                <p className="text-lg font-bold leading-tight mt-0.5">سيتم تحديده بعد المراجعة</p>
+                                <p className="text-xs opacity-90 mt-1.5 leading-relaxed">
+                                  ستصلك قيمة السعر النهائية والمدّة المتوقّعة عبر الإشعارات والبريد خلال ساعات.
+                                </p>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      )}
+
+                      {/* Navigation */}
+                      <div className="flex items-center justify-between pt-4 border-t border-border/40">
+                        <Button variant="outline" disabled={step === 0 || loading}
+                          onClick={() => setStep((s) => (s - 1) as Step)} className="gap-2">
+                          <ArrowRight className="w-4 h-4" /> السابق
+                        </Button>
+
+                        {step < 3 ? (
+                          <Button
+                            onClick={() => canNext() && setStep((s) => (s + 1) as Step)}
+                            disabled={!canNext()}
+                            className="gap-2 text-white hover:opacity-90"
+                            style={{
+                              background: `linear-gradient(135deg, hsl(var(--${theme.accent})), hsl(var(--${theme.glow})))`,
+                            }}
+                          >
+                            التالي <ArrowLeft className="w-4 h-4" />
+                          </Button>
                         ) : (
-                          <><Send className="w-4 h-4" /> إرسال الطلب</>
+                          <Button
+                            onClick={handleSubmit}
+                            disabled={loading}
+                            size="lg"
+                            className="gap-2 text-white hover:opacity-90 min-w-[160px] shadow-lg"
+                            style={{
+                              background: `linear-gradient(135deg, hsl(var(--${theme.accent})), hsl(var(--${theme.glow})))`,
+                              boxShadow: `0 8px 24px hsl(var(--${theme.accent}) / 0.4)`,
+                            }}
+                          >
+                            {loading ? (
+                              <><RefreshCw className="w-4 h-4 animate-spin" /> جارٍ الإرسال…</>
+                            ) : (
+                              <><Send className="w-4 h-4" /> إرسال الطلب</>
+                            )}
+                          </Button>
                         )}
-                      </Button>
-                    )}
-                  </div>
-                </CardContent>
-              </Card>
-            </motion.div>
-          </AnimatePresence>
+                      </div>
+                    </CardContent>
+                  </Card>
+                </motion.div>
+              </AnimatePresence>
+            </div>
+
+            {/* SIDE — guide card (sticky on desktop) */}
+            <aside className="hidden lg:block">
+              <div className="sticky top-6">
+                <CategoryGuideCard theme={theme} />
+              </div>
+            </aside>
+          </div>
         </div>
       </div>
     </ClientLayout>
