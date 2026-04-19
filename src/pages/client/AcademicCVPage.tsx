@@ -91,6 +91,16 @@ const AcademicCVPage: React.FC = () => {
   const tabLabels = T.tabs;
   const fillDemo = () => { updateData(() => (lang === 'ar' ? DEMO_CV_AR : DEMO_CV_EN)); toast.success(T.demoFilled); };
 
+  // ---- AI helper ----
+  const aiLabel = lang === 'ar' ? 'توليد بالذكاء' : 'AI Generate';
+  const aiImproveLabel = lang === 'ar' ? 'تحسين بالذكاء' : 'AI Improve';
+  const runAI = async (section: AISection, current?: string, ctx?: Record<string, any>) => {
+    const text = await aiAssist({ section, lang, context: ctx, current });
+    if (text) toast.success(lang === 'ar' ? 'تم التوليد ✨' : 'Generated ✨');
+    return text;
+  };
+
+
   // ---- Mutators ----
   const setPersonal = (k: keyof CVData['personal'], v: string) =>
     updateData(d => ({ ...d, personal: { ...d.personal, [k]: v } }));
