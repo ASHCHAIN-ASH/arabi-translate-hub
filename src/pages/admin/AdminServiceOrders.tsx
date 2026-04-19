@@ -23,6 +23,38 @@ import {
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { motion, AnimatePresence } from 'framer-motion';
+import { InteractiveTour, startTour, type TourStep } from '@/components/InteractiveTour';
+import { InfoCard, HelpHint } from '@/components/HelpHint';
+import { HelpCircle } from 'lucide-react';
+
+const ADMIN_ORDERS_TOUR_KEY = 'tour:admin-service-orders:v1';
+
+const ADMIN_TOUR_STEPS: TourStep[] = [
+  {
+    target: '[data-tour="admin-orders-header"]',
+    title: 'لوحة إدارة طلبات الخدمات',
+    content: 'مركز التحكم الكامل بطلبات العملاء — مربوط لحظياً، أي طلب جديد يظهر هنا فوراً مع إشعار.',
+    placement: 'bottom',
+  },
+  {
+    target: '[data-tour="admin-orders-stats"]',
+    title: 'مؤشرات الأداء (KPIs)',
+    content: 'نظرة فورية على إجمالي الطلبات، النشطة، المعلقة، المكتملة، وإجمالي الإيرادات. كل رقم تفاعلي ومحدّث لحظياً.',
+    placement: 'bottom',
+  },
+  {
+    target: '[data-tour="admin-orders-filters"]',
+    title: 'فلاتر متقدمة وبحث ذكي',
+    content: 'صفّ الطلبات حسب الحالة، الأولوية، أو رتّبها بالمبلغ والتاريخ. البحث يعمل عبر اسم العميل، الإيميل، ورقم التتبع.',
+    placement: 'bottom',
+  },
+  {
+    target: '[data-tour="admin-orders-table"]',
+    title: 'جدول الطلبات التفاعلي',
+    content: 'كل صف يعرض كل التفاصيل المهمة. اضغط على أي طلب لفتح لوحة التفاصيل الكاملة، إدارة المراحل، الفواتير، والمرفقات.',
+    placement: 'top',
+  },
+];
 
 interface CustomerInfo {
   id: string;
