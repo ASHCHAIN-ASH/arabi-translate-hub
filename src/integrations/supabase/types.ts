@@ -2940,6 +2940,48 @@ export type Database = {
           },
         ]
       }
+      support_kb_articles: {
+        Row: {
+          category: string
+          content: string
+          created_at: string
+          helpful_count: number
+          id: string
+          is_published: boolean
+          sort_order: number
+          tags: string[] | null
+          title: string
+          updated_at: string
+          views: number
+        }
+        Insert: {
+          category?: string
+          content: string
+          created_at?: string
+          helpful_count?: number
+          id?: string
+          is_published?: boolean
+          sort_order?: number
+          tags?: string[] | null
+          title: string
+          updated_at?: string
+          views?: number
+        }
+        Update: {
+          category?: string
+          content?: string
+          created_at?: string
+          helpful_count?: number
+          id?: string
+          is_published?: boolean
+          sort_order?: number
+          tags?: string[] | null
+          title?: string
+          updated_at?: string
+          views?: number
+        }
+        Relationships: []
+      }
       suppressed_emails: {
         Row: {
           created_at: string
@@ -3046,6 +3088,71 @@ export type Database = {
           },
         ]
       }
+      ticket_presence: {
+        Row: {
+          display_name: string | null
+          last_seen_at: string
+          ticket_id: string
+          user_id: string
+          user_type: string
+        }
+        Insert: {
+          display_name?: string | null
+          last_seen_at?: string
+          ticket_id: string
+          user_id: string
+          user_type: string
+        }
+        Update: {
+          display_name?: string | null
+          last_seen_at?: string
+          ticket_id?: string
+          user_id?: string
+          user_type?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ticket_presence_ticket_id_fkey"
+            columns: ["ticket_id"]
+            isOneToOne: false
+            referencedRelation: "tickets"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      ticket_quick_replies: {
+        Row: {
+          category: string | null
+          content: string
+          created_at: string
+          created_by: string | null
+          id: string
+          is_active: boolean
+          sort_order: number
+          title: string
+        }
+        Insert: {
+          category?: string | null
+          content: string
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          is_active?: boolean
+          sort_order?: number
+          title: string
+        }
+        Update: {
+          category?: string | null
+          content?: string
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          is_active?: boolean
+          sort_order?: number
+          title?: string
+        }
+        Relationships: []
+      }
       ticket_timeline: {
         Row: {
           action_label: string
@@ -3090,58 +3197,126 @@ export type Database = {
           },
         ]
       }
+      ticket_typing: {
+        Row: {
+          is_typing: boolean
+          ticket_id: string
+          updated_at: string
+          user_id: string
+          user_type: string
+        }
+        Insert: {
+          is_typing?: boolean
+          ticket_id: string
+          updated_at?: string
+          user_id: string
+          user_type: string
+        }
+        Update: {
+          is_typing?: boolean
+          ticket_id?: string
+          updated_at?: string
+          user_id?: string
+          user_type?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ticket_typing_ticket_id_fkey"
+            columns: ["ticket_id"]
+            isOneToOne: false
+            referencedRelation: "tickets"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       tickets: {
         Row: {
+          assigned_admin_id: string | null
           assigned_to: string | null
+          auto_created: boolean
           category: string | null
+          closed_at: string | null
           created_at: string
+          csat_comment: string | null
+          csat_rating: number | null
+          csat_submitted_at: string | null
           customer_id: string | null
           description: string | null
+          first_response_at: string | null
           id: string
           last_message_at: string | null
           priority: string | null
           related_invoice_id: string | null
           related_order_id: string | null
           resolved_at: string | null
+          sla_due_at: string | null
+          source: string
           status: string | null
           subject: string
+          tags: string[] | null
           ticket_number: string
+          unread_for_admin: number
+          unread_for_client: number
           updated_at: string
           user_id: string
         }
         Insert: {
+          assigned_admin_id?: string | null
           assigned_to?: string | null
+          auto_created?: boolean
           category?: string | null
+          closed_at?: string | null
           created_at?: string
+          csat_comment?: string | null
+          csat_rating?: number | null
+          csat_submitted_at?: string | null
           customer_id?: string | null
           description?: string | null
+          first_response_at?: string | null
           id?: string
           last_message_at?: string | null
           priority?: string | null
           related_invoice_id?: string | null
           related_order_id?: string | null
           resolved_at?: string | null
+          sla_due_at?: string | null
+          source?: string
           status?: string | null
           subject: string
+          tags?: string[] | null
           ticket_number?: string
+          unread_for_admin?: number
+          unread_for_client?: number
           updated_at?: string
           user_id: string
         }
         Update: {
+          assigned_admin_id?: string | null
           assigned_to?: string | null
+          auto_created?: boolean
           category?: string | null
+          closed_at?: string | null
           created_at?: string
+          csat_comment?: string | null
+          csat_rating?: number | null
+          csat_submitted_at?: string | null
           customer_id?: string | null
           description?: string | null
+          first_response_at?: string | null
           id?: string
           last_message_at?: string | null
           priority?: string | null
           related_invoice_id?: string | null
           related_order_id?: string | null
           resolved_at?: string | null
+          sla_due_at?: string | null
+          source?: string
           status?: string | null
           subject?: string
+          tags?: string[] | null
           ticket_number?: string
+          unread_for_admin?: number
+          unread_for_client?: number
           updated_at?: string
           user_id?: string
         }
@@ -3782,6 +3957,10 @@ export type Database = {
       }
       compute_level_for_points: { Args: { _points: number }; Returns: string }
       compute_order_countdown: { Args: { _order_id: string }; Returns: Json }
+      compute_ticket_sla: {
+        Args: { _created: string; _priority: string }
+        Returns: string
+      }
       create_group_order: {
         Args: {
           _deadline?: string
