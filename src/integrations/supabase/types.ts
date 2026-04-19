@@ -2201,33 +2201,56 @@ export type Database = {
       }
       service_categories: {
         Row: {
+          color: string | null
           created_at: string
           description: string | null
           icon: string | null
           id: string
+          is_active: boolean
           name: string
           name_ar: string | null
+          parent_id: string | null
+          slug: string | null
           sort_order: number | null
+          updated_at: string
         }
         Insert: {
+          color?: string | null
           created_at?: string
           description?: string | null
           icon?: string | null
           id?: string
+          is_active?: boolean
           name: string
           name_ar?: string | null
+          parent_id?: string | null
+          slug?: string | null
           sort_order?: number | null
+          updated_at?: string
         }
         Update: {
+          color?: string | null
           created_at?: string
           description?: string | null
           icon?: string | null
           id?: string
+          is_active?: boolean
           name?: string
           name_ar?: string | null
+          parent_id?: string | null
+          slug?: string | null
           sort_order?: number | null
+          updated_at?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "service_categories_parent_id_fkey"
+            columns: ["parent_id"]
+            isOneToOne: false
+            referencedRelation: "service_categories"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       service_order_admin_notes: {
         Row: {
@@ -2437,15 +2460,21 @@ export type Database = {
           category_id: string | null
           created_at: string
           description: string | null
+          description_ar: string | null
           group_max_members: number
           group_min_members: number
           group_seat_price: number | null
           id: string
+          image_url: string | null
           is_active: boolean | null
+          is_featured: boolean
           is_group_eligible: boolean
           name: string
           name_ar: string | null
           price: number | null
+          slug: string | null
+          sort_order: number
+          subcategory_id: string | null
           unit: string | null
           updated_at: string
         }
@@ -2453,15 +2482,21 @@ export type Database = {
           category_id?: string | null
           created_at?: string
           description?: string | null
+          description_ar?: string | null
           group_max_members?: number
           group_min_members?: number
           group_seat_price?: number | null
           id?: string
+          image_url?: string | null
           is_active?: boolean | null
+          is_featured?: boolean
           is_group_eligible?: boolean
           name: string
           name_ar?: string | null
           price?: number | null
+          slug?: string | null
+          sort_order?: number
+          subcategory_id?: string | null
           unit?: string | null
           updated_at?: string
         }
@@ -2469,15 +2504,21 @@ export type Database = {
           category_id?: string | null
           created_at?: string
           description?: string | null
+          description_ar?: string | null
           group_max_members?: number
           group_min_members?: number
           group_seat_price?: number | null
           id?: string
+          image_url?: string | null
           is_active?: boolean | null
+          is_featured?: boolean
           is_group_eligible?: boolean
           name?: string
           name_ar?: string | null
           price?: number | null
+          slug?: string | null
+          sort_order?: number
+          subcategory_id?: string | null
           unit?: string | null
           updated_at?: string
         }
@@ -2485,6 +2526,13 @@ export type Database = {
           {
             foreignKeyName: "services_category_id_fkey"
             columns: ["category_id"]
+            isOneToOne: false
+            referencedRelation: "service_categories"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "services_subcategory_id_fkey"
+            columns: ["subcategory_id"]
             isOneToOne: false
             referencedRelation: "service_categories"
             referencedColumns: ["id"]
