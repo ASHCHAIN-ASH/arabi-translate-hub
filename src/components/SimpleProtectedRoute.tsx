@@ -65,9 +65,11 @@ const SimpleProtectedRoute: React.FC<ProtectedRouteProps> = ({
       return <Navigate to="/dashboard" replace />;
     }
   } else if (effectiveRequired === 'client') {
-    // Only non-admin authenticated users. Admins get sent to their console so
-    // they don't accidentally operate inside the client UI with elevated rights.
-    if (userRole !== 'client') {
+    // Only non-admin authenticated users by default.
+    // EXCEPTION: admins are allowed to enter the order creation flow so they
+    // can test/preview the client experience without being kicked back to /adminmaster.
+    const isOrderFlow = location.pathname.startsWith('/orders/new');
+    if (userRole !== 'client' && !(userRole === 'admin' && isOrderFlow)) {
       return <Navigate to="/adminmaster" replace />;
     }
   }
