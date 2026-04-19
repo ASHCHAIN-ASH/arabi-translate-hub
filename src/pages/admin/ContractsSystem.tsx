@@ -30,7 +30,7 @@ import {
   sendContractToClient, createManualContract, ContractStatus,
   remindClientToSign, cancelContract, deleteContract,
 } from "@/utils/supabaseContractService";
-import { PARENT_COMPANY, SERVICE_TYPE_LABELS } from "@/utils/contractTemplates";
+import { PARENT_COMPANY, SERVICE_TYPE_LABELS, TEMPLATE_TYPE_LABELS, TEMPLATE_TYPE_DESCRIPTIONS, ContractTemplateType } from "@/utils/contractTemplates";
 
 const ContractsSystem = () => {
   const [contracts, setContracts] = useState<ContractRow[]>([]);

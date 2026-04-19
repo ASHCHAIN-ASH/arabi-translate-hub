@@ -298,7 +298,11 @@ const ClientContractApproval = () => {
           </div>
           <div className="flex items-center gap-2 shrink-0">
             <Badge className={STATUS_COLORS[contract.status]}>{STATUS_LABELS[contract.status]}</Badge>
-            <Button variant="outline" size="sm" onClick={() => window.print()}>
+            <Button variant="outline" size="sm" onClick={handleDownloadPdf} disabled={downloading}>
+              {downloading ? <Loader2 className="h-4 w-4 ml-2 animate-spin" /> : <Download className="h-4 w-4 ml-2" />}
+              تحميل العقد
+            </Button>
+            <Button variant="ghost" size="sm" onClick={() => window.print()}>
               <Printer className="h-4 w-4 ml-2" /> طباعة
             </Button>
           </div>
@@ -367,15 +371,33 @@ const ClientContractApproval = () => {
                       <Input id="signerName" value={signerName} onChange={(e) => setSignerName(e.target.value)} />
                     </div>
                     <div>
-                      <Label htmlFor="signerId">رقم الهوية/الإقامة (اختياري)</Label>
-                      <Input id="signerId" value={signerId} onChange={(e) => setSignerId(e.target.value)} placeholder="1xxxxxxxxx" />
+                      <Label htmlFor="signerId">رقم الهوية الوطنية / الإقامة *</Label>
+                      <Input
+                        id="signerId"
+                        value={signerId}
+                        onChange={(e) => setSignerId(e.target.value.replace(/\D/g, "").slice(0, 10))}
+                        placeholder="1xxxxxxxxx"
+                        inputMode="numeric"
+                        maxLength={10}
+                        className={signerId && !isValidSaudiId(signerId) ? "border-destructive" : ""}
+                      />
+                      {signerId && !isValidSaudiId(signerId) && (
+                        <p className="text-xs text-destructive mt-1">رقم الهوية يجب أن يكون 10 أرقام يبدأ بـ 1 أو 2</p>
+                      )}
                     </div>
                   </div>
 
                   <div>
-                    <Label htmlFor="sig">التوقيع الإلكتروني (اكتب اسمك الكامل) *</Label>
+                    <Label htmlFor="sig">التوقيع المكتوب (الاسم الكامل للتوثيق) *</Label>
                     <Input id="sig" value={signature} onChange={(e) => setSignature(e.target.value)} className="font-bold text-lg" placeholder="اكتب اسمك هنا للتوقيع" />
-                    <p className="text-xs text-muted-foreground mt-1">سيُسجَّل توقيعك مع وقت التوقيع وعنوان IP لأغراض التوثيق القانوني.</p>
+                  </div>
+
+                  <div>
+                    <Label>التوقيع المرسوم بخط اليد *</Label>
+                    <SignaturePad value={signatureImage || undefined} onChange={setSignatureImage} />
+                    <p className="text-xs text-muted-foreground mt-2">
+                      🔒 سيُسجَّل توقيعك مع وقت التوقيع، عنوان IP، رقم الهوية، وبصمة المتصفح وفق <strong>نظام التعاملات الإلكترونية السعودي</strong>.
+                    </p>
                   </div>
 
                   <div>
