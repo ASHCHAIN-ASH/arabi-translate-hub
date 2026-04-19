@@ -70,19 +70,37 @@ export const ContractSigningCard: React.FC<Props> = ({ contract, onSigned }) => 
     }
     setSigning(true);
     try {
+      // التحقق من تسجيل الدخول قبل المحاولة
+      const { data: u } = await supabase.auth.getUser();
+      if (!u.user) {
+        toast({ title: 'يجب تسجيل الدخول', description: 'سجّل دخولك ثم أعد المحاولة', variant: 'destructive' });
+        return;
+      }
       const { data, error } = await (supabase as any).rpc('sign_contract_with_otp', {
         _contract_id: contract.id,
-        _otp_code: otp,
-        _signature_text: signatureText,
-        _signer_name: signatureText,
+        _otp_code: otp.trim(),
+        _signature_text: signatureText.trim(),
+        _signer_name: signatureText.trim(),
         _ua: navigator.userAgent,
       });
       if (error) throw error;
+      if (!(data as any)?.ok) throw new Error((data as any)?.error || 'فشل التوقيع');
       toast({ title: '✅ تم التوقيع بنجاح', description: 'سيتم تجهيز فاتورتك خلال لحظات' });
       setOpen(false);
       onSigned?.();
     } catch (e: any) {
-      toast({ title: 'فشل التوقيع', description: e.message, variant: 'destructive' });
+      const msg = e?.message || 'فشل التوقيع';
+      let friendly = msg;
+      if (/منتهي|غير صحيح|invalid|expired/i.test(msg)) {
+        friendly = 'الرمز غير صحيح أو منتهي. اطلب رمزاً جديداً وأعد المحاولة.';
+      } else if (/مصرح|unauthorized/i.test(msg)) {
+        friendly = 'غير مصرح لك بتوقيع هذا العقد.';
+      } else if (/موقّع|already/i.test(msg)) {
+        friendly = 'هذا العقد موقّع مسبقاً.';
+      } else if (/تسجيل الدخول|login/i.test(msg)) {
+        friendly = 'يجب تسجيل الدخول أولاً.';
+      }
+      toast({ title: 'فشل التوقيع', description: friendly, variant: 'destructive' });
     } finally {
       setSigning(false);
     }
