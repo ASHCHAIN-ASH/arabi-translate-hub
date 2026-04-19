@@ -9,6 +9,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { CreditCard, Wallet, Upload, Loader2, CheckCircle2, ShieldCheck } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
+import { recordInvoicePayment } from '@/utils/invoicePaymentService';
 
 interface Invoice {
   id: string;
@@ -57,16 +58,12 @@ export const PaymentCard: React.FC<Props> = ({ invoice, userId, onPaid }) => {
     setLoading(true);
     try {
       await ensurePaymentOwner();
-      const { error } = await (supabase as any).from('invoice_payments').insert({
+      await recordInvoicePayment({
         invoice_id: invoice.id,
-        amount: remaining,
         payment_method: 'wallet',
         payment_date: new Date().toISOString().split('T')[0],
-        status: 'completed',
         notes: 'دفع من المحفظة',
-        created_by: userId,
       });
-      if (error) throw error;
       toast({ title: '✅ تم الدفع بنجاح', description: 'سيبدأ تنفيذ طلبك الآن' });
       onPaid?.();
     } catch (e: any) {
@@ -103,17 +100,13 @@ export const PaymentCard: React.FC<Props> = ({ invoice, userId, onPaid }) => {
     setLoading(true);
     try {
       await ensurePaymentOwner();
-      const { error } = await (supabase as any).from('invoice_payments').insert({
+      await recordInvoicePayment({
         invoice_id: invoice.id,
-        amount: remaining,
         payment_method: 'bank_transfer',
         payment_date: new Date().toISOString().split('T')[0],
-        status: 'pending',
         reference_number: reference,
         notes,
-        created_by: userId,
       });
-      if (error) throw error;
       toast({ title: '📨 تم استلام طلب الدفع', description: 'سيتم التحقق من التحويل قريباً' });
       setReference(''); setNotes('');
     } catch (e: any) {
