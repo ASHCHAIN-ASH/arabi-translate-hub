@@ -950,15 +950,20 @@ const ServiceDialog = ({
 };
 
 const CategoryDialog = ({
-  editing, form, setForm, onSave, onCancel,
+  editing, form, setForm, onSave, onCancel, allCategories,
 }: {
   editing: Category | null;
   form: any;
   setForm: React.Dispatch<React.SetStateAction<any>>;
   onSave: () => void;
   onCancel: () => void;
-}) => (
-  <DialogContent className="max-w-md" dir="rtl">
+  allCategories: Category[];
+}) => {
+  const possibleParents = allCategories.filter(
+    (c) => !c.parent_id && c.id !== editing?.id
+  );
+  return (
+  <DialogContent className="max-w-md max-h-[90vh] overflow-y-auto" dir="rtl">
     <DialogHeader>
       <DialogTitle className="flex items-center gap-2">
         <Layers className="h-5 w-5 text-primary" />
@@ -966,15 +971,17 @@ const CategoryDialog = ({
       </DialogTitle>
     </DialogHeader>
     <div className="space-y-4 py-2">
-      <div>
-        <Label>الاسم العربي *</Label>
-        <Input value={form.name_ar} onChange={(e) => setForm({ ...form, name_ar: e.target.value })}
-          placeholder="مثال: خدمات الترجمة" className="mt-1.5" />
-      </div>
-      <div>
-        <Label>الاسم الإنجليزي</Label>
-        <Input value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })}
-          placeholder="Translation Services" className="mt-1.5" />
+      <div className="grid grid-cols-2 gap-3">
+        <div>
+          <Label>الاسم العربي *</Label>
+          <Input value={form.name_ar} onChange={(e) => setForm({ ...form, name_ar: e.target.value })}
+            placeholder="خدمات الترجمة" className="mt-1.5" />
+        </div>
+        <div>
+          <Label>الاسم الإنجليزي</Label>
+          <Input value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })}
+            placeholder="Translation" className="mt-1.5" />
+        </div>
       </div>
       <div>
         <Label>الوصف</Label>
@@ -982,10 +989,38 @@ const CategoryDialog = ({
           rows={2} className="mt-1.5 resize-none" />
       </div>
       <div>
+        <Label>القسم الأب (اتركه فارغًا للقسم الرئيسي)</Label>
+        <Select value={form.parent_id || 'none'}
+          onValueChange={(v) => setForm({ ...form, parent_id: v === 'none' ? '' : v })}>
+          <SelectTrigger className="mt-1.5"><SelectValue placeholder="قسم رئيسي" /></SelectTrigger>
+          <SelectContent>
+            <SelectItem value="none">— قسم رئيسي —</SelectItem>
+            {possibleParents.map((c) => (
+              <SelectItem key={c.id} value={c.id}>{c.name_ar ?? c.name}</SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+      </div>
+      <div className="grid grid-cols-2 gap-3">
+        <div>
+          <Label>أيقونة (lucide)</Label>
+          <Input value={form.icon} onChange={(e) => setForm({ ...form, icon: e.target.value })}
+            placeholder="Languages" className="mt-1.5" />
+        </div>
+        <div>
+          <Label>اللون (HEX)</Label>
+          <Input value={form.color} onChange={(e) => setForm({ ...form, color: e.target.value })}
+            placeholder="#3b82f6" className="mt-1.5" />
+        </div>
+      </div>
+      <div>
         <Label>ترتيب العرض</Label>
         <Input type="number" min="0" value={form.sort_order}
           onChange={(e) => setForm({ ...form, sort_order: parseInt(e.target.value) || 0 })} className="mt-1.5" />
-        <p className="text-xs text-muted-foreground mt-1">الأرقام الأصغر تظهر أولاً</p>
+      </div>
+      <div className="flex items-center justify-between bg-muted/40 rounded-lg p-3">
+        <Label className="font-semibold">تفعيل القسم</Label>
+        <Switch checked={form.is_active} onCheckedChange={(c) => setForm({ ...form, is_active: c })} />
       </div>
     </div>
     <DialogFooter className="gap-2">
@@ -996,6 +1031,7 @@ const CategoryDialog = ({
       </Button>
     </DialogFooter>
   </DialogContent>
-);
+  );
+};
 
 export default AdminServices;
