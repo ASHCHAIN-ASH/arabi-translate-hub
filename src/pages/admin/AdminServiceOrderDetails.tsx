@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
+import { Switch } from '@/components/ui/switch';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Progress } from '@/components/ui/progress';
@@ -96,6 +97,8 @@ const AdminServiceOrderDetails = () => {
   const [showQuote, setShowQuote] = useState(false);
   const [quotePrice, setQuotePrice] = useState('');
   const [quoteNotes, setQuoteNotes] = useState('');
+  const [taxIncluded, setTaxIncluded] = useState(true); // هل المبلغ المُدخل شامل ضريبة القيمة المضافة 15%؟
+  const VAT_RATE = 0.15;
   const [sendingQuote, setSendingQuote] = useState(false);
 
   const [newMessage, setNewMessage] = useState('');
@@ -224,27 +227,37 @@ const AdminServiceOrderDetails = () => {
     }
     setSendingQuote(true);
     try {
-      const amt = parseFloat(quotePrice);
+      const entered = parseFloat(quotePrice);
+      // إذا كان المبلغ شاملاً للضريبة: نستخرج الصافي والضريبة من نفس المبلغ.
+      // إذا غير شامل: نضيف الضريبة فوقه ليصبح الإجمالي = صافي + ضريبة.
+      const net = taxIncluded ? +(entered / (1 + VAT_RATE)).toFixed(2) : entered;
+      const vat = taxIncluded ? +(entered - net).toFixed(2) : +(entered * VAT_RATE).toFixed(2);
+      const gross = taxIncluded ? entered : +(entered + vat).toFixed(2);
+
+      const taxNote = `الصافي: ${net.toLocaleString()} ر.س + ضريبة 15%: ${vat.toLocaleString()} ر.س = الإجمالي: ${gross.toLocaleString()} ر.س`;
+      const fullNote = quoteNotes ? `${quoteNotes} — ${taxNote}` : taxNote;
+
       await (supabase.from('service_orders') as any).update({
-        total_amount: amt, quote_status: 'pending', quote_notes: quoteNotes || null,
+        total_amount: gross, quote_status: 'pending', quote_notes: fullNote,
         quote_sent_at: new Date().toISOString(), updated_at: new Date().toISOString(),
       }).eq('id', order.id);
       await (supabase.from('service_order_timeline') as any).insert([{
-        order_id: order.id, status: 'price_quote', note: `عرض سعر: ${amt.toLocaleString()} ر.س${quoteNotes ? ` — ${quoteNotes}` : ''}`,
+        order_id: order.id, status: 'price_quote',
+        note: `عرض سعر: ${gross.toLocaleString()} ر.س (شامل ض.ق.م) — ${taxNote}${quoteNotes ? ` — ${quoteNotes}` : ''}`,
       }]);
       if (order.user_id) {
         await (supabase.from('user_notifications') as any).insert([{
           user_id: order.user_id, title: '💰 عرض سعر جديد',
-          message: `عرض سعر للطلب ${order.tracking_id}: ${amt.toLocaleString()} ر.س`,
+          message: `عرض سعر للطلب ${order.tracking_id}: ${gross.toLocaleString()} ر.س (شامل ض.ق.م)`,
           type: 'price_quote', link: `/orders/${order.id}`,
         }]);
       }
       sendOrderEmail({
         orderId: order.id, trackingId: order.tracking_id, eventType: 'quote',
-        amount: amt.toLocaleString(), note: quoteNotes || undefined,
+        amount: gross.toLocaleString(), note: fullNote,
         recipientEmail: clientEmail, clientName, serviceName: order.service_name,
       });
-      toast({ title: '✅ تم إرسال عرض السعر' });
+      toast({ title: '✅ تم إرسال عرض السعر', description: taxNote });
       setShowQuote(false);
       loadAll();
     } catch (e: any) {
@@ -492,6 +505,47 @@ const AdminServiceOrderDetails = () => {
                         <Input value={quoteNotes} onChange={(e) => setQuoteNotes(e.target.value)} className="mt-1" placeholder="تفاصيل العرض..." />
                       </div>
                     </div>
+
+                    {/* مفتاح: هل المبلغ شامل ضريبة القيمة المضافة؟ */}
+                    <div className="flex items-center justify-between gap-3 p-3 rounded-lg bg-background/60 border border-border">
+                      <div className="flex flex-col">
+                        <Label htmlFor="tax-included" className="text-xs font-semibold cursor-pointer">
+                          المبلغ المُدخل شامل ضريبة القيمة المضافة (15%)
+                        </Label>
+                        <span className="text-[11px] text-muted-foreground mt-0.5">
+                          {taxIncluded
+                            ? 'سيتم استخراج الضريبة من السعر الفعلي'
+                            : 'ستُضاف الضريبة فوق السعر المُدخل'}
+                        </span>
+                      </div>
+                      <Switch id="tax-included" checked={taxIncluded} onCheckedChange={setTaxIncluded} />
+                    </div>
+
+                    {/* ملخّص حي للضريبة والإجمالي */}
+                    {quotePrice && parseFloat(quotePrice) > 0 && (() => {
+                      const entered = parseFloat(quotePrice);
+                      const net = taxIncluded ? entered / (1 + VAT_RATE) : entered;
+                      const vat = taxIncluded ? entered - net : entered * VAT_RATE;
+                      const gross = taxIncluded ? entered : entered + vat;
+                      const fmt = (n: number) => n.toLocaleString('ar-SA', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+                      return (
+                        <div className="grid grid-cols-3 gap-2 text-center text-xs p-3 rounded-lg bg-primary/5 border border-primary/15">
+                          <div>
+                            <div className="text-muted-foreground">الصافي</div>
+                            <div className="font-bold text-foreground mt-0.5">{fmt(net)} ر.س</div>
+                          </div>
+                          <div>
+                            <div className="text-muted-foreground">الضريبة 15%</div>
+                            <div className="font-bold text-foreground mt-0.5">{fmt(vat)} ر.س</div>
+                          </div>
+                          <div>
+                            <div className="text-muted-foreground">الإجمالي</div>
+                            <div className="font-bold text-primary mt-0.5">{fmt(gross)} ر.س</div>
+                          </div>
+                        </div>
+                      );
+                    })()}
+
                     <Button size="sm" className="gap-2 w-full" onClick={sendQuote} disabled={sendingQuote || !quotePrice}>
                       {sendingQuote ? <RefreshCw className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />} إرسال للعميل (إيميل + إشعار)
                     </Button>
