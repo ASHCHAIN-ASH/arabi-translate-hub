@@ -390,6 +390,7 @@ const AcademicCVPage: React.FC = () => {
                       transition={{ duration: 0.2 }}
                     >
                       <TabsContent value="personal" className="space-y-3 mt-0">
+                        <SectionTips section="personal" lang={lang} />
                         <div className="grid sm:grid-cols-2 gap-3">
                           <Field label={T.fields.fullName} value={data.personal.fullName} onChange={v => setPersonal('fullName', v)} />
                           <Field label={T.fields.jobTitle} value={data.personal.jobTitle} onChange={v => setPersonal('jobTitle', v)} />
@@ -416,6 +417,7 @@ const AcademicCVPage: React.FC = () => {
                       </TabsContent>
 
                       <TabsContent value="education" className="space-y-3 mt-0">
+                        <SectionTips section="education" lang={lang} />
                         {data.education.map(e => (
                           <RowCard key={e.id} onDelete={() => delEdu(e.id)}>
                             <div className="grid sm:grid-cols-2 gap-2">
@@ -443,6 +445,7 @@ const AcademicCVPage: React.FC = () => {
                       </TabsContent>
 
                       <TabsContent value="experience" className="space-y-3 mt-0">
+                        <SectionTips section="experience" lang={lang} />
                         {data.experience.map(e => (
                           <RowCard key={e.id} onDelete={() => delExp(e.id)}>
                             <div className="grid sm:grid-cols-2 gap-2">
@@ -470,6 +473,7 @@ const AcademicCVPage: React.FC = () => {
                       </TabsContent>
 
                       <TabsContent value="projects" className="space-y-3 mt-0">
+                        <SectionTips section="projects" lang={lang} />
                         {data.projects.map(p => (
                           <RowCard key={p.id} onDelete={() => delProj(p.id)}>
                             <div className="grid sm:grid-cols-2 gap-2">
@@ -495,6 +499,7 @@ const AcademicCVPage: React.FC = () => {
                       </TabsContent>
 
                       <TabsContent value="skills" className="space-y-3 mt-0">
+                        <SectionTips section="skills" lang={lang} />
                         <div>
                           <div className="flex items-center justify-between mb-1">
                             <Label className="text-xs">{T.fields.techSkills}</Label>
@@ -528,6 +533,7 @@ const AcademicCVPage: React.FC = () => {
                       </TabsContent>
 
                       <TabsContent value="courses" className="space-y-3 mt-0">
+                        <SectionTips section="courses" lang={lang} />
                         {data.courses.map(c => (
                           <RowCard key={c.id} onDelete={() => delCourse(c.id)}>
                             <div className="grid sm:grid-cols-3 gap-2">
@@ -557,6 +563,7 @@ const AcademicCVPage: React.FC = () => {
                       </TabsContent>
 
                       <TabsContent value="activities" className="space-y-3 mt-0">
+                        <SectionTips section="activities" lang={lang} />
                         {data.activities.map(a => (
                           <RowCard key={a.id} onDelete={() => delAct(a.id)}>
                             <Field label={T.fields.activity} value={a.name} onChange={v => updAct(a.id, { name: v })} />
