@@ -8,9 +8,10 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, Di
 import { Checkbox } from '@/components/ui/checkbox';
 import { Badge } from '@/components/ui/badge';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { FileSignature, ShieldCheck, Loader2, MailCheck } from 'lucide-react';
+import { FileSignature, ShieldCheck, Loader2, MailCheck, Eye, Download } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
+import { ContractPdfDialog } from './ContractPdfDialog';
 
 interface Contract {
   id: string;
@@ -38,6 +39,7 @@ export const ContractSigningCard: React.FC<Props> = ({ contract, onSigned }) => 
   const [accepted, setAccepted] = useState(false);
   const [sending, setSending] = useState(false);
   const [signing, setSigning] = useState(false);
+  const [pdfOpen, setPdfOpen] = useState(false);
 
   const isSigned = contract.status === 'signed';
 
@@ -68,19 +70,37 @@ export const ContractSigningCard: React.FC<Props> = ({ contract, onSigned }) => 
     }
     setSigning(true);
     try {
+      // التحقق من تسجيل الدخول قبل المحاولة
+      const { data: u } = await supabase.auth.getUser();
+      if (!u.user) {
+        toast({ title: 'يجب تسجيل الدخول', description: 'سجّل دخولك ثم أعد المحاولة', variant: 'destructive' });
+        return;
+      }
       const { data, error } = await (supabase as any).rpc('sign_contract_with_otp', {
         _contract_id: contract.id,
-        _otp_code: otp,
-        _signature_text: signatureText,
-        _signer_name: signatureText,
+        _otp_code: otp.trim(),
+        _signature_text: signatureText.trim(),
+        _signer_name: signatureText.trim(),
         _ua: navigator.userAgent,
       });
       if (error) throw error;
+      if (!(data as any)?.ok) throw new Error((data as any)?.error || 'فشل التوقيع');
       toast({ title: '✅ تم التوقيع بنجاح', description: 'سيتم تجهيز فاتورتك خلال لحظات' });
       setOpen(false);
       onSigned?.();
     } catch (e: any) {
-      toast({ title: 'فشل التوقيع', description: e.message, variant: 'destructive' });
+      const msg = e?.message || 'فشل التوقيع';
+      let friendly = msg;
+      if (/منتهي|غير صحيح|invalid|expired/i.test(msg)) {
+        friendly = 'الرمز غير صحيح أو منتهي. اطلب رمزاً جديداً وأعد المحاولة.';
+      } else if (/مصرح|unauthorized/i.test(msg)) {
+        friendly = 'غير مصرح لك بتوقيع هذا العقد.';
+      } else if (/موقّع|already/i.test(msg)) {
+        friendly = 'هذا العقد موقّع مسبقاً.';
+      } else if (/تسجيل الدخول|login/i.test(msg)) {
+        friendly = 'يجب تسجيل الدخول أولاً.';
+      }
+      toast({ title: 'فشل التوقيع', description: friendly, variant: 'destructive' });
     } finally {
       setSigning(false);
     }
@@ -88,16 +108,29 @@ export const ContractSigningCard: React.FC<Props> = ({ contract, onSigned }) => 
 
   if (isSigned) {
     return (
-      <Card className="border-green-500/40 bg-green-500/5">
-        <CardContent className="p-4 flex items-center gap-3">
-          <ShieldCheck className="h-6 w-6 text-green-600" />
-          <div className="flex-1">
-            <p className="font-semibold">تم توقيع العقد</p>
-            <p className="text-sm text-muted-foreground">رقم العقد: {contract.contract_number}</p>
-          </div>
-          <Badge className="bg-green-600">موقّع</Badge>
-        </CardContent>
-      </Card>
+      <>
+        <Card className="border-emerald-500/40 bg-gradient-to-l from-emerald-500/10 to-transparent">
+          <CardContent className="p-4 flex items-center gap-3 flex-wrap">
+            <div className="h-11 w-11 rounded-2xl bg-gradient-to-br from-emerald-500 to-teal-600 flex items-center justify-center shadow-md shrink-0">
+              <ShieldCheck className="h-6 w-6 text-white" />
+            </div>
+            <div className="flex-1 min-w-[140px]">
+              <p className="font-bold">تم توقيع العقد</p>
+              <p className="text-xs text-muted-foreground">رقم: {contract.contract_number}</p>
+            </div>
+            <Badge className="bg-emerald-600 hover:bg-emerald-700">موقّع</Badge>
+            <Button size="sm" variant="outline" onClick={() => setPdfOpen(true)} className="gap-2">
+              <Eye className="h-4 w-4" /> عرض / تحميل PDF
+            </Button>
+          </CardContent>
+        </Card>
+        <ContractPdfDialog
+          contractId={contract.id}
+          contractNumber={contract.contract_number}
+          open={pdfOpen}
+          onOpenChange={setPdfOpen}
+        />
+      </>
     );
   }
 
