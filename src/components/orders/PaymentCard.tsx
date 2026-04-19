@@ -53,8 +53,10 @@ export const PaymentCard: React.FC<Props> = ({ invoice, userId, onPaid }) => {
         invoice_id: invoice.id,
         amount: remaining,
         payment_method: 'wallet',
+        payment_date: new Date().toISOString().split('T')[0],
         status: 'completed',
         notes: 'دفع من المحفظة',
+        created_by: userId,
       });
       if (error) throw error;
       toast({ title: '✅ تم الدفع بنجاح', description: 'سيبدأ تنفيذ طلبك الآن' });
