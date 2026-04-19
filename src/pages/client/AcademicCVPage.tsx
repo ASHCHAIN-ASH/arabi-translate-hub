@@ -51,6 +51,7 @@ const AcademicCVPage: React.FC = () => {
   const [tab, setTab] = useState<'personal' | 'education' | 'experience' | 'projects' | 'skills' | 'courses' | 'activities'>('personal');
   const [exporting, setExporting] = useState(false);
   const [paymentOpen, setPaymentOpen] = useState(false);
+  const [fullscreenOpen, setFullscreenOpen] = useState(false);
 
   const lang = cv?.language ?? 'ar';
   const data: CVData | null = cv?.data ?? null;
@@ -326,7 +327,7 @@ const AcademicCVPage: React.FC = () => {
                       whileHover={isLockedOther ? undefined : { y: -3, scale: 1.02 }}
                       whileTap={isLockedOther ? undefined : { scale: 0.98 }}
                       className={cn(
-                        'relative text-start rounded-xl border-2 p-2.5 transition-colors hover:shadow-lg bg-card',
+                        'relative text-start rounded-xl border-2 p-2.5 transition-colors hover:shadow-lg bg-card flex flex-col',
                         active ? 'border-primary shadow-lg ring-2 ring-primary/20' : 'border-border/60 hover:border-primary/40',
                         isLockedOther && 'opacity-40 cursor-not-allowed hover:shadow-none'
                       )}
@@ -344,6 +345,19 @@ const AcademicCVPage: React.FC = () => {
                       </div>
                       <div className="text-xs font-semibold leading-tight">{lang === 'ar' ? t.nameAr : t.nameEn}</div>
                       <div className="text-[10px] text-muted-foreground leading-tight mt-0.5 line-clamp-2">{lang === 'ar' ? t.descAr : t.descEn}</div>
+                      {t.badges.length > 0 && (
+                        <div className="flex flex-wrap gap-1 mt-1.5">
+                          {t.badges.slice(0, 2).map(b => (
+                            <span key={b} className={cn('text-[9px] px-1.5 py-0.5 rounded border font-medium', BADGE_META[b].cls)}>
+                              {lang === 'ar' ? BADGE_META[b].ar : BADGE_META[b].en}
+                            </span>
+                          ))}
+                        </div>
+                      )}
+                      <div className="mt-1.5 pt-1.5 border-t border-border/40 text-[9.5px] text-muted-foreground leading-tight">
+                        <span className="font-semibold text-foreground/70">{lang === 'ar' ? 'الأنسب: ' : 'Best for: '}</span>
+                        {lang === 'ar' ? t.bestForAr : t.bestForEn}
+                      </div>
                     </motion.button>
                   );
                 })}
