@@ -5,20 +5,17 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogFooter } from '@/components/ui/dialog';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { useAuth } from '@/components/SimpleAuthProvider';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 import {
-  Plus, MessageSquare, Search, Headphones, Sparkles, BookOpen,
-  ChevronLeft, FileText, Package, Loader2, Star, X,
+  Plus, MessageSquare, Search, Headphones, BookOpen,
+  ChevronLeft, Loader2,
 } from 'lucide-react';
 import {
   SupportService, type Ticket, type KbArticle,
-  CATEGORY_LABELS, STATUS_LABELS, PRIORITY_LABELS,
+  STATUS_LABELS, PRIORITY_LABELS,
   STATUS_COLOR, PRIORITY_COLOR,
 } from '@/utils/ticketsService';
 import { formatDistanceToNow } from 'date-fns';
@@ -27,18 +24,12 @@ import { ar } from 'date-fns/locale';
 export default function ClientTickets() {
   const { user } = useAuth();
   const navigate = useNavigate();
-  const [searchParams, setSearchParams] = useSearchParams();
+  const [searchParams] = useSearchParams();
   const [tickets, setTickets] = useState<Ticket[]>([]);
   const [kb, setKb] = useState<KbArticle[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
   const [tab, setTab] = useState('tickets');
-
-  const [isOpen, setIsOpen] = useState(false);
-  const [submitting, setSubmitting] = useState(false);
-  const [aiClassifying, setAiClassifying] = useState(false);
-  const [newTicket, setNewTicket] = useState({ title: '', description: '', category: 'general', priority: 'medium' });
-  const [linkedRef, setLinkedRef] = useState<{ type: 'invoice' | 'order'; id: string; number: string } | null>(null);
 
   const load = async () => {
     if (!user?.id) return;
@@ -69,75 +60,15 @@ export default function ClientTickets() {
     // eslint-disable-next-line
   }, [user?.id]);
 
-  // Auto-open dialog with prefill
+  // Redirect legacy ?new=1 links to dedicated new ticket page (preserve prefill params)
   useEffect(() => {
-    if (searchParams.get('new') !== '1') return;
-    const invoiceId = searchParams.get('invoice_id');
-    const invoiceNumber = searchParams.get('invoice_number') || '';
-    const orderId = searchParams.get('order_id');
-    const orderNumber = searchParams.get('order_number') || '';
-
-    if (invoiceId) {
-      setLinkedRef({ type: 'invoice', id: invoiceId, number: invoiceNumber });
-      setNewTicket(p => ({ ...p, category: 'billing',
-        title: `استفسار بخصوص الفاتورة ${invoiceNumber || `#${invoiceId.slice(0, 8)}`}`,
-        description: `تذكرة دعم متعلقة بالفاتورة رقم: ${invoiceNumber || invoiceId}\n\n` }));
-    } else if (orderId) {
-      setLinkedRef({ type: 'order', id: orderId, number: orderNumber });
-      setNewTicket(p => ({ ...p, category: 'general',
-        title: `استفسار بخصوص الطلب ${orderNumber || `#${orderId.slice(0, 8)}`}`,
-        description: `تذكرة دعم متعلقة بالطلب رقم: ${orderNumber || orderId}\n\n` }));
+    if (searchParams.get('new') === '1') {
+      const next = new URLSearchParams(searchParams);
+      next.delete('new');
+      navigate(`/support/tickets/new${next.toString() ? `?${next.toString()}` : ''}`, { replace: true });
     }
-    setIsOpen(true);
     // eslint-disable-next-line
   }, []);
-
-  const clearLinkedRef = () => {
-    setLinkedRef(null);
-    const next = new URLSearchParams(searchParams);
-    ['new', 'invoice_id', 'invoice_number', 'order_id', 'order_number'].forEach(k => next.delete(k));
-    setSearchParams(next, { replace: true });
-  };
-
-  const aiClassify = async () => {
-    if (!newTicket.title.trim()) return;
-    setAiClassifying(true);
-    try {
-      const data = await SupportService.ai('classify', { subject: newTicket.title, description: newTicket.description });
-      if (data?.category) setNewTicket(p => ({ ...p, category: data.category, priority: data.priority || p.priority }));
-      toast.success('تم التصنيف الذكي');
-    } catch { /* silent */ }
-    finally { setAiClassifying(false); }
-  };
-
-  const handleCreate = async () => {
-    if (!newTicket.title.trim() || !user?.id) return;
-    setSubmitting(true);
-    try {
-      const payload: any = {
-        user_id: user.id,
-        subject: newTicket.title,
-        description: newTicket.description,
-        category: newTicket.category,
-        priority: newTicket.priority,
-        status: 'open',
-        source: linkedRef ? `manual_${linkedRef.type}` : 'manual',
-      };
-      if (linkedRef?.type === 'invoice') payload.related_invoice_id = linkedRef.id;
-      if (linkedRef?.type === 'order') payload.related_order_id = linkedRef.id;
-
-      const created = await SupportService.create(payload);
-      toast.success('تم إنشاء التذكرة بنجاح');
-      setIsOpen(false);
-      setNewTicket({ title: '', description: '', category: 'general', priority: 'medium' });
-      clearLinkedRef();
-      navigate(`/support/tickets/${created.id}`);
-    } catch (err: any) {
-      toast.error('فشل الإنشاء', { description: err.message });
-    } finally {
-      setSubmitting(false);
-    }
-  };
 
   const filtered = useMemo(() => tickets.filter(t => {
     if (!search) return true;
@@ -168,57 +99,10 @@ export default function ClientTickets() {
             </h1>
             <p className="text-muted-foreground text-xs sm:text-sm mt-1">تواصل مع فريق الدعم — ردود سريعة، حضور لحظي، وتتبع كامل</p>
           </div>
-          <Dialog open={isOpen} onOpenChange={setIsOpen}>
-            <DialogTrigger asChild>
-              <Button size="sm" className="shrink-0 gap-1.5">
-                <Plus className="w-4 h-4" />
-                تذكرة جديدة
-              </Button>
-            </DialogTrigger>
-            <DialogContent className="max-w-[calc(100vw-2rem)] sm:max-w-lg max-h-[90vh] overflow-y-auto" dir="rtl">
-              <DialogHeader><DialogTitle>إنشاء تذكرة دعم</DialogTitle></DialogHeader>
-              <div className="space-y-4">
-                {linkedRef && (
-                  <div className="flex items-center justify-between gap-2 p-3 rounded-lg border border-primary/30 bg-primary/5">
-                    <div className="flex items-center gap-2 text-sm">
-                      {linkedRef.type === 'invoice' ? <FileText className="w-4 h-4 text-primary" /> : <Package className="w-4 h-4 text-primary" />}
-                      <span className="text-muted-foreground">مرتبط بـ {linkedRef.type === 'invoice' ? 'الفاتورة' : 'الطلب'}:</span>
-                      <span className="font-bold text-primary">{linkedRef.number || `#${linkedRef.id.slice(0, 8)}`}</span>
-                    </div>
-                    <Button size="sm" variant="ghost" onClick={clearLinkedRef} className="h-7 px-2 text-xs"><X className="w-3 h-3" /></Button>
-                  </div>
-                )}
-                <Input placeholder="عنوان التذكرة" value={newTicket.title}
-                  onChange={(e) => setNewTicket({ ...newTicket, title: e.target.value })} />
-                <Textarea placeholder="اشرح مشكلتك بالتفصيل..." value={newTicket.description}
-                  onChange={(e) => setNewTicket({ ...newTicket, description: e.target.value })} rows={5} />
-                <Button variant="outline" size="sm" className="w-full gap-2" onClick={aiClassify} disabled={aiClassifying || !newTicket.title.trim()}>
-                  {aiClassifying ? <Loader2 className="w-3 h-3 animate-spin" /> : <Sparkles className="w-3 h-3 text-violet-500" />}
-                  تصنيف تلقائي ذكي
-                </Button>
-                <div className="grid grid-cols-2 gap-3">
-                  <Select value={newTicket.category} onValueChange={(v) => setNewTicket({ ...newTicket, category: v })}>
-                    <SelectTrigger><SelectValue placeholder="التصنيف" /></SelectTrigger>
-                    <SelectContent>
-                      {Object.entries(CATEGORY_LABELS).map(([k, v]) => <SelectItem key={k} value={k}>{v}</SelectItem>)}
-                    </SelectContent>
-                  </Select>
-                  <Select value={newTicket.priority} onValueChange={(v) => setNewTicket({ ...newTicket, priority: v })}>
-                    <SelectTrigger><SelectValue placeholder="الأولوية" /></SelectTrigger>
-                    <SelectContent>
-                      {Object.entries(PRIORITY_LABELS).map(([k, v]) => <SelectItem key={k} value={k}>{v}</SelectItem>)}
-                    </SelectContent>
-                  </Select>
-                </div>
-              </div>
-              <DialogFooter>
-                <Button variant="outline" onClick={() => setIsOpen(false)}>إلغاء</Button>
-                <Button onClick={handleCreate} disabled={submitting || !newTicket.title.trim()}>
-                  {submitting ? <Loader2 className="w-4 h-4 animate-spin" /> : 'إنشاء'}
-                </Button>
-              </DialogFooter>
-            </DialogContent>
-          </Dialog>
+          <Button size="sm" className="shrink-0 gap-1.5" onClick={() => navigate('/support/tickets/new')}>
+            <Plus className="w-4 h-4" />
+            تذكرة جديدة
+          </Button>
         </div>
 
         {/* Stats */}
