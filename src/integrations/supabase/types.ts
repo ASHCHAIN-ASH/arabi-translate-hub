@@ -2349,6 +2349,7 @@ export type Database = {
           client_confirmed_at: string | null
           completed_at: string | null
           contract_pending_at: string | null
+          contract_signature_deadline: string | null
           contract_signed_at: string | null
           created_at: string
           current_status: string | null
@@ -2363,12 +2364,14 @@ export type Database = {
           notes: string | null
           paid_amount: number | null
           payment_completed_at: string | null
+          payment_deadline: string | null
           preferred_language: string | null
           priority: string | null
           progress_percentage: number
           quantity: number | null
           quantity_unit: string | null
           quote_notes: string | null
+          quote_response_deadline: string | null
           quote_sent_at: string | null
           quote_status: string | null
           service_id: string | null
@@ -2386,6 +2389,7 @@ export type Database = {
           client_confirmed_at?: string | null
           completed_at?: string | null
           contract_pending_at?: string | null
+          contract_signature_deadline?: string | null
           contract_signed_at?: string | null
           created_at?: string
           current_status?: string | null
@@ -2400,12 +2404,14 @@ export type Database = {
           notes?: string | null
           paid_amount?: number | null
           payment_completed_at?: string | null
+          payment_deadline?: string | null
           preferred_language?: string | null
           priority?: string | null
           progress_percentage?: number
           quantity?: number | null
           quantity_unit?: string | null
           quote_notes?: string | null
+          quote_response_deadline?: string | null
           quote_sent_at?: string | null
           quote_status?: string | null
           service_id?: string | null
@@ -2423,6 +2429,7 @@ export type Database = {
           client_confirmed_at?: string | null
           completed_at?: string | null
           contract_pending_at?: string | null
+          contract_signature_deadline?: string | null
           contract_signed_at?: string | null
           created_at?: string
           current_status?: string | null
@@ -2437,12 +2444,14 @@ export type Database = {
           notes?: string | null
           paid_amount?: number | null
           payment_completed_at?: string | null
+          payment_deadline?: string | null
           preferred_language?: string | null
           priority?: string | null
           progress_percentage?: number
           quantity?: number | null
           quantity_unit?: string | null
           quote_notes?: string | null
+          quote_response_deadline?: string | null
           quote_sent_at?: string | null
           quote_status?: string | null
           service_id?: string | null
@@ -3772,6 +3781,7 @@ export type Database = {
         Returns: Json
       }
       compute_level_for_points: { Args: { _points: number }; Returns: string }
+      compute_order_countdown: { Args: { _order_id: string }; Returns: Json }
       create_group_order: {
         Args: {
           _deadline?: string
@@ -3853,6 +3863,13 @@ export type Database = {
           _table_name: string
         }
         Returns: undefined
+      }
+      is_valid_lifecycle_transition: {
+        Args: {
+          _from: Database["public"]["Enums"]["order_lifecycle_status"]
+          _to: Database["public"]["Enums"]["order_lifecycle_status"]
+        }
+        Returns: boolean
       }
       join_group_order: { Args: { _invite_code: string }; Returns: string }
       lifecycle_progress: {
@@ -3941,6 +3958,14 @@ export type Database = {
           isOneToOne: false
           isSetofReturn: true
         }
+      }
+      transition_order_lifecycle: {
+        Args: {
+          _note?: string
+          _order_id: string
+          _to_status: Database["public"]["Enums"]["order_lifecycle_status"]
+        }
+        Returns: Json
       }
       use_smart_editor: {
         Args: { _input_length: number; _mode: string; _operation: string }
