@@ -1,12 +1,14 @@
-import React, { useMemo, useRef, useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { toast } from 'sonner';
 import {
-  ArrowRight, ArrowLeft, FileText, Languages, LayoutTemplate,
+  ArrowRight, FileText, Languages, LayoutTemplate,
   User, GraduationCap, Briefcase, Lightbulb, Wrench, Award, HeartHandshake,
-  Plus, Trash2, Eye, Download, Printer, Loader2, Crown, Sparkles, Check,
+  Plus, Trash2, Eye, Download, Printer, Loader2, Crown, Sparkles, Check, Wand2,
 } from 'lucide-react';
+import { TemplateThumbnail } from '@/features/academic-cv/TemplateThumbnail';
+import { DEMO_CV_AR, DEMO_CV_EN } from '@/features/academic-cv/demoData';
 import ClientLayout from '@/components/client/ClientLayout';
 import { useAuth } from '@/components/SimpleAuthProvider';
 import { useUserMembership } from '@/hooks/useMembership';
