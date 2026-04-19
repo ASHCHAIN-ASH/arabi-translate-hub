@@ -10,8 +10,8 @@ import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 import {
   ArrowRight, ArrowLeft, ShoppingCart, RefreshCw, Upload, X, File,
-  CheckCircle2, FileText, Send, Sparkles, ClipboardList, Paperclip, Eye,
-  Calculator, Image as ImageIcon,
+  CheckCircle2, Send, Sparkles, ClipboardList, Paperclip, Eye,
+  Image as ImageIcon, Clock, Hash,
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { toast } from 'sonner';
@@ -19,8 +19,12 @@ import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/components/SimpleAuthProvider';
 import { cn } from '@/lib/utils';
 import DynamicServiceFields from '@/components/client/DynamicServiceFields';
+import CategoryHero from '@/components/client/order-new/CategoryHero';
+import CategoryGuideCard from '@/components/client/order-new/CategoryGuideCard';
+import ExamplePrompts from '@/components/client/order-new/ExamplePrompts';
+import { getCategoryTheme } from '@/config/categoryThemes';
 import {
-  getFieldsConfig, getFieldLabel, getOptionLabel, URGENCY_MULTIPLIER, resolveServiceFields,
+  getFieldLabel, getOptionLabel, resolveServiceFields,
 } from '@/config/serviceFieldsConfig';
 
 interface ServiceItem {
