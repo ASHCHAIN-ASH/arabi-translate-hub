@@ -655,6 +655,7 @@ const AdminServices = () => {
                     setForm={setCategoryForm}
                     onSave={handleSaveCategory}
                     onCancel={() => setIsCategoryDialogOpen(false)}
+                    allCategories={categories}
                   />
                 </Dialog>
               </CardContent>
