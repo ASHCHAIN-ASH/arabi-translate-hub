@@ -33,6 +33,9 @@ interface ServiceItem {
   category_id: string | null;
   category_slug?: string | null;
   category_name?: string | null;
+  dynamic_fields?: any[];
+  quantity_unit_label?: string | null;
+  default_quantity?: number | null;
 }
 
 interface UploadedFile { file: File; id: string; preview?: string }
