@@ -628,6 +628,15 @@ const AcademicCVPage: React.FC = () => {
         </div>
       </div>
 
+      {/* Fullscreen preview */}
+      <FullscreenPreview
+        open={fullscreenOpen}
+        onClose={() => setFullscreenOpen(false)}
+        data={data}
+        lang={lang}
+        template={cv.template_key}
+      />
+
       {/* Payment dialog */}
       <Dialog open={paymentOpen} onOpenChange={setPaymentOpen}>
         <DialogContent dir={lang === 'ar' ? 'rtl' : 'ltr'}>
