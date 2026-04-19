@@ -14,8 +14,17 @@ export interface CVPersonal {
   summary: string;
 }
 
+export type EducationLevel =
+  | 'high_school'
+  | 'diploma'
+  | 'bachelor'
+  | 'master'
+  | 'phd'
+  | 'other';
+
 export interface CVEducation {
   id: string;
+  level?: EducationLevel;
   institution: string;
   degree: string;
   field: string;
