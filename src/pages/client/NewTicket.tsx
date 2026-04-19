@@ -331,7 +331,7 @@ export default function NewTicket() {
 
             <Button variant="outline" size="sm" className="w-full gap-2" onClick={aiClassify} disabled={aiClassifying || !form.title.trim()}>
               {aiClassifying ? <Loader2 className="w-3 h-3 animate-spin" /> : <Sparkles className="w-3 h-3 text-violet-500" />}
-              تصنيف تلقائي ذكي بالذكاء الاصطناعي
+              تصنيف تلقائي للتذكرة
             </Button>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
