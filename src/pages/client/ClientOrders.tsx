@@ -252,6 +252,7 @@ const ClientOrders = () => {
         <motion.div
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
+          data-tour="orders-hero"
           className="relative overflow-hidden rounded-2xl border border-border/50 bg-gradient-to-br from-card via-card to-primary/5 backdrop-blur-xl shadow-lg"
         >
           <div className="absolute top-0 right-0 w-64 h-64 bg-primary/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2" />
@@ -278,23 +279,49 @@ const ClientOrders = () => {
                 </div>
               </div>
             </div>
-            <Button
-              onClick={handleRefresh}
-              variant="outline"
-              size="lg"
-              className="gap-2 backdrop-blur-sm bg-background/50 border-border/60 hover:bg-primary/5 hover:border-primary/40 transition-all"
-              disabled={isRefreshing}
-            >
-              <RefreshCw className={cn('h-4 w-4', isRefreshing && 'animate-spin')} />
-              تحديث
-            </Button>
+            <div className="flex items-center gap-2">
+              <Button
+                onClick={() => startTour(CLIENT_ORDERS_TOUR_KEY)}
+                variant="ghost"
+                size="lg"
+                className="gap-2 text-primary hover:bg-primary/10"
+                title="ابدأ الجولة التعريفية"
+              >
+                <HelpCircle className="h-4 w-4" />
+                <span className="hidden sm:inline">جولة تعريفية</span>
+              </Button>
+              <Button
+                onClick={handleRefresh}
+                variant="outline"
+                size="lg"
+                data-tour="orders-refresh"
+                className="gap-2 backdrop-blur-sm bg-background/50 border-border/60 hover:bg-primary/5 hover:border-primary/40 transition-all"
+                disabled={isRefreshing}
+              >
+                <RefreshCw className={cn('h-4 w-4', isRefreshing && 'animate-spin')} />
+                تحديث
+              </Button>
+            </div>
           </div>
         </motion.div>
 
+        {/* Tip Card */}
+        <InfoCard
+          storageKey="client-orders-realtime"
+          title="التحديثات تصل لك مباشرة ⚡"
+          description="لا حاجة لتحديث الصفحة — أي تغيير في حالة طلبك أو إضافة مرحلة جديدة سيظهر هنا تلقائياً مع إشعار فوري."
+          variant="tip"
+        />
+
         {/* Stats Cards */}
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+        <div data-tour="orders-stats" className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
           {statCards.map((card, i) => {
             const Icon = card.icon;
+            const hint =
+              card.key === 'total' ? 'إجمالي الطلبات التي أنشأتها على المنصة.' :
+              card.key === 'active' ? 'طلباتك التي ما زالت بانتظار البدء أو في مرحلة المراجعة.' :
+              card.key === 'progress' ? 'الطلبات التي يعمل عليها فريقنا حالياً.' :
+              'الطلبات التي تم تسليمها وإغلاقها بنجاح.';
             return (
               <motion.div
                 key={card.key}
@@ -310,8 +337,9 @@ const ClientOrders = () => {
               >
                 <div className="flex items-start justify-between gap-3">
                   <div className="space-y-1">
-                    <p className="text-xs sm:text-sm text-muted-foreground font-medium">
+                    <p className="text-xs sm:text-sm text-muted-foreground font-medium flex items-center gap-1">
                       {card.label}
+                      <HelpHint text={hint} />
                     </p>
                     <p className={cn('text-2xl sm:text-3xl font-bold', card.accent)}>
                       {card.value}
