@@ -45,6 +45,22 @@ export const ContractSigningCard: React.FC<Props> = ({ contract, onSigned }) => 
   const [content, setContent] = useState<string>(contract.content || '');
   const [loadingContent, setLoadingContent] = useState(false);
 
+  const getIssueDateHijri = () => {
+    try {
+      return new Intl.DateTimeFormat('ar-SA-u-ca-islamic', {
+        day: 'numeric',
+        month: 'long',
+        year: 'numeric',
+      }).format(new Date());
+    } catch {
+      return new Intl.DateTimeFormat('ar-SA', {
+        day: 'numeric',
+        month: 'long',
+        year: 'numeric',
+      }).format(new Date());
+    }
+  };
+
   const isSigned = contract.status === 'signed';
   const isStubContent = !content || content.trim().length < 200;
 
@@ -206,9 +222,7 @@ export const ContractSigningCard: React.FC<Props> = ({ contract, onSigned }) => 
                       currency={contract.currency}
                       clientName={contract.client_full_name}
                       clientEmail={contract.client_email}
-                      issueDateHijri={new Intl.DateTimeFormat('ar-SA-u-ca-islamic', {
-                        day: 'numeric', month: 'long', year: 'numeric',
-                      }).format(new Date())}
+                      issueDateHijri={getIssueDateHijri()}
                     />
                   )}
                 </ScrollArea>
