@@ -25,10 +25,13 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { cn } from '@/lib/utils';
 
 import { useMyCV } from '@/features/academic-cv/useCv';
-import { CVRenderer, TEMPLATES_META } from '@/features/academic-cv/templates';
+import { CVRenderer, TEMPLATES_META, BADGE_META } from '@/features/academic-cv/templates';
 import type { CVData, CVEducation, CVExperience, CVProject, CVCourse, CVActivity, CVTemplate } from '@/features/academic-cv/types';
 import { exportNodeToPdf, printNode } from '@/features/academic-cv/exportPdf';
 import { aiAssist, type AISection } from '@/features/academic-cv/aiAssist';
+import { QualityMeter } from '@/features/academic-cv/QualityMeter';
+import { SectionTips } from '@/features/academic-cv/SectionTips';
+import { FullscreenPreview } from '@/features/academic-cv/FullscreenPreview';
 
 
 const uid = () => Math.random().toString(36).slice(2, 10);
