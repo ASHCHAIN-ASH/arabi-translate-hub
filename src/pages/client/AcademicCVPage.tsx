@@ -416,9 +416,36 @@ const AcademicCVPage: React.FC = () => {
                       </TabsContent>
 
                       <TabsContent value="skills" className="space-y-3 mt-0">
-                        <Field label={T.fields.techSkills} value={data.skills.technical.join(', ')} onChange={v => setSkills('technical', v)} placeholder="Python, SPSS, LaTeX" />
-                        <Field label={T.fields.softSkills} value={data.skills.soft.join(', ')} onChange={v => setSkills('soft', v)} placeholder={lang === 'ar' ? 'القيادة، التواصل، حل المشكلات' : 'Leadership, Communication, Problem-solving'} />
-                        <Field label={T.fields.langs} value={data.skills.languages.join(', ')} onChange={v => setSkills('languages', v)} placeholder={lang === 'ar' ? 'العربية (لغة أم)، الإنجليزية (متقدم)' : 'Arabic (Native), English (Advanced)'} />
+                        <div>
+                          <div className="flex items-center justify-between mb-1">
+                            <Label className="text-xs">{T.fields.techSkills}</Label>
+                            <AIBtn label={aiLabel} onClick={async () => {
+                              const t = await runAI('skills_tech', data.skills.technical.join(', '), { jobTitle: data.personal.jobTitle, education: data.education });
+                              if (t) setSkills('technical', t);
+                            }} />
+                          </div>
+                          <Input value={data.skills.technical.join(', ')} onChange={e => setSkills('technical', e.target.value)} placeholder="Python, SPSS, LaTeX" />
+                        </div>
+                        <div>
+                          <div className="flex items-center justify-between mb-1">
+                            <Label className="text-xs">{T.fields.softSkills}</Label>
+                            <AIBtn label={aiLabel} onClick={async () => {
+                              const t = await runAI('skills_soft', data.skills.soft.join(', '), { jobTitle: data.personal.jobTitle });
+                              if (t) setSkills('soft', t);
+                            }} />
+                          </div>
+                          <Input value={data.skills.soft.join(', ')} onChange={e => setSkills('soft', e.target.value)} placeholder={lang === 'ar' ? 'القيادة، التواصل، حل المشكلات' : 'Leadership, Communication, Problem-solving'} />
+                        </div>
+                        <div>
+                          <div className="flex items-center justify-between mb-1">
+                            <Label className="text-xs">{T.fields.langs}</Label>
+                            <AIBtn label={aiLabel} onClick={async () => {
+                              const t = await runAI('skills_langs', data.skills.languages.join(', '));
+                              if (t) setSkills('languages', t);
+                            }} />
+                          </div>
+                          <Input value={data.skills.languages.join(', ')} onChange={e => setSkills('languages', e.target.value)} placeholder={lang === 'ar' ? 'العربية (لغة أم)، الإنجليزية (متقدم)' : 'Arabic (Native), English (Advanced)'} />
+                        </div>
                       </TabsContent>
 
                       <TabsContent value="courses" className="space-y-3 mt-0">
