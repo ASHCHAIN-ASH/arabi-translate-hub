@@ -7,7 +7,8 @@ import Footer from '@/components/Footer';
 import WritingPanel from '@/components/workspace/WritingPanel';
 import SummarizerPanel from '@/components/workspace/SummarizerPanel';
 import StudyPanel from '@/components/workspace/StudyPanel';
-import NotesPanel, { loadNotes, saveNotes, Note } from '@/components/workspace/NotesPanel';
+import NotesPanel, { Note } from '@/components/workspace/NotesPanel';
+import { supabase } from '@/integrations/supabase/client';
 
 export default function Workspace() {
   const [tab, setTab] = useState('write');
@@ -18,12 +19,19 @@ export default function Workspace() {
   const [sumText, setSumText] = useState('');
   const [sumOutput, setSumOutput] = useState('');
   const [studyText, setStudyText] = useState('');
-  const [notes, setNotes] = useState<Note[]>(() => loadNotes());
+  const [notes, setNotes] = useState<Note[]>([]);
 
-  const saveToNotes = (content: string, title: string) => {
-    const n: Note = { id: crypto.randomUUID(), title, content, updatedAt: Date.now() };
-    const next = [n, ...notes];
-    setNotes(next); saveNotes(next);
+  const saveToNotes = async (content: string, title: string) => {
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) return;
+    const { data } = await supabase
+      .from('workspace_notes')
+      .insert({ user_id: user.id, title, content })
+      .select().single();
+    if (data) {
+      const n: Note = { id: data.id, title: data.title, content: data.content, updatedAt: Date.now() };
+      setNotes([n, ...notes]);
+    }
   };
 
   const sendToSummarizer = (content: string) => {
