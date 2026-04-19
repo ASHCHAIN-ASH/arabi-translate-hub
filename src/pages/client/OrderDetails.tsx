@@ -18,6 +18,7 @@ import ClientLayout from '@/components/client/ClientLayout';
 import OrderLifecycleTimeline, { LifecycleStatus } from '@/components/orders/OrderLifecycleTimeline';
 import { ContractSigningCard } from '@/components/orders/ContractSigningCard';
 import { PaymentCard } from '@/components/orders/PaymentCard';
+import OrderCountdown from '@/components/orders/OrderCountdown';
 
 interface ServiceOrder {
   id: string;
@@ -545,6 +546,9 @@ const OrderDetails = () => {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
           {/* Main Content */}
           <div className="lg:col-span-2 space-y-5">
+            {/* Live Countdown for current stage */}
+            {id && <OrderCountdown orderId={id} />}
+
             {/* Order Lifecycle Timeline (12 stages) */}
             <OrderLifecycleTimeline
               status={(order.lifecycle_status as LifecycleStatus) || 'received'}

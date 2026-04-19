@@ -61,7 +61,7 @@ export const OrderCountdown: React.FC<Props> = ({ orderId, className }) => {
   const cellClass = expired
     ? 'bg-destructive/10 text-destructive'
     : urgent
-    ? 'bg-amber-500/15 text-amber-700 dark:text-amber-400'
+    ? 'bg-warning/15 text-warning-foreground'
     : 'bg-primary/10 text-primary';
 
   return (
@@ -69,7 +69,7 @@ export const OrderCountdown: React.FC<Props> = ({ orderId, className }) => {
       className={cn(
         'overflow-hidden border-2 transition-all',
         expired && 'border-destructive/40 bg-destructive/5',
-        !expired && urgent && 'border-amber-500/40 bg-amber-500/5',
+        !expired && urgent && 'border-warning/40 bg-warning/5',
         !expired && !urgent && 'border-primary/30 bg-primary/5',
         className
       )}
@@ -81,7 +81,7 @@ export const OrderCountdown: React.FC<Props> = ({ orderId, className }) => {
               className={cn(
                 'h-10 w-10 rounded-full flex items-center justify-center shrink-0',
                 expired && 'bg-destructive/15 text-destructive',
-                !expired && urgent && 'bg-amber-500/20 text-amber-600 dark:text-amber-400',
+                !expired && urgent && 'bg-warning/20 text-warning-foreground',
                 !expired && !urgent && 'bg-primary/15 text-primary'
               )}
             >
