@@ -3957,6 +3957,10 @@ export type Database = {
       }
       compute_level_for_points: { Args: { _points: number }; Returns: string }
       compute_order_countdown: { Args: { _order_id: string }; Returns: Json }
+      compute_ticket_sla: {
+        Args: { _created: string; _priority: string }
+        Returns: string
+      }
       create_group_order: {
         Args: {
           _deadline?: string
