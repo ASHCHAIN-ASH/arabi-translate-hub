@@ -203,6 +203,7 @@ const AdminServices = () => {
     setServiceForm({
       name_ar: '', name: '', description: '', description_ar: '', category_id: '', subcategory_id: '',
       price: 0, unit: 'service', image_url: '', is_featured: false, is_active: true, sort_order: 0,
+      dynamic_fields: [], quantity_unit_label: '', default_quantity: 1,
     });
     setEditingService(null);
   };
@@ -222,6 +223,9 @@ const AdminServices = () => {
       is_featured: !!s.is_featured,
       is_active: !!s.is_active,
       sort_order: s.sort_order ?? 0,
+      dynamic_fields: Array.isArray((s as any).dynamic_fields) ? (s as any).dynamic_fields : [],
+      quantity_unit_label: (s as any).quantity_unit_label ?? '',
+      default_quantity: (s as any).default_quantity ?? 1,
     });
     setIsServiceDialogOpen(true);
   };
