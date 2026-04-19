@@ -40,7 +40,7 @@ const MinimalTemplate: React.FC<TemplateProps> = ({ data, lang }) => {
   );
 
   return (
-    <div style={{ padding: '48px 52px', color: ink, fontSize: '10.5px', lineHeight: 1.65 }}>
+    <div style={{ padding: '48px 52px', color: ink, fontSize: '10.5px', lineHeight: 1.65, flex: 1, display: 'flex', flexDirection: 'column', minHeight: '297mm' }}>
       {/* Header */}
       <header style={{ marginBottom: 28, paddingBottom: 22, borderBottom: `1px solid ${line}` }}>
         <div style={{ fontSize: '9px', fontWeight: 600, letterSpacing: '4px', color: muted, marginBottom: 8, textTransform: 'uppercase' }}>
@@ -192,7 +192,7 @@ const ModernTemplate: React.FC<TemplateProps> = ({ data, lang }) => {
   );
 
   return (
-    <div style={{ display: 'grid', gridTemplateColumns: lang === 'ar' ? '1fr 240px' : '240px 1fr', minHeight: '100%' }}>
+    <div style={{ display: 'grid', gridTemplateColumns: lang === 'ar' ? '1fr 240px' : '240px 1fr', flex: 1, minHeight: '297mm' }}>
       <aside style={{ background: sideBg, padding: '32px 22px', color: 'white', gridColumn: lang === 'ar' ? 2 : 1 }}>
         {/* Avatar */}
         <div style={{ textAlign: 'center', marginBottom: 20 }}>
@@ -361,7 +361,7 @@ const ElegantTemplate: React.FC<TemplateProps> = ({ data, lang }) => {
   );
 
   return (
-    <div style={{ padding: '44px 50px', color: '#1c1917', fontSize: '11px', lineHeight: 1.7, background: 'linear-gradient(180deg, #fffbeb 0%, #ffffff 120px)' }}>
+    <div style={{ padding: '44px 50px', color: '#1c1917', fontSize: '11px', lineHeight: 1.7, background: 'linear-gradient(180deg, #fffbeb 0%, #ffffff 120px)', flex: 1, display: 'flex', flexDirection: 'column', minHeight: '297mm' }}>
       {/* Ornamental Header */}
       <header style={{ textAlign: 'center', marginBottom: 28, paddingBottom: 22, position: 'relative' }}>
         <div style={{ fontSize: '10px', color: gold, letterSpacing: '6px', marginBottom: 8 }}>✦ ✦ ✦</div>
@@ -488,7 +488,7 @@ const CleanTemplate: React.FC<TemplateProps> = ({ data, lang }) => {
   );
 
   return (
-    <div style={{ padding: 0, color: '#0f172a', fontSize: '11px', lineHeight: 1.6 }}>
+    <div style={{ padding: 0, color: '#0f172a', fontSize: '11px', lineHeight: 1.6, flex: 1, display: 'flex', flexDirection: 'column', minHeight: '297mm' }}>
       {/* Strong colored header */}
       <header style={{ background: `linear-gradient(135deg, ${accent} 0%, ${accent2} 100%)`, color: 'white', padding: '32px 40px', position: 'relative', overflow: 'hidden' }}>
         <div style={{ position: 'absolute', top: -40, insetInlineEnd: -40, width: 180, height: 180, borderRadius: '50%', background: 'rgba(255,255,255,0.08)' }} />
@@ -506,7 +506,7 @@ const CleanTemplate: React.FC<TemplateProps> = ({ data, lang }) => {
         </div>
       </header>
 
-      <div style={{ padding: '26px 36px' }}>
+      <div style={{ padding: '26px 36px', flex: 1 }}>
         {personal.summary && (
           <Sec icon={Target} title={tr(lang, 'profile')}>
             <p style={{ margin: 0, color: '#334155', padding: 12, background: '#eff6ff', borderRadius: 6, borderInlineStart: `3px solid ${accent}` }}>{personal.summary}</p>
@@ -637,7 +637,7 @@ const CompactTemplate: React.FC<TemplateProps> = ({ data, lang }) => {
   );
 
   return (
-    <div style={{ padding: '26px 32px', color: '#0c4a6e', fontSize: '10px', lineHeight: 1.55 }}>
+    <div style={{ padding: '26px 32px', color: '#0c4a6e', fontSize: '10px', lineHeight: 1.55, flex: 1, display: 'flex', flexDirection: 'column', minHeight: '297mm' }}>
       {/* Compact two-row header */}
       <header style={{ marginBottom: 16, display: 'grid', gridTemplateColumns: '1fr auto', gap: 14, alignItems: 'flex-start', paddingBottom: 12, borderBottom: `2px solid ${accent}` }}>
         <div>
@@ -658,7 +658,7 @@ const CompactTemplate: React.FC<TemplateProps> = ({ data, lang }) => {
         </div>
       </header>
 
-      <div style={{ display: 'grid', gridTemplateColumns: '1.4fr 1fr', gap: 18 }}>
+      <div style={{ display: 'grid', gridTemplateColumns: '1.4fr 1fr', gap: 18, flex: 1 }}>
         <div>
           {experience.length > 0 && (
             <Sec icon={Briefcase} title={tr(lang, 'experience')}>
@@ -780,7 +780,7 @@ const CreativeTemplate: React.FC<TemplateProps> = ({ data, lang }) => {
   );
 
   return (
-    <div style={{ padding: 0, color: '#1e1b4b', fontSize: '11px', lineHeight: 1.6, background: 'white' }}>
+    <div style={{ padding: 0, color: '#1e1b4b', fontSize: '11px', lineHeight: 1.6, background: 'white', flex: 1, display: 'flex', flexDirection: 'column', minHeight: '297mm' }}>
       {/* Bold gradient header with avatar */}
       <header style={{ background: `linear-gradient(135deg, ${accent} 0%, ${accent2} 100%)`, color: 'white', padding: '32px 36px', position: 'relative', overflow: 'hidden' }}>
         {/* Decorative shapes */}
@@ -812,7 +812,7 @@ const CreativeTemplate: React.FC<TemplateProps> = ({ data, lang }) => {
         </div>
       </header>
 
-      <div style={{ display: 'grid', gridTemplateColumns: lang === 'ar' ? '1fr 220px' : '220px 1fr', gap: 0 }}>
+      <div style={{ display: 'grid', gridTemplateColumns: lang === 'ar' ? '1fr 220px' : '220px 1fr', gap: 0, flex: 1 }}>
         {/* Sidebar */}
         <aside style={{ padding: '24px 22px', background: 'linear-gradient(180deg, #faf5ff 0%, #fdf2f8 100%)', gridColumn: lang === 'ar' ? 2 : 1 }}>
           {personal.summary && (
