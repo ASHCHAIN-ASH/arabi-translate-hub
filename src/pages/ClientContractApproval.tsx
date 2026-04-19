@@ -121,25 +121,6 @@ const ClientContractApproval = () => {
       toast.error("يرجى إدخال رمز التحقق المكون من 6 أرقام");
       return;
     }
-    setOtpVerifying(true);
-    try {
-      const { data, error } = await supabase.functions.invoke("verify-contract-otp", {
-        body: { contract_id: contract.id, code: otpCode.trim() },
-      });
-      if (error) throw error;
-      if (!(data as any)?.verified) throw new Error((data as any)?.error || "رمز غير صحيح");
-      setOtpStep("verified");
-      toast.success("تم التحقق ✓ — جاري إتمام التوقيع");
-      await handleSign();
-    } catch (e: any) {
-      toast.error(e.message || "رمز التحقق غير صحيح");
-    } finally {
-      setOtpVerifying(false);
-    }
-  }
-
-  async function handleSign() {
-    if (!contract) return;
     if (!signerName.trim() || !signature.trim()) {
       toast.error("يرجى إدخال الاسم الكامل والتوقيع");
       return;
@@ -148,59 +129,81 @@ const ClientContractApproval = () => {
       toast.error("يرجى الموافقة على جميع الشروط");
       return;
     }
+
+    setOtpVerifying(true);
     setSubmitting(true);
+
     try {
+      // التحقق من تسجيل الدخول
       const { data: u } = await supabase.auth.getUser();
       if (!u.user) {
         toast.error("يجب تسجيل الدخول لتوقيع العقد");
         navigate("/login");
         return;
       }
-      const ip = await getClientIP();
-      await signContract({
-        contract_id: contract.id,
-        signer_user_id: u.user.id,
-        signer_name: signerName.trim(),
-        signer_email: contract.client_email || u.user.email || undefined,
-        signer_id_number: signerId.trim() || undefined,
-        signature_text: signature.trim(),
-        ip_address: ip,
-        user_agent: navigator.userAgent,
-        accepted_terms: accepted,
-        comments: comments.trim() || undefined,
+
+      // ✅ استدعاء ذرّي واحد: يتحقق من الرمز ويسجّل التوقيع في معاملة واحدة
+      // هذا يمنع المشكلة السابقة حيث كان الرمز يُعلَّم "مستخدماً" حتى عند فشل التوقيع
+      const { data, error } = await (supabase.rpc as any)("sign_contract_with_otp", {
+        _contract_id: contract.id,
+        _otp_code: otpCode.trim(),
+        _signature_text: signature.trim(),
+        _signer_name: signerName.trim(),
+        _ip: await getClientIP(),
+        _ua: navigator.userAgent,
       });
+
+      if (error) throw error;
+      if (!(data as any)?.ok) {
+        throw new Error((data as any)?.error || "فشل التوقيع");
+      }
+
+      setOtpStep("verified");
       toast.success("تم توقيع العقد بنجاح ✓");
 
-      // Generate signed PDF + email client (fire-and-forget; don't block UI)
+      // إنشاء PDF + إشعار العميل (في الخلفية)
       (async () => {
         try {
           const { data: pdfRes } = await supabase.functions.invoke('generate-contract-pdf', {
             body: { contract_id: contract.id },
           });
-          await supabase.functions.invoke('send-transactional-email', {
-            body: {
-              templateName: 'contract-signed',
-              recipientEmail: contract.client_email,
-              idempotencyKey: `contract-signed-${contract.id}`,
-              templateData: {
-                clientName: signerName.trim(),
-                contractNumber: contract.contract_number,
-                contractTitle: contract.title,
-                signedAt: new Date().toLocaleString('ar-SA'),
-                pdfUrl: (pdfRes as any)?.signed_url || undefined,
+          if (contract.client_email) {
+            await supabase.functions.invoke('send-transactional-email', {
+              body: {
+                templateName: 'contract-signed',
+                recipientEmail: contract.client_email,
+                idempotencyKey: `contract-signed-${contract.id}`,
+                templateData: {
+                  clientName: signerName.trim(),
+                  contractNumber: contract.contract_number,
+                  contractTitle: contract.title,
+                  signedAt: new Date().toLocaleString('ar-SA'),
+                  pdfUrl: (pdfRes as any)?.signed_url || undefined,
+                },
               },
-            },
-          });
-          toast.success('تم إرسال نسخة PDF إلى بريدك الإلكتروني');
+            });
+          }
         } catch (err) {
-          console.error('PDF/email post-sign error:', err);
+          console.error('post-sign PDF/email error:', err);
         }
       })();
 
       await load();
     } catch (e: any) {
-      toast.error(e.message || "تعذّر حفظ التوقيع");
+      const msg = e?.message || "رمز التحقق غير صحيح";
+      // رسائل أوضح حسب نوع الخطأ
+      if (/منتهي|غير صحيح|invalid|expired/i.test(msg)) {
+        toast.error("رمز التحقق غير صحيح أو منتهي الصلاحية. أعد طلب رمز جديد.");
+      } else if (/مصرح|unauthorized/i.test(msg)) {
+        toast.error("غير مصرح لك بتوقيع هذا العقد.");
+      } else if (/موقّع|already/i.test(msg)) {
+        toast.error("هذا العقد موقّع مسبقاً.");
+        await load();
+      } else {
+        toast.error(msg);
+      }
     } finally {
+      setOtpVerifying(false);
       setSubmitting(false);
     }
   }
