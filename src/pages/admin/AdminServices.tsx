@@ -23,7 +23,7 @@ import {
 import { useToast } from '@/hooks/use-toast';
 import {
   Plus, Search, Edit, Trash2, Eye, EyeOff, Package, Layers,
-  Tag, TrendingUp, CheckCircle2, XCircle, Wallet, FolderTree,
+  Tag, TrendingUp, CheckCircle2, XCircle, Wallet, FolderTree, Star, Upload, Image as ImageIcon,
 } from 'lucide-react';
 
 interface Service {
@@ -31,10 +31,16 @@ interface Service {
   name: string;
   name_ar: string | null;
   description: string | null;
+  description_ar: string | null;
   price: number | null;
   unit: string | null;
   category_id: string | null;
+  subcategory_id: string | null;
+  image_url: string | null;
+  slug: string | null;
+  is_featured: boolean;
   is_active: boolean | null;
+  sort_order: number;
   created_at: string;
   updated_at: string;
 }
@@ -45,6 +51,10 @@ interface Category {
   name_ar: string | null;
   description: string | null;
   icon: string | null;
+  color: string | null;
+  slug: string | null;
+  parent_id: string | null;
+  is_active: boolean;
   sort_order: number | null;
   created_at: string;
 }
@@ -77,11 +87,17 @@ const AdminServices = () => {
     name_ar: '',
     name: '',
     description: '',
+    description_ar: '',
     category_id: '',
+    subcategory_id: '',
     price: 0,
     unit: 'service',
+    image_url: '',
+    is_featured: false,
     is_active: true,
+    sort_order: 0,
   });
+  const [uploadingImage, setUploadingImage] = useState(false);
 
   // Category Dialog
   const [isCategoryDialogOpen, setIsCategoryDialogOpen] = useState(false);
@@ -91,7 +107,10 @@ const AdminServices = () => {
     name: '',
     description: '',
     icon: '',
+    color: '',
+    parent_id: '',
     sort_order: 0,
+    is_active: true,
   });
 
   // Delete confirmations
