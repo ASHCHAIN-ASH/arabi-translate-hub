@@ -322,7 +322,16 @@ const AcademicCVPage: React.FC = () => {
                           <Field label={T.fields.website} value={data.personal.website || ''} onChange={v => setPersonal('website', v)} />
                         </div>
                         <div>
-                          <Label className="text-xs mb-1.5 block">{T.fields.summary}</Label>
+                          <div className="flex items-center justify-between mb-1.5">
+                            <Label className="text-xs">{T.fields.summary}</Label>
+                            <AIBtn
+                              label={data.personal.summary ? aiImproveLabel : aiLabel}
+                              onClick={async () => {
+                                const t = await runAI('summary', data.personal.summary, { jobTitle: data.personal.jobTitle, education: data.education, experience: data.experience });
+                                if (t) setPersonal('summary', t);
+                              }}
+                            />
+                          </div>
                           <Textarea value={data.personal.summary} onChange={e => setPersonal('summary', e.target.value)} rows={4} placeholder={T.fields.summaryHint} />
                         </div>
                       </TabsContent>
