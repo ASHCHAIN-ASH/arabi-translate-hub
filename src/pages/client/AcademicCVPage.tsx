@@ -137,6 +137,7 @@ const AcademicCVPage: React.FC = () => {
     if (!previewRef.current) return;
     setExporting(true);
     try {
+      await recordExport();
       await exportNodeToPdf(previewRef.current, `${cv?.title || 'cv'}.pdf`);
       toast.success(lang === 'ar' ? 'تم تحميل الـ PDF' : 'PDF downloaded');
     } catch (e: any) {
@@ -144,21 +145,57 @@ const AcademicCVPage: React.FC = () => {
     } finally { setExporting(false); }
   };
 
-  const handlePrint = () => {
+  const handlePrint = async () => {
     if (needsPayment) { setPaymentOpen(true); return; }
     if (!previewRef.current) return;
-    printNode(previewRef.current, lang);
+    try {
+      await recordExport();
+      printNode(previewRef.current, lang);
+    } catch (e: any) {
+      toast.error(e?.message || 'Print failed');
+    }
   };
 
   const confirmPay = async () => {
     try {
-      const r = await purchaseExport();
-      toast.success(r.was_free ? (lang === 'ar' ? 'مجاناً ✨' : 'Free ✨') : (lang === 'ar' ? `تم الخصم: ${r.charged} ر.س` : `Charged: ${r.charged} SAR`));
+      const r = await purchaseCv(cv?.template_key);
+      if (r.already_purchased) {
+        toast.info(lang === 'ar' ? 'تم الشراء مسبقاً' : 'Already purchased');
+      } else {
+        toast.success(r.was_free
+          ? (lang === 'ar' ? 'مجاناً ✨' : 'Free ✨')
+          : (lang === 'ar' ? `تم الخصم: ${r.charged} ر.س — قالبك مقفول الآن` : `Charged: ${r.charged} SAR — template locked`));
+      }
       setPaymentOpen(false);
-      // Auto-trigger download
       setTimeout(() => handleDownload(), 200);
     } catch (e: any) {
       toast.error(e?.message || 'Payment failed');
+    }
+  };
+
+  // Guarded template selector — handles locked-CV edge cases
+  const handleSelectTemplate = async (key: CVTemplate) => {
+    if (!cv) return;
+    if (cv.status !== 'paid') {
+      try { await setTemplate(key); } catch (e: any) { toast.error(e?.message); }
+      return;
+    }
+    if (key === cv.locked_template_key) return;
+    if (!canSwapTemplate) {
+      toast.error(lang === 'ar'
+        ? 'القالب مقفول — انتهت نافذة التبديل المجاني (24 ساعة)'
+        : 'Template locked — free swap window (24h) has ended');
+      return;
+    }
+    const ok = window.confirm(lang === 'ar'
+      ? 'لديك تبديل مجاني واحد فقط خلال 24 ساعة من الدفع. هل تريد استخدامه الآن؟'
+      : 'You have only one free template swap within 24h of payment. Use it now?');
+    if (!ok) return;
+    try {
+      await setTemplate(key);
+      toast.success(lang === 'ar' ? 'تم تبديل القالب — لا تبديلات مجانية أخرى' : 'Template swapped — no more free swaps');
+    } catch (e: any) {
+      toast.error(e?.message || 'Swap failed');
     }
   };
 
