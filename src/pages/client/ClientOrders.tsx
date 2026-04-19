@@ -363,6 +363,7 @@ const ClientOrders = () => {
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3 }}
+          data-tour="orders-search"
           className="rounded-2xl border border-border/50 bg-card/80 backdrop-blur-md p-3 sm:p-4 shadow-sm"
         >
           <div className="flex flex-col lg:flex-row gap-3">
@@ -409,7 +410,7 @@ const ClientOrders = () => {
         </motion.div>
 
         {/* Orders */}
-        <div className="space-y-4">
+        <div data-tour="orders-list" className="space-y-4">
           <AnimatePresence mode="popLayout">
             {filteredOrders.length === 0 ? (
               <motion.div
@@ -468,6 +469,8 @@ const ClientOrders = () => {
           )}
         </AnimatePresence>
       </div>
+
+      <InteractiveTour steps={CLIENT_TOUR_STEPS} storageKey={CLIENT_ORDERS_TOUR_KEY} />
     </div>
   );
 };
