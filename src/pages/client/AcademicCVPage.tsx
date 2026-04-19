@@ -587,12 +587,19 @@ const AcademicCVPage: React.FC = () => {
               </CardContent>
             </Card>
 
-            {/* PREVIEW */}
-            <div className="lg:sticky lg:top-4 lg:self-start">
-              <div className="flex items-center gap-2 mb-2 text-sm text-muted-foreground">
-                <Eye className="w-4 h-4" /> {T.livePreview}
+            {/* PREVIEW + QUALITY */}
+            <div className="lg:sticky lg:top-4 lg:self-start space-y-3">
+              <QualityMeter data={data} lang={lang} />
+              <div className="flex items-center justify-between gap-2">
+                <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                  <Eye className="w-4 h-4" /> {T.livePreview}
+                </div>
+                <Button size="sm" variant="outline" onClick={() => setFullscreenOpen(true)} className="h-8 gap-1 text-xs">
+                  <Eye className="w-3.5 h-3.5" />
+                  {lang === 'ar' ? 'ملء الشاشة' : 'Fullscreen'}
+                </Button>
               </div>
-              <div className="rounded-xl border-2 border-border/60 bg-muted/30 p-2 sm:p-4 overflow-auto max-h-[80vh]">
+              <div className="rounded-xl border-2 border-border/60 bg-muted/30 p-2 sm:p-4 overflow-auto max-h-[75vh]">
                 <AnimatePresence mode="wait">
                   <motion.div
                     key={cv.template_key + lang}
