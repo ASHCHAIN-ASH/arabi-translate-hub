@@ -11,14 +11,33 @@ export async function exportNodeToPdf(node: HTMLElement, fileName: string): Prom
     try { await (document as any).fonts.ready; } catch { /* noop */ }
   }
 
-  const canvas = await html2canvas(node, {
-    scale: 2,
-    useCORS: true,
-    backgroundColor: '#ffffff',
-    logging: false,
-    windowWidth: node.scrollWidth,
-    windowHeight: node.scrollHeight,
-  });
+  // Neutralize any preview transform (scale, transform-origin) during capture
+  // so html2canvas measures the real, unscaled layout.
+  const prevTransform = node.style.transform;
+  const prevOrigin = node.style.transformOrigin;
+  node.style.transform = 'none';
+  node.style.transformOrigin = 'top left';
+  await new Promise(r => requestAnimationFrame(() => requestAnimationFrame(() => r(null))));
+
+  let canvas: HTMLCanvasElement;
+  try {
+    const rect = node.getBoundingClientRect();
+    const width = Math.max(node.scrollWidth, Math.ceil(rect.width));
+    const height = Math.max(node.scrollHeight, Math.ceil(rect.height));
+    canvas = await html2canvas(node, {
+      scale: 2,
+      useCORS: true,
+      backgroundColor: '#ffffff',
+      logging: false,
+      width,
+      height,
+      windowWidth: width,
+      windowHeight: height,
+    });
+  } finally {
+    node.style.transform = prevTransform;
+    node.style.transformOrigin = prevOrigin;
+  }
 
   const pdf = new jsPDF({ unit: 'mm', format: 'a4', orientation: 'portrait' });
   const pageW = pdf.internal.pageSize.getWidth();
