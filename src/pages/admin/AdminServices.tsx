@@ -96,6 +96,9 @@ const AdminServices = () => {
     is_featured: false,
     is_active: true,
     sort_order: 0,
+    dynamic_fields: [] as any[],
+    quantity_unit_label: '',
+    default_quantity: 1,
   });
   const [uploadingImage, setUploadingImage] = useState(false);
 
