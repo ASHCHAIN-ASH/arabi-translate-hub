@@ -96,6 +96,8 @@ const AdminServiceOrderDetails = () => {
   const [showQuote, setShowQuote] = useState(false);
   const [quotePrice, setQuotePrice] = useState('');
   const [quoteNotes, setQuoteNotes] = useState('');
+  const [taxIncluded, setTaxIncluded] = useState(true); // هل المبلغ المُدخل شامل ضريبة القيمة المضافة 15%؟
+  const VAT_RATE = 0.15;
   const [sendingQuote, setSendingQuote] = useState(false);
 
   const [newMessage, setNewMessage] = useState('');
