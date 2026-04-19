@@ -15,6 +15,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import { ContractPdfDialog } from './ContractPdfDialog';
 import { generateContractContent } from '@/utils/supabaseContractService';
+import { ContractDocumentView } from './ContractDocumentView';
 
 interface Contract {
   id: string;
