@@ -43,8 +43,22 @@ export const ContractSigningCard: React.FC<Props> = ({ contract, onSigned }) => 
   const [sending, setSending] = useState(false);
   const [signing, setSigning] = useState(false);
   const [pdfOpen, setPdfOpen] = useState(false);
+  const [content, setContent] = useState<string>(contract.content || '');
+  const [loadingContent, setLoadingContent] = useState(false);
 
   const isSigned = contract.status === 'signed';
+  const isStubContent = !content || content.trim().length < 200;
+
+  useEffect(() => {
+    if (open && isStubContent && !loadingContent) {
+      setLoadingContent(true);
+      generateContractContent(contract.id)
+        .then((full) => setContent(full))
+        .catch(() => {})
+        .finally(() => setLoadingContent(false));
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [open]);
 
   const sendOtp = async () => {
     if (!accepted) {
