@@ -2355,14 +2355,19 @@ export type Database = {
           customer_id: string | null
           deadline: string | null
           delivered_at: string | null
+          estimated_amount: number | null
           execution_started_at: string | null
           id: string
           lifecycle_status: Database["public"]["Enums"]["order_lifecycle_status"]
+          metadata: Json
           notes: string | null
           paid_amount: number | null
           payment_completed_at: string | null
+          preferred_language: string | null
           priority: string | null
           progress_percentage: number
+          quantity: number | null
+          quantity_unit: string | null
           quote_notes: string | null
           quote_sent_at: string | null
           quote_status: string | null
@@ -2387,14 +2392,19 @@ export type Database = {
           customer_id?: string | null
           deadline?: string | null
           delivered_at?: string | null
+          estimated_amount?: number | null
           execution_started_at?: string | null
           id?: string
           lifecycle_status?: Database["public"]["Enums"]["order_lifecycle_status"]
+          metadata?: Json
           notes?: string | null
           paid_amount?: number | null
           payment_completed_at?: string | null
+          preferred_language?: string | null
           priority?: string | null
           progress_percentage?: number
+          quantity?: number | null
+          quantity_unit?: string | null
           quote_notes?: string | null
           quote_sent_at?: string | null
           quote_status?: string | null
@@ -2419,14 +2429,19 @@ export type Database = {
           customer_id?: string | null
           deadline?: string | null
           delivered_at?: string | null
+          estimated_amount?: number | null
           execution_started_at?: string | null
           id?: string
           lifecycle_status?: Database["public"]["Enums"]["order_lifecycle_status"]
+          metadata?: Json
           notes?: string | null
           paid_amount?: number | null
           payment_completed_at?: string | null
+          preferred_language?: string | null
           priority?: string | null
           progress_percentage?: number
+          quantity?: number | null
+          quantity_unit?: string | null
           quote_notes?: string | null
           quote_sent_at?: string | null
           quote_status?: string | null
