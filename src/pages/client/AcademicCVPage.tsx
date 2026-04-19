@@ -93,7 +93,7 @@ const AcademicCVPage: React.FC = () => {
   const setPersonal = (k: keyof CVData['personal'], v: string) =>
     updateData(d => ({ ...d, personal: { ...d.personal, [k]: v } }));
 
-  const addEdu = () => updateData(d => ({ ...d, education: [...d.education, { id: uid(), institution: '', degree: '', field: '', gpa: '', startDate: '', endDate: '', description: '' }] }));
+  const addEdu = () => updateData(d => ({ ...d, education: [...d.education, { id: uid(), level: 'bachelor', institution: '', degree: '', field: '', gpa: '', startDate: '', endDate: '', description: '' }] }));
   const updEdu = (id: string, patch: Partial<CVEducation>) => updateData(d => ({ ...d, education: d.education.map(e => e.id === id ? { ...e, ...patch } : e) }));
   const delEdu = (id: string) => updateData(d => ({ ...d, education: d.education.filter(e => e.id !== id) }));
 
