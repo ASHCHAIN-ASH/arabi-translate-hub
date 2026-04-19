@@ -504,6 +504,47 @@ const AdminServiceOrderDetails = () => {
                         <Input value={quoteNotes} onChange={(e) => setQuoteNotes(e.target.value)} className="mt-1" placeholder="تفاصيل العرض..." />
                       </div>
                     </div>
+
+                    {/* مفتاح: هل المبلغ شامل ضريبة القيمة المضافة؟ */}
+                    <div className="flex items-center justify-between gap-3 p-3 rounded-lg bg-background/60 border border-border">
+                      <div className="flex flex-col">
+                        <Label htmlFor="tax-included" className="text-xs font-semibold cursor-pointer">
+                          المبلغ المُدخل شامل ضريبة القيمة المضافة (15%)
+                        </Label>
+                        <span className="text-[11px] text-muted-foreground mt-0.5">
+                          {taxIncluded
+                            ? 'سيتم استخراج الضريبة من السعر الفعلي'
+                            : 'ستُضاف الضريبة فوق السعر المُدخل'}
+                        </span>
+                      </div>
+                      <Switch id="tax-included" checked={taxIncluded} onCheckedChange={setTaxIncluded} />
+                    </div>
+
+                    {/* ملخّص حي للضريبة والإجمالي */}
+                    {quotePrice && parseFloat(quotePrice) > 0 && (() => {
+                      const entered = parseFloat(quotePrice);
+                      const net = taxIncluded ? entered / (1 + VAT_RATE) : entered;
+                      const vat = taxIncluded ? entered - net : entered * VAT_RATE;
+                      const gross = taxIncluded ? entered : entered + vat;
+                      const fmt = (n: number) => n.toLocaleString('ar-SA', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+                      return (
+                        <div className="grid grid-cols-3 gap-2 text-center text-xs p-3 rounded-lg bg-primary/5 border border-primary/15">
+                          <div>
+                            <div className="text-muted-foreground">الصافي</div>
+                            <div className="font-bold text-foreground mt-0.5">{fmt(net)} ر.س</div>
+                          </div>
+                          <div>
+                            <div className="text-muted-foreground">الضريبة 15%</div>
+                            <div className="font-bold text-foreground mt-0.5">{fmt(vat)} ر.س</div>
+                          </div>
+                          <div>
+                            <div className="text-muted-foreground">الإجمالي</div>
+                            <div className="font-bold text-primary mt-0.5">{fmt(gross)} ر.س</div>
+                          </div>
+                        </div>
+                      );
+                    })()}
+
                     <Button size="sm" className="gap-2 w-full" onClick={sendQuote} disabled={sendingQuote || !quotePrice}>
                       {sendingQuote ? <RefreshCw className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />} إرسال للعميل (إيميل + إشعار)
                     </Button>
