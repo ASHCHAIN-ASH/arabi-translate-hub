@@ -949,6 +949,35 @@ const ServiceDialog = ({
           <Switch checked={form.is_active} onCheckedChange={(c) => setForm({ ...form, is_active: c })} />
         </div>
       </div>
+
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2 border-t">
+        <div>
+          <Label>وحدة الكمية في فورم الطلب</Label>
+          <Input
+            value={form.quantity_unit_label ?? ''}
+            onChange={(e) => setForm({ ...form, quantity_unit_label: e.target.value })}
+            placeholder="مثال: صفحة / جلسة / تصميم"
+            className="mt-1.5"
+          />
+          <p className="text-xs text-muted-foreground mt-1">يظهر بجانب حقل الكمية للعميل. اتركه فارغاً لاستخدام الافتراضي.</p>
+        </div>
+        <div>
+          <Label>الكمية الافتراضية</Label>
+          <Input
+            type="number" min="1"
+            value={form.default_quantity ?? 1}
+            onChange={(e) => setForm({ ...form, default_quantity: parseInt(e.target.value) || 1 })}
+            className="mt-1.5"
+          />
+        </div>
+      </div>
+
+      <div className="pt-2 border-t">
+        <DynamicFieldsEditor
+          fields={form.dynamic_fields ?? []}
+          onChange={(fields) => setForm({ ...form, dynamic_fields: fields })}
+        />
+      </div>
     </div>
     <DialogFooter className="gap-2">
       <Button variant="outline" onClick={onCancel}>إلغاء</Button>
