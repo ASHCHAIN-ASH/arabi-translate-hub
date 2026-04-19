@@ -502,6 +502,8 @@ const AdminServices = () => {
                       categories={categories}
                       onSave={handleSaveService}
                       onCancel={() => setIsServiceDialogOpen(false)}
+                      onImageUpload={handleImageUpload}
+                      uploadingImage={uploadingImage}
                     />
                   </Dialog>
                 </div>
@@ -784,7 +786,7 @@ const StatCard = ({
 };
 
 const ServiceDialog = ({
-  editing, form, setForm, categories, onSave, onCancel,
+  editing, form, setForm, categories, onSave, onCancel, onImageUpload, uploadingImage,
 }: {
   editing: Service | null;
   form: any;
@@ -792,8 +794,13 @@ const ServiceDialog = ({
   categories: Category[];
   onSave: () => void;
   onCancel: () => void;
-}) => (
-  <DialogContent className="max-w-xl max-h-[90vh] overflow-y-auto" dir="rtl">
+  onImageUpload: (file: File) => Promise<void>;
+  uploadingImage: boolean;
+}) => {
+  const parentCategories = categories.filter((c) => !c.parent_id);
+  const subCategories = categories.filter((c) => c.parent_id === form.category_id);
+  return (
+  <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto" dir="rtl">
     <DialogHeader>
       <DialogTitle className="flex items-center gap-2">
         <Package className="h-5 w-5 text-primary" />
@@ -816,11 +823,46 @@ const ServiceDialog = ({
             placeholder="Certified Translation" className="mt-1.5" />
         </div>
       </div>
+
       <div>
-        <Label>الوصف</Label>
-        <Textarea value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })}
-          placeholder="وصف مختصر يساعد العميل على فهم الخدمة..." rows={3} className="mt-1.5 resize-none" />
+        <Label>الوصف بالعربية</Label>
+        <Textarea value={form.description_ar} onChange={(e) => setForm({ ...form, description_ar: e.target.value })}
+          placeholder="وصف يساعد العميل على فهم الخدمة..." rows={2} className="mt-1.5 resize-none" />
       </div>
+      <div>
+        <Label>الوصف بالإنجليزية</Label>
+        <Textarea value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })}
+          placeholder="English description..." rows={2} className="mt-1.5 resize-none" />
+      </div>
+
+      {/* Image upload */}
+      <div>
+        <Label className="flex items-center gap-2"><ImageIcon className="h-4 w-4" /> صورة الخدمة</Label>
+        <div className="mt-1.5 flex items-center gap-3">
+          {form.image_url ? (
+            <img src={form.image_url} alt="" className="h-16 w-16 rounded-lg object-cover border" />
+          ) : (
+            <div className="h-16 w-16 rounded-lg border-2 border-dashed flex items-center justify-center bg-muted/30">
+              <ImageIcon className="h-6 w-6 text-muted-foreground/50" />
+            </div>
+          )}
+          <div className="flex-1 flex gap-2">
+            <Input
+              type="file" accept="image/*"
+              onChange={(e) => { const f = e.target.files?.[0]; if (f) onImageUpload(f); }}
+              disabled={uploadingImage}
+              className="text-xs"
+            />
+            {form.image_url && (
+              <Button type="button" variant="ghost" size="sm" onClick={() => setForm({ ...form, image_url: '' })}>
+                <Trash2 className="h-4 w-4" />
+              </Button>
+            )}
+          </div>
+        </div>
+        {uploadingImage && <p className="text-xs text-muted-foreground mt-1">جارٍ الرفع...</p>}
+      </div>
+
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
         <div>
           <Label>السعر (ر.س) *</Label>
@@ -839,27 +881,61 @@ const ServiceDialog = ({
           </Select>
         </div>
         <div>
-          <Label>القسم</Label>
+          <Label>ترتيب العرض</Label>
+          <Input type="number" min="0" value={form.sort_order}
+            onChange={(e) => setForm({ ...form, sort_order: parseInt(e.target.value) || 0 })} className="mt-1.5" />
+        </div>
+      </div>
+
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+        <div>
+          <Label>القسم الرئيسي</Label>
           <Select value={form.category_id || 'none'}
-            onValueChange={(v) => setForm({ ...form, category_id: v === 'none' ? '' : v })}>
+            onValueChange={(v) => setForm({ ...form, category_id: v === 'none' ? '' : v, subcategory_id: '' })}>
             <SelectTrigger className="mt-1.5"><SelectValue placeholder="بدون قسم" /></SelectTrigger>
             <SelectContent>
               <SelectItem value="none">بدون قسم</SelectItem>
-              {categories.map((c) => (
+              {parentCategories.map((c) => (
+                <SelectItem key={c.id} value={c.id}>{c.name_ar ?? c.name}</SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+        <div>
+          <Label>القسم الفرعي (اختياري)</Label>
+          <Select value={form.subcategory_id || 'none'}
+            onValueChange={(v) => setForm({ ...form, subcategory_id: v === 'none' ? '' : v })}
+            disabled={!form.category_id || subCategories.length === 0}>
+            <SelectTrigger className="mt-1.5">
+              <SelectValue placeholder={subCategories.length === 0 ? 'لا توجد أقسام فرعية' : 'بدون'} />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="none">بدون</SelectItem>
+              {subCategories.map((c) => (
                 <SelectItem key={c.id} value={c.id}>{c.name_ar ?? c.name}</SelectItem>
               ))}
             </SelectContent>
           </Select>
         </div>
       </div>
-      <div className="flex items-center justify-between bg-muted/40 rounded-lg p-3">
-        <div>
-          <Label className="font-semibold">حالة الخدمة</Label>
-          <p className="text-xs text-muted-foreground mt-0.5">
-            {form.is_active ? 'الخدمة ظاهرة وقابلة للطلب' : 'الخدمة مخفية عن العملاء'}
-          </p>
+
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+        <div className="flex items-center justify-between bg-muted/40 rounded-lg p-3">
+          <div>
+            <Label className="font-semibold flex items-center gap-1"><Star className="h-4 w-4 text-amber-500" /> خدمة مميزة</Label>
+            <p className="text-xs text-muted-foreground mt-0.5">تظهر في الواجهة الرئيسية</p>
+          </div>
+          <Switch checked={form.is_featured} onCheckedChange={(c) => setForm({ ...form, is_featured: c })} />
         </div>
-        <Switch checked={form.is_active} onCheckedChange={(c) => setForm({ ...form, is_active: c })} />
+        <div className="flex items-center justify-between bg-muted/40 rounded-lg p-3">
+          <div>
+            <Label className="font-semibold">حالة الخدمة</Label>
+            <p className="text-xs text-muted-foreground mt-0.5">
+              {form.is_active ? 'ظاهرة للعملاء' : 'مخفية'}
+            </p>
+          </div>
+          <Switch checked={form.is_active} onCheckedChange={(c) => setForm({ ...form, is_active: c })} />
+        </div>
       </div>
     </div>
     <DialogFooter className="gap-2">
@@ -870,7 +946,8 @@ const ServiceDialog = ({
       </Button>
     </DialogFooter>
   </DialogContent>
-);
+  );
+};
 
 const CategoryDialog = ({
   editing, form, setForm, onSave, onCancel,
