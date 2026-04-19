@@ -983,23 +983,48 @@ export const BADGE_META: Record<TemplateBadge, { ar: string; en: string; cls: st
   recommended:  { ar: 'موصى به',     en: 'Recommended',   cls: 'bg-amber-500/15 text-amber-700 border-amber-500/30' },
 };
 
-export const CVRenderer: React.FC<{ template: CVTemplate; data: CVData; lang: CVLanguage }> = ({ template, data, lang }) => {
+/**
+ * CVRenderer wraps a template with:
+ *  - explicit `dir` for RTL/LTR
+ *  - the correct font stack per language
+ *  - data-cv-mode attribute that print CSS can target to neutralize
+ *    on-screen-only sizing (min-height: 297mm + flex:1) so PDF flows naturally
+ */
+export const CVRenderer: React.FC<{
+  template: CVTemplate;
+  data: CVData;
+  lang: CVLanguage;
+  /** "screen" (default) keeps full-page sizing; "print" lets content flow for accurate PDF pagination */
+  mode?: 'screen' | 'print';
+}> = ({ template, data, lang, mode = 'screen' }) => {
   const Comp = REGISTRY[template] || MinimalTemplate;
+  const isPrint = mode === 'print';
   return (
     <div
       dir={lang === 'ar' ? 'rtl' : 'ltr'}
+      data-cv-root
+      data-cv-mode={mode}
+      lang={lang}
       style={{
         fontFamily: lang === 'ar'
           ? "'IBM Plex Sans Arabic', 'Tajawal', 'Cairo', system-ui, sans-serif"
           : "'Inter', 'IBM Plex Sans', system-ui, sans-serif",
         background: 'white',
         width: '100%',
-        minHeight: '297mm',
+        minHeight: isPrint ? 'auto' : '297mm',
         display: 'flex',
         flexDirection: 'column',
+        textAlign: lang === 'ar' ? 'right' : 'left',
       }}
     >
-      <div style={{ flex: 1, display: 'flex', flexDirection: 'column', minHeight: '297mm' }}>
+      <div
+        style={{
+          flex: isPrint ? 'none' : 1,
+          display: 'flex',
+          flexDirection: 'column',
+          minHeight: isPrint ? 'auto' : '297mm',
+        }}
+      >
         <Comp data={data} lang={lang} />
       </div>
     </div>
