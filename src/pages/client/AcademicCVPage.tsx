@@ -373,7 +373,16 @@ const AcademicCVPage: React.FC = () => {
                               <Field label={T.fields.to} value={e.endDate} onChange={v => updExp(e.id, { endDate: v })} placeholder={lang === 'ar' ? 'حتى الآن' : 'Present'} />
                             </div>
                             <div className="mt-2">
-                              <Label className="text-xs mb-1 block">{T.fields.desc}</Label>
+                              <div className="flex items-center justify-between mb-1">
+                                <Label className="text-xs">{T.fields.desc}</Label>
+                                <AIBtn
+                                  label={e.description ? aiImproveLabel : aiLabel}
+                                  onClick={async () => {
+                                    const t = await runAI('experience_desc', e.description, { role: e.role, company: e.company });
+                                    if (t) updExp(e.id, { description: t });
+                                  }}
+                                />
+                              </div>
                               <Textarea rows={3} value={e.description} onChange={ev => updExp(e.id, { description: ev.target.value })} />
                             </div>
                           </RowCard>
