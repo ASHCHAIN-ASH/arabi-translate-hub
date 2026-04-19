@@ -88,8 +88,8 @@ const OrderNew = () => {
   const [trackingId, setTrackingId] = useState<string>('');
 
   const fieldsConfig = useMemo(
-    () => getFieldsConfig(service?.category_slug),
-    [service?.category_slug],
+    () => resolveServiceFields(service ?? undefined, service?.category_slug),
+    [service]
   );
 
   // Pre-fill defaults when service loads
