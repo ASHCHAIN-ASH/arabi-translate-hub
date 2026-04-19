@@ -25,10 +25,13 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { cn } from '@/lib/utils';
 
 import { useMyCV } from '@/features/academic-cv/useCv';
-import { CVRenderer, TEMPLATES_META } from '@/features/academic-cv/templates';
+import { CVRenderer, TEMPLATES_META, BADGE_META } from '@/features/academic-cv/templates';
 import type { CVData, CVEducation, CVExperience, CVProject, CVCourse, CVActivity, CVTemplate } from '@/features/academic-cv/types';
 import { exportNodeToPdf, printNode } from '@/features/academic-cv/exportPdf';
 import { aiAssist, type AISection } from '@/features/academic-cv/aiAssist';
+import { QualityMeter } from '@/features/academic-cv/QualityMeter';
+import { SectionTips } from '@/features/academic-cv/SectionTips';
+import { FullscreenPreview } from '@/features/academic-cv/FullscreenPreview';
 
 
 const uid = () => Math.random().toString(36).slice(2, 10);
@@ -48,6 +51,7 @@ const AcademicCVPage: React.FC = () => {
   const [tab, setTab] = useState<'personal' | 'education' | 'experience' | 'projects' | 'skills' | 'courses' | 'activities'>('personal');
   const [exporting, setExporting] = useState(false);
   const [paymentOpen, setPaymentOpen] = useState(false);
+  const [fullscreenOpen, setFullscreenOpen] = useState(false);
 
   const lang = cv?.language ?? 'ar';
   const data: CVData | null = cv?.data ?? null;
@@ -323,7 +327,7 @@ const AcademicCVPage: React.FC = () => {
                       whileHover={isLockedOther ? undefined : { y: -3, scale: 1.02 }}
                       whileTap={isLockedOther ? undefined : { scale: 0.98 }}
                       className={cn(
-                        'relative text-start rounded-xl border-2 p-2.5 transition-colors hover:shadow-lg bg-card',
+                        'relative text-start rounded-xl border-2 p-2.5 transition-colors hover:shadow-lg bg-card flex flex-col',
                         active ? 'border-primary shadow-lg ring-2 ring-primary/20' : 'border-border/60 hover:border-primary/40',
                         isLockedOther && 'opacity-40 cursor-not-allowed hover:shadow-none'
                       )}
@@ -341,6 +345,19 @@ const AcademicCVPage: React.FC = () => {
                       </div>
                       <div className="text-xs font-semibold leading-tight">{lang === 'ar' ? t.nameAr : t.nameEn}</div>
                       <div className="text-[10px] text-muted-foreground leading-tight mt-0.5 line-clamp-2">{lang === 'ar' ? t.descAr : t.descEn}</div>
+                      {t.badges.length > 0 && (
+                        <div className="flex flex-wrap gap-1 mt-1.5">
+                          {t.badges.slice(0, 2).map(b => (
+                            <span key={b} className={cn('text-[9px] px-1.5 py-0.5 rounded border font-medium', BADGE_META[b].cls)}>
+                              {lang === 'ar' ? BADGE_META[b].ar : BADGE_META[b].en}
+                            </span>
+                          ))}
+                        </div>
+                      )}
+                      <div className="mt-1.5 pt-1.5 border-t border-border/40 text-[9.5px] text-muted-foreground leading-tight">
+                        <span className="font-semibold text-foreground/70">{lang === 'ar' ? 'الأنسب: ' : 'Best for: '}</span>
+                        {lang === 'ar' ? t.bestForAr : t.bestForEn}
+                      </div>
                     </motion.button>
                   );
                 })}
@@ -373,6 +390,7 @@ const AcademicCVPage: React.FC = () => {
                       transition={{ duration: 0.2 }}
                     >
                       <TabsContent value="personal" className="space-y-3 mt-0">
+                        <SectionTips section="personal" lang={lang} />
                         <div className="grid sm:grid-cols-2 gap-3">
                           <Field label={T.fields.fullName} value={data.personal.fullName} onChange={v => setPersonal('fullName', v)} />
                           <Field label={T.fields.jobTitle} value={data.personal.jobTitle} onChange={v => setPersonal('jobTitle', v)} />
@@ -399,6 +417,7 @@ const AcademicCVPage: React.FC = () => {
                       </TabsContent>
 
                       <TabsContent value="education" className="space-y-3 mt-0">
+                        <SectionTips section="education" lang={lang} />
                         {data.education.map(e => (
                           <RowCard key={e.id} onDelete={() => delEdu(e.id)}>
                             <div className="grid sm:grid-cols-2 gap-2">
@@ -426,6 +445,7 @@ const AcademicCVPage: React.FC = () => {
                       </TabsContent>
 
                       <TabsContent value="experience" className="space-y-3 mt-0">
+                        <SectionTips section="experience" lang={lang} />
                         {data.experience.map(e => (
                           <RowCard key={e.id} onDelete={() => delExp(e.id)}>
                             <div className="grid sm:grid-cols-2 gap-2">
@@ -453,6 +473,7 @@ const AcademicCVPage: React.FC = () => {
                       </TabsContent>
 
                       <TabsContent value="projects" className="space-y-3 mt-0">
+                        <SectionTips section="projects" lang={lang} />
                         {data.projects.map(p => (
                           <RowCard key={p.id} onDelete={() => delProj(p.id)}>
                             <div className="grid sm:grid-cols-2 gap-2">
@@ -478,6 +499,7 @@ const AcademicCVPage: React.FC = () => {
                       </TabsContent>
 
                       <TabsContent value="skills" className="space-y-3 mt-0">
+                        <SectionTips section="skills" lang={lang} />
                         <div>
                           <div className="flex items-center justify-between mb-1">
                             <Label className="text-xs">{T.fields.techSkills}</Label>
@@ -511,6 +533,7 @@ const AcademicCVPage: React.FC = () => {
                       </TabsContent>
 
                       <TabsContent value="courses" className="space-y-3 mt-0">
+                        <SectionTips section="courses" lang={lang} />
                         {data.courses.map(c => (
                           <RowCard key={c.id} onDelete={() => delCourse(c.id)}>
                             <div className="grid sm:grid-cols-3 gap-2">
@@ -540,6 +563,7 @@ const AcademicCVPage: React.FC = () => {
                       </TabsContent>
 
                       <TabsContent value="activities" className="space-y-3 mt-0">
+                        <SectionTips section="activities" lang={lang} />
                         {data.activities.map(a => (
                           <RowCard key={a.id} onDelete={() => delAct(a.id)}>
                             <Field label={T.fields.activity} value={a.name} onChange={v => updAct(a.id, { name: v })} />
@@ -563,12 +587,19 @@ const AcademicCVPage: React.FC = () => {
               </CardContent>
             </Card>
 
-            {/* PREVIEW */}
-            <div className="lg:sticky lg:top-4 lg:self-start">
-              <div className="flex items-center gap-2 mb-2 text-sm text-muted-foreground">
-                <Eye className="w-4 h-4" /> {T.livePreview}
+            {/* PREVIEW + QUALITY */}
+            <div className="lg:sticky lg:top-4 lg:self-start space-y-3">
+              <QualityMeter data={data} lang={lang} />
+              <div className="flex items-center justify-between gap-2">
+                <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                  <Eye className="w-4 h-4" /> {T.livePreview}
+                </div>
+                <Button size="sm" variant="outline" onClick={() => setFullscreenOpen(true)} className="h-8 gap-1 text-xs">
+                  <Eye className="w-3.5 h-3.5" />
+                  {lang === 'ar' ? 'ملء الشاشة' : 'Fullscreen'}
+                </Button>
               </div>
-              <div className="rounded-xl border-2 border-border/60 bg-muted/30 p-2 sm:p-4 overflow-auto max-h-[80vh]">
+              <div className="rounded-xl border-2 border-border/60 bg-muted/30 p-2 sm:p-4 overflow-auto max-h-[75vh]">
                 <AnimatePresence mode="wait">
                   <motion.div
                     key={cv.template_key + lang}
@@ -596,6 +627,15 @@ const AcademicCVPage: React.FC = () => {
           </div>
         </div>
       </div>
+
+      {/* Fullscreen preview */}
+      <FullscreenPreview
+        open={fullscreenOpen}
+        onClose={() => setFullscreenOpen(false)}
+        data={data}
+        lang={lang}
+        template={cv.template_key}
+      />
 
       {/* Payment dialog */}
       <Dialog open={paymentOpen} onOpenChange={setPaymentOpen}>

@@ -957,14 +957,31 @@ const REGISTRY: Record<CVTemplate, React.FC<TemplateProps>> = {
   creative: CreativeTemplate,
 };
 
-export const TEMPLATES_META: { key: CVTemplate; nameAr: string; nameEn: string; descAr: string; descEn: string; accent: string }[] = [
-  { key: 'minimal', nameAr: 'مينيمال سويسري', nameEn: 'Minimal Swiss', descAr: 'تصميم سويسري نقي بمساحات بيضاء راقية', descEn: 'Pure Swiss design, refined whitespace', accent: '#0a0a0a' },
-  { key: 'modern', nameAr: 'حديث (شريط جانبي)', nameEn: 'Modern Sidebar', descAr: 'شريط جانبي ملوّن بأشرطة مهارات وصورة بادج', descEn: 'Color sidebar, skill bars & avatar', accent: '#0d9488' },
-  { key: 'elegant', nameAr: 'فاخر كلاسيكي', nameEn: 'Elegant Luxury', descAr: 'تصميم رسمي بنقوش ذهبية للأبحاث الأكاديمية', descEn: 'Gold ornaments, academic prestige', accent: '#7c2d12' },
-  { key: 'clean', nameAr: 'كوربوريت احترافي', nameEn: 'Corporate Pro', descAr: 'هيدر متدرّج وبطاقات منظّمة بأيقونات', descEn: 'Gradient header, iconic cards', accent: '#1e40af' },
-  { key: 'compact', nameAr: 'مدمج (انفوجرافيك)', nameEn: 'Infographic Compact', descAr: 'عمودين كثيفين مع تقييمات بصرية', descEn: 'Two columns with visual ratings', accent: '#0369a1' },
-  { key: 'creative', nameAr: 'إبداعي مجاني', nameEn: 'Creative Magazine', descAr: 'تدرّجات جريئة وأشكال هندسية لتميّز كامل', descEn: 'Bold gradients, geometric shapes', accent: '#7c3aed' },
+export type TemplateBadge = 'ats' | 'academic' | 'creative' | 'professional' | 'recommended';
+
+export const TEMPLATES_META: {
+  key: CVTemplate;
+  nameAr: string; nameEn: string;
+  descAr: string; descEn: string;
+  accent: string;
+  badges: TemplateBadge[];
+  bestForAr: string; bestForEn: string;
+}[] = [
+  { key: 'minimal', nameAr: 'مينيمال سويسري', nameEn: 'Minimal Swiss', descAr: 'تصميم سويسري نقي بمساحات بيضاء راقية', descEn: 'Pure Swiss design, refined whitespace', accent: '#0a0a0a', badges: ['ats', 'professional', 'recommended'], bestForAr: 'الوظائف الرسمية وأنظمة ATS', bestForEn: 'Formal jobs & ATS systems' },
+  { key: 'modern', nameAr: 'حديث (شريط جانبي)', nameEn: 'Modern Sidebar', descAr: 'شريط جانبي ملوّن بأشرطة مهارات وصورة بادج', descEn: 'Color sidebar, skill bars & avatar', accent: '#0d9488', badges: ['professional', 'recommended'], bestForAr: 'المتدربين والخريجين الجدد', bestForEn: 'Interns & new graduates' },
+  { key: 'elegant', nameAr: 'فاخر كلاسيكي', nameEn: 'Elegant Luxury', descAr: 'تصميم رسمي بنقوش ذهبية للأبحاث الأكاديمية', descEn: 'Gold ornaments, academic prestige', accent: '#7c2d12', badges: ['academic'], bestForAr: 'الباحثين والسير الأكاديمية', bestForEn: 'Researchers & academic CVs' },
+  { key: 'clean', nameAr: 'كوربوريت احترافي', nameEn: 'Corporate Pro', descAr: 'هيدر متدرّج وبطاقات منظّمة بأيقونات', descEn: 'Gradient header, iconic cards', accent: '#1e40af', badges: ['professional'], bestForAr: 'الإدارة والاستشارات', bestForEn: 'Management & consulting' },
+  { key: 'compact', nameAr: 'مدمج (انفوجرافيك)', nameEn: 'Infographic Compact', descAr: 'عمودين كثيفين مع تقييمات بصرية', descEn: 'Two columns with visual ratings', accent: '#0369a1', badges: ['ats'], bestForAr: 'سيرة من صفحة واحدة بمحتوى كثيف', bestForEn: 'One-page dense content' },
+  { key: 'creative', nameAr: 'إبداعي مجاني', nameEn: 'Creative Magazine', descAr: 'تدرّجات جريئة وأشكال هندسية لتميّز كامل', descEn: 'Bold gradients, geometric shapes', accent: '#7c3aed', badges: ['creative'], bestForAr: 'التصميم والمجالات الإبداعية', bestForEn: 'Design & creative fields' },
 ];
+
+export const BADGE_META: Record<TemplateBadge, { ar: string; en: string; cls: string }> = {
+  ats:          { ar: 'متوافق ATS', en: 'ATS-friendly',  cls: 'bg-emerald-500/15 text-emerald-700 border-emerald-500/30' },
+  academic:     { ar: 'أكاديمي',     en: 'Academic',      cls: 'bg-indigo-500/15 text-indigo-700 border-indigo-500/30' },
+  creative:     { ar: 'إبداعي',      en: 'Creative',      cls: 'bg-fuchsia-500/15 text-fuchsia-700 border-fuchsia-500/30' },
+  professional: { ar: 'احترافي',     en: 'Professional',  cls: 'bg-blue-500/15 text-blue-700 border-blue-500/30' },
+  recommended:  { ar: 'موصى به',     en: 'Recommended',   cls: 'bg-amber-500/15 text-amber-700 border-amber-500/30' },
+};
 
 export const CVRenderer: React.FC<{ template: CVTemplate; data: CVData; lang: CVLanguage }> = ({ template, data, lang }) => {
   const Comp = REGISTRY[template] || MinimalTemplate;
