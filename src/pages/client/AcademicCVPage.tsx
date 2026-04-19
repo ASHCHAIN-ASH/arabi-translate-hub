@@ -27,7 +27,7 @@ import { cn } from '@/lib/utils';
 import { useMyCV } from '@/features/academic-cv/useCv';
 import { CVRenderer, TEMPLATES_META, BADGE_META } from '@/features/academic-cv/templates';
 import type { CVData, CVEducation, CVExperience, CVProject, CVCourse, CVActivity, CVTemplate } from '@/features/academic-cv/types';
-import { exportNodeToPdf, printNode } from '@/features/academic-cv/exportPdf';
+import { exportCvToPdf, printCv } from '@/features/academic-cv/exportPdf';
 import { aiAssist, type AISection } from '@/features/academic-cv/aiAssist';
 import { QualityMeter } from '@/features/academic-cv/QualityMeter';
 import { SectionTips } from '@/features/academic-cv/SectionTips';
@@ -138,12 +138,17 @@ const AcademicCVPage: React.FC = () => {
   // ---- Export flow ----
   const handleDownload = async () => {
     if (needsPayment) { setPaymentOpen(true); return; }
-    if (!previewRef.current) return;
+    if (!cv) return;
     setExporting(true);
     try {
       await recordExport();
-      await exportNodeToPdf(previewRef.current, `${cv?.title || 'cv'}.pdf`);
-      toast.success(lang === 'ar' ? 'تم تحميل الـ PDF' : 'PDF downloaded');
+      await exportCvToPdf({
+        data,
+        lang,
+        template: cv.template_key,
+        fileName: `${cv.title || 'cv'}.pdf`,
+      });
+      toast.success(lang === 'ar' ? 'تم فتح نافذة الطباعة — اختر "حفظ كـ PDF"' : 'Print dialog opened — choose "Save as PDF"');
     } catch (e: any) {
       toast.error(e?.message || 'Export failed');
     } finally { setExporting(false); }
@@ -151,10 +156,10 @@ const AcademicCVPage: React.FC = () => {
 
   const handlePrint = async () => {
     if (needsPayment) { setPaymentOpen(true); return; }
-    if (!previewRef.current) return;
+    if (!cv) return;
     try {
       await recordExport();
-      printNode(previewRef.current, lang);
+      printCv({ data, lang, template: cv.template_key, fileName: cv.title || 'cv' });
     } catch (e: any) {
       toast.error(e?.message || 'Print failed');
     }
