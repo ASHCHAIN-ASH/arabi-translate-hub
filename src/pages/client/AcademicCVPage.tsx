@@ -466,7 +466,13 @@ const AcademicCVPage: React.FC = () => {
                           <RowCard key={a.id} onDelete={() => delAct(a.id)}>
                             <Field label={T.fields.activity} value={a.name} onChange={v => updAct(a.id, { name: v })} />
                             <div className="mt-2">
-                              <Label className="text-xs mb-1 block">{T.fields.desc}</Label>
+                              <div className="flex items-center justify-between mb-1">
+                                <Label className="text-xs">{T.fields.desc}</Label>
+                                <AIBtn label={a.description ? aiImproveLabel : aiLabel} onClick={async () => {
+                                  const t = await runAI('activity_desc', a.description, { name: a.name });
+                                  if (t) updAct(a.id, { description: t });
+                                }} />
+                              </div>
                               <Textarea rows={2} value={a.description || ''} onChange={e => updAct(a.id, { description: e.target.value })} />
                             </div>
                           </RowCard>
