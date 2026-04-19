@@ -25,6 +25,7 @@ import {
   Plus, Search, Edit, Trash2, Eye, EyeOff, Package, Layers,
   Tag, TrendingUp, CheckCircle2, XCircle, Wallet, FolderTree, Star, Upload, Image as ImageIcon,
 } from 'lucide-react';
+import { DynamicFieldsEditor } from '@/components/admin/DynamicFieldsEditor';
 
 interface Service {
   id: string;
