@@ -28,6 +28,8 @@ import { useMyCV } from '@/features/academic-cv/useCv';
 import { CVRenderer, TEMPLATES_META } from '@/features/academic-cv/templates';
 import type { CVData, CVEducation, CVExperience, CVProject, CVCourse, CVActivity, CVTemplate } from '@/features/academic-cv/types';
 import { exportNodeToPdf, printNode } from '@/features/academic-cv/exportPdf';
+import { aiAssist, type AISection } from '@/features/academic-cv/aiAssist';
+
 
 const uid = () => Math.random().toString(36).slice(2, 10);
 
@@ -88,6 +90,16 @@ const AcademicCVPage: React.FC = () => {
   };
   const tabLabels = T.tabs;
   const fillDemo = () => { updateData(() => (lang === 'ar' ? DEMO_CV_AR : DEMO_CV_EN)); toast.success(T.demoFilled); };
+
+  // ---- AI helper ----
+  const aiLabel = lang === 'ar' ? 'توليد بالذكاء' : 'AI Generate';
+  const aiImproveLabel = lang === 'ar' ? 'تحسين بالذكاء' : 'AI Improve';
+  const runAI = async (section: AISection, current?: string, ctx?: Record<string, any>) => {
+    const text = await aiAssist({ section, lang, context: ctx, current });
+    if (text) toast.success(lang === 'ar' ? 'تم التوليد ✨' : 'Generated ✨');
+    return text;
+  };
+
 
   // ---- Mutators ----
   const setPersonal = (k: keyof CVData['personal'], v: string) =>
@@ -310,7 +322,16 @@ const AcademicCVPage: React.FC = () => {
                           <Field label={T.fields.website} value={data.personal.website || ''} onChange={v => setPersonal('website', v)} />
                         </div>
                         <div>
-                          <Label className="text-xs mb-1.5 block">{T.fields.summary}</Label>
+                          <div className="flex items-center justify-between mb-1.5">
+                            <Label className="text-xs">{T.fields.summary}</Label>
+                            <AIBtn
+                              label={data.personal.summary ? aiImproveLabel : aiLabel}
+                              onClick={async () => {
+                                const t = await runAI('summary', data.personal.summary, { jobTitle: data.personal.jobTitle, education: data.education, experience: data.experience });
+                                if (t) setPersonal('summary', t);
+                              }}
+                            />
+                          </div>
                           <Textarea value={data.personal.summary} onChange={e => setPersonal('summary', e.target.value)} rows={4} placeholder={T.fields.summaryHint} />
                         </div>
                       </TabsContent>
@@ -352,7 +373,16 @@ const AcademicCVPage: React.FC = () => {
                               <Field label={T.fields.to} value={e.endDate} onChange={v => updExp(e.id, { endDate: v })} placeholder={lang === 'ar' ? 'حتى الآن' : 'Present'} />
                             </div>
                             <div className="mt-2">
-                              <Label className="text-xs mb-1 block">{T.fields.desc}</Label>
+                              <div className="flex items-center justify-between mb-1">
+                                <Label className="text-xs">{T.fields.desc}</Label>
+                                <AIBtn
+                                  label={e.description ? aiImproveLabel : aiLabel}
+                                  onClick={async () => {
+                                    const t = await runAI('experience_desc', e.description, { role: e.role, company: e.company });
+                                    if (t) updExp(e.id, { description: t });
+                                  }}
+                                />
+                              </div>
                               <Textarea rows={3} value={e.description} onChange={ev => updExp(e.id, { description: ev.target.value })} />
                             </div>
                           </RowCard>
@@ -368,7 +398,16 @@ const AcademicCVPage: React.FC = () => {
                               <Field label={T.fields.date} value={p.date || ''} onChange={v => updProj(p.id, { date: v })} />
                             </div>
                             <div className="mt-2">
-                              <Label className="text-xs mb-1 block">{T.fields.desc}</Label>
+                              <div className="flex items-center justify-between mb-1">
+                                <Label className="text-xs">{T.fields.desc}</Label>
+                                <AIBtn
+                                  label={p.description ? aiImproveLabel : aiLabel}
+                                  onClick={async () => {
+                                    const t = await runAI('project_desc', p.description, { name: p.name });
+                                    if (t) updProj(p.id, { description: t });
+                                  }}
+                                />
+                              </div>
                               <Textarea rows={3} value={p.description} onChange={e => updProj(p.id, { description: e.target.value })} />
                             </div>
                           </RowCard>
@@ -377,9 +416,36 @@ const AcademicCVPage: React.FC = () => {
                       </TabsContent>
 
                       <TabsContent value="skills" className="space-y-3 mt-0">
-                        <Field label={T.fields.techSkills} value={data.skills.technical.join(', ')} onChange={v => setSkills('technical', v)} placeholder="Python, SPSS, LaTeX" />
-                        <Field label={T.fields.softSkills} value={data.skills.soft.join(', ')} onChange={v => setSkills('soft', v)} placeholder={lang === 'ar' ? 'القيادة، التواصل، حل المشكلات' : 'Leadership, Communication, Problem-solving'} />
-                        <Field label={T.fields.langs} value={data.skills.languages.join(', ')} onChange={v => setSkills('languages', v)} placeholder={lang === 'ar' ? 'العربية (لغة أم)، الإنجليزية (متقدم)' : 'Arabic (Native), English (Advanced)'} />
+                        <div>
+                          <div className="flex items-center justify-between mb-1">
+                            <Label className="text-xs">{T.fields.techSkills}</Label>
+                            <AIBtn label={aiLabel} onClick={async () => {
+                              const t = await runAI('skills_tech', data.skills.technical.join(', '), { jobTitle: data.personal.jobTitle, education: data.education });
+                              if (t) setSkills('technical', t);
+                            }} />
+                          </div>
+                          <Input value={data.skills.technical.join(', ')} onChange={e => setSkills('technical', e.target.value)} placeholder="Python, SPSS, LaTeX" />
+                        </div>
+                        <div>
+                          <div className="flex items-center justify-between mb-1">
+                            <Label className="text-xs">{T.fields.softSkills}</Label>
+                            <AIBtn label={aiLabel} onClick={async () => {
+                              const t = await runAI('skills_soft', data.skills.soft.join(', '), { jobTitle: data.personal.jobTitle });
+                              if (t) setSkills('soft', t);
+                            }} />
+                          </div>
+                          <Input value={data.skills.soft.join(', ')} onChange={e => setSkills('soft', e.target.value)} placeholder={lang === 'ar' ? 'القيادة، التواصل، حل المشكلات' : 'Leadership, Communication, Problem-solving'} />
+                        </div>
+                        <div>
+                          <div className="flex items-center justify-between mb-1">
+                            <Label className="text-xs">{T.fields.langs}</Label>
+                            <AIBtn label={aiLabel} onClick={async () => {
+                              const t = await runAI('skills_langs', data.skills.languages.join(', '));
+                              if (t) setSkills('languages', t);
+                            }} />
+                          </div>
+                          <Input value={data.skills.languages.join(', ')} onChange={e => setSkills('languages', e.target.value)} placeholder={lang === 'ar' ? 'العربية (لغة أم)، الإنجليزية (متقدم)' : 'Arabic (Native), English (Advanced)'} />
+                        </div>
                       </TabsContent>
 
                       <TabsContent value="courses" className="space-y-3 mt-0">
@@ -392,7 +458,23 @@ const AcademicCVPage: React.FC = () => {
                             </div>
                           </RowCard>
                         ))}
-                        <Button variant="outline" onClick={addCourse} className="w-full gap-2"><Plus className="w-4 h-4" /> {T.fields.addCourse}</Button>
+                        <div className="flex gap-2">
+                          <Button variant="outline" onClick={addCourse} className="flex-1 gap-2"><Plus className="w-4 h-4" /> {T.fields.addCourse}</Button>
+                          <AIBtn
+                            label={lang === 'ar' ? 'اقتراحات بالذكاء' : 'AI Suggest'}
+                            className="h-9 px-3 text-sm"
+                            onClick={async () => {
+                              const t = await runAI('course_suggest', undefined, { jobTitle: data.personal.jobTitle, education: data.education });
+                              if (!t) return;
+                              const lines = t.split('\n').map(l => l.trim()).filter(Boolean).slice(0, 8);
+                              const newCourses = lines.map(line => {
+                                const [name, issuer] = line.split(/[-—–]/).map(s => s.trim());
+                                return { id: uid(), name: name || line, issuer: issuer || '', date: '' };
+                              });
+                              updateData(d => ({ ...d, courses: [...d.courses, ...newCourses] }));
+                            }}
+                          />
+                        </div>
                       </TabsContent>
 
                       <TabsContent value="activities" className="space-y-3 mt-0">
@@ -400,7 +482,13 @@ const AcademicCVPage: React.FC = () => {
                           <RowCard key={a.id} onDelete={() => delAct(a.id)}>
                             <Field label={T.fields.activity} value={a.name} onChange={v => updAct(a.id, { name: v })} />
                             <div className="mt-2">
-                              <Label className="text-xs mb-1 block">{T.fields.desc}</Label>
+                              <div className="flex items-center justify-between mb-1">
+                                <Label className="text-xs">{T.fields.desc}</Label>
+                                <AIBtn label={a.description ? aiImproveLabel : aiLabel} onClick={async () => {
+                                  const t = await runAI('activity_desc', a.description, { name: a.name });
+                                  if (t) updAct(a.id, { description: t });
+                                }} />
+                              </div>
                               <Textarea rows={2} value={a.description || ''} onChange={e => updAct(a.id, { description: e.target.value })} />
                             </div>
                           </RowCard>
@@ -485,5 +573,28 @@ const RowCard: React.FC<{ children: React.ReactNode; onDelete: () => void }> = (
     {children}
   </div>
 );
+
+const AIBtn: React.FC<{ onClick: () => void | Promise<void>; label?: string; loading?: boolean; className?: string }> = ({ onClick, label, loading, className }) => {
+  const [busy, setBusy] = React.useState(false);
+  const handle = async () => {
+    if (busy) return;
+    setBusy(true);
+    try { await onClick(); } finally { setBusy(false); }
+  };
+  return (
+    <Button
+      type="button"
+      size="sm"
+      variant="outline"
+      onClick={handle}
+      disabled={busy || loading}
+      className={cn('h-7 px-2 gap-1 text-xs border-primary/30 text-primary hover:bg-primary/10', className)}
+    >
+      {busy ? <Loader2 className="w-3 h-3 animate-spin" /> : <Sparkles className="w-3 h-3" />}
+      {label || 'AI'}
+    </Button>
+  );
+};
+
 
 export default AcademicCVPage;
