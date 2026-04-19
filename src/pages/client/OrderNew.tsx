@@ -108,21 +108,44 @@ const OrderNew = () => {
     try {
       const { data, error } = await supabase
         .from('services')
-        .select('id, name, name_ar, description, price, unit, category_id, dynamic_fields, quantity_unit_label, default_quantity, service_categories(slug, name_ar)')
-        .eq('id', serviceId).single();
-      if (error || !data) { toast.error('الخدمة غير موجودة'); navigate('/client-services'); return; }
-      const cat = (data as any).service_categories;
+        .select('id, name, name_ar, description, price, unit, category_id, dynamic_fields, quantity_unit_label, default_quantity')
+        .eq('id', serviceId)
+        .maybeSingle();
+      if (error) { console.error('loadService error:', error); }
+      if (!data) {
+        toast.error('الخدمة غير موجودة');
+        navigate('/client-services');
+        return;
+      }
+
+      // Fetch category info separately (non-blocking)
+      let categorySlug: string | null = null;
+      let categoryName: string | null = null;
+      if (data.category_id) {
+        const { data: cat } = await supabase
+          .from('service_categories')
+          .select('slug, name_ar')
+          .eq('id', data.category_id)
+          .maybeSingle();
+        categorySlug = cat?.slug ?? null;
+        categoryName = cat?.name_ar ?? null;
+      }
+
       setService({
         id: data.id, name: data.name, name_ar: data.name_ar,
         description: data.description, price: data.price, unit: data.unit,
         category_id: data.category_id,
-        category_slug: cat?.slug ?? null,
-        category_name: cat?.name_ar ?? null,
+        category_slug: categorySlug,
+        category_name: categoryName,
         dynamic_fields: Array.isArray((data as any).dynamic_fields) ? (data as any).dynamic_fields : [],
         quantity_unit_label: (data as any).quantity_unit_label ?? null,
         default_quantity: (data as any).default_quantity ?? null,
       });
-    } catch (e) { console.error(e); navigate('/client-services'); }
+    } catch (e) {
+      console.error('loadService exception:', e);
+      toast.error('حدث خطأ أثناء تحميل الخدمة');
+      navigate('/client-services');
+    }
     finally { setLoadingData(false); }
   };
 
