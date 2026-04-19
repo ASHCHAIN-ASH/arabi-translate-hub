@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '@/components/SimpleAuthProvider';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -17,12 +17,17 @@ const Login = () => {
   
   const { signIn, user, userRole, loading: authLoading } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
+  const redirectTo = (location.state as { from?: { pathname?: string; search?: string } } | null)?.from;
+  const nextPath = redirectTo?.pathname
+    ? `${redirectTo.pathname}${redirectTo.search ?? ''}`
+    : null;
 
   React.useEffect(() => {
     if (!authLoading && user) {
-      navigate(userRole === 'admin' ? '/adminmaster' : '/dashboard', { replace: true });
+      navigate(userRole === 'admin' ? '/adminmaster' : (nextPath || '/dashboard'), { replace: true });
     }
-  }, [authLoading, user, userRole, navigate]);
+  }, [authLoading, user, userRole, navigate, nextPath]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
