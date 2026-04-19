@@ -279,6 +279,9 @@ const AdminServices = () => {
       is_active: serviceForm.is_active,
       sort_order: serviceForm.sort_order,
       slug: editingService?.slug || slug || null,
+      dynamic_fields: serviceForm.dynamic_fields ?? [],
+      quantity_unit_label: serviceForm.quantity_unit_label?.trim() || null,
+      default_quantity: serviceForm.default_quantity || 1,
     };
 
     const { error } = editingService
