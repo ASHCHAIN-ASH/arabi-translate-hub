@@ -1,64 +1,58 @@
 /// <reference types="npm:@types/react@18.3.1" />
-
 import * as React from 'npm:react@18.3.1'
+import { Body, Button, Container, Head, Heading, Html, Preview, Section, Text, Hr } from 'npm:@react-email/components@0.0.22'
+import { BRAND, PALETTES, renderHeadCss, styles } from './_styles.ts'
 
-import {
-  Body,
-  Button,
-  Container,
-  Head,
-  Heading,
-  Html,
-  Preview,
-  Text,
-} from 'npm:@react-email/components@0.0.22'
+interface Props { siteName?: string; siteUrl?: string; recipient?: string; confirmationUrl: string }
+const P = PALETTES.magicLink
+const s = styles(P)
 
-interface MagicLinkEmailProps {
-  siteName: string
-  confirmationUrl: string
-}
-
-export const MagicLinkEmail = ({
-  confirmationUrl,
-}: MagicLinkEmailProps) => (
+export const MagicLinkEmail = ({ recipient, confirmationUrl }: Props) => (
   <Html lang="ar" dir="rtl">
-    <Head />
-    <Preview>رابط تسجيل الدخول - Master Edu Path</Preview>
-    <Body style={main}>
-      <Container style={container}>
-        <Text style={logo}>Master Edu Path</Text>
-        <Heading style={h1}>رابط تسجيل الدخول</Heading>
-        <Text style={text}>
-          اضغط على الزر أدناه لتسجيل الدخول إلى حسابك. هذا الرابط صالح لفترة محدودة.
+    <Head><style>{renderHeadCss(P)}</style></Head>
+    <Preview>رابط الدخول السريع إلى {BRAND.name} — صالح لـ 60 دقيقة</Preview>
+    <Body style={s.main}>
+      <Container style={s.shell} className="container">
+        <Section style={s.hero}>
+          <div style={s.brandRow} className="anim-fade">
+            <span style={s.brandMark}>M</span>
+            <Text style={s.brandName}>{BRAND.name}</Text>
+          </div>
+          <span style={s.badge} className="anim-fade-1">⚡ {P.label}</span>
+          <Heading className="h1 anim-fade-2" style={s.heroTitle}>دخول بنقرة واحدة</Heading>
+          <Text style={s.heroSub} className="anim-fade-3">رابط آمن ومُشفّر يأخذك مباشرة إلى لوحتك</Text>
+        </Section>
+
+        <Section style={s.body}>
+          <Text style={s.greet}>مرحباً،</Text>
+          <Text style={s.paragraph}>
+            استلمنا طلب دخول إلى حسابك{recipient ? <> (<strong style={{ color: '#0F172A' }}>{recipient}</strong>)</> : null} باستخدام الرابط السحري.
+            اضغط الزر أدناه لتسجيل الدخول مباشرة دون الحاجة لإدخال كلمة المرور.
+          </Text>
+          <div style={s.highlightCard}>
+            🔒 هذا الرابط <strong>صالح لاستخدام واحد فقط</strong> وينتهي خلال <strong>60 دقيقة</strong> من إرساله.
+          </div>
+        </Section>
+
+        <Section style={s.ctaWrap}>
+          <Button href={confirmationUrl} style={s.cta} className="cta anim-cta">
+            تسجيل الدخول الآن ←
+          </Button>
+        </Section>
+
+        <Text style={s.altLink}>
+          أو انسخ هذا الرابط في متصفّحك:<br />
+          <a href={confirmationUrl} style={s.altLinkUrl}>{confirmationUrl}</a>
         </Text>
-        <Button style={button} href={confirmationUrl}>
-          تسجيل الدخول
-        </Button>
-        <Text style={footer}>
-          إذا لم تطلب هذا الرابط، يمكنك تجاهل هذا البريد بأمان.
-        </Text>
+
+        <Hr style={s.divider} />
+        <Section style={s.footer}>
+          <Text style={s.footerBrand}>{BRAND.name} — {BRAND.tagline}</Text>
+          <Text style={s.footerText}>لم تطلب هذا الرابط؟ تجاهل الرسالة وحسابك بأمان تام.</Text>
+          <Text style={s.footerText}>© {BRAND.year} {BRAND.name}</Text>
+        </Section>
       </Container>
     </Body>
   </Html>
 )
-
 export default MagicLinkEmail
-
-const main = { backgroundColor: '#ffffff', fontFamily: "'IBM Plex Sans Arabic', 'IBM Plex Sans Arabic', Arial, sans-serif" }
-const container = { padding: '30px 25px', direction: 'rtl' as const, textAlign: 'right' as const }
-const logo = { fontSize: '20px', fontWeight: 'bold' as const, color: '#3644DB', margin: '0 0 24px', textAlign: 'center' as const }
-const h1 = { fontSize: '24px', fontWeight: 'bold' as const, color: '#0a0f1e', margin: '0 0 20px', textAlign: 'center' as const }
-const text = { fontSize: '15px', color: '#555555', lineHeight: '1.8', margin: '0 0 20px' }
-const button = {
-  backgroundColor: '#3644DB',
-  color: '#ffffff',
-  fontSize: '16px',
-  fontWeight: 'bold' as const,
-  borderRadius: '8px',
-  padding: '14px 28px',
-  textDecoration: 'none',
-  display: 'block' as const,
-  textAlign: 'center' as const,
-  margin: '0 auto 20px',
-}
-const footer = { fontSize: '12px', color: '#999999', margin: '30px 0 0', textAlign: 'center' as const }

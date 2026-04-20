@@ -1,53 +1,76 @@
 /// <reference types="npm:@types/react@18.3.1" />
-
 import * as React from 'npm:react@18.3.1'
+import { Body, Container, Head, Heading, Html, Preview, Section, Text, Hr } from 'npm:@react-email/components@0.0.22'
+import { BRAND, PALETTES, renderHeadCss, styles } from './_styles.ts'
 
-import {
-  Body,
-  Container,
-  Head,
-  Heading,
-  Html,
-  Preview,
-  Text,
-} from 'npm:@react-email/components@0.0.22'
+interface Props { siteName?: string; siteUrl?: string; recipient?: string; token: string }
+const P = PALETTES.reauth
+const s = styles(P)
 
-interface ReauthenticationEmailProps {
-  token: string
-}
-
-export const ReauthenticationEmail = ({ token }: ReauthenticationEmailProps) => (
+export const ReauthenticationEmail = ({ recipient, token }: Props) => (
   <Html lang="ar" dir="rtl">
-    <Head />
-    <Preview>رمز التحقق - Master Edu Path</Preview>
-    <Body style={main}>
-      <Container style={container}>
-        <Text style={logo}>Master Edu Path</Text>
-        <Heading style={h1}>تأكيد الهوية</Heading>
-        <Text style={text}>استخدم الرمز أدناه لتأكيد هويتك:</Text>
-        <Text style={codeStyle}>{token}</Text>
-        <Text style={footer}>
-          هذا الرمز صالح لفترة محدودة. إذا لم تطلب هذا الرمز، يمكنك تجاهل هذا البريد بأمان.
-        </Text>
+    <Head><style>{renderHeadCss(P)}</style></Head>
+    <Preview>رمز التحقق لإعادة التوثيق في {BRAND.name}</Preview>
+    <Body style={s.main}>
+      <Container style={s.shell} className="container">
+        <Section style={s.hero}>
+          <div style={s.brandRow} className="anim-fade">
+            <span style={s.brandMark}>M</span>
+            <Text style={s.brandName}>{BRAND.name}</Text>
+          </div>
+          <span style={s.badge} className="anim-fade-1">🛡️ {P.label}</span>
+          <Heading className="h1 anim-fade-2" style={s.heroTitle}>رمز التحقق الأمني</Heading>
+          <Text style={s.heroSub} className="anim-fade-3">للتأكّد من هويّتك قبل إجراء عملية حسّاسة</Text>
+        </Section>
+
+        <Section style={s.body}>
+          <Text style={s.greet}>مرحباً،</Text>
+          <Text style={s.paragraph}>
+            يُرجى استخدام الرمز أدناه لإكمال إعادة التوثيق على حسابك{recipient ? <> (<strong>{recipient}</strong>)</> : null}:
+          </Text>
+
+          <div
+            className="anim-fade-2"
+            style={{
+              background: `linear-gradient(135deg, ${P.tint} 0%, #FFFFFF 100%)`,
+              border: `2px dashed ${P.accent}`,
+              borderRadius: '14px',
+              padding: '28px 16px',
+              margin: '24px 0',
+              textAlign: 'center',
+            }}
+          >
+            <div style={{ fontSize: '12px', color: '#64748B', letterSpacing: '2px', marginBottom: '10px', fontWeight: 600 }}>
+              رمز التحقق
+            </div>
+            <div
+              style={{
+                fontSize: '38px',
+                fontWeight: 800,
+                letterSpacing: '12px',
+                color: P.primary,
+                fontFamily: "'IBM Plex Sans Arabic', monospace",
+                direction: 'ltr',
+              }}
+            >
+              {token}
+            </div>
+          </div>
+
+          <div style={s.highlightCard}>
+            ⏰ صالح لمدة <strong>10 دقائق</strong>.<br />
+            🔐 لا تُشارك هذا الرمز مع أي شخص — فريقنا لن يطلبه أبداً.
+          </div>
+        </Section>
+
+        <Hr style={s.divider} />
+        <Section style={s.footer}>
+          <Text style={s.footerBrand}>{BRAND.name} — {BRAND.tagline}</Text>
+          <Text style={s.footerText}>لم تطلب الرمز؟ راسلنا مباشرة على {BRAND.supportEmail}</Text>
+          <Text style={s.footerText}>© {BRAND.year} {BRAND.name}</Text>
+        </Section>
       </Container>
     </Body>
   </Html>
 )
-
 export default ReauthenticationEmail
-
-const main = { backgroundColor: '#ffffff', fontFamily: "'IBM Plex Sans Arabic', 'IBM Plex Sans Arabic', Arial, sans-serif" }
-const container = { padding: '30px 25px', direction: 'rtl' as const, textAlign: 'right' as const }
-const logo = { fontSize: '20px', fontWeight: 'bold' as const, color: '#3644DB', margin: '0 0 24px', textAlign: 'center' as const }
-const h1 = { fontSize: '24px', fontWeight: 'bold' as const, color: '#0a0f1e', margin: '0 0 20px', textAlign: 'center' as const }
-const text = { fontSize: '15px', color: '#555555', lineHeight: '1.8', margin: '0 0 20px' }
-const codeStyle = {
-  fontFamily: 'Courier, monospace',
-  fontSize: '28px',
-  fontWeight: 'bold' as const,
-  color: '#3644DB',
-  margin: '0 0 30px',
-  textAlign: 'center' as const,
-  letterSpacing: '6px',
-}
-const footer = { fontSize: '12px', color: '#999999', margin: '30px 0 0', textAlign: 'center' as const }
