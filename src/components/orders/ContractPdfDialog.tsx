@@ -182,7 +182,7 @@ export const ContractPdfDialog: React.FC<Props> = ({ contractId, contractNumber,
             <div className="flex items-center gap-2">
               <Button
                 onClick={downloadPdf}
-                disabled={loading || !pdfUrl}
+                disabled={loading}
                 size="sm"
                 className="bg-gradient-to-l from-amber-400 to-yellow-500 text-slate-900 hover:from-amber-500 hover:to-yellow-600 font-bold border-0"
               >
