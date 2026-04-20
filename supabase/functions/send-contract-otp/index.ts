@@ -33,7 +33,7 @@ serve(async (req) => {
     // Load contract
     const { data: contract, error: cErr } = await supabase
       .from("contracts")
-      .select("id, contract_number, title, client_full_name, client_email, customer_id, user_id")
+      .select("id, contract_number, title, client_full_name, client_email, client_phone, customer_id, user_id")
       .eq("id", contract_id)
       .single();
 
@@ -43,38 +43,69 @@ serve(async (req) => {
       });
     }
 
-    // Resolve recipient email — try multiple sources
+    // Resolve recipient — email and/or phone
     let recipient: string | null =
       (typeof override_email === "string" && override_email.trim()) ||
       contract.client_email ||
       null;
+    let recipientPhone: string | null = contract.client_phone || null;
+
+    // Detect WhatsApp-only users (email is synthetic placeholder)
+    const isWhatsappEmail = (e: string | null) =>
+      !!e && /@whatsapp\.local$/i.test(e);
 
     if (!recipient && contract.customer_id) {
       const { data: cust } = await supabase
-        .from("customers").select("email").eq("id", contract.customer_id).maybeSingle();
+        .from("customers").select("email, phone").eq("id", contract.customer_id).maybeSingle();
       if (cust?.email) recipient = cust.email;
+      if (!recipientPhone && cust?.phone) recipientPhone = cust.phone;
+    }
+
+    if (!recipientPhone && contract.user_id) {
+      // Try profiles for phone
+      const { data: prof } = await supabase
+        .from("profiles").select("phone").eq("user_id", contract.user_id).maybeSingle();
+      if (prof?.phone) recipientPhone = prof.phone;
     }
 
     if (!recipient && contract.user_id) {
       try {
         const { data: ures } = await supabase.auth.admin.getUserById(contract.user_id);
         if (ures?.user?.email) recipient = ures.user.email;
+        const phoneFromMeta = (ures?.user?.user_metadata as any)?.phone;
+        if (!recipientPhone && phoneFromMeta) recipientPhone = phoneFromMeta;
       } catch (_) { /* ignore */ }
     }
 
-    if (!recipient) {
+    // If email is the synthetic whatsapp.local placeholder, derive phone from it
+    if (isWhatsappEmail(recipient) && !recipientPhone) {
+      const m = recipient!.match(/^wa_(\d+)@/i);
+      if (m) recipientPhone = m[1];
+    }
+
+    const useWhatsapp = !!recipientPhone && (!recipient || isWhatsappEmail(recipient));
+
+    if (!recipient && !recipientPhone) {
       return new Response(JSON.stringify({
-        error: "لا يوجد بريد إلكتروني مسجل لهذا العقد. يرجى تحديث بيانات العميل من لوحة الإدارة.",
-        code: "NO_EMAIL",
+        error: "لا يوجد بريد إلكتروني أو رقم جوال مسجل لهذا العقد. يرجى تحديث بيانات العميل.",
+        code: "NO_CONTACT",
       }), {
         status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
 
-    // Persist resolved email back onto contract for downstream use
-    if (!contract.client_email) {
+    // Use phone as the OTP key if we're sending via WhatsApp (so email column stays consistent)
+    const otpKey = useWhatsapp ? `wa:${recipientPhone}` : recipient!;
+
+    // Persist resolved email back onto contract for downstream use (only real emails)
+    if (!contract.client_email && recipient && !isWhatsappEmail(recipient)) {
       await supabase.from("contracts")
         .update({ client_email: recipient })
+        .eq("id", contract_id);
+    }
+    if (!contract.client_phone && recipientPhone) {
+      await supabase.from("contracts")
+        .update({ client_phone: recipientPhone })
         .eq("id", contract_id);
     }
 
