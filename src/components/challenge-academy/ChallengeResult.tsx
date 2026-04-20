@@ -33,14 +33,43 @@ export const ChallengeResult: React.FC<Props> = ({
   const handleShare = async () => {
     if (!result) return;
     const text = `🎓 تحدي اليوم في ماستر إيدو باث:\n${tier.label} — ${result.score}%\n${result.correct_count}/${result.total_questions} إجابة صحيحة\n+${result.xp_awarded} XP 🔥\n${window.location.origin}/challenge-academy`;
-    try {
-      if (navigator.share) {
+
+    // Try Web Share API first (mobile)
+    if (typeof navigator !== 'undefined' && typeof navigator.share === 'function') {
+      try {
         await navigator.share({ title: 'تحدي اليوم', text });
-      } else {
-        await navigator.clipboard.writeText(text);
-        toast({ title: '📋 تم النسخ!', description: 'انشر إنجازك مع أصدقائك' });
+        return;
+      } catch (err: any) {
+        // AbortError = user cancelled, don't fallback
+        if (err?.name === 'AbortError') return;
+        // Otherwise fallback to clipboard
       }
-    } catch {/* user cancelled */}
+    }
+
+    // Clipboard fallback
+    try {
+      if (navigator.clipboard?.writeText) {
+        await navigator.clipboard.writeText(text);
+        toast({ title: '📋 تم نسخ النتيجة!', description: 'الصقها في واتساب أو تويتر لمشاركتها' });
+        return;
+      }
+      throw new Error('clipboard unavailable');
+    } catch {
+      // Last-resort: legacy execCommand
+      try {
+        const ta = document.createElement('textarea');
+        ta.value = text;
+        ta.style.position = 'fixed';
+        ta.style.opacity = '0';
+        document.body.appendChild(ta);
+        ta.select();
+        document.execCommand('copy');
+        document.body.removeChild(ta);
+        toast({ title: '📋 تم نسخ النتيجة!', description: 'الصقها في واتساب أو تويتر لمشاركتها' });
+      } catch {
+        toast({ title: 'تعذر النسخ', description: 'انسخ النص يدوياً', variant: 'destructive' });
+      }
+    }
   };
 
   if (!result) return null;
