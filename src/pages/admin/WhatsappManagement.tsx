@@ -11,9 +11,11 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { toast } from "sonner";
-import { Send, Sparkles, Megaphone, MessageSquare, Loader2, Plus, Smile, Pin, Star, Volume2, VolumeX, Bot, User, Search } from "lucide-react";
+import { Send, Sparkles, Megaphone, MessageSquare, Loader2, Plus, Smile, Pin, Star, Volume2, VolumeX, Bot, User, Search, Paperclip, BarChart3, PanelRightOpen, PanelRightClose } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import AdminLayout from "@/components/admin/AdminLayout";
+import { ConversationDetailsPanel } from "@/components/admin/whatsapp/ConversationDetailsPanel";
+import { CampaignAnalytics } from "@/components/admin/whatsapp/CampaignAnalytics";
 
 const EMOJIS = ["😀","😊","🙏","👍","✅","🎉","🌹","💼","📋","🧾","📜","💳","⏳","🔔","📞","🎓","📚","✨","🔥","💡","⭐","❤️","🤝","📩","📎","🚀"];
 
@@ -28,6 +30,7 @@ interface Message {
   id: string; direction: "inbound" | "outbound"; sender_type: string;
   sender_name: string | null; body: string; message_type: string;
   delivery_status: string; created_at: string;
+  media_url?: string | null; media_filename?: string | null;
 }
 interface Campaign {
   id: string; name: string; status: string; total_recipients: number;
@@ -48,6 +51,9 @@ export default function WhatsappManagement() {
   const [quickReplies, setQuickReplies] = useState<QuickReply[]>([]);
   const [showEmoji, setShowEmoji] = useState(false);
   const [aiLoading, setAiLoading] = useState(false);
+  const [showDetails, setShowDetails] = useState(true);
+  const [uploading, setUploading] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
 
   const [campaigns, setCampaigns] = useState<Campaign[]>([]);
   const [campaignDialog, setCampaignDialog] = useState(false);
@@ -133,6 +139,26 @@ export default function WhatsappManagement() {
     await supabase.from("whatsapp_conversations").update({ is_starred: !conv.is_starred }).eq("id", conv.id);
   };
 
+  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file || !activeConv) return;
+    if (file.size > 16 * 1024 * 1024) return toast.error("الحد الأقصى 16MB");
+    setUploading(true);
+    const path = `${activeConv.id}/${Date.now()}-${file.name}`;
+    const { error: upErr } = await supabase.storage.from("whatsapp-attachments").upload(path, file);
+    if (upErr) { setUploading(false); return toast.error(upErr.message); }
+    const { data, error } = await supabase.functions.invoke("whatsapp-send-attachment", {
+      body: { conversation_id: activeConv.id, storage_path: path, filename: file.name, caption: reply || "" },
+    });
+    setUploading(false);
+    if (e.target) e.target.value = "";
+    if (error || data?.error) return toast.error(data?.error || error?.message || "فشل الإرسال");
+    toast.success("تم إرسال المرفق ✅");
+    setReply("");
+    loadMessages(activeConv.id);
+  };
+
+
   const createCampaign = async () => {
     if (!newCampaign.name || !newCampaign.message_body) return toast.error("الاسم والنص مطلوبان");
     const status = newCampaign.scheduled_at ? "scheduled" : "draft";
@@ -187,14 +213,15 @@ export default function WhatsappManagement() {
         </motion.div>
 
         <Tabs value={tab} onValueChange={setTab} dir="rtl" className="space-y-4">
-          <TabsList className="grid grid-cols-2 w-full max-w-md">
+          <TabsList className="grid grid-cols-3 w-full max-w-xl">
             <TabsTrigger value="conversations"><MessageSquare className="w-4 h-4 ml-1" /> المحادثات</TabsTrigger>
             <TabsTrigger value="campaigns"><Megaphone className="w-4 h-4 ml-1" /> الحملات</TabsTrigger>
+            <TabsTrigger value="analytics"><BarChart3 className="w-4 h-4 ml-1" /> الإحصائيات</TabsTrigger>
           </TabsList>
 
           {/* المحادثات */}
           <TabsContent value="conversations">
-            <div className="grid lg:grid-cols-[340px,1fr] gap-4 h-[calc(100vh-220px)]">
+            <div className={`grid gap-4 h-[calc(100vh-220px)] ${showDetails ? "lg:grid-cols-[300px,1fr,300px]" : "lg:grid-cols-[340px,1fr]"}`}>
               {/* قائمة المحادثات */}
               <Card className="overflow-hidden flex flex-col">
                 <div className="p-3 border-b">
@@ -265,7 +292,10 @@ export default function WhatsappManagement() {
                           <Pin className={`w-4 h-4 ${activeConv.is_pinned ? "fill-current text-primary" : ""}`} />
                         </Button>
                         <Button size="icon" variant="ghost" onClick={() => toggleStar(activeConv)}>
-                          <Star className={`w-4 h-4 ${activeConv.is_starred ? "fill-current text-yellow-500" : ""}`} />
+                          <Star className={`w-4 h-4 ${activeConv.is_starred ? "fill-current text-primary" : ""}`} />
+                        </Button>
+                        <Button size="icon" variant="ghost" onClick={() => setShowDetails((s) => !s)} title="تفاصيل ومعلومات">
+                          {showDetails ? <PanelRightClose className="w-4 h-4" /> : <PanelRightOpen className="w-4 h-4" />}
                         </Button>
                       </div>
                     </div>
@@ -297,7 +327,14 @@ export default function WhatsappManagement() {
                                     <User className="w-3 h-3" /> {m.sender_name}
                                   </div>
                                 )}
-                                <div className="whitespace-pre-wrap break-words">{m.body}</div>
+                                {m.message_type === "attachment" && m.media_url && (
+                                  <a href={m.media_url} target="_blank" rel="noreferrer"
+                                    className="flex items-center gap-2 mb-1 px-2 py-1.5 rounded bg-background/30 hover:bg-background/50 transition text-xs">
+                                    <Paperclip className="w-3.5 h-3.5" />
+                                    <span className="truncate underline">{m.media_filename || "مرفق"}</span>
+                                  </a>
+                                )}
+                                {m.body && <div className="whitespace-pre-wrap break-words">{m.body}</div>}
                                 <div className="text-[10px] opacity-60 mt-1 text-end">
                                   {new Date(m.created_at).toLocaleTimeString("ar-SA", { hour: "2-digit", minute: "2-digit" })}
                                   {m.direction === "outbound" && ` · ${m.delivery_status === "sent" ? "✓" : m.delivery_status === "failed" ? "✕" : "⏳"}`}
@@ -340,6 +377,11 @@ export default function WhatsappManagement() {
                         )}
                       </div>
                       <div className="flex gap-2">
+                        <input ref={fileInputRef} type="file" hidden onChange={handleFileUpload}
+                          accept="image/*,application/pdf,.doc,.docx,.xls,.xlsx" />
+                        <Button size="icon" variant="outline" onClick={() => fileInputRef.current?.click()} disabled={uploading} title="إرفاق ملف">
+                          {uploading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Paperclip className="w-4 h-4" />}
+                        </Button>
                         <Button size="icon" variant="outline" onClick={() => setShowEmoji(!showEmoji)}>
                           <Smile className="w-4 h-4" />
                         </Button>
@@ -352,6 +394,22 @@ export default function WhatsappManagement() {
                   </>
                 )}
               </Card>
+
+              {/* اللوحة الجانبية: ملاحظات + إسناد */}
+              {showDetails && activeConv && (
+                <Card className="overflow-hidden flex flex-col">
+                  <div className="p-3 border-b bg-muted/30">
+                    <div className="font-semibold text-sm">تفاصيل المحادثة</div>
+                  </div>
+                  <ScrollArea className="flex-1">
+                    <ConversationDetailsPanel
+                      conversationId={activeConv.id}
+                      currentAssignee={activeConv.assigned_to}
+                      onAssigneeChanged={(id) => setActiveConv({ ...activeConv, assigned_to: id })}
+                    />
+                  </ScrollArea>
+                </Card>
+              )}
             </div>
           </TabsContent>
 
@@ -443,6 +501,11 @@ export default function WhatsappManagement() {
                 </div>
               </CardContent>
             </Card>
+          </TabsContent>
+
+          {/* الإحصائيات */}
+          <TabsContent value="analytics">
+            <CampaignAnalytics />
           </TabsContent>
         </Tabs>
       </div>
