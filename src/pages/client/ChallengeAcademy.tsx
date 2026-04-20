@@ -33,6 +33,32 @@ const ChallengeAcademy: React.FC = () => {
   const [runnerOpen, setRunnerOpen] = useState(false);
   const [resultOpen, setResultOpen] = useState(false);
   const [lastResult, setLastResult] = useState<AttemptSubmitResult | null>(null);
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  // Capture ?ref= and try to claim it
+  useEffect(() => {
+    const ref = searchParams.get('ref');
+    if (ref) {
+      ChallengeReferralService.storePendingCode(ref);
+      ChallengeReferralService.trackClick(ref);
+      // strip ?ref from URL
+      searchParams.delete('ref');
+      setSearchParams(searchParams, { replace: true });
+    }
+  }, [searchParams, setSearchParams]);
+
+  // Auto-claim pending referral once user is authenticated
+  useEffect(() => {
+    if (!userId) return;
+    const pending = ChallengeReferralService.readPendingCode();
+    if (!pending) return;
+    ChallengeReferralService.claimPendingIfAny().then((res) => {
+      if (res.claimed && !res.alreadyClaimed && res.xp) {
+        toast.success(`🎁 تم تفعيل دعوتك! +${res.xp} XP`, { duration: 5000 });
+        refresh();
+      }
+    });
+  }, [userId, refresh]);
 
   if (!userId) {
     return (
