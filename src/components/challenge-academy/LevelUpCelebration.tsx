@@ -4,7 +4,7 @@ import { Dialog, DialogContent } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Sparkles, X } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
-import { GamificationLevel, UserSummary } from '@/utils/challengeAcademyService';
+import { ChallengeLevel, UserSummary } from '@/utils/challengeAcademyService';
 
 interface Props {
   summary: UserSummary | null;
@@ -18,7 +18,7 @@ export const LevelUpCelebration: React.FC<Props> = ({ summary }) => {
   const { toast } = useToast();
   const prevLevelId = useRef<string | null | undefined>(undefined);
   const [open, setOpen] = useState(false);
-  const [newLevel, setNewLevel] = useState<GamificationLevel | null>(null);
+  const [newLevel, setNewLevel] = useState<ChallengeLevel | null>(null);
 
   useEffect(() => {
     const currentId = summary?.current_level?.id ?? null;
