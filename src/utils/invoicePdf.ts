@@ -11,11 +11,39 @@ import { InvoiceService } from './invoiceService';
 const COMPANY = {
   name: 'ماستر إدو باث',
   nameEn: 'Mastered Edu Path',
-  address: 'المملكة العربية السعودية',
+  address: 'المملكة العربية السعودية — الرياض',
   email: 'info@masteredupath.com',
-  phone: '+966 50 000 0000',
+  phone: '+966 53 530 0148',
   website: 'masteredupath.com',
+  vatNumber: '300000000000003',
+  crNumber: '1010000000',
+  iban: 'SA00 8000 0000 0000 0000 0000',
 };
+
+// ZATCA-style TLV base64 QR (Seller, VAT, Timestamp, Total, VAT amount)
+function buildZatcaQrPayload(sellerName: string, vatNumber: string, timestampISO: string, total: string, vatAmount: string): string {
+  const enc = new TextEncoder();
+  const tlv = (tag: number, val: string) => {
+    const v = enc.encode(val);
+    const out = new Uint8Array(2 + v.length);
+    out[0] = tag; out[1] = v.length; out.set(v, 2);
+    return out;
+  };
+  const parts = [
+    tlv(1, sellerName),
+    tlv(2, vatNumber),
+    tlv(3, timestampISO),
+    tlv(4, total),
+    tlv(5, vatAmount),
+  ];
+  const total_len = parts.reduce((s, p) => s + p.length, 0);
+  const merged = new Uint8Array(total_len);
+  let off = 0;
+  for (const p of parts) { merged.set(p, off); off += p.length; }
+  let bin = '';
+  for (let i = 0; i < merged.length; i++) bin += String.fromCharCode(merged[i]);
+  return typeof btoa !== 'undefined' ? btoa(bin) : '';
+}
 
 export function buildInvoiceHTML(invoice: Invoice, items: InvoiceItem[], payments: InvoicePayment[] = []): string {
   const fmt = (n: number | null | undefined) => InvoiceService.formatCurrency(n, invoice.currency);
