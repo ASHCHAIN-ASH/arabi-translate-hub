@@ -19,6 +19,7 @@ import {
   Crown,
   Trophy,
   Users,
+  Gift,
   GraduationCap as StudentIcon,
 } from 'lucide-react';
 import ChatFloatingButton from '@/components/chat/ChatFloatingButton';
@@ -44,6 +45,7 @@ const navItems: NavItem[] = [
   { name: 'عقودي', href: '/client/contracts', icon: ScrollText },
   { name: 'محفظتي', href: '/wallet', icon: Wallet },
   { name: 'عضويتي', href: '/membership', icon: Crown },
+  { name: 'الإحالات والعمولات', href: '/referrals', icon: Gift },
   { name: 'مكافآتي', href: '/rewards', icon: Trophy },
   { name: 'المدفوعات', href: '/billing/payments', icon: CreditCard },
   { name: 'خدمة العملاء', href: '/support/tickets', icon: Headphones },

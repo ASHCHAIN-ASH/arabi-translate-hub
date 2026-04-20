@@ -70,6 +70,7 @@ import GroupOrderNew from "./pages/client/GroupOrderNew";
 import GroupOrderDetails from "./pages/client/GroupOrderDetails";
 import GroupOrderJoin from "./pages/client/GroupOrderJoin";
 import MembershipPage from "./pages/client/MembershipPage";
+import ReferralsPage from "./pages/client/ReferralsPage";
 import RewardsPage from "./pages/client/Rewards";
 import StudentHub from "./pages/client/StudentHub";
 import MindMapPage from "./pages/client/MindMapPage";
@@ -548,6 +549,11 @@ const App = () => (
             <Route path="/membership" element={
               <SimpleProtectedRoute>
                 <MembershipPage />
+              </SimpleProtectedRoute>
+            } />
+            <Route path="/referrals" element={
+              <SimpleProtectedRoute>
+                <ReferralsPage />
               </SimpleProtectedRoute>
             } />
             <Route path="/rewards" element={
