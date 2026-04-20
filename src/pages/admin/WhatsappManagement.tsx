@@ -212,14 +212,15 @@ export default function WhatsappManagement() {
         </motion.div>
 
         <Tabs value={tab} onValueChange={setTab} dir="rtl" className="space-y-4">
-          <TabsList className="grid grid-cols-2 w-full max-w-md">
+          <TabsList className="grid grid-cols-3 w-full max-w-xl">
             <TabsTrigger value="conversations"><MessageSquare className="w-4 h-4 ml-1" /> المحادثات</TabsTrigger>
             <TabsTrigger value="campaigns"><Megaphone className="w-4 h-4 ml-1" /> الحملات</TabsTrigger>
+            <TabsTrigger value="analytics"><BarChart3 className="w-4 h-4 ml-1" /> الإحصائيات</TabsTrigger>
           </TabsList>
 
           {/* المحادثات */}
           <TabsContent value="conversations">
-            <div className="grid lg:grid-cols-[340px,1fr] gap-4 h-[calc(100vh-220px)]">
+            <div className={`grid gap-4 h-[calc(100vh-220px)] ${showDetails ? "lg:grid-cols-[300px,1fr,300px]" : "lg:grid-cols-[340px,1fr]"}`}>
               {/* قائمة المحادثات */}
               <Card className="overflow-hidden flex flex-col">
                 <div className="p-3 border-b">
