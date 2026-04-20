@@ -1,7 +1,12 @@
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 import { Resend } from "npm:resend@2.0.0";
+import { createClient } from "npm:@supabase/supabase-js@2";
 
 const resend = new Resend(Deno.env.get("RESEND_API_KEY"));
+const supabaseAdmin = createClient(
+  Deno.env.get("SUPABASE_URL")!,
+  Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!,
+);
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -29,6 +34,38 @@ const handler = async (req: Request): Promise<Response> => {
     const orderId = `SRV${Date.now()}`;
     
     console.log("Processing service request:", orderId);
+
+    // 🆕 1) حفظ الطلب فوراً في صندوق الوارد الموحّد (يظهر بلوحة الإدارة لحظياً)
+    let inboxMessageId: string | null = null;
+    try {
+      const { data: inserted, error: inboxError } = await supabaseAdmin
+        .from("inbox_messages")
+        .insert({
+          sender_name: orderData.fullName?.slice(0, 200) ?? "زائر",
+          sender_email: orderData.email?.slice(0, 200) ?? "unknown@masteredupath.com",
+          sender_phone: orderData.phone?.slice(0, 50) ?? null,
+          subject: `طلب خدمة: ${orderData.serviceTitle}`,
+          message: orderData.details?.slice(0, 8000) ||
+            `طلب خدمة «${orderData.serviceTitle}» — التخصص: ${orderData.specialization || "غير محدد"}.`,
+          form_type: "service_inquiry",
+          service_type: orderData.serviceType ?? null,
+          source_page: orderData.serviceType ? `service:${orderData.serviceType}` : null,
+          priority: "high",
+          status: "new",
+          metadata: {
+            order_id: orderId,
+            service_title: orderData.serviceTitle,
+            specialization: orderData.specialization,
+          },
+        })
+        .select("id")
+        .single();
+      if (inboxError) throw inboxError;
+      inboxMessageId = inserted.id;
+      console.log("[inbox] saved message:", inboxMessageId);
+    } catch (e) {
+      console.error("[inbox] failed to save (continuing with email):", e);
+    }
 
     // إيميل الإدارة (Admin RTL Template)
     const adminEmailHtml = `
