@@ -662,4 +662,33 @@ const ClientContractApproval = () => {
   );
 };
 
+const TONE_MAP: Record<string, { bg: string; ring: string; icon: string; text: string }> = {
+  indigo:  { bg: "from-indigo-500/10 to-indigo-500/5",   ring: "ring-indigo-500/20",  icon: "bg-indigo-500/15 text-indigo-600 dark:text-indigo-400",   text: "text-indigo-700 dark:text-indigo-300" },
+  violet:  { bg: "from-violet-500/10 to-violet-500/5",   ring: "ring-violet-500/20",  icon: "bg-violet-500/15 text-violet-600 dark:text-violet-400",   text: "text-violet-700 dark:text-violet-300" },
+  emerald: { bg: "from-emerald-500/10 to-emerald-500/5", ring: "ring-emerald-500/20", icon: "bg-emerald-500/15 text-emerald-600 dark:text-emerald-400", text: "text-emerald-700 dark:text-emerald-300" },
+  amber:   { bg: "from-amber-500/10 to-amber-500/5",     ring: "ring-amber-500/20",   icon: "bg-amber-500/15 text-amber-600 dark:text-amber-400",       text: "text-amber-700 dark:text-amber-300" },
+};
+
+const KpiTile: React.FC<{
+  icon: React.ComponentType<{ className?: string }>;
+  label: string;
+  value: string;
+  tone: keyof typeof TONE_MAP;
+}> = ({ icon: Icon, label, value, tone }) => {
+  const t = TONE_MAP[tone];
+  return (
+    <div className={`relative overflow-hidden rounded-xl border bg-gradient-to-br ${t.bg} ring-1 ${t.ring} p-3 backdrop-blur-sm transition-all hover:shadow-md hover:-translate-y-0.5`}>
+      <div className="flex items-center gap-2.5">
+        <div className={`h-9 w-9 rounded-lg flex items-center justify-center shrink-0 ${t.icon}`}>
+          <Icon className="h-4 w-4" />
+        </div>
+        <div className="min-w-0 flex-1">
+          <p className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wide">{label}</p>
+          <p className={`text-sm font-bold truncate ${t.text}`} title={value}>{value}</p>
+        </div>
+      </div>
+    </div>
+  );
+};
+
 export default ClientContractApproval;
