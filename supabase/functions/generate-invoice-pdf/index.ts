@@ -230,6 +230,9 @@ async function enrichInvoice(invoice: any) {
     }];
   }
 
+  // إخفاء البريد الافتراضي للحسابات المُنشأة عبر واتساب
+  if (customerEmail && /@whatsapp\.local$/i.test(customerEmail)) customerEmail = "";
+
   out.customer_name = customerName || "—";
   out.customer_email = customerEmail || "—";
   out.customer_phone = customerPhone || "—";
