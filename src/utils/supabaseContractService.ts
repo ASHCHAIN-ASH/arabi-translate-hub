@@ -55,12 +55,10 @@ export interface ContractSignature {
 }
 
 /**
- * تحميل العقد كـ PDF: نفتح نافذة جديدة بمحتوى العقد الكامل (مع الخطوط والصور)،
- * ننتظر تحميل كل الموارد + الخطوط، ثم نشغّل نافذة الطباعة → "حفظ كـ PDF".
- * هذا يضمن ظهور العقد الفعلي بكامل تنسيقه (وليس صفحة فارغة).
+ * يجلب HTML النهائي للعقد من نفس مسار التوليد المستخدم في التحميل/الطباعة
+ * حتى تتطابق المعاينة مع ملف PDF الفعلي تماماً.
  */
-export async function downloadContractPdf(contractId: string) {
-  // نجلب HTML الكامل من الـ Edge Function
+export async function getContractPdfHtml(contractId: string, options?: { fallbackOpen?: boolean }) {
   const { data, error } = await supabase.functions.invoke("generate-contract-pdf", {
     body: { contract_id: contractId, format: "json" },
   });
@@ -68,7 +66,6 @@ export async function downloadContractPdf(contractId: string) {
 
   let html: string = (data as any)?.html || "";
 
-  // إن لم يُرجِع HTML، نحاول جلبه من signed_url
   if (!html) {
     const url = (data as any)?.signed_url;
     if (url) {
@@ -76,12 +73,29 @@ export async function downloadContractPdf(contractId: string) {
         const res = await fetch(url);
         html = await res.text();
       } catch {
-        window.open(url, "_blank", "noopener");
-        return url;
+        if (options?.fallbackOpen) {
+          window.open(url, "_blank", "noopener");
+        }
+        return "";
       }
     }
   }
+
   if (!html) throw new Error("تعذر تجهيز محتوى العقد");
+
+  return html.replace(
+    /<div class="toolbar">[\s\S]*?<\/div>/,
+    '<style>.toolbar{display:none!important}</style>',
+  );
+}
+
+/**
+ * تحميل العقد كـ PDF: نفتح نافذة جديدة بمحتوى العقد الكامل (مع الخطوط والصور)،
+ * ننتظر تحميل كل الموارد + الخطوط، ثم نشغّل نافذة الطباعة → "حفظ كـ PDF".
+ * هذا يضمن ظهور العقد الفعلي بكامل تنسيقه (وليس صفحة فارغة).
+ */
+export async function downloadContractPdf(contractId: string) {
+  const html = await getContractPdfHtml(contractId, { fallbackOpen: true });
 
   // إخفاء شريط الأدوات الداخلي + حقن سكربت auto-print بعد جاهزية الخطوط
   const autoPrintScript = `
@@ -105,9 +119,7 @@ export async function downloadContractPdf(contractId: string) {
       })();
     </script>
   `;
-  const cleaned = html
-    .replace(/<div class="toolbar">[\s\S]*?<\/div>/, "")
-    .replace(/<\/head>/i, `${autoPrintScript}</head>`);
+  const cleaned = html.replace(/<\/head>/i, `${autoPrintScript}</head>`);
 
   // نفتح نافذة جديدة (تبويب) لضمان تحميل الخطوط والصور بشكل صحيح
   const win = window.open("", "_blank");
