@@ -111,6 +111,7 @@ import ContractsAnalytics from "./pages/admin/ContractsAnalytics";
 import AdminStudentResources from "./pages/admin/AdminStudentResources";
 import StudentLibrary from "./pages/client/StudentLibrary";
 import ClientContracts from "./pages/ClientContracts";
+import ClientContractView from "./pages/ClientContractView";
 
 import ThesisTitles from "./pages/research/ThesisTitles";
 import AnnotatedPublishing from './pages/research/AnnotatedPublishing';
@@ -403,7 +404,7 @@ const App = () => (
             } />
             <Route path="/client/contracts/:id" element={
               <SimpleProtectedRoute requiredRole="client">
-                <ClientContractApproval />
+                <ClientContractView />
               </SimpleProtectedRoute>
             } />
             <Route path="/adminmaster/services" element={
