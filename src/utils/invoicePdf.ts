@@ -11,11 +11,39 @@ import { InvoiceService } from './invoiceService';
 const COMPANY = {
   name: 'ماستر إدو باث',
   nameEn: 'Mastered Edu Path',
-  address: 'المملكة العربية السعودية',
+  address: 'المملكة العربية السعودية — الرياض',
   email: 'info@masteredupath.com',
-  phone: '+966 50 000 0000',
+  phone: '+966 53 530 0148',
   website: 'masteredupath.com',
+  vatNumber: '300000000000003',
+  crNumber: '1010000000',
+  iban: 'SA00 8000 0000 0000 0000 0000',
 };
+
+// ZATCA-style TLV base64 QR (Seller, VAT, Timestamp, Total, VAT amount)
+function buildZatcaQrPayload(sellerName: string, vatNumber: string, timestampISO: string, total: string, vatAmount: string): string {
+  const enc = new TextEncoder();
+  const tlv = (tag: number, val: string) => {
+    const v = enc.encode(val);
+    const out = new Uint8Array(2 + v.length);
+    out[0] = tag; out[1] = v.length; out.set(v, 2);
+    return out;
+  };
+  const parts = [
+    tlv(1, sellerName),
+    tlv(2, vatNumber),
+    tlv(3, timestampISO),
+    tlv(4, total),
+    tlv(5, vatAmount),
+  ];
+  const total_len = parts.reduce((s, p) => s + p.length, 0);
+  const merged = new Uint8Array(total_len);
+  let off = 0;
+  for (const p of parts) { merged.set(p, off); off += p.length; }
+  let bin = '';
+  for (let i = 0; i < merged.length; i++) bin += String.fromCharCode(merged[i]);
+  return typeof btoa !== 'undefined' ? btoa(bin) : '';
+}
 
 export function buildInvoiceHTML(invoice: Invoice, items: InvoiceItem[], payments: InvoicePayment[] = []): string {
   const fmt = (n: number | null | undefined) => InvoiceService.formatCurrency(n, invoice.currency);
@@ -50,6 +78,27 @@ export function buildInvoiceHTML(invoice: Invoice, items: InvoiceItem[], payment
 
   const totalItems = items.length;
   const totalQty = items.reduce((s, it) => s + Number(it.quantity || 0), 0);
+
+  // VAT (15%) — احسبها لو ما كانت مخزّنة
+  const subtotal = Number(invoice.subtotal || 0);
+  const discount = Number(invoice.discount_amount || 0);
+  const storedVat = Number(invoice.tax_amount || 0);
+  const computedVat = storedVat > 0 ? storedVat : Math.round((subtotal - discount) * 0.15 * 100) / 100;
+
+  // طريقة الدفع الأساسية
+  const primaryPayment = payments[0];
+  const paymentMethodLabel = primaryPayment ? translatePaymentMethod(primaryPayment.payment_method) : '—';
+
+  // QR ZATCA-style + رابط QuickChart للصورة
+  const qrPayload = buildZatcaQrPayload(
+    COMPANY.name,
+    COMPANY.vatNumber,
+    new Date(invoice.issue_date || invoice.created_at || Date.now()).toISOString(),
+    String(invoice.total_amount ?? 0),
+    String(computedVat),
+  );
+  const qrText = encodeURIComponent(qrPayload || `${invoice.invoice_number}|${invoice.total_amount}|${COMPANY.vatNumber}`);
+  const qrImg = `https://quickchart.io/qr?text=${qrText}&size=180&margin=1&ecLevel=M`;
 
   return `<!doctype html>
 <html lang="ar" dir="rtl">
@@ -226,7 +275,9 @@ export function buildInvoiceHTML(invoice: Invoice, items: InvoiceItem[], payment
           <div class="brand-meta">
             ${COMPANY.address}<br/>
             ${COMPANY.email}<span class="dot">•</span>${COMPANY.phone}<br/>
-            ${COMPANY.website}
+            ${COMPANY.website}<br/>
+            <span style="display:inline-block;margin-top:6px;padding:3px 8px;background:#eef2ff;border:1px solid #c7d2fe;border-radius:6px;font-weight:600;color:#3730a3;font-feature-settings:'tnum'">الرقم الضريبي: ${COMPANY.vatNumber}</span>
+            <span style="display:inline-block;margin-top:6px;margin-right:4px;padding:3px 8px;background:#fef3c7;border:1px solid #fde68a;border-radius:6px;font-weight:600;color:#92400e;font-feature-settings:'tnum'">س.ت: ${COMPANY.crNumber}</span>
           </div>
         </div>
       </div>
@@ -245,7 +296,7 @@ export function buildInvoiceHTML(invoice: Invoice, items: InvoiceItem[], payment
     <div class="info-grid">
       <div class="card">
         <div class="card-head"><div class="ic">👤</div><h4>بيانات العميل</h4></div>
-        <div class="name">${escapeHtml(invoice.customer_name ?? '—')}</div>
+        <div class="name" style="font-size:16px;color:var(--primary-2)">${escapeHtml(invoice.customer_name ?? '—')}</div>
         ${invoice.customer_email ? `<div class="row"><span class="k">البريد الإلكتروني</span><span class="v">${escapeHtml(invoice.customer_email)}</span></div>` : ''}
         ${invoice.customer_phone ? `<div class="row"><span class="k">رقم الجوال</span><span class="v">${escapeHtml(invoice.customer_phone)}</span></div>` : ''}
       </div>
@@ -255,6 +306,7 @@ export function buildInvoiceHTML(invoice: Invoice, items: InvoiceItem[], payment
         <div class="row"><span class="k">تاريخ الاستحقاق</span><span class="v">${invoice.due_date ?? '—'}</span></div>
         ${invoice.order_id ? `<div class="row"><span class="k">رقم الطلب</span><span class="v">${invoice.order_id.slice(0, 8)}…</span></div>` : ''}
         <div class="row"><span class="k">العملة</span><span class="v">${invoice.currency}</span></div>
+        <div class="row"><span class="k">طريقة الدفع</span><span class="v" style="color:var(--primary-2)">${escapeHtml(paymentMethodLabel)}</span></div>
       </div>
     </div>
 
@@ -283,13 +335,23 @@ export function buildInvoiceHTML(invoice: Invoice, items: InvoiceItem[], payment
 
     <div class="totals-wrap">
       <div class="totals-note">
-        <div class="nt-title">🛡️ فاتورة موثّقة إلكترونياً</div>
-        صادرة من منصة <strong>${COMPANY.name}</strong> ومحفوظة في سجلاتنا الرقمية. يمكنك التحقق من صحتها في أي وقت من خلال لوحة عميلك.
+        <div class="nt-title">🛡️ فاتورة موثّقة إلكترونياً (متوافقة مع زاتكا)</div>
+        صادرة من منصة <strong>${COMPANY.name}</strong> ومحفوظة في سجلاتنا الرقمية. يمكنك التحقق من صحتها بمسح رمز QR أدناه أو من خلال لوحة عميلك.
+        <div style="margin-top:12px;display:flex;align-items:center;gap:12px;padding:10px;background:#fff;border:1px dashed #c7d2fe;border-radius:10px">
+          <img src="${qrImg}" alt="QR" width="92" height="92" style="border-radius:6px;background:#fff" />
+          <div style="font-size:10.5px;color:var(--muted);line-height:1.7">
+            <div style="font-weight:700;color:var(--ink);margin-bottom:3px">رمز التحقق ZATCA</div>
+            البائع: ${COMPANY.name}<br/>
+            الرقم الضريبي: ${COMPANY.vatNumber}<br/>
+            الإجمالي: ${fmt(invoice.total_amount)}<br/>
+            ض.ق.م: ${fmt(computedVat)}
+          </div>
+        </div>
       </div>
       <div class="totals">
         <div class="row"><span class="k">المجموع الفرعي</span><span class="v">${fmt(invoice.subtotal)}</span></div>
         ${invoice.discount_amount ? `<div class="row"><span class="k">الخصم</span><span class="v">- ${fmt(invoice.discount_amount)}</span></div>` : ''}
-        ${invoice.tax_amount ? `<div class="row"><span class="k">ضريبة القيمة المضافة (15%)</span><span class="v">${fmt(invoice.tax_amount)}</span></div>` : ''}
+        <div class="row"><span class="k">ضريبة القيمة المضافة (15%)</span><span class="v">${fmt(computedVat)}</span></div>
         <div class="row grand"><span class="k">الإجمالي المستحق</span><span class="v">${fmt(invoice.total_amount)}</span></div>
         <div class="row paid"><span class="k">المدفوع</span><span class="v">${fmt(invoice.paid_amount)}</span></div>
         ${Number(invoice.remaining_amount || 0) <= 0
