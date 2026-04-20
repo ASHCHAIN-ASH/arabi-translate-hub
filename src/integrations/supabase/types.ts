@@ -110,6 +110,51 @@ export type Database = {
         }
         Relationships: []
       }
+      auth_whatsapp_otp: {
+        Row: {
+          attempts: number
+          code_hash: string
+          consumed_at: string | null
+          created_at: string
+          expires_at: string
+          full_name: string | null
+          id: string
+          ip_address: string | null
+          max_attempts: number
+          phone: string
+          purpose: string
+          user_agent: string | null
+        }
+        Insert: {
+          attempts?: number
+          code_hash: string
+          consumed_at?: string | null
+          created_at?: string
+          expires_at: string
+          full_name?: string | null
+          id?: string
+          ip_address?: string | null
+          max_attempts?: number
+          phone: string
+          purpose?: string
+          user_agent?: string | null
+        }
+        Update: {
+          attempts?: number
+          code_hash?: string
+          consumed_at?: string | null
+          created_at?: string
+          expires_at?: string
+          full_name?: string | null
+          id?: string
+          ip_address?: string | null
+          max_attempts?: number
+          phone?: string
+          purpose?: string
+          user_agent?: string | null
+        }
+        Relationships: []
+      }
       chat_conversations: {
         Row: {
           admin_id: string | null
