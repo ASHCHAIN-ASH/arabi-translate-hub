@@ -278,9 +278,9 @@ const AdminInbox: React.FC = () => {
               <StatCard icon={Clock}        label="اليوم"     value={counts.today}   color="bg-violet-500/10 text-violet-600"         delay={0.2} />
             </div>
 
-          <div className="grid grid-cols-1 gap-0 border-t lg:grid-cols-[400px_minmax(0,1fr)] min-h-[calc(100vh-15rem)] lg:h-[calc(100vh-15rem)]">
+          <div className="flex min-h-[calc(100vh-15rem)] flex-col border-t lg:h-[calc(100vh-15rem)] lg:flex-row-reverse">
               {/* List */}
-              <aside className="border-l overflow-hidden flex flex-col bg-card/50">
+              <aside className="flex flex-col overflow-hidden bg-card/50 lg:w-[400px] lg:border-l">
                 <div className="p-3 border-b space-y-2 bg-background/60 backdrop-blur">
                   <div className="relative">
                     <Search className="w-4 h-4 absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
@@ -412,7 +412,7 @@ const AdminInbox: React.FC = () => {
               </aside>
 
               {/* Conversation */}
-              <main className="flex flex-col overflow-hidden bg-gradient-to-b from-muted/10 to-muted/30">
+              <main className="flex min-w-0 flex-1 flex-col overflow-hidden bg-gradient-to-b from-muted/10 to-muted/30">
                 <AnimatePresence mode="wait">
                   {!selected ? (
                     <motion.div
