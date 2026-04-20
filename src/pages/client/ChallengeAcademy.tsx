@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import ClientLayout from '@/components/client/ClientLayout';
 import { useAuth } from '@/components/SimpleAuthProvider';
@@ -12,10 +13,13 @@ import { DailyChallengeCard } from '@/components/challenge-academy/DailyChalleng
 import { ChallengeRunner } from '@/components/challenge-academy/ChallengeRunner';
 import { ChallengeResult } from '@/components/challenge-academy/ChallengeResult';
 import { LevelUpCelebration } from '@/components/challenge-academy/LevelUpCelebration';
+import { ReferralPanel } from '@/components/challenge-academy/ReferralPanel';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { Card } from '@/components/ui/card';
-import { Zap, Trophy, Award, Loader2, Calendar } from 'lucide-react';
+import { Zap, Trophy, Award, Loader2, Calendar, Gift } from 'lucide-react';
 import { AttemptSubmitResult } from '@/utils/dailyChallengeService';
+import { ChallengeReferralService } from '@/utils/challengeReferralService';
+import { toast } from 'sonner';
 
 const ChallengeAcademy: React.FC = () => {
   const { user } = useAuth();
@@ -29,6 +33,32 @@ const ChallengeAcademy: React.FC = () => {
   const [runnerOpen, setRunnerOpen] = useState(false);
   const [resultOpen, setResultOpen] = useState(false);
   const [lastResult, setLastResult] = useState<AttemptSubmitResult | null>(null);
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  // Capture ?ref= and try to claim it
+  useEffect(() => {
+    const ref = searchParams.get('ref');
+    if (ref) {
+      ChallengeReferralService.storePendingCode(ref);
+      ChallengeReferralService.trackClick(ref);
+      // strip ?ref from URL
+      searchParams.delete('ref');
+      setSearchParams(searchParams, { replace: true });
+    }
+  }, [searchParams, setSearchParams]);
+
+  // Auto-claim pending referral once user is authenticated
+  useEffect(() => {
+    if (!userId) return;
+    const pending = ChallengeReferralService.readPendingCode();
+    if (!pending) return;
+    ChallengeReferralService.claimPendingIfAny().then((res) => {
+      if (res.claimed && !res.alreadyClaimed && res.xp) {
+        toast.success(`🎁 تم تفعيل دعوتك! +${res.xp} XP`, { duration: 5000 });
+        refresh();
+      }
+    });
+  }, [userId, refresh]);
 
   if (!userId) {
     return (
@@ -53,7 +83,7 @@ const ChallengeAcademy: React.FC = () => {
 
         {/* Tabs */}
         <Tabs defaultValue="daily" dir="rtl" className="space-y-4">
-          <TabsList dir="rtl" className="grid grid-cols-3 w-full max-w-2xl mx-auto h-auto p-1">
+          <TabsList dir="rtl" className="grid grid-cols-4 w-full max-w-3xl mx-auto h-auto p-1">
             <TabsTrigger value="daily" className="gap-2 py-2.5">
               <Zap className="w-4 h-4" />
               <span className="hidden sm:inline">التحدي اليومي</span>
@@ -68,6 +98,11 @@ const ChallengeAcademy: React.FC = () => {
               <Award className="w-4 h-4" />
               <span className="hidden sm:inline">إنجازاتي</span>
               <span className="sm:hidden">الإنجازات</span>
+            </TabsTrigger>
+            <TabsTrigger value="referrals" className="gap-2 py-2.5">
+              <Gift className="w-4 h-4" />
+              <span className="hidden sm:inline">الإحالات</span>
+              <span className="sm:hidden">الدعوات</span>
             </TabsTrigger>
           </TabsList>
 
@@ -161,6 +196,10 @@ const ChallengeAcademy: React.FC = () => {
               summary={summary}
               streak={streak}
             />
+          </TabsContent>
+
+          <TabsContent value="referrals">
+            <ReferralPanel />
           </TabsContent>
         </Tabs>
       </div>
