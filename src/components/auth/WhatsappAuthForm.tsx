@@ -63,9 +63,11 @@ export const WhatsappAuthForm: React.FC<Props> = ({ mode, onSuccess }) => {
     }
     setLoading(true);
     try {
-      const { data, error } = await supabase.functions.invoke('whatsapp-otp-request', {
-        body: { phone, purpose: mode },
-      });
+      const { data, error } = await withTimeout(
+        supabase.functions.invoke('whatsapp-otp-request', {
+          body: { phone, purpose: mode },
+        }),
+      );
       if (error || !data?.success) {
         throw new Error(data?.error || error?.message || 'تعذر إرسال الرمز');
       }
@@ -86,9 +88,11 @@ export const WhatsappAuthForm: React.FC<Props> = ({ mode, onSuccess }) => {
     }
     setLoading(true);
     try {
-      const { data, error } = await supabase.functions.invoke('whatsapp-auth-complete', {
-        body: { phone, code, full_name: fullName, purpose: mode },
-      });
+      const { data, error } = await withTimeout(
+        supabase.functions.invoke('whatsapp-auth-complete', {
+          body: { phone, code, full_name: fullName, purpose: mode },
+        }),
+      );
       if (error || !data?.success) {
         throw new Error(data?.error || error?.message || 'فشل التحقق');
       }
