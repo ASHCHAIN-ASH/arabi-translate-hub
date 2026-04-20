@@ -486,11 +486,12 @@ Deno.serve(async (req: Request) => {
       .order("signed_at", { ascending: false })
       .limit(1).maybeSingle();
 
-    // Apply optional overrides for previews only (never on signed_final)
-    if (mode === "preview") {
-      const overrideContent = typeof body.override_content === "string" ? body.override_content.trim() : "";
-      const overrideClientName = typeof body.override_client_full_name === "string" ? body.override_client_full_name.trim() : "";
-      const overrideClientEmail = typeof body.override_client_email === "string" ? body.override_client_email.trim() : "";
+    // Apply optional overrides for previews, and for signed_final only when base contract content is incomplete
+    const overrideContent = typeof body.override_content === "string" ? body.override_content.trim() : "";
+    const overrideClientName = typeof body.override_client_full_name === "string" ? body.override_client_full_name.trim() : "";
+    const overrideClientEmail = typeof body.override_client_email === "string" ? body.override_client_email.trim() : "";
+    const allowSignedOverride = mode === "signed_final" && !isCompleteContractContent(contract.content);
+    if (mode === "preview" || allowSignedOverride || (mode === "signed_final" && force)) {
       if (overrideClientName) contract.client_full_name = overrideClientName;
       if (overrideClientEmail) contract.client_email = overrideClientEmail;
       if (isCompleteContractContent(overrideContent)) contract.content = overrideContent;
@@ -524,7 +525,7 @@ Deno.serve(async (req: Request) => {
     if (mode === "signed_final") {
       if (!signature) throw new Error("Cannot generate signed_final: contract has no signature");
 
-      // Idempotency: return existing current signed_final unless force=true
+      // Idempotency: reuse only if current signed version is complete; otherwise auto-repair by regenerating a new immutable version
       if (!force) {
         const { data: existing } = await supabase
           .from("contract_versions")
@@ -533,7 +534,9 @@ Deno.serve(async (req: Request) => {
           .eq("output_type", "signed_final")
           .eq("is_current", true)
           .maybeSingle();
-        if (existing?.pdf_storage_path) {
+        const existingSnapshot = String(existing?.content_snapshot || "").trim();
+        const canReuseExisting = Boolean(existing?.pdf_storage_path) && isCompleteContractContent(existingSnapshot);
+        if (canReuseExisting) {
           const { data: signedUrlData } = await supabase.storage
             .from("contracts").createSignedUrl(existing.pdf_storage_path, 60 * 60 * 24 * 7);
           return new Response(JSON.stringify({
