@@ -11,6 +11,7 @@ import { MyAchievementsView } from '@/components/challenge-academy/MyAchievement
 import { DailyChallengeCard } from '@/components/challenge-academy/DailyChallengeCard';
 import { ChallengeRunner } from '@/components/challenge-academy/ChallengeRunner';
 import { ChallengeResult } from '@/components/challenge-academy/ChallengeResult';
+import { LevelUpCelebration } from '@/components/challenge-academy/LevelUpCelebration';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { Card } from '@/components/ui/card';
 import { Zap, Trophy, Award, Loader2, Calendar } from 'lucide-react';
@@ -44,6 +45,9 @@ const ChallengeAcademy: React.FC = () => {
   return (
     <ClientLayout>
       <div className="p-3 sm:p-4 lg:p-6 space-y-5 max-w-7xl mx-auto" dir="rtl">
+        {/* Level-up celebration (auto-triggers when level changes) */}
+        <LevelUpCelebration summary={summary} />
+
         {/* Header */}
         <StatsHeader summary={summary} streak={streak} />
 
