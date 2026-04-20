@@ -353,14 +353,28 @@ const ClientWallet: React.FC = () => {
                     <p className="text-sm">لا توجد حركات بعد</p>
                   </div>
                 ) : (
-                  <div className="divide-y divide-border p-2 space-y-2">
-                    {txs.map((t, i) => (
-                      <motion.div key={t.id} initial={{ opacity: 0, x: 8 }} animate={{ opacity: 1, x: 0 }}
-                        transition={{ delay: Math.min(i * 0.025, 0.3) }}>
-                        <TransactionItem tx={t} />
-                      </motion.div>
-                    ))}
-                  </div>
+                  <>
+                    <div className="divide-y divide-border p-2 space-y-2">
+                      {txs
+                        .slice((txPage - 1) * PAGE_SIZE, txPage * PAGE_SIZE)
+                        .map((t, i) => (
+                          <motion.div
+                            key={t.id}
+                            initial={{ opacity: 0, x: 8 }}
+                            animate={{ opacity: 1, x: 0 }}
+                            transition={{ delay: Math.min(i * 0.025, 0.2) }}
+                          >
+                            <TransactionItem tx={t} />
+                          </motion.div>
+                        ))}
+                    </div>
+                    <Pagination
+                      page={txPage}
+                      total={txs.length}
+                      pageSize={PAGE_SIZE}
+                      onChange={setTxPage}
+                    />
+                  </>
                 )}
               </CardContent>
             </Card>
@@ -375,28 +389,38 @@ const ClientWallet: React.FC = () => {
                     <p className="text-sm">لا توجد طلبات شحن بعد</p>
                   </div>
                 ) : (
-                  <div className="divide-y divide-border">
-                    {topups.map((r, i) => (
-                      <motion.div key={r.id} initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.04 }}
-                        className="flex items-center gap-2.5 p-3 hover:bg-muted/30 transition-colors">
-                        <div className="w-9 h-9 rounded-lg bg-violet-100 text-violet-600 flex items-center justify-center shrink-0">
-                          <CreditCard className="w-4 h-4" />
-                        </div>
-                        <div className="flex-1 min-w-0">
-                          <div className="flex items-center gap-1.5 flex-wrap">
-                            <span className="text-sm font-bold">{WalletService.formatCurrency(r.amount)}</span>
-                            <Badge className={`text-[9px] py-0 px-1.5 border ${TOPUP_STATUS_COLORS[r.status]}`}>
-                              {TOPUP_STATUS_LABELS[r.status]}
-                            </Badge>
-                          </div>
-                          <p className="text-[10px] text-muted-foreground mt-0.5">
-                            {r.payment_method} • {new Date(r.created_at).toLocaleString('ar-SA')}
-                          </p>
-                          {r.admin_notes && <p className="text-[10px] text-muted-foreground mt-1 italic">📝 {r.admin_notes}</p>}
-                        </div>
-                      </motion.div>
-                    ))}
-                  </div>
+                  <>
+                    <div className="divide-y divide-border">
+                      {topups
+                        .slice((topupsPage - 1) * PAGE_SIZE, topupsPage * PAGE_SIZE)
+                        .map((r, i) => (
+                          <motion.div key={r.id} initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.04 }}
+                            className="flex items-center gap-2.5 p-3 hover:bg-muted/30 transition-colors">
+                            <div className="w-9 h-9 rounded-lg bg-violet-100 text-violet-600 flex items-center justify-center shrink-0">
+                              <CreditCard className="w-4 h-4" />
+                            </div>
+                            <div className="flex-1 min-w-0">
+                              <div className="flex items-center gap-1.5 flex-wrap">
+                                <span className="text-sm font-bold">{WalletService.formatCurrency(r.amount)}</span>
+                                <Badge className={`text-[9px] py-0 px-1.5 border ${TOPUP_STATUS_COLORS[r.status]}`}>
+                                  {TOPUP_STATUS_LABELS[r.status]}
+                                </Badge>
+                              </div>
+                              <p className="text-[10px] text-muted-foreground mt-0.5">
+                                {r.payment_method} • {new Date(r.created_at).toLocaleString('ar-SA')}
+                              </p>
+                              {r.admin_notes && <p className="text-[10px] text-muted-foreground mt-1 italic">📝 {r.admin_notes}</p>}
+                            </div>
+                          </motion.div>
+                        ))}
+                    </div>
+                    <Pagination
+                      page={topupsPage}
+                      total={topups.length}
+                      pageSize={PAGE_SIZE}
+                      onChange={setTopupsPage}
+                    />
+                  </>
                 )}
               </CardContent>
             </Card>
@@ -404,6 +428,72 @@ const ClientWallet: React.FC = () => {
         </Tabs>
       </div>
     </ClientLayout>
+  );
+};
+
+// === Pagination component ===
+interface PaginationProps {
+  page: number;
+  total: number;
+  pageSize: number;
+  onChange: (p: number) => void;
+}
+const Pagination: React.FC<PaginationProps> = ({ page, total, pageSize, onChange }) => {
+  const totalPages = Math.max(1, Math.ceil(total / pageSize));
+  if (totalPages <= 1) return null;
+  const from = (page - 1) * pageSize + 1;
+  const to = Math.min(page * pageSize, total);
+
+  // Build page numbers (compact: 1 … current-1, current, current+1 … last)
+  const pages: (number | 'gap')[] = [];
+  const add = (n: number) => { if (!pages.includes(n)) pages.push(n); };
+  add(1);
+  if (page - 1 > 2) pages.push('gap');
+  for (let i = Math.max(2, page - 1); i <= Math.min(totalPages - 1, page + 1); i++) add(i);
+  if (page + 1 < totalPages - 1) pages.push('gap');
+  if (totalPages > 1) add(totalPages);
+
+  return (
+    <div className="flex flex-col sm:flex-row items-center justify-between gap-2 p-3 border-t bg-muted/20" dir="rtl">
+      <p className="text-[11px] text-muted-foreground">
+        عرض <span className="font-bold text-foreground">{from}</span>–<span className="font-bold text-foreground">{to}</span> من <span className="font-bold text-foreground">{total}</span>
+      </p>
+      <div className="flex items-center gap-1">
+        <Button
+          variant="outline" size="sm"
+          className="h-7 w-7 p-0"
+          onClick={() => onChange(page - 1)}
+          disabled={page === 1}
+          aria-label="السابق"
+        >
+          <ChevronRight className="w-3.5 h-3.5" />
+        </Button>
+        {pages.map((p, idx) =>
+          p === 'gap' ? (
+            <span key={`g-${idx}`} className="px-1 text-muted-foreground text-xs">…</span>
+          ) : (
+            <Button
+              key={p}
+              variant={p === page ? 'default' : 'outline'}
+              size="sm"
+              className="h-7 min-w-7 px-2 text-xs"
+              onClick={() => onChange(p)}
+            >
+              {p}
+            </Button>
+          )
+        )}
+        <Button
+          variant="outline" size="sm"
+          className="h-7 w-7 p-0"
+          onClick={() => onChange(page + 1)}
+          disabled={page === totalPages}
+          aria-label="التالي"
+        >
+          <ChevronLeft className="w-3.5 h-3.5" />
+        </Button>
+      </div>
+    </div>
   );
 };
 
