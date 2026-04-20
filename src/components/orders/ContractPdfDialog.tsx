@@ -39,13 +39,13 @@ export const ContractPdfDialog: React.FC<Props> = ({ contractId, contractNumber,
       const contract = await getContract(contractId);
       const isSigned = contract?.status === 'signed' || contract?.status === 'active' || contract?.status === 'completed';
       const resolvedContent = contract ? resolveContractDisplayContent(contract as any) : '';
-      const needsRepair = isSigned && resolvedContent.trim().length >= 400;
+      const needsRepair = isSigned && resolvedContent.trim().length >= 400 && resolvedContent.trim() !== (contract?.content || '').trim();
       const { data, error } = await supabase.functions.invoke('generate-contract-pdf', {
         body: {
           contract_id: contractId,
           mode: isSigned ? 'signed_final' : 'preview',
           force: needsRepair,
-          override_content: needsRepair ? resolvedContent : undefined,
+          override_content: isSigned ? resolvedContent : undefined,
           public_origin: window.location.origin,
         },
       });
