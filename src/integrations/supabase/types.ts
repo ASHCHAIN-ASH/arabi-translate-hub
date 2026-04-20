@@ -4322,6 +4322,105 @@ export type Database = {
         }
         Relationships: []
       }
+      whatsapp_bot_sessions: {
+        Row: {
+          created_at: string
+          customer_id: string | null
+          failed_attempts: number
+          human_takeover: boolean
+          human_takeover_at: string | null
+          human_takeover_reason: string | null
+          id: string
+          inbox_message_id: string | null
+          is_registered: boolean
+          last_bot_reply_at: string | null
+          last_message: string | null
+          last_message_at: string | null
+          phone: string
+          state: string
+          state_data: Json
+          updated_at: string
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          customer_id?: string | null
+          failed_attempts?: number
+          human_takeover?: boolean
+          human_takeover_at?: string | null
+          human_takeover_reason?: string | null
+          id?: string
+          inbox_message_id?: string | null
+          is_registered?: boolean
+          last_bot_reply_at?: string | null
+          last_message?: string | null
+          last_message_at?: string | null
+          phone: string
+          state?: string
+          state_data?: Json
+          updated_at?: string
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          customer_id?: string | null
+          failed_attempts?: number
+          human_takeover?: boolean
+          human_takeover_at?: string | null
+          human_takeover_reason?: string | null
+          id?: string
+          inbox_message_id?: string | null
+          is_registered?: boolean
+          last_bot_reply_at?: string | null
+          last_message?: string | null
+          last_message_at?: string | null
+          phone?: string
+          state?: string
+          state_data?: Json
+          updated_at?: string
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      whatsapp_inbound_messages: {
+        Row: {
+          bot_handled: boolean
+          bot_reply: string | null
+          created_at: string
+          forwarded_to_human: boolean
+          id: string
+          inbox_message_id: string | null
+          message_body: string | null
+          message_type: string | null
+          phone: string
+          raw_payload: Json | null
+        }
+        Insert: {
+          bot_handled?: boolean
+          bot_reply?: string | null
+          created_at?: string
+          forwarded_to_human?: boolean
+          id?: string
+          inbox_message_id?: string | null
+          message_body?: string | null
+          message_type?: string | null
+          phone: string
+          raw_payload?: Json | null
+        }
+        Update: {
+          bot_handled?: boolean
+          bot_reply?: string | null
+          created_at?: string
+          forwarded_to_human?: boolean
+          id?: string
+          inbox_message_id?: string | null
+          message_body?: string | null
+          message_type?: string | null
+          phone?: string
+          raw_payload?: Json | null
+        }
+        Relationships: []
+      }
       whatsapp_otp_codes: {
         Row: {
           attempts: number
