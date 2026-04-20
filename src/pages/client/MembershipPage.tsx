@@ -9,13 +9,13 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Label } from '@/components/ui/label';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { ReferralsTab } from '@/components/membership/ReferralsTab';
+import { Progress } from '@/components/ui/progress';
+import { Link } from 'react-router-dom';
 import { ReferralService } from '@/utils/referralService';
 import {
   Crown, Check, Wallet, Receipt, Sparkles, Calendar, TrendingUp, Zap, Shield,
   Gift, HeadphonesIcon, Star, Award, ArrowLeft, Info, HelpCircle, Rocket,
-  Clock, Users, BadgeCheck, Flame, Diamond,
+  Clock, Users, BadgeCheck, Flame, Diamond, ArrowRight, CheckCircle2, Quote,
 } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/components/SimpleAuthProvider';
