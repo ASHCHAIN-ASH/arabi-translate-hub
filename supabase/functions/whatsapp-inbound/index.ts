@@ -1,4 +1,4 @@
-// Webhook استقبال رسائل الواتساب من SmartWats — رد آلي ذكي
+// Webhook استقبال رسائل الواتساب — رد ذكي بـ Lovable AI من بيانات المنصة
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 import { normalizePhone, sendWhatsAppMessage } from "../_shared/whatsapp.ts";
@@ -9,19 +9,14 @@ const corsHeaders = {
   "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
 };
 
-const REGISTER_URL = "https://masteredupath.com/auth";
-const ORDERS_URL = "https://masteredupath.com/dashboard/orders";
-const INVOICES_URL = "https://masteredupath.com/dashboard/invoices";
+const SITE_URL = "https://masteredupath.com";
+const REGISTER_URL = `${SITE_URL}/auth`;
 const CONTACT_PHONE = "0500776343";
 
-// كلمات مفتاحية لطلب موظف بشري
 const HUMAN_KEYWORDS = [
-  "موظف", "بشر", "ادمن", "إدمن", "محادثه", "محادثة", "مساعده", "مساعدة",
-  "representative", "human", "agent", "support", "ممثل", "كلمني", "اتكلم",
+  "موظف", "بشر", "ادمن", "إدمن", "محادثه مع موظف", "كلمني موظف",
+  "representative", "human agent", "اتكلم مع موظف", "اريد موظف",
 ];
-
-// أوامر الإلغاء/إعادة التشغيل
-const RESET_KEYWORDS = ["قائمة", "قائمه", "menu", "بدء", "ابدأ", "/start", "0"];
 
 serve(async (req) => {
   if (req.method === "OPTIONS") return new Response(null, { headers: corsHeaders });
@@ -33,9 +28,8 @@ serve(async (req) => {
 
   try {
     const payload = await req.json().catch(() => ({}));
-    console.log("📨 Inbound payload:", JSON.stringify(payload).slice(0, 500));
+    console.log("📨 Inbound:", JSON.stringify(payload).slice(0, 400));
 
-    // استخراج الرقم والرسالة من حمولة SmartWats (تتنوع حسب الإعدادات)
     const rawPhone =
       payload?.from || payload?.phone || payload?.number ||
       payload?.data?.from || payload?.sender || payload?.user?.phone || "";
@@ -44,18 +38,13 @@ serve(async (req) => {
       payload?.data?.message || payload?.data?.text || ""
     ).toString().trim();
 
-    if (!rawPhone) {
-      return jsonRes({ success: false, error: "missing phone" }, 200);
-    }
-
-    const phone = normalizePhone(rawPhone);
-
-    // تجاهل رسائل الإرسال الصادر (echo)
+    if (!rawPhone) return jsonRes({ success: false, error: "missing phone" });
     if (payload?.fromMe || payload?.from_me || payload?.event === "message_status") {
       return jsonRes({ success: true, ignored: true });
     }
 
-    // سجل الرسالة الواردة
+    const phone = normalizePhone(rawPhone);
+
     const { data: inboundLog } = await supabase
       .from("whatsapp_inbound_messages")
       .insert({
@@ -69,19 +58,18 @@ serve(async (req) => {
 
     if (!messageBody) return jsonRes({ success: true, empty: true });
 
-    // اجلب أو أنشئ الجلسة
+    // الجلسة
     let { data: session } = await supabase
       .from("whatsapp_bot_sessions")
       .select("*")
       .eq("phone", phone)
       .maybeSingle();
 
-    // ابحث عن المستخدم المسجل بالرقم
+    // المستخدم
+    const phoneVariants = buildPhoneVariants(phone);
     let userId: string | null = null;
     let customerId: string | null = null;
     let customerName = "";
-
-    const phoneVariants = buildPhoneVariants(phone);
 
     const { data: profile } = await supabase
       .from("profiles")
@@ -89,11 +77,7 @@ serve(async (req) => {
       .or(phoneVariants.map((p) => `phone.eq.${p}`).join(","))
       .limit(1)
       .maybeSingle();
-
-    if (profile) {
-      userId = profile.id;
-      customerName = profile.full_name || "";
-    }
+    if (profile) { userId = profile.id; customerName = profile.full_name || ""; }
 
     const { data: customer } = await supabase
       .from("customers")
@@ -101,7 +85,6 @@ serve(async (req) => {
       .or(phoneVariants.map((p) => `phone.eq.${p}`).join(","))
       .limit(1)
       .maybeSingle();
-
     if (customer) {
       customerId = customer.id;
       if (!userId) userId = customer.user_id;
@@ -114,31 +97,25 @@ serve(async (req) => {
       const { data: newSession } = await supabase
         .from("whatsapp_bot_sessions")
         .insert({
-          phone,
-          user_id: userId,
-          customer_id: customerId,
+          phone, user_id: userId, customer_id: customerId,
           is_registered: isRegistered,
-          state: "idle",
+          state: "ai_chat",
           last_message: messageBody,
           last_message_at: new Date().toISOString(),
         })
-        .select("*")
-        .single();
+        .select("*").single();
       session = newSession;
     } else {
-      await supabase
-        .from("whatsapp_bot_sessions")
-        .update({
-          user_id: userId || session.user_id,
-          customer_id: customerId || session.customer_id,
-          is_registered: isRegistered || session.is_registered,
-          last_message: messageBody,
-          last_message_at: new Date().toISOString(),
-        })
-        .eq("id", session.id);
+      await supabase.from("whatsapp_bot_sessions").update({
+        user_id: userId || session.user_id,
+        customer_id: customerId || session.customer_id,
+        is_registered: isRegistered || session.is_registered,
+        last_message: messageBody,
+        last_message_at: new Date().toISOString(),
+      }).eq("id", session.id);
     }
 
-    // إذا تم تحويلها لموظف، لا ترد آلياً ولكن سجل
+    // إذا تم تحويلها لموظف
     if (session?.human_takeover) {
       await appendToInbox(supabase, session, phone, messageBody, customerName);
       return jsonRes({ success: true, takeover: true });
@@ -146,94 +123,267 @@ serve(async (req) => {
 
     const lower = messageBody.toLowerCase();
 
-    // كشف طلب موظف
+    // طلب موظف
     if (HUMAN_KEYWORDS.some((k) => lower.includes(k.toLowerCase()))) {
       await activateHumanTakeover(supabase, session, phone, messageBody, customerName, "user_request");
-      const reply = `تم تحويل محادثتك إلى موظف بشري 👨‍💼\nسيتواصل معك أحد أعضاء فريق ماستر إيدو باث في أقرب وقت ممكن.\n\nشكراً لصبرك 🌹`;
+      const reply = `تم تحويل محادثتك إلى موظف بشري 👨‍💼\nسيتواصل معك أحد أعضاء فريق ماستر إيدو باث في أقرب وقت.\n\nشكراً لصبرك 🌹`;
       await sendWhatsAppMessage(phone, reply);
       await logBotReply(supabase, inboundLog?.id, reply, true);
       return jsonRes({ success: true, action: "human_handoff" });
     }
 
-    // غير مسجل: رد ترحيبي + تسجيل في inbox
-    if (!isRegistered) {
-      const reply = buildGuestReply();
-      await sendWhatsAppMessage(phone, reply);
-      await appendToInbox(supabase, session, phone, messageBody, customerName || "زائر");
-      await logBotReply(supabase, inboundLog?.id, reply, false);
-      return jsonRes({ success: true, action: "guest_welcome" });
-    }
+    // اجمع سياق المنصة للعميل
+    const context = await buildPlatformContext(supabase, { userId, customerId, customerName, isRegistered });
 
-    // مسجل: قائمة تفاعلية
-    let reply = "";
-    let newState = session?.state || "idle";
+    // اجمع آخر الرسائل للسياق
+    const { data: recent } = await supabase
+      .from("whatsapp_inbound_messages")
+      .select("message_body, bot_reply, created_at")
+      .eq("phone", phone)
+      .order("created_at", { ascending: false })
+      .limit(5);
 
-    // إعادة تعيين
-    if (RESET_KEYWORDS.some((k) => lower === k.toLowerCase() || lower.startsWith(k.toLowerCase()))) {
-      reply = buildMainMenu(customerName);
-      newState = "menu";
-    }
-    // اختيار 1 — طلباتي
-    else if (lower === "1" || lower.includes("طلب") || lower.includes("طلبات")) {
-      reply = await buildOrdersReply(supabase, userId!, customerId);
-      newState = "orders";
-    }
-    // اختيار 2 — فواتيري
-    else if (lower === "2" || lower.includes("فاتور") || lower.includes("مدفوع")) {
-      reply = await buildInvoicesReply(supabase, userId!, customerId);
-      newState = "invoices";
-    }
-    // اختيار 3 — العقود
-    else if (lower === "3" || lower.includes("عقد") || lower.includes("عقود")) {
-      reply = await buildContractsReply(supabase, userId!, customerId);
-      newState = "contracts";
-    }
-    // اختيار 4 — موظف
-    else if (lower === "4") {
-      await activateHumanTakeover(supabase, session, phone, messageBody, customerName, "menu_choice");
-      reply = `تم تحويل محادثتك إلى موظف بشري 👨‍💼\nسيتواصل معك أحد أعضاء فريق ماستر إيدو باث قريباً.\n\nشكراً لتواصلك 🌹`;
+    const history = (recent || []).reverse().slice(0, -1).flatMap((m: any) => {
+      const arr: any[] = [{ role: "user", content: m.message_body }];
+      if (m.bot_reply) arr.push({ role: "assistant", content: m.bot_reply });
+      return arr;
+    });
+
+    // استدعِ Lovable AI
+    const aiResult = await askAI({ message: messageBody, context, history });
+
+    if (aiResult.handoff) {
+      await activateHumanTakeover(supabase, session, phone, messageBody, customerName, "ai_handoff");
+      const reply = aiResult.reply || `سأقوم بتحويلك إلى موظف بشري للمساعدة الأفضل 👨‍💼\nسيتواصل معك الفريق قريباً 🌹`;
       await sendWhatsAppMessage(phone, reply);
       await logBotReply(supabase, inboundLog?.id, reply, true);
-      return jsonRes({ success: true, action: "human_handoff" });
-    }
-    // محاولة فشل: زد العداد، وبعد محاولتين حول لموظف
-    else {
-      const fails = (session?.failed_attempts || 0) + 1;
-      await supabase
-        .from("whatsapp_bot_sessions")
-        .update({ failed_attempts: fails })
-        .eq("id", session!.id);
-
-      if (fails >= 2) {
-        await activateHumanTakeover(supabase, session, phone, messageBody, customerName, "auto_after_failures");
-        reply = `لم أتمكن من فهم استفسارك 🤔\nسأقوم بتحويل محادثتك إلى موظف بشري للمساعدة.\n\nسيرد عليك أحد أعضاء الفريق قريباً 🌹`;
-        await sendWhatsAppMessage(phone, reply);
-        await logBotReply(supabase, inboundLog?.id, reply, true);
-        return jsonRes({ success: true, action: "auto_handoff" });
-      }
-      reply = `لم أفهم طلبك جيداً 🤔\n\n${buildMainMenu(customerName)}`;
-      newState = "menu";
+      return jsonRes({ success: true, action: "ai_handoff" });
     }
 
-    // أعد تصفير العداد عند نجاح الفهم
-    await supabase
-      .from("whatsapp_bot_sessions")
-      .update({
-        state: newState,
-        failed_attempts: 0,
-        last_bot_reply_at: new Date().toISOString(),
-      })
-      .eq("id", session!.id);
+    const reply = aiResult.reply || "عذراً، لم أتمكن من معالجة طلبك. أرسل *موظف* للتحدث مع فريقنا.";
+
+    await supabase.from("whatsapp_bot_sessions").update({
+      state: "ai_chat",
+      failed_attempts: 0,
+      last_bot_reply_at: new Date().toISOString(),
+    }).eq("id", session!.id);
 
     await sendWhatsAppMessage(phone, reply);
     await logBotReply(supabase, inboundLog?.id, reply, false);
 
-    return jsonRes({ success: true, action: "auto_reply", state: newState });
+    return jsonRes({ success: true, action: "ai_reply" });
   } catch (e: any) {
     console.error("❌ inbound error:", e);
     return jsonRes({ success: false, error: e?.message || "error" }, 200);
   }
 });
+
+// ==================== AI ====================
+
+async function askAI(params: {
+  message: string;
+  context: string;
+  history: Array<{ role: string; content: string }>;
+}): Promise<{ reply: string; handoff?: boolean }> {
+  const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
+  if (!LOVABLE_API_KEY) {
+    return { reply: "عذراً، الخدمة الذكية غير مفعّلة حالياً. أرسل *موظف* للتحدث مع فريقنا." };
+  }
+
+  const systemPrompt = `أنت "مساعد ماستر إيدو باث" — مساعد ذكي للرد على عملاء منصة ماستر إيدو باث على واتساب.
+
+# هويتك
+- تتحدث العربية الفصحى المبسطة بنبرة ودودة ومهنية.
+- استخدم الإيموجي باعتدال (👋 ✅ 📋 🧾 📜 💼 🌹 ⏳).
+- ردودك قصيرة وواضحة (لا تتجاوز 6-8 أسطر إلا للضرورة).
+- تنسيق واتساب: *نص غامق*، _مائل_، استخدم القوائم المرقمة عند اللزوم.
+
+# مهمتك
+أجب على استفسارات العميل من بيانات المنصة المرفقة في القسم [بيانات العميل من المنصة].
+- أسئلة عن الطلبات/الفواتير/العقود/المحفظة/النقاط: استخرج الجواب من البيانات المرفقة.
+- أسئلة عن الأسعار/الخدمات/سياسات المنصة: استخدم القسم [معلومات المنصة].
+- إذا لم تجد إجابة دقيقة، اعتذر بلطف واقترح زيارة الموقع أو التحدث مع موظف.
+- إذا طلب العميل صراحة موظفاً بشرياً، أو كان السؤال معقداً (شكوى، استرجاع، نزاع، حالة طارئة)، أرسل علامة [HANDOFF] في بداية ردك.
+
+# قواعد صارمة
+- لا تخترع أرقام طلبات أو فواتير أو مبالغ.
+- لا تعد بأشياء خارج صلاحيتك (تخفيضات، استرجاع فوري).
+- لا تكشف معلومات حساسة (كلمات مرور، رموز OTP).
+- اربط دائماً للوحة التحكم: ${SITE_URL}/dashboard
+- للتسجيل: ${REGISTER_URL}
+- للتواصل المباشر: ${CONTACT_PHONE}
+
+# سياق العميل
+${params.context}`;
+
+  try {
+    const resp = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${LOVABLE_API_KEY}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        model: "google/gemini-2.5-flash",
+        messages: [
+          { role: "system", content: systemPrompt },
+          ...params.history,
+          { role: "user", content: params.message },
+        ],
+      }),
+    });
+
+    if (!resp.ok) {
+      const t = await resp.text();
+      console.error("AI gateway error:", resp.status, t);
+      if (resp.status === 429) {
+        return { reply: "النظام مزدحم حالياً 🙏\nالرجاء المحاولة بعد قليل، أو أرسل *موظف* للتحدث مع فريقنا." };
+      }
+      if (resp.status === 402) {
+        return { reply: "خدمة الذكاء غير متاحة مؤقتاً. أرسل *موظف* للتحدث مع فريقنا 🌹" };
+      }
+      return { reply: "عذراً، حدث خطأ مؤقت. أرسل *موظف* للمساعدة." };
+    }
+
+    const data = await resp.json();
+    let content: string = data?.choices?.[0]?.message?.content || "";
+    content = content.trim();
+
+    let handoff = false;
+    if (content.includes("[HANDOFF]")) {
+      handoff = true;
+      content = content.replace(/\[HANDOFF\]/g, "").trim();
+    }
+
+    return { reply: content, handoff };
+  } catch (e) {
+    console.error("AI call failed:", e);
+    return { reply: "عذراً، تعذر الوصول للخدمة الذكية. أرسل *موظف* للتحدث مع فريقنا." };
+  }
+}
+
+// ==================== Platform Context ====================
+
+async function buildPlatformContext(
+  supabase: any,
+  ctx: { userId: string | null; customerId: string | null; customerName: string; isRegistered: boolean },
+): Promise<string> {
+  const parts: string[] = [];
+
+  // [معلومات المنصة]
+  parts.push(`[معلومات المنصة]
+- ماستر إيدو باث: منصة سعودية متخصصة في الخدمات الأكاديمية (الترجمة، السيرة الذاتية، خرائط ذهنية، الاستشارات، صياغة الأبحاث).
+- الموقع: ${SITE_URL}
+- التسجيل: ${REGISTER_URL}
+- لوحة الطلبات: ${SITE_URL}/dashboard/orders
+- لوحة الفواتير: ${SITE_URL}/dashboard/invoices
+- المحفظة والنقاط: ${SITE_URL}/dashboard/wallet
+- الخدمات والأسعار: ${SITE_URL}/services
+- العضويات: ${SITE_URL}/membership
+- العملة الأساسية: SAR (ريال سعودي)
+- طرق الدفع: بطاقات ائتمان، Apple Pay، STC Pay، تحويل بنكي، رصيد المحفظة.
+- أوقات العمل: الأحد - الخميس 9 ص - 9 م (بتوقيت السعودية).
+- التواصل المباشر: ${CONTACT_PHONE}`);
+
+  if (!ctx.isRegistered) {
+    parts.push(`\n[بيانات العميل من المنصة]
+رقم العميل (${normalizePhoneDisplay("")}) غير مسجل في منصتنا.
+- وجّهه للتسجيل أولاً عبر: ${REGISTER_URL}
+- إذا أراد الاستفسار عن خدمة، اشرحها بشكل عام واطلب منه التسجيل لإتمام الطلب.`);
+    return parts.join("\n");
+  }
+
+  // الاسم
+  parts.push(`\n[بيانات العميل من المنصة]
+- الاسم: ${ctx.customerName || "عميل مسجل"}`);
+
+  const filters: string[] = [];
+  if (ctx.userId) filters.push(`user_id.eq.${ctx.userId}`);
+  if (ctx.customerId) filters.push(`customer_id.eq.${ctx.customerId}`);
+  const orFilter = filters.join(",");
+
+  // الطلبات
+  if (orFilter) {
+    const { data: orders } = await supabase
+      .from("service_orders")
+      .select("tracking_id, current_status, service_name, total_amount, currency, deadline, created_at")
+      .or(orFilter)
+      .order("created_at", { ascending: false })
+      .limit(10);
+
+    if (orders && orders.length > 0) {
+      parts.push(`\n## الطلبات (${orders.length}):`);
+      orders.forEach((o: any, i: number) => {
+        parts.push(`${i + 1}. رقم: ${o.tracking_id || "—"} | ${o.service_name || "خدمة"} | الحالة: ${o.current_status} | المبلغ: ${o.total_amount || 0} ${o.currency || "SAR"}${o.deadline ? ` | الموعد: ${o.deadline}` : ""}`);
+      });
+    } else {
+      parts.push(`\n## الطلبات: لا توجد طلبات`);
+    }
+
+    // الفواتير
+    const { data: invoices } = await supabase
+      .from("invoices")
+      .select("invoice_number, status, total_amount, paid_amount, remaining_amount, currency, due_date, issue_date")
+      .or(orFilter)
+      .order("created_at", { ascending: false })
+      .limit(10);
+
+    if (invoices && invoices.length > 0) {
+      parts.push(`\n## الفواتير (${invoices.length}):`);
+      invoices.forEach((inv: any, i: number) => {
+        parts.push(`${i + 1}. ${inv.invoice_number} | الحالة: ${inv.status} | الإجمالي: ${inv.total_amount} ${inv.currency} | المدفوع: ${inv.paid_amount || 0} | المتبقي: ${inv.remaining_amount || 0}${inv.due_date ? ` | الاستحقاق: ${inv.due_date}` : ""}`);
+      });
+    } else {
+      parts.push(`\n## الفواتير: لا توجد فواتير`);
+    }
+
+    // العقود
+    const { data: contracts } = await supabase
+      .from("contracts")
+      .select("contract_number, title, status, signed_at, total_amount, currency")
+      .or(orFilter)
+      .order("created_at", { ascending: false })
+      .limit(5);
+
+    if (contracts && contracts.length > 0) {
+      parts.push(`\n## العقود (${contracts.length}):`);
+      contracts.forEach((c: any, i: number) => {
+        parts.push(`${i + 1}. ${c.contract_number || c.title} | الحالة: ${c.status}${c.total_amount ? ` | القيمة: ${c.total_amount} ${c.currency || "SAR"}` : ""}${c.signed_at ? ` | موقّع في: ${new Date(c.signed_at).toLocaleDateString("ar-SA")}` : ""}`);
+      });
+    }
+  }
+
+  // المحفظة (إن وجدت)
+  if (ctx.userId) {
+    const { data: wallet } = await supabase
+      .from("wallets")
+      .select("balance, currency")
+      .eq("user_id", ctx.userId)
+      .maybeSingle()
+      .then((r: any) => r)
+      .catch(() => ({ data: null }));
+
+    if (wallet) {
+      parts.push(`\n## المحفظة: ${wallet.balance || 0} ${wallet.currency || "SAR"}`);
+    }
+
+    // العضوية
+    const { data: membership } = await supabase
+      .from("user_memberships")
+      .select("plan_id, status, expires_at")
+      .eq("user_id", ctx.userId)
+      .eq("status", "active")
+      .maybeSingle()
+      .then((r: any) => r)
+      .catch(() => ({ data: null }));
+
+    if (membership) {
+      parts.push(`\n## العضوية: نشطة${membership.expires_at ? ` حتى ${new Date(membership.expires_at).toLocaleDateString("ar-SA")}` : ""}`);
+    }
+  }
+
+  return parts.join("\n");
+}
 
 // ==================== Helpers ====================
 
@@ -254,236 +404,71 @@ function buildPhoneVariants(p: string): string[] {
   return [...set];
 }
 
-function buildMainMenu(name: string): string {
-  const greeting = name ? `أهلاً ${name} 👋` : "أهلاً بك 👋";
-  return `${greeting}\nمرحباً بك في *ماستر إيدو باث*\n\nاختر رقم الخدمة:\n\n1️⃣ طلباتي\n2️⃣ فواتيري\n3️⃣ عقودي\n4️⃣ التحدث مع موظف\n\nأرسل الرقم فقط للاختيار.`;
-}
-
-function buildGuestReply(): string {
-  return `أهلاً بك في *ماستر إيدو باث* 👋\n\nرقمك غير مسجّل لدينا. يرجى التسجيل في المنصة لتتمكن من الاستفادة من خدماتنا والمتابعة الآلية لطلباتك:\n\n🔗 ${REGISTER_URL}\n\nسيقوم أحد موظفينا بالرد عليك قريباً للمساعدة 🌹`;
-}
-
-async function buildOrdersReply(
-  supabase: any,
-  userId: string,
-  customerId: string | null,
-): Promise<string> {
-  const filters: string[] = [];
-  if (userId) filters.push(`user_id.eq.${userId}`);
-  if (customerId) filters.push(`customer_id.eq.${customerId}`);
-
-  const { data: orders } = await supabase
-    .from("service_orders")
-    .select("tracking_id, current_status, service_name, total_amount, deadline, created_at")
-    .or(filters.join(","))
-    .order("created_at", { ascending: false })
-    .limit(5);
-
-  if (!orders || orders.length === 0) {
-    return `لا توجد لديك طلبات حالياً 📭\n\nيمكنك تصفح خدماتنا عبر:\n🔗 https://masteredupath.com\n\nأرسل *قائمة* للعودة.`;
-  }
-
-  const statusMap: Record<string, string> = {
-    pending: "⏳ قيد الانتظار",
-    in_progress: "🔄 قيد التنفيذ",
-    completed: "✅ مكتمل",
-    delivered: "📦 تم التسليم",
-    cancelled: "❌ ملغى",
-    paid: "💳 مدفوع",
-  };
-
-  let txt = `📋 *آخر طلباتك:*\n\n`;
-  orders.forEach((o: any, i: number) => {
-    txt += `${i + 1}. *${o.tracking_id || "—"}*\n`;
-    txt += `   ${o.service_name || "خدمة"}\n`;
-    txt += `   الحالة: ${statusMap[o.current_status] || o.current_status}\n`;
-    if (o.total_amount) txt += `   المبلغ: ${o.total_amount} SAR\n`;
-    if (o.deadline) txt += `   الموعد النهائي: ${o.deadline}\n`;
-    txt += `\n`;
-  });
-  txt += `🔗 لوحة الطلبات: ${ORDERS_URL}\n\nأرسل *قائمة* للعودة.`;
-  return txt;
-}
-
-async function buildInvoicesReply(
-  supabase: any,
-  userId: string,
-  customerId: string | null,
-): Promise<string> {
-  const filters: string[] = [];
-  if (userId) filters.push(`user_id.eq.${userId}`);
-  if (customerId) filters.push(`customer_id.eq.${customerId}`);
-
-  const { data: invoices } = await supabase
-    .from("invoices")
-    .select("invoice_number, status, total_amount, remaining_amount, currency, due_date, issue_date")
-    .or(filters.join(","))
-    .order("created_at", { ascending: false })
-    .limit(5);
-
-  if (!invoices || invoices.length === 0) {
-    return `لا توجد لديك فواتير حالياً 📭\n\nأرسل *قائمة* للعودة.`;
-  }
-
-  const statusMap: Record<string, string> = {
-    paid: "✅ مدفوعة",
-    pending: "⏳ مستحقة",
-    overdue: "⚠️ متأخرة",
-    partial: "🟡 مدفوعة جزئياً",
-    cancelled: "❌ ملغاة",
-    draft: "📝 مسودة",
-  };
-
-  let txt = `🧾 *آخر فواتيرك:*\n\n`;
-  invoices.forEach((inv: any, i: number) => {
-    txt += `${i + 1}. *${inv.invoice_number}*\n`;
-    txt += `   الحالة: ${statusMap[inv.status] || inv.status}\n`;
-    txt += `   المبلغ: ${inv.total_amount} ${inv.currency || "SAR"}\n`;
-    if (inv.remaining_amount && Number(inv.remaining_amount) > 0) {
-      txt += `   المتبقي: ${inv.remaining_amount} ${inv.currency || "SAR"}\n`;
-    }
-    if (inv.due_date) txt += `   الاستحقاق: ${inv.due_date}\n`;
-    txt += `\n`;
-  });
-  txt += `🔗 لوحة الفواتير: ${INVOICES_URL}\n\nأرسل *قائمة* للعودة.`;
-  return txt;
-}
-
-async function buildContractsReply(
-  supabase: any,
-  userId: string,
-  customerId: string | null,
-): Promise<string> {
-  const filters: string[] = [];
-  if (userId) filters.push(`user_id.eq.${userId}`);
-  if (customerId) filters.push(`customer_id.eq.${customerId}`);
-
-  const { data: contracts } = await supabase
-    .from("contracts")
-    .select("contract_number, title, status, signed_at, total_amount, currency")
-    .or(filters.join(","))
-    .order("created_at", { ascending: false })
-    .limit(5);
-
-  if (!contracts || contracts.length === 0) {
-    return `لا توجد لديك عقود حالياً 📭\n\nأرسل *قائمة* للعودة.`;
-  }
-
-  const statusMap: Record<string, string> = {
-    draft: "📝 مسودة",
-    sent: "📤 مرسل",
-    signed: "✅ موقّع",
-    cancelled: "❌ ملغى",
-    expired: "⏰ منتهي",
-  };
-
-  let txt = `📜 *آخر عقودك:*\n\n`;
-  contracts.forEach((c: any, i: number) => {
-    txt += `${i + 1}. *${c.contract_number || c.title}*\n`;
-    txt += `   الحالة: ${statusMap[c.status] || c.status}\n`;
-    if (c.total_amount) txt += `   القيمة: ${c.total_amount} ${c.currency || "SAR"}\n`;
-    if (c.signed_at) txt += `   تاريخ التوقيع: ${new Date(c.signed_at).toLocaleDateString("ar-SA")}\n`;
-    txt += `\n`;
-  });
-  txt += `\nأرسل *قائمة* للعودة، أو *4* للتحدث مع موظف.`;
-  return txt;
+function normalizePhoneDisplay(p: string): string {
+  return p || "";
 }
 
 async function activateHumanTakeover(
-  supabase: any,
-  session: any,
-  phone: string,
-  message: string,
-  customerName: string,
-  reason: string,
+  supabase: any, session: any, phone: string,
+  message: string, customerName: string, reason: string,
 ) {
-  await supabase
-    .from("whatsapp_bot_sessions")
-    .update({
-      human_takeover: true,
-      human_takeover_at: new Date().toISOString(),
-      human_takeover_reason: reason,
-      state: "human",
-    })
-    .eq("id", session.id);
-
+  await supabase.from("whatsapp_bot_sessions").update({
+    human_takeover: true,
+    human_takeover_at: new Date().toISOString(),
+    human_takeover_reason: reason,
+    state: "human",
+  }).eq("id", session.id);
   await appendToInbox(supabase, session, phone, message, customerName, true);
 }
 
 async function appendToInbox(
-  supabase: any,
-  session: any,
-  phone: string,
-  message: string,
-  customerName: string,
-  highPriority = false,
+  supabase: any, session: any, phone: string,
+  message: string, customerName: string, highPriority = false,
 ) {
   let inboxId = session?.inbox_message_id;
-
-  // ابحث عن inbox مفتوح للرقم
   if (!inboxId) {
     const { data: existing } = await supabase
-      .from("inbox_messages")
-      .select("id")
-      .eq("sender_phone", phone)
-      .neq("status", "closed")
-      .order("created_at", { ascending: false })
-      .limit(1)
-      .maybeSingle();
+      .from("inbox_messages").select("id")
+      .eq("sender_phone", phone).neq("status", "closed")
+      .order("created_at", { ascending: false }).limit(1).maybeSingle();
     if (existing) inboxId = existing.id;
   }
-
   if (inboxId) {
-    await supabase
-      .from("inbox_messages")
-      .update({
-        message: message,
-        last_activity_at: new Date().toISOString(),
-        priority: highPriority ? "high" : "normal",
-        status: "open",
-      })
-      .eq("id", inboxId);
+    await supabase.from("inbox_messages").update({
+      message,
+      last_activity_at: new Date().toISOString(),
+      priority: highPriority ? "high" : "normal",
+      status: "open",
+    }).eq("id", inboxId);
   } else {
-    const { data: created } = await supabase
-      .from("inbox_messages")
-      .insert({
-        sender_name: customerName || phone,
-        sender_email: `${phone}@whatsapp.local`,
-        sender_phone: phone,
-        subject: "رسالة واتساب جديدة",
-        message: message,
-        form_type: "whatsapp",
-        status: "open",
-        priority: highPriority ? "high" : "normal",
-        source_page: "whatsapp_bot",
-        metadata: { source: "whatsapp_inbound", session_id: session?.id },
-      })
-      .select("id")
-      .single();
+    const { data: created } = await supabase.from("inbox_messages").insert({
+      sender_name: customerName || phone,
+      sender_email: `${phone}@whatsapp.local`,
+      sender_phone: phone,
+      subject: "رسالة واتساب جديدة",
+      message,
+      form_type: "whatsapp",
+      status: "open",
+      priority: highPriority ? "high" : "normal",
+      source_page: "whatsapp_bot",
+      metadata: { source: "whatsapp_inbound", session_id: session?.id },
+    }).select("id").single();
     inboxId = created?.id;
-
     if (inboxId && session?.id) {
-      await supabase
-        .from("whatsapp_bot_sessions")
-        .update({ inbox_message_id: inboxId })
-        .eq("id", session.id);
+      await supabase.from("whatsapp_bot_sessions")
+        .update({ inbox_message_id: inboxId }).eq("id", session.id);
     }
   }
 }
 
 async function logBotReply(
-  supabase: any,
-  inboundLogId: string | undefined,
-  reply: string,
-  forwarded: boolean,
+  supabase: any, inboundLogId: string | undefined,
+  reply: string, forwarded: boolean,
 ) {
   if (!inboundLogId) return;
-  await supabase
-    .from("whatsapp_inbound_messages")
-    .update({
-      bot_handled: true,
-      bot_reply: reply,
-      forwarded_to_human: forwarded,
-    })
-    .eq("id", inboundLogId);
+  await supabase.from("whatsapp_inbound_messages").update({
+    bot_handled: true,
+    bot_reply: reply,
+    forwarded_to_human: forwarded,
+  }).eq("id", inboundLogId);
 }
