@@ -43,60 +43,79 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
   const [unreadCount, setUnreadCount] = useState(0);
 
   const navGroups: NavGroup[] = [
+    // 1. نظرة عامة سريعة
     {
-      label: 'الرئيسية',
+      label: 'نظرة عامة',
       items: [
         { name: 'لوحة التحكم', href: '/adminmaster', icon: LayoutDashboard },
+        { name: 'اللوحة المالية', href: '/adminmaster/financial', icon: BarChart3 },
       ]
     },
+    // 2. العمل اليومي - أكثر الأقسام استخدامًا
     {
-      label: 'إدارة الطلبات',
-      items: [
-        { name: 'طلبات الخدمات', href: '/adminmaster/service-orders', icon: Package, badge: counts.orders > 0 ? counts.orders.toString() : null },
-        { name: 'الطلبات العامة', href: '/adminmaster/orders', icon: ShoppingCart },
-      ]
-    },
-    {
-      label: 'إدارة العملاء',
+      label: 'العمل اليومي',
       items: [
         { name: 'صندوق الوارد', href: '/adminmaster/inbox', icon: Inbox },
+        { name: 'طلبات الخدمات', href: '/adminmaster/service-orders', icon: Package, badge: counts.orders > 0 ? counts.orders.toString() : null },
+        { name: 'الطلبات العامة', href: '/adminmaster/orders', icon: ShoppingCart },
+        { name: 'خدمة العملاء', href: '/adminmaster/tickets', icon: Ticket, badge: counts.tickets > 0 ? counts.tickets.toString() : null },
+        { name: 'المحادثات', href: '/adminmaster/chat', icon: Activity },
+      ]
+    },
+    // 3. العملاء والمستخدمين
+    {
+      label: 'العملاء والمستخدمين',
+      items: [
         { name: 'العملاء', href: '/adminmaster/customers', icon: Users },
         { name: 'المستخدمين', href: '/adminmaster/users', icon: Settings },
         { name: 'إضافة مستخدم', href: '/adminmaster/add-user', icon: UserPlus },
-        { name: 'خدمة العملاء', href: '/adminmaster/tickets', icon: Ticket, badge: counts.tickets > 0 ? counts.tickets.toString() : null },
       ]
     },
+    // 4. الفوترة والمدفوعات
     {
-      label: 'المالية والمحاسبة',
+      label: 'الفوترة والمدفوعات',
       items: [
-        { name: 'اللوحة المالية', href: '/adminmaster/financial', icon: BarChart3 },
         { name: 'الفواتير', href: '/adminmaster/invoices', icon: Receipt, badge: counts.invoices > 0 ? counts.invoices.toString() : null },
         { name: 'المعاملات الداخلية', href: '/adminmaster/transactions', icon: CreditCard },
         { name: 'بوابة المدفوعات', href: '/adminmaster/payments', icon: CreditCard },
         { name: 'المحافظ الرقمية', href: '/adminmaster/wallets', icon: Wallet },
+      ]
+    },
+    // 5. التسويق والولاء
+    {
+      label: 'التسويق والولاء',
+      items: [
         { name: 'العضويات', href: '/adminmaster/memberships', icon: Star },
         { name: 'الإحالات والعمولات', href: '/adminmaster/referrals', icon: Gift },
         { name: 'النقاط والمكافآت', href: '/adminmaster/gamification', icon: Trophy },
-        { name: 'إدارة واتساب', href: '/adminmaster/whatsapp', icon: MessageCircle },
       ]
     },
+    // 6. المحتوى والخدمات
     {
-      label: 'العقود والتوقيع',
+      label: 'المحتوى والخدمات',
+      items: [
+        { name: 'إدارة الخدمات', href: '/adminmaster/services', icon: Briefcase },
+        { name: 'مكتبة الطالب', href: '/adminmaster/student-resources', icon: BookOpen },
+      ]
+    },
+    // 7. العقود والتوثيق
+    {
+      label: 'العقود والتوثيق',
       items: [
         { name: 'نظام العقود', href: '/adminmaster/contracts', icon: FileText },
       ]
     },
+    // 8. التواصل والإشعارات
     {
-      label: 'الخدمات والمحتوى',
+      label: 'التواصل والإشعارات',
       items: [
-        { name: 'إدارة الخدمات', href: '/adminmaster/services', icon: Briefcase },
         { name: 'الإشعارات البريدية', href: '/adminmaster/email-notifications', icon: Mail },
-        { name: 'المحادثات', href: '/adminmaster/chat', icon: Activity },
-        { name: 'مكتبة الطالب', href: '/adminmaster/student-resources', icon: BookOpen },
+        { name: 'إدارة واتساب', href: '/adminmaster/whatsapp', icon: MessageCircle },
       ]
     },
+    // 9. إعدادات النظام
     {
-      label: 'الإعدادات',
+      label: 'إعدادات النظام',
       items: [
         { name: 'ساعات العمل', href: '/adminmaster/working-hours', icon: Clock },
       ]
