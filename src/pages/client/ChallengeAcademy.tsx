@@ -151,9 +151,12 @@ const ChallengeAcademy: React.FC = () => {
           </TabsContent>
 
           <TabsContent value="achievements">
-            <Card className="p-4 sm:p-6">
-              <AchievementsGrid achievements={achievements} unlocked={userAchievements} />
-            </Card>
+            <MyAchievementsView
+              achievements={achievements}
+              unlocked={userAchievements}
+              summary={summary}
+              streak={streak}
+            />
           </TabsContent>
         </Tabs>
       </div>
