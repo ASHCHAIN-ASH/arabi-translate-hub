@@ -138,6 +138,26 @@ export default function WhatsappManagement() {
     await supabase.from("whatsapp_conversations").update({ is_starred: !conv.is_starred }).eq("id", conv.id);
   };
 
+  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file || !activeConv) return;
+    if (file.size > 16 * 1024 * 1024) return toast.error("الحد الأقصى 16MB");
+    setUploading(true);
+    const path = `${activeConv.id}/${Date.now()}-${file.name}`;
+    const { error: upErr } = await supabase.storage.from("whatsapp-attachments").upload(path, file);
+    if (upErr) { setUploading(false); return toast.error(upErr.message); }
+    const { data, error } = await supabase.functions.invoke("whatsapp-send-attachment", {
+      body: { conversation_id: activeConv.id, storage_path: path, filename: file.name, caption: reply || "" },
+    });
+    setUploading(false);
+    if (e.target) e.target.value = "";
+    if (error || data?.error) return toast.error(data?.error || error?.message || "فشل الإرسال");
+    toast.success("تم إرسال المرفق ✅");
+    setReply("");
+    loadMessages(activeConv.id);
+  };
+
+
   const createCampaign = async () => {
     if (!newCampaign.name || !newCampaign.message_body) return toast.error("الاسم والنص مطلوبان");
     const status = newCampaign.scheduled_at ? "scheduled" : "draft";
