@@ -3131,6 +3131,95 @@ export type Database = {
         }
         Relationships: []
       }
+      referral_events: {
+        Row: {
+          created_at: string
+          id: string
+          ip_address: string | null
+          ref_code: string
+          user_agent: string | null
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          ip_address?: string | null
+          ref_code: string
+          user_agent?: string | null
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          ip_address?: string | null
+          ref_code?: string
+          user_agent?: string | null
+        }
+        Relationships: []
+      }
+      referral_rewards: {
+        Row: {
+          created_at: string
+          id: string
+          referral_id: string | null
+          reward_type: string
+          user_id: string
+          xp_amount: number
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          referral_id?: string | null
+          reward_type: string
+          user_id: string
+          xp_amount: number
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          referral_id?: string | null
+          reward_type?: string
+          user_id?: string
+          xp_amount?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "referral_rewards_referral_id_fkey"
+            columns: ["referral_id"]
+            isOneToOne: false
+            referencedRelation: "referrals"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      referrals: {
+        Row: {
+          completed_at: string | null
+          created_at: string
+          id: string
+          referral_code: string
+          referred_user_id: string
+          referrer_user_id: string
+          status: string
+        }
+        Insert: {
+          completed_at?: string | null
+          created_at?: string
+          id?: string
+          referral_code: string
+          referred_user_id: string
+          referrer_user_id: string
+          status?: string
+        }
+        Update: {
+          completed_at?: string | null
+          created_at?: string
+          id?: string
+          referral_code?: string
+          referred_user_id?: string
+          referrer_user_id?: string
+          status?: string
+        }
+        Relationships: []
+      }
       service_categories: {
         Row: {
           color: string | null
@@ -4605,6 +4694,24 @@ export type Database = {
           },
         ]
       }
+      user_referral_codes: {
+        Row: {
+          code: string
+          created_at: string
+          user_id: string
+        }
+        Insert: {
+          code: string
+          created_at?: string
+          user_id: string
+        }
+        Update: {
+          code?: string
+          created_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       user_rewards: {
         Row: {
           awarded_at: string
@@ -5552,6 +5659,7 @@ export type Database = {
           longest_streak: number
         }[]
       }
+      claim_referral: { Args: { _ref_code: string }; Returns: Json }
       client_confirm_delivery: { Args: { _order_id: string }; Returns: Json }
       complete_daily_task: {
         Args: { _metadata?: Json; _task_code: string }
@@ -5585,6 +5693,7 @@ export type Database = {
         Args: { payload: Json; queue_name: string }
         Returns: number
       }
+      ensure_referral_code: { Args: { _user_id: string }; Returns: string }
       generate_customer_code: { Args: never; Returns: string }
       generate_group_invite_code: { Args: never; Returns: string }
       generate_internal_order_number: { Args: never; Returns: string }
@@ -5647,6 +5756,16 @@ export type Database = {
           points_reward: number
           title_ar: string
         }[]
+      }
+      grant_referral_xp: {
+        Args: {
+          _description: string
+          _referral_id: string
+          _reward_type: string
+          _user_id: string
+          _xp: number
+        }
+        Returns: undefined
       }
       has_role: {
         Args: {
@@ -5730,6 +5849,7 @@ export type Database = {
         }[]
       }
       record_cv_export: { Args: { _cv_id: string }; Returns: Json }
+      reward_viral_share: { Args: never; Returns: Json }
       sign_contract_with_otp: {
         Args: {
           _accepted_terms?: Json
