@@ -180,6 +180,8 @@ const Login = () => {
                 </p>
               </TabsContent>
             </Tabs>
+
+            <motion.div variants={itemVariants} className="mt-8 text-center space-y-4">
               <div className="relative">
                 <div className="absolute inset-0 flex items-center">
                   <div className="w-full border-t border-slate-300" />
@@ -188,7 +190,7 @@ const Login = () => {
                   <span className="px-2 bg-white text-slate-500">أو</span>
                 </div>
               </div>
-              
+
               <p className="text-slate-600">
                 ليس لديك حساب؟{' '}
                 <Button
@@ -199,7 +201,7 @@ const Login = () => {
                   إنشاء حساب جديد
                 </Button>
               </p>
-              
+
               <Button
                 variant="link"
                 className="p-0 h-auto font-normal text-sm text-slate-500 hover:text-slate-700"
