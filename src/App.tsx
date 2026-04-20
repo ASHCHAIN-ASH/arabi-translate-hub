@@ -72,6 +72,7 @@ import GroupOrderJoin from "./pages/client/GroupOrderJoin";
 import MembershipPage from "./pages/client/MembershipPage";
 import ReferralsPage from "./pages/client/ReferralsPage";
 import RewardsPage from "./pages/client/Rewards";
+import ChallengeAcademy from "./pages/client/ChallengeAcademy";
 import StudentHub from "./pages/client/StudentHub";
 import MindMapPage from "./pages/client/MindMapPage";
 import TracksPage from "./pages/client/TracksPage";
@@ -559,6 +560,11 @@ const App = () => (
             <Route path="/rewards" element={
               <SimpleProtectedRoute requiredRole="client">
                 <RewardsPage />
+              </SimpleProtectedRoute>
+            } />
+            <Route path="/challenge-academy" element={
+              <SimpleProtectedRoute requiredRole="client">
+                <ChallengeAcademy />
               </SimpleProtectedRoute>
             } />
             <Route path="/student" element={
