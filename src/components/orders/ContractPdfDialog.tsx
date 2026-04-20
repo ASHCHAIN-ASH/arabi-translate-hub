@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Loader2, Download, Eye, X, ExternalLink } from 'lucide-react';
@@ -13,24 +13,27 @@ interface Props {
   onOpenChange: (open: boolean) => void;
 }
 
-/**
- * Phase 2 — Real PDF preview & download.
- * - يستدعي generate-contract-pdf للحصول على signed_url لملف PDF حقيقي
- * - إذا العقد موقّع: signed_final (immutable, idempotent)
- * - إذا العقد قيد التوقيع/مسودة: preview
- * - يعرض الملف داخل iframe (PDF أصلي) بدلاً من HTML
- */
 export const ContractPdfDialog: React.FC<Props> = ({ contractId, contractNumber, open, onOpenChange }) => {
   const { toast } = useToast();
   const [loading, setLoading] = useState(false);
   const [pdfUrl, setPdfUrl] = useState<string>('');
   const [meta, setMeta] = useState<{ version_no?: number; output_type?: string }>({});
 
+  const shouldOpenExternally = useMemo(() => {
+    if (typeof navigator === 'undefined') return false;
+    const ua = navigator.userAgent || '';
+    return /iPad|iPhone|iPod|Macintosh/.test(ua) && /Safari/i.test(ua) && !/Chrome|CriOS|FxiOS|EdgiOS/i.test(ua);
+  }, []);
+
   useEffect(() => {
     if (!open || !contractId) return;
     void load();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [open, contractId]);
+
+  useEffect(() => {
+    if (!pdfUrl || !shouldOpenExternally) return;
+    window.open(pdfUrl, '_blank', 'noopener');
+  }, [pdfUrl, shouldOpenExternally]);
 
   async function load() {
     setLoading(true);
@@ -53,9 +56,10 @@ export const ContractPdfDialog: React.FC<Props> = ({ contractId, contractNumber,
       const url = (data as any)?.signed_url;
       if (!url) throw new Error('تعذر تجهيز ملف PDF');
       setPdfUrl(url);
+      const version = (data as any)?.version;
       setMeta({
-        version_no: (data as any)?.version_no,
-        output_type: (data as any)?.output_type,
+        version_no: version?.version_no ?? (data as any)?.version_no,
+        output_type: version?.output_type ?? (data as any)?.output_type,
       });
     } catch (e: any) {
       toast({ title: 'تعذر تحميل العقد', description: e.message, variant: 'destructive' });
@@ -128,26 +132,24 @@ export const ContractPdfDialog: React.FC<Props> = ({ contractId, contractNumber,
               <Loader2 className="h-10 w-10 animate-spin text-primary" />
               <p className="text-sm text-muted-foreground">جاري تحضير ملف PDF…</p>
             </div>
-          ) : pdfUrl ? (
-            <object
-              data={pdfUrl}
-              type="application/pdf"
-              className="w-full h-full bg-white"
-            >
-              <iframe
-                title="contract-pdf-preview"
-                src={`https://docs.google.com/viewer?url=${encodeURIComponent(pdfUrl)}&embedded=true`}
-                className="w-full h-full border-0 bg-white"
-              />
-              <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 p-6 text-center">
-                <p className="text-sm text-muted-foreground">
-                  متصفحك لا يدعم عرض PDF مباشرةً.
-                </p>
+          ) : pdfUrl ? shouldOpenExternally ? (
+            <div className="absolute inset-0 flex flex-col items-center justify-center gap-4 p-6 text-center">
+              <p className="text-sm text-muted-foreground">تم فتح العقد الأصلي في تبويب جديد لعرضه كاملاً بشكل صحيح على هذا الجهاز.</p>
+              <div className="flex items-center gap-2">
                 <Button onClick={downloadPdf} size="sm">
-                  <Download className="h-4 w-4 ml-2" /> فتح / تحميل PDF
+                  <ExternalLink className="h-4 w-4 ml-2" /> فتح العقد الأصلي
+                </Button>
+                <Button variant="outline" onClick={() => onOpenChange(false)} size="sm">
+                  إغلاق
                 </Button>
               </div>
-            </object>
+            </div>
+          ) : (
+            <iframe
+              title="contract-pdf-preview"
+              src={pdfUrl}
+              className="w-full h-full border-0 bg-white"
+            />
           ) : (
             <div className="absolute inset-0 flex items-center justify-center text-sm text-muted-foreground">
               لا يوجد ملف PDF متاح
@@ -160,3 +162,4 @@ export const ContractPdfDialog: React.FC<Props> = ({ contractId, contractNumber,
 };
 
 export default ContractPdfDialog;
+
