@@ -5605,6 +5605,21 @@ export type Database = {
         }[]
       }
       get_ai_usage_today: { Args: { _tool_type: string }; Returns: number }
+      get_challenge_leaderboard: {
+        Args: { p_limit?: number; p_period?: string }
+        Returns: {
+          avatar_url: string
+          full_name: string
+          level_color: string
+          level_icon: string
+          level_name: string
+          monthly_xp: number
+          rank: number
+          total_xp: number
+          user_id: string
+          weekly_xp: number
+        }[]
+      }
       get_membership_points_multiplier: {
         Args: { _user_id: string }
         Returns: number
