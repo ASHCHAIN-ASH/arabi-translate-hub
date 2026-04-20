@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
-import { Loader2, Download, Eye, X } from 'lucide-react';
+import { Loader2, Download, Eye, X, ExternalLink } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
-import { downloadContractPdf, getContractPdfHtml } from '@/utils/supabaseContractService';
+import { supabase } from '@/integrations/supabase/client';
+import { getContract } from '@/utils/supabaseContractService';
 
 interface Props {
   contractId: string;
@@ -13,15 +14,17 @@ interface Props {
 }
 
 /**
- * يعرض معاينة العقد داخل Modal (iframe srcdoc) مع زر تحميل PDF حقيقي
- * بدون فتح أي نافذة جديدة. التحميل يتم عبر نافذة طباعة المتصفح المخفية
- * → "حفظ كـ PDF" والذي يعمل على جميع المتصفحات الحديثة.
+ * Phase 2 — Real PDF preview & download.
+ * - يستدعي generate-contract-pdf للحصول على signed_url لملف PDF حقيقي
+ * - إذا العقد موقّع: signed_final (immutable, idempotent)
+ * - إذا العقد قيد التوقيع/مسودة: preview
+ * - يعرض الملف داخل iframe (PDF أصلي) بدلاً من HTML
  */
 export const ContractPdfDialog: React.FC<Props> = ({ contractId, contractNumber, open, onOpenChange }) => {
   const { toast } = useToast();
   const [loading, setLoading] = useState(false);
-  const [html, setHtml] = useState<string>('');
-  const [downloading, setDownloading] = useState(false);
+  const [pdfUrl, setPdfUrl] = useState<string>('');
+  const [meta, setMeta] = useState<{ version_no?: number; output_type?: string }>({});
 
   useEffect(() => {
     if (!open || !contractId) return;
@@ -31,9 +34,25 @@ export const ContractPdfDialog: React.FC<Props> = ({ contractId, contractNumber,
 
   async function load() {
     setLoading(true);
+    setPdfUrl('');
     try {
-      const resolvedHtml = await getContractPdfHtml(contractId);
-      setHtml(resolvedHtml);
+      const contract = await getContract(contractId);
+      const isSigned = contract?.status === 'signed' || contract?.status === 'active' || contract?.status === 'completed';
+      const { data, error } = await supabase.functions.invoke('generate-contract-pdf', {
+        body: {
+          contract_id: contractId,
+          mode: isSigned ? 'signed_final' : 'preview',
+          public_origin: window.location.origin,
+        },
+      });
+      if (error) throw error;
+      const url = (data as any)?.signed_url;
+      if (!url) throw new Error('تعذر تجهيز ملف PDF');
+      setPdfUrl(url);
+      setMeta({
+        version_no: (data as any)?.version_no,
+        output_type: (data as any)?.output_type,
+      });
     } catch (e: any) {
       toast({ title: 'تعذر تحميل العقد', description: e.message, variant: 'destructive' });
     } finally {
@@ -41,20 +60,9 @@ export const ContractPdfDialog: React.FC<Props> = ({ contractId, contractNumber,
     }
   }
 
-  /** تنزيل كـ PDF عبر طباعة iframe مخفي → المستخدم يختار "Save as PDF" */
-  async function downloadPdf() {
-    setDownloading(true);
-    try {
-      await downloadContractPdf(contractId);
-      toast({
-        title: '✓ نافذة الحفظ مفتوحة',
-        description: 'اختر "حفظ كـ PDF" من قائمة الطباعة',
-      });
-    } catch (e: any) {
-      toast({ title: 'تعذر التحميل', description: e.message, variant: 'destructive' });
-    } finally {
-      setDownloading(false);
-    }
+  function downloadPdf() {
+    if (!pdfUrl) return;
+    window.open(pdfUrl, '_blank', 'noopener');
   }
 
   return (
@@ -68,19 +76,35 @@ export const ContractPdfDialog: React.FC<Props> = ({ contractId, contractNumber,
             <DialogTitle className="text-white flex items-center gap-2 text-base">
               <Eye className="h-5 w-5 text-amber-300" />
               معاينة العقد {contractNumber && <span className="text-amber-300 font-mono">#{contractNumber}</span>}
+              {meta.output_type === 'signed_final' && meta.version_no && (
+                <span className="text-xs bg-emerald-500/20 text-emerald-200 px-2 py-0.5 rounded-full border border-emerald-400/30">
+                  النسخة النهائية v{meta.version_no}
+                </span>
+              )}
+              {meta.output_type === 'preview' && (
+                <span className="text-xs bg-amber-500/20 text-amber-200 px-2 py-0.5 rounded-full border border-amber-400/30">
+                  معاينة
+                </span>
+              )}
             </DialogTitle>
             <div className="flex items-center gap-2">
               <Button
                 onClick={downloadPdf}
-                disabled={downloading || loading || !html}
+                disabled={loading || !pdfUrl}
                 size="sm"
                 className="bg-gradient-to-l from-amber-400 to-yellow-500 text-slate-900 hover:from-amber-500 hover:to-yellow-600 font-bold border-0"
               >
-                {downloading ? (
-                  <><Loader2 className="h-4 w-4 ml-2 animate-spin" /> جاري التجهيز…</>
-                ) : (
-                  <><Download className="h-4 w-4 ml-2" /> تحميل PDF</>
-                )}
+                <Download className="h-4 w-4 ml-2" /> تحميل PDF
+              </Button>
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={() => pdfUrl && window.open(pdfUrl, '_blank', 'noopener')}
+                disabled={!pdfUrl}
+                className="text-white hover:bg-white/10 h-8 w-8"
+                title="فتح في تبويب جديد"
+              >
+                <ExternalLink className="h-4 w-4" />
               </Button>
               <Button
                 variant="ghost"
@@ -98,18 +122,17 @@ export const ContractPdfDialog: React.FC<Props> = ({ contractId, contractNumber,
           {loading ? (
             <div className="absolute inset-0 flex flex-col items-center justify-center gap-3">
               <Loader2 className="h-10 w-10 animate-spin text-primary" />
-              <p className="text-sm text-muted-foreground">جاري تحضير العقد…</p>
+              <p className="text-sm text-muted-foreground">جاري تحضير ملف PDF…</p>
             </div>
-          ) : html ? (
+          ) : pdfUrl ? (
             <iframe
-              title="contract-preview"
-              srcDoc={html}
+              title="contract-pdf-preview"
+              src={pdfUrl}
               className="w-full h-full border-0 bg-white"
-              sandbox="allow-same-origin allow-popups"
             />
           ) : (
             <div className="absolute inset-0 flex items-center justify-center text-sm text-muted-foreground">
-              لا يوجد محتوى للعقد
+              لا يوجد ملف PDF متاح
             </div>
           )}
         </div>
