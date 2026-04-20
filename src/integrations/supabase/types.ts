@@ -1282,6 +1282,45 @@ export type Database = {
         }
         Relationships: []
       }
+      daily_growth_metrics: {
+        Row: {
+          active_users: number
+          challenges_completed: number
+          computed_at: string
+          conversions: number
+          date: string
+          new_users: number
+          referrals_completed: number
+          referrals_count: number
+          retention_rate: number
+          shares_count: number
+        }
+        Insert: {
+          active_users?: number
+          challenges_completed?: number
+          computed_at?: string
+          conversions?: number
+          date: string
+          new_users?: number
+          referrals_completed?: number
+          referrals_count?: number
+          retention_rate?: number
+          shares_count?: number
+        }
+        Update: {
+          active_users?: number
+          challenges_completed?: number
+          computed_at?: string
+          conversions?: number
+          date?: string
+          new_users?: number
+          referrals_completed?: number
+          referrals_count?: number
+          retention_rate?: number
+          shares_count?: number
+        }
+        Relationships: []
+      }
       deadline_reminders: {
         Row: {
           channel: string
@@ -1817,6 +1856,36 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      growth_events: {
+        Row: {
+          created_at: string
+          dedupe_key: string | null
+          event_type: string
+          id: string
+          metadata: Json
+          source: string
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          dedupe_key?: string | null
+          event_type: string
+          id?: string
+          metadata?: Json
+          source?: string
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          dedupe_key?: string | null
+          event_type?: string
+          id?: string
+          metadata?: Json
+          source?: string
+          user_id?: string | null
+        }
+        Relationships: []
       }
       inbox_messages: {
         Row: {
@@ -5622,6 +5691,27 @@ export type Database = {
     }
     Functions: {
       accept_service_quote: { Args: { _order_id: string }; Returns: Json }
+      aggregate_daily_growth_metrics: {
+        Args: { p_date?: string }
+        Returns: {
+          active_users: number
+          challenges_completed: number
+          computed_at: string
+          conversions: number
+          date: string
+          new_users: number
+          referrals_completed: number
+          referrals_count: number
+          retention_rate: number
+          shares_count: number
+        }
+        SetofOptions: {
+          from: "*"
+          to: "daily_growth_metrics"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
       award_points: {
         Args: {
           _apply_multiplier?: boolean
@@ -5729,11 +5819,44 @@ export type Database = {
           weekly_xp: number
         }[]
       }
+      get_growth_daily_series: {
+        Args: { p_days?: number }
+        Returns: {
+          active_users: number
+          challenges_completed: number
+          date: string
+          new_users: number
+          referrals_completed: number
+          referrals_count: number
+          retention_rate: number
+          shares_count: number
+        }[]
+      }
+      get_growth_funnel: { Args: { p_days?: number }; Returns: Json }
+      get_growth_overview: { Args: { p_days?: number }; Returns: Json }
+      get_growth_sources: {
+        Args: { p_days?: number }
+        Returns: {
+          percentage: number
+          source: string
+          users: number
+        }[]
+      }
       get_membership_points_multiplier: {
         Args: { _user_id: string }
         Returns: number
       }
       get_mind_map_usage_today: { Args: never; Returns: number }
+      get_referral_leaderboard: {
+        Args: { p_limit?: number }
+        Returns: {
+          completed_invites: number
+          conversion_rate: number
+          referrer_name: string
+          referrer_user_id: string
+          total_invites: number
+        }[]
+      }
       get_referrer_by_code: {
         Args: { _code: string }
         Returns: {
@@ -5742,6 +5865,7 @@ export type Database = {
           user_id: string
         }[]
       }
+      get_retention_cohort: { Args: { p_days?: number }; Returns: Json }
       get_today_student_tasks: {
         Args: never
         Returns: {
@@ -5755,6 +5879,16 @@ export type Database = {
           is_completed: boolean
           points_reward: number
           title_ar: string
+        }[]
+      }
+      get_top_challenges: {
+        Args: { p_days?: number; p_limit?: number }
+        Returns: {
+          attempts: number
+          challenge_id: string
+          perfect: number
+          shares: number
+          title: string
         }[]
       }
       grant_referral_xp: {
@@ -5849,6 +5983,15 @@ export type Database = {
         }[]
       }
       record_cv_export: { Args: { _cv_id: string }; Returns: Json }
+      record_growth_event: {
+        Args: {
+          p_dedupe_key?: string
+          p_event_type: string
+          p_metadata?: Json
+          p_source?: string
+        }
+        Returns: string
+      }
       reward_viral_share: { Args: never; Returns: Json }
       sign_contract_with_otp: {
         Args: {
