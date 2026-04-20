@@ -59,6 +59,7 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
     {
       label: 'إدارة العملاء',
       items: [
+        { name: 'صندوق الوارد', href: '/adminmaster/inbox', icon: Inbox },
         { name: 'العملاء', href: '/adminmaster/customers', icon: Users },
         { name: 'المستخدمين', href: '/adminmaster/users', icon: Settings },
         { name: 'إضافة مستخدم', href: '/adminmaster/add-user', icon: UserPlus },
