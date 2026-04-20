@@ -32,7 +32,7 @@ export const ChallengeResult: React.FC<Props> = ({
 
   const handleShare = async () => {
     if (!result) return;
-    const text = `🎓 تحدي اليوم في ماستر إيدو باث:\n${tier.label} — ${result.score}%\n${result.correct_count}/${result.total_questions} إجابة صحيحة\n+${result.xp_awarded} XP 🔥\n${window.location.origin}/challenge-academy`;
+    const text = `🎓 تحدي اليوم في ماستر إيدو باث:\n${tier.label} — ${result.score}%\n${result.correct_count}/${result.total_questions} إجابة صحيحة\n+${result.xp_awarded} XP 🔥\nhttps://masteredupath.com/challenge-academy`;
 
     // Try Web Share API first (mobile)
     if (typeof navigator !== 'undefined' && typeof navigator.share === 'function') {

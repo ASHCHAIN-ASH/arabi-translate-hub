@@ -188,7 +188,7 @@ const AboutUs = () => {
         title="من نحن - MasterEduPath | وكالة الحلول التعليمية المتقدمة"
         description="تعرف على MasterEduPath - وكالة رائدة في تقديم الخدمات الأكاديمية والبحثية للطلاب والباحثين في السعودية والوطن العربي. خبرة أكثر من 10 سنوات في خدمة 50,000+ طالب وباحث"
         keywords="من نحن MasterEduPath, وكالة تعليمية, خدمات أكاديمية, خبرة أكاديمية, شركاء جامعات, خدمات بحثية احترافية"
-        url="https://ac43130c-4bba-404a-ade5-b9d62d1f8904.lovableproject.com/about-us"
+        url="https://masteredupath.com/about-us"
         schema={{
           "@context": "https://schema.org",
           "@type": "AboutPage",

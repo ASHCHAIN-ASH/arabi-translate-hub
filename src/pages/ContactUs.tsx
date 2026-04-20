@@ -186,7 +186,7 @@ const ContactUs = () => {
         title="تواصل معنا - MasterEduPath | استفسارات الخدمات الأكاديمية"
         description="تواصل مع فريق MasterEduPath للحصول على استشارة مجانية حول خدماتنا الأكاديمية والبحثية. نرد على استفساراتك خلال 4 ساعات. اتصل: +966559600824"
         keywords="تواصل معنا, استشارة أكاديمية مجانية, دعم عملاء MasterEduPath, استفسارات بحثية, خدمة عملاء 24/7"
-        url="https://ac43130c-4bba-404a-ade5-b9d62d1f8904.lovableproject.com/contact-us"
+        url="https://masteredupath.com/contact-us"
         type="ContactPage"
         schema={{
           "@context": "https://schema.org",
