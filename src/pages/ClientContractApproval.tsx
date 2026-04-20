@@ -1,7 +1,6 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { useParams, useSearchParams, useNavigate, Link } from "react-router-dom";
 import { motion } from "framer-motion";
-import ReactMarkdown from "react-markdown";
 import { supabase } from "@/integrations/supabase/client";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -20,11 +19,11 @@ import {
 import { InputOTP, InputOTPGroup, InputOTPSlot } from "@/components/ui/input-otp";
 import {
   getContract, getContractTimeline, getContractSignatures,
-  signContract, getClientIP, generateContractContent, downloadContractPdf,
+  signContract, getClientIP, generateContractContent, downloadContractPdf, buildContractContentFromRow,
   STATUS_LABELS, STATUS_COLORS, ContractRow, ContractSignature, ContractTimelineEvent,
 } from "@/utils/supabaseContractService";
 import { REQUIRED_TERMS, PARENT_COMPANY } from "@/utils/contractTemplates";
-import ContractDocument from "@/components/contracts/ContractDocument";
+import { ContractDocumentView } from "@/components/orders/ContractDocumentView";
 import ClientLayout from "@/components/client/ClientLayout";
 import SignaturePad from "@/components/contracts/SignaturePad";
 
@@ -67,24 +66,46 @@ const ClientContractApproval = () => {
 
   useEffect(() => { if (contractId) load(); }, [contractId]);
 
+  const getIssueDateHijri = (date?: string | null) => {
+    try {
+      return new Intl.DateTimeFormat("ar-SA-u-ca-islamic", {
+        day: "numeric",
+        month: "long",
+        year: "numeric",
+      }).format(date ? new Date(date) : new Date());
+    } catch {
+      return new Intl.DateTimeFormat("ar-SA", {
+        day: "numeric",
+        month: "long",
+        year: "numeric",
+      }).format(date ? new Date(date) : new Date());
+    }
+  };
+
   async function load() {
     setLoading(true);
     try {
       let c = await getContract(contractId);
-      // Regenerate if content is missing, too short, or just a placeholder summary
       const needsRegen =
         !c?.content ||
         c.content.trim().length < 400 ||
         /^عقد آلي للخدمة/.test(c.content.trim()) ||
         !/##|المادة/.test(c.content);
+
       if (c && needsRegen) {
         try {
           await generateContractContent(contractId);
           c = await getContract(contractId);
         } catch (err) {
-          console.error("Failed to regenerate contract content", err);
+          console.error("Failed to persist regenerated contract content", err);
+          c = { ...c, content: buildContractContentFromRow(c) };
         }
       }
+
+      if (c && (!c.content || c.content.trim().length < 400)) {
+        c = { ...c, content: buildContractContentFromRow(c) };
+      }
+
       setContract(c);
       if (c) {
         setSignerName(c.client_full_name || "");
@@ -373,12 +394,12 @@ const ClientContractApproval = () => {
                 />
               </div>
 
-              {/* Document viewer — full, no inner scroll */}
+              {/* Document viewer — نفس قالب المراجعة قبل التوقيع */}
               <Card className="overflow-hidden border-2 border-primary/10 shadow-xl">
                 <div className="px-5 py-3 bg-gradient-to-l from-primary/10 via-primary/5 to-transparent border-b flex items-center justify-between gap-3">
                   <div className="flex items-center gap-2">
                     <Eye className="h-4 w-4 text-primary" />
-                    <span className="font-bold text-sm">عرض العقد الكامل</span>
+                    <span className="font-bold text-sm">العقد الأصلي الكامل</span>
                   </div>
                   <div className="flex items-center gap-1.5 text-[11px] text-muted-foreground">
                     <Hash className="h-3 w-3" />
@@ -386,7 +407,16 @@ const ClientContractApproval = () => {
                   </div>
                 </div>
                 <div className="p-3 sm:p-5 bg-gradient-to-b from-muted/40 to-muted/10 overflow-x-auto">
-                  <ContractDocument contract={contract} signature={signatures[0]} />
+                  <ContractDocumentView
+                    contractNumber={contract.contract_number}
+                    title={contract.title}
+                    content={contract.content || buildContractContentFromRow(contract)}
+                    totalAmount={contract.total_amount}
+                    currency={contract.currency}
+                    clientName={contract.client_full_name}
+                    clientEmail={contract.client_email}
+                    issueDateHijri={getIssueDateHijri(contract.created_at)}
+                  />
                 </div>
               </Card>
 
