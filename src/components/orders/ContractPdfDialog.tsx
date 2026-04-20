@@ -17,6 +17,7 @@ export const ContractPdfDialog: React.FC<Props> = ({ contractId, contractNumber,
   const { toast } = useToast();
   const [loading, setLoading] = useState(false);
   const [pdfUrl, setPdfUrl] = useState<string>('');
+  const [rawPdfUrl, setRawPdfUrl] = useState<string>('');
   const [meta, setMeta] = useState<{ version_no?: number; output_type?: string }>({});
 
   const shouldOpenExternally = useMemo(() => {
@@ -31,31 +32,57 @@ export const ContractPdfDialog: React.FC<Props> = ({ contractId, contractNumber,
   }, [open, contractId]);
 
   useEffect(() => {
+    return () => {
+      if (pdfUrl.startsWith('blob:')) URL.revokeObjectURL(pdfUrl);
+    };
+  }, [pdfUrl]);
+
+  useEffect(() => {
     if (!pdfUrl || !shouldOpenExternally) return;
     window.open(pdfUrl, '_blank', 'noopener');
   }, [pdfUrl, shouldOpenExternally]);
 
+  async function createSafePreviewUrl(url: string) {
+    try {
+      const res = await fetch(url);
+      if (!res.ok) return url;
+      const buffer = await res.arrayBuffer();
+      const blob = new Blob([buffer], { type: 'application/pdf' });
+      return URL.createObjectURL(blob);
+    } catch {
+      return url;
+    }
+  }
+
   async function load() {
     setLoading(true);
+    if (pdfUrl.startsWith('blob:')) URL.revokeObjectURL(pdfUrl);
     setPdfUrl('');
+    setRawPdfUrl('');
+
     try {
       const contract = await getContract(contractId);
       const isSigned = contract?.status === 'signed' || contract?.status === 'active' || contract?.status === 'completed';
       const resolvedContent = contract ? resolveContractDisplayContent(contract as any) : '';
-      const needsRepair = isSigned && resolvedContent.trim().length >= 400 && resolvedContent.trim() !== (contract?.content || '').trim();
+
       const { data, error } = await supabase.functions.invoke('generate-contract-pdf', {
         body: {
           contract_id: contractId,
           mode: isSigned ? 'signed_final' : 'preview',
-          force: needsRepair,
           override_content: isSigned ? resolvedContent : undefined,
           public_origin: window.location.origin,
         },
       });
+
       if (error) throw error;
+
       const url = (data as any)?.signed_url;
       if (!url) throw new Error('تعذر تجهيز ملف PDF');
-      setPdfUrl(url);
+
+      const safeUrl = await createSafePreviewUrl(url);
+      setRawPdfUrl(url);
+      setPdfUrl(safeUrl);
+
       const version = (data as any)?.version;
       setMeta({
         version_no: version?.version_no ?? (data as any)?.version_no,
@@ -69,8 +96,26 @@ export const ContractPdfDialog: React.FC<Props> = ({ contractId, contractNumber,
   }
 
   function downloadPdf() {
-    if (!pdfUrl) return;
-    window.open(pdfUrl, '_blank', 'noopener');
+    const finalUrl = pdfUrl || rawPdfUrl;
+    if (!finalUrl) return;
+
+    if (finalUrl.startsWith('blob:')) {
+      const link = document.createElement('a');
+      link.href = finalUrl;
+      link.download = `${contractNumber || contractId}.pdf`;
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      return;
+    }
+
+    window.open(finalUrl, '_blank', 'noopener');
+  }
+
+  function openOriginalPdf() {
+    const finalUrl = pdfUrl || rawPdfUrl;
+    if (!finalUrl) return;
+    window.open(finalUrl, '_blank', 'noopener');
   }
 
   return (
@@ -107,7 +152,7 @@ export const ContractPdfDialog: React.FC<Props> = ({ contractId, contractNumber,
               <Button
                 variant="ghost"
                 size="icon"
-                onClick={() => pdfUrl && window.open(pdfUrl, '_blank', 'noopener')}
+                onClick={openOriginalPdf}
                 disabled={!pdfUrl}
                 className="text-white hover:bg-white/10 h-8 w-8"
                 title="فتح في تبويب جديد"
@@ -134,9 +179,9 @@ export const ContractPdfDialog: React.FC<Props> = ({ contractId, contractNumber,
             </div>
           ) : pdfUrl ? shouldOpenExternally ? (
             <div className="absolute inset-0 flex flex-col items-center justify-center gap-4 p-6 text-center">
-              <p className="text-sm text-muted-foreground">تم فتح العقد الأصلي في تبويب جديد لعرضه كاملاً بشكل صحيح على هذا الجهاز.</p>
+              <p className="text-sm text-muted-foreground">تم فتح العقد الأصلي من داخل المنصة في تبويب جديد لعرضه كاملاً بشكل صحيح على هذا الجهاز.</p>
               <div className="flex items-center gap-2">
-                <Button onClick={downloadPdf} size="sm">
+                <Button onClick={openOriginalPdf} size="sm">
                   <ExternalLink className="h-4 w-4 ml-2" /> فتح العقد الأصلي
                 </Button>
                 <Button variant="outline" onClick={() => onOpenChange(false)} size="sm">
@@ -162,4 +207,3 @@ export const ContractPdfDialog: React.FC<Props> = ({ contractId, contractNumber,
 };
 
 export default ContractPdfDialog;
-
