@@ -291,7 +291,10 @@ export default function WhatsappManagement() {
                           <Pin className={`w-4 h-4 ${activeConv.is_pinned ? "fill-current text-primary" : ""}`} />
                         </Button>
                         <Button size="icon" variant="ghost" onClick={() => toggleStar(activeConv)}>
-                          <Star className={`w-4 h-4 ${activeConv.is_starred ? "fill-current text-yellow-500" : ""}`} />
+                          <Star className={`w-4 h-4 ${activeConv.is_starred ? "fill-current text-primary" : ""}`} />
+                        </Button>
+                        <Button size="icon" variant="ghost" onClick={() => setShowDetails((s) => !s)} title="تفاصيل ومعلومات">
+                          {showDetails ? <PanelRightClose className="w-4 h-4" /> : <PanelRightOpen className="w-4 h-4" />}
                         </Button>
                       </div>
                     </div>
@@ -366,6 +369,11 @@ export default function WhatsappManagement() {
                         )}
                       </div>
                       <div className="flex gap-2">
+                        <input ref={fileInputRef} type="file" hidden onChange={handleFileUpload}
+                          accept="image/*,application/pdf,.doc,.docx,.xls,.xlsx" />
+                        <Button size="icon" variant="outline" onClick={() => fileInputRef.current?.click()} disabled={uploading} title="إرفاق ملف">
+                          {uploading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Paperclip className="w-4 h-4" />}
+                        </Button>
                         <Button size="icon" variant="outline" onClick={() => setShowEmoji(!showEmoji)}>
                           <Smile className="w-4 h-4" />
                         </Button>
