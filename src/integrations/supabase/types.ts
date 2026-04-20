@@ -1606,6 +1606,8 @@ export type Database = {
           order_id: string | null
           paid_amount: number
           paid_at: string | null
+          pdf_generated_at: string | null
+          pdf_storage_path: string | null
           remaining_amount: number | null
           sent_at: string | null
           status: string | null
@@ -1632,6 +1634,8 @@ export type Database = {
           order_id?: string | null
           paid_amount?: number
           paid_at?: string | null
+          pdf_generated_at?: string | null
+          pdf_storage_path?: string | null
           remaining_amount?: number | null
           sent_at?: string | null
           status?: string | null
@@ -1658,6 +1662,8 @@ export type Database = {
           order_id?: string | null
           paid_amount?: number
           paid_at?: string | null
+          pdf_generated_at?: string | null
+          pdf_storage_path?: string | null
           remaining_amount?: number | null
           sent_at?: string | null
           status?: string | null
