@@ -109,7 +109,9 @@ import ContractsSystem from "./pages/admin/ContractsSystem";
 import AdminContractDetails from "./pages/admin/AdminContractDetails";
 import ContractsAnalytics from "./pages/admin/ContractsAnalytics";
 import AdminStudentResources from "./pages/admin/AdminStudentResources";
-import WhatsappManagement from "./pages/admin/WhatsappManagement";
+import WhatsappInboxPage from "./pages/admin/whatsapp/WhatsappInboxPage";
+import WhatsappCampaignsPage from "./pages/admin/whatsapp/WhatsappCampaignsPage";
+import WhatsappAnalyticsPage from "./pages/admin/whatsapp/WhatsappAnalyticsPage";
 import StudentLibrary from "./pages/client/StudentLibrary";
 import ClientContracts from "./pages/ClientContracts";
 import ClientContractView from "./pages/ClientContractView";
@@ -533,10 +535,15 @@ const App = () => (
                 <AdminReferrals />
               </SimpleProtectedRoute>
             } />
-            <Route path="/adminmaster/whatsapp" element={
-              <SimpleProtectedRoute adminOnly>
-                <WhatsappManagement />
-              </SimpleProtectedRoute>
+            <Route path="/adminmaster/whatsapp" element={<Navigate to="/adminmaster/whatsapp/inbox" replace />} />
+            <Route path="/adminmaster/whatsapp/inbox" element={
+              <SimpleProtectedRoute adminOnly><WhatsappInboxPage /></SimpleProtectedRoute>
+            } />
+            <Route path="/adminmaster/whatsapp/campaigns" element={
+              <SimpleProtectedRoute adminOnly><WhatsappCampaignsPage /></SimpleProtectedRoute>
+            } />
+            <Route path="/adminmaster/whatsapp/analytics" element={
+              <SimpleProtectedRoute adminOnly><WhatsappAnalyticsPage /></SimpleProtectedRoute>
             } />
             <Route path="/membership" element={
               <SimpleProtectedRoute>
