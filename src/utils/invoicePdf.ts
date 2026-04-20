@@ -275,7 +275,9 @@ export function buildInvoiceHTML(invoice: Invoice, items: InvoiceItem[], payment
           <div class="brand-meta">
             ${COMPANY.address}<br/>
             ${COMPANY.email}<span class="dot">•</span>${COMPANY.phone}<br/>
-            ${COMPANY.website}
+            ${COMPANY.website}<br/>
+            <span style="display:inline-block;margin-top:6px;padding:3px 8px;background:#eef2ff;border:1px solid #c7d2fe;border-radius:6px;font-weight:600;color:#3730a3;font-feature-settings:'tnum'">الرقم الضريبي: ${COMPANY.vatNumber}</span>
+            <span style="display:inline-block;margin-top:6px;margin-right:4px;padding:3px 8px;background:#fef3c7;border:1px solid #fde68a;border-radius:6px;font-weight:600;color:#92400e;font-feature-settings:'tnum'">س.ت: ${COMPANY.crNumber}</span>
           </div>
         </div>
       </div>
@@ -294,7 +296,7 @@ export function buildInvoiceHTML(invoice: Invoice, items: InvoiceItem[], payment
     <div class="info-grid">
       <div class="card">
         <div class="card-head"><div class="ic">👤</div><h4>بيانات العميل</h4></div>
-        <div class="name">${escapeHtml(invoice.customer_name ?? '—')}</div>
+        <div class="name" style="font-size:16px;color:var(--primary-2)">${escapeHtml(invoice.customer_name ?? '—')}</div>
         ${invoice.customer_email ? `<div class="row"><span class="k">البريد الإلكتروني</span><span class="v">${escapeHtml(invoice.customer_email)}</span></div>` : ''}
         ${invoice.customer_phone ? `<div class="row"><span class="k">رقم الجوال</span><span class="v">${escapeHtml(invoice.customer_phone)}</span></div>` : ''}
       </div>
@@ -304,6 +306,7 @@ export function buildInvoiceHTML(invoice: Invoice, items: InvoiceItem[], payment
         <div class="row"><span class="k">تاريخ الاستحقاق</span><span class="v">${invoice.due_date ?? '—'}</span></div>
         ${invoice.order_id ? `<div class="row"><span class="k">رقم الطلب</span><span class="v">${invoice.order_id.slice(0, 8)}…</span></div>` : ''}
         <div class="row"><span class="k">العملة</span><span class="v">${invoice.currency}</span></div>
+        <div class="row"><span class="k">طريقة الدفع</span><span class="v" style="color:var(--primary-2)">${escapeHtml(paymentMethodLabel)}</span></div>
       </div>
     </div>
 
