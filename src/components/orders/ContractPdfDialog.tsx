@@ -125,11 +125,25 @@ export const ContractPdfDialog: React.FC<Props> = ({ contractId, contractNumber,
               <p className="text-sm text-muted-foreground">جاري تحضير ملف PDF…</p>
             </div>
           ) : pdfUrl ? (
-            <iframe
-              title="contract-pdf-preview"
-              src={pdfUrl}
-              className="w-full h-full border-0 bg-white"
-            />
+            <object
+              data={pdfUrl}
+              type="application/pdf"
+              className="w-full h-full bg-white"
+            >
+              <iframe
+                title="contract-pdf-preview"
+                src={`https://docs.google.com/viewer?url=${encodeURIComponent(pdfUrl)}&embedded=true`}
+                className="w-full h-full border-0 bg-white"
+              />
+              <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 p-6 text-center">
+                <p className="text-sm text-muted-foreground">
+                  متصفحك لا يدعم عرض PDF مباشرةً.
+                </p>
+                <Button onClick={downloadPdf} size="sm">
+                  <Download className="h-4 w-4 ml-2" /> فتح / تحميل PDF
+                </Button>
+              </div>
+            </object>
           ) : (
             <div className="absolute inset-0 flex items-center justify-center text-sm text-muted-foreground">
               لا يوجد ملف PDF متاح
