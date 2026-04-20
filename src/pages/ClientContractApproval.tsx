@@ -382,8 +382,8 @@ const ClientContractApproval = () => {
 
             {/* Signing block - only if pending */}
             {!isSigned && contract.status === "pending_signature" && (
-              <Card className="border-primary/40 shadow-md">
-                <CardHeader className="bg-primary/5 border-b">
+              <Card id="signature-section" className="border-2 border-primary/40 shadow-xl scroll-mt-24">
+                <CardHeader className="bg-gradient-to-l from-primary/10 to-transparent border-b">
                   <CardTitle className="flex items-center gap-2"><ShieldCheck className="h-5 w-5 text-primary" /> الموافقة والتوقيع الإلكتروني</CardTitle>
                 </CardHeader>
                 <CardContent className="p-6 space-y-5">
