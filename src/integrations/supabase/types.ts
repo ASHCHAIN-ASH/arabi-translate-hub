@@ -155,6 +155,339 @@ export type Database = {
         }
         Relationships: []
       }
+      challenge_achievements: {
+        Row: {
+          badge_color: string | null
+          created_at: string
+          criteria_type: string
+          criteria_value: number
+          description_ar: string | null
+          icon: string | null
+          id: string
+          is_active: boolean
+          name_ar: string
+          rarity: string
+          slug: string
+          sort_order: number
+          xp_bonus: number
+        }
+        Insert: {
+          badge_color?: string | null
+          created_at?: string
+          criteria_type: string
+          criteria_value?: number
+          description_ar?: string | null
+          icon?: string | null
+          id?: string
+          is_active?: boolean
+          name_ar: string
+          rarity?: string
+          slug: string
+          sort_order?: number
+          xp_bonus?: number
+        }
+        Update: {
+          badge_color?: string | null
+          created_at?: string
+          criteria_type?: string
+          criteria_value?: number
+          description_ar?: string | null
+          icon?: string | null
+          id?: string
+          is_active?: boolean
+          name_ar?: string
+          rarity?: string
+          slug?: string
+          sort_order?: number
+          xp_bonus?: number
+        }
+        Relationships: []
+      }
+      challenge_daily_challenges: {
+        Row: {
+          action_target: string | null
+          action_type: string | null
+          category: string | null
+          challenge_date: string
+          correct_answer: string | null
+          created_at: string
+          description_ar: string | null
+          difficulty: string
+          explanation_ar: string | null
+          icon: string | null
+          id: string
+          is_active: boolean
+          options: Json | null
+          question_ar: string | null
+          title_ar: string
+          type: string
+          updated_at: string
+          xp_reward: number
+        }
+        Insert: {
+          action_target?: string | null
+          action_type?: string | null
+          category?: string | null
+          challenge_date: string
+          correct_answer?: string | null
+          created_at?: string
+          description_ar?: string | null
+          difficulty?: string
+          explanation_ar?: string | null
+          icon?: string | null
+          id?: string
+          is_active?: boolean
+          options?: Json | null
+          question_ar?: string | null
+          title_ar: string
+          type: string
+          updated_at?: string
+          xp_reward?: number
+        }
+        Update: {
+          action_target?: string | null
+          action_type?: string | null
+          category?: string | null
+          challenge_date?: string
+          correct_answer?: string | null
+          created_at?: string
+          description_ar?: string | null
+          difficulty?: string
+          explanation_ar?: string | null
+          icon?: string | null
+          id?: string
+          is_active?: boolean
+          options?: Json | null
+          question_ar?: string | null
+          title_ar?: string
+          type?: string
+          updated_at?: string
+          xp_reward?: number
+        }
+        Relationships: []
+      }
+      challenge_levels: {
+        Row: {
+          badge_color: string | null
+          badge_label: string | null
+          created_at: string
+          icon: string | null
+          id: string
+          is_active: boolean
+          name_ar: string
+          name_en: string | null
+          perks_json: Json
+          required_xp: number
+          slug: string
+          sort_order: number
+          updated_at: string
+        }
+        Insert: {
+          badge_color?: string | null
+          badge_label?: string | null
+          created_at?: string
+          icon?: string | null
+          id?: string
+          is_active?: boolean
+          name_ar: string
+          name_en?: string | null
+          perks_json?: Json
+          required_xp?: number
+          slug: string
+          sort_order?: number
+          updated_at?: string
+        }
+        Update: {
+          badge_color?: string | null
+          badge_label?: string | null
+          created_at?: string
+          icon?: string | null
+          id?: string
+          is_active?: boolean
+          name_ar?: string
+          name_en?: string | null
+          perks_json?: Json
+          required_xp?: number
+          slug?: string
+          sort_order?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      challenge_streaks: {
+        Row: {
+          current_streak: number
+          last_activity_date: string | null
+          longest_streak: number
+          total_active_days: number
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          current_streak?: number
+          last_activity_date?: string | null
+          longest_streak?: number
+          total_active_days?: number
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          current_streak?: number
+          last_activity_date?: string | null
+          longest_streak?: number
+          total_active_days?: number
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      challenge_submissions: {
+        Row: {
+          answer: string | null
+          challenge_id: string
+          id: string
+          is_correct: boolean | null
+          submitted_at: string
+          user_id: string
+          xp_awarded: number
+        }
+        Insert: {
+          answer?: string | null
+          challenge_id: string
+          id?: string
+          is_correct?: boolean | null
+          submitted_at?: string
+          user_id: string
+          xp_awarded?: number
+        }
+        Update: {
+          answer?: string | null
+          challenge_id?: string
+          id?: string
+          is_correct?: boolean | null
+          submitted_at?: string
+          user_id?: string
+          xp_awarded?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "challenge_submissions_challenge_id_fkey"
+            columns: ["challenge_id"]
+            isOneToOne: false
+            referencedRelation: "challenge_daily_challenges"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      challenge_user_achievements: {
+        Row: {
+          achievement_id: string
+          id: string
+          progress: number
+          unlocked_at: string
+          user_id: string
+        }
+        Insert: {
+          achievement_id: string
+          id?: string
+          progress?: number
+          unlocked_at?: string
+          user_id: string
+        }
+        Update: {
+          achievement_id?: string
+          id?: string
+          progress?: number
+          unlocked_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "challenge_user_achievements_achievement_id_fkey"
+            columns: ["achievement_id"]
+            isOneToOne: false
+            referencedRelation: "challenge_achievements"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      challenge_user_xp: {
+        Row: {
+          current_level_id: string | null
+          last_monthly_reset: string
+          last_weekly_reset: string
+          lifetime_xp: number
+          monthly_xp: number
+          total_xp: number
+          updated_at: string
+          user_id: string
+          weekly_xp: number
+        }
+        Insert: {
+          current_level_id?: string | null
+          last_monthly_reset?: string
+          last_weekly_reset?: string
+          lifetime_xp?: number
+          monthly_xp?: number
+          total_xp?: number
+          updated_at?: string
+          user_id: string
+          weekly_xp?: number
+        }
+        Update: {
+          current_level_id?: string | null
+          last_monthly_reset?: string
+          last_weekly_reset?: string
+          lifetime_xp?: number
+          monthly_xp?: number
+          total_xp?: number
+          updated_at?: string
+          user_id?: string
+          weekly_xp?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "challenge_user_xp_current_level_id_fkey"
+            columns: ["current_level_id"]
+            isOneToOne: false
+            referencedRelation: "challenge_levels"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      challenge_xp_transactions: {
+        Row: {
+          balance_after: number | null
+          created_at: string
+          description: string | null
+          id: string
+          source_id: string | null
+          source_type: string
+          user_id: string
+          xp_amount: number
+        }
+        Insert: {
+          balance_after?: number | null
+          created_at?: string
+          description?: string | null
+          id?: string
+          source_id?: string | null
+          source_type: string
+          user_id: string
+          xp_amount: number
+        }
+        Update: {
+          balance_after?: number | null
+          created_at?: string
+          description?: string | null
+          id?: string
+          source_id?: string | null
+          source_type?: string
+          user_id?: string
+          xp_amount?: number
+        }
+        Relationships: []
+      }
       chat_conversations: {
         Row: {
           admin_id: string | null
@@ -5049,6 +5382,27 @@ export type Database = {
       cancel_group_order: {
         Args: { _group_order_id: string; _reason?: string }
         Returns: Json
+      }
+      challenge_award_xp: {
+        Args: {
+          p_description?: string
+          p_source: string
+          p_source_id?: string
+          p_user_id: string
+          p_xp: number
+        }
+        Returns: number
+      }
+      challenge_submit: {
+        Args: { p_answer: string; p_challenge_id: string; p_user_id: string }
+        Returns: Json
+      }
+      challenge_update_streak: {
+        Args: { p_user_id: string }
+        Returns: {
+          current_streak: number
+          longest_streak: number
+        }[]
       }
       client_confirm_delivery: { Args: { _order_id: string }; Returns: Json }
       complete_daily_task: {
