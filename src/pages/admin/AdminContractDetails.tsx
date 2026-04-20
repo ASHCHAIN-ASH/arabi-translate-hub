@@ -15,7 +15,7 @@ import {
 import {
   ArrowRight, FileText, Send, Clock, ShieldCheck, Building2,
   User, DollarSign, Calendar, Printer, Download, Bell, Copy, XCircle,
-  Mail, Phone, IdCard, RefreshCw,
+  Mail, Phone, IdCard, RefreshCw, MessageCircle,
 } from "lucide-react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
@@ -35,6 +35,23 @@ const AdminContractDetails = () => {
   const [tl, setTl] = useState<ContractTimelineEvent[]>([]);
   const [loading, setLoading] = useState(true);
   const [regenerating, setRegenerating] = useState(false);
+  const [sendingWa, setSendingWa] = useState(false);
+
+  async function sendPdfViaWhatsapp() {
+    if (!c) return;
+    if (!c.client_phone) { toast.error("لا يوجد رقم جوال للعميل"); return; }
+    setSendingWa(true);
+    try {
+      const { data, error } = await supabase.functions.invoke("whatsapp-send-document", {
+        body: { kind: "contract", contract_id: c.id },
+      });
+      if (error) throw error;
+      if (!data?.success) throw new Error(data?.error || "فشل الإرسال");
+      toast.success("تم إرسال PDF العقد عبر واتساب");
+    } catch (e: any) {
+      toast.error(e?.message || "تعذّر الإرسال عبر واتساب");
+    } finally { setSendingWa(false); }
+  }
 
   useEffect(() => { load(); }, [id]);
 
@@ -146,6 +163,13 @@ const AdminContractDetails = () => {
             {c.status === "pending_signature" && <Button size="sm" variant="secondary" onClick={handleRemind}><Bell className="h-4 w-4 ml-1" /> تذكير</Button>}
             <Button size="sm" variant="outline" onClick={copyClientLink}><Copy className="h-4 w-4 ml-1" /> رابط العميل</Button>
             <Button size="sm" variant="outline" onClick={downloadPdf}><Download className="h-4 w-4 ml-1" /> PDF</Button>
+            {c.status === "signed" && c.client_phone && (
+              <Button size="sm" onClick={sendPdfViaWhatsapp} disabled={sendingWa}
+                className="bg-green-600 hover:bg-green-700 text-white">
+                <MessageCircle className={`h-4 w-4 ml-1 ${sendingWa ? "animate-pulse" : ""}`} />
+                إرسال PDF واتساب
+              </Button>
+            )}
             <Button size="sm" variant="outline" onClick={() => window.print()}><Printer className="h-4 w-4 ml-1" /> طباعة</Button>
             <Button size="sm" variant="outline" onClick={regenerate} disabled={regenerating}>
               <RefreshCw className={`h-4 w-4 ml-1 ${regenerating ? "animate-spin" : ""}`} /> توليد المحتوى

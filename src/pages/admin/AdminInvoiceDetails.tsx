@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { ArrowRight, Edit, Printer, Download, CreditCard, Send, FileText, User, Package, Clock, Loader2, Trash2 } from 'lucide-react';
+import { ArrowRight, Edit, Printer, Download, CreditCard, Send, FileText, User, Package, Clock, Loader2, Trash2, MessageCircle } from 'lucide-react';
 import { toast } from 'sonner';
 import { supabase } from '@/integrations/supabase/client';
 import { InvoiceService, type Invoice, type InvoiceItem, type InvoicePayment, type InvoiceTimelineEntry } from '@/utils/invoiceService';
@@ -77,6 +77,22 @@ export default function AdminInvoiceDetails() {
   }, [id]);
 
   const handleSend = () => setSendOpen(true);
+  const [sendingWa, setSendingWa] = useState(false);
+  const sendPdfWhatsapp = async () => {
+    if (!invoice) return;
+    if (!invoice.customer_phone) { toast.error('لا يوجد رقم جوال للعميل'); return; }
+    setSendingWa(true);
+    try {
+      const { data, error } = await supabase.functions.invoke('whatsapp-send-document', {
+        body: { kind: 'invoice', invoice_id: invoice.id },
+      });
+      if (error) throw error;
+      if (!data?.success) throw new Error(data?.error || 'فشل الإرسال');
+      toast.success('تم إرسال PDF الفاتورة عبر واتساب');
+    } catch (e: any) {
+      toast.error('تعذّر الإرسال عبر واتساب', { description: e?.message });
+    } finally { setSendingWa(false); }
+  };
 
   const handleDelete = async () => {
     if (!invoice) return;
@@ -111,6 +127,13 @@ export default function AdminInvoiceDetails() {
               <Send className="w-4 h-4 ml-1" />
               إرسال بالبريد
             </Button>
+            {invoice.customer_phone && (
+              <Button size="sm" onClick={sendPdfWhatsapp} disabled={sendingWa}
+                className="bg-green-600 hover:bg-green-700 text-white">
+                <MessageCircle className={`w-4 h-4 ml-1 ${sendingWa ? 'animate-pulse' : ''}`} />
+                إرسال PDF واتساب
+              </Button>
+            )}
             <Button size="sm" variant="outline" onClick={() => setEditOpen(true)}><Edit className="w-4 h-4 ml-1" />تعديل</Button>
             {invoice.remaining_amount > 0 && <Button size="sm" onClick={() => setPayOpen(true)}><CreditCard className="w-4 h-4 ml-1" />دفعة</Button>}
             <Button size="sm" variant="outline" className="text-destructive" onClick={handleDelete}><Trash2 className="w-4 h-4" /></Button>
