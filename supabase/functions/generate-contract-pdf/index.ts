@@ -322,8 +322,8 @@ ${opts.forPdf ? '' : `<div class="toolbar">
     <div class="party">
       <div class="lbl">الطرف الثاني (العميل)</div>
       <table>
-        ${partyRow("الاسم", contract.client_full_name || "—")}
-        ${partyRow("البريد", contract.client_email || "—")}
+        ${partyRow("الاسم", contract.client_full_name || signature?.signer_name || "—")}
+        ${partyRow("البريد", contract.client_email || signature?.signer_email || "—")}
         ${partyRow("الجوال", contract.client_phone || "—")}
         ${partyRow("الهوية", contract.client_id_number || (signature?.signer_id_number) || "—")}
       </table>
