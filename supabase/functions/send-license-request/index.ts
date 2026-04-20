@@ -1,5 +1,11 @@
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 import { EmailTemplates, formatArabicDate, generateRequestNumber } from "../_shared/email-templates.ts";
+import { createClient } from "npm:@supabase/supabase-js@2";
+
+const supabaseAdmin = createClient(
+  Deno.env.get("SUPABASE_URL")!,
+  Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!,
+);
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -522,7 +528,28 @@ serve(async (req: Request) => {
   }
 
   try {
-    const requestData: LicenseRequestData = await req.json();
+    const body: any = await req.json();
+    const requestData: LicenseRequestData =body;
+    // 🆕 حفظ في صندوق الوارد الموحّد للوحة الإدارة
+    try {
+      const data: any = body;
+      await supabaseAdmin.from("inbox_messages").insert({
+        sender_name: (data.contactPerson || "زائر").toString().slice(0, 200),
+        sender_email: (data.email || "unknown@masteredupath.com").toString().slice(0, 200),
+        sender_phone: (data.phone || null) ? data.phone.toString().slice(0, 50) : null,
+        subject: (`طلب ترخيص - ${data.licenseType || ''} - ${data.companyName || ''}`).toString().slice(0, 300),
+        message: (data.additionalInfo || `طلب ترخيص ${data.licenseType} لـ ${data.usagePurpose}` || "").toString().slice(0, 8000),
+        form_type: "license_request",
+        service_type: 'license',
+        source_page: typeof data.sourcePage === "string" ? data.sourcePage : null,
+        priority: "high",
+        status: "new",
+        metadata: { company_name: data.companyName, license_type: data.licenseType, usage_purpose: data.usagePurpose, content_type: data.contentType, duration: data.duration },
+      });
+    } catch (inboxErr) {
+      console.error("[inbox] failed to save:", inboxErr);
+    }
+
     
     console.log("License request received:", {
       companyName: requestData.companyName,

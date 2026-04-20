@@ -4,8 +4,14 @@ import { renderAsync } from 'npm:@react-email/components@0.0.22';
 import React from 'npm:react@18.3.1';
 import { ClientEmail } from './_templates/client-email.tsx';
 import { AdminEmail } from './_templates/admin-email.tsx';
+import { createClient } from "npm:@supabase/supabase-js@2";
 
 const resend = new Resend(Deno.env.get('RESEND_API_KEY'));
+
+const supabaseAdmin = createClient(
+  Deno.env.get("SUPABASE_URL")!,
+  Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!,
+);
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -33,7 +39,28 @@ serve(async (req) => {
   }
 
   try {
-    const requestData: PartnershipRequest = await req.json();
+    const body: any = await req.json();
+    const requestData: PartnershipRequest =body;
+    // 🆕 حفظ في صندوق الوارد الموحّد للوحة الإدارة
+    try {
+      const data: any = body;
+      await supabaseAdmin.from("inbox_messages").insert({
+        sender_name: (data.contactPerson || "زائر").toString().slice(0, 200),
+        sender_email: (data.email || "unknown@masteredupath.com").toString().slice(0, 200),
+        sender_phone: (data.phone || null) ? data.phone.toString().slice(0, 50) : null,
+        subject: (`طلب شراكة - ${data.institutionName || ''} - ${data.selectedPackage || ''}`).toString().slice(0, 300),
+        message: (data.additionalNotes || `${data.institutionName} (${data.institutionType}) - باقة ${data.selectedPackage} - ${data.employeesCount} موظف` || "").toString().slice(0, 8000),
+        form_type: "partnership_request",
+        service_type: 'partnership',
+        source_page: typeof data.sourcePage === "string" ? data.sourcePage : null,
+        priority: "high",
+        status: "new",
+        metadata: { institution_name: data.institutionName, institution_type: data.institutionType, position: data.position, selected_package: data.selectedPackage, employees_count: data.employeesCount, expected_services: data.expectedServices },
+      });
+    } catch (inboxErr) {
+      console.error("[inbox] failed to save:", inboxErr);
+    }
+
     
     console.log('Processing partnership request for:', requestData.institutionName);
 
