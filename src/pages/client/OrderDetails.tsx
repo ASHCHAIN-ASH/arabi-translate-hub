@@ -711,12 +711,12 @@ const OrderDetails = () => {
                 </CardHeader>
                 <CardContent className="space-y-3">
                   {(() => {
-                    const subtotal = order.total_amount || 0;
+                    const totalWithTax = order.total_amount || 0;
                     const taxRate = 0.15;
-                    const tax = Math.round(subtotal * taxRate * 100) / 100;
-                    const totalWithTax = subtotal + tax;
+                    const subtotal = Math.round((totalWithTax / (1 + taxRate)) * 100) / 100;
+                    const tax = Math.round((totalWithTax - subtotal) * 100) / 100;
                     const paid = order.paid_amount || 0;
-                    const remaining = totalWithTax - paid;
+                    const remaining = Math.max(totalWithTax - paid, 0);
                     return (
                       <>
                         <div className="flex justify-between items-center py-2">
@@ -749,7 +749,7 @@ const OrderDetails = () => {
 
                   {/* Payment Progress */}
                   {(order.total_amount || 0) > 0 && (() => {
-                    const totalWithTax = (order.total_amount || 0) * 1.15;
+                    const totalWithTax = order.total_amount || 0;
                     const pct = Math.round(((order.paid_amount || 0) / totalWithTax) * 100);
                     return (
                       <div className="pt-2">
