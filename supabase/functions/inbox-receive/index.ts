@@ -1,6 +1,5 @@
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.45.0";
-import { Resend } from "https://esm.sh/resend@4.0.0";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -69,13 +68,12 @@ serve(async (req) => {
 
     if (insertError) throw insertError;
 
-    // 2) Notify the official email (best-effort)
+    // 2) Notify the official email (best-effort) via Resend REST API
     const resendKey = Deno.env.get("RESEND_API_KEY");
     let adminEmailId: string | null = null;
     let clientEmailId: string | null = null;
 
     if (resendKey) {
-      const resend = new Resend(resendKey);
       const safeName = escapeHtml(body.name);
       const safeSubject = escapeHtml(body.subject ?? "بدون عنوان");
       const safeMessage = escapeHtml(body.message).replace(/\n/g, "<br/>");
@@ -83,56 +81,41 @@ serve(async (req) => {
       const safePhone = escapeHtml(body.phone ?? "—");
       const safeForm = escapeHtml(body.formType ?? "contact");
 
+      const sendEmail = async (payload: Record<string, unknown>) => {
+        const r = await fetch("https://api.resend.com/emails", {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${resendKey}`,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(payload),
+        });
+        const j = await r.json().catch(() => ({}));
+        if (!r.ok) throw new Error(j?.message ?? `status ${r.status}`);
+        return j as { id?: string };
+      };
+
       try {
-        const adminRes = await resend.emails.send({
+        const adminRes = await sendEmail({
           from: FROM_LABEL,
           to: [OFFICIAL_EMAIL],
           reply_to: body.email,
           subject: `📩 [${safeForm}] ${safeName} — ${safeSubject}`,
-          html: `<!DOCTYPE html><html dir="rtl" lang="ar"><body style="font-family:Tahoma,Arial,sans-serif;background:#f6f7fb;padding:24px;color:#1f2937">
-            <div style="max-width:640px;margin:auto;background:#fff;border-radius:12px;overflow:hidden;border:1px solid #e5e7eb">
-              <div style="background:linear-gradient(135deg,#3b82f6,#6366f1);color:#fff;padding:22px 24px">
-                <h2 style="margin:0">رسالة جديدة من نموذج «${safeForm}»</h2>
-                <p style="margin:6px 0 0;opacity:.9">يمكن الرد مباشرة من لوحة الإدارة → صندوق الوارد</p>
-              </div>
-              <div style="padding:22px 24px;line-height:1.8">
-                <p><b>الاسم:</b> ${safeName}</p>
-                <p><b>البريد:</b> ${escapeHtml(body.email)}</p>
-                <p><b>الهاتف:</b> ${safePhone}</p>
-                <p><b>نوع الخدمة:</b> ${safeService}</p>
-                <p><b>الموضوع:</b> ${safeSubject}</p>
-                <div style="background:#f9fafb;border-right:4px solid #3b82f6;padding:14px 16px;border-radius:8px;margin-top:14px">
-                  ${safeMessage}
-                </div>
-                <p style="margin-top:18px;color:#6b7280;font-size:12px">رقم التذكرة: ${inserted.id}</p>
-              </div>
-            </div></body></html>`,
+          html: `<!DOCTYPE html><html dir="rtl" lang="ar"><body style="font-family:Tahoma,Arial,sans-serif;background:#f6f7fb;padding:24px;color:#1f2937"><div style="max-width:640px;margin:auto;background:#fff;border-radius:12px;overflow:hidden;border:1px solid #e5e7eb"><div style="background:linear-gradient(135deg,#3b82f6,#6366f1);color:#fff;padding:22px 24px"><h2 style="margin:0">رسالة جديدة من نموذج «${safeForm}»</h2><p style="margin:6px 0 0;opacity:.9">يمكن الرد مباشرة من لوحة الإدارة → صندوق الوارد</p></div><div style="padding:22px 24px;line-height:1.8"><p><b>الاسم:</b> ${safeName}</p><p><b>البريد:</b> ${escapeHtml(body.email)}</p><p><b>الهاتف:</b> ${safePhone}</p><p><b>نوع الخدمة:</b> ${safeService}</p><p><b>الموضوع:</b> ${safeSubject}</p><div style="background:#f9fafb;border-right:4px solid #3b82f6;padding:14px 16px;border-radius:8px;margin-top:14px">${safeMessage}</div><p style="margin-top:18px;color:#6b7280;font-size:12px">رقم التذكرة: ${inserted.id}</p></div></div></body></html>`,
         });
-        adminEmailId = adminRes.data?.id ?? null;
+        adminEmailId = adminRes.id ?? null;
       } catch (e) {
         console.error("[inbox-receive] admin email failed:", e);
       }
 
-      // Confirmation to the client (best-effort)
       try {
-        const clientRes = await resend.emails.send({
+        const clientRes = await sendEmail({
           from: "وكالة ماستر إيدو باث <info@masteredupath.com>",
           to: [body.email],
           subject: "✅ تم استلام رسالتك",
-          html: `<!DOCTYPE html><html dir="rtl" lang="ar"><body style="font-family:Tahoma,Arial,sans-serif;background:#f6f7fb;padding:24px;color:#1f2937">
-            <div style="max-width:600px;margin:auto;background:#fff;border-radius:12px;overflow:hidden;border:1px solid #e5e7eb">
-              <div style="background:linear-gradient(135deg,#10b981,#059669);color:#fff;padding:22px 24px">
-                <h2 style="margin:0">شكراً لك ${safeName}</h2>
-                <p style="margin:6px 0 0;opacity:.9">تم استلام رسالتك بنجاح وسنرد عليك قريباً</p>
-              </div>
-              <div style="padding:22px 24px;line-height:1.8">
-                <p>الموضوع: <b>${safeSubject}</b></p>
-                <p>سنتواصل معك على البريد <b>${escapeHtml(body.email)}</b> خلال 4 ساعات كحد أقصى.</p>
-                <p style="margin-top:18px">للتواصل العاجل: واتساب 0500776343</p>
-              </div>
-            </div></body></html>`,
+          html: `<!DOCTYPE html><html dir="rtl" lang="ar"><body style="font-family:Tahoma,Arial,sans-serif;background:#f6f7fb;padding:24px;color:#1f2937"><div style="max-width:600px;margin:auto;background:#fff;border-radius:12px;overflow:hidden;border:1px solid #e5e7eb"><div style="background:linear-gradient(135deg,#10b981,#059669);color:#fff;padding:22px 24px"><h2 style="margin:0">شكراً لك ${safeName}</h2><p style="margin:6px 0 0;opacity:.9">تم استلام رسالتك بنجاح وسنرد عليك قريباً</p></div><div style="padding:22px 24px;line-height:1.8"><p>الموضوع: <b>${safeSubject}</b></p><p>سنتواصل معك على البريد <b>${escapeHtml(body.email)}</b> خلال 4 ساعات كحد أقصى.</p><p style="margin-top:18px">للتواصل العاجل: واتساب 0500776343</p></div></div></body></html>`,
         });
-        clientEmailId = clientRes.data?.id ?? null;
+        clientEmailId = clientRes.id ?? null;
       } catch (e) {
         console.error("[inbox-receive] client email failed:", e);
       }
