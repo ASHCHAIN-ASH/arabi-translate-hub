@@ -450,6 +450,16 @@ Deno.serve(async (req: Request) => {
       hash = Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, "0")).join("");
     }
 
+    const overrideContent = typeof body.override_content === "string" ? body.override_content.trim() : "";
+    const overrideClientName = typeof body.override_client_full_name === "string" ? body.override_client_full_name.trim() : "";
+    const overrideClientEmail = typeof body.override_client_email === "string" ? body.override_client_email.trim() : "";
+
+    if (overrideClientName) contract.client_full_name = overrideClientName;
+    if (overrideClientEmail) contract.client_email = overrideClientEmail;
+    if (isCompleteContractContent(overrideContent)) {
+      contract.content = overrideContent;
+    }
+
     const html = buildHtml(contract, signature, hash);
     const userId = contract.user_id || "system";
     const path = `${userId}/${contract.id}.html`;
@@ -508,18 +518,6 @@ Deno.serve(async (req: Request) => {
         console.warn("admin notification failed:", e);
       }
     }
-
-    const overrideContent = typeof body.override_content === "string" ? body.override_content.trim() : "";
-    const overrideClientName = typeof body.override_client_full_name === "string" ? body.override_client_full_name.trim() : "";
-    const overrideClientEmail = typeof body.override_client_email === "string" ? body.override_client_email.trim() : "";
-
-    if (overrideClientName) contract.client_full_name = overrideClientName;
-    if (overrideClientEmail) contract.client_email = overrideClientEmail;
-    if (isCompleteContractContent(overrideContent)) {
-      contract.content = overrideContent;
-    }
-
-    const html = buildHtml(contract, signature, hash);
 
     const wantsHtml =
       url.searchParams.get("format") === "html" ||
