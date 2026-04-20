@@ -274,7 +274,7 @@ async function buildOrdersReply(
 
   const { data: orders } = await supabase
     .from("service_orders")
-    .select("order_number, status, service_name, total_amount, currency, created_at, expected_delivery_date")
+    .select("tracking_id, current_status, service_name, total_amount, deadline, created_at")
     .or(filters.join(","))
     .order("created_at", { ascending: false })
     .limit(5);
@@ -294,11 +294,11 @@ async function buildOrdersReply(
 
   let txt = `📋 *آخر طلباتك:*\n\n`;
   orders.forEach((o: any, i: number) => {
-    txt += `${i + 1}. *${o.order_number || "—"}*\n`;
+    txt += `${i + 1}. *${o.tracking_id || "—"}*\n`;
     txt += `   ${o.service_name || "خدمة"}\n`;
-    txt += `   الحالة: ${statusMap[o.status] || o.status}\n`;
-    if (o.total_amount) txt += `   المبلغ: ${o.total_amount} ${o.currency || "SAR"}\n`;
-    if (o.expected_delivery_date) txt += `   التسليم المتوقع: ${o.expected_delivery_date}\n`;
+    txt += `   الحالة: ${statusMap[o.current_status] || o.current_status}\n`;
+    if (o.total_amount) txt += `   المبلغ: ${o.total_amount} SAR\n`;
+    if (o.deadline) txt += `   الموعد النهائي: ${o.deadline}\n`;
     txt += `\n`;
   });
   txt += `🔗 لوحة الطلبات: ${ORDERS_URL}\n\nأرسل *قائمة* للعودة.`;
