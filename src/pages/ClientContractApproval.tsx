@@ -279,69 +279,106 @@ const ClientContractApproval = () => {
 
   return (
     <ClientLayout>
-      <div className="bg-gradient-to-b from-background to-muted/20 p-4 sm:p-6 lg:p-8" dir="rtl">
-      {/* Header */}
-      <header className="max-w-7xl mx-auto border rounded-2xl bg-card/80 backdrop-blur">
-        <div className="px-4 py-4 sm:px-6 flex items-center justify-between gap-4">
-          <div className="flex items-center gap-3 min-w-0">
-            <Button asChild variant="ghost" size="sm">
-              <Link to="/client/contracts"><ArrowRight className="h-4 w-4 ml-1" /> عودة</Link>
-            </Button>
-            <div className="min-w-0">
-              <h1 className="font-bold text-lg truncate">عقد رقم {contract.contract_number}</h1>
-              <p className="text-xs text-muted-foreground truncate">
-                <Building2 className="inline h-3 w-3 ml-1" />
-                {PARENT_COMPANY.platformName} — تابعة لـ {PARENT_COMPANY.legalEntity}
-              </p>
+      <div className="min-h-screen bg-[radial-gradient(ellipse_at_top,hsl(var(--primary)/0.08),transparent_60%)] pb-16" dir="rtl">
+        {/* Sticky toolbar */}
+        <div className="sticky top-0 z-30 backdrop-blur-xl bg-background/80 border-b border-border/60 shadow-sm">
+          <div className="max-w-6xl mx-auto px-4 sm:px-6 py-3 flex items-center justify-between gap-3 flex-wrap">
+            <div className="flex items-center gap-3 min-w-0">
+              <Button asChild variant="ghost" size="sm" className="shrink-0">
+                <Link to="/client/contracts"><ArrowRight className="h-4 w-4 ml-1" /> عودة لعقودي</Link>
+              </Button>
+              <Separator orientation="vertical" className="h-6" />
+              <div className="min-w-0">
+                <div className="flex items-center gap-2 flex-wrap">
+                  <h1 className="font-bold text-base sm:text-lg truncate">عقد {contract.contract_number}</h1>
+                  <Badge className={STATUS_COLORS[contract.status]}>{STATUS_LABELS[contract.status]}</Badge>
+                </div>
+                <p className="text-[11px] text-muted-foreground truncate flex items-center gap-1">
+                  <Building2 className="h-3 w-3" />
+                  {PARENT_COMPANY.platformName} — تابعة لـ {PARENT_COMPANY.legalEntity}
+                </p>
+              </div>
+            </div>
+            <div className="flex items-center gap-2 shrink-0">
+              <Button variant="outline" size="sm" onClick={handleDownloadPdf} disabled={downloading}>
+                {downloading ? <Loader2 className="h-4 w-4 ml-2 animate-spin" /> : <Download className="h-4 w-4 ml-2" />}
+                تحميل PDF
+              </Button>
+              <Button variant="ghost" size="sm" onClick={() => window.print()} className="hidden sm:inline-flex">
+                <Printer className="h-4 w-4 ml-2" /> طباعة
+              </Button>
             </div>
           </div>
-          <div className="flex items-center gap-2 shrink-0">
-            <Badge className={STATUS_COLORS[contract.status]}>{STATUS_LABELS[contract.status]}</Badge>
-            <Button variant="outline" size="sm" onClick={handleDownloadPdf} disabled={downloading}>
-              {downloading ? <Loader2 className="h-4 w-4 ml-2 animate-spin" /> : <Download className="h-4 w-4 ml-2" />}
-              تحميل العقد
-            </Button>
-            <Button variant="ghost" size="sm" onClick={() => window.print()}>
-              <Printer className="h-4 w-4 ml-2" /> طباعة
-            </Button>
-          </div>
         </div>
-      </header>
 
-      <main className="max-w-7xl mx-auto py-6">
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          {/* Contract Body */}
-          <motion.div
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="lg:col-span-2 space-y-6"
-          >
-            {/* Summary Card */}
-            <Card className="border-primary/20 shadow-sm">
-              <CardContent className="p-6 grid grid-cols-2 sm:grid-cols-4 gap-4">
-                <div className="flex items-start gap-2"><User className="h-4 w-4 text-primary mt-0.5" />
-                  <div><p className="text-xs text-muted-foreground">العميل</p><p className="font-semibold text-sm truncate">{contract.client_full_name || "—"}</p></div>
-                </div>
-                <div className="flex items-start gap-2"><FileText className="h-4 w-4 text-primary mt-0.5" />
-                  <div><p className="text-xs text-muted-foreground">الخدمة</p><p className="font-semibold text-sm truncate">{contract.service_name || "—"}</p></div>
-                </div>
-                <div className="flex items-start gap-2"><DollarSign className="h-4 w-4 text-primary mt-0.5" />
-                  <div><p className="text-xs text-muted-foreground">القيمة</p><p className="font-semibold text-sm">{Number(contract.total_amount || 0).toLocaleString("ar-SA")} {contract.currency || "SAR"}</p></div>
-                </div>
-                <div className="flex items-start gap-2"><Calendar className="h-4 w-4 text-primary mt-0.5" />
-                  <div><p className="text-xs text-muted-foreground">التحرير</p><p className="font-semibold text-sm">{new Date(contract.created_at).toLocaleDateString("ar-SA")}</p></div>
-                </div>
-              </CardContent>
-            </Card>
+        {/* Pending signature banner */}
+        {!isSigned && contract.status === "pending_signature" && (
+          <div className="max-w-6xl mx-auto px-4 sm:px-6 mt-4">
+            <motion.div
+              initial={{ opacity: 0, y: -8 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="rounded-xl border-2 border-amber-400/60 bg-gradient-to-l from-amber-50 via-amber-100/60 to-amber-50 dark:from-amber-950/40 dark:to-amber-900/20 p-4 flex items-center gap-3 shadow-sm"
+            >
+              <div className="h-10 w-10 rounded-full bg-amber-400 flex items-center justify-center shrink-0 animate-pulse">
+                <AlertCircle className="h-5 w-5 text-amber-950" />
+              </div>
+              <div className="flex-1 min-w-0">
+                <p className="font-bold text-sm text-amber-900 dark:text-amber-100">هذا العقد بانتظار توقيعك</p>
+                <p className="text-xs text-amber-800/80 dark:text-amber-200/80">يرجى مراجعة بنود العقد أدناه ثم إكمال خطوات التوقيع الإلكتروني الموثّق.</p>
+              </div>
+              <Button
+                size="sm"
+                onClick={() => document.getElementById("signature-section")?.scrollIntoView({ behavior: "smooth" })}
+                className="hidden sm:inline-flex bg-amber-500 hover:bg-amber-600 text-amber-950 font-bold shrink-0"
+              >
+                توقيع الآن ←
+              </Button>
+            </motion.div>
+          </div>
+        )}
 
-            {/* Contract Document — Bank-grade design */}
-            <Card className="overflow-hidden">
-              <CardContent className="p-4 sm:p-6 bg-muted/30">
-                <ScrollArea className="max-h-[75vh]" dir="rtl">
+        <main className="max-w-6xl mx-auto px-4 sm:px-6 py-6">
+          <div className="grid grid-cols-1 lg:grid-cols-[1fr_320px] gap-6">
+            {/* Contract Body */}
+            <motion.div
+              initial={{ opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="space-y-6 min-w-0"
+            >
+              {/* KPI Strip */}
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                <KpiTile icon={User} label="العميل" value={contract.client_full_name || "—"} tone="indigo" />
+                <KpiTile icon={Sparkles} label="الخدمة" value={contract.service_name || "—"} tone="violet" />
+                <KpiTile
+                  icon={DollarSign}
+                  label="القيمة"
+                  value={`${Number(contract.total_amount || 0).toLocaleString("ar-SA")} ${contract.currency || "SAR"}`}
+                  tone="emerald"
+                />
+                <KpiTile
+                  icon={Calendar}
+                  label="تاريخ التحرير"
+                  value={new Date(contract.created_at).toLocaleDateString("ar-SA")}
+                  tone="amber"
+                />
+              </div>
+
+              {/* Document viewer — full, no inner scroll */}
+              <Card className="overflow-hidden border-2 border-primary/10 shadow-xl">
+                <div className="px-5 py-3 bg-gradient-to-l from-primary/10 via-primary/5 to-transparent border-b flex items-center justify-between gap-3">
+                  <div className="flex items-center gap-2">
+                    <Eye className="h-4 w-4 text-primary" />
+                    <span className="font-bold text-sm">عرض العقد الكامل</span>
+                  </div>
+                  <div className="flex items-center gap-1.5 text-[11px] text-muted-foreground">
+                    <Hash className="h-3 w-3" />
+                    <span className="font-mono">{contract.contract_number}</span>
+                  </div>
+                </div>
+                <div className="p-3 sm:p-5 bg-gradient-to-b from-muted/40 to-muted/10 overflow-x-auto">
                   <ContractDocument contract={contract} signature={signatures[0]} />
-                </ScrollArea>
-              </CardContent>
-            </Card>
+                </div>
+              </Card>
 
             {/* Signing block - only if pending */}
             {!isSigned && contract.status === "pending_signature" && (
