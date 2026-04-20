@@ -8,7 +8,8 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, Di
 import { Checkbox } from '@/components/ui/checkbox';
 import { Badge } from '@/components/ui/badge';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { FileSignature, ShieldCheck, Loader2, MailCheck, Eye, Download } from 'lucide-react';
+import { FileSignature, ShieldCheck, Loader2, MailCheck, Eye, Download, Mail, IdCard, PenLine, ArrowRight, RefreshCw } from 'lucide-react';
+import { InputOTP, InputOTPGroup, InputOTPSlot } from '@/components/ui/input-otp';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import { ContractPdfDialog } from './ContractPdfDialog';
