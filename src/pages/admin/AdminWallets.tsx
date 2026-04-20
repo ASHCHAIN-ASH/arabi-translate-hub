@@ -173,12 +173,90 @@ const AdminWallets: React.FC = () => {
         .from('profiles').select('full_name, phone').eq('id', r.user_id).maybeSingle();
       const phone = (cust as any)?.phone || (prof as any)?.phone;
       if (!phone) return;
+
       const name = cust?.name || prof?.full_name || 'عميلنا الكريم';
-      const amount = Number(r.amount).toLocaleString('ar-SA');
+      const amountNum = Number(r.amount);
+      const amount = amountNum.toLocaleString('ar-SA');
       const reqId = r.id.slice(0, 8);
+      const refNo = (r as any).reference_number || '—';
+      const methodMap: Record<string, string> = {
+        bank_transfer: '🏦 تحويل بنكي',
+        stc_pay: '📱 STC Pay',
+        mada: '💳 مدى',
+        cash: '💵 نقدي',
+      };
+      const method = methodMap[r.payment_method] || r.payment_method;
+
+      let bonusPct = 0;
+      if (amountNum >= 5000) bonusPct = 15;
+      else if (amountNum >= 2500) bonusPct = 10;
+      else if (amountNum >= 1000) bonusPct = 5;
+      else if (amountNum >= 500) bonusPct = 2;
+      const bonusAmount = Math.round((amountNum * bonusPct) / 100 * 100) / 100;
+      const totalCredited = amountNum + bonusAmount;
+
+      const now = new Date();
+      const dateStr = now.toLocaleDateString('ar-SA', { year: 'numeric', month: 'long', day: 'numeric' });
+      const timeStr = now.toLocaleTimeString('ar-SA', { hour: '2-digit', minute: '2-digit' });
+
+      let receiptNo = '—';
+      let newBalance = '—';
+      if (kind === 'approved') {
+        const { data: tx } = await supabase
+          .from('wallet_transactions' as any)
+          .select('receipt_number')
+          .eq('reference_id', r.id)
+          .eq('reference_type', 'topup_request')
+          .maybeSingle();
+        receiptNo = (tx as any)?.receipt_number || '—';
+        const { data: w } = await supabase
+          .from('wallets').select('balance').eq('user_id', r.user_id).maybeSingle();
+        newBalance = Number((w as any)?.balance || 0).toLocaleString('ar-SA');
+      }
+
       const message = kind === 'approved'
-        ? `مرحباً ${name} 👋\n\n✅ تمت الموافقة على طلب شحن محفظتك\n💰 المبلغ: ${amount} ر.س\n🧾 رقم الطلب: ${reqId}\n\nشكراً لثقتك بنا — MasterEduPath`
-        : `مرحباً ${name} 👋\n\n❌ نأسف، تم رفض طلب شحن محفظتك\n💰 المبلغ: ${amount} ر.س\n🧾 رقم الطلب: ${reqId}\n📝 السبب: ${reason || 'لم يُحدد'}\n\nيمكنك التواصل مع الدعم لمزيد من التفاصيل — MasterEduPath`;
+        ? [
+            `مرحباً ${name} 👋`,
+            ``,
+            `✅ *تمت الموافقة على طلب شحن محفظتك*`,
+            ``,
+            `━━━━━━━━━━━━━━`,
+            `🧾 *رقم الإيصال:* ${receiptNo}`,
+            `🔖 *رقم الطلب:* #${reqId}`,
+            refNo !== '—' ? `🏷️ *الرقم المرجعي:* ${refNo}` : null,
+            `💳 *طريقة الدفع:* ${method}`,
+            `💰 *المبلغ المُودَع:* ${amount} ر.س`,
+            bonusAmount > 0
+              ? `🎁 *مكافأة بونص ${bonusPct}%:* +${bonusAmount.toLocaleString('ar-SA')} ر.س`
+              : `🎁 *مكافأة بونص:* لا يوجد`,
+            `💎 *إجمالي المُضاف:* ${totalCredited.toLocaleString('ar-SA')} ر.س`,
+            `🏦 *رصيدك الحالي:* ${newBalance} ر.س`,
+            `📅 *التاريخ:* ${dateStr}`,
+            `⏰ *الوقت:* ${timeStr}`,
+            `━━━━━━━━━━━━━━`,
+            ``,
+            `شكراً لثقتك بنا 🌟`,
+            `— MasterEduPath`,
+          ].filter(Boolean).join('\n')
+        : [
+            `مرحباً ${name} 👋`,
+            ``,
+            `❌ *نأسف، تم رفض طلب شحن محفظتك*`,
+            ``,
+            `━━━━━━━━━━━━━━`,
+            `🔖 *رقم الطلب:* #${reqId}`,
+            refNo !== '—' ? `🏷️ *الرقم المرجعي:* ${refNo}` : null,
+            `💳 *طريقة الدفع:* ${method}`,
+            `💰 *المبلغ:* ${amount} ر.س`,
+            `📅 *تاريخ الرفض:* ${dateStr}`,
+            `⏰ *الوقت:* ${timeStr}`,
+            `📝 *السبب:* ${reason || 'لم يُحدد'}`,
+            `━━━━━━━━━━━━━━`,
+            ``,
+            `للاستفسار، تواصل مع خدمة العملاء عبر تذاكر الدعم.`,
+            `— MasterEduPath`,
+          ].filter(Boolean).join('\n');
+
       await sendWhatsApp({
         to: phone,
         message,
