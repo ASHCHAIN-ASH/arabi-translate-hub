@@ -47,7 +47,7 @@ export function AdminLifecycleControl({ orderId, currentStatus, onChanged }: Pro
     try {
       const { data, error } = await (supabase.rpc as any)('transition_order_lifecycle', {
         _order_id: orderId,
-        _new_status: target,
+        _to_status: target,
         _note: note || null,
       });
       if (error) throw error;
