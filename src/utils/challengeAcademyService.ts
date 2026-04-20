@@ -78,11 +78,14 @@ export interface UserAchievement {
 export interface LeaderboardEntry {
   user_id: string;
   display_name: string;
+  full_name: string;
+  avatar_url: string | null;
   total_xp: number;
   weekly_xp: number;
   monthly_xp: number;
   level_name: string | null;
   level_color: string | null;
+  level_icon: string | null;
   rank: number;
 }
 
