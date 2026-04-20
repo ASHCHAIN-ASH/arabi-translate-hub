@@ -12,6 +12,15 @@ interface Props {
   onSuccess?: () => void;
 }
 
+// مهلة لطلبات الشبكة لتفادي تجمّد الواجهة عند الرجوع للتبويب من تطبيق آخر
+const withTimeout = <T,>(promise: Promise<T>, ms = 20000): Promise<T> =>
+  Promise.race([
+    promise,
+    new Promise<T>((_, reject) =>
+      setTimeout(() => reject(new Error('انتهت مهلة الاتصال، حاول مرة أخرى')), ms),
+    ),
+  ]);
+
 export const WhatsappAuthForm: React.FC<Props> = ({ mode, onSuccess }) => {
   const [step, setStep] = useState<'phone' | 'code'>('phone');
   const [phone, setPhone] = useState('');
@@ -25,6 +34,23 @@ export const WhatsappAuthForm: React.FC<Props> = ({ mode, onSuccess }) => {
     const t = setInterval(() => setResendIn((s) => s - 1), 1000);
     return () => clearInterval(t);
   }, [resendIn]);
+
+  // عند الرجوع للتطبيق من تبويب/تطبيق آخر، نفك أي قفل تحميل عالق
+  React.useEffect(() => {
+    const reset = () => {
+      if (document.visibilityState === 'visible') {
+        setLoading((cur) => (cur ? false : cur));
+      }
+    };
+    document.addEventListener('visibilitychange', reset);
+    window.addEventListener('focus', reset);
+    window.addEventListener('pageshow', reset);
+    return () => {
+      document.removeEventListener('visibilitychange', reset);
+      window.removeEventListener('focus', reset);
+      window.removeEventListener('pageshow', reset);
+    };
+  }, []);
 
   const requestCode = async () => {
     if (!phone || phone.replace(/\D/g, '').length < 8) {
