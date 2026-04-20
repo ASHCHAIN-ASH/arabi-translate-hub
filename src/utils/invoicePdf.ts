@@ -347,7 +347,7 @@ export function buildInvoiceHTML(invoice: Invoice, items: InvoiceItem[], payment
       </div>
     </div>
 
-    ${paymentsBlock}
+    
 
     ${invoice.notes ? `<div class="section"><h3><span class="pin"></span>ملاحظات</h3><p>${escapeHtml(invoice.notes)}</p></div>` : ''}
     ${invoice.terms ? `<div class="section"><h3><span class="pin"></span>الشروط والأحكام</h3><p>${escapeHtml(invoice.terms)}</p></div>` : ''}
