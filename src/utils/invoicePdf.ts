@@ -48,6 +48,9 @@ export function buildInvoiceHTML(invoice: Invoice, items: InvoiceItem[], payment
       </table>
     </div>` : '';
 
+  const totalItems = items.length;
+  const totalQty = items.reduce((s, it) => s + Number(it.quantity || 0), 0);
+
   return `<!doctype html>
 <html lang="ar" dir="rtl">
 <head>
@@ -55,73 +58,154 @@ export function buildInvoiceHTML(invoice: Invoice, items: InvoiceItem[], payment
 <title>فاتورة ${invoice.invoice_number}</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
-  html, body { font-family: 'Cairo', system-ui, -apple-system, sans-serif; color: #1a1a1a; background: #fff; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-  body { padding: 28px; direction: rtl; line-height: 1.6; font-size: 13px; }
-  .page { max-width: 800px; margin: 0 auto; background: #fff; }
-  .header { display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 3px solid #1e3a8a; padding-bottom: 18px; margin-bottom: 22px; }
-  .brand { display: flex; flex-direction: column; gap: 4px; }
-  .brand-name { font-size: 22px; font-weight: 800; color: #1e3a8a; }
-  .brand-en { font-size: 12px; color: #6b7280; letter-spacing: 1px; }
-  .brand-meta { font-size: 11px; color: #6b7280; margin-top: 6px; line-height: 1.7; }
-  .doc-title { text-align: left; }
-  .doc-title h1 { font-size: 28px; font-weight: 800; color: #0f172a; letter-spacing: 2px; }
-  .doc-title .num { font-family: 'Cairo', monospace; font-size: 14px; color: #475569; margin-top: 4px; font-weight: 600; }
-  .badge { display: inline-block; padding: 4px 12px; border-radius: 999px; font-size: 11px; font-weight: 700; margin-top: 8px; }
-  .badge-paid { background: #d1fae5; color: #065f46; }
-  .badge-pending { background: #fef3c7; color: #92400e; }
-  .badge-partial { background: #ffedd5; color: #9a3412; }
-  .badge-overdue { background: #fee2e2; color: #991b1b; }
-  .badge-default { background: #e5e7eb; color: #374151; }
-
-  .info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 22px; }
-  .card { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 14px 16px; }
-  .card h4 { font-size: 11px; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; }
-  .card .row { display: flex; justify-content: space-between; padding: 3px 0; font-size: 12px; }
-  .card .row span:first-child { color: #64748b; }
-  .card .row span:last-child { color: #0f172a; font-weight: 600; }
-  .card .name { font-size: 15px; font-weight: 700; color: #0f172a; margin-bottom: 6px; }
-
-  table.items { width: 100%; border-collapse: collapse; margin-bottom: 16px; }
-  table.items thead { background: linear-gradient(135deg, #1e3a8a 0%, #312e81 100%); color: #fff; }
-  table.items th { padding: 10px 12px; font-size: 12px; font-weight: 600; text-align: right; }
-  table.items th.num, table.items td.num { text-align: center; }
-  table.items td { padding: 12px; border-bottom: 1px solid #e2e8f0; font-size: 12px; vertical-align: top; }
-  table.items tbody tr:nth-child(even) { background: #f8fafc; }
-  .item-name { font-weight: 600; color: #0f172a; }
-  .item-desc { font-size: 11px; color: #64748b; margin-top: 2px; }
-  .strong { font-weight: 700; color: #0f172a; }
-
-  .totals-wrap { display: flex; justify-content: flex-start; margin-bottom: 18px; }
-  .totals { width: 320px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 12px 16px; }
-  .totals .row { display: flex; justify-content: space-between; padding: 6px 0; font-size: 13px; border-bottom: 1px dashed #e2e8f0; }
-  .totals .row:last-child { border-bottom: none; }
-  .totals .row.grand { font-size: 15px; font-weight: 800; color: #1e3a8a; padding-top: 10px; margin-top: 4px; border-top: 2px solid #1e3a8a; border-bottom: none; }
-  .totals .row.paid { color: #047857; }
-  .totals .row.remaining { color: #b91c1c; font-weight: 700; }
-
-  .section { margin-top: 18px; padding: 14px 16px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; }
-  .section h3 { font-size: 13px; font-weight: 700; color: #0f172a; margin-bottom: 8px; padding-bottom: 6px; border-bottom: 1px solid #e2e8f0; }
-  .section p { font-size: 12px; color: #475569; line-height: 1.7; white-space: pre-wrap; }
-  table.payments { width: 100%; border-collapse: collapse; }
-  table.payments th, table.payments td { padding: 8px 10px; text-align: right; font-size: 12px; border-bottom: 1px solid #e2e8f0; }
-  table.payments th { background: #fff; color: #64748b; font-weight: 600; }
-
-  .footer { margin-top: 26px; padding-top: 14px; border-top: 1px solid #e2e8f0; text-align: center; font-size: 11px; color: #94a3b8; }
-  .footer .thanks { font-size: 14px; color: #1e3a8a; font-weight: 700; margin-bottom: 6px; }
-
-  .actions { position: fixed; top: 12px; left: 12px; display: flex; gap: 8px; z-index: 1000; }
-  .actions button { font-family: 'Cairo', sans-serif; padding: 8px 16px; border: none; border-radius: 8px; cursor: pointer; font-size: 13px; font-weight: 600; }
-  .btn-print { background: #1e3a8a; color: #fff; }
-  .btn-close { background: #e5e7eb; color: #374151; }
-  @media print {
-    .actions { display: none; }
-    body { padding: 0; }
-    .page { max-width: 100%; }
+  :root {
+    --ink: #0b1220;
+    --ink-2: #1e293b;
+    --muted: #64748b;
+    --muted-2: #94a3b8;
+    --line: #e6ebf3;
+    --line-2: #eef2f8;
+    --bg: #f6f8fc;
+    --primary: #1d4ed8;
+    --primary-2: #1e40af;
+    --primary-3: #312e81;
+    --gold: #b8860b;
+    --ok: #047857;
+    --warn: #b45309;
+    --danger: #b91c1c;
   }
-  @page { size: A4; margin: 12mm; }
+  html, body { font-family: 'IBM Plex Sans Arabic', system-ui, -apple-system, "Segoe UI", sans-serif; color: var(--ink); background: var(--bg); -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  body { padding: 28px 18px; direction: rtl; line-height: 1.6; font-size: 13px; }
+  .page { max-width: 860px; margin: 0 auto; background: #fff; border-radius: 16px; box-shadow: 0 12px 40px rgba(15,23,42,.08); overflow: hidden; position: relative; }
+
+  /* Decorative ribbon */
+  .ribbon { height: 6px; background: linear-gradient(90deg, var(--primary-3), var(--primary), var(--gold)); }
+
+  /* HEADER */
+  .header {
+    position: relative;
+    padding: 26px 32px 22px;
+    background:
+      radial-gradient(1200px 220px at 90% -40%, rgba(29,78,216,.08), transparent 60%),
+      linear-gradient(180deg, #ffffff 0%, #fafbff 100%);
+    border-bottom: 1px solid var(--line);
+  }
+  .header-row { display: flex; justify-content: space-between; align-items: flex-start; gap: 24px; }
+  .brand { display: flex; gap: 14px; align-items: flex-start; }
+  .brand-mark {
+    width: 56px; height: 56px; border-radius: 14px;
+    background: linear-gradient(135deg, var(--primary-3), var(--primary));
+    color: #fff; display: flex; align-items: center; justify-content: center;
+    font-weight: 700; font-size: 20px; letter-spacing: -0.5px;
+    box-shadow: 0 8px 20px rgba(29,78,216,.25);
+  }
+  .brand-text .brand-name { font-size: 19px; font-weight: 700; color: var(--ink); letter-spacing: -0.2px; }
+  .brand-text .brand-en { font-size: 11px; color: var(--muted); margin-top: 2px; letter-spacing: 1px; text-transform: uppercase; }
+  .brand-meta { font-size: 11px; color: var(--muted); margin-top: 8px; line-height: 1.8; }
+  .brand-meta .dot { color: var(--line); margin: 0 6px; }
+
+  .doc-title { text-align: left; min-width: 220px; }
+  .doc-eyebrow { font-size: 10px; font-weight: 600; color: var(--muted); letter-spacing: 2px; text-transform: uppercase; }
+  .doc-title h1 { font-size: 28px; font-weight: 700; color: var(--ink); letter-spacing: -0.5px; margin-top: 4px; }
+  .doc-num { display: inline-flex; align-items: center; gap: 6px; margin-top: 8px; padding: 6px 10px; background: #f1f5fb; border: 1px solid var(--line); border-radius: 8px; font-size: 12px; font-weight: 600; color: var(--ink-2); font-feature-settings: "tnum"; }
+  .badge { display: inline-flex; align-items: center; gap: 6px; padding: 5px 12px; border-radius: 999px; font-size: 11px; font-weight: 600; margin-top: 10px; border: 1px solid transparent; }
+  .badge::before { content: ""; width: 7px; height: 7px; border-radius: 50%; }
+  .badge-paid { background: #ecfdf5; color: #065f46; border-color: #a7f3d0; }
+  .badge-paid::before { background: #10b981; }
+  .badge-pending { background: #fffbeb; color: #92400e; border-color: #fde68a; }
+  .badge-pending::before { background: #f59e0b; }
+  .badge-partial { background: #fff7ed; color: #9a3412; border-color: #fed7aa; }
+  .badge-partial::before { background: #fb923c; }
+  .badge-overdue { background: #fef2f2; color: #991b1b; border-color: #fecaca; }
+  .badge-overdue::before { background: #ef4444; }
+  .badge-default { background: #f1f5f9; color: #334155; border-color: #e2e8f0; }
+  .badge-default::before { background: #94a3b8; }
+
+  /* INFO CARDS */
+  .body { padding: 22px 32px 8px; }
+  .info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 22px; }
+  .card { background: #fff; border: 1px solid var(--line); border-radius: 12px; padding: 14px 16px; position: relative; }
+  .card-head { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; padding-bottom: 8px; border-bottom: 1px dashed var(--line-2); }
+  .card-head .ic { width: 22px; height: 22px; border-radius: 6px; background: #eef2ff; color: var(--primary-2); display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; }
+  .card-head h4 { font-size: 11px; font-weight: 700; color: var(--muted); letter-spacing: 1px; text-transform: uppercase; }
+  .card .name { font-size: 14px; font-weight: 700; color: var(--ink); margin-bottom: 4px; }
+  .row { display: flex; justify-content: space-between; align-items: center; padding: 4px 0; font-size: 12px; }
+  .row .k { color: var(--muted); }
+  .row .v { color: var(--ink-2); font-weight: 600; font-feature-settings: "tnum"; }
+
+  /* META STRIP */
+  .meta-strip { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin: 0 0 18px; padding: 12px; background: linear-gradient(135deg, #f8fafc, #eef2ff); border: 1px solid var(--line); border-radius: 12px; }
+  .meta { text-align: center; padding: 6px 4px; }
+  .meta + .meta { border-right: 1px solid var(--line); }
+  .meta .label { font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; }
+  .meta .value { font-size: 14px; font-weight: 700; color: var(--ink); margin-top: 4px; font-feature-settings: "tnum"; }
+
+  /* ITEMS */
+  .items-wrap { border: 1px solid var(--line); border-radius: 12px; overflow: hidden; margin-bottom: 16px; }
+  table.items { width: 100%; border-collapse: collapse; }
+  table.items thead { background: linear-gradient(135deg, var(--primary-3), var(--primary)); color: #fff; }
+  table.items th { padding: 11px 12px; font-size: 11px; font-weight: 600; text-align: right; letter-spacing: .3px; }
+  table.items th.num, table.items td.num { text-align: center; }
+  table.items th.amount, table.items td.amount { text-align: left; }
+  table.items td { padding: 12px; border-bottom: 1px solid var(--line-2); font-size: 12px; vertical-align: top; font-feature-settings: "tnum"; }
+  table.items tbody tr:last-child td { border-bottom: none; }
+  table.items tbody tr:nth-child(even) { background: #fafbff; }
+  .item-name { font-weight: 600; color: var(--ink); }
+  .item-desc { font-size: 11px; color: var(--muted); margin-top: 3px; line-height: 1.6; }
+  .strong { font-weight: 700; color: var(--ink); }
+  .empty-row { text-align: center; color: var(--muted-2); padding: 28px !important; font-style: italic; }
+
+  /* TOTALS */
+  .totals-wrap { display: grid; grid-template-columns: 1fr 320px; gap: 14px; margin-bottom: 18px; align-items: flex-start; }
+  .totals-note { background: linear-gradient(135deg, #eff6ff, #f0f9ff); border: 1px solid #dbeafe; border-radius: 12px; padding: 14px 16px; font-size: 11.5px; color: #1e3a8a; line-height: 1.8; }
+  .totals-note .nt-title { font-weight: 700; color: var(--primary-2); margin-bottom: 4px; display: flex; align-items: center; gap: 6px; }
+  .totals { background: #fff; border: 1px solid var(--line); border-radius: 12px; padding: 14px 18px; }
+  .totals .row { padding: 7px 0; font-size: 13px; border-bottom: 1px dashed var(--line-2); }
+  .totals .row:last-child { border-bottom: none; }
+  .totals .row.grand { font-size: 15px; font-weight: 700; color: var(--primary-2); padding: 12px 0; margin-top: 4px; border-top: 2px solid var(--primary-2); border-bottom: none; }
+  .totals .row.grand .v { font-size: 17px; }
+  .totals .row.paid .v { color: var(--ok); }
+  .totals .row.remaining { background: #fef2f2; margin: 6px -10px 0; padding: 10px 10px; border-radius: 8px; border: 1px solid #fee2e2; border-bottom: none; }
+  .totals .row.remaining .k, .totals .row.remaining .v { color: var(--danger); font-weight: 700; }
+  .totals .row.fully-paid { background: #ecfdf5; margin: 6px -10px 0; padding: 10px 10px; border-radius: 8px; border: 1px solid #a7f3d0; border-bottom: none; }
+  .totals .row.fully-paid .k, .totals .row.fully-paid .v { color: var(--ok); font-weight: 700; }
+
+  /* SECTIONS */
+  .section { margin-top: 14px; padding: 14px 16px; background: #fff; border: 1px solid var(--line); border-radius: 12px; }
+  .section h3 { font-size: 12px; font-weight: 700; color: var(--ink); margin-bottom: 10px; padding-bottom: 8px; border-bottom: 1px dashed var(--line-2); display: flex; align-items: center; gap: 8px; }
+  .section h3 .pin { width: 4px; height: 14px; background: var(--primary); border-radius: 4px; }
+  .section p { font-size: 12px; color: var(--ink-2); line-height: 1.8; white-space: pre-wrap; }
+  table.payments { width: 100%; border-collapse: collapse; }
+  table.payments th, table.payments td { padding: 9px 10px; text-align: right; font-size: 12px; border-bottom: 1px solid var(--line-2); font-feature-settings: "tnum"; }
+  table.payments tbody tr:last-child td { border-bottom: none; }
+  table.payments th { background: #f8fafc; color: var(--muted); font-weight: 600; font-size: 11px; }
+  table.payments td.amount { text-align: left; font-weight: 700; color: var(--ok); }
+
+  /* FOOTER */
+  .footer { margin-top: 22px; padding: 18px 32px 24px; border-top: 1px solid var(--line); background: linear-gradient(180deg, #fafbff, #f6f8fc); text-align: center; }
+  .footer .thanks { font-size: 14px; color: var(--primary-2); font-weight: 700; margin-bottom: 6px; }
+  .footer .legal { font-size: 11px; color: var(--muted); line-height: 1.8; }
+  .footer .stamp { display: inline-flex; align-items: center; gap: 6px; margin-top: 10px; padding: 6px 14px; background: #fff; border: 1px dashed var(--line); border-radius: 999px; font-size: 10px; color: var(--muted); letter-spacing: .5px; }
+
+  /* ACTIONS BAR */
+  .actions { position: fixed; top: 14px; left: 14px; display: flex; gap: 8px; z-index: 1000; }
+  .actions button { font-family: inherit; padding: 9px 16px; border: none; border-radius: 10px; cursor: pointer; font-size: 13px; font-weight: 600; box-shadow: 0 4px 12px rgba(15,23,42,.12); transition: transform .15s ease; }
+  .actions button:hover { transform: translateY(-1px); }
+  .btn-print { background: linear-gradient(135deg, var(--primary-3), var(--primary)); color: #fff; }
+  .btn-close { background: #fff; color: var(--ink-2); border: 1px solid var(--line) !important; }
+
+  @media print {
+    body { padding: 0; background: #fff; }
+    .actions { display: none; }
+    .page { box-shadow: none; border-radius: 0; max-width: 100%; }
+    .header { padding: 18px 22px 14px; }
+    .body { padding: 14px 22px 4px; }
+    .footer { padding: 12px 22px 16px; }
+  }
+  @page { size: A4; margin: 10mm; }
 </style>
 </head>
 <body>
@@ -130,73 +214,104 @@ export function buildInvoiceHTML(invoice: Invoice, items: InvoiceItem[], payment
   <button class="btn-close" onclick="window.close()">إغلاق</button>
 </div>
 <div class="page">
+  <div class="ribbon"></div>
+
   <div class="header">
-    <div class="brand">
-      <div class="brand-name">${COMPANY.name}</div>
-      <div class="brand-en">${COMPANY.nameEn}</div>
-      <div class="brand-meta">
-        ${COMPANY.address}<br/>
-        ${COMPANY.email} • ${COMPANY.phone}<br/>
-        ${COMPANY.website}
+    <div class="header-row">
+      <div class="brand">
+        <div class="brand-mark">M</div>
+        <div class="brand-text">
+          <div class="brand-name">${COMPANY.name}</div>
+          <div class="brand-en">${COMPANY.nameEn}</div>
+          <div class="brand-meta">
+            ${COMPANY.address}<br/>
+            ${COMPANY.email}<span class="dot">•</span>${COMPANY.phone}<br/>
+            ${COMPANY.website}
+          </div>
+        </div>
+      </div>
+      <div class="doc-title">
+        <div class="doc-eyebrow">Tax Invoice</div>
+        <h1>فاتورة ضريبية</h1>
+        <div class="doc-num">رقم: ${escapeHtml(invoice.invoice_number)}</div>
+        <div>
+          <span class="badge ${badgeClass(invoice.status)}">${InvoiceService.statusLabel(invoice.status)}</span>
+        </div>
       </div>
     </div>
-    <div class="doc-title">
-      <h1>فاتورة</h1>
-      <div class="num">${escapeHtml(invoice.invoice_number)}</div>
-      <div class="badge ${badgeClass(invoice.status)}">${InvoiceService.statusLabel(invoice.status)}</div>
-    </div>
   </div>
 
-  <div class="info-grid">
-    <div class="card">
-      <h4>بيانات العميل</h4>
-      <div class="name">${escapeHtml(invoice.customer_name ?? '-')}</div>
-      ${invoice.customer_email ? `<div class="row"><span>البريد</span><span>${escapeHtml(invoice.customer_email)}</span></div>` : ''}
-      ${invoice.customer_phone ? `<div class="row"><span>الهاتف</span><span>${escapeHtml(invoice.customer_phone)}</span></div>` : ''}
+  <div class="body">
+    <div class="info-grid">
+      <div class="card">
+        <div class="card-head"><div class="ic">👤</div><h4>بيانات العميل</h4></div>
+        <div class="name">${escapeHtml(invoice.customer_name ?? '—')}</div>
+        ${invoice.customer_email ? `<div class="row"><span class="k">البريد الإلكتروني</span><span class="v">${escapeHtml(invoice.customer_email)}</span></div>` : ''}
+        ${invoice.customer_phone ? `<div class="row"><span class="k">رقم الجوال</span><span class="v">${escapeHtml(invoice.customer_phone)}</span></div>` : ''}
+      </div>
+      <div class="card">
+        <div class="card-head"><div class="ic">📄</div><h4>تفاصيل الفاتورة</h4></div>
+        <div class="row"><span class="k">تاريخ الإصدار</span><span class="v">${invoice.issue_date}</span></div>
+        <div class="row"><span class="k">تاريخ الاستحقاق</span><span class="v">${invoice.due_date ?? '—'}</span></div>
+        ${invoice.order_id ? `<div class="row"><span class="k">رقم الطلب</span><span class="v">${invoice.order_id.slice(0, 8)}…</span></div>` : ''}
+        <div class="row"><span class="k">العملة</span><span class="v">${invoice.currency}</span></div>
+      </div>
     </div>
-    <div class="card">
-      <h4>تفاصيل الفاتورة</h4>
-      <div class="row"><span>تاريخ الإصدار</span><span>${invoice.issue_date}</span></div>
-      <div class="row"><span>تاريخ الاستحقاق</span><span>${invoice.due_date ?? '-'}</span></div>
-      ${invoice.order_id ? `<div class="row"><span>رقم الطلب</span><span>${invoice.order_id.slice(0, 8)}…</span></div>` : ''}
-      <div class="row"><span>العملة</span><span>${invoice.currency}</span></div>
+
+    <div class="meta-strip">
+      <div class="meta"><div class="label">عدد البنود</div><div class="value">${totalItems}</div></div>
+      <div class="meta"><div class="label">إجمالي الكميات</div><div class="value">${totalQty}</div></div>
+      <div class="meta"><div class="label">المدفوعات</div><div class="value">${payments.length}</div></div>
+      <div class="meta"><div class="label">الإجمالي</div><div class="value">${fmt(invoice.total_amount)}</div></div>
     </div>
+
+    <div class="items-wrap">
+      <table class="items">
+        <thead>
+          <tr>
+            <th class="num" style="width:40px">#</th>
+            <th>البند</th>
+            <th class="num" style="width:60px">الكمية</th>
+            <th class="amount" style="width:110px">سعر الوحدة</th>
+            <th class="amount" style="width:90px">الخصم</th>
+            <th class="amount" style="width:120px">الإجمالي</th>
+          </tr>
+        </thead>
+        <tbody>${itemsRows || `<tr><td colspan="6" class="empty-row">لا توجد بنود مسجّلة في هذه الفاتورة</td></tr>`}</tbody>
+      </table>
+    </div>
+
+    <div class="totals-wrap">
+      <div class="totals-note">
+        <div class="nt-title">🛡️ فاتورة موثّقة إلكترونياً</div>
+        صادرة من منصة <strong>${COMPANY.name}</strong> ومحفوظة في سجلاتنا الرقمية. يمكنك التحقق من صحتها في أي وقت من خلال لوحة عميلك.
+      </div>
+      <div class="totals">
+        <div class="row"><span class="k">المجموع الفرعي</span><span class="v">${fmt(invoice.subtotal)}</span></div>
+        ${invoice.discount_amount ? `<div class="row"><span class="k">الخصم</span><span class="v">- ${fmt(invoice.discount_amount)}</span></div>` : ''}
+        ${invoice.tax_amount ? `<div class="row"><span class="k">ضريبة القيمة المضافة (15%)</span><span class="v">${fmt(invoice.tax_amount)}</span></div>` : ''}
+        <div class="row grand"><span class="k">الإجمالي المستحق</span><span class="v">${fmt(invoice.total_amount)}</span></div>
+        <div class="row paid"><span class="k">المدفوع</span><span class="v">${fmt(invoice.paid_amount)}</span></div>
+        ${Number(invoice.remaining_amount || 0) <= 0
+          ? `<div class="row fully-paid"><span class="k">✓ تم السداد بالكامل</span><span class="v">${fmt(0)}</span></div>`
+          : `<div class="row remaining"><span class="k">المبلغ المتبقي</span><span class="v">${fmt(invoice.remaining_amount)}</span></div>`
+        }
+      </div>
+    </div>
+
+    ${paymentsBlock}
+
+    ${invoice.notes ? `<div class="section"><h3><span class="pin"></span>ملاحظات</h3><p>${escapeHtml(invoice.notes)}</p></div>` : ''}
+    ${invoice.terms ? `<div class="section"><h3><span class="pin"></span>الشروط والأحكام</h3><p>${escapeHtml(invoice.terms)}</p></div>` : ''}
   </div>
-
-  <table class="items">
-    <thead>
-      <tr>
-        <th class="num" style="width:40px">#</th>
-        <th>البند</th>
-        <th class="num" style="width:60px">الكمية</th>
-        <th class="num" style="width:110px">سعر الوحدة</th>
-        <th class="num" style="width:90px">الخصم</th>
-        <th class="num" style="width:120px">الإجمالي</th>
-      </tr>
-    </thead>
-    <tbody>${itemsRows || `<tr><td colspan="6" style="text-align:center;color:#94a3b8;padding:20px">لا توجد بنود</td></tr>`}</tbody>
-  </table>
-
-  <div class="totals-wrap">
-    <div class="totals">
-      <div class="row"><span>المجموع الفرعي</span><span>${fmt(invoice.subtotal)}</span></div>
-      ${invoice.discount_amount ? `<div class="row"><span>الخصم</span><span>- ${fmt(invoice.discount_amount)}</span></div>` : ''}
-      ${invoice.tax_amount ? `<div class="row"><span>ضريبة القيمة المضافة</span><span>${fmt(invoice.tax_amount)}</span></div>` : ''}
-      <div class="row grand"><span>الإجمالي</span><span>${fmt(invoice.total_amount)}</span></div>
-      <div class="row paid"><span>المدفوع</span><span>${fmt(invoice.paid_amount)}</span></div>
-      <div class="row remaining"><span>المتبقي</span><span>${fmt(invoice.remaining_amount)}</span></div>
-    </div>
-  </div>
-
-  ${paymentsBlock}
-
-  ${invoice.notes ? `<div class="section"><h3>ملاحظات</h3><p>${escapeHtml(invoice.notes)}</p></div>` : ''}
-  ${invoice.terms ? `<div class="section"><h3>الشروط والأحكام</h3><p>${escapeHtml(invoice.terms)}</p></div>` : ''}
 
   <div class="footer">
-    <div class="thanks">شكراً لتعاملكم معنا</div>
-    <div>هذه الفاتورة صادرة إلكترونياً ولا تحتاج إلى توقيع.</div>
-    <div>${COMPANY.website} • ${COMPANY.email}</div>
+    <div class="thanks">شكراً لثقتكم بـ ${COMPANY.name} 🌟</div>
+    <div class="legal">
+      هذه الفاتورة صادرة إلكترونياً ولا تحتاج إلى توقيع أو ختم.<br/>
+      للاستفسارات: ${COMPANY.email} • ${COMPANY.phone}
+    </div>
+    <div class="stamp">🔒 وثيقة رقمية موقّعة • ${COMPANY.website}</div>
   </div>
 </div>
 </body>
