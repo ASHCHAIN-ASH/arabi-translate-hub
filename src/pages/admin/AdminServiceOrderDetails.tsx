@@ -185,6 +185,52 @@ const AdminServiceOrderDetails = () => {
   const clientName = order?.customer?.name || order?.profile?.full_name || 'غير محدد';
   const clientEmail = order?.customer?.email || '';
   const clientPhone = order?.customer?.phone || order?.profile?.phone || '';
+  const orderDetailsLink = order ? `https://masteredupath.com/orders/${order.id}` : 'https://masteredupath.com/orders';
+  const formatRiyadhDateTime = () =>
+    new Date().toLocaleString('ar-SA', {
+      timeZone: 'Asia/Riyadh',
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+      hour: '2-digit',
+      minute: '2-digit',
+      hour12: false,
+    });
+
+  const sendStatusWhatsappNotification = async (statusLabel: string) => {
+    if (!order || !clientPhone) return false;
+
+    try {
+      const { data, error } = await supabase.functions.invoke('whatsapp-send', {
+        body: {
+          to: clientPhone,
+          event_key: 'order_status_changed',
+          variables: {
+            name: clientName,
+            service: order.service_name || 'خدمة أكاديمية',
+            order_no: order.tracking_id,
+            order_number: order.tracking_id,
+            status: statusLabel,
+            updated_at: formatRiyadhDateTime(),
+            link: orderDetailsLink,
+          },
+          related_entity_type: 'service_order',
+          related_entity_id: order.id,
+          user_id: order.user_id,
+        },
+      });
+
+      if (error || !data?.success) {
+        console.error('whatsapp status notification failed', error || data);
+        return false;
+      }
+
+      return true;
+    } catch (error) {
+      console.error('whatsapp status notification failed', error);
+      return false;
+    }
+  };
 
   // ----- Actions -----
   const updateStatus = async (newStatus: string) => {
@@ -205,7 +251,6 @@ const AdminServiceOrderDetails = () => {
           link: `/orders/${order.id}`,
         }]);
       }
-      // Email — every status change + special completion
       sendOrderEmail({
         orderId: order.id,
         trackingId: order.tracking_id,
@@ -215,7 +260,12 @@ const AdminServiceOrderDetails = () => {
         clientName,
         serviceName: order.service_name,
       });
-      toast({ title: '✅ تم تحديث الحالة وإرسال إشعار للعميل' });
+
+      const whatsappSent = await sendStatusWhatsappNotification(STATUS_CONFIG[newStatus]?.label || newStatus);
+      toast({
+        title: whatsappSent ? '✅ تم تحديث الحالة وإرسال إشعار واتساب للعميل' : '✅ تم تحديث الحالة',
+        description: whatsappSent ? undefined : 'تم تحديث الطلب لكن لم يُرسل إشعار واتساب لهذه الحالة',
+      });
     } catch (e: any) {
       toast({ title: 'خطأ', description: e.message, variant: 'destructive' });
     }
@@ -229,8 +279,6 @@ const AdminServiceOrderDetails = () => {
     setSendingQuote(true);
     try {
       const entered = parseFloat(quotePrice);
-      // إذا كان المبلغ شاملاً للضريبة: نستخرج الصافي والضريبة من نفس المبلغ.
-      // إذا غير شامل: نضيف الضريبة فوقه ليصبح الإجمالي = صافي + ضريبة.
       const net = taxIncluded ? +(entered / (1 + VAT_RATE)).toFixed(2) : entered;
       const vat = taxIncluded ? +(entered - net).toFixed(2) : +(entered * VAT_RATE).toFixed(2);
       const gross = taxIncluded ? entered : +(entered + vat).toFixed(2);
@@ -239,8 +287,12 @@ const AdminServiceOrderDetails = () => {
       const fullNote = quoteNotes ? `${quoteNotes} — ${taxNote}` : taxNote;
 
       await (supabase.from('service_orders') as any).update({
-        total_amount: gross, quote_status: 'pending', quote_notes: fullNote,
-        quote_sent_at: new Date().toISOString(), updated_at: new Date().toISOString(),
+        total_amount: gross,
+        quote_status: 'pending',
+        quote_notes: fullNote,
+        quote_sent_at: new Date().toISOString(),
+        lifecycle_status: 'quote_sent',
+        updated_at: new Date().toISOString(),
       }).eq('id', order.id);
       await (supabase.from('service_order_timeline') as any).insert([{
         order_id: order.id, status: 'price_quote',
@@ -258,7 +310,7 @@ const AdminServiceOrderDetails = () => {
         amount: gross.toLocaleString(), note: fullNote,
         recipientEmail: clientEmail, clientName, serviceName: order.service_name,
       });
-      toast({ title: '✅ تم إرسال عرض السعر', description: taxNote });
+      toast({ title: '✅ تم إرسال عرض السعر', description: 'سيصل إشعار الواتساب مع تفاصيل العرض والمبلغ.' });
       setShowQuote(false);
       loadAll();
     } catch (e: any) {
@@ -353,8 +405,17 @@ const AdminServiceOrderDetails = () => {
       const tax = Math.round(subtotal * 0.15 * 100) / 100;
       const total = subtotal + tax;
       const { data: inv, error } = await (supabase.from('invoices') as any).insert([{
-        user_id: order.user_id, customer_id: order.customer_id, order_id: order.id,
-        subtotal, tax_amount: tax, total_amount: total, status: 'draft',
+        user_id: order.user_id,
+        customer_id: order.customer_id,
+        order_id: order.id,
+        customer_name: clientName !== 'غير محدد' ? clientName : null,
+        customer_email: clientEmail || null,
+        customer_phone: clientPhone || null,
+        subtotal,
+        tax_amount: tax,
+        total_amount: total,
+        currency: 'SAR',
+        status: 'draft',
         notes: `فاتورة الطلب ${order.tracking_id}`,
       }]).select('id, invoice_number').single();
       if (error) throw error;
