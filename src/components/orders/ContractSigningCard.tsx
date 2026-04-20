@@ -376,6 +376,7 @@ export const ContractSigningCard: React.FC<Props> = ({ contract, onSigned }) => 
                 </Button>
               </div>
             </div>
+            </>
           )}
         </DialogContent>
       </Dialog>
