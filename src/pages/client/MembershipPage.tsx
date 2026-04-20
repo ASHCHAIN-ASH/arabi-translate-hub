@@ -322,121 +322,167 @@ export default function MembershipPage() {
                   className={isPopular ? 'md:-mt-4 md:mb-4' : ''}
                 >
                   <Card className={`
-                    relative overflow-hidden h-full transition-all duration-500
-                    ${visual.glow}
-                    ${isPopular ? `ring-2 ${visual.ring} scale-100 md:scale-105` : 'ring-1 ring-border'}
-                    ${isHovered ? 'ring-2 ring-primary/50' : ''}
+                    relative overflow-hidden h-full transition-all duration-500 bg-card
+                    shadow-lg hover:shadow-2xl
+                    ${isPopular ? `ring-2 ${visual.ring} scale-100 md:scale-[1.03]` : 'ring-1 ring-border'}
+                    ${isHovered ? 'ring-2 ring-primary/60' : ''}
                   `}>
+                    {/* Decorative top stripe */}
+                    <div className={`absolute top-0 inset-x-0 h-1.5 bg-gradient-to-l ${visual.borderTop} z-20`} />
+
                     {/* Popular badge */}
                     {isPopular && (
                       <motion.div
                         initial={{ y: -30, opacity: 0 }}
                         animate={{ y: 0, opacity: 1 }}
                         transition={{ delay: 0.5 }}
-                        className="absolute top-0 left-1/2 -translate-x-1/2 z-10"
+                        className="absolute top-1.5 left-1/2 -translate-x-1/2 z-20"
                       >
-                        <div className={`${visual.badge} text-white text-xs font-bold px-4 py-1.5 rounded-b-lg shadow-lg flex items-center gap-1`}>
+                        <div className={`${visual.badge} text-white text-xs font-bold px-4 py-1.5 rounded-b-xl shadow-xl flex items-center gap-1.5`}>
                           <Flame className="w-3 h-3" />
                           الأكثر شعبية
+                          <Sparkles className="w-3 h-3" />
                         </div>
                       </motion.div>
                     )}
 
                     {/* Current badge */}
                     {isCurrent && (
-                      <div className="absolute top-3 right-3 z-10">
-                        <Badge className="bg-emerald-500 text-white">
+                      <div className="absolute top-3 right-3 z-20">
+                        <Badge className="bg-emerald-500 text-white shadow-md">
                           <BadgeCheck className="w-3 h-3 ml-1" />
                           باقتك الحالية
                         </Badge>
                       </div>
                     )}
 
-                    {/* Header with gradient */}
-                    <div
-                      className={`relative bg-gradient-to-br ${visual.gradient} p-6 pb-8 ${visual.textOnDark ? 'text-white' : ''}`}
-                      style={{ backgroundImage: visual.pattern }}
-                    >
-                      {/* Animated icon */}
-                      <motion.div
-                        animate={isHovered ? { rotate: [0, -10, 10, 0], scale: 1.1 } : { rotate: 0, scale: 1 }}
-                        transition={{ duration: 0.5 }}
-                        className="mb-4"
-                      >
-                        <div className={`w-14 h-14 rounded-2xl flex items-center justify-center ${
-                          isPlatinum ? 'bg-white/10 backdrop-blur' : 'bg-white/60 backdrop-blur shadow-md'
-                        }`}>
-                          <Icon className={`w-7 h-7 ${visual.accent}`} />
-                        </div>
-                      </motion.div>
+                    {/* Colored Header — high contrast, always white text */}
+                    <div className={`relative ${visual.headerBg} text-white p-6 pt-8 overflow-hidden`}>
+                      {/* Decorative blobs */}
+                      <div className="absolute -top-8 -left-8 w-32 h-32 bg-white/10 rounded-full blur-2xl" />
+                      <div className="absolute -bottom-10 -right-10 w-40 h-40 bg-black/10 rounded-full blur-2xl" />
 
-                      <h3 className="text-2xl font-black mb-1">{plan.name_ar}</h3>
-                      <p className={`text-xs ${isPlatinum ? 'text-white/60' : 'text-muted-foreground'}`}>
-                        {plan.name_en}
-                      </p>
-
-                      {/* Price */}
-                      <div className="mt-5 flex items-baseline gap-1.5">
-                        <motion.span
-                          key={plan.id}
-                          initial={{ scale: 0.5, opacity: 0 }}
-                          animate={{ scale: 1, opacity: 1 }}
-                          transition={{ delay: idx * 0.1 + 0.3, type: 'spring' }}
-                          className="text-5xl font-black"
+                      <div className="relative">
+                        {/* Animated icon */}
+                        <motion.div
+                          animate={isHovered ? { rotate: [0, -10, 10, 0], scale: 1.1 } : { rotate: 0, scale: 1 }}
+                          transition={{ duration: 0.5 }}
+                          className="mb-4"
                         >
-                          {plan.price.toLocaleString()}
-                        </motion.span>
-                        <span className="text-sm">ر.س</span>
-                        <span className={`text-xs ${isPlatinum ? 'text-white/60' : 'text-muted-foreground'}`}>
-                          / سنة
-                        </span>
+                          <div className={`w-14 h-14 rounded-2xl flex items-center justify-center ${visual.iconBox} shadow-lg`}>
+                            <Icon className="w-7 h-7 text-white" />
+                          </div>
+                        </motion.div>
+
+                        <h3 className="text-2xl font-black mb-1 text-white drop-shadow">{plan.name_ar}</h3>
+                        <p className="text-xs text-white/70 mb-2">{plan.name_en}</p>
+                        <div className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-white/15 backdrop-blur rounded-full text-[11px] font-semibold ring-1 ring-white/20">
+                          <Star className="w-3 h-3" />
+                          {visual.tagline}
+                        </div>
+
+                        {/* Price */}
+                        <div className="mt-5 flex items-baseline gap-1.5">
+                          <motion.span
+                            key={plan.id}
+                            initial={{ scale: 0.5, opacity: 0 }}
+                            animate={{ scale: 1, opacity: 1 }}
+                            transition={{ delay: idx * 0.1 + 0.3, type: 'spring' }}
+                            className="text-5xl font-black text-white drop-shadow-lg"
+                          >
+                            {plan.price.toLocaleString()}
+                          </motion.span>
+                          <span className="text-sm text-white/90">ر.س</span>
+                          <span className="text-xs text-white/60">/ سنة</span>
+                        </div>
+                        <p className="text-[11px] mt-1 text-white/70">
+                          ≈ {Math.round(plan.price / 12).toLocaleString()} ر.س / شهر
+                        </p>
                       </div>
-                      <p className={`text-[11px] mt-1 ${isPlatinum ? 'text-white/50' : 'text-muted-foreground'}`}>
-                        ≈ {Math.round(plan.price / 12).toLocaleString()} ر.س / شهر
-                      </p>
                     </div>
 
                     <CardContent className="p-5 space-y-4">
-                      {/* Discount + Cashback highlights */}
-                      <div className="grid grid-cols-2 gap-2">
-                        <motion.div
-                          whileHover={{ scale: 1.03 }}
-                          className="relative p-3 bg-primary/5 border border-primary/20 rounded-xl text-center overflow-hidden"
-                        >
-                          <TrendingUp className="absolute -top-2 -right-2 w-12 h-12 text-primary/10" />
-                          <p className="text-2xl font-black text-primary relative">{plan.discount_percentage}%</p>
-                          <p className="text-[10px] text-muted-foreground relative">خصم دائم</p>
-                        </motion.div>
-                        <motion.div
-                          whileHover={{ scale: 1.03 }}
-                          className="relative p-3 bg-emerald-500/5 border border-emerald-500/20 rounded-xl text-center overflow-hidden"
-                        >
-                          <Gift className="absolute -top-2 -right-2 w-12 h-12 text-emerald-500/10" />
-                          <p className="text-2xl font-black text-emerald-600 relative">{plan.cashback_amount}</p>
-                          <p className="text-[10px] text-muted-foreground relative">كاش باك فوري</p>
-                        </motion.div>
+                      {/* "Best for" hint */}
+                      <div className="flex items-start gap-2 p-2.5 bg-muted/40 rounded-lg border-r-2 border-primary/40">
+                        <Info className="w-3.5 h-3.5 text-primary mt-0.5 shrink-0" />
+                        <p className="text-[11px] text-muted-foreground leading-relaxed">
+                          <span className="font-bold text-foreground">مناسبة:</span> {visual.bestFor}
+                        </p>
                       </div>
 
-                      {/* Benefits with icons */}
-                      <ul className="space-y-2.5 pt-2">
-                        {plan.benefits.map((b, i) => {
-                          const FIcon = getFeatureIcon(b);
-                          return (
-                            <motion.li
-                              key={i}
-                              initial={{ opacity: 0, x: 20 }}
-                              animate={{ opacity: 1, x: 0 }}
-                              transition={{ delay: idx * 0.1 + i * 0.05 + 0.4 }}
-                              className="flex items-start gap-2.5 text-sm group"
-                            >
-                              <div className="w-6 h-6 rounded-lg bg-emerald-500/10 flex items-center justify-center shrink-0 mt-0.5 group-hover:bg-emerald-500/20 transition-colors">
-                                <FIcon className="w-3.5 h-3.5 text-emerald-600" />
-                              </div>
-                              <span className="leading-relaxed">{b}</span>
-                            </motion.li>
-                          );
-                        })}
-                      </ul>
+                      {/* Discount + Cashback highlights with tooltips */}
+                      <TooltipProvider delayDuration={150}>
+                        <div className="grid grid-cols-2 gap-2">
+                          <Tooltip>
+                            <TooltipTrigger asChild>
+                              <motion.div
+                                whileHover={{ scale: 1.04, y: -2 }}
+                                className="relative p-3 bg-gradient-to-br from-primary/10 to-primary/5 border border-primary/20 rounded-xl text-center overflow-hidden cursor-help"
+                              >
+                                <TrendingUp className="absolute -top-2 -right-2 w-12 h-12 text-primary/10" />
+                                <p className="text-2xl font-black text-primary relative">{plan.discount_percentage}%</p>
+                                <p className="text-[10px] text-muted-foreground relative font-semibold">خصم دائم</p>
+                                <HelpCircle className="absolute top-1 left-1 w-3 h-3 text-primary/40" />
+                              </motion.div>
+                            </TooltipTrigger>
+                            <TooltipContent side="top" className="max-w-[220px] text-right">
+                              يُطبَّق هذا الخصم تلقائياً على <strong>كل فاتورة</strong> طوال فترة عضويتك دون الحاجة لكود.
+                            </TooltipContent>
+                          </Tooltip>
+                          <Tooltip>
+                            <TooltipTrigger asChild>
+                              <motion.div
+                                whileHover={{ scale: 1.04, y: -2 }}
+                                className="relative p-3 bg-gradient-to-br from-emerald-500/10 to-emerald-500/5 border border-emerald-500/20 rounded-xl text-center overflow-hidden cursor-help"
+                              >
+                                <Gift className="absolute -top-2 -right-2 w-12 h-12 text-emerald-500/10" />
+                                <p className="text-2xl font-black text-emerald-600 relative">{plan.cashback_amount}</p>
+                                <p className="text-[10px] text-muted-foreground relative font-semibold">كاش باك فوري</p>
+                                <HelpCircle className="absolute top-1 left-1 w-3 h-3 text-emerald-500/40" />
+                              </motion.div>
+                            </TooltipTrigger>
+                            <TooltipContent side="top" className="max-w-[220px] text-right">
+                              مبلغ نقدي يُضاف إلى محفظتك <strong>فور تفعيل العضوية</strong> ويمكنك صرفه على أي خدمة.
+                            </TooltipContent>
+                          </Tooltip>
+                        </div>
+
+                        {/* Benefits with rich tooltips */}
+                        <div className="pt-1">
+                          <p className="text-[11px] font-bold text-muted-foreground mb-2 flex items-center gap-1">
+                            <CheckCircle2 className="w-3 h-3 text-emerald-600" />
+                            ما الذي ستحصل عليه:
+                          </p>
+                          <ul className="space-y-2">
+                            {plan.benefits.map((b, i) => {
+                              const meta = getFeatureMeta(b);
+                              const FIcon = meta.icon;
+                              return (
+                                <Tooltip key={i}>
+                                  <TooltipTrigger asChild>
+                                    <motion.li
+                                      initial={{ opacity: 0, x: 20 }}
+                                      animate={{ opacity: 1, x: 0 }}
+                                      transition={{ delay: idx * 0.1 + i * 0.05 + 0.4 }}
+                                      className="flex items-start gap-2.5 text-sm group cursor-help p-1.5 rounded-md hover:bg-muted/50 transition-colors"
+                                    >
+                                      <div className={`w-7 h-7 rounded-lg ${meta.color} flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform`}>
+                                        <FIcon className="w-3.5 h-3.5" />
+                                      </div>
+                                      <span className="leading-relaxed flex-1">{b}</span>
+                                      <HelpCircle className="w-3 h-3 text-muted-foreground/40 mt-1 shrink-0 group-hover:text-primary transition-colors" />
+                                    </motion.li>
+                                  </TooltipTrigger>
+                                  <TooltipContent side="right" className="max-w-[260px] text-right">
+                                    <div className="font-bold mb-1">{meta.title}</div>
+                                    <p className="text-xs leading-relaxed opacity-90">{meta.explain}</p>
+                                  </TooltipContent>
+                                </Tooltip>
+                              );
+                            })}
+                          </ul>
+                        </div>
+                      </TooltipProvider>
 
                       {/* CTA Button */}
                       <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} className="pt-2">
@@ -460,6 +506,12 @@ export default function MembershipPage() {
                             </>
                           )}
                         </Button>
+                        {!isCurrent && (
+                          <p className="text-[10px] text-center text-muted-foreground mt-2 flex items-center justify-center gap-1">
+                            <Shield className="w-3 h-3" />
+                            دفع آمن • تفعيل خلال ساعات
+                          </p>
+                        )}
                       </motion.div>
                     </CardContent>
                   </Card>
