@@ -54,6 +54,17 @@ const SimpleProtectedRoute: React.FC<ProtectedRouteProps> = ({
     ? 'admin'
     : requiredRole;
 
+  // If role is still resolving for an authenticated user, show a minimal
+  // inline spinner (no full-screen "جاري التحميل..." text) to avoid the
+  // disruptive flash on every navigation.
+  if (effectiveRequired && !userRole) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <Loader2 className="h-6 w-6 animate-spin text-primary/60" />
+      </div>
+    );
+  }
+
   // SECURITY: explicit whitelist checks — no implicit "admin can access
   // everything" bleed-through.
   if (effectiveRequired === 'admin') {
