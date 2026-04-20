@@ -27,3 +27,7 @@ project_id = "kziujhdqogqeehtxgpax"
     verify_jwt = false
   [functions.verify-payment]
     verify_jwt = false
+  [functions.inbox-receive]
+    verify_jwt = false
+  [functions.inbox-reply]
+    verify_jwt = true
