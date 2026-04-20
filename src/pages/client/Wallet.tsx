@@ -21,6 +21,7 @@ import {
   WalletService, type Wallet as WalletT, type WalletTransaction, type TopupRequest,
   TX_TYPE_LABELS, TX_TYPE_COLORS, TOPUP_STATUS_LABELS, TOPUP_STATUS_COLORS,
 } from '@/utils/walletService';
+import { TransactionItem } from '@/components/wallet/TransactionItem';
 
 const QUICK_AMOUNTS = [100, 250, 500, 1000, 2500, 5000];
 
