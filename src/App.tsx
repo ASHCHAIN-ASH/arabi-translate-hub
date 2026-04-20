@@ -533,6 +533,11 @@ const App = () => (
                 <AdminReferrals />
               </SimpleProtectedRoute>
             } />
+            <Route path="/adminmaster/whatsapp" element={
+              <SimpleProtectedRoute adminOnly>
+                <WhatsappManagement />
+              </SimpleProtectedRoute>
+            } />
             <Route path="/membership" element={
               <SimpleProtectedRoute>
                 <MembershipPage />
