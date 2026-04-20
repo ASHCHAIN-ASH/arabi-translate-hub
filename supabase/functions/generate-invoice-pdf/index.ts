@@ -194,13 +194,19 @@ async function enrichInvoice(invoice: any) {
     if (order?.user_id) {
       const { data: prof } = await supabase
         .from("profiles")
-        .select("full_name, phone, email")
+        .select("full_name, phone")
         .eq("id", order.user_id)
         .maybeSingle();
       if (prof) {
         customerName = customerName || prof.full_name;
         customerPhone = customerPhone || prof.phone;
-        customerEmail = customerEmail || prof.email;
+      }
+      // محاولة جلب البريد من auth.users عبر admin API
+      if (!customerEmail) {
+        try {
+          const { data: u } = await supabase.auth.admin.getUserById(order.user_id);
+          if (u?.user?.email) customerEmail = u.user.email;
+        } catch (_) {}
       }
     }
     if (order && !out.invoice_items?.length) {
