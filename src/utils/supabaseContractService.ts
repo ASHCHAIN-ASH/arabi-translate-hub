@@ -55,11 +55,12 @@ export interface ContractSignature {
 }
 
 /**
- * تحميل العقد كـ PDF بسلاسة عبر iframe مخفي → نافذة الطباعة → "حفظ كـ PDF".
- * لا يفتح أي تبويب جديد ولا ملف HTML خام.
+ * تحميل العقد كـ PDF: نفتح نافذة جديدة بمحتوى العقد الكامل (مع الخطوط والصور)،
+ * ننتظر تحميل كل الموارد + الخطوط، ثم نشغّل نافذة الطباعة → "حفظ كـ PDF".
+ * هذا يضمن ظهور العقد الفعلي بكامل تنسيقه (وليس صفحة فارغة).
  */
 export async function downloadContractPdf(contractId: string) {
-  // نطلب الـ HTML مباشرة (format=json) لتفادي فتح الـ signed URL
+  // نجلب HTML الكامل من الـ Edge Function
   const { data, error } = await supabase.functions.invoke("generate-contract-pdf", {
     body: { contract_id: contractId, format: "json" },
   });
@@ -67,7 +68,7 @@ export async function downloadContractPdf(contractId: string) {
 
   let html: string = (data as any)?.html || "";
 
-  // إن لم يُرجِع HTML، نحاول جلبه من signed_url كملف نصي ثم نطبعه محلياً
+  // إن لم يُرجِع HTML، نحاول جلبه من signed_url
   if (!html) {
     const url = (data as any)?.signed_url;
     if (url) {
@@ -75,7 +76,6 @@ export async function downloadContractPdf(contractId: string) {
         const res = await fetch(url);
         html = await res.text();
       } catch {
-        // كحل أخير: افتح الرابط في تبويب
         window.open(url, "_blank", "noopener");
         return url;
       }
@@ -83,43 +83,40 @@ export async function downloadContractPdf(contractId: string) {
   }
   if (!html) throw new Error("تعذر تجهيز محتوى العقد");
 
-  // إخفاء أي toolbar داخلي
-  const cleaned = html.replace(
-    /<div class="toolbar">[\s\S]*?<\/div>/,
-    '<style>.toolbar{display:none!important}</style>',
-  );
+  // إخفاء شريط الأدوات الداخلي + حقن سكربت auto-print بعد جاهزية الخطوط
+  const autoPrintScript = `
+    <style>.toolbar{display:none!important}</style>
+    <script>
+      (function(){
+        function go(){
+          try { window.focus(); window.print(); } catch(e){}
+        }
+        function ready(){
+          if (document.fonts && document.fonts.ready) {
+            document.fonts.ready.then(function(){ setTimeout(go, 400); });
+          } else {
+            setTimeout(go, 1200);
+          }
+        }
+        if (document.readyState === 'complete') ready();
+        else window.addEventListener('load', ready);
+        // بعد إغلاق نافذة الطباعة، أغلق التبويب
+        window.addEventListener('afterprint', function(){ setTimeout(function(){ try{ window.close(); }catch(e){} }, 300); });
+      })();
+    </script>
+  `;
+  const cleaned = html
+    .replace(/<div class="toolbar">[\s\S]*?<\/div>/, "")
+    .replace(/<\/head>/i, `${autoPrintScript}</head>`);
 
-  // iframe مخفي → طباعة → المتصفح يعرض "حفظ كـ PDF"
-  const frame = document.createElement("iframe");
-  Object.assign(frame.style, {
-    position: "fixed",
-    right: "-10000px",
-    bottom: "0",
-    width: "0",
-    height: "0",
-    border: "0",
-  } as CSSStyleDeclaration);
-  document.body.appendChild(frame);
-
-  const doc = frame.contentDocument || frame.contentWindow?.document;
-  if (!doc) {
-    document.body.removeChild(frame);
-    throw new Error("تعذر إنشاء إطار الطباعة");
+  // نفتح نافذة جديدة (تبويب) لضمان تحميل الخطوط والصور بشكل صحيح
+  const win = window.open("", "_blank");
+  if (!win) {
+    throw new Error("الرجاء السماح بالنوافذ المنبثقة لتحميل العقد");
   }
-  doc.open();
-  doc.write(cleaned);
-  doc.close();
-
-  // ننتظر تحميل الخطوط ثم نطبع
-  await new Promise((r) => setTimeout(r, 700));
-  try {
-    frame.contentWindow?.focus();
-    frame.contentWindow?.print();
-  } finally {
-    setTimeout(() => {
-      try { document.body.removeChild(frame); } catch { /* noop */ }
-    }, 1500);
-  }
+  win.document.open();
+  win.document.write(cleaned);
+  win.document.close();
   return null;
 }
 
