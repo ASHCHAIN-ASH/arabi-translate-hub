@@ -11,8 +11,8 @@ const corsHeaders = {
 };
 
 const PLATFORM = {
-  name: "Master U Path",
-  nameAr: "ماستر يو المسار",
+  name: "MasterEduPath",
+  nameAr: "ماستر إيدو باث",
   legal: "منصة ماستر إيدو باث للخدمات الأكاديمية",
   domain: "masteredupath.com",
   jurisdiction: "المملكة العربية السعودية",
@@ -290,8 +290,8 @@ ${opts.forPdf ? '' : `<div class="toolbar">
     </div>
     <div class="brand-mark">
       <h1>${esc(PLATFORM.nameAr)}</h1>
-      <p class="en">MASTER U PATH — ACADEMIC SERVICES</p>
-      <div class="seal">MUP</div>
+      <p class="en">MASTEREDUPATH — ACADEMIC SERVICES</p>
+      <div class="seal">MEP</div>
     </div>
   </header>
 
@@ -303,8 +303,8 @@ ${opts.forPdf ? '' : `<div class="toolbar">
 
   <div class="preamble">
     إنه في يوم <strong>${fmtDate(contract.created_at)}</strong>، وانطلاقاً من رسالة <strong>${esc(PLATFORM.legal)}</strong>
-    في دعم المسيرة الأكاديمية والبحثية، وبناءً على رغبة الطرف الثاني الصريحة في الإفادة من الخدمات الأكاديمية المُقدَّمة عبر منصة
-    <strong>${esc(PLATFORM.name)}</strong> (${esc(PLATFORM.domain)})، فقد اتفق الطرفان — وهما بكامل أهليتهما المعتبرة شرعاً ونظاماً —
+    في دعم المسيرة الأكاديمية والبحثية، وبناءً على رغبة الطرف الثاني الصريحة في الإفادة من الخدمات الأكاديمية المُقدَّمة عبر
+    <strong>${esc(PLATFORM.nameAr)}</strong> على النطاق الرسمي <strong>${esc(PLATFORM.domain)}</strong>، فقد اتفق الطرفان — وهما بكامل أهليتهما المعتبرة شرعاً ونظاماً —
     على إبرام هذا العقد وفق البنود والأحكام المُبيَّنة أدناه.
   </div>
 
@@ -314,7 +314,7 @@ ${opts.forPdf ? '' : `<div class="toolbar">
       <div class="lbl">الطرف الأول (مقدّم الخدمة)</div>
       <table>
         ${partyRow("الاسم", PLATFORM.legal)}
-        ${partyRow("العلامة التجارية", PLATFORM.name)}
+        ${partyRow("العلامة التجارية", PLATFORM.nameAr)}
         ${partyRow("النطاق الرسمي", PLATFORM.domain)}
         ${partyRow("المقر", PLATFORM.jurisdiction)}
       </table>
@@ -354,7 +354,7 @@ ${opts.forPdf ? '' : `<div class="toolbar">
       <div class="who">${esc(PLATFORM.legal)}</div>
       <div class="seal-circle">
         <p class="sn">${esc(PLATFORM.nameAr)}</p>
-        <p class="sm">MUP</p>
+        <p class="sm">MEP</p>
         <p class="sd">${fmtDate(contract.created_at)}</p>
       </div>
       <div class="stamp-ok">معتمد ومختوم رسمياً</div>
@@ -402,7 +402,7 @@ ${opts.forPdf ? '' : `<div class="toolbar">
   <footer class="doc">
     <span class="num">${esc(contract.contract_number)}</span>
     <div class="center">
-      <b>${esc(PLATFORM.legal)} | ${esc(PLATFORM.name)}</b>
+      <b>${esc(PLATFORM.legal)} | ${esc(PLATFORM.nameAr)}</b>
       جميع الحقوق محفوظة © ${new Date().getFullYear()}
     </div>
     <span>${esc(PLATFORM.domain)}</span>
