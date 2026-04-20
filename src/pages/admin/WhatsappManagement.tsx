@@ -10,6 +10,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
 import { Loader2, MessageCircle, Send, Settings, FileText, History } from "lucide-react";
+import AdminLayout from "@/components/admin/AdminLayout";
 
 interface Settings {
   is_enabled: boolean;
@@ -119,13 +120,16 @@ export default function WhatsappManagement() {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
-        <Loader2 className="w-8 h-8 animate-spin" />
-      </div>
+      <AdminLayout>
+        <div className="flex items-center justify-center min-h-[60vh]">
+          <Loader2 className="w-8 h-8 animate-spin" />
+        </div>
+      </AdminLayout>
     );
   }
 
   return (
+    <AdminLayout>
     <div className="container mx-auto p-6 space-y-6 max-w-6xl" dir="rtl">
       <div className="flex items-center gap-3">
         <MessageCircle className="w-8 h-8 text-green-600" />
@@ -282,5 +286,6 @@ export default function WhatsappManagement() {
         </TabsContent>
       </Tabs>
     </div>
+    </AdminLayout>
   );
 }
