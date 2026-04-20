@@ -7,7 +7,6 @@ import { CheckCircle2, XCircle, Zap, Sparkles, Brain, Share2, BookOpen, Sun, Gra
 import { DailyChallenge, ChallengeSubmission, ChallengeAcademyService } from '@/utils/challengeAcademyService';
 import { useToast } from '@/hooks/use-toast';
 import { cn } from '@/lib/utils';
-import confetti from 'canvas-confetti';
 
 const ICON_MAP: Record<string, any> = {
   Brain, Share2, BookOpen, Sun, GraduationCap, Zap, Sparkles,
@@ -54,7 +53,6 @@ export const ChallengeCard: React.FC<Props> = ({ challenge, submission, userId, 
       }
       setResult(res);
       if (res.is_correct) {
-        confetti({ particleCount: 80, spread: 70, origin: { y: 0.6 } });
         toast({
           title: `🎉 إجابة صحيحة! +${res.xp_awarded} XP`,
           description: `سلسلتك: ${res.current_streak} يوم متتالي 🔥`,
