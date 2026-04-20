@@ -142,6 +142,16 @@ export const MyAchievementsView: React.FC<Props> = ({ achievements, unlocked, su
         </div>
       </motion.div>
 
+      {/* ── Streak calendar + at-risk warning ─────────── */}
+      {user?.id && (
+        <StreakCalendar
+          userId={user.id}
+          currentStreak={streak?.current_streak ?? 0}
+          longestStreak={streak?.longest_streak ?? 0}
+          lastActivityDate={streak?.last_activity_date ?? null}
+        />
+      )}
+
       {/* ── Achievements grid ─────────────────────────── */}
       <Card className="p-4 sm:p-5">
         <div className="flex items-center justify-between mb-4 flex-wrap gap-2">
