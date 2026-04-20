@@ -163,12 +163,42 @@ const AdminWallets: React.FC = () => {
     }
   };
 
+  const sendTopupWhatsApp = async (r: TopupRequest, kind: 'approved' | 'rejected', reason?: string) => {
+    try {
+      const { supabase } = await import('@/integrations/supabase/client');
+      const { sendWhatsApp } = await import('@/lib/whatsapp');
+      const { data: cust } = await supabase
+        .from('customers').select('phone, name').eq('user_id', r.user_id).maybeSingle();
+      const { data: prof } = await supabase
+        .from('profiles').select('full_name, phone').eq('id', r.user_id).maybeSingle();
+      const phone = (cust as any)?.phone || (prof as any)?.phone;
+      if (!phone) return;
+      const name = cust?.name || prof?.full_name || 'عميلنا الكريم';
+      const amount = Number(r.amount).toLocaleString('ar-SA');
+      const reqId = r.id.slice(0, 8);
+      const message = kind === 'approved'
+        ? `مرحباً ${name} 👋\n\n✅ تمت الموافقة على طلب شحن محفظتك\n💰 المبلغ: ${amount} ر.س\n🧾 رقم الطلب: ${reqId}\n\nشكراً لثقتك بنا — MasterEduPath`
+        : `مرحباً ${name} 👋\n\n❌ نأسف، تم رفض طلب شحن محفظتك\n💰 المبلغ: ${amount} ر.س\n🧾 رقم الطلب: ${reqId}\n📝 السبب: ${reason || 'لم يُحدد'}\n\nيمكنك التواصل مع الدعم لمزيد من التفاصيل — MasterEduPath`;
+      await sendWhatsApp({
+        to: phone,
+        message,
+        related_entity_type: 'wallet_topup',
+        related_entity_id: r.id,
+        user_id: r.user_id,
+      });
+    } catch (err) {
+      console.error('Failed to send wallet WhatsApp:', err);
+    }
+  };
+
   const approve = async (r: TopupRequest) => {
     try {
       await WalletService.approveTopup(r.id, user!.id);
       toast.success('تمت الموافقة وإضافة الرصيد');
-      // Wait briefly for the trigger to update the wallet balance, then send email
-      setTimeout(() => sendTopupEmail(r, 'approved'), 1200);
+      setTimeout(() => {
+        sendTopupEmail(r, 'approved');
+        sendTopupWhatsApp(r, 'approved');
+      }, 1200);
       load();
     } catch (e: any) { toast.error('فشلت الموافقة', { description: e.message }); }
   };
@@ -180,6 +210,7 @@ const AdminWallets: React.FC = () => {
       await WalletService.rejectTopup(rejectTarget.id, user!.id, rejectReason);
       toast.success('تم رفض الطلب');
       sendTopupEmail(rejectTarget, 'rejected', rejectReason);
+      sendTopupWhatsApp(rejectTarget, 'rejected', rejectReason);
       setRejectOpen(false); load();
     } catch (e: any) { toast.error('فشل الرفض', { description: e.message }); }
   };
