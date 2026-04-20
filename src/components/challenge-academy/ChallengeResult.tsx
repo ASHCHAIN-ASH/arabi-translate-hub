@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { motion } from 'framer-motion';
 import { Dialog, DialogContent } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
@@ -7,6 +7,8 @@ import { Trophy, Zap, RotateCcw, Share2, CheckCircle2, XCircle, Flame, Sparkles,
 import { AttemptSubmitResult } from '@/utils/dailyChallengeService';
 import { useToast } from '@/hooks/use-toast';
 import { cn } from '@/lib/utils';
+import { useAuth } from '@/components/SimpleAuthProvider';
+import { ChallengeReferralService } from '@/utils/challengeReferralService';
 
 interface Props {
   open: boolean;
