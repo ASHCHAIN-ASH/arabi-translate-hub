@@ -1,31 +1,6 @@
 // Bank-grade RTL contract PDF generator — Master U Path
 // Navy + Gold banking aesthetic. Renders standalone HTML for print/save-as-PDF.
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.57.4";
-import { buildLegalAcademicContract } from "../../../src/utils/contractTemplates.ts";
-
-function buildContractContentFromRow(contract: any) {
-  const meta = contract?.metadata || {};
-  return buildLegalAcademicContract({
-    contractNumber: contract.contract_number,
-    serviceName: contract.service_name || contract.title || "خدمة",
-    serviceDescription: meta.serviceDescription,
-    clientFullName: contract.client_full_name || "العميل",
-    clientIdNumber: contract.client_id_number || undefined,
-    clientEmail: contract.client_email || undefined,
-    clientPhone: contract.client_phone || undefined,
-    clientCompany: meta.clientCompany || undefined,
-    totalAmount: Number(contract.total_amount || 0),
-    currency: contract.currency || "SAR",
-    paymentTerms: contract.payment_terms || undefined,
-    deliveryDate: contract.delivery_date || undefined,
-    workDuration: meta.workDuration || undefined,
-    issueDate: contract.created_at,
-    templateType: contract.template_type || "academic",
-    deliverables: meta.deliverables,
-    paymentSchedule: meta.paymentSchedule,
-    scopeItems: meta.scopeItems,
-  });
-}
 
 
 const corsHeaders = {
@@ -486,8 +461,13 @@ Deno.serve(async (req: Request) => {
       contract.content = overrideContent;
     }
 
-    if (!isCompleteContractContent(contract.content)) {
-      contract.content = buildContractContentFromRow(contract);
+    if (!isCompleteContractContent(contract.content) && signature?.signature_text) {
+      contract.content = `${contract.content || ""}
+
+---
+
+### إقرار الطرف الثاني
+أقرّ أنا/${signature.signer_name || contract.client_full_name || "العميل"} بأنني وافقت على هذا العقد إلكترونياً وتم توثيق توقيعي في النظام.`.trim();
     }
 
     if ((!contract.client_full_name || !String(contract.client_full_name).trim()) && signature?.signer_name) {
