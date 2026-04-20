@@ -6,8 +6,10 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { toast } from 'sonner';
 import { Card } from '@/components/ui/card';
-import { LogIn, Mail, Lock, Eye, EyeOff } from 'lucide-react';
+import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
+import { LogIn, Mail, Lock, Eye, EyeOff, MessageCircle } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { WhatsappAuthForm } from '@/components/auth/WhatsappAuthForm';
 
 const Login = () => {
   const [email, setEmail] = useState('');
