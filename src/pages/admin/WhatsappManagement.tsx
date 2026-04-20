@@ -1,491 +1,286 @@
-import React, { useState, useEffect } from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import NavigationSidebar from '@/components/admin/NavigationSidebar';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Switch } from '@/components/ui/switch';
-import { 
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from '@/components/ui/dialog';
-import { format } from 'date-fns';
-import { ar } from 'date-fns/locale';
-import { 
-  MessageCircle, 
-  Send, 
-  Settings, 
-  TestTube,
-  CheckCircle,
-  XCircle,
-  Clock,
-  RefreshCw,
-  Phone,
-  Eye,
-  AlertCircle
-} from 'lucide-react';
-import { 
-  getAllWhatsappProviders,
-  getAllWhatsappTemplates,
-  getWhatsappLogs,
-  updateWhatsappProvider,
-  testWhatsappMessage
-} from '@/utils/supabaseWhatsappService';
-import { WhatsappProvider, WhatsappTemplate, WhatsappLog, WhatsappStatus } from '@/types/whatsapp';
-import { toast } from 'sonner';
+import React, { useEffect, useState } from "react";
+import { supabase } from "@/integrations/supabase/client";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import { Switch } from "@/components/ui/switch";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Badge } from "@/components/ui/badge";
+import { toast } from "sonner";
+import { Loader2, MessageCircle, Send, Settings, FileText, History } from "lucide-react";
 
-const WhatsappManagement: React.FC = () => {
-  const [providers, setProviders] = useState<WhatsappProvider[]>([]);
-  const [templates, setTemplates] = useState<WhatsappTemplate[]>([]);
-  const [logs, setLogs] = useState<WhatsappLog[]>([]);
-  const [loading, setLoading] = useState(false);
-  const [testDialog, setTestDialog] = useState(false);
-  const [testPhone, setTestPhone] = useState('');
-  const [testTemplate, setTestTemplate] = useState('');
-  const [testVariables, setTestVariables] = useState('');
-  const [configDialog, setConfigDialog] = useState(false);
-  const [selectedProvider, setSelectedProvider] = useState<WhatsappProvider | null>(null);
+interface Settings {
+  is_enabled: boolean;
+  events_enabled: Record<string, boolean>;
+  default_country_code: string;
+  test_phone: string | null;
+}
+
+interface Template {
+  id: string;
+  event_key: string;
+  title: string;
+  body_text: string;
+  variables: string[];
+  is_active: boolean;
+}
+
+interface LogRow {
+  id: string;
+  to_phone: string;
+  event_key: string | null;
+  status: string;
+  error_message: string | null;
+  created_at: string;
+}
+
+const EVENT_LABELS: Record<string, string> = {
+  order_created: "إنشاء طلب",
+  order_status_changed: "تغيّر حالة الطلب",
+  order_delivered: "تسليم الطلب",
+  invoice_new: "فاتورة جديدة",
+  invoice_reminder: "تذكير فاتورة",
+  invoice_paid: "تأكيد دفع",
+  contract_invite: "دعوة توقيع عقد",
+  contract_signed: "توقيع عقد",
+  otp_login: "OTP تسجيل الدخول",
+};
+
+export default function WhatsappManagement() {
+  const [settings, setSettings] = useState<Settings | null>(null);
+  const [templates, setTemplates] = useState<Template[]>([]);
+  const [logs, setLogs] = useState<LogRow[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [testing, setTesting] = useState(false);
+
+  const load = async () => {
+    setLoading(true);
+    const [s, t, l] = await Promise.all([
+      supabase.from("whatsapp_settings").select("*").eq("id", 1).single(),
+      supabase.from("whatsapp_templates").select("*").order("event_key"),
+      supabase
+        .from("whatsapp_send_log")
+        .select("id,to_phone,event_key,status,error_message,created_at")
+        .order("created_at", { ascending: false })
+        .limit(100),
+    ]);
+    if (s.data) setSettings(s.data as any);
+    if (t.data) setTemplates(t.data as any);
+    if (l.data) setLogs(l.data as any);
+    setLoading(false);
+  };
 
   useEffect(() => {
-    loadData();
+    load();
   }, []);
 
-  const loadData = async () => {
-    setLoading(true);
-    try {
-      const [providersData, templatesData, logsData] = await Promise.all([
-        getAllWhatsappProviders(),
-        getAllWhatsappTemplates(),
-        getWhatsappLogs({})
-      ]);
-
-      setProviders(providersData);
-      setTemplates(templatesData);
-      setLogs(logsData);
-    } catch (error) {
-      console.error('Error loading data:', error);
-      toast.error('فشل في تحميل بيانات واتساب');
-    } finally {
-      setLoading(false);
-    }
+  const saveSettings = async () => {
+    if (!settings) return;
+    const { error } = await supabase
+      .from("whatsapp_settings")
+      .update({
+        is_enabled: settings.is_enabled,
+        events_enabled: settings.events_enabled,
+        default_country_code: settings.default_country_code,
+        test_phone: settings.test_phone,
+      })
+      .eq("id", 1);
+    if (error) return toast.error("فشل الحفظ: " + error.message);
+    toast.success("تم حفظ الإعدادات");
   };
 
-  const handleProviderToggle = async (provider: WhatsappProvider) => {
-    try {
-      // إذا كنا نفعّل مزود، قم بتعطيل الآخرين أولاً
-      if (!provider.isEnabled) {
-        for (const p of providers) {
-          if (p.isEnabled && p.id !== provider.id) {
-            await updateWhatsappProvider(p.id, { isEnabled: false });
-          }
-        }
-      }
-
-      await updateWhatsappProvider(provider.id, { isEnabled: !provider.isEnabled });
-      toast.success(`تم ${!provider.isEnabled ? 'تفعيل' : 'تعطيل'} مزود ${provider.name} بنجاح`);
-      loadData();
-    } catch (error) {
-      console.error('Error toggling provider:', error);
-      toast.error('فشل في تحديث إعدادات المزود');
-    }
+  const saveTemplate = async (tpl: Template) => {
+    const { error } = await supabase
+      .from("whatsapp_templates")
+      .update({
+        title: tpl.title,
+        body_text: tpl.body_text,
+        is_active: tpl.is_active,
+      })
+      .eq("id", tpl.id);
+    if (error) return toast.error("فشل الحفظ: " + error.message);
+    toast.success("تم حفظ القالب");
   };
 
-  const handleTestMessage = async () => {
-    if (!testPhone || !testTemplate) {
-      toast.error('يرجى ملء جميع الحقول المطلوبة');
-      return;
+  const testConnection = async () => {
+    setTesting(true);
+    const { data, error } = await supabase.functions.invoke("whatsapp-send", {
+      body: { test: true, to: settings?.test_phone || undefined, message: "اختبار اتصال SmartWats ✅" },
+    });
+    setTesting(false);
+    if (error || !data?.success) {
+      return toast.error("فشل الاختبار: " + (data?.error || error?.message || "غير معروف"));
     }
-
-    try {
-      let variables: Record<string, string> = {};
-      if (testVariables) {
-        variables = JSON.parse(testVariables);
-      }
-
-      const result = await testWhatsappMessage('default', {
-        to: testPhone,
-        templateName: testTemplate,
-        variables: variables
-      });
-      
-      if (result.success) {
-        toast.success('تم إرسال الرسالة التجريبية بنجاح');
-      } else {
-        toast.error(`فشل في إرسال الرسالة: ${result.error}`);
-      }
-
-      setTestDialog(false);
-      setTestPhone('');
-      setTestTemplate('');
-      setTestVariables('');
-      loadData(); // إعادة تحميل السجلات
-    } catch (error) {
-      console.error('Error testing message:', error);
-      toast.error('خطأ في إرسال الرسالة التجريبية');
-    }
+    toast.success("نجح الاختبار");
+    load();
   };
 
-  const getStatusBadge = (status: WhatsappStatus) => {
-    const statusConfig = {
-      queued: { label: 'في الانتظار', variant: 'secondary' as const, icon: Clock },
-      sent: { label: 'مرسل', variant: 'default' as const, icon: CheckCircle },
-      failed: { label: 'فشل', variant: 'destructive' as const, icon: XCircle }
-    };
-
-    const config = statusConfig[status];
-    const Icon = config.icon;
-
+  if (loading) {
     return (
-      <Badge variant={config.variant} className="gap-1">
-        <Icon className="h-3 w-3" />
-        {config.label}
-      </Badge>
+      <div className="flex items-center justify-center min-h-screen">
+        <Loader2 className="w-8 h-8 animate-spin" />
+      </div>
     );
-  };
-
-  const getLogStats = () => {
-    const stats = {
-      total: logs.length,
-      sent: logs.filter(log => log.status === 'sent').length,
-      failed: logs.filter(log => log.status === 'failed').length,
-      queued: logs.filter(log => log.status === 'queued').length,
-    };
-    return stats;
-  };
-
-  const stats = getLogStats();
-  const activeProvider = providers.find(p => p.isEnabled);
+  }
 
   return (
-    <div className="flex min-h-screen" dir="rtl">
-      <NavigationSidebar />
-      <div className="flex-1 p-6 space-y-6">
-      <div className="flex justify-between items-center">
+    <div className="container mx-auto p-6 space-y-6 max-w-6xl" dir="rtl">
+      <div className="flex items-center gap-3">
+        <MessageCircle className="w-8 h-8 text-green-600" />
         <div>
-          <h1 className="text-3xl font-bold text-foreground">إدارة واتساب</h1>
-          <p className="text-muted-foreground">إدارة إشعارات واتساب والقوالب والمزودين</p>
+          <h1 className="text-3xl font-bold">إدارة واتساب (SmartWats)</h1>
+          <p className="text-muted-foreground">قوالب الرسائل، الإشعارات التلقائية، وسجل الإرسال</p>
         </div>
-        <div className="flex gap-2">
-          <Dialog open={testDialog} onOpenChange={setTestDialog}>
-            <DialogTrigger asChild>
-              <Button variant="outline">
-                <TestTube className="ml-2 h-4 w-4" />
-                اختبار الإرسال
-              </Button>
-            </DialogTrigger>
-            <DialogContent>
-              <DialogHeader>
-                <DialogTitle>اختبار إرسال رسالة واتساب</DialogTitle>
-                <DialogDescription>
-                  أرسل رسالة تجريبية لاختبار إعدادات واتساب
-                </DialogDescription>
-              </DialogHeader>
-              <div className="space-y-4">
+      </div>
+
+      <Tabs defaultValue="settings" className="space-y-4">
+        <TabsList className="grid grid-cols-4 w-full max-w-2xl">
+          <TabsTrigger value="settings"><Settings className="w-4 h-4 ml-1" /> الإعدادات</TabsTrigger>
+          <TabsTrigger value="templates"><FileText className="w-4 h-4 ml-1" /> القوالب</TabsTrigger>
+          <TabsTrigger value="logs"><History className="w-4 h-4 ml-1" /> السجل</TabsTrigger>
+          <TabsTrigger value="test"><Send className="w-4 h-4 ml-1" /> اختبار</TabsTrigger>
+        </TabsList>
+
+        <TabsContent value="settings">
+          <Card>
+            <CardHeader>
+              <CardTitle>الإعدادات العامة</CardTitle>
+              <CardDescription>تفعيل/تعطيل الخدمة والأحداث المرسلة تلقائياً</CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-6">
+              <div className="flex items-center justify-between p-4 border rounded-lg">
                 <div>
-                  <label className="text-sm font-medium">رقم الهاتف</label>
+                  <Label className="text-base">تفعيل خدمة واتساب</Label>
+                  <p className="text-sm text-muted-foreground">إيقاف هذا المفتاح يعطّل جميع الإشعارات</p>
+                </div>
+                <Switch
+                  checked={settings?.is_enabled ?? false}
+                  onCheckedChange={(v) => setSettings((s) => s && { ...s, is_enabled: v })}
+                />
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label>كود الدولة الافتراضي</Label>
                   <Input
-                    placeholder="+966559600824"
-                    value={testPhone}
-                    onChange={(e) => setTestPhone(e.target.value)}
+                    value={settings?.default_country_code || ""}
+                    onChange={(e) => setSettings((s) => s && { ...s, default_country_code: e.target.value })}
+                    placeholder="966"
                   />
                 </div>
-                <div>
-                  <label className="text-sm font-medium">القالب</label>
-                  <select 
-                    className="w-full p-2 border rounded-md mt-1"
-                    value={testTemplate}
-                    onChange={(e) => setTestTemplate(e.target.value)}
-                  >
-                    <option value="">-- اختر القالب --</option>
-                    {templates.map(template => (
-                      <option key={template.id} value={template.templateName}>
-                        {template.templateName}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-                <div>
-                  <label className="text-sm font-medium">متغيرات القالب (JSON)</label>
-                  <Textarea
-                    placeholder='{"customer_name": "أحمد", "invoice_number": "INV-001"}'
-                    value={testVariables}
-                    onChange={(e) => setTestVariables(e.target.value)}
-                    rows={3}
+                <div className="space-y-2">
+                  <Label>رقم اختبار</Label>
+                  <Input
+                    value={settings?.test_phone || ""}
+                    onChange={(e) => setSettings((s) => s && { ...s, test_phone: e.target.value })}
+                    placeholder="0559600824"
                   />
                 </div>
               </div>
-              <DialogFooter>
-                <Button variant="outline" onClick={() => setTestDialog(false)}>
-                  إلغاء
-                </Button>
-                <Button onClick={handleTestMessage}>
-                  <Send className="ml-2 h-4 w-4" />
-                  إرسال
-                </Button>
-              </DialogFooter>
-            </DialogContent>
-          </Dialog>
 
-          <Button onClick={loadData} variant="outline" disabled={loading}>
-            <RefreshCw className={`ml-2 h-4 w-4 ${loading ? 'animate-spin' : ''}`} />
-            تحديث
-          </Button>
-        </div>
-      </div>
+              <div className="space-y-3">
+                <h3 className="font-semibold">الأحداث المفعّلة</h3>
+                {Object.entries(EVENT_LABELS).map(([key, label]) => (
+                  <div key={key} className="flex items-center justify-between p-3 border rounded">
+                    <Label>{label}</Label>
+                    <Switch
+                      checked={settings?.events_enabled?.[key] ?? false}
+                      onCheckedChange={(v) =>
+                        setSettings((s) =>
+                          s && { ...s, events_enabled: { ...s.events_enabled, [key]: v } },
+                        )
+                      }
+                    />
+                  </div>
+                ))}
+              </div>
 
-      {/* حالة المزود النشط */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <MessageCircle className="h-5 w-5" />
-            حالة الخدمة
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              {activeProvider ? (
-                <>
-                  <div className="h-3 w-3 bg-green-500 rounded-full animate-pulse"></div>
-                  <span className="font-medium">المزود النشط: {activeProvider.name}</span>
-                  <Badge variant="default">متصل</Badge>
-                </>
-              ) : (
-                <>
-                  <div className="h-3 w-3 bg-red-500 rounded-full"></div>
-                  <span className="font-medium">لا يوجد مزود نشط</span>
-                  <Badge variant="destructive">غير متصل</Badge>
-                </>
-              )}
-            </div>
-            {activeProvider && (
-              <Button 
-                variant="outline" 
-                size="sm"
-                onClick={() => {
-                  setSelectedProvider(activeProvider);
-                  setConfigDialog(true);
-                }}
-              >
-                <Settings className="ml-2 h-4 w-4" />
-                إعدادات المزود
-              </Button>
-            )}
-          </div>
-        </CardContent>
-      </Card>
+              <Button onClick={saveSettings} className="w-full">حفظ الإعدادات</Button>
+            </CardContent>
+          </Card>
+        </TabsContent>
 
-      {/* إحصائيات الرسائل */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">إجمالي الرسائل</CardTitle>
-            <MessageCircle className="h-4 w-4 text-blue-600" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{stats.total}</div>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">مرسلة بنجاح</CardTitle>
-            <CheckCircle className="h-4 w-4 text-green-600" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold text-green-600">{stats.sent}</div>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">فشل الإرسال</CardTitle>
-            <XCircle className="h-4 w-4 text-red-600" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold text-red-600">{stats.failed}</div>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">في الانتظار</CardTitle>
-            <Clock className="h-4 w-4 text-yellow-600" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold text-yellow-600">{stats.queued}</div>
-          </CardContent>
-        </Card>
-      </div>
-
-      <Tabs defaultValue="logs" className="space-y-4">
-        <TabsList className="grid w-full grid-cols-3">
-          <TabsTrigger value="logs">سجل الرسائل</TabsTrigger>
-          <TabsTrigger value="templates">القوالب</TabsTrigger>
-          <TabsTrigger value="providers">المزودين</TabsTrigger>
-        </TabsList>
+        <TabsContent value="templates" className="space-y-4">
+          {templates.map((tpl) => (
+            <Card key={tpl.id}>
+              <CardHeader>
+                <div className="flex items-center justify-between">
+                  <CardTitle className="text-lg">{EVENT_LABELS[tpl.event_key] || tpl.title}</CardTitle>
+                  <Switch
+                    checked={tpl.is_active}
+                    onCheckedChange={(v) =>
+                      setTemplates((arr) => arr.map((x) => (x.id === tpl.id ? { ...x, is_active: v } : x)))
+                    }
+                  />
+                </div>
+                <CardDescription>
+                  المتغيرات: {(tpl.variables as any[])?.map((v) => `{{${v}}}`).join("، ") || "—"}
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-3">
+                <Textarea
+                  rows={4}
+                  value={tpl.body_text}
+                  onChange={(e) =>
+                    setTemplates((arr) =>
+                      arr.map((x) => (x.id === tpl.id ? { ...x, body_text: e.target.value } : x)),
+                    )
+                  }
+                />
+                <Button size="sm" onClick={() => saveTemplate(tpl)}>حفظ القالب</Button>
+              </CardContent>
+            </Card>
+          ))}
+        </TabsContent>
 
         <TabsContent value="logs">
           <Card>
-            <CardHeader>
-              <CardTitle>سجل رسائل واتساب</CardTitle>
-              <CardDescription>تتبع جميع رسائل واتساب المرسلة</CardDescription>
-            </CardHeader>
+            <CardHeader><CardTitle>آخر 100 رسالة</CardTitle></CardHeader>
             <CardContent>
-              <div className="space-y-4">
-                {logs.map((log) => (
-                  <Card key={log.id} className="border border-border">
-                    <CardContent className="p-4">
-                      <div className="flex justify-between items-start">
-                        <div className="flex-1 space-y-2">
-                          <div className="flex items-center gap-2">
-                            <Phone className="h-4 w-4" />
-                            <span className="font-medium">{log.toPhone}</span>
-                            {getStatusBadge(log.status)}
-                          </div>
-                          
-                          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm text-muted-foreground">
-                            <div>
-                              <span className="font-medium">القالب:</span> {log.templateName || 'غير محدد'}
-                            </div>
-                            <div>
-                              <span className="font-medium">وقت الإرسال:</span>{' '}
-                              {format(new Date(log.createdAt), 'dd/MM/yyyy HH:mm', { locale: ar })}
-                            </div>
-                            {log.providerMessageId && (
-                              <div>
-                                <span className="font-medium">معرف الرسالة:</span> {log.providerMessageId}
-                              </div>
-                            )}
-                          </div>
-
-                          {log.errorMessage && (
-                            <div className="flex items-center gap-2 p-2 bg-red-50 border border-red-200 rounded-md">
-                              <AlertCircle className="h-4 w-4 text-red-600" />
-                              <span className="text-sm text-red-700">{log.errorMessage}</span>
-                            </div>
-                          )}
-
-                          {Object.keys(log.variablesJson).length > 0 && (
-                            <details className="text-sm">
-                              <summary className="cursor-pointer text-muted-foreground hover:text-foreground">
-                                متغيرات الرسالة
-                              </summary>
-                              <pre className="mt-2 p-2 bg-muted rounded-md text-xs overflow-x-auto">
-                                {JSON.stringify(log.variablesJson, null, 2)}
-                              </pre>
-                            </details>
-                          )}
-                        </div>
-                      </div>
-                    </CardContent>
-                  </Card>
-                ))}
-
-                {logs.length === 0 && (
-                  <div className="text-center py-8 text-muted-foreground">
-                    <MessageCircle className="mx-auto h-12 w-12 mb-4" />
-                    <p>لا توجد رسائل واتساب حتى الآن</p>
+              <div className="space-y-2">
+                {logs.length === 0 && <p className="text-muted-foreground text-center py-8">لا توجد سجلات</p>}
+                {logs.map((l) => (
+                  <div key={l.id} className="flex items-center justify-between p-3 border rounded text-sm">
+                    <div className="flex flex-col">
+                      <span className="font-mono">{l.to_phone}</span>
+                      <span className="text-xs text-muted-foreground">
+                        {EVENT_LABELS[l.event_key || ""] || l.event_key || "مباشر"} ·{" "}
+                        {new Date(l.created_at).toLocaleString("ar")}
+                      </span>
+                      {l.error_message && (
+                        <span className="text-xs text-destructive mt-1">{l.error_message}</span>
+                      )}
+                    </div>
+                    <Badge variant={l.status === "sent" ? "default" : "destructive"}>
+                      {l.status === "sent" ? "مُرسلة" : "فشلت"}
+                    </Badge>
                   </div>
-                )}
-              </div>
-            </CardContent>
-          </Card>
-        </TabsContent>
-
-        <TabsContent value="templates">
-          <Card>
-            <CardHeader>
-              <CardTitle>قوالب الرسائل</CardTitle>
-              <CardDescription>قوالب رسائل واتساب المعتمدة</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-4">
-                {templates.map((template) => (
-                  <Card key={template.id} className="border border-border">
-                    <CardContent className="p-4">
-                      <div className="space-y-3">
-                        <div className="flex items-center justify-between">
-                          <h3 className="font-semibold">{template.templateName}</h3>
-                          <div className="flex items-center gap-2">
-                            <Badge variant={template.isApproved ? 'default' : 'outline'}>
-                              {template.isApproved ? 'معتمد' : 'غير معتمد'}
-                            </Badge>
-                            <Badge variant="outline">{template.language}</Badge>
-                          </div>
-                        </div>
-                        
-                        <div className="bg-muted p-3 rounded-md">
-                          <p className="text-sm whitespace-pre-wrap">{template.bodyText}</p>
-                        </div>
-                        
-                        {template.variables.length > 0 && (
-                          <div>
-                            <span className="text-sm font-medium">المتغيرات: </span>
-                            <div className="flex flex-wrap gap-1 mt-1">
-                              {template.variables.map((variable, index) => (
-                                <Badge key={index} variant="secondary" className="text-xs">
-                                  {variable}
-                                </Badge>
-                              ))}
-                            </div>
-                          </div>
-                        )}
-                      </div>
-                    </CardContent>
-                  </Card>
                 ))}
               </div>
             </CardContent>
           </Card>
         </TabsContent>
 
-        <TabsContent value="providers">
+        <TabsContent value="test">
           <Card>
             <CardHeader>
-              <CardTitle>مزودين واتساب</CardTitle>
-              <CardDescription>إدارة مزودين خدمة واتساب</CardDescription>
+              <CardTitle>اختبار الاتصال</CardTitle>
+              <CardDescription>إرسال رسالة اختبار إلى رقم الاختبار المحدد</CardDescription>
             </CardHeader>
-            <CardContent>
-              <div className="space-y-4">
-                {providers.map((provider) => (
-                  <Card key={provider.id} className="border border-border">
-                    <CardContent className="p-4">
-                      <div className="flex items-center justify-between">
-                        <div>
-                          <h3 className="font-semibold">{provider.name}</h3>
-                          <p className="text-sm text-muted-foreground">
-                            {provider.isEnabled ? 'نشط' : 'غير نشط'}
-                          </p>
-                        </div>
-                        <div className="flex items-center gap-2">
-                          <Switch
-                            checked={provider.isEnabled}
-                            onCheckedChange={() => handleProviderToggle(provider)}
-                          />
-                          <Badge variant={provider.isEnabled ? 'default' : 'outline'}>
-                            {provider.isEnabled ? 'نشط' : 'غير نشط'}
-                          </Badge>
-                        </div>
-                      </div>
-                    </CardContent>
-                  </Card>
-                ))}
+            <CardContent className="space-y-4">
+              <div className="p-4 bg-muted rounded">
+                <p className="text-sm">رقم الاختبار: <span className="font-mono">{settings?.test_phone || "—"}</span></p>
               </div>
+              <Button onClick={testConnection} disabled={testing} className="w-full">
+                {testing && <Loader2 className="w-4 h-4 ml-2 animate-spin" />}
+                إرسال رسالة اختبار
+              </Button>
             </CardContent>
           </Card>
         </TabsContent>
       </Tabs>
-      </div>
     </div>
   );
-};
-
-export default WhatsappManagement;
+}

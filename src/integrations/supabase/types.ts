@@ -4226,6 +4226,147 @@ export type Database = {
         }
         Relationships: []
       }
+      whatsapp_otp_codes: {
+        Row: {
+          attempts: number
+          code_hash: string
+          created_at: string
+          expires_at: string
+          id: string
+          ip_address: string | null
+          phone: string
+          purpose: string
+          used: boolean
+        }
+        Insert: {
+          attempts?: number
+          code_hash: string
+          created_at?: string
+          expires_at: string
+          id?: string
+          ip_address?: string | null
+          phone: string
+          purpose?: string
+          used?: boolean
+        }
+        Update: {
+          attempts?: number
+          code_hash?: string
+          created_at?: string
+          expires_at?: string
+          id?: string
+          ip_address?: string | null
+          phone?: string
+          purpose?: string
+          used?: boolean
+        }
+        Relationships: []
+      }
+      whatsapp_send_log: {
+        Row: {
+          created_at: string
+          error_message: string | null
+          event_key: string | null
+          id: string
+          message_body: string | null
+          provider_message_id: string | null
+          related_entity_id: string | null
+          related_entity_type: string | null
+          status: string
+          to_phone: string
+          user_id: string | null
+          variables: Json | null
+        }
+        Insert: {
+          created_at?: string
+          error_message?: string | null
+          event_key?: string | null
+          id?: string
+          message_body?: string | null
+          provider_message_id?: string | null
+          related_entity_id?: string | null
+          related_entity_type?: string | null
+          status?: string
+          to_phone: string
+          user_id?: string | null
+          variables?: Json | null
+        }
+        Update: {
+          created_at?: string
+          error_message?: string | null
+          event_key?: string | null
+          id?: string
+          message_body?: string | null
+          provider_message_id?: string | null
+          related_entity_id?: string | null
+          related_entity_type?: string | null
+          status?: string
+          to_phone?: string
+          user_id?: string | null
+          variables?: Json | null
+        }
+        Relationships: []
+      }
+      whatsapp_settings: {
+        Row: {
+          default_country_code: string
+          events_enabled: Json
+          id: number
+          is_enabled: boolean
+          test_phone: string | null
+          updated_at: string
+        }
+        Insert: {
+          default_country_code?: string
+          events_enabled?: Json
+          id?: number
+          is_enabled?: boolean
+          test_phone?: string | null
+          updated_at?: string
+        }
+        Update: {
+          default_country_code?: string
+          events_enabled?: Json
+          id?: number
+          is_enabled?: boolean
+          test_phone?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      whatsapp_templates: {
+        Row: {
+          body_text: string
+          created_at: string
+          event_key: string
+          id: string
+          is_active: boolean
+          title: string
+          updated_at: string
+          variables: Json
+        }
+        Insert: {
+          body_text: string
+          created_at?: string
+          event_key: string
+          id?: string
+          is_active?: boolean
+          title: string
+          updated_at?: string
+          variables?: Json
+        }
+        Update: {
+          body_text?: string
+          created_at?: string
+          event_key?: string
+          id?: string
+          is_active?: boolean
+          title?: string
+          updated_at?: string
+          variables?: Json
+        }
+        Relationships: []
+      }
       workspace_notes: {
         Row: {
           content: string

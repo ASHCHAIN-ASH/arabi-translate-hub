@@ -109,6 +109,7 @@ import ContractsSystem from "./pages/admin/ContractsSystem";
 import AdminContractDetails from "./pages/admin/AdminContractDetails";
 import ContractsAnalytics from "./pages/admin/ContractsAnalytics";
 import AdminStudentResources from "./pages/admin/AdminStudentResources";
+import WhatsappManagement from "./pages/admin/WhatsappManagement";
 import StudentLibrary from "./pages/client/StudentLibrary";
 import ClientContracts from "./pages/ClientContracts";
 import ClientContractView from "./pages/ClientContractView";
@@ -530,6 +531,11 @@ const App = () => (
             <Route path="/adminmaster/referrals" element={
               <SimpleProtectedRoute adminOnly>
                 <AdminReferrals />
+              </SimpleProtectedRoute>
+            } />
+            <Route path="/adminmaster/whatsapp" element={
+              <SimpleProtectedRoute adminOnly>
+                <WhatsappManagement />
               </SimpleProtectedRoute>
             } />
             <Route path="/membership" element={
