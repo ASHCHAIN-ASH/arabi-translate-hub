@@ -327,7 +327,14 @@ export default function WhatsappManagement() {
                                     <User className="w-3 h-3" /> {m.sender_name}
                                   </div>
                                 )}
-                                <div className="whitespace-pre-wrap break-words">{m.body}</div>
+                                {m.message_type === "attachment" && m.media_url && (
+                                  <a href={m.media_url} target="_blank" rel="noreferrer"
+                                    className="flex items-center gap-2 mb-1 px-2 py-1.5 rounded bg-background/30 hover:bg-background/50 transition text-xs">
+                                    <Paperclip className="w-3.5 h-3.5" />
+                                    <span className="truncate underline">{m.media_filename || "مرفق"}</span>
+                                  </a>
+                                )}
+                                {m.body && <div className="whitespace-pre-wrap break-words">{m.body}</div>}
                                 <div className="text-[10px] opacity-60 mt-1 text-end">
                                   {new Date(m.created_at).toLocaleTimeString("ar-SA", { hour: "2-digit", minute: "2-digit" })}
                                   {m.direction === "outbound" && ` · ${m.delivery_status === "sent" ? "✓" : m.delivery_status === "failed" ? "✕" : "⏳"}`}
