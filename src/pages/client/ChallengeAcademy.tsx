@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import ClientLayout from '@/components/client/ClientLayout';
 import { useAuth } from '@/components/SimpleAuthProvider';
@@ -12,10 +13,13 @@ import { DailyChallengeCard } from '@/components/challenge-academy/DailyChalleng
 import { ChallengeRunner } from '@/components/challenge-academy/ChallengeRunner';
 import { ChallengeResult } from '@/components/challenge-academy/ChallengeResult';
 import { LevelUpCelebration } from '@/components/challenge-academy/LevelUpCelebration';
+import { ReferralPanel } from '@/components/challenge-academy/ReferralPanel';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { Card } from '@/components/ui/card';
-import { Zap, Trophy, Award, Loader2, Calendar } from 'lucide-react';
+import { Zap, Trophy, Award, Loader2, Calendar, Gift } from 'lucide-react';
 import { AttemptSubmitResult } from '@/utils/dailyChallengeService';
+import { ChallengeReferralService } from '@/utils/challengeReferralService';
+import { toast } from 'sonner';
 
 const ChallengeAcademy: React.FC = () => {
   const { user } = useAuth();
