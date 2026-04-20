@@ -24,67 +24,67 @@ import { useAuth } from '@/components/SimpleAuthProvider';
 import { toast } from 'sonner';
 import { motion, AnimatePresence } from 'framer-motion';
 
-// === Visual identity per tier (semantic tokens + tasteful brand accents) ===
+// === Visual identity per tier — bold, distinctive, banking-luxury ===
 const TIER_VISUALS: Record<string, {
   icon: any;
-  gradient: string;
-  glow: string;
+  headerBg: string;
+  iconBox: string;
   accent: string;
   ring: string;
   badge: string;
-  textOnDark?: boolean;
-  pattern: string;
+  borderTop: string;
+  tagline: string;
+  bestFor: string;
 }> = {
   silver: {
     icon: Sparkles,
-    gradient: 'from-slate-100 via-white to-slate-200 dark:from-slate-800 dark:via-slate-900 dark:to-slate-800',
-    glow: 'shadow-[0_8px_40px_-12px_rgba(148,163,184,0.4)]',
-    accent: 'text-slate-600 dark:text-slate-300',
-    ring: 'ring-slate-200 dark:ring-slate-700',
-    badge: 'bg-slate-500',
-    pattern: 'radial-gradient(circle at 20% 0%, rgba(148,163,184,0.15), transparent 50%)',
+    headerBg: 'bg-gradient-to-br from-slate-700 via-slate-600 to-slate-800',
+    iconBox: 'bg-white/15 backdrop-blur ring-1 ring-white/20',
+    accent: 'text-slate-700 dark:text-slate-300',
+    ring: 'ring-slate-400',
+    badge: 'bg-slate-600',
+    borderTop: 'from-slate-400 via-slate-500 to-slate-600',
+    tagline: 'البداية المثالية',
+    bestFor: 'للطلاب والمبتدئين الذين يريدون تجربة المزايا',
   },
   gold: {
     icon: Crown,
-    gradient: 'from-amber-50 via-yellow-50 to-amber-100 dark:from-amber-950/40 dark:via-yellow-950/30 dark:to-amber-900/40',
-    glow: 'shadow-[0_20px_60px_-12px_rgba(245,158,11,0.5)]',
+    headerBg: 'bg-gradient-to-br from-amber-500 via-yellow-500 to-amber-600',
+    iconBox: 'bg-white/20 backdrop-blur ring-1 ring-white/30',
     accent: 'text-amber-700 dark:text-amber-300',
-    ring: 'ring-amber-400',
-    badge: 'bg-gradient-to-r from-amber-500 to-yellow-500',
-    pattern: 'radial-gradient(circle at 80% 0%, rgba(245,158,11,0.25), transparent 50%)',
+    ring: 'ring-amber-500',
+    badge: 'bg-gradient-to-r from-amber-500 to-orange-500',
+    borderTop: 'from-amber-400 via-yellow-400 to-amber-500',
+    tagline: 'الخيار الأذكى والأكثر توفيراً',
+    bestFor: 'للأعضاء النشطين الذين يطلبون خدمات بانتظام',
   },
   platinum: {
     icon: Diamond,
-    gradient: 'from-slate-900 via-slate-800 to-slate-950',
-    glow: 'shadow-[0_20px_60px_-12px_rgba(15,23,42,0.6)]',
-    accent: 'text-slate-300',
-    ring: 'ring-slate-700',
-    badge: 'bg-gradient-to-r from-slate-700 to-slate-900',
-    textOnDark: true,
-    pattern: 'radial-gradient(circle at 50% 0%, rgba(99,102,241,0.3), transparent 60%)',
+    headerBg: 'bg-gradient-to-br from-indigo-700 via-purple-700 to-indigo-900',
+    iconBox: 'bg-white/15 backdrop-blur ring-1 ring-white/20',
+    accent: 'text-indigo-700 dark:text-indigo-300',
+    ring: 'ring-indigo-500',
+    badge: 'bg-gradient-to-r from-indigo-600 to-purple-600',
+    borderTop: 'from-indigo-500 via-purple-500 to-indigo-600',
+    tagline: 'التجربة الفاخرة الكاملة',
+    bestFor: 'للمحترفين والباحثين الذين يريدون أقصى المزايا',
   },
 };
 
-const FEATURE_ICONS: Record<string, any> = {
-  discount: TrendingUp,
-  cashback: Gift,
-  priority: Rocket,
-  badge: BadgeCheck,
-  support: HeadphonesIcon,
-  vip: Crown,
-  manager: Users,
-};
+// === Detailed feature explanations (tooltips) ===
+const FEATURE_EXPLANATIONS: { match: (t: string) => boolean; title: string; explain: string; icon: any; color: string }[] = [
+  { match: (t) => t.includes('خصم'), title: 'خصم تلقائي دائم', explain: 'يُطبَّق على كل فاتورة جديدة تلقائياً دون الحاجة لكود — ترى الخصم مباشرة عند الدفع.', icon: TrendingUp, color: 'text-blue-600 bg-blue-50' },
+  { match: (t) => t.includes('كاش'), title: 'كاش باك فوري', explain: 'مبلغ نقدي يُضاف إلى محفظتك عند تفعيل العضوية، يمكنك صرفه على أي خدمة أو فاتورة.', icon: Gift, color: 'text-emerald-600 bg-emerald-50' },
+  { match: (t) => t.includes('أولوية'), title: 'أولوية في التنفيذ', explain: 'طلباتك تُعالج قبل الطلبات العادية مع تخصيص أسرع للفريق المختص.', icon: Rocket, color: 'text-orange-600 bg-orange-50' },
+  { match: (t) => t.includes('شارة'), title: 'شارة عضوية مميزة', explain: 'تظهر بجانب اسمك في كل مكان داخل المنصة لتعكس مستوى عضويتك.', icon: BadgeCheck, color: 'text-purple-600 bg-purple-50' },
+  { match: (t) => t.includes('VIP') || t.includes('vip'), title: 'مزايا VIP الحصرية', explain: 'وصول لخدمات مخصصة لكبار الأعضاء مثل الاستشارات الشخصية والمحتوى المغلق.', icon: Crown, color: 'text-amber-600 bg-amber-50' },
+  { match: (t) => t.includes('مدير') || t.includes('حساب'), title: 'مدير حساب مخصص', explain: 'شخص واحد محدد يتولى متابعة طلباتك واستفساراتك بشكل شخصي ومستمر.', icon: Users, color: 'text-indigo-600 bg-indigo-50' },
+  { match: (t) => t.includes('دعم'), title: 'دعم فني متقدم', explain: 'استجابة أسرع وقنوات تواصل إضافية مع فريق الدعم على مدار الساعة.', icon: HeadphonesIcon, color: 'text-teal-600 bg-teal-50' },
+];
 
-function getFeatureIcon(text: string) {
-  const lower = text.toLowerCase();
-  if (text.includes('خصم') || lower.includes('discount')) return FEATURE_ICONS.discount;
-  if (text.includes('كاش') || lower.includes('cashback')) return FEATURE_ICONS.cashback;
-  if (text.includes('أولوية') || lower.includes('priority')) return FEATURE_ICONS.priority;
-  if (text.includes('شارة') || lower.includes('badge')) return FEATURE_ICONS.badge;
-  if (text.includes('VIP') || text.includes('vip')) return FEATURE_ICONS.vip;
-  if (text.includes('مدير') || text.includes('حساب')) return FEATURE_ICONS.manager;
-  if (text.includes('دعم') || lower.includes('support')) return FEATURE_ICONS.support;
-  return Check;
+function getFeatureMeta(text: string) {
+  const found = FEATURE_EXPLANATIONS.find((f) => f.match(text));
+  return found ?? { title: 'ميزة عضوية', explain: 'ميزة حصرية ضمن باقتك.', icon: Check, color: 'text-emerald-600 bg-emerald-50' };
 }
 
 const FAQS = [
