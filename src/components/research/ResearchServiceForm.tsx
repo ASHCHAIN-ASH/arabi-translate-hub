@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
+import { sendToInbox } from '@/utils/inboxService';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
@@ -123,16 +124,34 @@ export const ResearchServiceForm = ({ serviceTitle, serviceType }: ResearchServi
     setLoading(true);
 
     try {
-      const { error } = await supabase.functions.invoke('send-research-service-request', {
-        body: {
-          serviceTitle,
-          serviceType,
-          ...formData,
-          phone: normalizeArabicNumbers(formData.phone)
-        }
-      });
+      const normalizedPhoneFinal = normalizeArabicNumbers(formData.phone);
 
-      if (error) throw error;
+      // Run both in parallel: legacy email notification + unified admin inbox
+      const [emailRes] = await Promise.all([
+        supabase.functions.invoke('send-research-service-request', {
+          body: {
+            serviceTitle,
+            serviceType,
+            ...formData,
+            phone: normalizedPhoneFinal,
+          },
+        }),
+        sendToInbox({
+          name: formData.fullName,
+          email: formData.email,
+          phone: normalizedPhoneFinal,
+          subject: `طلب خدمة: ${serviceTitle}`,
+          message: formData.details || `طلب خدمة «${serviceTitle}» بدون تفاصيل إضافية.`,
+          formType: 'service_inquiry',
+          serviceType,
+          metadata: {
+            specialization: formData.specialization,
+            serviceTitle,
+          },
+        }),
+      ]);
+
+      if (emailRes.error) throw emailRes.error;
 
       setSubmitted(true);
       toast.success('تم إرسال طلبك بنجاح! سنتواصل معك قريباً');
