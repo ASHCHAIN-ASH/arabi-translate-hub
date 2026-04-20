@@ -208,7 +208,7 @@ export const DashboardChallengeNotice: React.FC = () => {
 
             {/* CTA */}
             <Button
-              onClick={() => navigate('/dashboard/challenge-academy')}
+              onClick={() => navigate('/challenge-academy')}
               className="bg-white text-purple-700 hover:bg-white/95 font-black gap-1.5 shadow-xl rounded-xl px-4"
             >
               {config.cta}
