@@ -83,36 +83,16 @@ serve(async (req) => {
       phone = phone || inv.customer_phone || undefined;
       storagePath = inv.pdf_storage_path;
 
-      // لو لا يوجد PDF فاتورة محفوظ — نولّده ونرفعه
+      // لو لا يوجد PDF فاتورة محفوظ — نولّده عبر Browserless
       if (!storagePath) {
         const { data: gen, error: genErr } = await supabase.functions.invoke("generate-invoice-pdf", {
-          body: { invoice_id },
+          body: { invoice_id, force: true },
         });
-        if (genErr || !gen?.success) {
-          return json({ success: false, error: `فشل توليد PDF الفاتورة: ${genErr?.message || gen?.error}` }, 500);
+        if (genErr) return json({ success: false, error: `فشل توليد PDF الفاتورة: ${genErr.message}` }, 500);
+        if (!gen?.success || !gen?.pdf_storage_path) {
+          return json({ success: false, error: gen?.error || "تعذّر توليد PDF حقيقي للفاتورة" }, 500);
         }
-        // generate-invoice-pdf يُرجع HTML base64 حالياً — نحوله إلى ملف
-        const htmlData = gen?.html_data || gen?.pdf_data;
-        if (!htmlData) return json({ success: false, error: "لا توجد بيانات PDF للفاتورة" }, 500);
-        const bytes = Uint8Array.from(atob(htmlData), (ch) => ch.charCodeAt(0));
-        const path = `${inv.id}/${inv.invoice_number || inv.id}.pdf`;
-        // نحفظه كـ HTML داخل bucket — أغلب عملاء واتساب يفتحون .pdf فقط، لذا نتركه HTML بامتداد .html
-        // لنحافظ على إرسال PDF حقيقي، نرفع كـ application/pdf إن كانت البيانات PDF حقيقية، وإلا html.
-        const isPdf = bytes[0] === 0x25 && bytes[1] === 0x50; // %P
-        const ext = isPdf ? "pdf" : "html";
-        const realPath = path.replace(/\.pdf$/, `.${ext}`);
-        const { error: upErr } = await supabase.storage
-          .from("invoices")
-          .upload(realPath, bytes, {
-            contentType: isPdf ? "application/pdf" : "text/html; charset=utf-8",
-            upsert: true,
-          });
-        if (upErr) return json({ success: false, error: `فشل رفع PDF: ${upErr.message}` }, 500);
-        storagePath = realPath;
-        await supabase.from("invoices").update({
-          pdf_storage_path: realPath,
-          pdf_generated_at: new Date().toISOString(),
-        }).eq("id", inv.id);
+        storagePath = gen.pdf_storage_path;
       }
 
       bucket = "invoices";
