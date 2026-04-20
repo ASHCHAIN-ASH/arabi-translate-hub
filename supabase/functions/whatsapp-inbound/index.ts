@@ -56,6 +56,50 @@ serve(async (req) => {
       .select("id")
       .single();
 
+    // أنشئ/حدّث محادثة الواتساب الموحّدة (whatsapp_conversations + whatsapp_messages)
+    let conversationId: string | null = null;
+    try {
+      const { data: existingConv } = await supabase
+        .from("whatsapp_conversations")
+        .select("id, unread_count")
+        .eq("phone", phone)
+        .maybeSingle();
+      if (existingConv) {
+        conversationId = existingConv.id;
+        await supabase.from("whatsapp_conversations").update({
+          last_message: messageBody.slice(0, 200) || `[${payload?.type || "ملف"}]`,
+          last_message_at: new Date().toISOString(),
+          last_inbound_at: new Date().toISOString(),
+          unread_count: (existingConv.unread_count || 0) + 1,
+          status: "open",
+        }).eq("id", existingConv.id);
+      } else {
+        const { data: created } = await supabase.from("whatsapp_conversations").insert({
+          phone,
+          last_message: messageBody.slice(0, 200) || `[${payload?.type || "ملف"}]`,
+          last_message_at: new Date().toISOString(),
+          last_inbound_at: new Date().toISOString(),
+          unread_count: 1,
+          status: "open",
+        }).select("id").single();
+        conversationId = created?.id || null;
+      }
+      if (conversationId && messageBody) {
+        await supabase.from("whatsapp_messages").insert({
+          conversation_id: conversationId,
+          phone,
+          direction: "inbound",
+          sender_type: "customer",
+          body: messageBody,
+          message_type: payload?.type || "text",
+          delivery_status: "delivered",
+          metadata: { raw: payload },
+        });
+      }
+    } catch (e) {
+      console.error("conversation upsert failed:", e);
+    }
+
     if (!messageBody) return jsonRes({ success: true, empty: true });
 
     // الجلسة
