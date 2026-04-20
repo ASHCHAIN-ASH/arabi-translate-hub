@@ -508,11 +508,34 @@ async function appendToInbox(
 async function logBotReply(
   supabase: any, inboundLogId: string | undefined,
   reply: string, forwarded: boolean,
+  phone?: string,
 ) {
-  if (!inboundLogId) return;
-  await supabase.from("whatsapp_inbound_messages").update({
-    bot_handled: true,
-    bot_reply: reply,
-    forwarded_to_human: forwarded,
-  }).eq("id", inboundLogId);
+  if (inboundLogId) {
+    await supabase.from("whatsapp_inbound_messages").update({
+      bot_handled: true,
+      bot_reply: reply,
+      forwarded_to_human: forwarded,
+    }).eq("id", inboundLogId);
+  }
+  // سجّل رد البوت في whatsapp_messages للمحادثة الموحّدة
+  if (phone) {
+    const { data: conv } = await supabase
+      .from("whatsapp_conversations").select("id").eq("phone", phone).maybeSingle();
+    if (conv?.id) {
+      await supabase.from("whatsapp_messages").insert({
+        conversation_id: conv.id,
+        phone,
+        direction: "outbound",
+        sender_type: forwarded ? "system" : "bot",
+        sender_name: forwarded ? "تحويل لموظف" : "المساعد الذكي",
+        body: reply,
+        message_type: "text",
+        delivery_status: "sent",
+      });
+      await supabase.from("whatsapp_conversations").update({
+        last_message: reply.slice(0, 200),
+        last_message_at: new Date().toISOString(),
+      }).eq("id", conv.id);
+    }
+  }
 }
