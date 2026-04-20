@@ -1,6 +1,9 @@
 // Support AI: classify category/priority + suggest reply + summarize ticket
 // Uses Lovable AI Gateway (no API key required)
-import { corsHeaders } from '@supabase/supabase-js/cors';
+const corsHeaders = {
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
+};
 
 const LOVABLE_API_KEY = Deno.env.get('LOVABLE_API_KEY');
 const AI_URL = 'https://ai.gateway.lovable.dev/v1/chat/completions';
