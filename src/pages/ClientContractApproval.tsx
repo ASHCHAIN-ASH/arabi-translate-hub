@@ -71,9 +71,19 @@ const ClientContractApproval = () => {
     setLoading(true);
     try {
       let c = await getContract(contractId);
-      if (c && (!c.content || c.content.trim().length < 50)) {
-        await generateContractContent(contractId);
-        c = await getContract(contractId);
+      // Regenerate if content is missing, too short, or just a placeholder summary
+      const needsRegen =
+        !c?.content ||
+        c.content.trim().length < 400 ||
+        /^عقد آلي للخدمة/.test(c.content.trim()) ||
+        !/##|المادة/.test(c.content);
+      if (c && needsRegen) {
+        try {
+          await generateContractContent(contractId);
+          c = await getContract(contractId);
+        } catch (err) {
+          console.error("Failed to regenerate contract content", err);
+        }
       }
       setContract(c);
       if (c) {
