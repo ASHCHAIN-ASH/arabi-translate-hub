@@ -1,7 +1,13 @@
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 import { Resend } from "https://esm.sh/resend@4.0.0";
+import { createClient } from "npm:@supabase/supabase-js@2";
 
 const resend = new Resend(Deno.env.get("RESEND_API_KEY"));
+
+const supabaseAdmin = createClient(
+  Deno.env.get("SUPABASE_URL")!,
+  Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!,
+);
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -38,7 +44,28 @@ const handler = async (req: Request): Promise<Response> => {
   }
 
   try {
-    const inquiryData: AcademicTranslationInquiryRequest = await req.json();
+    const body: any = await req.json();
+    const inquiryData: AcademicTranslationInquiryRequest =body;
+    // 🆕 حفظ في صندوق الوارد الموحّد للوحة الإدارة
+    try {
+      const data: any = body;
+      await supabaseAdmin.from("inbox_messages").insert({
+        sender_name: (data.fullName || "زائر").toString().slice(0, 200),
+        sender_email: (data.email || "unknown@masteredupath.com").toString().slice(0, 200),
+        sender_phone: (data.phone || null) ? data.phone.toString().slice(0, 50) : null,
+        subject: (`استفسار ترجمة أكاديمية: ${data.documentTitle || data.documentType || ''}`).toString().slice(0, 300),
+        message: (data.additionalNotes || data.specialRequirements || `ترجمة من ${data.sourceLanguage} إلى ${data.targetLanguage}` || "").toString().slice(0, 8000),
+        form_type: "service_inquiry",
+        service_type: data.serviceType ?? 'academic-translation',
+        source_page: typeof data.sourcePage === "string" ? data.sourcePage : null,
+        priority: "high",
+        status: "new",
+        metadata: { document_type: data.documentType, source_language: data.sourceLanguage, target_language: data.targetLanguage, urgency: data.urgency, word_count: data.wordCount, page_count: data.pageCount },
+      });
+    } catch (inboxErr) {
+      console.error("[inbox] failed to save:", inboxErr);
+    }
+
     console.log("Received academic translation inquiry:", inquiryData);
 
     // Validation

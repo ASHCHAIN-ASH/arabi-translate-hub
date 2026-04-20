@@ -1,7 +1,13 @@
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 import { Resend } from "https://esm.sh/resend@4.0.0";
+import { createClient } from "npm:@supabase/supabase-js@2";
 
 const resend = new Resend(Deno.env.get("RESEND_API_KEY"));
+
+const supabaseAdmin = createClient(
+  Deno.env.get("SUPABASE_URL")!,
+  Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!,
+);
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -32,7 +38,28 @@ const handler = async (req: Request): Promise<Response> => {
   }
 
   try {
-    const inquiry: PricingInquiry = await req.json();
+    const body: any = await req.json();
+    const inquiry: PricingInquiry =body;
+    // 🆕 حفظ في صندوق الوارد الموحّد للوحة الإدارة
+    try {
+      const data: any = body;
+      await supabaseAdmin.from("inbox_messages").insert({
+        sender_name: (data.name || "زائر").toString().slice(0, 200),
+        sender_email: (data.email || "unknown@masteredupath.com").toString().slice(0, 200),
+        sender_phone: (data.phone || null) ? data.phone.toString().slice(0, 50) : null,
+        subject: (`استفسار تسعير - ${data.service || ''}`).toString().slice(0, 300),
+        message: (data.details || `استفسار عن سعر خدمة ${data.service}` || "").toString().slice(0, 8000),
+        form_type: "pricing_inquiry",
+        service_type: data.service ?? 'pricing',
+        source_page: typeof data.sourcePage === "string" ? data.sourcePage : null,
+        priority: "high",
+        status: "new",
+        metadata: { service: data.service, budget: data.budget, company: data.company, files_count: Array.isArray(data.files) ? data.files.length : 0 },
+      });
+    } catch (inboxErr) {
+      console.error("[inbox] failed to save:", inboxErr);
+    }
+
     console.log("Received inquiry:", inquiry);
 
     // Validate required fields

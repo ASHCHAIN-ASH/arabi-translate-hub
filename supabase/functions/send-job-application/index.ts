@@ -1,7 +1,13 @@
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 import { Resend } from "https://esm.sh/resend@4.0.0";
+import { createClient } from "npm:@supabase/supabase-js@2";
 
 const resend = new Resend(Deno.env.get("RESEND_API_KEY"));
+
+const supabaseAdmin = createClient(
+  Deno.env.get("SUPABASE_URL")!,
+  Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!,
+);
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -31,7 +37,28 @@ const handler = async (req: Request): Promise<Response> => {
 
   try {
     console.log("Processing job application request...");
-    const applicationData: JobApplicationRequest = await req.json();
+    const body: any = await req.json();
+    const applicationData: JobApplicationRequest =body;
+    // 🆕 حفظ في صندوق الوارد الموحّد للوحة الإدارة
+    try {
+      const data: any = body;
+      await supabaseAdmin.from("inbox_messages").insert({
+        sender_name: (data.fullName || "زائر").toString().slice(0, 200),
+        sender_email: (data.email || "unknown@masteredupath.com").toString().slice(0, 200),
+        sender_phone: (data.phone || null) ? data.phone.toString().slice(0, 50) : null,
+        subject: (`طلب توظيف - ${data.position || ''}`).toString().slice(0, 300),
+        message: (data.motivation || `تقديم لوظيفة ${data.position} - ${data.experience}` || "").toString().slice(0, 8000),
+        form_type: "job_application",
+        service_type: 'job',
+        source_page: typeof data.sourcePage === "string" ? data.sourcePage : null,
+        priority: "high",
+        status: "new",
+        metadata: { position: data.position, experience: data.experience, education: data.education, skills: data.skills },
+      });
+    } catch (inboxErr) {
+      console.error("[inbox] failed to save:", inboxErr);
+    }
+
     console.log("Received application data:", applicationData);
 
     // Validate required fields

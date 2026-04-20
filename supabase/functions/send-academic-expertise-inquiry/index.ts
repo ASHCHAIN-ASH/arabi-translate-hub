@@ -1,7 +1,13 @@
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 import { Resend } from "https://esm.sh/resend@4.0.0";
+import { createClient } from "npm:@supabase/supabase-js@2";
 
 const resend = new Resend(Deno.env.get("RESEND_API_KEY"));
+
+const supabaseAdmin = createClient(
+  Deno.env.get("SUPABASE_URL")!,
+  Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!,
+);
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -1335,7 +1341,28 @@ const handler = async (req: Request): Promise<Response> => {
   }
 
   try {
-    const consultationData: ConsultationRequest = await req.json();
+    const body: any = await req.json();
+    const consultationData: ConsultationRequest =body;
+    // 🆕 حفظ في صندوق الوارد الموحّد للوحة الإدارة
+    try {
+      const data: any = body;
+      await supabaseAdmin.from("inbox_messages").insert({
+        sender_name: (data.fullName || "زائر").toString().slice(0, 200),
+        sender_email: (data.email || "unknown@masteredupath.com").toString().slice(0, 200),
+        sender_phone: (data.phone || null) ? data.phone.toString().slice(0, 50) : null,
+        subject: (`استشارة خبرة أكاديمية - ${data.serviceType || data.specialization || ''}`).toString().slice(0, 300),
+        message: (data.projectDescription || data.additionalNotes || data.projectTitle || 'استشارة خبرة أكاديمية' || "").toString().slice(0, 8000),
+        form_type: "service_inquiry",
+        service_type: data.serviceType ?? 'academic-expertise',
+        source_page: typeof data.sourcePage === "string" ? data.sourcePage : null,
+        priority: "high",
+        status: "new",
+        metadata: { project_title: data.projectTitle, university: data.university, academic_level: data.academicLevel, specialization: data.specialization, deadline: data.deadline },
+      });
+    } catch (inboxErr) {
+      console.error("[inbox] failed to save:", inboxErr);
+    }
+
     console.log("Received consultation data:", { ...consultationData, phone: "[REDACTED]" });
 
     // Map service types to Arabic
