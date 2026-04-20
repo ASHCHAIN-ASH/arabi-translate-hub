@@ -27,17 +27,14 @@ const SimpleProtectedRoute: React.FC<ProtectedRouteProps> = ({
   const { user, userRole, loading } = useAuth();
   const location = useLocation();
 
-  // While auth state is initializing OR while a logged-in user's role is being
-  // resolved from the DB, render a loader. We must NEVER render protected
-  // content with an unresolved role.
-  const isResolvingRole = Boolean(user && !userRole);
-  if (loading || isResolvingRole) {
+  // Only block the very first auth initialization (no user info at all yet).
+  // Once we have a user, render the page immediately even if the role is still
+  // resolving — this avoids the disruptive "جاري التحميل..." flash on every
+  // route change.
+  if (loading && !user) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <div className="text-center">
-          <Loader2 className="h-8 w-8 animate-spin mx-auto mb-4 text-primary" />
-          <p className="text-muted-foreground">جاري التحميل...</p>
-        </div>
+        <Loader2 className="h-6 w-6 animate-spin text-primary" />
       </div>
     );
   }
