@@ -335,13 +335,23 @@ export function buildInvoiceHTML(invoice: Invoice, items: InvoiceItem[], payment
 
     <div class="totals-wrap">
       <div class="totals-note">
-        <div class="nt-title">🛡️ فاتورة موثّقة إلكترونياً</div>
-        صادرة من منصة <strong>${COMPANY.name}</strong> ومحفوظة في سجلاتنا الرقمية. يمكنك التحقق من صحتها في أي وقت من خلال لوحة عميلك.
+        <div class="nt-title">🛡️ فاتورة موثّقة إلكترونياً (متوافقة مع زاتكا)</div>
+        صادرة من منصة <strong>${COMPANY.name}</strong> ومحفوظة في سجلاتنا الرقمية. يمكنك التحقق من صحتها بمسح رمز QR أدناه أو من خلال لوحة عميلك.
+        <div style="margin-top:12px;display:flex;align-items:center;gap:12px;padding:10px;background:#fff;border:1px dashed #c7d2fe;border-radius:10px">
+          <img src="${qrImg}" alt="QR" width="92" height="92" style="border-radius:6px;background:#fff" />
+          <div style="font-size:10.5px;color:var(--muted);line-height:1.7">
+            <div style="font-weight:700;color:var(--ink);margin-bottom:3px">رمز التحقق ZATCA</div>
+            البائع: ${COMPANY.name}<br/>
+            الرقم الضريبي: ${COMPANY.vatNumber}<br/>
+            الإجمالي: ${fmt(invoice.total_amount)}<br/>
+            ض.ق.م: ${fmt(computedVat)}
+          </div>
+        </div>
       </div>
       <div class="totals">
         <div class="row"><span class="k">المجموع الفرعي</span><span class="v">${fmt(invoice.subtotal)}</span></div>
         ${invoice.discount_amount ? `<div class="row"><span class="k">الخصم</span><span class="v">- ${fmt(invoice.discount_amount)}</span></div>` : ''}
-        ${invoice.tax_amount ? `<div class="row"><span class="k">ضريبة القيمة المضافة (15%)</span><span class="v">${fmt(invoice.tax_amount)}</span></div>` : ''}
+        <div class="row"><span class="k">ضريبة القيمة المضافة (15%)</span><span class="v">${fmt(computedVat)}</span></div>
         <div class="row grand"><span class="k">الإجمالي المستحق</span><span class="v">${fmt(invoice.total_amount)}</span></div>
         <div class="row paid"><span class="k">المدفوع</span><span class="v">${fmt(invoice.paid_amount)}</span></div>
         ${Number(invoice.remaining_amount || 0) <= 0
