@@ -36,23 +36,25 @@ serve(async (req) => {
     // Build message body from template
     let messageBody = '';
     if (template_name && variables) {
-      // Fetch template from system_settings if available
+      // Fetch template from whatsapp_templates by event_key
       const { data: templateData } = await supabase
-        .from('system_settings')
-        .select('value')
-        .eq('key', `whatsapp_template_${template_name}`)
-        .single();
+        .from('whatsapp_templates')
+        .select('body_text')
+        .eq('event_key', template_name)
+        .eq('is_active', true)
+        .maybeSingle();
 
-      if (templateData) {
-        messageBody = (templateData as any).value?.body_text || '';
-        // Replace variables in template
+      if (templateData?.body_text) {
+        messageBody = templateData.body_text as string;
         Object.entries(variables).forEach(([key, value]) => {
-          messageBody = messageBody.replace(`{{${key}}}`, String(value));
+          messageBody = messageBody.split(`{{${key}}}`).join(String(value ?? ''));
         });
       } else {
         // Default fallback message
         messageBody = Object.values(variables).join(' - ');
       }
+    } else if (body.message) {
+      messageBody = String(body.message);
     }
 
     let messageId: string | undefined;
