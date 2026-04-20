@@ -61,3 +61,48 @@ export async function sendWhatsAppMessage(
     return { success: false, error: e?.message || "network error" };
   }
 }
+
+// إرسال مرفق (PDF/صورة/ملف) عبر SmartWats
+export async function sendWhatsAppMedia(
+  to: string,
+  mediaUrl: string,
+  filename: string,
+  caption = "",
+): Promise<SmartWatsSendResult> {
+  const instanceId = Deno.env.get("SMARTWATS_INSTANCE_ID");
+  const accessToken = Deno.env.get("SMARTWATS_ACCESS_TOKEN");
+  if (!instanceId || !accessToken) {
+    return { success: false, error: "SmartWats credentials not configured" };
+  }
+  try {
+    const url = `${SMARTWATS_BASE}/send`;
+    const res = await fetch(url, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        number: to,
+        type: "media",
+        message: caption || "",
+        media_url: mediaUrl,
+        filename,
+        instance_id: instanceId,
+        access_token: accessToken,
+      }),
+    });
+    const data = await res.json().catch(() => ({}));
+    if (!res.ok || data?.status === "error") {
+      return {
+        success: false,
+        error: data?.message || `HTTP ${res.status}`,
+        raw: data,
+      };
+    }
+    return {
+      success: true,
+      messageId: data?.data?.id || data?.id || undefined,
+      raw: data,
+    };
+  } catch (e: any) {
+    return { success: false, error: e?.message || "network error" };
+  }
+}
