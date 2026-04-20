@@ -111,7 +111,7 @@ import ContractsAnalytics from "./pages/admin/ContractsAnalytics";
 import AdminStudentResources from "./pages/admin/AdminStudentResources";
 import StudentLibrary from "./pages/client/StudentLibrary";
 import ClientContracts from "./pages/ClientContracts";
-import ClientContractApproval from "./pages/ClientContractApproval";
+import ClientContractView from "./pages/ClientContractView";
 
 import ThesisTitles from "./pages/research/ThesisTitles";
 import AnnotatedPublishing from './pages/research/AnnotatedPublishing';
@@ -186,7 +186,6 @@ import PaymentMethods from "./pages/PaymentMethods";
 import Universities from "./pages/Universities";
 import JournalsDirectory from "./pages/JournalsDirectory";
 import InstitutionalPartnerships from "./pages/InstitutionalPartnerships";
-import ContractManagement from "./pages/ContractManagement";
 import Footer from "./components/Footer";
 import BackToTopButton from "./components/BackToTopButton";
 
@@ -269,7 +268,7 @@ const App = () => (
             <Route path="/payment/return" element={<PaymentReturn />} />
             <Route path="/universities" element={<Universities />} />
             <Route path="/journals" element={<JournalsDirectory />} />
-            <Route path="/contract-management" element={<ContractManagement />} />
+            <Route path="/contract-management" element={<Navigate to="/client/contracts" replace />} />
             <Route path="/careers" element={<Careers />} />
             <Route path="/contact" element={<ContactUs />} />
             <Route path="/contact-us" element={<ContactUs />} />
@@ -405,7 +404,7 @@ const App = () => (
             } />
             <Route path="/client/contracts/:id" element={
               <SimpleProtectedRoute requiredRole="client">
-                <ClientContractApproval />
+                <ClientContractView />
               </SimpleProtectedRoute>
             } />
             <Route path="/adminmaster/services" element={

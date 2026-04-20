@@ -39,11 +39,6 @@ const items = [
     icon: CreditCard,
   },
   {
-    title: 'التوقيع الإلكتروني',
-    url: '/adminmaster/esign',
-    icon: FileSignature,
-  },
-  {
     title: 'واتساب',
     url: '/adminmaster/whatsapp',
     icon: MessageCircle,

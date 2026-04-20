@@ -38,6 +38,7 @@ export const ContractSigningCard: React.FC<Props> = ({ contract, onSigned }) => 
   const [step, setStep] = useState<'review' | 'otp'>('review');
   const [otp, setOtp] = useState('');
   const [signatureText, setSignatureText] = useState(contract.client_full_name || '');
+  const [idNumber, setIdNumber] = useState('');
   const [accepted, setAccepted] = useState(false);
   const [sending, setSending] = useState(false);
   const [signing, setSigning] = useState(false);
@@ -100,9 +101,12 @@ export const ContractSigningCard: React.FC<Props> = ({ contract, onSigned }) => 
       toast({ title: 'بيانات ناقصة', description: 'أدخل الرمز والتوقيع', variant: 'destructive' });
       return;
     }
+    if (!idNumber.trim() || idNumber.trim().length < 5) {
+      toast({ title: 'رقم الهوية مطلوب', description: 'أدخل رقم الهوية الوطنية أو الإقامة', variant: 'destructive' });
+      return;
+    }
     setSigning(true);
     try {
-      // التحقق من تسجيل الدخول قبل المحاولة
       const { data: u } = await supabase.auth.getUser();
       if (!u.user) {
         toast({ title: 'يجب تسجيل الدخول', description: 'سجّل دخولك ثم أعد المحاولة', variant: 'destructive' });
@@ -116,8 +120,12 @@ export const ContractSigningCard: React.FC<Props> = ({ contract, onSigned }) => 
         _ip: null,
         _ua: navigator.userAgent,
         _signature_image: null,
-        _signer_id_number: null,
-        _accepted_terms: null,
+        _signer_id_number: idNumber.trim(),
+        _accepted_terms: {
+          accepted_at: new Date().toISOString(),
+          terms_version: 'v1',
+          user_agent: navigator.userAgent,
+        },
         _comments: null,
       });
       if (error) throw error;
@@ -136,6 +144,10 @@ export const ContractSigningCard: React.FC<Props> = ({ contract, onSigned }) => 
         friendly = 'هذا العقد موقّع مسبقاً.';
       } else if (/تسجيل الدخول|login/i.test(msg)) {
         friendly = 'يجب تسجيل الدخول أولاً.';
+      } else if (/الهوية/i.test(msg)) {
+        friendly = 'رقم الهوية مطلوب وغير صحيح.';
+      } else if (/الشروط/i.test(msg)) {
+        friendly = 'يجب الموافقة على الشروط قبل التوقيع.';
       }
       toast({ title: 'فشل التوقيع', description: friendly, variant: 'destructive' });
     } finally {
@@ -263,6 +275,17 @@ export const ContractSigningCard: React.FC<Props> = ({ contract, onSigned }) => 
                   <p className="text-xs text-muted-foreground">
                     أُرسل الرمز إلى: {contract.client_email}
                   </p>
+                </div>
+                <div className="space-y-2">
+                  <Label>رقم الهوية / الإقامة</Label>
+                  <Input
+                    value={idNumber}
+                    onChange={(e) => setIdNumber(e.target.value.replace(/\D/g, '').slice(0, 15))}
+                    placeholder="1xxxxxxxxx"
+                    className="text-center font-mono"
+                    inputMode="numeric"
+                  />
+                  <p className="text-xs text-muted-foreground">مطلوب للتوثيق القانوني للتوقيع</p>
                 </div>
                 <div className="space-y-2">
                   <Label>الاسم الكامل (التوقيع)</Label>

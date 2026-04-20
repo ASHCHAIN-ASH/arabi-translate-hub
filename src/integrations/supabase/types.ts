@@ -275,7 +275,7 @@ export type Database = {
           {
             foreignKeyName: "contract_signatures_contract_id_fkey"
             columns: ["contract_id"]
-            isOneToOne: false
+            isOneToOne: true
             referencedRelation: "contracts"
             referencedColumns: ["id"]
           },
@@ -327,20 +327,26 @@ export type Database = {
       }
       contracts: {
         Row: {
+          cancellation_reason: string | null
+          cancelled_by: string | null
           client_email: string | null
           client_full_name: string | null
           client_id_number: string | null
           client_phone: string | null
           content: string | null
+          content_sha256: string | null
           contract_number: string
           created_at: string
           currency: string | null
           customer_id: string | null
           delivery_date: string | null
+          evidence_id: string | null
           expires_at: string | null
           id: string
+          locked_at: string | null
           metadata: Json | null
           order_id: string | null
+          parent_contract_id: string | null
           payment_terms: string | null
           sent_at: string | null
           service_name: string | null
@@ -356,22 +362,29 @@ export type Database = {
           updated_at: string
           user_id: string | null
           variables: Json | null
+          version: number
         }
         Insert: {
+          cancellation_reason?: string | null
+          cancelled_by?: string | null
           client_email?: string | null
           client_full_name?: string | null
           client_id_number?: string | null
           client_phone?: string | null
           content?: string | null
+          content_sha256?: string | null
           contract_number?: string
           created_at?: string
           currency?: string | null
           customer_id?: string | null
           delivery_date?: string | null
+          evidence_id?: string | null
           expires_at?: string | null
           id?: string
+          locked_at?: string | null
           metadata?: Json | null
           order_id?: string | null
+          parent_contract_id?: string | null
           payment_terms?: string | null
           sent_at?: string | null
           service_name?: string | null
@@ -387,22 +400,29 @@ export type Database = {
           updated_at?: string
           user_id?: string | null
           variables?: Json | null
+          version?: number
         }
         Update: {
+          cancellation_reason?: string | null
+          cancelled_by?: string | null
           client_email?: string | null
           client_full_name?: string | null
           client_id_number?: string | null
           client_phone?: string | null
           content?: string | null
+          content_sha256?: string | null
           contract_number?: string
           created_at?: string
           currency?: string | null
           customer_id?: string | null
           delivery_date?: string | null
+          evidence_id?: string | null
           expires_at?: string | null
           id?: string
+          locked_at?: string | null
           metadata?: Json | null
           order_id?: string | null
+          parent_contract_id?: string | null
           payment_terms?: string | null
           sent_at?: string | null
           service_name?: string | null
@@ -418,6 +438,7 @@ export type Database = {
           updated_at?: string
           user_id?: string | null
           variables?: Json | null
+          version?: number
         }
         Relationships: [
           {
@@ -432,6 +453,13 @@ export type Database = {
             columns: ["order_id"]
             isOneToOne: false
             referencedRelation: "service_orders"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "contracts_parent_contract_id_fkey"
+            columns: ["parent_contract_id"]
+            isOneToOne: false
+            referencedRelation: "contracts"
             referencedColumns: ["id"]
           },
           {
@@ -4229,33 +4257,21 @@ export type Database = {
         }[]
       }
       record_cv_export: { Args: { _cv_id: string }; Returns: Json }
-      sign_contract_with_otp:
-        | {
-            Args: {
-              _contract_id: string
-              _ip?: string
-              _otp_code: string
-              _signature_text: string
-              _signer_name?: string
-              _ua?: string
-            }
-            Returns: Json
-          }
-        | {
-            Args: {
-              _accepted_terms?: Json
-              _comments?: string
-              _contract_id: string
-              _ip?: string
-              _otp_code: string
-              _signature_image?: string
-              _signature_text: string
-              _signer_id_number?: string
-              _signer_name?: string
-              _ua?: string
-            }
-            Returns: Json
-          }
+      sign_contract_with_otp: {
+        Args: {
+          _accepted_terms?: Json
+          _comments?: string
+          _contract_id: string
+          _ip?: string
+          _otp_code: string
+          _signature_image?: string
+          _signature_text: string
+          _signer_id_number?: string
+          _signer_name?: string
+          _ua?: string
+        }
+        Returns: Json
+      }
       swap_cv_template: {
         Args: { _cv_id: string; _new_template_key: string }
         Returns: Json
