@@ -1,7 +1,5 @@
 import React, { useEffect, useMemo, useState, useCallback, useRef } from 'react';
 import { supabase } from '@/integrations/supabase/client';
-import { SidebarProvider, SidebarInset, SidebarTrigger } from '@/components/ui/sidebar';
-import NavigationSidebar from '@/components/admin/NavigationSidebar';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -23,6 +21,7 @@ import {
 import { formatDistanceToNow } from 'date-fns';
 import { ar } from 'date-fns/locale';
 import SEO from '@/components/SEO';
+import AdminLayout from '@/components/admin/AdminLayout';
 
 interface InboxMessage {
   id: string;
@@ -239,40 +238,36 @@ const AdminInbox: React.FC = () => {
   );
 
   return (
-    <SidebarProvider>
+    <AdminLayout>
       <SEO title="صندوق الوارد | لوحة الإدارة" description="استقبال جميع رسائل الفورمات والرد عليها مباشرة" />
       <TooltipProvider delayDuration={200}>
-        <div className="min-h-screen flex w-full bg-gradient-to-br from-background via-background to-muted/30" dir="rtl">
-          <NavigationSidebar />
-          <SidebarInset>
-            {/* Header */}
-            <header className="h-16 flex items-center gap-3 border-b px-4 bg-background/80 backdrop-blur-md sticky top-0 z-20">
-              <SidebarTrigger />
-              <motion.div
-                initial={{ rotate: -10, scale: 0.8 }}
-                animate={{ rotate: 0, scale: 1 }}
-                className="w-10 h-10 rounded-xl bg-gradient-to-br from-primary to-primary/70 flex items-center justify-center text-primary-foreground shadow-lg shadow-primary/20"
-              >
-                <InboxIcon className="w-5 h-5" />
-              </motion.div>
-              <div>
-                <h1 className="font-bold text-lg leading-tight">صندوق الوارد</h1>
-                <p className="text-xs text-muted-foreground flex items-center gap-1">
-                  <Activity className="w-3 h-3 text-emerald-500 animate-pulse" />
-                  متصل لحظياً
-                </p>
-              </div>
-              <div className="ms-auto">
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <Button variant="outline" size="sm" onClick={fetchMessages} disabled={loading}>
-                      <RefreshCcw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
-                    </Button>
-                  </TooltipTrigger>
-                  <TooltipContent>تحديث</TooltipContent>
-                </Tooltip>
-              </div>
-            </header>
+        <div className="flex w-full flex-col bg-gradient-to-br from-background via-background to-muted/30" dir="rtl">
+          <header className="flex min-h-16 items-center gap-3 border-b px-4 bg-background/80 backdrop-blur-md sticky top-0 z-20">
+            <motion.div
+              initial={{ rotate: -10, scale: 0.8 }}
+              animate={{ rotate: 0, scale: 1 }}
+              className="w-10 h-10 rounded-xl bg-gradient-to-br from-primary to-primary/70 flex items-center justify-center text-primary-foreground shadow-lg shadow-primary/20"
+            >
+              <InboxIcon className="w-5 h-5" />
+            </motion.div>
+            <div>
+              <h1 className="font-bold text-lg leading-tight">صندوق الوارد</h1>
+              <p className="text-xs text-muted-foreground flex items-center gap-1">
+                <Activity className="w-3 h-3 text-emerald-500 animate-pulse" />
+                متصل لحظياً
+              </p>
+            </div>
+            <div className="ms-auto">
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button variant="outline" size="sm" onClick={fetchMessages} disabled={loading}>
+                    <RefreshCcw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent>تحديث</TooltipContent>
+              </Tooltip>
+            </div>
+          </header>
 
             {/* Stats */}
             <div className="grid grid-cols-2 md:grid-cols-5 gap-3 p-4">
@@ -283,7 +278,7 @@ const AdminInbox: React.FC = () => {
               <StatCard icon={Clock}        label="اليوم"     value={counts.today}   color="bg-violet-500/10 text-violet-600"         delay={0.2} />
             </div>
 
-            <div className="grid grid-cols-1 lg:grid-cols-[400px_1fr] gap-0 h-[calc(100vh-4rem-7rem)] border-t">
+          <div className="grid grid-cols-1 gap-0 border-t lg:grid-cols-[400px_minmax(0,1fr)] min-h-[calc(100vh-15rem)] lg:h-[calc(100vh-15rem)]">
               {/* List */}
               <aside className="border-l overflow-hidden flex flex-col bg-card/50">
                 <div className="p-3 border-b space-y-2 bg-background/60 backdrop-blur">
@@ -633,11 +628,10 @@ const AdminInbox: React.FC = () => {
                   )}
                 </AnimatePresence>
               </main>
-            </div>
-          </SidebarInset>
+          </div>
         </div>
       </TooltipProvider>
-    </SidebarProvider>
+    </AdminLayout>
   );
 };
 
