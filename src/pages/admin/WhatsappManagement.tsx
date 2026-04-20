@@ -30,6 +30,7 @@ interface Message {
   id: string; direction: "inbound" | "outbound"; sender_type: string;
   sender_name: string | null; body: string; message_type: string;
   delivery_status: string; created_at: string;
+  media_url?: string | null; media_filename?: string | null;
 }
 interface Campaign {
   id: string; name: string; status: string; total_recipients: number;
@@ -386,6 +387,22 @@ export default function WhatsappManagement() {
                   </>
                 )}
               </Card>
+
+              {/* اللوحة الجانبية: ملاحظات + إسناد */}
+              {showDetails && activeConv && (
+                <Card className="overflow-hidden flex flex-col">
+                  <div className="p-3 border-b bg-muted/30">
+                    <div className="font-semibold text-sm">تفاصيل المحادثة</div>
+                  </div>
+                  <ScrollArea className="flex-1">
+                    <ConversationDetailsPanel
+                      conversationId={activeConv.id}
+                      currentAssignee={activeConv.assigned_to}
+                      onAssigneeChanged={(id) => setActiveConv({ ...activeConv, assigned_to: id })}
+                    />
+                  </ScrollArea>
+                </Card>
+              )}
             </div>
           </TabsContent>
 
@@ -477,6 +494,11 @@ export default function WhatsappManagement() {
                 </div>
               </CardContent>
             </Card>
+          </TabsContent>
+
+          {/* الإحصائيات */}
+          <TabsContent value="analytics">
+            <CampaignAnalytics />
           </TabsContent>
         </Tabs>
       </div>
