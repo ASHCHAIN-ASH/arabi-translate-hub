@@ -67,7 +67,19 @@ const ChallengeAcademy: React.FC = () => {
             </TabsTrigger>
           </TabsList>
 
-          <TabsContent value="daily" className="space-y-4">
+          <TabsContent value="daily" className="space-y-5">
+            {/* Timed quiz challenge — hero */}
+            {daily.challenge && (
+              <DailyChallengeCard
+                challenge={daily.challenge}
+                bestAttempt={daily.bestAttempt}
+                completedToday={daily.completedToday}
+                attemptCount={daily.attempts.length}
+                onStart={() => setRunnerOpen(true)}
+              />
+            )}
+
+            {/* Quick challenges (existing) */}
             <Card className="p-4 bg-gradient-to-br from-blue-50 to-indigo-50 border-blue-200">
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center">
@@ -75,7 +87,7 @@ const ChallengeAcademy: React.FC = () => {
                 </div>
                 <div className="flex-1">
                   <p className="font-bold text-sm">
-                    تحديات اليوم {new Date().toLocaleDateString('ar-SA', { weekday: 'long', day: 'numeric', month: 'long' })}
+                    تحديات سريعة {new Date().toLocaleDateString('ar-SA', { weekday: 'long', day: 'numeric', month: 'long' })}
                   </p>
                   <p className="text-xs text-muted-foreground">
                     أكملت {completedToday} من {totalToday} تحدي • +{submissions.reduce((s, x) => s + x.xp_awarded, 0)} XP اليوم
@@ -91,7 +103,7 @@ const ChallengeAcademy: React.FC = () => {
             ) : challenges.length === 0 ? (
               <Card className="p-10 text-center">
                 <Zap className="w-12 h-12 mx-auto mb-3 text-muted-foreground opacity-30" />
-                <p className="font-bold mb-1">لا توجد تحديات اليوم</p>
+                <p className="font-bold mb-1">لا توجد تحديات سريعة اليوم</p>
                 <p className="text-sm text-muted-foreground">عُد غداً لتحديات جديدة!</p>
               </Card>
             ) : (
@@ -106,6 +118,31 @@ const ChallengeAcademy: React.FC = () => {
                   />
                 ))}
               </div>
+            )}
+
+            {/* Runner & Result modals */}
+            {daily.challenge && (
+              <>
+                <ChallengeRunner
+                  open={runnerOpen}
+                  onOpenChange={setRunnerOpen}
+                  challengeId={daily.challenge.id}
+                  userId={userId}
+                  onComplete={(res) => {
+                    setLastResult(res);
+                    setResultOpen(true);
+                    daily.refresh();
+                    refresh();
+                  }}
+                />
+                <ChallengeResult
+                  open={resultOpen}
+                  onOpenChange={setResultOpen}
+                  result={lastResult}
+                  challengeTitle={daily.challenge.title}
+                  onRetry={() => { setResultOpen(false); setTimeout(() => setRunnerOpen(true), 300); }}
+                />
+              </>
             )}
           </TabsContent>
 
