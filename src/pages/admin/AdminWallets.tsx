@@ -19,6 +19,7 @@ import {
   WalletService, type Wallet, type TopupRequest, type WalletTransaction,
   TX_TYPE_LABELS, TX_TYPE_COLORS, TOPUP_STATUS_LABELS, TOPUP_STATUS_COLORS,
 } from '@/utils/walletService';
+import { TransactionItem } from '@/components/wallet/TransactionItem';
 
 const AdminWallets: React.FC = () => {
   const { user } = useAuth();
