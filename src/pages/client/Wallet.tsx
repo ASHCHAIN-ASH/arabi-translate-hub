@@ -1,4 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
+import { ChevronRight, ChevronLeft } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import ClientLayout from '@/components/client/ClientLayout';
 import { useAuth } from '@/components/SimpleAuthProvider';
