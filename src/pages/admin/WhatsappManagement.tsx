@@ -11,9 +11,11 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { toast } from "sonner";
-import { Send, Sparkles, Megaphone, MessageSquare, Loader2, Plus, Smile, Pin, Star, Volume2, VolumeX, Bot, User, Search } from "lucide-react";
+import { Send, Sparkles, Megaphone, MessageSquare, Loader2, Plus, Smile, Pin, Star, Volume2, VolumeX, Bot, User, Search, Paperclip, BarChart3, PanelRightOpen, PanelRightClose } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import AdminLayout from "@/components/admin/AdminLayout";
+import { ConversationDetailsPanel } from "@/components/admin/whatsapp/ConversationDetailsPanel";
+import { CampaignAnalytics } from "@/components/admin/whatsapp/CampaignAnalytics";
 
 const EMOJIS = ["😀","😊","🙏","👍","✅","🎉","🌹","💼","📋","🧾","📜","💳","⏳","🔔","📞","🎓","📚","✨","🔥","💡","⭐","❤️","🤝","📩","📎","🚀"];
 
@@ -48,6 +50,9 @@ export default function WhatsappManagement() {
   const [quickReplies, setQuickReplies] = useState<QuickReply[]>([]);
   const [showEmoji, setShowEmoji] = useState(false);
   const [aiLoading, setAiLoading] = useState(false);
+  const [showDetails, setShowDetails] = useState(true);
+  const [uploading, setUploading] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
 
   const [campaigns, setCampaigns] = useState<Campaign[]>([]);
   const [campaignDialog, setCampaignDialog] = useState(false);
