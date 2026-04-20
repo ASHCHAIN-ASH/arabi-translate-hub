@@ -113,7 +113,12 @@ export const ContractSigningCard: React.FC<Props> = ({ contract, onSigned }) => 
         _otp_code: otp.trim(),
         _signature_text: signatureText.trim(),
         _signer_name: signatureText.trim(),
+        _ip: null,
         _ua: navigator.userAgent,
+        _signature_image: null,
+        _signer_id_number: null,
+        _accepted_terms: null,
+        _comments: null,
       });
       if (error) throw error;
       if (!(data as any)?.ok) throw new Error((data as any)?.error || 'فشل التوقيع');
