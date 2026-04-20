@@ -276,13 +276,22 @@ function buildInvoiceHTML(inv: any, lastPayment: any): string {
   const items: any[] = inv.invoice_items || [];
   // عرض الأسعار قبل الضريبة في جدول البنود (متوافق مع ZATCA)
   const totalItemsAmount = items.reduce((s, it) => s + Number(it.total_price || (it.quantity * it.unit_price) || 0), 0) || total;
+  let accNet = 0, accTax = 0, accGross = 0;
   const itemsRows = items.map((it, i) => {
     const qty = Number(it.quantity || 1);
-    // نحسب سعر الوحدة قبل الضريبة بنسبة من المجموع الفرعي
     const lineRaw = Number(it.total_price || qty * Number(it.unit_price || 0));
-    const lineNet = totalItemsAmount > 0 ? +(subtotal * (lineRaw / totalItemsAmount)).toFixed(2) : lineRaw;
-    const lineTax = +(lineNet * VAT_RATE).toFixed(2);
-    const lineGross = +(lineNet + lineTax).toFixed(2);
+    const isLast = i === items.length - 1;
+    let lineNet = totalItemsAmount > 0 ? +(subtotal * (lineRaw / totalItemsAmount)).toFixed(2) : lineRaw;
+    let lineTax = +(lineNet * VAT_RATE).toFixed(2);
+    let lineGross = +(lineNet + lineTax).toFixed(2);
+    // ضبط البند الأخير ليطابق الإجماليات (تجنّب أخطاء التقريب)
+    if (isLast) {
+      lineNet = +(subtotal - accNet).toFixed(2);
+      lineTax = +(tax - accTax).toFixed(2);
+      lineGross = +(total - accGross).toFixed(2);
+    } else {
+      accNet += lineNet; accTax += lineTax; accGross += lineGross;
+    }
     const unitNet = +(lineNet / qty).toFixed(2);
     return `
       <tr>
