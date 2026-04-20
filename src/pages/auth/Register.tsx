@@ -6,9 +6,11 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { toast } from 'sonner';
 import { Card } from '@/components/ui/card';
-import { UserPlus, Mail, User, Phone, Lock, Eye, EyeOff, CheckCircle, Gift } from 'lucide-react';
+import { UserPlus, Mail, User, Phone, Lock, Eye, EyeOff, CheckCircle, Gift, MessageCircle } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { ReferralService } from '@/utils/referralService';
+import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
+import { WhatsappAuthForm } from '@/components/auth/WhatsappAuthForm';
 
 const Register = () => {
   const [searchParams] = useSearchParams();
