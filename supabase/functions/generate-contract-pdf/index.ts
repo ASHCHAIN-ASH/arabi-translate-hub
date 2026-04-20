@@ -486,11 +486,11 @@ Deno.serve(async (req: Request) => {
       .order("signed_at", { ascending: false })
       .limit(1).maybeSingle();
 
-    // Apply optional overrides for previews only (never on signed_final)
-    if (mode === "preview") {
-      const overrideContent = typeof body.override_content === "string" ? body.override_content.trim() : "";
-      const overrideClientName = typeof body.override_client_full_name === "string" ? body.override_client_full_name.trim() : "";
-      const overrideClientEmail = typeof body.override_client_email === "string" ? body.override_client_email.trim() : "";
+    // Apply optional overrides for previews, and for forced signed_final repair only
+    const overrideContent = typeof body.override_content === "string" ? body.override_content.trim() : "";
+    const overrideClientName = typeof body.override_client_full_name === "string" ? body.override_client_full_name.trim() : "";
+    const overrideClientEmail = typeof body.override_client_email === "string" ? body.override_client_email.trim() : "";
+    if (mode === "preview" || (mode === "signed_final" && force)) {
       if (overrideClientName) contract.client_full_name = overrideClientName;
       if (overrideClientEmail) contract.client_email = overrideClientEmail;
       if (isCompleteContractContent(overrideContent)) contract.content = overrideContent;
