@@ -93,7 +93,18 @@ const Login = () => {
 
         <motion.div variants={itemVariants}>
           <Card className="p-8 shadow-2xl border-0 bg-white/80 backdrop-blur-sm">
-            <form onSubmit={handleSubmit} className="space-y-6">
+            <Tabs defaultValue="email" dir="rtl" className="w-full">
+              <TabsList className="grid grid-cols-2 w-full mb-6">
+                <TabsTrigger value="email" className="gap-2">
+                  <Mail className="w-4 h-4" /> البريد الإلكتروني
+                </TabsTrigger>
+                <TabsTrigger value="whatsapp" className="gap-2">
+                  <MessageCircle className="w-4 h-4" /> واتساب
+                </TabsTrigger>
+              </TabsList>
+
+              <TabsContent value="email">
+                <form onSubmit={handleSubmit} className="space-y-6">
               <motion.div variants={itemVariants}>
                 <Label htmlFor="email" className="text-slate-700 font-medium flex items-center gap-2">
                   <Mail className="w-4 h-4" />
@@ -152,9 +163,23 @@ const Login = () => {
                   )}
                 </Button>
               </motion.div>
-            </form>
+                </form>
+              </TabsContent>
 
-            <motion.div variants={itemVariants} className="mt-8 text-center space-y-4">
+              <TabsContent value="whatsapp">
+                <WhatsappAuthForm mode="login" />
+                <p className="text-xs text-center text-slate-500 mt-4">
+                  ليس لديك حساب؟ يمكنك إنشاء حساب جديد بواتساب من{' '}
+                  <button
+                    type="button"
+                    onClick={() => navigate('/register')}
+                    className="text-emerald-600 hover:underline font-medium"
+                  >
+                    صفحة التسجيل
+                  </button>
+                </p>
+              </TabsContent>
+            </Tabs>
               <div className="relative">
                 <div className="absolute inset-0 flex items-center">
                   <div className="w-full border-t border-slate-300" />
