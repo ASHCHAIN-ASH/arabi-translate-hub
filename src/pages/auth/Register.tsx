@@ -351,6 +351,8 @@ const Register = () => {
                 </Button>
               </motion.div>
             </form>
+              </TabsContent>
+            </Tabs>
 
             <motion.div variants={itemVariants} className="mt-8 text-center space-y-4">
               <div className="relative">
