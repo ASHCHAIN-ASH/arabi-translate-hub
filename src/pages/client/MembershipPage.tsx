@@ -161,17 +161,6 @@ export default function MembershipPage() {
   return (
     <ClientLayout>
       <div className="max-w-7xl mx-auto p-2 md:p-4 space-y-8 pb-12" dir="rtl">
-        <Tabs defaultValue="plans" className="space-y-6">
-          <TabsList className="grid w-full md:w-auto md:inline-grid grid-cols-2 h-12 p-1 bg-muted/60">
-            <TabsTrigger value="plans" className="gap-2 text-base">
-              <Crown className="h-4 w-4" /> باقات العضوية
-            </TabsTrigger>
-            <TabsTrigger value="referrals" className="gap-2 text-base">
-              <Gift className="h-4 w-4" /> الإحالات والعمولات
-            </TabsTrigger>
-          </TabsList>
-
-          <TabsContent value="plans" className="space-y-8 mt-0">
         {/* === Hero with animated background === */}
         <motion.section
           initial={{ opacity: 0, y: -20 }}
