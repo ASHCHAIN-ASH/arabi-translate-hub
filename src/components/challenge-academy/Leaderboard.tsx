@@ -58,7 +58,7 @@ export const Leaderboard: React.FC<Props> = ({ currentUserId }) => {
         </div>
       </div>
 
-      <Tabs value={period} onValueChange={(v) => setPeriod(v as any)}>
+      <Tabs value={period} onValueChange={(v) => setPeriod(v as any)} dir="rtl">
         <div className="px-4 pt-4">
           <TabsList className="grid grid-cols-3 w-full">
             <TabsTrigger value="weekly" className="gap-1.5">
