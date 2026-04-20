@@ -618,7 +618,7 @@ const ClientContractApproval = () => {
           <motion.aside
             initial={{ opacity: 0, x: 16 }}
             animate={{ opacity: 1, x: 0 }}
-            className="space-y-4"
+            className="space-y-4 lg:sticky lg:top-24 lg:self-start lg:max-h-[calc(100vh-7rem)] lg:overflow-y-auto pr-1"
           >
             {/* Signatures */}
             <Card>
