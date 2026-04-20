@@ -27,16 +27,10 @@ serve(async (req) => {
       );
     }
 
-    // Verify caller is admin
+    // Verify caller is admin (use getClaims to support ES256 signing keys)
     const authHeader = req.headers.get("Authorization") ?? "";
-    const userClient = createClient(
-      Deno.env.get("SUPABASE_URL")!,
-      Deno.env.get("SUPABASE_ANON_KEY")!,
-      { global: { headers: { Authorization: authHeader } } },
-    );
-    const { data: userRes } = await userClient.auth.getUser();
-    const user = userRes?.user;
-    if (!user) {
+    const token = authHeader.replace(/^Bearer\s+/i, "");
+    if (!token) {
       return new Response(JSON.stringify({ success: false, error: "unauthenticated" }), {
         status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
@@ -46,6 +40,14 @@ serve(async (req) => {
       Deno.env.get("SUPABASE_URL")!,
       Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!,
     );
+
+    const { data: claimsData, error: claimsError } = await admin.auth.getClaims(token);
+    if (claimsError || !claimsData?.claims?.sub) {
+      return new Response(JSON.stringify({ success: false, error: "unauthenticated" }), {
+        status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+    const user = { id: claimsData.claims.sub as string, email: (claimsData.claims.email as string | undefined) ?? null };
 
     const { data: roleRow } = await admin
       .from("user_roles")
