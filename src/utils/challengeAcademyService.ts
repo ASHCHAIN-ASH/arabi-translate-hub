@@ -219,37 +219,30 @@ export class ChallengeAcademyService {
   }
 
   static async getLeaderboard(period: 'weekly' | 'monthly' | 'all', limit = 50): Promise<LeaderboardEntry[]> {
-    const orderCol = period === 'weekly' ? 'weekly_xp' : period === 'monthly' ? 'monthly_xp' : 'total_xp';
-    const { data, error } = await (supabase as any)
-      .from('challenge_user_xp')
-      .select('user_id, total_xp, weekly_xp, monthly_xp, current_level_id, level:challenge_levels(name_ar, badge_color)')
-      .order(orderCol, { ascending: false })
-      .limit(limit);
+    const { data, error } = await (supabase as any).rpc('get_challenge_leaderboard', {
+      p_period: period,
+      p_limit: limit,
+    });
     if (error) throw error;
 
-    const userIds = (data || []).map((r: any) => r.user_id);
-    const profiles: Record<string, string> = {};
-    if (userIds.length) {
-      const { data: profs } = await (supabase as any)
-        .from('profiles').select('user_id, full_name').in('user_id', userIds);
-      (profs || []).forEach((p: any) => { profiles[p.user_id] = p.full_name; });
-    }
-
-    return (data || []).map((row: any, idx: number) => {
-      const fullName = profiles[row.user_id] || 'طالب';
-      const parts = fullName.split(' ');
+    return (data || []).map((row: any) => {
+      const fullName: string = row.full_name || 'طالب';
+      const parts = fullName.trim().split(/\s+/);
       const masked = parts.length > 1
         ? `${parts[0]} ${parts[parts.length - 1].charAt(0)}***`
         : `${fullName.slice(0, 3)}***`;
       return {
         user_id: row.user_id,
         display_name: masked,
+        full_name: fullName,
+        avatar_url: row.avatar_url || null,
         total_xp: row.total_xp,
         weekly_xp: row.weekly_xp,
         monthly_xp: row.monthly_xp,
-        level_name: row.level?.name_ar || null,
-        level_color: row.level?.badge_color || null,
-        rank: idx + 1,
+        level_name: row.level_name,
+        level_color: row.level_color,
+        level_icon: row.level_icon,
+        rank: row.rank,
       } as LeaderboardEntry;
     });
   }
