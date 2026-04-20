@@ -35,6 +35,38 @@ const handler = async (req: Request): Promise<Response> => {
     
     console.log("Processing service request:", orderId);
 
+    // 🆕 1) حفظ الطلب فوراً في صندوق الوارد الموحّد (يظهر بلوحة الإدارة لحظياً)
+    let inboxMessageId: string | null = null;
+    try {
+      const { data: inserted, error: inboxError } = await supabaseAdmin
+        .from("inbox_messages")
+        .insert({
+          sender_name: orderData.fullName?.slice(0, 200) ?? "زائر",
+          sender_email: orderData.email?.slice(0, 200) ?? "unknown@masteredupath.com",
+          sender_phone: orderData.phone?.slice(0, 50) ?? null,
+          subject: `طلب خدمة: ${orderData.serviceTitle}`,
+          message: orderData.details?.slice(0, 8000) ||
+            `طلب خدمة «${orderData.serviceTitle}» — التخصص: ${orderData.specialization || "غير محدد"}.`,
+          form_type: "service_inquiry",
+          service_type: orderData.serviceType ?? null,
+          source_page: orderData.serviceType ? `service:${orderData.serviceType}` : null,
+          priority: "high",
+          status: "new",
+          metadata: {
+            order_id: orderId,
+            service_title: orderData.serviceTitle,
+            specialization: orderData.specialization,
+          },
+        })
+        .select("id")
+        .single();
+      if (inboxError) throw inboxError;
+      inboxMessageId = inserted.id;
+      console.log("[inbox] saved message:", inboxMessageId);
+    } catch (e) {
+      console.error("[inbox] failed to save (continuing with email):", e);
+    }
+
     // إيميل الإدارة (Admin RTL Template)
     const adminEmailHtml = `
       <!DOCTYPE html>
