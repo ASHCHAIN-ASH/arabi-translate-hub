@@ -22,6 +22,14 @@ export const ChallengeResult: React.FC<Props> = ({
   open, onOpenChange, result, challengeTitle, onRetry,
 }) => {
   const { toast } = useToast();
+  const { user } = useAuth();
+  const [refCode, setRefCode] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (user?.id) {
+      ChallengeReferralService.getOrCreateMyCode(user.id).then(setRefCode);
+    }
+  }, [user?.id]);
 
   const tier = useMemo(() => {
     const score = result?.score ?? 0;
@@ -34,42 +42,55 @@ export const ChallengeResult: React.FC<Props> = ({
 
   const handleShare = async () => {
     if (!result) return;
-    const text = `🎓 تحدي اليوم في ماستر إيدو باث:\n${tier.label} — ${result.score}%\n${result.correct_count}/${result.total_questions} إجابة صحيحة\n+${result.xp_awarded} XP 🔥\nhttps://masteredupath.com/challenge-academy`;
+    const url = refCode
+      ? ChallengeReferralService.buildChallengeShareUrl(refCode)
+      : 'https://masteredupath.com/challenge-academy';
+    const text = `🎓 تحدي اليوم في ماستر إيدو باث:\n${tier.label} — ${result.score}%\n${result.correct_count}/${result.total_questions} إجابة صحيحة\n+${result.xp_awarded} XP 🔥\n\nهل تقدر تهزمني؟ 💪\n${url}`;
+
+    let shared = false;
 
     // Try Web Share API first (mobile)
     if (typeof navigator !== 'undefined' && typeof navigator.share === 'function') {
       try {
         await navigator.share({ title: 'تحدي اليوم', text });
-        return;
+        shared = true;
       } catch (err: any) {
-        // AbortError = user cancelled, don't fallback
         if (err?.name === 'AbortError') return;
-        // Otherwise fallback to clipboard
       }
     }
 
-    // Clipboard fallback
-    try {
-      if (navigator.clipboard?.writeText) {
-        await navigator.clipboard.writeText(text);
-        toast({ title: '📋 تم نسخ النتيجة!', description: 'الصقها في واتساب أو تويتر لمشاركتها' });
-        return;
-      }
-      throw new Error('clipboard unavailable');
-    } catch {
-      // Last-resort: legacy execCommand
+    if (!shared) {
+      // Clipboard fallback
       try {
-        const ta = document.createElement('textarea');
-        ta.value = text;
-        ta.style.position = 'fixed';
-        ta.style.opacity = '0';
-        document.body.appendChild(ta);
-        ta.select();
-        document.execCommand('copy');
-        document.body.removeChild(ta);
-        toast({ title: '📋 تم نسخ النتيجة!', description: 'الصقها في واتساب أو تويتر لمشاركتها' });
-      } catch {
-        toast({ title: 'تعذر النسخ', description: 'انسخ النص يدوياً', variant: 'destructive' });
+        if (navigator.clipboard?.writeText) {
+          await navigator.clipboard.writeText(text);
+          toast({ title: '📋 تم نسخ النتيجة!', description: 'الصقها في واتساب أو تويتر لمشاركتها' });
+          shared = true;
+        }
+      } catch {}
+      if (!shared) {
+        try {
+          const ta = document.createElement('textarea');
+          ta.value = text;
+          ta.style.position = 'fixed';
+          ta.style.opacity = '0';
+          document.body.appendChild(ta);
+          ta.select();
+          document.execCommand('copy');
+          document.body.removeChild(ta);
+          toast({ title: '📋 تم نسخ النتيجة!', description: 'الصقها في واتساب أو تويتر لمشاركتها' });
+          shared = true;
+        } catch {
+          toast({ title: 'تعذر النسخ', description: 'انسخ النص يدوياً', variant: 'destructive' });
+        }
+      }
+    }
+
+    // Reward viral share (server enforces 1/day)
+    if (shared) {
+      const reward = await ChallengeReferralService.rewardViralShare();
+      if (reward.xp > 0) {
+        toast({ title: `🎁 +${reward.xp} XP لمشاركتك!`, description: 'استمر بالنشر لكسب المزيد' });
       }
     }
   };
