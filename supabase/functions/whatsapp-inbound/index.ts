@@ -172,7 +172,7 @@ serve(async (req) => {
       await activateHumanTakeover(supabase, session, phone, messageBody, customerName, "user_request");
       const reply = `تم تحويل محادثتك إلى موظف بشري 👨‍💼\nسيتواصل معك أحد أعضاء فريق ماستر إيدو باث في أقرب وقت.\n\nشكراً لصبرك 🌹`;
       await sendWhatsAppMessage(phone, reply);
-      await logBotReply(supabase, inboundLog?.id, reply, true);
+      await logBotReply(supabase, inboundLog?.id, reply, true, phone);
       return jsonRes({ success: true, action: "human_handoff" });
     }
 
@@ -200,7 +200,7 @@ serve(async (req) => {
       await activateHumanTakeover(supabase, session, phone, messageBody, customerName, "ai_handoff");
       const reply = aiResult.reply || `سأقوم بتحويلك إلى موظف بشري للمساعدة الأفضل 👨‍💼\nسيتواصل معك الفريق قريباً 🌹`;
       await sendWhatsAppMessage(phone, reply);
-      await logBotReply(supabase, inboundLog?.id, reply, true);
+      await logBotReply(supabase, inboundLog?.id, reply, true, phone);
       return jsonRes({ success: true, action: "ai_handoff" });
     }
 
@@ -213,7 +213,7 @@ serve(async (req) => {
     }).eq("id", session!.id);
 
     await sendWhatsAppMessage(phone, reply);
-    await logBotReply(supabase, inboundLog?.id, reply, false);
+    await logBotReply(supabase, inboundLog?.id, reply, false, phone);
 
     return jsonRes({ success: true, action: "ai_reply" });
   } catch (e: any) {
