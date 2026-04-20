@@ -403,6 +403,11 @@ function buildHtml(contract: any, signature: any, verifyHash: string) {
 </html>`;
 }
 
+function isCompleteContractContent(content?: string | null) {
+  const value = String(content || "").trim();
+  return value.length >= 400 && /##|المادة|\|/.test(value);
+}
+
 Deno.serve(async (req: Request) => {
   if (req.method === "OPTIONS") return new Response(null, { headers: corsHeaders });
 
@@ -503,6 +508,18 @@ Deno.serve(async (req: Request) => {
         console.warn("admin notification failed:", e);
       }
     }
+
+    const overrideContent = typeof body.override_content === "string" ? body.override_content.trim() : "";
+    const overrideClientName = typeof body.override_client_full_name === "string" ? body.override_client_full_name.trim() : "";
+    const overrideClientEmail = typeof body.override_client_email === "string" ? body.override_client_email.trim() : "";
+
+    if (overrideClientName) contract.client_full_name = overrideClientName;
+    if (overrideClientEmail) contract.client_email = overrideClientEmail;
+    if (isCompleteContractContent(overrideContent)) {
+      contract.content = overrideContent;
+    }
+
+    const html = buildHtml(contract, signature, hash);
 
     const wantsHtml =
       url.searchParams.get("format") === "html" ||
