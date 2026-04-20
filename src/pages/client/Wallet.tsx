@@ -55,6 +55,9 @@ const ClientWallet: React.FC = () => {
   const [wallet, setWallet] = useState<WalletT | null>(null);
   const [txs, setTxs] = useState<WalletTransaction[]>([]);
   const [topups, setTopups] = useState<TopupRequest[]>([]);
+  const [txPage, setTxPage] = useState(1);
+  const [topupsPage, setTopupsPage] = useState(1);
+  const PAGE_SIZE = 10;
   const [loading, setLoading] = useState(true);
   const [showBalance, setShowBalance] = useState(true);
   const [topupOpen, setTopupOpen] = useState(false);
