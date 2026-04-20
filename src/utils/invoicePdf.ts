@@ -79,6 +79,27 @@ export function buildInvoiceHTML(invoice: Invoice, items: InvoiceItem[], payment
   const totalItems = items.length;
   const totalQty = items.reduce((s, it) => s + Number(it.quantity || 0), 0);
 
+  // VAT (15%) — احسبها لو ما كانت مخزّنة
+  const subtotal = Number(invoice.subtotal || 0);
+  const discount = Number(invoice.discount_amount || 0);
+  const storedVat = Number(invoice.tax_amount || 0);
+  const computedVat = storedVat > 0 ? storedVat : Math.round((subtotal - discount) * 0.15 * 100) / 100;
+
+  // طريقة الدفع الأساسية
+  const primaryPayment = payments[0];
+  const paymentMethodLabel = primaryPayment ? translatePaymentMethod(primaryPayment.payment_method) : '—';
+
+  // QR ZATCA-style + رابط QuickChart للصورة
+  const qrPayload = buildZatcaQrPayload(
+    COMPANY.name,
+    COMPANY.vatNumber,
+    new Date(invoice.issue_date || invoice.created_at || Date.now()).toISOString(),
+    String(invoice.total_amount ?? 0),
+    String(computedVat),
+  );
+  const qrText = encodeURIComponent(qrPayload || `${invoice.invoice_number}|${invoice.total_amount}|${COMPANY.vatNumber}`);
+  const qrImg = `https://quickchart.io/qr?text=${qrText}&size=180&margin=1&ecLevel=M`;
+
   return `<!doctype html>
 <html lang="ar" dir="rtl">
 <head>
