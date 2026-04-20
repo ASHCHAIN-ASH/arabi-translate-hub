@@ -12,6 +12,8 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/
 import { Progress } from '@/components/ui/progress';
 import { Link } from 'react-router-dom';
 import { ReferralService } from '@/utils/referralService';
+import MembershipDashboard from '@/components/membership/MembershipDashboard';
+import { useMembershipStats } from '@/hooks/useMembershipStats';
 import {
   Crown, Check, Wallet, Receipt, Sparkles, Calendar, TrendingUp, Zap, Shield,
   Gift, HeadphonesIcon, Star, Award, ArrowLeft, Info, HelpCircle, Rocket,
