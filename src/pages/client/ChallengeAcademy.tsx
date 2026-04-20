@@ -7,7 +7,7 @@ import { useDailyChallenge } from '@/hooks/useDailyChallenge';
 import { StatsHeader } from '@/components/challenge-academy/StatsHeader';
 import { ChallengeCard } from '@/components/challenge-academy/ChallengeCard';
 import { Leaderboard } from '@/components/challenge-academy/Leaderboard';
-import { AchievementsGrid } from '@/components/challenge-academy/AchievementsGrid';
+import { MyAchievementsView } from '@/components/challenge-academy/MyAchievementsView';
 import { DailyChallengeCard } from '@/components/challenge-academy/DailyChallengeCard';
 import { ChallengeRunner } from '@/components/challenge-academy/ChallengeRunner';
 import { ChallengeResult } from '@/components/challenge-academy/ChallengeResult';
