@@ -34,7 +34,7 @@ const handler = async (req: Request): Promise<Response> => {
       await supabaseAdmin.from("inbox_messages").insert({
         sender_name: (data.name || "زائر").toString().slice(0, 200),
         sender_email: (data.email || "unknown@masteredupath.com").toString().slice(0, 200),
-        sender_phone: (data.'' || null) ? data.''.toString().slice(0, 50) : null,
+        sender_phone: null,
         subject: ('تسجيل اهتمام بمراجعة الأقران').toString().slice(0, 300),
         message: ('سجّل المستخدم اهتمامه بخدمة مراجعة الأقران Peer Review.' || "").toString().slice(0, 8000),
         form_type: "interest",
