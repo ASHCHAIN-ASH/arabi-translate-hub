@@ -263,49 +263,119 @@ export const ContractSigningCard: React.FC<Props> = ({ contract, onSigned }) => 
             </>
           ) : (
             <>
-              <div className="space-y-4">
-                <div className="space-y-2">
-                  <Label>رمز التحقق (OTP)</Label>
-                  <Input
-                    value={otp}
-                    onChange={(e) => setOtp(e.target.value.replace(/\D/g, '').slice(0, 6))}
-                    placeholder="000000"
-                    className="text-center text-2xl tracking-widest font-mono"
-                    maxLength={6}
-                  />
-                  <p className="text-xs text-muted-foreground">
-                    أُرسل الرمز إلى: {contract.client_email}
-                  </p>
+            <div className="flex-1 min-h-0 overflow-y-auto bg-gradient-to-b from-slate-50 to-white">
+              <div className="max-w-xl mx-auto px-4 sm:px-6 py-5 sm:py-8 space-y-5">
+                {/* رأس التأكيد */}
+                <div className="flex flex-col items-center text-center gap-3">
+                  <div className="w-16 h-16 rounded-2xl bg-primary/10 flex items-center justify-center ring-4 ring-primary/5">
+                    <ShieldCheck className="h-8 w-8 text-primary" />
+                  </div>
+                  <div>
+                    <h3 className="text-lg sm:text-xl font-bold text-slate-900">تأكيد التوقيع الإلكتروني</h3>
+                    <p className="text-xs sm:text-sm text-muted-foreground mt-1 flex items-center justify-center gap-1.5 flex-wrap">
+                      <Mail className="h-3.5 w-3.5" />
+                      أُرسل الرمز إلى
+                      <span className="font-mono font-semibold text-slate-700 dir-ltr">{contract.client_email}</span>
+                    </p>
+                  </div>
                 </div>
-                <div className="space-y-2">
-                  <Label>رقم الهوية / الإقامة</Label>
+
+                {/* رمز التحقق - InputOTP متجاوب */}
+                <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-4 sm:p-5 space-y-3">
+                  <Label className="flex items-center gap-2 text-sm font-semibold text-slate-800">
+                    <MailCheck className="h-4 w-4 text-primary" />
+                    رمز التحقق المكوّن من 6 أرقام
+                  </Label>
+                  <div dir="ltr" className="flex justify-center py-2">
+                    <InputOTP
+                      maxLength={6}
+                      value={otp}
+                      onChange={(v) => setOtp(v.replace(/\D/g, ''))}
+                      inputMode="numeric"
+                      pattern="[0-9]*"
+                    >
+                      <InputOTPGroup className="gap-1.5 sm:gap-2">
+                        {[0, 1, 2, 3, 4, 5].map((i) => (
+                          <InputOTPSlot
+                            key={i}
+                            index={i}
+                            className="w-10 h-12 sm:w-12 sm:h-14 text-lg sm:text-xl font-bold rounded-lg border-2 first:rounded-l-lg last:rounded-r-lg"
+                          />
+                        ))}
+                      </InputOTPGroup>
+                    </InputOTP>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={sendOtp}
+                    disabled={sending}
+                    className="w-full text-xs text-primary hover:text-primary/80 disabled:text-muted-foreground flex items-center justify-center gap-1.5 py-1"
+                  >
+                    <RefreshCw className={`h-3.5 w-3.5 ${sending ? 'animate-spin' : ''}`} />
+                    {sending ? 'جاري إعادة الإرسال...' : 'لم يصلك الرمز؟ إعادة الإرسال'}
+                  </button>
+                </div>
+
+                {/* الهوية */}
+                <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-4 sm:p-5 space-y-2.5">
+                  <Label className="flex items-center gap-2 text-sm font-semibold text-slate-800">
+                    <IdCard className="h-4 w-4 text-primary" />
+                    رقم الهوية / الإقامة
+                  </Label>
                   <Input
                     value={idNumber}
                     onChange={(e) => setIdNumber(e.target.value.replace(/\D/g, '').slice(0, 15))}
                     placeholder="1xxxxxxxxx"
-                    className="text-center font-mono"
+                    className="h-12 text-center font-mono text-base tracking-wider"
                     inputMode="numeric"
+                    dir="ltr"
                   />
-                  <p className="text-xs text-muted-foreground">مطلوب للتوثيق القانوني للتوقيع</p>
+                  <p className="text-[11px] text-muted-foreground">مطلوب للتوثيق القانوني للتوقيع</p>
                 </div>
-                <div className="space-y-2">
-                  <Label>الاسم الكامل (التوقيع)</Label>
+
+                {/* الاسم */}
+                <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-4 sm:p-5 space-y-2.5">
+                  <Label className="flex items-center gap-2 text-sm font-semibold text-slate-800">
+                    <PenLine className="h-4 w-4 text-primary" />
+                    الاسم الكامل (التوقيع)
+                  </Label>
                   <Textarea
                     value={signatureText}
                     onChange={(e) => setSignatureText(e.target.value)}
                     rows={2}
                     placeholder="اكتب اسمك الكامل كتوقيع"
+                    className="text-base resize-none"
                   />
                 </div>
+
+                {/* تنبيه قانوني */}
+                <div className="text-[11px] text-center text-muted-foreground leading-relaxed px-2">
+                  بالضغط على «توقيع وتأكيد» فإنك توافق على ربط هويتك الرقمية بهذا العقد وفق نظام التعاملات الإلكترونية السعودي.
+                </div>
               </div>
-              <DialogFooter>
-                <Button variant="outline" onClick={() => setStep('review')}>رجوع</Button>
-                <Button onClick={submitSignature} disabled={signing}>
+            </div>
+
+            {/* أزرار التحكم - ثابتة بالأسفل */}
+            <div className="px-4 sm:px-6 py-3 sm:py-4 border-t bg-white shrink-0">
+              <div className="flex flex-col-reverse sm:flex-row gap-2 sm:justify-end max-w-xl mx-auto w-full">
+                <Button
+                  variant="outline"
+                  onClick={() => setStep('review')}
+                  className="w-full sm:w-auto h-11"
+                >
+                  <ArrowRight className="h-4 w-4 ml-1.5" />
+                  رجوع للعقد
+                </Button>
+                <Button
+                  onClick={submitSignature}
+                  disabled={signing || otp.length < 6}
+                  className="w-full sm:w-auto h-11 sm:min-w-[180px] bg-gradient-to-r from-primary to-primary/90"
+                >
                   {signing ? <Loader2 className="h-4 w-4 ml-2 animate-spin" /> : <ShieldCheck className="h-4 w-4 ml-2" />}
                   توقيع وتأكيد
                 </Button>
-              </DialogFooter>
-            </>
+              </div>
+            </div>
           )}
         </DialogContent>
       </Dialog>
