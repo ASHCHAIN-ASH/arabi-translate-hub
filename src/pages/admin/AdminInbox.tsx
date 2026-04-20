@@ -116,31 +116,15 @@ const AdminInbox: React.FC = () => {
 
   useEffect(() => { fetchMessages(); }, [fetchMessages]);
 
+  // Polling instead of Realtime — protects PII (sender names/emails/phones)
+  // from being broadcast to any authenticated subscriber on a shared channel.
   useEffect(() => {
-    const channel = supabase
-      .channel('inbox-rt')
-      .on('postgres_changes', { event: '*', schema: 'public', table: 'inbox_messages' }, (payload) => {
-        if (payload.eventType === 'INSERT') {
-          const row = payload.new as InboxMessage;
-          setMessages((prev) => [row, ...prev.filter((m) => m.id !== row.id)]);
-          toast.message('📩 رسالة جديدة', { description: `${row.sender_name} — ${row.subject ?? ''}` });
-        } else if (payload.eventType === 'UPDATE') {
-          const row = payload.new as InboxMessage;
-          setMessages((prev) => prev.map((m) => (m.id === row.id ? row : m)));
-        } else if (payload.eventType === 'DELETE') {
-          const old = payload.old as InboxMessage;
-          setMessages((prev) => prev.filter((m) => m.id !== old.id));
-        }
-      })
-      .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'inbox_replies' }, (payload) => {
-        const row = payload.new as InboxReply;
-        if (row.message_id === selectedId) {
-          setReplies((prev) => [...prev.filter((r) => r.id !== row.id), row]);
-        }
-      })
-      .subscribe();
-    return () => { supabase.removeChannel(channel); };
-  }, [selectedId]);
+    const interval = setInterval(() => {
+      fetchMessages();
+      if (selectedId) fetchReplies(selectedId);
+    }, 15000);
+    return () => clearInterval(interval);
+  }, [selectedId, fetchMessages, fetchReplies]);
 
   useEffect(() => {
     if (selectedId) {
