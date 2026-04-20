@@ -12,6 +12,8 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/
 import { Progress } from '@/components/ui/progress';
 import { Link } from 'react-router-dom';
 import { ReferralService } from '@/utils/referralService';
+import MembershipDashboard from '@/components/membership/MembershipDashboard';
+import { useMembershipStats } from '@/hooks/useMembershipStats';
 import {
   Crown, Check, Wallet, Receipt, Sparkles, Calendar, TrendingUp, Zap, Shield,
   Gift, HeadphonesIcon, Star, Award, ArrowLeft, Info, HelpCircle, Rocket,
@@ -112,6 +114,7 @@ export default function MembershipPage() {
   const { user } = useAuth();
   const { plans, loading } = useMembershipPlans();
   const { membership, reload } = useUserMembership();
+  const { stats, loading: statsLoading } = useMembershipStats();
   const [selectedPlan, setSelectedPlan] = useState<MembershipPlan | null>(null);
   const [paymentMethod, setPaymentMethod] = useState<'wallet' | 'invoice'>('wallet');
   const [submitting, setSubmitting] = useState(false);
@@ -238,58 +241,12 @@ export default function MembershipPage() {
           </div>
         </motion.section>
 
-        {/* === Current Membership Status === */}
-        <AnimatePresence>
-          {membership && (
-            <motion.div
-              initial={{ opacity: 0, scale: 0.95 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.95 }}
-            >
-              <Card className="relative overflow-hidden border-primary/30">
-                <div className="absolute inset-0 bg-gradient-to-l from-primary/10 via-amber-500/5 to-transparent" />
-                <motion.div
-                  animate={{ x: ['0%', '100%'] }}
-                  transition={{ duration: 3, repeat: Infinity, ease: 'linear' }}
-                  className="absolute inset-y-0 -left-1/2 w-1/2 bg-gradient-to-r from-transparent via-white/10 to-transparent skew-x-12"
-                />
-                <CardContent className="relative p-5">
-                  <div className="flex items-center justify-between flex-wrap gap-4">
-                    <div className="flex items-center gap-4">
-                      <motion.div
-                        animate={{ rotate: [0, 10, -10, 0] }}
-                        transition={{ duration: 4, repeat: Infinity }}
-                      >
-                        <MembershipBadge code={membership.plan?.code} nameAr={membership.plan?.name_ar} size="lg" />
-                      </motion.div>
-                      <div>
-                        <div className="flex items-center gap-2">
-                          <BadgeCheck className="w-4 h-4 text-emerald-500" />
-                          <p className="text-sm font-bold">عضويتك نشطة الآن</p>
-                        </div>
-                        <p className="text-xs text-muted-foreground flex items-center gap-1.5 mt-1">
-                          <Calendar className="w-3 h-3" />
-                          تنتهي في: {membership.expires_at ? new Date(membership.expires_at).toLocaleDateString('ar-SA') : '-'}
-                        </p>
-                      </div>
-                    </div>
-                    <div className="flex items-center gap-6">
-                      <div className="text-center">
-                        <p className="text-2xl font-black text-primary">{membership.plan?.discount_percentage}%</p>
-                        <p className="text-[10px] text-muted-foreground">خصم على الطلبات</p>
-                      </div>
-                      <div className="w-px h-10 bg-border" />
-                      <div className="text-center">
-                        <p className="text-2xl font-black text-emerald-600">{membership.plan?.cashback_amount}</p>
-                        <p className="text-[10px] text-muted-foreground">كاش باك (ر.س)</p>
-                      </div>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            </motion.div>
-          )}
-        </AnimatePresence>
+        {/* === Live Membership Dashboard (real benefits, realtime data) === */}
+        <MembershipDashboard
+          membership={membership}
+          stats={stats}
+          loading={statsLoading}
+        />
 
         {/* === How it works (3 steps) === */}
         <motion.section
