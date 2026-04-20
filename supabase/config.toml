@@ -31,3 +31,9 @@ project_id = "kziujhdqogqeehtxgpax"
     verify_jwt = false
   [functions.inbox-reply]
     verify_jwt = true
+  [functions.whatsapp-otp-request]
+    verify_jwt = false
+  [functions.whatsapp-otp-verify]
+    verify_jwt = false
+  [functions.whatsapp-auth-complete]
+    verify_jwt = false
