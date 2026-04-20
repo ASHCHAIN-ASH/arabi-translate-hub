@@ -197,6 +197,10 @@ const ChallengeAcademy: React.FC = () => {
               streak={streak}
             />
           </TabsContent>
+
+          <TabsContent value="referrals">
+            <ReferralPanel />
+          </TabsContent>
         </Tabs>
       </div>
     </ClientLayout>
