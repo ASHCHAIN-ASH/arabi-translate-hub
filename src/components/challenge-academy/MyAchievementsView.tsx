@@ -11,6 +11,7 @@ import { generateAchievementImage, shareOrDownload, ShareImageData } from '@/uti
 import { useAuth } from '@/components/SimpleAuthProvider';
 import { useToast } from '@/hooks/use-toast';
 import { cn } from '@/lib/utils';
+import { StreakCalendar } from './StreakCalendar';
 
 const RARITY: Record<string, { label: string; ring: string; bg: string; glow: string }> = {
   common:    { label: 'عادي',     ring: 'ring-slate-300',  bg: 'from-slate-100 to-slate-200',     glow: 'shadow-slate-200/50' },
@@ -23,7 +24,7 @@ interface Props {
   achievements: Achievement[];
   unlocked: UserAchievement[];
   summary: UserSummary | null;
-  streak: { current_streak: number; longest_streak: number } | null;
+  streak: { current_streak: number; longest_streak: number; last_activity_date?: string | null } | null;
 }
 
 export const MyAchievementsView: React.FC<Props> = ({ achievements, unlocked, summary, streak }) => {
