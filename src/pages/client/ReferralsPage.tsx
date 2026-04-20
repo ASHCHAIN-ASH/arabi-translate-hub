@@ -375,15 +375,15 @@ export default function ReferralsPage() {
         </motion.div>
 
         {/* === Tabs: How it works / Tiers / Referrals === */}
-        <Tabs defaultValue="referrals" className="space-y-4">
-          <TabsList className="grid w-full md:w-auto md:inline-grid grid-cols-3 h-12 p-1">
-            <TabsTrigger value="referrals" className="gap-1.5 text-sm">
+        <Tabs defaultValue="referrals" dir="rtl" className="space-y-4">
+          <TabsList dir="rtl" className="grid w-full md:w-auto md:inline-grid grid-cols-3 h-12 p-1">
+            <TabsTrigger value="referrals" className="gap-1.5 text-sm flex-row-reverse">
               <Award className="h-4 w-4" /> إحالاتي
             </TabsTrigger>
-            <TabsTrigger value="tiers" className="gap-1.5 text-sm">
+            <TabsTrigger value="tiers" className="gap-1.5 text-sm flex-row-reverse">
               <Trophy className="h-4 w-4" /> المستويات
             </TabsTrigger>
-            <TabsTrigger value="how" className="gap-1.5 text-sm">
+            <TabsTrigger value="how" className="gap-1.5 text-sm flex-row-reverse">
               <Target className="h-4 w-4" /> كيف يعمل
             </TabsTrigger>
           </TabsList>
