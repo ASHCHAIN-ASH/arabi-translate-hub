@@ -56,6 +56,50 @@ serve(async (req) => {
       .select("id")
       .single();
 
+    // أنشئ/حدّث محادثة الواتساب الموحّدة (whatsapp_conversations + whatsapp_messages)
+    let conversationId: string | null = null;
+    try {
+      const { data: existingConv } = await supabase
+        .from("whatsapp_conversations")
+        .select("id, unread_count")
+        .eq("phone", phone)
+        .maybeSingle();
+      if (existingConv) {
+        conversationId = existingConv.id;
+        await supabase.from("whatsapp_conversations").update({
+          last_message: messageBody.slice(0, 200) || `[${payload?.type || "ملف"}]`,
+          last_message_at: new Date().toISOString(),
+          last_inbound_at: new Date().toISOString(),
+          unread_count: (existingConv.unread_count || 0) + 1,
+          status: "open",
+        }).eq("id", existingConv.id);
+      } else {
+        const { data: created } = await supabase.from("whatsapp_conversations").insert({
+          phone,
+          last_message: messageBody.slice(0, 200) || `[${payload?.type || "ملف"}]`,
+          last_message_at: new Date().toISOString(),
+          last_inbound_at: new Date().toISOString(),
+          unread_count: 1,
+          status: "open",
+        }).select("id").single();
+        conversationId = created?.id || null;
+      }
+      if (conversationId && messageBody) {
+        await supabase.from("whatsapp_messages").insert({
+          conversation_id: conversationId,
+          phone,
+          direction: "inbound",
+          sender_type: "customer",
+          body: messageBody,
+          message_type: payload?.type || "text",
+          delivery_status: "delivered",
+          metadata: { raw: payload },
+        });
+      }
+    } catch (e) {
+      console.error("conversation upsert failed:", e);
+    }
+
     if (!messageBody) return jsonRes({ success: true, empty: true });
 
     // الجلسة
@@ -128,7 +172,7 @@ serve(async (req) => {
       await activateHumanTakeover(supabase, session, phone, messageBody, customerName, "user_request");
       const reply = `تم تحويل محادثتك إلى موظف بشري 👨‍💼\nسيتواصل معك أحد أعضاء فريق ماستر إيدو باث في أقرب وقت.\n\nشكراً لصبرك 🌹`;
       await sendWhatsAppMessage(phone, reply);
-      await logBotReply(supabase, inboundLog?.id, reply, true);
+      await logBotReply(supabase, inboundLog?.id, reply, true, phone);
       return jsonRes({ success: true, action: "human_handoff" });
     }
 
@@ -156,7 +200,7 @@ serve(async (req) => {
       await activateHumanTakeover(supabase, session, phone, messageBody, customerName, "ai_handoff");
       const reply = aiResult.reply || `سأقوم بتحويلك إلى موظف بشري للمساعدة الأفضل 👨‍💼\nسيتواصل معك الفريق قريباً 🌹`;
       await sendWhatsAppMessage(phone, reply);
-      await logBotReply(supabase, inboundLog?.id, reply, true);
+      await logBotReply(supabase, inboundLog?.id, reply, true, phone);
       return jsonRes({ success: true, action: "ai_handoff" });
     }
 
@@ -169,7 +213,7 @@ serve(async (req) => {
     }).eq("id", session!.id);
 
     await sendWhatsAppMessage(phone, reply);
-    await logBotReply(supabase, inboundLog?.id, reply, false);
+    await logBotReply(supabase, inboundLog?.id, reply, false, phone);
 
     return jsonRes({ success: true, action: "ai_reply" });
   } catch (e: any) {
@@ -464,11 +508,34 @@ async function appendToInbox(
 async function logBotReply(
   supabase: any, inboundLogId: string | undefined,
   reply: string, forwarded: boolean,
+  phone?: string,
 ) {
-  if (!inboundLogId) return;
-  await supabase.from("whatsapp_inbound_messages").update({
-    bot_handled: true,
-    bot_reply: reply,
-    forwarded_to_human: forwarded,
-  }).eq("id", inboundLogId);
+  if (inboundLogId) {
+    await supabase.from("whatsapp_inbound_messages").update({
+      bot_handled: true,
+      bot_reply: reply,
+      forwarded_to_human: forwarded,
+    }).eq("id", inboundLogId);
+  }
+  // سجّل رد البوت في whatsapp_messages للمحادثة الموحّدة
+  if (phone) {
+    const { data: conv } = await supabase
+      .from("whatsapp_conversations").select("id").eq("phone", phone).maybeSingle();
+    if (conv?.id) {
+      await supabase.from("whatsapp_messages").insert({
+        conversation_id: conv.id,
+        phone,
+        direction: "outbound",
+        sender_type: forwarded ? "system" : "bot",
+        sender_name: forwarded ? "تحويل لموظف" : "المساعد الذكي",
+        body: reply,
+        message_type: "text",
+        delivery_status: "sent",
+      });
+      await supabase.from("whatsapp_conversations").update({
+        last_message: reply.slice(0, 200),
+        last_message_at: new Date().toISOString(),
+      }).eq("id", conv.id);
+    }
+  }
 }
