@@ -4618,6 +4618,7 @@ export type Database = {
         Args: { _status: Database["public"]["Enums"]["order_lifecycle_status"] }
         Returns: number
       }
+      lifecycle_status_ar: { Args: { p_status: string }; Returns: string }
       log_smart_editor_usage: {
         Args: {
           _cost: number
