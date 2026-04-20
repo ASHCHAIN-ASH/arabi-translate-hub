@@ -83,7 +83,7 @@ const ChallengeAcademy: React.FC = () => {
 
         {/* Tabs */}
         <Tabs defaultValue="daily" dir="rtl" className="space-y-4">
-          <TabsList dir="rtl" className="grid grid-cols-3 w-full max-w-2xl mx-auto h-auto p-1">
+          <TabsList dir="rtl" className="grid grid-cols-4 w-full max-w-3xl mx-auto h-auto p-1">
             <TabsTrigger value="daily" className="gap-2 py-2.5">
               <Zap className="w-4 h-4" />
               <span className="hidden sm:inline">التحدي اليومي</span>
@@ -98,6 +98,11 @@ const ChallengeAcademy: React.FC = () => {
               <Award className="w-4 h-4" />
               <span className="hidden sm:inline">إنجازاتي</span>
               <span className="sm:hidden">الإنجازات</span>
+            </TabsTrigger>
+            <TabsTrigger value="referrals" className="gap-2 py-2.5">
+              <Gift className="w-4 h-4" />
+              <span className="hidden sm:inline">الإحالات</span>
+              <span className="sm:hidden">الدعوات</span>
             </TabsTrigger>
           </TabsList>
 
