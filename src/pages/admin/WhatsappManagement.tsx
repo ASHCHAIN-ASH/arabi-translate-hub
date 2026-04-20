@@ -135,8 +135,8 @@ export default function WhatsappManagement() {
         </div>
       </div>
 
-      <Tabs defaultValue="settings" className="space-y-4">
-        <TabsList className="grid grid-cols-4 w-full max-w-2xl">
+      <Tabs defaultValue="settings" dir="rtl" className="space-y-4">
+        <TabsList className="grid grid-cols-4 w-full max-w-2xl" dir="rtl">
           <TabsTrigger value="settings"><Settings className="w-4 h-4 ml-1" /> الإعدادات</TabsTrigger>
           <TabsTrigger value="templates"><FileText className="w-4 h-4 ml-1" /> القوالب</TabsTrigger>
           <TabsTrigger value="logs"><History className="w-4 h-4 ml-1" /> السجل</TabsTrigger>
