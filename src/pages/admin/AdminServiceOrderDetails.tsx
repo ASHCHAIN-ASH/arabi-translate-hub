@@ -285,7 +285,7 @@ const AdminServiceOrderDetails = () => {
         serviceName: order.service_name,
       });
 
-      const whatsappSent = await sendStatusWhatsappNotification(STATUS_CONFIG[newStatus]?.label || newStatus);
+      const whatsappSent = await sendStatusWhatsappNotification(newStatus, STATUS_CONFIG[newStatus]?.label || newStatus);
       toast({
         title: whatsappSent ? '✅ تم تحديث الحالة وإرسال إشعار واتساب للعميل' : '✅ تم تحديث الحالة',
         description: whatsappSent ? undefined : 'تم تحديث الطلب لكن لم يُرسل إشعار واتساب لهذه الحالة',
