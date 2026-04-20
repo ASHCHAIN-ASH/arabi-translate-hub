@@ -37,8 +37,8 @@ export function ConversationDetailsPanel({ conversationId, currentAssignee, onAs
     const ids = (roleRows || []).map((r: any) => r.user_id);
     if (!ids.length) return;
     const { data: profs } = await supabase
-      .from("profiles").select("user_id, full_name").in("user_id", ids);
-    setAdmins((profs as Admin[]) || []);
+      .from("profiles").select("id, full_name").in("id", ids);
+    setAdmins(((profs as any[]) || []).map((p) => ({ user_id: p.id, full_name: p.full_name })));
   };
 
   useEffect(() => { loadNotes(); }, [conversationId]);
@@ -49,7 +49,7 @@ export function ConversationDetailsPanel({ conversationId, currentAssignee, onAs
     setSaving(true);
     const { data: u } = await supabase.auth.getUser();
     const { data: prof } = u.user
-      ? await supabase.from("profiles").select("full_name").eq("user_id", u.user.id).maybeSingle()
+      ? await supabase.from("profiles").select("full_name").eq("id", u.user.id).maybeSingle()
       : { data: null };
     const { error } = await supabase.from("whatsapp_conversation_notes" as any).insert({
       conversation_id: conversationId,
@@ -108,7 +108,7 @@ export function ConversationDetailsPanel({ conversationId, currentAssignee, onAs
             <AnimatePresence>
               {notes.map((n) => (
                 <motion.div key={n.id} initial={{ opacity: 0, y: 5 }} animate={{ opacity: 1, y: 0 }}
-                  className="bg-yellow-500/10 border border-yellow-500/30 rounded p-2 text-xs">
+                  className="bg-accent/40 border border-accent rounded p-2 text-xs">
                   <div className="flex justify-between items-center mb-1">
                     <span className="font-semibold">{n.admin_name || "مشرف"}</span>
                     <span className="text-[10px] text-muted-foreground">
