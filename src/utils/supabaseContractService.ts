@@ -54,13 +54,28 @@ export interface ContractSignature {
   signed_at: string;
 }
 
+export function resolveContractDisplayContent(c: ContractRow) {
+  const rawContent = c.content?.trim();
+  if (rawContent && rawContent.length >= 120 && !/^عقد آلي للخدمة/.test(rawContent)) {
+    return rawContent;
+  }
+  return buildContractContentFromRow(c);
+}
+
 /**
  * يجلب HTML النهائي للعقد من نفس مسار التوليد المستخدم في التحميل/الطباعة
  * حتى تتطابق المعاينة مع ملف PDF الفعلي تماماً.
  */
 export async function getContractPdfHtml(contractId: string, options?: { fallbackOpen?: boolean }) {
+  const contract = await getContract(contractId);
   const { data, error } = await supabase.functions.invoke("generate-contract-pdf", {
-    body: { contract_id: contractId, format: "json" },
+    body: {
+      contract_id: contractId,
+      format: "json",
+      override_content: contract ? resolveContractDisplayContent(contract) : undefined,
+      override_client_full_name: contract?.client_full_name || undefined,
+      override_client_email: contract?.client_email || undefined,
+    },
   });
   if (error) throw error;
 

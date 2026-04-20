@@ -126,7 +126,7 @@ const ClientContractApproval = () => {
   const contractDisplayContent = useMemo(() => {
     if (!contract) return "";
     const rawContent = contract.content?.trim();
-    if (rawContent && rawContent.length >= 400 && /##|المادة|\|/.test(rawContent)) {
+    if (rawContent && rawContent.length >= 120 && !/^عقد آلي للخدمة/.test(rawContent)) {
       return rawContent;
     }
     return buildContractContentFromRow(contract);

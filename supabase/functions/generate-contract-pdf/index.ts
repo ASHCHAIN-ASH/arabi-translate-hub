@@ -2,6 +2,7 @@
 // Navy + Gold banking aesthetic. Renders standalone HTML for print/save-as-PDF.
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.57.4";
 
+
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
@@ -403,6 +404,11 @@ function buildHtml(contract: any, signature: any, verifyHash: string) {
 </html>`;
 }
 
+function isCompleteContractContent(content?: string | null) {
+  const value = String(content || "").trim();
+  return value.length >= 400 && /##|المادة|\|/.test(value);
+}
+
 Deno.serve(async (req: Request) => {
   if (req.method === "OPTIONS") return new Response(null, { headers: corsHeaders });
 
@@ -443,6 +449,32 @@ Deno.serve(async (req: Request) => {
       const src = `${contract.id}|${signature.signed_at}|${signature.ip_address || ""}|${signature.signature_text}`;
       const buf = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(src));
       hash = Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, "0")).join("");
+    }
+
+    const overrideContent = typeof body.override_content === "string" ? body.override_content.trim() : "";
+    const overrideClientName = typeof body.override_client_full_name === "string" ? body.override_client_full_name.trim() : "";
+    const overrideClientEmail = typeof body.override_client_email === "string" ? body.override_client_email.trim() : "";
+
+    if (overrideClientName) contract.client_full_name = overrideClientName;
+    if (overrideClientEmail) contract.client_email = overrideClientEmail;
+    if (isCompleteContractContent(overrideContent)) {
+      contract.content = overrideContent;
+    }
+
+    if (!isCompleteContractContent(contract.content) && signature?.signature_text) {
+      contract.content = `${contract.content || ""}
+
+---
+
+### إقرار الطرف الثاني
+أقرّ أنا/${signature.signer_name || contract.client_full_name || "العميل"} بأنني وافقت على هذا العقد إلكترونياً وتم توثيق توقيعي في النظام.`.trim();
+    }
+
+    if ((!contract.client_full_name || !String(contract.client_full_name).trim()) && signature?.signer_name) {
+      contract.client_full_name = signature.signer_name;
+    }
+    if ((!contract.client_email || !String(contract.client_email).trim()) && signature?.signer_email) {
+      contract.client_email = signature.signer_email;
     }
 
     const html = buildHtml(contract, signature, hash);
