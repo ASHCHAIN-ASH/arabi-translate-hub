@@ -1,9 +1,10 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { FileText, CreditCard, FileSignature, MessageCircle, Receipt, Users, Settings, BarChart3, TrendingUp } from 'lucide-react';
+import { FileText, CreditCard, FileSignature, MessageCircle, Receipt, Users, Settings, BarChart3, TrendingUp, Inbox } from 'lucide-react';
 import { Sidebar, SidebarContent, SidebarGroup, SidebarGroupContent, SidebarGroupLabel, SidebarMenu, SidebarMenuButton, SidebarMenuItem, SidebarTrigger } from '@/components/ui/sidebar';
 
 const items = [
+  { title: 'صندوق الوارد', url: '/adminmaster/inbox', icon: Inbox },
   { title: 'إدارة العملاء', url: '/adminmaster/customers', icon: Users },
   { title: 'إدارة المستخدمين', url: '/adminmaster/users', icon: Settings },
   { title: 'اللوحة المالية', url: '/adminmaster/financial', icon: BarChart3 },
