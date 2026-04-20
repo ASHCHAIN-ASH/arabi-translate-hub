@@ -524,7 +524,7 @@ Deno.serve(async (req: Request) => {
     if (mode === "signed_final") {
       if (!signature) throw new Error("Cannot generate signed_final: contract has no signature");
 
-      // Idempotency: return existing current signed_final unless force=true
+      // Idempotency: reuse only if current signed version is complete; otherwise auto-repair by regenerating a new immutable version
       if (!force) {
         const { data: existing } = await supabase
           .from("contract_versions")
@@ -533,7 +533,9 @@ Deno.serve(async (req: Request) => {
           .eq("output_type", "signed_final")
           .eq("is_current", true)
           .maybeSingle();
-        if (existing?.pdf_storage_path) {
+        const existingSnapshot = String(existing?.content_snapshot || "").trim();
+        const canReuseExisting = Boolean(existing?.pdf_storage_path) && isCompleteContractContent(existingSnapshot);
+        if (canReuseExisting) {
           const { data: signedUrlData } = await supabase.storage
             .from("contracts").createSignedUrl(existing.pdf_storage_path, 60 * 60 * 24 * 7);
           return new Response(JSON.stringify({
