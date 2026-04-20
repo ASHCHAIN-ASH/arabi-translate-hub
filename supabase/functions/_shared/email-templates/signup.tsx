@@ -1,70 +1,64 @@
 /// <reference types="npm:@types/react@18.3.1" />
-
 import * as React from 'npm:react@18.3.1'
+import { Body, Button, Container, Head, Heading, Html, Preview, Section, Text, Hr } from 'npm:@react-email/components@0.0.22'
+import { BRAND, PALETTES, renderHeadCss, styles } from './_styles.ts'
 
-import {
-  Body,
-  Button,
-  Container,
-  Head,
-  Heading,
-  Html,
-  Preview,
-  Text,
-} from 'npm:@react-email/components@0.0.22'
+interface Props { siteName: string; siteUrl: string; recipient: string; confirmationUrl: string }
 
-interface SignupEmailProps {
-  siteName: string
-  siteUrl: string
-  recipient: string
-  confirmationUrl: string
-}
+const P = PALETTES.signup
+const s = styles(P)
 
-export const SignupEmail = ({
-  recipient,
-  confirmationUrl,
-}: SignupEmailProps) => (
+export const SignupEmail = ({ recipient, confirmationUrl }: Props) => (
   <Html lang="ar" dir="rtl">
-    <Head />
-    <Preview>تأكيد بريدك الإلكتروني في Master Edu Path</Preview>
-    <Body style={main}>
-      <Container style={container}>
-        <Text style={logo}>Master Edu Path</Text>
-        <Heading style={h1}>تأكيد البريد الإلكتروني</Heading>
-        <Text style={text}>
-          شكراً لتسجيلك في <strong>Master Edu Path</strong>!
+    <Head>
+      <style>{renderHeadCss(P)}</style>
+    </Head>
+    <Preview>تأكيد تسجيلك في {BRAND.name} — خطوة واحدة تفصلك عن منصّتك الأكاديمية</Preview>
+    <Body style={s.main}>
+      <Container style={s.shell} className="container">
+        <Section style={s.hero}>
+          <div style={s.brandRow} className="anim-fade">
+            <span style={s.brandMark}>M</span>
+            <Text style={s.brandName}>{BRAND.name}</Text>
+          </div>
+          <span style={s.badge} className="anim-fade-1">✦ {P.label}</span>
+          <Heading className="h1 anim-fade-2" style={s.heroTitle}>أهلاً بك في رحلتك الأكاديمية</Heading>
+          <Text style={s.heroSub} className="anim-fade-3">يسعدنا انضمامك إلى نخبة من الباحثين والطلّاب المتميّزين</Text>
+        </Section>
+
+        <Section style={s.body}>
+          <Text style={s.greet}>السلام عليكم،</Text>
+          <Text style={s.paragraph}>
+            تم إنشاء حسابك بنجاح على منصّة <strong style={{ color: P.primary }}>{BRAND.name}</strong> بالبريد:{' '}
+            <strong style={{ color: '#0F172A' }}>{recipient}</strong>.
+          </Text>
+          <Text style={s.paragraph}>
+            لتفعيل حسابك والاستفادة من جميع الخدمات الأكاديمية، يُرجى تأكيد بريدك الإلكتروني خلال <strong>24 ساعة</strong> عبر الزر أدناه.
+          </Text>
+          <div style={s.highlightCard}>
+            ✓ مكتبة بحثية متخصصة &nbsp;•&nbsp; ✓ خدمات ترجمة وتدقيق &nbsp;•&nbsp; ✓ استشارات أكاديمية معتمدة
+          </div>
+        </Section>
+
+        <Section style={s.ctaWrap}>
+          <Button href={confirmationUrl} style={s.cta} className="cta anim-cta">
+            تأكيد البريد الإلكتروني ←
+          </Button>
+        </Section>
+
+        <Text style={s.altLink}>
+          لا يعمل الزر؟ انسخ الرابط التالي:<br />
+          <a href={confirmationUrl} style={s.altLinkUrl}>{confirmationUrl}</a>
         </Text>
-        <Text style={text}>
-          يرجى تأكيد بريدك الإلكتروني ({recipient}) بالضغط على الزر أدناه:
-        </Text>
-        <Button style={button} href={confirmationUrl}>
-          تأكيد البريد الإلكتروني
-        </Button>
-        <Text style={footer}>
-          إذا لم تقم بإنشاء حساب، يمكنك تجاهل هذا البريد بأمان.
-        </Text>
+
+        <Hr style={s.divider} />
+        <Section style={s.footer}>
+          <Text style={s.footerBrand}>{BRAND.name} — {BRAND.tagline}</Text>
+          <Text style={s.footerText}>إذا لم تُنشئ هذا الحساب، يمكنك تجاهل هذه الرسالة بأمان.</Text>
+          <Text style={s.footerText}>© {BRAND.year} {BRAND.name} — جميع الحقوق محفوظة</Text>
+        </Section>
       </Container>
     </Body>
   </Html>
 )
-
 export default SignupEmail
-
-const main = { backgroundColor: '#ffffff', fontFamily: "'IBM Plex Sans Arabic', 'IBM Plex Sans Arabic', Arial, sans-serif" }
-const container = { padding: '30px 25px', direction: 'rtl' as const, textAlign: 'right' as const }
-const logo = { fontSize: '20px', fontWeight: 'bold' as const, color: '#3644DB', margin: '0 0 24px', textAlign: 'center' as const }
-const h1 = { fontSize: '24px', fontWeight: 'bold' as const, color: '#0a0f1e', margin: '0 0 20px', textAlign: 'center' as const }
-const text = { fontSize: '15px', color: '#555555', lineHeight: '1.8', margin: '0 0 20px' }
-const button = {
-  backgroundColor: '#3644DB',
-  color: '#ffffff',
-  fontSize: '16px',
-  fontWeight: 'bold' as const,
-  borderRadius: '8px',
-  padding: '14px 28px',
-  textDecoration: 'none',
-  display: 'block' as const,
-  textAlign: 'center' as const,
-  margin: '0 auto 20px',
-}
-const footer = { fontSize: '12px', color: '#999999', margin: '30px 0 0', textAlign: 'center' as const }
