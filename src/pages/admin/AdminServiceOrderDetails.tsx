@@ -197,21 +197,45 @@ const AdminServiceOrderDetails = () => {
       hour12: false,
     });
 
-  const sendStatusWhatsappNotification = async (statusLabel: string) => {
+  // قوالب واتساب مخصّصة لكل حالة، مع الرجوع إلى القالب العام عند عدم التطابق
+  const STATUS_EVENT_MAP: Record<string, string> = {
+    pending: 'order_status_pending',
+    confirmed: 'order_status_confirmed',
+    review: 'order_status_review',
+    in_progress: 'order_status_in_progress',
+    completed: 'order_status_completed',
+    cancelled: 'order_status_cancelled',
+    refunded: 'order_status_refunded',
+    payment_pending: 'order_status_payment_pending',
+    contract_pending: 'order_status_contract_pending',
+  };
+
+  const sendStatusWhatsappNotification = async (newStatus: string, statusLabel: string) => {
     if (!order || !clientPhone) return false;
+
+    const eventKey = STATUS_EVENT_MAP[newStatus] || 'order_status_changed';
+    const amount = order.total_amount
+      ? Number(order.total_amount).toLocaleString('ar-SA', { minimumFractionDigits: 2 })
+      : '0.00';
 
     try {
       const { data, error } = await supabase.functions.invoke('whatsapp-send', {
         body: {
           to: clientPhone,
-          event_key: 'order_status_changed',
+          event_key: eventKey,
           variables: {
+            client_name: clientName,
             name: clientName,
+            service_name: order.service_name || 'خدمة أكاديمية',
             service: order.service_name || 'خدمة أكاديمية',
             order_no: order.tracking_id,
             order_number: order.tracking_id,
             status: statusLabel,
+            date: formatRiyadhDateTime(),
             updated_at: formatRiyadhDateTime(),
+            deadline: order.deadline ? new Date(order.deadline).toLocaleDateString('ar-SA') : 'يُحدَّد لاحقاً',
+            amount,
+            reason: order.cancellation_reason || 'لم يُذكر سبب',
             link: orderDetailsLink,
           },
           related_entity_type: 'service_order',
