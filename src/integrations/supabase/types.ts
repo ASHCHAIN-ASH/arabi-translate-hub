@@ -4548,6 +4548,17 @@ export type Database = {
         }
         Returns: number
       }
+      notify_whatsapp_event: {
+        Args: {
+          _event_key: string
+          _related_entity_id?: string
+          _related_entity_type?: string
+          _to: string
+          _user_id?: string
+          _variables?: Json
+        }
+        Returns: undefined
+      }
       pay_group_seat_with_wallet: {
         Args: { _group_order_id: string }
         Returns: Json
