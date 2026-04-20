@@ -1343,10 +1343,14 @@ export type Database = {
           created_at: string
           form_type: string
           id: string
+          is_archived: boolean
+          is_pinned: boolean
+          is_starred: boolean
           last_activity_at: string
           message: string
           metadata: Json
           priority: string
+          read_at: string | null
           reply_count: number
           sender_email: string
           sender_name: string
@@ -1355,6 +1359,7 @@ export type Database = {
           source_page: string | null
           status: string
           subject: string | null
+          tags: string[]
           updated_at: string
         }
         Insert: {
@@ -1362,10 +1367,14 @@ export type Database = {
           created_at?: string
           form_type?: string
           id?: string
+          is_archived?: boolean
+          is_pinned?: boolean
+          is_starred?: boolean
           last_activity_at?: string
           message: string
           metadata?: Json
           priority?: string
+          read_at?: string | null
           reply_count?: number
           sender_email: string
           sender_name: string
@@ -1374,6 +1383,7 @@ export type Database = {
           source_page?: string | null
           status?: string
           subject?: string | null
+          tags?: string[]
           updated_at?: string
         }
         Update: {
@@ -1381,10 +1391,14 @@ export type Database = {
           created_at?: string
           form_type?: string
           id?: string
+          is_archived?: boolean
+          is_pinned?: boolean
+          is_starred?: boolean
           last_activity_at?: string
           message?: string
           metadata?: Json
           priority?: string
+          read_at?: string | null
           reply_count?: number
           sender_email?: string
           sender_name?: string
@@ -1393,9 +1407,45 @@ export type Database = {
           source_page?: string | null
           status?: string
           subject?: string | null
+          tags?: string[]
           updated_at?: string
         }
         Relationships: []
+      }
+      inbox_notes: {
+        Row: {
+          admin_id: string | null
+          admin_name: string | null
+          body: string
+          created_at: string
+          id: string
+          message_id: string
+        }
+        Insert: {
+          admin_id?: string | null
+          admin_name?: string | null
+          body: string
+          created_at?: string
+          id?: string
+          message_id: string
+        }
+        Update: {
+          admin_id?: string | null
+          admin_name?: string | null
+          body?: string
+          created_at?: string
+          id?: string
+          message_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "inbox_notes_message_id_fkey"
+            columns: ["message_id"]
+            isOneToOne: false
+            referencedRelation: "inbox_messages"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       inbox_replies: {
         Row: {
@@ -1443,6 +1493,45 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      inbox_reply_templates: {
+        Row: {
+          body: string
+          category: string | null
+          created_at: string
+          created_by: string | null
+          id: string
+          is_active: boolean
+          shortcut: string | null
+          title: string
+          updated_at: string
+          use_count: number
+        }
+        Insert: {
+          body: string
+          category?: string | null
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          is_active?: boolean
+          shortcut?: string | null
+          title: string
+          updated_at?: string
+          use_count?: number
+        }
+        Update: {
+          body?: string
+          category?: string | null
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          is_active?: boolean
+          shortcut?: string | null
+          title?: string
+          updated_at?: string
+          use_count?: number
+        }
+        Relationships: []
       }
       invoice_items: {
         Row: {
