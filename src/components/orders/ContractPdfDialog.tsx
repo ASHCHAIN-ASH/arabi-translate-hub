@@ -95,13 +95,11 @@ export const ContractPdfDialog: React.FC<Props> = ({ contractId, contractNumber,
     }
   }
 
-  function downloadPdf() {
-    const finalUrl = pdfUrl || rawPdfUrl;
-    if (!finalUrl) return;
-
-    if (finalUrl.startsWith('blob:')) {
+  async function downloadPdf() {
+    // If we already have a blob URL ready, download instantly
+    if (pdfUrl && pdfUrl.startsWith('blob:')) {
       const link = document.createElement('a');
-      link.href = finalUrl;
+      link.href = pdfUrl;
       link.download = `${contractNumber || contractId}.pdf`;
       document.body.appendChild(link);
       link.click();
@@ -109,7 +107,48 @@ export const ContractPdfDialog: React.FC<Props> = ({ contractId, contractNumber,
       return;
     }
 
-    window.open(finalUrl, '_blank', 'noopener');
+    // Otherwise fetch the PDF directly without waiting for preview render
+    try {
+      setLoading(true);
+      let url = rawPdfUrl;
+
+      if (!url) {
+        const contract = await getContract(contractId);
+        const isSigned = contract?.status === 'signed' || contract?.status === 'active' || contract?.status === 'completed';
+        const resolvedContent = contract ? resolveContractDisplayContent(contract as any) : '';
+
+        const { data, error } = await supabase.functions.invoke('generate-contract-pdf', {
+          body: {
+            contract_id: contractId,
+            mode: isSigned ? 'signed_final' : 'preview',
+            override_content: isSigned ? resolvedContent : undefined,
+            public_origin: window.location.origin,
+          },
+        });
+        if (error) throw error;
+        url = (data as any)?.signed_url;
+        if (!url) throw new Error('تعذر تجهيز ملف PDF');
+        setRawPdfUrl(url);
+      }
+
+      // Fetch as blob to force download
+      const res = await fetch(url);
+      if (!res.ok) throw new Error('فشل تحميل الملف');
+      const blob = new Blob([await res.arrayBuffer()], { type: 'application/pdf' });
+      const blobUrl = URL.createObjectURL(blob);
+
+      const link = document.createElement('a');
+      link.href = blobUrl;
+      link.download = `${contractNumber || contractId}.pdf`;
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      setTimeout(() => URL.revokeObjectURL(blobUrl), 1000);
+    } catch (e: any) {
+      toast({ title: 'تعذر التحميل', description: e.message, variant: 'destructive' });
+    } finally {
+      setLoading(false);
+    }
   }
 
   function openOriginalPdf() {
