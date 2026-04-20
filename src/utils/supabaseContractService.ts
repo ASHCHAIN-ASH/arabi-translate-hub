@@ -54,22 +54,71 @@ export interface ContractSignature {
   signed_at: string;
 }
 
-/** تنزيل/توليد PDF (HTML) للعقد - متاح في أي وقت قبل أو بعد التوقيع */
+/**
+ * تحميل العقد كـ PDF بسلاسة عبر iframe مخفي → نافذة الطباعة → "حفظ كـ PDF".
+ * لا يفتح أي تبويب جديد ولا ملف HTML خام.
+ */
 export async function downloadContractPdf(contractId: string) {
+  // نطلب الـ HTML مباشرة (format=json) لتفادي فتح الـ signed URL
   const { data, error } = await supabase.functions.invoke("generate-contract-pdf", {
-    body: { contract_id: contractId },
+    body: { contract_id: contractId, format: "json" },
   });
   if (error) throw error;
-  const url = (data as any)?.signed_url;
-  if (url) {
-    window.open(url, "_blank", "noopener");
-    return url;
+
+  let html: string = (data as any)?.html || "";
+
+  // إن لم يُرجِع HTML، نحاول جلبه من signed_url كملف نصي ثم نطبعه محلياً
+  if (!html) {
+    const url = (data as any)?.signed_url;
+    if (url) {
+      try {
+        const res = await fetch(url);
+        html = await res.text();
+      } catch {
+        // كحل أخير: افتح الرابط في تبويب
+        window.open(url, "_blank", "noopener");
+        return url;
+      }
+    }
   }
-  // احتياطي: افتح HTML مباشرة في نافذة جديدة
-  const html = (data as any)?.html;
-  if (html) {
-    const w = window.open("", "_blank");
-    if (w) { w.document.write(html); w.document.close(); }
+  if (!html) throw new Error("تعذر تجهيز محتوى العقد");
+
+  // إخفاء أي toolbar داخلي
+  const cleaned = html.replace(
+    /<div class="toolbar">[\s\S]*?<\/div>/,
+    '<style>.toolbar{display:none!important}</style>',
+  );
+
+  // iframe مخفي → طباعة → المتصفح يعرض "حفظ كـ PDF"
+  const frame = document.createElement("iframe");
+  Object.assign(frame.style, {
+    position: "fixed",
+    right: "-10000px",
+    bottom: "0",
+    width: "0",
+    height: "0",
+    border: "0",
+  } as CSSStyleDeclaration);
+  document.body.appendChild(frame);
+
+  const doc = frame.contentDocument || frame.contentWindow?.document;
+  if (!doc) {
+    document.body.removeChild(frame);
+    throw new Error("تعذر إنشاء إطار الطباعة");
+  }
+  doc.open();
+  doc.write(cleaned);
+  doc.close();
+
+  // ننتظر تحميل الخطوط ثم نطبع
+  await new Promise((r) => setTimeout(r, 700));
+  try {
+    frame.contentWindow?.focus();
+    frame.contentWindow?.print();
+  } finally {
+    setTimeout(() => {
+      try { document.body.removeChild(frame); } catch { /* noop */ }
+    }, 1500);
   }
   return null;
 }
