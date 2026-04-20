@@ -235,7 +235,7 @@ const AdminServiceOrderDetails = () => {
             updated_at: formatRiyadhDateTime(),
             deadline: order.deadline ? new Date(order.deadline).toLocaleDateString('ar-SA') : 'يُحدَّد لاحقاً',
             amount,
-            reason: order.cancellation_reason || 'لم يُذكر سبب',
+            reason: (order as any).cancellation_reason || 'لم يُذكر سبب',
             link: orderDetailsLink,
           },
           related_entity_type: 'service_order',
