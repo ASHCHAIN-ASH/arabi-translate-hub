@@ -98,6 +98,7 @@ import AdminTicketDetails from "./pages/admin/AdminTicketDetails";
 import AdminServiceOrders from "./pages/admin/AdminServiceOrders";
 import AdminServiceOrderDetails from "./pages/admin/AdminServiceOrderDetails";
 import EmailNotifications from "./pages/admin/EmailNotifications";
+import AdminInbox from "./pages/admin/AdminInbox";
 import AdminChat from "./pages/admin/AdminChat";
 import AddUser from "./pages/admin/AddUser";
 import AdminWorkingHours from "./pages/admin/AdminWorkingHours";
@@ -485,6 +486,11 @@ const App = () => (
             <Route path="/adminmaster/tickets/:id" element={
               <SimpleProtectedRoute adminOnly>
                 <AdminTicketDetails />
+              </SimpleProtectedRoute>
+            } />
+            <Route path="/adminmaster/inbox" element={
+              <SimpleProtectedRoute adminOnly>
+                <AdminInbox />
               </SimpleProtectedRoute>
             } />
             <Route path="/adminmaster/email-notifications" element={

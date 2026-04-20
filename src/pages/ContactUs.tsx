@@ -13,6 +13,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Badge } from '@/components/ui/badge';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
+import { sendToInbox } from '@/utils/inboxService';
 import Header from '@/components/Header';
 import SEO from '@/components/SEO';
 import contactHeroBackground from '@/assets/contact-hero-background.jpg';
@@ -48,7 +49,20 @@ const ContactUs = () => {
     setLoading(true);
     
     try {
-      const { data, error } = await supabase.functions.invoke('send-contact-message', {
+      // 1) Persist into unified admin inbox (also notifies info@masteredupath.com)
+      await sendToInbox({
+        name: formData.name,
+        email: formData.email,
+        phone: formData.phone,
+        subject: formData.subject,
+        message: formData.message,
+        formType: 'contact',
+        serviceType: formData.serviceType,
+        sourcePage: '/contact-us',
+      });
+
+      // 2) Keep the legacy notification path for backward compatibility
+      const { error } = await supabase.functions.invoke('send-contact-message', {
         body: {
           name: formData.name,
           email: formData.email,
@@ -59,7 +73,7 @@ const ContactUs = () => {
         }
       });
 
-      if (error) throw error;
+      if (error) console.warn('legacy contact notify failed', error);
 
       toast({
         title: "تم الإرسال بنجاح! ✅",

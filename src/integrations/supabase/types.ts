@@ -1094,6 +1094,113 @@ export type Database = {
           },
         ]
       }
+      inbox_messages: {
+        Row: {
+          assigned_to: string | null
+          created_at: string
+          form_type: string
+          id: string
+          last_activity_at: string
+          message: string
+          metadata: Json
+          priority: string
+          reply_count: number
+          sender_email: string
+          sender_name: string
+          sender_phone: string | null
+          service_type: string | null
+          source_page: string | null
+          status: string
+          subject: string | null
+          updated_at: string
+        }
+        Insert: {
+          assigned_to?: string | null
+          created_at?: string
+          form_type?: string
+          id?: string
+          last_activity_at?: string
+          message: string
+          metadata?: Json
+          priority?: string
+          reply_count?: number
+          sender_email: string
+          sender_name: string
+          sender_phone?: string | null
+          service_type?: string | null
+          source_page?: string | null
+          status?: string
+          subject?: string | null
+          updated_at?: string
+        }
+        Update: {
+          assigned_to?: string | null
+          created_at?: string
+          form_type?: string
+          id?: string
+          last_activity_at?: string
+          message?: string
+          metadata?: Json
+          priority?: string
+          reply_count?: number
+          sender_email?: string
+          sender_name?: string
+          sender_phone?: string | null
+          service_type?: string | null
+          source_page?: string | null
+          status?: string
+          subject?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      inbox_replies: {
+        Row: {
+          admin_email: string | null
+          admin_id: string | null
+          admin_name: string | null
+          body: string
+          created_at: string
+          delivery_error: string | null
+          delivery_status: string
+          external_message_id: string | null
+          id: string
+          message_id: string
+        }
+        Insert: {
+          admin_email?: string | null
+          admin_id?: string | null
+          admin_name?: string | null
+          body: string
+          created_at?: string
+          delivery_error?: string | null
+          delivery_status?: string
+          external_message_id?: string | null
+          id?: string
+          message_id: string
+        }
+        Update: {
+          admin_email?: string | null
+          admin_id?: string | null
+          admin_name?: string | null
+          body?: string
+          created_at?: string
+          delivery_error?: string | null
+          delivery_status?: string
+          external_message_id?: string | null
+          id?: string
+          message_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "inbox_replies_message_id_fkey"
+            columns: ["message_id"]
+            isOneToOne: false
+            referencedRelation: "inbox_messages"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       invoice_items: {
         Row: {
           created_at: string
