@@ -154,9 +154,9 @@ export const cancelDocument = async (documentId: string): Promise<void> => {
 
 export const exportCompletedDocument = async (documentId: string): Promise<string> => {
   const { data } = await supabase.functions.invoke('generate-contract-pdf', {
-    body: { contractId: documentId },
+    body: { contract_id: documentId, format: 'json' },
   });
-  return data?.url || '';
+  return data?.signed_url || data?.url || '';
 };
 
 export const sendDocumentForSigning = async (documentId: string, signers: any[]): Promise<void> => {
