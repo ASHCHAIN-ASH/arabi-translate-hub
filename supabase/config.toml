@@ -39,5 +39,6 @@ project_id = "kziujhdqogqeehtxgpax"
     verify_jwt = false
   [functions.whatsapp-inbound]
     verify_jwt = false
+
   [functions.generate-receipt-pdf]
     verify_jwt = true
