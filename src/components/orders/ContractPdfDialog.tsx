@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Loader2, Download, Eye, X, ExternalLink } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
-import { getContract } from '@/utils/supabaseContractService';
+import { getContract, resolveContractDisplayContent } from '@/utils/supabaseContractService';
 
 interface Props {
   contractId: string;
