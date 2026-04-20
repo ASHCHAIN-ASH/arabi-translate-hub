@@ -1,15 +1,20 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import ClientLayout from '@/components/client/ClientLayout';
 import { useAuth } from '@/components/SimpleAuthProvider';
 import { useChallengeAcademy } from '@/hooks/useChallengeAcademy';
+import { useDailyChallenge } from '@/hooks/useDailyChallenge';
 import { StatsHeader } from '@/components/challenge-academy/StatsHeader';
 import { ChallengeCard } from '@/components/challenge-academy/ChallengeCard';
 import { Leaderboard } from '@/components/challenge-academy/Leaderboard';
 import { AchievementsGrid } from '@/components/challenge-academy/AchievementsGrid';
+import { DailyChallengeCard } from '@/components/challenge-academy/DailyChallengeCard';
+import { ChallengeRunner } from '@/components/challenge-academy/ChallengeRunner';
+import { ChallengeResult } from '@/components/challenge-academy/ChallengeResult';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { Card } from '@/components/ui/card';
 import { Zap, Trophy, Award, Loader2, Calendar } from 'lucide-react';
+import { AttemptSubmitResult } from '@/utils/dailyChallengeService';
 
 const ChallengeAcademy: React.FC = () => {
   const { user } = useAuth();
@@ -18,6 +23,11 @@ const ChallengeAcademy: React.FC = () => {
     summary, streak, challenges, submissions,
     achievements, userAchievements, loading, refresh,
   } = useChallengeAcademy(userId);
+  const daily = useDailyChallenge(userId);
+
+  const [runnerOpen, setRunnerOpen] = useState(false);
+  const [resultOpen, setResultOpen] = useState(false);
+  const [lastResult, setLastResult] = useState<AttemptSubmitResult | null>(null);
 
   if (!userId) {
     return (
