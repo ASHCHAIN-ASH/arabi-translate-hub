@@ -171,10 +171,7 @@ export async function getContractSignatures(contractId: string) {
 }
 
 // ----------- Mutations -----------
-export async function generateContractContent(contractId: string) {
-  const c = await getContract(contractId);
-  if (!c) throw new Error("Contract not found");
-
+export function buildContractContentFromRow(c: ContractRow) {
   const meta = (c.metadata as any) || {};
   const ctx: LegalTemplateContext = {
     contractNumber: c.contract_number,
@@ -197,7 +194,14 @@ export async function generateContractContent(contractId: string) {
     scopeItems: meta.scopeItems,
   };
 
-  const content = buildLegalAcademicContract(ctx);
+  return buildLegalAcademicContract(ctx);
+}
+
+export async function generateContractContent(contractId: string) {
+  const c = await getContract(contractId);
+  if (!c) throw new Error("Contract not found");
+
+  const content = buildContractContentFromRow(c);
   const { error } = await (supabase.from(TBL) as any)
     .update({ content, updated_at: new Date().toISOString() })
     .eq("id", contractId);
