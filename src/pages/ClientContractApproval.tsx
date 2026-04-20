@@ -19,11 +19,10 @@ import {
 import { InputOTP, InputOTPGroup, InputOTPSlot } from "@/components/ui/input-otp";
 import {
   getContract, getContractTimeline, getContractSignatures,
-  signContract, getClientIP, generateContractContent, downloadContractPdf, buildContractContentFromRow,
+  signContract, getClientIP, generateContractContent, downloadContractPdf, buildContractContentFromRow, getContractPdfHtml,
   STATUS_LABELS, STATUS_COLORS, ContractRow, ContractSignature, ContractTimelineEvent,
 } from "@/utils/supabaseContractService";
 import { REQUIRED_TERMS, PARENT_COMPANY } from "@/utils/contractTemplates";
-import { ContractDocumentView } from "@/components/orders/ContractDocumentView";
 import ClientLayout from "@/components/client/ClientLayout";
 import SignaturePad from "@/components/contracts/SignaturePad";
 
@@ -34,6 +33,7 @@ const ClientContractApproval = () => {
   const contractId = params.id || sp.get("id") || "";
 
   const [contract, setContract] = useState<ContractRow | null>(null);
+  const [contractPreviewHtml, setContractPreviewHtml] = useState("");
   const [signatures, setSignatures] = useState<ContractSignature[]>([]);
   const [timeline, setTimeline] = useState<ContractTimelineEvent[]>([]);
   const [loading, setLoading] = useState(true);
@@ -108,13 +108,21 @@ const ClientContractApproval = () => {
 
       setContract(c);
       if (c) {
+        const previewPromise = getContractPdfHtml(contractId).catch((err) => {
+          console.error("Failed to load rendered contract preview", err);
+          return "";
+        });
         setSignerName(c.client_full_name || "");
-        const [sigs, tl] = await Promise.all([
+        const [sigs, tl, previewHtml] = await Promise.all([
           getContractSignatures(contractId),
           getContractTimeline(contractId),
+          previewPromise,
         ]);
         setSignatures(sigs);
         setTimeline(tl);
+        setContractPreviewHtml(previewHtml);
+      } else {
+        setContractPreviewHtml("");
       }
     } catch (e: any) {
       toast.error(e.message || "خطأ في تحميل العقد");
@@ -394,7 +402,7 @@ const ClientContractApproval = () => {
                 />
               </div>
 
-              {/* Document viewer — نفس قالب المراجعة قبل التوقيع */}
+              {/* Document viewer — نفس HTML الفعلي المستخدم في PDF */}
               <Card className="overflow-hidden border-2 border-primary/10 shadow-xl">
                 <div className="px-5 py-3 bg-gradient-to-l from-primary/10 via-primary/5 to-transparent border-b flex items-center justify-between gap-3">
                   <div className="flex items-center gap-2">
@@ -407,16 +415,20 @@ const ClientContractApproval = () => {
                   </div>
                 </div>
                 <div className="p-3 sm:p-5 bg-gradient-to-b from-muted/40 to-muted/10 overflow-x-auto">
-                  <ContractDocumentView
-                    contractNumber={contract.contract_number}
-                    title={contract.title}
-                    content={contract.content || buildContractContentFromRow(contract)}
-                    totalAmount={contract.total_amount}
-                    currency={contract.currency}
-                    clientName={contract.client_full_name}
-                    clientEmail={contract.client_email}
-                    issueDateHijri={getIssueDateHijri(contract.created_at)}
-                  />
+                  {contractPreviewHtml ? (
+                    <div className="rounded-2xl overflow-hidden border border-border/70 bg-white shadow-2xl">
+                      <iframe
+                        title="contract-original-preview"
+                        srcDoc={contractPreviewHtml}
+                        className="w-full min-h-[1200px] border-0 bg-white"
+                        sandbox="allow-same-origin"
+                      />
+                    </div>
+                  ) : (
+                    <div className="rounded-2xl border border-dashed border-border bg-card p-8 text-center text-sm text-muted-foreground">
+                      تعذر تحميل النسخة الأصلية للعقد حالياً، لكن ملف التحميل سيعرض النسخة الفعلية.
+                    </div>
+                  )}
                 </div>
               </Card>
 

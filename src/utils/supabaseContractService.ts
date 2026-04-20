@@ -58,7 +58,7 @@ export interface ContractSignature {
  * يجلب HTML النهائي للعقد من نفس مسار التوليد المستخدم في التحميل/الطباعة
  * حتى تتطابق المعاينة مع ملف PDF الفعلي تماماً.
  */
-export async function getContractPdfHtml(contractId: string) {
+export async function getContractPdfHtml(contractId: string, options?: { fallbackOpen?: boolean }) {
   const { data, error } = await supabase.functions.invoke("generate-contract-pdf", {
     body: { contract_id: contractId, format: "json" },
   });
@@ -73,7 +73,9 @@ export async function getContractPdfHtml(contractId: string) {
         const res = await fetch(url);
         html = await res.text();
       } catch {
-        window.open(url, "_blank", "noopener");
+        if (options?.fallbackOpen) {
+          window.open(url, "_blank", "noopener");
+        }
         return "";
       }
     }
@@ -93,7 +95,7 @@ export async function getContractPdfHtml(contractId: string) {
  * هذا يضمن ظهور العقد الفعلي بكامل تنسيقه (وليس صفحة فارغة).
  */
 export async function downloadContractPdf(contractId: string) {
-  const html = await getContractPdfHtml(contractId);
+  const html = await getContractPdfHtml(contractId, { fallbackOpen: true });
 
   // إخفاء شريط الأدوات الداخلي + حقن سكربت auto-print بعد جاهزية الخطوط
   const autoPrintScript = `
