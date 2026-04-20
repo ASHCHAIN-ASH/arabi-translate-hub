@@ -52,8 +52,8 @@ const ChallengeAcademy: React.FC = () => {
         <StatsHeader summary={summary} streak={streak} />
 
         {/* Tabs */}
-        <Tabs defaultValue="daily" className="space-y-4">
-          <TabsList className="grid grid-cols-3 w-full max-w-2xl mx-auto h-auto p-1">
+        <Tabs defaultValue="daily" dir="rtl" className="space-y-4">
+          <TabsList dir="rtl" className="grid grid-cols-3 w-full max-w-2xl mx-auto h-auto p-1">
             <TabsTrigger value="daily" className="gap-2 py-2.5">
               <Zap className="w-4 h-4" />
               <span className="hidden sm:inline">التحدي اليومي</span>
