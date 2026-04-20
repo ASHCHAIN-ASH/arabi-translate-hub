@@ -114,6 +114,7 @@ export default function MembershipPage() {
   const { user } = useAuth();
   const { plans, loading } = useMembershipPlans();
   const { membership, reload } = useUserMembership();
+  const { stats, loading: statsLoading } = useMembershipStats();
   const [selectedPlan, setSelectedPlan] = useState<MembershipPlan | null>(null);
   const [paymentMethod, setPaymentMethod] = useState<'wallet' | 'invoice'>('wallet');
   const [submitting, setSubmitting] = useState(false);
