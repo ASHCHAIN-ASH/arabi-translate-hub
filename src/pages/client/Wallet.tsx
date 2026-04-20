@@ -21,6 +21,7 @@ import {
   WalletService, type Wallet as WalletT, type WalletTransaction, type TopupRequest,
   TX_TYPE_LABELS, TX_TYPE_COLORS, TOPUP_STATUS_LABELS, TOPUP_STATUS_COLORS,
 } from '@/utils/walletService';
+import { TransactionItem } from '@/components/wallet/TransactionItem';
 
 const QUICK_AMOUNTS = [100, 250, 500, 1000, 2500, 5000];
 
@@ -348,35 +349,13 @@ const ClientWallet: React.FC = () => {
                     <p className="text-sm">لا توجد حركات بعد</p>
                   </div>
                 ) : (
-                  <div className="divide-y divide-border">
-                    {txs.map((t, i) => {
-                      const isIn = t.type === 'deposit' || t.type === 'refund';
-                      const TxIcon = isIn ? TrendingUp : TrendingDown;
-                      return (
-                        <motion.div key={t.id} initial={{ opacity: 0, x: 8 }} animate={{ opacity: 1, x: 0 }}
-                          transition={{ delay: Math.min(i * 0.025, 0.3) }}
-                          className="flex items-center gap-2.5 p-3 hover:bg-muted/30 transition-colors">
-                          <div className={`w-9 h-9 rounded-lg flex items-center justify-center shrink-0 ${isIn ? 'bg-emerald-100 text-emerald-600' : 'bg-rose-100 text-rose-600'}`}>
-                            <TxIcon className="w-4 h-4" />
-                          </div>
-                          <div className="flex-1 min-w-0">
-                            <div className="flex items-center gap-1.5 flex-wrap">
-                              <span className="text-xs sm:text-sm font-bold truncate">{t.description || TX_TYPE_LABELS[t.type]}</span>
-                              <Badge variant="outline" className={`text-[9px] py-0 px-1.5 ${TX_TYPE_COLORS[t.type]}`}>
-                                {TX_TYPE_LABELS[t.type]}
-                              </Badge>
-                            </div>
-                            <p className="text-[10px] text-muted-foreground mt-0.5">{new Date(t.created_at).toLocaleString('ar-SA')}</p>
-                          </div>
-                          <div className="text-end shrink-0">
-                            <div className={`text-sm font-black ${isIn ? 'text-emerald-600' : 'text-rose-600'}`}>
-                              {isIn ? '+' : '−'} {WalletService.formatCurrency(t.amount)}
-                            </div>
-                            <p className="text-[10px] text-muted-foreground">رصيد: {WalletService.formatCurrency(t.balance_after)}</p>
-                          </div>
-                        </motion.div>
-                      );
-                    })}
+                  <div className="divide-y divide-border p-2 space-y-2">
+                    {txs.map((t, i) => (
+                      <motion.div key={t.id} initial={{ opacity: 0, x: 8 }} animate={{ opacity: 1, x: 0 }}
+                        transition={{ delay: Math.min(i * 0.025, 0.3) }}>
+                        <TransactionItem tx={t} />
+                      </motion.div>
+                    ))}
                   </div>
                 )}
               </CardContent>

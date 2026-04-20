@@ -19,6 +19,7 @@ import {
   WalletService, type Wallet, type TopupRequest, type WalletTransaction,
   TX_TYPE_LABELS, TX_TYPE_COLORS, TOPUP_STATUS_LABELS, TOPUP_STATUS_COLORS,
 } from '@/utils/walletService';
+import { TransactionItem } from '@/components/wallet/TransactionItem';
 
 const AdminWallets: React.FC = () => {
   const { user } = useAuth();
@@ -367,35 +368,16 @@ const AdminWallets: React.FC = () => {
                 {txs.length === 0 ? (
                   <div className="text-center py-16 text-muted-foreground">لا توجد حركات</div>
                 ) : (
-                  <div className="divide-y divide-border">
-                    {txs.map((t, i) => {
-                      const w = wallets.find((wa) => wa.user_id === t.user_id);
-                      const isIn = t.type === 'deposit' || t.type === 'refund';
-                      return (
-                        <motion.div
-                          key={t.id}
-                          initial={{ opacity: 0 }} animate={{ opacity: 1 }}
-                          transition={{ delay: Math.min(i * 0.02, 0.3) }}
-                          className="flex items-center gap-3 p-3.5 hover:bg-muted/30 flex-wrap"
-                        >
-                          <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${isIn ? 'bg-emerald-100 text-emerald-600' : 'bg-rose-100 text-rose-600'}`}>
-                            {isIn ? <TrendingUp className="w-4 h-4" /> : <TrendingDown className="w-4 h-4" />}
-                          </div>
-                          <div className="flex-1 min-w-0">
-                            <div className="flex items-center gap-2 flex-wrap">
-                              <span className="text-sm font-bold">{w?.customer_name || 'عميل'}</span>
-                              <Badge variant="outline" className={`text-[10px] ${TX_TYPE_COLORS[t.type]}`}>
-                                {TX_TYPE_LABELS[t.type]}
-                              </Badge>
-                            </div>
-                            <p className="text-xs text-muted-foreground">{t.description} • {new Date(t.created_at).toLocaleString('ar-SA')}</p>
-                          </div>
-                          <div className={`font-black ${isIn ? 'text-emerald-600' : 'text-rose-600'}`}>
-                            {isIn ? '+' : '−'} {WalletService.formatCurrency(t.amount)}
-                          </div>
-                        </motion.div>
-                      );
-                    })}
+                  <div className="p-3 space-y-2">
+                    {txs.map((t, i) => (
+                      <motion.div
+                        key={t.id}
+                        initial={{ opacity: 0 }} animate={{ opacity: 1 }}
+                        transition={{ delay: Math.min(i * 0.02, 0.3) }}
+                      >
+                        <TransactionItem tx={t} />
+                      </motion.div>
+                    ))}
                   </div>
                 )}
               </CardContent>

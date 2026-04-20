@@ -19,6 +19,7 @@ export interface WalletTransaction {
   user_id: string;
   type: 'deposit' | 'withdrawal' | 'payment' | 'refund' | 'adjustment';
   amount: number;
+  balance_before?: number | null;
   balance_after: number;
   description: string | null;
   reference_type: string | null;
@@ -26,6 +27,19 @@ export interface WalletTransaction {
   created_by: string | null;
   created_at: string;
   metadata?: any;
+  receipt_number?: string | null;
+  gateway_ref?: string | null;
+  masked_account?: string | null;
+  fee_amount?: number;
+  vat_amount?: number;
+  currency?: string;
+  payment_method?: string | null;
+  signature_hash?: string | null;
+  reconciled?: boolean;
+  reconciled_at?: string | null;
+  signed_at?: string;
+  receipt_pdf_path?: string | null;
+  receipt_generated_at?: string | null;
 }
 
 export interface TopupRequest {
