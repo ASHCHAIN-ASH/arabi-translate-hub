@@ -276,7 +276,7 @@ const AdminWallets: React.FC = () => {
       setTimeout(() => {
         sendTopupEmail(r, 'approved');
         sendTopupWhatsApp(r, 'approved');
-      }, 1200);
+      }, 1500);
       load();
     } catch (e: any) { toast.error('فشلت الموافقة', { description: e.message }); }
   };
