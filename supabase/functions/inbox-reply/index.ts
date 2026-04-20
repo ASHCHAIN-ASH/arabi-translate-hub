@@ -1,6 +1,5 @@
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.45.0";
-import { Resend } from "https://esm.sh/resend@4.0.0";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -75,17 +74,22 @@ serve(async (req) => {
 
     if (resendKey) {
       try {
-        const resend = new Resend(resendKey);
         const safeName = escapeHtml(msg.sender_name);
         const safeBody = escapeHtml(body).replace(/\n/g, "<br/>");
         const safeOriginal = escapeHtml(msg.message).replace(/\n/g, "<br/>");
         const safeSubject = escapeHtml(msg.subject ?? "رسالتك");
 
-        const result = await resend.emails.send({
-          from: FROM_LABEL,
-          to: [msg.sender_email],
-          subject: `رد على: ${safeSubject}`,
-          html: `<!DOCTYPE html><html dir="rtl" lang="ar"><body style="font-family:Tahoma,Arial,sans-serif;background:#f6f7fb;padding:24px;color:#1f2937">
+        const r = await fetch("https://api.resend.com/emails", {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${resendKey}`,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            from: FROM_LABEL,
+            to: [msg.sender_email],
+            subject: `رد على: ${safeSubject}`,
+            html: `<!DOCTYPE html><html dir="rtl" lang="ar"><body style="font-family:Tahoma,Arial,sans-serif;background:#f6f7fb;padding:24px;color:#1f2937">
             <div style="max-width:640px;margin:auto;background:#fff;border-radius:12px;overflow:hidden;border:1px solid #e5e7eb">
               <div style="background:linear-gradient(135deg,#3b82f6,#6366f1);color:#fff;padding:22px 24px">
                 <h2 style="margin:0">مرحباً ${safeName}</h2>
@@ -102,8 +106,11 @@ serve(async (req) => {
                 <p style="margin-top:18px">للرد المباشر يمكنك ببساطة الرد على هذا البريد.</p>
               </div>
             </div></body></html>`,
+          }),
         });
-        externalId = result.data?.id ?? null;
+        const j = await r.json().catch(() => ({}));
+        if (!r.ok) throw new Error(j?.message ?? `status ${r.status}`);
+        externalId = j?.id ?? null;
         deliveryStatus = "sent";
       } catch (e) {
         deliveryError = (e as Error).message;
