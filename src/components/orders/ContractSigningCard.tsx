@@ -277,6 +277,17 @@ export const ContractSigningCard: React.FC<Props> = ({ contract, onSigned }) => 
                   </p>
                 </div>
                 <div className="space-y-2">
+                  <Label>رقم الهوية / الإقامة</Label>
+                  <Input
+                    value={idNumber}
+                    onChange={(e) => setIdNumber(e.target.value.replace(/\D/g, '').slice(0, 15))}
+                    placeholder="1xxxxxxxxx"
+                    className="text-center font-mono"
+                    inputMode="numeric"
+                  />
+                  <p className="text-xs text-muted-foreground">مطلوب للتوثيق القانوني للتوقيع</p>
+                </div>
+                <div className="space-y-2">
                   <Label>الاسم الكامل (التوقيع)</Label>
                   <Textarea
                     value={signatureText}
