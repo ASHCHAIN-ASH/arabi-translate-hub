@@ -22,124 +22,132 @@ const handler = async (req: Request): Promise<Response> => {
   }
 
   try {
-    const { invoice_id, send_email = false, recipient_email }: InvoicePDFRequest = await req.json();
-    
+    const { invoice_id, send_email = false, recipient_email, force = false }: InvoicePDFRequest & { force?: boolean } = await req.json();
     console.log("Generating PDF for invoice:", invoice_id);
 
-    // الحصول على بيانات الفاتورة
+    // جلب الفاتورة
     const { data: invoice, error: invoiceError } = await supabase
       .from('invoices')
-      .select(`
-        *,
-        invoice_items (*)
-      `)
+      .select('*, invoice_items (*)')
       .eq('id', invoice_id)
       .single();
-
     if (invoiceError || !invoice) {
       throw new Error(`فشل في العثور على الفاتورة: ${invoiceError?.message}`);
     }
 
-    // إنشاء HTML للفاتورة بتصميم احترافي
-    const invoiceHTML = generateProfessionalInvoiceHTML(invoice);
-    const fullHTML = invoiceHTML.replace('</head>', `<style>${generateInvoiceCSS()}</style></head>`);
-    const base64HTML = btoa(unescape(encodeURIComponent(fullHTML)));
-
-    return new Response(JSON.stringify({
-      success: true,
-      message: "تم إنشاء الفاتورة بنجاح",
-      html_data: base64HTML,
-      pdf_data: base64HTML,
-      invoice_number: invoice.invoice_number,
-      content_type: "text/html"
-    }), {
-      status: 200,
-      headers: { "Content-Type": "application/json", ...corsHeaders }
-    });
-
-    // legacy code (unreachable) kept below
-    const pdfResponse = await fetch("https://api.htmlcsstoimage.com/v1/image", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": `Bearer ${Deno.env.get("HTMLCSS_API_KEY") || "demo-key"}`
-      },
-      body: JSON.stringify({
-        html: invoiceHTML,
-        css: generateInvoiceCSS(),
-        format: "pdf",
-        width: 794,
-        height: 1123,
-        quality: 100
-      })
-    });
-
-    if (!pdfResponse.ok) {
-      // في حالة فشل الخدمة، سنعيد HTML مؤقتاً
-      const base64PDF = await generateSimplePDF(invoice);
-      
-      // حفظ رابط PDF في قاعدة البيانات
-      await supabase
+    // إعادة استخدام PDF موجود إن وُجد ولم يُطلب التجديد
+    if (!force && (invoice as any).pdf_storage_path) {
+      const { data: signed } = await supabase.storage
         .from('invoices')
-        .update({ 
-          pdf_generated: true,
-          pdf_url: `data:application/pdf;base64,${base64PDF}`
-        })
-        .eq('id', invoice_id);
-
-      // إرسال الإيميل مع PDF مضمن إذا طُلب ذلك
-      if (send_email && recipient_email) {
-        await sendInvoiceEmail(invoice, base64PDF, recipient_email);
-      }
-
+        .createSignedUrl((invoice as any).pdf_storage_path, 60 * 60 * 24 * 7);
       return new Response(JSON.stringify({
         success: true,
-        message: "تم إنشاء الفاتورة بنجاح",
-        pdf_data: base64PDF,
-        invoice_number: invoice.invoice_number
-      }), {
-        status: 200,
-        headers: { "Content-Type": "application/json", ...corsHeaders }
-      });
+        message: "تم استخدام PDF موجود",
+        invoice_number: invoice.invoice_number,
+        pdf_storage_path: (invoice as any).pdf_storage_path,
+        signed_url: signed?.signedUrl,
+        content_type: "application/pdf",
+      }), { status: 200, headers: { "Content-Type": "application/json", ...corsHeaders } });
     }
 
-    const pdfData = await pdfResponse.arrayBuffer();
-    const base64PDF = btoa(String.fromCharCode(...new Uint8Array(pdfData)));
+    // توليد HTML كامل
+    const invoiceHTML = generateProfessionalInvoiceHTML(invoice);
+    const fullHTML = invoiceHTML.includes('</head>')
+      ? invoiceHTML.replace('</head>', `<style>${generateInvoiceCSS()}</style></head>`)
+      : `<!doctype html><html dir="rtl" lang="ar"><head><meta charset="utf-8"/><style>${generateInvoiceCSS()}</style></head><body>${invoiceHTML}</body></html>`;
 
-    // حفظ رابط PDF في قاعدة البيانات
-    await supabase
-      .from('invoices')
-      .update({ 
-        pdf_generated: true,
-        pdf_url: `data:application/pdf;base64,${base64PDF}`
-      })
-      .eq('id', invoice_id);
+    // تحويل HTML → PDF عبر Browserless
+    const browserlessKey = Deno.env.get("BROWSERLESS_API_KEY");
+    let pdfBytes: Uint8Array | null = null;
+    let pdfError: string | null = null;
+    if (browserlessKey) {
+      try {
+        const endpoint = `https://production-sfo.browserless.io/pdf?token=${encodeURIComponent(browserlessKey)}`;
+        const r = await fetch(endpoint, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            html: fullHTML,
+            options: {
+              format: "A4",
+              printBackground: true,
+              preferCSSPageSize: true,
+              margin: { top: "10mm", right: "10mm", bottom: "10mm", left: "10mm" },
+              displayHeaderFooter: false,
+            },
+            gotoOptions: { waitUntil: "networkidle0", timeout: 30000 },
+            waitForTimeout: 600,
+          }),
+        });
+        if (!r.ok) {
+          pdfError = `Browserless ${r.status}: ${(await r.text()).slice(0, 300)}`;
+        } else {
+          pdfBytes = new Uint8Array(await r.arrayBuffer());
+        }
+      } catch (e: any) {
+        pdfError = e?.message || "browserless network error";
+      }
+    } else {
+      pdfError = "BROWSERLESS_API_KEY غير مهيّأ";
+    }
 
-    // إرسال الإيميل مع PDF مضمن إذا طُلب ذلك
-    if (send_email && recipient_email) {
-      await sendInvoiceEmail(invoice, base64PDF, recipient_email);
+    // رفع الملف إلى التخزين
+    let storagePath: string | null = null;
+    let signedUrl: string | null = null;
+    if (pdfBytes) {
+      storagePath = `${invoice.id}/${invoice.invoice_number || invoice.id}.pdf`;
+      const { error: upErr } = await supabase.storage
+        .from('invoices')
+        .upload(storagePath, pdfBytes, { contentType: 'application/pdf', upsert: true });
+      if (upErr) {
+        console.error('upload error', upErr);
+        pdfError = `Storage upload failed: ${upErr.message}`;
+      } else {
+        await supabase.from('invoices').update({
+          pdf_storage_path: storagePath,
+          pdf_generated_at: new Date().toISOString(),
+        }).eq('id', invoice.id);
+        const { data: signed } = await supabase.storage
+          .from('invoices').createSignedUrl(storagePath, 60 * 60 * 24 * 7);
+        signedUrl = signed?.signedUrl || null;
+      }
+    }
+
+    // إرسال الإيميل مع المرفق إن طُلب
+    if (send_email && recipient_email && pdfBytes) {
+      const base64PDF = btoa(String.fromCharCode(...pdfBytes));
+      await sendInvoiceEmail(invoice, base64PDF, recipient_email).catch((e) =>
+        console.error('sendInvoiceEmail failed', e));
+    }
+
+    if (!pdfBytes) {
+      // فشل توليد PDF — نُرجع HTML كحل احتياطي
+      const base64HTML = btoa(unescape(encodeURIComponent(fullHTML)));
+      return new Response(JSON.stringify({
+        success: false,
+        error: pdfError || 'تعذّر توليد PDF',
+        invoice_number: invoice.invoice_number,
+        html_data: base64HTML,
+        content_type: "text/html",
+      }), { status: 200, headers: { "Content-Type": "application/json", ...corsHeaders } });
     }
 
     return new Response(JSON.stringify({
       success: true,
-      message: "تم إنشاء الفاتورة بنجاح",
-      pdf_data: base64PDF,
-      invoice_number: invoice.invoice_number
-    }), {
-      status: 200,
-      headers: { "Content-Type": "application/json", ...corsHeaders }
-    });
+      message: "تم إنشاء PDF الفاتورة بنجاح",
+      invoice_number: invoice.invoice_number,
+      pdf_storage_path: storagePath,
+      signed_url: signedUrl,
+      pdf_data: btoa(String.fromCharCode(...pdfBytes)),
+      content_type: "application/pdf",
+    }), { status: 200, headers: { "Content-Type": "application/json", ...corsHeaders } });
 
   } catch (error: any) {
     console.error("Error generating invoice PDF:", error);
-    
     return new Response(JSON.stringify({
       success: false,
       error: error.message || "حدث خطأ في إنشاء الفاتورة"
-    }), {
-      status: 500,
-      headers: { "Content-Type": "application/json", ...corsHeaders }
-    });
+    }), { status: 500, headers: { "Content-Type": "application/json", ...corsHeaders } });
   }
 };
 
