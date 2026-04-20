@@ -203,6 +203,65 @@ export type Database = {
         }
         Relationships: []
       }
+      challenge_attempts: {
+        Row: {
+          answers: Json
+          attempt_number: number
+          challenge_id: string
+          completed_at: string | null
+          correct_count: number
+          id: string
+          is_perfect: boolean
+          score: number
+          started_at: string
+          status: string
+          time_taken_seconds: number | null
+          total_questions: number
+          user_id: string
+          xp_awarded: number
+        }
+        Insert: {
+          answers?: Json
+          attempt_number?: number
+          challenge_id: string
+          completed_at?: string | null
+          correct_count?: number
+          id?: string
+          is_perfect?: boolean
+          score?: number
+          started_at?: string
+          status?: string
+          time_taken_seconds?: number | null
+          total_questions?: number
+          user_id: string
+          xp_awarded?: number
+        }
+        Update: {
+          answers?: Json
+          attempt_number?: number
+          challenge_id?: string
+          completed_at?: string | null
+          correct_count?: number
+          id?: string
+          is_perfect?: boolean
+          score?: number
+          started_at?: string
+          status?: string
+          time_taken_seconds?: number | null
+          total_questions?: number
+          user_id?: string
+          xp_awarded?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "challenge_attempts_challenge_id_fkey"
+            columns: ["challenge_id"]
+            isOneToOne: false
+            referencedRelation: "daily_challenges"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       challenge_daily_challenges: {
         Row: {
           action_target: string | null
@@ -313,6 +372,47 @@ export type Database = {
           updated_at?: string
         }
         Relationships: []
+      }
+      challenge_questions: {
+        Row: {
+          challenge_id: string
+          correct_answer: string
+          created_at: string
+          explanation: string | null
+          id: string
+          options: Json
+          question: string
+          sort_order: number
+        }
+        Insert: {
+          challenge_id: string
+          correct_answer: string
+          created_at?: string
+          explanation?: string | null
+          id?: string
+          options?: Json
+          question: string
+          sort_order?: number
+        }
+        Update: {
+          challenge_id?: string
+          correct_answer?: string
+          created_at?: string
+          explanation?: string | null
+          id?: string
+          options?: Json
+          question?: string
+          sort_order?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "challenge_questions_challenge_id_fkey"
+            columns: ["challenge_id"]
+            isOneToOne: false
+            referencedRelation: "daily_challenges"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       challenge_streaks: {
         Row: {
@@ -1133,6 +1233,54 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      daily_challenges: {
+        Row: {
+          challenge_date: string
+          completion_bonus: number
+          cover_emoji: string | null
+          created_at: string
+          description: string | null
+          duration_minutes: number
+          id: string
+          is_active: boolean
+          perfect_bonus: number
+          retry_xp_multiplier: number
+          title: string
+          updated_at: string
+          xp_per_correct: number
+        }
+        Insert: {
+          challenge_date: string
+          completion_bonus?: number
+          cover_emoji?: string | null
+          created_at?: string
+          description?: string | null
+          duration_minutes?: number
+          id?: string
+          is_active?: boolean
+          perfect_bonus?: number
+          retry_xp_multiplier?: number
+          title: string
+          updated_at?: string
+          xp_per_correct?: number
+        }
+        Update: {
+          challenge_date?: string
+          completion_bonus?: number
+          cover_emoji?: string | null
+          created_at?: string
+          description?: string | null
+          duration_minutes?: number
+          id?: string
+          is_active?: boolean
+          perfect_bonus?: number
+          retry_xp_multiplier?: number
+          title?: string
+          updated_at?: string
+          xp_per_correct?: number
+        }
+        Relationships: []
       }
       deadline_reminders: {
         Row: {
@@ -5579,6 +5727,19 @@ export type Database = {
           _signer_id_number?: string
           _signer_name?: string
           _ua?: string
+        }
+        Returns: Json
+      }
+      start_daily_challenge_attempt: {
+        Args: { p_challenge_id: string; p_user_id: string }
+        Returns: Json
+      }
+      submit_daily_challenge_attempt: {
+        Args: {
+          p_answers: Json
+          p_attempt_id: string
+          p_time_taken_seconds: number
+          p_user_id: string
         }
         Returns: Json
       }
