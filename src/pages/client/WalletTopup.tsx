@@ -28,12 +28,7 @@ const getBonus = (amt: number) => {
   return { pct: 0, label: '' };
 };
 
-const PAYMENT_METHODS = [
-  { value: 'bank_transfer', label: 'تحويل بنكي', icon: '🏦' },
-  { value: 'stc_pay', label: 'STC Pay', icon: '📱' },
-  { value: 'mada', label: 'مدى', icon: '💳' },
-  { value: 'cash', label: 'نقدي', icon: '💵' },
-];
+// طريقة الدفع اليدوي الوحيدة المتاحة هي التحويل البنكي
 
 const WalletTopup: React.FC = () => {
   const { user } = useAuth();
@@ -233,26 +228,8 @@ const WalletTopup: React.FC = () => {
             </Card>
           </TabsContent>
 
-          {/* Manual Payment */}
+          {/* Manual Payment - Bank Transfer Only */}
           <TabsContent value="manual" className="mt-3 space-y-3">
-            <Card>
-              <CardContent className="p-3 sm:p-4 space-y-3">
-                <div>
-                  <Label className="text-sm font-bold mb-2 block">اختر طريقة الدفع</Label>
-                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
-                    {PAYMENT_METHODS.map((m) => (
-                      <button key={m.value} type="button" onClick={() => setMethod(m.value)}
-                        className={`flex flex-col items-center gap-1 px-2 py-3 rounded-xl text-xs font-bold border-2 transition-all ${
-                          method === m.value ? 'bg-primary/10 border-primary text-primary shadow-md' : 'bg-muted/30 border-border hover:bg-muted'
-                        }`}>
-                        <span className="text-2xl">{m.icon}</span>{m.label}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-
             {method === 'bank_transfer' && (
               <Card className="overflow-hidden">
                 <div className="bg-primary px-3 sm:px-4 py-3 flex items-center gap-2 text-primary-foreground">
