@@ -105,46 +105,39 @@ export async function getContractPdfHtml(contractId: string, options?: { fallbac
 }
 
 /**
- * تحميل العقد كـ PDF: نفتح نافذة جديدة بمحتوى العقد الكامل (مع الخطوط والصور)،
- * ننتظر تحميل كل الموارد + الخطوط، ثم نشغّل نافذة الطباعة → "حفظ كـ PDF".
- * هذا يضمن ظهور العقد الفعلي بكامل تنسيقه (وليس صفحة فارغة).
+ * تحميل العقد كـ PDF حقيقي (Phase 2):
+ * - إذا العقد موقّع: يطلب signed_final (idempotent) ويعيد رابطاً موقّعاً للملف PDF الفعلي
+ * - إذا العقد مسودة/قيد التوقيع: يولّد preview PDF
+ * - يفتح الرابط في تبويب جديد للتنزيل
  */
 export async function downloadContractPdf(contractId: string) {
-  const html = await getContractPdfHtml(contractId, { fallbackOpen: true });
+  const contract = await getContract(contractId);
+  const isSigned = contract?.status === "signed" || contract?.status === "active" || contract?.status === "completed";
+  const { data, error } = await supabase.functions.invoke("generate-contract-pdf", {
+    body: {
+      contract_id: contractId,
+      mode: isSigned ? "signed_final" : "preview",
+      public_origin: window.location.origin,
+    },
+  });
+  if (error) throw error;
+  const url = (data as any)?.signed_url;
+  if (!url) throw new Error("تعذّر تجهيز ملف PDF");
+  // فتح في تبويب جديد لتشغيل تنزيل المتصفح للـ PDF
+  window.open(url, "_blank", "noopener");
+  return url as string;
+}
 
-  // إخفاء شريط الأدوات الداخلي + حقن سكربت auto-print بعد جاهزية الخطوط
-  const autoPrintScript = `
-    <style>.toolbar{display:none!important}</style>
-    <script>
-      (function(){
-        function go(){
-          try { window.focus(); window.print(); } catch(e){}
-        }
-        function ready(){
-          if (document.fonts && document.fonts.ready) {
-            document.fonts.ready.then(function(){ setTimeout(go, 400); });
-          } else {
-            setTimeout(go, 1200);
-          }
-        }
-        if (document.readyState === 'complete') ready();
-        else window.addEventListener('load', ready);
-        // بعد إغلاق نافذة الطباعة، أغلق التبويب
-        window.addEventListener('afterprint', function(){ setTimeout(function(){ try{ window.close(); }catch(e){} }, 300); });
-      })();
-    </script>
-  `;
-  const cleaned = html.replace(/<\/head>/i, `${autoPrintScript}</head>`);
-
-  // نفتح نافذة جديدة (تبويب) لضمان تحميل الخطوط والصور بشكل صحيح
-  const win = window.open("", "_blank");
-  if (!win) {
-    throw new Error("الرجاء السماح بالنوافذ المنبثقة لتحميل العقد");
-  }
-  win.document.open();
-  win.document.write(cleaned);
-  win.document.close();
-  return null;
+/**
+ * (Admin only) إعادة توليد signed_final قسراً → ينشئ نسخة v(n+1) جديدة
+ * بدون تعديل النسخ القديمة (المحفوظة immutable).
+ */
+export async function regenerateSignedContractPdf(contractId: string) {
+  const { data, error } = await supabase.functions.invoke("generate-contract-pdf", {
+    body: { contract_id: contractId, mode: "signed_final", force: true, public_origin: window.location.origin },
+  });
+  if (error) throw error;
+  return data;
 }
 
 export interface ContractTimelineEvent {

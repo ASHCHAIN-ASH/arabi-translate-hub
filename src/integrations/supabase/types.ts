@@ -184,6 +184,97 @@ export type Database = {
           },
         ]
       }
+      contract_evidence: {
+        Row: {
+          accepted_terms: Json | null
+          content_sha256: string
+          content_snapshot: string | null
+          contract_id: string
+          contract_version_id: string | null
+          created_at: string
+          evidence_sha256: string | null
+          id: string
+          ip_address: string | null
+          metadata: Json
+          pdf_sha256: string | null
+          pdf_storage_path: string | null
+          signature_id: string | null
+          signed_at: string
+          signer_email: string | null
+          signer_id_number: string | null
+          signer_name: string
+          signer_user_id: string | null
+          user_agent: string | null
+          verification_token: string
+        }
+        Insert: {
+          accepted_terms?: Json | null
+          content_sha256: string
+          content_snapshot?: string | null
+          contract_id: string
+          contract_version_id?: string | null
+          created_at?: string
+          evidence_sha256?: string | null
+          id?: string
+          ip_address?: string | null
+          metadata?: Json
+          pdf_sha256?: string | null
+          pdf_storage_path?: string | null
+          signature_id?: string | null
+          signed_at: string
+          signer_email?: string | null
+          signer_id_number?: string | null
+          signer_name: string
+          signer_user_id?: string | null
+          user_agent?: string | null
+          verification_token: string
+        }
+        Update: {
+          accepted_terms?: Json | null
+          content_sha256?: string
+          content_snapshot?: string | null
+          contract_id?: string
+          contract_version_id?: string | null
+          created_at?: string
+          evidence_sha256?: string | null
+          id?: string
+          ip_address?: string | null
+          metadata?: Json
+          pdf_sha256?: string | null
+          pdf_storage_path?: string | null
+          signature_id?: string | null
+          signed_at?: string
+          signer_email?: string | null
+          signer_id_number?: string | null
+          signer_name?: string
+          signer_user_id?: string | null
+          user_agent?: string | null
+          verification_token?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "contract_evidence_contract_id_fkey"
+            columns: ["contract_id"]
+            isOneToOne: false
+            referencedRelation: "contracts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "contract_evidence_contract_version_id_fkey"
+            columns: ["contract_version_id"]
+            isOneToOne: false
+            referencedRelation: "contract_versions"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "contract_evidence_signature_id_fkey"
+            columns: ["signature_id"]
+            isOneToOne: false
+            referencedRelation: "contract_signatures"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       contract_otp_codes: {
         Row: {
           attempts: number
@@ -325,6 +416,72 @@ export type Database = {
           },
         ]
       }
+      contract_versions: {
+        Row: {
+          based_on_signature_id: string | null
+          content_sha256: string | null
+          content_snapshot: string | null
+          contract_id: string
+          generated_at: string
+          generated_by: string | null
+          generator: string
+          id: string
+          is_current: boolean
+          metadata: Json
+          output_type: string
+          pdf_size_bytes: number | null
+          pdf_storage_path: string | null
+          version_no: number
+        }
+        Insert: {
+          based_on_signature_id?: string | null
+          content_sha256?: string | null
+          content_snapshot?: string | null
+          contract_id: string
+          generated_at?: string
+          generated_by?: string | null
+          generator?: string
+          id?: string
+          is_current?: boolean
+          metadata?: Json
+          output_type: string
+          pdf_size_bytes?: number | null
+          pdf_storage_path?: string | null
+          version_no?: number
+        }
+        Update: {
+          based_on_signature_id?: string | null
+          content_sha256?: string | null
+          content_snapshot?: string | null
+          contract_id?: string
+          generated_at?: string
+          generated_by?: string | null
+          generator?: string
+          id?: string
+          is_current?: boolean
+          metadata?: Json
+          output_type?: string
+          pdf_size_bytes?: number | null
+          pdf_storage_path?: string | null
+          version_no?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "contract_versions_based_on_signature_id_fkey"
+            columns: ["based_on_signature_id"]
+            isOneToOne: false
+            referencedRelation: "contract_signatures"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "contract_versions_contract_id_fkey"
+            columns: ["contract_id"]
+            isOneToOne: false
+            referencedRelation: "contracts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       contracts: {
         Row: {
           cancellation_reason: string | null
@@ -338,6 +495,7 @@ export type Database = {
           contract_number: string
           created_at: string
           currency: string | null
+          current_version_id: string | null
           customer_id: string | null
           delivery_date: string | null
           evidence_id: string | null
@@ -362,6 +520,7 @@ export type Database = {
           updated_at: string
           user_id: string | null
           variables: Json | null
+          verification_token: string
           version: number
         }
         Insert: {
@@ -376,6 +535,7 @@ export type Database = {
           contract_number?: string
           created_at?: string
           currency?: string | null
+          current_version_id?: string | null
           customer_id?: string | null
           delivery_date?: string | null
           evidence_id?: string | null
@@ -400,6 +560,7 @@ export type Database = {
           updated_at?: string
           user_id?: string | null
           variables?: Json | null
+          verification_token?: string
           version?: number
         }
         Update: {
@@ -414,6 +575,7 @@ export type Database = {
           contract_number?: string
           created_at?: string
           currency?: string | null
+          current_version_id?: string | null
           customer_id?: string | null
           delivery_date?: string | null
           evidence_id?: string | null
@@ -438,9 +600,17 @@ export type Database = {
           updated_at?: string
           user_id?: string | null
           variables?: Json | null
+          verification_token?: string
           version?: number
         }
         Relationships: [
+          {
+            foreignKeyName: "contracts_current_version_id_fkey"
+            columns: ["current_version_id"]
+            isOneToOne: false
+            referencedRelation: "contract_versions"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "contracts_customer_id_fkey"
             columns: ["customer_id"]
