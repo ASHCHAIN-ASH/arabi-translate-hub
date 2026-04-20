@@ -2,8 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Loader2, Download, Eye, X } from 'lucide-react';
-import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
+import { downloadContractPdf, getContractPdfHtml } from '@/utils/supabaseContractService';
 
 interface Props {
   contractId: string;
@@ -32,17 +32,8 @@ export const ContractPdfDialog: React.FC<Props> = ({ contractId, contractNumber,
   async function load() {
     setLoading(true);
     try {
-      const { data, error } = await supabase.functions.invoke('generate-contract-pdf', {
-        body: { contract_id: contractId, format: 'json' },
-      });
-      if (error) throw error;
-      const raw: string = (data as any)?.html || '';
-      // إخفاء شريط الأدوات الموجود داخل HTML الأصلي (حتى لا يظهر زرّان)
-      const cleaned = raw.replace(
-        /<div class="toolbar">[\s\S]*?<\/div>/,
-        '<style>.toolbar{display:none!important}</style>',
-      );
-      setHtml(cleaned);
+      const resolvedHtml = await getContractPdfHtml(contractId);
+      setHtml(resolvedHtml);
     } catch (e: any) {
       toast({ title: 'تعذر تحميل العقد', description: e.message, variant: 'destructive' });
     } finally {
@@ -52,40 +43,9 @@ export const ContractPdfDialog: React.FC<Props> = ({ contractId, contractNumber,
 
   /** تنزيل كـ PDF عبر طباعة iframe مخفي → المستخدم يختار "Save as PDF" */
   async function downloadPdf() {
-    if (!html) return;
     setDownloading(true);
     try {
-      // ننشئ iframe مخفي يحوي محتوى العقد ثم نستدعي طباعته
-      const frame = document.createElement('iframe');
-      frame.style.position = 'fixed';
-      frame.style.right = '-10000px';
-      frame.style.bottom = '0';
-      frame.style.width = '0';
-      frame.style.height = '0';
-      frame.style.border = '0';
-      document.body.appendChild(frame);
-
-      const doc = frame.contentDocument || frame.contentWindow?.document;
-      if (!doc) throw new Error('failed to create frame');
-      doc.open();
-      doc.write(html);
-      doc.close();
-
-      const cleanup = () => {
-        setTimeout(() => {
-          document.body.removeChild(frame);
-        }, 1000);
-      };
-
-      // ننتظر قليلاً لتحميل الخطوط
-      await new Promise((r) => setTimeout(r, 600));
-
-      try {
-        frame.contentWindow?.focus();
-        frame.contentWindow?.print();
-      } finally {
-        cleanup();
-      }
+      await downloadContractPdf(contractId);
       toast({
         title: '✓ نافذة الحفظ مفتوحة',
         description: 'اختر "حفظ كـ PDF" من قائمة الطباعة',
