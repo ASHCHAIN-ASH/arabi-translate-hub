@@ -19,12 +19,13 @@ import {
 import { InputOTP, InputOTPGroup, InputOTPSlot } from "@/components/ui/input-otp";
 import {
   getContract, getContractTimeline, getContractSignatures,
-  signContract, getClientIP, generateContractContent, downloadContractPdf, buildContractContentFromRow, getContractPdfHtml,
+  signContract, getClientIP, generateContractContent, downloadContractPdf, buildContractContentFromRow,
   STATUS_LABELS, STATUS_COLORS, ContractRow, ContractSignature, ContractTimelineEvent,
 } from "@/utils/supabaseContractService";
 import { REQUIRED_TERMS, PARENT_COMPANY } from "@/utils/contractTemplates";
 import ClientLayout from "@/components/client/ClientLayout";
 import SignaturePad from "@/components/contracts/SignaturePad";
+import { ContractDocumentView } from "@/components/orders/ContractDocumentView";
 
 const ClientContractApproval = () => {
   const params = useParams();
@@ -33,7 +34,6 @@ const ClientContractApproval = () => {
   const contractId = params.id || sp.get("id") || "";
 
   const [contract, setContract] = useState<ContractRow | null>(null);
-  const [contractPreviewHtml, setContractPreviewHtml] = useState("");
   const [signatures, setSignatures] = useState<ContractSignature[]>([]);
   const [timeline, setTimeline] = useState<ContractTimelineEvent[]>([]);
   const [loading, setLoading] = useState(true);
@@ -108,21 +108,13 @@ const ClientContractApproval = () => {
 
       setContract(c);
       if (c) {
-        const previewPromise = getContractPdfHtml(contractId).catch((err) => {
-          console.error("Failed to load rendered contract preview", err);
-          return "";
-        });
         setSignerName(c.client_full_name || "");
-        const [sigs, tl, previewHtml] = await Promise.all([
+        const [sigs, tl] = await Promise.all([
           getContractSignatures(contractId),
           getContractTimeline(contractId),
-          previewPromise,
         ]);
         setSignatures(sigs);
         setTimeline(tl);
-        setContractPreviewHtml(previewHtml);
-      } else {
-        setContractPreviewHtml("");
       }
     } catch (e: any) {
       toast.error(e.message || "خطأ في تحميل العقد");
@@ -130,6 +122,17 @@ const ClientContractApproval = () => {
       setLoading(false);
     }
   }
+
+  const contractDisplayContent = useMemo(() => {
+    if (!contract) return "";
+    const rawContent = contract.content?.trim();
+    if (rawContent && rawContent.length >= 400 && /##|المادة|\|/.test(rawContent)) {
+      return rawContent;
+    }
+    return buildContractContentFromRow(contract);
+  }, [contract]);
+
+  const clientDisplayName = signerName.trim() || contract?.client_full_name || "العميل";
 
   const isSigned = contract?.status === "signed" || contract?.status === "active" || contract?.status === "completed";
   const allTermsAccepted = accepted.length === REQUIRED_TERMS.length;
@@ -402,12 +405,12 @@ const ClientContractApproval = () => {
                 />
               </div>
 
-              {/* Document viewer — نفس HTML الفعلي المستخدم في PDF */}
+              {/* Document viewer — نفس مكوّن العرض المستخدم أثناء التوقيع */}
               <Card className="overflow-hidden border-2 border-primary/10 shadow-xl">
                 <div className="px-5 py-3 bg-gradient-to-l from-primary/10 via-primary/5 to-transparent border-b flex items-center justify-between gap-3">
                   <div className="flex items-center gap-2">
                     <Eye className="h-4 w-4 text-primary" />
-                    <span className="font-bold text-sm">العقد الأصلي الكامل</span>
+                    <span className="font-bold text-sm">العقد الكامل كما يظهر عند التوقيع</span>
                   </div>
                   <div className="flex items-center gap-1.5 text-[11px] text-muted-foreground">
                     <Hash className="h-3 w-3" />
@@ -415,20 +418,18 @@ const ClientContractApproval = () => {
                   </div>
                 </div>
                 <div className="p-3 sm:p-5 bg-gradient-to-b from-muted/40 to-muted/10 overflow-x-auto">
-                  {contractPreviewHtml ? (
-                    <div className="rounded-2xl overflow-hidden border border-border/70 bg-white shadow-2xl">
-                      <iframe
-                        title="contract-original-preview"
-                        srcDoc={contractPreviewHtml}
-                        className="w-full min-h-[1200px] border-0 bg-white"
-                        sandbox="allow-same-origin"
-                      />
-                    </div>
-                  ) : (
-                    <div className="rounded-2xl border border-dashed border-border bg-card p-8 text-center text-sm text-muted-foreground">
-                      تعذر تحميل النسخة الأصلية للعقد حالياً، لكن ملف التحميل سيعرض النسخة الفعلية.
-                    </div>
-                  )}
+                  <div className="rounded-2xl overflow-hidden border border-border/70 bg-white shadow-2xl">
+                    <ContractDocumentView
+                      contractNumber={contract.contract_number}
+                      title={contract.title}
+                      content={contractDisplayContent || "محتوى العقد غير متاح حالياً."}
+                      totalAmount={contract.total_amount}
+                      currency={contract.currency}
+                      clientName={contract.client_full_name}
+                      clientEmail={contract.client_email}
+                      issueDateHijri={getIssueDateHijri(contract.created_at)}
+                    />
+                  </div>
                 </div>
               </Card>
 
@@ -585,6 +586,10 @@ const ClientContractApproval = () => {
                             <KeyRound className="h-8 w-8 text-primary" />
                           </motion.div>
                           <h3 className="text-lg font-bold">أدخل رمز التحقق</h3>
+                          <div className="mx-auto inline-flex max-w-full flex-wrap items-center justify-center gap-x-3 gap-y-1 rounded-full border border-border bg-muted/40 px-3 py-1.5 text-xs">
+                            <span className="font-bold text-foreground">العميل: {clientDisplayName}</span>
+                            {maskedEmail && <span className="text-muted-foreground">{maskedEmail}</span>}
+                          </div>
                           <p className="text-xs text-muted-foreground">
                             أُرسل الرمز إلى <span className="font-bold text-foreground">{maskedEmail}</span>
                           </p>
