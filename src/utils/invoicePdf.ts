@@ -60,21 +60,7 @@ export function buildInvoiceHTML(invoice: Invoice, items: InvoiceItem[], payment
       <td class="num strong">${fmt(it.total_price)}</td>
     </tr>`).join('');
 
-  const paymentsBlock = payments.length ? `
-    <div class="section">
-      <h3>المدفوعات</h3>
-      <table class="payments">
-        <thead><tr><th>التاريخ</th><th>الطريقة</th><th>المرجع</th><th>المبلغ</th></tr></thead>
-        <tbody>
-          ${payments.map(p => `<tr>
-            <td>${p.payment_date}</td>
-            <td>${escapeHtml(translatePaymentMethod(p.payment_method))}</td>
-            <td>${escapeHtml(p.reference_number ?? '-')}</td>
-            <td class="strong">${fmt(p.amount)}</td>
-          </tr>`).join('')}
-        </tbody>
-      </table>
-    </div>` : '';
+
 
   const totalItems = items.length;
   const totalQty = items.reduce((s, it) => s + Number(it.quantity || 0), 0);
@@ -361,7 +347,7 @@ export function buildInvoiceHTML(invoice: Invoice, items: InvoiceItem[], payment
       </div>
     </div>
 
-    ${paymentsBlock}
+    
 
     ${invoice.notes ? `<div class="section"><h3><span class="pin"></span>ملاحظات</h3><p>${escapeHtml(invoice.notes)}</p></div>` : ''}
     ${invoice.terms ? `<div class="section"><h3><span class="pin"></span>الشروط والأحكام</h3><p>${escapeHtml(invoice.terms)}</p></div>` : ''}
