@@ -114,52 +114,84 @@ serve(async (req) => {
     const code_hash = await sha256(code);
     const expires_at = new Date(Date.now() + 10 * 60 * 1000).toISOString();
 
-    // Invalidate previous codes
+    // Invalidate previous codes for this contact
     await supabase
       .from("contract_otp_codes")
       .update({ used: true })
       .eq("contract_id", contract_id)
-      .eq("email", recipient)
+      .eq("email", otpKey)
       .eq("used", false);
 
     const { error: insErr } = await supabase.from("contract_otp_codes").insert({
-      contract_id, email: recipient, code_hash, expires_at,
+      contract_id, email: otpKey, code_hash, expires_at,
     });
     if (insErr) throw insErr;
 
-    // Send via transactional email (do not fail if email gateway hiccups)
-    let mailDelivered = true;
-    try {
-      const { error: mailErr } = await supabase.functions.invoke("send-transactional-email", {
-        body: {
-          templateName: "contract-otp",
-          recipientEmail: recipient,
-          idempotencyKey: `contract-otp-${contract_id}-${Date.now()}`,
-          templateData: {
-            clientName: contract.client_full_name || "عميلنا الكريم",
-            contractNumber: contract.contract_number,
-            contractTitle: contract.title,
-            otpCode: code,
-            expiresInMinutes: 10,
+    let delivered = false;
+    let channel: "whatsapp" | "email" = useWhatsapp ? "whatsapp" : "email";
+    let masked = "";
+
+    if (useWhatsapp) {
+      // Send via WhatsApp
+      try {
+        const { error: waErr } = await supabase.functions.invoke("whatsapp-send", {
+          body: {
+            to: recipientPhone,
+            event_key: "contract_otp",
+            variables: {
+              client_name: contract.client_full_name || "عميلنا الكريم",
+              contract_number: contract.contract_number,
+              otp_code: code,
+              expires_in: "10",
+            },
+            related_entity_type: "contract",
+            related_entity_id: contract_id,
+            user_id: contract.user_id,
           },
-        },
-      });
-      if (mailErr) { mailDelivered = false; console.error("transactional email error:", mailErr); }
-    } catch (mailErr) {
-      mailDelivered = false;
-      console.error("email send (non-blocking):", mailErr);
+        });
+        if (waErr) { console.error("whatsapp-send error:", waErr); }
+        else { delivered = true; }
+      } catch (waErr) {
+        console.error("whatsapp send (non-blocking):", waErr);
+      }
+      masked = recipientPhone!.replace(/(\d{3})\d+(\d{2})/, "$1****$2");
+    } else {
+      // Send via email
+      try {
+        const { error: mailErr } = await supabase.functions.invoke("send-transactional-email", {
+          body: {
+            templateName: "contract-otp",
+            recipientEmail: recipient,
+            idempotencyKey: `contract-otp-${contract_id}-${Date.now()}`,
+            templateData: {
+              clientName: contract.client_full_name || "عميلنا الكريم",
+              contractNumber: contract.contract_number,
+              contractTitle: contract.title,
+              otpCode: code,
+              expiresInMinutes: 10,
+            },
+          },
+        });
+        if (mailErr) { console.error("transactional email error:", mailErr); }
+        else { delivered = true; }
+      } catch (mailErr) {
+        console.error("email send (non-blocking):", mailErr);
+      }
+      masked = recipient!.replace(/(.{2}).+(@.+)/, "$1***$2");
     }
 
-    console.log(`[contract-otp] code generated for ${recipient} (contract ${contract.contract_number}) delivered=${mailDelivered}`);
+    console.log(`[contract-otp] code generated via ${channel} for contract ${contract.contract_number} delivered=${delivered}`);
 
     return new Response(
       JSON.stringify({
         success: true,
-        delivered: mailDelivered,
-        message: mailDelivered
-          ? "تم إرسال رمز التحقق إلى بريدك الإلكتروني"
-          : "تم توليد رمز التحقق — قد يتأخر وصوله بضع دقائق",
-        masked_email: recipient.replace(/(.{2}).+(@.+)/, "$1***$2"),
+        delivered,
+        channel,
+        message: channel === "whatsapp"
+          ? (delivered ? "تم إرسال رمز التحقق إلى واتساب" : "تم توليد الرمز — قد يتأخر وصوله بضع دقائق")
+          : (delivered ? "تم إرسال رمز التحقق إلى بريدك الإلكتروني" : "تم توليد رمز التحقق — قد يتأخر وصوله بضع دقائق"),
+        masked_recipient: masked,
+        masked_email: masked,
       }),
       { headers: { ...corsHeaders, "Content-Type": "application/json" }, status: 200 },
     );
