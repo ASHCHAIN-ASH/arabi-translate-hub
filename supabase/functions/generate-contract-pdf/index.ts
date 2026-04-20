@@ -576,14 +576,12 @@ Deno.serve(async (req: Request) => {
       if (isCompleteContractContent(overrideContent)) contract.content = overrideContent;
     }
 
-    // Auto-append acknowledgement if content is light and we have a signature
-    if (!isCompleteContractContent(contract.content) && signature?.signature_text) {
-      contract.content = `${contract.content || ""}
-
----
-
-### إقرار الطرف الثاني
-أقرّ أنا/${signature.signer_name || contract.client_full_name || "العميل"} بأنني وافقت على هذا العقد إلكترونياً وتم توثيق توقيعي في النظام.`.trim();
+    // Auto-fill: if content is light, replace with a complete standard contract body
+    if (!isCompleteContractContent(contract.content)) {
+      const standardBody = buildStandardContractBody(contract, signature);
+      contract.content = (contract.content && contract.content.trim().length > 0)
+        ? `${contract.content.trim()}\n\n${standardBody}`
+        : standardBody;
     }
     if ((!contract.client_full_name || !String(contract.client_full_name).trim()) && signature?.signer_name) {
       contract.client_full_name = signature.signer_name;
