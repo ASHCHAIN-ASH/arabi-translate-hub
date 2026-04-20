@@ -4176,46 +4176,91 @@ export type Database = {
         Row: {
           amount: number
           balance_after: number
+          balance_before: number | null
           created_at: string
           created_by: string | null
+          currency: string
           description: string | null
+          fee_amount: number
+          gateway_ref: string | null
           id: string
+          ip_address: string | null
+          masked_account: string | null
           metadata: Json | null
           payment_intent_id: string | null
+          payment_method: string | null
+          receipt_generated_at: string | null
+          receipt_number: string | null
+          receipt_pdf_path: string | null
+          reconciled: boolean
+          reconciled_at: string | null
           reference_id: string | null
           reference_type: string | null
+          signature_hash: string | null
+          signed_at: string
           type: string
           user_id: string
+          vat_amount: number
           wallet_id: string
         }
         Insert: {
           amount: number
           balance_after?: number
+          balance_before?: number | null
           created_at?: string
           created_by?: string | null
+          currency?: string
           description?: string | null
+          fee_amount?: number
+          gateway_ref?: string | null
           id?: string
+          ip_address?: string | null
+          masked_account?: string | null
           metadata?: Json | null
           payment_intent_id?: string | null
+          payment_method?: string | null
+          receipt_generated_at?: string | null
+          receipt_number?: string | null
+          receipt_pdf_path?: string | null
+          reconciled?: boolean
+          reconciled_at?: string | null
           reference_id?: string | null
           reference_type?: string | null
+          signature_hash?: string | null
+          signed_at?: string
           type: string
           user_id: string
+          vat_amount?: number
           wallet_id: string
         }
         Update: {
           amount?: number
           balance_after?: number
+          balance_before?: number | null
           created_at?: string
           created_by?: string | null
+          currency?: string
           description?: string | null
+          fee_amount?: number
+          gateway_ref?: string | null
           id?: string
+          ip_address?: string | null
+          masked_account?: string | null
           metadata?: Json | null
           payment_intent_id?: string | null
+          payment_method?: string | null
+          receipt_generated_at?: string | null
+          receipt_number?: string | null
+          receipt_pdf_path?: string | null
+          reconciled?: boolean
+          reconciled_at?: string | null
           reference_id?: string | null
           reference_type?: string | null
+          signature_hash?: string | null
+          signed_at?: string
           type?: string
           user_id?: string
+          vat_amount?: number
           wallet_id?: string
         }
         Relationships: [
@@ -4499,6 +4544,7 @@ export type Database = {
       generate_customer_code: { Args: never; Returns: string }
       generate_group_invite_code: { Args: never; Returns: string }
       generate_internal_order_number: { Args: never; Returns: string }
+      generate_receipt_number: { Args: never; Returns: string }
       generate_referral_code: { Args: never; Returns: string }
       get_active_membership: {
         Args: { _user_id: string }
