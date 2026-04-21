@@ -117,7 +117,7 @@ export const ContractDocument: React.FC<Props> = ({ contract, signature, signatu
             <tbody>
               <MetaRow label="رقم العقد" value={contract.contract_number} mono />
               <MetaRow label="التاريخ" value={fmtDate(contract.created_at)} />
-              <MetaRow label="النوع" value={contract.service_type || "خدمة أكاديمية"} />
+              <MetaRow label="النوع" value={translateServiceType(contract.service_type)} />
               <MetaRow label="الخدمة" value={contract.service_name || "—"} />
             </tbody>
           </table>
