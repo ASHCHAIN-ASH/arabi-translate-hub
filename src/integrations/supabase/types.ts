@@ -3294,9 +3294,12 @@ export type Database = {
           item_id: string
           item_slug: string
           item_type: string
+          original_xp_cost: number | null
+          promo_code: string | null
           reward_payload: Json
           status: string
           user_id: string
+          xp_discount: number
           xp_spent: number
         }
         Insert: {
@@ -3307,9 +3310,12 @@ export type Database = {
           item_id: string
           item_slug: string
           item_type: string
+          original_xp_cost?: number | null
+          promo_code?: string | null
           reward_payload?: Json
           status?: string
           user_id: string
+          xp_discount?: number
           xp_spent: number
         }
         Update: {
@@ -3320,9 +3326,12 @@ export type Database = {
           item_id?: string
           item_slug?: string
           item_type?: string
+          original_xp_cost?: number | null
+          promo_code?: string | null
           reward_payload?: Json
           status?: string
           user_id?: string
+          xp_discount?: number
           xp_spent?: number
         }
         Relationships: [
@@ -5578,7 +5587,9 @@ export type Database = {
           max_uses: number
           source_purchase_id: string | null
           status: string
+          used_at: string | null
           used_count: number
+          used_on_purchase_id: string | null
           user_id: string
         }
         Insert: {
@@ -5592,7 +5603,9 @@ export type Database = {
           max_uses?: number
           source_purchase_id?: string | null
           status?: string
+          used_at?: string | null
           used_count?: number
+          used_on_purchase_id?: string | null
           user_id: string
         }
         Update: {
@@ -5606,13 +5619,22 @@ export type Database = {
           max_uses?: number
           source_purchase_id?: string | null
           status?: string
+          used_at?: string | null
           used_count?: number
+          used_on_purchase_id?: string | null
           user_id?: string
         }
         Relationships: [
           {
             foreignKeyName: "user_discount_coupons_source_purchase_id_fkey"
             columns: ["source_purchase_id"]
+            isOneToOne: false
+            referencedRelation: "marketplace_purchases"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "user_discount_coupons_used_on_purchase_id_fkey"
+            columns: ["used_on_purchase_id"]
             isOneToOne: false
             referencedRelation: "marketplace_purchases"
             referencedColumns: ["id"]
@@ -7349,7 +7371,9 @@ export type Database = {
         Returns: Json
       }
       purchase_cv_export: { Args: { _cv_id: string }; Returns: Json }
-      purchase_marketplace_item: { Args: { p_item_id: string }; Returns: Json }
+      purchase_marketplace_item:
+        | { Args: { p_item_id: string }; Returns: Json }
+        | { Args: { p_item_id: string; p_promo_code?: string }; Returns: Json }
       purchase_stat_analysis: { Args: { _analysis_id: string }; Returns: Json }
       purchase_stat_pdf: { Args: { _analysis_id: string }; Returns: Json }
       read_email_batch: {
@@ -7488,6 +7512,10 @@ export type Database = {
       use_track_tool:
         | { Args: { _tool_id: string }; Returns: Json }
         | { Args: { _mode: string; _tool_id: string }; Returns: Json }
+      validate_promo_code: {
+        Args: { p_code: string; p_item_id: string }
+        Returns: Json
+      }
     }
     Enums: {
       app_role: "admin" | "moderator" | "user"
