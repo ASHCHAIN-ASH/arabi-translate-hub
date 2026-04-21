@@ -16,7 +16,9 @@ import { LevelUpCelebration } from '@/components/challenge-academy/LevelUpCelebr
 import { ReferralPanel } from '@/components/challenge-academy/ReferralPanel';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { Card } from '@/components/ui/card';
-import { Zap, Trophy, Award, Loader2, Calendar, Gift } from 'lucide-react';
+import { Zap, Trophy, Award, Loader2, Calendar, Gift, Target, ArrowLeft } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Link } from 'react-router-dom';
 import { AttemptSubmitResult } from '@/utils/dailyChallengeService';
 import { ChallengeReferralService } from '@/utils/challengeReferralService';
 import { toast } from 'sonner';
