@@ -13,6 +13,7 @@ import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
 
 import Footer from '@/components/Footer';
+import AuthCtaCard from "@/components/research/AuthCtaCard";
 export default function EbookCreation() {
   const navigate = useNavigate();
   const { toast } = useToast();
@@ -514,69 +515,7 @@ export default function EbookCreation() {
             <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
               <Card className="p-8 shadow-xl">
                 <h2 className="text-3xl font-bold mb-6 text-center">اطلب الخدمة الآن</h2>
-                <form onSubmit={handleSubmit} className="space-y-6">
-                  <div>
-                    <Label htmlFor="fullName">الاسم الكامل *</Label>
-                    <Input
-                      id="fullName"
-                      value={formData.fullName}
-                      onChange={(e) => setFormData({ ...formData, fullName: e.target.value })}
-                      required
-                      className="mt-2"
-                    />
-                  </div>
-
-                  <div className="grid md:grid-cols-2 gap-4">
-                    <div>
-                      <Label htmlFor="email">البريد الإلكتروني *</Label>
-                      <Input
-                        id="email"
-                        type="email"
-                        value={formData.email}
-                        onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                        required
-                        className="mt-2"
-                      />
-                    </div>
-                    <div>
-                      <Label htmlFor="phone">رقم الجوال *</Label>
-                      <Input
-                        id="phone"
-                        value={formData.phone}
-                        onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                        required
-                        className="mt-2"
-                      />
-                    </div>
-                  </div>
-
-                  <div>
-                    <Label htmlFor="specialization">مجال الكتاب</Label>
-                    <Input
-                      id="specialization"
-                      value={formData.specialization}
-                      onChange={(e) => setFormData({ ...formData, specialization: e.target.value })}
-                      className="mt-2"
-                    />
-                  </div>
-
-                  <div>
-                    <Label htmlFor="details">تفاصيل الكتاب الإلكتروني *</Label>
-                    <Textarea
-                      id="details"
-                      value={formData.details}
-                      onChange={(e) => setFormData({ ...formData, details: e.target.value })}
-                      required
-                      rows={5}
-                      className="mt-2"
-                      placeholder="يرجى ذكر موضوع الكتاب، عدد الصفحات المتوقع، التصميم المطلوب، الصيغة النهائية، وأي تفاصيل أخرى..."
-                    />
-                  </div>
-
-                  <Button type="submit" disabled={loading} className="w-full bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 text-white py-6 text-lg font-bold">
-                    {loading ? 'جاري الإرسال...' : 'إرسال الطلب'}
-                  </Button>
-                </form>
+                <AuthCtaCard serviceTitle="إنشاء الكتب الإلكترونية" />
               </Card>
             </motion.div>
           </div>

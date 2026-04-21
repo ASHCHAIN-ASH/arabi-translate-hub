@@ -14,6 +14,7 @@ import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 
 import Footer from '@/components/Footer';
+import AuthCtaCard from "@/components/research/AuthCtaCard";
 const PlagiarismCheck = () => {
   const [checkForm, setCheckForm] = useState({
     name: "",
@@ -162,107 +163,7 @@ const PlagiarismCheck = () => {
                   <DialogHeader>
                     <DialogTitle className="text-2xl font-arabic-title">طلب فحص السرقة الأدبية</DialogTitle>
                   </DialogHeader>
-                  <form onSubmit={handleSubmit} className="space-y-4">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <div>
-                        <Label>الاسم الكامل *</Label>
-                        <Input
-                          value={checkForm.name}
-                          onChange={(e) => setCheckForm({...checkForm, name: e.target.value})}
-                          required
-                        />
-                      </div>
-                      <div>
-                        <Label>البريد الإلكتروني *</Label>
-                        <Input
-                          type="email"
-                          value={checkForm.email}
-                          onChange={(e) => setCheckForm({...checkForm, email: e.target.value})}
-                          required
-                        />
-                      </div>
-                    </div>
-                    
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <div>
-                        <Label>رقم الهاتف</Label>
-                        <Input
-                          value={checkForm.phone}
-                          onChange={(e) => setCheckForm({...checkForm, phone: e.target.value})}
-                        />
-                      </div>
-                      <div>
-                        <Label>نوع الوثيقة *</Label>
-                        <Select value={checkForm.document_type} onValueChange={(value) => setCheckForm({...checkForm, document_type: value})} required>
-                          <SelectTrigger>
-                            <SelectValue placeholder="اختر نوع الوثيقة" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="thesis">رسالة ماجستير/دكتوراه</SelectItem>
-                            <SelectItem value="research_paper">بحث علمي</SelectItem>
-                            <SelectItem value="article">مقال أكاديمي</SelectItem>
-                            <SelectItem value="report">تقرير</SelectItem>
-                            <SelectItem value="book">كتاب</SelectItem>
-                            <SelectItem value="other">أخرى</SelectItem>
-                          </SelectContent>
-                        </Select>
-                      </div>
-                    </div>
-
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <div>
-                        <Label>لغة الوثيقة</Label>
-                        <Select value={checkForm.language} onValueChange={(value) => setCheckForm({...checkForm, language: value})}>
-                          <SelectTrigger>
-                            <SelectValue placeholder="اختر اللغة" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="arabic">العربية</SelectItem>
-                            <SelectItem value="english">الإنجليزية</SelectItem>
-                            <SelectItem value="french">الفرنسية</SelectItem>
-                            <SelectItem value="mixed">مختلطة</SelectItem>
-                          </SelectContent>
-                        </Select>
-                      </div>
-                      <div>
-                        <Label>عدد الصفحات (تقريبي)</Label>
-                        <Input
-                          type="number"
-                          value={checkForm.pages_count}
-                          onChange={(e) => setCheckForm({...checkForm, pages_count: e.target.value})}
-                          placeholder="مثال: 50"
-                        />
-                      </div>
-                    </div>
-
-                    <div>
-                      <Label>مستوى الاستعجال</Label>
-                      <Select value={checkForm.urgency} onValueChange={(value) => setCheckForm({...checkForm, urgency: value})}>
-                        <SelectTrigger>
-                          <SelectValue placeholder="اختر مستوى الاستعجال" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="normal">عادي (24 ساعة)</SelectItem>
-                          <SelectItem value="urgent">سريع (12 ساعة)</SelectItem>
-                          <SelectItem value="very_urgent">عاجل (6 ساعات)</SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </div>
-
-                    <div>
-                      <Label>ملاحظات إضافية</Label>
-                      <Textarea
-                        value={checkForm.additional_notes}
-                        onChange={(e) => setCheckForm({...checkForm, additional_notes: e.target.value})}
-                        placeholder="أي متطلبات خاصة أو ملاحظات..."
-                        rows={3}
-                      />
-                    </div>
-
-                    <Button type="submit" disabled={loading} className="w-full">
-                      {loading ? "جاري الإرسال..." : "إرسال طلب الفحص"}
-                    </Button>
-                  </form>
+                  <AuthCtaCard serviceTitle="فحص الانتحال" />
                 </DialogContent>
               </Dialog>
               <Button variant="outline" size="lg" className="border-white text-white hover:bg-white hover:text-primary">
