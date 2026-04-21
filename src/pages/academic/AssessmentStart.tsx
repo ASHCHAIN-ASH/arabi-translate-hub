@@ -11,6 +11,7 @@ import { AssessmentService, AssessmentQuestion, Assessment } from '@/utils/asses
 import { useAuth } from '@/components/SimpleAuthProvider';
 import { toast } from 'sonner';
 import { motion, AnimatePresence } from 'framer-motion';
+import ClientLayout from '@/components/client/ClientLayout';
 
 export default function AssessmentStart() {
   const { id } = useParams<{ id: string }>();
@@ -95,16 +96,20 @@ export default function AssessmentStart() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-background" dir="rtl">
-        <Loader2 className="w-8 h-8 animate-spin text-primary" />
-      </div>
+      <ClientLayout>
+        <div className="min-h-screen flex items-center justify-center bg-background" dir="rtl">
+          <Loader2 className="w-8 h-8 animate-spin text-primary" />
+        </div>
+      </ClientLayout>
     );
   }
   if (!assessment || total === 0) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-background" dir="rtl">
-        <p className="text-muted-foreground">لا توجد أسئلة في هذا الاختبار.</p>
-      </div>
+      <ClientLayout>
+        <div className="min-h-screen flex items-center justify-center bg-background" dir="rtl">
+          <p className="text-muted-foreground">لا توجد أسئلة في هذا الاختبار.</p>
+        </div>
+      </ClientLayout>
     );
   }
 
