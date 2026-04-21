@@ -1398,6 +1398,7 @@ export type Database = {
           order_id: string | null
           parent_contract_id: string | null
           payment_terms: string | null
+          publication_id: string | null
           sent_at: string | null
           service_name: string | null
           service_order_id: string | null
@@ -1438,6 +1439,7 @@ export type Database = {
           order_id?: string | null
           parent_contract_id?: string | null
           payment_terms?: string | null
+          publication_id?: string | null
           sent_at?: string | null
           service_name?: string | null
           service_order_id?: string | null
@@ -1478,6 +1480,7 @@ export type Database = {
           order_id?: string | null
           parent_contract_id?: string | null
           payment_terms?: string | null
+          publication_id?: string | null
           sent_at?: string | null
           service_name?: string | null
           service_order_id?: string | null
@@ -1522,6 +1525,13 @@ export type Database = {
             columns: ["parent_contract_id"]
             isOneToOne: false
             referencedRelation: "contracts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "contracts_publication_id_fkey"
+            columns: ["publication_id"]
+            isOneToOne: false
+            referencedRelation: "research_publications"
             referencedColumns: ["id"]
           },
           {
@@ -2942,6 +2952,7 @@ export type Database = {
           paid_at: string | null
           pdf_generated_at: string | null
           pdf_storage_path: string | null
+          publication_id: string | null
           remaining_amount: number | null
           sent_at: string | null
           status: string | null
@@ -2970,6 +2981,7 @@ export type Database = {
           paid_at?: string | null
           pdf_generated_at?: string | null
           pdf_storage_path?: string | null
+          publication_id?: string | null
           remaining_amount?: number | null
           sent_at?: string | null
           status?: string | null
@@ -2998,6 +3010,7 @@ export type Database = {
           paid_at?: string | null
           pdf_generated_at?: string | null
           pdf_storage_path?: string | null
+          publication_id?: string | null
           remaining_amount?: number | null
           sent_at?: string | null
           status?: string | null
@@ -3021,6 +3034,13 @@ export type Database = {
             columns: ["order_id"]
             isOneToOne: false
             referencedRelation: "service_orders"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "invoices_publication_id_fkey"
+            columns: ["publication_id"]
+            isOneToOne: false
+            referencedRelation: "research_publications"
             referencedColumns: ["id"]
           },
         ]
@@ -4714,6 +4734,62 @@ export type Database = {
         Relationships: [
           {
             foreignKeyName: "research_publication_messages_publication_id_fkey"
+            columns: ["publication_id"]
+            isOneToOne: false
+            referencedRelation: "research_publications"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      research_publication_quotes: {
+        Row: {
+          amount: number
+          created_at: string
+          created_by: string | null
+          currency: string
+          description: string | null
+          id: string
+          publication_id: string
+          quote_number: string
+          status: string
+          tax_amount: number
+          total_amount: number
+          updated_at: string
+          valid_until: string | null
+        }
+        Insert: {
+          amount: number
+          created_at?: string
+          created_by?: string | null
+          currency?: string
+          description?: string | null
+          id?: string
+          publication_id: string
+          quote_number?: string
+          status?: string
+          tax_amount?: number
+          total_amount: number
+          updated_at?: string
+          valid_until?: string | null
+        }
+        Update: {
+          amount?: number
+          created_at?: string
+          created_by?: string | null
+          currency?: string
+          description?: string | null
+          id?: string
+          publication_id?: string
+          quote_number?: string
+          status?: string
+          tax_amount?: number
+          total_amount?: number
+          updated_at?: string
+          valid_until?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "research_publication_quotes_publication_id_fkey"
             columns: ["publication_id"]
             isOneToOne: false
             referencedRelation: "research_publications"

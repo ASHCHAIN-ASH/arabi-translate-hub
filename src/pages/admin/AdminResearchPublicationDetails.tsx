@@ -1,0 +1,642 @@
+import React, { useEffect, useState } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
+import { motion } from 'framer-motion';
+import {
+  ArrowRight, BookOpen, User, Phone, Mail, FileText, FileSignature, Receipt,
+  MessageCircle, Send, Loader2, Award, Paperclip, Download, Plus, Calendar,
+  Trash2, ExternalLink, History,
+} from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
+import { Label } from '@/components/ui/label';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Card } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
+import { useToast } from '@/hooks/use-toast';
+import { useAuth } from '@/components/SimpleAuthProvider';
+import { supabase } from '@/integrations/supabase/client';
+import AdminLayout from '@/components/admin/AdminLayout';
+
+const STATUSES = [
+  { value: 'new', label: 'جديد', color: 'bg-blue-500' },
+  { value: 'under_review', label: 'قيد المراجعة', color: 'bg-amber-500' },
+  { value: 'quoted', label: 'عرض سعر', color: 'bg-purple-500' },
+  { value: 'approved', label: 'معتمد', color: 'bg-emerald-500' },
+  { value: 'in_progress', label: 'قيد التنفيذ', color: 'bg-cyan-500' },
+  { value: 'published', label: 'تم النشر', color: 'bg-green-600' },
+  { value: 'rejected', label: 'مرفوض', color: 'bg-rose-500' },
+];
+
+const QUOTE_STATUSES: Record<string, { label: string; color: string }> = {
+  draft: { label: 'مسودة', color: 'bg-slate-500' },
+  sent: { label: 'مُرسل', color: 'bg-blue-500' },
+  accepted: { label: 'مقبول', color: 'bg-emerald-500' },
+  rejected: { label: 'مرفوض', color: 'bg-rose-500' },
+  expired: { label: 'منتهي', color: 'bg-amber-500' },
+};
+
+const INVOICE_STATUSES: Record<string, { label: string; color: string }> = {
+  draft: { label: 'مسودة', color: 'bg-slate-500' },
+  pending: { label: 'بانتظار الدفع', color: 'bg-amber-500' },
+  sent: { label: 'مُرسلة', color: 'bg-blue-500' },
+  partially_paid: { label: 'مدفوعة جزئياً', color: 'bg-cyan-500' },
+  paid: { label: 'مدفوعة', color: 'bg-emerald-500' },
+  overdue: { label: 'متأخرة', color: 'bg-rose-500' },
+  cancelled: { label: 'ملغاة', color: 'bg-slate-400' },
+};
+
+const CONTRACT_STATUSES: Record<string, { label: string; color: string }> = {
+  draft: { label: 'مسودة', color: 'bg-slate-500' },
+  sent: { label: 'مُرسل', color: 'bg-blue-500' },
+  signed: { label: 'موقّع', color: 'bg-emerald-500' },
+  cancelled: { label: 'ملغى', color: 'bg-rose-500' },
+  expired: { label: 'منتهي', color: 'bg-amber-500' },
+};
+
+export default function AdminResearchPublicationDetails() {
+  const { id } = useParams();
+  const navigate = useNavigate();
+  const { user } = useAuth();
+  const { toast } = useToast();
+
+  const [item, setItem] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
+  const [editing, setEditing] = useState<any>({});
+  const [messages, setMessages] = useState<any[]>([]);
+  const [newMsg, setNewMsg] = useState('');
+  const [contracts, setContracts] = useState<any[]>([]);
+  const [quotes, setQuotes] = useState<any[]>([]);
+  const [invoices, setInvoices] = useState<any[]>([]);
+
+  const [quoteDialog, setQuoteDialog] = useState(false);
+  const [quoteForm, setQuoteForm] = useState({ amount: '', tax_rate: '15', description: '', valid_until: '' });
+
+  const [invoiceDialog, setInvoiceDialog] = useState(false);
+  const [invoiceForm, setInvoiceForm] = useState({ subtotal: '', tax_rate: '15', notes: '', due_date: '' });
+
+  const loadAll = async () => {
+    if (!id) return;
+    setLoading(true);
+    const [pub, msgs, ctr, qts, inv] = await Promise.all([
+      supabase.from('research_publications').select('*').eq('id', id).maybeSingle(),
+      supabase.from('research_publication_messages').select('*').eq('publication_id', id).order('created_at'),
+      (supabase.from('contracts') as any).select('*').eq('publication_id', id).order('created_at', { ascending: false }),
+      (supabase.from('research_publication_quotes') as any).select('*').eq('publication_id', id).order('created_at', { ascending: false }),
+      (supabase.from('invoices') as any).select('*').eq('publication_id', id).order('created_at', { ascending: false }),
+    ]);
+    setItem(pub.data);
+    setMessages(msgs.data || []);
+    setContracts(ctr.data || []);
+    setQuotes(qts.data || []);
+    setInvoices(inv.data || []);
+    setLoading(false);
+  };
+
+  useEffect(() => { loadAll(); }, [id]);
+
+  useEffect(() => {
+    if (!id) return;
+    const channel = supabase
+      .channel(`pub-detail-${id}`)
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'research_publication_messages', filter: `publication_id=eq.${id}` }, loadAll)
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'research_publications', filter: `id=eq.${id}` }, loadAll)
+      .subscribe();
+    return () => { supabase.removeChannel(channel); };
+  }, [id]);
+
+  const updatePublication = async () => {
+    if (!item) return;
+    const updates: any = {};
+    if (editing.status && editing.status !== item.status) updates.status = editing.status;
+    if (editing.priority && editing.priority !== item.priority) updates.priority = editing.priority;
+    if (editing.estimated_amount !== undefined) updates.estimated_amount = editing.estimated_amount || null;
+    if (editing.final_amount !== undefined) updates.final_amount = editing.final_amount || null;
+    if (editing.expected_delivery_date !== undefined) updates.expected_delivery_date = editing.expected_delivery_date || null;
+    if (editing.admin_notes !== undefined) updates.admin_notes = editing.admin_notes;
+    if (Object.keys(updates).length === 0) return toast({ title: 'لا تغييرات' });
+    const { error } = await supabase.from('research_publications').update(updates).eq('id', item.id);
+    if (error) return toast({ title: 'خطأ', description: error.message, variant: 'destructive' });
+    toast({ title: '✅ تم التحديث', description: 'سيتم إشعار العميل عبر واتساب' });
+    setEditing({});
+    loadAll();
+  };
+
+  const sendReply = async () => {
+    if (!newMsg.trim() || !item) return;
+    const { error } = await supabase.from('research_publication_messages').insert({
+      publication_id: item.id,
+      sender_id: user!.id,
+      sender_type: 'admin',
+      message: newMsg.trim(),
+    });
+    if (error) return toast({ title: 'خطأ', description: error.message, variant: 'destructive' });
+    toast({ title: '✅ تم الإرسال', description: 'الرد سيصل العميل عبر الواتساب' });
+    setNewMsg('');
+  };
+
+  // Create Quote
+  const createQuote = async () => {
+    const amount = parseFloat(quoteForm.amount);
+    if (!amount || amount <= 0) return toast({ title: 'أدخل مبلغاً صحيحاً', variant: 'destructive' });
+    const taxRate = parseFloat(quoteForm.tax_rate) || 0;
+    const taxAmount = (amount * taxRate) / 100;
+    const total = amount + taxAmount;
+    const { error } = await (supabase.from('research_publication_quotes') as any).insert({
+      publication_id: item.id,
+      amount,
+      tax_amount: taxAmount,
+      total_amount: total,
+      description: quoteForm.description || null,
+      valid_until: quoteForm.valid_until || null,
+      created_by: user!.id,
+      status: 'draft',
+    });
+    if (error) return toast({ title: 'خطأ', description: error.message, variant: 'destructive' });
+    toast({ title: '✅ تم إنشاء عرض السعر' });
+    setQuoteDialog(false);
+    setQuoteForm({ amount: '', tax_rate: '15', description: '', valid_until: '' });
+    loadAll();
+  };
+
+  const sendQuote = async (q: any) => {
+    const { error } = await (supabase.from('research_publication_quotes') as any)
+      .update({ status: 'sent' }).eq('id', q.id);
+    if (error) return toast({ title: 'خطأ', description: error.message, variant: 'destructive' });
+    // Sync price into publication and notify client
+    await supabase.from('research_publications').update({
+      estimated_amount: q.amount,
+      status: item.status === 'new' || item.status === 'under_review' ? 'quoted' : item.status,
+    }).eq('id', item.id);
+    toast({ title: '✅ تم إرسال العرض للعميل (واتساب)' });
+    loadAll();
+  };
+
+  const deleteQuote = async (qid: string) => {
+    if (!confirm('هل تريد حذف عرض السعر؟')) return;
+    const { error } = await (supabase.from('research_publication_quotes') as any).delete().eq('id', qid);
+    if (error) return toast({ title: 'خطأ', description: error.message, variant: 'destructive' });
+    toast({ title: 'تم الحذف' });
+    loadAll();
+  };
+
+  // Create Invoice
+  const createInvoice = async () => {
+    const subtotal = parseFloat(invoiceForm.subtotal);
+    if (!subtotal || subtotal <= 0) return toast({ title: 'أدخل مبلغاً صحيحاً', variant: 'destructive' });
+    const taxRate = parseFloat(invoiceForm.tax_rate) || 0;
+    const taxAmount = (subtotal * taxRate) / 100;
+    const total = subtotal + taxAmount;
+    const { error } = await (supabase.from('invoices') as any).insert({
+      publication_id: item.id,
+      user_id: item.user_id,
+      subtotal,
+      tax_amount: taxAmount,
+      total_amount: total,
+      status: 'pending',
+      customer_name: item.client_name,
+      customer_email: item.client_email,
+      customer_phone: item.client_phone,
+      notes: invoiceForm.notes || `فاتورة طلب نشر ${item.request_number}`,
+      due_date: invoiceForm.due_date || null,
+      currency: 'SAR',
+    });
+    if (error) return toast({ title: 'خطأ', description: error.message, variant: 'destructive' });
+    toast({ title: '✅ تم إنشاء الفاتورة الضريبية' });
+    setInvoiceDialog(false);
+    setInvoiceForm({ subtotal: '', tax_rate: '15', notes: '', due_date: '' });
+    loadAll();
+  };
+
+  // Create Contract
+  const createContract = () => {
+    if (!item) return;
+    const params = new URLSearchParams({
+      client_full_name: item.client_name || '',
+      client_phone: item.client_phone || '',
+      client_email: item.client_email || '',
+      title: `عقد نشر بحث: ${item.title}`,
+      service_name: 'نشر بحث علمي',
+      total_amount: String(item.final_amount || item.estimated_amount || ''),
+      publication_id: item.id,
+    });
+    navigate(`/adminmaster/contracts/new?${params.toString()}`);
+  };
+
+  if (loading) {
+    return <AdminLayout><div className="p-12 text-center"><Loader2 className="w-10 h-10 animate-spin mx-auto text-indigo-600" /></div></AdminLayout>;
+  }
+  if (!item) {
+    return <AdminLayout><div className="p-12 text-center"><p>الطلب غير موجود</p><Button onClick={() => navigate('/adminmaster/research')} className="mt-4">عودة</Button></div></AdminLayout>;
+  }
+
+  const status = STATUSES.find(s => s.value === item.status);
+  const attachments: any[] = Array.isArray(item.attachments) ? item.attachments : [];
+
+  return (
+    <AdminLayout>
+      <div className="p-4 sm:p-6 space-y-5" dir="rtl">
+        {/* Header */}
+        <div className="flex items-center gap-3 flex-wrap">
+          <Button variant="outline" size="sm" onClick={() => navigate('/adminmaster/research')}>
+            <ArrowRight className="w-4 h-4 ml-1" /> سجل الطلبات
+          </Button>
+        </div>
+
+        <motion.div
+          initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }}
+          className="bg-gradient-to-br from-indigo-700 via-blue-700 to-cyan-600 text-white rounded-3xl p-6 shadow-xl"
+        >
+          <div className="flex items-start justify-between gap-4 flex-wrap">
+            <div className="flex items-start gap-3">
+              <div className="w-14 h-14 bg-white/20 rounded-2xl flex items-center justify-center shrink-0">
+                <BookOpen className="w-8 h-8" />
+              </div>
+              <div>
+                <Badge className="bg-white/20 border-0 text-white font-mono mb-2">{item.request_number}</Badge>
+                <h1 className="text-xl sm:text-2xl font-black">{item.title}</h1>
+                <div className="flex items-center gap-3 mt-2 text-white/85 text-xs flex-wrap">
+                  <span className="flex items-center gap-1"><User className="w-3 h-3" />{item.client_name}</span>
+                  <span className="flex items-center gap-1"><Phone className="w-3 h-3" />{item.client_phone}</span>
+                  {item.client_email && <span className="flex items-center gap-1"><Mail className="w-3 h-3" />{item.client_email}</span>}
+                </div>
+              </div>
+            </div>
+            <Badge className={`${status?.color} text-white border-0 text-base px-3 py-1`}>{status?.label}</Badge>
+          </div>
+        </motion.div>
+
+        <Tabs defaultValue="overview" dir="rtl">
+          <TabsList className="flex-wrap h-auto">
+            <TabsTrigger value="overview"><FileText className="w-4 h-4 ml-1" />نظرة عامة</TabsTrigger>
+            <TabsTrigger value="contracts"><FileSignature className="w-4 h-4 ml-1" />العقود ({contracts.length})</TabsTrigger>
+            <TabsTrigger value="quotes"><Award className="w-4 h-4 ml-1" />عروض الأسعار ({quotes.length})</TabsTrigger>
+            <TabsTrigger value="invoices"><Receipt className="w-4 h-4 ml-1" />الفواتير ({invoices.length})</TabsTrigger>
+            <TabsTrigger value="attachments"><Paperclip className="w-4 h-4 ml-1" />المرفقات ({attachments.length})</TabsTrigger>
+            <TabsTrigger value="chat"><MessageCircle className="w-4 h-4 ml-1" />المحادثة ({messages.length})</TabsTrigger>
+          </TabsList>
+
+          {/* Overview */}
+          <TabsContent value="overview" className="space-y-4 mt-4">
+            <div className="grid md:grid-cols-2 gap-4">
+              <Card className="p-4">
+                <h4 className="font-bold mb-3 text-sm">تفاصيل البحث</h4>
+                <div className="space-y-1.5 text-sm">
+                  <div><b>التخصص:</b> {item.field}</div>
+                  <div><b>اللغة:</b> {item.language}</div>
+                  <div><b>نوع الخدمة:</b> {item.service_type}</div>
+                  {item.target_journal && <div><b>المجلة:</b> {item.target_journal}</div>}
+                  {item.journal_rank && <div><b>التصنيف:</b> {item.journal_rank}</div>}
+                  {item.page_count && <div><b>الصفحات:</b> {item.page_count}</div>}
+                  {item.keywords && <div><b>الكلمات المفتاحية:</b> {item.keywords}</div>}
+                  {item.authors && <div><b>المؤلفون:</b> {item.authors}</div>}
+                </div>
+              </Card>
+
+              <Card className="p-4 bg-indigo-50/50 border-indigo-200">
+                <h4 className="font-bold mb-3 text-sm flex items-center gap-2"><Award className="w-4 h-4 text-indigo-600" />إدارة الطلب</h4>
+                <div className="space-y-2">
+                  <div className="grid grid-cols-2 gap-2">
+                    <div>
+                      <Label className="text-xs">الحالة</Label>
+                      <Select value={editing.status ?? item.status} onValueChange={v => setEditing({ ...editing, status: v })}>
+                        <SelectTrigger><SelectValue /></SelectTrigger>
+                        <SelectContent>
+                          {STATUSES.map(s => <SelectItem key={s.value} value={s.value}>{s.label}</SelectItem>)}
+                        </SelectContent>
+                      </Select>
+                    </div>
+                    <div>
+                      <Label className="text-xs">الأولوية</Label>
+                      <Select value={editing.priority ?? item.priority} onValueChange={v => setEditing({ ...editing, priority: v })}>
+                        <SelectTrigger><SelectValue /></SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="low">منخفضة</SelectItem>
+                          <SelectItem value="normal">عادية</SelectItem>
+                          <SelectItem value="high">مرتفعة</SelectItem>
+                          <SelectItem value="urgent">عاجلة</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                  </div>
+                  <div className="grid grid-cols-2 gap-2">
+                    <div>
+                      <Label className="text-xs">السعر المقترح</Label>
+                      <Input type="number" defaultValue={item.estimated_amount || ''}
+                        onChange={e => setEditing({ ...editing, estimated_amount: e.target.value })} />
+                    </div>
+                    <div>
+                      <Label className="text-xs">السعر النهائي</Label>
+                      <Input type="number" defaultValue={item.final_amount || ''}
+                        onChange={e => setEditing({ ...editing, final_amount: e.target.value })} />
+                    </div>
+                  </div>
+                  <div>
+                    <Label className="text-xs">تاريخ التسليم المتوقع</Label>
+                    <Input type="date" defaultValue={item.expected_delivery_date || ''}
+                      onChange={e => setEditing({ ...editing, expected_delivery_date: e.target.value })} />
+                  </div>
+                  <div>
+                    <Label className="text-xs">ملاحظات إدارية</Label>
+                    <Textarea rows={2} defaultValue={item.admin_notes || ''}
+                      onChange={e => setEditing({ ...editing, admin_notes: e.target.value })} />
+                  </div>
+                  <Button onClick={updatePublication} className="w-full bg-indigo-600 hover:bg-indigo-700">
+                    💾 حفظ (سيتم إشعار العميل)
+                  </Button>
+                </div>
+              </Card>
+            </div>
+
+            <Card className="p-4">
+              <div className="text-xs text-muted-foreground mb-1">الملخص:</div>
+              <p className="text-sm whitespace-pre-wrap">{item.abstract}</p>
+            </Card>
+
+            {item.notes && (
+              <Card className="p-4 bg-amber-50 border-amber-200">
+                <div className="text-xs text-amber-700 mb-1">ملاحظات العميل:</div>
+                <p className="text-sm whitespace-pre-wrap">{item.notes}</p>
+              </Card>
+            )}
+          </TabsContent>
+
+          {/* Contracts */}
+          <TabsContent value="contracts" className="space-y-3 mt-4">
+            <div className="flex justify-between items-center">
+              <h3 className="font-bold">عقود الطلب</h3>
+              <Button onClick={createContract} className="bg-indigo-600 hover:bg-indigo-700">
+                <Plus className="w-4 h-4 ml-1" /> إنشاء عقد جديد
+              </Button>
+            </div>
+            {contracts.length === 0 ? (
+              <Card className="p-12 text-center border-dashed">
+                <FileSignature className="w-12 h-12 mx-auto text-muted-foreground/30 mb-2" />
+                <p className="text-muted-foreground text-sm">لا توجد عقود لهذا الطلب</p>
+              </Card>
+            ) : contracts.map(c => {
+              const cs = CONTRACT_STATUSES[c.status] || { label: c.status, color: 'bg-slate-500' };
+              return (
+                <Card key={c.id} className="p-4 hover:shadow-md transition-shadow">
+                  <div className="flex justify-between items-start gap-3 flex-wrap">
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-2 mb-1 flex-wrap">
+                        <Badge variant="outline" className="font-mono text-xs">{c.contract_number}</Badge>
+                        <Badge className={`${cs.color} text-white border-0`}>{cs.label}</Badge>
+                      </div>
+                      <h4 className="font-bold text-sm">{c.title}</h4>
+                      <div className="text-xs text-muted-foreground mt-1">
+                        {new Date(c.created_at).toLocaleString('ar-SA')}
+                        {c.total_amount && ` • ${Number(c.total_amount).toLocaleString('ar-SA')} ر.س`}
+                      </div>
+                    </div>
+                    <Button size="sm" variant="outline" onClick={() => navigate(`/adminmaster/contracts/${c.id}`)}>
+                      <ExternalLink className="w-4 h-4 ml-1" /> فتح
+                    </Button>
+                  </div>
+                </Card>
+              );
+            })}
+          </TabsContent>
+
+          {/* Quotes */}
+          <TabsContent value="quotes" className="space-y-3 mt-4">
+            <div className="flex justify-between items-center">
+              <h3 className="font-bold">عروض الأسعار</h3>
+              <Button onClick={() => setQuoteDialog(true)} className="bg-purple-600 hover:bg-purple-700">
+                <Plus className="w-4 h-4 ml-1" /> إنشاء عرض سعر
+              </Button>
+            </div>
+            {quotes.length === 0 ? (
+              <Card className="p-12 text-center border-dashed">
+                <Award className="w-12 h-12 mx-auto text-muted-foreground/30 mb-2" />
+                <p className="text-muted-foreground text-sm">لا توجد عروض أسعار</p>
+              </Card>
+            ) : quotes.map(q => {
+              const qs = QUOTE_STATUSES[q.status] || { label: q.status, color: 'bg-slate-500' };
+              return (
+                <Card key={q.id} className="p-4">
+                  <div className="flex justify-between items-start gap-3 flex-wrap">
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-2 mb-1 flex-wrap">
+                        <Badge variant="outline" className="font-mono text-xs">{q.quote_number}</Badge>
+                        <Badge className={`${qs.color} text-white border-0`}>{qs.label}</Badge>
+                      </div>
+                      <div className="text-sm grid grid-cols-3 gap-3 mt-2">
+                        <div><div className="text-xs text-muted-foreground">المبلغ</div><div className="font-bold">{Number(q.amount).toLocaleString('ar-SA')} ر.س</div></div>
+                        <div><div className="text-xs text-muted-foreground">الضريبة</div><div className="font-bold">{Number(q.tax_amount).toLocaleString('ar-SA')} ر.س</div></div>
+                        <div><div className="text-xs text-muted-foreground">الإجمالي</div><div className="font-black text-emerald-700">{Number(q.total_amount).toLocaleString('ar-SA')} ر.س</div></div>
+                      </div>
+                      {q.description && <p className="text-xs text-muted-foreground mt-2">{q.description}</p>}
+                      {q.valid_until && <div className="text-xs mt-1"><Calendar className="w-3 h-3 inline ml-1" />صالح حتى: {new Date(q.valid_until).toLocaleDateString('ar-SA')}</div>}
+                    </div>
+                    <div className="flex flex-col gap-2">
+                      {q.status === 'draft' && (
+                        <Button size="sm" onClick={() => sendQuote(q)} className="bg-blue-600 hover:bg-blue-700">
+                          <Send className="w-3 h-3 ml-1" /> إرسال للعميل
+                        </Button>
+                      )}
+                      <Button size="sm" variant="outline" onClick={() => deleteQuote(q.id)} className="text-rose-600">
+                        <Trash2 className="w-3 h-3 ml-1" /> حذف
+                      </Button>
+                    </div>
+                  </div>
+                </Card>
+              );
+            })}
+          </TabsContent>
+
+          {/* Invoices */}
+          <TabsContent value="invoices" className="space-y-3 mt-4">
+            <div className="flex justify-between items-center">
+              <h3 className="font-bold">الفواتير الضريبية</h3>
+              <Button onClick={() => setInvoiceDialog(true)} className="bg-emerald-600 hover:bg-emerald-700">
+                <Plus className="w-4 h-4 ml-1" /> إنشاء فاتورة
+              </Button>
+            </div>
+            {invoices.length === 0 ? (
+              <Card className="p-12 text-center border-dashed">
+                <Receipt className="w-12 h-12 mx-auto text-muted-foreground/30 mb-2" />
+                <p className="text-muted-foreground text-sm">لا توجد فواتير</p>
+              </Card>
+            ) : invoices.map(inv => {
+              const ist = INVOICE_STATUSES[inv.status] || { label: inv.status, color: 'bg-slate-500' };
+              return (
+                <Card key={inv.id} className="p-4">
+                  <div className="flex justify-between items-start gap-3 flex-wrap">
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-2 mb-1 flex-wrap">
+                        <Badge variant="outline" className="font-mono text-xs">{inv.invoice_number}</Badge>
+                        <Badge className={`${ist.color} text-white border-0`}>{ist.label}</Badge>
+                      </div>
+                      <div className="text-sm grid grid-cols-3 gap-3 mt-2">
+                        <div><div className="text-xs text-muted-foreground">المجموع الفرعي</div><div className="font-bold">{Number(inv.subtotal).toLocaleString('ar-SA')} ر.س</div></div>
+                        <div><div className="text-xs text-muted-foreground">الضريبة</div><div className="font-bold">{Number(inv.tax_amount).toLocaleString('ar-SA')} ر.س</div></div>
+                        <div><div className="text-xs text-muted-foreground">الإجمالي</div><div className="font-black text-emerald-700">{Number(inv.total_amount).toLocaleString('ar-SA')} ر.س</div></div>
+                      </div>
+                      <div className="text-xs text-muted-foreground mt-2">
+                        صادرة في: {new Date(inv.issue_date).toLocaleDateString('ar-SA')}
+                        {inv.due_date && ` • مستحقة: ${new Date(inv.due_date).toLocaleDateString('ar-SA')}`}
+                      </div>
+                    </div>
+                    <Button size="sm" variant="outline" onClick={() => navigate(`/adminmaster/invoices/${inv.id}`)}>
+                      <ExternalLink className="w-4 h-4 ml-1" /> فتح
+                    </Button>
+                  </div>
+                </Card>
+              );
+            })}
+          </TabsContent>
+
+          {/* Attachments */}
+          <TabsContent value="attachments" className="space-y-3 mt-4">
+            <h3 className="font-bold">مرفقات العميل</h3>
+            {attachments.length === 0 ? (
+              <Card className="p-12 text-center border-dashed">
+                <Paperclip className="w-12 h-12 mx-auto text-muted-foreground/30 mb-2" />
+                <p className="text-muted-foreground text-sm">لا توجد مرفقات</p>
+              </Card>
+            ) : (
+              <div className="grid sm:grid-cols-2 gap-3">
+                {attachments.map((a: any, idx: number) => (
+                  <Card key={idx} className="p-3 flex items-center gap-3">
+                    <FileText className="w-8 h-8 text-indigo-600 shrink-0" />
+                    <div className="flex-1 min-w-0">
+                      <div className="font-bold text-sm truncate">{a.name || a.file_name || `ملف ${idx + 1}`}</div>
+                      {a.size && <div className="text-xs text-muted-foreground">{(a.size / 1024).toFixed(1)} KB</div>}
+                    </div>
+                    {(a.url || a.file_url) && (
+                      <Button size="sm" variant="outline" asChild>
+                        <a href={a.url || a.file_url} target="_blank" rel="noreferrer">
+                          <Download className="w-4 h-4" />
+                        </a>
+                      </Button>
+                    )}
+                  </Card>
+                ))}
+              </div>
+            )}
+            {item.file_url && (
+              <Card className="p-3 flex items-center gap-3 bg-indigo-50 border-indigo-200">
+                <FileText className="w-8 h-8 text-indigo-600 shrink-0" />
+                <div className="flex-1 font-bold text-sm">الملف الرئيسي للبحث</div>
+                <Button size="sm" variant="outline" asChild>
+                  <a href={item.file_url} target="_blank" rel="noreferrer"><Download className="w-4 h-4" /></a>
+                </Button>
+              </Card>
+            )}
+          </TabsContent>
+
+          {/* Chat */}
+          <TabsContent value="chat" className="mt-4">
+            <Card className="p-4">
+              <h4 className="font-bold mb-2 text-sm flex items-center gap-2">
+                <MessageCircle className="w-4 h-4 text-indigo-600" />
+                المحادثة (الرد سيُرسل عبر الواتساب فوراً)
+              </h4>
+              <div className="bg-muted/20 rounded-xl p-3 max-h-[500px] overflow-y-auto space-y-2 mb-3 min-h-[300px]">
+                {messages.length === 0 ? (
+                  <p className="text-sm text-muted-foreground text-center py-8">لا توجد رسائل بعد. ابدأ المحادثة 👇</p>
+                ) : messages.map(m => (
+                  <div key={m.id} className={`flex ${m.sender_type === 'admin' ? 'justify-end' : 'justify-start'}`}>
+                    <div className={`max-w-[80%] p-3 rounded-2xl text-sm ${
+                      m.sender_type === 'admin' ? 'bg-indigo-600 text-white rounded-br-sm' : 'bg-card border rounded-bl-sm'
+                    }`}>
+                      <div className="text-[10px] font-bold mb-1 opacity-70">
+                        {m.sender_type === 'admin' ? '👨‍💼 الإدارة' : '👤 العميل'}
+                      </div>
+                      {m.message}
+                      <div className={`text-[10px] mt-1 ${m.sender_type === 'admin' ? 'text-white/70' : 'text-muted-foreground'}`}>
+                        {new Date(m.created_at).toLocaleString('ar-SA')}
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+              <div className="flex gap-2">
+                <Textarea value={newMsg} onChange={e => setNewMsg(e.target.value)}
+                  placeholder="اكتب ردك للعميل... سيصل عبر الواتساب فوراً 📲" rows={2} />
+                <Button onClick={sendReply} disabled={!newMsg.trim()} className="bg-indigo-600 hover:bg-indigo-700 self-end">
+                  <Send className="w-4 h-4" />
+                </Button>
+              </div>
+            </Card>
+          </TabsContent>
+        </Tabs>
+
+        {/* Quote Dialog */}
+        <Dialog open={quoteDialog} onOpenChange={setQuoteDialog}>
+          <DialogContent dir="rtl">
+            <DialogHeader><DialogTitle>إنشاء عرض سعر جديد</DialogTitle></DialogHeader>
+            <div className="space-y-3">
+              <div>
+                <Label>المبلغ (ر.س) *</Label>
+                <Input type="number" value={quoteForm.amount} onChange={e => setQuoteForm({ ...quoteForm, amount: e.target.value })} />
+              </div>
+              <div>
+                <Label>نسبة الضريبة (%)</Label>
+                <Input type="number" value={quoteForm.tax_rate} onChange={e => setQuoteForm({ ...quoteForm, tax_rate: e.target.value })} />
+              </div>
+              <div>
+                <Label>الوصف</Label>
+                <Textarea rows={3} value={quoteForm.description} onChange={e => setQuoteForm({ ...quoteForm, description: e.target.value })} />
+              </div>
+              <div>
+                <Label>صالح حتى</Label>
+                <Input type="date" value={quoteForm.valid_until} onChange={e => setQuoteForm({ ...quoteForm, valid_until: e.target.value })} />
+              </div>
+              {quoteForm.amount && (
+                <Card className="p-3 bg-emerald-50 border-emerald-200 text-sm">
+                  المجموع: {parseFloat(quoteForm.amount || '0').toLocaleString('ar-SA')} +
+                  ضريبة {parseFloat(quoteForm.tax_rate || '0')}% =
+                  <b className="mr-1">{(parseFloat(quoteForm.amount || '0') * (1 + parseFloat(quoteForm.tax_rate || '0') / 100)).toLocaleString('ar-SA')} ر.س</b>
+                </Card>
+              )}
+            </div>
+            <DialogFooter>
+              <Button variant="outline" onClick={() => setQuoteDialog(false)}>إلغاء</Button>
+              <Button onClick={createQuote} className="bg-purple-600 hover:bg-purple-700">إنشاء العرض</Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+
+        {/* Invoice Dialog */}
+        <Dialog open={invoiceDialog} onOpenChange={setInvoiceDialog}>
+          <DialogContent dir="rtl">
+            <DialogHeader><DialogTitle>إنشاء فاتورة ضريبية</DialogTitle></DialogHeader>
+            <div className="space-y-3">
+              <div>
+                <Label>المجموع الفرعي (ر.س) *</Label>
+                <Input type="number" value={invoiceForm.subtotal} onChange={e => setInvoiceForm({ ...invoiceForm, subtotal: e.target.value })} />
+              </div>
+              <div>
+                <Label>نسبة الضريبة (%)</Label>
+                <Input type="number" value={invoiceForm.tax_rate} onChange={e => setInvoiceForm({ ...invoiceForm, tax_rate: e.target.value })} />
+              </div>
+              <div>
+                <Label>تاريخ الاستحقاق</Label>
+                <Input type="date" value={invoiceForm.due_date} onChange={e => setInvoiceForm({ ...invoiceForm, due_date: e.target.value })} />
+              </div>
+              <div>
+                <Label>ملاحظات</Label>
+                <Textarea rows={2} value={invoiceForm.notes} onChange={e => setInvoiceForm({ ...invoiceForm, notes: e.target.value })} />
+              </div>
+              {invoiceForm.subtotal && (
+                <Card className="p-3 bg-emerald-50 border-emerald-200 text-sm">
+                  الإجمالي شامل الضريبة:
+                  <b className="mr-1">{(parseFloat(invoiceForm.subtotal || '0') * (1 + parseFloat(invoiceForm.tax_rate || '0') / 100)).toLocaleString('ar-SA')} ر.س</b>
+                </Card>
+              )}
+            </div>
+            <DialogFooter>
+              <Button variant="outline" onClick={() => setInvoiceDialog(false)}>إلغاء</Button>
+              <Button onClick={createInvoice} className="bg-emerald-600 hover:bg-emerald-700">إنشاء الفاتورة</Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+      </div>
+    </AdminLayout>
+  );
+}
