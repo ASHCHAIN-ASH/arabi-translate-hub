@@ -120,11 +120,14 @@ const ClientMarketplaceRewards: React.FC = () => {
           </Card>
         </div>
 
+        {(() => null)()}
+        {/* Promo usages derived from purchases */}
         <Tabs defaultValue="all">
-          <TabsList className="w-full md:w-auto">
+          <TabsList className="w-full md:w-auto flex-wrap h-auto">
             <TabsTrigger value="all">الكل ({purchases.length})</TabsTrigger>
             <TabsTrigger value="coupons">الكوبونات ({coupons.length})</TabsTrigger>
             <TabsTrigger value="features">الميزات ({features.length})</TabsTrigger>
+            <TabsTrigger value="promos">أكواد الخصم ({purchases.filter(p => !!p.promo_code).length})</TabsTrigger>
           </TabsList>
 
           {/* All purchases */}
