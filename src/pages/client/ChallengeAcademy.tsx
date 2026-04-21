@@ -83,6 +83,30 @@ const ChallengeAcademy: React.FC = () => {
         {/* Header */}
         <StatsHeader summary={summary} streak={streak} />
 
+        {/* Level Assessment CTA Banner */}
+        <Card className="relative overflow-hidden p-5 bg-gradient-to-br from-primary/15 via-purple-500/10 to-amber-500/10 border-2 border-primary/30 hover:border-primary/50 transition-all">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
+            <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-primary to-purple-600 flex items-center justify-center shadow-lg shrink-0">
+              <Target className="w-7 h-7 text-white" />
+            </div>
+            <div className="flex-1">
+              <div className="flex items-center gap-2 flex-wrap mb-1">
+                <h3 className="font-bold text-lg">🎯 اختبارات تحديد المستوى</h3>
+                <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-amber-500 text-white">جديد</span>
+              </div>
+              <p className="text-sm text-muted-foreground">
+                اكتشف مستواك خلال دقائق، احصل على تحليل لمهاراتك، واربح XP مع كل اختبار.
+              </p>
+            </div>
+            <Button asChild size="lg" className="w-full sm:w-auto shrink-0">
+              <Link to="/challenge-academy/assessments">
+                ابدأ الآن
+                <ArrowLeft className="w-4 h-4 mr-2" />
+              </Link>
+            </Button>
+          </div>
+        </Card>
+
         {/* Tabs */}
         <Tabs defaultValue="daily" dir="rtl" className="space-y-4">
           <TabsList dir="rtl" className="grid grid-cols-4 w-full max-w-3xl mx-auto h-auto p-1">
