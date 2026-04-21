@@ -24,8 +24,8 @@ const isExpired = (d?: string | null) => !!d && new Date(d) < new Date();
 const ValidityBadge: React.FC<{ expiresAt?: string | null; usedAt?: string | null }> = ({ expiresAt, usedAt }) => {
   if (usedAt) return <Badge variant="secondary" className="gap-1"><CheckCircle2 className="h-3 w-3" />مُستخدم</Badge>;
   if (isExpired(expiresAt)) return <Badge variant="destructive" className="gap-1"><AlertCircle className="h-3 w-3" />منتهي</Badge>;
-  if (expiresAt) return <Badge className="gap-1 bg-emerald-600 hover:bg-emerald-700"><Clock className="h-3 w-3" />ساري حتى {new Date(expiresAt).toLocaleDateString('ar-EG')}</Badge>;
-  return <Badge className="gap-1 bg-emerald-600 hover:bg-emerald-700"><CheckCircle2 className="h-3 w-3" />ساري دائماً</Badge>;
+  if (expiresAt) return <Badge className="gap-1"><Clock className="h-3 w-3" />ساري حتى {new Date(expiresAt).toLocaleDateString('ar-EG')}</Badge>;
+  return <Badge className="gap-1"><CheckCircle2 className="h-3 w-3" />ساري دائماً</Badge>;
 };
 
 const buildMessage = (p: MarketplacePurchase): string => {
