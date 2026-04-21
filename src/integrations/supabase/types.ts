@@ -7421,7 +7421,11 @@ export type Database = {
       purchase_cv_export: { Args: { _cv_id: string }; Returns: Json }
       purchase_marketplace_item:
         | { Args: { p_item_id: string }; Returns: Json }
-        | { Args: { p_item_id: string; p_promo_code?: string }; Returns: Json }
+        | { Args: { p_item_id: string; p_promo_code: string }; Returns: Json }
+        | {
+            Args: { p_item_id: string; p_promo_codes: string[] }
+            Returns: Json
+          }
       purchase_stat_analysis: { Args: { _analysis_id: string }; Returns: Json }
       purchase_stat_pdf: { Args: { _analysis_id: string }; Returns: Json }
       read_email_batch: {
@@ -7573,6 +7577,10 @@ export type Database = {
         | { Args: { _mode: string; _tool_id: string }; Returns: Json }
       validate_promo_code: {
         Args: { p_code: string; p_item_id: string }
+        Returns: Json
+      }
+      validate_promo_code_on_base: {
+        Args: { p_base_xp: number; p_code: string; p_item_id: string }
         Returns: Json
       }
     }
