@@ -98,16 +98,24 @@ export class ClientDashboardService {
 
   static async getClientOrders(userId: string): Promise<ClientOrder[]> {
     try {
-      const { data, error } = await (supabase.from('service_orders') as any).select(`
-          id, tracking_id, service_name, current_status, total_amount, created_at, priority, quote_status, quote_notes, quote_sent_at
-        `)
-        .eq('user_id', userId)
-        .order('created_at', { ascending: false })
-        .limit(10);
+      const [ordersRes, researchRes] = await Promise.all([
+        (supabase.from('service_orders') as any).select(`
+            id, tracking_id, service_name, current_status, total_amount, created_at, priority, quote_status, quote_notes, quote_sent_at
+          `)
+          .eq('user_id', userId)
+          .order('created_at', { ascending: false })
+          .limit(20),
+        (supabase.from('research_publications') as any).select(`
+            id, request_number, title, service_type, status, estimated_amount, final_amount, created_at, priority
+          `)
+          .eq('user_id', userId)
+          .order('created_at', { ascending: false })
+          .limit(20),
+      ]);
 
-      if (error) throw error;
+      if (ordersRes.error) throw ordersRes.error;
 
-      return data?.map((order: any) => ({
+      const serviceOrders: ClientOrder[] = (ordersRes.data || []).map((order: any) => ({
         id: order.id,
         orderNumber: order.tracking_id,
         service: order.service_name || '',
@@ -121,7 +129,35 @@ export class ClientDashboardService {
         quoteStatus: order.quote_status || null,
         quoteNotes: order.quote_notes || null,
         quoteSentAt: order.quote_sent_at || null,
-      })) || [];
+      }));
+
+      const rpStatusMap: Record<string, string> = {
+        new: 'في الانتظار', under_review: 'قيد المراجعة', quoted: 'عرض سعر',
+        approved: 'معتمد', in_progress: 'قيد التنفيذ', published: 'مكتمل', rejected: 'مرفوض',
+      };
+      const rpProgressMap: Record<string, number> = {
+        new: 10, under_review: 25, quoted: 40, approved: 55, in_progress: 75, published: 100, rejected: 0,
+      };
+
+      const researchOrders: ClientOrder[] = (researchRes.data || []).map((r: any) => ({
+        id: r.id,
+        orderNumber: r.request_number,
+        service: 'نشر بحث علمي',
+        title: r.title || 'طلب نشر بحث',
+        status: rpStatusMap[r.status] || r.status,
+        total: Number(r.final_amount ?? r.estimated_amount ?? 0),
+        date: new Date(r.created_at).toLocaleDateString('ar-SA'),
+        priority: r.priority || 'normal',
+        progress: rpProgressMap[r.status] ?? 0,
+        serviceType: 'research_publication',
+        quoteStatus: r.status === 'quoted' ? 'pending' : null,
+        quoteNotes: null,
+        quoteSentAt: null,
+      }));
+
+      return [...serviceOrders, ...researchOrders].sort(
+        (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
+      );
     } catch (error) {
       console.error('خطأ في جلب طلبات العميل:', error);
       return [];
