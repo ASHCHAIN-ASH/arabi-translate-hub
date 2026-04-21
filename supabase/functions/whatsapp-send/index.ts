@@ -1,7 +1,7 @@
 // إرسال رسالة واتساب عبر SmartWats مع قوالب من قاعدة البيانات
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
-import { normalizePhone, renderTemplate, sendWhatsAppMessage } from "../_shared/whatsapp.ts";
+import { normalizePhone, renderTemplate, sendWhatsAppMessage, sendWhatsAppMedia } from "../_shared/whatsapp.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -27,6 +27,8 @@ serve(async (req) => {
       related_entity_type,
       related_entity_id,
       user_id,
+      media_url,
+      media_filename,
     } = body;
 
     // اختبار الاتصال
@@ -75,7 +77,9 @@ serve(async (req) => {
     if (!finalMessage) return json({ success: false, error: "نص الرسالة فارغ" }, 400);
 
     const phone = normalizePhone(to, settings.default_country_code || "966");
-    const result = await sendWhatsAppMessage(phone, finalMessage);
+    const result = media_url
+      ? await sendWhatsAppMedia(phone, media_url, media_filename || "document.pdf", finalMessage)
+      : await sendWhatsAppMessage(phone, finalMessage);
 
     // سجل
     await supabase.from("whatsapp_send_log").insert({

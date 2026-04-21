@@ -82,10 +82,13 @@ export default function AdminResearchPublicationDetails() {
   const [invoices, setInvoices] = useState<any[]>([]);
 
   const [quoteDialog, setQuoteDialog] = useState(false);
-  const [quoteForm, setQuoteForm] = useState({ amount: '', tax_rate: '15', description: '', valid_until: '' });
+  const [quoteForm, setQuoteForm] = useState({ amount: '', tax_rate: '15', tax_inclusive: false, description: '', valid_until: '' });
 
   const [invoiceDialog, setInvoiceDialog] = useState(false);
-  const [invoiceForm, setInvoiceForm] = useState({ subtotal: '', tax_rate: '15', notes: '', due_date: '' });
+  const [invoiceForm, setInvoiceForm] = useState({ amount: '', tax_rate: '15', tax_inclusive: false, notes: '', due_date: '' });
+  const [sendingInvoicePdf, setSendingInvoicePdf] = useState<string | null>(null);
+  const [sendingQuotePdf, setSendingQuotePdf] = useState<string | null>(null);
+  const [sendingContractPdf, setSendingContractPdf] = useState<string | null>(null);
 
   const loadAll = async () => {
     if (!id) return;
@@ -167,20 +170,24 @@ export default function AdminResearchPublicationDetails() {
   };
 
   const createQuote = async () => {
-    const amount = parseFloat(quoteForm.amount);
-    if (!amount || amount <= 0) return toast({ title: 'أدخل مبلغاً صحيحاً', variant: 'destructive' });
+    const enteredAmount = parseFloat(quoteForm.amount);
+    if (!enteredAmount || enteredAmount <= 0) return toast({ title: 'أدخل مبلغاً صحيحاً', variant: 'destructive' });
     const taxRate = parseFloat(quoteForm.tax_rate) || 0;
-    const taxAmount = (amount * taxRate) / 100;
-    const total = amount + taxAmount;
+    // إذا كان شامل الضريبة: استخراج الصافي. غير شامل: المُدخل هو الصافي.
+    const subtotal = quoteForm.tax_inclusive
+      ? Math.round((enteredAmount / (1 + taxRate / 100)) * 100) / 100
+      : enteredAmount;
+    const taxAmount = Math.round(subtotal * (taxRate / 100) * 100) / 100;
+    const total = Math.round((subtotal + taxAmount) * 100) / 100;
     const { error } = await (supabase.from('research_publication_quotes') as any).insert({
-      publication_id: item.id, amount, tax_amount: taxAmount, total_amount: total,
+      publication_id: item.id, amount: subtotal, tax_amount: taxAmount, total_amount: total,
       description: quoteForm.description || null, valid_until: quoteForm.valid_until || null,
       created_by: user!.id, status: 'draft',
     });
     if (error) return toast({ title: 'خطأ', description: error.message, variant: 'destructive' });
     toast({ title: '✅ تم إنشاء عرض السعر' });
     setQuoteDialog(false);
-    setQuoteForm({ amount: '', tax_rate: '15', description: '', valid_until: '' });
+    setQuoteForm({ amount: '', tax_rate: '15', tax_inclusive: false, description: '', valid_until: '' });
     loadAll();
   };
 
@@ -210,11 +217,14 @@ export default function AdminResearchPublicationDetails() {
   };
 
   const createInvoice = async () => {
-    const subtotal = parseFloat(invoiceForm.subtotal);
-    if (!subtotal || subtotal <= 0) return toast({ title: 'أدخل مبلغاً صحيحاً', variant: 'destructive' });
+    const enteredAmount = parseFloat(invoiceForm.amount);
+    if (!enteredAmount || enteredAmount <= 0) return toast({ title: 'أدخل مبلغاً صحيحاً', variant: 'destructive' });
     const taxRate = parseFloat(invoiceForm.tax_rate) || 0;
-    const taxAmount = (subtotal * taxRate) / 100;
-    const total = subtotal + taxAmount;
+    const subtotal = invoiceForm.tax_inclusive
+      ? Math.round((enteredAmount / (1 + taxRate / 100)) * 100) / 100
+      : enteredAmount;
+    const taxAmount = Math.round(subtotal * (taxRate / 100) * 100) / 100;
+    const total = Math.round((subtotal + taxAmount) * 100) / 100;
     const { data: inserted, error } = await (supabase.from('invoices') as any).insert({
       publication_id: item.id, user_id: item.user_id,
       subtotal, tax_amount: taxAmount, total_amount: total,
@@ -229,10 +239,62 @@ export default function AdminResearchPublicationDetails() {
       event: 'invoice_created',
       extra: { invoice_number: inserted?.invoice_number, total_amount: total, due_date: invoiceForm.due_date },
     });
-    toast({ title: '✅ تم إصدار الفاتورة وإشعار العميل' });
+    toast({ title: '✅ تم إصدار الفاتورة' });
     setInvoiceDialog(false);
-    setInvoiceForm({ subtotal: '', tax_rate: '15', notes: '', due_date: '' });
+    setInvoiceForm({ amount: '', tax_rate: '15', tax_inclusive: false, notes: '', due_date: '' });
     loadAll();
+    if (inserted?.id) sendInvoicePdfToWhatsApp(inserted.id, inserted.invoice_number);
+  };
+
+  // === إرسال PDF عبر واتساب ===
+  const sendInvoicePdfToWhatsApp = async (invoiceId: string, invoiceNumber?: string) => {
+    if (!item?.client_phone) { toast({ title: 'لا يوجد رقم جوال للعميل', variant: 'destructive' }); return; }
+    setSendingInvoicePdf(invoiceId);
+    try {
+      const { data: pdfData, error: pdfErr } = await supabase.functions.invoke('generate-invoice-pdf', {
+        body: { invoice_id: invoiceId, force: true },
+      });
+      if (pdfErr || !pdfData?.signed_url) throw new Error(pdfErr?.message || 'تعذّر توليد PDF');
+      await supabase.functions.invoke('whatsapp-send', {
+        body: {
+          to: item.client_phone,
+          message: `🧾 فاتورة ضريبية رقم ${invoiceNumber || ''}\nبخصوص بحثكم: ${item.title}\n\nتجدون نسخة الفاتورة مرفقة 👇`,
+          media_url: pdfData.signed_url,
+          media_filename: `invoice-${invoiceNumber || invoiceId}.pdf`,
+          related_entity_type: 'research_publication',
+          related_entity_id: item.id,
+          user_id: item.user_id,
+        },
+      });
+      toast({ title: '📎 تم إرسال الفاتورة كمرفق على واتساب' });
+    } catch (e: any) {
+      toast({ title: 'تعذّر إرسال PDF الفاتورة', description: e.message, variant: 'destructive' });
+    } finally { setSendingInvoicePdf(null); }
+  };
+
+  const sendContractPdfToWhatsApp = async (contractId: string, contractNumber?: string) => {
+    if (!item?.client_phone) { toast({ title: 'لا يوجد رقم جوال للعميل', variant: 'destructive' }); return; }
+    setSendingContractPdf(contractId);
+    try {
+      const { data: pdfData, error: pdfErr } = await supabase.functions.invoke('generate-contract-pdf', {
+        body: { contract_id: contractId, mode: 'preview' },
+      });
+      if (pdfErr || !pdfData?.signed_url) throw new Error(pdfErr?.message || 'تعذّر توليد PDF');
+      await supabase.functions.invoke('whatsapp-send', {
+        body: {
+          to: item.client_phone,
+          message: `📝 عقد خدمة نشر بحث رقم ${contractNumber || ''}\nبخصوص بحثكم: ${item.title}\n\nتجدون نسخة العقد مرفقة للمراجعة والتوقيع 👇`,
+          media_url: pdfData.signed_url,
+          media_filename: `contract-${contractNumber || contractId}.pdf`,
+          related_entity_type: 'research_publication',
+          related_entity_id: item.id,
+          user_id: item.user_id,
+        },
+      });
+      toast({ title: '📎 تم إرسال العقد كمرفق على واتساب' });
+    } catch (e: any) {
+      toast({ title: 'تعذّر إرسال PDF العقد', description: e.message, variant: 'destructive' });
+    } finally { setSendingContractPdf(null); }
   };
 
   const [creatingContract, setCreatingContract] = useState(false);
@@ -260,7 +322,7 @@ export default function AdminResearchPublicationDetails() {
           publication_id: item.id,
           service_name: 'نشر بحث علمي',
           service_type: 'research_publication',
-          template_type: 'research_publication',
+          template_type: 'academic',
           total_amount: amount || null,
           currency: 'SAR',
           content: contractContent,
@@ -698,6 +760,14 @@ export default function AdminResearchPublicationDetails() {
               <div>
                 <Label>المبلغ (ر.س) *</Label>
                 <Input type="number" value={quoteForm.amount} onChange={e => setQuoteForm({ ...quoteForm, amount: e.target.value })} />
+                <div className="flex gap-2 mt-2">
+                  <Button type="button" size="sm" variant={!quoteForm.tax_inclusive ? 'default' : 'outline'} onClick={() => setQuoteForm({ ...quoteForm, tax_inclusive: false })}>
+                    غير شامل الضريبة
+                  </Button>
+                  <Button type="button" size="sm" variant={quoteForm.tax_inclusive ? 'default' : 'outline'} onClick={() => setQuoteForm({ ...quoteForm, tax_inclusive: true })}>
+                    شامل الضريبة
+                  </Button>
+                </div>
               </div>
               <div>
                 <Label>نسبة الضريبة (%)</Label>
@@ -711,13 +781,20 @@ export default function AdminResearchPublicationDetails() {
                 <Label>صالح حتى</Label>
                 <Input type="date" value={quoteForm.valid_until} onChange={e => setQuoteForm({ ...quoteForm, valid_until: e.target.value })} />
               </div>
-              {quoteForm.amount && (
-                <Card className="p-3 bg-emerald-50 border-emerald-200 text-sm">
-                  المجموع: {parseFloat(quoteForm.amount || '0').toLocaleString('ar-SA')} +
-                  ضريبة {parseFloat(quoteForm.tax_rate || '0')}% =
-                  <b className="mr-1">{(parseFloat(quoteForm.amount || '0') * (1 + parseFloat(quoteForm.tax_rate || '0') / 100)).toLocaleString('ar-SA')} ر.س</b>
-                </Card>
-              )}
+              {quoteForm.amount && (() => {
+                const entered = parseFloat(quoteForm.amount || '0');
+                const rate = parseFloat(quoteForm.tax_rate || '0');
+                const sub = quoteForm.tax_inclusive ? entered / (1 + rate / 100) : entered;
+                const tax = sub * (rate / 100);
+                const tot = sub + tax;
+                return (
+                  <Card className="p-3 bg-emerald-50 border-emerald-200 text-sm space-y-1">
+                    <div>الصافي: <b>{sub.toLocaleString('ar-SA', { maximumFractionDigits: 2 })} ر.س</b></div>
+                    <div>الضريبة ({rate}%): <b>{tax.toLocaleString('ar-SA', { maximumFractionDigits: 2 })} ر.س</b></div>
+                    <div className="text-base">الإجمالي: <b className="text-emerald-700">{tot.toLocaleString('ar-SA', { maximumFractionDigits: 2 })} ر.س</b></div>
+                  </Card>
+                );
+              })()}
             </div>
             <DialogFooter>
               <Button variant="outline" onClick={() => setQuoteDialog(false)}>إلغاء</Button>
@@ -731,8 +808,16 @@ export default function AdminResearchPublicationDetails() {
             <DialogHeader><DialogTitle>إنشاء فاتورة ضريبية</DialogTitle></DialogHeader>
             <div className="space-y-3">
               <div>
-                <Label>المجموع الفرعي (ر.س) *</Label>
-                <Input type="number" value={invoiceForm.subtotal} onChange={e => setInvoiceForm({ ...invoiceForm, subtotal: e.target.value })} />
+                <Label>المبلغ (ر.س) *</Label>
+                <Input type="number" value={invoiceForm.amount} onChange={e => setInvoiceForm({ ...invoiceForm, amount: e.target.value })} />
+                <div className="flex gap-2 mt-2">
+                  <Button type="button" size="sm" variant={!invoiceForm.tax_inclusive ? 'default' : 'outline'} onClick={() => setInvoiceForm({ ...invoiceForm, tax_inclusive: false })}>
+                    غير شامل الضريبة
+                  </Button>
+                  <Button type="button" size="sm" variant={invoiceForm.tax_inclusive ? 'default' : 'outline'} onClick={() => setInvoiceForm({ ...invoiceForm, tax_inclusive: true })}>
+                    شامل الضريبة
+                  </Button>
+                </div>
               </div>
               <div>
                 <Label>نسبة الضريبة (%)</Label>
@@ -746,16 +831,24 @@ export default function AdminResearchPublicationDetails() {
                 <Label>ملاحظات</Label>
                 <Textarea rows={2} value={invoiceForm.notes} onChange={e => setInvoiceForm({ ...invoiceForm, notes: e.target.value })} />
               </div>
-              {invoiceForm.subtotal && (
-                <Card className="p-3 bg-emerald-50 border-emerald-200 text-sm">
-                  الإجمالي شامل الضريبة:
-                  <b className="mr-1">{(parseFloat(invoiceForm.subtotal || '0') * (1 + parseFloat(invoiceForm.tax_rate || '0') / 100)).toLocaleString('ar-SA')} ر.س</b>
-                </Card>
-              )}
+              {invoiceForm.amount && (() => {
+                const entered = parseFloat(invoiceForm.amount || '0');
+                const rate = parseFloat(invoiceForm.tax_rate || '0');
+                const sub = invoiceForm.tax_inclusive ? entered / (1 + rate / 100) : entered;
+                const tax = sub * (rate / 100);
+                const tot = sub + tax;
+                return (
+                  <Card className="p-3 bg-emerald-50 border-emerald-200 text-sm space-y-1">
+                    <div>الصافي قبل الضريبة: <b>{sub.toLocaleString('ar-SA', { maximumFractionDigits: 2 })} ر.س</b></div>
+                    <div>الضريبة ({rate}%): <b>{tax.toLocaleString('ar-SA', { maximumFractionDigits: 2 })} ر.س</b></div>
+                    <div className="text-base">الإجمالي: <b className="text-emerald-700">{tot.toLocaleString('ar-SA', { maximumFractionDigits: 2 })} ر.س</b></div>
+                  </Card>
+                );
+              })()}
             </div>
             <DialogFooter>
               <Button variant="outline" onClick={() => setInvoiceDialog(false)}>إلغاء</Button>
-              <Button onClick={createInvoice} className="bg-emerald-600 hover:bg-emerald-700">إنشاء الفاتورة</Button>
+              <Button onClick={createInvoice} className="bg-emerald-600 hover:bg-emerald-700">إنشاء الفاتورة وإرسالها</Button>
             </DialogFooter>
           </DialogContent>
         </Dialog>
