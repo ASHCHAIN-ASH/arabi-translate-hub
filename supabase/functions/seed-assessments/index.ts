@@ -1,5 +1,6 @@
 // One-shot seeder for the 12 specialization assessment question banks.
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.45.0';
+import { SEED_DATA } from './seed-data.ts';
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -10,16 +11,13 @@ Deno.serve(async (req) => {
   if (req.method === 'OPTIONS') return new Response('ok', { headers: corsHeaders });
 
   try {
-    const url = new URL('./data.json', import.meta.url);
-    const data = JSON.parse(await Deno.readTextFile(url));
-
     const SUPABASE_URL = Deno.env.get('SUPABASE_URL')!;
     const SERVICE_ROLE = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
     const supabase = createClient(SUPABASE_URL, SERVICE_ROLE);
 
     const summary: Record<string, { inserted: number; skipped?: string }> = {};
 
-    for (const [slug, info] of Object.entries(data as Record<string, any>)) {
+    for (const [slug, info] of Object.entries(SEED_DATA)) {
       const { data: a } = await supabase.from('assessments').select('id').eq('slug', slug).maybeSingle();
       if (!a?.id) { summary[slug] = { inserted: 0, skipped: 'assessment not found' }; continue; }
 
@@ -31,7 +29,7 @@ Deno.serve(async (req) => {
       }
 
       let inserted = 0;
-      const qs = info.questions || [];
+      const qs = (info as any).questions || [];
       for (let i = 0; i < qs.length; i++) {
         const q = qs[i];
         const { data: qRow, error: qErr } = await supabase.from('assessment_questions').insert({
