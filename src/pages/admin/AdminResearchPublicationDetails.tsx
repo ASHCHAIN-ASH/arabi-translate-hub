@@ -760,6 +760,14 @@ export default function AdminResearchPublicationDetails() {
               <div>
                 <Label>المبلغ (ر.س) *</Label>
                 <Input type="number" value={quoteForm.amount} onChange={e => setQuoteForm({ ...quoteForm, amount: e.target.value })} />
+                <div className="flex gap-2 mt-2">
+                  <Button type="button" size="sm" variant={!quoteForm.tax_inclusive ? 'default' : 'outline'} onClick={() => setQuoteForm({ ...quoteForm, tax_inclusive: false })}>
+                    غير شامل الضريبة
+                  </Button>
+                  <Button type="button" size="sm" variant={quoteForm.tax_inclusive ? 'default' : 'outline'} onClick={() => setQuoteForm({ ...quoteForm, tax_inclusive: true })}>
+                    شامل الضريبة
+                  </Button>
+                </div>
               </div>
               <div>
                 <Label>نسبة الضريبة (%)</Label>
@@ -773,13 +781,20 @@ export default function AdminResearchPublicationDetails() {
                 <Label>صالح حتى</Label>
                 <Input type="date" value={quoteForm.valid_until} onChange={e => setQuoteForm({ ...quoteForm, valid_until: e.target.value })} />
               </div>
-              {quoteForm.amount && (
-                <Card className="p-3 bg-emerald-50 border-emerald-200 text-sm">
-                  المجموع: {parseFloat(quoteForm.amount || '0').toLocaleString('ar-SA')} +
-                  ضريبة {parseFloat(quoteForm.tax_rate || '0')}% =
-                  <b className="mr-1">{(parseFloat(quoteForm.amount || '0') * (1 + parseFloat(quoteForm.tax_rate || '0') / 100)).toLocaleString('ar-SA')} ر.س</b>
-                </Card>
-              )}
+              {quoteForm.amount && (() => {
+                const entered = parseFloat(quoteForm.amount || '0');
+                const rate = parseFloat(quoteForm.tax_rate || '0');
+                const sub = quoteForm.tax_inclusive ? entered / (1 + rate / 100) : entered;
+                const tax = sub * (rate / 100);
+                const tot = sub + tax;
+                return (
+                  <Card className="p-3 bg-emerald-50 border-emerald-200 text-sm space-y-1">
+                    <div>الصافي: <b>{sub.toLocaleString('ar-SA', { maximumFractionDigits: 2 })} ر.س</b></div>
+                    <div>الضريبة ({rate}%): <b>{tax.toLocaleString('ar-SA', { maximumFractionDigits: 2 })} ر.س</b></div>
+                    <div className="text-base">الإجمالي: <b className="text-emerald-700">{tot.toLocaleString('ar-SA', { maximumFractionDigits: 2 })} ر.س</b></div>
+                  </Card>
+                );
+              })()}
             </div>
             <DialogFooter>
               <Button variant="outline" onClick={() => setQuoteDialog(false)}>إلغاء</Button>
@@ -793,8 +808,16 @@ export default function AdminResearchPublicationDetails() {
             <DialogHeader><DialogTitle>إنشاء فاتورة ضريبية</DialogTitle></DialogHeader>
             <div className="space-y-3">
               <div>
-                <Label>المجموع الفرعي (ر.س) *</Label>
-                <Input type="number" value={invoiceForm.subtotal} onChange={e => setInvoiceForm({ ...invoiceForm, subtotal: e.target.value })} />
+                <Label>المبلغ (ر.س) *</Label>
+                <Input type="number" value={invoiceForm.amount} onChange={e => setInvoiceForm({ ...invoiceForm, amount: e.target.value })} />
+                <div className="flex gap-2 mt-2">
+                  <Button type="button" size="sm" variant={!invoiceForm.tax_inclusive ? 'default' : 'outline'} onClick={() => setInvoiceForm({ ...invoiceForm, tax_inclusive: false })}>
+                    غير شامل الضريبة
+                  </Button>
+                  <Button type="button" size="sm" variant={invoiceForm.tax_inclusive ? 'default' : 'outline'} onClick={() => setInvoiceForm({ ...invoiceForm, tax_inclusive: true })}>
+                    شامل الضريبة
+                  </Button>
+                </div>
               </div>
               <div>
                 <Label>نسبة الضريبة (%)</Label>
@@ -808,16 +831,24 @@ export default function AdminResearchPublicationDetails() {
                 <Label>ملاحظات</Label>
                 <Textarea rows={2} value={invoiceForm.notes} onChange={e => setInvoiceForm({ ...invoiceForm, notes: e.target.value })} />
               </div>
-              {invoiceForm.subtotal && (
-                <Card className="p-3 bg-emerald-50 border-emerald-200 text-sm">
-                  الإجمالي شامل الضريبة:
-                  <b className="mr-1">{(parseFloat(invoiceForm.subtotal || '0') * (1 + parseFloat(invoiceForm.tax_rate || '0') / 100)).toLocaleString('ar-SA')} ر.س</b>
-                </Card>
-              )}
+              {invoiceForm.amount && (() => {
+                const entered = parseFloat(invoiceForm.amount || '0');
+                const rate = parseFloat(invoiceForm.tax_rate || '0');
+                const sub = invoiceForm.tax_inclusive ? entered / (1 + rate / 100) : entered;
+                const tax = sub * (rate / 100);
+                const tot = sub + tax;
+                return (
+                  <Card className="p-3 bg-emerald-50 border-emerald-200 text-sm space-y-1">
+                    <div>الصافي قبل الضريبة: <b>{sub.toLocaleString('ar-SA', { maximumFractionDigits: 2 })} ر.س</b></div>
+                    <div>الضريبة ({rate}%): <b>{tax.toLocaleString('ar-SA', { maximumFractionDigits: 2 })} ر.س</b></div>
+                    <div className="text-base">الإجمالي: <b className="text-emerald-700">{tot.toLocaleString('ar-SA', { maximumFractionDigits: 2 })} ر.س</b></div>
+                  </Card>
+                );
+              })()}
             </div>
             <DialogFooter>
               <Button variant="outline" onClick={() => setInvoiceDialog(false)}>إلغاء</Button>
-              <Button onClick={createInvoice} className="bg-emerald-600 hover:bg-emerald-700">إنشاء الفاتورة</Button>
+              <Button onClick={createInvoice} className="bg-emerald-600 hover:bg-emerald-700">إنشاء الفاتورة وإرسالها</Button>
             </DialogFooter>
           </DialogContent>
         </Dialog>
