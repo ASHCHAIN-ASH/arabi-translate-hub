@@ -7,6 +7,7 @@ import Header from "@/components/Header";
 import { WorkingHoursBannerRTL } from "@/components/WorkingHoursBannerRTL";
 import { motion } from "framer-motion";
 
+import Footer from '@/components/Footer';
 const TermsOfService = () => {
   const downloadTerms = () => {
     const element = document.createElement('a');
@@ -441,6 +442,7 @@ const TermsOfService = () => {
           </motion.div>
         </div>
       </motion.div>
+          <Footer />
     </div>
   );
 };

@@ -40,6 +40,8 @@ import {
 import { z } from "zod";
 import admissionBackground from "@/assets/university-admission-background.jpg";
 
+import Header from '@/components/Header';
+import Footer from '@/components/Footer';
 // Schema validation for the admission form
 const admissionSchema = z.object({
   fullName: z.string().trim().min(2, { message: "الاسم يجب أن يكون أكثر من حرفين" }).max(100, { message: "الاسم يجب أن يكون أقل من 100 حرف" }),
@@ -198,6 +200,7 @@ const AdmissionServices = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-white" dir="rtl">
+      <Header />
       {/* Hero Section */}
       <section className="py-16 md:py-24 relative overflow-hidden bg-cover bg-center bg-no-repeat" style={{ backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.6)), url(${admissionBackground})` }}>
         <div className="absolute inset-0 bg-gradient-to-br from-primary/20 via-blue-900/30 to-purple-900/20"></div>
@@ -654,6 +657,7 @@ const AdmissionServices = () => {
           </div>
         </div>
       </section>
+          <Footer />
     </div>
   );
 };

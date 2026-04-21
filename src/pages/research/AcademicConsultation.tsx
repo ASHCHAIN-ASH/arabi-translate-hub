@@ -12,6 +12,7 @@ import { Users, MessageCircle, Lightbulb, Target, BookOpen, Clock, Star, CheckCi
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 
+import Footer from '@/components/Footer';
 const AcademicConsultation = () => {
   const [consultationForm, setConsultationForm] = useState({
     name: "",
@@ -454,6 +455,7 @@ const AcademicConsultation = () => {
           </div>
         </div>
       </section>
+          <Footer />
     </div>
   );
 };

@@ -5,6 +5,7 @@ import ServiceInquiryForm from "@/components/ServiceInquiryForm";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import Footer from '@/components/Footer';
 import { 
   BarChart3, TrendingUp, PieChart, Calculator, Users, Clock, Trophy, 
   CheckCircle, Zap, ArrowRight, MessageCircle, Mail, Phone,
@@ -466,6 +467,7 @@ const StatisticalAnalysis = () => {
         </div>
       )}
 
+          <Footer />
     </div>
   );
 };

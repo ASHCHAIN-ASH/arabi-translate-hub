@@ -18,6 +18,7 @@ import Header from "@/components/Header";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 
+import Footer from '@/components/Footer';
 const GlobalPeerReview = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [formData, setFormData] = useState({
@@ -305,6 +306,7 @@ const GlobalPeerReview = () => {
           </motion.div>
         </div>
       </section>
+          <Footer />
     </div>
   );
 };

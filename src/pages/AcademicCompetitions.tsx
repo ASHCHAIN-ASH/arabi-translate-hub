@@ -31,6 +31,7 @@ import CompetitionCard from "@/components/CompetitionCard";
 import CompetitionLeaderboard from "@/components/CompetitionLeaderboard";
 import { useCompetitions } from "@/hooks/useCompetitions";
 
+import Footer from '@/components/Footer';
 const AcademicCompetitions = () => {
   const { competitions, loading, fetchCompetition, registerParticipation } = useCompetitions();
   
@@ -407,6 +408,7 @@ const AcademicCompetitions = () => {
           </div>
         </motion.div>
       </div>
+          <Footer />
     </div>
   );
 };

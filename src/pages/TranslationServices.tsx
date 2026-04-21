@@ -41,6 +41,7 @@ import medicalTranslationImg from "@/assets/medical-translation-service.jpg";
 import technicalTranslationImg from "@/assets/technical-translation-service.jpg";
 import academicTranslationImg from "@/assets/academic-translation-service.jpg";
 
+import Footer from '@/components/Footer';
 // Translation services data
 const translationServices = [
   {
@@ -458,6 +459,7 @@ export default function TranslationServices() {
       </section>
 
       
+          <Footer />
     </div>
   );
 }

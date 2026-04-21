@@ -13,6 +13,7 @@ import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
 import { AcademicAssistanceDisclaimer } from '@/components/AcademicAssistanceDisclaimer';
 
+import Footer from '@/components/Footer';
 export default function AssignmentExecution() {
   const navigate = useNavigate();
   const { toast } = useToast();
@@ -704,6 +705,7 @@ export default function AssignmentExecution() {
           </div>
         </div>
       </section>
+          <Footer />
     </div>
   );
 }

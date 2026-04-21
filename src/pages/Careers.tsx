@@ -41,6 +41,7 @@ import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
 import careersBackground from '@/assets/careers-background.jpg';
 
+import Footer from '@/components/Footer';
 interface JobApplication {
   position: string;
   fullName: string;
@@ -882,6 +883,7 @@ const Careers = () => {
           </motion.div>
         </div>
       </section>
+          <Footer />
     </div>
   );
 };

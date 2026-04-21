@@ -10,6 +10,7 @@ import { useToast } from "@/hooks/use-toast";
 import { Copy, Gift, Sparkles, Trophy } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 
+import Footer from '@/components/Footer';
 interface Segment {
   text: string;
   color: string;
@@ -441,6 +442,7 @@ const SpinTheWheel = () => {
           </div>
         </DialogContent>
       </Dialog>
+          <Footer />
     </div>
   );
 };

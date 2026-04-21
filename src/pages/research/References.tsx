@@ -12,6 +12,7 @@ import { Database, BookOpen, Search, FileText, Globe, Clock, Award, CheckCircle,
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 
+import Footer from '@/components/Footer';
 const References = () => {
   const [referenceForm, setReferenceForm] = useState({
     name: "",
@@ -555,6 +556,7 @@ const References = () => {
           </div>
         </div>
       </section>
+          <Footer />
     </div>
   );
 };

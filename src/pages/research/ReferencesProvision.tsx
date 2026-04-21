@@ -12,6 +12,7 @@ import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
 
+import Footer from '@/components/Footer';
 export default function ReferencesProvision() {
   const navigate = useNavigate();
   const { toast } = useToast();
@@ -335,6 +336,7 @@ export default function ReferencesProvision() {
         </div>
       </section>
 
+          <Footer />
     </div>
   );
 }

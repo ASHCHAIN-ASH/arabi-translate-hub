@@ -8,6 +8,7 @@ import AcademicTranslationForm from "@/components/AcademicTranslationForm";
 import Header from "@/components/Header";
 import Breadcrumb from '@/components/Breadcrumb';
 
+import Footer from '@/components/Footer';
 const AcademicTranslation = () => {
   const academicServices = [
     {
@@ -474,6 +475,7 @@ const AcademicTranslation = () => {
         </div>
       </section>
 
+          <Footer />
     </div>
   );
 };

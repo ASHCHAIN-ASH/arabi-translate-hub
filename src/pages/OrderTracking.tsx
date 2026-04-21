@@ -23,6 +23,7 @@ import { motion } from 'framer-motion';
 import { OrderStatus } from '@/types/order';
 import { searchOrder } from '@/utils/orderApi';
 
+import Footer from '@/components/Footer';
 const OrderTracking = () => {
   const [trackingId, setTrackingId] = useState('');
   const [phoneLastFour, setPhoneLastFour] = useState('');
@@ -358,6 +359,7 @@ const OrderTracking = () => {
         </section>
       )}
 
+          <Footer />
     </div>
   );
 };

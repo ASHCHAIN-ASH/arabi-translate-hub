@@ -7,6 +7,7 @@ import Header from "@/components/Header";
 import { WorkingHoursBannerRTL } from "@/components/WorkingHoursBannerRTL";
 import { motion } from "framer-motion";
 
+import Footer from '@/components/Footer';
 const PrivacyPolicy = () => {
   const downloadPrivacyPolicy = () => {
     const element = document.createElement('a');
@@ -780,6 +781,7 @@ const PrivacyPolicy = () => {
           </motion.div>
         </div>
       </motion.div>
+          <Footer />
     </div>
   );
 };

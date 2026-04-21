@@ -18,6 +18,7 @@ import Header from '@/components/Header';
 import SEO from '@/components/SEO';
 import contactHeroBackground from '@/assets/contact-hero-background.jpg';
 
+import Footer from '@/components/Footer';
 const ContactUs = () => {
   const { toast } = useToast();
   const [loading, setLoading] = useState(false);
@@ -968,6 +969,7 @@ const ContactUs = () => {
           </div>
         </section>
       </main>
+          <Footer />
     </div>
   );
 };

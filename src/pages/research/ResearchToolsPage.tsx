@@ -5,6 +5,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import Header from '@/components/Header';
 import ServiceInquiryForm from '@/components/ServiceInquiryForm';
+import Footer from '@/components/Footer';
 import { 
   Search, 
   BookOpen, 
@@ -278,6 +279,7 @@ const ResearchToolsPage = () => {
         showFileSizeField={true}
       />
 
+          <Footer />
     </div>
   );
 };

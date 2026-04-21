@@ -10,6 +10,7 @@ import { Badge } from "@/components/ui/badge";
 import Header from "@/components/Header";
 import { useState } from "react";
 
+import Footer from '@/components/Footer';
 const SuccessStories = () => {
   const [showDetails, setShowDetails] = useState<{[key: number]: boolean}>({});
 
@@ -896,6 +897,7 @@ const SuccessStories = () => {
           </motion.div>
         </div>
       </section>
+          <Footer />
     </div>
   );
 };

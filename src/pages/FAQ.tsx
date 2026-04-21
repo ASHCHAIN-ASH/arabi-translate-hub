@@ -48,6 +48,7 @@ import { Badge } from "@/components/ui/badge";
 import Header from "@/components/Header";
 import { WorkingHoursBannerRTL } from "@/components/WorkingHoursBannerRTL";
 
+import Footer from '@/components/Footer';
 const FAQ = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [activeCategory, setActiveCategory] = useState("الكل");
@@ -985,6 +986,7 @@ const FAQ = () => {
           </motion.div>
         </div>
       </motion.section>
+          <Footer />
     </div>
   );
 };

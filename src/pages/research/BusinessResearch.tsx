@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { SimpleResearchForm } from "@/components/SimpleResearchForm";
+import Footer from '@/components/Footer';
 import { 
   Briefcase, TrendingUp, BarChart3, PieChart, DollarSign, 
   ShoppingCart, Users, Building, Globe, Target,
@@ -262,6 +263,7 @@ const BusinessResearch = () => {
           />
         </div>
       </section>
+          <Footer />
     </div>
   );
 };
