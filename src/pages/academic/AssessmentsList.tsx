@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Clock, Sparkles, Trophy, ArrowLeft, CheckCircle2, RefreshCw } from 'lucide-react';
+import { Clock, Sparkles, Trophy, ArrowLeft, CheckCircle2, RefreshCw, Lock, Timer } from 'lucide-react';
 import { AssessmentService, Assessment } from '@/utils/assessmentService';
 import { useAuth } from '@/components/SimpleAuthProvider';
 import { motion } from 'framer-motion';
@@ -13,13 +13,25 @@ export default function AssessmentsList() {
   const { user } = useAuth();
   const [items, setItems] = useState<Assessment[]>([]);
   const [todayMap, setTodayMap] = useState<Record<string, string>>({});
+  const [quota, setQuota] = useState<{
+    attempt_id: string;
+    assessment_id: string;
+    assessment_slug: string;
+    assessment_title: string;
+    completed_at: string;
+    next_available_at: string;
+  } | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     (async () => {
       try {
-        const list = await AssessmentService.listActive();
+        const [list, q] = await Promise.all([
+          AssessmentService.listActive(),
+          AssessmentService.getDailyQuotaStatus(user?.id ?? null),
+        ]);
         setItems(list);
+        setQuota(q);
         const entries = await Promise.all(
           list.map(async (a) => [a.id, await AssessmentService.getTodayAttemptId(a.id, user?.id ?? null)] as const)
         );
@@ -34,6 +46,10 @@ export default function AssessmentsList() {
     })();
   }, [user?.id]);
 
+  const quotaHoursLeft = quota
+    ? Math.max(1, Math.ceil((new Date(quota.next_available_at).getTime() - Date.now()) / 3600000))
+    : 0;
+
   return (
     <ClientLayout>
     <div className="min-h-screen bg-background py-10 px-4" dir="rtl">
@@ -46,9 +62,34 @@ export default function AssessmentsList() {
             </p>
             <Badge variant="outline" className="gap-1.5 border-primary/30 text-primary">
               <RefreshCw className="w-3 h-3" />
-              أسئلة جديدة كل يوم — محاولة واحدة يوميًا
+              أسئلة جديدة كل يوم — تخصص واحد فقط كل 24 ساعة
             </Badge>
           </motion.div>
+
+          {quota && (
+            <motion.div
+              initial={{ opacity: 0, y: -6 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="mt-5 max-w-2xl mx-auto"
+            >
+              <Card className="border-primary/30 bg-primary/5">
+                <CardContent className="py-4 flex items-center gap-3 text-right">
+                  <Timer className="w-5 h-5 text-primary shrink-0" />
+                  <div className="flex-1 text-sm">
+                    <p className="font-semibold">أنهيت اليوم اختبار "{quota.assessment_title}"</p>
+                    <p className="text-muted-foreground text-xs mt-0.5">
+                      يمكنك اختيار تخصص آخر بعد <span className="font-bold text-primary">{quotaHoursLeft} ساعة</span>
+                    </p>
+                  </div>
+                  <Button asChild size="sm" variant="secondary">
+                    <Link to={`/challenge-academy/assessments/${quota.assessment_id}/result?attempt=${quota.attempt_id}`}>
+                      عرض النتيجة
+                    </Link>
+                  </Button>
+                </CardContent>
+              </Card>
+            </motion.div>
+          )}
         </div>
 
         {loading ? (
@@ -108,6 +149,11 @@ export default function AssessmentsList() {
                           <CheckCircle2 className="w-4 h-4 ml-2" />
                           عرض نتيجة اليوم
                         </Link>
+                      </Button>
+                    ) : quota && quota.assessment_id !== a.id ? (
+                      <Button disabled variant="outline" className="w-full">
+                        <Lock className="w-4 h-4 ml-2" />
+                        متاح بعد {quotaHoursLeft} ساعة
                       </Button>
                     ) : (
                       <Button asChild className="w-full group-hover:bg-primary/90">

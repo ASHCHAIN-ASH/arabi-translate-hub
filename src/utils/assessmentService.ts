@@ -120,8 +120,7 @@ export class AssessmentService {
   }
 
   /**
-   * Returns the id of today's completed attempt for this user (or anon), or null.
-   * Used to enforce one-attempt-per-day.
+   * Returns the id of today's completed attempt for this specific assessment, or null.
    */
   static async getTodayAttemptId(assessmentId: string, userId: string | null): Promise<string | null> {
     const params: any = { p_assessment_id: assessmentId };
@@ -133,6 +132,30 @@ export class AssessmentService {
       return null;
     }
     return (data as string) || null;
+  }
+
+  /**
+   * Returns info about the most recent completed attempt across ALL assessments
+   * within the last 24 hours. Used to enforce one-specialization-per-day.
+   */
+  static async getDailyQuotaStatus(userId: string | null): Promise<{
+    attempt_id: string;
+    assessment_id: string;
+    assessment_slug: string;
+    assessment_title: string;
+    completed_at: string;
+    next_available_at: string;
+  } | null> {
+    const params: any = {};
+    if (userId) params.p_user_id = userId;
+    else params.p_anonymous_id = getAssessmentAnonId();
+    const { data, error } = await (supabase as any).rpc('get_today_any_assessment_attempt', params);
+    if (error) {
+      console.warn('getDailyQuotaStatus failed', error);
+      return null;
+    }
+    const row = Array.isArray(data) ? data[0] : data;
+    return row || null;
   }
 
   static async createAttempt(assessmentId: string, userId: string | null): Promise<AssessmentAttempt> {
