@@ -280,7 +280,7 @@ const SpinTheWheel = () => {
           </motion.div>
 
           {/* Wheel + Side panel */}
-          <div className="grid lg:grid-cols-[1.1fr_1fr] gap-8 lg:gap-12 items-center max-w-5xl mx-auto">
+          <div className="grid lg:grid-cols-[1.1fr_1fr] gap-6 sm:gap-8 lg:gap-12 items-center max-w-5xl mx-auto">
             {/* Wheel */}
             <motion.div
               ref={containerRef}
