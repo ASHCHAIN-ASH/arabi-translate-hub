@@ -49,6 +49,7 @@ const navItems: NavItem[] = [
   { name: 'مكافآتي', href: '/rewards', icon: Trophy },
   { name: 'متجر XP', href: '/marketplace', icon: ShoppingCart },
   { name: 'أكاديمية التحدي', href: '/challenge-academy', icon: Sparkles },
+  { name: 'بنك الأسئلة', href: '/quiz-bank', icon: BookOpen },
   { name: 'خدمة العملاء', href: '/support/tickets', icon: Headphones },
 ];
 
