@@ -14,7 +14,7 @@ import {
 
 const ResearchPlan = () => {
   const navigate = useNavigate();
-  const setShowForm = (_v: boolean) => navigate(`/auth?redirect=${encodeURIComponent(window.location.pathname)}`);
+  const setShowForm = (_v: boolean) => navigate(`/login?redirect=${encodeURIComponent(window.location.pathname)}`);
 
   const features = [
     {
