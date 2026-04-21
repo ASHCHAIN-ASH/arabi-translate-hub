@@ -20,7 +20,13 @@ export interface MarketplaceItem {
   min_level: number;
   max_per_user: number | null;
   sort_order: number;
+  // SAR pricing
+  price_sar?: number | null;
+  xp_to_sar_rate?: number;
+  allow_payment_methods?: string[]; // 'xp' | 'wallet' | 'gateway'
 }
+
+export type PaymentMethod = 'xp' | 'wallet' | 'gateway';
 
 export interface MarketplacePurchase {
   id: string;
