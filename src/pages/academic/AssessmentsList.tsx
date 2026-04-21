@@ -102,12 +102,21 @@ export default function AssessmentsList() {
                         <span>تحليل المهارات</span>
                       </div>
                     </div>
-                    <Button asChild className="w-full group-hover:bg-primary/90">
-                      <Link to={`/challenge-academy/assessments/${a.id}/start`}>
-                        ابدأ الاختبار
-                        <ArrowLeft className="w-4 h-4 mr-2" />
-                      </Link>
-                    </Button>
+                    {todayMap[a.id] ? (
+                      <Button asChild variant="secondary" className="w-full">
+                        <Link to={`/challenge-academy/assessments/${a.id}/result?attempt=${todayMap[a.id]}`}>
+                          <CheckCircle2 className="w-4 h-4 ml-2" />
+                          عرض نتيجة اليوم
+                        </Link>
+                      </Button>
+                    ) : (
+                      <Button asChild className="w-full group-hover:bg-primary/90">
+                        <Link to={`/challenge-academy/assessments/${a.id}/start`}>
+                          ابدأ الاختبار
+                          <ArrowLeft className="w-4 h-4 mr-2" />
+                        </Link>
+                      </Button>
+                    )}
                   </CardContent>
                 </Card>
               </motion.div>
