@@ -217,11 +217,14 @@ export default function AdminResearchPublicationDetails() {
   };
 
   const createInvoice = async () => {
-    const subtotal = parseFloat(invoiceForm.subtotal);
-    if (!subtotal || subtotal <= 0) return toast({ title: 'أدخل مبلغاً صحيحاً', variant: 'destructive' });
+    const enteredAmount = parseFloat(invoiceForm.amount);
+    if (!enteredAmount || enteredAmount <= 0) return toast({ title: 'أدخل مبلغاً صحيحاً', variant: 'destructive' });
     const taxRate = parseFloat(invoiceForm.tax_rate) || 0;
-    const taxAmount = (subtotal * taxRate) / 100;
-    const total = subtotal + taxAmount;
+    const subtotal = invoiceForm.tax_inclusive
+      ? Math.round((enteredAmount / (1 + taxRate / 100)) * 100) / 100
+      : enteredAmount;
+    const taxAmount = Math.round(subtotal * (taxRate / 100) * 100) / 100;
+    const total = Math.round((subtotal + taxAmount) * 100) / 100;
     const { data: inserted, error } = await (supabase.from('invoices') as any).insert({
       publication_id: item.id, user_id: item.user_id,
       subtotal, tax_amount: taxAmount, total_amount: total,
@@ -236,10 +239,62 @@ export default function AdminResearchPublicationDetails() {
       event: 'invoice_created',
       extra: { invoice_number: inserted?.invoice_number, total_amount: total, due_date: invoiceForm.due_date },
     });
-    toast({ title: '✅ تم إصدار الفاتورة وإشعار العميل' });
+    toast({ title: '✅ تم إصدار الفاتورة' });
     setInvoiceDialog(false);
-    setInvoiceForm({ subtotal: '', tax_rate: '15', notes: '', due_date: '' });
+    setInvoiceForm({ amount: '', tax_rate: '15', tax_inclusive: false, notes: '', due_date: '' });
     loadAll();
+    if (inserted?.id) sendInvoicePdfToWhatsApp(inserted.id, inserted.invoice_number);
+  };
+
+  // === إرسال PDF عبر واتساب ===
+  const sendInvoicePdfToWhatsApp = async (invoiceId: string, invoiceNumber?: string) => {
+    if (!item?.client_phone) { toast({ title: 'لا يوجد رقم جوال للعميل', variant: 'destructive' }); return; }
+    setSendingInvoicePdf(invoiceId);
+    try {
+      const { data: pdfData, error: pdfErr } = await supabase.functions.invoke('generate-invoice-pdf', {
+        body: { invoice_id: invoiceId, force: true },
+      });
+      if (pdfErr || !pdfData?.signed_url) throw new Error(pdfErr?.message || 'تعذّر توليد PDF');
+      await supabase.functions.invoke('whatsapp-send', {
+        body: {
+          to: item.client_phone,
+          message: `🧾 فاتورة ضريبية رقم ${invoiceNumber || ''}\nبخصوص بحثكم: ${item.title}\n\nتجدون نسخة الفاتورة مرفقة 👇`,
+          media_url: pdfData.signed_url,
+          media_filename: `invoice-${invoiceNumber || invoiceId}.pdf`,
+          related_entity_type: 'research_publication',
+          related_entity_id: item.id,
+          user_id: item.user_id,
+        },
+      });
+      toast({ title: '📎 تم إرسال الفاتورة كمرفق على واتساب' });
+    } catch (e: any) {
+      toast({ title: 'تعذّر إرسال PDF الفاتورة', description: e.message, variant: 'destructive' });
+    } finally { setSendingInvoicePdf(null); }
+  };
+
+  const sendContractPdfToWhatsApp = async (contractId: string, contractNumber?: string) => {
+    if (!item?.client_phone) { toast({ title: 'لا يوجد رقم جوال للعميل', variant: 'destructive' }); return; }
+    setSendingContractPdf(contractId);
+    try {
+      const { data: pdfData, error: pdfErr } = await supabase.functions.invoke('generate-contract-pdf', {
+        body: { contract_id: contractId, mode: 'preview' },
+      });
+      if (pdfErr || !pdfData?.signed_url) throw new Error(pdfErr?.message || 'تعذّر توليد PDF');
+      await supabase.functions.invoke('whatsapp-send', {
+        body: {
+          to: item.client_phone,
+          message: `📝 عقد خدمة نشر بحث رقم ${contractNumber || ''}\nبخصوص بحثكم: ${item.title}\n\nتجدون نسخة العقد مرفقة للمراجعة والتوقيع 👇`,
+          media_url: pdfData.signed_url,
+          media_filename: `contract-${contractNumber || contractId}.pdf`,
+          related_entity_type: 'research_publication',
+          related_entity_id: item.id,
+          user_id: item.user_id,
+        },
+      });
+      toast({ title: '📎 تم إرسال العقد كمرفق على واتساب' });
+    } catch (e: any) {
+      toast({ title: 'تعذّر إرسال PDF العقد', description: e.message, variant: 'destructive' });
+    } finally { setSendingContractPdf(null); }
   };
 
   const [creatingContract, setCreatingContract] = useState(false);
