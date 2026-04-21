@@ -453,6 +453,100 @@ export default function AdminResearchContractDetails() {
               );
             })()}
 
+            {/* Identity card — second party details */}
+            {(() => {
+              const name = pub?.client_name || contract.client_full_name || '—';
+              const role = (contract as any)?.metadata?.client_role || pub?.client_role || 'باحث / متعاقد';
+              const idNum = contract.client_id_number || (contract as any)?.metadata?.client_id_number || null;
+              const email = pub?.client_email || contract.client_email || null;
+              const phone = pub?.client_phone || contract.client_phone || null;
+              const record = (contract as any)?.metadata?.commercial_register
+                || (contract as any)?.metadata?.registration_number
+                || null;
+              const initials = name && name !== '—'
+                ? name.trim().split(/\s+/).slice(0, 2).map((p: string) => p[0]).join('')
+                : '؟';
+              return (
+                <div
+                  className="mt-5 rounded-xl border p-4 backdrop-blur-sm"
+                  style={{
+                    background: 'linear-gradient(135deg, rgba(201,169,97,0.10), rgba(201,169,97,0.04))',
+                    borderColor: 'rgba(201,169,97,0.35)',
+                  }}
+                >
+                  <div className="flex items-start gap-4">
+                    {/* Avatar */}
+                    <div
+                      className="w-14 h-14 rounded-full flex items-center justify-center font-bold text-lg shrink-0 border-2"
+                      style={{
+                        background: 'linear-gradient(135deg, #c9a961, #b8954a)',
+                        color: '#0a1628',
+                        borderColor: 'rgba(201,169,97,0.6)',
+                      }}
+                    >
+                      {initials}
+                    </div>
+
+                    {/* Details */}
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-2 flex-wrap">
+                        <span className="text-[10px] uppercase tracking-wider font-semibold" style={{ color: '#c9a961' }}>
+                          بطاقة تعريف الطرف الثاني
+                        </span>
+                        <span
+                          className="text-[10px] px-2 py-0.5 rounded-full border"
+                          style={{
+                            color: '#c9a961',
+                            borderColor: 'rgba(201,169,97,0.4)',
+                            background: 'rgba(201,169,97,0.08)',
+                          }}
+                        >
+                          {role}
+                        </span>
+                      </div>
+                      <div className="font-bold text-white text-lg mt-1 truncate" title={name}>
+                        {name}
+                      </div>
+
+                      <div className="mt-3 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2">
+                        {idNum && (
+                          <div className="flex items-center gap-2 text-xs">
+                            <Hash className="w-3.5 h-3.5 shrink-0" style={{ color: '#c9a961' }} />
+                            <span className="text-white/60">رقم الهوية:</span>
+                            <span className="text-white font-mono truncate" title={idNum}>{idNum}</span>
+                          </div>
+                        )}
+                        {record && (
+                          <div className="flex items-center gap-2 text-xs">
+                            <FileText className="w-3.5 h-3.5 shrink-0" style={{ color: '#c9a961' }} />
+                            <span className="text-white/60">السجل:</span>
+                            <span className="text-white font-mono truncate" title={record}>{record}</span>
+                          </div>
+                        )}
+                        {phone && (
+                          <div className="flex items-center gap-2 text-xs">
+                            <Phone className="w-3.5 h-3.5 shrink-0" style={{ color: '#c9a961' }} />
+                            <span className="text-white/60">الجوال:</span>
+                            <span className="text-white truncate" dir="ltr" title={phone}>{phone}</span>
+                          </div>
+                        )}
+                        {email && (
+                          <div className="flex items-center gap-2 text-xs">
+                            <Mail className="w-3.5 h-3.5 shrink-0" style={{ color: '#c9a961' }} />
+                            <span className="text-white/60">البريد:</span>
+                            <span className="text-white truncate" dir="ltr" title={email}>{email}</span>
+                          </div>
+                        )}
+                        {!idNum && !record && !phone && !email && (
+                          <div className="text-xs text-white/50 italic">لا توجد بيانات تعريف إضافية متاحة</div>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              );
+            })()}
+
           </div>
 
           {/* Gold bottom stripe */}
