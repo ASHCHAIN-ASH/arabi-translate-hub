@@ -1,7 +1,6 @@
-import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import Header from "@/components/Header";
 import Breadcrumb from '@/components/Breadcrumb';
-import ServiceInquiryForm from "@/components/ServiceInquiryForm";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -13,7 +12,8 @@ import {
 } from "lucide-react";
 
 const StatisticalAnalysis = () => {
-  const [showForm, setShowForm] = useState(false);
+  const navigate = useNavigate();
+  const setShowForm = (_v: boolean) => navigate(`/auth?redirect=${encodeURIComponent(window.location.pathname)}`);
 
   const features = [
     {
@@ -444,28 +444,6 @@ const StatisticalAnalysis = () => {
         </div>
       </section>
 
-      {/* Service Inquiry Form Modal */}
-      {showForm && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-lg p-6 max-w-2xl w-full max-h-[90vh] overflow-y-auto">
-            <div className="flex justify-between items-center mb-4">
-              <h3 className="text-2xl font-bold">طلب خدمة التحليل الإحصائي</h3>
-              <Button 
-                variant="ghost" 
-                onClick={() => setShowForm(false)}
-                className="text-slate-500 hover:text-slate-700"
-              >
-                ✕
-              </Button>
-            </div>
-            <ServiceInquiryForm 
-              serviceType="statistical-analysis"
-              serviceName="التحليل الإحصائي ومناقشة النتائج"
-              serviceIcon="📊"
-            />
-          </div>
-        </div>
-      )}
 
           <Footer />
     </div>
