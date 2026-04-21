@@ -77,7 +77,9 @@ serve(async (req) => {
     if (!finalMessage) return json({ success: false, error: "نص الرسالة فارغ" }, 400);
 
     const phone = normalizePhone(to, settings.default_country_code || "966");
-    const result = await sendWhatsAppMessage(phone, finalMessage);
+    const result = media_url
+      ? await sendWhatsAppMedia(phone, media_url, media_filename || "document.pdf", finalMessage)
+      : await sendWhatsAppMessage(phone, finalMessage);
 
     // سجل
     await supabase.from("whatsapp_send_log").insert({
