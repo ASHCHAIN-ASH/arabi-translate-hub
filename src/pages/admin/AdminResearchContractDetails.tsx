@@ -110,6 +110,7 @@ export default function AdminResearchContractDetails() {
   const [loading, setLoading] = useState(true);
   const [sending, setSending] = useState(false);
   const [generating, setGenerating] = useState(false);
+  const [printing, setPrinting] = useState(false);
 
   // ─── Content review / edit state ───
   const [editMode, setEditMode] = useState(false);
