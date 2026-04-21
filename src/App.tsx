@@ -135,6 +135,8 @@ import WhatsappCampaignsPage from "./pages/admin/whatsapp/WhatsappCampaignsPage"
 import WhatsappAnalyticsPage from "./pages/admin/whatsapp/WhatsappAnalyticsPage";
 import StudentLibrary from "./pages/client/StudentLibrary";
 import ClientContracts from "./pages/ClientContracts";
+import ClientResearchPublication from "./pages/client/ResearchPublication";
+import AdminResearchPublications from "./pages/admin/AdminResearchPublications";
 import ClientContractView from "./pages/ClientContractView";
 
 import ThesisTitles from "./pages/research/ThesisTitles";
