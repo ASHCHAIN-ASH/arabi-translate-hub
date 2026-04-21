@@ -62,12 +62,29 @@ const fmtMoney = (n: number, c = "SAR") =>
 interface Props {
   contract: ContractRow;
   signature?: ContractSignature | null;
+  /** Optional: multiple signatures / approval slots. When provided, renders an ordered grid
+   *  of "الطرف الثاني / الثالث / ..." plus an optional empty slot per `expectedSigners`. */
+  signatures?: ContractSignature[] | null;
+  /** Optional: total expected signer slots (excluding platform). Defaults to signatures.length or 1. */
+  expectedSigners?: number;
 }
 
-export const ContractDocument: React.FC<Props> = ({ contract, signature }) => {
+// Arabic ordinal labels for parties
+const PARTY_LABELS_AR = [
+  "الطرف الأول", "الطرف الثاني", "الطرف الثالث", "الطرف الرابع",
+  "الطرف الخامس", "الطرف السادس", "الطرف السابع", "الطرف الثامن",
+];
+
+export const ContractDocument: React.FC<Props> = ({ contract, signature, signatures, expectedSigners }) => {
   useArefFont();
   const total = Number(contract.total_amount || 0);
   const currency = contract.currency || "SAR";
+
+  // Normalize signatures: prefer `signatures` array, fallback to legacy single `signature`
+  const sigList: ContractSignature[] = (signatures && signatures.length > 0)
+    ? [...signatures].sort((a: any, b: any) => new Date(a.signed_at || 0).getTime() - new Date(b.signed_at || 0).getTime())
+    : (signature ? [signature] : []);
+  const slotCount = Math.max(expectedSigners || 0, sigList.length, 1);
 
   return (
     <div
