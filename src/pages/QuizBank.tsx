@@ -170,6 +170,15 @@ export default function QuizBank() {
       setCurrentIdx((i) => i + 1);
       setSelectedChoice(null); setResult(null); setStartedAt(Date.now());
     } else {
+      const correctCount = questions.filter(q => answeredIds.includes(q.id)).length;
+      QuestionBankService.logSessionCompletion({
+        category_id: categoryId !== 'all' ? categoryId : null,
+        subject_id: subjectId !== 'all' ? subjectId : null,
+        difficulty: difficulty !== 'all' ? difficulty : null,
+        total_questions: questions.length,
+        correct_count: correctCount,
+        xp_earned: sessionXp,
+      }).catch(() => {});
       toast.success('🎉 أتممت جميع الأسئلة! انتقل لصفحة النتائج…');
       setTimeout(() => navigate('/quiz-bank/results'), 800);
     }
