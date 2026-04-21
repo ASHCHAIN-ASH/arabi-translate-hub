@@ -220,6 +220,114 @@ export default function ResearchPublication() {
 
   const formatSize = (b: number) => b < 1024 ? `${b}B` : b < 1024 * 1024 ? `${(b / 1024).toFixed(1)}KB` : `${(b / 1024 / 1024).toFixed(1)}MB`;
 
+  const downloadSummaryPdf = (item: any) => {
+    const statusLabel = STATUS_CONFIG[item.status]?.label || item.status;
+    const serviceLabel = SERVICE_TYPES.find(s => s.value === item.service_type)?.label || item.service_type;
+    const langLabel = item.language === 'ar' ? 'العربية' : item.language === 'en' ? 'الإنجليزية' : 'ثنائي اللغة';
+    const created = new Date(item.created_at).toLocaleString('ar-SA', { dateStyle: 'long', timeStyle: 'short' });
+    const updated = new Date(item.updated_at || item.created_at).toLocaleString('ar-SA', { dateStyle: 'long', timeStyle: 'short' });
+    const atts: any[] = Array.isArray(item.attachments) ? item.attachments : [];
+    const esc = (s: any) => String(s ?? '—').replace(/[<>&]/g, c => ({ '<': '&lt;', '>': '&gt;', '&': '&amp;' } as any)[c]);
+
+    const html = `<!DOCTYPE html><html dir="rtl" lang="ar"><head><meta charset="UTF-8"><title>طلب نشر بحث ${esc(item.request_number)}</title>
+<style>
+  @page { size: A4; margin: 18mm; }
+  * { box-sizing: border-box; }
+  body { font-family: 'IBM Plex Sans Arabic','Segoe UI',Tahoma,sans-serif; color:#1f2937; margin:0; padding:0; line-height:1.7; }
+  .header { background: linear-gradient(135deg,#4f46e5,#0891b2); color:#fff; padding:28px 24px; border-radius:14px; margin-bottom:24px; }
+  .header h1 { margin:0 0 6px; font-size:24px; font-weight:900; }
+  .header .meta { display:flex; gap:14px; flex-wrap:wrap; font-size:12px; opacity:.95; margin-top:10px; }
+  .badge { display:inline-block; padding:4px 12px; border-radius:999px; background:rgba(255,255,255,.22); font-weight:700; }
+  .section { margin-bottom:18px; border:1px solid #e5e7eb; border-radius:12px; padding:16px 18px; background:#fff; }
+  .section h2 { margin:0 0 12px; font-size:15px; color:#4f46e5; border-bottom:2px solid #eef2ff; padding-bottom:6px; font-weight:800; }
+  .grid { display:grid; grid-template-columns:1fr 1fr; gap:10px 18px; }
+  .row { display:flex; gap:8px; font-size:13px; }
+  .row .k { color:#6b7280; min-width:110px; font-weight:600; }
+  .row .v { color:#111827; font-weight:700; flex:1; }
+  .abstract { font-size:13px; line-height:1.9; background:#f9fafb; padding:12px 14px; border-right:3px solid #4f46e5; border-radius:8px; }
+  .att { display:flex; align-items:center; gap:10px; padding:8px 12px; border:1px solid #e5e7eb; border-radius:8px; margin-bottom:6px; font-size:12px; background:#fafafa; }
+  .att .ic { width:28px; height:28px; border-radius:6px; background:#eef2ff; color:#4f46e5; display:flex; align-items:center; justify-content:center; font-weight:900; font-size:10px; }
+  .att .name { flex:1; font-weight:700; word-break:break-all; }
+  .att .sz { color:#6b7280; font-size:11px; }
+  .footer { margin-top:24px; padding-top:14px; border-top:1px dashed #d1d5db; text-align:center; font-size:11px; color:#6b7280; }
+  .pill { display:inline-block; padding:3px 10px; border-radius:999px; background:#ecfdf5; color:#047857; font-weight:700; font-size:11px; border:1px solid #a7f3d0; }
+  @media print { body { -webkit-print-color-adjust:exact; print-color-adjust:exact; } .noprint { display:none !important; } }
+  .noprint { position:fixed; top:14px; left:14px; background:#4f46e5; color:#fff; padding:10px 18px; border-radius:8px; cursor:pointer; border:0; font-weight:700; font-family:inherit; box-shadow:0 4px 12px rgba(79,70,229,.4); }
+</style></head><body>
+  <button class="noprint" onclick="window.print()">🖨️ طباعة / حفظ PDF</button>
+
+  <div class="header">
+    <div style="display:flex; justify-content:space-between; align-items:center; gap:10px; flex-wrap:wrap;">
+      <h1>📚 طلب نشر بحث علمي</h1>
+      <span class="badge">${esc(item.request_number)}</span>
+    </div>
+    <div style="font-size:18px; font-weight:800; margin-top:6px;">${esc(item.title)}</div>
+    <div class="meta">
+      <span>📅 الإنشاء: ${esc(created)}</span>
+      <span>🔄 آخر تحديث: ${esc(updated)}</span>
+      <span class="badge">الحالة: ${esc(statusLabel)}</span>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>📋 بيانات البحث</h2>
+    <div class="grid">
+      <div class="row"><span class="k">التخصص:</span><span class="v">${esc(item.field)}</span></div>
+      <div class="row"><span class="k">اللغة:</span><span class="v">${esc(langLabel)}</span></div>
+      <div class="row"><span class="k">نوع الخدمة:</span><span class="v">${esc(serviceLabel)}</span></div>
+      <div class="row"><span class="k">عدد الصفحات:</span><span class="v">${esc(item.page_count || '—')}</span></div>
+      <div class="row"><span class="k">المجلة المستهدفة:</span><span class="v">${esc(item.target_journal || '—')}</span></div>
+      <div class="row"><span class="k">تصنيف المجلة:</span><span class="v">${esc(item.journal_rank || '—')}</span></div>
+      <div class="row"><span class="k">الباحثون:</span><span class="v">${esc(item.authors || '—')}</span></div>
+      <div class="row"><span class="k">الكلمات المفتاحية:</span><span class="v">${esc(item.keywords || '—')}</span></div>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>📝 ملخص البحث</h2>
+    <div class="abstract">${esc(item.abstract)}</div>
+  </div>
+
+  ${item.notes ? `<div class="section"><h2>🗒️ ملاحظات</h2><div class="abstract">${esc(item.notes)}</div></div>` : ''}
+
+  <div class="section">
+    <h2>📎 المرفقات (${atts.length})</h2>
+    ${atts.length === 0 ? '<div style="color:#6b7280; font-size:12px;">لا توجد مرفقات.</div>' :
+      atts.map(a => `<div class="att">
+        <div class="ic">PDF</div>
+        <div class="name">${esc(a.name)}</div>
+        <div class="sz">${a.size ? formatSize(a.size) : ''}</div>
+      </div>`).join('')}
+    ${atts.length > 0 ? '<div style="font-size:11px; color:#6b7280; margin-top:8px;">ℹ️ المرفقات متاحة للتنزيل من داخل لوحة العميل.</div>' : ''}
+  </div>
+
+  <div class="section">
+    <h2>📞 بيانات التواصل</h2>
+    <div class="grid">
+      <div class="row"><span class="k">الاسم:</span><span class="v">${esc(item.client_name)}</span></div>
+      <div class="row"><span class="k">واتساب:</span><span class="v">${esc(item.client_phone)}</span></div>
+      ${item.client_email ? `<div class="row"><span class="k">البريد:</span><span class="v">${esc(item.client_email)}</span></div>` : ''}
+    </div>
+  </div>
+
+  ${item.estimated_amount ? `<div class="section"><h2>💰 السعر</h2><span class="pill">${Number(item.estimated_amount).toLocaleString('ar-SA')} ر.س</span></div>` : ''}
+
+  <div class="footer">
+    تم إنشاء هذا الملخّص تلقائياً من منصة ماسترد بات • masteredupath.com
+  </div>
+
+  <script>setTimeout(() => window.print(), 600);</script>
+</body></html>`;
+
+    const w = window.open('', '_blank');
+    if (!w) {
+      toast({ title: 'تعذّر الفتح', description: 'يرجى السماح بالنوافذ المنبثقة', variant: 'destructive' });
+      return;
+    }
+    w.document.write(html);
+    w.document.close();
+  };
+
   const load = async () => {
     if (!user?.id) return;
     setLoading(true);
