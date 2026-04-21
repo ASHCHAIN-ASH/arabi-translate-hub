@@ -294,9 +294,18 @@ export default function QuizBankBrowse() {
                             )}
                           </div>
                         </div>
-                        <Badge variant={totalQ > 0 ? 'default' : 'outline'} className="text-xs gap-1 shrink-0">
-                          <HelpCircle className="w-3 h-3" /> {totalQ} سؤال
-                        </Badge>
+                        <div className="flex items-center gap-2 shrink-0">
+                          <Badge variant={totalQ > 0 ? 'default' : 'outline'} className="text-xs gap-1">
+                            <HelpCircle className="w-3 h-3" /> {totalQ} سؤال
+                          </Badge>
+                          <Link
+                            to={`/quiz-bank/subject/${s.id}`}
+                            onClick={(e) => e.stopPropagation()}
+                            className="text-xs px-2.5 py-1 rounded-md border bg-background hover:bg-primary hover:text-primary-foreground hover:border-primary transition-colors"
+                          >
+                            التفاصيل
+                          </Link>
+                        </div>
                       </div>
                     </AccordionTrigger>
                     <AccordionContent className="px-4 pb-4">
