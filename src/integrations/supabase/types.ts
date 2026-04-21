@@ -4680,6 +4680,137 @@ export type Database = {
         }
         Relationships: []
       }
+      research_publication_messages: {
+        Row: {
+          attachments: Json | null
+          created_at: string
+          id: string
+          message: string
+          publication_id: string
+          read_at: string | null
+          sender_id: string
+          sender_type: string
+        }
+        Insert: {
+          attachments?: Json | null
+          created_at?: string
+          id?: string
+          message: string
+          publication_id: string
+          read_at?: string | null
+          sender_id: string
+          sender_type?: string
+        }
+        Update: {
+          attachments?: Json | null
+          created_at?: string
+          id?: string
+          message?: string
+          publication_id?: string
+          read_at?: string | null
+          sender_id?: string
+          sender_type?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "research_publication_messages_publication_id_fkey"
+            columns: ["publication_id"]
+            isOneToOne: false
+            referencedRelation: "research_publications"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      research_publications: {
+        Row: {
+          abstract: string
+          admin_notes: string | null
+          assigned_to: string | null
+          authors: string | null
+          client_email: string | null
+          client_name: string
+          client_phone: string
+          created_at: string
+          estimated_amount: number | null
+          expected_delivery_date: string | null
+          field: string
+          file_url: string | null
+          final_amount: number | null
+          id: string
+          journal_rank: string | null
+          keywords: string | null
+          language: string
+          notes: string | null
+          page_count: number | null
+          priority: string
+          request_number: string
+          service_type: string
+          status: string
+          target_journal: string | null
+          title: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          abstract: string
+          admin_notes?: string | null
+          assigned_to?: string | null
+          authors?: string | null
+          client_email?: string | null
+          client_name: string
+          client_phone: string
+          created_at?: string
+          estimated_amount?: number | null
+          expected_delivery_date?: string | null
+          field: string
+          file_url?: string | null
+          final_amount?: number | null
+          id?: string
+          journal_rank?: string | null
+          keywords?: string | null
+          language?: string
+          notes?: string | null
+          page_count?: number | null
+          priority?: string
+          request_number?: string
+          service_type?: string
+          status?: string
+          target_journal?: string | null
+          title: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          abstract?: string
+          admin_notes?: string | null
+          assigned_to?: string | null
+          authors?: string | null
+          client_email?: string | null
+          client_name?: string
+          client_phone?: string
+          created_at?: string
+          estimated_amount?: number | null
+          expected_delivery_date?: string | null
+          field?: string
+          file_url?: string | null
+          final_amount?: number | null
+          id?: string
+          journal_rank?: string | null
+          keywords?: string | null
+          language?: string
+          notes?: string | null
+          page_count?: number | null
+          priority?: string
+          request_number?: string
+          service_type?: string
+          status?: string
+          target_journal?: string | null
+          title?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       service_categories: {
         Row: {
           color: string | null
