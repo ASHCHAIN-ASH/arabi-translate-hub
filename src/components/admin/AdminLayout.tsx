@@ -10,7 +10,8 @@ import {
   LayoutDashboard, Users, ShoppingCart, FileText, 
   CreditCard, HelpCircle, Settings, LogOut, Shield, Bell, Menu,
   Activity, Mail, Briefcase, Clock, Receipt, ChevronDown,
-  BarChart3, Package, Ticket, UserPlus, Star, Wallet, Gift, Trophy, BookOpen, Inbox, MessageCircle
+  BarChart3, Package, Ticket, UserPlus, Star, Wallet, Gift, Trophy, BookOpen, Inbox, MessageCircle,
+  TrendingUp, Sparkles, FlaskConical
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import ChatFloatingButton from '@/components/chat/ChatFloatingButton';
@@ -88,6 +89,15 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
         { name: 'العضويات', href: '/adminmaster/memberships', icon: Star },
         { name: 'الإحالات والعمولات', href: '/adminmaster/referrals', icon: Gift },
         { name: 'النقاط والمكافآت', href: '/adminmaster/gamification', icon: Trophy },
+      ]
+    },
+    // 5.5 النمو والتحليلات
+    {
+      label: 'النمو والتحليلات',
+      items: [
+        { name: 'تحليلات النمو', href: '/adminmaster/growth', icon: TrendingUp },
+        { name: 'الأتمتة الذكية', href: '/adminmaster/growth/automation', icon: Sparkles },
+        { name: 'تجارب A/B', href: '/adminmaster/experiments', icon: FlaskConical },
       ]
     },
     // 6. المحتوى والخدمات
