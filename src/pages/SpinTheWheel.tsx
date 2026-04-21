@@ -42,12 +42,16 @@ const SpinTheWheel = () => {
   const [isChecking, setIsChecking] = useState(true);
   const { toast } = useToast();
 
-  // Responsive canvas size
+  // Responsive canvas size — based on viewport, not just container
   useEffect(() => {
     const update = () => {
-      const w = containerRef.current?.clientWidth ?? 400;
-      const next = Math.max(280, Math.min(520, w - 16));
-      setSize(next);
+      const vw = window.innerWidth;
+      const vh = window.innerHeight;
+      // Cap by viewport width AND height to avoid overflow on short screens
+      const maxByWidth = vw < 640 ? vw - 48 : vw < 1024 ? Math.min(vw - 80, 440) : 500;
+      const maxByHeight = vh * 0.6;
+      const next = Math.max(260, Math.min(maxByWidth, maxByHeight, 520));
+      setSize(Math.round(next));
     };
     update();
     window.addEventListener("resize", update);
@@ -129,19 +133,23 @@ const SpinTheWheel = () => {
       ctx.stroke();
       ctx.restore();
 
-      // Text — keep upright relative to slice center, draw along radius
+      // Text — radial, always readable. Rotate so the baseline points to center,
+      // and place text from outer edge inward so Arabic reads naturally regardless of slice angle.
       ctx.save();
       ctx.translate(cx, cy);
-      ctx.rotate(a0 + arc / 2);
-      ctx.textAlign = "right";
+      const mid = a0 + arc / 2;
+      // Rotate so text reads from outer rim toward center (top of letters faces outward)
+      ctx.rotate(mid + Math.PI / 2);
+      ctx.textAlign = "center";
       ctx.textBaseline = "middle";
-      const fontSize = Math.max(13, Math.round(size * 0.038));
-      ctx.font = `700 ${fontSize}px "IBM Plex Sans Arabic", system-ui, sans-serif`;
+      const fontSize = Math.max(12, Math.round(size * 0.036));
+      ctx.font = `700 ${fontSize}px "IBM Plex Sans Arabic", "Tajawal", system-ui, sans-serif`;
       ctx.fillStyle = "#fff";
-      ctx.shadowColor = "rgba(0,0,0,0.45)";
+      ctx.shadowColor = "rgba(0,0,0,0.55)";
       ctx.shadowBlur = 4;
       ctx.shadowOffsetY = 1;
-      ctx.fillText(seg.text, radius - 18, 0);
+      // Draw at distance from center along the now-vertical axis (negative Y = outward)
+      ctx.fillText(seg.text, 0, -(radius * 0.62));
       ctx.restore();
     });
 
@@ -272,7 +280,7 @@ const SpinTheWheel = () => {
           </motion.div>
 
           {/* Wheel + Side panel */}
-          <div className="grid lg:grid-cols-[1.1fr_1fr] gap-8 lg:gap-12 items-center max-w-5xl mx-auto">
+          <div className="grid lg:grid-cols-[1.1fr_1fr] gap-6 sm:gap-8 lg:gap-12 items-center max-w-5xl mx-auto">
             {/* Wheel */}
             <motion.div
               ref={containerRef}
