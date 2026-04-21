@@ -341,6 +341,7 @@ export default function MarketplaceItemCard({ item, userXp, userLevel, onPurchas
                 <p className="text-xs text-destructive">{lastError}</p>
               )}
             </div>
+            )}
 
             {/* Cumulative breakdown */}
             <div className="space-y-2 text-sm">
