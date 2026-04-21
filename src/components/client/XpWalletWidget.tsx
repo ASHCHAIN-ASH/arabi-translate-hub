@@ -99,6 +99,13 @@ export default function XpWalletWidget() {
           </div>
         )}
 
+        {/* CTA: Marketplace */}
+        <Button asChild size="sm" variant="outline" className="w-full gap-2">
+          <Link to="/marketplace">
+            <Store className="w-3.5 h-3.5" /> استبدل XP في المتجر
+          </Link>
+        </Button>
+
         {/* Activity Feed */}
         <div className="pt-2 border-t">
           <div className="flex items-center gap-2 mb-2 text-xs font-semibold text-muted-foreground">
