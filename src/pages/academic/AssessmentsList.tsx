@@ -3,21 +3,36 @@ import { Link } from 'react-router-dom';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Clock, Sparkles, Trophy, ArrowLeft } from 'lucide-react';
+import { Clock, Sparkles, Trophy, ArrowLeft, CheckCircle2, RefreshCw } from 'lucide-react';
 import { AssessmentService, Assessment } from '@/utils/assessmentService';
+import { useAuth } from '@/components/SimpleAuthProvider';
 import { motion } from 'framer-motion';
 import ClientLayout from '@/components/client/ClientLayout';
 
 export default function AssessmentsList() {
+  const { user } = useAuth();
   const [items, setItems] = useState<Assessment[]>([]);
+  const [todayMap, setTodayMap] = useState<Record<string, string>>({});
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    AssessmentService.listActive()
-      .then(setItems)
-      .catch((e) => console.error(e))
-      .finally(() => setLoading(false));
-  }, []);
+    (async () => {
+      try {
+        const list = await AssessmentService.listActive();
+        setItems(list);
+        const entries = await Promise.all(
+          list.map(async (a) => [a.id, await AssessmentService.getTodayAttemptId(a.id, user?.id ?? null)] as const)
+        );
+        const map: Record<string, string> = {};
+        entries.forEach(([id, att]) => { if (att) map[id] = att; });
+        setTodayMap(map);
+      } catch (e) {
+        console.error(e);
+      } finally {
+        setLoading(false);
+      }
+    })();
+  }, [user?.id]);
 
   return (
     <ClientLayout>
