@@ -133,19 +133,23 @@ const SpinTheWheel = () => {
       ctx.stroke();
       ctx.restore();
 
-      // Text — keep upright relative to slice center, draw along radius
+      // Text — radial, always readable. Rotate so the baseline points to center,
+      // and place text from outer edge inward so Arabic reads naturally regardless of slice angle.
       ctx.save();
       ctx.translate(cx, cy);
-      ctx.rotate(a0 + arc / 2);
-      ctx.textAlign = "right";
+      const mid = a0 + arc / 2;
+      // Rotate so text reads from outer rim toward center (top of letters faces outward)
+      ctx.rotate(mid + Math.PI / 2);
+      ctx.textAlign = "center";
       ctx.textBaseline = "middle";
-      const fontSize = Math.max(13, Math.round(size * 0.038));
-      ctx.font = `700 ${fontSize}px "IBM Plex Sans Arabic", system-ui, sans-serif`;
+      const fontSize = Math.max(12, Math.round(size * 0.036));
+      ctx.font = `700 ${fontSize}px "IBM Plex Sans Arabic", "Tajawal", system-ui, sans-serif`;
       ctx.fillStyle = "#fff";
-      ctx.shadowColor = "rgba(0,0,0,0.45)";
+      ctx.shadowColor = "rgba(0,0,0,0.55)";
       ctx.shadowBlur = 4;
       ctx.shadowOffsetY = 1;
-      ctx.fillText(seg.text, radius - 18, 0);
+      // Draw at distance from center along the now-vertical axis (negative Y = outward)
+      ctx.fillText(seg.text, 0, -(radius * 0.62));
       ctx.restore();
     });
 
