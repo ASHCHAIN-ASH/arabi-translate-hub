@@ -3078,6 +3078,216 @@ export type Database = {
           },
         ]
       }
+      marketplace_item_views: {
+        Row: {
+          anonymous_id: string | null
+          created_at: string
+          id: string
+          item_id: string
+          user_id: string | null
+          variant_key: string | null
+        }
+        Insert: {
+          anonymous_id?: string | null
+          created_at?: string
+          id?: string
+          item_id: string
+          user_id?: string | null
+          variant_key?: string | null
+        }
+        Update: {
+          anonymous_id?: string | null
+          created_at?: string
+          id?: string
+          item_id?: string
+          user_id?: string | null
+          variant_key?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "marketplace_item_views_item_id_fkey"
+            columns: ["item_id"]
+            isOneToOne: false
+            referencedRelation: "marketplace_items"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      marketplace_items: {
+        Row: {
+          badge_color: string | null
+          category: string
+          created_at: string
+          description_ar: string | null
+          icon: string | null
+          id: string
+          is_active: boolean
+          is_featured: boolean
+          max_per_user: number | null
+          min_level: number
+          reward_payload: Json
+          slug: string
+          sort_order: number
+          stock: number | null
+          title_ar: string
+          total_purchased: number
+          type: string
+          updated_at: string
+          xp_cost: number
+        }
+        Insert: {
+          badge_color?: string | null
+          category?: string
+          created_at?: string
+          description_ar?: string | null
+          icon?: string | null
+          id?: string
+          is_active?: boolean
+          is_featured?: boolean
+          max_per_user?: number | null
+          min_level?: number
+          reward_payload?: Json
+          slug: string
+          sort_order?: number
+          stock?: number | null
+          title_ar: string
+          total_purchased?: number
+          type: string
+          updated_at?: string
+          xp_cost: number
+        }
+        Update: {
+          badge_color?: string | null
+          category?: string
+          created_at?: string
+          description_ar?: string | null
+          icon?: string | null
+          id?: string
+          is_active?: boolean
+          is_featured?: boolean
+          max_per_user?: number | null
+          min_level?: number
+          reward_payload?: Json
+          slug?: string
+          sort_order?: number
+          stock?: number | null
+          title_ar?: string
+          total_purchased?: number
+          type?: string
+          updated_at?: string
+          xp_cost?: number
+        }
+        Relationships: []
+      }
+      marketplace_price_experiments: {
+        Row: {
+          allocation_percent: number
+          created_at: string
+          id: string
+          is_active: boolean
+          item_id: string
+          variant_key: string
+          xp_cost: number
+        }
+        Insert: {
+          allocation_percent?: number
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          item_id: string
+          variant_key: string
+          xp_cost: number
+        }
+        Update: {
+          allocation_percent?: number
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          item_id?: string
+          variant_key?: string
+          xp_cost?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "marketplace_price_experiments_item_id_fkey"
+            columns: ["item_id"]
+            isOneToOne: false
+            referencedRelation: "marketplace_items"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      marketplace_purchase_limits: {
+        Row: {
+          description: string | null
+          max_per_day: number
+          max_xp_per_day: number
+          type: string
+        }
+        Insert: {
+          description?: string | null
+          max_per_day: number
+          max_xp_per_day: number
+          type: string
+        }
+        Update: {
+          description?: string | null
+          max_per_day?: number
+          max_xp_per_day?: number
+          type?: string
+        }
+        Relationships: []
+      }
+      marketplace_purchases: {
+        Row: {
+          created_at: string
+          fulfillment_data: Json
+          id: string
+          ip_address: string | null
+          item_id: string
+          item_slug: string
+          item_type: string
+          reward_payload: Json
+          status: string
+          user_id: string
+          xp_spent: number
+        }
+        Insert: {
+          created_at?: string
+          fulfillment_data?: Json
+          id?: string
+          ip_address?: string | null
+          item_id: string
+          item_slug: string
+          item_type: string
+          reward_payload?: Json
+          status?: string
+          user_id: string
+          xp_spent: number
+        }
+        Update: {
+          created_at?: string
+          fulfillment_data?: Json
+          id?: string
+          ip_address?: string | null
+          item_id?: string
+          item_slug?: string
+          item_type?: string
+          reward_payload?: Json
+          status?: string
+          user_id?: string
+          xp_spent?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "marketplace_purchases_item_id_fkey"
+            columns: ["item_id"]
+            isOneToOne: false
+            referencedRelation: "marketplace_items"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       member_referrals: {
         Row: {
           commission_amount: number
@@ -5309,6 +5519,59 @@ export type Database = {
         }
         Relationships: []
       }
+      user_discount_coupons: {
+        Row: {
+          applies_to: string
+          code: string
+          created_at: string
+          discount_type: string
+          discount_value: number
+          expires_at: string | null
+          id: string
+          max_uses: number
+          source_purchase_id: string | null
+          status: string
+          used_count: number
+          user_id: string
+        }
+        Insert: {
+          applies_to?: string
+          code: string
+          created_at?: string
+          discount_type: string
+          discount_value: number
+          expires_at?: string | null
+          id?: string
+          max_uses?: number
+          source_purchase_id?: string | null
+          status?: string
+          used_count?: number
+          user_id: string
+        }
+        Update: {
+          applies_to?: string
+          code?: string
+          created_at?: string
+          discount_type?: string
+          discount_value?: number
+          expires_at?: string | null
+          id?: string
+          max_uses?: number
+          source_purchase_id?: string | null
+          status?: string
+          used_count?: number
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_discount_coupons_source_purchase_id_fkey"
+            columns: ["source_purchase_id"]
+            isOneToOne: false
+            referencedRelation: "marketplace_purchases"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       user_memberships: {
         Row: {
           activated_by: string | null
@@ -5556,6 +5819,39 @@ export type Database = {
           created_at?: string
           id?: string
           role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
+        }
+        Relationships: []
+      }
+      user_unlocked_features: {
+        Row: {
+          created_at: string
+          expires_at: string | null
+          feature_key: string
+          id: string
+          payload: Json
+          source: string
+          source_id: string | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          expires_at?: string | null
+          feature_key: string
+          id?: string
+          payload?: Json
+          source?: string
+          source_id?: string | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          expires_at?: string | null
+          feature_key?: string
+          id?: string
+          payload?: Json
+          source?: string
+          source_id?: string | null
           user_id?: string
         }
         Relationships: []
@@ -6794,6 +7090,7 @@ export type Database = {
           users: number
         }[]
       }
+      get_marketplace_metrics: { Args: { p_days?: number }; Returns: Json }
       get_membership_points_multiplier: {
         Args: { _user_id: string }
         Returns: number
@@ -7004,6 +7301,7 @@ export type Database = {
         Returns: Json
       }
       purchase_cv_export: { Args: { _cv_id: string }; Returns: Json }
+      purchase_marketplace_item: { Args: { p_item_id: string }; Returns: Json }
       purchase_stat_analysis: { Args: { _analysis_id: string }; Returns: Json }
       purchase_stat_pdf: { Args: { _analysis_id: string }; Returns: Json }
       read_email_batch: {
@@ -7073,6 +7371,14 @@ export type Database = {
           p_metadata?: Json
           p_metric_value?: number
           p_user_id?: string
+        }
+        Returns: undefined
+      }
+      track_marketplace_view: {
+        Args: {
+          p_anonymous_id?: string
+          p_item_id: string
+          p_variant_key?: string
         }
         Returns: undefined
       }

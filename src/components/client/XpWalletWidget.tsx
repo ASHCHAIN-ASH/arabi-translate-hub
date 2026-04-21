@@ -1,9 +1,11 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
 import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { Sparkles, TrendingUp, Trophy, Zap } from 'lucide-react';
+import { Sparkles, TrendingUp, Trophy, Zap, Store } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { Link } from 'react-router-dom';
 import { useAuth } from '@/components/SimpleAuthProvider';
 import { useXpEconomy } from '@/hooks/useXpEconomy';
 import { XpEconomyService } from '@/utils/xpEconomyService';
@@ -98,6 +100,13 @@ export default function XpWalletWidget() {
             وصلت للمستوى الأعلى! 👑
           </div>
         )}
+
+        {/* CTA: Marketplace */}
+        <Button asChild size="sm" variant="outline" className="w-full gap-2">
+          <Link to="/marketplace">
+            <Store className="w-3.5 h-3.5" /> استبدل XP في المتجر
+          </Link>
+        </Button>
 
         {/* Activity Feed */}
         <div className="pt-2 border-t">
