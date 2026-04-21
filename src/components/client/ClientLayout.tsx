@@ -21,6 +21,7 @@ import {
   Users,
   Gift,
   GraduationCap as StudentIcon,
+  BookOpen,
 } from 'lucide-react';
 import ChatFloatingButton from '@/components/chat/ChatFloatingButton';
 import { cn } from '@/lib/utils';
