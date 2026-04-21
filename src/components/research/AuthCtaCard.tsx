@@ -21,7 +21,9 @@ export const AuthCtaCard: React.FC<AuthCtaCardProps> = ({
   const navigate = useNavigate();
 
   const goAuth = (mode: 'signin' | 'signup') => {
-    navigate(`/auth?mode=${mode}&redirect=${encodeURIComponent(window.location.pathname)}`);
+    const redirect = encodeURIComponent(window.location.pathname);
+    const path = mode === 'signup' ? '/register' : '/login';
+    navigate(`${path}?redirect=${redirect}`);
   };
 
   return (
