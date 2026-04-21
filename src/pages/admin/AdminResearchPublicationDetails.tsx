@@ -325,6 +325,18 @@ export default function AdminResearchPublicationDetails() {
     } finally { setSendingContractPdf(null); }
   };
 
+  const deleteContract = async (contractId: string, contractNumber?: string) => {
+    if (!confirm(`هل أنت متأكد من حذف العقد ${contractNumber || ''}؟ لا يمكن التراجع عن هذا الإجراء.`)) return;
+    try {
+      const { error } = await (supabase.from('contracts') as any).delete().eq('id', contractId);
+      if (error) throw error;
+      toast({ title: '🗑️ تم حذف العقد' });
+      await loadAll();
+    } catch (e: any) {
+      toast({ title: 'تعذّر حذف العقد', description: e.message, variant: 'destructive' });
+    }
+  };
+
   const [creatingContract, setCreatingContract] = useState(false);
   const createContract = async () => {
     if (!item) return;
@@ -673,6 +685,14 @@ export default function AdminResearchPublicationDetails() {
                       >
                         {sendingContractPdf === c.id ? <Loader2 className="w-3 h-3 ml-1 animate-spin" /> : <Send className="w-3 h-3 ml-1" />}
                         📎 إرسال PDF واتساب
+                      </Button>
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        onClick={() => deleteContract(c.id, c.contract_number)}
+                        className="border-rose-300 text-rose-700 hover:bg-rose-50"
+                      >
+                        <Trash2 className="w-3 h-3 ml-1" /> حذف
                       </Button>
                     </div>
                   </div>
