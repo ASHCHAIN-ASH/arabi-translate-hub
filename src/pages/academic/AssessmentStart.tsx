@@ -118,6 +118,7 @@ export default function AssessmentStart() {
   const lowTime = secondsLeft <= 30;
 
   return (
+    <ClientLayout>
     <div className="min-h-screen bg-background py-8 px-4" dir="rtl">
       <div className="max-w-2xl mx-auto">
         {/* Header */}
@@ -195,5 +196,6 @@ export default function AssessmentStart() {
         </div>
       </div>
     </div>
+    </ClientLayout>
   );
 }
