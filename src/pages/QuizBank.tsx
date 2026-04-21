@@ -230,6 +230,9 @@ export default function QuizBank() {
                 </Badge>
               )}
               <Button asChild size="sm" variant="ghost" className="text-white hover:bg-white/15 hover:text-white gap-1.5 backdrop-blur-sm">
+                <Link to="/quiz-bank/account"><Crown className="w-3.5 h-3.5" /> حسابي</Link>
+              </Button>
+              <Button asChild size="sm" variant="ghost" className="text-white hover:bg-white/15 hover:text-white gap-1.5 backdrop-blur-sm">
                 <Link to="/quiz-bank/browse"><Layers className="w-3.5 h-3.5" /> تصفح التخصصات</Link>
               </Button>
               <Button asChild size="sm" variant="ghost" className="text-white hover:bg-white/15 hover:text-white gap-1.5 backdrop-blur-sm">
