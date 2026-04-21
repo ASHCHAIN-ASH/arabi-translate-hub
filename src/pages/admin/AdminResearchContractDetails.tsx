@@ -110,6 +110,16 @@ export default function AdminResearchContractDetails() {
   const [sending, setSending] = useState(false);
   const [generating, setGenerating] = useState(false);
 
+  // ─── Content review / edit state ───
+  const [editMode, setEditMode] = useState(false);
+  const [savingContent, setSavingContent] = useState(false);
+  const [draftTitle, setDraftTitle] = useState('');
+  const [draftAmount, setDraftAmount] = useState<string>('');
+  const [draftPaymentTerms, setDraftPaymentTerms] = useState('');
+  const [draftContent, setDraftContent] = useState('');
+  const [draftItems, setDraftItems] = useState<ItemRow[]>([]);
+  const [previewMode, setPreviewMode] = useState<'edit' | 'preview'>('edit');
+
   const loadAll = async () => {
     if (!id) return;
     setLoading(true);
