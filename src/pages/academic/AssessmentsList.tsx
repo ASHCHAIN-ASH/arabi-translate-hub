@@ -6,6 +6,7 @@ import { Badge } from '@/components/ui/badge';
 import { Clock, Sparkles, Trophy, ArrowLeft } from 'lucide-react';
 import { AssessmentService, Assessment } from '@/utils/assessmentService';
 import { motion } from 'framer-motion';
+import ClientLayout from '@/components/client/ClientLayout';
 
 export default function AssessmentsList() {
   const [items, setItems] = useState<Assessment[]>([]);
@@ -19,6 +20,7 @@ export default function AssessmentsList() {
   }, []);
 
   return (
+    <ClientLayout>
     <div className="min-h-screen bg-background py-10 px-4" dir="rtl">
       <div className="max-w-5xl mx-auto">
         <div className="mb-8 text-center">
@@ -95,5 +97,6 @@ export default function AssessmentsList() {
         )}
       </div>
     </div>
+    </ClientLayout>
   );
 }
