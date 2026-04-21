@@ -5560,6 +5560,33 @@ export type Database = {
         }
         Relationships: []
       }
+      user_xp_wallet: {
+        Row: {
+          current_level: number
+          lifetime_xp: number
+          total_xp: number
+          updated_at: string
+          user_id: string
+          xp_to_next_level: number
+        }
+        Insert: {
+          current_level?: number
+          lifetime_xp?: number
+          total_xp?: number
+          updated_at?: string
+          user_id: string
+          xp_to_next_level?: number
+        }
+        Update: {
+          current_level?: number
+          lifetime_xp?: number
+          total_xp?: number
+          updated_at?: string
+          user_id?: string
+          xp_to_next_level?: number
+        }
+        Relationships: []
+      }
       wallet_topup_requests: {
         Row: {
           admin_notes: string | null
@@ -6380,6 +6407,123 @@ export type Database = {
         }
         Relationships: []
       }
+      xp_daily_limits: {
+        Row: {
+          description: string | null
+          max_per_day: number
+          max_xp_per_day: number
+          source_type: string
+        }
+        Insert: {
+          description?: string | null
+          max_per_day: number
+          max_xp_per_day: number
+          source_type: string
+        }
+        Update: {
+          description?: string | null
+          max_per_day?: number
+          max_xp_per_day?: number
+          source_type?: string
+        }
+        Relationships: []
+      }
+      xp_levels: {
+        Row: {
+          badge_color: string | null
+          created_at: string
+          icon: string | null
+          level: number
+          name_ar: string
+          required_xp_total: number
+          reward_payload: Json
+          reward_type: string | null
+        }
+        Insert: {
+          badge_color?: string | null
+          created_at?: string
+          icon?: string | null
+          level: number
+          name_ar: string
+          required_xp_total: number
+          reward_payload?: Json
+          reward_type?: string | null
+        }
+        Update: {
+          badge_color?: string | null
+          created_at?: string
+          icon?: string | null
+          level?: number
+          name_ar?: string
+          required_xp_total?: number
+          reward_payload?: Json
+          reward_type?: string | null
+        }
+        Relationships: []
+      }
+      xp_rewards_claims: {
+        Row: {
+          claimed_at: string
+          id: string
+          level: number
+          reward_payload: Json
+          reward_type: string | null
+          user_id: string
+        }
+        Insert: {
+          claimed_at?: string
+          id?: string
+          level: number
+          reward_payload?: Json
+          reward_type?: string | null
+          user_id: string
+        }
+        Update: {
+          claimed_at?: string
+          id?: string
+          level?: number
+          reward_payload?: Json
+          reward_type?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
+      xp_transactions: {
+        Row: {
+          amount: number
+          balance_after: number
+          created_at: string
+          description: string | null
+          id: string
+          metadata: Json
+          source_id: string | null
+          source_type: string
+          user_id: string
+        }
+        Insert: {
+          amount: number
+          balance_after: number
+          created_at?: string
+          description?: string | null
+          id?: string
+          metadata?: Json
+          source_id?: string | null
+          source_type: string
+          user_id: string
+        }
+        Update: {
+          amount?: number
+          balance_after?: number
+          created_at?: string
+          description?: string | null
+          id?: string
+          metadata?: Json
+          source_id?: string | null
+          source_type?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
@@ -6465,6 +6609,17 @@ export type Database = {
           _user_id: string
         }
         Returns: string
+      }
+      award_xp: {
+        Args: {
+          p_amount: number
+          p_description?: string
+          p_metadata?: Json
+          p_source_id?: string
+          p_source_type: string
+          p_user_id: string
+        }
+        Returns: Json
       }
       build_growth_snapshot: { Args: never; Returns: Json }
       cancel_group_order: {
