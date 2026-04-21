@@ -157,6 +157,12 @@ export default function ResearchPublication() {
   const [messages, setMessages] = useState<any[]>([]);
   const [newMsg, setNewMsg] = useState('');
   const [sending, setSending] = useState(false);
+  const [attachments, setAttachments] = useState<Array<{ name: string; path: string; size: number; type: string }>>([]);
+  const [uploadingFile, setUploadingFile] = useState(false);
+  const [downloadingPath, setDownloadingPath] = useState<string | null>(null);
+
+  const ALLOWED_EXT = ['doc', 'docx', 'pdf', 'txt'];
+  const MAX_SIZE_MB = 20;
 
   const [form, setForm] = useState({
     title: '', field: '', language: 'ar', service_type: 'publication',
@@ -166,6 +172,53 @@ export default function ResearchPublication() {
     client_phone: user?.user_metadata?.phone || '',
     client_email: user?.email || '',
   });
+
+  const handleFilesSelected = async (files: FileList | null) => {
+    if (!files || !user?.id) return;
+    setUploadingFile(true);
+    const newOnes: typeof attachments = [];
+    for (const file of Array.from(files)) {
+      const ext = file.name.split('.').pop()?.toLowerCase() || '';
+      if (!ALLOWED_EXT.includes(ext)) {
+        toast({ title: 'نوع غير مدعوم', description: `${file.name} — يُسمح فقط بـ Word/PDF/TXT`, variant: 'destructive' });
+        continue;
+      }
+      if (file.size > MAX_SIZE_MB * 1024 * 1024) {
+        toast({ title: 'الملف كبير', description: `${file.name} يتجاوز ${MAX_SIZE_MB}MB`, variant: 'destructive' });
+        continue;
+      }
+      const path = `${user.id}/${Date.now()}-${Math.random().toString(36).slice(2, 8)}.${ext}`;
+      const { error } = await supabase.storage.from('research-attachments').upload(path, file, {
+        contentType: file.type || 'application/octet-stream',
+      });
+      if (error) {
+        toast({ title: 'فشل الرفع', description: `${file.name}: ${error.message}`, variant: 'destructive' });
+        continue;
+      }
+      newOnes.push({ name: file.name, path, size: file.size, type: file.type || ext });
+    }
+    setAttachments(prev => [...prev, ...newOnes]);
+    setUploadingFile(false);
+    if (newOnes.length) toast({ title: '✅ تم الرفع', description: `${newOnes.length} ملف(ات)` });
+  };
+
+  const removeAttachment = async (path: string) => {
+    await supabase.storage.from('research-attachments').remove([path]);
+    setAttachments(prev => prev.filter(a => a.path !== path));
+  };
+
+  const downloadAttachment = async (att: { name: string; path: string }) => {
+    setDownloadingPath(att.path);
+    const { data, error } = await supabase.storage.from('research-attachments').createSignedUrl(att.path, 60);
+    setDownloadingPath(null);
+    if (error || !data?.signedUrl) {
+      toast({ title: 'تعذّر التنزيل', description: error?.message || 'حاول لاحقاً', variant: 'destructive' });
+      return;
+    }
+    window.open(data.signedUrl, '_blank');
+  };
+
+  const formatSize = (b: number) => b < 1024 ? `${b}B` : b < 1024 * 1024 ? `${(b / 1024).toFixed(1)}KB` : `${(b / 1024 / 1024).toFixed(1)}MB`;
 
   const load = async () => {
     if (!user?.id) return;
