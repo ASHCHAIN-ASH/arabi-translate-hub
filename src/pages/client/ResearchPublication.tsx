@@ -656,6 +656,43 @@ export default function ResearchPublication() {
                                 <p className="text-sm">{selected.abstract}</p>
                               </div>
 
+                              {/* المرفقات */}
+                              {Array.isArray(selected.attachments) && selected.attachments.length > 0 && (
+                                <div className="bg-white/70 rounded-xl p-3 border">
+                                  <div className="text-xs text-muted-foreground mb-2 flex items-center gap-1.5 font-bold">
+                                    <Paperclip className="w-3.5 h-3.5 text-indigo-600" />
+                                    المرفقات ({selected.attachments.length})
+                                  </div>
+                                  <div className="space-y-2">
+                                    {selected.attachments.map((att: any, idx: number) => (
+                                      <div key={idx} className="flex items-center gap-2 p-2 bg-indigo-50/50 border border-indigo-100 rounded-lg">
+                                        <div className="w-9 h-9 rounded-lg bg-gradient-to-br from-indigo-500 to-cyan-500 text-white flex items-center justify-center shrink-0">
+                                          <FileIcon className="w-4 h-4" />
+                                        </div>
+                                        <div className="flex-1 min-w-0">
+                                          <div className="text-sm font-bold truncate">{att.name}</div>
+                                          <div className="text-[11px] text-muted-foreground">{att.size ? formatSize(att.size) : ''}</div>
+                                        </div>
+                                        <Button
+                                          type="button"
+                                          size="sm"
+                                          variant="outline"
+                                          onClick={() => downloadAttachment(att)}
+                                          disabled={downloadingPath === att.path}
+                                          className="border-indigo-300 text-indigo-700 hover:bg-indigo-100"
+                                        >
+                                          {downloadingPath === att.path ? (
+                                            <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                                          ) : (
+                                            <><Download className="w-3.5 h-3.5 ml-1" />تنزيل</>
+                                          )}
+                                        </Button>
+                                      </div>
+                                    ))}
+                                  </div>
+                                </div>
+                              )}
+
                               <div className="border-t pt-4">
                                 <h3 className="font-bold mb-3 flex items-center gap-2">
                                   <MessageCircle className="w-4 h-4 text-indigo-600" />
