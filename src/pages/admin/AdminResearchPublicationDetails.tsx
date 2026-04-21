@@ -370,7 +370,7 @@ export default function AdminResearchPublicationDetails() {
           client_full_name: item.client_name || null,
           client_email: item.client_email || null,
           client_phone: item.client_phone || null,
-          customer_id: item.user_id || null,
+          customer_id: customerId,
           user_id: item.user_id || null,
           publication_id: item.id,
           service_name: 'نشر بحث علمي',
