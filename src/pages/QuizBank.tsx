@@ -212,6 +212,14 @@ export default function QuizBank() {
                   <Flame className="w-3.5 h-3.5" /> {streak} متتالية
                 </Badge>
               )}
+              {answeredIds.length > 0 && (
+                <Button
+                  size="sm" variant="ghost" onClick={handleResetSession}
+                  className="text-white hover:bg-white/15 hover:text-white gap-1.5 backdrop-blur-sm"
+                >
+                  <RotateCcw className="w-3.5 h-3.5" /> جلسة جديدة
+                </Button>
+              )}
             </div>
           </div>
         </div>
