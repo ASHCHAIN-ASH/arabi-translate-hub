@@ -107,6 +107,7 @@ import AdminWorkingHours from "./pages/admin/AdminWorkingHours";
 import AdminWallets from "./pages/admin/AdminWallets";
 import AdminPayments from "./pages/admin/AdminPayments";
 import AdminGamification from "./pages/admin/AdminGamification";
+import AdminGrowthAnalytics from "./pages/admin/AdminGrowthAnalytics";
 import ContractsSystem from "./pages/admin/ContractsSystem";
 import AdminContractDetails from "./pages/admin/AdminContractDetails";
 import ContractsAnalytics from "./pages/admin/ContractsAnalytics";
@@ -535,6 +536,11 @@ const App = () => (
             <Route path="/adminmaster/referrals" element={
               <SimpleProtectedRoute adminOnly>
                 <AdminReferrals />
+              </SimpleProtectedRoute>
+            } />
+            <Route path="/adminmaster/growth" element={
+              <SimpleProtectedRoute adminOnly>
+                <AdminGrowthAnalytics />
               </SimpleProtectedRoute>
             } />
             <Route path="/adminmaster/whatsapp" element={<Navigate to="/adminmaster/whatsapp/inbox" replace />} />
