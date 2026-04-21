@@ -4184,6 +4184,45 @@ export type Database = {
         }
         Relationships: []
       }
+      question_bank_sessions: {
+        Row: {
+          answered_question_ids: string[]
+          current_index: number
+          filter_category_id: string | null
+          filter_difficulty: string | null
+          filter_subject_id: string | null
+          question_ids: string[]
+          session_xp: number
+          streak: number
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          answered_question_ids?: string[]
+          current_index?: number
+          filter_category_id?: string | null
+          filter_difficulty?: string | null
+          filter_subject_id?: string | null
+          question_ids?: string[]
+          session_xp?: number
+          streak?: number
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          answered_question_ids?: string[]
+          current_index?: number
+          filter_category_id?: string | null
+          filter_difficulty?: string | null
+          filter_subject_id?: string | null
+          question_ids?: string[]
+          session_xp?: number
+          streak?: number
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       question_categories: {
         Row: {
           created_at: string
