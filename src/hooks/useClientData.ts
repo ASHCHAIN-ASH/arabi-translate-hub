@@ -70,14 +70,19 @@ export function useClientData(userId: string | undefined) {
         .channel(`client-orders-${userId}`)
         .on('postgres_changes', { event: '*', schema: 'public', table: 'service_orders', filter: `user_id=eq.${userId}` }, () => loadData());
 
+      const researchChannel = supabase
+        .channel(`client-research-${userId}`)
+        .on('postgres_changes', { event: '*', schema: 'public', table: 'research_publications', filter: `user_id=eq.${userId}` }, () => loadData());
+
       Promise.all([
         contractsChannel.subscribe(),
         invoicesChannel.subscribe(),
         paymentsChannel.subscribe(),
         ticketsChannel.subscribe(),
-        ordersChannel.subscribe()
+        ordersChannel.subscribe(),
+        researchChannel.subscribe(),
       ]).then(() => {
-        subscriptions.push(contractsChannel, invoicesChannel, paymentsChannel, ticketsChannel, ordersChannel);
+        subscriptions.push(contractsChannel, invoicesChannel, paymentsChannel, ticketsChannel, ordersChannel, researchChannel);
       });
 
       // تنظيف الاشتراكات
