@@ -135,6 +135,8 @@ import WhatsappCampaignsPage from "./pages/admin/whatsapp/WhatsappCampaignsPage"
 import WhatsappAnalyticsPage from "./pages/admin/whatsapp/WhatsappAnalyticsPage";
 import StudentLibrary from "./pages/client/StudentLibrary";
 import ClientContracts from "./pages/ClientContracts";
+import ClientResearchPublication from "./pages/client/ResearchPublication";
+import AdminResearchPublications from "./pages/admin/AdminResearchPublications";
 import ClientContractView from "./pages/ClientContractView";
 
 import ThesisTitles from "./pages/research/ThesisTitles";
@@ -439,6 +441,16 @@ const App = () => (
             <Route path="/client/contracts/:id" element={
               <SimpleProtectedRoute requiredRole="client">
                 <ClientContractView />
+              </SimpleProtectedRoute>
+            } />
+            <Route path="/client/research" element={
+              <SimpleProtectedRoute requiredRole="client">
+                <ClientResearchPublication />
+              </SimpleProtectedRoute>
+            } />
+            <Route path="/adminmaster/research" element={
+              <SimpleProtectedRoute adminOnly>
+                <AdminResearchPublications />
               </SimpleProtectedRoute>
             } />
             <Route path="/adminmaster/services" element={
