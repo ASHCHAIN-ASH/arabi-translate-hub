@@ -339,13 +339,38 @@ export default function AdminResearchPublicationDetails() {
       const amount = Number(item.final_amount || item.estimated_amount || 0);
       const contractContent = `عقد نشر بحث علمي\n\nالعميل: ${item.client_name || ''}\nالبريد: ${item.client_email || ''}\nالجوال: ${item.client_phone || ''}\n\nعنوان البحث: ${item.title || ''}\nالتخصص: ${item.field_of_study || item.specialization || '—'}\nاللغة: ${item.language || '—'}\nالمجلة المستهدفة: ${item.target_journal || '—'}\n\nالقيمة الإجمالية: ${amount.toLocaleString('ar-SA')} ر.س (شاملة الضريبة)\n\nيلتزم الطرف الثاني (ماستر إيدو باث) بتقديم خدمة نشر البحث وفق المعايير الأكاديمية المتفق عليها، ويلتزم الطرف الأول (العميل) بسداد القيمة المتفق عليها.`;
 
+      // إيجاد أو إنشاء customer مرتبط بمالك الطلب (customers.id ≠ auth.users.id)
+      let customerId: string | null = null;
+      if (item.user_id) {
+        const { data: existingCustomer } = await supabase
+          .from('customers')
+          .select('id')
+          .eq('user_id', item.user_id)
+          .maybeSingle();
+        if (existingCustomer?.id) {
+          customerId = existingCustomer.id;
+        } else {
+          const { data: newCustomer } = await (supabase.from('customers') as any)
+            .insert({
+              user_id: item.user_id,
+              name: item.client_name || 'عميل',
+              email: item.client_email || null,
+              phone: item.client_phone || null,
+              status: 'active',
+            })
+            .select('id')
+            .single();
+          customerId = newCustomer?.id || null;
+        }
+      }
+
       const { data: created, error } = await (supabase.from('contracts') as any)
         .insert([{
           title: `عقد نشر بحث: ${item.title}`,
           client_full_name: item.client_name || null,
           client_email: item.client_email || null,
           client_phone: item.client_phone || null,
-          customer_id: item.user_id || null,
+          customer_id: customerId,
           user_id: item.user_id || null,
           publication_id: item.id,
           service_name: 'نشر بحث علمي',
