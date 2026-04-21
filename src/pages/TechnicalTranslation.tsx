@@ -7,7 +7,7 @@ import Header from "@/components/Header";
 import Breadcrumb from '@/components/Breadcrumb';
 
 
-import ServiceInquiryForm from "@/components/ServiceInquiryForm";
+import AuthCtaCard from "@/components/research/AuthCtaCard";
 
 import Footer from '@/components/Footer';
 const TechnicalTranslation = () => {
@@ -184,32 +184,13 @@ const TechnicalTranslation = () => {
             </div>
           </motion.div>
 
-          {/* Service Inquiry Form */}
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.7 }}
             className="mb-16"
           >
-            <Card className="bg-gradient-to-br from-purple-50 to-indigo-50 border-2 border-purple-200">
-              <CardContent className="p-8">
-                <div className="text-center mb-8">
-                  <Settings className="h-16 w-16 mx-auto mb-4 text-purple-600" />
-                  <h3 className="text-3xl font-bold mb-4 font-arabic-title text-gray-800">
-                    احصل على خدمة الترجمة التقنية
-                  </h3>
-                  <p className="text-lg text-gray-600 font-arabic-body">
-                    تواصل معنا للحصول على ترجمة تقنية دقيقة ومتخصصة
-                  </p>
-                </div>
-                <ServiceInquiryForm 
-                  serviceType="technical-translation"
-                  serviceName="الترجمة التقنية"
-                  showLanguageFields={true}
-                  showFileSizeField={true}
-                />
-              </CardContent>
-            </Card>
+            <AuthCtaCard serviceTitle="الترجمة التقنية" />
           </motion.div>
 
         </div>
