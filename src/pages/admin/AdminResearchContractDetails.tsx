@@ -380,7 +380,7 @@ export default function AdminResearchContractDetails() {
                   <div className="rounded-lg px-3 py-2 border" style={cellStyle}>
                     <div className="text-[10px] uppercase tracking-wider" style={labelStyle}>تاريخ التسليم</div>
                     <div className="font-bold text-white text-sm mt-0.5">
-                      {end ? end.toLocaleDateString('ar-SA', { year: 'numeric', month: 'long', day: 'numeric' }) : '—'}
+                      {formatContractHeaderDate(end)}
                     </div>
                   </div>
                   <div className="rounded-lg px-3 py-2 border" style={cellStyle}>
