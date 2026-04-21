@@ -110,6 +110,8 @@ import AdminGamification from "./pages/admin/AdminGamification";
 import AdminGrowthAnalytics from "./pages/admin/AdminGrowthAnalytics";
 import AdminGrowthAutomation from "./pages/admin/AdminGrowthAutomation";
 import AdminGrowthAutomationRules from "./pages/admin/AdminGrowthAutomationRules";
+import AdminExperiments from "./pages/admin/AdminExperiments";
+import AdminExperimentDetail from "./pages/admin/AdminExperimentDetail";
 import ContractsSystem from "./pages/admin/ContractsSystem";
 import AdminContractDetails from "./pages/admin/AdminContractDetails";
 import ContractsAnalytics from "./pages/admin/ContractsAnalytics";
@@ -553,6 +555,16 @@ const App = () => (
             <Route path="/adminmaster/growth/automation/rules" element={
               <SimpleProtectedRoute adminOnly>
                 <AdminGrowthAutomationRules />
+              </SimpleProtectedRoute>
+            } />
+            <Route path="/adminmaster/experiments" element={
+              <SimpleProtectedRoute adminOnly>
+                <AdminExperiments />
+              </SimpleProtectedRoute>
+            } />
+            <Route path="/adminmaster/experiments/:id" element={
+              <SimpleProtectedRoute adminOnly>
+                <AdminExperimentDetail />
               </SimpleProtectedRoute>
             } />
             <Route path="/adminmaster/whatsapp" element={<Navigate to="/adminmaster/whatsapp/inbox" replace />} />
