@@ -415,8 +415,8 @@ export const ContractDocument: React.FC<Props> = ({ contract, signature, signatu
         })}
       </div>
 
-      {/* Digital verification hash */}
-      {signature && (
+      {/* Digital verification hashes — one per signature */}
+      {sigList.length > 0 && (
         <div
           className="mt-5 rounded-xl px-4 py-3.5 text-xs"
           style={{
@@ -430,21 +430,29 @@ export const ContractDocument: React.FC<Props> = ({ contract, signature, signatu
               className="inline-flex items-center justify-center text-[11px]"
               style={{ background: NAVY, color: GOLD, width: 22, height: 22, borderRadius: "50%" }}
             >🔒</span>
-            بصمة التحقق الرقمي (SHA-256)
+            بصمات التحقق الرقمي (SHA-256)
           </div>
-          <code
-            className="block break-all rounded-md px-2.5 py-2 mt-1.5"
-            style={{
-              background: "#fff", border: `1px dashed ${GOLD}55`,
-              fontFamily: "ui-monospace, Menlo, monospace", fontSize: 10,
-              color: NAVY, letterSpacing: ".02em",
-            }}
-          >
-            {/* Display a deterministic mock hash from signature id+date for the React preview */}
-            {`${(signature.id || "").replace(/-/g,"")}${signature.signed_at?.replace(/[^0-9]/g,"") || ""}`.padEnd(64, "0").slice(0, 64)}
-          </code>
-          <p className="mt-1.5 text-[10px]" style={{ color: NAVY + "99" }}>
-            هذه البصمة تُستخدم للتحقق من سلامة العقد وعدم التلاعب به. أي تعديل سيؤدي إلى تغيير البصمة.
+          <div className="space-y-2 mt-1.5">
+            {sigList.map((s, i) => (
+              <div key={s.id || i}>
+                <div className="text-[10px] font-bold mb-0.5" style={{ color: NAVY + "cc" }}>
+                  {PARTY_LABELS_AR[i + 1] || `الطرف #${i + 2}`} — {s.signer_name}
+                </div>
+                <code
+                  className="block break-all rounded-md px-2.5 py-2"
+                  style={{
+                    background: "#fff", border: `1px dashed ${GOLD}55`,
+                    fontFamily: "ui-monospace, Menlo, monospace", fontSize: 10,
+                    color: NAVY, letterSpacing: ".02em",
+                  }}
+                >
+                  {`${(s.id || "").replace(/-/g,"")}${s.signed_at?.replace(/[^0-9]/g,"") || ""}`.padEnd(64, "0").slice(0, 64)}
+                </code>
+              </div>
+            ))}
+          </div>
+          <p className="mt-2 text-[10px]" style={{ color: NAVY + "99" }}>
+            تُستخدم هذه البصمات للتحقق من سلامة العقد وعدم التلاعب به. أي تعديل سيؤدي إلى تغيير البصمات.
           </p>
         </div>
       )}
