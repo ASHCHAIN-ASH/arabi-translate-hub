@@ -41,9 +41,13 @@ export default function AssessmentsList() {
         <div className="mb-8 text-center">
           <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }}>
             <h1 className="text-3xl md:text-4xl font-bold mb-3">🎯 اختبارات تحديد المستوى</h1>
-            <p className="text-muted-foreground max-w-2xl mx-auto">
+            <p className="text-muted-foreground max-w-2xl mx-auto mb-3">
               اكتشف مستواك خلال دقائق، احصل على تحليل لمهاراتك، واربح XP مع كل اختبار.
             </p>
+            <Badge variant="outline" className="gap-1.5 border-primary/30 text-primary">
+              <RefreshCw className="w-3 h-3" />
+              أسئلة جديدة كل يوم — محاولة واحدة يوميًا
+            </Badge>
           </motion.div>
         </div>
 
