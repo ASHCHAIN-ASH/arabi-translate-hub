@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import { FloatingWhatsAppButton } from '@/components/FloatingWhatsAppButton';
-import { ProofreadingServiceForm } from '@/components/research/forms/ProofreadingServiceForm';
+import { AuthCtaCard } from '@/components/research/AuthCtaCard';
 import { CheckCheck, CheckCircle, Edit, FileText, Search, Send, ArrowRight, Languages, Shield, Sparkles, Eye } from 'lucide-react';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -256,7 +256,7 @@ export default function ProofreadingService() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
             >
-              <ProofreadingServiceForm />
+              <AuthCtaCard serviceTitle="التدقيق اللغوي والأكاديمي" />
             </motion.div>
           </div>
         </div>

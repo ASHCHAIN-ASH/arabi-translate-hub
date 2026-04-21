@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import { FloatingWhatsAppButton } from '@/components/FloatingWhatsAppButton';
-import { StatisticalSpssServiceForm } from '@/components/research/forms/StatisticalSpssServiceForm';
+import { AuthCtaCard } from '@/components/research/AuthCtaCard';
 import { BarChart3, CheckCircle, Database, TrendingUp, PieChart, LineChart, ArrowRight, FileText, Search, Send } from 'lucide-react';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -256,7 +256,7 @@ export default function StatisticalSpssService() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
             >
-              <StatisticalSpssServiceForm />
+              <AuthCtaCard serviceTitle="التحليل الإحصائي SPSS" />
             </motion.div>
           </div>
         </div>

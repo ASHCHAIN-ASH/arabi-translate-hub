@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import { FloatingWhatsAppButton } from '@/components/FloatingWhatsAppButton';
-import { ResearchServiceForm } from '@/components/research/ResearchServiceForm';
+import { AuthCtaCard } from '@/components/research/AuthCtaCard';
 import { Presentation, CheckCircle, Palette, Layout, Image, Sparkles, ArrowRight, Wand2, Monitor, Zap } from 'lucide-react';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -243,10 +243,7 @@ export default function PowerPointService() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
             >
-              <ResearchServiceForm 
-                serviceTitle="إعداد عروض PowerPoint أكاديمية"
-                serviceType="powerpoint"
-              />
+              <AuthCtaCard serviceTitle="إعداد عروض PowerPoint أكاديمية" />
             </motion.div>
           </div>
         </div>
