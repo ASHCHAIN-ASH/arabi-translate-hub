@@ -22,11 +22,19 @@ const promoSchema = z.string().trim().min(3, 'الكود قصير').max(40, 'ا�
 export default function MarketplaceItemCard({ item, userXp, userLevel, onPurchased }: Props) {
   const [open, setOpen] = useState(false);
   const [busy, setBusy] = useState(false);
+  // Up to 2 stacked promo codes
   const [promoInput, setPromoInput] = useState('');
   const [promoValidating, setPromoValidating] = useState(false);
-  const [promo, setPromo] = useState<PromoValidation | null>(null);
+  const [promos, setPromos] = useState<PromoValidation[]>([]); // applied codes (max 2)
+  const [lastError, setLastError] = useState<string | null>(null);
 
-  const canAfford = userXp >= (promo?.valid ? (promo.final_xp ?? item.xp_cost) : item.xp_cost);
+  // Cumulative breakdown derived from applied promos
+  const baseCost = item.xp_cost;
+  const totalDiscount = promos.reduce((s, p) => s + (p.xp_discount || 0), 0);
+  const effectiveCost = Math.max(baseCost - totalDiscount, 0);
+  const canAddMore = promos.length < 2;
+
+  const canAfford = userXp >= effectiveCost;
   const meetsLevel = userLevel >= item.min_level;
   const inStock = item.stock === null || item.total_purchased < item.stock;
   const canBuy = canAfford && meetsLevel && inStock;
@@ -42,29 +50,46 @@ export default function MarketplaceItemCard({ item, userXp, userLevel, onPurchas
     if (open) {
       MarketplaceService.trackEvent('dialog_open', { itemId: item.id, metadata: { type: item.type } });
     } else {
-      setPromoInput(''); setPromo(null);
+      setPromoInput(''); setPromos([]); setLastError(null);
     }
   }, [open, item.id, item.type]);
 
-  const effectiveCost = promo?.valid ? (promo.final_xp ?? item.xp_cost) : item.xp_cost;
-  const discountAmount = promo?.valid ? (promo.xp_discount ?? 0) : 0;
-
   const applyPromo = async () => {
+    setLastError(null);
     const parsed = promoSchema.safeParse(promoInput);
     if (!parsed.success) {
-      setPromo({ valid: false, error: 'invalid_promo' });
+      setLastError(parsed.error.errors[0].message);
       toast.error(parsed.error.errors[0].message);
       MarketplaceService.trackEvent('promo_invalid', { itemId: item.id, metadata: { reason: 'format' } });
       return;
     }
+    const codeUpper = parsed.data.toUpperCase();
+    if (promos.some((p) => (p.code || '').toUpperCase() === codeUpper)) {
+      setLastError('هذا الكود مُطبَّق بالفعل');
+      toast.error('هذا الكود مُطبَّق بالفعل');
+      return;
+    }
     setPromoValidating(true);
     try {
-      const r = await MarketplaceService.validatePromo(parsed.data, item.id);
-      setPromo(r);
+      // Validate against the running cost (base for the next coupon)
+      const runningBase = effectiveCost;
+      const r = promos.length === 0
+        ? await MarketplaceService.validatePromo(parsed.data, item.id)
+        : await MarketplaceService.validatePromoOnBase(parsed.data, item.id, runningBase);
       if (r.valid) {
-        toast.success(`✅ خصم ${r.xp_discount?.toLocaleString('ar-SA')} XP`);
-        MarketplaceService.trackEvent('promo_apply', { itemId: item.id, metadata: { code: parsed.data, discount_xp: r.xp_discount } });
+        // Guard: if the second coupon yields 0 discount (floor reached), reject gracefully
+        if ((r.xp_discount ?? 0) <= 0) {
+          setLastError('السعر بعد الكوبون الأول وصل للحد الأدنى — لا يمكن تطبيق كوبون ثانٍ');
+          toast.error('وصلت للحد الأدنى للسعر');
+          MarketplaceService.trackEvent('promo_invalid', { itemId: item.id, metadata: { code: parsed.data, error: 'floor_reached' } });
+          return;
+        }
+        setPromos((prev) => [...prev, r]);
+        setPromoInput('');
+        toast.success(`✅ خصم إضافي ${r.xp_discount?.toLocaleString('ar-SA')} XP`);
+        MarketplaceService.trackEvent('promo_apply', { itemId: item.id, metadata: { code: parsed.data, discount_xp: r.xp_discount, slot: promos.length + 1 } });
       } else {
+        setLastError(MarketplaceService.labelError(r.error || 'invalid_promo'));
         toast.error(MarketplaceService.labelError(r.error || 'invalid_promo'));
         MarketplaceService.trackEvent('promo_invalid', { itemId: item.id, metadata: { code: parsed.data, error: r.error } });
       }
@@ -73,20 +98,26 @@ export default function MarketplaceItemCard({ item, userXp, userLevel, onPurchas
     }
   };
 
-  const removePromo = () => { setPromo(null); setPromoInput(''); };
+  const removePromoAt = (idx: number) => {
+    // Removing a coupon invalidates any subsequent ones (their discount was based on the prior running cost),
+    // so drop everything from idx onwards. Keeps math correct.
+    setPromos((prev) => prev.slice(0, idx));
+    setLastError(null);
+  };
 
   const handlePurchase = async () => {
     setBusy(true);
+    const codes = promos.map((p) => p.code!).filter(Boolean);
     MarketplaceService.trackEvent('purchase_confirm', {
       itemId: item.id,
-      metadata: { effective_cost: effectiveCost, promo: promo?.valid ? promo.code : null, discount: discountAmount },
+      metadata: { effective_cost: effectiveCost, promo_codes: codes, discount: totalDiscount },
     });
     try {
-      const r = await MarketplaceService.purchase(item.id, promo?.valid ? promo.code : undefined);
+      const r = await MarketplaceService.purchaseStacked(item.id, codes);
       if (r.success) {
         MarketplaceService.trackEvent('purchase_success', {
           itemId: item.id,
-          metadata: { purchase_id: r.purchase_id, xp_spent: r.xp_spent, type: item.type, fulfillment: r.fulfillment },
+          metadata: { purchase_id: r.purchase_id, xp_spent: r.xp_spent, type: item.type, fulfillment: r.fulfillment, codes },
         });
         toast.success(`✨ تم الشراء بنجاح! -${r.xp_spent} XP`, {
           description: r.fulfillment?.coupon_code
