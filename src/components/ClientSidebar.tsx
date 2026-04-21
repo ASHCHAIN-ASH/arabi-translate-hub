@@ -1,5 +1,5 @@
 import React from 'react';
-import { FileText } from 'lucide-react';
+import { FileText, BookOpen } from 'lucide-react';
 import { Sidebar, SidebarContent, SidebarGroup, SidebarGroupContent, SidebarGroupLabel, SidebarMenu, SidebarMenuButton, SidebarMenuItem, SidebarTrigger } from '@/components/ui/sidebar';
 
 const items = [
@@ -7,6 +7,11 @@ const items = [
     title: 'العقود',
     url: '/client/contracts',
     icon: FileText,
+  },
+  {
+    title: 'نشر الأبحاث',
+    url: '/client/research',
+    icon: BookOpen,
   }
 ];
 
