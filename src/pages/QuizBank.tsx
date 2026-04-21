@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
-import { Loader2, CheckCircle2, XCircle, Sparkles, BookOpen, BarChart3, Trophy, Target, Flame } from 'lucide-react';
+import { Loader2, CheckCircle2, XCircle, Sparkles, BookOpen, BarChart3, Trophy, Target, Flame, RotateCcw } from 'lucide-react';
 import { toast } from 'sonner';
 import ClientLayout from '@/components/client/ClientLayout';
 import { QuestionBankService, type QCategory, type QSubject, type QQuestion, type Difficulty } from '@/services/questionBankService';
@@ -37,27 +37,59 @@ export default function QuizBank() {
   const [startedAt, setStartedAt] = useState<number>(Date.now());
   const [sessionXp, setSessionXp] = useState(0);
   const [streak, setStreak] = useState(0);
+  const [answeredIds, setAnsweredIds] = useState<string[]>([]);
+  const [hydrated, setHydrated] = useState(false);
+  const [resumed, setResumed] = useState(false);
 
+  // Initial load + session restore
   useEffect(() => {
     (async () => {
       try {
-        const [cats, subs, stat] = await Promise.all([
+        const [cats, subs, stat, session] = await Promise.all([
           QuestionBankService.listCategories(),
           QuestionBankService.listSubjects(),
           QuestionBankService.getStats().catch(() => null),
+          QuestionBankService.loadSession().catch(() => null),
         ]);
         setCategories(cats);
         setSubjects(subs);
         setStats(stat);
+
+        if (session && session.question_ids.length > 0) {
+          setCategoryId(session.filter_category_id || 'all');
+          setSubjectId(session.filter_subject_id || 'all');
+          setDifficulty((session.filter_difficulty as any) || 'all');
+          setSessionXp(session.session_xp || 0);
+          setStreak(session.streak || 0);
+          setAnsweredIds(session.answered_question_ids || []);
+          const qs = await QuestionBankService.listQuestions({
+            subjectId: session.filter_subject_id || undefined,
+            difficulty: (session.filter_difficulty as any) || undefined,
+            limit: 100,
+          });
+          const map = new Map(qs.map((q) => [q.id, q]));
+          const ordered = session.question_ids.map((id) => map.get(id)).filter(Boolean) as QQuestion[];
+          if (ordered.length > 0) {
+            setQuestions(ordered);
+            const idx = Math.min(session.current_index, ordered.length - 1);
+            setCurrentIdx(idx);
+            setResumed(true);
+            toast.success(`📌 تم استئناف جلستك من السؤال ${idx + 1}`);
+          }
+        }
       } catch {
         toast.error('تعذّر تحميل البيانات');
       } finally {
+        setHydrated(true);
         setLoading(false);
       }
     })();
   }, []);
 
+  // Reload questions when filters change (after hydration, skip first restore)
   useEffect(() => {
+    if (!hydrated) return;
+    if (resumed) { setResumed(false); return; }
     (async () => {
       setLoading(true);
       try {
@@ -68,12 +100,31 @@ export default function QuizBank() {
         });
         setQuestions(qs);
         setCurrentIdx(0); setSelectedChoice(null); setResult(null);
+        setAnsweredIds([]); setSessionXp(0); setStreak(0);
         setStartedAt(Date.now());
       } finally {
         setLoading(false);
       }
     })();
-  }, [subjectId, difficulty]);
+  }, [subjectId, difficulty, hydrated]);
+
+  // Auto-save session (debounced)
+  useEffect(() => {
+    if (!hydrated || questions.length === 0) return;
+    const t = setTimeout(() => {
+      QuestionBankService.saveSession({
+        filter_category_id: categoryId === 'all' ? null : categoryId,
+        filter_subject_id: subjectId === 'all' ? null : subjectId,
+        filter_difficulty: difficulty === 'all' ? null : difficulty,
+        question_ids: questions.map((q) => q.id),
+        current_index: currentIdx,
+        answered_question_ids: answeredIds,
+        session_xp: sessionXp,
+        streak,
+      }).catch(() => {});
+    }, 400);
+    return () => clearTimeout(t);
+  }, [hydrated, questions, currentIdx, answeredIds, sessionXp, streak, categoryId, subjectId, difficulty]);
 
   const filteredSubjects = useMemo(() => {
     if (categoryId === 'all') return subjects;
@@ -91,6 +142,7 @@ export default function QuizBank() {
       const r = await QuestionBankService.submitAnswer(current.id, selectedChoice, elapsed);
       if (!r.success) { toast.error('تعذّر تسجيل الإجابة'); return; }
       setResult({ is_correct: !!r.is_correct, correct_choice_id: r.correct_choice_id, explanation: r.explanation, xp_awarded: r.xp_awarded });
+      setAnsweredIds((prev) => prev.includes(current.id) ? prev : [...prev, current.id]);
       if (r.is_correct) {
         toast.success(`✨ إجابة صحيحة! +${r.xp_awarded || 5} XP`);
         setSessionXp((x) => x + (r.xp_awarded || 5));
@@ -112,6 +164,24 @@ export default function QuizBank() {
       setSelectedChoice(null); setResult(null); setStartedAt(Date.now());
     } else {
       toast.info('🎉 أتممت جميع الأسئلة المتاحة!');
+    }
+  };
+
+  const handleResetSession = async () => {
+    if (!confirm('هل تريد بدء جلسة جديدة؟ سيُمسح التقدّم المحفوظ.')) return;
+    try {
+      await QuestionBankService.resetSession();
+      setCurrentIdx(0); setSelectedChoice(null); setResult(null);
+      setAnsweredIds([]); setSessionXp(0); setStreak(0);
+      const qs = await QuestionBankService.listQuestions({
+        subjectId: subjectId !== 'all' ? subjectId : undefined,
+        difficulty: difficulty !== 'all' ? difficulty : undefined,
+        limit: 50,
+      });
+      setQuestions(qs);
+      toast.success('🔄 تم بدء جلسة جديدة');
+    } catch {
+      toast.error('تعذّر إعادة الجلسة');
     }
   };
 
@@ -141,6 +211,14 @@ export default function QuizBank() {
                 <Badge className="bg-amber-400/30 hover:bg-amber-400/40 text-white border-amber-300/40 px-3 py-1.5 text-sm gap-1.5 backdrop-blur-sm">
                   <Flame className="w-3.5 h-3.5" /> {streak} متتالية
                 </Badge>
+              )}
+              {answeredIds.length > 0 && (
+                <Button
+                  size="sm" variant="ghost" onClick={handleResetSession}
+                  className="text-white hover:bg-white/15 hover:text-white gap-1.5 backdrop-blur-sm"
+                >
+                  <RotateCcw className="w-3.5 h-3.5" /> جلسة جديدة
+                </Button>
               )}
             </div>
           </div>

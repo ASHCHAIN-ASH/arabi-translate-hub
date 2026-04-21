@@ -116,4 +116,49 @@ export class QuestionBankService {
     if (error) throw error;
     return data as { success: boolean; inserted: number; error?: string };
   }
+
+  // ===== Session persistence =====
+  static async loadSession() {
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) return null;
+    const { data, error } = await (supabase as any)
+      .from('question_bank_sessions').select('*').eq('user_id', user.id).maybeSingle();
+    if (error) throw error;
+    return data as null | {
+      user_id: string;
+      filter_category_id: string | null;
+      filter_subject_id: string | null;
+      filter_difficulty: Difficulty | null;
+      question_ids: string[];
+      current_index: number;
+      answered_question_ids: string[];
+      session_xp: number;
+      streak: number;
+      updated_at: string;
+    };
+  }
+
+  static async saveSession(payload: {
+    filter_category_id?: string | null;
+    filter_subject_id?: string | null;
+    filter_difficulty?: Difficulty | null;
+    question_ids: string[];
+    current_index: number;
+    answered_question_ids: string[];
+    session_xp: number;
+    streak: number;
+  }) {
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) return;
+    const { error } = await (supabase as any)
+      .from('question_bank_sessions')
+      .upsert({ user_id: user.id, ...payload }, { onConflict: 'user_id' });
+    if (error) throw error;
+  }
+
+  static async resetSession() {
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) return;
+    await (supabase as any).from('question_bank_sessions').delete().eq('user_id', user.id);
+  }
 }
