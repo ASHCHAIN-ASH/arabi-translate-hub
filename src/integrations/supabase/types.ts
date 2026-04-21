@@ -7276,6 +7276,7 @@ export type Database = {
           title: string
         }[]
       }
+      get_user_whatsapp_phone: { Args: { _user_id: string }; Returns: string }
       get_user_xp_summary: { Args: { p_user_id?: string }; Returns: Json }
       get_xp_conversion_report: { Args: { p_days?: number }; Returns: Json }
       grant_referral_xp: {
