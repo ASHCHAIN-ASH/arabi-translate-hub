@@ -10,6 +10,8 @@ import {
 } from "lucide-react";
 import { memo, useState } from "react";
 import { Link } from "react-router-dom";
+import Header from "@/components/Header";
+import Footer from "@/components/Footer";
 
 // University card component with performance optimizations
 const UniversityCard = memo(({ university, index }: { university: any, index: number }) => {
