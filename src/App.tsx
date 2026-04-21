@@ -108,6 +108,7 @@ import AdminWorkingHours from "./pages/admin/AdminWorkingHours";
 import AdminWallets from "./pages/admin/AdminWallets";
 import AdminPayments from "./pages/admin/AdminPayments";
 import AdminGamification from "./pages/admin/AdminGamification";
+import AdminXpConversionReport from "./pages/admin/AdminXpConversionReport";
 import AdminGrowthAnalytics from "./pages/admin/AdminGrowthAnalytics";
 import AdminGrowthAutomation from "./pages/admin/AdminGrowthAutomation";
 import AdminGrowthAutomationRules from "./pages/admin/AdminGrowthAutomationRules";
@@ -540,6 +541,11 @@ const App = () => (
             <Route path="/adminmaster/gamification" element={
               <SimpleProtectedRoute adminOnly>
                 <AdminGamification />
+              </SimpleProtectedRoute>
+            } />
+            <Route path="/adminmaster/xp-conversion-report" element={
+              <SimpleProtectedRoute adminOnly>
+                <AdminXpConversionReport />
               </SimpleProtectedRoute>
             } />
             <Route path="/adminmaster/memberships" element={

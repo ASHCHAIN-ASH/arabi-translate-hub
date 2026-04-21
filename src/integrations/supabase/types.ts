@@ -3217,6 +3217,53 @@ export type Database = {
           },
         ]
       }
+      marketplace_purchase_failures: {
+        Row: {
+          created_at: string
+          error_code: string
+          error_detail: Json
+          id: string
+          item_id: string | null
+          item_slug: string | null
+          item_type: string | null
+          user_id: string | null
+          xp_available: number | null
+          xp_required: number | null
+        }
+        Insert: {
+          created_at?: string
+          error_code: string
+          error_detail?: Json
+          id?: string
+          item_id?: string | null
+          item_slug?: string | null
+          item_type?: string | null
+          user_id?: string | null
+          xp_available?: number | null
+          xp_required?: number | null
+        }
+        Update: {
+          created_at?: string
+          error_code?: string
+          error_detail?: Json
+          id?: string
+          item_id?: string | null
+          item_slug?: string | null
+          item_type?: string | null
+          user_id?: string | null
+          xp_available?: number | null
+          xp_required?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "marketplace_purchase_failures_item_id_fkey"
+            columns: ["item_id"]
+            isOneToOne: false
+            referencedRelation: "marketplace_items"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       marketplace_purchase_limits: {
         Row: {
           description: string | null
@@ -7160,6 +7207,7 @@ export type Database = {
         }[]
       }
       get_user_xp_summary: { Args: { p_user_id?: string }; Returns: Json }
+      get_xp_conversion_report: { Args: { p_days?: number }; Returns: Json }
       grant_referral_xp: {
         Args: {
           _description: string
