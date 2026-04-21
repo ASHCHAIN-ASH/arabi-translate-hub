@@ -227,32 +227,43 @@ export default function MarketplaceItemCard({ item, userXp, userLevel, onPurchas
               </div>
             </div>
 
-            {/* Promo code input */}
+            {/* Promo codes (up to 2, stackable) */}
             <div className="space-y-2">
               <label className="text-xs font-medium text-muted-foreground flex items-center gap-1.5">
-                <Ticket className="w-3.5 h-3.5" /> كوبون خصم (اختياري)
+                <Ticket className="w-3.5 h-3.5" /> أكواد الخصم (حتى كوبونين)
               </label>
-              {promo?.valid ? (
-                <div className="flex items-center justify-between gap-2 p-2.5 rounded-lg bg-emerald-500/10 border border-emerald-500/30">
+
+              {promos.map((p, idx) => (
+                <div
+                  key={`${p.code}-${idx}`}
+                  className="flex items-center justify-between gap-2 p-2.5 rounded-lg bg-emerald-500/10 border border-emerald-500/30"
+                >
                   <div className="flex items-center gap-2 min-w-0">
                     <Check className="w-4 h-4 text-emerald-600 flex-shrink-0" />
                     <div className="min-w-0">
-                      <div className="font-mono text-sm font-bold truncate">{promo.code}</div>
+                      <div className="font-mono text-sm font-bold truncate">
+                        #{idx + 1} · {p.code}
+                      </div>
                       <div className="text-[10px] text-muted-foreground">
-                        خصم {promo.discount_value}{promo.discount_type === 'percentage' ? '%' : ' ر.س'}
+                        {p.discount_type === 'percentage'
+                          ? `${p.discount_value}% على ${(p.original_xp ?? 0).toLocaleString('ar-SA')} XP`
+                          : `خصم ثابت ${p.discount_value}`}
+                        {' '}‒ وفّر {(p.xp_discount ?? 0).toLocaleString('ar-SA')} XP
                       </div>
                     </div>
                   </div>
-                  <Button size="icon" variant="ghost" className="h-7 w-7" onClick={removePromo}>
+                  <Button size="icon" variant="ghost" className="h-7 w-7" onClick={() => removePromoAt(idx)}>
                     <X className="w-3.5 h-3.5" />
                   </Button>
                 </div>
-              ) : (
+              ))}
+
+              {canAddMore ? (
                 <div className="flex gap-2">
                   <Input
                     value={promoInput}
-                    onChange={(e) => setPromoInput(e.target.value.toUpperCase())}
-                    placeholder="أدخل الكود"
+                    onChange={(e) => { setPromoInput(e.target.value.toUpperCase()); setLastError(null); }}
+                    placeholder={promos.length === 0 ? 'أدخل الكود الأول' : 'أدخل الكود الثاني (اختياري)'}
                     maxLength={40}
                     className="font-mono text-sm uppercase"
                     onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); applyPromo(); } }}
@@ -268,12 +279,18 @@ export default function MarketplaceItemCard({ item, userXp, userLevel, onPurchas
                     {promoValidating ? <Loader2 className="w-4 h-4 animate-spin" /> : 'تطبيق'}
                   </Button>
                 </div>
+              ) : (
+                <p className="text-[11px] text-muted-foreground text-center py-1">
+                  تم استخدام الحد الأقصى (كوبونان) ✓
+                </p>
               )}
-              {promo && !promo.valid && promo.error && (
-                <p className="text-xs text-destructive">{MarketplaceService.labelError(promo.error)}</p>
+
+              {lastError && (
+                <p className="text-xs text-destructive">{lastError}</p>
               )}
             </div>
 
+            {/* Cumulative breakdown */}
             <div className="space-y-2 text-sm">
               <div className="flex justify-between">
                 <span className="text-muted-foreground">رصيدك الحالي:</span>
@@ -281,19 +298,34 @@ export default function MarketplaceItemCard({ item, userXp, userLevel, onPurchas
               </div>
               <div className="flex justify-between">
                 <span className="text-muted-foreground">السعر الأصلي:</span>
-                <span className={discountAmount > 0 ? 'line-through text-muted-foreground' : ''}>
+                <span className={totalDiscount > 0 ? 'line-through text-muted-foreground' : ''}>
                   {item.xp_cost.toLocaleString('ar-SA')} XP
                 </span>
               </div>
-              {discountAmount > 0 && (
-                <div className="flex justify-between text-emerald-600 dark:text-emerald-400">
-                  <span>خصم الكوبون:</span>
-                  <span className="font-semibold">- {discountAmount.toLocaleString('ar-SA')} XP</span>
+
+              {promos.map((p, idx) => (
+                <div
+                  key={`bd-${p.code}-${idx}`}
+                  className="flex justify-between text-emerald-600 dark:text-emerald-400 ps-3"
+                >
+                  <span className="text-xs">
+                    خصم #{idx + 1} ({p.code}){' '}
+                    {p.discount_type === 'percentage' ? `${p.discount_value}%` : ''}
+                  </span>
+                  <span className="font-semibold">− {(p.xp_discount ?? 0).toLocaleString('ar-SA')} XP</span>
+                </div>
+              ))}
+
+              {totalDiscount > 0 && (
+                <div className="flex justify-between border-t pt-2 text-emerald-700 dark:text-emerald-300 font-semibold">
+                  <span>إجمالي التوفير:</span>
+                  <span>− {totalDiscount.toLocaleString('ar-SA')} XP</span>
                 </div>
               )}
+
               <div className="flex justify-between text-destructive">
                 <span>الإجمالي المستحق:</span>
-                <span className="font-semibold">- {effectiveCost.toLocaleString('ar-SA')} XP</span>
+                <span className="font-semibold">− {effectiveCost.toLocaleString('ar-SA')} XP</span>
               </div>
               <div className="flex justify-between pt-2 border-t font-bold">
                 <span>الرصيد بعد الشراء:</span>
