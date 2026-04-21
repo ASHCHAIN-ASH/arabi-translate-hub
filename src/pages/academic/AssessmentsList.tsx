@@ -6,6 +6,7 @@ import { Badge } from '@/components/ui/badge';
 import { Clock, Sparkles, Trophy, ArrowLeft } from 'lucide-react';
 import { AssessmentService, Assessment } from '@/utils/assessmentService';
 import { motion } from 'framer-motion';
+import ClientLayout from '@/components/client/ClientLayout';
 
 export default function AssessmentsList() {
   const [items, setItems] = useState<Assessment[]>([]);
