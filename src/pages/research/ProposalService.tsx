@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import { FloatingWhatsAppButton } from '@/components/FloatingWhatsAppButton';
-import { ProposalServiceForm } from '@/components/research/forms/ProposalServiceForm';
+import { AuthCtaCard } from '@/components/research/AuthCtaCard';
 import { FileText, CheckCircle, Target, Lightbulb, BookOpen, Calendar, ArrowRight, FileSearch, Layers, Send } from 'lucide-react';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -256,7 +256,7 @@ export default function ProposalService() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
             >
-              <ProposalServiceForm />
+              <AuthCtaCard serviceTitle="خطة البحث (Proposal)" />
             </motion.div>
           </div>
         </div>

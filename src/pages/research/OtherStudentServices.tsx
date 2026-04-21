@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import { FloatingWhatsAppButton } from '@/components/FloatingWhatsAppButton';
-import { ResearchServiceForm } from '@/components/research/ResearchServiceForm';
+import { AuthCtaCard } from '@/components/research/AuthCtaCard';
 import { 
   GraduationCap, 
   CheckCircle, 
@@ -386,10 +386,7 @@ export default function OtherStudentServices() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
             >
-              <ResearchServiceForm 
-                serviceTitle="خدمات الطلاب الأخرى"
-                serviceType="other-services"
-              />
+              <AuthCtaCard serviceTitle="خدمات الطلاب الأخرى" />
             </motion.div>
           </div>
         </div>

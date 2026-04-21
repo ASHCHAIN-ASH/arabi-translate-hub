@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import { FloatingWhatsAppButton } from '@/components/FloatingWhatsAppButton';
-import { ResearchServiceForm } from '@/components/research/ResearchServiceForm';
+import { AuthCtaCard } from '@/components/research/AuthCtaCard';
 import { BookOpenCheck, CheckCircle, Clock, Shield, Users, Award, ArrowRight, FileText, Search, Edit, Send, ChevronDown } from 'lucide-react';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -271,10 +271,7 @@ export default function AcademicWritingService() {
               viewport={{ once: true }}
             >
               <AcademicAssistanceDisclaimer className="mb-6" />
-              <ResearchServiceForm 
-                serviceTitle="المساعدة الأكاديمية في إعداد الأبحاث الجامعية"
-                serviceType="academic-writing"
-              />
+              <AuthCtaCard serviceTitle="المساعدة الأكاديمية في إعداد الأبحاث الجامعية" />
             </motion.div>
           </div>
         </div>
