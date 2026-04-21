@@ -51,6 +51,11 @@ export default function AdminGrowthAnalytics() {
           <Button variant="outline" size="sm" onClick={refresh}>
             <RefreshCw className="w-4 h-4 ml-2" /> تحديث
           </Button>
+          <a href="/adminmaster/growth/automation">
+            <Button size="sm" className="gap-1">
+              <Lightbulb className="w-4 h-4" /> الأتمتة الذكية
+            </Button>
+          </a>
         </div>
       </div>
 
