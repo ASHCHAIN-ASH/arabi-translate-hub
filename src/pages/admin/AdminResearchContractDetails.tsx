@@ -427,6 +427,194 @@ export default function AdminResearchContractDetails() {
 
           {/* Left column: Contract content + Signatures + Timeline */}
           <div className="lg:col-span-2 space-y-6">
+            {/* ─── Content review / edit panel ─── */}
+            <Card className="p-5 border-amber-300/60 bg-gradient-to-br from-amber-50/60 to-white">
+              <div className="flex items-center justify-between gap-3 flex-wrap mb-3">
+                <h3 className="font-black flex items-center gap-2 text-amber-900">
+                  <ListChecks className="w-5 h-5" /> مراجعة المحتوى قبل الحفظ
+                </h3>
+                {!editMode ? (
+                  <Button
+                    size="sm"
+                    onClick={enterEditMode}
+                    disabled={!!contract.signed_at || contract.status === 'signed'}
+                    className="bg-amber-600 hover:bg-amber-700 text-white"
+                  >
+                    <Pencil className="w-4 h-4 ml-1" /> تعديل النص والبنود
+                  </Button>
+                ) : (
+                  <div className="flex gap-2 flex-wrap">
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      onClick={() => setPreviewMode(p => p === 'edit' ? 'preview' : 'edit')}
+                    >
+                      <Eye className="w-4 h-4 ml-1" />
+                      {previewMode === 'edit' ? 'معاينة' : 'تحرير'}
+                    </Button>
+                    <Button size="sm" variant="outline" onClick={() => setEditMode(false)}>
+                      <X className="w-4 h-4 ml-1" /> إلغاء
+                    </Button>
+                    <Button
+                      size="sm"
+                      onClick={saveContent}
+                      disabled={savingContent}
+                      className="bg-emerald-600 hover:bg-emerald-700 text-white"
+                    >
+                      {savingContent ? <Loader2 className="w-4 h-4 ml-1 animate-spin" /> : <Save className="w-4 h-4 ml-1" />}
+                      حفظ التعديلات
+                    </Button>
+                  </div>
+                )}
+              </div>
+
+              {!!contract.signed_at && (
+                <div className="text-xs text-rose-700 bg-rose-50 border border-rose-200 rounded-md px-3 py-2 mb-3">
+                  🔒 العقد موقّع رسمياً — لا يمكن تعديل المحتوى. أنشئ نسخة جديدة عند الحاجة.
+                </div>
+              )}
+
+              {!editMode ? (
+                <p className="text-xs text-muted-foreground">
+                  راجع نص العقد وبنوده بالأسفل، ثم اضغط <span className="font-bold">"تعديل النص والبنود"</span> لإجراء أي تحديث قبل الإرسال للعميل.
+                </p>
+              ) : previewMode === 'edit' ? (
+                <div className="space-y-4">
+                  {/* Top fields */}
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                    <div className="md:col-span-3">
+                      <Label className="text-xs">عنوان العقد</Label>
+                      <Input value={draftTitle} onChange={e => setDraftTitle(e.target.value)} className="mt-1" />
+                    </div>
+                    <div>
+                      <Label className="text-xs">الإجمالي (ر.س)</Label>
+                      <Input
+                        type="number"
+                        value={draftAmount}
+                        onChange={e => setDraftAmount(e.target.value)}
+                        className="mt-1"
+                      />
+                      <p className="text-[10px] text-muted-foreground mt-1">
+                        إجمالي البنود المحسوب: <span className="font-bold text-amber-700">{computedItemsTotal.toLocaleString('ar-SA')} ر.س</span>
+                      </p>
+                    </div>
+                    <div className="md:col-span-2">
+                      <Label className="text-xs">شروط الدفع</Label>
+                      <Input
+                        value={draftPaymentTerms}
+                        onChange={e => setDraftPaymentTerms(e.target.value)}
+                        placeholder="مثال: 50% مقدماً، 50% عند التسليم"
+                        className="mt-1"
+                      />
+                    </div>
+                  </div>
+
+                  {/* Items editor */}
+                  <div>
+                    <div className="flex items-center justify-between mb-2">
+                      <Label className="text-xs font-bold">بنود العقد</Label>
+                      <Button size="sm" variant="outline" onClick={addItem}>
+                        <Plus className="w-3.5 h-3.5 ml-1" /> إضافة بند
+                      </Button>
+                    </div>
+                    <div className="border rounded-lg overflow-hidden bg-white">
+                      <table className="w-full text-xs">
+                        <thead className="bg-amber-50 text-amber-900">
+                          <tr>
+                            <th className="text-right p-2 font-bold">البند</th>
+                            <th className="text-center p-2 font-bold w-20">الكمية</th>
+                            <th className="text-center p-2 font-bold w-32">السعر (ر.س)</th>
+                            <th className="text-center p-2 font-bold w-28">الإجمالي</th>
+                            <th className="w-10" />
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {draftItems.map((it, idx) => (
+                            <tr key={idx} className="border-t">
+                              <td className="p-1.5">
+                                <Input
+                                  value={it.name}
+                                  onChange={e => updateItem(idx, { name: e.target.value })}
+                                  placeholder="وصف البند"
+                                  className="h-8 text-xs"
+                                />
+                              </td>
+                              <td className="p-1.5">
+                                <Input
+                                  type="number"
+                                  value={it.qty}
+                                  onChange={e => updateItem(idx, { qty: Number(e.target.value) || 1 })}
+                                  className="h-8 text-xs text-center"
+                                />
+                              </td>
+                              <td className="p-1.5">
+                                <Input
+                                  type="number"
+                                  value={it.price}
+                                  onChange={e => updateItem(idx, { price: Number(e.target.value) || 0 })}
+                                  className="h-8 text-xs text-center"
+                                />
+                              </td>
+                              <td className="p-1.5 text-center font-bold text-amber-800">
+                                {((Number(it.qty) || 1) * (Number(it.price) || 0)).toLocaleString('ar-SA')}
+                              </td>
+                              <td className="p-1.5 text-center">
+                                <Button size="icon" variant="ghost" className="h-7 w-7 text-rose-600" onClick={() => removeItem(idx)}>
+                                  <Trash2 className="w-3.5 h-3.5" />
+                                </Button>
+                              </td>
+                            </tr>
+                          ))}
+                          {draftItems.length === 0 && (
+                            <tr><td colSpan={5} className="p-4 text-center text-muted-foreground">لا توجد بنود — أضف بنداً جديداً</td></tr>
+                          )}
+                        </tbody>
+                        <tfoot className="bg-amber-50/60 font-bold">
+                          <tr>
+                            <td className="p-2 text-right" colSpan={3}>الإجمالي الكلي</td>
+                            <td className="p-2 text-center text-emerald-700">{computedItemsTotal.toLocaleString('ar-SA')} ر.س</td>
+                            <td />
+                          </tr>
+                        </tfoot>
+                      </table>
+                    </div>
+                    <p className="text-[10px] text-muted-foreground mt-1">
+                      يتم تحديث جدول البنود داخل نص العقد تلقائياً عند التعديل.
+                    </p>
+                  </div>
+
+                  {/* Markdown editor */}
+                  <div>
+                    <Label className="text-xs font-bold">نص العقد (Markdown)</Label>
+                    <Textarea
+                      value={draftContent}
+                      onChange={e => setDraftContent(e.target.value)}
+                      rows={18}
+                      dir="rtl"
+                      className="mt-1 font-mono text-xs leading-relaxed bg-white"
+                    />
+                    <p className="text-[10px] text-muted-foreground mt-1">
+                      يدعم العناوين (#، ##)، القوائم (-، 1.)، الجداول (| ... |)، والعريض (**نص**).
+                    </p>
+                  </div>
+                </div>
+              ) : (
+                /* Inline preview using ContractDocument with the live draft */
+                <div className="bg-gradient-to-br from-slate-100 to-amber-50/40 rounded-xl p-2 md:p-4 shadow-inner">
+                  <ContractDocument
+                    contract={{
+                      ...contract,
+                      title: draftTitle,
+                      content: draftContent,
+                      total_amount: draftAmount === '' ? null : Number(draftAmount),
+                      payment_terms: draftPaymentTerms,
+                    } as any}
+                    signatures={signatures as any}
+                  />
+                </div>
+              )}
+            </Card>
+
             {/* Contract document — bank-grade navy/gold design */}
             <div className="bg-gradient-to-br from-slate-100 to-amber-50/40 rounded-2xl p-2 md:p-4 shadow-inner">
               {contract.content ? (
