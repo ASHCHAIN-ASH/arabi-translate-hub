@@ -674,6 +674,14 @@ export default function AdminResearchPublicationDetails() {
                         {sendingContractPdf === c.id ? <Loader2 className="w-3 h-3 ml-1 animate-spin" /> : <Send className="w-3 h-3 ml-1" />}
                         📎 إرسال PDF واتساب
                       </Button>
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        onClick={() => deleteContract(c.id, c.contract_number)}
+                        className="border-rose-300 text-rose-700 hover:bg-rose-50"
+                      >
+                        <Trash2 className="w-3 h-3 ml-1" /> حذف
+                      </Button>
                     </div>
                   </div>
                 </Card>
