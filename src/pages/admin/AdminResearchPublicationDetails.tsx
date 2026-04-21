@@ -364,6 +364,29 @@ export default function AdminResearchPublicationDetails() {
         }
       }
 
+      const fieldOfStudy = item.field_of_study || item.specialization || '—';
+      const targetJournal = item.target_journal || '—';
+      const language = item.language || '—';
+
+      const serviceDescription = `خدمة نشر بحث علمي بعنوان «${item.title}» في تخصص ${fieldOfStudy}، باللغة ${language}، مستهدفاً النشر في: ${targetJournal}.`;
+
+      const scopeItems = [
+        `مراجعة وتدقيق البحث المُقدَّم بعنوان: «${item.title}» وفق المعايير الأكاديمية الدولية.`,
+        `تحرير وتنسيق البحث وفق متطلبات المجلة المستهدفة (${targetJournal}).`,
+        `إجراء التدقيق اللغوي والمنهجي للبحث باللغة ${language}.`,
+        `التواصل مع هيئة تحرير المجلة وتقديم البحث رسمياً للنشر.`,
+        `الرد على ملاحظات المُحكِّمين وإجراء التعديلات المطلوبة (Revisions).`,
+        `تسليم خطاب القبول النهائي ورابط النشر بعد اعتماد البحث.`,
+      ];
+
+      const deliverables = [
+        'تقرير مراجعة فنية ولغوية للبحث.',
+        'نسخة محرَّرة ومنسَّقة جاهزة للتقديم.',
+        'إثبات تقديم رسمي للمجلة المستهدفة.',
+        'متابعة دورية لحالة البحث حتى صدور قرار التحكيم.',
+        'خطاب قبول/نشر رسمي + رابط البحث بعد النشر.',
+      ];
+
       const { data: created, error } = await (supabase.from('contracts') as any)
         .insert([{
           title: `عقد نشر بحث: ${item.title}`,
@@ -373,7 +396,7 @@ export default function AdminResearchPublicationDetails() {
           customer_id: customerId,
           user_id: item.user_id || null,
           publication_id: item.id,
-          service_name: 'نشر بحث علمي',
+          service_name: `نشر بحث علمي — ${item.title}`,
           service_type: 'research_publication',
           template_type: 'academic',
           total_amount: amount || null,
@@ -383,8 +406,13 @@ export default function AdminResearchPublicationDetails() {
           metadata: {
             source: 'research_publication',
             publication_id: item.id,
-            field_of_study: item.field_of_study || item.specialization || null,
-            target_journal: item.target_journal || null,
+            research_title: item.title,
+            field_of_study: fieldOfStudy,
+            target_journal: targetJournal,
+            language,
+            serviceDescription,
+            scopeItems,
+            deliverables,
           },
         }])
         .select('id, contract_number')
