@@ -31,9 +31,18 @@ export default function AssessmentStart() {
     if (!id) return;
     (async () => {
       try {
+        // 1) Block if already completed today — show previous result
+        const todayAttemptId = await AssessmentService.getTodayAttemptId(id, user?.id ?? null);
+        if (todayAttemptId) {
+          toast.info('لقد أكملت اختبار اليوم — هذه نتيجتك');
+          navigate(`/challenge-academy/assessments/${id}/result?attempt=${todayAttemptId}`, { replace: true });
+          return;
+        }
+
+        // 2) Load assessment + today's daily questions (deterministic per-day shuffle)
         const [a, qs] = await Promise.all([
           AssessmentService.getById(id),
-          AssessmentService.getQuestions(id),
+          AssessmentService.getDailyQuestions(id, 10),
         ]);
         if (!a) { toast.error('الاختبار غير موجود'); navigate('/challenge-academy/assessments'); return; }
         setAssessment(a);
