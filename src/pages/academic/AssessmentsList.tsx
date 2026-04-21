@@ -20,6 +20,8 @@ export default function AssessmentsList() {
   }, []);
 
   return (
+  return (
+    <ClientLayout>
     <div className="min-h-screen bg-background py-10 px-4" dir="rtl">
       <div className="max-w-5xl mx-auto">
         <div className="mb-8 text-center">
