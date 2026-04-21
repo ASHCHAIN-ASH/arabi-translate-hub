@@ -13,13 +13,25 @@ export default function AssessmentsList() {
   const { user } = useAuth();
   const [items, setItems] = useState<Assessment[]>([]);
   const [todayMap, setTodayMap] = useState<Record<string, string>>({});
+  const [quota, setQuota] = useState<{
+    attempt_id: string;
+    assessment_id: string;
+    assessment_slug: string;
+    assessment_title: string;
+    completed_at: string;
+    next_available_at: string;
+  } | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     (async () => {
       try {
-        const list = await AssessmentService.listActive();
+        const [list, q] = await Promise.all([
+          AssessmentService.listActive(),
+          AssessmentService.getDailyQuotaStatus(user?.id ?? null),
+        ]);
         setItems(list);
+        setQuota(q);
         const entries = await Promise.all(
           list.map(async (a) => [a.id, await AssessmentService.getTodayAttemptId(a.id, user?.id ?? null)] as const)
         );
@@ -33,6 +45,10 @@ export default function AssessmentsList() {
       }
     })();
   }, [user?.id]);
+
+  const quotaHoursLeft = quota
+    ? Math.max(1, Math.ceil((new Date(quota.next_available_at).getTime() - Date.now()) / 3600000))
+    : 0;
 
   return (
     <ClientLayout>
