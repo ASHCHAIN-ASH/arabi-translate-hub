@@ -343,7 +343,7 @@ export default function AdminResearchPublicationDetails() {
     // إذا كان هناك عقد سابق مرتبط بالطلب، افتحه مباشرة
     const existing = contracts?.[0];
     if (existing) {
-      navigate(`/adminmaster/contracts/${existing.id}`);
+      navigate(`/adminmaster/research/contracts/${existing.id}`);
       return;
     }
     setCreatingContract(true);
@@ -437,7 +437,7 @@ export default function AdminResearchPublicationDetails() {
         extra: { contract_number: created?.contract_number, total_amount: amount },
       });
       toast({ title: '✅ تم إنشاء العقد', description: `رقم العقد: ${created?.contract_number || ''}` });
-      navigate(`/adminmaster/contracts/${created.id}`);
+      navigate(`/adminmaster/research/contracts/${created.id}`);
     } catch (e: any) {
       toast({ title: 'تعذّر إنشاء العقد', description: e.message, variant: 'destructive' });
     } finally {
@@ -674,7 +674,7 @@ export default function AdminResearchPublicationDetails() {
                       </div>
                     </div>
                     <div className="flex flex-col gap-2">
-                      <Button size="sm" variant="outline" onClick={() => navigate(`/adminmaster/contracts/${c.id}`)}>
+                      <Button size="sm" variant="outline" onClick={() => navigate(`/adminmaster/research/contracts/${c.id}`)}>
                         <ExternalLink className="w-4 h-4 ml-1" /> فتح
                       </Button>
                       <Button

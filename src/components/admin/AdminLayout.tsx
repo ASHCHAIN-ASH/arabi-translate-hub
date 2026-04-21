@@ -108,6 +108,7 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
         { name: 'إدارة الخدمات', href: '/adminmaster/services', icon: Briefcase },
         { name: 'مكتبة الطالب', href: '/adminmaster/student-resources', icon: BookOpen },
         { name: 'سجل طلبات النشر', href: '/adminmaster/research', icon: BookOpen },
+        { name: 'عقود النشر العلمي', href: '/adminmaster/research/contracts', icon: FileText },
       ]
     },
     // 7. العقود والتوثيق
