@@ -1,19 +1,78 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import {
   ArrowRight, BookMarked, User, Phone, Mail, Calendar, Hash, Globe, Languages,
   Building2, FileSignature, Loader2, Send, Download, Printer, Copy, Trash2,
-  CheckCircle2, Award, BookOpen, Sparkles, ScrollText,
+  CheckCircle2, Award, BookOpen, Sparkles, ScrollText, Pencil, Save, X, Plus, Eye, ListChecks,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
 import AdminLayout from '@/components/admin/AdminLayout';
 import ContractDocument from '@/components/contracts/ContractDocument';
+
+// ─── Items-table helpers ──────────────────────────────────────────────────
+type ItemRow = { name: string; qty: number; price: number };
+
+/** Detect a markdown items table in the contract body and parse its rows.
+ *  Looks for the first markdown table whose header contains both "البند" and "السعر". */
+const parseItemsTable = (md: string): { items: ItemRow[]; tableMatch: string | null } => {
+  if (!md) return { items: [], tableMatch: null };
+  const lines = md.split('\n');
+  let start = -1;
+  for (let i = 0; i < lines.length - 1; i++) {
+    const h = lines[i].trim();
+    const sep = (lines[i + 1] || '').trim();
+    if (
+      h.startsWith('|') && h.includes('|') &&
+      /\|\s*-{2,}/.test(sep) &&
+      /البند|الخدمة|الوصف/.test(h) &&
+      /السعر|المبلغ|الإجمالي/.test(h)
+    ) { start = i; break; }
+  }
+  if (start === -1) return { items: [], tableMatch: null };
+  const items: ItemRow[] = [];
+  let end = start + 2;
+  for (let j = start + 2; j < lines.length; j++) {
+    const row = lines[j].trim();
+    if (!row.startsWith('|')) break;
+    end = j;
+    const cells = row.split('|').map(s => s.trim()).filter((_, idx, arr) => idx > 0 && idx < arr.length - 1);
+    if (cells.length >= 2) {
+      const name = cells[0] || '';
+      const qty = cells.length >= 3 ? Number(String(cells[1]).replace(/[^\d.]/g, '')) || 1 : 1;
+      const priceCell = cells[cells.length - 1];
+      const price = Number(String(priceCell).replace(/[^\d.]/g, '')) || 0;
+      if (name) items.push({ name, qty, price });
+    }
+  }
+  const tableMatch = lines.slice(start, end + 1).join('\n');
+  return { items, tableMatch };
+};
+
+const buildItemsTable = (items: ItemRow[]): string => {
+  const header = `| البند | الكمية | السعر (ر.س) |\n|---|---|---|`;
+  const rows = items.map(it =>
+    `| ${(it.name || '').replace(/\|/g, '\\|')} | ${it.qty || 1} | ${Number(it.price || 0).toLocaleString('ar-SA')} |`
+  ).join('\n');
+  const total = items.reduce((s, it) => s + (Number(it.qty) || 1) * (Number(it.price) || 0), 0);
+  const totalRow = `| **الإجمالي** |  | **${total.toLocaleString('ar-SA')}** |`;
+  return [header, rows, totalRow].filter(Boolean).join('\n');
+};
+
+const replaceOrAppendTable = (md: string, oldTable: string | null, newTable: string): string => {
+  if (oldTable && md.includes(oldTable)) return md.replace(oldTable, newTable);
+  // Append section if no table existed
+  return `${md.trimEnd()}\n\n## بنود وقيمة العقد\n\n${newTable}\n`;
+};
+
 
 const CONTRACT_STATUSES: Record<string, { label: string; color: string }> = {
   draft: { label: 'مسودة', color: 'bg-slate-500' },
