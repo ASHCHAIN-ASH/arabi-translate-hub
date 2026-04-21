@@ -91,6 +91,15 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
         { name: 'النقاط والمكافآت', href: '/adminmaster/gamification', icon: Trophy },
       ]
     },
+    // 5.5 النمو والتحليلات
+    {
+      label: 'النمو والتحليلات',
+      items: [
+        { name: 'تحليلات النمو', href: '/adminmaster/growth', icon: TrendingUp },
+        { name: 'الأتمتة الذكية', href: '/adminmaster/growth/automation', icon: Sparkles },
+        { name: 'تجارب A/B', href: '/adminmaster/experiments', icon: FlaskConical },
+      ]
+    },
     // 6. المحتوى والخدمات
     {
       label: 'المحتوى والخدمات',
