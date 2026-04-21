@@ -44,6 +44,7 @@ const navItems: NavItem[] = [
   { name: 'الطلبات الجماعية', href: '/group-orders', icon: Users },
   { name: 'فواتيري', href: '/invoices', icon: FileText },
   { name: 'عقودي', href: '/client/contracts', icon: ScrollText },
+  { name: 'نشر الأبحاث', href: '/client/research', icon: BookOpen },
   { name: 'محفظتي', href: '/wallet', icon: Wallet },
   { name: 'عضويتي', href: '/membership', icon: Crown },
   { name: 'الإحالات والعمولات', href: '/referrals', icon: Gift },
