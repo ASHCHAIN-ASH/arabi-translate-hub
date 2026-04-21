@@ -17,6 +17,7 @@ import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
 import AdminLayout from '@/components/admin/AdminLayout';
 import ContractDocument from '@/components/contracts/ContractDocument';
+import { formatContractHeaderDate } from '@/utils/formatContractDate';
 
 // ─── Items-table helpers ──────────────────────────────────────────────────
 type ItemRow = { name: string; qty: number; price: number };
@@ -361,7 +362,7 @@ export default function AdminResearchContractDetails() {
                   <div className="rounded-lg px-3 py-2 border" style={cellStyle}>
                     <div className="text-[10px] uppercase tracking-wider" style={labelStyle}>تاريخ التحرير</div>
                     <div className="font-bold text-white text-sm mt-0.5">
-                      {start ? start.toLocaleDateString('ar-SA', { year: 'numeric', month: 'long', day: 'numeric' }) : '—'}
+                      {formatContractHeaderDate(start)}
                     </div>
                   </div>
                   <div className="rounded-lg px-3 py-2 border" style={cellStyle}>
@@ -379,7 +380,7 @@ export default function AdminResearchContractDetails() {
                   <div className="rounded-lg px-3 py-2 border" style={cellStyle}>
                     <div className="text-[10px] uppercase tracking-wider" style={labelStyle}>تاريخ التسليم</div>
                     <div className="font-bold text-white text-sm mt-0.5">
-                      {end ? end.toLocaleDateString('ar-SA', { year: 'numeric', month: 'long', day: 'numeric' }) : '—'}
+                      {formatContractHeaderDate(end)}
                     </div>
                   </div>
                   <div className="rounded-lg px-3 py-2 border" style={cellStyle}>

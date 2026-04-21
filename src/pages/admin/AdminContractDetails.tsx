@@ -27,6 +27,7 @@ import {
 } from "@/utils/supabaseContractService";
 import { PARENT_COMPANY } from "@/utils/contractTemplates";
 import ContractDocument from "@/components/contracts/ContractDocument";
+import { formatContractHeaderDate } from "@/utils/formatContractDate";
 
 const AdminContractDetails = () => {
   const { id = "" } = useParams();
@@ -207,7 +208,7 @@ const AdminContractDetails = () => {
                   </div>
                   <Button size="sm" variant="ghost" className="h-6 px-1.5 text-xs" onClick={editWorkDuration}>تعديل</Button>
                 </div>
-                <div><p className="text-xs text-muted-foreground"><Calendar className="inline h-3 w-3 ml-1" />التحرير</p><p className="font-semibold">{new Date(c.created_at).toLocaleDateString("ar-SA")}</p></div>
+                <div><p className="text-xs text-muted-foreground"><Calendar className="inline h-3 w-3 ml-1" />التحرير</p><p className="font-semibold">{formatContractHeaderDate(c.created_at)}</p></div>
               </CardContent>
             </Card>
 

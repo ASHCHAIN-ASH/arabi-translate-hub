@@ -11,6 +11,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { supabase } from '@/integrations/supabase/client';
 import AdminLayout from '@/components/admin/AdminLayout';
 import { useToast } from '@/hooks/use-toast';
+import { formatContractHeaderDate } from '@/utils/formatContractDate';
 
 const CONTRACT_STATUSES: Record<string, { label: string; color: string }> = {
   draft: { label: 'مسودة', color: 'bg-slate-500' },
@@ -149,7 +150,7 @@ export default function AdminResearchContracts() {
                       <TableCell><Badge className={`${cs.color} text-white border-0`}>{cs.label}</Badge></TableCell>
                       <TableCell className="text-xs">
                         <Calendar className="w-3 h-3 inline ml-1" />
-                        {new Date(c.created_at).toLocaleDateString('ar-SA')}
+                        {formatContractHeaderDate(c.created_at)}
                       </TableCell>
                       <TableCell>
                         <div className="flex gap-2">
