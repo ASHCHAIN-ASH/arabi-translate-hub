@@ -1,7 +1,7 @@
 // إرسال رسالة واتساب عبر SmartWats مع قوالب من قاعدة البيانات
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
-import { normalizePhone, renderTemplate, sendWhatsAppMessage } from "../_shared/whatsapp.ts";
+import { normalizePhone, renderTemplate, sendWhatsAppMessage, sendWhatsAppMedia } from "../_shared/whatsapp.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
