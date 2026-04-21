@@ -455,7 +455,55 @@ export default function ResearchPublication() {
                     <Label>ملاحظات إضافية</Label>
                     <Textarea rows={2} value={form.notes} onChange={e => setForm({ ...form, notes: e.target.value })} />
                   </div>
-                  <Button onClick={submit} disabled={submitting} className="w-full h-12 bg-gradient-to-r from-indigo-600 to-cyan-600 text-white font-bold rounded-xl">
+
+                  {/* رفع مرفقات البحث */}
+                  <div className="border-t pt-4">
+                    <h3 className="font-bold mb-3 flex items-center gap-2">
+                      <Paperclip className="w-4 h-4 text-indigo-600" />
+                      مرفقات البحث
+                      <span className="text-xs font-normal text-muted-foreground">(Word / PDF / TXT — حتى {MAX_SIZE_MB}MB)</span>
+                    </h3>
+                    <label className={`flex flex-col items-center justify-center gap-2 p-5 border-2 border-dashed rounded-xl cursor-pointer transition-all ${uploadingFile ? 'border-indigo-300 bg-indigo-50/60' : 'border-indigo-200 bg-white hover:border-indigo-400 hover:bg-indigo-50/40'}`}>
+                      <input
+                        type="file"
+                        multiple
+                        accept=".doc,.docx,.pdf,.txt,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,text/plain"
+                        className="hidden"
+                        onChange={e => { handleFilesSelected(e.target.files); e.target.value = ''; }}
+                        disabled={uploadingFile}
+                      />
+                      {uploadingFile ? (
+                        <Loader2 className="w-6 h-6 text-indigo-600 animate-spin" />
+                      ) : (
+                        <Upload className="w-6 h-6 text-indigo-600" />
+                      )}
+                      <span className="text-sm font-bold text-indigo-700">
+                        {uploadingFile ? 'جاري الرفع…' : 'اسحب الملفات هنا أو اضغط للاختيار'}
+                      </span>
+                      <span className="text-[11px] text-muted-foreground">يمكنك رفع عدة ملفات</span>
+                    </label>
+
+                    {attachments.length > 0 && (
+                      <div className="mt-3 space-y-2">
+                        {attachments.map(att => (
+                          <div key={att.path} className="flex items-center gap-2 p-2.5 bg-white border rounded-lg">
+                            <div className="w-9 h-9 rounded-lg bg-indigo-100 text-indigo-700 flex items-center justify-center shrink-0">
+                              <FileIcon className="w-4 h-4" />
+                            </div>
+                            <div className="flex-1 min-w-0">
+                              <div className="text-sm font-bold truncate">{att.name}</div>
+                              <div className="text-[11px] text-muted-foreground">{formatSize(att.size)}</div>
+                            </div>
+                            <Button type="button" variant="ghost" size="icon" onClick={() => removeAttachment(att.path)} className="text-rose-600 hover:text-rose-700 hover:bg-rose-50">
+                              <Trash2 className="w-4 h-4" />
+                            </Button>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+
+                  <Button onClick={submit} disabled={submitting || uploadingFile} className="w-full h-12 bg-gradient-to-r from-indigo-600 to-cyan-600 text-white font-bold rounded-xl">
                     {submitting ? <Loader2 className="w-5 h-5 animate-spin" /> : <><Send className="w-5 h-5 ml-2" />إرسال الطلب</>}
                   </Button>
                 </div>
