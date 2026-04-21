@@ -314,92 +314,105 @@ export const ContractDocument: React.FC<Props> = ({ contract, signature, signatu
           </div>
         </div>
 
-        {/* Second party — Client e-signature */}
-        <div
-          className="relative rounded-xl p-5 pt-6 text-center overflow-hidden"
-          style={{
-            background: `linear-gradient(180deg, #fff 0%, ${CREAM} 100%)`,
-            border: `1px solid ${GOLD}88`,
-            boxShadow: "0 4px 16px rgba(10,31,61,.08)",
-          }}
-        >
-          <div
-            className="absolute top-0 right-0 left-0 h-1"
-            style={{ background: `linear-gradient(90deg, ${GOLD} 0%, ${NAVY} 50%, ${GOLD} 100%)` }}
-          />
-          <div
-            className="absolute top-2.5 left-2.5 px-2 py-0.5 text-[9px] font-bold tracking-widest rounded"
-            style={{ background: NAVY, color: GOLD }}
-          >
-            E-SIGNED
-          </div>
-
-          <p className="font-bold text-sm mb-1 mt-1" style={{ color: NAVY }}>الطرف الثاني</p>
-          <p className="text-[13px] mb-4 font-semibold" style={{ color: NAVY }}>
-            {contract.client_full_name || "—"}
-          </p>
-
-          {signature ? (
+        {/* Other parties — ordered approval slots */}
+        {Array.from({ length: slotCount }).map((_, idx) => {
+          const sig = sigList[idx];
+          const partyLabel = PARTY_LABELS_AR[idx + 1] || `الطرف رقم ${idx + 2}`;
+          const signerName = sig?.signer_name || (idx === 0 ? (contract.client_full_name || "—") : "—");
+          return (
             <div
-              className="rounded-lg p-3 text-xs"
+              key={sig?.id || `slot-${idx}`}
+              className="relative rounded-xl p-5 pt-6 text-center overflow-hidden"
               style={{
-                background: `linear-gradient(180deg, #fff, ${CREAM})`,
-                border: `1.5px solid ${GOLD}`,
-                boxShadow: `inset 0 0 0 1px ${GOLD}33`,
+                background: `linear-gradient(180deg, #fff 0%, ${CREAM} 100%)`,
+                border: `1px solid ${GOLD}88`,
+                boxShadow: "0 4px 16px rgba(10,31,61,.08)",
               }}
             >
-              {/* Verified pill */}
               <div
-                className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-bold mb-2"
-                style={{ background: "#16a34a", color: "#fff", letterSpacing: ".05em" }}
+                className="absolute top-0 right-0 left-0 h-1"
+                style={{ background: `linear-gradient(90deg, ${GOLD} 0%, ${NAVY} 50%, ${GOLD} 100%)` }}
+              />
+              <div
+                className="absolute top-2.5 left-2.5 px-2 py-0.5 text-[9px] font-bold tracking-widest rounded"
+                style={{ background: NAVY, color: GOLD }}
               >
-                <span className="font-black">✓</span> موقّع إلكترونياً ومُوثّق
+                {sig ? "E-SIGNED" : "PENDING"}
+              </div>
+              {/* Order badge */}
+              <div
+                className="absolute top-2.5 right-2.5 w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-black"
+                style={{ background: GOLD, color: NAVY }}
+                title={`ترتيب التوقيع #${idx + 2}`}
+              >
+                {idx + 2}
               </div>
 
-              {/* Signature frame */}
-              <div
-                className="relative rounded-md px-2 py-2.5 my-1.5 mb-2.5"
-                style={{ background: "#fff", border: `1px solid ${GOLD}66` }}
-              >
-                <span
-                  className="absolute -top-1.5 right-2.5 px-1.5 text-[9px] font-semibold"
-                  style={{ background: "#fff", color: NAVY + "99" }}
-                >
-                  التوقيع
-                </span>
-                <p
-                  className="m-0"
+              <p className="font-bold text-sm mb-1 mt-1" style={{ color: NAVY }}>{partyLabel}</p>
+              <p className="text-[13px] mb-4 font-semibold" style={{ color: NAVY }}>
+                {signerName}
+              </p>
+
+              {sig ? (
+                <div
+                  className="rounded-lg p-3 text-xs"
                   style={{
-                    fontFamily: "'Aref Ruqaa', 'Brush Script MT', cursive",
-                    fontSize: 30, color: NAVY, fontWeight: 700, lineHeight: 1.2,
-                    textShadow: `1px 1px 0 ${GOLD}33`,
+                    background: `linear-gradient(180deg, #fff, ${CREAM})`,
+                    border: `1.5px solid ${GOLD}`,
+                    boxShadow: `inset 0 0 0 1px ${GOLD}33`,
                   }}
                 >
-                  {signature.signature_text}
-                </p>
-              </div>
+                  <div
+                    className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-bold mb-2"
+                    style={{ background: "#16a34a", color: "#fff", letterSpacing: ".05em" }}
+                  >
+                    <span className="font-black">✓</span> موقّع إلكترونياً ومُوثّق
+                  </div>
 
-              {/* Meta rows */}
-              <div className="text-right px-1.5" style={{ color: NAVY + "cc", fontSize: "10.5px", lineHeight: 1.9 }}>
-                <SigRow k="التاريخ والوقت" v={fmtDateTime(signature.signed_at)} />
-                {signature.ip_address && <SigRow k="عنوان IP" v={signature.ip_address} />}
-                {signature.signer_id_number && <SigRow k="رقم الهوية" v={signature.signer_id_number} />}
-                <SigRow k="معرّف التوقيع" v={String(signature.id || "").slice(0, 8)} last />
-              </div>
+                  <div
+                    className="relative rounded-md px-2 py-2.5 my-1.5 mb-2.5"
+                    style={{ background: "#fff", border: `1px solid ${GOLD}66` }}
+                  >
+                    <span
+                      className="absolute -top-1.5 right-2.5 px-1.5 text-[9px] font-semibold"
+                      style={{ background: "#fff", color: NAVY + "99" }}
+                    >
+                      التوقيع
+                    </span>
+                    <p
+                      className="m-0"
+                      style={{
+                        fontFamily: "'Aref Ruqaa', 'Brush Script MT', cursive",
+                        fontSize: 28, color: NAVY, fontWeight: 700, lineHeight: 1.2,
+                        textShadow: `1px 1px 0 ${GOLD}33`,
+                      }}
+                    >
+                      {sig.signature_text}
+                    </p>
+                  </div>
+
+                  <div className="text-right px-1.5" style={{ color: NAVY + "cc", fontSize: "10.5px", lineHeight: 1.9 }}>
+                    <SigRow k="التاريخ والوقت" v={fmtDateTime(sig.signed_at)} />
+                    {sig.ip_address && <SigRow k="عنوان IP" v={sig.ip_address} />}
+                    {sig.signer_id_number && <SigRow k="رقم الهوية" v={sig.signer_id_number} />}
+                    <SigRow k="معرّف التوقيع" v={String(sig.id || "").slice(0, 8)} last />
+                  </div>
+                </div>
+              ) : (
+                <div
+                  className="rounded-lg p-7 text-xs font-semibold"
+                  style={{
+                    background: `repeating-linear-gradient(45deg, ${CREAM}, ${CREAM} 10px, #f6f1e3 10px, #f6f1e3 20px)`,
+                    border: `1.5px dashed ${NAVY}66`,
+                    color: NAVY + "88",
+                  }}
+                >
+                  <span className="text-lg">⏳</span> بانتظار التوقيع
+                </div>
+              )}
             </div>
-          ) : (
-            <div
-              className="rounded-lg p-7 text-xs font-semibold"
-              style={{
-                background: `repeating-linear-gradient(45deg, ${CREAM}, ${CREAM} 10px, #f6f1e3 10px, #f6f1e3 20px)`,
-                border: `1.5px dashed ${NAVY}66`,
-                color: NAVY + "88",
-              }}
-            >
-              <span className="text-lg">⏳</span> لم يتم التوقيع بعد
-            </div>
-          )}
-        </div>
+          );
+        })}
       </div>
 
       {/* Digital verification hash */}
