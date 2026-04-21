@@ -6,7 +6,7 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { X } from 'lucide-react';
 import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { useToast } from '@/hooks/use-toast';
@@ -174,26 +174,38 @@ export default function ResearchPublication() {
                 </p>
               </div>
             </div>
-            <Dialog open={open} onOpenChange={setOpen}>
-              <DialogTrigger asChild>
-                <Button size="lg" className="bg-white text-indigo-700 hover:bg-white/90 font-bold rounded-xl shadow-2xl">
-                  <Plus className="w-5 h-5 ml-2" />
-                  طلب نشر جديد
-                </Button>
-              </DialogTrigger>
-              <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto" dir="rtl">
-                <DialogHeader>
-                  <DialogTitle className="text-xl font-black flex items-center gap-2">
+            <Button size="lg" onClick={() => { setSelected(null); setOpen(o => !o); }} className="bg-white text-indigo-700 hover:bg-white/90 font-bold rounded-xl shadow-2xl">
+              <Plus className="w-5 h-5 ml-2" />
+              {open ? 'إغلاق النموذج' : 'طلب نشر جديد'}
+            </Button>
+          </div>
+        </motion.div>
+
+        {/* نموذج الطلب الداخلي */}
+        <AnimatePresence>
+          {open && (
+            <motion.div
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: 'auto' }}
+              exit={{ opacity: 0, height: 0 }}
+              className="overflow-hidden"
+            >
+              <Card className="p-6 border-2 border-indigo-200 bg-gradient-to-br from-indigo-50/50 to-cyan-50/30 shadow-xl rounded-2xl">
+                <div className="flex items-center justify-between mb-5">
+                  <h2 className="text-xl font-black flex items-center gap-2">
                     <BookOpen className="w-6 h-6 text-indigo-600" />
                     طلب نشر بحث جديد
-                  </DialogTitle>
-                </DialogHeader>
-                <div className="space-y-4 mt-4">
+                  </h2>
+                  <Button variant="ghost" size="icon" onClick={() => setOpen(false)}>
+                    <X className="w-5 h-5" />
+                  </Button>
+                </div>
+                <div className="space-y-4">
                   <div>
                     <Label>عنوان البحث *</Label>
                     <Input value={form.title} onChange={e => setForm({ ...form, title: e.target.value })} placeholder="مثال: أثر الذكاء الاصطناعي على..." />
                   </div>
-                  <div className="grid grid-cols-2 gap-3">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     <div>
                       <Label>التخصص *</Label>
                       <Select value={form.field} onValueChange={v => setForm({ ...form, field: v })}>
@@ -215,13 +227,13 @@ export default function ResearchPublication() {
                   </div>
                   <div>
                     <Label>نوع الخدمة *</Label>
-                    <div className="grid grid-cols-2 gap-2 mt-2">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 mt-2">
                       {SERVICE_TYPES.map(s => (
                         <button
                           key={s.value}
                           type="button"
                           onClick={() => setForm({ ...form, service_type: s.value })}
-                          className={`text-right p-3 rounded-xl border-2 transition-all ${form.service_type === s.value ? 'border-indigo-500 bg-indigo-50' : 'border-border hover:border-indigo-300'}`}
+                          className={`text-right p-3 rounded-xl border-2 transition-all ${form.service_type === s.value ? 'border-indigo-500 bg-indigo-50' : 'border-border hover:border-indigo-300 bg-white'}`}
                         >
                           <div className="font-bold text-sm">{s.label}</div>
                           <div className="text-xs text-muted-foreground mt-1">{s.desc}</div>
@@ -229,7 +241,7 @@ export default function ResearchPublication() {
                       ))}
                     </div>
                   </div>
-                  <div className="grid grid-cols-2 gap-3">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     <div>
                       <Label>المجلة المستهدفة</Label>
                       <Input value={form.target_journal} onChange={e => setForm({ ...form, target_journal: e.target.value })} placeholder="اسم المجلة (اختياري)" />
@@ -246,7 +258,7 @@ export default function ResearchPublication() {
                     <Label>ملخص البحث (Abstract) *</Label>
                     <Textarea rows={4} value={form.abstract} onChange={e => setForm({ ...form, abstract: e.target.value })} placeholder="اكتب ملخصاً واضحاً لبحثك..." />
                   </div>
-                  <div className="grid grid-cols-2 gap-3">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     <div>
                       <Label>الكلمات المفتاحية</Label>
                       <Input value={form.keywords} onChange={e => setForm({ ...form, keywords: e.target.value })} placeholder="مفصولة بفواصل" />
@@ -262,7 +274,7 @@ export default function ResearchPublication() {
                   </div>
                   <div className="border-t pt-4">
                     <h3 className="font-bold mb-3">📞 بيانات التواصل</h3>
-                    <div className="grid grid-cols-2 gap-3">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                       <div>
                         <Label>الاسم *</Label>
                         <Input value={form.client_name} onChange={e => setForm({ ...form, client_name: e.target.value })} />
@@ -285,10 +297,10 @@ export default function ResearchPublication() {
                     {submitting ? <Loader2 className="w-5 h-5 animate-spin" /> : <><Send className="w-5 h-5 ml-2" />إرسال الطلب</>}
                   </Button>
                 </div>
-              </DialogContent>
-            </Dialog>
-          </div>
-        </motion.div>
+              </Card>
+            </motion.div>
+          )}
+        </AnimatePresence>
 
         {/* Features */}
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
@@ -341,8 +353,11 @@ export default function ResearchPublication() {
                     transition={{ delay: i * 0.05 }}
                   >
                     <Card
-                      className="p-4 hover:shadow-lg transition-all cursor-pointer hover:border-indigo-300 group"
-                      onClick={() => { setSelected(item); loadMessages(item.id); }}
+                      className={`p-4 hover:shadow-lg transition-all cursor-pointer hover:border-indigo-300 group ${selected?.id === item.id ? 'border-indigo-500 ring-2 ring-indigo-200' : ''}`}
+                      onClick={() => {
+                        if (selected?.id === item.id) { setSelected(null); }
+                        else { setSelected(item); loadMessages(item.id); }
+                      }}
                     >
                       <div className="flex items-start justify-between gap-4">
                         <div className="flex-1 min-w-0">
@@ -362,9 +377,79 @@ export default function ResearchPublication() {
                             </p>
                           )}
                         </div>
-                        <ChevronRight className="w-5 h-5 text-muted-foreground group-hover:text-indigo-600 group-hover:-translate-x-1 transition-all" />
+                        <ChevronRight className={`w-5 h-5 text-muted-foreground group-hover:text-indigo-600 transition-all ${selected?.id === item.id ? 'rotate-90 text-indigo-600' : ''}`} />
                       </div>
                     </Card>
+
+                    {/* تفاصيل + محادثة داخل البطاقة */}
+                    <AnimatePresence>
+                      {selected?.id === item.id && (
+                        <motion.div
+                          initial={{ opacity: 0, height: 0 }}
+                          animate={{ opacity: 1, height: 'auto' }}
+                          exit={{ opacity: 0, height: 0 }}
+                          className="overflow-hidden"
+                        >
+                          <Card className="mt-2 p-5 border-2 border-indigo-200 bg-gradient-to-br from-indigo-50/40 to-cyan-50/20 rounded-2xl">
+                            <div className="space-y-4">
+                              <div className="grid grid-cols-2 gap-3 text-sm">
+                                <div><span className="text-muted-foreground">التخصص:</span> <b>{selected.field}</b></div>
+                                <div><span className="text-muted-foreground">اللغة:</span> <b>{selected.language === 'ar' ? 'العربية' : selected.language === 'en' ? 'الإنجليزية' : 'ثنائية'}</b></div>
+                                {selected.target_journal && <div><span className="text-muted-foreground">المجلة:</span> <b>{selected.target_journal}</b></div>}
+                                {selected.journal_rank && <div><span className="text-muted-foreground">التصنيف:</span> <b>{selected.journal_rank}</b></div>}
+                              </div>
+                              <div className="bg-white/70 rounded-xl p-3 border">
+                                <div className="text-xs text-muted-foreground mb-1">الملخص:</div>
+                                <p className="text-sm">{selected.abstract}</p>
+                              </div>
+
+                              <div className="border-t pt-4">
+                                <h3 className="font-bold mb-3 flex items-center gap-2">
+                                  <MessageCircle className="w-4 h-4 text-indigo-600" />
+                                  المحادثة مع الإدارة
+                                </h3>
+                                <div className="bg-white/60 rounded-xl p-3 max-h-64 overflow-y-auto space-y-2 mb-3 border">
+                                  <AnimatePresence>
+                                    {messages.length === 0 ? (
+                                      <p className="text-sm text-muted-foreground text-center py-4">لا توجد رسائل بعد</p>
+                                    ) : messages.map(m => (
+                                      <motion.div
+                                        key={m.id}
+                                        initial={{ opacity: 0, y: 10 }}
+                                        animate={{ opacity: 1, y: 0 }}
+                                        className={`flex ${m.sender_type === 'client' ? 'justify-end' : 'justify-start'}`}
+                                      >
+                                        <div className={`max-w-[75%] p-3 rounded-2xl text-sm ${
+                                          m.sender_type === 'client'
+                                            ? 'bg-indigo-600 text-white rounded-br-sm'
+                                            : 'bg-white border rounded-bl-sm'
+                                        }`}>
+                                          {m.message}
+                                          <div className={`text-[10px] mt-1 ${m.sender_type === 'client' ? 'text-white/70' : 'text-muted-foreground'}`}>
+                                            {new Date(m.created_at).toLocaleString('ar-SA')}
+                                          </div>
+                                        </div>
+                                      </motion.div>
+                                    ))}
+                                  </AnimatePresence>
+                                </div>
+                                <div className="flex gap-2">
+                                  <Input
+                                    value={newMsg}
+                                    onChange={e => setNewMsg(e.target.value)}
+                                    placeholder="اكتب رسالتك..."
+                                    onKeyDown={e => e.key === 'Enter' && sendMessage()}
+                                  />
+                                  <Button onClick={sendMessage} disabled={sending || !newMsg.trim()} className="bg-indigo-600 hover:bg-indigo-700">
+                                    {sending ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}
+                                  </Button>
+                                </div>
+                              </div>
+                            </div>
+                          </Card>
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
                   </motion.div>
                 );
               })}
@@ -372,80 +457,6 @@ export default function ResearchPublication() {
           )}
         </div>
 
-        {/* Details + chat */}
-        <Dialog open={!!selected} onOpenChange={() => setSelected(null)}>
-          <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto" dir="rtl">
-            {selected && (
-              <>
-                <DialogHeader>
-                  <DialogTitle className="text-xl font-black">{selected.title}</DialogTitle>
-                </DialogHeader>
-                <div className="space-y-4">
-                  <div className="flex flex-wrap gap-2">
-                    <Badge variant="outline" className="font-mono">{selected.request_number}</Badge>
-                    <Badge className={STATUS_CONFIG[selected.status]?.color}>
-                      {STATUS_CONFIG[selected.status]?.label}
-                    </Badge>
-                  </div>
-                  <div className="grid grid-cols-2 gap-3 text-sm">
-                    <div><span className="text-muted-foreground">التخصص:</span> <b>{selected.field}</b></div>
-                    <div><span className="text-muted-foreground">اللغة:</span> <b>{selected.language === 'ar' ? 'العربية' : selected.language === 'en' ? 'الإنجليزية' : 'ثنائية'}</b></div>
-                    {selected.target_journal && <div><span className="text-muted-foreground">المجلة:</span> <b>{selected.target_journal}</b></div>}
-                    {selected.journal_rank && <div><span className="text-muted-foreground">التصنيف:</span> <b>{selected.journal_rank}</b></div>}
-                  </div>
-                  <div className="bg-muted/50 rounded-xl p-3">
-                    <div className="text-xs text-muted-foreground mb-1">الملخص:</div>
-                    <p className="text-sm">{selected.abstract}</p>
-                  </div>
-
-                  {/* محادثة */}
-                  <div className="border-t pt-4">
-                    <h3 className="font-bold mb-3 flex items-center gap-2">
-                      <MessageCircle className="w-4 h-4 text-indigo-600" />
-                      المحادثة مع الإدارة
-                    </h3>
-                    <div className="bg-muted/30 rounded-xl p-3 max-h-64 overflow-y-auto space-y-2 mb-3">
-                      <AnimatePresence>
-                        {messages.length === 0 ? (
-                          <p className="text-sm text-muted-foreground text-center py-4">لا توجد رسائل بعد</p>
-                        ) : messages.map(m => (
-                          <motion.div
-                            key={m.id}
-                            initial={{ opacity: 0, y: 10 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            className={`flex ${m.sender_type === 'client' ? 'justify-end' : 'justify-start'}`}
-                          >
-                            <div className={`max-w-[75%] p-3 rounded-2xl text-sm ${
-                              m.sender_type === 'client'
-                                ? 'bg-indigo-600 text-white rounded-br-sm'
-                                : 'bg-white border rounded-bl-sm'
-                            }`}>
-                              {m.message}
-                              <div className={`text-[10px] mt-1 ${m.sender_type === 'client' ? 'text-white/70' : 'text-muted-foreground'}`}>
-                                {new Date(m.created_at).toLocaleString('ar-SA')}
-                              </div>
-                            </div>
-                          </motion.div>
-                        ))}
-                      </AnimatePresence>
-                    </div>
-                    <div className="flex gap-2">
-                      <Input
-                        value={newMsg}
-                        onChange={e => setNewMsg(e.target.value)}
-                        placeholder="اكتب رسالتك..."
-                        onKeyDown={e => e.key === 'Enter' && sendMessage()}
-                      />
-                      <Button onClick={sendMessage} disabled={sending || !newMsg.trim()} className="bg-indigo-600 hover:bg-indigo-700">
-                        {sending ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}
-                      </Button>
-                    </div>
-                  </div>
-                </div>
-              </>
-            )}
-          </DialogContent>
-        </Dialog>
       </div>
     </ClientLayout>
   );
