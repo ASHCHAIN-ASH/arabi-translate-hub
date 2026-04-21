@@ -31,10 +31,20 @@ export default function MarketplaceItemCard({ item, userXp, userLevel, onPurchas
   const inStock = item.stock === null || item.total_purchased < item.stock;
   const canBuy = canAfford && meetsLevel && inStock;
 
-  // Reset promo state when dialog closes
+  // Track view once on mount
   useEffect(() => {
-    if (!open) { setPromoInput(''); setPromo(null); }
-  }, [open]);
+    MarketplaceService.trackEvent('item_view', { itemId: item.id, metadata: { title: item.title_ar, type: item.type, xp_cost: item.xp_cost } });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [item.id]);
+
+  // Track dialog open + reset promo state when dialog closes
+  useEffect(() => {
+    if (open) {
+      MarketplaceService.trackEvent('dialog_open', { itemId: item.id, metadata: { type: item.type } });
+    } else {
+      setPromoInput(''); setPromo(null);
+    }
+  }, [open, item.id, item.type]);
 
   const effectiveCost = promo?.valid ? (promo.final_xp ?? item.xp_cost) : item.xp_cost;
   const discountAmount = promo?.valid ? (promo.xp_discount ?? 0) : 0;
@@ -44,6 +54,7 @@ export default function MarketplaceItemCard({ item, userXp, userLevel, onPurchas
     if (!parsed.success) {
       setPromo({ valid: false, error: 'invalid_promo' });
       toast.error(parsed.error.errors[0].message);
+      MarketplaceService.trackEvent('promo_invalid', { itemId: item.id, metadata: { reason: 'format' } });
       return;
     }
     setPromoValidating(true);
@@ -52,8 +63,10 @@ export default function MarketplaceItemCard({ item, userXp, userLevel, onPurchas
       setPromo(r);
       if (r.valid) {
         toast.success(`✅ خصم ${r.xp_discount?.toLocaleString('ar-SA')} XP`);
+        MarketplaceService.trackEvent('promo_apply', { itemId: item.id, metadata: { code: parsed.data, discount_xp: r.xp_discount } });
       } else {
         toast.error(MarketplaceService.labelError(r.error || 'invalid_promo'));
+        MarketplaceService.trackEvent('promo_invalid', { itemId: item.id, metadata: { code: parsed.data, error: r.error } });
       }
     } finally {
       setPromoValidating(false);
@@ -64,9 +77,17 @@ export default function MarketplaceItemCard({ item, userXp, userLevel, onPurchas
 
   const handlePurchase = async () => {
     setBusy(true);
+    MarketplaceService.trackEvent('purchase_confirm', {
+      itemId: item.id,
+      metadata: { effective_cost: effectiveCost, promo: promo?.valid ? promo.code : null, discount: discountAmount },
+    });
     try {
       const r = await MarketplaceService.purchase(item.id, promo?.valid ? promo.code : undefined);
       if (r.success) {
+        MarketplaceService.trackEvent('purchase_success', {
+          itemId: item.id,
+          metadata: { purchase_id: r.purchase_id, xp_spent: r.xp_spent, type: item.type, fulfillment: r.fulfillment },
+        });
         toast.success(`✨ تم الشراء بنجاح! -${r.xp_spent} XP`, {
           description: r.fulfillment?.coupon_code
             ? `كوبونك: ${r.fulfillment.coupon_code}`
@@ -77,9 +98,11 @@ export default function MarketplaceItemCard({ item, userXp, userLevel, onPurchas
         setOpen(false);
         onPurchased?.();
       } else {
+        MarketplaceService.trackEvent('purchase_failed', { itemId: item.id, metadata: { error: r.error } });
         toast.error(MarketplaceService.labelError(r.error || 'unknown'));
       }
     } catch (e: any) {
+      MarketplaceService.trackEvent('purchase_failed', { itemId: item.id, metadata: { error: e?.message } });
       toast.error(e?.message || 'تعذّر الشراء');
     } finally {
       setBusy(false);

@@ -110,6 +110,7 @@ import AdminWallets from "./pages/admin/AdminWallets";
 import AdminPayments from "./pages/admin/AdminPayments";
 import AdminGamification from "./pages/admin/AdminGamification";
 import AdminXpConversionReport from "./pages/admin/AdminXpConversionReport";
+import AdminMarketplaceFunnel from "./pages/admin/AdminMarketplaceFunnel";
 import AdminGrowthAnalytics from "./pages/admin/AdminGrowthAnalytics";
 import AdminGrowthAutomation from "./pages/admin/AdminGrowthAutomation";
 import AdminGrowthAutomationRules from "./pages/admin/AdminGrowthAutomationRules";
@@ -552,6 +553,11 @@ const App = () => (
             <Route path="/adminmaster/xp-conversion-report" element={
               <SimpleProtectedRoute adminOnly>
                 <AdminXpConversionReport />
+              </SimpleProtectedRoute>
+            } />
+            <Route path="/adminmaster/marketplace-funnel" element={
+              <SimpleProtectedRoute adminOnly>
+                <AdminMarketplaceFunnel />
               </SimpleProtectedRoute>
             } />
             <Route path="/adminmaster/memberships" element={

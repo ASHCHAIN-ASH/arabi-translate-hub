@@ -3078,6 +3078,50 @@ export type Database = {
           },
         ]
       }
+      marketplace_funnel_events: {
+        Row: {
+          anonymous_id: string | null
+          created_at: string
+          event_type: string
+          id: string
+          item_id: string | null
+          metadata: Json
+          session_id: string | null
+          user_id: string | null
+          variant_key: string | null
+        }
+        Insert: {
+          anonymous_id?: string | null
+          created_at?: string
+          event_type: string
+          id?: string
+          item_id?: string | null
+          metadata?: Json
+          session_id?: string | null
+          user_id?: string | null
+          variant_key?: string | null
+        }
+        Update: {
+          anonymous_id?: string | null
+          created_at?: string
+          event_type?: string
+          id?: string
+          item_id?: string | null
+          metadata?: Json
+          session_id?: string | null
+          user_id?: string | null
+          variant_key?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "marketplace_funnel_events_item_id_fkey"
+            columns: ["item_id"]
+            isOneToOne: false
+            referencedRelation: "marketplace_items"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       marketplace_item_views: {
         Row: {
           anonymous_id: string | null
@@ -7159,6 +7203,10 @@ export type Database = {
           users: number
         }[]
       }
+      get_marketplace_funnel_report: {
+        Args: { p_days?: number }
+        Returns: Json
+      }
       get_marketplace_metrics: { Args: { p_days?: number }; Returns: Json }
       get_membership_points_multiplier: {
         Args: { _user_id: string }
@@ -7445,6 +7493,17 @@ export type Database = {
           p_user_id?: string
         }
         Returns: undefined
+      }
+      track_marketplace_event: {
+        Args: {
+          p_anonymous_id?: string
+          p_event_type: string
+          p_item_id?: string
+          p_metadata?: Json
+          p_session_id?: string
+          p_variant_key?: string
+        }
+        Returns: string
       }
       track_marketplace_view: {
         Args: {

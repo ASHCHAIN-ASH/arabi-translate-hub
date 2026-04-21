@@ -191,4 +191,38 @@ export class MarketplaceService {
     if (error) throw error;
     return data;
   }
+
+  static async trackEvent(
+    eventType: 'item_view' | 'dialog_open' | 'promo_apply' | 'promo_invalid' | 'purchase_confirm' | 'purchase_success' | 'purchase_failed' | 'redeem',
+    opts: { itemId?: string; metadata?: Record<string, any>; variantKey?: string } = {}
+  ) {
+    try {
+      let sessionId = sessionStorage.getItem('mkt_session_id');
+      if (!sessionId) {
+        sessionId = crypto.randomUUID();
+        sessionStorage.setItem('mkt_session_id', sessionId);
+      }
+      let anonId = localStorage.getItem('mkt_anon_id');
+      if (!anonId) {
+        anonId = crypto.randomUUID();
+        localStorage.setItem('mkt_anon_id', anonId);
+      }
+      await (supabase as any).rpc('track_marketplace_event', {
+        p_event_type: eventType,
+        p_item_id: opts.itemId ?? null,
+        p_anonymous_id: anonId,
+        p_session_id: sessionId,
+        p_variant_key: opts.variantKey ?? null,
+        p_metadata: opts.metadata ?? {},
+      });
+    } catch {
+      /* best-effort */
+    }
+  }
+
+  static async getFunnelReport(days = 7) {
+    const { data, error } = await (supabase as any).rpc('get_marketplace_funnel_report', { p_days: days });
+    if (error) throw error;
+    return data;
+  }
 }
