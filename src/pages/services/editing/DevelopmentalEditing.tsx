@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { BookOpen, Lightbulb, Users, TrendingUp, Sparkles, ArrowLeft } from 'lucide-react';
 import Header from '@/components/Header';
 import Breadcrumb from '@/components/Breadcrumb';
-import { EditingServiceForm } from '@/components/editing/EditingServiceForm';
+import { AuthCtaCard } from '@/components/research/AuthCtaCard';
 import { useNavigate } from 'react-router-dom';
 
 const DevelopmentalEditing = () => {
@@ -292,11 +292,7 @@ const DevelopmentalEditing = () => {
             </h2>
             <p className="text-muted-foreground text-lg">املأ النموذج وسنبدأ فوراً</p>
           </motion.div>
-          <EditingServiceForm
-            serviceTitle="التحرير التطويري"
-            serviceType="developmental-editing"
-            documentTypes={['رواية', 'كتاب غير روائي', 'أطروحة', 'بحث أكاديمي', 'مشروع أدبي']}
-          />
+          <AuthCtaCard serviceTitle="التحرير التطويري" />
         </div>
       </section>
     </div>

@@ -6,7 +6,7 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/
 import { BookOpen, Feather, Eye, Sparkles, ArrowLeft, Zap } from 'lucide-react';
 import Header from '@/components/Header';
 import Breadcrumb from '@/components/Breadcrumb';
-import { EditingServiceForm } from '@/components/editing/EditingServiceForm';
+import { AuthCtaCard } from '@/components/research/AuthCtaCard';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 
@@ -158,11 +158,7 @@ const StyleReview = () => {
             <h2 className="text-4xl font-bold mb-4">اطلب خدمة مراجعة الأسلوب</h2>
             <p className="text-muted-foreground text-lg">املأ النموذج وسنبدأ فوراً</p>
           </div>
-          <EditingServiceForm
-            serviceTitle="مراجعة الأسلوب"
-            serviceType="style-review"
-            documentTypes={['مقال', 'كتاب', 'رواية', 'محتوى تسويقي', 'بحث', 'تقرير']}
-          />
+          <AuthCtaCard serviceTitle="مراجعة الأسلوب" />
         </div>
       </section>
     </div>

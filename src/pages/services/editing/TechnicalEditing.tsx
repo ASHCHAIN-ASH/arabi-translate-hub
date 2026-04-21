@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Settings, Code, FileCheck, Zap, Sparkles, ArrowLeft } from 'lucide-react';
 import Header from '@/components/Header';
 import Breadcrumb from '@/components/Breadcrumb';
-import { EditingServiceForm } from '@/components/editing/EditingServiceForm';
+import { AuthCtaCard } from '@/components/research/AuthCtaCard';
 import { useNavigate } from 'react-router-dom';
 
 const TechnicalEditing = () => {
@@ -292,12 +292,7 @@ const TechnicalEditing = () => {
             </h2>
             <p className="text-muted-foreground text-lg">املأ النموذج وسنبدأ فوراً</p>
           </motion.div>
-          <EditingServiceForm
-            serviceTitle="التحرير التقني"
-            serviceType="technical-editing"
-            specializations={['هندسة', 'طب', 'علوم الحاسوب', 'فيزياء', 'كيمياء', 'رياضيات']}
-            documentTypes={['بحث علمي', 'تقرير تقني', 'دليل استخدام', 'وثيقة فنية', 'دراسة تقنية']}
-          />
+          <AuthCtaCard serviceTitle="التحرير التقني" />
         </div>
       </section>
     </div>
