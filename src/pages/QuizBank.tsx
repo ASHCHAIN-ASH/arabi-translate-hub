@@ -145,6 +145,11 @@ export default function QuizBank() {
       if (!r.success) { toast.error('تعذّر تسجيل الإجابة'); return; }
       setResult({ is_correct: !!r.is_correct, correct_choice_id: r.correct_choice_id, explanation: r.explanation, xp_awarded: r.xp_awarded });
       setAnsweredIds((prev) => prev.includes(current.id) ? prev : [...prev, current.id]);
+      QuestionBankService.logAttempt({
+        question_id: current.id, subject_id: current.subject_id, choice_id: selectedChoice,
+        is_correct: !!r.is_correct, difficulty: current.difficulty,
+        time_spent_seconds: elapsed, xp_awarded: r.xp_awarded || 0,
+      }).catch(() => {});
       if (r.is_correct) {
         toast.success(`✨ إجابة صحيحة! +${r.xp_awarded || 5} XP`);
         setSessionXp((x) => x + (r.xp_awarded || 5));
