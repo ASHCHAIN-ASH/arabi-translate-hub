@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
-import { Gift, Ticket, Sparkles, Wallet, Copy, CheckCircle2, Clock, AlertCircle, Package, RefreshCw } from 'lucide-react';
+import { Gift, Ticket, Sparkles, Wallet, Copy, CheckCircle2, Clock, AlertCircle, Package, RefreshCw, TicketPercent } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import ClientLayout from '@/components/client/ClientLayout';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { useAuth } from '@/components/SimpleAuthProvider';
 import { useToast } from '@/hooks/use-toast';
 import { MarketplaceService, type MarketplacePurchase, type DiscountCoupon, type UnlockedFeature } from '@/utils/marketplaceService';
