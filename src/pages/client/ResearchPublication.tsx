@@ -499,6 +499,7 @@ export default function ResearchPublication() {
                         >
                           <Card className="mt-2 p-5 border-2 border-indigo-200 bg-gradient-to-br from-indigo-50/40 to-cyan-50/20 rounded-2xl">
                             <div className="space-y-4">
+                              <StatusTimeline status={selected.status} />
                               <div className="grid grid-cols-2 gap-3 text-sm">
                                 <div><span className="text-muted-foreground">التخصص:</span> <b>{selected.field}</b></div>
                                 <div><span className="text-muted-foreground">اللغة:</span> <b>{selected.language === 'ar' ? 'العربية' : selected.language === 'en' ? 'الإنجليزية' : 'ثنائية'}</b></div>
