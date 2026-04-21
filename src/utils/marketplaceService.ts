@@ -254,4 +254,35 @@ export class MarketplaceService {
     if (error) throw error;
     return data;
   }
+
+  // ===== Pricing helpers =====
+  static itemPriceSAR(item: MarketplaceItem): number {
+    if (item.price_sar != null && item.price_sar > 0) return Number(item.price_sar);
+    const rate = item.xp_to_sar_rate || 100;
+    return Math.round((item.xp_cost / rate) * 100) / 100;
+  }
+
+  static allowedMethods(item: MarketplaceItem): PaymentMethod[] {
+    const a = item.allow_payment_methods;
+    if (!a || a.length === 0) return ['xp', 'wallet', 'gateway'];
+    return a.filter((m): m is PaymentMethod => m === 'xp' || m === 'wallet' || m === 'gateway');
+  }
+
+  // ===== Purchase via wallet (SAR) =====
+  static async purchaseWithWallet(itemId: string): Promise<PurchaseResult> {
+    const { data, error } = await (supabase as any).rpc('purchase_marketplace_with_wallet', {
+      p_item_id: itemId,
+    });
+    if (error) return { success: false, error: error.message };
+    return data as PurchaseResult;
+  }
+
+  // ===== Purchase via payment gateway (SAR) =====
+  static async purchaseWithGateway(itemId: string, amountSar: number): Promise<{ success: boolean; checkout_url?: string; error?: string }> {
+    const { data, error } = await supabase.functions.invoke('marketplace-gateway-checkout', {
+      body: { item_id: itemId, amount_sar: amountSar },
+    });
+    if (error) return { success: false, error: error.message };
+    return data as { success: boolean; checkout_url?: string; error?: string };
+  }
 }
