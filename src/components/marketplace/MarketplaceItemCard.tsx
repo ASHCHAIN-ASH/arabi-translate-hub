@@ -105,35 +105,58 @@ export default function MarketplaceItemCard({ item, userXp, userLevel, onPurchas
     setLastError(null);
   };
 
+  const priceSar = MarketplaceService.itemPriceSAR(item);
+  const allowed = MarketplaceService.allowedMethods(item);
+  const [method, setMethod] = useState<'xp' | 'wallet' | 'gateway'>(
+    allowed.includes('xp') ? 'xp' : (allowed[0] as any) || 'xp'
+  );
+
   const handlePurchase = async () => {
     setBusy(true);
     const codes = promos.map((p) => p.code!).filter(Boolean);
     MarketplaceService.trackEvent('purchase_confirm', {
       itemId: item.id,
-      metadata: { effective_cost: effectiveCost, promo_codes: codes, discount: totalDiscount },
+      metadata: { effective_cost: effectiveCost, promo_codes: codes, discount: totalDiscount, method },
     });
     try {
-      const r = await MarketplaceService.purchaseStacked(item.id, codes);
-      if (r.success) {
-        MarketplaceService.trackEvent('purchase_success', {
-          itemId: item.id,
-          metadata: { purchase_id: r.purchase_id, xp_spent: r.xp_spent, type: item.type, fulfillment: r.fulfillment, codes },
-        });
-        toast.success(`✨ تم الشراء بنجاح! -${r.xp_spent} XP`, {
-          description: r.fulfillment?.coupon_code
-            ? `كوبونك: ${r.fulfillment.coupon_code}`
-            : r.fulfillment?.sar_credited
-              ? `تم إضافة ${r.fulfillment.sar_credited} ريال لمحفظتك`
+      if (method === 'xp') {
+        const r = await MarketplaceService.purchaseStacked(item.id, codes);
+        if (r.success) {
+          MarketplaceService.trackEvent('purchase_success', { itemId: item.id, metadata: { purchase_id: r.purchase_id, xp_spent: r.xp_spent, type: item.type, fulfillment: r.fulfillment, codes, method } });
+          toast.success(`✨ تم الشراء بنجاح! -${r.xp_spent} XP`, {
+            description: r.fulfillment?.coupon_code ? `كوبونك: ${r.fulfillment.coupon_code}`
+              : r.fulfillment?.sar_credited ? `تم إضافة ${r.fulfillment.sar_credited} ريال لمحفظتك`
               : 'تحقق من مكافآتك',
-        });
-        setOpen(false);
-        onPurchased?.();
+          });
+          setOpen(false); onPurchased?.();
+        } else {
+          MarketplaceService.trackEvent('purchase_failed', { itemId: item.id, metadata: { error: r.error, method } });
+          toast.error(MarketplaceService.labelError(r.error || 'unknown'));
+        }
+      } else if (method === 'wallet') {
+        const r = await MarketplaceService.purchaseWithWallet(item.id);
+        if (r.success) {
+          MarketplaceService.trackEvent('purchase_success', { itemId: item.id, metadata: { purchase_id: r.purchase_id, paid_sar: priceSar, method } });
+          toast.success(`✨ تم الشراء بنجاح من المحفظة! -${priceSar.toLocaleString('ar-SA')} ر.س`);
+          setOpen(false); onPurchased?.();
+        } else {
+          MarketplaceService.trackEvent('purchase_failed', { itemId: item.id, metadata: { error: r.error, method } });
+          toast.error(MarketplaceService.labelError(r.error || 'unknown'));
+        }
       } else {
-        MarketplaceService.trackEvent('purchase_failed', { itemId: item.id, metadata: { error: r.error } });
-        toast.error(MarketplaceService.labelError(r.error || 'unknown'));
+        // gateway
+        const r = await MarketplaceService.purchaseWithGateway(item.id, priceSar);
+        if (r.success && r.checkout_url) {
+          MarketplaceService.trackEvent('purchase_confirm', { itemId: item.id, metadata: { method, redirect: true } });
+          toast.success('جارٍ تحويلك لصفحة الدفع…');
+          window.location.href = r.checkout_url;
+        } else {
+          MarketplaceService.trackEvent('purchase_failed', { itemId: item.id, metadata: { error: r.error, method } });
+          toast.error(MarketplaceService.labelError(r.error || 'gateway_error'));
+        }
       }
     } catch (e: any) {
-      MarketplaceService.trackEvent('purchase_failed', { itemId: item.id, metadata: { error: e?.message } });
+      MarketplaceService.trackEvent('purchase_failed', { itemId: item.id, metadata: { error: e?.message, method } });
       toast.error(e?.message || 'تعذّر الشراء');
     } finally {
       setBusy(false);
