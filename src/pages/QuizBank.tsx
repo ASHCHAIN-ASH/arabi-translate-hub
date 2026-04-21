@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
-import { Loader2, CheckCircle2, XCircle, Sparkles, BookOpen, BarChart3, Trophy, Target, Flame, RotateCcw, BarChart, Layers } from 'lucide-react';
+import { Loader2, CheckCircle2, XCircle, Sparkles, BookOpen, BarChart3, Trophy, Target, Flame, RotateCcw, BarChart, Layers, Crown } from 'lucide-react';
 import { toast } from 'sonner';
 import ClientLayout from '@/components/client/ClientLayout';
 import { QuestionBankService, type QCategory, type QSubject, type QQuestion, type Difficulty } from '@/services/questionBankService';
