@@ -112,6 +112,10 @@ import AdminGrowthAutomation from "./pages/admin/AdminGrowthAutomation";
 import AdminGrowthAutomationRules from "./pages/admin/AdminGrowthAutomationRules";
 import AdminExperiments from "./pages/admin/AdminExperiments";
 import AdminExperimentDetail from "./pages/admin/AdminExperimentDetail";
+import AdminAssessments from "./pages/admin/AdminAssessments";
+import AssessmentsList from "./pages/academic/AssessmentsList";
+import AssessmentStart from "./pages/academic/AssessmentStart";
+import AssessmentResult from "./pages/academic/AssessmentResult";
 import ContractsSystem from "./pages/admin/ContractsSystem";
 import AdminContractDetails from "./pages/admin/AdminContractDetails";
 import ContractsAnalytics from "./pages/admin/ContractsAnalytics";
@@ -567,6 +571,14 @@ const App = () => (
                 <AdminExperimentDetail />
               </SimpleProtectedRoute>
             } />
+            <Route path="/adminmaster/assessments" element={
+              <SimpleProtectedRoute adminOnly>
+                <AdminAssessments />
+              </SimpleProtectedRoute>
+            } />
+            <Route path="/challenge-academy/assessments" element={<AssessmentsList />} />
+            <Route path="/challenge-academy/assessments/:id/start" element={<AssessmentStart />} />
+            <Route path="/challenge-academy/assessments/:id/result" element={<AssessmentResult />} />
             <Route path="/adminmaster/whatsapp" element={<Navigate to="/adminmaster/whatsapp/inbox" replace />} />
             <Route path="/adminmaster/whatsapp/inbox" element={
               <SimpleProtectedRoute adminOnly><WhatsappInboxPage /></SimpleProtectedRoute>

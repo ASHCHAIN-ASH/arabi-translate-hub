@@ -11,7 +11,7 @@ import {
   CreditCard, HelpCircle, Settings, LogOut, Shield, Bell, Menu,
   Activity, Mail, Briefcase, Clock, Receipt, ChevronDown,
   BarChart3, Package, Ticket, UserPlus, Star, Wallet, Gift, Trophy, BookOpen, Inbox, MessageCircle,
-  TrendingUp, Sparkles, FlaskConical
+  TrendingUp, Sparkles, FlaskConical, Target
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import ChatFloatingButton from '@/components/chat/ChatFloatingButton';
@@ -98,6 +98,7 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
         { name: 'تحليلات النمو', href: '/adminmaster/growth', icon: TrendingUp },
         { name: 'الأتمتة الذكية', href: '/adminmaster/growth/automation', icon: Sparkles },
         { name: 'تجارب A/B', href: '/adminmaster/experiments', icon: FlaskConical },
+        { name: 'اختبارات المستوى', href: '/adminmaster/assessments', icon: Target },
       ]
     },
     // 6. المحتوى والخدمات
