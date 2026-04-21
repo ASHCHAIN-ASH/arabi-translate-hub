@@ -120,6 +120,7 @@ import AdminAssessments from "./pages/admin/AdminAssessments";
 import AdminQuestionBank from "./pages/admin/AdminQuestionBank";
 import QuizBank from "./pages/QuizBank";
 import QuizBankResults from "./pages/QuizBankResults";
+import QuizBankBrowse from "./pages/QuizBankBrowse";
 import AssessmentsList from "./pages/academic/AssessmentsList";
 import AssessmentStart from "./pages/academic/AssessmentStart";
 import AssessmentResult from "./pages/academic/AssessmentResult";
