@@ -276,7 +276,9 @@ export default function AdminResearchPublicationDetails() {
         .single();
       if (error) throw error;
 
-      await notifyResearchEvent('contract_created', item, {
+      await notifyResearchEvent({
+        publication: item as any,
+        event: 'contract_created',
         extra: { contract_number: created?.contract_number, total_amount: amount },
       });
       toast({ title: '✅ تم إنشاء العقد', description: `رقم العقد: ${created?.contract_number || ''}` });
