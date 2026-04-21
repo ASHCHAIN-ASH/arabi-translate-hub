@@ -119,6 +119,7 @@ import AdminExperimentDetail from "./pages/admin/AdminExperimentDetail";
 import AdminAssessments from "./pages/admin/AdminAssessments";
 import AdminQuestionBank from "./pages/admin/AdminQuestionBank";
 import QuizBank from "./pages/QuizBank";
+import QuizBankResults from "./pages/QuizBankResults";
 import AssessmentsList from "./pages/academic/AssessmentsList";
 import AssessmentStart from "./pages/academic/AssessmentStart";
 import AssessmentResult from "./pages/academic/AssessmentResult";
@@ -610,6 +611,11 @@ const App = () => (
             <Route path="/quiz-bank" element={
               <SimpleProtectedRoute requiredRole="client">
                 <QuizBank />
+              </SimpleProtectedRoute>
+            } />
+            <Route path="/quiz-bank/results" element={
+              <SimpleProtectedRoute requiredRole="client">
+                <QuizBankResults />
               </SimpleProtectedRoute>
             } />
             <Route path="/challenge-academy/assessments" element={<AssessmentsList />} />

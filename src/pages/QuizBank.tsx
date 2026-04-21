@@ -1,10 +1,11 @@
 import React, { useEffect, useMemo, useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
-import { Loader2, CheckCircle2, XCircle, Sparkles, BookOpen, BarChart3, Trophy, Target, Flame, RotateCcw } from 'lucide-react';
+import { Loader2, CheckCircle2, XCircle, Sparkles, BookOpen, BarChart3, Trophy, Target, Flame, RotateCcw, BarChart } from 'lucide-react';
 import { toast } from 'sonner';
 import ClientLayout from '@/components/client/ClientLayout';
 import { QuestionBankService, type QCategory, type QSubject, type QQuestion, type Difficulty } from '@/services/questionBankService';
@@ -20,6 +21,7 @@ const DIFFICULTY_COLORS: Record<Difficulty, string> = {
 };
 
 export default function QuizBank() {
+  const navigate = useNavigate();
   const [categories, setCategories] = useState<QCategory[]>([]);
   const [subjects, setSubjects] = useState<QSubject[]>([]);
   const [questions, setQuestions] = useState<QQuestion[]>([]);
@@ -163,7 +165,8 @@ export default function QuizBank() {
       setCurrentIdx((i) => i + 1);
       setSelectedChoice(null); setResult(null); setStartedAt(Date.now());
     } else {
-      toast.info('🎉 أتممت جميع الأسئلة المتاحة!');
+      toast.success('🎉 أتممت جميع الأسئلة! انتقل لصفحة النتائج…');
+      setTimeout(() => navigate('/quiz-bank/results'), 800);
     }
   };
 
@@ -212,6 +215,9 @@ export default function QuizBank() {
                   <Flame className="w-3.5 h-3.5" /> {streak} متتالية
                 </Badge>
               )}
+              <Button asChild size="sm" variant="ghost" className="text-white hover:bg-white/15 hover:text-white gap-1.5 backdrop-blur-sm">
+                <Link to="/quiz-bank/results"><BarChart className="w-3.5 h-3.5" /> النتائج</Link>
+              </Button>
               {answeredIds.length > 0 && (
                 <Button
                   size="sm" variant="ghost" onClick={handleResetSession}
