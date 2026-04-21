@@ -443,6 +443,16 @@ const App = () => (
                 <ClientContractView />
               </SimpleProtectedRoute>
             } />
+            <Route path="/client/research" element={
+              <SimpleProtectedRoute requiredRole="client">
+                <ClientResearchPublication />
+              </SimpleProtectedRoute>
+            } />
+            <Route path="/adminmaster/research" element={
+              <SimpleProtectedRoute adminOnly>
+                <AdminResearchPublications />
+              </SimpleProtectedRoute>
+            } />
             <Route path="/adminmaster/services" element={
               <SimpleProtectedRoute adminOnly>
                 <AdminServices />
