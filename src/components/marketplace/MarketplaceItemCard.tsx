@@ -31,10 +31,20 @@ export default function MarketplaceItemCard({ item, userXp, userLevel, onPurchas
   const inStock = item.stock === null || item.total_purchased < item.stock;
   const canBuy = canAfford && meetsLevel && inStock;
 
-  // Reset promo state when dialog closes
+  // Track view once on mount
   useEffect(() => {
-    if (!open) { setPromoInput(''); setPromo(null); }
-  }, [open]);
+    MarketplaceService.trackEvent('item_view', { itemId: item.id, metadata: { title: item.title_ar, type: item.type, xp_cost: item.xp_cost } });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [item.id]);
+
+  // Track dialog open + reset promo state when dialog closes
+  useEffect(() => {
+    if (open) {
+      MarketplaceService.trackEvent('dialog_open', { itemId: item.id, metadata: { type: item.type } });
+    } else {
+      setPromoInput(''); setPromo(null);
+    }
+  }, [open, item.id, item.type]);
 
   const effectiveCost = promo?.valid ? (promo.final_xp ?? item.xp_cost) : item.xp_cost;
   const discountAmount = promo?.valid ? (promo.xp_discount ?? 0) : 0;
