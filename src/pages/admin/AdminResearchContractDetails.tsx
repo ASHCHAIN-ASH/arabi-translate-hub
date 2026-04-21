@@ -13,6 +13,7 @@ import { Separator } from '@/components/ui/separator';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
 import AdminLayout from '@/components/admin/AdminLayout';
+import ContractDocument from '@/components/contracts/ContractDocument';
 
 const CONTRACT_STATUSES: Record<string, { label: string; color: string }> = {
   draft: { label: 'مسودة', color: 'bg-slate-500' },
