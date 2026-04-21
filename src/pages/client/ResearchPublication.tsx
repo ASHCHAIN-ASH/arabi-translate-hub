@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { BookOpen, Plus, FileText, Clock, CheckCircle2, XCircle, MessageCircle, Sparkles, Award, Globe, Send, Loader2, ChevronRight } from 'lucide-react';
+import { BookOpen, Plus, FileText, Clock, CheckCircle2, XCircle, MessageCircle, Sparkles, Award, Globe, Send, Loader2, ChevronRight, Upload, Paperclip, Download, Trash2, File as FileIcon } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
@@ -157,6 +157,12 @@ export default function ResearchPublication() {
   const [messages, setMessages] = useState<any[]>([]);
   const [newMsg, setNewMsg] = useState('');
   const [sending, setSending] = useState(false);
+  const [attachments, setAttachments] = useState<Array<{ name: string; path: string; size: number; type: string }>>([]);
+  const [uploadingFile, setUploadingFile] = useState(false);
+  const [downloadingPath, setDownloadingPath] = useState<string | null>(null);
+
+  const ALLOWED_EXT = ['doc', 'docx', 'pdf', 'txt'];
+  const MAX_SIZE_MB = 20;
 
   const [form, setForm] = useState({
     title: '', field: '', language: 'ar', service_type: 'publication',
@@ -166,6 +172,53 @@ export default function ResearchPublication() {
     client_phone: user?.user_metadata?.phone || '',
     client_email: user?.email || '',
   });
+
+  const handleFilesSelected = async (files: FileList | null) => {
+    if (!files || !user?.id) return;
+    setUploadingFile(true);
+    const newOnes: typeof attachments = [];
+    for (const file of Array.from(files)) {
+      const ext = file.name.split('.').pop()?.toLowerCase() || '';
+      if (!ALLOWED_EXT.includes(ext)) {
+        toast({ title: 'نوع غير مدعوم', description: `${file.name} — يُسمح فقط بـ Word/PDF/TXT`, variant: 'destructive' });
+        continue;
+      }
+      if (file.size > MAX_SIZE_MB * 1024 * 1024) {
+        toast({ title: 'الملف كبير', description: `${file.name} يتجاوز ${MAX_SIZE_MB}MB`, variant: 'destructive' });
+        continue;
+      }
+      const path = `${user.id}/${Date.now()}-${Math.random().toString(36).slice(2, 8)}.${ext}`;
+      const { error } = await supabase.storage.from('research-attachments').upload(path, file, {
+        contentType: file.type || 'application/octet-stream',
+      });
+      if (error) {
+        toast({ title: 'فشل الرفع', description: `${file.name}: ${error.message}`, variant: 'destructive' });
+        continue;
+      }
+      newOnes.push({ name: file.name, path, size: file.size, type: file.type || ext });
+    }
+    setAttachments(prev => [...prev, ...newOnes]);
+    setUploadingFile(false);
+    if (newOnes.length) toast({ title: '✅ تم الرفع', description: `${newOnes.length} ملف(ات)` });
+  };
+
+  const removeAttachment = async (path: string) => {
+    await supabase.storage.from('research-attachments').remove([path]);
+    setAttachments(prev => prev.filter(a => a.path !== path));
+  };
+
+  const downloadAttachment = async (att: { name: string; path: string }) => {
+    setDownloadingPath(att.path);
+    const { data, error } = await supabase.storage.from('research-attachments').createSignedUrl(att.path, 60);
+    setDownloadingPath(null);
+    if (error || !data?.signedUrl) {
+      toast({ title: 'تعذّر التنزيل', description: error?.message || 'حاول لاحقاً', variant: 'destructive' });
+      return;
+    }
+    window.open(data.signedUrl, '_blank');
+  };
+
+  const formatSize = (b: number) => b < 1024 ? `${b}B` : b < 1024 * 1024 ? `${(b / 1024).toFixed(1)}KB` : `${(b / 1024 / 1024).toFixed(1)}MB`;
 
   const load = async () => {
     if (!user?.id) return;
@@ -212,6 +265,7 @@ export default function ResearchPublication() {
       client_name: form.client_name,
       client_phone: form.client_phone,
       client_email: form.client_email || null,
+      attachments: attachments as any,
     });
     setSubmitting(false);
     if (error) {
@@ -220,6 +274,7 @@ export default function ResearchPublication() {
       toast({ title: '✅ تم الإرسال', description: 'سيتم التواصل معك عبر واتساب قريباً' });
       setOpen(false);
       setForm({ ...form, title: '', abstract: '', target_journal: '', notes: '', keywords: '', authors: '', page_count: '' });
+      setAttachments([]);
       load();
     }
   };
@@ -400,7 +455,55 @@ export default function ResearchPublication() {
                     <Label>ملاحظات إضافية</Label>
                     <Textarea rows={2} value={form.notes} onChange={e => setForm({ ...form, notes: e.target.value })} />
                   </div>
-                  <Button onClick={submit} disabled={submitting} className="w-full h-12 bg-gradient-to-r from-indigo-600 to-cyan-600 text-white font-bold rounded-xl">
+
+                  {/* رفع مرفقات البحث */}
+                  <div className="border-t pt-4">
+                    <h3 className="font-bold mb-3 flex items-center gap-2">
+                      <Paperclip className="w-4 h-4 text-indigo-600" />
+                      مرفقات البحث
+                      <span className="text-xs font-normal text-muted-foreground">(Word / PDF / TXT — حتى {MAX_SIZE_MB}MB)</span>
+                    </h3>
+                    <label className={`flex flex-col items-center justify-center gap-2 p-5 border-2 border-dashed rounded-xl cursor-pointer transition-all ${uploadingFile ? 'border-indigo-300 bg-indigo-50/60' : 'border-indigo-200 bg-white hover:border-indigo-400 hover:bg-indigo-50/40'}`}>
+                      <input
+                        type="file"
+                        multiple
+                        accept=".doc,.docx,.pdf,.txt,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,text/plain"
+                        className="hidden"
+                        onChange={e => { handleFilesSelected(e.target.files); e.target.value = ''; }}
+                        disabled={uploadingFile}
+                      />
+                      {uploadingFile ? (
+                        <Loader2 className="w-6 h-6 text-indigo-600 animate-spin" />
+                      ) : (
+                        <Upload className="w-6 h-6 text-indigo-600" />
+                      )}
+                      <span className="text-sm font-bold text-indigo-700">
+                        {uploadingFile ? 'جاري الرفع…' : 'اسحب الملفات هنا أو اضغط للاختيار'}
+                      </span>
+                      <span className="text-[11px] text-muted-foreground">يمكنك رفع عدة ملفات</span>
+                    </label>
+
+                    {attachments.length > 0 && (
+                      <div className="mt-3 space-y-2">
+                        {attachments.map(att => (
+                          <div key={att.path} className="flex items-center gap-2 p-2.5 bg-white border rounded-lg">
+                            <div className="w-9 h-9 rounded-lg bg-indigo-100 text-indigo-700 flex items-center justify-center shrink-0">
+                              <FileIcon className="w-4 h-4" />
+                            </div>
+                            <div className="flex-1 min-w-0">
+                              <div className="text-sm font-bold truncate">{att.name}</div>
+                              <div className="text-[11px] text-muted-foreground">{formatSize(att.size)}</div>
+                            </div>
+                            <Button type="button" variant="ghost" size="icon" onClick={() => removeAttachment(att.path)} className="text-rose-600 hover:text-rose-700 hover:bg-rose-50">
+                              <Trash2 className="w-4 h-4" />
+                            </Button>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+
+                  <Button onClick={submit} disabled={submitting || uploadingFile} className="w-full h-12 bg-gradient-to-r from-indigo-600 to-cyan-600 text-white font-bold rounded-xl">
                     {submitting ? <Loader2 className="w-5 h-5 animate-spin" /> : <><Send className="w-5 h-5 ml-2" />إرسال الطلب</>}
                   </Button>
                 </div>
@@ -552,6 +655,43 @@ export default function ResearchPublication() {
                                 <div className="text-xs text-muted-foreground mb-1">الملخص:</div>
                                 <p className="text-sm">{selected.abstract}</p>
                               </div>
+
+                              {/* المرفقات */}
+                              {Array.isArray(selected.attachments) && selected.attachments.length > 0 && (
+                                <div className="bg-white/70 rounded-xl p-3 border">
+                                  <div className="text-xs text-muted-foreground mb-2 flex items-center gap-1.5 font-bold">
+                                    <Paperclip className="w-3.5 h-3.5 text-indigo-600" />
+                                    المرفقات ({selected.attachments.length})
+                                  </div>
+                                  <div className="space-y-2">
+                                    {selected.attachments.map((att: any, idx: number) => (
+                                      <div key={idx} className="flex items-center gap-2 p-2 bg-indigo-50/50 border border-indigo-100 rounded-lg">
+                                        <div className="w-9 h-9 rounded-lg bg-gradient-to-br from-indigo-500 to-cyan-500 text-white flex items-center justify-center shrink-0">
+                                          <FileIcon className="w-4 h-4" />
+                                        </div>
+                                        <div className="flex-1 min-w-0">
+                                          <div className="text-sm font-bold truncate">{att.name}</div>
+                                          <div className="text-[11px] text-muted-foreground">{att.size ? formatSize(att.size) : ''}</div>
+                                        </div>
+                                        <Button
+                                          type="button"
+                                          size="sm"
+                                          variant="outline"
+                                          onClick={() => downloadAttachment(att)}
+                                          disabled={downloadingPath === att.path}
+                                          className="border-indigo-300 text-indigo-700 hover:bg-indigo-100"
+                                        >
+                                          {downloadingPath === att.path ? (
+                                            <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                                          ) : (
+                                            <><Download className="w-3.5 h-3.5 ml-1" />تنزيل</>
+                                          )}
+                                        </Button>
+                                      </div>
+                                    ))}
+                                  </div>
+                                </div>
+                              )}
 
                               <div className="border-t pt-4">
                                 <h3 className="font-bold mb-3 flex items-center gap-2">

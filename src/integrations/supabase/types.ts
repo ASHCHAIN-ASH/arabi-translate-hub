@@ -4726,6 +4726,7 @@ export type Database = {
           abstract: string
           admin_notes: string | null
           assigned_to: string | null
+          attachments: Json
           authors: string | null
           client_email: string | null
           client_name: string
@@ -4755,6 +4756,7 @@ export type Database = {
           abstract: string
           admin_notes?: string | null
           assigned_to?: string | null
+          attachments?: Json
           authors?: string | null
           client_email?: string | null
           client_name: string
@@ -4784,6 +4786,7 @@ export type Database = {
           abstract?: string
           admin_notes?: string | null
           assigned_to?: string | null
+          attachments?: Json
           authors?: string | null
           client_email?: string | null
           client_name?: string
