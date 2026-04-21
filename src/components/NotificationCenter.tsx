@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Bell, Check, CheckCheck, X, Package, FileText, CreditCard, MessageSquare } from 'lucide-react';
+import { Bell, Check, CheckCheck, X, Package, FileText, CreditCard, MessageSquare, ShoppingBag, AlertTriangle } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { ScrollArea } from '@/components/ui/scroll-area';
@@ -15,10 +16,12 @@ interface Notification {
   type: string;
   is_read: boolean;
   created_at: string;
+  link?: string | null;
 }
 
 const NotificationCenter: React.FC = () => {
   const { user } = useAuth();
+  const navigate = useNavigate();
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const [isOpen, setIsOpen] = useState(false);
 
@@ -84,8 +87,15 @@ const NotificationCenter: React.FC = () => {
       case 'invoice': return <FileText className="w-4 h-4 text-green-500" />;
       case 'payment': return <CreditCard className="w-4 h-4 text-purple-500" />;
       case 'ticket': return <MessageSquare className="w-4 h-4 text-orange-500" />;
+      case 'marketplace_success': return <ShoppingBag className="w-4 h-4 text-emerald-500" />;
+      case 'marketplace_failed': return <AlertTriangle className="w-4 h-4 text-red-500" />;
       default: return <Bell className="w-4 h-4 text-gray-500" />;
     }
+  };
+
+  const handleClick = (n: Notification) => {
+    if (!n.is_read) markAsRead(n.id);
+    if (n.link) { setIsOpen(false); navigate(n.link); }
   };
 
   const timeAgo = (dateStr: string) => {
@@ -138,7 +148,7 @@ const NotificationCenter: React.FC = () => {
                 className={`p-3 border-b last:border-0 cursor-pointer hover:bg-muted/50 transition-colors ${
                   !notification.is_read ? 'bg-primary/5' : ''
                 }`}
-                onClick={() => !notification.is_read && markAsRead(notification.id)}
+                onClick={() => handleClick(notification)}
               >
                 <div className="flex items-start gap-2">
                   {getIcon(notification.type)}
