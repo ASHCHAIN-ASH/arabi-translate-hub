@@ -12,11 +12,12 @@ const corsHeaders = {
 };
 
 interface CreateIntentBody {
-  purpose: 'wallet_topup' | 'invoice_payment' | 'contract_payment';
+  purpose: 'wallet_topup' | 'invoice_payment' | 'contract_payment' | 'research_publication_payment';
   amount: number;
   invoice_id?: string;
   service_order_id?: string;
   contract_id?: string;
+  research_publication_id?: string;
   return_url?: string;
   provider_mode?: 'hosted' | 'embedded';
   note?: string;
