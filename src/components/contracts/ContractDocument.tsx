@@ -50,6 +50,29 @@ const fmtDate = (d?: string | null) => {
   catch { return String(d); }
 };
 
+const SERVICE_TYPE_AR: Record<string, string> = {
+  research_publication: "خدمة نشر علمي",
+  research_thesis: "إعداد رسالة علمية",
+  research_plan: "خطة بحث",
+  research_analysis: "تحليل إحصائي",
+  research_formatting: "تنسيق بحث",
+  research_consultation: "استشارة بحثية",
+  translation_legal: "ترجمة قانونية",
+  translation_business: "ترجمة تجارية",
+  translation_technical: "ترجمة تقنية",
+  translation_medical: "ترجمة طبية",
+  translation_academic: "ترجمة أكاديمية",
+  translation_literary: "ترجمة أدبية",
+  translation_media: "ترجمة إعلامية",
+  custom_service: "خدمة مخصصة",
+};
+
+const translateServiceType = (t?: string | null): string => {
+  if (!t) return "خدمة أكاديمية";
+  const key = String(t).toLowerCase().replace(/-/g, "_");
+  return SERVICE_TYPE_AR[key] || t;
+};
+
 const fmtDateTime = (d?: string | null) => {
   if (!d) return "—";
   try { return new Date(d).toLocaleString("ar-SA", { dateStyle: "long", timeStyle: "short" }); }
