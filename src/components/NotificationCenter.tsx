@@ -87,8 +87,15 @@ const NotificationCenter: React.FC = () => {
       case 'invoice': return <FileText className="w-4 h-4 text-green-500" />;
       case 'payment': return <CreditCard className="w-4 h-4 text-purple-500" />;
       case 'ticket': return <MessageSquare className="w-4 h-4 text-orange-500" />;
+      case 'marketplace_success': return <ShoppingBag className="w-4 h-4 text-emerald-500" />;
+      case 'marketplace_failed': return <AlertTriangle className="w-4 h-4 text-red-500" />;
       default: return <Bell className="w-4 h-4 text-gray-500" />;
     }
+  };
+
+  const handleClick = (n: Notification) => {
+    if (!n.is_read) markAsRead(n.id);
+    if (n.link) { setIsOpen(false); navigate(n.link); }
   };
 
   const timeAgo = (dateStr: string) => {
