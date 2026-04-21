@@ -779,6 +779,37 @@ export default function ResearchPublication() {
                           <Card className="mt-2 p-5 border-2 border-indigo-200 bg-gradient-to-br from-indigo-50/40 to-cyan-50/20 rounded-2xl">
                             <div className="space-y-4">
                               <StatusTimeline status={selected.status} />
+
+                              {/* زر الدفع — يظهر عند وجود مبلغ مستحق وحالة قابلة للدفع */}
+                              {(['quoted', 'approved', 'in_progress'].includes(selected.status)) &&
+                                Number(selected.final_amount ?? selected.estimated_amount ?? 0) > 0 && (
+                                <div className="bg-gradient-to-r from-emerald-50 to-teal-50 border-2 border-emerald-200 rounded-2xl p-4 space-y-3">
+                                  <div className="flex items-center justify-between">
+                                    <div>
+                                      <div className="text-xs text-emerald-700 font-bold mb-1">المبلغ المستحق</div>
+                                      <div className="text-2xl font-extrabold text-emerald-700">
+                                        {Number(selected.final_amount ?? selected.estimated_amount).toLocaleString('ar-SA')} ر.س
+                                      </div>
+                                    </div>
+                                    <Award className="w-10 h-10 text-emerald-500" />
+                                  </div>
+                                  <Button
+                                    onClick={() => payNow(selected)}
+                                    disabled={payingId === selected.id}
+                                    className="w-full bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white font-bold rounded-xl h-12"
+                                  >
+                                    {payingId === selected.id ? (
+                                      <><Loader2 className="w-4 h-4 ml-2 animate-spin" /> جاري التحويل للدفع…</>
+                                    ) : (
+                                      <><Sparkles className="w-4 h-4 ml-2" /> ادفع الآن عبر بطاقة / Apple Pay / مدى</>
+                                    )}
+                                  </Button>
+                                  <p className="text-[11px] text-emerald-700/80 text-center">
+                                    سيتم تحويلك إلى بوابة دفع آمنة
+                                  </p>
+                                </div>
+                              )}
+
                               <Button
                                 onClick={() => downloadSummaryPdf(selected)}
                                 className="w-full bg-gradient-to-r from-rose-600 to-orange-600 hover:from-rose-700 hover:to-orange-700 text-white font-bold rounded-xl"
