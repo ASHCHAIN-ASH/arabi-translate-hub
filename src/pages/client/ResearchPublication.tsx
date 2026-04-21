@@ -160,6 +160,32 @@ export default function ResearchPublication() {
   const [attachments, setAttachments] = useState<Array<{ name: string; path: string; size: number; type: string }>>([]);
   const [uploadingFile, setUploadingFile] = useState(false);
   const [downloadingPath, setDownloadingPath] = useState<string | null>(null);
+  const [payingId, setPayingId] = useState<string | null>(null);
+
+  const payNow = async (item: any) => {
+    const due = Number(item.final_amount ?? item.estimated_amount ?? 0);
+    if (!due || due <= 0) {
+      toast({ title: 'لا يوجد مبلغ مستحق', description: 'في انتظار تحديد السعر من الإدارة', variant: 'destructive' });
+      return;
+    }
+    setPayingId(item.id);
+    try {
+      const { data, error } = await supabase.functions.invoke('create-payment-intent', {
+        body: {
+          purpose: 'research_publication_payment',
+          amount: due,
+          research_publication_id: item.id,
+          note: `دفع طلب نشر بحث #${item.request_number}`,
+        },
+      });
+      if (error) throw error;
+      if (!data?.checkout_url) throw new Error('لم يتم استلام رابط الدفع');
+      window.location.href = data.checkout_url;
+    } catch (e: any) {
+      toast({ title: 'تعذّر بدء الدفع', description: e?.message || 'حاول مرة أخرى', variant: 'destructive' });
+      setPayingId(null);
+    }
+  };
 
   const ALLOWED_EXT = ['doc', 'docx', 'pdf', 'txt'];
   const MAX_SIZE_MB = 20;
