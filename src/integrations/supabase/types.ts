@@ -6603,6 +6603,18 @@ export type Database = {
           weekly_xp: number
         }[]
       }
+      get_daily_assessment_questions: {
+        Args: { p_assessment_id: string; p_limit?: number }
+        Returns: {
+          assessment_id: string
+          difficulty: string
+          explanation: string
+          id: string
+          order_index: number
+          question_text: string
+          skill_tag: string
+        }[]
+      }
       get_growth_daily_series: {
         Args: { p_days?: number }
         Returns: {
@@ -6650,6 +6662,14 @@ export type Database = {
         }[]
       }
       get_retention_cohort: { Args: { p_days?: number }; Returns: Json }
+      get_today_assessment_attempt: {
+        Args: {
+          p_anonymous_id?: string
+          p_assessment_id: string
+          p_user_id?: string
+        }
+        Returns: string
+      }
       get_today_student_tasks: {
         Args: never
         Returns: {
