@@ -49,13 +49,7 @@ export default function AssessmentResult() {
 
   const handleShare = async () => {
     if (!attempt || !assessment) return;
-    // Always use the public production domain (avoid preview/iframe URLs)
-    const PUBLIC_ORIGIN = 'https://masteredupath.com';
-    const host = typeof window !== 'undefined' ? window.location.hostname : '';
-    const origin = /lovableproject\.com|lovable\.app|localhost|127\.0\.0\.1/.test(host)
-      ? PUBLIC_ORIGIN
-      : (typeof window !== 'undefined' ? window.location.origin : PUBLIC_ORIGIN);
-    const url = `${origin}/challenge-academy/assessments`;
+    const url = buildPublicUrl('/challenge-academy/assessments');
     const text = `🎯 حصلت على ${attempt.total_score}% في "${assessment.title}" (${lvl.label} ${lvl.emoji}) — جرّب الاختبار:`;
     const fullText = `${text} ${url}`;
     setSharing(true);
