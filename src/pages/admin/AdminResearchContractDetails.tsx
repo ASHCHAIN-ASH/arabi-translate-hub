@@ -224,32 +224,29 @@ export default function AdminResearchContractDetails() {
 
           {/* Left column: Contract content + Signatures + Timeline */}
           <div className="lg:col-span-2 space-y-6">
-            {/* Contract content */}
-            <Card className="overflow-hidden border-amber-300/60 shadow-sm">
-              <div className="bg-gradient-to-r from-slate-900 to-indigo-900 text-white p-3 flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <FileSignature className="w-4 h-4" />
-                  <span className="font-bold text-sm">نص العقد الأكاديمي</span>
-                </div>
-                <Badge className="bg-amber-500 text-white border-0 text-xs">📜 سري وخاص</Badge>
-              </div>
-              <div className="p-6 max-h-[600px] overflow-y-auto bg-gradient-to-br from-amber-50/20 to-white">
-                {contract.content ? (
-                  <div className="prose prose-sm max-w-none whitespace-pre-wrap font-arabic leading-relaxed text-foreground">
-                    {contract.content}
-                  </div>
-                ) : (
-                  <p className="text-center text-muted-foreground py-8">لا يوجد محتوى — يرجى توليد المحتوى من صفحة الطلب</p>
-                )}
-              </div>
-              {pub?.id && (
-                <div className="border-t p-3 bg-muted/30 flex justify-end">
+            {/* Contract document — bank-grade navy/gold design */}
+            <div className="bg-gradient-to-br from-slate-100 to-amber-50/40 rounded-2xl p-2 md:p-4 shadow-inner">
+              {contract.content ? (
+                <ContractDocument contract={contract as any} signature={signatures[0] as any} />
+              ) : (
+                <Card className="p-12 text-center">
+                  <FileSignature className="w-12 h-12 mx-auto text-muted-foreground/30 mb-2" />
+                  <p className="text-muted-foreground mb-3">لا يوجد محتوى للعقد بعد</p>
+                  {pub?.id && (
+                    <Button onClick={() => navigate(`/adminmaster/research/${pub.id}`)} className="bg-indigo-600 hover:bg-indigo-700">
+                      توليد المحتوى من صفحة الطلب ←
+                    </Button>
+                  )}
+                </Card>
+              )}
+              {pub?.id && contract.content && (
+                <div className="flex justify-end mt-3">
                   <Button size="sm" variant="outline" onClick={() => navigate(`/adminmaster/research/${pub.id}`)}>
                     تعديل من صفحة الطلب ←
                   </Button>
                 </div>
               )}
-            </Card>
+            </div>
 
             {/* Signatures */}
             <Card className="p-5">
