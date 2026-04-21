@@ -7,6 +7,11 @@ const items = [
     title: 'العقود',
     url: '/client/contracts',
     icon: FileText,
+  },
+  {
+    title: 'نشر الأبحاث',
+    url: '/client/research',
+    icon: BookOpen,
   }
 ];
 
