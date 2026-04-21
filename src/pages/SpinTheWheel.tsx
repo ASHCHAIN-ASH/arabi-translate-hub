@@ -423,11 +423,14 @@ const SpinTheWheel = () => {
 
       {/* Result Dialog */}
       <Dialog open={showResult} onOpenChange={setShowResult}>
-        <DialogContent className="sm:max-w-md" dir="rtl">
+        <DialogContent
+          className="w-[calc(100vw-2rem)] sm:w-full sm:max-w-md max-h-[90vh] overflow-y-auto p-4 sm:p-6 rounded-2xl"
+          dir="rtl"
+        >
           <DialogHeader>
-            <DialogTitle className="text-center text-2xl">
-              <div className="flex items-center justify-center gap-2 mb-2">
-                <Trophy className="w-8 h-8" style={{ color: "hsl(43 90% 50%)" }} />
+            <DialogTitle className="text-center text-xl sm:text-2xl">
+              <div className="flex items-center justify-center gap-2 mb-1">
+                <Trophy className="w-6 h-6 sm:w-8 sm:h-8" style={{ color: "hsl(43 90% 50%)" }} />
                 <span style={{
                   background: "linear-gradient(90deg, hsl(43 74% 45%), hsl(220 45% 25%))",
                   WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent",
@@ -440,19 +443,19 @@ const SpinTheWheel = () => {
 
           <AnimatePresence>
             <motion.div
-              initial={{ scale: 0.9, opacity: 0 }}
+              initial={{ scale: 0.95, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
-              className="space-y-5"
+              className="space-y-4"
             >
               <div
-                className="rounded-xl p-6 text-center border-2"
+                className="rounded-xl p-4 sm:p-6 text-center border-2"
                 style={{
                   background: "linear-gradient(135deg, hsl(45 80% 95%), hsl(45 60% 88%))",
                   borderColor: "hsl(43 74% 55%)",
                 }}
               >
-                <p className="text-sm text-muted-foreground mb-1">لقد ربحت:</p>
-                <p className="text-3xl font-extrabold" style={{ color: "hsl(220 45% 18%)" }}>{wonPrize}</p>
+                <p className="text-xs sm:text-sm text-muted-foreground mb-1">لقد ربحت:</p>
+                <p className="text-2xl sm:text-3xl font-extrabold break-words" style={{ color: "hsl(220 45% 18%)" }}>{wonPrize}</p>
               </div>
 
               <Button onClick={copyCoupon} variant="outline" className="w-full">
