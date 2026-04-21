@@ -73,6 +73,31 @@ Deno.serve(async (req) => {
       serverAmount = remaining > 0 ? remaining : Number(body.amount);
     }
 
+    // Validate research publication payment
+    if (body.purpose === 'research_publication_payment') {
+      if (!body.research_publication_id) {
+        return new Response(JSON.stringify({ error: 'research_publication_id_required' }), {
+          status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        });
+      }
+      const { data: rp } = await admin.from('research_publications')
+        .select('id, user_id, status, final_amount, estimated_amount')
+        .eq('id', body.research_publication_id).maybeSingle();
+      if (!rp || rp.user_id !== user.id) {
+        return new Response(JSON.stringify({ error: 'research_publication_not_found' }), {
+          status: 404, headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        });
+      }
+      const allowed = ['quoted', 'approved', 'in_progress'];
+      if (!allowed.includes(rp.status)) {
+        return new Response(JSON.stringify({ error: 'research_publication_not_payable' }), {
+          status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        });
+      }
+      const due = Number(rp.final_amount ?? rp.estimated_amount ?? 0);
+      if (due > 0) serverAmount = due;
+    }
+
     // Generate internal order number
     const { data: numData, error: numErr } = await admin
       .rpc('generate_internal_order_number');
