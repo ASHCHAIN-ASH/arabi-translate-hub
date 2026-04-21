@@ -571,6 +571,14 @@ const App = () => (
                 <AdminExperimentDetail />
               </SimpleProtectedRoute>
             } />
+            <Route path="/adminmaster/assessments" element={
+              <SimpleProtectedRoute adminOnly>
+                <AdminAssessments />
+              </SimpleProtectedRoute>
+            } />
+            <Route path="/challenge-academy/assessments" element={<AssessmentsList />} />
+            <Route path="/challenge-academy/assessments/:id/start" element={<AssessmentStart />} />
+            <Route path="/challenge-academy/assessments/:id/result" element={<AssessmentResult />} />
             <Route path="/adminmaster/whatsapp" element={<Navigate to="/adminmaster/whatsapp/inbox" replace />} />
             <Route path="/adminmaster/whatsapp/inbox" element={
               <SimpleProtectedRoute adminOnly><WhatsappInboxPage /></SimpleProtectedRoute>
