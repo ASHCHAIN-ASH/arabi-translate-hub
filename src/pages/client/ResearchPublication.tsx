@@ -160,6 +160,32 @@ export default function ResearchPublication() {
   const [attachments, setAttachments] = useState<Array<{ name: string; path: string; size: number; type: string }>>([]);
   const [uploadingFile, setUploadingFile] = useState(false);
   const [downloadingPath, setDownloadingPath] = useState<string | null>(null);
+  const [payingId, setPayingId] = useState<string | null>(null);
+
+  const payNow = async (item: any) => {
+    const due = Number(item.final_amount ?? item.estimated_amount ?? 0);
+    if (!due || due <= 0) {
+      toast({ title: 'لا يوجد مبلغ مستحق', description: 'في انتظار تحديد السعر من الإدارة', variant: 'destructive' });
+      return;
+    }
+    setPayingId(item.id);
+    try {
+      const { data, error } = await supabase.functions.invoke('create-payment-intent', {
+        body: {
+          purpose: 'research_publication_payment',
+          amount: due,
+          research_publication_id: item.id,
+          note: `دفع طلب نشر بحث #${item.request_number}`,
+        },
+      });
+      if (error) throw error;
+      if (!data?.checkout_url) throw new Error('لم يتم استلام رابط الدفع');
+      window.location.href = data.checkout_url;
+    } catch (e: any) {
+      toast({ title: 'تعذّر بدء الدفع', description: e?.message || 'حاول مرة أخرى', variant: 'destructive' });
+      setPayingId(null);
+    }
+  };
 
   const ALLOWED_EXT = ['doc', 'docx', 'pdf', 'txt'];
   const MAX_SIZE_MB = 20;
@@ -753,6 +779,37 @@ export default function ResearchPublication() {
                           <Card className="mt-2 p-5 border-2 border-indigo-200 bg-gradient-to-br from-indigo-50/40 to-cyan-50/20 rounded-2xl">
                             <div className="space-y-4">
                               <StatusTimeline status={selected.status} />
+
+                              {/* زر الدفع — يظهر عند وجود مبلغ مستحق وحالة قابلة للدفع */}
+                              {(['quoted', 'approved', 'in_progress'].includes(selected.status)) &&
+                                Number(selected.final_amount ?? selected.estimated_amount ?? 0) > 0 && (
+                                <div className="bg-gradient-to-r from-emerald-50 to-teal-50 border-2 border-emerald-200 rounded-2xl p-4 space-y-3">
+                                  <div className="flex items-center justify-between">
+                                    <div>
+                                      <div className="text-xs text-emerald-700 font-bold mb-1">المبلغ المستحق</div>
+                                      <div className="text-2xl font-extrabold text-emerald-700">
+                                        {Number(selected.final_amount ?? selected.estimated_amount).toLocaleString('ar-SA')} ر.س
+                                      </div>
+                                    </div>
+                                    <Award className="w-10 h-10 text-emerald-500" />
+                                  </div>
+                                  <Button
+                                    onClick={() => payNow(selected)}
+                                    disabled={payingId === selected.id}
+                                    className="w-full bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white font-bold rounded-xl h-12"
+                                  >
+                                    {payingId === selected.id ? (
+                                      <><Loader2 className="w-4 h-4 ml-2 animate-spin" /> جاري التحويل للدفع…</>
+                                    ) : (
+                                      <><Sparkles className="w-4 h-4 ml-2" /> ادفع الآن عبر بطاقة / Apple Pay / مدى</>
+                                    )}
+                                  </Button>
+                                  <p className="text-[11px] text-emerald-700/80 text-center">
+                                    سيتم تحويلك إلى بوابة دفع آمنة
+                                  </p>
+                                </div>
+                              )}
+
                               <Button
                                 onClick={() => downloadSummaryPdf(selected)}
                                 className="w-full bg-gradient-to-r from-rose-600 to-orange-600 hover:from-rose-700 hover:to-orange-700 text-white font-bold rounded-xl"
