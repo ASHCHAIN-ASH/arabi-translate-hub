@@ -468,16 +468,58 @@ export default function ResearchPublication() {
                     >
                       <div className="flex items-start justify-between gap-4">
                         <div className="flex-1 min-w-0">
-                          <div className="flex items-center gap-2 mb-2">
+                          <div className="flex items-center gap-2 mb-2 flex-wrap">
                             <Badge variant="outline" className="text-xs font-mono">{item.request_number}</Badge>
                             <Badge className={`${cfg.color} border`}>
-                              <Icon className="w-3 h-3 ml-1" />{cfg.label}
+                              <Icon className={`w-3 h-3 ml-1 ${item.status === 'in_progress' ? 'animate-spin' : ''}`} />{cfg.label}
                             </Badge>
+                            <span className="text-[11px] text-muted-foreground inline-flex items-center gap-1 mr-auto">
+                              <Clock className="w-3 h-3" />
+                              آخر تحديث: {new Date(item.updated_at || item.created_at).toLocaleString('ar-SA', { dateStyle: 'short', timeStyle: 'short' })}
+                            </span>
                           </div>
                           <h3 className="font-bold text-base line-clamp-1">{item.title}</h3>
                           <p className="text-xs text-muted-foreground mt-1">
                             {item.field} • {SERVICE_TYPES.find(s => s.value === item.service_type)?.label || item.service_type}
                           </p>
+
+                          {/* شريط الحالة المصغّر */}
+                          {item.status !== 'rejected' ? (() => {
+                            const idx = Math.max(0, STAGES.findIndex(s => s.key === item.status));
+                            const pct = ((idx + 1) / STAGES.length) * 100;
+                            return (
+                              <div className="mt-3">
+                                <div className="flex items-center justify-between text-[10px] text-muted-foreground mb-1.5 font-bold">
+                                  <span>المرحلة {idx + 1} من {STAGES.length}</span>
+                                  <span className="text-indigo-600">{Math.round(pct)}%</span>
+                                </div>
+                                <div className="h-2 bg-muted rounded-full overflow-hidden">
+                                  <motion.div
+                                    initial={{ width: 0 }}
+                                    animate={{ width: `${pct}%` }}
+                                    transition={{ duration: 0.8, ease: 'easeOut' }}
+                                    className="h-full bg-gradient-to-l from-indigo-500 via-blue-500 to-cyan-500 rounded-full"
+                                  />
+                                </div>
+                                <div className="flex items-center justify-between mt-1.5 gap-1">
+                                  {STAGES.map((s, si) => (
+                                    <div
+                                      key={s.key}
+                                      title={s.label}
+                                      className={`h-1.5 flex-1 rounded-full ${
+                                        si <= idx ? 'bg-gradient-to-l from-indigo-500 to-cyan-500' : 'bg-muted'
+                                      }`}
+                                    />
+                                  ))}
+                                </div>
+                              </div>
+                            );
+                          })() : (
+                            <div className="mt-3 flex items-center gap-2 text-xs text-rose-600 font-bold bg-rose-50 border border-rose-200 rounded-lg p-2">
+                              <XCircle className="w-4 h-4" /> تم رفض الطلب — اطّلع على التفاصيل
+                            </div>
+                          )}
+
                           {item.estimated_amount && (
                             <p className="text-sm font-bold text-emerald-600 mt-2">
                               💰 {Number(item.estimated_amount).toLocaleString('ar-SA')} ر.س
