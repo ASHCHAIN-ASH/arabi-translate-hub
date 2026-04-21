@@ -91,6 +91,50 @@ export class AssessmentService {
     })) as AssessmentQuestion[];
   }
 
+  /**
+   * Get today's daily questions: deterministic per-day shuffle (everyone gets the
+   * same questions on the same day; rotates next day). Then loads options for each.
+   */
+  static async getDailyQuestions(assessmentId: string, limit = 10): Promise<AssessmentQuestion[]> {
+    const { data: dailyQs, error: rpcErr } = await (supabase as any).rpc('get_daily_assessment_questions', {
+      p_assessment_id: assessmentId,
+      p_limit: limit,
+    });
+    if (rpcErr) throw rpcErr;
+    const ids = (dailyQs || []).map((q: any) => q.id);
+    if (ids.length === 0) return [];
+    const { data: opts, error: optsErr } = await (supabase as any)
+      .from('assessment_options')
+      .select('*')
+      .in('question_id', ids);
+    if (optsErr) throw optsErr;
+    const optsByQ: Record<string, any[]> = {};
+    (opts || []).forEach((o: any) => {
+      (optsByQ[o.question_id] ||= []).push(o);
+    });
+    return (dailyQs as any[]).map((q, idx) => ({
+      ...q,
+      order_index: idx,
+      options: (optsByQ[q.id] || []).sort((a, b) => a.order_index - b.order_index),
+    })) as AssessmentQuestion[];
+  }
+
+  /**
+   * Returns the id of today's completed attempt for this user (or anon), or null.
+   * Used to enforce one-attempt-per-day.
+   */
+  static async getTodayAttemptId(assessmentId: string, userId: string | null): Promise<string | null> {
+    const params: any = { p_assessment_id: assessmentId };
+    if (userId) params.p_user_id = userId;
+    else params.p_anonymous_id = getAssessmentAnonId();
+    const { data, error } = await (supabase as any).rpc('get_today_assessment_attempt', params);
+    if (error) {
+      console.warn('getTodayAttemptId failed', error);
+      return null;
+    }
+    return (data as string) || null;
+  }
+
   static async createAttempt(assessmentId: string, userId: string | null): Promise<AssessmentAttempt> {
     const payload: any = { assessment_id: assessmentId };
     if (userId) payload.user_id = userId;
