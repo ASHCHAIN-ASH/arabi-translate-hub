@@ -17,6 +17,7 @@ import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
 import AdminLayout from '@/components/admin/AdminLayout';
 import ContractDocument from '@/components/contracts/ContractDocument';
+import { formatContractHeaderDate } from '@/utils/formatContractDate';
 
 // ─── Items-table helpers ──────────────────────────────────────────────────
 type ItemRow = { name: string; qty: number; price: number };
