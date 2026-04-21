@@ -325,6 +325,18 @@ export default function AdminResearchPublicationDetails() {
     } finally { setSendingContractPdf(null); }
   };
 
+  const deleteContract = async (contractId: string, contractNumber?: string) => {
+    if (!confirm(`هل أنت متأكد من حذف العقد ${contractNumber || ''}؟ لا يمكن التراجع عن هذا الإجراء.`)) return;
+    try {
+      const { error } = await (supabase.from('contracts') as any).delete().eq('id', contractId);
+      if (error) throw error;
+      toast({ title: '🗑️ تم حذف العقد' });
+      await loadAll();
+    } catch (e: any) {
+      toast({ title: 'تعذّر حذف العقد', description: e.message, variant: 'destructive' });
+    }
+  };
+
   const [creatingContract, setCreatingContract] = useState(false);
   const createContract = async () => {
     if (!item) return;
