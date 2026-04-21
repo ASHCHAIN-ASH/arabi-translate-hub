@@ -158,9 +158,19 @@ export class MarketplaceService {
   }
 
   static async purchase(itemId: string, promoCode?: string): Promise<PurchaseResult> {
-    const args: any = { p_item_id: itemId };
-    if (promoCode && promoCode.trim()) args.p_promo_code = promoCode.trim();
-    const { data, error } = await (supabase as any).rpc('purchase_marketplace_item', args);
+    // Backward-compatible single-code purchase
+    return this.purchaseStacked(itemId, promoCode ? [promoCode] : []);
+  }
+
+  static async purchaseStacked(itemId: string, promoCodes: string[] = []): Promise<PurchaseResult> {
+    const cleaned = (promoCodes || [])
+      .map((c) => (c || '').trim())
+      .filter(Boolean)
+      .slice(0, 2);
+    const { data, error } = await (supabase as any).rpc('purchase_marketplace_item', {
+      p_item_id: itemId,
+      p_promo_codes: cleaned,
+    });
     if (error) {
       console.error(error);
       return { success: false, error: error.message };
@@ -172,6 +182,16 @@ export class MarketplaceService {
     const { data, error } = await (supabase as any).rpc('validate_promo_code', {
       p_code: code.trim(),
       p_item_id: itemId,
+    });
+    if (error) return { valid: false, error: error.message };
+    return data as PromoValidation;
+  }
+
+  static async validatePromoOnBase(code: string, itemId: string, baseXp: number): Promise<PromoValidation> {
+    const { data, error } = await (supabase as any).rpc('validate_promo_code_on_base', {
+      p_code: code.trim(),
+      p_item_id: itemId,
+      p_base_xp: baseXp,
     });
     if (error) return { valid: false, error: error.message };
     return data as PromoValidation;
