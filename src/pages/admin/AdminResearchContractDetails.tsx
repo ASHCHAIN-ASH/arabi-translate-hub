@@ -365,15 +365,31 @@ export default function AdminResearchContractDetails() {
                 </div>
               </div>
 
-              {/* Left side — back button */}
-              <Button
-                variant="outline"
-                onClick={() => navigate('/adminmaster/research/contracts')}
-                className="border-[#c9a961]/40 text-[#c9a961] bg-transparent hover:bg-[#c9a961]/10 hover:text-[#c9a961]"
-              >
-                <ArrowRight className="w-4 h-4 ml-1" /> عودة للقائمة
-              </Button>
+              {/* Left side — print + back buttons */}
+              <div className="flex items-center gap-2 flex-wrap">
+                <Button
+                  onClick={printContractPdf}
+                  disabled={printing}
+                  className="border-0 font-bold shadow-md"
+                  style={{
+                    background: 'linear-gradient(135deg, #c9a961 0%, #b8954f 100%)',
+                    color: '#0a1f3d',
+                  }}
+                  title="تجهيز PDF بتنسيق العقد وفتح حوار الطباعة"
+                >
+                  {printing ? <Loader2 className="w-4 h-4 ml-1 animate-spin" /> : <Printer className="w-4 h-4 ml-1" />}
+                  طباعة العقد (PDF)
+                </Button>
+                <Button
+                  variant="outline"
+                  onClick={() => navigate('/adminmaster/research/contracts')}
+                  className="border-[#c9a961]/40 text-[#c9a961] bg-transparent hover:bg-[#c9a961]/10 hover:text-[#c9a961]"
+                >
+                  <ArrowRight className="w-4 h-4 ml-1" /> عودة للقائمة
+                </Button>
+              </div>
             </div>
+
 
             {/* Meta strip — contract number, date, parties, duration, type, status */}
             {(() => {
@@ -456,8 +472,9 @@ export default function AdminResearchContractDetails() {
           <Button onClick={copyClientLink} variant="outline">
             <Copy className="w-4 h-4 ml-1" /> نسخ رابط التوقيع
           </Button>
-          <Button onClick={() => window.print()} variant="outline">
-            <Printer className="w-4 h-4 ml-1" /> طباعة
+          <Button onClick={printContractPdf} disabled={printing} variant="outline">
+            {printing ? <Loader2 className="w-4 h-4 ml-1 animate-spin" /> : <Printer className="w-4 h-4 ml-1" />}
+            طباعة
           </Button>
           <Button onClick={deleteContract} variant="outline" className="border-rose-300 text-rose-700 hover:bg-rose-50">
             <Trash2 className="w-4 h-4 ml-1" /> حذف
