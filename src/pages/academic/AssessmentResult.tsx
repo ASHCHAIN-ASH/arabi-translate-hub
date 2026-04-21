@@ -51,13 +51,36 @@ export default function AssessmentResult() {
     if (!attempt || !assessment) return;
     const url = `${window.location.origin}/challenge-academy/assessments`;
     const text = `🎯 حصلت على ${attempt.total_score}% في "${assessment.title}" (${lvl.label} ${lvl.emoji}) — جرّب الاختبار:`;
+    const fullText = `${text} ${url}`;
     setSharing(true);
     try {
-      if ((navigator as any).share) {
-        await (navigator as any).share({ title: assessment.title, text, url });
-      } else {
-        await navigator.clipboard.writeText(`${text} ${url}`);
-        toast.success('تم نسخ الرابط للمشاركة');
+      let shared = false;
+      // Try Web Share API (works on mobile + secure contexts, often blocked in iframes)
+      const canShare = typeof navigator !== 'undefined' && typeof (navigator as any).share === 'function' && window.self === window.top;
+      if (canShare) {
+        try {
+          await (navigator as any).share({ title: assessment.title, text, url });
+          shared = true;
+        } catch (err: any) {
+          if (err?.name === 'AbortError') { setSharing(false); return; }
+          // fall through to clipboard
+        }
+      }
+      if (!shared) {
+        try {
+          await navigator.clipboard.writeText(fullText);
+        } catch {
+          // Last-resort fallback for restricted contexts
+          const ta = document.createElement('textarea');
+          ta.value = fullText;
+          ta.style.position = 'fixed';
+          ta.style.opacity = '0';
+          document.body.appendChild(ta);
+          ta.select();
+          try { document.execCommand('copy'); } catch {}
+          document.body.removeChild(ta);
+        }
+        toast.success('تم نسخ نتيجتك — الصقها في أي مكان لمشاركتها 🎉');
       }
       if (isOwnerLoggedIn && attempt.share_xp_awarded === 0) {
         const r = await AssessmentService.awardShareXp(attempt.id);
@@ -66,8 +89,12 @@ export default function AssessmentResult() {
           await reload();
         }
       }
-    } catch { /* user cancelled */ }
-    finally { setSharing(false); }
+    } catch (e) {
+      console.error('share failed', e);
+      toast.error('تعذّرت المشاركة، حاول مرة أخرى');
+    } finally {
+      setSharing(false);
+    }
   };
 
   if (loading) {
