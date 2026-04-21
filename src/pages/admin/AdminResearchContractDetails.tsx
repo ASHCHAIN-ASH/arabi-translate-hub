@@ -141,6 +141,81 @@ export default function AdminResearchContractDetails() {
 
   useEffect(() => { loadAll(); }, [id]);
 
+  // Initialize draft fields whenever contract loads / edit mode toggles on
+  const enterEditMode = () => {
+    if (!contract) return;
+    setDraftTitle(contract.title || '');
+    setDraftAmount(contract.total_amount != null ? String(contract.total_amount) : '');
+    setDraftPaymentTerms(contract.payment_terms || '');
+    setDraftContent(contract.content || '');
+    const { items } = parseItemsTable(contract.content || '');
+    setDraftItems(items.length ? items : [{ name: 'خدمة نشر علمي', qty: 1, price: Number(contract.total_amount || 0) }]);
+    setPreviewMode('edit');
+    setEditMode(true);
+  };
+
+  const computedItemsTotal = useMemo(
+    () => draftItems.reduce((s, it) => s + (Number(it.qty) || 1) * (Number(it.price) || 0), 0),
+    [draftItems]
+  );
+
+  // When user edits items, sync table inside markdown
+  const syncItemsIntoContent = (items: ItemRow[]) => {
+    const { tableMatch } = parseItemsTable(draftContent || '');
+    const newTable = buildItemsTable(items);
+    setDraftContent(replaceOrAppendTable(draftContent || '', tableMatch, newTable));
+  };
+
+  const updateItem = (idx: number, patch: Partial<ItemRow>) => {
+    const next = draftItems.map((it, i) => i === idx ? { ...it, ...patch } : it);
+    setDraftItems(next);
+    syncItemsIntoContent(next);
+  };
+  const addItem = () => {
+    const next = [...draftItems, { name: '', qty: 1, price: 0 }];
+    setDraftItems(next);
+    syncItemsIntoContent(next);
+  };
+  const removeItem = (idx: number) => {
+    const next = draftItems.filter((_, i) => i !== idx);
+    setDraftItems(next);
+    syncItemsIntoContent(next);
+  };
+
+  const saveContent = async () => {
+    if (!contract) return;
+    setSavingContent(true);
+    try {
+      const payload: any = {
+        title: draftTitle.trim() || contract.title,
+        content: draftContent,
+        total_amount: draftAmount === '' ? null : Number(draftAmount),
+        payment_terms: draftPaymentTerms || null,
+        updated_at: new Date().toISOString(),
+      };
+      const { error } = await (supabase.from('contracts') as any).update(payload).eq('id', contract.id);
+      if (error) throw error;
+      // Log timeline event (best-effort)
+      try {
+        await (supabase.from('contract_timeline') as any).insert({
+          contract_id: contract.id,
+          action_type: 'content_updated',
+          action_label: 'تم تحديث محتوى العقد',
+          actor_type: 'admin',
+          description: 'مراجعة وتعديل بنود/نص العقد قبل الاعتماد',
+        });
+      } catch {}
+      toast({ title: '✅ تم حفظ المحتوى' });
+      setEditMode(false);
+      await loadAll();
+    } catch (e: any) {
+      toast({ title: 'تعذّر الحفظ', description: e.message, variant: 'destructive' });
+    } finally {
+      setSavingContent(false);
+    }
+  };
+
+
   const sendPdfToWhatsApp = async () => {
     if (!contract || !pub?.client_phone) { toast({ title: 'لا يوجد رقم جوال للعميل', variant: 'destructive' }); return; }
     setSending(true);
