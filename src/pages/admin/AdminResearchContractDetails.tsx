@@ -298,9 +298,12 @@ export default function AdminResearchContractDetails() {
 
   const copyClientLink = async () => {
     if (!contract?.verification_token) return;
-    const url = `${window.location.origin}/contracts/sign/${contract.verification_token}`;
+    // Always use the official production domain for client-facing links,
+    // never the lovableproject.com sandbox/preview origin.
+    const PUBLIC_BASE = 'https://masteredupath.com';
+    const url = `${PUBLIC_BASE}/contracts/sign/${contract.verification_token}`;
     await navigator.clipboard.writeText(url);
-    toast({ title: '🔗 تم نسخ رابط التوقيع' });
+    toast({ title: '🔗 تم نسخ رابط التوقيع', description: url });
   };
 
   const deleteContract = async () => {
