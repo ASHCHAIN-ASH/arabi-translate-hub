@@ -120,7 +120,6 @@ const ClientMarketplaceRewards: React.FC = () => {
           </Card>
         </div>
 
-        {(() => null)()}
         {/* Promo usages derived from purchases */}
         <Tabs defaultValue="all">
           <TabsList className="w-full md:w-auto flex-wrap h-auto">
