@@ -286,7 +286,7 @@ export default function AdminResearchContractDetails() {
             {/* Contract document — bank-grade navy/gold design */}
             <div className="bg-gradient-to-br from-slate-100 to-amber-50/40 rounded-2xl p-2 md:p-4 shadow-inner">
               {contract.content ? (
-                <ContractDocument contract={contract as any} signature={signatures[0] as any} />
+                <ContractDocument contract={contract as any} signatures={signatures as any} />
               ) : (
                 <Card className="p-12 text-center">
                   <FileSignature className="w-12 h-12 mx-auto text-muted-foreground/30 mb-2" />
