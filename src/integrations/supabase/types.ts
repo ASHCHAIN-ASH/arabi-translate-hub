@@ -6648,6 +6648,7 @@ export type Database = {
         }[]
       }
       claim_referral: { Args: { _ref_code: string }; Returns: Json }
+      claim_xp_reward: { Args: { p_level: number }; Returns: Json }
       classify_severity: { Args: { _delta_pct: number }; Returns: string }
       client_confirm_delivery: { Args: { _order_id: string }; Returns: Json }
       complete_daily_task: {
@@ -6861,6 +6862,7 @@ export type Database = {
           title: string
         }[]
       }
+      get_user_xp_summary: { Args: { p_user_id?: string }; Returns: Json }
       grant_referral_xp: {
         Args: {
           _description: string
