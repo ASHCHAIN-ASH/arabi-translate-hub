@@ -334,29 +334,68 @@ export default function AdminResearchContractDetails() {
               </Button>
             </div>
 
-            {/* Meta strip — contract number, date, status, type */}
-            <div className="mt-5 grid grid-cols-2 md:grid-cols-4 gap-3">
-              <div className="rounded-lg px-3 py-2 border" style={{ background: 'rgba(201,169,97,0.08)', borderColor: 'rgba(201,169,97,0.25)' }}>
-                <div className="text-[10px] uppercase tracking-wider" style={{ color: '#c9a961' }}>رقم العقد</div>
-                <div className="font-mono font-bold text-white text-sm mt-0.5">{contract.contract_number}</div>
-              </div>
-              <div className="rounded-lg px-3 py-2 border" style={{ background: 'rgba(201,169,97,0.08)', borderColor: 'rgba(201,169,97,0.25)' }}>
-                <div className="text-[10px] uppercase tracking-wider" style={{ color: '#c9a961' }}>تاريخ التحرير</div>
-                <div className="font-bold text-white text-sm mt-0.5">
-                  {new Date(contract.created_at).toLocaleDateString('ar-SA', { year: 'numeric', month: 'long', day: 'numeric' })}
+            {/* Meta strip — contract number, date, parties, duration, type, status */}
+            {(() => {
+              // Compute duration text from delivery_date / expires_at if available
+              const start = contract.created_at ? new Date(contract.created_at) : null;
+              const end = contract.delivery_date
+                ? new Date(contract.delivery_date)
+                : (contract.expires_at ? new Date(contract.expires_at) : null);
+              let durationText = '—';
+              if (start && end && !isNaN(end.getTime())) {
+                const days = Math.max(0, Math.round((end.getTime() - start.getTime()) / 86400000));
+                durationText = `${days} يوم`;
+              } else if (contract.metadata?.duration_days) {
+                durationText = `${contract.metadata.duration_days} يوم`;
+              }
+              const partyOne = 'منصة ماستر إيدو باث';
+              const partyTwo = pub?.client_name || contract.client_full_name || '—';
+              const cellStyle = { background: 'rgba(201,169,97,0.08)', borderColor: 'rgba(201,169,97,0.25)' } as const;
+              const labelStyle = { color: '#c9a961' } as const;
+              return (
+                <div className="mt-5 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
+                  <div className="rounded-lg px-3 py-2 border" style={cellStyle}>
+                    <div className="text-[10px] uppercase tracking-wider" style={labelStyle}>رقم العقد</div>
+                    <div className="font-mono font-bold text-white text-sm mt-0.5">{contract.contract_number}</div>
+                  </div>
+                  <div className="rounded-lg px-3 py-2 border" style={cellStyle}>
+                    <div className="text-[10px] uppercase tracking-wider" style={labelStyle}>تاريخ التحرير</div>
+                    <div className="font-bold text-white text-sm mt-0.5">
+                      {start ? start.toLocaleDateString('ar-SA', { year: 'numeric', month: 'long', day: 'numeric' }) : '—'}
+                    </div>
+                  </div>
+                  <div className="rounded-lg px-3 py-2 border" style={cellStyle}>
+                    <div className="text-[10px] uppercase tracking-wider" style={labelStyle}>الطرف الأول</div>
+                    <div className="font-bold text-white text-sm mt-0.5 truncate" title={partyOne}>🏛️ {partyOne}</div>
+                  </div>
+                  <div className="rounded-lg px-3 py-2 border" style={cellStyle}>
+                    <div className="text-[10px] uppercase tracking-wider" style={labelStyle}>الطرف الثاني</div>
+                    <div className="font-bold text-white text-sm mt-0.5 truncate" title={partyTwo}>👤 {partyTwo}</div>
+                  </div>
+                  <div className="rounded-lg px-3 py-2 border" style={cellStyle}>
+                    <div className="text-[10px] uppercase tracking-wider" style={labelStyle}>مدة العقد</div>
+                    <div className="font-bold text-white text-sm mt-0.5">⏳ {durationText}</div>
+                  </div>
+                  <div className="rounded-lg px-3 py-2 border" style={cellStyle}>
+                    <div className="text-[10px] uppercase tracking-wider" style={labelStyle}>تاريخ التسليم</div>
+                    <div className="font-bold text-white text-sm mt-0.5">
+                      {end ? end.toLocaleDateString('ar-SA', { year: 'numeric', month: 'long', day: 'numeric' }) : '—'}
+                    </div>
+                  </div>
+                  <div className="rounded-lg px-3 py-2 border" style={cellStyle}>
+                    <div className="text-[10px] uppercase tracking-wider" style={labelStyle}>نوع العقد</div>
+                    <div className="font-bold text-white text-sm mt-0.5">📚 خدمة نشر علمي</div>
+                  </div>
+                  <div className="rounded-lg px-3 py-2 border" style={cellStyle}>
+                    <div className="text-[10px] uppercase tracking-wider" style={labelStyle}>الحالة</div>
+                    <div className="mt-0.5">
+                      <Badge className={`${cs.color} text-white border-0 text-xs`}>{cs.label}</Badge>
+                    </div>
+                  </div>
                 </div>
-              </div>
-              <div className="rounded-lg px-3 py-2 border" style={{ background: 'rgba(201,169,97,0.08)', borderColor: 'rgba(201,169,97,0.25)' }}>
-                <div className="text-[10px] uppercase tracking-wider" style={{ color: '#c9a961' }}>نوع العقد</div>
-                <div className="font-bold text-white text-sm mt-0.5">📚 خدمة نشر علمي</div>
-              </div>
-              <div className="rounded-lg px-3 py-2 border" style={{ background: 'rgba(201,169,97,0.08)', borderColor: 'rgba(201,169,97,0.25)' }}>
-                <div className="text-[10px] uppercase tracking-wider" style={{ color: '#c9a961' }}>الحالة</div>
-                <div className="mt-0.5">
-                  <Badge className={`${cs.color} text-white border-0 text-xs`}>{cs.label}</Badge>
-                </div>
-              </div>
-            </div>
+              );
+            })()}
+
           </div>
 
           {/* Gold bottom stripe */}
