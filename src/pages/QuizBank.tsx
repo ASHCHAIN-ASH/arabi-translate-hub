@@ -21,6 +21,7 @@ const DIFFICULTY_COLORS: Record<Difficulty, string> = {
 };
 
 export default function QuizBank() {
+  const navigate = useNavigate();
   const [categories, setCategories] = useState<QCategory[]>([]);
   const [subjects, setSubjects] = useState<QSubject[]>([]);
   const [questions, setQuestions] = useState<QQuestion[]>([]);
