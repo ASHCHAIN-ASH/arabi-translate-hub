@@ -18,6 +18,7 @@ import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 
 import Footer from '@/components/Footer';
+import AuthCtaCard from "@/components/research/AuthCtaCard";
 const ThesisTitles = () => {
   const [titleForm, setTitleForm] = useState({
     name: "",
@@ -219,132 +220,7 @@ const ThesisTitles = () => {
                   <DialogHeader>
                     <DialogTitle className="text-2xl font-arabic-title">طلب اقتراح عناوين الرسائل</DialogTitle>
                   </DialogHeader>
-                  <form onSubmit={handleSubmit} className="space-y-4">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <div>
-                        <Label>الاسم الكامل *</Label>
-                        <Input
-                          value={titleForm.name}
-                          onChange={(e) => setTitleForm({...titleForm, name: e.target.value})}
-                          required
-                        />
-                      </div>
-                      <div>
-                        <Label>البريد الإلكتروني *</Label>
-                        <Input
-                          type="email"
-                          value={titleForm.email}
-                          onChange={(e) => setTitleForm({...titleForm, email: e.target.value})}
-                          required
-                        />
-                      </div>
-                    </div>
-                    
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <div>
-                        <Label>رقم الهاتف</Label>
-                        <Input
-                          value={titleForm.phone}
-                          onChange={(e) => setTitleForm({...titleForm, phone: e.target.value})}
-                        />
-                      </div>
-                      <div>
-                        <Label>المستوى الأكاديمي *</Label>
-                        <Select value={titleForm.academic_level} onValueChange={(value) => setTitleForm({...titleForm, academic_level: value})} required>
-                          <SelectTrigger>
-                            <SelectValue placeholder="اختر المستوى" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="master">ماجستير</SelectItem>
-                            <SelectItem value="phd">دكتوراه</SelectItem>
-                            <SelectItem value="researcher">باحث</SelectItem>
-                          </SelectContent>
-                        </Select>
-                      </div>
-                    </div>
-
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <div>
-                        <Label>مجال التخصص *</Label>
-                        <Select value={titleForm.subject_area} onValueChange={(value) => setTitleForm({...titleForm, subject_area: value})} required>
-                          <SelectTrigger>
-                            <SelectValue placeholder="اختر المجال" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="business">إدارة الأعمال</SelectItem>
-                            <SelectItem value="education">التربية والتعليم</SelectItem>
-                            <SelectItem value="psychology">علم النفس</SelectItem>
-                            <SelectItem value="medicine">الطب والصحة</SelectItem>
-                            <SelectItem value="engineering">الهندسة</SelectItem>
-                            <SelectItem value="law">القانون</SelectItem>
-                            <SelectItem value="other">أخرى</SelectItem>
-                          </SelectContent>
-                        </Select>
-                      </div>
-                      <div>
-                        <Label>التخصص الدقيق</Label>
-                        <Input
-                          value={titleForm.specialization}
-                          onChange={(e) => setTitleForm({...titleForm, specialization: e.target.value})}
-                          placeholder="مثال: إدارة الموارد البشرية"
-                        />
-                      </div>
-                    </div>
-
-                    <div>
-                      <Label>اهتمامك البحثي</Label>
-                      <Textarea
-                        value={titleForm.research_interest}
-                        onChange={(e) => setTitleForm({...titleForm, research_interest: e.target.value})}
-                        placeholder="اشرح ما يثير اهتمامك في مجال بحثك..."
-                        rows={3}
-                      />
-                    </div>
-
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <div>
-                        <Label>عدد العناوين المطلوب</Label>
-                        <Select value={titleForm.title_count} onValueChange={(value) => setTitleForm({...titleForm, title_count: value})}>
-                          <SelectTrigger>
-                            <SelectValue placeholder="اختر العدد" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="5">5 عناوين</SelectItem>
-                            <SelectItem value="10">10 عناوين</SelectItem>
-                            <SelectItem value="15">15 عنوان</SelectItem>
-                            <SelectItem value="20">20 عنوان</SelectItem>
-                          </SelectContent>
-                        </Select>
-                      </div>
-                      <div>
-                        <Label>مستوى الاستعجال</Label>
-                        <Select value={titleForm.urgency} onValueChange={(value) => setTitleForm({...titleForm, urgency: value})}>
-                          <SelectTrigger>
-                            <SelectValue placeholder="اختر المدة" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="normal">عادي (3-5 أيام)</SelectItem>
-                            <SelectItem value="urgent">سريع (24-48 ساعة)</SelectItem>
-                            <SelectItem value="very_urgent">عاجل (خلال 24 ساعة)</SelectItem>
-                          </SelectContent>
-                        </Select>
-                      </div>
-                    </div>
-
-                    <div>
-                      <Label>ملاحظات إضافية</Label>
-                      <Textarea
-                        value={titleForm.additional_notes}
-                        onChange={(e) => setTitleForm({...titleForm, additional_notes: e.target.value})}
-                        placeholder="أي متطلبات خاصة أو توجيهات للعناوين المقترحة..."
-                        rows={3}
-                      />
-                    </div>
-
-                    <Button type="submit" disabled={loading} className="w-full">
-                      {loading ? "جاري الإرسال..." : "إرسال طلب الاقتراح"}
-                    </Button>
-                  </form>
+                  <AuthCtaCard serviceTitle="عناوين الرسائل" />
                 </DialogContent>
               </Dialog>
               <Button variant="outline" size="lg" className="border-white text-white hover:bg-white hover:text-primary">

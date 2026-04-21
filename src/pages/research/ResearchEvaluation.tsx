@@ -13,6 +13,7 @@ import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 
 import Footer from '@/components/Footer';
+import AuthCtaCard from "@/components/research/AuthCtaCard";
 const ResearchEvaluation = () => {
   const [evaluationForm, setEvaluationForm] = useState({
     name: "",
@@ -233,136 +234,7 @@ const ResearchEvaluation = () => {
                   <DialogHeader>
                     <DialogTitle className="text-2xl font-arabic-title">طلب خدمة التحكيم العلمي</DialogTitle>
                   </DialogHeader>
-                  <form onSubmit={handleSubmit} className="space-y-4">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <div>
-                        <Label>الاسم الكامل *</Label>
-                        <Input
-                          value={evaluationForm.name}
-                          onChange={(e) => setEvaluationForm({...evaluationForm, name: e.target.value})}
-                          required
-                        />
-                      </div>
-                      <div>
-                        <Label>البريد الإلكتروني *</Label>
-                        <Input
-                          type="email"
-                          value={evaluationForm.email}
-                          onChange={(e) => setEvaluationForm({...evaluationForm, email: e.target.value})}
-                          required
-                        />
-                      </div>
-                    </div>
-                    
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <div>
-                        <Label>رقم الهاتف</Label>
-                        <Input
-                          value={evaluationForm.phone}
-                          onChange={(e) => setEvaluationForm({...evaluationForm, phone: e.target.value})}
-                        />
-                      </div>
-                      <div>
-                        <Label>نوع الوثيقة *</Label>
-                        <Select value={evaluationForm.document_type} onValueChange={(value) => setEvaluationForm({...evaluationForm, document_type: value})} required>
-                          <SelectTrigger>
-                            <SelectValue placeholder="اختر نوع الوثيقة" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="research_paper">بحث علمي</SelectItem>
-                            <SelectItem value="thesis">رسالة ماجستير/دكتوراه</SelectItem>
-                            <SelectItem value="survey">استبانة</SelectItem>
-                            <SelectItem value="questionnaire">استبيان</SelectItem>
-                            <SelectItem value="scale">مقياس</SelectItem>
-                            <SelectItem value="article">مقال علمي</SelectItem>
-                          </SelectContent>
-                        </Select>
-                      </div>
-                    </div>
-
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <div>
-                        <Label>مجال الدراسة</Label>
-                        <Select value={evaluationForm.field_of_study} onValueChange={(value) => setEvaluationForm({...evaluationForm, field_of_study: value})}>
-                          <SelectTrigger>
-                            <SelectValue placeholder="اختر المجال" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="education">التربية والتعليم</SelectItem>
-                            <SelectItem value="psychology">علم النفس</SelectItem>
-                            <SelectItem value="business">إدارة الأعمال</SelectItem>
-                            <SelectItem value="medicine">الطب والصحة</SelectItem>
-                            <SelectItem value="engineering">الهندسة</SelectItem>
-                            <SelectItem value="social_sciences">العلوم الاجتماعية</SelectItem>
-                            <SelectItem value="other">أخرى</SelectItem>
-                          </SelectContent>
-                        </Select>
-                      </div>
-                      <div>
-                        <Label>نوع التحكيم المطلوب</Label>
-                        <Select value={evaluationForm.evaluation_type} onValueChange={(value) => setEvaluationForm({...evaluationForm, evaluation_type: value})}>
-                          <SelectTrigger>
-                            <SelectValue placeholder="اختر نوع التحكيم" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="methodology">تحكيم المنهجية</SelectItem>
-                            <SelectItem value="content">تحكيم المحتوى</SelectItem>
-                            <SelectItem value="statistical">التحليل الإحصائي</SelectItem>
-                            <SelectItem value="comprehensive">تحكيم شامل</SelectItem>
-                          </SelectContent>
-                        </Select>
-                      </div>
-                    </div>
-
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <div>
-                        <Label>عدد الصفحات (تقريبي)</Label>
-                        <Input
-                          type="number"
-                          value={evaluationForm.pages_count}
-                          onChange={(e) => setEvaluationForm({...evaluationForm, pages_count: e.target.value})}
-                          placeholder="مثال: 50"
-                        />
-                      </div>
-                      <div>
-                        <Label>مستوى الاستعجال</Label>
-                        <Select value={evaluationForm.urgency} onValueChange={(value) => setEvaluationForm({...evaluationForm, urgency: value})}>
-                          <SelectTrigger>
-                            <SelectValue placeholder="اختر المدة المطلوبة" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="normal">عادي (5-7 أيام)</SelectItem>
-                            <SelectItem value="urgent">سريع (3-4 أيام)</SelectItem>
-                            <SelectItem value="very_urgent">عاجل (24-48 ساعة)</SelectItem>
-                          </SelectContent>
-                        </Select>
-                      </div>
-                    </div>
-
-                    <div>
-                      <Label>التركيز المحدد للتحكيم</Label>
-                      <Textarea
-                        value={evaluationForm.specific_focus}
-                        onChange={(e) => setEvaluationForm({...evaluationForm, specific_focus: e.target.value})}
-                        placeholder="أي جوانب محددة تود التركيز عليها في التحكيم..."
-                        rows={3}
-                      />
-                    </div>
-
-                    <div>
-                      <Label>ملاحظات إضافية</Label>
-                      <Textarea
-                        value={evaluationForm.additional_notes}
-                        onChange={(e) => setEvaluationForm({...evaluationForm, additional_notes: e.target.value})}
-                        placeholder="أي ملاحظات أو متطلبات خاصة..."
-                        rows={3}
-                      />
-                    </div>
-
-                    <Button type="submit" disabled={loading} className="w-full">
-                      {loading ? "جاري الإرسال..." : "إرسال طلب التحكيم"}
-                    </Button>
-                  </form>
+                  <AuthCtaCard serviceTitle="تقييم الأبحاث" />
                 </DialogContent>
               </Dialog>
               <Button variant="outline" size="lg" className="border-white text-white hover:bg-white hover:text-primary">

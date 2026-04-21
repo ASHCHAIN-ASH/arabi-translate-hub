@@ -13,6 +13,7 @@ import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 
 import Footer from '@/components/Footer';
+import AuthCtaCard from "@/components/research/AuthCtaCard";
 const AcademicConsultation = () => {
   const [consultationForm, setConsultationForm] = useState({
     name: "",
@@ -170,121 +171,7 @@ const AcademicConsultation = () => {
                   <DialogHeader>
                     <DialogTitle className="text-2xl font-arabic-title">طلب استشارة أكاديمية</DialogTitle>
                   </DialogHeader>
-                  <form onSubmit={handleSubmit} className="space-y-4">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <div>
-                        <Label>الاسم الكامل *</Label>
-                        <Input
-                          value={consultationForm.name}
-                          onChange={(e) => setConsultationForm({...consultationForm, name: e.target.value})}
-                          required
-                        />
-                      </div>
-                      <div>
-                        <Label>البريد الإلكتروني *</Label>
-                        <Input
-                          type="email"
-                          value={consultationForm.email}
-                          onChange={(e) => setConsultationForm({...consultationForm, email: e.target.value})}
-                          required
-                        />
-                      </div>
-                    </div>
-                    
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <div>
-                        <Label>رقم الهاتف</Label>
-                        <Input
-                          value={consultationForm.phone}
-                          onChange={(e) => setConsultationForm({...consultationForm, phone: e.target.value})}
-                        />
-                      </div>
-                      <div>
-                        <Label>المستوى الأكاديمي</Label>
-                        <Select value={consultationForm.academic_level} onValueChange={(value) => setConsultationForm({...consultationForm, academic_level: value})}>
-                          <SelectTrigger>
-                            <SelectValue placeholder="اختر المستوى" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="bachelor">بكالوريوس</SelectItem>
-                            <SelectItem value="master">ماجستير</SelectItem>
-                            <SelectItem value="phd">دكتوراه</SelectItem>
-                            <SelectItem value="researcher">باحث</SelectItem>
-                          </SelectContent>
-                        </Select>
-                      </div>
-                    </div>
-
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <div>
-                        <Label>التخصص</Label>
-                        <Input
-                          value={consultationForm.subject_area}
-                          onChange={(e) => setConsultationForm({...consultationForm, subject_area: e.target.value})}
-                          placeholder="مثال: إدارة الأعمال"
-                        />
-                      </div>
-                      <div>
-                        <Label>نوع الاستشارة *</Label>
-                        <Select value={consultationForm.consultation_type} onValueChange={(value) => setConsultationForm({...consultationForm, consultation_type: value})} required>
-                          <SelectTrigger>
-                            <SelectValue placeholder="اختر نوع الاستشارة" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="topic_selection">اختيار موضوع البحث</SelectItem>
-                            <SelectItem value="methodology">تطوير منهجية البحث</SelectItem>
-                            <SelectItem value="problem_solving">حل مشاكل البحث</SelectItem>
-                            <SelectItem value="comprehensive_review">مراجعة شاملة</SelectItem>
-                          </SelectContent>
-                        </Select>
-                      </div>
-                    </div>
-
-                    <div>
-                      <Label>وصف الاستشارة المطلوبة</Label>
-                      <Textarea
-                        value={consultationForm.description}
-                        onChange={(e) => setConsultationForm({...consultationForm, description: e.target.value})}
-                        placeholder="اشرح ما تحتاجه في الاستشارة..."
-                        rows={4}
-                      />
-                    </div>
-
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <div>
-                        <Label>الوقت المفضل</Label>
-                        <Select value={consultationForm.preferred_time} onValueChange={(value) => setConsultationForm({...consultationForm, preferred_time: value})}>
-                          <SelectTrigger>
-                            <SelectValue placeholder="اختر الوقت المناسب" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="morning">صباحاً (9-12)</SelectItem>
-                            <SelectItem value="afternoon">بعد الظهر (1-5)</SelectItem>
-                            <SelectItem value="evening">مساءً (6-9)</SelectItem>
-                            <SelectItem value="flexible">مرن</SelectItem>
-                          </SelectContent>
-                        </Select>
-                      </div>
-                      <div>
-                        <Label>الميزانية المتوقعة</Label>
-                        <Select value={consultationForm.budget_range} onValueChange={(value) => setConsultationForm({...consultationForm, budget_range: value})}>
-                          <SelectTrigger>
-                            <SelectValue placeholder="اختر النطاق السعري" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="200-400">200-400 ريال</SelectItem>
-                            <SelectItem value="400-600">400-600 ريال</SelectItem>
-                            <SelectItem value="600-800">600-800 ريال</SelectItem>
-                            <SelectItem value="800+">800+ ريال</SelectItem>
-                          </SelectContent>
-                        </Select>
-                      </div>
-                    </div>
-
-                    <Button type="submit" disabled={loading} className="w-full">
-                      {loading ? "جاري الإرسال..." : "إرسال طلب الاستشارة"}
-                    </Button>
-                  </form>
+                  <AuthCtaCard serviceTitle="الاستشارة الأكاديمية" />
                 </DialogContent>
               </Dialog>
               <Button variant="outline" size="lg" className="border-white text-white hover:bg-white hover:text-primary">

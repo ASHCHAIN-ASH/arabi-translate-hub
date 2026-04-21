@@ -4,7 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import Header from '@/components/Header';
-import ServiceInquiryForm from '@/components/ServiceInquiryForm';
+import AuthCtaCard from '@/components/research/AuthCtaCard';
 import Footer from '@/components/Footer';
 import { 
   Search, 
@@ -270,14 +270,9 @@ const ResearchToolsPage = () => {
         </div>
       </section>
 
-      {/* Contact Form */}
-      <ServiceInquiryForm
-        serviceType="research_tools"
-        serviceName="أدوات البحث العلمي"
-        serviceIcon={<FileSearch className="h-8 w-8" />}
-        showLanguageFields={false}
-        showFileSizeField={true}
-      />
+      <section className="py-16 container mx-auto px-4">
+        <AuthCtaCard serviceTitle="أدوات البحث العلمي" />
+      </section>
 
           <Footer />
     </div>

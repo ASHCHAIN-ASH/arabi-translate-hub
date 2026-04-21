@@ -13,6 +13,7 @@ import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 
 import Footer from '@/components/Footer';
+import AuthCtaCard from "@/components/research/AuthCtaCard";
 const References = () => {
   const [referenceForm, setReferenceForm] = useState({
     name: "",
@@ -214,130 +215,7 @@ const References = () => {
                   <DialogHeader>
                     <DialogTitle className="text-2xl font-arabic-title">طلب خدمة توفير المراجع</DialogTitle>
                   </DialogHeader>
-                  <form onSubmit={handleSubmit} className="space-y-4">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <div>
-                        <Label>الاسم الكامل *</Label>
-                        <Input
-                          value={referenceForm.name}
-                          onChange={(e) => setReferenceForm({...referenceForm, name: e.target.value})}
-                          required
-                        />
-                      </div>
-                      <div>
-                        <Label>البريد الإلكتروني *</Label>
-                        <Input
-                          type="email"
-                          value={referenceForm.email}
-                          onChange={(e) => setReferenceForm({...referenceForm, email: e.target.value})}
-                          required
-                        />
-                      </div>
-                    </div>
-                    
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <div>
-                        <Label>رقم الهاتف</Label>
-                        <Input
-                          value={referenceForm.phone}
-                          onChange={(e) => setReferenceForm({...referenceForm, phone: e.target.value})}
-                        />
-                      </div>
-                      <div>
-                        <Label>المستوى الأكاديمي</Label>
-                        <Select value={referenceForm.academic_level} onValueChange={(value) => setReferenceForm({...referenceForm, academic_level: value})}>
-                          <SelectTrigger>
-                            <SelectValue placeholder="اختر المستوى" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="bachelor">بكالوريوس</SelectItem>
-                            <SelectItem value="master">ماجستير</SelectItem>
-                            <SelectItem value="phd">دكتوراه</SelectItem>
-                            <SelectItem value="researcher">باحث</SelectItem>
-                          </SelectContent>
-                        </Select>
-                      </div>
-                    </div>
-
-                    <div>
-                      <Label>موضوع البحث *</Label>
-                      <Input
-                        value={referenceForm.research_topic}
-                        onChange={(e) => setReferenceForm({...referenceForm, research_topic: e.target.value})}
-                        placeholder="مثال: إدارة الموارد البشرية في الشركات الناشئة"
-                        required
-                      />
-                    </div>
-
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <div>
-                        <Label>التخصص</Label>
-                        <Input
-                          value={referenceForm.subject_area}
-                          onChange={(e) => setReferenceForm({...referenceForm, subject_area: e.target.value})}
-                          placeholder="مثال: إدارة الأعمال"
-                        />
-                      </div>
-                      <div>
-                        <Label>عدد المراجع المطلوب</Label>
-                        <Select value={referenceForm.reference_count} onValueChange={(value) => setReferenceForm({...referenceForm, reference_count: value})}>
-                          <SelectTrigger>
-                            <SelectValue placeholder="اختر العدد" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="10-20">10-20 مرجع</SelectItem>
-                            <SelectItem value="20-40">20-40 مرجع</SelectItem>
-                            <SelectItem value="40-60">40-60 مرجع</SelectItem>
-                            <SelectItem value="60+">أكثر من 60 مرجع</SelectItem>
-                          </SelectContent>
-                        </Select>
-                      </div>
-                    </div>
-
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <div>
-                        <Label>تفضيل اللغة</Label>
-                        <Select value={referenceForm.language_preference} onValueChange={(value) => setReferenceForm({...referenceForm, language_preference: value})}>
-                          <SelectTrigger>
-                            <SelectValue placeholder="اختر اللغة المفضلة" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="arabic">العربية</SelectItem>
-                            <SelectItem value="english">الإنجليزية</SelectItem>
-                            <SelectItem value="mixed">مختلطة</SelectItem>
-                            <SelectItem value="no_preference">لا يوجد تفضيل</SelectItem>
-                          </SelectContent>
-                        </Select>
-                      </div>
-                      <div>
-                        <Label>مستوى الاستعجال</Label>
-                        <Select value={referenceForm.urgency} onValueChange={(value) => setReferenceForm({...referenceForm, urgency: value})}>
-                          <SelectTrigger>
-                            <SelectValue placeholder="اختر المدة المطلوبة" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="normal">عادي (5-7 أيام)</SelectItem>
-                            <SelectItem value="urgent">سريع (3-4 أيام)</SelectItem>
-                            <SelectItem value="very_urgent">عاجل (24-48 ساعة)</SelectItem>
-                          </SelectContent>
-                        </Select>
-                      </div>
-                    </div>
-
-                    <div>
-                      <Label>متطلبات إضافية</Label>
-                      <Textarea
-                        value={referenceForm.additional_notes}
-                        onChange={(e) => setReferenceForm({...referenceForm, additional_notes: e.target.value})}
-                        placeholder="أي متطلبات خاصة أو ملاحظات حول نوع المراجع المطلوبة..."
-                        rows={3}
-                      />
-                    </div>
-
-                    <Button type="submit" disabled={loading} className="w-full">
-                      {loading ? "جاري الإرسال..." : "إرسال طلب الخدمة"}
-                    </Button>
-                  </form>
+                  <AuthCtaCard serviceTitle="إعداد المراجع" />
                 </DialogContent>
               </Dialog>
               <Button variant="outline" size="lg" className="border-white text-white hover:bg-white hover:text-primary">

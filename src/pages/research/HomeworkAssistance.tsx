@@ -14,6 +14,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { AcademicAssistanceDisclaimer } from '@/components/AcademicAssistanceDisclaimer';
 
 import Footer from '@/components/Footer';
+import AuthCtaCard from "@/components/research/AuthCtaCard";
 export default function HomeworkAssistance() {
   const navigate = useNavigate();
   const { toast } = useToast();
@@ -289,101 +290,7 @@ export default function HomeworkAssistance() {
                 >
                   املأ النموذج وسنتواصل معك عبر الواتساب لإرفاق الملفات
                 </motion.p>
-                <form onSubmit={handleSubmit} className="space-y-4 md:space-y-6">
-                  <div>
-                    <Label htmlFor="fullName">الاسم الكامل *</Label>
-                    <Input
-                      id="fullName"
-                      value={formData.fullName}
-                      onChange={(e) => setFormData({ ...formData, fullName: e.target.value })}
-                      required
-                      className="mt-2"
-                    />
-                  </div>
-
-                  <div className="grid md:grid-cols-2 gap-4">
-                    <div>
-                      <Label htmlFor="email">البريد الإلكتروني *</Label>
-                      <Input
-                        id="email"
-                        type="email"
-                        value={formData.email}
-                        onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                        required
-                        className="mt-2"
-                      />
-                    </div>
-                    <div>
-                      <Label htmlFor="phone">رقم الجوال *</Label>
-                      <Input
-                        id="phone"
-                        value={formData.phone}
-                        onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                        required
-                        className="mt-2"
-                      />
-                    </div>
-                  </div>
-
-                  <div>
-                    <Label htmlFor="specialization">التخصص أو المادة</Label>
-                    <Input
-                      id="specialization"
-                      value={formData.specialization}
-                      onChange={(e) => setFormData({ ...formData, specialization: e.target.value })}
-                      className="mt-2"
-                    />
-                  </div>
-
-                  <div>
-                    <Label htmlFor="details">تفاصيل الواجب أو التقرير المطلوب *</Label>
-                    <Textarea
-                      id="details"
-                      value={formData.details}
-                      onChange={(e) => setFormData({ ...formData, details: e.target.value })}
-                      required
-                      rows={5}
-                      className="mt-2"
-                      placeholder="يرجى ذكر نوع الواجب، الأسئلة أو المتطلبات، الموعد النهائي، وأي تفاصيل أخرى مهمة..."
-                    />
-                    <motion.div 
-                      initial={{ opacity: 0, x: -20 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      transition={{ delay: 0.5 }}
-                      className="mt-2 flex items-start gap-2 p-3 bg-blue-50 dark:bg-blue-950/30 border border-blue-200 dark:border-blue-800 rounded-lg"
-                    >
-                      <svg className="w-5 h-5 text-blue-600 dark:text-blue-400 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
-                        <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd"/>
-                      </svg>
-                      <p className="text-sm text-blue-800 dark:text-blue-200">
-                        <strong>ملاحظة:</strong> إرفاق الملفات والمستندات سيتم عبر الواتساب بعد إرسال الطلب
-                      </p>
-                    </motion.div>
-                  </div>
-
-                  <motion.div
-                    whileHover={{ scale: 1.02 }}
-                    whileTap={{ scale: 0.98 }}
-                  >
-                    <Button 
-                      type="submit" 
-                      disabled={loading} 
-                      className="w-full bg-gradient-to-r from-teal-500 to-cyan-500 hover:from-teal-600 hover:to-cyan-600 text-white py-6 text-lg font-bold shadow-lg hover:shadow-xl transition-all duration-300"
-                    >
-                      {loading ? (
-                        <span className="flex items-center justify-center gap-2">
-                          <svg className="animate-spin h-5 w-5" viewBox="0 0 24 24">
-                            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none"/>
-                            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"/>
-                          </svg>
-                          جاري الإرسال...
-                        </span>
-                      ) : (
-                        'إرسال الطلب'
-                      )}
-                    </Button>
-                  </motion.div>
-                </form>
+                <AuthCtaCard serviceTitle="حل الواجبات" />
               </Card>
             </motion.div>
           </div>

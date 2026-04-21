@@ -13,6 +13,7 @@ import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
 
 import Footer from '@/components/Footer';
+import AuthCtaCard from "@/components/research/AuthCtaCard";
 export default function ReferencesProvision() {
   const navigate = useNavigate();
   const { toast } = useToast();
@@ -267,69 +268,7 @@ export default function ReferencesProvision() {
                 <p className="text-center text-muted-foreground mb-6 text-sm md:text-base">
                   املأ النموذج وسنتواصل معك عبر الواتساب لتوفير المراجع
                 </p>
-                <form onSubmit={handleSubmit} className="space-y-4 md:space-y-6">
-                  <div>
-                    <Label htmlFor="fullName">الاسم الكامل *</Label>
-                    <Input
-                      id="fullName"
-                      value={formData.fullName}
-                      onChange={(e) => setFormData({ ...formData, fullName: e.target.value })}
-                      required
-                      className="mt-2"
-                    />
-                  </div>
-
-                  <div className="grid md:grid-cols-2 gap-4">
-                    <div>
-                      <Label htmlFor="email">البريد الإلكتروني *</Label>
-                      <Input
-                        id="email"
-                        type="email"
-                        value={formData.email}
-                        onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                        required
-                        className="mt-2"
-                      />
-                    </div>
-                    <div>
-                      <Label htmlFor="phone">رقم الجوال *</Label>
-                      <Input
-                        id="phone"
-                        value={formData.phone}
-                        onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                        required
-                        className="mt-2"
-                      />
-                    </div>
-                  </div>
-
-                  <div>
-                    <Label htmlFor="specialization">التخصص</Label>
-                    <Input
-                      id="specialization"
-                      value={formData.specialization}
-                      onChange={(e) => setFormData({ ...formData, specialization: e.target.value })}
-                      className="mt-2"
-                    />
-                  </div>
-
-                  <div>
-                    <Label htmlFor="details">تفاصيل المراجع المطلوبة *</Label>
-                    <Textarea
-                      id="details"
-                      value={formData.details}
-                      onChange={(e) => setFormData({ ...formData, details: e.target.value })}
-                      required
-                      rows={5}
-                      className="mt-2"
-                      placeholder="يرجى ذكر موضوع البحث، نوع المراجع المطلوبة (كتب، مقالات، أبحاث)، عددها، سنوات النشر المفضلة، ونظام التوثيق المطلوب..."
-                    />
-                  </div>
-
-                  <Button type="submit" disabled={loading} className="w-full bg-gradient-to-r from-indigo-500 to-blue-500 hover:from-indigo-600 hover:to-blue-600 text-white py-6 text-lg font-bold">
-                    {loading ? 'جاري الإرسال...' : 'إرسال الطلب'}
-                  </Button>
-                </form>
+                <AuthCtaCard serviceTitle="توفير المراجع" />
               </Card>
             </motion.div>
           </div>

@@ -13,6 +13,7 @@ import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 
 import Footer from '@/components/Footer';
+import AuthCtaCard from "@/components/research/AuthCtaCard";
 const Formatting = () => {
   const [formatForm, setFormatForm] = useState({
     name: "",
@@ -220,135 +221,7 @@ const Formatting = () => {
                   <DialogHeader>
                     <DialogTitle className="text-2xl font-arabic-title">طلب خدمة التنسيق</DialogTitle>
                   </DialogHeader>
-                  <form onSubmit={handleSubmit} className="space-y-4">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <div>
-                        <Label>الاسم الكامل *</Label>
-                        <Input
-                          value={formatForm.name}
-                          onChange={(e) => setFormatForm({...formatForm, name: e.target.value})}
-                          required
-                        />
-                      </div>
-                      <div>
-                        <Label>البريد الإلكتروني *</Label>
-                        <Input
-                          type="email"
-                          value={formatForm.email}
-                          onChange={(e) => setFormatForm({...formatForm, email: e.target.value})}
-                          required
-                        />
-                      </div>
-                    </div>
-                    
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <div>
-                        <Label>رقم الهاتف</Label>
-                        <Input
-                          value={formatForm.phone}
-                          onChange={(e) => setFormatForm({...formatForm, phone: e.target.value})}
-                        />
-                      </div>
-                      <div>
-                        <Label>نوع الوثيقة *</Label>
-                        <Select value={formatForm.document_type} onValueChange={(value) => setFormatForm({...formatForm, document_type: value})} required>
-                          <SelectTrigger>
-                            <SelectValue placeholder="اختر نوع الوثيقة" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="thesis">رسالة ماجستير/دكتوراه</SelectItem>
-                            <SelectItem value="research_paper">بحث علمي</SelectItem>
-                            <SelectItem value="report">تقرير</SelectItem>
-                            <SelectItem value="book">كتاب</SelectItem>
-                            <SelectItem value="article">مقال</SelectItem>
-                            <SelectItem value="other">أخرى</SelectItem>
-                          </SelectContent>
-                        </Select>
-                      </div>
-                    </div>
-
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <div>
-                        <Label>المستوى الأكاديمي</Label>
-                        <Select value={formatForm.academic_level} onValueChange={(value) => setFormatForm({...formatForm, academic_level: value})}>
-                          <SelectTrigger>
-                            <SelectValue placeholder="اختر المستوى" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="bachelor">بكالوريوس</SelectItem>
-                            <SelectItem value="master">ماجستير</SelectItem>
-                            <SelectItem value="phd">دكتوراه</SelectItem>
-                            <SelectItem value="researcher">باحث</SelectItem>
-                          </SelectContent>
-                        </Select>
-                      </div>
-                      <div>
-                        <Label>دليل الأسلوب المطلوب</Label>
-                        <Select value={formatForm.style_guide} onValueChange={(value) => setFormatForm({...formatForm, style_guide: value})}>
-                          <SelectTrigger>
-                            <SelectValue placeholder="اختر دليل الأسلوب" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="apa">APA Style</SelectItem>
-                            <SelectItem value="mla">MLA Style</SelectItem>
-                            <SelectItem value="chicago">Chicago Style</SelectItem>
-                            <SelectItem value="arabic">الأسلوب العربي</SelectItem>
-                            <SelectItem value="university">دليل الجامعة</SelectItem>
-                            <SelectItem value="custom">مخصص</SelectItem>
-                          </SelectContent>
-                        </Select>
-                      </div>
-                    </div>
-
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <div>
-                        <Label>عدد الصفحات (تقريبي)</Label>
-                        <Input
-                          type="number"
-                          value={formatForm.pages_count}
-                          onChange={(e) => setFormatForm({...formatForm, pages_count: e.target.value})}
-                          placeholder="مثال: 100"
-                        />
-                      </div>
-                      <div>
-                        <Label>مستوى الاستعجال</Label>
-                        <Select value={formatForm.urgency} onValueChange={(value) => setFormatForm({...formatForm, urgency: value})}>
-                          <SelectTrigger>
-                            <SelectValue placeholder="اختر المدة المطلوبة" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="normal">عادي (3-5 أيام)</SelectItem>
-                            <SelectItem value="urgent">سريع (1-2 يوم)</SelectItem>
-                            <SelectItem value="very_urgent">عاجل (24 ساعة)</SelectItem>
-                          </SelectContent>
-                        </Select>
-                      </div>
-                    </div>
-
-                    <div>
-                      <Label>متطلبات خاصة</Label>
-                      <Textarea
-                        value={formatForm.special_requirements}
-                        onChange={(e) => setFormatForm({...formatForm, special_requirements: e.target.value})}
-                        placeholder="أي متطلبات خاصة للتنسيق (خطوط معينة، ألوان، تخطيط مخصص...)"
-                        rows={3}
-                      />
-                    </div>
-
-                    <div>
-                      <Label>ملاحظات إضافية</Label>
-                      <Textarea
-                        value={formatForm.additional_notes}
-                        onChange={(e) => setFormatForm({...formatForm, additional_notes: e.target.value})}
-                        placeholder="أي ملاحظات أو توضيحات إضافية..."
-                        rows={3}
-                      />
-                    </div>
-
-                    <Button type="submit" disabled={loading} className="w-full">
-                      {loading ? "جاري الإرسال..." : "إرسال طلب التنسيق"}
-                    </Button>
-                  </form>
+                  <AuthCtaCard serviceTitle="التنسيق" />
                 </DialogContent>
               </Dialog>
               <Button variant="outline" size="lg" className="border-white text-white hover:bg-white hover:text-primary">

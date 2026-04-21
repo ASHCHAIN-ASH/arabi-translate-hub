@@ -13,6 +13,7 @@ import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 
 import Footer from '@/components/Footer';
+import AuthCtaCard from "@/components/research/AuthCtaCard";
 const TrainingCourses = () => {
   const [courseForm, setCourseForm] = useState({
     name: "",
@@ -240,137 +241,7 @@ const TrainingCourses = () => {
                   <DialogHeader>
                     <DialogTitle className="text-2xl font-arabic-title">التسجيل في الدورات التدريبية</DialogTitle>
                   </DialogHeader>
-                  <form onSubmit={handleSubmit} className="space-y-4">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <div>
-                        <Label>الاسم الكامل *</Label>
-                        <Input
-                          value={courseForm.name}
-                          onChange={(e) => setCourseForm({...courseForm, name: e.target.value})}
-                          required
-                        />
-                      </div>
-                      <div>
-                        <Label>البريد الإلكتروني *</Label>
-                        <Input
-                          type="email"
-                          value={courseForm.email}
-                          onChange={(e) => setCourseForm({...courseForm, email: e.target.value})}
-                          required
-                        />
-                      </div>
-                    </div>
-                    
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <div>
-                        <Label>رقم الهاتف</Label>
-                        <Input
-                          value={courseForm.phone}
-                          onChange={(e) => setCourseForm({...courseForm, phone: e.target.value})}
-                        />
-                      </div>
-                      <div>
-                        <Label>مستوى الخبرة</Label>
-                        <Select value={courseForm.experience_level} onValueChange={(value) => setCourseForm({...courseForm, experience_level: value})}>
-                          <SelectTrigger>
-                            <SelectValue placeholder="اختر مستوى خبرتك" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="beginner">مبتدئ</SelectItem>
-                            <SelectItem value="intermediate">متوسط</SelectItem>
-                            <SelectItem value="advanced">متقدم</SelectItem>
-                          </SelectContent>
-                        </Select>
-                      </div>
-                    </div>
-
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <div>
-                        <Label>نوع الدورة المهتم بها *</Label>
-                        <Select value={courseForm.course_type} onValueChange={(value) => setCourseForm({...courseForm, course_type: value})} required>
-                          <SelectTrigger>
-                            <SelectValue placeholder="اختر نوع الدورة" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="research_methods">مناهج البحث العلمي</SelectItem>
-                            <SelectItem value="thesis_writing">كتابة الأطروحات</SelectItem>
-                            <SelectItem value="statistical_analysis">التحليل الإحصائي</SelectItem>
-                            <SelectItem value="scientific_publishing">النشر العلمي</SelectItem>
-                            <SelectItem value="all">جميع الدورات</SelectItem>
-                          </SelectContent>
-                        </Select>
-                      </div>
-                      <div>
-                        <Label>نمط التدريب المفضل</Label>
-                        <Select value={courseForm.preferred_format} onValueChange={(value) => setCourseForm({...courseForm, preferred_format: value})}>
-                          <SelectTrigger>
-                            <SelectValue placeholder="اختر النمط" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="online">عن بُعد</SelectItem>
-                            <SelectItem value="offline">حضوري</SelectItem>
-                            <SelectItem value="hybrid">مختلط</SelectItem>
-                            <SelectItem value="no_preference">لا يوجد تفضيل</SelectItem>
-                          </SelectContent>
-                        </Select>
-                      </div>
-                    </div>
-
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <div>
-                        <Label>التوقيت المفضل</Label>
-                        <Select value={courseForm.schedule_preference} onValueChange={(value) => setCourseForm({...courseForm, schedule_preference: value})}>
-                          <SelectTrigger>
-                            <SelectValue placeholder="اختر التوقيت" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="morning">صباحي (9-12)</SelectItem>
-                            <SelectItem value="afternoon">بعد الظهر (2-5)</SelectItem>
-                            <SelectItem value="evening">مسائي (6-9)</SelectItem>
-                            <SelectItem value="weekend">نهاية الأسبوع</SelectItem>
-                          </SelectContent>
-                        </Select>
-                      </div>
-                      <div>
-                        <Label>حجم المجموعة المفضل</Label>
-                        <Select value={courseForm.group_size} onValueChange={(value) => setCourseForm({...courseForm, group_size: value})}>
-                          <SelectTrigger>
-                            <SelectValue placeholder="اختر حجم المجموعة" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="individual">فردي</SelectItem>
-                            <SelectItem value="small">مجموعة صغيرة (5-10)</SelectItem>
-                            <SelectItem value="medium">مجموعة متوسطة (10-20)</SelectItem>
-                            <SelectItem value="large">مجموعة كبيرة (20+)</SelectItem>
-                          </SelectContent>
-                        </Select>
-                      </div>
-                    </div>
-
-                    <div>
-                      <Label>موضوعات محددة مهتم بها</Label>
-                      <Textarea
-                        value={courseForm.specific_topics}
-                        onChange={(e) => setCourseForm({...courseForm, specific_topics: e.target.value})}
-                        placeholder="اذكر أي موضوعات محددة تود التركيز عليها..."
-                        rows={3}
-                      />
-                    </div>
-
-                    <div>
-                      <Label>ملاحظات إضافية</Label>
-                      <Textarea
-                        value={courseForm.additional_notes}
-                        onChange={(e) => setCourseForm({...courseForm, additional_notes: e.target.value})}
-                        placeholder="أي ملاحظات أو متطلبات خاصة..."
-                        rows={3}
-                      />
-                    </div>
-
-                    <Button type="submit" disabled={loading} className="w-full">
-                      {loading ? "جاري الإرسال..." : "إرسال طلب التسجيل"}
-                    </Button>
-                  </form>
+                  <AuthCtaCard serviceTitle="الدورات التدريبية" />
                 </DialogContent>
               </Dialog>
               <Button variant="outline" size="lg" className="border-white text-white hover:bg-white hover:text-primary">

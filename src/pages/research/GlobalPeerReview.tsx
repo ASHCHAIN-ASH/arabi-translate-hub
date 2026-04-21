@@ -19,6 +19,7 @@ import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 
 import Footer from '@/components/Footer';
+import AuthCtaCard from "@/components/research/AuthCtaCard";
 const GlobalPeerReview = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [formData, setFormData] = useState({
@@ -236,55 +237,7 @@ const GlobalPeerReview = () => {
                     <h3 className="text-xl font-semibold text-amber-800 dark:text-amber-200 mb-6">
                       سجل اهتمامك
                     </h3>
-                    <form onSubmit={handleSubmit} className="space-y-4">
-                      <div>
-                        <Label htmlFor="name" className="text-amber-700 dark:text-amber-300">
-                          الاسم الكامل
-                        </Label>
-                        <Input
-                          id="name"
-                          name="name"
-                          type="text"
-                          value={formData.name}
-                          onChange={handleInputChange}
-                          className="bg-white dark:bg-background border-amber-200 dark:border-amber-800 focus:border-amber-400"
-                          placeholder="أدخل اسمك الكامل"
-                          required
-                        />
-                      </div>
-                      <div>
-                        <Label htmlFor="email" className="text-amber-700 dark:text-amber-300">
-                          البريد الإلكتروني
-                        </Label>
-                        <Input
-                          id="email"
-                          name="email"
-                          type="email"
-                          value={formData.email}
-                          onChange={handleInputChange}
-                          className="bg-white dark:bg-background border-amber-200 dark:border-amber-800 focus:border-amber-400"
-                          placeholder="أدخل بريدك الإلكتروني"
-                          required
-                        />
-                      </div>
-                      <Button
-                        type="submit"
-                        disabled={isSubmitting}
-                        className="w-full bg-amber-600 hover:bg-amber-700 text-white font-semibold py-3"
-                      >
-                        {isSubmitting ? (
-                          <>
-                            <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white ml-2"></div>
-                            جاري التسجيل...
-                          </>
-                        ) : (
-                          <>
-                            <Mail className="w-5 h-5 ml-2" />
-                            سجل اهتمامك
-                          </>
-                        )}
-                      </Button>
-                    </form>
+                    <AuthCtaCard serviceTitle="المراجعة العالمية" />
                   </div>
                 ) : (
                   <div className="max-w-md mx-auto text-center">
