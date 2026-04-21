@@ -137,6 +137,7 @@ import StudentLibrary from "./pages/client/StudentLibrary";
 import ClientContracts from "./pages/ClientContracts";
 import ClientResearchPublication from "./pages/client/ResearchPublication";
 import AdminResearchPublications from "./pages/admin/AdminResearchPublications";
+import AdminResearchPublicationDetails from "./pages/admin/AdminResearchPublicationDetails";
 import ClientContractView from "./pages/ClientContractView";
 
 import ThesisTitles from "./pages/research/ThesisTitles";
