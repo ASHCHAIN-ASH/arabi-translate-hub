@@ -250,7 +250,36 @@ export default function MarketplaceItemCard({ item, userXp, userLevel, onPurchas
               </div>
             </div>
 
-            {/* Promo codes (up to 2, stackable) */}
+            {/* اختيار طريقة الدفع */}
+            <div className="space-y-2">
+              <label className="text-xs font-medium text-muted-foreground">طريقة الدفع</label>
+              <div className="grid grid-cols-3 gap-2">
+                {allowed.includes('xp') && (
+                  <button type="button" onClick={() => setMethod('xp')}
+                    className={`p-2 rounded-lg border text-xs font-medium transition ${method==='xp' ? 'border-primary bg-primary/10' : 'border-border hover:bg-muted'}`}>
+                    ⭐ XP
+                    <div className="text-[10px] text-muted-foreground mt-0.5">{effectiveCost.toLocaleString('ar-SA')}</div>
+                  </button>
+                )}
+                {allowed.includes('wallet') && (
+                  <button type="button" onClick={() => setMethod('wallet')}
+                    className={`p-2 rounded-lg border text-xs font-medium transition ${method==='wallet' ? 'border-primary bg-primary/10' : 'border-border hover:bg-muted'}`}>
+                    👛 محفظة
+                    <div className="text-[10px] text-muted-foreground mt-0.5">{priceSar.toLocaleString('ar-SA')} ر.س</div>
+                  </button>
+                )}
+                {allowed.includes('gateway') && (
+                  <button type="button" onClick={() => setMethod('gateway')}
+                    className={`p-2 rounded-lg border text-xs font-medium transition ${method==='gateway' ? 'border-primary bg-primary/10' : 'border-border hover:bg-muted'}`}>
+                    💳 بطاقة
+                    <div className="text-[10px] text-muted-foreground mt-0.5">{priceSar.toLocaleString('ar-SA')} ر.س</div>
+                  </button>
+                )}
+              </div>
+            </div>
+
+            {/* أكواد الخصم — تُطبَّق فقط مع الدفع بـ XP */}
+            {method === 'xp' && (
             <div className="space-y-2">
               <label className="text-xs font-medium text-muted-foreground flex items-center gap-1.5">
                 <Ticket className="w-3.5 h-3.5" /> أكواد الخصم (حتى كوبونين)
