@@ -142,6 +142,7 @@ export default function QuizBank() {
       const r = await QuestionBankService.submitAnswer(current.id, selectedChoice, elapsed);
       if (!r.success) { toast.error('تعذّر تسجيل الإجابة'); return; }
       setResult({ is_correct: !!r.is_correct, correct_choice_id: r.correct_choice_id, explanation: r.explanation, xp_awarded: r.xp_awarded });
+      setAnsweredIds((prev) => prev.includes(current.id) ? prev : [...prev, current.id]);
       if (r.is_correct) {
         toast.success(`✨ إجابة صحيحة! +${r.xp_awarded || 5} XP`);
         setSessionXp((x) => x + (r.xp_awarded || 5));
@@ -163,6 +164,24 @@ export default function QuizBank() {
       setSelectedChoice(null); setResult(null); setStartedAt(Date.now());
     } else {
       toast.info('🎉 أتممت جميع الأسئلة المتاحة!');
+    }
+  };
+
+  const handleResetSession = async () => {
+    if (!confirm('هل تريد بدء جلسة جديدة؟ سيُمسح التقدّم المحفوظ.')) return;
+    try {
+      await QuestionBankService.resetSession();
+      setCurrentIdx(0); setSelectedChoice(null); setResult(null);
+      setAnsweredIds([]); setSessionXp(0); setStreak(0);
+      const qs = await QuestionBankService.listQuestions({
+        subjectId: subjectId !== 'all' ? subjectId : undefined,
+        difficulty: difficulty !== 'all' ? difficulty : undefined,
+        limit: 50,
+      });
+      setQuestions(qs);
+      toast.success('🔄 تم بدء جلسة جديدة');
+    } catch {
+      toast.error('تعذّر إعادة الجلسة');
     }
   };
 
