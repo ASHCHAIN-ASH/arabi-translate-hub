@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
-import { Loader2, CheckCircle2, XCircle, Sparkles, BookOpen, BarChart3, Trophy, Target, Flame, RotateCcw, BarChart, Layers } from 'lucide-react';
+import { Loader2, CheckCircle2, XCircle, Sparkles, BookOpen, BarChart3, Trophy, Target, Flame, RotateCcw, BarChart, Layers, Crown } from 'lucide-react';
 import { toast } from 'sonner';
 import ClientLayout from '@/components/client/ClientLayout';
 import { QuestionBankService, type QCategory, type QSubject, type QQuestion, type Difficulty } from '@/services/questionBankService';
@@ -145,6 +145,11 @@ export default function QuizBank() {
       if (!r.success) { toast.error('تعذّر تسجيل الإجابة'); return; }
       setResult({ is_correct: !!r.is_correct, correct_choice_id: r.correct_choice_id, explanation: r.explanation, xp_awarded: r.xp_awarded });
       setAnsweredIds((prev) => prev.includes(current.id) ? prev : [...prev, current.id]);
+      QuestionBankService.logAttempt({
+        question_id: current.id, subject_id: current.subject_id, choice_id: selectedChoice,
+        is_correct: !!r.is_correct, difficulty: current.difficulty,
+        time_spent_seconds: elapsed, xp_awarded: r.xp_awarded || 0,
+      }).catch(() => {});
       if (r.is_correct) {
         toast.success(`✨ إجابة صحيحة! +${r.xp_awarded || 5} XP`);
         setSessionXp((x) => x + (r.xp_awarded || 5));
@@ -165,6 +170,15 @@ export default function QuizBank() {
       setCurrentIdx((i) => i + 1);
       setSelectedChoice(null); setResult(null); setStartedAt(Date.now());
     } else {
+      const correctCount = questions.filter(q => answeredIds.includes(q.id)).length;
+      QuestionBankService.logSessionCompletion({
+        category_id: categoryId !== 'all' ? categoryId : null,
+        subject_id: subjectId !== 'all' ? subjectId : null,
+        difficulty: difficulty !== 'all' ? difficulty : null,
+        total_questions: questions.length,
+        correct_count: correctCount,
+        xp_earned: sessionXp,
+      }).catch(() => {});
       toast.success('🎉 أتممت جميع الأسئلة! انتقل لصفحة النتائج…');
       setTimeout(() => navigate('/quiz-bank/results'), 800);
     }
@@ -215,6 +229,9 @@ export default function QuizBank() {
                   <Flame className="w-3.5 h-3.5" /> {streak} متتالية
                 </Badge>
               )}
+              <Button asChild size="sm" variant="ghost" className="text-white hover:bg-white/15 hover:text-white gap-1.5 backdrop-blur-sm">
+                <Link to="/quiz-bank/account"><Crown className="w-3.5 h-3.5" /> حسابي</Link>
+              </Button>
               <Button asChild size="sm" variant="ghost" className="text-white hover:bg-white/15 hover:text-white gap-1.5 backdrop-blur-sm">
                 <Link to="/quiz-bank/browse"><Layers className="w-3.5 h-3.5" /> تصفح التخصصات</Link>
               </Button>

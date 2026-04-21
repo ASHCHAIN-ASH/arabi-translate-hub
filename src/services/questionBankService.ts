@@ -161,4 +161,109 @@ export class QuestionBankService {
     if (!user) return;
     await (supabase as any).from('question_bank_sessions').delete().eq('user_id', user.id);
   }
+
+  // ===== Account: attempts, history, subscription =====
+  static async logAttempt(payload: {
+    question_id: string; subject_id?: string | null; choice_id?: string | null;
+    is_correct: boolean; difficulty?: string | null; time_spent_seconds?: number | null;
+    xp_awarded?: number;
+  }) {
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) return;
+    await (supabase as any).from('question_bank_attempts').insert({
+      user_id: user.id,
+      question_id: payload.question_id,
+      subject_id: payload.subject_id ?? null,
+      choice_id: payload.choice_id ?? null,
+      is_correct: payload.is_correct,
+      difficulty: payload.difficulty ?? null,
+      time_spent_seconds: payload.time_spent_seconds ?? null,
+      xp_awarded: payload.xp_awarded ?? 0,
+    });
+  }
+
+  static async listAttempts(limit = 50) {
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) return [];
+    const { data, error } = await (supabase as any)
+      .from('question_bank_attempts')
+      .select('*')
+      .eq('user_id', user.id)
+      .order('created_at', { ascending: false })
+      .limit(limit);
+    if (error) throw error;
+    return data || [];
+  }
+
+  static async logSessionCompletion(payload: {
+    category_id?: string | null; subject_id?: string | null; difficulty?: string | null;
+    total_questions: number; correct_count: number; xp_earned: number;
+    duration_seconds?: number | null;
+  }) {
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) return;
+    await (supabase as any).from('question_bank_session_history').insert({
+      user_id: user.id,
+      category_id: payload.category_id ?? null,
+      subject_id: payload.subject_id ?? null,
+      difficulty: payload.difficulty ?? null,
+      total_questions: payload.total_questions,
+      correct_count: payload.correct_count,
+      xp_earned: payload.xp_earned,
+      duration_seconds: payload.duration_seconds ?? null,
+    });
+  }
+
+  static async listSessionHistory(limit = 30) {
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) return [];
+    const { data, error } = await (supabase as any)
+      .from('question_bank_session_history')
+      .select('*')
+      .eq('user_id', user.id)
+      .order('completed_at', { ascending: false })
+      .limit(limit);
+    if (error) throw error;
+    return data || [];
+  }
+
+  static async listPlans() {
+    const { data, error } = await (supabase as any)
+      .from('question_bank_plans')
+      .select('*')
+      .eq('is_active', true)
+      .order('sort_order');
+    if (error) throw error;
+    return data || [];
+  }
+
+  static async getActiveSubscription() {
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) return null;
+    const { data, error } = await (supabase as any).rpc('get_active_question_bank_subscription', { _user_id: user.id });
+    if (error) throw error;
+    return (data && data[0]) || null;
+  }
+
+  static async subscribeToPlan(planId: string, opts: { amount?: number; method?: string; reference?: string } = {}) {
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) throw new Error('Not authenticated');
+    const { data: plan, error: pe } = await (supabase as any)
+      .from('question_bank_plans').select('duration_days, price_sar').eq('id', planId).single();
+    if (pe) throw pe;
+    const expires = plan?.duration_days
+      ? new Date(Date.now() + plan.duration_days * 86400000).toISOString()
+      : null;
+    const { data, error } = await (supabase as any).from('question_bank_subscriptions').insert({
+      user_id: user.id,
+      plan_id: planId,
+      status: 'active',
+      expires_at: expires,
+      amount_paid: opts.amount ?? plan?.price_sar ?? 0,
+      payment_method: opts.method ?? 'manual',
+      payment_reference: opts.reference ?? null,
+    }).select().single();
+    if (error) throw error;
+    return data;
+  }
 }
