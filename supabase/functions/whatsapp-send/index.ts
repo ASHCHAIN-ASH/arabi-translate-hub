@@ -27,6 +27,8 @@ serve(async (req) => {
       related_entity_type,
       related_entity_id,
       user_id,
+      media_url,
+      media_filename,
     } = body;
 
     // اختبار الاتصال
