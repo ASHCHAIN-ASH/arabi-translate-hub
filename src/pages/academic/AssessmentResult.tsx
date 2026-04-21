@@ -9,6 +9,7 @@ import { AssessmentService, AssessmentAttempt, Assessment, levelLabel, skillLabe
 import { useAuth } from '@/components/SimpleAuthProvider';
 import { toast } from 'sonner';
 import { motion } from 'framer-motion';
+import ClientLayout from '@/components/client/ClientLayout';
 
 export default function AssessmentResult() {
   const { id } = useParams<{ id: string }>();
@@ -71,16 +72,20 @@ export default function AssessmentResult() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-background" dir="rtl">
-        <Loader2 className="w-8 h-8 animate-spin text-primary" />
-      </div>
+      <ClientLayout>
+        <div className="min-h-screen flex items-center justify-center bg-background" dir="rtl">
+          <Loader2 className="w-8 h-8 animate-spin text-primary" />
+        </div>
+      </ClientLayout>
     );
   }
   if (!attempt || !assessment) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-background" dir="rtl">
-        <p className="text-muted-foreground">النتيجة غير متاحة.</p>
-      </div>
+      <ClientLayout>
+        <div className="min-h-screen flex items-center justify-center bg-background" dir="rtl">
+          <p className="text-muted-foreground">النتيجة غير متاحة.</p>
+        </div>
+      </ClientLayout>
     );
   }
 
@@ -88,6 +93,7 @@ export default function AssessmentResult() {
   const skills = Object.entries(attempt.skill_breakdown || {});
 
   return (
+    <ClientLayout>
     <div className="min-h-screen bg-background py-10 px-4" dir="rtl">
       <div className="max-w-3xl mx-auto space-y-6">
         {/* Hero Score */}
@@ -188,5 +194,6 @@ export default function AssessmentResult() {
         )}
       </div>
     </div>
+    </ClientLayout>
   );
 }
