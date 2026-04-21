@@ -155,6 +155,179 @@ export type Database = {
         }
         Relationships: []
       }
+      automation_actions_log: {
+        Row: {
+          action_payload: Json
+          action_type: string
+          created_at: string
+          created_by: string | null
+          id: string
+          insight_id: string | null
+          note: string | null
+          status: string
+        }
+        Insert: {
+          action_payload?: Json
+          action_type: string
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          insight_id?: string | null
+          note?: string | null
+          status?: string
+        }
+        Update: {
+          action_payload?: Json
+          action_type?: string
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          insight_id?: string | null
+          note?: string | null
+          status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "automation_actions_log_insight_id_fkey"
+            columns: ["insight_id"]
+            isOneToOne: false
+            referencedRelation: "automation_insights"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      automation_insights: {
+        Row: {
+          comparison_value: number | null
+          context_data: Json
+          created_at: string
+          dedupe_key: string
+          delta_percentage: number | null
+          description: string
+          detected_at: string
+          dismissed_at: string | null
+          id: string
+          insight_type: string
+          last_seen_at: string
+          metric_key: string
+          metric_value: number | null
+          recommendation: string
+          resolved_at: string | null
+          severity: string
+          status: string
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          comparison_value?: number | null
+          context_data?: Json
+          created_at?: string
+          dedupe_key: string
+          delta_percentage?: number | null
+          description: string
+          detected_at?: string
+          dismissed_at?: string | null
+          id?: string
+          insight_type: string
+          last_seen_at?: string
+          metric_key: string
+          metric_value?: number | null
+          recommendation: string
+          resolved_at?: string | null
+          severity: string
+          status?: string
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          comparison_value?: number | null
+          context_data?: Json
+          created_at?: string
+          dedupe_key?: string
+          delta_percentage?: number | null
+          description?: string
+          detected_at?: string
+          dismissed_at?: string | null
+          id?: string
+          insight_type?: string
+          last_seen_at?: string
+          metric_key?: string
+          metric_value?: number | null
+          recommendation?: string
+          resolved_at?: string | null
+          severity?: string
+          status?: string
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      automation_rules: {
+        Row: {
+          comparison_operator: string
+          created_at: string
+          description: string | null
+          id: string
+          is_active: boolean
+          lookback_days: number
+          recommendation_template: string
+          rule_group: string
+          rule_key: string
+          rule_name: string
+          threshold_value: number
+          updated_at: string
+        }
+        Insert: {
+          comparison_operator?: string
+          created_at?: string
+          description?: string | null
+          id?: string
+          is_active?: boolean
+          lookback_days?: number
+          recommendation_template: string
+          rule_group: string
+          rule_key: string
+          rule_name: string
+          threshold_value: number
+          updated_at?: string
+        }
+        Update: {
+          comparison_operator?: string
+          created_at?: string
+          description?: string | null
+          id?: string
+          is_active?: boolean
+          lookback_days?: number
+          recommendation_template?: string
+          rule_group?: string
+          rule_key?: string
+          rule_name?: string
+          threshold_value?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      automation_snapshots: {
+        Row: {
+          created_at: string
+          id: string
+          metrics_payload: Json
+          snapshot_date: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          metrics_payload?: Json
+          snapshot_date: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          metrics_payload?: Json
+          snapshot_date?: string
+        }
+        Relationships: []
+      }
       challenge_achievements: {
         Row: {
           badge_color: string | null
@@ -5712,6 +5885,7 @@ export type Database = {
           isSetofReturn: false
         }
       }
+      analyze_growth_insights: { Args: never; Returns: Json }
       award_points: {
         Args: {
           _apply_multiplier?: boolean
@@ -5724,6 +5898,7 @@ export type Database = {
         }
         Returns: string
       }
+      build_growth_snapshot: { Args: never; Returns: Json }
       cancel_group_order: {
         Args: { _group_order_id: string; _reason?: string }
         Returns: Json
@@ -5750,6 +5925,7 @@ export type Database = {
         }[]
       }
       claim_referral: { Args: { _ref_code: string }; Returns: Json }
+      classify_severity: { Args: { _delta_pct: number }; Returns: string }
       client_confirm_delivery: { Args: { _order_id: string }; Returns: Json }
       complete_daily_task: {
         Args: { _metadata?: Json; _task_code: string }
@@ -5774,6 +5950,10 @@ export type Database = {
       delete_email: {
         Args: { message_id: number; queue_name: string }
         Returns: boolean
+      }
+      dismiss_automation_insight: {
+        Args: { _id: string; _note?: string }
+        Returns: Json
       }
       dispatch_document_send: {
         Args: { _id: string; _kind: string }
@@ -5992,6 +6172,10 @@ export type Database = {
         }
         Returns: string
       }
+      resolve_automation_insight: {
+        Args: { _id: string; _note?: string }
+        Returns: Json
+      }
       reward_viral_share: { Args: never; Returns: Json }
       sign_contract_with_otp: {
         Args: {
@@ -6059,6 +6243,22 @@ export type Database = {
           _to_status: Database["public"]["Enums"]["order_lifecycle_status"]
         }
         Returns: Json
+      }
+      upsert_insight: {
+        Args: {
+          _comparison_value: number
+          _context: Json
+          _dedupe_key: string
+          _delta_pct: number
+          _description: string
+          _metric_key: string
+          _metric_value: number
+          _recommendation: string
+          _severity: string
+          _title: string
+          _type: string
+        }
+        Returns: string
       }
       use_smart_editor: {
         Args: { _input_length: number; _mode: string; _operation: string }
