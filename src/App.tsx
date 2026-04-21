@@ -138,6 +138,8 @@ import StudentLibrary from "./pages/client/StudentLibrary";
 import ClientContracts from "./pages/ClientContracts";
 import ClientResearchPublication from "./pages/client/ResearchPublication";
 import AdminResearchPublications from "./pages/admin/AdminResearchPublications";
+import AdminResearchContracts from "./pages/admin/AdminResearchContracts";
+import AdminResearchContractDetails from "./pages/admin/AdminResearchContractDetails";
 import AdminResearchPublicationDetails from "./pages/admin/AdminResearchPublicationDetails";
 import ClientContractView from "./pages/ClientContractView";
 
