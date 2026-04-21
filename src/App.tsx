@@ -108,6 +108,8 @@ import AdminWallets from "./pages/admin/AdminWallets";
 import AdminPayments from "./pages/admin/AdminPayments";
 import AdminGamification from "./pages/admin/AdminGamification";
 import AdminGrowthAnalytics from "./pages/admin/AdminGrowthAnalytics";
+import AdminGrowthAutomation from "./pages/admin/AdminGrowthAutomation";
+import AdminGrowthAutomationRules from "./pages/admin/AdminGrowthAutomationRules";
 import ContractsSystem from "./pages/admin/ContractsSystem";
 import AdminContractDetails from "./pages/admin/AdminContractDetails";
 import ContractsAnalytics from "./pages/admin/ContractsAnalytics";
@@ -541,6 +543,16 @@ const App = () => (
             <Route path="/adminmaster/growth" element={
               <SimpleProtectedRoute adminOnly>
                 <AdminGrowthAnalytics />
+              </SimpleProtectedRoute>
+            } />
+            <Route path="/adminmaster/growth/automation" element={
+              <SimpleProtectedRoute adminOnly>
+                <AdminGrowthAutomation />
+              </SimpleProtectedRoute>
+            } />
+            <Route path="/adminmaster/growth/automation/rules" element={
+              <SimpleProtectedRoute adminOnly>
+                <AdminGrowthAutomationRules />
               </SimpleProtectedRoute>
             } />
             <Route path="/adminmaster/whatsapp" element={<Navigate to="/adminmaster/whatsapp/inbox" replace />} />
