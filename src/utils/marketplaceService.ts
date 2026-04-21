@@ -32,6 +32,9 @@ export interface MarketplacePurchase {
   fulfillment_data: any;
   reward_payload: any;
   created_at: string;
+  promo_code?: string | null;
+  xp_discount?: number | null;
+  original_xp_cost?: number | null;
 }
 
 export interface DiscountCoupon {

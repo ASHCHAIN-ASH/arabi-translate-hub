@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
-import { Gift, Ticket, Sparkles, Wallet, Copy, CheckCircle2, Clock, AlertCircle, Package, RefreshCw } from 'lucide-react';
+import { Gift, Ticket, Sparkles, Wallet, Copy, CheckCircle2, Clock, AlertCircle, Package, RefreshCw, TicketPercent } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import ClientLayout from '@/components/client/ClientLayout';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { useAuth } from '@/components/SimpleAuthProvider';
 import { useToast } from '@/hooks/use-toast';
 import { MarketplaceService, type MarketplacePurchase, type DiscountCoupon, type UnlockedFeature } from '@/utils/marketplaceService';
@@ -119,11 +120,13 @@ const ClientMarketplaceRewards: React.FC = () => {
           </Card>
         </div>
 
+        {/* Promo usages derived from purchases */}
         <Tabs defaultValue="all">
-          <TabsList className="w-full md:w-auto">
+          <TabsList className="w-full md:w-auto flex-wrap h-auto">
             <TabsTrigger value="all">الكل ({purchases.length})</TabsTrigger>
             <TabsTrigger value="coupons">الكوبونات ({coupons.length})</TabsTrigger>
             <TabsTrigger value="features">الميزات ({features.length})</TabsTrigger>
+            <TabsTrigger value="promos">أكواد الخصم ({purchases.filter(p => !!p.promo_code).length})</TabsTrigger>
           </TabsList>
 
           {/* All purchases */}
@@ -227,6 +230,122 @@ const ClientMarketplaceRewards: React.FC = () => {
                 </div>
               </Card>
             ))}
+          </TabsContent>
+
+          {/* Promo codes applied */}
+          <TabsContent value="promos" className="mt-4">
+            {(() => {
+              const promoUsages = purchases.filter(p => !!p.promo_code);
+              if (promoUsages.length === 0) {
+                return (
+                  <Card className="p-8 text-center">
+                    <TicketPercent className="h-10 w-10 mx-auto text-muted-foreground mb-3" />
+                    <p className="font-medium mb-1">لم تستخدم أي كود خصم بعد</p>
+                    <p className="text-sm text-muted-foreground">
+                      عند تطبيق Promo Code أثناء الشراء من المتجر، ستجد سجلًا تفصيليًا هنا.
+                    </p>
+                  </Card>
+                );
+              }
+              const totalDiscount = promoUsages.reduce((s, p) => s + (p.xp_discount || 0), 0);
+              return (
+                <div className="space-y-3">
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                    <Card className="p-4">
+                      <p className="text-xs text-muted-foreground mb-1">عدد مرات الاستخدام</p>
+                      <p className="text-2xl font-bold">{promoUsages.length}</p>
+                    </Card>
+                    <Card className="p-4">
+                      <p className="text-xs text-muted-foreground mb-1">إجمالي XP الموفّر</p>
+                      <p className="text-2xl font-bold text-primary">{totalDiscount.toLocaleString('ar-EG')}</p>
+                    </Card>
+                    <Card className="p-4">
+                      <p className="text-xs text-muted-foreground mb-1">آخر استخدام</p>
+                      <p className="text-sm font-semibold">
+                        {new Date(promoUsages[0].created_at).toLocaleDateString('ar-EG')}
+                      </p>
+                    </Card>
+                  </div>
+
+                  <Card className="overflow-hidden">
+                    <Table>
+                      <TableHeader>
+                        <TableRow>
+                          <TableHead className="text-right">الكود</TableHead>
+                          <TableHead className="text-right">المنتج</TableHead>
+                          <TableHead className="text-right">السعر الأصلي</TableHead>
+                          <TableHead className="text-right">الخصم</TableHead>
+                          <TableHead className="text-right">المدفوع</TableHead>
+                          <TableHead className="text-right">تاريخ الاستخدام</TableHead>
+                          <TableHead className="text-right">الحالة</TableHead>
+                        </TableRow>
+                      </TableHeader>
+                      <TableBody>
+                        {promoUsages.map((p) => {
+                          const matchedCoupon = coupons.find(
+                            (c) => c.code.toUpperCase() === (p.promo_code || '').toUpperCase()
+                          );
+                          const expired = isExpired(matchedCoupon?.expires_at);
+                          return (
+                            <TableRow key={p.id}>
+                              <TableCell>
+                                <div className="flex items-center gap-2">
+                                  <code className="px-2 py-1 rounded bg-muted text-xs font-mono font-bold">
+                                    {p.promo_code}
+                                  </code>
+                                  <Button
+                                    size="sm"
+                                    variant="ghost"
+                                    className="h-6 w-6 p-0"
+                                    onClick={() => copy(p.promo_code!)}
+                                  >
+                                    <Copy className="h-3 w-3" />
+                                  </Button>
+                                </div>
+                              </TableCell>
+                              <TableCell>
+                                <Badge variant="outline" className="text-xs">{p.item_slug}</Badge>
+                              </TableCell>
+                              <TableCell className="text-muted-foreground line-through">
+                                {(p.original_xp_cost ?? p.xp_spent + (p.xp_discount || 0)).toLocaleString('ar-EG')} XP
+                              </TableCell>
+                              <TableCell className="text-primary font-semibold">
+                                −{(p.xp_discount || 0).toLocaleString('ar-EG')} XP
+                              </TableCell>
+                              <TableCell className="font-semibold">
+                                {p.xp_spent.toLocaleString('ar-EG')} XP
+                              </TableCell>
+                              <TableCell className="text-xs">
+                                {new Date(p.created_at).toLocaleString('ar-EG')}
+                              </TableCell>
+                              <TableCell>
+                                {p.status !== 'completed' ? (
+                                  <Badge variant="destructive" className="gap-1">
+                                    <AlertCircle className="h-3 w-3" />فشل
+                                  </Badge>
+                                ) : matchedCoupon ? (
+                                  <Badge variant="secondary" className="gap-1">
+                                    <CheckCircle2 className="h-3 w-3" />مُستخدم
+                                  </Badge>
+                                ) : expired ? (
+                                  <Badge variant="destructive" className="gap-1">
+                                    <AlertCircle className="h-3 w-3" />منتهي
+                                  </Badge>
+                                ) : (
+                                  <Badge className="gap-1">
+                                    <CheckCircle2 className="h-3 w-3" />مُطبّق
+                                  </Badge>
+                                )}
+                              </TableCell>
+                            </TableRow>
+                          );
+                        })}
+                      </TableBody>
+                    </Table>
+                  </Card>
+                </div>
+              );
+            })()}
           </TabsContent>
         </Tabs>
       </div>
