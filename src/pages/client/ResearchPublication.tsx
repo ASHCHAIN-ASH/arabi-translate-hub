@@ -265,6 +265,7 @@ export default function ResearchPublication() {
       client_name: form.client_name,
       client_phone: form.client_phone,
       client_email: form.client_email || null,
+      attachments: attachments as any,
     });
     setSubmitting(false);
     if (error) {
@@ -273,6 +274,7 @@ export default function ResearchPublication() {
       toast({ title: '✅ تم الإرسال', description: 'سيتم التواصل معك عبر واتساب قريباً' });
       setOpen(false);
       setForm({ ...form, title: '', abstract: '', target_journal: '', notes: '', keywords: '', authors: '', page_count: '' });
+      setAttachments([]);
       load();
     }
   };
