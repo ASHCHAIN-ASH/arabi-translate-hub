@@ -110,6 +110,7 @@ export default function AdminResearchContractDetails() {
   const [loading, setLoading] = useState(true);
   const [sending, setSending] = useState(false);
   const [generating, setGenerating] = useState(false);
+  const [printing, setPrinting] = useState(false);
 
   // ─── Content review / edit state ───
   const [editMode, setEditMode] = useState(false);
@@ -256,6 +257,45 @@ export default function AdminResearchContractDetails() {
     } finally { setGenerating(false); }
   };
 
+  // ─── Print: generate PDF in same contract-document style, open & auto-trigger print ───
+  const printContractPdf = async () => {
+    if (!contract) return;
+    setPrinting(true);
+    const win = window.open('', '_blank');
+    if (win) {
+      win.document.write(
+        `<!doctype html><html dir="rtl" lang="ar"><head><meta charset="utf-8"><title>تجهيز نسخة الطباعة...</title>
+        <style>body{font-family:'IBM Plex Sans Arabic',system-ui;margin:0;display:flex;align-items:center;justify-content:center;height:100vh;background:#0a1f3d;color:#c9a961;text-align:center}</style>
+        </head><body><div><h2>📄 جاري تجهيز نسخة العقد للطباعة...</h2><p>يرجى الانتظار قليلاً</p></div></body></html>`
+      );
+    }
+    try {
+      const { data, error } = await supabase.functions.invoke('generate-contract-pdf', {
+        body: { contract_id: contract.id, mode: 'preview' },
+      });
+      if (error || !data?.signed_url) throw new Error(error?.message || 'تعذّر التوليد');
+      if (win) {
+        // Embed the generated PDF and auto-trigger print once loaded
+        win.document.open();
+        win.document.write(
+          `<!doctype html><html dir="rtl" lang="ar"><head><meta charset="utf-8">
+          <title>عقد ${contract.contract_number} — طباعة</title>
+          <style>html,body{margin:0;height:100%}iframe{border:0;width:100%;height:100%}</style>
+          </head><body><iframe id="pdf" src="${data.signed_url}#toolbar=1" onload="setTimeout(()=>{try{this.contentWindow.focus();this.contentWindow.print();}catch(e){}},700)"></iframe></body></html>`
+        );
+        win.document.close();
+      } else {
+        // Popup blocked — fallback: open the PDF directly
+        window.open(data.signed_url, '_blank');
+      }
+      toast({ title: '🖨️ نسخة الطباعة جاهزة' });
+    } catch (e: any) {
+      if (win) win.close();
+      toast({ title: 'تعذّر تجهيز نسخة الطباعة', description: e.message, variant: 'destructive' });
+    } finally { setPrinting(false); }
+  };
+
+
   const copyClientLink = async () => {
     if (!contract?.verification_token) return;
     const url = `${window.location.origin}/contracts/sign/${contract.verification_token}`;
@@ -325,15 +365,31 @@ export default function AdminResearchContractDetails() {
                 </div>
               </div>
 
-              {/* Left side — back button */}
-              <Button
-                variant="outline"
-                onClick={() => navigate('/adminmaster/research/contracts')}
-                className="border-[#c9a961]/40 text-[#c9a961] bg-transparent hover:bg-[#c9a961]/10 hover:text-[#c9a961]"
-              >
-                <ArrowRight className="w-4 h-4 ml-1" /> عودة للقائمة
-              </Button>
+              {/* Left side — print + back buttons */}
+              <div className="flex items-center gap-2 flex-wrap">
+                <Button
+                  onClick={printContractPdf}
+                  disabled={printing}
+                  className="border-0 font-bold shadow-md"
+                  style={{
+                    background: 'linear-gradient(135deg, #c9a961 0%, #b8954f 100%)',
+                    color: '#0a1f3d',
+                  }}
+                  title="تجهيز PDF بتنسيق العقد وفتح حوار الطباعة"
+                >
+                  {printing ? <Loader2 className="w-4 h-4 ml-1 animate-spin" /> : <Printer className="w-4 h-4 ml-1" />}
+                  طباعة العقد (PDF)
+                </Button>
+                <Button
+                  variant="outline"
+                  onClick={() => navigate('/adminmaster/research/contracts')}
+                  className="border-[#c9a961]/40 text-[#c9a961] bg-transparent hover:bg-[#c9a961]/10 hover:text-[#c9a961]"
+                >
+                  <ArrowRight className="w-4 h-4 ml-1" /> عودة للقائمة
+                </Button>
+              </div>
             </div>
+
 
             {/* Meta strip — contract number, date, parties, duration, type, status */}
             {(() => {
@@ -416,8 +472,9 @@ export default function AdminResearchContractDetails() {
           <Button onClick={copyClientLink} variant="outline">
             <Copy className="w-4 h-4 ml-1" /> نسخ رابط التوقيع
           </Button>
-          <Button onClick={() => window.print()} variant="outline">
-            <Printer className="w-4 h-4 ml-1" /> طباعة
+          <Button onClick={printContractPdf} disabled={printing} variant="outline">
+            {printing ? <Loader2 className="w-4 h-4 ml-1 animate-spin" /> : <Printer className="w-4 h-4 ml-1" />}
+            طباعة
           </Button>
           <Button onClick={deleteContract} variant="outline" className="border-rose-300 text-rose-700 hover:bg-rose-50">
             <Trash2 className="w-4 h-4 ml-1" /> حذف
