@@ -218,7 +218,6 @@ export default function AdminResearchContractDetails() {
           {/* Gold bottom stripe */}
           <div className="h-1 w-full" style={{ background: 'linear-gradient(90deg, transparent, #c9a961, transparent)' }} />
         </motion.div>
-        </motion.div>
 
         {/* Action bar */}
         <Card className="p-3 flex flex-wrap gap-2 justify-end">
