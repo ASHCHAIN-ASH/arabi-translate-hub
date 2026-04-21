@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { BookOpen, Search, Loader2, FileText, FileSignature, Receipt, Eye, Phone, Mail, User, Calendar, ArrowUpDown } from 'lucide-react';
+import { BookOpen, Search, Loader2, Eye, Phone, User, Calendar, ArrowUpDown } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
@@ -10,23 +10,7 @@ import { Badge } from '@/components/ui/badge';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { supabase } from '@/integrations/supabase/client';
 import AdminLayout from '@/components/admin/AdminLayout';
-
-const STATUSES = [
-  { value: 'new', label: 'جديد', color: 'bg-blue-500' },
-  { value: 'under_review', label: 'قيد المراجعة', color: 'bg-amber-500' },
-  { value: 'quoted', label: 'عرض سعر', color: 'bg-purple-500' },
-  { value: 'approved', label: 'معتمد', color: 'bg-emerald-500' },
-  { value: 'in_progress', label: 'قيد التنفيذ', color: 'bg-cyan-500' },
-  { value: 'published', label: 'تم النشر', color: 'bg-green-600' },
-  { value: 'rejected', label: 'مرفوض', color: 'bg-rose-500' },
-];
-
-const PRIORITIES = [
-  { value: 'low', label: 'منخفضة', color: 'bg-slate-400' },
-  { value: 'normal', label: 'عادية', color: 'bg-blue-400' },
-  { value: 'high', label: 'مرتفعة', color: 'bg-orange-500' },
-  { value: 'urgent', label: 'عاجلة', color: 'bg-rose-600' },
-];
+import { RESEARCH_STATUSES, PRIORITIES, getStatus, getPriority } from '@/utils/researchPublicationStatuses';
 
 type SortKey = 'created_at' | 'estimated_amount' | 'title';
 
@@ -52,7 +36,6 @@ export default function AdminResearchPublications() {
 
   useEffect(() => { load(); }, []);
 
-  // Realtime
   useEffect(() => {
     const channel = supabase
       .channel('admin-research-pubs')
@@ -99,26 +82,22 @@ export default function AdminResearchPublications() {
   return (
     <AdminLayout>
       <div className="p-4 sm:p-6 space-y-5" dir="rtl">
-        {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
           className="bg-gradient-to-br from-indigo-700 via-blue-700 to-cyan-600 text-white rounded-3xl p-6 shadow-xl"
         >
-          <div className="flex items-center justify-between flex-wrap gap-3">
-            <div className="flex items-center gap-3">
-              <div className="w-14 h-14 bg-white/20 rounded-2xl flex items-center justify-center">
-                <BookOpen className="w-8 h-8" />
-              </div>
-              <div>
-                <h1 className="text-2xl sm:text-3xl font-black">سجل طلبات النشر</h1>
-                <p className="text-white/85 text-sm">إدارة طلبات نشر الأبحاث، عقودها، عروض الأسعار، والفواتير الضريبية</p>
-              </div>
+          <div className="flex items-center gap-3">
+            <div className="w-14 h-14 bg-white/20 rounded-2xl flex items-center justify-center">
+              <BookOpen className="w-8 h-8" />
+            </div>
+            <div>
+              <h1 className="text-2xl sm:text-3xl font-black">سجل طلبات النشر</h1>
+              <p className="text-white/85 text-sm">إدارة طلبات نشر الأبحاث، عقودها، عروض الأسعار، والفواتير الضريبية</p>
             </div>
           </div>
         </motion.div>
 
-        {/* Stats */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
           <Card className="p-4">
             <div className="text-xs text-muted-foreground">إجمالي الطلبات</div>
@@ -129,7 +108,7 @@ export default function AdminResearchPublications() {
             <div className="text-3xl font-black text-cyan-700">{stats.active}</div>
           </Card>
           <Card className="p-4">
-            <div className="text-xs text-muted-foreground">مكتملة (تم النشر)</div>
+            <div className="text-xs text-muted-foreground">منشورة</div>
             <div className="text-3xl font-black text-emerald-700">{stats.completed}</div>
           </Card>
           <Card className="p-4">
@@ -138,29 +117,29 @@ export default function AdminResearchPublications() {
           </Card>
         </div>
 
-        {/* Filters */}
         <Card className="p-3 flex gap-2 flex-wrap">
           <div className="flex-1 min-w-[220px] relative">
             <Search className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
             <Input value={search} onChange={e => setSearch(e.target.value)} placeholder="بحث بالعنوان، العميل، الهاتف، رقم الطلب..." className="pr-10" />
           </div>
           <Select value={statusFilter} onValueChange={setStatusFilter}>
-            <SelectTrigger className="w-[170px]"><SelectValue placeholder="الحالة" /></SelectTrigger>
+            <SelectTrigger className="w-[200px]"><SelectValue placeholder="الحالة" /></SelectTrigger>
             <SelectContent>
               <SelectItem value="all">كل الحالات</SelectItem>
-              {STATUSES.map(s => <SelectItem key={s.value} value={s.value}>{s.label}</SelectItem>)}
+              {RESEARCH_STATUSES.map(s => (
+                <SelectItem key={s.value} value={s.value}>{s.emoji} {s.label}</SelectItem>
+              ))}
             </SelectContent>
           </Select>
           <Select value={priorityFilter} onValueChange={setPriorityFilter}>
             <SelectTrigger className="w-[150px]"><SelectValue placeholder="الأولوية" /></SelectTrigger>
             <SelectContent>
               <SelectItem value="all">كل الأولويات</SelectItem>
-              {PRIORITIES.map(p => <SelectItem key={p.value} value={p.value}>{p.label}</SelectItem>)}
+              {PRIORITIES.map(p => <SelectItem key={p.value} value={p.value}>{p.emoji} {p.label}</SelectItem>)}
             </SelectContent>
           </Select>
         </Card>
 
-        {/* Table */}
         <Card className="overflow-hidden">
           {loading ? (
             <div className="text-center py-16"><Loader2 className="w-8 h-8 animate-spin mx-auto text-indigo-600" /></div>
@@ -193,9 +172,10 @@ export default function AdminResearchPublications() {
                 </TableHeader>
                 <TableBody>
                   {filtered.map(item => {
-                    const status = STATUSES.find(s => s.value === item.status);
-                    const priority = PRIORITIES.find(p => p.value === item.priority);
+                    const st = getStatus(item.status);
+                    const pr = getPriority(item.priority);
                     const amount = item.final_amount || item.estimated_amount;
+                    const StIcon = st.icon;
                     return (
                       <TableRow key={item.id} className="hover:bg-muted/40 cursor-pointer" onClick={() => navigate(`/adminmaster/research/${item.id}`)}>
                         <TableCell className="font-mono text-xs">{item.request_number}</TableCell>
@@ -205,8 +185,13 @@ export default function AdminResearchPublications() {
                           <div className="text-[11px] text-muted-foreground flex items-center gap-1"><Phone className="w-3 h-3" />{item.client_phone}</div>
                         </TableCell>
                         <TableCell className="text-sm">{item.field}</TableCell>
-                        <TableCell><Badge className={`${status?.color} text-white border-0`}>{status?.label}</Badge></TableCell>
-                        <TableCell><Badge className={`${priority?.color} text-white border-0`}>{priority?.label}</Badge></TableCell>
+                        <TableCell>
+                          <Badge className={`${st.color} text-white border-0 gap-1`}>
+                            <StIcon className="w-3 h-3" />
+                            {st.label}
+                          </Badge>
+                        </TableCell>
+                        <TableCell><Badge className={`${pr.color} text-white border-0`}>{pr.emoji} {pr.label}</Badge></TableCell>
                         <TableCell className="font-bold text-emerald-700">
                           {amount ? `${Number(amount).toLocaleString('ar-SA')} ر.س` : <span className="text-muted-foreground text-xs">—</span>}
                         </TableCell>
