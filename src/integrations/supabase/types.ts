@@ -74,6 +74,247 @@ export type Database = {
         }
         Relationships: []
       }
+      assessment_answers: {
+        Row: {
+          answered_at: string
+          attempt_id: string
+          id: string
+          is_correct: boolean
+          question_id: string
+          selected_option_id: string | null
+        }
+        Insert: {
+          answered_at?: string
+          attempt_id: string
+          id?: string
+          is_correct?: boolean
+          question_id: string
+          selected_option_id?: string | null
+        }
+        Update: {
+          answered_at?: string
+          attempt_id?: string
+          id?: string
+          is_correct?: boolean
+          question_id?: string
+          selected_option_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "assessment_answers_attempt_id_fkey"
+            columns: ["attempt_id"]
+            isOneToOne: false
+            referencedRelation: "assessment_attempts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "assessment_answers_question_id_fkey"
+            columns: ["question_id"]
+            isOneToOne: false
+            referencedRelation: "assessment_questions"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "assessment_answers_selected_option_id_fkey"
+            columns: ["selected_option_id"]
+            isOneToOne: false
+            referencedRelation: "assessment_options"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      assessment_attempts: {
+        Row: {
+          anonymous_id: string | null
+          assessment_id: string
+          completed_at: string | null
+          correct_count: number
+          id: string
+          level_result: string | null
+          share_xp_awarded: number
+          shared_at: string | null
+          skill_breakdown: Json
+          started_at: string
+          status: string
+          time_spent_seconds: number
+          total_questions: number
+          total_score: number
+          user_id: string | null
+          xp_awarded: number
+        }
+        Insert: {
+          anonymous_id?: string | null
+          assessment_id: string
+          completed_at?: string | null
+          correct_count?: number
+          id?: string
+          level_result?: string | null
+          share_xp_awarded?: number
+          shared_at?: string | null
+          skill_breakdown?: Json
+          started_at?: string
+          status?: string
+          time_spent_seconds?: number
+          total_questions?: number
+          total_score?: number
+          user_id?: string | null
+          xp_awarded?: number
+        }
+        Update: {
+          anonymous_id?: string | null
+          assessment_id?: string
+          completed_at?: string | null
+          correct_count?: number
+          id?: string
+          level_result?: string | null
+          share_xp_awarded?: number
+          shared_at?: string | null
+          skill_breakdown?: Json
+          started_at?: string
+          status?: string
+          time_spent_seconds?: number
+          total_questions?: number
+          total_score?: number
+          user_id?: string | null
+          xp_awarded?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "assessment_attempts_assessment_id_fkey"
+            columns: ["assessment_id"]
+            isOneToOne: false
+            referencedRelation: "assessments"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      assessment_options: {
+        Row: {
+          created_at: string
+          id: string
+          is_correct: boolean
+          option_text: string
+          order_index: number
+          question_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          is_correct?: boolean
+          option_text: string
+          order_index?: number
+          question_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          is_correct?: boolean
+          option_text?: string
+          order_index?: number
+          question_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "assessment_options_question_id_fkey"
+            columns: ["question_id"]
+            isOneToOne: false
+            referencedRelation: "assessment_questions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      assessment_questions: {
+        Row: {
+          assessment_id: string
+          created_at: string
+          difficulty: string
+          explanation: string | null
+          id: string
+          order_index: number
+          question_text: string
+          skill_tag: string
+        }
+        Insert: {
+          assessment_id: string
+          created_at?: string
+          difficulty?: string
+          explanation?: string | null
+          id?: string
+          order_index?: number
+          question_text: string
+          skill_tag?: string
+        }
+        Update: {
+          assessment_id?: string
+          created_at?: string
+          difficulty?: string
+          explanation?: string | null
+          id?: string
+          order_index?: number
+          question_text?: string
+          skill_tag?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "assessment_questions_assessment_id_fkey"
+            columns: ["assessment_id"]
+            isOneToOne: false
+            referencedRelation: "assessments"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      assessments: {
+        Row: {
+          category: string
+          cover_emoji: string | null
+          created_at: string
+          description: string | null
+          difficulty_profile: Json
+          id: string
+          is_active: boolean
+          slug: string
+          sort_order: number
+          time_limit_seconds: number
+          title: string
+          updated_at: string
+          xp_completion: number
+          xp_share: number
+        }
+        Insert: {
+          category?: string
+          cover_emoji?: string | null
+          created_at?: string
+          description?: string | null
+          difficulty_profile?: Json
+          id?: string
+          is_active?: boolean
+          slug: string
+          sort_order?: number
+          time_limit_seconds?: number
+          title: string
+          updated_at?: string
+          xp_completion?: number
+          xp_share?: number
+        }
+        Update: {
+          category?: string
+          cover_emoji?: string | null
+          created_at?: string
+          description?: string | null
+          difficulty_profile?: Json
+          id?: string
+          is_active?: boolean
+          slug?: string
+          sort_order?: number
+          time_limit_seconds?: number
+          title?: string
+          updated_at?: string
+          xp_completion?: number
+          xp_share?: number
+        }
+        Relationships: []
+      }
       audit_logs: {
         Row: {
           action: string
@@ -6209,6 +6450,10 @@ export type Database = {
           variant_key: string
         }[]
       }
+      award_assessment_share_xp: {
+        Args: { p_attempt_id: string }
+        Returns: Json
+      }
       award_points: {
         Args: {
           _apply_multiplier?: boolean
@@ -6498,6 +6743,10 @@ export type Database = {
         Returns: number
       }
       lifecycle_status_ar: { Args: { p_status: string }; Returns: string }
+      link_anonymous_assessment_attempts: {
+        Args: { p_anonymous_id: string }
+        Returns: number
+      }
       log_smart_editor_usage: {
         Args: {
           _cost: number
@@ -6609,6 +6858,10 @@ export type Database = {
       }
       start_daily_challenge_attempt: {
         Args: { p_challenge_id: string; p_user_id: string }
+        Returns: Json
+      }
+      submit_assessment_attempt: {
+        Args: { p_answers: Json; p_attempt_id: string; p_time_spent?: number }
         Returns: Json
       }
       submit_daily_challenge_attempt: {
