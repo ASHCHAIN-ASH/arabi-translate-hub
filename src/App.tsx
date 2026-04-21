@@ -24,6 +24,7 @@ import TimelineCommitment from "./pages/academic/TimelineCommitment";
 import OrderNow from "./pages/OrderNow";
 import Index from "./pages/Index";
 import PaymentReturn from "./pages/PaymentReturn";
+import ContractSignByToken from "./pages/ContractSignByToken";
 
 import TranslationServices from "./pages/TranslationServices";
 import LegalTranslation from "./pages/LegalTranslation";
@@ -439,6 +440,7 @@ const App = () => (
             <Route path="/contracts/:id" element={
               <LegacyContractRedirect />
             } />
+            <Route path="/contracts/sign/:token" element={<ContractSignByToken />} />
             <Route path="/client/contracts/:id" element={
               <SimpleProtectedRoute requiredRole="client">
                 <ClientContractView />
