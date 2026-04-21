@@ -4,7 +4,8 @@ import { motion } from 'framer-motion';
 import {
   ArrowRight, BookOpen, User, Phone, Mail, FileText, FileSignature, Receipt,
   MessageCircle, Send, Loader2, Award, Paperclip, Download, Plus, Calendar,
-  Trash2, ExternalLink, History,
+  Trash2, ExternalLink, Hash, Globe, Languages, Building2, BookMarked,
+  FileSearch, Tags, Users2, FileCheck2, StickyNote, Wallet, CalendarClock,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -19,41 +20,50 @@ import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/components/SimpleAuthProvider';
 import { supabase } from '@/integrations/supabase/client';
 import AdminLayout from '@/components/admin/AdminLayout';
-
-const STATUSES = [
-  { value: 'new', label: 'جديد', color: 'bg-blue-500' },
-  { value: 'under_review', label: 'قيد المراجعة', color: 'bg-amber-500' },
-  { value: 'quoted', label: 'عرض سعر', color: 'bg-purple-500' },
-  { value: 'approved', label: 'معتمد', color: 'bg-emerald-500' },
-  { value: 'in_progress', label: 'قيد التنفيذ', color: 'bg-cyan-500' },
-  { value: 'published', label: 'تم النشر', color: 'bg-green-600' },
-  { value: 'rejected', label: 'مرفوض', color: 'bg-rose-500' },
-];
+import {
+  RESEARCH_STATUSES, PRIORITIES, getStatus, getPriority,
+  notifyResearchStatusChange, notifyResearchEvent,
+} from '@/utils/researchPublicationStatuses';
 
 const QUOTE_STATUSES: Record<string, { label: string; color: string }> = {
   draft: { label: 'مسودة', color: 'bg-slate-500' },
-  sent: { label: 'مُرسل', color: 'bg-blue-500' },
+  sent: { label: 'مُرسَل للعميل', color: 'bg-blue-500' },
   accepted: { label: 'مقبول', color: 'bg-emerald-500' },
   rejected: { label: 'مرفوض', color: 'bg-rose-500' },
-  expired: { label: 'منتهي', color: 'bg-amber-500' },
+  expired: { label: 'منتهي الصلاحية', color: 'bg-amber-500' },
 };
 
 const INVOICE_STATUSES: Record<string, { label: string; color: string }> = {
   draft: { label: 'مسودة', color: 'bg-slate-500' },
-  pending: { label: 'بانتظار الدفع', color: 'bg-amber-500' },
-  sent: { label: 'مُرسلة', color: 'bg-blue-500' },
+  pending: { label: 'بانتظار السداد', color: 'bg-amber-500' },
+  sent: { label: 'مُرسَلة', color: 'bg-blue-500' },
   partially_paid: { label: 'مدفوعة جزئياً', color: 'bg-cyan-500' },
-  paid: { label: 'مدفوعة', color: 'bg-emerald-500' },
+  paid: { label: 'مدفوعة بالكامل', color: 'bg-emerald-500' },
   overdue: { label: 'متأخرة', color: 'bg-rose-500' },
   cancelled: { label: 'ملغاة', color: 'bg-slate-400' },
 };
 
 const CONTRACT_STATUSES: Record<string, { label: string; color: string }> = {
   draft: { label: 'مسودة', color: 'bg-slate-500' },
-  sent: { label: 'مُرسل', color: 'bg-blue-500' },
-  signed: { label: 'موقّع', color: 'bg-emerald-500' },
+  sent: { label: 'مُرسَل', color: 'bg-blue-500' },
+  signed: { label: 'موقّع رسمياً', color: 'bg-emerald-500' },
   cancelled: { label: 'ملغى', color: 'bg-rose-500' },
   expired: { label: 'منتهي', color: 'bg-amber-500' },
+};
+
+const InfoRow = ({ icon: Icon, label, value, mono }: { icon: any; label: string; value?: any; mono?: boolean }) => {
+  if (!value && value !== 0) return null;
+  return (
+    <div className="flex items-start gap-3 py-2.5 border-b border-border/40 last:border-0">
+      <div className="w-8 h-8 rounded-lg bg-indigo-50 flex items-center justify-center shrink-0">
+        <Icon className="w-4 h-4 text-indigo-600" />
+      </div>
+      <div className="flex-1 min-w-0">
+        <div className="text-[11px] text-muted-foreground font-medium">{label}</div>
+        <div className={`text-sm font-semibold text-foreground break-words ${mono ? 'font-mono' : ''}`}>{value}</div>
+      </div>
+    </div>
+  );
 };
 
 export default function AdminResearchPublicationDetails() {
@@ -110,16 +120,35 @@ export default function AdminResearchPublicationDetails() {
   const updatePublication = async () => {
     if (!item) return;
     const updates: any = {};
-    if (editing.status && editing.status !== item.status) updates.status = editing.status;
-    if (editing.priority && editing.priority !== item.priority) updates.priority = editing.priority;
+    const statusChanged = editing.status && editing.status !== item.status;
+    const priorityChanged = editing.priority && editing.priority !== item.priority;
+    const amountChanged = editing.final_amount !== undefined && editing.final_amount !== String(item.final_amount || '');
+
+    if (statusChanged) updates.status = editing.status;
+    if (priorityChanged) updates.priority = editing.priority;
     if (editing.estimated_amount !== undefined) updates.estimated_amount = editing.estimated_amount || null;
     if (editing.final_amount !== undefined) updates.final_amount = editing.final_amount || null;
     if (editing.expected_delivery_date !== undefined) updates.expected_delivery_date = editing.expected_delivery_date || null;
     if (editing.admin_notes !== undefined) updates.admin_notes = editing.admin_notes;
+
     if (Object.keys(updates).length === 0) return toast({ title: 'لا تغييرات' });
+
     const { error } = await supabase.from('research_publications').update(updates).eq('id', item.id);
     if (error) return toast({ title: 'خطأ', description: error.message, variant: 'destructive' });
-    toast({ title: '✅ تم التحديث', description: 'سيتم إشعار العميل عبر واتساب' });
+
+    const pubBase = { ...item, ...updates };
+    if (statusChanged) {
+      await notifyResearchStatusChange({ publication: pubBase, newStatus: editing.status });
+    }
+    if (priorityChanged && !statusChanged) {
+      const pr = getPriority(editing.priority);
+      await notifyResearchEvent({ publication: pubBase, event: 'priority_changed', extra: { priority_label: pr.label, priority_emoji: pr.emoji } });
+    }
+    if (amountChanged && !statusChanged) {
+      await notifyResearchEvent({ publication: pubBase, event: 'amount_updated', extra: { amount: editing.final_amount } });
+    }
+
+    toast({ title: '✅ تم الحفظ والإشعار', description: 'تم إرسال إشعار واتساب لحظي للعميل' });
     setEditing({});
     loadAll();
   };
@@ -133,11 +162,10 @@ export default function AdminResearchPublicationDetails() {
       message: newMsg.trim(),
     });
     if (error) return toast({ title: 'خطأ', description: error.message, variant: 'destructive' });
-    toast({ title: '✅ تم الإرسال', description: 'الرد سيصل العميل عبر الواتساب' });
+    toast({ title: '✅ تم الإرسال عبر الواتساب' });
     setNewMsg('');
   };
 
-  // Create Quote
   const createQuote = async () => {
     const amount = parseFloat(quoteForm.amount);
     if (!amount || amount <= 0) return toast({ title: 'أدخل مبلغاً صحيحاً', variant: 'destructive' });
@@ -145,14 +173,9 @@ export default function AdminResearchPublicationDetails() {
     const taxAmount = (amount * taxRate) / 100;
     const total = amount + taxAmount;
     const { error } = await (supabase.from('research_publication_quotes') as any).insert({
-      publication_id: item.id,
-      amount,
-      tax_amount: taxAmount,
-      total_amount: total,
-      description: quoteForm.description || null,
-      valid_until: quoteForm.valid_until || null,
-      created_by: user!.id,
-      status: 'draft',
+      publication_id: item.id, amount, tax_amount: taxAmount, total_amount: total,
+      description: quoteForm.description || null, valid_until: quoteForm.valid_until || null,
+      created_by: user!.id, status: 'draft',
     });
     if (error) return toast({ title: 'خطأ', description: error.message, variant: 'destructive' });
     toast({ title: '✅ تم إنشاء عرض السعر' });
@@ -165,12 +188,16 @@ export default function AdminResearchPublicationDetails() {
     const { error } = await (supabase.from('research_publication_quotes') as any)
       .update({ status: 'sent' }).eq('id', q.id);
     if (error) return toast({ title: 'خطأ', description: error.message, variant: 'destructive' });
-    // Sync price into publication and notify client
     await supabase.from('research_publications').update({
       estimated_amount: q.amount,
       status: item.status === 'new' || item.status === 'under_review' ? 'quoted' : item.status,
     }).eq('id', item.id);
-    toast({ title: '✅ تم إرسال العرض للعميل (واتساب)' });
+    await notifyResearchEvent({
+      publication: item,
+      event: 'quote_sent',
+      extra: { amount: q.amount, tax_amount: q.tax_amount, total_amount: q.total_amount, valid_until: q.valid_until },
+    });
+    toast({ title: '✅ تم إرسال العرض للعميل عبر الواتساب' });
     loadAll();
   };
 
@@ -182,35 +209,32 @@ export default function AdminResearchPublicationDetails() {
     loadAll();
   };
 
-  // Create Invoice
   const createInvoice = async () => {
     const subtotal = parseFloat(invoiceForm.subtotal);
     if (!subtotal || subtotal <= 0) return toast({ title: 'أدخل مبلغاً صحيحاً', variant: 'destructive' });
     const taxRate = parseFloat(invoiceForm.tax_rate) || 0;
     const taxAmount = (subtotal * taxRate) / 100;
     const total = subtotal + taxAmount;
-    const { error } = await (supabase.from('invoices') as any).insert({
-      publication_id: item.id,
-      user_id: item.user_id,
-      subtotal,
-      tax_amount: taxAmount,
-      total_amount: total,
+    const { data: inserted, error } = await (supabase.from('invoices') as any).insert({
+      publication_id: item.id, user_id: item.user_id,
+      subtotal, tax_amount: taxAmount, total_amount: total,
       status: 'pending',
-      customer_name: item.client_name,
-      customer_email: item.client_email,
-      customer_phone: item.client_phone,
+      customer_name: item.client_name, customer_email: item.client_email, customer_phone: item.client_phone,
       notes: invoiceForm.notes || `فاتورة طلب نشر ${item.request_number}`,
-      due_date: invoiceForm.due_date || null,
-      currency: 'SAR',
-    });
+      due_date: invoiceForm.due_date || null, currency: 'SAR',
+    }).select().single();
     if (error) return toast({ title: 'خطأ', description: error.message, variant: 'destructive' });
-    toast({ title: '✅ تم إنشاء الفاتورة الضريبية' });
+    await notifyResearchEvent({
+      publication: item,
+      event: 'invoice_created',
+      extra: { invoice_number: inserted?.invoice_number, total_amount: total, due_date: invoiceForm.due_date },
+    });
+    toast({ title: '✅ تم إصدار الفاتورة وإشعار العميل' });
     setInvoiceDialog(false);
     setInvoiceForm({ subtotal: '', tax_rate: '15', notes: '', due_date: '' });
     loadAll();
   };
 
-  // Create Contract
   const createContract = () => {
     if (!item) return;
     const params = new URLSearchParams({
@@ -232,13 +256,14 @@ export default function AdminResearchPublicationDetails() {
     return <AdminLayout><div className="p-12 text-center"><p>الطلب غير موجود</p><Button onClick={() => navigate('/adminmaster/research')} className="mt-4">عودة</Button></div></AdminLayout>;
   }
 
-  const status = STATUSES.find(s => s.value === item.status);
+  const status = getStatus(item.status);
+  const priority = getPriority(item.priority);
+  const StIcon = status.icon;
   const attachments: any[] = Array.isArray(item.attachments) ? item.attachments : [];
 
   return (
     <AdminLayout>
       <div className="p-4 sm:p-6 space-y-5" dir="rtl">
-        {/* Header */}
         <div className="flex items-center gap-3 flex-wrap">
           <Button variant="outline" size="sm" onClick={() => navigate('/adminmaster/research')}>
             <ArrowRight className="w-4 h-4 ml-1" /> سجل الطلبات
@@ -250,13 +275,13 @@ export default function AdminResearchPublicationDetails() {
           className="bg-gradient-to-br from-indigo-700 via-blue-700 to-cyan-600 text-white rounded-3xl p-6 shadow-xl"
         >
           <div className="flex items-start justify-between gap-4 flex-wrap">
-            <div className="flex items-start gap-3">
+            <div className="flex items-start gap-3 flex-1 min-w-0">
               <div className="w-14 h-14 bg-white/20 rounded-2xl flex items-center justify-center shrink-0">
                 <BookOpen className="w-8 h-8" />
               </div>
-              <div>
+              <div className="min-w-0">
                 <Badge className="bg-white/20 border-0 text-white font-mono mb-2">{item.request_number}</Badge>
-                <h1 className="text-xl sm:text-2xl font-black">{item.title}</h1>
+                <h1 className="text-xl sm:text-2xl font-black break-words">{item.title}</h1>
                 <div className="flex items-center gap-3 mt-2 text-white/85 text-xs flex-wrap">
                   <span className="flex items-center gap-1"><User className="w-3 h-3" />{item.client_name}</span>
                   <span className="flex items-center gap-1"><Phone className="w-3 h-3" />{item.client_phone}</span>
@@ -264,106 +289,166 @@ export default function AdminResearchPublicationDetails() {
                 </div>
               </div>
             </div>
-            <Badge className={`${status?.color} text-white border-0 text-base px-3 py-1`}>{status?.label}</Badge>
+            <div className="flex flex-col items-end gap-2">
+              <Badge className={`${status.color} text-white border-0 text-base px-3 py-1.5 gap-1.5`}>
+                <StIcon className="w-4 h-4" /> {status.emoji} {status.label}
+              </Badge>
+              <Badge className={`${priority.color} text-white border-0 gap-1`}>
+                {priority.emoji} {priority.label}
+              </Badge>
+            </div>
+          </div>
+          <div className="mt-4 bg-white/10 backdrop-blur rounded-xl p-3 text-sm text-white/95">
+            {status.description}
           </div>
         </motion.div>
 
         <Tabs defaultValue="overview" dir="rtl">
           <TabsList className="flex-wrap h-auto">
-            <TabsTrigger value="overview"><FileText className="w-4 h-4 ml-1" />نظرة عامة</TabsTrigger>
+            <TabsTrigger value="overview"><FileText className="w-4 h-4 ml-1" />تفاصيل الطلب</TabsTrigger>
+            <TabsTrigger value="manage"><Award className="w-4 h-4 ml-1" />إدارة الطلب</TabsTrigger>
             <TabsTrigger value="contracts"><FileSignature className="w-4 h-4 ml-1" />العقود ({contracts.length})</TabsTrigger>
-            <TabsTrigger value="quotes"><Award className="w-4 h-4 ml-1" />عروض الأسعار ({quotes.length})</TabsTrigger>
+            <TabsTrigger value="quotes"><Wallet className="w-4 h-4 ml-1" />عروض الأسعار ({quotes.length})</TabsTrigger>
             <TabsTrigger value="invoices"><Receipt className="w-4 h-4 ml-1" />الفواتير ({invoices.length})</TabsTrigger>
             <TabsTrigger value="attachments"><Paperclip className="w-4 h-4 ml-1" />المرفقات ({attachments.length})</TabsTrigger>
             <TabsTrigger value="chat"><MessageCircle className="w-4 h-4 ml-1" />المحادثة ({messages.length})</TabsTrigger>
           </TabsList>
 
-          {/* Overview */}
           <TabsContent value="overview" className="space-y-4 mt-4">
-            <div className="grid md:grid-cols-2 gap-4">
-              <Card className="p-4">
-                <h4 className="font-bold mb-3 text-sm">تفاصيل البحث</h4>
-                <div className="space-y-1.5 text-sm">
-                  <div><b>التخصص:</b> {item.field}</div>
-                  <div><b>اللغة:</b> {item.language}</div>
-                  <div><b>نوع الخدمة:</b> {item.service_type}</div>
-                  {item.target_journal && <div><b>المجلة:</b> {item.target_journal}</div>}
-                  {item.journal_rank && <div><b>التصنيف:</b> {item.journal_rank}</div>}
-                  {item.page_count && <div><b>الصفحات:</b> {item.page_count}</div>}
-                  {item.keywords && <div><b>الكلمات المفتاحية:</b> {item.keywords}</div>}
-                  {item.authors && <div><b>المؤلفون:</b> {item.authors}</div>}
+            <div className="grid lg:grid-cols-2 gap-4">
+              <Card className="p-5">
+                <div className="flex items-center gap-2 mb-3 pb-3 border-b">
+                  <FileSearch className="w-5 h-5 text-indigo-600" />
+                  <h3 className="font-black text-lg">المعلومات الأكاديمية</h3>
                 </div>
+                <InfoRow icon={Hash} label="رقم الطلب" value={item.request_number} mono />
+                <InfoRow icon={BookOpen} label="عنوان البحث" value={item.title} />
+                <InfoRow icon={FileText} label="الملخص العلمي" value={item.abstract} />
+                <InfoRow icon={Tags} label="الكلمات المفتاحية" value={item.keywords} />
+                <InfoRow icon={Users2} label="المؤلفون / الباحثون" value={item.authors} />
+                <InfoRow icon={Globe} label="التخصص العلمي" value={item.field} />
+                <InfoRow icon={Languages} label="لغة البحث" value={item.language === 'ar' ? 'العربية' : item.language === 'en' ? 'الإنجليزية' : item.language} />
+                <InfoRow icon={FileCheck2} label="عدد الصفحات" value={item.page_count} />
               </Card>
 
-              <Card className="p-4 bg-indigo-50/50 border-indigo-200">
-                <h4 className="font-bold mb-3 text-sm flex items-center gap-2"><Award className="w-4 h-4 text-indigo-600" />إدارة الطلب</h4>
-                <div className="space-y-2">
-                  <div className="grid grid-cols-2 gap-2">
-                    <div>
-                      <Label className="text-xs">الحالة</Label>
-                      <Select value={editing.status ?? item.status} onValueChange={v => setEditing({ ...editing, status: v })}>
-                        <SelectTrigger><SelectValue /></SelectTrigger>
-                        <SelectContent>
-                          {STATUSES.map(s => <SelectItem key={s.value} value={s.value}>{s.label}</SelectItem>)}
-                        </SelectContent>
-                      </Select>
-                    </div>
-                    <div>
-                      <Label className="text-xs">الأولوية</Label>
-                      <Select value={editing.priority ?? item.priority} onValueChange={v => setEditing({ ...editing, priority: v })}>
-                        <SelectTrigger><SelectValue /></SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="low">منخفضة</SelectItem>
-                          <SelectItem value="normal">عادية</SelectItem>
-                          <SelectItem value="high">مرتفعة</SelectItem>
-                          <SelectItem value="urgent">عاجلة</SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </div>
-                  </div>
-                  <div className="grid grid-cols-2 gap-2">
-                    <div>
-                      <Label className="text-xs">السعر المقترح</Label>
-                      <Input type="number" defaultValue={item.estimated_amount || ''}
-                        onChange={e => setEditing({ ...editing, estimated_amount: e.target.value })} />
-                    </div>
-                    <div>
-                      <Label className="text-xs">السعر النهائي</Label>
-                      <Input type="number" defaultValue={item.final_amount || ''}
-                        onChange={e => setEditing({ ...editing, final_amount: e.target.value })} />
-                    </div>
-                  </div>
-                  <div>
-                    <Label className="text-xs">تاريخ التسليم المتوقع</Label>
-                    <Input type="date" defaultValue={item.expected_delivery_date || ''}
-                      onChange={e => setEditing({ ...editing, expected_delivery_date: e.target.value })} />
-                  </div>
-                  <div>
-                    <Label className="text-xs">ملاحظات إدارية</Label>
-                    <Textarea rows={2} defaultValue={item.admin_notes || ''}
-                      onChange={e => setEditing({ ...editing, admin_notes: e.target.value })} />
-                  </div>
-                  <Button onClick={updatePublication} className="w-full bg-indigo-600 hover:bg-indigo-700">
-                    💾 حفظ (سيتم إشعار العميل)
-                  </Button>
+              <Card className="p-5">
+                <div className="flex items-center gap-2 mb-3 pb-3 border-b">
+                  <Building2 className="w-5 h-5 text-indigo-600" />
+                  <h3 className="font-black text-lg">بيانات النشر والمجلة</h3>
                 </div>
+                <InfoRow icon={BookMarked} label="نوع الخدمة" value={
+                  item.service_type === 'publication' ? 'نشر في مجلة علمية' :
+                  item.service_type === 'translation' ? 'ترجمة وتدقيق' :
+                  item.service_type
+                } />
+                <InfoRow icon={Building2} label="المجلة المستهدفة" value={item.target_journal || '— لم تُحدَّد —'} />
+                <InfoRow icon={Award} label="تصنيف المجلة" value={item.journal_rank || '— غير محدد —'} />
+                <InfoRow icon={Wallet} label="السعر المقترح (تقديري)" value={item.estimated_amount ? `${Number(item.estimated_amount).toLocaleString('ar-SA')} ر.س` : null} />
+                <InfoRow icon={Wallet} label="السعر النهائي المعتمد" value={item.final_amount ? `${Number(item.final_amount).toLocaleString('ar-SA')} ر.س` : null} />
+                <InfoRow icon={CalendarClock} label="تاريخ التسليم المتوقع" value={item.expected_delivery_date ? new Date(item.expected_delivery_date).toLocaleDateString('ar-SA', { dateStyle: 'long' }) : null} />
+                <InfoRow icon={Calendar} label="تاريخ تقديم الطلب" value={new Date(item.created_at).toLocaleDateString('ar-SA', { dateStyle: 'long' })} />
+                <InfoRow icon={Calendar} label="آخر تحديث" value={new Date(item.updated_at).toLocaleString('ar-SA')} />
               </Card>
             </div>
 
-            <Card className="p-4">
-              <div className="text-xs text-muted-foreground mb-1">الملخص:</div>
-              <p className="text-sm whitespace-pre-wrap">{item.abstract}</p>
+            <Card className="p-5">
+              <div className="flex items-center gap-2 mb-3 pb-3 border-b">
+                <User className="w-5 h-5 text-indigo-600" />
+                <h3 className="font-black text-lg">بيانات الباحث / مقدِّم الطلب</h3>
+              </div>
+              <div className="grid md:grid-cols-3 gap-4">
+                <InfoRow icon={User} label="الاسم الكامل" value={item.client_name} />
+                <InfoRow icon={Phone} label="رقم الجوال (واتساب)" value={item.client_phone} mono />
+                <InfoRow icon={Mail} label="البريد الإلكتروني" value={item.client_email || '—'} />
+              </div>
             </Card>
 
             {item.notes && (
               <Card className="p-4 bg-amber-50 border-amber-200">
-                <div className="text-xs text-amber-700 mb-1">ملاحظات العميل:</div>
-                <p className="text-sm whitespace-pre-wrap">{item.notes}</p>
+                <div className="flex items-center gap-2 mb-2">
+                  <StickyNote className="w-4 h-4 text-amber-700" />
+                  <h4 className="font-bold text-amber-900">ملاحظات الباحث</h4>
+                </div>
+                <p className="text-sm text-amber-900 whitespace-pre-wrap">{item.notes}</p>
+              </Card>
+            )}
+
+            {item.admin_notes && (
+              <Card className="p-4 bg-indigo-50 border-indigo-200">
+                <div className="flex items-center gap-2 mb-2">
+                  <StickyNote className="w-4 h-4 text-indigo-700" />
+                  <h4 className="font-bold text-indigo-900">الملاحظات الإدارية</h4>
+                </div>
+                <p className="text-sm text-indigo-900 whitespace-pre-wrap">{item.admin_notes}</p>
               </Card>
             )}
           </TabsContent>
 
-          {/* Contracts */}
+          <TabsContent value="manage" className="space-y-4 mt-4">
+            <Card className="p-5">
+              <div className="flex items-center gap-2 mb-4 pb-3 border-b flex-wrap">
+                <Award className="w-5 h-5 text-indigo-600" />
+                <h3 className="font-black text-lg">إدارة الطلب وتحديث الحالة</h3>
+                <Badge variant="outline" className="mr-auto text-xs">📲 الإشعارات تصل عبر الواتساب لحظياً</Badge>
+              </div>
+
+              <div className="grid md:grid-cols-2 gap-3 mb-3">
+                <div>
+                  <Label className="text-xs font-bold mb-1 block">الحالة الأكاديمية</Label>
+                  <Select value={editing.status ?? item.status} onValueChange={v => setEditing({ ...editing, status: v })}>
+                    <SelectTrigger><SelectValue /></SelectTrigger>
+                    <SelectContent>
+                      {RESEARCH_STATUSES.map(s => (
+                        <SelectItem key={s.value} value={s.value}>{s.emoji} {s.label}</SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  <p className="text-[11px] text-muted-foreground mt-1">{getStatus(editing.status ?? item.status).description}</p>
+                </div>
+                <div>
+                  <Label className="text-xs font-bold mb-1 block">الأولوية</Label>
+                  <Select value={editing.priority ?? item.priority} onValueChange={v => setEditing({ ...editing, priority: v })}>
+                    <SelectTrigger><SelectValue /></SelectTrigger>
+                    <SelectContent>
+                      {PRIORITIES.map(p => (
+                        <SelectItem key={p.value} value={p.value}>{p.emoji} {p.label}</SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
+
+              <div className="grid md:grid-cols-3 gap-3 mb-3">
+                <div>
+                  <Label className="text-xs font-bold mb-1 block">السعر المقترح (ر.س)</Label>
+                  <Input type="number" defaultValue={item.estimated_amount || ''}
+                    onChange={e => setEditing({ ...editing, estimated_amount: e.target.value })} />
+                </div>
+                <div>
+                  <Label className="text-xs font-bold mb-1 block">السعر النهائي المعتمد (ر.س)</Label>
+                  <Input type="number" defaultValue={item.final_amount || ''}
+                    onChange={e => setEditing({ ...editing, final_amount: e.target.value })} />
+                </div>
+                <div>
+                  <Label className="text-xs font-bold mb-1 block">تاريخ التسليم المتوقع</Label>
+                  <Input type="date" defaultValue={item.expected_delivery_date || ''}
+                    onChange={e => setEditing({ ...editing, expected_delivery_date: e.target.value })} />
+                </div>
+              </div>
+
+              <div className="mb-4">
+                <Label className="text-xs font-bold mb-1 block">ملاحظات إدارية (تُرسَل ضمن إشعار الواتساب)</Label>
+                <Textarea rows={3} defaultValue={item.admin_notes || ''}
+                  placeholder="اكتب ملاحظتك للعميل... ستُرسل ضمن نص إشعار الحالة"
+                  onChange={e => setEditing({ ...editing, admin_notes: e.target.value })} />
+              </div>
+
+              <Button onClick={updatePublication} className="w-full bg-indigo-600 hover:bg-indigo-700 h-11">
+                <Send className="w-4 h-4 ml-2" /> 💾 حفظ وإرسال إشعار واتساب لحظي للعميل
+              </Button>
+            </Card>
+          </TabsContent>
+
           <TabsContent value="contracts" className="space-y-3 mt-4">
             <div className="flex justify-between items-center">
               <h3 className="font-bold">عقود الطلب</h3>
@@ -401,7 +486,6 @@ export default function AdminResearchPublicationDetails() {
             })}
           </TabsContent>
 
-          {/* Quotes */}
           <TabsContent value="quotes" className="space-y-3 mt-4">
             <div className="flex justify-between items-center">
               <h3 className="font-bold">عروض الأسعار</h3>
@@ -448,7 +532,6 @@ export default function AdminResearchPublicationDetails() {
             })}
           </TabsContent>
 
-          {/* Invoices */}
           <TabsContent value="invoices" className="space-y-3 mt-4">
             <div className="flex justify-between items-center">
               <h3 className="font-bold">الفواتير الضريبية</h3>
@@ -490,16 +573,27 @@ export default function AdminResearchPublicationDetails() {
             })}
           </TabsContent>
 
-          {/* Attachments */}
           <TabsContent value="attachments" className="space-y-3 mt-4">
             <h3 className="font-bold">مرفقات العميل</h3>
-            {attachments.length === 0 ? (
+            {attachments.length === 0 && !item.file_url ? (
               <Card className="p-12 text-center border-dashed">
                 <Paperclip className="w-12 h-12 mx-auto text-muted-foreground/30 mb-2" />
                 <p className="text-muted-foreground text-sm">لا توجد مرفقات</p>
               </Card>
             ) : (
               <div className="grid sm:grid-cols-2 gap-3">
+                {item.file_url && (
+                  <Card className="p-3 flex items-center gap-3 bg-indigo-50 border-indigo-200">
+                    <FileText className="w-8 h-8 text-indigo-600 shrink-0" />
+                    <div className="flex-1 min-w-0">
+                      <div className="font-bold text-sm">الملف الرئيسي للبحث</div>
+                      <div className="text-[11px] text-muted-foreground">المرفق الأساسي</div>
+                    </div>
+                    <Button size="sm" variant="outline" asChild>
+                      <a href={item.file_url} target="_blank" rel="noreferrer"><Download className="w-4 h-4" /></a>
+                    </Button>
+                  </Card>
+                )}
                 {attachments.map((a: any, idx: number) => (
                   <Card key={idx} className="p-3 flex items-center gap-3">
                     <FileText className="w-8 h-8 text-indigo-600 shrink-0" />
@@ -518,23 +612,13 @@ export default function AdminResearchPublicationDetails() {
                 ))}
               </div>
             )}
-            {item.file_url && (
-              <Card className="p-3 flex items-center gap-3 bg-indigo-50 border-indigo-200">
-                <FileText className="w-8 h-8 text-indigo-600 shrink-0" />
-                <div className="flex-1 font-bold text-sm">الملف الرئيسي للبحث</div>
-                <Button size="sm" variant="outline" asChild>
-                  <a href={item.file_url} target="_blank" rel="noreferrer"><Download className="w-4 h-4" /></a>
-                </Button>
-              </Card>
-            )}
           </TabsContent>
 
-          {/* Chat */}
           <TabsContent value="chat" className="mt-4">
             <Card className="p-4">
               <h4 className="font-bold mb-2 text-sm flex items-center gap-2">
                 <MessageCircle className="w-4 h-4 text-indigo-600" />
-                المحادثة (الرد سيُرسل عبر الواتساب فوراً)
+                المحادثة (الرد يصل العميل عبر الواتساب لحظياً 📲)
               </h4>
               <div className="bg-muted/20 rounded-xl p-3 max-h-[500px] overflow-y-auto space-y-2 mb-3 min-h-[300px]">
                 {messages.length === 0 ? (
@@ -547,7 +631,7 @@ export default function AdminResearchPublicationDetails() {
                       <div className="text-[10px] font-bold mb-1 opacity-70">
                         {m.sender_type === 'admin' ? '👨‍💼 الإدارة' : '👤 العميل'}
                       </div>
-                      {m.message}
+                      <div className="whitespace-pre-wrap">{m.message}</div>
                       <div className={`text-[10px] mt-1 ${m.sender_type === 'admin' ? 'text-white/70' : 'text-muted-foreground'}`}>
                         {new Date(m.created_at).toLocaleString('ar-SA')}
                       </div>
@@ -566,7 +650,6 @@ export default function AdminResearchPublicationDetails() {
           </TabsContent>
         </Tabs>
 
-        {/* Quote Dialog */}
         <Dialog open={quoteDialog} onOpenChange={setQuoteDialog}>
           <DialogContent dir="rtl">
             <DialogHeader><DialogTitle>إنشاء عرض سعر جديد</DialogTitle></DialogHeader>
@@ -602,7 +685,6 @@ export default function AdminResearchPublicationDetails() {
           </DialogContent>
         </Dialog>
 
-        {/* Invoice Dialog */}
         <Dialog open={invoiceDialog} onOpenChange={setInvoiceDialog}>
           <DialogContent dir="rtl">
             <DialogHeader><DialogTitle>إنشاء فاتورة ضريبية</DialogTitle></DialogHeader>
