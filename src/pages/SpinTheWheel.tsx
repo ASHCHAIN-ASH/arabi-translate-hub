@@ -42,12 +42,16 @@ const SpinTheWheel = () => {
   const [isChecking, setIsChecking] = useState(true);
   const { toast } = useToast();
 
-  // Responsive canvas size
+  // Responsive canvas size — based on viewport, not just container
   useEffect(() => {
     const update = () => {
-      const w = containerRef.current?.clientWidth ?? 400;
-      const next = Math.max(280, Math.min(520, w - 16));
-      setSize(next);
+      const vw = window.innerWidth;
+      const vh = window.innerHeight;
+      // Cap by viewport width AND height to avoid overflow on short screens
+      const maxByWidth = vw < 640 ? vw - 48 : vw < 1024 ? Math.min(vw - 80, 440) : 500;
+      const maxByHeight = vh * 0.6;
+      const next = Math.max(260, Math.min(maxByWidth, maxByHeight, 520));
+      setSize(Math.round(next));
     };
     update();
     window.addEventListener("resize", update);
