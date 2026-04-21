@@ -132,7 +132,11 @@ Deno.serve(async (req) => {
       purpose: body.purpose,
       return_url: baseReturn,
       callback_url: callBackUrl,
-      metadata: { client_origin: origin, note: body.note || null },
+      metadata: {
+        client_origin: origin,
+        note: body.note || null,
+        research_publication_id: body.research_publication_id || null,
+      },
     }).select().single();
     if (insErr) throw insErr;
 
@@ -148,6 +152,7 @@ Deno.serve(async (req) => {
       note: body.note || (
         body.purpose === 'wallet_topup' ? 'شحن المحفظة'
         : body.purpose === 'invoice_payment' ? 'دفع فاتورة'
+        : body.purpose === 'research_publication_payment' ? 'دفع طلب نشر بحث'
         : 'دفع طلب خدمة'
       ),
     };
