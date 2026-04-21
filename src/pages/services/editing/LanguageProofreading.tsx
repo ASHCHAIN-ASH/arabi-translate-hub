@@ -6,7 +6,7 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/
 import { Languages, CheckCircle, FileText, Search, Sparkles, ArrowLeft, Zap } from 'lucide-react';
 import Header from '@/components/Header';
 import Breadcrumb from '@/components/Breadcrumb';
-import { EditingServiceForm } from '@/components/editing/EditingServiceForm';
+import { AuthCtaCard } from '@/components/research/AuthCtaCard';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 
@@ -339,10 +339,7 @@ const LanguageProofreading = () => {
             viewport={{ once: true }}
             transition={{ delay: 0.2 }}
           >
-            <EditingServiceForm
-              serviceTitle="التدقيق اللغوي"
-              serviceType="language-proofreading"
-            />
+            <AuthCtaCard serviceTitle="التدقيق اللغوي" />
           </motion.div>
         </div>
       </section>

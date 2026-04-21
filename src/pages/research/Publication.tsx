@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { BookOpen, Award, TrendingUp, Shield, Sparkles, ArrowLeft, CheckCircle } from 'lucide-react';
 import Header from '@/components/Header';
 import Breadcrumb from '@/components/Breadcrumb';
-import { PublicationServiceForm } from '@/components/publication/PublicationServiceForm';
+import { AuthCtaCard } from '@/components/research/AuthCtaCard';
 import { useNavigate } from 'react-router-dom';
 
 import Footer from '@/components/Footer';
@@ -415,10 +415,7 @@ const Publication = () => {
             </h2>
             <p className="text-muted-foreground text-lg">املأ النموذج وسنتواصل معك خلال 24 ساعة</p>
           </motion.div>
-          <PublicationServiceForm
-            serviceTitle="النشر الأكاديمي"
-            serviceType="publication"
-          />
+          <AuthCtaCard serviceTitle="النشر الأكاديمي" />
         </div>
       </section>
           <Footer />

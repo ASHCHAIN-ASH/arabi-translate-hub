@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import Header from '@/components/Header';
 import Breadcrumb from '@/components/Breadcrumb';
-import ServiceInquiryForm from '@/components/ServiceInquiryForm';
+import { AuthCtaCard } from '@/components/research/AuthCtaCard';
 
 import { 
   Globe, 
@@ -365,14 +365,11 @@ const WebsiteTranslation = () => {
         </div>
       </section>
 
-      {/* فورم طلب الخدمة */}
-      <ServiceInquiryForm
-        serviceType="website-translation"
-        serviceName="ترجمة المواقع الإلكترونية"
-        serviceIcon={<Globe className="h-8 w-8" />}
-        showLanguageFields={true}
-        showFileSizeField={false}
-      />
+      <section className="py-16">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-4xl">
+          <AuthCtaCard serviceTitle="ترجمة المواقع الإلكترونية" />
+        </div>
+      </section>
 
       {/* دعوة للعمل */}
       <section className="py-16 bg-gradient-to-r from-cyan-600 to-blue-600 text-white">

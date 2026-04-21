@@ -5,7 +5,7 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/
 import { FileCheck, BookOpen, Award, Target, Sparkles } from 'lucide-react';
 import Header from '@/components/Header';
 import Breadcrumb from '@/components/Breadcrumb';
-import { EditingServiceForm } from '@/components/editing/EditingServiceForm';
+import { AuthCtaCard } from '@/components/research/AuthCtaCard';
 
 const AcademicReview = () => {
   const features = [
@@ -150,11 +150,7 @@ const AcademicReview = () => {
             <h2 className="text-4xl font-bold mb-4">اطلب خدمة المراجعة الأكاديمية</h2>
             <p className="text-muted-foreground text-lg">املأ النموذج وسنبدأ فوراً</p>
           </div>
-          <EditingServiceForm
-            serviceTitle="المراجعة الأكاديمية"
-            serviceType="academic-review"
-            specializations={['علوم إنسانية', 'علوم طبيعية', 'هندسة', 'طب', 'إدارة', 'قانون', 'تربية']}
-          />
+          <AuthCtaCard serviceTitle="المراجعة الأكاديمية" />
         </div>
       </section>
     </div>

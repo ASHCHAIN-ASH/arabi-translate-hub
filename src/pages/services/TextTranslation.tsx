@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import Header from '@/components/Header';
 import Breadcrumb from '@/components/Breadcrumb';
-import ServiceInquiryForm from '@/components/ServiceInquiryForm';
+import { AuthCtaCard } from '@/components/research/AuthCtaCard';
 
 import { 
   FileText, 
@@ -301,14 +301,11 @@ const TextTranslation = () => {
         </div>
       </section>
 
-      {/* فورم طلب الخدمة */}
-      <ServiceInquiryForm
-        serviceType="text-translation"
-        serviceName="ترجمة النصوص الفورية"
-        serviceIcon={<FileText className="h-8 w-8" />}
-        showLanguageFields={true}
-        showFileSizeField={true}
-      />
+      <section className="py-16">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-4xl">
+          <AuthCtaCard serviceTitle="ترجمة النصوص الفورية" />
+        </div>
+      </section>
 
       {/* دعوة للعمل */}
       <section className="py-16 bg-white dark:bg-slate-900">
