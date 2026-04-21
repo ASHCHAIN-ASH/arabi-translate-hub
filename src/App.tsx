@@ -453,6 +453,11 @@ const App = () => (
                 <AdminResearchPublications />
               </SimpleProtectedRoute>
             } />
+            <Route path="/adminmaster/research/:id" element={
+              <SimpleProtectedRoute adminOnly>
+                <AdminResearchPublicationDetails />
+              </SimpleProtectedRoute>
+            } />
             <Route path="/adminmaster/services" element={
               <SimpleProtectedRoute adminOnly>
                 <AdminServices />
