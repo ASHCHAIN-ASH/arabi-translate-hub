@@ -243,7 +243,7 @@ export const ContractDocument: React.FC<Props> = ({ contract, signature, signatu
         <span style={{ color: GOLD }}>━━━</span> التوقيع والاعتماد <span style={{ color: GOLD }}>━━━</span>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div className={`grid grid-cols-1 gap-4 ${slotCount >= 2 ? 'md:grid-cols-3' : 'md:grid-cols-2'}`}>
         {/* First party — Official platform seal */}
         <div
           className="relative rounded-xl p-5 pt-6 text-center overflow-hidden"
