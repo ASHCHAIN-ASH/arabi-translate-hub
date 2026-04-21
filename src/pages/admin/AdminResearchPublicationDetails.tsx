@@ -235,18 +235,57 @@ export default function AdminResearchPublicationDetails() {
     loadAll();
   };
 
-  const createContract = () => {
+  const [creatingContract, setCreatingContract] = useState(false);
+  const createContract = async () => {
     if (!item) return;
-    const params = new URLSearchParams({
-      client_full_name: item.client_name || '',
-      client_phone: item.client_phone || '',
-      client_email: item.client_email || '',
-      title: `عقد نشر بحث: ${item.title}`,
-      service_name: 'نشر بحث علمي',
-      total_amount: String(item.final_amount || item.estimated_amount || ''),
-      publication_id: item.id,
-    });
-    navigate(`/adminmaster/contracts/new?${params.toString()}`);
+    // إذا كان هناك عقد سابق مرتبط بالطلب، افتحه مباشرة
+    const existing = contracts?.[0];
+    if (existing) {
+      navigate(`/adminmaster/contracts/${existing.id}`);
+      return;
+    }
+    setCreatingContract(true);
+    try {
+      const amount = Number(item.final_amount || item.estimated_amount || 0);
+      const contractContent = `عقد نشر بحث علمي\n\nالعميل: ${item.client_name || ''}\nالبريد: ${item.client_email || ''}\nالجوال: ${item.client_phone || ''}\n\nعنوان البحث: ${item.title || ''}\nالتخصص: ${item.field_of_study || item.specialization || '—'}\nاللغة: ${item.language || '—'}\nالمجلة المستهدفة: ${item.target_journal || '—'}\n\nالقيمة الإجمالية: ${amount.toLocaleString('ar-SA')} ر.س (شاملة الضريبة)\n\nيلتزم الطرف الثاني (ماستر إيدو باث) بتقديم خدمة نشر البحث وفق المعايير الأكاديمية المتفق عليها، ويلتزم الطرف الأول (العميل) بسداد القيمة المتفق عليها.`;
+
+      const { data: created, error } = await (supabase.from('contracts') as any)
+        .insert([{
+          title: `عقد نشر بحث: ${item.title}`,
+          client_full_name: item.client_name || null,
+          client_email: item.client_email || null,
+          client_phone: item.client_phone || null,
+          customer_id: item.user_id || null,
+          user_id: item.user_id || null,
+          publication_id: item.id,
+          service_name: 'نشر بحث علمي',
+          service_type: 'research_publication',
+          template_type: 'research_publication',
+          total_amount: amount || null,
+          currency: 'SAR',
+          content: contractContent,
+          status: 'draft',
+          metadata: {
+            source: 'research_publication',
+            publication_id: item.id,
+            field_of_study: item.field_of_study || item.specialization || null,
+            target_journal: item.target_journal || null,
+          },
+        }])
+        .select('id, contract_number')
+        .single();
+      if (error) throw error;
+
+      await notifyResearchEvent('contract_created', item, {
+        extra: { contract_number: created?.contract_number, total_amount: amount },
+      });
+      toast({ title: '✅ تم إنشاء العقد', description: `رقم العقد: ${created?.contract_number || ''}` });
+      navigate(`/adminmaster/contracts/${created.id}`);
+    } catch (e: any) {
+      toast({ title: 'تعذّر إنشاء العقد', description: e.message, variant: 'destructive' });
+    } finally {
+      setCreatingContract(false);
+    }
   };
 
   if (loading) {
