@@ -256,6 +256,45 @@ export default function AdminResearchContractDetails() {
     } finally { setGenerating(false); }
   };
 
+  // ─── Print: generate PDF in same contract-document style, open & auto-trigger print ───
+  const printContractPdf = async () => {
+    if (!contract) return;
+    setPrinting(true);
+    const win = window.open('', '_blank');
+    if (win) {
+      win.document.write(
+        `<!doctype html><html dir="rtl" lang="ar"><head><meta charset="utf-8"><title>تجهيز نسخة الطباعة...</title>
+        <style>body{font-family:'IBM Plex Sans Arabic',system-ui;margin:0;display:flex;align-items:center;justify-content:center;height:100vh;background:#0a1f3d;color:#c9a961;text-align:center}</style>
+        </head><body><div><h2>📄 جاري تجهيز نسخة العقد للطباعة...</h2><p>يرجى الانتظار قليلاً</p></div></body></html>`
+      );
+    }
+    try {
+      const { data, error } = await supabase.functions.invoke('generate-contract-pdf', {
+        body: { contract_id: contract.id, mode: 'preview' },
+      });
+      if (error || !data?.signed_url) throw new Error(error?.message || 'تعذّر التوليد');
+      if (win) {
+        // Embed the generated PDF and auto-trigger print once loaded
+        win.document.open();
+        win.document.write(
+          `<!doctype html><html dir="rtl" lang="ar"><head><meta charset="utf-8">
+          <title>عقد ${contract.contract_number} — طباعة</title>
+          <style>html,body{margin:0;height:100%}iframe{border:0;width:100%;height:100%}</style>
+          </head><body><iframe id="pdf" src="${data.signed_url}#toolbar=1" onload="setTimeout(()=>{try{this.contentWindow.focus();this.contentWindow.print();}catch(e){}},700)"></iframe></body></html>`
+        );
+        win.document.close();
+      } else {
+        // Popup blocked — fallback: open the PDF directly
+        window.open(data.signed_url, '_blank');
+      }
+      toast({ title: '🖨️ نسخة الطباعة جاهزة' });
+    } catch (e: any) {
+      if (win) win.close();
+      toast({ title: 'تعذّر تجهيز نسخة الطباعة', description: e.message, variant: 'destructive' });
+    } finally { setPrinting(false); }
+  };
+
+
   const copyClientLink = async () => {
     if (!contract?.verification_token) return;
     const url = `${window.location.origin}/contracts/sign/${contract.verification_token}`;
