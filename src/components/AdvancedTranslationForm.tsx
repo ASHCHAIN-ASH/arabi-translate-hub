@@ -693,7 +693,7 @@ const AdvancedTranslationForm = ({
                 <Clock className="h-8 w-8 mx-auto mb-2 text-white animate-pulse" />
                 <h4 className="font-semibold">ساعات العمل</h4>
                 <p className="text-sm opacity-90">الأحد - الخميس</p>
-                <p className="text-xs opacity-80">10:00 ص - 7:00 م</p>
+                <p className="text-xs opacity-80">9:00 ص - 5:00 م</p>
               </motion.div>
 
               <motion.div
