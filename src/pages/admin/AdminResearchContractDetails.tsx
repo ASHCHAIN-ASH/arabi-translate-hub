@@ -4,7 +4,7 @@ import { motion } from 'framer-motion';
 import {
   ArrowRight, BookMarked, User, Phone, Mail, Calendar, Hash, Globe, Languages,
   Building2, FileSignature, Loader2, Send, Download, Printer, Copy, Trash2,
-  CheckCircle2, Award, BookOpen, Sparkles, ScrollText, Pencil, Save, X, Plus, Eye, ListChecks,
+  CheckCircle2, Award, BookOpen, Sparkles, ScrollText, Pencil, Save, X, Plus, Eye, ListChecks, FileText,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
