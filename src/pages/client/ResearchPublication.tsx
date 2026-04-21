@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { BookOpen, Plus, FileText, Clock, CheckCircle2, XCircle, MessageCircle, Sparkles, Award, Globe, Send, Loader2, ChevronRight } from 'lucide-react';
+import { BookOpen, Plus, FileText, Clock, CheckCircle2, XCircle, MessageCircle, Sparkles, Award, Globe, Send, Loader2, ChevronRight, Upload, Paperclip, Download, Trash2, File as FileIcon } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
