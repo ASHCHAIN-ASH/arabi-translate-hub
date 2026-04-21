@@ -35,6 +35,20 @@ export class QuestionBankService {
     return data || [];
   }
 
+  /** Returns counts of active questions per subject id */
+  static async getQuestionCountsBySubject(): Promise<Record<string, number>> {
+    const { data, error } = await (supabase as any)
+      .from('questions')
+      .select('subject_id')
+      .eq('is_active', true);
+    if (error) throw error;
+    const map: Record<string, number> = {};
+    (data || []).forEach((r: any) => {
+      map[r.subject_id] = (map[r.subject_id] || 0) + 1;
+    });
+    return map;
+  }
+
   static async listQuestions(filter: { subjectId?: string; difficulty?: Difficulty; limit?: number } = {}): Promise<QQuestion[]> {
     let q = (supabase as any).from('questions').select('id, subject_id, question_text, explanation, question_type, difficulty, question_choices(id, choice_text, order_index)').eq('is_active', true);
     if (filter.subjectId) q = q.eq('subject_id', filter.subjectId);
