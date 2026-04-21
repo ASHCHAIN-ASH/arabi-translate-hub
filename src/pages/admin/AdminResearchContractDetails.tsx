@@ -136,28 +136,88 @@ export default function AdminResearchContractDetails() {
   return (
     <AdminLayout>
       <div className="p-6 space-y-6 max-w-6xl mx-auto">
-        {/* Header */}
-        <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }}
-          className="bg-gradient-to-br from-slate-900 via-indigo-900 to-purple-900 rounded-2xl p-6 text-white shadow-xl">
-          <div className="flex items-center justify-between flex-wrap gap-4">
-            <div className="flex items-center gap-4">
-              <div className="w-14 h-14 rounded-xl bg-white/15 backdrop-blur flex items-center justify-center border border-white/20">
-                <BookMarked className="w-7 h-7" />
-              </div>
-              <div>
-                <div className="flex items-center gap-2 mb-1">
-                  <Badge variant="outline" className="font-mono text-xs bg-white/10 border-white/30 text-white">{contract.contract_number}</Badge>
-                  <Badge className={`${cs.color} text-white border-0`}>{cs.label}</Badge>
-                  <Badge className="bg-amber-500/90 text-white border-0">📚 عقد نشر علمي</Badge>
+        {/* Header — bank-grade navy/gold identity matching contract document */}
+        <motion.div
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="relative overflow-hidden rounded-2xl shadow-2xl border"
+          style={{
+            background: 'linear-gradient(135deg, #0a1f3d 0%, #0f2a52 60%, #0a1f3d 100%)',
+            borderColor: '#c9a961',
+            fontFamily: "'IBM Plex Sans Arabic', 'Tajawal', system-ui, sans-serif",
+          }}
+        >
+          {/* Gold top stripe */}
+          <div className="h-1.5 w-full" style={{ background: 'linear-gradient(90deg, transparent, #c9a961, transparent)' }} />
+
+          {/* Decorative corner ornaments */}
+          <div className="absolute top-3 left-3 w-10 h-10 border-t-2 border-l-2 rounded-tl-lg opacity-50" style={{ borderColor: '#c9a961' }} />
+          <div className="absolute bottom-3 right-3 w-10 h-10 border-b-2 border-r-2 rounded-br-lg opacity-50" style={{ borderColor: '#c9a961' }} />
+
+          <div className="relative px-6 py-5">
+            <div className="flex items-start justify-between flex-wrap gap-4">
+              {/* Right side — identity */}
+              <div className="flex items-center gap-4 flex-1 min-w-0">
+                <div
+                  className="w-16 h-16 rounded-xl flex items-center justify-center shrink-0 shadow-lg"
+                  style={{
+                    background: 'linear-gradient(135deg, #c9a961 0%, #b8954f 100%)',
+                    boxShadow: '0 4px 14px rgba(201,169,97,0.4)',
+                  }}
+                >
+                  <BookMarked className="w-8 h-8 text-[#0a1f3d]" />
                 </div>
-                <h1 className="text-xl md:text-2xl font-black">{pub?.title || contract.title}</h1>
-                <p className="text-xs text-white/70 mt-1">منصة ماستر إيدو باث للخدمات الأكاديمية</p>
+                <div className="min-w-0">
+                  <div className="text-[10px] tracking-[0.3em] uppercase mb-1" style={{ color: '#c9a961' }}>
+                    Master U Path · Academic Contract
+                  </div>
+                  <h1 className="text-xl md:text-2xl font-black text-white truncate">
+                    {pub?.title || contract.title}
+                  </h1>
+                  <p className="text-xs mt-1" style={{ color: '#c9a96199' }}>
+                    منصة ماستر إيدو باث للخدمات الأكاديمية — المملكة العربية السعودية
+                  </p>
+                </div>
+              </div>
+
+              {/* Left side — back button */}
+              <Button
+                variant="outline"
+                onClick={() => navigate('/adminmaster/research/contracts')}
+                className="border-[#c9a961]/40 text-[#c9a961] bg-transparent hover:bg-[#c9a961]/10 hover:text-[#c9a961]"
+              >
+                <ArrowRight className="w-4 h-4 ml-1" /> عودة للقائمة
+              </Button>
+            </div>
+
+            {/* Meta strip — contract number, date, status, type */}
+            <div className="mt-5 grid grid-cols-2 md:grid-cols-4 gap-3">
+              <div className="rounded-lg px-3 py-2 border" style={{ background: 'rgba(201,169,97,0.08)', borderColor: 'rgba(201,169,97,0.25)' }}>
+                <div className="text-[10px] uppercase tracking-wider" style={{ color: '#c9a961' }}>رقم العقد</div>
+                <div className="font-mono font-bold text-white text-sm mt-0.5">{contract.contract_number}</div>
+              </div>
+              <div className="rounded-lg px-3 py-2 border" style={{ background: 'rgba(201,169,97,0.08)', borderColor: 'rgba(201,169,97,0.25)' }}>
+                <div className="text-[10px] uppercase tracking-wider" style={{ color: '#c9a961' }}>تاريخ التحرير</div>
+                <div className="font-bold text-white text-sm mt-0.5">
+                  {new Date(contract.created_at).toLocaleDateString('ar-SA', { year: 'numeric', month: 'long', day: 'numeric' })}
+                </div>
+              </div>
+              <div className="rounded-lg px-3 py-2 border" style={{ background: 'rgba(201,169,97,0.08)', borderColor: 'rgba(201,169,97,0.25)' }}>
+                <div className="text-[10px] uppercase tracking-wider" style={{ color: '#c9a961' }}>نوع العقد</div>
+                <div className="font-bold text-white text-sm mt-0.5">📚 خدمة نشر علمي</div>
+              </div>
+              <div className="rounded-lg px-3 py-2 border" style={{ background: 'rgba(201,169,97,0.08)', borderColor: 'rgba(201,169,97,0.25)' }}>
+                <div className="text-[10px] uppercase tracking-wider" style={{ color: '#c9a961' }}>الحالة</div>
+                <div className="mt-0.5">
+                  <Badge className={`${cs.color} text-white border-0 text-xs`}>{cs.label}</Badge>
+                </div>
               </div>
             </div>
-            <Button variant="outline" onClick={() => navigate('/adminmaster/research/contracts')} className="bg-white/10 border-white/30 text-white hover:bg-white/20">
-              <ArrowRight className="w-4 h-4 ml-1" /> عودة للقائمة
-            </Button>
           </div>
+
+          {/* Gold bottom stripe */}
+          <div className="h-1 w-full" style={{ background: 'linear-gradient(90deg, transparent, #c9a961, transparent)' }} />
+        </motion.div>
         </motion.div>
 
         {/* Action bar */}
