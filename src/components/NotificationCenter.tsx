@@ -148,7 +148,7 @@ const NotificationCenter: React.FC = () => {
                 className={`p-3 border-b last:border-0 cursor-pointer hover:bg-muted/50 transition-colors ${
                   !notification.is_read ? 'bg-primary/5' : ''
                 }`}
-                onClick={() => !notification.is_read && markAsRead(notification.id)}
+                onClick={() => handleClick(notification)}
               >
                 <div className="flex items-start gap-2">
                   {getIcon(notification.type)}
