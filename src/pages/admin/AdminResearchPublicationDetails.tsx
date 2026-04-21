@@ -170,20 +170,24 @@ export default function AdminResearchPublicationDetails() {
   };
 
   const createQuote = async () => {
-    const amount = parseFloat(quoteForm.amount);
-    if (!amount || amount <= 0) return toast({ title: 'أدخل مبلغاً صحيحاً', variant: 'destructive' });
+    const enteredAmount = parseFloat(quoteForm.amount);
+    if (!enteredAmount || enteredAmount <= 0) return toast({ title: 'أدخل مبلغاً صحيحاً', variant: 'destructive' });
     const taxRate = parseFloat(quoteForm.tax_rate) || 0;
-    const taxAmount = (amount * taxRate) / 100;
-    const total = amount + taxAmount;
+    // إذا كان شامل الضريبة: استخراج الصافي. غير شامل: المُدخل هو الصافي.
+    const subtotal = quoteForm.tax_inclusive
+      ? Math.round((enteredAmount / (1 + taxRate / 100)) * 100) / 100
+      : enteredAmount;
+    const taxAmount = Math.round(subtotal * (taxRate / 100) * 100) / 100;
+    const total = Math.round((subtotal + taxAmount) * 100) / 100;
     const { error } = await (supabase.from('research_publication_quotes') as any).insert({
-      publication_id: item.id, amount, tax_amount: taxAmount, total_amount: total,
+      publication_id: item.id, amount: subtotal, tax_amount: taxAmount, total_amount: total,
       description: quoteForm.description || null, valid_until: quoteForm.valid_until || null,
       created_by: user!.id, status: 'draft',
     });
     if (error) return toast({ title: 'خطأ', description: error.message, variant: 'destructive' });
     toast({ title: '✅ تم إنشاء عرض السعر' });
     setQuoteDialog(false);
-    setQuoteForm({ amount: '', tax_rate: '15', description: '', valid_until: '' });
+    setQuoteForm({ amount: '', tax_rate: '15', tax_inclusive: false, description: '', valid_until: '' });
     loadAll();
   };
 
