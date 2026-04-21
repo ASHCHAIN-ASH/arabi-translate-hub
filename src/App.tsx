@@ -121,6 +121,7 @@ import AdminQuestionBank from "./pages/admin/AdminQuestionBank";
 import QuizBank from "./pages/QuizBank";
 import QuizBankResults from "./pages/QuizBankResults";
 import QuizBankBrowse from "./pages/QuizBankBrowse";
+import QuizBankSubject from "./pages/QuizBankSubject";
 import QuizBankAccount from "./pages/QuizBankAccount";
 import AssessmentsList from "./pages/academic/AssessmentsList";
 import AssessmentStart from "./pages/academic/AssessmentStart";
@@ -618,6 +619,11 @@ const App = () => (
             <Route path="/quiz-bank/browse" element={
               <SimpleProtectedRoute requiredRole="client">
                 <QuizBankBrowse />
+              </SimpleProtectedRoute>
+            } />
+            <Route path="/quiz-bank/subject/:id" element={
+              <SimpleProtectedRoute requiredRole="client">
+                <QuizBankSubject />
               </SimpleProtectedRoute>
             } />
             <Route path="/quiz-bank/account" element={
