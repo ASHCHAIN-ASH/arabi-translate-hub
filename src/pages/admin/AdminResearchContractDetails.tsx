@@ -362,7 +362,7 @@ export default function AdminResearchContractDetails() {
                   <div className="rounded-lg px-3 py-2 border" style={cellStyle}>
                     <div className="text-[10px] uppercase tracking-wider" style={labelStyle}>تاريخ التحرير</div>
                     <div className="font-bold text-white text-sm mt-0.5">
-                      {start ? start.toLocaleDateString('ar-SA', { year: 'numeric', month: 'long', day: 'numeric' }) : '—'}
+                      {formatContractHeaderDate(start)}
                     </div>
                   </div>
                   <div className="rounded-lg px-3 py-2 border" style={cellStyle}>
