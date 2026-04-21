@@ -783,6 +783,7 @@ const InstitutionalPartnerships = () => {
           </div>
         </section>
       </div>
+      <Footer />
     </>
   );
 };

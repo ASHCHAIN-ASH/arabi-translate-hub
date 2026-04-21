@@ -588,6 +588,7 @@ const Universities = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-white" dir="rtl">
+      <Header />
       {/* Hero Section */}
       <section className="relative py-16 sm:py-20 lg:py-24 bg-gradient-to-br from-primary/10 via-blue-50 to-white overflow-hidden">
         <div className="absolute inset-0 bg-grid-pattern opacity-5" />
@@ -756,6 +757,7 @@ const Universities = () => {
           </motion.div>
         </div>
       </section>
+      <Footer />
     </div>
   );
 };
