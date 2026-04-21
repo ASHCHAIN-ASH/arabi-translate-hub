@@ -82,7 +82,7 @@ const Footer = () => {
               <Clock className="h-8 w-8 md:h-10 md:w-10 mx-auto mb-3 text-green-400" />
               <h4 className="font-semibold text-base md:text-lg mb-2">ساعات العمل الرسمية</h4>
               <p className="text-sm opacity-90 mb-1">الأحد - الخميس</p>
-              <p className="text-sm md:text-base font-semibold text-green-400">10:00 ص - 7:00 م</p>
+              <p className="text-sm md:text-base font-semibold text-green-400">9:00 ص - 5:00 م</p>
             </motion.div>
 
             <motion.div
