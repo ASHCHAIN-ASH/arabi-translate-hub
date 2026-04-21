@@ -493,8 +493,8 @@ export default function AdminResearchPublicationDetails() {
           <TabsContent value="contracts" className="space-y-3 mt-4">
             <div className="flex justify-between items-center">
               <h3 className="font-bold">عقود الطلب</h3>
-              <Button onClick={createContract} className="bg-indigo-600 hover:bg-indigo-700">
-                <Plus className="w-4 h-4 ml-1" /> إنشاء عقد جديد
+              <Button onClick={createContract} disabled={creatingContract} className="bg-indigo-600 hover:bg-indigo-700">
+                {creatingContract ? <Loader2 className="w-4 h-4 ml-1 animate-spin" /> : <Plus className="w-4 h-4 ml-1" />} {contracts?.[0] ? 'فتح العقد' : 'إنشاء عقد جديد'}
               </Button>
             </div>
             {contracts.length === 0 ? (
