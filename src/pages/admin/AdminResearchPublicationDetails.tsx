@@ -82,10 +82,13 @@ export default function AdminResearchPublicationDetails() {
   const [invoices, setInvoices] = useState<any[]>([]);
 
   const [quoteDialog, setQuoteDialog] = useState(false);
-  const [quoteForm, setQuoteForm] = useState({ amount: '', tax_rate: '15', description: '', valid_until: '' });
+  const [quoteForm, setQuoteForm] = useState({ amount: '', tax_rate: '15', tax_inclusive: false, description: '', valid_until: '' });
 
   const [invoiceDialog, setInvoiceDialog] = useState(false);
-  const [invoiceForm, setInvoiceForm] = useState({ subtotal: '', tax_rate: '15', notes: '', due_date: '' });
+  const [invoiceForm, setInvoiceForm] = useState({ amount: '', tax_rate: '15', tax_inclusive: false, notes: '', due_date: '' });
+  const [sendingInvoicePdf, setSendingInvoicePdf] = useState<string | null>(null);
+  const [sendingQuotePdf, setSendingQuotePdf] = useState<string | null>(null);
+  const [sendingContractPdf, setSendingContractPdf] = useState<string | null>(null);
 
   const loadAll = async () => {
     if (!id) return;
