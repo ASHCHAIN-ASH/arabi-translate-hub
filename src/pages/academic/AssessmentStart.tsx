@@ -31,7 +31,7 @@ export default function AssessmentStart() {
     if (!id) return;
     (async () => {
       try {
-        // 1) Block if already completed today — show previous result
+        // 1) Same-assessment block
         const todayAttemptId = await AssessmentService.getTodayAttemptId(id, user?.id ?? null);
         if (todayAttemptId) {
           toast.info('لقد أكملت اختبار اليوم — هذه نتيجتك');
@@ -39,12 +39,27 @@ export default function AssessmentStart() {
           return;
         }
 
-        // 2) Load assessment + today's daily questions (deterministic per-day shuffle)
+        // 2) Daily quota across ALL specializations (one per 24h)
+        const quota = await AssessmentService.getDailyQuotaStatus(user?.id ?? null);
+        if (quota && quota.assessment_id !== id) {
+          const next = new Date(quota.next_available_at);
+          const hoursLeft = Math.max(1, Math.ceil((next.getTime() - Date.now()) / 3600000));
+          toast.info(`أنهيت اليوم اختبار "${quota.assessment_title}". يمكنك اختيار تخصص آخر بعد ${hoursLeft} ساعة.`);
+          navigate(`/challenge-academy/assessments/${quota.assessment_id}/result?attempt=${quota.attempt_id}`, { replace: true });
+          return;
+        }
+
+        // 3) Load assessment + daily questions
         const [a, qs] = await Promise.all([
           AssessmentService.getById(id),
           AssessmentService.getDailyQuestions(id, 10),
         ]);
         if (!a) { toast.error('الاختبار غير موجود'); navigate('/challenge-academy/assessments'); return; }
+        if (!qs || qs.length === 0) {
+          toast.error('لا توجد أسئلة متاحة لهذا التخصص حالياً');
+          navigate('/challenge-academy/assessments', { replace: true });
+          return;
+        }
         setAssessment(a);
         setQuestions(qs);
         setSecondsLeft(a.time_limit_seconds);
