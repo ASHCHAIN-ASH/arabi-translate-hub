@@ -322,7 +322,7 @@ export default function AdminResearchPublicationDetails() {
           publication_id: item.id,
           service_name: 'نشر بحث علمي',
           service_type: 'research_publication',
-          template_type: 'research_publication',
+          template_type: 'academic',
           total_amount: amount || null,
           currency: 'SAR',
           content: contractContent,
