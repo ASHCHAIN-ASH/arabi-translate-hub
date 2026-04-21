@@ -71,6 +71,19 @@ export interface PurchaseResult {
   limit_xp?: number;
 }
 
+export interface PromoValidation {
+  valid: boolean;
+  error?: string;
+  code?: string;
+  coupon_id?: string;
+  discount_type?: 'percentage' | 'fixed';
+  discount_value?: number;
+  original_xp?: number;
+  xp_discount?: number;
+  final_xp?: number;
+  expires_at?: string | null;
+}
+
 const ERROR_LABELS: Record<string, string> = {
   unauthenticated: 'يلزم تسجيل الدخول',
   item_unavailable: 'هذا المنتج غير متاح حالياً',
@@ -81,6 +94,12 @@ const ERROR_LABELS: Record<string, string> = {
   daily_limit_reached: 'وصلت الحد اليومي لهذا النوع',
   xp_deduction_failed: 'تعذّر خصم XP',
   duplicate: 'تم الشراء مسبقاً',
+  invalid_promo: 'كوبون الخصم غير صالح',
+  empty_code: 'أدخل كود الكوبون',
+  not_found: 'الكود غير موجود',
+  already_used: 'تم استخدام الكوبون مسبقاً',
+  expired: 'الكوبون منتهي الصلاحية',
+  not_applicable: 'لا يمكن استخدام هذا الكوبون على هذا المنتج',
 };
 
 const TYPE_LABELS: Record<string, string> = {
@@ -135,13 +154,24 @@ export class MarketplaceService {
     return (data || []) as UnlockedFeature[];
   }
 
-  static async purchase(itemId: string): Promise<PurchaseResult> {
-    const { data, error } = await (supabase as any).rpc('purchase_marketplace_item', { p_item_id: itemId });
+  static async purchase(itemId: string, promoCode?: string): Promise<PurchaseResult> {
+    const args: any = { p_item_id: itemId };
+    if (promoCode && promoCode.trim()) args.p_promo_code = promoCode.trim();
+    const { data, error } = await (supabase as any).rpc('purchase_marketplace_item', args);
     if (error) {
       console.error(error);
       return { success: false, error: error.message };
     }
     return data as PurchaseResult;
+  }
+
+  static async validatePromo(code: string, itemId: string): Promise<PromoValidation> {
+    const { data, error } = await (supabase as any).rpc('validate_promo_code', {
+      p_code: code.trim(),
+      p_item_id: itemId,
+    });
+    if (error) return { valid: false, error: error.message };
+    return data as PromoValidation;
   }
 
   static async trackView(itemId: string, anonymousId?: string, variantKey?: string) {
