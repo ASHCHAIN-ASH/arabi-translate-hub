@@ -27,6 +27,7 @@ import {
 } from "@/utils/supabaseContractService";
 import { PARENT_COMPANY } from "@/utils/contractTemplates";
 import ContractDocument from "@/components/contracts/ContractDocument";
+import { formatContractHeaderDate } from "@/utils/formatContractDate";
 
 const AdminContractDetails = () => {
   const { id = "" } = useParams();
