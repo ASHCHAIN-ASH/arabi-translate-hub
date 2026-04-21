@@ -4184,6 +4184,129 @@ export type Database = {
         }
         Relationships: []
       }
+      question_bank_attempts: {
+        Row: {
+          choice_id: string | null
+          created_at: string
+          difficulty: string | null
+          id: string
+          is_correct: boolean
+          question_id: string
+          subject_id: string | null
+          time_spent_seconds: number | null
+          user_id: string
+          xp_awarded: number
+        }
+        Insert: {
+          choice_id?: string | null
+          created_at?: string
+          difficulty?: string | null
+          id?: string
+          is_correct?: boolean
+          question_id: string
+          subject_id?: string | null
+          time_spent_seconds?: number | null
+          user_id: string
+          xp_awarded?: number
+        }
+        Update: {
+          choice_id?: string | null
+          created_at?: string
+          difficulty?: string | null
+          id?: string
+          is_correct?: boolean
+          question_id?: string
+          subject_id?: string | null
+          time_spent_seconds?: number | null
+          user_id?: string
+          xp_awarded?: number
+        }
+        Relationships: []
+      }
+      question_bank_plans: {
+        Row: {
+          created_at: string
+          daily_question_limit: number | null
+          description_ar: string | null
+          duration_days: number
+          features: Json
+          id: string
+          is_active: boolean
+          name_ar: string
+          name_en: string | null
+          price_sar: number
+          slug: string
+          sort_order: number
+        }
+        Insert: {
+          created_at?: string
+          daily_question_limit?: number | null
+          description_ar?: string | null
+          duration_days?: number
+          features?: Json
+          id?: string
+          is_active?: boolean
+          name_ar: string
+          name_en?: string | null
+          price_sar?: number
+          slug: string
+          sort_order?: number
+        }
+        Update: {
+          created_at?: string
+          daily_question_limit?: number | null
+          description_ar?: string | null
+          duration_days?: number
+          features?: Json
+          id?: string
+          is_active?: boolean
+          name_ar?: string
+          name_en?: string | null
+          price_sar?: number
+          slug?: string
+          sort_order?: number
+        }
+        Relationships: []
+      }
+      question_bank_session_history: {
+        Row: {
+          category_id: string | null
+          completed_at: string
+          correct_count: number
+          difficulty: string | null
+          duration_seconds: number | null
+          id: string
+          subject_id: string | null
+          total_questions: number
+          user_id: string
+          xp_earned: number
+        }
+        Insert: {
+          category_id?: string | null
+          completed_at?: string
+          correct_count?: number
+          difficulty?: string | null
+          duration_seconds?: number | null
+          id?: string
+          subject_id?: string | null
+          total_questions?: number
+          user_id: string
+          xp_earned?: number
+        }
+        Update: {
+          category_id?: string | null
+          completed_at?: string
+          correct_count?: number
+          difficulty?: string | null
+          duration_seconds?: number | null
+          id?: string
+          subject_id?: string | null
+          total_questions?: number
+          user_id?: string
+          xp_earned?: number
+        }
+        Relationships: []
+      }
       question_bank_sessions: {
         Row: {
           answered_question_ids: string[]
@@ -4222,6 +4345,53 @@ export type Database = {
           user_id?: string
         }
         Relationships: []
+      }
+      question_bank_subscriptions: {
+        Row: {
+          amount_paid: number
+          created_at: string
+          expires_at: string | null
+          id: string
+          payment_method: string | null
+          payment_reference: string | null
+          plan_id: string
+          started_at: string
+          status: string
+          user_id: string
+        }
+        Insert: {
+          amount_paid?: number
+          created_at?: string
+          expires_at?: string | null
+          id?: string
+          payment_method?: string | null
+          payment_reference?: string | null
+          plan_id: string
+          started_at?: string
+          status?: string
+          user_id: string
+        }
+        Update: {
+          amount_paid?: number
+          created_at?: string
+          expires_at?: string | null
+          id?: string
+          payment_method?: string | null
+          payment_reference?: string | null
+          plan_id?: string
+          started_at?: string
+          status?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "question_bank_subscriptions_plan_id_fkey"
+            columns: ["plan_id"]
+            isOneToOne: false
+            referencedRelation: "question_bank_plans"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       question_categories: {
         Row: {
@@ -7464,6 +7634,19 @@ export type Database = {
           plan_id: string
           plan_name_ar: string
           priority_level: number
+        }[]
+      }
+      get_active_question_bank_subscription: {
+        Args: { _user_id: string }
+        Returns: {
+          daily_question_limit: number
+          expires_at: string
+          plan_id: string
+          plan_name: string
+          plan_slug: string
+          started_at: string
+          status: string
+          subscription_id: string
         }[]
       }
       get_ai_usage_today: { Args: { _tool_type: string }; Returns: number }
