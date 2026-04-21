@@ -10,6 +10,7 @@ import { useAuth } from '@/components/SimpleAuthProvider';
 import { toast } from 'sonner';
 import { motion } from 'framer-motion';
 import ClientLayout from '@/components/client/ClientLayout';
+import { buildPublicUrl } from '@/lib/publicUrl';
 
 export default function AssessmentResult() {
   const { id } = useParams<{ id: string }>();
