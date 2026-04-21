@@ -8,6 +8,7 @@ import Breadcrumb from '@/components/Breadcrumb';
 
 import realBusinessServicesImg from "@/assets/real-business-services.jpg";
 
+import Footer from '@/components/Footer';
 const BusinessTranslation = () => {
   const businessServices = [
     {
@@ -172,6 +173,7 @@ const BusinessTranslation = () => {
         </div>
       </section>
 
+          <Footer />
     </div>
   );
 };

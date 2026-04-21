@@ -8,6 +8,7 @@ import Breadcrumb from '@/components/Breadcrumb';
 import { PublicationServiceForm } from '@/components/publication/PublicationServiceForm';
 import { useNavigate } from 'react-router-dom';
 
+import Footer from '@/components/Footer';
 const Publication = () => {
   const navigate = useNavigate();
 
@@ -420,6 +421,7 @@ const Publication = () => {
           />
         </div>
       </section>
+          <Footer />
     </div>
   );
 };

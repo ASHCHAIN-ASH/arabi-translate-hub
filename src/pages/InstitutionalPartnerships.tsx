@@ -30,6 +30,7 @@ import { useState } from "react";
 import Breadcrumb from "@/components/Breadcrumb";
 import SEO from "@/components/SEO";
 import Header from "@/components/Header";
+import Footer from "@/components/Footer";
 import InstitutionalPartnershipForm from "@/components/InstitutionalPartnershipForm";
 
 const InstitutionalPartnerships = () => {
@@ -783,6 +784,7 @@ const InstitutionalPartnerships = () => {
           </div>
         </section>
       </div>
+      <Footer />
     </>
   );
 };

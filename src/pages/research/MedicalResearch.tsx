@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { SimpleResearchForm } from "@/components/SimpleResearchForm";
+import Footer from '@/components/Footer';
 import { 
   Heart, Stethoscope, Pill, FlaskConical, Brain, 
   Baby, Eye, Bone, Activity, Users,
@@ -262,6 +263,7 @@ const MedicalResearch = () => {
           />
         </div>
       </section>
+          <Footer />
     </div>
   );
 };

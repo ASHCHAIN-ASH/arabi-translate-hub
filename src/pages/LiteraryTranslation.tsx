@@ -5,6 +5,8 @@ import { Button } from "@/components/ui/button";
 import { BookOpen, Feather, Scroll, PenTool, Award, Heart } from "lucide-react";
 
 
+import Header from '@/components/Header';
+import Footer from '@/components/Footer';
 const LiteraryTranslation = () => {
   const literaryServices = [
     {
@@ -52,6 +54,7 @@ const LiteraryTranslation = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-pink-50 to-white">
+      <Header />
       {/* Header */}
       <section className="relative py-20 px-4 text-center bg-gradient-to-r from-pink-600 to-pink-800 text-white">
         <div className="absolute inset-0 bg-black/20"></div>
@@ -257,6 +260,7 @@ const LiteraryTranslation = () => {
         </div>
       </section>
 
+          <Footer />
     </div>
   );
 };

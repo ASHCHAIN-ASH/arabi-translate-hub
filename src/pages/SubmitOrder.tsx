@@ -19,6 +19,7 @@ import {
 import { motion } from 'framer-motion';
 import { createOrder } from '@/utils/supabaseOrderService';
 
+import Footer from '@/components/Footer';
 const SubmitOrder = () => {
   const { toast } = useToast();
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -406,6 +407,7 @@ const SubmitOrder = () => {
         </div>
       </section>
 
+          <Footer />
     </div>
   );
 };

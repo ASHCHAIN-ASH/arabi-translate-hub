@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import Header from '@/components/Header';
 import Breadcrumb from '@/components/Breadcrumb';
+import Footer from '@/components/Footer';
 import { 
   Scale, 
   FileText, 
@@ -416,6 +417,7 @@ const LegalTranslation = () => {
       </section>
 
       
+          <Footer />
     </div>
   );
 };

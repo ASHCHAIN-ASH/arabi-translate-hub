@@ -28,6 +28,7 @@ import {
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 
+import Footer from '@/components/Footer';
 interface ServiceCategory {
   [key: string]: any;
   id: string;
@@ -647,7 +648,8 @@ const ServiceCard = ({ service, onOrderService }: { service: Service; onOrderSer
             <ShoppingCart className="w-5 h-5 ml-2" />
             طلب الخدمة
           </Button>
-        </div>
+              <Footer />
+    </div>
       </CardContent>
     </Card>
   );

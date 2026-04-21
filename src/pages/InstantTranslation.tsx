@@ -5,6 +5,8 @@ import { Button } from "@/components/ui/button";
 import { Zap, Clock, Smartphone, MessageSquare, Globe, Mic, Video, FileText, Star, CheckCircle, Timer, Users } from "lucide-react";
 
 
+import Header from '@/components/Header';
+import Footer from '@/components/Footer';
 const InstantTranslation = () => {
   const instantServices = [
     {
@@ -110,6 +112,7 @@ const InstantTranslation = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-yellow-50 via-orange-50 to-red-50">
+      <Header />
       {/* Electric Hero Section */}
       <section className="relative overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-r from-yellow-500 via-orange-500 to-red-600"></div>
@@ -418,6 +421,7 @@ const InstantTranslation = () => {
         </div>
       </section>
 
+          <Footer />
     </div>
   );
 };

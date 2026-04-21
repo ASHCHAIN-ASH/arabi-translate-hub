@@ -23,6 +23,7 @@ import Header from '@/components/Header';
 import { WorkingHoursBannerRTL } from "@/components/WorkingHoursBannerRTL";
 import MembershipSubscriptionForm from "@/components/MembershipSubscriptionForm";
 
+import Footer from '@/components/Footer';
 const MasterMembership = () => {
   const [selectedPlan, setSelectedPlan] = useState<any>(null);
   const [isFormOpen, setIsFormOpen] = useState(false);
@@ -970,6 +971,7 @@ const MasterMembership = () => {
         />
       )}
 
+          <Footer />
     </div>
   );
 };

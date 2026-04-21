@@ -31,6 +31,7 @@ import { Link } from "react-router-dom";
 import { Separator } from "@/components/ui/separator";
 import Header from "@/components/Header";
 
+import Footer from '@/components/Footer';
 const IntellectualProperty = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-purple-50" dir="rtl">
@@ -510,6 +511,7 @@ const IntellectualProperty = () => {
         </div>
       </section>
       </main>
+          <Footer />
     </div>
   );
 };

@@ -24,6 +24,7 @@ import Header from '@/components/Header';
 import ScientificMethodologyForm from '@/components/ScientificMethodologyForm';
 
 
+import Footer from '@/components/Footer';
 const ScientificMethodology = () => {
   const methodologySteps = [
     {
@@ -437,6 +438,7 @@ const ScientificMethodology = () => {
       {/* Scientific Methodology Form */}
       <ScientificMethodologyForm />
       
+          <Footer />
     </div>
   );
 };

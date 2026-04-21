@@ -23,6 +23,7 @@ import Header from '@/components/Header';
 
 import ConsultationForm from '@/components/ConsultationForm';
 
+import Footer from '@/components/Footer';
 const AcademicExpertise = () => {
   const expertiseAreas = [
     {
@@ -354,6 +355,7 @@ const AcademicExpertise = () => {
       </section>
 
       
+          <Footer />
     </div>
   );
 };

@@ -9,6 +9,7 @@ import Breadcrumb from '@/components/Breadcrumb';
 
 import ServiceInquiryForm from "@/components/ServiceInquiryForm";
 
+import Footer from '@/components/Footer';
 const MedicalTranslation = () => {
   const medicalServices = [
     {
@@ -247,6 +248,7 @@ const MedicalTranslation = () => {
         </div>
       </section>
 
+          <Footer />
     </div>
   );
 };

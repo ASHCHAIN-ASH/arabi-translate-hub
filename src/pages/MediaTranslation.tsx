@@ -5,6 +5,8 @@ import { Button } from "@/components/ui/button";
 import { Video, Film, Tv, Radio, Headphones, Camera, Edit, Play, Pause, Volume2, Subtitles, Mic } from "lucide-react";
 
 
+import Header from '@/components/Header';
+import Footer from '@/components/Footer';
 const MediaTranslation = () => {
   const mediaServices = [
     {
@@ -106,6 +108,7 @@ const MediaTranslation = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-50 via-pink-50 to-red-50">
+      <Header />
       {/* Cinematic Hero Section */}
       <section className="relative overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-r from-purple-700 via-pink-600 to-red-700"></div>
@@ -428,6 +431,7 @@ const MediaTranslation = () => {
         </div>
       </section>
 
+          <Footer />
     </div>
   );
 };

@@ -11,6 +11,7 @@ import {
 import { memo } from "react";
 import { Link } from "react-router-dom";
 import Header from "@/components/Header";
+import Footer from "@/components/Footer";
 
 // Journal card component with performance optimizations
 const JournalCard = memo(({ journal, index }: { journal: any, index: number }) => {
@@ -640,6 +641,7 @@ const JournalsDirectory = () => {
           </motion.div>
         </div>
       </section>
+      <Footer />
     </div>
   );
 };

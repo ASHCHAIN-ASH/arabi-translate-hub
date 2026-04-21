@@ -13,6 +13,7 @@ import { Shield, Search, CheckCircle, AlertTriangle, FileText, Clock, Award, Upl
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 
+import Footer from '@/components/Footer';
 const PlagiarismCheck = () => {
   const [checkForm, setCheckForm] = useState({
     name: "",
@@ -505,6 +506,7 @@ const PlagiarismCheck = () => {
           </div>
         </div>
       </section>
+          <Footer />
     </div>
   );
 };

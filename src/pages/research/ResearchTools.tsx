@@ -3,6 +3,7 @@ import Header from "@/components/Header";
 import { Button } from "@/components/ui/button";
 import { Cog, ClipboardList, BarChart, Target } from "lucide-react";
 
+import Footer from '@/components/Footer';
 const ResearchTools = () => {
   return (
     <div className="min-h-screen bg-background">
@@ -16,6 +17,7 @@ const ResearchTools = () => {
         </div>
       </section>
       
+          <Footer />
     </div>
   );
 };

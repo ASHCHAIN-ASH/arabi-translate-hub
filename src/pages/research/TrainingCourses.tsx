@@ -12,6 +12,7 @@ import { Search, BookOpen, Users, Award, Brain, Target, CheckCircle, Clock, Star
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 
+import Footer from '@/components/Footer';
 const TrainingCourses = () => {
   const [courseForm, setCourseForm] = useState({
     name: "",
@@ -596,6 +597,7 @@ const TrainingCourses = () => {
           </div>
         </div>
       </section>
+          <Footer />
     </div>
   );
 };

@@ -9,6 +9,7 @@ import Breadcrumb from '@/components/Breadcrumb';
 
 import ServiceInquiryForm from "@/components/ServiceInquiryForm";
 
+import Footer from '@/components/Footer';
 const TechnicalTranslation = () => {
   const technicalServices = [
     {
@@ -214,6 +215,7 @@ const TechnicalTranslation = () => {
         </div>
       </section>
 
+          <Footer />
     </div>
   );
 };

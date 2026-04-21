@@ -12,6 +12,7 @@ import { Scale, CheckCircle, Award, Users, Star, Clock, Shield, Target, BookOpen
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 
+import Footer from '@/components/Footer';
 const ResearchEvaluation = () => {
   const [evaluationForm, setEvaluationForm] = useState({
     name: "",
@@ -592,6 +593,7 @@ const ResearchEvaluation = () => {
           </div>
         </div>
       </section>
+          <Footer />
     </div>
   );
 };

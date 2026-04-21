@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { SimpleResearchForm } from "@/components/SimpleResearchForm";
+import Footer from '@/components/Footer';
 import { 
   Users, Heart, GraduationCap, BookOpen, Globe, 
   Brain, MessageCircle, UserCheck, Home, Radio,
@@ -262,6 +263,7 @@ const SocialResearch = () => {
           />
         </div>
       </section>
+          <Footer />
     </div>
   );
 };

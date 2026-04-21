@@ -12,6 +12,7 @@ import { Layout, FileText, Palette, Settings, CheckCircle, Star, Clock, Award, L
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 
+import Footer from '@/components/Footer';
 const Formatting = () => {
   const [formatForm, setFormatForm] = useState({
     name: "",
@@ -578,6 +579,7 @@ const Formatting = () => {
           </div>
         </div>
       </section>
+          <Footer />
     </div>
   );
 };

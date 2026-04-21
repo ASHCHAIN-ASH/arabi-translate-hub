@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { SimpleResearchForm } from "@/components/SimpleResearchForm";
+import Footer from '@/components/Footer';
 import { 
   Microscope, FlaskConical, Atom, Dna, Waves, Zap, 
   Droplets, TestTube, Binary, Cpu, ArrowRight, CheckCircle, Star, Users
@@ -268,6 +269,7 @@ const ScientificResearch = () => {
           />
         </div>
       </section>
+          <Footer />
     </div>
   );
 };

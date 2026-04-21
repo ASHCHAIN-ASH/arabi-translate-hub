@@ -17,6 +17,7 @@ import {
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 
+import Footer from '@/components/Footer';
 const ThesisTitles = () => {
   const [titleForm, setTitleForm] = useState({
     name: "",
@@ -523,6 +524,7 @@ const ThesisTitles = () => {
           </div>
         </div>
       </section>
+          <Footer />
     </div>
   );
 };

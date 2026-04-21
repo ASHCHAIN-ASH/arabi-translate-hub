@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { SimpleResearchForm } from "@/components/SimpleResearchForm";
+import Footer from '@/components/Footer';
 import { 
   Scale, Heart, Building2, Briefcase, FlaskConical, Globe,
   GraduationCap, BookOpen, FileText, Calculator, Users, Palette,
@@ -300,6 +301,7 @@ const AcademicResearch = () => {
           />
         </div>
       </section>
+          <Footer />
     </div>
   );
 };
