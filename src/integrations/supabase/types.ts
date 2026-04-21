@@ -6662,6 +6662,17 @@ export type Database = {
         }[]
       }
       get_retention_cohort: { Args: { p_days?: number }; Returns: Json }
+      get_today_any_assessment_attempt: {
+        Args: { p_anonymous_id?: string; p_user_id?: string }
+        Returns: {
+          assessment_id: string
+          assessment_slug: string
+          assessment_title: string
+          attempt_id: string
+          completed_at: string
+          next_available_at: string
+        }[]
+      }
       get_today_assessment_attempt: {
         Args: {
           p_anonymous_id?: string
