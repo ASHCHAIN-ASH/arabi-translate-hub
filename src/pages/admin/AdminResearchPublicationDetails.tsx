@@ -608,9 +608,20 @@ export default function AdminResearchPublicationDetails() {
                         {c.total_amount && ` • ${Number(c.total_amount).toLocaleString('ar-SA')} ر.س`}
                       </div>
                     </div>
-                    <Button size="sm" variant="outline" onClick={() => navigate(`/adminmaster/contracts/${c.id}`)}>
-                      <ExternalLink className="w-4 h-4 ml-1" /> فتح
-                    </Button>
+                    <div className="flex flex-col gap-2">
+                      <Button size="sm" variant="outline" onClick={() => navigate(`/adminmaster/contracts/${c.id}`)}>
+                        <ExternalLink className="w-4 h-4 ml-1" /> فتح
+                      </Button>
+                      <Button
+                        size="sm"
+                        onClick={() => sendContractPdfToWhatsApp(c.id, c.contract_number)}
+                        disabled={sendingContractPdf === c.id}
+                        className="bg-emerald-600 hover:bg-emerald-700"
+                      >
+                        {sendingContractPdf === c.id ? <Loader2 className="w-3 h-3 ml-1 animate-spin" /> : <Send className="w-3 h-3 ml-1" />}
+                        📎 إرسال PDF واتساب
+                      </Button>
+                    </div>
                   </div>
                 </Card>
               );
@@ -651,6 +662,17 @@ export default function AdminResearchPublicationDetails() {
                       {q.status === 'draft' && (
                         <Button size="sm" onClick={() => sendQuote(q)} className="bg-blue-600 hover:bg-blue-700">
                           <Send className="w-3 h-3 ml-1" /> إرسال للعميل
+                        </Button>
+                      )}
+                      {q.status !== 'draft' && (
+                        <Button
+                          size="sm"
+                          onClick={() => sendQuotePdfToWhatsApp(q.id, q.quote_number, q)}
+                          disabled={sendingQuotePdf === q.id}
+                          className="bg-emerald-600 hover:bg-emerald-700"
+                        >
+                          {sendingQuotePdf === q.id ? <Loader2 className="w-3 h-3 ml-1 animate-spin" /> : <Send className="w-3 h-3 ml-1" />}
+                          📎 إعادة إرسال PDF
                         </Button>
                       )}
                       <Button size="sm" variant="outline" onClick={() => deleteQuote(q.id)} className="text-rose-600">
@@ -695,9 +717,20 @@ export default function AdminResearchPublicationDetails() {
                         {inv.due_date && ` • مستحقة: ${new Date(inv.due_date).toLocaleDateString('ar-SA')}`}
                       </div>
                     </div>
-                    <Button size="sm" variant="outline" onClick={() => navigate(`/adminmaster/invoices/${inv.id}`)}>
-                      <ExternalLink className="w-4 h-4 ml-1" /> فتح
-                    </Button>
+                    <div className="flex flex-col gap-2">
+                      <Button size="sm" variant="outline" onClick={() => navigate(`/adminmaster/invoices/${inv.id}`)}>
+                        <ExternalLink className="w-4 h-4 ml-1" /> فتح
+                      </Button>
+                      <Button
+                        size="sm"
+                        onClick={() => sendInvoicePdfToWhatsApp(inv.id, inv.invoice_number)}
+                        disabled={sendingInvoicePdf === inv.id}
+                        className="bg-emerald-600 hover:bg-emerald-700"
+                      >
+                        {sendingInvoicePdf === inv.id ? <Loader2 className="w-3 h-3 ml-1 animate-spin" /> : <Send className="w-3 h-3 ml-1" />}
+                        📎 إرسال PDF واتساب
+                      </Button>
+                    </div>
                   </div>
                 </Card>
               );
