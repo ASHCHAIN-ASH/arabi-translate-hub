@@ -20,7 +20,13 @@ export interface MarketplaceItem {
   min_level: number;
   max_per_user: number | null;
   sort_order: number;
+  // SAR pricing
+  price_sar?: number | null;
+  xp_to_sar_rate?: number;
+  allow_payment_methods?: string[]; // 'xp' | 'wallet' | 'gateway'
 }
+
+export type PaymentMethod = 'xp' | 'wallet' | 'gateway';
 
 export interface MarketplacePurchase {
   id: string;
@@ -93,6 +99,9 @@ const ERROR_LABELS: Record<string, string> = {
   out_of_stock: 'نفدت الكمية المتاحة',
   level_too_low: 'مستواك الحالي لا يسمح بشراء هذا المنتج',
   insufficient_xp: 'رصيد XP غير كافٍ',
+  insufficient_balance: 'رصيد المحفظة غير كافٍ',
+  wallet_not_allowed: 'الدفع بالمحفظة غير متاح لهذا المنتج',
+  invalid_price: 'السعر غير محدد لهذا المنتج',
   max_per_user_reached: 'وصلت الحد الأقصى لشراء هذا المنتج',
   daily_limit_reached: 'وصلت الحد اليومي لهذا النوع',
   xp_deduction_failed: 'تعذّر خصم XP',
@@ -247,5 +256,36 @@ export class MarketplaceService {
     const { data, error } = await (supabase as any).rpc('get_marketplace_funnel_report', { p_days: days });
     if (error) throw error;
     return data;
+  }
+
+  // ===== Pricing helpers =====
+  static itemPriceSAR(item: MarketplaceItem): number {
+    if (item.price_sar != null && item.price_sar > 0) return Number(item.price_sar);
+    const rate = item.xp_to_sar_rate || 100;
+    return Math.round((item.xp_cost / rate) * 100) / 100;
+  }
+
+  static allowedMethods(item: MarketplaceItem): PaymentMethod[] {
+    const a = item.allow_payment_methods;
+    if (!a || a.length === 0) return ['xp', 'wallet', 'gateway'];
+    return a.filter((m): m is PaymentMethod => m === 'xp' || m === 'wallet' || m === 'gateway');
+  }
+
+  // ===== Purchase via wallet (SAR) =====
+  static async purchaseWithWallet(itemId: string): Promise<PurchaseResult> {
+    const { data, error } = await (supabase as any).rpc('purchase_marketplace_with_wallet', {
+      p_item_id: itemId,
+    });
+    if (error) return { success: false, error: error.message };
+    return data as PurchaseResult;
+  }
+
+  // ===== Purchase via payment gateway (SAR) =====
+  static async purchaseWithGateway(itemId: string, amountSar: number): Promise<{ success: boolean; checkout_url?: string; error?: string }> {
+    const { data, error } = await supabase.functions.invoke('marketplace-gateway-checkout', {
+      body: { item_id: itemId, amount_sar: amountSar },
+    });
+    if (error) return { success: false, error: error.message };
+    return data as { success: boolean; checkout_url?: string; error?: string };
   }
 }

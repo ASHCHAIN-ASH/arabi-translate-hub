@@ -105,35 +105,58 @@ export default function MarketplaceItemCard({ item, userXp, userLevel, onPurchas
     setLastError(null);
   };
 
+  const priceSar = MarketplaceService.itemPriceSAR(item);
+  const allowed = MarketplaceService.allowedMethods(item);
+  const [method, setMethod] = useState<'xp' | 'wallet' | 'gateway'>(
+    allowed.includes('xp') ? 'xp' : (allowed[0] as any) || 'xp'
+  );
+
   const handlePurchase = async () => {
     setBusy(true);
     const codes = promos.map((p) => p.code!).filter(Boolean);
     MarketplaceService.trackEvent('purchase_confirm', {
       itemId: item.id,
-      metadata: { effective_cost: effectiveCost, promo_codes: codes, discount: totalDiscount },
+      metadata: { effective_cost: effectiveCost, promo_codes: codes, discount: totalDiscount, method },
     });
     try {
-      const r = await MarketplaceService.purchaseStacked(item.id, codes);
-      if (r.success) {
-        MarketplaceService.trackEvent('purchase_success', {
-          itemId: item.id,
-          metadata: { purchase_id: r.purchase_id, xp_spent: r.xp_spent, type: item.type, fulfillment: r.fulfillment, codes },
-        });
-        toast.success(`✨ تم الشراء بنجاح! -${r.xp_spent} XP`, {
-          description: r.fulfillment?.coupon_code
-            ? `كوبونك: ${r.fulfillment.coupon_code}`
-            : r.fulfillment?.sar_credited
-              ? `تم إضافة ${r.fulfillment.sar_credited} ريال لمحفظتك`
+      if (method === 'xp') {
+        const r = await MarketplaceService.purchaseStacked(item.id, codes);
+        if (r.success) {
+          MarketplaceService.trackEvent('purchase_success', { itemId: item.id, metadata: { purchase_id: r.purchase_id, xp_spent: r.xp_spent, type: item.type, fulfillment: r.fulfillment, codes, method } });
+          toast.success(`✨ تم الشراء بنجاح! -${r.xp_spent} XP`, {
+            description: r.fulfillment?.coupon_code ? `كوبونك: ${r.fulfillment.coupon_code}`
+              : r.fulfillment?.sar_credited ? `تم إضافة ${r.fulfillment.sar_credited} ريال لمحفظتك`
               : 'تحقق من مكافآتك',
-        });
-        setOpen(false);
-        onPurchased?.();
+          });
+          setOpen(false); onPurchased?.();
+        } else {
+          MarketplaceService.trackEvent('purchase_failed', { itemId: item.id, metadata: { error: r.error, method } });
+          toast.error(MarketplaceService.labelError(r.error || 'unknown'));
+        }
+      } else if (method === 'wallet') {
+        const r = await MarketplaceService.purchaseWithWallet(item.id);
+        if (r.success) {
+          MarketplaceService.trackEvent('purchase_success', { itemId: item.id, metadata: { purchase_id: r.purchase_id, paid_sar: priceSar, method } });
+          toast.success(`✨ تم الشراء بنجاح من المحفظة! -${priceSar.toLocaleString('ar-SA')} ر.س`);
+          setOpen(false); onPurchased?.();
+        } else {
+          MarketplaceService.trackEvent('purchase_failed', { itemId: item.id, metadata: { error: r.error, method } });
+          toast.error(MarketplaceService.labelError(r.error || 'unknown'));
+        }
       } else {
-        MarketplaceService.trackEvent('purchase_failed', { itemId: item.id, metadata: { error: r.error } });
-        toast.error(MarketplaceService.labelError(r.error || 'unknown'));
+        // gateway
+        const r = await MarketplaceService.purchaseWithGateway(item.id, priceSar);
+        if (r.success && r.checkout_url) {
+          MarketplaceService.trackEvent('purchase_confirm', { itemId: item.id, metadata: { method, redirect: true } });
+          toast.success('جارٍ تحويلك لصفحة الدفع…');
+          window.location.href = r.checkout_url;
+        } else {
+          MarketplaceService.trackEvent('purchase_failed', { itemId: item.id, metadata: { error: r.error, method } });
+          toast.error(MarketplaceService.labelError(r.error || 'gateway_error'));
+        }
       }
     } catch (e: any) {
-      MarketplaceService.trackEvent('purchase_failed', { itemId: item.id, metadata: { error: e?.message } });
+      MarketplaceService.trackEvent('purchase_failed', { itemId: item.id, metadata: { error: e?.message, method } });
       toast.error(e?.message || 'تعذّر الشراء');
     } finally {
       setBusy(false);
@@ -227,7 +250,36 @@ export default function MarketplaceItemCard({ item, userXp, userLevel, onPurchas
               </div>
             </div>
 
-            {/* Promo codes (up to 2, stackable) */}
+            {/* اختيار طريقة الدفع */}
+            <div className="space-y-2">
+              <label className="text-xs font-medium text-muted-foreground">طريقة الدفع</label>
+              <div className="grid grid-cols-3 gap-2">
+                {allowed.includes('xp') && (
+                  <button type="button" onClick={() => setMethod('xp')}
+                    className={`p-2 rounded-lg border text-xs font-medium transition ${method==='xp' ? 'border-primary bg-primary/10' : 'border-border hover:bg-muted'}`}>
+                    ⭐ XP
+                    <div className="text-[10px] text-muted-foreground mt-0.5">{effectiveCost.toLocaleString('ar-SA')}</div>
+                  </button>
+                )}
+                {allowed.includes('wallet') && (
+                  <button type="button" onClick={() => setMethod('wallet')}
+                    className={`p-2 rounded-lg border text-xs font-medium transition ${method==='wallet' ? 'border-primary bg-primary/10' : 'border-border hover:bg-muted'}`}>
+                    👛 محفظة
+                    <div className="text-[10px] text-muted-foreground mt-0.5">{priceSar.toLocaleString('ar-SA')} ر.س</div>
+                  </button>
+                )}
+                {allowed.includes('gateway') && (
+                  <button type="button" onClick={() => setMethod('gateway')}
+                    className={`p-2 rounded-lg border text-xs font-medium transition ${method==='gateway' ? 'border-primary bg-primary/10' : 'border-border hover:bg-muted'}`}>
+                    💳 بطاقة
+                    <div className="text-[10px] text-muted-foreground mt-0.5">{priceSar.toLocaleString('ar-SA')} ر.س</div>
+                  </button>
+                )}
+              </div>
+            </div>
+
+            {/* أكواد الخصم — تُطبَّق فقط مع الدفع بـ XP */}
+            {method === 'xp' && (
             <div className="space-y-2">
               <label className="text-xs font-medium text-muted-foreground flex items-center gap-1.5">
                 <Ticket className="w-3.5 h-3.5" /> أكواد الخصم (حتى كوبونين)
@@ -289,6 +341,7 @@ export default function MarketplaceItemCard({ item, userXp, userLevel, onPurchas
                 <p className="text-xs text-destructive">{lastError}</p>
               )}
             </div>
+            )}
 
             {/* Cumulative breakdown */}
             <div className="space-y-2 text-sm">

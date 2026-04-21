@@ -3159,6 +3159,7 @@ export type Database = {
       }
       marketplace_items: {
         Row: {
+          allow_payment_methods: string[]
           badge_color: string | null
           category: string
           created_at: string
@@ -3169,6 +3170,7 @@ export type Database = {
           is_featured: boolean
           max_per_user: number | null
           min_level: number
+          price_sar: number | null
           reward_payload: Json
           slug: string
           sort_order: number
@@ -3178,8 +3180,10 @@ export type Database = {
           type: string
           updated_at: string
           xp_cost: number
+          xp_to_sar_rate: number
         }
         Insert: {
+          allow_payment_methods?: string[]
           badge_color?: string | null
           category?: string
           created_at?: string
@@ -3190,6 +3194,7 @@ export type Database = {
           is_featured?: boolean
           max_per_user?: number | null
           min_level?: number
+          price_sar?: number | null
           reward_payload?: Json
           slug: string
           sort_order?: number
@@ -3199,8 +3204,10 @@ export type Database = {
           type: string
           updated_at?: string
           xp_cost: number
+          xp_to_sar_rate?: number
         }
         Update: {
+          allow_payment_methods?: string[]
           badge_color?: string | null
           category?: string
           created_at?: string
@@ -3211,6 +3218,7 @@ export type Database = {
           is_featured?: boolean
           max_per_user?: number | null
           min_level?: number
+          price_sar?: number | null
           reward_payload?: Json
           slug?: string
           sort_order?: number
@@ -3220,6 +3228,7 @@ export type Database = {
           type?: string
           updated_at?: string
           xp_cost?: number
+          xp_to_sar_rate?: number
         }
         Relationships: []
       }
@@ -3339,6 +3348,9 @@ export type Database = {
           item_slug: string
           item_type: string
           original_xp_cost: number | null
+          paid_amount_sar: number | null
+          payment_intent_id: string | null
+          payment_method: string
           promo_code: string | null
           reward_payload: Json
           status: string
@@ -3355,6 +3367,9 @@ export type Database = {
           item_slug: string
           item_type: string
           original_xp_cost?: number | null
+          paid_amount_sar?: number | null
+          payment_intent_id?: string | null
+          payment_method?: string
           promo_code?: string | null
           reward_payload?: Json
           status?: string
@@ -3371,6 +3386,9 @@ export type Database = {
           item_slug?: string
           item_type?: string
           original_xp_cost?: number | null
+          paid_amount_sar?: number | null
+          payment_intent_id?: string | null
+          payment_method?: string
           promo_code?: string | null
           reward_payload?: Json
           status?: string
@@ -7106,6 +7124,15 @@ export type Database = {
         Args: { _created: string; _priority: string }
         Returns: string
       }
+      confirm_marketplace_gateway_purchase: {
+        Args: {
+          p_item_id: string
+          p_paid_sar: number
+          p_payment_intent_id: string
+          p_user_id: string
+        }
+        Returns: Json
+      }
       create_group_order: {
         Args: {
           _deadline?: string
@@ -7205,6 +7232,10 @@ export type Database = {
       }
       get_marketplace_funnel_report: {
         Args: { p_days?: number }
+        Returns: Json
+      }
+      get_marketplace_item_pricing: {
+        Args: { p_item_id: string }
         Returns: Json
       }
       get_marketplace_metrics: { Args: { p_days?: number }; Returns: Json }
@@ -7427,6 +7458,10 @@ export type Database = {
             Args: { p_item_id: string; p_promo_codes: string[] }
             Returns: Json
           }
+      purchase_marketplace_with_wallet: {
+        Args: { p_item_id: string }
+        Returns: Json
+      }
       purchase_stat_analysis: { Args: { _analysis_id: string }; Returns: Json }
       purchase_stat_pdf: { Args: { _analysis_id: string }; Returns: Json }
       read_email_batch: {
