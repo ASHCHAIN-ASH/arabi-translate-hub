@@ -614,6 +614,11 @@ const App = () => (
                 <QuizBank />
               </SimpleProtectedRoute>
             } />
+            <Route path="/quiz-bank/browse" element={
+              <SimpleProtectedRoute requiredRole="client">
+                <QuizBankBrowse />
+              </SimpleProtectedRoute>
+            } />
             <Route path="/quiz-bank/results" element={
               <SimpleProtectedRoute requiredRole="client">
                 <QuizBankResults />
