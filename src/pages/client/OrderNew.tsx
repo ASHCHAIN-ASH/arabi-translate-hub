@@ -751,7 +751,7 @@ const OrderNew = () => {
                         background: `linear-gradient(90deg, hsl(var(--${theme.accent})), hsl(var(--${theme.glow})), hsl(var(--${theme.accent})))`,
                       }}
                     />
-                    <CardContent className="p-6 sm:p-8 space-y-6">
+                    <CardContent className="p-4 sm:p-6 lg:p-8 space-y-5 sm:space-y-6">
 
                       {/* STEP 0 — Confirm service */}
                       {step === 0 && (
@@ -1080,10 +1080,11 @@ const OrderNew = () => {
                       )}
 
                       {/* Navigation */}
-                      <div className="flex items-center justify-between pt-4 border-t border-border/40">
+                      <div className="flex items-center justify-between gap-2 pt-4 border-t border-border/40">
                         <Button variant="outline" disabled={step === 0 || loading}
-                          onClick={() => setStep((s) => (s - 1) as Step)} className="gap-2">
-                          <ArrowRight className="w-4 h-4" /> السابق
+                          onClick={() => setStep((s) => (s - 1) as Step)} className="gap-1.5 h-10 sm:h-11 px-3 sm:px-4">
+                          <ArrowRight className="w-4 h-4" />
+                          <span className="text-sm">السابق</span>
                         </Button>
 
                         {step < 3 ? (
