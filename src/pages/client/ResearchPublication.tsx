@@ -610,25 +610,33 @@ export default function ResearchPublication() {
     .dseal::before { content:''; position:absolute; inset:0; background:radial-gradient(circle at 100% 0%,rgba(212,175,55,.08) 0%,transparent 45%),radial-gradient(circle at 0% 100%,rgba(12,35,64,.05) 0%,transparent 50%); pointer-events:none; }
     .dseal .ribbon { position:absolute; top:12px; left:-34px; transform:rotate(-38deg); background:linear-gradient(90deg,#1e40af,#3b82f6); color:#fff; padding:3px 38px; font-size:8.5px; font-weight:800; letter-spacing:2px; box-shadow:0 2px 6px rgba(0,0,0,.18); z-index:2; }
     .dseal.platform .ribbon { background:linear-gradient(90deg,#0c2340,#d4af37); color:#fff; }
-    .dseal .stamp-wrap { position:relative; flex:0 0 144px; display:flex; align-items:center; justify-content:center; padding:14px 10px; background:linear-gradient(160deg,#eff5ff 0%,#dbeafe 100%); border-left:1px dashed #1e40af; }
+    /* ─── Modern Certificate Badge (hex shield) ─── */
+    .dseal .stamp-wrap { position:relative; flex:0 0 148px; display:flex; align-items:center; justify-content:center; padding:14px 10px; background:linear-gradient(160deg,#f4f8ff 0%,#dbeafe 100%); border-left:1px dashed #1e40af; }
     .dseal.platform .stamp-wrap { background:linear-gradient(160deg,#0c2340 0%,#1e3a5f 100%); border-left-color:rgba(212,175,55,.6); }
-    .dseal .stamp { position:relative; width:122px; height:122px; border-radius:50%; display:flex; flex-direction:column; align-items:center; justify-content:center; transform:rotate(-9deg); }
-    .dseal .stamp .ring-out { position:absolute; inset:0; border-radius:50%; border:2.5px solid #1e40af; box-shadow:inset 0 0 0 1px rgba(255,255,255,.9), 0 4px 14px rgba(30,64,175,.28); }
-    .dseal .stamp .ring-mid { position:absolute; inset:5px; border-radius:50%; border:1px solid #1e40af; opacity:.5; }
-    .dseal .stamp .ring-in { position:absolute; inset:14px; border-radius:50%; border:1.5px dashed #1e40af; background:radial-gradient(circle,#fff 40%,#eff5ff 100%); display:flex; flex-direction:column; align-items:center; justify-content:center; }
-    .dseal.platform .stamp .ring-out { border-color:#d4af37; box-shadow:inset 0 0 0 1px rgba(212,175,55,.4), 0 4px 14px rgba(0,0,0,.5); }
-    .dseal.platform .stamp .ring-mid { border-color:#d4af37; }
-    .dseal.platform .stamp .ring-in { border-color:#d4af37; background:radial-gradient(circle,#fefdf6 30%,#f5e9b8 100%); }
-    .dseal .stamp .arc-top, .dseal .stamp .arc-bot { position:absolute; left:0; right:0; text-align:center; font-family:'Amiri',serif; font-size:7.5px; font-weight:700; letter-spacing:2.5px; color:#1e40af; text-transform:uppercase; }
-    .dseal .stamp .arc-top { top:6px; }
-    .dseal .stamp .arc-bot { bottom:6px; }
-    .dseal.platform .stamp .arc-top, .dseal.platform .stamp .arc-bot { color:#d4af37; }
-    .dseal .stamp .core-icon { position:relative; z-index:1; font-size:24px; line-height:1; color:#1e40af; filter:drop-shadow(0 1px 2px rgba(30,64,175,.35)); }
-    .dseal.platform .stamp .core-icon { color:#0c2340; filter:drop-shadow(0 1px 2px rgba(212,175,55,.5)); }
-    .dseal .stamp .core-text { position:relative; z-index:1; font-family:'Amiri',serif; font-size:11.5px; font-weight:700; color:#1e40af; margin-top:2px; letter-spacing:.5px; }
-    .dseal.platform .stamp .core-text { color:#0c2340; }
-    .dseal .stamp .core-tag { position:relative; z-index:1; font-size:6.5px; font-weight:800; letter-spacing:1.4px; color:#1e40af; opacity:.85; margin-top:2px; }
-    .dseal.platform .stamp .core-tag { color:#0c2340; }
+    /* Hex/octagon clipped badge */
+    .dseal .stamp { position:relative; width:124px; height:138px; display:flex; flex-direction:column; align-items:center; justify-content:center; -webkit-clip-path:polygon(50% 0,100% 25%,100% 75%,50% 100%,0 75%,0 25%); clip-path:polygon(50% 0,100% 25%,100% 75%,50% 100%,0 75%,0 25%); background:linear-gradient(145deg,#1e40af 0%,#3b82f6 50%,#1e40af 100%); padding:3px; filter:drop-shadow(0 6px 14px rgba(30,64,175,.35)); transform:none; }
+    .dseal.platform .stamp { background:linear-gradient(145deg,#d4af37 0%,#f5d97a 50%,#b8941f 100%); filter:drop-shadow(0 6px 14px rgba(0,0,0,.45)); }
+    /* Inner panel (the "paper" inside the metal frame) */
+    .dseal .stamp .ring-out { position:absolute; inset:3px; -webkit-clip-path:polygon(50% 0,100% 25%,100% 75%,50% 100%,0 75%,0 25%); clip-path:polygon(50% 0,100% 25%,100% 75%,50% 100%,0 75%,0 25%); background:radial-gradient(ellipse at 50% 30%,#ffffff 0%,#eaf2ff 60%,#dbeafe 100%); border:0; box-shadow:none; }
+    .dseal.platform .stamp .ring-out { background:radial-gradient(ellipse at 50% 30%,#0c2340 0%,#102a4c 55%,#08182f 100%); }
+    /* Subtle guilloche pattern overlay */
+    .dseal .stamp .ring-mid { position:absolute; inset:6px; -webkit-clip-path:polygon(50% 0,100% 25%,100% 75%,50% 100%,0 75%,0 25%); clip-path:polygon(50% 0,100% 25%,100% 75%,50% 100%,0 75%,0 25%); background:repeating-linear-gradient(45deg,rgba(30,64,175,.07) 0 1px,transparent 1px 6px),repeating-linear-gradient(-45deg,rgba(30,64,175,.07) 0 1px,transparent 1px 6px); border:0; opacity:1; }
+    .dseal.platform .stamp .ring-mid { background:repeating-linear-gradient(45deg,rgba(212,175,55,.12) 0 1px,transparent 1px 6px),repeating-linear-gradient(-45deg,rgba(212,175,55,.12) 0 1px,transparent 1px 6px); }
+    /* Inner hairline frame */
+    .dseal .stamp .ring-in { position:absolute; inset:10px; -webkit-clip-path:polygon(50% 0,100% 25%,100% 75%,50% 100%,0 75%,0 25%); clip-path:polygon(50% 0,100% 25%,100% 75%,50% 100%,0 75%,0 25%); border:0; background:linear-gradient(180deg,rgba(30,64,175,.18) 0%,transparent 8%,transparent 92%,rgba(30,64,175,.18) 100%); display:flex; flex-direction:column; align-items:center; justify-content:center; }
+    .dseal.platform .stamp .ring-in { background:linear-gradient(180deg,rgba(212,175,55,.35) 0%,transparent 8%,transparent 92%,rgba(212,175,55,.35) 100%); }
+    /* Top & bottom banner strips inside the hex (replace curved arc text) */
+    .dseal .stamp .arc-top, .dseal .stamp .arc-bot { position:absolute; left:14%; right:14%; text-align:center; font-family:'Inter','Amiri',sans-serif; font-size:6.5px; font-weight:800; letter-spacing:2px; color:#fff; text-transform:uppercase; padding:2px 0; background:linear-gradient(90deg,transparent,#1e40af 20%,#1e40af 80%,transparent); border-radius:2px; }
+    .dseal .stamp .arc-top { top:14px; }
+    .dseal .stamp .arc-bot { bottom:14px; }
+    .dseal.platform .stamp .arc-top, .dseal.platform .stamp .arc-bot { color:#0c2340; background:linear-gradient(90deg,transparent,#d4af37 20%,#d4af37 80%,transparent); }
+    /* Core: icon + name + tag, stacked clean */
+    .dseal .stamp .core-icon { position:relative; z-index:2; font-size:26px; line-height:1; color:#1e40af; filter:drop-shadow(0 1px 1px rgba(255,255,255,.6)); margin-bottom:2px; }
+    .dseal.platform .stamp .core-icon { color:#d4af37; filter:drop-shadow(0 1px 1px rgba(0,0,0,.4)); }
+    .dseal .stamp .core-text { position:relative; z-index:2; font-family:'Amiri',serif; font-size:13px; font-weight:700; color:#0c2340; margin-top:1px; letter-spacing:.3px; line-height:1.1; }
+    .dseal.platform .stamp .core-text { color:#f5d97a; }
+    .dseal .stamp .core-tag { position:relative; z-index:2; font-size:7px; font-weight:800; letter-spacing:1.6px; color:#1e40af; margin-top:4px; padding:1px 7px; border:1px solid rgba(30,64,175,.35); border-radius:99px; background:rgba(255,255,255,.7); }
+    .dseal.platform .stamp .core-tag { color:#0c2340; border-color:rgba(212,175,55,.55); background:rgba(212,175,55,.95); }
     .dseal .info { flex:1; min-width:0; padding:16px 18px 14px; display:flex; flex-direction:column; }
     .dseal .info .label { display:inline-flex; align-items:center; gap:5px; align-self:flex-start; font-size:9px; color:#1e40af; letter-spacing:1.5px; font-weight:800; text-transform:uppercase; padding:3px 10px; border-radius:99px; background:rgba(59,130,246,.1); border:1px solid rgba(30,64,175,.25); margin-bottom:8px; }
     .dseal.platform .info .label { color:#856404; background:rgba(212,175,55,.14); border-color:rgba(212,175,55,.4); }
