@@ -491,7 +491,7 @@ export default function ResearchPublication() {
     <!-- Digital Seals -->
     <div class="seal-row">
       <div class="dseal platform">
-        <div class="ribbon"><span>ختم المنصّة الرسمي</span><span>PLATFORM SEAL</span></div>
+        <div class="ribbon"><span class="rdot">${SVG_DOT}</span><span>ختم المنصّة الرسمي</span><span>PLATFORM SEAL</span></div>
         <div class="stamp-wrap">
           <div class="stamp">
             <div class="ring-out"><div class="core-icon">${SVG_STAR}</div></div>
@@ -513,7 +513,7 @@ export default function ResearchPublication() {
         </div>
       </div>
       <div class="dseal">
-        <div class="ribbon"><span>توقيع المُتقدّم</span><span>CLIENT SIGNATURE</span></div>
+        <div class="ribbon"><span class="rdot">${SVG_DOT}</span><span>توقيع المُتقدّم</span><span>CLIENT SIGNATURE</span></div>
         <div class="stamp-wrap">
           <div class="stamp">
             <div class="ring-out"><div class="core-icon">${SVG_BADGE_CHECK}</div></div>
@@ -804,7 +804,7 @@ export default function ResearchPublication() {
     <div class="price-box"><div class="label">إجمالي قيمة العقد</div><div class="amount">${amount}<small>${esc(currency)}</small></div></div></div>` : ''}
   <div class="seal-row">
     <div class="dseal platform">
-      <div class="ribbon"><span>ختم المنصّة الرسمي</span><span>PLATFORM SEAL</span></div>
+      <div class="ribbon"><span class="rdot">${SVG_DOT}</span><span>ختم المنصّة الرسمي</span><span>PLATFORM SEAL</span></div>
       <div class="stamp-wrap">
         <div class="stamp">
           <div class="ring-out"><div class="core-icon">${SVG_STAR}</div></div>
@@ -826,7 +826,7 @@ export default function ResearchPublication() {
       </div>
     </div>
     <div class="dseal">
-      <div class="ribbon"><span>${sig ? 'توقيع المستفيد' : 'بانتظار التوقيع'}</span><span>${sig ? 'PARTY · SIGNED' : 'AWAITING SIG'}</span></div>
+      <div class="ribbon"><span class="rdot">${SVG_DOT}</span><span>${sig ? 'توقيع المستفيد' : 'بانتظار التوقيع'}</span><span>${sig ? 'PARTY · SIGNED' : 'AWAITING SIG'}</span></div>
       <div class="stamp-wrap">
         <div class="stamp">
           <div class="ring-out"><div class="core-icon">${sig ? SVG_BADGE_CHECK : SVG_HOURGLASS}</div></div>
@@ -923,7 +923,7 @@ export default function ResearchPublication() {
   </div>
   <div class="seal-row">
     <div class="dseal platform">
-      <div class="ribbon"><span>ختم المنصّة الرسمي</span><span>TAX INVOICE · SEAL</span></div>
+      <div class="ribbon"><span class="rdot">${SVG_DOT}</span><span>ختم المنصّة الرسمي</span><span>TAX INVOICE · SEAL</span></div>
       <div class="stamp-wrap">
         <div class="stamp">
           <div class="ring-out"><div class="core-icon">${SVG_STAR}</div></div>
@@ -945,7 +945,7 @@ export default function ResearchPublication() {
       </div>
     </div>
     <div class="dseal">
-      <div class="ribbon"><span>بيانات العميل</span><span>CLIENT · VERIFIED</span></div>
+      <div class="ribbon"><span class="rdot">${SVG_DOT}</span><span>بيانات العميل</span><span>CLIENT · VERIFIED</span></div>
       <div class="stamp-wrap">
         <div class="stamp">
           <div class="ring-out"><div class="core-icon">${SVG_BADGE_CHECK}</div></div>
