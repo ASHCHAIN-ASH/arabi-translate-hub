@@ -28,10 +28,17 @@ serve(async (req) => {
       Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!,
     );
 
-    const { phone, code, full_name, purpose = "login" } = await req.json();
+    const { phone, code, full_name, email, purpose = "login" } = await req.json();
     if (!phone || !code) {
       return resp({ success: false, error: "البيانات ناقصة" });
     }
+
+    // تحقّق من صحة البريد إذا أُرسل
+    const emailRe = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const cleanEmail: string | null =
+      typeof email === "string" && emailRe.test(email.trim()) && email.trim().length <= 255
+        ? email.trim().toLowerCase()
+        : null;
 
     const normalized = normalizePhone(phone);
 
