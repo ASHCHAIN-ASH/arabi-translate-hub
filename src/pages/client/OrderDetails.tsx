@@ -20,6 +20,7 @@ import { ContractSigningCard } from '@/components/orders/ContractSigningCard';
 import { PaymentCard } from '@/components/orders/PaymentCard';
 import OrderCountdown from '@/components/orders/OrderCountdown';
 import PriceApprovalCard from '@/components/client/PriceApprovalCard';
+import { translateStageWords } from '@/utils/stageTranslations';
 
 interface ServiceOrder {
   id: string;
@@ -620,7 +621,7 @@ const OrderDetails = () => {
                                 </span>
                               </div>
                               {entry.note && (
-                                <p className="text-sm text-muted-foreground mt-1 bg-muted/40 p-2.5 rounded-lg">{entry.note}</p>
+                                <p className="text-sm text-muted-foreground mt-1 bg-muted/40 p-2.5 rounded-lg">{translateStageWords(entry.note)}</p>
                               )}
                             </div>
                           </div>
