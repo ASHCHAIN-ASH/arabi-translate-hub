@@ -385,20 +385,36 @@ export default function ResearchPublication() {
     .actbar { display:none !important; }
   }
   @media (max-width: 720px) {
-    .canvas { padding:14px 8px 40px; }
-    .page { padding:18px 14px; }
-    .doc-head { flex-direction:column; align-items:flex-start; }
-    .doc-meta { text-align:right; }
-    .grid, .seal-row { grid-template-columns:1fr; }
-    .title-block h1 { font-size:20px; }
+    .canvas { padding:12px 10px 36px; }
+    .page { padding:18px 14px; border-radius:10px; border:1px solid #d8e0ec; box-shadow:0 6px 20px rgba(12,35,64,.10); }
+    .doc-head { flex-direction:column; align-items:flex-start; gap:10px; }
+    .doc-meta { text-align:right; width:100%; }
+    .grid { grid-template-columns:1fr; gap:10px; }
+    .seal-row { grid-template-columns:1fr; gap:18px; margin-top:18px; }
+    .seal-row::before { font-size:8px; padding:4px 14px; letter-spacing:1.5px; }
+    .title-block h1 { font-size:20px; line-height:1.4; }
     .title-block .subj { padding:0 6px; font-size:13px; }
-    .price-box { flex-direction:column; gap:8px; text-align:center; }
+    .price-box { flex-direction:column; gap:8px; text-align:center; padding:16px; }
     .status-strip { flex-wrap:wrap; gap:8px; }
-    .verify-bar { flex-direction:column; gap:6px; text-align:center; }
-    .dseal { flex-direction:column; text-align:center; padding:18px 14px; min-height:auto; }
-    .dseal .stamp { transform:rotate(-8deg); }
-    .dseal .info { width:100%; text-align:center; }
-    .dseal .who { border-bottom-color:#ece4cb; }
+    .verify-bar { flex-direction:column; gap:8px; text-align:center; padding:12px; }
+    .verify-bar code { word-break:break-all; max-width:100%; }
+    .dseal { border-radius:14px; border:1.5px solid #c9b87a; box-shadow:0 6px 18px rgba(12,35,64,.12); overflow:hidden; }
+    .dseal .ribbon { padding:9px 12px; font-size:9.5px; letter-spacing:1px; }
+    .dseal .stamp-wrap { padding:22px 12px 18px; }
+    .dseal .stamp { flex:0 0 110px; width:110px; height:110px; transform:rotate(-6deg); }
+    .dseal .stamp .core-text { font-size:11px; max-width:96px; }
+    .dseal .info { padding:14px 14px 16px; }
+    .dseal .info .who { font-size:14px; word-break:break-word; }
+    .dseal .info .meta { font-size:11px; }
+    .dseal .info .meta code { font-size:9.5px; word-break:break-all; }
+    .dseal .vstrip { font-size:10.5px; padding-top:10px; margin-top:4px; border-top:1px dashed #ece4cb; }
+  }
+  @media (max-width: 420px) {
+    .canvas { padding:10px 8px 32px; }
+    .page { padding:14px 12px; }
+    .dseal .stamp { flex:0 0 96px; width:96px; height:96px; }
+    .dseal .stamp .core-text { font-size:10px; max-width:84px; }
+    .title-block h1 { font-size:18px; }
   }
 </style></head><body>
   <div class="actbar">
