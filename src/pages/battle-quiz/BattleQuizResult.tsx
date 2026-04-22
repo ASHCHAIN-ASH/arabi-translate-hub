@@ -134,6 +134,34 @@ const BattleQuizResult: React.FC = () => {
               </div>
             )}
 
+            {/* Anti-Cheat summary (visible to user) */}
+            {flags && flags.total > 0 && (
+              <div className="px-5 pb-5">
+                <div className={`rounded-xl border p-3 ${
+                  isFlagged
+                    ? 'bg-destructive/5 border-destructive/30'
+                    : 'bg-amber-500/5 border-amber-500/30'
+                }`}>
+                  <div className="flex items-center gap-2 mb-1">
+                    <ShieldAlert className={`w-4 h-4 ${isFlagged ? 'text-destructive' : 'text-amber-600'}`} />
+                    <p className="text-sm font-bold">
+                      {isFlagged ? 'تنبيهات سلامة المحاولة' : 'ملاحظات سلامة'}
+                    </p>
+                    <span className="text-xs text-muted-foreground mr-auto">
+                      {flags.total} إشارة • أعلى خطر {flags.topRisk}
+                    </span>
+                  </div>
+                  <div className="flex flex-wrap gap-1.5 mt-2">
+                    {Object.entries(flags.byType).map(([t, n]) => (
+                      <span key={t} className="text-[11px] px-2 py-0.5 rounded-full bg-background border">
+                        {flagLabel(t)} × {n}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            )}
+
             {/* Actions */}
             <div className="p-5 pt-0 space-y-2">
               {!isFlagged && (
