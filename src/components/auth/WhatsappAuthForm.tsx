@@ -100,7 +100,7 @@ export const WhatsappAuthForm: React.FC<Props> = ({ mode, onSuccess }) => {
     try {
       const { data, error } = await withTimeout(
         supabase.functions.invoke('whatsapp-auth-complete', {
-          body: { phone, code: finalCode, full_name: fullName, purpose: mode },
+          body: { phone, code: finalCode, full_name: fullName, email: email.trim() || undefined, purpose: mode },
         }),
       );
       if (error || !data?.success) {
