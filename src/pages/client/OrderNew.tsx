@@ -243,6 +243,7 @@ const OrderNew = () => {
     setUploadProgress(0);
     try {
       const language = dynamicValues.language || dynamicValues.target_language || null;
+      const hasWordAnalysis = !!wordCountData && wordCountData.totalWords > 0;
       const { data, error } = await supabase.from('service_orders').insert({
         user_id: user.id,
         service_id: service.id,
@@ -253,6 +254,10 @@ const OrderNew = () => {
         quantity: quantity || null,
         quantity_unit: fieldsConfig.quantityUnitLabel,
         preferred_language: language,
+        // Price approval workflow — auto-trigger when client uploaded files & got an estimate
+        price_approval_status: hasWordAnalysis ? 'pending' : 'not_requested',
+        client_estimated_price: hasWordAnalysis ? wordCountData!.estimatedPriceSar : null,
+        price_approval_requested_at: hasWordAnalysis ? new Date().toISOString() : null,
         metadata: {
           ...dynamicValues,
           category_slug: service.category_slug,
@@ -272,6 +277,7 @@ const OrderNew = () => {
         notes: notes || null,
       } as any).select('id, tracking_id').single();
       if (error) throw error;
+
 
       setTrackingId(data?.tracking_id || '');
       setSubmitted(true);
