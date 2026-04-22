@@ -108,6 +108,14 @@ export const SimpleAuthProvider: React.FC<{ children: React.ReactNode }> = ({ ch
       setTimeout(() => {
         void applySession(currentSession);
       }, 0);
+      // Auto-claim a pending referral code on first SIGNED_IN after a ?ref= visit.
+      if (event === 'SIGNED_IN' && currentSession?.user) {
+        setTimeout(() => {
+          import('@/utils/referralService')
+            .then(({ ReferralService }) => ReferralService.claimPendingReferralIfAny())
+            .catch(() => {});
+        }, 100);
+      }
     });
 
     supabase.auth.getSession().then(({ data: { session: initialSession } }) => {

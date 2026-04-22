@@ -123,4 +123,31 @@ export const ReferralService = {
     // Always use canonical public origin — never preview/iframe domains
     return buildPublicUrl(`/register?ref=${code}`);
   },
+
+  /**
+   * Consume any pending referral code captured before signup.
+   * Must be called AFTER the user is fully authenticated (session active),
+   * so that the SECURITY DEFINER `claim_referral` RPC can attach the new
+   * user as the referred party of the referrer's pending referral row.
+   */
+  async claimPendingReferralIfAny(): Promise<void> {
+    const code = ReferralService.readPendingCode();
+    if (!code) return;
+    try {
+      const { data, error } = await supabase.rpc('claim_referral' as any, {
+        _ref_code: code,
+      });
+      if (error) {
+        // Keep the code so a later retry can succeed (e.g., session not ready)
+        console.warn('[referral] claim_referral failed:', error.message);
+        return;
+      }
+      const ok = (data as any)?.success !== false;
+      if (ok) {
+        ReferralService.clearPendingCode();
+      }
+    } catch (e) {
+      console.warn('[referral] claim_referral threw:', e);
+    }
+  },
 };
