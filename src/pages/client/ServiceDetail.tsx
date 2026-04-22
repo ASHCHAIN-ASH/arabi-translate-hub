@@ -172,14 +172,6 @@ const ServiceDetail = () => {
     { q: 'هل تقدمون فاتورة رسمية؟', a: 'نعم، نوفر فواتير ضريبية رسمية لجميع الطلبات بعد إتمام الدفع.' },
   ]), []);
 
-  // Estimated price calculator (display-only — final price set by team)
-  const estimate = useMemo(() => {
-    const base = 50; // base unit price (display only)
-    const urgencyMultiplier = urgency === 'urgent' ? 1.6 : urgency === 'fast' ? 1.25 : 1;
-    const total = Math.max(qty, 1) * base * urgencyMultiplier;
-    return Math.round(total);
-  }, [qty, urgency]);
-
   if (loading) {
     return (
       <ClientLayout>
