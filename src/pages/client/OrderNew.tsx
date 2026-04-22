@@ -20,6 +20,7 @@ import { useAuth } from '@/components/SimpleAuthProvider';
 import { cn } from '@/lib/utils';
 import DynamicServiceFields from '@/components/client/DynamicServiceFields';
 import TranslationWordCounter from '@/components/client/TranslationWordCounter';
+import TranslationAnalysisEngine, { type AnalysisSummary } from '@/components/client/TranslationAnalysisEngine';
 import CategoryHero from '@/components/client/order-new/CategoryHero';
 import CategoryGuideCard from '@/components/client/order-new/CategoryGuideCard';
 import ExamplePrompts from '@/components/client/order-new/ExamplePrompts';
@@ -92,11 +93,20 @@ const OrderNew = () => {
   const [dragOver, setDragOver] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [trackingId, setTrackingId] = useState<string>('');
-  const [wordCountData, setWordCountData] = useState<{
-    totalWords: number; totalPages: number; estimatedPriceSar: number;
-    files: { name: string; words: number }[];
-    pendingCount: number; errorCount: number; totalFiles: number;
-  } | null>(null);
+  const [analysisSummary, setAnalysisSummary] = useState<AnalysisSummary | null>(null);
+  // Legacy shape used by guards & DB write — derived from analysisSummary
+  const wordCountData = useMemo(() => {
+    if (!analysisSummary) return null;
+    return {
+      totalWords: analysisSummary.totalWords,
+      totalPages: analysisSummary.totalPages,
+      estimatedPriceSar: analysisSummary.estimatedPriceSar,
+      files: analysisSummary.files.map((f) => ({ name: f.fileName, words: f.wordCount })),
+      pendingCount: analysisSummary.pendingCount,
+      errorCount: analysisSummary.errorCount,
+      totalFiles: analysisSummary.totalFiles,
+    };
+  }, [analysisSummary]);
 
   // Detect translation services so we render the word counter widget.
   const isTranslationService = useMemo(() => {
@@ -310,6 +320,38 @@ const OrderNew = () => {
       setTrackingId(data?.tracking_id || '');
       setSubmitted(true);
       toast.success('تم إنشاء الطلب بنجاح');
+
+      // Persist per-file translation analyses (non-blocking)
+      if (analysisSummary && analysisSummary.files.length > 0 && data?.id) {
+        const rows = analysisSummary.files.map((f) => ({
+          service_order_id: data.id,
+          user_id: user.id,
+          file_name: f.fileName,
+          file_type: f.fileType,
+          file_size_bytes: f.fileSizeBytes,
+          word_count: f.wordCount,
+          character_count: f.characterCount,
+          estimated_pages: f.estimatedPages,
+          words_per_page_standard: f.wordsPerPageStandard,
+          detected_language: f.language,
+          arabic_ratio: f.arabicRatio,
+          english_ratio: f.englishRatio,
+          domain: f.domain,
+          domain_source: f.domainSource === 'heuristic' ? 'manual' : f.domainSource,
+          domain_confidence: f.domainConfidence,
+          estimated_price_sar: f.estimatedPriceSar,
+          per_word_rate_sar: f.perWordRateSar,
+          urgency_multiplier: f.urgencyMultiplier,
+          domain_multiplier: f.domainMultiplier,
+          confidence_level: f.confidenceLevel,
+          analysis_method: f.analysisMethod,
+          is_fallback: f.isFallback,
+          analysis_notes: f.analysisNotes.join(' • '),
+          text_sample: f.textSample,
+        }));
+        supabase.from('translation_file_analyses' as any).insert(rows as any)
+          .then(({ error: e }) => { if (e) console.error('Failed to save analyses:', e); });
+      }
 
       if (files.length > 0 && data?.id) {
         uploadFilesParallel(data.id, user.id)
@@ -646,15 +688,15 @@ const OrderNew = () => {
                             </div>
                           </div>
 
-                          {/* Translation word counter — shown only for translation services */}
+                          {/* Translation Analysis Engine — professional per-file analysis */}
                           {isTranslationService && (
                             <div className="mb-6 rounded-2xl border border-emerald-500/20 bg-gradient-to-br from-emerald-50/30 to-teal-50/20 dark:from-emerald-950/10 dark:to-teal-950/5 p-4">
-                              <TranslationWordCounter
+                              <TranslationAnalysisEngine
                                 sourceLanguage={dynamicValues.source_language}
                                 targetLanguage={dynamicValues.target_language || dynamicValues.language}
                                 urgency={dynamicValues.urgency}
                                 certified={dynamicValues.certified}
-                                onCountChange={setWordCountData}
+                                onChange={setAnalysisSummary}
                               />
                             </div>
                           )}

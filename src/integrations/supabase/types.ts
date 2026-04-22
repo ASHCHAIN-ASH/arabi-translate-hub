@@ -6280,6 +6280,119 @@ export type Database = {
         }
         Relationships: []
       }
+      translation_file_analyses: {
+        Row: {
+          admin_notes: string | null
+          analysis_method: string
+          analysis_notes: string | null
+          approval_status: string
+          approved_at: string | null
+          approved_by: string | null
+          approved_price_sar: number | null
+          arabic_ratio: number | null
+          character_count: number
+          confidence_level: string
+          created_at: string
+          detected_language: string
+          domain: string
+          domain_confidence: number | null
+          domain_multiplier: number
+          domain_source: string
+          english_ratio: number | null
+          estimated_pages: number
+          estimated_price_sar: number
+          file_name: string
+          file_size_bytes: number
+          file_type: string
+          id: string
+          is_fallback: boolean
+          per_word_rate_sar: number
+          service_order_id: string | null
+          text_sample: string | null
+          updated_at: string
+          urgency_multiplier: number
+          user_id: string
+          word_count: number
+          words_per_page_standard: number
+        }
+        Insert: {
+          admin_notes?: string | null
+          analysis_method?: string
+          analysis_notes?: string | null
+          approval_status?: string
+          approved_at?: string | null
+          approved_by?: string | null
+          approved_price_sar?: number | null
+          arabic_ratio?: number | null
+          character_count?: number
+          confidence_level?: string
+          created_at?: string
+          detected_language?: string
+          domain?: string
+          domain_confidence?: number | null
+          domain_multiplier?: number
+          domain_source?: string
+          english_ratio?: number | null
+          estimated_pages?: number
+          estimated_price_sar?: number
+          file_name: string
+          file_size_bytes?: number
+          file_type: string
+          id?: string
+          is_fallback?: boolean
+          per_word_rate_sar?: number
+          service_order_id?: string | null
+          text_sample?: string | null
+          updated_at?: string
+          urgency_multiplier?: number
+          user_id: string
+          word_count?: number
+          words_per_page_standard?: number
+        }
+        Update: {
+          admin_notes?: string | null
+          analysis_method?: string
+          analysis_notes?: string | null
+          approval_status?: string
+          approved_at?: string | null
+          approved_by?: string | null
+          approved_price_sar?: number | null
+          arabic_ratio?: number | null
+          character_count?: number
+          confidence_level?: string
+          created_at?: string
+          detected_language?: string
+          domain?: string
+          domain_confidence?: number | null
+          domain_multiplier?: number
+          domain_source?: string
+          english_ratio?: number | null
+          estimated_pages?: number
+          estimated_price_sar?: number
+          file_name?: string
+          file_size_bytes?: number
+          file_type?: string
+          id?: string
+          is_fallback?: boolean
+          per_word_rate_sar?: number
+          service_order_id?: string | null
+          text_sample?: string | null
+          updated_at?: string
+          urgency_multiplier?: number
+          user_id?: string
+          word_count?: number
+          words_per_page_standard?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "translation_file_analyses_service_order_id_fkey"
+            columns: ["service_order_id"]
+            isOneToOne: false
+            referencedRelation: "service_orders"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       user_answers: {
         Row: {
           answered_at: string
