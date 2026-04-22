@@ -1264,6 +1264,20 @@ export default function ResearchPublication() {
                                 <Download className="w-4 h-4 ml-2" />
                                 تنزيل ملخّص الطلب PDF
                               </Button>
+                              <Button
+                                onClick={() => downloadContractPdf(selected)}
+                                className="w-full bg-gradient-to-r from-slate-800 to-slate-900 hover:from-slate-900 hover:to-black text-amber-300 font-bold rounded-xl border border-amber-400/40"
+                              >
+                                <FileText className="w-4 h-4 ml-2" />
+                                تنزيل العقد PDF
+                              </Button>
+                              <Button
+                                onClick={() => downloadInvoicePdf(selected)}
+                                className="w-full bg-gradient-to-r from-emerald-700 to-teal-700 hover:from-emerald-800 hover:to-teal-800 text-white font-bold rounded-xl"
+                              >
+                                <Download className="w-4 h-4 ml-2" />
+                                تنزيل الفاتورة PDF
+                              </Button>
                               <div className="grid grid-cols-2 gap-3 text-sm">
                                 <div><span className="text-muted-foreground">التخصص:</span> <b>{selected.field}</b></div>
                                 <div><span className="text-muted-foreground">اللغة:</span> <b>{selected.language === 'ar' ? 'العربية' : selected.language === 'en' ? 'الإنجليزية' : 'ثنائية'}</b></div>
