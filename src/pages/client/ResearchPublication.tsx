@@ -617,7 +617,7 @@ export default function ResearchPublication() {
     .actbar button:hover { background:#d4af37; color:#0c2340; }
     .actbar .close { background:#fff; color:#0c2340; }
     @media print { body { background:#fff; } .canvas { padding:0; } .page { box-shadow:none; border:0; padding:0; max-width:100%; border-radius:0; } .actbar { display:none !important; } }
-    @media (max-width:720px) { .canvas { padding:14px 8px 40px; } .page { padding:18px 14px; } .doc-head { flex-direction:column; align-items:flex-start; } .doc-meta { text-align:right; } .grid, .seal-row { grid-template-columns:1fr; } .price-box { flex-direction:column; gap:8px; text-align:center; } .verify-bar { flex-direction:column; gap:6px; text-align:center; } .dseal { padding:14px 14px 110px; min-height:auto; } .dseal .stamp { position:relative; right:auto; top:auto; transform:rotate(-8deg); margin:10px auto 0; } }
+    @media (max-width:720px) { .canvas { padding:14px 8px 40px; } .page { padding:18px 14px; } .doc-head { flex-direction:column; align-items:flex-start; } .doc-meta { text-align:right; } .grid, .seal-row { grid-template-columns:1fr; } .price-box { flex-direction:column; gap:8px; text-align:center; } .verify-bar { flex-direction:column; gap:6px; text-align:center; } .dseal { flex-direction:column; text-align:center; padding:18px 14px; min-height:auto; } .dseal .stamp { transform:rotate(-8deg); } .dseal .info { width:100%; text-align:center; } }
   `;
 
   const openPdfWindow = (html: string) => {
