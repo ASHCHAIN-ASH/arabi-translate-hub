@@ -114,6 +114,12 @@ export const WhatsappAuthForm: React.FC<Props> = ({ mode, onSuccess }) => {
       });
       if (sessErr) throw sessErr;
 
+      // Claim referral code captured from ?ref= before signup (if any)
+      try {
+        const { ReferralService } = await import('@/utils/referralService');
+        await ReferralService.claimPendingReferralIfAny();
+      } catch {}
+
       toast.success(mode === 'register' ? 'تم إنشاء الحساب وتسجيل الدخول' : 'تم تسجيل الدخول');
       onSuccess?.();
     } catch (e: any) {
