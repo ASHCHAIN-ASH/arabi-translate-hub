@@ -246,6 +246,15 @@ export default function ResearchPublication() {
 
   const formatSize = (b: number) => b < 1024 ? `${b}B` : b < 1024 * 1024 ? `${(b / 1024).toFixed(1)}KB` : `${(b / 1024 / 1024).toFixed(1)}MB`;
 
+  // ═══ Inline SVG icons — render identically across all browsers/devices (no emoji, no font dependency) ═══
+  const SVG_STAR = `<svg viewBox="0 0 24 24" width="1em" height="1em" fill="currentColor" aria-hidden="true" style="display:inline-block;vertical-align:middle"><path d="M12 2.5l2.95 6.36 6.95.78-5.2 4.78 1.45 6.83L12 17.77l-6.15 3.48 1.45-6.83-5.2-4.78 6.95-.78L12 2.5z"/></svg>`;
+  const SVG_CHECK = `<svg viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:inline-block;vertical-align:middle"><polyline points="4 12.5 10 18.5 20 6"/></svg>`;
+  const SVG_HOURGLASS = `<svg viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:inline-block;vertical-align:middle"><path d="M6 2h12M6 22h12M7 2v4c0 3 5 4 5 6s-5 3-5 6v4M17 2v4c0 3-5 4-5 6s5 3 5 6v4"/></svg>`;
+  const SVG_DOT = `<svg viewBox="0 0 12 12" width=".7em" height=".7em" fill="currentColor" aria-hidden="true" style="display:inline-block;vertical-align:middle"><circle cx="6" cy="6" r="5"/></svg>`;
+  const SVG_BADGE_CHECK = `<svg viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:inline-block;vertical-align:middle"><path d="M12 2l2.4 2 3.1-.4.6 3 2.6 1.7-1.4 2.7 1.4 2.7-2.6 1.7-.6 3-3.1-.4L12 22l-2.4-2-3.1.4-.6-3L3.3 15.7l1.4-2.7-1.4-2.7L5.9 8.6l.6-3 3.1.4L12 2z"/><polyline points="8.5 12.5 11 15 16 9.5"/></svg>`;
+  const greenDot = `<span style="display:inline-flex;align-items:center;justify-content:center;width:11px;height:11px;border-radius:50%;background:#22c55e;box-shadow:0 0 0 3px rgba(34,197,94,.22);color:#fff;font-size:9px">${SVG_CHECK}</span>`;
+
+
   const downloadSummaryPdf = (item: any) => {
     const statusLabel = STATUS_CONFIG[item.status]?.label || item.status;
     const serviceLabel = SERVICE_TYPES.find(s => s.value === item.service_type)?.label || item.service_type;
