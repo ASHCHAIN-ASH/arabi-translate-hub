@@ -53,7 +53,8 @@ interface Props {
 }
 
 const ACCEPTED = '.pdf,.docx,.txt,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document,text/plain';
-const MAX_SIZE = 20 * 1024 * 1024;
+const MAX_SIZE = 50 * 1024 * 1024; // 50MB per file
+const MAX_FILES = 10;
 
 const LANG_LABEL: Record<string, string> = {
   ar: 'العربية', en: 'الإنجليزية', mixed: 'مختلطة', unknown: 'غير محدّدة',
