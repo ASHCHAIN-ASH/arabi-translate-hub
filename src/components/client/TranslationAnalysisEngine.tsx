@@ -86,9 +86,12 @@ const TranslationAnalysisEngine: React.FC<Props> = ({
 
   // ───────── analyze single file ─────────
   const processFile = useCallback(
-    async (id: string) => {
-      const entry = entriesRef.current.find((e) => e.id === id);
+    async (entryOrId: Pick<FileEntry, 'id' | 'file'> | string) => {
+      const entry = typeof entryOrId === 'string'
+        ? entriesRef.current.find((e) => e.id === entryOrId)
+        : entryOrId;
       if (!entry) return;
+      const { id, file } = entry;
 
       const updateEntry = (patch: Partial<FileEntry>) => {
         setEntries((prev) => prev.map((e) => (e.id === id ? { ...e, ...patch } : e)));
@@ -97,7 +100,7 @@ const TranslationAnalysisEngine: React.FC<Props> = ({
       updateEntry({ loading: true, progress: 0, error: undefined });
 
       try {
-        const result = await analyzeTranslationFile(entry.file, {
+        const result = await analyzeTranslationFile(file, {
           urgency, certified, targetLanguage,
           onProgress: (p) => updateEntry({ progress: p }),
         });
@@ -187,7 +190,7 @@ const TranslationAnalysisEngine: React.FC<Props> = ({
       const CONCURRENCY = 2;
       for (let i = 0; i < accepted.length; i += CONCURRENCY) {
         await Promise.all(
-          accepted.slice(i, i + CONCURRENCY).map((e) => processFile(e.id))
+          accepted.slice(i, i + CONCURRENCY).map((entry) => processFile(entry))
         );
       }
     },
@@ -195,7 +198,10 @@ const TranslationAnalysisEngine: React.FC<Props> = ({
   );
 
   const removeEntry = (id: string) => setEntries((prev) => prev.filter((e) => e.id !== id));
-  const reanalyze = (id: string) => processFile(id);
+  const reanalyze = (id: string) => {
+    const entry = entriesRef.current.find((e) => e.id === id);
+    if (entry) processFile({ id: entry.id, file: entry.file });
+  };
   const changeDomain = (id: string, domain: Domain) => {
     setEntries((prev) =>
       prev.map((e) =>
