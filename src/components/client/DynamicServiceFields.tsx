@@ -8,7 +8,20 @@ import {
 import { CategoryFieldsConfig, DynamicField } from '@/config/serviceFieldsConfig';
 import { CategoryTheme } from '@/config/categoryThemes';
 import { cn } from '@/lib/utils';
-import { Info, Clock, Zap, Flame, Check } from 'lucide-react';
+import { Info, Clock, Zap, Flame, Check, Languages, FileText, GraduationCap, Edit3, Send, BarChart3, Palette, Calendar } from 'lucide-react';
+import type { FormSection } from '@/config/serviceFormTemplates';
+
+const SECTION_ICONS = {
+  languages: Languages,
+  file: FileText,
+  graduation: GraduationCap,
+  edit: Edit3,
+  send: Send,
+  chart: BarChart3,
+  design: Palette,
+  calendar: Calendar,
+  info: Info,
+} as const;
 
 const URGENCY_META: Record<string, {
   label: string;
