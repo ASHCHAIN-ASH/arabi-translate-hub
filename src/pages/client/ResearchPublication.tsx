@@ -799,18 +799,14 @@ export default function ResearchPublication() {
     <div class="price-box"><div class="label">إجمالي قيمة العقد</div><div class="amount">${amount}<small>${esc(currency)}</small></div></div></div>` : ''}
   <div class="seal-row">
     <div class="dseal platform">
-      <div class="ribbon">PLATFORM</div>
+      <div class="ribbon"><span>ختم المنصّة الرسمي</span><span>PLATFORM SEAL</span></div>
       <div class="stamp-wrap">
         <div class="stamp">
-          <div class="ring-out"></div>
-          <div class="ring-mid"></div>
-          <div class="ring-in">
-            <div class="core-icon">★</div>
-            <div class="core-text">معتمد</div>
-            <div class="core-tag">VERIFIED</div>
+          <div class="ring-out"><div class="core-icon">★</div></div>
+          <div class="ring-mid">
+            <div class="core-text" data-en="MasterEduPath · Verified Authority">ماستر إيدو باث</div>
           </div>
-          <div class="arc-top">• MASTEREDUPATH ·</div>
-          <div class="arc-bot">· DIGITALLY SIGNED ·</div>
+          <div class="ring-in"><div class="core-tag">معتمد</div></div>
         </div>
       </div>
       <div class="info">
@@ -825,18 +821,14 @@ export default function ResearchPublication() {
       </div>
     </div>
     <div class="dseal">
-      <div class="ribbon">${sig ? 'SIGNED' : 'PENDING'}</div>
+      <div class="ribbon"><span>${sig ? 'توقيع المستفيد' : 'بانتظار التوقيع'}</span><span>${sig ? 'PARTY · SIGNED' : 'AWAITING SIG'}</span></div>
       <div class="stamp-wrap">
         <div class="stamp">
-          <div class="ring-out"></div>
-          <div class="ring-mid"></div>
-          <div class="ring-in">
-            <div class="core-icon">${sig ? '✓' : '⏳'}</div>
-            <div class="core-text">الطرف الثاني</div>
-            <div class="core-tag">${sig ? 'SIGNED' : 'PENDING'}</div>
+          <div class="ring-out"><div class="core-icon">${sig ? '✓' : '⏳'}</div></div>
+          <div class="ring-mid">
+            <div class="core-text" data-en="${sig ? 'Authorized Party · e-Signature' : 'Awaiting Signature'}">${sig ? 'الطرف الثاني المعتمد' : 'الطرف الثاني'}</div>
           </div>
-          <div class="arc-top">• OFFICIAL CLIENT ·</div>
-          <div class="arc-bot">· e-SIGNATURE ·</div>
+          <div class="ring-in"><div class="core-tag">${sig ? 'موقّع' : 'انتظار'}</div></div>
         </div>
       </div>
       <div class="info">
@@ -926,18 +918,14 @@ export default function ResearchPublication() {
   </div>
   <div class="seal-row">
     <div class="dseal platform">
-      <div class="ribbon">PLATFORM</div>
+      <div class="ribbon"><span>ختم المنصّة الرسمي</span><span>TAX INVOICE · SEAL</span></div>
       <div class="stamp-wrap">
         <div class="stamp">
-          <div class="ring-out"></div>
-          <div class="ring-mid"></div>
-          <div class="ring-in">
-            <div class="core-icon">★</div>
-            <div class="core-text">معتمد</div>
-            <div class="core-tag">TAX · INV</div>
+          <div class="ring-out"><div class="core-icon">★</div></div>
+          <div class="ring-mid">
+            <div class="core-text" data-en="MasterEduPath · Tax Invoice Authority">ماستر إيدو باث</div>
           </div>
-          <div class="arc-top">• MASTEREDUPATH ·</div>
-          <div class="arc-bot">· DIGITALLY SIGNED ·</div>
+          <div class="ring-in"><div class="core-tag">معتمد</div></div>
         </div>
       </div>
       <div class="info">
@@ -952,18 +940,14 @@ export default function ResearchPublication() {
       </div>
     </div>
     <div class="dseal">
-      <div class="ribbon">CLIENT</div>
+      <div class="ribbon"><span>بيانات العميل</span><span>CLIENT · VERIFIED</span></div>
       <div class="stamp-wrap">
         <div class="stamp">
-          <div class="ring-out"></div>
-          <div class="ring-mid"></div>
-          <div class="ring-in">
-            <div class="core-icon">✓</div>
-            <div class="core-text">العميل</div>
-            <div class="core-tag">VERIFIED</div>
+          <div class="ring-out"><div class="core-icon">✓</div></div>
+          <div class="ring-mid">
+            <div class="core-text" data-en="Authorized Customer · e-Invoice">العميل المعتمد</div>
           </div>
-          <div class="arc-top">• OFFICIAL CUSTOMER ·</div>
-          <div class="arc-bot">· e-INVOICE ·</div>
+          <div class="ring-in"><div class="core-tag">موثّق</div></div>
         </div>
       </div>
       <div class="info">
