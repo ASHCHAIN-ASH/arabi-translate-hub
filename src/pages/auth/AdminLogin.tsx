@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { toast } from 'sonner';
+import { triggerLoginWelcome } from '@/components/LoginWelcomeOverlay';
 import { Card } from '@/components/ui/card';
 import { Shield, ArrowRight } from 'lucide-react';
 import { motion } from 'framer-motion';
