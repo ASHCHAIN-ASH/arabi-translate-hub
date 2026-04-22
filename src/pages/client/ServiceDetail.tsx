@@ -119,9 +119,9 @@ const ServiceDetail = () => {
       try {
         const [activeRes, doneRes] = await Promise.all([
           supabase.from('service_orders').select('id', { count: 'exact', head: true })
-            .eq('service_id', id).in('status', ['pending', 'in_progress', 'review']),
+            .eq('service_id', id).is('completed_at', null).is('cancelled_at', null),
           supabase.from('service_orders').select('id', { count: 'exact', head: true })
-            .eq('service_id', id).eq('status', 'completed'),
+            .eq('service_id', id).not('completed_at', 'is', null),
         ]);
         setActiveOrders(activeRes.count || 0);
         setCompletedOrders(doneRes.count || 0);
