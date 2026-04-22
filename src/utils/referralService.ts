@@ -1,4 +1,5 @@
 import { supabase } from '@/integrations/supabase/client';
+import { buildPublicUrl } from '@/lib/publicUrl';
 
 export interface MemberReferral {
   id: string;
@@ -120,8 +121,6 @@ export const ReferralService = {
 
   buildShareUrl(code: string): string {
     // Always use canonical public origin — never preview/iframe domains
-    // Lazy import to avoid circular deps
-    const { buildPublicUrl } = require('@/lib/publicUrl');
     return buildPublicUrl(`/register?ref=${code}`);
   },
 };
