@@ -377,8 +377,10 @@ export default function ResearchPublication() {
     .price-box { flex-direction:column; gap:8px; text-align:center; }
     .status-strip { flex-wrap:wrap; gap:8px; }
     .verify-bar { flex-direction:column; gap:6px; text-align:center; }
-    .dseal { padding:14px 14px 110px 14px; min-height:auto; }
-    .dseal .stamp { position:relative; right:auto; top:auto; transform:rotate(-8deg); margin:10px auto 0; }
+    .dseal { flex-direction:column; text-align:center; padding:18px 14px; min-height:auto; }
+    .dseal .stamp { transform:rotate(-8deg); }
+    .dseal .info { width:100%; text-align:center; }
+    .dseal .who { border-bottom-color:#ece4cb; }
   }
 </style></head><body>
   <div class="actbar">
