@@ -587,22 +587,26 @@ export default function ResearchPublication() {
     table.inv tfoot tr.total td { background:linear-gradient(135deg,#0c2340,#1e3a5f); color:#fff; font-size:14px; }
     table.inv tfoot tr.total td b { color:#d4af37; font-family:'Amiri',serif; font-size:18px; }
     .seal-row { position:relative; z-index:1; display:grid; grid-template-columns:1fr 1fr; gap:18px; margin-top:24px; padding-top:18px; border-top:2px dashed #d4af37; }
-    .dseal { position:relative; padding:14px 14px 14px 110px; border:1.5px solid #0c2340; border-radius:6px; background:linear-gradient(135deg,#fff,#fbfaf6); min-height:130px; }
-    .dseal .stamp { position:absolute; right:14px; top:50%; transform:translateY(-50%) rotate(-12deg); width:90px; height:90px; border-radius:50%; border:2.5px solid #0c2340; display:flex; flex-direction:column; align-items:center; justify-content:center; background:rgba(255,255,255,.85); box-shadow:inset 0 0 0 3px rgba(212,175,55,.4); }
-    .dseal .stamp::before { content:''; position:absolute; inset:4px; border:1px dashed #0c2340; border-radius:50%; opacity:.5; }
-    .dseal .stamp .st-top { font-family:'Amiri',serif; font-size:9px; color:#0c2340; font-weight:700; letter-spacing:1px; }
-    .dseal .stamp .st-icon { font-size:20px; color:#d4af37; line-height:1; margin:2px 0; }
-    .dseal .stamp .st-mid { font-family:'Amiri',serif; font-size:11px; color:#0c2340; font-weight:700; }
-    .dseal .stamp .st-bot { font-size:7.5px; color:#0c2340; font-weight:600; letter-spacing:.5px; margin-top:2px; }
-    .dseal .stamp.client { border-color:#1e40af; box-shadow:inset 0 0 0 3px rgba(59,130,246,.25); }
+    .dseal { position:relative; display:flex; align-items:center; gap:18px; padding:18px; border:1.5px solid #0c2340; border-radius:8px; background:linear-gradient(135deg,#fff 0%,#fbfaf6 100%); min-height:140px; box-shadow:0 4px 14px rgba(12,35,64,.08); overflow:hidden; }
+    .dseal::after { content:''; position:absolute; top:0; right:0; width:5px; height:100%; background:linear-gradient(180deg,#d4af37 0%,#0c2340 100%); }
+    .dseal .stamp { position:relative; flex:0 0 110px; width:110px; height:110px; border-radius:50%; border:3px solid #0c2340; display:flex; flex-direction:column; align-items:center; justify-content:center; background:radial-gradient(circle,#fff 30%,#fbfaf6 100%); box-shadow:inset 0 0 0 4px rgba(212,175,55,.45), 0 4px 12px rgba(12,35,64,.18); transform:rotate(-10deg); }
+    .dseal .stamp::before { content:''; position:absolute; inset:5px; border:1.5px dashed #0c2340; border-radius:50%; opacity:.55; }
+    .dseal .stamp::after { content:''; position:absolute; inset:-1px; border-radius:50%; border:1px solid rgba(212,175,55,.6); }
+    .dseal .stamp .st-top { font-family:'Amiri',serif; font-size:10px; color:#0c2340; font-weight:700; letter-spacing:1.2px; text-transform:uppercase; }
+    .dseal .stamp .st-icon { font-size:24px; color:#d4af37; line-height:1; margin:3px 0; filter:drop-shadow(0 1px 1px rgba(12,35,64,.3)); }
+    .dseal .stamp .st-mid { font-family:'Amiri',serif; font-size:13px; color:#0c2340; font-weight:700; }
+    .dseal .stamp .st-bot { font-size:8px; color:#0c2340; font-weight:700; letter-spacing:.8px; margin-top:3px; }
+    .dseal .stamp.client { border-color:#1e40af; box-shadow:inset 0 0 0 4px rgba(59,130,246,.3), 0 4px 12px rgba(30,64,175,.2); }
     .dseal .stamp.client::before { border-color:#1e40af; }
+    .dseal .stamp.client::after { border-color:rgba(59,130,246,.5); }
     .dseal .stamp.client .st-top, .dseal .stamp.client .st-mid, .dseal .stamp.client .st-bot { color:#1e40af; }
     .dseal .stamp.client .st-icon { color:#3b82f6; }
-    .dseal .label { font-size:10px; color:#64748b; letter-spacing:1.5px; font-weight:600; margin-bottom:4px; }
-    .dseal .who { font-family:'Amiri',serif; font-size:14px; color:#0c2340; font-weight:700; margin-bottom:6px; }
-    .dseal .meta { font-size:9.5px; color:#475569; line-height:1.7; }
-    .dseal .meta b { color:#0c2340; }
-    .dseal .meta code { font-family:'Courier New',monospace; background:#f1f5f9; padding:1px 5px; border-radius:2px; font-size:9px; color:#0c2340; letter-spacing:.5px; }
+    .dseal .info { flex:1; min-width:0; }
+    .dseal .label { font-size:10px; color:#64748b; letter-spacing:1.5px; font-weight:700; margin-bottom:6px; text-transform:uppercase; }
+    .dseal .who { font-family:'Amiri',serif; font-size:15px; color:#0c2340; font-weight:700; margin-bottom:8px; padding-bottom:6px; border-bottom:1px solid #ece4cb; }
+    .dseal .meta { font-size:10px; color:#475569; line-height:1.85; word-break:break-word; }
+    .dseal .meta b { color:#0c2340; font-weight:700; }
+    .dseal .meta code { font-family:'Courier New',monospace; background:#0c2340; color:#d4af37; padding:2px 6px; border-radius:3px; font-size:9.5px; letter-spacing:.6px; font-weight:700; }
     .verify-bar { position:relative; z-index:1; margin-top:14px; display:flex; align-items:center; justify-content:space-between; gap:12px; padding:10px 14px; background:#0c2340; color:#fff; border-radius:3px; font-size:10px; }
     .verify-bar .v-id { font-family:'Courier New',monospace; color:#d4af37; letter-spacing:1px; font-weight:700; font-size:11px; }
     .verify-bar .v-tick { color:#d4af37; font-weight:700; letter-spacing:1px; }
