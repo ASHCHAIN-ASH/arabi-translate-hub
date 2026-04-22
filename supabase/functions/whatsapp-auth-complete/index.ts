@@ -30,7 +30,7 @@ serve(async (req) => {
     );
 
     const { phone, code, full_name, purpose = "login" } = await req.json();
-    if (!phone || !code) return resp({ success: false, error: "البيانات ناقصة" }, 400);
+    if (!phone || !code) return resp({ success: false, error: "البيانات ناقصة" }, 200);
 
     const normalized = normalizePhone(phone);
     const codeHash = await hashCode(String(code));
