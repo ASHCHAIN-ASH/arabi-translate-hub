@@ -220,11 +220,19 @@ serve(async (req) => {
       return resp({ success: false, error: linkErr?.message || "تعذر إنشاء الجلسة" });
     }
 
+    // إرسال رسالة الترحيب المناسبة (جديد / عائد) — لا تعطّل تسجيل الدخول إذا فشل
+    const isNewUser = !existingProfile?.id;
+    const welcomeName =
+      (full_name && String(full_name).trim()) ||
+      `عميلنا الكريم`;
+    await sendWelcomeMessage(supabase, normalized, isNewUser, welcomeName);
+
     const props = linkData.properties;
     return resp({
       success: true,
       user_id: userId,
       email: userEmail,
+      is_new_user: isNewUser,
       action_link: props?.action_link,
       hashed_token: props?.hashed_token,
       email_otp: props?.email_otp,
