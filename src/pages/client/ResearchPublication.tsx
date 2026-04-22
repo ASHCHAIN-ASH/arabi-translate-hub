@@ -705,13 +705,16 @@ export default function ResearchPublication() {
   `;
 
   const openPdfWindow = (html: string) => {
-    const w = window.open('', '_blank');
+    const normalizedHtml = html.replace(/<base[^>]*>/gi, '');
+    const blob = new Blob([normalizedHtml], { type: 'text/html;charset=utf-8' });
+    const blobUrl = URL.createObjectURL(blob);
+    const w = window.open(blobUrl, '_blank', 'noopener,noreferrer');
     if (!w) {
+      URL.revokeObjectURL(blobUrl);
       toast({ title: 'تعذّر الفتح', description: 'يرجى السماح بالنوافذ المنبثقة', variant: 'destructive' });
       return;
     }
-    w.document.write(html);
-    w.document.close();
+    setTimeout(() => URL.revokeObjectURL(blobUrl), 60000);
   };
 
   const buildDocMeta = (item: any, kind: 'contract' | 'invoice') => {
