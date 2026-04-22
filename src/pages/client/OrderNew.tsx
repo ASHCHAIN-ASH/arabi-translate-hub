@@ -124,6 +124,8 @@ const OrderNew = () => {
   const [submitted, setSubmitted] = useState(false);
   const [trackingId, setTrackingId] = useState<string>('');
   const [analysisSummary, setAnalysisSummary] = useState<AnalysisSummary | null>(null);
+  const [tourOpen, setTourOpen] = useState(false);
+  const [mobileGuideOpen, setMobileGuideOpen] = useState(false);
   // Legacy shape used by guards & DB write — derived from analysisSummary
   const wordCountData = useMemo(() => {
     if (!analysisSummary) return null;
