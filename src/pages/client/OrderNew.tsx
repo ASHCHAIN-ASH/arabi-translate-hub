@@ -26,6 +26,7 @@ import { getCategoryTheme } from '@/config/categoryThemes';
 import {
   getFieldLabel, getOptionLabel, resolveServiceFields,
 } from '@/config/serviceFieldsConfig';
+import { getServiceTemplate, flattenTemplateFields } from '@/config/serviceFormTemplates';
 
 interface ServiceItem {
   id: string;
@@ -91,10 +92,22 @@ const OrderNew = () => {
   const [submitted, setSubmitted] = useState(false);
   const [trackingId, setTrackingId] = useState<string>('');
 
-  const fieldsConfig = useMemo(
-    () => resolveServiceFields(service ?? undefined, service?.category_slug),
-    [service]
+  // Service-specific template (per-service sections + fields). When present, takes priority.
+  const template = useMemo(
+    () => getServiceTemplate(service?.id, service?.name_ar || service?.name),
+    [service?.id, service?.name_ar, service?.name]
   );
+
+  const fieldsConfig = useMemo(() => {
+    const base = resolveServiceFields(service ?? undefined, service?.category_slug);
+    if (!template) return base;
+    // Override with template's flattened fields so validation + review still work.
+    return {
+      quantityUnitLabel: template.quantityUnitLabel,
+      defaultQuantity: template.defaultQuantity,
+      fields: flattenTemplateFields(template),
+    };
+  }, [service, template]);
 
   // Theme drives the entire visual identity of the wizard for this category.
   const theme = useMemo(() => getCategoryTheme(service?.category_slug), [service?.category_slug]);
@@ -515,12 +528,13 @@ const OrderNew = () => {
                               className="rounded-xl bg-background/60 max-w-[200px]" />
                           </div>
 
-                          {/* Dynamic fields per category — themed */}
+                          {/* Dynamic fields per service — themed, sectioned when template available */}
                           <DynamicServiceFields
                             config={fieldsConfig}
                             values={dynamicValues}
                             onChange={(k, v) => setDynamicValues(prev => ({ ...prev, [k]: v }))}
                             theme={theme}
+                            sections={template?.sections}
                           />
 
                           {/* Notes with category-tailored placeholder */}
