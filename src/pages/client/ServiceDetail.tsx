@@ -6,16 +6,15 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
-import { Input } from '@/components/ui/input';
 import { supabase } from '@/integrations/supabase/client';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 import {
   ArrowRight, ShoppingCart, CheckCircle, Clock, Shield, Award,
   Zap, RefreshCw, FileText, Star, HeadphonesIcon, Eye,
   BookOpen, PenTool, Printer, BarChart3, GraduationCap,
   Languages, Mic, Globe, Video, Layers, Target, Lightbulb,
   MessageCircle, ThumbsUp, Lock, Truck, TrendingUp, Users,
-  Activity, Sparkles, Calculator, HelpCircle, Calendar,
+  Activity, Sparkles, HelpCircle, Calendar,
 } from 'lucide-react';
 
 interface Service {
