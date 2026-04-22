@@ -790,6 +790,9 @@ export default function ResearchPublication() {
   <div class="footer">
     <div class="org">منصّة ماستر إيدو باث · MASTEREDUPATH</div>
     <div>هذا العقد مُستخرج مباشرةً من النظام الرسمي للمنصّة · masteredupath.com</div>
+    <div class="legal">جميع الحقوق محفوظة © ${new Date().getFullYear()} · مرجع العقد: ${esc(docNumber)} · ختم زمني: ${esc(issuedIso)}</div>
+  </div>
+</div></div>${triggerPrintScript}</body></html>`;
     openPdfWindow(html);
   };
 
