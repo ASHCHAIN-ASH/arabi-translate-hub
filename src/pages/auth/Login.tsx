@@ -61,7 +61,7 @@ const Login = () => {
       }
       if (remember) localStorage.setItem(REMEMBER_KEY, email);
       else localStorage.removeItem(REMEMBER_KEY);
-      toast.success('تم تسجيل الدخول بنجاح');
+      triggerLoginWelcome();
     } catch (error: any) {
       toast.error(error.message || 'خطأ في تسجيل الدخول');
     } finally {
