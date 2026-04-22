@@ -310,8 +310,8 @@ const ServiceDetail = () => {
                     </div>
                     <p className="text-xs text-white/70">موثوق من آلاف العملاء</p>
                     <div className="border-t border-white/20 pt-4">
-                      <p className="text-xs text-white/60 mb-1">السعر</p>
-                      <p className="text-lg font-bold">يُحدد بعد المراجعة</p>
+                      <p className="text-xs text-white/60 mb-1">جاهز للبدء</p>
+                      <p className="text-base font-bold">احصل على استشارة مجانية</p>
                     </div>
                     <Button
                       onClick={() => navigate(`/orders/new?service=${service.id}`)}
