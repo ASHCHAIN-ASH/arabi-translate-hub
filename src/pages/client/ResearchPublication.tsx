@@ -340,7 +340,8 @@ export default function ResearchPublication() {
   .dseal { position:relative; min-width:0; display:flex; flex-direction:column; border:1px solid #e2dcc4; border-radius:14px; background:linear-gradient(160deg,#ffffff 0%,#fdfbf3 100%); box-shadow:0 10px 28px -14px rgba(12,35,64,.22), 0 2px 6px rgba(12,35,64,.05); overflow:hidden; }
   .dseal .ribbon { display:flex; align-items:center; justify-content:space-between; gap:6px; padding:8px 12px; font-size:8.5px; font-weight:800; letter-spacing:1.6px; background:linear-gradient(90deg,#1e3a8a 0%,#3b82f6 100%); color:#fff; text-transform:uppercase; }
   .dseal.platform .ribbon { background:linear-gradient(90deg,#0c2340 0%,#1e3a5f 70%,#b8941f 140%); color:#f5d97a; }
-  .dseal .ribbon::before { content:'●'; font-size:7px; color:#22c55e; }
+  .dseal .ribbon .rdot { display:inline-flex; align-items:center; color:#22c55e; }
+  .dseal .ribbon .rdot svg { width:7px; height:7px; }
   .dseal .stamp-wrap { position:relative; min-width:0; display:flex; align-items:center; justify-content:center; padding:18px 10px 14px; background:linear-gradient(180deg,#f4f8ff 0%,#e9efff 100%); border-bottom:1px dashed rgba(30,64,175,.3); }
   .dseal.platform .stamp-wrap { background:linear-gradient(180deg,#0c2340 0%,#102a4c 100%); border-bottom-color:rgba(212,175,55,.4); }
   /* Round emblem stamp — fixed size, never collapses */
@@ -493,7 +494,7 @@ export default function ResearchPublication() {
         <div class="ribbon"><span>ختم المنصّة الرسمي</span><span>PLATFORM SEAL</span></div>
         <div class="stamp-wrap">
           <div class="stamp">
-            <div class="ring-out"><div class="core-icon">★</div></div>
+            <div class="ring-out"><div class="core-icon">${SVG_STAR}</div></div>
             <div class="ring-mid">
               <div class="core-text" data-en="MasterEduPath · Verified Authority">ماستر إيدو باث</div>
             </div>
@@ -508,14 +509,14 @@ export default function ResearchPublication() {
             <div><b>رمز التحقق:</b> <code>${verifyId}</code></div>
             <div><b>الإصدار:</b> ${esc(docDate)} — ${esc(docTime)}</div>
           </div>
-          <div class="vstrip"><span style="width:6px;height:6px;border-radius:50%;background:#22c55e;box-shadow:0 0 0 3px rgba(34,197,94,.2)"></span> موثّق رقمياً عبر نظام المنصّة</div>
+          <div class="vstrip">${greenDot} موثّق رقمياً عبر نظام المنصّة</div>
         </div>
       </div>
       <div class="dseal">
         <div class="ribbon"><span>توقيع المُتقدّم</span><span>CLIENT SIGNATURE</span></div>
         <div class="stamp-wrap">
           <div class="stamp">
-            <div class="ring-out"><div class="core-icon">✓</div></div>
+            <div class="ring-out"><div class="core-icon">${SVG_BADGE_CHECK}</div></div>
             <div class="ring-mid">
               <div class="core-text" data-en="Authorized Client · e-Signature">المُتقدّم المعتمد</div>
             </div>
@@ -530,13 +531,13 @@ export default function ResearchPublication() {
             <div><b>التوقيع الرقمي:</b> <code>SIG-${sigHash}</code></div>
             <div><b>التاريخ:</b> ${esc(created)}</div>
           </div>
-          <div class="vstrip"><span style="width:6px;height:6px;border-radius:50%;background:#22c55e;box-shadow:0 0 0 3px rgba(34,197,94,.2)"></span> توقيع إلكتروني صالح ومعتمد</div>
+          <div class="vstrip">${greenDot} توقيع إلكتروني صالح ومعتمد</div>
         </div>
       </div>
     </div>
 
     <div class="verify-bar">
-      <span class="v-tick">✓ مستند معتمد رقمياً وصادر إلكترونياً من نظام المنصّة</span>
+      <span class="v-tick">${SVG_CHECK} مستند معتمد رقمياً وصادر إلكترونياً من نظام المنصّة</span>
       <span>تحقّق عبر: <b style="color:#fff">masteredupath.com/verify</b> — <span class="v-id">${verifyId}</span></span>
     </div>
 
@@ -619,7 +620,8 @@ export default function ResearchPublication() {
     .dseal { position:relative; min-width:0; display:flex; flex-direction:column; border:1px solid #e2dcc4; border-radius:14px; background:linear-gradient(160deg,#ffffff 0%,#fdfbf3 100%); box-shadow:0 10px 28px -14px rgba(12,35,64,.22), 0 2px 6px rgba(12,35,64,.05); overflow:hidden; }
     .dseal .ribbon { display:flex; align-items:center; justify-content:space-between; gap:6px; padding:9px 13px; font-size:8.5px; font-weight:800; letter-spacing:1.7px; background:linear-gradient(90deg,#1e3a8a 0%,#3b82f6 100%); color:#fff; text-transform:uppercase; }
     .dseal.platform .ribbon { background:linear-gradient(90deg,#0c2340 0%,#1e3a5f 70%,#b8941f 140%); color:#f5d97a; }
-    .dseal .ribbon::before { content:'●'; font-size:7px; color:#22c55e; }
+    .dseal .ribbon .rdot { display:inline-flex; align-items:center; color:#22c55e; }
+    .dseal .ribbon .rdot svg { width:7px; height:7px; }
     .dseal .stamp-wrap { position:relative; min-width:0; display:flex; align-items:center; justify-content:center; padding:20px 10px 16px; background:linear-gradient(180deg,#f4f8ff 0%,#e9efff 100%); border-bottom:1px dashed rgba(30,64,175,.3); }
     .dseal.platform .stamp-wrap { background:linear-gradient(180deg,#0c2340 0%,#102a4c 100%); border-bottom-color:rgba(212,175,55,.4); }
     /* Round emblem stamp — fixed size, never collapses */
@@ -805,7 +807,7 @@ export default function ResearchPublication() {
       <div class="ribbon"><span>ختم المنصّة الرسمي</span><span>PLATFORM SEAL</span></div>
       <div class="stamp-wrap">
         <div class="stamp">
-          <div class="ring-out"><div class="core-icon">★</div></div>
+          <div class="ring-out"><div class="core-icon">${SVG_STAR}</div></div>
           <div class="ring-mid">
             <div class="core-text" data-en="MasterEduPath · Verified Authority">ماستر إيدو باث</div>
           </div>
@@ -820,14 +822,14 @@ export default function ResearchPublication() {
           <div><b>رمز التحقق:</b> <code>${verifyId}</code></div>
           <div><b>الإصدار:</b> ${esc(docDate)} — ${esc(docTime)}</div>
         </div>
-        <div class="vstrip"><span style="width:6px;height:6px;border-radius:50%;background:#22c55e;box-shadow:0 0 0 3px rgba(34,197,94,.2)"></span> موثّق رقمياً عبر نظام المنصّة</div>
+        <div class="vstrip">${greenDot} موثّق رقمياً عبر نظام المنصّة</div>
       </div>
     </div>
     <div class="dseal">
       <div class="ribbon"><span>${sig ? 'توقيع المستفيد' : 'بانتظار التوقيع'}</span><span>${sig ? 'PARTY · SIGNED' : 'AWAITING SIG'}</span></div>
       <div class="stamp-wrap">
         <div class="stamp">
-          <div class="ring-out"><div class="core-icon">${sig ? '✓' : '⏳'}</div></div>
+          <div class="ring-out"><div class="core-icon">${sig ? SVG_BADGE_CHECK : SVG_HOURGLASS}</div></div>
           <div class="ring-mid">
             <div class="core-text" data-en="${sig ? 'Authorized Party · e-Signature' : 'Awaiting Signature'}">${sig ? 'الطرف الثاني المعتمد' : 'الطرف الثاني'}</div>
           </div>
@@ -843,12 +845,12 @@ export default function ResearchPublication() {
           <div><b>${sig ? 'تاريخ التوقيع' : 'تاريخ الإصدار'}:</b> ${esc(sig?.signed_at ? new Date(sig.signed_at).toLocaleString('ar-SA', { dateStyle: 'long', timeStyle: 'short' }) : created)}</div>
           ${sig?.ip_address ? `<div><b>IP:</b> <code>${esc(sig.ip_address)}</code></div>` : ''}
         </div>
-        <div class="vstrip"><span style="width:6px;height:6px;border-radius:50%;background:${sig ? '#22c55e' : '#f59e0b'};box-shadow:0 0 0 3px ${sig ? 'rgba(34,197,94,.2)' : 'rgba(245,158,11,.2)'}"></span> ${sig ? 'توقيع إلكتروني صالح ومعتمد' : 'بانتظار توقيع المستفيد'}</div>
+        <div class="vstrip"><span style="display:inline-flex;align-items:center;justify-content:center;width:11px;height:11px;border-radius:50%;background:${sig ? '#22c55e' : '#f59e0b'};box-shadow:0 0 0 3px ${sig ? 'rgba(34,197,94,.22)' : 'rgba(245,158,11,.22)'};color:#fff;font-size:9px">${sig ? SVG_CHECK : SVG_HOURGLASS}</span> ${sig ? 'توقيع إلكتروني صالح ومعتمد' : 'بانتظار توقيع المستفيد'}</div>
       </div>
     </div>
   </div>
   <div class="verify-bar">
-    <span class="v-tick">✓ ${sig ? 'عقد موقّع ومعتمد رقمياً وموثّق إلكترونياً من نظام المنصّة' : 'عقد رسمي صادر من نظام المنصّة (بانتظار التوقيع)'}</span>
+    <span class="v-tick">${SVG_CHECK} ${sig ? 'عقد موقّع ومعتمد رقمياً وموثّق إلكترونياً من نظام المنصّة' : 'عقد رسمي صادر من نظام المنصّة (بانتظار التوقيع)'}</span>
     <span>تحقّق عبر: <b style="color:#fff">masteredupath.com/verify</b> — <span class="v-id">${verifyId}</span></span>
   </div>
   <div class="footer">
@@ -924,7 +926,7 @@ export default function ResearchPublication() {
       <div class="ribbon"><span>ختم المنصّة الرسمي</span><span>TAX INVOICE · SEAL</span></div>
       <div class="stamp-wrap">
         <div class="stamp">
-          <div class="ring-out"><div class="core-icon">★</div></div>
+          <div class="ring-out"><div class="core-icon">${SVG_STAR}</div></div>
           <div class="ring-mid">
             <div class="core-text" data-en="MasterEduPath · Tax Invoice Authority">ماستر إيدو باث</div>
           </div>
@@ -939,14 +941,14 @@ export default function ResearchPublication() {
           <div><b>رمز التحقق:</b> <code>${verifyId}</code></div>
           <div><b>الإصدار:</b> ${esc(docDate)} — ${esc(docTime)}</div>
         </div>
-        <div class="vstrip"><span style="width:6px;height:6px;border-radius:50%;background:#22c55e;box-shadow:0 0 0 3px rgba(34,197,94,.2)"></span> فاتورة موثّقة رقمياً ومعتمدة</div>
+        <div class="vstrip">${greenDot} فاتورة موثّقة رقمياً ومعتمدة</div>
       </div>
     </div>
     <div class="dseal">
       <div class="ribbon"><span>بيانات العميل</span><span>CLIENT · VERIFIED</span></div>
       <div class="stamp-wrap">
         <div class="stamp">
-          <div class="ring-out"><div class="core-icon">✓</div></div>
+          <div class="ring-out"><div class="core-icon">${SVG_BADGE_CHECK}</div></div>
           <div class="ring-mid">
             <div class="core-text" data-en="Authorized Customer · e-Invoice">العميل المعتمد</div>
           </div>
@@ -961,12 +963,12 @@ export default function ResearchPublication() {
           <div><b>التوقيع الرقمي:</b> <code>SIG-${sigHash}</code></div>
           ${item.client_email ? `<div><b>البريد:</b> ${esc(item.client_email)}</div>` : ''}
         </div>
-        <div class="vstrip"><span style="width:6px;height:6px;border-radius:50%;background:#22c55e;box-shadow:0 0 0 3px rgba(34,197,94,.2)"></span> فاتورة إلكترونية صالحة</div>
+        <div class="vstrip">${greenDot} فاتورة إلكترونية صالحة</div>
       </div>
     </div>
   </div>
   <div class="verify-bar">
-    <span class="v-tick">✓ فاتورة معتمدة رقمياً وموثّقة إلكترونياً</span>
+    <span class="v-tick">${SVG_CHECK} فاتورة معتمدة رقمياً وموثّقة إلكترونياً</span>
     <span>تحقّق عبر: <b style="color:#fff">masteredupath.com/verify</b> — <span class="v-id">${verifyId}</span></span>
   </div>
   <div class="footer">
