@@ -101,43 +101,69 @@ const TranslationWordCounter: React.FC<Props> = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [urgency, certified, targetLanguage]);
 
-  const processFile = useCallback(async (entry: FileEntry, all: FileEntry[]) => {
+  // Use a ref so concurrent updates always see the latest list (avoids race
+  // conditions when multiple files report progress simultaneously).
+  const entriesRef = useRef<FileEntry[]>([]);
+  useEffect(() => { entriesRef.current = entries; }, [entries]);
+
+  const updateEntry = useCallback((id: string, patch: Partial<FileEntry>) => {
+    const next = entriesRef.current.map((e) => (e.id === id ? { ...e, ...patch } : e));
+    entriesRef.current = next;
+    setEntries(next);
+    return next;
+  }, []);
+
+  const processFile = useCallback(async (id: string) => {
+    const target = entriesRef.current.find((e) => e.id === id);
+    if (!target) return;
     try {
-      const result = await countWordsInFile(entry.file);
-      const next = all.map((e) =>
-        e.id === entry.id ? { ...e, result, error: undefined, loading: false } : e
-      );
-      setEntries(next);
+      const result = await countWordsInFile(target.file, (pct) => {
+        updateEntry(id, { progress: pct });
+      });
+      const next = updateEntry(id, { result, error: undefined, loading: false, progress: 100 });
       notify(next);
-      toast.success(`تم حساب ${result.words.toLocaleString()} كلمة في "${entry.file.name}"`);
+      toast.success(`تم حساب ${result.words.toLocaleString()} كلمة في "${target.file.name}"`);
     } catch (err: any) {
       const msg = err?.message || 'تعذّر تحليل الملف';
-      const next = all.map((e) =>
-        e.id === entry.id ? { ...e, error: msg, loading: false } : e
-      );
-      setEntries(next);
+      const next = updateEntry(id, { error: msg, loading: false, progress: 0 });
+      notify(next);
       toast.error(msg);
     }
-  }, [notify]);
+  }, [notify, updateEntry]);
+
+  // Queue: process files one-at-a-time so a 50MB PDF doesn't freeze the tab
+  // while another is still parsing. Progress remains live per file.
+  const runQueue = useCallback(async (ids: string[]) => {
+    for (const id of ids) {
+      await processFile(id);
+    }
+  }, [processFile]);
 
   const handleFiles = useCallback((files: FileList | null) => {
     if (!files || files.length === 0) return;
-    const arr = Array.from(files).slice(0, 5 - entries.length);
+    const slots = MAX_FILES - entries.length;
+    if (slots <= 0) {
+      toast.error(`الحد الأقصى ${MAX_FILES} ملفات`);
+      return;
+    }
+    const arr = Array.from(files).slice(0, slots);
     const newEntries: FileEntry[] = arr
       .filter((f) => {
         if (f.size > MAX_SIZE) {
-          toast.error(`"${f.name}" أكبر من 20MB`);
+          toast.error(`"${f.name}" يتجاوز الحد الأقصى 50MB`);
           return false;
         }
         return true;
       })
-      .map((f) => ({ id: crypto.randomUUID(), file: f, loading: true }));
+      .map((f) => ({ id: crypto.randomUUID(), file: f, loading: true, progress: 0 }));
 
     if (newEntries.length === 0) return;
     const merged = [...entries, ...newEntries];
+    entriesRef.current = merged;
     setEntries(merged);
-    newEntries.forEach((e) => processFile(e, merged));
-  }, [entries, processFile]);
+    notify(merged); // immediately notify pending state to parent
+    runQueue(newEntries.map((e) => e.id));
+  }, [entries, notify, runQueue]);
 
   const removeEntry = (id: string) => {
     const next = entries.filter((e) => e.id !== id);
