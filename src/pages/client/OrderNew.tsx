@@ -236,9 +236,36 @@ const OrderNew = () => {
     }
   };
 
+  /**
+   * Validates the translation word-count step before submission.
+   * Returns null on success, or a user-facing reason string blocking submit.
+   */
+  const translationGuardReason = useMemo<string | null>(() => {
+    if (!isTranslationService) return null;
+    if (!wordCountData || wordCountData.totalFiles === 0) {
+      return 'لإكمال طلب الترجمة، يجب رفع الملف وحساب عدد كلماته أولاً.';
+    }
+    if (wordCountData.pendingCount > 0) {
+      return `لا يزال هناك ${wordCountData.pendingCount} ملف قيد التحليل — انتظر اكتمال الحساب قبل الإرسال.`;
+    }
+    if (wordCountData.errorCount > 0) {
+      return `تعذّر تحليل ${wordCountData.errorCount} ملف. يرجى إعادة الحساب أو إزالة الملفات التالفة قبل الإرسال.`;
+    }
+    if (wordCountData.totalWords <= 0) {
+      return 'لم يتم استخراج أي كلمات من الملفات المرفوعة. تأكد أن الملف نصي وليس صورة ممسوحة.';
+    }
+    return null;
+  }, [isTranslationService, wordCountData]);
+
   const handleSubmit = async () => {
     if (!service) return;
     if (!user) return toast.error('يرجى تسجيل الدخول أولاً');
+
+    // Block translation orders that don't have a completed word count
+    if (translationGuardReason) {
+      toast.error(translationGuardReason);
+      return;
+    }
 
     setLoading(true);
     setUploadProgress(0);
