@@ -20,6 +20,7 @@ import { useAuth } from '@/components/SimpleAuthProvider';
 import { cn } from '@/lib/utils';
 import DynamicServiceFields from '@/components/client/DynamicServiceFields';
 import TranslationWordCounter from '@/components/client/TranslationWordCounter';
+import TranslationAnalysisEngine, { type AnalysisSummary } from '@/components/client/TranslationAnalysisEngine';
 import CategoryHero from '@/components/client/order-new/CategoryHero';
 import CategoryGuideCard from '@/components/client/order-new/CategoryGuideCard';
 import ExamplePrompts from '@/components/client/order-new/ExamplePrompts';
@@ -92,11 +93,20 @@ const OrderNew = () => {
   const [dragOver, setDragOver] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [trackingId, setTrackingId] = useState<string>('');
-  const [wordCountData, setWordCountData] = useState<{
-    totalWords: number; totalPages: number; estimatedPriceSar: number;
-    files: { name: string; words: number }[];
-    pendingCount: number; errorCount: number; totalFiles: number;
-  } | null>(null);
+  const [analysisSummary, setAnalysisSummary] = useState<AnalysisSummary | null>(null);
+  // Legacy shape used by guards & DB write — derived from analysisSummary
+  const wordCountData = useMemo(() => {
+    if (!analysisSummary) return null;
+    return {
+      totalWords: analysisSummary.totalWords,
+      totalPages: analysisSummary.totalPages,
+      estimatedPriceSar: analysisSummary.estimatedPriceSar,
+      files: analysisSummary.files.map((f) => ({ name: f.fileName, words: f.wordCount })),
+      pendingCount: analysisSummary.pendingCount,
+      errorCount: analysisSummary.errorCount,
+      totalFiles: analysisSummary.totalFiles,
+    };
+  }, [analysisSummary]);
 
   // Detect translation services so we render the word counter widget.
   const isTranslationService = useMemo(() => {
@@ -646,15 +656,15 @@ const OrderNew = () => {
                             </div>
                           </div>
 
-                          {/* Translation word counter — shown only for translation services */}
+                          {/* Translation Analysis Engine — professional per-file analysis */}
                           {isTranslationService && (
                             <div className="mb-6 rounded-2xl border border-emerald-500/20 bg-gradient-to-br from-emerald-50/30 to-teal-50/20 dark:from-emerald-950/10 dark:to-teal-950/5 p-4">
-                              <TranslationWordCounter
+                              <TranslationAnalysisEngine
                                 sourceLanguage={dynamicValues.source_language}
                                 targetLanguage={dynamicValues.target_language || dynamicValues.language}
                                 urgency={dynamicValues.urgency}
                                 certified={dynamicValues.certified}
-                                onCountChange={setWordCountData}
+                                onChange={setAnalysisSummary}
                               />
                             </div>
                           )}
