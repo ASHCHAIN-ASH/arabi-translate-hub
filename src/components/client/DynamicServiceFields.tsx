@@ -153,7 +153,7 @@ interface Props {
   sections?: FormSection[];
 }
 
-const DynamicServiceFields: React.FC<Props> = ({ config, values, onChange, theme }) => {
+const DynamicServiceFields: React.FC<Props> = ({ config, values, onChange, theme, sections }) => {
   const renderField = (field: DynamicField) => {
     const v = values[field.key] ?? '';
     switch (field.type) {
@@ -213,48 +213,92 @@ const DynamicServiceFields: React.FC<Props> = ({ config, values, onChange, theme
     }
   };
 
+  const renderFieldBlock = (field: DynamicField) => {
+    const FieldIcon = theme?.fieldIcons?.[field.key];
+    const smartHint = theme?.fieldHints?.[field.key];
+    const isUrgency = field.key === 'urgency' && field.type === 'select';
+    return (
+      <div
+        key={field.key}
+        className={cn(
+          field.type === 'textarea' && 'sm:col-span-2',
+          isUrgency && 'sm:col-span-2'
+        )}
+      >
+        <Label className="text-sm font-medium mb-2 flex items-center gap-1.5">
+          {FieldIcon && (
+            <FieldIcon
+              className="w-3.5 h-3.5"
+              style={theme ? { color: `hsl(var(--${theme.accent}))` } : undefined}
+            />
+          )}
+          <span>{field.label}</span>
+          {field.required && <span className="text-destructive">*</span>}
+        </Label>
+        {isUrgency ? (
+          <UrgencySelector
+            field={field}
+            value={values[field.key] ?? ''}
+            onChange={(val) => onChange(field.key, val)}
+          />
+        ) : (
+          renderField(field)
+        )}
+        {(smartHint || field.helpText) && (
+          <p className="text-xs text-muted-foreground mt-1.5 flex items-start gap-1">
+            <Info className="w-3 h-3 mt-0.5 flex-shrink-0 opacity-70" />
+            <span>{smartHint || field.helpText}</span>
+          </p>
+        )}
+      </div>
+    );
+  };
+
+  // Sectioned rendering — preferred when service template provides it.
+  if (sections && sections.length > 0) {
+    return (
+      <div className="space-y-6">
+        {sections.map((section, idx) => {
+          const Icon = SECTION_ICONS[section.icon ?? 'info'] ?? Info;
+          return (
+            <div
+              key={idx}
+              className="rounded-2xl border border-border/40 bg-background/40 backdrop-blur-sm p-4 sm:p-5 space-y-4"
+            >
+              <div className="flex items-start gap-3 pb-3 border-b border-border/30">
+                <div
+                  className="w-9 h-9 rounded-xl flex items-center justify-center shrink-0"
+                  style={{ background: theme ? `hsl(var(--${theme.accent}) / 0.12)` : undefined }}
+                >
+                  <Icon
+                    className="w-4.5 h-4.5"
+                    style={{ color: theme ? `hsl(var(--${theme.accent}))` : undefined }}
+                  />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <h4 className="text-sm font-bold leading-tight">{section.title}</h4>
+                  {section.description && (
+                    <p className="text-xs text-muted-foreground mt-0.5">{section.description}</p>
+                  )}
+                </div>
+                <span className="text-xs text-muted-foreground font-mono opacity-60">
+                  {idx + 1}/{sections.length}
+                </span>
+              </div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                {section.fields.map(renderFieldBlock)}
+              </div>
+            </div>
+          );
+        })}
+      </div>
+    );
+  }
+
+  // Fallback flat rendering (category default).
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-      {config.fields.map((field) => {
-        const FieldIcon = theme?.fieldIcons?.[field.key];
-        const smartHint = theme?.fieldHints?.[field.key];
-        const isUrgency = field.key === 'urgency' && field.type === 'select';
-        return (
-          <div
-            key={field.key}
-            className={cn(
-              field.type === 'textarea' && 'sm:col-span-2',
-              isUrgency && 'sm:col-span-2'
-            )}
-          >
-            <Label className="text-sm font-medium mb-2 flex items-center gap-1.5">
-              {FieldIcon && (
-                <FieldIcon
-                  className="w-3.5 h-3.5"
-                  style={theme ? { color: `hsl(var(--${theme.accent}))` } : undefined}
-                />
-              )}
-              <span>{field.label}</span>
-              {field.required && <span className="text-destructive">*</span>}
-            </Label>
-            {isUrgency ? (
-              <UrgencySelector
-                field={field}
-                value={values[field.key] ?? ''}
-                onChange={(val) => onChange(field.key, val)}
-              />
-            ) : (
-              renderField(field)
-            )}
-            {(smartHint || field.helpText) && (
-              <p className="text-xs text-muted-foreground mt-1.5 flex items-start gap-1">
-                <Info className="w-3 h-3 mt-0.5 flex-shrink-0 opacity-70" />
-                <span>{smartHint || field.helpText}</span>
-              </p>
-            )}
-          </div>
-        );
-      })}
+      {config.fields.map(renderFieldBlock)}
     </div>
   );
 };
