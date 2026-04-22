@@ -99,6 +99,7 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
         { name: 'الأتمتة الذكية', href: '/adminmaster/growth/automation', icon: Sparkles },
         { name: 'تجارب A/B', href: '/adminmaster/experiments', icon: FlaskConical },
         { name: 'اختبارات المستوى', href: '/adminmaster/assessments', icon: Target },
+        { name: 'Battle Quiz Arena', href: '/adminmaster/battle-quiz', icon: Trophy },
       ]
     },
     // 6. المحتوى والخدمات
