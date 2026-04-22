@@ -81,8 +81,9 @@ export const WhatsappAuthForm: React.FC<Props> = ({ mode, onSuccess }) => {
     }
   };
 
-  const verifyCode = async () => {
-    if (code.length !== 6) {
+  const verifyCode = async (codeToVerify?: string) => {
+    const finalCode = codeToVerify ?? code;
+    if (finalCode.length !== 6) {
       toast.error('أدخل الرمز المكوّن من 6 أرقام');
       return;
     }
@@ -90,14 +91,13 @@ export const WhatsappAuthForm: React.FC<Props> = ({ mode, onSuccess }) => {
     try {
       const { data, error } = await withTimeout(
         supabase.functions.invoke('whatsapp-auth-complete', {
-          body: { phone, code, full_name: fullName, purpose: mode },
+          body: { phone, code: finalCode, full_name: fullName, purpose: mode },
         }),
       );
       if (error || !data?.success) {
         throw new Error(data?.error || error?.message || 'فشل التحقق');
       }
 
-      // إنشاء جلسة عبر التحقق من email_otp
       const { error: sessErr } = await supabase.auth.verifyOtp({
         email: data.email,
         token: data.email_otp,
@@ -109,8 +109,57 @@ export const WhatsappAuthForm: React.FC<Props> = ({ mode, onSuccess }) => {
       onSuccess?.();
     } catch (e: any) {
       toast.error(e.message);
+      setCode('');
+      setTimeout(() => otpRefs.current[0]?.focus(), 0);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const otpRefs = useRef<Array<HTMLInputElement | null>>([]);
+
+  useEffect(() => {
+    if (step === 'code') {
+      setTimeout(() => otpRefs.current[0]?.focus(), 50);
+    }
+  }, [step]);
+
+  const handleOtpChange = (index: number, value: string) => {
+    const digit = value.replace(/\D/g, '').slice(-1);
+    const c = code.split('');
+    while (c.length < 6) c.push('');
+    c[index] = digit;
+    const newCode = c.join('').slice(0, 6);
+    setCode(newCode);
+
+    if (digit && index < 5) {
+      otpRefs.current[index + 1]?.focus();
+    }
+
+    if (/^\d{6}$/.test(newCode) && !loading) {
+      verifyCode(newCode);
+    }
+  };
+
+  const handleOtpKeyDown = (index: number, e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Backspace' && !code[index] && index > 0) {
+      otpRefs.current[index - 1]?.focus();
+    } else if (e.key === 'ArrowLeft' && index < 5) {
+      otpRefs.current[index + 1]?.focus();
+    } else if (e.key === 'ArrowRight' && index > 0) {
+      otpRefs.current[index - 1]?.focus();
+    }
+  };
+
+  const handleOtpPaste = (e: React.ClipboardEvent<HTMLInputElement>) => {
+    e.preventDefault();
+    const pasted = e.clipboardData.getData('text').replace(/\D/g, '').slice(0, 6);
+    if (!pasted) return;
+    setCode(pasted);
+    const lastIdx = Math.min(pasted.length, 6) - 1;
+    setTimeout(() => otpRefs.current[lastIdx]?.focus(), 0);
+    if (pasted.length === 6) {
+      verifyCode(pasted);
     }
   };
 
