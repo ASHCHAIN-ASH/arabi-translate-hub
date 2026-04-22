@@ -6,11 +6,12 @@
  * - All final pricing is confirmed by admin after manual review
  */
 
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   Upload, FileText, Loader2, CheckCircle2, AlertCircle,
   Calculator, Languages, Hash, FileSearch, Info, Sparkles, X,
+  RefreshCw, Quote, RotateCw, FileType2,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
