@@ -703,6 +703,18 @@ const App = () => (
                 <ChallengeAcademy />
               </SimpleProtectedRoute>
             } />
+            <Route path="/battle-quiz" element={
+              <SimpleProtectedRoute requiredRole="client"><BattleQuizHome /></SimpleProtectedRoute>
+            } />
+            <Route path="/battle-quiz/leaderboard" element={
+              <SimpleProtectedRoute requiredRole="client"><BattleQuizLeaderboard /></SimpleProtectedRoute>
+            } />
+            <Route path="/battle-quiz/:roomId/play" element={
+              <SimpleProtectedRoute requiredRole="client"><BattleQuizPlay /></SimpleProtectedRoute>
+            } />
+            <Route path="/battle-quiz/:roomId/result" element={
+              <SimpleProtectedRoute requiredRole="client"><BattleQuizResult /></SimpleProtectedRoute>
+            } />
             <Route path="/student" element={
               <SimpleProtectedRoute requiredRole="client">
                 <StudentHub />
