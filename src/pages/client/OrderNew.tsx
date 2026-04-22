@@ -19,6 +19,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/components/SimpleAuthProvider';
 import { cn } from '@/lib/utils';
 import DynamicServiceFields from '@/components/client/DynamicServiceFields';
+import TranslationWordCounter from '@/components/client/TranslationWordCounter';
 import CategoryHero from '@/components/client/order-new/CategoryHero';
 import CategoryGuideCard from '@/components/client/order-new/CategoryGuideCard';
 import ExamplePrompts from '@/components/client/order-new/ExamplePrompts';
@@ -91,6 +92,17 @@ const OrderNew = () => {
   const [dragOver, setDragOver] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [trackingId, setTrackingId] = useState<string>('');
+  const [wordCountData, setWordCountData] = useState<{
+    totalWords: number; totalPages: number; estimatedPriceSar: number;
+    files: { name: string; words: number }[];
+  } | null>(null);
+
+  // Detect translation services so we render the word counter widget.
+  const isTranslationService = useMemo(() => {
+    const name = (service?.name_ar || service?.name || '').toLowerCase();
+    const cat = (service?.category_slug || service?.category_name || '').toLowerCase();
+    return /ترجم|translat/i.test(name) || /ترجم|translat/i.test(cat);
+  }, [service]);
 
   // Service-specific template (per-service sections + fields). When present, takes priority.
   const template = useMemo(
