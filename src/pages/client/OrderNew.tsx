@@ -347,10 +347,23 @@ const OrderNew = () => {
                     <span className="font-mono font-bold text-primary">{trackingId}</span>
                   </div>
                 )}
-                <div className="my-4 rounded-xl bg-amber-500/10 border border-amber-500/30 p-4 text-sm">
-                  <Clock className="w-4 h-4 inline-block ms-1 text-amber-600" />
-                  <span className="font-medium">سيتم التواصل معك خلال ساعات قليلة لتأكيد عرض السعر النهائي</span>
-                </div>
+                {wordCountData && wordCountData.totalWords > 0 ? (
+                  <div className="my-4 rounded-xl bg-amber-500/10 border-2 border-amber-500/40 p-4 text-sm text-right space-y-2">
+                    <div className="flex items-center gap-2 font-bold text-amber-700 dark:text-amber-400">
+                      <Clock className="w-4 h-4 animate-pulse" />
+                      <span>طلبك الآن "بانتظار اعتماد السعر"</span>
+                    </div>
+                    <p className="text-xs text-muted-foreground leading-relaxed">
+                      تم إرسال السعر التقديري ({wordCountData.estimatedPriceSar.toLocaleString()} ر.س لـ {wordCountData.totalWords.toLocaleString()} كلمة) للإدارة.
+                      ستصلك حالة <strong>"السعر معتمد"</strong> فور المراجعة، وعندها يمكنك الدفع لبدء التنفيذ.
+                    </p>
+                  </div>
+                ) : (
+                  <div className="my-4 rounded-xl bg-amber-500/10 border border-amber-500/30 p-4 text-sm">
+                    <Clock className="w-4 h-4 inline-block ms-1 text-amber-600" />
+                    <span className="font-medium">سيتم التواصل معك خلال ساعات قليلة لتأكيد عرض السعر النهائي</span>
+                  </div>
+                )}
                 {files.length > 0 && uploadProgress < 100 && (
                   <div className="my-4 space-y-2">
                     <p className="text-xs text-muted-foreground">جارٍ رفع المرفقات في الخلفية…</p>
