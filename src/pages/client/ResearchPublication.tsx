@@ -255,94 +255,184 @@ export default function ResearchPublication() {
     const atts: any[] = Array.isArray(item.attachments) ? item.attachments : [];
     const esc = (s: any) => String(s ?? '—').replace(/[<>&]/g, c => ({ '<': '&lt;', '>': '&gt;', '&': '&amp;' } as any)[c]);
 
-    const html = `<!DOCTYPE html><html dir="rtl" lang="ar"><head><meta charset="UTF-8"><title>طلب نشر بحث ${esc(item.request_number)}</title>
+    const docDate = new Date().toLocaleDateString('ar-SA', { dateStyle: 'long' });
+    const html = `<!DOCTYPE html><html dir="rtl" lang="ar"><head><meta charset="UTF-8"><title>وثيقة طلب نشر بحث — ${esc(item.request_number)}</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
-  @page { size: A4; margin: 18mm; }
-  * { box-sizing: border-box; }
-  body { font-family: 'IBM Plex Sans Arabic','Segoe UI',Tahoma,sans-serif; color:#1f2937; margin:0; padding:0; line-height:1.7; }
-  .header { background: linear-gradient(135deg,#4f46e5,#0891b2); color:#fff; padding:28px 24px; border-radius:14px; margin-bottom:24px; }
-  .header h1 { margin:0 0 6px; font-size:24px; font-weight:900; }
-  .header .meta { display:flex; gap:14px; flex-wrap:wrap; font-size:12px; opacity:.95; margin-top:10px; }
-  .badge { display:inline-block; padding:4px 12px; border-radius:999px; background:rgba(255,255,255,.22); font-weight:700; }
-  .section { margin-bottom:18px; border:1px solid #e5e7eb; border-radius:12px; padding:16px 18px; background:#fff; }
-  .section h2 { margin:0 0 12px; font-size:15px; color:#4f46e5; border-bottom:2px solid #eef2ff; padding-bottom:6px; font-weight:800; }
-  .grid { display:grid; grid-template-columns:1fr 1fr; gap:10px 18px; }
-  .row { display:flex; gap:8px; font-size:13px; }
-  .row .k { color:#6b7280; min-width:110px; font-weight:600; }
-  .row .v { color:#111827; font-weight:700; flex:1; }
-  .abstract { font-size:13px; line-height:1.9; background:#f9fafb; padding:12px 14px; border-right:3px solid #4f46e5; border-radius:8px; }
-  .att { display:flex; align-items:center; gap:10px; padding:8px 12px; border:1px solid #e5e7eb; border-radius:8px; margin-bottom:6px; font-size:12px; background:#fafafa; }
-  .att .ic { width:28px; height:28px; border-radius:6px; background:#eef2ff; color:#4f46e5; display:flex; align-items:center; justify-content:center; font-weight:900; font-size:10px; }
-  .att .name { flex:1; font-weight:700; word-break:break-all; }
-  .att .sz { color:#6b7280; font-size:11px; }
-  .footer { margin-top:24px; padding-top:14px; border-top:1px dashed #d1d5db; text-align:center; font-size:11px; color:#6b7280; }
-  .pill { display:inline-block; padding:3px 10px; border-radius:999px; background:#ecfdf5; color:#047857; font-weight:700; font-size:11px; border:1px solid #a7f3d0; }
-  @media print { body { -webkit-print-color-adjust:exact; print-color-adjust:exact; } .noprint { display:none !important; } }
-  .noprint { position:fixed; top:14px; left:14px; background:#4f46e5; color:#fff; padding:10px 18px; border-radius:8px; cursor:pointer; border:0; font-weight:700; font-family:inherit; box-shadow:0 4px 12px rgba(79,70,229,.4); }
+  @page { size: A4; margin: 16mm 14mm; }
+  * { box-sizing: border-box; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  html, body { margin:0; padding:0; }
+  body { font-family: 'IBM Plex Sans Arabic', 'Segoe UI', Tahoma, sans-serif; color:#0f172a; background:#fff; line-height:1.85; font-size:12.5px; position:relative; }
+  .page { max-width: 800px; margin: 0 auto; padding: 0 4px; position:relative; }
+  /* Watermark */
+  .watermark { position:fixed; inset:0; display:flex; align-items:center; justify-content:center; pointer-events:none; z-index:0; opacity:.045; }
+  .watermark span { font-family:'Amiri',serif; font-size:140px; font-weight:700; color:#0c2340; transform:rotate(-22deg); letter-spacing:6px; white-space:nowrap; }
+  /* Official header */
+  .doc-head { position:relative; z-index:1; border-top:6px solid #0c2340; border-bottom:1px solid #d4af37; padding:18px 0 14px; margin-bottom:18px; display:flex; align-items:center; justify-content:space-between; gap:14px; }
+  .doc-head::after { content:''; position:absolute; left:0; right:0; bottom:-4px; height:2px; background:#d4af37; }
+  .brand { display:flex; align-items:center; gap:12px; }
+  .seal { width:62px; height:62px; border-radius:50%; border:2px solid #d4af37; display:flex; align-items:center; justify-content:center; background:radial-gradient(circle,#fff,#f8f5ec); box-shadow:0 0 0 4px #fff,0 0 0 5px #0c2340; flex:0 0 auto; }
+  .seal span { font-family:'Amiri',serif; font-size:22px; font-weight:700; color:#0c2340; }
+  .brand-text .name { font-family:'Amiri',serif; font-size:20px; font-weight:700; color:#0c2340; line-height:1.2; }
+  .brand-text .tagline { font-size:10.5px; color:#64748b; letter-spacing:1px; margin-top:2px; }
+  .doc-meta { text-align:left; font-size:10.5px; color:#475569; line-height:1.7; }
+  .doc-meta b { color:#0c2340; }
+  /* Title block */
+  .title-block { position:relative; z-index:1; text-align:center; padding:22px 16px 18px; margin:0 0 22px; background:linear-gradient(180deg,#fbfaf6 0%,#fff 100%); border:1px solid #ece4cb; border-radius:4px; }
+  .title-block .kicker { font-size:10.5px; letter-spacing:8px; color:#d4af37; font-weight:700; margin-bottom:8px; text-transform:uppercase; }
+  .title-block h1 { font-family:'Amiri',serif; margin:0 0 10px; font-size:26px; font-weight:700; color:#0c2340; letter-spacing:.5px; }
+  .title-block .ref { display:inline-flex; align-items:center; gap:8px; font-size:11.5px; color:#475569; padding:5px 14px; background:#fff; border:1px solid #d4af37; border-radius:999px; font-weight:600; }
+  .title-block .ref b { color:#0c2340; font-family:'Courier New',monospace; letter-spacing:1px; }
+  .title-block .subj { margin-top:14px; font-size:14px; color:#1e293b; font-weight:600; padding:0 30px; line-height:1.6; }
+  /* Status strip */
+  .status-strip { position:relative; z-index:1; display:flex; justify-content:space-between; align-items:center; padding:10px 16px; background:#0c2340; color:#fff; border-radius:3px; margin-bottom:18px; font-size:11.5px; }
+  .status-strip .s-label { color:#d4af37; font-weight:600; letter-spacing:1px; font-size:10.5px; }
+  .status-strip .s-val { font-weight:700; font-size:13px; }
+  .status-strip .divider { width:1px; height:22px; background:rgba(212,175,55,.4); }
+  /* Sections */
+  .section { position:relative; z-index:1; margin-bottom:16px; page-break-inside:avoid; }
+  .section h2 { display:flex; align-items:center; gap:10px; margin:0 0 10px; font-family:'Amiri',serif; font-size:15px; font-weight:700; color:#0c2340; padding-bottom:8px; border-bottom:2px solid #0c2340; position:relative; }
+  .section h2::before { content:''; width:6px; height:18px; background:#d4af37; display:inline-block; }
+  .section h2::after { content:''; position:absolute; right:0; bottom:-4px; width:60px; height:2px; background:#d4af37; }
+  .section .body { background:#fcfcfa; border:1px solid #e7e2d0; border-radius:3px; padding:14px 16px; }
+  .grid { display:grid; grid-template-columns:1fr 1fr; gap:0; }
+  .row { display:flex; gap:10px; padding:8px 4px; border-bottom:1px dotted #d4d4d8; font-size:12px; }
+  .grid .row:nth-last-child(-n+2) { border-bottom:0; }
+  .row .k { color:#64748b; min-width:130px; font-weight:500; position:relative; padding-left:8px; }
+  .row .k::after { content:':'; position:absolute; left:0; }
+  .row .v { color:#0f172a; font-weight:600; flex:1; }
+  /* Abstract */
+  .abstract { font-size:12.5px; line-height:2; color:#1e293b; padding:14px 18px; background:#fff; border-right:4px solid #d4af37; border-radius:3px; text-align:justify; position:relative; font-family:'Amiri',serif; }
+  .abstract::before { content:'\u201D'; position:absolute; top:-10px; right:10px; font-size:48px; color:#d4af37; font-family:'Amiri',serif; line-height:1; opacity:.4; }
+  /* Attachments */
+  .att { display:flex; align-items:center; gap:12px; padding:10px 12px; border:1px solid #e7e2d0; border-radius:3px; margin-bottom:6px; font-size:11.5px; background:#fff; }
+  .att .ic { width:34px; height:34px; border-radius:3px; background:#0c2340; color:#d4af37; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:9px; letter-spacing:.5px; flex:0 0 auto; }
+  .att .name { flex:1; font-weight:600; word-break:break-all; color:#0f172a; }
+  .att .sz { color:#64748b; font-size:10.5px; font-family:'Courier New',monospace; }
+  .empty { color:#94a3b8; font-size:11.5px; text-align:center; padding:14px; font-style:italic; }
+  /* Price */
+  .price-box { display:flex; align-items:center; justify-content:space-between; padding:18px 22px; background:linear-gradient(135deg,#0c2340 0%,#1e3a5f 100%); border-radius:3px; color:#fff; }
+  .price-box .label { font-size:12px; color:#d4af37; letter-spacing:2px; font-weight:600; }
+  .price-box .amount { font-family:'Amiri',serif; font-size:28px; font-weight:700; }
+  .price-box .amount small { font-size:14px; color:#d4af37; margin-right:6px; }
+  /* Signature & footer */
+  .sign-row { position:relative; z-index:1; display:grid; grid-template-columns:1fr 1fr; gap:30px; margin-top:30px; padding-top:18px; }
+  .sign-box { text-align:center; padding-top:38px; border-top:1.5px solid #0c2340; font-size:11px; color:#64748b; }
+  .sign-box b { display:block; color:#0c2340; font-size:12.5px; margin-bottom:2px; }
+  .footer { position:relative; z-index:1; margin-top:24px; padding:14px 0 0; border-top:3px double #d4af37; text-align:center; font-size:10px; color:#64748b; line-height:1.7; }
+  .footer .org { font-family:'Amiri',serif; color:#0c2340; font-size:12px; font-weight:700; letter-spacing:1px; }
+  .footer .legal { margin-top:4px; font-size:9.5px; color:#94a3b8; }
+  /* Print button */
+  .noprint { position:fixed; top:14px; left:14px; z-index:100; background:#0c2340; color:#d4af37; padding:11px 22px; border-radius:3px; cursor:pointer; border:1.5px solid #d4af37; font-weight:700; font-family:inherit; font-size:13px; box-shadow:0 6px 18px rgba(12,35,64,.35); letter-spacing:1px; }
+  .noprint:hover { background:#d4af37; color:#0c2340; }
+  @media print { .noprint { display:none !important; } .watermark { position:absolute; } }
+  /* Responsive */
+  @media (max-width: 640px) {
+    .doc-head { flex-direction:column; align-items:flex-start; }
+    .doc-meta { text-align:right; }
+    .grid, .sign-row { grid-template-columns:1fr; }
+    .title-block h1 { font-size:20px; }
+    .title-block .subj { padding:0 6px; font-size:13px; }
+    .price-box { flex-direction:column; gap:8px; text-align:center; }
+  }
 </style></head><body>
-  <button class="noprint" onclick="window.print()">🖨️ طباعة / حفظ PDF</button>
+  <button class="noprint" onclick="window.print()">⬇ طباعة / حفظ PDF</button>
+  <div class="watermark"><span>MASTEREDUPATH</span></div>
 
-  <div class="header">
-    <div style="display:flex; justify-content:space-between; align-items:center; gap:10px; flex-wrap:wrap;">
-      <h1>📚 طلب نشر بحث علمي</h1>
-      <span class="badge">${esc(item.request_number)}</span>
+  <div class="page">
+    <div class="doc-head">
+      <div class="brand">
+        <div class="seal"><span>م</span></div>
+        <div class="brand-text">
+          <div class="name">منصّة ماستر إيدو باث</div>
+          <div class="tagline">MASTEREDUPATH · ACADEMIC SERVICES</div>
+        </div>
+      </div>
+      <div class="doc-meta">
+        <div><b>رقم الوثيقة:</b> ${esc(item.request_number)}</div>
+        <div><b>تاريخ الإصدار:</b> ${esc(docDate)}</div>
+        <div><b>نوع المستند:</b> طلب رسمي</div>
+      </div>
     </div>
-    <div style="font-size:18px; font-weight:800; margin-top:6px;">${esc(item.title)}</div>
-    <div class="meta">
-      <span>📅 الإنشاء: ${esc(created)}</span>
-      <span>🔄 آخر تحديث: ${esc(updated)}</span>
-      <span class="badge">الحالة: ${esc(statusLabel)}</span>
+
+    <div class="title-block">
+      <div class="kicker">وثيقة رسمية</div>
+      <h1>طلب نشر بحث علمي</h1>
+      <div class="ref">المرجع: <b>${esc(item.request_number)}</b></div>
+      <div class="subj">${esc(item.title)}</div>
+    </div>
+
+    <div class="status-strip">
+      <div><div class="s-label">الحالة</div><div class="s-val">${esc(statusLabel)}</div></div>
+      <div class="divider"></div>
+      <div><div class="s-label">تاريخ الإنشاء</div><div class="s-val">${esc(created)}</div></div>
+      <div class="divider"></div>
+      <div><div class="s-label">آخر تحديث</div><div class="s-val">${esc(updated)}</div></div>
+    </div>
+
+    <div class="section">
+      <h2>أولاً · بيانات البحث</h2>
+      <div class="body"><div class="grid">
+        <div class="row"><span class="k">التخصص</span><span class="v">${esc(item.field)}</span></div>
+        <div class="row"><span class="k">اللغة</span><span class="v">${esc(langLabel)}</span></div>
+        <div class="row"><span class="k">نوع الخدمة</span><span class="v">${esc(serviceLabel)}</span></div>
+        <div class="row"><span class="k">عدد الصفحات</span><span class="v">${esc(item.page_count || '—')}</span></div>
+        <div class="row"><span class="k">المجلة المستهدفة</span><span class="v">${esc(item.target_journal || '—')}</span></div>
+        <div class="row"><span class="k">تصنيف المجلة</span><span class="v">${esc(item.journal_rank || '—')}</span></div>
+        <div class="row"><span class="k">الباحثون</span><span class="v">${esc(item.authors || '—')}</span></div>
+        <div class="row"><span class="k">الكلمات المفتاحية</span><span class="v">${esc(item.keywords || '—')}</span></div>
+      </div></div>
+    </div>
+
+    <div class="section">
+      <h2>ثانياً · ملخّص البحث</h2>
+      <div class="body"><div class="abstract">${esc(item.abstract)}</div></div>
+    </div>
+
+    ${item.notes ? `<div class="section"><h2>ثالثاً · ملاحظات إضافية</h2><div class="body"><div class="abstract">${esc(item.notes)}</div></div></div>` : ''}
+
+    <div class="section">
+      <h2>${item.notes ? 'رابعاً' : 'ثالثاً'} · المرفقات (${atts.length})</h2>
+      <div class="body">
+        ${atts.length === 0 ? '<div class="empty">— لا توجد مرفقات مرفوعة مع هذا الطلب —</div>' :
+          atts.map(a => `<div class="att">
+            <div class="ic">PDF</div>
+            <div class="name">${esc(a.name)}</div>
+            <div class="sz">${a.size ? formatSize(a.size) : ''}</div>
+          </div>`).join('')}
+        ${atts.length > 0 ? '<div style="font-size:10.5px; color:#64748b; margin-top:10px; padding-top:8px; border-top:1px dotted #d4d4d8;">ملاحظة: المرفقات متاحة للتنزيل من داخل لوحة العميل في المنصّة.</div>' : ''}
+      </div>
+    </div>
+
+    <div class="section">
+      <h2>${item.notes ? 'خامساً' : 'رابعاً'} · بيانات المُتقدّم</h2>
+      <div class="body"><div class="grid">
+        <div class="row"><span class="k">الاسم الكامل</span><span class="v">${esc(item.client_name)}</span></div>
+        <div class="row"><span class="k">رقم الواتساب</span><span class="v">${esc(item.client_phone)}</span></div>
+        ${item.client_email ? `<div class="row"><span class="k">البريد الإلكتروني</span><span class="v">${esc(item.client_email)}</span></div>` : ''}
+      </div></div>
+    </div>
+
+    ${item.estimated_amount ? `<div class="section"><h2>${item.notes ? 'سادساً' : 'خامساً'} · القيمة المالية</h2>
+      <div class="price-box">
+        <div class="label">إجمالي الطلب</div>
+        <div class="amount">${Number(item.estimated_amount).toLocaleString('ar-SA')}<small>ر.س</small></div>
+      </div></div>` : ''}
+
+    <div class="sign-row">
+      <div class="sign-box"><b>توقيع المُتقدّم</b>${esc(item.client_name)}</div>
+      <div class="sign-box"><b>ختم المنصّة</b>إدارة ماستر إيدو باث</div>
+    </div>
+
+    <div class="footer">
+      <div class="org">منصّة ماستر إيدو باث · MASTEREDUPATH</div>
+      <div>وثيقة مُنشأة إلكترونياً · masteredupath.com · هذا المستند صادر من نظام المنصّة الرسمي</div>
+      <div class="legal">جميع الحقوق محفوظة © ${new Date().getFullYear()} · مرجع الوثيقة: ${esc(item.request_number)}</div>
     </div>
   </div>
 
-  <div class="section">
-    <h2>📋 بيانات البحث</h2>
-    <div class="grid">
-      <div class="row"><span class="k">التخصص:</span><span class="v">${esc(item.field)}</span></div>
-      <div class="row"><span class="k">اللغة:</span><span class="v">${esc(langLabel)}</span></div>
-      <div class="row"><span class="k">نوع الخدمة:</span><span class="v">${esc(serviceLabel)}</span></div>
-      <div class="row"><span class="k">عدد الصفحات:</span><span class="v">${esc(item.page_count || '—')}</span></div>
-      <div class="row"><span class="k">المجلة المستهدفة:</span><span class="v">${esc(item.target_journal || '—')}</span></div>
-      <div class="row"><span class="k">تصنيف المجلة:</span><span class="v">${esc(item.journal_rank || '—')}</span></div>
-      <div class="row"><span class="k">الباحثون:</span><span class="v">${esc(item.authors || '—')}</span></div>
-      <div class="row"><span class="k">الكلمات المفتاحية:</span><span class="v">${esc(item.keywords || '—')}</span></div>
-    </div>
-  </div>
-
-  <div class="section">
-    <h2>📝 ملخص البحث</h2>
-    <div class="abstract">${esc(item.abstract)}</div>
-  </div>
-
-  ${item.notes ? `<div class="section"><h2>🗒️ ملاحظات</h2><div class="abstract">${esc(item.notes)}</div></div>` : ''}
-
-  <div class="section">
-    <h2>📎 المرفقات (${atts.length})</h2>
-    ${atts.length === 0 ? '<div style="color:#6b7280; font-size:12px;">لا توجد مرفقات.</div>' :
-      atts.map(a => `<div class="att">
-        <div class="ic">PDF</div>
-        <div class="name">${esc(a.name)}</div>
-        <div class="sz">${a.size ? formatSize(a.size) : ''}</div>
-      </div>`).join('')}
-    ${atts.length > 0 ? '<div style="font-size:11px; color:#6b7280; margin-top:8px;">ℹ️ المرفقات متاحة للتنزيل من داخل لوحة العميل.</div>' : ''}
-  </div>
-
-  <div class="section">
-    <h2>📞 بيانات التواصل</h2>
-    <div class="grid">
-      <div class="row"><span class="k">الاسم:</span><span class="v">${esc(item.client_name)}</span></div>
-      <div class="row"><span class="k">واتساب:</span><span class="v">${esc(item.client_phone)}</span></div>
-      ${item.client_email ? `<div class="row"><span class="k">البريد:</span><span class="v">${esc(item.client_email)}</span></div>` : ''}
-    </div>
-  </div>
-
-  ${item.estimated_amount ? `<div class="section"><h2>💰 السعر</h2><span class="pill">${Number(item.estimated_amount).toLocaleString('ar-SA')} ر.س</span></div>` : ''}
-
-  <div class="footer">
-    تم إنشاء هذا الملخّص تلقائياً من منصة ماسترد بات • masteredupath.com
-  </div>
-
-  <script>setTimeout(() => window.print(), 600);</script>
+  <script>setTimeout(() => window.print(), 700);</script>
 </body></html>`;
 
     const w = window.open('', '_blank');
