@@ -52,8 +52,6 @@ const PRIORITY_CONFIG: Record<string, { label: string; color: string }> = {
 
 const STATUS_ORDER = ['pending', 'confirmed', 'review', 'in_progress', 'completed'];
 
-import { translateStageWords } from '@/utils/stageTranslations';
-
 interface Order {
   id: string;
   tracking_id: string;
