@@ -169,13 +169,13 @@ const DynamicServiceFields: React.FC<Props> = ({ config, values, onChange, theme
         );
       case 'select':
         return (
-          <Select value={v} onValueChange={(val) => onChange(field.key, val)}>
-            <SelectTrigger className="rounded-xl bg-background/60 border-border/60 focus:ring-primary/40">
+          <Select value={v} onValueChange={(val) => onChange(field.key, val)} dir="rtl">
+            <SelectTrigger className="rounded-xl bg-background/60 border-border/60 focus:ring-primary/40 text-right [&>span]:text-right [&>span]:flex-1">
               <SelectValue placeholder="اختر..." />
             </SelectTrigger>
-            <SelectContent>
+            <SelectContent dir="rtl" className="text-right">
               {field.options?.map((o) => (
-                <SelectItem key={o.value} value={o.value}>{o.label}</SelectItem>
+                <SelectItem key={o.value} value={o.value} className="text-right">{o.label}</SelectItem>
               ))}
             </SelectContent>
           </Select>
