@@ -373,7 +373,7 @@ const ServiceDetail = () => {
 
         {/* Interactive Tabs Section */}
         <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}>
-          <Tabs defaultValue="overview" className="w-full">
+          <Tabs defaultValue="overview" dir="rtl" className="w-full">
             <TabsList className="grid grid-cols-4 w-full h-auto p-1 bg-muted/50 rounded-2xl">
               <TabsTrigger value="overview" className="gap-1.5 text-xs sm:text-sm rounded-xl py-2.5 data-[state=active]:shadow-md">
                 <Sparkles className="w-3.5 h-3.5" />
