@@ -96,23 +96,25 @@ const extractTxt = async (
 };
 
 /** Main entry: count words in any supported file. */
-export const countWordsInFile = async (file: File): Promise<WordCountResult> => {
+export const countWordsInFile = async (
+  file: File,
+  onProgress?: (pct: number) => void,
+): Promise<WordCountResult> => {
   const name = file.name.toLowerCase();
   const ext = name.split('.').pop() || '';
 
   let text = '';
   try {
     if (ext === 'pdf' || file.type === 'application/pdf') {
-      text = await extractPdfText(file);
+      text = await extractPdfText(file, onProgress);
     } else if (
       ext === 'docx' ||
       file.type === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
     ) {
-      text = await extractDocxText(file);
+      text = await extractDocxText(file, onProgress);
     } else if (ext === 'txt' || file.type === 'text/plain') {
-      text = await extractTxt(file);
+      text = await extractTxt(file, onProgress);
     } else if (ext === 'doc') {
-      // Legacy .doc not supported in browser
       throw new Error('legacy_doc');
     } else {
       throw new Error('unsupported');
@@ -131,6 +133,7 @@ export const countWordsInFile = async (file: File): Promise<WordCountResult> => 
   const characters = text.replace(/\s/g, '').length;
   const pages = Math.max(1, Math.ceil(words / WORDS_PER_PAGE));
   const language = detectLanguage(text);
+  onProgress?.(100);
 
   return {
     words,
