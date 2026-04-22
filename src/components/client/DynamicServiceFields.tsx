@@ -76,7 +76,7 @@ const UrgencySelector: React.FC<{
 }> = ({ field, value, onChange }) => {
   const options = field.options ?? [];
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
+    <div className="grid grid-cols-1 min-[480px]:grid-cols-3 gap-2.5">
       {options.map((o) => {
         const meta = URGENCY_META[o.value] ?? {
           label: o.label, sub: '', eta: '', icon: Clock,
@@ -93,9 +93,10 @@ const UrgencySelector: React.FC<{
             onClick={() => onChange(o.value)}
             aria-pressed={selected}
             className={cn(
-              'group relative text-right rounded-2xl border-2 p-3.5 transition-all duration-200',
+              'group relative text-right rounded-2xl border-2 p-3 transition-all duration-200',
               'bg-background/60 hover:bg-background/90 hover:-translate-y-0.5',
               'focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-primary/50',
+              'min-h-[120px] flex flex-col',
               selected
                 ? cn('ring-2 shadow-lg', meta.ring, meta.bg)
                 : 'border-border/60 hover:border-border'
@@ -103,39 +104,36 @@ const UrgencySelector: React.FC<{
           >
             {selected && (
               <span className={cn(
-                'absolute top-2 left-2 w-5 h-5 rounded-full flex items-center justify-center',
+                'absolute top-2 left-2 w-5 h-5 rounded-full flex items-center justify-center z-10',
                 meta.text.replace('text-', 'bg-').replace('-700', '-500').replace('-400', '-500')
               )}>
                 <Check className="w-3 h-3 text-white" strokeWidth={3} />
               </span>
             )}
-            <div className="flex items-start gap-2.5">
-              <div className={cn(
-                'shrink-0 w-10 h-10 rounded-xl flex items-center justify-center transition-transform group-hover:scale-110',
-                meta.bg
-              )}>
-                <Icon className={cn('w-5 h-5', meta.text)} />
-              </div>
-              <div className="flex-1 min-w-0">
-                <div className={cn('text-sm font-bold leading-tight', selected ? meta.text : 'text-foreground')}>
-                  {meta.label}
-                </div>
-                {meta.sub && (
-                  <div className="text-[11px] text-muted-foreground mt-0.5 leading-snug">
-                    {meta.sub}
-                  </div>
-                )}
-                {meta.eta && (
-                  <div className={cn(
-                    'inline-flex items-center gap-1 mt-2 px-2 py-0.5 rounded-full text-[10px] font-semibold',
-                    meta.badge, meta.badgeText
-                  )}>
-                    <Clock className="w-2.5 h-2.5" />
-                    {meta.eta}
-                  </div>
-                )}
-              </div>
+            {/* Stacked layout — works in narrow side-by-side grids */}
+            <div className={cn(
+              'w-9 h-9 rounded-xl flex items-center justify-center transition-transform group-hover:scale-110 mb-2',
+              meta.bg
+            )}>
+              <Icon className={cn('w-4 h-4', meta.text)} />
             </div>
+            <div className={cn('text-sm font-bold leading-tight', selected ? meta.text : 'text-foreground')}>
+              {meta.label}
+            </div>
+            {meta.sub && (
+              <div className="text-[11px] text-muted-foreground mt-0.5 leading-snug line-clamp-2">
+                {meta.sub}
+              </div>
+            )}
+            {meta.eta && (
+              <div className={cn(
+                'inline-flex items-center gap-1 mt-auto pt-2 px-2 py-0.5 rounded-full text-[10px] font-semibold self-start',
+                meta.badge, meta.badgeText
+              )}>
+                <Clock className="w-2.5 h-2.5" />
+                {meta.eta}
+              </div>
+            )}
           </button>
         );
       })}
