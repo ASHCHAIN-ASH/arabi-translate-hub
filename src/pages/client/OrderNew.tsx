@@ -849,6 +849,16 @@ const OrderNew = () => {
                               <ClipboardList className="w-3.5 h-3.5" style={{ color: `hsl(var(--${theme.accent}))` }} />
                               <span>وصف الطلب وملاحظات إضافية</span>
                               <span className="text-destructive">*</span>
+                              <Tooltip>
+                                <TooltipTrigger asChild>
+                                  <button type="button" className="text-muted-foreground hover:text-foreground transition-colors">
+                                    <HelpCircle className="w-3.5 h-3.5" />
+                                  </button>
+                                </TooltipTrigger>
+                                <TooltipContent className="max-w-[260px] text-xs leading-relaxed">
+                                  اشرح ما تحتاجه بالتفصيل: الهدف، الجمهور المستهدف، أي متطلبات خاصة، ولغة التسليم. كلما زادت التفاصيل، حصلت على عرض سعر ودقّة أعلى.
+                                </TooltipContent>
+                              </Tooltip>
                             </Label>
                             <Textarea value={notes} onChange={(e) => setNotes(e.target.value)}
                               placeholder={theme.notesPlaceholder}
