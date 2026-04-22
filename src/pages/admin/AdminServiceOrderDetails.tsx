@@ -24,6 +24,7 @@ import {
 } from 'lucide-react';
 import OrderLifecycleTimeline, { LifecycleStatus } from '@/components/orders/OrderLifecycleTimeline';
 import { AdminQuoteSender } from '@/components/orders/AdminQuoteSender';
+import AdminPriceApprovalPanel from '@/components/admin/AdminPriceApprovalPanel';
 import { AdminLifecycleControl } from '@/components/admin/orders/AdminLifecycleControl';
 
 const STATUS_CONFIG: Record<string, { label: string; color: string; icon: React.ReactNode; barClass: string }> = {
