@@ -164,14 +164,17 @@ export const countWordsInFile = async (
 
   const words = countWordsInText(text);
   const characters = text.replace(/\s/g, '').length;
-  const pages = Math.max(1, Math.ceil(words / WORDS_PER_PAGE));
   const language = detectLanguage(text);
+  const { pages, pagesByWords, pagesByChars, wordsPerPage } = computePages(words, characters, language);
   onProgress?.(100);
 
   return {
     words,
     characters,
     pages,
+    pagesByWords,
+    pagesByChars,
+    wordsPerPage,
     language,
     extractedSample: text.trim().slice(0, 200),
   };
