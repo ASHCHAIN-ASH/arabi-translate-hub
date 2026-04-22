@@ -203,12 +203,16 @@ const DynamicServiceFields: React.FC<Props> = ({ config, values, onChange, theme
       {config.fields.map((field) => {
         const FieldIcon = theme?.fieldIcons?.[field.key];
         const smartHint = theme?.fieldHints?.[field.key];
+        const isUrgency = field.key === 'urgency' && field.type === 'select';
         return (
           <div
             key={field.key}
-            className={cn(field.type === 'textarea' && 'sm:col-span-2')}
+            className={cn(
+              field.type === 'textarea' && 'sm:col-span-2',
+              isUrgency && 'sm:col-span-2'
+            )}
           >
-            <Label className="text-sm font-medium mb-1.5 flex items-center gap-1.5">
+            <Label className="text-sm font-medium mb-2 flex items-center gap-1.5">
               {FieldIcon && (
                 <FieldIcon
                   className="w-3.5 h-3.5"
@@ -218,7 +222,15 @@ const DynamicServiceFields: React.FC<Props> = ({ config, values, onChange, theme
               <span>{field.label}</span>
               {field.required && <span className="text-destructive">*</span>}
             </Label>
-            {renderField(field)}
+            {isUrgency ? (
+              <UrgencySelector
+                field={field}
+                value={values[field.key] ?? ''}
+                onChange={(val) => onChange(field.key, val)}
+              />
+            ) : (
+              renderField(field)
+            )}
             {(smartHint || field.helpText) && (
               <p className="text-xs text-muted-foreground mt-1.5 flex items-start gap-1">
                 <Info className="w-3 h-3 mt-0.5 flex-shrink-0 opacity-70" />
