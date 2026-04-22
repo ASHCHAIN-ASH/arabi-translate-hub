@@ -887,8 +887,20 @@ const OrderNew = () => {
                             >
                               <Paperclip className="w-5 h-5" style={{ color: `hsl(var(--${theme.accent}))` }} />
                             </div>
-                            <div>
-                              <h3 className="text-lg font-bold">المرفقات</h3>
+                            <div className="flex-1">
+                              <h3 className="text-lg font-bold flex items-center gap-1.5">
+                                المرفقات
+                                <Tooltip>
+                                  <TooltipTrigger asChild>
+                                    <button type="button" className="text-muted-foreground hover:text-foreground transition-colors">
+                                      <HelpCircle className="w-3.5 h-3.5" />
+                                    </button>
+                                  </TooltipTrigger>
+                                  <TooltipContent className="max-w-[280px] text-xs leading-relaxed">
+                                    PDF, Word, Excel, PowerPoint, صور — حد ٢٠MB لكل ملف، حتى {MAX_FILES} ملفات. {isTranslationService ? 'سيتم تحليل ملفاتك تلقائياً وحساب الكلمات والصفحات.' : ''}
+                                  </TooltipContent>
+                                </Tooltip>
+                              </h3>
                               <p className="text-xs text-muted-foreground">اسحب الملفات أو اضغط للرفع — اختياري لكن يُسرّع التسعير</p>
                             </div>
                           </div>
