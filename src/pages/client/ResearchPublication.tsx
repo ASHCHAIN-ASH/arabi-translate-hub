@@ -1584,6 +1584,8 @@ export default function ResearchPublication() {
                                 </Button>
                               </div>
 
+                              <div className="grid grid-cols-2 gap-3 text-sm">
+                                <div><span className="text-muted-foreground">التخصص:</span> <b>{selected.field}</b></div>
                                 <div><span className="text-muted-foreground">اللغة:</span> <b>{selected.language === 'ar' ? 'العربية' : selected.language === 'en' ? 'الإنجليزية' : 'ثنائية'}</b></div>
                                 {selected.target_journal && <div><span className="text-muted-foreground">المجلة:</span> <b>{selected.target_journal}</b></div>}
                                 {selected.journal_rank && <div><span className="text-muted-foreground">التصنيف:</span> <b>{selected.journal_rank}</b></div>}
