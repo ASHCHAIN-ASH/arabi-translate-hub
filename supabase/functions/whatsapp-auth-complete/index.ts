@@ -1,6 +1,39 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
-import { normalizePhone } from "../_shared/whatsapp.ts";
+import { normalizePhone, renderTemplate, sendWhatsAppMessage } from "../_shared/whatsapp.ts";
+
+async function sendWelcomeMessage(
+  supabase: any,
+  phone: string,
+  isNewUser: boolean,
+  fullName: string,
+) {
+  try {
+    const eventKey = isNewUser ? "welcome_new_user" : "welcome_returning_user";
+    const { data: tpl } = await supabase
+      .from("whatsapp_templates")
+      .select("body_text, is_active")
+      .eq("event_key", eventKey)
+      .maybeSingle();
+
+    if (!tpl?.is_active || !tpl?.body_text) return;
+
+    const displayName = (fullName || "").trim() || "عزيزي العميل";
+    const body = renderTemplate(tpl.body_text, { name: displayName });
+    const result = await sendWhatsAppMessage(phone, body);
+
+    await supabase.from("whatsapp_send_log").insert({
+      to_phone: phone,
+      event_key: eventKey,
+      message_body: body,
+      status: result.success ? "sent" : "failed",
+      provider_message_id: result.messageId ?? null,
+      error_message: result.success ? null : result.error,
+    });
+  } catch (err) {
+    console.error("sendWelcomeMessage failed", err);
+  }
+}
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
