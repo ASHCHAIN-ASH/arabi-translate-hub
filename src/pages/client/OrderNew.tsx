@@ -321,6 +321,38 @@ const OrderNew = () => {
       setSubmitted(true);
       toast.success('تم إنشاء الطلب بنجاح');
 
+      // Persist per-file translation analyses (non-blocking)
+      if (analysisSummary && analysisSummary.files.length > 0 && data?.id) {
+        const rows = analysisSummary.files.map((f) => ({
+          service_order_id: data.id,
+          user_id: user.id,
+          file_name: f.fileName,
+          file_type: f.fileType,
+          file_size_bytes: f.fileSizeBytes,
+          word_count: f.wordCount,
+          character_count: f.characterCount,
+          estimated_pages: f.estimatedPages,
+          words_per_page_standard: f.wordsPerPageStandard,
+          detected_language: f.language,
+          arabic_ratio: f.arabicRatio,
+          english_ratio: f.englishRatio,
+          domain: f.domain,
+          domain_source: f.domainSource === 'heuristic' ? 'manual' : f.domainSource,
+          domain_confidence: f.domainConfidence,
+          estimated_price_sar: f.estimatedPriceSar,
+          per_word_rate_sar: f.perWordRateSar,
+          urgency_multiplier: f.urgencyMultiplier,
+          domain_multiplier: f.domainMultiplier,
+          confidence_level: f.confidenceLevel,
+          analysis_method: f.analysisMethod,
+          is_fallback: f.isFallback,
+          analysis_notes: f.analysisNotes.join(' • '),
+          text_sample: f.textSample,
+        }));
+        supabase.from('translation_file_analyses' as any).insert(rows as any)
+          .then(({ error: e }) => { if (e) console.error('Failed to save analyses:', e); });
+      }
+
       if (files.length > 0 && data?.id) {
         uploadFilesParallel(data.id, user.id)
           .then(() => toast.success('تم رفع جميع المرفقات'))
