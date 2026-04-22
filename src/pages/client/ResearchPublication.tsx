@@ -473,18 +473,14 @@ export default function ResearchPublication() {
     <!-- Digital Seals -->
     <div class="seal-row">
       <div class="dseal platform">
-        <div class="ribbon">PLATFORM</div>
+        <div class="ribbon"><span>ختم المنصّة الرسمي</span><span>PLATFORM SEAL</span></div>
         <div class="stamp-wrap">
           <div class="stamp">
-            <div class="ring-out"></div>
-            <div class="ring-mid"></div>
-            <div class="ring-in">
-              <div class="core-icon">★</div>
-              <div class="core-text">معتمد</div>
-              <div class="core-tag">VERIFIED</div>
+            <div class="ring-out"><div class="core-icon">★</div></div>
+            <div class="ring-mid">
+              <div class="core-text" data-en="MasterEduPath · Verified Authority">ماستر إيدو باث</div>
             </div>
-            <div class="arc-top">• MASTEREDUPATH ·</div>
-            <div class="arc-bot">· DIGITALLY SIGNED ·</div>
+            <div class="ring-in"><div class="core-tag">معتمد</div></div>
           </div>
         </div>
         <div class="info">
@@ -499,18 +495,14 @@ export default function ResearchPublication() {
         </div>
       </div>
       <div class="dseal">
-        <div class="ribbon">CLIENT</div>
+        <div class="ribbon"><span>توقيع المُتقدّم</span><span>CLIENT SIGNATURE</span></div>
         <div class="stamp-wrap">
           <div class="stamp">
-            <div class="ring-out"></div>
-            <div class="ring-mid"></div>
-            <div class="ring-in">
-              <div class="core-icon">✓</div>
-              <div class="core-text">مُتقدّم</div>
-              <div class="core-tag">VERIFIED</div>
+            <div class="ring-out"><div class="core-icon">✓</div></div>
+            <div class="ring-mid">
+              <div class="core-text" data-en="Authorized Client · e-Signature">المُتقدّم المعتمد</div>
             </div>
-            <div class="arc-top">• OFFICIAL CLIENT ·</div>
-            <div class="arc-bot">· e-SIGNATURE ·</div>
+            <div class="ring-in"><div class="core-tag">موثّق</div></div>
           </div>
         </div>
         <div class="info">
