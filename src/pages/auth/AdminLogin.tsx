@@ -48,7 +48,7 @@ const AdminLogin = () => {
         return;
       }
       
-      toast.success('تم تسجيل الدخول بنجاح');
+      triggerLoginWelcome();
       // Navigation will happen via useEffect when userRole is set
     } catch (error: any) {
       toast.error(error.message || 'خطأ في تسجيل الدخول');
