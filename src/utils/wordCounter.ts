@@ -10,12 +10,45 @@ import mammoth from 'mammoth';
 export interface WordCountResult {
   words: number;
   characters: number;
-  pages: number; // estimated (250 words/page is industry standard)
+  pages: number; // estimated using language-aware standard (see computePages)
+  pagesByWords: number; // pages computed from word count only
+  pagesByChars: number; // pages computed from character count (ISO 1500 chars/page)
+  wordsPerPage: number; // words/page standard used for this language
   language: 'ar' | 'en' | 'mixed' | 'unknown';
   extractedSample: string; // first 200 chars for verification
 }
 
-const WORDS_PER_PAGE = 250; // industry standard
+/**
+ * Words-per-page standards used by global LSPs (Language Service Providers):
+ *  - English / Latin scripts: 250 words/page (industry default, SDL/Lionbridge)
+ *  - Arabic (RTL): ~220 words/page — Arabic words are shorter and denser, and
+ *    typesetting requires more leading for diacritics & ligatures.
+ *  - Mixed content: 235 (weighted average).
+ *  - Unknown: fall back to 250.
+ *
+ * We additionally compute a character-based estimate using the ISO/DIN
+ * "standard page" of 1500 characters (≈ 55 chars × 27 lines, no spaces),
+ * then take the MAX of the two to avoid under-billing dense documents.
+ */
+const WORDS_PER_PAGE_BY_LANG: Record<WordCountResult['language'], number> = {
+  en: 250,
+  ar: 220,
+  mixed: 235,
+  unknown: 250,
+};
+const CHARS_PER_PAGE = 1500; // ISO standard page (chars, no spaces)
+
+const computePages = (
+  words: number,
+  characters: number,
+  language: WordCountResult['language'],
+): { pages: number; pagesByWords: number; pagesByChars: number; wordsPerPage: number } => {
+  const wordsPerPage = WORDS_PER_PAGE_BY_LANG[language] ?? 250;
+  const pagesByWords = words > 0 ? Math.max(1, Math.ceil(words / wordsPerPage)) : 0;
+  const pagesByChars = characters > 0 ? Math.max(1, Math.ceil(characters / CHARS_PER_PAGE)) : 0;
+  const pages = Math.max(pagesByWords, pagesByChars);
+  return { pages, pagesByWords, pagesByChars, wordsPerPage };
+};
 
 /** Tokenize text into words using Unicode-aware regex. Handles Arabic + Latin. */
 export const countWordsInText = (text: string): number => {
