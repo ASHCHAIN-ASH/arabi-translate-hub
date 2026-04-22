@@ -33,28 +33,85 @@ serve(async (req) => {
     if (!phone || !code) return resp({ success: false, error: "البيانات ناقصة" }, 200);
 
     const normalized = normalizePhone(phone);
-    const codeHash = await hashCode(String(code));
+
+    // التحقق من قفل الحساب (24 ساعة بعد 5 محاولات فاشلة)
+    const { data: activeLock } = await supabase
+      .from("auth_phone_lockouts")
+      .select("locked_until")
+      .eq("phone", normalized)
+      .gt("locked_until", new Date().toISOString())
+      .order("locked_until", { ascending: false })
+      .limit(1)
+      .maybeSingle();
+
+    if (activeLock) {
+      const until = new Date(activeLock.locked_until);
+      const hoursLeft = Math.max(1, Math.ceil((until.getTime() - Date.now()) / (1000 * 60 * 60)));
+      return resp({
+        success: false,
+        locked: true,
+        locked_until: activeLock.locked_until,
+        error: `تم قفل حسابك مؤقتاً بسبب محاولات متكررة. يرجى المحاولة بعد ${hoursLeft} ساعة، أو تواصل مع الدعم.`,
+      }, 200);
+    }
 
     // التحقق من OTP
     const { data: rows } = await supabase
-      .from("whatsapp_otp_codes")
+      .from("auth_whatsapp_otp")
       .select("*")
       .eq("phone", normalized)
-      .eq("used", false)
+      .is("consumed_at", null)
       .gt("expires_at", new Date().toISOString())
       .order("created_at", { ascending: false })
       .limit(1);
 
     const otp = rows?.[0];
-    if (!otp) return resp({ success: false, error: "الرمز منتهٍ أو غير موجود" }, 200);
-    if (otp.attempts >= 5) return resp({ success: false, error: "محاولات كثيرة" }, 200);
-    const codeHash = await hashCode(code);
+    if (!otp) {
+      return resp({ success: false, error: "انتهت صلاحية الرمز أو لم يُرسل. يرجى طلب رمز جديد." }, 200);
+    }
+
+    const codeHash = await hashCode(String(code));
     if (codeHash !== otp.code_hash) {
-      await supabase.from("auth_whatsapp_otp").update({ attempts: otp.attempts + 1 }).eq("id", otp.id);
-      return resp({ success: false, error: "الرمز غير صحيح" }, 200);
+      const newAttempts = (otp.attempts ?? 0) + 1;
+      await supabase
+        .from("auth_whatsapp_otp")
+        .update({ attempts: newAttempts })
+        .eq("id", otp.id);
+
+      const remaining = Math.max(0, 5 - newAttempts);
+
+      // إذا وصل للحد الأقصى، نُقفل الحساب 24 ساعة
+      if (newAttempts >= 5) {
+        const lockedUntil = new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString();
+        await supabase.from("auth_phone_lockouts").insert({
+          phone: normalized,
+          locked_until: lockedUntil,
+          reason: "too_many_otp_attempts",
+        });
+        // إبطال جميع رموز OTP النشطة لهذا الرقم
+        await supabase
+          .from("auth_whatsapp_otp")
+          .update({ consumed_at: new Date().toISOString() })
+          .eq("phone", normalized)
+          .is("consumed_at", null);
+
+        return resp({
+          success: false,
+          locked: true,
+          locked_until: lockedUntil,
+          error: "تجاوزت الحد المسموح من المحاولات. تم قفل حسابك لمدة 24 ساعة لحماية أمانك.",
+        }, 200);
+      }
+
+      return resp({
+        success: false,
+        attempts_remaining: remaining,
+        error: `الرمز الذي أدخلته غير صحيح. تبقّى لديك ${remaining} ${remaining === 1 ? "محاولة" : "محاولات"} قبل قفل الحساب لمدة 24 ساعة.`,
+      }, 200);
     }
 
     await supabase.from("auth_whatsapp_otp").update({ consumed_at: new Date().toISOString() }).eq("id", otp.id);
+
 
     // البحث عن مستخدم موجود برقم الجوال
     const { data: existingProfile } = await supabase
