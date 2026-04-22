@@ -802,6 +802,24 @@ const OrderNew = () => {
                         </div>
                       )}
 
+                      {/* Submission guard message — only on final step */}
+                      {step === 3 && translationGuardReason && (
+                        <div
+                          role="alert"
+                          className="mt-4 rounded-xl border-2 border-destructive/40 bg-destructive/5 p-3 flex items-start gap-3"
+                        >
+                          <AlertCircle className="w-5 h-5 text-destructive flex-shrink-0 mt-0.5" />
+                          <div className="flex-1 min-w-0">
+                            <p className="text-sm font-bold text-destructive">
+                              لا يمكن إرسال الطلب بعد
+                            </p>
+                            <p className="text-xs text-muted-foreground mt-0.5 leading-relaxed">
+                              {translationGuardReason}
+                            </p>
+                          </div>
+                        </div>
+                      )}
+
                       {/* Navigation */}
                       <div className="flex items-center justify-between pt-4 border-t border-border/40">
                         <Button variant="outline" disabled={step === 0 || loading}
@@ -823,9 +841,10 @@ const OrderNew = () => {
                         ) : (
                           <Button
                             onClick={handleSubmit}
-                            disabled={loading}
+                            disabled={loading || !!translationGuardReason}
                             size="lg"
-                            className="gap-2 text-white hover:opacity-90 min-w-[160px] shadow-lg"
+                            title={translationGuardReason || undefined}
+                            className="gap-2 text-white hover:opacity-90 min-w-[160px] shadow-lg disabled:opacity-50"
                             style={{
                               background: `linear-gradient(135deg, hsl(var(--${theme.accent})), hsl(var(--${theme.glow})))`,
                               boxShadow: `0 8px 24px hsl(var(--${theme.accent}) / 0.4)`,
