@@ -388,12 +388,15 @@ const TranslationWordCounter: React.FC<Props> = ({
                           {e.result.words.toLocaleString()}
                         </div>
                       </div>
-                      <div className="bg-card p-2 text-center">
+                      <div className="bg-card p-2 text-center" title={`المعيار: ${e.result.wordsPerPage} كلمة/صفحة (${e.result.language === 'ar' ? 'عربي RTL' : e.result.language === 'en' ? 'لاتيني' : e.result.language === 'mixed' ? 'مختلط' : 'افتراضي'}) — حسب الكلمات: ${e.result.pagesByWords} • حسب الأحرف (1500/صفحة): ${e.result.pagesByChars}`}>
                         <div className="text-[10px] text-muted-foreground flex items-center justify-center gap-1">
                           <FileType2 className="w-2.5 h-2.5" /> صفحات
                         </div>
                         <div className="text-sm font-bold text-teal-600">
                           ~{e.result.pages}
+                        </div>
+                        <div className="text-[9px] text-muted-foreground mt-0.5">
+                          {e.result.wordsPerPage}ك/ص
                         </div>
                       </div>
                       <div className="bg-card p-2 text-center">

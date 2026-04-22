@@ -10,12 +10,45 @@ import mammoth from 'mammoth';
 export interface WordCountResult {
   words: number;
   characters: number;
-  pages: number; // estimated (250 words/page is industry standard)
+  pages: number; // estimated using language-aware standard (see computePages)
+  pagesByWords: number; // pages computed from word count only
+  pagesByChars: number; // pages computed from character count (ISO 1500 chars/page)
+  wordsPerPage: number; // words/page standard used for this language
   language: 'ar' | 'en' | 'mixed' | 'unknown';
   extractedSample: string; // first 200 chars for verification
 }
 
-const WORDS_PER_PAGE = 250; // industry standard
+/**
+ * Words-per-page standards used by global LSPs (Language Service Providers):
+ *  - English / Latin scripts: 250 words/page (industry default, SDL/Lionbridge)
+ *  - Arabic (RTL): ~220 words/page — Arabic words are shorter and denser, and
+ *    typesetting requires more leading for diacritics & ligatures.
+ *  - Mixed content: 235 (weighted average).
+ *  - Unknown: fall back to 250.
+ *
+ * We additionally compute a character-based estimate using the ISO/DIN
+ * "standard page" of 1500 characters (≈ 55 chars × 27 lines, no spaces),
+ * then take the MAX of the two to avoid under-billing dense documents.
+ */
+const WORDS_PER_PAGE_BY_LANG: Record<WordCountResult['language'], number> = {
+  en: 250,
+  ar: 220,
+  mixed: 235,
+  unknown: 250,
+};
+const CHARS_PER_PAGE = 1500; // ISO standard page (chars, no spaces)
+
+const computePages = (
+  words: number,
+  characters: number,
+  language: WordCountResult['language'],
+): { pages: number; pagesByWords: number; pagesByChars: number; wordsPerPage: number } => {
+  const wordsPerPage = WORDS_PER_PAGE_BY_LANG[language] ?? 250;
+  const pagesByWords = words > 0 ? Math.max(1, Math.ceil(words / wordsPerPage)) : 0;
+  const pagesByChars = characters > 0 ? Math.max(1, Math.ceil(characters / CHARS_PER_PAGE)) : 0;
+  const pages = Math.max(pagesByWords, pagesByChars);
+  return { pages, pagesByWords, pagesByChars, wordsPerPage };
+};
 
 /** Tokenize text into words using Unicode-aware regex. Handles Arabic + Latin. */
 export const countWordsInText = (text: string): number => {
@@ -131,14 +164,17 @@ export const countWordsInFile = async (
 
   const words = countWordsInText(text);
   const characters = text.replace(/\s/g, '').length;
-  const pages = Math.max(1, Math.ceil(words / WORDS_PER_PAGE));
   const language = detectLanguage(text);
+  const { pages, pagesByWords, pagesByChars, wordsPerPage } = computePages(words, characters, language);
   onProgress?.(100);
 
   return {
     words,
     characters,
     pages,
+    pagesByWords,
+    pagesByChars,
+    wordsPerPage,
     language,
     extractedSample: text.trim().slice(0, 200),
   };
@@ -147,16 +183,22 @@ export const countWordsInFile = async (
 /** Sum results from multiple files. */
 export const aggregateResults = (results: WordCountResult[]): WordCountResult => {
   if (results.length === 0) {
-    return { words: 0, characters: 0, pages: 0, language: 'unknown', extractedSample: '' };
+    return {
+      words: 0, characters: 0, pages: 0, pagesByWords: 0, pagesByChars: 0,
+      wordsPerPage: WORDS_PER_PAGE_BY_LANG.unknown, language: 'unknown', extractedSample: '',
+    };
   }
   const words = results.reduce((s, r) => s + r.words, 0);
   const characters = results.reduce((s, r) => s + r.characters, 0);
-  const pages = Math.max(1, Math.ceil(words / WORDS_PER_PAGE));
-  // Pick majority language
+  // Pick majority language (weighted by words)
   const langCounts: Record<string, number> = {};
   results.forEach((r) => { langCounts[r.language] = (langCounts[r.language] || 0) + r.words; });
   const language = (Object.entries(langCounts).sort((a, b) => b[1] - a[1])[0]?.[0] || 'unknown') as WordCountResult['language'];
-  return { words, characters, pages, language, extractedSample: results[0].extractedSample };
+  const { pages, pagesByWords, pagesByChars, wordsPerPage } = computePages(words, characters, language);
+  return {
+    words, characters, pages, pagesByWords, pagesByChars, wordsPerPage,
+    language, extractedSample: results[0].extractedSample,
+  };
 };
 
 /** Estimate price (indicative only — final price is set by admin). */
