@@ -183,9 +183,12 @@ const TranslationAnalysisEngine: React.FC<Props> = ({
       if (!accepted.length) return;
 
       setEntries((prev) => [...prev, ...accepted]);
-      // Sequential processing to avoid overloading the browser
-      for (const e of accepted) {
-        await processFile(e.id);
+      // Process up to 2 files in parallel — fast without overloading the browser.
+      const CONCURRENCY = 2;
+      for (let i = 0; i < accepted.length; i += CONCURRENCY) {
+        await Promise.all(
+          accepted.slice(i, i + CONCURRENCY).map((e) => processFile(e.id))
+        );
       }
     },
     [processFile]
