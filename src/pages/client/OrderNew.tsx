@@ -19,6 +19,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/components/SimpleAuthProvider';
 import { cn } from '@/lib/utils';
 import DynamicServiceFields from '@/components/client/DynamicServiceFields';
+import TranslationWordCounter from '@/components/client/TranslationWordCounter';
 import CategoryHero from '@/components/client/order-new/CategoryHero';
 import CategoryGuideCard from '@/components/client/order-new/CategoryGuideCard';
 import ExamplePrompts from '@/components/client/order-new/ExamplePrompts';
@@ -91,6 +92,17 @@ const OrderNew = () => {
   const [dragOver, setDragOver] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [trackingId, setTrackingId] = useState<string>('');
+  const [wordCountData, setWordCountData] = useState<{
+    totalWords: number; totalPages: number; estimatedPriceSar: number;
+    files: { name: string; words: number }[];
+  } | null>(null);
+
+  // Detect translation services so we render the word counter widget.
+  const isTranslationService = useMemo(() => {
+    const name = (service?.name_ar || service?.name || '').toLowerCase();
+    const cat = (service?.category_slug || service?.category_name || '').toLowerCase();
+    return /ترجم|translat/i.test(name) || /ترجم|translat/i.test(cat);
+  }, [service]);
 
   // Service-specific template (per-service sections + fields). When present, takes priority.
   const template = useMemo(
@@ -245,6 +257,16 @@ const OrderNew = () => {
           ...dynamicValues,
           category_slug: service.category_slug,
           base_unit_price: service.price,
+          ...(wordCountData ? {
+            word_count_analysis: {
+              total_words: wordCountData.totalWords,
+              total_pages: wordCountData.totalPages,
+              estimated_price_sar: wordCountData.estimatedPriceSar,
+              files: wordCountData.files,
+              note: 'سعر تقديري مبدئي - السعر النهائي يحدد بعد مراجعة الإدارة',
+              calculated_at: new Date().toISOString(),
+            },
+          } : {}),
         },
         current_status: 'pending', priority: 'normal',
         notes: notes || null,
@@ -576,6 +598,19 @@ const OrderNew = () => {
                               <p className="text-xs text-muted-foreground">اسحب الملفات أو اضغط للرفع — اختياري لكن يُسرّع التسعير</p>
                             </div>
                           </div>
+
+                          {/* Translation word counter — shown only for translation services */}
+                          {isTranslationService && (
+                            <div className="mb-6 rounded-2xl border border-emerald-500/20 bg-gradient-to-br from-emerald-50/30 to-teal-50/20 dark:from-emerald-950/10 dark:to-teal-950/5 p-4">
+                              <TranslationWordCounter
+                                sourceLanguage={dynamicValues.source_language}
+                                targetLanguage={dynamicValues.target_language || dynamicValues.language}
+                                urgency={dynamicValues.urgency}
+                                certified={dynamicValues.certified}
+                                onCountChange={setWordCountData}
+                              />
+                            </div>
+                          )}
 
                           <input ref={fileInputRef} type="file" multiple
                             accept={ALLOWED_TYPES.join(',')}
