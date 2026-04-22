@@ -4,6 +4,8 @@ import { useAuth } from '@/components/SimpleAuthProvider';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import NotificationCenter from '@/components/NotificationCenter';
+import { useChallengeAcademy } from '@/hooks/useChallengeAcademy';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import {
   LayoutDashboard,
   ShoppingCart,
@@ -58,11 +60,26 @@ const navItems: NavItem[] = [
 interface SidebarInnerProps {
   displayName: string;
   initial: string;
+  userId?: string;
   onItemClick?: () => void;
   onSignOut: () => void;
 }
 
-const SidebarInner = memo<SidebarInnerProps>(({ displayName, initial, onItemClick, onSignOut }) => {
+const SidebarInner = memo<SidebarInnerProps>(({ displayName, initial, userId, onItemClick, onSignOut }) => {
+  const { summary } = useChallengeAcademy(userId);
+  const level = summary?.current_level;
+  const nextLevel = summary?.next_level;
+  const totalXp = (summary as any)?.xp?.total_xp ?? (summary as any)?.total_xp ?? 0;
+  const requiredXp = nextLevel?.required_xp ?? level?.required_xp ?? 0;
+  const baseXp = level?.required_xp ?? 0;
+  const progress = nextLevel
+    ? Math.min(100, Math.round(((totalXp - baseXp) / Math.max(1, requiredXp - baseXp)) * 100))
+    : 100;
+
+  const badgeLabel = level?.name_ar || 'عميل جديد';
+  const badgeIcon = (level as any)?.icon || '🌱';
+  const badgeColor = (level as any)?.badge_color || 'hsl(var(--primary))';
+
   return (
     <div className="h-full flex flex-col bg-card">
       {/* Brand header */}
@@ -78,20 +95,54 @@ const SidebarInner = memo<SidebarInnerProps>(({ displayName, initial, onItemClic
         </div>
       </div>
 
-      {/* User chip */}
+      {/* User chip with real level badge — clickable, links to challenge academy */}
       <div className="p-4">
-        <div className="flex items-center gap-3 p-3 rounded-xl bg-muted/40 border border-border">
-          <div className="relative shrink-0">
-            <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-primary to-secondary text-white flex items-center justify-center font-bold">
-              {initial}
-            </div>
-            <span className="absolute -bottom-0.5 -right-0.5 w-3 h-3 bg-emerald-500 border-2 border-card rounded-full" />
-          </div>
-          <div className="min-w-0 flex-1">
-            <p className="text-sm font-bold truncate">{displayName}</p>
-            <p className="text-[11px] text-muted-foreground">عميل مميز ✨</p>
-          </div>
-        </div>
+        <TooltipProvider delayDuration={200}>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Link
+                to="/challenge-academy"
+                onClick={onItemClick}
+                className="flex items-center gap-3 p-3 rounded-xl bg-muted/40 border border-border hover:bg-muted transition"
+              >
+                <div className="relative shrink-0">
+                  <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-primary to-secondary text-white flex items-center justify-center font-bold">
+                    {initial}
+                  </div>
+                  <span className="absolute -bottom-0.5 -right-0.5 w-3 h-3 bg-emerald-500 border-2 border-card rounded-full" />
+                </div>
+                <div className="min-w-0 flex-1">
+                  <p className="text-sm font-bold truncate">{displayName}</p>
+                  <div className="flex items-center gap-1.5 mt-0.5">
+                    <span
+                      className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-md text-[10px] font-bold text-white"
+                      style={{ backgroundColor: badgeColor }}
+                    >
+                      <span>{badgeIcon}</span>
+                      <span className="truncate max-w-[80px]">{badgeLabel}</span>
+                    </span>
+                    <span className="text-[10px] text-muted-foreground font-semibold">
+                      {Number(totalXp).toLocaleString('ar')} XP
+                    </span>
+                  </div>
+                  {nextLevel && (
+                    <div className="mt-1.5 h-1 w-full bg-border rounded-full overflow-hidden">
+                      <div
+                        className="h-full rounded-full transition-all"
+                        style={{ width: `${progress}%`, backgroundColor: badgeColor }}
+                      />
+                    </div>
+                  )}
+                </div>
+              </Link>
+            </TooltipTrigger>
+            <TooltipContent side="bottom" className="text-xs">
+              {nextLevel
+                ? `${Number(requiredXp - totalXp).toLocaleString('ar')} XP للوصول إلى ${nextLevel.name_ar}`
+                : 'وصلت إلى أعلى مستوى 🎉'}
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
       </div>
 
       {/* Nav */}
@@ -164,6 +215,7 @@ const ClientLayout: React.FC<ClientLayoutProps> = ({ children }) => {
             <SidebarInner
               displayName={displayName}
               initial={initial}
+              userId={user?.id}
               onSignOut={handleSignOut}
             />
           </div>
@@ -191,6 +243,7 @@ const ClientLayout: React.FC<ClientLayoutProps> = ({ children }) => {
                       <SidebarInner
                         displayName={displayName}
                         initial={initial}
+                        userId={user?.id}
                         onItemClick={closeSidebar}
                         onSignOut={handleSignOut}
                       />
