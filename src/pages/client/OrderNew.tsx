@@ -528,12 +528,13 @@ const OrderNew = () => {
                               className="rounded-xl bg-background/60 max-w-[200px]" />
                           </div>
 
-                          {/* Dynamic fields per category — themed */}
+                          {/* Dynamic fields per service — themed, sectioned when template available */}
                           <DynamicServiceFields
                             config={fieldsConfig}
                             values={dynamicValues}
                             onChange={(k, v) => setDynamicValues(prev => ({ ...prev, [k]: v }))}
                             theme={theme}
+                            sections={template?.sections}
                           />
 
                           {/* Notes with category-tailored placeholder */}
