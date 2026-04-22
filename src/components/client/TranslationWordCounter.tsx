@@ -28,6 +28,7 @@ interface FileEntry {
   result?: WordCountResult;
   error?: string;
   loading: boolean;
+  progress: number; // 0-100, parsing progress
 }
 
 interface Props {
@@ -52,7 +53,8 @@ interface Props {
 }
 
 const ACCEPTED = '.pdf,.docx,.txt,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document,text/plain';
-const MAX_SIZE = 20 * 1024 * 1024;
+const MAX_SIZE = 50 * 1024 * 1024; // 50MB per file
+const MAX_FILES = 10;
 
 const LANG_LABEL: Record<string, string> = {
   ar: 'العربية', en: 'الإنجليزية', mixed: 'مختلطة', unknown: 'غير محدّدة',
@@ -99,43 +101,69 @@ const TranslationWordCounter: React.FC<Props> = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [urgency, certified, targetLanguage]);
 
-  const processFile = useCallback(async (entry: FileEntry, all: FileEntry[]) => {
+  // Use a ref so concurrent updates always see the latest list (avoids race
+  // conditions when multiple files report progress simultaneously).
+  const entriesRef = useRef<FileEntry[]>([]);
+  useEffect(() => { entriesRef.current = entries; }, [entries]);
+
+  const updateEntry = useCallback((id: string, patch: Partial<FileEntry>) => {
+    const next = entriesRef.current.map((e) => (e.id === id ? { ...e, ...patch } : e));
+    entriesRef.current = next;
+    setEntries(next);
+    return next;
+  }, []);
+
+  const processFile = useCallback(async (id: string) => {
+    const target = entriesRef.current.find((e) => e.id === id);
+    if (!target) return;
     try {
-      const result = await countWordsInFile(entry.file);
-      const next = all.map((e) =>
-        e.id === entry.id ? { ...e, result, error: undefined, loading: false } : e
-      );
-      setEntries(next);
+      const result = await countWordsInFile(target.file, (pct) => {
+        updateEntry(id, { progress: pct });
+      });
+      const next = updateEntry(id, { result, error: undefined, loading: false, progress: 100 });
       notify(next);
-      toast.success(`تم حساب ${result.words.toLocaleString()} كلمة في "${entry.file.name}"`);
+      toast.success(`تم حساب ${result.words.toLocaleString()} كلمة في "${target.file.name}"`);
     } catch (err: any) {
       const msg = err?.message || 'تعذّر تحليل الملف';
-      const next = all.map((e) =>
-        e.id === entry.id ? { ...e, error: msg, loading: false } : e
-      );
-      setEntries(next);
+      const next = updateEntry(id, { error: msg, loading: false, progress: 0 });
+      notify(next);
       toast.error(msg);
     }
-  }, [notify]);
+  }, [notify, updateEntry]);
+
+  // Queue: process files one-at-a-time so a 50MB PDF doesn't freeze the tab
+  // while another is still parsing. Progress remains live per file.
+  const runQueue = useCallback(async (ids: string[]) => {
+    for (const id of ids) {
+      await processFile(id);
+    }
+  }, [processFile]);
 
   const handleFiles = useCallback((files: FileList | null) => {
     if (!files || files.length === 0) return;
-    const arr = Array.from(files).slice(0, 5 - entries.length);
+    const slots = MAX_FILES - entries.length;
+    if (slots <= 0) {
+      toast.error(`الحد الأقصى ${MAX_FILES} ملفات`);
+      return;
+    }
+    const arr = Array.from(files).slice(0, slots);
     const newEntries: FileEntry[] = arr
       .filter((f) => {
         if (f.size > MAX_SIZE) {
-          toast.error(`"${f.name}" أكبر من 20MB`);
+          toast.error(`"${f.name}" يتجاوز الحد الأقصى 50MB`);
           return false;
         }
         return true;
       })
-      .map((f) => ({ id: crypto.randomUUID(), file: f, loading: true }));
+      .map((f) => ({ id: crypto.randomUUID(), file: f, loading: true, progress: 0 }));
 
     if (newEntries.length === 0) return;
     const merged = [...entries, ...newEntries];
+    entriesRef.current = merged;
     setEntries(merged);
-    newEntries.forEach((e) => processFile(e, merged));
-  }, [entries, processFile]);
+    notify(merged); // immediately notify pending state to parent
+    runQueue(newEntries.map((e) => e.id));
+  }, [entries, notify, runQueue]);
 
   const removeEntry = (id: string) => {
     const next = entries.filter((e) => e.id !== id);
@@ -145,23 +173,28 @@ const TranslationWordCounter: React.FC<Props> = ({
   };
 
   const recalcEntry = useCallback((id: string) => {
-    const target = entries.find((e) => e.id === id);
-    if (!target) return;
-    const next = entries.map((e) =>
-      e.id === id ? { ...e, loading: true, error: undefined, result: undefined } : e
+    if (!entriesRef.current.find((e) => e.id === id)) return;
+    const next = entriesRef.current.map((e) =>
+      e.id === id ? { ...e, loading: true, error: undefined, result: undefined, progress: 0 } : e
     );
+    entriesRef.current = next;
     setEntries(next);
-    processFile({ ...target, loading: true, error: undefined, result: undefined }, next);
-  }, [entries, processFile]);
+    notify(next);
+    runQueue([id]);
+  }, [notify, runQueue]);
 
   const recalcAll = useCallback(() => {
     if (entries.length === 0) return;
-    const next = entries.map((e) => ({ ...e, loading: true, error: undefined, result: undefined }));
+    const next = entries.map((e) => ({
+      ...e, loading: true, error: undefined, result: undefined, progress: 0,
+    }));
+    entriesRef.current = next;
     setEntries(next);
     setPricingChangedAt(null);
-    next.forEach((e) => processFile(e, next));
+    notify(next);
+    runQueue(next.map((e) => e.id));
     toast.info('جارٍ إعادة حساب جميع الملفات…');
-  }, [entries, processFile]);
+  }, [entries, notify, runQueue]);
 
   const completed = entries.filter((e) => e.result);
   const aggregate = aggregateResults(completed.map((e) => e.result!));
@@ -208,7 +241,7 @@ const TranslationWordCounter: React.FC<Props> = ({
         <div className="text-center">
           <p className="font-semibold text-sm">ارفع ملفك للحساب التلقائي</p>
           <p className="text-xs text-muted-foreground mt-1">
-            PDF، Word (.docx)، نص — حتى 20MB
+            PDF، Word (.docx)، نص — حتى 50MB لكل ملف ({MAX_FILES} ملفات كحد أقصى)
           </p>
         </div>
       </button>
@@ -287,12 +320,27 @@ const TranslationWordCounter: React.FC<Props> = ({
                     <div className="flex-1 min-w-0">
                       <p className="text-sm font-medium truncate">{e.file.name}</p>
                       <p className="text-[10px] text-muted-foreground mt-0.5">
-                        {(e.file.size / 1024).toFixed(1)} KB
+                        {e.file.size > 1024 * 1024
+                          ? `${(e.file.size / 1024 / 1024).toFixed(2)} MB`
+                          : `${(e.file.size / 1024).toFixed(1)} KB`}
                       </p>
                       {e.loading && (
-                        <p className="text-xs text-muted-foreground flex items-center gap-1.5 mt-1">
-                          <Loader2 className="w-3 h-3 animate-spin" /> جارٍ التحليل…
-                        </p>
+                        <div className="mt-1.5 space-y-1">
+                          <div className="flex items-center justify-between text-[11px]">
+                            <span className="text-muted-foreground flex items-center gap-1.5">
+                              <Loader2 className="w-3 h-3 animate-spin" />
+                              {e.progress < 15 ? 'تحضير الملف…' :
+                               e.progress < 95 ? 'استخراج النص…' : 'إنهاء الحساب…'}
+                            </span>
+                            <span className="font-mono font-bold text-foreground">{e.progress}%</span>
+                          </div>
+                          <div className="h-1.5 rounded-full bg-muted overflow-hidden">
+                            <div
+                              className="h-full bg-gradient-to-r from-emerald-500 to-teal-500 transition-all duration-300 ease-out"
+                              style={{ width: `${e.progress}%` }}
+                            />
+                          </div>
+                        </div>
                       )}
                       {e.error && (
                         <p className="text-xs text-destructive flex items-center gap-1.5 mt-1">
