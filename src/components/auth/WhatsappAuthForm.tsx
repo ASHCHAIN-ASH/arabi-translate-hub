@@ -195,6 +195,25 @@ export const WhatsappAuthForm: React.FC<Props> = ({ mode, onSuccess }) => {
               />
             </div>
           )}
+          {mode === 'register' && (
+            <div>
+              <Label htmlFor="wa-email" className="flex items-center gap-2 text-slate-700 font-medium">
+                <Mail className="w-4 h-4" /> البريد الإلكتروني
+              </Label>
+              <Input
+                id="wa-email"
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="name@example.com"
+                dir="ltr"
+                autoComplete="email"
+                maxLength={255}
+                className="mt-2 h-12 border-2 focus:border-emerald-500 text-right"
+              />
+              <p className="text-xs text-slate-500 mt-1">سيُستخدم لإرسال إشعارات الحساب والفواتير</p>
+            </div>
+          )}
           <div>
             <Label htmlFor="wa-phone" className="flex items-center gap-2 text-slate-700 font-medium">
               <Phone className="w-4 h-4" /> رقم الجوال (واتساب)
