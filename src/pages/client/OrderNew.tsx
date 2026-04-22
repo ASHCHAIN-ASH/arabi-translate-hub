@@ -1147,13 +1147,21 @@ const OrderNew = () => {
 
                             {fieldsConfig.fields.map((f) => {
                               const v = dynamicValues[f.key];
-                              if (!v) return null;
-                              const display = f.type === 'select'
-                                ? getOptionLabel(service?.category_slug, f.key, v)
-                                : String(v);
+                              if (v === undefined || v === null || v === '') return null;
+                              // Resolve label/option from the actual field config in use
+                              const fieldLabel = f.label || getFieldLabel(service?.category_slug, f.key);
+                              let display: string;
+                              if (f.type === 'select' && f.options) {
+                                const opt = f.options.find((o) => o.value === v);
+                                display = opt?.label ?? getOptionLabel(service?.category_slug, f.key, String(v));
+                              } else if (typeof v === 'boolean') {
+                                display = v ? 'نعم' : 'لا';
+                              } else {
+                                display = String(v);
+                              }
                               return (
                                 <div key={f.key} className="flex justify-between gap-2 text-sm">
-                                  <span className="text-muted-foreground">{getFieldLabel(service?.category_slug, f.key)}</span>
+                                  <span className="text-muted-foreground">{fieldLabel}</span>
                                   <span className="font-semibold text-end">{display}</span>
                                 </div>
                               );
