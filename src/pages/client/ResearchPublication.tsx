@@ -792,10 +792,49 @@ export default function ResearchPublication() {
   ${(realContract.total_amount || item.estimated_amount) ? `<div class="section"><h2>رابعاً · القيمة المالية</h2>
     <div class="price-box"><div class="label">إجمالي قيمة العقد</div><div class="amount">${amount}<small>${esc(currency)}</small></div></div></div>` : ''}
   <div class="seal-row">
-    <div class="dseal">
-      <div class="stamp client"><div class="st-top">• OFFICIAL •</div><div class="st-icon">${sig ? '✓' : '⏳'}</div><div class="st-mid">الطرف الثاني</div><div class="st-bot">${sig ? 'SIGNED' : 'PENDING'}</div></div>
+    <div class="dseal platform">
+      <div class="ribbon">PLATFORM</div>
+      <div class="stamp-wrap">
+        <div class="stamp">
+          <div class="ring-out"></div>
+          <div class="ring-mid"></div>
+          <div class="ring-in">
+            <div class="core-icon">★</div>
+            <div class="core-text">معتمد</div>
+            <div class="core-tag">VERIFIED</div>
+          </div>
+          <div class="arc-top">• MASTEREDUPATH ·</div>
+          <div class="arc-bot">· DIGITALLY SIGNED ·</div>
+        </div>
+      </div>
       <div class="info">
-        <div class="label">${sig ? 'توقيع المستفيد المعتمد' : 'توقيع المستفيد (بانتظار التوقيع)'}</div>
+        <div class="label"><span class="dot"></span>ختم المنصّة الرسمي</div>
+        <div class="who">إدارة ماستر إيدو باث</div>
+        <div class="meta">
+          <div><b>المُصدِر:</b> MasterEduPath Platform</div>
+          <div><b>رمز التحقق:</b> <code>${verifyId}</code></div>
+          <div><b>الإصدار:</b> ${esc(docDate)} — ${esc(docTime)}</div>
+        </div>
+        <div class="vstrip"><span style="width:6px;height:6px;border-radius:50%;background:#22c55e;box-shadow:0 0 0 3px rgba(34,197,94,.2)"></span> موثّق رقمياً عبر نظام المنصّة</div>
+      </div>
+    </div>
+    <div class="dseal">
+      <div class="ribbon">${sig ? 'SIGNED' : 'PENDING'}</div>
+      <div class="stamp-wrap">
+        <div class="stamp">
+          <div class="ring-out"></div>
+          <div class="ring-mid"></div>
+          <div class="ring-in">
+            <div class="core-icon">${sig ? '✓' : '⏳'}</div>
+            <div class="core-text">الطرف الثاني</div>
+            <div class="core-tag">${sig ? 'SIGNED' : 'PENDING'}</div>
+          </div>
+          <div class="arc-top">• OFFICIAL CLIENT ·</div>
+          <div class="arc-bot">· e-SIGNATURE ·</div>
+        </div>
+      </div>
+      <div class="info">
+        <div class="label"><span class="dot"></span>${sig ? 'توقيع المستفيد المعتمد' : 'توقيع المستفيد (بانتظار)'}</div>
         <div class="who">${esc(sig?.signer_name || clientName)}</div>
         <div class="meta">
           ${sig?.signer_email ? `<div><b>البريد:</b> ${esc(sig.signer_email)}</div>` : `<div><b>الرقم:</b> ${esc(clientPhone)}</div>`}
@@ -803,14 +842,7 @@ export default function ResearchPublication() {
           <div><b>${sig ? 'تاريخ التوقيع' : 'تاريخ الإصدار'}:</b> ${esc(sig?.signed_at ? new Date(sig.signed_at).toLocaleString('ar-SA', { dateStyle: 'long', timeStyle: 'short' }) : created)}</div>
           ${sig?.ip_address ? `<div><b>IP:</b> <code>${esc(sig.ip_address)}</code></div>` : ''}
         </div>
-      </div>
-    </div>
-    <div class="dseal">
-      <div class="stamp"><div class="st-top">• MASTEREDUPATH •</div><div class="st-icon">★</div><div class="st-mid">الطرف الأول</div><div class="st-bot">DIGITALLY SIGNED</div></div>
-      <div class="info">
-        <div class="label">ختم المنصّة الرسمي</div>
-        <div class="who">إدارة ماستر إيدو باث</div>
-        <div class="meta"><div><b>المُصدِر:</b> MasterEduPath Platform</div><div><b>رمز التحقق:</b> <code>${verifyId}</code></div><div><b>الإصدار:</b> ${esc(docDate)} — ${esc(docTime)}</div></div>
+        <div class="vstrip"><span style="width:6px;height:6px;border-radius:50%;background:${sig ? '#22c55e' : '#f59e0b'};box-shadow:0 0 0 3px ${sig ? 'rgba(34,197,94,.2)' : 'rgba(245,158,11,.2)'}"></span> ${sig ? 'توقيع إلكتروني صالح ومعتمد' : 'بانتظار توقيع المستفيد'}</div>
       </div>
     </div>
   </div>
