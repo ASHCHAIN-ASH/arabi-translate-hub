@@ -29,7 +29,19 @@ const BattleQuizPlay: React.FC = () => {
 
   const startedAtRef = useRef<number>(Date.now());
 
-  useBattleQuizAntiCheat(payload?.attempt_id ?? null, !!payload && !feedback);
+  const currentQ: BattleQuizQuestion | null = payload?.questions[qIndex] ?? null;
+
+  const { reportPostAnswer } = useBattleQuizAntiCheat(
+    payload?.attempt_id ?? null,
+    !!payload && !feedback,
+    currentQ
+      ? {
+          questionId: currentQ.id,
+          antiCheatType: currentQ.anti_cheat_type as any,
+          timeLimitSeconds: currentQ.time_limit_seconds,
+        }
+      : null,
+  );
 
   // Start attempt
   useEffect(() => {
@@ -56,7 +68,7 @@ const BattleQuizPlay: React.FC = () => {
     return () => { mounted = false; };
   }, [user, roomId]);
 
-  const currentQ: BattleQuizQuestion | null = payload?.questions[qIndex] ?? null;
+  // currentQ already declared above (needed by the anti-cheat hook).
 
   // Countdown
   useEffect(() => {
@@ -83,6 +95,8 @@ const BattleQuizPlay: React.FC = () => {
     const responseMs = Date.now() - startedAtRef.current;
     const res = await BattleQuizService.submitAnswer(payload.attempt_id, currentQ.id, choiceId, responseMs);
     setSubmitting(false);
+    // Per-type post-answer heuristics (too-fast-to-read, mechanical pattern, …)
+    reportPostAnswer(responseMs);
     if ('error' in res) {
       toast.error('تعذّر إرسال الإجابة');
       return;
