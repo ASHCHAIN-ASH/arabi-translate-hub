@@ -28,6 +28,7 @@ interface FileEntry {
   result?: WordCountResult;
   error?: string;
   loading: boolean;
+  progress: number; // 0-100, parsing progress
 }
 
 interface Props {
