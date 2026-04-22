@@ -4,6 +4,8 @@ import { useAuth } from '@/components/SimpleAuthProvider';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import NotificationCenter from '@/components/NotificationCenter';
+import { useChallengeAcademy } from '@/hooks/useChallengeAcademy';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import {
   LayoutDashboard,
   ShoppingCart,
