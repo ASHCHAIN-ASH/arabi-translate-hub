@@ -577,13 +577,12 @@ export default function ResearchPublication() {
   </script>
 </body></html>`;
 
-    const w = window.open('', '_blank');
-    if (!w) {
-      toast({ title: 'تعذّر الفتح', description: 'يرجى السماح بالنوافذ المنبثقة', variant: 'destructive' });
-      return;
-    }
-    w.document.write(html);
-    w.document.close();
+    return html;
+  };
+
+  const downloadSummaryPdf = (item: any) => {
+    const html = buildSummaryHtml(item);
+    openPdfWindow(html);
   };
 
   // Shared style block for Contract & Invoice (matches summary look)
