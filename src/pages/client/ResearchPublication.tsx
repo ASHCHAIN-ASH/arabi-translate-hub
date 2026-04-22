@@ -479,12 +479,14 @@ export default function ResearchPublication() {
           <div class="st-mid">مُتقدّم</div>
           <div class="st-bot">VERIFIED</div>
         </div>
-        <div class="label">توقيع المُتقدّم</div>
-        <div class="who">${esc(item.client_name)}</div>
-        <div class="meta">
-          <div><b>الرقم:</b> ${esc(item.client_phone || '—')}</div>
-          <div><b>التوقيع الرقمي:</b> <code>SIG-${sigHash}</code></div>
-          <div><b>التاريخ:</b> ${esc(created)}</div>
+        <div class="info">
+          <div class="label">توقيع المُتقدّم</div>
+          <div class="who">${esc(item.client_name)}</div>
+          <div class="meta">
+            <div><b>الرقم:</b> ${esc(item.client_phone || '—')}</div>
+            <div><b>التوقيع الرقمي:</b> <code>SIG-${sigHash}</code></div>
+            <div><b>التاريخ:</b> ${esc(created)}</div>
+          </div>
         </div>
       </div>
       <div class="dseal">
@@ -494,12 +496,14 @@ export default function ResearchPublication() {
           <div class="st-mid">معتمد رقمياً</div>
           <div class="st-bot">DIGITALLY SIGNED</div>
         </div>
-        <div class="label">ختم المنصّة الرسمي</div>
-        <div class="who">إدارة ماستر إيدو باث</div>
-        <div class="meta">
-          <div><b>المُصدِر:</b> MasterEduPath Platform</div>
-          <div><b>رمز التحقق:</b> <code>${verifyId}</code></div>
-          <div><b>الإصدار:</b> ${esc(docDate)} — ${esc(docTime)}</div>
+        <div class="info">
+          <div class="label">ختم المنصّة الرسمي</div>
+          <div class="who">إدارة ماستر إيدو باث</div>
+          <div class="meta">
+            <div><b>المُصدِر:</b> MasterEduPath Platform</div>
+            <div><b>رمز التحقق:</b> <code>${verifyId}</code></div>
+            <div><b>الإصدار:</b> ${esc(docDate)} — ${esc(docTime)}</div>
+          </div>
         </div>
       </div>
     </div>
