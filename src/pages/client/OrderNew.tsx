@@ -612,7 +612,7 @@ const OrderNew = () => {
                             </div>
                           )}
 
-
+                          <input ref={fileInputRef} type="file" multiple
                             accept={ALLOWED_TYPES.join(',')}
                             onChange={handleFileSelect}
                             className="hidden" />
