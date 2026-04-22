@@ -173,23 +173,28 @@ const TranslationWordCounter: React.FC<Props> = ({
   };
 
   const recalcEntry = useCallback((id: string) => {
-    const target = entries.find((e) => e.id === id);
-    if (!target) return;
-    const next = entries.map((e) =>
-      e.id === id ? { ...e, loading: true, error: undefined, result: undefined } : e
+    if (!entriesRef.current.find((e) => e.id === id)) return;
+    const next = entriesRef.current.map((e) =>
+      e.id === id ? { ...e, loading: true, error: undefined, result: undefined, progress: 0 } : e
     );
+    entriesRef.current = next;
     setEntries(next);
-    processFile({ ...target, loading: true, error: undefined, result: undefined }, next);
-  }, [entries, processFile]);
+    notify(next);
+    runQueue([id]);
+  }, [notify, runQueue]);
 
   const recalcAll = useCallback(() => {
     if (entries.length === 0) return;
-    const next = entries.map((e) => ({ ...e, loading: true, error: undefined, result: undefined }));
+    const next = entries.map((e) => ({
+      ...e, loading: true, error: undefined, result: undefined, progress: 0,
+    }));
+    entriesRef.current = next;
     setEntries(next);
     setPricingChangedAt(null);
-    next.forEach((e) => processFile(e, next));
+    notify(next);
+    runQueue(next.map((e) => e.id));
     toast.info('جارٍ إعادة حساب جميع الملفات…');
-  }, [entries, processFile]);
+  }, [entries, notify, runQueue]);
 
   const completed = entries.filter((e) => e.result);
   const aggregate = aggregateResults(completed.map((e) => e.result!));
