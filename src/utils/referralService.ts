@@ -119,7 +119,9 @@ export const ReferralService = {
   },
 
   buildShareUrl(code: string): string {
-    const origin = typeof window !== 'undefined' ? window.location.origin : 'https://masteredupath.com';
-    return `${origin}/register?ref=${code}`;
+    // Always use canonical public origin — never preview/iframe domains
+    // Lazy import to avoid circular deps
+    const { buildPublicUrl } = require('@/lib/publicUrl');
+    return buildPublicUrl(`/register?ref=${code}`);
   },
 };
