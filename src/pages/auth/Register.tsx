@@ -91,6 +91,10 @@ const Register = () => {
         toast.error(error);
         return;
       }
+      // Try to claim pending referral immediately (works only if a session
+      // already exists, e.g. when email auto-confirm is enabled). Otherwise
+      // it stays pending in localStorage and is claimed after first login.
+      try { await ReferralService.claimPendingReferralIfAny(); } catch {}
       toast.success('تم إنشاء الحساب بنجاح، يرجى تأكيد البريد الإلكتروني');
       navigate('/login');
     } catch (error: any) {
