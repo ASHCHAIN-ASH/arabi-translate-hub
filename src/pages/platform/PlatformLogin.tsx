@@ -32,7 +32,7 @@ export default function PlatformLogin() {
     const result = await login(email, password);
 
     if (result.success) {
-      toast.success('تم تسجيل الدخول بنجاح');
+      triggerLoginWelcome();
       const redirectPath = user?.role === 'admin' ? '/platform/admin/dashboard' : '/platform/dashboard';
       navigate(redirectPath);
     } else {
