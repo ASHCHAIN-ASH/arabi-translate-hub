@@ -1078,6 +1078,7 @@ export default function ResearchPublication() {
   };
 
 
+  const load = async () => {
     if (!user?.id) return;
     setLoading(true);
     const { data } = await supabase
