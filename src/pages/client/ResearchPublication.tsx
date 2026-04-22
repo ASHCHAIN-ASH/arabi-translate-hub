@@ -586,29 +586,42 @@ export default function ResearchPublication() {
     table.inv tfoot td { padding:10px; font-weight:700; border-top:2px solid #0c2340; }
     table.inv tfoot tr.total td { background:linear-gradient(135deg,#0c2340,#1e3a5f); color:#fff; font-size:14px; }
     table.inv tfoot tr.total td b { color:#d4af37; font-family:'Amiri',serif; font-size:18px; }
-    .seal-row { position:relative; z-index:1; display:grid; grid-template-columns:1fr 1fr; gap:18px; margin-top:24px; padding-top:18px; border-top:2px dashed #d4af37; }
-    .dseal { position:relative; display:flex; align-items:center; gap:18px; padding:18px; border:1.5px solid #0c2340; border-radius:8px; background:linear-gradient(135deg,#fff 0%,#fbfaf6 100%); min-height:140px; box-shadow:0 4px 14px rgba(12,35,64,.08); overflow:hidden; }
-    .dseal::after { content:''; position:absolute; top:0; right:0; width:5px; height:100%; background:linear-gradient(180deg,#d4af37 0%,#0c2340 100%); }
-    .dseal .stamp { position:relative; flex:0 0 110px; width:110px; height:110px; border-radius:50%; border:3px solid #0c2340; display:flex; flex-direction:column; align-items:center; justify-content:center; background:radial-gradient(circle,#fff 30%,#fbfaf6 100%); box-shadow:inset 0 0 0 4px rgba(212,175,55,.45), 0 4px 12px rgba(12,35,64,.18); transform:rotate(-10deg); }
-    .dseal .stamp::before { content:''; position:absolute; inset:5px; border:1.5px dashed #0c2340; border-radius:50%; opacity:.55; }
-    .dseal .stamp::after { content:''; position:absolute; inset:-1px; border-radius:50%; border:1px solid rgba(212,175,55,.6); }
-    .dseal .stamp .st-top { font-family:'Amiri',serif; font-size:10px; color:#0c2340; font-weight:700; letter-spacing:1.2px; text-transform:uppercase; }
-    .dseal .stamp .st-icon { font-size:24px; color:#d4af37; line-height:1; margin:3px 0; filter:drop-shadow(0 1px 1px rgba(12,35,64,.3)); }
-    .dseal .stamp .st-mid { font-family:'Amiri',serif; font-size:13px; color:#0c2340; font-weight:700; }
-    .dseal .stamp .st-bot { font-size:8px; color:#0c2340; font-weight:700; letter-spacing:.8px; margin-top:3px; }
-    .dseal .stamp.client { border-color:#1e40af; box-shadow:inset 0 0 0 4px rgba(59,130,246,.3), 0 4px 12px rgba(30,64,175,.2); }
-    .dseal .stamp.client::before { border-color:#1e40af; }
-    .dseal .stamp.client::after { border-color:rgba(59,130,246,.5); }
-    .dseal .stamp.client .st-top, .dseal .stamp.client .st-mid, .dseal .stamp.client .st-bot { color:#1e40af; }
-    .dseal .stamp.client .st-icon { color:#3b82f6; }
-    .dseal .info { flex:1; min-width:0; }
-    .dseal .label { font-size:10px; color:#64748b; letter-spacing:1.5px; font-weight:700; margin-bottom:6px; text-transform:uppercase; }
-    .dseal .who { font-family:'Amiri',serif; font-size:15px; color:#0c2340; font-weight:700; margin-bottom:8px; padding-bottom:6px; border-bottom:1px solid #ece4cb; }
-    .dseal .meta { font-size:10px; color:#475569; line-height:1.85; word-break:break-word; }
-    .dseal .meta b { color:#0c2340; font-weight:700; }
-    .dseal .meta code { font-family:'Courier New',monospace; background:#0c2340; color:#d4af37; padding:2px 6px; border-radius:3px; font-size:9.5px; letter-spacing:.6px; font-weight:700; }
-    .verify-bar { position:relative; z-index:1; margin-top:14px; display:flex; align-items:center; justify-content:space-between; gap:12px; padding:10px 14px; background:#0c2340; color:#fff; border-radius:3px; font-size:10px; }
-    .verify-bar .v-id { font-family:'Courier New',monospace; color:#d4af37; letter-spacing:1px; font-weight:700; font-size:11px; }
+    .seal-row { position:relative; z-index:1; display:grid; grid-template-columns:1fr 1fr; gap:20px; margin-top:30px; padding-top:26px; border-top:1px solid #e7e2cf; }
+    .seal-row::before { content:'OFFICIAL · DIGITAL SEALS'; position:absolute; top:-11px; left:50%; transform:translateX(-50%); background:linear-gradient(135deg,#0c2340,#1e3a5f); color:#d4af37; padding:5px 18px; border-radius:99px; font-size:9px; font-weight:800; letter-spacing:3px; box-shadow:0 4px 12px rgba(12,35,64,.25); border:1px solid rgba(212,175,55,.5); }
+    .dseal { position:relative; display:flex; align-items:stretch; gap:0; padding:0; border:1px solid #e2dcc4; border-radius:14px; background:linear-gradient(160deg,#ffffff 0%,#fdfbf3 100%); min-height:178px; box-shadow:0 10px 30px -10px rgba(12,35,64,.18), 0 2px 6px rgba(12,35,64,.06); overflow:hidden; }
+    .dseal::before { content:''; position:absolute; inset:0; background:radial-gradient(circle at 100% 0%,rgba(212,175,55,.08) 0%,transparent 45%),radial-gradient(circle at 0% 100%,rgba(12,35,64,.05) 0%,transparent 50%); pointer-events:none; }
+    .dseal .ribbon { position:absolute; top:12px; left:-34px; transform:rotate(-38deg); background:linear-gradient(90deg,#1e40af,#3b82f6); color:#fff; padding:3px 38px; font-size:8.5px; font-weight:800; letter-spacing:2px; box-shadow:0 2px 6px rgba(0,0,0,.18); z-index:2; }
+    .dseal.platform .ribbon { background:linear-gradient(90deg,#0c2340,#d4af37); color:#fff; }
+    .dseal .stamp-wrap { position:relative; flex:0 0 144px; display:flex; align-items:center; justify-content:center; padding:14px 10px; background:linear-gradient(160deg,#eff5ff 0%,#dbeafe 100%); border-left:1px dashed #1e40af; }
+    .dseal.platform .stamp-wrap { background:linear-gradient(160deg,#0c2340 0%,#1e3a5f 100%); border-left-color:rgba(212,175,55,.6); }
+    .dseal .stamp { position:relative; width:122px; height:122px; border-radius:50%; display:flex; flex-direction:column; align-items:center; justify-content:center; transform:rotate(-9deg); }
+    .dseal .stamp .ring-out { position:absolute; inset:0; border-radius:50%; border:2.5px solid #1e40af; box-shadow:inset 0 0 0 1px rgba(255,255,255,.9), 0 4px 14px rgba(30,64,175,.28); }
+    .dseal .stamp .ring-mid { position:absolute; inset:5px; border-radius:50%; border:1px solid #1e40af; opacity:.5; }
+    .dseal .stamp .ring-in { position:absolute; inset:14px; border-radius:50%; border:1.5px dashed #1e40af; background:radial-gradient(circle,#fff 40%,#eff5ff 100%); display:flex; flex-direction:column; align-items:center; justify-content:center; }
+    .dseal.platform .stamp .ring-out { border-color:#d4af37; box-shadow:inset 0 0 0 1px rgba(212,175,55,.4), 0 4px 14px rgba(0,0,0,.5); }
+    .dseal.platform .stamp .ring-mid { border-color:#d4af37; }
+    .dseal.platform .stamp .ring-in { border-color:#d4af37; background:radial-gradient(circle,#fefdf6 30%,#f5e9b8 100%); }
+    .dseal .stamp .arc-top, .dseal .stamp .arc-bot { position:absolute; left:0; right:0; text-align:center; font-family:'Amiri',serif; font-size:7.5px; font-weight:700; letter-spacing:2.5px; color:#1e40af; text-transform:uppercase; }
+    .dseal .stamp .arc-top { top:6px; }
+    .dseal .stamp .arc-bot { bottom:6px; }
+    .dseal.platform .stamp .arc-top, .dseal.platform .stamp .arc-bot { color:#d4af37; }
+    .dseal .stamp .core-icon { position:relative; z-index:1; font-size:24px; line-height:1; color:#1e40af; filter:drop-shadow(0 1px 2px rgba(30,64,175,.35)); }
+    .dseal.platform .stamp .core-icon { color:#0c2340; filter:drop-shadow(0 1px 2px rgba(212,175,55,.5)); }
+    .dseal .stamp .core-text { position:relative; z-index:1; font-family:'Amiri',serif; font-size:11.5px; font-weight:700; color:#1e40af; margin-top:2px; letter-spacing:.5px; }
+    .dseal.platform .stamp .core-text { color:#0c2340; }
+    .dseal .stamp .core-tag { position:relative; z-index:1; font-size:6.5px; font-weight:800; letter-spacing:1.4px; color:#1e40af; opacity:.85; margin-top:2px; }
+    .dseal.platform .stamp .core-tag { color:#0c2340; }
+    .dseal .info { flex:1; min-width:0; padding:16px 18px 14px; display:flex; flex-direction:column; }
+    .dseal .info .label { display:inline-flex; align-items:center; gap:5px; align-self:flex-start; font-size:9px; color:#1e40af; letter-spacing:1.5px; font-weight:800; text-transform:uppercase; padding:3px 10px; border-radius:99px; background:rgba(59,130,246,.1); border:1px solid rgba(30,64,175,.25); margin-bottom:8px; }
+    .dseal.platform .info .label { color:#856404; background:rgba(212,175,55,.14); border-color:rgba(212,175,55,.4); }
+    .dseal .info .label .dot { width:5px; height:5px; border-radius:50%; background:#22c55e; box-shadow:0 0 0 2px rgba(34,197,94,.25); }
+    .dseal .info .who { font-family:'Amiri',serif; font-size:16px; color:#0c2340; font-weight:700; line-height:1.3; margin-bottom:8px; padding-bottom:8px; border-bottom:1px dotted #d4af37; }
+    .dseal .info .meta { font-size:10px; color:#475569; line-height:1.85; word-break:break-word; display:grid; gap:3px; }
+    .dseal .info .meta b { color:#0c2340; font-weight:700; margin-left:4px; }
+    .dseal .info .meta code { font-family:'Courier New',monospace; background:linear-gradient(135deg,#0c2340,#1e3a5f); color:#d4af37; padding:2px 7px; border-radius:4px; font-size:9.5px; letter-spacing:.6px; font-weight:700; box-shadow:inset 0 1px 0 rgba(255,255,255,.1); }
+    .dseal .info .vstrip { margin-top:auto; padding-top:8px; display:flex; align-items:center; gap:6px; font-size:8.5px; color:#0c2340; font-weight:700; letter-spacing:1px; }
+    .verify-bar { position:relative; z-index:1; margin-top:14px; display:flex; align-items:center; justify-content:space-between; gap:12px; padding:11px 16px; background:linear-gradient(135deg,#0c2340 0%,#1e3a5f 100%); color:#fff; border-radius:6px; font-size:10px; box-shadow:0 4px 12px rgba(12,35,64,.25); }
+    .verify-bar .v-id { font-family:'Courier New',monospace; color:#d4af37; letter-spacing:1px; font-weight:700; font-size:11px; background:rgba(212,175,55,.12); padding:3px 8px; border-radius:3px; border:1px solid rgba(212,175,55,.3); }
     .verify-bar .v-tick { color:#d4af37; font-weight:700; letter-spacing:1px; }
     .footer { position:relative; z-index:1; margin-top:18px; padding:12px 0 0; border-top:3px double #d4af37; text-align:center; font-size:10px; color:#64748b; line-height:1.7; }
     .footer .org { font-family:'Amiri',serif; color:#0c2340; font-size:12px; font-weight:700; letter-spacing:1px; }
@@ -617,7 +630,7 @@ export default function ResearchPublication() {
     .actbar button:hover { background:#d4af37; color:#0c2340; }
     .actbar .close { background:#fff; color:#0c2340; }
     @media print { body { background:#fff; } .canvas { padding:0; } .page { box-shadow:none; border:0; padding:0; max-width:100%; border-radius:0; } .actbar { display:none !important; } }
-    @media (max-width:720px) { .canvas { padding:14px 8px 40px; } .page { padding:18px 14px; } .doc-head { flex-direction:column; align-items:flex-start; } .doc-meta { text-align:right; } .grid, .seal-row { grid-template-columns:1fr; } .price-box { flex-direction:column; gap:8px; text-align:center; } .verify-bar { flex-direction:column; gap:6px; text-align:center; } .dseal { flex-direction:column; text-align:center; padding:18px 14px; min-height:auto; } .dseal .stamp { transform:rotate(-8deg); } .dseal .info { width:100%; text-align:center; } }
+    @media (max-width:720px) { .canvas { padding:14px 8px 40px; } .page { padding:18px 14px; } .doc-head { flex-direction:column; align-items:flex-start; } .doc-meta { text-align:right; } .grid, .seal-row { grid-template-columns:1fr; } .price-box { flex-direction:column; gap:8px; text-align:center; } .verify-bar { flex-direction:column; gap:6px; text-align:center; } .dseal { flex-direction:column; min-height:auto; } .dseal .stamp-wrap { border-left:0; border-bottom:1px dashed #d4af37; padding:18px; } .dseal.platform .stamp-wrap { border-bottom-color:rgba(212,175,55,.6); } .dseal .info { padding:14px 16px 16px; text-align:right; } }
   `;
 
   const openPdfWindow = (html: string) => {
