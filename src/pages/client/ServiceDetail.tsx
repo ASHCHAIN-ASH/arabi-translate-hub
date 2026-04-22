@@ -196,7 +196,7 @@ const ServiceDetail = () => {
 
   return (
     <ClientLayout>
-      <div className="p-4 lg:p-6 max-w-5xl mx-auto space-y-6 pb-28 lg:pb-6" dir="rtl">
+      <div className="px-3 py-3 sm:p-4 lg:p-6 max-w-5xl mx-auto space-y-4 sm:space-y-6 pb-28 lg:pb-6" dir="rtl">
         {/* Breadcrumb */}
         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex items-center gap-2 text-sm">
           <Button variant="ghost" size="sm" onClick={() => navigate('/client-services')} className="gap-2 text-muted-foreground">
@@ -245,7 +245,7 @@ const ServiceDetail = () => {
         {/* Hero Card */}
         <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }}>
           <Card className="overflow-hidden border-0 shadow-xl">
-            <div className={`bg-gradient-to-r ${gradient} p-6 sm:p-8 text-white relative overflow-hidden`}>
+            <div className={`bg-gradient-to-r ${gradient} p-5 sm:p-7 lg:p-8 text-white relative overflow-hidden`}>
               <div className="absolute top-0 left-0 w-64 h-64 bg-white/10 rounded-full -translate-x-32 -translate-y-32 blur-3xl" />
               <div className="absolute bottom-0 right-0 w-48 h-48 bg-white/5 rounded-full translate-x-16 translate-y-16 blur-2xl" />
               {/* Subtle grid */}
@@ -277,7 +277,7 @@ const ServiceDetail = () => {
                       متاح الآن
                     </Badge>
                   </div>
-                  <h1 className="text-2xl sm:text-3xl lg:text-4xl font-black leading-tight">
+                  <h1 className="text-xl sm:text-3xl lg:text-4xl font-black leading-tight">
                     {service.name_ar || service.name}
                   </h1>
                   {service.description && (
@@ -301,7 +301,7 @@ const ServiceDetail = () => {
 
                 {/* Order CTA */}
                 <div className="shrink-0 w-full lg:w-auto">
-                  <div className="bg-white/15 backdrop-blur-md rounded-2xl p-6 text-center space-y-4 lg:min-w-[240px] border border-white/20">
+                  <div className="bg-white/15 backdrop-blur-md rounded-2xl p-4 sm:p-6 text-center space-y-3 sm:space-y-4 lg:min-w-[240px] border border-white/20">
                     <div className="flex items-center justify-center gap-1.5">
                       {[...Array(5)].map((_, i) => (
                         <Star key={i} className="w-4 h-4 fill-yellow-300 text-yellow-300" />
