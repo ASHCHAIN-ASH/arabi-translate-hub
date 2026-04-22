@@ -25,6 +25,7 @@ import {
 import OrderLifecycleTimeline, { LifecycleStatus } from '@/components/orders/OrderLifecycleTimeline';
 import { AdminQuoteSender } from '@/components/orders/AdminQuoteSender';
 import AdminPriceApprovalPanel from '@/components/admin/AdminPriceApprovalPanel';
+import AdminTranslationAnalysisPanel from '@/components/admin/AdminTranslationAnalysisPanel';
 import { AdminLifecycleControl } from '@/components/admin/orders/AdminLifecycleControl';
 
 const STATUS_CONFIG: Record<string, { label: string; color: string; icon: React.ReactNode; barClass: string }> = {
@@ -682,6 +683,9 @@ const AdminServiceOrderDetails = () => {
                 files={(order as any).metadata?.word_count_analysis?.files}
                 onUpdated={loadAll}
               />
+
+              {/* Translation file analyses — per-file pricing & approval */}
+              <AdminTranslationAnalysisPanel serviceOrderId={order.id} />
 
               {/* Quote sender — controls quote_status / lifecycle entry */}
               <AdminQuoteSender
