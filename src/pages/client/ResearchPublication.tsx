@@ -255,7 +255,14 @@ export default function ResearchPublication() {
     const atts: any[] = Array.isArray(item.attachments) ? item.attachments : [];
     const esc = (s: any) => String(s ?? '—').replace(/[<>&]/g, c => ({ '<': '&lt;', '>': '&gt;', '&': '&amp;' } as any)[c]);
 
+    // Digital signature hash (deterministic per document)
+    const seedStr = `${item.id || item.request_number}-${item.created_at || ''}-${item.client_name || ''}`;
+    let h = 0; for (let i = 0; i < seedStr.length; i++) { h = ((h << 5) - h + seedStr.charCodeAt(i)) | 0; }
+    const sigHash = Math.abs(h).toString(16).toUpperCase().padStart(8, '0').slice(0, 8);
+    const verifyId = `MEP-${sigHash}-${String(item.request_number || '').replace(/[^A-Z0-9]/gi, '').slice(-6).toUpperCase() || 'XXXXXX'}`;
+    const issuedIso = new Date().toISOString();
     const docDate = new Date().toLocaleDateString('ar-SA', { dateStyle: 'long' });
+    const docTime = new Date().toLocaleTimeString('ar-SA', { timeStyle: 'short' });
     const html = `<!DOCTYPE html><html dir="rtl" lang="ar"><head><meta charset="UTF-8"><title>وثيقة طلب نشر بحث — ${esc(item.request_number)}</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&display=swap" rel="stylesheet">
