@@ -243,6 +243,7 @@ const ClientLayout: React.FC<ClientLayoutProps> = ({ children }) => {
                       <SidebarInner
                         displayName={displayName}
                         initial={initial}
+                        userId={user?.id}
                         onItemClick={closeSidebar}
                         onSignOut={handleSignOut}
                       />
