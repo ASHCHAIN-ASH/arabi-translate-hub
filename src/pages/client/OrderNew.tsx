@@ -257,6 +257,16 @@ const OrderNew = () => {
           ...dynamicValues,
           category_slug: service.category_slug,
           base_unit_price: service.price,
+          ...(wordCountData ? {
+            word_count_analysis: {
+              total_words: wordCountData.totalWords,
+              total_pages: wordCountData.totalPages,
+              estimated_price_sar: wordCountData.estimatedPriceSar,
+              files: wordCountData.files,
+              note: 'سعر تقديري مبدئي - السعر النهائي يحدد بعد مراجعة الإدارة',
+              calculated_at: new Date().toISOString(),
+            },
+          } : {}),
         },
         current_status: 'pending', priority: 'normal',
         notes: notes || null,
@@ -589,7 +599,20 @@ const OrderNew = () => {
                             </div>
                           </div>
 
-                          <input ref={fileInputRef} type="file" multiple
+                          {/* Translation word counter — shown only for translation services */}
+                          {isTranslationService && (
+                            <div className="mb-6 rounded-2xl border border-emerald-500/20 bg-gradient-to-br from-emerald-50/30 to-teal-50/20 dark:from-emerald-950/10 dark:to-teal-950/5 p-4">
+                              <TranslationWordCounter
+                                sourceLanguage={dynamicValues.source_language}
+                                targetLanguage={dynamicValues.target_language || dynamicValues.language}
+                                urgency={dynamicValues.urgency}
+                                certified={dynamicValues.certified}
+                                onCountChange={setWordCountData}
+                              />
+                            </div>
+                          )}
+
+
                             accept={ALLOWED_TYPES.join(',')}
                             onChange={handleFileSelect}
                             className="hidden" />
