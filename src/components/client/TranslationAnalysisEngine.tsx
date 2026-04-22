@@ -102,36 +102,41 @@ const TranslationAnalysisEngine: React.FC<Props> = ({
           onProgress: (p) => updateEntry({ progress: p }),
         });
 
-        // Try AI classification (non-blocking)
+        // Show heuristic result IMMEDIATELY — don't wait for AI.
+        updateEntry({ result, loading: false, progress: 100 });
+
+        // Fire-and-forget AI classification with a 4s timeout, refine if better.
         if (result.textSample && result.textSample.length > 50) {
-          try {
-            const { data, error } = await supabase.functions.invoke('analyze-translation-file', {
-              body: {
-                textSample: result.textSample,
-                fileName: result.fileName,
-                fileType: result.fileType,
-              },
-            });
-            if (!error && data?.domain) {
+          (async () => {
+            try {
+              const aiPromise = supabase.functions.invoke('analyze-translation-file', {
+                body: {
+                  textSample: result.textSample,
+                  fileName: result.fileName,
+                  fileType: result.fileType,
+                },
+              });
+              const timeout = new Promise<{ data: null; error: any }>((resolve) =>
+                setTimeout(() => resolve({ data: null, error: new Error('timeout') }), 4000)
+              );
+              const { data, error } = (await Promise.race([aiPromise, timeout])) as any;
+              if (error || !data?.domain) return;
               const aiDomain = data.domain as Domain;
               const aiConf = Number(data.confidence) || 50;
-              // If AI is more confident than heuristic, use AI's suggestion
               if (aiConf > result.domainConfidence) {
                 const repriced = recomputePricing(result, {
                   urgency, certified, targetLanguage, domain: aiDomain,
                 });
                 repriced.domainSource = 'ai';
                 repriced.domainConfidence = aiConf;
-                updateEntry({ result: repriced, loading: false, progress: 100 });
-                return;
+                updateEntry({ result: repriced });
               }
+            } catch {
+              /* ignore — heuristic stays */
             }
-          } catch (e) {
-            // ignore AI errors — heuristic remains
-          }
+          })();
         }
-
-        updateEntry({ result, loading: false, progress: 100 });
+        return;
       } catch (err: any) {
         updateEntry({
           loading: false,

@@ -250,25 +250,56 @@ export const scoreConfidence = (params: {
 
 // ───────────────────────── Extraction ─────────────────────────
 
-const extractPdfText = async (file: File, onProgress?: (p: number) => void): Promise<string> => {
-  const pdfjs = await import('pdfjs-dist');
-  // @ts-ignore
-  const workerSrc = (await import('pdfjs-dist/build/pdf.worker.mjs?url')).default;
-  pdfjs.GlobalWorkerOptions.workerSrc = workerSrc;
-
-  onProgress?.(5);
-  const buffer = await file.arrayBuffer();
-  onProgress?.(15);
-  const pdf = await pdfjs.getDocument({ data: buffer }).promise;
-  let text = '';
-  const total = pdf.numPages;
-  for (let i = 1; i <= total; i++) {
-    const page = await pdf.getPage(i);
-    const content = await page.getTextContent();
-    text += content.items.map((it: any) => ('str' in it ? it.str : '')).join(' ') + '\n';
-    onProgress?.(15 + Math.round((i / total) * 80));
+// Cache pdf.js module + worker so we only pay the load cost once per session.
+let _pdfjsPromise: Promise<any> | null = null;
+const loadPdfJs = () => {
+  if (!_pdfjsPromise) {
+    _pdfjsPromise = (async () => {
+      const pdfjs = await import('pdfjs-dist');
+      // @ts-ignore
+      const workerSrc = (await import('pdfjs-dist/build/pdf.worker.mjs?url')).default;
+      pdfjs.GlobalWorkerOptions.workerSrc = workerSrc;
+      return pdfjs;
+    })();
   }
-  return text;
+  return _pdfjsPromise;
+};
+
+const extractPdfText = async (file: File, onProgress?: (p: number) => void): Promise<string> => {
+  onProgress?.(3);
+  const pdfjs = await loadPdfJs();
+  onProgress?.(10);
+  const buffer = await file.arrayBuffer();
+  onProgress?.(18);
+  const pdf = await pdfjs.getDocument({ data: buffer, disableAutoFetch: true, disableStream: true }).promise;
+  const total = pdf.numPages;
+
+  // Process pages in parallel batches for big speed-up on multi-page PDFs.
+  const BATCH = 6;
+  const pageTexts: string[] = new Array(total);
+  let done = 0;
+
+  for (let start = 0; start < total; start += BATCH) {
+    const end = Math.min(start + BATCH, total);
+    await Promise.all(
+      Array.from({ length: end - start }, (_, k) => start + k + 1).map(async (pageNum) => {
+        try {
+          const page = await pdf.getPage(pageNum);
+          const content = await page.getTextContent();
+          pageTexts[pageNum - 1] = content.items
+            .map((it: any) => ('str' in it ? it.str : ''))
+            .join(' ');
+        } catch {
+          pageTexts[pageNum - 1] = '';
+        } finally {
+          done++;
+          onProgress?.(18 + Math.round((done / total) * 78));
+        }
+      })
+    );
+  }
+
+  return pageTexts.join('\n');
 };
 
 const extractDocxText = async (file: File, onProgress?: (p: number) => void): Promise<string> => {
