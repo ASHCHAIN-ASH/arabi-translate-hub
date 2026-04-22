@@ -243,6 +243,7 @@ const OrderNew = () => {
     setUploadProgress(0);
     try {
       const language = dynamicValues.language || dynamicValues.target_language || null;
+      const hasWordAnalysis = !!wordCountData && wordCountData.totalWords > 0;
       const { data, error } = await supabase.from('service_orders').insert({
         user_id: user.id,
         service_id: service.id,
@@ -253,6 +254,10 @@ const OrderNew = () => {
         quantity: quantity || null,
         quantity_unit: fieldsConfig.quantityUnitLabel,
         preferred_language: language,
+        // Price approval workflow — auto-trigger when client uploaded files & got an estimate
+        price_approval_status: hasWordAnalysis ? 'pending' : 'not_requested',
+        client_estimated_price: hasWordAnalysis ? wordCountData!.estimatedPriceSar : null,
+        price_approval_requested_at: hasWordAnalysis ? new Date().toISOString() : null,
         metadata: {
           ...dynamicValues,
           category_slug: service.category_slug,
@@ -272,6 +277,7 @@ const OrderNew = () => {
         notes: notes || null,
       } as any).select('id, tracking_id').single();
       if (error) throw error;
+
 
       setTrackingId(data?.tracking_id || '');
       setSubmitted(true);
@@ -341,10 +347,23 @@ const OrderNew = () => {
                     <span className="font-mono font-bold text-primary">{trackingId}</span>
                   </div>
                 )}
-                <div className="my-4 rounded-xl bg-amber-500/10 border border-amber-500/30 p-4 text-sm">
-                  <Clock className="w-4 h-4 inline-block ms-1 text-amber-600" />
-                  <span className="font-medium">سيتم التواصل معك خلال ساعات قليلة لتأكيد عرض السعر النهائي</span>
-                </div>
+                {wordCountData && wordCountData.totalWords > 0 ? (
+                  <div className="my-4 rounded-xl bg-amber-500/10 border-2 border-amber-500/40 p-4 text-sm text-right space-y-2">
+                    <div className="flex items-center gap-2 font-bold text-amber-700 dark:text-amber-400">
+                      <Clock className="w-4 h-4 animate-pulse" />
+                      <span>طلبك الآن "بانتظار اعتماد السعر"</span>
+                    </div>
+                    <p className="text-xs text-muted-foreground leading-relaxed">
+                      تم إرسال السعر التقديري ({wordCountData.estimatedPriceSar.toLocaleString()} ر.س لـ {wordCountData.totalWords.toLocaleString()} كلمة) للإدارة.
+                      ستصلك حالة <strong>"السعر معتمد"</strong> فور المراجعة، وعندها يمكنك الدفع لبدء التنفيذ.
+                    </p>
+                  </div>
+                ) : (
+                  <div className="my-4 rounded-xl bg-amber-500/10 border border-amber-500/30 p-4 text-sm">
+                    <Clock className="w-4 h-4 inline-block ms-1 text-amber-600" />
+                    <span className="font-medium">سيتم التواصل معك خلال ساعات قليلة لتأكيد عرض السعر النهائي</span>
+                  </div>
+                )}
                 {files.length > 0 && uploadProgress < 100 && (
                   <div className="my-4 space-y-2">
                     <p className="text-xs text-muted-foreground">جارٍ رفع المرفقات في الخلفية…</p>

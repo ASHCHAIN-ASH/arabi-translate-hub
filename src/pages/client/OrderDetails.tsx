@@ -19,6 +19,7 @@ import OrderLifecycleTimeline, { LifecycleStatus } from '@/components/orders/Ord
 import { ContractSigningCard } from '@/components/orders/ContractSigningCard';
 import { PaymentCard } from '@/components/orders/PaymentCard';
 import OrderCountdown from '@/components/orders/OrderCountdown';
+import PriceApprovalCard from '@/components/client/PriceApprovalCard';
 
 interface ServiceOrder {
   id: string;
@@ -448,6 +449,22 @@ const OrderDetails = () => {
             </CardContent>
           </Card>
         </motion.div>
+
+        {/* Price Approval Section (translation orders) */}
+        {(order as any).price_approval_status && (order as any).price_approval_status !== 'not_requested' && (
+          <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}>
+            <PriceApprovalCard
+              status={(order as any).price_approval_status}
+              clientEstimatedPrice={(order as any).client_estimated_price}
+              adminApprovedPrice={(order as any).admin_approved_price}
+              approvalNote={(order as any).price_approval_note}
+              requestedAt={(order as any).price_approval_requested_at}
+              approvedAt={(order as any).price_approved_at}
+              totalWords={(order as any).metadata?.word_count_analysis?.total_words}
+              totalPages={(order as any).metadata?.word_count_analysis?.total_pages}
+            />
+          </motion.div>
+        )}
 
         {/* Quote Section */}
         <AnimatePresence>

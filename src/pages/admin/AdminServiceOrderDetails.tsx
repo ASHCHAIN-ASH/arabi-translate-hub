@@ -24,6 +24,7 @@ import {
 } from 'lucide-react';
 import OrderLifecycleTimeline, { LifecycleStatus } from '@/components/orders/OrderLifecycleTimeline';
 import { AdminQuoteSender } from '@/components/orders/AdminQuoteSender';
+import AdminPriceApprovalPanel from '@/components/admin/AdminPriceApprovalPanel';
 import { AdminLifecycleControl } from '@/components/admin/orders/AdminLifecycleControl';
 
 const STATUS_CONFIG: Record<string, { label: string; color: string; icon: React.ReactNode; barClass: string }> = {
@@ -667,6 +668,19 @@ const AdminServiceOrderDetails = () => {
                 orderId={order.id}
                 currentStatus={order.lifecycle_status || 'received'}
                 onChanged={loadAll}
+              />
+
+              {/* Price approval panel — for translation orders with client auto-estimate */}
+              <AdminPriceApprovalPanel
+                orderId={order.id}
+                status={(order as any).price_approval_status}
+                clientEstimatedPrice={(order as any).client_estimated_price}
+                adminApprovedPrice={(order as any).admin_approved_price}
+                approvalNote={(order as any).price_approval_note}
+                totalWords={(order as any).metadata?.word_count_analysis?.total_words}
+                totalPages={(order as any).metadata?.word_count_analysis?.total_pages}
+                files={(order as any).metadata?.word_count_analysis?.files}
+                onUpdated={loadAll}
               />
 
               {/* Quote sender — controls quote_status / lifecycle entry */}
