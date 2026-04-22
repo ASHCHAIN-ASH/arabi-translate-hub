@@ -470,11 +470,13 @@ const AdminServiceOrderDetails = () => {
   const stepIndex = STATUS_ORDER.indexOf(order.current_status);
   const progressPct = stepIndex >= 0 ? Math.round(((stepIndex + 1) / STATUS_ORDER.length) * 100) : 10;
 
-  const subtotal = order.total_amount || 0;
-  const tax = Math.round(subtotal * 0.15 * 100) / 100;
-  const totalWithTax = subtotal + tax;
+  // total_amount يُخزَّن كقيمة إجمالية شاملة لضريبة القيمة المضافة (15%)
+  // كما هو معروض على العميل في عرض السعر، لذا نستخرج الصافي والضريبة منه
+  const totalWithTax = order.total_amount || 0;
+  const subtotal = Math.round((totalWithTax / 1.15) * 100) / 100;
+  const tax = Math.round((totalWithTax - subtotal) * 100) / 100;
   const paid = order.paid_amount || 0;
-  const remaining = totalWithTax - paid;
+  const remaining = Math.max(0, Math.round((totalWithTax - paid) * 100) / 100);
   const paymentPct = totalWithTax > 0 ? Math.min(Math.round((paid / totalWithTax) * 100), 100) : 0;
 
   const whatsappLink = clientPhone ? `https://wa.me/${clientPhone.replace(/\D/g, '')}?text=${encodeURIComponent(`بخصوص طلبك ${order.tracking_id}`)}` : null;
