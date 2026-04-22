@@ -790,9 +790,10 @@ export default function ResearchPublication() {
   <div class="footer">
     <div class="org">منصّة ماستر إيدو باث · MASTEREDUPATH</div>
     <div>هذا العقد مُستخرج مباشرةً من النظام الرسمي للمنصّة · masteredupath.com</div>
-    <div class="legal">جميع الحقوق محفوظة © ${new Date().getFullYear()} · مرجع العقد: ${esc(docNumber)} · ختم زمني: ${esc(issuedIso)}</div>
-  </div>
-</div></div>${triggerPrintScript}</body></html>`;
+    openPdfWindow(html);
+  };
+
+  const downloadInvoicePdf = (item: any) => {
     const { esc, sigHash, verifyId, docNumber, docDate, docTime, issuedIso } = buildDocMeta(item, 'invoice');
     const serviceLabel = SERVICE_TYPES.find(s => s.value === item.service_type)?.label || item.service_type;
     const subtotal = Number(item.estimated_amount || 0);
