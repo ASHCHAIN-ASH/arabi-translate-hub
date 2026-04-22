@@ -52,10 +52,6 @@ serve(async (req) => {
     if (codeHash !== otp.code_hash) {
       await supabase.from("auth_whatsapp_otp").update({ attempts: otp.attempts + 1 }).eq("id", otp.id);
       return resp({ success: false, error: "الرمز غير صحيح" }, 200);
-    if (otp.code_hash !== codeHash) {
-      await supabase.from("whatsapp_otp_codes")
-        .update({ attempts: otp.attempts + 1 }).eq("id", otp.id);
-      return resp({ success: false, error: "الرمز غير صحيح" }, 400);
     }
 
     await supabase.from("whatsapp_otp_codes").update({ used: true }).eq("id", otp.id);
