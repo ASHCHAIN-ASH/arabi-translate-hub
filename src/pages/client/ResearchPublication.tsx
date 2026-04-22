@@ -472,38 +472,56 @@ export default function ResearchPublication() {
 
     <!-- Digital Seals -->
     <div class="seal-row">
-      <div class="dseal">
-        <div class="stamp client">
-          <div class="st-top">• OFFICIAL •</div>
-          <div class="st-icon">✓</div>
-          <div class="st-mid">مُتقدّم</div>
-          <div class="st-bot">VERIFIED</div>
-        </div>
-        <div class="info">
-          <div class="label">توقيع المُتقدّم</div>
-          <div class="who">${esc(item.client_name)}</div>
-          <div class="meta">
-            <div><b>الرقم:</b> ${esc(item.client_phone || '—')}</div>
-            <div><b>التوقيع الرقمي:</b> <code>SIG-${sigHash}</code></div>
-            <div><b>التاريخ:</b> ${esc(created)}</div>
+      <div class="dseal platform">
+        <div class="ribbon">PLATFORM</div>
+        <div class="stamp-wrap">
+          <div class="stamp">
+            <div class="ring-out"></div>
+            <div class="ring-mid"></div>
+            <div class="ring-in">
+              <div class="core-icon">★</div>
+              <div class="core-text">معتمد</div>
+              <div class="core-tag">VERIFIED</div>
+            </div>
+            <div class="arc-top">• MASTEREDUPATH ·</div>
+            <div class="arc-bot">· DIGITALLY SIGNED ·</div>
           </div>
         </div>
-      </div>
-      <div class="dseal">
-        <div class="stamp">
-          <div class="st-top">• MASTEREDUPATH •</div>
-          <div class="st-icon">★</div>
-          <div class="st-mid">معتمد رقمياً</div>
-          <div class="st-bot">DIGITALLY SIGNED</div>
-        </div>
         <div class="info">
-          <div class="label">ختم المنصّة الرسمي</div>
+          <div class="label"><span class="dot"></span>ختم المنصّة الرسمي</div>
           <div class="who">إدارة ماستر إيدو باث</div>
           <div class="meta">
             <div><b>المُصدِر:</b> MasterEduPath Platform</div>
             <div><b>رمز التحقق:</b> <code>${verifyId}</code></div>
             <div><b>الإصدار:</b> ${esc(docDate)} — ${esc(docTime)}</div>
           </div>
+          <div class="vstrip"><span style="width:6px;height:6px;border-radius:50%;background:#22c55e;box-shadow:0 0 0 3px rgba(34,197,94,.2)"></span> موثّق رقمياً عبر نظام المنصّة</div>
+        </div>
+      </div>
+      <div class="dseal">
+        <div class="ribbon">CLIENT</div>
+        <div class="stamp-wrap">
+          <div class="stamp">
+            <div class="ring-out"></div>
+            <div class="ring-mid"></div>
+            <div class="ring-in">
+              <div class="core-icon">✓</div>
+              <div class="core-text">مُتقدّم</div>
+              <div class="core-tag">VERIFIED</div>
+            </div>
+            <div class="arc-top">• OFFICIAL CLIENT ·</div>
+            <div class="arc-bot">· e-SIGNATURE ·</div>
+          </div>
+        </div>
+        <div class="info">
+          <div class="label"><span class="dot"></span>توقيع المُتقدّم</div>
+          <div class="who">${esc(item.client_name)}</div>
+          <div class="meta">
+            <div><b>الرقم:</b> ${esc(item.client_phone || '—')}</div>
+            <div><b>التوقيع الرقمي:</b> <code>SIG-${sigHash}</code></div>
+            <div><b>التاريخ:</b> ${esc(created)}</div>
+          </div>
+          <div class="vstrip"><span style="width:6px;height:6px;border-radius:50%;background:#22c55e;box-shadow:0 0 0 3px rgba(34,197,94,.2)"></span> توقيع إلكتروني صالح ومعتمد</div>
         </div>
       </div>
     </div>
