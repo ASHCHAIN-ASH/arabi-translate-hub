@@ -818,6 +818,16 @@ const OrderNew = () => {
                               <Hash className="w-3.5 h-3.5" style={{ color: `hsl(var(--${theme.accent}))` }} />
                               <span>الكمية ({fieldsConfig.quantityUnitLabel})</span>
                               <span className="text-destructive">*</span>
+                              <Tooltip>
+                                <TooltipTrigger asChild>
+                                  <button type="button" className="text-muted-foreground hover:text-foreground transition-colors">
+                                    <HelpCircle className="w-3.5 h-3.5" />
+                                  </button>
+                                </TooltipTrigger>
+                                <TooltipContent className="max-w-[240px] text-xs">
+                                  حدّد العدد المطلوب بوحدة <span className="font-bold">{fieldsConfig.quantityUnitLabel}</span>. يساعدنا هذا في تقدير الجهد والمدة بدقة.
+                                </TooltipContent>
+                              </Tooltip>
                             </Label>
                             <Input type="number" min={1} value={quantity}
                               onChange={(e) => setQuantity(Number(e.target.value) || 0)}
