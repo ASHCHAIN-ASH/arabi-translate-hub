@@ -46,7 +46,7 @@ export const useChallengeAcademy = (userId?: string) => {
   useEffect(() => {
     if (!userId) return;
     const ch = supabase
-      .channel(`challenge-${userId}`)
+      .channel(`challenge-${userId}-${Math.random().toString(36).slice(2, 9)}`)
       .on('postgres_changes',
         { event: '*', schema: 'public', table: 'challenge_user_xp', filter: `user_id=eq.${userId}` },
         () => refresh())
