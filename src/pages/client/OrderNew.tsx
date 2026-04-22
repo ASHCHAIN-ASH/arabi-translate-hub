@@ -26,6 +26,7 @@ import { getCategoryTheme } from '@/config/categoryThemes';
 import {
   getFieldLabel, getOptionLabel, resolveServiceFields,
 } from '@/config/serviceFieldsConfig';
+import { getServiceTemplate, flattenTemplateFields } from '@/config/serviceFormTemplates';
 
 interface ServiceItem {
   id: string;
