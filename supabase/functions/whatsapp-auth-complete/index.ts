@@ -134,24 +134,42 @@ serve(async (req) => {
         return resp({ success: false, error: "لا يوجد حساب بهذا الرقم. سجل أولاً." });
       }
 
-      userEmail = `wa_${normalized}@whatsapp.local`;
+      userEmail = cleanEmail || `wa_${normalized}@whatsapp.local`;
       const { data: created, error: createErr } = await supabase.auth.admin.createUser({
         email: userEmail,
         phone: normalized,
         email_confirm: true,
         phone_confirm: true,
-        user_metadata: { full_name: full_name || `مستخدم ${normalized.slice(-4)}`, phone: normalized },
+        user_metadata: { full_name: full_name || `مستخدم ${normalized.slice(-4)}`, phone: normalized, email: cleanEmail || undefined },
       });
 
       if (createErr || !created.user) {
-        return resp({ success: false, error: createErr?.message || "تعذر إنشاء الحساب" });
+        // إذا كان البريد مستخدماً مسبقاً، ارجع للبريد الافتراضي
+        if (cleanEmail && /already|exists|registered/i.test(createErr?.message || "")) {
+          userEmail = `wa_${normalized}@whatsapp.local`;
+          const retry = await supabase.auth.admin.createUser({
+            email: userEmail,
+            phone: normalized,
+            email_confirm: true,
+            phone_confirm: true,
+            user_metadata: { full_name: full_name || `مستخدم ${normalized.slice(-4)}`, phone: normalized, email: cleanEmail },
+          });
+          if (retry.error || !retry.data.user) {
+            return resp({ success: false, error: retry.error?.message || "تعذر إنشاء الحساب" });
+          }
+          userId = retry.data.user.id;
+        } else {
+          return resp({ success: false, error: createErr?.message || "تعذر إنشاء الحساب" });
+        }
+      } else {
+        userId = created.user.id;
       }
 
-      userId = created.user.id;
       await supabase.from("profiles").upsert({
         id: userId,
         full_name: full_name || `مستخدم ${normalized.slice(-4)}`,
         phone: normalized,
+        ...(cleanEmail ? { email: cleanEmail } : {}),
       });
     } else {
       const { data: userRes, error: userErr } = await supabase.auth.admin.getUserById(userId);
