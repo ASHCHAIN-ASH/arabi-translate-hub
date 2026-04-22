@@ -604,54 +604,40 @@ export default function ResearchPublication() {
     table.inv tfoot td { padding:10px; font-weight:700; border-top:2px solid #0c2340; }
     table.inv tfoot tr.total td { background:linear-gradient(135deg,#0c2340,#1e3a5f); color:#fff; font-size:14px; }
     table.inv tfoot tr.total td b { color:#d4af37; font-family:'Amiri',serif; font-size:18px; }
-    /* ─── Digital Seals — modern, clean, certificate-grade ─── */
-    .seal-row { position:relative; z-index:1; display:grid; grid-template-columns:1fr 1fr; gap:18px; margin-top:34px; padding-top:30px; border-top:1px solid #e7e2cf; }
-    .seal-row::before { content:'OFFICIAL · DIGITAL SEALS · ختم رسمي'; position:absolute; top:-12px; left:50%; transform:translateX(-50%); background:linear-gradient(135deg,#0c2340,#1e3a5f); color:#d4af37; padding:6px 22px; border-radius:99px; font-size:9px; font-weight:800; letter-spacing:2.5px; box-shadow:0 6px 16px rgba(12,35,64,.28); border:1px solid rgba(212,175,55,.55); white-space:nowrap; }
-    .dseal { position:relative; display:flex; flex-direction:column; padding:0; border:1px solid #e2dcc4; border-radius:16px; background:linear-gradient(160deg,#ffffff 0%,#fdfbf3 100%); box-shadow:0 12px 32px -14px rgba(12,35,64,.22), 0 2px 6px rgba(12,35,64,.05); overflow:hidden; }
-    /* Top header strip */
-    .dseal .ribbon { position:relative; top:auto; left:auto; transform:none; padding:9px 14px; font-size:9px; font-weight:800; letter-spacing:2.2px; box-shadow:none; border-radius:0; z-index:2; display:flex; align-items:center; justify-content:space-between; gap:8px; background:linear-gradient(90deg,#1e3a8a 0%,#3b82f6 100%); color:#fff; text-transform:uppercase; }
-    .dseal.platform .ribbon { background:linear-gradient(90deg,#0c2340 0%,#1e3a5f 60%,#d4af37 140%); color:#d4af37; }
-    .dseal .ribbon::before { content:'●'; font-size:7px; color:#22c55e; text-shadow:0 0 6px rgba(34,197,94,.85); }
-    /* Stamp container */
-    .dseal .stamp-wrap { position:relative; display:flex; align-items:center; justify-content:center; padding:18px 14px 14px; background:linear-gradient(180deg,#f4f8ff 0%,#e9efff 100%); border-bottom:1px dashed rgba(30,64,175,.35); }
-    .dseal.platform .stamp-wrap { background:linear-gradient(180deg,#0c2340 0%,#102a4c 100%); border-bottom-color:rgba(212,175,55,.45); }
-    /* Modern certificate stamp — horizontal card */
-    .dseal .stamp { position:relative; width:100%; max-width:340px; min-height:88px; padding:12px 16px; display:grid; grid-template-columns:auto 1fr auto; align-items:center; gap:14px; background:linear-gradient(135deg,#ffffff 0%,#f8fbff 100%); border:1.5px solid #1e40af; border-radius:12px; box-shadow:0 4px 14px rgba(30,64,175,.18), inset 0 0 0 3px rgba(255,255,255,.85), inset 0 0 0 4px rgba(30,64,175,.18); transform:none; overflow:hidden; }
-    .dseal.platform .stamp { background:linear-gradient(135deg,#fefdf6 0%,#f8eed1 100%); border-color:#b8941f; box-shadow:0 4px 14px rgba(0,0,0,.35), inset 0 0 0 3px rgba(255,255,255,.7), inset 0 0 0 4px rgba(184,148,31,.3); }
-    /* Subtle guilloche security pattern */
-    .dseal .stamp::before { content:''; position:absolute; inset:0; background:repeating-linear-gradient(45deg,rgba(30,64,175,.05) 0 1px,transparent 1px 7px),repeating-linear-gradient(-45deg,rgba(30,64,175,.05) 0 1px,transparent 1px 7px); pointer-events:none; }
-    .dseal.platform .stamp::before { background:repeating-linear-gradient(45deg,rgba(184,148,31,.07) 0 1px,transparent 1px 7px),repeating-linear-gradient(-45deg,rgba(184,148,31,.07) 0 1px,transparent 1px 7px); }
-    /* Left medallion */
-    .dseal .stamp .ring-out { position:relative; z-index:1; width:54px; height:54px; border-radius:50%; background:radial-gradient(circle at 35% 30%,#3b82f6 0%,#1e40af 100%); display:flex; align-items:center; justify-content:center; box-shadow:0 3px 8px rgba(30,64,175,.4), inset 0 0 0 2px rgba(255,255,255,.5); border:0; inset:auto; }
-    .dseal.platform .stamp .ring-out { background:radial-gradient(circle at 35% 30%,#f5d97a 0%,#b8941f 100%); box-shadow:0 3px 8px rgba(0,0,0,.4), inset 0 0 0 2px rgba(255,255,255,.45); }
-    /* Center column */
-    .dseal .stamp .ring-mid { position:relative; z-index:1; display:flex; flex-direction:column; align-items:flex-start; gap:3px; min-width:0; inset:auto; border:0; opacity:1; background:none; border-radius:0; }
-    /* Right verified pill */
-    .dseal .stamp .ring-in { position:relative; z-index:1; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:3px; padding:6px 9px; background:rgba(30,64,175,.08); border:1px dashed rgba(30,64,175,.45); border-radius:8px; inset:auto; }
-    .dseal.platform .stamp .ring-in { background:rgba(184,148,31,.12); border-color:rgba(184,148,31,.5); }
-    /* Hide legacy arc texts */
+    /* ═══ Modern Digital Seals — vertical card, robust, never collapses ═══ */
+    .seal-row { position:relative; z-index:1; display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:16px; margin-top:32px; padding-top:26px; border-top:1px solid #e7e2cf; }
+    .seal-row::before { content:'OFFICIAL DIGITAL SEALS · ختم رسمي'; position:absolute; top:-12px; left:50%; transform:translateX(-50%); background:linear-gradient(135deg,#0c2340,#1e3a5f); color:#d4af37; padding:5px 20px; border-radius:99px; font-size:9px; font-weight:800; letter-spacing:2.2px; box-shadow:0 4px 14px rgba(12,35,64,.28); border:1px solid rgba(212,175,55,.55); white-space:nowrap; }
+    .dseal { position:relative; min-width:0; display:flex; flex-direction:column; border:1px solid #e2dcc4; border-radius:14px; background:linear-gradient(160deg,#ffffff 0%,#fdfbf3 100%); box-shadow:0 10px 28px -14px rgba(12,35,64,.22), 0 2px 6px rgba(12,35,64,.05); overflow:hidden; }
+    .dseal .ribbon { display:flex; align-items:center; justify-content:space-between; gap:6px; padding:9px 13px; font-size:8.5px; font-weight:800; letter-spacing:1.7px; background:linear-gradient(90deg,#1e3a8a 0%,#3b82f6 100%); color:#fff; text-transform:uppercase; }
+    .dseal.platform .ribbon { background:linear-gradient(90deg,#0c2340 0%,#1e3a5f 70%,#b8941f 140%); color:#f5d97a; }
+    .dseal .ribbon::before { content:'●'; font-size:7px; color:#22c55e; }
+    .dseal .stamp-wrap { position:relative; min-width:0; display:flex; align-items:center; justify-content:center; padding:20px 10px 16px; background:linear-gradient(180deg,#f4f8ff 0%,#e9efff 100%); border-bottom:1px dashed rgba(30,64,175,.3); }
+    .dseal.platform .stamp-wrap { background:linear-gradient(180deg,#0c2340 0%,#102a4c 100%); border-bottom-color:rgba(212,175,55,.4); }
+    /* Round emblem stamp — fixed size, never collapses */
+    .dseal .stamp { position:relative; flex:0 0 100px; width:100px; height:100px; border-radius:50%; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:2px; background:radial-gradient(circle at 35% 28%,#ffffff 0%,#eaf1ff 75%,#cfdcf5 100%); border:2.5px solid #1e40af; box-shadow:0 6px 18px rgba(30,64,175,.4), inset 0 0 0 4px #fff, inset 0 0 0 5px rgba(30,64,175,.55); transform:rotate(-6deg); overflow:hidden; padding:0; max-width:none; min-height:0; grid-template-columns:none; }
+    .dseal.platform .stamp { background:radial-gradient(circle at 35% 28%,#fffbe8 0%,#f5e7b0 70%,#d9b85a 100%); border-color:#8a6d18; box-shadow:0 6px 18px rgba(0,0,0,.5), inset 0 0 0 4px rgba(255,253,240,.95), inset 0 0 0 5px rgba(138,109,24,.6); }
+    .dseal .stamp::before { content:''; position:absolute; inset:6px; border-radius:50%; border:1px dashed rgba(30,64,175,.55); background:none; }
+    .dseal.platform .stamp::before { border-color:rgba(138,109,24,.6); }
+    .dseal .stamp::after { content:none; }
+    /* Reset legacy ring children to plain inline blocks inside emblem */
+    .dseal .ring-out, .dseal .ring-mid, .dseal .ring-in { position:relative; z-index:2; display:flex; align-items:center; justify-content:center; background:transparent; border:0; padding:0; margin:0; inset:auto; width:auto; height:auto; border-radius:0; box-shadow:none; opacity:1; flex:initial; gap:0; flex-direction:row; }
     .dseal .stamp .arc-top, .dseal .stamp .arc-bot { display:none !important; }
-    /* Medallion icon */
-    .dseal .stamp .core-icon { position:relative; z-index:2; font-size:22px; line-height:1; color:#fff; filter:drop-shadow(0 1px 2px rgba(0,0,0,.3)); margin:0; }
-    .dseal.platform .stamp .core-icon { color:#0c2340; filter:drop-shadow(0 1px 1px rgba(255,255,255,.5)); }
-    /* Center title */
-    .dseal .stamp .core-text { position:relative; z-index:2; font-family:'Amiri',serif; font-size:14px; font-weight:700; color:#0c2340; line-height:1.2; letter-spacing:.2px; text-align:right; direction:rtl; width:100%; }
-    .dseal .stamp .core-text::after { content:attr(data-en); display:block; font-family:'Inter',sans-serif; font-size:8.5px; font-weight:600; color:#475569; letter-spacing:1.4px; margin-top:2px; text-transform:uppercase; direction:ltr; text-align:right; }
-    .dseal.platform .stamp .core-text::after { color:#856404; }
-    /* Right tag */
-    .dseal .stamp .core-tag { position:relative; z-index:2; font-family:'Inter',sans-serif; font-size:8px; font-weight:800; letter-spacing:1.2px; color:#1e40af; padding:0; margin:0; text-transform:uppercase; line-height:1.1; }
-    .dseal .stamp .core-tag::before { content:'✓'; display:block; font-size:18px; color:#22c55e; line-height:1; margin-bottom:2px; filter:drop-shadow(0 1px 2px rgba(34,197,94,.4)); }
-    .dseal.platform .stamp .core-tag { color:#856404; }
-    /* Info section */
-    .dseal .info { flex:1; min-width:0; padding:14px 16px 16px; display:flex; flex-direction:column; gap:8px; background:#fff; }
-    .dseal .info .label { display:inline-flex; align-items:center; gap:6px; align-self:flex-start; font-size:9px; color:#1e40af; letter-spacing:1.4px; font-weight:800; text-transform:uppercase; padding:4px 11px; border-radius:99px; background:rgba(59,130,246,.1); border:1px solid rgba(30,64,175,.25); margin:0; }
+    .dseal .stamp .core-icon { font-size:22px; line-height:1; color:#1e40af; filter:drop-shadow(0 1px 1px rgba(255,255,255,.6)); margin:0; }
+    .dseal.platform .stamp .core-icon { color:#5a4410; filter:drop-shadow(0 1px 1px rgba(255,253,240,.6)); }
+    .dseal .stamp .core-text { font-family:'Amiri',serif; font-size:10.5px; font-weight:800; color:#0c2340; line-height:1.05; text-align:center; letter-spacing:.2px; padding:0 5px; max-width:90px; direction:rtl; width:auto; }
+    .dseal .stamp .core-text::after { content:none !important; display:none !important; }
+    .dseal .stamp .core-tag { font-family:'Inter',sans-serif; font-size:7.5px; font-weight:800; letter-spacing:1.2px; color:#1e40af; text-transform:uppercase; padding:1.5px 7px; border-radius:99px; background:rgba(255,255,255,.85); border:.5px solid rgba(30,64,175,.45); margin:0; }
+    .dseal .stamp .core-tag::before { content:none !important; display:none !important; }
+    .dseal.platform .stamp .core-tag { color:#5a4410; background:rgba(255,253,240,.9); border-color:rgba(138,109,24,.5); }
+    .dseal .info { padding:14px 14px; display:flex; flex-direction:column; gap:7px; background:#fff; min-width:0; }
+    .dseal .info .label { display:inline-flex; align-items:center; gap:5px; align-self:flex-start; font-size:8.5px; color:#1e40af; letter-spacing:1.2px; font-weight:800; text-transform:uppercase; padding:3px 10px; border-radius:99px; background:rgba(59,130,246,.1); border:1px solid rgba(30,64,175,.22); margin:0; }
     .dseal.platform .info .label { color:#856404; background:rgba(212,175,55,.14); border-color:rgba(212,175,55,.4); }
-    .dseal .info .label .dot { width:6px; height:6px; border-radius:50%; background:#22c55e; box-shadow:0 0 0 3px rgba(34,197,94,.22); }
-    .dseal .info .who { font-family:'Amiri',serif; font-size:16px; color:#0c2340; font-weight:700; line-height:1.35; margin:0; padding-bottom:10px; border-bottom:1px dotted #d4af37; }
-    .dseal .info .meta { font-size:10.5px; color:#475569; line-height:1.85; word-break:break-word; display:grid; gap:4px; margin:0; }
-    .dseal .info .meta b { color:#0c2340; font-weight:700; margin-left:6px; }
-    .dseal .info .meta code { font-family:'Courier New',monospace; background:linear-gradient(135deg,#0c2340,#1e3a5f); color:#d4af37; padding:2px 8px; border-radius:4px; font-size:9.5px; letter-spacing:.6px; font-weight:700; box-shadow:inset 0 1px 0 rgba(255,255,255,.1); }
-    .dseal .info .vstrip { margin-top:auto; padding-top:10px; border-top:1px dashed #ece4cb; display:flex; align-items:center; gap:7px; font-size:9.5px; color:#0c2340; font-weight:700; letter-spacing:.6px; }
+    .dseal .info .label .dot { width:5px; height:5px; border-radius:50%; background:#22c55e; box-shadow:0 0 0 2.5px rgba(34,197,94,.22); }
+    .dseal .info .who { font-family:'Amiri',serif; font-size:14.5px; color:#0c2340; font-weight:700; line-height:1.35; margin:0; padding-bottom:8px; border-bottom:1px dotted #d4af37; word-break:break-word; }
+    .dseal .info .meta { font-size:10px; color:#475569; line-height:1.75; word-break:break-word; display:grid; gap:3px; margin:0; }
+    .dseal .info .meta b { color:#0c2340; font-weight:700; margin-left:5px; }
+    .dseal .info .meta code { font-family:'Courier New',monospace; background:linear-gradient(135deg,#0c2340,#1e3a5f); color:#d4af37; padding:2px 7px; border-radius:4px; font-size:9px; letter-spacing:.5px; font-weight:700; word-break:break-all; display:inline-block; max-width:100%; }
+    .dseal .info .vstrip { margin-top:auto; padding-top:9px; border-top:1px dashed #ece4cb; display:flex; align-items:center; gap:6px; font-size:9px; color:#0c2340; font-weight:700; letter-spacing:.4px; }
     .verify-bar { position:relative; z-index:1; margin-top:16px; display:flex; align-items:center; justify-content:space-between; gap:12px; padding:11px 16px; background:linear-gradient(135deg,#0c2340 0%,#1e3a5f 100%); color:#fff; border-radius:8px; font-size:10px; box-shadow:0 4px 12px rgba(12,35,64,.25); }
     .verify-bar .v-id { font-family:'Courier New',monospace; color:#d4af37; letter-spacing:1px; font-weight:700; font-size:11px; background:rgba(212,175,55,.12); padding:3px 8px; border-radius:3px; border:1px solid rgba(212,175,55,.3); }
     .verify-bar .v-tick { color:#d4af37; font-weight:700; letter-spacing:1px; }
@@ -662,7 +648,7 @@ export default function ResearchPublication() {
     .actbar button:hover { background:#d4af37; color:#0c2340; }
     .actbar .close { background:#fff; color:#0c2340; }
     @media print { body { background:#fff; } .canvas { padding:0; } .page { box-shadow:none; border:0; padding:0; max-width:100%; border-radius:0; } .actbar { display:none !important; } }
-    @media (max-width:720px) { .canvas { padding:14px 8px 40px; } .page { padding:18px 14px; } .doc-head { flex-direction:column; align-items:flex-start; } .doc-meta { text-align:right; } .grid, .seal-row { grid-template-columns:1fr; } .price-box { flex-direction:column; gap:8px; text-align:center; } .verify-bar { flex-direction:column; gap:6px; text-align:center; } .dseal .stamp { grid-template-columns:auto 1fr; padding:10px 12px; } .dseal .stamp .ring-in { grid-column:1 / -1; flex-direction:row; justify-content:center; gap:8px; padding:5px 8px; } .dseal .stamp .ring-in .core-tag::before { display:inline-block; margin:0 6px 0 0; font-size:14px; vertical-align:middle; } }
+    @media (max-width:720px) { .canvas { padding:14px 8px 40px; } .page { padding:18px 14px; } .doc-head { flex-direction:column; align-items:flex-start; } .doc-meta { text-align:right; } .grid, .seal-row { grid-template-columns:1fr; } .price-box { flex-direction:column; gap:8px; text-align:center; } .verify-bar { flex-direction:column; gap:6px; text-align:center; } }
   `;
 
   const openPdfWindow = (html: string) => {
