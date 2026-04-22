@@ -1,0 +1,153 @@
+import React, { useEffect, useState } from 'react';
+import { Link, useParams, useSearchParams } from 'react-router-dom';
+import { motion } from 'framer-motion';
+import ClientLayout from '@/components/client/ClientLayout';
+import { Card } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Trophy, Zap, Target, Clock, Share2, RotateCw, ArrowLeft, AlertTriangle } from 'lucide-react';
+import { toast } from 'sonner';
+
+interface ResultData {
+  status: 'completed' | 'flagged';
+  score: number;
+  correct_count: number;
+  total_questions: number;
+  total_time_ms: number;
+  xp_earned: number;
+  rank: number;
+  is_perfect: boolean;
+  room_title?: string;
+}
+
+const BattleQuizResult: React.FC = () => {
+  const { roomId } = useParams<{ roomId: string }>();
+  const [params] = useSearchParams();
+  const attemptId = params.get('attempt');
+  const [result, setResult] = useState<ResultData | null>(null);
+
+  useEffect(() => {
+    if (!attemptId) return;
+    const raw = sessionStorage.getItem(`bq_result_${attemptId}`);
+    if (raw) {
+      try { setResult(JSON.parse(raw)); } catch { /* ignore */ }
+    }
+  }, [attemptId]);
+
+  const share = async () => {
+    const text = `🏆 سجلت ${result?.score} نقطة في Battle Quiz Arena! ترتيبي #${result?.rank}. جرب التحدي:`;
+    const url = `${window.location.origin}/battle-quiz`;
+    if (navigator.share) {
+      try { await navigator.share({ title: 'Battle Quiz', text, url }); } catch { /* canceled */ }
+    } else {
+      await navigator.clipboard.writeText(`${text} ${url}`);
+      toast.success('تم نسخ الرابط');
+    }
+  };
+
+  if (!result) {
+    return (
+      <ClientLayout>
+        <div className="p-6 max-w-lg mx-auto" dir="rtl">
+          <Card className="p-6 text-center">
+            <p className="mb-4">لا توجد نتيجة لعرضها.</p>
+            <Button asChild><Link to="/battle-quiz">العودة</Link></Button>
+          </Card>
+        </div>
+      </ClientLayout>
+    );
+  }
+
+  const isFlagged = result.status === 'flagged';
+  const accuracy = result.total_questions > 0
+    ? Math.round((result.correct_count / result.total_questions) * 100) : 0;
+
+  return (
+    <ClientLayout>
+      <div className="p-3 sm:p-4 lg:p-6 max-w-2xl mx-auto" dir="rtl">
+        <motion.div
+          initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }}
+          transition={{ type: 'spring', stiffness: 200 }}
+        >
+          <Card className={`overflow-hidden border-2 ${isFlagged ? 'border-destructive' : 'border-primary/30'}`}>
+            {/* Banner */}
+            <div className={`p-6 sm:p-8 text-center text-white ${
+              isFlagged ? 'bg-gradient-to-br from-red-500 to-rose-700'
+                : result.is_perfect ? 'bg-gradient-to-br from-amber-400 via-orange-500 to-pink-600'
+                : 'bg-gradient-to-br from-primary via-purple-600 to-fuchsia-700'
+            }`}>
+              {isFlagged ? (
+                <>
+                  <AlertTriangle className="w-14 h-14 mx-auto mb-3" />
+                  <h1 className="text-2xl font-extrabold mb-1">تم وضع المحاولة قيد المراجعة</h1>
+                  <p className="text-white/90 text-sm">رصد النظام نشاطاً غير معتاد. لن تُحتسب الجائزة.</p>
+                </>
+              ) : (
+                <>
+                  <Trophy className="w-14 h-14 mx-auto mb-3" />
+                  <h1 className="text-3xl font-extrabold mb-1">{result.is_perfect ? '🎯 مثالي!' : 'أحسنت!'}</h1>
+                  <p className="text-white/90">
+                    {result.room_title} — ترتيبك <strong>#{result.rank}</strong>
+                  </p>
+                </>
+              )}
+            </div>
+
+            {/* Stats */}
+            <div className="p-5 grid grid-cols-2 sm:grid-cols-4 gap-3">
+              <Stat icon={Zap} label="النقاط" value={result.score} color="text-amber-600" />
+              <Stat icon={Target} label="الإجابات" value={`${result.correct_count}/${result.total_questions}`} color="text-emerald-600" />
+              <Stat icon={Clock} label="الزمن" value={`${(result.total_time_ms / 1000).toFixed(1)}ث`} color="text-blue-600" />
+              <Stat icon={Trophy} label="الدقة" value={`${accuracy}%`} color="text-purple-600" />
+            </div>
+
+            {/* XP */}
+            {!isFlagged && (
+              <div className="px-5 pb-5">
+                <div className="rounded-xl bg-gradient-to-r from-amber-500/10 to-orange-500/10 border border-amber-500/30 p-4 text-center">
+                  <p className="text-xs text-muted-foreground mb-1">XP المكتسب</p>
+                  <p className="text-3xl font-extrabold text-amber-600">+{result.xp_earned}</p>
+                </div>
+              </div>
+            )}
+
+            {/* Actions */}
+            <div className="p-5 pt-0 space-y-2">
+              {!isFlagged && (
+                <Button onClick={share} className="w-full" size="lg">
+                  <Share2 className="w-4 h-4 ml-2" /> شارك نتيجتك
+                </Button>
+              )}
+              <div className="grid grid-cols-2 gap-2">
+                <Button asChild variant="outline">
+                  <Link to={`/battle-quiz/${roomId}/play`}>
+                    <RotateCw className="w-4 h-4 ml-2" /> جولة أخرى
+                  </Link>
+                </Button>
+                <Button asChild variant="outline">
+                  <Link to="/battle-quiz/leaderboard">
+                    <Trophy className="w-4 h-4 ml-2" /> الترتيب
+                  </Link>
+                </Button>
+              </div>
+              <Button asChild variant="ghost" className="w-full">
+                <Link to="/battle-quiz">
+                  <ArrowLeft className="w-4 h-4 ml-2" /> عودة للأرينا
+                </Link>
+              </Button>
+            </div>
+          </Card>
+        </motion.div>
+      </div>
+    </ClientLayout>
+  );
+};
+
+const Stat: React.FC<{ icon: any; label: string; value: React.ReactNode; color: string }> = ({ icon: Icon, label, value, color }) => (
+  <div className="text-center p-3 rounded-xl bg-muted/40">
+    <Icon className={`w-5 h-5 mx-auto mb-1 ${color}`} />
+    <p className="text-[11px] text-muted-foreground">{label}</p>
+    <p className="font-bold tabular-nums">{value}</p>
+  </div>
+);
+
+export default BattleQuizResult;
