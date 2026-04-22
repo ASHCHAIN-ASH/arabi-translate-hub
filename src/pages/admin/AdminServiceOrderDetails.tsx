@@ -52,6 +52,41 @@ const PRIORITY_CONFIG: Record<string, { label: string; color: string }> = {
 
 const STATUS_ORDER = ['pending', 'confirmed', 'review', 'in_progress', 'completed'];
 
+// خريطة ترجمة مراحل دورة حياة الطلب (lifecycle stages) من الإنجليزية إلى العربية
+const STAGE_AR: Record<string, string> = {
+  received: 'مستلم',
+  under_review: 'قيد المراجعة',
+  quote_sent: 'تم إرسال عرض السعر',
+  quote_approved: 'تمت الموافقة على العرض',
+  quote_rejected: 'تم رفض العرض',
+  contract_pending: 'بانتظار توقيع العقد',
+  contract_signed: 'تم توقيع العقد',
+  payment_pending: 'بانتظار الدفع',
+  payment_received: 'تم استلام الدفع',
+  in_progress: 'قيد التنفيذ',
+  quality_check: 'مراجعة الجودة',
+  ready_for_delivery: 'جاهز للتسليم',
+  delivered: 'تم التسليم',
+  completed: 'مكتمل',
+  cancelled: 'ملغي',
+  refunded: 'مسترد',
+  on_hold: 'معلق',
+  pending: 'معلق',
+  confirmed: 'مؤكد',
+  review: 'قيد المراجعة',
+};
+
+const translateStageWords = (text: string): string => {
+  if (!text) return text;
+  let out = text;
+  // ترتيب من الأطول للأقصر لتجنب الاستبدال الجزئي الخاطئ
+  const keys = Object.keys(STAGE_AR).sort((a, b) => b.length - a.length);
+  for (const k of keys) {
+    out = out.replace(new RegExp(`\\b${k}\\b`, 'g'), STAGE_AR[k]);
+  }
+  return out;
+};
+
 interface Order {
   id: string;
   tracking_id: string;
