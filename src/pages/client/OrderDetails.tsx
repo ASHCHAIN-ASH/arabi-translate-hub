@@ -20,6 +20,7 @@ import { ContractSigningCard } from '@/components/orders/ContractSigningCard';
 import { PaymentCard } from '@/components/orders/PaymentCard';
 import OrderCountdown from '@/components/orders/OrderCountdown';
 import PriceApprovalCard from '@/components/client/PriceApprovalCard';
+import { translateStageWords } from '@/utils/stageTranslations';
 
 interface ServiceOrder {
   id: string;
