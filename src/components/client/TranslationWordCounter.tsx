@@ -241,7 +241,7 @@ const TranslationWordCounter: React.FC<Props> = ({
         <div className="text-center">
           <p className="font-semibold text-sm">ارفع ملفك للحساب التلقائي</p>
           <p className="text-xs text-muted-foreground mt-1">
-            PDF، Word (.docx)، نص — حتى 20MB
+            PDF، Word (.docx)، نص — حتى 50MB لكل ملف ({MAX_FILES} ملفات كحد أقصى)
           </p>
         </div>
       </button>
