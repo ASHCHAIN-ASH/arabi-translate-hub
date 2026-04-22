@@ -21,7 +21,7 @@ import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import ClientLayout from '@/components/client/ClientLayout';
 import { useTracks } from '@/hooks/useTracks';
 import { useTrackStats, useUserTrackUsage } from '@/hooks/useTrackStats';
-import { useAuth } from '@/contexts/AuthContext';
+import { useAuth } from '@/components/SimpleAuthProvider';
 
 type FilterMode = 'all' | 'free' | 'premium';
 
