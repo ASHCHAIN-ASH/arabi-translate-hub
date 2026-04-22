@@ -169,7 +169,6 @@ serve(async (req) => {
         id: userId,
         full_name: full_name || `مستخدم ${normalized.slice(-4)}`,
         phone: normalized,
-        ...(cleanEmail ? { email: cleanEmail } : {}),
       });
     } else {
       const { data: userRes, error: userErr } = await supabase.auth.admin.getUserById(userId);
