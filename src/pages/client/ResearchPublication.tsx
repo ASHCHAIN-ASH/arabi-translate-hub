@@ -730,7 +730,7 @@ export default function ResearchPublication() {
 
   const triggerPrintScript = `<script>window.addEventListener('load',function(){var go=function(){try{window.focus();window.print();}catch(e){}};if(document.fonts&&document.fonts.ready){document.fonts.ready.then(function(){setTimeout(go,150);});}else{setTimeout(go,400);}});</script>`;
 
-  const downloadContractPdf = async (item: any) => {
+  const buildContractHtml = async (item: any): Promise<string> => {
     // 1) جلب العقد الفعلي المرتبط بهذا الطلب من قاعدة البيانات
     const { data: realContract } = await supabase
       .from('contracts')
