@@ -62,6 +62,14 @@ export const WhatsappAuthForm: React.FC<Props> = ({ mode, onSuccess }) => {
       toast.error('أدخل اسمك الكامل');
       return;
     }
+    if (mode === 'register') {
+      const emailTrimmed = email.trim();
+      const emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailTrimmed) && emailTrimmed.length <= 255;
+      if (!emailOk) {
+        toast.error('أدخل بريداً إلكترونياً صحيحاً');
+        return;
+      }
+    }
     setLoading(true);
     try {
       const { data, error } = await withTimeout(
