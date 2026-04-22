@@ -54,7 +54,7 @@ serve(async (req) => {
       return resp({ success: false, error: "الرمز غير صحيح" }, 200);
     }
 
-    await supabase.from("whatsapp_otp_codes").update({ used: true }).eq("id", otp.id);
+    await supabase.from("auth_whatsapp_otp").update({ consumed_at: new Date().toISOString() }).eq("id", otp.id);
 
     // البحث عن مستخدم موجود برقم الجوال
     const { data: existingProfile } = await supabase
