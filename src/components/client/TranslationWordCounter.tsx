@@ -51,7 +51,11 @@ const TranslationWordCounter: React.FC<Props> = ({
   sourceLanguage, targetLanguage, urgency, certified, onCountChange,
 }) => {
   const [entries, setEntries] = useState<FileEntry[]>([]);
+  const [expandedId, setExpandedId] = useState<string | null>(null);
   const inputRef = React.useRef<HTMLInputElement>(null);
+  // Track previous pricing inputs so we can flag a "recalculation needed" hint
+  const prevPricingRef = useRef({ urgency, certified, targetLanguage });
+  const [pricingChangedAt, setPricingChangedAt] = useState<number | null>(null);
 
   const notify = useCallback((list: FileEntry[]) => {
     const completed = list.filter((e) => e.result);
@@ -65,11 +69,25 @@ const TranslationWordCounter: React.FC<Props> = ({
     });
   }, [onCountChange, urgency, certified, targetLanguage]);
 
+  // When the user changes urgency / certified / targetLanguage we don't need
+  // to re-extract text — we just re-estimate the price and re-emit the totals.
+  useEffect(() => {
+    const prev = prevPricingRef.current;
+    const changed = prev.urgency !== urgency || prev.certified !== certified || prev.targetLanguage !== targetLanguage;
+    if (!changed) return;
+    prevPricingRef.current = { urgency, certified, targetLanguage };
+    if (entries.some((e) => e.result)) {
+      setPricingChangedAt(Date.now());
+      notify(entries);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [urgency, certified, targetLanguage]);
+
   const processFile = useCallback(async (entry: FileEntry, all: FileEntry[]) => {
     try {
       const result = await countWordsInFile(entry.file);
       const next = all.map((e) =>
-        e.id === entry.id ? { ...e, result, loading: false } : e
+        e.id === entry.id ? { ...e, result, error: undefined, loading: false } : e
       );
       setEntries(next);
       notify(next);
@@ -106,8 +124,28 @@ const TranslationWordCounter: React.FC<Props> = ({
   const removeEntry = (id: string) => {
     const next = entries.filter((e) => e.id !== id);
     setEntries(next);
+    if (expandedId === id) setExpandedId(null);
     notify(next);
   };
+
+  const recalcEntry = useCallback((id: string) => {
+    const target = entries.find((e) => e.id === id);
+    if (!target) return;
+    const next = entries.map((e) =>
+      e.id === id ? { ...e, loading: true, error: undefined, result: undefined } : e
+    );
+    setEntries(next);
+    processFile({ ...target, loading: true, error: undefined, result: undefined }, next);
+  }, [entries, processFile]);
+
+  const recalcAll = useCallback(() => {
+    if (entries.length === 0) return;
+    const next = entries.map((e) => ({ ...e, loading: true, error: undefined, result: undefined }));
+    setEntries(next);
+    setPricingChangedAt(null);
+    next.forEach((e) => processFile(e, next));
+    toast.info('جارٍ إعادة حساب جميع الملفات…');
+  }, [entries, processFile]);
 
   const completed = entries.filter((e) => e.result);
   const aggregate = aggregateResults(completed.map((e) => e.result!));
