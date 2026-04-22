@@ -95,6 +95,7 @@ const OrderNew = () => {
   const [wordCountData, setWordCountData] = useState<{
     totalWords: number; totalPages: number; estimatedPriceSar: number;
     files: { name: string; words: number }[];
+    pendingCount: number; errorCount: number; totalFiles: number;
   } | null>(null);
 
   // Detect translation services so we render the word counter widget.
