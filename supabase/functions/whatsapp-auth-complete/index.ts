@@ -68,7 +68,7 @@ serve(async (req) => {
 
     if (!userId) {
       if (purpose !== "register") {
-        return resp({ success: false, error: "لا يوجد حساب بهذا الرقم. سجل أولاً." }, 404);
+        return resp({ success: false, error: "لا يوجد حساب بهذا الرقم. سجل أولاً." }, 200);
       }
       // إنشاء مستخدم جديد ببريد شكلي مرتبط بالرقم
       userEmail = `wa_${normalized}@whatsapp.local`;
