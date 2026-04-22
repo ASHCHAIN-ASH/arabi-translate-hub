@@ -17,6 +17,12 @@ async function hashCode(code: string): Promise<string> {
 serve(async (req) => {
   if (req.method === "OPTIONS") return new Response(null, { headers: corsHeaders });
 
+  const resp = (payload: Record<string, unknown>) =>
+    new Response(JSON.stringify(payload), {
+      status: 200,
+      headers: { ...corsHeaders, "Content-Type": "application/json" },
+    });
+
   try {
     const supabase = createClient(
       Deno.env.get("SUPABASE_URL")!,
@@ -25,10 +31,7 @@ serve(async (req) => {
 
     const { phone, purpose = "login" } = await req.json();
     if (!phone) {
-      return new Response(JSON.stringify({ success: false, error: "رقم الجوال مطلوب" }), {
-        status: 400,
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
-      });
+      return resp({ success: false, error: "رقم الجوال مطلوب" });
     }
 
     const { data: settings } = await supabase
@@ -38,26 +41,38 @@ serve(async (req) => {
       .single();
 
     if (!settings?.is_enabled || settings.events_enabled?.otp_login === false) {
-      return new Response(JSON.stringify({ success: false, error: "OTP عبر واتساب معطّل" }), {
-        status: 403,
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
-      });
+      return resp({ success: false, error: "تسجيل الدخول عبر واتساب غير متاح حالياً" });
     }
 
     const normalized = normalizePhone(phone, settings.default_country_code || "966");
 
+    const { data: activeLock } = await supabase
+      .from("auth_phone_lockouts")
+      .select("locked_until")
+      .eq("phone", normalized)
+      .gt("locked_until", new Date().toISOString())
+      .order("locked_until", { ascending: false })
+      .limit(1)
+      .maybeSingle();
+
+    if (activeLock) {
+      return resp({
+        success: false,
+        locked: true,
+        locked_until: activeLock.locked_until,
+        error: "تم قفل الحساب مؤقتاً لمدة 24 ساعة بسبب كثرة المحاولات. حاول لاحقاً.",
+      });
+    }
+
     // حد الإرسال: 3 طلبات / 10 دقائق
     const since = new Date(Date.now() - 10 * 60 * 1000).toISOString();
     const { count } = await supabase
-      .from("whatsapp_otp_codes")
+      .from("auth_whatsapp_otp")
       .select("id", { count: "exact", head: true })
       .eq("phone", normalized)
       .gte("created_at", since);
     if ((count ?? 0) >= 3) {
-      return new Response(JSON.stringify({ success: false, error: "محاولات كثيرة، حاول لاحقاً" }), {
-        status: 429,
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
-      });
+      return resp({ success: false, error: "تم طلب الرمز عدة مرات. حاول مرة أخرى بعد قليل" });
     }
 
     const code = Math.floor(100000 + Math.random() * 900000).toString();
@@ -65,7 +80,7 @@ serve(async (req) => {
     const expiresAt = new Date(Date.now() + 10 * 60 * 1000).toISOString();
     const ip = req.headers.get("x-forwarded-for")?.split(",")[0] ?? null;
 
-    await supabase.from("whatsapp_otp_codes").insert({
+    await supabase.from("auth_whatsapp_otp").insert({
       phone: normalized,
       code_hash: codeHash,
       purpose,
@@ -95,22 +110,13 @@ serve(async (req) => {
       error_message: result.success ? null : result.error,
     });
 
-    return new Response(
-      JSON.stringify({
-        success: result.success,
-        error: result.success ? undefined : result.error,
-        expires_in: 600,
-      }),
-      {
-        status: result.success ? 200 : 502,
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
-      },
-    );
+    return resp({
+      success: result.success,
+      error: result.success ? undefined : result.error || "تعذر إرسال الرمز حالياً",
+      expires_in: 600,
+    });
   } catch (e: any) {
     console.error("whatsapp-otp-request", e);
-    return new Response(JSON.stringify({ success: false, error: e?.message || "خطأ" }), {
-      status: 500,
-      headers: { ...corsHeaders, "Content-Type": "application/json" },
-    });
+    return resp({ success: false, error: e?.message || "تعذر إرسال الرمز، حاول مرة أخرى" });
   }
 });
