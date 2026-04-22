@@ -255,7 +255,7 @@ export default function ResearchPublication() {
   const greenDot = `<span style="display:inline-flex;align-items:center;justify-content:center;width:11px;height:11px;border-radius:50%;background:#22c55e;box-shadow:0 0 0 3px rgba(34,197,94,.22);color:#fff;font-size:9px">${SVG_CHECK}</span>`;
 
 
-  const downloadSummaryPdf = (item: any) => {
+  const buildSummaryHtml = (item: any): string => {
     const statusLabel = STATUS_CONFIG[item.status]?.label || item.status;
     const serviceLabel = SERVICE_TYPES.find(s => s.value === item.service_type)?.label || item.service_type;
     const langLabel = item.language === 'ar' ? 'العربية' : item.language === 'en' ? 'الإنجليزية' : 'ثنائي اللغة';
