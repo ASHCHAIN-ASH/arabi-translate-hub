@@ -81,9 +81,6 @@ const ServiceDetail = () => {
   const [completedOrders, setCompletedOrders] = useState<number>(0);
   const [viewersNow, setViewersNow] = useState<number>(7);
 
-  // Calculator
-  const [qty, setQty] = useState<number>(10);
-  const [urgency, setUrgency] = useState<'normal' | 'fast' | 'urgent'>('normal');
 
   useEffect(() => {
     const load = async () => {
