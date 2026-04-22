@@ -59,7 +59,6 @@ serve(async (req) => {
       .from("auth_whatsapp_otp")
       .select("*")
       .eq("phone", normalized)
-      .eq("purpose", purpose)
       .is("consumed_at", null)
       .gt("expires_at", new Date().toISOString())
       .order("created_at", { ascending: false })
