@@ -4,8 +4,9 @@ import { motion } from 'framer-motion';
 import ClientLayout from '@/components/client/ClientLayout';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Trophy, Zap, Target, Clock, Share2, RotateCw, ArrowLeft, AlertTriangle } from 'lucide-react';
+import { Trophy, Zap, Target, Clock, Share2, RotateCw, ArrowLeft, AlertTriangle, ShieldAlert } from 'lucide-react';
 import { toast } from 'sonner';
+import { supabase } from '@/integrations/supabase/client';
 
 interface ResultData {
   status: 'completed' | 'flagged';
@@ -19,11 +20,18 @@ interface ResultData {
   room_title?: string;
 }
 
+interface FlagSummary {
+  total: number;
+  byType: Record<string, number>;
+  topRisk: number;
+}
+
 const BattleQuizResult: React.FC = () => {
   const { roomId } = useParams<{ roomId: string }>();
   const [params] = useSearchParams();
   const attemptId = params.get('attempt');
   const [result, setResult] = useState<ResultData | null>(null);
+  const [flags, setFlags] = useState<FlagSummary | null>(null);
 
   useEffect(() => {
     if (!attemptId) return;
@@ -31,6 +39,22 @@ const BattleQuizResult: React.FC = () => {
     if (raw) {
       try { setResult(JSON.parse(raw)); } catch { /* ignore */ }
     }
+    // Fetch user-visible flag summary for this attempt
+    (async () => {
+      const { data } = await (supabase as any)
+        .from('battle_quiz_flags')
+        .select('flag_type, risk_score')
+        .eq('attempt_id', attemptId);
+      if (data && data.length) {
+        const byType: Record<string, number> = {};
+        let topRisk = 0;
+        for (const f of data) {
+          byType[f.flag_type] = (byType[f.flag_type] || 0) + 1;
+          if (f.risk_score > topRisk) topRisk = f.risk_score;
+        }
+        setFlags({ total: data.length, byType, topRisk });
+      }
+    })();
   }, [attemptId]);
 
   const share = async () => {
@@ -110,6 +134,34 @@ const BattleQuizResult: React.FC = () => {
               </div>
             )}
 
+            {/* Anti-Cheat summary (visible to user) */}
+            {flags && flags.total > 0 && (
+              <div className="px-5 pb-5">
+                <div className={`rounded-xl border p-3 ${
+                  isFlagged
+                    ? 'bg-destructive/5 border-destructive/30'
+                    : 'bg-amber-500/5 border-amber-500/30'
+                }`}>
+                  <div className="flex items-center gap-2 mb-1">
+                    <ShieldAlert className={`w-4 h-4 ${isFlagged ? 'text-destructive' : 'text-amber-600'}`} />
+                    <p className="text-sm font-bold">
+                      {isFlagged ? 'تنبيهات سلامة المحاولة' : 'ملاحظات سلامة'}
+                    </p>
+                    <span className="text-xs text-muted-foreground mr-auto">
+                      {flags.total} إشارة • أعلى خطر {flags.topRisk}
+                    </span>
+                  </div>
+                  <div className="flex flex-wrap gap-1.5 mt-2">
+                    {Object.entries(flags.byType).map(([t, n]) => (
+                      <span key={t} className="text-[11px] px-2 py-0.5 rounded-full bg-background border">
+                        {flagLabel(t)} × {n}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            )}
+
             {/* Actions */}
             <div className="p-5 pt-0 space-y-2">
               {!isFlagged && (
@@ -149,5 +201,21 @@ const Stat: React.FC<{ icon: any; label: string; value: React.ReactNode; color: 
     <p className="font-bold tabular-nums">{value}</p>
   </div>
 );
+
+function flagLabel(t: string): string {
+  const map: Record<string, string> = {
+    tab_blur: 'خروج من النافذة',
+    visibility_hidden: 'إخفاء الصفحة',
+    copy: 'نسخ',
+    paste: 'لصق',
+    right_click: 'نقر يمين',
+    devtools_suspect: 'أدوات المطور',
+    screenshot_attempt: 'لقطة شاشة',
+    image_drag: 'سحب صورة',
+    too_fast_for_reading: 'إجابة سريعة جداً',
+    mechanical_pattern: 'نمط ميكانيكي',
+  };
+  return map[t] || t;
+}
 
 export default BattleQuizResult;
