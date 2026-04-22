@@ -4,8 +4,9 @@ import { motion } from 'framer-motion';
 import ClientLayout from '@/components/client/ClientLayout';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Trophy, Zap, Target, Clock, Share2, RotateCw, ArrowLeft, AlertTriangle } from 'lucide-react';
+import { Trophy, Zap, Target, Clock, Share2, RotateCw, ArrowLeft, AlertTriangle, ShieldAlert } from 'lucide-react';
 import { toast } from 'sonner';
+import { supabase } from '@/integrations/supabase/client';
 
 interface ResultData {
   status: 'completed' | 'flagged';
@@ -19,11 +20,18 @@ interface ResultData {
   room_title?: string;
 }
 
+interface FlagSummary {
+  total: number;
+  byType: Record<string, number>;
+  topRisk: number;
+}
+
 const BattleQuizResult: React.FC = () => {
   const { roomId } = useParams<{ roomId: string }>();
   const [params] = useSearchParams();
   const attemptId = params.get('attempt');
   const [result, setResult] = useState<ResultData | null>(null);
+  const [flags, setFlags] = useState<FlagSummary | null>(null);
 
   useEffect(() => {
     if (!attemptId) return;
@@ -31,6 +39,22 @@ const BattleQuizResult: React.FC = () => {
     if (raw) {
       try { setResult(JSON.parse(raw)); } catch { /* ignore */ }
     }
+    // Fetch user-visible flag summary for this attempt
+    (async () => {
+      const { data } = await (supabase as any)
+        .from('battle_quiz_flags')
+        .select('flag_type, risk_score')
+        .eq('attempt_id', attemptId);
+      if (data && data.length) {
+        const byType: Record<string, number> = {};
+        let topRisk = 0;
+        for (const f of data) {
+          byType[f.flag_type] = (byType[f.flag_type] || 0) + 1;
+          if (f.risk_score > topRisk) topRisk = f.risk_score;
+        }
+        setFlags({ total: data.length, byType, topRisk });
+      }
+    })();
   }, [attemptId]);
 
   const share = async () => {
