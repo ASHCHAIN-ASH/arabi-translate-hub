@@ -1555,8 +1555,35 @@ export default function ResearchPublication() {
                                 <Download className="w-4 h-4 ml-2" />
                                 تنزيل الفاتورة PDF
                               </Button>
-                              <div className="grid grid-cols-2 gap-3 text-sm">
-                                <div><span className="text-muted-foreground">التخصص:</span> <b>{selected.field}</b></div>
+
+                              {/* اختبار PDF متعدد المقاسات */}
+                              <div className="grid grid-cols-3 gap-2 pt-1">
+                                <Button
+                                  variant="outline"
+                                  size="sm"
+                                  onClick={() => openPdfTest(selected, 'summary')}
+                                  className="text-xs border-rose-300 text-rose-700 hover:bg-rose-50"
+                                >
+                                  📱 اختبار الملخّص
+                                </Button>
+                                <Button
+                                  variant="outline"
+                                  size="sm"
+                                  onClick={() => openPdfTest(selected, 'contract')}
+                                  className="text-xs border-slate-400 text-slate-800 hover:bg-slate-50"
+                                >
+                                  📱 اختبار العقد
+                                </Button>
+                                <Button
+                                  variant="outline"
+                                  size="sm"
+                                  onClick={() => openPdfTest(selected, 'invoice')}
+                                  className="text-xs border-emerald-300 text-emerald-700 hover:bg-emerald-50"
+                                >
+                                  📱 اختبار الفاتورة
+                                </Button>
+                              </div>
+
                                 <div><span className="text-muted-foreground">اللغة:</span> <b>{selected.language === 'ar' ? 'العربية' : selected.language === 'en' ? 'الإنجليزية' : 'ثنائية'}</b></div>
                                 {selected.target_journal && <div><span className="text-muted-foreground">المجلة:</span> <b>{selected.target_journal}</b></div>}
                                 {selected.journal_rank && <div><span className="text-muted-foreground">التصنيف:</span> <b>{selected.journal_rank}</b></div>}
