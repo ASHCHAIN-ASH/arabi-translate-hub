@@ -1,204 +1,249 @@
+import { useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import * as Icons from 'lucide-react';
+import {
+  ArrowLeft,
+  Search,
+  Sparkles,
+  Wrench,
+  Crown,
+  Star,
+  TrendingUp,
+  Filter,
+  GraduationCap,
+} from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { Input } from '@/components/ui/input';
+import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import ClientLayout from '@/components/client/ClientLayout';
 import { useTracks } from '@/hooks/useTracks';
-import { ArrowLeft, Sparkles, Wand2, Zap, Shield, Star } from 'lucide-react';
+import { useTrackStats, useUserTrackUsage } from '@/hooks/useTrackStats';
+import { useAuth } from '@/contexts/AuthContext';
+
+type FilterMode = 'all' | 'free' | 'premium';
 
 export default function TracksPage() {
   const navigate = useNavigate();
+  const { user } = useAuth();
   const { tracks, loading } = useTracks();
+  const { stats } = useTrackStats();
+  const { usage } = useUserTrackUsage(user?.id);
 
-  const getIcon = (name: string) => {
-    const Icon = (Icons as any)[name] || Icons.GraduationCap;
-    return Icon;
-  };
+  const [search, setSearch] = useState('');
+  const [filter, setFilter] = useState<FilterMode>('all');
+
+  const getIcon = (name: string) => (Icons as any)[name] || Icons.GraduationCap;
+
+  // Recommended track = most used by this user, fallback to first track
+  const recommendedTrackId = useMemo(() => {
+    const entries = Object.entries(usage);
+    if (entries.length === 0) return null;
+    return entries.sort((a, b) => b[1] - a[1])[0][0];
+  }, [usage]);
+
+  const recommendedTrack = tracks.find((t) => t.id === recommendedTrackId);
+
+  // Aggregate platform totals
+  const totals = useMemo(() => {
+    let tools = 0;
+    let free = 0;
+    let premium = 0;
+    Object.values(stats).forEach((s) => {
+      tools += s.tools_count;
+      free += s.free_count;
+      premium += s.premium_count;
+    });
+    return { tools, free, premium };
+  }, [stats]);
+
+  // Filter tracks
+  const filteredTracks = useMemo(() => {
+    return tracks.filter((t) => {
+      const q = search.trim().toLowerCase();
+      const matchSearch =
+        !q ||
+        t.name_ar.toLowerCase().includes(q) ||
+        (t.name_en || '').toLowerCase().includes(q) ||
+        (t.description_ar || '').toLowerCase().includes(q);
+      if (!matchSearch) return false;
+      const s = stats[t.id];
+      if (filter === 'free') return !s || s.free_count > 0;
+      if (filter === 'premium') return s && s.premium_count > 0;
+      return true;
+    });
+  }, [tracks, search, filter, stats]);
 
   return (
     <ClientLayout>
-      <div dir="rtl" className="relative min-h-screen overflow-hidden">
-        {/* Ambient background */}
-        <div className="pointer-events-none absolute inset-0 -z-10">
-          <div className="absolute -top-40 -right-32 w-[520px] h-[520px] rounded-full bg-primary/15 blur-[120px]" />
-          <div className="absolute top-40 -left-40 w-[460px] h-[460px] rounded-full bg-accent/20 blur-[120px]" />
-          <div className="absolute bottom-0 left-1/3 w-[420px] h-[420px] rounded-full bg-secondary/30 blur-[120px]" />
-          {/* subtle grid */}
-          <div
-            className="absolute inset-0 opacity-[0.04]"
-            style={{
-              backgroundImage:
-                'linear-gradient(to right, hsl(var(--foreground)) 1px, transparent 1px), linear-gradient(to bottom, hsl(var(--foreground)) 1px, transparent 1px)',
-              backgroundSize: '48px 48px',
-            }}
-          />
-        </div>
-
-        <div className="container mx-auto px-4 py-10 max-w-7xl">
-          {/* Hero */}
-          <motion.div
-            initial={{ opacity: 0, y: -24 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            className="text-center mb-14"
-          >
-            <motion.div
-              initial={{ scale: 0.9, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              transition={{ delay: 0.1 }}
-              className="inline-flex items-center gap-2 px-5 py-2 rounded-full border border-primary/20 bg-primary/5 backdrop-blur-sm text-primary mb-6 shadow-sm"
-            >
-              <Sparkles className="w-4 h-4" />
-              <span className="text-sm font-semibold tracking-wide">المسارات التخصصية الذكية</span>
-              <span className="hidden sm:inline-flex items-center gap-1 ms-2 ps-2 border-s border-primary/20 text-xs text-muted-foreground">
-                <Star className="w-3 h-3 fill-primary text-primary" />
-                نخبة
-              </span>
-            </motion.div>
-
-            <h1 className="text-4xl md:text-6xl font-bold mb-5 leading-tight">
-              <span className="bg-gradient-to-l from-primary via-primary/80 to-accent-foreground bg-clip-text text-transparent">
-                اختر مسارك التخصصي
-              </span>
-            </h1>
-            <p className="text-muted-foreground text-base md:text-lg max-w-2xl mx-auto leading-relaxed">
-              منصة احترافية تجمع <span className="text-foreground font-semibold">أدوات ذكاء اصطناعي</span> وخدمات
-              مصمَّمة لكل تخصص — استخدم رصيد محفظتك للوصول الفوري بدون انتظار.
-            </p>
-
-            {/* Trust badges */}
-            <div className="flex flex-wrap items-center justify-center gap-3 mt-7">
-              {[
-                { icon: Wand2, label: 'مدعوم بالذكاء الاصطناعي' },
-                { icon: Zap, label: 'استجابة فورية' },
-                { icon: Shield, label: 'خصوصية مضمونة' },
-              ].map((b, i) => (
-                <motion.div
-                  key={i}
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.2 + i * 0.08 }}
-                  className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-card/60 backdrop-blur border border-border/60 text-xs text-muted-foreground"
-                >
-                  <b.icon className="w-3.5 h-3.5 text-primary" />
-                  {b.label}
-                </motion.div>
-              ))}
+      <div dir="rtl" className="min-h-screen bg-background">
+        <div className="container mx-auto px-4 py-6 md:py-10 max-w-7xl space-y-8">
+          {/* ===== Header ===== */}
+          <div className="flex flex-col gap-3">
+            <div className="flex items-center gap-2 text-sm text-muted-foreground">
+              <GraduationCap className="w-4 h-4" />
+              <span>منصة الطالب</span>
+              <span>›</span>
+              <span className="text-foreground font-medium">المسارات التخصصية</span>
             </div>
-          </motion.div>
+            <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4">
+              <div>
+                <h1 className="text-2xl md:text-3xl font-bold text-foreground tracking-tight">
+                  المسارات التخصصية
+                </h1>
+                <p className="text-sm md:text-base text-muted-foreground mt-1.5 max-w-2xl">
+                  اختر مسارك الأكاديمي لاكتشاف أدوات الذكاء الاصطناعي والموارد المصممة لتخصصك.
+                </p>
+              </div>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => navigate('/student')}
+                className="gap-2 self-start md:self-auto"
+              >
+                <ArrowLeft className="w-4 h-4" />
+                لوحة الطالب
+              </Button>
+            </div>
+          </div>
 
-          {/* Loading skeletons */}
+          {/* ===== Stats row (banking-style) ===== */}
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4">
+            <StatTile
+              icon={GraduationCap}
+              label="مسارات نشطة"
+              value={tracks.length}
+              tone="primary"
+            />
+            <StatTile icon={Wrench} label="إجمالي الأدوات" value={totals.tools} tone="default" />
+            <StatTile icon={Sparkles} label="أدوات مجانية" value={totals.free} tone="success" />
+            <StatTile icon={Crown} label="أدوات بريميوم" value={totals.premium} tone="warning" />
+          </div>
+
+          {/* ===== Recommended Track ===== */}
+          {recommendedTrack && (
+            <RecommendedCard
+              track={recommendedTrack}
+              stats={stats[recommendedTrack.id]}
+              usageCount={usage[recommendedTrack.id] || 0}
+              onOpen={() => navigate(`/student/tracks/${recommendedTrack.slug}`)}
+              getIcon={getIcon}
+            />
+          )}
+
+          {/* ===== Search + Filter ===== */}
+          <div className="flex flex-col sm:flex-row gap-3">
+            <div className="relative flex-1">
+              <Search className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+              <Input
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                placeholder="ابحث عن مسار..."
+                className="ps-3 pe-10 h-11 bg-card"
+              />
+            </div>
+            <Tabs value={filter} onValueChange={(v) => setFilter(v as FilterMode)}>
+              <TabsList className="h-11 bg-card border border-border">
+                <TabsTrigger value="all" className="gap-1.5 text-xs md:text-sm">
+                  <Filter className="w-3.5 h-3.5" />
+                  الكل
+                </TabsTrigger>
+                <TabsTrigger value="free" className="gap-1.5 text-xs md:text-sm">
+                  مجاني
+                </TabsTrigger>
+                <TabsTrigger value="premium" className="gap-1.5 text-xs md:text-sm">
+                  <Crown className="w-3.5 h-3.5" />
+                  بريميوم
+                </TabsTrigger>
+              </TabsList>
+            </Tabs>
+          </div>
+
+          {/* ===== Loading ===== */}
           {loading && (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               {[...Array(6)].map((_, i) => (
                 <div
                   key={i}
-                  className="h-72 rounded-3xl bg-gradient-to-br from-muted/60 to-muted/20 animate-pulse border border-border/40"
+                  className="h-44 rounded-xl bg-muted/40 animate-pulse border border-border"
                 />
               ))}
             </div>
           )}
 
-          {/* Tracks Grid */}
-          {!loading && (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-7">
-              {tracks.map((track, idx) => {
+          {/* ===== Tracks Grid ===== */}
+          {!loading && filteredTracks.length > 0 && (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {filteredTracks.map((track, idx) => {
                 const Icon = getIcon(track.icon);
+                const s = stats[track.id];
+                const userUses = usage[track.id] || 0;
                 return (
                   <motion.div
                     key={track.id}
-                    initial={{ opacity: 0, y: 24 }}
+                    initial={{ opacity: 0, y: 12 }}
                     animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: idx * 0.06, duration: 0.5 }}
-                    whileHover={{ y: -6 }}
-                    className="group relative"
+                    transition={{ delay: idx * 0.04, duration: 0.35 }}
                   >
-                    {/* Outer glow on hover */}
-                    <div
-                      className={`absolute -inset-0.5 rounded-3xl bg-gradient-to-br ${track.color} opacity-0 group-hover:opacity-40 blur-xl transition-opacity duration-500`}
-                    />
-
                     <Card
-                      className="relative overflow-hidden rounded-3xl border border-border/60 bg-card/80 backdrop-blur-xl hover:border-primary/40 transition-all duration-500 cursor-pointer h-full shadow-sm hover:shadow-2xl"
                       onClick={() => navigate(`/student/tracks/${track.slug}`)}
+                      className="group relative cursor-pointer h-full border-border bg-card hover:border-primary/40 hover:shadow-md transition-all duration-300"
                     >
-                      {/* Top accent bar */}
-                      <div className={`absolute inset-x-0 top-0 h-1.5 bg-gradient-to-l ${track.color}`} />
-
-                      {/* Decorative gradient corner */}
-                      <div
-                        className={`absolute -top-20 -left-20 w-56 h-56 rounded-full bg-gradient-to-br ${track.color} opacity-[0.08] group-hover:opacity-20 group-hover:scale-125 transition-all duration-700`}
-                      />
-                      {/* Subtle inner pattern */}
-                      <div
-                        className="absolute inset-0 opacity-[0.03] group-hover:opacity-[0.06] transition-opacity"
-                        style={{
-                          backgroundImage:
-                            'radial-gradient(circle at 1px 1px, hsl(var(--foreground)) 1px, transparent 0)',
-                          backgroundSize: '20px 20px',
-                        }}
-                      />
-
-                      <CardContent className="p-7 relative">
-                        {/* Icon + Premium chip */}
-                        <div className="flex items-start justify-between mb-5">
-                          <motion.div
-                            whileHover={{ rotate: [0, -6, 6, 0], scale: 1.08 }}
-                            transition={{ duration: 0.5 }}
-                            className={`relative w-16 h-16 rounded-2xl bg-gradient-to-br ${track.color} flex items-center justify-center shadow-lg`}
+                      <CardContent className="p-5">
+                        {/* Header row */}
+                        <div className="flex items-start justify-between mb-4">
+                          <div
+                            className={`w-12 h-12 rounded-xl bg-gradient-to-br ${track.color} flex items-center justify-center shadow-sm`}
                           >
-                            <div className="absolute inset-0 rounded-2xl bg-white/20 opacity-0 group-hover:opacity-100 transition-opacity" />
-                            <Icon className="w-8 h-8 text-white relative z-10 drop-shadow" />
-                          </motion.div>
-
-                          <Badge
-                            variant="outline"
-                            className="bg-background/80 backdrop-blur border-primary/20 text-[10px] font-semibold tracking-wider uppercase text-primary/80"
-                          >
-                            <Sparkles className="w-3 h-3 ms-1" />
-                            AI
-                          </Badge>
+                            <Icon className="w-6 h-6 text-white" />
+                          </div>
+                          {userUses > 0 && (
+                            <Badge
+                              variant="secondary"
+                              className="text-[10px] gap-1 bg-primary/10 text-primary border-primary/20"
+                            >
+                              <TrendingUp className="w-3 h-3" />
+                              {userUses} استخدام
+                            </Badge>
+                          )}
                         </div>
 
                         {/* Title */}
-                        <h3 className="text-2xl font-bold mb-2 text-foreground group-hover:text-primary transition-colors">
+                        <h3 className="text-base md:text-lg font-bold text-foreground mb-1 group-hover:text-primary transition-colors">
                           {track.name_ar}
                         </h3>
-
-                        {/* English name */}
-                        <p className="text-xs font-medium text-muted-foreground/80 mb-3 tracking-wide uppercase">
+                        <p className="text-[11px] uppercase tracking-wider text-muted-foreground/70 mb-3 font-medium">
                           {track.name_en}
                         </p>
 
                         {/* Description */}
-                        <p className="text-sm text-muted-foreground leading-relaxed line-clamp-3 mb-6 min-h-[60px]">
+                        <p className="text-xs md:text-sm text-muted-foreground leading-relaxed line-clamp-2 mb-4 min-h-[40px]">
                           {track.description_ar}
                         </p>
 
-                        {/* Footer */}
-                        <div className="flex items-center justify-between pt-4 border-t border-border/60">
-                          <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
-                            <div className="flex -space-x-1.5 rtl:space-x-reverse">
-                              {[...Array(3)].map((_, i) => (
-                                <div
-                                  key={i}
-                                  className={`w-6 h-6 rounded-full bg-gradient-to-br ${track.color} border-2 border-card shadow-sm`}
-                                />
-                              ))}
-                            </div>
-                            <span className="ms-1 font-medium">+ أدوات</span>
+                        {/* Stats footer */}
+                        <div className="flex items-center justify-between pt-3 border-t border-border">
+                          <div className="flex items-center gap-3 text-xs">
+                            <span className="flex items-center gap-1 text-muted-foreground">
+                              <Wrench className="w-3.5 h-3.5" />
+                              <span className="font-semibold text-foreground">
+                                {s?.tools_count ?? 0}
+                              </span>
+                              <span>أداة</span>
+                            </span>
+                            {s && s.premium_count > 0 && (
+                              <span className="flex items-center gap-1 text-amber-600 dark:text-amber-500">
+                                <Crown className="w-3.5 h-3.5" />
+                                {s.premium_count}
+                              </span>
+                            )}
                           </div>
-
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            className="gap-1 text-primary hover:text-primary hover:bg-primary/10 group-hover:gap-2 transition-all font-semibold"
-                          >
+                          <div className="text-primary text-xs font-semibold flex items-center gap-1 group-hover:gap-2 transition-all">
                             استكشف
-                            <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
-                          </Button>
+                            <ArrowLeft className="w-3.5 h-3.5" />
+                          </div>
                         </div>
                       </CardContent>
                     </Card>
@@ -208,37 +253,148 @@ export default function TracksPage() {
             </div>
           )}
 
-          {/* Bottom CTA strip */}
+          {/* ===== Empty state ===== */}
+          {!loading && filteredTracks.length === 0 && (
+            <Card className="border-dashed border-border">
+              <CardContent className="py-12 text-center">
+                <Search className="w-10 h-10 mx-auto mb-3 text-muted-foreground/60" />
+                <h3 className="font-semibold text-foreground mb-1">لا توجد نتائج</h3>
+                <p className="text-sm text-muted-foreground mb-4">
+                  جرّب بحثًا آخر أو غيّر الفلتر.
+                </p>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => {
+                    setSearch('');
+                    setFilter('all');
+                  }}
+                >
+                  إعادة ضبط
+                </Button>
+              </CardContent>
+            </Card>
+          )}
+
+          {/* ===== Bottom CTA ===== */}
           {!loading && tracks.length > 0 && (
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.4 }}
-              className="mt-16 relative overflow-hidden rounded-3xl border border-primary/20 bg-gradient-to-l from-primary/10 via-primary/5 to-transparent backdrop-blur p-8 md:p-10"
-            >
-              <div className="absolute -bottom-10 -left-10 w-64 h-64 rounded-full bg-primary/20 blur-3xl" />
-              <div className="relative flex flex-col md:flex-row items-center justify-between gap-6">
+            <Card className="border-border bg-gradient-to-l from-primary/5 to-transparent">
+              <CardContent className="p-6 md:p-7 flex flex-col md:flex-row items-center justify-between gap-4">
                 <div className="text-center md:text-right">
-                  <h3 className="text-xl md:text-2xl font-bold mb-2">
+                  <h3 className="text-base md:text-lg font-bold text-foreground mb-1">
                     لم تجد المسار المناسب؟
                   </h3>
-                  <p className="text-muted-foreground text-sm">
-                    تواصل معنا واطلب مسارًا مخصصًا لتخصصك — فريقنا جاهز لخدمتك.
+                  <p className="text-sm text-muted-foreground">
+                    تواصل معنا واطلب مسارًا مخصصًا لتخصصك.
                   </p>
                 </div>
                 <Button
-                  size="lg"
                   onClick={() => navigate('/support/tickets')}
-                  className="bg-primary hover:bg-primary/90 shadow-lg shadow-primary/20 gap-2"
+                  className="gap-2"
+                  size="default"
                 >
                   <Sparkles className="w-4 h-4" />
                   اطلب مسارًا مخصصًا
                 </Button>
-              </div>
-            </motion.div>
+              </CardContent>
+            </Card>
           )}
         </div>
       </div>
     </ClientLayout>
+  );
+}
+
+/* ============================================================
+   Subcomponents
+   ============================================================ */
+
+interface StatTileProps {
+  icon: React.ElementType;
+  label: string;
+  value: number | string;
+  tone?: 'default' | 'primary' | 'success' | 'warning';
+}
+
+function StatTile({ icon: Icon, label, value, tone = 'default' }: StatTileProps) {
+  const tones = {
+    default: 'text-foreground bg-muted/60',
+    primary: 'text-primary bg-primary/10',
+    success: 'text-emerald-600 dark:text-emerald-500 bg-emerald-500/10',
+    warning: 'text-amber-600 dark:text-amber-500 bg-amber-500/10',
+  };
+  return (
+    <Card className="border-border">
+      <CardContent className="p-4 flex items-center gap-3">
+        <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${tones[tone]}`}>
+          <Icon className="w-5 h-5" />
+        </div>
+        <div className="min-w-0">
+          <div className="text-xl md:text-2xl font-bold text-foreground leading-none">
+            {value}
+          </div>
+          <div className="text-[11px] md:text-xs text-muted-foreground mt-1 truncate">
+            {label}
+          </div>
+        </div>
+      </CardContent>
+    </Card>
+  );
+}
+
+interface RecommendedCardProps {
+  track: any;
+  stats?: { tools_count: number; free_count: number; premium_count: number };
+  usageCount: number;
+  onOpen: () => void;
+  getIcon: (name: string) => React.ElementType;
+}
+
+function RecommendedCard({ track, stats, usageCount, onOpen, getIcon }: RecommendedCardProps) {
+  const Icon = getIcon(track.icon);
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 10 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.4 }}
+    >
+      <Card className="border-primary/30 bg-gradient-to-l from-primary/5 via-card to-card overflow-hidden">
+        <CardContent className="p-5 md:p-6">
+          <div className="flex items-center gap-2 mb-4 text-xs text-primary font-semibold">
+            <Star className="w-4 h-4 fill-primary" />
+            موصى به لك بناءً على نشاطك
+          </div>
+          <div className="flex flex-col md:flex-row md:items-center gap-5">
+            <div
+              className={`w-16 h-16 rounded-2xl bg-gradient-to-br ${track.color} flex items-center justify-center shadow-md shrink-0`}
+            >
+              <Icon className="w-8 h-8 text-white" />
+            </div>
+            <div className="flex-1 min-w-0">
+              <h2 className="text-lg md:text-xl font-bold text-foreground mb-1">
+                {track.name_ar}
+              </h2>
+              <p className="text-sm text-muted-foreground line-clamp-2 mb-2">
+                {track.description_ar}
+              </p>
+              <div className="flex flex-wrap items-center gap-3 text-xs text-muted-foreground">
+                <span className="flex items-center gap-1">
+                  <Wrench className="w-3.5 h-3.5" />
+                  {stats?.tools_count ?? 0} أداة
+                </span>
+                <span className="flex items-center gap-1">
+                  <TrendingUp className="w-3.5 h-3.5" />
+                  استخدمتها {usageCount} مرة
+                </span>
+              </div>
+            </div>
+            <Button onClick={onOpen} className="gap-2 shrink-0 self-start md:self-center">
+              متابعة
+              <ArrowLeft className="w-4 h-4" />
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
+    </motion.div>
   );
 }
