@@ -7,6 +7,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { usePlatformAuth } from '@/components/auth/PlatformAuthProvider';
 import { toast } from 'sonner';
+import { triggerLoginWelcome } from '@/components/LoginWelcomeOverlay';
 
 export default function PlatformLogin() {
   const [email, setEmail] = useState('');
