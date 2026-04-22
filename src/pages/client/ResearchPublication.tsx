@@ -1032,11 +1032,52 @@ export default function ResearchPublication() {
     <div class="legal">جميع الحقوق محفوظة © ${new Date().getFullYear()} · مرجع الفاتورة: ${esc(docNumber)} · ختم زمني: ${esc(issuedIso)}</div>
   </div>
 </div></div>${triggerPrintScript}</body></html>`;
-    openPdfWindow(html);
+    return html;
+  };
+
+  const downloadInvoicePdf = (item: any) => {
+    openPdfWindow(buildInvoiceHtml(item));
+  };
+
+  // ============================================================
+  // اختبار PDF متعدد المقاسات (Mobile/Tablet/Desktop)
+  // ============================================================
+  const [pdfTestOpen, setPdfTestOpen] = useState(false);
+  const [pdfTestKind, setPdfTestKind] = useState<'summary' | 'contract' | 'invoice'>('summary');
+  const [pdfTestHtml, setPdfTestHtml] = useState<string>('');
+  const [pdfTestLoading, setPdfTestLoading] = useState(false);
+  const [pdfTestItem, setPdfTestItem] = useState<any>(null);
+  const [pdfTestViewport, setPdfTestViewport] = useState<'mobile' | 'tablet' | 'desktop' | 'compare'>('compare');
+
+  const openPdfTest = async (item: any, kind: 'summary' | 'contract' | 'invoice') => {
+    setPdfTestItem(item);
+    setPdfTestKind(kind);
+    setPdfTestOpen(true);
+    setPdfTestLoading(true);
+    setPdfTestHtml('');
+    try {
+      let html = '';
+      if (kind === 'summary') html = buildSummaryHtml(item);
+      else if (kind === 'contract') html = await buildContractHtml(item);
+      else html = buildInvoiceHtml(item);
+      // إزالة سكربت الطباعة التلقائية في وضع المعاينة
+      html = html.replace(/<script>[\s\S]*?window\.print[\s\S]*?<\/script>/g, '');
+      setPdfTestHtml(html);
+    } catch (e: any) {
+      toast({ title: 'تعذّر التوليد', description: e?.message || 'حدث خطأ', variant: 'destructive' });
+    } finally {
+      setPdfTestLoading(false);
+    }
+  };
+
+  const exportPdfTest = () => {
+    if (!pdfTestItem) return;
+    if (pdfTestKind === 'summary') downloadSummaryPdf(pdfTestItem);
+    else if (pdfTestKind === 'contract') downloadContractPdf(pdfTestItem);
+    else downloadInvoicePdf(pdfTestItem);
   };
 
 
-  const load = async () => {
     if (!user?.id) return;
     setLoading(true);
     const { data } = await supabase
