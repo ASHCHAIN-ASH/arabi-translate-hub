@@ -236,6 +236,7 @@ const App = () => (
       <BrowserRouter>
         <ScrollToTop />
         <SimpleAuthProvider>
+          <LoginWelcomeOverlay />
           <PageThemeProvider>
           <Routes>
             {/* Public Routes */}
