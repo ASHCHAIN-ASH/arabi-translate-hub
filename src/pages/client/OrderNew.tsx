@@ -796,84 +796,211 @@ const OrderNew = () => {
                         </div>
                       )}
 
-                      {/* STEP 1 — Details + dynamic fields + quantity */}
+                      {/* STEP 1 — Details + dynamic fields + quantity (Redesigned) */}
                       {step === 1 && (
-                        <div className="space-y-5">
-                          <div className="flex items-center gap-3">
+                        <div className="space-y-5 sm:space-y-6">
+                          {/* Header with accent strip + completion chip */}
+                          <div className="relative overflow-hidden rounded-2xl border border-border/50 bg-gradient-to-br from-card to-card/60 p-4 sm:p-5">
                             <div
-                              className="w-10 h-10 rounded-xl flex items-center justify-center"
-                              style={{ background: `hsl(var(--${theme.accent}) / 0.12)` }}
-                            >
-                              <ClipboardList className="w-5 h-5" style={{ color: `hsl(var(--${theme.accent}))` }} />
-                            </div>
-                            <div>
-                              <h3 className="text-lg font-bold">تفاصيل الطلب</h3>
-                              <p className="text-xs text-muted-foreground">كلما زادت دقّة المعلومات، كان عرض السعر أدق</p>
+                              className="absolute inset-x-0 top-0 h-1"
+                              style={{ background: `linear-gradient(90deg, hsl(var(--${theme.accent})), hsl(var(--${theme.accent}) / 0.3))` }}
+                            />
+                            <div className="flex items-start gap-3 sm:gap-4">
+                              <div
+                                className="w-11 h-11 sm:w-12 sm:h-12 rounded-2xl flex items-center justify-center flex-shrink-0 shadow-sm"
+                                style={{ background: `hsl(var(--${theme.accent}) / 0.12)` }}
+                              >
+                                <ClipboardList className="w-5 h-5 sm:w-6 sm:h-6" style={{ color: `hsl(var(--${theme.accent}))` }} />
+                              </div>
+                              <div className="flex-1 min-w-0">
+                                <div className="flex items-center gap-2 flex-wrap">
+                                  <h3 className="text-base sm:text-lg font-bold">تفاصيل الطلب</h3>
+                                  <span
+                                    className="text-[10px] sm:text-xs font-mono px-2 py-0.5 rounded-full"
+                                    style={{
+                                      background: `hsl(var(--${theme.accent}) / 0.1)`,
+                                      color: `hsl(var(--${theme.accent}))`,
+                                    }}
+                                  >
+                                    خطوة 2 من 4
+                                  </span>
+                                </div>
+                                <p className="text-xs sm:text-sm text-muted-foreground mt-1 leading-relaxed">
+                                  كلما زادت دقّة المعلومات، كان عرض السعر والمدّة أدق
+                                </p>
+                              </div>
                             </div>
                           </div>
 
-                          {/* Quantity */}
-                          <div>
-                            <Label className="text-sm font-medium mb-1.5 flex items-center gap-1.5">
-                              <Hash className="w-3.5 h-3.5" style={{ color: `hsl(var(--${theme.accent}))` }} />
-                              <span>الكمية ({fieldsConfig.quantityUnitLabel})</span>
-                              <span className="text-destructive">*</span>
-                              <Tooltip>
-                                <TooltipTrigger asChild>
-                                  <button type="button" className="text-muted-foreground hover:text-foreground transition-colors">
-                                    <HelpCircle className="w-3.5 h-3.5" />
+                          {/* SECTION 1 — Quantity (compact card) */}
+                          <section className="rounded-2xl border border-border/50 bg-card/40 p-4 sm:p-5">
+                            <div className="flex items-center justify-between gap-3 mb-3">
+                              <Label className="text-sm font-semibold flex items-center gap-2 m-0">
+                                <span
+                                  className="w-7 h-7 rounded-lg flex items-center justify-center"
+                                  style={{ background: `hsl(var(--${theme.accent}) / 0.12)` }}
+                                >
+                                  <Hash className="w-3.5 h-3.5" style={{ color: `hsl(var(--${theme.accent}))` }} />
+                                </span>
+                                <span>الكمية</span>
+                                <span className="text-destructive">*</span>
+                                <Tooltip>
+                                  <TooltipTrigger asChild>
+                                    <button type="button" className="text-muted-foreground hover:text-foreground transition-colors">
+                                      <HelpCircle className="w-3.5 h-3.5" />
+                                    </button>
+                                  </TooltipTrigger>
+                                  <TooltipContent className="max-w-[240px] text-xs">
+                                    حدّد العدد المطلوب بوحدة <span className="font-bold">{fieldsConfig.quantityUnitLabel}</span>. يساعدنا هذا في تقدير الجهد والمدة بدقة.
+                                  </TooltipContent>
+                                </Tooltip>
+                              </Label>
+                              <span className="text-[11px] text-muted-foreground bg-muted/60 px-2 py-1 rounded-full">
+                                {fieldsConfig.quantityUnitLabel}
+                              </span>
+                            </div>
+                            <div className="flex items-stretch gap-2">
+                              <button
+                                type="button"
+                                onClick={() => setQuantity((q) => Math.max(1, (q || 1) - 1))}
+                                className="w-11 h-11 rounded-xl bg-muted/60 hover:bg-muted active:scale-95 transition-all flex items-center justify-center text-lg font-bold text-muted-foreground hover:text-foreground"
+                                aria-label="إنقاص"
+                              >
+                                −
+                              </button>
+                              <Input
+                                type="number"
+                                min={1}
+                                value={quantity}
+                                onChange={(e) => setQuantity(Number(e.target.value) || 0)}
+                                className="rounded-xl bg-background/60 text-center text-lg font-bold h-11 flex-1 max-w-[160px]"
+                              />
+                              <button
+                                type="button"
+                                onClick={() => setQuantity((q) => (q || 0) + 1)}
+                                className="w-11 h-11 rounded-xl bg-muted/60 hover:bg-muted active:scale-95 transition-all flex items-center justify-center text-lg font-bold text-muted-foreground hover:text-foreground"
+                                aria-label="زيادة"
+                              >
+                                +
+                              </button>
+                              {/* Quick presets */}
+                              <div className="hidden sm:flex items-center gap-1.5 mr-auto">
+                                {[1, 5, 10, 20].map((v) => (
+                                  <button
+                                    key={v}
+                                    type="button"
+                                    onClick={() => setQuantity(v)}
+                                    className={cn(
+                                      'h-9 px-3 rounded-lg text-xs font-medium transition-all',
+                                      quantity === v
+                                        ? 'text-white shadow-sm'
+                                        : 'bg-muted/50 hover:bg-muted text-muted-foreground hover:text-foreground'
+                                    )}
+                                    style={quantity === v ? { background: `hsl(var(--${theme.accent}))` } : undefined}
+                                  >
+                                    {v}
                                   </button>
-                                </TooltipTrigger>
-                                <TooltipContent className="max-w-[240px] text-xs">
-                                  حدّد العدد المطلوب بوحدة <span className="font-bold">{fieldsConfig.quantityUnitLabel}</span>. يساعدنا هذا في تقدير الجهد والمدة بدقة.
-                                </TooltipContent>
-                              </Tooltip>
-                            </Label>
-                            <Input type="number" min={1} value={quantity}
-                              onChange={(e) => setQuantity(Number(e.target.value) || 0)}
-                              className="rounded-xl bg-background/60 max-w-[200px]" />
-                          </div>
+                                ))}
+                              </div>
+                            </div>
+                            {/* Mobile presets */}
+                            <div className="flex sm:hidden items-center gap-1.5 mt-3 overflow-x-auto pb-1">
+                              {[1, 5, 10, 20, 50].map((v) => (
+                                <button
+                                  key={v}
+                                  type="button"
+                                  onClick={() => setQuantity(v)}
+                                  className={cn(
+                                    'h-8 px-3 rounded-lg text-xs font-medium transition-all flex-shrink-0',
+                                    quantity === v
+                                      ? 'text-white shadow-sm'
+                                      : 'bg-muted/50 hover:bg-muted text-muted-foreground'
+                                  )}
+                                  style={quantity === v ? { background: `hsl(var(--${theme.accent}))` } : undefined}
+                                >
+                                  {v}
+                                </button>
+                              ))}
+                            </div>
+                          </section>
 
-                          {/* Dynamic fields per service — themed, sectioned when template available */}
-                          <DynamicServiceFields
-                            config={fieldsConfig}
-                            values={dynamicValues}
-                            onChange={(k, v) => setDynamicValues(prev => ({ ...prev, [k]: v }))}
-                            theme={theme}
-                            sections={template?.sections}
-                          />
+                          {/* SECTION 2 — Dynamic fields */}
+                          <section className="rounded-2xl border border-border/50 bg-card/40 p-4 sm:p-5">
+                            <DynamicServiceFields
+                              config={fieldsConfig}
+                              values={dynamicValues}
+                              onChange={(k, v) => setDynamicValues(prev => ({ ...prev, [k]: v }))}
+                              theme={theme}
+                              sections={template?.sections}
+                            />
+                          </section>
 
-                          {/* Notes with category-tailored placeholder */}
-                          <div className="space-y-3">
-                            <Label className="text-sm font-medium mb-1.5 flex items-center gap-1.5">
-                              <ClipboardList className="w-3.5 h-3.5" style={{ color: `hsl(var(--${theme.accent}))` }} />
-                              <span>وصف الطلب وملاحظات إضافية</span>
-                              <span className="text-destructive">*</span>
-                              <Tooltip>
-                                <TooltipTrigger asChild>
-                                  <button type="button" className="text-muted-foreground hover:text-foreground transition-colors">
-                                    <HelpCircle className="w-3.5 h-3.5" />
-                                  </button>
-                                </TooltipTrigger>
-                                <TooltipContent className="max-w-[260px] text-xs leading-relaxed">
-                                  اشرح ما تحتاجه بالتفصيل: الهدف، الجمهور المستهدف، أي متطلبات خاصة، ولغة التسليم. كلما زادت التفاصيل، حصلت على عرض سعر ودقّة أعلى.
-                                </TooltipContent>
-                              </Tooltip>
-                            </Label>
-                            <Textarea value={notes} onChange={(e) => setNotes(e.target.value)}
+                          {/* SECTION 3 — Notes */}
+                          <section className="rounded-2xl border border-border/50 bg-card/40 p-4 sm:p-5 space-y-3">
+                            <div className="flex items-start justify-between gap-3 flex-wrap">
+                              <Label className="text-sm font-semibold flex items-center gap-2 m-0">
+                                <span
+                                  className="w-7 h-7 rounded-lg flex items-center justify-center"
+                                  style={{ background: `hsl(var(--${theme.accent}) / 0.12)` }}
+                                >
+                                  <ClipboardList className="w-3.5 h-3.5" style={{ color: `hsl(var(--${theme.accent}))` }} />
+                                </span>
+                                <span>وصف الطلب</span>
+                                <span className="text-destructive">*</span>
+                                <Tooltip>
+                                  <TooltipTrigger asChild>
+                                    <button type="button" className="text-muted-foreground hover:text-foreground transition-colors">
+                                      <HelpCircle className="w-3.5 h-3.5" />
+                                    </button>
+                                  </TooltipTrigger>
+                                  <TooltipContent className="max-w-[260px] text-xs leading-relaxed">
+                                    اشرح ما تحتاجه بالتفصيل: الهدف، الجمهور المستهدف، أي متطلبات خاصة، ولغة التسليم. كلما زادت التفاصيل، حصلت على عرض سعر ودقّة أعلى.
+                                  </TooltipContent>
+                                </Tooltip>
+                              </Label>
+                              <span
+                                className={cn(
+                                  'text-[11px] font-mono px-2 py-1 rounded-full transition-colors',
+                                  notes.length >= 50
+                                    ? 'bg-emerald-500/15 text-emerald-700 dark:text-emerald-400'
+                                    : notes.length >= 10
+                                    ? 'bg-amber-500/15 text-amber-700 dark:text-amber-400'
+                                    : 'bg-muted/60 text-muted-foreground'
+                                )}
+                              >
+                                {notes.length} حرف
+                              </span>
+                            </div>
+
+                            <Textarea
+                              value={notes}
+                              onChange={(e) => setNotes(e.target.value)}
                               placeholder={theme.notesPlaceholder}
                               rows={5}
-                              className="resize-none rounded-xl bg-background/60" />
-                            <div className="flex items-center justify-between text-xs text-muted-foreground">
-                              <span>كلّما كان الوصف مفصّلاً، حصلت على نتيجة أفضل</span>
-                              <span className={cn(notes.length >= 5 && 'text-emerald-600 font-medium')}>
-                                {notes.length} حرف
+                              className="resize-none rounded-xl bg-background/60 text-sm leading-relaxed min-h-[120px] sm:min-h-[140px]"
+                            />
+
+                            {/* Quality hint */}
+                            <div className="flex items-center gap-2 text-[11px] sm:text-xs text-muted-foreground">
+                              <div className="flex-1 h-1 rounded-full bg-muted/60 overflow-hidden">
+                                <div
+                                  className="h-full rounded-full transition-all duration-300"
+                                  style={{
+                                    width: `${Math.min(100, (notes.length / 100) * 100)}%`,
+                                    background: notes.length >= 50
+                                      ? 'hsl(var(--emerald-500, 142 76% 36%))'
+                                      : `hsl(var(--${theme.accent}))`,
+                                  }}
+                                />
+                              </div>
+                              <span className="flex-shrink-0">
+                                {notes.length < 10 ? 'ابدأ بالكتابة' : notes.length < 50 ? 'وصف جيد' : 'وصف ممتاز ✓'}
                               </span>
                             </div>
 
                             {/* Example prompts (clickable) */}
                             <ExamplePrompts theme={theme} onPick={(t) => setNotes(t)} />
-                          </div>
+                          </section>
                         </div>
                       )}
 
