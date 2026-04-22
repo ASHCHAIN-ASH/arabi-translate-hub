@@ -37,7 +37,18 @@ interface Props {
   urgency?: string;
   certified?: string;
   /** Notify parent of total word count for storage in metadata. */
-  onCountChange?: (data: { totalWords: number; totalPages: number; estimatedPriceSar: number; files: { name: string; words: number }[] }) => void;
+  onCountChange?: (data: {
+    totalWords: number;
+    totalPages: number;
+    estimatedPriceSar: number;
+    files: { name: string; words: number }[];
+    /** Number of files still being analyzed. */
+    pendingCount: number;
+    /** Number of files that errored out. */
+    errorCount: number;
+    /** Total uploaded files (loaded + pending + error). */
+    totalFiles: number;
+  }) => void;
 }
 
 const ACCEPTED = '.pdf,.docx,.txt,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document,text/plain';
