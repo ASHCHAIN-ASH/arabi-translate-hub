@@ -621,7 +621,7 @@ const OrderDetails = () => {
                                 </span>
                               </div>
                               {entry.note && (
-                                <p className="text-sm text-muted-foreground mt-1 bg-muted/40 p-2.5 rounded-lg">{entry.note}</p>
+                                <p className="text-sm text-muted-foreground mt-1 bg-muted/40 p-2.5 rounded-lg">{translateStageWords(entry.note)}</p>
                               )}
                             </div>
                           </div>
