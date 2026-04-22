@@ -599,8 +599,8 @@ const ServiceDetail = () => {
       >
         <div className="flex items-center gap-3">
           <div className="flex-1 min-w-0">
-            <div className="text-[10px] text-muted-foreground">السعر</div>
-            <div className="text-sm font-black truncate">يُحدد بعد المراجعة</div>
+            <div className="text-[10px] text-muted-foreground">جاهز للطلب؟</div>
+            <div className="text-sm font-black truncate">{service.name_ar || service.name}</div>
           </div>
           <Button
             onClick={() => navigate(`/orders/new?service=${service.id}`)}
