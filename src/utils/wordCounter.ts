@@ -183,16 +183,22 @@ export const countWordsInFile = async (
 /** Sum results from multiple files. */
 export const aggregateResults = (results: WordCountResult[]): WordCountResult => {
   if (results.length === 0) {
-    return { words: 0, characters: 0, pages: 0, language: 'unknown', extractedSample: '' };
+    return {
+      words: 0, characters: 0, pages: 0, pagesByWords: 0, pagesByChars: 0,
+      wordsPerPage: WORDS_PER_PAGE_BY_LANG.unknown, language: 'unknown', extractedSample: '',
+    };
   }
   const words = results.reduce((s, r) => s + r.words, 0);
   const characters = results.reduce((s, r) => s + r.characters, 0);
-  const pages = Math.max(1, Math.ceil(words / WORDS_PER_PAGE));
-  // Pick majority language
+  // Pick majority language (weighted by words)
   const langCounts: Record<string, number> = {};
   results.forEach((r) => { langCounts[r.language] = (langCounts[r.language] || 0) + r.words; });
   const language = (Object.entries(langCounts).sort((a, b) => b[1] - a[1])[0]?.[0] || 'unknown') as WordCountResult['language'];
-  return { words, characters, pages, language, extractedSample: results[0].extractedSample };
+  const { pages, pagesByWords, pagesByChars, wordsPerPage } = computePages(words, characters, language);
+  return {
+    words, characters, pages, pagesByWords, pagesByChars, wordsPerPage,
+    language, extractedSample: results[0].extractedSample,
+  };
 };
 
 /** Estimate price (indicative only — final price is set by admin). */
