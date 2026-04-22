@@ -76,11 +76,34 @@ const formatFileSize = (b: number) => {
 
 type Step = 0 | 1 | 2 | 3;
 const STEPS = [
-  { id: 0, title: 'الخدمة', icon: Sparkles },
-  { id: 1, title: 'التفاصيل', icon: ClipboardList },
-  { id: 2, title: 'المرفقات', icon: Paperclip },
-  { id: 3, title: 'المراجعة', icon: Eye },
+  { id: 0, title: 'الخدمة', shortTitle: 'الخدمة', icon: Sparkles, hint: 'تأكيد الخدمة المختارة من القائمة' },
+  { id: 1, title: 'التفاصيل', shortTitle: 'التفاصيل', icon: ClipboardList, hint: 'الكمية وملاحظاتك التفصيلية للفريق' },
+  { id: 2, title: 'المرفقات', shortTitle: 'الملفات', icon: Paperclip, hint: 'ارفع الملفات (اختياري — يُسرّع التسعير)' },
+  { id: 3, title: 'المراجعة', shortTitle: 'المراجعة', icon: Eye, hint: 'مراجعة نهائية قبل الإرسال' },
 ] as const;
+
+const TOUR_STEPS: TourStep[] = [
+  {
+    icon: Compass,
+    title: 'مرحباً بك في إنشاء الطلب 👋',
+    description: 'سنرشدك خطوة بخطوة في 4 خطوات بسيطة: تأكيد الخدمة، إدخال التفاصيل، رفع المرفقات، ثم المراجعة والإرسال.',
+  },
+  {
+    icon: ClipboardList,
+    title: 'كلما زادت التفاصيل، تحسّن السعر',
+    description: 'كلما كان وصفك أدق وأشمل، استطاع الفريق إعداد عرض سعر أكثر دقة وتسليم أسرع. استعن بالأمثلة الجاهزة كنقطة بداية.',
+  },
+  {
+    icon: Paperclip,
+    title: 'رفع الملفات يُسرّع التسعير',
+    description: 'لطلبات الترجمة، يقوم محرك التحليل تلقائياً بقراءة ملفك وحساب الكلمات والصفحات وتقدير السعر فوراً.',
+  },
+  {
+    icon: CheckCircle2,
+    title: 'مراجعة قبل الإرسال',
+    description: 'في الخطوة الأخيرة ستجد ملخصاً كاملاً لطلبك. راجعه ثم اضغط "إرسال" — وستصلك حالة طلبك عبر الإشعارات.',
+  },
+];
 
 const OrderNew = () => {
   const navigate = useNavigate();
