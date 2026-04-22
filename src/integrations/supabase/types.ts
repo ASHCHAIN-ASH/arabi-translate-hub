@@ -351,6 +351,33 @@ export type Database = {
         }
         Relationships: []
       }
+      auth_phone_lockouts: {
+        Row: {
+          created_at: string
+          id: string
+          locked_at: string
+          locked_until: string
+          phone: string
+          reason: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          locked_at?: string
+          locked_until: string
+          phone: string
+          reason?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          locked_at?: string
+          locked_until?: string
+          phone?: string
+          reason?: string
+        }
+        Relationships: []
+      }
       auth_whatsapp_otp: {
         Row: {
           attempts: number
