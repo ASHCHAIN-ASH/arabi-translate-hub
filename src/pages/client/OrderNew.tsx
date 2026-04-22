@@ -11,19 +11,26 @@ import { Progress } from '@/components/ui/progress';
 import {
   ArrowRight, ArrowLeft, ShoppingCart, RefreshCw, Upload, X, File,
   CheckCircle2, Send, Sparkles, ClipboardList, Paperclip, Eye,
-  Image as ImageIcon, Clock, Hash, AlertCircle,
+  Image as ImageIcon, Clock, Hash, AlertCircle, HelpCircle, PlayCircle,
+  Info, FileText, Compass,
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { toast } from 'sonner';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/components/SimpleAuthProvider';
 import { cn } from '@/lib/utils';
+import {
+  Tooltip, TooltipContent, TooltipProvider, TooltipTrigger,
+} from '@/components/ui/tooltip';
+import {
+  Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger,
+} from '@/components/ui/sheet';
 import DynamicServiceFields from '@/components/client/DynamicServiceFields';
-import TranslationWordCounter from '@/components/client/TranslationWordCounter';
 import TranslationAnalysisEngine, { type AnalysisSummary } from '@/components/client/TranslationAnalysisEngine';
 import CategoryHero from '@/components/client/order-new/CategoryHero';
 import CategoryGuideCard from '@/components/client/order-new/CategoryGuideCard';
 import ExamplePrompts from '@/components/client/order-new/ExamplePrompts';
+import OnboardingTour, { type TourStep } from '@/components/client/order-new/OnboardingTour';
 import { getCategoryTheme } from '@/config/categoryThemes';
 import {
   getFieldLabel, getOptionLabel, resolveServiceFields,
@@ -69,11 +76,34 @@ const formatFileSize = (b: number) => {
 
 type Step = 0 | 1 | 2 | 3;
 const STEPS = [
-  { id: 0, title: 'الخدمة', icon: Sparkles },
-  { id: 1, title: 'التفاصيل', icon: ClipboardList },
-  { id: 2, title: 'المرفقات', icon: Paperclip },
-  { id: 3, title: 'المراجعة', icon: Eye },
+  { id: 0, title: 'الخدمة', shortTitle: 'الخدمة', icon: Sparkles, hint: 'تأكيد الخدمة المختارة من القائمة' },
+  { id: 1, title: 'التفاصيل', shortTitle: 'التفاصيل', icon: ClipboardList, hint: 'الكمية وملاحظاتك التفصيلية للفريق' },
+  { id: 2, title: 'المرفقات', shortTitle: 'الملفات', icon: Paperclip, hint: 'ارفع الملفات (اختياري — يُسرّع التسعير)' },
+  { id: 3, title: 'المراجعة', shortTitle: 'المراجعة', icon: Eye, hint: 'مراجعة نهائية قبل الإرسال' },
 ] as const;
+
+const TOUR_STEPS: TourStep[] = [
+  {
+    icon: Compass,
+    title: 'مرحباً بك في إنشاء الطلب 👋',
+    description: 'سنرشدك خطوة بخطوة في 4 خطوات بسيطة: تأكيد الخدمة، إدخال التفاصيل، رفع المرفقات، ثم المراجعة والإرسال.',
+  },
+  {
+    icon: ClipboardList,
+    title: 'كلما زادت التفاصيل، تحسّن السعر',
+    description: 'كلما كان وصفك أدق وأشمل، استطاع الفريق إعداد عرض سعر أكثر دقة وتسليم أسرع. استعن بالأمثلة الجاهزة كنقطة بداية.',
+  },
+  {
+    icon: Paperclip,
+    title: 'رفع الملفات يُسرّع التسعير',
+    description: 'لطلبات الترجمة، يقوم محرك التحليل تلقائياً بقراءة ملفك وحساب الكلمات والصفحات وتقدير السعر فوراً.',
+  },
+  {
+    icon: CheckCircle2,
+    title: 'مراجعة قبل الإرسال',
+    description: 'في الخطوة الأخيرة ستجد ملخصاً كاملاً لطلبك. راجعه ثم اضغط "إرسال" — وستصلك حالة طلبك عبر الإشعارات.',
+  },
+];
 
 const OrderNew = () => {
   const navigate = useNavigate();
@@ -94,6 +124,8 @@ const OrderNew = () => {
   const [submitted, setSubmitted] = useState(false);
   const [trackingId, setTrackingId] = useState<string>('');
   const [analysisSummary, setAnalysisSummary] = useState<AnalysisSummary | null>(null);
+  const [tourOpen, setTourOpen] = useState(false);
+  const [mobileGuideOpen, setMobileGuideOpen] = useState(false);
   // Legacy shape used by guards & DB write — derived from analysisSummary
   const wordCountData = useMemo(() => {
     if (!analysisSummary) return null;
@@ -456,103 +488,256 @@ const OrderNew = () => {
     );
   }
 
+  const progressPct = Math.round(((step + 1) / STEPS.length) * 100);
+
   return (
     <ClientLayout>
-      <div className="p-4 sm:p-6 lg:p-8 relative" dir="rtl">
-        {/* Ambient background */}
-        <div className="absolute inset-0 -z-10 overflow-hidden pointer-events-none">
-          <div
-            className="absolute top-0 right-1/4 w-96 h-96 rounded-full blur-3xl opacity-50"
-            style={{ background: `hsl(var(--${theme.glow}) / 0.3)` }}
-          />
-          <div
-            className="absolute bottom-0 left-1/4 w-96 h-96 rounded-full blur-3xl opacity-40"
-            style={{ background: `hsl(var(--${theme.accent}) / 0.2)` }}
-          />
-        </div>
+      <TooltipProvider delayDuration={150}>
+        {/* Onboarding tour — auto-shows once per service category */}
+        <OnboardingTour
+          storageKey={`tour-order-new-${service?.category_slug || 'default'}`}
+          steps={TOUR_STEPS}
+          accentVar={theme.accent}
+          forceOpen={tourOpen}
+          onClose={() => setTourOpen(false)}
+        />
 
-        <div className="max-w-6xl mx-auto space-y-6">
-          {/* Top bar */}
-          <div className="flex items-center justify-between">
-            <Button variant="ghost" size="sm" onClick={() => navigate('/client-services')}>
-              <ArrowRight className="w-4 h-4 me-1" /> رجوع للخدمات
-            </Button>
-            <div className="text-xs text-muted-foreground hidden sm:block">
-              الخطوة <span className="font-bold text-foreground">{step + 1}</span> من {STEPS.length}
-            </div>
+        <div className="px-3 py-3 sm:p-6 lg:p-8 relative" dir="rtl">
+          {/* Ambient background */}
+          <div className="absolute inset-0 -z-10 overflow-hidden pointer-events-none">
+            <div
+              className="absolute top-0 right-1/4 w-[60vw] max-w-md h-[60vw] max-h-md rounded-full blur-3xl opacity-40 sm:opacity-50"
+              style={{ background: `hsl(var(--${theme.glow}) / 0.3)` }}
+            />
+            <div
+              className="absolute bottom-0 left-1/4 w-[60vw] max-w-md h-[60vw] max-h-md rounded-full blur-3xl opacity-30 sm:opacity-40"
+              style={{ background: `hsl(var(--${theme.accent}) / 0.2)` }}
+            />
           </div>
 
-          {/* Category-specific Hero */}
-          {service && (
-            <CategoryHero
-              theme={theme}
-              serviceName={service.name_ar || service.name}
-              serviceDescription={service.description}
-              categoryLabel={service.category_name}
-            />
-          )}
+          <div className="max-w-6xl mx-auto space-y-4 sm:space-y-6">
+            {/* Top bar */}
+            <div className="flex items-center justify-between gap-2 flex-wrap">
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => navigate('/client-services')}
+                className="gap-1 -ms-2 sm:ms-0"
+              >
+                <ArrowRight className="w-4 h-4" />
+                <span className="hidden xs:inline">رجوع للخدمات</span>
+                <span className="xs:hidden">رجوع</span>
+              </Button>
 
-          {/* Two-column layout: wizard + side guide */}
-          <div className="grid grid-cols-1 lg:grid-cols-[1fr_320px] gap-6">
-            {/* MAIN — wizard */}
-            <div className="space-y-6 min-w-0">
-              {/* Stepper */}
-              <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
-                className="rounded-2xl border border-border/40 bg-card/60 backdrop-blur-xl p-4 sm:p-6 shadow-sm">
-                <div className="flex items-center justify-between gap-2 sm:gap-4">
-                  {STEPS.map((s, i) => {
-                    const Icon = s.icon;
-                    const active = step === s.id;
-                    const done = step > s.id;
-                    return (
-                      <React.Fragment key={s.id}>
-                        <button type="button" onClick={() => done && setStep(s.id as Step)}
-                          className={cn('flex flex-col items-center gap-2 flex-shrink-0 transition-all', done && 'cursor-pointer')}>
-                          <div
-                            className={cn(
-                              'relative w-12 h-12 rounded-2xl flex items-center justify-center transition-all duration-300',
-                              !active && !done && 'bg-muted text-muted-foreground',
-                              done && 'bg-emerald-500 text-white shadow-md shadow-emerald-500/30',
-                            )}
-                            style={active ? {
-                              background: `hsl(var(--${theme.accent}))`,
-                              color: 'white',
-                              boxShadow: `0 8px 24px hsl(var(--${theme.accent}) / 0.4)`,
-                              transform: 'scale(1.1)',
-                            } : undefined}
-                          >
-                            {done ? <CheckCircle2 className="w-5 h-5" /> : <Icon className="w-5 h-5" />}
-                            {active && (
-                              <motion.div
-                                className="absolute inset-0 rounded-2xl border-2"
-                                style={{ borderColor: `hsl(var(--${theme.accent}))` }}
-                                animate={{ scale: [1, 1.15, 1], opacity: [0.6, 0, 0.6] }}
-                                transition={{ duration: 2, repeat: Infinity }}
-                              />
-                            )}
-                          </div>
-                          <div className="text-center hidden sm:block">
-                            <div className={cn('text-sm font-semibold', active ? 'text-foreground' : 'text-muted-foreground')}>
-                              {s.title}
-                            </div>
-                          </div>
-                        </button>
-                        {i < STEPS.length - 1 && (
-                          <div className="flex-1 h-1 rounded-full bg-muted overflow-hidden">
-                            <motion.div
-                              className="h-full"
-                              style={{ background: `hsl(var(--${theme.accent}))` }}
-                              initial={{ width: '0%' }}
-                              animate={{ width: step > s.id ? '100%' : '0%' }}
-                              transition={{ duration: 0.4 }}
-                            />
-                          </div>
-                        )}
-                      </React.Fragment>
-                    );
-                  })}
+              <div className="flex items-center gap-1.5">
+                {/* Step indicator (desktop) */}
+                <div className="text-xs text-muted-foreground hidden sm:block me-2">
+                  الخطوة <span className="font-bold text-foreground">{step + 1}</span> من {STEPS.length}
                 </div>
-              </motion.div>
+
+                {/* Mobile guide trigger */}
+                <Sheet open={mobileGuideOpen} onOpenChange={setMobileGuideOpen}>
+                  <SheetTrigger asChild>
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="sm"
+                      className="lg:hidden h-9 gap-1.5 rounded-full"
+                    >
+                      <Info className="w-3.5 h-3.5" />
+                      <span className="text-xs">دليل</span>
+                    </Button>
+                  </SheetTrigger>
+                  <SheetContent side="bottom" className="rounded-t-3xl max-h-[85vh] overflow-y-auto" dir="rtl">
+                    <SheetHeader className="text-right mb-3">
+                      <SheetTitle className="flex items-center gap-2">
+                        <Compass className="w-5 h-5" style={{ color: `hsl(var(--${theme.accent}))` }} />
+                        دليل الطلب
+                      </SheetTitle>
+                    </SheetHeader>
+                    <CategoryGuideCard theme={theme} />
+                  </SheetContent>
+                </Sheet>
+
+                {/* Tour trigger */}
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="sm"
+                      onClick={() => setTourOpen(true)}
+                      className="h-9 gap-1.5 rounded-full"
+                    >
+                      <PlayCircle className="w-3.5 h-3.5" />
+                      <span className="text-xs hidden xs:inline">جولة</span>
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent>إعادة تشغيل الجولة التعريفية</TooltipContent>
+                </Tooltip>
+              </div>
+            </div>
+
+            {/* Category-specific Hero */}
+            {service && (
+              <CategoryHero
+                theme={theme}
+                serviceName={service.name_ar || service.name}
+                serviceDescription={service.description}
+                categoryLabel={service.category_name}
+              />
+            )}
+
+            {/* Two-column layout: wizard + side guide */}
+            <div className="grid grid-cols-1 lg:grid-cols-[1fr_320px] gap-4 sm:gap-6">
+              {/* MAIN — wizard */}
+              <div className="space-y-4 sm:space-y-6 min-w-0">
+                {/* Stepper — compact mobile, full desktop */}
+                <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
+                  className="rounded-2xl border border-border/40 bg-card/70 backdrop-blur-xl p-3 sm:p-5 shadow-sm">
+
+                  {/* Mobile: clean linear progress + active step pill */}
+                  <div className="sm:hidden space-y-3">
+                    <div className="flex items-center justify-between gap-2">
+                      <div className="flex items-center gap-2 min-w-0">
+                        <div
+                          className="w-9 h-9 rounded-xl flex items-center justify-center shrink-0"
+                          style={{
+                            background: `hsl(var(--${theme.accent}))`,
+                            boxShadow: `0 6px 16px hsl(var(--${theme.accent}) / 0.35)`,
+                          }}
+                        >
+                          {React.createElement(STEPS[step].icon, { className: 'w-4 h-4 text-white' })}
+                        </div>
+                        <div className="min-w-0">
+                          <div className="text-[10px] text-muted-foreground leading-tight">الخطوة {step + 1}/{STEPS.length}</div>
+                          <div className="text-sm font-bold truncate leading-tight">{STEPS[step].title}</div>
+                        </div>
+                      </div>
+                      <span
+                        className="text-xs font-bold tabular-nums"
+                        style={{ color: `hsl(var(--${theme.accent}))` }}
+                      >
+                        {progressPct}%
+                      </span>
+                    </div>
+                    <div className="h-1.5 rounded-full bg-muted overflow-hidden">
+                      <motion.div
+                        className="h-full rounded-full"
+                        style={{
+                          background: `linear-gradient(90deg, hsl(var(--${theme.accent})), hsl(var(--${theme.glow})))`,
+                        }}
+                        initial={{ width: 0 }}
+                        animate={{ width: `${progressPct}%` }}
+                        transition={{ duration: 0.4 }}
+                      />
+                    </div>
+                    {/* Tappable mini-dots for completed steps */}
+                    <div className="flex items-center justify-between gap-1 pt-1">
+                      {STEPS.map((s, i) => {
+                        const Icon = s.icon;
+                        const active = step === s.id;
+                        const done = step > s.id;
+                        return (
+                          <button
+                            key={s.id}
+                            type="button"
+                            onClick={() => done && setStep(s.id as Step)}
+                            className={cn(
+                              'flex-1 flex flex-col items-center gap-1 py-1 rounded-lg transition-colors',
+                              done && 'cursor-pointer hover:bg-muted/50',
+                              !done && !active && 'opacity-50',
+                            )}
+                          >
+                            <div
+                              className={cn(
+                                'w-7 h-7 rounded-lg flex items-center justify-center text-xs',
+                                active && 'text-white',
+                                done && 'bg-emerald-500 text-white',
+                                !active && !done && 'bg-muted text-muted-foreground',
+                              )}
+                              style={active ? { background: `hsl(var(--${theme.accent}))` } : undefined}
+                            >
+                              {done ? <CheckCircle2 className="w-3.5 h-3.5" /> : <Icon className="w-3.5 h-3.5" />}
+                            </div>
+                            <span className={cn(
+                              'text-[10px] leading-none font-medium',
+                              active ? 'text-foreground' : 'text-muted-foreground',
+                            )}>
+                              {s.shortTitle}
+                            </span>
+                          </button>
+                        );
+                      })}
+                    </div>
+                  </div>
+
+                  {/* Desktop: full horizontal stepper */}
+                  <div className="hidden sm:flex items-center justify-between gap-3 lg:gap-4">
+                    {STEPS.map((s, i) => {
+                      const Icon = s.icon;
+                      const active = step === s.id;
+                      const done = step > s.id;
+                      return (
+                        <React.Fragment key={s.id}>
+                          <Tooltip>
+                            <TooltipTrigger asChild>
+                              <button
+                                type="button"
+                                onClick={() => done && setStep(s.id as Step)}
+                                className={cn(
+                                  'flex flex-col items-center gap-2 flex-shrink-0 transition-all rounded-xl p-1',
+                                  done && 'cursor-pointer hover:bg-muted/40',
+                                )}
+                              >
+                                <div
+                                  className={cn(
+                                    'relative w-12 h-12 rounded-2xl flex items-center justify-center transition-all duration-300',
+                                    !active && !done && 'bg-muted text-muted-foreground',
+                                    done && 'bg-emerald-500 text-white shadow-md shadow-emerald-500/30',
+                                  )}
+                                  style={active ? {
+                                    background: `hsl(var(--${theme.accent}))`,
+                                    color: 'white',
+                                    boxShadow: `0 8px 24px hsl(var(--${theme.accent}) / 0.4)`,
+                                    transform: 'scale(1.08)',
+                                  } : undefined}
+                                >
+                                  {done ? <CheckCircle2 className="w-5 h-5" /> : <Icon className="w-5 h-5" />}
+                                  {active && (
+                                    <motion.div
+                                      className="absolute inset-0 rounded-2xl border-2"
+                                      style={{ borderColor: `hsl(var(--${theme.accent}))` }}
+                                      animate={{ scale: [1, 1.15, 1], opacity: [0.6, 0, 0.6] }}
+                                      transition={{ duration: 2, repeat: Infinity }}
+                                    />
+                                  )}
+                                </div>
+                                <div className="text-center">
+                                  <div className={cn('text-sm font-semibold', active ? 'text-foreground' : 'text-muted-foreground')}>
+                                    {s.title}
+                                  </div>
+                                </div>
+                              </button>
+                            </TooltipTrigger>
+                            <TooltipContent>{s.hint}</TooltipContent>
+                          </Tooltip>
+                          {i < STEPS.length - 1 && (
+                            <div className="flex-1 h-1 rounded-full bg-muted overflow-hidden">
+                              <motion.div
+                                className="h-full"
+                                style={{ background: `hsl(var(--${theme.accent}))` }}
+                                initial={{ width: '0%' }}
+                                animate={{ width: step > s.id ? '100%' : '0%' }}
+                                transition={{ duration: 0.4 }}
+                              />
+                            </div>
+                          )}
+                        </React.Fragment>
+                      );
+                    })}
+                  </div>
+                </motion.div>
 
               {/* Step content */}
               <AnimatePresence mode="wait">
@@ -566,7 +751,7 @@ const OrderNew = () => {
                         background: `linear-gradient(90deg, hsl(var(--${theme.accent})), hsl(var(--${theme.glow})), hsl(var(--${theme.accent})))`,
                       }}
                     />
-                    <CardContent className="p-6 sm:p-8 space-y-6">
+                    <CardContent className="p-4 sm:p-6 lg:p-8 space-y-5 sm:space-y-6">
 
                       {/* STEP 0 — Confirm service */}
                       {step === 0 && (
@@ -633,6 +818,16 @@ const OrderNew = () => {
                               <Hash className="w-3.5 h-3.5" style={{ color: `hsl(var(--${theme.accent}))` }} />
                               <span>الكمية ({fieldsConfig.quantityUnitLabel})</span>
                               <span className="text-destructive">*</span>
+                              <Tooltip>
+                                <TooltipTrigger asChild>
+                                  <button type="button" className="text-muted-foreground hover:text-foreground transition-colors">
+                                    <HelpCircle className="w-3.5 h-3.5" />
+                                  </button>
+                                </TooltipTrigger>
+                                <TooltipContent className="max-w-[240px] text-xs">
+                                  حدّد العدد المطلوب بوحدة <span className="font-bold">{fieldsConfig.quantityUnitLabel}</span>. يساعدنا هذا في تقدير الجهد والمدة بدقة.
+                                </TooltipContent>
+                              </Tooltip>
                             </Label>
                             <Input type="number" min={1} value={quantity}
                               onChange={(e) => setQuantity(Number(e.target.value) || 0)}
@@ -654,6 +849,16 @@ const OrderNew = () => {
                               <ClipboardList className="w-3.5 h-3.5" style={{ color: `hsl(var(--${theme.accent}))` }} />
                               <span>وصف الطلب وملاحظات إضافية</span>
                               <span className="text-destructive">*</span>
+                              <Tooltip>
+                                <TooltipTrigger asChild>
+                                  <button type="button" className="text-muted-foreground hover:text-foreground transition-colors">
+                                    <HelpCircle className="w-3.5 h-3.5" />
+                                  </button>
+                                </TooltipTrigger>
+                                <TooltipContent className="max-w-[260px] text-xs leading-relaxed">
+                                  اشرح ما تحتاجه بالتفصيل: الهدف، الجمهور المستهدف، أي متطلبات خاصة، ولغة التسليم. كلما زادت التفاصيل، حصلت على عرض سعر ودقّة أعلى.
+                                </TooltipContent>
+                              </Tooltip>
                             </Label>
                             <Textarea value={notes} onChange={(e) => setNotes(e.target.value)}
                               placeholder={theme.notesPlaceholder}
@@ -682,8 +887,20 @@ const OrderNew = () => {
                             >
                               <Paperclip className="w-5 h-5" style={{ color: `hsl(var(--${theme.accent}))` }} />
                             </div>
-                            <div>
-                              <h3 className="text-lg font-bold">المرفقات</h3>
+                            <div className="flex-1">
+                              <h3 className="text-lg font-bold flex items-center gap-1.5">
+                                المرفقات
+                                <Tooltip>
+                                  <TooltipTrigger asChild>
+                                    <button type="button" className="text-muted-foreground hover:text-foreground transition-colors">
+                                      <HelpCircle className="w-3.5 h-3.5" />
+                                    </button>
+                                  </TooltipTrigger>
+                                  <TooltipContent className="max-w-[280px] text-xs leading-relaxed">
+                                    PDF, Word, Excel, PowerPoint, صور — حد ٢٠MB لكل ملف، حتى {MAX_FILES} ملفات. {isTranslationService ? 'سيتم تحليل ملفاتك تلقائياً وحساب الكلمات والصفحات.' : ''}
+                                  </TooltipContent>
+                                </Tooltip>
+                              </h3>
                               <p className="text-xs text-muted-foreground">اسحب الملفات أو اضغط للرفع — اختياري لكن يُسرّع التسعير</p>
                             </div>
                           </div>
@@ -863,10 +1080,11 @@ const OrderNew = () => {
                       )}
 
                       {/* Navigation */}
-                      <div className="flex items-center justify-between pt-4 border-t border-border/40">
+                      <div className="flex items-center justify-between gap-2 pt-4 border-t border-border/40">
                         <Button variant="outline" disabled={step === 0 || loading}
-                          onClick={() => setStep((s) => (s - 1) as Step)} className="gap-2">
-                          <ArrowRight className="w-4 h-4" /> السابق
+                          onClick={() => setStep((s) => (s - 1) as Step)} className="gap-1.5 h-10 sm:h-11 px-3 sm:px-4">
+                          <ArrowRight className="w-4 h-4" />
+                          <span className="text-sm">السابق</span>
                         </Button>
 
                         {step < 3 ? (
@@ -914,7 +1132,8 @@ const OrderNew = () => {
             </aside>
           </div>
         </div>
-      </div>
+        </div>
+      </TooltipProvider>
     </ClientLayout>
   );
 };
