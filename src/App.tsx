@@ -123,6 +123,7 @@ import AdminGrowthAutomationRules from "./pages/admin/AdminGrowthAutomationRules
 import AdminExperiments from "./pages/admin/AdminExperiments";
 import AdminExperimentDetail from "./pages/admin/AdminExperimentDetail";
 import AdminAssessments from "./pages/admin/AdminAssessments";
+import AdminBattleQuiz from "./pages/admin/AdminBattleQuiz";
 import AdminQuestionBank from "./pages/admin/AdminQuestionBank";
 import QuizBank from "./pages/QuizBank";
 import QuizBankResults from "./pages/QuizBankResults";
@@ -642,6 +643,11 @@ const App = () => (
             <Route path="/adminmaster/assessments" element={
               <SimpleProtectedRoute adminOnly>
                 <AdminAssessments />
+              </SimpleProtectedRoute>
+            } />
+            <Route path="/adminmaster/battle-quiz" element={
+              <SimpleProtectedRoute adminOnly>
+                <AdminBattleQuiz />
               </SimpleProtectedRoute>
             } />
             <Route path="/adminmaster/question-bank" element={
