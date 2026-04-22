@@ -218,22 +218,38 @@ export const WhatsappAuthForm: React.FC<Props> = ({ mode, onSuccess }) => {
             تم إرسال الرمز إلى <span className="font-mono font-bold">{phone}</span>
           </div>
           <div>
-            <Label htmlFor="wa-code" className="flex items-center gap-2 text-slate-700 font-medium">
+            <Label className="flex items-center gap-2 text-slate-700 font-medium mb-3">
               <KeyRound className="w-4 h-4" /> رمز التحقق
             </Label>
-            <Input
-              id="wa-code"
-              value={code}
-              onChange={(e) => setCode(e.target.value.replace(/\D/g, '').slice(0, 6))}
-              placeholder="000000"
-              maxLength={6}
-              dir="ltr"
-              className="mt-2 h-14 border-2 focus:border-emerald-500 text-center text-2xl tracking-[0.5em] font-mono"
-            />
+            <div dir="ltr" className="flex justify-center gap-2">
+              {Array.from({ length: 6 }).map((_, i) => (
+                <Input
+                  key={i}
+                  ref={(el) => { otpRefs.current[i] = el; }}
+                  type="text"
+                  inputMode="numeric"
+                  autoComplete="one-time-code"
+                  maxLength={1}
+                  value={code[i] || ''}
+                  onChange={(e) => handleOtpChange(i, e.target.value)}
+                  onKeyDown={(e) => handleOtpKeyDown(i, e)}
+                  onPaste={handleOtpPaste}
+                  onFocus={(e) => e.target.select()}
+                  disabled={loading}
+                  className="w-12 h-14 sm:w-14 sm:h-16 text-center text-2xl font-bold font-mono border-2 focus:border-emerald-500 p-0"
+                />
+              ))}
+            </div>
+            {loading && (
+              <div className="flex items-center justify-center gap-2 mt-3 text-sm text-emerald-600">
+                <Loader2 className="w-4 h-4 animate-spin" />
+                جاري التحقق...
+              </div>
+            )}
           </div>
           <Button
-            onClick={verifyCode}
-            disabled={loading}
+            onClick={() => verifyCode()}
+            disabled={loading || code.length !== 6}
             className="w-full h-12 bg-gradient-to-r from-emerald-600 to-green-600 hover:from-emerald-700 hover:to-green-700 text-white font-medium"
           >
             {loading ? 'جاري التحقق...' : (mode === 'register' ? 'إنشاء الحساب' : 'تسجيل الدخول')}
