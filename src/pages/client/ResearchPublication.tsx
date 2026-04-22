@@ -715,19 +715,24 @@ export default function ResearchPublication() {
 <div class="canvas"><div class="page">
   <div class="watermark"><span>MASTEREDUPATH</span></div>
   <div class="doc-head">
-    <div class="brand"><div class="seal"><span>م</span></div><div class="brand-text"><div class="name">منصّة ماستر إيدو باث</div><div class="tagline">MASTEREDUPATH · LEGAL CONTRACT</div></div></div>
-    <div class="doc-meta"><div><b>رقم العقد:</b> ${esc(docNumber)}</div><div><b>تاريخ الإصدار:</b> ${esc(docDate)} — ${esc(docTime)}</div><div><b>نوع المستند:</b> عقد رسمي</div></div>
+    <div class="brand"><div class="seal"><span>م</span></div><div class="brand-text"><div class="name">منصّة ماستر إيدو باث</div><div class="tagline">MASTEREDUPATH · OFFICIAL CONTRACT</div></div></div>
+    <div class="doc-meta">
+      <div><b>رقم العقد:</b> ${esc(docNumber)}</div>
+      <div><b>تاريخ الإصدار:</b> ${esc(docDate)} — ${esc(docTime)}</div>
+      <div><b>الحالة:</b> ${esc(statusLabel)}</div>
+      ${signedAt ? `<div><b>تاريخ التوقيع:</b> ${esc(signedAt)}</div>` : ''}
+    </div>
   </div>
   <div class="title-block">
-    <div class="kicker">عقد قانوني معتمد</div>
-    <h1>عقد تقديم خدمة نشر بحث علمي</h1>
-    <div class="ref">رقم العقد: <b>${esc(docNumber)}</b></div>
+    <div class="kicker">العقد الرسمي المعتمد · مُستخرج من نظام المنصّة</div>
+    <h1>${esc(contractTitle)}</h1>
+    <div class="ref">رقم العقد: <b>${esc(docNumber)}</b> · مرجع الطلب: <b>${esc(item.request_number)}</b></div>
   </div>
   <div class="section">
     <h2>أولاً · أطراف العقد</h2>
     <div class="body">
       <div class="clause"><b>الطرف الأول (مُقدّم الخدمة):</b> منصّة ماستر إيدو باث للخدمات الأكاديمية — masteredupath.com</div>
-      <div class="clause"><b>الطرف الثاني (المستفيد):</b> ${esc(item.client_name)} — رقم التواصل: ${esc(item.client_phone)}${item.client_email ? ` — البريد: ${esc(item.client_email)}` : ''}</div>
+      <div class="clause"><b>الطرف الثاني (المستفيد):</b> ${esc(clientName)}${clientPhone !== '—' ? ` — رقم التواصل: ${esc(clientPhone)}` : ''}${clientEmail ? ` — البريد: ${esc(clientEmail)}` : ''}${realContract.client_id_number ? ` — الهوية: ${esc(realContract.client_id_number)}` : ''}</div>
     </div>
   </div>
   <div class="section">
@@ -742,25 +747,31 @@ export default function ResearchPublication() {
     </div></div>
   </div>
   <div class="section">
-    <h2>ثالثاً · البنود والشروط</h2>
+    <h2>ثالثاً · نص العقد والبنود الرسمية</h2>
     <div class="body">
+      ${contentHtml || `
       <div class="clause"><b>البند الأول:</b> يلتزم الطرف الأول بتقديم خدمة نشر البحث المذكور وفقاً للمعايير الأكاديمية المعتمدة وضمن المدة الزمنية المتفق عليها.</div>
       <div class="clause"><b>البند الثاني:</b> يلتزم الطرف الثاني بسداد القيمة المالية المتفق عليها وتقديم كافة المرفقات والبيانات المطلوبة لإتمام الخدمة.</div>
       <div class="clause"><b>البند الثالث:</b> تُعتبر جميع البيانات والمستندات المُتبادلة بين الطرفين سرّية ولا يجوز الإفصاح عنها لأي طرف ثالث إلا بإذن خطي.</div>
       <div class="clause"><b>البند الرابع:</b> يحقّ للطرف الثاني طلب التعديلات وفق سياسة المراجعات المعتمدة، ويتم النشر النهائي بعد موافقة الطرفين.</div>
       <div class="clause"><b>البند الخامس:</b> يخضع هذا العقد للأنظمة المعمول بها في المملكة العربية السعودية، وتُحلّ أي خلافات ودّياً أو عبر الجهات المختصة.</div>
-      <div class="clause"><b>البند السادس:</b> يُعدّ هذا العقد ساري المفعول من تاريخ إصداره ولحين إتمام جميع الالتزامات المتفق عليها.</div>
+      <div class="clause"><b>البند السادس:</b> يُعدّ هذا العقد ساري المفعول من تاريخ إصداره ولحين إتمام جميع الالتزامات المتفق عليها.</div>`}
     </div>
   </div>
-  ${item.estimated_amount ? `<div class="section"><h2>رابعاً · القيمة المالية</h2>
-    <div class="price-box"><div class="label">إجمالي قيمة العقد</div><div class="amount">${amount}<small>ر.س</small></div></div></div>` : ''}
+  ${(realContract.total_amount || item.estimated_amount) ? `<div class="section"><h2>رابعاً · القيمة المالية</h2>
+    <div class="price-box"><div class="label">إجمالي قيمة العقد</div><div class="amount">${amount}<small>${esc(currency)}</small></div></div></div>` : ''}
   <div class="seal-row">
     <div class="dseal">
-      <div class="stamp client"><div class="st-top">• OFFICIAL •</div><div class="st-icon">✓</div><div class="st-mid">الطرف الثاني</div><div class="st-bot">VERIFIED</div></div>
+      <div class="stamp client"><div class="st-top">• OFFICIAL •</div><div class="st-icon">${sig ? '✓' : '⏳'}</div><div class="st-mid">الطرف الثاني</div><div class="st-bot">${sig ? 'SIGNED' : 'PENDING'}</div></div>
       <div class="info">
-        <div class="label">توقيع المستفيد</div>
-        <div class="who">${esc(item.client_name)}</div>
-        <div class="meta"><div><b>الرقم:</b> ${esc(item.client_phone || '—')}</div><div><b>التوقيع الرقمي:</b> <code>SIG-${sigHash}</code></div><div><b>التاريخ:</b> ${esc(created)}</div></div>
+        <div class="label">${sig ? 'توقيع المستفيد المعتمد' : 'توقيع المستفيد (بانتظار التوقيع)'}</div>
+        <div class="who">${esc(sig?.signer_name || clientName)}</div>
+        <div class="meta">
+          ${sig?.signer_email ? `<div><b>البريد:</b> ${esc(sig.signer_email)}</div>` : `<div><b>الرقم:</b> ${esc(clientPhone)}</div>`}
+          <div><b>التوقيع الرقمي:</b> <code>SIG-${sigHash}</code></div>
+          <div><b>${sig ? 'تاريخ التوقيع' : 'تاريخ الإصدار'}:</b> ${esc(sig?.signed_at ? new Date(sig.signed_at).toLocaleString('ar-SA', { dateStyle: 'long', timeStyle: 'short' }) : created)}</div>
+          ${sig?.ip_address ? `<div><b>IP:</b> <code>${esc(sig.ip_address)}</code></div>` : ''}
+        </div>
       </div>
     </div>
     <div class="dseal">
@@ -773,19 +784,15 @@ export default function ResearchPublication() {
     </div>
   </div>
   <div class="verify-bar">
-    <span class="v-tick">✓ عقد معتمد رقمياً وموثّق إلكترونياً من نظام المنصّة</span>
+    <span class="v-tick">✓ ${sig ? 'عقد موقّع ومعتمد رقمياً وموثّق إلكترونياً من نظام المنصّة' : 'عقد رسمي صادر من نظام المنصّة (بانتظار التوقيع)'}</span>
     <span>تحقّق عبر: <b style="color:#fff">masteredupath.com/verify</b> — <span class="v-id">${verifyId}</span></span>
   </div>
   <div class="footer">
     <div class="org">منصّة ماستر إيدو باث · MASTEREDUPATH</div>
-    <div>عقد مُنشأ إلكترونياً · masteredupath.com · هذا العقد صادر من نظام المنصّة الرسمي ولا يحتاج إلى توقيع يدوي</div>
+    <div>هذا العقد مُستخرج مباشرةً من النظام الرسمي للمنصّة · masteredupath.com</div>
     <div class="legal">جميع الحقوق محفوظة © ${new Date().getFullYear()} · مرجع العقد: ${esc(docNumber)} · ختم زمني: ${esc(issuedIso)}</div>
   </div>
 </div></div>${triggerPrintScript}</body></html>`;
-    openPdfWindow(html);
-  };
-
-  const downloadInvoicePdf = (item: any) => {
     const { esc, sigHash, verifyId, docNumber, docDate, docTime, issuedIso } = buildDocMeta(item, 'invoice');
     const serviceLabel = SERVICE_TYPES.find(s => s.value === item.service_type)?.label || item.service_type;
     const subtotal = Number(item.estimated_amount || 0);
