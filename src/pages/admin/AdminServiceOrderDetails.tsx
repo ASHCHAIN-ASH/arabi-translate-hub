@@ -847,7 +847,7 @@ const AdminServiceOrderDetails = () => {
                             {ec ? <Badge className={cn('text-xs border', ec.color)}>{ec.label}</Badge> : <Badge variant="outline" className="text-xs">{entry.status}</Badge>}
                             <span className="text-xs text-muted-foreground">{new Date(entry.created_at).toLocaleString('ar-SA')}</span>
                           </div>
-                          {entry.note && <p className="text-sm text-muted-foreground mt-1.5 bg-muted/40 p-2.5 rounded-lg">{entry.note}</p>}
+                          {entry.note && <p className="text-sm text-muted-foreground mt-1.5 bg-muted/40 p-2.5 rounded-lg">{translateStageWords(entry.note)}</p>}
                         </div>
                       </motion.div>
                     );
