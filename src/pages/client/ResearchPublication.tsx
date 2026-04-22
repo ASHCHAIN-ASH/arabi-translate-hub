@@ -255,7 +255,7 @@ export default function ResearchPublication() {
   const greenDot = `<span style="display:inline-flex;align-items:center;justify-content:center;width:11px;height:11px;border-radius:50%;background:#22c55e;box-shadow:0 0 0 3px rgba(34,197,94,.22);color:#fff;font-size:9px">${SVG_CHECK}</span>`;
 
 
-  const downloadSummaryPdf = (item: any) => {
+  const buildSummaryHtml = (item: any): string => {
     const statusLabel = STATUS_CONFIG[item.status]?.label || item.status;
     const serviceLabel = SERVICE_TYPES.find(s => s.value === item.service_type)?.label || item.service_type;
     const langLabel = item.language === 'ar' ? 'العربية' : item.language === 'en' ? 'الإنجليزية' : 'ثنائي اللغة';
@@ -577,13 +577,12 @@ export default function ResearchPublication() {
   </script>
 </body></html>`;
 
-    const w = window.open('', '_blank');
-    if (!w) {
-      toast({ title: 'تعذّر الفتح', description: 'يرجى السماح بالنوافذ المنبثقة', variant: 'destructive' });
-      return;
-    }
-    w.document.write(html);
-    w.document.close();
+    return html;
+  };
+
+  const downloadSummaryPdf = (item: any) => {
+    const html = buildSummaryHtml(item);
+    openPdfWindow(html);
   };
 
   // Shared style block for Contract & Invoice (matches summary look)
@@ -731,7 +730,7 @@ export default function ResearchPublication() {
 
   const triggerPrintScript = `<script>window.addEventListener('load',function(){var go=function(){try{window.focus();window.print();}catch(e){}};if(document.fonts&&document.fonts.ready){document.fonts.ready.then(function(){setTimeout(go,150);});}else{setTimeout(go,400);}});</script>`;
 
-  const downloadContractPdf = async (item: any) => {
+  const buildContractHtml = async (item: any): Promise<string> => {
     // 1) جلب العقد الفعلي المرتبط بهذا الطلب من قاعدة البيانات
     const { data: realContract } = await supabase
       .from('contracts')
@@ -910,10 +909,15 @@ export default function ResearchPublication() {
     <div class="legal">جميع الحقوق محفوظة © ${new Date().getFullYear()} · مرجع العقد: ${esc(docNumber)} · ختم زمني: ${esc(issuedIso)}</div>
   </div>
 </div></div>${triggerPrintScript}</body></html>`;
+    return html;
+  };
+
+  const downloadContractPdf = async (item: any) => {
+    const html = await buildContractHtml(item);
     openPdfWindow(html);
   };
 
-  const downloadInvoicePdf = (item: any) => {
+  const buildInvoiceHtml = (item: any): string => {
     const { esc, sigHash, verifyId, docNumber, docDate, docTime, issuedIso } = buildDocMeta(item, 'invoice');
     const serviceLabel = SERVICE_TYPES.find(s => s.value === item.service_type)?.label || item.service_type;
     const subtotal = Number(item.estimated_amount || 0);
@@ -1028,7 +1032,49 @@ export default function ResearchPublication() {
     <div class="legal">جميع الحقوق محفوظة © ${new Date().getFullYear()} · مرجع الفاتورة: ${esc(docNumber)} · ختم زمني: ${esc(issuedIso)}</div>
   </div>
 </div></div>${triggerPrintScript}</body></html>`;
-    openPdfWindow(html);
+    return html;
+  };
+
+  const downloadInvoicePdf = (item: any) => {
+    openPdfWindow(buildInvoiceHtml(item));
+  };
+
+  // ============================================================
+  // اختبار PDF متعدد المقاسات (Mobile/Tablet/Desktop)
+  // ============================================================
+  const [pdfTestOpen, setPdfTestOpen] = useState(false);
+  const [pdfTestKind, setPdfTestKind] = useState<'summary' | 'contract' | 'invoice'>('summary');
+  const [pdfTestHtml, setPdfTestHtml] = useState<string>('');
+  const [pdfTestLoading, setPdfTestLoading] = useState(false);
+  const [pdfTestItem, setPdfTestItem] = useState<any>(null);
+  const [pdfTestViewport, setPdfTestViewport] = useState<'mobile' | 'tablet' | 'desktop' | 'compare'>('compare');
+
+  const openPdfTest = async (item: any, kind: 'summary' | 'contract' | 'invoice') => {
+    setPdfTestItem(item);
+    setPdfTestKind(kind);
+    setPdfTestOpen(true);
+    setPdfTestLoading(true);
+    setPdfTestHtml('');
+    try {
+      let html = '';
+      if (kind === 'summary') html = buildSummaryHtml(item);
+      else if (kind === 'contract') html = await buildContractHtml(item);
+      else html = buildInvoiceHtml(item);
+      // إزالة سكربت الطباعة التلقائية في وضع المعاينة
+      html = html.replace(/<script>[\s\S]*?window\.print[\s\S]*?<\/script>/g, '');
+      setPdfTestHtml(html);
+    } catch (e: any) {
+      toast({ title: 'تعذّر التوليد', description: e?.message || 'حدث خطأ', variant: 'destructive' });
+    } finally {
+      setPdfTestLoading(false);
+    }
+  };
+
+  const exportPdfTest = () => {
+    if (!pdfTestItem) return;
+    if (pdfTestKind === 'summary') downloadSummaryPdf(pdfTestItem);
+    else if (pdfTestKind === 'contract') downloadContractPdf(pdfTestItem);
+    else downloadInvoicePdf(pdfTestItem);
   };
 
 
@@ -1509,6 +1555,35 @@ export default function ResearchPublication() {
                                 <Download className="w-4 h-4 ml-2" />
                                 تنزيل الفاتورة PDF
                               </Button>
+
+                              {/* اختبار PDF متعدد المقاسات */}
+                              <div className="grid grid-cols-3 gap-2 pt-1">
+                                <Button
+                                  variant="outline"
+                                  size="sm"
+                                  onClick={() => openPdfTest(selected, 'summary')}
+                                  className="text-xs border-rose-300 text-rose-700 hover:bg-rose-50"
+                                >
+                                  📱 اختبار الملخّص
+                                </Button>
+                                <Button
+                                  variant="outline"
+                                  size="sm"
+                                  onClick={() => openPdfTest(selected, 'contract')}
+                                  className="text-xs border-slate-400 text-slate-800 hover:bg-slate-50"
+                                >
+                                  📱 اختبار العقد
+                                </Button>
+                                <Button
+                                  variant="outline"
+                                  size="sm"
+                                  onClick={() => openPdfTest(selected, 'invoice')}
+                                  className="text-xs border-emerald-300 text-emerald-700 hover:bg-emerald-50"
+                                >
+                                  📱 اختبار الفاتورة
+                                </Button>
+                              </div>
+
                               <div className="grid grid-cols-2 gap-3 text-sm">
                                 <div><span className="text-muted-foreground">التخصص:</span> <b>{selected.field}</b></div>
                                 <div><span className="text-muted-foreground">اللغة:</span> <b>{selected.language === 'ar' ? 'العربية' : selected.language === 'en' ? 'الإنجليزية' : 'ثنائية'}</b></div>
@@ -1612,6 +1687,116 @@ export default function ResearchPublication() {
         </div>
 
       </div>
+
+      {/* ============== مودال اختبار PDF متعدد المقاسات ============== */}
+      {pdfTestOpen && (
+        <div
+          className="fixed inset-0 z-[200] bg-black/70 backdrop-blur-sm flex flex-col"
+          onClick={(e) => { if (e.target === e.currentTarget) setPdfTestOpen(false); }}
+        >
+          <div className="bg-white border-b shadow-md px-4 py-3 flex items-center justify-between gap-3 flex-wrap">
+            <div className="flex items-center gap-2">
+              <span className="font-bold text-slate-900">
+                🔬 اختبار PDF —{' '}
+                {pdfTestKind === 'summary' ? 'ملخّص الطلب' : pdfTestKind === 'contract' ? 'العقد' : 'الفاتورة'}
+              </span>
+              <Badge variant="outline" className="text-[10px]">
+                {pdfTestItem?.request_number}
+              </Badge>
+            </div>
+
+            <div className="flex items-center gap-1 bg-slate-100 rounded-lg p-1">
+              {(['mobile','tablet','desktop','compare'] as const).map(k => {
+                const labels: Record<string, string> = {
+                  mobile: '📱 جوال', tablet: '📲 تابلت', desktop: '🖥 ديسكتوب', compare: '⚖️ مقارنة',
+                };
+                return (
+                  <button
+                    key={k}
+                    onClick={() => setPdfTestViewport(k)}
+                    className={`px-3 py-1.5 text-xs font-bold rounded-md transition-all ${
+                      pdfTestViewport === k ? 'bg-indigo-600 text-white shadow-sm' : 'text-slate-700 hover:bg-white'
+                    }`}
+                  >
+                    {labels[k]}
+                  </button>
+                );
+              })}
+            </div>
+
+            <div className="flex items-center gap-2">
+              <Button size="sm" onClick={exportPdfTest} className="bg-emerald-600 hover:bg-emerald-700 text-white">
+                <Download className="w-4 h-4 ml-1.5" /> تصدير PDF
+              </Button>
+              <Button size="sm" variant="ghost" onClick={() => setPdfTestOpen(false)}>
+                <X className="w-4 h-4" />
+              </Button>
+            </div>
+          </div>
+
+          <div className="flex-1 overflow-auto bg-slate-200 p-4">
+            {pdfTestLoading ? (
+              <div className="h-full flex items-center justify-center text-slate-700">
+                <Loader2 className="w-8 h-8 animate-spin text-indigo-600" />
+                <span className="mr-3">جارٍ توليد المستند…</span>
+              </div>
+            ) : pdfTestViewport === 'compare' ? (
+              <>
+                <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 max-w-[1600px] mx-auto">
+                  {[
+                    { label: '📱 جوال 375px', w: 375 },
+                    { label: '📲 تابلت 768px', w: 768 },
+                    { label: '🖥 ديسكتوب 1024px', w: 1024 },
+                  ].map(vp => (
+                    <div key={vp.w} className="bg-white rounded-xl shadow-lg overflow-hidden border-2 border-slate-300">
+                      <div className="bg-slate-800 text-white px-3 py-2 text-xs font-bold flex items-center justify-between">
+                        <span>{vp.label}</span>
+                        <span className="text-slate-400">A4 preview</span>
+                      </div>
+                      <div className="bg-slate-100 overflow-auto" style={{ height: '70vh' }}>
+                        <iframe
+                          title={`pdf-${vp.w}`}
+                          srcDoc={pdfTestHtml}
+                          style={{ width: vp.w, height: '1100px', border: 0, display: 'block' }}
+                        />
+                      </div>
+                    </div>
+                  ))}
+                </div>
+                <div className="max-w-[1600px] mx-auto mt-4 bg-white rounded-xl p-4 border-2 border-amber-300 shadow">
+                  <div className="text-sm font-bold text-amber-900 mb-2">✅ نقاط الفحص البصري التلقائي</div>
+                  <ul className="text-xs text-slate-700 space-y-1 list-disc pr-5">
+                    <li>تحقق أن الأختام (التوقيع/الاعتماد) تظهر بنفس الحجم والترتيب في كل عرض.</li>
+                    <li>لا يوجد نص مقطوع أو يخرج خارج الإطار في عرض الجوال (375px).</li>
+                    <li>الحدود الذهبية والظلال متناسقة عبر المقاسات الثلاثة.</li>
+                    <li>أرقام التحقق وكود الـ Hash لا تسبب scroll أفقي على الجوال.</li>
+                    <li>اضغط <b>"تصدير PDF"</b> أعلاه لمقارنة الناتج النهائي مع هذه المعاينة.</li>
+                  </ul>
+                </div>
+              </>
+            ) : (
+              <div className="flex justify-center">
+                {(() => {
+                  const w = pdfTestViewport === 'mobile' ? 375 : pdfTestViewport === 'tablet' ? 768 : 1024;
+                  return (
+                    <div className="bg-white rounded-xl shadow-2xl overflow-hidden border-2 border-slate-300">
+                      <div className="bg-slate-800 text-white px-3 py-2 text-xs font-bold flex items-center justify-between">
+                        <span>عرض {w}px</span>
+                        <span className="text-slate-400">A4 Preview</span>
+                      </div>
+                      <iframe
+                        title="pdf-single"
+                        srcDoc={pdfTestHtml}
+                        style={{ width: w, height: '80vh', border: 0, display: 'block' }}
+                      />
+                    </div>
+                  );
+                })()}
+              </div>
+            )}
+          </div>
+        </div>
+      )}
     </ClientLayout>
   );
 }
