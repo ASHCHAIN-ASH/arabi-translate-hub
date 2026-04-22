@@ -11,19 +11,26 @@ import { Progress } from '@/components/ui/progress';
 import {
   ArrowRight, ArrowLeft, ShoppingCart, RefreshCw, Upload, X, File,
   CheckCircle2, Send, Sparkles, ClipboardList, Paperclip, Eye,
-  Image as ImageIcon, Clock, Hash, AlertCircle,
+  Image as ImageIcon, Clock, Hash, AlertCircle, HelpCircle, PlayCircle,
+  Info, FileText, Compass,
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { toast } from 'sonner';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/components/SimpleAuthProvider';
 import { cn } from '@/lib/utils';
+import {
+  Tooltip, TooltipContent, TooltipProvider, TooltipTrigger,
+} from '@/components/ui/tooltip';
+import {
+  Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger,
+} from '@/components/ui/sheet';
 import DynamicServiceFields from '@/components/client/DynamicServiceFields';
-import TranslationWordCounter from '@/components/client/TranslationWordCounter';
 import TranslationAnalysisEngine, { type AnalysisSummary } from '@/components/client/TranslationAnalysisEngine';
 import CategoryHero from '@/components/client/order-new/CategoryHero';
 import CategoryGuideCard from '@/components/client/order-new/CategoryGuideCard';
 import ExamplePrompts from '@/components/client/order-new/ExamplePrompts';
+import OnboardingTour, { type TourStep } from '@/components/client/order-new/OnboardingTour';
 import { getCategoryTheme } from '@/config/categoryThemes';
 import {
   getFieldLabel, getOptionLabel, resolveServiceFields,
