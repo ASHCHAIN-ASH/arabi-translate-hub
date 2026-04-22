@@ -1,6 +1,39 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
-import { normalizePhone } from "../_shared/whatsapp.ts";
+import { normalizePhone, renderTemplate, sendWhatsAppMessage } from "../_shared/whatsapp.ts";
+
+async function sendWelcomeMessage(
+  supabase: any,
+  phone: string,
+  isNewUser: boolean,
+  fullName: string,
+) {
+  try {
+    const eventKey = isNewUser ? "welcome_new_user" : "welcome_returning_user";
+    const { data: tpl } = await supabase
+      .from("whatsapp_templates")
+      .select("body_text, is_active")
+      .eq("event_key", eventKey)
+      .maybeSingle();
+
+    if (!tpl?.is_active || !tpl?.body_text) return;
+
+    const displayName = (fullName || "").trim() || "عزيزي العميل";
+    const body = renderTemplate(tpl.body_text, { name: displayName });
+    const result = await sendWhatsAppMessage(phone, body);
+
+    await supabase.from("whatsapp_send_log").insert({
+      to_phone: phone,
+      event_key: eventKey,
+      message_body: body,
+      status: result.success ? "sent" : "failed",
+      provider_message_id: result.messageId ?? null,
+      error_message: result.success ? null : result.error,
+    });
+  } catch (err) {
+    console.error("sendWelcomeMessage failed", err);
+  }
+}
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -187,11 +220,19 @@ serve(async (req) => {
       return resp({ success: false, error: linkErr?.message || "تعذر إنشاء الجلسة" });
     }
 
+    // إرسال رسالة الترحيب المناسبة (جديد / عائد) — لا تعطّل تسجيل الدخول إذا فشل
+    const isNewUser = !existingProfile?.id;
+    const welcomeName =
+      (full_name && String(full_name).trim()) ||
+      `عميلنا الكريم`;
+    await sendWelcomeMessage(supabase, normalized, isNewUser, welcomeName);
+
     const props = linkData.properties;
     return resp({
       success: true,
       user_id: userId,
       email: userEmail,
+      is_new_user: isNewUser,
       action_link: props?.action_link,
       hashed_token: props?.hashed_token,
       email_otp: props?.email_otp,
