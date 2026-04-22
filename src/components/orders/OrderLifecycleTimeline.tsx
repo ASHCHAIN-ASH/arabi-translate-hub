@@ -59,7 +59,15 @@ export const OrderLifecycleTimeline: React.FC<Props> = ({ status, progress, clas
   }
 
   const currentIdx = STEPS.findIndex(s => s.key === status);
-  const safePct = Math.max(0, Math.min(100, progress ?? 0));
+  // احسب النسبة من المرحلة الحالية لضمان توافقها مع الحالة الفعلية للطلب،
+  // واستخدم القيمة الممرّرة فقط إن لم نتعرّف على المرحلة.
+  const derivedPct =
+    status === 'completed'
+      ? 100
+      : currentIdx >= 0
+        ? Math.round(((currentIdx + 1) / STEPS.length) * 100)
+        : (progress ?? 0);
+  const safePct = Math.max(0, Math.min(100, derivedPct));
   const current = STEPS[currentIdx] ?? STEPS[0];
 
   return (
