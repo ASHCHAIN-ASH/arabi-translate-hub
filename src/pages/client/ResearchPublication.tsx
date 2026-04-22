@@ -707,9 +707,17 @@ export default function ResearchPublication() {
       return;
     }
 
-    const sig = Array.isArray((realContract as any).contract_signatures)
+    const sigRecord = Array.isArray((realContract as any).contract_signatures)
       ? (realContract as any).contract_signatures[0]
       : (realContract as any).contract_signatures;
+    // اعتبر العقد موقّعاً إذا وُجد سجل توقيع، أو signed_at، أو الحالة signed/active (للعقود القديمة)
+    const isSigned = !!sigRecord || !!realContract.signed_at || realContract.status === 'signed' || realContract.status === 'active';
+    const sig = isSigned ? (sigRecord || {
+      signer_name: realContract.client_full_name,
+      signer_email: realContract.client_email,
+      signed_at: realContract.signed_at,
+      ip_address: null,
+    }) : null;
 
     const { esc, issuedIso } = buildDocMeta(item, 'contract');
     // استخدم البيانات الفعلية للعقد بدل التوليد
