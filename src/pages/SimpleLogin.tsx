@@ -42,7 +42,7 @@ const SimpleLogin = () => {
       if (error) {
         toast.error(error);
       } else {
-        toast.success('تم تسجيل الدخول بنجاح');
+        triggerLoginWelcome();
         navigate('/dashboard');
       }
     } catch (error) {
