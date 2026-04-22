@@ -46,8 +46,12 @@ serve(async (req) => {
       .limit(1);
 
     const otp = rows?.[0];
-    if (!otp) return resp({ success: false, error: "الرمز منتهٍ أو غير موجود" }, 400);
-    if (otp.attempts >= 5) return resp({ success: false, error: "محاولات كثيرة" }, 429);
+    if (!otp) return resp({ success: false, error: "الرمز منتهٍ أو غير موجود" }, 200);
+    if (otp.attempts >= 5) return resp({ success: false, error: "محاولات كثيرة" }, 200);
+    const codeHash = await hashCode(code);
+    if (codeHash !== otp.code_hash) {
+      await supabase.from("auth_whatsapp_otp").update({ attempts: otp.attempts + 1 }).eq("id", otp.id);
+      return resp({ success: false, error: "الرمز غير صحيح" }, 200);
     if (otp.code_hash !== codeHash) {
       await supabase.from("whatsapp_otp_codes")
         .update({ attempts: otp.attempts + 1 }).eq("id", otp.id);
