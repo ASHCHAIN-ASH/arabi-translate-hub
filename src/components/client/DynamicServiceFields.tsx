@@ -149,6 +149,8 @@ interface Props {
   onChange: (key: string, value: any) => void;
   /** Optional theme to drive icons + smart hints per field. */
   theme?: CategoryTheme;
+  /** When provided, renders fields grouped into titled sections. */
+  sections?: FormSection[];
 }
 
 const DynamicServiceFields: React.FC<Props> = ({ config, values, onChange, theme }) => {
