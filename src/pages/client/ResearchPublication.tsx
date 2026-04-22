@@ -325,25 +325,28 @@ export default function ResearchPublication() {
   .price-box .label { font-size:12px; color:#d4af37; letter-spacing:2px; font-weight:600; }
   .price-box .amount { font-family:'Amiri',serif; font-size:28px; font-weight:700; }
   .price-box .amount small { font-size:14px; color:#d4af37; margin-right:6px; }
-  /* Digital seals row */
+  /* Digital seals row — flex layout, stamp on LEFT, no overlap */
   .seal-row { position:relative; z-index:1; display:grid; grid-template-columns:1fr 1fr; gap:18px; margin-top:24px; padding-top:18px; border-top:2px dashed #d4af37; }
-  .dseal { position:relative; padding:14px 14px 14px 110px; border:1.5px solid #0c2340; border-radius:6px; background:linear-gradient(135deg,#fff 0%,#fbfaf6 100%); min-height:130px; }
-  .dseal .stamp { position:absolute; right:14px; top:50%; transform:translateY(-50%) rotate(-12deg); width:90px; height:90px; border-radius:50%; border:2.5px solid #0c2340; display:flex; flex-direction:column; align-items:center; justify-content:center; background:rgba(255,255,255,.85); box-shadow:inset 0 0 0 3px rgba(212,175,55,.4); }
-  .dseal .stamp::before { content:''; position:absolute; inset:4px; border:1px dashed #0c2340; border-radius:50%; opacity:.5; }
-  .dseal .stamp .st-top { font-family:'Amiri',serif; font-size:9px; color:#0c2340; font-weight:700; letter-spacing:1px; }
-  .dseal .stamp .st-icon { font-size:20px; color:#d4af37; line-height:1; margin:2px 0; }
-  .dseal .stamp .st-mid { font-family:'Amiri',serif; font-size:11px; color:#0c2340; font-weight:700; }
-  .dseal .stamp .st-bot { font-size:7.5px; color:#0c2340; font-weight:600; letter-spacing:.5px; margin-top:2px; }
-  .dseal .stamp.client { border-color:#1e40af; box-shadow:inset 0 0 0 3px rgba(59,130,246,.25); }
+  .dseal { position:relative; display:flex; align-items:center; gap:18px; padding:18px; border:1.5px solid #0c2340; border-radius:8px; background:linear-gradient(135deg,#fff 0%,#fbfaf6 100%); min-height:140px; box-shadow:0 4px 14px rgba(12,35,64,.08); overflow:hidden; }
+  .dseal::after { content:''; position:absolute; top:0; right:0; width:5px; height:100%; background:linear-gradient(180deg,#d4af37 0%,#0c2340 100%); }
+  .dseal .stamp { position:relative; flex:0 0 110px; width:110px; height:110px; border-radius:50%; border:3px solid #0c2340; display:flex; flex-direction:column; align-items:center; justify-content:center; background:radial-gradient(circle,#fff 30%,#fbfaf6 100%); box-shadow:inset 0 0 0 4px rgba(212,175,55,.45), 0 4px 12px rgba(12,35,64,.18); transform:rotate(-10deg); }
+  .dseal .stamp::before { content:''; position:absolute; inset:5px; border:1.5px dashed #0c2340; border-radius:50%; opacity:.55; }
+  .dseal .stamp::after { content:''; position:absolute; inset:-1px; border-radius:50%; border:1px solid rgba(212,175,55,.6); }
+  .dseal .stamp .st-top { font-family:'Amiri',serif; font-size:10px; color:#0c2340; font-weight:700; letter-spacing:1.2px; text-transform:uppercase; }
+  .dseal .stamp .st-icon { font-size:24px; color:#d4af37; line-height:1; margin:3px 0; filter:drop-shadow(0 1px 1px rgba(12,35,64,.3)); }
+  .dseal .stamp .st-mid { font-family:'Amiri',serif; font-size:13px; color:#0c2340; font-weight:700; }
+  .dseal .stamp .st-bot { font-size:8px; color:#0c2340; font-weight:700; letter-spacing:.8px; margin-top:3px; }
+  .dseal .stamp.client { border-color:#1e40af; box-shadow:inset 0 0 0 4px rgba(59,130,246,.3), 0 4px 12px rgba(30,64,175,.2); }
   .dseal .stamp.client::before { border-color:#1e40af; }
-  .dseal .stamp.client .st-top, .dseal .stamp.client .st-mid { color:#1e40af; }
-  .dseal .stamp.client .st-bot { color:#1e40af; }
+  .dseal .stamp.client::after { border-color:rgba(59,130,246,.5); }
+  .dseal .stamp.client .st-top, .dseal .stamp.client .st-mid, .dseal .stamp.client .st-bot { color:#1e40af; }
   .dseal .stamp.client .st-icon { color:#3b82f6; }
-  .dseal .label { font-size:10px; color:#64748b; letter-spacing:1.5px; font-weight:600; margin-bottom:4px; }
-  .dseal .who { font-family:'Amiri',serif; font-size:14px; color:#0c2340; font-weight:700; margin-bottom:6px; }
-  .dseal .meta { font-size:9.5px; color:#475569; line-height:1.7; }
-  .dseal .meta b { color:#0c2340; }
-  .dseal .meta code { font-family:'Courier New',monospace; background:#f1f5f9; padding:1px 5px; border-radius:2px; font-size:9px; color:#0c2340; letter-spacing:.5px; }
+  .dseal .info { flex:1; min-width:0; }
+  .dseal .label { font-size:10px; color:#64748b; letter-spacing:1.5px; font-weight:700; margin-bottom:6px; text-transform:uppercase; }
+  .dseal .who { font-family:'Amiri',serif; font-size:15px; color:#0c2340; font-weight:700; margin-bottom:8px; padding-bottom:6px; border-bottom:1px solid #ece4cb; }
+  .dseal .meta { font-size:10px; color:#475569; line-height:1.85; word-break:break-word; }
+  .dseal .meta b { color:#0c2340; font-weight:700; }
+  .dseal .meta code { font-family:'Courier New',monospace; background:#0c2340; color:#d4af37; padding:2px 6px; border-radius:3px; font-size:9.5px; letter-spacing:.6px; font-weight:700; }
   /* Verification bar */
   .verify-bar { position:relative; z-index:1; margin-top:14px; display:flex; align-items:center; justify-content:space-between; gap:12px; padding:10px 14px; background:#0c2340; color:#fff; border-radius:3px; font-size:10px; }
   .verify-bar .v-id { font-family:'Courier New',monospace; color:#d4af37; letter-spacing:1px; font-weight:700; font-size:11px; }
@@ -374,8 +377,10 @@ export default function ResearchPublication() {
     .price-box { flex-direction:column; gap:8px; text-align:center; }
     .status-strip { flex-wrap:wrap; gap:8px; }
     .verify-bar { flex-direction:column; gap:6px; text-align:center; }
-    .dseal { padding:14px 14px 110px 14px; min-height:auto; }
-    .dseal .stamp { position:relative; right:auto; top:auto; transform:rotate(-8deg); margin:10px auto 0; }
+    .dseal { flex-direction:column; text-align:center; padding:18px 14px; min-height:auto; }
+    .dseal .stamp { transform:rotate(-8deg); }
+    .dseal .info { width:100%; text-align:center; }
+    .dseal .who { border-bottom-color:#ece4cb; }
   }
 </style></head><body>
   <div class="actbar">
@@ -474,12 +479,14 @@ export default function ResearchPublication() {
           <div class="st-mid">مُتقدّم</div>
           <div class="st-bot">VERIFIED</div>
         </div>
-        <div class="label">توقيع المُتقدّم</div>
-        <div class="who">${esc(item.client_name)}</div>
-        <div class="meta">
-          <div><b>الرقم:</b> ${esc(item.client_phone || '—')}</div>
-          <div><b>التوقيع الرقمي:</b> <code>SIG-${sigHash}</code></div>
-          <div><b>التاريخ:</b> ${esc(created)}</div>
+        <div class="info">
+          <div class="label">توقيع المُتقدّم</div>
+          <div class="who">${esc(item.client_name)}</div>
+          <div class="meta">
+            <div><b>الرقم:</b> ${esc(item.client_phone || '—')}</div>
+            <div><b>التوقيع الرقمي:</b> <code>SIG-${sigHash}</code></div>
+            <div><b>التاريخ:</b> ${esc(created)}</div>
+          </div>
         </div>
       </div>
       <div class="dseal">
@@ -489,12 +496,14 @@ export default function ResearchPublication() {
           <div class="st-mid">معتمد رقمياً</div>
           <div class="st-bot">DIGITALLY SIGNED</div>
         </div>
-        <div class="label">ختم المنصّة الرسمي</div>
-        <div class="who">إدارة ماستر إيدو باث</div>
-        <div class="meta">
-          <div><b>المُصدِر:</b> MasterEduPath Platform</div>
-          <div><b>رمز التحقق:</b> <code>${verifyId}</code></div>
-          <div><b>الإصدار:</b> ${esc(docDate)} — ${esc(docTime)}</div>
+        <div class="info">
+          <div class="label">ختم المنصّة الرسمي</div>
+          <div class="who">إدارة ماستر إيدو باث</div>
+          <div class="meta">
+            <div><b>المُصدِر:</b> MasterEduPath Platform</div>
+            <div><b>رمز التحقق:</b> <code>${verifyId}</code></div>
+            <div><b>الإصدار:</b> ${esc(docDate)} — ${esc(docTime)}</div>
+          </div>
         </div>
       </div>
     </div>
@@ -578,22 +587,26 @@ export default function ResearchPublication() {
     table.inv tfoot tr.total td { background:linear-gradient(135deg,#0c2340,#1e3a5f); color:#fff; font-size:14px; }
     table.inv tfoot tr.total td b { color:#d4af37; font-family:'Amiri',serif; font-size:18px; }
     .seal-row { position:relative; z-index:1; display:grid; grid-template-columns:1fr 1fr; gap:18px; margin-top:24px; padding-top:18px; border-top:2px dashed #d4af37; }
-    .dseal { position:relative; padding:14px 14px 14px 110px; border:1.5px solid #0c2340; border-radius:6px; background:linear-gradient(135deg,#fff,#fbfaf6); min-height:130px; }
-    .dseal .stamp { position:absolute; right:14px; top:50%; transform:translateY(-50%) rotate(-12deg); width:90px; height:90px; border-radius:50%; border:2.5px solid #0c2340; display:flex; flex-direction:column; align-items:center; justify-content:center; background:rgba(255,255,255,.85); box-shadow:inset 0 0 0 3px rgba(212,175,55,.4); }
-    .dseal .stamp::before { content:''; position:absolute; inset:4px; border:1px dashed #0c2340; border-radius:50%; opacity:.5; }
-    .dseal .stamp .st-top { font-family:'Amiri',serif; font-size:9px; color:#0c2340; font-weight:700; letter-spacing:1px; }
-    .dseal .stamp .st-icon { font-size:20px; color:#d4af37; line-height:1; margin:2px 0; }
-    .dseal .stamp .st-mid { font-family:'Amiri',serif; font-size:11px; color:#0c2340; font-weight:700; }
-    .dseal .stamp .st-bot { font-size:7.5px; color:#0c2340; font-weight:600; letter-spacing:.5px; margin-top:2px; }
-    .dseal .stamp.client { border-color:#1e40af; box-shadow:inset 0 0 0 3px rgba(59,130,246,.25); }
+    .dseal { position:relative; display:flex; align-items:center; gap:18px; padding:18px; border:1.5px solid #0c2340; border-radius:8px; background:linear-gradient(135deg,#fff 0%,#fbfaf6 100%); min-height:140px; box-shadow:0 4px 14px rgba(12,35,64,.08); overflow:hidden; }
+    .dseal::after { content:''; position:absolute; top:0; right:0; width:5px; height:100%; background:linear-gradient(180deg,#d4af37 0%,#0c2340 100%); }
+    .dseal .stamp { position:relative; flex:0 0 110px; width:110px; height:110px; border-radius:50%; border:3px solid #0c2340; display:flex; flex-direction:column; align-items:center; justify-content:center; background:radial-gradient(circle,#fff 30%,#fbfaf6 100%); box-shadow:inset 0 0 0 4px rgba(212,175,55,.45), 0 4px 12px rgba(12,35,64,.18); transform:rotate(-10deg); }
+    .dseal .stamp::before { content:''; position:absolute; inset:5px; border:1.5px dashed #0c2340; border-radius:50%; opacity:.55; }
+    .dseal .stamp::after { content:''; position:absolute; inset:-1px; border-radius:50%; border:1px solid rgba(212,175,55,.6); }
+    .dseal .stamp .st-top { font-family:'Amiri',serif; font-size:10px; color:#0c2340; font-weight:700; letter-spacing:1.2px; text-transform:uppercase; }
+    .dseal .stamp .st-icon { font-size:24px; color:#d4af37; line-height:1; margin:3px 0; filter:drop-shadow(0 1px 1px rgba(12,35,64,.3)); }
+    .dseal .stamp .st-mid { font-family:'Amiri',serif; font-size:13px; color:#0c2340; font-weight:700; }
+    .dseal .stamp .st-bot { font-size:8px; color:#0c2340; font-weight:700; letter-spacing:.8px; margin-top:3px; }
+    .dseal .stamp.client { border-color:#1e40af; box-shadow:inset 0 0 0 4px rgba(59,130,246,.3), 0 4px 12px rgba(30,64,175,.2); }
     .dseal .stamp.client::before { border-color:#1e40af; }
+    .dseal .stamp.client::after { border-color:rgba(59,130,246,.5); }
     .dseal .stamp.client .st-top, .dseal .stamp.client .st-mid, .dseal .stamp.client .st-bot { color:#1e40af; }
     .dseal .stamp.client .st-icon { color:#3b82f6; }
-    .dseal .label { font-size:10px; color:#64748b; letter-spacing:1.5px; font-weight:600; margin-bottom:4px; }
-    .dseal .who { font-family:'Amiri',serif; font-size:14px; color:#0c2340; font-weight:700; margin-bottom:6px; }
-    .dseal .meta { font-size:9.5px; color:#475569; line-height:1.7; }
-    .dseal .meta b { color:#0c2340; }
-    .dseal .meta code { font-family:'Courier New',monospace; background:#f1f5f9; padding:1px 5px; border-radius:2px; font-size:9px; color:#0c2340; letter-spacing:.5px; }
+    .dseal .info { flex:1; min-width:0; }
+    .dseal .label { font-size:10px; color:#64748b; letter-spacing:1.5px; font-weight:700; margin-bottom:6px; text-transform:uppercase; }
+    .dseal .who { font-family:'Amiri',serif; font-size:15px; color:#0c2340; font-weight:700; margin-bottom:8px; padding-bottom:6px; border-bottom:1px solid #ece4cb; }
+    .dseal .meta { font-size:10px; color:#475569; line-height:1.85; word-break:break-word; }
+    .dseal .meta b { color:#0c2340; font-weight:700; }
+    .dseal .meta code { font-family:'Courier New',monospace; background:#0c2340; color:#d4af37; padding:2px 6px; border-radius:3px; font-size:9.5px; letter-spacing:.6px; font-weight:700; }
     .verify-bar { position:relative; z-index:1; margin-top:14px; display:flex; align-items:center; justify-content:space-between; gap:12px; padding:10px 14px; background:#0c2340; color:#fff; border-radius:3px; font-size:10px; }
     .verify-bar .v-id { font-family:'Courier New',monospace; color:#d4af37; letter-spacing:1px; font-weight:700; font-size:11px; }
     .verify-bar .v-tick { color:#d4af37; font-weight:700; letter-spacing:1px; }
@@ -604,7 +617,7 @@ export default function ResearchPublication() {
     .actbar button:hover { background:#d4af37; color:#0c2340; }
     .actbar .close { background:#fff; color:#0c2340; }
     @media print { body { background:#fff; } .canvas { padding:0; } .page { box-shadow:none; border:0; padding:0; max-width:100%; border-radius:0; } .actbar { display:none !important; } }
-    @media (max-width:720px) { .canvas { padding:14px 8px 40px; } .page { padding:18px 14px; } .doc-head { flex-direction:column; align-items:flex-start; } .doc-meta { text-align:right; } .grid, .seal-row { grid-template-columns:1fr; } .price-box { flex-direction:column; gap:8px; text-align:center; } .verify-bar { flex-direction:column; gap:6px; text-align:center; } .dseal { padding:14px 14px 110px; min-height:auto; } .dseal .stamp { position:relative; right:auto; top:auto; transform:rotate(-8deg); margin:10px auto 0; } }
+    @media (max-width:720px) { .canvas { padding:14px 8px 40px; } .page { padding:18px 14px; } .doc-head { flex-direction:column; align-items:flex-start; } .doc-meta { text-align:right; } .grid, .seal-row { grid-template-columns:1fr; } .price-box { flex-direction:column; gap:8px; text-align:center; } .verify-bar { flex-direction:column; gap:6px; text-align:center; } .dseal { flex-direction:column; text-align:center; padding:18px 14px; min-height:auto; } .dseal .stamp { transform:rotate(-8deg); } .dseal .info { width:100%; text-align:center; } }
   `;
 
   const openPdfWindow = (html: string) => {
@@ -690,15 +703,19 @@ export default function ResearchPublication() {
   <div class="seal-row">
     <div class="dseal">
       <div class="stamp client"><div class="st-top">• OFFICIAL •</div><div class="st-icon">✓</div><div class="st-mid">الطرف الثاني</div><div class="st-bot">VERIFIED</div></div>
-      <div class="label">توقيع المستفيد</div>
-      <div class="who">${esc(item.client_name)}</div>
-      <div class="meta"><div><b>الرقم:</b> ${esc(item.client_phone || '—')}</div><div><b>التوقيع الرقمي:</b> <code>SIG-${sigHash}</code></div><div><b>التاريخ:</b> ${esc(created)}</div></div>
+      <div class="info">
+        <div class="label">توقيع المستفيد</div>
+        <div class="who">${esc(item.client_name)}</div>
+        <div class="meta"><div><b>الرقم:</b> ${esc(item.client_phone || '—')}</div><div><b>التوقيع الرقمي:</b> <code>SIG-${sigHash}</code></div><div><b>التاريخ:</b> ${esc(created)}</div></div>
+      </div>
     </div>
     <div class="dseal">
       <div class="stamp"><div class="st-top">• MASTEREDUPATH •</div><div class="st-icon">★</div><div class="st-mid">الطرف الأول</div><div class="st-bot">DIGITALLY SIGNED</div></div>
-      <div class="label">ختم المنصّة الرسمي</div>
-      <div class="who">إدارة ماستر إيدو باث</div>
-      <div class="meta"><div><b>المُصدِر:</b> MasterEduPath Platform</div><div><b>رمز التحقق:</b> <code>${verifyId}</code></div><div><b>الإصدار:</b> ${esc(docDate)} — ${esc(docTime)}</div></div>
+      <div class="info">
+        <div class="label">ختم المنصّة الرسمي</div>
+        <div class="who">إدارة ماستر إيدو باث</div>
+        <div class="meta"><div><b>المُصدِر:</b> MasterEduPath Platform</div><div><b>رمز التحقق:</b> <code>${verifyId}</code></div><div><b>الإصدار:</b> ${esc(docDate)} — ${esc(docTime)}</div></div>
+      </div>
     </div>
   </div>
   <div class="verify-bar">
@@ -776,15 +793,19 @@ export default function ResearchPublication() {
   <div class="seal-row">
     <div class="dseal">
       <div class="stamp client"><div class="st-top">• CUSTOMER •</div><div class="st-icon">✓</div><div class="st-mid">العميل</div><div class="st-bot">VERIFIED</div></div>
-      <div class="label">بيانات العميل</div>
-      <div class="who">${esc(item.client_name)}</div>
-      <div class="meta"><div><b>الرقم:</b> ${esc(item.client_phone || '—')}</div><div><b>التوقيع الرقمي:</b> <code>SIG-${sigHash}</code></div></div>
+      <div class="info">
+        <div class="label">بيانات العميل</div>
+        <div class="who">${esc(item.client_name)}</div>
+        <div class="meta"><div><b>الرقم:</b> ${esc(item.client_phone || '—')}</div><div><b>التوقيع الرقمي:</b> <code>SIG-${sigHash}</code></div></div>
+      </div>
     </div>
     <div class="dseal">
       <div class="stamp"><div class="st-top">• TAX INVOICE •</div><div class="st-icon">★</div><div class="st-mid">معتمد</div><div class="st-bot">DIGITALLY SIGNED</div></div>
-      <div class="label">ختم المنصّة الرسمي</div>
-      <div class="who">إدارة ماستر إيدو باث</div>
-      <div class="meta"><div><b>المُصدِر:</b> MasterEduPath Platform</div><div><b>رمز التحقق:</b> <code>${verifyId}</code></div><div><b>الإصدار:</b> ${esc(docDate)} — ${esc(docTime)}</div></div>
+      <div class="info">
+        <div class="label">ختم المنصّة الرسمي</div>
+        <div class="who">إدارة ماستر إيدو باث</div>
+        <div class="meta"><div><b>المُصدِر:</b> MasterEduPath Platform</div><div><b>رمز التحقق:</b> <code>${verifyId}</code></div><div><b>الإصدار:</b> ${esc(docDate)} — ${esc(docTime)}</div></div>
+      </div>
     </div>
   </div>
   <div class="verify-bar">
