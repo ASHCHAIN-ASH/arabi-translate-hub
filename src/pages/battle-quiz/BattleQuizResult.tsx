@@ -202,4 +202,20 @@ const Stat: React.FC<{ icon: any; label: string; value: React.ReactNode; color: 
   </div>
 );
 
+function flagLabel(t: string): string {
+  const map: Record<string, string> = {
+    tab_blur: 'خروج من النافذة',
+    visibility_hidden: 'إخفاء الصفحة',
+    copy: 'نسخ',
+    paste: 'لصق',
+    right_click: 'نقر يمين',
+    devtools_suspect: 'أدوات المطور',
+    screenshot_attempt: 'لقطة شاشة',
+    image_drag: 'سحب صورة',
+    too_fast_for_reading: 'إجابة سريعة جداً',
+    mechanical_pattern: 'نمط ميكانيكي',
+  };
+  return map[t] || t;
+}
+
 export default BattleQuizResult;
