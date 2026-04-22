@@ -1687,6 +1687,116 @@ export default function ResearchPublication() {
         </div>
 
       </div>
+
+      {/* ============== مودال اختبار PDF متعدد المقاسات ============== */}
+      {pdfTestOpen && (
+        <div
+          className="fixed inset-0 z-[200] bg-black/70 backdrop-blur-sm flex flex-col"
+          onClick={(e) => { if (e.target === e.currentTarget) setPdfTestOpen(false); }}
+        >
+          <div className="bg-white border-b shadow-md px-4 py-3 flex items-center justify-between gap-3 flex-wrap">
+            <div className="flex items-center gap-2">
+              <span className="font-bold text-slate-900">
+                🔬 اختبار PDF —{' '}
+                {pdfTestKind === 'summary' ? 'ملخّص الطلب' : pdfTestKind === 'contract' ? 'العقد' : 'الفاتورة'}
+              </span>
+              <Badge variant="outline" className="text-[10px]">
+                {pdfTestItem?.request_number}
+              </Badge>
+            </div>
+
+            <div className="flex items-center gap-1 bg-slate-100 rounded-lg p-1">
+              {(['mobile','tablet','desktop','compare'] as const).map(k => {
+                const labels: Record<string, string> = {
+                  mobile: '📱 جوال', tablet: '📲 تابلت', desktop: '🖥 ديسكتوب', compare: '⚖️ مقارنة',
+                };
+                return (
+                  <button
+                    key={k}
+                    onClick={() => setPdfTestViewport(k)}
+                    className={`px-3 py-1.5 text-xs font-bold rounded-md transition-all ${
+                      pdfTestViewport === k ? 'bg-indigo-600 text-white shadow-sm' : 'text-slate-700 hover:bg-white'
+                    }`}
+                  >
+                    {labels[k]}
+                  </button>
+                );
+              })}
+            </div>
+
+            <div className="flex items-center gap-2">
+              <Button size="sm" onClick={exportPdfTest} className="bg-emerald-600 hover:bg-emerald-700 text-white">
+                <Download className="w-4 h-4 ml-1.5" /> تصدير PDF
+              </Button>
+              <Button size="sm" variant="ghost" onClick={() => setPdfTestOpen(false)}>
+                <X className="w-4 h-4" />
+              </Button>
+            </div>
+          </div>
+
+          <div className="flex-1 overflow-auto bg-slate-200 p-4">
+            {pdfTestLoading ? (
+              <div className="h-full flex items-center justify-center text-slate-700">
+                <Loader2 className="w-8 h-8 animate-spin text-indigo-600" />
+                <span className="mr-3">جارٍ توليد المستند…</span>
+              </div>
+            ) : pdfTestViewport === 'compare' ? (
+              <>
+                <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 max-w-[1600px] mx-auto">
+                  {[
+                    { label: '📱 جوال 375px', w: 375 },
+                    { label: '📲 تابلت 768px', w: 768 },
+                    { label: '🖥 ديسكتوب 1024px', w: 1024 },
+                  ].map(vp => (
+                    <div key={vp.w} className="bg-white rounded-xl shadow-lg overflow-hidden border-2 border-slate-300">
+                      <div className="bg-slate-800 text-white px-3 py-2 text-xs font-bold flex items-center justify-between">
+                        <span>{vp.label}</span>
+                        <span className="text-slate-400">A4 preview</span>
+                      </div>
+                      <div className="bg-slate-100 overflow-auto" style={{ height: '70vh' }}>
+                        <iframe
+                          title={`pdf-${vp.w}`}
+                          srcDoc={pdfTestHtml}
+                          style={{ width: vp.w, height: '1100px', border: 0, display: 'block' }}
+                        />
+                      </div>
+                    </div>
+                  ))}
+                </div>
+                <div className="max-w-[1600px] mx-auto mt-4 bg-white rounded-xl p-4 border-2 border-amber-300 shadow">
+                  <div className="text-sm font-bold text-amber-900 mb-2">✅ نقاط الفحص البصري التلقائي</div>
+                  <ul className="text-xs text-slate-700 space-y-1 list-disc pr-5">
+                    <li>تحقق أن الأختام (التوقيع/الاعتماد) تظهر بنفس الحجم والترتيب في كل عرض.</li>
+                    <li>لا يوجد نص مقطوع أو يخرج خارج الإطار في عرض الجوال (375px).</li>
+                    <li>الحدود الذهبية والظلال متناسقة عبر المقاسات الثلاثة.</li>
+                    <li>أرقام التحقق وكود الـ Hash لا تسبب scroll أفقي على الجوال.</li>
+                    <li>اضغط <b>"تصدير PDF"</b> أعلاه لمقارنة الناتج النهائي مع هذه المعاينة.</li>
+                  </ul>
+                </div>
+              </>
+            ) : (
+              <div className="flex justify-center">
+                {(() => {
+                  const w = pdfTestViewport === 'mobile' ? 375 : pdfTestViewport === 'tablet' ? 768 : 1024;
+                  return (
+                    <div className="bg-white rounded-xl shadow-2xl overflow-hidden border-2 border-slate-300">
+                      <div className="bg-slate-800 text-white px-3 py-2 text-xs font-bold flex items-center justify-between">
+                        <span>عرض {w}px</span>
+                        <span className="text-slate-400">A4 Preview</span>
+                      </div>
+                      <iframe
+                        title="pdf-single"
+                        srcDoc={pdfTestHtml}
+                        style={{ width: w, height: '80vh', border: 0, display: 'block' }}
+                      />
+                    </div>
+                  );
+                })()}
+              </div>
+            )}
+          </div>
+        </div>
+      )}
     </ClientLayout>
   );
 }
