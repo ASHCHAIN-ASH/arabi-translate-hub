@@ -1099,7 +1099,7 @@ const OrderNew = () => {
             </aside>
           </div>
         </div>
-      </div>
+      </TooltipProvider>
     </ClientLayout>
   );
 };
