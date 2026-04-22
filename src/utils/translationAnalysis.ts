@@ -71,18 +71,21 @@ const WORDS_PER_PAGE: Record<Language, number> = {
 };
 const CHARS_PER_PAGE = 1500; // ISO 1500-char standard page
 
-// Per-word base rates (SAR), per target language
+// Per-word base rate (SAR) — pricing is per 1000 words for the "general" domain at 95 SAR.
+// 95 SAR / 1000 words = 0.095 SAR per word. Domain multipliers scale this base.
+// Target language no longer affects base price (kept uniform per business rule).
 const BASE_RATES_SAR: Record<string, number> = {
-  ar: 0.18, en: 0.18, fr: 0.22, es: 0.22, de: 0.25, tr: 0.20, other: 0.22,
+  ar: 0.095, en: 0.095, fr: 0.095, es: 0.095, de: 0.095, tr: 0.095, other: 0.095,
 };
 
-// Domain pricing multipliers
+// Domain pricing multipliers — calibrated so per-1000-words pricing matches:
+// general 95 · academic 150 · legal 250 · medical 250 · technical 200
 const DOMAIN_MULTIPLIER: Record<Domain, number> = {
-  general: 1.0,
-  academic: 1.25,
-  legal: 1.5,
-  medical: 1.55,
-  technical: 1.35,
+  general: 1.0,        // 95 SAR / 1000 words
+  academic: 1.5789,    // ≈ 150 SAR / 1000 words
+  legal: 2.6316,       // ≈ 250 SAR / 1000 words
+  medical: 2.6316,     // ≈ 250 SAR / 1000 words
+  technical: 2.1053,   // ≈ 200 SAR / 1000 words
 };
 
 // ───────────────────────── Cleaning ─────────────────────────
