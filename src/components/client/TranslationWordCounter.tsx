@@ -320,12 +320,27 @@ const TranslationWordCounter: React.FC<Props> = ({
                     <div className="flex-1 min-w-0">
                       <p className="text-sm font-medium truncate">{e.file.name}</p>
                       <p className="text-[10px] text-muted-foreground mt-0.5">
-                        {(e.file.size / 1024).toFixed(1)} KB
+                        {e.file.size > 1024 * 1024
+                          ? `${(e.file.size / 1024 / 1024).toFixed(2)} MB`
+                          : `${(e.file.size / 1024).toFixed(1)} KB`}
                       </p>
                       {e.loading && (
-                        <p className="text-xs text-muted-foreground flex items-center gap-1.5 mt-1">
-                          <Loader2 className="w-3 h-3 animate-spin" /> جارٍ التحليل…
-                        </p>
+                        <div className="mt-1.5 space-y-1">
+                          <div className="flex items-center justify-between text-[11px]">
+                            <span className="text-muted-foreground flex items-center gap-1.5">
+                              <Loader2 className="w-3 h-3 animate-spin" />
+                              {e.progress < 15 ? 'تحضير الملف…' :
+                               e.progress < 95 ? 'استخراج النص…' : 'إنهاء الحساب…'}
+                            </span>
+                            <span className="font-mono font-bold text-foreground">{e.progress}%</span>
+                          </div>
+                          <div className="h-1.5 rounded-full bg-muted overflow-hidden">
+                            <div
+                              className="h-full bg-gradient-to-r from-emerald-500 to-teal-500 transition-all duration-300 ease-out"
+                              style={{ width: `${e.progress}%` }}
+                            />
+                          </div>
+                        </div>
                       )}
                       {e.error && (
                         <p className="text-xs text-destructive flex items-center gap-1.5 mt-1">
