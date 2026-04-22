@@ -23,6 +23,7 @@ import {
   PackageCheck, FileCheck2, Receipt, ScrollText, ClipboardList,
 } from 'lucide-react';
 import OrderLifecycleTimeline, { LifecycleStatus } from '@/components/orders/OrderLifecycleTimeline';
+import { translateStageWords } from '@/utils/stageTranslations';
 import { AdminQuoteSender } from '@/components/orders/AdminQuoteSender';
 import AdminPriceApprovalPanel from '@/components/admin/AdminPriceApprovalPanel';
 import AdminTranslationAnalysisPanel from '@/components/admin/AdminTranslationAnalysisPanel';
