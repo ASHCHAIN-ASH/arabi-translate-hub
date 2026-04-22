@@ -6,6 +6,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Checkbox } from '@/components/ui/checkbox';
 import { toast } from 'sonner';
+import { triggerLoginWelcome } from '@/components/LoginWelcomeOverlay';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { LogIn, Mail, Lock, Eye, EyeOff, MessageCircle, ArrowLeft, AlertCircle } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -60,7 +61,7 @@ const Login = () => {
       }
       if (remember) localStorage.setItem(REMEMBER_KEY, email);
       else localStorage.removeItem(REMEMBER_KEY);
-      toast.success('تم تسجيل الدخول بنجاح');
+      triggerLoginWelcome();
     } catch (error: any) {
       toast.error(error.message || 'خطأ في تسجيل الدخول');
     } finally {

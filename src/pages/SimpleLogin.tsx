@@ -6,6 +6,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card } from '@/components/ui/card';
 import { toast } from 'sonner';
+import { triggerLoginWelcome } from '@/components/LoginWelcomeOverlay';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Building2, Eye, EyeOff, User, Mail, Phone, Lock, ArrowLeft, BookOpen, Users, Award, Sparkles } from 'lucide-react';
 import { motion } from 'framer-motion';
@@ -41,7 +42,7 @@ const SimpleLogin = () => {
       if (error) {
         toast.error(error);
       } else {
-        toast.success('تم تسجيل الدخول بنجاح');
+        triggerLoginWelcome();
         navigate('/dashboard');
       }
     } catch (error) {
