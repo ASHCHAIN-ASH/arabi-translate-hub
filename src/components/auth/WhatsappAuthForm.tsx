@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { toast } from 'sonner';
-import { Phone, MessageCircle, KeyRound, User, Loader2 } from 'lucide-react';
+import { Phone, MessageCircle, KeyRound, User, Loader2, Mail } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 interface Props {
@@ -25,6 +25,7 @@ export const WhatsappAuthForm: React.FC<Props> = ({ mode, onSuccess }) => {
   const [step, setStep] = useState<'phone' | 'code'>('phone');
   const [phone, setPhone] = useState('');
   const [fullName, setFullName] = useState('');
+  const [email, setEmail] = useState('');
   const [code, setCode] = useState('');
   const [loading, setLoading] = useState(false);
   const [resendIn, setResendIn] = useState(0);
@@ -61,6 +62,14 @@ export const WhatsappAuthForm: React.FC<Props> = ({ mode, onSuccess }) => {
       toast.error('أدخل اسمك الكامل');
       return;
     }
+    if (mode === 'register') {
+      const emailTrimmed = email.trim();
+      const emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailTrimmed) && emailTrimmed.length <= 255;
+      if (!emailOk) {
+        toast.error('أدخل بريداً إلكترونياً صحيحاً');
+        return;
+      }
+    }
     setLoading(true);
     try {
       const { data, error } = await withTimeout(
@@ -91,7 +100,7 @@ export const WhatsappAuthForm: React.FC<Props> = ({ mode, onSuccess }) => {
     try {
       const { data, error } = await withTimeout(
         supabase.functions.invoke('whatsapp-auth-complete', {
-          body: { phone, code: finalCode, full_name: fullName, purpose: mode },
+          body: { phone, code: finalCode, full_name: fullName, email: email.trim() || undefined, purpose: mode },
         }),
       );
       if (error || !data?.success) {
@@ -184,6 +193,25 @@ export const WhatsappAuthForm: React.FC<Props> = ({ mode, onSuccess }) => {
                 placeholder="اسمك الكامل"
                 className="mt-2 h-12 border-2 focus:border-emerald-500"
               />
+            </div>
+          )}
+          {mode === 'register' && (
+            <div>
+              <Label htmlFor="wa-email" className="flex items-center gap-2 text-slate-700 font-medium">
+                <Mail className="w-4 h-4" /> البريد الإلكتروني
+              </Label>
+              <Input
+                id="wa-email"
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="name@example.com"
+                dir="ltr"
+                autoComplete="email"
+                maxLength={255}
+                className="mt-2 h-12 border-2 focus:border-emerald-500 text-right"
+              />
+              <p className="text-xs text-slate-500 mt-1">سيُستخدم لإرسال إشعارات الحساب والفواتير</p>
             </div>
           )}
           <div>
