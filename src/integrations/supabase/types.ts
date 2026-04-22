@@ -5035,9 +5035,11 @@ export type Database = {
       service_orders: {
         Row: {
           active_invoice_id: string | null
+          admin_approved_price: number | null
           assistance_type: string | null
           cancelled_at: string | null
           client_confirmed_at: string | null
+          client_estimated_price: number | null
           completed_at: string | null
           contract_pending_at: string | null
           contract_signature_deadline: string | null
@@ -5057,6 +5059,11 @@ export type Database = {
           payment_completed_at: string | null
           payment_deadline: string | null
           preferred_language: string | null
+          price_approval_note: string | null
+          price_approval_requested_at: string | null
+          price_approval_status: string
+          price_approved_at: string | null
+          price_reviewed_by: string | null
           priority: string | null
           progress_percentage: number
           quantity: number | null
@@ -5075,9 +5082,11 @@ export type Database = {
         }
         Insert: {
           active_invoice_id?: string | null
+          admin_approved_price?: number | null
           assistance_type?: string | null
           cancelled_at?: string | null
           client_confirmed_at?: string | null
+          client_estimated_price?: number | null
           completed_at?: string | null
           contract_pending_at?: string | null
           contract_signature_deadline?: string | null
@@ -5097,6 +5106,11 @@ export type Database = {
           payment_completed_at?: string | null
           payment_deadline?: string | null
           preferred_language?: string | null
+          price_approval_note?: string | null
+          price_approval_requested_at?: string | null
+          price_approval_status?: string
+          price_approved_at?: string | null
+          price_reviewed_by?: string | null
           priority?: string | null
           progress_percentage?: number
           quantity?: number | null
@@ -5115,9 +5129,11 @@ export type Database = {
         }
         Update: {
           active_invoice_id?: string | null
+          admin_approved_price?: number | null
           assistance_type?: string | null
           cancelled_at?: string | null
           client_confirmed_at?: string | null
+          client_estimated_price?: number | null
           completed_at?: string | null
           contract_pending_at?: string | null
           contract_signature_deadline?: string | null
@@ -5137,6 +5153,11 @@ export type Database = {
           payment_completed_at?: string | null
           payment_deadline?: string | null
           preferred_language?: string | null
+          price_approval_note?: string | null
+          price_approval_requested_at?: string | null
+          price_approval_status?: string
+          price_approved_at?: string | null
+          price_reviewed_by?: string | null
           priority?: string | null
           progress_percentage?: number
           quantity?: number | null
