@@ -41,37 +41,59 @@ const detectLanguage = (text: string): WordCountResult['language'] => {
   return 'mixed';
 };
 
-/** Extract text from a PDF using pdfjs-dist. */
-const extractPdfText = async (file: File): Promise<string> => {
+/** Extract text from a PDF using pdfjs-dist. Reports per-page progress. */
+const extractPdfText = async (
+  file: File,
+  onProgress?: (pct: number) => void,
+): Promise<string> => {
   const pdfjs = await import('pdfjs-dist');
   // Use bundled worker via Vite ?url import
   // @ts-ignore
   const workerSrc = (await import('pdfjs-dist/build/pdf.worker.mjs?url')).default;
   pdfjs.GlobalWorkerOptions.workerSrc = workerSrc;
 
+  onProgress?.(5);
   const buffer = await file.arrayBuffer();
+  onProgress?.(15);
   const pdf = await pdfjs.getDocument({ data: buffer }).promise;
   let text = '';
-  for (let i = 1; i <= pdf.numPages; i++) {
+  const total = pdf.numPages;
+  for (let i = 1; i <= total; i++) {
     const page = await pdf.getPage(i);
     const content = await page.getTextContent();
     const pageText = content.items
       .map((it: any) => ('str' in it ? it.str : ''))
       .join(' ');
     text += pageText + '\n';
+    // Map page progress into 15% → 95% range
+    onProgress?.(15 + Math.round((i / total) * 80));
   }
   return text;
 };
 
 /** Extract text from a DOCX using mammoth. */
-const extractDocxText = async (file: File): Promise<string> => {
+const extractDocxText = async (
+  file: File,
+  onProgress?: (pct: number) => void,
+): Promise<string> => {
+  onProgress?.(20);
   const buffer = await file.arrayBuffer();
+  onProgress?.(60);
   const result = await mammoth.extractRawText({ arrayBuffer: buffer });
+  onProgress?.(95);
   return result.value || '';
 };
 
 /** Extract text from a plain text file. */
-const extractTxt = async (file: File): Promise<string> => file.text();
+const extractTxt = async (
+  file: File,
+  onProgress?: (pct: number) => void,
+): Promise<string> => {
+  onProgress?.(40);
+  const t = await file.text();
+  onProgress?.(95);
+  return t;
+};
 
 /** Main entry: count words in any supported file. */
 export const countWordsInFile = async (file: File): Promise<WordCountResult> => {
