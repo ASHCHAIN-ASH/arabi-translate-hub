@@ -11,7 +11,7 @@ import { Progress } from '@/components/ui/progress';
 import {
   ArrowRight, ArrowLeft, ShoppingCart, RefreshCw, Upload, X, File,
   CheckCircle2, Send, Sparkles, ClipboardList, Paperclip, Eye,
-  Image as ImageIcon, Clock, Hash,
+  Image as ImageIcon, Clock, Hash, AlertCircle,
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { toast } from 'sonner';
