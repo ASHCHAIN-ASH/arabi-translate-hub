@@ -1,4 +1,5 @@
 import { supabase } from '@/integrations/supabase/client';
+import { buildPublicUrl } from '@/lib/publicUrl';
 
 export interface MemberReferral {
   id: string;
@@ -119,7 +120,7 @@ export const ReferralService = {
   },
 
   buildShareUrl(code: string): string {
-    const origin = typeof window !== 'undefined' ? window.location.origin : 'https://masteredupath.com';
-    return `${origin}/register?ref=${code}`;
+    // Always use canonical public origin — never preview/iframe domains
+    return buildPublicUrl(`/register?ref=${code}`);
   },
 };
