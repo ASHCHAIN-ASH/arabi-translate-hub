@@ -596,6 +596,453 @@ export type Database = {
         }
         Relationships: []
       }
+      battle_quiz_answers: {
+        Row: {
+          attempt_id: string
+          awarded_points: number
+          created_at: string
+          id: string
+          is_correct: boolean
+          question_id: string
+          response_time_ms: number
+          selected_choice_id: string | null
+        }
+        Insert: {
+          attempt_id: string
+          awarded_points?: number
+          created_at?: string
+          id?: string
+          is_correct?: boolean
+          question_id: string
+          response_time_ms?: number
+          selected_choice_id?: string | null
+        }
+        Update: {
+          attempt_id?: string
+          awarded_points?: number
+          created_at?: string
+          id?: string
+          is_correct?: boolean
+          question_id?: string
+          response_time_ms?: number
+          selected_choice_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "battle_quiz_answers_attempt_id_fkey"
+            columns: ["attempt_id"]
+            isOneToOne: false
+            referencedRelation: "battle_quiz_attempts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "battle_quiz_answers_question_id_fkey"
+            columns: ["question_id"]
+            isOneToOne: false
+            referencedRelation: "battle_quiz_questions"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "battle_quiz_answers_selected_choice_id_fkey"
+            columns: ["selected_choice_id"]
+            isOneToOne: false
+            referencedRelation: "battle_quiz_choices"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      battle_quiz_attempts: {
+        Row: {
+          completed_at: string | null
+          correct_count: number
+          created_at: string
+          id: string
+          question_order: Json
+          reward_amount: number | null
+          room_id: string
+          score: number
+          started_at: string
+          status: Database["public"]["Enums"]["battle_quiz_attempt_status"]
+          suspicious_score: number
+          total_questions: number
+          total_time_ms: number
+          user_id: string
+          xp_earned: number
+        }
+        Insert: {
+          completed_at?: string | null
+          correct_count?: number
+          created_at?: string
+          id?: string
+          question_order?: Json
+          reward_amount?: number | null
+          room_id: string
+          score?: number
+          started_at?: string
+          status?: Database["public"]["Enums"]["battle_quiz_attempt_status"]
+          suspicious_score?: number
+          total_questions?: number
+          total_time_ms?: number
+          user_id: string
+          xp_earned?: number
+        }
+        Update: {
+          completed_at?: string | null
+          correct_count?: number
+          created_at?: string
+          id?: string
+          question_order?: Json
+          reward_amount?: number | null
+          room_id?: string
+          score?: number
+          started_at?: string
+          status?: Database["public"]["Enums"]["battle_quiz_attempt_status"]
+          suspicious_score?: number
+          total_questions?: number
+          total_time_ms?: number
+          user_id?: string
+          xp_earned?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "battle_quiz_attempts_room_id_fkey"
+            columns: ["room_id"]
+            isOneToOne: false
+            referencedRelation: "battle_quiz_rooms"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      battle_quiz_choices: {
+        Row: {
+          choice_text: string
+          created_at: string
+          id: string
+          is_correct: boolean
+          order_index: number
+          question_id: string
+        }
+        Insert: {
+          choice_text: string
+          created_at?: string
+          id?: string
+          is_correct?: boolean
+          order_index?: number
+          question_id: string
+        }
+        Update: {
+          choice_text?: string
+          created_at?: string
+          id?: string
+          is_correct?: boolean
+          order_index?: number
+          question_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "battle_quiz_choices_question_id_fkey"
+            columns: ["question_id"]
+            isOneToOne: false
+            referencedRelation: "battle_quiz_questions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      battle_quiz_daily_limits: {
+        Row: {
+          created_at: string
+          daily_attempts_count: number
+          quiz_date: string
+          reward_eligible_count: number
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          daily_attempts_count?: number
+          quiz_date: string
+          reward_eligible_count?: number
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          daily_attempts_count?: number
+          quiz_date?: string
+          reward_eligible_count?: number
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      battle_quiz_flags: {
+        Row: {
+          attempt_id: string | null
+          created_at: string
+          flag_reason: string | null
+          flag_type: string
+          id: string
+          metadata: Json | null
+          risk_score: number
+          user_id: string
+        }
+        Insert: {
+          attempt_id?: string | null
+          created_at?: string
+          flag_reason?: string | null
+          flag_type: string
+          id?: string
+          metadata?: Json | null
+          risk_score?: number
+          user_id: string
+        }
+        Update: {
+          attempt_id?: string | null
+          created_at?: string
+          flag_reason?: string | null
+          flag_type?: string
+          id?: string
+          metadata?: Json | null
+          risk_score?: number
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "battle_quiz_flags_attempt_id_fkey"
+            columns: ["attempt_id"]
+            isOneToOne: false
+            referencedRelation: "battle_quiz_attempts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      battle_quiz_leaderboards: {
+        Row: {
+          attempt_id: string | null
+          created_at: string
+          id: string
+          rank_position: number | null
+          reward_status:
+            | Database["public"]["Enums"]["battle_quiz_reward_status"]
+            | null
+          room_id: string
+          total_correct: number
+          total_score: number
+          total_time_ms: number
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          attempt_id?: string | null
+          created_at?: string
+          id?: string
+          rank_position?: number | null
+          reward_status?:
+            | Database["public"]["Enums"]["battle_quiz_reward_status"]
+            | null
+          room_id: string
+          total_correct?: number
+          total_score?: number
+          total_time_ms?: number
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          attempt_id?: string | null
+          created_at?: string
+          id?: string
+          rank_position?: number | null
+          reward_status?:
+            | Database["public"]["Enums"]["battle_quiz_reward_status"]
+            | null
+          room_id?: string
+          total_correct?: number
+          total_score?: number
+          total_time_ms?: number
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "battle_quiz_leaderboards_attempt_id_fkey"
+            columns: ["attempt_id"]
+            isOneToOne: false
+            referencedRelation: "battle_quiz_attempts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "battle_quiz_leaderboards_room_id_fkey"
+            columns: ["room_id"]
+            isOneToOne: false
+            referencedRelation: "battle_quiz_rooms"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      battle_quiz_questions: {
+        Row: {
+          anti_cheat_type: Database["public"]["Enums"]["battle_quiz_anti_cheat_type"]
+          created_at: string
+          difficulty: Database["public"]["Enums"]["battle_quiz_difficulty"]
+          explanation: string | null
+          id: string
+          order_index: number
+          question_bank_id: string | null
+          question_text: string
+          question_type: string
+          room_id: string
+          time_limit_seconds: number
+        }
+        Insert: {
+          anti_cheat_type?: Database["public"]["Enums"]["battle_quiz_anti_cheat_type"]
+          created_at?: string
+          difficulty?: Database["public"]["Enums"]["battle_quiz_difficulty"]
+          explanation?: string | null
+          id?: string
+          order_index?: number
+          question_bank_id?: string | null
+          question_text: string
+          question_type?: string
+          room_id: string
+          time_limit_seconds?: number
+        }
+        Update: {
+          anti_cheat_type?: Database["public"]["Enums"]["battle_quiz_anti_cheat_type"]
+          created_at?: string
+          difficulty?: Database["public"]["Enums"]["battle_quiz_difficulty"]
+          explanation?: string | null
+          id?: string
+          order_index?: number
+          question_bank_id?: string | null
+          question_text?: string
+          question_type?: string
+          room_id?: string
+          time_limit_seconds?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "battle_quiz_questions_room_id_fkey"
+            columns: ["room_id"]
+            isOneToOne: false
+            referencedRelation: "battle_quiz_rooms"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      battle_quiz_rewards: {
+        Row: {
+          attempt_id: string | null
+          created_at: string
+          id: string
+          metadata: Json | null
+          reward_type: Database["public"]["Enums"]["battle_quiz_reward_type"]
+          reward_value: number
+          room_id: string
+          status: Database["public"]["Enums"]["battle_quiz_reward_status"]
+          user_id: string
+        }
+        Insert: {
+          attempt_id?: string | null
+          created_at?: string
+          id?: string
+          metadata?: Json | null
+          reward_type?: Database["public"]["Enums"]["battle_quiz_reward_type"]
+          reward_value?: number
+          room_id: string
+          status?: Database["public"]["Enums"]["battle_quiz_reward_status"]
+          user_id: string
+        }
+        Update: {
+          attempt_id?: string | null
+          created_at?: string
+          id?: string
+          metadata?: Json | null
+          reward_type?: Database["public"]["Enums"]["battle_quiz_reward_type"]
+          reward_value?: number
+          room_id?: string
+          status?: Database["public"]["Enums"]["battle_quiz_reward_status"]
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "battle_quiz_rewards_attempt_id_fkey"
+            columns: ["attempt_id"]
+            isOneToOne: false
+            referencedRelation: "battle_quiz_attempts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "battle_quiz_rewards_room_id_fkey"
+            columns: ["room_id"]
+            isOneToOne: false
+            referencedRelation: "battle_quiz_rooms"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      battle_quiz_rooms: {
+        Row: {
+          category: string
+          cover_emoji: string | null
+          created_at: string
+          created_by: string | null
+          description: string | null
+          ends_at: string | null
+          id: string
+          is_reward_eligible: boolean
+          mode: Database["public"]["Enums"]["battle_quiz_mode"]
+          question_count: number
+          starts_at: string | null
+          status: Database["public"]["Enums"]["battle_quiz_room_status"]
+          time_limit_per_question: number
+          title: string
+          updated_at: string
+          xp_completion_bonus: number
+          xp_per_correct: number
+          xp_top_bonus: number
+        }
+        Insert: {
+          category?: string
+          cover_emoji?: string | null
+          created_at?: string
+          created_by?: string | null
+          description?: string | null
+          ends_at?: string | null
+          id?: string
+          is_reward_eligible?: boolean
+          mode?: Database["public"]["Enums"]["battle_quiz_mode"]
+          question_count?: number
+          starts_at?: string | null
+          status?: Database["public"]["Enums"]["battle_quiz_room_status"]
+          time_limit_per_question?: number
+          title: string
+          updated_at?: string
+          xp_completion_bonus?: number
+          xp_per_correct?: number
+          xp_top_bonus?: number
+        }
+        Update: {
+          category?: string
+          cover_emoji?: string | null
+          created_at?: string
+          created_by?: string | null
+          description?: string | null
+          ends_at?: string | null
+          id?: string
+          is_reward_eligible?: boolean
+          mode?: Database["public"]["Enums"]["battle_quiz_mode"]
+          question_count?: number
+          starts_at?: string | null
+          status?: Database["public"]["Enums"]["battle_quiz_room_status"]
+          time_limit_per_question?: number
+          title?: string
+          updated_at?: string
+          xp_completion_bonus?: number
+          xp_per_correct?: number
+          xp_top_bonus?: number
+        }
+        Relationships: []
+      }
       challenge_achievements: {
         Row: {
           badge_color: string | null
@@ -7876,6 +8323,7 @@ export type Database = {
         }
         Returns: Json
       }
+      bq_is_admin: { Args: never; Returns: boolean }
       build_growth_snapshot: { Args: never; Returns: Json }
       cancel_group_order: {
         Args: { _group_order_id: string; _reason?: string }
@@ -7906,6 +8354,10 @@ export type Database = {
       claim_xp_reward: { Args: { p_level: number }; Returns: Json }
       classify_severity: { Args: { _delta_pct: number }; Returns: string }
       client_confirm_delivery: { Args: { _order_id: string }; Returns: Json }
+      complete_battle_quiz_attempt: {
+        Args: { p_attempt_id: string }
+        Returns: Json
+      }
       complete_daily_task: {
         Args: { _metadata?: Json; _task_code: string }
         Returns: Json
@@ -7988,6 +8440,15 @@ export type Database = {
         Returns: number
       }
       ensure_referral_code: { Args: { _user_id: string }; Returns: string }
+      flag_battle_quiz_event: {
+        Args: {
+          p_attempt_id: string
+          p_flag_type: string
+          p_metadata?: Json
+          p_risk_score: number
+        }
+        Returns: Json
+      }
       generate_customer_code: { Args: never; Returns: string }
       generate_group_invite_code: { Args: never; Returns: string }
       generate_internal_order_number: { Args: never; Returns: string }
@@ -8021,6 +8482,18 @@ export type Database = {
         }[]
       }
       get_ai_usage_today: { Args: { _tool_type: string }; Returns: number }
+      get_battle_quiz_leaderboard: {
+        Args: { p_limit?: number; p_room_id: string }
+        Returns: {
+          avatar_url: string
+          display_name: string
+          rank: number
+          total_correct: number
+          total_score: number
+          total_time_ms: number
+          user_id: string
+        }[]
+      }
       get_challenge_leaderboard: {
         Args: { p_limit?: number; p_period?: string }
         Returns: {
@@ -8344,12 +8817,22 @@ export type Database = {
         }
         Returns: Json
       }
+      start_battle_quiz_attempt: { Args: { p_room_id: string }; Returns: Json }
       start_daily_challenge_attempt: {
         Args: { p_challenge_id: string; p_user_id: string }
         Returns: Json
       }
       submit_assessment_attempt: {
         Args: { p_answers: Json; p_attempt_id: string; p_time_spent?: number }
+        Returns: Json
+      }
+      submit_battle_quiz_answer: {
+        Args: {
+          p_attempt_id: string
+          p_choice_id: string
+          p_question_id: string
+          p_response_time_ms: number
+        }
         Returns: Json
       }
       submit_daily_challenge_attempt: {
@@ -8472,6 +8955,31 @@ export type Database = {
     }
     Enums: {
       app_role: "admin" | "moderator" | "user"
+      battle_quiz_anti_cheat_type:
+        | "logic"
+        | "case"
+        | "scenario"
+        | "visual_hint"
+        | "speed"
+        | "standard"
+      battle_quiz_attempt_status:
+        | "in_progress"
+        | "completed"
+        | "flagged"
+        | "invalidated"
+        | "approved"
+      battle_quiz_difficulty: "easy" | "medium" | "hard"
+      battle_quiz_mode: "daily" | "sprint" | "ranked" | "practice"
+      battle_quiz_reward_status: "pending" | "approved" | "paid" | "rejected"
+      battle_quiz_reward_type: "xp" | "badge" | "coupon" | "wallet"
+      battle_quiz_room_status:
+        | "draft"
+        | "scheduled"
+        | "active"
+        | "locked"
+        | "completed"
+        | "rewards_pending"
+        | "archived"
       experiment_status:
         | "draft"
         | "running"
@@ -8633,6 +9141,34 @@ export const Constants = {
   public: {
     Enums: {
       app_role: ["admin", "moderator", "user"],
+      battle_quiz_anti_cheat_type: [
+        "logic",
+        "case",
+        "scenario",
+        "visual_hint",
+        "speed",
+        "standard",
+      ],
+      battle_quiz_attempt_status: [
+        "in_progress",
+        "completed",
+        "flagged",
+        "invalidated",
+        "approved",
+      ],
+      battle_quiz_difficulty: ["easy", "medium", "hard"],
+      battle_quiz_mode: ["daily", "sprint", "ranked", "practice"],
+      battle_quiz_reward_status: ["pending", "approved", "paid", "rejected"],
+      battle_quiz_reward_type: ["xp", "badge", "coupon", "wallet"],
+      battle_quiz_room_status: [
+        "draft",
+        "scheduled",
+        "active",
+        "locked",
+        "completed",
+        "rewards_pending",
+        "archived",
+      ],
       experiment_status: [
         "draft",
         "running",
