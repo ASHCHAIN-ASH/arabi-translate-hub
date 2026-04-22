@@ -11,7 +11,7 @@ import { Progress } from '@/components/ui/progress';
 import {
   ArrowRight, ArrowLeft, ShoppingCart, RefreshCw, Upload, X, File,
   CheckCircle2, Send, Sparkles, ClipboardList, Paperclip, Eye,
-  Image as ImageIcon, Clock, Hash,
+  Image as ImageIcon, Clock, Hash, AlertCircle,
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { toast } from 'sonner';
@@ -95,6 +95,7 @@ const OrderNew = () => {
   const [wordCountData, setWordCountData] = useState<{
     totalWords: number; totalPages: number; estimatedPriceSar: number;
     files: { name: string; words: number }[];
+    pendingCount: number; errorCount: number; totalFiles: number;
   } | null>(null);
 
   // Detect translation services so we render the word counter widget.
@@ -235,9 +236,36 @@ const OrderNew = () => {
     }
   };
 
+  /**
+   * Validates the translation word-count step before submission.
+   * Returns null on success, or a user-facing reason string blocking submit.
+   */
+  const translationGuardReason = useMemo<string | null>(() => {
+    if (!isTranslationService) return null;
+    if (!wordCountData || wordCountData.totalFiles === 0) {
+      return 'لإكمال طلب الترجمة، يجب رفع الملف وحساب عدد كلماته أولاً.';
+    }
+    if (wordCountData.pendingCount > 0) {
+      return `لا يزال هناك ${wordCountData.pendingCount} ملف قيد التحليل — انتظر اكتمال الحساب قبل الإرسال.`;
+    }
+    if (wordCountData.errorCount > 0) {
+      return `تعذّر تحليل ${wordCountData.errorCount} ملف. يرجى إعادة الحساب أو إزالة الملفات التالفة قبل الإرسال.`;
+    }
+    if (wordCountData.totalWords <= 0) {
+      return 'لم يتم استخراج أي كلمات من الملفات المرفوعة. تأكد أن الملف نصي وليس صورة ممسوحة.';
+    }
+    return null;
+  }, [isTranslationService, wordCountData]);
+
   const handleSubmit = async () => {
     if (!service) return;
     if (!user) return toast.error('يرجى تسجيل الدخول أولاً');
+
+    // Block translation orders that don't have a completed word count
+    if (translationGuardReason) {
+      toast.error(translationGuardReason);
+      return;
+    }
 
     setLoading(true);
     setUploadProgress(0);
@@ -774,6 +802,24 @@ const OrderNew = () => {
                         </div>
                       )}
 
+                      {/* Submission guard message — only on final step */}
+                      {step === 3 && translationGuardReason && (
+                        <div
+                          role="alert"
+                          className="mt-4 rounded-xl border-2 border-destructive/40 bg-destructive/5 p-3 flex items-start gap-3"
+                        >
+                          <AlertCircle className="w-5 h-5 text-destructive flex-shrink-0 mt-0.5" />
+                          <div className="flex-1 min-w-0">
+                            <p className="text-sm font-bold text-destructive">
+                              لا يمكن إرسال الطلب بعد
+                            </p>
+                            <p className="text-xs text-muted-foreground mt-0.5 leading-relaxed">
+                              {translationGuardReason}
+                            </p>
+                          </div>
+                        </div>
+                      )}
+
                       {/* Navigation */}
                       <div className="flex items-center justify-between pt-4 border-t border-border/40">
                         <Button variant="outline" disabled={step === 0 || loading}
@@ -795,9 +841,10 @@ const OrderNew = () => {
                         ) : (
                           <Button
                             onClick={handleSubmit}
-                            disabled={loading}
+                            disabled={loading || !!translationGuardReason}
                             size="lg"
-                            className="gap-2 text-white hover:opacity-90 min-w-[160px] shadow-lg"
+                            title={translationGuardReason || undefined}
+                            className="gap-2 text-white hover:opacity-90 min-w-[160px] shadow-lg disabled:opacity-50"
                             style={{
                               background: `linear-gradient(135deg, hsl(var(--${theme.accent})), hsl(var(--${theme.glow})))`,
                               boxShadow: `0 8px 24px hsl(var(--${theme.accent}) / 0.4)`,

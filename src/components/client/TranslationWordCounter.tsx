@@ -37,7 +37,18 @@ interface Props {
   urgency?: string;
   certified?: string;
   /** Notify parent of total word count for storage in metadata. */
-  onCountChange?: (data: { totalWords: number; totalPages: number; estimatedPriceSar: number; files: { name: string; words: number }[] }) => void;
+  onCountChange?: (data: {
+    totalWords: number;
+    totalPages: number;
+    estimatedPriceSar: number;
+    files: { name: string; words: number }[];
+    /** Number of files still being analyzed. */
+    pendingCount: number;
+    /** Number of files that errored out. */
+    errorCount: number;
+    /** Total uploaded files (loaded + pending + error). */
+    totalFiles: number;
+  }) => void;
 }
 
 const ACCEPTED = '.pdf,.docx,.txt,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document,text/plain';
@@ -59,6 +70,8 @@ const TranslationWordCounter: React.FC<Props> = ({
 
   const notify = useCallback((list: FileEntry[]) => {
     const completed = list.filter((e) => e.result);
+    const pending = list.filter((e) => e.loading);
+    const errored = list.filter((e) => e.error);
     const agg = aggregateResults(completed.map((e) => e.result!));
     const estimate = estimatePrice(agg.words, { urgency, certified, targetLanguage });
     onCountChange?.({
@@ -66,6 +79,9 @@ const TranslationWordCounter: React.FC<Props> = ({
       totalPages: agg.pages,
       estimatedPriceSar: estimate.totalSar,
       files: completed.map((e) => ({ name: e.file.name, words: e.result!.words })),
+      pendingCount: pending.length,
+      errorCount: errored.length,
+      totalFiles: list.length,
     });
   }, [onCountChange, urgency, certified, targetLanguage]);
 
