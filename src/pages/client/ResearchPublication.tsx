@@ -646,12 +646,66 @@ export default function ResearchPublication() {
 
   const triggerPrintScript = `<script>window.addEventListener('load',function(){var go=function(){try{window.focus();window.print();}catch(e){}};if(document.fonts&&document.fonts.ready){document.fonts.ready.then(function(){setTimeout(go,150);});}else{setTimeout(go,400);}});</script>`;
 
-  const downloadContractPdf = (item: any) => {
-    const { esc, sigHash, verifyId, docNumber, docDate, docTime, issuedIso } = buildDocMeta(item, 'contract');
-    const serviceLabel = SERVICE_TYPES.find(s => s.value === item.service_type)?.label || item.service_type;
+  const downloadContractPdf = async (item: any) => {
+    // 1) جلب العقد الفعلي المرتبط بهذا الطلب من قاعدة البيانات
+    const { data: realContract } = await supabase
+      .from('contracts')
+      .select('*, contract_signatures(*)')
+      .eq('publication_id', item.id)
+      .order('created_at', { ascending: false })
+      .limit(1)
+      .maybeSingle();
+
+    if (!realContract) {
+      toast({
+        title: 'لا يوجد عقد بعد',
+        description: 'لم يتم إنشاء عقد رسمي لهذا الطلب بعد. يرجى الانتظار حتى يتم إصداره من إدارة المنصّة.',
+        variant: 'destructive',
+      });
+      return;
+    }
+
+    const sig = Array.isArray((realContract as any).contract_signatures)
+      ? (realContract as any).contract_signatures[0]
+      : (realContract as any).contract_signatures;
+
+    const { esc, issuedIso } = buildDocMeta(item, 'contract');
+    // استخدم البيانات الفعلية للعقد بدل التوليد
+    const docNumber = realContract.contract_number || `CTR-${realContract.id.slice(0, 8).toUpperCase()}`;
+    const verifyId = `MEP-${(realContract.verification_token || realContract.id).toString().toUpperCase().replace(/-/g, '').slice(0, 8)}-${docNumber.slice(-6)}`;
+    const sigHash = (realContract.content_sha256 || realContract.verification_token || realContract.id).toString().toUpperCase().replace(/-/g, '').slice(0, 8);
+    const issuedAt = new Date(realContract.created_at || Date.now());
+    const docDate = issuedAt.toLocaleDateString('ar-SA', { dateStyle: 'long' });
+    const docTime = issuedAt.toLocaleTimeString('ar-SA', { timeStyle: 'short' });
+    const signedAt = realContract.signed_at
+      ? new Date(realContract.signed_at).toLocaleString('ar-SA', { dateStyle: 'long', timeStyle: 'short' })
+      : null;
+
+    const serviceLabel = realContract.service_name
+      || SERVICE_TYPES.find(s => s.value === item.service_type)?.label
+      || item.service_type;
     const langLabel = item.language === 'ar' ? 'العربية' : item.language === 'en' ? 'الإنجليزية' : 'ثنائي اللغة';
-    const amount = Number(item.estimated_amount || 0).toLocaleString('ar-SA');
-    const created = new Date(item.created_at).toLocaleString('ar-SA', { dateStyle: 'long', timeStyle: 'short' });
+    const amount = Number(realContract.total_amount || item.estimated_amount || 0).toLocaleString('ar-SA');
+    const currency = realContract.currency || 'ر.س';
+    const created = issuedAt.toLocaleString('ar-SA', { dateStyle: 'long', timeStyle: 'short' });
+
+    const clientName = realContract.client_full_name || item.client_name;
+    const clientPhone = realContract.client_phone || item.client_phone || '—';
+    const clientEmail = realContract.client_email || item.client_email || '';
+    const contractTitle = realContract.title || 'عقد تقديم خدمة نشر بحث علمي';
+    // محتوى العقد الفعلي (HTML آمن)
+    const rawContent = (realContract.content || '').toString();
+    const contentHtml = rawContent
+      ? rawContent
+          .replace(/[<>]/g, c => ({ '<': '&lt;', '>': '&gt;' } as any)[c])
+          .split(/\n{2,}/)
+          .map(p => `<p style="margin:0 0 10px;line-height:1.9;text-align:justify">${p.replace(/\n/g, '<br/>')}</p>`)
+          .join('')
+      : '';
+    const statusLabel = realContract.status === 'signed' || realContract.status === 'active'
+      ? 'موقّع ومعتمد'
+      : realContract.status === 'sent' ? 'بانتظار التوقيع'
+      : realContract.status === 'draft' ? 'مسودة' : (realContract.status || '—');
 
     const html = `<!DOCTYPE html><html dir="rtl" lang="ar"><head><meta charset="UTF-8"><title>عقد خدمة — ${esc(docNumber)}</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
