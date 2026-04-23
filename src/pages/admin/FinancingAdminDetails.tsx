@@ -625,7 +625,7 @@ const FinancingAdminDetails: React.FC = () => {
             </Card>
           </div>
         </div>
-      </div>
+      </motion.div>
     </AdminLayout>
   );
 };
