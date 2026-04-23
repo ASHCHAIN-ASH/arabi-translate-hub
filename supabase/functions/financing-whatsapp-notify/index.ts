@@ -181,7 +181,7 @@ function buildMessage(event: string, app: AppRow, extra: Record<string, any> = {
         `🚨 *تنبيه: قسط متأخر*\n\n` +
         `${name}، لديك قسط متأخر على خطة التمويل *${ref}*.\n\n` +
         `💰 المبلغ المتأخر: *${fmt(extra.amount)} ر.س*\n` +
-        `📅 كان مستحقاً في: *${extra.due_date}*\n\n` +
+        `📅 كان مستحقاً في: *${ltr(extra.due_date)}*\n\n` +
         `يرجى السداد في أقرب وقت لتجنب تعليق الخدمات.` +
         footer
       );
