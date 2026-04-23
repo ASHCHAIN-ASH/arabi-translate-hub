@@ -656,6 +656,45 @@ const FinancingNew: React.FC = () => {
                         placeholder="0"
                       />
                     </FieldGroup>
+
+                    {/* عوامل التقييم الإضافية */}
+                    <FieldGroup icon={User} label="العمر (سنوات)">
+                      <Input
+                        type="number" min={18} max={75}
+                        value={form.applicant_age}
+                        onChange={(e) => setField('applicant_age', e.target.value)}
+                        placeholder="مثال: 32"
+                      />
+                    </FieldGroup>
+                    <FieldGroup icon={Briefcase} label="سنوات الخبرة الوظيفية">
+                      <Input
+                        type="number" min={0} max={50}
+                        value={form.employment_years}
+                        onChange={(e) => setField('employment_years', e.target.value)}
+                        placeholder="مثال: 5"
+                      />
+                    </FieldGroup>
+
+                    {/* كفيل غارم — اختياري */}
+                    <div className="md:col-span-2">
+                      <label className="flex items-start gap-2 rounded-xl border bg-muted/30 p-3 cursor-pointer hover:bg-muted/50 transition-colors">
+                        <Checkbox
+                          checked={form.has_guarantor}
+                          onCheckedChange={(v) => setField('has_guarantor', !!v)}
+                          className="mt-0.5"
+                        />
+                        <div className="flex-1">
+                          <div className="text-sm font-bold flex items-center gap-1.5">
+                            <ShieldCheck className="h-3.5 w-3.5 text-emerald-600" />
+                            يوجد كفيل غارم
+                          </div>
+                          <div className="text-[11px] text-muted-foreground mt-0.5">
+                            وجود كفيل يعزّز السكور الائتماني (مهم للطلاب وأصحاب الأعمال الحرة)
+                          </div>
+                        </div>
+                      </label>
+                    </div>
+
                     <div className="md:col-span-2">
                       <Label className="text-sm font-semibold mb-1.5 block">ملاحظات إضافية (اختياري)</Label>
                       <Textarea
@@ -710,7 +749,21 @@ const FinancingNew: React.FC = () => {
                   </Button>
                 </div>
               </Card>
-            </motion.div>
+                </motion.div>
+
+                {/* بطاقة التقييم الائتماني التلقائي */}
+                {creditScore && (
+                  <CreditScoreCard result={creditScore} />
+                )}
+                {!creditScore && (
+                  <div className="rounded-2xl border border-dashed bg-muted/20 p-5 text-center">
+                    <Sparkles className="h-6 w-6 mx-auto mb-2 text-primary/60" />
+                    <div className="text-sm font-semibold">سيظهر تقييمك الائتماني فور إكمال البيانات</div>
+                    <div className="text-xs text-muted-foreground mt-1">
+                      اختر فئتك وأدخل دخلك الشهري للحصول على سكور فوري وفق نموذج SIMAH
+                    </div>
+                  </div>
+                )}
           )}
 
           {step === 2 && (
