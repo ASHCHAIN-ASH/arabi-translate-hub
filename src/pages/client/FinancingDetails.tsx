@@ -513,6 +513,57 @@ const FinancingDetails: React.FC = () => {
           </Card>
         </motion.div>
 
+        {/* Digital Acknowledgments CTA — visible across active stages */}
+        {!REJECTED_LIKE.includes(app.status) && app.status !== 'completed' && (
+          <motion.div
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.1 }}
+          >
+            <Card className="relative overflow-hidden border-0 shadow-xl">
+              <div
+                className="absolute inset-0"
+                style={{
+                  background:
+                    'linear-gradient(135deg, hsl(var(--primary)) 0%, hsl(var(--primary) / 0.85) 50%, hsl(var(--accent) / 0.9) 100%)',
+                }}
+              />
+              <motion.div
+                className="absolute -top-16 -left-16 h-44 w-44 rounded-full bg-white/15 blur-3xl"
+                animate={{ scale: [1, 1.2, 1] }}
+                transition={{ duration: 6, repeat: Infinity }}
+              />
+              <div className="relative p-5 md:p-6 text-primary-foreground flex flex-col md:flex-row md:items-center gap-4">
+                <div className="h-14 w-14 rounded-2xl bg-white/15 backdrop-blur-xl ring-1 ring-white/30 flex items-center justify-center shrink-0">
+                  <ScrollText className="h-7 w-7" />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center gap-1.5 text-[10px] uppercase tracking-widest text-white/70 mb-1">
+                    <Lock className="h-3 w-3" /> الإقرارات الرقمية الإلزامية
+                  </div>
+                  <h3 className="font-extrabold text-lg md:text-xl mb-1">
+                    أكمل الإقرارات الأربعة لتفعيل التمويل
+                  </h3>
+                  <p className="text-xs md:text-sm text-white/90 leading-relaxed">
+                    إقرار صحة البيانات • توثيق المستندات • الالتزام بعدم التأخير • السند التنفيذي —
+                    موثّقة بحجّية كاملة وفق نظام التعاملات الإلكترونية السعودي.
+                  </p>
+                </div>
+                <Button
+                  asChild
+                  size="lg"
+                  className="bg-white text-primary hover:bg-white/90 font-bold shadow-lg shrink-0"
+                >
+                  <Link to={`/financing/acknowledgments?app=${app.id}`}>
+                    <ScrollText className="h-4 w-4 ml-2" />
+                    بدء الإقرارات
+                  </Link>
+                </Button>
+              </div>
+            </Card>
+          </motion.div>
+        )}
+
         {/* Contract signing area — only when contract_pending_signature */}
         <AnimatePresence mode="wait">
           {app.status === 'contract_pending_signature' && (
