@@ -3903,6 +3903,42 @@ export type Database = {
           },
         ]
       }
+      marketing_assets: {
+        Row: {
+          caption_template: string | null
+          created_at: string
+          id: string
+          image_url: string | null
+          is_active: boolean
+          platform: string
+          service_type: string
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          caption_template?: string | null
+          created_at?: string
+          id?: string
+          image_url?: string | null
+          is_active?: boolean
+          platform: string
+          service_type: string
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          caption_template?: string | null
+          created_at?: string
+          id?: string
+          image_url?: string | null
+          is_active?: boolean
+          platform?: string
+          service_type?: string
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       marketplace_funnel_events: {
         Row: {
           anonymous_id: string | null
@@ -5415,6 +5451,73 @@ export type Database = {
           referrer_user_id?: string | null
         }
         Relationships: []
+      }
+      referral_clicks: {
+        Row: {
+          created_at: string
+          id: string
+          ip: string | null
+          ref_code: string
+          user_agent: string | null
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          ip?: string | null
+          ref_code: string
+          user_agent?: string | null
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          ip?: string | null
+          ref_code?: string
+          user_agent?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "referral_clicks_ref_code_fkey"
+            columns: ["ref_code"]
+            isOneToOne: false
+            referencedRelation: "user_referrals"
+            referencedColumns: ["ref_code"]
+          },
+        ]
+      }
+      referral_conversions: {
+        Row: {
+          created_at: string
+          id: string
+          order_id: string | null
+          ref_code: string
+          type: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          order_id?: string | null
+          ref_code: string
+          type: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          order_id?: string | null
+          ref_code?: string
+          type?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "referral_conversions_ref_code_fkey"
+            columns: ["ref_code"]
+            isOneToOne: false
+            referencedRelation: "user_referrals"
+            referencedColumns: ["ref_code"]
+          },
+        ]
       }
       referral_events: {
         Row: {
@@ -7476,6 +7579,39 @@ export type Database = {
         }
         Relationships: []
       }
+      user_referrals: {
+        Row: {
+          created_at: string
+          id: string
+          ref_code: string
+          total_clicks: number
+          total_orders: number
+          total_signups: number
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          ref_code: string
+          total_clicks?: number
+          total_orders?: number
+          total_signups?: number
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          ref_code?: string
+          total_clicks?: number
+          total_orders?: number
+          total_signups?: number
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       user_rewards: {
         Row: {
           awarded_at: string
@@ -8849,6 +8985,7 @@ export type Database = {
       generate_internal_order_number: { Args: never; Returns: string }
       generate_receipt_number: { Args: never; Returns: string }
       generate_referral_code: { Args: never; Returns: string }
+      generate_short_ref_code: { Args: never; Returns: string }
       get_active_membership: {
         Args: { _user_id: string }
         Returns: {
