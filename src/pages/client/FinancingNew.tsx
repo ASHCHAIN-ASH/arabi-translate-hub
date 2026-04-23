@@ -104,12 +104,39 @@ const formSchema = z.object({
   applicant_id_number: z.string().trim().min(8, 'رقم هوية غير صالح').max(20),
   applicant_phone: z.string().trim().min(9, 'رقم جوال غير صالح').max(20),
   applicant_email: z.string().trim().email('بريد غير صالح').max(160),
-  employer_name: z.string().trim().min(2, 'جهة العمل مطلوبة').max(120),
+  employer_name: z.string().trim().max(120).optional().nullable(),
   monthly_income: z.coerce.number().min(0, 'الدخل لا يمكن أن يكون سالبًا'),
   monthly_commitments: z.coerce.number().min(0).default(0),
   city: z.string().trim().min(2, 'المدينة مطلوبة').max(60),
   notes: z.string().max(500).optional().nullable(),
 });
+
+// === المراحل التعليمية للطلاب ===
+const STUDENT_LEVELS = [
+  { value: 'high_school', label: 'طالب ثانوي', icon: '📚' },
+  { value: 'diploma', label: 'دبلوم / كلية تقنية', icon: '🛠️' },
+  { value: 'bachelor', label: 'بكالوريوس (جامعة)', icon: '🎓' },
+  { value: 'master', label: 'ماجستير', icon: '📖' },
+  { value: 'phd', label: 'دكتوراه', icon: '🔬' },
+] as const;
+
+// === مصادر دخل المتقاعد ===
+const RETIREMENT_SOURCES = [
+  { value: 'civil', label: 'تقاعد مدني', icon: '🏛️' },
+  { value: 'military', label: 'تقاعد عسكري', icon: '🎖️' },
+  { value: 'social_insurance', label: 'تأمينات اجتماعية', icon: '🤝' },
+  { value: 'private_pension', label: 'معاش خاص', icon: '💰' },
+] as const;
+
+// === أنواع الأعمال الحرة ===
+const FREELANCE_TYPES = [
+  { value: 'tech_freelance', label: 'تقنية / برمجة', icon: '💻' },
+  { value: 'design', label: 'تصميم / محتوى', icon: '🎨' },
+  { value: 'consulting', label: 'استشارات', icon: '💡' },
+  { value: 'commerce', label: 'تجارة إلكترونية', icon: '🛍️' },
+  { value: 'services', label: 'خدمات ميدانية', icon: '🔧' },
+  { value: 'other_freelance', label: 'أخرى', icon: '✨' },
+] as const;
 
 type DocKey = 'id_front' | 'id_back' | 'bank_statement' | 'proof_of_income';
 const REQUIRED_DOCS: DocKey[] = ['id_front', 'id_back', 'bank_statement'];
@@ -148,6 +175,11 @@ const FinancingNew: React.FC = () => {
     has_guarantor: false,
     employer_sector: '',
     employer_name: '',
+    student_level: '',
+    university_name: '',
+    student_gpa: '' as number | '',
+    retirement_source: '',
+    freelance_type: '',
     monthly_income: '' as number | '',
     monthly_commitments: '' as number | '',
     city: '',
@@ -583,47 +615,177 @@ const FinancingNew: React.FC = () => {
                       </div>
                     </div>
 
-                    {/* قطاع العمل */}
-                    <div className="md:col-span-2">
-                      <Label className="text-sm font-semibold mb-1.5 flex items-center gap-1.5">
-                        <Building2 className="h-3.5 w-3.5 text-muted-foreground" />
-                        قطاع جهة العمل
-                      </Label>
-                      <Select
-                        dir="rtl"
-                        value={form.employer_sector}
-                        onValueChange={(v) => setField('employer_sector', v)}
-                      >
-                        <SelectTrigger className="h-11 text-right [&>span]:text-right [&>span]:flex-1 [&>span]:mr-0">
-                          <SelectValue placeholder="اختر القطاع المهني..." />
-                        </SelectTrigger>
-                        <SelectContent dir="rtl" className="text-right">
-                          {EMPLOYMENT_SECTORS.map((s) => (
-                            <SelectItem key={s.value} value={s.value} className="text-right">
-                              <div className="flex items-center gap-2 flex-row-reverse justify-start w-full">
-                                <s.icon className={`h-4 w-4 ${s.color}`} />
-                                <span>{s.label}</span>
-                              </div>
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                    </div>
+                    {/* === حقول مخصصة حسب فئة المتقدم === */}
+                    {(() => {
+                      const cat = form.applicant_category;
+                      const isEmployed = cat === 'gov_employee' || cat === 'private_employee';
+                      const isFreelance = cat === 'self_employed';
+                      const isStudent = cat === 'student';
+                      const isRetired = cat === 'retired';
+                      const isUnemployed = !cat;
 
-                    <FieldGroup icon={Briefcase} label="اسم جهة العمل / الشركة">
-                      <Input
-                        value={form.employer_name}
-                        onChange={(e) => setField('employer_name', e.target.value)}
-                        placeholder="مثال: أرامكو السعودية"
-                      />
-                    </FieldGroup>
+                      return (
+                        <>
+                          {/* === الموظفين (حكومي / خاص) === */}
+                          {isEmployed && (
+                            <>
+                              <div className="md:col-span-2">
+                                <Label className="text-sm font-semibold mb-1.5 flex items-center gap-1.5">
+                                  <Building2 className="h-3.5 w-3.5 text-muted-foreground" />
+                                  قطاع جهة العمل
+                                </Label>
+                                <Select dir="rtl" value={form.employer_sector}
+                                  onValueChange={(v) => setField('employer_sector', v)}>
+                                  <SelectTrigger className="h-11 flex-row-reverse justify-between text-right [&>span]:text-right [&>span]:flex-1">
+                                    <SelectValue placeholder="اختر القطاع المهني..." />
+                                  </SelectTrigger>
+                                  <SelectContent dir="rtl" className="text-right">
+                                    {EMPLOYMENT_SECTORS.filter(s => s.value !== 'unemployed' && s.value !== 'self_employed').map((s) => (
+                                      <SelectItem key={s.value} value={s.value} className="text-right">
+                                        <div className="flex items-center gap-2 flex-row-reverse justify-start w-full">
+                                          <s.icon className={`h-4 w-4 ${s.color}`} />
+                                          <span>{s.label}</span>
+                                        </div>
+                                      </SelectItem>
+                                    ))}
+                                  </SelectContent>
+                                </Select>
+                              </div>
+                              <FieldGroup icon={Briefcase} label="اسم جهة العمل / الشركة">
+                                <Input value={form.employer_name}
+                                  onChange={(e) => setField('employer_name', e.target.value)}
+                                  placeholder="مثال: أرامكو السعودية" />
+                              </FieldGroup>
+                              <FieldGroup icon={Briefcase} label="سنوات الخبرة الوظيفية">
+                                <Input type="number" min={0} max={50}
+                                  value={form.employment_years}
+                                  onChange={(e) => setField('employment_years', e.target.value)}
+                                  placeholder="مثال: 5" />
+                              </FieldGroup>
+                            </>
+                          )}
+
+                          {/* === أعمال حرة === */}
+                          {isFreelance && (
+                            <>
+                              <div className="md:col-span-2">
+                                <Label className="text-sm font-semibold mb-1.5 flex items-center gap-1.5">
+                                  <UserCheck className="h-3.5 w-3.5 text-teal-600" />
+                                  نوع النشاط الحر
+                                </Label>
+                                <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+                                  {FREELANCE_TYPES.map((t) => {
+                                    const active = form.freelance_type === t.value;
+                                    return (
+                                      <motion.button key={t.value} type="button"
+                                        whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}
+                                        onClick={() => setField('freelance_type', t.value)}
+                                        className={`rounded-xl p-2.5 text-right ring-1 transition-all ${
+                                          active ? 'bg-primary/10 ring-primary shadow-sm'
+                                          : 'bg-background ring-border hover:ring-primary/40'}`}>
+                                        <div className="text-xl mb-0.5">{t.icon}</div>
+                                        <div className={`text-[11px] font-bold ${active ? 'text-primary' : 'text-foreground'}`}>{t.label}</div>
+                                      </motion.button>
+                                    );
+                                  })}
+                                </div>
+                              </div>
+                              <FieldGroup icon={Briefcase} label="اسم النشاط / السجل التجاري (اختياري)">
+                                <Input value={form.employer_name}
+                                  onChange={(e) => setField('employer_name', e.target.value)}
+                                  placeholder="مثال: مؤسسة تقنية ..." />
+                              </FieldGroup>
+                              <FieldGroup icon={Briefcase} label="سنوات ممارسة النشاط">
+                                <Input type="number" min={0} max={50}
+                                  value={form.employment_years}
+                                  onChange={(e) => setField('employment_years', e.target.value)}
+                                  placeholder="مثال: 3" />
+                              </FieldGroup>
+                            </>
+                          )}
+
+                          {/* === الطلاب === */}
+                          {isStudent && (
+                            <>
+                              <div className="md:col-span-2">
+                                <Label className="text-sm font-semibold mb-1.5 flex items-center gap-1.5">
+                                  <GraduationCap className="h-3.5 w-3.5 text-indigo-600" />
+                                  المرحلة الدراسية
+                                </Label>
+                                <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2">
+                                  {STUDENT_LEVELS.map((lv) => {
+                                    const active = form.student_level === lv.value;
+                                    return (
+                                      <motion.button key={lv.value} type="button"
+                                        whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}
+                                        onClick={() => setField('student_level', lv.value)}
+                                        className={`rounded-xl p-2.5 text-right ring-1 transition-all ${
+                                          active ? 'bg-primary/10 ring-primary shadow-sm'
+                                          : 'bg-background ring-border hover:ring-primary/40'}`}>
+                                        <div className="text-xl mb-0.5">{lv.icon}</div>
+                                        <div className={`text-[11px] font-bold ${active ? 'text-primary' : 'text-foreground'}`}>{lv.label}</div>
+                                      </motion.button>
+                                    );
+                                  })}
+                                </div>
+                              </div>
+                              <FieldGroup icon={GraduationCap} label="اسم الجامعة / المؤسسة التعليمية">
+                                <Input value={form.university_name}
+                                  onChange={(e) => setField('university_name', e.target.value)}
+                                  placeholder="مثال: جامعة الملك سعود" />
+                              </FieldGroup>
+                              <FieldGroup icon={Sparkles} label="المعدل التراكمي (من 5)">
+                                <Input type="number" min={0} max={5} step="0.01"
+                                  value={form.student_gpa}
+                                  onChange={(e) => setField('student_gpa', e.target.value)}
+                                  placeholder="مثال: 4.5" />
+                              </FieldGroup>
+                            </>
+                          )}
+
+                          {/* === المتقاعدين === */}
+                          {isRetired && (
+                            <div className="md:col-span-2">
+                              <Label className="text-sm font-semibold mb-1.5 flex items-center gap-1.5">
+                                <Landmark className="h-3.5 w-3.5 text-amber-600" />
+                                مصدر المعاش التقاعدي
+                              </Label>
+                              <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+                                {RETIREMENT_SOURCES.map((r) => {
+                                  const active = form.retirement_source === r.value;
+                                  return (
+                                    <motion.button key={r.value} type="button"
+                                      whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}
+                                      onClick={() => setField('retirement_source', r.value)}
+                                      className={`rounded-xl p-2.5 text-right ring-1 transition-all ${
+                                        active ? 'bg-primary/10 ring-primary shadow-sm'
+                                        : 'bg-background ring-border hover:ring-primary/40'}`}>
+                                      <div className="text-xl mb-0.5">{r.icon}</div>
+                                      <div className={`text-[11px] font-bold ${active ? 'text-primary' : 'text-foreground'}`}>{r.label}</div>
+                                    </motion.button>
+                                  );
+                                })}
+                              </div>
+                            </div>
+                          )}
+
+                          {/* === لم يختر فئة بعد === */}
+                          {isUnemployed && (
+                            <div className="md:col-span-2 rounded-xl border border-dashed bg-muted/20 p-4 text-center">
+                              <UserCheck className="h-5 w-5 mx-auto mb-1.5 text-muted-foreground" />
+                              <div className="text-xs text-muted-foreground">
+                                اختر فئتك أعلاه لعرض الحقول المخصصة لك
+                              </div>
+                            </div>
+                          )}
+                        </>
+                      );
+                    })()}
+
+                    {/* === الحقول المشتركة لكل الفئات === */}
                     <FieldGroup icon={MapPin} label="المدينة">
-                      <Select
-                        dir="rtl"
-                        value={form.city}
-                        onValueChange={(v) => setField('city', v)}
-                      >
-                        <SelectTrigger className="h-11 text-right [&>span]:text-right [&>span]:flex-1 [&>span]:mr-0">
+                      <Select dir="rtl" value={form.city} onValueChange={(v) => setField('city', v)}>
+                        <SelectTrigger className="h-11 flex-row-reverse justify-between text-right [&>span]:text-right [&>span]:flex-1">
                           <SelectValue placeholder="اختر المدينة..." />
                         </SelectTrigger>
                         <SelectContent dir="rtl" className="max-h-72 text-right">
@@ -638,41 +800,28 @@ const FinancingNew: React.FC = () => {
                         </SelectContent>
                       </Select>
                     </FieldGroup>
-                    <FieldGroup icon={TrendingUp} label="الدخل الشهري (ر.س)">
-                      <Input
-                        type="number"
-                        min={0}
-                        value={form.monthly_income}
-                        onChange={(e) => setField('monthly_income', e.target.value)}
-                        placeholder="0"
-                      />
-                    </FieldGroup>
-                    <FieldGroup icon={Receipt} label="الالتزامات الشهرية (ر.س)">
-                      <Input
-                        type="number"
-                        min={0}
-                        value={form.monthly_commitments}
-                        onChange={(e) => setField('monthly_commitments', e.target.value)}
-                        placeholder="0"
-                      />
-                    </FieldGroup>
-
-                    {/* عوامل التقييم الإضافية */}
                     <FieldGroup icon={User} label="العمر (سنوات)">
-                      <Input
-                        type="number" min={18} max={75}
+                      <Input type="number" min={16} max={75}
                         value={form.applicant_age}
                         onChange={(e) => setField('applicant_age', e.target.value)}
-                        placeholder="مثال: 32"
-                      />
+                        placeholder="مثال: 32" />
                     </FieldGroup>
-                    <FieldGroup icon={Briefcase} label="سنوات الخبرة الوظيفية">
-                      <Input
-                        type="number" min={0} max={50}
-                        value={form.employment_years}
-                        onChange={(e) => setField('employment_years', e.target.value)}
-                        placeholder="مثال: 5"
-                      />
+                    <FieldGroup icon={TrendingUp} label={
+                      form.applicant_category === 'student' ? 'الدخل / المكافأة الشهرية (ر.س)' :
+                      form.applicant_category === 'retired' ? 'المعاش التقاعدي الشهري (ر.س)' :
+                      form.applicant_category === 'self_employed' ? 'متوسط الدخل الشهري (ر.س)' :
+                      'الدخل الشهري (ر.س)'
+                    }>
+                      <Input type="number" min={0}
+                        value={form.monthly_income}
+                        onChange={(e) => setField('monthly_income', e.target.value)}
+                        placeholder="0" />
+                    </FieldGroup>
+                    <FieldGroup icon={Receipt} label="الالتزامات الشهرية (ر.س)">
+                      <Input type="number" min={0}
+                        value={form.monthly_commitments}
+                        onChange={(e) => setField('monthly_commitments', e.target.value)}
+                        placeholder="0" />
                     </FieldGroup>
 
                     {/* كفيل غارم — اختياري */}
