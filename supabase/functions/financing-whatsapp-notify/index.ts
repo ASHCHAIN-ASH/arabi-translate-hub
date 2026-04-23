@@ -141,7 +141,7 @@ function buildMessage(event: string, app: AppRow, extra: Record<string, any> = {
         `📅 *جدول الأقساط:*\n` +
         `• قسط شهري: ${monthly} ر.س\n` +
         `• عدد الأقساط: ${months}\n` +
-        `• أول استحقاق: ${extra.first_due_date || "بعد 30 يوماً"}` +
+        `• أول استحقاق: ${extra.first_due_date ? ltr(extra.first_due_date) : "بعد 30 يوماً"}` +
         footer
       );
     }
