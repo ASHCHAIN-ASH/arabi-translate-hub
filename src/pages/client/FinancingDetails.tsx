@@ -264,6 +264,59 @@ const FinancingDetails: React.FC = () => {
     }
   };
 
+  // فتح / إنشاء عقد التمويل ثم الانتقال لصفحة التوقيع
+  const openOrCreateContract = async () => {
+    if (!app || !user) return;
+    if (contract?.id) {
+      navigate(`/client/contracts/${contract.id}`);
+      return;
+    }
+    setCreatingContract(true);
+    try {
+      const { data: profile } = await supabase
+        .from('profiles')
+        .select('full_name,phone,email')
+        .eq('id', user.id)
+        .maybeSingle();
+
+      const title = `عقد تمويل Master PayLater — ${app.id.slice(0, 8).toUpperCase()}`;
+      const content = `هذا عقد تمويل داخلي عبر منصة Master PayLater بمبلغ ${fmt(Number(app.total_amount))} ر.س، دفعة أولى ${fmt(downPayment)} ر.س، قسط شهري ${fmt(Number(app.monthly_installment))} ر.س لمدة ${app.duration_months} شهر.`;
+
+      const { data: created, error } = await supabase
+        .from('contracts')
+        .insert({
+          title,
+          content,
+          template_type: 'financing',
+          status: 'sent',
+          user_id: user.id,
+          total_amount: app.total_amount,
+          currency: 'SAR',
+          client_full_name: (profile as any)?.full_name ?? null,
+          client_phone: (profile as any)?.phone ?? null,
+          client_email: (profile as any)?.email ?? user.email ?? null,
+          sent_at: new Date().toISOString(),
+          metadata: {
+            application_id: app.id,
+            source: 'financing',
+            down_payment: app.down_payment,
+            monthly_installment: app.monthly_installment,
+            duration_months: app.duration_months,
+          },
+        } as any)
+        .select('id,status,contract_number')
+        .single();
+
+      if (error) throw error;
+      setContract({ id: created.id, status: created.status, contract_number: created.contract_number });
+      navigate(`/client/contracts/${created.id}`);
+    } catch (e: any) {
+      toast({ title: 'تعذر فتح العقد', description: e?.message ?? 'حدث خطأ', variant: 'destructive' });
+    } finally {
+      setCreatingContract(false);
+    }
+  };
+
   if (loading) {
     return (
       <ClientLayout>
