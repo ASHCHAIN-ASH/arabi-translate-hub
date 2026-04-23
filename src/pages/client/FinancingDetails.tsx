@@ -19,6 +19,9 @@ import {
   Sparkles,
   Calendar,
   TrendingUp,
+  Gavel,
+  Lock,
+  ScrollText,
 } from 'lucide-react';
 import ClientLayout from '@/components/client/ClientLayout';
 import { Card } from '@/components/ui/card';
@@ -75,13 +78,14 @@ interface WalletRow {
 
 const fmt = (n: number) => new Intl.NumberFormat('en-US', { maximumFractionDigits: 2 }).format(n);
 
-// التايملاين الكامل لحالات التمويل
+// التايملاين الكامل لحالات التمويل بطابع شركات التمويل العالمية المرخّصة
 const TIMELINE_STAGES = [
-  { key: 'submitted', label: 'تم الاستلام', icon: Receipt },
-  { key: 'under_review', label: 'قيد المراجعة', icon: Clock3 },
+  { key: 'submitted', label: 'استلام الطلب', icon: Receipt },
+  { key: 'under_review', label: 'التقييم الائتماني', icon: ShieldCheck },
   { key: 'contract_pending_signature', label: 'توقيع العقد', icon: FileText },
   { key: 'waiting_down_payment', label: 'الدفعة الأولى', icon: CreditCard },
   { key: 'active', label: 'تفعيل الرصيد', icon: Sparkles },
+  { key: 'execution_deed', label: 'السند التنفيذي', icon: Gavel },
 ];
 
 const REJECTED_LIKE = ['rejected', 'cancelled'];
@@ -89,16 +93,17 @@ const REJECTED_LIKE = ['rejected', 'cancelled'];
 const stageReached = (currentStatus: string, stageKey: string): 'done' | 'current' | 'upcoming' => {
   if (REJECTED_LIKE.includes(currentStatus)) return 'upcoming';
   const order = TIMELINE_STAGES.map((s) => s.key);
-  const currIdx = order.indexOf(currentStatus);
-  const stageIdx = order.indexOf(stageKey);
   // Map equivalent statuses
   const aliases: Record<string, string> = {
     documents_pending: 'submitted',
     approved: 'waiting_down_payment',
     completed: 'active',
+    overdue: 'active',
   };
   const effectiveCurr = aliases[currentStatus] ?? currentStatus;
   const effIdx = order.indexOf(effectiveCurr);
+  const stageIdx = order.indexOf(stageKey);
+  if (effIdx === -1) return 'upcoming';
   if (stageIdx < effIdx) return 'done';
   if (stageIdx === effIdx) return 'current';
   return 'upcoming';
