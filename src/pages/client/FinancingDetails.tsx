@@ -785,6 +785,137 @@ const FinancingDetails: React.FC = () => {
           )}
         </AnimatePresence>
 
+        {/* Installments schedule */}
+        {installments.length > 0 && (() => {
+          const totalDue = installments.reduce((s, i) => s + Number(i.amount), 0);
+          const totalPaid = installments
+            .filter((i) => i.status === 'paid')
+            .reduce((s, i) => s + Number(i.paid_amount ?? i.amount), 0);
+          const remaining = Math.max(0, totalDue - totalPaid);
+          const paidCount = installments.filter((i) => i.status === 'paid').length;
+          const today = new Date();
+          today.setHours(0, 0, 0, 0);
+          const nextDue = installments.find((i) => i.status !== 'paid');
+          const progressPct = totalDue > 0 ? Math.round((totalPaid / totalDue) * 100) : 0;
+
+          return (
+            <Card className="p-5 overflow-hidden relative">
+              <div className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-primary/60 via-primary to-primary/60" />
+              <div className="flex flex-wrap items-center justify-between gap-3 mb-4">
+                <h3 className="font-bold flex items-center gap-2">
+                  <Calendar className="h-4 w-4 text-primary" /> جدول السداد الشهري
+                </h3>
+                <Badge variant="outline" className="text-[11px]">
+                  {paidCount} / {installments.length} قسط مدفوع
+                </Badge>
+              </div>
+
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-4">
+                <div className="rounded-lg border border-border/50 bg-muted/30 p-3">
+                  <div className="text-[10px] text-muted-foreground mb-1">إجمالي السداد</div>
+                  <div className="font-bold tabular-nums text-sm">{fmt(totalDue)} ر.س</div>
+                </div>
+                <div className="rounded-lg border border-emerald-500/30 bg-emerald-500/5 p-3">
+                  <div className="text-[10px] text-emerald-700 dark:text-emerald-400 mb-1">المسدّد</div>
+                  <div className="font-bold tabular-nums text-sm text-emerald-700 dark:text-emerald-400">{fmt(totalPaid)} ر.س</div>
+                </div>
+                <div className="rounded-lg border border-amber-500/30 bg-amber-500/5 p-3">
+                  <div className="text-[10px] text-amber-700 dark:text-amber-400 mb-1">المتبقي</div>
+                  <div className="font-bold tabular-nums text-sm text-amber-700 dark:text-amber-400">{fmt(remaining)} ر.س</div>
+                </div>
+                <div className="rounded-lg border border-border/50 bg-muted/30 p-3">
+                  <div className="text-[10px] text-muted-foreground mb-1">القسط القادم</div>
+                  <div className="font-bold tabular-nums text-sm">
+                    {nextDue ? new Date(nextDue.due_date).toLocaleDateString('en-GB') : '—'}
+                  </div>
+                </div>
+              </div>
+
+              <div className="mb-4">
+                <div className="flex items-center justify-between text-[11px] text-muted-foreground mb-1">
+                  <span>تقدم السداد</span>
+                  <span className="tabular-nums font-semibold text-foreground">{progressPct}%</span>
+                </div>
+                <div className="h-2 rounded-full bg-muted overflow-hidden">
+                  <div
+                    className="h-full bg-gradient-to-r from-emerald-500 to-emerald-400 transition-all"
+                    style={{ width: `${progressPct}%` }}
+                  />
+                </div>
+              </div>
+
+              <div className="space-y-1.5 max-h-[460px] overflow-y-auto pr-1">
+                {installments.map((i) => {
+                  const due = new Date(i.due_date);
+                  due.setHours(0, 0, 0, 0);
+                  const isPaid = i.status === 'paid';
+                  const isOverdue = !isPaid && due < today;
+                  const isNext = !isPaid && nextDue?.id === i.id;
+                  const tone = isPaid
+                    ? 'border-emerald-500/30 bg-emerald-500/5'
+                    : isOverdue
+                      ? 'border-rose-500/30 bg-rose-500/5'
+                      : isNext
+                        ? 'border-primary/40 bg-primary/5 ring-1 ring-primary/20'
+                        : 'border-border/40 bg-card';
+                  const StatusIcon = isPaid ? CheckCircle2 : isOverdue ? AlertCircle : Clock3;
+                  const statusText = isPaid
+                    ? `مدفوع${i.paid_at ? ` • ${new Date(i.paid_at).toLocaleDateString('en-GB')}` : ''}`
+                    : isOverdue
+                      ? 'متأخر'
+                      : isNext
+                        ? 'القسط القادم'
+                        : 'مستحق لاحقاً';
+                  const statusTone = isPaid
+                    ? 'text-emerald-600 dark:text-emerald-400'
+                    : isOverdue
+                      ? 'text-rose-600 dark:text-rose-400'
+                      : isNext
+                        ? 'text-primary'
+                        : 'text-muted-foreground';
+
+                  return (
+                    <div
+                      key={i.id}
+                      className={`flex items-center justify-between gap-3 p-3 rounded-lg border ${tone} transition-colors`}
+                    >
+                      <div className="flex items-center gap-3 min-w-0">
+                        <div
+                          className={`h-9 w-9 shrink-0 rounded-full flex items-center justify-center text-xs font-bold tabular-nums ${
+                            isPaid
+                              ? 'bg-emerald-500 text-white'
+                              : isOverdue
+                                ? 'bg-rose-500 text-white'
+                                : isNext
+                                  ? 'bg-primary text-primary-foreground'
+                                  : 'bg-muted text-muted-foreground'
+                          }`}
+                        >
+                          {i.month_number}
+                        </div>
+                        <div className="min-w-0">
+                          <div className="text-sm font-semibold">القسط {i.month_number}</div>
+                          <div className="text-[11px] text-muted-foreground flex items-center gap-1.5">
+                            <Calendar className="h-3 w-3" />
+                            <span className="tabular-nums">{due.toLocaleDateString('en-GB')}</span>
+                          </div>
+                        </div>
+                      </div>
+                      <div className="flex flex-col items-end gap-0.5">
+                        <div className="font-bold tabular-nums text-sm">{fmt(Number(i.amount))} ر.س</div>
+                        <div className={`text-[10px] flex items-center gap-1 ${statusTone}`}>
+                          <StatusIcon className="h-3 w-3" />
+                          <span>{statusText}</span>
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </Card>
+          );
+        })()}
+
         {/* Receipts history */}
         {receipts.length > 0 && (
           <Card className="p-5">
