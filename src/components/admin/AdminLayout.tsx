@@ -80,6 +80,7 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
         { name: 'المعاملات الداخلية', href: '/adminmaster/transactions', icon: CreditCard },
         { name: 'بوابة المدفوعات', href: '/adminmaster/payments', icon: CreditCard },
         { name: 'المحافظ الرقمية', href: '/adminmaster/wallets', icon: Wallet },
+        { name: 'Master PayLater', href: '/adminmaster/financing', icon: Wallet },
       ]
     },
     // 5. التسويق والولاء

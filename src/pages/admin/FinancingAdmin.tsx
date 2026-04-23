@@ -179,14 +179,14 @@ const FinancingAdmin: React.FC = () => {
     const { error } = await supabase
       .from('financing_applications')
       .update({
-        status,
+        status: status as any,
         notes: adminNote
           ? `${selected.notes ? selected.notes + '\n---\n' : ''}[${format(
               new Date(),
               'yyyy-MM-dd HH:mm',
             )}] ${adminNote}`
           : selected.notes,
-      })
+      } as any)
       .eq('id', selected.id);
     setWorking(false);
     if (error) {
@@ -202,7 +202,7 @@ const FinancingAdmin: React.FC = () => {
   const reviewDoc = async (doc: FinancingDocument, status: 'approved' | 'rejected') => {
     const { error } = await supabase
       .from('financing_documents')
-      .update({ status, review_note: status === 'rejected' ? 'مرفوض من الإدارة' : null })
+      .update({ status: status as any, review_note: status === 'rejected' ? 'مرفوض من الإدارة' : null } as any)
       .eq('id', doc.id);
     if (error) {
       toast.error('تعذر تحديث المستند');

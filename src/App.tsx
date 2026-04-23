@@ -100,6 +100,7 @@ import AdminReferrals from "./pages/admin/AdminReferrals";
 
 // Admin Pages
 import AdminDashboard from "./pages/admin/AdminDashboard";
+import FinancingAdmin from "./pages/admin/FinancingAdmin";
 import AdminServices from "./pages/admin/AdminServices";
 import AdminOrders from "./pages/admin/AdminOrders";
 import AdminInvoices from "./pages/admin/AdminInvoices";
@@ -432,6 +433,11 @@ const App = () => (
             <Route path="/adminmaster" element={
               <SimpleProtectedRoute adminOnly>
                 <AdminDashboard />
+              </SimpleProtectedRoute>
+            } />
+            <Route path="/adminmaster/financing" element={
+              <SimpleProtectedRoute adminOnly>
+                <FinancingAdmin />
               </SimpleProtectedRoute>
             } />
             <Route path="/adminmaster/contracts" element={
