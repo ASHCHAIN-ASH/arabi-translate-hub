@@ -98,23 +98,21 @@ ${platformContext}
     });
 
     if (!response.ok) {
-      if (response.status === 429) {
-        return new Response(JSON.stringify({ error: "تم تجاوز الحد المسموح، حاول لاحقاً" }), {
-          status: 429,
-          headers: { ...corsHeaders, "Content-Type": "application/json" },
-        });
-      }
-      if (response.status === 402) {
-        return new Response(JSON.stringify({ error: "الرصيد غير كافٍ، يرجى إضافة رصيد" }), {
-          status: 402,
-          headers: { ...corsHeaders, "Content-Type": "application/json" },
-        });
-      }
-      const t = await response.text();
-      console.error("AI gateway error:", response.status, t);
-      return new Response(JSON.stringify({ error: "خطأ في الذكاء الاصطناعي" }), {
-        status: 500,
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      const errText = await response.text().catch(() => "");
+      console.error("AI gateway error:", response.status, errText);
+
+      let userMsg = "خطأ في الذكاء الاصطناعي";
+      if (response.status === 429) userMsg = "تم تجاوز الحد المسموح، حاول لاحقاً";
+      else if (response.status === 402) userMsg = "الرصيد غير كافٍ، يرجى إضافة رصيد الذكاء الاصطناعي";
+
+      // إرجاع stream متوافق SSE حتى يستهلكه العميل دون كسر، مع رسالة واضحة
+      const sseBody =
+        `data: ${JSON.stringify({ choices: [{ delta: { content: `⚠️ ${userMsg}` } }] })}\n\n` +
+        `data: [DONE]\n\n`;
+
+      return new Response(sseBody, {
+        status: 200,
+        headers: { ...corsHeaders, "Content-Type": "text/event-stream" },
       });
     }
 
