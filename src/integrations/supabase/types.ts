@@ -3004,6 +3004,60 @@ export type Database = {
           },
         ]
       }
+      financing_acknowledgments: {
+        Row: {
+          accepted_clauses: Json
+          ack_title: string
+          ack_type: string
+          application_id: string
+          created_at: string
+          evidence_sha256: string
+          id: string
+          ip_address: string | null
+          locked: boolean
+          signature_text: string
+          signed_at: string
+          signer_id_number: string | null
+          signer_name: string
+          user_agent: string | null
+          user_id: string
+        }
+        Insert: {
+          accepted_clauses?: Json
+          ack_title: string
+          ack_type: string
+          application_id: string
+          created_at?: string
+          evidence_sha256: string
+          id?: string
+          ip_address?: string | null
+          locked?: boolean
+          signature_text: string
+          signed_at?: string
+          signer_id_number?: string | null
+          signer_name: string
+          user_agent?: string | null
+          user_id: string
+        }
+        Update: {
+          accepted_clauses?: Json
+          ack_title?: string
+          ack_type?: string
+          application_id?: string
+          created_at?: string
+          evidence_sha256?: string
+          id?: string
+          ip_address?: string | null
+          locked?: boolean
+          signature_text?: string
+          signed_at?: string
+          signer_id_number?: string | null
+          signer_name?: string
+          user_agent?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
       financing_applications: {
         Row: {
           activated_at: string | null
