@@ -91,6 +91,13 @@ import {
   FINANCING_MIN_AMOUNT,
   computeFinancingPreview,
 } from '@/lib/financing';
+import {
+  APPLICANT_CATEGORIES,
+  ApplicantCategory,
+  calculateCreditScore,
+  SECTOR_RISK_MAP,
+} from '@/lib/creditScoring';
+import { CreditScoreCard } from '@/components/financing/CreditScoreCard';
 
 const formSchema = z.object({
   applicant_full_name: z.string().trim().min(3, 'الاسم الكامل مطلوب').max(120),
@@ -135,6 +142,10 @@ const FinancingNew: React.FC = () => {
     applicant_id_number: '',
     applicant_phone: '',
     applicant_email: user?.email ?? '',
+    applicant_category: '' as ApplicantCategory | '',
+    applicant_age: '' as number | '',
+    employment_years: '' as number | '',
+    has_guarantor: false,
     employer_sector: '',
     employer_name: '',
     monthly_income: '' as number | '',
@@ -152,6 +163,28 @@ const FinancingNew: React.FC = () => {
   });
 
   const preview = useMemo(() => computeFinancingPreview(amount), [amount]);
+
+  // ===== التقييم الائتماني التلقائي =====
+  const creditScore = useMemo(() => {
+    if (!form.applicant_category || !form.monthly_income || Number(form.monthly_income) <= 0) {
+      return null;
+    }
+    return calculateCreditScore({
+      category: form.applicant_category as ApplicantCategory,
+      monthlyIncome: Number(form.monthly_income) || 0,
+      monthlyCommitments: Number(form.monthly_commitments) || 0,
+      requestedAmount: amount,
+      durationMonths: preview.duration,
+      age: form.applicant_age ? Number(form.applicant_age) : undefined,
+      employmentYears: form.employment_years ? Number(form.employment_years) : undefined,
+      hasGuarantor: form.has_guarantor,
+      sectorRisk: form.employer_sector ? SECTOR_RISK_MAP[form.employer_sector] : undefined,
+    });
+  }, [
+    form.applicant_category, form.monthly_income, form.monthly_commitments,
+    form.applicant_age, form.employment_years, form.has_guarantor,
+    form.employer_sector, amount, preview.duration,
+  ]);
 
   useEffect(() => {
     document.title = 'طلب تمويل جديد — Master PayLater';
@@ -515,7 +548,42 @@ const FinancingNew: React.FC = () => {
                     <Briefcase className="h-4 w-4" /> البيانات المهنية والمالية
                   </h3>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    {/* Employment sector — banking-style select with icons */}
+                    {/* فئة المتقدم — تحدد المعادلة الائتمانية */}
+                    <div className="md:col-span-2">
+                      <Label className="text-sm font-semibold mb-1.5 flex items-center gap-1.5">
+                        <UserCheck className="h-3.5 w-3.5 text-primary" />
+                        فئة المتقدم
+                        <Badge variant="outline" className="text-[9px] gap-1 mr-1">
+                          <Sparkles className="h-2.5 w-2.5 text-primary" /> تقييم تلقائي
+                        </Badge>
+                      </Label>
+                      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2">
+                        {APPLICANT_CATEGORIES.map((cat) => {
+                          const active = form.applicant_category === cat.value;
+                          return (
+                            <motion.button
+                              key={cat.value}
+                              type="button"
+                              whileHover={{ scale: 1.03 }}
+                              whileTap={{ scale: 0.97 }}
+                              onClick={() => setField('applicant_category', cat.value)}
+                              className={`rounded-xl p-2.5 text-right ring-1 transition-all ${
+                                active
+                                  ? 'bg-primary/10 ring-primary shadow-sm'
+                                  : 'bg-background ring-border hover:ring-primary/40'
+                              }`}
+                            >
+                              <div className="text-2xl mb-0.5">{cat.icon}</div>
+                              <div className={`text-[11px] font-bold ${active ? 'text-primary' : 'text-foreground'}`}>
+                                {cat.label}
+                              </div>
+                            </motion.button>
+                          );
+                        })}
+                      </div>
+                    </div>
+
+                    {/* قطاع العمل */}
                     <div className="md:col-span-2">
                       <Label className="text-sm font-semibold mb-1.5 flex items-center gap-1.5">
                         <Building2 className="h-3.5 w-3.5 text-muted-foreground" />
@@ -588,6 +656,45 @@ const FinancingNew: React.FC = () => {
                         placeholder="0"
                       />
                     </FieldGroup>
+
+                    {/* عوامل التقييم الإضافية */}
+                    <FieldGroup icon={User} label="العمر (سنوات)">
+                      <Input
+                        type="number" min={18} max={75}
+                        value={form.applicant_age}
+                        onChange={(e) => setField('applicant_age', e.target.value)}
+                        placeholder="مثال: 32"
+                      />
+                    </FieldGroup>
+                    <FieldGroup icon={Briefcase} label="سنوات الخبرة الوظيفية">
+                      <Input
+                        type="number" min={0} max={50}
+                        value={form.employment_years}
+                        onChange={(e) => setField('employment_years', e.target.value)}
+                        placeholder="مثال: 5"
+                      />
+                    </FieldGroup>
+
+                    {/* كفيل غارم — اختياري */}
+                    <div className="md:col-span-2">
+                      <label className="flex items-start gap-2 rounded-xl border bg-muted/30 p-3 cursor-pointer hover:bg-muted/50 transition-colors">
+                        <Checkbox
+                          checked={form.has_guarantor}
+                          onCheckedChange={(v) => setField('has_guarantor', !!v)}
+                          className="mt-0.5"
+                        />
+                        <div className="flex-1">
+                          <div className="text-sm font-bold flex items-center gap-1.5">
+                            <ShieldCheck className="h-3.5 w-3.5 text-emerald-600" />
+                            يوجد كفيل غارم
+                          </div>
+                          <div className="text-[11px] text-muted-foreground mt-0.5">
+                            وجود كفيل يعزّز السكور الائتماني (مهم للطلاب وأصحاب الأعمال الحرة)
+                          </div>
+                        </div>
+                      </label>
+                    </div>
+
                     <div className="md:col-span-2">
                       <Label className="text-sm font-semibold mb-1.5 block">ملاحظات إضافية (اختياري)</Label>
                       <Textarea
@@ -630,6 +737,19 @@ const FinancingNew: React.FC = () => {
                     ))}
                   </div>
                 </motion.div>
+
+                {/* بطاقة التقييم الائتماني التلقائي */}
+                {creditScore ? (
+                  <CreditScoreCard result={creditScore} />
+                ) : (
+                  <div className="rounded-2xl border border-dashed bg-muted/20 p-5 text-center">
+                    <Sparkles className="h-6 w-6 mx-auto mb-2 text-primary/60" />
+                    <div className="text-sm font-semibold">سيظهر تقييمك الائتماني فور إكمال البيانات</div>
+                    <div className="text-xs text-muted-foreground mt-1">
+                      اختر فئتك وأدخل دخلك الشهري للحصول على سكور فوري وفق نموذج SIMAH
+                    </div>
+                  </div>
+                )}
 
                 <div className="flex justify-end pt-2">
                   <Button
