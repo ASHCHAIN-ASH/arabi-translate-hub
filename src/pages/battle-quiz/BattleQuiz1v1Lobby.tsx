@@ -5,10 +5,13 @@ import ClientLayout from '@/components/client/ClientLayout';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Swords, Loader2, Users, X, Trophy, Flame, ArrowLeft } from 'lucide-react';
+import { Swords, Loader2, Users, X, Trophy, Flame, ArrowLeft, UserPlus, Zap } from 'lucide-react';
 import { useAuth } from '@/components/SimpleAuthProvider';
 import { BattleQuiz1v1Service } from '@/utils/battleQuiz1v1Service';
 import { toast } from 'sonner';
+import DailyMissionsCard from '@/components/battle-quiz/DailyMissionsCard';
+import FriendInviteDialog from '@/components/battle-quiz/FriendInviteDialog';
+import type { BQ1v1Mode } from '@/utils/battleQuiz1v1Extras';
 
 const BattleQuiz1v1Lobby: React.FC = () => {
   const { user } = useAuth();
