@@ -29,7 +29,18 @@ export const AIInsightsWidget: React.FC = () => {
         }),
       });
 
-      if (!resp.ok || !resp.body) throw new Error('فشل الاتصال');
+      if (!resp.ok) {
+        let msg = 'تعذر جلب الرؤى';
+        try {
+          const j = await resp.json();
+          if (j?.error) msg = j.error;
+        } catch {}
+        if (resp.status === 402) msg = '⚠️ الرصيد غير كافٍ — يرجى إضافة رصيد الذكاء الاصطناعي من Settings → Workspace → Usage';
+        else if (resp.status === 429) msg = '⚠️ تم تجاوز الحد المسموح، حاول لاحقاً';
+        setInsights([msg]);
+        return;
+      }
+      if (!resp.body) throw new Error('فشل الاتصال');
 
       const reader = resp.body.getReader();
       const decoder = new TextDecoder();
