@@ -135,6 +135,7 @@ const FinancingNew: React.FC = () => {
     applicant_id_number: '',
     applicant_phone: '',
     applicant_email: user?.email ?? '',
+    employer_sector: '',
     employer_name: '',
     monthly_income: '' as number | '',
     monthly_commitments: '' as number | '',
