@@ -7,6 +7,38 @@ export const FINANCING_LEGAL_FEES_SAR = 5000;
 export const FINANCING_DEFAULT_DURATION_MONTHS = 12;
 // مهلة السماح بالتأخر بعد تاريخ استحقاق القسط (بالساعات) — بعدها تبدأ الإجراءات الصارمة
 export const FINANCING_GRACE_PERIOD_HOURS = 24;
+// التمويل بدون فوائد — معدل الفائدة السنوي 0%
+export const FINANCING_INTEREST_RATE = 0;
+export const FINANCING_NO_INTEREST_NOTE_AR =
+  'تمويل بدون فوائد — APR 0% — أنت تسدد المبلغ الأصلي فقط بدون أي رسوم إضافية أو فوائد ربوية.';
+
+// شرائح المدة بناءً على مبلغ التمويل (بدون فوائد)
+// 2,500 — 10,000 ر.س   →  6 أشهر
+// 10,001 — 25,000 ر.س  →  12 شهرًا (سنة)
+// 25,001 — 100,000 ر.س →  36 شهرًا (3 سنوات)
+export interface FinancingTier {
+  min: number;
+  max: number;
+  months: number;
+  label: string;
+}
+export const FINANCING_TIERS: FinancingTier[] = [
+  { min: 2500, max: 10000, months: 6, label: '6 أشهر' },
+  { min: 10001, max: 25000, months: 12, label: 'سنة (12 شهرًا)' },
+  { min: 25001, max: 100000, months: 36, label: '3 سنوات (36 شهرًا)' },
+];
+
+export function getFinancingTier(amount: number): FinancingTier {
+  const a = Math.max(0, Number(amount) || 0);
+  return (
+    FINANCING_TIERS.find((t) => a >= t.min && a <= t.max) ??
+    FINANCING_TIERS[FINANCING_TIERS.length - 1]
+  );
+}
+
+export function getDurationForAmount(amount: number): number {
+  return getFinancingTier(amount).months;
+}
 
 export interface FinancingPreview {
   total: number;
@@ -14,18 +46,30 @@ export interface FinancingPreview {
   remaining: number;
   monthly: number;
   duration: number;
+  tierLabel: string;
+  interestRate: number;
 }
 
 export function computeFinancingPreview(
   total: number,
   downPaymentPct: number = FINANCING_DEFAULT_DOWN_PAYMENT_PCT,
-  duration: number = FINANCING_DEFAULT_DURATION_MONTHS,
+  duration?: number,
 ): FinancingPreview {
   const safeTotal = Math.max(0, Number(total) || 0);
+  const tier = getFinancingTier(safeTotal);
+  const finalDuration = duration ?? tier.months;
   const downPayment = Math.round(safeTotal * downPaymentPct * 100) / 100;
   const remaining = Math.round((safeTotal - downPayment) * 100) / 100;
-  const monthly = duration > 0 ? Math.round((remaining / duration) * 100) / 100 : 0;
-  return { total: safeTotal, downPayment, remaining, monthly, duration };
+  const monthly = finalDuration > 0 ? Math.round((remaining / finalDuration) * 100) / 100 : 0;
+  return {
+    total: safeTotal,
+    downPayment,
+    remaining,
+    monthly,
+    duration: finalDuration,
+    tierLabel: tier.label,
+    interestRate: FINANCING_INTEREST_RATE,
+  };
 }
 
 export function isEligibleForFinancing(amount: number): boolean {
