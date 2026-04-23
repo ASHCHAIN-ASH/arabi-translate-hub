@@ -473,125 +473,380 @@ const WalletTopup: React.FC = () => {
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -10 }}
-                  transition={{ duration: 0.25 }}
+                  transition={{ duration: 0.3, ease: 'easeOut' }}
                   className="space-y-3"
                 >
-                  <Card className="overflow-hidden border-border/60 shadow-sm">
-                    <div className="bg-gradient-to-l from-amber-500 to-amber-600 px-4 py-3 flex items-center gap-2 text-white">
-                      <div className="w-9 h-9 rounded-lg bg-white/20 backdrop-blur flex items-center justify-center shrink-0">
-                        <Building2 className="w-5 h-5" />
+                  {/* === BANK CARD (visual, premium) === */}
+                  <motion.div
+                    initial={{ opacity: 0, rotateX: -8 }}
+                    animate={{ opacity: 1, rotateX: 0 }}
+                    transition={{ duration: 0.5 }}
+                    className="relative overflow-hidden rounded-3xl p-5 sm:p-6 text-white shadow-2xl shadow-amber-900/20"
+                    style={{
+                      background:
+                        'linear-gradient(135deg, hsl(220 70% 18%) 0%, hsl(215 60% 28%) 55%, hsl(35 85% 45%) 130%)',
+                    }}
+                  >
+                    {/* shimmer */}
+                    <motion.div
+                      animate={{ x: ['-150%', '150%'] }}
+                      transition={{ duration: 4.5, repeat: Infinity, ease: 'linear' }}
+                      className="absolute inset-y-0 w-1/3 bg-gradient-to-r from-transparent via-white/15 to-transparent skew-x-12 pointer-events-none"
+                    />
+                    {/* mesh dots */}
+                    <div
+                      className="absolute inset-0 opacity-20 pointer-events-none"
+                      style={{
+                        backgroundImage:
+                          'radial-gradient(rgba(255,255,255,0.5) 1px, transparent 1px)',
+                        backgroundSize: '14px 14px',
+                      }}
+                    />
+
+                    <div className="relative flex items-start justify-between gap-2">
+                      <div className="flex items-center gap-2">
+                        <motion.div
+                          animate={{ scale: [1, 1.05, 1] }}
+                          transition={{ duration: 3, repeat: Infinity }}
+                          className="w-11 h-11 rounded-2xl bg-white/15 backdrop-blur-md border border-white/25 flex items-center justify-center shadow-lg"
+                        >
+                          <Building2 className="w-5 h-5" />
+                        </motion.div>
+                        <div className="min-w-0">
+                          <div className="text-[10px] uppercase tracking-widest opacity-80">
+                            تحويل بنكي مباشر
+                          </div>
+                          <div className="text-sm sm:text-base font-black truncate">
+                            {BANK_INFO.bank}
+                          </div>
+                        </div>
                       </div>
-                      <div className="flex-1 min-w-0">
-                        <div className="text-[10px] opacity-90">حوّل للحساب البنكي التالي</div>
-                        <div className="text-xs sm:text-sm font-black truncate">{BANK_INFO.bank}</div>
-                      </div>
-                      <Badge className="bg-white/20 backdrop-blur border-white/30 text-white shrink-0 text-[10px]">
-                        معتمد ✓
+                      <Badge className="bg-white/20 backdrop-blur border-white/30 text-white text-[10px] gap-1">
+                        <BadgeCheck className="w-3 h-3" /> معتمد
                       </Badge>
                     </div>
-                    <CardContent className="p-3 space-y-2.5 bg-muted/20">
-                      <div className="rounded-xl bg-card border p-3">
-                        <div className="flex items-center justify-between mb-1 gap-2">
-                          <span className="text-[10px] font-bold text-primary uppercase tracking-wider">رقم الآيبان (IBAN)</span>
-                          <button
-                            onClick={() => copy(BANK_INFO.iban, 'iban')}
-                            className="flex items-center gap-1 text-[10px] font-bold text-primary hover:bg-primary/10 px-2 py-1 rounded-md transition shrink-0"
-                          >
-                            {copied === 'iban' ? (
-                              <><Check className="w-3 h-3" /> تم النسخ</>
-                            ) : (
-                              <><Copy className="w-3 h-3" /> نسخ</>
-                            )}
-                          </button>
-                        </div>
-                        <div className="font-mono text-sm sm:text-base font-black tracking-wider text-foreground select-all break-all">
+
+                    {/* IBAN */}
+                    <div className="relative mt-5">
+                      <div className="text-[10px] uppercase tracking-widest opacity-80 mb-1.5">
+                        رقم الآيبان (IBAN)
+                      </div>
+                      <div className="flex items-center justify-between gap-2 bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl px-3.5 py-2.5">
+                        <div className="font-mono text-base sm:text-lg font-black tracking-[0.18em] select-all break-all">
                           {BANK_INFO.ibanFormatted}
                         </div>
+                        <motion.button
+                          whileTap={{ scale: 0.9 }}
+                          onClick={() => copy(BANK_INFO.iban, 'iban')}
+                          className="shrink-0 flex items-center gap-1 text-[10px] font-black bg-white/15 hover:bg-white/25 border border-white/25 px-2.5 py-1.5 rounded-lg transition"
+                        >
+                          <AnimatePresence mode="wait" initial={false}>
+                            {copied === 'iban' ? (
+                              <motion.span
+                                key="ok"
+                                initial={{ opacity: 0, scale: 0.8 }}
+                                animate={{ opacity: 1, scale: 1 }}
+                                exit={{ opacity: 0 }}
+                                className="flex items-center gap-1"
+                              >
+                                <Check className="w-3 h-3" /> نُسخ
+                              </motion.span>
+                            ) : (
+                              <motion.span
+                                key="copy"
+                                initial={{ opacity: 0 }}
+                                animate={{ opacity: 1 }}
+                                exit={{ opacity: 0 }}
+                                className="flex items-center gap-1"
+                              >
+                                <Copy className="w-3 h-3" /> نسخ
+                              </motion.span>
+                            )}
+                          </AnimatePresence>
+                        </motion.button>
                       </div>
+                    </div>
 
-                      <div className="rounded-xl bg-card border p-3">
-                        <div className="flex items-center justify-between gap-2">
-                          <div className="min-w-0">
-                            <div className="text-[10px] font-bold text-primary uppercase tracking-wider mb-0.5">اسم المستفيد</div>
-                            <div className="text-xs sm:text-sm font-bold text-foreground truncate">{BANK_INFO.beneficiary}</div>
-                          </div>
-                          <button
-                            onClick={() => copy(BANK_INFO.beneficiary, 'ben')}
-                            className="shrink-0 text-primary hover:bg-primary/10 p-2 rounded-md transition"
-                          >
-                            {copied === 'ben' ? <Check className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
-                          </button>
+                    {/* Beneficiary + amount hint */}
+                    <div className="relative mt-3 grid grid-cols-2 gap-2">
+                      <div className="bg-white/10 backdrop-blur-md border border-white/20 rounded-xl px-3 py-2">
+                        <div className="text-[9px] uppercase tracking-widest opacity-80">
+                          المستفيد
+                        </div>
+                        <div className="text-[11px] sm:text-xs font-black truncate mt-0.5">
+                          {BANK_INFO.beneficiary}
                         </div>
                       </div>
+                      <button
+                        onClick={() => copy(BANK_INFO.beneficiary, 'ben')}
+                        className="bg-white/10 backdrop-blur-md border border-white/20 rounded-xl px-3 py-2 text-right hover:bg-white/15 transition"
+                      >
+                        <div className="text-[9px] uppercase tracking-widest opacity-80">
+                          المبلغ
+                        </div>
+                        <div className="text-[11px] sm:text-xs font-black mt-0.5 tabular-nums">
+                          {amount > 0 ? amount.toLocaleString('ar-SA') + ' ر.س' : '— —'}
+                        </div>
+                      </button>
+                    </div>
+                  </motion.div>
 
-                      {/* Receipt upload */}
-                      <div>
-                        <Label className="text-[10px] font-bold text-primary uppercase tracking-wider flex items-center gap-1 mb-1.5">
-                          <Receipt className="w-3 h-3" /> إيصال التحويل <span className="text-destructive">*</span>
+                  {/* === STEP TIMELINE === */}
+                  <Card className="overflow-hidden border-border/60 shadow-sm">
+                    <CardContent className="p-4">
+                      <div className="grid grid-cols-3 gap-2 relative">
+                        {[
+                          { id: 1, icon: Banknote, label: 'حوّل المبلغ', done: true },
+                          { id: 2, icon: CloudUpload, label: 'ارفع الإيصال', done: !!receiptFile },
+                          { id: 3, icon: Send, label: 'إرسال للأدمن', done: uploadStage === 'done' },
+                        ].map((s, i) => {
+                          const Icon = s.icon;
+                          return (
+                            <div key={s.id} className="flex flex-col items-center text-center relative">
+                              {i < 2 && (
+                                <div className="absolute top-4 left-[-50%] right-[50%] h-0.5 bg-border" />
+                              )}
+                              <motion.div
+                                animate={s.done ? { scale: [1, 1.15, 1] } : {}}
+                                transition={{ duration: 0.4 }}
+                                className={cn(
+                                  'relative w-9 h-9 rounded-full flex items-center justify-center border-2 transition-colors z-10',
+                                  s.done
+                                    ? 'bg-emerald-500 border-emerald-500 text-white shadow-md shadow-emerald-500/30'
+                                    : 'bg-card border-border text-muted-foreground',
+                                )}
+                              >
+                                {s.done ? <Check className="w-4 h-4" /> : <Icon className="w-4 h-4" />}
+                              </motion.div>
+                              <div
+                                className={cn(
+                                  'text-[10px] sm:text-[11px] font-bold mt-1.5',
+                                  s.done ? 'text-foreground' : 'text-muted-foreground',
+                                )}
+                              >
+                                {s.label}
+                              </div>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    </CardContent>
+                  </Card>
+
+                  {/* === RECEIPT UPLOAD (drag-n-drop + live preview) === */}
+                  <Card className="overflow-hidden border-border/60 shadow-sm">
+                    <CardContent className="p-4 space-y-3">
+                      <div className="flex items-center justify-between">
+                        <Label className="text-sm font-black flex items-center gap-2">
+                          <Receipt className="w-4 h-4 text-primary" />
+                          إيصال التحويل البنكي
+                          <span className="text-destructive">*</span>
                         </Label>
+                        <span className="text-[10px] text-muted-foreground font-bold">
+                          JPG · PNG · PDF • 5MB
+                        </span>
+                      </div>
+
+                      <AnimatePresence mode="wait">
                         {!receiptFile ? (
                           <motion.label
-                            whileHover={{ scale: 1.01 }}
-                            className="cursor-pointer flex flex-col items-center justify-center gap-1.5 border-2 border-dashed border-primary/40 rounded-xl p-5 hover:bg-primary/5 transition bg-card text-center"
+                            key="dropzone"
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            exit={{ opacity: 0 }}
+                            onDragOver={(e) => {
+                              e.preventDefault();
+                              setDragOver(true);
+                            }}
+                            onDragLeave={() => setDragOver(false)}
+                            onDrop={(e) => {
+                              e.preventDefault();
+                              setDragOver(false);
+                              handleFile(e.dataTransfer.files?.[0]);
+                            }}
+                            className={cn(
+                              'relative cursor-pointer flex flex-col items-center justify-center gap-2 border-2 border-dashed rounded-2xl p-6 sm:p-8 transition-all bg-gradient-to-br text-center overflow-hidden',
+                              dragOver
+                                ? 'border-primary bg-primary/10 scale-[1.01] shadow-lg shadow-primary/10'
+                                : 'border-primary/35 from-primary/5 to-transparent hover:border-primary/60 hover:bg-primary/5',
+                            )}
                           >
-                            <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
-                              <Upload className="w-5 h-5 text-primary" />
+                            <motion.div
+                              animate={{ y: [0, -6, 0] }}
+                              transition={{ duration: 2.2, repeat: Infinity, ease: 'easeInOut' }}
+                              className="w-14 h-14 rounded-2xl bg-gradient-to-br from-primary to-primary/70 flex items-center justify-center shadow-lg shadow-primary/30"
+                            >
+                              <CloudUpload className="w-7 h-7 text-primary-foreground" />
+                            </motion.div>
+                            <div className="space-y-0.5">
+                              <div className="text-sm font-black text-foreground">
+                                {dragOver ? 'أفلت الملف هنا' : 'اسحب الإيصال هنا أو اضغط للاختيار'}
+                              </div>
+                              <div className="text-[11px] text-muted-foreground">
+                                سيُرسل للأدمن فوراً ويُراجع خلال 24 ساعة
+                              </div>
                             </div>
-                            <span className="text-xs font-black text-primary">ارفع صورة الإيصال</span>
-                            <span className="text-[10px] text-muted-foreground">JPG · PNG · PDF • أقصى 5MB</span>
+                            <div className="flex items-center gap-1.5 mt-1">
+                              <Badge variant="outline" className="text-[9px] gap-1 font-bold">
+                                <ImageIcon className="w-2.5 h-2.5" /> صورة
+                              </Badge>
+                              <Badge variant="outline" className="text-[9px] gap-1 font-bold">
+                                <FileImage className="w-2.5 h-2.5" /> PDF
+                              </Badge>
+                            </div>
                             <input
                               type="file"
                               accept="image/*,application/pdf"
                               hidden
-                              onChange={(e) => {
-                                const f = e.target.files?.[0];
-                                if (!f) return;
-                                if (f.size > 5 * 1024 * 1024) return toast.error('الحجم الأقصى 5 ميجابايت');
-                                setReceiptFile(f);
-                              }}
+                              onChange={(e) => handleFile(e.target.files?.[0])}
                             />
                           </motion.label>
                         ) : (
                           <motion.div
-                            initial={{ opacity: 0, scale: 0.95 }}
-                            animate={{ opacity: 1, scale: 1 }}
-                            className="flex items-center gap-2 bg-emerald-50 dark:bg-emerald-950/20 border border-emerald-200 dark:border-emerald-900 rounded-xl p-2.5"
+                            key="preview"
+                            initial={{ opacity: 0, y: 8 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            exit={{ opacity: 0, y: -8 }}
+                            className="rounded-2xl border-2 border-emerald-500/30 bg-gradient-to-br from-emerald-500/5 to-transparent overflow-hidden"
                           >
-                            <div className="w-10 h-10 rounded-lg bg-emerald-500 flex items-center justify-center shrink-0">
-                              <Check className="w-5 h-5 text-white" />
+                            {/* preview area */}
+                            <div className="relative aspect-[16/9] bg-muted/30 flex items-center justify-center overflow-hidden">
+                              {receiptPreview ? (
+                                <motion.img
+                                  initial={{ scale: 1.1, opacity: 0 }}
+                                  animate={{ scale: 1, opacity: 1 }}
+                                  src={receiptPreview}
+                                  alt="معاينة الإيصال"
+                                  className="w-full h-full object-contain"
+                                />
+                              ) : (
+                                <div className="flex flex-col items-center gap-2 text-muted-foreground">
+                                  <FileImage className="w-12 h-12" />
+                                  <span className="text-xs font-bold">ملف PDF</span>
+                                </div>
+                              )}
+                              <motion.button
+                                whileHover={{ scale: 1.05 }}
+                                whileTap={{ scale: 0.95 }}
+                                onClick={() => setReceiptFile(null)}
+                                disabled={submitting}
+                                className="absolute top-2 left-2 w-8 h-8 rounded-full bg-background/90 backdrop-blur border border-border shadow-md hover:bg-destructive hover:text-destructive-foreground transition flex items-center justify-center disabled:opacity-50"
+                                aria-label="إزالة"
+                              >
+                                <X className="w-4 h-4" />
+                              </motion.button>
+                              <Badge className="absolute bottom-2 right-2 bg-emerald-500 hover:bg-emerald-500 text-white gap-1 text-[10px] font-bold shadow-md">
+                                <FileCheck2 className="w-3 h-3" /> جاهز
+                              </Badge>
                             </div>
-                            <div className="flex-1 min-w-0">
-                              <div className="text-xs font-bold truncate">{receiptFile.name}</div>
-                              <div className="text-[10px] text-muted-foreground">{(receiptFile.size / 1024).toFixed(0)} KB · جاهز للإرسال</div>
+
+                            {/* file meta */}
+                            <div className="p-3 flex items-center gap-3 bg-card">
+                              <div className="w-10 h-10 rounded-xl bg-emerald-500/10 flex items-center justify-center shrink-0">
+                                <FileImage className="w-5 h-5 text-emerald-600 dark:text-emerald-400" />
+                              </div>
+                              <div className="flex-1 min-w-0">
+                                <div className="text-xs font-black truncate">{receiptFile.name}</div>
+                                <div className="text-[10px] text-muted-foreground">
+                                  {(receiptFile.size / 1024).toFixed(0)} KB
+                                </div>
+                              </div>
+                              <label className="shrink-0 cursor-pointer text-[10px] font-bold text-primary hover:bg-primary/10 px-2.5 py-1.5 rounded-md transition border border-primary/30">
+                                تغيير
+                                <input
+                                  type="file"
+                                  accept="image/*,application/pdf"
+                                  hidden
+                                  onChange={(e) => handleFile(e.target.files?.[0])}
+                                />
+                              </label>
                             </div>
-                            <button
-                              onClick={() => setReceiptFile(null)}
-                              className="text-destructive hover:bg-destructive/10 p-1.5 rounded shrink-0"
-                            >
-                              <X className="w-4 h-4" />
-                            </button>
+
+                            {/* upload progress (shown while submitting) */}
+                            <AnimatePresence>
+                              {uploadStage !== 'idle' && (
+                                <motion.div
+                                  initial={{ opacity: 0, height: 0 }}
+                                  animate={{ opacity: 1, height: 'auto' }}
+                                  exit={{ opacity: 0, height: 0 }}
+                                  className="border-t bg-muted/20 px-3 py-2.5"
+                                >
+                                  <div className="flex items-center justify-between text-[10px] font-bold mb-1.5">
+                                    <span className="flex items-center gap-1.5 text-foreground">
+                                      {uploadStage === 'done' ? (
+                                        <>
+                                          <Check className="w-3 h-3 text-emerald-500" />
+                                          تم الإرسال للأدمن بنجاح
+                                        </>
+                                      ) : uploadStage === 'saving' ? (
+                                        <>
+                                          <Loader2 className="w-3 h-3 animate-spin text-primary" />
+                                          حفظ الطلب وإشعار الأدمن...
+                                        </>
+                                      ) : (
+                                        <>
+                                          <Loader2 className="w-3 h-3 animate-spin text-primary" />
+                                          رفع الإيصال...
+                                        </>
+                                      )}
+                                    </span>
+                                    <span className="tabular-nums text-primary">
+                                      {uploadStage === 'done' ? 100 : uploadPct}%
+                                    </span>
+                                  </div>
+                                  <div className="h-1.5 bg-muted rounded-full overflow-hidden">
+                                    <motion.div
+                                      animate={{ width: `${uploadStage === 'done' ? 100 : uploadPct}%` }}
+                                      transition={{ duration: 0.3 }}
+                                      className={cn(
+                                        'h-full rounded-full bg-gradient-to-l',
+                                        uploadStage === 'done'
+                                          ? 'from-emerald-500 to-emerald-400'
+                                          : 'from-primary to-primary/70',
+                                      )}
+                                    />
+                                  </div>
+                                </motion.div>
+                              )}
+                            </AnimatePresence>
                           </motion.div>
                         )}
+                      </AnimatePresence>
+
+                      {/* extra fields */}
+                      <div className="grid sm:grid-cols-2 gap-3 pt-1">
+                        <div>
+                          <Label className="text-[11px] font-bold flex items-center gap-1">
+                            <Hash className="w-3 h-3 text-primary" /> رقم العملية
+                            <span className="text-muted-foreground font-normal">(اختياري)</span>
+                          </Label>
+                          <Input
+                            value={reference}
+                            onChange={(e) => setReference(e.target.value)}
+                            placeholder="مثال: REF-1029384"
+                            className="mt-1 h-10 font-mono"
+                          />
+                        </div>
+                        <div>
+                          <Label className="text-[11px] font-bold flex items-center gap-1">
+                            <Info className="w-3 h-3 text-primary" /> ملاحظات
+                            <span className="text-muted-foreground font-normal">(اختياري)</span>
+                          </Label>
+                          <Input
+                            value={notes}
+                            onChange={(e) => setNotes(e.target.value)}
+                            placeholder="أي تفاصيل إضافية..."
+                            className="mt-1 h-10"
+                          />
+                        </div>
                       </div>
 
-                      <div>
-                        <Label className="text-[11px] font-bold">رقم الحوالة (اختياري)</Label>
-                        <Input
-                          value={reference}
-                          onChange={(e) => setReference(e.target.value)}
-                          placeholder="رقم العملية المرجعي"
-                          className="mt-1 h-10"
-                        />
-                      </div>
-                      <div>
-                        <Label className="text-[11px] font-bold">ملاحظات (اختياري)</Label>
-                        <Textarea
-                          value={notes}
-                          onChange={(e) => setNotes(e.target.value)}
-                          rows={2}
-                          className="mt-1"
-                          placeholder="أي تفاصيل إضافية..."
-                        />
+                      {/* security note */}
+                      <div className="flex items-start gap-2 text-[10px] text-muted-foreground bg-primary/5 border border-primary/15 rounded-xl p-2.5">
+                        <Shield className="w-3.5 h-3.5 text-primary shrink-0 mt-0.5" />
+                        <span>
+                          إيصالك مرفوع في تخزين خاص ومُشفّر • يصل الأدمن إشعار فوري بالطلب • سيُضاف الرصيد كاملاً مع البونص فور الموافقة.
+                        </span>
                       </div>
                     </CardContent>
                   </Card>
