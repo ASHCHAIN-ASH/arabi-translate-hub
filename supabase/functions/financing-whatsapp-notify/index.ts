@@ -11,6 +11,33 @@ const corsHeaders = {
 
 const BRAND = "🏦 *Master PayLater*";
 const DIVIDER = "━━━━━━━━━━━━━━━";
+const CONTACT = "+966 920 000 000";
+
+// توقيع ديناميكي حسب الحالة (فريق المتابعة / الائتمان / التمويل)
+function signatureFor(event: string): string {
+  const followup = "فريق المتابعة 👥";
+  const credit = "فريق الائتمان 🛡️";
+  const funding = "فريق التمويل 💼";
+  switch (event) {
+    case "submitted":
+    case "documents_pending":
+    case "under_review":
+    case "status_update":
+      return followup;
+    case "contract_pending_signature":
+    case "approved":
+    case "rejected":
+    case "cancelled":
+      return credit;
+    case "waiting_down_payment":
+    case "active":
+    case "installment_reminder":
+    case "installment_overdue":
+      return funding;
+    default:
+      return "فريق التمويل والائتمان والمتابعة";
+  }
+}
 
 // LRM (Left-to-Right Mark) — يضمن عرض الأرقام والمبالغ بشكل صحيح داخل نص RTL
 const LRM = "\u200E";
@@ -57,8 +84,14 @@ function buildMessage(event: string, app: AppRow, extra: Record<string, any> = {
   const down = fmt(app.down_payment);
   const monthly = fmt(app.monthly_installment);
   const months = ltr(app.duration_months);
+  const sig = signatureFor(event);
 
-  const footer = `\n${DIVIDER}\n📱 لمتابعة طلبك: تطبيق المنصة\n🔒 لا تشارك هذه الرسالة مع أي طرف`;
+  const footer =
+    `\n${DIVIDER}\n` +
+    `✍️ ${sig}\n` +
+    `☎️ للاستفسار: ${ltr(CONTACT)}\n` +
+    `📱 لمتابعة طلبك: تطبيق المنصة\n` +
+    `🔒 لا تشارك هذه الرسالة مع أي طرف`;
 
   switch (event) {
     case "submitted":
