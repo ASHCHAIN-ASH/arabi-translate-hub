@@ -146,14 +146,37 @@ export const WalletService = {
   },
 
   // Upload bank-transfer receipt to private storage; returns the storage path.
-  async uploadReceipt(userId: string, file: File): Promise<string> {
+  // Optional onProgress callback receives a 0..100 number for UI feedback.
+  async uploadReceipt(
+    userId: string,
+    file: File,
+    onProgress?: (pct: number) => void,
+  ): Promise<string> {
     const ext = file.name.split('.').pop() || 'jpg';
     const path = `${userId}/${Date.now()}-${Math.random().toString(36).slice(2, 8)}.${ext}`;
-    const { error } = await supabase.storage
-      .from('wallet-receipts')
-      .upload(path, file, { cacheControl: '3600', upsert: false });
-    if (error) throw error;
-    return path;
+
+    // Smooth simulated progress while the upload is in flight (Supabase JS
+    // doesn't expose native progress events for storage uploads yet).
+    let timer: ReturnType<typeof setInterval> | null = null;
+    if (onProgress) {
+      let pct = 0;
+      onProgress(2);
+      timer = setInterval(() => {
+        pct = Math.min(90, pct + Math.max(2, Math.round((90 - pct) * 0.12)));
+        onProgress(pct);
+      }, 180);
+    }
+
+    try {
+      const { error } = await supabase.storage
+        .from('wallet-receipts')
+        .upload(path, file, { cacheControl: '3600', upsert: false });
+      if (error) throw error;
+      onProgress?.(100);
+      return path;
+    } finally {
+      if (timer) clearInterval(timer);
+    }
   },
 
   async getReceiptSignedUrl(path: string, expiresIn = 3600): Promise<string | null> {
