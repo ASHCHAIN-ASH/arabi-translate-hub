@@ -91,6 +91,13 @@ import {
   FINANCING_MIN_AMOUNT,
   computeFinancingPreview,
 } from '@/lib/financing';
+import {
+  APPLICANT_CATEGORIES,
+  ApplicantCategory,
+  calculateCreditScore,
+  SECTOR_RISK_MAP,
+} from '@/lib/creditScoring';
+import { CreditScoreCard } from '@/components/financing/CreditScoreCard';
 
 const formSchema = z.object({
   applicant_full_name: z.string().trim().min(3, 'الاسم الكامل مطلوب').max(120),
@@ -135,6 +142,10 @@ const FinancingNew: React.FC = () => {
     applicant_id_number: '',
     applicant_phone: '',
     applicant_email: user?.email ?? '',
+    applicant_category: '' as ApplicantCategory | '',
+    applicant_age: '' as number | '',
+    employment_years: '' as number | '',
+    has_guarantor: false,
     employer_sector: '',
     employer_name: '',
     monthly_income: '' as number | '',
