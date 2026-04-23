@@ -94,8 +94,10 @@ const WalletTopup: React.FC = () => {
   const copy = (text: string, key: string) => {
     navigator.clipboard.writeText(text);
     setCopied(key);
-    toast.success('تم النسخ');
-    setTimeout(() => setCopied(null), 1500);
+    toast.success('تم نسخ رقم الآيبان بنجاح ✓', {
+      description: 'يمكنك الآن لصقه في تطبيق البنك لإتمام التحويل',
+    });
+    setTimeout(() => setCopied(null), 1800);
   };
 
   const payInstant = async () => {
