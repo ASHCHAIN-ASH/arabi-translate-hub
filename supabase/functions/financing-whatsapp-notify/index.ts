@@ -2,7 +2,7 @@
 // Sends bank-style status messages with icons to applicants
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
-import { normalizePhone, sendWhatsAppMessage } from "../_shared/whatsapp.ts";
+import { normalizePhone, sendWhatsAppMessage, sendWhatsAppMedia } from "../_shared/whatsapp.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
