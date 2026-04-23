@@ -170,7 +170,7 @@ function buildMessage(event: string, app: AppRow, extra: Record<string, any> = {
         `⏰ *تذكير بقسط مستحق*\n\n` +
         `${name}، يستحق قسطك القادم خلال أيام:\n\n` +
         `💰 المبلغ: *${fmt(extra.amount)} ر.س*\n` +
-        `📅 تاريخ الاستحقاق: *${extra.due_date}*\n` +
+        `📅 تاريخ الاستحقاق: *${ltr(extra.due_date)}*\n` +
         `🔖 رقم الطلب: *${ref}*` +
         footer
       );
