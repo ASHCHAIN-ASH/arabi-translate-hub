@@ -50,6 +50,10 @@ const WalletTopup: React.FC = () => {
   const [uploadPct, setUploadPct] = useState(0);
   const [receiptPreview, setReceiptPreview] = useState<string | null>(null);
   const [showSuccess, setShowSuccess] = useState(false);
+  // Temporary local order number (shown before submission, persists for the session)
+  const [orderRef] = useState<string>(
+    () => `TOP-${Date.now().toString(36).toUpperCase()}-${Math.random().toString(36).slice(2, 5).toUpperCase()}`,
+  );
   const [dragOver, setDragOver] = useState(false);
 
   useEffect(() => {
