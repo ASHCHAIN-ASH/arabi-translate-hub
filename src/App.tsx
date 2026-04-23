@@ -158,6 +158,7 @@ import AdminResearchPublicationDetails from "./pages/admin/AdminResearchPublicat
 import ClientContractView from "./pages/ClientContractView";
 import FinancingHome from "./pages/client/FinancingHome";
 import FinancingNew from "./pages/client/FinancingNew";
+import FinancingDetails from "./pages/client/FinancingDetails";
 
 import ThesisTitles from "./pages/research/ThesisTitles";
 import AnnotatedPublishing from './pages/research/AnnotatedPublishing';
