@@ -1021,11 +1021,16 @@ const WalletTopup: React.FC = () => {
                   )}
 
                   {/* Action button */}
-                  <motion.div whileHover={amount > 0 ? { scale: 1.01 } : {}} whileTap={amount > 0 ? { scale: 0.99 } : {}}>
+                  <motion.div whileHover={amount > 0 && !submitting ? { scale: 1.01 } : {}} whileTap={amount > 0 && !submitting ? { scale: 0.99 } : {}}>
                     <Button
                       onClick={method === 'instant' ? payInstant : submitManual}
                       disabled={!amount || amount <= 0 || submitting || (method === 'manual' && !receiptFile)}
-                      className="w-full h-13 sm:h-14 font-black text-sm sm:text-base gap-2 shadow-lg shadow-primary/20 bg-gradient-to-l from-primary to-primary/85 hover:opacity-95"
+                      aria-busy={submitting}
+                      aria-disabled={submitting}
+                      className={cn(
+                        'w-full h-13 sm:h-14 font-black text-sm sm:text-base gap-2 shadow-lg shadow-primary/20 bg-gradient-to-l from-primary to-primary/85 hover:opacity-95 transition-all',
+                        submitting && 'cursor-not-allowed opacity-90',
+                      )}
                     >
                       {submitting ? (
                         <>
@@ -1034,7 +1039,17 @@ const WalletTopup: React.FC = () => {
                             transition={{ duration: 1, repeat: Infinity, ease: 'linear' }}
                             className="w-4 h-4 border-2 border-primary-foreground/30 border-t-primary-foreground rounded-full"
                           />
-                          جارٍ المعالجة...
+                          <span className="truncate">
+                            {method === 'manual'
+                              ? uploadStage === 'uploading'
+                                ? `جارٍ رفع الإيصال... ${uploadPct}%`
+                                : uploadStage === 'saving'
+                                  ? 'جارٍ حفظ الطلب وإشعار فريق المراجعة...'
+                                  : uploadStage === 'done'
+                                    ? 'تم الإرسال بنجاح ✓'
+                                    : 'جارٍ التجهيز...'
+                              : 'جارٍ تحويلك إلى بوابة الدفع...'}
+                          </span>
                         </>
                       ) : method === 'instant' ? (
                         <>
@@ -1045,11 +1060,59 @@ const WalletTopup: React.FC = () => {
                       ) : (
                         <>
                           <Upload className="w-5 h-5" />
-                          إرسال طلب الشحن
+                          إرسال الطلب للمراجعة
                           <ArrowLeft className="w-4 h-4" />
                         </>
                       )}
                     </Button>
+
+                    {/* Live waiting indicator under the button */}
+                    <AnimatePresence>
+                      {submitting && method === 'manual' && (
+                        <motion.div
+                          initial={{ opacity: 0, height: 0 }}
+                          animate={{ opacity: 1, height: 'auto' }}
+                          exit={{ opacity: 0, height: 0 }}
+                          className="overflow-hidden"
+                          aria-live="polite"
+                          role="status"
+                        >
+                          <div className="mt-2 rounded-xl border border-primary/25 bg-primary/5 p-3 space-y-2">
+                            <div className="flex items-center justify-between text-[11px] font-bold">
+                              <span className="flex items-center gap-1.5 text-foreground">
+                                <Loader2 className="w-3 h-3 animate-spin text-primary" />
+                                {uploadStage === 'uploading'
+                                  ? 'يتم رفع الإيصال إلى الخادم'
+                                  : uploadStage === 'saving'
+                                    ? 'يتم حفظ الطلب وإرسال إشعار للمراجعة'
+                                    : 'تجهيز الطلب...'}
+                              </span>
+                              <span className="tabular-nums text-primary">
+                                {uploadStage === 'uploading' ? `${uploadPct}%` : ''}
+                              </span>
+                            </div>
+                            <div className="h-1.5 w-full bg-muted rounded-full overflow-hidden">
+                              <motion.div
+                                animate={{
+                                  width:
+                                    uploadStage === 'uploading'
+                                      ? `${uploadPct}%`
+                                      : uploadStage === 'saving'
+                                        ? '95%'
+                                        : '100%',
+                                }}
+                                transition={{ duration: 0.3 }}
+                                className="h-full bg-gradient-to-l from-primary to-primary/70"
+                              />
+                            </div>
+                            <p className="text-[10px] text-muted-foreground flex items-center gap-1">
+                              <Lock className="w-2.5 h-2.5" />
+                              يرجى عدم إغلاق الصفحة حتى اكتمال الإرسال — الزر معطّل لمنع التكرار.
+                            </p>
+                          </div>
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
                   </motion.div>
 
                   <div className="flex items-start gap-2 text-[10px] text-muted-foreground bg-muted/40 rounded-lg p-2.5">
