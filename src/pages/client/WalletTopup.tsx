@@ -948,6 +948,71 @@ const WalletTopup: React.FC = () => {
                     )}
                   </div>
 
+                  </div>
+
+                  {/* === ملخص الطلب قبل الإرسال === */}
+                  {amount > 0 && (
+                    <motion.div
+                      initial={{ opacity: 0, y: 8 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.3 }}
+                      className="rounded-2xl border border-primary/25 bg-gradient-to-br from-primary/5 via-card to-card p-3.5 space-y-2.5"
+                    >
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                          <div className="w-7 h-7 rounded-lg bg-primary/15 flex items-center justify-center">
+                            <Receipt className="w-3.5 h-3.5 text-primary" />
+                          </div>
+                          <span className="text-xs font-black text-foreground">ملخص الطلب</span>
+                        </div>
+                        <Badge variant="outline" className="text-[10px] font-bold gap-1 border-amber-500/40 text-amber-700 dark:text-amber-300 bg-amber-500/10">
+                          <Loader2 className="w-2.5 h-2.5 animate-spin" />
+                          قبل الإشعار للمراجعة
+                        </Badge>
+                      </div>
+
+                      <div className="grid grid-cols-3 gap-2">
+                        {/* المبلغ */}
+                        <div className="rounded-xl bg-muted/40 border border-border/60 px-2.5 py-2">
+                          <div className="flex items-center gap-1 text-[10px] text-muted-foreground font-bold mb-1">
+                            <Banknote className="w-3 h-3" />
+                            المبلغ
+                          </div>
+                          <div className="text-[13px] font-black text-foreground tabular-nums truncate">
+                            {amount.toLocaleString('ar-SA')} ر.س
+                          </div>
+                        </div>
+
+                        {/* طريقة الدفع */}
+                        <div className="rounded-xl bg-muted/40 border border-border/60 px-2.5 py-2">
+                          <div className="flex items-center gap-1 text-[10px] text-muted-foreground font-bold mb-1">
+                            {method === 'instant' ? <Zap className="w-3 h-3" /> : <Building2 className="w-3 h-3" />}
+                            طريقة الدفع
+                          </div>
+                          <div className="text-[12px] font-black text-foreground truncate">
+                            {method === 'instant' ? 'بطاقة فورية' : 'تحويل بنكي'}
+                          </div>
+                        </div>
+
+                        {/* رقم الطلب */}
+                        <div className="rounded-xl bg-muted/40 border border-border/60 px-2.5 py-2">
+                          <div className="flex items-center gap-1 text-[10px] text-muted-foreground font-bold mb-1">
+                            <Hash className="w-3 h-3" />
+                            رقم الطلب
+                          </div>
+                          <div dir="ltr" className="text-[11px] font-mono font-black text-foreground truncate text-right">
+                            {orderRef}
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="flex items-start gap-1.5 text-[10px] text-muted-foreground bg-muted/30 rounded-lg px-2.5 py-1.5">
+                        <Info className="w-3 h-3 mt-0.5 shrink-0 text-primary" />
+                        <span>راجع التفاصيل أعلاه قبل الإرسال — سيتم إشعار فريق المراجعة فور التأكيد.</span>
+                      </div>
+                    </motion.div>
+                  )}
+
                   {/* Action button */}
                   <motion.div whileHover={amount > 0 ? { scale: 1.01 } : {}} whileTap={amount > 0 ? { scale: 0.99 } : {}}>
                     <Button
