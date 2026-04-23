@@ -948,8 +948,6 @@ const WalletTopup: React.FC = () => {
                     )}
                   </div>
 
-                  </div>
-
                   {/* === ملخص الطلب قبل الإرسال === */}
                   {amount > 0 && (
                     <motion.div
