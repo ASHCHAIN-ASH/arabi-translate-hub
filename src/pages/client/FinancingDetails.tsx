@@ -115,6 +115,8 @@ const FinancingDetails: React.FC = () => {
   const [receipts, setReceipts] = useState<PaymentReceipt[]>([]);
   const [wallet, setWallet] = useState<WalletRow | null>(null);
   const [loading, setLoading] = useState(true);
+  const [contract, setContract] = useState<{ id: string; status: string | null; contract_number: string } | null>(null);
+  const [creatingContract, setCreatingContract] = useState(false);
 
   // Payment form state
   const [paymentTab, setPaymentTab] = useState<'wallet' | 'bank_transfer'>('wallet');
