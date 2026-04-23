@@ -3021,6 +3021,15 @@ export type Database = {
           duration_months: number
           employer_name: string | null
           funding_type: string
+          guarantor_city: string | null
+          guarantor_consent: boolean
+          guarantor_employer: string | null
+          guarantor_full_name: string | null
+          guarantor_id_number: string | null
+          guarantor_monthly_income: number | null
+          guarantor_phone: string | null
+          guarantor_relation: string | null
+          has_guarantor: boolean
           id: string
           invoice_id: string | null
           monthly_commitments: number | null
@@ -3054,6 +3063,15 @@ export type Database = {
           duration_months?: number
           employer_name?: string | null
           funding_type?: string
+          guarantor_city?: string | null
+          guarantor_consent?: boolean
+          guarantor_employer?: string | null
+          guarantor_full_name?: string | null
+          guarantor_id_number?: string | null
+          guarantor_monthly_income?: number | null
+          guarantor_phone?: string | null
+          guarantor_relation?: string | null
+          has_guarantor?: boolean
           id?: string
           invoice_id?: string | null
           monthly_commitments?: number | null
@@ -3087,6 +3105,15 @@ export type Database = {
           duration_months?: number
           employer_name?: string | null
           funding_type?: string
+          guarantor_city?: string | null
+          guarantor_consent?: boolean
+          guarantor_employer?: string | null
+          guarantor_full_name?: string | null
+          guarantor_id_number?: string | null
+          guarantor_monthly_income?: number | null
+          guarantor_phone?: string | null
+          guarantor_relation?: string | null
+          has_guarantor?: boolean
           id?: string
           invoice_id?: string | null
           monthly_commitments?: number | null
