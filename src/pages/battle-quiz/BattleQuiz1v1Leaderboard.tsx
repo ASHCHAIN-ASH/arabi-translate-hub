@@ -28,6 +28,13 @@ const BattleQuiz1v1Leaderboard: React.FC = () => {
 
   const myRow = rows.find((r) => r.user_id === user?.id);
 
+  // إخفاء أسماء اللاعبين الآخرين لحماية الخصوصية — نعرض اسماً مستعاراً مشتقاً من user_id
+  const anonName = (uid: string) => `لاعب #${(uid || '').replace(/-/g, '').slice(0, 4).toUpperCase()}`;
+  const displayFor = (r: BQ1v1LeaderboardRow) =>
+    r.user_id === user?.id ? r.display_name : anonName(r.user_id);
+  const initialFor = (r: BQ1v1LeaderboardRow) =>
+    r.user_id === user?.id ? (r.display_name?.charAt(0) || '?') : '🥷';
+
   return (
     <ClientLayout>
       <div className="p-3 sm:p-4 lg:p-6 max-w-3xl mx-auto space-y-4" dir="rtl">
