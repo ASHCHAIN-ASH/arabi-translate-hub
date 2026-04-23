@@ -27,6 +27,7 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { renderCaption, copyToClipboard } from "@/utils/referralLink";
 import ReferralAnalytics from "@/components/marketing/ReferralAnalytics";
+import QuickShareButtons from "@/components/marketing/QuickShareButtons";
 
 // ---------------- Types ----------------
 type Platform = "instagram" | "story" | "twitter" | "brochure";
@@ -146,6 +147,17 @@ function AssetCard({
         <h3 className="font-semibold text-foreground line-clamp-2 leading-snug">
           {asset.title}
         </h3>
+
+        {/* Quick share row (WhatsApp / Twitter / Telegram + image actions) */}
+        <QuickShareButtons
+          text={renderCaption(asset.caption_template, shareUrl)}
+          shareUrl={shareUrl}
+          imageUrl={asset.image_url}
+          filename={`${asset.title.replace(/[^\p{L}\p{N}_-]+/gu, "_")}.${
+            (asset.image_url?.split(".").pop()?.split("?")[0] || "jpg")
+          }`}
+          withImageActions={false}
+        />
 
         <div className="grid grid-cols-2 gap-2 mt-auto">
           <Button
