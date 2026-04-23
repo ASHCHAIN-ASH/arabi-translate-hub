@@ -1,4 +1,5 @@
 import { supabase } from "@/integrations/supabase/client";
+import { buildReferralLink } from "@/utils/referralLink";
 
 const REF_KEY = "mep_marketing_ref";
 const REF_CLICK_FIRED_KEY = "mep_marketing_ref_clicked";
@@ -101,8 +102,9 @@ export const MarketingReferralService = {
   },
 
   buildShareUrl(refCode: string): string {
-    if (typeof window === "undefined") return `/?ref=${refCode}`;
-    return `${window.location.origin}/?ref=${refCode}`;
+    // Always use the canonical public domain (e.g. masteredupath.com),
+    // never the preview/iframe origin like *.lovableproject.com.
+    return buildReferralLink(refCode);
   },
 
   // ---------- Conversions ----------
