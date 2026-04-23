@@ -179,6 +179,13 @@ const FinancingAdminDetails: React.FC = () => {
         .eq('id', app.id);
       if (error) throw error;
       toast.success('تم تحديث الحالة');
+      // 📲 Notify customer via WhatsApp
+      const statusLabel = FINANCING_STATUS_LABELS_AR[toStatus] || toStatus;
+      const noteSuffix = adminNote ? `\n📝 ملاحظة: ${adminNote}` : '';
+      await notifyCustomer(
+        app,
+        `تم تحديث حالة طلب التمويل الخاص بك إلى: *${statusLabel}* ✅${noteSuffix}`,
+      );
       setAdminNote('');
       setNewStatus('');
     } catch (e: any) {
@@ -189,21 +196,68 @@ const FinancingAdminDetails: React.FC = () => {
   };
 
   const reviewDoc = async (docId: string, status: 'approved' | 'rejected', note?: string) => {
+    const doc = docs.find(d => d.id === docId);
     const { error } = await supabase
       .from('financing_documents' as any)
       .update({ status, review_note: note ?? null, reviewed_at: new Date().toISOString() } as any)
       .eq('id', docId);
-    if (error) toast.error('فشل تحديث المستند');
-    else toast.success(status === 'approved' ? 'تمت الموافقة على المستند' : 'تم رفض المستند');
+    if (error) {
+      toast.error('فشل تحديث المستند');
+      return;
+    }
+    toast.success(status === 'approved' ? 'تمت الموافقة على المستند' : 'تم رفض المستند');
+    // 📲 Notify customer
+    const docLabel = doc ? (FINANCING_DOC_LABELS_AR[doc.document_type] || doc.document_type) : 'وثيقة';
+    if (status === 'approved') {
+      await notifyCustomer(app, `✅ تم قبول وثيقة *${docLabel}* الخاصة بطلب التمويل.`, docId);
+    } else {
+      await notifyCustomer(
+        app,
+        `❌ تم رفض وثيقة *${docLabel}*.${note ? `\nالسبب: ${note}` : ''}\n\nيرجى إعادة رفعها من حسابك.`,
+        docId,
+      );
+    }
   };
 
   const reviewReceipt = async (rid: string, status: 'approved' | 'rejected') => {
+    const receipt = receipts.find(r => r.id === rid);
     const { error } = await supabase
       .from('financing_payment_receipts' as any)
       .update({ status, reviewer_note: adminNote || null } as any)
       .eq('id', rid);
-    if (error) toast.error('فشل تحديث الإيصال');
-    else toast.success(status === 'approved' ? 'تم اعتماد الإيصال' : 'تم رفض الإيصال');
+    if (error) {
+      toast.error('فشل تحديث الإيصال');
+      return;
+    }
+    toast.success(status === 'approved' ? 'تم اعتماد الإيصال' : 'تم رفض الإيصال');
+    // 📲 Notify customer
+    const amt = receipt ? `${fmt(receipt.amount)} ر.س` : '';
+    if (status === 'approved') {
+      await notifyCustomer(
+        app,
+        `✅ تم اعتماد إيصال الدفع بمبلغ *${amt}* بنجاح.\nسيتم تفعيل خطة التمويل قريباً.`,
+        rid,
+      );
+    } else {
+      await notifyCustomer(
+        app,
+        `❌ تم رفض إيصال الدفع بمبلغ *${amt}*.${adminNote ? `\nالسبب: ${adminNote}` : ''}\n\nيرجى رفع إيصال صحيح من حسابك.`,
+        rid,
+      );
+    }
+  };
+
+  // 📲 Send admin note as WhatsApp message directly
+  const sendNoteToCustomer = async () => {
+    if (!adminNote.trim()) {
+      toast.error('اكتب الملاحظة أولاً');
+      return;
+    }
+    setWorking(true);
+    await notifyCustomer(app, `📌 رسالة من فريق التمويل:\n\n${adminNote}`);
+    toast.success('تم إرسال الملاحظة عبر واتساب');
+    setAdminNote('');
+    setWorking(false);
   };
 
   const openFile = async (path: string) => {
