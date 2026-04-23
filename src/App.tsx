@@ -474,6 +474,11 @@ const App = () => (
                 <FinancingNew />
               </SimpleProtectedRoute>
             } />
+            <Route path="/financing/:id" element={
+              <SimpleProtectedRoute requiredRole="client">
+                <FinancingDetails />
+              </SimpleProtectedRoute>
+            } />
             <Route path="/contracts/:id" element={
               <LegacyContractRedirect />
             } />
