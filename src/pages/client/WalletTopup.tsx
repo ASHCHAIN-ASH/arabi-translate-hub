@@ -48,6 +48,7 @@ const WalletTopup: React.FC = () => {
   const [uploadStage, setUploadStage] = useState<'idle' | 'uploading' | 'saving' | 'done'>('idle');
   const [uploadPct, setUploadPct] = useState(0);
   const [receiptPreview, setReceiptPreview] = useState<string | null>(null);
+  const [showSuccess, setShowSuccess] = useState(false);
   const [dragOver, setDragOver] = useState(false);
 
   useEffect(() => {
