@@ -1,6 +1,18 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import { Link } from 'react-router-dom';
-import { CreditCard, Plus, FileText, Clock, CheckCircle2, XCircle, ShieldCheck } from 'lucide-react';
+import { motion } from 'framer-motion';
+import {
+  Plus,
+  FileText,
+  ShieldCheck,
+  Sparkles,
+  TrendingUp,
+  Wallet,
+  ArrowUpRight,
+  CheckCircle2,
+  Clock3,
+  AlertCircle,
+} from 'lucide-react';
 import ClientLayout from '@/components/client/ClientLayout';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -24,13 +36,16 @@ interface FinancingApp {
 }
 
 const fmt = (n: number) =>
-  new Intl.NumberFormat('ar-SA', { maximumFractionDigits: 2 }).format(n);
+  new Intl.NumberFormat('en-US', { maximumFractionDigits: 2 }).format(n);
 
-const statusVariant = (status: string): 'default' | 'secondary' | 'destructive' | 'outline' => {
-  if (['approved', 'active', 'completed'].includes(status)) return 'default';
-  if (['rejected', 'cancelled', 'overdue'].includes(status)) return 'destructive';
-  if (['draft'].includes(status)) return 'outline';
-  return 'secondary';
+const statusTone = (status: string) => {
+  if (['approved', 'active', 'completed'].includes(status))
+    return { bg: 'bg-emerald-500/10', text: 'text-emerald-600 dark:text-emerald-400', ring: 'ring-emerald-500/20', icon: CheckCircle2 };
+  if (['rejected', 'cancelled', 'overdue'].includes(status))
+    return { bg: 'bg-rose-500/10', text: 'text-rose-600 dark:text-rose-400', ring: 'ring-rose-500/20', icon: AlertCircle };
+  if (['waiting_down_payment', 'contract_pending_signature'].includes(status))
+    return { bg: 'bg-amber-500/10', text: 'text-amber-600 dark:text-amber-400', ring: 'ring-amber-500/20', icon: Clock3 };
+  return { bg: 'bg-sky-500/10', text: 'text-sky-600 dark:text-sky-400', ring: 'ring-sky-500/20', icon: Clock3 };
 };
 
 const FinancingHome: React.FC = () => {
@@ -42,83 +57,173 @@ const FinancingHome: React.FC = () => {
     document.title = 'Master PayLater — التمويل | منصة ماستر';
   }, []);
 
+  const load = async () => {
+    setLoading(true);
+    const { data } = await supabase
+      .from('financing_applications')
+      .select('id,total_amount,down_payment,monthly_installment,duration_months,status,created_at')
+      .order('created_at', { ascending: false });
+    if (data) setApps(data as FinancingApp[]);
+    setLoading(false);
+  };
+
   useEffect(() => {
     if (!user) return;
-    (async () => {
-      setLoading(true);
-      const { data, error } = await supabase
-        .from('financing_applications')
-        .select('id,total_amount,down_payment,monthly_installment,duration_months,status,created_at')
-        .order('created_at', { ascending: false });
-      if (!error && data) setApps(data as FinancingApp[]);
-      setLoading(false);
-    })();
-  }, [user]);
+    load();
+    const channel = supabase
+      .channel(`financing-home-${user.id}`)
+      .on(
+        'postgres_changes',
+        { event: '*', schema: 'public', table: 'financing_applications', filter: `user_id=eq.${user.id}` },
+        () => load(),
+      )
+      .subscribe();
+    return () => {
+      supabase.removeChannel(channel);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user?.id]);
+
+  const stats = useMemo(() => {
+    const active = apps.filter((a) => ['active', 'approved'].includes(a.status));
+    const pending = apps.filter((a) => !['active', 'approved', 'rejected', 'cancelled', 'completed'].includes(a.status));
+    const totalCredit = active.reduce((s, a) => s + Number(a.total_amount - a.down_payment), 0);
+    return { active: active.length, pending: pending.length, totalCredit };
+  }, [apps]);
 
   return (
     <ClientLayout>
-      <div dir="rtl" className="space-y-6">
-        {/* Hero */}
-        <Card
-          className="relative overflow-hidden border-0 shadow-xl"
-          style={{
-            background:
-              'linear-gradient(135deg, hsl(var(--primary)) 0%, hsl(var(--primary) / 0.85) 50%, hsl(var(--accent) / 0.9) 100%)',
-            color: 'hsl(var(--primary-foreground))',
-          }}
+      <div dir="rtl" className="space-y-6 animate-fade-in">
+        {/* Hero — Glassmorphism + gradient */}
+        <motion.div
+          initial={{ opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, ease: 'easeOut' }}
         >
-          <div className="absolute -top-16 -left-16 h-64 w-64 rounded-full bg-white/10 blur-3xl" />
-          <div className="absolute -bottom-20 -right-10 h-72 w-72 rounded-full bg-white/10 blur-3xl" />
-          <div className="relative p-6 md:p-10">
-            <div className="flex items-center gap-3 mb-3">
-              <div className="h-14 w-14 rounded-2xl bg-white/15 backdrop-blur flex items-center justify-center ring-1 ring-white/25">
-                <CreditCard className="h-7 w-7" />
+          <Card className="relative overflow-hidden border-0 shadow-2xl">
+            <div
+              className="absolute inset-0"
+              style={{
+                background:
+                  'linear-gradient(135deg, hsl(217 91% 18%) 0%, hsl(217 91% 28%) 35%, hsl(199 89% 38%) 100%)',
+              }}
+            />
+            {/* Animated orbs */}
+            <motion.div
+              className="absolute -top-24 -left-24 h-72 w-72 rounded-full bg-gradient-to-br from-cyan-400/30 to-blue-500/20 blur-3xl"
+              animate={{ scale: [1, 1.15, 1], opacity: [0.4, 0.7, 0.4] }}
+              transition={{ duration: 8, repeat: Infinity, ease: 'easeInOut' }}
+            />
+            <motion.div
+              className="absolute -bottom-32 -right-16 h-80 w-80 rounded-full bg-gradient-to-tr from-violet-500/30 to-fuchsia-400/20 blur-3xl"
+              animate={{ scale: [1.1, 1, 1.1], opacity: [0.5, 0.3, 0.5] }}
+              transition={{ duration: 10, repeat: Infinity, ease: 'easeInOut' }}
+            />
+            <div className="absolute inset-0 backdrop-blur-[2px] bg-white/[0.02]" />
+
+            <div className="relative p-6 md:p-10 text-white">
+              <div className="flex items-center justify-between flex-wrap gap-4">
+                <div className="flex items-center gap-4">
+                  <motion.div
+                    initial={{ rotate: -12, scale: 0.8 }}
+                    animate={{ rotate: 0, scale: 1 }}
+                    transition={{ delay: 0.2, type: 'spring', stiffness: 200 }}
+                    className="h-16 w-16 rounded-2xl bg-white/15 backdrop-blur-xl flex items-center justify-center ring-1 ring-white/30 shadow-xl"
+                  >
+                    <Wallet className="h-8 w-8" />
+                  </motion.div>
+                  <div>
+                    <div className="flex items-center gap-2 text-xs uppercase tracking-widest text-white/70 mb-1">
+                      <Sparkles className="h-3 w-3" />
+                      Master PayLater
+                    </div>
+                    <h1 className="text-2xl md:text-3xl font-bold">تمويل ماستر الذكي</h1>
+                  </div>
+                </div>
+                <Button
+                  asChild
+                  size="lg"
+                  className="bg-white text-slate-900 hover:bg-white/90 font-bold shadow-lg shadow-black/20 hover-scale"
+                >
+                  <Link to="/financing/new">
+                    <Plus className="ml-2 h-4 w-4" />
+                    طلب تمويل جديد
+                  </Link>
+                </Button>
               </div>
-              <div>
-                <div className="text-xs opacity-80">Master PayLater</div>
-                <h1 className="text-2xl md:text-3xl font-bold">تمويل ماستر الذكي</h1>
+
+              <p className="text-sm md:text-base text-white/90 max-w-2xl leading-relaxed mt-6 mb-5">
+                قسّط طلباتك التي تتجاوز {fmt(FINANCING_MIN_AMOUNT)} ر.س على 12 شهرًا بأقساط متساوية،
+                ادفع الدفعة الأولى فقط — وبعد الموافقة يُضاف الرصيد إلى محفظتك داخل المنصة فورًا.
+              </p>
+
+              <div className="flex items-start gap-2 rounded-xl bg-white/10 backdrop-blur-xl p-4 ring-1 ring-white/20 max-w-3xl">
+                <ShieldCheck className="h-5 w-5 mt-0.5 shrink-0 text-cyan-200" />
+                <p className="text-xs leading-relaxed text-white/95">{FINANCING_DISCLAIMER_AR}</p>
+              </div>
+
+              {/* Live stats */}
+              <div className="grid grid-cols-3 gap-3 mt-6">
+                {[
+                  { label: 'تمويلات نشطة', value: stats.active, icon: TrendingUp },
+                  { label: 'قيد المعالجة', value: stats.pending, icon: Clock3 },
+                  { label: 'إجمالي الرصيد', value: `${fmt(stats.totalCredit)} ر.س`, icon: Wallet },
+                ].map((s, i) => (
+                  <motion.div
+                    key={s.label}
+                    initial={{ opacity: 0, y: 12 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.3 + i * 0.08 }}
+                    className="rounded-xl bg-white/10 backdrop-blur-xl ring-1 ring-white/20 p-3"
+                  >
+                    <div className="flex items-center gap-1.5 text-[10px] uppercase tracking-wider text-white/70 mb-1">
+                      <s.icon className="h-3 w-3" />
+                      {s.label}
+                    </div>
+                    <div className="text-base md:text-lg font-bold">{s.value}</div>
+                  </motion.div>
+                ))}
               </div>
             </div>
-            <p className="text-sm md:text-base opacity-95 max-w-2xl leading-relaxed mb-5">
-              قسّط طلباتك التي تتجاوز {fmt(FINANCING_MIN_AMOUNT)} ر.س على 12 شهرًا بأقساط متساوية،
-              ادفع الدفعة الأولى فقط — وبعد الموافقة يُضاف الرصيد إلى محفظتك داخل المنصة فورًا.
-            </p>
-            <div className="flex items-start gap-2 rounded-lg bg-white/10 backdrop-blur p-3 mb-5 ring-1 ring-white/20 max-w-2xl">
-              <ShieldCheck className="h-4 w-4 mt-0.5 shrink-0" />
-              <p className="text-xs leading-relaxed">{FINANCING_DISCLAIMER_AR}</p>
-            </div>
-            <Button asChild size="lg" className="bg-white text-primary hover:bg-white/90 font-bold shadow-md">
-              <Link to="/financing/new">
-                <Plus className="ml-2 h-4 w-4" />
-                طلب تمويل جديد
-              </Link>
-            </Button>
-          </div>
-        </Card>
+          </Card>
+        </motion.div>
 
         {/* Steps */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4">
           {[
-            { i: 1, t: 'إرسال الطلب', d: 'املأ بياناتك ووثّق هويتك وكشف حسابك' },
-            { i: 2, t: 'مراجعة الإدارة', d: 'تقييم الأهلية والموافقة' },
-            { i: 3, t: 'توقيع العقد + الدفعة الأولى', d: 'وقّع إلكترونيًا وادفع 20%' },
-            { i: 4, t: 'تفعيل الرصيد', d: 'يُضاف الرصيد لمحفظتك ويُستخدم لسداد الطلب' },
-          ].map((s) => (
-            <Card key={s.i} className="p-4 border-border/60">
-              <div className="h-9 w-9 rounded-lg bg-primary/10 text-primary flex items-center justify-center font-bold mb-3">
-                {s.i}
-              </div>
-              <div className="font-semibold mb-1 text-sm">{s.t}</div>
-              <p className="text-xs text-muted-foreground leading-relaxed">{s.d}</p>
-            </Card>
+            { i: 1, t: 'إرسال الطلب', d: 'املأ بياناتك ووثّق هويتك', emoji: '📝' },
+            { i: 2, t: 'مراجعة الإدارة', d: 'تقييم الأهلية والموافقة', emoji: '🔎' },
+            { i: 3, t: 'العقد + الدفعة', d: 'وقّع إلكترونيًا وادفع 20%', emoji: '✍️' },
+            { i: 4, t: 'تفعيل الرصيد', d: 'يُضاف لمحفظتك فورًا', emoji: '⚡' },
+          ].map((s, idx) => (
+            <motion.div
+              key={s.i}
+              initial={{ opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.1 + idx * 0.07 }}
+            >
+              <Card className="p-3 md:p-4 border-border/50 hover:border-primary/50 hover:shadow-lg transition-all hover-scale h-full">
+                <div className="flex items-center gap-2 mb-2">
+                  <div className="text-xl md:text-2xl">{s.emoji}</div>
+                  <div className="h-7 w-7 rounded-lg bg-gradient-to-br from-primary to-primary/70 text-primary-foreground flex items-center justify-center font-bold text-xs">
+                    {s.i}
+                  </div>
+                </div>
+                <div className="font-semibold mb-0.5 text-sm">{s.t}</div>
+                <p className="text-[11px] md:text-xs text-muted-foreground leading-relaxed">{s.d}</p>
+              </Card>
+            </motion.div>
           ))}
         </div>
 
         {/* Applications list */}
         <div>
           <div className="flex items-center justify-between mb-4">
-            <h2 className="text-xl font-bold">طلباتي التمويلية</h2>
-            <Button asChild variant="outline" size="sm">
+            <h2 className="text-xl font-bold flex items-center gap-2">
+              <FileText className="h-5 w-5 text-primary" />
+              طلباتي التمويلية
+            </h2>
+            <Button asChild variant="outline" size="sm" className="hover-scale">
               <Link to="/financing/new">
                 <Plus className="ml-1 h-4 w-4" /> طلب جديد
               </Link>
@@ -126,7 +231,7 @@ const FinancingHome: React.FC = () => {
           </div>
 
           {loading ? (
-            <Card className="p-8 text-center text-muted-foreground">جاري التحميل…</Card>
+            <Card className="p-8 text-center text-muted-foreground animate-pulse">جاري التحميل…</Card>
           ) : apps.length === 0 ? (
             <Card className="p-10 text-center border-dashed">
               <FileText className="h-10 w-10 mx-auto text-muted-foreground/60 mb-3" />
@@ -140,50 +245,66 @@ const FinancingHome: React.FC = () => {
             </Card>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {apps.map((a) => (
-                <Card key={a.id} className="p-5 hover:shadow-md transition-shadow">
-                  <div className="flex items-start justify-between mb-3">
-                    <div>
-                      <div className="text-xs text-muted-foreground mb-1">
-                        رقم الطلب: {a.id.slice(0, 8)}
-                      </div>
-                      <div className="font-bold">{fmt(a.total_amount)} ر.س</div>
-                    </div>
-                    <Badge variant={statusVariant(a.status)}>
-                      {FINANCING_STATUS_LABELS_AR[a.status] ?? a.status}
-                    </Badge>
-                  </div>
-                  <div className="grid grid-cols-3 gap-2 text-center text-xs mb-4">
-                    <div className="rounded-md bg-muted/50 p-2">
-                      <div className="text-muted-foreground mb-0.5">الدفعة الأولى</div>
-                      <div className="font-semibold">{fmt(a.down_payment)}</div>
-                    </div>
-                    <div className="rounded-md bg-muted/50 p-2">
-                      <div className="text-muted-foreground mb-0.5">القسط</div>
-                      <div className="font-semibold">{fmt(a.monthly_installment)}</div>
-                    </div>
-                    <div className="rounded-md bg-muted/50 p-2">
-                      <div className="text-muted-foreground mb-0.5">المدة</div>
-                      <div className="font-semibold">{a.duration_months} شهر</div>
-                    </div>
-                  </div>
-                  <div className="flex items-center justify-between text-xs text-muted-foreground">
-                    <span className="flex items-center gap-1">
-                      <Clock className="h-3 w-3" />
-                      {new Date(a.created_at).toLocaleDateString('ar-SA')}
-                    </span>
-                    {a.status === 'approved' || a.status === 'active' ? (
-                      <span className="flex items-center gap-1 text-primary">
-                        <CheckCircle2 className="h-3 w-3" /> فعّال
-                      </span>
-                    ) : a.status === 'rejected' ? (
-                      <span className="flex items-center gap-1 text-destructive">
-                        <XCircle className="h-3 w-3" /> مرفوض
-                      </span>
-                    ) : null}
-                  </div>
-                </Card>
-              ))}
+              {apps.map((a, idx) => {
+                const tone = statusTone(a.status);
+                const StatusIcon = tone.icon;
+                return (
+                  <motion.div
+                    key={a.id}
+                    initial={{ opacity: 0, y: 12 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: idx * 0.05 }}
+                  >
+                    <Link to={`/financing/${a.id}`} className="block">
+                      <Card className="p-5 hover:shadow-xl hover:-translate-y-0.5 transition-all border-border/60 hover:border-primary/40 group h-full">
+                        <div className="flex items-start justify-between mb-4">
+                          <div>
+                            <div className="text-[10px] uppercase tracking-widest text-muted-foreground mb-1">
+                              رقم الطلب
+                            </div>
+                            <div className="font-mono text-xs font-semibold mb-2">
+                              #{a.id.slice(0, 8).toUpperCase()}
+                            </div>
+                            <div className="text-2xl font-extrabold tabular-nums">
+                              {fmt(a.total_amount)}
+                              <span className="text-sm font-normal text-muted-foreground mr-1">ر.س</span>
+                            </div>
+                          </div>
+                          <Badge
+                            className={`${tone.bg} ${tone.text} ring-1 ${tone.ring} border-0 gap-1 px-2.5`}
+                          >
+                            <StatusIcon className="h-3 w-3" />
+                            {FINANCING_STATUS_LABELS_AR[a.status] ?? a.status}
+                          </Badge>
+                        </div>
+
+                        <div className="grid grid-cols-3 gap-2 text-center text-xs mb-4">
+                          <div className="rounded-lg bg-muted/50 p-2.5">
+                            <div className="text-[10px] text-muted-foreground mb-1">الدفعة الأولى</div>
+                            <div className="font-bold tabular-nums">{fmt(a.down_payment)}</div>
+                          </div>
+                          <div className="rounded-lg bg-muted/50 p-2.5">
+                            <div className="text-[10px] text-muted-foreground mb-1">القسط</div>
+                            <div className="font-bold tabular-nums">{fmt(a.monthly_installment)}</div>
+                          </div>
+                          <div className="rounded-lg bg-muted/50 p-2.5">
+                            <div className="text-[10px] text-muted-foreground mb-1">المدة</div>
+                            <div className="font-bold tabular-nums">{a.duration_months} ش</div>
+                          </div>
+                        </div>
+
+                        <div className="flex items-center justify-between text-xs text-muted-foreground pt-3 border-t border-border/40">
+                          <span>{new Date(a.created_at).toLocaleDateString('en-GB')}</span>
+                          <span className="flex items-center gap-1 text-primary group-hover:gap-2 transition-all">
+                            عرض التفاصيل
+                            <ArrowUpRight className="h-3.5 w-3.5" />
+                          </span>
+                        </div>
+                      </Card>
+                    </Link>
+                  </motion.div>
+                );
+              })}
             </div>
           )}
         </div>
