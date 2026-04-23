@@ -34,6 +34,9 @@ const BattleQuiz1v1Play: React.FC = () => {
   const [submitting, setSubmitting] = useState(false);
   const [submittedFinal, setSubmittedFinal] = useState(false);
 
+  type AttemptStage = 'idle' | 'fetching_match' | 'validating' | 'creating_attempt' | 'loading_questions' | 'ready' | 'failed';
+  const [attemptStage, setAttemptStage] = useState<AttemptStage>('idle');
+
   const startedAtRef = useRef<number>(Date.now());
   const matchStartRef = useRef<number>(Date.now());
 
@@ -50,10 +53,14 @@ const BattleQuiz1v1Play: React.FC = () => {
     if (!user || !matchId) return;
     let mounted = true;
     (async () => {
+      setAttemptStage('fetching_match');
       const m = await BattleQuiz1v1Service.getMatch(matchId);
       if (!mounted) return;
-      if (!m) { setError('لم يتم العثور على المباراة'); setLoading(false); return; }
+      if (!m) { setAttemptStage('failed'); setError('لم يتم العثور على المباراة'); setLoading(false); return; }
+
+      setAttemptStage('validating');
       if (![m.player_a_id, m.player_b_id].includes(user.id)) {
+        setAttemptStage('failed');
         setError('لست لاعباً في هذه المباراة'); setLoading(false); return;
       }
       setMatch(m);
@@ -63,6 +70,7 @@ const BattleQuiz1v1Play: React.FC = () => {
         return;
       }
 
+      setAttemptStage('creating_attempt');
       const res = await BattleQuiz1v1Service.startAttempt(matchId);
       if (!mounted) return;
       if (!res || res.error) {
@@ -78,11 +86,14 @@ const BattleQuiz1v1Play: React.FC = () => {
           room_not_open: 'الغرفة غير مفتوحة للعب حالياً.',
         };
         const friendly = res?.error ? errorMessages[res.error] : null;
+        setAttemptStage('failed');
         setError(friendly ?? `تعذّر بدء المباراة${res?.error ? ` (${res.error})` : ''}. يرجى المحاولة لاحقاً.`);
         setLoading(false);
         return;
       }
+      setAttemptStage('loading_questions');
       setPayload(res);
+      setAttemptStage('ready');
       setLoading(false);
       startedAtRef.current = Date.now();
       matchStartRef.current = Date.now();
@@ -168,7 +179,55 @@ const BattleQuiz1v1Play: React.FC = () => {
   };
 
   if (!user) return <ClientLayout><div className="p-6 text-center" dir="rtl">يرجى تسجيل الدخول</div></ClientLayout>;
-  if (loading) return <ClientLayout><div className="flex justify-center py-20"><Loader2 className="w-8 h-8 animate-spin text-primary" /></div></ClientLayout>;
+  if (loading) {
+    const stages: { key: AttemptStage; label: string }[] = [
+      { key: 'fetching_match', label: 'جلب بيانات المباراة' },
+      { key: 'validating', label: 'التحقق من اللاعب' },
+      { key: 'creating_attempt', label: 'إنشاء محاولة اللعب' },
+      { key: 'loading_questions', label: 'تحميل الأسئلة' },
+      { key: 'ready', label: 'جاهز للبدء' },
+    ];
+    const currentIdx = stages.findIndex((s) => s.key === attemptStage);
+    return (
+      <ClientLayout>
+        <div className="p-6 max-w-md mx-auto" dir="rtl">
+          <Card className="p-6 space-y-5">
+            <div className="text-center space-y-1">
+              <Swords className="w-10 h-10 mx-auto text-primary" />
+              <h2 className="font-bold text-lg">تجهيز المباراة</h2>
+              <p className="text-xs text-muted-foreground">يتم تجهيز محاولتك، يرجى الانتظار…</p>
+            </div>
+            <ul className="space-y-2.5">
+              {stages.map((s, i) => {
+                const done = currentIdx > i || attemptStage === 'ready';
+                const active = currentIdx === i && attemptStage !== 'ready';
+                return (
+                  <li key={s.key} className="flex items-center gap-3 text-sm">
+                    <span
+                      className={`w-6 h-6 rounded-full flex items-center justify-center shrink-0 transition-colors ${
+                        done ? 'bg-green-500 text-white' : active ? 'bg-primary/15 text-primary' : 'bg-muted text-muted-foreground'
+                      }`}
+                    >
+                      {done ? (
+                        <CheckCircle2 className="w-4 h-4" />
+                      ) : active ? (
+                        <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                      ) : (
+                        <span className="text-[11px] font-bold">{i + 1}</span>
+                      )}
+                    </span>
+                    <span className={done ? 'text-foreground font-medium' : active ? 'text-primary font-bold' : 'text-muted-foreground'}>
+                      {s.label}
+                    </span>
+                  </li>
+                );
+              })}
+            </ul>
+          </Card>
+        </div>
+      </ClientLayout>
+    );
+  }
   if (error) {
     return (
       <ClientLayout>
