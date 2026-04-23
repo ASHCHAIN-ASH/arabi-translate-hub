@@ -119,49 +119,144 @@ const FinancingAcknowledgments: React.FC = () => {
 
   useEffect(() => {
     document.title = 'الإقرارات الرقمية — Master PayLater';
-    if (focus) setOpenKey(focus);
-  }, [focus]);
+  }, []);
 
+  // فتح الإقرار المطلوب فقط إذا لم يكن موقّعاً مسبقاً
+  useEffect(() => {
+    if (focus && !completed.has(focus)) setOpenKey(focus);
+  }, [focus, completed]);
+
+  // تحميل بيانات المستخدم + الإقرارات الموقّعة سابقاً (لمنع إعادة التوقيع)
   useEffect(() => {
     if (!user?.id) return;
     (async () => {
-      const { data } = await supabase
-        .from('profiles')
-        .select('full_name')
-        .eq('id', user.id)
-        .maybeSingle();
-      if ((data as any)?.full_name) setProfileName((data as any).full_name);
+      const [{ data: prof }, { data: acks }] = await Promise.all([
+        supabase.from('profiles').select('full_name').eq('id', user.id).maybeSingle(),
+        applicationId
+          ? supabase
+              .from('financing_acknowledgments' as any)
+              .select('ack_type')
+              .eq('application_id', applicationId)
+              .eq('user_id', user.id)
+          : Promise.resolve({ data: [] as any[] }),
+      ]);
+      if ((prof as any)?.full_name) setProfileName((prof as any).full_name);
+      if (Array.isArray(acks)) {
+        setCompleted(new Set((acks as any[]).map((r) => r.ack_type)));
+      }
     })();
-  }, [user?.id]);
+  }, [user?.id, applicationId]);
+
+  // بصمة SHA-256 للدليل القانوني
+  const buildEvidenceHash = async (data: Record<string, unknown>) => {
+    const json = JSON.stringify(data);
+    const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(json));
+    return Array.from(new Uint8Array(buf))
+      .map((b) => b.toString(16).padStart(2, '0'))
+      .join('');
+  };
 
   const handleConfirm = async (
     key: FinancingAcknowledgmentType,
     payload: { fullName: string; signedAt: string; clauses: string[] },
   ) => {
-    // نسجّل الإقرار في audit_logs (موجود بالنظام) كأثر قانوني
-    try {
-      await supabase.from('audit_logs').insert({
+    // حماية مزدوجة: لا نسمح بإعادة التوقيع
+    if (completed.has(key)) {
+      toast({
+        title: 'تم توثيق هذا الإقرار مسبقاً',
+        description: 'لا يمكن إعادة توقيع إقرار سبق توثيقه — السجل محفوظ بصفة دائمة.',
+        variant: 'destructive',
+      });
+      setOpenKey(null);
+      throw new Error('already_signed');
+    }
+
+    if (!applicationId) {
+      toast({
+        title: 'تعذّر التوثيق',
+        description: 'رقم طلب التمويل مفقود.',
+        variant: 'destructive',
+      });
+      throw new Error('no_application_id');
+    }
+
+    const evidence = {
+      ack_type: key,
+      ack_title: FINANCING_ACK_TITLES_AR[key],
+      signer_name: payload.fullName,
+      signed_at: payload.signedAt,
+      accepted_clauses: payload.clauses,
+      application_id: applicationId,
+      user_id: user?.id,
+      user_agent: navigator.userAgent,
+    };
+    const evidence_sha256 = await buildEvidenceHash(evidence);
+
+    // إدراج رسمي في الجدول الدائم — UNIQUE constraint يمنع التكرار من الخادم
+    const { error } = await supabase.from('financing_acknowledgments' as any).insert({
+      application_id: applicationId,
+      user_id: user?.id,
+      ack_type: key,
+      ack_title: FINANCING_ACK_TITLES_AR[key],
+      signer_name: payload.fullName,
+      accepted_clauses: payload.clauses,
+      signature_text: payload.fullName,
+      signed_at: payload.signedAt,
+      user_agent: navigator.userAgent,
+      evidence_sha256,
+    } as any);
+
+    if (error) {
+      // 23505 = unique_violation → سُجِّل من قبل
+      if ((error as any).code === '23505') {
+        setCompleted((prev) => new Set(prev).add(key));
+        toast({
+          title: 'هذا الإقرار موثَّق مسبقاً',
+          description: 'لا يمكن إعادة التوقيع.',
+          variant: 'destructive',
+        });
+        setOpenKey(null);
+        throw error;
+      }
+      console.error('[acknowledgments] insert failed:', error);
+      toast({
+        title: 'تعذّر حفظ الإقرار',
+        description: 'يرجى المحاولة مرة أخرى.',
+        variant: 'destructive',
+      });
+      throw error;
+    }
+
+    // سجل audit (إضافي، غير حاجب)
+    supabase
+      .from('audit_logs')
+      .insert({
         user_id: user?.id ?? null,
         action: `financing_acknowledgment:${key}`,
         table_name: 'financing_acknowledgments',
-        record_id: applicationId ?? null,
-        new_data: {
-          ack_type: key,
-          ack_title: FINANCING_ACK_TITLES_AR[key],
-          signer_name: payload.fullName,
-          signed_at: payload.signedAt,
-          accepted_clauses: payload.clauses,
+        record_id: applicationId,
+        new_data: { ...evidence, evidence_sha256 } as any,
+      } as any)
+      .then(() => {});
+
+    // إشعار واتساب فوري (غير حاجب)
+    supabase.functions
+      .invoke('financing-whatsapp-notify', {
+        body: {
           application_id: applicationId,
-          user_agent: navigator.userAgent,
-        } as any,
-      } as any);
-    } catch (err) {
-      console.warn('[acknowledgments] audit insert failed (non-blocking):', err);
-    }
+          event: 'status_update',
+          extra: {
+            new_status: 'acknowledgment_signed',
+            status_label: `تم توثيق إقرار: ${FINANCING_ACK_TITLES_AR[key]}`,
+          },
+        },
+      })
+      .catch((e) => console.warn('[whatsapp ack notify] failed:', e));
+
     setCompleted((prev) => new Set(prev).add(key));
     toast({
       title: 'تم توثيق الإقرار رقمياً ✓',
-      description: `${FINANCING_ACK_TITLES_AR[key]} — صالح بحجّية كاملة`,
+      description: `${FINANCING_ACK_TITLES_AR[key]} — مغلق بصفة نهائية`,
     });
   };
 
@@ -296,13 +391,14 @@ const FinancingAcknowledgments: React.FC = () => {
                     {c.subtitle}
                   </p>
                   <Button
-                    onClick={() => setOpenKey(c.key)}
+                    onClick={() => !done && setOpenKey(c.key)}
                     variant={done ? 'outline' : 'default'}
                     className="w-full font-semibold gap-2"
                     size="sm"
+                    disabled={done}
                   >
-                    <c.Icon className="h-4 w-4" />
-                    {done ? 'مراجعة الإقرار' : 'بدء الإقرار والتوقيع'}
+                    {done ? <Lock className="h-4 w-4" /> : <c.Icon className="h-4 w-4" />}
+                    {done ? 'موثَّق نهائياً — لا يمكن إعادة التوقيع' : 'بدء الإقرار والتوقيع'}
                   </Button>
                 </Card>
               </motion.div>
