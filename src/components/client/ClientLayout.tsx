@@ -50,6 +50,7 @@ const navItems: NavItem[] = [
   { name: 'عقودي', href: '/client/contracts', icon: ScrollText },
   { name: 'نشر الأبحاث', href: '/client/research', icon: BookOpen },
   { name: 'محفظتي', href: '/wallet', icon: Wallet },
+  { name: 'التمويل (Master PayLater)', href: '/financing', icon: CreditCard },
   { name: 'عضويتي', href: '/membership', icon: Crown },
   { name: 'الإحالات والعمولات', href: '/referrals', icon: Gift },
   { name: 'مركز التسويق', href: '/marketing-hub', icon: Megaphone },
