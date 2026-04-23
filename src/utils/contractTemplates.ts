@@ -66,6 +66,15 @@ export interface LegalTemplateContext {
   deliverables?: string[];
   paymentSchedule?: Array<{ stage: string; percent: number; due: string }>;
   scopeItems?: Array<{ item: string; details: string }>;
+  // حقول خاصة بعقد التمويل
+  financing?: {
+    financedAmount: number;       // المبلغ الإجمالي للتمويل (يضاف للمحفظة)
+    downPayment: number;          // الدفعة الأولى
+    monthlyInstallment: number;   // القسط الشهري
+    durationMonths: number;       // عدد الأشهر
+    firstInstallmentDate?: string;// تاريخ أول قسط
+    applicationId?: string;       // مرجع طلب التمويل
+  };
 }
 
 const fmtMoney = (n: number, c: string = "SAR") =>
