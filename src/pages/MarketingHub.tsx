@@ -362,13 +362,7 @@ export default function MarketingHub() {
 
   return (
     <div className="min-h-screen bg-background flex flex-col" dir="rtl">
-      <Helmet>
-        <title>مركز التسويق – بنرات وروابط الإحالة</title>
-        <meta
-          name="description"
-          content="مركز التسويق: بنرات إنستغرام وستوريز وتويتر وبروشورات جاهزة مع رابط الإحالة الخاص بك."
-        />
-      </Helmet>
+      {/* SEO */}
 
       <Header />
 
