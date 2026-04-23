@@ -776,12 +776,12 @@ const WalletTopup: React.FC = () => {
                                       {uploadStage === 'done' ? (
                                         <>
                                           <Check className="w-3 h-3 text-emerald-500" />
-                                          تم الإرسال للأدمن بنجاح
+                                          تم استلام طلبك بنجاح
                                         </>
                                       ) : uploadStage === 'saving' ? (
                                         <>
                                           <Loader2 className="w-3 h-3 animate-spin text-primary" />
-                                          حفظ الطلب وإشعار الأدمن...
+                                          جارٍ حفظ الطلب وإشعار فريق المراجعة...
                                         </>
                                       ) : (
                                         <>
