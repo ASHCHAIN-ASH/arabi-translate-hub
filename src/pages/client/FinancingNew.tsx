@@ -480,19 +480,58 @@ const FinancingNew: React.FC = () => {
                     <Briefcase className="h-4 w-4" /> البيانات المهنية والمالية
                   </h3>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <FieldGroup icon={Briefcase} label="جهة العمل">
+                    {/* Employment sector — banking-style select with icons */}
+                    <div className="md:col-span-2">
+                      <Label className="text-sm font-semibold mb-1.5 flex items-center gap-1.5">
+                        <Building2 className="h-3.5 w-3.5 text-muted-foreground" />
+                        قطاع جهة العمل
+                      </Label>
+                      <Select
+                        value={form.employer_sector}
+                        onValueChange={(v) => setField('employer_sector', v)}
+                      >
+                        <SelectTrigger className="h-11">
+                          <SelectValue placeholder="اختر القطاع المهني..." />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {EMPLOYMENT_SECTORS.map((s) => (
+                            <SelectItem key={s.value} value={s.value}>
+                              <div className="flex items-center gap-2">
+                                <s.icon className={`h-4 w-4 ${s.color}`} />
+                                <span>{s.label}</span>
+                              </div>
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
+
+                    <FieldGroup icon={Briefcase} label="اسم جهة العمل / الشركة">
                       <Input
                         value={form.employer_name}
                         onChange={(e) => setField('employer_name', e.target.value)}
-                        placeholder="اسم الشركة / الجهة"
+                        placeholder="مثال: أرامكو السعودية"
                       />
                     </FieldGroup>
                     <FieldGroup icon={MapPin} label="المدينة">
-                      <Input
+                      <Select
                         value={form.city}
-                        onChange={(e) => setField('city', e.target.value)}
-                        placeholder="مثال: الرياض"
-                      />
+                        onValueChange={(v) => setField('city', v)}
+                      >
+                        <SelectTrigger className="h-11">
+                          <SelectValue placeholder="اختر المدينة..." />
+                        </SelectTrigger>
+                        <SelectContent className="max-h-72">
+                          {SAUDI_CITIES.map((c) => (
+                            <SelectItem key={c} value={c}>
+                              <div className="flex items-center gap-2">
+                                <MapPin className="h-3.5 w-3.5 text-muted-foreground" />
+                                {c}
+                              </div>
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
                     </FieldGroup>
                     <FieldGroup icon={TrendingUp} label="الدخل الشهري (ر.س)">
                       <Input
