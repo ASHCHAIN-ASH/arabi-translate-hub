@@ -104,12 +104,39 @@ const formSchema = z.object({
   applicant_id_number: z.string().trim().min(8, 'رقم هوية غير صالح').max(20),
   applicant_phone: z.string().trim().min(9, 'رقم جوال غير صالح').max(20),
   applicant_email: z.string().trim().email('بريد غير صالح').max(160),
-  employer_name: z.string().trim().min(2, 'جهة العمل مطلوبة').max(120),
+  employer_name: z.string().trim().max(120).optional().nullable(),
   monthly_income: z.coerce.number().min(0, 'الدخل لا يمكن أن يكون سالبًا'),
   monthly_commitments: z.coerce.number().min(0).default(0),
   city: z.string().trim().min(2, 'المدينة مطلوبة').max(60),
   notes: z.string().max(500).optional().nullable(),
 });
+
+// === المراحل التعليمية للطلاب ===
+const STUDENT_LEVELS = [
+  { value: 'high_school', label: 'طالب ثانوي', icon: '📚' },
+  { value: 'diploma', label: 'دبلوم / كلية تقنية', icon: '🛠️' },
+  { value: 'bachelor', label: 'بكالوريوس (جامعة)', icon: '🎓' },
+  { value: 'master', label: 'ماجستير', icon: '📖' },
+  { value: 'phd', label: 'دكتوراه', icon: '🔬' },
+] as const;
+
+// === مصادر دخل المتقاعد ===
+const RETIREMENT_SOURCES = [
+  { value: 'civil', label: 'تقاعد مدني', icon: '🏛️' },
+  { value: 'military', label: 'تقاعد عسكري', icon: '🎖️' },
+  { value: 'social_insurance', label: 'تأمينات اجتماعية', icon: '🤝' },
+  { value: 'private_pension', label: 'معاش خاص', icon: '💰' },
+] as const;
+
+// === أنواع الأعمال الحرة ===
+const FREELANCE_TYPES = [
+  { value: 'tech_freelance', label: 'تقنية / برمجة', icon: '💻' },
+  { value: 'design', label: 'تصميم / محتوى', icon: '🎨' },
+  { value: 'consulting', label: 'استشارات', icon: '💡' },
+  { value: 'commerce', label: 'تجارة إلكترونية', icon: '🛍️' },
+  { value: 'services', label: 'خدمات ميدانية', icon: '🔧' },
+  { value: 'other_freelance', label: 'أخرى', icon: '✨' },
+] as const;
 
 type DocKey = 'id_front' | 'id_back' | 'bank_statement' | 'proof_of_income';
 const REQUIRED_DOCS: DocKey[] = ['id_front', 'id_back', 'bank_statement'];
