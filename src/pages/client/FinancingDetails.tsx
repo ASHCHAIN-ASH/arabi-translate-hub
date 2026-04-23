@@ -311,7 +311,52 @@ const FinancingDetails: React.FC = () => {
       setContract({ id: created.id, status: created.status, contract_number: created.contract_number });
       navigate(`/client/contracts/${created.id}`);
     } catch (e: any) {
-      toast({ title: 'تعذر فتح العقد', description: e?.message ?? 'حدث خطأ', variant: 'destructive' });
+      // استخراج تفاصيل الخطأ من Supabase / PostgREST لعرضها للمستخدم
+      const dbCode: string | undefined = e?.code;
+      const dbDetails: string | undefined = e?.details;
+      const dbHint: string | undefined = e?.hint;
+      const rawMessage: string = e?.message ?? 'حدث خطأ غير معروف';
+
+      // ترجمة الأخطاء الشائعة إلى العربية
+      let friendly = rawMessage;
+      if (/row-level security|RLS|permission denied/i.test(rawMessage)) {
+        friendly = 'لا تملك صلاحية إنشاء العقد لهذا الطلب. تأكد أن الطلب يخصك.';
+      } else if (/violates check constraint/i.test(rawMessage)) {
+        const m = rawMessage.match(/constraint "([^"]+)"/);
+        friendly = `بيانات العقد لا تطابق قواعد قاعدة البيانات${m ? ` (${m[1]})` : ''}.`;
+      } else if (/duplicate key|unique constraint/i.test(rawMessage)) {
+        friendly = 'يوجد عقد مُنشأ مسبقًا لهذا الطلب. حدّث الصفحة ثم حاول مجددًا.';
+      } else if (/foreign key|violates foreign/i.test(rawMessage)) {
+        friendly = 'تعذر ربط العقد بطلب التمويل. تأكد من صحة بيانات الطلب.';
+      } else if (/network|fetch|Failed to fetch/i.test(rawMessage)) {
+        friendly = 'تعذر الاتصال بالخادم. تحقق من الإنترنت ثم حاول مجددًا.';
+      }
+
+      const description = [
+        friendly,
+        dbCode ? `كود الخطأ: ${dbCode}` : null,
+        dbDetails ? `التفاصيل: ${dbDetails}` : null,
+        dbHint ? `تلميح: ${dbHint}` : null,
+      ]
+        .filter(Boolean)
+        .join(' • ');
+
+      toast({
+        title: 'تعذر إنشاء عقد التمويل',
+        description,
+        variant: 'destructive',
+        duration: 9000,
+      });
+
+      // طباعة كاملة في وحدة التحكم لتسهيل التشخيص للفريق
+      // eslint-disable-next-line no-console
+      console.error('[FinancingDetails] openOrCreateContract failed:', {
+        message: rawMessage,
+        code: dbCode,
+        details: dbDetails,
+        hint: dbHint,
+        raw: e,
+      });
     } finally {
       setCreatingContract(false);
     }
