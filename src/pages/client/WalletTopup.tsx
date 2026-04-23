@@ -44,6 +44,10 @@ const WalletTopup: React.FC = () => {
   const [submitting, setSubmitting] = useState(false);
   const [copied, setCopied] = useState<string | null>(null);
   const [method, setMethod] = useState<'instant' | 'manual'>('instant');
+  const [uploadStage, setUploadStage] = useState<'idle' | 'uploading' | 'saving' | 'done'>('idle');
+  const [uploadPct, setUploadPct] = useState(0);
+  const [receiptPreview, setReceiptPreview] = useState<string | null>(null);
+  const [dragOver, setDragOver] = useState(false);
 
   useEffect(() => {
     if (!user?.id) return;
