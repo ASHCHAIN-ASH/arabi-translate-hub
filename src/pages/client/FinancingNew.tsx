@@ -890,25 +890,154 @@ const FinancingNew: React.FC = () => {
                         placeholder="0" />
                     </FieldGroup>
 
-                    {/* كفيل غارم — اختياري */}
+                    {/* === الكفيل الغارم === */}
                     <div className="md:col-span-2">
-                      <label className="flex items-start gap-2 rounded-xl border bg-muted/30 p-3 cursor-pointer hover:bg-muted/50 transition-colors">
+                      <motion.label
+                        whileTap={{ scale: 0.99 }}
+                        className={`flex items-start gap-3 rounded-2xl border-2 p-4 cursor-pointer transition-all ${
+                          form.has_guarantor
+                            ? 'border-emerald-500 bg-emerald-500/5 shadow-md shadow-emerald-500/10'
+                            : 'border-border bg-muted/30 hover:bg-muted/50'
+                        }`}
+                      >
                         <Checkbox
                           checked={form.has_guarantor}
                           onCheckedChange={(v) => setField('has_guarantor', !!v)}
-                          className="mt-0.5"
+                          className="mt-1"
                         />
                         <div className="flex-1">
-                          <div className="text-sm font-bold flex items-center gap-1.5">
-                            <ShieldCheck className="h-3.5 w-3.5 text-emerald-600" />
-                            يوجد كفيل غارم
+                          <div className="text-sm font-bold flex items-center gap-2">
+                            <ShieldCheck className="h-4 w-4 text-emerald-600" />
+                            إضافة كفيل غارم
+                            <span className="text-[10px] font-normal text-emerald-700 bg-emerald-100 dark:bg-emerald-900/30 px-2 py-0.5 rounded-full">
+                              يرفع السكور +60
+                            </span>
                           </div>
-                          <div className="text-[11px] text-muted-foreground mt-0.5">
-                            وجود كفيل يعزّز السكور الائتماني (مهم للطلاب وأصحاب الأعمال الحرة)
+                          <div className="text-[11px] text-muted-foreground mt-1 leading-relaxed">
+                            الكفيل الغارم يلتزم نظاماً بسداد الأقساط في حال تعذّر سداد المتقدم. مُوصى به للطلاب وأصحاب الأعمال الحرة.
                           </div>
                         </div>
-                      </label>
+                      </motion.label>
                     </div>
+
+                    {/* === فورم الكفيل (يظهر عند التفعيل) === */}
+                    <AnimatePresence>
+                      {form.has_guarantor && (
+                        <motion.div
+                          initial={{ opacity: 0, height: 0, y: -10 }}
+                          animate={{ opacity: 1, height: 'auto', y: 0 }}
+                          exit={{ opacity: 0, height: 0, y: -10 }}
+                          transition={{ duration: 0.3 }}
+                          className="md:col-span-2 overflow-hidden"
+                        >
+                          <div className="rounded-2xl border-2 border-emerald-500/30 bg-gradient-to-br from-emerald-50 via-background to-background dark:from-emerald-950/20 p-5 space-y-4">
+                            {/* رأس البطاقة */}
+                            <div className="flex items-start justify-between gap-3 pb-3 border-b border-emerald-500/20">
+                              <div className="flex items-center gap-2.5">
+                                <div className="h-10 w-10 rounded-xl bg-emerald-500 flex items-center justify-center shadow-lg shadow-emerald-500/30">
+                                  <ShieldCheck className="h-5 w-5 text-white" />
+                                </div>
+                                <div>
+                                  <div className="font-bold text-sm">بيانات الكفيل الغارم</div>
+                                  <div className="text-[11px] text-muted-foreground">جميع الحقول إلزامية ومطابقة للهوية الرسمية</div>
+                                </div>
+                              </div>
+                              <span className="text-[10px] font-bold text-emerald-700 bg-emerald-100 dark:bg-emerald-900/40 px-2.5 py-1 rounded-full whitespace-nowrap">
+                                ⚖️ ملزم نظاماً
+                              </span>
+                            </div>
+
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                              <FieldGroup icon={User} label="الاسم الرباعي للكفيل">
+                                <Input
+                                  value={form.guarantor_full_name}
+                                  onChange={(e) => setField('guarantor_full_name', e.target.value)}
+                                  placeholder="كما في الهوية الوطنية"
+                                  maxLength={120}
+                                />
+                              </FieldGroup>
+                              <FieldGroup icon={IdCard} label="رقم هوية الكفيل">
+                                <Input
+                                  inputMode="numeric"
+                                  value={form.guarantor_id_number}
+                                  onChange={(e) => setField('guarantor_id_number', e.target.value.replace(/\D/g, '').slice(0, 10))}
+                                  placeholder="10 أرقام (يبدأ بـ 1 أو 2)"
+                                  maxLength={10}
+                                />
+                              </FieldGroup>
+                              <FieldGroup icon={Phone} label="جوال الكفيل">
+                                <Input
+                                  inputMode="tel"
+                                  value={form.guarantor_phone}
+                                  onChange={(e) => setField('guarantor_phone', e.target.value)}
+                                  placeholder="05XXXXXXXX"
+                                  maxLength={15}
+                                />
+                              </FieldGroup>
+                              <FieldGroup icon={Users} label="صلة القرابة">
+                                <Select
+                                  value={form.guarantor_relation}
+                                  onValueChange={(v) => setField('guarantor_relation', v)}
+                                >
+                                  <SelectTrigger className="flex-row-reverse text-right">
+                                    <SelectValue placeholder="اختر صلة القرابة" />
+                                  </SelectTrigger>
+                                  <SelectContent>
+                                    {GUARANTOR_RELATIONS.map((r) => (
+                                      <SelectItem key={r.value} value={r.value}>
+                                        <span className="ml-1.5">{r.icon}</span> {r.label}
+                                      </SelectItem>
+                                    ))}
+                                  </SelectContent>
+                                </Select>
+                              </FieldGroup>
+                              <FieldGroup icon={Briefcase} label="جهة عمل الكفيل">
+                                <Input
+                                  value={form.guarantor_employer}
+                                  onChange={(e) => setField('guarantor_employer', e.target.value)}
+                                  placeholder="اسم الجهة / الشركة"
+                                  maxLength={120}
+                                />
+                              </FieldGroup>
+                              <FieldGroup icon={TrendingUp} label="الدخل الشهري للكفيل (ر.س)">
+                                <Input
+                                  type="number"
+                                  min={3000}
+                                  value={form.guarantor_monthly_income}
+                                  onChange={(e) => setField('guarantor_monthly_income', e.target.value)}
+                                  placeholder="الحد الأدنى 3,000"
+                                />
+                              </FieldGroup>
+                              <FieldGroup icon={MapPin} label="مدينة الكفيل">
+                                <Input
+                                  value={form.guarantor_city}
+                                  onChange={(e) => setField('guarantor_city', e.target.value)}
+                                  placeholder="مثال: الرياض"
+                                  maxLength={60}
+                                />
+                              </FieldGroup>
+                            </div>
+
+                            {/* إقرار الكفيل */}
+                            <label className="flex items-start gap-2.5 rounded-xl bg-emerald-500/10 border border-emerald-500/30 p-3 cursor-pointer">
+                              <Checkbox
+                                checked={form.guarantor_consent}
+                                onCheckedChange={(v) => setField('guarantor_consent', !!v)}
+                                className="mt-0.5"
+                              />
+                              <div className="text-[12px] leading-relaxed">
+                                <span className="font-bold">إقرار الكفيل: </span>
+                                أُقرّ بأن الكفيل المذكور قد اطّلع على بنود التمويل ووافق على الكفالة الغارمة، وأتحمّل المسؤولية الكاملة عن صحة بياناته. سيتم التواصل مع الكفيل عبر الجوال لتأكيد الموافقة قبل تفعيل التمويل.
+                              </div>
+                            </label>
+
+                            <div className="text-[10px] text-muted-foreground bg-muted/40 rounded-lg p-2.5 leading-relaxed">
+                              🛡️ <strong>سرية البيانات:</strong> بيانات الكفيل محمية وفق نظام حماية البيانات الشخصية السعودي (PDPL) ولن تُستخدم إلا لأغراض التحقق من الكفالة.
+                            </div>
+                          </div>
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
 
                     <div className="md:col-span-2">
                       <Label className="text-sm font-semibold mb-1.5 block">ملاحظات إضافية (اختياري)</Label>
