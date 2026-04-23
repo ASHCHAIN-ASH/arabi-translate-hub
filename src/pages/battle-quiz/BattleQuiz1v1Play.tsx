@@ -63,9 +63,10 @@ const BattleQuiz1v1Play: React.FC = () => {
         return;
       }
 
-      const res = await BattleQuizService.startAttempt(m.room_id);
+      const res = await BattleQuiz1v1Service.startAttempt(matchId);
       if (!mounted) return;
-      if ('error' in res) {
+      if (!res || res.error) {
+        console.error('start 1v1 attempt error', res?.error);
         setError('تعذّر بدء المباراة'); setLoading(false); return;
       }
       setPayload(res);
