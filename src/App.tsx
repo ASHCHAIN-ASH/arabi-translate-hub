@@ -81,6 +81,10 @@ import BattleQuizHome from "./pages/battle-quiz/BattleQuizHome";
 import BattleQuizPlay from "./pages/battle-quiz/BattleQuizPlay";
 import BattleQuizResult from "./pages/battle-quiz/BattleQuizResult";
 import BattleQuizLeaderboard from "./pages/battle-quiz/BattleQuizLeaderboard";
+import BattleQuiz1v1Lobby from "./pages/battle-quiz/BattleQuiz1v1Lobby";
+import BattleQuiz1v1Play from "./pages/battle-quiz/BattleQuiz1v1Play";
+import BattleQuiz1v1Result from "./pages/battle-quiz/BattleQuiz1v1Result";
+import BattleQuiz1v1Leaderboard from "./pages/battle-quiz/BattleQuiz1v1Leaderboard";
 import StudentHub from "./pages/client/StudentHub";
 import MindMapPage from "./pages/client/MindMapPage";
 import TracksPage from "./pages/client/TracksPage";
@@ -724,6 +728,18 @@ const App = () => (
             } />
             <Route path="/battle-quiz/:roomId/result" element={
               <SimpleProtectedRoute requiredRole="client"><BattleQuizResult /></SimpleProtectedRoute>
+            } />
+            <Route path="/battle-quiz/1v1" element={
+              <SimpleProtectedRoute requiredRole="client"><BattleQuiz1v1Lobby /></SimpleProtectedRoute>
+            } />
+            <Route path="/battle-quiz/1v1/leaderboard" element={
+              <SimpleProtectedRoute requiredRole="client"><BattleQuiz1v1Leaderboard /></SimpleProtectedRoute>
+            } />
+            <Route path="/battle-quiz/1v1/:matchId/play" element={
+              <SimpleProtectedRoute requiredRole="client"><BattleQuiz1v1Play /></SimpleProtectedRoute>
+            } />
+            <Route path="/battle-quiz/1v1/:matchId/result" element={
+              <SimpleProtectedRoute requiredRole="client"><BattleQuiz1v1Result /></SimpleProtectedRoute>
             } />
             <Route path="/student" element={
               <SimpleProtectedRoute requiredRole="client">

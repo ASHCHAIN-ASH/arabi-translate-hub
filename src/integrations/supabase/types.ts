@@ -596,6 +596,167 @@ export type Database = {
         }
         Relationships: []
       }
+      battle_quiz_1v1_matches: {
+        Row: {
+          category: string
+          created_at: string
+          finalized_at: string | null
+          id: string
+          player_a_attempt_id: string | null
+          player_a_correct: number
+          player_a_finished_at: string | null
+          player_a_id: string
+          player_a_last_seen: string
+          player_a_score: number
+          player_a_time_ms: number
+          player_b_attempt_id: string | null
+          player_b_correct: number
+          player_b_finished_at: string | null
+          player_b_id: string
+          player_b_last_seen: string
+          player_b_score: number
+          player_b_time_ms: number
+          rating_delta: number
+          room_id: string
+          started_at: string
+          status: Database["public"]["Enums"]["bq_1v1_match_status"]
+          updated_at: string
+          winner_id: string | null
+        }
+        Insert: {
+          category?: string
+          created_at?: string
+          finalized_at?: string | null
+          id?: string
+          player_a_attempt_id?: string | null
+          player_a_correct?: number
+          player_a_finished_at?: string | null
+          player_a_id: string
+          player_a_last_seen?: string
+          player_a_score?: number
+          player_a_time_ms?: number
+          player_b_attempt_id?: string | null
+          player_b_correct?: number
+          player_b_finished_at?: string | null
+          player_b_id: string
+          player_b_last_seen?: string
+          player_b_score?: number
+          player_b_time_ms?: number
+          rating_delta?: number
+          room_id: string
+          started_at?: string
+          status?: Database["public"]["Enums"]["bq_1v1_match_status"]
+          updated_at?: string
+          winner_id?: string | null
+        }
+        Update: {
+          category?: string
+          created_at?: string
+          finalized_at?: string | null
+          id?: string
+          player_a_attempt_id?: string | null
+          player_a_correct?: number
+          player_a_finished_at?: string | null
+          player_a_id?: string
+          player_a_last_seen?: string
+          player_a_score?: number
+          player_a_time_ms?: number
+          player_b_attempt_id?: string | null
+          player_b_correct?: number
+          player_b_finished_at?: string | null
+          player_b_id?: string
+          player_b_last_seen?: string
+          player_b_score?: number
+          player_b_time_ms?: number
+          rating_delta?: number
+          room_id?: string
+          started_at?: string
+          status?: Database["public"]["Enums"]["bq_1v1_match_status"]
+          updated_at?: string
+          winner_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "battle_quiz_1v1_matches_room_id_fkey"
+            columns: ["room_id"]
+            isOneToOne: false
+            referencedRelation: "battle_quiz_rooms"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      battle_quiz_1v1_queue: {
+        Row: {
+          category: string
+          created_at: string
+          id: string
+          match_id: string | null
+          matched_with_user_id: string | null
+          status: Database["public"]["Enums"]["bq_1v1_queue_status"]
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          category?: string
+          created_at?: string
+          id?: string
+          match_id?: string | null
+          matched_with_user_id?: string | null
+          status?: Database["public"]["Enums"]["bq_1v1_queue_status"]
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          category?: string
+          created_at?: string
+          id?: string
+          match_id?: string | null
+          matched_with_user_id?: string | null
+          status?: Database["public"]["Enums"]["bq_1v1_queue_status"]
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      battle_quiz_1v1_ratings: {
+        Row: {
+          best_streak: number
+          current_streak: number
+          draws: number
+          last_match_at: string | null
+          losses: number
+          matches_played: number
+          rating: number
+          updated_at: string
+          user_id: string
+          wins: number
+        }
+        Insert: {
+          best_streak?: number
+          current_streak?: number
+          draws?: number
+          last_match_at?: string | null
+          losses?: number
+          matches_played?: number
+          rating?: number
+          updated_at?: string
+          user_id: string
+          wins?: number
+        }
+        Update: {
+          best_streak?: number
+          current_streak?: number
+          draws?: number
+          last_match_at?: string | null
+          losses?: number
+          matches_played?: number
+          rating?: number
+          updated_at?: string
+          user_id?: string
+          wins?: number
+        }
+        Relationships: []
+      }
       battle_quiz_answers: {
         Row: {
           attempt_id: string
@@ -8323,6 +8484,36 @@ export type Database = {
         }
         Returns: Json
       }
+      bq_1v1_cancel_queue: { Args: never; Returns: Json }
+      bq_1v1_enqueue: { Args: { p_category?: string }; Returns: Json }
+      bq_1v1_finalize: { Args: { p_match_id: string }; Returns: Json }
+      bq_1v1_get_leaderboard: {
+        Args: { p_limit?: number }
+        Returns: {
+          avatar_url: string
+          best_streak: number
+          current_streak: number
+          display_name: string
+          draws: number
+          losses: number
+          matches_played: number
+          rank: number
+          rating: number
+          user_id: string
+          wins: number
+        }[]
+      }
+      bq_1v1_heartbeat: { Args: { p_match_id: string }; Returns: undefined }
+      bq_1v1_submit_score: {
+        Args: {
+          p_attempt_id: string
+          p_correct: number
+          p_match_id: string
+          p_score: number
+          p_total_time_ms: number
+        }
+        Returns: Json
+      }
       bq_is_admin: { Args: never; Returns: boolean }
       build_growth_snapshot: { Args: never; Returns: Json }
       cancel_group_order: {
@@ -8980,6 +9171,8 @@ export type Database = {
         | "completed"
         | "rewards_pending"
         | "archived"
+      bq_1v1_match_status: "active" | "completed" | "abandoned" | "expired"
+      bq_1v1_queue_status: "waiting" | "matched" | "cancelled" | "expired"
       experiment_status:
         | "draft"
         | "running"
@@ -9169,6 +9362,8 @@ export const Constants = {
         "rewards_pending",
         "archived",
       ],
+      bq_1v1_match_status: ["active", "completed", "abandoned", "expired"],
+      bq_1v1_queue_status: ["waiting", "matched", "cancelled", "expired"],
       experiment_status: [
         "draft",
         "running",
