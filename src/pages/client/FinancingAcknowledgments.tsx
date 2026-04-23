@@ -391,13 +391,14 @@ const FinancingAcknowledgments: React.FC = () => {
                     {c.subtitle}
                   </p>
                   <Button
-                    onClick={() => setOpenKey(c.key)}
+                    onClick={() => !done && setOpenKey(c.key)}
                     variant={done ? 'outline' : 'default'}
                     className="w-full font-semibold gap-2"
                     size="sm"
+                    disabled={done}
                   >
-                    <c.Icon className="h-4 w-4" />
-                    {done ? 'مراجعة الإقرار' : 'بدء الإقرار والتوقيع'}
+                    {done ? <Lock className="h-4 w-4" /> : <c.Icon className="h-4 w-4" />}
+                    {done ? 'موثَّق نهائياً — لا يمكن إعادة التوقيع' : 'بدء الإقرار والتوقيع'}
                   </Button>
                 </Card>
               </motion.div>
