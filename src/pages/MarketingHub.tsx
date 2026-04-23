@@ -28,6 +28,7 @@ import Footer from "@/components/Footer";
 import { renderCaption, copyToClipboard } from "@/utils/referralLink";
 import ReferralAnalytics from "@/components/marketing/ReferralAnalytics";
 import QuickShareButtons from "@/components/marketing/QuickShareButtons";
+import AICopyGenerator from "@/components/marketing/AICopyGenerator";
 
 // ---------------- Types ----------------
 type Platform = "instagram" | "story" | "twitter" | "brochure";
