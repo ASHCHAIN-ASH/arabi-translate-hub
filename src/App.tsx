@@ -9,6 +9,7 @@ import SimpleProtectedRoute from "@/components/SimpleProtectedRoute";
 import ScrollToTop from "@/components/ScrollToTop";
 import ContentProtection from "@/components/ContentProtection";
 import LoginWelcomeOverlay from "@/components/LoginWelcomeOverlay";
+import ReferralTracker from "@/components/marketing/ReferralTracker";
 import SimpleLogin from "./pages/SimpleLogin";
 import Login from "./pages/auth/Login";
 import Register from "./pages/auth/Register";
@@ -246,6 +247,7 @@ const App = () => (
       <BrowserRouter>
         <ScrollToTop />
         <SimpleAuthProvider>
+          <ReferralTracker />
           <LoginWelcomeOverlay />
           <PageThemeProvider>
           <Routes>
