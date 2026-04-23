@@ -212,6 +212,16 @@ export function buildContractContentFromRow(c: ContractRow) {
     deliverables: meta.deliverables,
     paymentSchedule: meta.paymentSchedule,
     scopeItems: meta.scopeItems,
+    financing: meta.financing
+      ? {
+          financedAmount: Number(meta.financing.financedAmount ?? c.total_amount ?? 0),
+          downPayment: Number(meta.financing.downPayment ?? 0),
+          monthlyInstallment: Number(meta.financing.monthlyInstallment ?? 0),
+          durationMonths: Number(meta.financing.durationMonths ?? 0),
+          firstInstallmentDate: meta.financing.firstInstallmentDate,
+          applicationId: meta.financing.applicationId,
+        }
+      : undefined,
   };
 
   return buildLegalAcademicContract(ctx);
