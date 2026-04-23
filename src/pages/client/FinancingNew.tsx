@@ -738,6 +738,19 @@ const FinancingNew: React.FC = () => {
                   </div>
                 </motion.div>
 
+                {/* بطاقة التقييم الائتماني التلقائي */}
+                {creditScore ? (
+                  <CreditScoreCard result={creditScore} />
+                ) : (
+                  <div className="rounded-2xl border border-dashed bg-muted/20 p-5 text-center">
+                    <Sparkles className="h-6 w-6 mx-auto mb-2 text-primary/60" />
+                    <div className="text-sm font-semibold">سيظهر تقييمك الائتماني فور إكمال البيانات</div>
+                    <div className="text-xs text-muted-foreground mt-1">
+                      اختر فئتك وأدخل دخلك الشهري للحصول على سكور فوري وفق نموذج SIMAH
+                    </div>
+                  </div>
+                )}
+
                 <div className="flex justify-end pt-2">
                   <Button
                     size="lg"
@@ -749,21 +762,7 @@ const FinancingNew: React.FC = () => {
                   </Button>
                 </div>
               </Card>
-                </motion.div>
-
-                {/* بطاقة التقييم الائتماني التلقائي */}
-                {creditScore && (
-                  <CreditScoreCard result={creditScore} />
-                )}
-                {!creditScore && (
-                  <div className="rounded-2xl border border-dashed bg-muted/20 p-5 text-center">
-                    <Sparkles className="h-6 w-6 mx-auto mb-2 text-primary/60" />
-                    <div className="text-sm font-semibold">سيظهر تقييمك الائتماني فور إكمال البيانات</div>
-                    <div className="text-xs text-muted-foreground mt-1">
-                      اختر فئتك وأدخل دخلك الشهري للحصول على سكور فوري وفق نموذج SIMAH
-                    </div>
-                  </div>
-                )}
+            </motion.div>
           )}
 
           {step === 2 && (
