@@ -129,16 +129,33 @@ const FinancingDetails: React.FC = () => {
   const load = useCallback(async () => {
     if (!id || !user) return;
     setLoading(true);
-    const [appRes, docsRes, receiptsRes, walletRes] = await Promise.all([
+    const [appRes, docsRes, receiptsRes, walletRes, contractRes] = await Promise.all([
       supabase.from('financing_applications').select('*').eq('id', id).maybeSingle(),
       supabase.from('financing_documents').select('id,document_type,status,file_url,review_note').eq('application_id', id),
       supabase.from('financing_payment_receipts').select('*').eq('application_id', id).order('created_at', { ascending: false }),
       supabase.from('wallets').select('balance').eq('user_id', user.id).maybeSingle(),
+      supabase
+        .from('contracts')
+        .select('id,status,contract_number,metadata')
+        .eq('template_type', 'financing')
+        .contains('metadata', { application_id: id })
+        .order('created_at', { ascending: false })
+        .limit(1)
+        .maybeSingle(),
     ]);
     if (appRes.data) setApp(appRes.data as FinancingApp);
     if (docsRes.data) setDocs(docsRes.data as DocumentRow[]);
     if (receiptsRes.data) setReceipts(receiptsRes.data as PaymentReceipt[]);
     if (walletRes.data) setWallet(walletRes.data as WalletRow);
+    if (contractRes.data) {
+      setContract({
+        id: contractRes.data.id,
+        status: contractRes.data.status,
+        contract_number: contractRes.data.contract_number,
+      });
+    } else {
+      setContract(null);
+    }
     setLoading(false);
   }, [id, user]);
 
