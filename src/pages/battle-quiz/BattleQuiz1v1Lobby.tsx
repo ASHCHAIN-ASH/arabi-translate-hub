@@ -19,6 +19,8 @@ const BattleQuiz1v1Lobby: React.FC = () => {
   const [searching, setSearching] = useState(false);
   const [waitSecs, setWaitSecs] = useState(0);
   const [myRating, setMyRating] = useState<{ rating: number; wins: number; losses: number; matches_played: number } | null>(null);
+  const [inviteOpen, setInviteOpen] = useState(false);
+  const [selectedMode, setSelectedMode] = useState<BQ1v1Mode>('classic');
 
   const cleanupRef = useRef<(() => void) | null>(null);
   const tickRef = useRef<number | null>(null);
@@ -131,9 +133,37 @@ const BattleQuiz1v1Lobby: React.FC = () => {
                 <h2 className="text-xl font-bold mb-1">جاهز للمعركة؟</h2>
                 <p className="text-sm text-muted-foreground">5 أسئلة، الفائز هو الأعلى نقاطًا (والأسرع عند التعادل).</p>
               </div>
-              <Button size="lg" onClick={startSearch} className="gap-2">
-                <Swords className="w-5 h-5" /> ابحث عن خصم
-              </Button>
+
+              {/* Mode selector */}
+              <div className="grid grid-cols-2 gap-2 max-w-sm mx-auto">
+                <Button
+                  type="button"
+                  variant={selectedMode === 'classic' ? 'default' : 'outline'}
+                  onClick={() => setSelectedMode('classic')}
+                  className="h-auto py-3 flex flex-col gap-1"
+                >
+                  <span className="flex items-center gap-1 text-sm font-bold"><Swords className="w-4 h-4" /> كلاسيكي</span>
+                  <span className="text-[10px] opacity-75">5 أسئلة عادية</span>
+                </Button>
+                <Button
+                  type="button"
+                  variant={selectedMode === 'blitz' ? 'default' : 'outline'}
+                  onClick={() => setSelectedMode('blitz')}
+                  className="h-auto py-3 flex flex-col gap-1"
+                >
+                  <span className="flex items-center gap-1 text-sm font-bold"><Zap className="w-4 h-4" /> Blitz</span>
+                  <span className="text-[10px] opacity-75">سريع — 6ث/سؤال</span>
+                </Button>
+              </div>
+
+              <div className="flex flex-col sm:flex-row gap-2 justify-center pt-1">
+                <Button size="lg" onClick={startSearch} className="gap-2">
+                  <Swords className="w-5 h-5" /> ابحث عن خصم
+                </Button>
+                <Button size="lg" variant="outline" onClick={() => setInviteOpen(true)} className="gap-2">
+                  <UserPlus className="w-5 h-5" /> تحدَّ صديقاً
+                </Button>
+              </div>
               <div className="text-xs text-muted-foreground">
                 إذا انسحبت أو غبت 30 ثانية، يفوز خصمك تلقائياً.
               </div>
@@ -159,6 +189,11 @@ const BattleQuiz1v1Lobby: React.FC = () => {
             </div>
           )}
         </Card>
+
+        {/* Daily missions */}
+        <DailyMissionsCard />
+
+        <FriendInviteDialog open={inviteOpen} onOpenChange={setInviteOpen} defaultMode={selectedMode} />
 
         <div className="text-center">
           <Button variant="link" onClick={() => navigate('/battle-quiz/1v1/leaderboard')}>
