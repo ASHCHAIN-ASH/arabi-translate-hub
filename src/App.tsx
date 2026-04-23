@@ -160,6 +160,7 @@ import ClientContractView from "./pages/ClientContractView";
 import FinancingHome from "./pages/client/FinancingHome";
 import FinancingNew from "./pages/client/FinancingNew";
 import FinancingDetails from "./pages/client/FinancingDetails";
+import FinancingAcknowledgments from "./pages/client/FinancingAcknowledgments";
 
 import ThesisTitles from "./pages/research/ThesisTitles";
 import AnnotatedPublishing from './pages/research/AnnotatedPublishing';
@@ -483,6 +484,11 @@ const App = () => (
             <Route path="/financing/:id" element={
               <SimpleProtectedRoute requiredRole="client">
                 <FinancingDetails />
+              </SimpleProtectedRoute>
+            } />
+            <Route path="/financing/acknowledgments" element={
+              <SimpleProtectedRoute requiredRole="client">
+                <FinancingAcknowledgments />
               </SimpleProtectedRoute>
             } />
             <Route path="/contracts/:id" element={
