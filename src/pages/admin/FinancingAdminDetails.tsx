@@ -148,7 +148,7 @@ const FinancingAdminDetails: React.FC = () => {
       const { error } = await supabase
         .from('financing_applications')
         .update({
-          status: toStatus,
+          status: toStatus as any,
           notes: adminNote
             ? `${app.notes ? app.notes + '\n---\n' : ''}[${format(new Date(), 'yyyy-MM-dd HH:mm')}] ${adminNote}`
             : app.notes,
