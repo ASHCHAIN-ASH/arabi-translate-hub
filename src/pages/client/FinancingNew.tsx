@@ -208,6 +208,15 @@ const FinancingNew: React.FC = () => {
     monthly_commitments: '' as number | '',
     city: '',
     notes: '',
+    // === بيانات الكفيل الغارم ===
+    guarantor_full_name: '',
+    guarantor_id_number: '',
+    guarantor_phone: '',
+    guarantor_relation: '',
+    guarantor_employer: '',
+    guarantor_monthly_income: '' as number | '',
+    guarantor_city: '',
+    guarantor_consent: false,
   });
   const [files, setFiles] = useState<Partial<Record<DocKey, File>>>({});
   const [agreed, setAgreed] = useState({
