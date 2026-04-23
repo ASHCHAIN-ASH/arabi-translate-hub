@@ -3262,6 +3262,71 @@ export type Database = {
           },
         ]
       }
+      financing_payment_receipts: {
+        Row: {
+          amount: number
+          application_id: string
+          bank_name: string | null
+          created_at: string
+          id: string
+          payment_method: string
+          receipt_file_name: string | null
+          receipt_file_url: string | null
+          reference_number: string | null
+          reviewed_at: string | null
+          reviewed_by: string | null
+          reviewer_note: string | null
+          status: string
+          transfer_date: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          amount: number
+          application_id: string
+          bank_name?: string | null
+          created_at?: string
+          id?: string
+          payment_method: string
+          receipt_file_name?: string | null
+          receipt_file_url?: string | null
+          reference_number?: string | null
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          reviewer_note?: string | null
+          status?: string
+          transfer_date?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          amount?: number
+          application_id?: string
+          bank_name?: string | null
+          created_at?: string
+          id?: string
+          payment_method?: string
+          receipt_file_name?: string | null
+          receipt_file_url?: string | null
+          reference_number?: string | null
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          reviewer_note?: string | null
+          status?: string
+          transfer_date?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "financing_payment_receipts_application_id_fkey"
+            columns: ["application_id"]
+            isOneToOne: false
+            referencedRelation: "financing_applications"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       financing_status_logs: {
         Row: {
           application_id: string
