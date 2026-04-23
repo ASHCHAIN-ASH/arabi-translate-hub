@@ -138,10 +138,11 @@ const WalletTopup: React.FC = () => {
         receipt_path,
       });
       setUploadStage('done');
-      toast.success('تم إرسال طلب الشحن بانتظار موافقة الإدارة', {
-        description: bonus.pct > 0 ? `🎁 ستحصل على ${bonus.label} عند الموافقة!` : undefined,
-      });
-      setTimeout(() => navigate('/wallet'), 900);
+      setShowSuccess(true);
+      setTimeout(() => {
+        setShowSuccess(false);
+        navigate('/wallet');
+      }, 5000);
     } catch (e: any) {
       setUploadStage('idle');
       toast.error('فشل إرسال الطلب', { description: e.message });
