@@ -205,6 +205,10 @@ export default function MarketingHub() {
   const [activeTab, setActiveTab] = useState<Platform>("instagram");
   const [walletBalance, setWalletBalance] = useState<number | null>(null);
 
+  useEffect(() => {
+    document.title = "مركز التسويق – بنرات وروابط الإحالة";
+  }, []);
+
   // Load active assets
   useEffect(() => {
     let alive = true;
