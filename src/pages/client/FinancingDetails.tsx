@@ -13,6 +13,7 @@ import {
   ShieldCheck,
   Copy,
   FileText,
+  PenLine,
   Loader2,
   Receipt,
   Sparkles,
@@ -114,6 +115,8 @@ const FinancingDetails: React.FC = () => {
   const [receipts, setReceipts] = useState<PaymentReceipt[]>([]);
   const [wallet, setWallet] = useState<WalletRow | null>(null);
   const [loading, setLoading] = useState(true);
+  const [contract, setContract] = useState<{ id: string; status: string | null; contract_number: string } | null>(null);
+  const [creatingContract, setCreatingContract] = useState(false);
 
   // Payment form state
   const [paymentTab, setPaymentTab] = useState<'wallet' | 'bank_transfer'>('wallet');
@@ -126,16 +129,33 @@ const FinancingDetails: React.FC = () => {
   const load = useCallback(async () => {
     if (!id || !user) return;
     setLoading(true);
-    const [appRes, docsRes, receiptsRes, walletRes] = await Promise.all([
+    const [appRes, docsRes, receiptsRes, walletRes, contractRes] = await Promise.all([
       supabase.from('financing_applications').select('*').eq('id', id).maybeSingle(),
       supabase.from('financing_documents').select('id,document_type,status,file_url,review_note').eq('application_id', id),
       supabase.from('financing_payment_receipts').select('*').eq('application_id', id).order('created_at', { ascending: false }),
       supabase.from('wallets').select('balance').eq('user_id', user.id).maybeSingle(),
+      supabase
+        .from('contracts')
+        .select('id,status,contract_number,metadata')
+        .eq('template_type', 'financing')
+        .contains('metadata', { application_id: id })
+        .order('created_at', { ascending: false })
+        .limit(1)
+        .maybeSingle(),
     ]);
     if (appRes.data) setApp(appRes.data as FinancingApp);
     if (docsRes.data) setDocs(docsRes.data as DocumentRow[]);
     if (receiptsRes.data) setReceipts(receiptsRes.data as PaymentReceipt[]);
     if (walletRes.data) setWallet(walletRes.data as WalletRow);
+    if (contractRes.data) {
+      setContract({
+        id: contractRes.data.id,
+        status: contractRes.data.status,
+        contract_number: contractRes.data.contract_number,
+      });
+    } else {
+      setContract(null);
+    }
     setLoading(false);
   }, [id, user]);
 
@@ -241,6 +261,59 @@ const FinancingDetails: React.FC = () => {
       toast({ title: 'تعذر رفع الإيصال', description: e?.message ?? 'حدث خطأ', variant: 'destructive' });
     } finally {
       setPaying(false);
+    }
+  };
+
+  // فتح / إنشاء عقد التمويل ثم الانتقال لصفحة التوقيع
+  const openOrCreateContract = async () => {
+    if (!app || !user) return;
+    if (contract?.id) {
+      navigate(`/client/contracts/${contract.id}`);
+      return;
+    }
+    setCreatingContract(true);
+    try {
+      const { data: profile } = await supabase
+        .from('profiles')
+        .select('full_name,phone,email')
+        .eq('id', user.id)
+        .maybeSingle();
+
+      const title = `عقد تمويل Master PayLater — ${app.id.slice(0, 8).toUpperCase()}`;
+      const content = `هذا عقد تمويل داخلي عبر منصة Master PayLater بمبلغ ${fmt(Number(app.total_amount))} ر.س، دفعة أولى ${fmt(downPayment)} ر.س، قسط شهري ${fmt(Number(app.monthly_installment))} ر.س لمدة ${app.duration_months} شهر.`;
+
+      const { data: created, error } = await supabase
+        .from('contracts')
+        .insert({
+          title,
+          content,
+          template_type: 'financing',
+          status: 'sent',
+          user_id: user.id,
+          total_amount: app.total_amount,
+          currency: 'SAR',
+          client_full_name: (profile as any)?.full_name ?? null,
+          client_phone: (profile as any)?.phone ?? null,
+          client_email: (profile as any)?.email ?? user.email ?? null,
+          sent_at: new Date().toISOString(),
+          metadata: {
+            application_id: app.id,
+            source: 'financing',
+            down_payment: app.down_payment,
+            monthly_installment: app.monthly_installment,
+            duration_months: app.duration_months,
+          },
+        } as any)
+        .select('id,status,contract_number')
+        .single();
+
+      if (error) throw error;
+      setContract({ id: created.id, status: created.status, contract_number: created.contract_number });
+      navigate(`/client/contracts/${created.id}`);
+    } catch (e: any) {
+      toast({ title: 'تعذر فتح العقد', description: e?.message ?? 'حدث خطأ', variant: 'destructive' });
+    } finally {
+      setCreatingContract(false);
     }
   };
 
@@ -369,6 +442,56 @@ const FinancingDetails: React.FC = () => {
             </div>
           </Card>
         </motion.div>
+
+        {/* Contract signing area — only when contract_pending_signature */}
+        <AnimatePresence mode="wait">
+          {app.status === 'contract_pending_signature' && (
+            <motion.div
+              key="contract-sign"
+              initial={{ opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -8 }}
+            >
+              <Card className="border-primary/40 bg-gradient-to-br from-primary/10 via-background to-background p-5 md:p-6 shadow-xl">
+                <div className="flex items-start gap-3 mb-4">
+                  <div className="h-11 w-11 rounded-xl bg-primary/15 ring-1 ring-primary/40 flex items-center justify-center shrink-0">
+                    <PenLine className="h-5 w-5 text-primary" />
+                  </div>
+                  <div className="flex-1">
+                    <h3 className="font-bold text-lg mb-0.5">توقيع عقد التمويل</h3>
+                    <p className="text-xs md:text-sm text-muted-foreground">
+                      عقدك جاهز للتوقيع رقمياً. اضغط الزر بالأسفل لمراجعة بنود العقد وتوقيعه إلكترونياً بحجية قانونية كاملة.
+                    </p>
+                  </div>
+                  {contract && (
+                    <Badge className="bg-primary/15 text-primary ring-1 ring-primary/40 border-0">
+                      {contract.contract_number}
+                    </Badge>
+                  )}
+                </div>
+                <div className="flex flex-col sm:flex-row gap-3">
+                  <Button
+                    size="lg"
+                    onClick={openOrCreateContract}
+                    disabled={creatingContract}
+                    className="flex-1 gap-2 shadow-lg"
+                  >
+                    {creatingContract ? (
+                      <Loader2 className="h-5 w-5 animate-spin" />
+                    ) : (
+                      <PenLine className="h-5 w-5" />
+                    )}
+                    {contract ? 'فتح العقد وتوقيعه رقمياً' : 'إنشاء العقد وبدء التوقيع'}
+                  </Button>
+                  <div className="flex items-center gap-2 text-xs text-muted-foreground sm:max-w-[40%]">
+                    <ShieldCheck className="h-4 w-4 text-emerald-500 shrink-0" />
+                    موثّق برقم تحقق فريد، طابع زمني، وسجل IP — مطابق لنظام التعاملات الإلكترونية السعودي.
+                  </div>
+                </div>
+              </Card>
+            </motion.div>
+          )}
+        </AnimatePresence>
 
         {/* Payment area — only when waiting_down_payment */}
         <AnimatePresence mode="wait">
