@@ -70,17 +70,17 @@ export const MarketingReferralService = {
   // ---------- ref_code per user ----------
   /** Get my ref_code, creating the user_referrals row if missing. */
   async getOrCreateMyRefCode(userId: string): Promise<string | null> {
-    const { data: existing, error: selErr } = await supabase
-      .from("user_referrals" as any)
+    const { data: existing, error: selErr } = await (supabase as any)
+      .from("user_referrals")
       .select("ref_code")
       .eq("user_id", userId)
       .maybeSingle();
 
-    if (!selErr && existing?.ref_code) return existing.ref_code;
+    if (!selErr && existing?.ref_code) return existing.ref_code as string;
 
-    const { data: inserted, error: insErr } = await supabase
-      .from("user_referrals" as any)
-      .insert({ user_id: userId } as any)
+    const { data: inserted, error: insErr } = await (supabase as any)
+      .from("user_referrals")
+      .insert({ user_id: userId })
       .select("ref_code")
       .single();
 
@@ -88,7 +88,7 @@ export const MarketingReferralService = {
       console.warn("[referral] create ref failed:", insErr.message);
       return null;
     }
-    return inserted?.ref_code ?? null;
+    return (inserted?.ref_code as string) ?? null;
   },
 
   async getMyStats(userId: string) {
