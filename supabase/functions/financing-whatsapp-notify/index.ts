@@ -12,13 +12,31 @@ const corsHeaders = {
 const BRAND = "🏦 *Master PayLater*";
 const DIVIDER = "━━━━━━━━━━━━━━━";
 
+// LRM (Left-to-Right Mark) — يضمن عرض الأرقام والمبالغ بشكل صحيح داخل نص RTL
+const LRM = "\u200E";
+
+/**
+ * تنسيق الأرقام بأرقام لاتينية (إنجليزية) مع فواصل آلاف،
+ * ولفّها بعلامات LRM لمنع انعكاسها داخل سياق RTL في واتساب.
+ * مثال: 12500 → ‎12,500‎
+ */
 function fmt(n: number | string | null | undefined): string {
   const v = Number(n || 0);
-  return v.toLocaleString("ar-SA", { minimumFractionDigits: 0, maximumFractionDigits: 2 });
+  // en-US يضمن أرقام لاتينية وفواصل آلاف ثابتة بغض النظر عن locale الخادم
+  const formatted = v.toLocaleString("en-US", {
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 2,
+  });
+  return `${LRM}${formatted}${LRM}`;
+}
+
+/** لفّ نص قصير (رقم/كود) بعلامات LRM لضمان اتجاهه داخل RTL */
+function ltr(s: string | number): string {
+  return `${LRM}${s}${LRM}`;
 }
 
 function refOf(id: string): string {
-  return id.slice(0, 8).toUpperCase();
+  return ltr(id.slice(0, 8).toUpperCase());
 }
 
 interface AppRow {
@@ -38,7 +56,7 @@ function buildMessage(event: string, app: AppRow, extra: Record<string, any> = {
   const total = fmt(app.total_amount);
   const down = fmt(app.down_payment);
   const monthly = fmt(app.monthly_installment);
-  const months = app.duration_months;
+  const months = ltr(app.duration_months);
 
   const footer = `\n${DIVIDER}\n📱 لمتابعة طلبك: تطبيق المنصة\n🔒 لا تشارك هذه الرسالة مع أي طرف`;
 
@@ -123,7 +141,7 @@ function buildMessage(event: string, app: AppRow, extra: Record<string, any> = {
         `📅 *جدول الأقساط:*\n` +
         `• قسط شهري: ${monthly} ر.س\n` +
         `• عدد الأقساط: ${months}\n` +
-        `• أول استحقاق: ${extra.first_due_date || "بعد 30 يوماً"}` +
+        `• أول استحقاق: ${extra.first_due_date ? ltr(extra.first_due_date) : "بعد 30 يوماً"}` +
         footer
       );
     }
@@ -152,7 +170,7 @@ function buildMessage(event: string, app: AppRow, extra: Record<string, any> = {
         `⏰ *تذكير بقسط مستحق*\n\n` +
         `${name}، يستحق قسطك القادم خلال أيام:\n\n` +
         `💰 المبلغ: *${fmt(extra.amount)} ر.س*\n` +
-        `📅 تاريخ الاستحقاق: *${extra.due_date}*\n` +
+        `📅 تاريخ الاستحقاق: *${ltr(extra.due_date)}*\n` +
         `🔖 رقم الطلب: *${ref}*` +
         footer
       );
@@ -163,7 +181,7 @@ function buildMessage(event: string, app: AppRow, extra: Record<string, any> = {
         `🚨 *تنبيه: قسط متأخر*\n\n` +
         `${name}، لديك قسط متأخر على خطة التمويل *${ref}*.\n\n` +
         `💰 المبلغ المتأخر: *${fmt(extra.amount)} ر.س*\n` +
-        `📅 كان مستحقاً في: *${extra.due_date}*\n\n` +
+        `📅 كان مستحقاً في: *${ltr(extra.due_date)}*\n\n` +
         `يرجى السداد في أقرب وقت لتجنب تعليق الخدمات.` +
         footer
       );
