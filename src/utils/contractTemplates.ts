@@ -5,6 +5,7 @@
 //   - translation (ترجمة معتمدة)
 //   - consulting  (استشارات مهنية)
 //   - corporate   (شراكة/توريد للشركات)
+//   - financing   (عقد تمويل داخلي لمنتج Master PayLater)
 // =============================================================
 
 export const PARENT_COMPANY = {
@@ -22,13 +23,14 @@ export const PARENT_COMPANY = {
   website: "masteredupath.com",
 };
 
-export type ContractTemplateType = "academic" | "translation" | "consulting" | "corporate";
+export type ContractTemplateType = "academic" | "translation" | "consulting" | "corporate" | "financing";
 
 export const TEMPLATE_TYPE_LABELS: Record<ContractTemplateType, string> = {
   academic: "أكاديمي وبحثي",
   translation: "ترجمة معتمدة",
   consulting: "استشارات مهنية",
   corporate: "شراكة/توريد للشركات",
+  financing: "تمويل Master PayLater",
 };
 
 export const TEMPLATE_TYPE_DESCRIPTIONS: Record<ContractTemplateType, string> = {
@@ -40,6 +42,8 @@ export const TEMPLATE_TYPE_DESCRIPTIONS: Record<ContractTemplateType, string> = 
     "للاستشارات المهنية والإدارية والتقنية — يتضمن نطاق العمل، مراحل التنفيذ، ومؤشرات الأداء.",
   corporate:
     "لعقود الشراكة والتوريد بين الشركات (B2B) — يتضمن ضمان الأداء، شروط السداد المرحلي، حماية الملكية الفكرية، وعقوبات الإخلال.",
+  financing:
+    "لعقود التمويل الداخلي داخل المنصة — يتضمن مبلغ التمويل، الدفعة الأولى، الأقساط الشهرية، وضوابط التوقيع الإلكتروني والسداد.",
 };
 
 export interface LegalTemplateContext {
@@ -513,6 +517,7 @@ export function buildLegalAcademicContract(ctx: LegalTemplateContext): string {
     case "translation": return buildTranslationContract(ctx);
     case "consulting":  return buildConsultingContract(ctx);
     case "corporate":   return buildCorporateContract(ctx);
+    case "financing":   return buildConsultingContract(ctx);
     case "academic":
     default:            return buildAcademicContract(ctx);
   }
