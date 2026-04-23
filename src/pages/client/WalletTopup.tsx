@@ -136,7 +136,7 @@ const WalletTopup: React.FC = () => {
         (p) => setUploadPct(p),
       );
       setUploadStage('saving');
-      await WalletService.createTopupRequest({
+      const created = await WalletService.createTopupRequest({
         user_id: user.id,
         amount,
         payment_method: 'bank_transfer',
@@ -144,6 +144,35 @@ const WalletTopup: React.FC = () => {
         notes: notes || undefined,
         receipt_path,
       });
+
+      // Notify the review team with full request summary (amount, method, id, receipt link)
+      try {
+        const { supabase } = await import('@/integrations/supabase/client');
+        let receipt_url: string | undefined;
+        try {
+          const { data: signed } = await supabase.storage
+            .from('wallet-receipts')
+            .createSignedUrl(receipt_path, 60 * 60 * 24 * 7); // 7 days
+          receipt_url = signed?.signedUrl;
+        } catch { /* non-blocking */ }
+
+        await supabase.functions.invoke('send-topup-notification', {
+          body: {
+            request_id: (created as any)?.id || crypto.randomUUID(),
+            amount,
+            payment_method: 'bank_transfer',
+            reference_number: reference || undefined,
+            notes: notes || undefined,
+            client_name: (user as any)?.user_metadata?.full_name || (user as any)?.email,
+            client_email: (user as any)?.email,
+            client_phone: (user as any)?.user_metadata?.phone || (user as any)?.phone,
+            receipt_url,
+          },
+        });
+      } catch (notifyErr) {
+        console.warn('Topup notification failed (non-blocking):', notifyErr);
+      }
+
       setUploadStage('done');
       setShowSuccess(true);
       setTimeout(() => {
