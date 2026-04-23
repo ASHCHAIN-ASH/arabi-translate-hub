@@ -9008,6 +9008,10 @@ export type Database = {
         }
         Returns: Json
       }
+      start_battle_quiz_1v1_attempt: {
+        Args: { p_match_id: string }
+        Returns: Json
+      }
       start_battle_quiz_attempt: { Args: { p_room_id: string }; Returns: Json }
       start_daily_challenge_attempt: {
         Args: { p_challenge_id: string; p_user_id: string }
