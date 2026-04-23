@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { Helmet } from "react-helmet-async";
+// (no helmet — set document.title via effect)
 import {
   Download,
   Share2,
@@ -55,8 +55,8 @@ const TABS: {
 function applyRefToCaption(template: string | null, shareUrl: string): string {
   const base = template?.trim() || "";
   if (!base) return shareUrl;
-  if (base.includes("{{ref_url}}")) return base.replaceAll("{{ref_url}}", shareUrl);
-  if (base.includes("{ref_url}")) return base.replaceAll("{ref_url}", shareUrl);
+  if (base.includes("{{ref_url}}")) return base.split("{{ref_url}}").join(shareUrl);
+  if (base.includes("{ref_url}")) return base.split("{ref_url}").join(shareUrl);
   return `${base}\n\n${shareUrl}`;
 }
 
