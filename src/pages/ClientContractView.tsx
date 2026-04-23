@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { ArrowRight, FileText, ShieldCheck, Calendar, Wallet, Loader2 } from "lucide-react";
+import { ArrowRight, FileText, ShieldCheck, Calendar, Wallet, Loader2, AlertCircle, CalendarClock, BadgePercent } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { ContractSigningCard } from "@/components/orders/ContractSigningCard";
@@ -163,6 +163,79 @@ const ClientContractView: React.FC = () => {
                 </CardContent>
               </Card>
             </div>
+
+            {/* تنبيه الدفعة الأولى لعقود التمويل */}
+            {contract.template_type === "financing" && (() => {
+              const fin = (contract.metadata as any)?.financing || {};
+              const financed = Number(fin.financedAmount ?? contract.total_amount ?? 0);
+              const downPayment = Number(fin.downPayment ?? 0);
+              const computedDown = financed * 0.25;
+              const displayDown = downPayment > 0 ? downPayment : computedDown;
+              const pct = financed > 0 ? Math.round((displayDown / financed) * 1000) / 10 : 25;
+              const dueDateRaw =
+                fin.firstInstallmentDate ||
+                (contract.metadata as any)?.first_payment_due ||
+                contract.created_at;
+              let dueDateAr = "—";
+              try {
+                dueDateAr = new Date(dueDateRaw).toLocaleDateString("ar-SA-u-ca-gregory", {
+                  weekday: "long",
+                  day: "numeric",
+                  month: "long",
+                  year: "numeric",
+                });
+              } catch {}
+              const fmtSAR = (n: number) =>
+                new Intl.NumberFormat("ar-SA", {
+                  style: "currency",
+                  currency: contract.currency || "SAR",
+                  maximumFractionDigits: 2,
+                }).format(n);
+              return (
+                <Card className="border-2 border-amber-500/60 bg-gradient-to-l from-amber-50 via-amber-50/60 to-transparent dark:from-amber-950/40 dark:via-amber-950/20">
+                  <CardContent className="p-5">
+                    <div className="flex items-start gap-3 mb-4">
+                      <div className="rounded-full bg-amber-500/20 p-2 shrink-0">
+                        <AlertCircle className="h-6 w-6 text-amber-700 dark:text-amber-300" />
+                      </div>
+                      <div className="flex-1">
+                        <h3 className="text-lg md:text-xl font-bold text-amber-900 dark:text-amber-100">
+                          الدفعة الأولى مطلوبة لتفعيل التمويل
+                        </h3>
+                        <p className="text-sm text-amber-800/90 dark:text-amber-200/90 mt-1 leading-relaxed">
+                          تُمثّل الدفعة الأولى <span className="font-bold">{pct}%</span> من إجمالي مبلغ التمويل البالغ{" "}
+                          <span className="font-bold">{fmtSAR(financed)}</span>، ويجب سدادها قبل تفعيل العقد وإضافة الرصيد للمحفظة الرقمية.
+                        </p>
+                      </div>
+                    </div>
+
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                      <div className="rounded-lg bg-background/80 dark:bg-background/40 border border-amber-200 dark:border-amber-900 p-3 flex items-center gap-3">
+                        <BadgePercent className="h-5 w-5 text-amber-600 shrink-0" />
+                        <div>
+                          <p className="text-[11px] text-muted-foreground">نسبة الدفعة الأولى</p>
+                          <p className="font-bold text-base">{pct}%</p>
+                        </div>
+                      </div>
+                      <div className="rounded-lg bg-background/80 dark:bg-background/40 border border-amber-200 dark:border-amber-900 p-3 flex items-center gap-3">
+                        <Wallet className="h-5 w-5 text-amber-600 shrink-0" />
+                        <div>
+                          <p className="text-[11px] text-muted-foreground">قيمة الدفعة الأولى</p>
+                          <p className="font-bold text-base tabular-nums">{fmtSAR(displayDown)}</p>
+                        </div>
+                      </div>
+                      <div className="rounded-lg bg-background/80 dark:bg-background/40 border border-amber-200 dark:border-amber-900 p-3 flex items-center gap-3">
+                        <CalendarClock className="h-5 w-5 text-amber-600 shrink-0" />
+                        <div>
+                          <p className="text-[11px] text-muted-foreground">تاريخ الاستحقاق</p>
+                          <p className="font-bold text-sm">{dueDateAr}</p>
+                        </div>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              );
+            })()}
 
             {/* Document */}
             <Card>
