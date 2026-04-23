@@ -79,6 +79,12 @@ export class BattleQuiz1v1Service {
     await (supabase as any).rpc('bq_1v1_heartbeat', { p_match_id: matchId });
   }
 
+  static async startAttempt(matchId: string): Promise<any> {
+    const { data, error } = await (supabase as any).rpc('start_battle_quiz_1v1_attempt', { p_match_id: matchId });
+    if (error) { console.error('startAttempt 1v1', error); return { error: error.message }; }
+    return data;
+  }
+
   static async finalize(matchId: string): Promise<any> {
     const { data } = await (supabase as any).rpc('bq_1v1_finalize', { p_match_id: matchId });
     return data;
