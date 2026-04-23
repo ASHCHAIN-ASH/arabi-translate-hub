@@ -1,6 +1,8 @@
 // Master PayLater — Shared financing constants & helpers
 export const FINANCING_MIN_AMOUNT = 2500;
-export const FINANCING_DEFAULT_DOWN_PAYMENT_PCT = 0.20;
+export const FINANCING_DEFAULT_DOWN_PAYMENT_PCT = 0.25;
+// أتعاب المحاماة عند إحالة الملف للجهات القضائية / مكتب المحاماة المتعاقد
+export const FINANCING_LEGAL_FEES_SAR = 5000;
 export const FINANCING_DEFAULT_DURATION_MONTHS = 12;
 
 export interface FinancingPreview {
