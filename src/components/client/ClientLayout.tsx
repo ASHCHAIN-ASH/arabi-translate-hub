@@ -25,6 +25,7 @@ import {
   GraduationCap as StudentIcon,
   BookOpen,
   Swords,
+  Megaphone,
 } from 'lucide-react';
 import ChatFloatingButton from '@/components/chat/ChatFloatingButton';
 import { cn } from '@/lib/utils';
@@ -51,6 +52,7 @@ const navItems: NavItem[] = [
   { name: 'محفظتي', href: '/wallet', icon: Wallet },
   { name: 'عضويتي', href: '/membership', icon: Crown },
   { name: 'الإحالات والعمولات', href: '/referrals', icon: Gift },
+  { name: 'مركز التسويق', href: '/marketing-hub', icon: Megaphone },
   { name: 'مكافآتي', href: '/rewards', icon: Trophy },
   { name: 'متجر XP', href: '/marketplace', icon: ShoppingCart },
   { name: 'أكاديمية التحدي', href: '/challenge-academy', icon: Sparkles },
