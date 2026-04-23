@@ -267,6 +267,27 @@ const FinancingNew: React.FC = () => {
       toast({ title: 'بيانات ناقصة', description: parsed.error.issues[0]?.message, variant: 'destructive' });
       return false;
     }
+    // فحص صارم لبيانات الكفيل عند التفعيل
+    if (form.has_guarantor) {
+      const gParsed = guarantorSchema.safeParse(form);
+      if (!gParsed.success) {
+        toast({
+          title: 'بيانات الكفيل غير مكتملة',
+          description: gParsed.error.issues[0]?.message,
+          variant: 'destructive',
+        });
+        return false;
+      }
+      // الكفيل يجب أن يكون مختلف عن المتقدم
+      if (form.guarantor_id_number === form.applicant_id_number) {
+        toast({ title: 'تعارض في البيانات', description: 'لا يمكن أن يكون الكفيل هو نفسه المتقدم', variant: 'destructive' });
+        return false;
+      }
+      if (form.guarantor_phone === form.applicant_phone) {
+        toast({ title: 'تعارض في البيانات', description: 'جوال الكفيل يجب أن يختلف عن جوال المتقدم', variant: 'destructive' });
+        return false;
+      }
+    }
     return true;
   };
 
