@@ -7,7 +7,9 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Trophy, Swords, Loader2, ArrowLeft, RotateCw, TrendingUp, TrendingDown, Minus } from 'lucide-react';
 import { BattleQuiz1v1Service, type BQ1v1Match } from '@/utils/battleQuiz1v1Service';
+import { BattleQuiz1v1Extras } from '@/utils/battleQuiz1v1Extras';
 import { useAuth } from '@/components/SimpleAuthProvider';
+import { toast } from 'sonner';
 
 const BattleQuiz1v1Result: React.FC = () => {
   const { matchId } = useParams<{ matchId: string }>();
@@ -15,6 +17,41 @@ const BattleQuiz1v1Result: React.FC = () => {
   const navigate = useNavigate();
   const [match, setMatch] = useState<BQ1v1Match | null>(null);
   const [loading, setLoading] = useState(true);
+  const [rematchLoading, setRematchLoading] = useState(false);
+  const [rematchWaiting, setRematchWaiting] = useState(false);
+
+  // Subscribe for new rematch match created by either player
+  useEffect(() => {
+    if (!matchId) return;
+    const unsub = BattleQuiz1v1Extras.subscribeRematchTrigger(matchId, (newId) => {
+      toast.success('تم قبول الإعادة! جاري نقلك للمباراة الجديدة...');
+      navigate(`/battle-quiz/1v1/${newId}/play`);
+    });
+    return unsub;
+  }, [matchId, navigate]);
+
+  const requestRematch = async () => {
+    if (!matchId) return;
+    setRematchLoading(true);
+    const r = await BattleQuiz1v1Extras.requestRematch(matchId);
+    setRematchLoading(false);
+    if (r.error) {
+      toast.error(
+        r.error === 'match_not_completed' ? 'المباراة لم تنتهِ بعد' :
+        r.error === 'not_a_participant' ? 'لست مشاركاً في هذه المباراة' :
+        'تعذّر طلب الإعادة'
+      );
+      return;
+    }
+    if (r.match_id) {
+      navigate(`/battle-quiz/1v1/${r.match_id}/play`);
+      return;
+    }
+    if (r.waiting) {
+      setRematchWaiting(true);
+      toast.info('بانتظار موافقة الخصم على الإعادة...');
+    }
+  };
 
   useEffect(() => {
     if (!matchId) return;
