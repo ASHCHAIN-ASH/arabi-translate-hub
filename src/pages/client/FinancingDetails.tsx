@@ -288,7 +288,7 @@ const FinancingDetails: React.FC = () => {
           title,
           content,
           template_type: 'financing',
-          status: 'sent',
+          status: 'pending_signature',
           user_id: user.id,
           total_amount: app.total_amount,
           currency: 'SAR',
