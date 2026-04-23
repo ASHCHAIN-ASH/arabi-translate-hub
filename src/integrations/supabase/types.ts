@@ -3014,6 +3014,8 @@ export type Database = {
           approved_at: string | null
           approved_by: string | null
           city: string | null
+          contract_id: string | null
+          contract_pdf_url: string | null
           created_at: string
           down_payment: number
           duration_months: number
@@ -3045,6 +3047,8 @@ export type Database = {
           approved_at?: string | null
           approved_by?: string | null
           city?: string | null
+          contract_id?: string | null
+          contract_pdf_url?: string | null
           created_at?: string
           down_payment?: number
           duration_months?: number
@@ -3076,6 +3080,8 @@ export type Database = {
           approved_at?: string | null
           approved_by?: string | null
           city?: string | null
+          contract_id?: string | null
+          contract_pdf_url?: string | null
           created_at?: string
           down_payment?: number
           duration_months?: number
@@ -3099,6 +3105,13 @@ export type Database = {
           user_id?: string
         }
         Relationships: [
+          {
+            foreignKeyName: "financing_applications_contract_id_fkey"
+            columns: ["contract_id"]
+            isOneToOne: false
+            referencedRelation: "contracts"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "financing_applications_invoice_id_fkey"
             columns: ["invoice_id"]

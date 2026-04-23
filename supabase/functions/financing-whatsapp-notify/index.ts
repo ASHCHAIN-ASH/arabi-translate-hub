@@ -2,7 +2,7 @@
 // Sends bank-style status messages with icons to applicants
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
-import { normalizePhone, sendWhatsAppMessage } from "../_shared/whatsapp.ts";
+import { normalizePhone, sendWhatsAppMessage, sendWhatsAppMedia } from "../_shared/whatsapp.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -124,20 +124,33 @@ function buildMessage(event: string, app: AppRow, extra: Record<string, any> = {
         footer
       );
 
-    case "contract_pending_signature":
+    case "contract_pending_signature": {
+      const signLink = extra.sign_link ? `\n🔗 رابط التوقيع: ${ltr(extra.sign_link)}\n` : "";
+      const pdfNote = extra.contract_pdf_url
+        ? `\n📎 *مرفق:* نسخة PDF من العقد للمراجعة قبل التوقيع.\n`
+        : "";
       return (
         `${BRAND}\n${DIVIDER}\n` +
-        `📝 *العقد جاهز للتوقيع*\n\n` +
-        `${name}، تمت الموافقة المبدئية على طلبك *${ref}*.\n\n` +
-        `الخطوة التالية:\n` +
-        `1️⃣ توقيع عقد التمويل إلكترونياً\n` +
-        `2️⃣ سداد الدفعة الأولى *${down} ر.س*\n\n` +
-        `📋 ملخص الخطة:\n` +
-        `• إجمالي الطلب: ${total} ر.س\n` +
-        `• الدفعة الأولى: ${down} ر.س\n` +
-        `• القسط الشهري: ${monthly} ر.س × ${months} شهراً` +
+        `📝 *العقد جاهز للتوقيع الإلكتروني*\n\n` +
+        `${name}، تمت الموافقة المبدئية على طلبك *${ref}*.\n` +
+        `يرجى مراجعة بنود العقد بعناية ثم التوقيع إلكترونياً.\n` +
+        pdfNote +
+        `\n📋 *ملخص رسمي للعقد:*\n` +
+        `• رقم العقد: *${ref}*\n` +
+        `• إجمالي التمويل: *${total} ر.س*\n` +
+        `• الدفعة الأولى: *${down} ر.س*\n` +
+        `• القسط الشهري: *${monthly} ر.س*\n` +
+        `• مدة السداد: *${months} شهراً*\n` +
+        `• نسبة الفائدة: *0%* (تمويل بدون فوائد)\n\n` +
+        `⚖️ *الخطوات النظامية:*\n` +
+        `1️⃣ مراجعة بنود العقد المرفق\n` +
+        `2️⃣ التوقيع إلكترونياً عبر المنصة\n` +
+        `3️⃣ سداد الدفعة الأولى لتفعيل التمويل\n` +
+        signLink +
+        `\n🛡️ هذا العقد ملزم نظاماً وفق نظام التعاملات الإلكترونية السعودي` +
         footer
       );
+    }
 
     case "waiting_down_payment":
       return (
@@ -261,7 +274,7 @@ serve(async (req) => {
 
     const { data: app, error: appErr } = await supabase
       .from("financing_applications")
-      .select("id, applicant_full_name, applicant_phone, total_amount, down_payment, remaining_amount, monthly_installment, duration_months, status")
+      .select("id, applicant_full_name, applicant_phone, total_amount, down_payment, remaining_amount, monthly_installment, duration_months, status, contract_id, contract_pdf_url")
       .eq("id", application_id)
       .single();
 
@@ -292,6 +305,23 @@ serve(async (req) => {
       extra.status_label = labels[extra.new_status || ""] || extra.new_status;
     }
 
+    // عند مرحلة العقد: حاول جلب رابط PDF تلقائياً من جدول contracts إذا لم يُمرَّر
+    let contractPdfUrl: string | null = (app as any).contract_pdf_url || null;
+    if (event === "contract_pending_signature" && !contractPdfUrl && (app as any).contract_id) {
+      const { data: contractRow } = await supabase
+        .from("contracts")
+        .select("signed_pdf_path")
+        .eq("id", (app as any).contract_id)
+        .maybeSingle();
+      if (contractRow?.signed_pdf_path) {
+        const { data: signed } = await supabase.storage
+          .from("contracts")
+          .createSignedUrl(contractRow.signed_pdf_path, 60 * 60 * 24 * 7); // 7 أيام
+        contractPdfUrl = signed?.signedUrl || null;
+      }
+    }
+    if (contractPdfUrl) extra.contract_pdf_url = contractPdfUrl;
+
     const message = buildMessage(event, app as AppRow, extra);
     if (!message) {
       return json(200, { success: false, skipped: true, reason: `no template for event '${event}'` });
@@ -299,6 +329,18 @@ serve(async (req) => {
 
     const phone = normalizePhone(app.applicant_phone, "966");
     const result = await sendWhatsAppMessage(phone, message);
+
+    // إرسال PDF كمرفق منفصل بعد رسالة الملخص (واتساب يدعم رسالة + ميديا منفصلة)
+    let mediaResult: any = null;
+    if (event === "contract_pending_signature" && contractPdfUrl) {
+      const fileName = `Contract-${(app.id as string).slice(0, 8).toUpperCase()}.pdf`;
+      mediaResult = await sendWhatsAppMedia(
+        phone,
+        contractPdfUrl,
+        fileName,
+        `📎 عقد التمويل رقم ${refOf(app.id)} — للمراجعة قبل التوقيع`,
+      );
+    }
 
     // Log every attempt (success or failure)
     await supabase.from("financing_whatsapp_logs").insert({
@@ -313,6 +355,8 @@ serve(async (req) => {
       success: result.success,
       messageId: result.messageId,
       error: result.error,
+      attachment_sent: !!mediaResult?.success,
+      attachment_error: mediaResult?.error,
     });
   } catch (e) {
     console.error("financing-whatsapp-notify error:", e);
