@@ -25,6 +25,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { useToast } from "@/hooks/use-toast";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import { renderCaption, copyToClipboard } from "@/utils/referralLink";
 
 // ---------------- Types ----------------
 type Platform = "instagram" | "story" | "twitter" | "brochure";
@@ -52,13 +53,7 @@ const TABS: {
 ];
 
 // ---------------- Helpers ----------------
-function applyRefToCaption(template: string | null, shareUrl: string): string {
-  const base = template?.trim() || "";
-  if (!base) return shareUrl;
-  if (base.includes("{{ref_url}}")) return base.split("{{ref_url}}").join(shareUrl);
-  if (base.includes("{ref_url}")) return base.split("{ref_url}").join(shareUrl);
-  return `${base}\n\n${shareUrl}`;
-}
+// caption rendering moved to @/utils/referralLink (renderCaption)
 
 async function downloadImage(url: string, filename: string) {
   try {
@@ -272,10 +267,10 @@ export default function MarketingHub() {
 
   // ---------------- Actions ----------------
   const handleCopy = async (text: string, label: string) => {
-    try {
-      await navigator.clipboard.writeText(text);
+    const ok = await copyToClipboard(text);
+    if (ok) {
       toast({ title: "✅ تم النسخ", description: label });
-    } catch {
+    } else {
       toast({
         title: "تعذر النسخ",
         description: "حاول يدوياً",
@@ -285,7 +280,7 @@ export default function MarketingHub() {
   };
 
   const handleShare = async (asset: MarketingAsset) => {
-    const text = applyRefToCaption(asset.caption_template, shareUrl);
+    const text = renderCaption(asset.caption_template, shareUrl);
     if (navigator.share) {
       try {
         await navigator.share({
@@ -352,7 +347,7 @@ export default function MarketingHub() {
             onCopyLink={() => handleCopy(shareUrl, "تم نسخ رابط الإحالة")}
             onCopyCaption={() =>
               handleCopy(
-                applyRefToCaption(asset.caption_template, shareUrl),
+                renderCaption(asset.caption_template, shareUrl),
                 "تم نسخ النص الجاهز",
               )
             }
