@@ -85,6 +85,7 @@ import BattleQuiz1v1Lobby from "./pages/battle-quiz/BattleQuiz1v1Lobby";
 import BattleQuiz1v1Play from "./pages/battle-quiz/BattleQuiz1v1Play";
 import BattleQuiz1v1Result from "./pages/battle-quiz/BattleQuiz1v1Result";
 import BattleQuiz1v1Leaderboard from "./pages/battle-quiz/BattleQuiz1v1Leaderboard";
+import BattleQuiz1v1Invite from "./pages/battle-quiz/BattleQuiz1v1Invite";
 import StudentHub from "./pages/client/StudentHub";
 import MindMapPage from "./pages/client/MindMapPage";
 import TracksPage from "./pages/client/TracksPage";
@@ -740,6 +741,9 @@ const App = () => (
             } />
             <Route path="/battle-quiz/1v1/:matchId/result" element={
               <SimpleProtectedRoute requiredRole="client"><BattleQuiz1v1Result /></SimpleProtectedRoute>
+            } />
+            <Route path="/battle-quiz/1v1/invite/:code" element={
+              <SimpleProtectedRoute requiredRole="client"><BattleQuiz1v1Invite /></SimpleProtectedRoute>
             } />
 
             {/* ===== Battle Academy aliases (same components, friendlier URLs) ===== */}

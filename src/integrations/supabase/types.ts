@@ -596,12 +596,67 @@ export type Database = {
         }
         Relationships: []
       }
+      battle_quiz_1v1_friend_invites: {
+        Row: {
+          accepted_at: string | null
+          category: string
+          created_at: string
+          expires_at: string
+          id: string
+          invite_code: string
+          invitee_id: string | null
+          inviter_id: string
+          match_id: string | null
+          mode: Database["public"]["Enums"]["bq_1v1_mode"]
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          accepted_at?: string | null
+          category?: string
+          created_at?: string
+          expires_at?: string
+          id?: string
+          invite_code: string
+          invitee_id?: string | null
+          inviter_id: string
+          match_id?: string | null
+          mode?: Database["public"]["Enums"]["bq_1v1_mode"]
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          accepted_at?: string | null
+          category?: string
+          created_at?: string
+          expires_at?: string
+          id?: string
+          invite_code?: string
+          invitee_id?: string | null
+          inviter_id?: string
+          match_id?: string | null
+          mode?: Database["public"]["Enums"]["bq_1v1_mode"]
+          status?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "battle_quiz_1v1_friend_invites_match_id_fkey"
+            columns: ["match_id"]
+            isOneToOne: false
+            referencedRelation: "battle_quiz_1v1_matches"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       battle_quiz_1v1_matches: {
         Row: {
           category: string
           created_at: string
           finalized_at: string | null
           id: string
+          invite_id: string | null
+          mode: Database["public"]["Enums"]["bq_1v1_mode"]
           player_a_attempt_id: string | null
           player_a_correct: number
           player_a_finished_at: string | null
@@ -617,6 +672,8 @@ export type Database = {
           player_b_score: number
           player_b_time_ms: number
           rating_delta: number
+          rematch_of_match_id: string | null
+          rematch_request_by: string | null
           room_id: string
           started_at: string
           status: Database["public"]["Enums"]["bq_1v1_match_status"]
@@ -628,6 +685,8 @@ export type Database = {
           created_at?: string
           finalized_at?: string | null
           id?: string
+          invite_id?: string | null
+          mode?: Database["public"]["Enums"]["bq_1v1_mode"]
           player_a_attempt_id?: string | null
           player_a_correct?: number
           player_a_finished_at?: string | null
@@ -643,6 +702,8 @@ export type Database = {
           player_b_score?: number
           player_b_time_ms?: number
           rating_delta?: number
+          rematch_of_match_id?: string | null
+          rematch_request_by?: string | null
           room_id: string
           started_at?: string
           status?: Database["public"]["Enums"]["bq_1v1_match_status"]
@@ -654,6 +715,8 @@ export type Database = {
           created_at?: string
           finalized_at?: string | null
           id?: string
+          invite_id?: string | null
+          mode?: Database["public"]["Enums"]["bq_1v1_mode"]
           player_a_attempt_id?: string | null
           player_a_correct?: number
           player_a_finished_at?: string | null
@@ -669,6 +732,8 @@ export type Database = {
           player_b_score?: number
           player_b_time_ms?: number
           rating_delta?: number
+          rematch_of_match_id?: string | null
+          rematch_request_by?: string | null
           room_id?: string
           started_at?: string
           status?: Database["public"]["Enums"]["bq_1v1_match_status"]
@@ -676,6 +741,13 @@ export type Database = {
           winner_id?: string | null
         }
         Relationships: [
+          {
+            foreignKeyName: "battle_quiz_1v1_matches_rematch_of_match_id_fkey"
+            columns: ["rematch_of_match_id"]
+            isOneToOne: false
+            referencedRelation: "battle_quiz_1v1_matches"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "battle_quiz_1v1_matches_room_id_fkey"
             columns: ["room_id"]
@@ -933,6 +1005,54 @@ export type Database = {
           reward_eligible_count?: number
           updated_at?: string
           user_id?: string
+        }
+        Relationships: []
+      }
+      battle_quiz_daily_missions: {
+        Row: {
+          created_at: string
+          description_ar: string | null
+          icon: string | null
+          id: string
+          is_active: boolean
+          mission_type: string
+          scope: string
+          slug: string
+          sort_order: number
+          target_value: number
+          title_ar: string
+          updated_at: string
+          xp_reward: number
+        }
+        Insert: {
+          created_at?: string
+          description_ar?: string | null
+          icon?: string | null
+          id?: string
+          is_active?: boolean
+          mission_type: string
+          scope?: string
+          slug: string
+          sort_order?: number
+          target_value?: number
+          title_ar: string
+          updated_at?: string
+          xp_reward?: number
+        }
+        Update: {
+          created_at?: string
+          description_ar?: string | null
+          icon?: string | null
+          id?: string
+          is_active?: boolean
+          mission_type?: string
+          scope?: string
+          slug?: string
+          sort_order?: number
+          target_value?: number
+          title_ar?: string
+          updated_at?: string
+          xp_reward?: number
         }
         Relationships: []
       }
@@ -1203,6 +1323,56 @@ export type Database = {
           xp_top_bonus?: number
         }
         Relationships: []
+      }
+      battle_quiz_user_missions: {
+        Row: {
+          claimed_at: string | null
+          completed_at: string | null
+          created_at: string
+          id: string
+          is_claimed: boolean
+          is_completed: boolean
+          mission_date: string
+          mission_id: string
+          progress: number
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          claimed_at?: string | null
+          completed_at?: string | null
+          created_at?: string
+          id?: string
+          is_claimed?: boolean
+          is_completed?: boolean
+          mission_date?: string
+          mission_id: string
+          progress?: number
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          claimed_at?: string | null
+          completed_at?: string | null
+          created_at?: string
+          id?: string
+          is_claimed?: boolean
+          is_completed?: boolean
+          mission_date?: string
+          mission_id?: string
+          progress?: number
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "battle_quiz_user_missions_mission_id_fkey"
+            columns: ["mission_id"]
+            isOneToOne: false
+            referencedRelation: "battle_quiz_daily_missions"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       challenge_achievements: {
         Row: {
@@ -8484,7 +8654,18 @@ export type Database = {
         }
         Returns: Json
       }
+      bq_1v1_accept_friend_invite: {
+        Args: { p_invite_code: string }
+        Returns: Json
+      }
       bq_1v1_cancel_queue: { Args: never; Returns: Json }
+      bq_1v1_create_friend_invite: {
+        Args: {
+          p_category?: string
+          p_mode?: Database["public"]["Enums"]["bq_1v1_mode"]
+        }
+        Returns: Json
+      }
       bq_1v1_enqueue: { Args: { p_category?: string }; Returns: Json }
       bq_1v1_finalize: { Args: { p_match_id: string }; Returns: Json }
       bq_1v1_get_leaderboard: {
@@ -8504,6 +8685,7 @@ export type Database = {
         }[]
       }
       bq_1v1_heartbeat: { Args: { p_match_id: string }; Returns: undefined }
+      bq_1v1_request_rematch: { Args: { p_match_id: string }; Returns: Json }
       bq_1v1_submit_score: {
         Args: {
           p_attempt_id: string
@@ -8513,6 +8695,28 @@ export type Database = {
           p_total_time_ms: number
         }
         Returns: Json
+      }
+      bq_claim_daily_mission: {
+        Args: { p_user_mission_id: string }
+        Returns: Json
+      }
+      bq_get_daily_missions: {
+        Args: never
+        Returns: {
+          description_ar: string
+          icon: string
+          is_claimed: boolean
+          is_completed: boolean
+          mission_id: string
+          mission_type: string
+          progress: number
+          scope: string
+          slug: string
+          target_value: number
+          title_ar: string
+          user_mission_id: string
+          xp_reward: number
+        }[]
       }
       bq_is_admin: { Args: never; Returns: boolean }
       build_growth_snapshot: { Args: never; Returns: Json }
@@ -9177,6 +9381,7 @@ export type Database = {
         | "rewards_pending"
         | "archived"
       bq_1v1_match_status: "active" | "completed" | "abandoned" | "expired"
+      bq_1v1_mode: "classic" | "blitz"
       bq_1v1_queue_status: "waiting" | "matched" | "cancelled" | "expired"
       experiment_status:
         | "draft"
@@ -9368,6 +9573,7 @@ export const Constants = {
         "archived",
       ],
       bq_1v1_match_status: ["active", "completed", "abandoned", "expired"],
+      bq_1v1_mode: ["classic", "blitz"],
       bq_1v1_queue_status: ["waiting", "matched", "cancelled", "expired"],
       experiment_status: [
         "draft",
