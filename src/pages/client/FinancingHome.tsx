@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useMemo } from 'react';
 import { Link } from 'react-router-dom';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import {
   Plus,
   FileText,
@@ -12,6 +12,10 @@ import {
   CheckCircle2,
   Clock3,
   AlertCircle,
+  LayoutGrid,
+  Activity,
+  Hourglass,
+  Archive,
 } from 'lucide-react';
 import ClientLayout from '@/components/client/ClientLayout';
 import { Card } from '@/components/ui/card';
@@ -52,6 +56,7 @@ const FinancingHome: React.FC = () => {
   const { user } = useAuth();
   const [apps, setApps] = useState<FinancingApp[]>([]);
   const [loading, setLoading] = useState(true);
+  const [activeTab, setActiveTab] = useState<'all' | 'active' | 'pending' | 'closed'>('all');
 
   useEffect(() => {
     document.title = 'Master PayLater — التمويل | منصة ماستر';
@@ -216,10 +221,10 @@ const FinancingHome: React.FC = () => {
           ))}
         </div>
 
-        {/* Applications list */}
+        {/* Applications list with stunning RTL tabs */}
         <div>
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="text-xl font-bold flex items-center gap-2">
+          <div className="flex items-center justify-between mb-5 flex-wrap gap-3">
+            <h2 className="text-xl md:text-2xl font-bold flex items-center gap-2">
               <FileText className="h-5 w-5 text-primary" />
               طلباتي التمويلية
             </h2>
@@ -230,83 +235,185 @@ const FinancingHome: React.FC = () => {
             </Button>
           </div>
 
-          {loading ? (
-            <Card className="p-8 text-center text-muted-foreground animate-pulse">جاري التحميل…</Card>
-          ) : apps.length === 0 ? (
-            <Card className="p-10 text-center border-dashed">
-              <FileText className="h-10 w-10 mx-auto text-muted-foreground/60 mb-3" />
-              <h3 className="font-semibold mb-1">لا توجد طلبات تمويل بعد</h3>
-              <p className="text-sm text-muted-foreground mb-4">
-                ابدأ أول طلب تمويل لك عبر Master PayLater
-              </p>
-              <Button asChild>
-                <Link to="/financing/new">إنشاء طلب جديد</Link>
-              </Button>
-            </Card>
-          ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {apps.map((a, idx) => {
-                const tone = statusTone(a.status);
-                const StatusIcon = tone.icon;
-                return (
-                  <motion.div
-                    key={a.id}
-                    initial={{ opacity: 0, y: 12 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: idx * 0.05 }}
-                  >
-                    <Link to={`/financing/${a.id}`} className="block">
-                      <Card className="p-5 hover:shadow-xl hover:-translate-y-0.5 transition-all border-border/60 hover:border-primary/40 group h-full">
-                        <div className="flex items-start justify-between mb-4">
-                          <div>
-                            <div className="text-[10px] uppercase tracking-widest text-muted-foreground mb-1">
-                              رقم الطلب
-                            </div>
-                            <div className="font-mono text-xs font-semibold mb-2">
-                              #{a.id.slice(0, 8).toUpperCase()}
-                            </div>
-                            <div className="text-2xl font-extrabold tabular-nums">
-                              {fmt(a.total_amount)}
-                              <span className="text-sm font-normal text-muted-foreground mr-1">ر.س</span>
-                            </div>
-                          </div>
-                          <Badge
-                            className={`${tone.bg} ${tone.text} ring-1 ${tone.ring} border-0 gap-1 px-2.5`}
-                          >
-                            <StatusIcon className="h-3 w-3" />
-                            {FINANCING_STATUS_LABELS_AR[a.status] ?? a.status}
-                          </Badge>
-                        </div>
+          {/* ✨ Premium animated tabs */}
+          {(() => {
+            const tabs = [
+              { key: 'all', label: 'الكل', icon: LayoutGrid, count: apps.length },
+              {
+                key: 'active',
+                label: 'نشطة',
+                icon: Activity,
+                count: apps.filter((a) => ['active', 'approved'].includes(a.status)).length,
+              },
+              {
+                key: 'pending',
+                label: 'قيد المعالجة',
+                icon: Hourglass,
+                count: apps.filter(
+                  (a) => !['active', 'approved', 'rejected', 'cancelled', 'completed'].includes(a.status),
+                ).length,
+              },
+              {
+                key: 'closed',
+                label: 'منتهية',
+                icon: Archive,
+                count: apps.filter((a) => ['completed', 'rejected', 'cancelled'].includes(a.status)).length,
+              },
+            ] as const;
 
-                        <div className="grid grid-cols-3 gap-2 text-center text-xs mb-4">
-                          <div className="rounded-lg bg-muted/50 p-2.5">
-                            <div className="text-[10px] text-muted-foreground mb-1">الدفعة الأولى</div>
-                            <div className="font-bold tabular-nums">{fmt(a.down_payment)}</div>
-                          </div>
-                          <div className="rounded-lg bg-muted/50 p-2.5">
-                            <div className="text-[10px] text-muted-foreground mb-1">القسط</div>
-                            <div className="font-bold tabular-nums">{fmt(a.monthly_installment)}</div>
-                          </div>
-                          <div className="rounded-lg bg-muted/50 p-2.5">
-                            <div className="text-[10px] text-muted-foreground mb-1">المدة</div>
-                            <div className="font-bold tabular-nums">{a.duration_months} ش</div>
-                          </div>
-                        </div>
+            const filtered = apps.filter((a) => {
+              if (activeTab === 'all') return true;
+              if (activeTab === 'active') return ['active', 'approved'].includes(a.status);
+              if (activeTab === 'pending')
+                return !['active', 'approved', 'rejected', 'cancelled', 'completed'].includes(a.status);
+              return ['completed', 'rejected', 'cancelled'].includes(a.status);
+            });
 
-                        <div className="flex items-center justify-between text-xs text-muted-foreground pt-3 border-t border-border/40">
-                          <span>{new Date(a.created_at).toLocaleDateString('en-GB')}</span>
-                          <span className="flex items-center gap-1 text-primary group-hover:gap-2 transition-all">
-                            عرض التفاصيل
-                            <ArrowUpRight className="h-3.5 w-3.5" />
+            return (
+              <>
+                <div
+                  dir="rtl"
+                  className="relative mb-6 rounded-2xl p-1.5 bg-gradient-to-l from-primary/5 via-muted/40 to-primary/5 ring-1 ring-border/60 backdrop-blur-xl overflow-x-auto shadow-inner"
+                >
+                  <div className="flex gap-1.5 min-w-max">
+                    {tabs.map((t) => {
+                      const isActive = activeTab === t.key;
+                      const Icon = t.icon;
+                      return (
+                        <button
+                          key={t.key}
+                          onClick={() => setActiveTab(t.key as typeof activeTab)}
+                          className={`relative flex items-center gap-2 px-4 md:px-5 py-2.5 rounded-xl text-sm font-semibold transition-all duration-300 whitespace-nowrap group ${
+                            isActive
+                              ? 'text-white'
+                              : 'text-muted-foreground hover:text-foreground'
+                          }`}
+                        >
+                          {isActive && (
+                            <motion.div
+                              layoutId="activeFinancingTab"
+                              className="absolute inset-0 rounded-xl shadow-lg"
+                              style={{
+                                background:
+                                  'linear-gradient(135deg, hsl(217 91% 32%) 0%, hsl(199 89% 48%) 100%)',
+                                boxShadow:
+                                  '0 8px 24px -8px hsl(217 91% 32% / 0.5), inset 0 1px 0 0 hsl(0 0% 100% / 0.2)',
+                              }}
+                              transition={{ type: 'spring', stiffness: 380, damping: 30 }}
+                            />
+                          )}
+                          <span className="relative flex items-center gap-2">
+                            <Icon className={`h-4 w-4 transition-transform ${isActive ? 'scale-110' : 'group-hover:scale-110'}`} />
+                            <span>{t.label}</span>
+                            <span
+                              className={`min-w-[22px] h-5 px-1.5 inline-flex items-center justify-center rounded-full text-[10px] font-bold tabular-nums transition-all ${
+                                isActive
+                                  ? 'bg-white/25 text-white ring-1 ring-white/30'
+                                  : 'bg-muted text-muted-foreground ring-1 ring-border/60'
+                              }`}
+                            >
+                              {t.count}
+                            </span>
                           </span>
-                        </div>
-                      </Card>
-                    </Link>
-                  </motion.div>
-                );
-              })}
-            </div>
-          )}
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+
+                {loading ? (
+                  <Card className="p-8 text-center text-muted-foreground animate-pulse">جاري التحميل…</Card>
+                ) : filtered.length === 0 ? (
+                  <Card className="p-10 text-center border-dashed">
+                    <FileText className="h-10 w-10 mx-auto text-muted-foreground/60 mb-3" />
+                    <h3 className="font-semibold mb-1">
+                      {apps.length === 0 ? 'لا توجد طلبات تمويل بعد' : 'لا توجد طلبات في هذا التصنيف'}
+                    </h3>
+                    <p className="text-sm text-muted-foreground mb-4">
+                      {apps.length === 0
+                        ? 'ابدأ أول طلب تمويل لك عبر Master PayLater'
+                        : 'جرّب تبويبًا آخر أو أنشئ طلبًا جديدًا'}
+                    </p>
+                    <Button asChild>
+                      <Link to="/financing/new">إنشاء طلب جديد</Link>
+                    </Button>
+                  </Card>
+                ) : (
+                  <AnimatePresence mode="wait">
+                    <motion.div
+                      key={activeTab}
+                      initial={{ opacity: 0, y: 8 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -8 }}
+                      transition={{ duration: 0.2 }}
+                      className="grid grid-cols-1 md:grid-cols-2 gap-4"
+                    >
+                      {filtered.map((a, idx) => {
+                        const tone = statusTone(a.status);
+                        const StatusIcon = tone.icon;
+                        return (
+                          <motion.div
+                            key={a.id}
+                            initial={{ opacity: 0, y: 12 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ delay: idx * 0.05 }}
+                          >
+                            <Link to={`/financing/${a.id}`} className="block">
+                              <Card className="p-5 hover:shadow-xl hover:-translate-y-0.5 transition-all border-border/60 hover:border-primary/40 group h-full">
+                                <div className="flex items-start justify-between mb-4">
+                                  <div>
+                                    <div className="text-[10px] uppercase tracking-widest text-muted-foreground mb-1">
+                                      رقم الطلب
+                                    </div>
+                                    <div className="font-mono text-xs font-semibold mb-2">
+                                      #{a.id.slice(0, 8).toUpperCase()}
+                                    </div>
+                                    <div className="text-2xl font-extrabold tabular-nums">
+                                      {fmt(a.total_amount)}
+                                      <span className="text-sm font-normal text-muted-foreground mr-1">ر.س</span>
+                                    </div>
+                                  </div>
+                                  <Badge
+                                    className={`${tone.bg} ${tone.text} ring-1 ${tone.ring} border-0 gap-1 px-2.5`}
+                                  >
+                                    <StatusIcon className="h-3 w-3" />
+                                    {FINANCING_STATUS_LABELS_AR[a.status] ?? a.status}
+                                  </Badge>
+                                </div>
+
+                                <div className="grid grid-cols-3 gap-2 text-center text-xs mb-4">
+                                  <div className="rounded-lg bg-muted/50 p-2.5">
+                                    <div className="text-[10px] text-muted-foreground mb-1">الدفعة الأولى</div>
+                                    <div className="font-bold tabular-nums">{fmt(a.down_payment)}</div>
+                                  </div>
+                                  <div className="rounded-lg bg-muted/50 p-2.5">
+                                    <div className="text-[10px] text-muted-foreground mb-1">القسط</div>
+                                    <div className="font-bold tabular-nums">{fmt(a.monthly_installment)}</div>
+                                  </div>
+                                  <div className="rounded-lg bg-muted/50 p-2.5">
+                                    <div className="text-[10px] text-muted-foreground mb-1">المدة</div>
+                                    <div className="font-bold tabular-nums">{a.duration_months} ش</div>
+                                  </div>
+                                </div>
+
+                                <div className="flex items-center justify-between text-xs text-muted-foreground pt-3 border-t border-border/40">
+                                  <span>{new Date(a.created_at).toLocaleDateString('en-GB')}</span>
+                                  <span className="flex items-center gap-1 text-primary group-hover:gap-2 transition-all">
+                                    عرض التفاصيل
+                                    <ArrowUpRight className="h-3.5 w-3.5" />
+                                  </span>
+                                </div>
+                              </Card>
+                            </Link>
+                          </motion.div>
+                        );
+                      })}
+                    </motion.div>
+                  </AnimatePresence>
+                )}
+              </>
+            );
+          })()}
         </div>
       </div>
     </ClientLayout>
