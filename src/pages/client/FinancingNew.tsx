@@ -24,6 +24,20 @@ import {
   ScrollText,
   AlertTriangle,
   Gavel,
+  Building2,
+  Landmark,
+  GraduationCap,
+  Stethoscope,
+  Cpu,
+  ShoppingBag,
+  Hammer,
+  Plane,
+  HeartHandshake,
+  Factory,
+  Scale,
+  Users,
+  UserCheck,
+  Zap,
 } from 'lucide-react';
 import ClientLayout from '@/components/client/ClientLayout';
 import { Card } from '@/components/ui/card';
@@ -32,6 +46,41 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Checkbox } from '@/components/ui/checkbox';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
+
+// === Saudi market: employment sectors (banking-style classification) ===
+const EMPLOYMENT_SECTORS = [
+  { value: 'government', label: 'القطاع الحكومي', icon: Landmark, color: 'text-emerald-600' },
+  { value: 'military', label: 'العسكري والأمني', icon: ShieldCheck, color: 'text-emerald-700' },
+  { value: 'banking', label: 'البنوك والمالية', icon: Building2, color: 'text-blue-600' },
+  { value: 'oil_gas', label: 'النفط والغاز (أرامكو/سابك)', icon: Factory, color: 'text-amber-600' },
+  { value: 'tech', label: 'تقنية المعلومات', icon: Cpu, color: 'text-violet-600' },
+  { value: 'healthcare', label: 'الصحة والمستشفيات', icon: Stethoscope, color: 'text-rose-600' },
+  { value: 'education', label: 'التعليم والجامعات', icon: GraduationCap, color: 'text-indigo-600' },
+  { value: 'retail', label: 'التجزئة والتجارة', icon: ShoppingBag, color: 'text-orange-600' },
+  { value: 'construction', label: 'المقاولات والبناء', icon: Hammer, color: 'text-yellow-700' },
+  { value: 'aviation', label: 'الطيران والنقل', icon: Plane, color: 'text-sky-600' },
+  { value: 'hospitality', label: 'الضيافة والسياحة', icon: HeartHandshake, color: 'text-pink-600' },
+  { value: 'legal', label: 'القانوني والاستشاري', icon: Scale, color: 'text-slate-700' },
+  { value: 'self_employed', label: 'أعمال حرة / مستقل', icon: UserCheck, color: 'text-teal-600' },
+  { value: 'private', label: 'القطاع الخاص (آخر)', icon: Briefcase, color: 'text-primary' },
+  { value: 'unemployed', label: 'حالياً بدون عمل', icon: Users, color: 'text-muted-foreground' },
+] as const;
+
+const SAUDI_CITIES = [
+  'الرياض', 'جدة', 'مكة المكرمة', 'المدينة المنورة', 'الدمام', 'الخبر',
+  'الظهران', 'الطائف', 'تبوك', 'بريدة', 'حائل', 'أبها', 'خميس مشيط',
+  'جازان', 'نجران', 'الجبيل', 'ينبع', 'الأحساء', 'القطيف', 'عرعر',
+  'سكاكا', 'الباحة', 'القصيم', 'الخرج', 'حفر الباطن', 'أخرى',
+];
+
+const QUICK_AMOUNTS = [2500, 5000, 10000, 20000, 50000, 100000];
 import { Badge } from '@/components/ui/badge';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
@@ -86,6 +135,7 @@ const FinancingNew: React.FC = () => {
     applicant_id_number: '',
     applicant_phone: '',
     applicant_email: user?.email ?? '',
+    employer_sector: '',
     employer_name: '',
     monthly_income: '' as number | '',
     monthly_commitments: '' as number | '',
@@ -315,32 +365,74 @@ const FinancingNew: React.FC = () => {
                   </div>
                 </div>
 
-                {/* Amount block highlighted */}
-                <div className="rounded-2xl bg-gradient-to-br from-primary/10 to-primary/5 p-5 ring-1 ring-primary/20">
-                  <Label htmlFor="amount" className="flex items-center gap-2 mb-3 text-base font-bold">
-                    <Wallet className="h-4 w-4 text-primary" />
-                    مبلغ التمويل المطلوب
-                  </Label>
+                {/* Amount block — premium with quick presets */}
+                <motion.div
+                  initial={{ opacity: 0, scale: 0.98 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  className="rounded-2xl bg-gradient-to-br from-primary/15 via-primary/5 to-transparent p-5 ring-1 ring-primary/30 relative overflow-hidden"
+                >
+                  <motion.div
+                    className="absolute -top-12 -left-12 h-32 w-32 rounded-full bg-primary/20 blur-3xl"
+                    animate={{ scale: [1, 1.2, 1], opacity: [0.4, 0.7, 0.4] }}
+                    transition={{ duration: 4, repeat: Infinity }}
+                  />
                   <div className="relative">
-                    <Input
-                      id="amount"
-                      type="number"
-                      min={FINANCING_MIN_AMOUNT}
-                      step="0.01"
-                      value={amount}
-                      onChange={(e) => setAmount(Number(e.target.value))}
-                      disabled={!!orderId || !!invoiceId}
-                      className="h-14 text-2xl font-bold pl-20 bg-background"
-                    />
-                    <span className="absolute left-4 top-1/2 -translate-y-1/2 text-sm font-semibold text-muted-foreground">
-                      ر.س
-                    </span>
+                    <div className="flex items-center justify-between mb-3 flex-wrap gap-2">
+                      <Label htmlFor="amount" className="flex items-center gap-2 text-base font-bold">
+                        <Wallet className="h-4 w-4 text-primary" />
+                        مبلغ التمويل المطلوب
+                      </Label>
+                      <Badge variant="outline" className="text-[10px] gap-1">
+                        <Zap className="h-3 w-3 text-primary" /> اختر مبلغ سريع
+                      </Badge>
+                    </div>
+
+                    {/* Quick amount chips */}
+                    {!orderId && !invoiceId && (
+                      <div className="flex flex-wrap gap-2 mb-3">
+                        {QUICK_AMOUNTS.map((q) => {
+                          const active = amount === q;
+                          return (
+                            <motion.button
+                              key={q}
+                              type="button"
+                              whileHover={{ scale: 1.05 }}
+                              whileTap={{ scale: 0.95 }}
+                              onClick={() => setAmount(q)}
+                              className={`px-3 py-1.5 rounded-full text-xs font-bold transition-all ring-1 ${
+                                active
+                                  ? 'bg-primary text-primary-foreground ring-primary shadow-md'
+                                  : 'bg-background text-foreground ring-border hover:ring-primary/50'
+                              }`}
+                            >
+                              {fmt(q)} ر.س
+                            </motion.button>
+                          );
+                        })}
+                      </div>
+                    )}
+
+                    <div className="relative">
+                      <Input
+                        id="amount"
+                        type="number"
+                        min={FINANCING_MIN_AMOUNT}
+                        step="0.01"
+                        value={amount}
+                        onChange={(e) => setAmount(Number(e.target.value))}
+                        disabled={!!orderId || !!invoiceId}
+                        className="h-14 text-2xl font-bold pl-20 bg-background"
+                      />
+                      <span className="absolute left-4 top-1/2 -translate-y-1/2 text-sm font-semibold text-muted-foreground">
+                        ر.س
+                      </span>
+                    </div>
+                    <p className="text-xs text-muted-foreground mt-2 flex items-center gap-1">
+                      <AlertTriangle className="h-3 w-3" />
+                      الحد الأدنى: {fmt(FINANCING_MIN_AMOUNT)} ر.س · حدّ أعلى: 100,000 ر.س
+                    </p>
                   </div>
-                  <p className="text-xs text-muted-foreground mt-2 flex items-center gap-1">
-                    <AlertTriangle className="h-3 w-3" />
-                    الحد الأدنى: {fmt(FINANCING_MIN_AMOUNT)} ر.س
-                  </p>
-                </div>
+                </motion.div>
 
                 {/* Personal info grid */}
                 <div className="space-y-1">
@@ -389,19 +481,58 @@ const FinancingNew: React.FC = () => {
                     <Briefcase className="h-4 w-4" /> البيانات المهنية والمالية
                   </h3>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <FieldGroup icon={Briefcase} label="جهة العمل">
+                    {/* Employment sector — banking-style select with icons */}
+                    <div className="md:col-span-2">
+                      <Label className="text-sm font-semibold mb-1.5 flex items-center gap-1.5">
+                        <Building2 className="h-3.5 w-3.5 text-muted-foreground" />
+                        قطاع جهة العمل
+                      </Label>
+                      <Select
+                        value={form.employer_sector}
+                        onValueChange={(v) => setField('employer_sector', v)}
+                      >
+                        <SelectTrigger className="h-11">
+                          <SelectValue placeholder="اختر القطاع المهني..." />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {EMPLOYMENT_SECTORS.map((s) => (
+                            <SelectItem key={s.value} value={s.value}>
+                              <div className="flex items-center gap-2">
+                                <s.icon className={`h-4 w-4 ${s.color}`} />
+                                <span>{s.label}</span>
+                              </div>
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
+
+                    <FieldGroup icon={Briefcase} label="اسم جهة العمل / الشركة">
                       <Input
                         value={form.employer_name}
                         onChange={(e) => setField('employer_name', e.target.value)}
-                        placeholder="اسم الشركة / الجهة"
+                        placeholder="مثال: أرامكو السعودية"
                       />
                     </FieldGroup>
                     <FieldGroup icon={MapPin} label="المدينة">
-                      <Input
+                      <Select
                         value={form.city}
-                        onChange={(e) => setField('city', e.target.value)}
-                        placeholder="مثال: الرياض"
-                      />
+                        onValueChange={(v) => setField('city', v)}
+                      >
+                        <SelectTrigger className="h-11">
+                          <SelectValue placeholder="اختر المدينة..." />
+                        </SelectTrigger>
+                        <SelectContent className="max-h-72">
+                          {SAUDI_CITIES.map((c) => (
+                            <SelectItem key={c} value={c}>
+                              <div className="flex items-center gap-2">
+                                <MapPin className="h-3.5 w-3.5 text-muted-foreground" />
+                                {c}
+                              </div>
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
                     </FieldGroup>
                     <FieldGroup icon={TrendingUp} label="الدخل الشهري (ر.س)">
                       <Input
