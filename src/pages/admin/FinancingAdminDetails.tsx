@@ -24,6 +24,29 @@ import {
   FINANCING_DOC_LABELS_AR,
 } from '@/lib/financing';
 import { FINANCING_TEAMS } from '@/lib/financing-bank';
+import { sendWhatsApp } from '@/lib/whatsapp';
+import { MessageCircle, Send } from 'lucide-react';
+
+// ── WhatsApp helper: notify customer about admin actions ──
+const notifyCustomer = async (
+  app: any,
+  message: string,
+  entityId?: string,
+) => {
+  const phone = app?.applicant_phone;
+  if (!phone) return;
+  try {
+    await sendWhatsApp({
+      to: phone,
+      message: `مرحباً ${app.applicant_full_name || ''} 👋\n\n${message}\n\nرقم الطلب: #${String(app.id).slice(0, 8).toUpperCase()}\n\nفريق ماستر للتمويل 💼`,
+      related_entity_type: 'financing_application',
+      related_entity_id: entityId || app.id,
+      user_id: app.user_id || undefined,
+    });
+  } catch (e) {
+    console.warn('whatsapp notify failed', e);
+  }
+};
 
 type Application = any;
 type FinancingDocument = {
@@ -156,6 +179,13 @@ const FinancingAdminDetails: React.FC = () => {
         .eq('id', app.id);
       if (error) throw error;
       toast.success('تم تحديث الحالة');
+      // 📲 Notify customer via WhatsApp
+      const statusLabel = FINANCING_STATUS_LABELS_AR[toStatus] || toStatus;
+      const noteSuffix = adminNote ? `\n📝 ملاحظة: ${adminNote}` : '';
+      await notifyCustomer(
+        app,
+        `تم تحديث حالة طلب التمويل الخاص بك إلى: *${statusLabel}* ✅${noteSuffix}`,
+      );
       setAdminNote('');
       setNewStatus('');
     } catch (e: any) {
@@ -166,21 +196,68 @@ const FinancingAdminDetails: React.FC = () => {
   };
 
   const reviewDoc = async (docId: string, status: 'approved' | 'rejected', note?: string) => {
+    const doc = docs.find(d => d.id === docId);
     const { error } = await supabase
       .from('financing_documents' as any)
       .update({ status, review_note: note ?? null, reviewed_at: new Date().toISOString() } as any)
       .eq('id', docId);
-    if (error) toast.error('فشل تحديث المستند');
-    else toast.success(status === 'approved' ? 'تمت الموافقة على المستند' : 'تم رفض المستند');
+    if (error) {
+      toast.error('فشل تحديث المستند');
+      return;
+    }
+    toast.success(status === 'approved' ? 'تمت الموافقة على المستند' : 'تم رفض المستند');
+    // 📲 Notify customer
+    const docLabel = doc ? (FINANCING_DOC_LABELS_AR[doc.document_type] || doc.document_type) : 'وثيقة';
+    if (status === 'approved') {
+      await notifyCustomer(app, `✅ تم قبول وثيقة *${docLabel}* الخاصة بطلب التمويل.`, docId);
+    } else {
+      await notifyCustomer(
+        app,
+        `❌ تم رفض وثيقة *${docLabel}*.${note ? `\nالسبب: ${note}` : ''}\n\nيرجى إعادة رفعها من حسابك.`,
+        docId,
+      );
+    }
   };
 
   const reviewReceipt = async (rid: string, status: 'approved' | 'rejected') => {
+    const receipt = receipts.find(r => r.id === rid);
     const { error } = await supabase
       .from('financing_payment_receipts' as any)
       .update({ status, reviewer_note: adminNote || null } as any)
       .eq('id', rid);
-    if (error) toast.error('فشل تحديث الإيصال');
-    else toast.success(status === 'approved' ? 'تم اعتماد الإيصال' : 'تم رفض الإيصال');
+    if (error) {
+      toast.error('فشل تحديث الإيصال');
+      return;
+    }
+    toast.success(status === 'approved' ? 'تم اعتماد الإيصال' : 'تم رفض الإيصال');
+    // 📲 Notify customer
+    const amt = receipt ? `${fmt(receipt.amount)} ر.س` : '';
+    if (status === 'approved') {
+      await notifyCustomer(
+        app,
+        `✅ تم اعتماد إيصال الدفع بمبلغ *${amt}* بنجاح.\nسيتم تفعيل خطة التمويل قريباً.`,
+        rid,
+      );
+    } else {
+      await notifyCustomer(
+        app,
+        `❌ تم رفض إيصال الدفع بمبلغ *${amt}*.${adminNote ? `\nالسبب: ${adminNote}` : ''}\n\nيرجى رفع إيصال صحيح من حسابك.`,
+        rid,
+      );
+    }
+  };
+
+  // 📲 Send admin note as WhatsApp message directly
+  const sendNoteToCustomer = async () => {
+    if (!adminNote.trim()) {
+      toast.error('اكتب الملاحظة أولاً');
+      return;
+    }
+    setWorking(true);
+    await notifyCustomer(app, `📌 رسالة من فريق التمويل:\n\n${adminNote}`);
+    toast.success('تم إرسال الملاحظة عبر واتساب');
+    setAdminNote('');
+    setWorking(false);
   };
 
   const openFile = async (path: string) => {
@@ -218,7 +295,13 @@ const FinancingAdminDetails: React.FC = () => {
 
   return (
     <AdminLayout>
-      <div className="space-y-6" dir="rtl">
+      <motion.div
+        className="space-y-6"
+        dir="rtl"
+        initial={{ opacity: 0, y: 16 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+      >
         {/* Header */}
         <div className="relative overflow-hidden rounded-2xl border bg-gradient-to-br from-primary/10 via-background to-accent/10 p-6 backdrop-blur-xl">
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,hsl(var(--primary)/0.15),transparent_50%)]" />
@@ -480,6 +563,15 @@ const FinancingAdminDetails: React.FC = () => {
                   {working ? <Loader2 className="w-4 h-4 animate-spin ml-1" /> : <CheckCircle2 className="w-4 h-4 ml-1" />}
                   تطبيق التغيير
                 </Button>
+                <Button
+                  variant="outline"
+                  className="w-full border-emerald-500/40 text-emerald-700 dark:text-emerald-400 hover:bg-emerald-500/10"
+                  disabled={!adminNote.trim() || working}
+                  onClick={sendNoteToCustomer}
+                >
+                  <MessageCircle className="w-4 h-4 ml-1" />
+                  إرسال الملاحظة للعميل عبر واتساب
+                </Button>
                 <Separator />
                 <div className="grid grid-cols-2 gap-2">
                   <Button variant="default" className="bg-emerald-600 hover:bg-emerald-700" disabled={working} onClick={() => updateStatus('approved')}>
@@ -533,7 +625,7 @@ const FinancingAdminDetails: React.FC = () => {
             </Card>
           </div>
         </div>
-      </div>
+      </motion.div>
     </AdminLayout>
   );
 };
