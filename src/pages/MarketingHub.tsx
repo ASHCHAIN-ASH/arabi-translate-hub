@@ -121,16 +121,30 @@ function AssetCard({
   onShare: () => void;
   onDownload: () => void;
 }) {
+  // Cache-bust so freshly re-uploaded banners refresh in the browser
+  const cacheBustedSrc = asset.image_url
+    ? `${asset.image_url}${asset.image_url.includes("?") ? "&" : "?"}v=2`
+    : null;
+
   return (
-    <Card className="group overflow-hidden border-border/60 bg-card hover:shadow-xl hover:-translate-y-0.5 transition-all duration-300 flex flex-col">
+    <Card className="group relative overflow-hidden rounded-2xl border-border/40 bg-card/80 backdrop-blur-sm flex flex-col animate-fade-in transition-all duration-500 hover:-translate-y-1 hover:shadow-[0_20px_60px_-15px_hsl(var(--primary)/0.35)] hover:border-primary/40">
+      {/* Animated gradient glow on hover */}
+      <div className="pointer-events-none absolute inset-0 -z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-500 bg-[radial-gradient(circle_at_top,hsl(var(--primary)/0.15),transparent_60%)]" />
+
       <div className="relative aspect-[4/5] bg-muted overflow-hidden">
-        {asset.image_url ? (
-          <img
-            src={asset.image_url}
-            alt={asset.title}
-            loading="lazy"
-            className="h-full w-full object-cover group-hover:scale-105 transition-transform duration-500"
-          />
+        {cacheBustedSrc ? (
+          <>
+            <img
+              src={cacheBustedSrc}
+              alt={asset.title}
+              loading="lazy"
+              className="h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-110"
+            />
+            {/* Shine sweep on hover */}
+            <div className="pointer-events-none absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-1000 ease-out bg-gradient-to-r from-transparent via-white/20 to-transparent" />
+            {/* Bottom gradient overlay for legibility */}
+            <div className="pointer-events-none absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-black/40 to-transparent" />
+          </>
         ) : (
           <div className="h-full w-full flex items-center justify-center">
             <ImageIcon className="h-12 w-12 text-muted-foreground/40" />
@@ -138,7 +152,7 @@ function AssetCard({
         )}
         <Badge
           variant="secondary"
-          className="absolute top-3 start-3 bg-background/90 backdrop-blur-sm text-xs"
+          className="absolute top-3 start-3 bg-background/80 backdrop-blur-md text-xs border border-border/50 shadow-sm"
         >
           {asset.service_type}
         </Badge>
