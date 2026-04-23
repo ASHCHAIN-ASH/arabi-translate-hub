@@ -52,6 +52,29 @@ const BattleQuizHome: React.FC = () => {
         {/* Daily challenge */}
         {dailyRoom && <RoomCard room={dailyRoom} featured />}
 
+        {/* 1v1 Mode entry */}
+        <motion.div whileHover={{ y: -2 }} transition={{ type: 'spring', stiffness: 300 }}>
+          <Card className="relative overflow-hidden p-5 border-2 border-fuchsia-500/30 bg-gradient-to-br from-fuchsia-500/5 to-purple-600/10">
+            <div className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-fuchsia-600 to-purple-700" />
+            <div className="flex items-center gap-4">
+              <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-fuchsia-600 to-purple-700 flex items-center justify-center text-white shrink-0 shadow-lg">
+                <Swords className="w-7 h-7" />
+              </div>
+              <div className="flex-1 min-w-0">
+                <div className="flex items-center gap-2 flex-wrap">
+                  <Badge className="text-[10px] bg-fuchsia-600 hover:bg-fuchsia-600">جديد</Badge>
+                  <Badge variant="secondary" className="text-[10px]">Elo Rating</Badge>
+                </div>
+                <h3 className="font-bold mt-1">⚔️ مواجهة 1 ضد 1</h3>
+                <p className="text-xs text-muted-foreground mt-0.5">طابق خصمًا فوريًا واصعد في تصنيف Elo</p>
+              </div>
+              <Button asChild className="shrink-0 bg-gradient-to-r from-fuchsia-600 to-purple-700 hover:from-fuchsia-700 hover:to-purple-800">
+                <Link to="/battle-quiz/1v1">ابدأ <ArrowLeft className="w-4 h-4 mr-1" /></Link>
+              </Button>
+            </div>
+          </Card>
+        </motion.div>
+
         {/* Other modes */}
         <section>
           <h2 className="font-bold text-lg mb-3 flex items-center gap-2">
