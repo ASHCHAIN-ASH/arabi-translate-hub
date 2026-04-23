@@ -267,10 +267,10 @@ export default function MarketingHub() {
 
   // ---------------- Actions ----------------
   const handleCopy = async (text: string, label: string) => {
-    try {
-      await navigator.clipboard.writeText(text);
+    const ok = await copyToClipboard(text);
+    if (ok) {
       toast({ title: "✅ تم النسخ", description: label });
-    } catch {
+    } else {
       toast({
         title: "تعذر النسخ",
         description: "حاول يدوياً",
@@ -280,7 +280,7 @@ export default function MarketingHub() {
   };
 
   const handleShare = async (asset: MarketingAsset) => {
-    const text = applyRefToCaption(asset.caption_template, shareUrl);
+    const text = renderCaption(asset.caption_template, shareUrl);
     if (navigator.share) {
       try {
         await navigator.share({
@@ -347,7 +347,7 @@ export default function MarketingHub() {
             onCopyLink={() => handleCopy(shareUrl, "تم نسخ رابط الإحالة")}
             onCopyCaption={() =>
               handleCopy(
-                applyRefToCaption(asset.caption_template, shareUrl),
+                renderCaption(asset.caption_template, shareUrl),
                 "تم نسخ النص الجاهز",
               )
             }
