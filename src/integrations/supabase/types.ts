@@ -9051,6 +9051,7 @@ export type Database = {
         Args: { _cv_id: string; _new_template_key: string }
         Returns: Json
       }
+      test_start_battle_quiz_1v1_attempt: { Args: never; Returns: Json }
       track_experiment_event: {
         Args: {
           p_anonymous_id?: string
