@@ -305,6 +305,23 @@ serve(async (req) => {
       extra.status_label = labels[extra.new_status || ""] || extra.new_status;
     }
 
+    // عند مرحلة العقد: حاول جلب رابط PDF تلقائياً من جدول contracts إذا لم يُمرَّر
+    let contractPdfUrl: string | null = (app as any).contract_pdf_url || null;
+    if (event === "contract_pending_signature" && !contractPdfUrl && (app as any).contract_id) {
+      const { data: contractRow } = await supabase
+        .from("contracts")
+        .select("signed_pdf_path")
+        .eq("id", (app as any).contract_id)
+        .maybeSingle();
+      if (contractRow?.signed_pdf_path) {
+        const { data: signed } = await supabase.storage
+          .from("contracts")
+          .createSignedUrl(contractRow.signed_pdf_path, 60 * 60 * 24 * 7); // 7 أيام
+        contractPdfUrl = signed?.signedUrl || null;
+      }
+    }
+    if (contractPdfUrl) extra.contract_pdf_url = contractPdfUrl;
+
     const message = buildMessage(event, app as AppRow, extra);
     if (!message) {
       return json(200, { success: false, skipped: true, reason: `no template for event '${event}'` });
@@ -312,6 +329,18 @@ serve(async (req) => {
 
     const phone = normalizePhone(app.applicant_phone, "966");
     const result = await sendWhatsAppMessage(phone, message);
+
+    // إرسال PDF كمرفق منفصل بعد رسالة الملخص (واتساب يدعم رسالة + ميديا منفصلة)
+    let mediaResult: any = null;
+    if (event === "contract_pending_signature" && contractPdfUrl) {
+      const fileName = `Contract-${(app.id as string).slice(0, 8).toUpperCase()}.pdf`;
+      mediaResult = await sendWhatsAppMedia(
+        phone,
+        contractPdfUrl,
+        fileName,
+        `📎 عقد التمويل رقم ${refOf(app.id)} — للمراجعة قبل التوقيع`,
+      );
+    }
 
     // Log every attempt (success or failure)
     await supabase.from("financing_whatsapp_logs").insert({
@@ -326,6 +355,8 @@ serve(async (req) => {
       success: result.success,
       messageId: result.messageId,
       error: result.error,
+      attachment_sent: !!mediaResult?.success,
+      attachment_error: mediaResult?.error,
     });
   } catch (e) {
     console.error("financing-whatsapp-notify error:", e);
