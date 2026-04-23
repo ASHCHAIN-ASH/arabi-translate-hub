@@ -28,6 +28,13 @@ const BattleQuiz1v1Leaderboard: React.FC = () => {
 
   const myRow = rows.find((r) => r.user_id === user?.id);
 
+  // إخفاء أسماء اللاعبين الآخرين لحماية الخصوصية — نعرض اسماً مستعاراً مشتقاً من user_id
+  const anonName = (uid: string) => `لاعب #${(uid || '').replace(/-/g, '').slice(0, 4).toUpperCase()}`;
+  const displayFor = (r: BQ1v1LeaderboardRow) =>
+    r.user_id === user?.id ? r.display_name : anonName(r.user_id);
+  const initialFor = (r: BQ1v1LeaderboardRow) =>
+    r.user_id === user?.id ? (r.display_name?.charAt(0) || '?') : '🥷';
+
   return (
     <ClientLayout>
       <div className="p-3 sm:p-4 lg:p-6 max-w-3xl mx-auto space-y-4" dir="rtl">
@@ -86,15 +93,15 @@ const BattleQuiz1v1Leaderboard: React.FC = () => {
                     <div className="w-9 h-9 rounded-full bg-muted flex items-center justify-center shrink-0">
                       {rankIcon(r.rank)}
                     </div>
-                    {r.avatar_url ? (
+                    {r.avatar_url && r.user_id === user?.id ? (
                       <img src={r.avatar_url} alt="" className="w-9 h-9 rounded-full object-cover shrink-0" />
                     ) : (
                       <div className="w-9 h-9 rounded-full bg-gradient-to-br from-primary to-fuchsia-600 flex items-center justify-center text-white font-bold text-sm shrink-0">
-                        {r.display_name.charAt(0)}
+                        {initialFor(r)}
                       </div>
                     )}
                     <div className="flex-1 min-w-0">
-                      <div className="font-semibold truncate">{r.display_name} {isMe && <Badge variant="secondary" className="text-[10px] mr-1">أنت</Badge>}</div>
+                      <div className="font-semibold truncate">{displayFor(r)} {isMe && <Badge variant="secondary" className="text-[10px] mr-1">أنت</Badge>}</div>
                       <div className="text-[11px] text-muted-foreground flex gap-2 mt-0.5">
                         <span>{r.wins}ف</span>
                         <span>{r.losses}خ</span>
