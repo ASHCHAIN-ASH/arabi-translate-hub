@@ -42,3 +42,6 @@ project_id = "kziujhdqogqeehtxgpax"
 
   [functions.generate-receipt-pdf]
     verify_jwt = true
+
+  [functions.financing-whatsapp-notify]
+    verify_jwt = false
