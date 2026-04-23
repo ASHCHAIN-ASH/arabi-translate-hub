@@ -145,37 +145,102 @@ export const WalletService = {
     return data as any;
   },
 
-  // Upload bank-transfer receipt to private storage; returns the storage path.
-  // Optional onProgress callback receives a 0..100 number for UI feedback.
+  // Upload bank-transfer receipt to private storage with REAL upload progress.
+  // Uses a signed upload URL + XHR so we can read xhr.upload.onprogress events.
+  // Falls back to the standard SDK upload (with smooth simulated progress) if
+  // signed-URL creation isn't available.
   async uploadReceipt(
     userId: string,
     file: File,
     onProgress?: (pct: number) => void,
   ): Promise<string> {
-    const ext = file.name.split('.').pop() || 'jpg';
+    // Validate first to surface clear errors
+    if (!file) throw new Error('لم يتم اختيار ملف للرفع');
+    if (file.size === 0) throw new Error('الملف فارغ، يرجى اختيار ملف صالح');
+    if (file.size > 5 * 1024 * 1024) throw new Error('حجم الملف يتجاوز 5 ميجابايت');
+
+    const ext = (file.name.split('.').pop() || 'jpg').toLowerCase();
     const path = `${userId}/${Date.now()}-${Math.random().toString(36).slice(2, 8)}.${ext}`;
 
-    // Smooth simulated progress while the upload is in flight (Supabase JS
-    // doesn't expose native progress events for storage uploads yet).
-    let timer: ReturnType<typeof setInterval> | null = null;
-    if (onProgress) {
-      let pct = 0;
-      onProgress(2);
-      timer = setInterval(() => {
-        pct = Math.min(90, pct + Math.max(2, Math.round((90 - pct) * 0.12)));
-        onProgress(pct);
-      }, 180);
-    }
+    onProgress?.(1);
 
+    // Try real-progress path via signed upload URL
     try {
-      const { error } = await supabase.storage
+      const { data: signed, error: signErr } = await supabase.storage
         .from('wallet-receipts')
-        .upload(path, file, { cacheControl: '3600', upsert: false });
-      if (error) throw error;
-      onProgress?.(100);
+        .createSignedUploadUrl(path);
+
+      if (signErr || !signed?.signedUrl) {
+        throw signErr || new Error('تعذّر إنشاء رابط الرفع');
+      }
+
+      await new Promise<void>((resolve, reject) => {
+        const xhr = new XMLHttpRequest();
+        xhr.open('PUT', signed.signedUrl, true);
+        xhr.setRequestHeader('Content-Type', file.type || 'application/octet-stream');
+        xhr.setRequestHeader('x-upsert', 'false');
+        xhr.upload.onprogress = (evt) => {
+          if (evt.lengthComputable && onProgress) {
+            const pct = Math.max(1, Math.min(99, Math.round((evt.loaded / evt.total) * 100)));
+            onProgress(pct);
+          }
+        };
+        xhr.onload = () => {
+          if (xhr.status >= 200 && xhr.status < 300) {
+            onProgress?.(100);
+            resolve();
+          } else {
+            const msg =
+              xhr.status === 413
+                ? 'حجم الملف كبير جدًا — تجاوز الحد المسموح به'
+                : xhr.status === 401 || xhr.status === 403
+                  ? 'صلاحيات الرفع منتهية أو غير كافية، أعد تسجيل الدخول وحاول مجددًا'
+                  : xhr.status === 0
+                    ? 'انقطع الاتصال أثناء الرفع، تحقق من الإنترنت'
+                    : `فشل الرفع (رمز ${xhr.status})${xhr.statusText ? ': ' + xhr.statusText : ''}`;
+            reject(new Error(msg));
+          }
+        };
+        xhr.onerror = () => reject(new Error('فشل الاتصال بخادم التخزين أثناء رفع الإيصال'));
+        xhr.onabort = () => reject(new Error('تم إلغاء عملية الرفع'));
+        xhr.ontimeout = () => reject(new Error('انتهت مهلة الرفع، حاول مرة أخرى'));
+        xhr.send(file);
+      });
+
       return path;
-    } finally {
-      if (timer) clearInterval(timer);
+    } catch (signedErr: any) {
+      // Fallback: standard SDK upload with smooth simulated progress
+      let timer: ReturnType<typeof setInterval> | null = null;
+      if (onProgress) {
+        let pct = 5;
+        onProgress(pct);
+        timer = setInterval(() => {
+          pct = Math.min(90, pct + Math.max(2, Math.round((90 - pct) * 0.12)));
+          onProgress(pct);
+        }, 180);
+      }
+      try {
+        const { error } = await supabase.storage
+          .from('wallet-receipts')
+          .upload(path, file, { cacheControl: '3600', upsert: false });
+        if (error) {
+          const msg = (error as any)?.message || '';
+          if (/exceeded|too large|413/i.test(msg)) {
+            throw new Error('حجم الملف يتجاوز الحد المسموح');
+          }
+          if (/Unauthorized|JWT|401|403/i.test(msg)) {
+            throw new Error('صلاحيات الرفع غير كافية، أعد تسجيل الدخول');
+          }
+          if (/duplicate|already exists/i.test(msg)) {
+            throw new Error('ملف بنفس الاسم موجود مسبقًا، حاول مجددًا');
+          }
+          throw new Error(`فشل رفع الإيصال: ${msg || 'سبب غير معروف'}`);
+        }
+        onProgress?.(100);
+        return path;
+      } finally {
+        if (timer) clearInterval(timer);
+      }
     }
   },
 
