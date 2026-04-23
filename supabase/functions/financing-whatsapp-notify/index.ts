@@ -12,13 +12,31 @@ const corsHeaders = {
 const BRAND = "🏦 *Master PayLater*";
 const DIVIDER = "━━━━━━━━━━━━━━━";
 
+// LRM (Left-to-Right Mark) — يضمن عرض الأرقام والمبالغ بشكل صحيح داخل نص RTL
+const LRM = "\u200E";
+
+/**
+ * تنسيق الأرقام بأرقام لاتينية (إنجليزية) مع فواصل آلاف،
+ * ولفّها بعلامات LRM لمنع انعكاسها داخل سياق RTL في واتساب.
+ * مثال: 12500 → ‎12,500‎
+ */
 function fmt(n: number | string | null | undefined): string {
   const v = Number(n || 0);
-  return v.toLocaleString("ar-SA", { minimumFractionDigits: 0, maximumFractionDigits: 2 });
+  // en-US يضمن أرقام لاتينية وفواصل آلاف ثابتة بغض النظر عن locale الخادم
+  const formatted = v.toLocaleString("en-US", {
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 2,
+  });
+  return `${LRM}${formatted}${LRM}`;
+}
+
+/** لفّ نص قصير (رقم/كود) بعلامات LRM لضمان اتجاهه داخل RTL */
+function ltr(s: string | number): string {
+  return `${LRM}${s}${LRM}`;
 }
 
 function refOf(id: string): string {
-  return id.slice(0, 8).toUpperCase();
+  return ltr(id.slice(0, 8).toUpperCase());
 }
 
 interface AppRow {
