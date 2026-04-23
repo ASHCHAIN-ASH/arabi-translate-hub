@@ -48,6 +48,7 @@ const WalletTopup: React.FC = () => {
   const [uploadStage, setUploadStage] = useState<'idle' | 'uploading' | 'saving' | 'done'>('idle');
   const [uploadPct, setUploadPct] = useState(0);
   const [receiptPreview, setReceiptPreview] = useState<string | null>(null);
+  const [showSuccess, setShowSuccess] = useState(false);
   const [dragOver, setDragOver] = useState(false);
 
   useEffect(() => {
@@ -137,10 +138,11 @@ const WalletTopup: React.FC = () => {
         receipt_path,
       });
       setUploadStage('done');
-      toast.success('تم إرسال طلب الشحن بانتظار موافقة الإدارة', {
-        description: bonus.pct > 0 ? `🎁 ستحصل على ${bonus.label} عند الموافقة!` : undefined,
-      });
-      setTimeout(() => navigate('/wallet'), 900);
+      setShowSuccess(true);
+      setTimeout(() => {
+        setShowSuccess(false);
+        navigate('/wallet');
+      }, 5000);
     } catch (e: any) {
       setUploadStage('idle');
       toast.error('فشل إرسال الطلب', { description: e.message });
@@ -997,6 +999,145 @@ const WalletTopup: React.FC = () => {
           </div>
         </div>
       </div>
+
+      {/* === Centered Success Modal (5s auto-dismiss) === */}
+      <AnimatePresence>
+        {showSuccess && (
+          <motion.div
+            key="success-overlay"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.25 }}
+            className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-background/70 backdrop-blur-md"
+            onClick={() => setShowSuccess(false)}
+          >
+            <motion.div
+              initial={{ scale: 0.85, y: 20, opacity: 0 }}
+              animate={{ scale: 1, y: 0, opacity: 1 }}
+              exit={{ scale: 0.9, y: 10, opacity: 0 }}
+              transition={{ type: 'spring', stiffness: 260, damping: 22 }}
+              onClick={(e) => e.stopPropagation()}
+              className="relative w-full max-w-md overflow-hidden rounded-3xl border border-emerald-500/30 bg-card shadow-2xl"
+              dir="rtl"
+            >
+              {/* Animated gradient header */}
+              <div className="relative h-32 bg-gradient-to-br from-emerald-500 via-emerald-600 to-teal-600 overflow-hidden">
+                {/* Floating orbs */}
+                {[...Array(6)].map((_, i) => (
+                  <motion.div
+                    key={i}
+                    initial={{ y: 100, opacity: 0 }}
+                    animate={{ y: -120, opacity: [0, 1, 0] }}
+                    transition={{ duration: 2.5, delay: i * 0.25, repeat: Infinity, ease: 'easeOut' }}
+                    className="absolute w-2.5 h-2.5 rounded-full bg-white/40"
+                    style={{ left: `${10 + i * 15}%` }}
+                  />
+                ))}
+                {/* Shimmer */}
+                <motion.div
+                  initial={{ x: '-100%' }}
+                  animate={{ x: '200%' }}
+                  transition={{ duration: 2, repeat: Infinity, ease: 'linear' }}
+                  className="absolute inset-y-0 w-1/3 bg-gradient-to-r from-transparent via-white/25 to-transparent skew-x-12"
+                />
+
+                {/* Check circle */}
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <motion.div
+                    initial={{ scale: 0, rotate: -180 }}
+                    animate={{ scale: 1, rotate: 0 }}
+                    transition={{ type: 'spring', stiffness: 200, damping: 14, delay: 0.15 }}
+                    className="relative w-20 h-20 rounded-full bg-white/95 flex items-center justify-center shadow-2xl"
+                  >
+                    <motion.div
+                      animate={{ scale: [1, 1.15, 1], opacity: [0.4, 0.7, 0.4] }}
+                      transition={{ duration: 1.6, repeat: Infinity }}
+                      className="absolute inset-0 rounded-full bg-emerald-400/40"
+                    />
+                    <motion.svg
+                      viewBox="0 0 24 24"
+                      className="w-10 h-10 relative z-10"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="3"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    >
+                      <motion.path
+                        d="M5 13l4 4L19 7"
+                        className="text-emerald-600"
+                        initial={{ pathLength: 0 }}
+                        animate={{ pathLength: 1 }}
+                        transition={{ duration: 0.5, delay: 0.4, ease: 'easeOut' }}
+                      />
+                    </motion.svg>
+                  </motion.div>
+                </div>
+              </div>
+
+              {/* Body */}
+              <div className="p-6 text-center space-y-3">
+                <motion.h3
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.5 }}
+                  className="text-xl font-black text-foreground"
+                >
+                  تم إرسال طلب الشحن بنجاح
+                </motion.h3>
+                <motion.p
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.6 }}
+                  className="text-sm text-muted-foreground leading-relaxed"
+                >
+                  طلبك قيد المراجعة من فريق الإدارة، وسيتم إضافة الرصيد إلى محفظتك فور الاعتماد.
+                </motion.p>
+
+                {bonus.pct > 0 && (
+                  <motion.div
+                    initial={{ opacity: 0, scale: 0.9 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ delay: 0.7, type: 'spring', stiffness: 220 }}
+                    className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-700 dark:text-amber-300 text-sm font-bold"
+                  >
+                    <Gift className="w-4 h-4" />
+                    🎁 سيُضاف بونص {bonus.pct}% عند الموافقة
+                  </motion.div>
+                )}
+
+                {/* Amount badge */}
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ delay: 0.8 }}
+                  className="flex items-center justify-center gap-2 pt-2"
+                >
+                  <Badge variant="secondary" className="font-black text-base px-3 py-1 tabular-nums">
+                    {amount.toLocaleString('ar-SA')} ر.س
+                  </Badge>
+                </motion.div>
+
+                {/* 5s progress bar */}
+                <div className="pt-3">
+                  <div className="h-1 w-full bg-muted rounded-full overflow-hidden">
+                    <motion.div
+                      initial={{ width: '100%' }}
+                      animate={{ width: '0%' }}
+                      transition={{ duration: 5, ease: 'linear' }}
+                      className="h-full bg-gradient-to-l from-emerald-500 to-teal-500"
+                    />
+                  </div>
+                  <p className="text-[11px] text-muted-foreground mt-2">
+                    سيتم تحويلك إلى المحفظة خلال لحظات...
+                  </p>
+                </div>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </ClientLayout>
   );
 };
