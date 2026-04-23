@@ -8,6 +8,7 @@ import {
   Sparkles, Gift, Zap, CreditCard, Building2, Copy, Check, Upload,
   FileImage, X, Shield, ArrowLeft, Wallet as WalletIcon, ChevronRight,
   TrendingUp, Lock, BadgeCheck, Banknote, Receipt, Info, Plus,
+  Image as ImageIcon, Loader2, CloudUpload, FileCheck2, Send, Hash,
 } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
