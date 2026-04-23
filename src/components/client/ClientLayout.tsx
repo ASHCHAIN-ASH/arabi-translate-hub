@@ -24,6 +24,7 @@ import {
   Gift,
   GraduationCap as StudentIcon,
   BookOpen,
+  Swords,
 } from 'lucide-react';
 import ChatFloatingButton from '@/components/chat/ChatFloatingButton';
 import { cn } from '@/lib/utils';
