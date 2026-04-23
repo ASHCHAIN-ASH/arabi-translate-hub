@@ -53,10 +53,14 @@ const BattleQuiz1v1Play: React.FC = () => {
     if (!user || !matchId) return;
     let mounted = true;
     (async () => {
+      setAttemptStage('fetching_match');
       const m = await BattleQuiz1v1Service.getMatch(matchId);
       if (!mounted) return;
-      if (!m) { setError('لم يتم العثور على المباراة'); setLoading(false); return; }
+      if (!m) { setAttemptStage('failed'); setError('لم يتم العثور على المباراة'); setLoading(false); return; }
+
+      setAttemptStage('validating');
       if (![m.player_a_id, m.player_b_id].includes(user.id)) {
+        setAttemptStage('failed');
         setError('لست لاعباً في هذه المباراة'); setLoading(false); return;
       }
       setMatch(m);
@@ -66,6 +70,7 @@ const BattleQuiz1v1Play: React.FC = () => {
         return;
       }
 
+      setAttemptStage('creating_attempt');
       const res = await BattleQuiz1v1Service.startAttempt(matchId);
       if (!mounted) return;
       if (!res || res.error) {
@@ -81,11 +86,14 @@ const BattleQuiz1v1Play: React.FC = () => {
           room_not_open: 'الغرفة غير مفتوحة للعب حالياً.',
         };
         const friendly = res?.error ? errorMessages[res.error] : null;
+        setAttemptStage('failed');
         setError(friendly ?? `تعذّر بدء المباراة${res?.error ? ` (${res.error})` : ''}. يرجى المحاولة لاحقاً.`);
         setLoading(false);
         return;
       }
+      setAttemptStage('loading_questions');
       setPayload(res);
+      setAttemptStage('ready');
       setLoading(false);
       startedAtRef.current = Date.now();
       matchStartRef.current = Date.now();
