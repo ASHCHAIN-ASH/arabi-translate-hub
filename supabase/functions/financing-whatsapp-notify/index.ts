@@ -56,7 +56,7 @@ function buildMessage(event: string, app: AppRow, extra: Record<string, any> = {
   const total = fmt(app.total_amount);
   const down = fmt(app.down_payment);
   const monthly = fmt(app.monthly_installment);
-  const months = app.duration_months;
+  const months = ltr(app.duration_months);
 
   const footer = `\n${DIVIDER}\n📱 لمتابعة طلبك: تطبيق المنصة\n🔒 لا تشارك هذه الرسالة مع أي طرف`;
 
