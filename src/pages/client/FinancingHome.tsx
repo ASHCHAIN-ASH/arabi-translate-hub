@@ -16,6 +16,9 @@ import {
   Activity,
   Hourglass,
   Archive,
+  Receipt,
+  CreditCard,
+  Gavel,
 } from 'lucide-react';
 import ClientLayout from '@/components/client/ClientLayout';
 import { Card } from '@/components/ui/card';
@@ -193,32 +196,58 @@ const FinancingHome: React.FC = () => {
           </Card>
         </motion.div>
 
-        {/* Steps */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4">
-          {[
-            { i: 1, t: 'إرسال الطلب', d: 'املأ بياناتك ووثّق هويتك', emoji: '📝' },
-            { i: 2, t: 'مراجعة الإدارة', d: 'تقييم الأهلية والموافقة', emoji: '🔎' },
-            { i: 3, t: 'العقد + الدفعة', d: 'وقّع إلكترونيًا وادفع 20%', emoji: '✍️' },
-            { i: 4, t: 'تفعيل الرصيد', d: 'يُضاف لمحفظتك فورًا', emoji: '⚡' },
-          ].map((s, idx) => (
-            <motion.div
-              key={s.i}
-              initial={{ opacity: 0, y: 16 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.1 + idx * 0.07 }}
-            >
-              <Card className="p-3 md:p-4 border-border/50 hover:border-primary/50 hover:shadow-lg transition-all hover-scale h-full">
-                <div className="flex items-center gap-2 mb-2">
-                  <div className="text-xl md:text-2xl">{s.emoji}</div>
-                  <div className="h-7 w-7 rounded-lg bg-gradient-to-br from-primary to-primary/70 text-primary-foreground flex items-center justify-center font-bold text-xs">
-                    {s.i}
+        {/* Steps — 6 professional fintech stages */}
+        <div className="space-y-3">
+          <div className="flex items-center justify-between">
+            <h3 className="text-sm md:text-base font-bold flex items-center gap-2">
+              <Sparkles className="h-4 w-4 text-primary" />
+              مراحل طلبك التمويلي
+            </h3>
+            <Badge variant="outline" className="text-[10px]">نظام مستقل · صارم · موثّق</Badge>
+          </div>
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-2.5 md:gap-3">
+            {[
+              { i: 1, t: 'إرسال الطلب', d: 'وثّق هويتك وبياناتك', icon: Receipt, color: 'from-sky-500 to-blue-600' },
+              { i: 2, t: 'التقييم الائتماني', d: 'فحص الأهلية والملاءة', icon: ShieldCheck, color: 'from-indigo-500 to-violet-600' },
+              { i: 3, t: 'توقيع العقد', d: 'توقيع رقمي مُلزِم', icon: FileText, color: 'from-violet-500 to-purple-600' },
+              { i: 4, t: 'الدفعة الأولى', d: '20% من المبلغ', icon: CreditCard, color: 'from-fuchsia-500 to-pink-600' },
+              { i: 5, t: 'تفعيل الرصيد', d: 'يُضاف لمحفظتك فورًا', icon: Sparkles, color: 'from-emerald-500 to-teal-600' },
+              { i: 6, t: 'السند التنفيذي', d: 'عند التأخر +24 ساعة', icon: Gavel, color: 'from-rose-500 to-red-600' },
+            ].map((s, idx) => (
+              <motion.div
+                key={s.i}
+                initial={{ opacity: 0, y: 18 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.1 + idx * 0.08, type: 'spring', stiffness: 120 }}
+                whileHover={{ y: -4, scale: 1.03 }}
+              >
+                <Card className="relative overflow-hidden p-3 border-border/60 hover:border-primary/60 hover:shadow-xl transition-all h-full group cursor-default">
+                  <div className={`absolute inset-0 bg-gradient-to-br ${s.color} opacity-0 group-hover:opacity-10 transition-opacity`} />
+                  <div className="relative flex items-center gap-2 mb-2">
+                    <motion.div
+                      whileHover={{ rotate: [0, -8, 8, 0] }}
+                      transition={{ duration: 0.5 }}
+                      className={`h-9 w-9 rounded-xl bg-gradient-to-br ${s.color} text-white flex items-center justify-center shadow-md`}
+                    >
+                      <s.icon className="h-4 w-4" />
+                    </motion.div>
+                    <div className="h-6 w-6 rounded-md bg-muted text-foreground/70 flex items-center justify-center font-bold text-[11px] ring-1 ring-border">
+                      {s.i}
+                    </div>
                   </div>
-                </div>
-                <div className="font-semibold mb-0.5 text-sm">{s.t}</div>
-                <p className="text-[11px] md:text-xs text-muted-foreground leading-relaxed">{s.d}</p>
-              </Card>
-            </motion.div>
-          ))}
+                  <div className="relative font-bold mb-0.5 text-[13px] leading-tight">{s.t}</div>
+                  <p className="relative text-[10.5px] text-muted-foreground leading-snug">{s.d}</p>
+                  {idx < 5 && (
+                    <motion.div
+                      className="absolute top-1/2 -left-1 h-px w-2 bg-gradient-to-r from-primary/40 to-transparent hidden lg:block"
+                      animate={{ opacity: [0.3, 1, 0.3] }}
+                      transition={{ duration: 2, repeat: Infinity, delay: idx * 0.2 }}
+                    />
+                  )}
+                </Card>
+              </motion.div>
+            ))}
+          </div>
         </div>
 
         {/* Applications list with stunning RTL tabs */}
