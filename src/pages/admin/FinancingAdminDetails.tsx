@@ -24,6 +24,29 @@ import {
   FINANCING_DOC_LABELS_AR,
 } from '@/lib/financing';
 import { FINANCING_TEAMS } from '@/lib/financing-bank';
+import { sendWhatsApp } from '@/lib/whatsapp';
+import { MessageCircle, Send } from 'lucide-react';
+
+// ── WhatsApp helper: notify customer about admin actions ──
+const notifyCustomer = async (
+  app: any,
+  message: string,
+  entityId?: string,
+) => {
+  const phone = app?.applicant_phone;
+  if (!phone) return;
+  try {
+    await sendWhatsApp({
+      to: phone,
+      message: `مرحباً ${app.applicant_full_name || ''} 👋\n\n${message}\n\nرقم الطلب: #${String(app.id).slice(0, 8).toUpperCase()}\n\nفريق ماستر للتمويل 💼`,
+      related_entity_type: 'financing_application',
+      related_entity_id: entityId || app.id,
+      user_id: app.user_id || undefined,
+    });
+  } catch (e) {
+    console.warn('whatsapp notify failed', e);
+  }
+};
 
 type Application = any;
 type FinancingDocument = {
