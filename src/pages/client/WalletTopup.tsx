@@ -55,6 +55,26 @@ const WalletTopup: React.FC = () => {
     WalletService.getMyWallet(user.id).then(setWallet).catch(() => {});
   }, [user?.id]);
 
+  // Build/cleanup an object URL preview for the receipt file (images only).
+  useEffect(() => {
+    if (!receiptFile || !receiptFile.type.startsWith('image/')) {
+      setReceiptPreview(null);
+      return;
+    }
+    const url = URL.createObjectURL(receiptFile);
+    setReceiptPreview(url);
+    return () => URL.revokeObjectURL(url);
+  }, [receiptFile]);
+
+  const handleFile = (f?: File | null) => {
+    if (!f) return;
+    if (f.size > 5 * 1024 * 1024) return toast.error('الحجم الأقصى 5 ميجابايت');
+    const ok = f.type.startsWith('image/') || f.type === 'application/pdf';
+    if (!ok) return toast.error('الصيغة غير مدعومة. JPG / PNG / PDF فقط');
+    setReceiptFile(f);
+    toast.success('تم اختيار الإيصال', { description: f.name });
+  };
+
   const bonus = useMemo(() => getBonus(amount), [amount]);
   const bonusAmount = useMemo(() => Math.round((amount * bonus.pct) / 100), [amount, bonus.pct]);
   const totalReceived = amount + bonusAmount;
