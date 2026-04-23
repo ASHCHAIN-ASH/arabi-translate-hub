@@ -488,16 +488,17 @@ const FinancingNew: React.FC = () => {
                         قطاع جهة العمل
                       </Label>
                       <Select
+                        dir="rtl"
                         value={form.employer_sector}
                         onValueChange={(v) => setField('employer_sector', v)}
                       >
-                        <SelectTrigger className="h-11">
+                        <SelectTrigger className="h-11 text-right flex-row-reverse">
                           <SelectValue placeholder="اختر القطاع المهني..." />
                         </SelectTrigger>
-                        <SelectContent>
+                        <SelectContent dir="rtl" className="text-right">
                           {EMPLOYMENT_SECTORS.map((s) => (
-                            <SelectItem key={s.value} value={s.value}>
-                              <div className="flex items-center gap-2">
+                            <SelectItem key={s.value} value={s.value} className="text-right">
+                              <div className="flex items-center gap-2 flex-row-reverse justify-start w-full">
                                 <s.icon className={`h-4 w-4 ${s.color}`} />
                                 <span>{s.label}</span>
                               </div>
@@ -516,16 +517,17 @@ const FinancingNew: React.FC = () => {
                     </FieldGroup>
                     <FieldGroup icon={MapPin} label="المدينة">
                       <Select
+                        dir="rtl"
                         value={form.city}
                         onValueChange={(v) => setField('city', v)}
                       >
-                        <SelectTrigger className="h-11">
+                        <SelectTrigger className="h-11 text-right flex-row-reverse">
                           <SelectValue placeholder="اختر المدينة..." />
                         </SelectTrigger>
-                        <SelectContent className="max-h-72">
+                        <SelectContent dir="rtl" className="max-h-72 text-right">
                           {SAUDI_CITIES.map((c) => (
-                            <SelectItem key={c} value={c}>
-                              <div className="flex items-center gap-2">
+                            <SelectItem key={c} value={c} className="text-right">
+                              <div className="flex items-center gap-2 flex-row-reverse justify-start w-full">
                                 <MapPin className="h-3.5 w-3.5 text-muted-foreground" />
                                 {c}
                               </div>
