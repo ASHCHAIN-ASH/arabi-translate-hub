@@ -25,6 +25,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { useToast } from "@/hooks/use-toast";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import { renderCaption, copyToClipboard } from "@/utils/referralLink";
 
 // ---------------- Types ----------------
 type Platform = "instagram" | "story" | "twitter" | "brochure";
@@ -52,13 +53,7 @@ const TABS: {
 ];
 
 // ---------------- Helpers ----------------
-function applyRefToCaption(template: string | null, shareUrl: string): string {
-  const base = template?.trim() || "";
-  if (!base) return shareUrl;
-  if (base.includes("{{ref_url}}")) return base.split("{{ref_url}}").join(shareUrl);
-  if (base.includes("{ref_url}")) return base.split("{ref_url}").join(shareUrl);
-  return `${base}\n\n${shareUrl}`;
-}
+// caption rendering moved to @/utils/referralLink (renderCaption)
 
 async function downloadImage(url: string, filename: string) {
   try {
