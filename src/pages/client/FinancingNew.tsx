@@ -1,6 +1,5 @@
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { useNavigate, useSearchParams, Link } from 'react-router-dom';
-import { Helmet } from 'react-helmet-async';
 import { z } from 'zod';
 import { ArrowRight, CheckCircle2, ShieldCheck, Upload, Loader2 } from 'lucide-react';
 import ClientLayout from '@/components/client/ClientLayout';
@@ -67,6 +66,10 @@ const FinancingNew: React.FC = () => {
   const [agreed, setAgreed] = useState({ terms: false, dataUse: false, walletCredit: false });
 
   const preview = useMemo(() => computeFinancingPreview(amount), [amount]);
+
+  useEffect(() => {
+    document.title = 'طلب تمويل جديد — Master PayLater';
+  }, []);
 
   const setField = (k: keyof typeof form, v: any) => setForm((f) => ({ ...f, [k]: v }));
 
@@ -189,10 +192,6 @@ const FinancingNew: React.FC = () => {
 
   return (
     <ClientLayout>
-      <Helmet>
-        <title>طلب تمويل جديد — Master PayLater</title>
-      </Helmet>
-
       <div dir="rtl" className="max-w-3xl mx-auto space-y-6">
         <div>
           <Link to="/financing" className="text-sm text-muted-foreground hover:text-foreground inline-flex items-center gap-1">
@@ -316,7 +315,7 @@ const FinancingNew: React.FC = () => {
                       {REQUIRED_DOCS.includes(dk) && <span className="text-destructive mr-1">*</span>}
                     </Label>
                     {files[dk] && (
-                      <span className="text-xs text-green-600 flex items-center gap-1">
+                      <span className="text-xs text-primary flex items-center gap-1">
                         <CheckCircle2 className="h-3 w-3" /> تم الرفع
                       </span>
                     )}

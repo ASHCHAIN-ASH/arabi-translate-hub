@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Helmet } from 'react-helmet-async';
 import { CreditCard, Plus, FileText, Clock, CheckCircle2, XCircle, ShieldCheck } from 'lucide-react';
 import ClientLayout from '@/components/client/ClientLayout';
 import { Card } from '@/components/ui/card';
@@ -40,6 +39,10 @@ const FinancingHome: React.FC = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    document.title = 'Master PayLater — التمويل | منصة ماستر';
+  }, []);
+
+  useEffect(() => {
     if (!user) return;
     (async () => {
       setLoading(true);
@@ -54,11 +57,6 @@ const FinancingHome: React.FC = () => {
 
   return (
     <ClientLayout>
-      <Helmet>
-        <title>Master PayLater — التمويل | منصة ماستر</title>
-        <meta name="description" content="نظام التمويل الداخلي Master PayLater لتقسيط طلباتك على 12 شهرًا برصيد محفظة بعد الموافقة." />
-      </Helmet>
-
       <div dir="rtl" className="space-y-6">
         {/* Hero */}
         <Card
@@ -175,7 +173,7 @@ const FinancingHome: React.FC = () => {
                       {new Date(a.created_at).toLocaleDateString('ar-SA')}
                     </span>
                     {a.status === 'approved' || a.status === 'active' ? (
-                      <span className="flex items-center gap-1 text-green-600">
+                      <span className="flex items-center gap-1 text-primary">
                         <CheckCircle2 className="h-3 w-3" /> فعّال
                       </span>
                     ) : a.status === 'rejected' ? (
