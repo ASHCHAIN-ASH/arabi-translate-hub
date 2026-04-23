@@ -531,9 +531,9 @@ const WalletTopup: React.FC = () => {
                       <div className="text-[10px] uppercase tracking-widest opacity-80 mb-1.5">
                         رقم الآيبان (IBAN)
                       </div>
-                      <div className="flex items-center justify-between gap-2 bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl px-3.5 py-2.5">
-                        <div className="font-mono text-base sm:text-lg font-black tracking-[0.18em] select-all break-all">
-                          {BANK_INFO.ibanFormatted}
+                      <div className="flex items-center justify-between gap-2 bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl px-3 py-2">
+                        <div dir="ltr" className="font-mono text-[13px] sm:text-sm font-bold tracking-normal select-all truncate">
+                          {BANK_INFO.iban}
                         </div>
                         <motion.button
                           whileTap={{ scale: 0.9 }}
