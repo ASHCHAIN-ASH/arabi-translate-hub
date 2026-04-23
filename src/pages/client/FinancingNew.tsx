@@ -24,6 +24,20 @@ import {
   ScrollText,
   AlertTriangle,
   Gavel,
+  Building2,
+  Landmark,
+  GraduationCap,
+  Stethoscope,
+  Cpu,
+  ShoppingBag,
+  Hammer,
+  Plane,
+  HeartHandshake,
+  Factory,
+  Scale,
+  Users,
+  UserCheck,
+  Zap,
 } from 'lucide-react';
 import ClientLayout from '@/components/client/ClientLayout';
 import { Card } from '@/components/ui/card';
