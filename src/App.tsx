@@ -741,6 +741,32 @@ const App = () => (
             <Route path="/battle-quiz/1v1/:matchId/result" element={
               <SimpleProtectedRoute requiredRole="client"><BattleQuiz1v1Result /></SimpleProtectedRoute>
             } />
+
+            {/* ===== Battle Academy aliases (same components, friendlier URLs) ===== */}
+            <Route path="/battle-academy" element={
+              <SimpleProtectedRoute requiredRole="client"><BattleQuizHome /></SimpleProtectedRoute>
+            } />
+            <Route path="/battle-academy/leaderboard" element={
+              <SimpleProtectedRoute requiredRole="client"><BattleQuizLeaderboard /></SimpleProtectedRoute>
+            } />
+            <Route path="/battle-academy/play/:roomId" element={
+              <SimpleProtectedRoute requiredRole="client"><BattleQuizPlay /></SimpleProtectedRoute>
+            } />
+            <Route path="/battle-academy/result/:roomId" element={
+              <SimpleProtectedRoute requiredRole="client"><BattleQuizResult /></SimpleProtectedRoute>
+            } />
+            <Route path="/battle-academy/1v1" element={
+              <SimpleProtectedRoute requiredRole="client"><BattleQuiz1v1Lobby /></SimpleProtectedRoute>
+            } />
+            <Route path="/battle-academy/1v1/leaderboard" element={
+              <SimpleProtectedRoute requiredRole="client"><BattleQuiz1v1Leaderboard /></SimpleProtectedRoute>
+            } />
+            <Route path="/battle-academy/1v1/play/:matchId" element={
+              <SimpleProtectedRoute requiredRole="client"><BattleQuiz1v1Play /></SimpleProtectedRoute>
+            } />
+            <Route path="/battle-academy/1v1/result/:matchId" element={
+              <SimpleProtectedRoute requiredRole="client"><BattleQuiz1v1Result /></SimpleProtectedRoute>
+            } />
             <Route path="/student" element={
               <SimpleProtectedRoute requiredRole="client">
                 <StudentHub />
