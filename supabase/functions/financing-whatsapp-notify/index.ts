@@ -274,7 +274,7 @@ serve(async (req) => {
 
     const { data: app, error: appErr } = await supabase
       .from("financing_applications")
-      .select("id, applicant_full_name, applicant_phone, total_amount, down_payment, remaining_amount, monthly_installment, duration_months, status")
+      .select("id, applicant_full_name, applicant_phone, total_amount, down_payment, remaining_amount, monthly_installment, duration_months, status, contract_id, contract_pdf_url")
       .eq("id", application_id)
       .single();
 
