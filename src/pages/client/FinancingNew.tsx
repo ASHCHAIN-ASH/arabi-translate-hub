@@ -46,6 +46,41 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Checkbox } from '@/components/ui/checkbox';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
+
+// === Saudi market: employment sectors (banking-style classification) ===
+const EMPLOYMENT_SECTORS = [
+  { value: 'government', label: 'القطاع الحكومي', icon: Landmark, color: 'text-emerald-600' },
+  { value: 'military', label: 'العسكري والأمني', icon: ShieldCheck, color: 'text-emerald-700' },
+  { value: 'banking', label: 'البنوك والمالية', icon: Building2, color: 'text-blue-600' },
+  { value: 'oil_gas', label: 'النفط والغاز (أرامكو/سابك)', icon: Factory, color: 'text-amber-600' },
+  { value: 'tech', label: 'تقنية المعلومات', icon: Cpu, color: 'text-violet-600' },
+  { value: 'healthcare', label: 'الصحة والمستشفيات', icon: Stethoscope, color: 'text-rose-600' },
+  { value: 'education', label: 'التعليم والجامعات', icon: GraduationCap, color: 'text-indigo-600' },
+  { value: 'retail', label: 'التجزئة والتجارة', icon: ShoppingBag, color: 'text-orange-600' },
+  { value: 'construction', label: 'المقاولات والبناء', icon: Hammer, color: 'text-yellow-700' },
+  { value: 'aviation', label: 'الطيران والنقل', icon: Plane, color: 'text-sky-600' },
+  { value: 'hospitality', label: 'الضيافة والسياحة', icon: HeartHandshake, color: 'text-pink-600' },
+  { value: 'legal', label: 'القانوني والاستشاري', icon: Scale, color: 'text-slate-700' },
+  { value: 'self_employed', label: 'أعمال حرة / مستقل', icon: UserCheck, color: 'text-teal-600' },
+  { value: 'private', label: 'القطاع الخاص (آخر)', icon: Briefcase, color: 'text-primary' },
+  { value: 'unemployed', label: 'حالياً بدون عمل', icon: Users, color: 'text-muted-foreground' },
+] as const;
+
+const SAUDI_CITIES = [
+  'الرياض', 'جدة', 'مكة المكرمة', 'المدينة المنورة', 'الدمام', 'الخبر',
+  'الظهران', 'الطائف', 'تبوك', 'بريدة', 'حائل', 'أبها', 'خميس مشيط',
+  'جازان', 'نجران', 'الجبيل', 'ينبع', 'الأحساء', 'القطيف', 'عرعر',
+  'سكاكا', 'الباحة', 'القصيم', 'الخرج', 'حفر الباطن', 'أخرى',
+];
+
+const QUICK_AMOUNTS = [2500, 5000, 10000, 20000, 50000, 100000];
 import { Badge } from '@/components/ui/badge';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
