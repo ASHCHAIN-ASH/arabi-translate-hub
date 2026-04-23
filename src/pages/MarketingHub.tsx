@@ -492,8 +492,9 @@ export default function MarketingHub() {
           <Tabs
             value={activeTab}
             onValueChange={(v) => setActiveTab(v as Platform)}
+            dir="rtl"
           >
-            <TabsList className="w-full sm:w-auto grid grid-cols-4 sm:inline-flex h-auto p-1 mb-5 sm:mb-6">
+            <TabsList dir="rtl" className="w-full sm:w-auto grid grid-cols-4 sm:inline-flex h-auto p-1 mb-5 sm:mb-6">
               {TABS.map(({ key, label, icon: Icon }) => {
                 const count = grouped[key].length;
                 return (
