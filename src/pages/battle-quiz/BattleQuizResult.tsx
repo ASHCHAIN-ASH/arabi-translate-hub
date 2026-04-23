@@ -126,11 +126,62 @@ const BattleQuizResult: React.FC = () => {
 
             {/* XP */}
             {!isFlagged && (
-              <div className="px-5 pb-5">
+              <div className="px-5 pb-3">
                 <div className="rounded-xl bg-gradient-to-r from-amber-500/10 to-orange-500/10 border border-amber-500/30 p-4 text-center">
                   <p className="text-xs text-muted-foreground mb-1">XP المكتسب</p>
                   <p className="text-3xl font-extrabold text-amber-600">+{result.xp_earned}</p>
                 </div>
+              </div>
+            )}
+
+            {/* 🏅 Earned badges */}
+            {!isFlagged && (
+              <div className="px-5 pb-5 flex flex-wrap gap-2 justify-center">
+                {result.is_perfect && (
+                  <motion.span
+                    initial={{ scale: 0, rotate: -10 }} animate={{ scale: 1, rotate: 0 }}
+                    transition={{ type: 'spring', stiffness: 300 }}
+                    className="px-3 py-1.5 rounded-full bg-gradient-to-r from-amber-500 to-orange-500 text-white text-xs font-bold shadow-md"
+                  >
+                    🎯 إجابات مثالية
+                  </motion.span>
+                )}
+                {result.rank === 1 && (
+                  <motion.span
+                    initial={{ scale: 0 }} animate={{ scale: 1 }}
+                    transition={{ type: 'spring', stiffness: 300, delay: 0.1 }}
+                    className="px-3 py-1.5 rounded-full bg-gradient-to-r from-yellow-400 to-amber-600 text-white text-xs font-bold shadow-md"
+                  >
+                    👑 المركز الأول
+                  </motion.span>
+                )}
+                {result.rank > 1 && result.rank <= 3 && (
+                  <motion.span
+                    initial={{ scale: 0 }} animate={{ scale: 1 }}
+                    transition={{ type: 'spring', stiffness: 300, delay: 0.1 }}
+                    className="px-3 py-1.5 rounded-full bg-gradient-to-r from-slate-400 to-slate-600 text-white text-xs font-bold shadow-md"
+                  >
+                    🏅 المنصة
+                  </motion.span>
+                )}
+                {result.total_time_ms / Math.max(1, result.total_questions) < 4000 && (
+                  <motion.span
+                    initial={{ scale: 0 }} animate={{ scale: 1 }}
+                    transition={{ type: 'spring', stiffness: 300, delay: 0.2 }}
+                    className="px-3 py-1.5 rounded-full bg-gradient-to-r from-blue-500 to-cyan-500 text-white text-xs font-bold shadow-md"
+                  >
+                    ⚡ سريع البرق
+                  </motion.span>
+                )}
+                {accuracy >= 80 && !result.is_perfect && (
+                  <motion.span
+                    initial={{ scale: 0 }} animate={{ scale: 1 }}
+                    transition={{ type: 'spring', stiffness: 300, delay: 0.25 }}
+                    className="px-3 py-1.5 rounded-full bg-gradient-to-r from-emerald-500 to-green-600 text-white text-xs font-bold shadow-md"
+                  >
+                    🎯 دقة عالية
+                  </motion.span>
+                )}
               </div>
             )}
 
