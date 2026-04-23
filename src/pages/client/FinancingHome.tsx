@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useMemo } from 'react';
 import { Link } from 'react-router-dom';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import {
   Plus,
   FileText,
@@ -12,6 +12,10 @@ import {
   CheckCircle2,
   Clock3,
   AlertCircle,
+  LayoutGrid,
+  Activity,
+  Hourglass,
+  Archive,
 } from 'lucide-react';
 import ClientLayout from '@/components/client/ClientLayout';
 import { Card } from '@/components/ui/card';
