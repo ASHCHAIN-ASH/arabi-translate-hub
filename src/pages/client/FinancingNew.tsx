@@ -382,9 +382,14 @@ const FinancingNew: React.FC = () => {
                         <Wallet className="h-4 w-4 text-primary" />
                         مبلغ التمويل المطلوب
                       </Label>
-                      <Badge variant="outline" className="text-[10px] gap-1">
-                        <Zap className="h-3 w-3 text-primary" /> اختر مبلغ سريع
-                      </Badge>
+                      <div className="flex items-center gap-1.5 flex-wrap">
+                        <Badge className="text-[10px] gap-1 bg-emerald-500/15 text-emerald-700 dark:text-emerald-400 border-emerald-500/30 hover:bg-emerald-500/20">
+                          <Sparkles className="h-3 w-3" /> بدون فوائد · APR 0%
+                        </Badge>
+                        <Badge variant="outline" className="text-[10px] gap-1">
+                          <Zap className="h-3 w-3 text-primary" /> اختر مبلغ سريع
+                        </Badge>
+                      </div>
                     </div>
 
                     {/* Quick amount chips */}
@@ -431,6 +436,35 @@ const FinancingNew: React.FC = () => {
                       <AlertTriangle className="h-3 w-3" />
                       الحد الأدنى: {fmt(FINANCING_MIN_AMOUNT)} ر.س · حدّ أعلى: 100,000 ر.س
                     </p>
+
+                    {/* شرائح المدة */}
+                    <div className="mt-4 grid grid-cols-1 sm:grid-cols-3 gap-2">
+                      {[
+                        { range: '2,500 — 10,000', months: '6 أشهر', min: 2500, max: 10000 },
+                        { range: '10,001 — 25,000', months: 'سنة كاملة', min: 10001, max: 25000 },
+                        { range: '25,001 — 100,000', months: '3 سنوات', min: 25001, max: 100000 },
+                      ].map((tier, i) => {
+                        const active = amount >= tier.min && amount <= tier.max;
+                        return (
+                          <motion.div
+                            key={i}
+                            initial={{ opacity: 0, y: 8 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ delay: i * 0.08 }}
+                            className={`rounded-xl p-3 ring-1 transition-all ${
+                              active
+                                ? 'bg-primary/10 ring-primary shadow-sm'
+                                : 'bg-background/60 ring-border/60'
+                            }`}
+                          >
+                            <div className="text-[10px] text-muted-foreground mb-1">{tier.range} ر.س</div>
+                            <div className={`text-xs font-bold ${active ? 'text-primary' : 'text-foreground'}`}>
+                              {tier.months}
+                            </div>
+                          </motion.div>
+                        );
+                      })}
+                    </div>
                   </div>
                 </motion.div>
 
