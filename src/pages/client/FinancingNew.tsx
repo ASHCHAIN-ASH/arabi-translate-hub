@@ -492,7 +492,7 @@ const FinancingNew: React.FC = () => {
                         value={form.employer_sector}
                         onValueChange={(v) => setField('employer_sector', v)}
                       >
-                        <SelectTrigger className="h-11 text-right flex-row-reverse">
+                        <SelectTrigger className="h-11 text-right [&>span]:text-right [&>span]:flex-1 [&>span]:mr-0">
                           <SelectValue placeholder="اختر القطاع المهني..." />
                         </SelectTrigger>
                         <SelectContent dir="rtl" className="text-right">
@@ -521,7 +521,7 @@ const FinancingNew: React.FC = () => {
                         value={form.city}
                         onValueChange={(v) => setField('city', v)}
                       >
-                        <SelectTrigger className="h-11 text-right flex-row-reverse">
+                        <SelectTrigger className="h-11 text-right [&>span]:text-right [&>span]:flex-1 [&>span]:mr-0">
                           <SelectValue placeholder="اختر المدينة..." />
                         </SelectTrigger>
                         <SelectContent dir="rtl" className="max-h-72 text-right">
