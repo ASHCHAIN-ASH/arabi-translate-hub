@@ -150,13 +150,25 @@ const BattleQuiz1v1Result: React.FC = () => {
         </Card>
 
         <div className="grid grid-cols-2 gap-3">
-          <Button onClick={() => navigate('/battle-quiz/1v1')} className="gap-2">
-            <RotateCw className="w-4 h-4" /> مباراة جديدة
-          </Button>
+          {match.status === 'completed' ? (
+            <Button onClick={requestRematch} disabled={rematchLoading || rematchWaiting} className="gap-2">
+              {rematchLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : <RotateCw className="w-4 h-4" />}
+              {rematchWaiting ? 'بانتظار الخصم...' : 'إعادة المباراة'}
+            </Button>
+          ) : (
+            <Button onClick={() => navigate('/battle-quiz/1v1')} className="gap-2">
+              <RotateCw className="w-4 h-4" /> مباراة جديدة
+            </Button>
+          )}
           <Button variant="outline" onClick={() => navigate('/battle-quiz/1v1/leaderboard')} className="gap-2">
             <Trophy className="w-4 h-4" /> الترتيب
           </Button>
         </div>
+        {match.status === 'completed' && (
+          <Button variant="ghost" size="sm" onClick={() => navigate('/battle-quiz/1v1')} className="w-full gap-1">
+            <ArrowLeft className="w-4 h-4" /> العودة للوبي
+          </Button>
+        )}
       </div>
     </ClientLayout>
   );
