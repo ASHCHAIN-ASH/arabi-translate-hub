@@ -443,6 +443,56 @@ const FinancingDetails: React.FC = () => {
           </Card>
         </motion.div>
 
+        {/* Contract signing area — only when contract_pending_signature */}
+        <AnimatePresence mode="wait">
+          {app.status === 'contract_pending_signature' && (
+            <motion.div
+              key="contract-sign"
+              initial={{ opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -8 }}
+            >
+              <Card className="border-primary/40 bg-gradient-to-br from-primary/10 via-background to-background p-5 md:p-6 shadow-xl">
+                <div className="flex items-start gap-3 mb-4">
+                  <div className="h-11 w-11 rounded-xl bg-primary/15 ring-1 ring-primary/40 flex items-center justify-center shrink-0">
+                    <PenLine className="h-5 w-5 text-primary" />
+                  </div>
+                  <div className="flex-1">
+                    <h3 className="font-bold text-lg mb-0.5">توقيع عقد التمويل</h3>
+                    <p className="text-xs md:text-sm text-muted-foreground">
+                      عقدك جاهز للتوقيع رقمياً. اضغط الزر بالأسفل لمراجعة بنود العقد وتوقيعه إلكترونياً بحجية قانونية كاملة.
+                    </p>
+                  </div>
+                  {contract && (
+                    <Badge className="bg-primary/15 text-primary ring-1 ring-primary/40 border-0">
+                      {contract.contract_number}
+                    </Badge>
+                  )}
+                </div>
+                <div className="flex flex-col sm:flex-row gap-3">
+                  <Button
+                    size="lg"
+                    onClick={openOrCreateContract}
+                    disabled={creatingContract}
+                    className="flex-1 gap-2 shadow-lg"
+                  >
+                    {creatingContract ? (
+                      <Loader2 className="h-5 w-5 animate-spin" />
+                    ) : (
+                      <PenLine className="h-5 w-5" />
+                    )}
+                    {contract ? 'فتح العقد وتوقيعه رقمياً' : 'إنشاء العقد وبدء التوقيع'}
+                  </Button>
+                  <div className="flex items-center gap-2 text-xs text-muted-foreground sm:max-w-[40%]">
+                    <ShieldCheck className="h-4 w-4 text-emerald-500 shrink-0" />
+                    موثّق برقم تحقق فريد، طابع زمني، وسجل IP — مطابق لنظام التعاملات الإلكترونية السعودي.
+                  </div>
+                </div>
+              </Card>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
         {/* Payment area — only when waiting_down_payment */}
         <AnimatePresence mode="wait">
           {app.status === 'waiting_down_payment' && (
