@@ -598,7 +598,7 @@ const WalletTopup: React.FC = () => {
                         {[
                           { id: 1, icon: Banknote, label: 'حوّل المبلغ', done: true },
                           { id: 2, icon: CloudUpload, label: 'ارفع الإيصال', done: !!receiptFile },
-                          { id: 3, icon: Send, label: 'إرسال للأدمن', done: uploadStage === 'done' },
+                          { id: 3, icon: Send, label: 'إرسال الطلب للمراجعة', done: uploadStage === 'done' },
                         ].map((s, i) => {
                           const Icon = s.icon;
                           return (
