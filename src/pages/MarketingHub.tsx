@@ -26,6 +26,7 @@ import { useToast } from "@/hooks/use-toast";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { renderCaption, copyToClipboard } from "@/utils/referralLink";
+import ReferralAnalytics from "@/components/marketing/ReferralAnalytics";
 
 // ---------------- Types ----------------
 type Platform = "instagram" | "story" | "twitter" | "brochure";
@@ -429,6 +430,21 @@ export default function MarketingHub() {
             </Card>
           ) : null}
         </section>
+
+        {/* Analytics */}
+        {user && code && (
+          <section className="mb-6 sm:mb-10">
+            <ReferralAnalytics
+              userId={user.id}
+              refCode={code}
+              totals={{
+                total_clicks: stats?.total_clicks ?? 0,
+                total_signups: stats?.total_signups ?? 0,
+                total_orders: stats?.total_orders ?? 0,
+              }}
+            />
+          </section>
+        )}
 
         {/* Tabs */}
         <section>
