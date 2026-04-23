@@ -56,6 +56,7 @@ const FinancingHome: React.FC = () => {
   const { user } = useAuth();
   const [apps, setApps] = useState<FinancingApp[]>([]);
   const [loading, setLoading] = useState(true);
+  const [activeTab, setActiveTab] = useState<'all' | 'active' | 'pending' | 'closed'>('all');
 
   useEffect(() => {
     document.title = 'Master PayLater — التمويل | منصة ماستر';
