@@ -66,8 +66,21 @@ const BattleQuiz1v1Play: React.FC = () => {
       const res = await BattleQuiz1v1Service.startAttempt(matchId);
       if (!mounted) return;
       if (!res || res.error) {
-        console.error('start 1v1 attempt error', res?.error);
-        setError('تعذّر بدء المباراة'); setLoading(false); return;
+        console.error('start 1v1 attempt error', res?.error, res);
+        const errorMessages: Record<string, string> = {
+          unauthorized: 'يجب تسجيل الدخول لبدء المباراة.',
+          match_not_found: 'لم يتم العثور على المباراة. ربما تم حذفها أو انتهت صلاحيتها.',
+          not_a_player: 'أنت لست أحد لاعبي هذه المباراة.',
+          match_not_active: `المباراة لم تعد نشطة (الحالة: ${res?.status ?? 'غير معروفة'}). لا يمكن استئنافها.`,
+          room_not_found: 'لم يتم العثور على غرفة الأسئلة المرتبطة بهذه المباراة.',
+          no_questions: 'لا توجد أسئلة متاحة في هذه الغرفة حالياً. يرجى التواصل مع الإدارة.',
+          daily_limit_reached: 'لقد استهلكت محاولتك اليومية لهذه الغرفة. حاول مرة أخرى غداً.',
+          room_not_open: 'الغرفة غير مفتوحة للعب حالياً.',
+        };
+        const friendly = res?.error ? errorMessages[res.error] : null;
+        setError(friendly ?? `تعذّر بدء المباراة${res?.error ? ` (${res.error})` : ''}. يرجى المحاولة لاحقاً.`);
+        setLoading(false);
+        return;
       }
       setPayload(res);
       setLoading(false);
