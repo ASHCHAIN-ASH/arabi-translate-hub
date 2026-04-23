@@ -280,7 +280,11 @@ const FinancingDetails: React.FC = () => {
         .maybeSingle();
 
       const title = `عقد تمويل Master PayLater — ${app.id.slice(0, 8).toUpperCase()}`;
-      const content = `هذا عقد تمويل داخلي عبر منصة Master PayLater بمبلغ ${fmt(Number(app.total_amount))} ر.س، دفعة أولى ${fmt(downPayment)} ر.س، قسط شهري ${fmt(Number(app.monthly_installment))} ر.س لمدة ${app.duration_months} شهر.`;
+      // Compute first installment date = today + 30 days
+      const firstInstallment = new Date();
+      firstInstallment.setDate(firstInstallment.getDate() + 30);
+      const firstInstallmentDate = firstInstallment.toISOString().slice(0, 10);
+      const content = `عقد تمويل داخلي — Master PayLater — مبلغ التمويل ${fmt(Number(app.total_amount))} ر.س يُضاف للمحفظة الرقمية لشراء خدمات منصة ماستر، يُسدَّد على ${app.duration_months} قسط شهري بقيمة ${fmt(Number(app.monthly_installment))} ر.س. (سيتم توليد العقد التفصيلي تلقائياً)`;
 
       const { data: created, error } = await supabase
         .from('contracts')
@@ -302,12 +306,28 @@ const FinancingDetails: React.FC = () => {
             down_payment: app.down_payment,
             monthly_installment: app.monthly_installment,
             duration_months: app.duration_months,
+            // Block consumed by buildContractContentFromRow → buildFinancingContract
+            financing: {
+              financedAmount: Number(app.total_amount),
+              downPayment: Number(app.down_payment),
+              monthlyInstallment: Number(app.monthly_installment),
+              durationMonths: app.duration_months,
+              firstInstallmentDate,
+              applicationId: app.id,
+            },
           },
         } as any)
         .select('id,status,contract_number')
         .single();
 
       if (error) throw error;
+      // Regenerate the rich legal content based on template_type + metadata
+      try {
+        const { generateContractContent } = await import('@/utils/supabaseContractService');
+        await generateContractContent(created.id);
+      } catch (genErr) {
+        console.warn('[FinancingDetails] generateContractContent failed (non-fatal):', genErr);
+      }
       setContract({ id: created.id, status: created.status, contract_number: created.contract_number });
       navigate(`/client/contracts/${created.id}`);
     } catch (e: any) {
