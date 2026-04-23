@@ -442,6 +442,11 @@ const App = () => (
                 <FinancingAdmin />
               </SimpleProtectedRoute>
             } />
+            <Route path="/adminmaster/financing/:id" element={
+              <SimpleProtectedRoute adminOnly>
+                <FinancingAdminDetails />
+              </SimpleProtectedRoute>
+            } />
             <Route path="/adminmaster/contracts" element={
               <SimpleProtectedRoute adminOnly>
                 <ContractsSystem />
