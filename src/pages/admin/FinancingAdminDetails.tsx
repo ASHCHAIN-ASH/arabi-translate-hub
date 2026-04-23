@@ -557,6 +557,15 @@ const FinancingAdminDetails: React.FC = () => {
                   {working ? <Loader2 className="w-4 h-4 animate-spin ml-1" /> : <CheckCircle2 className="w-4 h-4 ml-1" />}
                   تطبيق التغيير
                 </Button>
+                <Button
+                  variant="outline"
+                  className="w-full border-emerald-500/40 text-emerald-700 dark:text-emerald-400 hover:bg-emerald-500/10"
+                  disabled={!adminNote.trim() || working}
+                  onClick={sendNoteToCustomer}
+                >
+                  <MessageCircle className="w-4 h-4 ml-1" />
+                  إرسال الملاحظة للعميل عبر واتساب
+                </Button>
                 <Separator />
                 <div className="grid grid-cols-2 gap-2">
                   <Button variant="default" className="bg-emerald-600 hover:bg-emerald-700" disabled={working} onClick={() => updateStatus('approved')}>
