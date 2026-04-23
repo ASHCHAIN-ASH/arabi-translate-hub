@@ -164,6 +164,28 @@ const FinancingNew: React.FC = () => {
 
   const preview = useMemo(() => computeFinancingPreview(amount), [amount]);
 
+  // ===== التقييم الائتماني التلقائي =====
+  const creditScore = useMemo(() => {
+    if (!form.applicant_category || !form.monthly_income || Number(form.monthly_income) <= 0) {
+      return null;
+    }
+    return calculateCreditScore({
+      category: form.applicant_category as ApplicantCategory,
+      monthlyIncome: Number(form.monthly_income) || 0,
+      monthlyCommitments: Number(form.monthly_commitments) || 0,
+      requestedAmount: amount,
+      durationMonths: preview.duration,
+      age: form.applicant_age ? Number(form.applicant_age) : undefined,
+      employmentYears: form.employment_years ? Number(form.employment_years) : undefined,
+      hasGuarantor: form.has_guarantor,
+      sectorRisk: form.employer_sector ? SECTOR_RISK_MAP[form.employer_sector] : undefined,
+    });
+  }, [
+    form.applicant_category, form.monthly_income, form.monthly_commitments,
+    form.applicant_age, form.employment_years, form.has_guarantor,
+    form.employer_sector, amount, preview.duration,
+  ]);
+
   useEffect(() => {
     document.title = 'طلب تمويل جديد — Master PayLater';
   }, []);
