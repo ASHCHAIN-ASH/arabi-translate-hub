@@ -539,35 +539,45 @@ const WalletTopup: React.FC = () => {
                         <div dir="ltr" className="font-mono text-[13px] sm:text-sm font-bold tracking-normal select-all truncate">
                           {BANK_INFO.iban}
                         </div>
-                        <motion.button
-                          whileTap={{ scale: 0.9 }}
-                          onClick={() => copy(BANK_INFO.iban, 'iban')}
-                          className="shrink-0 flex items-center gap-1 text-[10px] font-black bg-white/15 hover:bg-white/25 border border-white/25 px-2.5 py-1.5 rounded-lg transition"
-                        >
-                          <AnimatePresence mode="wait" initial={false}>
-                            {copied === 'iban' ? (
-                              <motion.span
-                                key="ok"
-                                initial={{ opacity: 0, scale: 0.8 }}
-                                animate={{ opacity: 1, scale: 1 }}
-                                exit={{ opacity: 0 }}
-                                className="flex items-center gap-1"
+                        <TooltipProvider delayDuration={150}>
+                          <Tooltip>
+                            <TooltipTrigger asChild>
+                              <motion.button
+                                whileTap={{ scale: 0.9 }}
+                                onClick={() => copy(BANK_INFO.iban, 'iban')}
+                                aria-label="نسخ رقم الآيبان"
+                                className="shrink-0 flex items-center gap-1 text-[10px] font-black bg-white/15 hover:bg-white/25 border border-white/25 px-2.5 py-1.5 rounded-lg transition"
                               >
-                                <Check className="w-3 h-3" /> نُسخ
-                              </motion.span>
-                            ) : (
-                              <motion.span
-                                key="copy"
-                                initial={{ opacity: 0 }}
-                                animate={{ opacity: 1 }}
-                                exit={{ opacity: 0 }}
-                                className="flex items-center gap-1"
-                              >
-                                <Copy className="w-3 h-3" /> نسخ
-                              </motion.span>
-                            )}
-                          </AnimatePresence>
-                        </motion.button>
+                                <AnimatePresence mode="wait" initial={false}>
+                                  {copied === 'iban' ? (
+                                    <motion.span
+                                      key="ok"
+                                      initial={{ opacity: 0, scale: 0.8 }}
+                                      animate={{ opacity: 1, scale: 1 }}
+                                      exit={{ opacity: 0 }}
+                                      className="flex items-center gap-1"
+                                    >
+                                      <Check className="w-3 h-3" /> نُسخ
+                                    </motion.span>
+                                  ) : (
+                                    <motion.span
+                                      key="copy"
+                                      initial={{ opacity: 0 }}
+                                      animate={{ opacity: 1 }}
+                                      exit={{ opacity: 0 }}
+                                      className="flex items-center gap-1"
+                                    >
+                                      <Copy className="w-3 h-3" /> نسخ
+                                    </motion.span>
+                                  )}
+                                </AnimatePresence>
+                              </motion.button>
+                            </TooltipTrigger>
+                            <TooltipContent side="top" className="font-bold">
+                              {copied === 'iban' ? 'تم النسخ ✓' : 'نسخ رقم الآيبان إلى الحافظة'}
+                            </TooltipContent>
+                          </Tooltip>
+                        </TooltipProvider>
                       </div>
                     </div>
 
