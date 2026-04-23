@@ -13,6 +13,7 @@ import {
   ShieldCheck,
   Copy,
   FileText,
+  PenLine,
   Loader2,
   Receipt,
   Sparkles,
