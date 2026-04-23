@@ -5458,6 +5458,8 @@ export type Database = {
           id: string
           ip: string | null
           ref_code: string
+          session_id: string | null
+          tracking_started_at: string | null
           user_agent: string | null
         }
         Insert: {
@@ -5465,6 +5467,8 @@ export type Database = {
           id?: string
           ip?: string | null
           ref_code: string
+          session_id?: string | null
+          tracking_started_at?: string | null
           user_agent?: string | null
         }
         Update: {
@@ -5472,6 +5476,8 @@ export type Database = {
           id?: string
           ip?: string | null
           ref_code?: string
+          session_id?: string | null
+          tracking_started_at?: string | null
           user_agent?: string | null
         }
         Relationships: [
