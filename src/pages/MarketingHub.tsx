@@ -459,6 +459,20 @@ export default function MarketingHub() {
           </section>
         )}
 
+        {/* AI Copy Generator */}
+        <section className="mb-6 sm:mb-8 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 p-4 rounded-2xl border bg-gradient-to-br from-violet-50 via-fuchsia-50 to-pink-50 dark:from-violet-950/30 dark:via-fuchsia-950/30 dark:to-pink-950/30">
+          <div className="space-y-0.5">
+            <h3 className="font-bold text-sm sm:text-base flex items-center gap-1.5">
+              <Sparkles className="w-4 h-4 text-fuchsia-500" />
+              ولّد نص تسويقي بالذكاء الاصطناعي
+            </h3>
+            <p className="text-xs text-muted-foreground">
+              اختر الخدمة والمنصة، واحصل على نص جاهز يحتوي رابط إحالتك.
+            </p>
+          </div>
+          <AICopyGenerator refCode={code} />
+        </section>
+
         {/* Tabs */}
         <section>
           <Tabs
