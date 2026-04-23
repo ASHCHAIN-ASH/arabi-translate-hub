@@ -76,6 +76,16 @@ interface WalletRow {
   balance: number;
 }
 
+interface InstallmentRow {
+  id: string;
+  month_number: number;
+  amount: number;
+  due_date: string;
+  status: 'pending' | 'paid' | 'overdue' | 'waived';
+  paid_at: string | null;
+  paid_amount: number | null;
+}
+
 const fmt = (n: number) => new Intl.NumberFormat('en-US', { maximumFractionDigits: 2 }).format(n);
 
 // التايملاين الكامل لحالات التمويل بطابع شركات التمويل العالمية المرخّصة
