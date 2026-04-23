@@ -295,7 +295,13 @@ const FinancingAdminDetails: React.FC = () => {
 
   return (
     <AdminLayout>
-      <div className="space-y-6" dir="rtl">
+      <motion.div
+        className="space-y-6"
+        dir="rtl"
+        initial={{ opacity: 0, y: 16 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+      >
         {/* Header */}
         <div className="relative overflow-hidden rounded-2xl border bg-gradient-to-br from-primary/10 via-background to-accent/10 p-6 backdrop-blur-xl">
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,hsl(var(--primary)/0.15),transparent_50%)]" />
