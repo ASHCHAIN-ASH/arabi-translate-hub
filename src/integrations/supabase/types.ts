@@ -3004,6 +3004,343 @@ export type Database = {
           },
         ]
       }
+      financing_applications: {
+        Row: {
+          activated_at: string | null
+          applicant_email: string | null
+          applicant_full_name: string | null
+          applicant_id_number: string | null
+          applicant_phone: string | null
+          approved_at: string | null
+          approved_by: string | null
+          city: string | null
+          created_at: string
+          down_payment: number
+          duration_months: number
+          employer_name: string | null
+          funding_type: string
+          id: string
+          invoice_id: string | null
+          monthly_commitments: number | null
+          monthly_income: number | null
+          monthly_installment: number
+          notes: string | null
+          order_id: string | null
+          rejected_at: string | null
+          rejection_reason: string | null
+          remaining_amount: number
+          risk_level: Database["public"]["Enums"]["financing_risk_level"]
+          score: number | null
+          status: Database["public"]["Enums"]["financing_status"]
+          total_amount: number
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          activated_at?: string | null
+          applicant_email?: string | null
+          applicant_full_name?: string | null
+          applicant_id_number?: string | null
+          applicant_phone?: string | null
+          approved_at?: string | null
+          approved_by?: string | null
+          city?: string | null
+          created_at?: string
+          down_payment?: number
+          duration_months?: number
+          employer_name?: string | null
+          funding_type?: string
+          id?: string
+          invoice_id?: string | null
+          monthly_commitments?: number | null
+          monthly_income?: number | null
+          monthly_installment?: number
+          notes?: string | null
+          order_id?: string | null
+          rejected_at?: string | null
+          rejection_reason?: string | null
+          remaining_amount?: number
+          risk_level?: Database["public"]["Enums"]["financing_risk_level"]
+          score?: number | null
+          status?: Database["public"]["Enums"]["financing_status"]
+          total_amount: number
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          activated_at?: string | null
+          applicant_email?: string | null
+          applicant_full_name?: string | null
+          applicant_id_number?: string | null
+          applicant_phone?: string | null
+          approved_at?: string | null
+          approved_by?: string | null
+          city?: string | null
+          created_at?: string
+          down_payment?: number
+          duration_months?: number
+          employer_name?: string | null
+          funding_type?: string
+          id?: string
+          invoice_id?: string | null
+          monthly_commitments?: number | null
+          monthly_income?: number | null
+          monthly_installment?: number
+          notes?: string | null
+          order_id?: string | null
+          rejected_at?: string | null
+          rejection_reason?: string | null
+          remaining_amount?: number
+          risk_level?: Database["public"]["Enums"]["financing_risk_level"]
+          score?: number | null
+          status?: Database["public"]["Enums"]["financing_status"]
+          total_amount?: number
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "financing_applications_invoice_id_fkey"
+            columns: ["invoice_id"]
+            isOneToOne: false
+            referencedRelation: "invoices"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "financing_applications_order_id_fkey"
+            columns: ["order_id"]
+            isOneToOne: false
+            referencedRelation: "service_orders"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      financing_contracts: {
+        Row: {
+          application_id: string
+          contract_number: string
+          contract_text: string | null
+          created_at: string
+          id: string
+          pdf_storage_path: string | null
+          signed_at: string | null
+          signed_ip: string | null
+          signed_user_agent: string | null
+          status: Database["public"]["Enums"]["financing_contract_status"]
+          updated_at: string
+        }
+        Insert: {
+          application_id: string
+          contract_number: string
+          contract_text?: string | null
+          created_at?: string
+          id?: string
+          pdf_storage_path?: string | null
+          signed_at?: string | null
+          signed_ip?: string | null
+          signed_user_agent?: string | null
+          status?: Database["public"]["Enums"]["financing_contract_status"]
+          updated_at?: string
+        }
+        Update: {
+          application_id?: string
+          contract_number?: string
+          contract_text?: string | null
+          created_at?: string
+          id?: string
+          pdf_storage_path?: string | null
+          signed_at?: string | null
+          signed_ip?: string | null
+          signed_user_agent?: string | null
+          status?: Database["public"]["Enums"]["financing_contract_status"]
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "financing_contracts_application_id_fkey"
+            columns: ["application_id"]
+            isOneToOne: false
+            referencedRelation: "financing_applications"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      financing_documents: {
+        Row: {
+          application_id: string
+          created_at: string
+          document_type: Database["public"]["Enums"]["financing_doc_type"]
+          file_name: string | null
+          file_url: string
+          id: string
+          mime_type: string | null
+          review_note: string | null
+          reviewed_at: string | null
+          reviewed_by: string | null
+          status: Database["public"]["Enums"]["financing_doc_status"]
+        }
+        Insert: {
+          application_id: string
+          created_at?: string
+          document_type: Database["public"]["Enums"]["financing_doc_type"]
+          file_name?: string | null
+          file_url: string
+          id?: string
+          mime_type?: string | null
+          review_note?: string | null
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          status?: Database["public"]["Enums"]["financing_doc_status"]
+        }
+        Update: {
+          application_id?: string
+          created_at?: string
+          document_type?: Database["public"]["Enums"]["financing_doc_type"]
+          file_name?: string | null
+          file_url?: string
+          id?: string
+          mime_type?: string | null
+          review_note?: string | null
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          status?: Database["public"]["Enums"]["financing_doc_status"]
+        }
+        Relationships: [
+          {
+            foreignKeyName: "financing_documents_application_id_fkey"
+            columns: ["application_id"]
+            isOneToOne: false
+            referencedRelation: "financing_applications"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      financing_installments: {
+        Row: {
+          amount: number
+          application_id: string
+          created_at: string
+          due_date: string
+          id: string
+          month_number: number
+          paid_amount: number | null
+          paid_at: string | null
+          status: Database["public"]["Enums"]["financing_installment_status"]
+          wallet_transaction_id: string | null
+        }
+        Insert: {
+          amount: number
+          application_id: string
+          created_at?: string
+          due_date: string
+          id?: string
+          month_number: number
+          paid_amount?: number | null
+          paid_at?: string | null
+          status?: Database["public"]["Enums"]["financing_installment_status"]
+          wallet_transaction_id?: string | null
+        }
+        Update: {
+          amount?: number
+          application_id?: string
+          created_at?: string
+          due_date?: string
+          id?: string
+          month_number?: number
+          paid_amount?: number | null
+          paid_at?: string | null
+          status?: Database["public"]["Enums"]["financing_installment_status"]
+          wallet_transaction_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "financing_installments_application_id_fkey"
+            columns: ["application_id"]
+            isOneToOne: false
+            referencedRelation: "financing_applications"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      financing_status_logs: {
+        Row: {
+          application_id: string
+          changed_by: string | null
+          created_at: string
+          id: string
+          new_status: Database["public"]["Enums"]["financing_status"]
+          note: string | null
+          old_status: Database["public"]["Enums"]["financing_status"] | null
+        }
+        Insert: {
+          application_id: string
+          changed_by?: string | null
+          created_at?: string
+          id?: string
+          new_status: Database["public"]["Enums"]["financing_status"]
+          note?: string | null
+          old_status?: Database["public"]["Enums"]["financing_status"] | null
+        }
+        Update: {
+          application_id?: string
+          changed_by?: string | null
+          created_at?: string
+          id?: string
+          new_status?: Database["public"]["Enums"]["financing_status"]
+          note?: string | null
+          old_status?: Database["public"]["Enums"]["financing_status"] | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "financing_status_logs_application_id_fkey"
+            columns: ["application_id"]
+            isOneToOne: false
+            referencedRelation: "financing_applications"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      financing_whatsapp_logs: {
+        Row: {
+          application_id: string | null
+          created_at: string
+          delivery_status: string
+          error_message: string | null
+          id: string
+          message_body: string | null
+          message_type: string
+          recipient_phone: string
+        }
+        Insert: {
+          application_id?: string | null
+          created_at?: string
+          delivery_status?: string
+          error_message?: string | null
+          id?: string
+          message_body?: string | null
+          message_type: string
+          recipient_phone: string
+        }
+        Update: {
+          application_id?: string | null
+          created_at?: string
+          delivery_status?: string
+          error_message?: string | null
+          id?: string
+          message_body?: string | null
+          message_type?: string
+          recipient_phone?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "financing_whatsapp_logs_application_id_fkey"
+            columns: ["application_id"]
+            isOneToOne: false
+            referencedRelation: "financing_applications"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       gamification_levels: {
         Row: {
           badge_color: string | null
@@ -7762,6 +8099,47 @@ export type Database = {
         }
         Relationships: []
       }
+      wallet_credit_events: {
+        Row: {
+          amount: number
+          application_id: string | null
+          created_at: string
+          event_type: Database["public"]["Enums"]["wallet_credit_event_type"]
+          id: string
+          metadata: Json | null
+          user_id: string
+          wallet_transaction_id: string | null
+        }
+        Insert: {
+          amount: number
+          application_id?: string | null
+          created_at?: string
+          event_type: Database["public"]["Enums"]["wallet_credit_event_type"]
+          id?: string
+          metadata?: Json | null
+          user_id: string
+          wallet_transaction_id?: string | null
+        }
+        Update: {
+          amount?: number
+          application_id?: string | null
+          created_at?: string
+          event_type?: Database["public"]["Enums"]["wallet_credit_event_type"]
+          id?: string
+          metadata?: Json | null
+          user_id?: string
+          wallet_transaction_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "wallet_credit_events_application_id_fkey"
+            columns: ["application_id"]
+            isOneToOne: false
+            referencedRelation: "financing_applications"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       wallet_topup_requests: {
         Row: {
           admin_notes: string | null
@@ -9190,6 +9568,7 @@ export type Database = {
         }
         Returns: undefined
       }
+      is_financing_admin: { Args: { _user_id: string }; Returns: boolean }
       is_valid_lifecycle_transition: {
         Args: {
           _from: Database["public"]["Enums"]["order_lifecycle_status"]
@@ -9537,6 +9916,29 @@ export type Database = {
         | "referral_page"
         | "onboarding_flow"
         | "share_cta"
+      financing_contract_status: "draft" | "sent" | "signed" | "cancelled"
+      financing_doc_status: "pending" | "approved" | "rejected"
+      financing_doc_type:
+        | "id_front"
+        | "id_back"
+        | "bank_statement"
+        | "proof_of_income"
+        | "other"
+      financing_installment_status: "pending" | "paid" | "overdue" | "waived"
+      financing_risk_level: "low" | "medium" | "high" | "unknown"
+      financing_status:
+        | "draft"
+        | "submitted"
+        | "documents_pending"
+        | "under_review"
+        | "waiting_down_payment"
+        | "contract_pending_signature"
+        | "approved"
+        | "rejected"
+        | "active"
+        | "completed"
+        | "overdue"
+        | "cancelled"
       group_member_status: "joined" | "paid" | "refunded" | "left"
       group_order_status:
         | "open"
@@ -9559,6 +9961,10 @@ export type Database = {
         | "delivered"
         | "completed"
         | "cancelled"
+      wallet_credit_event_type:
+        | "financing_credit_added"
+        | "financing_credit_reversed"
+        | "installment_paid"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -9731,6 +10137,31 @@ export const Constants = {
         "onboarding_flow",
         "share_cta",
       ],
+      financing_contract_status: ["draft", "sent", "signed", "cancelled"],
+      financing_doc_status: ["pending", "approved", "rejected"],
+      financing_doc_type: [
+        "id_front",
+        "id_back",
+        "bank_statement",
+        "proof_of_income",
+        "other",
+      ],
+      financing_installment_status: ["pending", "paid", "overdue", "waived"],
+      financing_risk_level: ["low", "medium", "high", "unknown"],
+      financing_status: [
+        "draft",
+        "submitted",
+        "documents_pending",
+        "under_review",
+        "waiting_down_payment",
+        "contract_pending_signature",
+        "approved",
+        "rejected",
+        "active",
+        "completed",
+        "overdue",
+        "cancelled",
+      ],
       group_member_status: ["joined", "paid", "refunded", "left"],
       group_order_status: [
         "open",
@@ -9754,6 +10185,11 @@ export const Constants = {
         "delivered",
         "completed",
         "cancelled",
+      ],
+      wallet_credit_event_type: [
+        "financing_credit_added",
+        "financing_credit_reversed",
+        "installment_paid",
       ],
     },
   },
