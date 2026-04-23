@@ -34,6 +34,9 @@ const BattleQuiz1v1Play: React.FC = () => {
   const [submitting, setSubmitting] = useState(false);
   const [submittedFinal, setSubmittedFinal] = useState(false);
 
+  type AttemptStage = 'idle' | 'fetching_match' | 'validating' | 'creating_attempt' | 'loading_questions' | 'ready' | 'failed';
+  const [attemptStage, setAttemptStage] = useState<AttemptStage>('idle');
+
   const startedAtRef = useRef<number>(Date.now());
   const matchStartRef = useRef<number>(Date.now());
 
