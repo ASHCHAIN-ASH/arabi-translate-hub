@@ -101,14 +101,38 @@ import { CreditScoreCard } from '@/components/financing/CreditScoreCard';
 
 const formSchema = z.object({
   applicant_full_name: z.string().trim().min(3, 'الاسم الكامل مطلوب').max(120),
-  applicant_id_number: z.string().trim().min(8, 'رقم هوية غير صالح').max(20),
-  applicant_phone: z.string().trim().min(9, 'رقم جوال غير صالح').max(20),
+  applicant_id_number: z.string().trim().regex(/^[12]\d{9}$/, 'رقم هوية سعودي غير صالح (10 أرقام يبدأ بـ 1 أو 2)'),
+  applicant_phone: z.string().trim().regex(/^(05|9665|\+9665)\d{8}$/, 'جوال سعودي غير صالح'),
   applicant_email: z.string().trim().email('بريد غير صالح').max(160),
   employer_name: z.string().trim().max(120).optional().nullable(),
   monthly_income: z.coerce.number().min(0, 'الدخل لا يمكن أن يكون سالبًا'),
   monthly_commitments: z.coerce.number().min(0).default(0),
   city: z.string().trim().min(2, 'المدينة مطلوبة').max(60),
   notes: z.string().max(500).optional().nullable(),
+});
+
+// === صلة قرابة الكفيل ===
+const GUARANTOR_RELATIONS = [
+  { value: 'father', label: 'والد', icon: '👨' },
+  { value: 'mother', label: 'والدة', icon: '👩' },
+  { value: 'brother', label: 'أخ', icon: '🧑' },
+  { value: 'sister', label: 'أخت', icon: '👩‍🦰' },
+  { value: 'spouse', label: 'زوج/ة', icon: '💍' },
+  { value: 'relative', label: 'قريب من الدرجة الأولى', icon: '👪' },
+  { value: 'employer', label: 'صاحب عمل', icon: '💼' },
+  { value: 'friend', label: 'صديق ذو ملاءة', icon: '🤝' },
+] as const;
+
+// مخطط صارم للكفيل — يُفعّل فقط عند تفعيل الكفالة
+const guarantorSchema = z.object({
+  guarantor_full_name: z.string().trim().min(3, 'اسم الكفيل الكامل مطلوب').max(120),
+  guarantor_id_number: z.string().trim().regex(/^[12]\d{9}$/, 'رقم هوية الكفيل غير صالح (10 أرقام)'),
+  guarantor_phone: z.string().trim().regex(/^(05|9665|\+9665)\d{8}$/, 'جوال الكفيل غير صالح'),
+  guarantor_relation: z.string().min(1, 'صلة القرابة مطلوبة'),
+  guarantor_employer: z.string().trim().min(2, 'جهة عمل الكفيل مطلوبة').max(120),
+  guarantor_monthly_income: z.coerce.number().min(3000, 'الحد الأدنى لدخل الكفيل 3,000 ر.س'),
+  guarantor_city: z.string().trim().min(2, 'مدينة الكفيل مطلوبة').max(60),
+  guarantor_consent: z.literal(true, { errorMap: () => ({ message: 'موافقة الكفيل إلزامية' }) }),
 });
 
 // === المراحل التعليمية للطلاب ===
