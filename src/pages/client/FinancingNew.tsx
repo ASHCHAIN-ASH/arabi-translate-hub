@@ -316,6 +316,17 @@ const FinancingNew: React.FC = () => {
     setSubmitting(true);
     try {
       const parsed = formSchema.parse(form);
+      const guarantorPayload = form.has_guarantor ? {
+        has_guarantor: true,
+        guarantor_full_name: form.guarantor_full_name.trim(),
+        guarantor_id_number: form.guarantor_id_number.trim(),
+        guarantor_phone: form.guarantor_phone.trim(),
+        guarantor_relation: form.guarantor_relation,
+        guarantor_employer: form.guarantor_employer.trim(),
+        guarantor_monthly_income: Number(form.guarantor_monthly_income) || 0,
+        guarantor_city: form.guarantor_city.trim(),
+        guarantor_consent: form.guarantor_consent,
+      } : { has_guarantor: false };
       const { data: app, error: appErr } = await supabase
         .from('financing_applications')
         .insert({
@@ -325,6 +336,7 @@ const FinancingNew: React.FC = () => {
           total_amount: amount,
           status: 'submitted',
           ...parsed,
+          ...guarantorPayload,
         })
         .select('id')
         .single();
