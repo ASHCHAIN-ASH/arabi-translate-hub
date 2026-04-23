@@ -548,7 +548,42 @@ const FinancingNew: React.FC = () => {
                     <Briefcase className="h-4 w-4" /> البيانات المهنية والمالية
                   </h3>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    {/* Employment sector — banking-style select with icons */}
+                    {/* فئة المتقدم — تحدد المعادلة الائتمانية */}
+                    <div className="md:col-span-2">
+                      <Label className="text-sm font-semibold mb-1.5 flex items-center gap-1.5">
+                        <UserCheck className="h-3.5 w-3.5 text-primary" />
+                        فئة المتقدم
+                        <Badge variant="outline" className="text-[9px] gap-1 mr-1">
+                          <Sparkles className="h-2.5 w-2.5 text-primary" /> تقييم تلقائي
+                        </Badge>
+                      </Label>
+                      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2">
+                        {APPLICANT_CATEGORIES.map((cat) => {
+                          const active = form.applicant_category === cat.value;
+                          return (
+                            <motion.button
+                              key={cat.value}
+                              type="button"
+                              whileHover={{ scale: 1.03 }}
+                              whileTap={{ scale: 0.97 }}
+                              onClick={() => setField('applicant_category', cat.value)}
+                              className={`rounded-xl p-2.5 text-right ring-1 transition-all ${
+                                active
+                                  ? 'bg-primary/10 ring-primary shadow-sm'
+                                  : 'bg-background ring-border hover:ring-primary/40'
+                              }`}
+                            >
+                              <div className="text-2xl mb-0.5">{cat.icon}</div>
+                              <div className={`text-[11px] font-bold ${active ? 'text-primary' : 'text-foreground'}`}>
+                                {cat.label}
+                              </div>
+                            </motion.button>
+                          );
+                        })}
+                      </div>
+                    </div>
+
+                    {/* قطاع العمل */}
                     <div className="md:col-span-2">
                       <Label className="text-sm font-semibold mb-1.5 flex items-center gap-1.5">
                         <Building2 className="h-3.5 w-3.5 text-muted-foreground" />
