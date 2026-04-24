@@ -107,7 +107,7 @@ const AcknowledgmentDialog: React.FC<AcknowledgmentDialogProps> = ({
       await onConfirm({
         fullName: fullName.trim(),
         signedAt: new Date().toISOString(),
-        clauses: clauses.map((c) => c.id),
+        clauses: clauses.map((c) => c.text),
       });
       setStep('done');
       setTimeout(() => onClose(), 1800);
