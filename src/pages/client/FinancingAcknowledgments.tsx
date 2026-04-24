@@ -10,7 +10,9 @@ import {
   ArrowRight,
   Sparkles,
   Lock,
+  Download,
 } from 'lucide-react';
+import { downloadAcknowledgmentPdf } from '@/lib/financingAckPdf';
 import ClientLayout from '@/components/client/ClientLayout';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
