@@ -99,6 +99,7 @@ const FinancingAdminDetails: React.FC = () => {
   const [docs, setDocs] = useState<FinancingDocument[]>([]);
   const [receipts, setReceipts] = useState<PaymentReceipt[]>([]);
   const [logs, setLogs] = useState<StatusLog[]>([]);
+  const [acks, setAcks] = useState<AckRow[]>([]);
   const [adminNote, setAdminNote] = useState('');
   const [newStatus, setNewStatus] = useState('');
   const [working, setWorking] = useState(false);
@@ -106,17 +107,19 @@ const FinancingAdminDetails: React.FC = () => {
 
   const reload = async () => {
     if (!id) return;
-    const [a, d, r, l] = await Promise.all([
+    const [a, d, r, l, k] = await Promise.all([
       supabase.from('financing_applications').select('*').eq('id', id).maybeSingle(),
       supabase.from('financing_documents' as any).select('*').eq('application_id', id).order('created_at', { ascending: false }),
       supabase.from('financing_payment_receipts' as any).select('*').eq('application_id', id).order('created_at', { ascending: false }),
       supabase.from('financing_status_logs' as any).select('*').eq('application_id', id).order('created_at', { ascending: true }),
+      supabase.from('financing_acknowledgments' as any).select('*').eq('application_id', id).order('signed_at', { ascending: true }),
     ]);
     if (a.error || !a.data) { toast.error('تعذر تحميل الطلب'); setLoading(false); return; }
     setApp(a.data);
     setDocs((d.data as any) || []);
     setReceipts((r.data as any) || []);
     setLogs((l.data as any) || []);
+    setAcks((k.data as any) || []);
     setLoading(false);
   };
 
