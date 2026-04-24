@@ -564,6 +564,80 @@ const FinancingAdminDetails: React.FC = () => {
                     </Card>
                   </TabsContent>
 
+                  {/* ACKNOWLEDGMENTS */}
+                  <TabsContent value="acks" className="mt-0">
+                    <Card>
+                      <CardContent className="pt-6">
+                        {acks.length === 0 ? (
+                          <EmptyState icon={Gavel} text="لم يوقّع العميل أي إقرار رقمي بعد" />
+                        ) : (
+                          <div className="space-y-3">
+                            {acks.map((a, i) => (
+                              <motion.div
+                                key={a.id}
+                                initial={{ opacity: 0, y: 8 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                transition={{ delay: i * 0.05 }}
+                                className="rounded-xl border-2 border-emerald-500/30 bg-gradient-to-br from-emerald-50/60 to-transparent dark:from-emerald-950/20 p-4"
+                              >
+                                <div className="flex items-start justify-between gap-3 flex-wrap">
+                                  <div className="flex items-start gap-3 min-w-0 flex-1">
+                                    <div className="h-11 w-11 rounded-lg bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 flex items-center justify-center shrink-0 ring-1 ring-emerald-500/40">
+                                      <ShieldCheck className="h-5 w-5" />
+                                    </div>
+                                    <div className="min-w-0 flex-1">
+                                      <div className="flex items-center gap-2 flex-wrap mb-1">
+                                        <Badge className="bg-emerald-500 text-white text-[10px]">موثَّق</Badge>
+                                        <Badge variant="outline" className="text-[10px]">
+                                          الإقرار {i + 1}
+                                        </Badge>
+                                      </div>
+                                      <h4 className="font-bold text-sm leading-tight mb-1">
+                                        {a.ack_title || FINANCING_ACK_TITLES_AR[a.ack_type]}
+                                      </h4>
+                                      <div className="text-[11px] text-muted-foreground space-y-0.5">
+                                        <div>
+                                          <strong>الموقِّع:</strong> {a.signer_name}
+                                        </div>
+                                        <div>
+                                          <strong>التاريخ:</strong>{' '}
+                                          {format(new Date(a.signed_at), 'yyyy-MM-dd HH:mm:ss')}
+                                        </div>
+                                        <div className="font-mono text-[10px] break-all" dir="ltr">
+                                          <strong className="font-sans">SHA-256:</strong> {a.evidence_sha256.slice(0, 32)}…
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                  <Button
+                                    size="sm"
+                                    variant="outline"
+                                    className="gap-2 shrink-0 border-emerald-500/40 text-emerald-700 dark:text-emerald-300 hover:bg-emerald-500/10"
+                                    onClick={async () => {
+                                      try {
+                                        await downloadAcknowledgmentPdf({
+                                          applicationId: a.application_id,
+                                          ackType: a.ack_type,
+                                          userId: a.user_id,
+                                          applicationCode: String(a.application_id).slice(0, 8).toUpperCase(),
+                                        });
+                                      } catch (e: any) {
+                                        toast.error(e?.message || 'تعذّر تنزيل الإقرار');
+                                      }
+                                    }}
+                                  >
+                                    <Download className="h-4 w-4" />
+                                    تنزيل PDF
+                                  </Button>
+                                </div>
+                              </motion.div>
+                            ))}
+                          </div>
+                        )}
+                      </CardContent>
+                    </Card>
+                  </TabsContent>
+
                   {/* TIMELINE */}
                   <TabsContent value="timeline" className="mt-0">
                     <Card>
