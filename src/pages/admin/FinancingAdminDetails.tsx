@@ -373,7 +373,7 @@ const FinancingAdminDetails: React.FC = () => {
           {/* Left: Tabbed content */}
           <div className="lg:col-span-2">
             <Tabs value={tab} onValueChange={setTab} className="w-full">
-              <TabsList className="relative w-full h-auto p-1.5 bg-muted/50 backdrop-blur border border-border/50 rounded-2xl grid grid-cols-4 gap-1">
+              <TabsList className="relative w-full h-auto p-1.5 bg-muted/50 backdrop-blur border border-border/50 rounded-2xl grid grid-cols-5 gap-1">
                 {TABS.map(t => {
                   const Icon = t.icon;
                   const active = tab === t.key;
