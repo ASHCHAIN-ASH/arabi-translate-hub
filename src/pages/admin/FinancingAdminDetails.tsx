@@ -19,14 +19,17 @@ import {
   ArrowRight, CheckCircle2, XCircle, FileText, RefreshCw, User, Phone, Mail,
   Building2, Wallet, AlertCircle, Receipt, Clock, ShieldCheck,
   Banknote, Hash, MapPin, CreditCard, Eye, Download, Loader2, Sparkles,
-  MessageCircle, LayoutGrid, FileCheck2, History, Activity,
+  MessageCircle, LayoutGrid, FileCheck2, History, Activity, Gavel,
 } from 'lucide-react';
 import {
   FINANCING_STATUS_LABELS_AR,
   FINANCING_DOC_LABELS_AR,
+  FINANCING_ACK_TITLES_AR,
+  type FinancingAcknowledgmentType,
 } from '@/lib/financing';
 import { FINANCING_TEAMS } from '@/lib/financing-bank';
 import { sendWhatsApp } from '@/lib/whatsapp';
+import { downloadAcknowledgmentPdf } from '@/lib/financingAckPdf';
 import { cn } from '@/lib/utils';
 
 // ── WhatsApp helper ──
@@ -59,6 +62,12 @@ type StatusLog = {
   id: string; application_id: string; from_status: string | null; to_status: string;
   note: string | null; changed_by: string | null; created_at: string;
 };
+type AckRow = {
+  id: string; application_id: string; user_id: string;
+  ack_type: FinancingAcknowledgmentType; ack_title: string;
+  signer_name: string; signed_at: string; evidence_sha256: string;
+  accepted_clauses: string[] | null;
+};
 
 const TIMELINE_STEPS = [
   { key: 'submitted', label: 'تم الإرسال', icon: FileText, color: 'from-sky-500 to-cyan-500' },
@@ -90,6 +99,7 @@ const FinancingAdminDetails: React.FC = () => {
   const [docs, setDocs] = useState<FinancingDocument[]>([]);
   const [receipts, setReceipts] = useState<PaymentReceipt[]>([]);
   const [logs, setLogs] = useState<StatusLog[]>([]);
+  const [acks, setAcks] = useState<AckRow[]>([]);
   const [adminNote, setAdminNote] = useState('');
   const [newStatus, setNewStatus] = useState('');
   const [working, setWorking] = useState(false);
@@ -97,17 +107,19 @@ const FinancingAdminDetails: React.FC = () => {
 
   const reload = async () => {
     if (!id) return;
-    const [a, d, r, l] = await Promise.all([
+    const [a, d, r, l, k] = await Promise.all([
       supabase.from('financing_applications').select('*').eq('id', id).maybeSingle(),
       supabase.from('financing_documents' as any).select('*').eq('application_id', id).order('created_at', { ascending: false }),
       supabase.from('financing_payment_receipts' as any).select('*').eq('application_id', id).order('created_at', { ascending: false }),
       supabase.from('financing_status_logs' as any).select('*').eq('application_id', id).order('created_at', { ascending: true }),
+      supabase.from('financing_acknowledgments' as any).select('*').eq('application_id', id).order('signed_at', { ascending: true }),
     ]);
     if (a.error || !a.data) { toast.error('تعذر تحميل الطلب'); setLoading(false); return; }
     setApp(a.data);
     setDocs((d.data as any) || []);
     setReceipts((r.data as any) || []);
     setLogs((l.data as any) || []);
+    setAcks((k.data as any) || []);
     setLoading(false);
   };
 
@@ -217,6 +229,7 @@ const FinancingAdminDetails: React.FC = () => {
     { key: 'overview', label: 'نظرة عامة', icon: LayoutGrid },
     { key: 'documents', label: 'الوثائق', icon: FileCheck2, count: docs.length },
     { key: 'receipts', label: 'الإيصالات', icon: Receipt, count: receipts.length },
+    { key: 'acks', label: 'الإقرارات', icon: Gavel, count: acks.length },
     { key: 'timeline', label: 'سجل النشاط', icon: History, count: logs.length },
   ];
 
@@ -360,7 +373,7 @@ const FinancingAdminDetails: React.FC = () => {
           {/* Left: Tabbed content */}
           <div className="lg:col-span-2">
             <Tabs value={tab} onValueChange={setTab} className="w-full">
-              <TabsList className="relative w-full h-auto p-1.5 bg-muted/50 backdrop-blur border border-border/50 rounded-2xl grid grid-cols-4 gap-1">
+              <TabsList className="relative w-full h-auto p-1.5 bg-muted/50 backdrop-blur border border-border/50 rounded-2xl grid grid-cols-5 gap-1">
                 {TABS.map(t => {
                   const Icon = t.icon;
                   const active = tab === t.key;
@@ -542,6 +555,80 @@ const FinancingAdminDetails: React.FC = () => {
                                       </Button>
                                     </div>
                                   )}
+                                </div>
+                              </motion.div>
+                            ))}
+                          </div>
+                        )}
+                      </CardContent>
+                    </Card>
+                  </TabsContent>
+
+                  {/* ACKNOWLEDGMENTS */}
+                  <TabsContent value="acks" className="mt-0">
+                    <Card>
+                      <CardContent className="pt-6">
+                        {acks.length === 0 ? (
+                          <EmptyState icon={Gavel} text="لم يوقّع العميل أي إقرار رقمي بعد" />
+                        ) : (
+                          <div className="space-y-3">
+                            {acks.map((a, i) => (
+                              <motion.div
+                                key={a.id}
+                                initial={{ opacity: 0, y: 8 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                transition={{ delay: i * 0.05 }}
+                                className="rounded-xl border-2 border-emerald-500/30 bg-gradient-to-br from-emerald-50/60 to-transparent dark:from-emerald-950/20 p-4"
+                              >
+                                <div className="flex items-start justify-between gap-3 flex-wrap">
+                                  <div className="flex items-start gap-3 min-w-0 flex-1">
+                                    <div className="h-11 w-11 rounded-lg bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 flex items-center justify-center shrink-0 ring-1 ring-emerald-500/40">
+                                      <ShieldCheck className="h-5 w-5" />
+                                    </div>
+                                    <div className="min-w-0 flex-1">
+                                      <div className="flex items-center gap-2 flex-wrap mb-1">
+                                        <Badge className="bg-emerald-500 text-white text-[10px]">موثَّق</Badge>
+                                        <Badge variant="outline" className="text-[10px]">
+                                          الإقرار {i + 1}
+                                        </Badge>
+                                      </div>
+                                      <h4 className="font-bold text-sm leading-tight mb-1">
+                                        {a.ack_title || FINANCING_ACK_TITLES_AR[a.ack_type]}
+                                      </h4>
+                                      <div className="text-[11px] text-muted-foreground space-y-0.5">
+                                        <div>
+                                          <strong>الموقِّع:</strong> {a.signer_name}
+                                        </div>
+                                        <div>
+                                          <strong>التاريخ:</strong>{' '}
+                                          {format(new Date(a.signed_at), 'yyyy-MM-dd HH:mm:ss')}
+                                        </div>
+                                        <div className="font-mono text-[10px] break-all" dir="ltr">
+                                          <strong className="font-sans">SHA-256:</strong> {a.evidence_sha256.slice(0, 32)}…
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                  <Button
+                                    size="sm"
+                                    variant="outline"
+                                    className="gap-2 shrink-0 border-emerald-500/40 text-emerald-700 dark:text-emerald-300 hover:bg-emerald-500/10"
+                                    onClick={async () => {
+                                      try {
+                                        await downloadAcknowledgmentPdf({
+                                          applicationId: a.application_id,
+                                          ackType: a.ack_type,
+                                          userId: a.user_id,
+                                          applicationCode: String(a.application_id).slice(0, 8).toUpperCase(),
+                                        });
+                                      } catch (e: any) {
+                                        toast.error(e?.message || 'تعذّر تنزيل الإقرار');
+                                      }
+                                    }}
+                                  >
+                                    <Download className="h-4 w-4" />
+                                    تنزيل PDF
+                                  </Button>
                                 </div>
                               </motion.div>
                             ))}
