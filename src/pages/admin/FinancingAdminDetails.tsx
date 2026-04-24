@@ -62,6 +62,12 @@ type StatusLog = {
   id: string; application_id: string; from_status: string | null; to_status: string;
   note: string | null; changed_by: string | null; created_at: string;
 };
+type AckRow = {
+  id: string; application_id: string; user_id: string;
+  ack_type: FinancingAcknowledgmentType; ack_title: string;
+  signer_name: string; signed_at: string; evidence_sha256: string;
+  accepted_clauses: string[] | null;
+};
 
 const TIMELINE_STEPS = [
   { key: 'submitted', label: 'تم الإرسال', icon: FileText, color: 'from-sky-500 to-cyan-500' },
