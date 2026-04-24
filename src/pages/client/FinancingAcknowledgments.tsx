@@ -402,6 +402,31 @@ const FinancingAcknowledgments: React.FC = () => {
                     {done ? <Lock className="h-4 w-4" /> : <c.Icon className="h-4 w-4" />}
                     {done ? 'موثَّق نهائياً — لا يمكن إعادة التوقيع' : 'بدء الإقرار والتوقيع'}
                   </Button>
+                  {done && applicationId && (
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="w-full mt-2 gap-2 text-primary hover:bg-primary/10"
+                      onClick={async () => {
+                        try {
+                          await downloadAcknowledgmentPdf({
+                            applicationId,
+                            ackType: c.key,
+                            userId: user?.id,
+                          });
+                        } catch (e: any) {
+                          toast({
+                            title: 'تعذّر تنزيل الإقرار',
+                            description: e?.message || 'حدث خطأ أثناء توليد الـ PDF',
+                            variant: 'destructive',
+                          });
+                        }
+                      }}
+                    >
+                      <Download className="h-4 w-4" />
+                      تنزيل الإقرار PDF
+                    </Button>
+                  )}
                 </Card>
               </motion.div>
             );
