@@ -19,14 +19,17 @@ import {
   ArrowRight, CheckCircle2, XCircle, FileText, RefreshCw, User, Phone, Mail,
   Building2, Wallet, AlertCircle, Receipt, Clock, ShieldCheck,
   Banknote, Hash, MapPin, CreditCard, Eye, Download, Loader2, Sparkles,
-  MessageCircle, LayoutGrid, FileCheck2, History, Activity,
+  MessageCircle, LayoutGrid, FileCheck2, History, Activity, Gavel,
 } from 'lucide-react';
 import {
   FINANCING_STATUS_LABELS_AR,
   FINANCING_DOC_LABELS_AR,
+  FINANCING_ACK_TITLES_AR,
+  type FinancingAcknowledgmentType,
 } from '@/lib/financing';
 import { FINANCING_TEAMS } from '@/lib/financing-bank';
 import { sendWhatsApp } from '@/lib/whatsapp';
+import { downloadAcknowledgmentPdf } from '@/lib/financingAckPdf';
 import { cn } from '@/lib/utils';
 
 // ── WhatsApp helper ──
