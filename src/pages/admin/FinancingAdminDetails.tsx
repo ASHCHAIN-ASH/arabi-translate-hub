@@ -229,6 +229,7 @@ const FinancingAdminDetails: React.FC = () => {
     { key: 'overview', label: 'نظرة عامة', icon: LayoutGrid },
     { key: 'documents', label: 'الوثائق', icon: FileCheck2, count: docs.length },
     { key: 'receipts', label: 'الإيصالات', icon: Receipt, count: receipts.length },
+    { key: 'acks', label: 'الإقرارات', icon: Gavel, count: acks.length },
     { key: 'timeline', label: 'سجل النشاط', icon: History, count: logs.length },
   ];
 
