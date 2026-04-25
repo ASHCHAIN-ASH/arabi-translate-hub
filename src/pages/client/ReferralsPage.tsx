@@ -446,9 +446,17 @@ export default function ReferralsPage() {
 
         {/* === Tabs: How it works / Tiers / Referrals === */}
         <Tabs defaultValue="referrals" dir="rtl" className="space-y-4">
-          <TabsList dir="rtl" className="grid w-full md:w-auto md:inline-grid grid-cols-3 h-12 p-1">
+          <TabsList dir="rtl" className="grid w-full md:w-auto md:inline-grid grid-cols-2 md:grid-cols-4 h-auto md:h-12 p-1">
             <TabsTrigger value="referrals" className="gap-1.5 text-sm flex-row-reverse">
               <Award className="h-4 w-4" /> إحالاتي
+            </TabsTrigger>
+            <TabsTrigger value="withdrawals" className="gap-1.5 text-sm flex-row-reverse">
+              <Banknote className="h-4 w-4" /> طلبات السحب
+              {withdrawals.filter(w => w.status === 'pending').length > 0 && (
+                <Badge variant="secondary" className="text-[9px] h-4 px-1.5">
+                  {withdrawals.filter(w => w.status === 'pending').length}
+                </Badge>
+              )}
             </TabsTrigger>
             <TabsTrigger value="tiers" className="gap-1.5 text-sm flex-row-reverse">
               <Trophy className="h-4 w-4" /> المستويات
