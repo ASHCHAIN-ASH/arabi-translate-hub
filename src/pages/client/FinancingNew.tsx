@@ -440,22 +440,20 @@ const FinancingNew: React.FC = () => {
               exit={{ opacity: 0, x: 30 }}
               transition={{ duration: 0.3 }}
             >
-              <Card className="p-6 md:p-7 space-y-6 border-border/60">
-                <div className="flex items-center gap-3 pb-4 border-b border-border/50">
-                  <div className="h-10 w-10 rounded-xl bg-gradient-to-br from-sky-500 to-blue-600 flex items-center justify-center text-white shadow-md">
-                    <CreditCard className="h-5 w-5" />
-                  </div>
-                  <div>
-                    <h2 className="text-lg font-bold">بيانات التمويل والمتقدم</h2>
-                    <p className="text-xs text-muted-foreground">جميع الحقول إلزامية لتقييم الأهلية</p>
-                  </div>
-                </div>
+              <Card className="p-4 sm:p-6 md:p-7 space-y-5 sm:space-y-6 border-border/60 shadow-md overflow-hidden">
+                <SectionHeader
+                  icon={CreditCard}
+                  title="بيانات التمويل والمتقدّم"
+                  subtitle="جميع الحقول إلزامية لتقييم الأهلية الائتماني"
+                  badge="الخطوة 1"
+                  gradient="from-sky-500 via-blue-600 to-indigo-600"
+                />
 
                 {/* Amount block — premium with quick presets */}
                 <motion.div
                   initial={{ opacity: 0, scale: 0.98 }}
                   animate={{ opacity: 1, scale: 1 }}
-                  className="rounded-2xl bg-gradient-to-br from-primary/15 via-primary/5 to-transparent p-5 ring-1 ring-primary/30 relative overflow-hidden"
+                  className="rounded-2xl bg-gradient-to-br from-primary/15 via-primary/5 to-transparent p-4 sm:p-5 ring-1 ring-primary/30 relative overflow-hidden"
                 >
                   <motion.div
                     className="absolute -top-12 -left-12 h-32 w-32 rounded-full bg-primary/20 blur-3xl"
