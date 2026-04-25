@@ -719,6 +719,13 @@ export default function ReferralsPage() {
           </TabsContent>
         </Tabs>
       </div>
+
+      <WithdrawDialog
+        open={withdrawDialogOpen}
+        onOpenChange={setWithdrawDialogOpen}
+        availableBalance={walletBalance}
+        onSuccess={loadWalletAndWithdrawals}
+      />
     </ClientLayout>
   );
 }
