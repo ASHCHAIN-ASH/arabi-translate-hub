@@ -2,7 +2,7 @@ import { useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import {
   AlertTriangle, CheckCircle2, Sparkles, Zap, RefreshCw, Settings,
-  TrendingDown, ListChecks, X, Loader2, ArrowLeft,
+  TrendingDown, ListChecks, X, Loader2, ArrowRight,
 } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
