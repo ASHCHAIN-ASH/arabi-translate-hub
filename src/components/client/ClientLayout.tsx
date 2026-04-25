@@ -100,7 +100,7 @@ const SidebarInner = memo<SidebarInnerProps>(({ displayName, initial, onItemClic
       </div>
 
       {/* Nav */}
-      <nav className="flex-1 overflow-y-auto px-3 pb-4 space-y-1">
+      <nav className="flex-1 min-h-0 overflow-y-auto overscroll-contain px-3 pb-4 space-y-1 [scrollbar-width:thin] [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-thumb]:bg-muted-foreground/30 [&::-webkit-scrollbar-thumb]:rounded-full">
         <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground px-3 mb-2">
           القائمة الرئيسية
         </p>
