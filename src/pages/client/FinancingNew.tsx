@@ -1,6 +1,7 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { useNavigate, useSearchParams, Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
+import { toast as sonner } from 'sonner';
 import { z } from 'zod';
 import {
   ArrowRight,
@@ -46,6 +47,7 @@ import FinancingLiveSummary from '@/components/financing/FinancingLiveSummary';
 import AnimatedField from '@/components/financing/AnimatedField';
 import SectionHeader from '@/components/financing/SectionHeader';
 import FinancingCalculator from '@/components/financing/FinancingCalculator';
+import StepNavBar from '@/components/financing/StepNavBar';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -261,6 +263,78 @@ const FinancingNew: React.FC = () => {
     document.title = 'طلب تمويل جديد — Master PayLater';
   }, []);
 
+  // ===== Draft autosave (localStorage) — silent debounced + manual save =====
+  const DRAFT_KEY = `financing_draft_${user?.id ?? 'anon'}`;
+  const [savedAt, setSavedAt] = useState<Date | null>(null);
+  const [savingDraft, setSavingDraft] = useState(false);
+  const restoredRef = useRef(false);
+
+  // Restore draft once after mount
+  useEffect(() => {
+    if (restoredRef.current || !user?.id) return;
+    restoredRef.current = true;
+    try {
+      const raw = localStorage.getItem(DRAFT_KEY);
+      if (!raw) return;
+      const draft = JSON.parse(raw);
+      if (draft.form) setForm((f) => ({ ...f, ...draft.form }));
+      if (draft.amount) setAmount(draft.amount);
+      if (draft.step) setStep(draft.step);
+      if (draft.savedAt) setSavedAt(new Date(draft.savedAt));
+      sonner.success('تمت استعادة مسودة طلبك السابقة', {
+        description: 'تابع من حيث توقفت — لم نفقد أي بيان.',
+        duration: 4000,
+      });
+    } catch {/* ignore corrupt draft */}
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user?.id]);
+
+  // Debounced silent autosave on form/amount changes
+  useEffect(() => {
+    if (!user?.id) return;
+    const t = setTimeout(() => {
+      try {
+        localStorage.setItem(DRAFT_KEY, JSON.stringify({
+          form, amount, step, savedAt: new Date().toISOString(),
+        }));
+        setSavedAt(new Date());
+      } catch {/* quota */}
+    }, 1200);
+    return () => clearTimeout(t);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [form, amount, step, user?.id]);
+
+  const saveDraftManually = () => {
+    if (!user?.id) {
+      sonner.error('سجّل الدخول أولًا', { description: 'لا يمكن حفظ المسودة بدون حساب.' });
+      return;
+    }
+    setSavingDraft(true);
+    try {
+      localStorage.setItem(DRAFT_KEY, JSON.stringify({
+        form, amount, step, savedAt: new Date().toISOString(),
+      }));
+      setSavedAt(new Date());
+      sonner.success('💾 تم حفظ المسودة', {
+        description: 'يمكنك إغلاق الصفحة والعودة لاحقًا — سيتم استعادة كل شيء تلقائيًا.',
+        duration: 3500,
+      });
+    } catch {
+      sonner.error('تعذّر حفظ المسودة', { description: 'تأكد من توفر مساحة في المتصفح.' });
+    } finally {
+      setTimeout(() => setSavingDraft(false), 600);
+    }
+  };
+
+  const goToStep = (next: 1 | 2 | 3) => {
+    const direction = next > step ? 'الأمام' : 'الخلف';
+    setStep(next);
+    sonner.success(`✓ انتقلت إلى الخطوة ${next} من 3`, {
+      description: `تم حفظ تقدمك تلقائيًا قبل التنقل ${direction === 'الأمام' ? 'للأمام' : 'للخلف'}.`,
+      duration: 2200,
+    });
+  };
+
   const setField = (k: keyof typeof form, v: any) => setForm((f) => ({ ...f, [k]: v }));
 
   // === Live field validators (for visual ✓/✗ feedback + Arabic error messages) ===
@@ -408,6 +482,8 @@ const FinancingNew: React.FC = () => {
         if (docsErr) throw docsErr;
       }
 
+      // Clear draft on successful submission
+      try { localStorage.removeItem(DRAFT_KEY); } catch {/* ignore */}
       toast({
         title: '✅ تم استلام طلبك بنجاح',
         description: 'سيبدأ فريق التقييم الائتماني بمراجعة طلبك خلال 24 ساعة.',
@@ -430,7 +506,7 @@ const FinancingNew: React.FC = () => {
 
         {/* Visual Stepper */}
         <div className="mt-6">
-          <FinancingStepper current={step} onJump={(s) => setStep(s as 1 | 2 | 3)} />
+          <FinancingStepper current={step} onJump={(s) => goToStep(s as 1 | 2 | 3)} />
         </div>
 
         {/* Two-column layout: form + sticky summary */}
@@ -1151,16 +1227,21 @@ const FinancingNew: React.FC = () => {
                   </div>
                 )}
 
-                <div className="flex justify-end pt-2">
-                  <Button
-                    size="lg"
-                    onClick={() => validateStep1() && setStep(2)}
-                    className="bg-gradient-to-l from-primary to-primary/80 shadow-lg hover:shadow-xl transition-shadow"
-                  >
-                    التالي: المستندات
-                    <ArrowRight className="mr-2 h-4 w-4 rotate-180" />
-                  </Button>
-                </div>
+                <StepNavBar
+                  savedAt={savedAt}
+                  savingDraft={savingDraft}
+                  onSaveDraft={saveDraftManually}
+                  rightButton={
+                    <Button
+                      size="lg"
+                      onClick={() => validateStep1() && goToStep(2)}
+                      className="bg-gradient-to-l from-primary to-primary/80 shadow-lg hover:shadow-xl transition-shadow"
+                    >
+                      التالي: المستندات
+                      <ArrowRight className="mr-2 h-4 w-4 rotate-180" />
+                    </Button>
+                  }
+                />
               </Card>
             </motion.div>
           )}
@@ -1254,19 +1335,26 @@ const FinancingNew: React.FC = () => {
                   })}
                 </div>
 
-                <div className="flex justify-between pt-2">
-                  <Button variant="outline" onClick={() => setStep(1)} size="lg">
-                    <ArrowRight className="ml-2 h-4 w-4" /> السابق
-                  </Button>
-                  <Button
-                    size="lg"
-                    onClick={() => validateStep2() && setStep(3)}
-                    className="bg-gradient-to-l from-primary to-primary/80 shadow-lg"
-                  >
-                    التالي: الإقرارات
-                    <ArrowRight className="mr-2 h-4 w-4 rotate-180" />
-                  </Button>
-                </div>
+                <StepNavBar
+                  savedAt={savedAt}
+                  savingDraft={savingDraft}
+                  onSaveDraft={saveDraftManually}
+                  leftButton={
+                    <Button variant="outline" onClick={() => goToStep(1)} size="lg">
+                      <ArrowRight className="ml-2 h-4 w-4" /> السابق
+                    </Button>
+                  }
+                  rightButton={
+                    <Button
+                      size="lg"
+                      onClick={() => validateStep2() && goToStep(3)}
+                      className="bg-gradient-to-l from-primary to-primary/80 shadow-lg"
+                    >
+                      التالي: الإقرارات
+                      <ArrowRight className="mr-2 h-4 w-4 rotate-180" />
+                    </Button>
+                  }
+                />
               </Card>
             </motion.div>
           )}
@@ -1357,27 +1445,34 @@ const FinancingNew: React.FC = () => {
                   </div>
                 </div>
 
-                <div className="flex justify-between pt-2 flex-wrap gap-3">
-                  <Button variant="outline" onClick={() => setStep(2)} disabled={submitting} size="lg">
-                    <ArrowRight className="ml-2 h-4 w-4" /> السابق
-                  </Button>
-                  <Button
-                    onClick={handleSubmit}
-                    disabled={submitting}
-                    size="lg"
-                    className="bg-gradient-to-l from-emerald-600 to-teal-600 shadow-lg hover:shadow-xl text-white"
-                  >
-                    {submitting ? (
-                      <>
-                        <Loader2 className="ml-2 h-4 w-4 animate-spin" /> جاري الإرسال…
-                      </>
-                    ) : (
-                      <>
-                        <Sparkles className="ml-2 h-4 w-4" /> إرسال طلب التمويل
-                      </>
-                    )}
-                  </Button>
-                </div>
+                <StepNavBar
+                  savedAt={savedAt}
+                  savingDraft={savingDraft}
+                  onSaveDraft={saveDraftManually}
+                  leftButton={
+                    <Button variant="outline" onClick={() => goToStep(2)} disabled={submitting} size="lg">
+                      <ArrowRight className="ml-2 h-4 w-4" /> السابق
+                    </Button>
+                  }
+                  rightButton={
+                    <Button
+                      onClick={handleSubmit}
+                      disabled={submitting}
+                      size="lg"
+                      className="bg-gradient-to-l from-emerald-600 to-teal-600 shadow-lg hover:shadow-xl text-white"
+                    >
+                      {submitting ? (
+                        <>
+                          <Loader2 className="ml-2 h-4 w-4 animate-spin" /> جاري الإرسال…
+                        </>
+                      ) : (
+                        <>
+                          <Sparkles className="ml-2 h-4 w-4" /> إرسال طلب التمويل
+                        </>
+                      )}
+                    </Button>
+                  }
+                />
               </Card>
             </motion.div>
           )}
