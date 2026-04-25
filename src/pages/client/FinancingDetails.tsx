@@ -570,7 +570,7 @@ const FinancingDetails: React.FC = () => {
                 <Button
                   asChild
                   size="lg"
-                  className="bg-white text-primary hover:bg-white/90 font-bold shadow-lg shrink-0"
+                  className="bg-white text-primary hover:bg-white/90 font-bold shadow-lg shrink-0 w-full sm:w-auto h-12 sm:h-11 text-base sm:text-sm"
                 >
                   <Link to={`/financing/acknowledgments?app=${app.id}`}>
                     <ScrollText className="h-4 w-4 ml-2" />
@@ -613,7 +613,7 @@ const FinancingDetails: React.FC = () => {
                     size="lg"
                     onClick={openOrCreateContract}
                     disabled={creatingContract}
-                    className="flex-1 gap-2 shadow-lg"
+                    className="flex-1 gap-2 shadow-lg w-full sm:w-auto h-12 sm:h-11 text-base sm:text-sm font-bold"
                   >
                     {creatingContract ? (
                       <Loader2 className="h-5 w-5 animate-spin" />
@@ -622,7 +622,7 @@ const FinancingDetails: React.FC = () => {
                     )}
                     {contract ? 'فتح العقد وتوقيعه رقمياً' : 'إنشاء العقد وبدء التوقيع'}
                   </Button>
-                  <div className="flex items-center gap-2 text-xs text-muted-foreground sm:max-w-[40%]">
+                  <div className="flex items-center gap-2 text-[11px] sm:text-xs text-muted-foreground sm:max-w-[40%]">
                     <ShieldCheck className="h-4 w-4 text-emerald-500 shrink-0" />
                     موثّق برقم تحقق فريد، طابع زمني، وسجل IP — مطابق لنظام التعاملات الإلكترونية السعودي.
                   </div>
@@ -670,11 +670,11 @@ const FinancingDetails: React.FC = () => {
 
                 {canPay && (
                   <Tabs value={paymentTab} onValueChange={(v: any) => setPaymentTab(v)}>
-                    <TabsList className="w-full grid grid-cols-2 mb-4">
-                      <TabsTrigger value="wallet" className="gap-2">
+                    <TabsList className="w-full grid grid-cols-2 mb-4 h-auto">
+                      <TabsTrigger value="wallet" className="gap-2 py-2.5 sm:py-2 text-xs sm:text-sm">
                         <Wallet className="h-4 w-4" /> المحفظة الرقمية
                       </TabsTrigger>
-                      <TabsTrigger value="bank_transfer" className="gap-2">
+                      <TabsTrigger value="bank_transfer" className="gap-2 py-2.5 sm:py-2 text-xs sm:text-sm">
                         <Building2 className="h-4 w-4" /> تحويل بنكي
                       </TabsTrigger>
                     </TabsList>
@@ -698,7 +698,7 @@ const FinancingDetails: React.FC = () => {
                       </div>
                       <Button
                         size="lg"
-                        className="w-full font-bold shadow-lg hover-scale"
+                        className="w-full font-bold shadow-lg hover-scale h-12 sm:h-11 text-base sm:text-sm"
                         disabled={!walletEnough || paying}
                         onClick={submitWalletPayment}
                       >
@@ -770,7 +770,7 @@ const FinancingDetails: React.FC = () => {
 
                       <Button
                         size="lg"
-                        className="w-full font-bold shadow-lg hover-scale"
+                        className="w-full font-bold shadow-lg hover-scale h-12 sm:h-11 text-base sm:text-sm"
                         disabled={paying}
                         onClick={submitBankTransfer}
                       >
