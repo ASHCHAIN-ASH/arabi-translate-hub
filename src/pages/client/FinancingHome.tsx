@@ -252,16 +252,18 @@ const FinancingHome: React.FC = () => {
 
         {/* Applications list with stunning RTL tabs */}
         <div>
-          <div className="flex items-center justify-between mb-4 sm:mb-5 flex-wrap gap-2 sm:gap-3">
-            <h2 className="text-lg sm:text-xl md:text-2xl font-bold flex items-center gap-2">
-              <FileText className="h-4 w-4 sm:h-5 sm:w-5 text-primary" />
-              طلباتي التمويلية
-            </h2>
-            <Button asChild variant="outline" size="sm" className="hover-scale h-8 sm:h-9 text-xs sm:text-sm">
-              <Link to="/financing/new">
-                <Plus className="ml-1 h-3.5 w-3.5 sm:h-4 sm:w-4" /> طلب جديد
-              </Link>
-            </Button>
+          <div className="sticky top-14 sm:static z-30 -mx-3 sm:mx-0 px-3 sm:px-0 pt-2 sm:pt-0 pb-2 sm:pb-0 mb-3 sm:mb-0 bg-background/85 sm:bg-transparent backdrop-blur-md sm:backdrop-blur-0 border-b border-border/40 sm:border-0">
+            <div className="flex items-center justify-between mb-3 sm:mb-5 flex-wrap gap-2 sm:gap-3">
+              <h2 className="text-lg sm:text-xl md:text-2xl font-bold flex items-center gap-2">
+                <FileText className="h-4 w-4 sm:h-5 sm:w-5 text-primary" />
+                طلباتي التمويلية
+              </h2>
+              <Button asChild variant="outline" size="sm" className="hover-scale h-8 sm:h-9 text-xs sm:text-sm">
+                <Link to="/financing/new">
+                  <Plus className="ml-1 h-3.5 w-3.5 sm:h-4 sm:w-4" /> طلب جديد
+                </Link>
+              </Button>
+            </div>
           </div>
 
           {/* ✨ Premium animated tabs */}
