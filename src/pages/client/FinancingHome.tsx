@@ -367,8 +367,38 @@ const FinancingHome: React.FC = () => {
                   </div>
                 </div>
 
-                {loading ? (
-                  <Card className="p-8 text-center text-muted-foreground animate-pulse">جاري التحميل…</Card>
+                {loading || tabSwitching ? (
+                  <div
+                    aria-busy="true"
+                    aria-live="polite"
+                    className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4"
+                  >
+                    {Array.from({ length: 4 }).map((_, i) => (
+                      <Card key={i} className="p-4 sm:p-5 border-border/60">
+                        <div className="flex items-start justify-between gap-2 mb-3 sm:mb-4">
+                          <div className="space-y-2 flex-1 min-w-0">
+                            <Skeleton className="h-2.5 w-16" />
+                            <Skeleton className="h-3 w-24" />
+                            <Skeleton className="h-7 sm:h-8 w-32" />
+                          </div>
+                          <Skeleton className="h-6 w-20 rounded-full shrink-0" />
+                        </div>
+                        <div className="grid grid-cols-3 gap-1.5 sm:gap-2 mb-3 sm:mb-4">
+                          {Array.from({ length: 3 }).map((__, j) => (
+                            <div key={j} className="rounded-lg bg-muted/40 p-2 sm:p-2.5 space-y-1.5">
+                              <Skeleton className="h-2 w-12 mx-auto" />
+                              <Skeleton className="h-3 w-10 mx-auto" />
+                            </div>
+                          ))}
+                        </div>
+                        <div className="flex items-center justify-between pt-2.5 sm:pt-3 border-t border-border/40">
+                          <Skeleton className="h-3 w-16" />
+                          <Skeleton className="h-3 w-20" />
+                        </div>
+                      </Card>
+                    ))}
+                    <span className="sr-only">جاري تحميل الطلبات…</span>
+                  </div>
                 ) : filtered.length === 0 ? (
                   <Card className="p-10 text-center border-dashed">
                     <FileText className="h-10 w-10 mx-auto text-muted-foreground/60 mb-3" />
