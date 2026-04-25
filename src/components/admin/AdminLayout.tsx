@@ -133,6 +133,7 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
       label: 'إعدادات النظام',
       items: [
         { name: 'ساعات العمل', href: '/adminmaster/working-hours', icon: Clock },
+        { name: 'سجل التغييرات', href: '/adminmaster/changelog', icon: History },
       ]
     },
   ];
