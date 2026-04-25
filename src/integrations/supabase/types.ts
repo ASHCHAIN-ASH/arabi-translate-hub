@@ -5040,6 +5040,101 @@ export type Database = {
         }
         Relationships: []
       }
+      study_challenge_attempts: {
+        Row: {
+          badge_awarded: string | null
+          completed_at: string | null
+          created_at: string
+          current_day: number
+          failed_at: string | null
+          id: string
+          last_check_in_on: string | null
+          points_awarded: number
+          required_days: number
+          required_minutes: number
+          started_on: string
+          status: string
+          streak: number
+          updated_at: string
+          user_id: string
+          xp_awarded: number
+        }
+        Insert: {
+          badge_awarded?: string | null
+          completed_at?: string | null
+          created_at?: string
+          current_day?: number
+          failed_at?: string | null
+          id?: string
+          last_check_in_on?: string | null
+          points_awarded?: number
+          required_days?: number
+          required_minutes?: number
+          started_on?: string
+          status?: string
+          streak?: number
+          updated_at?: string
+          user_id: string
+          xp_awarded?: number
+        }
+        Update: {
+          badge_awarded?: string | null
+          completed_at?: string | null
+          created_at?: string
+          current_day?: number
+          failed_at?: string | null
+          id?: string
+          last_check_in_on?: string | null
+          points_awarded?: number
+          required_days?: number
+          required_minutes?: number
+          started_on?: string
+          status?: string
+          streak?: number
+          updated_at?: string
+          user_id?: string
+          xp_awarded?: number
+        }
+        Relationships: []
+      }
+      study_challenge_check_ins: {
+        Row: {
+          attempt_id: string
+          check_in_date: string
+          created_at: string
+          day_number: number
+          id: string
+          minutes_studied: number
+          user_id: string
+        }
+        Insert: {
+          attempt_id: string
+          check_in_date: string
+          created_at?: string
+          day_number: number
+          id?: string
+          minutes_studied?: number
+          user_id: string
+        }
+        Update: {
+          attempt_id?: string
+          check_in_date?: string
+          created_at?: string
+          day_number?: number
+          id?: string
+          minutes_studied?: number
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "study_challenge_check_ins_attempt_id_fkey"
+            columns: ["attempt_id"]
+            isOneToOne: false
+            referencedRelation: "study_challenge_attempts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       study_sessions: {
         Row: {
           completed_at: string | null
@@ -7027,6 +7122,7 @@ export type Database = {
           longest_streak: number
         }[]
       }
+      check_in_study_challenge: { Args: { p_minutes?: number }; Returns: Json }
       claim_referral: { Args: { _ref_code: string }; Returns: Json }
       classify_severity: { Args: { _delta_pct: number }; Returns: string }
       client_confirm_delivery: { Args: { _order_id: string }; Returns: Json }
@@ -7189,6 +7285,7 @@ export type Database = {
         }[]
       }
       get_retention_cohort: { Args: { p_days?: number }; Returns: Json }
+      get_study_challenge_state: { Args: { p_user_id: string }; Returns: Json }
       get_today_any_assessment_attempt: {
         Args: { p_anonymous_id?: string; p_user_id?: string }
         Returns: {
@@ -7411,6 +7508,7 @@ export type Database = {
         }
         Returns: Json
       }
+      start_study_challenge: { Args: never; Returns: Json }
       submit_assessment_attempt: {
         Args: { p_answers: Json; p_attempt_id: string; p_time_spent?: number }
         Returns: Json

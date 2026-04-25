@@ -30,6 +30,7 @@ import StartDayButton from '@/components/student/StartDayButton';
 import AIAssistantPanel from '@/components/student/AIAssistantPanel';
 import { celebrate } from '@/components/student/celebrate';
 import StudyWalletCard from '@/components/student/StudyWalletCard';
+import StudyChallengeCard from '@/components/student/StudyChallengeCard';
 import SuperTasksCard from '@/components/student/SuperTasksCard';
 import RPGProfileBar from '@/components/student/rpg/RPGProfileBar';
 import LevelUpOverlay from '@/components/student/rpg/LevelUpOverlay';
@@ -630,9 +631,10 @@ export default function StudentDashboardPage() {
           />
         </div>
 
-        {/* Study Wallet */}
-        <div className="mt-6">
+        {/* Study Wallet + 7-Day Challenge */}
+        <div className="mt-6 grid grid-cols-1 gap-6 lg:grid-cols-2">
           <StudyWalletCard userId={user?.id} />
+          <StudyChallengeCard userId={user?.id} />
         </div>
 
 
