@@ -545,6 +545,87 @@ export default function ReferralsPage() {
             </Card>
           </TabsContent>
 
+          {/* Withdrawals list */}
+          <TabsContent value="withdrawals" className="mt-0">
+            <Card>
+              <CardContent className="p-5">
+                <div className="flex items-center justify-between mb-4 flex-wrap gap-2">
+                  <h3 className="text-lg font-bold flex items-center gap-2">
+                    <Banknote className="h-5 w-5 text-primary" />
+                    سجل طلبات السحب
+                    <Badge variant="secondary">{withdrawals.length}</Badge>
+                  </h3>
+                  <Button
+                    size="sm"
+                    onClick={() => setWithdrawDialogOpen(true)}
+                    disabled={walletBalance < 100}
+                    className="gap-1.5"
+                  >
+                    <Banknote className="w-4 h-4" />
+                    طلب سحب جديد
+                  </Button>
+                </div>
+
+                {withdrawals.length === 0 ? (
+                  <div className="text-center py-12">
+                    <div className="inline-flex h-16 w-16 items-center justify-center rounded-2xl bg-muted mb-3">
+                      <Banknote className="h-8 w-8 text-muted-foreground" />
+                    </div>
+                    <p className="font-bold mb-1">لا توجد طلبات سحب بعد</p>
+                    <p className="text-sm text-muted-foreground">
+                      عند توفر رصيد كافٍ يمكنك طلب سحب أرباحك إلى حسابك البنكي
+                    </p>
+                  </div>
+                ) : (
+                  <div className="space-y-2">
+                    {withdrawals.map((w, i) => {
+                      const statusMeta: Record<string, { label: string; color: string; icon: any }> = {
+                        pending: { label: 'قيد المراجعة', color: 'bg-amber-500/10 text-amber-700 border-amber-200', icon: Clock },
+                        approved: { label: 'موافق عليه', color: 'bg-blue-500/10 text-blue-700 border-blue-200', icon: CheckCircle2 },
+                        paid: { label: 'تم التحويل', color: 'bg-emerald-500/10 text-emerald-700 border-emerald-200', icon: CheckCircle2 },
+                        rejected: { label: 'مرفوض', color: 'bg-red-500/10 text-red-700 border-red-200', icon: XCircle },
+                      };
+                      const meta = statusMeta[w.status] || statusMeta.pending;
+                      const SIcon = meta.icon;
+                      return (
+                        <motion.div
+                          key={w.id}
+                          initial={{ opacity: 0, x: -10 }}
+                          animate={{ opacity: 1, x: 0 }}
+                          transition={{ delay: i * 0.04 }}
+                          className="flex items-center gap-3 p-3.5 rounded-xl border bg-card hover:bg-accent/30 transition-colors"
+                        >
+                          <div className={cn('h-11 w-11 rounded-xl flex items-center justify-center shrink-0 border', meta.color)}>
+                            <SIcon className="h-5 w-5" />
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <div className="font-bold text-sm">{w.bank_name}</div>
+                            <div className="text-[11px] text-muted-foreground font-mono truncate" dir="ltr">{w.iban}</div>
+                            <div className="text-[10px] text-muted-foreground flex items-center gap-1 mt-0.5">
+                              <Calendar className="w-3 h-3" />
+                              {new Date(w.created_at).toLocaleDateString('ar-SA')}
+                            </div>
+                            {w.admin_notes && (
+                              <div className="text-[11px] text-red-600 mt-1">📝 {w.admin_notes}</div>
+                            )}
+                          </div>
+                          <div className="text-left shrink-0">
+                            <div className="font-black text-base">
+                              {Number(w.amount).toLocaleString('ar-SA')} ر.س
+                            </div>
+                            <Badge variant="outline" className={cn('text-[9px] mt-0.5', meta.color)}>
+                              {meta.label}
+                            </Badge>
+                          </div>
+                        </motion.div>
+                      );
+                    })}
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+          </TabsContent>
+
           {/* Tiers */}
           <TabsContent value="tiers" className="mt-0">
             <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
