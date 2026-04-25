@@ -20,6 +20,8 @@ import {
   CreditCard,
   Gavel,
   Loader2,
+  RefreshCw,
+  WifiOff,
 } from 'lucide-react';
 import { Skeleton } from '@/components/ui/skeleton';
 import ClientLayout from '@/components/client/ClientLayout';
