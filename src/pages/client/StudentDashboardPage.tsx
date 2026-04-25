@@ -375,7 +375,7 @@ export default function StudentDashboardPage() {
           variant="ghost"
           size="sm"
           onClick={() => navigate(-1)}
-          className="mb-4 text-white/70 hover:bg-white/10 hover:text-white"
+          className="mb-4 text-slate-600 hover:bg-slate-100 hover:text-slate-900"
         >
           <ArrowRight className="me-2 h-4 w-4" /> رجوع
         </Button>
@@ -386,13 +386,13 @@ export default function StudentDashboardPage() {
           className="mb-8 flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center"
         >
           <div>
-            <Badge className="mb-2 border-white/10 bg-white/5 text-cyan-200 hover:bg-white/10">
+            <Badge className="mb-2 border-violet-200 bg-violet-50 text-violet-700 hover:bg-violet-100">
               <Sparkles className="me-1 h-3 w-3" /> مركز الطالب الذكي
             </Badge>
-            <h1 className="text-3xl font-bold tracking-tight sm:text-4xl">
+            <h1 className="text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl">
               لوحة مذاكرتك وهويتك الدراسية
             </h1>
-            <p className="mt-1 max-w-xl text-sm text-white/60">
+            <p className="mt-1 max-w-xl text-sm text-slate-600">
               بطاقة طالب، جدول يومي، جلسات تركيز، مهام، وإنجازات في تجربة واحدة.
             </p>
           </div>
@@ -407,7 +407,7 @@ export default function StudentDashboardPage() {
                 startFocus();
               }
             }} />
-            <Button variant="ghost" size="sm" onClick={dash.refresh} className="text-white/70 hover:bg-white/10 hover:text-white">
+            <Button variant="ghost" size="sm" onClick={dash.refresh} className="text-slate-600 hover:bg-slate-100 hover:text-slate-900">
               <RefreshCcw className="me-2 h-4 w-4" /> تحديث
             </Button>
             <Button onClick={() => setEventOpen(true)} className="bg-gradient-to-l from-violet-500 to-cyan-500 text-white shadow-lg shadow-violet-500/30">
