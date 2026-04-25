@@ -271,15 +271,18 @@ export default function StudentDashboardPage() {
 
   /* ---------- Add event ---------- */
   const [eventOpen, setEventOpen] = useState(false);
-  const [ev, setEv] = useState<{ title: string; event_type: StudentEventType; time: string }>({
-    title: '', event_type: 'study', time: '09:00',
+  const todayStr = new Date().toISOString().slice(0, 10);
+  const [ev, setEv] = useState<{ title: string; event_type: StudentEventType; date: string; time: string }>({
+    title: '', event_type: 'study', date: todayStr, time: '09:00',
   });
   const submitEvent = async () => {
     if (!ev.title.trim()) { toast.error('أدخل عنوان الموعد'); return; }
+    if (!ev.date) { toast.error('اختر تاريخ الموعد'); return; }
     const [h, m] = ev.time.split(':').map(Number);
-    const d = new Date(); d.setHours(h || 0, m || 0, 0, 0);
+    const [yy, mm, dd] = ev.date.split('-').map(Number);
+    const d = new Date(yy, (mm || 1) - 1, dd || 1, h || 0, m || 0, 0, 0);
     await dash.addEvent({ title: ev.title.trim(), event_type: ev.event_type, starts_at: d.toISOString() });
-    setEv({ title: '', event_type: 'study', time: '09:00' });
+    setEv({ title: '', event_type: 'study', date: new Date().toISOString().slice(0, 10), time: '09:00' });
     setEventOpen(false);
     toast.success('تمت إضافة الموعد');
   };
@@ -662,6 +665,12 @@ export default function StudentDashboardPage() {
           <DialogHeader><DialogTitle>إضافة موعد جديد</DialogTitle></DialogHeader>
           <div className="space-y-3">
             <Input placeholder="عنوان الموعد" value={ev.title} onChange={e => setEv({ ...ev, title: e.target.value })} />
+            <Input
+              type="date"
+              value={ev.date}
+              min={todayStr}
+              onChange={e => setEv({ ...ev, date: e.target.value })}
+            />
             <div className="grid grid-cols-2 gap-3">
               <Select value={ev.event_type} onValueChange={(v: StudentEventType) => setEv({ ...ev, event_type: v })}>
                 <SelectTrigger><SelectValue /></SelectTrigger>
