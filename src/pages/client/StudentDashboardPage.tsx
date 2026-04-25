@@ -31,6 +31,11 @@ import AIAssistantPanel from '@/components/student/AIAssistantPanel';
 import { celebrate } from '@/components/student/celebrate';
 import StudyWalletCard from '@/components/student/StudyWalletCard';
 import SuperTasksCard from '@/components/student/SuperTasksCard';
+import RPGProfileBar from '@/components/student/rpg/RPGProfileBar';
+import LevelUpOverlay from '@/components/student/rpg/LevelUpOverlay';
+import AchievementsPanel from '@/components/student/rpg/AchievementsPanel';
+import PerformanceAnalytics from '@/components/student/rpg/PerformanceAnalytics';
+import BossChallengeCard from '@/components/student/rpg/BossChallengeCard';
 
 /* =========================================================
    Animated counter
@@ -701,7 +706,12 @@ export default function StudentDashboardPage() {
           </Card>
         </div>
 
-        {/* BOTTOM: tasks + weekly */}
+        {/* RPG profile bar */}
+        <div className="mt-6">
+          <RPGProfileBar xp={xp} name={profile?.full_name} />
+        </div>
+
+        {/* BOTTOM: tasks + boss */}
         <div className="mt-6 grid grid-cols-1 gap-6 lg:grid-cols-3">
           <SuperTasksCard
             tasks={dash.tasks}
@@ -719,33 +729,17 @@ export default function StudentDashboardPage() {
             onStartFocus={() => { if (!running) startFocus(); }}
           />
 
-          {/* Weekly achievement */}
-          <Card className="relative overflow-hidden border-blue-400/30 bg-gradient-to-br from-blue-600 via-indigo-600 to-blue-700 backdrop-blur-xl shadow-lg shadow-blue-500/20">
-            <div className="pointer-events-none absolute -top-12 -right-12 h-40 w-40 rounded-full bg-blue-400/30 blur-3xl" />
-            <div className="pointer-events-none absolute -bottom-12 -left-12 h-40 w-40 rounded-full bg-indigo-400/20 blur-3xl" />
-            <CardContent className="relative p-6">
-              <div className="mb-3 flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-blue-400 to-indigo-500 shadow-lg shadow-blue-500/40">
-                <Trophy className="h-7 w-7 text-white" />
-              </div>
-              <h3 className="text-lg font-bold text-white drop-shadow">إنجاز الأسبوع</h3>
-              <p className="mt-1 text-sm leading-relaxed text-white/90">
-                أكمل {weeklyTarget} جلسات تركيز هذا الأسبوع للحصول على شارة الطالب الذهبي.
-              </p>
-              <div className="mt-4">
-                <div className="mb-1.5 flex items-center justify-between text-sm font-medium text-white">
-                  <span>التقدم</span>
-                  <span className="tabular-nums text-blue-100">{weeklyDone} / {weeklyTarget}</span>
-                </div>
-                <Progress value={(weeklyDone / weeklyTarget) * 100} className="h-2.5 bg-white/15" />
-              </div>
-              <div className="mt-4 flex items-center gap-2 text-sm font-semibold text-blue-100">
-                <Star className="h-4 w-4 fill-blue-200 text-blue-200" />
-                شارة الطالب الذهبي
-              </div>
-            </CardContent>
-          </Card>
+          <BossChallengeCard tasks={dash.tasks} sessions={dash.sessions} />
+        </div>
+
+        {/* Achievements + Analytics */}
+        <div className="mt-6 grid grid-cols-1 gap-6 lg:grid-cols-2">
+          <AchievementsPanel tasks={dash.tasks} sessions={dash.sessions} xp={xp} streak={streak} />
+          <PerformanceAnalytics tasks={dash.tasks} sessions={dash.sessions} />
         </div>
       </div>
+
+      <LevelUpOverlay xp={xp} />
 
       {/* ===== Profile Dialog ===== */}
       <Dialog open={profileOpen} onOpenChange={setProfileOpen}>
