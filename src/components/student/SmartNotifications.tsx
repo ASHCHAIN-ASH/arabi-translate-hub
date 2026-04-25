@@ -133,6 +133,56 @@ export default function SmartNotifications({
     return () => clearInterval(i);
   }, []);
 
+  // 🔴 Realtime: react instantly to wallet/profile/session changes
+  useEffect(() => {
+    if (!userId) return;
+    const ch = supabase
+      .channel(`smart-notifs:${userId}`)
+      .on('postgres_changes',
+        { event: '*', schema: 'public', table: 'student_wallets', filter: `user_id=eq.${userId}` },
+        () => { setTick(x => x + 1); onLiveUpdate?.(); })
+      .on('postgres_changes',
+        { event: '*', schema: 'public', table: 'student_profiles', filter: `user_id=eq.${userId}` },
+        () => { setTick(x => x + 1); onLiveUpdate?.(); })
+      .on('postgres_changes',
+        { event: 'INSERT', schema: 'public', table: 'student_wallet_transactions', filter: `user_id=eq.${userId}` },
+        () => { setTick(x => x + 1); onLiveUpdate?.(); })
+      .on('postgres_changes',
+        { event: '*', schema: 'public', table: 'study_sessions', filter: `user_id=eq.${userId}` },
+        () => { setTick(x => x + 1); onLiveUpdate?.(); })
+      .subscribe();
+    return () => { supabase.removeChannel(ch); };
+  }, [userId, onLiveUpdate]);
+
+  // 🔁 Detect milestone CROSSING (level up / streak milestone reached) →
+  // clear stale "seen" entries so a fresh notif can appear immediately.
+  const prevRef = useRef<{ levelLvl: number; streak: number; weeklyDone: number } | null>(null);
+  useEffect(() => {
+    const lvl = getLevelInfo(xp).current.lvl;
+    const prev = prevRef.current;
+    if (prev) {
+      try {
+        const raw = localStorage.getItem('student_notifs_seen_v1');
+        const seen = raw ? JSON.parse(raw) as Record<string, number> : {};
+        let mutated = false;
+        // Level changed → wipe any stale "level-*" suppression
+        if (lvl !== prev.levelLvl) {
+          for (const k of Object.keys(seen)) if (k.startsWith('level-')) { delete seen[k]; mutated = true; }
+        }
+        // Streak grew → wipe stale "streak-*"
+        if (streak !== prev.streak) {
+          for (const k of Object.keys(seen)) if (k.startsWith('streak-')) { delete seen[k]; mutated = true; }
+        }
+        // Weekly progress changed → wipe stale "weekly-*"
+        if (weeklyDone !== prev.weeklyDone) {
+          for (const k of Object.keys(seen)) if (k.startsWith('weekly-')) { delete seen[k]; mutated = true; }
+        }
+        if (mutated) localStorage.setItem('student_notifs_seen_v1', JSON.stringify(seen));
+      } catch { /* ignore */ }
+    }
+    prevRef.current = { levelLvl: lvl, streak, weeklyDone };
+  }, [xp, streak, weeklyDone]);
+
   // 24h suppression for milestone notifs (streak/level/weekly) via LocalStorage
   const STORAGE_KEY = 'student_notifs_seen_v1';
   const TTL_MS = 24 * 60 * 60 * 1000;
