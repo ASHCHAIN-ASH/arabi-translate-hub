@@ -1235,16 +1235,14 @@ const FinancingNew: React.FC = () => {
               exit={{ opacity: 0, x: 30 }}
               transition={{ duration: 0.3 }}
             >
-              <Card className="p-6 md:p-7 space-y-6 border-border/60">
-                <div className="flex items-center gap-3 pb-4 border-b border-border/50">
-                  <div className="h-10 w-10 rounded-xl bg-gradient-to-br from-emerald-500 to-teal-600 flex items-center justify-center text-white shadow-md">
-                    <Gavel className="h-5 w-5" />
-                  </div>
-                  <div>
-                    <h2 className="text-lg font-bold">الإقرارات القانونية النهائية</h2>
-                    <p className="text-xs text-muted-foreground">إقرارات مُلزِمة قانونيًا — يُرجى القراءة بعناية</p>
-                  </div>
-                </div>
+              <Card className="p-4 sm:p-6 md:p-7 space-y-5 sm:space-y-6 border-border/60 shadow-md">
+                <SectionHeader
+                  icon={Gavel}
+                  title="الإقرارات القانونية النهائية"
+                  subtitle="إقرارات مُلزِمة قانونياً — يُرجى القراءة بعناية"
+                  badge="الخطوة 3"
+                  gradient="from-emerald-500 via-teal-600 to-cyan-600"
+                />
 
                 {/* Strict warning */}
                 <div className="rounded-xl bg-gradient-to-l from-rose-500/10 to-rose-500/5 ring-1 ring-rose-500/30 p-4">
