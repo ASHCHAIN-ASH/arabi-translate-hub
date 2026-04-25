@@ -39,6 +39,7 @@ import FinancingHero from '@/components/financing/FinancingHero';
 import FinancingFeatures from '@/components/financing/FinancingFeatures';
 import FinancingTerms from '@/components/financing/FinancingTerms';
 import FinancingFAQ from '@/components/financing/FinancingFAQ';
+import FinancingJourneyShowcase from '@/components/financing/FinancingJourneyShowcase';
 
 interface FinancingApp {
   id: string;
@@ -569,6 +570,9 @@ const FinancingHome: React.FC = () => {
             );
           })()}
         </div>
+
+        {/* رحلة التمويل بصور واقعية */}
+        <FinancingJourneyShowcase />
 
         {/* Terms & conditions */}
         <FinancingTerms />
