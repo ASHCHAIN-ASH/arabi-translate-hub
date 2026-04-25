@@ -1471,7 +1471,7 @@ const FinancingNew: React.FC = () => {
                   rightButton={
                     <Button
                       onClick={handleSubmit}
-                      disabled={submitting}
+                      disabled={submitting || !paymentValid}
                       size="lg"
                       className="bg-gradient-to-l from-emerald-600 to-teal-600 shadow-lg hover:shadow-xl text-white"
                     >
