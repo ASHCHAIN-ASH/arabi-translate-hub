@@ -52,8 +52,9 @@ const statusBadge = (status: WalletTransaction['status'] | RewardRedemption['sta
 };
 
 export default function StudyWalletCard({ userId }: { userId?: string }) {
-  const { wallet, transactions, redemptions, loading, requestRedemption } = useStudentWallet(userId);
+  const { wallet, transactions, redemptions, loading, requestRedemption, refresh } = useStudentWallet(userId);
   const [open, setOpen] = useState(false);
+  const [mode, setMode] = useState<'cash' | 'request'>('cash');
   const [type, setType] = useState<RewardRedemption['redemption_type']>('coupon');
   const [points, setPoints] = useState<string>('200');
   const [notes, setNotes] = useState<string>('');
@@ -63,6 +64,7 @@ export default function StudyWalletCard({ userId }: { userId?: string }) {
   const lifetime = wallet?.lifetime_earned_points ?? 0;
   const redeemed = wallet?.redeemed_points ?? 0;
   const pending = wallet?.pending_points ?? 0;
+  const cashBalance = wallet?.cash_balance ?? 0;
   const cashEquiv = (balance / POINTS_PER_SAR).toFixed(2);
 
   const submit = async () => {
@@ -71,13 +73,23 @@ export default function StudyWalletCard({ userId }: { userId?: string }) {
     if (p > balance) { toast.error('رصيدك لا يكفي'); return; }
     setSubmitting(true);
     try {
-      await requestRedemption(type, p, notes || undefined);
-      toast.success('تم إرسال الطلب — في انتظار مراجعة الأدمن');
+      if (mode === 'cash') {
+        const { data, error } = await supabase.functions.invoke('convert_points_to_cash', {
+          body: { points: p },
+        });
+        if (error) throw error;
+        if (data?.error) throw new Error(data.error);
+        toast.success(`تم تحويل ${p} نقطة إلى ${Number(data?.cash_added || 0).toFixed(2)} ر.س 💰`);
+        await refresh();
+      } else {
+        await requestRedemption(type, p, notes || undefined);
+        toast.success('تم إرسال الطلب — في انتظار مراجعة الأدمن');
+      }
       setOpen(false);
       setNotes('');
       setPoints('200');
     } catch (e: any) {
-      toast.error(e?.message || 'تعذّر إرسال الطلب');
+      toast.error(e?.message || 'تعذّر إتمام العملية');
     } finally {
       setSubmitting(false);
     }
