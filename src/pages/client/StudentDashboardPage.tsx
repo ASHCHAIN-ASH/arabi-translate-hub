@@ -484,7 +484,7 @@ export default function StudentDashboardPage() {
                           </div>
                           <Button
                             size="sm" variant="ghost"
-                            onClick={() => dash.toggleEventDone(e)}
+                            onClick={() => { if (!e.is_done) celebrate('small'); dash.toggleEventDone(e); }}
                             className="text-white/80 hover:bg-white/10 hover:text-white"
                           >
                             {e.is_done ? <CheckCircle2 className="h-4 w-4 text-emerald-400" /> : <Play className="h-4 w-4" />}
@@ -590,7 +590,7 @@ export default function StudentDashboardPage() {
                       transition={{ delay: i * 0.04 }}
                     >
                       <button
-                        onClick={() => dash.toggleTask(t)}
+                        onClick={() => { if (!t.is_done) celebrate('small'); dash.toggleTask(t); }}
                         className="group flex w-full items-center justify-between rounded-2xl bg-white/5 p-4 ring-1 ring-white/10 transition hover:bg-white/10"
                       >
                         <div className="flex items-center gap-3">
