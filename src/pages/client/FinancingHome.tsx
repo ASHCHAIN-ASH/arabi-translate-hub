@@ -57,6 +57,30 @@ const statusTone = (status: string) => {
   return { bg: 'bg-sky-500/10', text: 'text-sky-600 dark:text-sky-400', ring: 'ring-sky-500/20', icon: Clock3 };
 };
 
+// نسبة تقدم الطلب حسب المرحلة (6 مراحل رئيسية)
+const STATUS_PROGRESS: Record<string, { pct: number; label: string; tone: 'sky' | 'amber' | 'violet' | 'emerald' | 'rose' }> = {
+  draft: { pct: 5, label: 'مسودة', tone: 'sky' },
+  submitted: { pct: 15, label: 'تم الإرسال', tone: 'sky' },
+  documents_pending: { pct: 25, label: 'بانتظار المستندات', tone: 'amber' },
+  under_review: { pct: 40, label: 'قيد التقييم الائتماني', tone: 'violet' },
+  contract_pending_signature: { pct: 60, label: 'بانتظار توقيع العقد', tone: 'violet' },
+  waiting_down_payment: { pct: 80, label: 'بانتظار الدفعة الأولى', tone: 'amber' },
+  approved: { pct: 90, label: 'تمت الموافقة', tone: 'emerald' },
+  active: { pct: 95, label: 'نشط — جاري السداد', tone: 'emerald' },
+  completed: { pct: 100, label: 'مكتمل', tone: 'emerald' },
+  overdue: { pct: 95, label: 'قسط متأخر', tone: 'rose' },
+  rejected: { pct: 100, label: 'مرفوض', tone: 'rose' },
+  cancelled: { pct: 100, label: 'ملغي', tone: 'rose' },
+};
+
+const PROGRESS_BAR_CLASS: Record<'sky' | 'amber' | 'violet' | 'emerald' | 'rose', string> = {
+  sky: 'bg-gradient-to-l from-sky-500 to-blue-500',
+  amber: 'bg-gradient-to-l from-amber-500 to-orange-500',
+  violet: 'bg-gradient-to-l from-violet-500 to-fuchsia-500',
+  emerald: 'bg-gradient-to-l from-emerald-500 to-teal-500',
+  rose: 'bg-gradient-to-l from-rose-500 to-red-500',
+};
+
 const FinancingHome: React.FC = () => {
   const { user } = useAuth();
   const [apps, setApps] = useState<FinancingApp[]>([]);
