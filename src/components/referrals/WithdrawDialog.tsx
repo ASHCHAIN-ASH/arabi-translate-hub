@@ -37,7 +37,7 @@ export default function WithdrawDialog({ open, onOpenChange, availableBalance, o
       return;
     }
     if (numAmount > availableBalance) {
-      toast.error('المبلغ يتجاوز رصيد محفظتك');
+      toast.error('المبلغ يتجاوز رصيد أرباح العمولات المتاحة');
       return;
     }
     if (!bankName.trim() || !holderName.trim() || !iban.trim()) {
@@ -87,7 +87,7 @@ export default function WithdrawDialog({ open, onOpenChange, availableBalance, o
             سحب الأرباح
           </DialogTitle>
           <DialogDescription>
-            اطلب تحويل أرباح إحالاتك إلى حسابك البنكي
+            اطلب تحويل أرباح إحالاتك (العمولات فقط) إلى حسابك البنكي
           </DialogDescription>
         </DialogHeader>
 
@@ -95,7 +95,7 @@ export default function WithdrawDialog({ open, onOpenChange, availableBalance, o
           <div className="bg-gradient-to-l from-primary/10 to-transparent border rounded-xl p-4 flex items-center justify-between">
             <div className="flex items-center gap-2">
               <Wallet className="w-4 h-4 text-primary" />
-              <span className="text-sm text-muted-foreground">رصيد محفظتك</span>
+              <span className="text-sm text-muted-foreground">أرباح العمولات المتاحة</span>
             </div>
             <span className="text-lg font-black">{availableBalance.toLocaleString('ar-SA')} ر.س</span>
           </div>
@@ -104,7 +104,7 @@ export default function WithdrawDialog({ open, onOpenChange, availableBalance, o
             <Alert>
               <Info className="w-4 h-4" />
               <AlertDescription className="text-xs">
-                الحد الأدنى للسحب {MIN_WITHDRAWAL} ر.س. يلزم {(MIN_WITHDRAWAL - availableBalance).toLocaleString('ar-SA')} ر.س إضافية.
+                الحد الأدنى للسحب {MIN_WITHDRAWAL} ر.س. يلزم {(MIN_WITHDRAWAL - availableBalance).toLocaleString('ar-SA')} ر.س إضافية من أرباح العمولات.
               </AlertDescription>
             </Alert>
           )}
@@ -154,7 +154,7 @@ export default function WithdrawDialog({ open, onOpenChange, availableBalance, o
           <Alert>
             <Info className="w-4 h-4" />
             <AlertDescription className="text-xs leading-relaxed">
-              يُخصم المبلغ من محفظتك فوراً عند إرسال الطلب. في حال الرفض يُعاد المبلغ تلقائياً. مدة المعالجة: 1-3 أيام عمل.
+              يُسحب من أرباح العمولات فقط (لا يشمل رصيد المحفظة الأساسي مثل الإيداعات والاستردادات). يُخصم المبلغ فور إرسال الطلب، ويُعاد تلقائياً عند الرفض. مدة المعالجة: 1-3 أيام عمل.
             </AlertDescription>
           </Alert>
         </div>
