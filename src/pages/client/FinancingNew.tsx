@@ -262,7 +262,7 @@ const FinancingNew: React.FC = () => {
 
   const setField = (k: keyof typeof form, v: any) => setForm((f) => ({ ...f, [k]: v }));
 
-  // === Live field validators (for visual ✓/✗ feedback) ===
+  // === Live field validators (for visual ✓/✗ feedback + Arabic error messages) ===
   const v = {
     name: form.applicant_full_name.trim().length >= 3,
     nameInvalid: form.applicant_full_name.length > 0 && form.applicant_full_name.trim().length < 3,
@@ -273,7 +273,23 @@ const FinancingNew: React.FC = () => {
     email: /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.applicant_email.trim()),
     emailInvalid: form.applicant_email.length > 0 && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.applicant_email.trim()),
     income: Number(form.monthly_income) > 0,
+    incomeInvalid: String(form.monthly_income).length > 0 && (isNaN(Number(form.monthly_income)) || Number(form.monthly_income) <= 0),
+    commitments: Number(form.monthly_commitments) >= 0 && String(form.monthly_commitments).length > 0,
+    commitmentsInvalid: String(form.monthly_commitments).length > 0 && (isNaN(Number(form.monthly_commitments)) || Number(form.monthly_commitments) < 0),
     city: form.city.trim().length >= 2,
+    age: form.applicant_age !== '' && Number(form.applicant_age) >= 18 && Number(form.applicant_age) <= 75,
+    ageInvalid: String(form.applicant_age).length > 0 && (isNaN(Number(form.applicant_age)) || Number(form.applicant_age) < 18 || Number(form.applicant_age) > 75),
+  };
+
+  // Arabic error messages mapped to validators
+  const errMsg = {
+    name: 'الاسم الكامل يجب أن يكون 3 أحرف على الأقل',
+    id: 'رقم هوية غير صالح — 10 أرقام تبدأ بـ 1 (مواطن) أو 2 (مقيم)',
+    phone: 'رقم جوال سعودي غير صالح — يجب أن يبدأ بـ 05 أو 9665',
+    email: 'بريد إلكتروني غير صالح — تأكد من وجود @ والامتداد',
+    income: 'الدخل الشهري يجب أن يكون رقمًا موجبًا',
+    commitments: 'الالتزامات يجب أن تكون رقمًا غير سالب',
+    age: 'العمر يجب أن يكون بين 18 و 75 سنة',
   };
 
   const validateStep1 = () => {
