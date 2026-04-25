@@ -456,6 +456,12 @@ export default function StudentDashboardPage() {
           />
         </div>
 
+        {/* Study Wallet */}
+        <div className="mt-6">
+          <StudyWalletCard userId={user?.id} />
+        </div>
+
+
         {/* MIDDLE: schedule + focus */}
         <div className="mt-6 grid grid-cols-1 gap-6 lg:grid-cols-3">
           {/* Schedule */}
