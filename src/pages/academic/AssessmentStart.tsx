@@ -35,7 +35,7 @@ export default function AssessmentStart() {
         const todayAttemptId = await AssessmentService.getTodayAttemptId(id, user?.id ?? null);
         if (todayAttemptId) {
           toast.info('لقد أكملت اختبار اليوم — هذه نتيجتك');
-          navigate(`/challenge-academy/assessments/${id}/result?attempt=${todayAttemptId}`, { replace: true });
+          navigate(`/assessments/${id}/result?attempt=${todayAttemptId}`, { replace: true });
           return;
         }
 
@@ -45,7 +45,7 @@ export default function AssessmentStart() {
           const next = new Date(quota.next_available_at);
           const hoursLeft = Math.max(1, Math.ceil((next.getTime() - Date.now()) / 3600000));
           toast.info(`أنهيت اليوم اختبار "${quota.assessment_title}". يمكنك اختيار تخصص آخر بعد ${hoursLeft} ساعة.`);
-          navigate(`/challenge-academy/assessments/${quota.assessment_id}/result?attempt=${quota.attempt_id}`, { replace: true });
+          navigate(`/assessments/${quota.assessment_id}/result?attempt=${quota.attempt_id}`, { replace: true });
           return;
         }
 
@@ -54,10 +54,10 @@ export default function AssessmentStart() {
           AssessmentService.getById(id),
           AssessmentService.getDailyQuestions(id, 10),
         ]);
-        if (!a) { toast.error('الاختبار غير موجود'); navigate('/challenge-academy/assessments'); return; }
+        if (!a) { toast.error('الاختبار غير موجود'); navigate('/assessments'); return; }
         if (!qs || qs.length === 0) {
           toast.error('لا توجد أسئلة متاحة لهذا التخصص حالياً');
-          navigate('/challenge-academy/assessments', { replace: true });
+          navigate('/assessments', { replace: true });
           return;
         }
         setAssessment(a);
@@ -111,7 +111,7 @@ export default function AssessmentStart() {
       const elapsed = Math.round((Date.now() - startedAt.current) / 1000);
       const res = await AssessmentService.submit(attemptId, payload, elapsed);
       if (!res.success) { toast.error('فشل الإرسال'); setSubmitting(false); return; }
-      navigate(`/challenge-academy/assessments/${id}/result?attempt=${attemptId}`);
+      navigate(`/assessments/${id}/result?attempt=${attemptId}`);
     } catch (e: any) {
       toast.error('فشل الإرسال: ' + (e?.message || ''));
       setSubmitting(false);

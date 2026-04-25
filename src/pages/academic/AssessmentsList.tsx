@@ -82,7 +82,7 @@ export default function AssessmentsList() {
                     </p>
                   </div>
                   <Button asChild size="sm" variant="secondary">
-                    <Link to={`/challenge-academy/assessments/${quota.assessment_id}/result?attempt=${quota.attempt_id}`}>
+                    <Link to={`/assessments/${quota.assessment_id}/result?attempt=${quota.attempt_id}`}>
                       عرض النتيجة
                     </Link>
                   </Button>
@@ -145,7 +145,7 @@ export default function AssessmentsList() {
                     </div>
                     {todayMap[a.id] ? (
                       <Button asChild variant="secondary" className="w-full">
-                        <Link to={`/challenge-academy/assessments/${a.id}/result?attempt=${todayMap[a.id]}`}>
+                        <Link to={`/assessments/${a.id}/result?attempt=${todayMap[a.id]}`}>
                           <CheckCircle2 className="w-4 h-4 ml-2" />
                           عرض نتيجة اليوم
                         </Link>
@@ -157,7 +157,7 @@ export default function AssessmentsList() {
                       </Button>
                     ) : (
                       <Button asChild className="w-full group-hover:bg-primary/90">
-                        <Link to={`/challenge-academy/assessments/${a.id}/start`}>
+                        <Link to={`/assessments/${a.id}/start`}>
                           ابدأ الاختبار
                           <ArrowLeft className="w-4 h-4 mr-2" />
                         </Link>

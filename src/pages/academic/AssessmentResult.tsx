@@ -50,7 +50,7 @@ export default function AssessmentResult() {
 
   const handleShare = async () => {
     if (!attempt || !assessment) return;
-    const url = buildPublicUrl('/challenge-academy/assessments');
+    const url = buildPublicUrl('/assessments');
     const text = `🎯 حصلت على ${attempt.total_score}% في "${assessment.title}" (${lvl.label} ${lvl.emoji}) — جرّب الاختبار:`;
     const fullText = `${text} ${url}`;
     setSharing(true);
@@ -152,7 +152,7 @@ export default function AssessmentResult() {
                 </div>
               </div>
               <Button asChild>
-                <Link to={`/login?redirect=/challenge-academy/assessments/${id}/result?attempt=${attemptId}`}>
+                <Link to={`/login?redirect=/assessments/${id}/result?attempt=${attemptId}`}>
                   <LogIn className="w-4 h-4 ml-2" /> سجّل الدخول
                 </Link>
               </Button>
@@ -202,14 +202,14 @@ export default function AssessmentResult() {
             {sharing ? <Loader2 className="w-4 h-4 animate-spin" /> : <><Share2 className="w-4 h-4 ml-2" /> 📲 شارك نتيجتي</>}
           </Button>
           <Button asChild variant="outline" size="lg">
-            <Link to="/challenge-academy">
+            <Link to="/dashboard">
               <Trophy className="w-4 h-4 ml-2" /> اذهب لأكاديمية التحدي
             </Link>
           </Button>
         </div>
         <div className="text-center">
           <Button asChild variant="ghost" size="sm">
-            <Link to={`/challenge-academy/assessments/${id}/start`}>
+            <Link to={`/assessments/${id}/start`}>
               <RefreshCw className="w-3.5 h-3.5 ml-2" /> أعد الاختبار
             </Link>
           </Button>
