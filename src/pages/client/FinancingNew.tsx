@@ -48,6 +48,11 @@ import AnimatedField from '@/components/financing/AnimatedField';
 import SectionHeader from '@/components/financing/SectionHeader';
 import FinancingCalculator from '@/components/financing/FinancingCalculator';
 import StepNavBar from '@/components/financing/StepNavBar';
+import PaymentMethodSection, {
+  emptyPaymentDetails,
+  validatePaymentDetails,
+  type PaymentDetails,
+} from '@/components/financing/PaymentMethodSection';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -234,6 +239,8 @@ const FinancingNew: React.FC = () => {
     noDelay: false,
     executionDeed: false,
   });
+  const [payment, setPayment] = useState<PaymentDetails>(emptyPaymentDetails);
+  const paymentValid = useMemo(() => validatePaymentDetails(payment).ok, [payment]);
 
   const preview = useMemo(() => computeFinancingPreview(amount), [amount]);
 
@@ -1431,6 +1438,13 @@ const FinancingNew: React.FC = () => {
                   />
                 </div>
 
+                {/* Payment method (Visa / Mada / PayPal) */}
+                <PaymentMethodSection
+                  value={payment}
+                  onChange={setPayment}
+                  amountLabel={`${fmt(preview.downPayment)} ر.س`}
+                />
+
                 {/* Final summary */}
                 <div className="rounded-2xl bg-gradient-to-br from-primary/10 to-primary/5 p-5 ring-1 ring-primary/30">
                   <div className="text-sm font-bold mb-3 flex items-center gap-2">
@@ -1457,7 +1471,7 @@ const FinancingNew: React.FC = () => {
                   rightButton={
                     <Button
                       onClick={handleSubmit}
-                      disabled={submitting}
+                      disabled={submitting || !paymentValid}
                       size="lg"
                       className="bg-gradient-to-l from-emerald-600 to-teal-600 shadow-lg hover:shadow-xl text-white"
                     >
