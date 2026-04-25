@@ -388,23 +388,13 @@ export interface StudentRewardEvent {
   created_at: string;
 }
 
-export function useStudentRewardEvents(limit = 50) {
-  const { user } = useAuth();
-  const uid = user?.id;
+export function useStudentRewardEvents(_limit = 50) {
+  // Reward events feature was removed. Returns empty list for backward compatibility.
   return useQuery({
-    queryKey: uid ? ['student-reward-events', uid, limit] : ['student-reward-events', 'anon', limit],
-    enabled: !!uid,
-    queryFn: async () => {
-      const { data, error } = await supabase
-        .from('student_reward_events' as any)
-        .select('*')
-        .eq('user_id', uid!)
-        .order('created_at', { ascending: false })
-        .limit(limit);
-      if (error) { console.error('[student] reward events', error); return [] as StudentRewardEvent[]; }
-      return ((data || []) as unknown) as StudentRewardEvent[];
-    },
-    staleTime: 15_000,
+    queryKey: ['student-reward-events', 'disabled'],
+    enabled: false,
+    queryFn: async () => [] as StudentRewardEvent[],
+    staleTime: Infinity,
   });
 }
 
