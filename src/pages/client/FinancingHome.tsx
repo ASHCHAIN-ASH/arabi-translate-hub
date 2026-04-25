@@ -375,7 +375,7 @@ const FinancingHome: React.FC = () => {
                       animate={{ opacity: 1, y: 0 }}
                       exit={{ opacity: 0, y: -8 }}
                       transition={{ duration: 0.2 }}
-                      className="grid grid-cols-1 md:grid-cols-2 gap-4"
+                      className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4"
                     >
                       {filtered.map((a, idx) => {
                         const tone = statusTone(a.status);
@@ -388,48 +388,48 @@ const FinancingHome: React.FC = () => {
                             transition={{ delay: idx * 0.05 }}
                           >
                             <Link to={`/financing/${a.id}`} className="block">
-                              <Card className="p-5 hover:shadow-xl hover:-translate-y-0.5 transition-all border-border/60 hover:border-primary/40 group h-full">
-                                <div className="flex items-start justify-between mb-4">
-                                  <div>
-                                    <div className="text-[10px] uppercase tracking-widest text-muted-foreground mb-1">
+                              <Card className="p-4 sm:p-5 hover:shadow-xl hover:-translate-y-0.5 transition-all border-border/60 hover:border-primary/40 group h-full">
+                                <div className="flex items-start justify-between gap-2 mb-3 sm:mb-4">
+                                  <div className="min-w-0">
+                                    <div className="text-[9px] sm:text-[10px] uppercase tracking-widest text-muted-foreground mb-1">
                                       رقم الطلب
                                     </div>
-                                    <div className="font-mono text-xs font-semibold mb-2">
+                                    <div className="font-mono text-[11px] sm:text-xs font-semibold mb-1.5 sm:mb-2 truncate">
                                       #{a.id.slice(0, 8).toUpperCase()}
                                     </div>
-                                    <div className="text-2xl font-extrabold tabular-nums">
+                                    <div className="text-xl sm:text-2xl font-extrabold tabular-nums">
                                       {fmt(a.total_amount)}
-                                      <span className="text-sm font-normal text-muted-foreground mr-1">ر.س</span>
+                                      <span className="text-xs sm:text-sm font-normal text-muted-foreground mr-1">ر.س</span>
                                     </div>
                                   </div>
                                   <Badge
-                                    className={`${tone.bg} ${tone.text} ring-1 ${tone.ring} border-0 gap-1 px-2.5`}
+                                    className={`${tone.bg} ${tone.text} ring-1 ${tone.ring} border-0 gap-1 px-2 sm:px-2.5 text-[10px] sm:text-xs shrink-0`}
                                   >
                                     <StatusIcon className="h-3 w-3" />
                                     {FINANCING_STATUS_LABELS_AR[a.status] ?? a.status}
                                   </Badge>
                                 </div>
 
-                                <div className="grid grid-cols-3 gap-2 text-center text-xs mb-4">
-                                  <div className="rounded-lg bg-muted/50 p-2.5">
-                                    <div className="text-[10px] text-muted-foreground mb-1">الدفعة الأولى</div>
-                                    <div className="font-bold tabular-nums">{fmt(a.down_payment)}</div>
+                                <div className="grid grid-cols-3 gap-1.5 sm:gap-2 text-center text-xs mb-3 sm:mb-4">
+                                  <div className="rounded-lg bg-muted/50 p-2 sm:p-2.5">
+                                    <div className="text-[9px] sm:text-[10px] text-muted-foreground mb-0.5 sm:mb-1">الدفعة الأولى</div>
+                                    <div className="text-[11px] sm:text-xs font-bold tabular-nums">{fmt(a.down_payment)}</div>
                                   </div>
-                                  <div className="rounded-lg bg-muted/50 p-2.5">
-                                    <div className="text-[10px] text-muted-foreground mb-1">القسط</div>
-                                    <div className="font-bold tabular-nums">{fmt(a.monthly_installment)}</div>
+                                  <div className="rounded-lg bg-muted/50 p-2 sm:p-2.5">
+                                    <div className="text-[9px] sm:text-[10px] text-muted-foreground mb-0.5 sm:mb-1">القسط</div>
+                                    <div className="text-[11px] sm:text-xs font-bold tabular-nums">{fmt(a.monthly_installment)}</div>
                                   </div>
-                                  <div className="rounded-lg bg-muted/50 p-2.5">
-                                    <div className="text-[10px] text-muted-foreground mb-1">المدة</div>
-                                    <div className="font-bold tabular-nums">{a.duration_months} ش</div>
+                                  <div className="rounded-lg bg-muted/50 p-2 sm:p-2.5">
+                                    <div className="text-[9px] sm:text-[10px] text-muted-foreground mb-0.5 sm:mb-1">المدة</div>
+                                    <div className="text-[11px] sm:text-xs font-bold tabular-nums">{a.duration_months} ش</div>
                                   </div>
                                 </div>
 
-                                <div className="flex items-center justify-between text-xs text-muted-foreground pt-3 border-t border-border/40">
+                                <div className="flex items-center justify-between text-[11px] sm:text-xs text-muted-foreground pt-2.5 sm:pt-3 border-t border-border/40">
                                   <span>{new Date(a.created_at).toLocaleDateString('en-GB')}</span>
-                                  <span className="flex items-center gap-1 text-primary group-hover:gap-2 transition-all">
+                                  <span className="flex items-center gap-1 text-primary font-semibold group-hover:gap-2 transition-all">
                                     عرض التفاصيل
-                                    <ArrowUpRight className="h-3.5 w-3.5" />
+                                    <ArrowUpRight className="h-3 w-3 sm:h-3.5 sm:w-3.5" />
                                   </span>
                                 </div>
                               </Card>
