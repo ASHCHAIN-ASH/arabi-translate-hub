@@ -1,0 +1,2 @@
+[functions.student-whatsapp-notifier]
+verify_jwt = false
