@@ -1,8 +1,9 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { Bell, BookOpen, Flame, GraduationCap, Sparkles, Timer, Trophy, X, Zap } from 'lucide-react';
 import type { StudentEvent } from '@/hooks/useStudentDashboard';
 import { getLevelInfo } from '@/components/student/LevelProgress';
+import { supabase } from '@/integrations/supabase/client';
 
 type NotifKind = 'exam' | 'study' | 'focus' | 'streak' | 'level' | 'weekly' | 'general';
 
@@ -43,8 +44,10 @@ export interface SmartNotificationsProps {
   streak?: number;
   weeklyDone?: number;
   weeklyTarget?: number;
+  userId?: string;
   onStartFocus?: () => void;
   onAddTask?: () => void;
+  onLiveUpdate?: () => void;
 }
 
 export default function SmartNotifications({
@@ -53,8 +56,10 @@ export default function SmartNotifications({
   streak = 0,
   weeklyDone = 0,
   weeklyTarget = 5,
+  userId,
   onStartFocus,
   onAddTask,
+  onLiveUpdate,
 }: SmartNotificationsProps) {
   const notifs = useMemo<Notif[]>(() => {
     const list: Notif[] = buildEventNotifs(events);
@@ -127,6 +132,56 @@ export default function SmartNotifications({
     const i = setInterval(() => setTick(x => x + 1), 60_000);
     return () => clearInterval(i);
   }, []);
+
+  // 🔴 Realtime: react instantly to wallet/profile/session changes
+  useEffect(() => {
+    if (!userId) return;
+    const ch = supabase
+      .channel(`smart-notifs:${userId}`)
+      .on('postgres_changes',
+        { event: '*', schema: 'public', table: 'student_wallets', filter: `user_id=eq.${userId}` },
+        () => { setTick(x => x + 1); onLiveUpdate?.(); })
+      .on('postgres_changes',
+        { event: '*', schema: 'public', table: 'student_profiles', filter: `user_id=eq.${userId}` },
+        () => { setTick(x => x + 1); onLiveUpdate?.(); })
+      .on('postgres_changes',
+        { event: 'INSERT', schema: 'public', table: 'student_wallet_transactions', filter: `user_id=eq.${userId}` },
+        () => { setTick(x => x + 1); onLiveUpdate?.(); })
+      .on('postgres_changes',
+        { event: '*', schema: 'public', table: 'study_sessions', filter: `user_id=eq.${userId}` },
+        () => { setTick(x => x + 1); onLiveUpdate?.(); })
+      .subscribe();
+    return () => { supabase.removeChannel(ch); };
+  }, [userId, onLiveUpdate]);
+
+  // 🔁 Detect milestone CROSSING (level up / streak milestone reached) →
+  // clear stale "seen" entries so a fresh notif can appear immediately.
+  const prevRef = useRef<{ levelLvl: number; streak: number; weeklyDone: number } | null>(null);
+  useEffect(() => {
+    const lvl = getLevelInfo(xp).current.lvl;
+    const prev = prevRef.current;
+    if (prev) {
+      try {
+        const raw = localStorage.getItem('student_notifs_seen_v1');
+        const seen = raw ? JSON.parse(raw) as Record<string, number> : {};
+        let mutated = false;
+        // Level changed → wipe any stale "level-*" suppression
+        if (lvl !== prev.levelLvl) {
+          for (const k of Object.keys(seen)) if (k.startsWith('level-')) { delete seen[k]; mutated = true; }
+        }
+        // Streak grew → wipe stale "streak-*"
+        if (streak !== prev.streak) {
+          for (const k of Object.keys(seen)) if (k.startsWith('streak-')) { delete seen[k]; mutated = true; }
+        }
+        // Weekly progress changed → wipe stale "weekly-*"
+        if (weeklyDone !== prev.weeklyDone) {
+          for (const k of Object.keys(seen)) if (k.startsWith('weekly-')) { delete seen[k]; mutated = true; }
+        }
+        if (mutated) localStorage.setItem('student_notifs_seen_v1', JSON.stringify(seen));
+      } catch { /* ignore */ }
+    }
+    prevRef.current = { levelLvl: lvl, streak, weeklyDone };
+  }, [xp, streak, weeklyDone]);
 
   // 24h suppression for milestone notifs (streak/level/weekly) via LocalStorage
   const STORAGE_KEY = 'student_notifs_seen_v1';

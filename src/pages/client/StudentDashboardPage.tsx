@@ -829,8 +829,10 @@ export default function StudentDashboardPage() {
         streak={streak}
         weeklyDone={weeklyDone}
         weeklyTarget={weeklyTarget}
+        userId={user?.id}
         onStartFocus={() => { if (!running) startFocus(); }}
         onAddTask={() => setTaskOpen(true)}
+        onLiveUpdate={() => dash.refresh()}
       />
     </div>
     </ClientLayout>
