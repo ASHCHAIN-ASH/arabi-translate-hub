@@ -886,9 +886,17 @@ const FinancingNew: React.FC = () => {
                     })()}
 
                     {/* === الحقول المشتركة لكل الفئات === */}
-                    <FieldGroup icon={MapPin} label="المدينة">
-                      <Select dir="rtl" value={form.city} onValueChange={(v) => setField('city', v)}>
-                        <SelectTrigger className="h-11 flex-row-reverse justify-between text-right [&>span]:text-right [&>span]:flex-1">
+                    <AnimatedField
+                      icon={MapPin}
+                      label="المدينة"
+                      iconColor="text-rose-600"
+                      delay={0.05}
+                      required
+                      valid={v.city}
+                      hint="اختر مدينة الإقامة الحالية"
+                    >
+                      <Select dir="rtl" value={form.city} onValueChange={(val) => setField('city', val)}>
+                        <SelectTrigger className="h-11 border-0 bg-transparent focus:ring-0 focus:ring-offset-0 flex-row-reverse justify-between text-right [&>span]:text-right [&>span]:flex-1">
                           <SelectValue placeholder="اختر المدينة..." />
                         </SelectTrigger>
                         <SelectContent dir="rtl" className="max-h-72 text-right">
@@ -902,30 +910,62 @@ const FinancingNew: React.FC = () => {
                           ))}
                         </SelectContent>
                       </Select>
-                    </FieldGroup>
-                    <FieldGroup icon={User} label="العمر (سنوات)">
-                      <Input type="number" min={16} max={75}
+                    </AnimatedField>
+                    <AnimatedField
+                      icon={User}
+                      label="العمر (سنوات)"
+                      iconColor="text-indigo-600"
+                      delay={0.1}
+                      required
+                      valid={v.age}
+                      invalid={v.ageInvalid}
+                      errorMessage={errMsg.age}
+                      hint="من 18 إلى 75 سنة"
+                    >
+                      <Input type="number" min={18} max={75}
                         value={form.applicant_age}
                         onChange={(e) => setField('applicant_age', e.target.value)}
-                        placeholder="مثال: 32" />
-                    </FieldGroup>
-                    <FieldGroup icon={TrendingUp} label={
-                      form.applicant_category === 'student' ? 'الدخل / المكافأة الشهرية (ر.س)' :
-                      form.applicant_category === 'retired' ? 'المعاش التقاعدي الشهري (ر.س)' :
-                      form.applicant_category === 'self_employed' ? 'متوسط الدخل الشهري (ر.س)' :
-                      'الدخل الشهري (ر.س)'
-                    }>
+                        placeholder="مثال: 32"
+                        className="border-0 bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0 h-11 tabular-nums" />
+                    </AnimatedField>
+                    <AnimatedField
+                      icon={TrendingUp}
+                      label={
+                        form.applicant_category === 'student' ? 'الدخل / المكافأة الشهرية (ر.س)' :
+                        form.applicant_category === 'retired' ? 'المعاش التقاعدي الشهري (ر.س)' :
+                        form.applicant_category === 'self_employed' ? 'متوسط الدخل الشهري (ر.س)' :
+                        'الدخل الشهري (ر.س)'
+                      }
+                      iconColor="text-emerald-600"
+                      delay={0.15}
+                      required
+                      valid={v.income}
+                      invalid={v.incomeInvalid}
+                      errorMessage={errMsg.income}
+                      hint="ضع رقمًا تقريبيًا — يُستخدم لحساب الجدارة الائتمانية"
+                    >
                       <Input type="number" min={0}
                         value={form.monthly_income}
                         onChange={(e) => setField('monthly_income', e.target.value)}
-                        placeholder="0" />
-                    </FieldGroup>
-                    <FieldGroup icon={Receipt} label="الالتزامات الشهرية (ر.س)">
+                        placeholder="0"
+                        className="border-0 bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0 h-11 tabular-nums font-semibold" />
+                    </AnimatedField>
+                    <AnimatedField
+                      icon={Receipt}
+                      label="الالتزامات الشهرية (ر.س)"
+                      iconColor="text-orange-600"
+                      delay={0.2}
+                      valid={v.commitments}
+                      invalid={v.commitmentsInvalid}
+                      errorMessage={errMsg.commitments}
+                      hint="مجموع الأقساط/الالتزامات الشهرية الحالية (0 إن لم يوجد)"
+                    >
                       <Input type="number" min={0}
                         value={form.monthly_commitments}
                         onChange={(e) => setField('monthly_commitments', e.target.value)}
-                        placeholder="0" />
-                    </FieldGroup>
+                        placeholder="0"
+                        className="border-0 bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0 h-11 tabular-nums" />
+                    </AnimatedField>
 
                     {/* === الكفيل الغارم === */}
                     <div className="md:col-span-2">
