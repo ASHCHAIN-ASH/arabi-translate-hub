@@ -19,7 +19,7 @@ interface Props {
 const E = ({ customerName, amount, paymentMethod, referenceNumber, requestId, requestedAt, walletUrl }: Props) => (
   <Html lang="ar" dir="rtl">
     <Head />
-    <Preview>تم استلام طلب شحن محفظتك بمبلغ {amount} ر.س — {SITE_NAME}</Preview>
+    <Preview>{`تم استلام طلب شحن محفظتك بمبلغ ${amount ?? ''} ر.س — ${SITE_NAME}`}</Preview>
     <Body style={main}>
       <Container style={container}>
         {/* Bank-style Header */}

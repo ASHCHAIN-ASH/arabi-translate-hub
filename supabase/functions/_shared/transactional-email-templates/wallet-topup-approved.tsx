@@ -19,7 +19,7 @@ interface Props {
 const E = ({ customerName, amount, newBalance, requestId, approvedAt, paymentMethod, walletUrl }: Props) => (
   <Html lang="ar" dir="rtl">
     <Head />
-    <Preview>✅ تم إيداع {amount} ر.س في محفظتك بنجاح — {SITE_NAME}</Preview>
+    <Preview>{`✅ تم إيداع ${amount ?? ''} ر.س في محفظتك بنجاح — ${SITE_NAME}`}</Preview>
     <Body style={main}>
       <Container style={container}>
         <Section style={bankHeader}>
