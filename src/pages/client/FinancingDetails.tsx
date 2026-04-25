@@ -457,37 +457,73 @@ const FinancingDetails: React.FC = () => {
                   const state = idx < 2 ? 'done' : idx === 2 ? 'current' : 'upcoming';
                   const StageIcon = stage.icon;
                   const isLast = idx === TIMELINE_STAGES.length - 1;
+                  const isCurrent = state === 'current';
 
                   const circleClass =
                     state === 'done'
                       ? 'bg-emerald-500/20 ring-emerald-500/40 text-emerald-600 dark:text-emerald-400'
-                      : state === 'current'
-                      ? 'bg-primary/15 ring-primary/40 text-primary animate-pulse shadow-md shadow-primary/20'
+                      : isCurrent
+                      ? 'bg-primary/15 ring-primary/50 text-primary'
                       : 'bg-muted ring-border/50 text-muted-foreground/40';
 
-                  const connectorClass =
+                  // Outgoing connector: if previous stage is current, animate it as shimmer
+                  const incomingFromCurrent = idx > 0 && idx - 1 === 2; // connector between current and next
+                  const connectorBaseClass =
                     state === 'done'
                       ? 'bg-emerald-500/40'
+                      : incomingFromCurrent
+                      ? 'bg-gradient-to-l from-primary/50 via-primary/20 to-muted-foreground/15 bg-[length:200%_100%] animate-[shimmer-rtl_1.6s_linear_infinite]'
                       : 'bg-muted-foreground/15';
 
                   return (
                     <React.Fragment key={stage.key}>
                       <div role="listitem" className="flex flex-col items-center gap-1.5 min-w-[56px] sm:min-w-[68px] shrink-0">
-                        <div
-                          className={`h-9 w-9 sm:h-10 sm:w-10 rounded-full ring-2 ${circleClass} flex items-center justify-center transition-all`}
-                        >
-                          <StageIcon className="h-4 w-4 sm:h-[18px] sm:w-[18px] opacity-80" aria-hidden="true" />
+                        <div className="relative">
+                          {/* Outer glowing halo for current stage */}
+                          {isCurrent && (
+                            <>
+                              <span
+                                aria-hidden="true"
+                                className="absolute inset-0 rounded-full bg-primary/30 animate-ping"
+                              />
+                              <span
+                                aria-hidden="true"
+                                className="absolute -inset-1.5 rounded-full bg-primary/10 blur-md animate-[pulse-soft_2s_ease-in-out_infinite]"
+                              />
+                            </>
+                          )}
+                          <div
+                            className={`relative h-9 w-9 sm:h-10 sm:w-10 rounded-full ring-2 ${circleClass} flex items-center justify-center transition-all ${
+                              isCurrent ? 'shadow-lg shadow-primary/40' : ''
+                            }`}
+                            style={
+                              isCurrent
+                                ? {
+                                    animation: 'pulse-soft 1.6s ease-in-out infinite',
+                                  }
+                                : undefined
+                            }
+                          >
+                            <StageIcon
+                              className={`h-4 w-4 sm:h-[18px] sm:w-[18px] ${
+                                isCurrent ? 'opacity-100' : 'opacity-80'
+                              }`}
+                              aria-hidden="true"
+                            />
+                          </div>
                         </div>
                         <Skeleton
-                          className={`h-2 w-12 sm:w-14 ${state === 'upcoming' ? 'opacity-40' : ''}`}
+                          className={`h-2 w-12 sm:w-14 ${
+                            state === 'upcoming' ? 'opacity-40' : isCurrent ? 'bg-primary/25' : ''
+                          }`}
                         />
-                        {state === 'current' && (
-                          <Skeleton className="h-2 w-8 rounded-full bg-primary/20" />
+                        {isCurrent && (
+                          <Skeleton className="h-2 w-8 rounded-full bg-primary/30" />
                         )}
                       </div>
                       {!isLast && (
                         <div
-                          className={`h-0.5 flex-1 min-w-[8px] rounded-full mt-[18px] sm:mt-5 ${connectorClass}`}
+                          className={`relative h-1 flex-1 min-w-[8px] rounded-full mt-[18px] sm:mt-5 overflow-hidden ${connectorBaseClass}`}
                           aria-hidden="true"
                         />
                       )}
