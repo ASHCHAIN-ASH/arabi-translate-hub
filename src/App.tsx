@@ -215,6 +215,7 @@ import OrderForm from "./components/OrderForm";
 import TermsOfService from "./pages/TermsOfService";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
 import ColorShowcase from "./pages/ColorShowcase";
+import ThemePreview from "./pages/ThemePreview";
 import Pricing from "./pages/Pricing";
 import OrderTracking from "./pages/OrderTracking";
 import SubmitOrder from "./pages/SubmitOrder";
@@ -254,6 +255,7 @@ const App = () => (
           <Routes>
             {/* Public Routes */}
             <Route path="/" element={<Index />} />
+            <Route path="/theme-preview" element={<ThemePreview />} />
             <Route path="/marketing-hub" element={<MarketingHub />} />
             <Route path="/order-now" element={<OrderNow />} />
             <Route path="/services" element={<Services />} />
