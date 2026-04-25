@@ -895,6 +895,18 @@ export default function StudentDashboardPage() {
         onAddTask={() => setTaskOpen(true)}
         onLiveUpdate={() => dash.refresh()}
       />
+
+      <BossRewardOverlay
+        open={bossOverlay.open}
+        phase={bossOverlay.phase}
+        xpAwarded={bossOverlay.xp}
+        pointsAwarded={bossOverlay.points}
+        newXp={bossOverlay.newXp}
+        level={bossOverlay.level}
+        weekKey={bossOverlay.weekKey}
+        alreadyClaimed={bossOverlay.alreadyClaimed}
+        onClose={() => setBossOverlay(s => ({ ...s, open: false }))}
+      />
     </div>
     </ClientLayout>
   );
