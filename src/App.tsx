@@ -88,13 +88,6 @@ import BattleQuiz1v1Play from "./pages/battle-quiz/BattleQuiz1v1Play";
 import BattleQuiz1v1Result from "./pages/battle-quiz/BattleQuiz1v1Result";
 import BattleQuiz1v1Leaderboard from "./pages/battle-quiz/BattleQuiz1v1Leaderboard";
 import BattleQuiz1v1Invite from "./pages/battle-quiz/BattleQuiz1v1Invite";
-import StudentHub from "./pages/client/StudentHub";
-import MindMapPage from "./pages/client/MindMapPage";
-import TracksPage from "./pages/client/TracksPage";
-import TrackDetailPage from "./pages/client/TrackDetailPage";
-import TrackToolPage from "./pages/client/TrackToolPage";
-import AcademicCVPage from "./pages/client/AcademicCVPage";
-import StudentStatisticalAnalysis from "./pages/client/StudentStatisticalAnalysis";
 import AdminMemberships from "./pages/admin/AdminMemberships";
 import AdminReferrals from "./pages/admin/AdminReferrals";
 
@@ -145,11 +138,11 @@ import AssessmentResult from "./pages/academic/AssessmentResult";
 import ContractsSystem from "./pages/admin/ContractsSystem";
 import AdminContractDetails from "./pages/admin/AdminContractDetails";
 import ContractsAnalytics from "./pages/admin/ContractsAnalytics";
-import AdminStudentResources from "./pages/admin/AdminStudentResources";
+
 import WhatsappInboxPage from "./pages/admin/whatsapp/WhatsappInboxPage";
 import WhatsappCampaignsPage from "./pages/admin/whatsapp/WhatsappCampaignsPage";
 import WhatsappAnalyticsPage from "./pages/admin/whatsapp/WhatsappAnalyticsPage";
-import StudentLibrary from "./pages/client/StudentLibrary";
+
 import ClientContracts from "./pages/ClientContracts";
 import ClientResearchPublication from "./pages/client/ResearchPublication";
 import AdminResearchPublications from "./pages/admin/AdminResearchPublications";
@@ -810,46 +803,6 @@ const App = () => (
             } />
             <Route path="/battle-academy/1v1/result/:matchId" element={
               <SimpleProtectedRoute requiredRole="client"><BattleQuiz1v1Result /></SimpleProtectedRoute>
-            } />
-            <Route path="/student" element={
-              <SimpleProtectedRoute requiredRole="client">
-                <StudentHub />
-              </SimpleProtectedRoute>
-            } />
-            <Route path="/student/mind-map" element={
-              <SimpleProtectedRoute requiredRole="client">
-                <MindMapPage />
-              </SimpleProtectedRoute>
-            } />
-            <Route path="/student/tracks" element={
-              <SimpleProtectedRoute requiredRole="client">
-                <TracksPage />
-              </SimpleProtectedRoute>
-            } />
-            <Route path="/student/tracks/:slug" element={
-              <SimpleProtectedRoute requiredRole="client">
-                <TrackDetailPage />
-              </SimpleProtectedRoute>
-            } />
-            <Route path="/student/tracks/:trackSlug/tools/:toolSlug" element={
-              <SimpleProtectedRoute requiredRole="client">
-                <TrackToolPage />
-              </SimpleProtectedRoute>
-            } />
-            <Route path="/student/academic-cv" element={
-              <SimpleProtectedRoute requiredRole="client">
-                <AcademicCVPage />
-              </SimpleProtectedRoute>
-            } />
-            <Route path="/student/statistical-analysis" element={
-              <SimpleProtectedRoute requiredRole="client">
-                <StudentStatisticalAnalysis />
-              </SimpleProtectedRoute>
-            } />
-            <Route path="/student/library" element={
-              <SimpleProtectedRoute requiredRole="client">
-                <StudentLibrary />
-              </SimpleProtectedRoute>
             } />
             
             {/* Academic Pages */}
