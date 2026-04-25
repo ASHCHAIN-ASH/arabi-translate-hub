@@ -267,6 +267,9 @@ const FinancingHome: React.FC = () => {
               <h2 className="text-lg sm:text-xl md:text-2xl font-bold flex items-center gap-2">
                 <FileText className="h-4 w-4 sm:h-5 sm:w-5 text-primary" />
                 طلباتي التمويلية
+                {(loading || tabSwitching) && (
+                  <Loader2 className="h-4 w-4 text-primary animate-spin" aria-label="جاري التحميل" />
+                )}
               </h2>
               <Button asChild variant="outline" size="sm" className="hover-scale h-8 sm:h-9 text-xs sm:text-sm">
                 <Link to="/financing/new">
