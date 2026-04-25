@@ -570,7 +570,7 @@ const FinancingDetails: React.FC = () => {
                 <Button
                   asChild
                   size="lg"
-                  className="bg-white text-primary hover:bg-white/90 font-bold shadow-lg shrink-0"
+                  className="bg-white text-primary hover:bg-white/90 font-bold shadow-lg shrink-0 w-full sm:w-auto h-12 sm:h-11 text-base sm:text-sm"
                 >
                   <Link to={`/financing/acknowledgments?app=${app.id}`}>
                     <ScrollText className="h-4 w-4 ml-2" />
