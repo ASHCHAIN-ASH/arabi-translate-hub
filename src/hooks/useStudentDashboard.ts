@@ -440,35 +440,13 @@ export function useAwardTaskLootBonus() {
 }
 
 export function useClaimBossChallengeReward() {
-  const qc = useQueryClient();
-  const { user } = useAuth();
+  // Boss challenge reward feature was removed.
   return useMutation({
     mutationFn: async () => {
-      const { data, error } = await supabase.functions.invoke('claim_boss_challenge_reward', { body: {} });
-      if (error) throw error;
-      return data as {
-        success: boolean;
-        alreadyClaimed?: boolean;
-        week_key?: string;
-        xp_awarded?: number;
-        points_awarded?: number;
-      };
-    },
-    onSuccess: (data) => {
-      if (!user?.id) return;
-      invalidateRewardChain(qc, user.id);
-      if (data?.alreadyClaimed) {
-        toast.info('تم استلام مكافأة هذا الأسبوع مسبقاً ✅');
-        return;
-      }
-      const xp = data?.xp_awarded ?? 500;
-      const pts = data?.points_awarded ?? 0;
-      toast.success(`🏆 Boss Slain! +${xp} XP${pts ? ` و +${pts} نقطة` : ''}`);
+      throw new Error('ميزة مكافأة التحدي تمت إزالتها');
     },
     onError: (e: any) => {
-      console.error('[claim_boss_challenge_reward]', e);
-      const msg = e?.context?.body || e?.message || 'تعذّر استلام المكافأة';
-      toast.error(typeof msg === 'string' ? msg : 'لم تستوفِ شروط التحدي بعد');
+      toast.error(e?.message || 'الميزة غير متاحة');
     },
   });
 }
