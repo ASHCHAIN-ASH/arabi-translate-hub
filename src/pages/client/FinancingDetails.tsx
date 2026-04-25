@@ -441,69 +441,61 @@ const FinancingDetails: React.FC = () => {
             </div>
           </Card>
 
-          {/* Stages timeline skeleton — mirrors real stage states */}
-          <Card className="p-4 sm:p-6 border-border/60">
-            <div className="flex items-center justify-between mb-4 sm:mb-5">
-              <Skeleton className="h-4 w-32" />
-              <Skeleton className="h-3 w-20 rounded-full" />
+          {/* Stages timeline skeleton — mirrors real horizontal RTL timeline */}
+          <Card dir="rtl" className="p-4 sm:p-6 border-border/60">
+            <div className="flex items-center justify-between mb-3 sm:mb-4">
+              <Skeleton className="h-3.5 w-24" />
+              <Skeleton className="h-3 w-16 rounded-full" />
             </div>
-            <ol className="relative space-y-4 sm:space-y-5">
-              {TIMELINE_STAGES.map((stage, idx) => {
-                // Simulate progression: 0-1 done, 2 current, 3+ upcoming
-                const state = idx < 2 ? 'done' : idx === 2 ? 'current' : 'upcoming';
-                const StageIcon = stage.icon;
-                const isLast = idx === TIMELINE_STAGES.length - 1;
+            <div className="rounded-xl bg-muted/30 ring-1 ring-border/40 p-3 sm:p-4">
+              <div
+                className="flex items-start justify-between gap-1 overflow-x-auto pb-1 scrollbar-none"
+                role="list"
+                aria-label="مراحل التمويل (جاري التحميل)"
+              >
+                {TIMELINE_STAGES.map((stage, idx) => {
+                  const state = idx < 2 ? 'done' : idx === 2 ? 'current' : 'upcoming';
+                  const StageIcon = stage.icon;
+                  const isLast = idx === TIMELINE_STAGES.length - 1;
 
-                const circleClass =
-                  state === 'done'
-                    ? 'bg-emerald-500/15 ring-emerald-500/30 text-emerald-600 dark:text-emerald-400'
-                    : state === 'current'
-                    ? 'bg-primary/15 ring-primary/40 text-primary animate-pulse'
-                    : 'bg-muted ring-border/40 text-muted-foreground/40';
+                  const circleClass =
+                    state === 'done'
+                      ? 'bg-emerald-500/20 ring-emerald-500/40 text-emerald-600 dark:text-emerald-400'
+                      : state === 'current'
+                      ? 'bg-primary/15 ring-primary/40 text-primary animate-pulse shadow-md shadow-primary/20'
+                      : 'bg-muted ring-border/50 text-muted-foreground/40';
 
-                const connectorClass =
-                  state === 'done'
-                    ? 'bg-emerald-500/40'
-                    : state === 'current'
-                    ? 'bg-gradient-to-b from-primary/40 to-muted'
-                    : 'bg-muted';
+                  const connectorClass =
+                    state === 'done'
+                      ? 'bg-emerald-500/40'
+                      : 'bg-muted-foreground/15';
 
-                return (
-                  <li key={stage.key} className="relative flex items-start gap-3 sm:gap-4">
-                    <div className="relative flex flex-col items-center shrink-0">
-                      <div
-                        className={`h-9 w-9 sm:h-10 sm:w-10 rounded-full ring-2 ${circleClass} flex items-center justify-center transition-all`}
-                      >
-                        <StageIcon className="h-4 w-4 sm:h-[18px] sm:w-[18px] opacity-70" aria-hidden="true" />
-                      </div>
-                      {!isLast && (
-                        <div className={`w-0.5 h-6 sm:h-7 mt-1 rounded-full ${connectorClass}`} />
-                      )}
-                    </div>
-                    <div className="flex-1 min-w-0 pt-1 space-y-2">
-                      <div className="flex items-center justify-between gap-2">
+                  return (
+                    <React.Fragment key={stage.key}>
+                      <div role="listitem" className="flex flex-col items-center gap-1.5 min-w-[56px] sm:min-w-[68px] shrink-0">
+                        <div
+                          className={`h-9 w-9 sm:h-10 sm:w-10 rounded-full ring-2 ${circleClass} flex items-center justify-center transition-all`}
+                        >
+                          <StageIcon className="h-4 w-4 sm:h-[18px] sm:w-[18px] opacity-80" aria-hidden="true" />
+                        </div>
                         <Skeleton
-                          className={`h-3 sm:h-3.5 ${
-                            state === 'current' ? 'w-40 sm:w-48' : state === 'done' ? 'w-32 sm:w-40' : 'w-28 sm:w-36'
-                          } ${state === 'upcoming' ? 'opacity-50' : ''}`}
+                          className={`h-2 w-12 sm:w-14 ${state === 'upcoming' ? 'opacity-40' : ''}`}
                         />
                         {state === 'current' && (
-                          <Skeleton className="h-4 w-14 rounded-full bg-primary/20" />
-                        )}
-                        {state === 'done' && (
-                          <Skeleton className="h-3 w-3 rounded-full bg-emerald-500/30" />
+                          <Skeleton className="h-2 w-8 rounded-full bg-primary/20" />
                         )}
                       </div>
-                      <Skeleton
-                        className={`h-2.5 ${
-                          state === 'current' ? 'w-56 sm:w-64' : 'w-44 sm:w-52'
-                        } ${state === 'upcoming' ? 'opacity-40' : ''}`}
-                      />
-                    </div>
-                  </li>
-                );
-              })}
-            </ol>
+                      {!isLast && (
+                        <div
+                          className={`h-0.5 flex-1 min-w-[8px] rounded-full mt-[18px] sm:mt-5 ${connectorClass}`}
+                          aria-hidden="true"
+                        />
+                      )}
+                    </React.Fragment>
+                  );
+                })}
+              </div>
+            </div>
           </Card>
 
           {/* Action panels skeleton */}
