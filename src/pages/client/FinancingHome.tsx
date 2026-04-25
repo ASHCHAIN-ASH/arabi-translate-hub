@@ -451,6 +451,9 @@ const FinancingHome: React.FC = () => {
                       {filtered.map((a, idx) => {
                         const tone = statusTone(a.status);
                         const StatusIcon = tone.icon;
+                        const progress = STATUS_PROGRESS[a.status] ?? { pct: 10, label: a.status, tone: 'sky' as const };
+                        const barClass = PROGRESS_BAR_CLASS[progress.tone];
+                        const isTerminal = ['completed', 'rejected', 'cancelled'].includes(a.status);
                         return (
                           <motion.div
                             key={a.id}
