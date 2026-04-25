@@ -13,6 +13,7 @@ type Notif = {
   title: string;
   body: string;
   cta?: { label: string; onClick: () => void };
+  progress?: { pct: number; label?: string };
 };
 
 function buildEventNotifs(events: StudentEvent[]): Notif[] {
