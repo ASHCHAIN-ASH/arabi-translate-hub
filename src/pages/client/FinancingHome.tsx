@@ -462,39 +462,44 @@ const FinancingHome: React.FC = () => {
                             transition={{ delay: idx * 0.05 }}
                           >
                             <Link to={`/financing/${a.id}`} className="block">
-                              <Card className="p-4 sm:p-5 hover:shadow-xl hover:-translate-y-0.5 transition-all border-border/60 hover:border-primary/40 group h-full">
-                                <div className="flex items-start justify-between gap-2 mb-3 sm:mb-4">
-                                  <div className="min-w-0">
-                                    <div className="text-[9px] sm:text-[10px] uppercase tracking-widest text-muted-foreground mb-1">
-                                      رقم الطلب
+                              <Card className="p-3 sm:p-5 hover:shadow-xl hover:-translate-y-0.5 transition-all border-border/60 hover:border-primary/40 group h-full">
+                                {/* Header — رقم الطلب + المبلغ + شارة الحالة */}
+                                <div className="flex items-center gap-2.5 sm:gap-3 mb-3 sm:mb-4">
+                                  <div
+                                    className={`h-10 w-10 sm:h-11 sm:w-11 rounded-xl ${tone.bg} ring-1 ${tone.ring} flex items-center justify-center shrink-0`}
+                                    aria-hidden
+                                  >
+                                    <StatusIcon className={`h-5 w-5 ${tone.text}`} />
+                                  </div>
+                                  <div className="flex-1 min-w-0">
+                                    <div className="flex items-center justify-between gap-2 mb-0.5">
+                                      <span className="font-mono text-[10px] sm:text-xs font-semibold text-muted-foreground truncate">
+                                        #{a.id.slice(0, 8).toUpperCase()}
+                                      </span>
+                                      <Badge
+                                        className={`${tone.bg} ${tone.text} ring-1 ${tone.ring} border-0 px-1.5 sm:px-2 h-5 text-[9px] sm:text-[10px] font-semibold shrink-0`}
+                                      >
+                                        {FINANCING_STATUS_LABELS_AR[a.status] ?? a.status}
+                                      </Badge>
                                     </div>
-                                    <div className="font-mono text-[11px] sm:text-xs font-semibold mb-1.5 sm:mb-2 truncate">
-                                      #{a.id.slice(0, 8).toUpperCase()}
-                                    </div>
-                                    <div className="text-xl sm:text-2xl font-extrabold tabular-nums">
+                                    <div className="text-lg sm:text-2xl font-extrabold tabular-nums leading-tight">
                                       {fmt(a.total_amount)}
-                                      <span className="text-xs sm:text-sm font-normal text-muted-foreground mr-1">ر.س</span>
+                                      <span className="text-[11px] sm:text-sm font-normal text-muted-foreground mr-1">ر.س</span>
                                     </div>
                                   </div>
-                                  <Badge
-                                    className={`${tone.bg} ${tone.text} ring-1 ${tone.ring} border-0 gap-1 px-2 sm:px-2.5 text-[10px] sm:text-xs shrink-0`}
-                                  >
-                                    <StatusIcon className="h-3 w-3" />
-                                    {FINANCING_STATUS_LABELS_AR[a.status] ?? a.status}
-                                  </Badge>
                                 </div>
 
                                 <div className="grid grid-cols-3 gap-1.5 sm:gap-2 text-center text-xs mb-3 sm:mb-4">
-                                  <div className="rounded-lg bg-muted/50 p-2 sm:p-2.5">
-                                    <div className="text-[9px] sm:text-[10px] text-muted-foreground mb-0.5 sm:mb-1">الدفعة الأولى</div>
+                                  <div className="rounded-lg bg-muted/50 p-1.5 sm:p-2.5">
+                                    <div className="text-[9px] sm:text-[10px] text-muted-foreground mb-0.5">الدفعة الأولى</div>
                                     <div className="text-[11px] sm:text-xs font-bold tabular-nums">{fmt(a.down_payment)}</div>
                                   </div>
-                                  <div className="rounded-lg bg-muted/50 p-2 sm:p-2.5">
-                                    <div className="text-[9px] sm:text-[10px] text-muted-foreground mb-0.5 sm:mb-1">القسط</div>
+                                  <div className="rounded-lg bg-muted/50 p-1.5 sm:p-2.5">
+                                    <div className="text-[9px] sm:text-[10px] text-muted-foreground mb-0.5">القسط</div>
                                     <div className="text-[11px] sm:text-xs font-bold tabular-nums">{fmt(a.monthly_installment)}</div>
                                   </div>
-                                  <div className="rounded-lg bg-muted/50 p-2 sm:p-2.5">
-                                    <div className="text-[9px] sm:text-[10px] text-muted-foreground mb-0.5 sm:mb-1">المدة</div>
+                                  <div className="rounded-lg bg-muted/50 p-1.5 sm:p-2.5">
+                                    <div className="text-[9px] sm:text-[10px] text-muted-foreground mb-0.5">المدة</div>
                                     <div className="text-[11px] sm:text-xs font-bold tabular-nums">{a.duration_months} ش</div>
                                   </div>
                                 </div>
