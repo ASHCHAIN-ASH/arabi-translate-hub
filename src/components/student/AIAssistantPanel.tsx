@@ -52,8 +52,8 @@ export default function AIAssistantPanel({
   };
 
   return (
-    <Card className="relative overflow-hidden border-white/10 bg-gradient-to-br from-violet-500/10 via-cyan-500/10 to-fuchsia-500/10 backdrop-blur-xl">
-      <div className="pointer-events-none absolute -top-16 -right-10 h-44 w-44 rounded-full bg-violet-500/20 blur-3xl" />
+    <Card className="relative overflow-hidden border-violet-200 bg-gradient-to-br from-violet-50 via-cyan-50 to-fuchsia-50 shadow-sm">
+      <div className="pointer-events-none absolute -top-16 -right-10 h-44 w-44 rounded-full bg-violet-300/30 blur-3xl" />
       <CardContent className="relative p-5">
         <div className="mb-4 flex items-center justify-between">
           <div className="flex items-center gap-3">
@@ -61,22 +61,22 @@ export default function AIAssistantPanel({
               <Bot className="h-5 w-5 text-white" />
             </div>
             <div>
-              <p className="text-xs text-white/50">المساعد الذكي</p>
-              <p className="text-base font-bold text-white">اقتراحات يومية</p>
+              <p className="text-xs text-slate-500">المساعد الذكي</p>
+              <p className="text-base font-bold text-slate-900">اقتراحات يومية</p>
             </div>
           </div>
           <Button
             size="sm"
             onClick={fetchSuggestions}
             disabled={loading}
-            className="bg-white/10 text-white hover:bg-white/20"
+            className="bg-gradient-to-l from-violet-500 to-cyan-500 text-white hover:opacity-90"
           >
             {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : <><Sparkles className="me-1 h-4 w-4" /> اقترح</>}
           </Button>
         </div>
 
         {items.length === 0 && !loading && (
-          <p className="rounded-xl border border-dashed border-white/10 p-4 text-center text-xs text-white/55">
+          <p className="rounded-xl border border-dashed border-slate-300 bg-white/60 p-4 text-center text-xs text-slate-600">
             اضغط "اقترح" ليقترح المساعد مهامًا مناسبة لك.
           </p>
         )}
@@ -91,17 +91,17 @@ export default function AIAssistantPanel({
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, x: -16 }}
                 transition={{ delay: i * 0.04 }}
-                className="flex items-center justify-between gap-2 rounded-xl bg-white/5 p-3 ring-1 ring-white/10"
+                className="flex items-center justify-between gap-2 rounded-xl bg-white p-3 ring-1 ring-slate-200 shadow-sm"
               >
-                <span className="line-clamp-2 text-sm text-white/90">{s.title}</span>
+                <span className="line-clamp-2 text-sm text-slate-800">{s.title}</span>
                 <div className="flex shrink-0 items-center gap-1.5">
-                  <Badge className="border-0 bg-violet-500/20 text-violet-200">+{s.xp}</Badge>
+                  <Badge className="border-0 bg-violet-100 text-violet-700">+{s.xp}</Badge>
                   <Button
                     size="sm"
                     variant="ghost"
                     disabled={adding === s.title}
                     onClick={() => addOne(s)}
-                    className="text-cyan-300 hover:bg-white/10 hover:text-cyan-200"
+                    className="text-violet-600 hover:bg-violet-50 hover:text-violet-700"
                   >
                     {adding === s.title ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Plus className="h-3.5 w-3.5" />}
                   </Button>
