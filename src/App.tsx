@@ -88,6 +88,7 @@ import BattleQuiz1v1Play from "./pages/battle-quiz/BattleQuiz1v1Play";
 import BattleQuiz1v1Result from "./pages/battle-quiz/BattleQuiz1v1Result";
 import BattleQuiz1v1Leaderboard from "./pages/battle-quiz/BattleQuiz1v1Leaderboard";
 import BattleQuiz1v1Invite from "./pages/battle-quiz/BattleQuiz1v1Invite";
+import StudentDashboardPage from "./pages/client/StudentDashboardPage";
 import AdminMemberships from "./pages/admin/AdminMemberships";
 import AdminReferrals from "./pages/admin/AdminReferrals";
 
