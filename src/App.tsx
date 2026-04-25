@@ -115,8 +115,6 @@ import AdminExperimentDetail from "./pages/admin/AdminExperimentDetail";
 import AdminAssessments from "./pages/admin/AdminAssessments";
 import StudentActivityPage from "./pages/admin/StudentActivityPage";
 import AdminStudentWalletsPage from "./pages/admin/AdminStudentWalletsPage";
-import AdminRewardRedemptionsPage from "./pages/admin/AdminRewardRedemptionsPage";
-import AdminRewardRulesPage from "./pages/admin/AdminRewardRulesPage";
 import AssessmentsList from "./pages/academic/AssessmentsList";
 import AssessmentStart from "./pages/academic/AssessmentStart";
 import AssessmentResult from "./pages/academic/AssessmentResult";
