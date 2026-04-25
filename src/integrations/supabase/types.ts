@@ -7131,6 +7131,63 @@ export type Database = {
         }
         Relationships: []
       }
+      withdrawal_requests: {
+        Row: {
+          account_holder_name: string
+          admin_notes: string | null
+          amount: number
+          bank_name: string
+          created_at: string
+          hold_transaction_id: string | null
+          iban: string
+          id: string
+          notes: string | null
+          paid_at: string | null
+          refund_transaction_id: string | null
+          reviewed_at: string | null
+          reviewed_by: string | null
+          status: Database["public"]["Enums"]["withdrawal_status"]
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          account_holder_name: string
+          admin_notes?: string | null
+          amount: number
+          bank_name: string
+          created_at?: string
+          hold_transaction_id?: string | null
+          iban: string
+          id?: string
+          notes?: string | null
+          paid_at?: string | null
+          refund_transaction_id?: string | null
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          status?: Database["public"]["Enums"]["withdrawal_status"]
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          account_holder_name?: string
+          admin_notes?: string | null
+          amount?: number
+          bank_name?: string
+          created_at?: string
+          hold_transaction_id?: string | null
+          iban?: string
+          id?: string
+          notes?: string | null
+          paid_at?: string | null
+          refund_transaction_id?: string | null
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          status?: Database["public"]["Enums"]["withdrawal_status"]
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       workspace_notes: {
         Row: {
           content: string
@@ -7835,6 +7892,16 @@ export type Database = {
         }
         Returns: string
       }
+      request_withdrawal: {
+        Args: {
+          _account_holder_name: string
+          _amount: number
+          _bank_name: string
+          _iban: string
+          _notes?: string
+        }
+        Returns: Json
+      }
       resolve_automation_insight: {
         Args: { _id: string; _note?: string }
         Returns: Json
@@ -8014,6 +8081,7 @@ export type Database = {
         | "financing_credit_added"
         | "financing_credit_reversed"
         | "installment_paid"
+      withdrawal_status: "pending" | "approved" | "rejected" | "paid"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -8211,6 +8279,7 @@ export const Constants = {
         "financing_credit_reversed",
         "installment_paid",
       ],
+      withdrawal_status: ["pending", "approved", "rejected", "paid"],
     },
   },
 } as const

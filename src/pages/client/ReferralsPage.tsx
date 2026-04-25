@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect, useCallback } from 'react';
 import ClientLayout from '@/components/client/ClientLayout';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -11,11 +11,25 @@ import {
   Gift, Copy, Check, Share2, Users, TrendingUp, Wallet,
   Sparkles, MessageCircle, Mail, Send, Award, Clock, CheckCircle2,
   QrCode, Trophy, Target, Zap, Flame, Crown, ArrowUpRight, Link2,
-  BarChart3, Calendar, Star, Rocket, ShieldCheck,
+  BarChart3, Calendar, Star, Rocket, ShieldCheck, Banknote, XCircle,
 } from 'lucide-react';
 import { useMyReferralCode, useMyReferrals } from '@/hooks/useReferrals';
+import { useAuth } from '@/components/SimpleAuthProvider';
+import { supabase } from '@/integrations/supabase/client';
+import WithdrawDialog from '@/components/referrals/WithdrawDialog';
 import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
+
+interface WithdrawalRow {
+  id: string;
+  amount: number;
+  bank_name: string;
+  iban: string;
+  status: 'pending' | 'approved' | 'rejected' | 'paid';
+  admin_notes: string | null;
+  created_at: string;
+  paid_at: string | null;
+}
 
 // === Tier system based on referrals ===
 const TIERS = [
@@ -34,10 +48,30 @@ function getNextTier(count: number) {
 }
 
 export default function ReferralsPage() {
+  const { user } = useAuth();
   const { code, shareUrl, loading: codeLoading } = useMyReferralCode();
   const { referrals, stats, loading } = useMyReferrals();
   const [copiedCode, setCopiedCode] = useState(false);
   const [copiedLink, setCopiedLink] = useState(false);
+  const [walletBalance, setWalletBalance] = useState(0);
+  const [withdrawals, setWithdrawals] = useState<WithdrawalRow[]>([]);
+  const [withdrawDialogOpen, setWithdrawDialogOpen] = useState(false);
+
+  const loadWalletAndWithdrawals = useCallback(async () => {
+    if (!user) return;
+    const [{ data: wallet }, { data: wRows }] = await Promise.all([
+      supabase.from('wallets' as any).select('balance').eq('user_id', user.id).maybeSingle(),
+      supabase
+        .from('withdrawal_requests' as any)
+        .select('id, amount, bank_name, iban, status, admin_notes, created_at, paid_at')
+        .eq('user_id', user.id)
+        .order('created_at', { ascending: false }),
+    ]);
+    setWalletBalance(Number((wallet as any)?.balance || 0));
+    setWithdrawals(((wRows as any) || []) as WithdrawalRow[]);
+  }, [user]);
+
+  useEffect(() => { loadWalletAndWithdrawals(); }, [loadWalletAndWithdrawals]);
 
   const currentTier = useMemo(() => getTier(stats.rewarded), [stats.rewarded]);
   const nextTier = useMemo(() => getNextTier(stats.rewarded), [stats.rewarded]);
@@ -238,6 +272,42 @@ export default function ReferralsPage() {
           </Card>
         </motion.div>
 
+        {/* === Wallet Balance + Withdraw CTA === */}
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.25 }}
+        >
+          <Card className="overflow-hidden border-2 border-primary/20 bg-gradient-to-l from-primary/5 via-transparent to-emerald-500/5">
+            <CardContent className="p-5 flex flex-col md:flex-row items-stretch md:items-center justify-between gap-4">
+              <div className="flex items-center gap-4">
+                <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-primary to-emerald-500 flex items-center justify-center text-white shadow-lg shrink-0">
+                  <Wallet className="w-7 h-7" />
+                </div>
+                <div>
+                  <p className="text-xs text-muted-foreground font-medium">رصيد محفظتك القابل للسحب</p>
+                  <p className="text-3xl font-black tracking-tight">
+                    {walletBalance.toLocaleString('ar-SA')}
+                    <span className="text-base text-muted-foreground font-bold ms-1">ر.س</span>
+                  </p>
+                  <p className="text-[11px] text-muted-foreground mt-0.5">
+                    العمولات تُودع تلقائياً عند تفعيل اشتراك المُحال • الحد الأدنى للسحب 100 ر.س
+                  </p>
+                </div>
+              </div>
+              <Button
+                size="lg"
+                onClick={() => setWithdrawDialogOpen(true)}
+                disabled={walletBalance < 100}
+                className="gap-2 bg-gradient-to-l from-primary to-emerald-600 hover:opacity-90 shadow-md"
+              >
+                <Banknote className="w-5 h-5" />
+                سحب الأرباح
+              </Button>
+            </CardContent>
+          </Card>
+        </motion.div>
+
         {/* === Stats Grid === */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4">
           <StatCard icon={Users} label="إجمالي الإحالات" value={stats.total} color="from-blue-500 to-indigo-500" delay={0} />
@@ -376,9 +446,17 @@ export default function ReferralsPage() {
 
         {/* === Tabs: How it works / Tiers / Referrals === */}
         <Tabs defaultValue="referrals" dir="rtl" className="space-y-4">
-          <TabsList dir="rtl" className="grid w-full md:w-auto md:inline-grid grid-cols-3 h-12 p-1">
+          <TabsList dir="rtl" className="grid w-full md:w-auto md:inline-grid grid-cols-2 md:grid-cols-4 h-auto md:h-12 p-1">
             <TabsTrigger value="referrals" className="gap-1.5 text-sm flex-row-reverse">
               <Award className="h-4 w-4" /> إحالاتي
+            </TabsTrigger>
+            <TabsTrigger value="withdrawals" className="gap-1.5 text-sm flex-row-reverse">
+              <Banknote className="h-4 w-4" /> طلبات السحب
+              {withdrawals.filter(w => w.status === 'pending').length > 0 && (
+                <Badge variant="secondary" className="text-[9px] h-4 px-1.5">
+                  {withdrawals.filter(w => w.status === 'pending').length}
+                </Badge>
+              )}
             </TabsTrigger>
             <TabsTrigger value="tiers" className="gap-1.5 text-sm flex-row-reverse">
               <Trophy className="h-4 w-4" /> المستويات
@@ -461,6 +539,87 @@ export default function ReferralsPage() {
                         </div>
                       </motion.div>
                     ))}
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          {/* Withdrawals list */}
+          <TabsContent value="withdrawals" className="mt-0">
+            <Card>
+              <CardContent className="p-5">
+                <div className="flex items-center justify-between mb-4 flex-wrap gap-2">
+                  <h3 className="text-lg font-bold flex items-center gap-2">
+                    <Banknote className="h-5 w-5 text-primary" />
+                    سجل طلبات السحب
+                    <Badge variant="secondary">{withdrawals.length}</Badge>
+                  </h3>
+                  <Button
+                    size="sm"
+                    onClick={() => setWithdrawDialogOpen(true)}
+                    disabled={walletBalance < 100}
+                    className="gap-1.5"
+                  >
+                    <Banknote className="w-4 h-4" />
+                    طلب سحب جديد
+                  </Button>
+                </div>
+
+                {withdrawals.length === 0 ? (
+                  <div className="text-center py-12">
+                    <div className="inline-flex h-16 w-16 items-center justify-center rounded-2xl bg-muted mb-3">
+                      <Banknote className="h-8 w-8 text-muted-foreground" />
+                    </div>
+                    <p className="font-bold mb-1">لا توجد طلبات سحب بعد</p>
+                    <p className="text-sm text-muted-foreground">
+                      عند توفر رصيد كافٍ يمكنك طلب سحب أرباحك إلى حسابك البنكي
+                    </p>
+                  </div>
+                ) : (
+                  <div className="space-y-2">
+                    {withdrawals.map((w, i) => {
+                      const statusMeta: Record<string, { label: string; color: string; icon: any }> = {
+                        pending: { label: 'قيد المراجعة', color: 'bg-amber-500/10 text-amber-700 border-amber-200', icon: Clock },
+                        approved: { label: 'موافق عليه', color: 'bg-blue-500/10 text-blue-700 border-blue-200', icon: CheckCircle2 },
+                        paid: { label: 'تم التحويل', color: 'bg-emerald-500/10 text-emerald-700 border-emerald-200', icon: CheckCircle2 },
+                        rejected: { label: 'مرفوض', color: 'bg-red-500/10 text-red-700 border-red-200', icon: XCircle },
+                      };
+                      const meta = statusMeta[w.status] || statusMeta.pending;
+                      const SIcon = meta.icon;
+                      return (
+                        <motion.div
+                          key={w.id}
+                          initial={{ opacity: 0, x: -10 }}
+                          animate={{ opacity: 1, x: 0 }}
+                          transition={{ delay: i * 0.04 }}
+                          className="flex items-center gap-3 p-3.5 rounded-xl border bg-card hover:bg-accent/30 transition-colors"
+                        >
+                          <div className={cn('h-11 w-11 rounded-xl flex items-center justify-center shrink-0 border', meta.color)}>
+                            <SIcon className="h-5 w-5" />
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <div className="font-bold text-sm">{w.bank_name}</div>
+                            <div className="text-[11px] text-muted-foreground font-mono truncate" dir="ltr">{w.iban}</div>
+                            <div className="text-[10px] text-muted-foreground flex items-center gap-1 mt-0.5">
+                              <Calendar className="w-3 h-3" />
+                              {new Date(w.created_at).toLocaleDateString('ar-SA')}
+                            </div>
+                            {w.admin_notes && (
+                              <div className="text-[11px] text-red-600 mt-1">📝 {w.admin_notes}</div>
+                            )}
+                          </div>
+                          <div className="text-left shrink-0">
+                            <div className="font-black text-base">
+                              {Number(w.amount).toLocaleString('ar-SA')} ر.س
+                            </div>
+                            <Badge variant="outline" className={cn('text-[9px] mt-0.5', meta.color)}>
+                              {meta.label}
+                            </Badge>
+                          </div>
+                        </motion.div>
+                      );
+                    })}
                   </div>
                 )}
               </CardContent>
@@ -560,6 +719,13 @@ export default function ReferralsPage() {
           </TabsContent>
         </Tabs>
       </div>
+
+      <WithdrawDialog
+        open={withdrawDialogOpen}
+        onOpenChange={setWithdrawDialogOpen}
+        availableBalance={walletBalance}
+        onSuccess={loadWalletAndWithdrawals}
+      />
     </ClientLayout>
   );
 }
