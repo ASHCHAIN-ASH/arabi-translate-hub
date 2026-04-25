@@ -36,6 +36,7 @@ import LevelUpOverlay from '@/components/student/rpg/LevelUpOverlay';
 import AchievementsPanel from '@/components/student/rpg/AchievementsPanel';
 import PerformanceAnalytics from '@/components/student/rpg/PerformanceAnalytics';
 import BossChallengeCard from '@/components/student/rpg/BossChallengeCard';
+import BossRewardOverlay from '@/components/student/rpg/BossRewardOverlay';
 
 /* =========================================================
    Animated counter
