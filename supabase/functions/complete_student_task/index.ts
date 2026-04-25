@@ -112,8 +112,26 @@ Deno.serve(async (req) => {
       metadata: { task_id: taskId, title: task.title, xp_awarded: reward, new_xp: newXp, level: newLevel },
     });
 
+    // === Study-to-Earn: award wallet points ===
+    let pointsAwarded = 0;
+    try {
+      const admin = createClient(
+        Deno.env.get('SUPABASE_URL')!,
+        Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!,
+      );
+      pointsAwarded = await awardPoints(admin, {
+        userId,
+        ruleCode: 'TASK_COMPLETED',
+        sourceType: 'task',
+        sourceId: taskId,
+        description: `إكمال مهمة: ${task.title}`,
+      });
+    } catch (we) {
+      console.error('wallet award failed', we);
+    }
+
     return new Response(JSON.stringify({
-      success: true, xp_awarded: reward, new_xp: newXp, level: newLevel,
+      success: true, xp_awarded: reward, new_xp: newXp, level: newLevel, points_awarded: pointsAwarded,
     }), { headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
   } catch (e) {
     console.error('complete_student_task error', e);
