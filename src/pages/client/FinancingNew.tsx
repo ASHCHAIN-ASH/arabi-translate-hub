@@ -239,6 +239,8 @@ const FinancingNew: React.FC = () => {
     noDelay: false,
     executionDeed: false,
   });
+  const [payment, setPayment] = useState<PaymentDetails>(emptyPaymentDetails);
+  const paymentValid = useMemo(() => validatePaymentDetails(payment).ok, [payment]);
 
   const preview = useMemo(() => computeFinancingPreview(amount), [amount]);
 
