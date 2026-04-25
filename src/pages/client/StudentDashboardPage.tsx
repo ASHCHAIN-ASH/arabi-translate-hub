@@ -188,14 +188,14 @@ function StatTile({ icon: Icon, label, value, color, suffix }: {
     <motion.div
       initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}
       whileHover={{ y: -4 }} transition={{ type: 'spring', stiffness: 220, damping: 22 }}
-      className="group relative overflow-hidden rounded-3xl bg-white/5 p-5 ring-1 ring-white/10 backdrop-blur-xl"
+      className="group relative overflow-hidden rounded-3xl bg-white p-5 ring-1 ring-slate-200 shadow-sm hover:shadow-md transition-shadow"
     >
-      <div className={`pointer-events-none absolute -inset-px rounded-3xl opacity-0 blur-xl transition group-hover:opacity-60 ${color}`} />
+      <div className={`pointer-events-none absolute -inset-px rounded-3xl opacity-0 blur-xl transition group-hover:opacity-30 ${color}`} />
       <div className="relative flex items-center justify-between">
         <div>
-          <p className="text-xs text-white/60">{label}</p>
-          <p className="mt-1 text-2xl font-bold text-white">
-            <Counter value={value} />{suffix && <span className="ms-1 text-sm text-white/60">{suffix}</span>}
+          <p className="text-xs font-medium text-slate-500">{label}</p>
+          <p className="mt-1 text-2xl font-bold text-slate-900">
+            <Counter value={value} />{suffix && <span className="ms-1 text-sm text-slate-500">{suffix}</span>}
           </p>
         </div>
         <div className={`flex h-12 w-12 items-center justify-center rounded-2xl ${color} text-white shadow-lg`}>
