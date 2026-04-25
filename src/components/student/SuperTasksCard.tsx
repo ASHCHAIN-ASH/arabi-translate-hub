@@ -310,21 +310,21 @@ export default function SuperTasksCard({
   const missionsDone = missions.filter(m => m.current >= m.target).length;
   const allMissionsDone = missionsDone === missions.length;
 
-  // Loot drop after each completion
+  // Loot drop after each completion — server is source of truth for XP/points
+  const awardLoot = useAwardTaskLootBonus();
   const handleAfterComplete = (t: DerivedTask) => {
     bump();
     const newCombo = combo + 1;
     const loot = rollLoot(t.xp_reward, newCombo);
-    if (loot) {
-      setTimeout(() => {
-        toast.message(`${loot.emoji} ${loot.label}`, {
-          description: `حصلت على +${loot.bonusXp} XP إضافية كمكافأة عشوائية`,
-          duration: 4000,
-          className: 'border-2 border-amber-300',
-        });
-        celebrate(loot.tier === 'legendary' ? 'big' : 'medium');
-      }, 600);
-    }
+    if (!loot || loot.tier === null) return;
+    const tier = loot.tier as 'common' | 'rare' | 'epic' | 'legendary';
+    // Visual flash immediately; numbers shown via the hook's toast after server confirms
+    celebrate(tier === 'legendary' ? 'big' : 'medium');
+    awardLoot.mutate({
+      task_id: t.id,
+      combo_count: Math.min(20, newCombo),
+      loot_tier: tier,
+    });
   };
 
   return (
