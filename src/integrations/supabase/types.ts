@@ -6643,6 +6643,69 @@ export type Database = {
         }
         Relationships: []
       }
+      student_activity_logs: {
+        Row: {
+          action: string | null
+          created_at: string
+          id: string
+          metadata: Json
+          user_id: string | null
+        }
+        Insert: {
+          action?: string | null
+          created_at?: string
+          id?: string
+          metadata?: Json
+          user_id?: string | null
+        }
+        Update: {
+          action?: string | null
+          created_at?: string
+          id?: string
+          metadata?: Json
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      student_day_state: {
+        Row: {
+          completed_at: string | null
+          completed_tasks_count: number
+          created_at: string
+          day_date: string
+          focus_minutes: number
+          id: string
+          started_at: string | null
+          status: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          completed_at?: string | null
+          completed_tasks_count?: number
+          created_at?: string
+          day_date?: string
+          focus_minutes?: number
+          id?: string
+          started_at?: string | null
+          status?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          completed_at?: string | null
+          completed_tasks_count?: number
+          created_at?: string
+          day_date?: string
+          focus_minutes?: number
+          id?: string
+          started_at?: string | null
+          status?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       student_events: {
         Row: {
           created_at: string
@@ -6732,11 +6795,14 @@ export type Database = {
       }
       student_profiles: {
         Row: {
+          avatar_url: string | null
           created_at: string
           full_name: string | null
           gpa: number | null
           id: string
           level: string | null
+          level_name: string | null
+          level_number: number
           major: string | null
           streak_days: number
           student_no: string | null
@@ -6749,11 +6815,14 @@ export type Database = {
           xp: number
         }
         Insert: {
+          avatar_url?: string | null
           created_at?: string
           full_name?: string | null
           gpa?: number | null
           id?: string
           level?: string | null
+          level_name?: string | null
+          level_number?: number
           major?: string | null
           streak_days?: number
           student_no?: string | null
@@ -6766,11 +6835,14 @@ export type Database = {
           xp?: number
         }
         Update: {
+          avatar_url?: string | null
           created_at?: string
           full_name?: string | null
           gpa?: number | null
           id?: string
           level?: string | null
+          level_name?: string | null
+          level_number?: number
           major?: string | null
           streak_days?: number
           student_no?: string | null
@@ -6786,30 +6858,42 @@ export type Database = {
       }
       student_tasks: {
         Row: {
+          completed_at: string | null
           created_at: string
+          description: string | null
           done_at: string | null
+          due_at: string | null
           id: string
           is_done: boolean
+          subject: string | null
           title: string
           updated_at: string
           user_id: string
           xp_reward: number
         }
         Insert: {
+          completed_at?: string | null
           created_at?: string
+          description?: string | null
           done_at?: string | null
+          due_at?: string | null
           id?: string
           is_done?: boolean
+          subject?: string | null
           title: string
           updated_at?: string
           user_id: string
           xp_reward?: number
         }
         Update: {
+          completed_at?: string | null
           created_at?: string
+          description?: string | null
           done_at?: string | null
+          due_at?: string | null
           id?: string
           is_done?: boolean
+          subject?: string | null
           title?: string
           updated_at?: string
           user_id?: string
@@ -6822,6 +6906,7 @@ export type Database = {
           completed_at: string | null
           created_at: string
           duration_minutes: number
+          earned_xp: number
           id: string
           started_at: string
           status: Database["public"]["Enums"]["study_session_status"]
@@ -6832,6 +6917,7 @@ export type Database = {
           completed_at?: string | null
           created_at?: string
           duration_minutes?: number
+          earned_xp?: number
           id?: string
           started_at?: string
           status?: Database["public"]["Enums"]["study_session_status"]
@@ -6842,6 +6928,7 @@ export type Database = {
           completed_at?: string | null
           created_at?: string
           duration_minutes?: number
+          earned_xp?: number
           id?: string
           started_at?: string
           status?: Database["public"]["Enums"]["study_session_status"]
@@ -9735,7 +9822,7 @@ export type Database = {
         | "completed"
         | "cancelled"
       student_event_type: "study" | "exam" | "focus"
-      study_session_status: "active" | "completed" | "cancelled"
+      study_session_status: "active" | "completed" | "cancelled" | "planned"
       wallet_credit_event_type:
         | "financing_credit_added"
         | "financing_credit_reversed"
@@ -9962,7 +10049,7 @@ export const Constants = {
         "cancelled",
       ],
       student_event_type: ["study", "exam", "focus"],
-      study_session_status: ["active", "completed", "cancelled"],
+      study_session_status: ["active", "completed", "cancelled", "planned"],
       wallet_credit_event_type: [
         "financing_credit_added",
         "financing_credit_reversed",
