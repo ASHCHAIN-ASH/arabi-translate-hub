@@ -458,21 +458,21 @@ export default function StudentDashboardPage() {
         {/* MIDDLE: schedule + focus */}
         <div className="mt-6 grid grid-cols-1 gap-6 lg:grid-cols-3">
           {/* Schedule */}
-          <Card className="border-white/10 bg-white/5 backdrop-blur-xl lg:col-span-2">
+          <Card className="border-slate-200 bg-white shadow-sm lg:col-span-2">
             <CardContent className="p-6">
               <div className="mb-5 flex items-center justify-between">
                 <div>
-                  <h3 className="text-lg font-bold text-white">جدول اليوم</h3>
-                  <p className="text-xs text-white/50">مواعيدك الدراسية مرتبة حسب الوقت</p>
+                  <h3 className="text-lg font-bold text-slate-900">جدول اليوم</h3>
+                  <p className="text-xs text-slate-500">مواعيدك الدراسية مرتبة حسب الوقت</p>
                 </div>
-                <CalendarDays className="h-5 w-5 text-white/50" />
+                <CalendarDays className="h-5 w-5 text-slate-400" />
               </div>
               <div className="space-y-3">
-                {dash.loading && <p className="text-sm text-white/50">جارٍ التحميل…</p>}
+                {dash.loading && <p className="text-sm text-slate-500">جارٍ التحميل…</p>}
                 {!dash.loading && dash.events.length === 0 && (
-                  <div className="rounded-2xl border border-dashed border-white/10 p-8 text-center">
-                    <p className="text-sm text-white/60">لا توجد مواعيد اليوم.</p>
-                    <Button onClick={() => setEventOpen(true)} variant="ghost" size="sm" className="mt-2 text-cyan-300 hover:bg-white/5 hover:text-cyan-200">
+                  <div className="rounded-2xl border border-dashed border-slate-300 p-8 text-center">
+                    <p className="text-sm text-slate-600">لا توجد مواعيد اليوم.</p>
+                    <Button onClick={() => setEventOpen(true)} variant="ghost" size="sm" className="mt-2 text-violet-600 hover:bg-violet-50 hover:text-violet-700">
                       <Plus className="me-1 h-4 w-4" /> أضف موعدًا
                     </Button>
                   </div>
@@ -481,9 +481,9 @@ export default function StudentDashboardPage() {
                   {dash.events.map((e, i) => {
                     const t = new Date(e.starts_at).toLocaleTimeString('ar-SA', { hour: '2-digit', minute: '2-digit' });
                     const palette =
-                      e.event_type === 'exam' ? 'from-amber-500/20 to-orange-500/20 ring-amber-400/30' :
-                      e.event_type === 'focus' ? 'from-violet-500/20 to-fuchsia-500/20 ring-violet-400/30' :
-                                                 'from-cyan-500/20 to-blue-500/20 ring-cyan-400/30';
+                      e.event_type === 'exam' ? 'from-amber-100 to-orange-100 ring-amber-300' :
+                      e.event_type === 'focus' ? 'from-violet-100 to-fuchsia-100 ring-violet-300' :
+                                                 'from-cyan-100 to-blue-100 ring-cyan-300';
                     const typeLabel = e.event_type === 'exam' ? 'اختبار' : e.event_type === 'focus' ? 'تركيز' : 'مذاكرة';
                     return (
                       <motion.div
@@ -494,18 +494,18 @@ export default function StudentDashboardPage() {
                       >
                         <div id={`event-${e.id}`} className={`flex items-center justify-between rounded-2xl bg-gradient-to-l ${palette} p-4 ring-1`}>
                           <div className="flex items-center gap-4">
-                            <div className="rounded-xl bg-black/30 px-3 py-2 font-mono text-sm text-white">{t}</div>
+                            <div className="rounded-xl bg-slate-900 px-3 py-2 font-mono text-sm text-white">{t}</div>
                             <div>
-                              <p className={`font-semibold ${e.is_done ? 'text-white/50 line-through' : 'text-white'}`}>{e.title}</p>
-                              <p className="text-xs text-white/60">{typeLabel}</p>
+                              <p className={`font-semibold ${e.is_done ? 'text-slate-400 line-through' : 'text-slate-900'}`}>{e.title}</p>
+                              <p className="text-xs text-slate-600">{typeLabel}</p>
                             </div>
                           </div>
                           <Button
                             size="sm" variant="ghost"
                             onClick={() => { if (!e.is_done) celebrate('small'); dash.toggleEventDone(e); }}
-                            className="text-white/80 hover:bg-white/10 hover:text-white"
+                            className="text-slate-700 hover:bg-white/60 hover:text-slate-900"
                           >
-                            {e.is_done ? <CheckCircle2 className="h-4 w-4 text-emerald-400" /> : <Play className="h-4 w-4" />}
+                            {e.is_done ? <CheckCircle2 className="h-4 w-4 text-emerald-600" /> : <Play className="h-4 w-4" />}
                           </Button>
                         </div>
                       </motion.div>
