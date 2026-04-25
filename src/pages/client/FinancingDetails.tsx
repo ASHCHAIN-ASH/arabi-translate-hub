@@ -27,6 +27,7 @@ import ClientLayout from '@/components/client/ClientLayout';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { Skeleton } from '@/components/ui/skeleton';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
@@ -408,8 +409,70 @@ const FinancingDetails: React.FC = () => {
   if (loading) {
     return (
       <ClientLayout>
-        <div className="p-8 text-center text-muted-foreground" dir="rtl">
-          <Loader2 className="h-8 w-8 mx-auto animate-spin mb-2" /> جاري تحميل تفاصيل الطلب…
+        <div
+          dir="rtl"
+          aria-busy="true"
+          aria-live="polite"
+          className="max-w-5xl mx-auto p-3 sm:p-6 space-y-4 sm:space-y-6"
+        >
+          {/* Back link skeleton */}
+          <Skeleton className="h-4 w-28" />
+
+          {/* Hero header skeleton */}
+          <Card className="p-4 sm:p-6 border-border/60">
+            <div className="flex items-start gap-3 sm:gap-4 mb-4">
+              <Skeleton className="h-12 w-12 sm:h-14 sm:w-14 rounded-2xl shrink-0" />
+              <div className="flex-1 min-w-0 space-y-2">
+                <div className="flex items-center justify-between gap-2">
+                  <Skeleton className="h-3 w-24" />
+                  <Skeleton className="h-6 w-20 rounded-full" />
+                </div>
+                <Skeleton className="h-7 sm:h-9 w-40" />
+                <Skeleton className="h-3 w-32" />
+              </div>
+            </div>
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-3 pt-4 border-t border-border/40">
+              {Array.from({ length: 4 }).map((_, i) => (
+                <div key={i} className="rounded-lg bg-muted/40 p-2.5 sm:p-3 space-y-1.5">
+                  <Skeleton className="h-2.5 w-16" />
+                  <Skeleton className="h-4 w-20" />
+                </div>
+              ))}
+            </div>
+          </Card>
+
+          {/* Stages timeline skeleton */}
+          <Card className="p-4 sm:p-6 border-border/60">
+            <Skeleton className="h-4 w-32 mb-4" />
+            <div className="space-y-3">
+              {Array.from({ length: 4 }).map((_, i) => (
+                <div key={i} className="flex items-center gap-3">
+                  <Skeleton className="h-8 w-8 rounded-full shrink-0" />
+                  <div className="flex-1 space-y-1.5">
+                    <Skeleton className="h-3 w-32" />
+                    <Skeleton className="h-2.5 w-48" />
+                  </div>
+                </div>
+              ))}
+            </div>
+          </Card>
+
+          {/* Action panels skeleton */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 sm:gap-4">
+            {Array.from({ length: 2 }).map((_, i) => (
+              <Card key={i} className="p-4 sm:p-5 border-border/60 space-y-3">
+                <div className="flex items-center gap-2">
+                  <Skeleton className="h-9 w-9 rounded-lg" />
+                  <Skeleton className="h-4 w-28" />
+                </div>
+                <Skeleton className="h-3 w-full" />
+                <Skeleton className="h-3 w-3/4" />
+                <Skeleton className="h-12 w-full rounded-lg" />
+              </Card>
+            ))}
+          </div>
+
+          <span className="sr-only">جاري تحميل تفاصيل الطلب…</span>
         </div>
       </ClientLayout>
     );
