@@ -361,6 +361,7 @@ export default function StudentDashboardPage() {
 
   /* ============================================ */
   return (
+    <ClientLayout>
     <div dir="rtl" className="relative min-h-screen overflow-hidden bg-[#070914] text-white">
       {/* ambient glow */}
       <div className="pointer-events-none absolute -top-40 right-0 h-[500px] w-[500px] rounded-full bg-violet-600/20 blur-[140px]" />
@@ -369,6 +370,16 @@ export default function StudentDashboardPage() {
         style={{ backgroundImage: 'radial-gradient(circle at 1px 1px, white 1px, transparent 0)', backgroundSize: '28px 28px' }} />
 
       <div className="relative mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
+        {/* Back button */}
+        <Button
+          variant="ghost"
+          size="sm"
+          onClick={() => navigate(-1)}
+          className="mb-4 text-white/70 hover:bg-white/10 hover:text-white"
+        >
+          <ArrowRight className="me-2 h-4 w-4" /> رجوع
+        </Button>
+
         {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }}
