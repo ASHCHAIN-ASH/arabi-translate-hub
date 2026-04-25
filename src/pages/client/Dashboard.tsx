@@ -14,8 +14,6 @@ import DashboardRecentContracts from '@/components/client/DashboardRecentContrac
 import DashboardRecentInvoices from '@/components/client/DashboardRecentInvoices';
 import DashboardActiveTickets from '@/components/client/DashboardActiveTickets';
 import DashboardRewardsWidget from '@/components/client/DashboardRewardsWidget';
-import XpWalletWidget from '@/components/client/XpWalletWidget';
-import { DashboardChallengeNotice } from '@/components/client/DashboardChallengeNotice';
 
 const ClientDashboard = () => {
   const { user } = useAuth();
@@ -130,9 +128,6 @@ const ClientDashboard = () => {
           </div>
         </motion.div>
 
-        {/* Challenge Academy Notice — smart banner */}
-        <DashboardChallengeNotice />
-
         {/* Stats */}
         <DashboardStatsGrid stats={stats} payments={payments} />
 
@@ -146,7 +141,6 @@ const ClientDashboard = () => {
             <DashboardRecentContracts contracts={contracts} />
           </div>
           <div className="space-y-5">
-            <XpWalletWidget />
             <DashboardRewardsWidget />
             <DashboardRecentInvoices invoices={invoices} />
             <DashboardActiveTickets tickets={tickets} />
