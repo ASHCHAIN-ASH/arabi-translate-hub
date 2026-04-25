@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect, useCallback } from 'react';
 import ClientLayout from '@/components/client/ClientLayout';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -11,11 +11,25 @@ import {
   Gift, Copy, Check, Share2, Users, TrendingUp, Wallet,
   Sparkles, MessageCircle, Mail, Send, Award, Clock, CheckCircle2,
   QrCode, Trophy, Target, Zap, Flame, Crown, ArrowUpRight, Link2,
-  BarChart3, Calendar, Star, Rocket, ShieldCheck,
+  BarChart3, Calendar, Star, Rocket, ShieldCheck, Banknote, XCircle,
 } from 'lucide-react';
 import { useMyReferralCode, useMyReferrals } from '@/hooks/useReferrals';
+import { useAuth } from '@/components/SimpleAuthProvider';
+import { supabase } from '@/integrations/supabase/client';
+import WithdrawDialog from '@/components/referrals/WithdrawDialog';
 import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
+
+interface WithdrawalRow {
+  id: string;
+  amount: number;
+  bank_name: string;
+  iban: string;
+  status: 'pending' | 'approved' | 'rejected' | 'paid';
+  admin_notes: string | null;
+  created_at: string;
+  paid_at: string | null;
+}
 
 // === Tier system based on referrals ===
 const TIERS = [
