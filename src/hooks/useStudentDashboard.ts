@@ -371,6 +371,119 @@ export function useCreateStudentTask() {
 }
 
 /* =========================================================
+ * Reward events (Loot + Boss)
+ * ========================================================= */
+export interface StudentRewardEvent {
+  id: string;
+  user_id: string;
+  source_type: string;
+  source_id: string | null;
+  source_key: string | null;
+  reward_type: string;
+  reward_tier: string | null;
+  xp_amount: number;
+  points_amount: number;
+  status: string;
+  metadata: Record<string, any>;
+  created_at: string;
+}
+
+export function useStudentRewardEvents(limit = 50) {
+  const { user } = useAuth();
+  const uid = user?.id;
+  return useQuery({
+    queryKey: uid ? ['student-reward-events', uid, limit] : ['student-reward-events', 'anon', limit],
+    enabled: !!uid,
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('student_reward_events' as any)
+        .select('*')
+        .eq('user_id', uid!)
+        .order('created_at', { ascending: false })
+        .limit(limit);
+      if (error) { console.error('[student] reward events', error); return [] as StudentRewardEvent[]; }
+      return ((data || []) as unknown) as StudentRewardEvent[];
+    },
+    staleTime: 15_000,
+  });
+}
+
+function invalidateRewardChain(qc: QueryClient, uid: string) {
+  qc.invalidateQueries({ queryKey: ['student-profile', uid] });
+  qc.invalidateQueries({ queryKey: ['student-activity-logs', uid] });
+  qc.invalidateQueries({ queryKey: ['student-reward-events', uid] });
+  qc.invalidateQueries({ queryKey: ['student-wallet', uid] });
+  qc.invalidateQueries({ queryKey: ['wallet-transactions', uid] });
+}
+
+export function useAwardTaskLootBonus() {
+  const qc = useQueryClient();
+  const { user } = useAuth();
+  return useMutation({
+    mutationFn: async (input: { task_id: string; combo_count: number; loot_tier: 'common' | 'rare' | 'epic' | 'legendary' }) => {
+      const { data, error } = await supabase.functions.invoke('award_task_loot_bonus', { body: input });
+      if (error) throw error;
+      return data as {
+        success: boolean;
+        alreadyAwarded?: boolean;
+        xp_awarded?: number;
+        points_awarded?: number;
+        tier?: string;
+        new_xp?: number;
+        level?: number;
+      };
+    },
+    onSuccess: (data) => {
+      if (!user?.id) return;
+      invalidateRewardChain(qc, user.id);
+      if (data?.alreadyAwarded) return;
+      const xp = data?.xp_awarded ?? 0;
+      const pts = data?.points_awarded ?? 0;
+      if (xp > 0 || pts > 0) {
+        toast.success(`🎁 مكافأة Loot: +${xp} XP${pts ? ` و +${pts} نقطة` : ''}`);
+      }
+    },
+    onError: (e: any) => {
+      console.error('[award_task_loot_bonus]', e);
+    },
+  });
+}
+
+export function useClaimBossChallengeReward() {
+  const qc = useQueryClient();
+  const { user } = useAuth();
+  return useMutation({
+    mutationFn: async () => {
+      const { data, error } = await supabase.functions.invoke('claim_boss_challenge_reward', { body: {} });
+      if (error) throw error;
+      return data as {
+        success: boolean;
+        alreadyClaimed?: boolean;
+        week_key?: string;
+        xp_awarded?: number;
+        points_awarded?: number;
+      };
+    },
+    onSuccess: (data) => {
+      if (!user?.id) return;
+      invalidateRewardChain(qc, user.id);
+      if (data?.alreadyClaimed) {
+        toast.info('تم استلام مكافأة هذا الأسبوع مسبقاً ✅');
+        return;
+      }
+      const xp = data?.xp_awarded ?? 500;
+      const pts = data?.points_awarded ?? 0;
+      toast.success(`🏆 Boss Slain! +${xp} XP${pts ? ` و +${pts} نقطة` : ''}`);
+    },
+    onError: (e: any) => {
+      console.error('[claim_boss_challenge_reward]', e);
+      const msg = e?.context?.body || e?.message || 'تعذّر استلام المكافأة';
+      toast.error(typeof msg === 'string' ? msg : 'لم تستوفِ شروط التحدي بعد');
+    },
+  });
+}
+
+/* =========================================================
  * Realtime subscription
  * ========================================================= */
 export function useStudentRealtime() {
