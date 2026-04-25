@@ -20,6 +20,8 @@ import {
   CreditCard,
   Gavel,
   Loader2,
+  RefreshCw,
+  WifiOff,
 } from 'lucide-react';
 import { Skeleton } from '@/components/ui/skeleton';
 import ClientLayout from '@/components/client/ClientLayout';
@@ -85,6 +87,7 @@ const FinancingHome: React.FC = () => {
   const { user } = useAuth();
   const [apps, setApps] = useState<FinancingApp[]>([]);
   const [loading, setLoading] = useState(true);
+  const [loadError, setLoadError] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState<'all' | 'active' | 'pending' | 'closed'>('all');
   const [tabSwitching, setTabSwitching] = useState(false);
 
@@ -101,13 +104,22 @@ const FinancingHome: React.FC = () => {
 
   const load = async () => {
     setLoading(true);
-    const { data } = await supabase
-      .from('financing_applications')
-      .select('id,total_amount,down_payment,monthly_installment,duration_months,status,created_at')
-      .order('created_at', { ascending: false });
-    if (data) setApps(data as FinancingApp[]);
-    setLoading(false);
+    setLoadError(null);
+    try {
+      const { data, error } = await supabase
+        .from('financing_applications')
+        .select('id,total_amount,down_payment,monthly_installment,duration_months,status,created_at')
+        .order('created_at', { ascending: false });
+      if (error) throw error;
+      setApps((data ?? []) as FinancingApp[]);
+    } catch (err: any) {
+      console.error('[FinancingHome] load failed:', err);
+      setLoadError(err?.message || 'تعذّر الاتصال بالخادم. تحقّق من اتصالك بالإنترنت.');
+    } finally {
+      setLoading(false);
+    }
   };
+
 
   useEffect(() => {
     if (!user) return;
@@ -454,6 +466,44 @@ const FinancingHome: React.FC = () => {
                     ))}
                     <span className="sr-only">جاري تحميل الطلبات…</span>
                   </div>
+                ) : loadError ? (
+                  <Card
+                    role="tabpanel"
+                    id="financing-tabpanel"
+                    aria-labelledby={`financing-tab-${activeTab}`}
+                    aria-live="assertive"
+                    className="p-6 sm:p-10 text-center border-destructive/30 bg-destructive/5"
+                  >
+                    <div className="mx-auto mb-3 sm:mb-4 h-14 w-14 sm:h-16 sm:w-16 rounded-2xl bg-destructive/10 ring-1 ring-destructive/20 flex items-center justify-center">
+                      <WifiOff className="h-7 w-7 sm:h-8 sm:w-8 text-destructive" aria-hidden="true" />
+                    </div>
+                    <h3 className="font-bold text-base sm:text-lg mb-1.5 text-foreground">
+                      تعذّر جلب الطلبات
+                    </h3>
+                    <p className="text-xs sm:text-sm text-muted-foreground mb-4 max-w-sm mx-auto leading-relaxed">
+                      {loadError}
+                    </p>
+                    <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 items-center justify-center">
+                      <Button
+                        onClick={load}
+                        size="lg"
+                        className="w-full sm:w-auto h-12 sm:h-11 text-base sm:text-sm font-semibold gap-2"
+                        disabled={loading}
+                        aria-label="إعادة محاولة جلب الطلبات"
+                      >
+                        <RefreshCw className={`h-4 w-4 ${loading ? 'animate-spin' : ''}`} aria-hidden="true" />
+                        {loading ? 'جاري المحاولة…' : 'إعادة المحاولة'}
+                      </Button>
+                      <Button
+                        asChild
+                        variant="outline"
+                        size="lg"
+                        className="w-full sm:w-auto h-12 sm:h-11 text-base sm:text-sm"
+                      >
+                        <Link to="/financing/new">إنشاء طلب جديد</Link>
+                      </Button>
+                    </div>
+                  </Card>
                 ) : filtered.length === 0 ? (
                   <Card
                     role="tabpanel"
