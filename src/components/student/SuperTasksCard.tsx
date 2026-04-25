@@ -289,6 +289,7 @@ export default function SuperTasksCard({
   const derived = useMemo(() => tasks.map(deriveTask), [tasks]);
   const open = derived.filter(t => !t.is_done);
   const doneCount = derived.length - open.length;
+  const { combo, bump, reset, pulseKey } = useCombo();
 
   // Smart suggestion: highest XP among open, prefer priority
   const suggestion = useMemo(() => {
@@ -309,15 +310,36 @@ export default function SuperTasksCard({
   const missionsDone = missions.filter(m => m.current >= m.target).length;
   const allMissionsDone = missionsDone === missions.length;
 
+  // Loot drop after each completion
+  const handleAfterComplete = (t: DerivedTask) => {
+    bump();
+    const newCombo = combo + 1;
+    const loot = rollLoot(t.xp_reward, newCombo);
+    if (loot) {
+      setTimeout(() => {
+        toast.message(`${loot.emoji} ${loot.label}`, {
+          description: `حصلت على +${loot.bonusXp} XP إضافية كمكافأة عشوائية`,
+          duration: 4000,
+          className: 'border-2 border-amber-300',
+        });
+        celebrate(loot.tier === 'legendary' ? 'big' : 'medium');
+      }, 600);
+    }
+  };
+
   return (
     <Card className="border-slate-200 bg-white shadow-sm lg:col-span-2">
       <CardContent className="p-6">
         {/* Header */}
         <div className="mb-5 flex flex-wrap items-center justify-between gap-3">
           <div>
-            <h3 className="text-lg font-bold text-slate-900">مهام اليوم</h3>
+            <div className="flex items-center gap-2">
+              <h3 className="text-lg font-bold text-slate-900">مهام اليوم</h3>
+              <ComboBadge combo={combo} pulseKey={pulseKey} />
+            </div>
             <p className="text-xs text-slate-500">
               {open.length} متبقية · {doneCount} مكتملة
+              {combo >= 2 && <span className="ms-1 text-amber-600">· استمر في السلسلة!</span>}
             </p>
           </div>
           <div className="flex items-center gap-2">
