@@ -7466,10 +7466,6 @@ export type Database = {
       claim_xp_reward: { Args: { p_level: number }; Returns: Json }
       classify_severity: { Args: { _delta_pct: number }; Returns: string }
       client_confirm_delivery: { Args: { _order_id: string }; Returns: Json }
-      complete_battle_quiz_attempt: {
-        Args: { p_attempt_id: string }
-        Returns: Json
-      }
       complete_experiment: {
         Args: {
           p_experiment_id: string
@@ -7512,15 +7508,6 @@ export type Database = {
         Args: { _created: string; _priority: string }
         Returns: string
       }
-      confirm_marketplace_gateway_purchase: {
-        Args: {
-          p_item_id: string
-          p_paid_sar: number
-          p_payment_intent_id: string
-          p_user_id: string
-        }
-        Returns: Json
-      }
       create_group_order: {
         Args: {
           _deadline?: string
@@ -7548,15 +7535,6 @@ export type Database = {
         Returns: number
       }
       ensure_referral_code: { Args: { _user_id: string }; Returns: string }
-      flag_battle_quiz_event: {
-        Args: {
-          p_attempt_id: string
-          p_flag_type: string
-          p_metadata?: Json
-          p_risk_score: number
-        }
-        Returns: Json
-      }
       generate_customer_code: { Args: never; Returns: string }
       generate_group_invite_code: { Args: never; Returns: string }
       generate_internal_order_number: { Args: never; Returns: string }
@@ -7577,32 +7555,7 @@ export type Database = {
           priority_level: number
         }[]
       }
-      get_active_question_bank_subscription: {
-        Args: { _user_id: string }
-        Returns: {
-          daily_question_limit: number
-          expires_at: string
-          plan_id: string
-          plan_name: string
-          plan_slug: string
-          started_at: string
-          status: string
-          subscription_id: string
-        }[]
-      }
       get_ai_usage_today: { Args: { _tool_type: string }; Returns: number }
-      get_battle_quiz_leaderboard: {
-        Args: { p_limit?: number; p_room_id: string }
-        Returns: {
-          avatar_url: string
-          display_name: string
-          rank: number
-          total_correct: number
-          total_score: number
-          total_time_ms: number
-          user_id: string
-        }[]
-      }
       get_challenge_leaderboard: {
         Args: { p_limit?: number; p_period?: string }
         Returns: {
@@ -7653,21 +7606,11 @@ export type Database = {
           users: number
         }[]
       }
-      get_marketplace_funnel_report: {
-        Args: { p_days?: number }
-        Returns: Json
-      }
-      get_marketplace_item_pricing: {
-        Args: { p_item_id: string }
-        Returns: Json
-      }
-      get_marketplace_metrics: { Args: { p_days?: number }; Returns: Json }
       get_membership_points_multiplier: {
         Args: { _user_id: string }
         Returns: number
       }
       get_mind_map_usage_today: { Args: never; Returns: number }
-      get_question_bank_stats: { Args: { p_user_id?: string }; Returns: Json }
       get_referral_leaderboard: {
         Args: { p_limit?: number }
         Returns: {
@@ -7872,17 +7815,6 @@ export type Database = {
         Returns: Json
       }
       purchase_cv_export: { Args: { _cv_id: string }; Returns: Json }
-      purchase_marketplace_item:
-        | { Args: { p_item_id: string }; Returns: Json }
-        | { Args: { p_item_id: string; p_promo_code: string }; Returns: Json }
-        | {
-            Args: { p_item_id: string; p_promo_codes: string[] }
-            Returns: Json
-          }
-      purchase_marketplace_with_wallet: {
-        Args: { p_item_id: string }
-        Returns: Json
-      }
       purchase_stat_analysis: { Args: { _analysis_id: string }; Returns: Json }
       purchase_stat_pdf: { Args: { _analysis_id: string }; Returns: Json }
       read_email_batch: {
@@ -7923,35 +7855,8 @@ export type Database = {
         }
         Returns: Json
       }
-      start_battle_quiz_1v1_attempt: {
-        Args: { p_match_id: string }
-        Returns: Json
-      }
-      start_battle_quiz_attempt: { Args: { p_room_id: string }; Returns: Json }
-      start_daily_challenge_attempt: {
-        Args: { p_challenge_id: string; p_user_id: string }
-        Returns: Json
-      }
       submit_assessment_attempt: {
         Args: { p_answers: Json; p_attempt_id: string; p_time_spent?: number }
-        Returns: Json
-      }
-      submit_battle_quiz_answer: {
-        Args: {
-          p_attempt_id: string
-          p_choice_id: string
-          p_question_id: string
-          p_response_time_ms: number
-        }
-        Returns: Json
-      }
-      submit_daily_challenge_attempt: {
-        Args: {
-          p_answers: Json
-          p_attempt_id: string
-          p_time_taken_seconds: number
-          p_user_id: string
-        }
         Returns: Json
       }
       submit_question_answer: {
@@ -7966,7 +7871,6 @@ export type Database = {
         Args: { _cv_id: string; _new_template_key: string }
         Returns: Json
       }
-      test_start_battle_quiz_1v1_attempt: { Args: never; Returns: Json }
       track_experiment_event: {
         Args: {
           p_anonymous_id?: string
@@ -7975,25 +7879,6 @@ export type Database = {
           p_metadata?: Json
           p_metric_value?: number
           p_user_id?: string
-        }
-        Returns: undefined
-      }
-      track_marketplace_event: {
-        Args: {
-          p_anonymous_id?: string
-          p_event_type: string
-          p_item_id?: string
-          p_metadata?: Json
-          p_session_id?: string
-          p_variant_key?: string
-        }
-        Returns: string
-      }
-      track_marketplace_view: {
-        Args: {
-          p_anonymous_id?: string
-          p_item_id: string
-          p_variant_key?: string
         }
         Returns: undefined
       }
