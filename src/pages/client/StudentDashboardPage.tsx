@@ -748,7 +748,13 @@ export default function StudentDashboardPage() {
             onStartFocus={() => { if (!running) startFocus(); }}
           />
 
-          <BossChallengeCard tasks={dash.tasks} sessions={dash.sessions} />
+          <BossChallengeCard
+            tasks={dash.tasks}
+            sessions={dash.sessions}
+            claimed={bossClaimed}
+            loading={claimBoss.isPending}
+            onClaimReward={() => claimBoss.mutate()}
+          />
         </div>
 
         {/* Achievements + Analytics */}
