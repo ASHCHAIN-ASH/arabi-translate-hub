@@ -6643,6 +6643,156 @@ export type Database = {
         }
         Relationships: []
       }
+      student_events: {
+        Row: {
+          created_at: string
+          ends_at: string | null
+          event_type: Database["public"]["Enums"]["student_event_type"]
+          id: string
+          is_done: boolean
+          starts_at: string
+          title: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          ends_at?: string | null
+          event_type?: Database["public"]["Enums"]["student_event_type"]
+          id?: string
+          is_done?: boolean
+          starts_at: string
+          title: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          ends_at?: string | null
+          event_type?: Database["public"]["Enums"]["student_event_type"]
+          id?: string
+          is_done?: boolean
+          starts_at?: string
+          title?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      student_profiles: {
+        Row: {
+          created_at: string
+          full_name: string | null
+          gpa: number | null
+          id: string
+          level: string | null
+          major: string | null
+          streak_days: number
+          student_no: string | null
+          study_progress: number
+          university: string | null
+          updated_at: string
+          user_id: string
+          xp: number
+        }
+        Insert: {
+          created_at?: string
+          full_name?: string | null
+          gpa?: number | null
+          id?: string
+          level?: string | null
+          major?: string | null
+          streak_days?: number
+          student_no?: string | null
+          study_progress?: number
+          university?: string | null
+          updated_at?: string
+          user_id: string
+          xp?: number
+        }
+        Update: {
+          created_at?: string
+          full_name?: string | null
+          gpa?: number | null
+          id?: string
+          level?: string | null
+          major?: string | null
+          streak_days?: number
+          student_no?: string | null
+          study_progress?: number
+          university?: string | null
+          updated_at?: string
+          user_id?: string
+          xp?: number
+        }
+        Relationships: []
+      }
+      student_tasks: {
+        Row: {
+          created_at: string
+          done_at: string | null
+          id: string
+          is_done: boolean
+          title: string
+          updated_at: string
+          user_id: string
+          xp_reward: number
+        }
+        Insert: {
+          created_at?: string
+          done_at?: string | null
+          id?: string
+          is_done?: boolean
+          title: string
+          updated_at?: string
+          user_id: string
+          xp_reward?: number
+        }
+        Update: {
+          created_at?: string
+          done_at?: string | null
+          id?: string
+          is_done?: boolean
+          title?: string
+          updated_at?: string
+          user_id?: string
+          xp_reward?: number
+        }
+        Relationships: []
+      }
+      study_sessions: {
+        Row: {
+          completed_at: string | null
+          created_at: string
+          duration_minutes: number
+          id: string
+          started_at: string
+          status: Database["public"]["Enums"]["study_session_status"]
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          completed_at?: string | null
+          created_at?: string
+          duration_minutes?: number
+          id?: string
+          started_at?: string
+          status?: Database["public"]["Enums"]["study_session_status"]
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          completed_at?: string | null
+          created_at?: string
+          duration_minutes?: number
+          id?: string
+          started_at?: string
+          status?: Database["public"]["Enums"]["study_session_status"]
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       subjects: {
         Row: {
           category_id: string
@@ -9516,6 +9666,8 @@ export type Database = {
         | "delivered"
         | "completed"
         | "cancelled"
+      student_event_type: "study" | "exam" | "focus"
+      study_session_status: "active" | "completed" | "cancelled"
       wallet_credit_event_type:
         | "financing_credit_added"
         | "financing_credit_reversed"
@@ -9741,6 +9893,8 @@ export const Constants = {
         "completed",
         "cancelled",
       ],
+      student_event_type: ["study", "exam", "focus"],
+      study_session_status: ["active", "completed", "cancelled"],
       wallet_credit_event_type: [
         "financing_credit_added",
         "financing_credit_reversed",
