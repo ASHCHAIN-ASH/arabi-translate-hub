@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Bell, Check, CheckCheck, X, Package, FileText, CreditCard, MessageSquare, ShoppingBag, AlertTriangle } from 'lucide-react';
+import { Bell, Check, CheckCheck, X, Package, FileText, CreditCard, MessageSquare } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
