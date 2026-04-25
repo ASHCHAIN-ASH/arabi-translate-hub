@@ -80,25 +80,58 @@ function CheckBurst({ show }: { show: boolean }) {
 }
 
 function TaskCard({
-  task, suggested, onComplete, onStart,
+  task, suggested, onComplete, onStart, onUndo,
 }: {
   task: DerivedTask;
   suggested: boolean;
   onComplete: (t: DerivedTask) => void;
   onStart: (t: DerivedTask) => void;
+  onUndo: (t: DerivedTask) => void;
 }) {
   const diff = difficultyMap[task.difficulty];
   const [bursting, setBursting] = useState(false);
   const [showXp, setShowXp] = useState(false);
+  const [confirming, setConfirming] = useState(false);
 
-  const handleComplete = () => {
-    if (task.is_done) return;
+  // Cancel confirmation if user doesn't tap within 3s
+  React.useEffect(() => {
+    if (!confirming) return;
+    const t = setTimeout(() => setConfirming(false), 3000);
+    return () => clearTimeout(t);
+  }, [confirming]);
+
+  const fireUndoToast = () => {
+    const id = `undo-${task.id}-${Date.now()}`;
+    toast.success(`+${task.xp_reward} XP 🎉`, {
+      id,
+      description: `تم إنهاء «${task.title}» — يمكنك التراجع خلال 5 ثوانٍ`,
+      duration: 5000,
+      action: {
+        label: 'تراجع',
+        onClick: () => {
+          onUndo(task);
+          toast.dismiss(id);
+          toast.message('تم التراجع', { description: 'أعدنا المهمة لحالتها السابقة', duration: 2500 });
+        },
+      },
+    });
+  };
+
+  const handleConfirm = () => {
+    setConfirming(false);
     setBursting(true);
     setShowXp(true);
     celebrate('small');
     setTimeout(() => setBursting(false), 800);
     setTimeout(() => setShowXp(false), 1100);
     onComplete(task);
+    fireUndoToast();
+  };
+
+  const handleFinishClick = () => {
+    if (task.is_done) return;
+    if (!confirming) { setConfirming(true); return; }
+    handleConfirm();
   };
 
   return (
@@ -163,17 +196,59 @@ function TaskCard({
 
         <div className="flex shrink-0 flex-col items-end gap-2">
           {task.is_done ? (
-            <div className="flex h-9 w-9 items-center justify-center rounded-full bg-emerald-100 text-emerald-600">
-              <CheckCircle2 className="h-5 w-5" />
-            </div>
+            <>
+              <div className="flex h-9 w-9 items-center justify-center rounded-full bg-emerald-100 text-emerald-600">
+                <CheckCircle2 className="h-5 w-5" />
+              </div>
+              <Button
+                size="sm" variant="ghost"
+                className="h-7 gap-1 text-[11px] text-slate-500 hover:text-slate-800"
+                onClick={() => onUndo(task)}
+              >
+                <Undo2 className="h-3 w-3" /> تراجع
+              </Button>
+            </>
           ) : (
             <>
               <Button size="sm" variant="outline" className="h-8 gap-1 text-xs" onClick={() => onStart(task)}>
                 <Play className="h-3 w-3" /> ابدأ
               </Button>
-              <Button size="sm" className="h-8 gap-1 bg-emerald-600 text-xs hover:bg-emerald-700" onClick={handleComplete}>
-                <CheckCircle2 className="h-3 w-3" /> إنهاء
-              </Button>
+              <AnimatePresence mode="wait" initial={false}>
+                {confirming ? (
+                  <motion.div
+                    key="confirm"
+                    initial={{ opacity: 0, scale: 0.9 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 0, scale: 0.9 }}
+                    className="flex flex-col items-end gap-1"
+                  >
+                    <Button
+                      size="sm"
+                      className="h-8 gap-1 bg-amber-500 text-xs text-white hover:bg-amber-600 animate-pulse"
+                      onClick={handleConfirm}
+                    >
+                      <CheckCircle2 className="h-3 w-3" /> أكّد الإنهاء
+                    </Button>
+                    <button
+                      type="button"
+                      onClick={() => setConfirming(false)}
+                      className="text-[10px] text-slate-500 hover:text-slate-700"
+                    >
+                      إلغاء
+                    </button>
+                  </motion.div>
+                ) : (
+                  <motion.div key="finish" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+                    <Button
+                      size="sm"
+                      className="h-8 gap-1 bg-emerald-600 text-xs hover:bg-emerald-700"
+                      onClick={handleFinishClick}
+                    >
+                      <CheckCircle2 className="h-3 w-3" /> إنهاء
+                    </Button>
+                  </motion.div>
+                )}
+              </AnimatePresence>
             </>
           )}
         </div>
