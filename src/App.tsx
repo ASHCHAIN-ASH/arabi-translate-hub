@@ -800,6 +800,12 @@ const App = () => (
             <Route path="/battle-academy/1v1/result/:matchId" element={
               <SimpleProtectedRoute requiredRole="client"><BattleQuiz1v1Result /></SimpleProtectedRoute>
             } />
+            <Route path="/student" element={
+              <SimpleProtectedRoute requiredRole="client"><StudentDashboardPage /></SimpleProtectedRoute>
+            } />
+            <Route path="/student/dashboard" element={
+              <SimpleProtectedRoute requiredRole="client"><StudentDashboardPage /></SimpleProtectedRoute>
+            } />
             
             {/* Academic Pages */}
             <Route path="/academic/expertise" element={<AcademicExpertise />} />
