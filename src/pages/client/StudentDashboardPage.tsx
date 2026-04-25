@@ -1,11 +1,14 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { QRCodeSVG } from 'qrcode.react';
 import {
+  ArrowRight,
   CalendarDays, CheckCircle2, Circle, Clock3, Flame, GraduationCap,
   Medal, Pause, Play, Plus, QrCode, RefreshCcw, Sparkles, Star,
   Target, Timer, Trophy, UserRound, Wifi, Zap,
 } from 'lucide-react';
+import ClientLayout from '@/components/client/ClientLayout';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
