@@ -381,27 +381,36 @@ export function useStudentRealtime() {
   useEffect(() => {
     if (!uid) return;
 
-    const channel = supabase.channel(`student-dashboard:${uid}`);
-    const filter = `user_id=eq.${uid}`;
+    let channel: ReturnType<typeof supabase.channel> | null = null;
+    try {
+      channel = supabase.channel(`student-dashboard:${uid}`);
+      const filter = `user_id=eq.${uid}`;
 
-    const tablesToKeys: Array<{ table: string; key: readonly unknown[] }> = [
-      { table: 'student_profiles', key: ['student-profile', uid] },
-      { table: 'student_day_state', key: ['student-day-state', uid] },
-      { table: 'student_tasks', key: ['student-tasks', uid] },
-      { table: 'study_sessions', key: ['study-sessions', uid] },
-      { table: 'student_activity_logs', key: ['student-activity-logs', uid] },
-    ];
+      const tablesToKeys: Array<{ table: string; key: readonly unknown[] }> = [
+        { table: 'student_profiles', key: ['student-profile', uid] },
+        { table: 'student_day_state', key: ['student-day-state', uid] },
+        { table: 'student_tasks', key: ['student-tasks', uid] },
+        { table: 'study_sessions', key: ['study-sessions', uid] },
+        { table: 'student_activity_logs', key: ['student-activity-logs', uid] },
+      ];
 
-    for (const { table, key } of tablesToKeys) {
-      channel.on(
-        'postgres_changes' as any,
-        { event: '*', schema: 'public', table, filter },
-        () => { qc.invalidateQueries({ queryKey: key }); },
-      );
+      for (const { table, key } of tablesToKeys) {
+        channel.on(
+          'postgres_changes' as any,
+          { event: '*', schema: 'public', table, filter },
+          () => { qc.invalidateQueries({ queryKey: key }); },
+        );
+      }
+
+      channel.subscribe();
+    } catch (e) {
+      console.error('[student-realtime] subscribe failed', e);
     }
 
-    channel.subscribe();
-    return () => { supabase.removeChannel(channel); };
+    return () => {
+      if (!channel) return;
+      try { supabase.removeChannel(channel); } catch (e) { console.error('[student-realtime] cleanup', e); }
+    };
   }, [uid, qc]);
 }
 
