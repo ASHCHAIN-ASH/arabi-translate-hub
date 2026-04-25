@@ -832,7 +832,22 @@ export default function StudentDashboardPage() {
           <DialogHeader><DialogTitle>مهمة جديدة</DialogTitle></DialogHeader>
           <div className="space-y-3">
             <Input placeholder="عنوان المهمة" value={tk.title} onChange={e => setTk({ ...tk, title: e.target.value })} />
-            <Input placeholder="نقاط XP" type="number" min={0} value={tk.xp} onChange={e => setTk({ ...tk, xp: e.target.value })} />
+            <div>
+              <div className="mb-2 text-xs font-medium text-muted-foreground">مكافأة XP عند إكمال المهمة</div>
+              <div className="grid grid-cols-3 gap-2">
+                {['5', '10', '15'].map(v => (
+                  <Button
+                    key={v}
+                    type="button"
+                    variant={String(tk.xp) === v ? 'default' : 'outline'}
+                    onClick={() => setTk({ ...tk, xp: v })}
+                    className="h-10 font-bold tabular-nums"
+                  >
+                    +{v} XP
+                  </Button>
+                ))}
+              </div>
+            </div>
           </div>
           <DialogFooter>
             <Button variant="ghost" onClick={() => setTaskOpen(false)}>إلغاء</Button>
