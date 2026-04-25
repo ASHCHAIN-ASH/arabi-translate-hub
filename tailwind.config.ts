@@ -269,6 +269,10 @@ export default {
 						opacity: '1',
 						transform: 'scale(1.05)'
 					}
+				},
+				'shimmer-rtl': {
+					'0%': { backgroundPosition: '-200% 0' },
+					'100%': { backgroundPosition: '200% 0' }
 				}
 			},
 			animation: {
