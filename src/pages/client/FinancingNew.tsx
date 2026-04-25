@@ -1443,27 +1443,34 @@ const FinancingNew: React.FC = () => {
                   </div>
                 </div>
 
-                <div className="flex justify-between pt-2 flex-wrap gap-3">
-                  <Button variant="outline" onClick={() => setStep(2)} disabled={submitting} size="lg">
-                    <ArrowRight className="ml-2 h-4 w-4" /> السابق
-                  </Button>
-                  <Button
-                    onClick={handleSubmit}
-                    disabled={submitting}
-                    size="lg"
-                    className="bg-gradient-to-l from-emerald-600 to-teal-600 shadow-lg hover:shadow-xl text-white"
-                  >
-                    {submitting ? (
-                      <>
-                        <Loader2 className="ml-2 h-4 w-4 animate-spin" /> جاري الإرسال…
-                      </>
-                    ) : (
-                      <>
-                        <Sparkles className="ml-2 h-4 w-4" /> إرسال طلب التمويل
-                      </>
-                    )}
-                  </Button>
-                </div>
+                <StepNavBar
+                  savedAt={savedAt}
+                  savingDraft={savingDraft}
+                  onSaveDraft={saveDraftManually}
+                  leftButton={
+                    <Button variant="outline" onClick={() => goToStep(2)} disabled={submitting} size="lg">
+                      <ArrowRight className="ml-2 h-4 w-4" /> السابق
+                    </Button>
+                  }
+                  rightButton={
+                    <Button
+                      onClick={handleSubmit}
+                      disabled={submitting}
+                      size="lg"
+                      className="bg-gradient-to-l from-emerald-600 to-teal-600 shadow-lg hover:shadow-xl text-white"
+                    >
+                      {submitting ? (
+                        <>
+                          <Loader2 className="ml-2 h-4 w-4 animate-spin" /> جاري الإرسال…
+                        </>
+                      ) : (
+                        <>
+                          <Sparkles className="ml-2 h-4 w-4" /> إرسال طلب التمويل
+                        </>
+                      )}
+                    </Button>
+                  }
+                />
               </Card>
             </motion.div>
           )}
