@@ -421,6 +421,9 @@ const FinancingHome: React.FC = () => {
 
                 {loading || tabSwitching ? (
                   <div
+                    role="tabpanel"
+                    id="financing-tabpanel"
+                    aria-labelledby={`financing-tab-${activeTab}`}
                     aria-busy="true"
                     aria-live="polite"
                     className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4"
