@@ -85,7 +85,7 @@ export default function AdminRewardRulesPage() {
   };
 
   return (
-    <AdminLayout title="قواعد المكافآت">
+    <AdminLayout>
       <div dir="rtl" className="space-y-6 p-6">
         <Card>
           <CardContent className="flex items-center gap-3 p-4">

@@ -118,7 +118,7 @@ export default function AdminRewardRedemptionsPage() {
   };
 
   return (
-    <AdminLayout title="طلبات استبدال المكافآت">
+    <AdminLayout>
       <div dir="rtl" className="space-y-6 p-6">
         {/* Header + filters */}
         <Card>

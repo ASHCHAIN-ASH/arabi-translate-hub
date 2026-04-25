@@ -85,7 +85,7 @@ export default function AdminStudentWalletsPage() {
   const totalLifetime = wallets.reduce((s, w) => s + (w.lifetime_earned_points || 0), 0);
 
   return (
-    <AdminLayout title="محافظ الطلاب">
+    <AdminLayout>
       <div dir="rtl" className="space-y-6 p-6">
         {/* Stats */}
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
