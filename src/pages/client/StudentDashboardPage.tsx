@@ -211,6 +211,7 @@ function StatTile({ icon: Icon, label, value, color, suffix }: {
 ========================================================= */
 export default function StudentDashboardPage() {
   const { user } = useAuth();
+  const navigate = useNavigate();
   const dash = useStudentDashboard(user?.id);
 
   const profile = dash.profile;
