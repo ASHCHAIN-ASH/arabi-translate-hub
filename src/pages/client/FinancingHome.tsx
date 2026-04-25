@@ -35,6 +35,10 @@ import {
   FINANCING_STATUS_LABELS_AR,
   FINANCING_MIN_AMOUNT,
 } from '@/lib/financing';
+import FinancingHero from '@/components/financing/FinancingHero';
+import FinancingFeatures from '@/components/financing/FinancingFeatures';
+import FinancingTerms from '@/components/financing/FinancingTerms';
+import FinancingFAQ from '@/components/financing/FinancingFAQ';
 
 interface FinancingApp {
   id: string;
