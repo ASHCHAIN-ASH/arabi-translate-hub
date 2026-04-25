@@ -210,7 +210,7 @@ export default function AdminTickets() {
                             </div>
                             <div className="text-xs text-muted-foreground flex flex-col items-end gap-1 shrink-0">
                               <span>{formatDistanceToNow(new Date(t.created_at), { addSuffix: true, locale: ar })}</span>
-                              <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
+                              <ArrowLeft className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                             </div>
                           </div>
                         </div>
