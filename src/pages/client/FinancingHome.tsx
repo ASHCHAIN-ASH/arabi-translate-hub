@@ -57,6 +57,30 @@ const statusTone = (status: string) => {
   return { bg: 'bg-sky-500/10', text: 'text-sky-600 dark:text-sky-400', ring: 'ring-sky-500/20', icon: Clock3 };
 };
 
+// نسبة تقدم الطلب حسب المرحلة (6 مراحل رئيسية)
+const STATUS_PROGRESS: Record<string, { pct: number; label: string; tone: 'sky' | 'amber' | 'violet' | 'emerald' | 'rose' }> = {
+  draft: { pct: 5, label: 'مسودة', tone: 'sky' },
+  submitted: { pct: 15, label: 'تم الإرسال', tone: 'sky' },
+  documents_pending: { pct: 25, label: 'بانتظار المستندات', tone: 'amber' },
+  under_review: { pct: 40, label: 'قيد التقييم الائتماني', tone: 'violet' },
+  contract_pending_signature: { pct: 60, label: 'بانتظار توقيع العقد', tone: 'violet' },
+  waiting_down_payment: { pct: 80, label: 'بانتظار الدفعة الأولى', tone: 'amber' },
+  approved: { pct: 90, label: 'تمت الموافقة', tone: 'emerald' },
+  active: { pct: 95, label: 'نشط — جاري السداد', tone: 'emerald' },
+  completed: { pct: 100, label: 'مكتمل', tone: 'emerald' },
+  overdue: { pct: 95, label: 'قسط متأخر', tone: 'rose' },
+  rejected: { pct: 100, label: 'مرفوض', tone: 'rose' },
+  cancelled: { pct: 100, label: 'ملغي', tone: 'rose' },
+};
+
+const PROGRESS_BAR_CLASS: Record<'sky' | 'amber' | 'violet' | 'emerald' | 'rose', string> = {
+  sky: 'bg-gradient-to-l from-sky-500 to-blue-500',
+  amber: 'bg-gradient-to-l from-amber-500 to-orange-500',
+  violet: 'bg-gradient-to-l from-violet-500 to-fuchsia-500',
+  emerald: 'bg-gradient-to-l from-emerald-500 to-teal-500',
+  rose: 'bg-gradient-to-l from-rose-500 to-red-500',
+};
+
 const FinancingHome: React.FC = () => {
   const { user } = useAuth();
   const [apps, setApps] = useState<FinancingApp[]>([]);
@@ -427,6 +451,9 @@ const FinancingHome: React.FC = () => {
                       {filtered.map((a, idx) => {
                         const tone = statusTone(a.status);
                         const StatusIcon = tone.icon;
+                        const progress = STATUS_PROGRESS[a.status] ?? { pct: 10, label: a.status, tone: 'sky' as const };
+                        const barClass = PROGRESS_BAR_CLASS[progress.tone];
+                        const isTerminal = ['completed', 'rejected', 'cancelled'].includes(a.status);
                         return (
                           <motion.div
                             key={a.id}
@@ -469,6 +496,36 @@ const FinancingHome: React.FC = () => {
                                   <div className="rounded-lg bg-muted/50 p-2 sm:p-2.5">
                                     <div className="text-[9px] sm:text-[10px] text-muted-foreground mb-0.5 sm:mb-1">المدة</div>
                                     <div className="text-[11px] sm:text-xs font-bold tabular-nums">{a.duration_months} ش</div>
+                                  </div>
+                                </div>
+
+                                {/* شريط تقدم المرحلة */}
+                                <div className="mb-3 sm:mb-3.5" aria-label={`نسبة التقدم: ${progress.pct}%`}>
+                                  <div className="flex items-center justify-between mb-1.5 text-[10px] sm:text-[11px]">
+                                    <span className="font-semibold text-foreground/80 truncate">{progress.label}</span>
+                                    <span className="font-bold tabular-nums text-foreground/70 shrink-0 mr-2">{progress.pct}%</span>
+                                  </div>
+                                  <div
+                                    role="progressbar"
+                                    aria-valuenow={progress.pct}
+                                    aria-valuemin={0}
+                                    aria-valuemax={100}
+                                    className="relative h-1.5 sm:h-2 w-full rounded-full bg-muted overflow-hidden ring-1 ring-border/40"
+                                  >
+                                    <motion.div
+                                      initial={{ width: 0 }}
+                                      animate={{ width: `${progress.pct}%` }}
+                                      transition={{ duration: 0.8, ease: 'easeOut', delay: idx * 0.05 + 0.1 }}
+                                      className={`absolute inset-y-0 right-0 ${barClass} rounded-full shadow-sm`}
+                                    />
+                                    {!isTerminal && (
+                                      <motion.div
+                                        className="absolute inset-y-0 right-0 w-8 bg-gradient-to-l from-white/40 to-transparent rounded-full"
+                                        animate={{ x: ['-100%', '300%'] }}
+                                        transition={{ duration: 2.4, repeat: Infinity, ease: 'easeInOut', delay: 1 }}
+                                        style={{ width: `${Math.min(progress.pct, 30)}%` }}
+                                      />
+                                    )}
                                   </div>
                                 </div>
 
