@@ -126,7 +126,24 @@ Deno.serve(async (req) => {
       metadata: { day_date: today },
     });
 
-    return new Response(JSON.stringify({ success: true, day: dayRow }), {
+    let pointsAwarded = 0;
+    try {
+      const admin = createClient(
+        Deno.env.get('SUPABASE_URL')!,
+        Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!,
+      );
+      pointsAwarded = await awardPoints(admin, {
+        userId,
+        ruleCode: 'DAILY_START',
+        sourceType: 'daily_bonus',
+        sourceId: dayRow.id,
+        description: `بداية يوم ${today}`,
+      });
+    } catch (we) {
+      console.error('wallet award failed', we);
+    }
+
+    return new Response(JSON.stringify({ success: true, day: dayRow, points_awarded: pointsAwarded }), {
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
     });
   } catch (e) {
