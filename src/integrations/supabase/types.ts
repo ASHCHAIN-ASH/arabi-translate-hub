@@ -2174,128 +2174,6 @@ export type Database = {
           },
         ]
       }
-      gamification_levels: {
-        Row: {
-          badge_color: string | null
-          badge_label: string | null
-          created_at: string
-          icon: string | null
-          id: string
-          is_active: boolean
-          name_ar: string
-          name_en: string
-          perks_json: Json
-          required_points: number
-          slug: string
-          sort_order: number
-          updated_at: string
-        }
-        Insert: {
-          badge_color?: string | null
-          badge_label?: string | null
-          created_at?: string
-          icon?: string | null
-          id?: string
-          is_active?: boolean
-          name_ar: string
-          name_en: string
-          perks_json?: Json
-          required_points?: number
-          slug: string
-          sort_order?: number
-          updated_at?: string
-        }
-        Update: {
-          badge_color?: string | null
-          badge_label?: string | null
-          created_at?: string
-          icon?: string | null
-          id?: string
-          is_active?: boolean
-          name_ar?: string
-          name_en?: string
-          perks_json?: Json
-          required_points?: number
-          slug?: string
-          sort_order?: number
-          updated_at?: string
-        }
-        Relationships: []
-      }
-      gamification_rewards: {
-        Row: {
-          badge_color: string | null
-          cost_points: number
-          created_at: string
-          description_ar: string | null
-          expires_in_days: number | null
-          icon: string | null
-          id: string
-          is_active: boolean
-          level_required_id: string | null
-          max_redemptions_per_user: number | null
-          metadata: Json
-          sort_order: number
-          title_ar: string
-          title_en: string | null
-          total_redeemed: number
-          total_stock: number | null
-          type: string
-          updated_at: string
-          value: number
-        }
-        Insert: {
-          badge_color?: string | null
-          cost_points?: number
-          created_at?: string
-          description_ar?: string | null
-          expires_in_days?: number | null
-          icon?: string | null
-          id?: string
-          is_active?: boolean
-          level_required_id?: string | null
-          max_redemptions_per_user?: number | null
-          metadata?: Json
-          sort_order?: number
-          title_ar: string
-          title_en?: string | null
-          total_redeemed?: number
-          total_stock?: number | null
-          type: string
-          updated_at?: string
-          value?: number
-        }
-        Update: {
-          badge_color?: string | null
-          cost_points?: number
-          created_at?: string
-          description_ar?: string | null
-          expires_in_days?: number | null
-          icon?: string | null
-          id?: string
-          is_active?: boolean
-          level_required_id?: string | null
-          max_redemptions_per_user?: number | null
-          metadata?: Json
-          sort_order?: number
-          title_ar?: string
-          title_en?: string | null
-          total_redeemed?: number
-          total_stock?: number | null
-          type?: string
-          updated_at?: string
-          value?: number
-        }
-        Relationships: [
-          {
-            foreignKeyName: "gamification_rewards_level_required_id_fkey"
-            columns: ["level_required_id"]
-            isOneToOne: false
-            referencedRelation: "gamification_levels"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
       gateway_webhooks: {
         Row: {
           created_at: string
@@ -4054,41 +3932,6 @@ export type Database = {
         }
         Relationships: []
       }
-      referral_rewards: {
-        Row: {
-          created_at: string
-          id: string
-          referral_id: string | null
-          reward_type: string
-          user_id: string
-          xp_amount: number
-        }
-        Insert: {
-          created_at?: string
-          id?: string
-          referral_id?: string | null
-          reward_type: string
-          user_id: string
-          xp_amount: number
-        }
-        Update: {
-          created_at?: string
-          id?: string
-          referral_id?: string | null
-          reward_type?: string
-          user_id?: string
-          xp_amount?: number
-        }
-        Relationships: [
-          {
-            foreignKeyName: "referral_rewards_referral_id_fkey"
-            columns: ["referral_id"]
-            isOneToOne: false
-            referencedRelation: "referrals"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
       referrals: {
         Row: {
           completed_at: string | null
@@ -4306,101 +4149,6 @@ export type Database = {
           title?: string
           updated_at?: string
           user_id?: string
-        }
-        Relationships: []
-      }
-      reward_redemptions: {
-        Row: {
-          cash_value: number
-          id: string
-          metadata: Json
-          notes: string | null
-          points_spent: number
-          redemption_type: string
-          requested_at: string
-          reviewed_at: string | null
-          reviewed_by: string | null
-          status: string
-          user_id: string
-          wallet_id: string
-        }
-        Insert: {
-          cash_value?: number
-          id?: string
-          metadata?: Json
-          notes?: string | null
-          points_spent?: number
-          redemption_type: string
-          requested_at?: string
-          reviewed_at?: string | null
-          reviewed_by?: string | null
-          status?: string
-          user_id: string
-          wallet_id: string
-        }
-        Update: {
-          cash_value?: number
-          id?: string
-          metadata?: Json
-          notes?: string | null
-          points_spent?: number
-          redemption_type?: string
-          requested_at?: string
-          reviewed_at?: string | null
-          reviewed_by?: string | null
-          status?: string
-          user_id?: string
-          wallet_id?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "reward_redemptions_wallet_id_fkey"
-            columns: ["wallet_id"]
-            isOneToOne: false
-            referencedRelation: "student_wallets"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      reward_rules: {
-        Row: {
-          cash_reward: number
-          code: string
-          created_at: string
-          daily_limit: number
-          description_ar: string | null
-          id: string
-          is_active: boolean
-          name_ar: string
-          points_reward: number
-          source_type: string
-          updated_at: string
-        }
-        Insert: {
-          cash_reward?: number
-          code: string
-          created_at?: string
-          daily_limit?: number
-          description_ar?: string | null
-          id?: string
-          is_active?: boolean
-          name_ar: string
-          points_reward?: number
-          source_type: string
-          updated_at?: string
-        }
-        Update: {
-          cash_reward?: number
-          code?: string
-          created_at?: string
-          daily_limit?: number
-          description_ar?: string | null
-          id?: string
-          is_active?: boolean
-          name_ar?: string
-          points_reward?: number
-          source_type?: string
-          updated_at?: string
         }
         Relationships: []
       }
@@ -5152,51 +4900,6 @@ export type Database = {
           whatsapp_notifications_enabled?: boolean
           whatsapp_phone_override?: string | null
           xp?: number
-        }
-        Relationships: []
-      }
-      student_reward_events: {
-        Row: {
-          created_at: string
-          id: string
-          metadata: Json
-          points_amount: number
-          reward_tier: string | null
-          reward_type: string
-          source_id: string | null
-          source_key: string | null
-          source_type: string
-          status: string
-          user_id: string
-          xp_amount: number
-        }
-        Insert: {
-          created_at?: string
-          id?: string
-          metadata?: Json
-          points_amount?: number
-          reward_tier?: string | null
-          reward_type: string
-          source_id?: string | null
-          source_key?: string | null
-          source_type: string
-          status?: string
-          user_id: string
-          xp_amount?: number
-        }
-        Update: {
-          created_at?: string
-          id?: string
-          metadata?: Json
-          points_amount?: number
-          reward_tier?: string | null
-          reward_type?: string
-          source_id?: string | null
-          source_key?: string | null
-          source_type?: string
-          status?: string
-          user_id?: string
-          xp_amount?: number
         }
         Relationships: []
       }
@@ -6100,47 +5803,6 @@ export type Database = {
         }
         Relationships: []
       }
-      user_points: {
-        Row: {
-          created_at: string
-          current_level_id: string | null
-          level_reached_at: string | null
-          lifetime_earned: number
-          lifetime_spent: number
-          total_points: number
-          updated_at: string
-          user_id: string
-        }
-        Insert: {
-          created_at?: string
-          current_level_id?: string | null
-          level_reached_at?: string | null
-          lifetime_earned?: number
-          lifetime_spent?: number
-          total_points?: number
-          updated_at?: string
-          user_id: string
-        }
-        Update: {
-          created_at?: string
-          current_level_id?: string | null
-          level_reached_at?: string | null
-          lifetime_earned?: number
-          lifetime_spent?: number
-          total_points?: number
-          updated_at?: string
-          user_id?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "user_points_current_level_id_fkey"
-            columns: ["current_level_id"]
-            isOneToOne: false
-            referencedRelation: "gamification_levels"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
       user_referral_codes: {
         Row: {
           code: string
@@ -6192,69 +5854,6 @@ export type Database = {
         }
         Relationships: []
       }
-      user_rewards: {
-        Row: {
-          awarded_at: string
-          created_at: string
-          expires_at: string | null
-          id: string
-          metadata: Json
-          point_transaction_id: string | null
-          redemption_code: string | null
-          reward_id: string
-          source: string
-          status: string
-          updated_at: string
-          used_at: string | null
-          user_id: string
-        }
-        Insert: {
-          awarded_at?: string
-          created_at?: string
-          expires_at?: string | null
-          id?: string
-          metadata?: Json
-          point_transaction_id?: string | null
-          redemption_code?: string | null
-          reward_id: string
-          source?: string
-          status?: string
-          updated_at?: string
-          used_at?: string | null
-          user_id: string
-        }
-        Update: {
-          awarded_at?: string
-          created_at?: string
-          expires_at?: string | null
-          id?: string
-          metadata?: Json
-          point_transaction_id?: string | null
-          redemption_code?: string | null
-          reward_id?: string
-          source?: string
-          status?: string
-          updated_at?: string
-          used_at?: string | null
-          user_id?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "user_rewards_point_transaction_id_fkey"
-            columns: ["point_transaction_id"]
-            isOneToOne: false
-            referencedRelation: "point_transactions"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "user_rewards_reward_id_fkey"
-            columns: ["reward_id"]
-            isOneToOne: false
-            referencedRelation: "gamification_rewards"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
       user_roles: {
         Row: {
           created_at: string
@@ -6273,33 +5872,6 @@ export type Database = {
           id?: string
           role?: Database["public"]["Enums"]["app_role"]
           user_id?: string
-        }
-        Relationships: []
-      }
-      user_xp_wallet: {
-        Row: {
-          current_level: number
-          lifetime_xp: number
-          total_xp: number
-          updated_at: string
-          user_id: string
-          xp_to_next_level: number
-        }
-        Insert: {
-          current_level?: number
-          lifetime_xp?: number
-          total_xp?: number
-          updated_at?: string
-          user_id: string
-          xp_to_next_level?: number
-        }
-        Update: {
-          current_level?: number
-          lifetime_xp?: number
-          total_xp?: number
-          updated_at?: string
-          user_id?: string
-          xp_to_next_level?: number
         }
         Relationships: []
       }
@@ -7275,33 +6847,6 @@ export type Database = {
         }
         Relationships: []
       }
-      xp_rewards_claims: {
-        Row: {
-          claimed_at: string
-          id: string
-          level: number
-          reward_payload: Json
-          reward_type: string | null
-          user_id: string
-        }
-        Insert: {
-          claimed_at?: string
-          id?: string
-          level: number
-          reward_payload?: Json
-          reward_type?: string | null
-          user_id: string
-        }
-        Update: {
-          claimed_at?: string
-          id?: string
-          level?: number
-          reward_payload?: Json
-          reward_type?: string | null
-          user_id?: string
-        }
-        Relationships: []
-      }
       xp_transactions: {
         Row: {
           amount: number
@@ -7408,33 +6953,6 @@ export type Database = {
           variant_key: string
         }[]
       }
-      award_assessment_share_xp: {
-        Args: { p_attempt_id: string }
-        Returns: Json
-      }
-      award_points: {
-        Args: {
-          _apply_multiplier?: boolean
-          _base_points: number
-          _description?: string
-          _metadata?: Json
-          _source_id?: string
-          _source_type: string
-          _user_id: string
-        }
-        Returns: string
-      }
-      award_xp: {
-        Args: {
-          p_amount: number
-          p_description?: string
-          p_metadata?: Json
-          p_source_id?: string
-          p_source_type: string
-          p_user_id: string
-        }
-        Returns: Json
-      }
       bq_1v1_accept_friend_invite: {
         Args: { p_invite_code: string }
         Returns: Json
@@ -7498,16 +7016,6 @@ export type Database = {
         Args: { _group_order_id: string; _reason?: string }
         Returns: Json
       }
-      challenge_award_xp: {
-        Args: {
-          p_description?: string
-          p_source: string
-          p_source_id?: string
-          p_user_id: string
-          p_xp: number
-        }
-        Returns: number
-      }
       challenge_submit: {
         Args: { p_answer: string; p_challenge_id: string; p_user_id: string }
         Returns: Json
@@ -7520,7 +7028,6 @@ export type Database = {
         }[]
       }
       claim_referral: { Args: { _ref_code: string }; Returns: Json }
-      claim_xp_reward: { Args: { p_level: number }; Returns: Json }
       classify_severity: { Args: { _delta_pct: number }; Returns: string }
       client_confirm_delivery: { Args: { _order_id: string }; Returns: Json }
       complete_experiment: {
@@ -7559,7 +7066,6 @@ export type Database = {
         Args: { p_experiment_id: string }
         Returns: Json
       }
-      compute_level_for_points: { Args: { _points: number }; Returns: string }
       compute_order_countdown: { Args: { _order_id: string }; Returns: Json }
       compute_ticket_sla: {
         Args: { _created: string; _priority: string }
@@ -7663,10 +7169,6 @@ export type Database = {
           users: number
         }[]
       }
-      get_membership_points_multiplier: {
-        Args: { _user_id: string }
-        Returns: number
-      }
       get_mind_map_usage_today: { Args: never; Returns: number }
       get_referral_leaderboard: {
         Args: { p_limit?: number }
@@ -7717,18 +7219,6 @@ export type Database = {
         }[]
       }
       get_user_whatsapp_phone: { Args: { _user_id: string }; Returns: string }
-      get_user_xp_summary: { Args: { p_user_id?: string }; Returns: Json }
-      get_xp_conversion_report: { Args: { p_days?: number }; Returns: Json }
-      grant_referral_xp: {
-        Args: {
-          _description: string
-          _referral_id: string
-          _reward_type: string
-          _user_id: string
-          _xp: number
-        }
-        Returns: undefined
-      }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
@@ -7906,7 +7396,6 @@ export type Database = {
         Args: { _id: string; _note?: string }
         Returns: Json
       }
-      reward_viral_share: { Args: never; Returns: Json }
       sign_contract_with_otp: {
         Args: {
           _accepted_terms?: Json

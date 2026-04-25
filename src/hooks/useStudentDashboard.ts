@@ -388,23 +388,13 @@ export interface StudentRewardEvent {
   created_at: string;
 }
 
-export function useStudentRewardEvents(limit = 50) {
-  const { user } = useAuth();
-  const uid = user?.id;
+export function useStudentRewardEvents(_limit = 50) {
+  // Reward events feature was removed. Returns empty list for backward compatibility.
   return useQuery({
-    queryKey: uid ? ['student-reward-events', uid, limit] : ['student-reward-events', 'anon', limit],
-    enabled: !!uid,
-    queryFn: async () => {
-      const { data, error } = await supabase
-        .from('student_reward_events' as any)
-        .select('*')
-        .eq('user_id', uid!)
-        .order('created_at', { ascending: false })
-        .limit(limit);
-      if (error) { console.error('[student] reward events', error); return [] as StudentRewardEvent[]; }
-      return ((data || []) as unknown) as StudentRewardEvent[];
-    },
-    staleTime: 15_000,
+    queryKey: ['student-reward-events', 'disabled'],
+    enabled: false,
+    queryFn: async () => [] as StudentRewardEvent[],
+    staleTime: Infinity,
   });
 }
 
@@ -450,35 +440,13 @@ export function useAwardTaskLootBonus() {
 }
 
 export function useClaimBossChallengeReward() {
-  const qc = useQueryClient();
-  const { user } = useAuth();
-  return useMutation({
+  // Boss challenge reward feature was removed.
+  return useMutation<{ success: boolean; alreadyClaimed?: boolean; week_key?: string; xp_awarded?: number; points_awarded?: number }, Error, void>({
     mutationFn: async () => {
-      const { data, error } = await supabase.functions.invoke('claim_boss_challenge_reward', { body: {} });
-      if (error) throw error;
-      return data as {
-        success: boolean;
-        alreadyClaimed?: boolean;
-        week_key?: string;
-        xp_awarded?: number;
-        points_awarded?: number;
-      };
-    },
-    onSuccess: (data) => {
-      if (!user?.id) return;
-      invalidateRewardChain(qc, user.id);
-      if (data?.alreadyClaimed) {
-        toast.info('تم استلام مكافأة هذا الأسبوع مسبقاً ✅');
-        return;
-      }
-      const xp = data?.xp_awarded ?? 500;
-      const pts = data?.points_awarded ?? 0;
-      toast.success(`🏆 Boss Slain! +${xp} XP${pts ? ` و +${pts} نقطة` : ''}`);
+      throw new Error('ميزة مكافأة التحدي تمت إزالتها');
     },
     onError: (e: any) => {
-      console.error('[claim_boss_challenge_reward]', e);
-      const msg = e?.context?.body || e?.message || 'تعذّر استلام المكافأة';
-      toast.error(typeof msg === 'string' ? msg : 'لم تستوفِ شروط التحدي بعد');
+      toast.error(e?.message || 'الميزة غير متاحة');
     },
   });
 }

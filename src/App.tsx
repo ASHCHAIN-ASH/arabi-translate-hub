@@ -75,7 +75,7 @@ import GroupOrderDetails from "./pages/client/GroupOrderDetails";
 import GroupOrderJoin from "./pages/client/GroupOrderJoin";
 import MembershipPage from "./pages/client/MembershipPage";
 import ReferralsPage from "./pages/client/ReferralsPage";
-import RewardsPage from "./pages/client/Rewards";
+
 import StudentDashboardPage from "./pages/client/StudentDashboardPage";
 import AdminMemberships from "./pages/admin/AdminMemberships";
 import AdminReferrals from "./pages/admin/AdminReferrals";
@@ -106,8 +106,6 @@ import AdminWorkingHours from "./pages/admin/AdminWorkingHours";
 import AdminChangelog from "./pages/admin/AdminChangelog";
 import AdminWallets from "./pages/admin/AdminWallets";
 import AdminPayments from "./pages/admin/AdminPayments";
-import AdminGamification from "./pages/admin/AdminGamification";
-import AdminXpConversionReport from "./pages/admin/AdminXpConversionReport";
 
 import AdminGrowthAnalytics from "./pages/admin/AdminGrowthAnalytics";
 import AdminGrowthAutomation from "./pages/admin/AdminGrowthAutomation";
@@ -117,8 +115,6 @@ import AdminExperimentDetail from "./pages/admin/AdminExperimentDetail";
 import AdminAssessments from "./pages/admin/AdminAssessments";
 import StudentActivityPage from "./pages/admin/StudentActivityPage";
 import AdminStudentWalletsPage from "./pages/admin/AdminStudentWalletsPage";
-import AdminRewardRedemptionsPage from "./pages/admin/AdminRewardRedemptionsPage";
-import AdminRewardRulesPage from "./pages/admin/AdminRewardRulesPage";
 import AssessmentsList from "./pages/academic/AssessmentsList";
 import AssessmentStart from "./pages/academic/AssessmentStart";
 import AssessmentResult from "./pages/academic/AssessmentResult";
@@ -607,11 +603,6 @@ const App = () => (
                 <AdminPayments />
               </SimpleProtectedRoute>
             } />
-            <Route path="/adminmaster/gamification" element={
-              <SimpleProtectedRoute adminOnly>
-                <AdminGamification />
-              </SimpleProtectedRoute>
-            } />
             <Route path="/adminmaster/student-activity" element={
               <SimpleProtectedRoute adminOnly>
                 <StudentActivityPage />
@@ -620,21 +611,6 @@ const App = () => (
             <Route path="/adminmaster/student-wallets" element={
               <SimpleProtectedRoute adminOnly>
                 <AdminStudentWalletsPage />
-              </SimpleProtectedRoute>
-            } />
-            <Route path="/adminmaster/reward-redemptions" element={
-              <SimpleProtectedRoute adminOnly>
-                <AdminRewardRedemptionsPage />
-              </SimpleProtectedRoute>
-            } />
-            <Route path="/adminmaster/reward-rules" element={
-              <SimpleProtectedRoute adminOnly>
-                <AdminRewardRulesPage />
-              </SimpleProtectedRoute>
-            } />
-            <Route path="/adminmaster/xp-conversion-report" element={
-              <SimpleProtectedRoute adminOnly>
-                <AdminXpConversionReport />
               </SimpleProtectedRoute>
             } />
             <Route path="/adminmaster/memberships" element={
@@ -698,11 +674,6 @@ const App = () => (
             <Route path="/referrals" element={
               <SimpleProtectedRoute>
                 <ReferralsPage />
-              </SimpleProtectedRoute>
-            } />
-            <Route path="/rewards" element={
-              <SimpleProtectedRoute requiredRole="client">
-                <RewardsPage />
               </SimpleProtectedRoute>
             } />
             <Route path="/student" element={

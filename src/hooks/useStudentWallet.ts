@@ -29,23 +29,9 @@ export interface WalletTransaction {
   created_at: string;
 }
 
-export interface RewardRedemption {
-  id: string;
-  user_id: string;
-  wallet_id: string;
-  redemption_type: 'coupon' | 'cash' | 'gift' | 'service_credit';
-  points_spent: number;
-  cash_value: number;
-  status: 'pending' | 'approved' | 'rejected' | 'paid';
-  requested_at: string;
-  reviewed_at: string | null;
-  notes: string | null;
-}
-
 export const useStudentWallet = (userId?: string) => {
   const [wallet, setWallet] = useState<StudentWallet | null>(null);
   const [transactions, setTransactions] = useState<WalletTransaction[]>([]);
-  const [redemptions, setRedemptions] = useState<RewardRedemption[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -65,7 +51,6 @@ export const useStudentWallet = (userId?: string) => {
     if (!userId) { setLoading(false); return; }
     try {
       setError(null);
-      // Ensure wallet exists
       let w: StudentWallet | null = null;
       const { data: existing } = await (supabase as any)
         .from('student_wallets')
@@ -75,24 +60,15 @@ export const useStudentWallet = (userId?: string) => {
       w = existing as StudentWallet | null;
       if (!w) w = await ensureWallet();
 
-      const [txRes, redRes] = await Promise.all([
-        (supabase as any)
-          .from('student_wallet_transactions')
-          .select('*')
-          .eq('user_id', userId)
-          .order('created_at', { ascending: false })
-          .limit(15),
-        (supabase as any)
-          .from('reward_redemptions')
-          .select('*')
-          .eq('user_id', userId)
-          .order('requested_at', { ascending: false })
-          .limit(10),
-      ]);
+      const { data: txData } = await (supabase as any)
+        .from('student_wallet_transactions')
+        .select('*')
+        .eq('user_id', userId)
+        .order('created_at', { ascending: false })
+        .limit(15);
 
       setWallet(w);
-      setTransactions((txRes.data as WalletTransaction[]) || []);
-      setRedemptions((redRes.data as RewardRedemption[]) || []);
+      setTransactions((txData as WalletTransaction[]) || []);
     } catch (e: any) {
       console.error('wallet refresh failed', e);
       setError(e?.message || 'تعذّر تحميل المحفظة');
@@ -114,26 +90,9 @@ export const useStudentWallet = (userId?: string) => {
       .on('postgres_changes',
         { event: '*', schema: 'public', table: 'student_wallet_transactions', filter: `user_id=eq.${userId}` },
         () => refresh())
-      .on('postgres_changes',
-        { event: '*', schema: 'public', table: 'reward_redemptions', filter: `user_id=eq.${userId}` },
-        () => refresh())
       .subscribe();
     return () => { supabase.removeChannel(ch); };
   }, [userId, refresh]);
 
-  const requestRedemption = useCallback(async (
-    redemption_type: RewardRedemption['redemption_type'],
-    points_spent: number,
-    notes?: string,
-  ) => {
-    const { data, error } = await supabase.functions.invoke('request_reward_redemption', {
-      body: { redemption_type, points_spent, notes },
-    });
-    if (error) throw error;
-    if (data?.error) throw new Error(data.error);
-    await refresh();
-    return data;
-  }, [refresh]);
-
-  return { wallet, transactions, redemptions, loading, error, refresh, requestRedemption };
+  return { wallet, transactions, loading, error, refresh };
 };
