@@ -3,7 +3,8 @@ import { motion } from 'framer-motion';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
-import { Sword, Skull, Crown, Trophy } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Sword, Skull, Crown, Trophy, Loader2, CheckCircle2 } from 'lucide-react';
 import type { StudentTask, StudySession } from '@/hooks/useStudentDashboard';
 
 function startOfWeek(d = new Date()) {
