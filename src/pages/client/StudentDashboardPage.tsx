@@ -517,22 +517,22 @@ export default function StudentDashboardPage() {
           </Card>
 
           {/* Focus */}
-          <Card className="relative overflow-hidden border-white/10 bg-white/5 backdrop-blur-xl">
+          <Card className="relative overflow-hidden border-slate-200 bg-white shadow-sm">
             <div className={`pointer-events-none absolute inset-0 opacity-60 transition ${running ? 'animate-pulse' : ''}`}>
-              <div className="absolute -inset-10 bg-[radial-gradient(circle_at_center,rgba(139,92,246,0.25),transparent_70%)]" />
+              <div className="absolute -inset-10 bg-[radial-gradient(circle_at_center,rgba(139,92,246,0.12),transparent_70%)]" />
             </div>
             <CardContent className="relative p-6">
               <div className="mb-4 flex items-center justify-between">
                 <div>
-                  <h3 className="text-lg font-bold text-white">جلسة التركيز</h3>
-                  <p className="text-xs text-white/50">ابدأ مذاكرة بدون تشتيت</p>
+                  <h3 className="text-lg font-bold text-slate-900">جلسة التركيز</h3>
+                  <p className="text-xs text-slate-500">ابدأ مذاكرة بدون تشتيت</p>
                 </div>
-                <Timer className="h-5 w-5 text-white/50" />
+                <Timer className="h-5 w-5 text-slate-400" />
               </div>
 
               <div className="relative mx-auto my-6 grid h-44 w-44 place-items-center">
                 <svg className="absolute inset-0 -rotate-90" viewBox="0 0 100 100">
-                  <circle cx="50" cy="50" r="45" fill="none" stroke="rgba(255,255,255,0.08)" strokeWidth="8" />
+                  <circle cx="50" cy="50" r="45" fill="none" stroke="rgba(15,23,42,0.08)" strokeWidth="8" />
                   <motion.circle
                     cx="50" cy="50" r="45" fill="none" strokeLinecap="round"
                     stroke="url(#focusGrad)" strokeWidth="8"
@@ -548,8 +548,8 @@ export default function StudentDashboardPage() {
                   </defs>
                 </svg>
                 <div className="text-center">
-                  <p className="font-mono text-4xl font-bold text-white tabular-nums">{mm}:{ss}</p>
-                  <p className="text-[11px] text-white/50">{focusMin} دقيقة</p>
+                  <p className="font-mono text-4xl font-bold text-slate-900 tabular-nums">{mm}:{ss}</p>
+                  <p className="text-[11px] text-slate-500">{focusMin} دقيقة</p>
                 </div>
               </div>
 
@@ -560,7 +560,7 @@ export default function StudentDashboardPage() {
                     disabled={running}
                     onClick={() => setFocusMin(m)}
                     className={`rounded-full px-3 py-1 text-xs ring-1 transition disabled:opacity-50
-                      ${focusMin === m ? 'bg-white text-[#0b1437] ring-white' : 'bg-white/5 text-white/70 ring-white/10 hover:bg-white/10'}`}
+                      ${focusMin === m ? 'bg-slate-900 text-white ring-slate-900' : 'bg-slate-50 text-slate-600 ring-slate-200 hover:bg-slate-100'}`}
                   >
                     {m} د
                   </button>
@@ -569,7 +569,7 @@ export default function StudentDashboardPage() {
 
               <Button
                 onClick={running ? stopFocus : startFocus}
-                className={`h-12 w-full rounded-2xl text-base font-bold shadow-lg
+                className={`h-12 w-full rounded-2xl text-base font-bold text-white shadow-lg
                   ${running
                     ? 'bg-gradient-to-l from-rose-500 to-orange-500 shadow-rose-500/30'
                     : 'bg-gradient-to-l from-violet-500 to-cyan-500 shadow-violet-500/30'}`}
