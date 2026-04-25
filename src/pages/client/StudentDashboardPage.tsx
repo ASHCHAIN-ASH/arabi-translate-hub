@@ -723,5 +723,6 @@ export default function StudentDashboardPage() {
 
       <SmartNotifications events={dash.events} />
     </div>
+    </ClientLayout>
   );
 }
