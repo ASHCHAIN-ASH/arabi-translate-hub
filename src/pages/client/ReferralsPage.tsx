@@ -48,10 +48,30 @@ function getNextTier(count: number) {
 }
 
 export default function ReferralsPage() {
+  const { user } = useAuth();
   const { code, shareUrl, loading: codeLoading } = useMyReferralCode();
   const { referrals, stats, loading } = useMyReferrals();
   const [copiedCode, setCopiedCode] = useState(false);
   const [copiedLink, setCopiedLink] = useState(false);
+  const [walletBalance, setWalletBalance] = useState(0);
+  const [withdrawals, setWithdrawals] = useState<WithdrawalRow[]>([]);
+  const [withdrawDialogOpen, setWithdrawDialogOpen] = useState(false);
+
+  const loadWalletAndWithdrawals = useCallback(async () => {
+    if (!user) return;
+    const [{ data: wallet }, { data: wRows }] = await Promise.all([
+      supabase.from('wallets' as any).select('balance').eq('user_id', user.id).maybeSingle(),
+      supabase
+        .from('withdrawal_requests' as any)
+        .select('id, amount, bank_name, iban, status, admin_notes, created_at, paid_at')
+        .eq('user_id', user.id)
+        .order('created_at', { ascending: false }),
+    ]);
+    setWalletBalance(Number((wallet as any)?.balance || 0));
+    setWithdrawals(((wRows as any) || []) as WithdrawalRow[]);
+  }, [user]);
+
+  useEffect(() => { loadWalletAndWithdrawals(); }, [loadWalletAndWithdrawals]);
 
   const currentTier = useMemo(() => getTier(stats.rewarded), [stats.rewarded]);
   const nextTier = useMemo(() => getNextTier(stats.rewarded), [stats.rewarded]);
