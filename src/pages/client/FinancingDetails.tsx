@@ -143,6 +143,14 @@ const FinancingDetails: React.FC = () => {
   const [receiptFile, setReceiptFile] = useState<File | null>(null);
   const [paying, setPaying] = useState(false);
 
+  // Live ticking clock for countdown to next installment
+  const [now, setNow] = useState(() => Date.now());
+  useEffect(() => {
+    const t = window.setInterval(() => setNow(Date.now()), 60_000);
+    return () => window.clearInterval(t);
+  }, []);
+
+
   const load = useCallback(async () => {
     if (!id || !user) return;
     setLoading(true);
