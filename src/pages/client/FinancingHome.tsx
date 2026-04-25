@@ -569,6 +569,12 @@ const FinancingHome: React.FC = () => {
             );
           })()}
         </div>
+
+        {/* Terms & conditions */}
+        <FinancingTerms />
+
+        {/* FAQ */}
+        <FinancingFAQ />
       </div>
     </ClientLayout>
   );
