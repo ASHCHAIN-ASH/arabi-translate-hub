@@ -501,7 +501,7 @@ const FinancingNew: React.FC = () => {
                       </div>
                     )}
 
-                    <div className="relative">
+                    <div className="relative group">
                       <Input
                         id="amount"
                         type="number"
@@ -510,11 +510,16 @@ const FinancingNew: React.FC = () => {
                         value={amount}
                         onChange={(e) => setAmount(Number(e.target.value))}
                         disabled={!!orderId || !!invoiceId}
-                        className="h-14 text-2xl font-bold pl-20 bg-background"
+                        className="h-14 sm:h-16 text-2xl sm:text-3xl font-extrabold pl-20 bg-background/90 backdrop-blur-sm tabular-nums tracking-tight ring-1 ring-primary/20 focus-visible:ring-primary"
                       />
-                      <span className="absolute left-4 top-1/2 -translate-y-1/2 text-sm font-semibold text-muted-foreground">
+                      <motion.span
+                        key={amount}
+                        initial={{ scale: 1.15, opacity: 0 }}
+                        animate={{ scale: 1, opacity: 1 }}
+                        className="absolute left-4 top-1/2 -translate-y-1/2 text-sm font-bold text-primary bg-primary/10 px-2 py-1 rounded-md"
+                      >
                         ر.س
-                      </span>
+                      </motion.span>
                     </div>
                     <p className="text-xs text-muted-foreground mt-2 flex items-center gap-1">
                       <AlertTriangle className="h-3 w-3" />
