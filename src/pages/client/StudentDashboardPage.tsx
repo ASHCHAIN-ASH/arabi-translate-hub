@@ -614,24 +614,25 @@ export default function StudentDashboardPage() {
           </Card>
 
           {/* Weekly achievement */}
-          <Card className="relative overflow-hidden border-white/10 bg-gradient-to-br from-amber-500/10 via-violet-500/10 to-cyan-500/10 backdrop-blur-xl">
-            <CardContent className="p-6">
+          <Card className="relative overflow-hidden border-amber-400/30 bg-gradient-to-br from-amber-500/25 via-orange-500/20 to-rose-500/15 backdrop-blur-xl shadow-lg shadow-amber-500/10">
+            <div className="pointer-events-none absolute -top-12 -right-12 h-40 w-40 rounded-full bg-amber-400/20 blur-3xl" />
+            <CardContent className="relative p-6">
               <div className="mb-3 flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-amber-400 to-orange-500 shadow-lg shadow-amber-500/40">
                 <Trophy className="h-7 w-7 text-white" />
               </div>
-              <h3 className="text-lg font-bold text-white">إنجاز الأسبوع</h3>
-              <p className="mt-1 text-xs text-white/60">
+              <h3 className="text-lg font-bold text-white drop-shadow">إنجاز الأسبوع</h3>
+              <p className="mt-1 text-sm leading-relaxed text-white/90">
                 أكمل {weeklyTarget} جلسات تركيز هذا الأسبوع للحصول على شارة الطالب الذهبي.
               </p>
               <div className="mt-4">
-                <div className="mb-1 flex items-center justify-between text-xs text-white/70">
+                <div className="mb-1.5 flex items-center justify-between text-sm font-medium text-white">
                   <span>التقدم</span>
-                  <span>{weeklyDone} / {weeklyTarget}</span>
+                  <span className="tabular-nums text-amber-200">{weeklyDone} / {weeklyTarget}</span>
                 </div>
-                <Progress value={(weeklyDone / weeklyTarget) * 100} className="h-2 bg-white/10" />
+                <Progress value={(weeklyDone / weeklyTarget) * 100} className="h-2.5 bg-white/15" />
               </div>
-              <div className="mt-4 flex items-center gap-2 text-xs text-amber-200">
-                <Star className="h-4 w-4" />
+              <div className="mt-4 flex items-center gap-2 text-sm font-semibold text-amber-100">
+                <Star className="h-4 w-4 fill-amber-300 text-amber-300" />
                 شارة الطالب الذهبي
               </div>
             </CardContent>
