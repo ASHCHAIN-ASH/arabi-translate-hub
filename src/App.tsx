@@ -603,11 +603,6 @@ const App = () => (
                 <AdminPayments />
               </SimpleProtectedRoute>
             } />
-            <Route path="/adminmaster/gamification" element={
-              <SimpleProtectedRoute adminOnly>
-                <AdminGamification />
-              </SimpleProtectedRoute>
-            } />
             <Route path="/adminmaster/student-activity" element={
               <SimpleProtectedRoute adminOnly>
                 <StudentActivityPage />
@@ -616,21 +611,6 @@ const App = () => (
             <Route path="/adminmaster/student-wallets" element={
               <SimpleProtectedRoute adminOnly>
                 <AdminStudentWalletsPage />
-              </SimpleProtectedRoute>
-            } />
-            <Route path="/adminmaster/reward-redemptions" element={
-              <SimpleProtectedRoute adminOnly>
-                <AdminRewardRedemptionsPage />
-              </SimpleProtectedRoute>
-            } />
-            <Route path="/adminmaster/reward-rules" element={
-              <SimpleProtectedRoute adminOnly>
-                <AdminRewardRulesPage />
-              </SimpleProtectedRoute>
-            } />
-            <Route path="/adminmaster/xp-conversion-report" element={
-              <SimpleProtectedRoute adminOnly>
-                <AdminXpConversionReport />
               </SimpleProtectedRoute>
             } />
             <Route path="/adminmaster/memberships" element={
