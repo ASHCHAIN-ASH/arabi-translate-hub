@@ -499,6 +499,36 @@ const FinancingHome: React.FC = () => {
                                   </div>
                                 </div>
 
+                                {/* شريط تقدم المرحلة */}
+                                <div className="mb-3 sm:mb-3.5" aria-label={`نسبة التقدم: ${progress.pct}%`}>
+                                  <div className="flex items-center justify-between mb-1.5 text-[10px] sm:text-[11px]">
+                                    <span className="font-semibold text-foreground/80 truncate">{progress.label}</span>
+                                    <span className="font-bold tabular-nums text-foreground/70 shrink-0 mr-2">{progress.pct}%</span>
+                                  </div>
+                                  <div
+                                    role="progressbar"
+                                    aria-valuenow={progress.pct}
+                                    aria-valuemin={0}
+                                    aria-valuemax={100}
+                                    className="relative h-1.5 sm:h-2 w-full rounded-full bg-muted overflow-hidden ring-1 ring-border/40"
+                                  >
+                                    <motion.div
+                                      initial={{ width: 0 }}
+                                      animate={{ width: `${progress.pct}%` }}
+                                      transition={{ duration: 0.8, ease: 'easeOut', delay: idx * 0.05 + 0.1 }}
+                                      className={`absolute inset-y-0 right-0 ${barClass} rounded-full shadow-sm`}
+                                    />
+                                    {!isTerminal && (
+                                      <motion.div
+                                        className="absolute inset-y-0 right-0 w-8 bg-gradient-to-l from-white/40 to-transparent rounded-full"
+                                        animate={{ x: ['-100%', '300%'] }}
+                                        transition={{ duration: 2.4, repeat: Infinity, ease: 'easeInOut', delay: 1 }}
+                                        style={{ width: `${Math.min(progress.pct, 30)}%` }}
+                                      />
+                                    )}
+                                  </div>
+                                </div>
+
                                 <div className="flex items-center justify-between text-[11px] sm:text-xs text-muted-foreground pt-2.5 sm:pt-3 border-t border-border/40">
                                   <span>{new Date(a.created_at).toLocaleDateString('en-GB')}</span>
                                   <span className="flex items-center gap-1 text-primary font-semibold group-hover:gap-2 transition-all">
