@@ -324,7 +324,7 @@ const FinancingHome: React.FC = () => {
                         return (
                           <button
                             key={t.key}
-                            onClick={() => setActiveTab(t.key as typeof activeTab)}
+                            onClick={() => handleTabChange(t.key as typeof activeTab)}
                             className={`relative flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 md:px-5 py-2 sm:py-2.5 rounded-xl text-xs sm:text-sm font-semibold transition-all duration-300 whitespace-nowrap group ${
                               isActive
                                 ? 'text-white'
