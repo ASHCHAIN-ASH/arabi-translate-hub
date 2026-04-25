@@ -188,14 +188,14 @@ function StatTile({ icon: Icon, label, value, color, suffix }: {
     <motion.div
       initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}
       whileHover={{ y: -4 }} transition={{ type: 'spring', stiffness: 220, damping: 22 }}
-      className="group relative overflow-hidden rounded-3xl bg-white/5 p-5 ring-1 ring-white/10 backdrop-blur-xl"
+      className="group relative overflow-hidden rounded-3xl bg-white p-5 ring-1 ring-slate-200 shadow-sm hover:shadow-md transition-shadow"
     >
-      <div className={`pointer-events-none absolute -inset-px rounded-3xl opacity-0 blur-xl transition group-hover:opacity-60 ${color}`} />
+      <div className={`pointer-events-none absolute -inset-px rounded-3xl opacity-0 blur-xl transition group-hover:opacity-30 ${color}`} />
       <div className="relative flex items-center justify-between">
         <div>
-          <p className="text-xs text-white/60">{label}</p>
-          <p className="mt-1 text-2xl font-bold text-white">
-            <Counter value={value} />{suffix && <span className="ms-1 text-sm text-white/60">{suffix}</span>}
+          <p className="text-xs font-medium text-slate-500">{label}</p>
+          <p className="mt-1 text-2xl font-bold text-slate-900">
+            <Counter value={value} />{suffix && <span className="ms-1 text-sm text-slate-500">{suffix}</span>}
           </p>
         </div>
         <div className={`flex h-12 w-12 items-center justify-center rounded-2xl ${color} text-white shadow-lg`}>
@@ -431,7 +431,7 @@ export default function StudentDashboardPage() {
               })}
               todayPreview={todayPreview}
             />
-            <Button variant="ghost" size="sm" onClick={() => setProfileOpen(true)} className="mt-3 w-full text-white/60 hover:bg-white/5 hover:text-white">
+            <Button variant="ghost" size="sm" onClick={() => setProfileOpen(true)} className="mt-3 w-full text-slate-600 hover:bg-slate-100 hover:text-slate-900">
               <UserRound className="me-2 h-4 w-4" /> تعديل بيانات البطاقة
             </Button>
           </motion.div>
@@ -458,21 +458,21 @@ export default function StudentDashboardPage() {
         {/* MIDDLE: schedule + focus */}
         <div className="mt-6 grid grid-cols-1 gap-6 lg:grid-cols-3">
           {/* Schedule */}
-          <Card className="border-white/10 bg-white/5 backdrop-blur-xl lg:col-span-2">
+          <Card className="border-slate-200 bg-white shadow-sm lg:col-span-2">
             <CardContent className="p-6">
               <div className="mb-5 flex items-center justify-between">
                 <div>
-                  <h3 className="text-lg font-bold text-white">جدول اليوم</h3>
-                  <p className="text-xs text-white/50">مواعيدك الدراسية مرتبة حسب الوقت</p>
+                  <h3 className="text-lg font-bold text-slate-900">جدول اليوم</h3>
+                  <p className="text-xs text-slate-500">مواعيدك الدراسية مرتبة حسب الوقت</p>
                 </div>
-                <CalendarDays className="h-5 w-5 text-white/50" />
+                <CalendarDays className="h-5 w-5 text-slate-400" />
               </div>
               <div className="space-y-3">
-                {dash.loading && <p className="text-sm text-white/50">جارٍ التحميل…</p>}
+                {dash.loading && <p className="text-sm text-slate-500">جارٍ التحميل…</p>}
                 {!dash.loading && dash.events.length === 0 && (
-                  <div className="rounded-2xl border border-dashed border-white/10 p-8 text-center">
-                    <p className="text-sm text-white/60">لا توجد مواعيد اليوم.</p>
-                    <Button onClick={() => setEventOpen(true)} variant="ghost" size="sm" className="mt-2 text-cyan-300 hover:bg-white/5 hover:text-cyan-200">
+                  <div className="rounded-2xl border border-dashed border-slate-300 p-8 text-center">
+                    <p className="text-sm text-slate-600">لا توجد مواعيد اليوم.</p>
+                    <Button onClick={() => setEventOpen(true)} variant="ghost" size="sm" className="mt-2 text-violet-600 hover:bg-violet-50 hover:text-violet-700">
                       <Plus className="me-1 h-4 w-4" /> أضف موعدًا
                     </Button>
                   </div>
@@ -481,9 +481,9 @@ export default function StudentDashboardPage() {
                   {dash.events.map((e, i) => {
                     const t = new Date(e.starts_at).toLocaleTimeString('ar-SA', { hour: '2-digit', minute: '2-digit' });
                     const palette =
-                      e.event_type === 'exam' ? 'from-amber-500/20 to-orange-500/20 ring-amber-400/30' :
-                      e.event_type === 'focus' ? 'from-violet-500/20 to-fuchsia-500/20 ring-violet-400/30' :
-                                                 'from-cyan-500/20 to-blue-500/20 ring-cyan-400/30';
+                      e.event_type === 'exam' ? 'from-amber-100 to-orange-100 ring-amber-300' :
+                      e.event_type === 'focus' ? 'from-violet-100 to-fuchsia-100 ring-violet-300' :
+                                                 'from-cyan-100 to-blue-100 ring-cyan-300';
                     const typeLabel = e.event_type === 'exam' ? 'اختبار' : e.event_type === 'focus' ? 'تركيز' : 'مذاكرة';
                     return (
                       <motion.div
@@ -494,18 +494,18 @@ export default function StudentDashboardPage() {
                       >
                         <div id={`event-${e.id}`} className={`flex items-center justify-between rounded-2xl bg-gradient-to-l ${palette} p-4 ring-1`}>
                           <div className="flex items-center gap-4">
-                            <div className="rounded-xl bg-black/30 px-3 py-2 font-mono text-sm text-white">{t}</div>
+                            <div className="rounded-xl bg-slate-900 px-3 py-2 font-mono text-sm text-white">{t}</div>
                             <div>
-                              <p className={`font-semibold ${e.is_done ? 'text-white/50 line-through' : 'text-white'}`}>{e.title}</p>
-                              <p className="text-xs text-white/60">{typeLabel}</p>
+                              <p className={`font-semibold ${e.is_done ? 'text-slate-400 line-through' : 'text-slate-900'}`}>{e.title}</p>
+                              <p className="text-xs text-slate-600">{typeLabel}</p>
                             </div>
                           </div>
                           <Button
                             size="sm" variant="ghost"
                             onClick={() => { if (!e.is_done) celebrate('small'); dash.toggleEventDone(e); }}
-                            className="text-white/80 hover:bg-white/10 hover:text-white"
+                            className="text-slate-700 hover:bg-white/60 hover:text-slate-900"
                           >
-                            {e.is_done ? <CheckCircle2 className="h-4 w-4 text-emerald-400" /> : <Play className="h-4 w-4" />}
+                            {e.is_done ? <CheckCircle2 className="h-4 w-4 text-emerald-600" /> : <Play className="h-4 w-4" />}
                           </Button>
                         </div>
                       </motion.div>
@@ -517,22 +517,22 @@ export default function StudentDashboardPage() {
           </Card>
 
           {/* Focus */}
-          <Card className="relative overflow-hidden border-white/10 bg-white/5 backdrop-blur-xl">
+          <Card className="relative overflow-hidden border-slate-200 bg-white shadow-sm">
             <div className={`pointer-events-none absolute inset-0 opacity-60 transition ${running ? 'animate-pulse' : ''}`}>
-              <div className="absolute -inset-10 bg-[radial-gradient(circle_at_center,rgba(139,92,246,0.25),transparent_70%)]" />
+              <div className="absolute -inset-10 bg-[radial-gradient(circle_at_center,rgba(139,92,246,0.12),transparent_70%)]" />
             </div>
             <CardContent className="relative p-6">
               <div className="mb-4 flex items-center justify-between">
                 <div>
-                  <h3 className="text-lg font-bold text-white">جلسة التركيز</h3>
-                  <p className="text-xs text-white/50">ابدأ مذاكرة بدون تشتيت</p>
+                  <h3 className="text-lg font-bold text-slate-900">جلسة التركيز</h3>
+                  <p className="text-xs text-slate-500">ابدأ مذاكرة بدون تشتيت</p>
                 </div>
-                <Timer className="h-5 w-5 text-white/50" />
+                <Timer className="h-5 w-5 text-slate-400" />
               </div>
 
               <div className="relative mx-auto my-6 grid h-44 w-44 place-items-center">
                 <svg className="absolute inset-0 -rotate-90" viewBox="0 0 100 100">
-                  <circle cx="50" cy="50" r="45" fill="none" stroke="rgba(255,255,255,0.08)" strokeWidth="8" />
+                  <circle cx="50" cy="50" r="45" fill="none" stroke="rgba(15,23,42,0.08)" strokeWidth="8" />
                   <motion.circle
                     cx="50" cy="50" r="45" fill="none" strokeLinecap="round"
                     stroke="url(#focusGrad)" strokeWidth="8"
@@ -548,8 +548,8 @@ export default function StudentDashboardPage() {
                   </defs>
                 </svg>
                 <div className="text-center">
-                  <p className="font-mono text-4xl font-bold text-white tabular-nums">{mm}:{ss}</p>
-                  <p className="text-[11px] text-white/50">{focusMin} دقيقة</p>
+                  <p className="font-mono text-4xl font-bold text-slate-900 tabular-nums">{mm}:{ss}</p>
+                  <p className="text-[11px] text-slate-500">{focusMin} دقيقة</p>
                 </div>
               </div>
 
@@ -560,7 +560,7 @@ export default function StudentDashboardPage() {
                     disabled={running}
                     onClick={() => setFocusMin(m)}
                     className={`rounded-full px-3 py-1 text-xs ring-1 transition disabled:opacity-50
-                      ${focusMin === m ? 'bg-white text-[#0b1437] ring-white' : 'bg-white/5 text-white/70 ring-white/10 hover:bg-white/10'}`}
+                      ${focusMin === m ? 'bg-slate-900 text-white ring-slate-900' : 'bg-slate-50 text-slate-600 ring-slate-200 hover:bg-slate-100'}`}
                   >
                     {m} د
                   </button>
@@ -569,7 +569,7 @@ export default function StudentDashboardPage() {
 
               <Button
                 onClick={running ? stopFocus : startFocus}
-                className={`h-12 w-full rounded-2xl text-base font-bold shadow-lg
+                className={`h-12 w-full rounded-2xl text-base font-bold text-white shadow-lg
                   ${running
                     ? 'bg-gradient-to-l from-rose-500 to-orange-500 shadow-rose-500/30'
                     : 'bg-gradient-to-l from-violet-500 to-cyan-500 shadow-violet-500/30'}`}
@@ -583,20 +583,20 @@ export default function StudentDashboardPage() {
 
         {/* BOTTOM: tasks + weekly */}
         <div className="mt-6 grid grid-cols-1 gap-6 lg:grid-cols-3">
-          <Card className="border-white/10 bg-white/5 backdrop-blur-xl lg:col-span-2">
+          <Card className="border-slate-200 bg-white shadow-sm lg:col-span-2">
             <CardContent className="p-6">
               <div className="mb-5 flex items-center justify-between">
                 <div>
-                  <h3 className="text-lg font-bold text-white">مهام اليوم</h3>
-                  <p className="text-xs text-white/50">أكمل المهام واحصد نقاط الخبرة</p>
+                  <h3 className="text-lg font-bold text-slate-900">مهام اليوم</h3>
+                  <p className="text-xs text-slate-500">أكمل المهام واحصد نقاط الخبرة</p>
                 </div>
-                <Button size="sm" variant="ghost" onClick={() => setTaskOpen(true)} className="text-cyan-300 hover:bg-white/5 hover:text-cyan-200">
+                <Button size="sm" variant="ghost" onClick={() => setTaskOpen(true)} className="text-violet-600 hover:bg-violet-50 hover:text-violet-700">
                   <Plus className="me-1 h-4 w-4" /> مهمة جديدة
                 </Button>
               </div>
               <div className="space-y-2">
                 {dash.tasks.length === 0 && !dash.loading && (
-                  <p className="rounded-2xl border border-dashed border-white/10 p-6 text-center text-sm text-white/60">
+                  <p className="rounded-2xl border border-dashed border-slate-300 p-6 text-center text-sm text-slate-600">
                     لا توجد مهام بعد. ابدأ بإضافة أول مهمة.
                   </p>
                 )}
@@ -609,15 +609,15 @@ export default function StudentDashboardPage() {
                     >
                       <button
                         onClick={() => { if (!t.is_done) celebrate('small'); dash.toggleTask(t); }}
-                        className="group flex w-full items-center justify-between rounded-2xl bg-white/5 p-4 ring-1 ring-white/10 transition hover:bg-white/10"
+                        className="group flex w-full items-center justify-between rounded-2xl bg-slate-50 p-4 ring-1 ring-slate-200 transition hover:bg-slate-100"
                       >
                         <div className="flex items-center gap-3">
                           {t.is_done
-                            ? <CheckCircle2 className="h-5 w-5 text-emerald-400" />
-                            : <Circle className="h-5 w-5 text-white/40 group-hover:text-white/70" />}
-                          <span className={`text-sm ${t.is_done ? 'text-white/40 line-through' : 'text-white'}`}>{t.title}</span>
+                            ? <CheckCircle2 className="h-5 w-5 text-emerald-600" />
+                            : <Circle className="h-5 w-5 text-slate-400 group-hover:text-slate-600" />}
+                          <span className={`text-sm ${t.is_done ? 'text-slate-400 line-through' : 'text-slate-900'}`}>{t.title}</span>
                         </div>
-                        <Badge className={`border-0 ${t.is_done ? 'bg-emerald-500/20 text-emerald-300' : 'bg-violet-500/20 text-violet-200'}`}>
+                        <Badge className={`border-0 ${t.is_done ? 'bg-emerald-100 text-emerald-700' : 'bg-violet-100 text-violet-700'}`}>
                           +{t.xp_reward} XP
                         </Badge>
                       </button>
