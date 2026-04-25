@@ -1333,19 +1333,26 @@ const FinancingNew: React.FC = () => {
                   })}
                 </div>
 
-                <div className="flex justify-between pt-2">
-                  <Button variant="outline" onClick={() => setStep(1)} size="lg">
-                    <ArrowRight className="ml-2 h-4 w-4" /> السابق
-                  </Button>
-                  <Button
-                    size="lg"
-                    onClick={() => validateStep2() && setStep(3)}
-                    className="bg-gradient-to-l from-primary to-primary/80 shadow-lg"
-                  >
-                    التالي: الإقرارات
-                    <ArrowRight className="mr-2 h-4 w-4 rotate-180" />
-                  </Button>
-                </div>
+                <StepNavBar
+                  savedAt={savedAt}
+                  savingDraft={savingDraft}
+                  onSaveDraft={saveDraftManually}
+                  leftButton={
+                    <Button variant="outline" onClick={() => goToStep(1)} size="lg">
+                      <ArrowRight className="ml-2 h-4 w-4" /> السابق
+                    </Button>
+                  }
+                  rightButton={
+                    <Button
+                      size="lg"
+                      onClick={() => validateStep2() && goToStep(3)}
+                      className="bg-gradient-to-l from-primary to-primary/80 shadow-lg"
+                    >
+                      التالي: الإقرارات
+                      <ArrowRight className="mr-2 h-4 w-4 rotate-180" />
+                    </Button>
+                  }
+                />
               </Card>
             </motion.div>
           )}
