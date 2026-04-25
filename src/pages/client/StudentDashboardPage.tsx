@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { QRCodeSVG } from 'qrcode.react';
@@ -36,6 +36,7 @@ import LevelUpOverlay from '@/components/student/rpg/LevelUpOverlay';
 import AchievementsPanel from '@/components/student/rpg/AchievementsPanel';
 import PerformanceAnalytics from '@/components/student/rpg/PerformanceAnalytics';
 import BossChallengeCard from '@/components/student/rpg/BossChallengeCard';
+import BossRewardOverlay from '@/components/student/rpg/BossRewardOverlay';
 
 /* =========================================================
    Animated counter
@@ -289,6 +290,42 @@ export default function StudentDashboardPage() {
       r => r.source_type === 'boss_challenge' && r.reward_type === 'weekly_boss' && r.source_key === currentWeekKey,
     );
   }, [rewardEvents.data, currentWeekKey]);
+
+  // Boss reward overlay state
+  const [bossOverlay, setBossOverlay] = useState<{
+    open: boolean;
+    phase: 'loading' | 'success';
+    xp?: number;
+    points?: number;
+    newXp?: number;
+    level?: number;
+    weekKey?: string;
+    alreadyClaimed?: boolean;
+  }>({ open: false, phase: 'loading' });
+
+  const handleClaimBoss = useCallback(() => {
+    // Prevent duplicate clicks: in-flight, overlay open, or already claimed this week
+    if (claimBoss.isPending || bossOverlay.open || bossClaimed) return;
+    setBossOverlay({ open: true, phase: 'loading' });
+    claimBoss.mutate(undefined, {
+      onSuccess: (data) => {
+        setBossOverlay({
+          open: true,
+          phase: 'success',
+          xp: data?.xp_awarded ?? 0,
+          points: data?.points_awarded ?? 0,
+          newXp: (data as any)?.new_xp,
+          level: (data as any)?.level,
+          weekKey: data?.week_key,
+          alreadyClaimed: data?.alreadyClaimed,
+        });
+      },
+      onError: () => {
+        // Hook already shows error toast; just close overlay
+        setBossOverlay({ open: false, phase: 'loading' });
+      },
+    });
+  }, [claimBoss, bossOverlay.open, bossClaimed]);
 
   const profile = dash.profile;
   const xp = profile?.xp ?? 0;
@@ -752,8 +789,8 @@ export default function StudentDashboardPage() {
             tasks={dash.tasks}
             sessions={dash.sessions}
             claimed={bossClaimed}
-            loading={claimBoss.isPending}
-            onClaimReward={() => claimBoss.mutate()}
+            loading={claimBoss.isPending || bossOverlay.open}
+            onClaimReward={handleClaimBoss}
           />
         </div>
 
@@ -857,6 +894,18 @@ export default function StudentDashboardPage() {
         onStartFocus={() => { if (!running) startFocus(); }}
         onAddTask={() => setTaskOpen(true)}
         onLiveUpdate={() => dash.refresh()}
+      />
+
+      <BossRewardOverlay
+        open={bossOverlay.open}
+        phase={bossOverlay.phase}
+        xpAwarded={bossOverlay.xp}
+        pointsAwarded={bossOverlay.points}
+        newXp={bossOverlay.newXp}
+        level={bossOverlay.level}
+        weekKey={bossOverlay.weekKey}
+        alreadyClaimed={bossOverlay.alreadyClaimed}
+        onClose={() => setBossOverlay(s => ({ ...s, open: false }))}
       />
     </div>
     </ClientLayout>
