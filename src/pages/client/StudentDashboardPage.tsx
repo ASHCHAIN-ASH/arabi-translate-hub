@@ -485,9 +485,26 @@ export default function StudentDashboardPage() {
 
             {/* Quick actions */}
             <div className="flex w-full flex-wrap items-center gap-2 lg:w-auto lg:flex-nowrap">
-              <StartDayButton onClick={() => {
+              <StartDayButton onClick={async () => {
                 celebrate('big');
-                toast.success('بداية موفقة! 🎯 ركّز على أول مهمة في جدولك');
+                try {
+                  const { data, error } = await supabase.functions.invoke('start_student_day');
+                  if (error) throw error;
+                  const pts = (data as any)?.points_awarded ?? 0;
+                  if (pts > 0) {
+                    toast.success(`+${pts} نقاط 🎉`, {
+                      description: `حصلت على ${pts} نقاط مكافأة بداية اليوم — استمر!`,
+                    });
+                  } else {
+                    toast.success('بداية موفقة! 🎯 ركّز على أول مهمة في جدولك', {
+                      description: 'سجّلت بدايتك اليوم بالفعل — لا مكافأة إضافية',
+                    });
+                  }
+                  dash.refresh();
+                } catch (e: any) {
+                  console.error('start_student_day failed', e);
+                  toast.error('تعذّر تسجيل بداية اليوم', { description: e?.message ?? 'حاول مجددًا' });
+                }
                 const firstEvent = dash.events.find(e => !e.is_done);
                 if (firstEvent) {
                   document.getElementById(`event-${firstEvent.id}`)?.scrollIntoView({ behavior: 'smooth', block: 'center' });
