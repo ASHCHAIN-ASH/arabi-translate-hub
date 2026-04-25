@@ -13,6 +13,7 @@ type Notif = {
   title: string;
   body: string;
   cta?: { label: string; onClick: () => void };
+  progress?: { pct: number; label?: string };
 };
 
 function buildEventNotifs(events: StudentEvent[]): Notif[] {
@@ -87,6 +88,7 @@ export default function SmartNotifications({
           title: `⚡ على وشك المستوى ${next.lvl}!`,
           body: `تبقّى ${toNext} XP فقط لفتح ${next.name}.`,
           cta: onStartFocus ? { label: 'اكسب XP الآن', onClick: onStartFocus } : undefined,
+          progress: { pct: Math.round(pct), label: `${Math.round(pct)}%` },
         });
       }
     }
@@ -284,14 +286,36 @@ export default function SmartNotifications({
                 <div className="min-w-0 flex-1">
                   <p className="text-sm font-bold text-white drop-shadow-sm">{n.title}</p>
                   <p className="mt-0.5 text-xs leading-relaxed text-white/85">{n.body}</p>
-                  {n.cta && (
-                    <button
-                      onClick={() => { n.cta!.onClick(); setDismissed(s => new Set(s).add(n.id)); }}
-                      className="mt-2 inline-flex items-center gap-1.5 rounded-lg bg-white px-3 py-1.5 text-xs font-bold text-slate-900 shadow-md transition hover:scale-[1.03] hover:shadow-lg active:scale-95"
-                    >
-                      {n.cta.label}
-                      <span aria-hidden>←</span>
-                    </button>
+
+                  {/* Inline progress + CTA row */}
+                  {(n.progress || n.cta) && (
+                    <div className="mt-2 flex items-center gap-2">
+                      {n.progress && (
+                        <div className="min-w-0 flex-1">
+                          <div className="mb-1 flex items-center justify-between text-[10px] font-bold text-white/90">
+                            <span>التقدم</span>
+                            <span className="tabular-nums">{n.progress.label ?? `${Math.round(n.progress.pct)}%`}</span>
+                          </div>
+                          <div className="h-1.5 overflow-hidden rounded-full bg-white/20 ring-1 ring-white/20">
+                            <motion.div
+                              initial={{ width: 0 }}
+                              animate={{ width: `${Math.max(0, Math.min(100, n.progress.pct))}%` }}
+                              transition={{ duration: 1.1, ease: 'easeOut' }}
+                              className="h-full rounded-full bg-gradient-to-l from-yellow-200 via-white to-yellow-100 shadow-[0_0_8px_rgba(255,255,255,0.6)]"
+                            />
+                          </div>
+                        </div>
+                      )}
+                      {n.cta && (
+                        <button
+                          onClick={() => { n.cta!.onClick(); setDismissed(s => new Set(s).add(n.id)); }}
+                          className="shrink-0 inline-flex items-center gap-1.5 rounded-lg bg-white px-3 py-1.5 text-xs font-bold text-slate-900 shadow-md transition hover:scale-[1.03] hover:shadow-lg active:scale-95"
+                        >
+                          {n.cta.label}
+                          <span aria-hidden>←</span>
+                        </button>
+                      )}
+                    </div>
                   )}
                 </div>
                 <button
