@@ -65,23 +65,50 @@ export default function ReferralsPage() {
   const [copiedLink, setCopiedLink] = useState(false);
   const [walletBalance, setWalletBalance] = useState(0);
   const [withdrawals, setWithdrawals] = useState<WithdrawalRow[]>([]);
+  const [walletTxs, setWalletTxs] = useState<WalletTxRow[]>([]);
   const [withdrawDialogOpen, setWithdrawDialogOpen] = useState(false);
 
   const loadWalletAndWithdrawals = useCallback(async () => {
     if (!user) return;
-    const [{ data: wallet }, { data: wRows }] = await Promise.all([
+    const [{ data: wallet }, { data: wRows }, { data: txRows }] = await Promise.all([
       supabase.from('wallets' as any).select('balance').eq('user_id', user.id).maybeSingle(),
       supabase
         .from('withdrawal_requests' as any)
         .select('id, amount, bank_name, iban, status, admin_notes, created_at, paid_at')
         .eq('user_id', user.id)
         .order('created_at', { ascending: false }),
+      supabase
+        .from('wallet_transactions' as any)
+        .select('id, type, amount, description, reference_type, balance_after, created_at')
+        .eq('user_id', user.id)
+        .in('reference_type', ['referral_commission', 'withdrawal_request', 'withdrawal_refund'])
+        .order('created_at', { ascending: false })
+        .limit(50),
     ]);
     setWalletBalance(Number((wallet as any)?.balance || 0));
     setWithdrawals(((wRows as any) || []) as WithdrawalRow[]);
+    setWalletTxs(((txRows as any) || []) as WalletTxRow[]);
   }, [user]);
 
   useEffect(() => { loadWalletAndWithdrawals(); }, [loadWalletAndWithdrawals]);
+
+  // Realtime: تحديث فوري عند أي تغيير في المحفظة أو السحوبات
+  useEffect(() => {
+    if (!user) return;
+    const channel = supabase
+      .channel('referrals-wallet-' + user.id)
+      .on('postgres_changes',
+        { event: '*', schema: 'public', table: 'wallet_transactions', filter: `user_id=eq.${user.id}` },
+        () => loadWalletAndWithdrawals())
+      .on('postgres_changes',
+        { event: '*', schema: 'public', table: 'wallets', filter: `user_id=eq.${user.id}` },
+        () => loadWalletAndWithdrawals())
+      .on('postgres_changes',
+        { event: '*', schema: 'public', table: 'withdrawal_requests', filter: `user_id=eq.${user.id}` },
+        () => loadWalletAndWithdrawals())
+      .subscribe();
+    return () => { supabase.removeChannel(channel); };
+  }, [user, loadWalletAndWithdrawals]);
 
   const currentTier = useMemo(() => getTier(stats.rewarded), [stats.rewarded]);
   const nextTier = useMemo(() => getNextTier(stats.rewarded), [stats.rewarded]);
