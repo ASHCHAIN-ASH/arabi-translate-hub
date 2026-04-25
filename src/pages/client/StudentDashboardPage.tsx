@@ -474,7 +474,7 @@ export default function StudentDashboardPage() {
                         initial={{ opacity: 0, x: 24 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -24 }}
                         transition={{ delay: i * 0.05 }}
                       >
-                        <div className={`flex items-center justify-between rounded-2xl bg-gradient-to-l ${palette} p-4 ring-1`}>
+                        <div id={`event-${e.id}`} className={`flex items-center justify-between rounded-2xl bg-gradient-to-l ${palette} p-4 ring-1`}>
                           <div className="flex items-center gap-4">
                             <div className="rounded-xl bg-black/30 px-3 py-2 font-mono text-sm text-white">{t}</div>
                             <div>
