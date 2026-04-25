@@ -695,6 +695,8 @@ export default function StudentDashboardPage() {
           </DialogFooter>
         </DialogContent>
       </Dialog>
+
+      <SmartNotifications events={dash.events} />
     </div>
   );
 }
