@@ -6679,6 +6679,57 @@ export type Database = {
         }
         Relationships: []
       }
+      student_notifications_log: {
+        Row: {
+          channel: string
+          created_at: string
+          dedupe_key: string
+          error: string | null
+          id: string
+          message: string | null
+          notification_type: string
+          phone: string | null
+          reference_id: string | null
+          reference_kind: string | null
+          scheduled_for: string | null
+          sent_at: string | null
+          status: string
+          user_id: string
+        }
+        Insert: {
+          channel?: string
+          created_at?: string
+          dedupe_key: string
+          error?: string | null
+          id?: string
+          message?: string | null
+          notification_type: string
+          phone?: string | null
+          reference_id?: string | null
+          reference_kind?: string | null
+          scheduled_for?: string | null
+          sent_at?: string | null
+          status?: string
+          user_id: string
+        }
+        Update: {
+          channel?: string
+          created_at?: string
+          dedupe_key?: string
+          error?: string | null
+          id?: string
+          message?: string | null
+          notification_type?: string
+          phone?: string | null
+          reference_id?: string | null
+          reference_kind?: string | null
+          scheduled_for?: string | null
+          sent_at?: string | null
+          status?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       student_profiles: {
         Row: {
           created_at: string
@@ -6693,6 +6744,8 @@ export type Database = {
           university: string | null
           updated_at: string
           user_id: string
+          whatsapp_notifications_enabled: boolean
+          whatsapp_phone_override: string | null
           xp: number
         }
         Insert: {
@@ -6708,6 +6761,8 @@ export type Database = {
           university?: string | null
           updated_at?: string
           user_id: string
+          whatsapp_notifications_enabled?: boolean
+          whatsapp_phone_override?: string | null
           xp?: number
         }
         Update: {
@@ -6723,6 +6778,8 @@ export type Database = {
           university?: string | null
           updated_at?: string
           user_id?: string
+          whatsapp_notifications_enabled?: boolean
+          whatsapp_phone_override?: string | null
           xp?: number
         }
         Relationships: []
@@ -9338,6 +9395,17 @@ export type Database = {
           source_queue: string
         }
         Returns: number
+      }
+      notify_student_whatsapp: {
+        Args: {
+          _dedupe_key?: string
+          _message: string
+          _reference_id?: string
+          _reference_kind?: string
+          _type: string
+          _user_id: string
+        }
+        Returns: undefined
       }
       notify_whatsapp_event: {
         Args: {
