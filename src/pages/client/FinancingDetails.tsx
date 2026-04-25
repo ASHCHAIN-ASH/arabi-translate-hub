@@ -670,11 +670,11 @@ const FinancingDetails: React.FC = () => {
 
                 {canPay && (
                   <Tabs value={paymentTab} onValueChange={(v: any) => setPaymentTab(v)}>
-                    <TabsList className="w-full grid grid-cols-2 mb-4">
-                      <TabsTrigger value="wallet" className="gap-2">
+                    <TabsList className="w-full grid grid-cols-2 mb-4 h-auto">
+                      <TabsTrigger value="wallet" className="gap-2 py-2.5 sm:py-2 text-xs sm:text-sm">
                         <Wallet className="h-4 w-4" /> المحفظة الرقمية
                       </TabsTrigger>
-                      <TabsTrigger value="bank_transfer" className="gap-2">
+                      <TabsTrigger value="bank_transfer" className="gap-2 py-2.5 sm:py-2 text-xs sm:text-sm">
                         <Building2 className="h-4 w-4" /> تحويل بنكي
                       </TabsTrigger>
                     </TabsList>
