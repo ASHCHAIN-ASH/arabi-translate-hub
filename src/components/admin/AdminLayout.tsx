@@ -11,7 +11,7 @@ import {
   CreditCard, HelpCircle, Settings, LogOut, Shield, Bell, Menu,
   Activity, Mail, Briefcase, Clock, Receipt, ChevronDown,
   BarChart3, Package, Ticket, UserPlus, Star, Wallet, Gift, Trophy, BookOpen, Inbox, MessageCircle,
-  TrendingUp, Sparkles, FlaskConical, Target
+  TrendingUp, Sparkles, FlaskConical, Target, History
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import ChatFloatingButton from '@/components/chat/ChatFloatingButton';
@@ -133,6 +133,7 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
       label: 'إعدادات النظام',
       items: [
         { name: 'ساعات العمل', href: '/adminmaster/working-hours', icon: Clock },
+        { name: 'سجل التغييرات', href: '/adminmaster/changelog', icon: History },
       ]
     },
   ];
