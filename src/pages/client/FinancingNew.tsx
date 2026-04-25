@@ -47,6 +47,7 @@ import FinancingLiveSummary from '@/components/financing/FinancingLiveSummary';
 import AnimatedField from '@/components/financing/AnimatedField';
 import SectionHeader from '@/components/financing/SectionHeader';
 import FinancingCalculator from '@/components/financing/FinancingCalculator';
+import StepNavBar from '@/components/financing/StepNavBar';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
