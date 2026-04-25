@@ -632,10 +632,11 @@ export default function StudentDashboardPage() {
           />
         </div>
 
-        {/* Study Wallet + 7-Day Challenge */}
-        <div className="mt-6 grid grid-cols-1 gap-6 lg:grid-cols-2">
+        {/* Study Wallet + 7-Day Challenge + Viral Referral */}
+        <div className="mt-6 grid grid-cols-1 gap-6 lg:grid-cols-3">
           <StudyWalletCard userId={user?.id} />
           <StudyChallengeCard userId={user?.id} />
+          <ViralReferralCard userId={user?.id} />
         </div>
 
 
