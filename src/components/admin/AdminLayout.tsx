@@ -11,7 +11,7 @@ import {
   CreditCard, HelpCircle, Settings, LogOut, Shield, Bell, Menu,
   Activity, Mail, Briefcase, Clock, Receipt, ChevronDown,
   BarChart3, Package, Ticket, UserPlus, Star, Wallet, Gift, Trophy, BookOpen, Inbox, MessageCircle,
-  TrendingUp, Sparkles, FlaskConical, Target, History
+  TrendingUp, Sparkles, FlaskConical, Target, History, Banknote
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import ChatFloatingButton from '@/components/chat/ChatFloatingButton';
@@ -80,6 +80,7 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
         { name: 'المعاملات الداخلية', href: '/adminmaster/transactions', icon: CreditCard },
         { name: 'بوابة المدفوعات', href: '/adminmaster/payments', icon: CreditCard },
         { name: 'المحافظ الرقمية', href: '/adminmaster/wallets', icon: Wallet },
+        { name: 'طلبات السحب', href: '/adminmaster/withdrawals', icon: Banknote },
         { name: 'Master PayLater', href: '/adminmaster/financing', icon: Wallet },
       ]
     },

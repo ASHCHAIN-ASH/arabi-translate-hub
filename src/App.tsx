@@ -105,6 +105,7 @@ import AddUser from "./pages/admin/AddUser";
 import AdminWorkingHours from "./pages/admin/AdminWorkingHours";
 import AdminChangelog from "./pages/admin/AdminChangelog";
 import AdminWallets from "./pages/admin/AdminWallets";
+import AdminWithdrawals from "./pages/admin/AdminWithdrawals";
 import AdminPayments from "./pages/admin/AdminPayments";
 
 import AdminGrowthAnalytics from "./pages/admin/AdminGrowthAnalytics";
@@ -596,6 +597,11 @@ const App = () => (
             <Route path="/adminmaster/wallets" element={
               <SimpleProtectedRoute adminOnly>
                 <AdminWallets />
+              </SimpleProtectedRoute>
+            } />
+            <Route path="/adminmaster/withdrawals" element={
+              <SimpleProtectedRoute adminOnly>
+                <AdminWithdrawals />
               </SimpleProtectedRoute>
             } />
             <Route path="/adminmaster/payments" element={
