@@ -53,7 +53,11 @@ const AnimatedField: React.FC<AnimatedFieldProps> = ({
             <Icon className="h-3.5 w-3.5" />
           </span>
           <span>{label}</span>
-          {required && <span className="text-rose-500 text-[10px]">*</span>}
+          {required && (
+            <span className="inline-flex items-center gap-1 text-[9px] font-bold text-rose-600 bg-rose-500/10 ring-1 ring-rose-500/30 px-1.5 py-0.5 rounded-md">
+              مطلوب
+            </span>
+          )}
         </Label>
         {valid && (
           <motion.span
@@ -86,9 +90,18 @@ const AnimatedField: React.FC<AnimatedFieldProps> = ({
       >
         {children}
       </div>
-      {hint && !invalid && (
+      {invalid && errorMessage ? (
+        <motion.p
+          initial={{ opacity: 0, y: -4 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="text-[11px] font-medium text-rose-600 mt-1.5 pr-1 flex items-center gap-1"
+        >
+          <AlertCircle className="h-3 w-3 shrink-0" />
+          <span>{errorMessage}</span>
+        </motion.p>
+      ) : hint ? (
         <p className="text-[10px] text-muted-foreground mt-1 pr-1">{hint}</p>
-      )}
+      ) : null}
     </motion.div>
   );
 };
