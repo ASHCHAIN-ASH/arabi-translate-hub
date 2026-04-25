@@ -588,6 +588,90 @@ export default function ReferralsPage() {
             </Card>
           </TabsContent>
 
+          {/* Wallet transactions (commissions + withdrawals) */}
+          <TabsContent value="transactions" className="mt-0">
+            <Card>
+              <CardContent className="p-5">
+                <div className="flex items-center justify-between mb-4 flex-wrap gap-2">
+                  <h3 className="text-lg font-bold flex items-center gap-2">
+                    <Wallet className="h-5 w-5 text-primary" />
+                    حركات المحفظة (عمولات وسحوبات)
+                    <Badge variant="secondary">{walletTxs.length}</Badge>
+                  </h3>
+                  <div className="text-xs text-muted-foreground">
+                    الرصيد الحالي: <strong className="text-foreground">{walletBalance.toLocaleString('ar-SA')} ر.س</strong>
+                  </div>
+                </div>
+
+                {walletTxs.length === 0 ? (
+                  <div className="text-center py-12">
+                    <div className="inline-flex h-16 w-16 items-center justify-center rounded-2xl bg-muted mb-3">
+                      <Wallet className="h-8 w-8 text-muted-foreground" />
+                    </div>
+                    <p className="font-bold mb-1">لا توجد حركات بعد</p>
+                    <p className="text-sm text-muted-foreground">
+                      ستظهر هنا عمولات الإحالة المُودَعة وطلبات السحب فور حدوثها
+                    </p>
+                  </div>
+                ) : (
+                  <div className="space-y-2">
+                    {walletTxs.map((t, i) => {
+                      const isDeposit = t.type === 'deposit';
+                      const isCommission = t.reference_type === 'referral_commission';
+                      const isWithdrawHold = t.reference_type === 'withdrawal_request';
+                      const isRefund = t.reference_type === 'withdrawal_refund';
+                      const meta = isCommission
+                        ? { label: 'عمولة إحالة', color: 'bg-emerald-500/10 text-emerald-700 border-emerald-200', icon: Gift }
+                        : isWithdrawHold
+                        ? { label: 'طلب سحب', color: 'bg-amber-500/10 text-amber-700 border-amber-200', icon: Banknote }
+                        : isRefund
+                        ? { label: 'استرداد سحب', color: 'bg-blue-500/10 text-blue-700 border-blue-200', icon: ArrowUpRight }
+                        : { label: t.type, color: 'bg-muted text-muted-foreground border-border', icon: Wallet };
+                      const MIcon = meta.icon;
+                      return (
+                        <motion.div
+                          key={t.id}
+                          initial={{ opacity: 0, x: -10 }}
+                          animate={{ opacity: 1, x: 0 }}
+                          transition={{ delay: i * 0.03 }}
+                          className="flex items-center gap-3 p-3.5 rounded-xl border bg-card hover:bg-accent/30 transition-colors"
+                        >
+                          <div className={cn('h-11 w-11 rounded-xl flex items-center justify-center shrink-0 border', meta.color)}>
+                            <MIcon className="h-5 w-5" />
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <div className="font-medium text-sm truncate">{t.description || meta.label}</div>
+                            <div className="text-[11px] text-muted-foreground flex items-center gap-1 mt-0.5">
+                              <Calendar className="w-3 h-3" />
+                              {new Date(t.created_at).toLocaleString('ar-SA')}
+                              {t.balance_after !== null && (
+                                <>
+                                  <span>•</span>
+                                  <span>الرصيد بعد: {Number(t.balance_after).toLocaleString('ar-SA')} ر.س</span>
+                                </>
+                              )}
+                            </div>
+                          </div>
+                          <div className="text-left shrink-0">
+                            <div className={cn(
+                              'font-black text-base',
+                              isDeposit ? 'text-emerald-600' : 'text-rose-600'
+                            )}>
+                              {isDeposit ? '+' : '-'}{Number(t.amount).toLocaleString('ar-SA')} ر.س
+                            </div>
+                            <Badge variant="outline" className={cn('text-[9px] mt-0.5', meta.color)}>
+                              {meta.label}
+                            </Badge>
+                          </div>
+                        </motion.div>
+                      );
+                    })}
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+          </TabsContent>
+
           {/* Withdrawals list */}
           <TabsContent value="withdrawals" className="mt-0">
             <Card>
