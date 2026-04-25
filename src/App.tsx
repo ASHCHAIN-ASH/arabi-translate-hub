@@ -106,8 +106,6 @@ import AdminWorkingHours from "./pages/admin/AdminWorkingHours";
 import AdminChangelog from "./pages/admin/AdminChangelog";
 import AdminWallets from "./pages/admin/AdminWallets";
 import AdminPayments from "./pages/admin/AdminPayments";
-import AdminGamification from "./pages/admin/AdminGamification";
-import AdminXpConversionReport from "./pages/admin/AdminXpConversionReport";
 
 import AdminGrowthAnalytics from "./pages/admin/AdminGrowthAnalytics";
 import AdminGrowthAutomation from "./pages/admin/AdminGrowthAutomation";
