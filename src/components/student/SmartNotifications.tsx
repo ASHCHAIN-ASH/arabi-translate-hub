@@ -88,6 +88,7 @@ export default function SmartNotifications({
           title: `⚡ على وشك المستوى ${next.lvl}!`,
           body: `تبقّى ${toNext} XP فقط لفتح ${next.name}.`,
           cta: onStartFocus ? { label: 'اكسب XP الآن', onClick: onStartFocus } : undefined,
+          progress: { pct: Math.round(pct), label: `${Math.round(pct)}%` },
         });
       }
     }
