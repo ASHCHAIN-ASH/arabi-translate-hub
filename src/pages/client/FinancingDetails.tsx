@@ -992,6 +992,54 @@ const FinancingDetails: React.FC = () => {
                 </div>
               </div>
 
+              {/* عدّ تنازلي للقسط القادم */}
+              {nextDue && (() => {
+                const dueMs = new Date(nextDue.due_date).setHours(0, 0, 0, 0);
+                const diffMs = dueMs - now;
+                const dayMs = 86_400_000;
+                const totalDays = Math.floor(Math.abs(diffMs) / dayMs);
+                const totalHours = Math.floor((Math.abs(diffMs) % dayMs) / 3_600_000);
+                const isOverdueNext = diffMs < 0;
+                const isUrgent = !isOverdueNext && diffMs <= 3 * dayMs;
+                const tone = isOverdueNext
+                  ? { bg: 'from-rose-500/15 via-rose-500/5 to-transparent', ring: 'ring-rose-500/30', text: 'text-rose-700 dark:text-rose-300', label: 'متأخر عن السداد بـ', icon: AlertCircle, pulse: 'animate-pulse' }
+                  : isUrgent
+                  ? { bg: 'from-amber-500/15 via-amber-500/5 to-transparent', ring: 'ring-amber-500/40', text: 'text-amber-700 dark:text-amber-300', label: 'متبقي على القسط القادم', icon: Clock3, pulse: 'animate-pulse' }
+                  : { bg: 'from-primary/15 via-primary/5 to-transparent', ring: 'ring-primary/30', text: 'text-primary', label: 'متبقي على القسط القادم', icon: Calendar, pulse: '' };
+                const ToneIcon = tone.icon;
+                const dayWord = totalDays === 1 ? 'يوم' : totalDays === 2 ? 'يومان' : totalDays >= 3 && totalDays <= 10 ? 'أيام' : 'يومًا';
+                const hourWord = totalHours === 1 ? 'ساعة' : totalHours === 2 ? 'ساعتان' : totalHours >= 3 && totalHours <= 10 ? 'ساعات' : 'ساعة';
+                return (
+                  <div className={`mb-4 rounded-xl bg-gradient-to-l ${tone.bg} ring-1 ${tone.ring} p-3 sm:p-4`} role="status" aria-live="polite">
+                    <div className="flex items-center justify-between gap-3 mb-2.5">
+                      <div className={`flex items-center gap-2 text-xs sm:text-sm font-semibold ${tone.text}`}>
+                        <ToneIcon className={`h-4 w-4 ${tone.pulse}`} aria-hidden="true" />
+                        <span>{tone.label}</span>
+                      </div>
+                      <Badge variant="outline" className="text-[10px] sm:text-[11px] tabular-nums border-current">
+                        {fmt(Number(nextDue.amount))} ر.س
+                      </Badge>
+                    </div>
+                    <div className="grid grid-cols-2 gap-2 sm:gap-3">
+                      <div className="rounded-lg bg-background/60 backdrop-blur-sm ring-1 ring-border/40 p-2.5 sm:p-3 text-center">
+                        <div className={`text-2xl sm:text-3xl font-extrabold tabular-nums ${tone.text}`}>{totalDays}</div>
+                        <div className="text-[10px] sm:text-[11px] text-muted-foreground mt-0.5">{dayWord}</div>
+                      </div>
+                      <div className="rounded-lg bg-background/60 backdrop-blur-sm ring-1 ring-border/40 p-2.5 sm:p-3 text-center">
+                        <div className={`text-2xl sm:text-3xl font-extrabold tabular-nums ${tone.text}`}>{totalHours}</div>
+                        <div className="text-[10px] sm:text-[11px] text-muted-foreground mt-0.5">{hourWord}</div>
+                      </div>
+                    </div>
+                    <div className="flex items-center justify-between text-[10px] sm:text-[11px] text-muted-foreground mt-2.5">
+                      <span>تاريخ الاستحقاق</span>
+                      <span className="font-semibold text-foreground tabular-nums">
+                        {new Date(nextDue.due_date).toLocaleDateString('en-GB')}
+                      </span>
+                    </div>
+                  </div>
+                );
+              })()}
+
               <div className="space-y-1.5 max-h-[460px] overflow-y-auto pr-1">
                 {installments.map((i) => {
                   const due = new Date(i.due_date);
