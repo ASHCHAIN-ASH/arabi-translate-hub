@@ -85,6 +85,7 @@ const FinancingHome: React.FC = () => {
   const { user } = useAuth();
   const [apps, setApps] = useState<FinancingApp[]>([]);
   const [loading, setLoading] = useState(true);
+  const [loadError, setLoadError] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState<'all' | 'active' | 'pending' | 'closed'>('all');
   const [tabSwitching, setTabSwitching] = useState(false);
 
@@ -101,13 +102,22 @@ const FinancingHome: React.FC = () => {
 
   const load = async () => {
     setLoading(true);
-    const { data } = await supabase
-      .from('financing_applications')
-      .select('id,total_amount,down_payment,monthly_installment,duration_months,status,created_at')
-      .order('created_at', { ascending: false });
-    if (data) setApps(data as FinancingApp[]);
-    setLoading(false);
+    setLoadError(null);
+    try {
+      const { data, error } = await supabase
+        .from('financing_applications')
+        .select('id,total_amount,down_payment,monthly_installment,duration_months,status,created_at')
+        .order('created_at', { ascending: false });
+      if (error) throw error;
+      setApps((data ?? []) as FinancingApp[]);
+    } catch (err: any) {
+      console.error('[FinancingHome] load failed:', err);
+      setLoadError(err?.message || 'تعذّر الاتصال بالخادم. تحقّق من اتصالك بالإنترنت.');
+    } finally {
+      setLoading(false);
+    }
   };
+
 
   useEffect(() => {
     if (!user) return;
