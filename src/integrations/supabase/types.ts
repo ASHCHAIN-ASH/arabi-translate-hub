@@ -7419,6 +7419,10 @@ export type Database = {
         }[]
       }
       get_mind_map_usage_today: { Args: never; Returns: number }
+      get_referral_commission_balance: {
+        Args: { _user_id: string }
+        Returns: number
+      }
       get_referral_leaderboard: {
         Args: { p_limit?: number }
         Returns: {
