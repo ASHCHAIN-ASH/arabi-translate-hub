@@ -665,6 +665,12 @@ export default function StudentDashboardPage() {
           <DialogHeader><DialogTitle>إضافة موعد جديد</DialogTitle></DialogHeader>
           <div className="space-y-3">
             <Input placeholder="عنوان الموعد" value={ev.title} onChange={e => setEv({ ...ev, title: e.target.value })} />
+            <Input
+              type="date"
+              value={ev.date}
+              min={todayStr}
+              onChange={e => setEv({ ...ev, date: e.target.value })}
+            />
             <div className="grid grid-cols-2 gap-3">
               <Select value={ev.event_type} onValueChange={(v: StudentEventType) => setEv({ ...ev, event_type: v })}>
                 <SelectTrigger><SelectValue /></SelectTrigger>
