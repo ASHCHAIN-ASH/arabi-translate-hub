@@ -343,16 +343,44 @@ const FinancingHome: React.FC = () => {
                   dir="rtl"
                   className="sticky top-[108px] sm:static z-20 -mx-3 sm:mx-0 px-3 sm:px-0 py-2 sm:py-0 mb-3 sm:mb-6 bg-background/85 sm:bg-transparent backdrop-blur-md sm:backdrop-blur-0 border-b border-border/40 sm:border-0"
                 >
-                  <div className="relative rounded-2xl p-1 sm:p-1.5 bg-gradient-to-l from-primary/5 via-muted/40 to-primary/5 ring-1 ring-border/60 backdrop-blur-xl overflow-x-auto shadow-inner scrollbar-none">
+                  <div
+                    role="tablist"
+                    aria-label="تصنيفات طلبات التمويل"
+                    aria-orientation="horizontal"
+                    className="relative rounded-2xl p-1 sm:p-1.5 bg-gradient-to-l from-primary/5 via-muted/40 to-primary/5 ring-1 ring-border/60 backdrop-blur-xl overflow-x-auto shadow-inner scrollbar-none"
+                  >
                     <div className="flex gap-1 sm:gap-1.5 min-w-max">
-                      {tabs.map((t) => {
+                      {tabs.map((t, tabIdx) => {
                         const isActive = activeTab === t.key;
                         const Icon = t.icon;
                         return (
                           <button
                             key={t.key}
+                            type="button"
+                            role="tab"
+                            id={`financing-tab-${t.key}`}
+                            aria-selected={isActive}
+                            aria-controls="financing-tabpanel"
+                            tabIndex={isActive ? 0 : -1}
                             onClick={() => handleTabChange(t.key as typeof activeTab)}
-                            className={`relative flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 md:px-5 py-2 sm:py-2.5 rounded-xl text-xs sm:text-sm font-semibold transition-all duration-300 whitespace-nowrap group ${
+                            onKeyDown={(e) => {
+                              if (e.key === 'ArrowLeft' || e.key === 'ArrowRight' || e.key === 'Home' || e.key === 'End') {
+                                e.preventDefault();
+                                let nextIdx = tabIdx;
+                                // RTL: ArrowRight => previous, ArrowLeft => next
+                                if (e.key === 'ArrowRight') nextIdx = tabIdx === 0 ? tabs.length - 1 : tabIdx - 1;
+                                else if (e.key === 'ArrowLeft') nextIdx = tabIdx === tabs.length - 1 ? 0 : tabIdx + 1;
+                                else if (e.key === 'Home') nextIdx = 0;
+                                else if (e.key === 'End') nextIdx = tabs.length - 1;
+                                const next = tabs[nextIdx];
+                                handleTabChange(next.key as typeof activeTab);
+                                requestAnimationFrame(() => {
+                                  document.getElementById(`financing-tab-${next.key}`)?.focus();
+                                });
+                              }
+                            }}
+                            aria-label={`${t.label} — ${t.count} طلب`}
+                            className={`relative flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 md:px-5 py-2 sm:py-2.5 rounded-xl text-xs sm:text-sm font-semibold transition-all duration-300 whitespace-nowrap group focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background ${
                               isActive
                                 ? 'text-white'
                                 : 'text-muted-foreground hover:text-foreground'
@@ -393,6 +421,9 @@ const FinancingHome: React.FC = () => {
 
                 {loading || tabSwitching ? (
                   <div
+                    role="tabpanel"
+                    id="financing-tabpanel"
+                    aria-labelledby={`financing-tab-${activeTab}`}
                     aria-busy="true"
                     aria-live="polite"
                     className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4"
@@ -424,8 +455,13 @@ const FinancingHome: React.FC = () => {
                     <span className="sr-only">جاري تحميل الطلبات…</span>
                   </div>
                 ) : filtered.length === 0 ? (
-                  <Card className="p-10 text-center border-dashed">
-                    <FileText className="h-10 w-10 mx-auto text-muted-foreground/60 mb-3" />
+                  <Card
+                    role="tabpanel"
+                    id="financing-tabpanel"
+                    aria-labelledby={`financing-tab-${activeTab}`}
+                    className="p-10 text-center border-dashed"
+                  >
+                    <FileText className="h-10 w-10 mx-auto text-muted-foreground/60 mb-3" aria-hidden="true" />
                     <h3 className="font-semibold mb-1">
                       {apps.length === 0 ? 'لا توجد طلبات تمويل بعد' : 'لا توجد طلبات في هذا التصنيف'}
                     </h3>
@@ -435,13 +471,17 @@ const FinancingHome: React.FC = () => {
                         : 'جرّب تبويبًا آخر أو أنشئ طلبًا جديدًا'}
                     </p>
                     <Button asChild>
-                      <Link to="/financing/new">إنشاء طلب جديد</Link>
+                      <Link to="/financing/new" aria-label="إنشاء طلب تمويل جديد">إنشاء طلب جديد</Link>
                     </Button>
                   </Card>
                 ) : (
                   <AnimatePresence mode="wait">
                     <motion.div
                       key={activeTab}
+                      role="tabpanel"
+                      id="financing-tabpanel"
+                      aria-labelledby={`financing-tab-${activeTab}`}
+                      aria-label={`قائمة الطلبات — ${filtered.length} طلب`}
                       initial={{ opacity: 0, y: 8 }}
                       animate={{ opacity: 1, y: 0 }}
                       exit={{ opacity: 0, y: -8 }}
@@ -454,6 +494,8 @@ const FinancingHome: React.FC = () => {
                         const progress = STATUS_PROGRESS[a.status] ?? { pct: 10, label: a.status, tone: 'sky' as const };
                         const barClass = PROGRESS_BAR_CLASS[progress.tone];
                         const isTerminal = ['completed', 'rejected', 'cancelled'].includes(a.status);
+                        const statusLabel = FINANCING_STATUS_LABELS_AR[a.status] ?? a.status;
+                        const cardAriaLabel = `طلب تمويل رقم ${a.id.slice(0, 8).toUpperCase()} — المبلغ ${fmt(a.total_amount)} ريال — الحالة: ${statusLabel} — نسبة الإنجاز ${progress.pct}٪ — اضغط لعرض التفاصيل`;
                         return (
                           <motion.div
                             key={a.id}
@@ -461,7 +503,11 @@ const FinancingHome: React.FC = () => {
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ delay: idx * 0.05 }}
                           >
-                            <Link to={`/financing/${a.id}`} className="block">
+                            <Link
+                              to={`/financing/${a.id}`}
+                              className="block rounded-xl focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+                              aria-label={cardAriaLabel}
+                            >
                               <Card className="p-3 sm:p-5 hover:shadow-xl hover:-translate-y-0.5 transition-all border-border/60 hover:border-primary/40 group h-full">
                                 {/* Header — رقم الطلب + المبلغ + شارة الحالة */}
                                 <div className="flex items-center gap-2.5 sm:gap-3 mb-3 sm:mb-4">
