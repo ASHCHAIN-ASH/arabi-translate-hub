@@ -20,6 +20,11 @@ import {
 import { useAuth } from '@/components/SimpleAuthProvider';
 import { useStudentDashboard, type StudentEventType } from '@/hooks/useStudentDashboard';
 import { toast } from 'sonner';
+import LevelProgress, { getLevelInfo } from '@/components/student/LevelProgress';
+import SmartNotifications from '@/components/student/SmartNotifications';
+import StartDayButton from '@/components/student/StartDayButton';
+import AIAssistantPanel from '@/components/student/AIAssistantPanel';
+import { celebrate } from '@/components/student/celebrate';
 
 /* =========================================================
    Animated counter
@@ -219,6 +224,17 @@ export default function StudentDashboardPage() {
     [dash.events],
   );
 
+  // Level-up detection → confetti
+  const lastLevelRef = useRef<number | null>(null);
+  useEffect(() => {
+    const lvl = getLevelInfo(xp).current.lvl;
+    if (lastLevelRef.current !== null && lvl > lastLevelRef.current) {
+      celebrate('big');
+      toast.success(`🎉 ترقّيت إلى المستوى ${lvl}!`);
+    }
+    lastLevelRef.current = lvl;
+  }, [xp]);
+
   /* ---------- Profile setup dialog ---------- */
   const [profileOpen, setProfileOpen] = useState(false);
   const [pf, setPf] = useState({
@@ -299,6 +315,7 @@ export default function StudentDashboardPage() {
           setRunning(false);
           if (activeSessionId) {
             dash.completeSession(activeSessionId, focusMin).then(() => {
+              celebrate('big');
               toast.success(`أحسنت! +${focusMin} XP`);
             });
             setActiveSessionId(null);
@@ -361,7 +378,17 @@ export default function StudentDashboardPage() {
               بطاقة طالب، جدول يومي، جلسات تركيز، مهام، وإنجازات في تجربة واحدة.
             </p>
           </div>
-          <div className="flex items-center gap-2">
+          <div className="flex flex-wrap items-center gap-2">
+            <StartDayButton onClick={() => {
+              celebrate('big');
+              toast.success('بداية موفقة! 🎯 ركّز على أول مهمة في جدولك');
+              const firstEvent = dash.events.find(e => !e.is_done);
+              if (firstEvent) {
+                document.getElementById(`event-${firstEvent.id}`)?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+              } else if (!running) {
+                startFocus();
+              }
+            }} />
             <Button variant="ghost" size="sm" onClick={dash.refresh} className="text-white/70 hover:bg-white/10 hover:text-white">
               <RefreshCcw className="me-2 h-4 w-4" /> تحديث
             </Button>
@@ -397,6 +424,17 @@ export default function StudentDashboardPage() {
             <StatTile icon={Flame} label="سلسلة الالتزام" value={streak} color="bg-gradient-to-br from-orange-500 to-rose-500" suffix="يوم" />
             <StatTile icon={Medal} label="الشارات" value={badges} color="bg-gradient-to-br from-emerald-500 to-teal-500" />
           </div>
+        </div>
+
+        {/* Level + AI assistant */}
+        <div className="mt-6 grid grid-cols-1 gap-6 lg:grid-cols-2">
+          <LevelProgress xp={xp} />
+          <AIAssistantPanel
+            profile={profile}
+            events={dash.events}
+            tasks={dash.tasks}
+            onAdd={async (title, xp) => { await dash.addTask(title, xp); celebrate('small'); }}
+          />
         </div>
 
         {/* MIDDLE: schedule + focus */}
@@ -436,7 +474,7 @@ export default function StudentDashboardPage() {
                         initial={{ opacity: 0, x: 24 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -24 }}
                         transition={{ delay: i * 0.05 }}
                       >
-                        <div className={`flex items-center justify-between rounded-2xl bg-gradient-to-l ${palette} p-4 ring-1`}>
+                        <div id={`event-${e.id}`} className={`flex items-center justify-between rounded-2xl bg-gradient-to-l ${palette} p-4 ring-1`}>
                           <div className="flex items-center gap-4">
                             <div className="rounded-xl bg-black/30 px-3 py-2 font-mono text-sm text-white">{t}</div>
                             <div>
@@ -446,7 +484,7 @@ export default function StudentDashboardPage() {
                           </div>
                           <Button
                             size="sm" variant="ghost"
-                            onClick={() => dash.toggleEventDone(e)}
+                            onClick={() => { if (!e.is_done) celebrate('small'); dash.toggleEventDone(e); }}
                             className="text-white/80 hover:bg-white/10 hover:text-white"
                           >
                             {e.is_done ? <CheckCircle2 className="h-4 w-4 text-emerald-400" /> : <Play className="h-4 w-4" />}
@@ -552,7 +590,7 @@ export default function StudentDashboardPage() {
                       transition={{ delay: i * 0.04 }}
                     >
                       <button
-                        onClick={() => dash.toggleTask(t)}
+                        onClick={() => { if (!t.is_done) celebrate('small'); dash.toggleTask(t); }}
                         className="group flex w-full items-center justify-between rounded-2xl bg-white/5 p-4 ring-1 ring-white/10 transition hover:bg-white/10"
                       >
                         <div className="flex items-center gap-3">
@@ -657,6 +695,8 @@ export default function StudentDashboardPage() {
           </DialogFooter>
         </DialogContent>
       </Dialog>
+
+      <SmartNotifications events={dash.events} />
     </div>
   );
 }
