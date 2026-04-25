@@ -88,6 +88,7 @@ import BattleQuiz1v1Play from "./pages/battle-quiz/BattleQuiz1v1Play";
 import BattleQuiz1v1Result from "./pages/battle-quiz/BattleQuiz1v1Result";
 import BattleQuiz1v1Leaderboard from "./pages/battle-quiz/BattleQuiz1v1Leaderboard";
 import BattleQuiz1v1Invite from "./pages/battle-quiz/BattleQuiz1v1Invite";
+import StudentDashboardPage from "./pages/client/StudentDashboardPage";
 import AdminMemberships from "./pages/admin/AdminMemberships";
 import AdminReferrals from "./pages/admin/AdminReferrals";
 
@@ -798,6 +799,12 @@ const App = () => (
             } />
             <Route path="/battle-academy/1v1/result/:matchId" element={
               <SimpleProtectedRoute requiredRole="client"><BattleQuiz1v1Result /></SimpleProtectedRoute>
+            } />
+            <Route path="/student" element={
+              <SimpleProtectedRoute requiredRole="client"><StudentDashboardPage /></SimpleProtectedRoute>
+            } />
+            <Route path="/student/dashboard" element={
+              <SimpleProtectedRoute requiredRole="client"><StudentDashboardPage /></SimpleProtectedRoute>
             } />
             
             {/* Academic Pages */}
