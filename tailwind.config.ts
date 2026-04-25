@@ -243,6 +243,23 @@ export default {
 						transform: 'scale(1.2) rotate(180deg)'
 					}
 				},
+				'toast-pop': {
+					'0%': {
+						opacity: '0',
+						transform: 'translateY(-24px) scale(0.85)',
+						filter: 'blur(6px)'
+					},
+					'60%': {
+						opacity: '1',
+						transform: 'translateY(4px) scale(1.04)',
+						filter: 'blur(0)'
+					},
+					'100%': {
+						opacity: '1',
+						transform: 'translateY(0) scale(1)',
+						filter: 'blur(0)'
+					}
+				},
 				'pulse-slow': {
 					'0%, 100%': {
 						opacity: '0.6',
@@ -270,7 +287,8 @@ export default {
 				'golden-shine': 'golden-shine 3s linear infinite',
 				'pride-glow': 'pride-glow 4s ease-in-out infinite',
 				'sparkle': 'sparkle 2s ease-in-out infinite',
-				'pulse-slow': 'pulse-slow 4s ease-in-out infinite'
+				'pulse-slow': 'pulse-slow 4s ease-in-out infinite',
+				'toast-pop': 'toast-pop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1)'
 			}
 		}
 	},
