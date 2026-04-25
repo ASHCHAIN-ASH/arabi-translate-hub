@@ -455,8 +455,13 @@ const FinancingHome: React.FC = () => {
                     <span className="sr-only">جاري تحميل الطلبات…</span>
                   </div>
                 ) : filtered.length === 0 ? (
-                  <Card className="p-10 text-center border-dashed">
-                    <FileText className="h-10 w-10 mx-auto text-muted-foreground/60 mb-3" />
+                  <Card
+                    role="tabpanel"
+                    id="financing-tabpanel"
+                    aria-labelledby={`financing-tab-${activeTab}`}
+                    className="p-10 text-center border-dashed"
+                  >
+                    <FileText className="h-10 w-10 mx-auto text-muted-foreground/60 mb-3" aria-hidden="true" />
                     <h3 className="font-semibold mb-1">
                       {apps.length === 0 ? 'لا توجد طلبات تمويل بعد' : 'لا توجد طلبات في هذا التصنيف'}
                     </h3>
@@ -466,7 +471,7 @@ const FinancingHome: React.FC = () => {
                         : 'جرّب تبويبًا آخر أو أنشئ طلبًا جديدًا'}
                     </p>
                     <Button asChild>
-                      <Link to="/financing/new">إنشاء طلب جديد</Link>
+                      <Link to="/financing/new" aria-label="إنشاء طلب تمويل جديد">إنشاء طلب جديد</Link>
                     </Button>
                   </Card>
                 ) : (
