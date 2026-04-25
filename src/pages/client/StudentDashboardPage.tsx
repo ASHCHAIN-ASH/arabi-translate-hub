@@ -28,6 +28,7 @@ import SmartNotifications from '@/components/student/SmartNotifications';
 import StartDayButton from '@/components/student/StartDayButton';
 import AIAssistantPanel from '@/components/student/AIAssistantPanel';
 import { celebrate } from '@/components/student/celebrate';
+import StudyWalletCard from '@/components/student/StudyWalletCard';
 
 /* =========================================================
    Animated counter
