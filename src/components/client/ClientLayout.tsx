@@ -53,7 +53,7 @@ const navItems: NavItem[] = [
   { name: 'عضويتي', href: '/membership', icon: Crown },
   { name: 'الإحالات والعمولات', href: '/referrals', icon: Gift },
   { name: 'مركز التسويق', href: '/marketing-hub', icon: Megaphone },
-  { name: 'مكافآتي', href: '/rewards', icon: Trophy },
+  
   { name: 'خدمة العملاء', href: '/support/tickets', icon: Headphones },
 ];
 
