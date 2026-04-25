@@ -10,7 +10,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 import { celebrate } from '@/components/student/celebrate';
-import type { StudentTask } from '@/hooks/useStudentDashboard';
+import { useAwardTaskLootBonus, type StudentTask } from '@/hooks/useStudentDashboard';
 import ComboBadge, { useCombo } from '@/components/student/rpg/ComboTracker';
 import { rollLoot } from '@/components/student/rpg/loot';
 
