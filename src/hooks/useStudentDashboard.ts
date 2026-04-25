@@ -505,6 +505,9 @@ export function useStudentRealtime() {
         { table: 'student_tasks', key: ['student-tasks', uid] },
         { table: 'study_sessions', key: ['study-sessions', uid] },
         { table: 'student_activity_logs', key: ['student-activity-logs', uid] },
+        { table: 'student_reward_events', key: ['student-reward-events', uid] },
+        { table: 'student_wallets', key: ['student-wallet', uid] },
+        { table: 'student_wallet_transactions', key: ['wallet-transactions', uid] },
       ];
 
       for (const { table, key } of tablesToKeys) {
