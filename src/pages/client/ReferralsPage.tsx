@@ -31,6 +31,16 @@ interface WithdrawalRow {
   paid_at: string | null;
 }
 
+interface WalletTxRow {
+  id: string;
+  type: string;
+  amount: number;
+  description: string | null;
+  reference_type: string | null;
+  balance_after: number | null;
+  created_at: string;
+}
+
 // === Tier system based on referrals ===
 const TIERS = [
   { name: 'مبتدئ', min: 0, max: 5, color: 'from-slate-500 to-slate-600', icon: Star, perk: 'عمولة أساسية 10%' },
@@ -55,23 +65,50 @@ export default function ReferralsPage() {
   const [copiedLink, setCopiedLink] = useState(false);
   const [walletBalance, setWalletBalance] = useState(0);
   const [withdrawals, setWithdrawals] = useState<WithdrawalRow[]>([]);
+  const [walletTxs, setWalletTxs] = useState<WalletTxRow[]>([]);
   const [withdrawDialogOpen, setWithdrawDialogOpen] = useState(false);
 
   const loadWalletAndWithdrawals = useCallback(async () => {
     if (!user) return;
-    const [{ data: wallet }, { data: wRows }] = await Promise.all([
+    const [{ data: wallet }, { data: wRows }, { data: txRows }] = await Promise.all([
       supabase.from('wallets' as any).select('balance').eq('user_id', user.id).maybeSingle(),
       supabase
         .from('withdrawal_requests' as any)
         .select('id, amount, bank_name, iban, status, admin_notes, created_at, paid_at')
         .eq('user_id', user.id)
         .order('created_at', { ascending: false }),
+      supabase
+        .from('wallet_transactions' as any)
+        .select('id, type, amount, description, reference_type, balance_after, created_at')
+        .eq('user_id', user.id)
+        .in('reference_type', ['referral_commission', 'withdrawal_request', 'withdrawal_refund'])
+        .order('created_at', { ascending: false })
+        .limit(50),
     ]);
     setWalletBalance(Number((wallet as any)?.balance || 0));
     setWithdrawals(((wRows as any) || []) as WithdrawalRow[]);
+    setWalletTxs(((txRows as any) || []) as WalletTxRow[]);
   }, [user]);
 
   useEffect(() => { loadWalletAndWithdrawals(); }, [loadWalletAndWithdrawals]);
+
+  // Realtime: تحديث فوري عند أي تغيير في المحفظة أو السحوبات
+  useEffect(() => {
+    if (!user) return;
+    const channel = supabase
+      .channel('referrals-wallet-' + user.id)
+      .on('postgres_changes',
+        { event: '*', schema: 'public', table: 'wallet_transactions', filter: `user_id=eq.${user.id}` },
+        () => loadWalletAndWithdrawals())
+      .on('postgres_changes',
+        { event: '*', schema: 'public', table: 'wallets', filter: `user_id=eq.${user.id}` },
+        () => loadWalletAndWithdrawals())
+      .on('postgres_changes',
+        { event: '*', schema: 'public', table: 'withdrawal_requests', filter: `user_id=eq.${user.id}` },
+        () => loadWalletAndWithdrawals())
+      .subscribe();
+    return () => { supabase.removeChannel(channel); };
+  }, [user, loadWalletAndWithdrawals]);
 
   const currentTier = useMemo(() => getTier(stats.rewarded), [stats.rewarded]);
   const nextTier = useMemo(() => getNextTier(stats.rewarded), [stats.rewarded]);
@@ -446,9 +483,15 @@ export default function ReferralsPage() {
 
         {/* === Tabs: How it works / Tiers / Referrals === */}
         <Tabs defaultValue="referrals" dir="rtl" className="space-y-4">
-          <TabsList dir="rtl" className="grid w-full md:w-auto md:inline-grid grid-cols-2 md:grid-cols-4 h-auto md:h-12 p-1">
+          <TabsList dir="rtl" className="grid w-full md:w-auto md:inline-grid grid-cols-2 md:grid-cols-5 h-auto md:h-12 p-1">
             <TabsTrigger value="referrals" className="gap-1.5 text-sm flex-row-reverse">
               <Award className="h-4 w-4" /> إحالاتي
+            </TabsTrigger>
+            <TabsTrigger value="transactions" className="gap-1.5 text-sm flex-row-reverse">
+              <Wallet className="h-4 w-4" /> حركات المحفظة
+              {walletTxs.length > 0 && (
+                <Badge variant="secondary" className="text-[9px] h-4 px-1.5">{walletTxs.length}</Badge>
+              )}
             </TabsTrigger>
             <TabsTrigger value="withdrawals" className="gap-1.5 text-sm flex-row-reverse">
               <Banknote className="h-4 w-4" /> طلبات السحب
@@ -539,6 +582,90 @@ export default function ReferralsPage() {
                         </div>
                       </motion.div>
                     ))}
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          {/* Wallet transactions (commissions + withdrawals) */}
+          <TabsContent value="transactions" className="mt-0">
+            <Card>
+              <CardContent className="p-5">
+                <div className="flex items-center justify-between mb-4 flex-wrap gap-2">
+                  <h3 className="text-lg font-bold flex items-center gap-2">
+                    <Wallet className="h-5 w-5 text-primary" />
+                    حركات المحفظة (عمولات وسحوبات)
+                    <Badge variant="secondary">{walletTxs.length}</Badge>
+                  </h3>
+                  <div className="text-xs text-muted-foreground">
+                    الرصيد الحالي: <strong className="text-foreground">{walletBalance.toLocaleString('ar-SA')} ر.س</strong>
+                  </div>
+                </div>
+
+                {walletTxs.length === 0 ? (
+                  <div className="text-center py-12">
+                    <div className="inline-flex h-16 w-16 items-center justify-center rounded-2xl bg-muted mb-3">
+                      <Wallet className="h-8 w-8 text-muted-foreground" />
+                    </div>
+                    <p className="font-bold mb-1">لا توجد حركات بعد</p>
+                    <p className="text-sm text-muted-foreground">
+                      ستظهر هنا عمولات الإحالة المُودَعة وطلبات السحب فور حدوثها
+                    </p>
+                  </div>
+                ) : (
+                  <div className="space-y-2">
+                    {walletTxs.map((t, i) => {
+                      const isDeposit = t.type === 'deposit';
+                      const isCommission = t.reference_type === 'referral_commission';
+                      const isWithdrawHold = t.reference_type === 'withdrawal_request';
+                      const isRefund = t.reference_type === 'withdrawal_refund';
+                      const meta = isCommission
+                        ? { label: 'عمولة إحالة', color: 'bg-emerald-500/10 text-emerald-700 border-emerald-200', icon: Gift }
+                        : isWithdrawHold
+                        ? { label: 'طلب سحب', color: 'bg-amber-500/10 text-amber-700 border-amber-200', icon: Banknote }
+                        : isRefund
+                        ? { label: 'استرداد سحب', color: 'bg-blue-500/10 text-blue-700 border-blue-200', icon: ArrowUpRight }
+                        : { label: t.type, color: 'bg-muted text-muted-foreground border-border', icon: Wallet };
+                      const MIcon = meta.icon;
+                      return (
+                        <motion.div
+                          key={t.id}
+                          initial={{ opacity: 0, x: -10 }}
+                          animate={{ opacity: 1, x: 0 }}
+                          transition={{ delay: i * 0.03 }}
+                          className="flex items-center gap-3 p-3.5 rounded-xl border bg-card hover:bg-accent/30 transition-colors"
+                        >
+                          <div className={cn('h-11 w-11 rounded-xl flex items-center justify-center shrink-0 border', meta.color)}>
+                            <MIcon className="h-5 w-5" />
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <div className="font-medium text-sm truncate">{t.description || meta.label}</div>
+                            <div className="text-[11px] text-muted-foreground flex items-center gap-1 mt-0.5">
+                              <Calendar className="w-3 h-3" />
+                              {new Date(t.created_at).toLocaleString('ar-SA')}
+                              {t.balance_after !== null && (
+                                <>
+                                  <span>•</span>
+                                  <span>الرصيد بعد: {Number(t.balance_after).toLocaleString('ar-SA')} ر.س</span>
+                                </>
+                              )}
+                            </div>
+                          </div>
+                          <div className="text-left shrink-0">
+                            <div className={cn(
+                              'font-black text-base',
+                              isDeposit ? 'text-emerald-600' : 'text-rose-600'
+                            )}>
+                              {isDeposit ? '+' : '-'}{Number(t.amount).toLocaleString('ar-SA')} ر.س
+                            </div>
+                            <Badge variant="outline" className={cn('text-[9px] mt-0.5', meta.color)}>
+                              {meta.label}
+                            </Badge>
+                          </div>
+                        </motion.div>
+                      );
+                    })}
                   </div>
                 )}
               </CardContent>
