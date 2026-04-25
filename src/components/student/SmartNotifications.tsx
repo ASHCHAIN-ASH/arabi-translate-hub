@@ -44,8 +44,10 @@ export interface SmartNotificationsProps {
   streak?: number;
   weeklyDone?: number;
   weeklyTarget?: number;
+  userId?: string;
   onStartFocus?: () => void;
   onAddTask?: () => void;
+  onLiveUpdate?: () => void;
 }
 
 export default function SmartNotifications({
@@ -54,8 +56,10 @@ export default function SmartNotifications({
   streak = 0,
   weeklyDone = 0,
   weeklyTarget = 5,
+  userId,
   onStartFocus,
   onAddTask,
+  onLiveUpdate,
 }: SmartNotificationsProps) {
   const notifs = useMemo<Notif[]>(() => {
     const list: Notif[] = buildEventNotifs(events);
