@@ -583,20 +583,20 @@ export default function StudentDashboardPage() {
 
         {/* BOTTOM: tasks + weekly */}
         <div className="mt-6 grid grid-cols-1 gap-6 lg:grid-cols-3">
-          <Card className="border-white/10 bg-white/5 backdrop-blur-xl lg:col-span-2">
+          <Card className="border-slate-200 bg-white shadow-sm lg:col-span-2">
             <CardContent className="p-6">
               <div className="mb-5 flex items-center justify-between">
                 <div>
-                  <h3 className="text-lg font-bold text-white">مهام اليوم</h3>
-                  <p className="text-xs text-white/50">أكمل المهام واحصد نقاط الخبرة</p>
+                  <h3 className="text-lg font-bold text-slate-900">مهام اليوم</h3>
+                  <p className="text-xs text-slate-500">أكمل المهام واحصد نقاط الخبرة</p>
                 </div>
-                <Button size="sm" variant="ghost" onClick={() => setTaskOpen(true)} className="text-cyan-300 hover:bg-white/5 hover:text-cyan-200">
+                <Button size="sm" variant="ghost" onClick={() => setTaskOpen(true)} className="text-violet-600 hover:bg-violet-50 hover:text-violet-700">
                   <Plus className="me-1 h-4 w-4" /> مهمة جديدة
                 </Button>
               </div>
               <div className="space-y-2">
                 {dash.tasks.length === 0 && !dash.loading && (
-                  <p className="rounded-2xl border border-dashed border-white/10 p-6 text-center text-sm text-white/60">
+                  <p className="rounded-2xl border border-dashed border-slate-300 p-6 text-center text-sm text-slate-600">
                     لا توجد مهام بعد. ابدأ بإضافة أول مهمة.
                   </p>
                 )}
@@ -609,15 +609,15 @@ export default function StudentDashboardPage() {
                     >
                       <button
                         onClick={() => { if (!t.is_done) celebrate('small'); dash.toggleTask(t); }}
-                        className="group flex w-full items-center justify-between rounded-2xl bg-white/5 p-4 ring-1 ring-white/10 transition hover:bg-white/10"
+                        className="group flex w-full items-center justify-between rounded-2xl bg-slate-50 p-4 ring-1 ring-slate-200 transition hover:bg-slate-100"
                       >
                         <div className="flex items-center gap-3">
                           {t.is_done
-                            ? <CheckCircle2 className="h-5 w-5 text-emerald-400" />
-                            : <Circle className="h-5 w-5 text-white/40 group-hover:text-white/70" />}
-                          <span className={`text-sm ${t.is_done ? 'text-white/40 line-through' : 'text-white'}`}>{t.title}</span>
+                            ? <CheckCircle2 className="h-5 w-5 text-emerald-600" />
+                            : <Circle className="h-5 w-5 text-slate-400 group-hover:text-slate-600" />}
+                          <span className={`text-sm ${t.is_done ? 'text-slate-400 line-through' : 'text-slate-900'}`}>{t.title}</span>
                         </div>
-                        <Badge className={`border-0 ${t.is_done ? 'bg-emerald-500/20 text-emerald-300' : 'bg-violet-500/20 text-violet-200'}`}>
+                        <Badge className={`border-0 ${t.is_done ? 'bg-emerald-100 text-emerald-700' : 'bg-violet-100 text-violet-700'}`}>
                           +{t.xp_reward} XP
                         </Badge>
                       </button>
