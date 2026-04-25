@@ -64,13 +64,14 @@ export default function ReferralsPage() {
   const [copiedCode, setCopiedCode] = useState(false);
   const [copiedLink, setCopiedLink] = useState(false);
   const [walletBalance, setWalletBalance] = useState(0);
+  const [commissionBalance, setCommissionBalance] = useState(0);
   const [withdrawals, setWithdrawals] = useState<WithdrawalRow[]>([]);
   const [walletTxs, setWalletTxs] = useState<WalletTxRow[]>([]);
   const [withdrawDialogOpen, setWithdrawDialogOpen] = useState(false);
 
   const loadWalletAndWithdrawals = useCallback(async () => {
     if (!user) return;
-    const [{ data: wallet }, { data: wRows }, { data: txRows }] = await Promise.all([
+    const [{ data: wallet }, { data: wRows }, { data: txRows }, { data: commBal }] = await Promise.all([
       supabase.from('wallets' as any).select('balance').eq('user_id', user.id).maybeSingle(),
       supabase
         .from('withdrawal_requests' as any)
@@ -81,11 +82,19 @@ export default function ReferralsPage() {
         .from('wallet_transactions' as any)
         .select('id, type, amount, description, reference_type, balance_after, created_at')
         .eq('user_id', user.id)
-        .in('reference_type', ['referral_commission', 'withdrawal_request', 'withdrawal_refund'])
+        .in('reference_type', [
+          'referral_commission',
+          'referral_withdrawal_request',
+          'referral_withdrawal_refund',
+          'withdrawal_request',
+          'withdrawal_refund',
+        ])
         .order('created_at', { ascending: false })
         .limit(50),
+      supabase.rpc('get_referral_commission_balance' as any, { _user_id: user.id }),
     ]);
     setWalletBalance(Number((wallet as any)?.balance || 0));
+    setCommissionBalance(Number((commBal as any) || 0));
     setWithdrawals(((wRows as any) || []) as WithdrawalRow[]);
     setWalletTxs(((txRows as any) || []) as WalletTxRow[]);
   }, [user]);
@@ -322,20 +331,20 @@ export default function ReferralsPage() {
                   <Wallet className="w-7 h-7" />
                 </div>
                 <div>
-                  <p className="text-xs text-muted-foreground font-medium">رصيد محفظتك القابل للسحب</p>
+                  <p className="text-xs text-muted-foreground font-medium">أرباح العمولات القابلة للسحب</p>
                   <p className="text-3xl font-black tracking-tight">
-                    {walletBalance.toLocaleString('ar-SA')}
+                    {commissionBalance.toLocaleString('ar-SA')}
                     <span className="text-base text-muted-foreground font-bold ms-1">ر.س</span>
                   </p>
                   <p className="text-[11px] text-muted-foreground mt-0.5">
-                    العمولات تُودع تلقائياً عند تفعيل اشتراك المُحال • الحد الأدنى للسحب 100 ر.س
+                    يُسحب من أرباح إحالاتك فقط (لا يشمل رصيد المحفظة الأساسي) • الحد الأدنى 100 ر.س
                   </p>
                 </div>
               </div>
               <Button
                 size="lg"
                 onClick={() => setWithdrawDialogOpen(true)}
-                disabled={walletBalance < 100}
+                disabled={commissionBalance < 100}
                 className="gap-2 bg-gradient-to-l from-primary to-emerald-600 hover:opacity-90 shadow-md"
               >
                 <Banknote className="w-5 h-5" />
@@ -685,7 +694,7 @@ export default function ReferralsPage() {
                   <Button
                     size="sm"
                     onClick={() => setWithdrawDialogOpen(true)}
-                    disabled={walletBalance < 100}
+                    disabled={commissionBalance < 100}
                     className="gap-1.5"
                   >
                     <Banknote className="w-4 h-4" />
@@ -850,7 +859,7 @@ export default function ReferralsPage() {
       <WithdrawDialog
         open={withdrawDialogOpen}
         onOpenChange={setWithdrawDialogOpen}
-        availableBalance={walletBalance}
+        availableBalance={commissionBalance}
         onSuccess={loadWalletAndWithdrawals}
       />
     </ClientLayout>
