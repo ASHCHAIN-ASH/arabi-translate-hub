@@ -203,7 +203,7 @@ const FinancingHome: React.FC = () => {
               <Sparkles className="h-4 w-4 text-primary" />
               مراحل طلبك التمويلي
             </h3>
-            <Badge variant="outline" className="text-[10px]">نظام مستقل · صارم · موثّق</Badge>
+            <Badge variant="outline" className="text-[10px]">نظام مستقل · آمن · موثّق</Badge>
           </div>
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-2.5 md:gap-3">
             {[
