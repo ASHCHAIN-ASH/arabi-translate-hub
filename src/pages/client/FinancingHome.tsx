@@ -478,6 +478,10 @@ const FinancingHome: React.FC = () => {
                   <AnimatePresence mode="wait">
                     <motion.div
                       key={activeTab}
+                      role="tabpanel"
+                      id="financing-tabpanel"
+                      aria-labelledby={`financing-tab-${activeTab}`}
+                      aria-label={`قائمة الطلبات — ${filtered.length} طلب`}
                       initial={{ opacity: 0, y: 8 }}
                       animate={{ opacity: 1, y: 0 }}
                       exit={{ opacity: 0, y: -8 }}
@@ -490,6 +494,8 @@ const FinancingHome: React.FC = () => {
                         const progress = STATUS_PROGRESS[a.status] ?? { pct: 10, label: a.status, tone: 'sky' as const };
                         const barClass = PROGRESS_BAR_CLASS[progress.tone];
                         const isTerminal = ['completed', 'rejected', 'cancelled'].includes(a.status);
+                        const statusLabel = FINANCING_STATUS_LABELS_AR[a.status] ?? a.status;
+                        const cardAriaLabel = `طلب تمويل رقم ${a.id.slice(0, 8).toUpperCase()} — المبلغ ${fmt(a.total_amount)} ريال — الحالة: ${statusLabel} — نسبة الإنجاز ${progress.pct}٪ — اضغط لعرض التفاصيل`;
                         return (
                           <motion.div
                             key={a.id}
@@ -497,7 +503,11 @@ const FinancingHome: React.FC = () => {
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ delay: idx * 0.05 }}
                           >
-                            <Link to={`/financing/${a.id}`} className="block">
+                            <Link
+                              to={`/financing/${a.id}`}
+                              className="block rounded-xl focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+                              aria-label={cardAriaLabel}
+                            >
                               <Card className="p-3 sm:p-5 hover:shadow-xl hover:-translate-y-0.5 transition-all border-border/60 hover:border-primary/40 group h-full">
                                 {/* Header — رقم الطلب + المبلغ + شارة الحالة */}
                                 <div className="flex items-center gap-2.5 sm:gap-3 mb-3 sm:mb-4">
