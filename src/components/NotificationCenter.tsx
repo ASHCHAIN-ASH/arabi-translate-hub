@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Bell, Check, CheckCheck, X, Package, FileText, CreditCard, MessageSquare, ShoppingBag, AlertTriangle } from 'lucide-react';
+import { Bell, Check, CheckCheck, X, Package, FileText, CreditCard, MessageSquare } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -87,8 +87,6 @@ const NotificationCenter: React.FC = () => {
       case 'invoice': return <FileText className="w-4 h-4 text-green-500" />;
       case 'payment': return <CreditCard className="w-4 h-4 text-purple-500" />;
       case 'ticket': return <MessageSquare className="w-4 h-4 text-orange-500" />;
-      case 'marketplace_success': return <ShoppingBag className="w-4 h-4 text-emerald-500" />;
-      case 'marketplace_failed': return <AlertTriangle className="w-4 h-4 text-red-500" />;
       default: return <Bell className="w-4 h-4 text-gray-500" />;
     }
   };
