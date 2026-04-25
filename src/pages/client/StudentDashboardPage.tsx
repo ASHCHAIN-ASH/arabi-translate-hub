@@ -789,8 +789,8 @@ export default function StudentDashboardPage() {
             tasks={dash.tasks}
             sessions={dash.sessions}
             claimed={bossClaimed}
-            loading={claimBoss.isPending}
-            onClaimReward={() => claimBoss.mutate()}
+            loading={claimBoss.isPending || bossOverlay.open}
+            onClaimReward={handleClaimBoss}
           />
         </div>
 
