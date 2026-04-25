@@ -362,12 +362,12 @@ export default function StudentDashboardPage() {
   /* ============================================ */
   return (
     <ClientLayout>
-    <div dir="rtl" className="relative min-h-screen overflow-hidden bg-[#070914] text-white">
-      {/* ambient glow */}
-      <div className="pointer-events-none absolute -top-40 right-0 h-[500px] w-[500px] rounded-full bg-violet-600/20 blur-[140px]" />
-      <div className="pointer-events-none absolute -bottom-40 left-0 h-[500px] w-[500px] rounded-full bg-cyan-500/20 blur-[140px]" />
-      <div className="pointer-events-none absolute inset-0 opacity-[0.04]"
-        style={{ backgroundImage: 'radial-gradient(circle at 1px 1px, white 1px, transparent 0)', backgroundSize: '28px 28px' }} />
+    <div dir="rtl" className="relative min-h-screen overflow-hidden bg-gradient-to-br from-slate-50 via-white to-violet-50 text-slate-900">
+      {/* ambient glow (soft) */}
+      <div className="pointer-events-none absolute -top-40 right-0 h-[500px] w-[500px] rounded-full bg-violet-300/30 blur-[140px]" />
+      <div className="pointer-events-none absolute -bottom-40 left-0 h-[500px] w-[500px] rounded-full bg-cyan-300/30 blur-[140px]" />
+      <div className="pointer-events-none absolute inset-0 opacity-[0.05]"
+        style={{ backgroundImage: 'radial-gradient(circle at 1px 1px, #6366f1 1px, transparent 0)', backgroundSize: '28px 28px' }} />
 
       <div className="relative mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
         {/* Back button */}
