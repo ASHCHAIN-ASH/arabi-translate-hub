@@ -3932,6 +3932,50 @@ export type Database = {
         }
         Relationships: []
       }
+      referral_viral_rewards: {
+        Row: {
+          created_at: string
+          id: string
+          metadata: Json
+          points_awarded: number
+          referral_id: string
+          referred_user_id: string
+          referrer_user_id: string
+          reward_type: string
+          xp_awarded: number
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          metadata?: Json
+          points_awarded?: number
+          referral_id: string
+          referred_user_id: string
+          referrer_user_id: string
+          reward_type: string
+          xp_awarded?: number
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          metadata?: Json
+          points_awarded?: number
+          referral_id?: string
+          referred_user_id?: string
+          referrer_user_id?: string
+          reward_type?: string
+          xp_awarded?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "referral_viral_rewards_referral_id_fkey"
+            columns: ["referral_id"]
+            isOneToOne: false
+            referencedRelation: "referrals"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       referrals: {
         Row: {
           completed_at: string | null
@@ -5970,6 +6014,30 @@ export type Database = {
         }
         Relationships: []
       }
+      user_secret_features: {
+        Row: {
+          feature_key: string
+          id: string
+          metadata: Json
+          unlocked_at: string
+          user_id: string
+        }
+        Insert: {
+          feature_key: string
+          id?: string
+          metadata?: Json
+          unlocked_at?: string
+          user_id: string
+        }
+        Update: {
+          feature_key?: string
+          id?: string
+          metadata?: Json
+          unlocked_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       wallet_credit_events: {
         Row: {
           amount: number
@@ -7316,6 +7384,19 @@ export type Database = {
         }[]
       }
       get_user_whatsapp_phone: { Args: { _user_id: string }; Returns: string }
+      get_viral_referral_summary: { Args: { p_user_id: string }; Returns: Json }
+      grant_referral_viral_reward: {
+        Args: {
+          p_description: string
+          p_points: number
+          p_referral_id: string
+          p_referred: string
+          p_referrer: string
+          p_reward_type: string
+          p_xp: number
+        }
+        Returns: boolean
+      }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
