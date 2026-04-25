@@ -137,6 +137,7 @@ import AdminResearchContractDetails from "./pages/admin/AdminResearchContractDet
 import AdminResearchPublicationDetails from "./pages/admin/AdminResearchPublicationDetails";
 import ClientContractView from "./pages/ClientContractView";
 import FinancingHome from "./pages/client/FinancingHome";
+import MasterPayLater from "./pages/MasterPayLater";
 import FinancingNew from "./pages/client/FinancingNew";
 import FinancingDetails from "./pages/client/FinancingDetails";
 import FinancingAcknowledgments from "./pages/client/FinancingAcknowledgments";
@@ -444,6 +445,7 @@ const App = () => (
                 <ClientContracts />
               </SimpleProtectedRoute>
             } />
+            <Route path="/master-paylater" element={<MasterPayLater />} />
             <Route path="/financing" element={
               <SimpleProtectedRoute requiredRole="client">
                 <FinancingHome />
