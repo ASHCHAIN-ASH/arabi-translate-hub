@@ -20,7 +20,7 @@ interface Props {
 const E = ({ customerName, invoiceNumber, amount, newBalance, paidAt, transactionId, invoiceUrl, walletUrl }: Props) => (
   <Html lang="ar" dir="rtl">
     <Head />
-    <Preview>💳 تم دفع الفاتورة {invoiceNumber} بمبلغ {amount} ر.س من محفظتك — {SITE_NAME}</Preview>
+    <Preview>{`💳 تم دفع الفاتورة ${invoiceNumber ?? ''} بمبلغ ${amount ?? ''} ر.س من محفظتك — ${SITE_NAME}`}</Preview>
     <Body style={main}>
       <Container style={container}>
         <Section style={bankHeader}>

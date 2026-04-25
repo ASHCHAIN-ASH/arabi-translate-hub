@@ -127,7 +127,7 @@ serve(async (req) => {
       .insert({
         message_id: messageId,
         admin_id: user.id,
-        admin_name: user.user_metadata?.full_name ?? null,
+        admin_name: (user as any).user_metadata?.full_name ?? null,
         admin_email: user.email ?? null,
         body,
         delivery_status: deliveryStatus,

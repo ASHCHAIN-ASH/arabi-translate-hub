@@ -39,7 +39,7 @@ const OrderUpdateEmail = ({
   return (
     <Html lang="ar" dir="rtl">
       <Head />
-      <Preview>{headline} — {trackingId}</Preview>
+      <Preview>{`${headline} — ${trackingId ?? ''}`}</Preview>
       <Body style={main}>
         <Container style={container}>
           <Section style={brandBar}>
