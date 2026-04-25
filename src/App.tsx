@@ -48,6 +48,7 @@ import MedicalResearch from "./pages/research/MedicalResearch";
 import AboutUs from "./pages/AboutUs";
 import AcademicCompetitions from "./pages/AcademicCompetitions";
 import SpinTheWheel from "./pages/SpinTheWheel";
+import StudyToEarn from "./pages/StudyToEarn";
 import Unauthorized from "./pages/Unauthorized";
 import MasterMembership from "./pages/MasterMembership";
 import FAQ from "./pages/FAQ";
@@ -287,6 +288,7 @@ const App = () => (
              <Route path="/faq" element={<FAQ />} />
              <Route path="/academic-competitions" element={<AcademicCompetitions />} />
              <Route path="/spin-the-wheel" element={<SpinTheWheel />} />
+             <Route path="/study-to-earn" element={<StudyToEarn />} />
              <Route path="/client-guide" element={<ClientGuide />} />
              <Route path="/order-tracking" element={<OrderTracking />} />
              <Route path="/submit-order" element={<OrderForm />} />
