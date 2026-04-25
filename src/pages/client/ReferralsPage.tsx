@@ -272,6 +272,42 @@ export default function ReferralsPage() {
           </Card>
         </motion.div>
 
+        {/* === Wallet Balance + Withdraw CTA === */}
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.25 }}
+        >
+          <Card className="overflow-hidden border-2 border-primary/20 bg-gradient-to-l from-primary/5 via-transparent to-emerald-500/5">
+            <CardContent className="p-5 flex flex-col md:flex-row items-stretch md:items-center justify-between gap-4">
+              <div className="flex items-center gap-4">
+                <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-primary to-emerald-500 flex items-center justify-center text-white shadow-lg shrink-0">
+                  <Wallet className="w-7 h-7" />
+                </div>
+                <div>
+                  <p className="text-xs text-muted-foreground font-medium">رصيد محفظتك القابل للسحب</p>
+                  <p className="text-3xl font-black tracking-tight">
+                    {walletBalance.toLocaleString('ar-SA')}
+                    <span className="text-base text-muted-foreground font-bold ms-1">ر.س</span>
+                  </p>
+                  <p className="text-[11px] text-muted-foreground mt-0.5">
+                    العمولات تُودع تلقائياً عند تفعيل اشتراك المُحال • الحد الأدنى للسحب 100 ر.س
+                  </p>
+                </div>
+              </div>
+              <Button
+                size="lg"
+                onClick={() => setWithdrawDialogOpen(true)}
+                disabled={walletBalance < 100}
+                className="gap-2 bg-gradient-to-l from-primary to-emerald-600 hover:opacity-90 shadow-md"
+              >
+                <Banknote className="w-5 h-5" />
+                سحب الأرباح
+              </Button>
+            </CardContent>
+          </Card>
+        </motion.div>
+
         {/* === Stats Grid === */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4">
           <StatCard icon={Users} label="إجمالي الإحالات" value={stats.total} color="from-blue-500 to-indigo-500" delay={0} />
