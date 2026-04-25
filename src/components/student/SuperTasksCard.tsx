@@ -82,13 +82,14 @@ function CheckBurst({ show }: { show: boolean }) {
 }
 
 function TaskCard({
-  task, suggested, onComplete, onStart, onUndo,
+  task, suggested, onComplete, onStart, onUndo, onAfterComplete,
 }: {
   task: DerivedTask;
   suggested: boolean;
   onComplete: (t: DerivedTask) => void;
   onStart: (t: DerivedTask) => void;
   onUndo: (t: DerivedTask) => void;
+  onAfterComplete?: (t: DerivedTask) => void;
 }) {
   const diff = difficultyMap[task.difficulty];
   const [bursting, setBursting] = useState(false);
@@ -128,6 +129,7 @@ function TaskCard({
     setTimeout(() => setShowXp(false), 1100);
     onComplete(task);
     fireUndoToast();
+    onAfterComplete?.(task);
   };
 
   const handleFinishClick = () => {
