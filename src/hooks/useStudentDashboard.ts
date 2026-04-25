@@ -90,6 +90,22 @@ export function useStudentDashboard(userId?: string) {
 
   useEffect(() => { refresh(); }, [refresh]);
 
+  // Realtime: refresh on any change to user's rows across the 4 tables
+  useEffect(() => {
+    if (!userId) return;
+    const tables = ['student_profiles', 'student_events', 'student_tasks', 'study_sessions'];
+    const channel = supabase.channel(`student-dashboard-${userId}`);
+    tables.forEach((table) => {
+      channel.on(
+        'postgres_changes' as any,
+        { event: '*', schema: 'public', table, filter: `user_id=eq.${userId}` },
+        () => { refresh(); }
+      );
+    });
+    channel.subscribe();
+    return () => { supabase.removeChannel(channel); };
+  }, [userId, refresh]);
+
   // Profile
   const updateProfile = useCallback(async (patch: Partial<StudentProfile>) => {
     if (!userId) return;
