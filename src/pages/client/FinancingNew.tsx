@@ -41,6 +41,8 @@ import {
 } from 'lucide-react';
 import ClientLayout from '@/components/client/ClientLayout';
 import FinancingNewHero from '@/components/financing/FinancingNewHero';
+import FinancingStepper from '@/components/financing/FinancingStepper';
+import FinancingLiveSummary from '@/components/financing/FinancingLiveSummary';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -389,23 +391,31 @@ const FinancingNew: React.FC = () => {
 
   return (
     <ClientLayout>
-      <div dir="rtl" className="max-w-4xl mx-auto space-y-6 pb-12">
+      <div dir="rtl" className="max-w-7xl mx-auto pb-12">
         {/* Banking-grade Hero */}
         <FinancingNewHero step={step} totalSteps={3} />
 
-        {/* Disclaimer */}
-        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.15 }}>
-          <Card className="p-4 border-primary/30 bg-gradient-to-l from-primary/10 via-primary/5 to-transparent">
-            <div className="flex items-start gap-3">
-              <div className="h-9 w-9 rounded-xl bg-primary/20 flex items-center justify-center shrink-0">
-                <ShieldCheck className="h-5 w-5 text-primary" />
-              </div>
-              <p className="text-sm leading-relaxed">{FINANCING_DISCLAIMER_AR}</p>
-            </div>
-          </Card>
-        </motion.div>
+        {/* Visual Stepper */}
+        <div className="mt-6">
+          <FinancingStepper current={step} onJump={(s) => setStep(s as 1 | 2 | 3)} />
+        </div>
 
-        <AnimatePresence mode="wait">
+        {/* Two-column layout: form + sticky summary */}
+        <div className="grid grid-cols-1 lg:grid-cols-[1fr_340px] gap-6 mt-6">
+          <div className="space-y-6 min-w-0">
+            {/* Disclaimer */}
+            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.15 }}>
+              <Card className="p-4 border-primary/30 bg-gradient-to-l from-primary/10 via-primary/5 to-transparent">
+                <div className="flex items-start gap-3">
+                  <div className="h-9 w-9 rounded-xl bg-primary/20 flex items-center justify-center shrink-0">
+                    <ShieldCheck className="h-5 w-5 text-primary" />
+                  </div>
+                  <p className="text-sm leading-relaxed">{FINANCING_DISCLAIMER_AR}</p>
+                </div>
+              </Card>
+            </motion.div>
+
+            <AnimatePresence mode="wait">
           {step === 1 && (
             <motion.div
               key="step1"
