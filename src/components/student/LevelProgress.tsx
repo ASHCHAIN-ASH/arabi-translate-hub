@@ -30,7 +30,7 @@ export function getLevelInfo(xp: number) {
 export default function LevelProgress({ xp }: { xp: number }) {
   const { current, next, pct, toNext } = getLevelInfo(xp);
   return (
-    <Card className="overflow-hidden border-white/10 bg-white/5 backdrop-blur-xl">
+    <Card className="overflow-hidden border-slate-200 bg-white shadow-sm">
       <CardContent className="p-5">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
@@ -38,24 +38,24 @@ export default function LevelProgress({ xp }: { xp: number }) {
               <Crown className="h-6 w-6 text-white" />
             </div>
             <div>
-              <p className="text-xs text-white/50">المستوى الحالي</p>
-              <p className="text-lg font-bold text-white">
+              <p className="text-xs text-slate-500">المستوى الحالي</p>
+              <p className="text-lg font-bold text-slate-900">
                 Lv.{current.lvl} · {current.name}
               </p>
             </div>
           </div>
-          <Badge className="border-0 bg-white/10 text-cyan-200">
+          <Badge className="border-0 bg-violet-100 text-violet-700">
             <Sparkles className="me-1 h-3 w-3" />
             {xp.toLocaleString('ar-SA')} XP
           </Badge>
         </div>
 
         <div className="mt-4">
-          <div className="mb-1 flex items-center justify-between text-xs text-white/60">
+          <div className="mb-1 flex items-center justify-between text-xs text-slate-600">
             <span>التقدم نحو {next.name}</span>
             <span>{toNext > 0 ? `يتبقى ${toNext} XP` : 'وصلت أعلى مستوى'}</span>
           </div>
-          <div className="relative h-2.5 overflow-hidden rounded-full bg-white/10">
+          <div className="relative h-2.5 overflow-hidden rounded-full bg-slate-100">
             <motion.div
               className={`h-full bg-gradient-to-l ${next.color}`}
               initial={{ width: 0 }}
@@ -74,7 +74,7 @@ export default function LevelProgress({ xp }: { xp: number }) {
                 className={`rounded-full px-2.5 py-1 text-[10px] ring-1 transition ${
                   reached
                     ? `bg-gradient-to-l ${l.color} text-white ring-white/30 shadow`
-                    : 'bg-white/5 text-white/40 ring-white/10'
+                    : 'bg-slate-50 text-slate-500 ring-slate-200'
                 }`}
               >
                 {l.name}
