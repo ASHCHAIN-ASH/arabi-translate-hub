@@ -366,7 +366,17 @@ export default function StudentDashboardPage() {
               بطاقة طالب، جدول يومي، جلسات تركيز، مهام، وإنجازات في تجربة واحدة.
             </p>
           </div>
-          <div className="flex items-center gap-2">
+          <div className="flex flex-wrap items-center gap-2">
+            <StartDayButton onClick={() => {
+              celebrate('big');
+              toast.success('بداية موفقة! 🎯 ركّز على أول مهمة في جدولك');
+              const firstEvent = dash.events.find(e => !e.is_done);
+              if (firstEvent) {
+                document.getElementById(`event-${firstEvent.id}`)?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+              } else if (!running) {
+                startFocus();
+              }
+            }} />
             <Button variant="ghost" size="sm" onClick={dash.refresh} className="text-white/70 hover:bg-white/10 hover:text-white">
               <RefreshCcw className="me-2 h-4 w-4" /> تحديث
             </Button>
