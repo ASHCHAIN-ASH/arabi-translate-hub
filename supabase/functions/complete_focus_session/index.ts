@@ -152,8 +152,25 @@ Deno.serve(async (req) => {
       metadata: { session_id: session.id, duration_minutes: duration, xp_awarded: FOCUS_XP, new_xp: newXp, level: newLevel },
     });
 
+    let pointsAwarded = 0;
+    try {
+      const admin = createClient(
+        Deno.env.get('SUPABASE_URL')!,
+        Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!,
+      );
+      pointsAwarded = await awardPoints(admin, {
+        userId,
+        ruleCode: 'FOCUS_COMPLETED',
+        sourceType: 'focus_session',
+        sourceId: session.id,
+        description: `جلسة تركيز ${duration} دقيقة`,
+      });
+    } catch (we) {
+      console.error('wallet award failed', we);
+    }
+
     return new Response(JSON.stringify({
-      success: true, session, xp_awarded: FOCUS_XP, new_xp: newXp, level: newLevel,
+      success: true, session, xp_awarded: FOCUS_XP, new_xp: newXp, level: newLevel, points_awarded: pointsAwarded,
     }), { headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
   } catch (e) {
     console.error('complete_focus_session error', e);
