@@ -221,23 +221,61 @@ export default function StudyWalletCard({ userId }: { userId?: string }) {
           </DialogHeader>
           <div className="space-y-3">
             <div className="rounded-xl bg-emerald-50 p-3 ring-1 ring-emerald-200">
-              <p className="text-xs text-emerald-700">
-                رصيدك المتاح: <span className="font-bold">{balance.toLocaleString('ar-SA')}</span> نقطة
-                <span className="ms-1 text-emerald-600">(≈ {cashEquiv} ر.س)</span>
-              </p>
+              <div className="flex items-center justify-between text-xs text-emerald-700">
+                <span>رصيد النقاط: <span className="font-bold">{balance.toLocaleString('ar-SA')}</span></span>
+                <span>رصيد نقدي: <span className="font-bold">{cashBalance.toFixed(2)} ر.س</span></span>
+              </div>
             </div>
-            <div>
-              <label className="mb-1 block text-xs font-medium text-slate-700">نوع الاستبدال</label>
-              <Select value={type} onValueChange={(v: any) => setType(v)}>
-                <SelectTrigger><SelectValue /></SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="coupon">قسيمة خصم</SelectItem>
-                  <SelectItem value="service_credit">رصيد خدمات</SelectItem>
-                  <SelectItem value="gift">هدية</SelectItem>
-                  <SelectItem value="cash">سحب نقدي (يحتاج موافقة)</SelectItem>
-                </SelectContent>
-              </Select>
+
+            {/* Mode tabs */}
+            <div className="grid grid-cols-2 gap-2">
+              <button
+                type="button"
+                onClick={() => setMode('cash')}
+                className={`rounded-xl border p-3 text-right transition ${
+                  mode === 'cash'
+                    ? 'border-emerald-500 bg-emerald-50 ring-2 ring-emerald-300'
+                    : 'border-slate-200 hover:border-emerald-300'
+                }`}
+              >
+                <div className="flex items-center gap-2">
+                  <Banknote className="h-4 w-4 text-emerald-600" />
+                  <span className="text-sm font-bold text-slate-800">تحويل لرصيد نقدي</span>
+                </div>
+                <p className="mt-1 text-[10px] text-slate-500">فوري — يُضاف إلى محفظتك مباشرة</p>
+              </button>
+              <button
+                type="button"
+                onClick={() => setMode('request')}
+                className={`rounded-xl border p-3 text-right transition ${
+                  mode === 'request'
+                    ? 'border-emerald-500 bg-emerald-50 ring-2 ring-emerald-300'
+                    : 'border-slate-200 hover:border-emerald-300'
+                }`}
+              >
+                <div className="flex items-center gap-2">
+                  <Gift className="h-4 w-4 text-emerald-600" />
+                  <span className="text-sm font-bold text-slate-800">طلب مكافأة أخرى</span>
+                </div>
+                <p className="mt-1 text-[10px] text-slate-500">قسيمة / هدية / سحب — يحتاج مراجعة</p>
+              </button>
             </div>
+
+            {mode === 'request' && (
+              <div>
+                <label className="mb-1 block text-xs font-medium text-slate-700">نوع الاستبدال</label>
+                <Select value={type} onValueChange={(v: any) => setType(v)}>
+                  <SelectTrigger><SelectValue /></SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="coupon">قسيمة خصم</SelectItem>
+                    <SelectItem value="service_credit">رصيد خدمات</SelectItem>
+                    <SelectItem value="gift">هدية</SelectItem>
+                    <SelectItem value="cash">سحب نقدي (يحتاج موافقة)</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            )}
+
             <div>
               <label className="mb-1 block text-xs font-medium text-slate-700">عدد النقاط</label>
               <Input
@@ -249,16 +287,19 @@ export default function StudyWalletCard({ userId }: { userId?: string }) {
                 ≈ {(Number(points) / POINTS_PER_SAR || 0).toFixed(2)} ر.س — الحد الأدنى 100 نقطة
               </p>
             </div>
-            <div>
-              <label className="mb-1 block text-xs font-medium text-slate-700">ملاحظات (اختياري)</label>
-              <Textarea
-                rows={3}
-                placeholder="مثال: أرغب في قسيمة خصم على خدمة الترجمة"
-                value={notes}
-                onChange={(e) => setNotes(e.target.value)}
-                maxLength={500}
-              />
-            </div>
+
+            {mode === 'request' && (
+              <div>
+                <label className="mb-1 block text-xs font-medium text-slate-700">ملاحظات (اختياري)</label>
+                <Textarea
+                  rows={3}
+                  placeholder="مثال: أرغب في قسيمة خصم على خدمة الترجمة"
+                  value={notes}
+                  onChange={(e) => setNotes(e.target.value)}
+                  maxLength={500}
+                />
+              </div>
+            )}
           </div>
           <DialogFooter>
             <Button variant="ghost" onClick={() => setOpen(false)} disabled={submitting}>إلغاء</Button>
@@ -267,9 +308,12 @@ export default function StudyWalletCard({ userId }: { userId?: string }) {
               disabled={submitting}
               className="bg-emerald-600 text-white hover:bg-emerald-700"
             >
-              {submitting ? 'جارٍ الإرسال…' : 'إرسال الطلب'}
+              {submitting
+                ? 'جارٍ التنفيذ…'
+                : mode === 'cash' ? 'تحويل إلى المحفظة' : 'إرسال الطلب'}
             </Button>
           </DialogFooter>
+
         </DialogContent>
       </Dialog>
     </Card>
