@@ -698,7 +698,7 @@ const FinancingDetails: React.FC = () => {
                       </div>
                       <Button
                         size="lg"
-                        className="w-full font-bold shadow-lg hover-scale"
+                        className="w-full font-bold shadow-lg hover-scale h-12 sm:h-11 text-base sm:text-sm"
                         disabled={!walletEnough || paying}
                         onClick={submitWalletPayment}
                       >
