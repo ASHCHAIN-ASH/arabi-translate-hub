@@ -89,7 +89,7 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
       items: [
         { name: 'العضويات', href: '/adminmaster/memberships', icon: Star },
         { name: 'الإحالات والعمولات', href: '/adminmaster/referrals', icon: Gift },
-        { name: 'النقاط والمكافآت', href: '/adminmaster/gamification', icon: Trophy },
+        
       ]
     },
     // 5.5 النمو والتحليلات
