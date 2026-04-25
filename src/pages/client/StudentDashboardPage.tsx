@@ -20,6 +20,11 @@ import {
 import { useAuth } from '@/components/SimpleAuthProvider';
 import { useStudentDashboard, type StudentEventType } from '@/hooks/useStudentDashboard';
 import { toast } from 'sonner';
+import LevelProgress, { getLevelInfo } from '@/components/student/LevelProgress';
+import SmartNotifications from '@/components/student/SmartNotifications';
+import StartDayButton from '@/components/student/StartDayButton';
+import AIAssistantPanel from '@/components/student/AIAssistantPanel';
+import { celebrate } from '@/components/student/celebrate';
 
 /* =========================================================
    Animated counter
