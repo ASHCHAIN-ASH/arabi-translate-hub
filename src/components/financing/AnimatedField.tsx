@@ -11,6 +11,7 @@ interface AnimatedFieldProps {
   required?: boolean;
   valid?: boolean;
   invalid?: boolean;
+  errorMessage?: string;
   iconColor?: string; // tailwind class e.g. "text-sky-500"
   delay?: number;
   className?: string;
