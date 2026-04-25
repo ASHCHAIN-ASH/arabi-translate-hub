@@ -592,7 +592,10 @@ const FinancingNew: React.FC = () => {
                       label="الاسم الكامل (كما في الهوية)"
                       iconColor="text-sky-600"
                       delay={0.05}
+                      required
                       valid={v.name}
+                      invalid={v.nameInvalid}
+                      errorMessage={errMsg.name}
                       hint="أدخل اسمك الرباعي كاملاً كما في الهوية الوطنية"
                     >
                       <Input
@@ -607,8 +610,10 @@ const FinancingNew: React.FC = () => {
                       label="رقم الهوية / الإقامة"
                       iconColor="text-violet-600"
                       delay={0.1}
+                      required
                       valid={v.id}
                       invalid={v.idInvalid}
+                      errorMessage={errMsg.id}
                       hint="10 أرقام تبدأ بـ 1 (مواطن) أو 2 (مقيم)"
                     >
                       <Input
@@ -626,8 +631,10 @@ const FinancingNew: React.FC = () => {
                       label="رقم الجوال"
                       iconColor="text-emerald-600"
                       delay={0.15}
+                      required
                       valid={v.phone}
                       invalid={v.phoneInvalid}
+                      errorMessage={errMsg.phone}
                       hint="مثال: 0501234567 أو 966501234567"
                     >
                       <Input
@@ -644,8 +651,10 @@ const FinancingNew: React.FC = () => {
                       label="البريد الإلكتروني"
                       iconColor="text-amber-600"
                       delay={0.2}
+                      required
                       valid={v.email}
                       invalid={v.emailInvalid}
+                      errorMessage={errMsg.email}
                       hint="سيُستخدم لإرسال نسخة العقد ونتيجة التقييم"
                     >
                       <Input
