@@ -24,6 +24,7 @@ import {
   ScrollText,
 } from 'lucide-react';
 import ClientLayout from '@/components/client/ClientLayout';
+import FinancingDetailsHero from '@/components/financing/FinancingDetailsHero';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -576,105 +577,91 @@ const FinancingDetails: React.FC = () => {
     );
   }
 
+  const _nextDueRow = installments.find((i) => i.status !== 'paid');
+  const _paidCount = installments.filter((i) => i.status === 'paid').length;
+
   return (
     <ClientLayout>
       <div dir="rtl" className="space-y-5 max-w-5xl mx-auto animate-fade-in">
-        {/* Back nav */}
-        <Link to="/financing" className="text-sm text-muted-foreground hover:text-foreground inline-flex items-center gap-1 hover-scale">
-          <ArrowRight className="h-4 w-4 rotate-180" /> رجوع إلى قائمة التمويل
-        </Link>
+        {/* Banking-grade Hero with countdown + repayment progress */}
+        <FinancingDetailsHero
+          applicationId={app.id}
+          totalAmount={app.total_amount}
+          downPayment={app.down_payment}
+          monthlyInstallment={app.monthly_installment}
+          durationMonths={app.duration_months}
+          remainingAmount={app.remaining_amount}
+          statusLabel={FINANCING_STATUS_LABELS_AR[app.status] ?? app.status}
+          statusKey={app.status}
+          nextDueDate={_nextDueRow?.due_date}
+          paidInstallments={_paidCount}
+          totalInstallments={installments.length}
+        />
 
-        {/* Header card with timeline */}
-        <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}>
-          <Card className="relative overflow-hidden border-0 shadow-2xl">
-            <div
-              className="absolute inset-0"
-              style={{
-                background: 'linear-gradient(135deg, hsl(217 91% 18%) 0%, hsl(199 89% 38%) 100%)',
-              }}
-            />
-            <motion.div
-              className="absolute -top-20 -right-20 h-64 w-64 rounded-full bg-cyan-400/30 blur-3xl"
-              animate={{ scale: [1, 1.15, 1] }}
-              transition={{ duration: 7, repeat: Infinity }}
-            />
-            <div className="relative p-6 md:p-8 text-white">
-              <div className="flex items-start justify-between flex-wrap gap-4 mb-6">
-                <div>
-                  <div className="text-[10px] uppercase tracking-widest text-white/70 mb-1">رقم الطلب</div>
-                  <div className="font-mono text-sm font-bold mb-2">#{app.id.slice(0, 8).toUpperCase()}</div>
-                  <div className="text-3xl md:text-4xl font-extrabold tabular-nums">
-                    {fmt(app.total_amount)}
-                    <span className="text-base font-normal text-white/80 mr-2">ر.س</span>
-                  </div>
-                </div>
-                <Badge className="bg-white/15 text-white ring-1 ring-white/30 border-0 backdrop-blur-xl px-3 py-1.5">
-                  {FINANCING_STATUS_LABELS_AR[app.status] ?? app.status}
-                </Badge>
+        {/* Stages timeline (kept as banking journey strip) */}
+        <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.15 }}>
+          <Card dir="rtl" className="p-4 sm:p-6 border-border/60 bg-gradient-to-br from-card via-card to-muted/20">
+            <div className="flex items-center justify-between mb-3 sm:mb-4">
+              <div className="flex items-center gap-2 text-sm font-bold">
+                <TrendingUp className="h-4 w-4 text-primary" /> مسار التمويل
               </div>
-
-              {/* Payment plan summary */}
-              <div className="grid grid-cols-3 gap-2 md:gap-3 mb-6">
-                <div className="rounded-xl bg-white/10 backdrop-blur-xl p-3 ring-1 ring-white/20">
-                  <div className="text-[10px] uppercase tracking-wider text-white/70 mb-1">الدفعة الأولى</div>
-                  <div className="font-bold tabular-nums text-sm md:text-base">{fmt(app.down_payment)} ر.س</div>
-                </div>
-                <div className="rounded-xl bg-white/10 backdrop-blur-xl p-3 ring-1 ring-white/20">
-                  <div className="text-[10px] uppercase tracking-wider text-white/70 mb-1">القسط الشهري</div>
-                  <div className="font-bold tabular-nums text-sm md:text-base">{fmt(app.monthly_installment)} ر.س</div>
-                </div>
-                <div className="rounded-xl bg-white/10 backdrop-blur-xl p-3 ring-1 ring-white/20">
-                  <div className="text-[10px] uppercase tracking-wider text-white/70 mb-1">المدة</div>
-                  <div className="font-bold tabular-nums text-sm md:text-base">{app.duration_months} شهر</div>
-                </div>
-              </div>
-
-              {/* Timeline */}
-              <div className="rounded-xl bg-white/5 backdrop-blur-xl p-4 ring-1 ring-white/10">
-                <div className="flex items-center gap-2 text-xs text-white/80 mb-3">
-                  <TrendingUp className="h-3.5 w-3.5" /> مسار التمويل
-                </div>
-                <div className="flex items-center justify-between gap-1 overflow-x-auto pb-1">
-                  {TIMELINE_STAGES.map((stage, idx) => {
-                    const state = stageReached(app.status, stage.key);
-                    const Icon = stage.icon;
-                    return (
-                      <React.Fragment key={stage.key}>
-                        <motion.div
-                          initial={{ opacity: 0, scale: 0.8 }}
-                          animate={{ opacity: 1, scale: 1 }}
-                          transition={{ delay: 0.15 + idx * 0.08 }}
-                          className="flex flex-col items-center gap-1 min-w-[60px]"
-                        >
+              <span className="text-[11px] text-muted-foreground">
+                {FINANCING_STATUS_LABELS_AR[app.status] ?? app.status}
+              </span>
+            </div>
+            <div className="rounded-xl bg-muted/30 ring-1 ring-border/40 p-3 sm:p-4">
+              <div className="flex items-start justify-between gap-1 overflow-x-auto pb-1" role="list" aria-label="مراحل التمويل">
+                {TIMELINE_STAGES.map((stage, idx) => {
+                  const state = stageReached(app.status, stage.key);
+                  const Icon = stage.icon;
+                  const isLast = idx === TIMELINE_STAGES.length - 1;
+                  const isCurrent = state === 'current';
+                  return (
+                    <React.Fragment key={stage.key}>
+                      <motion.div
+                        role="listitem"
+                        initial={{ opacity: 0, scale: 0.85 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        transition={{ delay: 0.1 + idx * 0.07 }}
+                        className="flex flex-col items-center gap-1.5 min-w-[60px] sm:min-w-[72px] shrink-0"
+                      >
+                        <div className="relative">
+                          {isCurrent && (
+                            <span aria-hidden="true" className="absolute inset-0 rounded-full bg-primary/30 animate-ping" />
+                          )}
                           <div
-                            className={`h-9 w-9 rounded-full flex items-center justify-center ring-2 transition-all ${
+                            className={`relative h-10 w-10 rounded-full ring-2 flex items-center justify-center transition-all ${
                               state === 'done'
-                                ? 'bg-emerald-400 text-emerald-900 ring-emerald-300/50'
-                                : state === 'current'
-                                  ? 'bg-amber-300 text-amber-900 ring-amber-200/60 shadow-lg shadow-amber-500/30 animate-pulse'
-                                  : 'bg-white/10 text-white/50 ring-white/20'
+                                ? 'bg-emerald-500/20 ring-emerald-500/40 text-emerald-600 dark:text-emerald-400'
+                                : isCurrent
+                                ? 'bg-primary/15 ring-primary/50 text-primary shadow-lg shadow-primary/30'
+                                : 'bg-muted ring-border/50 text-muted-foreground/50'
                             }`}
                           >
-                            {state === 'done' ? <CheckCircle2 className="h-4 w-4" /> : <Icon className="h-4 w-4" />}
+                            {state === 'done' ? <CheckCircle2 className="h-[18px] w-[18px]" /> : <Icon className="h-[18px] w-[18px]" />}
                           </div>
-                          <span className={`text-[10px] text-center leading-tight ${state === 'upcoming' ? 'text-white/40' : 'text-white/90'}`}>
-                            {stage.label}
-                          </span>
-                        </motion.div>
-                        {idx < TIMELINE_STAGES.length - 1 && (
-                          <div className={`h-0.5 flex-1 min-w-[8px] rounded ${state === 'done' ? 'bg-emerald-400/60' : 'bg-white/15'}`} />
-                        )}
-                      </React.Fragment>
-                    );
-                  })}
-                </div>
-                {REJECTED_LIKE.includes(app.status) && (
-                  <div className="mt-3 text-xs text-rose-200 flex items-center gap-1.5">
-                    <AlertCircle className="h-3.5 w-3.5" />
-                    هذا الطلب {FINANCING_STATUS_LABELS_AR[app.status]} — تواصل مع {FINANCING_TEAMS.followup} ({FINANCING_TEAMS.contact}) لمعرفة التفاصيل.
-                  </div>
-                )}
+                        </div>
+                        <span className={`text-[10px] sm:text-[11px] text-center font-semibold leading-tight ${
+                          state === 'upcoming' ? 'text-muted-foreground/60' : isCurrent ? 'text-primary' : 'text-foreground'
+                        }`}>
+                          {stage.label}
+                        </span>
+                      </motion.div>
+                      {!isLast && (
+                        <div className={`h-1 flex-1 min-w-[8px] rounded-full mt-5 ${
+                          state === 'done' ? 'bg-emerald-500/40' : isCurrent ? 'bg-gradient-to-l from-primary/50 via-primary/20 to-muted-foreground/15' : 'bg-muted-foreground/15'
+                        }`} aria-hidden="true" />
+                      )}
+                    </React.Fragment>
+                  );
+                })}
               </div>
+              {REJECTED_LIKE.includes(app.status) && (
+                <div className="mt-3 text-xs text-rose-600 dark:text-rose-400 flex items-center gap-1.5">
+                  <AlertCircle className="h-3.5 w-3.5" />
+                  هذا الطلب {FINANCING_STATUS_LABELS_AR[app.status]} — تواصل مع {FINANCING_TEAMS.followup} ({FINANCING_TEAMS.contact}).
+                </div>
+              )}
             </div>
           </Card>
         </motion.div>
