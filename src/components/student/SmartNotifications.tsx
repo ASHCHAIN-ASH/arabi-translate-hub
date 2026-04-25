@@ -128,7 +128,50 @@ export default function SmartNotifications({
     return () => clearInterval(i);
   }, []);
 
-  const visible = notifs.filter(n => !dismissed.has(n.id));
+  // 24h suppression for milestone notifs (streak/level/weekly) via LocalStorage
+  const STORAGE_KEY = 'student_notifs_seen_v1';
+  const TTL_MS = 24 * 60 * 60 * 1000;
+  const SUPPRESSED_KINDS: NotifKind[] = ['streak', 'level', 'weekly'];
+
+  const readSeen = (): Record<string, number> => {
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if (!raw) return {};
+      const parsed = JSON.parse(raw) as Record<string, number>;
+      const now = Date.now();
+      // prune expired entries
+      const fresh: Record<string, number> = {};
+      for (const [k, t] of Object.entries(parsed)) {
+        if (now - t < TTL_MS) fresh[k] = t;
+      }
+      return fresh;
+    } catch { return {}; }
+  };
+
+  const markSeen = (id: string) => {
+    try {
+      const seen = readSeen();
+      seen[id] = Date.now();
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(seen));
+    } catch { /* ignore */ }
+  };
+
+  const seenMap = useMemo(readSeen, [tick, notifs]);
+
+  const visible = notifs.filter(n => {
+    if (dismissed.has(n.id)) return false;
+    if (SUPPRESSED_KINDS.includes(n.kind) && seenMap[n.id]) return false;
+    return true;
+  });
+
+  // Mark milestone notifs as "seen" the first time they render
+  useEffect(() => {
+    visible.forEach(n => {
+      if (SUPPRESSED_KINDS.includes(n.kind)) markSeen(n.id);
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [visible.map(v => v.id).join('|')]);
+
   if (visible.length === 0) return null;
 
   return (
