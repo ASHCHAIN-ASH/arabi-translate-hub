@@ -1269,6 +1269,20 @@ const FinancingNew: React.FC = () => {
             </motion.div>
           )}
         </AnimatePresence>
+          </div>
+
+          {/* Sticky live summary sidebar */}
+          <aside className="lg:block">
+            <FinancingLiveSummary
+              amount={amount}
+              total={preview.total}
+              downPayment={preview.downPayment}
+              monthly={preview.monthly}
+              duration={preview.duration}
+              step={step}
+            />
+          </aside>
+        </div>
       </div>
     </ClientLayout>
   );
