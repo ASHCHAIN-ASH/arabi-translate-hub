@@ -103,6 +103,7 @@ import AdminInbox from "./pages/admin/AdminInbox";
 import AdminChat from "./pages/admin/AdminChat";
 import AddUser from "./pages/admin/AddUser";
 import AdminWorkingHours from "./pages/admin/AdminWorkingHours";
+import AdminChangelog from "./pages/admin/AdminChangelog";
 import AdminWallets from "./pages/admin/AdminWallets";
 import AdminPayments from "./pages/admin/AdminPayments";
 import AdminGamification from "./pages/admin/AdminGamification";
