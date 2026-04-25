@@ -419,6 +419,7 @@ export default function SuperTasksCard({
                 task={t}
                 suggested={suggestion?.id === t.id}
                 onComplete={onCompleteTask}
+                onUndo={(task) => onCompleteTask({ ...task, is_done: true })}
                 onStart={(task) => {
                   if (/تركيز|focus/i.test(task.title)) onStartFocus();
                   else onStartTask(task);
