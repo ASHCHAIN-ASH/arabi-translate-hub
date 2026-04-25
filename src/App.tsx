@@ -378,16 +378,6 @@ const App = () => (
                 <ClientWallet />
               </SimpleProtectedRoute>
             } />
-            <Route path="/marketplace" element={
-              <SimpleProtectedRoute requiredRole="client">
-                <Marketplace />
-              </SimpleProtectedRoute>
-            } />
-            <Route path="/marketplace/rewards" element={
-              <SimpleProtectedRoute requiredRole="client">
-                <MarketplaceRewards />
-              </SimpleProtectedRoute>
-            } />
             <Route path="/wallet/topup" element={
               <SimpleProtectedRoute requiredRole="client">
                 <WalletTopup />
@@ -641,11 +631,6 @@ const App = () => (
                 <AdminXpConversionReport />
               </SimpleProtectedRoute>
             } />
-            <Route path="/adminmaster/marketplace-funnel" element={
-              <SimpleProtectedRoute adminOnly>
-                <AdminMarketplaceFunnel />
-              </SimpleProtectedRoute>
-            } />
             <Route path="/adminmaster/memberships" element={
               <SimpleProtectedRoute adminOnly>
                 <AdminMemberships />
@@ -686,41 +671,6 @@ const App = () => (
                 <AdminAssessments />
               </SimpleProtectedRoute>
             } />
-            <Route path="/adminmaster/battle-quiz" element={
-              <SimpleProtectedRoute adminOnly>
-                <AdminBattleQuiz />
-              </SimpleProtectedRoute>
-            } />
-            <Route path="/adminmaster/question-bank" element={
-              <SimpleProtectedRoute adminOnly>
-                <AdminQuestionBank />
-              </SimpleProtectedRoute>
-            } />
-            <Route path="/quiz-bank" element={
-              <SimpleProtectedRoute requiredRole="client">
-                <QuizBank />
-              </SimpleProtectedRoute>
-            } />
-            <Route path="/quiz-bank/browse" element={
-              <SimpleProtectedRoute requiredRole="client">
-                <QuizBankBrowse />
-              </SimpleProtectedRoute>
-            } />
-            <Route path="/quiz-bank/subject/:id" element={
-              <SimpleProtectedRoute requiredRole="client">
-                <QuizBankSubject />
-              </SimpleProtectedRoute>
-            } />
-            <Route path="/quiz-bank/account" element={
-              <SimpleProtectedRoute requiredRole="client">
-                <QuizBankAccount />
-              </SimpleProtectedRoute>
-            } />
-            <Route path="/quiz-bank/results" element={
-              <SimpleProtectedRoute requiredRole="client">
-                <QuizBankResults />
-              </SimpleProtectedRoute>
-            } />
             <Route path="/challenge-academy/assessments" element={<AssessmentsList />} />
             <Route path="/challenge-academy/assessments/:id/start" element={<AssessmentStart />} />
             <Route path="/challenge-academy/assessments/:id/result" element={<AssessmentResult />} />
@@ -748,64 +698,6 @@ const App = () => (
               <SimpleProtectedRoute requiredRole="client">
                 <RewardsPage />
               </SimpleProtectedRoute>
-            } />
-            <Route path="/challenge-academy" element={
-              <SimpleProtectedRoute requiredRole="client">
-                <ChallengeAcademy />
-              </SimpleProtectedRoute>
-            } />
-            <Route path="/battle-quiz" element={
-              <SimpleProtectedRoute requiredRole="client"><BattleQuizHome /></SimpleProtectedRoute>
-            } />
-            <Route path="/battle-quiz/leaderboard" element={
-              <SimpleProtectedRoute requiredRole="client"><BattleQuizLeaderboard /></SimpleProtectedRoute>
-            } />
-            <Route path="/battle-quiz/:roomId/play" element={
-              <SimpleProtectedRoute requiredRole="client"><BattleQuizPlay /></SimpleProtectedRoute>
-            } />
-            <Route path="/battle-quiz/:roomId/result" element={
-              <SimpleProtectedRoute requiredRole="client"><BattleQuizResult /></SimpleProtectedRoute>
-            } />
-            <Route path="/battle-quiz/1v1" element={
-              <SimpleProtectedRoute requiredRole="client"><BattleQuiz1v1Lobby /></SimpleProtectedRoute>
-            } />
-            <Route path="/battle-quiz/1v1/leaderboard" element={
-              <SimpleProtectedRoute requiredRole="client"><BattleQuiz1v1Leaderboard /></SimpleProtectedRoute>
-            } />
-            <Route path="/battle-quiz/1v1/:matchId/play" element={
-              <SimpleProtectedRoute requiredRole="client"><BattleQuiz1v1Play /></SimpleProtectedRoute>
-            } />
-            <Route path="/battle-quiz/1v1/:matchId/result" element={
-              <SimpleProtectedRoute requiredRole="client"><BattleQuiz1v1Result /></SimpleProtectedRoute>
-            } />
-            <Route path="/battle-quiz/1v1/invite/:code" element={
-              <SimpleProtectedRoute requiredRole="client"><BattleQuiz1v1Invite /></SimpleProtectedRoute>
-            } />
-
-            {/* ===== Battle Academy aliases (same components, friendlier URLs) ===== */}
-            <Route path="/battle-academy" element={
-              <SimpleProtectedRoute requiredRole="client"><BattleQuizHome /></SimpleProtectedRoute>
-            } />
-            <Route path="/battle-academy/leaderboard" element={
-              <SimpleProtectedRoute requiredRole="client"><BattleQuizLeaderboard /></SimpleProtectedRoute>
-            } />
-            <Route path="/battle-academy/play/:roomId" element={
-              <SimpleProtectedRoute requiredRole="client"><BattleQuizPlay /></SimpleProtectedRoute>
-            } />
-            <Route path="/battle-academy/result/:roomId" element={
-              <SimpleProtectedRoute requiredRole="client"><BattleQuizResult /></SimpleProtectedRoute>
-            } />
-            <Route path="/battle-academy/1v1" element={
-              <SimpleProtectedRoute requiredRole="client"><BattleQuiz1v1Lobby /></SimpleProtectedRoute>
-            } />
-            <Route path="/battle-academy/1v1/leaderboard" element={
-              <SimpleProtectedRoute requiredRole="client"><BattleQuiz1v1Leaderboard /></SimpleProtectedRoute>
-            } />
-            <Route path="/battle-academy/1v1/play/:matchId" element={
-              <SimpleProtectedRoute requiredRole="client"><BattleQuiz1v1Play /></SimpleProtectedRoute>
-            } />
-            <Route path="/battle-academy/1v1/result/:matchId" element={
-              <SimpleProtectedRoute requiredRole="client"><BattleQuiz1v1Result /></SimpleProtectedRoute>
             } />
             <Route path="/student" element={
               <SimpleProtectedRoute requiredRole="client"><StudentDashboardPage /></SimpleProtectedRoute>
