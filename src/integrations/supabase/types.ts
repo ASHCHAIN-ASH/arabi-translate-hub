@@ -2981,42 +2981,6 @@ export type Database = {
           },
         ]
       }
-      marketing_assets: {
-        Row: {
-          caption_template: string | null
-          created_at: string
-          id: string
-          image_url: string | null
-          is_active: boolean
-          platform: string
-          service_type: string
-          title: string
-          updated_at: string
-        }
-        Insert: {
-          caption_template?: string | null
-          created_at?: string
-          id?: string
-          image_url?: string | null
-          is_active?: boolean
-          platform: string
-          service_type: string
-          title: string
-          updated_at?: string
-        }
-        Update: {
-          caption_template?: string | null
-          created_at?: string
-          id?: string
-          image_url?: string | null
-          is_active?: boolean
-          platform?: string
-          service_type?: string
-          title?: string
-          updated_at?: string
-        }
-        Relationships: []
-      }
       member_referrals: {
         Row: {
           commission_amount: number
