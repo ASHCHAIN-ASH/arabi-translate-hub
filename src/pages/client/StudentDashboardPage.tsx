@@ -21,7 +21,7 @@ import {
   Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
 } from '@/components/ui/select';
 import { useAuth } from '@/components/SimpleAuthProvider';
-import { useStudentDashboard, type StudentEventType } from '@/hooks/useStudentDashboard';
+import { useStudentDashboard, useClaimBossChallengeReward, useStudentRewardEvents, type StudentEventType } from '@/hooks/useStudentDashboard';
 import { toast } from 'sonner';
 import { supabase } from '@/integrations/supabase/client';
 import LevelProgress, { getLevelInfo } from '@/components/student/LevelProgress';
@@ -270,6 +270,25 @@ export default function StudentDashboardPage() {
   const { user } = useAuth();
   const navigate = useNavigate();
   const dash = useStudentDashboard(user?.id);
+  const claimBoss = useClaimBossChallengeReward();
+  const rewardEvents = useStudentRewardEvents(50);
+
+  // Compute current ISO week key (matches edge fn)
+  const currentWeekKey = useMemo(() => {
+    const d = new Date();
+    const date = new Date(Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate()));
+    const dayNum = (date.getUTCDay() + 6) % 7;
+    date.setUTCDate(date.getUTCDate() - dayNum + 3);
+    const firstThursday = new Date(Date.UTC(date.getUTCFullYear(), 0, 4));
+    const week = 1 + Math.round(((date.getTime() - firstThursday.getTime()) / 86400000 - 3 + ((firstThursday.getUTCDay() + 6) % 7)) / 7);
+    return `${date.getUTCFullYear()}-${String(week).padStart(2, '0')}`;
+  }, []);
+
+  const bossClaimed = useMemo(() => {
+    return (rewardEvents.data || []).some(
+      r => r.source_type === 'boss_challenge' && r.reward_type === 'weekly_boss' && r.source_key === currentWeekKey,
+    );
+  }, [rewardEvents.data, currentWeekKey]);
 
   const profile = dash.profile;
   const xp = profile?.xp ?? 0;
@@ -729,7 +748,13 @@ export default function StudentDashboardPage() {
             onStartFocus={() => { if (!running) startFocus(); }}
           />
 
-          <BossChallengeCard tasks={dash.tasks} sessions={dash.sessions} />
+          <BossChallengeCard
+            tasks={dash.tasks}
+            sessions={dash.sessions}
+            claimed={bossClaimed}
+            loading={claimBoss.isPending}
+            onClaimReward={() => claimBoss.mutate()}
+          />
         </div>
 
         {/* Achievements + Analytics */}

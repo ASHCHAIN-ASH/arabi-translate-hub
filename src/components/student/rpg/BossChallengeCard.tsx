@@ -3,7 +3,8 @@ import { motion } from 'framer-motion';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
-import { Sword, Skull, Crown, Trophy } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Sword, Skull, Crown, Trophy, Loader2, CheckCircle2 } from 'lucide-react';
 import type { StudentTask, StudySession } from '@/hooks/useStudentDashboard';
 
 function startOfWeek(d = new Date()) {
@@ -15,10 +16,13 @@ function startOfWeek(d = new Date()) {
 }
 
 export default function BossChallengeCard({
-  tasks, sessions,
+  tasks, sessions, claimed = false, loading = false, onClaimReward,
 }: {
   tasks: StudentTask[];
   sessions: StudySession[];
+  claimed?: boolean;
+  loading?: boolean;
+  onClaimReward?: () => void;
 }) {
   const sow = startOfWeek();
   const { tasksDoneWeek, sessionsDoneWeek } = useMemo(() => {
@@ -100,6 +104,30 @@ export default function BossChallengeCard({
             <span>التقدم الإجمالي</span>
             <span className="tabular-nums font-bold text-white">{totalPct}%</span>
           </div>
+
+          {defeated && (
+            <div className="pt-2">
+              {claimed ? (
+                <div className="flex items-center justify-center gap-2 rounded-xl bg-white/15 px-4 py-2.5 text-sm font-semibold text-white backdrop-blur">
+                  <CheckCircle2 className="h-4 w-4" />
+                  تم استلام مكافأة هذا الأسبوع
+                </div>
+              ) : (
+                <Button
+                  type="button"
+                  onClick={onClaimReward}
+                  disabled={loading || !onClaimReward}
+                  className="w-full bg-white text-emerald-700 hover:bg-white/90 font-bold shadow-lg"
+                >
+                  {loading ? (
+                    <><Loader2 className="me-2 h-4 w-4 animate-spin" /> جارٍ الاستلام…</>
+                  ) : (
+                    <>🏆 استلام مكافأة Boss (+500 XP)</>
+                  )}
+                </Button>
+              )}
+            </div>
+          )}
         </div>
       </CardContent>
     </Card>

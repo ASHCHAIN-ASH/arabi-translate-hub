@@ -6951,6 +6951,51 @@ export type Database = {
         }
         Relationships: []
       }
+      student_reward_events: {
+        Row: {
+          created_at: string
+          id: string
+          metadata: Json
+          points_amount: number
+          reward_tier: string | null
+          reward_type: string
+          source_id: string | null
+          source_key: string | null
+          source_type: string
+          status: string
+          user_id: string
+          xp_amount: number
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          metadata?: Json
+          points_amount?: number
+          reward_tier?: string | null
+          reward_type: string
+          source_id?: string | null
+          source_key?: string | null
+          source_type: string
+          status?: string
+          user_id: string
+          xp_amount?: number
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          metadata?: Json
+          points_amount?: number
+          reward_tier?: string | null
+          reward_type?: string
+          source_id?: string | null
+          source_key?: string | null
+          source_type?: string
+          status?: string
+          user_id?: string
+          xp_amount?: number
+        }
+        Relationships: []
+      }
       student_tasks: {
         Row: {
           completed_at: string | null
