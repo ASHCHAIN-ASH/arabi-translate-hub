@@ -1129,16 +1129,14 @@ const FinancingNew: React.FC = () => {
               exit={{ opacity: 0, x: 30 }}
               transition={{ duration: 0.3 }}
             >
-              <Card className="p-6 md:p-7 space-y-6 border-border/60">
-                <div className="flex items-center gap-3 pb-4 border-b border-border/50">
-                  <div className="h-10 w-10 rounded-xl bg-gradient-to-br from-violet-500 to-purple-600 flex items-center justify-center text-white shadow-md">
-                    <FileText className="h-5 w-5" />
-                  </div>
-                  <div>
-                    <h2 className="text-lg font-bold">المستندات الرسمية المطلوبة</h2>
-                    <p className="text-xs text-muted-foreground">PDF أو صور واضحة · مخزّنة بتشفير كامل</p>
-                  </div>
-                </div>
+              <Card className="p-4 sm:p-6 md:p-7 space-y-5 sm:space-y-6 border-border/60 shadow-md">
+                <SectionHeader
+                  icon={FileText}
+                  title="المستندات الرسمية المطلوبة"
+                  subtitle="PDF أو صور واضحة · مخزّنة بتشفير AES-256"
+                  badge="الخطوة 2"
+                  gradient="from-violet-500 via-purple-600 to-fuchsia-600"
+                />
 
                 <div className="rounded-xl bg-amber-500/10 ring-1 ring-amber-500/30 p-3 flex items-start gap-2">
                   <Lock className="h-4 w-4 text-amber-600 dark:text-amber-400 mt-0.5 shrink-0" />
