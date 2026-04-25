@@ -65,7 +65,7 @@ export default function SmartNotifications({ events }: { events: StudentEvent[] 
               dir="rtl"
             >
               <div className="flex items-start gap-3">
-                <div className="grid h-9 w-9 shrink-0 place-items-center rounded-xl bg-black/30">
+                <div className="grid h-9 w-9 shrink-0 place-items-center rounded-xl bg-white/20 ring-1 ring-white/30 backdrop-blur">
                   <Icon className="h-4 w-4 text-white" />
                 </div>
                 <div className="min-w-0 flex-1">

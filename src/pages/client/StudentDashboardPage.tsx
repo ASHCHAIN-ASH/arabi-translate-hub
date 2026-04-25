@@ -494,7 +494,7 @@ export default function StudentDashboardPage() {
                       >
                         <div id={`event-${e.id}`} className={`flex items-center justify-between rounded-2xl bg-gradient-to-l ${palette} p-4 ring-1`}>
                           <div className="flex items-center gap-4">
-                            <div className="rounded-xl bg-slate-900 px-3 py-2 font-mono text-sm text-white">{t}</div>
+                            <div className="rounded-xl bg-gradient-to-br from-violet-500 to-cyan-500 px-3 py-2 font-mono text-sm text-white shadow-sm">{t}</div>
                             <div>
                               <p className={`font-semibold ${e.is_done ? 'text-slate-400 line-through' : 'text-slate-900'}`}>{e.title}</p>
                               <p className="text-xs text-slate-600">{typeLabel}</p>
@@ -560,7 +560,7 @@ export default function StudentDashboardPage() {
                     disabled={running}
                     onClick={() => setFocusMin(m)}
                     className={`rounded-full px-3 py-1 text-xs ring-1 transition disabled:opacity-50
-                      ${focusMin === m ? 'bg-slate-900 text-white ring-slate-900' : 'bg-slate-50 text-slate-600 ring-slate-200 hover:bg-slate-100'}`}
+                      ${focusMin === m ? 'bg-gradient-to-l from-violet-500 to-cyan-500 text-white ring-violet-400' : 'bg-violet-50/60 text-slate-600 ring-violet-100 hover:bg-violet-50'}`}
                   >
                     {m} د
                   </button>
@@ -609,7 +609,7 @@ export default function StudentDashboardPage() {
                     >
                       <button
                         onClick={() => { if (!t.is_done) celebrate('small'); dash.toggleTask(t); }}
-                        className="group flex w-full items-center justify-between rounded-2xl bg-slate-50 p-4 ring-1 ring-slate-200 transition hover:bg-slate-100"
+                        className="group flex w-full items-center justify-between rounded-2xl bg-gradient-to-l from-violet-50/60 to-cyan-50/60 p-4 ring-1 ring-violet-100 transition hover:from-violet-50 hover:to-cyan-50"
                       >
                         <div className="flex items-center gap-3">
                           {t.is_done
