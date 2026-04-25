@@ -236,6 +236,7 @@ const App = () => (
         <SimpleAuthProvider>
           <ReferralTracker />
           <LoginWelcomeOverlay />
+          <BonusDropBanner />
           <PageThemeProvider>
           <Routes>
             {/* Public Routes */}
