@@ -262,6 +262,78 @@ const FinancingNew: React.FC = () => {
     document.title = 'طلب تمويل جديد — Master PayLater';
   }, []);
 
+  // ===== Draft autosave (localStorage) — silent debounced + manual save =====
+  const DRAFT_KEY = `financing_draft_${user?.id ?? 'anon'}`;
+  const [savedAt, setSavedAt] = useState<Date | null>(null);
+  const [savingDraft, setSavingDraft] = useState(false);
+  const restoredRef = useRef(false);
+
+  // Restore draft once after mount
+  useEffect(() => {
+    if (restoredRef.current || !user?.id) return;
+    restoredRef.current = true;
+    try {
+      const raw = localStorage.getItem(DRAFT_KEY);
+      if (!raw) return;
+      const draft = JSON.parse(raw);
+      if (draft.form) setForm((f) => ({ ...f, ...draft.form }));
+      if (draft.amount) setAmount(draft.amount);
+      if (draft.step) setStep(draft.step);
+      if (draft.savedAt) setSavedAt(new Date(draft.savedAt));
+      sonner.success('تمت استعادة مسودة طلبك السابقة', {
+        description: 'تابع من حيث توقفت — لم نفقد أي بيان.',
+        duration: 4000,
+      });
+    } catch {/* ignore corrupt draft */}
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user?.id]);
+
+  // Debounced silent autosave on form/amount changes
+  useEffect(() => {
+    if (!user?.id) return;
+    const t = setTimeout(() => {
+      try {
+        localStorage.setItem(DRAFT_KEY, JSON.stringify({
+          form, amount, step, savedAt: new Date().toISOString(),
+        }));
+        setSavedAt(new Date());
+      } catch {/* quota */}
+    }, 1200);
+    return () => clearTimeout(t);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [form, amount, step, user?.id]);
+
+  const saveDraftManually = () => {
+    if (!user?.id) {
+      sonner.error('سجّل الدخول أولًا', { description: 'لا يمكن حفظ المسودة بدون حساب.' });
+      return;
+    }
+    setSavingDraft(true);
+    try {
+      localStorage.setItem(DRAFT_KEY, JSON.stringify({
+        form, amount, step, savedAt: new Date().toISOString(),
+      }));
+      setSavedAt(new Date());
+      sonner.success('💾 تم حفظ المسودة', {
+        description: 'يمكنك إغلاق الصفحة والعودة لاحقًا — سيتم استعادة كل شيء تلقائيًا.',
+        duration: 3500,
+      });
+    } catch {
+      sonner.error('تعذّر حفظ المسودة', { description: 'تأكد من توفر مساحة في المتصفح.' });
+    } finally {
+      setTimeout(() => setSavingDraft(false), 600);
+    }
+  };
+
+  const goToStep = (next: 1 | 2 | 3) => {
+    const direction = next > step ? 'الأمام' : 'الخلف';
+    setStep(next);
+    sonner.success(`✓ انتقلت إلى الخطوة ${next} من 3`, {
+      description: `تم حفظ تقدمك تلقائيًا قبل التنقل ${direction === 'الأمام' ? 'للأمام' : 'للخلف'}.`,
+      duration: 2200,
+    });
+  };
+
   const setField = (k: keyof typeof form, v: any) => setForm((f) => ({ ...f, [k]: v }));
 
   // === Live field validators (for visual ✓/✗ feedback + Arabic error messages) ===
