@@ -2,8 +2,9 @@ import React, { useMemo, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   Plus, Zap, Flame, Sparkles, Brain, CheckCircle2, Play,
-  Star, Target, Bolt, Trophy, Lightbulb,
+  Star, Target, Bolt, Trophy, Lightbulb, Undo2,
 } from 'lucide-react';
+import { toast } from 'sonner';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
