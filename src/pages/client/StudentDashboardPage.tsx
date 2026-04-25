@@ -425,6 +425,17 @@ export default function StudentDashboardPage() {
           </div>
         </div>
 
+        {/* Level + AI assistant */}
+        <div className="mt-6 grid grid-cols-1 gap-6 lg:grid-cols-2">
+          <LevelProgress xp={xp} />
+          <AIAssistantPanel
+            profile={profile}
+            events={dash.events}
+            tasks={dash.tasks}
+            onAdd={async (title, xp) => { await dash.addTask(title, xp); celebrate('small'); }}
+          />
+        </div>
+
         {/* MIDDLE: schedule + focus */}
         <div className="mt-6 grid grid-cols-1 gap-6 lg:grid-cols-3">
           {/* Schedule */}
