@@ -28,6 +28,7 @@ import LevelProgress, { getLevelInfo } from '@/components/student/LevelProgress'
 import SmartNotifications from '@/components/student/SmartNotifications';
 import StartDayButton from '@/components/student/StartDayButton';
 import AIAssistantPanel from '@/components/student/AIAssistantPanel';
+import AINudgeBanner from '@/components/student/AINudgeBanner';
 import { celebrate } from '@/components/student/celebrate';
 import StudyWalletCard from '@/components/student/StudyWalletCard';
 import StudyChallengeCard from '@/components/student/StudyChallengeCard';
@@ -619,6 +620,27 @@ export default function StudentDashboardPage() {
             <StatTile icon={Flame} label="سلسلة الالتزام" value={streak} color="bg-gradient-to-br from-orange-500 to-rose-500" suffix="يوم" accent="bg-orange-500" pulse={streak > 0} delay={0.2} />
             <StatTile icon={Medal} label="الشارات" value={badges} color="bg-gradient-to-br from-emerald-500 to-teal-500" accent="bg-emerald-500" delay={0.3} />
           </div>
+        </div>
+
+        {/* AI Nudge — contextual coach */}
+        <div className="mt-6">
+          <AINudgeBanner
+            profile={profile}
+            events={dash.events}
+            tasks={dash.tasks}
+            dayState={dash.day}
+            streak={streak}
+            onAction={(target) => {
+              const map: Record<string, string> = {
+                tasks: 'tasks-section',
+                schedule: 'schedule-section',
+                focus: 'focus-section',
+                challenge: 'challenge-section',
+              };
+              const id = map[target];
+              if (id) document.getElementById(id)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }}
+          />
         </div>
 
         {/* Level + AI assistant */}
