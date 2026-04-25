@@ -1,8 +1,9 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { Bell, BookOpen, Flame, GraduationCap, Sparkles, Timer, Trophy, X, Zap } from 'lucide-react';
 import type { StudentEvent } from '@/hooks/useStudentDashboard';
 import { getLevelInfo } from '@/components/student/LevelProgress';
+import { supabase } from '@/integrations/supabase/client';
 
 type NotifKind = 'exam' | 'study' | 'focus' | 'streak' | 'level' | 'weekly' | 'general';
 
