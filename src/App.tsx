@@ -128,6 +128,7 @@ import AdminExperimentDetail from "./pages/admin/AdminExperimentDetail";
 import AdminAssessments from "./pages/admin/AdminAssessments";
 import AdminBattleQuiz from "./pages/admin/AdminBattleQuiz";
 import AdminQuestionBank from "./pages/admin/AdminQuestionBank";
+import StudentActivityPage from "./pages/admin/StudentActivityPage";
 import QuizBank from "./pages/QuizBank";
 import QuizBankResults from "./pages/QuizBankResults";
 import QuizBankBrowse from "./pages/QuizBankBrowse";
@@ -629,6 +630,11 @@ const App = () => (
             <Route path="/adminmaster/gamification" element={
               <SimpleProtectedRoute adminOnly>
                 <AdminGamification />
+              </SimpleProtectedRoute>
+            } />
+            <Route path="/adminmaster/student-activity" element={
+              <SimpleProtectedRoute adminOnly>
+                <StudentActivityPage />
               </SimpleProtectedRoute>
             } />
             <Route path="/adminmaster/xp-conversion-report" element={
