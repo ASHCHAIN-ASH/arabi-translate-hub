@@ -43,6 +43,8 @@ import ClientLayout from '@/components/client/ClientLayout';
 import FinancingNewHero from '@/components/financing/FinancingNewHero';
 import FinancingStepper from '@/components/financing/FinancingStepper';
 import FinancingLiveSummary from '@/components/financing/FinancingLiveSummary';
+import AnimatedField from '@/components/financing/AnimatedField';
+import SectionHeader from '@/components/financing/SectionHeader';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
