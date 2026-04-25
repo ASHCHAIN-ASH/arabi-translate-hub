@@ -1438,6 +1438,13 @@ const FinancingNew: React.FC = () => {
                   />
                 </div>
 
+                {/* Payment method (Visa / Mada / PayPal) */}
+                <PaymentMethodSection
+                  value={payment}
+                  onChange={setPayment}
+                  amountLabel={`${fmt(preview.downPayment)} ر.س`}
+                />
+
                 {/* Final summary */}
                 <div className="rounded-2xl bg-gradient-to-br from-primary/10 to-primary/5 p-5 ring-1 ring-primary/30">
                   <div className="text-sm font-bold mb-3 flex items-center gap-2">
