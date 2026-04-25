@@ -180,30 +180,79 @@ function Field({ label, value, mono, accent }: { label: string; value: string; m
 }
 
 /* =========================================================
-   Stat tile
+   Gamified Stat tile (pulsing, animated)
 ========================================================= */
-function StatTile({ icon: Icon, label, value, color, suffix }: {
+function StatTile({ icon: Icon, label, value, color, suffix, accent, pulse, delay = 0 }: {
   icon: any; label: string; value: number; color: string; suffix?: string;
+  accent: string; pulse?: boolean; delay?: number;
 }) {
   return (
     <motion.div
-      initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}
-      whileHover={{ y: -4 }} transition={{ type: 'spring', stiffness: 220, damping: 22 }}
-      className="group relative overflow-hidden rounded-3xl bg-white p-5 ring-1 ring-slate-200 shadow-sm hover:shadow-md transition-shadow"
+      initial={{ opacity: 0, y: 24, scale: 0.92 }}
+      animate={{ opacity: 1, y: 0, scale: 1 }}
+      whileHover={{ y: -6, scale: 1.02 }}
+      transition={{ type: 'spring', stiffness: 220, damping: 20, delay }}
+      className="group relative overflow-hidden rounded-3xl bg-white p-5 ring-1 ring-slate-200 shadow-sm hover:shadow-2xl transition-all"
     >
-      <div className={`pointer-events-none absolute -inset-px rounded-3xl opacity-0 blur-xl transition group-hover:opacity-30 ${color}`} />
-      <div className="relative flex items-center justify-between">
-        <div>
-          <p className="text-xs font-medium text-slate-500">{label}</p>
-          <p className="mt-1 text-2xl font-bold text-slate-900">
-            <Counter value={value} />{suffix && <span className="ms-1 text-sm text-slate-500">{suffix}</span>}
+      {/* animated background glow */}
+      <div className={`pointer-events-none absolute -inset-1 rounded-3xl opacity-0 blur-2xl transition-opacity duration-500 group-hover:opacity-40 ${color}`} />
+      {/* corner sparkle */}
+      <div className="pointer-events-none absolute -top-6 -left-6 h-20 w-20 rounded-full bg-gradient-to-br opacity-20 blur-2xl transition-opacity group-hover:opacity-60" style={{ background: `var(--tw-gradient-stops)` }} />
+
+      <div className="relative flex items-start justify-between">
+        <div className="min-w-0 flex-1">
+          <div className="flex items-center gap-1.5">
+            <p className="text-[11px] font-semibold uppercase tracking-wider text-slate-500">{label}</p>
+            {pulse && (
+              <span className="relative flex h-1.5 w-1.5">
+                <span className={`absolute inline-flex h-full w-full animate-ping rounded-full ${accent} opacity-75`} />
+                <span className={`relative inline-flex h-1.5 w-1.5 rounded-full ${accent}`} />
+              </span>
+            )}
+          </div>
+          <p className="mt-2 text-3xl font-extrabold leading-none text-slate-900 tabular-nums">
+            <Counter value={value} />
+            {suffix && <span className="ms-1 text-sm font-medium text-slate-500">{suffix}</span>}
           </p>
+          {/* mini progress bar (decorative) */}
+          <div className="mt-3 h-1 overflow-hidden rounded-full bg-slate-100">
+            <motion.div
+              initial={{ width: 0 }}
+              animate={{ width: `${Math.min(100, Math.max(8, (value % 100) || 30))}%` }}
+              transition={{ duration: 1.4, ease: 'easeOut', delay: delay + 0.2 }}
+              className={`h-full rounded-full ${color}`}
+            />
+          </div>
         </div>
-        <div className={`flex h-12 w-12 items-center justify-center rounded-2xl ${color} text-white shadow-lg`}>
-          <Icon className="h-6 w-6" />
+
+        {/* icon orb with rotating ring */}
+        <div className="relative ms-3 flex-shrink-0">
+          <motion.div
+            animate={{ rotate: 360 }}
+            transition={{ duration: 18, ease: 'linear', repeat: Infinity }}
+            className={`absolute inset-0 rounded-2xl ${color} opacity-30 blur-md`}
+          />
+          <div className={`relative flex h-14 w-14 items-center justify-center rounded-2xl ${color} text-white shadow-lg ring-2 ring-white`}>
+            <Icon className="h-6 w-6 drop-shadow" />
+          </div>
         </div>
       </div>
     </motion.div>
+  );
+}
+
+/* Quick action chip */
+function QuickChip({ icon: Icon, label, onClick, color }: { icon: any; label: string; onClick: () => void; color: string }) {
+  return (
+    <motion.button
+      whileHover={{ scale: 1.05, y: -2 }}
+      whileTap={{ scale: 0.96 }}
+      onClick={onClick}
+      className={`group flex items-center gap-2 rounded-2xl px-4 py-2.5 text-sm font-bold text-white shadow-lg transition-shadow hover:shadow-xl ${color}`}
+    >
+      <Icon className="h-4 w-4 transition-transform group-hover:rotate-12" />
+      {label}
+    </motion.button>
   );
 }
 
@@ -381,43 +430,88 @@ export default function StudentDashboardPage() {
           <ArrowRight className="me-2 h-4 w-4" /> رجوع
         </Button>
 
-        {/* Header */}
+        {/* ===== HERO HEADER ===== */}
         <motion.div
-          initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }}
-          className="mb-8 flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center"
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+          className="relative mb-8 overflow-hidden rounded-[2rem] bg-gradient-to-br from-violet-600 via-fuchsia-600 to-cyan-500 p-6 shadow-2xl shadow-violet-500/30 sm:p-8"
         >
-          <div>
-            <Badge className="mb-2 border-violet-200 bg-violet-50 text-violet-700 hover:bg-violet-100">
-              <Sparkles className="me-1 h-3 w-3" /> مركز الطالب الذكي
-            </Badge>
-            <h1 className="text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl">
-              لوحة مذاكرتك وهويتك الدراسية
-            </h1>
-            <p className="mt-1 max-w-xl text-sm text-slate-600">
-              بطاقة طالب، جدول يومي، جلسات تركيز، مهام، وإنجازات في تجربة واحدة.
-            </p>
-          </div>
-          <div className="flex flex-wrap items-center gap-2">
-            <StartDayButton onClick={() => {
-              celebrate('big');
-              toast.success('بداية موفقة! 🎯 ركّز على أول مهمة في جدولك');
-              const firstEvent = dash.events.find(e => !e.is_done);
-              if (firstEvent) {
-                document.getElementById(`event-${firstEvent.id}`)?.scrollIntoView({ behavior: 'smooth', block: 'center' });
-              } else if (!running) {
-                startFocus();
-              }
-            }} />
-            <Button variant="ghost" size="sm" onClick={dash.refresh} className="text-slate-600 hover:bg-slate-100 hover:text-slate-900">
-              <RefreshCcw className="me-2 h-4 w-4" /> تحديث
-            </Button>
-            <Button onClick={() => setEventOpen(true)} className="bg-gradient-to-l from-violet-500 to-cyan-500 text-white shadow-lg shadow-violet-500/30">
-              <Plus className="me-2 h-4 w-4" /> إضافة موعد
-            </Button>
+          {/* animated orbs */}
+          <motion.div
+            animate={{ x: [0, 30, 0], y: [0, -20, 0] }}
+            transition={{ duration: 8, repeat: Infinity, ease: 'easeInOut' }}
+            className="pointer-events-none absolute -top-20 -right-20 h-64 w-64 rounded-full bg-cyan-300/40 blur-3xl"
+          />
+          <motion.div
+            animate={{ x: [0, -20, 0], y: [0, 30, 0] }}
+            transition={{ duration: 10, repeat: Infinity, ease: 'easeInOut' }}
+            className="pointer-events-none absolute -bottom-20 -left-20 h-64 w-64 rounded-full bg-fuchsia-300/40 blur-3xl"
+          />
+          {/* dotted overlay */}
+          <div
+            className="pointer-events-none absolute inset-0 opacity-[0.08]"
+            style={{ backgroundImage: 'radial-gradient(circle at 1px 1px, white 1px, transparent 0)', backgroundSize: '24px 24px' }}
+          />
+
+          <div className="relative flex flex-col items-start justify-between gap-6 lg:flex-row lg:items-center">
+            <div className="flex-1">
+              <Badge className="mb-3 border-white/30 bg-white/15 text-white backdrop-blur hover:bg-white/20">
+                <Sparkles className="me-1 h-3 w-3" /> مركز الطالب الذكي
+              </Badge>
+              <h1 className="text-3xl font-extrabold leading-tight tracking-tight text-white drop-shadow-lg sm:text-4xl lg:text-5xl">
+                لوحة مذاكرتك وهويتك الدراسية
+              </h1>
+              <p className="mt-2 max-w-2xl text-sm text-white/90 sm:text-base">
+                بطاقة طالب، جدول يومي، جلسات تركيز، مهام، وإنجازات في تجربة واحدة نابضة بالحياة.
+              </p>
+
+              {/* live XP ribbon */}
+              <div className="mt-5 inline-flex items-center gap-2 rounded-full bg-white/15 px-4 py-2 ring-1 ring-white/30 backdrop-blur">
+                <motion.div
+                  animate={{ rotate: 360 }}
+                  transition={{ duration: 4, repeat: Infinity, ease: 'linear' }}
+                >
+                  <Zap className="h-4 w-4 fill-yellow-300 text-yellow-300" />
+                </motion.div>
+                <span className="text-xs font-bold text-white tabular-nums">
+                  <Counter value={xp} /> XP
+                </span>
+                <span className="h-3 w-px bg-white/30" />
+                <Flame className="h-3.5 w-3.5 text-orange-300" />
+                <span className="text-xs font-bold text-white tabular-nums">{streak} يوم</span>
+              </div>
+            </div>
+
+            {/* Quick actions */}
+            <div className="flex w-full flex-wrap items-center gap-2 lg:w-auto lg:flex-nowrap">
+              <StartDayButton onClick={() => {
+                celebrate('big');
+                toast.success('بداية موفقة! 🎯 ركّز على أول مهمة في جدولك');
+                const firstEvent = dash.events.find(e => !e.is_done);
+                if (firstEvent) {
+                  document.getElementById(`event-${firstEvent.id}`)?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                } else if (!running) {
+                  startFocus();
+                }
+              }} />
+              <QuickChip
+                icon={Plus}
+                label="موعد"
+                onClick={() => setEventOpen(true)}
+                color="bg-white/15 ring-1 ring-white/30 backdrop-blur hover:bg-white/25"
+              />
+              <QuickChip
+                icon={RefreshCcw}
+                label="تحديث"
+                onClick={dash.refresh}
+                color="bg-white/15 ring-1 ring-white/30 backdrop-blur hover:bg-white/25"
+              />
+            </div>
           </div>
         </motion.div>
 
-        {/* TOP: identity + stats */}
+        {/* TOP: identity + stats (Bento) */}
         <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="lg:col-span-1">
             <IdentityCard
@@ -437,11 +531,11 @@ export default function StudentDashboardPage() {
             </Button>
           </motion.div>
 
-          <div className="grid grid-cols-2 gap-4 lg:col-span-2">
-            <StatTile icon={Zap} label="نقاط الخبرة" value={xp} color="bg-gradient-to-br from-violet-500 to-fuchsia-500" />
-            <StatTile icon={Clock3} label="ساعات الأسبوع" value={studyHours} color="bg-gradient-to-br from-cyan-500 to-blue-500" suffix="س" />
-            <StatTile icon={Flame} label="سلسلة الالتزام" value={streak} color="bg-gradient-to-br from-orange-500 to-rose-500" suffix="يوم" />
-            <StatTile icon={Medal} label="الشارات" value={badges} color="bg-gradient-to-br from-emerald-500 to-teal-500" />
+          <div className="grid grid-cols-2 gap-3 sm:gap-4 lg:col-span-2">
+            <StatTile icon={Zap} label="نقاط الخبرة" value={xp} color="bg-gradient-to-br from-violet-500 to-fuchsia-500" accent="bg-violet-500" pulse delay={0} />
+            <StatTile icon={Clock3} label="ساعات الأسبوع" value={studyHours} color="bg-gradient-to-br from-cyan-500 to-blue-500" suffix="س" accent="bg-cyan-500" delay={0.1} />
+            <StatTile icon={Flame} label="سلسلة الالتزام" value={streak} color="bg-gradient-to-br from-orange-500 to-rose-500" suffix="يوم" accent="bg-orange-500" pulse={streak > 0} delay={0.2} />
+            <StatTile icon={Medal} label="الشارات" value={badges} color="bg-gradient-to-br from-emerald-500 to-teal-500" accent="bg-emerald-500" delay={0.3} />
           </div>
         </div>
 
