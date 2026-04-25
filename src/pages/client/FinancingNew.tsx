@@ -558,51 +558,105 @@ const FinancingNew: React.FC = () => {
                 </motion.div>
 
                 {/* Personal info grid */}
-                <div className="space-y-1">
-                  <h3 className="text-sm font-bold text-muted-foreground flex items-center gap-2 mb-3">
-                    <User className="h-4 w-4" /> البيانات الشخصية
-                  </h3>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <FieldGroup icon={User} label="الاسم الكامل (كما في الهوية)">
+                <div className="space-y-3">
+                  <motion.div
+                    initial={{ opacity: 0, x: 12 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    className="flex items-center gap-2 text-xs sm:text-sm font-bold text-muted-foreground"
+                  >
+                    <div className="h-7 w-7 rounded-lg bg-gradient-to-br from-sky-500/20 to-blue-600/20 flex items-center justify-center ring-1 ring-sky-500/30">
+                      <User className="h-3.5 w-3.5 text-sky-600 dark:text-sky-400" />
+                    </div>
+                    البيانات الشخصية
+                    <span className="h-px flex-1 bg-gradient-to-l from-border to-transparent" />
+                  </motion.div>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4">
+                    <AnimatedField
+                      icon={User}
+                      label="الاسم الكامل (كما في الهوية)"
+                      iconColor="text-sky-600"
+                      delay={0.05}
+                      valid={v.name}
+                      hint="أدخل اسمك الرباعي كاملاً كما في الهوية الوطنية"
+                    >
                       <Input
                         value={form.applicant_full_name}
                         onChange={(e) => setField('applicant_full_name', e.target.value)}
-                        placeholder="مثال: محمد عبدالله السالم"
+                        placeholder="مثال: محمد عبدالله السالم العتيبي"
+                        className="border-0 bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0 h-11"
                       />
-                    </FieldGroup>
-                    <FieldGroup icon={IdCard} label="رقم الهوية / الإقامة">
+                    </AnimatedField>
+                    <AnimatedField
+                      icon={IdCard}
+                      label="رقم الهوية / الإقامة"
+                      iconColor="text-violet-600"
+                      delay={0.1}
+                      valid={v.id}
+                      invalid={v.idInvalid}
+                      hint="10 أرقام تبدأ بـ 1 (مواطن) أو 2 (مقيم)"
+                    >
                       <Input
                         value={form.applicant_id_number}
-                        onChange={(e) => setField('applicant_id_number', e.target.value)}
-                        placeholder="10 أرقام"
+                        onChange={(e) => setField('applicant_id_number', e.target.value.replace(/\D/g, '').slice(0, 10))}
+                        placeholder="1xxxxxxxxx"
                         inputMode="numeric"
+                        maxLength={10}
+                        dir="ltr"
+                        className="border-0 bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0 h-11 tabular-nums tracking-widest text-center font-bold"
                       />
-                    </FieldGroup>
-                    <FieldGroup icon={Phone} label="رقم الجوال">
+                    </AnimatedField>
+                    <AnimatedField
+                      icon={Phone}
+                      label="رقم الجوال"
+                      iconColor="text-emerald-600"
+                      delay={0.15}
+                      valid={v.phone}
+                      invalid={v.phoneInvalid}
+                      hint="مثال: 0501234567 أو 966501234567"
+                    >
                       <Input
                         type="tel"
                         value={form.applicant_phone}
                         onChange={(e) => setField('applicant_phone', e.target.value)}
-                        placeholder="9665xxxxxxxx"
+                        placeholder="05XXXXXXXX"
                         dir="ltr"
+                        className="border-0 bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0 h-11 tabular-nums"
                       />
-                    </FieldGroup>
-                    <FieldGroup icon={Mail} label="البريد الإلكتروني">
+                    </AnimatedField>
+                    <AnimatedField
+                      icon={Mail}
+                      label="البريد الإلكتروني"
+                      iconColor="text-amber-600"
+                      delay={0.2}
+                      valid={v.email}
+                      invalid={v.emailInvalid}
+                      hint="سيُستخدم لإرسال نسخة العقد ونتيجة التقييم"
+                    >
                       <Input
                         type="email"
                         value={form.applicant_email}
                         onChange={(e) => setField('applicant_email', e.target.value)}
                         placeholder="example@email.com"
                         dir="ltr"
+                        className="border-0 bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0 h-11"
                       />
-                    </FieldGroup>
+                    </AnimatedField>
                   </div>
                 </div>
 
-                <div className="space-y-1">
-                  <h3 className="text-sm font-bold text-muted-foreground flex items-center gap-2 mb-3">
-                    <Briefcase className="h-4 w-4" /> البيانات المهنية والمالية
-                  </h3>
+                <div className="space-y-3">
+                  <motion.div
+                    initial={{ opacity: 0, x: 12 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: 0.1 }}
+                    className="flex items-center gap-2 text-xs sm:text-sm font-bold text-muted-foreground"
+                  >
+                    <div className="h-7 w-7 rounded-lg bg-gradient-to-br from-violet-500/20 to-purple-600/20 flex items-center justify-center ring-1 ring-violet-500/30">
+                      <Briefcase className="h-3.5 w-3.5 text-violet-600 dark:text-violet-400" />
+                    </div>
+                    البيانات المهنية والمالية
+                    <span className="h-px flex-1 bg-gradient-to-l from-border to-transparent" />
+                  </motion.div>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     {/* فئة المتقدم — تحدد المعادلة الائتمانية */}
                     <div className="md:col-span-2">
