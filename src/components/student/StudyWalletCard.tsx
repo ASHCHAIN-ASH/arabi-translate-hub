@@ -128,6 +128,13 @@ export default function StudyWalletCard({ userId }: { userId?: string }) {
           <p className="mt-1 text-xs text-emerald-100">
             ≈ {cashEquiv} ر.س <span className="text-white/60">({POINTS_PER_SAR} نقطة = 1 ر.س)</span>
           </p>
+          <div className="mt-3 flex items-center justify-between rounded-2xl bg-white/15 px-3 py-2 ring-1 ring-white/25">
+            <div className="flex items-center gap-1.5 text-xs text-white/80">
+              <Banknote className="h-3.5 w-3.5" />
+              رصيد المحفظة النقدي
+            </div>
+            <p className="text-lg font-black tabular-nums">{cashBalance.toFixed(2)} <span className="text-xs font-semibold">ر.س</span></p>
+          </div>
         </motion.div>
 
         <div className="mt-4 grid grid-cols-3 gap-2 text-center">
