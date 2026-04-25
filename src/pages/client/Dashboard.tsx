@@ -13,7 +13,7 @@ import DashboardRecentOrders from '@/components/client/DashboardRecentOrders';
 import DashboardRecentContracts from '@/components/client/DashboardRecentContracts';
 import DashboardRecentInvoices from '@/components/client/DashboardRecentInvoices';
 import DashboardActiveTickets from '@/components/client/DashboardActiveTickets';
-import DashboardRewardsWidget from '@/components/client/DashboardRewardsWidget';
+
 
 const ClientDashboard = () => {
   const { user } = useAuth();
