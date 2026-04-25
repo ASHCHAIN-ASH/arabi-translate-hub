@@ -31,6 +31,16 @@ interface WithdrawalRow {
   paid_at: string | null;
 }
 
+interface WalletTxRow {
+  id: string;
+  type: string;
+  amount: number;
+  description: string | null;
+  reference_type: string | null;
+  balance_after: number | null;
+  created_at: string;
+}
+
 // === Tier system based on referrals ===
 const TIERS = [
   { name: 'مبتدئ', min: 0, max: 5, color: 'from-slate-500 to-slate-600', icon: Star, perk: 'عمولة أساسية 10%' },
