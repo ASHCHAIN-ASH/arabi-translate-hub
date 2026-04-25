@@ -503,7 +503,7 @@ const FinancingNew: React.FC = () => {
 
         {/* Visual Stepper */}
         <div className="mt-6">
-          <FinancingStepper current={step} onJump={(s) => setStep(s as 1 | 2 | 3)} />
+          <FinancingStepper current={step} onJump={(s) => goToStep(s as 1 | 2 | 3)} />
         </div>
 
         {/* Two-column layout: form + sticky summary */}
