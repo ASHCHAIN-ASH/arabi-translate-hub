@@ -262,7 +262,7 @@ const FinancingNew: React.FC = () => {
 
   const setField = (k: keyof typeof form, v: any) => setForm((f) => ({ ...f, [k]: v }));
 
-  // === Live field validators (for visual ✓/✗ feedback) ===
+  // === Live field validators (for visual ✓/✗ feedback + Arabic error messages) ===
   const v = {
     name: form.applicant_full_name.trim().length >= 3,
     nameInvalid: form.applicant_full_name.length > 0 && form.applicant_full_name.trim().length < 3,
@@ -273,7 +273,23 @@ const FinancingNew: React.FC = () => {
     email: /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.applicant_email.trim()),
     emailInvalid: form.applicant_email.length > 0 && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.applicant_email.trim()),
     income: Number(form.monthly_income) > 0,
+    incomeInvalid: String(form.monthly_income).length > 0 && (isNaN(Number(form.monthly_income)) || Number(form.monthly_income) <= 0),
+    commitments: Number(form.monthly_commitments) >= 0 && String(form.monthly_commitments).length > 0,
+    commitmentsInvalid: String(form.monthly_commitments).length > 0 && (isNaN(Number(form.monthly_commitments)) || Number(form.monthly_commitments) < 0),
     city: form.city.trim().length >= 2,
+    age: form.applicant_age !== '' && Number(form.applicant_age) >= 18 && Number(form.applicant_age) <= 75,
+    ageInvalid: String(form.applicant_age).length > 0 && (isNaN(Number(form.applicant_age)) || Number(form.applicant_age) < 18 || Number(form.applicant_age) > 75),
+  };
+
+  // Arabic error messages mapped to validators
+  const errMsg = {
+    name: 'الاسم الكامل يجب أن يكون 3 أحرف على الأقل',
+    id: 'رقم هوية غير صالح — 10 أرقام تبدأ بـ 1 (مواطن) أو 2 (مقيم)',
+    phone: 'رقم جوال سعودي غير صالح — يجب أن يبدأ بـ 05 أو 9665',
+    email: 'بريد إلكتروني غير صالح — تأكد من وجود @ والامتداد',
+    income: 'الدخل الشهري يجب أن يكون رقمًا موجبًا',
+    commitments: 'الالتزامات يجب أن تكون رقمًا غير سالب',
+    age: 'العمر يجب أن يكون بين 18 و 75 سنة',
   };
 
   const validateStep1 = () => {
@@ -576,7 +592,10 @@ const FinancingNew: React.FC = () => {
                       label="الاسم الكامل (كما في الهوية)"
                       iconColor="text-sky-600"
                       delay={0.05}
+                      required
                       valid={v.name}
+                      invalid={v.nameInvalid}
+                      errorMessage={errMsg.name}
                       hint="أدخل اسمك الرباعي كاملاً كما في الهوية الوطنية"
                     >
                       <Input
@@ -591,8 +610,10 @@ const FinancingNew: React.FC = () => {
                       label="رقم الهوية / الإقامة"
                       iconColor="text-violet-600"
                       delay={0.1}
+                      required
                       valid={v.id}
                       invalid={v.idInvalid}
+                      errorMessage={errMsg.id}
                       hint="10 أرقام تبدأ بـ 1 (مواطن) أو 2 (مقيم)"
                     >
                       <Input
@@ -610,8 +631,10 @@ const FinancingNew: React.FC = () => {
                       label="رقم الجوال"
                       iconColor="text-emerald-600"
                       delay={0.15}
+                      required
                       valid={v.phone}
                       invalid={v.phoneInvalid}
+                      errorMessage={errMsg.phone}
                       hint="مثال: 0501234567 أو 966501234567"
                     >
                       <Input
@@ -628,8 +651,10 @@ const FinancingNew: React.FC = () => {
                       label="البريد الإلكتروني"
                       iconColor="text-amber-600"
                       delay={0.2}
+                      required
                       valid={v.email}
                       invalid={v.emailInvalid}
+                      errorMessage={errMsg.email}
                       hint="سيُستخدم لإرسال نسخة العقد ونتيجة التقييم"
                     >
                       <Input
@@ -861,9 +886,17 @@ const FinancingNew: React.FC = () => {
                     })()}
 
                     {/* === الحقول المشتركة لكل الفئات === */}
-                    <FieldGroup icon={MapPin} label="المدينة">
-                      <Select dir="rtl" value={form.city} onValueChange={(v) => setField('city', v)}>
-                        <SelectTrigger className="h-11 flex-row-reverse justify-between text-right [&>span]:text-right [&>span]:flex-1">
+                    <AnimatedField
+                      icon={MapPin}
+                      label="المدينة"
+                      iconColor="text-rose-600"
+                      delay={0.05}
+                      required
+                      valid={v.city}
+                      hint="اختر مدينة الإقامة الحالية"
+                    >
+                      <Select dir="rtl" value={form.city} onValueChange={(val) => setField('city', val)}>
+                        <SelectTrigger className="h-11 border-0 bg-transparent focus:ring-0 focus:ring-offset-0 flex-row-reverse justify-between text-right [&>span]:text-right [&>span]:flex-1">
                           <SelectValue placeholder="اختر المدينة..." />
                         </SelectTrigger>
                         <SelectContent dir="rtl" className="max-h-72 text-right">
@@ -877,30 +910,62 @@ const FinancingNew: React.FC = () => {
                           ))}
                         </SelectContent>
                       </Select>
-                    </FieldGroup>
-                    <FieldGroup icon={User} label="العمر (سنوات)">
-                      <Input type="number" min={16} max={75}
+                    </AnimatedField>
+                    <AnimatedField
+                      icon={User}
+                      label="العمر (سنوات)"
+                      iconColor="text-indigo-600"
+                      delay={0.1}
+                      required
+                      valid={v.age}
+                      invalid={v.ageInvalid}
+                      errorMessage={errMsg.age}
+                      hint="من 18 إلى 75 سنة"
+                    >
+                      <Input type="number" min={18} max={75}
                         value={form.applicant_age}
                         onChange={(e) => setField('applicant_age', e.target.value)}
-                        placeholder="مثال: 32" />
-                    </FieldGroup>
-                    <FieldGroup icon={TrendingUp} label={
-                      form.applicant_category === 'student' ? 'الدخل / المكافأة الشهرية (ر.س)' :
-                      form.applicant_category === 'retired' ? 'المعاش التقاعدي الشهري (ر.س)' :
-                      form.applicant_category === 'self_employed' ? 'متوسط الدخل الشهري (ر.س)' :
-                      'الدخل الشهري (ر.س)'
-                    }>
+                        placeholder="مثال: 32"
+                        className="border-0 bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0 h-11 tabular-nums" />
+                    </AnimatedField>
+                    <AnimatedField
+                      icon={TrendingUp}
+                      label={
+                        form.applicant_category === 'student' ? 'الدخل / المكافأة الشهرية (ر.س)' :
+                        form.applicant_category === 'retired' ? 'المعاش التقاعدي الشهري (ر.س)' :
+                        form.applicant_category === 'self_employed' ? 'متوسط الدخل الشهري (ر.س)' :
+                        'الدخل الشهري (ر.س)'
+                      }
+                      iconColor="text-emerald-600"
+                      delay={0.15}
+                      required
+                      valid={v.income}
+                      invalid={v.incomeInvalid}
+                      errorMessage={errMsg.income}
+                      hint="ضع رقمًا تقريبيًا — يُستخدم لحساب الجدارة الائتمانية"
+                    >
                       <Input type="number" min={0}
                         value={form.monthly_income}
                         onChange={(e) => setField('monthly_income', e.target.value)}
-                        placeholder="0" />
-                    </FieldGroup>
-                    <FieldGroup icon={Receipt} label="الالتزامات الشهرية (ر.س)">
+                        placeholder="0"
+                        className="border-0 bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0 h-11 tabular-nums font-semibold" />
+                    </AnimatedField>
+                    <AnimatedField
+                      icon={Receipt}
+                      label="الالتزامات الشهرية (ر.س)"
+                      iconColor="text-orange-600"
+                      delay={0.2}
+                      valid={v.commitments}
+                      invalid={v.commitmentsInvalid}
+                      errorMessage={errMsg.commitments}
+                      hint="مجموع الأقساط/الالتزامات الشهرية الحالية (0 إن لم يوجد)"
+                    >
                       <Input type="number" min={0}
                         value={form.monthly_commitments}
                         onChange={(e) => setField('monthly_commitments', e.target.value)}
-                        placeholder="0" />
-                    </FieldGroup>
+                        placeholder="0"
+                        className="border-0 bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0 h-11 tabular-nums" />
+                    </AnimatedField>
 
                     {/* === الكفيل الغارم === */}
                     <div className="md:col-span-2">
