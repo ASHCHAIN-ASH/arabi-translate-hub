@@ -262,6 +262,20 @@ const FinancingNew: React.FC = () => {
 
   const setField = (k: keyof typeof form, v: any) => setForm((f) => ({ ...f, [k]: v }));
 
+  // === Live field validators (for visual ✓/✗ feedback) ===
+  const v = {
+    name: form.applicant_full_name.trim().length >= 3,
+    nameInvalid: form.applicant_full_name.length > 0 && form.applicant_full_name.trim().length < 3,
+    id: /^[12]\d{9}$/.test(form.applicant_id_number.trim()),
+    idInvalid: form.applicant_id_number.length > 0 && !/^[12]\d{9}$/.test(form.applicant_id_number.trim()),
+    phone: /^(05|9665|\+9665)\d{8}$/.test(form.applicant_phone.trim()),
+    phoneInvalid: form.applicant_phone.length > 0 && !/^(05|9665|\+9665)\d{8}$/.test(form.applicant_phone.trim()),
+    email: /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.applicant_email.trim()),
+    emailInvalid: form.applicant_email.length > 0 && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.applicant_email.trim()),
+    income: Number(form.monthly_income) > 0,
+    city: form.city.trim().length >= 2,
+  };
+
   const validateStep1 = () => {
     if (amount < FINANCING_MIN_AMOUNT) {
       toast({ title: 'مبلغ غير مؤهل', description: `الحد الأدنى ${fmt(FINANCING_MIN_AMOUNT)} ر.س`, variant: 'destructive' });
