@@ -25,6 +25,7 @@ import {
 } from 'lucide-react';
 import ClientLayout from '@/components/client/ClientLayout';
 import FinancingDetailsHero from '@/components/financing/FinancingDetailsHero';
+import FinancingJourneyShowcase from '@/components/financing/FinancingJourneyShowcase';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -1164,6 +1165,12 @@ const FinancingDetails: React.FC = () => {
             </div>
           </Card>
         )}
+
+        {/* Journey showcase — صور واقعية */}
+        <FinancingJourneyShowcase
+          title="تذكير برحلتك"
+          subtitle="حيث وصلت في رحلة التمويل وما الذي ينتظرك بعد التفعيل."
+        />
 
         {/* Support */}
         <Card className="p-4 bg-muted/30">
