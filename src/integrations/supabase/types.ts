@@ -536,6 +536,89 @@ export type Database = {
         }
         Relationships: []
       }
+      bonus_drop_views: {
+        Row: {
+          bonus_drop_id: string
+          id: string
+          seen_at: string
+          user_id: string
+        }
+        Insert: {
+          bonus_drop_id: string
+          id?: string
+          seen_at?: string
+          user_id: string
+        }
+        Update: {
+          bonus_drop_id?: string
+          id?: string
+          seen_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "bonus_drop_views_bonus_drop_id_fkey"
+            columns: ["bonus_drop_id"]
+            isOneToOne: false
+            referencedRelation: "bonus_drops"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      bonus_drops: {
+        Row: {
+          banner_color: string
+          created_at: string
+          created_by: string | null
+          emoji: string
+          ends_at: string
+          id: string
+          is_active: boolean
+          metadata: Json
+          multiplier_type: string
+          multiplier_value: number
+          notification_message: string
+          starts_at: string
+          subtitle: string | null
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          banner_color?: string
+          created_at?: string
+          created_by?: string | null
+          emoji?: string
+          ends_at: string
+          id?: string
+          is_active?: boolean
+          metadata?: Json
+          multiplier_type?: string
+          multiplier_value?: number
+          notification_message?: string
+          starts_at: string
+          subtitle?: string | null
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          banner_color?: string
+          created_at?: string
+          created_by?: string | null
+          emoji?: string
+          ends_at?: string
+          id?: string
+          is_active?: boolean
+          metadata?: Json
+          multiplier_type?: string
+          multiplier_value?: number
+          notification_message?: string
+          starts_at?: string
+          subtitle?: string | null
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       chat_conversations: {
         Row: {
           admin_id: string | null
@@ -7268,6 +7351,7 @@ export type Database = {
       generate_receipt_number: { Args: never; Returns: string }
       generate_referral_code: { Args: never; Returns: string }
       generate_short_ref_code: { Args: never; Returns: string }
+      get_active_bonus_drop: { Args: { p_user_id?: string }; Returns: Json }
       get_active_membership: {
         Args: { _user_id: string }
         Returns: {
@@ -7282,6 +7366,7 @@ export type Database = {
           priority_level: number
         }[]
       }
+      get_active_multipliers: { Args: never; Returns: Json }
       get_ai_usage_today: { Args: { _tool_type: string }; Returns: number }
       get_challenge_leaderboard: {
         Args: { p_limit?: number; p_period?: string }
@@ -7472,6 +7557,7 @@ export type Database = {
         }
         Returns: string
       }
+      mark_bonus_drop_seen: { Args: { p_drop_id: string }; Returns: undefined }
       move_to_dlq: {
         Args: {
           dlq_name: string
