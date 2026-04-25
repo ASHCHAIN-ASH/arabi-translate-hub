@@ -48,6 +48,7 @@ import MedicalResearch from "./pages/research/MedicalResearch";
 import AboutUs from "./pages/AboutUs";
 import AcademicCompetitions from "./pages/AcademicCompetitions";
 import SpinTheWheel from "./pages/SpinTheWheel";
+import StudyToEarn from "./pages/StudyToEarn";
 import Unauthorized from "./pages/Unauthorized";
 import MasterMembership from "./pages/MasterMembership";
 import FAQ from "./pages/FAQ";
