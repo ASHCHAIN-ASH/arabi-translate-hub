@@ -823,7 +823,15 @@ export default function StudentDashboardPage() {
         </DialogContent>
       </Dialog>
 
-      <SmartNotifications events={dash.events} />
+      <SmartNotifications
+        events={dash.events}
+        xp={xp}
+        streak={streak}
+        weeklyDone={weeklyDone}
+        weeklyTarget={weeklyTarget}
+        onStartFocus={() => { if (!running) startFocus(); }}
+        onAddTask={() => setTaskOpen(true)}
+      />
     </div>
     </ClientLayout>
   );
