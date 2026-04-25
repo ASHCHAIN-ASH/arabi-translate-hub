@@ -224,6 +224,17 @@ export default function StudentDashboardPage() {
     [dash.events],
   );
 
+  // Level-up detection → confetti
+  const lastLevelRef = useRef<number | null>(null);
+  useEffect(() => {
+    const lvl = getLevelInfo(xp).current.lvl;
+    if (lastLevelRef.current !== null && lvl > lastLevelRef.current) {
+      celebrate('big');
+      toast.success(`🎉 ترقّيت إلى المستوى ${lvl}!`);
+    }
+    lastLevelRef.current = lvl;
+  }, [xp]);
+
   /* ---------- Profile setup dialog ---------- */
   const [profileOpen, setProfileOpen] = useState(false);
   const [pf, setPf] = useState({
