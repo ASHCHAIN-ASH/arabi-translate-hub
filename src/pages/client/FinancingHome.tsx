@@ -19,7 +19,9 @@ import {
   Receipt,
   CreditCard,
   Gavel,
+  Loader2,
 } from 'lucide-react';
+import { Skeleton } from '@/components/ui/skeleton';
 import ClientLayout from '@/components/client/ClientLayout';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -60,6 +62,14 @@ const FinancingHome: React.FC = () => {
   const [apps, setApps] = useState<FinancingApp[]>([]);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState<'all' | 'active' | 'pending' | 'closed'>('all');
+  const [tabSwitching, setTabSwitching] = useState(false);
+
+  const handleTabChange = (key: typeof activeTab) => {
+    if (key === activeTab) return;
+    setTabSwitching(true);
+    setActiveTab(key);
+    window.setTimeout(() => setTabSwitching(false), 280);
+  };
 
   useEffect(() => {
     document.title = 'Master PayLater — التمويل | منصة ماستر';
@@ -257,6 +267,9 @@ const FinancingHome: React.FC = () => {
               <h2 className="text-lg sm:text-xl md:text-2xl font-bold flex items-center gap-2">
                 <FileText className="h-4 w-4 sm:h-5 sm:w-5 text-primary" />
                 طلباتي التمويلية
+                {(loading || tabSwitching) && (
+                  <Loader2 className="h-4 w-4 text-primary animate-spin" aria-label="جاري التحميل" />
+                )}
               </h2>
               <Button asChild variant="outline" size="sm" className="hover-scale h-8 sm:h-9 text-xs sm:text-sm">
                 <Link to="/financing/new">
@@ -314,7 +327,7 @@ const FinancingHome: React.FC = () => {
                         return (
                           <button
                             key={t.key}
-                            onClick={() => setActiveTab(t.key as typeof activeTab)}
+                            onClick={() => handleTabChange(t.key as typeof activeTab)}
                             className={`relative flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 md:px-5 py-2 sm:py-2.5 rounded-xl text-xs sm:text-sm font-semibold transition-all duration-300 whitespace-nowrap group ${
                               isActive
                                 ? 'text-white'
@@ -354,8 +367,38 @@ const FinancingHome: React.FC = () => {
                   </div>
                 </div>
 
-                {loading ? (
-                  <Card className="p-8 text-center text-muted-foreground animate-pulse">جاري التحميل…</Card>
+                {loading || tabSwitching ? (
+                  <div
+                    aria-busy="true"
+                    aria-live="polite"
+                    className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4"
+                  >
+                    {Array.from({ length: 4 }).map((_, i) => (
+                      <Card key={i} className="p-4 sm:p-5 border-border/60">
+                        <div className="flex items-start justify-between gap-2 mb-3 sm:mb-4">
+                          <div className="space-y-2 flex-1 min-w-0">
+                            <Skeleton className="h-2.5 w-16" />
+                            <Skeleton className="h-3 w-24" />
+                            <Skeleton className="h-7 sm:h-8 w-32" />
+                          </div>
+                          <Skeleton className="h-6 w-20 rounded-full shrink-0" />
+                        </div>
+                        <div className="grid grid-cols-3 gap-1.5 sm:gap-2 mb-3 sm:mb-4">
+                          {Array.from({ length: 3 }).map((__, j) => (
+                            <div key={j} className="rounded-lg bg-muted/40 p-2 sm:p-2.5 space-y-1.5">
+                              <Skeleton className="h-2 w-12 mx-auto" />
+                              <Skeleton className="h-3 w-10 mx-auto" />
+                            </div>
+                          ))}
+                        </div>
+                        <div className="flex items-center justify-between pt-2.5 sm:pt-3 border-t border-border/40">
+                          <Skeleton className="h-3 w-16" />
+                          <Skeleton className="h-3 w-20" />
+                        </div>
+                      </Card>
+                    ))}
+                    <span className="sr-only">جاري تحميل الطلبات…</span>
+                  </div>
                 ) : filtered.length === 0 ? (
                   <Card className="p-10 text-center border-dashed">
                     <FileText className="h-10 w-10 mx-auto text-muted-foreground/60 mb-3" />
