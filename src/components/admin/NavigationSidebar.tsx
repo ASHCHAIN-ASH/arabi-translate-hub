@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { FileText, CreditCard, FileSignature, MessageCircle, Receipt, Users, Settings, BarChart3, TrendingUp, Inbox, BookOpen, Activity } from 'lucide-react';
+import { FileText, CreditCard, FileSignature, MessageCircle, Receipt, Users, Settings, BarChart3, TrendingUp, Inbox, BookOpen, Activity, Wallet, Gift, Settings2 } from 'lucide-react';
 import { Sidebar, SidebarContent, SidebarGroup, SidebarGroupContent, SidebarGroupLabel, SidebarMenu, SidebarMenuButton, SidebarMenuItem, SidebarTrigger } from '@/components/ui/sidebar';
 
 const items = [
@@ -47,6 +47,21 @@ const items = [
     title: 'نشاط الطلاب',
     url: '/adminmaster/student-activity',
     icon: Activity,
+  },
+  {
+    title: 'محافظ الطلاب',
+    url: '/adminmaster/student-wallets',
+    icon: Wallet,
+  },
+  {
+    title: 'طلبات الاستبدال',
+    url: '/adminmaster/reward-redemptions',
+    icon: Gift,
+  },
+  {
+    title: 'قواعد المكافآت',
+    url: '/adminmaster/reward-rules',
+    icon: Settings2,
   },
   {
     title: 'واتساب',

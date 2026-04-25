@@ -28,6 +28,7 @@ import SmartNotifications from '@/components/student/SmartNotifications';
 import StartDayButton from '@/components/student/StartDayButton';
 import AIAssistantPanel from '@/components/student/AIAssistantPanel';
 import { celebrate } from '@/components/student/celebrate';
+import StudyWalletCard from '@/components/student/StudyWalletCard';
 
 /* =========================================================
    Animated counter
@@ -454,6 +455,12 @@ export default function StudentDashboardPage() {
             onAdd={async (title, xp) => { await dash.addTask(title, xp); celebrate('small'); }}
           />
         </div>
+
+        {/* Study Wallet */}
+        <div className="mt-6">
+          <StudyWalletCard userId={user?.id} />
+        </div>
+
 
         {/* MIDDLE: schedule + focus */}
         <div className="mt-6 grid grid-cols-1 gap-6 lg:grid-cols-3">

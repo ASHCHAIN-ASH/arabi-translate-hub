@@ -129,6 +129,9 @@ import AdminAssessments from "./pages/admin/AdminAssessments";
 import AdminBattleQuiz from "./pages/admin/AdminBattleQuiz";
 import AdminQuestionBank from "./pages/admin/AdminQuestionBank";
 import StudentActivityPage from "./pages/admin/StudentActivityPage";
+import AdminStudentWalletsPage from "./pages/admin/AdminStudentWalletsPage";
+import AdminRewardRedemptionsPage from "./pages/admin/AdminRewardRedemptionsPage";
+import AdminRewardRulesPage from "./pages/admin/AdminRewardRulesPage";
 import QuizBank from "./pages/QuizBank";
 import QuizBankResults from "./pages/QuizBankResults";
 import QuizBankBrowse from "./pages/QuizBankBrowse";
@@ -635,6 +638,21 @@ const App = () => (
             <Route path="/adminmaster/student-activity" element={
               <SimpleProtectedRoute adminOnly>
                 <StudentActivityPage />
+              </SimpleProtectedRoute>
+            } />
+            <Route path="/adminmaster/student-wallets" element={
+              <SimpleProtectedRoute adminOnly>
+                <AdminStudentWalletsPage />
+              </SimpleProtectedRoute>
+            } />
+            <Route path="/adminmaster/reward-redemptions" element={
+              <SimpleProtectedRoute adminOnly>
+                <AdminRewardRedemptionsPage />
+              </SimpleProtectedRoute>
+            } />
+            <Route path="/adminmaster/reward-rules" element={
+              <SimpleProtectedRoute adminOnly>
+                <AdminRewardRulesPage />
               </SimpleProtectedRoute>
             } />
             <Route path="/adminmaster/xp-conversion-report" element={
