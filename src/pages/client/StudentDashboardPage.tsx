@@ -291,6 +291,42 @@ export default function StudentDashboardPage() {
     );
   }, [rewardEvents.data, currentWeekKey]);
 
+  // Boss reward overlay state
+  const [bossOverlay, setBossOverlay] = useState<{
+    open: boolean;
+    phase: 'loading' | 'success';
+    xp?: number;
+    points?: number;
+    newXp?: number;
+    level?: number;
+    weekKey?: string;
+    alreadyClaimed?: boolean;
+  }>({ open: false, phase: 'loading' });
+
+  const handleClaimBoss = useCallback(() => {
+    // Prevent duplicate clicks: in-flight, overlay open, or already claimed this week
+    if (claimBoss.isPending || bossOverlay.open || bossClaimed) return;
+    setBossOverlay({ open: true, phase: 'loading' });
+    claimBoss.mutate(undefined, {
+      onSuccess: (data) => {
+        setBossOverlay({
+          open: true,
+          phase: 'success',
+          xp: data?.xp_awarded ?? 0,
+          points: data?.points_awarded ?? 0,
+          newXp: (data as any)?.new_xp,
+          level: (data as any)?.level,
+          weekKey: data?.week_key,
+          alreadyClaimed: data?.alreadyClaimed,
+        });
+      },
+      onError: () => {
+        // Hook already shows error toast; just close overlay
+        setBossOverlay({ open: false, phase: 'loading' });
+      },
+    });
+  }, [claimBoss, bossOverlay.open, bossClaimed]);
+
   const profile = dash.profile;
   const xp = profile?.xp ?? 0;
   const streak = profile?.streak_days ?? 0;
