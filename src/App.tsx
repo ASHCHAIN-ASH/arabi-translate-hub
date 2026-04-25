@@ -288,6 +288,7 @@ const App = () => (
              <Route path="/faq" element={<FAQ />} />
              <Route path="/academic-competitions" element={<AcademicCompetitions />} />
              <Route path="/spin-the-wheel" element={<SpinTheWheel />} />
+             <Route path="/study-to-earn" element={<StudyToEarn />} />
              <Route path="/client-guide" element={<ClientGuide />} />
              <Route path="/order-tracking" element={<OrderTracking />} />
              <Route path="/submit-order" element={<OrderForm />} />
