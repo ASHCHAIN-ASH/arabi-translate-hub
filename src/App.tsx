@@ -592,6 +592,11 @@ const App = () => (
                 <AdminWorkingHours />
               </SimpleProtectedRoute>
             } />
+            <Route path="/adminmaster/changelog" element={
+              <SimpleProtectedRoute adminOnly>
+                <AdminChangelog />
+              </SimpleProtectedRoute>
+            } />
             <Route path="/adminmaster/wallets" element={
               <SimpleProtectedRoute adminOnly>
                 <AdminWallets />
