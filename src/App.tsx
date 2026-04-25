@@ -523,11 +523,6 @@ const App = () => (
                 <AdminServices />
               </SimpleProtectedRoute>
             } />
-            <Route path="/adminmaster/student-resources" element={
-              <SimpleProtectedRoute adminOnly>
-                <AdminStudentResources />
-              </SimpleProtectedRoute>
-            } />
             <Route path="/adminmaster/service-orders" element={
               <SimpleProtectedRoute adminOnly>
                 <AdminServiceOrders />
