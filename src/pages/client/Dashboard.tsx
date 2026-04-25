@@ -141,7 +141,6 @@ const ClientDashboard = () => {
             <DashboardRecentContracts contracts={contracts} />
           </div>
           <div className="space-y-5">
-            <DashboardRewardsWidget />
             <DashboardRecentInvoices invoices={invoices} />
             <DashboardActiveTickets tickets={tickets} />
           </div>
