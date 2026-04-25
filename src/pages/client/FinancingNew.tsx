@@ -43,6 +43,8 @@ import ClientLayout from '@/components/client/ClientLayout';
 import FinancingNewHero from '@/components/financing/FinancingNewHero';
 import FinancingStepper from '@/components/financing/FinancingStepper';
 import FinancingLiveSummary from '@/components/financing/FinancingLiveSummary';
+import AnimatedField from '@/components/financing/AnimatedField';
+import SectionHeader from '@/components/financing/SectionHeader';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -260,6 +262,20 @@ const FinancingNew: React.FC = () => {
 
   const setField = (k: keyof typeof form, v: any) => setForm((f) => ({ ...f, [k]: v }));
 
+  // === Live field validators (for visual ✓/✗ feedback) ===
+  const v = {
+    name: form.applicant_full_name.trim().length >= 3,
+    nameInvalid: form.applicant_full_name.length > 0 && form.applicant_full_name.trim().length < 3,
+    id: /^[12]\d{9}$/.test(form.applicant_id_number.trim()),
+    idInvalid: form.applicant_id_number.length > 0 && !/^[12]\d{9}$/.test(form.applicant_id_number.trim()),
+    phone: /^(05|9665|\+9665)\d{8}$/.test(form.applicant_phone.trim()),
+    phoneInvalid: form.applicant_phone.length > 0 && !/^(05|9665|\+9665)\d{8}$/.test(form.applicant_phone.trim()),
+    email: /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.applicant_email.trim()),
+    emailInvalid: form.applicant_email.length > 0 && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.applicant_email.trim()),
+    income: Number(form.monthly_income) > 0,
+    city: form.city.trim().length >= 2,
+  };
+
   const validateStep1 = () => {
     if (amount < FINANCING_MIN_AMOUNT) {
       toast({ title: 'مبلغ غير مؤهل', description: `الحد الأدنى ${fmt(FINANCING_MIN_AMOUNT)} ر.س`, variant: 'destructive' });
@@ -424,22 +440,20 @@ const FinancingNew: React.FC = () => {
               exit={{ opacity: 0, x: 30 }}
               transition={{ duration: 0.3 }}
             >
-              <Card className="p-6 md:p-7 space-y-6 border-border/60">
-                <div className="flex items-center gap-3 pb-4 border-b border-border/50">
-                  <div className="h-10 w-10 rounded-xl bg-gradient-to-br from-sky-500 to-blue-600 flex items-center justify-center text-white shadow-md">
-                    <CreditCard className="h-5 w-5" />
-                  </div>
-                  <div>
-                    <h2 className="text-lg font-bold">بيانات التمويل والمتقدم</h2>
-                    <p className="text-xs text-muted-foreground">جميع الحقول إلزامية لتقييم الأهلية</p>
-                  </div>
-                </div>
+              <Card className="p-4 sm:p-6 md:p-7 space-y-5 sm:space-y-6 border-border/60 shadow-md overflow-hidden">
+                <SectionHeader
+                  icon={CreditCard}
+                  title="بيانات التمويل والمتقدّم"
+                  subtitle="جميع الحقول إلزامية لتقييم الأهلية الائتماني"
+                  badge="الخطوة 1"
+                  gradient="from-sky-500 via-blue-600 to-indigo-600"
+                />
 
                 {/* Amount block — premium with quick presets */}
                 <motion.div
                   initial={{ opacity: 0, scale: 0.98 }}
                   animate={{ opacity: 1, scale: 1 }}
-                  className="rounded-2xl bg-gradient-to-br from-primary/15 via-primary/5 to-transparent p-5 ring-1 ring-primary/30 relative overflow-hidden"
+                  className="rounded-2xl bg-gradient-to-br from-primary/15 via-primary/5 to-transparent p-4 sm:p-5 ring-1 ring-primary/30 relative overflow-hidden"
                 >
                   <motion.div
                     className="absolute -top-12 -left-12 h-32 w-32 rounded-full bg-primary/20 blur-3xl"
@@ -487,7 +501,7 @@ const FinancingNew: React.FC = () => {
                       </div>
                     )}
 
-                    <div className="relative">
+                    <div className="relative group">
                       <Input
                         id="amount"
                         type="number"
@@ -496,11 +510,16 @@ const FinancingNew: React.FC = () => {
                         value={amount}
                         onChange={(e) => setAmount(Number(e.target.value))}
                         disabled={!!orderId || !!invoiceId}
-                        className="h-14 text-2xl font-bold pl-20 bg-background"
+                        className="h-14 sm:h-16 text-2xl sm:text-3xl font-extrabold pl-20 bg-background/90 backdrop-blur-sm tabular-nums tracking-tight ring-1 ring-primary/20 focus-visible:ring-primary"
                       />
-                      <span className="absolute left-4 top-1/2 -translate-y-1/2 text-sm font-semibold text-muted-foreground">
+                      <motion.span
+                        key={amount}
+                        initial={{ scale: 1.15, opacity: 0 }}
+                        animate={{ scale: 1, opacity: 1 }}
+                        className="absolute left-4 top-1/2 -translate-y-1/2 text-sm font-bold text-primary bg-primary/10 px-2 py-1 rounded-md"
+                      >
                         ر.س
-                      </span>
+                      </motion.span>
                     </div>
                     <p className="text-xs text-muted-foreground mt-2 flex items-center gap-1">
                       <AlertTriangle className="h-3 w-3" />
@@ -539,51 +558,105 @@ const FinancingNew: React.FC = () => {
                 </motion.div>
 
                 {/* Personal info grid */}
-                <div className="space-y-1">
-                  <h3 className="text-sm font-bold text-muted-foreground flex items-center gap-2 mb-3">
-                    <User className="h-4 w-4" /> البيانات الشخصية
-                  </h3>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <FieldGroup icon={User} label="الاسم الكامل (كما في الهوية)">
+                <div className="space-y-3">
+                  <motion.div
+                    initial={{ opacity: 0, x: 12 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    className="flex items-center gap-2 text-xs sm:text-sm font-bold text-muted-foreground"
+                  >
+                    <div className="h-7 w-7 rounded-lg bg-gradient-to-br from-sky-500/20 to-blue-600/20 flex items-center justify-center ring-1 ring-sky-500/30">
+                      <User className="h-3.5 w-3.5 text-sky-600 dark:text-sky-400" />
+                    </div>
+                    البيانات الشخصية
+                    <span className="h-px flex-1 bg-gradient-to-l from-border to-transparent" />
+                  </motion.div>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4">
+                    <AnimatedField
+                      icon={User}
+                      label="الاسم الكامل (كما في الهوية)"
+                      iconColor="text-sky-600"
+                      delay={0.05}
+                      valid={v.name}
+                      hint="أدخل اسمك الرباعي كاملاً كما في الهوية الوطنية"
+                    >
                       <Input
                         value={form.applicant_full_name}
                         onChange={(e) => setField('applicant_full_name', e.target.value)}
-                        placeholder="مثال: محمد عبدالله السالم"
+                        placeholder="مثال: محمد عبدالله السالم العتيبي"
+                        className="border-0 bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0 h-11"
                       />
-                    </FieldGroup>
-                    <FieldGroup icon={IdCard} label="رقم الهوية / الإقامة">
+                    </AnimatedField>
+                    <AnimatedField
+                      icon={IdCard}
+                      label="رقم الهوية / الإقامة"
+                      iconColor="text-violet-600"
+                      delay={0.1}
+                      valid={v.id}
+                      invalid={v.idInvalid}
+                      hint="10 أرقام تبدأ بـ 1 (مواطن) أو 2 (مقيم)"
+                    >
                       <Input
                         value={form.applicant_id_number}
-                        onChange={(e) => setField('applicant_id_number', e.target.value)}
-                        placeholder="10 أرقام"
+                        onChange={(e) => setField('applicant_id_number', e.target.value.replace(/\D/g, '').slice(0, 10))}
+                        placeholder="1xxxxxxxxx"
                         inputMode="numeric"
+                        maxLength={10}
+                        dir="ltr"
+                        className="border-0 bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0 h-11 tabular-nums tracking-widest text-center font-bold"
                       />
-                    </FieldGroup>
-                    <FieldGroup icon={Phone} label="رقم الجوال">
+                    </AnimatedField>
+                    <AnimatedField
+                      icon={Phone}
+                      label="رقم الجوال"
+                      iconColor="text-emerald-600"
+                      delay={0.15}
+                      valid={v.phone}
+                      invalid={v.phoneInvalid}
+                      hint="مثال: 0501234567 أو 966501234567"
+                    >
                       <Input
                         type="tel"
                         value={form.applicant_phone}
                         onChange={(e) => setField('applicant_phone', e.target.value)}
-                        placeholder="9665xxxxxxxx"
+                        placeholder="05XXXXXXXX"
                         dir="ltr"
+                        className="border-0 bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0 h-11 tabular-nums"
                       />
-                    </FieldGroup>
-                    <FieldGroup icon={Mail} label="البريد الإلكتروني">
+                    </AnimatedField>
+                    <AnimatedField
+                      icon={Mail}
+                      label="البريد الإلكتروني"
+                      iconColor="text-amber-600"
+                      delay={0.2}
+                      valid={v.email}
+                      invalid={v.emailInvalid}
+                      hint="سيُستخدم لإرسال نسخة العقد ونتيجة التقييم"
+                    >
                       <Input
                         type="email"
                         value={form.applicant_email}
                         onChange={(e) => setField('applicant_email', e.target.value)}
                         placeholder="example@email.com"
                         dir="ltr"
+                        className="border-0 bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0 h-11"
                       />
-                    </FieldGroup>
+                    </AnimatedField>
                   </div>
                 </div>
 
-                <div className="space-y-1">
-                  <h3 className="text-sm font-bold text-muted-foreground flex items-center gap-2 mb-3">
-                    <Briefcase className="h-4 w-4" /> البيانات المهنية والمالية
-                  </h3>
+                <div className="space-y-3">
+                  <motion.div
+                    initial={{ opacity: 0, x: 12 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: 0.1 }}
+                    className="flex items-center gap-2 text-xs sm:text-sm font-bold text-muted-foreground"
+                  >
+                    <div className="h-7 w-7 rounded-lg bg-gradient-to-br from-violet-500/20 to-purple-600/20 flex items-center justify-center ring-1 ring-violet-500/30">
+                      <Briefcase className="h-3.5 w-3.5 text-violet-600 dark:text-violet-400" />
+                    </div>
+                    البيانات المهنية والمالية
+                    <span className="h-px flex-1 bg-gradient-to-l from-border to-transparent" />
+                  </motion.div>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     {/* فئة المتقدم — تحدد المعادلة الائتمانية */}
                     <div className="md:col-span-2">
@@ -1056,16 +1129,14 @@ const FinancingNew: React.FC = () => {
               exit={{ opacity: 0, x: 30 }}
               transition={{ duration: 0.3 }}
             >
-              <Card className="p-6 md:p-7 space-y-6 border-border/60">
-                <div className="flex items-center gap-3 pb-4 border-b border-border/50">
-                  <div className="h-10 w-10 rounded-xl bg-gradient-to-br from-violet-500 to-purple-600 flex items-center justify-center text-white shadow-md">
-                    <FileText className="h-5 w-5" />
-                  </div>
-                  <div>
-                    <h2 className="text-lg font-bold">المستندات الرسمية المطلوبة</h2>
-                    <p className="text-xs text-muted-foreground">PDF أو صور واضحة · مخزّنة بتشفير كامل</p>
-                  </div>
-                </div>
+              <Card className="p-4 sm:p-6 md:p-7 space-y-5 sm:space-y-6 border-border/60 shadow-md">
+                <SectionHeader
+                  icon={FileText}
+                  title="المستندات الرسمية المطلوبة"
+                  subtitle="PDF أو صور واضحة · مخزّنة بتشفير AES-256"
+                  badge="الخطوة 2"
+                  gradient="from-violet-500 via-purple-600 to-fuchsia-600"
+                />
 
                 <div className="rounded-xl bg-amber-500/10 ring-1 ring-amber-500/30 p-3 flex items-start gap-2">
                   <Lock className="h-4 w-4 text-amber-600 dark:text-amber-400 mt-0.5 shrink-0" />
@@ -1164,16 +1235,14 @@ const FinancingNew: React.FC = () => {
               exit={{ opacity: 0, x: 30 }}
               transition={{ duration: 0.3 }}
             >
-              <Card className="p-6 md:p-7 space-y-6 border-border/60">
-                <div className="flex items-center gap-3 pb-4 border-b border-border/50">
-                  <div className="h-10 w-10 rounded-xl bg-gradient-to-br from-emerald-500 to-teal-600 flex items-center justify-center text-white shadow-md">
-                    <Gavel className="h-5 w-5" />
-                  </div>
-                  <div>
-                    <h2 className="text-lg font-bold">الإقرارات القانونية النهائية</h2>
-                    <p className="text-xs text-muted-foreground">إقرارات مُلزِمة قانونيًا — يُرجى القراءة بعناية</p>
-                  </div>
-                </div>
+              <Card className="p-4 sm:p-6 md:p-7 space-y-5 sm:space-y-6 border-border/60 shadow-md">
+                <SectionHeader
+                  icon={Gavel}
+                  title="الإقرارات القانونية النهائية"
+                  subtitle="إقرارات مُلزِمة قانونياً — يُرجى القراءة بعناية"
+                  badge="الخطوة 3"
+                  gradient="from-emerald-500 via-teal-600 to-cyan-600"
+                />
 
                 {/* Strict warning */}
                 <div className="rounded-xl bg-gradient-to-l from-rose-500/10 to-rose-500/5 ring-1 ring-rose-500/30 p-4">
