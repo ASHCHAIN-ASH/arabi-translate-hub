@@ -11,7 +11,7 @@ import ScrollToTop from "@/components/ScrollToTop";
 import ContentProtection from "@/components/ContentProtection";
 import LoginWelcomeOverlay from "@/components/LoginWelcomeOverlay";
 import ReferralTracker from "@/components/marketing/ReferralTracker";
-import MarketingHub from "@/pages/MarketingHub";
+
 import SimpleLogin from "./pages/SimpleLogin";
 import Login from "./pages/auth/Login";
 import Register from "./pages/auth/Register";
@@ -242,7 +242,7 @@ const App = () => (
             {/* Public Routes */}
             <Route path="/" element={<Index />} />
             <Route path="/theme-preview" element={<ThemePreview />} />
-            <Route path="/marketing-hub" element={<MarketingHub />} />
+            
             <Route path="/order-now" element={<OrderNow />} />
             <Route path="/services" element={<Services />} />
             <Route path="/translation-services" element={<TranslationServices />} />

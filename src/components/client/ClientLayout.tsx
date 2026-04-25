@@ -52,8 +52,6 @@ const navItems: NavItem[] = [
   { name: 'التمويل (Master PayLater)', href: '/financing', icon: CreditCard },
   { name: 'عضويتي', href: '/membership', icon: Crown },
   { name: 'الإحالات والعمولات', href: '/referrals', icon: Gift },
-  { name: 'مركز التسويق', href: '/marketing-hub', icon: Megaphone },
-  
   { name: 'خدمة العملاء', href: '/support/tickets', icon: Headphones },
 ];
 
