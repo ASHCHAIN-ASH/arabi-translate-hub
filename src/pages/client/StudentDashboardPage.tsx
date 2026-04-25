@@ -270,6 +270,25 @@ export default function StudentDashboardPage() {
   const { user } = useAuth();
   const navigate = useNavigate();
   const dash = useStudentDashboard(user?.id);
+  const claimBoss = useClaimBossChallengeReward();
+  const rewardEvents = useStudentRewardEvents(50);
+
+  // Compute current ISO week key (matches edge fn)
+  const currentWeekKey = useMemo(() => {
+    const d = new Date();
+    const date = new Date(Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate()));
+    const dayNum = (date.getUTCDay() + 6) % 7;
+    date.setUTCDate(date.getUTCDate() - dayNum + 3);
+    const firstThursday = new Date(Date.UTC(date.getUTCFullYear(), 0, 4));
+    const week = 1 + Math.round(((date.getTime() - firstThursday.getTime()) / 86400000 - 3 + ((firstThursday.getUTCDay() + 6) % 7)) / 7);
+    return `${date.getUTCFullYear()}-${String(week).padStart(2, '0')}`;
+  }, []);
+
+  const bossClaimed = useMemo(() => {
+    return (rewardEvents.data || []).some(
+      r => r.source_type === 'boss_challenge' && r.reward_type === 'weekly_boss' && r.source_key === currentWeekKey,
+    );
+  }, [rewardEvents.data, currentWeekKey]);
 
   const profile = dash.profile;
   const xp = profile?.xp ?? 0;
