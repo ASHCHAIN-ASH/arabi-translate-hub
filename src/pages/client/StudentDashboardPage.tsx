@@ -30,6 +30,7 @@ import StartDayButton from '@/components/student/StartDayButton';
 import AIAssistantPanel from '@/components/student/AIAssistantPanel';
 import { celebrate } from '@/components/student/celebrate';
 import StudyWalletCard from '@/components/student/StudyWalletCard';
+import SuperTasksCard from '@/components/student/SuperTasksCard';
 
 /* =========================================================
    Animated counter
@@ -702,50 +703,21 @@ export default function StudentDashboardPage() {
 
         {/* BOTTOM: tasks + weekly */}
         <div className="mt-6 grid grid-cols-1 gap-6 lg:grid-cols-3">
-          <Card className="border-slate-200 bg-white shadow-sm lg:col-span-2">
-            <CardContent className="p-6">
-              <div className="mb-5 flex items-center justify-between">
-                <div>
-                  <h3 className="text-lg font-bold text-slate-900">مهام اليوم</h3>
-                  <p className="text-xs text-slate-500">أكمل المهام واحصد نقاط الخبرة</p>
-                </div>
-                <Button size="sm" variant="ghost" onClick={() => setTaskOpen(true)} className="text-violet-600 hover:bg-violet-50 hover:text-violet-700">
-                  <Plus className="me-1 h-4 w-4" /> مهمة جديدة
-                </Button>
-              </div>
-              <div className="space-y-2">
-                {dash.tasks.length === 0 && !dash.loading && (
-                  <p className="rounded-2xl border border-dashed border-slate-300 p-6 text-center text-sm text-slate-600">
-                    لا توجد مهام بعد. ابدأ بإضافة أول مهمة.
-                  </p>
-                )}
-                <AnimatePresence initial={false}>
-                  {dash.tasks.map((t, i) => (
-                    <motion.div
-                      key={t.id} layout
-                      initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, x: -16 }}
-                      transition={{ delay: i * 0.04 }}
-                    >
-                      <button
-                        onClick={() => { if (!t.is_done) celebrate('small'); dash.toggleTask(t); }}
-                        className="group flex w-full items-center justify-between rounded-2xl bg-gradient-to-l from-violet-50/60 to-cyan-50/60 p-4 ring-1 ring-violet-100 transition hover:from-violet-50 hover:to-cyan-50"
-                      >
-                        <div className="flex items-center gap-3">
-                          {t.is_done
-                            ? <CheckCircle2 className="h-5 w-5 text-emerald-600" />
-                            : <Circle className="h-5 w-5 text-slate-400 group-hover:text-slate-600" />}
-                          <span className={`text-sm ${t.is_done ? 'text-slate-400 line-through' : 'text-slate-900'}`}>{t.title}</span>
-                        </div>
-                        <Badge className={`border-0 ${t.is_done ? 'bg-emerald-100 text-emerald-700' : 'bg-violet-100 text-violet-700'}`}>
-                          +{t.xp_reward} XP
-                        </Badge>
-                      </button>
-                    </motion.div>
-                  ))}
-                </AnimatePresence>
-              </div>
-            </CardContent>
-          </Card>
+          <SuperTasksCard
+            tasks={dash.tasks}
+            loading={dash.loading}
+            onAddTask={() => setTaskOpen(true)}
+            onCreateQuickTask={async () => {
+              await dash.addTask('جلسة تركيز 25 دقيقة', 10);
+              celebrate('small');
+              toast.success('تم إنشاء مهمة سريعة ⚡', { description: 'جلسة تركيز 25 دقيقة · +10 XP عند الإنهاء' });
+            }}
+            onCompleteTask={(t) => dash.toggleTask(t)}
+            onStartTask={(t) => {
+              toast.message(`بدأت: ${t.title}`, { description: 'بالتوفيق! اضغط «إنهاء» عند انتهائك.' });
+            }}
+            onStartFocus={() => { if (!running) startFocus(); }}
+          />
 
           {/* Weekly achievement */}
           <Card className="relative overflow-hidden border-blue-400/30 bg-gradient-to-br from-blue-600 via-indigo-600 to-blue-700 backdrop-blur-xl shadow-lg shadow-blue-500/20">
