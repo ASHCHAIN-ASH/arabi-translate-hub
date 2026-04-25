@@ -343,16 +343,44 @@ const FinancingHome: React.FC = () => {
                   dir="rtl"
                   className="sticky top-[108px] sm:static z-20 -mx-3 sm:mx-0 px-3 sm:px-0 py-2 sm:py-0 mb-3 sm:mb-6 bg-background/85 sm:bg-transparent backdrop-blur-md sm:backdrop-blur-0 border-b border-border/40 sm:border-0"
                 >
-                  <div className="relative rounded-2xl p-1 sm:p-1.5 bg-gradient-to-l from-primary/5 via-muted/40 to-primary/5 ring-1 ring-border/60 backdrop-blur-xl overflow-x-auto shadow-inner scrollbar-none">
+                  <div
+                    role="tablist"
+                    aria-label="تصنيفات طلبات التمويل"
+                    aria-orientation="horizontal"
+                    className="relative rounded-2xl p-1 sm:p-1.5 bg-gradient-to-l from-primary/5 via-muted/40 to-primary/5 ring-1 ring-border/60 backdrop-blur-xl overflow-x-auto shadow-inner scrollbar-none"
+                  >
                     <div className="flex gap-1 sm:gap-1.5 min-w-max">
-                      {tabs.map((t) => {
+                      {tabs.map((t, tabIdx) => {
                         const isActive = activeTab === t.key;
                         const Icon = t.icon;
                         return (
                           <button
                             key={t.key}
+                            type="button"
+                            role="tab"
+                            id={`financing-tab-${t.key}`}
+                            aria-selected={isActive}
+                            aria-controls="financing-tabpanel"
+                            tabIndex={isActive ? 0 : -1}
                             onClick={() => handleTabChange(t.key as typeof activeTab)}
-                            className={`relative flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 md:px-5 py-2 sm:py-2.5 rounded-xl text-xs sm:text-sm font-semibold transition-all duration-300 whitespace-nowrap group ${
+                            onKeyDown={(e) => {
+                              if (e.key === 'ArrowLeft' || e.key === 'ArrowRight' || e.key === 'Home' || e.key === 'End') {
+                                e.preventDefault();
+                                let nextIdx = tabIdx;
+                                // RTL: ArrowRight => previous, ArrowLeft => next
+                                if (e.key === 'ArrowRight') nextIdx = tabIdx === 0 ? tabs.length - 1 : tabIdx - 1;
+                                else if (e.key === 'ArrowLeft') nextIdx = tabIdx === tabs.length - 1 ? 0 : tabIdx + 1;
+                                else if (e.key === 'Home') nextIdx = 0;
+                                else if (e.key === 'End') nextIdx = tabs.length - 1;
+                                const next = tabs[nextIdx];
+                                handleTabChange(next.key as typeof activeTab);
+                                requestAnimationFrame(() => {
+                                  document.getElementById(`financing-tab-${next.key}`)?.focus();
+                                });
+                              }
+                            }}
+                            aria-label={`${t.label} — ${t.count} طلب`}
+                            className={`relative flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 md:px-5 py-2 sm:py-2.5 rounded-xl text-xs sm:text-sm font-semibold transition-all duration-300 whitespace-nowrap group focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background ${
                               isActive
                                 ? 'text-white'
                                 : 'text-muted-foreground hover:text-foreground'
