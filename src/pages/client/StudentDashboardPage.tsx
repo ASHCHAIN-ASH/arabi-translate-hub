@@ -315,6 +315,7 @@ export default function StudentDashboardPage() {
           setRunning(false);
           if (activeSessionId) {
             dash.completeSession(activeSessionId, focusMin).then(() => {
+              celebrate('big');
               toast.success(`أحسنت! +${focusMin} XP`);
             });
             setActiveSessionId(null);
