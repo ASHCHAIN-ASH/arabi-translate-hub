@@ -6105,6 +6105,101 @@ export type Database = {
         }
         Relationships: []
       }
+      reward_redemptions: {
+        Row: {
+          cash_value: number
+          id: string
+          metadata: Json
+          notes: string | null
+          points_spent: number
+          redemption_type: string
+          requested_at: string
+          reviewed_at: string | null
+          reviewed_by: string | null
+          status: string
+          user_id: string
+          wallet_id: string
+        }
+        Insert: {
+          cash_value?: number
+          id?: string
+          metadata?: Json
+          notes?: string | null
+          points_spent?: number
+          redemption_type: string
+          requested_at?: string
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          status?: string
+          user_id: string
+          wallet_id: string
+        }
+        Update: {
+          cash_value?: number
+          id?: string
+          metadata?: Json
+          notes?: string | null
+          points_spent?: number
+          redemption_type?: string
+          requested_at?: string
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          status?: string
+          user_id?: string
+          wallet_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "reward_redemptions_wallet_id_fkey"
+            columns: ["wallet_id"]
+            isOneToOne: false
+            referencedRelation: "student_wallets"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      reward_rules: {
+        Row: {
+          cash_reward: number
+          code: string
+          created_at: string
+          daily_limit: number
+          description_ar: string | null
+          id: string
+          is_active: boolean
+          name_ar: string
+          points_reward: number
+          source_type: string
+          updated_at: string
+        }
+        Insert: {
+          cash_reward?: number
+          code: string
+          created_at?: string
+          daily_limit?: number
+          description_ar?: string | null
+          id?: string
+          is_active?: boolean
+          name_ar: string
+          points_reward?: number
+          source_type: string
+          updated_at?: string
+        }
+        Update: {
+          cash_reward?: number
+          code?: string
+          created_at?: string
+          daily_limit?: number
+          description_ar?: string | null
+          id?: string
+          is_active?: boolean
+          name_ar?: string
+          points_reward?: number
+          source_type?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       service_categories: {
         Row: {
           color: string | null
@@ -6898,6 +6993,98 @@ export type Database = {
           updated_at?: string
           user_id?: string
           xp_reward?: number
+        }
+        Relationships: []
+      }
+      student_wallet_transactions: {
+        Row: {
+          cash_amount: number
+          created_at: string
+          description: string | null
+          id: string
+          metadata: Json
+          points_amount: number
+          source_id: string | null
+          source_type: string
+          status: string
+          transaction_type: string
+          user_id: string
+          wallet_id: string
+        }
+        Insert: {
+          cash_amount?: number
+          created_at?: string
+          description?: string | null
+          id?: string
+          metadata?: Json
+          points_amount?: number
+          source_id?: string | null
+          source_type: string
+          status?: string
+          transaction_type: string
+          user_id: string
+          wallet_id: string
+        }
+        Update: {
+          cash_amount?: number
+          created_at?: string
+          description?: string | null
+          id?: string
+          metadata?: Json
+          points_amount?: number
+          source_id?: string | null
+          source_type?: string
+          status?: string
+          transaction_type?: string
+          user_id?: string
+          wallet_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "student_wallet_transactions_wallet_id_fkey"
+            columns: ["wallet_id"]
+            isOneToOne: false
+            referencedRelation: "student_wallets"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      student_wallets: {
+        Row: {
+          cash_balance: number
+          created_at: string
+          id: string
+          lifetime_earned_points: number
+          pending_points: number
+          points_balance: number
+          redeemed_points: number
+          status: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          cash_balance?: number
+          created_at?: string
+          id?: string
+          lifetime_earned_points?: number
+          pending_points?: number
+          points_balance?: number
+          redeemed_points?: number
+          status?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          cash_balance?: number
+          created_at?: string
+          id?: string
+          lifetime_earned_points?: number
+          pending_points?: number
+          points_balance?: number
+          redeemed_points?: number
+          status?: string
+          updated_at?: string
+          user_id?: string
         }
         Relationships: []
       }
