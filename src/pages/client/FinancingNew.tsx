@@ -40,6 +40,7 @@ import {
   Zap,
 } from 'lucide-react';
 import ClientLayout from '@/components/client/ClientLayout';
+import FinancingNewHero from '@/components/financing/FinancingNewHero';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -389,80 +390,8 @@ const FinancingNew: React.FC = () => {
   return (
     <ClientLayout>
       <div dir="rtl" className="max-w-4xl mx-auto space-y-6 pb-12">
-        {/* Header */}
-        <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }}>
-          <Link
-            to="/financing"
-            className="text-sm text-muted-foreground hover:text-foreground inline-flex items-center gap-1 transition-colors"
-          >
-            <ArrowRight className="h-4 w-4 rotate-180" /> رجوع للوحة التمويل
-          </Link>
-          <div className="mt-3 flex flex-wrap items-center gap-3">
-            <Badge className="bg-gradient-to-r from-primary to-primary/70 text-primary-foreground border-0">
-              <Sparkles className="ml-1 h-3 w-3" /> Master PayLater
-            </Badge>
-            <Badge variant="outline" className="text-xs">
-              <Lock className="ml-1 h-3 w-3" /> نظام مشفّر · موثّق قانونيًا
-            </Badge>
-          </div>
-          <h1 className="text-3xl md:text-4xl font-extrabold mt-3 bg-gradient-to-l from-foreground to-foreground/70 bg-clip-text">
-            طلب تمويل جديد
-          </h1>
-          <p className="text-sm text-muted-foreground mt-1.5">
-            تقسيط ذكي على 12 شهرًا برصيد محفظة المنصة — إجراءات سريعة وموثّقة
-          </p>
-        </motion.div>
-
-        {/* Animated step indicator */}
-        <Card className="p-5 border-border/60 bg-gradient-to-br from-card to-muted/20 overflow-hidden relative">
-          <div className="relative">
-            {/* Progress line */}
-            <div className="absolute top-1/2 -translate-y-1/2 right-6 left-6 h-1 bg-muted rounded-full overflow-hidden">
-              <motion.div
-                className="h-full bg-gradient-to-l from-primary to-primary/60 rounded-full"
-                initial={{ width: 0 }}
-                animate={{ width: `${progressPct}%` }}
-                transition={{ type: 'spring', stiffness: 80, damping: 20 }}
-              />
-            </div>
-
-            <div className="relative flex items-center justify-between">
-              {STEPS.map((s) => {
-                const active = step === s.n;
-                const done = step > s.n;
-                return (
-                  <div key={s.n} className="flex flex-col items-center gap-2 z-10">
-                    <motion.div
-                      animate={
-                        active
-                          ? { scale: [1, 1.08, 1] }
-                          : { scale: 1 }
-                      }
-                      transition={{ duration: 1.6, repeat: active ? Infinity : 0 }}
-                      className={`h-12 w-12 rounded-2xl flex items-center justify-center font-bold text-sm shadow-lg transition-all ${
-                        done
-                          ? 'bg-gradient-to-br from-emerald-500 to-teal-600 text-white'
-                          : active
-                          ? `bg-gradient-to-br ${s.color} text-white ring-4 ring-primary/20`
-                          : 'bg-muted text-muted-foreground ring-1 ring-border'
-                      }`}
-                    >
-                      {done ? <CheckCircle2 className="h-5 w-5" /> : <s.icon className="h-5 w-5" />}
-                    </motion.div>
-                    <div className="text-center">
-                      <div className={`text-[10px] font-semibold ${active ? 'text-primary' : 'text-muted-foreground'}`}>
-                        الخطوة {s.n}
-                      </div>
-                      <div className={`text-xs font-bold ${active || done ? 'text-foreground' : 'text-muted-foreground'}`}>
-                        {s.label}
-                      </div>
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-          </div>
-        </Card>
+        {/* Banking-grade Hero */}
+        <FinancingNewHero step={step} totalSteps={3} />
 
         {/* Disclaimer */}
         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.15 }}>
