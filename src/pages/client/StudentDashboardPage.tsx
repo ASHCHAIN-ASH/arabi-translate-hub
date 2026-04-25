@@ -431,7 +431,7 @@ export default function StudentDashboardPage() {
               })}
               todayPreview={todayPreview}
             />
-            <Button variant="ghost" size="sm" onClick={() => setProfileOpen(true)} className="mt-3 w-full text-white/60 hover:bg-white/5 hover:text-white">
+            <Button variant="ghost" size="sm" onClick={() => setProfileOpen(true)} className="mt-3 w-full text-slate-600 hover:bg-slate-100 hover:text-slate-900">
               <UserRound className="me-2 h-4 w-4" /> تعديل بيانات البطاقة
             </Button>
           </motion.div>
