@@ -25,6 +25,7 @@ const AnimatedField: React.FC<AnimatedFieldProps> = ({
   required,
   valid,
   invalid,
+  errorMessage,
   iconColor = 'text-primary',
   delay = 0,
   className,
