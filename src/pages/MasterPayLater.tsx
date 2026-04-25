@@ -103,6 +103,21 @@ const MasterPayLater: React.FC = () => {
   const [calcAmount, setCalcAmount] = useState<number>(15000);
   const preview = useMemo(() => computeFinancingPreview(calcAmount), [calcAmount]);
 
+  useEffect(() => {
+    const prevTitle = document.title;
+    document.title = 'Master PayLater — تمويل بدون فوائد حتى 100,000 ر.س';
+    const setMeta = (name: string, content: string) => {
+      let el = document.querySelector(`meta[name="${name}"]`) as HTMLMetaElement | null;
+      if (!el) { el = document.createElement('meta'); el.name = name; document.head.appendChild(el); }
+      el.content = content;
+    };
+    setMeta('description', 'تمويل ذكي بصفر فوائد حتى 100,000 ر.س. تقييم ائتماني فوري، عقد رقمي موثّق، وأقساط مرنة من 6 إلى 36 شهر — متوافق شرعاً.');
+    let canonical = document.querySelector('link[rel="canonical"]') as HTMLLinkElement | null;
+    if (!canonical) { canonical = document.createElement('link'); canonical.rel = 'canonical'; document.head.appendChild(canonical); }
+    canonical.href = `${window.location.origin}/master-paylater`;
+    return () => { document.title = prevTitle; };
+  }, []);
+
   return (
     <main dir="rtl" className="min-h-screen bg-background">
       {/* ==================== HERO ==================== */}
