@@ -676,11 +676,6 @@ const App = () => (
                 <ReferralsPage />
               </SimpleProtectedRoute>
             } />
-            <Route path="/rewards" element={
-              <SimpleProtectedRoute requiredRole="client">
-                <RewardsPage />
-              </SimpleProtectedRoute>
-            } />
             <Route path="/student" element={
               <SimpleProtectedRoute requiredRole="client"><StudentDashboardPage /></SimpleProtectedRoute>
             } />
