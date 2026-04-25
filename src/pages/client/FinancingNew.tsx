@@ -1224,16 +1224,21 @@ const FinancingNew: React.FC = () => {
                   </div>
                 )}
 
-                <div className="flex justify-end pt-2">
-                  <Button
-                    size="lg"
-                    onClick={() => validateStep1() && setStep(2)}
-                    className="bg-gradient-to-l from-primary to-primary/80 shadow-lg hover:shadow-xl transition-shadow"
-                  >
-                    التالي: المستندات
-                    <ArrowRight className="mr-2 h-4 w-4 rotate-180" />
-                  </Button>
-                </div>
+                <StepNavBar
+                  savedAt={savedAt}
+                  savingDraft={savingDraft}
+                  onSaveDraft={saveDraftManually}
+                  rightButton={
+                    <Button
+                      size="lg"
+                      onClick={() => validateStep1() && goToStep(2)}
+                      className="bg-gradient-to-l from-primary to-primary/80 shadow-lg hover:shadow-xl transition-shadow"
+                    >
+                      التالي: المستندات
+                      <ArrowRight className="mr-2 h-4 w-4 rotate-180" />
+                    </Button>
+                  }
+                />
               </Card>
             </motion.div>
           )}
