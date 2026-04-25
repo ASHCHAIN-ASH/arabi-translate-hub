@@ -441,7 +441,7 @@ export function useAwardTaskLootBonus() {
 
 export function useClaimBossChallengeReward() {
   // Boss challenge reward feature was removed.
-  return useMutation({
+  return useMutation<{ success: boolean; alreadyClaimed?: boolean; week_key?: string; xp_awarded?: number; points_awarded?: number }, Error, void>({
     mutationFn: async () => {
       throw new Error('ميزة مكافأة التحدي تمت إزالتها');
     },
