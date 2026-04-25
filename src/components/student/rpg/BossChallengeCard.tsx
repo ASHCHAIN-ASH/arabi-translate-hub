@@ -16,10 +16,13 @@ function startOfWeek(d = new Date()) {
 }
 
 export default function BossChallengeCard({
-  tasks, sessions,
+  tasks, sessions, claimed = false, loading = false, onClaimReward,
 }: {
   tasks: StudentTask[];
   sessions: StudySession[];
+  claimed?: boolean;
+  loading?: boolean;
+  onClaimReward?: () => void;
 }) {
   const sow = startOfWeek();
   const { tasksDoneWeek, sessionsDoneWeek } = useMemo(() => {
