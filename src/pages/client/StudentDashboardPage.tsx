@@ -180,30 +180,79 @@ function Field({ label, value, mono, accent }: { label: string; value: string; m
 }
 
 /* =========================================================
-   Stat tile
+   Gamified Stat tile (pulsing, animated)
 ========================================================= */
-function StatTile({ icon: Icon, label, value, color, suffix }: {
+function StatTile({ icon: Icon, label, value, color, suffix, accent, pulse, delay = 0 }: {
   icon: any; label: string; value: number; color: string; suffix?: string;
+  accent: string; pulse?: boolean; delay?: number;
 }) {
   return (
     <motion.div
-      initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}
-      whileHover={{ y: -4 }} transition={{ type: 'spring', stiffness: 220, damping: 22 }}
-      className="group relative overflow-hidden rounded-3xl bg-white p-5 ring-1 ring-slate-200 shadow-sm hover:shadow-md transition-shadow"
+      initial={{ opacity: 0, y: 24, scale: 0.92 }}
+      animate={{ opacity: 1, y: 0, scale: 1 }}
+      whileHover={{ y: -6, scale: 1.02 }}
+      transition={{ type: 'spring', stiffness: 220, damping: 20, delay }}
+      className="group relative overflow-hidden rounded-3xl bg-white p-5 ring-1 ring-slate-200 shadow-sm hover:shadow-2xl transition-all"
     >
-      <div className={`pointer-events-none absolute -inset-px rounded-3xl opacity-0 blur-xl transition group-hover:opacity-30 ${color}`} />
-      <div className="relative flex items-center justify-between">
-        <div>
-          <p className="text-xs font-medium text-slate-500">{label}</p>
-          <p className="mt-1 text-2xl font-bold text-slate-900">
-            <Counter value={value} />{suffix && <span className="ms-1 text-sm text-slate-500">{suffix}</span>}
+      {/* animated background glow */}
+      <div className={`pointer-events-none absolute -inset-1 rounded-3xl opacity-0 blur-2xl transition-opacity duration-500 group-hover:opacity-40 ${color}`} />
+      {/* corner sparkle */}
+      <div className="pointer-events-none absolute -top-6 -left-6 h-20 w-20 rounded-full bg-gradient-to-br opacity-20 blur-2xl transition-opacity group-hover:opacity-60" style={{ background: `var(--tw-gradient-stops)` }} />
+
+      <div className="relative flex items-start justify-between">
+        <div className="min-w-0 flex-1">
+          <div className="flex items-center gap-1.5">
+            <p className="text-[11px] font-semibold uppercase tracking-wider text-slate-500">{label}</p>
+            {pulse && (
+              <span className="relative flex h-1.5 w-1.5">
+                <span className={`absolute inline-flex h-full w-full animate-ping rounded-full ${accent} opacity-75`} />
+                <span className={`relative inline-flex h-1.5 w-1.5 rounded-full ${accent}`} />
+              </span>
+            )}
+          </div>
+          <p className="mt-2 text-3xl font-extrabold leading-none text-slate-900 tabular-nums">
+            <Counter value={value} />
+            {suffix && <span className="ms-1 text-sm font-medium text-slate-500">{suffix}</span>}
           </p>
+          {/* mini progress bar (decorative) */}
+          <div className="mt-3 h-1 overflow-hidden rounded-full bg-slate-100">
+            <motion.div
+              initial={{ width: 0 }}
+              animate={{ width: `${Math.min(100, Math.max(8, (value % 100) || 30))}%` }}
+              transition={{ duration: 1.4, ease: 'easeOut', delay: delay + 0.2 }}
+              className={`h-full rounded-full ${color}`}
+            />
+          </div>
         </div>
-        <div className={`flex h-12 w-12 items-center justify-center rounded-2xl ${color} text-white shadow-lg`}>
-          <Icon className="h-6 w-6" />
+
+        {/* icon orb with rotating ring */}
+        <div className="relative ms-3 flex-shrink-0">
+          <motion.div
+            animate={{ rotate: 360 }}
+            transition={{ duration: 18, ease: 'linear', repeat: Infinity }}
+            className={`absolute inset-0 rounded-2xl ${color} opacity-30 blur-md`}
+          />
+          <div className={`relative flex h-14 w-14 items-center justify-center rounded-2xl ${color} text-white shadow-lg ring-2 ring-white`}>
+            <Icon className="h-6 w-6 drop-shadow" />
+          </div>
         </div>
       </div>
     </motion.div>
+  );
+}
+
+/* Quick action chip */
+function QuickChip({ icon: Icon, label, onClick, color }: { icon: any; label: string; onClick: () => void; color: string }) {
+  return (
+    <motion.button
+      whileHover={{ scale: 1.05, y: -2 }}
+      whileTap={{ scale: 0.96 }}
+      onClick={onClick}
+      className={`group flex items-center gap-2 rounded-2xl px-4 py-2.5 text-sm font-bold text-white shadow-lg transition-shadow hover:shadow-xl ${color}`}
+    >
+      <Icon className="h-4 w-4 transition-transform group-hover:rotate-12" />
+      {label}
+    </motion.button>
   );
 }
 
