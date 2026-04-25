@@ -62,6 +62,14 @@ const FinancingHome: React.FC = () => {
   const [apps, setApps] = useState<FinancingApp[]>([]);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState<'all' | 'active' | 'pending' | 'closed'>('all');
+  const [tabSwitching, setTabSwitching] = useState(false);
+
+  const handleTabChange = (key: typeof activeTab) => {
+    if (key === activeTab) return;
+    setTabSwitching(true);
+    setActiveTab(key);
+    window.setTimeout(() => setTabSwitching(false), 280);
+  };
 
   useEffect(() => {
     document.title = 'Master PayLater — التمويل | منصة ماستر';
