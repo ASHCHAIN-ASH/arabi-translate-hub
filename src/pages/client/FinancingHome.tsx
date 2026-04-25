@@ -304,51 +304,53 @@ const FinancingHome: React.FC = () => {
               <>
                 <div
                   dir="rtl"
-                  className="relative mb-4 sm:mb-6 rounded-2xl p-1 sm:p-1.5 bg-gradient-to-l from-primary/5 via-muted/40 to-primary/5 ring-1 ring-border/60 backdrop-blur-xl overflow-x-auto shadow-inner scrollbar-none"
+                  className="sticky top-[108px] sm:static z-20 -mx-3 sm:mx-0 px-3 sm:px-0 py-2 sm:py-0 mb-3 sm:mb-6 bg-background/85 sm:bg-transparent backdrop-blur-md sm:backdrop-blur-0 border-b border-border/40 sm:border-0"
                 >
-                  <div className="flex gap-1 sm:gap-1.5 min-w-max">
-                    {tabs.map((t) => {
-                      const isActive = activeTab === t.key;
-                      const Icon = t.icon;
-                      return (
-                        <button
-                          key={t.key}
-                          onClick={() => setActiveTab(t.key as typeof activeTab)}
-                          className={`relative flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 md:px-5 py-2 sm:py-2.5 rounded-xl text-xs sm:text-sm font-semibold transition-all duration-300 whitespace-nowrap group ${
-                            isActive
-                              ? 'text-white'
-                              : 'text-muted-foreground hover:text-foreground'
-                          }`}
-                        >
-                          {isActive && (
-                            <motion.div
-                              layoutId="activeFinancingTab"
-                              className="absolute inset-0 rounded-xl shadow-lg"
-                              style={{
-                                background:
-                                  'linear-gradient(135deg, hsl(217 91% 32%) 0%, hsl(199 89% 48%) 100%)',
-                                boxShadow:
-                                  '0 8px 24px -8px hsl(217 91% 32% / 0.5), inset 0 1px 0 0 hsl(0 0% 100% / 0.2)',
-                              }}
-                              transition={{ type: 'spring', stiffness: 380, damping: 30 }}
-                            />
-                          )}
-                          <span className="relative flex items-center gap-1.5 sm:gap-2">
-                            <Icon className={`h-3.5 w-3.5 sm:h-4 sm:w-4 transition-transform ${isActive ? 'scale-110' : 'group-hover:scale-110'}`} />
-                            <span>{t.label}</span>
-                            <span
-                              className={`min-w-[20px] sm:min-w-[22px] h-4 sm:h-5 px-1 sm:px-1.5 inline-flex items-center justify-center rounded-full text-[9px] sm:text-[10px] font-bold tabular-nums transition-all ${
-                                isActive
-                                  ? 'bg-white/25 text-white ring-1 ring-white/30'
-                                  : 'bg-muted text-muted-foreground ring-1 ring-border/60'
-                              }`}
-                            >
-                              {t.count}
+                  <div className="relative rounded-2xl p-1 sm:p-1.5 bg-gradient-to-l from-primary/5 via-muted/40 to-primary/5 ring-1 ring-border/60 backdrop-blur-xl overflow-x-auto shadow-inner scrollbar-none">
+                    <div className="flex gap-1 sm:gap-1.5 min-w-max">
+                      {tabs.map((t) => {
+                        const isActive = activeTab === t.key;
+                        const Icon = t.icon;
+                        return (
+                          <button
+                            key={t.key}
+                            onClick={() => setActiveTab(t.key as typeof activeTab)}
+                            className={`relative flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 md:px-5 py-2 sm:py-2.5 rounded-xl text-xs sm:text-sm font-semibold transition-all duration-300 whitespace-nowrap group ${
+                              isActive
+                                ? 'text-white'
+                                : 'text-muted-foreground hover:text-foreground'
+                            }`}
+                          >
+                            {isActive && (
+                              <motion.div
+                                layoutId="activeFinancingTab"
+                                className="absolute inset-0 rounded-xl shadow-lg"
+                                style={{
+                                  background:
+                                    'linear-gradient(135deg, hsl(217 91% 32%) 0%, hsl(199 89% 48%) 100%)',
+                                  boxShadow:
+                                    '0 8px 24px -8px hsl(217 91% 32% / 0.5), inset 0 1px 0 0 hsl(0 0% 100% / 0.2)',
+                                }}
+                                transition={{ type: 'spring', stiffness: 380, damping: 30 }}
+                              />
+                            )}
+                            <span className="relative flex items-center gap-1.5 sm:gap-2">
+                              <Icon className={`h-3.5 w-3.5 sm:h-4 sm:w-4 transition-transform ${isActive ? 'scale-110' : 'group-hover:scale-110'}`} />
+                              <span>{t.label}</span>
+                              <span
+                                className={`min-w-[20px] sm:min-w-[22px] h-4 sm:h-5 px-1 sm:px-1.5 inline-flex items-center justify-center rounded-full text-[9px] sm:text-[10px] font-bold tabular-nums transition-all ${
+                                  isActive
+                                    ? 'bg-white/25 text-white ring-1 ring-white/30'
+                                    : 'bg-muted text-muted-foreground ring-1 ring-border/60'
+                                }`}
+                              >
+                                {t.count}
+                              </span>
                             </span>
-                          </span>
-                        </button>
-                      );
-                    })}
+                          </button>
+                        );
+                      })}
+                    </div>
                   </div>
                 </div>
 
