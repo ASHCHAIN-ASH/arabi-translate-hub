@@ -482,6 +482,8 @@ const FinancingNew: React.FC = () => {
         if (docsErr) throw docsErr;
       }
 
+      // Clear draft on successful submission
+      try { localStorage.removeItem(DRAFT_KEY); } catch {/* ignore */}
       toast({
         title: '✅ تم استلام طلبك بنجاح',
         description: 'سيبدأ فريق التقييم الائتماني بمراجعة طلبك خلال 24 ساعة.',
