@@ -45,6 +45,7 @@ import FinancingStepper from '@/components/financing/FinancingStepper';
 import FinancingLiveSummary from '@/components/financing/FinancingLiveSummary';
 import AnimatedField from '@/components/financing/AnimatedField';
 import SectionHeader from '@/components/financing/SectionHeader';
+import FinancingCalculator from '@/components/financing/FinancingCalculator';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -542,34 +543,12 @@ const FinancingNew: React.FC = () => {
                       الحد الأدنى: {fmt(FINANCING_MIN_AMOUNT)} ر.س · حدّ أعلى: 100,000 ر.س
                     </p>
 
-                    {/* شرائح المدة */}
-                    <div className="mt-4 grid grid-cols-1 sm:grid-cols-3 gap-2">
-                      {[
-                        { range: '2,500 — 10,000', months: '6 أشهر', min: 2500, max: 10000 },
-                        { range: '10,001 — 25,000', months: 'سنة كاملة', min: 10001, max: 25000 },
-                        { range: '25,001 — 100,000', months: '3 سنوات', min: 25001, max: 100000 },
-                      ].map((tier, i) => {
-                        const active = amount >= tier.min && amount <= tier.max;
-                        return (
-                          <motion.div
-                            key={i}
-                            initial={{ opacity: 0, y: 8 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ delay: i * 0.08 }}
-                            className={`rounded-xl p-3 ring-1 transition-all ${
-                              active
-                                ? 'bg-primary/10 ring-primary shadow-sm'
-                                : 'bg-background/60 ring-border/60'
-                            }`}
-                          >
-                            <div className="text-[10px] text-muted-foreground mb-1">{tier.range} ر.س</div>
-                            <div className={`text-xs font-bold ${active ? 'text-primary' : 'text-foreground'}`}>
-                              {tier.months}
-                            </div>
-                          </motion.div>
-                        );
-                      })}
-                    </div>
+                    {/* === حاسبة فورية للأقساط (Slider + معاينة حية) === */}
+                    <FinancingCalculator
+                      amount={amount}
+                      onAmountChange={setAmount}
+                      disabled={!!orderId || !!invoiceId}
+                    />
                   </div>
                 </motion.div>
 
