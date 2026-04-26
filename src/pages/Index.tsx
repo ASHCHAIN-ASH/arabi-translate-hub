@@ -32,6 +32,10 @@ import testimonialProfessorImg from "@/assets/home-testimonial-professor.jpg";
 import testimonialStudentFemaleImg from "@/assets/home-testimonial-student-female.jpg";
 import testimonialResearcherMaleImg from "@/assets/home-testimonial-researcher-male.jpg";
 import partnershipHandshakeImg from "@/assets/home-partnership-handshake.jpg";
+import qualityResearcherImg from "@/assets/home-quality-researcher.jpg";
+import qualityResearchDetailImg from "@/assets/home-quality-research-detail.jpg";
+import ctaCampusSunsetImg from "@/assets/home-cta-campus-sunset.jpg";
+import inquiryTeamImg from "@/assets/home-inquiry-team.jpg";
 
 // Lazy loading للمكونات الثقيلة لتحسين الأداء
 const ServicesShowcase = lazy(() => import("@/components/ServicesShowcase"));
@@ -627,62 +631,150 @@ const Index = () => {
         </div>
       </section>
 
-      {/* قسم مميزات الجودة */}
-      <section className="py-16 bg-gradient-to-br from-violet-600 via-purple-600 to-fuchsia-600 text-white relative overflow-hidden">
-        {/* خلفية متحركة */}
-        <div className="absolute inset-0">
+      {/* قسم مميزات الجودة - تصميم تفاعلي بصور حقيقية */}
+      <section className="py-16 sm:py-20 lg:py-24 bg-gradient-to-br from-slate-900 via-violet-950 to-slate-900 text-white relative overflow-hidden">
+        {/* خلفية صورة بـ Parallax */}
+        <motion.div
+          className="absolute inset-0 opacity-20"
+          initial={{ scale: 1.15 }}
+          whileInView={{ scale: 1 }}
+          transition={{ duration: 1.4, ease: "easeOut" }}
+          viewport={{ once: true }}
+        >
+          <img
+            src={qualityResearchDetailImg}
+            alt=""
+            className="w-full h-full object-cover"
+            loading="lazy"
+          />
+          <div className="absolute inset-0 bg-gradient-to-br from-violet-950/95 via-purple-950/85 to-slate-900/95" />
+        </motion.div>
+
+        {/* عناصر زخرفية */}
+        <div className="absolute inset-0 pointer-events-none">
           <motion.div
-            className="absolute top-0 right-0 w-96 h-96 bg-white/10 rounded-full blur-3xl"
+            className="absolute top-0 right-0 w-96 h-96 bg-violet-500/20 rounded-full blur-3xl"
             animate={{ scale: [1, 1.2, 1], x: [0, 50, 0], y: [0, 30, 0] }}
             transition={{ duration: 10, repeat: Infinity }}
           />
           <motion.div
-            className="absolute bottom-0 left-0 w-80 h-80 bg-purple-300/10 rounded-full blur-3xl"
-            animate={{ scale: [1, 1.3, 1], x: [0, -40, 0], y: [0, -20, 0] }}
+            className="absolute bottom-0 left-0 w-80 h-80 bg-fuchsia-500/15 rounded-full blur-3xl"
+            animate={{ scale: [1, 1.3, 1], x: [0, -40, 0] }}
             transition={{ duration: 12, repeat: Infinity, delay: 1 }}
           />
         </div>
 
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-          <motion.div
-            className="text-center mb-12"
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-            viewport={{ once: true }}
-          >
-            <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-4">
-              لماذا نحن الخيار الأمثل؟
-            </h2>
-            <p className="text-lg sm:text-xl text-white/90 max-w-2xl mx-auto">
-              نلتزم بأعلى معايير الجودة الأكاديمية العالمية
-            </p>
-          </motion.div>
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 items-center">
+            {/* الصورة الجانبية الحقيقية */}
+            <motion.div
+              className="lg:col-span-5 order-2 lg:order-1"
+              initial={{ opacity: 0, x: -50 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.8 }}
+              viewport={{ once: true }}
+            >
+              <motion.div
+                className="relative rounded-3xl overflow-hidden shadow-2xl border-4 border-white/10 group"
+                whileHover={{ scale: 1.02 }}
+                transition={{ duration: 0.5 }}
+              >
+                <div className="aspect-[4/5]">
+                  <motion.img
+                    src={qualityResearcherImg}
+                    alt="باحثة سعودية تحمل شهادة التخرج بفخر"
+                    className="w-full h-full object-cover"
+                    loading="lazy"
+                    whileHover={{ scale: 1.08 }}
+                    transition={{ duration: 0.8 }}
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-violet-900/70 via-transparent to-transparent" />
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {qualityFeatures.map((feature, index) => {
-              const IconComponent = feature.icon;
-              return (
-                <motion.div
-                  key={index}
-                  initial={{ opacity: 0, y: 30 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.6, delay: index * 0.1 }}
-                  viewport={{ once: true }}
-                  whileHover={{ y: -8 }}
-                >
-                  <Card className="bg-white/10 backdrop-blur-md border-white/20 text-white hover:bg-white/20 transition-all duration-300">
-                    <CardContent className="p-6 text-center">
-                      <div className="w-14 h-14 mx-auto mb-4 bg-white/20 rounded-xl flex items-center justify-center">
-                        <IconComponent className="h-7 w-7" />
+                  {/* بطاقة شهادة عائمة */}
+                  <motion.div
+                    className="absolute bottom-5 right-5 left-5 bg-white/95 dark:bg-slate-900/95 backdrop-blur-md rounded-2xl p-4 shadow-xl"
+                    initial={{ opacity: 0, y: 30 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.6, duration: 0.6 }}
+                    viewport={{ once: true }}
+                  >
+                    <div className="flex items-center gap-3">
+                      <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-amber-400 to-orange-500 flex items-center justify-center shadow-lg shrink-0">
+                        <Award className="h-6 w-6 text-white" />
                       </div>
-                      <h3 className="text-xl font-bold mb-2">{feature.title}</h3>
-                      <p className="text-white/80 text-sm">{feature.description}</p>
-                    </CardContent>
-                  </Card>
-                </motion.div>
-              );
-            })}
+                      <div className="text-right flex-1">
+                        <p className="text-sm font-bold text-slate-800 dark:text-white">شهادة جودة معتمدة</p>
+                        <p className="text-xs text-slate-500 dark:text-slate-400">ISO 9001:2015</p>
+                      </div>
+                    </div>
+                  </motion.div>
+                </div>
+              </motion.div>
+            </motion.div>
+
+            {/* المحتوى والمميزات */}
+            <motion.div
+              className="lg:col-span-7 order-1 lg:order-2"
+              initial={{ opacity: 0, x: 50 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.8 }}
+              viewport={{ once: true }}
+            >
+              <motion.div
+                className="inline-flex items-center gap-2 px-4 py-2 bg-white/10 backdrop-blur-md border border-white/20 rounded-full mb-5"
+                initial={{ opacity: 0, scale: 0.85 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                viewport={{ once: true }}
+              >
+                <Sparkles className="h-4 w-4 text-amber-300" />
+                <span className="text-xs sm:text-sm font-semibold text-white/90">الخيار الأمثل للأكاديميين</span>
+              </motion.div>
+
+              <h2 className="text-3xl sm:text-4xl md:text-5xl font-black mb-4 leading-tight">
+                لماذا يثق بنا{" "}
+                <span className="bg-gradient-to-r from-amber-300 via-pink-300 to-fuchsia-300 bg-clip-text text-transparent">
+                  15,000+ باحث؟
+                </span>
+              </h2>
+              <p className="text-base sm:text-lg text-white/80 mb-8 max-w-xl leading-relaxed">
+                نلتزم بأعلى معايير الجودة الأكاديمية العالمية ونضع نجاحك في صدارة أولوياتنا
+              </p>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                {qualityFeatures.map((feature, index) => {
+                  const IconComponent = feature.icon;
+                  return (
+                    <motion.div
+                      key={index}
+                      initial={{ opacity: 0, y: 20 }}
+                      whileInView={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.5, delay: index * 0.1 }}
+                      viewport={{ once: true }}
+                      whileHover={{ y: -6, scale: 1.02 }}
+                      className="group relative p-4 sm:p-5 bg-white/5 hover:bg-white/10 backdrop-blur-md border border-white/10 hover:border-amber-300/40 rounded-2xl transition-all duration-300 cursor-default"
+                    >
+                      <div className="flex items-start gap-3">
+                        <motion.div
+                          className="w-12 h-12 shrink-0 rounded-xl bg-gradient-to-br from-amber-400 via-orange-500 to-pink-500 flex items-center justify-center shadow-lg group-hover:shadow-amber-500/50"
+                          whileHover={{ rotate: [0, -10, 10, 0] }}
+                          transition={{ duration: 0.5 }}
+                        >
+                          <IconComponent className="h-6 w-6 text-white" strokeWidth={2.2} />
+                        </motion.div>
+                        <div className="flex-1 min-w-0">
+                          <h3 className="text-base sm:text-lg font-bold mb-1 text-white group-hover:text-amber-200 transition-colors">
+                            {feature.title}
+                          </h3>
+                          <p className="text-xs sm:text-sm text-white/70 leading-relaxed">
+                            {feature.description}
+                          </p>
+                        </div>
+                      </div>
+                    </motion.div>
+                  );
+                })}
+              </div>
+            </motion.div>
           </div>
         </div>
       </section>
@@ -906,53 +998,113 @@ const Index = () => {
         </div>
       </section>
 
-      {/* Quick Inquiry Form - Lead Capture */}
-      <section className="py-16 bg-gradient-to-r from-indigo-600 via-blue-600 to-cyan-600 text-white relative overflow-hidden" dir="rtl">
-        <div className="absolute inset-0 opacity-10">
-          <div className="absolute inset-0" style={{ backgroundImage: 'radial-gradient(circle at 25% 50%, white 1px, transparent 1px)', backgroundSize: '40px 40px' }} />
-        </div>
+      {/* Quick Inquiry Form - Lead Capture بصورة فريق حقيقية */}
+      <section className="py-16 sm:py-20 relative overflow-hidden text-white" dir="rtl">
+        {/* خلفية صورة فريق حقيقي مع Parallax */}
+        <motion.div
+          className="absolute inset-0"
+          initial={{ scale: 1.15 }}
+          whileInView={{ scale: 1 }}
+          transition={{ duration: 1.4, ease: "easeOut" }}
+          viewport={{ once: true }}
+        >
+          <img
+            src={inquiryTeamImg}
+            alt=""
+            className="w-full h-full object-cover"
+            loading="lazy"
+          />
+          <div className="absolute inset-0 bg-gradient-to-l from-indigo-950/95 via-blue-900/85 to-cyan-900/80" />
+        </motion.div>
+
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-          <div className="max-w-3xl mx-auto text-center">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 items-center max-w-6xl mx-auto">
+            {/* النص الترويجي */}
             <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6 }}
+              className="text-right"
+              initial={{ opacity: 0, x: -30 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.7 }}
               viewport={{ once: true }}
             >
-              <h2 className="text-3xl sm:text-4xl font-bold mb-3">احصل على استشارة مجانية</h2>
-              <p className="text-lg text-white/90 mb-8">أخبرنا عن مشروعك وسنتواصل معك خلال ساعة واحدة</p>
-            </motion.div>
-            <motion.div
-              className="grid grid-cols-1 sm:grid-cols-3 gap-4 max-w-2xl mx-auto"
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.2 }}
-              viewport={{ once: true }}
-            >
-              <input
-                type="text"
-                placeholder="الاسم"
-                className="px-4 py-3 rounded-xl bg-white/20 backdrop-blur border border-white/30 text-white placeholder-white/70 focus:outline-none focus:ring-2 focus:ring-white/50"
-              />
-              <input
-                type="tel"
-                placeholder="رقم الجوال"
-                className="px-4 py-3 rounded-xl bg-white/20 backdrop-blur border border-white/30 text-white placeholder-white/70 focus:outline-none focus:ring-2 focus:ring-white/50"
-                dir="ltr"
-              />
-              <Button 
-                size="lg"
-                className="bg-white text-blue-600 hover:bg-white/90 font-bold shadow-xl"
-                onClick={() => navigate('/contact-us')}
+              <motion.div
+                className="inline-flex items-center gap-2 px-4 py-2 bg-amber-400/20 backdrop-blur-md border border-amber-300/40 rounded-full text-amber-200 text-sm font-semibold mb-5"
+                initial={{ opacity: 0, scale: 0.85 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                viewport={{ once: true }}
               >
-                أرسل طلبك
-                <ArrowRight className="h-4 w-4 mr-2" />
-              </Button>
+                <Zap className="h-4 w-4" />
+                استشارة مجانية خلال ساعة
+              </motion.div>
+              <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black mb-4 leading-tight">
+                فريقنا الأكاديمي{" "}
+                <span className="bg-gradient-to-r from-amber-300 to-pink-300 bg-clip-text text-transparent">
+                  بانتظارك
+                </span>
+              </h2>
+              <p className="text-base sm:text-lg text-white/85 mb-6 leading-relaxed">
+                أخبرنا عن مشروعك وسيتواصل معك خبير متخصص لتقديم الحل المناسب — بدون أي التزام
+              </p>
+              <div className="flex flex-wrap gap-4 text-sm text-white/80">
+                <div className="flex items-center gap-2">
+                  <CheckCircle className="h-4 w-4 text-emerald-400" />
+                  <span>ردّ خلال 60 دقيقة</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Shield className="h-4 w-4 text-emerald-400" />
+                  <span>سرية تامة</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Heart className="h-4 w-4 text-pink-400" />
+                  <span>بدون التزام</span>
+                </div>
+              </div>
             </motion.div>
-            <p className="text-xs text-white/60 mt-4">
-              <Shield className="h-3 w-3 inline ml-1" />
-              معلوماتك محمية بالكامل ولن يتم مشاركتها
-            </p>
+
+            {/* بطاقة النموذج */}
+            <motion.div
+              className="relative"
+              initial={{ opacity: 0, x: 30, y: 20 }}
+              whileInView={{ opacity: 1, x: 0, y: 0 }}
+              transition={{ duration: 0.7, delay: 0.2 }}
+              viewport={{ once: true }}
+            >
+              <div className="bg-white/10 backdrop-blur-xl border border-white/20 rounded-3xl p-6 sm:p-8 shadow-2xl">
+                <div className="space-y-4">
+                  <div>
+                    <label className="block text-sm font-medium text-white/90 mb-2">الاسم الكامل</label>
+                    <input
+                      type="text"
+                      placeholder="اكتب اسمك"
+                      className="w-full px-4 py-3 rounded-xl bg-white/20 backdrop-blur border border-white/30 text-white placeholder-white/60 focus:outline-none focus:ring-2 focus:ring-amber-300 focus:border-amber-300 transition-all"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-white/90 mb-2">رقم الجوال</label>
+                    <input
+                      type="tel"
+                      placeholder="05xxxxxxxx"
+                      className="w-full px-4 py-3 rounded-xl bg-white/20 backdrop-blur border border-white/30 text-white placeholder-white/60 focus:outline-none focus:ring-2 focus:ring-amber-300 focus:border-amber-300 transition-all"
+                      dir="ltr"
+                    />
+                  </div>
+                  <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+                    <Button
+                      size="lg"
+                      className="w-full bg-gradient-to-r from-amber-400 to-orange-500 hover:from-amber-500 hover:to-orange-600 text-slate-900 font-bold shadow-xl text-base py-6"
+                      onClick={() => navigate('/contact-us')}
+                    >
+                      احجز استشارتك المجانية الآن
+                      <ArrowRight className="h-5 w-5 mr-2" />
+                    </Button>
+                  </motion.div>
+                  <p className="text-xs text-white/60 text-center">
+                    <Shield className="h-3 w-3 inline ml-1" />
+                    معلوماتك محمية بالكامل ولن يتم مشاركتها
+                  </p>
+                </div>
+              </div>
+            </motion.div>
           </div>
         </div>
       </section>
@@ -980,50 +1132,136 @@ const Index = () => {
         <HomeFinancingSection />
       </Suspense>
 
-      {/* Call to Action النهائي */}
-      <section className="py-20 bg-gradient-to-r from-blue-600 via-cyan-600 to-teal-600 text-white relative overflow-hidden">
-        <div className="absolute inset-0">
-          <motion.div
-            className="absolute inset-0 bg-gradient-to-r from-blue-600/50 via-indigo-600/50 to-purple-600/50"
-            animate={{ 
-              backgroundPosition: ['0% 50%', '100% 50%', '0% 50%']
-            }}
-            transition={{ duration: 15, repeat: Infinity }}
-            style={{ backgroundSize: '200% 200%' }}
+      {/* Call to Action النهائي - بصورة حرم جامعي حقيقية */}
+      <section className="relative py-24 sm:py-28 lg:py-32 overflow-hidden text-white">
+        {/* خلفية صورة حرم جامعي + Parallax */}
+        <motion.div
+          className="absolute inset-0"
+          initial={{ scale: 1.2 }}
+          whileInView={{ scale: 1 }}
+          transition={{ duration: 1.6, ease: "easeOut" }}
+          viewport={{ once: true }}
+        >
+          <img
+            src={ctaCampusSunsetImg}
+            alt="حرم جامعي سعودي عند الغروب"
+            className="w-full h-full object-cover"
+            loading="lazy"
           />
+          {/* تدرج لإبراز النص */}
+          <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-900/85 to-blue-950/70" />
+          <motion.div
+            className="absolute inset-0 bg-gradient-to-r from-amber-600/20 via-transparent to-blue-600/20"
+            animate={{ opacity: [0.3, 0.6, 0.3] }}
+            transition={{ duration: 6, repeat: Infinity }}
+          />
+        </motion.div>
+
+        {/* جسيمات متحركة */}
+        <div className="absolute inset-0 pointer-events-none">
+          {[...Array(6)].map((_, i) => (
+            <motion.div
+              key={i}
+              className="absolute w-2 h-2 bg-amber-300/60 rounded-full"
+              style={{
+                left: `${15 + i * 14}%`,
+                top: `${20 + (i % 3) * 25}%`,
+              }}
+              animate={{
+                y: [0, -30, 0],
+                opacity: [0.3, 1, 0.3],
+              }}
+              transition={{
+                duration: 3 + i * 0.5,
+                repeat: Infinity,
+                delay: i * 0.3,
+              }}
+            />
+          ))}
         </div>
 
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
           <motion.div
-            initial={{ opacity: 0, y: 30 }}
+            initial={{ opacity: 0, y: 40 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
             viewport={{ once: true }}
           >
-            <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-6">
-              هل أنت مستعد للبدء؟
+            <motion.div
+              className="inline-flex items-center gap-2 px-5 py-2.5 bg-white/10 backdrop-blur-md border border-white/20 rounded-full mb-6"
+              initial={{ opacity: 0, scale: 0.85 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              transition={{ delay: 0.2 }}
+              viewport={{ once: true }}
+            >
+              <motion.div
+                animate={{ rotate: [0, 360] }}
+                transition={{ duration: 4, repeat: Infinity, ease: "linear" }}
+              >
+                <Sparkles className="h-4 w-4 text-amber-300" />
+              </motion.div>
+              <span className="text-sm font-semibold text-white/95">انطلاقتك الأكاديمية تبدأ هنا</span>
+            </motion.div>
+
+            <h2 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black mb-6 leading-tight tracking-tight">
+              مستقبلك الأكاديمي{" "}
+              <span className="block sm:inline bg-gradient-to-r from-amber-300 via-orange-300 to-pink-300 bg-clip-text text-transparent">
+                يبدأ بخطوة
+              </span>
             </h2>
-            <p className="text-lg sm:text-xl text-white/90 mb-8 max-w-2xl mx-auto">
-              انضم إلى آلاف الباحثين والطلاب الذين اختاروا التميز الأكاديمي معنا
+            <p className="text-base sm:text-lg lg:text-xl text-white/90 mb-10 max-w-2xl mx-auto leading-relaxed">
+              انضم إلى آلاف الباحثين والطلاب الذين اختاروا التميز معنا — ابدأ رحلتك الأكاديمية اليوم
             </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button 
-                size="lg"
-                className="bg-white text-blue-600 hover:bg-slate-100 shadow-xl text-lg px-8"
-                onClick={() => navigate('/order-now')}
-              >
-                اطلب خدمتك الآن
-                <ArrowRight className="h-5 w-5 mr-2" />
-              </Button>
-              <Button 
-                size="lg"
-                variant="outline"
-                className="border-2 border-white text-white hover:bg-white/10 text-lg px-8"
-                onClick={() => navigate('/contact-us')}
-              >
-                تواصل معنا
-              </Button>
+
+            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+              <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                <Button
+                  size="lg"
+                  className="bg-gradient-to-r from-amber-400 to-orange-500 hover:from-amber-500 hover:to-orange-600 text-slate-900 font-bold shadow-2xl shadow-amber-500/40 text-base sm:text-lg px-8 sm:px-10 py-6"
+                  onClick={() => navigate('/order-now')}
+                >
+                  ابدأ الآن — مجاناً للاستشارة
+                  <ArrowRight className="h-5 w-5 mr-2" />
+                </Button>
+              </motion.div>
+              <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                <Button
+                  size="lg"
+                  variant="outline"
+                  className="border-2 border-white/60 bg-white/10 backdrop-blur-md text-white hover:bg-white hover:text-slate-900 text-base sm:text-lg px-8 py-6 transition-all"
+                  onClick={() => window.open('https://wa.me/966559600824', '_blank')}
+                >
+                  <MessageCircle className="h-5 w-5 ml-2" />
+                  تواصل عبر واتساب
+                </Button>
+              </motion.div>
             </div>
+
+            {/* مؤشرات الثقة السفلية */}
+            <motion.div
+              className="mt-12 flex flex-wrap justify-center gap-6 sm:gap-10 text-white/80"
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.4 }}
+              viewport={{ once: true }}
+            >
+              <div className="flex items-center gap-2">
+                <Users className="h-5 w-5 text-amber-300" />
+                <span className="text-sm font-medium">15,000+ عميل</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <Star className="h-5 w-5 text-amber-300 fill-amber-300" />
+                <span className="text-sm font-medium">4.9/5 تقييم</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <Globe className="h-5 w-5 text-amber-300" />
+                <span className="text-sm font-medium">25+ دولة</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <Clock className="h-5 w-5 text-amber-300" />
+                <span className="text-sm font-medium">تسليم 24 ساعة</span>
+              </div>
+            </motion.div>
           </motion.div>
         </div>
       </section>
