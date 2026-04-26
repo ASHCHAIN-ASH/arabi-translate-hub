@@ -631,62 +631,150 @@ const Index = () => {
         </div>
       </section>
 
-      {/* قسم مميزات الجودة */}
-      <section className="py-16 bg-gradient-to-br from-violet-600 via-purple-600 to-fuchsia-600 text-white relative overflow-hidden">
-        {/* خلفية متحركة */}
-        <div className="absolute inset-0">
+      {/* قسم مميزات الجودة - تصميم تفاعلي بصور حقيقية */}
+      <section className="py-16 sm:py-20 lg:py-24 bg-gradient-to-br from-slate-900 via-violet-950 to-slate-900 text-white relative overflow-hidden">
+        {/* خلفية صورة بـ Parallax */}
+        <motion.div
+          className="absolute inset-0 opacity-20"
+          initial={{ scale: 1.15 }}
+          whileInView={{ scale: 1 }}
+          transition={{ duration: 1.4, ease: "easeOut" }}
+          viewport={{ once: true }}
+        >
+          <img
+            src={qualityResearchDetailImg}
+            alt=""
+            className="w-full h-full object-cover"
+            loading="lazy"
+          />
+          <div className="absolute inset-0 bg-gradient-to-br from-violet-950/95 via-purple-950/85 to-slate-900/95" />
+        </motion.div>
+
+        {/* عناصر زخرفية */}
+        <div className="absolute inset-0 pointer-events-none">
           <motion.div
-            className="absolute top-0 right-0 w-96 h-96 bg-white/10 rounded-full blur-3xl"
+            className="absolute top-0 right-0 w-96 h-96 bg-violet-500/20 rounded-full blur-3xl"
             animate={{ scale: [1, 1.2, 1], x: [0, 50, 0], y: [0, 30, 0] }}
             transition={{ duration: 10, repeat: Infinity }}
           />
           <motion.div
-            className="absolute bottom-0 left-0 w-80 h-80 bg-purple-300/10 rounded-full blur-3xl"
-            animate={{ scale: [1, 1.3, 1], x: [0, -40, 0], y: [0, -20, 0] }}
+            className="absolute bottom-0 left-0 w-80 h-80 bg-fuchsia-500/15 rounded-full blur-3xl"
+            animate={{ scale: [1, 1.3, 1], x: [0, -40, 0] }}
             transition={{ duration: 12, repeat: Infinity, delay: 1 }}
           />
         </div>
 
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-          <motion.div
-            className="text-center mb-12"
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-            viewport={{ once: true }}
-          >
-            <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-4">
-              لماذا نحن الخيار الأمثل؟
-            </h2>
-            <p className="text-lg sm:text-xl text-white/90 max-w-2xl mx-auto">
-              نلتزم بأعلى معايير الجودة الأكاديمية العالمية
-            </p>
-          </motion.div>
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 items-center">
+            {/* الصورة الجانبية الحقيقية */}
+            <motion.div
+              className="lg:col-span-5 order-2 lg:order-1"
+              initial={{ opacity: 0, x: -50 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.8 }}
+              viewport={{ once: true }}
+            >
+              <motion.div
+                className="relative rounded-3xl overflow-hidden shadow-2xl border-4 border-white/10 group"
+                whileHover={{ scale: 1.02 }}
+                transition={{ duration: 0.5 }}
+              >
+                <div className="aspect-[4/5]">
+                  <motion.img
+                    src={qualityResearcherImg}
+                    alt="باحثة سعودية تحمل شهادة التخرج بفخر"
+                    className="w-full h-full object-cover"
+                    loading="lazy"
+                    whileHover={{ scale: 1.08 }}
+                    transition={{ duration: 0.8 }}
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-violet-900/70 via-transparent to-transparent" />
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {qualityFeatures.map((feature, index) => {
-              const IconComponent = feature.icon;
-              return (
-                <motion.div
-                  key={index}
-                  initial={{ opacity: 0, y: 30 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.6, delay: index * 0.1 }}
-                  viewport={{ once: true }}
-                  whileHover={{ y: -8 }}
-                >
-                  <Card className="bg-white/10 backdrop-blur-md border-white/20 text-white hover:bg-white/20 transition-all duration-300">
-                    <CardContent className="p-6 text-center">
-                      <div className="w-14 h-14 mx-auto mb-4 bg-white/20 rounded-xl flex items-center justify-center">
-                        <IconComponent className="h-7 w-7" />
+                  {/* بطاقة شهادة عائمة */}
+                  <motion.div
+                    className="absolute bottom-5 right-5 left-5 bg-white/95 dark:bg-slate-900/95 backdrop-blur-md rounded-2xl p-4 shadow-xl"
+                    initial={{ opacity: 0, y: 30 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.6, duration: 0.6 }}
+                    viewport={{ once: true }}
+                  >
+                    <div className="flex items-center gap-3">
+                      <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-amber-400 to-orange-500 flex items-center justify-center shadow-lg shrink-0">
+                        <Award className="h-6 w-6 text-white" />
                       </div>
-                      <h3 className="text-xl font-bold mb-2">{feature.title}</h3>
-                      <p className="text-white/80 text-sm">{feature.description}</p>
-                    </CardContent>
-                  </Card>
-                </motion.div>
-              );
-            })}
+                      <div className="text-right flex-1">
+                        <p className="text-sm font-bold text-slate-800 dark:text-white">شهادة جودة معتمدة</p>
+                        <p className="text-xs text-slate-500 dark:text-slate-400">ISO 9001:2015</p>
+                      </div>
+                    </div>
+                  </motion.div>
+                </div>
+              </motion.div>
+            </motion.div>
+
+            {/* المحتوى والمميزات */}
+            <motion.div
+              className="lg:col-span-7 order-1 lg:order-2"
+              initial={{ opacity: 0, x: 50 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.8 }}
+              viewport={{ once: true }}
+            >
+              <motion.div
+                className="inline-flex items-center gap-2 px-4 py-2 bg-white/10 backdrop-blur-md border border-white/20 rounded-full mb-5"
+                initial={{ opacity: 0, scale: 0.85 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                viewport={{ once: true }}
+              >
+                <Sparkles className="h-4 w-4 text-amber-300" />
+                <span className="text-xs sm:text-sm font-semibold text-white/90">الخيار الأمثل للأكاديميين</span>
+              </motion.div>
+
+              <h2 className="text-3xl sm:text-4xl md:text-5xl font-black mb-4 leading-tight">
+                لماذا يثق بنا{" "}
+                <span className="bg-gradient-to-r from-amber-300 via-pink-300 to-fuchsia-300 bg-clip-text text-transparent">
+                  15,000+ باحث؟
+                </span>
+              </h2>
+              <p className="text-base sm:text-lg text-white/80 mb-8 max-w-xl leading-relaxed">
+                نلتزم بأعلى معايير الجودة الأكاديمية العالمية ونضع نجاحك في صدارة أولوياتنا
+              </p>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                {qualityFeatures.map((feature, index) => {
+                  const IconComponent = feature.icon;
+                  return (
+                    <motion.div
+                      key={index}
+                      initial={{ opacity: 0, y: 20 }}
+                      whileInView={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.5, delay: index * 0.1 }}
+                      viewport={{ once: true }}
+                      whileHover={{ y: -6, scale: 1.02 }}
+                      className="group relative p-4 sm:p-5 bg-white/5 hover:bg-white/10 backdrop-blur-md border border-white/10 hover:border-amber-300/40 rounded-2xl transition-all duration-300 cursor-default"
+                    >
+                      <div className="flex items-start gap-3">
+                        <motion.div
+                          className="w-12 h-12 shrink-0 rounded-xl bg-gradient-to-br from-amber-400 via-orange-500 to-pink-500 flex items-center justify-center shadow-lg group-hover:shadow-amber-500/50"
+                          whileHover={{ rotate: [0, -10, 10, 0] }}
+                          transition={{ duration: 0.5 }}
+                        >
+                          <IconComponent className="h-6 w-6 text-white" strokeWidth={2.2} />
+                        </motion.div>
+                        <div className="flex-1 min-w-0">
+                          <h3 className="text-base sm:text-lg font-bold mb-1 text-white group-hover:text-amber-200 transition-colors">
+                            {feature.title}
+                          </h3>
+                          <p className="text-xs sm:text-sm text-white/70 leading-relaxed">
+                            {feature.description}
+                          </p>
+                        </div>
+                      </div>
+                    </motion.div>
+                  );
+                })}
+              </div>
+            </motion.div>
           </div>
         </div>
       </section>
