@@ -26,6 +26,7 @@ import {
   GraduationCap as StudentIcon,
   BookOpen,
   Megaphone,
+  Receipt,
 } from 'lucide-react';
 import ChatFloatingButton from '@/components/chat/ChatFloatingButton';
 import { cn } from '@/lib/utils';
