@@ -9,7 +9,8 @@ interface SEOProps {
   type?: string;
   author?: string;
   publishedTime?: string;
-  schema?: object;
+  schema?: object | object[];
+  noIndex?: boolean;
 }
 
 const SEO = ({
