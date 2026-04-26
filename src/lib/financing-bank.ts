@@ -13,9 +13,7 @@ export const FINANCING_TEAMS = {
   credit: 'فريق الائتمان',
   funding: 'فريق التمويل',
   unified: 'فريق التمويل والائتمان والمتابعة',
-  contact: '+966 50 077 6343',
-  contactSecondary: '+966 55 960 0824',
-  whatsappPrimary: '966500776343',
-  whatsappSecondary: '966559600824',
+  contact: '+966 55 960 0824',
+  whatsappPrimary: '966559600824',
   email: 'info@masteredupath.com',
 } as const;

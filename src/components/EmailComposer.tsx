@@ -158,7 +158,7 @@ export default function EmailComposer({ defaultTo = "", defaultTemplateKey = "",
           <tr><td class="content">${bodyHtml}</td></tr>
           <tr><td class="footer">
             © ${new Date().getFullYear()} منصة ماستر إيدو باث - جميع الحقوق محفوظة<br/>
-            للتواصل: <a href="mailto:info@masteredupath.com">info@masteredupath.com</a> · واتساب: 0500776343
+            للتواصل: <a href="mailto:info@masteredupath.com">info@masteredupath.com</a> · واتساب: 0559600824
             <div class="links">
               <a href="https://masteredupath.com">الموقع</a> ·
               <a href="https://masteredupath.com/contact-us">تواصل معنا</a>

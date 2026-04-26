@@ -113,17 +113,6 @@ const FinancingFAQ: React.FC = () => {
             <p className="text-[12px] sm:text-sm text-white/80">
               تواصل مع فريق التمويل والائتمان والمتابعة عبر الواتساب —{' '}
               <a
-                href="https://wa.me/966500776343"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="font-bold tabular-nums underline-offset-2 hover:underline"
-              >
-                +966 50 077 6343
-              </a>
-            </p>
-            <p className="text-[11px] sm:text-xs text-white/70 mt-1">
-              أو على الرقم البديل{' '}
-              <a
                 href="https://wa.me/966559600824"
                 target="_blank"
                 rel="noopener noreferrer"
