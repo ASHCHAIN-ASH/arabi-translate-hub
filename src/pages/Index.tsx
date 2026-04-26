@@ -29,6 +29,7 @@ const ServicesShowcase = lazy(() => import("@/components/ServicesShowcase"));
 const MasterMembershipBanner = lazy(() => import("@/components/MasterMembershipBanner"));
 const ServiceSteps = lazy(() => import("@/components/ServiceSteps"));
 const ModernStatsSection = lazy(() => import("@/components/ModernStatsSection"));
+const HomeFinancingSection = lazy(() => import("@/components/home/HomeFinancingSection"));
 
 
 // مكون Loading محسّن
@@ -857,6 +858,11 @@ const Index = () => {
 
       <Suspense fallback={<LoadingSpinner />}>
         <ServicesShowcase />
+      </Suspense>
+
+      {/* قسم Master PayLater — تمويل أكاديمي تفاعلي */}
+      <Suspense fallback={<LoadingSpinner />}>
+        <HomeFinancingSection />
       </Suspense>
 
       {/* Call to Action النهائي */}
