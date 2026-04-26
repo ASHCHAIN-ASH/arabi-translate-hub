@@ -1456,11 +1456,13 @@ const FinancingNew: React.FC = () => {
                   />
                 </div>
 
-                {/* Payment method (Visa / Mada / PayPal) */}
+                {/* Payment method (Wallet / Mada / Visa / Bank Transfer / PayPal) */}
                 <PaymentMethodSection
                   value={payment}
                   onChange={setPayment}
                   amountLabel={`${fmt(preview.downPayment)} ر.س`}
+                  downPaymentAmount={preview.downPayment}
+                  walletBalance={walletBalance}
                 />
 
                 {/* Final summary */}
