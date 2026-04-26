@@ -1213,7 +1213,7 @@ const FinancingDetails: React.FC = () => {
                 <span className="font-semibold text-foreground">{FINANCING_TEAMS.unified}</span>{' '}
                 مباشرةً عبر واتساب — ستصلك جميع تحديثات الطلب لحظيًا.
               </p>
-              <div className="flex flex-wrap gap-2 pt-1">
+              <div className="flex flex-wrap items-center gap-2 pt-1">
                 <a
                   href={`https://wa.me/${FINANCING_TEAMS.whatsappPrimary}`}
                   target="_blank"
@@ -1222,12 +1222,6 @@ const FinancingDetails: React.FC = () => {
                 >
                   <span>واتساب</span>
                   <span dir="ltr">{FINANCING_TEAMS.contact}</span>
-                </a>
-                <a
-                  href={`mailto:${FINANCING_TEAMS.email}`}
-                  className="inline-flex items-center gap-1.5 rounded-full bg-primary/10 hover:bg-primary/20 text-primary ring-1 ring-primary/30 px-3 py-1.5 font-semibold transition-colors"
-                >
-                  {FINANCING_TEAMS.email}
                 </a>
                 <a
                   href={`mailto:${FINANCING_TEAMS.email}`}
