@@ -7439,6 +7439,10 @@ export type Database = {
       }
       ensure_referral_code: { Args: { _user_id: string }; Returns: string }
       generate_customer_code: { Args: never; Returns: string }
+      generate_financing_installments: {
+        Args: { _application_id: string }
+        Returns: undefined
+      }
       generate_group_invite_code: { Args: never; Returns: string }
       generate_internal_order_number: { Args: never; Returns: string }
       generate_receipt_number: { Args: never; Returns: string }
@@ -7906,6 +7910,7 @@ export type Database = {
         | "contract_pending_signature"
         | "approved"
         | "rejected"
+        | "execution_deed"
         | "active"
         | "completed"
         | "overdue"
@@ -8100,6 +8105,7 @@ export const Constants = {
         "contract_pending_signature",
         "approved",
         "rejected",
+        "execution_deed",
         "active",
         "completed",
         "overdue",
