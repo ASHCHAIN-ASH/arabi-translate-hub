@@ -740,29 +740,59 @@ const FinancingAdmin: React.FC = () => {
                       rows={2}
                       className="mb-2 bg-background/60"
                     />
-                    <div className="flex flex-wrap gap-2 items-center">
-                      <Button size="sm" className="bg-emerald-600 hover:bg-emerald-700 text-white shadow shadow-emerald-500/20" disabled={working} onClick={() => updateStatus('approved')}>
-                        <CheckCircle2 className="w-4 h-4 ml-1" /> موافقة
-                      </Button>
-                      <Button size="sm" variant="destructive" disabled={working} onClick={() => updateStatus('rejected')}>
-                        <XCircle className="w-4 h-4 ml-1" /> رفض
-                      </Button>
-                      <Button size="sm" variant="outline" disabled={working} onClick={() => updateStatus('documents_pending')}>طلب مستندات</Button>
-                      <Button size="sm" variant="outline" disabled={working} onClick={() => updateStatus('under_review')}>تحت المراجعة</Button>
-                      <Button size="sm" variant="outline" disabled={working} onClick={() => updateStatus('waiting_down_payment')}>طلب الدفعة</Button>
-                      <Button size="sm" variant="outline" disabled={working} onClick={() => updateStatus('active')}>تفعيل</Button>
-                      <div className="flex items-center gap-2 ms-auto">
-                        <Select value={newStatus} onValueChange={setNewStatus}>
-                          <SelectTrigger className="w-[180px] h-9 bg-background/60">
-                            <SelectValue placeholder="حالة أخرى..." />
-                          </SelectTrigger>
-                          <SelectContent>
-                            {ACTION_STATUSES.map((s) => (
-                              <SelectItem key={s} value={s}>{FINANCING_STATUS_LABELS_AR[s] || s}</SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
-                        <Button size="sm" disabled={!newStatus || working} onClick={() => newStatus && updateStatus(newStatus)}>تطبيق</Button>
+                    {/* أزرار سريعة مرتّبة حسب تسلسل الرحلة */}
+                    <div className="space-y-2.5">
+                      {/* سطر 1 — مسار الموافقة بالتسلسل */}
+                      <div className="flex flex-wrap gap-2 items-center">
+                        <span className="text-[10px] text-muted-foreground font-semibold ml-1">مسار التقدّم:</span>
+                        <Button size="sm" variant="outline" disabled={working} onClick={() => updateStatus('documents_pending')}>
+                          <span className="text-[10px] opacity-60 ml-1">2</span> طلب مستندات
+                        </Button>
+                        <Button size="sm" variant="outline" disabled={working} onClick={() => updateStatus('under_review')}>
+                          <span className="text-[10px] opacity-60 ml-1">3</span> قيد التقييم
+                        </Button>
+                        <Button size="sm" variant="outline" disabled={working} onClick={() => updateStatus('waiting_down_payment')}>
+                          <span className="text-[10px] opacity-60 ml-1">4</span> طلب الدفعة
+                        </Button>
+                        <Button size="sm" variant="outline" disabled={working} onClick={() => updateStatus('contract_pending_signature')}>
+                          <span className="text-[10px] opacity-60 ml-1">5</span> توقيع العقد
+                        </Button>
+                      </div>
+                      {/* سطر 2 — قرارات نهائية */}
+                      <div className="flex flex-wrap gap-2 items-center">
+                        <span className="text-[10px] text-muted-foreground font-semibold ml-1">القرار:</span>
+                        <Button size="sm" className="bg-emerald-600 hover:bg-emerald-700 text-white shadow shadow-emerald-500/20" disabled={working} onClick={() => updateStatus('approved')}>
+                          <CheckCircle2 className="w-4 h-4 ml-1" /> موافقة
+                        </Button>
+                        <Button size="sm" className="bg-primary hover:bg-primary/90 text-primary-foreground" disabled={working} onClick={() => updateStatus('active')}>
+                          <Zap className="w-4 h-4 ml-1" /> تفعيل التمويل
+                        </Button>
+                        <Button size="sm" variant="destructive" disabled={working} onClick={() => updateStatus('rejected')}>
+                          <XCircle className="w-4 h-4 ml-1" /> رفض
+                        </Button>
+                        <Button size="sm" variant="outline" disabled={working} onClick={() => updateStatus('cancelled')}>إلغاء</Button>
+                        <div className="flex items-center gap-2 ms-auto">
+                          <Select value={newStatus} onValueChange={setNewStatus}>
+                            <SelectTrigger className="w-[220px] h-9 bg-background/60">
+                              <SelectValue placeholder="حالة أخرى..." />
+                            </SelectTrigger>
+                            <SelectContent className="max-h-[400px]">
+                              {STATUS_GROUPS.map((group) => (
+                                <React.Fragment key={group.label}>
+                                  <div className="px-2 py-1.5 text-[10px] font-semibold text-muted-foreground bg-muted/40 sticky top-0">
+                                    {group.label}
+                                  </div>
+                                  {group.statuses.map((s) => (
+                                    <SelectItem key={s} value={s} className="text-xs">
+                                      {FINANCING_STATUS_LABELS_AR[s] || s}
+                                    </SelectItem>
+                                  ))}
+                                </React.Fragment>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                          <Button size="sm" disabled={!newStatus || working} onClick={() => newStatus && updateStatus(newStatus)}>تطبيق</Button>
+                        </div>
                       </div>
                     </div>
                   </div>
