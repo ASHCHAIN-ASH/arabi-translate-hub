@@ -22,7 +22,8 @@ const SEO = ({
   type = "website",
   author = "MasterEduPath Agency",
   publishedTime,
-  schema
+  schema,
+  noIndex = false
 }: SEOProps) => {
   const siteName = "MasterEduPath - وكالة الحلول التعليمية المتقدمة";
   const twitterHandle = "@MasterEduPath";
