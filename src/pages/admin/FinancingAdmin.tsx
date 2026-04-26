@@ -21,6 +21,7 @@ import {
   Phone, Mail, Building2, Wallet, Calendar, AlertCircle,
   Receipt, TrendingUp, Clock, Sparkles, ShieldCheck, Banknote,
   CalendarClock, AlertTriangle, ExternalLink, Activity, Zap,
+  MessageCircle, Users,
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import {
@@ -28,6 +29,9 @@ import {
   FINANCING_DOC_LABELS_AR,
   validateFinancingStatusTransition,
 } from '@/lib/financing';
+import AdminFinancingStepper from '@/components/admin/financing/AdminFinancingStepper';
+import AdminQuickActions from '@/components/admin/financing/AdminQuickActions';
+import AdminWhatsAppLogPanel from '@/components/admin/financing/AdminWhatsAppLogPanel';
 
 type Application = {
   id: string;
@@ -363,57 +367,64 @@ const FinancingAdmin: React.FC = () => {
   return (
     <AdminLayout>
       <div className="p-4 md:p-6 space-y-6 animate-fade-in" dir="rtl">
-        {/* Hero — Banking-style */}
+        {/* Hero — Dashboard banking مكثّف */}
         <motion.div
           initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
-          className="relative overflow-hidden rounded-3xl border border-border/40 bg-gradient-to-br from-primary/15 via-background to-accent/10 p-6 md:p-8 backdrop-blur-2xl shadow-xl"
+          className="relative overflow-hidden rounded-3xl border border-border/40 bg-gradient-to-br from-primary/15 via-background to-accent/10 p-5 md:p-6 backdrop-blur-2xl shadow-xl"
         >
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_85%_15%,hsl(var(--primary)/0.25),transparent_55%)]" />
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_15%_85%,hsl(var(--accent)/0.2),transparent_55%)]" />
-          <div className="relative flex items-center justify-between flex-wrap gap-4">
-            <div className="flex items-center gap-4">
-              <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-primary via-primary to-primary/70 flex items-center justify-center shadow-2xl shadow-primary/40 ring-4 ring-primary/10">
-                <Banknote className="w-8 h-8 text-primary-foreground" />
+          <div className="relative flex items-start justify-between flex-wrap gap-4">
+            <div className="flex items-center gap-3">
+              <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-primary via-primary to-primary/70 flex items-center justify-center shadow-2xl shadow-primary/40 ring-4 ring-primary/10">
+                <Banknote className="w-7 h-7 text-primary-foreground" />
               </div>
               <div>
-                <h1 className="text-2xl md:text-3xl font-extrabold flex items-center gap-2 tracking-tight">
-                  Master PayLater
-                  <Sparkles className="w-5 h-5 text-primary animate-pulse" />
+                <h1 className="text-xl md:text-2xl font-extrabold flex items-center gap-2 tracking-tight">
+                  لوحة التمويل والائتمان
+                  <Sparkles className="w-4 h-4 text-primary animate-pulse" />
                 </h1>
-                <p className="text-sm text-muted-foreground mt-1">
-                  لوحة التمويل والائتمان والمتابعة • مزامنة لحظية مع لوحة العميل
+                <p className="text-xs text-muted-foreground mt-0.5">
+                  إدارة طلبات Master PayLater • مزامنة لحظية مع لوحة العميل والواتساب
                 </p>
-                <div className="flex items-center gap-2 mt-2">
-                  <span className="inline-flex items-center gap-1.5 text-xs px-2 py-0.5 rounded-full bg-emerald-500/15 text-emerald-700 dark:text-emerald-400 border border-emerald-500/20">
+                <div className="flex items-center gap-2 mt-1.5 flex-wrap">
+                  <span className="inline-flex items-center gap-1.5 text-[10px] px-2 py-0.5 rounded-full bg-emerald-500/15 text-emerald-700 dark:text-emerald-400 border border-emerald-500/20">
                     <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-                    Realtime مفعّل
+                    مباشر
                   </span>
-                  <span className="text-xs text-muted-foreground">آخر تحديث: {format(new Date(), 'HH:mm:ss')}</span>
+                  <span className="inline-flex items-center gap-1 text-[10px] px-2 py-0.5 rounded-full bg-background/60 border border-border/40 text-muted-foreground">
+                    <Users className="w-3 h-3" />
+                    {apps.length} طلب
+                  </span>
+                  <span className="text-[10px] text-muted-foreground tabular-nums" dir="ltr">
+                    {format(new Date(), 'HH:mm:ss')}
+                  </span>
                 </div>
               </div>
             </div>
             <div className="flex items-center gap-2">
-              <Button asChild variant="outline" size="sm" className="gap-2">
+              <Button asChild variant="outline" size="sm" className="gap-1.5 h-8">
                 <Link to="/adminmaster/financing/audit">
-                  <Activity className="w-4 h-4" /> سجل التدقيق
+                  <Activity className="w-3.5 h-3.5" /> سجل التدقيق
                 </Link>
               </Button>
-              <Button variant="default" onClick={fetchApps} disabled={loading} className="gap-2 shadow-lg shadow-primary/20">
-                <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
+              <Button variant="default" size="sm" onClick={fetchApps} disabled={loading} className="gap-1.5 h-8 shadow-lg shadow-primary/20">
+                <RefreshCw className={`w-3.5 h-3.5 ${loading ? 'animate-spin' : ''}`} />
                 تحديث
               </Button>
             </div>
           </div>
         </motion.div>
 
-        {/* KPI cards — banking grid */}
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3">
+        {/* KPI cards — صف مكثّف 6 أعمدة */}
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-2.5">
           <KpiCard icon={<TrendingUp className="w-4 h-4" />} label="نشطة" value={String(stats.active)} accent="from-emerald-500/20 to-emerald-500/5" tone="text-emerald-600" />
           <KpiCard icon={<Clock className="w-4 h-4" />} label="قيد المعالجة" value={String(stats.pending)} accent="from-amber-500/20 to-amber-500/5" tone="text-amber-600" />
           <KpiCard icon={<Receipt className="w-4 h-4" />} label="بانتظار الدفعة" value={String(stats.pendingReceipts)} accent="from-sky-500/20 to-sky-500/5" tone="text-sky-600" />
           <KpiCard icon={<AlertTriangle className="w-4 h-4" />} label="أقساط متأخرة" value={String(stats.overdueCount)} accent="from-rose-500/20 to-rose-500/5" tone="text-rose-600" sub={stats.overdueAmount ? `${fmt(stats.overdueAmount)} ر.س` : undefined} />
-          <KpiCard icon={<Wallet className="w-4 h-4" />} label="إجمالي المُموَّل" value={`${fmt(stats.totalFunded)} ر.س`} accent="from-primary/20 to-primary/5" tone="text-primary" />
+          <KpiCard icon={<Wallet className="w-4 h-4" />} label="إجمالي المُموَّل" value={`${fmt(stats.totalFunded)}`} accent="from-primary/20 to-primary/5" tone="text-primary" sub="ريال سعودي" />
+          <KpiCard icon={<Users className="w-4 h-4" />} label="إجمالي الطلبات" value={String(apps.length)} accent="from-violet-500/20 to-violet-500/5" tone="text-violet-600" />
         </div>
 
         <Tabs value={filter} onValueChange={setFilter}>
@@ -543,6 +554,22 @@ const FinancingAdmin: React.FC = () => {
                   </div>
                 </CardHeader>
                 <CardContent className="space-y-5 pt-5">
+                  {/* 🎯 Stepper التفاعلي + Quick Actions في الأعلى */}
+                  <div className="space-y-3">
+                    <AdminFinancingStepper
+                      currentStatus={selected.status}
+                      onChange={(s) => updateStatus(s)}
+                      disabled={working}
+                    />
+                    <AdminQuickActions
+                      currentStatus={selected.status}
+                      onAction={(s) => updateStatus(s)}
+                      disabled={working}
+                    />
+                  </div>
+
+                  <Separator />
+
                   {/* Applicant info */}
                   <div className="grid grid-cols-2 md:grid-cols-3 gap-3 text-sm">
                     <InfoRow icon={<Phone className="w-3.5 h-3.5" />} label="الجوال" value={selected.applicant_phone} ltr />
@@ -550,7 +577,7 @@ const FinancingAdmin: React.FC = () => {
                     <InfoRow icon={<User className="w-3.5 h-3.5" />} label="الهوية" value={selected.applicant_id_number} ltr />
                     <InfoRow icon={<Building2 className="w-3.5 h-3.5" />} label="جهة العمل" value={selected.employer_name || '—'} />
                     <InfoRow label="الدخل الشهري" value={selected.monthly_income ? `${fmt(selected.monthly_income)} ر.س` : '—'} />
-                    <InfoRow label="الالتزامات" value={selected.monthly_commitments ? `${fmt(selected.monthly_commitments)} ر.س` : '—'} />
+                    <InfoRow label="الالتزامات الشهرية" value={selected.monthly_commitments ? `${fmt(selected.monthly_commitments)} ر.س` : '—'} />
                     <InfoRow label="المدينة" value={selected.city || '—'} />
                     <InfoRow icon={<Calendar className="w-3.5 h-3.5" />} label="تاريخ الطلب" value={format(new Date(selected.created_at), 'yyyy-MM-dd HH:mm')} />
                     <InfoRow label="درجة المخاطر" value={selected.risk_level || '—'} />
@@ -560,11 +587,17 @@ const FinancingAdmin: React.FC = () => {
 
                   {/* Financial summary */}
                   <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-                    <Stat label="إجمالي" value={`${fmt(selected.total_amount)} ر.س`} />
+                    <Stat label="إجمالي التمويل" value={`${fmt(selected.total_amount)} ر.س`} />
                     <Stat label="الدفعة الأولى" value={`${fmt(selected.down_payment)} ر.س`} />
-                    <Stat label="المتبقي" value={`${fmt(selected.remaining_amount)} ر.س`} />
-                    <Stat label={`القسط × ${selected.duration_months}`} value={`${fmt(selected.monthly_installment)} ر.س`} />
+                    <Stat label="المبلغ المتبقي" value={`${fmt(selected.remaining_amount)} ر.س`} />
+                    <Stat label={`القسط الشهري × ${selected.duration_months}`} value={`${fmt(selected.monthly_installment)} ر.س`} />
                   </div>
+
+                  {/* 📲 سجل إشعارات الواتساب */}
+                  <AdminWhatsAppLogPanel
+                    applicationId={selected.id}
+                    applicantName={selected.applicant_full_name}
+                  />
 
                   {/* Installments tracker */}
                   {installments.length > 0 && (
@@ -732,11 +765,11 @@ const FinancingAdmin: React.FC = () => {
 
                   <Separator />
 
-                  {/* Admin actions */}
+                  {/* ملاحظات الإدارة + حالة مخصّصة */}
                   <div>
-                    <h3 className="font-semibold mb-2 flex items-center gap-2">
+                    <h3 className="font-semibold mb-2 flex items-center gap-2 text-sm">
                       <ShieldCheck className="w-4 h-4 text-primary" />
-                      إجراءات الإدارة — تنبيه واتساب لحظي للعميل
+                      ملاحظات الإدارة وحالات إضافية
                     </h3>
                     {selected.notes && (
                       <div className="mb-2 p-2.5 bg-muted/60 rounded-lg text-xs whitespace-pre-wrap max-h-32 overflow-auto border border-border/40">
@@ -747,66 +780,40 @@ const FinancingAdmin: React.FC = () => {
                       </div>
                     )}
                     <Textarea
-                      placeholder="ملاحظة للسجل (اختياري) — ستُضاف إلى ملاحظات الطلب وتظهر للعميل"
+                      placeholder="أضف ملاحظة إدارية (اختياري) — ستُرفق مع تغيير الحالة التالي وتظهر في سجل العميل"
                       value={adminNote}
                       onChange={(e) => setAdminNote(e.target.value)}
                       rows={2}
                       className="mb-2 bg-background/60"
                     />
-                    {/* أزرار سريعة مرتّبة حسب تسلسل الرحلة */}
-                    <div className="space-y-2.5">
-                      {/* سطر 1 — مسار الموافقة بالتسلسل */}
-                      <div className="flex flex-wrap gap-2 items-center">
-                        <span className="text-[10px] text-muted-foreground font-semibold ml-1">مسار التقدّم:</span>
-                        <Button size="sm" variant="outline" disabled={working} onClick={() => updateStatus('documents_pending')}>
-                          <span className="text-[10px] opacity-60 ml-1">2</span> طلب مستندات
-                        </Button>
-                        <Button size="sm" variant="outline" disabled={working} onClick={() => updateStatus('under_review')}>
-                          <span className="text-[10px] opacity-60 ml-1">3</span> قيد التقييم
-                        </Button>
-                        <Button size="sm" variant="outline" disabled={working} onClick={() => updateStatus('waiting_down_payment')}>
-                          <span className="text-[10px] opacity-60 ml-1">4</span> طلب الدفعة
-                        </Button>
-                        <Button size="sm" variant="outline" disabled={working} onClick={() => updateStatus('contract_pending_signature')}>
-                          <span className="text-[10px] opacity-60 ml-1">5</span> توقيع العقد
-                        </Button>
-                      </div>
-                      {/* سطر 2 — قرارات نهائية */}
-                      <div className="flex flex-wrap gap-2 items-center">
-                        <span className="text-[10px] text-muted-foreground font-semibold ml-1">القرار:</span>
-                        <Button size="sm" className="bg-emerald-600 hover:bg-emerald-700 text-white shadow shadow-emerald-500/20" disabled={working} onClick={() => updateStatus('approved')}>
-                          <CheckCircle2 className="w-4 h-4 ml-1" /> موافقة
-                        </Button>
-                        <Button size="sm" className="bg-primary hover:bg-primary/90 text-primary-foreground" disabled={working} onClick={() => updateStatus('active')}>
-                          <Zap className="w-4 h-4 ml-1" /> تفعيل التمويل
-                        </Button>
-                        <Button size="sm" variant="destructive" disabled={working} onClick={() => updateStatus('rejected')}>
-                          <XCircle className="w-4 h-4 ml-1" /> رفض
-                        </Button>
-                        <Button size="sm" variant="outline" disabled={working} onClick={() => updateStatus('cancelled')}>إلغاء</Button>
-                        <div className="flex items-center gap-2 ms-auto">
-                          <Select value={newStatus} onValueChange={setNewStatus}>
-                            <SelectTrigger className="w-[220px] h-9 bg-background/60">
-                              <SelectValue placeholder="حالة أخرى..." />
-                            </SelectTrigger>
-                            <SelectContent className="max-h-[400px]">
-                              {STATUS_GROUPS.map((group) => (
-                                <React.Fragment key={group.label}>
-                                  <div className="px-2 py-1.5 text-[10px] font-semibold text-muted-foreground bg-muted/40 sticky top-0">
-                                    {group.label}
-                                  </div>
-                                  {group.statuses.map((s) => (
-                                    <SelectItem key={s} value={s} className="text-xs">
-                                      {FINANCING_STATUS_LABELS_AR[s] || s}
-                                    </SelectItem>
-                                  ))}
-                                </React.Fragment>
+                    <div className="flex items-center gap-2 flex-wrap">
+                      <span className="text-[10px] text-muted-foreground font-semibold">حالة مخصّصة:</span>
+                      <Select value={newStatus} onValueChange={setNewStatus}>
+                        <SelectTrigger className="w-[240px] h-9 bg-background/60">
+                          <SelectValue placeholder="اختر حالة من القائمة الكاملة..." />
+                        </SelectTrigger>
+                        <SelectContent className="max-h-[400px]">
+                          {STATUS_GROUPS.map((group) => (
+                            <React.Fragment key={group.label}>
+                              <div className="px-2 py-1.5 text-[10px] font-semibold text-muted-foreground bg-muted/40 sticky top-0">
+                                {group.label}
+                              </div>
+                              {group.statuses.map((s) => (
+                                <SelectItem key={s} value={s} className="text-xs">
+                                  {FINANCING_STATUS_LABELS_AR[s] || s}
+                                </SelectItem>
                               ))}
-                            </SelectContent>
-                          </Select>
-                          <Button size="sm" disabled={!newStatus || working} onClick={() => newStatus && updateStatus(newStatus)}>تطبيق</Button>
-                        </div>
-                      </div>
+                            </React.Fragment>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                      <Button size="sm" disabled={!newStatus || working} onClick={() => newStatus && updateStatus(newStatus)}>
+                        تطبيق التغيير
+                      </Button>
+                      <span className="text-[10px] text-muted-foreground mr-auto inline-flex items-center gap-1">
+                        <MessageCircle className="w-3 h-3 text-emerald-600" />
+                        إشعار واتساب تلقائي عند كل تغيير
+                      </span>
                     </div>
                   </div>
                 </CardContent>

@@ -26,12 +26,14 @@ function signatureFor(event: string): string {
       return followup;
     case "contract_pending_signature":
     case "approved":
+    case "execution_deed":
     case "rejected":
     case "cancelled":
       return credit;
     case "waiting_down_payment":
     case "down_payment_received":
     case "active":
+    case "completed":
     case "installment_reminder":
     case "installment_overdue":
       return funding;
@@ -193,12 +195,36 @@ function buildMessage(event: string, app: AppRow, extra: Record<string, any> = {
       );
     }
 
+    case "execution_deed":
+      return (
+        `${BRAND}\n${DIVIDER}\n` +
+        `⚖️ *صدور السند التنفيذي*\n\n` +
+        `${name}، صدر السند التنفيذي لطلب التمويل *${ref}* رسمياً وفق نظام التنفيذ السعودي.\n\n` +
+        `📋 *الملخص الرسمي:*\n` +
+        `• إجمالي التمويل: *${total} ر.س*\n` +
+        `• القسط الشهري: *${monthly} ر.س*\n` +
+        `• مدة السداد: *${months} شهراً*\n\n` +
+        `✅ الخطوة التالية: تفعيل الرصيد في محفظتك خلال دقائق.\n` +
+        `🛡️ السند التنفيذي وثيقة نظامية ملزمة قابلة للتنفيذ القضائي عند الإخلال.` +
+        footer
+      );
+
+    case "completed":
+      return (
+        `${BRAND}\n${DIVIDER}\n` +
+        `🎊 *تهانينا — سدّدتَ بالكامل*\n\n` +
+        `${name}، تم سداد كافة أقساط التمويل *${ref}* بنجاح ✅\n\n` +
+        `🏆 سجلّك الائتماني لدينا ممتاز، وأنت مؤهّل لتمويل أعلى في المستقبل.\n` +
+        `🙏 شكراً لانضباطك والتزامك.` +
+        footer
+      );
+
     case "rejected":
       return (
         `${BRAND}\n${DIVIDER}\n` +
         `⚠️ *تحديث بشأن طلب التمويل*\n\n` +
         `${name}، نأسف لإبلاغك بعدم الموافقة على طلب التمويل *${ref}* في الوقت الحالي.\n\n` +
-        `يمكنك التواصل مع فريق الدعم لمعرفة التفاصيل أو تقديم طلب جديد لاحقاً.` +
+        `📞 يمكنك التواصل مع فريق الدعم لمعرفة الأسباب وكيفية تحسين فرصك في طلب لاحق.` +
         footer
       );
 
