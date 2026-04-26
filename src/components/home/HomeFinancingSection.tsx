@@ -198,7 +198,7 @@ const HomeFinancingSection: React.FC = () => {
               </div>
 
               {/* مبلغ التمويل */}
-              <div className="space-y-2 mb-6">
+              <div className="space-y-2 mb-5">
                 <div className="flex items-center justify-between">
                   <label className="text-sm font-semibold text-slate-700">
                     مبلغ التمويل
@@ -210,41 +210,53 @@ const HomeFinancingSection: React.FC = () => {
                 <Slider
                   value={[amount]}
                   onValueChange={(v) => setAmount(v[0])}
-                  min={500}
-                  max={5000}
-                  step={100}
+                  min={FINANCING_MIN_AMOUNT}
+                  max={100000}
+                  step={500}
                   className="py-1"
                 />
                 <div className="flex justify-between text-[10px] text-slate-400 tabular-nums">
-                  <span>500 ر.س</span>
-                  <span>5,000 ر.س</span>
+                  <span>{fmt(FINANCING_MIN_AMOUNT)} ر.س</span>
+                  <span>100,000 ر.س</span>
                 </div>
+                {!eligible && (
+                  <div className="text-[11px] text-amber-700 bg-amber-50 border border-amber-200 rounded-lg px-2.5 py-1.5 flex items-center gap-1.5">
+                    <Info className="w-3 h-3 shrink-0" />
+                    الحد الأدنى للتمويل {fmt(FINANCING_MIN_AMOUNT)} ر.س.
+                  </div>
+                )}
               </div>
 
-              {/* مدة السداد */}
-              <div className="space-y-2 mb-6">
-                <div className="flex items-center justify-between">
-                  <label className="text-sm font-semibold text-slate-700">
-                    مدة السداد
-                  </label>
-                  <span className="text-base font-black text-slate-900 tabular-nums">
-                    {months} أشهر
-                  </span>
+              {/* مدة السداد — تُحتسب تلقائياً حسب شريحة المبلغ */}
+              <div className="rounded-xl bg-slate-50 ring-1 ring-slate-200 px-3 py-2.5 mb-5 flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <CalendarClock className="w-4 h-4 text-indigo-600" />
+                  <span className="text-xs font-semibold text-slate-700">مدة السداد (تلقائية حسب الشريحة)</span>
                 </div>
-                <div className="grid grid-cols-4 gap-2">
-                  {[3, 6, 9, 12].map((m) => (
-                    <button
-                      key={m}
-                      onClick={() => setMonths(m)}
-                      className={`py-2 rounded-xl text-sm font-bold transition-all ${
-                        months === m
-                          ? 'bg-gradient-to-br from-indigo-600 to-blue-600 text-white shadow-lg scale-105'
-                          : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
-                      }`}
-                    >
-                      {m}
-                    </button>
-                  ))}
+                <span className="text-sm font-black text-slate-900 tabular-nums">
+                  {preview.tierLabel}
+                </span>
+              </div>
+
+              {/* تفصيل التسعير الواقعي */}
+              <div className="grid grid-cols-2 gap-2 mb-5">
+                <div className="rounded-xl bg-white ring-1 ring-slate-200 p-3">
+                  <div className="flex items-center gap-1 text-[10px] text-slate-500 mb-1">
+                    <Coins className="w-3 h-3" />
+                    دفعة مقدّمة ({downPct}%)
+                  </div>
+                  <div className="text-sm font-black text-slate-900 tabular-nums">
+                    {fmt(downPayment)} ر.س
+                  </div>
+                </div>
+                <div className="rounded-xl bg-white ring-1 ring-slate-200 p-3">
+                  <div className="flex items-center gap-1 text-[10px] text-slate-500 mb-1">
+                    <Wallet className="w-3 h-3" />
+                    المتبقي على أقساط
+                  </div>
+                  <div className="text-sm font-black text-slate-900 tabular-nums">
+                    {fmt(remaining)} ر.س
+                  </div>
                 </div>
               </div>
 
@@ -254,18 +266,40 @@ const HomeFinancingSection: React.FC = () => {
                 initial={{ scale: 0.96, opacity: 0.7 }}
                 animate={{ scale: 1, opacity: 1 }}
                 transition={{ duration: 0.25 }}
-                className="rounded-2xl p-5 bg-gradient-to-br from-indigo-600 via-blue-600 to-cyan-600 text-white shadow-xl mb-5"
+                className="rounded-2xl p-5 bg-gradient-to-br from-indigo-600 via-blue-600 to-cyan-600 text-white shadow-xl mb-4"
               >
                 <div className="text-xs text-white/80 mb-1">قسطك الشهري</div>
                 <div className="text-3xl sm:text-4xl font-black tabular-nums leading-none mb-2">
                   {fmt(monthly)}{' '}
                   <span className="text-base font-bold">ر.س / شهر</span>
                 </div>
+                <div className="text-[11px] text-white/80 mb-2 tabular-nums">
+                  × {months} شهرًا = {fmt(remaining)} ر.س (بعد الدفعة المقدّمة)
+                </div>
                 <div className="flex items-center gap-1.5 text-[11px] text-emerald-200 font-semibold">
                   <CheckCircle2 className="w-3.5 h-3.5" />
                   بدون فوائد · بدون رسوم خفية · APR 0%
                 </div>
               </motion.div>
+
+              {/* سياسة ورسوم التمويل */}
+              <div className="rounded-xl bg-slate-50 ring-1 ring-slate-200 p-3 mb-4 space-y-1.5 text-[11px] text-slate-600 leading-relaxed">
+                <div className="flex items-center gap-1.5 font-bold text-slate-800 text-xs mb-1">
+                  <Percent className="w-3.5 h-3.5 text-indigo-600" />
+                  نموذج التسعير والسياسة
+                </div>
+                <div>• معدل الفائدة السنوي: <strong className="text-emerald-700">APR 0%</strong> — تسدد المبلغ الأصلي فقط.</div>
+                <div>• دفعة مقدّمة إلزامية: <strong>{downPct}%</strong> من قيمة التمويل قبل التفعيل.</div>
+                <div>• المدة تُحدَّد تلقائياً حسب الشريحة:
+                  {' '}{FINANCING_TIERS.map((t, i) => (
+                    <span key={i} className="tabular-nums">
+                      {i > 0 ? '، ' : ''}{fmt(t.min)}–{fmt(t.max)} ← {t.months} ش
+                    </span>
+                  ))}.
+                </div>
+                <div>• مهلة سماح <strong className="tabular-nums">{FINANCING_GRACE_PERIOD_HOURS} ساعة</strong> بعد الاستحقاق، ثم تبدأ الإجراءات النظامية.</div>
+                <div>• في حال التعثّر وإحالة الملف للجهات القضائية تُضاف أتعاب محاماة قدرها <strong className="tabular-nums">{fmt(FINANCING_LEGAL_FEES_SAR)} ر.س</strong>.</div>
+              </div>
 
               <Button
                 onClick={() => navigate('/financing/new')}
