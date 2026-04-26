@@ -26,12 +26,14 @@ function signatureFor(event: string): string {
       return followup;
     case "contract_pending_signature":
     case "approved":
+    case "execution_deed":
     case "rejected":
     case "cancelled":
       return credit;
     case "waiting_down_payment":
     case "down_payment_received":
     case "active":
+    case "completed":
     case "installment_reminder":
     case "installment_overdue":
       return funding;
