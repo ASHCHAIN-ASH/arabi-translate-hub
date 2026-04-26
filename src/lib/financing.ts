@@ -79,17 +79,17 @@ export function isEligibleForFinancing(amount: number): boolean {
 // مسميات الحالات بطابع شركات التمويل العالمية المرخّصة (تواكب Tabby / Tamara / Klarna / Afterpay)
 export const FINANCING_STATUS_LABELS_AR: Record<string, string> = {
   draft: 'مسودّة الطلب',
-  submitted: 'تم استلام الطلب',
-  documents_pending: 'بانتظار توثيق المستندات',
-  under_review: 'قيد التقييم الائتماني',
-  waiting_down_payment: 'بانتظار الدفعة المُقدّمة',
-  contract_pending_signature: 'بانتظار توقيع العقد رقمياً',
-  approved: 'تمت الموافقة الائتمانية',
-  active: 'تمويل نشط — جدول السداد مُفعّل',
+  submitted: '1. استلام الطلب',
+  documents_pending: '2. توثيق المستندات',
+  under_review: '3. التقييم الائتماني',
+  contract_pending_signature: '4. توقيع العقد',
+  waiting_down_payment: '5. الدفعة الأولى',
+  approved: '6. الموافقة النهائية',
+  execution_deed: '7. السند التنفيذي',
+  active: '8. تفعيل الرصيد',
+  completed: '9. مُسدَّدة بالكامل',
   rejected: 'مرفوض ائتمانياً',
-  completed: 'مُسدَّد بالكامل',
   overdue: 'متعثّر — إنذار رسمي',
-  execution_deed: 'صدور السند التنفيذي',
   cancelled: 'ملغي',
 };
 
