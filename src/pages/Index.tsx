@@ -32,6 +32,10 @@ import testimonialProfessorImg from "@/assets/home-testimonial-professor.jpg";
 import testimonialStudentFemaleImg from "@/assets/home-testimonial-student-female.jpg";
 import testimonialResearcherMaleImg from "@/assets/home-testimonial-researcher-male.jpg";
 import partnershipHandshakeImg from "@/assets/home-partnership-handshake.jpg";
+import qualityResearcherImg from "@/assets/home-quality-researcher.jpg";
+import qualityResearchDetailImg from "@/assets/home-quality-research-detail.jpg";
+import ctaCampusSunsetImg from "@/assets/home-cta-campus-sunset.jpg";
+import inquiryTeamImg from "@/assets/home-inquiry-team.jpg";
 
 // Lazy loading للمكونات الثقيلة لتحسين الأداء
 const ServicesShowcase = lazy(() => import("@/components/ServicesShowcase"));
