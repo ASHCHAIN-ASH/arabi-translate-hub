@@ -1224,13 +1224,10 @@ const FinancingDetails: React.FC = () => {
                   <span dir="ltr">{FINANCING_TEAMS.contact}</span>
                 </a>
                 <a
-                  href={`https://wa.me/${FINANCING_TEAMS.whatsappSecondary}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-1.5 rounded-full bg-emerald-500/5 hover:bg-emerald-500/15 text-emerald-700 dark:text-emerald-300 ring-1 ring-emerald-500/20 px-3 py-1.5 font-mono font-semibold tabular-nums transition-colors"
+                  href={`mailto:${FINANCING_TEAMS.email}`}
+                  className="inline-flex items-center gap-1.5 rounded-full bg-primary/10 hover:bg-primary/20 text-primary ring-1 ring-primary/30 px-3 py-1.5 font-semibold transition-colors"
                 >
-                  <span>بديل</span>
-                  <span dir="ltr">{FINANCING_TEAMS.contactSecondary}</span>
+                  {FINANCING_TEAMS.email}
                 </a>
                 <a
                   href={`mailto:${FINANCING_TEAMS.email}`}
