@@ -303,7 +303,8 @@ const HomeFinancingSection: React.FC = () => {
 
               <Button
                 onClick={() => navigate('/financing/new')}
-                className="w-full h-12 text-base font-bold bg-gradient-to-r from-amber-500 via-orange-500 to-amber-600 hover:from-amber-600 hover:to-orange-600 text-white shadow-lg shadow-amber-500/30 rounded-xl"
+                disabled={!eligible}
+                className="w-full h-12 text-base font-bold bg-gradient-to-r from-amber-500 via-orange-500 to-amber-600 hover:from-amber-600 hover:to-orange-600 text-white shadow-lg shadow-amber-500/30 rounded-xl disabled:opacity-60"
               >
                 تقديم طلب التمويل الآن
                 <ArrowLeft className="w-5 h-5 mr-2" />
