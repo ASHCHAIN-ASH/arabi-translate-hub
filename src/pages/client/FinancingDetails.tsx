@@ -138,6 +138,7 @@ const FinancingDetails: React.FC = () => {
   const [receipts, setReceipts] = useState<PaymentReceipt[]>([]);
   const [wallet, setWallet] = useState<WalletRow | null>(null);
   const [installments, setInstallments] = useState<InstallmentRow[]>([]);
+  const [statusLogs, setStatusLogs] = useState<Array<{ id: string; old_status: string | null; new_status: string; note: string | null; created_at: string }>>([]);
   const [loading, setLoading] = useState(true);
   const [contract, setContract] = useState<{ id: string; status: string | null; contract_number: string } | null>(null);
   const [creatingContract, setCreatingContract] = useState(false);
