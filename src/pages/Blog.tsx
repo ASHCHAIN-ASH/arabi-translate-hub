@@ -43,6 +43,41 @@ const Blog = () => {
 
   const rssUrl = `https://${import.meta.env.VITE_SUPABASE_PROJECT_ID}.supabase.co/functions/v1/rss-feed`;
 
+  const blogSchema = {
+    "@context": "https://schema.org",
+    "@type": "Blog",
+    "name": "مدونة MasterEduPath",
+    "description": "أحدث المقالات في الترجمة الأكاديمية والبحث العلمي والنشر الدولي",
+    "url": "https://masteredupath.com/blog",
+    "inLanguage": "ar-SA",
+    "publisher": {
+      "@type": "Organization",
+      "name": "MasterEduPath",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://masteredupath.com/assets/national-day-logo-original.webp"
+      }
+    },
+    "blogPost": posts.slice(0, 20).map((p) => ({
+      "@type": "BlogPosting",
+      "headline": p.title,
+      "description": p.excerpt,
+      "image": p.cover_image,
+      "datePublished": p.published_at,
+      "url": `https://masteredupath.com/blog/${p.slug}`,
+      "author": { "@type": "Organization", "name": p.author_name }
+    }))
+  };
+
+  const breadcrumbSchema = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "الرئيسية", "item": "https://masteredupath.com/" },
+      { "@type": "ListItem", "position": 2, "name": "المدونة", "item": "https://masteredupath.com/blog" }
+    ]
+  };
+
   return (
     <div className="min-h-screen bg-background" dir="rtl">
       <SEO
@@ -50,6 +85,7 @@ const Blog = () => {
         description="مقالات وأخبار متخصصة في الترجمة الأكاديمية والنشر العلمي والتحليل الإحصائي."
         url="https://masteredupath.com/blog"
         keywords="مدونة, مقالات ترجمة, نشر علمي, SPSS, Scopus, أبحاث"
+        schema={[blogSchema, breadcrumbSchema]}
       />
 
       {/* RSS auto-discovery */}
