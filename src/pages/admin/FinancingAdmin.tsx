@@ -6,19 +6,23 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
+import { Progress } from '@/components/ui/progress';
 import {
   Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
 } from '@/components/ui/select';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Separator } from '@/components/ui/separator';
 import { ScrollArea } from '@/components/ui/scroll-area';
+import { motion, AnimatePresence } from 'framer-motion';
 import { toast } from 'sonner';
-import { format } from 'date-fns';
+import { format, differenceInDays } from 'date-fns';
 import {
   CheckCircle2, XCircle, FileText, Search, RefreshCw, User,
   Phone, Mail, Building2, Wallet, Calendar, AlertCircle,
   Receipt, TrendingUp, Clock, Sparkles, ShieldCheck, Banknote,
+  CalendarClock, AlertTriangle, ExternalLink, Activity, Zap,
 } from 'lucide-react';
+import { Link } from 'react-router-dom';
 import {
   FINANCING_STATUS_LABELS_AR,
   FINANCING_DOC_LABELS_AR,
@@ -36,6 +40,7 @@ type Application = {
   status: string;
   score: number | null;
   risk_level: string | null;
+  ai_risk_score: number | null;
   applicant_full_name: string;
   applicant_id_number: string;
   applicant_phone: string;
@@ -76,6 +81,17 @@ type PaymentReceipt = {
   created_at: string;
 };
 
+type Installment = {
+  id: string;
+  application_id: string;
+  month_number: number;
+  amount: number;
+  due_date: string;
+  status: 'pending' | 'paid' | 'overdue' | 'waived';
+  paid_at: string | null;
+  paid_amount: number | null;
+};
+
 const STATUS_FILTERS: Array<{ key: string; label: string }> = [
   { key: 'all', label: 'الكل' },
   { key: 'submitted', label: 'جديدة' },
@@ -114,9 +130,11 @@ const FinancingAdmin: React.FC = () => {
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [docs, setDocs] = useState<FinancingDocument[]>([]);
   const [receipts, setReceipts] = useState<PaymentReceipt[]>([]);
+  const [installments, setInstallments] = useState<Installment[]>([]);
   const [adminNote, setAdminNote] = useState('');
   const [newStatus, setNewStatus] = useState<string>('');
   const [working, setWorking] = useState(false);
+  const [installmentsByApp, setInstallmentsByApp] = useState<Record<string, Installment[]>>({});
 
   const fetchApps = async () => {
     const { data, error } = await supabase
@@ -127,7 +145,21 @@ const FinancingAdmin: React.FC = () => {
       toast.error('تعذر تحميل الطلبات');
       console.error(error);
     } else {
-      setApps((data || []) as Application[]);
+      const list = (data || []) as Application[];
+      setApps(list);
+      // Fetch installments summary for active applications (for sidebar progress bars)
+      const activeIds = list.filter((a) => ['active', 'approved'].includes(a.status)).map((a) => a.id);
+      if (activeIds.length > 0) {
+        const { data: ins } = await supabase
+          .from('financing_installments')
+          .select('*')
+          .in('application_id', activeIds);
+        const grouped: Record<string, Installment[]> = {};
+        (ins || []).forEach((i: any) => {
+          (grouped[i.application_id] ??= []).push(i as Installment);
+        });
+        setInstallmentsByApp(grouped);
+      }
     }
     setLoading(false);
   };
@@ -143,6 +175,10 @@ const FinancingAdmin: React.FC = () => {
       .on('postgres_changes', { event: '*', schema: 'public', table: 'financing_documents' }, () => {
         if (selectedId) loadDetails(selectedId);
       })
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'financing_installments' }, () => {
+        if (selectedId) loadDetails(selectedId);
+        fetchApps();
+      })
       .subscribe();
     return () => { supabase.removeChannel(channel); };
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -154,16 +190,18 @@ const FinancingAdmin: React.FC = () => {
   );
 
   const loadDetails = async (id: string) => {
-    const [{ data: dd }, { data: rr }] = await Promise.all([
+    const [{ data: dd }, { data: rr }, { data: ii }] = await Promise.all([
       supabase.from('financing_documents').select('*').eq('application_id', id).order('created_at', { ascending: false }),
       supabase.from('financing_payment_receipts').select('*').eq('application_id', id).order('created_at', { ascending: false }),
+      supabase.from('financing_installments').select('*').eq('application_id', id).order('month_number', { ascending: true }),
     ]);
     setDocs((dd || []) as FinancingDocument[]);
     setReceipts((rr || []) as PaymentReceipt[]);
+    setInstallments((ii || []) as Installment[]);
   };
 
   useEffect(() => {
-    if (!selectedId) { setDocs([]); setReceipts([]); return; }
+    if (!selectedId) { setDocs([]); setReceipts([]); setInstallments([]); return; }
     setAdminNote(''); setNewStatus('');
     loadDetails(selectedId);
   }, [selectedId]);
@@ -193,8 +231,20 @@ const FinancingAdmin: React.FC = () => {
     const pending = apps.filter(a => ['submitted','under_review','documents_pending','waiting_down_payment','contract_pending_signature'].includes(a.status)).length;
     const totalFunded = apps.filter(a => ['active','completed'].includes(a.status)).reduce((s,a) => s + Number(a.total_amount||0), 0);
     const pendingReceipts = apps.filter(a => a.status === 'waiting_down_payment').length;
-    return { active, pending, totalFunded, pendingReceipts };
-  }, [apps]);
+    // Overdue installments across all active apps
+    let overdueCount = 0;
+    let overdueAmount = 0;
+    Object.values(installmentsByApp).forEach((list) => {
+      list.forEach((i) => {
+        const isOverdue = i.status === 'overdue' || (i.status === 'pending' && new Date(i.due_date) < new Date());
+        if (isOverdue) {
+          overdueCount += 1;
+          overdueAmount += Number(i.amount || 0);
+        }
+      });
+    });
+    return { active, pending, totalFunded, pendingReceipts, overdueCount, overdueAmount };
+  }, [apps, installmentsByApp]);
 
   const updateStatus = async (status: string) => {
     if (!selected) return;
@@ -232,52 +282,113 @@ const FinancingAdmin: React.FC = () => {
     toast.success(status === 'approved' ? '✅ تم قبول الإيصال — جاري تفعيل التمويل' : 'تم رفض الإيصال');
   };
 
+  const markInstallmentPaid = async (ins: Installment) => {
+    const { error } = await supabase
+      .from('financing_installments')
+      .update({
+        status: 'paid' as any,
+        paid_at: new Date().toISOString(),
+        paid_amount: ins.amount,
+      } as any)
+      .eq('id', ins.id);
+    if (error) { toast.error('تعذر تعليم القسط: ' + error.message); return; }
+    toast.success(`✅ تم تعليم القسط #${ins.month_number} كمدفوع — تحديث فوري للعميل`);
+  };
+
+  const markInstallmentOverdue = async (ins: Installment) => {
+    const { error } = await supabase
+      .from('financing_installments')
+      .update({ status: 'overdue' as any } as any)
+      .eq('id', ins.id);
+    if (error) { toast.error('تعذر التحديث: ' + error.message); return; }
+    toast.success(`⚠️ تم تعليم القسط #${ins.month_number} كمتأخر`);
+  };
+
   const openFile = async (bucket: string, path: string) => {
     const { data, error } = await supabase.storage.from(bucket).createSignedUrl(path, 60 * 10);
     if (error || !data?.signedUrl) { toast.error('تعذر فتح الملف'); return; }
     window.open(data.signedUrl, '_blank');
   };
 
+  // Calculate progress for selected app installments
+  const selectedProgress = useMemo(() => {
+    if (!installments.length) return { paid: 0, total: 0, pct: 0, paidAmount: 0, totalAmount: 0, overdue: 0 };
+    const paid = installments.filter((i) => i.status === 'paid');
+    const overdue = installments.filter((i) => i.status === 'overdue' || (i.status === 'pending' && new Date(i.due_date) < new Date())).length;
+    const paidAmount = paid.reduce((s, i) => s + Number(i.paid_amount || i.amount || 0), 0);
+    const totalAmount = installments.reduce((s, i) => s + Number(i.amount || 0), 0);
+    return {
+      paid: paid.length,
+      total: installments.length,
+      pct: installments.length ? Math.round((paid.length / installments.length) * 100) : 0,
+      paidAmount,
+      totalAmount,
+      overdue,
+    };
+  }, [installments]);
+
   return (
     <AdminLayout>
       <div className="p-4 md:p-6 space-y-6 animate-fade-in" dir="rtl">
-        {/* Hero */}
-        <div className="relative overflow-hidden rounded-2xl border bg-gradient-to-br from-primary/10 via-background to-accent/10 p-6 backdrop-blur-xl">
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,hsl(var(--primary)/0.15),transparent_50%)]" />
-          <div className="relative flex items-center justify-between flex-wrap gap-3">
-            <div className="flex items-center gap-3">
-              <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-primary to-primary/60 flex items-center justify-center shadow-lg shadow-primary/30">
-                <Banknote className="w-7 h-7 text-primary-foreground" />
+        {/* Hero — Banking-style */}
+        <motion.div
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="relative overflow-hidden rounded-3xl border border-border/40 bg-gradient-to-br from-primary/15 via-background to-accent/10 p-6 md:p-8 backdrop-blur-2xl shadow-xl"
+        >
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_85%_15%,hsl(var(--primary)/0.25),transparent_55%)]" />
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_15%_85%,hsl(var(--accent)/0.2),transparent_55%)]" />
+          <div className="relative flex items-center justify-between flex-wrap gap-4">
+            <div className="flex items-center gap-4">
+              <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-primary via-primary to-primary/70 flex items-center justify-center shadow-2xl shadow-primary/40 ring-4 ring-primary/10">
+                <Banknote className="w-8 h-8 text-primary-foreground" />
               </div>
               <div>
-                <h1 className="text-2xl md:text-3xl font-bold flex items-center gap-2">
+                <h1 className="text-2xl md:text-3xl font-extrabold flex items-center gap-2 tracking-tight">
                   Master PayLater
                   <Sparkles className="w-5 h-5 text-primary animate-pulse" />
                 </h1>
-                <p className="text-sm text-muted-foreground">لوحة فريق التمويل والائتمان والمتابعة — تحديث لحظي</p>
+                <p className="text-sm text-muted-foreground mt-1">
+                  لوحة التمويل والائتمان والمتابعة • مزامنة لحظية مع لوحة العميل
+                </p>
+                <div className="flex items-center gap-2 mt-2">
+                  <span className="inline-flex items-center gap-1.5 text-xs px-2 py-0.5 rounded-full bg-emerald-500/15 text-emerald-700 dark:text-emerald-400 border border-emerald-500/20">
+                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                    Realtime مفعّل
+                  </span>
+                  <span className="text-xs text-muted-foreground">آخر تحديث: {format(new Date(), 'HH:mm:ss')}</span>
+                </div>
               </div>
             </div>
-            <Button variant="outline" onClick={fetchApps} disabled={loading} className="gap-2">
-              <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
-              تحديث
-            </Button>
+            <div className="flex items-center gap-2">
+              <Button asChild variant="outline" size="sm" className="gap-2">
+                <Link to="/adminmaster/financing/audit">
+                  <Activity className="w-4 h-4" /> سجل التدقيق
+                </Link>
+              </Button>
+              <Button variant="default" onClick={fetchApps} disabled={loading} className="gap-2 shadow-lg shadow-primary/20">
+                <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
+                تحديث
+              </Button>
+            </div>
           </div>
-        </div>
+        </motion.div>
 
-        {/* KPI cards */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-          <KpiCard icon={<TrendingUp className="w-4 h-4" />} label="نشطة" value={String(stats.active)} accent="from-emerald-500/20 to-emerald-500/5" />
-          <KpiCard icon={<Clock className="w-4 h-4" />} label="قيد المعالجة" value={String(stats.pending)} accent="from-amber-500/20 to-amber-500/5" />
-          <KpiCard icon={<Receipt className="w-4 h-4" />} label="بانتظار الدفعة" value={String(stats.pendingReceipts)} accent="from-sky-500/20 to-sky-500/5" />
-          <KpiCard icon={<Wallet className="w-4 h-4" />} label="إجمالي المُموَّل" value={`${fmt(stats.totalFunded)} ر.س`} accent="from-primary/20 to-primary/5" />
+        {/* KPI cards — banking grid */}
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3">
+          <KpiCard icon={<TrendingUp className="w-4 h-4" />} label="نشطة" value={String(stats.active)} accent="from-emerald-500/20 to-emerald-500/5" tone="text-emerald-600" />
+          <KpiCard icon={<Clock className="w-4 h-4" />} label="قيد المعالجة" value={String(stats.pending)} accent="from-amber-500/20 to-amber-500/5" tone="text-amber-600" />
+          <KpiCard icon={<Receipt className="w-4 h-4" />} label="بانتظار الدفعة" value={String(stats.pendingReceipts)} accent="from-sky-500/20 to-sky-500/5" tone="text-sky-600" />
+          <KpiCard icon={<AlertTriangle className="w-4 h-4" />} label="أقساط متأخرة" value={String(stats.overdueCount)} accent="from-rose-500/20 to-rose-500/5" tone="text-rose-600" sub={stats.overdueAmount ? `${fmt(stats.overdueAmount)} ر.س` : undefined} />
+          <KpiCard icon={<Wallet className="w-4 h-4" />} label="إجمالي المُموَّل" value={`${fmt(stats.totalFunded)} ر.س`} accent="from-primary/20 to-primary/5" tone="text-primary" />
         </div>
 
         <Tabs value={filter} onValueChange={setFilter}>
-          <TabsList className="flex flex-wrap h-auto justify-start bg-muted/50 backdrop-blur">
+          <TabsList className="flex flex-wrap h-auto justify-start bg-muted/40 backdrop-blur-xl border border-border/40 p-1 rounded-xl">
             {STATUS_FILTERS.map((f) => (
-              <TabsTrigger key={f.key} value={f.key} className="gap-2 data-[state=active]:bg-background data-[state=active]:shadow-sm">
+              <TabsTrigger key={f.key} value={f.key} className="gap-2 data-[state=active]:bg-background data-[state=active]:shadow-md rounded-lg transition-all">
                 {f.label}
-                {counts[f.key] ? (<Badge variant="secondary" className="h-5 px-1.5">{counts[f.key]}</Badge>) : null}
+                {counts[f.key] ? (<Badge variant="secondary" className="h-5 px-1.5 tabular-nums">{counts[f.key]}</Badge>) : null}
               </TabsTrigger>
             ))}
           </TabsList>
@@ -285,49 +396,73 @@ const FinancingAdmin: React.FC = () => {
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-4">
           {/* Left: list */}
-          <Card className="lg:col-span-5 xl:col-span-4 border-border/60 backdrop-blur bg-card/80">
+          <Card className="lg:col-span-5 xl:col-span-4 border-border/50 backdrop-blur-xl bg-card/80 shadow-lg">
             <CardHeader className="pb-3">
               <div className="relative">
                 <Search className="w-4 h-4 absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
                 <Input
                   placeholder="بحث بالاسم، الهوية، الجوال..."
-                  className="pr-9 bg-background/60"
+                  className="pr-9 bg-background/60 border-border/40"
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
                 />
               </div>
             </CardHeader>
             <CardContent className="p-0">
-              <ScrollArea className="h-[calc(100vh-380px)] min-h-[400px]">
+              <ScrollArea className="h-[calc(100vh-420px)] min-h-[450px]">
                 {loading ? (
                   <div className="p-6 text-center text-muted-foreground text-sm">جاري التحميل...</div>
                 ) : filtered.length === 0 ? (
                   <div className="p-6 text-center text-muted-foreground text-sm">لا توجد طلبات</div>
                 ) : (
-                  <div className="divide-y divide-border/60">
-                    {filtered.map((a) => (
-                      <button
-                        key={a.id}
-                        onClick={() => setSelectedId(a.id)}
-                        className={`w-full text-right p-3 hover:bg-accent/50 transition-all duration-200 ${
-                          selectedId === a.id ? 'bg-accent/70 border-r-2 border-primary' : ''
-                        }`}
-                      >
-                        <div className="flex items-start justify-between gap-2 mb-1">
-                          <div className="font-medium truncate">{a.applicant_full_name}</div>
-                          <Badge variant={statusVariant(a.status) as any} className="text-xs shrink-0">
-                            {FINANCING_STATUS_LABELS_AR[a.status] || a.status}
-                          </Badge>
-                        </div>
-                        <div className="text-xs text-muted-foreground flex items-center gap-2 flex-wrap">
-                          <span dir="ltr">{a.applicant_phone}</span>
-                          <span>•</span>
-                          <span dir="ltr">{fmt(a.total_amount)} ر.س</span>
-                          <span>•</span>
-                          <span dir="ltr">{format(new Date(a.created_at), 'yyyy-MM-dd')}</span>
-                        </div>
-                      </button>
-                    ))}
+                  <div className="divide-y divide-border/40">
+                    <AnimatePresence initial={false}>
+                      {filtered.map((a) => {
+                        const ins = installmentsByApp[a.id] || [];
+                        const paidCount = ins.filter((i) => i.status === 'paid').length;
+                        const overdue = ins.filter((i) => i.status === 'overdue' || (i.status === 'pending' && new Date(i.due_date) < new Date())).length;
+                        const pct = ins.length ? Math.round((paidCount / ins.length) * 100) : 0;
+                        return (
+                          <motion.button
+                            key={a.id}
+                            layout
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            onClick={() => setSelectedId(a.id)}
+                            className={`w-full text-right p-3 hover:bg-accent/40 transition-all duration-200 ${
+                              selectedId === a.id ? 'bg-gradient-to-l from-primary/15 to-transparent border-r-4 border-primary' : ''
+                            }`}
+                          >
+                            <div className="flex items-start justify-between gap-2 mb-1.5">
+                              <div className="font-semibold truncate">{a.applicant_full_name}</div>
+                              <Badge variant={statusVariant(a.status) as any} className="text-xs shrink-0">
+                                {FINANCING_STATUS_LABELS_AR[a.status] || a.status}
+                              </Badge>
+                            </div>
+                            <div className="text-xs text-muted-foreground flex items-center gap-2 flex-wrap mb-1.5">
+                              <span dir="ltr">{a.applicant_phone}</span>
+                              <span>•</span>
+                              <span dir="ltr" className="font-medium text-foreground/80">{fmt(a.total_amount)} ر.س</span>
+                              <span>•</span>
+                              <span dir="ltr">{format(new Date(a.created_at), 'yyyy-MM-dd')}</span>
+                            </div>
+                            {ins.length > 0 && (
+                              <div className="flex items-center gap-2 mt-2">
+                                <Progress value={pct} className="h-1.5 flex-1" />
+                                <span className="text-[10px] tabular-nums text-muted-foreground shrink-0">
+                                  {paidCount}/{ins.length}
+                                </span>
+                                {overdue > 0 && (
+                                  <Badge variant="destructive" className="h-4 px-1 text-[9px] gap-0.5">
+                                    <AlertTriangle className="w-2.5 h-2.5" />{overdue}
+                                  </Badge>
+                                )}
+                              </div>
+                            )}
+                          </motion.button>
+                        );
+                      })}
+                    </AnimatePresence>
                   </div>
                 )}
               </ScrollArea>
@@ -335,31 +470,46 @@ const FinancingAdmin: React.FC = () => {
           </Card>
 
           {/* Right: details */}
-          <Card className="lg:col-span-7 xl:col-span-8 border-border/60 backdrop-blur bg-card/80">
+          <Card className="lg:col-span-7 xl:col-span-8 border-border/50 backdrop-blur-xl bg-card/80 shadow-lg">
             {!selected ? (
               <CardContent className="p-12 text-center text-muted-foreground">
                 <FileText className="w-12 h-12 mx-auto mb-3 opacity-40" />
-                اختر طلباً من القائمة لعرض التفاصيل
+                اختر طلباً من القائمة لعرض التفاصيل والإجراءات
               </CardContent>
             ) : (
               <>
-                <CardHeader>
+                <CardHeader className="border-b border-border/40">
                   <div className="flex items-start justify-between flex-wrap gap-2">
                     <div>
                       <CardTitle className="flex items-center gap-2">
-                        <User className="w-5 h-5" />
+                        <User className="w-5 h-5 text-primary" />
                         {selected.applicant_full_name}
                       </CardTitle>
-                      <p className="text-xs text-muted-foreground mt-1 font-mono" dir="ltr">
-                        #{selected.id.slice(0, 8).toUpperCase()}
-                      </p>
+                      <div className="flex items-center gap-2 mt-1.5">
+                        <p className="text-xs text-muted-foreground font-mono" dir="ltr">
+                          #{selected.id.slice(0, 8).toUpperCase()}
+                        </p>
+                        <Button asChild variant="ghost" size="sm" className="h-6 px-2 gap-1 text-xs">
+                          <Link to={`/adminmaster/financing/${selected.id}`}>
+                            <ExternalLink className="w-3 h-3" /> عرض كامل
+                          </Link>
+                        </Button>
+                      </div>
                     </div>
-                    <Badge variant={statusVariant(selected.status) as any}>
-                      {FINANCING_STATUS_LABELS_AR[selected.status] || selected.status}
-                    </Badge>
+                    <div className="flex items-center gap-2">
+                      {selected.ai_risk_score != null && (
+                        <Badge variant="outline" className="gap-1">
+                          <ShieldCheck className="w-3 h-3" />
+                          AI: {selected.ai_risk_score}/100
+                        </Badge>
+                      )}
+                      <Badge variant={statusVariant(selected.status) as any}>
+                        {FINANCING_STATUS_LABELS_AR[selected.status] || selected.status}
+                      </Badge>
+                    </div>
                   </div>
                 </CardHeader>
-                <CardContent className="space-y-4">
+                <CardContent className="space-y-5 pt-5">
                   {/* Applicant info */}
                   <div className="grid grid-cols-2 md:grid-cols-3 gap-3 text-sm">
                     <InfoRow icon={<Phone className="w-3.5 h-3.5" />} label="الجوال" value={selected.applicant_phone} ltr />
@@ -383,12 +533,78 @@ const FinancingAdmin: React.FC = () => {
                     <Stat label={`القسط × ${selected.duration_months}`} value={`${fmt(selected.monthly_installment)} ر.س`} />
                   </div>
 
+                  {/* Installments tracker */}
+                  {installments.length > 0 && (
+                    <>
+                      <Separator />
+                      <div className="space-y-3">
+                        <div className="flex items-center justify-between flex-wrap gap-2">
+                          <h3 className="font-semibold flex items-center gap-2">
+                            <CalendarClock className="w-4 h-4 text-primary" />
+                            جدول الأقساط ({selectedProgress.paid}/{selectedProgress.total})
+                            {selectedProgress.overdue > 0 && (
+                              <Badge variant="destructive" className="text-[10px] gap-1 animate-pulse">
+                                <AlertTriangle className="w-3 h-3" /> {selectedProgress.overdue} متأخر
+                              </Badge>
+                            )}
+                          </h3>
+                          <span className="text-xs text-muted-foreground tabular-nums">
+                            {fmt(selectedProgress.paidAmount)} / {fmt(selectedProgress.totalAmount)} ر.س
+                          </span>
+                        </div>
+                        <Progress value={selectedProgress.pct} className="h-2" />
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 max-h-72 overflow-auto pr-1">
+                          {installments.map((ins) => {
+                            const isOverdue = ins.status === 'overdue' || (ins.status === 'pending' && new Date(ins.due_date) < new Date());
+                            const daysToOrPast = differenceInDays(new Date(ins.due_date), new Date());
+                            const tone =
+                              ins.status === 'paid' ? 'border-emerald-500/30 bg-emerald-500/5' :
+                              isOverdue ? 'border-rose-500/30 bg-rose-500/5' :
+                              'border-border/50 bg-background';
+                            return (
+                              <div key={ins.id} className={`flex items-center justify-between gap-2 p-2.5 border rounded-lg ${tone}`}>
+                                <div className="min-w-0">
+                                  <div className="text-xs font-semibold flex items-center gap-1.5">
+                                    قسط #{ins.month_number}
+                                    {ins.status === 'paid' && <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />}
+                                    {isOverdue && <AlertTriangle className="w-3.5 h-3.5 text-rose-600" />}
+                                  </div>
+                                  <div className="text-[11px] text-muted-foreground mt-0.5" dir="ltr">
+                                    {format(new Date(ins.due_date), 'yyyy-MM-dd')}
+                                    {ins.status !== 'paid' && (
+                                      <span className={isOverdue ? 'text-rose-600 mr-1' : 'mr-1'}>
+                                        ({daysToOrPast >= 0 ? `بعد ${daysToOrPast} يوم` : `متأخر ${Math.abs(daysToOrPast)} يوم`})
+                                      </span>
+                                    )}
+                                  </div>
+                                  <div className="text-xs font-bold mt-0.5 tabular-nums" dir="ltr">{fmt(ins.amount)} ر.س</div>
+                                </div>
+                                {ins.status !== 'paid' && (
+                                  <div className="flex flex-col gap-1 shrink-0">
+                                    <Button size="sm" className="h-7 px-2 text-[11px] bg-emerald-600 hover:bg-emerald-700 text-white gap-1" onClick={() => markInstallmentPaid(ins)}>
+                                      <Zap className="w-3 h-3" /> دفع
+                                    </Button>
+                                    {!isOverdue && (
+                                      <Button size="sm" variant="ghost" className="h-6 px-2 text-[10px] text-rose-600" onClick={() => markInstallmentOverdue(ins)}>
+                                        تأخير
+                                      </Button>
+                                    )}
+                                  </div>
+                                )}
+                              </div>
+                            );
+                          })}
+                        </div>
+                      </div>
+                    </>
+                  )}
+
                   <Separator />
 
                   {/* Payment Receipts */}
                   <div>
                     <h3 className="font-semibold mb-2 flex items-center gap-2">
-                      <Receipt className="w-4 h-4" />
+                      <Receipt className="w-4 h-4 text-primary" />
                       إيصالات الدفع ({receipts.length})
                       {receipts.some(r => r.status === 'pending') && (
                         <Badge variant="destructive" className="text-[10px] animate-pulse">بانتظار المراجعة</Badge>
@@ -399,12 +615,12 @@ const FinancingAdmin: React.FC = () => {
                     ) : (
                       <div className="space-y-2">
                         {receipts.map((r) => (
-                          <div key={r.id} className="p-3 border rounded-lg bg-gradient-to-br from-background to-muted/30 space-y-2">
+                          <div key={r.id} className="p-3 border border-border/50 rounded-xl bg-gradient-to-br from-background to-muted/20 space-y-2">
                             <div className="flex items-center justify-between gap-2 flex-wrap">
                               <div className="flex items-center gap-2 text-sm">
                                 {r.payment_method === 'wallet' ? <Wallet className="w-4 h-4 text-primary" /> : <Banknote className="w-4 h-4 text-emerald-600" />}
                                 <span className="font-medium">{r.payment_method === 'wallet' ? 'محفظة رقمية' : 'تحويل بنكي'}</span>
-                                <span className="text-muted-foreground" dir="ltr">{fmt(r.amount)} ر.س</span>
+                                <span className="text-muted-foreground tabular-nums" dir="ltr">{fmt(r.amount)} ر.س</span>
                               </div>
                               <Badge variant={r.status === 'approved' ? 'default' : r.status === 'rejected' ? 'destructive' : 'secondary'}>
                                 {r.status === 'approved' ? 'مقبول' : r.status === 'rejected' ? 'مرفوض' : 'بانتظار'}
@@ -418,10 +634,10 @@ const FinancingAdmin: React.FC = () => {
                               </div>
                             )}
                             {r.status === 'pending' && (
-                              <div className="flex items-center gap-1 pt-1">
+                              <div className="flex items-center gap-1 pt-1 flex-wrap">
                                 {r.receipt_file_url && (
                                   <Button size="sm" variant="ghost" onClick={() => openFile('payment-receipts', r.receipt_file_url!)}>
-                                    عرض الإيصال
+                                    <ExternalLink className="w-3.5 h-3.5 ml-1" /> عرض الإيصال
                                   </Button>
                                 )}
                                 <Button size="sm" className="bg-emerald-600 hover:bg-emerald-700 text-white" onClick={() => reviewReceipt(r, 'approved')}>
@@ -433,7 +649,7 @@ const FinancingAdmin: React.FC = () => {
                               </div>
                             )}
                             {r.reviewer_note && (
-                              <div className="text-xs text-muted-foreground border-t pt-1">📝 {r.reviewer_note}</div>
+                              <div className="text-xs text-muted-foreground border-t border-border/40 pt-1">📝 {r.reviewer_note}</div>
                             )}
                           </div>
                         ))}
@@ -446,7 +662,7 @@ const FinancingAdmin: React.FC = () => {
                   {/* Documents */}
                   <div>
                     <h3 className="font-semibold mb-2 flex items-center gap-2">
-                      <FileText className="w-4 h-4" />
+                      <FileText className="w-4 h-4 text-primary" />
                       المستندات ({docs.length})
                     </h3>
                     {docs.length === 0 ? (
@@ -454,7 +670,7 @@ const FinancingAdmin: React.FC = () => {
                     ) : (
                       <div className="space-y-2">
                         {docs.map((d) => (
-                          <div key={d.id} className="flex items-center justify-between gap-2 p-2 border rounded-md flex-wrap">
+                          <div key={d.id} className="flex items-center justify-between gap-2 p-2.5 border border-border/50 rounded-lg flex-wrap bg-background/40">
                             <div className="min-w-0 flex-1">
                               <div className="text-sm font-medium truncate">
                                 {FINANCING_DOC_LABELS_AR[d.document_type] || d.document_type}
@@ -487,10 +703,10 @@ const FinancingAdmin: React.FC = () => {
                   <div>
                     <h3 className="font-semibold mb-2 flex items-center gap-2">
                       <ShieldCheck className="w-4 h-4 text-primary" />
-                      إجراءات الإدارة — تنبيه واتساب لحظي
+                      إجراءات الإدارة — تنبيه واتساب لحظي للعميل
                     </h3>
                     {selected.notes && (
-                      <div className="mb-2 p-2 bg-muted rounded text-xs whitespace-pre-wrap max-h-32 overflow-auto">
+                      <div className="mb-2 p-2.5 bg-muted/60 rounded-lg text-xs whitespace-pre-wrap max-h-32 overflow-auto border border-border/40">
                         <div className="flex items-center gap-1 text-muted-foreground mb-1">
                           <AlertCircle className="w-3 h-3" /> ملاحظات سابقة
                         </div>
@@ -498,14 +714,14 @@ const FinancingAdmin: React.FC = () => {
                       </div>
                     )}
                     <Textarea
-                      placeholder="ملاحظة للسجل (اختياري) — ستُضاف إلى ملاحظات الطلب"
+                      placeholder="ملاحظة للسجل (اختياري) — ستُضاف إلى ملاحظات الطلب وتظهر للعميل"
                       value={adminNote}
                       onChange={(e) => setAdminNote(e.target.value)}
                       rows={2}
-                      className="mb-2"
+                      className="mb-2 bg-background/60"
                     />
                     <div className="flex flex-wrap gap-2 items-center">
-                      <Button size="sm" className="bg-emerald-600 hover:bg-emerald-700 text-white" disabled={working} onClick={() => updateStatus('approved')}>
+                      <Button size="sm" className="bg-emerald-600 hover:bg-emerald-700 text-white shadow shadow-emerald-500/20" disabled={working} onClick={() => updateStatus('approved')}>
                         <CheckCircle2 className="w-4 h-4 ml-1" /> موافقة
                       </Button>
                       <Button size="sm" variant="destructive" disabled={working} onClick={() => updateStatus('rejected')}>
@@ -514,9 +730,10 @@ const FinancingAdmin: React.FC = () => {
                       <Button size="sm" variant="outline" disabled={working} onClick={() => updateStatus('documents_pending')}>طلب مستندات</Button>
                       <Button size="sm" variant="outline" disabled={working} onClick={() => updateStatus('under_review')}>تحت المراجعة</Button>
                       <Button size="sm" variant="outline" disabled={working} onClick={() => updateStatus('waiting_down_payment')}>طلب الدفعة</Button>
+                      <Button size="sm" variant="outline" disabled={working} onClick={() => updateStatus('active')}>تفعيل</Button>
                       <div className="flex items-center gap-2 ms-auto">
                         <Select value={newStatus} onValueChange={setNewStatus}>
-                          <SelectTrigger className="w-[180px] h-9">
+                          <SelectTrigger className="w-[180px] h-9 bg-background/60">
                             <SelectValue placeholder="حالة أخرى..." />
                           </SelectTrigger>
                           <SelectContent>
@@ -539,27 +756,31 @@ const FinancingAdmin: React.FC = () => {
   );
 };
 
-const KpiCard: React.FC<{ icon: React.ReactNode; label: string; value: string; accent: string }> = ({ icon, label, value, accent }) => (
-  <div className={`relative overflow-hidden rounded-xl border bg-gradient-to-br ${accent} backdrop-blur p-4 transition-all hover:scale-[1.02] hover:shadow-lg`}>
+const KpiCard: React.FC<{ icon: React.ReactNode; label: string; value: string; accent: string; tone?: string; sub?: string }> = ({ icon, label, value, accent, tone, sub }) => (
+  <motion.div
+    whileHover={{ y: -2 }}
+    className={`relative overflow-hidden rounded-2xl border border-border/40 bg-gradient-to-br ${accent} backdrop-blur-xl p-4 transition-all hover:shadow-xl`}
+  >
     <div className="flex items-center justify-between mb-2">
-      <span className="text-xs text-muted-foreground">{label}</span>
-      <div className="w-7 h-7 rounded-lg bg-background/60 flex items-center justify-center">{icon}</div>
+      <span className="text-xs text-muted-foreground font-medium">{label}</span>
+      <div className={`w-8 h-8 rounded-xl bg-background/70 flex items-center justify-center shadow-sm ${tone || ''}`}>{icon}</div>
     </div>
-    <div className="text-xl md:text-2xl font-bold" dir="ltr">{value}</div>
-  </div>
+    <div className={`text-xl md:text-2xl font-extrabold tabular-nums ${tone || ''}`} dir="ltr">{value}</div>
+    {sub && <div className="text-[10px] text-muted-foreground mt-0.5" dir="ltr">{sub}</div>}
+  </motion.div>
 );
 
 const InfoRow: React.FC<{ icon?: React.ReactNode; label: string; value: string; ltr?: boolean }> = ({ icon, label, value, ltr }) => (
-  <div>
+  <div className="p-2 rounded-lg bg-muted/30 border border-border/30">
     <div className="text-xs text-muted-foreground flex items-center gap-1">{icon} {label}</div>
-    <div className="text-sm font-medium truncate" dir={ltr ? 'ltr' : undefined}>{value}</div>
+    <div className="text-sm font-semibold truncate mt-0.5" dir={ltr ? 'ltr' : undefined}>{value}</div>
   </div>
 );
 
 const Stat: React.FC<{ label: string; value: string }> = ({ label, value }) => (
-  <div className="p-3 rounded-lg border bg-gradient-to-br from-card to-muted/30">
+  <div className="p-3 rounded-xl border border-border/40 bg-gradient-to-br from-card via-card to-muted/30 shadow-sm">
     <div className="text-xs text-muted-foreground">{label}</div>
-    <div className="text-sm font-bold mt-0.5" dir="ltr">{value}</div>
+    <div className="text-sm font-extrabold mt-1 tabular-nums" dir="ltr">{value}</div>
   </div>
 );
 
